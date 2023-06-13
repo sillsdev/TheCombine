@@ -9,6 +9,7 @@ import {
   buttonMinHeight,
   tabColor,
 } from "components/AppBar/AppBarTypes";
+import { useWindowSize } from "utilities/useWindowSize";
 
 export const dataEntryButtonId = "data-entry";
 export const dataCleanupButtonId = "data-cleanup";
@@ -41,6 +42,7 @@ interface NavButtonProps extends TabProps {
 
 function NavButton(props: NavButtonProps): ReactElement {
   const { t } = useTranslation();
+  const { windowWidth } = useWindowSize();
 
   return (
     <Button
@@ -52,8 +54,9 @@ function NavButton(props: NavButtonProps): ReactElement {
         marginLeft: 2,
         marginRight: 2,
         maxHeight: appBarHeight,
+        maxWidth: 0.13 * windowWidth,
         minHeight: buttonMinHeight,
-        width: "min-content",
+        width: "fit-content",
       }}
     >
       {t(props.textId)}

@@ -20,10 +20,10 @@ export const projButtonId = "project-settings";
 export const statButtonId = "project-statistics";
 
 const enum projNameLength {
-  sm = 21,
-  md = 31,
-  lg = 51,
-  xl = 81,
+  sm = 17,
+  md = 27,
+  lg = 47,
+  xl = 77,
 }
 
 export async function getIsAdminOrOwner(): Promise<boolean> {
