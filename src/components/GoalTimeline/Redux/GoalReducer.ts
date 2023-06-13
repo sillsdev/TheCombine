@@ -1,4 +1,4 @@
-import { defaultState } from "components/GoalTimeline/DefaultState";
+import { defaultState } from "components/GoalTimeline/GoalTimelineTypes";
 import {
   GoalAction,
   GoalActionTypes,
