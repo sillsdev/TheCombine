@@ -4,9 +4,9 @@ import thunk from "redux-thunk";
 import {
   setDomainLanguageAction,
   traverseTree,
-} from "components/TreeView/TreeViewActions";
-import { defaultState } from "components/TreeView/TreeViewReducer";
-import { TreeActionType } from "components/TreeView/TreeViewReduxTypes";
+} from "components/TreeView/Redux/TreeViewActions";
+import { defaultState } from "components/TreeView/Redux/TreeViewReducer";
+import { TreeActionType } from "components/TreeView/Redux/TreeViewReduxTypes";
 import { newSemanticDomainTreeNode } from "types/semanticDomain";
 
 jest.mock("backend", () => ({

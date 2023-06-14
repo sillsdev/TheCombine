@@ -3,7 +3,7 @@ import {
   TreeViewAction,
   TreeActionType,
   defaultTreeNode,
-} from "components/TreeView/TreeViewReduxTypes";
+} from "components/TreeView/Redux/TreeViewReduxTypes";
 import { StoreAction, StoreActionTypes } from "rootActions";
 
 export interface TreeViewState {

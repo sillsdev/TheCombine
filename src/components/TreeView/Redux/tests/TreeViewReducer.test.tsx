@@ -2,11 +2,11 @@ import {
   treeViewReducer,
   defaultState,
   TreeViewState,
-} from "components/TreeView/TreeViewReducer";
+} from "components/TreeView/Redux/TreeViewReducer";
 import {
   TreeViewAction,
   TreeActionType,
-} from "components/TreeView/TreeViewReduxTypes";
+} from "components/TreeView/Redux/TreeViewReduxTypes";
 import { StoreAction, StoreActionTypes } from "rootActions";
 import { newSemanticDomainTreeNode } from "types/semanticDomain";
 

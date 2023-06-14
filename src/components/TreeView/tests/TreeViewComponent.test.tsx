@@ -6,11 +6,11 @@ import { Key } from "ts-key-enum";
 
 import "tests/reactI18nextMock";
 
+import { defaultState as treeViewState } from "components/TreeView/Redux/TreeViewReducer";
 import TreeView, {
   exitButtonId,
   topButtonId,
 } from "components/TreeView/TreeViewComponent";
-import { defaultState as treeViewState } from "components/TreeView/TreeViewReducer";
 import mockMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
 import { newWritingSystem } from "types/writingSystem";
 
@@ -25,7 +25,6 @@ jest.mock("@mui/material", () => {
   };
 });
 
-jest.mock("components/TreeView/TreeDepiction");
 jest.mock("types/hooks", () => {
   const realHooks = jest.requireActual("types/hooks");
   return {
