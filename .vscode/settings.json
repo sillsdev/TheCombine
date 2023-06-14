@@ -49,6 +49,7 @@
     "mongoimport",
     "mongosh",
     "nerdctl",
+    "nspell",
     "oneshot",
     "openapi",
     "piptools",

@@ -66,7 +66,7 @@ export function newWord(vernacular = ""): Word {
   };
 }
 
-/** A stripped-down sense used in DataEntry > ExistingDataTable. */
+/*** A minimal Word-Sense used in DataEntry. */
 export class DomainWord {
   wordGuid: string;
   vernacular: string;
