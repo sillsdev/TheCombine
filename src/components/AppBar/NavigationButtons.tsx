@@ -14,6 +14,8 @@ import { useWindowSize } from "utilities/useWindowSize";
 export const dataEntryButtonId = "data-entry";
 export const dataCleanupButtonId = "data-cleanup";
 
+const navButtonMaxWidthProportion = 0.12;
+
 /** A button that redirects to the home page */
 export default function NavigationButtons(props: TabProps): ReactElement {
   return (
@@ -54,7 +56,7 @@ function NavButton(props: NavButtonProps): ReactElement {
         marginLeft: 2,
         marginRight: 2,
         maxHeight: appBarHeight,
-        maxWidth: 0.13 * windowWidth,
+        maxWidth: navButtonMaxWidthProportion * windowWidth,
         minHeight: buttonMinHeight,
         width: "fit-content",
       }}
