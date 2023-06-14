@@ -3,7 +3,7 @@ import {
   filterWords,
   filterWordsByDomain,
   sortDomainWordsByVern,
-} from "components/DataEntry/DataEntry";
+} from "components/DataEntry/utilities";
 import { newSemanticDomain } from "types/semanticDomain";
 import { DomainWord, newSense, simpleWord } from "types/word";
 

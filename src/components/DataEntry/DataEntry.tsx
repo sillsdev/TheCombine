@@ -1,12 +1,16 @@
 import { Dialog, Divider, Grid, Paper } from "@mui/material";
 import { ReactElement, useCallback, useEffect, useState } from "react";
 
-import { SemanticDomainTreeNode, Status, Word } from "api/models";
+import { SemanticDomainTreeNode } from "api/models";
 import { getFrontierWords, getSemanticDomainFull } from "backend";
 import AppBar from "components/AppBar/AppBarComponent";
 import DataEntryHeader from "components/DataEntry/DataEntryHeader";
 import DataEntryTable from "components/DataEntry/DataEntryTable/DataEntryTable";
 import ExistingDataTable from "components/DataEntry/ExistingDataTable/ExistingDataTable";
+import {
+  filterWordsByDomain,
+  sortDomainWordsByVern,
+} from "components/DataEntry/utilities";
 import TreeView from "components/TreeView/TreeViewComponent";
 import { newSemanticDomain } from "types/semanticDomain";
 import theme from "types/theme";
@@ -19,41 +23,6 @@ const paperStyle = {
   marginLeft: "auto",
   marginRight: "auto",
 };
-
-/** Filter out words that do not have at least 1 active sense */
-export function filterWords(words: Word[]): Word[] {
-  return words.filter((w) =>
-    w.senses.find((s) =>
-      [Status.Active, Status.Protected].includes(s.accessibility)
-    )
-  );
-}
-
-export function filterWordsByDomain(
-  words: Word[],
-  domainId: string
-): DomainWord[] {
-  const domainWords: DomainWord[] = [];
-  for (const currentWord of words) {
-    const senses = currentWord.senses.filter((s) =>
-      // The undefined is for Statuses created before .accessibility was required in the frontend.
-      [Status.Active, Status.Protected, undefined].includes(s.accessibility)
-    );
-    for (const sense of senses) {
-      if (sense.semanticDomains.map((dom) => dom.id).includes(domainId)) {
-        domainWords.push(new DomainWord({ ...currentWord, senses: [sense] }));
-      }
-    }
-  }
-  return domainWords;
-}
-
-export function sortDomainWordsByVern(words: DomainWord[]): DomainWord[] {
-  return words.sort((a, b) => {
-    const comp = a.vernacular.localeCompare(b.vernacular);
-    return comp !== 0 ? comp : a.gloss.localeCompare(b.gloss);
-  });
-}
 
 interface DataEntryProps {
   currentDomain: SemanticDomainTreeNode;
