@@ -5,8 +5,10 @@ import {
   setDomainLanguageAction,
   traverseTree,
 } from "components/TreeView/Redux/TreeViewActions";
-import { defaultState } from "components/TreeView/Redux/TreeViewReducer";
-import { TreeActionType } from "components/TreeView/Redux/TreeViewReduxTypes";
+import {
+  defaultState,
+  TreeActionType,
+} from "components/TreeView/Redux/TreeViewReduxTypes";
 import { newSemanticDomainTreeNode } from "types/semanticDomain";
 
 jest.mock("backend", () => ({

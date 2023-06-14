@@ -6,7 +6,7 @@ import { Key } from "ts-key-enum";
 
 import "tests/reactI18nextMock";
 
-import { defaultState as treeViewState } from "components/TreeView/Redux/TreeViewReducer";
+import { defaultState as treeViewState } from "components/TreeView/Redux/TreeViewReduxTypes";
 import TreeView, {
   exitButtonId,
   topButtonId,
