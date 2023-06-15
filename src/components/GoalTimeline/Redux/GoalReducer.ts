@@ -1,5 +1,5 @@
-import { defaultState } from "components/GoalTimeline/GoalTimelineTypes";
 import {
+  defaultState,
   GoalAction,
   GoalActionTypes,
 } from "components/GoalTimeline/Redux/GoalReduxTypes";

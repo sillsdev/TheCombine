@@ -1,9 +1,7 @@
+import { goalReducer } from "components/GoalTimeline/Redux/GoalReducer";
 import {
   defaultState,
   emptyGoalState,
-} from "components/GoalTimeline/GoalTimelineTypes";
-import { goalReducer } from "components/GoalTimeline/Redux/GoalReducer";
-import {
   GoalAction,
   GoalActionTypes,
 } from "components/GoalTimeline/Redux/GoalReduxTypes";
