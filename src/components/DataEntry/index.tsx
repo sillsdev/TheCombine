@@ -25,15 +25,15 @@ import { useWindowSize } from "utilities/useWindowSize";
 export const smallScreenThreshold = 960;
 
 const paperStyle = {
-  padding: theme.spacing(2),
-  maxWidth: 800,
   marginLeft: "auto",
   marginRight: "auto",
+  maxWidth: 800,
+  padding: theme.spacing(2),
 };
 
 /**
  * Allows users to add words to a project, add senses to an existing word,
- * and add the current semantic domain to a sense
+ * and add the current semantic domain to an existing sense.
  */
 export default function DataEntry(): ReactElement {
   const dispatch = useAppDispatch();
@@ -44,24 +44,26 @@ export default function DataEntry(): ReactElement {
   const { id, lang, name } = useAppSelector(
     (state: StoreState) => state.treeViewState.currentDomain
   );
+
   const [domain, setDomain] = useState(newSemanticDomain(id, name, lang));
   const [domainWords, setDomainWords] = useState<DomainWord[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  //const [isLoaded, setIsLoaded] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [questionsVisible, setQuestionsVisible] = useState(false);
 
   const { windowWidth } = useWindowSize();
 
-  // Open tree when DataEntry first renders, not when props update.
+  // On first render, open tree.
   useEffect(() => {
     dispatch(openTreeAction());
   }, [dispatch]);
 
+  // When window width changes, check if there's space for the sidebar.
   useEffect(() => {
     setIsSmallScreen(windowWidth < smallScreenThreshold);
   }, [windowWidth]);
 
+  // When domain changes, fetch full domain details.
   useEffect(() => {
     getSemanticDomainFull(id, lang).then((fullDomain) => {
       if (fullDomain) {

@@ -16,7 +16,8 @@ interface ExistingDataTableProps {
   toggleDrawer: (openClosed: boolean) => void;
 }
 
-/*** Displays previously entered data in the specified domain.
+/**
+ * Displays previously entered data in the specified domain.
  * If the window is wide enough, display as panel on right side.
  * Otherwise, have button to toggle pop-out drawer on left side.
  */
