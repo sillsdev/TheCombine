@@ -5,8 +5,8 @@ import { SemanticDomainTreeNode } from "api/models";
 import { getFrontierWords, getSemanticDomainFull } from "backend";
 import AppBar from "components/AppBar/AppBarComponent";
 import DataEntryHeader from "components/DataEntry/DataEntryHeader";
-import DataEntryTable from "components/DataEntry/DataEntryTable/DataEntryTable";
-import ExistingDataTable from "components/DataEntry/ExistingDataTable/ExistingDataTable";
+import DataEntryTable from "components/DataEntry/DataEntryTable";
+import ExistingDataTable from "components/DataEntry/ExistingDataTable";
 import {
   filterWordsByDomain,
   sortDomainWordsByVern,
@@ -24,7 +24,7 @@ const paperStyle = {
   marginRight: "auto",
 };
 
-interface DataEntryProps {
+export interface DataEntryProps {
   currentDomain: SemanticDomainTreeNode;
   isTreeOpen?: boolean;
   closeTree: () => void;
@@ -36,8 +36,8 @@ interface DataEntryProps {
  * and add the current semantic domain to a sense
  */
 export default function DataEntry(props: DataEntryProps): ReactElement {
+  const { closeTree, isTreeOpen } = props;
   const { id, lang, name } = props.currentDomain;
-  const closeTree = props.closeTree;
 
   const [domain, setDomain] = useState(newSemanticDomain(id, name, lang));
   const [domainWords, setDomainWords] = useState<DomainWord[]>([]);
@@ -93,7 +93,7 @@ export default function DataEntry(props: DataEntryProps): ReactElement {
         toggleDrawer={setDrawerOpen}
       />
 
-      <Dialog fullScreen open={!!props.isTreeOpen}>
+      <Dialog fullScreen open={!!isTreeOpen}>
         <AppBar />
         <TreeView returnControlToCaller={returnControlToCaller} />
       </Dialog>
