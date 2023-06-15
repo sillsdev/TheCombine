@@ -36,16 +36,25 @@ export interface DataEntryProps {
  * and add the current semantic domain to a sense
  */
 export default function DataEntry(props: DataEntryProps): ReactElement {
-  const { closeTree, isTreeOpen } = props;
+  const { closeTree, openTree, isTreeOpen } = props;
   const { id, lang, name } = props.currentDomain;
 
   const [domain, setDomain] = useState(newSemanticDomain(id, name, lang));
   const [domainWords, setDomainWords] = useState<DomainWord[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [questionsVisible, setQuestionsVisible] = useState(false);
 
   const { windowWidth } = useWindowSize();
+
+  // Open tree when DataEntry first renders, not when props update.
+  useEffect(() => {
+    if (!isLoaded) {
+      setIsLoaded(true);
+      openTree();
+    }
+  }, [isLoaded, openTree]);
 
   useEffect(() => {
     setIsSmallScreen(windowWidth < 960);
