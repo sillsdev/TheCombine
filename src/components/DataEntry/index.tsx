@@ -22,6 +22,8 @@ import theme from "types/theme";
 import { DomainWord } from "types/word";
 import { useWindowSize } from "utilities/useWindowSize";
 
+export const smallScreenThreshold = 960;
+
 const paperStyle = {
   padding: theme.spacing(2),
   maxWidth: 800,
@@ -57,7 +59,7 @@ export default function DataEntry(): ReactElement {
   }, [dispatch]);
 
   useEffect(() => {
-    setIsSmallScreen(windowWidth < 960);
+    setIsSmallScreen(windowWidth < smallScreenThreshold);
   }, [windowWidth]);
 
   useEffect(() => {
