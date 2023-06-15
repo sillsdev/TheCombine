@@ -4,13 +4,11 @@ import { Flag } from "api/models";
 import FlagButton from "components/Buttons/FlagButton";
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 
-interface FlagCellProps {
+interface FlagCellProps extends FieldParameterStandard {
   editable?: boolean;
 }
 
-export default function FlagCell(
-  props: FieldParameterStandard & FlagCellProps
-): ReactElement {
+export default function FlagCell(props: FlagCellProps): ReactElement {
   function updateFlag(flag: Flag): void {
     if (props.onRowDataChange) {
       props.onRowDataChange({ ...props.rowData, flag });

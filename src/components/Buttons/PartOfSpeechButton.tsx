@@ -1,4 +1,4 @@
-import { Square } from "@mui/icons-material";
+import { Hexagon } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 import { Fragment, ReactElement } from "react";
 import { useTranslation } from "react-i18next";
@@ -35,7 +35,7 @@ export default function PartOfSpeech(props: PartOfSpeechProps): ReactElement {
   const CatGroupButton = () => (
     <IconButtonWithTooltip
       buttonId={props.buttonId}
-      icon={<Square fontSize="small" sx={{ color }} />}
+      icon={<Hexagon fontSize="small" sx={{ color }} />}
       onClick={props.onClick}
       side="top"
       small
