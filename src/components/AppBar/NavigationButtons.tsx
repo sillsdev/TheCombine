@@ -9,9 +9,12 @@ import {
   buttonMinHeight,
   tabColor,
 } from "components/AppBar/AppBarTypes";
+import { useWindowSize } from "utilities/useWindowSize";
 
 export const dataEntryButtonId = "data-entry";
 export const dataCleanupButtonId = "data-cleanup";
+
+const navButtonMaxWidthProportion = 0.12;
 
 /** A button that redirects to the home page */
 export default function NavigationButtons(props: TabProps): ReactElement {
@@ -41,6 +44,7 @@ interface NavButtonProps extends TabProps {
 
 function NavButton(props: NavButtonProps): ReactElement {
   const { t } = useTranslation();
+  const { windowWidth } = useWindowSize();
 
   return (
     <Button
@@ -52,8 +56,9 @@ function NavButton(props: NavButtonProps): ReactElement {
         marginLeft: 2,
         marginRight: 2,
         maxHeight: appBarHeight,
+        maxWidth: navButtonMaxWidthProportion * windowWidth,
         minHeight: buttonMinHeight,
-        width: "min-content",
+        width: "fit-content",
       }}
     >
       {t(props.textId)}
