@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { isEmailTaken, isUsernameTaken, resetPasswordRequest } from "backend";
 import history, { Path } from "browserHistory";
-import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
+import { LoadingDoneButton } from "components/Buttons";
 import { useAppDispatch } from "types/hooks";
 
 export default function ResetRequest(): ReactElement {

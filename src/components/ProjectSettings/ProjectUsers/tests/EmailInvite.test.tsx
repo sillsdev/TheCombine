@@ -2,7 +2,7 @@ import renderer from "react-test-renderer";
 
 import "tests/reactI18nextMock.ts";
 
-import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
+import { LoadingDoneButton } from "components/Buttons";
 import EmailInvite from "components/ProjectSettings/ProjectUsers/EmailInvite";
 
 jest.mock("backend", () => ({

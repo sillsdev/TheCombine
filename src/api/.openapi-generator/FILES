@@ -33,6 +33,8 @@ models/email-invite-status.ts
 models/email-invite.ts
 models/flag.ts
 models/gloss.ts
+models/gram-cat-group.ts
+models/grammatical-info.ts
 models/index.ts
 models/merge-source-word.ts
 models/merge-undo-ids.ts

@@ -1,7 +1,7 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import { MergeWords, Sense, Status, Word } from "api/models";
+import { GramCatGroup, MergeWords, Sense, Status, Word } from "api/models";
 import {
   defaultTree,
   MergeData,
@@ -14,6 +14,7 @@ import {
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import { newMergeWords } from "goals/MergeDupGoal/MergeDupsTypes";
 import {
+  combineIntoFirstSense,
   dispatchMergeStepData,
   mergeAll,
   mergeDefinitionIntoSense,
@@ -27,10 +28,12 @@ import {
 } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MergeDupDataMock";
 import { GoalsState, GoalType } from "types/goals";
+import { newSemanticDomain } from "types/semanticDomain";
 import {
   multiSenseWord,
   newDefinition,
   newFlag,
+  newGrammaticalInfo,
   newSense,
   newWord,
 } from "types/word";
@@ -267,13 +270,13 @@ describe("MergeDupActions", () => {
     const wordId = "mockWordId";
     const mergeSenseId = "mockSenseId";
 
-    it("creates a MOVE_SENSE action when going from word to word.", () => {
+    it("creates a MOVE_SENSE action when going from word to word", () => {
       const mockRef: MergeTreeReference = { wordId, mergeSenseId };
       const resultAction = moveSense(mockRef, wordId, -1);
       expect(resultAction.type).toEqual(MergeTreeActionTypes.MOVE_SENSE);
     });
 
-    it("creates a MOVE_DUPLICATE action when going from sidebar to word.", () => {
+    it("creates a MOVE_DUPLICATE action when going from sidebar to word", () => {
       const mockRef: MergeTreeReference = { wordId, mergeSenseId, order: 0 };
       const resultAction = moveSense(mockRef, wordId, -1);
       expect(resultAction.type).toEqual(MergeTreeActionTypes.MOVE_DUPLICATE);
@@ -285,13 +288,13 @@ describe("MergeDupActions", () => {
     const mergeSenseId = "mockSenseId";
     const mockOrder = 0;
 
-    it("creates an ORDER_SENSE action when moving within a word.", () => {
+    it("creates an ORDER_SENSE action when moving within a word", () => {
       const mockRef: MergeTreeReference = { wordId, mergeSenseId };
       const resultAction = orderSense(mockRef, mockOrder);
       expect(resultAction.type).toEqual(MergeTreeActionTypes.ORDER_SENSE);
     });
 
-    it("creates an ORDER_DUPLICATE action when moving within the sidebar.", () => {
+    it("creates an ORDER_DUPLICATE action when moving within the sidebar", () => {
       const mockRef: MergeTreeReference = { wordId, mergeSenseId, order: 0 };
       const resultAction = orderSense(mockRef, mockOrder);
       expect(resultAction.type).toEqual(MergeTreeActionTypes.ORDER_DUPLICATE);
@@ -308,7 +311,7 @@ describe("MergeDupActions", () => {
       sense = newSense() as MergeTreeSense;
     });
 
-    it("ignores definitions with empty text.", () => {
+    it("ignores definitions with empty text", () => {
       mergeDefinitionIntoSense(sense, newDefinition());
       expect(sense.definitions).toHaveLength(0);
       mergeDefinitionIntoSense(sense, newDefinition("", Bcp47Code.En));
@@ -342,6 +345,65 @@ describe("MergeDupActions", () => {
       expect(
         sense.definitions.find((d) => d.language === Bcp47Code.En)!.text
       ).toEqual(twoEnTexts);
+    });
+  });
+
+  describe("combineIntoFirstSense", () => {
+    it("sets all but the first sense to duplicate status", () => {
+      const s4 = [newSense(), newSense(), newSense(), newSense()].map(
+        (s) => s as MergeTreeSense
+      );
+      combineIntoFirstSense(s4);
+      expect(s4[0].accessibility).not.toBe(Status.Duplicate);
+      expect(
+        s4.filter((s) => s.accessibility === Status.Duplicate)
+      ).toHaveLength(s4.length - 1);
+    });
+
+    it("gives the first sense the earliest part of speech found in all senses", () => {
+      const s3 = [newSense(), newSense(), newSense()].map(
+        (s) => s as MergeTreeSense
+      );
+      const gramInfo = {
+        catGroup: GramCatGroup.Verb,
+        grammaticalCategory: "vt",
+      };
+      s3[1].grammaticalInfo = { ...gramInfo };
+      s3[2].grammaticalInfo = {
+        catGroup: GramCatGroup.Preverb,
+        grammaticalCategory: "prev",
+      };
+      combineIntoFirstSense(s3);
+      expect(s3[0].grammaticalInfo).toEqual(gramInfo);
+
+      // Ensure the first sense's grammaticalInfo doesn't get overwritten.
+      s3[1].grammaticalInfo = newGrammaticalInfo();
+      combineIntoFirstSense(s3);
+      expect(s3[0].grammaticalInfo).toEqual(gramInfo);
+    });
+
+    it("adds domains to first sense from other senses", () => {
+      const s3 = [newSense(), newSense(), newSense()].map(
+        (s) => s as MergeTreeSense
+      );
+      s3[1].semanticDomains = [
+        newSemanticDomain("1", "uno"),
+        newSemanticDomain("2", "dos"),
+      ];
+      s3[2].semanticDomains = [newSemanticDomain("3", "three")];
+      combineIntoFirstSense(s3);
+      expect(s3[0].semanticDomains).toHaveLength(3);
+    });
+
+    it("doesn't adds domains it already has", () => {
+      const s2 = [newSense(), newSense()].map((s) => s as MergeTreeSense);
+      s2[0].semanticDomains = [newSemanticDomain("1", "one")];
+      s2[1].semanticDomains = [
+        newSemanticDomain("1", "uno"),
+        newSemanticDomain("2", "dos"),
+      ];
+      combineIntoFirstSense(s2);
+      expect(s2[0].semanticDomains).toHaveLength(2);
     });
   });
 });

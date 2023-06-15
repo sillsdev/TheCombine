@@ -4,6 +4,7 @@ import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponent
 import FlagCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/FlagCell";
 import GlossCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell";
 import NoteCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/NoteCell";
+import PartOfSpeechCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/PartOfSpeechCell";
 import PronunciationsCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/PronunciationsCell";
 import SenseCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
 import VernacularCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/VernacularCell";
@@ -15,6 +16,7 @@ export {
   FlagCell,
   GlossCell,
   NoteCell,
+  PartOfSpeechCell,
   PronunciationsCell,
   SenseCell,
   VernacularCell,

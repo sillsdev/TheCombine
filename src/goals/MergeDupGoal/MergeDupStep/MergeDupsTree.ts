@@ -67,7 +67,7 @@ export function convertSenseToMergeTreeSense(
   };
 }
 
-export function convertWordtoMergeTreeWord(word: Word): MergeTreeWord {
+export function convertWordToMergeTreeWord(word: Word): MergeTreeWord {
   const mergeTreeWord = newMergeTreeWord(word.vernacular);
   word.senses.forEach((sense) => {
     mergeTreeWord.sensesGuids[v4()] = [sense.guid];

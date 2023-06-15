@@ -7,7 +7,7 @@ import validator from "validator";
 import { User } from "api/models";
 import * as backend from "backend";
 import { getProjectId } from "backend/localStorage";
-import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
+import { LoadingDoneButton } from "components/Buttons";
 
 interface InviteProps {
   addToProject: (user: User) => void;

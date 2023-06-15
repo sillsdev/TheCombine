@@ -38,7 +38,7 @@ export default function ProjectAutocomplete(
       <Grid>
         <Tooltip
           title={t("projectSettings.autocomplete.hint")}
-          placement="right"
+          placement={document.body.dir === "rtl" ? "left" : "right"}
         >
           <HelpOutline />
         </Tooltip>

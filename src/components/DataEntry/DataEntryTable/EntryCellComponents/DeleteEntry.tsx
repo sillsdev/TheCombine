@@ -3,7 +3,7 @@ import { IconButton, Tooltip } from "@mui/material";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
+import { CancelConfirmDialog } from "components/Dialogs";
 
 interface DeleteEntryProps {
   removeEntry: () => void;

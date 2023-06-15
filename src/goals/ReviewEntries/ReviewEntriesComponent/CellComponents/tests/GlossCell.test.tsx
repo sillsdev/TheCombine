@@ -4,7 +4,7 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import GlossCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell";
+import { GlossCell } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/WordsMock";
 import { defaultWritingSystem } from "types/writingSystem";
 
@@ -20,7 +20,7 @@ const mockStore = configureMockStore()({
 const mockWord = mockWords()[0];
 
 describe("GlossCell", () => {
-  it("renders sort-stylized without crashing", () => {
+  it("renders sort-stylized", () => {
     renderer.act(() => {
       renderer.create(
         <Provider store={mockStore}>
@@ -30,7 +30,7 @@ describe("GlossCell", () => {
     });
   });
 
-  it("renders editable without crashing", () => {
+  it("renders editable", () => {
     renderer.act(() => {
       renderer.create(
         <Provider store={mockStore}>

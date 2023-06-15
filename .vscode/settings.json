@@ -42,6 +42,7 @@
     "globaltool",
     "Guids",
     "kubeconfig",
+    "ldml",
     "letsencrypt",
     "Linq",
     "maint",

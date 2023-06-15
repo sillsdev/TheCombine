@@ -140,9 +140,9 @@ namespace Backend.Tests.Controllers
             return name;
         }
 
-        private static FileUpload InitFile(Stream fstream, string filename)
+        private static FileUpload InitFile(Stream stream, string filename)
         {
-            var formFile = new FormFile(fstream, 0, fstream.Length, "name", filename);
+            var formFile = new FormFile(stream, 0, stream.Length, "name", filename);
             var fileUpload = new FileUpload { File = formFile, Name = "FileName" };
 
             return fileUpload;
@@ -175,10 +175,13 @@ namespace Backend.Tests.Controllers
             public int NumOfWords { get; }
             public string EntryGuid { get; }
             public string SenseGuid { get; }
+            public bool HasGramInfo { get; }
+            public bool HasDefs { get; }
 
             public RoundTripObj(
                 string filename, string language, List<string> audio,
-                int numOfWords, string entryGuid = "", string senseGuid = "")
+                int numOfWords, string entryGuid = "", string senseGuid = "",
+                bool hasGramInfo = false, bool hasDefs = false)
             {
                 Filename = filename;
                 Language = language;
@@ -186,18 +189,8 @@ namespace Backend.Tests.Controllers
                 NumOfWords = numOfWords;
                 EntryGuid = entryGuid;
                 SenseGuid = senseGuid;
-            }
-        }
-
-        public class DefinitionImportObj
-        {
-            public string Filename { get; }
-            public bool HasDefinitions { get; }
-
-            public DefinitionImportObj(string filename, bool hasDefinitions)
-            {
-                Filename = filename;
-                HasDefinitions = hasDefinitions;
+                HasGramInfo = hasGramInfo;
+                HasDefs = hasDefs;
             }
         }
 
@@ -288,7 +281,7 @@ namespace Backend.Tests.Controllers
                 Is.EqualTo(text.LastIndexOf("dateDeleted", StringComparison.Ordinal)));
 
             // Delete the export
-            await _liftController.DeleteLiftFile(UserId);
+            _liftController.DeleteLiftFile(UserId);
             var notFoundResult = await _liftController.DownloadLiftFile(_projId, UserId);
             Assert.That(notFoundResult is NotFoundObjectResult);
         }
@@ -297,23 +290,23 @@ namespace Backend.Tests.Controllers
         {
             new("Gusillaay.zip", "gsl-Qaaa-x-orth", new List<string>(), 8045),
             new("GusillaayNoTopLevelFolder.zip", "gsl-Qaaa-x-orth", new List<string>(), 8045),
-            new("Lotud.zip", "dtr", new List<string>(), 5400),
-            new("Natqgu.zip", "qaa-x-stc-natqgu", new List<string>(), 11570),
-            new("Resembli.zip", "ags", new List<string>(), 255),
-            new("RWC.zip", "es", new List<string>(), 132),
-            new("Sena.zip", "seh", new List<string>(), 1462),
+            new("Lotud.zip", "dtr", new List<string>(), 5400, "", "", true, true),
+            new("Natqgu.zip", "qaa-x-stc-natqgu", new List<string>(), 11570, "", "", true, true),
+            new("Resembli.zip", "ags", new List<string>(), 255, "", "", true, true),
+            new("RWC.zip", "es", new List<string>(), 132, "", "", true),
+            new("Sena.zip", "seh", new List<string>(), 1462, "", "", true, true),
             new(
                 "SingleEntryLiftWithSound.zip", "ptn", new List<string> { "short.mp3" }, 1,
                 "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone entry*/,
-                "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/),
+                "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/, true),
             new(
                 "SingleEntryLiftWithTwoSound.zip", "ptn", new List<string> { "short.mp3", "short1.mp3" }, 1,
                 "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone entry*/,
-                "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/),
+                "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/, true),
             new(
                 "SingleEntryLiftWithWebmSound.zip", "ptn", new List<string> { "short.webm" }, 1,
                 "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone entry*/,
-                "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/)
+                "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/, true)
         };
 
         [TestCaseSource(nameof(_roundTripCases))]
@@ -331,10 +324,10 @@ namespace Backend.Tests.Controllers
             proj1 = _projRepo.Create(proj1).Result;
 
             // Upload the zip file.
-            // Generate api parameter with filestream.
-            using (var stream = File.OpenRead(pathToStartZip))
+            // Generate api parameter with file stream.
+            using (var fileStream = File.OpenRead(pathToStartZip))
             {
-                var fileUpload = InitFile(stream, roundTripObj.Filename);
+                var fileUpload = InitFile(fileStream, roundTripObj.Filename);
 
                 // Make api call.
                 var result = _liftController.UploadLiftFile(proj1!.Id, fileUpload).Result;
@@ -349,6 +342,8 @@ namespace Backend.Tests.Controllers
             }
 
             Assert.That(proj1.LiftImported);
+            Assert.AreEqual(proj1.DefinitionsEnabled, roundTripObj.HasDefs);
+            Assert.AreEqual(proj1.GrammaticalInfoEnabled, roundTripObj.HasGramInfo);
 
             var allWords = _wordRepo.GetAllWords(proj1.Id).Result;
             Assert.AreEqual(allWords.Count, roundTripObj.NumOfWords);
@@ -406,10 +401,10 @@ namespace Backend.Tests.Controllers
             proj2 = _projRepo.Create(proj2).Result;
 
             // Upload the exported words again.
-            // Generate api parameter with filestream.
-            using (var fstream = File.OpenRead(exportedFilePath))
+            // Generate api parameter with file stream.
+            using (var fileStream = File.OpenRead(exportedFilePath))
             {
-                var fileUpload = InitFile(fstream, roundTripObj.Filename);
+                var fileUpload = InitFile(fileStream, roundTripObj.Filename);
 
                 // Make api call.
                 var result2 = _liftController.UploadLiftFile(proj2!.Id, fileUpload).Result;
@@ -426,8 +421,13 @@ namespace Backend.Tests.Controllers
             // Clean up zip file.
             File.Delete(exportedFilePath);
 
+            // Ensure that the definitions and grammatical info weren't all lost.
+            Assert.AreEqual(proj2.DefinitionsEnabled, roundTripObj.HasDefs);
+            Assert.AreEqual(proj2.GrammaticalInfoEnabled, roundTripObj.HasGramInfo);
+
             allWords = _wordRepo.GetAllWords(proj2.Id).Result;
             Assert.That(allWords, Has.Count.EqualTo(roundTripObj.NumOfWords));
+
             // We are currently only testing guids on the single-entry data sets.
             if (roundTripObj.EntryGuid != "" && allWords.Count == 1)
             {
@@ -464,45 +464,6 @@ namespace Backend.Tests.Controllers
             {
                 _projRepo.Delete(project.Id);
             }
-        }
-
-        private static DefinitionImportObj[] _defImportCases =
-        {
-            new("Natqgu.zip", true),
-            new("SingleEntryLiftWithSound.zip", false)
-        };
-
-        [TestCaseSource(nameof(_defImportCases))]
-        public void TestHasDefinitions(DefinitionImportObj defImportObj)
-        {
-            // This test assumes you have the starting .zip (filename) included in your project files.
-            var pathToStartZip = Path.Combine(Util.AssetsDir, defImportObj.Filename);
-            Assert.IsTrue(File.Exists(pathToStartZip));
-
-            // Init the project the .zip info is added to.
-            var proj = Util.RandomProject();
-            proj.VernacularWritingSystem.Bcp47 = "qaa";
-            proj = _projRepo.Create(proj).Result;
-
-            // Upload the zip file.
-            // Generate api parameter with filestream.
-            using (var stream = File.OpenRead(pathToStartZip))
-            {
-                var fileUpload = InitFile(stream, defImportObj.Filename);
-
-                // Make api call.
-                var result = _liftController.UploadLiftFile(proj!.Id, fileUpload).Result;
-                Assert.That(result is OkObjectResult);
-            }
-
-            proj = _projRepo.GetProject(proj.Id).Result;
-            if (proj is null)
-            {
-                Assert.Fail();
-                return;
-            }
-
-            Assert.AreEqual(proj.DefinitionsEnabled, defImportObj.HasDefinitions);
         }
 
         private class MockLogger : ILogger<LiftController>

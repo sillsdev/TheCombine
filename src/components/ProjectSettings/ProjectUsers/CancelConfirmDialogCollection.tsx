@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 
 import { Permission } from "api/models";
 import { addOrUpdateUserRole, removeUserRole } from "backend";
-import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
+import { CancelConfirmDialog } from "components/Dialogs";
 import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
 import { useAppDispatch } from "types/hooks";
 
@@ -215,7 +215,7 @@ export default function CancelConfirmDialogCollection(
       />
       <Tooltip
         title={t("projectSettings.userManagement.manageUser")}
-        placement="right"
+        placement={document.body.dir === "rtl" ? "left" : "right"}
       >
         <IconButton
           id={idAffix}

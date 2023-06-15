@@ -150,6 +150,7 @@ namespace BackendFramework.Controllers
             // Sets the projectId of our parser to add words to that project
             var liftMerger = _liftService.GetLiftImporterExporter(projectId, _wordRepo);
             var doesImportHaveDefinitions = false;
+            var doesImportHaveGrammaticalInfo = false;
             try
             {
                 // Add character set to project from ldml file
@@ -171,6 +172,7 @@ namespace BackendFramework.Controllers
                 // Check if there are any definitions in the imported words
                 // before they are deleted by SaveImportEntries.
                 doesImportHaveDefinitions = liftMerger.DoesImportHaveDefinitions();
+                doesImportHaveGrammaticalInfo = liftMerger.DoesImportHaveGrammaticalInfo();
 
                 await liftMerger.SaveImportEntries();
             }
@@ -190,6 +192,7 @@ namespace BackendFramework.Controllers
             }
 
             project.DefinitionsEnabled = doesImportHaveDefinitions;
+            project.GrammaticalInfoEnabled = doesImportHaveGrammaticalInfo;
             project.LiftImported = true;
             await _projRepo.Update(projectId, project);
 
@@ -312,18 +315,16 @@ namespace BackendFramework.Controllers
         /// <returns> UserId, if successful </returns>
         [HttpGet("deleteexport", Name = "DeleteLiftFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        public async Task<IActionResult> DeleteLiftFile()
+        public IActionResult DeleteLiftFile()
         {
             var userId = _permissionService.GetUserId(HttpContext);
-            return await DeleteLiftFile(userId);
+            return DeleteLiftFile(userId);
         }
 
-        internal async Task<IActionResult> DeleteLiftFile(string userId)
+        internal IActionResult DeleteLiftFile(string userId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
-            {
-                return Forbid();
-            }
+            // Don't check _permissionService.HasProjectPermission,
+            // since the lift-file is user-specific, not tied to a project.
 
             _liftService.DeleteExport(userId);
             return Ok(userId);

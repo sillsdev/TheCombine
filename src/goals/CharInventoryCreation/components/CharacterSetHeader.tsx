@@ -16,7 +16,10 @@ export default function CharacterSetHeader(): ReactElement {
         style={{ marginTop: theme.spacing(1) }}
       >
         {t("charInventory.characterSet.title")}{" "}
-        <Tooltip title={t("charInventory.characterSet.help")} placement="right">
+        <Tooltip
+          title={t("charInventory.characterSet.help")}
+          placement={document.body.dir === "rtl" ? "left" : "right"}
+        >
           <Help />
         </Tooltip>
       </Typography>
