@@ -4,14 +4,16 @@ import createMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import { SemanticDomainFull } from "api/models";
-import * as backend from "backend";
-import DataEntry from "components/DataEntry";
+import DataEntry, { smallScreenThreshold } from "components/DataEntry";
 import { openTreeAction } from "components/TreeView/TreeViewActions";
 import { TreeViewState } from "components/TreeView/TreeViewReducer";
 import { TreeViewAction } from "components/TreeView/TreeViewReduxTypes";
 import { newSemanticDomainTreeNode } from "types/semanticDomain";
+import * as useWindowSize from "utilities/useWindowSize";
 
+jest.mock("backend", () => ({
+  getSemanticDomainFull: (...args: any[]) => mockGetSemanticDomainFull(...args),
+}));
 jest.mock("components/DataEntry/DataEntryTable", () => "div");
 jest.mock("types/hooks", () => {
   return {
@@ -22,18 +24,18 @@ jest.mock("types/hooks", () => {
 
 const mockDispatch = jest.fn((action: TreeViewAction) => action);
 const mockDomain = newSemanticDomainTreeNode("mockId", "mockName", "mockLang");
+const mockGetSemanticDomainFull = jest.fn();
 const mockStore = createMockStore();
 
-let testHandle: renderer.ReactTestRenderer;
-
-function spyOnGetSemanticDomainFull(
-  domain?: SemanticDomainFull
-): jest.SpyInstance {
-  return jest.spyOn(backend, "getSemanticDomainFull").mockResolvedValue(domain);
+function spyOnUseWindowSize(windowWidth: number): jest.SpyInstance {
+  return jest
+    .spyOn(useWindowSize, "useWindowSize")
+    .mockReturnValue({ windowWidth, windowHeight: 1 });
 }
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockGetSemanticDomainFull.mockResolvedValue(undefined);
 });
 
 describe("DataEntry", () => {
@@ -43,17 +45,28 @@ describe("DataEntry", () => {
   });
 
   it("fetches domain", async () => {
-    const spyHandle = spyOnGetSemanticDomainFull();
     await renderDataEntry({ currentDomain: mockDomain });
-    expect(spyHandle).toBeCalledWith(mockDomain.id, mockDomain.lang);
+    expect(mockGetSemanticDomainFull).toBeCalledWith(
+      mockDomain.id,
+      mockDomain.lang
+    );
+  });
+
+  it("renders on a small screen", async () => {
+    await renderDataEntry(
+      { currentDomain: mockDomain },
+      smallScreenThreshold - 1
+    );
   });
 });
 
 async function renderDataEntry(
-  mockState: Partial<TreeViewState>
+  mockState: Partial<TreeViewState>,
+  windowWidth = smallScreenThreshold + 1
 ): Promise<void> {
+  spyOnUseWindowSize(windowWidth);
   await renderer.act(async () => {
-    testHandle = renderer.create(
+    renderer.create(
       <Provider store={mockStore({ treeViewState: mockState })}>
         <DataEntry />
       </Provider>
