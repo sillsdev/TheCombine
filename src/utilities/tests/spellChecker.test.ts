@@ -1,8 +1,4 @@
-import SpellChecker from "components/DataEntry/spellChecker";
-
-jest.mock("components/DataEntry/DataEntryHeader/DataEntryHeader");
-jest.mock("components/DataEntry/DataEntryTable/DataEntryTable");
-jest.mock("components/TreeView/TreeViewComponent");
+import SpellChecker from "utilities/spellChecker";
 
 describe("SpellChecker", () => {
   it("constructs properly", () => {
