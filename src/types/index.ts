@@ -3,7 +3,7 @@ import { CurrentProjectState } from "components/Project/ProjectReduxTypes";
 import { ExportProjectState } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { CreateProjectState } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
 import { PronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
-import { TreeViewState } from "components/TreeView/TreeViewReducer";
+import { TreeViewState } from "components/TreeView/Redux/TreeViewReduxTypes";
 import { CharacterInventoryState } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
 import { MergeTreeState } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { ReviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";

@@ -44,7 +44,7 @@ jest.mock("backend", () => ({
 }));
 // Mock the node module used by AudioRecorder.
 jest.mock("components/Pronunciations/Recorder");
-jest.mock("components/TreeView/TreeViewComponent", () => "div");
+jest.mock("components/TreeView", () => "div");
 
 // Mock store + axios
 const mockReviewEntryWords = mockWords();

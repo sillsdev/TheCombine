@@ -2,7 +2,7 @@ import SpellChecker from "components/DataEntry/spellChecker";
 
 jest.mock("components/DataEntry/DataEntryHeader/DataEntryHeader");
 jest.mock("components/DataEntry/DataEntryTable/DataEntryTable");
-jest.mock("components/TreeView/TreeViewComponent");
+jest.mock("components/TreeView");
 
 describe("SpellChecker", () => {
   it("constructs properly", () => {
