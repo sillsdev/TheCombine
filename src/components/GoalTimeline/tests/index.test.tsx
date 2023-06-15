@@ -1,41 +1,42 @@
 import { Button } from "@mui/material";
+import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
+import createMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
 import { Permission } from "api/models";
-import { createSuggestionData, GoalTimeline } from "components/GoalTimeline";
+import GoalTimeline, { createSuggestionData } from "components/GoalTimeline";
 import { defaultState } from "components/GoalTimeline/GoalTimelineTypes";
 import { Goal, GoalType, GoalsState } from "types/goals";
 import { goalTypeToGoal } from "utilities/goalUtilities";
-
-// Mock out HTMLDiv.scrollIntoView function, as it fails in a testing environment
-HTMLDivElement.prototype.scrollIntoView = jest.fn();
 
 jest.mock("backend", () => ({
   getUserRole: () => ({ permissions: mockPermissions }),
 }));
 jest.mock("backend/localStorage", () => ({
-  getCurrentUser: () => {
-    const projectRoles: { [key: string]: string } = {};
-    projectRoles[mockProjectId] = "nonempty";
-    return { projectRoles };
-  },
+  getCurrentUser: () => ({ projectRoles: mockProjectRoles }),
 }));
-jest.mock("components/AppBar/AppBarComponent", () => "div");
+jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({
+  asyncAddGoal: (goal: Goal) => mockChooseGoal(goal),
+  asyncGetUserEdits: () => jest.fn(),
+}));
+jest.mock("types/hooks", () => {
+  return {
+    ...jest.requireActual("types/hooks"),
+    useAppDispatch: () => jest.fn(),
+  };
+});
 
+const mockChooseGoal = jest.fn();
 const mockPermissions = Object.values(Permission);
 const mockProjectId = "mockId";
+const mockProjectRoles: { [key: string]: string } = {};
+mockProjectRoles[mockProjectId] = "nonempty";
 
-// Constants
-const mockChooseGoal = jest.fn();
-const mockClearHistory = jest.fn();
-const mockLoadHistory = jest.fn();
 const allGoals = defaultState.allGoalTypes.map((t) => goalTypeToGoal(t));
-const allGoalsWithAnyGuids: Goal[] = allGoals.map((g) => ({
-  ...g,
-  guid: expect.any(String),
-}));
+const goalWithAnyGuid = (g: Goal): Goal => ({ ...g, guid: expect.any(String) });
+const allGoalsWithAnyGuids = allGoals.map(goalWithAnyGuid);
 
 let timeLord: renderer.ReactTestRenderer;
 
@@ -52,7 +53,7 @@ describe("GoalTimeline", () => {
     );
   });
 
-  it("Selects a goal from suggestions", async () => {
+  it("selects a goal from suggestions", async () => {
     const goalNumber = 2;
     await renderTimeline();
     const goalButton = timeLord.root.findByProps({
@@ -103,7 +104,8 @@ async function renderTimeline(
   goalTypeSuggestions?: GoalType[],
   history?: Goal[]
 ): Promise<void> {
-  const mockState: GoalsState = {
+  const currentProjectState = { project: { id: mockProjectId } };
+  const goalsState: GoalsState = {
     ...defaultState,
     goalTypeSuggestions: goalTypeSuggestions ?? defaultState.allGoalTypes,
     history: history ?? [],
@@ -111,13 +113,9 @@ async function renderTimeline(
   };
   await renderer.act(async () => {
     timeLord = renderer.create(
-      <GoalTimeline
-        {...mockState}
-        chooseGoal={mockChooseGoal}
-        clearHistory={mockClearHistory}
-        loadHistory={mockLoadHistory}
-        currentProjectId={mockProjectId}
-      />
+      <Provider store={createMockStore()({ currentProjectState, goalsState })}>
+        <GoalTimeline />
+      </Provider>
     );
   });
 }

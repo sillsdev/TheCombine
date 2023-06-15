@@ -14,10 +14,9 @@ import GoalList from "components/GoalTimeline/GoalList";
 import {
   asyncAddGoal,
   asyncGetUserEdits,
-  loadUserEdits,
 } from "components/GoalTimeline/Redux/GoalActions";
 import { StoreState } from "types";
-import { Goal, GoalsState, GoalType } from "types/goals";
+import { Goal, GoalType } from "types/goals";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { requiredPermission, goalTypeToGoal } from "utilities/goalUtilities";
 import { useWindowSize } from "utilities/useWindowSize";
@@ -59,20 +58,22 @@ export function createSuggestionData(
   return secondarySuggestions.map(goalTypeToGoal);
 }
 
-interface GoalTimelineProps {
-  currentProjectId: string;
-  chooseGoal: (goal: Goal) => void;
-  clearHistory: () => void;
-  loadHistory: () => void;
-}
-
 /**
  * Displays the list of goals the user has decided they will work on, their choices
  * for the next goal, and suggestions for which goals they should choose to work on.
  */
-export function GoalTimeline(
-  props: GoalTimelineProps & GoalsState
-): ReactElement {
+export default function GoalTimeline(): ReactElement {
+  const dispatch = useAppDispatch();
+
+  const currentProjectId = useAppSelector(
+    (state: StoreState) => state.currentProjectState.project.id
+  );
+  const { allGoalTypes, goalTypeSuggestions, history } = useAppSelector(
+    (state: StoreState) => state.goalsState
+  );
+
+  const chooseGoal = (goal: Goal) => dispatch(asyncAddGoal(goal));
+
   const [availableGoalTypes, setAvailableGoalTypes] = useState<GoalType[]>([]);
   const [suggestedGoalTypes, setSuggestedGoalTypes] = useState<GoalType[]>([]);
 
@@ -85,39 +86,33 @@ export function GoalTimeline(
 
   useEffect(() => {
     if (!loaded) {
-      props.loadHistory();
+      dispatch(asyncGetUserEdits());
       setLoaded(true);
     }
-  }, [loaded, props]);
+  }, [dispatch, loaded]);
 
   useEffect(() => {
     setPortrait(windowWidth - 40 < windowHeight);
   }, [windowHeight, windowWidth]);
 
   const getGoalTypes = useCallback(async (): Promise<void> => {
-    const userRoleId = getCurrentUser()?.projectRoles[props.currentProjectId];
+    const userRoleId = getCurrentUser()?.projectRoles[currentProjectId];
     if (!userRoleId) {
       return;
     }
     const permissions = (await getUserRole(userRoleId)).permissions;
-    const goalTypes = props.allGoalTypes.filter((t) =>
+    const goalTypes = allGoalTypes.filter((t) =>
       permissions.includes(requiredPermission(t))
     );
     setAvailableGoalTypes(goalTypes);
     setSuggestedGoalTypes(
-      goalTypes.filter((t) => props.goalTypeSuggestions.includes(t))
+      goalTypes.filter((t) => goalTypeSuggestions.includes(t))
     );
-  }, [props]);
+  }, [allGoalTypes, currentProjectId, goalTypeSuggestions]);
 
   useEffect(() => {
     getGoalTypes();
   }, [getGoalTypes]);
-
-  // Given a change event, find which goal the user selected, and choose it
-  // as the next goal to work on.
-  function handleChange(goal: Goal): void {
-    props.chooseGoal(goal);
-  }
 
   // Creates a button for our recommended goal
   function goalButton(): ReactElement {
@@ -129,7 +124,7 @@ export function GoalTimeline(
         color="primary"
         variant="contained"
         disabled={done}
-        onClick={() => props.chooseGoal(goal)}
+        onClick={() => chooseGoal(goal)}
         id={`new-goal-${goal.name}`}
       >
         <Typography variant="h4">
@@ -146,11 +141,8 @@ export function GoalTimeline(
         <div style={{ ...timelineStyle.paneStyling, float: "right" }}>
           <GoalList
             orientation="horizontal"
-            data={createSuggestionData(
-              availableGoalTypes,
-              props.goalTypeSuggestions
-            )}
-            handleChange={handleChange}
+            data={createSuggestionData(availableGoalTypes, goalTypeSuggestions)}
+            handleChange={chooseGoal}
             size={100}
             numPanes={2}
           />
@@ -168,8 +160,8 @@ export function GoalTimeline(
           <GoalList
             completed
             orientation="horizontal"
-            data={[...props.history].reverse()}
-            handleChange={handleChange}
+            data={[...history].reverse()}
+            handleChange={chooseGoal}
             size={100}
             numPanes={3}
             scrollable
@@ -190,11 +182,8 @@ export function GoalTimeline(
           <Typography variant="h6">{t("goal.selector.other")}</Typography>
           <GoalList
             orientation="vertical"
-            data={createSuggestionData(
-              availableGoalTypes,
-              props.goalTypeSuggestions
-            )}
-            handleChange={handleChange}
+            data={createSuggestionData(availableGoalTypes, goalTypeSuggestions)}
+            handleChange={chooseGoal}
             size={35}
             numPanes={3}
           />
@@ -212,8 +201,8 @@ export function GoalTimeline(
           <GoalList
             completed
             orientation="vertical"
-            data={[...props.history].reverse()}
-            handleChange={handleChange}
+            data={[...history].reverse()}
+            handleChange={chooseGoal}
             size={35}
             numPanes={3}
             scrollable
@@ -224,27 +213,4 @@ export function GoalTimeline(
   }
 
   return portrait ? renderPortrait() : renderLandscape();
-}
-
-export default function (): ReactElement {
-  const dispatch = useAppDispatch();
-
-  const currentProjectId = useAppSelector(
-    (state: StoreState) => state.currentProjectState.project.id
-  );
-  const goalState = useAppSelector((state: StoreState) => state.goalsState);
-
-  const chooseGoal = (goal: Goal) => dispatch(asyncAddGoal(goal));
-  const clearHistory = () => dispatch(loadUserEdits());
-  const loadHistory = () => dispatch(asyncGetUserEdits());
-
-  return (
-    <GoalTimeline
-      {...goalState}
-      chooseGoal={chooseGoal}
-      clearHistory={clearHistory}
-      currentProjectId={currentProjectId}
-      loadHistory={loadHistory}
-    />
-  );
 }
