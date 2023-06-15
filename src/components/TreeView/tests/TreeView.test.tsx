@@ -10,7 +10,7 @@ import { defaultState as treeViewState } from "components/TreeView/Redux/TreeVie
 import TreeView, {
   exitButtonId,
   topButtonId,
-} from "components/TreeView/TreeViewComponent";
+} from "components/TreeView/TreeView";
 import mockMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
 import { newWritingSystem } from "types/writingSystem";
 

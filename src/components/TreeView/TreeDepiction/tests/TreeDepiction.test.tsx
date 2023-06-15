@@ -3,7 +3,7 @@ import renderer from "react-test-renderer";
 import "tests/reactI18nextMock.ts";
 
 import { SemanticDomainTreeNode } from "api";
-import TreeDepiction from "components/TreeView/TreeDepiction";
+import TreeDepiction from "components/TreeView/TreeDepiction/TreeDepiction";
 import testDomainMap, {
   mapIds,
 } from "components/TreeView/tests/SemanticDomainMock";

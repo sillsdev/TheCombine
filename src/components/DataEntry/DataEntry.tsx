@@ -11,7 +11,7 @@ import {
   filterWordsByDomain,
   sortDomainWordsByVern,
 } from "components/DataEntry/utilities";
-import TreeView from "components/TreeView/TreeViewComponent";
+import TreeView from "components/TreeView";
 import { newSemanticDomain } from "types/semanticDomain";
 import theme from "types/theme";
 import { DomainWord } from "types/word";
