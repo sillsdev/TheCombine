@@ -4,7 +4,9 @@ import renderer from "react-test-renderer";
 import "tests/reactI18nextMock";
 
 import { Permission } from "api/models";
-import { createSuggestionData, GoalTimeline } from "components/GoalTimeline";
+import GoalTimeline, {
+  createSuggestionData,
+} from "components/GoalTimeline/GoalTimeline";
 import { defaultState } from "components/GoalTimeline/GoalTimelineTypes";
 import { Goal, GoalType, GoalsState } from "types/goals";
 import { goalTypeToGoal } from "utilities/goalUtilities";
