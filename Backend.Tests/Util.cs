@@ -51,7 +51,6 @@ namespace Backend.Tests
                 Created = RandString(),
                 Vernacular = RandString(),
                 Modified = RandString(),
-                PartOfSpeech = RandString(),
                 Plural = RandString(),
                 History = new List<string>(),
                 Audio = new List<string>(),
