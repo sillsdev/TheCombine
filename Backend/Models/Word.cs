@@ -57,10 +57,6 @@ namespace BackendFramework.Models
         public List<string> History { get; set; }
 
         /// <summary> Not implemented in frontend. </summary>
-        [BsonElement("partOfSpeech")]
-        public string PartOfSpeech { get; set; }
-
-        /// <summary> Not implemented in frontend. </summary>
         [BsonElement("editedBy")]
         public List<string> EditedBy { get; set; }
 
@@ -90,7 +86,6 @@ namespace BackendFramework.Models
             Plural = "";
             Created = "";
             Modified = "";
-            PartOfSpeech = "";
             OtherField = "";
             ProjectId = "";
             Accessibility = Status.Active;
@@ -112,7 +107,6 @@ namespace BackendFramework.Models
                 Plural = Plural,
                 Created = Created,
                 Modified = Modified,
-                PartOfSpeech = PartOfSpeech,
                 OtherField = OtherField,
                 ProjectId = ProjectId,
                 Accessibility = Accessibility,
@@ -149,7 +143,6 @@ namespace BackendFramework.Models
             return
                 other.Vernacular.Equals(Vernacular, StringComparison.Ordinal) &&
                 other.Plural.Equals(Plural, StringComparison.Ordinal) &&
-                other.PartOfSpeech.Equals(PartOfSpeech, StringComparison.Ordinal) &&
                 other.OtherField.Equals(OtherField, StringComparison.Ordinal) &&
                 other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
 
@@ -195,7 +188,6 @@ namespace BackendFramework.Models
             hash.Add(Modified);
             hash.Add(Accessibility);
             hash.Add(History);
-            hash.Add(PartOfSpeech);
             hash.Add(EditedBy);
             hash.Add(OtherField);
             hash.Add(ProjectId);
@@ -216,7 +208,7 @@ namespace BackendFramework.Models
         /// <summary>
         /// Append contents of other contained word.
         /// Warning! The following content of the other word are lost:
-        /// Plural, PartOfSpeech, Created, Modified, Accessibility, OtherField.
+        /// Plural, Created, Modified, Accessibility, OtherField.
         /// </summary>
         /// <returns> A bool: true if operation succeeded and word updated. </returns>
         public bool AppendContainedWordContents(Word other, String userId)
