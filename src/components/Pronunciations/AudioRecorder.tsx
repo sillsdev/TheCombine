@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 
 import Recorder from "components/Pronunciations/Recorder";
 import RecorderIcon from "components/Pronunciations/RecorderIcon";
-import { UpperRightToastContainer } from "components/Toast/UpperRightToastContainer";
 
 interface RecorderProps {
   wordId: string;
@@ -43,13 +42,10 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
   }
 
   return (
-    <>
-      <UpperRightToastContainer />
-      <RecorderIcon
-        wordId={props.wordId}
-        startRecording={startRecording}
-        stopRecording={stopRecording}
-      />
-    </>
+    <RecorderIcon
+      wordId={props.wordId}
+      startRecording={startRecording}
+      stopRecording={stopRecording}
+    />
   );
 }
