@@ -5,7 +5,7 @@ import configureMockStore from "redux-mock-store";
 import "tests/reactI18nextMock";
 
 import { SemanticDomainFull } from "api";
-import DataEntryHeader from "components/DataEntry/DataEntryHeader/DataEntryHeader";
+import DataEntryHeader from "components/DataEntry/DataEntryHeader";
 import { newSemanticDomain } from "types/semanticDomain";
 
 const mockStore = configureMockStore()();

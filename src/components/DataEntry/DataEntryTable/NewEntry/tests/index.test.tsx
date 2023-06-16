@@ -5,7 +5,7 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
+import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
 import { newWritingSystem } from "types/writingSystem";
 
 jest.mock("@mui/material/Autocomplete", () => "div");

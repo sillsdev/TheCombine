@@ -21,13 +21,13 @@ import {
   SemanticDomain,
   SemanticDomainTreeNode,
   Sense,
-  Status,
   Word,
 } from "api/models";
 import * as backend from "backend";
 import { getUserId } from "backend/localStorage";
-import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
-import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry";
+import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
+import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
+import { filterWords } from "components/DataEntry/utilities";
 import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
 import { StoreState } from "types";
@@ -78,15 +78,6 @@ export function addSemanticDomainToSense(
   sense.semanticDomains.push(makeSemDomCurrent(semDom));
   const senses = word.senses.map((s) => (s.guid === senseGuid ? sense : s));
   return { ...word, senses };
-}
-
-/*** Filter out words that do not have at least one Active/Protected sense. */
-function filterWords(words: Word[]): Word[] {
-  return words.filter((w) =>
-    w.senses.find((s) =>
-      [Status.Active, Status.Protected].includes(s.accessibility)
-    )
-  );
 }
 
 /*** Focus on a specified object. */
