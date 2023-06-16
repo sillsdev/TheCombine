@@ -9,7 +9,6 @@ import * as backend from "backend";
 import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
 import EmailInvite from "components/ProjectSettings/ProjectUsers/EmailInvite";
 import UserList from "components/ProjectSettings/ProjectUsers/UserList";
-import { UpperRightToastContainer } from "components/Toast/UpperRightToastContainer";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { RuntimeConfig } from "types/runtimeConfig";
@@ -59,7 +58,6 @@ export default function AddProjectUsers(): ReactElement {
     <>
       <Grid container spacing={1}>
         <UserList projectUsers={projectUsers} addToProject={addToProject} />
-        <UpperRightToastContainer />
       </Grid>
 
       {RuntimeConfig.getInstance().emailServicesEnabled() && (
