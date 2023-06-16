@@ -85,12 +85,6 @@ export interface Word {
   history: Array<string>;
   /**
    *
-   * @type {string}
-   * @memberof Word
-   */
-  partOfSpeech?: string | null;
-  /**
-   *
    * @type {Array<string>}
    * @memberof Word
    */

@@ -1,10 +1,12 @@
-import { Drawer, Grid, List } from "@mui/material";
+import { Drawer, Grid, List, SxProps } from "@mui/material";
 import React, { ReactElement } from "react";
 
 import { SemanticDomain } from "api/models";
+import { appBarHeight } from "components/AppBar/AppBarTypes";
 import ImmutableExistingData from "components/DataEntry/ExistingDataTable/ImmutableExistingData";
 import theme from "types/theme";
 import { DomainWord } from "types/word";
+import { useWindowSize } from "utilities/useWindowSize";
 
 interface ExistingDataTableProps {
   domain: SemanticDomain;
@@ -22,6 +24,8 @@ export default function ExistingDataTable(
   props: ExistingDataTableProps
 ): ReactElement {
   const closeDrawer = (): void => props.toggleDrawer(false);
+
+  const { windowHeight } = useWindowSize();
 
   const list = (): ReactElement => {
     return (
@@ -54,8 +58,12 @@ export default function ExistingDataTable(
   };
 
   const renderSidePanel = (): ReactElement => {
+    const sxScrollOverflow: SxProps = {
+      maxHeight: windowHeight - appBarHeight,
+      overflowY: "scroll",
+    };
     return (
-      <Grid item md={5} lg={4}>
+      <Grid item md={5} lg={4} sx={sxScrollOverflow}>
         {list()}
       </Grid>
     );
