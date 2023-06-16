@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 
 /** A pre-configured ToastContainer to consistently display toasts in the
  * upper right corner of the screen. */
-export function UpperRightToastContainer(): ReactElement {
+export default function UpperRightToastContainer(): ReactElement {
   return (
     <ToastContainer
       position="top-right"
