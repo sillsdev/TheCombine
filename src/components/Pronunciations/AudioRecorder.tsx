@@ -39,8 +39,7 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
       lastModified: Date.now(),
       type: Recorder.blobType,
     };
-    const audioFile = new File([blob], fileName, options);
-    props.uploadAudio(props.wordId, audioFile);
+    props.uploadAudio(props.wordId, new File([blob], fileName, options));
   }
 
   return (
