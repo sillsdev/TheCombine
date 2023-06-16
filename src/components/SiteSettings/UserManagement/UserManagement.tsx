@@ -8,7 +8,6 @@ import { User } from "api/models";
 import { deleteUser, getAllUsers } from "backend";
 import ConfirmDeletion from "components/SiteSettings/UserManagement/ConfirmDeletion";
 import UserList from "components/SiteSettings/UserManagement/UserList";
-import { UpperRightToastContainer } from "components/Toast/UpperRightToastContainer";
 
 const customStyles = {
   content: {
@@ -70,7 +69,6 @@ export default function UserManagement(): ReactElement {
     <>
       <Grid container spacing={1}>
         <UserList allUsers={allUsers} handleOpenModal={handleOpenModal} />
-        <UpperRightToastContainer />
       </Grid>
 
       <Modal
