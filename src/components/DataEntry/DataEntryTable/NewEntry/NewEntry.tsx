@@ -303,11 +303,11 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
       <Grid item xs={2} style={gridItemStyle(1)}>
         <Pronunciations
           wordId={""}
+          audioInFrontend
           pronunciationFiles={newAudioUrls}
           recorder={recorder}
           deleteAudio={(_, fileName: string) => delNewAudioUrl(fileName)}
           uploadAudio={(_, audioFile: File) => addNewAudioUrl(audioFile)}
-          getAudioUrl={(_, fileName: string) => fileName}
         />
       </Grid>
       <Grid item xs={1} style={gridItemStyle(1)}>
