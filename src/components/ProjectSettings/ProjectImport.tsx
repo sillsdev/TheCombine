@@ -3,8 +3,7 @@ import { ReactElement, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 
 import { getProject, uploadLift } from "backend";
-import FileInputButton from "components/Buttons/FileInputButton";
-import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
+import { FileInputButton, LoadingDoneButton } from "components/Buttons";
 import { ProjectSettingPropsWithSet } from "components/ProjectSettings/ProjectSettingsTypes";
 
 enum UploadState {

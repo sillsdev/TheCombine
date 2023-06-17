@@ -10,6 +10,7 @@ import {
   FlagCell,
   GlossCell,
   NoteCell,
+  PartOfSpeechCell,
   PronunciationsCell,
   SenseCell,
   VernacularCell,
@@ -28,6 +29,7 @@ enum SortStyle {
   Sense,
   Definition,
   Gloss,
+  PartOfSpeech,
   Domain,
   Pronunciation,
   //Note,
@@ -40,6 +42,7 @@ export class ColumnTitle {
   static Senses = t("reviewEntries.columns.senses");
   static Definitions = t("reviewEntries.columns.definitions");
   static Glosses = t("reviewEntries.columns.glosses");
+  static PartOfSpeech = t("reviewEntries.columns.partOfSpeech");
   static Domains = t("reviewEntries.columns.domains");
   static Pronunciations = t("reviewEntries.columns.pronunciations");
   static Note = t("reviewEntries.columns.note");
@@ -210,6 +213,51 @@ const columns: Column<any>[] = [
         if (stringA !== stringB) {
           return stringA.localeCompare(stringB);
         }
+      }
+      return a.senses.length - b.senses.length;
+    },
+  },
+
+  // Part of Speech column
+  {
+    title: ColumnTitle.PartOfSpeech,
+    disableClick: true,
+    editable: "never",
+    field: ReviewEntriesWordField.Senses,
+    render: (rowData: ReviewEntriesWord) => (
+      <PartOfSpeechCell rowData={rowData} />
+    ),
+    customFilterAndSearch: (
+      term: string,
+      rowData: ReviewEntriesWord
+    ): boolean => {
+      const regex = cleanRegExp(term);
+      for (const sense of rowData.senses) {
+        const gramInfo = `${sense.partOfSpeech.catGroup} ${sense.partOfSpeech.grammaticalCategory}`;
+        if (regex.exec(gramInfo.toLowerCase())) {
+          return true;
+        }
+      }
+      return false;
+    },
+    customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
+      if (currentSort !== SortStyle.PartOfSpeech) {
+        currentSort = SortStyle.PartOfSpeech;
+      }
+
+      for (
+        let count = 0;
+        count < a.senses.length && count < b.senses.length;
+        count++
+      ) {
+        const gramInfoA = a.senses[count].partOfSpeech;
+        const gramInfoB = b.senses[count].partOfSpeech;
+        if (gramInfoA.catGroup === gramInfoB.catGroup) {
+          return gramInfoA.grammaticalCategory.localeCompare(
+            gramInfoB.grammaticalCategory
+          );
+        }
+        return gramInfoA.catGroup.localeCompare(gramInfoB.catGroup);
       }
       return a.senses.length - b.senses.length;
     },

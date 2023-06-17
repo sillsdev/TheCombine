@@ -2,6 +2,7 @@ import {
   Definition,
   Flag,
   Gloss,
+  GrammaticalInfo,
   SemanticDomain,
   Sense,
   Status,
@@ -52,6 +53,7 @@ export class ReviewEntriesSense {
   guid: string;
   definitions: Definition[];
   glosses: Gloss[];
+  partOfSpeech: GrammaticalInfo;
   domains: SemanticDomain[];
   deleted: boolean;
   protected: boolean;
@@ -69,6 +71,7 @@ export class ReviewEntriesSense {
       ? sense.glosses.filter((g) => g.language === analysisLang)
       : sense.glosses;
     this.glosses = cleanGlosses(this.glosses);
+    this.partOfSpeech = sense.grammaticalInfo;
     this.domains = [...sense.semanticDomains];
     this.deleted = sense.accessibility === Status.Deleted;
     this.protected = sense.accessibility === Status.Protected;

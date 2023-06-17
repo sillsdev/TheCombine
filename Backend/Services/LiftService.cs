@@ -431,17 +431,25 @@ namespace BackendFramework.Services
                 lexSense.Definition.MergeIn(MultiTextBase.Create(defDict));
                 lexSense.Gloss.MergeIn(MultiTextBase.Create(glossDict));
                 lexSense.Id = currentSense.Guid.ToString();
-                entry.Senses.Add(lexSense);
+
+                // Add grammatical info
+                if (currentSense.GrammaticalInfo.CatGroup != GramCatGroup.Unspecified)
+                {
+                    var optionRef = new OptionRef(currentSense.GrammaticalInfo.GrammaticalCategory);
+                    lexSense.Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>(
+                        LexSense.WellKnownProperties.PartOfSpeech, optionRef));
+                }
 
                 // Merge in semantic domains
                 foreach (var semDom in currentSense.SemanticDomains)
                 {
                     var orc = new OptionRefCollection();
                     orc.Add(semDom.Id + " " + semDom.Name);
-
-                    lexSense.Properties.Add(
-                        new KeyValuePair<string, IPalasoDataObjectProperty>("semantic-domain-ddp4", orc));
+                    lexSense.Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>(
+                        LexSense.WellKnownProperties.SemanticDomainDdp4, orc));
                 }
+
+                entry.Senses.Add(lexSense);
             }
         }
 
@@ -556,6 +564,17 @@ namespace BackendFramework.Services
             public bool DoesImportHaveDefinitions()
             {
                 return _importEntries.Any(w => w.Senses.Any(s => s.Definitions.Count > 0));
+            }
+
+            /// <summary>
+            /// Check for any GrammaticalInfo in the private field <see cref="_importEntries"/>
+            /// </summary>
+            /// <returns> A boolean: true if at least one word has a GramCatGroup other than Unspecified. </returns>
+            public bool DoesImportHaveGrammaticalInfo()
+            {
+                return _importEntries.Any(w => w.Senses.Any(
+                    s => s.GrammaticalInfo is not null &&
+                    s.GrammaticalInfo.CatGroup != GramCatGroup.Unspecified));
             }
 
             /// <summary>
@@ -675,6 +694,12 @@ namespace BackendFramework.Services
                                 MongoId = ObjectId.GenerateNewId().ToString(),
                                 Name = splitSemDom[1]
                             });
+                    }
+
+                    // Add grammatical info
+                    if (!String.IsNullOrWhiteSpace(sense.GramInfo?.Value))
+                    {
+                        newSense.GrammaticalInfo = new GrammaticalInfo(sense.GramInfo.Value);
                     }
 
                     newWord.Senses.Add(newSense);
@@ -815,6 +840,22 @@ namespace BackendFramework.Services
                     entry.Notes.Add(note);
                 }
             }
+
+            public void MergeInGrammaticalInfo(LiftObject senseOrReversal, string val, List<Trait> traits)
+            {
+                if (senseOrReversal is LiftSense sense)
+                {
+                    if (sense.GramInfo is null)
+                    {
+                        sense.GramInfo = new LiftGrammaticalInfo { Value = val };
+                    }
+                    else
+                    {
+                        sense.GramInfo.Value = val;
+                    }
+                }
+            }
+
             /// <summary> Adds in each semantic domain to a list </summary>
             public void ProcessRangeElement(string range, string id, string guid, string parent,
                 LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml)
@@ -867,7 +908,6 @@ namespace BackendFramework.Services
 
             public void EntryWasDeleted(Extensible info, DateTime dateDeleted) { }
             public void MergeInExampleForm(LiftExample example, LiftMultiText multiText) { }
-            public void MergeInGrammaticalInfo(LiftObject senseOrReversal, string val, List<Trait> traits) { }
 
             public void MergeInPicture(LiftSense sense, string href, LiftMultiText caption) { }
             public void MergeInRelation(

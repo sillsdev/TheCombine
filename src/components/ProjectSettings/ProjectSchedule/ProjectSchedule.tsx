@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 
 import { getProject, updateProject } from "backend";
-import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import { IconButtonWithTooltip } from "components/Buttons";
 import CalendarView from "components/ProjectSettings/ProjectSchedule/CalendarView";
 import DateScheduleEdit from "components/ProjectSettings/ProjectSchedule/DateScheduleEdit";
 import DateSelector from "components/ProjectSettings/ProjectSchedule/DateSelector";

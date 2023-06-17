@@ -1,10 +1,10 @@
 import {
   Definition,
   Flag,
+  GramCatGroup,
   MergeSourceWord,
   MergeUndoIds,
   MergeWords,
-  SemanticDomain,
   Status,
   Word,
 } from "api/models";
@@ -170,29 +170,10 @@ function getMergeWords(
 
     // Set sense and duplicate senses.
     Object.values(word.sensesGuids).forEach((guids) => {
-      // Set the first sense to be merged as Active/Protected.
-      // This was the top sense when the sidebar was opened.
-      const senseData = data.senses[guids[0]];
-      const mainSense = senses[senseData.srcWordId][senseData.order];
-      mainSense.accessibility = mainSense.protected
-        ? Status.Protected
-        : Status.Active;
-
-      // Merge the rest as duplicates.
-      // These were senses dropped into another sense.
-      const dups = guids.slice(1).map((guid) => data.senses[guid]);
-      dups.forEach((dup) => {
-        const dupSense = senses[dup.srcWordId][dup.order];
-        dupSense.accessibility = Status.Duplicate;
-        // Put the duplicate's definitions in the main sense.
-        dupSense.definitions.forEach((def) =>
-          mergeDefinitionIntoSense(mainSense, def)
-        );
-        // Put the duplicate's domains in the main sense.
-        dupSense.semanticDomains.forEach((dom) =>
-          mergeDomainIntoSense(mainSense, dom)
-        );
-      });
+      const sensesToCombine = guids
+        .map((g) => data.senses[g])
+        .map((s) => senses[s.srcWordId][s.order]);
+      combineIntoFirstSense(sensesToCombine);
     });
 
     // Clean order of senses in each src word to reflect backend order.
@@ -232,6 +213,7 @@ function getMergeWords(
             glosses: sense.glosses,
             semanticDomains: sense.semanticDomains,
             accessibility: sense.accessibility,
+            grammaticalInfo: sense.grammaticalInfo,
           });
         }
       });
@@ -329,6 +311,36 @@ export async function loadMergeDupsData(goal: MergeDups): Promise<void> {
   goal.steps = [];
 }
 
+/** Modifies the mutable input sense list. */
+export function combineIntoFirstSense(senses: MergeTreeSense[]): void {
+  // Set the first sense to be merged as Active/Protected.
+  // This was the top sense when the sidebar was opened.
+  const mainSense = senses[0];
+  mainSense.accessibility = mainSense.protected
+    ? Status.Protected
+    : Status.Active;
+
+  // Merge the rest as duplicates.
+  // These were senses dropped into another sense.
+  senses.slice(1).forEach((dupSense) => {
+    dupSense.accessibility = Status.Duplicate;
+    // Put the duplicate's definitions in the main sense.
+    dupSense.definitions.forEach((def) =>
+      mergeDefinitionIntoSense(mainSense, def)
+    );
+    // Use the duplicate's part of speech if not specified in the main sense.
+    if (mainSense.grammaticalInfo.catGroup === GramCatGroup.Unspecified) {
+      mainSense.grammaticalInfo = { ...dupSense.grammaticalInfo };
+    }
+    // Put the duplicate's domains in the main sense.
+    dupSense.semanticDomains.forEach((dom) => {
+      if (!mainSense.semanticDomains.find((d) => d.id === dom.id)) {
+        mainSense.semanticDomains.push({ ...dom });
+      }
+    });
+  });
+}
+
 /** Modifies the mutable input sense. */
 export function mergeDefinitionIntoSense(
   sense: MergeTreeSense,
@@ -348,14 +360,5 @@ export function mergeDefinitionIntoSense(
     if (!oldText.split(sep).includes(def.text)) {
       sense.definitions[defIndex].text = `${oldText}${sep}${def.text}`;
     }
-  }
-}
-/** Modifies the mutable input sense. */
-export function mergeDomainIntoSense(
-  sense: MergeTreeSense,
-  dom: SemanticDomain
-): void {
-  if (!sense.semanticDomains.find((d) => d.id === dom.id)) {
-    sense.semanticDomains.push({ ...dom });
   }
 }

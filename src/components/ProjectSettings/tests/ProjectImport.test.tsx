@@ -2,7 +2,7 @@ import renderer from "react-test-renderer";
 
 import "tests/reactI18nextMock";
 
-import FileInputButton from "components/Buttons/FileInputButton";
+import { FileInputButton } from "components/Buttons";
 import ProjectImport, {
   uploadFileButtonId,
 } from "components/ProjectSettings/ProjectImport";

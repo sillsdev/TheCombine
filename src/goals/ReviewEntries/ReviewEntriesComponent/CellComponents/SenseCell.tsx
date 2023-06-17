@@ -7,13 +7,11 @@ import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesCompone
 import AlignedList from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
 import { ReviewEntriesSense } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
-interface SenseCellProps {
+interface SenseCellProps extends FieldParameterStandard {
   delete: (deleteIndex: string) => void;
 }
 
-export default function SenseCell(
-  props: SenseCellProps & FieldParameterStandard
-): ReactElement {
+export default function SenseCell(props: SenseCellProps): ReactElement {
   const { t } = useTranslation();
 
   function addSense(): ReactElement {
@@ -37,7 +35,7 @@ export default function SenseCell(
       contents={props.rowData.senses.map((sense) => (
         <Tooltip
           title={sense.protected ? t("reviewEntries.deleteDisabled") : ""}
-          placement="right"
+          placement={document.body.dir === "rtl" ? "left" : "right"}
           key={sense.guid}
         >
           <span>

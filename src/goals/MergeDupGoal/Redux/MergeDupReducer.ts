@@ -3,7 +3,7 @@ import { v4 } from "uuid";
 import { Word } from "api/models";
 import {
   convertSenseToMergeTreeSense,
-  convertWordtoMergeTreeWord,
+  convertWordToMergeTreeWord,
   defaultSidebar,
   defaultTree,
   MergeTree,
@@ -265,7 +265,7 @@ export const mergeDupStepReducer = (
         word.senses.forEach((s, order) => {
           senses[s.guid] = convertSenseToMergeTreeSense(s, word.id, order);
         });
-        wordsTree[word.id] = convertWordtoMergeTreeWord(word);
+        wordsTree[word.id] = convertWordToMergeTreeWord(word);
       });
       return {
         ...state,

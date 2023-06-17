@@ -11,7 +11,7 @@ import { withTranslation, WithTranslation } from "react-i18next";
 
 import { isEmailTaken, isUsernameTaken } from "backend";
 import router, { Path } from "browserRouter";
-import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
+import LoadingDoneButton from "components/Buttons";
 import {
   meetsPasswordRequirements,
   meetsUsernameRequirements,

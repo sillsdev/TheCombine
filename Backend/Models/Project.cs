@@ -31,6 +31,10 @@ namespace BackendFramework.Models
         public bool DefinitionsEnabled { get; set; }
 
         [Required]
+        [BsonElement("grammaticalInfoEnabled")]
+        public bool GrammaticalInfoEnabled { get; set; }
+
+        [Required]
         [BsonElement("autocompleteSetting")]
         [BsonRepresentation(BsonType.String)]
         public AutocompleteSetting AutocompleteSetting { get; set; }
@@ -85,6 +89,7 @@ namespace BackendFramework.Models
             IsActive = true;
             LiftImported = false;
             DefinitionsEnabled = false;
+            GrammaticalInfoEnabled = false;
             AutocompleteSetting = AutocompleteSetting.On;
             SemDomWritingSystem = new WritingSystem();
             VernacularWritingSystem = new WritingSystem();
@@ -108,6 +113,7 @@ namespace BackendFramework.Models
                 IsActive = IsActive,
                 LiftImported = LiftImported,
                 DefinitionsEnabled = DefinitionsEnabled,
+                GrammaticalInfoEnabled = GrammaticalInfoEnabled,
                 AutocompleteSetting = AutocompleteSetting,
                 SemDomWritingSystem = SemDomWritingSystem.Clone(),
                 VernacularWritingSystem = VernacularWritingSystem.Clone(),
@@ -169,6 +175,7 @@ namespace BackendFramework.Models
                 other.IsActive == IsActive &&
                 other.LiftImported == LiftImported &&
                 other.DefinitionsEnabled == DefinitionsEnabled &&
+                other.GrammaticalInfoEnabled == GrammaticalInfoEnabled &&
                 other.AutocompleteSetting.Equals(AutocompleteSetting) &&
                 other.SemDomWritingSystem.Equals(SemDomWritingSystem) &&
                 other.VernacularWritingSystem.Equals(VernacularWritingSystem) &&
@@ -218,6 +225,7 @@ namespace BackendFramework.Models
             hash.Add(Name);
             hash.Add(LiftImported);
             hash.Add(DefinitionsEnabled);
+            hash.Add(GrammaticalInfoEnabled);
             hash.Add(IsActive);
             hash.Add(AutocompleteSetting);
             hash.Add(SemDomWritingSystem);

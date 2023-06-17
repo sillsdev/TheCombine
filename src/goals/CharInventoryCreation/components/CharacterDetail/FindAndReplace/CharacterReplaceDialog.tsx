@@ -9,7 +9,7 @@ import {
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import LoadingButton from "components/Buttons/LoadingButton";
+import { LoadingButton } from "components/Buttons";
 
 interface ReplaceDialogProps {
   open: boolean;

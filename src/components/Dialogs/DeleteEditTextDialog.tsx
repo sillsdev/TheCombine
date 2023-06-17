@@ -14,7 +14,7 @@ import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
-import LoadingButton from "components/Buttons/LoadingButton";
+import { LoadingButton } from "components/Buttons";
 
 interface DeleteEditTextDialogProps {
   open: boolean;

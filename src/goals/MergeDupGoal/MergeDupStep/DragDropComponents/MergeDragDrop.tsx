@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { v4 } from "uuid";
 
 import { appBarHeight } from "components/AppBar/AppBarTypes";
-import CancelConfirmDialog from "components/Buttons/CancelConfirmDialog";
+import { CancelConfirmDialog } from "components/Dialogs";
 import DropWord from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/DropWord";
 import SidebarDrop from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/SidebarDrop";
 import { MergeTreeReference } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";

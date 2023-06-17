@@ -23,7 +23,8 @@ namespace BackendFramework.Helper
         /// </summary>
         public static bool IsProtected(LiftSense sense)
         {
-            return sense.Examples.Count > 0 || sense.Fields.Count > 0 || sense.GramInfo is not null ||
+            return sense.Examples.Count > 0 || sense.Fields.Count > 0 ||
+                sense.GramInfo is not null && sense.GramInfo.Traits.Count > 0 ||
                 sense.Illustrations.Count > 0 || sense.Notes.Count > 0 || sense.Relations.Count > 0 ||
                 sense.Reversals.Count > 0 || sense.Subsenses.Count > 0 ||
                 (sense.Traits.Any(t => !t.Name.StartsWith("semantic-domain", StringComparison.OrdinalIgnoreCase)));

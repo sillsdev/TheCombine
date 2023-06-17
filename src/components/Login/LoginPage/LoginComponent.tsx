@@ -15,7 +15,7 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import { BannerType } from "api/models";
 import { getBannerText } from "backend";
 import router, { openUserGuide, Path } from "browserRouter";
-import LoadingButton from "components/Buttons/LoadingButton";
+import LoadingButton from "components/Buttons";
 import { RuntimeConfig } from "types/runtimeConfig";
 import theme from "types/theme";
 

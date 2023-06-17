@@ -21,6 +21,7 @@ const router = createBrowserRouter([
 // updates to the react-router-dom package.
 router.subscribe((routerState) => {
   const pathname = routerState.location.pathname;
+  // log navigation while subscribe is officially a private method
   if (process.env.NODE_ENV !== "production") {
     console.log(`router.subscribe(${pathname})`);
   }

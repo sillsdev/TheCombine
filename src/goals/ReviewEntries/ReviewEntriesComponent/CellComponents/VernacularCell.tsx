@@ -4,12 +4,12 @@ import { useTranslation } from "react-i18next";
 
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 
-interface VernacularCellProps {
+interface VernacularCellProps extends FieldParameterStandard {
   editable?: boolean;
 }
 
 export default function VernacularCell(
-  props: FieldParameterStandard & VernacularCellProps
+  props: VernacularCellProps
 ): ReactElement {
   const { t } = useTranslation();
 

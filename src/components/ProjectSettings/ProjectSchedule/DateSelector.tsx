@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 
 import { getProject, updateProject } from "backend";
 import * as LocalStorage from "backend/localStorage";
-import LoadingButton from "components/Buttons/LoadingButton";
+import { LoadingButton } from "components/Buttons";
 
 interface DateSelectorProps {
   close: () => void;

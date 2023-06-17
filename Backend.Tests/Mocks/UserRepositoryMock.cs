@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -22,11 +23,11 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_users.Select(user => user.Clone()).ToList());
         }
 
-        public Task<User?> GetUser(string id, bool sanitize = true)
+        public Task<User?> GetUser(string userId, bool sanitize = true)
         {
             try
             {
-                var foundUser = _users.Single(user => user.Id == id);
+                var foundUser = _users.Single(user => user.Id == userId);
                 return Task.FromResult<User?>(foundUser.Clone());
             }
             catch (InvalidOperationException)
@@ -48,9 +49,9 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(true);
         }
 
-        public Task<bool> Delete(string id)
+        public Task<bool> Delete(string userId)
         {
-            var foundUser = _users.Single(user => user.Id == id);
+            var foundUser = _users.Single(user => user.Id == userId);
             var success = _users.Remove(foundUser);
             return Task.FromResult(success);
         }
@@ -75,9 +76,9 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(user);
         }
 
-        public Task<ResultOfUpdate> Update(string id, User user, bool updateIsAdmin = false)
+        public Task<ResultOfUpdate> Update(string userId, User user, bool updateIsAdmin = false)
         {
-            var foundUser = _users.Single(u => u.Id == id);
+            var foundUser = _users.Single(u => u.Id == userId);
 
             if (!updateIsAdmin)
             {
@@ -99,5 +100,13 @@ namespace Backend.Tests.Mocks
             // TODO: more sophisticated mock
             return Task.FromResult(ResultOfUpdate.Updated);
         }
+    }
+
+    [Serializable]
+    public class UserCreationException : Exception
+    {
+        public UserCreationException() { }
+
+        protected UserCreationException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

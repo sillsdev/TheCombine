@@ -1,4 +1,4 @@
-import { Sense, Word } from "api/models";
+import { GramCatGroup, Sense, Word } from "api/models";
 import {
   ReviewEntriesSense,
   ReviewEntriesWord,
@@ -19,7 +19,11 @@ export default function mockWords(): ReviewEntriesWord[] {
           guid: "1",
           glosses: [
             { def: "bup", language: Bcp47Code.En },
-            { def: "AHHHHHH", language: Bcp47Code.Es },
+            { def: "AHH", language: Bcp47Code.Es },
+          ],
+          definitions: [
+            { text: "bup-bup", language: Bcp47Code.Ar },
+            { text: "AHH-AHH", language: Bcp47Code.Fr },
           ],
           domains: [newSemanticDomain("number", "domain")],
         },
@@ -36,6 +40,10 @@ export default function mockWords(): ReviewEntriesWord[] {
           guid: "2",
           glosses: [{ def: "gloss", language: Bcp47Code.En }],
           domains: [newSemanticDomain("number", "domain")],
+          partOfSpeech: {
+            catGroup: GramCatGroup.Other,
+            grammaticalCategory: "wxyz",
+          },
         },
       ],
       flag: newFlag("second word"),
@@ -59,6 +67,7 @@ function createMockSense(sense: ReviewEntriesSense): Sense {
     guid: sense.guid,
     definitions: [...sense.definitions],
     glosses: [...sense.glosses],
+    grammaticalInfo: sense.partOfSpeech,
     semanticDomains: [...sense.domains],
   };
 }

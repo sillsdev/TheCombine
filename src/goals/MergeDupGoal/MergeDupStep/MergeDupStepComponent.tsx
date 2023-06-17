@@ -2,7 +2,7 @@ import { Button, Grid, Typography } from "@mui/material";
 import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import LoadingButton from "components/Buttons/LoadingButton";
+import { LoadingButton } from "components/Buttons";
 import MergeDragDrop from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/MergeDragDrop";
 import theme from "types/theme";
 

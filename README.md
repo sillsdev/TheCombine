@@ -534,9 +534,9 @@ If the following tools were not installed with either _Rancher Desktop_ or _Dock
 links:
 
 1. [kubectl](https://kubernetes.io/docs/tasks/tools/)
-   - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernete-cli`
+   - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernetes-cli`
 2. [helm](https://helm.sh/docs/intro/install/)
-   - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernete-helm`
+   - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernetes-helm`
 
 ## Setup The Combine
 
@@ -657,20 +657,6 @@ maintenance-7f4b5b89b8-rhgk9   1/1     Running   0          10m
 
 ### Connecting to Your Cluster
 
-#### Network Hosts Configuration
-
-The cluster's ingress controller uses the hostname `thecombine.local` to _The Combine_. To direct traffic for this host
-to the ingress controller, add:
-
-```textfile
-127.0.0.1  thecombine.local
-```
-
-to your network hosts file:
-
-- Windows: `%windir%\System32\drivers\etc\hosts`
-- Linux/macOS: `/etc/hosts`
-
 #### Setup Port Forwarding
 
 _Rancher Desktop only!_
@@ -686,9 +672,8 @@ Note that the port forwarding is not persistent; you need to set it up whenever 
 
 #### Connecting to _The Combine_
 
-Once your host configuration has been setup, you can connect to _The Combine_ by entering the URL
-`https://thecombine.local` in the address bar of your web browser. (`https://thecombine.local:<portnumber>` for _Rancher
-Desktop_)
+You can connect to _The Combine_ by entering the URL `https://thecombine.localhost` in the address bar of your web
+browser. (`https://thecombine.localhost:<portnumber>` for _Rancher Desktop_)
 
 Notes:
 

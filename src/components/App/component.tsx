@@ -12,6 +12,7 @@ import PasswordRequest from "components/PasswordReset/Request";
 import PasswordReset from "components/PasswordReset/ResetPage";
 import ProjectInvite from "components/ProjectInvite/ProjectInvite";
 import RequireAuth from "components/RequireAuth";
+import UpperRightToastContainer from "components/Toast/UpperRightToastContainer";
 
 const AppWithBar = loadable(() => import("components/App/AppLoggedIn"));
 
@@ -23,6 +24,7 @@ export default function App(): ReactElement {
     <div className="App">
       <Suspense fallback={<div />}>
         <AnnouncementBanner />
+        <UpperRightToastContainer />
         <Routes>
           <Route path={Path.Root} element={<LandingPage />} />
           <Route
