@@ -1,4 +1,4 @@
-import { getBasePath, Path } from "browserHistory";
+import { getBasePath, Path } from "browserRouter";
 
 describe("history", () => {
   describe("getBasePath", () => {

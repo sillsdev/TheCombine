@@ -1,8 +1,9 @@
 import { Button, Card, Grid, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
-import history, { openUserGuide, Path } from "browserHistory";
+import { openUserGuide, Path } from "browserRouter";
 import theme from "types/theme";
 
 const idAffix = "landing";
@@ -24,6 +25,7 @@ interface LandingButtonsProps {
 export default function LandingButtons(
   props: LandingButtonsProps
 ): ReactElement {
+  const navigate = useNavigate();
   return (
     <Card
       style={{
@@ -39,7 +41,7 @@ export default function LandingButtons(
       >
         <SignUpButton />
         <LandingButton
-          onClick={() => history.push(Path.Login)}
+          onClick={() => navigate(Path.Login)}
           textId="login.login"
           buttonId={`${idAffix}-login`}
         />
@@ -57,9 +59,11 @@ interface SignUpButtonProps {
   buttonIdPrefix?: string;
 }
 export function SignUpButton(props: SignUpButtonProps): ReactElement {
+  const navigate = useNavigate();
+
   return (
     <LandingButton
-      onClick={() => history.push(Path.SignUp)}
+      onClick={() => navigate(Path.SignUp)}
       textId="login.signUp"
       buttonId={`${props.buttonIdPrefix ?? idAffix}-signUp`}
       filled

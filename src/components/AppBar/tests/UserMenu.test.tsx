@@ -5,7 +5,7 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import { Path } from "browserHistory";
+import { Path } from "browserRouter";
 import UserMenu, { getIsAdmin, UserMenuList } from "components/AppBar/UserMenu";
 import { newUser } from "types/user";
 

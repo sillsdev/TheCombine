@@ -1,6 +1,6 @@
 import * as Backend from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
-import history, { Path } from "browserHistory";
+import router, { Path } from "browserRouter";
 import {
   GoalActionTypes,
   LoadUserEditsAction,
@@ -81,7 +81,7 @@ export function asyncAddGoal(goal: Goal) {
       }
 
       // Serve goal.
-      history.push(Path.GoalCurrent);
+      router.navigate(Path.GoalCurrent);
     }
   };
 }
@@ -174,10 +174,10 @@ export function updateStepFromData(goal: Goal): boolean {
 function goalCleanup(goal: Goal): void {
   switch (goal.goalType) {
     case GoalType.MergeDups:
-      history.push(Path.GoalNext);
+      router.navigate(Path.GoalNext);
       break;
     default:
-      history.push(Path.Goals);
+      router.navigate(Path.Goals);
       break;
   }
 }

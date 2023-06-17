@@ -2,7 +2,7 @@ import renderer, { ReactTestInstance } from "react-test-renderer";
 
 import "tests/reactI18nextMock";
 
-import { Path } from "browserHistory";
+import { Path } from "browserRouter";
 import NavigationButtons, {
   dataCleanupButtonId,
   dataEntryButtonId,

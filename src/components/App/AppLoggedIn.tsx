@@ -2,7 +2,7 @@ import loadable from "@loadable/component";
 import { ReactElement, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import { Path } from "browserHistory";
+import { Path, routerPath } from "browserRouter";
 import SignalRHub from "components/App/SignalRHub";
 import AppBar from "components/AppBar/AppBarComponent";
 import PageNotFound from "components/PageNotFound/component";
@@ -28,36 +28,28 @@ export default function AppWithBar(): ReactElement {
       <SignalRHub />
       <AppBar />
       <Routes>
-        <Route exact path={Path.DataEntry}>
-          <DataEntry />
-        </Route>
-        <Route exact path={Path.GoalCurrent}>
-          <BaseGoalScreen />
-        </Route>
-        <Route exact path={Path.GoalNext}>
-          <NextGoalScreen />
-        </Route>
-        <Route exact path={Path.Goals}>
-          <GoalTimeline />
-        </Route>
-        <Route exact path={Path.ProjScreen}>
-          <ProjectScreen />
-        </Route>
-        <Route exact path={Path.ProjSettings}>
-          <ProjectSettings />
-        </Route>
-        <Route exact path={Path.SiteSettings}>
-          <SiteSettings />
-        </Route>
-        <Route exact path={Path.Statistics}>
-          <Statistics />
-        </Route>
-        <Route exact path={Path.UserSettings}>
-          <UserSettings />
-        </Route>
-        <Route>
-          <PageNotFound />
-        </Route>
+        <Route path={routerPath(Path.DataEntry)} element={<DataEntry />} />
+        <Route path={routerPath(Path.Goals)} element={<GoalTimeline />} />
+        <Route
+          path={routerPath(Path.GoalCurrent)}
+          element={<BaseGoalScreen />}
+        />
+        <Route path={routerPath(Path.GoalNext)} element={<NextGoalScreen />} />
+        <Route path={routerPath(Path.ProjScreen)} element={<ProjectScreen />} />
+        <Route
+          path={routerPath(Path.ProjSettings)}
+          element={<ProjectSettings />}
+        />
+        <Route
+          path={routerPath(Path.SiteSettings)}
+          element={<SiteSettings />}
+        />
+        <Route path={routerPath(Path.Statistics)} element={<Statistics />} />
+        <Route
+          path={routerPath(Path.UserSettings)}
+          element={<UserSettings />}
+        />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </>
   );

@@ -6,7 +6,7 @@ import configureMockStore from "redux-mock-store";
 import "tests/reactI18nextMock";
 
 import { Permission } from "api/models";
-import { Path } from "browserHistory";
+import { Path } from "browserRouter";
 import ProjectButtons, {
   getIsAdminOrOwner,
   projButtonId,

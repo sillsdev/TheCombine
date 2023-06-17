@@ -14,7 +14,7 @@ import { withTranslation, WithTranslation } from "react-i18next";
 
 import { BannerType } from "api/models";
 import { getBannerText } from "backend";
-import history, { openUserGuide, Path } from "browserHistory";
+import router, { openUserGuide, Path } from "browserRouter";
 import LoadingButton from "components/Buttons/LoadingButton";
 import { RuntimeConfig } from "types/runtimeConfig";
 import theme from "types/theme";
@@ -161,7 +161,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
                 <Typography>
                   <Link
                     href={"#"}
-                    onClick={() => history.push(Path.PwRequest)}
+                    onClick={() => router.navigate(Path.PwRequest)}
                     variant="subtitle2"
                     underline="hover"
                   >
@@ -213,7 +213,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
                   <Button
                     id={`${idAffix}-signUp`}
                     onClick={() => {
-                      history.push(Path.SignUp);
+                      router.navigate(Path.SignUp);
                     }}
                   >
                     {this.props.t("login.signUp")}

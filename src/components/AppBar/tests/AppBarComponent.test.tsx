@@ -4,7 +4,7 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import { Path } from "browserHistory";
+import { Path } from "browserRouter";
 import { defaultState } from "components/App/DefaultState";
 import AppBar from "components/AppBar/AppBarComponent";
 import { newUser } from "types/user";

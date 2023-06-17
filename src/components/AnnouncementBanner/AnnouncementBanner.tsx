@@ -6,7 +6,7 @@ import { useLocation } from "react-router";
 import { BannerType } from "api/models";
 import { getBannerText } from "backend";
 import { getClosedBanner, setClosedBanner } from "backend/localStorage";
-import { Path } from "browserHistory";
+import { Path } from "browserRouter";
 import { topBarHeight } from "components/LandingPage/TopBar";
 import theme, { themeColors } from "types/theme";
 
@@ -15,7 +15,7 @@ export default function AnnouncementBanner() {
 
   // Adjust the margins depending on whether there is an AppBar.
   const loc = useLocation().pathname;
-  const isBelowAppBar = loc === Path.Root || loc.startsWith(Path.ProjScreen);
+  const isBelowAppBar = loc === Path.Root || loc.startsWith(Path.AppRoot);
   const margins = isBelowAppBar
     ? { marginTop: topBarHeight, marginBottom: -topBarHeight }
     : {};

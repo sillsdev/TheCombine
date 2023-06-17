@@ -2,7 +2,7 @@ import Hex from "crypto-js/enc-hex";
 import sha256 from "crypto-js/sha256";
 
 import * as backend from "backend";
-import history, { Path } from "browserHistory";
+import router, { Path } from "browserRouter";
 import {
   LoginActionTypes,
   UserAction,
@@ -22,7 +22,7 @@ export function asyncLogin(username: string, password: string) {
         // hash the user name and use it in analytics.identify
         const analyticsId = Hex.stringify(sha256(user.id));
         analytics.identify(analyticsId);
-        history.push(Path.ProjScreen);
+        router.navigate(Path.ProjScreen);
       })
       .catch(() => dispatch(loginFailure(username)));
   };

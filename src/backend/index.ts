@@ -24,7 +24,7 @@ import {
   ChartRootData,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
-import history, { Path } from "browserHistory";
+import router, { Path } from "browserRouter";
 import authHeader from "components/Login/AuthHeaders";
 import { errorToast } from "components/Toast/SwalToast";
 import { Goal, GoalStep } from "types/goals";
@@ -54,7 +54,7 @@ axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
   if (response) {
     const status = response.status;
     if (status === StatusCodes.UNAUTHORIZED) {
-      history.push(Path.Login);
+      router.navigate(Path.Login);
     }
 
     // Check for fatal errors (4xx-5xx).

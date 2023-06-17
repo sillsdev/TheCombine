@@ -1,6 +1,6 @@
 import { WritingSystem } from "api/models";
 import * as backend from "backend";
-import history, { Path } from "browserHistory";
+import router, { Path } from "browserRouter";
 import { asyncCreateUserEdits } from "components/GoalTimeline/Redux/GoalActions";
 import {
   setCurrentProject,
@@ -43,7 +43,7 @@ export function asyncCreateProject(
               // Manually pause so they have a chance to see the success message.
               setTimeout(() => {
                 dispatch(asyncCreateUserEdits());
-                history.push(Path.ProjSettings);
+                router.navigate(Path.ProjSettings);
               }, 1000);
             })
             .catch((err) => {
@@ -60,7 +60,7 @@ export function asyncCreateProject(
           dispatch(success(name, vernacularLanguage, analysisLanguages));
           setTimeout(() => {
             dispatch(asyncCreateUserEdits());
-            history.push(Path.ProjSettings);
+            router.navigate(Path.ProjSettings);
           }, 1000);
         }
       })

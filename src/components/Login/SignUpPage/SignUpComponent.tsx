@@ -10,7 +10,7 @@ import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 
 import { isEmailTaken, isUsernameTaken } from "backend";
-import history, { Path } from "browserHistory";
+import router, { Path } from "browserRouter";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import {
   meetsPasswordRequirements,
@@ -292,7 +292,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
                     id={`${idAffix}-login`}
                     type="button"
                     onClick={() => {
-                      history.push(Path.Login);
+                      router.navigate(Path.Login);
                     }}
                   >
                     {this.props.t("login.backToLogin")}

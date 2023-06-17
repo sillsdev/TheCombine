@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import renderer from "react-test-renderer";
 
-import { Path } from "browserHistory";
+import { Path } from "browserRouter";
 import Logo from "components/AppBar/Logo";
 
 jest.mock("browserHistory", () => ({

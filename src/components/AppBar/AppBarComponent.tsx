@@ -3,7 +3,7 @@ import { ReactElement, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import { getProjectId } from "backend/localStorage";
-import { getBasePath, Path } from "browserHistory";
+import { getBasePath, Path } from "browserRouter";
 import { appBarHeight } from "components/AppBar/AppBarTypes";
 import Logo from "components/AppBar/Logo";
 import NavigationButtons from "components/AppBar/NavigationButtons";

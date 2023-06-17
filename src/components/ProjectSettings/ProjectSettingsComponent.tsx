@@ -13,12 +13,13 @@ import {
 import { Grid, Typography } from "@mui/material";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { Permission, Project } from "api/models";
 import { canUploadLift, getUserRole } from "backend";
 import { getCurrentUser } from "backend/localStorage";
-import history, { Path } from "browserHistory";
+import { Path } from "browserRouter";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
 import {
   asyncRefreshCurrentProjectUsers,
@@ -47,6 +48,7 @@ export default function ProjectSettingsComponent() {
   const [imports, setImports] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const roleId = currentRoles[project.id];
@@ -70,7 +72,7 @@ export default function ProjectSettingsComponent() {
   const archiveUpdate = (): void => {
     toast.success(t("projectSettings.user.archiveToastSuccess"));
     setTimeout(() => {
-      history.push(Path.ProjScreen);
+      navigate(Path.ProjScreen);
     }, 2000);
   };
 

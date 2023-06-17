@@ -2,7 +2,7 @@ import loadable from "@loadable/component";
 import { ReactElement, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import { Path } from "browserHistory";
+import { Path, routerPath } from "browserRouter";
 import AnnouncementBanner from "components/AnnouncementBanner/AnnouncementBanner";
 import LandingPage from "components/LandingPage";
 import Login from "components/Login/LoginPage";
@@ -24,35 +24,27 @@ export default function App(): ReactElement {
       <Suspense fallback={<div />}>
         <AnnouncementBanner />
         <Routes>
-          <Route exact path={Path.Root}>
-            <LandingPage />
-          </Route>
+          <Route path={Path.Root} element={<LandingPage />} />
           <Route
-            path={Path.ProjScreen}
-            render={() => (
+            path={"app/*"}
+            element={
               <RequireAuth redirectTo={Path.Login}>
                 <AppWithBar />
               </RequireAuth>
-            )}
+            }
           />
-          <Route path={Path.Login}>
-            <Login />
-          </Route>
-          <Route path={Path.SignUp}>
-            <SignUp />
-          </Route>
-          <Route path={`${Path.PwReset}/:token`}>
-            <PasswordReset />
-          </Route>
-          <Route path={Path.PwRequest}>
-            <PasswordRequest />
-          </Route>
-          <Route path={`${Path.ProjInvite}/:project/:token`}>
-            <ProjectInvite />
-          </Route>
-          <Route>
-            <PageNotFound />
-          </Route>
+          <Route path={routerPath(Path.Login)} element={<Login />} />
+          <Route path={routerPath(Path.SignUp)} element={<SignUp />} />
+          <Route path={`${Path.PwReset}/:token`} element={<PasswordReset />} />
+          <Route
+            path={routerPath(Path.PwRequest)}
+            element={<PasswordRequest />}
+          />
+          <Route
+            path={`${Path.ProjInvite}/:project/:token`}
+            element={<ProjectInvite />}
+          />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Suspense>
     </div>

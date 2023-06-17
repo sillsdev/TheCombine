@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 import { Project } from "api/models";
 import { getAllActiveProjectsByUser } from "backend";
 import { getUserId } from "backend/localStorage";
-import history, { Path } from "browserHistory";
+import router, { Path } from "browserRouter";
 import { setNewCurrentProject } from "components/Project/ProjectActions";
 import { useAppDispatch } from "types/hooks";
 
@@ -31,7 +31,7 @@ export default function ChooseProject(): ReactElement {
 
   const selectProject = (project: Project): void => {
     dispatch(setNewCurrentProject(project));
-    history.push(Path.Goals);
+    router.navigate(Path.Goals);
   };
 
   return (

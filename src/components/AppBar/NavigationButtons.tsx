@@ -1,8 +1,9 @@
 import { Button } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
-import history, { Path } from "browserHistory";
+import { Path } from "browserRouter";
 import {
   TabProps,
   appBarHeight,
@@ -41,11 +42,11 @@ interface NavButtonProps extends TabProps {
 
 function NavButton(props: NavButtonProps): ReactElement {
   const { t } = useTranslation();
-
+  const navigate = useNavigate();
   return (
     <Button
       id={props.buttonId}
-      onClick={() => history.push(props.targetPath)}
+      onClick={() => navigate(props.targetPath)}
       color="inherit"
       style={{
         background: tabColor(props.currentTab, props.targetPath),

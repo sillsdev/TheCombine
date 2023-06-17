@@ -1,8 +1,9 @@
 import { Typography } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
-import history, { Path } from "browserHistory";
+import { Path } from "browserRouter";
 import tractor from "resources/tractor.png";
 
 /**
@@ -11,6 +12,7 @@ import tractor from "resources/tractor.png";
  */
 export default function PageNotFound() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <React.Fragment>
@@ -22,7 +24,7 @@ export default function PageNotFound() {
         alt="Tractor"
         style={{ width: "50%", margin: "0% 25%" }}
         onClick={() => {
-          history.push(Path.ProjScreen);
+          navigate(Path.ProjScreen);
         }}
       />
       <Typography variant="h5" style={{ textAlign: "center" }}>
