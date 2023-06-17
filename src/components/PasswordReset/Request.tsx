@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { isEmailTaken, isUsernameTaken, resetPasswordRequest } from "backend";
 import { Path } from "browserRouter";
-import LoadingDoneButton from "components/Buttons";
+import { LoadingDoneButton } from "components/Buttons";
 import { useAppDispatch } from "types/hooks";
 
 export default function ResetRequest(): ReactElement {
