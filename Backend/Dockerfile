@@ -1,5 +1,5 @@
 # Docker multi-stage build using 6.0.408-focal-amd64
-FROM mcr.microsoft.com/dotnet/sdk@sha256:ee58390fb079afdd11a9537aab538e6e6503e920900685e6d4daab4118d8e08b AS builder
+FROM mcr.microsoft.com/dotnet/sdk@sha256:39006b351d036a7f06718a845280470d5511f5f2fd5af330db19a4c70ffd7a84 AS builder
 WORKDIR /app
 
 # Copy csproj and restore (fetch dependencies) as distinct layers.
