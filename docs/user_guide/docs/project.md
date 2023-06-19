@@ -70,12 +70,12 @@ affixed.
 
 ### Autocomplete
 
-The default setting is On: When a user is entering the [vernacular form](dataEntry.md#vernacular) of a new entry in Data
-Entry, this setting gives suggestions of similar existing entries, allowing the user to select an existing entry and add
-a new sense to that entry, rather than creating a (mostly) duplicate to something previously entered.
+The default setting is On: When a user is entering the vernacular form of a new entry in Data Entry, this setting gives
+suggestions of similar existing entries, allowing the user to select an existing entry and add a new sense to that
+entry, rather than creating a (mostly) duplicate to something previously entered. See
+[Data Entry](dataEntry.md#new-entry-with-duplicate-vernacular-form) for more details.
 
-(This does not effect the [gloss](dataEntry.md#gloss) spelling suggestions, which are based on a dictionary independent
-of existing project data.)
+(This does not effect gloss spelling suggestions, which are based on a dictionary independent of existing project data.)
 
 ### Project Users
 
