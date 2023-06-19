@@ -1,3 +1,4 @@
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import renderer from "react-test-renderer";
 
 import "tests/reactI18nextMock";
@@ -21,16 +22,19 @@ const MOCK_EVENT = { preventDefault: jest.fn(), target: { value: DATA } };
 describe("Testing login component", () => {
   beforeEach(() => {
     renderer.act(() => {
-      loginMaster = renderer.create(<Login logout={LOGOUT} reset={LOGOUT} />);
+      loginMaster = renderer.create(
+        <MemoryRouter>
+          <Routes>
+            <Route
+              path="*"
+              element={<Login logout={LOGOUT} reset={LOGOUT} />}
+            />
+          </Routes>
+        </MemoryRouter>
+      );
     });
     loginHandle = loginMaster.root.findByType(Login);
     LOGOUT.mockClear();
-  });
-
-  it("Renders properly", () => {
-    renderer.act(() => {
-      renderer.create(<Login logout={LOGOUT} reset={LOGOUT} />);
-    });
   });
 
   // These test whether logging in with a username and password (the strings) should result in errors with the username or password (the booleans)

@@ -1,21 +1,16 @@
 import { Provider } from "react-redux";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import { Path } from "browserRouter";
 import { defaultState } from "components/App/DefaultState";
 import AppBar from "components/AppBar/AppBarComponent";
 import { newUser } from "types/user";
 
-const mockPath = jest.fn();
 const mockGetUser = jest.fn();
 const mockUser = newUser();
-
-jest.mock("react-router-dom", () => ({
-  useLocation: () => ({ pathname: mockPath() }),
-}));
 
 jest.mock("backend", () => ({
   getUser: () => mockGetUser(),
@@ -36,11 +31,14 @@ beforeAll(() => {
 
 describe("AppBar", () => {
   it("renders", () => {
-    mockPath.mockReturnValue(Path.ProjScreen);
     renderer.act(() => {
       testRenderer = renderer.create(
         <Provider store={mockStore}>
-          <AppBar />
+          <MemoryRouter>
+            <Routes>
+              <Route path="*" element={<AppBar />} />
+            </Routes>
+          </MemoryRouter>
         </Provider>
       );
     });

@@ -50,7 +50,7 @@ const ResetPageProviders = ({
     <Provider store={mockStore}>
       <MemoryRouter initialEntries={[`${Path.PwReset}/testPasswordReset`]}>
         <Routes>
-          <Route path={`${Path.PwReset}/:token`}>{children}</Route>
+          <Route path={`${Path.PwReset}/:token`} element={children} />
         </Routes>
       </MemoryRouter>
     </Provider>

@@ -1,5 +1,6 @@
 import { Button, MenuItem } from "@mui/material";
 import { Provider } from "react-redux";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
@@ -42,7 +43,11 @@ describe("UserMenu", () => {
     renderer.act(() => {
       testRenderer = renderer.create(
         <Provider store={mockStore}>
-          <UserMenu currentTab={Path.Root} />
+          <MemoryRouter>
+            <Routes>
+              <Route path="*" element={<UserMenu currentTab={Path.Root} />} />
+            </Routes>
+          </MemoryRouter>
         </Provider>
       );
     });
@@ -69,7 +74,14 @@ function renderMenuList(isAdmin = false) {
   renderer.act(() => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
-        <UserMenuList isAdmin={isAdmin} onSelect={jest.fn()} />
+        <MemoryRouter>
+          <Routes>
+            <Route
+              path="*"
+              element={<UserMenuList isAdmin={isAdmin} onSelect={jest.fn()} />}
+            />
+          </Routes>
+        </MemoryRouter>
       </Provider>
     );
   });

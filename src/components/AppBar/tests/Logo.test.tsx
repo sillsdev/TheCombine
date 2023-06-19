@@ -1,28 +1,35 @@
 import { Button } from "@mui/material";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import renderer from "react-test-renderer";
 
 import { Path } from "browserRouter";
 import Logo from "components/AppBar/Logo";
 
-jest.mock("browserHistory", () => ({
-  ...jest.requireActual("browserHistory"),
+jest.mock("browserRouter", () => ({
+  ...jest.requireActual("browserRouter"),
   __esModule: true,
-  default: { push: (path: Path) => mockPush(path) },
+  default: { navigate: (path: Path) => mockNavigate(path) },
 }));
 
-const mockPush = jest.fn();
+const mockNavigate = jest.fn();
 
 let testRenderer: renderer.ReactTestRenderer;
 
 beforeAll(() => {
   renderer.act(() => {
-    testRenderer = renderer.create(<Logo />);
+    testRenderer = renderer.create(
+      <MemoryRouter>
+        <Routes>
+          <Route path="*" element={<Logo />} />
+        </Routes>
+      </MemoryRouter>
+    );
   });
 });
 
 describe("Logo", () => {
   it("navigates to Project Screen on click", () => {
     testRenderer.root.findByType(Button).props.onClick();
-    expect(mockPush).toBeCalledWith(Path.ProjScreen);
+    expect(mockNavigate).toBeCalledWith(Path.ProjScreen);
   });
 });

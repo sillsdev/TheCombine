@@ -1,5 +1,6 @@
 import "jest-canvas-mock";
 import { Provider } from "react-redux";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
@@ -18,7 +19,11 @@ describe("BaseGoalScreen", () => {
     renderer.act(() => {
       renderer.create(
         <Provider store={mockStore}>
-          <BaseGoalScreen />
+          <MemoryRouter>
+            <Routes>
+              <Route path="*" element={<BaseGoalScreen />} />
+            </Routes>
+          </MemoryRouter>
         </Provider>
       );
     });

@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 import { Provider } from "react-redux";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
@@ -38,7 +39,11 @@ const renderProjectButtons = async (path = Path.Root) => {
   await renderer.act(async () => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
-        <ProjectButtons currentTab={path} />
+        <MemoryRouter>
+          <Routes>
+            <Route path="*" element={<ProjectButtons currentTab={path} />} />
+          </Routes>
+        </MemoryRouter>
       </Provider>
     );
   });

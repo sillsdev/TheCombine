@@ -1,4 +1,5 @@
 import { Provider } from "react-redux";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
@@ -13,7 +14,11 @@ it("renders without crashing", () => {
   renderer.act(() => {
     renderer.create(
       <Provider store={mockStore}>
-        <PageNotFound />
+        <MemoryRouter>
+          <Routes>
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        </MemoryRouter>
       </Provider>
     );
   });

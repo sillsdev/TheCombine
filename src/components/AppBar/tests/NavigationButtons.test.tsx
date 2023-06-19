@@ -1,3 +1,4 @@
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import renderer, { ReactTestInstance } from "react-test-renderer";
 
 import "tests/reactI18nextMock";
@@ -15,7 +16,13 @@ let cleanButton: ReactTestInstance | undefined;
 
 const renderNavButtons = (path: Path): void => {
   renderer.act(() => {
-    testRenderer = renderer.create(<NavigationButtons currentTab={path} />);
+    testRenderer = renderer.create(
+      <MemoryRouter>
+        <Routes>
+          <Route path="*" element={<NavigationButtons currentTab={path} />} />
+        </Routes>
+      </MemoryRouter>
+    );
   });
   entryButton = testRenderer.root.findByProps({ id: dataEntryButtonId });
   cleanButton = testRenderer.root.findByProps({ id: dataCleanupButtonId });
