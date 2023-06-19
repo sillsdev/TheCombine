@@ -10,7 +10,7 @@ RUN dotnet restore
 COPY . ./
 RUN dotnet publish -c Release -o build
 
-# Build runtime image.  Using 6.0.16-focal-amd64
+# Build runtime image.
 FROM mcr.microsoft.com/dotnet/aspnet:6.0.18-focal-amd64
 
 ENV ASPNETCORE_URLS=http://+:5000
