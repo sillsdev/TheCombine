@@ -7,14 +7,15 @@ import { Key } from "ts-key-enum";
 
 import { SemanticDomain, WritingSystem } from "api";
 import { IconButtonWithTooltip } from "components/Buttons";
-import TreeDepiction from "components/TreeView/TreeDepiction";
-import TreeSearch from "components/TreeView/TreeSearch";
 import {
   initTreeDomain,
   traverseTree,
   updateTreeLanguage,
-} from "components/TreeView/TreeViewActions";
-import { defaultTreeNode } from "components/TreeView/TreeViewReduxTypes";
+} from "components/TreeView/Redux/TreeViewActions";
+import { defaultTreeNode } from "components/TreeView/Redux/TreeViewReduxTypes";
+import TreeDepiction from "components/TreeView/TreeDepiction";
+import TreeNavigator from "components/TreeView/TreeNavigator";
+import TreeSearch from "components/TreeView/TreeSearch";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { newSemanticDomain } from "types/semanticDomain";
@@ -109,6 +110,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
   return (
     <>
       {/* Domain search */}
+      <TreeNavigator currentDomain={currentDomain} animate={animateHandler} />
       <Grid container justifyContent="space-between">
         <Grid item style={{ minWidth: exit ? 80 : 40 }} />
         <Grid item>
