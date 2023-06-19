@@ -4,7 +4,7 @@ import { ReactElement, useEffect } from "react";
 import { clearCurrentProject } from "components/Project/ProjectActions";
 import ChooseProject from "components/ProjectScreen/ChooseProject";
 import CreateProject from "components/ProjectScreen/CreateProject";
-import { resetTreeAction } from "components/TreeView/TreeViewActions";
+import { resetTreeAction } from "components/TreeView/Redux/TreeViewActions";
 import { useAppDispatch } from "types/hooks";
 
 /** Where users create a project or choose an existing one */

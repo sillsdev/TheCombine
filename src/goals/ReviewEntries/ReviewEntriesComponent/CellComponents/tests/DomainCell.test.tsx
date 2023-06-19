@@ -7,7 +7,7 @@ import "tests/reactI18nextMock";
 import { DomainCell } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/WordsMock";
 
-jest.mock("components/TreeView/TreeViewComponent", () => "div");
+jest.mock("components/TreeView", () => "div");
 
 const mockStore = configureMockStore()();
 const mockWord = mockWords()[0];

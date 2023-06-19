@@ -4,7 +4,7 @@ import DataEntryComponent from "components/DataEntry/DataEntryComponent";
 import {
   closeTreeAction,
   openTreeAction,
-} from "components/TreeView/TreeViewActions";
+} from "components/TreeView/Redux/TreeViewActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 

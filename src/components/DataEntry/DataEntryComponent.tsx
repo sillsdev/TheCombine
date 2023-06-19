@@ -13,7 +13,7 @@ import AppBar from "components/AppBar/AppBarComponent";
 import DataEntryHeader from "components/DataEntry/DataEntryHeader/DataEntryHeader";
 import DataEntryTable from "components/DataEntry/DataEntryTable/DataEntryTable";
 import ExistingDataTable from "components/DataEntry/ExistingDataTable/ExistingDataTable";
-import TreeView from "components/TreeView/TreeViewComponent";
+import TreeView from "components/TreeView";
 import { newSemanticDomain } from "types/semanticDomain";
 import theme from "types/theme";
 import { DomainWord } from "types/word";
