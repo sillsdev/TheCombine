@@ -37,3 +37,34 @@ delete its recording.
 
 **On a touch screen:** Press-and-hold the red circle to record. Tap a green triangle to play its audio, or
 press-and-hold to bring up a menu (with options to play or delete).
+
+## New Entry with Duplicate Vernacular Form
+
+If you submit a new entry with identical vernacular form and gloss to an existing entry, that entry will be updated
+instead of a new entry created. For example. If you submit [Vernacular: dedo; Gloss: finger] in domain 2.1.3.1 (Arm) and
+again in domain 2.1.3.3 (Finger, Toe), the result will be a single entry for "dedo" with a single sense that has gloss
+"finger" and two domains.
+
+The Combine has an optional feature to assist with data entry involving duplicate vernacular forms. It can be turned on
+or off in [Project Settings > Autocomplete](project.md#autocomplete). When the setting is on, as you type the vernacular
+form in Data Entry, a drop-down menu appears with identical/similar vernacular forms that already exist in other entries
+in the project. If you ignore the menu options and type a new vernacular form, you can simply move on the the gloss and
+submit a new entry.
+
+![Workshop Schedule](images/data-entry-dup-vern.png){ .center }
+
+When the autocomplete setting is on and you type or select a vernacular form that already exists in another entry, a box
+will pop up with options. You will be shown all entries with that vernacular form and get to choose whether to update
+one of those entries or create a new entry. If you choose to create a new entry, the pop-up box with go away and you can
+type the gloss for your new entry.
+
+![Workshop Schedule](images/data-entry-dup-vern-select-entry.png){ .center }
+
+!!! note
+
+    Even if you selected to create a new entry, if the gloss you type is identical to a gloss of another entry with the same vernacular form, a new entry will not be created, but rather that entry will be updated.
+
+If you choose to update one of the existing entries, a second box will appear. Here you can choose to update an existing
+sense on the selected entry or to add a new sense to that entry.
+
+![Workshop Schedule](images/data-entry-dup-vern-select-sense.png){ .center }
