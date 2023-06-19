@@ -12,6 +12,7 @@ jest.mock("backend", () => ({
   getBannerText: () => Promise.resolve(""),
 }));
 
+jest.mock("browserRouter");
 const LOGOUT = jest.fn();
 let loginMaster: renderer.ReactTestRenderer;
 let loginHandle: renderer.ReactTestInstance;
