@@ -3,7 +3,7 @@ import { getSemanticDomainTreeNode } from "backend";
 import {
   TreeActionType,
   TreeViewAction,
-} from "components/TreeView/TreeViewReduxTypes";
+} from "components/TreeView/Redux/TreeViewReduxTypes";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 

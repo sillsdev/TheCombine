@@ -1,43 +1,37 @@
 import { Button } from "@mui/material";
 import renderer from "react-test-renderer";
 
-import "tests/reactI18nextMock.ts";
+import "tests/reactI18nextMock";
 
-import DomainTile, { Direction } from "components/TreeView/DomainTile";
+import DomainTileButton from "components/TreeView/TreeDepiction/DomainTileButton";
+import { Direction } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
 import domMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
 
 let tileMaster: renderer.ReactTestRenderer;
 const MOCK_ANIMATE = jest.fn();
 
-describe("DomainTile", () => {
-  it("Renders directionless (default) tile without crashing", () => {
+describe("DomainTileButton", () => {
+  it("renders tile and matches the latest snapshot", () => {
     createTile();
-  });
-
-  it("Renders directional tile without crashing", () => {
-    createTile(Direction.Next);
-  });
-
-  it("Tile with direction matches the latest snapshot", () => {
-    createTile(Direction.Next);
     snapTest();
   });
 
-  it("Click calls function", () => {
+  it("calls function on click", () => {
     createTile();
+    expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
     tileMaster.root.findByType(Button).props.onClick();
     expect(MOCK_ANIMATE).toHaveBeenCalledTimes(1);
   });
 });
 
 // Creates the tile
-function createTile(direction?: Direction) {
+function createTile(direction = Direction.Next) {
   renderer.act(() => {
     tileMaster = renderer.create(
-      <DomainTile
+      <DomainTileButton
+        direction={direction}
         domain={domMap[mapIds.parent]}
         onClick={MOCK_ANIMATE}
-        direction={direction}
       />
     );
   });

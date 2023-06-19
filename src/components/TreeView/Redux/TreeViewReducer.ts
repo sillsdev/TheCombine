@@ -1,22 +1,10 @@
-import { SemanticDomainTreeNode } from "api/models";
 import {
   TreeViewAction,
   TreeActionType,
-  defaultTreeNode,
-} from "components/TreeView/TreeViewReduxTypes";
+  TreeViewState,
+  defaultState,
+} from "components/TreeView/Redux/TreeViewReduxTypes";
 import { StoreAction, StoreActionTypes } from "rootActions";
-
-export interface TreeViewState {
-  currentDomain: SemanticDomainTreeNode;
-  language: string;
-  open: boolean;
-}
-
-export const defaultState: TreeViewState = {
-  language: "",
-  open: false,
-  currentDomain: defaultTreeNode,
-};
 
 export const treeViewReducer = (
   state: TreeViewState = defaultState,
