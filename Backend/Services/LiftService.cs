@@ -578,6 +578,27 @@ namespace BackendFramework.Services
             }
 
             /// <summary>
+            /// Get all analysis languages found in senses in the private field <see cref="_importEntries"/>
+            /// </summary>
+            /// <returns> A List of all distinct bcp-47 codes of analysis languages in the import. </returns>
+            public List<string> GetImportAnalysisLanguages()
+            {
+                var func = (List<string> acc, List<string> x) =>
+                {
+                    acc.AddRange(x); return acc.Distinct().ToList();
+                };
+
+                return _importEntries.Select(w =>
+                    w.Senses.Select(s =>
+                    {
+                        var langs = s.Definitions.Select(d => d.Language).ToList();
+                        langs.AddRange(s.Glosses.Select(g => g.Language));
+                        return langs.Distinct().ToList();
+                    }).Aggregate(new List<string>(), func)
+                ).Aggregate(new List<string>(), func);
+            }
+
+            /// <summary>
             /// <see cref="Word"/>s are added to the private field <see cref="_importEntries"/>
             /// during lift import. This saves the contents of _importEntries to the database.
             /// </summary>

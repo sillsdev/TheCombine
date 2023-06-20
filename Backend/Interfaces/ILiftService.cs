@@ -23,6 +23,7 @@ namespace BackendFramework.Interfaces
     {
         bool DoesImportHaveDefinitions();
         bool DoesImportHaveGrammaticalInfo();
+        List<string> GetImportAnalysisLanguages();
         Task<List<Word>> SaveImportEntries();
     }
 }

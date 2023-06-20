@@ -144,7 +144,9 @@ export class CreateProject extends React.Component<
 
     const name = this.state.name.trim();
     const vernLang = this.state.vernLanguage;
-    const analysisLang = this.state.analysisLanguages;
+    const analysisLang = this.state.languageData
+      ? []
+      : this.state.analysisLanguages;
     const languageData = this.state.languageData;
     if (name === "") {
       this.setState({ error: { empty: true, nameTaken: false } });
@@ -252,15 +254,19 @@ export class CreateProject extends React.Component<
             <Typography style={{ marginTop: theme.spacing(1) }}>
               {this.props.t("projectSettings.language.analysisLanguage")}
             </Typography>
-            <LanguagePicker
-              value={this.state.analysisLanguages[0].bcp47}
-              setCode={(bcp47: string) => this.setAnalysisBcp47(bcp47)}
-              name={this.state.analysisLanguages[0].name}
-              setName={(name: string) => this.setAnalysisLangName(name)}
-              font={this.state.analysisLanguages[0].font}
-              setFont={(font: string) => this.setAnalysisFont(font)}
-              t={languagePickerStrings_en}
-            />
+            {this.state.languageData ? (
+              this.props.t("createProject.language")
+            ) : (
+              <LanguagePicker
+                value={this.state.analysisLanguages[0].bcp47}
+                setCode={(bcp47: string) => this.setAnalysisBcp47(bcp47)}
+                name={this.state.analysisLanguages[0].name}
+                setName={(name: string) => this.setAnalysisLangName(name)}
+                font={this.state.analysisLanguages[0].font}
+                setFont={(font: string) => this.setAnalysisFont(font)}
+                t={languagePickerStrings_en}
+              />
+            )}
             {/* Form submission button */}
             <Grid
               container

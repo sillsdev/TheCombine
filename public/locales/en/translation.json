@@ -87,12 +87,13 @@
   },
   "createProject": {
     "name": "Project Name",
+    "nameTaken": "Name taken",
     "upload?": "Upload existing data?",
     "uploadFormat": "File must be a zipped folder containing a <1>Lexicon Interchange FormaT (LIFT)</1> project.",
     "create": "Create Project",
     "fileSelected": "File selected",
-    "success": "Project Created!",
-    "nameTaken": "Name taken"
+    "language": "Project language information will be automatically extracted from uploaded data.",
+    "success": "Project Created!"
   },
   "selectProject": {
     "title": "Select Project"
