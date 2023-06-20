@@ -1,6 +1,5 @@
 import "jest-canvas-mock";
 import { Provider } from "react-redux";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
@@ -14,16 +13,14 @@ const createMockStore = configureMockStore([thunk]);
 const mockStoreState = { goalsState: { currentGoal: new Goal() } };
 const mockStore = createMockStore(mockStoreState);
 
+jest.mock("components/PageNotFound/component", () => "div");
+
 describe("BaseGoalScreen", () => {
   it("Renders with default goal without crashing", () => {
     renderer.act(() => {
       renderer.create(
         <Provider store={mockStore}>
-          <MemoryRouter>
-            <Routes>
-              <Route path="*" element={<BaseGoalScreen />} />
-            </Routes>
-          </MemoryRouter>
+          <BaseGoalScreen />
         </Provider>
       );
     });

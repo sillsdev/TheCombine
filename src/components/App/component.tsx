@@ -29,7 +29,7 @@ export default function App(): ReactElement {
         <Routes>
           <Route path={Path.Root} element={<LandingPage />} />
           <Route
-            path={"app/*"}
+            path={routerPath(Path.AppRoot)}
             element={
               <RequireAuth redirectTo={Path.Login}>
                 <AppWithBar />

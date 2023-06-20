@@ -46,9 +46,9 @@ export function routerPath(pathname: Path): string {
   }
 
   let routePath = pathname.valueOf();
-  for (var i = 0; i < nestedRoutes.length; i++) {
-    if (routePath.startsWith(nestedRoutes[i])) {
-      routePath = routePath.slice(nestedRoutes[i].length);
+  for (const route of nestedRoutes) {
+    if (routePath.startsWith(route)) {
+      routePath = routePath.slice(route.length);
       break;
     }
   }
