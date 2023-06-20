@@ -12,7 +12,8 @@ import Statistics from "components/Statistics/Statistics";
 import UserSettings from "components/UserSettings/UserSettings";
 import NextGoalScreen from "goals/DefaultGoal/NextGoalScreen";
 import { updateLangFromUser } from "i18n";
-import { Path, routerPath } from "types/path";
+import { Path } from "types/path";
+import { routerPath } from "utilities/pathUtilities";
 
 const BaseGoalScreen = loadable(
   () => import("goals/DefaultGoal/BaseGoalScreen")

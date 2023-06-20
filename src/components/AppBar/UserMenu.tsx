@@ -26,8 +26,9 @@ import {
 } from "components/AppBar/AppBarTypes";
 import { clearCurrentProject } from "components/Project/ProjectActions";
 import { useAppDispatch } from "types/hooks";
-import { openUserGuide, Path } from "types/path";
+import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
+import { openUserGuide } from "utilities/pathUtilities";
 
 const idAffix = "user-menu";
 

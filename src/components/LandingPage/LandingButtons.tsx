@@ -3,8 +3,9 @@ import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { openUserGuide, Path } from "types/path";
+import { Path } from "types/path";
 import theme from "types/theme";
+import { openUserGuide } from "utilities/pathUtilities";
 
 const idAffix = "landing";
 

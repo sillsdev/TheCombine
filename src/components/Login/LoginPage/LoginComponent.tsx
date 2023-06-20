@@ -16,9 +16,10 @@ import { BannerType } from "api/models";
 import { getBannerText } from "backend";
 import router from "browserRouter";
 import { LoadingButton } from "components/Buttons";
-import { openUserGuide, Path } from "types/path";
+import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
 import theme from "types/theme";
+import { openUserGuide } from "utilities/pathUtilities";
 
 const idAffix = "login";
 

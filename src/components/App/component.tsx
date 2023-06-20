@@ -12,7 +12,8 @@ import PasswordReset from "components/PasswordReset/ResetPage";
 import ProjectInvite from "components/ProjectInvite/ProjectInvite";
 import RequireAuth from "components/RequireAuth";
 import UpperRightToastContainer from "components/Toast/UpperRightToastContainer";
-import { Path, routerPath } from "types/path";
+import { Path } from "types/path";
+import { routerPath } from "utilities/pathUtilities";
 
 const AppWithBar = loadable(() => import("components/App/AppLoggedIn"));
 

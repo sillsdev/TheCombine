@@ -9,7 +9,8 @@ import { asyncSignUp } from "components/Login/Redux/LoginActions";
 import SignUp from "components/Login/SignUpPage/SignUpComponent";
 import { reset } from "rootActions";
 import { useAppDispatch, useAppSelector } from "types/hooks";
-import { openUserGuide, Path } from "types/path";
+import { Path } from "types/path";
+import { openUserGuide } from "utilities/pathUtilities";
 
 export interface ProjectInviteStateProps {
   inProgress: boolean;

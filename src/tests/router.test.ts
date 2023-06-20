@@ -1,4 +1,5 @@
-import { getBasePath, Path } from "types/path";
+import { Path } from "types/path";
+import { getBasePath } from "utilities/pathUtilities";
 
 describe("router", () => {
   describe("getBasePath", () => {
