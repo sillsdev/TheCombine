@@ -1,5 +1,5 @@
-import { render, screen } from "@testing-library/react";
-import { act, renderHook } from "@testing-library/react-hooks";
+import { act, render, screen } from "@testing-library/react";
+import { act as actHook, renderHook } from "@testing-library/react-hooks";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { Key } from "ts-key-enum";
@@ -63,8 +63,8 @@ describe("TreeSearch", () => {
       // an act call to avoid warnings and make sure the state change is complete before we test
       // for the results
       const { result } = renderHook(() => useTreeSearch(testProps));
-      act(() => result.current.handleChange(simulatedInput));
-      await act(async () =>
+      actHook(() => result.current.handleChange(simulatedInput));
+      await actHook(async () =>
         result.current.searchAndSelectDomain(
           simulatedEnterKey as React.KeyboardEvent
         )

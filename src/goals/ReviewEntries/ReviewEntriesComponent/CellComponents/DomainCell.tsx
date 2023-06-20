@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 import { SemanticDomain } from "api/models";
 import { getCurrentUser } from "backend/localStorage";
-import TreeView from "components/TreeView/TreeViewComponent";
+import TreeView from "components/TreeView";
 import AlignedList, {
   SPACER,
 } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";

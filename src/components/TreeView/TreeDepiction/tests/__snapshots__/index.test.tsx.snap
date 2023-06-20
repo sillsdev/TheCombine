@@ -11,7 +11,6 @@ Array [
         Object {
           "gap": 0,
           "gridTemplateColumns": "repeat(1, 1fr)",
-          "width": 90,
         }
       }
     >
@@ -108,7 +107,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="parent.svg"
-          width={31}
+          width={51}
         />
       </li>
     </ul>
@@ -218,7 +217,7 @@ Array [
         Object {
           "gap": 0,
           "gridTemplateColumns": "repeat(11, 1fr)",
-          "width": 330,
+          "width": 550,
         }
       }
     >
@@ -250,7 +249,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="leftEndcap.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -270,7 +269,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -290,7 +289,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -310,7 +309,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -330,7 +329,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="intersect.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -350,7 +349,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -370,7 +369,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -390,7 +389,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -410,7 +409,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="rightEndcap.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -690,7 +689,6 @@ Array [
         Object {
           "gap": 0,
           "gridTemplateColumns": "repeat(1, 1fr)",
-          "width": 90,
         }
       }
     >
@@ -787,7 +785,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="parent.svg"
-          width={31}
+          width={51}
         />
       </li>
     </ul>
@@ -972,7 +970,7 @@ Array [
         Object {
           "gap": 0,
           "gridTemplateColumns": "repeat(3, 1fr)",
-          "width": 90,
+          "width": 150,
         }
       }
     >
@@ -1004,7 +1002,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="pillar.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -1110,7 +1108,6 @@ Array [
         Object {
           "gap": 0,
           "gridTemplateColumns": "repeat(1, 1fr)",
-          "width": 90,
         }
       }
     >
@@ -1207,7 +1204,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="parent.svg"
-          width={31}
+          width={51}
         />
       </li>
     </ul>
@@ -1317,7 +1314,7 @@ Array [
         Object {
           "gap": 0,
           "gridTemplateColumns": "repeat(3, 1fr)",
-          "width": 90,
+          "width": 150,
         }
       }
     >
@@ -1349,7 +1346,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="pillar.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -1455,7 +1452,6 @@ Array [
         Object {
           "gap": 0,
           "gridTemplateColumns": "repeat(1, 1fr)",
-          "width": 90,
         }
       }
     >
@@ -1552,7 +1548,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="parent.svg"
-          width={31}
+          width={51}
         />
       </li>
     </ul>
@@ -1737,7 +1733,7 @@ Array [
         Object {
           "gap": 0,
           "gridTemplateColumns": "repeat(15, 1fr)",
-          "width": 450,
+          "width": 750,
         }
       }
     >
@@ -1769,7 +1765,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="leftEndcap.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -1789,7 +1785,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -1809,7 +1805,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -1829,7 +1825,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -1849,7 +1845,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="teeUpRight.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -1869,7 +1865,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -1889,7 +1885,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="teeDown.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -1909,7 +1905,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -1929,7 +1925,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="teeUpLeft.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -1949,7 +1945,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -1969,7 +1965,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -1989,7 +1985,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -2009,7 +2005,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="rightEndcap.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -2376,7 +2372,6 @@ Array [
         Object {
           "gap": 0,
           "gridTemplateColumns": "repeat(1, 1fr)",
-          "width": 150,
         }
       }
     >
@@ -2591,7 +2586,6 @@ Array [
         Object {
           "gap": 0,
           "gridTemplateColumns": "repeat(1, 1fr)",
-          "width": 90,
         }
       }
     >
@@ -2688,7 +2682,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="parent.svg"
-          width={31}
+          width={51}
         />
       </li>
     </ul>
@@ -2948,7 +2942,7 @@ Array [
         Object {
           "gap": 0,
           "gridTemplateColumns": "repeat(11, 1fr)",
-          "width": 330,
+          "width": 550,
         }
       }
     >
@@ -2980,7 +2974,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="leftEndcap.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -3000,7 +2994,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -3020,7 +3014,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -3040,7 +3034,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -3060,7 +3054,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="intersect.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -3080,7 +3074,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -3100,7 +3094,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -3120,7 +3114,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
@@ -3140,7 +3134,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="rightEndcap.svg"
-          width={31}
+          width={51}
         />
       </li>
       <li
