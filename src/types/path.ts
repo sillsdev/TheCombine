@@ -1,11 +1,11 @@
 export enum Path {
+  AppRoot = "/app",
   DataEntry = "/app/data-entry",
   GoalCurrent = "/app/goals/current",
   GoalNext = "/app/goals/next",
   Goals = "/app/goals",
   Login = "/login",
   ProjInvite = "/invite",
-  AppRoot = "/app",
   ProjScreen = "/app/projects",
   ProjSettings = "/app/project-settings",
   PwRequest = "/forgot/request",
@@ -13,6 +13,6 @@ export enum Path {
   Root = "/",
   SignUp = "/sign-up",
   SiteSettings = "/app/site-settings",
-  UserSettings = "/app/user-settings",
   Statistics = "/app/statistics",
+  UserSettings = "/app/user-settings",
 }
