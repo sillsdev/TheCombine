@@ -1,6 +1,6 @@
 import { getBasePath, Path } from "browserRouter";
 
-describe("history", () => {
+describe("router", () => {
   describe("getBasePath", () => {
     it("returns Path.Goal for a specific numbered goal", () => {
       expect(getBasePath(`${Path.Goals}/3`)).toEqual(Path.Goals);
