@@ -2,13 +2,14 @@ import Hex from "crypto-js/enc-hex";
 import sha256 from "crypto-js/sha256";
 
 import * as backend from "backend";
-import router, { Path } from "browserRouter";
+import router from "browserRouter";
 import {
   LoginActionTypes,
   UserAction,
 } from "components/Login/Redux/LoginReduxTypes";
 import { reset } from "rootActions";
 import { StoreStateDispatch } from "types/Redux/actions";
+import { Path } from "types/path";
 import { newUser } from "types/user";
 
 // thunk action creator

@@ -3,13 +3,13 @@ import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { Path } from "browserRouter";
 import {
   TabProps,
   appBarHeight,
   buttonMinHeight,
   tabColor,
 } from "components/AppBar/AppBarTypes";
+import { Path } from "types/path";
 import { useWindowSize } from "utilities/useWindowSize";
 
 export const dataEntryButtonId = "data-entry";

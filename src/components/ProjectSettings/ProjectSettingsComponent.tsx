@@ -19,7 +19,6 @@ import { toast } from "react-toastify";
 import { Permission, Project } from "api/models";
 import { canUploadLift, getUserRole } from "backend";
 import { getCurrentUser } from "backend/localStorage";
-import { Path } from "browserRouter";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
 import {
   asyncRefreshCurrentProjectUsers,
@@ -38,6 +37,7 @@ import AddProjectUsers from "components/ProjectSettings/ProjectUsers/AddProjectU
 import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
+import { Path } from "types/path";
 
 export default function ProjectSettingsComponent() {
   const project = useAppSelector(

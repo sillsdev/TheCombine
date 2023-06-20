@@ -1,6 +1,6 @@
 import * as Backend from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
-import router, { Path } from "browserRouter";
+import router from "browserRouter";
 import {
   GoalActionTypes,
   LoadUserEditsAction,
@@ -14,6 +14,7 @@ import {
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { Goal, GoalStatus, GoalType } from "types/goals";
+import { Path } from "types/path";
 import { convertEditToGoal } from "utilities/goalUtilities";
 
 // Action Creators

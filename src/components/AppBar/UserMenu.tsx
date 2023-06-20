@@ -18,7 +18,6 @@ import { useNavigate } from "react-router-dom";
 
 import { getUser } from "backend";
 import * as LocalStorage from "backend/localStorage";
-import { openUserGuide, Path } from "browserRouter";
 import {
   buttonMinHeight,
   shortenName,
@@ -27,6 +26,7 @@ import {
 } from "components/AppBar/AppBarTypes";
 import { clearCurrentProject } from "components/Project/ProjectActions";
 import { useAppDispatch } from "types/hooks";
+import { openUserGuide, Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
 
 const idAffix = "user-menu";

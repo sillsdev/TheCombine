@@ -5,11 +5,11 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import * as backend from "backend";
-import { openUserGuide, Path } from "browserRouter";
 import { asyncSignUp } from "components/Login/Redux/LoginActions";
 import SignUp from "components/Login/SignUpPage/SignUpComponent";
 import { reset } from "rootActions";
 import { useAppDispatch, useAppSelector } from "types/hooks";
+import { openUserGuide, Path } from "types/path";
 
 export interface ProjectInviteStateProps {
   inProgress: boolean;

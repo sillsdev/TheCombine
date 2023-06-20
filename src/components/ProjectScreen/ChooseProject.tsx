@@ -11,9 +11,10 @@ import { useTranslation } from "react-i18next";
 import { Project } from "api/models";
 import { getAllActiveProjectsByUser } from "backend";
 import { getUserId } from "backend/localStorage";
-import router, { Path } from "browserRouter";
+import router from "browserRouter";
 import { setNewCurrentProject } from "components/Project/ProjectActions";
 import { useAppDispatch } from "types/hooks";
+import { Path } from "types/path";
 
 export default function ChooseProject(): ReactElement {
   const dispatch = useAppDispatch();

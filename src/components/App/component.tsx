@@ -2,7 +2,6 @@ import loadable from "@loadable/component";
 import { ReactElement, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import { Path, routerPath } from "browserRouter";
 import AnnouncementBanner from "components/AnnouncementBanner/AnnouncementBanner";
 import LandingPage from "components/LandingPage";
 import Login from "components/Login/LoginPage";
@@ -13,6 +12,7 @@ import PasswordReset from "components/PasswordReset/ResetPage";
 import ProjectInvite from "components/ProjectInvite/ProjectInvite";
 import RequireAuth from "components/RequireAuth";
 import UpperRightToastContainer from "components/Toast/UpperRightToastContainer";
+import { Path, routerPath } from "types/path";
 
 const AppWithBar = loadable(() => import("components/App/AppLoggedIn"));
 

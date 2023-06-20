@@ -10,8 +10,9 @@ import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 
 import { isEmailTaken, isUsernameTaken } from "backend";
-import router, { Path } from "browserRouter";
+import router from "browserRouter";
 import { LoadingDoneButton } from "components/Buttons";
+import { Path } from "types/path";
 import {
   meetsPasswordRequirements,
   meetsUsernameRequirements,

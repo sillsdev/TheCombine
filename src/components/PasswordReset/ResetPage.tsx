@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { resetPassword } from "backend";
-import { Path } from "browserRouter";
+import { Path } from "types/path";
 import { meetsPasswordRequirements } from "utilities/utilities";
 
 export enum PasswordResetTestIds {

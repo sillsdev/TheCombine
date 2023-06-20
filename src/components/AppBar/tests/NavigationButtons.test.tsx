@@ -3,11 +3,11 @@ import renderer, { ReactTestInstance } from "react-test-renderer";
 
 import "tests/reactI18nextMock";
 
-import { Path } from "browserRouter";
 import NavigationButtons, {
   dataCleanupButtonId,
   dataEntryButtonId,
 } from "components/AppBar/NavigationButtons";
+import { Path } from "types/path";
 import { themeColors } from "types/theme";
 
 let testRenderer: renderer.ReactTestRenderer;

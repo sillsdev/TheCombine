@@ -4,9 +4,9 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { isEmailTaken, isUsernameTaken, resetPasswordRequest } from "backend";
-import { Path } from "browserRouter";
 import { LoadingDoneButton } from "components/Buttons";
 import { useAppDispatch } from "types/hooks";
+import { Path } from "types/path";
 
 export default function ResetRequest(): ReactElement {
   const dispatch = useAppDispatch();

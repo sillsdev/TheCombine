@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import { Permission } from "api/models";
 import { getUserRole } from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
-import { Path } from "browserRouter";
 import {
   TabProps,
   buttonMinHeight,
@@ -16,6 +15,7 @@ import {
   tabColor,
 } from "components/AppBar/AppBarTypes";
 import { StoreState } from "types";
+import { Path } from "types/path";
 
 export const projButtonId = "project-settings";
 export const statButtonId = "project-statistics";

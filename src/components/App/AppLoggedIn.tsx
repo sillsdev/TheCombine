@@ -2,7 +2,6 @@ import loadable from "@loadable/component";
 import { ReactElement, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import { Path, routerPath } from "browserRouter";
 import SignalRHub from "components/App/SignalRHub";
 import AppBar from "components/AppBar/AppBarComponent";
 import PageNotFound from "components/PageNotFound/component";
@@ -13,6 +12,7 @@ import Statistics from "components/Statistics/Statistics";
 import UserSettings from "components/UserSettings/UserSettings";
 import NextGoalScreen from "goals/DefaultGoal/NextGoalScreen";
 import { updateLangFromUser } from "i18n";
+import { Path, routerPath } from "types/path";
 
 const BaseGoalScreen = loadable(
   () => import("goals/DefaultGoal/BaseGoalScreen")

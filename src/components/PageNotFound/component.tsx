@@ -3,8 +3,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { Path } from "browserRouter";
 import tractor from "resources/tractor.png";
+import { Path } from "types/path";
 
 /**
  * A custom 404 page that should be displayed anytime the user tries to navigate

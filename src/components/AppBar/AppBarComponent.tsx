@@ -3,7 +3,6 @@ import { ReactElement, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import { getProjectId } from "backend/localStorage";
-import { getBasePath, Path } from "browserRouter";
 import { appBarHeight } from "components/AppBar/AppBarTypes";
 import Logo from "components/AppBar/Logo";
 import NavigationButtons from "components/AppBar/NavigationButtons";
@@ -11,6 +10,7 @@ import ProjectButtons from "components/AppBar/ProjectButtons";
 import UserMenu from "components/AppBar/UserMenu";
 import { topBarHeight } from "components/LandingPage/TopBar";
 import DownloadButton from "components/ProjectExport/DownloadButton";
+import { getBasePath, Path } from "types/path";
 import theme from "types/theme";
 
 /** An app bar shown at the top of all logged in pages */

@@ -7,12 +7,12 @@ import configureMockStore from "redux-mock-store";
 import "tests/reactI18nextMock";
 
 import { Permission } from "api/models";
-import { Path } from "browserRouter";
 import ProjectButtons, {
   getIsAdminOrOwner,
   projButtonId,
   statButtonId,
 } from "components/AppBar/ProjectButtons";
+import { Path } from "types/path";
 import { themeColors } from "types/theme";
 
 jest.mock("backend", () => ({

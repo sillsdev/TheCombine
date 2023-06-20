@@ -24,10 +24,11 @@ import {
   ChartRootData,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
-import router, { Path } from "browserRouter";
+import router from "browserRouter";
 import authHeader from "components/Login/AuthHeaders";
 import { errorToast } from "components/Toast/SwalToast";
 import { Goal, GoalStep } from "types/goals";
+import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
 import { Bcp47Code } from "types/writingSystem";
 import { convertGoalToEdit } from "utilities/goalUtilities";

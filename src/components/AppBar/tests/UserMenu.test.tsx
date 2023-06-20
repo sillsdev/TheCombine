@@ -6,8 +6,8 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import { Path } from "browserRouter";
 import UserMenu, { getIsAdmin, UserMenuList } from "components/AppBar/UserMenu";
+import { Path } from "types/path";
 import { newUser } from "types/user";
 
 jest.mock("backend", () => ({

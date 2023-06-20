@@ -6,8 +6,8 @@ import { useLocation } from "react-router";
 import { BannerType } from "api/models";
 import { getBannerText } from "backend";
 import { getClosedBanner, setClosedBanner } from "backend/localStorage";
-import { Path } from "browserRouter";
 import { topBarHeight } from "components/LandingPage/TopBar";
+import { Path } from "types/path";
 import theme, { themeColors } from "types/theme";
 
 export default function AnnouncementBanner() {

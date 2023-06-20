@@ -1,6 +1,6 @@
 import { WritingSystem } from "api/models";
 import * as backend from "backend";
-import router, { Path } from "browserRouter";
+import router from "browserRouter";
 import { asyncCreateUserEdits } from "components/GoalTimeline/Redux/GoalActions";
 import {
   setCurrentProject,
@@ -11,6 +11,7 @@ import {
   CreateProjectActionTypes,
 } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
 import { StoreStateDispatch } from "types/Redux/actions";
+import { Path } from "types/path";
 import { newProject } from "types/project";
 
 //thunk action creator
