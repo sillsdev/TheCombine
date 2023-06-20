@@ -5,9 +5,11 @@ import createMockStore from "redux-mock-store";
 import "tests/reactI18nextMock";
 
 import DataEntry, { smallScreenThreshold } from "components/DataEntry";
-import { openTreeAction } from "components/TreeView/TreeViewActions";
-import { TreeViewState } from "components/TreeView/TreeViewReducer";
-import { TreeViewAction } from "components/TreeView/TreeViewReduxTypes";
+import { openTreeAction } from "components/TreeView/Redux/TreeViewActions";
+import {
+  TreeViewAction,
+  TreeViewState,
+} from "components/TreeView/Redux/TreeViewReduxTypes";
 import { newSemanticDomainTreeNode } from "types/semanticDomain";
 import * as useWindowSize from "utilities/useWindowSize";
 
