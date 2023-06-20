@@ -580,22 +580,14 @@ namespace BackendFramework.Services
             /// <summary>
             /// Get all analysis languages found in senses in the private field <see cref="_importEntries"/>
             /// </summary>
-            /// <returns> A List of all distinct bcp-47 codes of analysis languages in the import. </returns>
-            public List<string> GetImportAnalysisLanguages()
+            /// <returns> A List of all distinct analysis writing systems in the import. </returns>
+            public List<WritingSystem> GetImportAnalysisLanguages()
             {
-                var func = (List<string> acc, List<string> x) =>
-                {
-                    acc.AddRange(x); return acc.Distinct().ToList();
-                };
+                var langTags = _importEntries.SelectMany(
+                    w => w.Senses.SelectMany(s => Language.GetSenseAnalysisLangTags(s))
+                ).Distinct();
 
-                return _importEntries.Select(w =>
-                    w.Senses.Select(s =>
-                    {
-                        var langs = s.Definitions.Select(d => d.Language).ToList();
-                        langs.AddRange(s.Glosses.Select(g => g.Language));
-                        return langs.Distinct().ToList();
-                    }).Aggregate(new List<string>(), func)
-                ).Aggregate(new List<string>(), func);
+                return Language.ConvertLangTagsToWritingSystems(langTags).ToList();
             }
 
             /// <summary>

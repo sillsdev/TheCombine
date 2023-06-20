@@ -149,7 +149,7 @@ namespace BackendFramework.Controllers
             int liftParseResult;
             // Sets the projectId of our parser to add words to that project
             var liftMerger = _liftService.GetLiftImporterExporter(projectId, _wordRepo);
-            var analysisLanguages = new List<string>();
+            var analysisLanguages = new List<WritingSystem>();
             var doesImportHaveDefinitions = false;
             var doesImportHaveGrammaticalInfo = false;
             try
@@ -192,13 +192,8 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
-            foreach (var lang in analysisLanguages)
-            {
-                if (!project.AnalysisWritingSystems.Any(ws => ws.Bcp47 == lang))
-                {
-                    project.AnalysisWritingSystems.Add(new WritingSystem { Bcp47 = lang });
-                }
-            }
+            project.AnalysisWritingSystems.AddRange(analysisLanguages.Where(
+                lang => !project.AnalysisWritingSystems.Any(ws => ws.Bcp47 == lang.Bcp47)));
             project.DefinitionsEnabled = doesImportHaveDefinitions;
             project.GrammaticalInfoEnabled = doesImportHaveGrammaticalInfo;
             project.LiftImported = true;
