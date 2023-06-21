@@ -1,7 +1,7 @@
 import { Cancel } from "@mui/icons-material";
 import { Box, IconButton, Toolbar, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router";
+import { useLocation } from "react-router-dom";
 
 import { BannerType } from "api/models";
 import { getBannerText } from "backend";
