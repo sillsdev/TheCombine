@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using SIL.Lift.Parsing;
 
@@ -6,6 +8,19 @@ namespace BackendFramework.Helper
 {
     public class LiftHelper
     {
+
+        /// <summary> Find any .lift files within a directory. </summary>
+        public static List<string> FindLiftFiles(string dir, bool recursive = false)
+        {
+            var liftFiles = Directory.GetFiles(dir, "*.lift").ToList();
+            if (recursive)
+            {
+                Directory.GetDirectories(dir).ToList()
+                    .ForEach(subDir => liftFiles.AddRange(FindLiftFiles(subDir, true)));
+            }
+            return liftFiles;
+        }
+
         /// <summary>
         /// Determine if a <see cref="LiftEntry"/> has any data not handled by The Combine.
         /// </summary>

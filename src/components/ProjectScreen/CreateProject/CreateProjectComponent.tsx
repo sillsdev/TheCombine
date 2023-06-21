@@ -143,7 +143,9 @@ export class CreateProject extends React.Component<
     }
 
     const name = this.state.name.trim();
-    const vernLang = this.state.vernLanguage;
+    const vernLang = this.state.languageData
+      ? newWritingSystem()
+      : this.state.vernLanguage;
     const analysisLang = this.state.languageData
       ? []
       : this.state.analysisLanguages;
@@ -241,15 +243,19 @@ export class CreateProject extends React.Component<
             <Typography style={{ marginTop: theme.spacing(1) }}>
               {this.props.t("projectSettings.language.vernacularLanguage")}
             </Typography>
-            <LanguagePicker
-              value={this.state.vernLanguage.bcp47}
-              setCode={(bcp47: string) => this.setVernBcp47(bcp47)}
-              name={this.state.vernLanguage.name}
-              setName={(name: string) => this.setVernLangName(name)}
-              font={this.state.vernLanguage.font}
-              setFont={(font: string) => this.setVernFont(font)}
-              t={languagePickerStrings_en}
-            />
+            {this.state.languageData ? (
+              <React.Fragment />
+            ) : (
+              <LanguagePicker
+                value={this.state.vernLanguage.bcp47}
+                setCode={(bcp47: string) => this.setVernBcp47(bcp47)}
+                name={this.state.vernLanguage.name}
+                setName={(name: string) => this.setVernLangName(name)}
+                font={this.state.vernLanguage.font}
+                setFont={(font: string) => this.setVernFont(font)}
+                t={languagePickerStrings_en}
+              />
+            )}
             {/* Analysis language picker */}
             <Typography style={{ marginTop: theme.spacing(1) }}>
               {this.props.t("projectSettings.language.analysisLanguage")}

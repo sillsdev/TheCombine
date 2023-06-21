@@ -79,6 +79,13 @@ namespace BackendFramework.Services
     }
 
     [Serializable]
+    public class InvalidLiftFileException : Exception
+    {
+        public InvalidLiftFileException(string message) : base("Malformed LIFT file: " + message) { }
+
+    }
+
+    [Serializable]
     public class MissingProjectException : Exception
     {
         public MissingProjectException(string message) : base(message) { }
@@ -89,6 +96,8 @@ namespace BackendFramework.Services
     {
         /// A dictionary shared by all Projects for storing and retrieving paths to exported projects.
         private readonly Dictionary<string, string> _liftExports;
+        /// A dictionary shared by all Projects for storing and retrieving paths to in-process imports.
+        private readonly Dictionary<string, string> _liftImports;
         private const string InProgress = "IN_PROGRESS";
 
         public LiftService()
@@ -99,6 +108,7 @@ namespace BackendFramework.Services
             }
 
             _liftExports = new Dictionary<string, string>();
+            _liftImports = new Dictionary<string, string>();
         }
 
         /// <summary> Store status that a user's export is in-progress. </summary>
@@ -152,19 +162,145 @@ namespace BackendFramework.Services
             return removeSuccessful;
         }
 
-        /// <summary> Imports main character set for a project from an ldml file </summary>
-        public void LdmlImport(string filePath, string langTag, IProjectRepository projRepo, Project project)
+        /// <summary> Store filePath for a user's Lift import. </summary>
+        public void StoreImport(string userId, string filePath)
+        {
+            _liftImports.Remove(userId);
+            _liftImports.Add(userId, filePath);
+        }
+
+        /// <summary> Retrieve a stored filePath for the user's Lift import. </summary>
+        /// <returns> Path to the Lift file on disk. </returns>
+        public string? RetrieveImport(string userId)
+        {
+            if (!_liftImports.ContainsKey(userId))
+            {
+                return null;
+            }
+
+            return _liftImports[userId];
+        }
+
+        /// <summary> Delete a stored Lift import path and its file on disk. </summary>
+        /// <returns> If the element is successfully found and removed, true; otherwise, false. </returns>
+        public bool DeleteImport(string userId)
+        {
+            var removeSuccessful = _liftImports.Remove(userId, out var dirPath);
+            if (removeSuccessful && dirPath is not null)
+            {
+                Directory.Delete(dirPath, true);
+            }
+            return removeSuccessful;
+        }
+
+        public async Task<string> ExtractZippedLiftFile(FileUpload fileUpload)
+        {
+            var file = fileUpload.File;
+            if (file is null)
+            {
+                throw new InvalidLiftFileException("Null file");
+            }
+            if (file.Length == 0)
+            {
+                throw new InvalidLiftFileException("Empty file");
+            }
+
+            // Copy zip file data to a new temporary file
+            fileUpload.FilePath = Path.GetTempFileName();
+            await using (var fs = new FileStream(fileUpload.FilePath, FileMode.OpenOrCreate))
+            {
+                await file.CopyToAsync(fs);
+            }
+
+            // Make temporary destination for extracted files
+            var extractDir = FileOperations.GetRandomTempDir();
+
+            // Extract the zip to new created directory.
+            FileOperations.ExtractZipFile(fileUpload.FilePath, extractDir, true);
+
+            return extractDir;
+        }
+
+        public string GetLiftRootFromExtractedZip(string dirPath)
+        {
+            // Search for .lift files to determine the root of the Lift project.
+            string extractedLiftRootPath;
+            // Handle this structuring case:
+            // flex.zip
+            //    | audio
+            //    | WritingSystems
+            //    | project_name.lift
+            //    | project_name.lift-ranges
+            if (LiftHelper.FindLiftFiles(dirPath).Count > 0)
+            {
+                extractedLiftRootPath = dirPath;
+            }
+            // Handle the typical structuring case:
+            //  flex.zip
+            //    | project_name
+            //      | audio
+            //      | WritingSystems
+            //      | project_name.lift
+            //      | project_name.lift-ranges
+            else
+            {
+                extractedLiftRootPath = Directory.GetDirectories(dirPath).First();
+            }
+
+            // Validate that only one .lift file is included.
+            var extractedLiftFiles = LiftHelper.FindLiftFiles(extractedLiftRootPath);
+            switch (extractedLiftFiles.Count)
+            {
+                case 0:
+                    throw new InvalidLiftFileException("No .lift files detected.");
+                case > 1:
+                    throw new InvalidLiftFileException("More than one .lift file detected.");
+            }
+
+            return extractedLiftRootPath;
+        }
+
+        public List<WritingSystem> GetVernacularWritingSystems(string dirPath)
+        {
+            var wsr = LdmlInFolderWritingSystemRepository.Initialize(dirPath);
+            return wsr.AllWritingSystems.Select(ws => new WritingSystem
+            {
+                Bcp47 = ws.LanguageTag,
+                Name = ws.Language.Name,
+                Font = ws.DefaultFont.Name
+            }).ToList();
+        }
+
+        /// <summary> Imports main character set for a project from an ldml file. </summary>
+        /// <returns> A bool indicating whether a character set was added to the project. </returns>
+        public async Task<bool> LdmlImport(string filePath, IProjectRepository projRepo, Project project)
         {
             var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
+            var aws = wsr.AllWritingSystems;
+            if (String.IsNullOrWhiteSpace(project.VernacularWritingSystem.Bcp47) && aws.Any())
+            {
+                var ws = aws.First();
+                project.VernacularWritingSystem = new WritingSystem
+                {
+                    Bcp47 = ws.LanguageTag,
+                    Name = ws.Language.Name,
+                    Font = ws.DefaultFont.Name
+                };
+            }
             var wsf = new LdmlInFolderWritingSystemFactory(wsr);
-            wsf.Create(langTag, out var wsDef);
+            wsf.Create(project.VernacularWritingSystem.Bcp47, out var wsDef);
 
-            // If there is a main character set, import it to the project
+            // If there is a main character set, add it to the project
             if (wsDef.CharacterSets.Contains("main"))
             {
-                project.ValidCharacters = wsDef.CharacterSets["main"].Characters.ToList();
-                projRepo.Update(project.Id, project);
+                project.ValidCharacters.AddRange(wsDef.CharacterSets["main"].Characters);
+                project.ValidCharacters = project.ValidCharacters.Distinct().ToList();
+                project.RejectedCharacters = project.RejectedCharacters
+                    .Where(c => !project.ValidCharacters.Contains(c)).ToList();
+                await projRepo.Update(project.Id, project);
+                return true;
             }
+            return false;
         }
 
         /// <summary> Exports information from a project to a lift package zip </summary>
