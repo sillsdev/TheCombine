@@ -8,9 +8,6 @@ namespace BackendFramework.Interfaces
     public interface ILiftService
     {
         ILiftMerger GetLiftImporterExporter(string projectId, IWordRepository wordRepo);
-        Task<string> ExtractZippedLiftFile(FileUpload fileUpload);
-        string GetLiftRootFromExtractedZip(string dirPath);
-        List<WritingSystem> GetVernacularWritingSystems(string dirPath);
         Task<bool> LdmlImport(string filePath, IProjectRepository projRepo, Project project);
         Task<string> LiftExport(string projectId, IWordRepository wordRepo, IProjectRepository projRepo);
 

@@ -79,13 +79,6 @@ namespace BackendFramework.Services
     }
 
     [Serializable]
-    public class InvalidLiftFileException : Exception
-    {
-        public InvalidLiftFileException(string message) : base("Malformed LIFT file: " + message) { }
-
-    }
-
-    [Serializable]
     public class MissingProjectException : Exception
     {
         public MissingProjectException(string message) : base(message) { }
@@ -191,84 +184,6 @@ namespace BackendFramework.Services
                 Directory.Delete(dirPath, true);
             }
             return removeSuccessful;
-        }
-
-        public async Task<string> ExtractZippedLiftFile(FileUpload fileUpload)
-        {
-            var file = fileUpload.File;
-            if (file is null)
-            {
-                throw new InvalidLiftFileException("Null file");
-            }
-            if (file.Length == 0)
-            {
-                throw new InvalidLiftFileException("Empty file");
-            }
-
-            // Copy zip file data to a new temporary file
-            fileUpload.FilePath = Path.GetTempFileName();
-            await using (var fs = new FileStream(fileUpload.FilePath, FileMode.OpenOrCreate))
-            {
-                await file.CopyToAsync(fs);
-            }
-
-            // Make temporary destination for extracted files
-            var extractDir = FileOperations.GetRandomTempDir();
-
-            // Extract the zip to new created directory.
-            FileOperations.ExtractZipFile(fileUpload.FilePath, extractDir, true);
-
-            return extractDir;
-        }
-
-        public string GetLiftRootFromExtractedZip(string dirPath)
-        {
-            // Search for .lift files to determine the root of the Lift project.
-            string extractedLiftRootPath;
-            // Handle this structuring case:
-            // flex.zip
-            //    | audio
-            //    | WritingSystems
-            //    | project_name.lift
-            //    | project_name.lift-ranges
-            if (LiftHelper.FindLiftFiles(dirPath).Count > 0)
-            {
-                extractedLiftRootPath = dirPath;
-            }
-            // Handle the typical structuring case:
-            //  flex.zip
-            //    | project_name
-            //      | audio
-            //      | WritingSystems
-            //      | project_name.lift
-            //      | project_name.lift-ranges
-            else
-            {
-                extractedLiftRootPath = Directory.GetDirectories(dirPath).First();
-            }
-
-            // Validate that only one .lift file is included.
-            var extractedLiftFiles = LiftHelper.FindLiftFiles(extractedLiftRootPath);
-            switch (extractedLiftFiles.Count)
-            {
-                case 0:
-                    throw new InvalidLiftFileException("No .lift files detected.");
-                case > 1:
-                    throw new InvalidLiftFileException("More than one .lift file detected.");
-            }
-
-            return extractedLiftRootPath;
-        }
-
-        public List<WritingSystem> GetVernacularWritingSystems(string dirPath)
-        {
-            var wsr = LdmlInFolderWritingSystemRepository.Initialize(dirPath);
-            return wsr.AllWritingSystems.Select(ws => new WritingSystem
-            {
-                Bcp47 = ws.LanguageTag,
-                Name = ws.Language.Name,
-                Font = ws.DefaultFont.Name
-            }).ToList();
         }
 
         /// <summary> Imports main character set for a project from an ldml file. </summary>

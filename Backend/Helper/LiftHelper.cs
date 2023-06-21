@@ -6,8 +6,53 @@ using SIL.Lift.Parsing;
 
 namespace BackendFramework.Helper
 {
-    public class LiftHelper
+    [Serializable]
+    public class InvalidLiftFileException : InvalidFileException
     {
+        public InvalidLiftFileException(string message) : base("Malformed LIFT file: " + message) { }
+
+    }
+
+    public static class LiftHelper
+    {
+        public static string GetLiftRootFromExtractedZip(string dirPath)
+        {
+            // Search for .lift files to determine the root of the Lift project.
+            string extractedLiftRootPath;
+            // Handle this structuring case:
+            // extractedZipDir
+            //    | audio
+            //    | WritingSystems
+            //    | project_name.lift
+            //    | project_name.lift-ranges
+            if (FindLiftFiles(dirPath).Count > 0)
+            {
+                extractedLiftRootPath = dirPath;
+            }
+            // Handle the typical structuring case:
+            // extractedZipDir
+            //    | project_name
+            //      | audio
+            //      | WritingSystems
+            //      | project_name.lift
+            //      | project_name.lift-ranges
+            else
+            {
+                extractedLiftRootPath = Directory.GetDirectories(dirPath).First();
+            }
+
+            // Validate that only one .lift file is included.
+            var extractedLiftFiles = FindLiftFiles(extractedLiftRootPath);
+            switch (extractedLiftFiles.Count)
+            {
+                case 0:
+                    throw new InvalidLiftFileException("No .lift files detected.");
+                case > 1:
+                    throw new InvalidLiftFileException("More than one .lift file detected.");
+            }
+
+            return extractedLiftRootPath;
+        }
 
         /// <summary> Find any .lift files within a directory. </summary>
         public static List<string> FindLiftFiles(string dir, bool recursive = false)

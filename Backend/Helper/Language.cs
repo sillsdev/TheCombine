@@ -7,7 +7,6 @@ namespace BackendFramework.Helper
 {
     public static class Language
     {
-
         /// <summary>
         /// Extract list of distinct Language strings from all of a <see cref="Sense"/>'s Definitions and Glosses.
         /// </summary>
@@ -18,6 +17,7 @@ namespace BackendFramework.Helper
             return tags.Distinct();
         }
 
+        /// <summary> Convert language tags into writing systems. </summary>
         public static IEnumerable<WritingSystem> ConvertLangTagsToWritingSystems(IEnumerable<string> langTags)
         {
             var langLookup = new LanguageLookup();
@@ -25,5 +25,16 @@ namespace BackendFramework.Helper
                 tag => new WritingSystem { Bcp47 = tag, Name = langLookup.GetLanguageFromCode(tag).DesiredName });
         }
 
+        /// <summary> Extract <see cref="WritingSystem"/>s from ldml files in a directory. </summary>
+        public static IEnumerable<WritingSystem> GetVernacularWritingSystems(string dirPath)
+        {
+            var wsr = LdmlInFolderWritingSystemRepository.Initialize(dirPath);
+            return wsr.AllWritingSystems.Select(ws => new WritingSystem
+            {
+                Bcp47 = ws.LanguageTag,
+                Name = ws.Language.Name,
+                Font = ws.DefaultFont.Name
+            });
+        }
     }
 }

@@ -46,7 +46,7 @@ namespace BackendFramework.Controllers
         /// Extract a LIFT file to a temporary folder.
         /// Get all vernacular writing systems from the extracted location.
         /// </summary>
-        /// <returns> A List of WritingSystems. </returns>
+        /// <returns> A List of <see cref="WritingSystem"/>s. </returns>
         [HttpPost("uploadandgetwritingsystems", Name = "UploadLiftFileAndGetWritingSystems")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<WritingSystem>))]
         // Allow clients to POST large import files to the server (default limit is 28MB).
@@ -64,9 +64,9 @@ namespace BackendFramework.Controllers
             string extractedLiftRootPath;
             try
             {
-                var extractDir = await _liftService.ExtractZippedLiftFile(fileUpload);
+                var extractDir = await FileOperations.ExtractZipFile(fileUpload.File);
                 _liftService.StoreImport(userId, extractDir);
-                extractedLiftRootPath = _liftService.GetLiftRootFromExtractedZip(extractDir);
+                extractedLiftRootPath = LiftHelper.GetLiftRootFromExtractedZip(extractDir);
             }
             catch (Exception e)
             {
@@ -74,7 +74,7 @@ namespace BackendFramework.Controllers
                 return BadRequest(e.Message);
             }
 
-            return Ok(_liftService.GetVernacularWritingSystems(extractedLiftRootPath));
+            return Ok(Language.GetVernacularWritingSystems(extractedLiftRootPath));
 
 
         }
@@ -117,7 +117,7 @@ namespace BackendFramework.Controllers
             string extractedLiftRootPath;
             try
             {
-                extractedLiftRootPath = _liftService.GetLiftRootFromExtractedZip(extractDir);
+                extractedLiftRootPath = LiftHelper.GetLiftRootFromExtractedZip(extractDir);
             }
             catch (Exception e)
             {
@@ -168,8 +168,8 @@ namespace BackendFramework.Controllers
             string extractedLiftRootPath;
             try
             {
-                extractDir = await _liftService.ExtractZippedLiftFile(fileUpload);
-                extractedLiftRootPath = _liftService.GetLiftRootFromExtractedZip(extractDir);
+                extractDir = await FileOperations.ExtractZipFile(fileUpload.File);
+                extractedLiftRootPath = LiftHelper.GetLiftRootFromExtractedZip(extractDir);
             }
             catch (Exception e)
             {
