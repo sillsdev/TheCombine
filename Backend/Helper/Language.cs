@@ -20,9 +20,12 @@ namespace BackendFramework.Helper
         /// <summary> Convert language tags into writing systems. </summary>
         public static IEnumerable<WritingSystem> ConvertLangTagsToWritingSystems(IEnumerable<string> langTags)
         {
+            Sldr.Initialize();
             var langLookup = new LanguageLookup();
-            return langTags.Select(
-                tag => new WritingSystem { Bcp47 = tag, Name = langLookup.GetLanguageFromCode(tag).DesiredName });
+            var writingSystems = langTags.Select(tag =>
+                new WritingSystem { Bcp47 = tag, Name = langLookup.GetLanguageFromCode(tag)?.DesiredName ?? "" });
+            Sldr.Cleanup();
+            return writingSystems;
         }
 
         /// <summary> Extract <see cref="WritingSystem"/>s from ldml files in a directory. </summary>
