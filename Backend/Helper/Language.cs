@@ -21,11 +21,19 @@ namespace BackendFramework.Helper
         /// <summary> Convert language tags into writing systems. </summary>
         public static IEnumerable<WritingSystem> ConvertLangTagsToWritingSystems(IEnumerable<string> langTags)
         {
-            Sldr.Initialize();
+            // If Sldr isn't initialized, temporarily initialize it here.
+            var isSldrInitialized = Sldr.IsInitialized;
+            if (!isSldrInitialized)
+            {
+                Sldr.Initialize();
+            }
             var langLookup = new LanguageLookup();
             var writingSystems = langTags.Select(tag =>
                 new WritingSystem { Bcp47 = tag, Name = langLookup.GetLanguageFromCode(tag)?.DesiredName ?? "" });
-            Sldr.Cleanup();
+            if (!isSldrInitialized)
+            {
+                Sldr.Cleanup();
+            }
             return writingSystems;
         }
 
