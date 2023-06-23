@@ -1,5 +1,5 @@
 import { Button, Grid, TextField } from "@mui/material";
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
@@ -8,8 +8,12 @@ import { ProjectSettingPropsWithUpdate } from "components/ProjectSettings/Projec
 export default function ProjectName(
   props: ProjectSettingPropsWithUpdate
 ): ReactElement {
-  const [projName, setProjName] = useState(props.project.name);
+  const [projName, setProjName] = useState("");
   const { t } = useTranslation();
+
+  useEffect(() => {
+    setProjName(props.project.name);
+  }, [props.project.name]);
 
   const updateProjectName = async (): Promise<void> => {
     if (projName !== props.project.name) {
