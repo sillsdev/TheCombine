@@ -222,6 +222,21 @@ export async function validateLink(
 
 /* LiftController.cs */
 
+export async function uploadLiftAndGetWritingSystems(
+  liftFile: File
+): Promise<Api.WritingSystem[]> {
+  const resp = await liftApi.uploadLiftFileAndGetWritingSystems(
+    { projectId: "nonempty", ...fileUpload(liftFile) },
+    { headers: { ...authHeader(), "Content-Type": "multipart/form-data" } }
+  );
+  return resp.data;
+}
+
+export async function finishUploadLift(projectId: string): Promise<number> {
+  const options = { headers: authHeader() };
+  return (await liftApi.finishUploadLiftFile({ projectId }, options)).data;
+}
+
 export async function uploadLift(
   projectId: string,
   liftFile: File
@@ -669,6 +684,8 @@ export async function updateWord(word: Word): Promise<Word> {
   );
   return { ...word, id: resp.data };
 }
+
+/* StatisticsController.cs */
 
 export async function getSemanticDomainCounts(
   projectId: string,
