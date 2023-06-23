@@ -1,6 +1,5 @@
 import { Button } from "@mui/material";
 import { Provider } from "react-redux";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
@@ -22,6 +21,9 @@ jest.mock("backend/localStorage", () => ({
   getCurrentUser: () => mockGetCurrentUser(),
   getProjectId: () => mockProjectId,
 }));
+jest.mock("react-router-dom", () => ({
+  useNavigate: jest.fn(),
+}));
 
 const mockGetCurrentUser = jest.fn();
 const mockGetUserRole = jest.fn();
@@ -39,11 +41,7 @@ const renderProjectButtons = async (path = Path.Root) => {
   await renderer.act(async () => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
-        <MemoryRouter>
-          <Routes>
-            <Route path="*" element={<ProjectButtons currentTab={path} />} />
-          </Routes>
-        </MemoryRouter>
+        <ProjectButtons currentTab={path} />
       </Provider>
     );
   });

@@ -1,11 +1,11 @@
 import { Cancel } from "@mui/icons-material";
 import { Box, IconButton, Toolbar, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 
 import { BannerType } from "api/models";
 import { getBannerText } from "backend";
 import { getClosedBanner, setClosedBanner } from "backend/localStorage";
+import router from "browserRouter";
 import { topBarHeight } from "components/LandingPage/TopBar";
 import { Path } from "types/path";
 import theme, { themeColors } from "types/theme";
@@ -14,7 +14,7 @@ export default function AnnouncementBanner() {
   const [banner, setBanner] = useState<string>("");
 
   // Adjust the margins depending on whether there is an AppBar.
-  const loc = useLocation().pathname;
+  const loc = router.state.location.pathname;
   const isBelowAppBar = loc === Path.Root || loc.startsWith(Path.AppRoot);
   const margins = isBelowAppBar
     ? { marginTop: topBarHeight, marginBottom: -topBarHeight }

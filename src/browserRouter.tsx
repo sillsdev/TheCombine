@@ -1,16 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import App from "components/App/component";
 import { store } from "store";
 import { changePage } from "types/Redux/analytics";
+import { appRoutes } from "types/appRoutes";
 
-const router = createBrowserRouter([
-  // match everything with "*"
-  {
-    path: "*",
-    element: <App />,
-  },
-]);
+/**
+ * NOTES:
+ *   Move the route definitions to types/appRoutes and
+ *   export as AppRoutes.
+ */
+const router = createBrowserRouter(appRoutes);
 
 // set up analytics for page navigation
 // *********** WARNING! ***********
