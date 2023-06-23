@@ -226,6 +226,29 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestUploadLiftFileAndGetWritingSystems()
+        {
+            var fileName = "Natqgu.zip";
+            var pathToZip = Path.Combine(Util.AssetsDir, fileName);
+
+            Assert.That(_liftService.RetrieveImport(UserId), Is.Null);
+
+            // Upload the zip file.
+            // Generate api parameter with file stream.
+            using (var fileStream = File.OpenRead(pathToZip))
+            {
+                var fileUpload = InitFile(fileStream, fileName);
+                var result = _liftController.UploadLiftFileAndGetWritingSystems(fileUpload, UserId).Result;
+                Assert.That(result is OkObjectResult);
+                var writingSystems = (result as OkObjectResult)!.Value as List<WritingSystem>;
+                Assert.That(writingSystems, Has.Count.Not.Zero);
+            }
+
+            Assert.That(_liftService.RetrieveImport(UserId), Is.Not.Null);
+            _liftService.DeleteImport(UserId);
+        }
+
+        [Test]
         public async Task TestModifiedTimeExportsToLift()
         {
             var word = Util.RandomWord(_projId);

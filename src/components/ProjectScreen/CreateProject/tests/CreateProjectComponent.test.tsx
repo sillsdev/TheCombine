@@ -5,26 +5,20 @@ import configureMockStore from "redux-mock-store";
 
 import CreateProjectWithProps from "components/ProjectScreen/CreateProject";
 import { CreateProject } from "components/ProjectScreen/CreateProject/CreateProjectComponent";
+import { defaultState } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
 import i18n from "tests/i18nMock";
 
 const createMockStore = configureMockStore();
 const mockState = {
   currentProjectState: { project: {} },
-  createProjectState: {
-    name: "",
-    inProgress: false,
-    success: false,
-    errorMsg: "",
-  },
+  createProjectState: defaultState,
 };
 const mockStore = createMockStore(mockState);
 
 const DATA = "stuff";
 const MOCK_EVENT = {
   preventDefault: jest.fn(),
-  target: {
-    value: DATA,
-  },
+  target: { value: DATA },
 };
 
 let projectMaster: renderer.ReactTestRenderer;

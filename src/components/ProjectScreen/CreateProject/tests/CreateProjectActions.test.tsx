@@ -2,17 +2,16 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
 import * as action from "components/ProjectScreen/CreateProject/Redux/CreateProjectActions";
-import {
-  defaultState,
-  CreateProjectAction,
-  CreateProjectActionTypes,
-} from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
+import { defaultState } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
 
-const createMockStore = configureMockStore([thunk]);
+jest.mock("backend", () => ({
+  createProject: () => Promise.reject({ response: "intentional failure" }),
+}));
+
+const mockStore = configureMockStore([thunk])(defaultState);
 
 const project = {
   name: "testProjectName",
-
   vernacularLanguage: {
     name: "testVernName",
     bcp47: "testVernCode",
@@ -25,37 +24,34 @@ const project = {
       font: "testAnalysisFont",
     },
   ],
-  languageData: new File([], "testFile.lift"),
 };
 
+beforeEach(() => {
+  mockStore.clearActions();
+});
+
 describe("CreateProjectAction Tests", () => {
-  const mockState = defaultState;
-  const CreateProject: CreateProjectAction = {
-    type: CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS,
-    payload: {},
-  };
-
-  test("inProgress returns correct value", () => {
-    expect(action.inProgress()).toEqual({
-      type: CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS,
-      payload: {},
-    });
-  });
-
-  test("asyncCreateProject correctly affects state", () => {
-    const mockStore = createMockStore(mockState);
-    const mockDispatch = mockStore.dispatch<any>(
+  test("asyncCreateProject correctly affects state", async () => {
+    await mockStore.dispatch<any>(
       action.asyncCreateProject(
         project.name,
         project.vernacularLanguage,
         project.analysisLanguages
       )
     );
+    expect(mockStore.getActions()).toEqual([
+      action.inProgress(),
+      action.failure(), // backend.createProject mocked to fail
+    ]);
+  });
 
-    mockDispatch
-      .then(() => {
-        expect(mockStore.getActions()).toEqual([CreateProject]);
-      })
-      .catch(() => fail());
+  test("asyncFinishProject correctly affects state", async () => {
+    await mockStore.dispatch<any>(
+      action.asyncFinishProject(project.name, project.vernacularLanguage)
+    );
+    expect(mockStore.getActions()).toEqual([
+      action.inProgress(),
+      action.failure(), // backend.createProject mocked to fail
+    ]);
   });
 });

@@ -56,11 +56,11 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UploadLiftFileAndGetWritingSystems([FromForm] FileUpload fileUpload)
         {
             var userId = _permissionService.GetUserId(HttpContext);
-            if (string.IsNullOrWhiteSpace(userId))
-            {
-                return Forbid();
-            }
+            return await UploadLiftFileAndGetWritingSystems(fileUpload, userId);
+        }
 
+        internal async Task<IActionResult> UploadLiftFileAndGetWritingSystems(FileUpload fileUpload, string userId)
+        {
             string extractedLiftRootPath;
             try
             {
@@ -74,9 +74,7 @@ namespace BackendFramework.Controllers
                 return BadRequest(e.Message);
             }
 
-            return Ok(Language.GetVernacularWritingSystems(extractedLiftRootPath));
-
-
+            return Ok(Language.GetVernacularWritingSystems(extractedLiftRootPath).ToList());
         }
 
         /// <summary> Adds data from a directory containing a .lift file </summary>
@@ -89,13 +87,12 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
-
             var userId = _permissionService.GetUserId(HttpContext);
-            if (string.IsNullOrWhiteSpace(userId))
-            {
-                return Forbid();
-            }
+            return await FinishUploadLiftFile(projectId, userId);
+        }
 
+        internal async Task<IActionResult> FinishUploadLiftFile(string projectId, string userId)
+        {
             // Sanitize projectId
             if (!Sanitization.SanitizeId(projectId))
             {
