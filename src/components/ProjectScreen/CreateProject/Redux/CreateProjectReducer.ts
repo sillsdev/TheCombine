@@ -13,30 +13,21 @@ export const createProjectReducer = (
   switch (action.type) {
     case CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS:
       return {
-        name: action.payload.name,
-        vernacularLanguage: action.payload.vernacularLanguage,
-        analysisLanguages: action.payload.analysisLanguages,
         success: false,
         inProgress: true,
         errorMsg: "",
       };
     case CreateProjectActionTypes.CREATE_PROJECT_SUCCESS:
       return {
-        name: action.payload.name,
-        vernacularLanguage: action.payload.vernacularLanguage,
-        analysisLanguages: action.payload.analysisLanguages,
         success: true,
         inProgress: false,
         errorMsg: "",
       };
     case CreateProjectActionTypes.CREATE_PROJECT_FAILURE:
       return {
-        name: action.payload.name,
-        vernacularLanguage: action.payload.vernacularLanguage,
-        analysisLanguages: action.payload.analysisLanguages,
         success: false,
         inProgress: false,
-        errorMsg: action.payload.errorMsg || "",
+        errorMsg: action.payload.errorMsg ?? "",
       };
     case CreateProjectActionTypes.CREATE_PROJECT_RESET:
       return defaultState;

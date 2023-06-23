@@ -32,27 +32,13 @@ describe("CreateProjectAction Tests", () => {
   const mockState = defaultState;
   const CreateProject: CreateProjectAction = {
     type: CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS,
-    payload: {
-      name: project.name,
-      vernacularLanguage: project.vernacularLanguage,
-      analysisLanguages: project.analysisLanguages,
-    },
+    payload: {},
   };
 
   test("inProgress returns correct value", () => {
-    expect(
-      action.inProgress(
-        project.name,
-        project.vernacularLanguage,
-        project.analysisLanguages
-      )
-    ).toEqual({
+    expect(action.inProgress()).toEqual({
       type: CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS,
-      payload: {
-        name: project.name,
-        vernacularLanguage: project.vernacularLanguage,
-        analysisLanguages: project.analysisLanguages,
-      },
+      payload: {},
     });
   });
 
@@ -62,8 +48,7 @@ describe("CreateProjectAction Tests", () => {
       action.asyncCreateProject(
         project.name,
         project.vernacularLanguage,
-        project.analysisLanguages,
-        project.languageData
+        project.analysisLanguages
       )
     );
 

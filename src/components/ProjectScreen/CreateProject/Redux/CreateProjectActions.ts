@@ -2,10 +2,7 @@ import { WritingSystem } from "api/models";
 import * as backend from "backend";
 import history, { Path } from "browserHistory";
 import { asyncCreateUserEdits } from "components/GoalTimeline/Redux/GoalActions";
-import {
-  setCurrentProject,
-  setNewCurrentProject,
-} from "components/Project/ProjectActions";
+import { setNewCurrentProject } from "components/Project/ProjectActions";
 import {
   CreateProjectAction,
   CreateProjectActionTypes,
@@ -17,12 +14,11 @@ import { newProject } from "types/project";
 export function asyncCreateProject(
   name: string,
   vernacularLanguage: WritingSystem,
-  analysisLanguages: WritingSystem[],
-  languageData?: File
+  analysisLanguages: WritingSystem[]
 ) {
   return async (dispatch: StoreStateDispatch) => {
-    dispatch(inProgress(name, vernacularLanguage, analysisLanguages));
-    // Create project
+    dispatch(inProgress());
+
     const project = newProject(name);
     project.vernacularWritingSystem = vernacularLanguage;
     project.analysisWritingSystems = analysisLanguages;
@@ -33,87 +29,71 @@ export function asyncCreateProject(
         dispatch(setNewCurrentProject(createdProject));
 
         // Upload words
-        if (languageData) {
-          await backend.uploadLift(createdProject.id, languageData);
-          await backend
-            .getProject(createdProject.id)
-            .then((updatedProject) => {
-              dispatch(setCurrentProject(updatedProject));
-              dispatch(success(name, vernacularLanguage, analysisLanguages));
-              // Manually pause so they have a chance to see the success message.
-              setTimeout(() => {
-                dispatch(asyncCreateUserEdits());
-                history.push(Path.ProjSettings);
-              }, 1000);
-            })
-            .catch((err) => {
-              dispatch(
-                failure(
-                  name,
-                  vernacularLanguage,
-                  analysisLanguages,
-                  err.response?.statusText
-                )
-              );
-            });
-        } else {
-          dispatch(success(name, vernacularLanguage, analysisLanguages));
-          setTimeout(() => {
-            dispatch(asyncCreateUserEdits());
-            history.push(Path.ProjSettings);
-          }, 1000);
-        }
+        dispatch(success());
+        setTimeout(() => {
+          dispatch(asyncCreateUserEdits());
+          history.push(Path.ProjSettings);
+        }, 1000);
       })
-      .catch((err) => {
-        const errorMessage = err.response?.statusText;
-        dispatch(
-          failure(name, vernacularLanguage, analysisLanguages, errorMessage)
-        );
+      .catch((e) => {
+        dispatch(failure(e.response?.statusText));
       });
   };
 }
 
-export function inProgress(
+//thunk action creator
+export function asyncFinishProject(
   name: string,
-  vernacularLanguage: WritingSystem,
-  analysisLanguages: WritingSystem[]
-): CreateProjectAction {
+  vernacularLanguage: WritingSystem
+) {
+  return async (dispatch: StoreStateDispatch) => {
+    dispatch(inProgress());
+
+    const project = newProject(name);
+    project.vernacularWritingSystem = vernacularLanguage;
+
+    await backend
+      .createProject(project)
+      .then(async (createdProject) => {
+        await backend.finishUploadLift(createdProject.id);
+        createdProject = await backend.getProject(createdProject.id);
+        dispatch(setNewCurrentProject(createdProject));
+        dispatch(success());
+        setTimeout(() => {
+          dispatch(asyncCreateUserEdits());
+          history.push(Path.ProjSettings);
+        }, 1000);
+      })
+      .catch((e) => {
+        dispatch(failure(e.response?.statusText));
+      });
+  };
+}
+
+export function inProgress(): CreateProjectAction {
   return {
     type: CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS,
-    payload: { name, vernacularLanguage, analysisLanguages },
+    payload: {},
   };
 }
 
-export function success(
-  name: string,
-  vernacularLanguage: WritingSystem,
-  analysisLanguages: WritingSystem[]
-): CreateProjectAction {
+export function success(): CreateProjectAction {
   return {
     type: CreateProjectActionTypes.CREATE_PROJECT_SUCCESS,
-    payload: { name, vernacularLanguage, analysisLanguages },
+    payload: {},
   };
 }
 
-export function failure(
-  name: string,
-  vernacularLanguage: WritingSystem,
-  analysisLanguages: WritingSystem[],
-  errorMsg = ""
-): CreateProjectAction {
+export function failure(errorMsg = ""): CreateProjectAction {
   return {
     type: CreateProjectActionTypes.CREATE_PROJECT_FAILURE,
-    payload: { name, errorMsg, vernacularLanguage, analysisLanguages },
+    payload: { errorMsg },
   };
 }
 
 export function reset(): CreateProjectAction {
   return {
     type: CreateProjectActionTypes.CREATE_PROJECT_RESET,
-    payload: {
-      name: "",
-      vernacularLanguage: { name: "", bcp47: "", font: "" },
-      analysisLanguages: [{ name: "", bcp47: "", font: "" }],
-    },
+    payload: {},
   };
 }
