@@ -17,7 +17,7 @@ export default function ProjectSwitch(
     if (userId) {
       getAllActiveProjectsByUser(userId).then(setProjList);
     }
-  }, [props.project.name, setProjList]);
+  }, [props.project.name]);
 
   const getListItems = (): ReactElement[] => {
     return projList.map((proj) => (
