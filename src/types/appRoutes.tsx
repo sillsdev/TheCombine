@@ -16,35 +16,37 @@ const AppWithBar = loadable(() => import("components/App/AppLoggedIn"));
 
 export const appRoutes: RouteObject[] = [
   {
-    path: routerPath(Path.Root),
+    path: Path.Root,
     element: <LandingPage />,
   },
   {
+    // use routerPath to get the wildcard expression for
+    // the app pages
     path: routerPath(Path.AppRoot),
     element: (
-      <RequireAuth redirectTo={routerPath(Path.Login)}>
+      <RequireAuth redirectTo={Path.Login}>
         <AppWithBar />
       </RequireAuth>
     ),
   },
   {
-    path: routerPath(Path.Login),
+    path: Path.Login,
     element: <Login />,
   },
   {
-    path: routerPath(Path.SignUp),
+    path: Path.SignUp,
     element: <SignUp />,
   },
   {
-    path: `${routerPath(Path.PwReset)}/:token`,
+    path: `${Path.PwReset}/:token`,
     element: <PasswordReset />,
   },
   {
-    path: routerPath(Path.PwRequest),
+    path: Path.PwRequest,
     element: <PasswordRequest />,
   },
   {
-    path: `${routerPath(Path.ProjInvite)}/:project/:token`,
+    path: `${Path.ProjInvite}/:project/:token`,
     element: <ProjectInvite />,
   },
   {
