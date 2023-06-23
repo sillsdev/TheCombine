@@ -179,7 +179,7 @@ namespace BackendFramework.Services
         public bool DeleteImport(string userId)
         {
             var removeSuccessful = _liftImports.Remove(userId, out var dirPath);
-            if (removeSuccessful && dirPath is not null)
+            if (removeSuccessful && Directory.Exists(dirPath))
             {
                 Directory.Delete(dirPath, true);
             }

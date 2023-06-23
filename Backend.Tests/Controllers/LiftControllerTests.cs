@@ -249,6 +249,29 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestFinishUploadLiftFileNothingToFinish()
+        {
+            var proj = Util.RandomProject();
+            proj = _projRepo.Create(proj).Result;
+
+            // No extracted import dir stored for user.
+            Assert.That(_liftService.RetrieveImport(UserId), Is.Null);
+            var result = _liftController.FinishUploadLiftFile(proj!.Id, UserId).Result;
+            Assert.That(result is BadRequestObjectResult);
+
+            // Empty extracted import dir stored for user.
+            _liftService.StoreImport(UserId, "  ");
+            result = _liftController.FinishUploadLiftFile(proj!.Id, UserId).Result;
+            Assert.That(result is BadRequestObjectResult);
+
+            // Nonsense extracted import dir stored for user.
+            _liftService.StoreImport(UserId, "not-a-real-path");
+            result = _liftController.FinishUploadLiftFile(proj!.Id, UserId).Result;
+            Assert.That(result is BadRequestObjectResult);
+            Assert.That(_liftService.RetrieveImport(UserId), Is.Null);
+        }
+
+        [Test]
         public async Task TestModifiedTimeExportsToLift()
         {
             var word = Util.RandomWord(_projId);
