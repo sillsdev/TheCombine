@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
@@ -96,6 +98,27 @@ namespace BackendFramework.Helper
             {
                 CopyDirectory(directory, Path.Combine(targetDir, Path.GetFileName(directory)));
             }
+        }
+
+        /// <summary> Find any files of specified extension within a directory. </summary>
+        public static List<string> FindFilesWithExtension(string dir, string ext, bool recursive = false)
+        {
+            if (dir.Length == 0 || ext.Length == 0)
+            {
+                return new List<string>();
+            }
+            if (ext[0] != '.')
+            {
+                ext = $".{ext}";
+            }
+
+            var files = Directory.GetFiles(dir, $"*{ext}").ToList();
+            if (recursive)
+            {
+                Directory.GetDirectories(dir).ToList()
+                    .ForEach(subDir => files.AddRange(FindFilesWithExtension(subDir, ext, true)));
+            }
+            return files;
         }
     }
 }

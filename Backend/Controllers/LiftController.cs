@@ -211,12 +211,13 @@ namespace BackendFramework.Controllers
                     return NotFound(projectId);
                 }
 
-                await _liftService.LdmlImport(Path.Combine(liftStoragePath, "WritingSystems"), _projRepo, proj);
+                await _liftService.LdmlImport(Path.Combine(liftStoragePath), _projRepo, proj);
 
                 var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(liftMerger);
 
                 // Import words from .lift file
-                liftParseResult = parser.ReadLiftFile(LiftHelper.FindLiftFiles(liftStoragePath, true).First());
+                liftParseResult = parser.ReadLiftFile(
+                    FileOperations.FindFilesWithExtension(liftStoragePath, ".lift", true).First());
 
                 // Get data from imported words before they're deleted by SaveImportEntries.
                 analysisLanguages = liftMerger.GetImportAnalysisLanguages();
@@ -241,6 +242,7 @@ namespace BackendFramework.Controllers
 
             project.AnalysisWritingSystems.AddRange(analysisLanguages.Where(
                 lang => !project.AnalysisWritingSystems.Any(ws => ws.Bcp47 == lang.Bcp47)));
+            project.AnalysisWritingSystems.RemoveAll(lang => String.IsNullOrWhiteSpace(lang.Bcp47));
             project.DefinitionsEnabled = doesImportHaveDefinitions;
             project.GrammaticalInfoEnabled = doesImportHaveGrammaticalInfo;
             project.LiftImported = true;

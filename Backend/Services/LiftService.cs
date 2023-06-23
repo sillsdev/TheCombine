@@ -188,28 +188,22 @@ namespace BackendFramework.Services
 
         /// <summary> Imports main character set for a project from an ldml file. </summary>
         /// <returns> A bool indicating whether a character set was added to the project. </returns>
-        public async Task<bool> LdmlImport(string filePath, IProjectRepository projRepo, Project project)
+        public async Task<bool> LdmlImport(string dirPath, IProjectRepository projRepo, Project project)
         {
-            var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
-            var aws = wsr.AllWritingSystems;
-            if (String.IsNullOrWhiteSpace(project.VernacularWritingSystem.Bcp47) && aws.Any())
+            if (!Directory.GetFiles(dirPath, "*.ldml").Any())
             {
-                var ws = aws.First();
-                project.VernacularWritingSystem = new WritingSystem
-                {
-                    Bcp47 = ws.LanguageTag,
-                    Name = ws.Language.Name,
-                    Font = ws.DefaultFont.Name
-                };
+                dirPath = Path.Combine(dirPath, "WritingSystems");
             }
+            var wsr = LdmlInFolderWritingSystemRepository.Initialize(dirPath);
+
             var wsf = new LdmlInFolderWritingSystemFactory(wsr);
             wsf.Create(project.VernacularWritingSystem.Bcp47, out var wsDef);
 
             // If there is a main character set, add it to the project
             if (wsDef.CharacterSets.Contains("main"))
             {
-                project.ValidCharacters.AddRange(wsDef.CharacterSets["main"].Characters);
-                project.ValidCharacters = project.ValidCharacters.Distinct().ToList();
+                project.ValidCharacters.AddRange(wsDef.CharacterSets["main"].Characters
+                    .Where(c => !project.ValidCharacters.Contains(c)));
                 project.RejectedCharacters = project.RejectedCharacters
                     .Where(c => !project.ValidCharacters.Contains(c)).ToList();
                 await projRepo.Update(project.Id, project);

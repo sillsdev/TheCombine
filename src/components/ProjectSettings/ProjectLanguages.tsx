@@ -266,22 +266,23 @@ function ImmutableWritingSystem(
         </Grid>
       )}
       <Grid item>
-        <Typography>
-          {t("projectSettings.language.name")}
-          {`: ${props.ws.name}, `}
-        </Typography>
+        {!!props.ws.name && (
+          <Typography>
+            {`${t("projectSettings.language.name")}: ${props.ws.name}, `}
+          </Typography>
+        )}
       </Grid>
       <Grid item>
         <Typography>
-          {t("projectSettings.language.bcp47")}
-          {`: ${props.ws.bcp47}, `}
+          {`${t("projectSettings.language.bcp47")}: ${props.ws.bcp47}`}
         </Typography>
       </Grid>
       <Grid item>
-        <Typography>
-          {t("projectSettings.language.font")}
-          {`: ${props.ws.font}`}
-        </Typography>
+        {!!props.ws.font && (
+          <Typography>
+            {`, ${t("projectSettings.language.font")}: ${props.ws.font}`}
+          </Typography>
+        )}
       </Grid>
       <Grid item>{props.buttons}</Grid>
     </Grid>

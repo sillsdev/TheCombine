@@ -20,7 +20,7 @@ import { FileInputButton, LoadingDoneButton } from "components/Buttons";
 import theme from "types/theme";
 import { newWritingSystem } from "types/writingSystem";
 
-const otherVernId = "is-for-selecting-a-different-vernacular-language";
+const otherVernId = "selectLanguageOptionOther";
 const undBcp47 = "und";
 
 interface CreateProjectProps extends WithTranslation {
@@ -163,7 +163,7 @@ export class CreateProject extends React.Component<
 
     const menuItems = [
       <MenuItem key={"no-language-selected"}>
-        {"Select from vernacular languages in file:"}
+        {this.props.t("createProject.languageSelect")}
       </MenuItem>,
     ];
     menuItems.push(
@@ -175,7 +175,7 @@ export class CreateProject extends React.Component<
     );
     menuItems.push(
       <MenuItem key={otherVernId} value={otherVernId}>
-        {"other"}
+        {this.props.t("createProject.languageOptionOther")}
       </MenuItem>
     );
 
@@ -194,11 +194,7 @@ export class CreateProject extends React.Component<
     };
 
     return (
-      <Select
-        displayEmpty
-        id="create-proj-select-vern-lang"
-        onChange={onChange}
-      >
+      <Select displayEmpty id="create-proj-select-vern" onChange={onChange}>
         {menuItems}
       </Select>
     );

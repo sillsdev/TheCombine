@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using SIL.Lift.Parsing;
@@ -25,7 +24,7 @@ namespace BackendFramework.Helper
             //    | WritingSystems
             //    | project_name.lift
             //    | project_name.lift-ranges
-            if (FindLiftFiles(dirPath).Count > 0)
+            if (FileOperations.FindFilesWithExtension(dirPath, ".lift").Count > 0)
             {
                 extractedLiftRootPath = dirPath;
             }
@@ -42,7 +41,7 @@ namespace BackendFramework.Helper
             }
 
             // Validate that only one .lift file is included.
-            var extractedLiftFiles = FindLiftFiles(extractedLiftRootPath);
+            var extractedLiftFiles = FileOperations.FindFilesWithExtension(extractedLiftRootPath, ".lift");
             switch (extractedLiftFiles.Count)
             {
                 case 0:
@@ -52,18 +51,6 @@ namespace BackendFramework.Helper
             }
 
             return extractedLiftRootPath;
-        }
-
-        /// <summary> Find any .lift files within a directory. </summary>
-        public static List<string> FindLiftFiles(string dir, bool recursive = false)
-        {
-            var liftFiles = Directory.GetFiles(dir, "*.lift").ToList();
-            if (recursive)
-            {
-                Directory.GetDirectories(dir).ToList()
-                    .ForEach(subDir => liftFiles.AddRange(FindLiftFiles(subDir, true)));
-            }
-            return liftFiles;
         }
 
         /// <summary>

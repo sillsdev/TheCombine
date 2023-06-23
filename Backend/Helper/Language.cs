@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using BackendFramework.Models;
 using SIL.WritingSystems;
@@ -28,16 +29,18 @@ namespace BackendFramework.Helper
             return writingSystems;
         }
 
-        /// <summary> Extract <see cref="WritingSystem"/>s from ldml files in a directory. </summary>
+        /// <summary>
+        /// Extract <see cref="WritingSystem"/>s from .ldml files in a directory or its WritingSystems subdirectory.
+        /// </summary>
         public static IEnumerable<WritingSystem> GetVernacularWritingSystems(string dirPath)
         {
-            var wsr = LdmlInFolderWritingSystemRepository.Initialize(dirPath + "/WritingSystems");
-            return wsr.AllWritingSystems.Select(ws => new WritingSystem
+            if (!Directory.GetFiles(dirPath, "*.ldml").Any())
             {
-                Bcp47 = ws.LanguageTag,
-                Name = ws.Language.Name,
-                Font = ws.DefaultFont.Name
-            });
+                dirPath = Path.Combine(dirPath, "WritingSystems");
+            }
+
+            var wsr = LdmlInFolderWritingSystemRepository.Initialize(dirPath);
+            return wsr.AllWritingSystems.Select(wsd => new WritingSystem(wsd));
         }
     }
 }
