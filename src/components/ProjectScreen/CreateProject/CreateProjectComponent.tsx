@@ -20,7 +20,8 @@ import { FileInputButton, LoadingDoneButton } from "components/Buttons";
 import theme from "types/theme";
 import { newWritingSystem } from "types/writingSystem";
 
-const otherVernId = "selectLanguageOptionOther";
+const vernIdNone = "selectLanguageOptionNone";
+const vernIdOther = "selectLanguageOptionOther";
 const undBcp47 = "und";
 
 interface CreateProjectProps extends WithTranslation {
@@ -162,7 +163,7 @@ export class CreateProject extends React.Component<
     }
 
     const menuItems = [
-      <MenuItem key={"no-language-selected"}>
+      <MenuItem key={vernIdNone}>
         {this.props.t("createProject.languageSelect")}
       </MenuItem>,
     ];
@@ -174,22 +175,20 @@ export class CreateProject extends React.Component<
       ))
     );
     menuItems.push(
-      <MenuItem key={otherVernId} value={otherVernId}>
+      <MenuItem key={vernIdOther} value={vernIdOther}>
         {this.props.t("createProject.languageOptionOther")}
       </MenuItem>
     );
 
     const onChange = (e: SelectChangeEvent): void => {
-      if (!e.target.value) {
-        return;
-      }
       const ws = langs.find((l) => l.bcp47 === e.target.value);
       if (ws) {
-        this.setState({ vernLangIsOther: false });
-        this.setVernBcp47(ws.bcp47);
-        this.setVernLangName(ws.name);
+        this.setState({ vernLangIsOther: false, vernLanguage: ws });
       } else {
-        this.setState({ vernLangIsOther: true });
+        this.setState({
+          vernLangIsOther: e.target.value === vernIdOther,
+          vernLanguage: newWritingSystem(undBcp47),
+        });
       }
     };
 
