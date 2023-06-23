@@ -24,32 +24,34 @@ const MOCK_EVENT = {
 let projectMaster: renderer.ReactTestRenderer;
 let projectHandle: renderer.ReactTestInstance;
 
-it("renders without crashing", () => {
-  renderer.act(() => {
-    renderer.create(
-      <Provider store={mockStore}>
-        <I18nextProvider i18n={i18n}>
+describe("CreateProject", () => {
+  it("renders", () => {
+    renderer.act(() => {
+      renderer.create(
+        <Provider store={mockStore}>
+          <I18nextProvider i18n={i18n}>
+            <CreateProjectWithProps />
+          </I18nextProvider>
+        </Provider>
+      );
+    });
+  });
+
+  it("errors on empty name", () => {
+    renderer.act(() => {
+      projectMaster = renderer.create(
+        <Provider store={mockStore}>
           <CreateProjectWithProps />
-        </I18nextProvider>
-      </Provider>
-    );
+        </Provider>
+      );
+    });
+
+    projectHandle = projectMaster.root.findByType(CreateProject);
+    const testComponent = projectHandle.instance;
+
+    expect(testComponent.state.error.empty).toBe(false);
+    testComponent.setState({ name: "" });
+    testComponent.createProject(MOCK_EVENT);
+    expect(testComponent.state.error.empty).toBe(true);
   });
-});
-
-it("errors on empty name", () => {
-  renderer.act(() => {
-    projectMaster = renderer.create(
-      <Provider store={mockStore}>
-        <CreateProjectWithProps />
-      </Provider>
-    );
-  });
-
-  projectHandle = projectMaster.root.findByType(CreateProject);
-  const testComponent = projectHandle.instance;
-
-  expect(testComponent.state.error.empty).toBe(false);
-  testComponent.setState({ name: "" });
-  testComponent.createProject(MOCK_EVENT);
-  expect(testComponent.state.error.empty).toBe(true);
 });

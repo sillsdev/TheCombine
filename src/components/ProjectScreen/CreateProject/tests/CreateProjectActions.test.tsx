@@ -3,6 +3,7 @@ import thunk from "redux-thunk";
 
 import * as action from "components/ProjectScreen/CreateProject/Redux/CreateProjectActions";
 import { defaultState } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
+import { newWritingSystem } from "types/writingSystem";
 
 jest.mock("backend", () => ({
   createProject: () => Promise.reject({ response: "intentional failure" }),
@@ -12,25 +13,15 @@ const mockStore = configureMockStore([thunk])(defaultState);
 
 const project = {
   name: "testProjectName",
-  vernacularLanguage: {
-    name: "testVernName",
-    bcp47: "testVernCode",
-    font: "testVernFont",
-  },
-  analysisLanguages: [
-    {
-      name: "testAnalysisName",
-      bcp47: "testAnalysisCode",
-      font: "testAnalysisFont",
-    },
-  ],
+  vernacularLanguage: newWritingSystem("testVernCode", "testVernName"),
+  analysisLanguages: [newWritingSystem("testAnalysisCode", "testAnalysisName")],
 };
 
 beforeEach(() => {
   mockStore.clearActions();
 });
 
-describe("CreateProjectAction Tests", () => {
+describe("CreateProjectActions", () => {
   test("asyncCreateProject correctly affects state", async () => {
     await mockStore.dispatch<any>(
       action.asyncCreateProject(

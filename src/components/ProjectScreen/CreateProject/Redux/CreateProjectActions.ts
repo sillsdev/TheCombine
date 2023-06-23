@@ -1,5 +1,5 @@
 import { WritingSystem } from "api/models";
-import * as backend from "backend";
+import { createProject, finishUploadLift, getProject } from "backend";
 import history, { Path } from "browserHistory";
 import { asyncCreateUserEdits } from "components/GoalTimeline/Redux/GoalActions";
 import { setNewCurrentProject } from "components/Project/ProjectActions";
@@ -10,7 +10,7 @@ import {
 import { StoreStateDispatch } from "types/Redux/actions";
 import { newProject } from "types/project";
 
-//thunk action creator
+/** thunk action creator for creating a project without an import */
 export function asyncCreateProject(
   name: string,
   vernacularLanguage: WritingSystem,
@@ -23,12 +23,9 @@ export function asyncCreateProject(
     project.vernacularWritingSystem = vernacularLanguage;
     project.analysisWritingSystems = analysisLanguages;
 
-    await backend
-      .createProject(project)
+    await createProject(project)
       .then(async (createdProject) => {
         dispatch(setNewCurrentProject(createdProject));
-
-        // Upload words
         dispatch(success());
         setTimeout(() => {
           dispatch(asyncCreateUserEdits());
@@ -41,7 +38,7 @@ export function asyncCreateProject(
   };
 }
 
-//thunk action creator
+/** thunk action creator for creating a project with an pre-uploaded import */
 export function asyncFinishProject(
   name: string,
   vernacularLanguage: WritingSystem
@@ -52,11 +49,10 @@ export function asyncFinishProject(
     const project = newProject(name);
     project.vernacularWritingSystem = vernacularLanguage;
 
-    await backend
-      .createProject(project)
+    await createProject(project)
       .then(async (createdProject) => {
-        await backend.finishUploadLift(createdProject.id);
-        createdProject = await backend.getProject(createdProject.id);
+        await finishUploadLift(createdProject.id);
+        createdProject = await getProject(createdProject.id);
         dispatch(setNewCurrentProject(createdProject));
         dispatch(success());
         setTimeout(() => {
