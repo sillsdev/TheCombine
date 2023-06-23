@@ -47,6 +47,7 @@ interface CreateProjectState {
   languageData?: File;
 }
 
+/** A component for creating a new project. */
 export class CreateProject extends React.Component<
   CreateProjectProps,
   CreateProjectState
@@ -156,6 +157,7 @@ export class CreateProject extends React.Component<
     }
   }
 
+  /** A selector listing the vernacular writing systems in the user's upload. */
   vernLangSelect(): ReactElement {
     const langs = this.state.vernLangOptions;
     if (!langs.length) {
@@ -234,7 +236,7 @@ export class CreateProject extends React.Component<
             <Typography variant="h5" align="center" gutterBottom>
               {this.props.t("createProject.create")}
             </Typography>
-            {/* Project name field */}
+            {/* Project name */}
             <TextField
               id="create-project-name"
               label={this.props.t("createProject.name")}
@@ -283,7 +285,7 @@ export class CreateProject extends React.Component<
                   FillerTextC
                 </Trans>
               </Typography>
-              {/* Displays the name of the selected file */}
+              {/* Uploaded file name and remove button */}
               {this.state.languageData && (
                 <Typography
                   variant="body2"

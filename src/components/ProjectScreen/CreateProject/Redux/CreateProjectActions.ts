@@ -10,7 +10,7 @@ import {
 import { StoreStateDispatch } from "types/Redux/actions";
 import { newProject } from "types/project";
 
-/** thunk action creator for creating a project without an import */
+/** thunk action creator for creating a project without an import. */
 export function asyncCreateProject(
   name: string,
   vernacularLanguage: WritingSystem,
@@ -27,6 +27,8 @@ export function asyncCreateProject(
       .then(async (createdProject) => {
         dispatch(setNewCurrentProject(createdProject));
         dispatch(success());
+
+        // Manually pause so they have a chance to see the success message.
         setTimeout(() => {
           dispatch(asyncCreateUserEdits());
           history.push(Path.ProjSettings);
@@ -38,7 +40,7 @@ export function asyncCreateProject(
   };
 }
 
-/** thunk action creator for creating a project with an pre-uploaded import */
+/** thunk action creator for creating a project with an pre-uploaded import. */
 export function asyncFinishProject(
   name: string,
   vernacularLanguage: WritingSystem
@@ -55,6 +57,8 @@ export function asyncFinishProject(
         createdProject = await getProject(createdProject.id);
         dispatch(setNewCurrentProject(createdProject));
         dispatch(success());
+
+        // Manually pause so they have a chance to see the success message.
         setTimeout(() => {
           dispatch(asyncCreateUserEdits());
           history.push(Path.ProjSettings);
