@@ -190,6 +190,12 @@ namespace BackendFramework.Controllers
 
         private async Task<IActionResult> AddImportToProject(string liftStoragePath, string projectId)
         {
+            // Sanitize projectId
+            if (!Sanitization.SanitizeId(projectId))
+            {
+                return new UnsupportedMediaTypeResult();
+            }
+
             int liftParseResult;
             // Sets the projectId of our parser to add words to that project
             var liftMerger = _liftService.GetLiftImporterExporter(projectId, _wordRepo);

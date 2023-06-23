@@ -31,7 +31,7 @@ namespace BackendFramework.Helper
         /// <summary> Extract <see cref="WritingSystem"/>s from ldml files in a directory. </summary>
         public static IEnumerable<WritingSystem> GetVernacularWritingSystems(string dirPath)
         {
-            var wsr = LdmlInFolderWritingSystemRepository.Initialize(dirPath);
+            var wsr = LdmlInFolderWritingSystemRepository.Initialize(dirPath + "/WritingSystems");
             return wsr.AllWritingSystems.Select(ws => new WritingSystem
             {
                 Bcp47 = ws.LanguageTag,
