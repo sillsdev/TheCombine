@@ -6,7 +6,7 @@ The Review Entries table shows all entries in a project.
 
 ### Sorting and Filtering Columns
 
-The columns are: Actions, Vernacular, Senses, Glosses, Domains, Pronunciations, Note, Flag, and Delete.
+The columns are: Edit, Vernacular, Senses, Glosses, Domains, Pronunciations, Note, Flag, and Delete.
 
 ![Review Entries column headers](images/reviewEntriesColumns.png)
 
@@ -16,14 +16,16 @@ alphabetically or filter with a text search.
 At the top of the Senses and Pronunciations columns, you can sort or filter by the number of senses or recordings that
 entries have.
 
-There is also a Definitions column that can be turned on or off in [Project Settings](project.md#definitions).
+Due to the nature of Rapid Word Collection, [Data Entry](dataEntry.md) in The Combine does not support adding
+definitions or parts of speech. However, if you have imported a project in which senses have definitions or part of
+speech, additional columns with that information will automatically be added to the Review Entries table.
 
 ### Editing Entry Rows
 
 You can record, play, or delete an entry's audio recordings with the icons in the Pronunciations column. You can delete
 an entire entry with the icon in the Delete column.
 
-To edit an entry's vernacular form, senses (including glosses and domains), note, or flag, click the icon in the Actions
+To edit an entry's vernacular form, senses (including glosses and domains), note, or flag, click the icon in the Edit
 column.
 
 ## Merge Duplicates
@@ -125,6 +127,27 @@ deleted senses), updating the words in the database. Second, it saves any unmerg
 
 The grey "Skip" button resets any changes made to the set of potential duplicates. The same set will be suggested again
 the next time Merge Duplicates is opened.
+
+### Merging with Imported Data
+
+#### Definitions and Part of Speech
+
+Although definitions and part of speech cannot be added during Data Entry, they can be present on imported entries. This
+information will appear in the Merge Duplicate sense cards as follows:
+
+- Any definition in an analysis language is shown below the gloss in that language.
+- Any part of speech is indicated by a colored hexagon in the upper-left corner. The color corresponds to its general
+  category (e.g., noun or verb). Hover your cursor over the hexagon to see the specific grammatical category (e.g.,
+  proper noun or transitive verb).
+
+![Merge Duplicates sense with definitions and part of speech](images/mergeSenseDefinitionsPartOfSpeech.png){ .center }
+
+#### Protected Entries and Senses
+
+If an entry or sense was imported with other data not supported in The Combine, it is protected to prevent its deletion.
+The sense card of a protected sense will have a yellow background—it cannot be deleted or dropped into another sense
+card. The column of a protected entry will have a yellow header (where the vernacular and flag are located). When a
+protected entry has only one sense, that sense card cannot be moved.
 
 ## Create Character Inventory
 
