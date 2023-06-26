@@ -43,6 +43,9 @@ const MOCK_STATE = {
     rejectedCharacters: REJECT_DATA,
     validCharacters: VALID_DATA,
   },
+  goalState: {
+    currentGoal: { changes: {} },
+  },
 };
 
 let oldProjectId: string;
@@ -93,12 +96,11 @@ describe("CharacterInventoryActions", () => {
     // Mock out the goal-related things called by uploadInventory.
     const mockAction: Action = { type: null };
     mockAsyncUpdateGoal.mockReturnValue(mockAction);
-    const mockGoal = { changes: {} } as Goal;
 
     LocalStorage.setCurrentUser(mockUser);
     LocalStorage.setProjectId(mockProjectId);
     const mockStore = createMockStore(MOCK_STATE);
-    const mockUpload = Actions.uploadInventory(mockGoal);
+    const mockUpload = Actions.uploadInventory();
     await mockUpload(
       mockStore.dispatch,
       mockStore.getState as () => StoreState
