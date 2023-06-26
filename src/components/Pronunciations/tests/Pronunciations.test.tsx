@@ -8,7 +8,9 @@ import "tests/reactI18nextMock";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
-import RecorderIcon from "components/Pronunciations/RecorderIcon";
+import RecorderIcon, {
+  recordButtonId,
+} from "components/Pronunciations/RecorderIcon";
 import {
   PronunciationsState,
   defaultState as pronunciationsState,
@@ -47,6 +49,8 @@ beforeAll(() => {
             <Pronunciations
               wordId="2"
               pronunciationFiles={["a.wav", "b.wav"]}
+              deleteAudio={jest.fn()}
+              uploadAudio={jest.fn()}
             />
           </Provider>
         </ThemeProvider>
@@ -83,11 +87,13 @@ describe("Pronunciations", () => {
         </StyledEngineProvider>
       );
     });
-    testRenderer.root
-      .findByProps({ id: "recordingButton" })
-      .props.onMouseDown();
+
+    expect(mockStartRecording).not.toBeCalled();
+    testRenderer.root.findByProps({ id: recordButtonId }).props.onMouseDown();
     expect(mockStartRecording).toBeCalled();
-    testRenderer.root.findByProps({ id: "recordingButton" }).props.onMouseUp();
+
+    expect(mockStopRecording).not.toBeCalled();
+    testRenderer.root.findByProps({ id: recordButtonId }).props.onMouseUp();
     expect(mockStopRecording).toBeCalled();
   });
 
@@ -97,7 +103,12 @@ describe("Pronunciations", () => {
         <ThemeProvider theme={theme}>
           <StyledEngineProvider>
             <Provider store={mockStore}>
-              <Pronunciations wordId="1" pronunciationFiles={["a.wav"]} />
+              <Pronunciations
+                wordId="1"
+                pronunciationFiles={["a.wav"]}
+                deleteAudio={jest.fn()}
+                uploadAudio={jest.fn()}
+              />
             </Provider>
           </StyledEngineProvider>
         </ThemeProvider>
@@ -117,7 +128,12 @@ describe("Pronunciations", () => {
         <ThemeProvider theme={theme}>
           <StyledEngineProvider>
             <Provider store={mockStore2}>
-              <Pronunciations wordId={wordId} pronunciationFiles={["a.wav"]} />
+              <Pronunciations
+                wordId={wordId}
+                pronunciationFiles={["a.wav"]}
+                deleteAudio={jest.fn()}
+                uploadAudio={jest.fn()}
+              />
             </Provider>
           </StyledEngineProvider>
         </ThemeProvider>
