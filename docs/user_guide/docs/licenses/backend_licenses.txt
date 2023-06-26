@@ -809,34 +809,34 @@ license Type:MIT
 
 ####################################################################################################
 Package:MongoDB.Bson
-Version:2.19.2
+Version:2.20.0
 project URL:https://www.mongodb.com/docs/drivers/csharp/
 Description:MongoDB's Official Bson Library.
-licenseUrl:https://www.nuget.org/packages/MongoDB.Bson/2.19.2/License
-license Type:License.txt
+licenseUrl:https://www.nuget.org/packages/MongoDB.Bson/2.20.0/License
+license Type:LICENSE.md
 
 ####################################################################################################
 Package:MongoDB.Driver
-Version:2.19.2
+Version:2.20.0
 project URL:https://www.mongodb.com/docs/drivers/csharp/
 Description:Official .NET driver for MongoDB.
-licenseUrl:https://www.nuget.org/packages/MongoDB.Driver/2.19.2/License
-license Type:License.txt
+licenseUrl:https://www.nuget.org/packages/MongoDB.Driver/2.20.0/License
+license Type:LICENSE.md
 
 ####################################################################################################
 Package:MongoDB.Driver.Core
-Version:2.19.2
+Version:2.20.0
 project URL:https://www.mongodb.com/docs/drivers/csharp/
 Description:Core Component of the Official MongoDB .NET Driver.
-licenseUrl:https://www.nuget.org/packages/MongoDB.Driver.Core/2.19.2/License
-license Type:License.txt
+licenseUrl:https://www.nuget.org/packages/MongoDB.Driver.Core/2.20.0/License
+license Type:LICENSE.md
 
 ####################################################################################################
 Package:MongoDB.Libmongocrypt
-Version:1.7.0
+Version:1.8.0
 project URL:http://www.mongodb.org/display/DOCS/CSharp+Language+Center
 Description:Libmongocrypt wrapper for the .NET driver.
-licenseUrl:https://www.nuget.org/packages/MongoDB.Libmongocrypt/1.7.0/License
+licenseUrl:https://www.nuget.org/packages/MongoDB.Libmongocrypt/1.8.0/License
 license Type:License.txt
 
 ####################################################################################################
