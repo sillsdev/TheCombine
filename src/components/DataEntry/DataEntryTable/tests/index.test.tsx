@@ -12,8 +12,8 @@ import DataEntryTable, {
   exitButtonId,
   makeSemDomCurrent,
   updateEntryGloss,
-} from "components/DataEntry/DataEntryTable/DataEntryTable";
-import NewEntry from "components/DataEntry/DataEntryTable/NewEntry/NewEntry";
+} from "components/DataEntry/DataEntryTable";
+import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
 import { newProject } from "types/project";
 import {
   newSemanticDomain,
@@ -41,10 +41,7 @@ jest.mock("backend", () => ({
 jest.mock("backend/localStorage", () => ({
   getUserId: () => mockUserId,
 }));
-jest.mock(
-  "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry",
-  () => "div"
-);
+jest.mock("components/DataEntry/DataEntryTable/RecentEntry", () => "div");
 jest.mock("components/Pronunciations/PronunciationsComponent", () => "div");
 jest.mock("components/Pronunciations/Recorder");
 jest.mock("utilities/utilities");

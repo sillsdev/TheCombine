@@ -11,7 +11,7 @@ import {
   GlossWithSuggestions,
   VernWithSuggestions,
 } from "components/DataEntry/DataEntryTable/EntryCellComponents";
-import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry/RecentEntry";
+import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
 import { EditTextDialog } from "components/Dialogs";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
