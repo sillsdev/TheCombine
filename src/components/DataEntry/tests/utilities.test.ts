@@ -1,7 +1,7 @@
 import { Status, Word } from "api/models";
 import {
-  filterWords,
   filterWordsByDomain,
+  filterWordsWithSenses,
   sortDomainWordsByVern,
 } from "components/DataEntry/utilities";
 import { newSemanticDomain } from "types/semanticDomain";
@@ -10,11 +10,11 @@ import { DomainWord, newSense, simpleWord } from "types/word";
 const mockWord = simpleWord("vern", "gloss");
 
 describe("DataEntryComponent", () => {
-  describe("filterWords", () => {
+  describe("filterWordsWithSenses", () => {
     it("returns empty Word Array when given empty Word Array.", () => {
       const words: Word[] = [];
       const expectedWords: Word[] = [];
-      expect(filterWords(words)).toEqual(expectedWords);
+      expect(filterWordsWithSenses(words)).toEqual(expectedWords);
     });
 
     it("removes words with no Active/Protected sense.", () => {
@@ -28,7 +28,7 @@ describe("DataEntryComponent", () => {
           senses: [{ ...newSense(), accessibility: Status.Duplicate }],
         },
       ];
-      expect(filterWords(words)).toHaveLength(0);
+      expect(filterWordsWithSenses(words)).toHaveLength(0);
     });
 
     it("keeps words with an Active/Protected sense.", () => {
@@ -39,7 +39,7 @@ describe("DataEntryComponent", () => {
           senses: [{ ...newSense(), accessibility: Status.Protected }],
         },
       ];
-      expect(filterWords(words)).toHaveLength(2);
+      expect(filterWordsWithSenses(words)).toHaveLength(2);
     });
   });
 

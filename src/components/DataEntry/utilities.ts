@@ -2,7 +2,7 @@ import { Status, Word } from "api/models";
 import { DomainWord } from "types/word";
 
 /** Filter out words that do not have at least 1 active sense */
-export function filterWords(words: Word[]): Word[] {
+export function filterWordsWithSenses(words: Word[]): Word[] {
   return words.filter((w) =>
     w.senses.find((s) =>
       [Status.Active, Status.Protected].includes(s.accessibility)

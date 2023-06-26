@@ -1,5 +1,11 @@
 import { Dialog, Divider, Grid, Paper } from "@mui/material";
-import { ReactElement, useCallback, useEffect, useState } from "react";
+import {
+  ReactElement,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from "react";
 
 import { getFrontierWords, getSemanticDomainFull } from "backend";
 import AppBar from "components/AppBar/AppBarComponent";
@@ -41,9 +47,7 @@ export default function DataEntry(): ReactElement {
   const { currentDomain, open } = useAppSelector(
     (state: StoreState) => state.treeViewState
   );
-  const { id, lang, name } = useAppSelector(
-    (state: StoreState) => state.treeViewState.currentDomain
-  );
+  const { id, lang, name } = currentDomain;
 
   const [domain, setDomain] = useState(newSemanticDomain(id, name, lang));
   const [domainWords, setDomainWords] = useState<DomainWord[]>([]);
@@ -54,12 +58,12 @@ export default function DataEntry(): ReactElement {
   const { windowWidth } = useWindowSize();
 
   // On first render, open tree.
-  useEffect(() => {
+  useLayoutEffect(() => {
     dispatch(openTreeAction());
   }, [dispatch]);
 
   // When window width changes, check if there's space for the sidebar.
-  useEffect(() => {
+  useLayoutEffect(() => {
     setIsSmallScreen(windowWidth < smallScreenThreshold);
   }, [windowWidth]);
 

@@ -27,7 +27,7 @@ import * as backend from "backend";
 import { getUserId } from "backend/localStorage";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
-import { filterWords } from "components/DataEntry/utilities";
+import { filterWordsWithSenses } from "components/DataEntry/utilities";
 import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
 import { StoreState } from "types";
@@ -434,7 +434,7 @@ export default function DataEntryTable(
   useEffect(() => {
     if (state.isFetchingFrontier) {
       backend.getFrontierWords().then((words) => {
-        const allWords = filterWords(words);
+        const allWords = filterWordsWithSenses(words);
         setState((prevState) => {
           const defunctWordIds: Hash<DefunctStatus> = {};
           for (const id of Object.keys(prevState.defunctWordIds)) {
