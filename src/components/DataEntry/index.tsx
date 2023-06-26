@@ -29,6 +29,7 @@ import { DomainWord } from "types/word";
 import { useWindowSize } from "utilities/useWindowSize";
 
 export const smallScreenThreshold = 960;
+export const treeViewDialogId = "tree-view-dialog";
 
 const paperStyle = {
   marginLeft: "auto",
@@ -110,7 +111,7 @@ export default function DataEntry(): ReactElement {
         toggleDrawer={setDrawerOpen}
       />
 
-      <Dialog fullScreen open={!!open}>
+      <Dialog id={treeViewDialogId} fullScreen open={!!open}>
         <AppBar />
         <TreeView returnControlToCaller={returnControlToCaller} />
       </Dialog>
