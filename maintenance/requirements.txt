@@ -18,7 +18,7 @@ cryptography==41.0.1
     # via pyopenssl
 dnspython==2.3.0
     # via pymongo
-google-auth==2.19.1
+google-auth==2.20.0
     # via kubernetes
 humanfriendly==10.0
     # via -r requirements.in
@@ -36,7 +36,7 @@ pyasn1-modules==0.3.0
     # via google-auth
 pycparser==2.21
     # via cffi
-pymongo==4.3.3
+pymongo==4.4.0
     # via -r requirements.in
 pyopenssl==23.2.0
     # via -r requirements.in
@@ -62,7 +62,7 @@ urllib3==1.26.16
     #   google-auth
     #   kubernetes
     #   requests
-websocket-client==1.5.2
+websocket-client==1.6.1
     # via kubernetes
 
 # The following packages are considered to be unsafe in a requirements file:
