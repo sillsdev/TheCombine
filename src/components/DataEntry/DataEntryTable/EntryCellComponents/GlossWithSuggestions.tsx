@@ -3,7 +3,7 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { Key } from "ts-key-enum";
 
 import { WritingSystem } from "api";
-import SpellChecker from "components/DataEntry/spellChecker";
+import SpellChecker from "utilities/spellChecker";
 
 interface GlossWithSuggestionsProps {
   isNew?: boolean;

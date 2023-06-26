@@ -50,6 +50,7 @@
     "mongoimport",
     "mongosh",
     "nerdctl",
+    "nspell",
     "oneshot",
     "openapi",
     "Palaso",
