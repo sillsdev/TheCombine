@@ -1,17 +1,17 @@
 import { memo, ReactElement } from "react";
 
-import * as backend from "backend";
+import { getAudioUrl } from "backend";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import Recorder from "components/Pronunciations/Recorder";
 
 interface PronunciationProps {
   wordId: string;
+  audioInFrontend?: boolean;
   pronunciationFiles: string[];
   recorder?: Recorder;
-  deleteAudio?: (wordId: string, fileName: string) => void;
-  getAudioUrl?: (wordId: string, fileName: string) => string;
-  uploadAudio?: (wordId: string, audioFile: File) => void;
+  deleteAudio: (wordId: string, fileName: string) => void;
+  uploadAudio: (wordId: string, audioFile: File) => void;
 }
 
 /** Audio recording/playing component */
@@ -23,14 +23,13 @@ export function Pronunciations(props: PronunciationProps): ReactElement {
         wordId={props.wordId}
         fileName={fileName}
         pronunciationUrl={
-          props.getAudioUrl
-            ? props.getAudioUrl(props.wordId, fileName)
-            : backend.getAudioUrl(props.wordId, fileName)
+          props.audioInFrontend ? fileName : getAudioUrl(props.wordId, fileName)
         }
         deleteAudio={props.deleteAudio}
       />
     )
   );
+
   return (
     <>
       <AudioRecorder
