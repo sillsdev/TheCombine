@@ -4,9 +4,9 @@
 #
 #    pip-compile --resolver=backtracking requirements.in
 #
-ansible==8.0.0
+ansible==8.1.0
     # via -r requirements.in
-ansible-core==2.15.0
+ansible-core==2.15.1
     # via ansible
 cachetools==5.3.1
     # via google-auth
@@ -22,7 +22,7 @@ cryptography==41.0.1
     # via
     #   ansible-core
     #   pyopenssl
-google-auth==2.19.1
+google-auth==2.20.0
     # via kubernetes
 idna==3.4
     # via requests
@@ -78,7 +78,7 @@ urllib3==1.26.16
     #   google-auth
     #   kubernetes
     #   requests
-websocket-client==1.5.2
+websocket-client==1.6.1
     # via kubernetes
 
 # The following packages are considered to be unsafe in a requirements file:
