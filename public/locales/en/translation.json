@@ -94,7 +94,7 @@
     "fileSelected": "File selected",
     "language": "Project language information will be automatically extracted from uploaded data.",
     "languageOptionOther": "other",
-    "languageSelect": "Select from vernacular languages in file:",
+    "languageSelect": "Select from languages in file:",
     "success": "Project Created!"
   },
   "selectProject": {
