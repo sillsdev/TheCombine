@@ -626,7 +626,7 @@ namespace BackendFramework.Services
             /// Get all analysis languages found in senses in the private field <see cref="_importEntries"/>
             /// </summary>
             /// <returns> A List of all distinct analysis writing systems in the import. </returns>
-            public List<WritingSystem> GetImportAnalysisLanguages()
+            public List<WritingSystem> GetImportAnalysisWritingSystems()
             {
                 var langTags = _importEntries.SelectMany(
                     w => w.Senses.SelectMany(s => Language.GetSenseAnalysisLangTags(s))

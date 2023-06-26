@@ -196,7 +196,7 @@ namespace BackendFramework.Controllers
             int liftParseResult;
             // Sets the projectId of our parser to add words to that project
             var liftMerger = _liftService.GetLiftImporterExporter(projectId, _wordRepo);
-            var analysisLanguages = new List<WritingSystem>();
+            var importedAnalysisWritingSystems = new List<WritingSystem>();
             var doesImportHaveDefinitions = false;
             var doesImportHaveGrammaticalInfo = false;
             try
@@ -217,7 +217,7 @@ namespace BackendFramework.Controllers
                     FileOperations.FindFilesWithExtension(liftStoragePath, ".lift", true).First());
 
                 // Get data from imported words before they're deleted by SaveImportEntries.
-                analysisLanguages = liftMerger.GetImportAnalysisLanguages();
+                importedAnalysisWritingSystems = liftMerger.GetImportAnalysisWritingSystems();
                 doesImportHaveDefinitions = liftMerger.DoesImportHaveDefinitions();
                 doesImportHaveGrammaticalInfo = liftMerger.DoesImportHaveGrammaticalInfo();
 
@@ -229,20 +229,31 @@ namespace BackendFramework.Controllers
                 return BadRequest("Error processing the LIFT data. Contact support for help.");
             }
 
-            // Store that we have imported LIFT data already for this project to signal the frontend
-            // not to attempt to import again.
             var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
                 return NotFound(projectId);
             }
 
-            project.AnalysisWritingSystems.AddRange(analysisLanguages.Where(
-                lang => !project.AnalysisWritingSystems.Any(ws => ws.Bcp47 == lang.Bcp47)));
-            project.AnalysisWritingSystems.RemoveAll(lang => String.IsNullOrWhiteSpace(lang.Bcp47));
+            // Add analysis writing systems found in the data, avoiding duplicate and empty bcp47 codes.
+            project.AnalysisWritingSystems.AddRange(importedAnalysisWritingSystems.Where(
+                iws => !project.AnalysisWritingSystems.Any(ws => ws.Bcp47 == iws.Bcp47)));
+            project.AnalysisWritingSystems.RemoveAll(ws => String.IsNullOrWhiteSpace(ws.Bcp47));
+            if (project.AnalysisWritingSystems.Count == 0)
+            {
+                // The list cannot be empty.
+                project.AnalysisWritingSystems.Add(new WritingSystem { Bcp47 = "en", Name = "English" });
+            }
+
+            // Store whether we have imported any senses with definitions or grammatical info
+            // to signal the frontend to display that data for this project.
             project.DefinitionsEnabled = doesImportHaveDefinitions;
             project.GrammaticalInfoEnabled = doesImportHaveGrammaticalInfo;
+
+            // Store that we have imported LIFT data already for this project
+            // to signal the frontend not to attempt to import again in this project.
             project.LiftImported = true;
+
             await _projRepo.Update(projectId, project);
 
             return Ok(liftParseResult);
