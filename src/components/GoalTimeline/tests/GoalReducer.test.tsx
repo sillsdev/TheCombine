@@ -1,9 +1,6 @@
-import {
-  defaultState,
-  emptyGoalState,
-} from "components/GoalTimeline/DefaultState";
 import { goalReducer } from "components/GoalTimeline/Redux/GoalReducer";
 import {
+  defaultState,
   GoalAction,
   GoalActionTypes,
 } from "components/GoalTimeline/Redux/GoalReduxTypes";
@@ -15,6 +12,15 @@ import { SpellCheckGloss } from "goals/SpellCheckGloss/SpellCheckGloss";
 import { ValidateChars } from "goals/ValidateChars/ValidateChars";
 import { StoreAction, StoreActionTypes } from "rootActions";
 import { Goal, GoalsState } from "types/goals";
+
+function emptyGoalState(): GoalsState {
+  return {
+    ...defaultState,
+    allGoalTypes: [],
+    currentGoal: { ...new Goal(), guid: expect.any(String) },
+    goalTypeSuggestions: [],
+  };
+}
 
 describe("GoalReducer", () => {
   describe("GoalActionTypes.LOAD_USER_EDITS", () => {
@@ -83,10 +89,7 @@ describe("GoalReducer", () => {
   describe("StoreActionTypes.RESET", () => {
     it("Should return the default state", () => {
       const state = emptyGoalState();
-
-      const action: StoreAction = {
-        type: StoreActionTypes.RESET,
-      };
+      const action: StoreAction = { type: StoreActionTypes.RESET };
       expect(goalReducer(state, action)).toEqual(defaultState);
     });
   });
