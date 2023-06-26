@@ -13,15 +13,15 @@ import { newProject } from "types/project";
 /** thunk action creator for creating a project without an import. */
 export function asyncCreateProject(
   name: string,
-  vernacularLanguage: WritingSystem,
-  analysisLanguages: WritingSystem[]
+  vernacularWritingSystem: WritingSystem,
+  analysisWritingSystems: WritingSystem[]
 ) {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(inProgress());
 
     const project = newProject(name);
-    project.vernacularWritingSystem = vernacularLanguage;
-    project.analysisWritingSystems = analysisLanguages;
+    project.vernacularWritingSystem = vernacularWritingSystem;
+    project.analysisWritingSystems = analysisWritingSystems;
 
     await createProject(project)
       .then(async (createdProject) => {
@@ -40,16 +40,16 @@ export function asyncCreateProject(
   };
 }
 
-/** thunk action creator for creating a project with an pre-uploaded import. */
+/** thunk action creator for creating a project with a pre-uploaded import. */
 export function asyncFinishProject(
   name: string,
-  vernacularLanguage: WritingSystem
+  vernacularWritingSystem: WritingSystem
 ) {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(inProgress());
 
     const project = newProject(name);
-    project.vernacularWritingSystem = vernacularLanguage;
+    project.vernacularWritingSystem = vernacularWritingSystem;
 
     await createProject(project)
       .then(async (createdProject) => {
