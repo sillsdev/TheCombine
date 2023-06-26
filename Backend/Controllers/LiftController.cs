@@ -208,7 +208,7 @@ namespace BackendFramework.Controllers
                     return NotFound(projectId);
                 }
 
-                await _liftService.LdmlImport(Path.Combine(liftStoragePath), _projRepo, proj);
+                await _liftService.LdmlImport(liftStoragePath, _projRepo, proj);
 
                 var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(liftMerger);
 
