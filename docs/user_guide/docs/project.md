@@ -54,7 +54,7 @@ The _semantic domains language_ controls the language in which semantic domain t
 
 !!! note
 
-    Currently, the maximum size of LIFT files supported for import is 250MB.
+    Currently, the maximum size of LIFT files supported for import is 100MB.
 
 !!! note
 

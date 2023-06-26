@@ -48,17 +48,17 @@ again in domain 2.1.3.3 (Finger, Toe), the result will be a single entry for "de
 The Combine has an optional feature to assist with data entry involving duplicate vernacular forms. It can be turned on
 or off in [Project Settings > Autocomplete](project.md#autocomplete). When the setting is on, as you type the vernacular
 form in Data Entry, a drop-down menu appears with identical/similar vernacular forms that already exist in other entries
-in the project. If you ignore the menu options and type a new vernacular form, you can simply move on the the gloss and
-submit a new entry.
+in the project. If you ignore the menu options and type a new vernacular form, you can simply continue on to the gloss
+and submit a new entry.
 
-![Workshop Schedule](images/data-entry-dup-vern.png){ .center }
+![Data Entry duplicate vernacular forms](images/data-entry-dup-vern.png){ .center }
 
 When the autocomplete setting is on and you type or select a vernacular form that already exists in another entry, a box
 will pop up with options. You will be shown all entries with that vernacular form and get to choose whether to update
 one of those entries or create a new entry. If you choose to create a new entry, the pop-up box with go away and you can
 type the gloss for your new entry.
 
-![Workshop Schedule](images/data-entry-dup-vern-select-entry.png){ .center }
+![Data Entry duplicate vernacular entries](images/data-entry-dup-vern-select-entry.png){ .center }
 
 !!! note
 
@@ -67,4 +67,4 @@ type the gloss for your new entry.
 If you choose to update one of the existing entries, a second box will appear. Here you can choose to update an existing
 sense on the selected entry or to add a new sense to that entry.
 
-![Workshop Schedule](images/data-entry-dup-vern-select-sense.png){ .center }
+![Data Entry duplicate vernacular senses](images/data-entry-dup-vern-select-sense.png){ .center }
