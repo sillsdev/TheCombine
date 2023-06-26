@@ -1,6 +1,4 @@
-import DeleteEntry from "components/DataEntry/DataEntryTable/EntryCellComponents/DeleteEntry";
-import EntryNote from "components/DataEntry/DataEntryTable/EntryCellComponents/EntryNote";
-import GlossWithSuggestions from "components/DataEntry/DataEntryTable/EntryCellComponents/GlossWithSuggestions";
-import VernWithSuggestions from "components/DataEntry/DataEntryTable/EntryCellComponents/VernWithSuggestions";
-
-export { DeleteEntry, EntryNote, GlossWithSuggestions, VernWithSuggestions };
+export { default as DeleteEntry } from "components/DataEntry/DataEntryTable/EntryCellComponents/DeleteEntry";
+export { default as EntryNote } from "components/DataEntry/DataEntryTable/EntryCellComponents/EntryNote";
+export { default as GlossWithSuggestions } from "components/DataEntry/DataEntryTable/EntryCellComponents/GlossWithSuggestions";
+export { default as VernWithSuggestions } from "components/DataEntry/DataEntryTable/EntryCellComponents/VernWithSuggestions";

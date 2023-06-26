@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 import { Key } from "ts-key-enum";
 
 import { Word, WritingSystem } from "api/models";
-import { focusInput } from "components/DataEntry/DataEntryTable/DataEntryTable";
+import { focusInput } from "components/DataEntry/DataEntryTable";
 import {
   DeleteEntry,
   EntryNote,
