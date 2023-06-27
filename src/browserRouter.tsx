@@ -28,13 +28,18 @@ router.subscribe((routerState) => {
   if (process.env.NODE_ENV !== "production") {
     console.log(`router.subscribe(${pathname})`);
   }
-  if (pathname !== store.getState().analyticsState.currentPage) {
+  const currentPage = store.getState().analyticsState.currentPage;
+  console.log(`Current page: ${currentPage}`);
+  if (pathname !== currentPage) {
     analytics.track("navigate", {
-      source: store.getState().analyticsState.currentPage,
+      source: currentPage,
       destination: pathname,
     });
     store.dispatch(changePage(pathname));
   }
 });
+
+// Force an initial setting of the currentPage
+store.dispatch(changePage(router.state.location.pathname));
 
 export default router;
