@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Runtime.Serialization;
 
 namespace BackendFramework.Helper
 {
@@ -24,11 +25,23 @@ namespace BackendFramework.Helper
 
         /// <summary> Indicates that an error occurred locating the current user's home directory. </summary>
         [Serializable]
-        public class HomeFolderNotFoundException : Exception { }
+        public class HomeFolderNotFoundException : Exception
+        {
+            public HomeFolderNotFoundException() { }
+
+            protected HomeFolderNotFoundException(SerializationInfo info, StreamingContext context)
+                : base(info, context) { }
+        }
 
         /// <summary> Indicates an invalid input id. </summary>
         [Serializable]
-        public class InvalidIdException : Exception { }
+        public class InvalidIdException : Exception
+        {
+            public InvalidIdException() { }
+
+            protected InvalidIdException(SerializationInfo info, StreamingContext context)
+                : base(info, context) { }
+        }
 
         /// <summary>
         /// Generate a path to the file name of an audio file for the Project based on the Word ID.

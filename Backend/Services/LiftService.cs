@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
@@ -83,6 +84,8 @@ namespace BackendFramework.Services
     {
         public MissingProjectException(string message) : base(message) { }
 
+        protected MissingProjectException(SerializationInfo info, StreamingContext context)
+            : base(info, context) { }
     }
 
     public class LiftService : ILiftService
@@ -102,7 +105,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Store status that a user's export is in-progress. </summary>
-        public void SetExportInProgress(string userId, bool isInProgress = true)
+        public void SetExportInProgress(string userId, bool isInProgress)
         {
             _liftExports.Remove(userId);
             if (isInProgress)
