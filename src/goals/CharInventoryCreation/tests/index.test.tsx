@@ -52,10 +52,7 @@ const mockUploadInventory = jest.fn();
 
 let charMaster: renderer.ReactTestRenderer;
 
-const mockStore = configureMockStore()({
-  characterInventoryState,
-  currentProjectState: { project: {} },
-});
+const mockStore = configureMockStore()({ characterInventoryState });
 
 function renderCharInvCreation() {
   renderer.act(() => {
