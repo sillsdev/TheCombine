@@ -1,4 +1,3 @@
-import { StoreAction, StoreActionTypes } from "rootActions";
 import {
   AnalyticsActionTypes,
   AnalyticsChangePageAction,
@@ -7,6 +6,7 @@ import {
 } from "types/Redux/analyticsReduxTypes";
 
 export function changePage(newPage: string): AnalyticsChangePageAction {
+  console.log(`changePage(${newPage})`);
   return {
     type: AnalyticsActionTypes.ChangePage,
     newPage,
@@ -16,7 +16,7 @@ export function changePage(newPage: string): AnalyticsChangePageAction {
 export const analyticsReducer = (
   //createStore() calls each reducer with undefined state
   state: AnalyticsState = defaultState,
-  action: AnalyticsChangePageAction | StoreAction
+  action: AnalyticsChangePageAction
 ): AnalyticsState => {
   switch (action.type) {
     case AnalyticsActionTypes.ChangePage:
@@ -24,9 +24,6 @@ export const analyticsReducer = (
         ...state,
         currentPage: action.newPage,
       };
-
-    case StoreActionTypes.RESET:
-      return defaultState;
 
     default:
       return state;
