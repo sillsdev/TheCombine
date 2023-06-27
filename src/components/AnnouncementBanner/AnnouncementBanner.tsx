@@ -5,7 +5,9 @@ import React, { useEffect, useState } from "react";
 import { BannerType } from "api/models";
 import { getBannerText } from "backend";
 import { getClosedBanner, setClosedBanner } from "backend/localStorage";
+import router from "browserRouter";
 import { topBarHeight } from "components/LandingPage/TopBar";
+import { store } from "store";
 import { StoreState } from "types";
 import { useAppSelector } from "types/hooks";
 import { Path } from "types/path";
@@ -19,6 +21,9 @@ export default function AnnouncementBanner() {
     (state: StoreState) => state.analyticsState.currentPage
   );
   console.log(`loc: ${loc}`);
+  console.log(`store: ${store.getState().analyticsState.currentPage}`);
+  console.log(`router: ${router.state.location.pathname}`);
+
   const isBelowAppBar = loc === Path.Root || loc.startsWith(Path.AppRoot);
   const margins = isBelowAppBar
     ? { marginTop: topBarHeight, marginBottom: -topBarHeight }

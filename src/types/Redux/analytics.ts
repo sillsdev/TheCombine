@@ -20,6 +20,7 @@ export const analyticsReducer = (
 ): AnalyticsState => {
   switch (action.type) {
     case AnalyticsActionTypes.ChangePage:
+      console.log(`analytics action: changePage(${action.newPage})`);
       return {
         ...state,
         currentPage: action.newPage,
