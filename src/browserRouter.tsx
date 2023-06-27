@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { store } from "store";
 import { changePage } from "types/Redux/analytics";
 import { appRoutes } from "types/appRoutes";
+import { Path } from "types/path";
 
 /**
  * NOTES:
@@ -19,7 +20,10 @@ const router = createBrowserRouter(appRoutes);
 // the time being.  This functionality needs to be verified with future
 // updates to the react-router-dom package.
 router.subscribe((routerState) => {
-  const pathname = routerState.location.pathname;
+  const pathname = routerState.location.pathname
+    ? routerState.location.pathname
+    : Path.Root;
+
   // log navigation while subscribe is officially a private method
   if (process.env.NODE_ENV !== "production") {
     console.log(`router.subscribe(${pathname})`);
