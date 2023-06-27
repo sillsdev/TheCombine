@@ -40,7 +40,7 @@ namespace BackendFramework.Helper
         /// <summary>
         /// Extract <see cref="WritingSystem"/>s from .ldml files in a directory or its WritingSystems subdirectory.
         /// </summary>
-        public static IEnumerable<WritingSystem> GetVernacularWritingSystems(string dirPath)
+        public static IEnumerable<WritingSystem> GetWritingSystems(string dirPath)
         {
             if (!Directory.GetFiles(dirPath, "*.ldml").Any())
             {

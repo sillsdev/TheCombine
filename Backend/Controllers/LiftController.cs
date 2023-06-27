@@ -74,7 +74,7 @@ namespace BackendFramework.Controllers
                 return BadRequest(e.Message);
             }
 
-            return Ok(Language.GetVernacularWritingSystems(extractedLiftRootPath).ToList());
+            return Ok(Language.GetWritingSystems(extractedLiftRootPath).ToList());
         }
 
         /// <summary> Adds data from a directory containing a .lift file </summary>
