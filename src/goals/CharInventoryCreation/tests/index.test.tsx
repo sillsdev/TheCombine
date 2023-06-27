@@ -4,7 +4,6 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import { Project } from "api/models";
 import CharacterInventory, {
   buttonIdCancel,
   buttonIdSave,
@@ -55,7 +54,7 @@ let charMaster: renderer.ReactTestRenderer;
 
 const mockStore = configureMockStore()({
   characterInventoryState,
-  currentProjectState: { project: { validCharacters: ["a"] } },
+  currentProjectState: { project: {} },
 });
 
 function renderCharInvCreation() {
