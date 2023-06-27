@@ -11,7 +11,13 @@ import { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { LoadingButton } from "components/Buttons";
-import * as action from "goals/CharInventoryCreation/Redux/CharacterInventoryActions";
+import {
+  exit,
+  loadCharInvData,
+  resetInState,
+  setSelectedCharacter,
+  uploadInventory,
+} from "goals/CharInventoryCreation/Redux/CharacterInventoryActions";
 import CharacterDetail from "goals/CharInventoryCreation/components/CharacterDetail";
 import CharacterEntry from "goals/CharInventoryCreation/components/CharacterEntry";
 import CharacterList from "goals/CharInventoryCreation/components/CharacterList";
@@ -20,8 +26,14 @@ import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import theme from "types/theme";
 
-export const SAVE = "pushGoals";
-export const CANCEL = "cancelInventoryCreation";
+const idPrefix = "character-inventory";
+export const buttonIdCancel = `${idPrefix}-cancel-button`;
+export const buttonIdSave = `${idPrefix}-save-button`;
+export const dialogButtonIdNo = `${idPrefix}-cancel-dialog-no-button`;
+export const dialogButtonIdYes = `${idPrefix}-cancel-dialog-yes-button`;
+export const dialogIdCancel = `${idPrefix}-cancel-dialog`;
+const dialogTextIdCancel = `${idPrefix}-cancel-dialog-text`;
+const dialogTitleIdCancel = `${idPrefix}-cancel-dialog-title`;
 
 /**
  * Allows users to define a character inventory for a project
@@ -39,15 +51,15 @@ export default function CharacterInventory() {
   const { t } = useTranslation();
 
   useEffect(() => {
-    dispatch(action.loadCharInvData());
+    dispatch(loadCharInvData());
 
     // Call when component unmounts.
-    () => dispatch(action.resetInState());
+    () => dispatch(resetInState());
   }, [dispatch]);
 
   const save = async (): Promise<void> => {
     setSaveInProgress(true);
-    await dispatch(action.uploadInventory());
+    await dispatch(uploadInventory());
   };
 
   return (
@@ -73,7 +85,7 @@ export default function CharacterInventory() {
           ) : (
             <CharacterDetail
               character={selectedCharacter}
-              close={() => dispatch(action.setSelectedCharacter(""))}
+              close={() => dispatch(setSelectedCharacter(""))}
             />
           )}
         </Grid>
@@ -84,7 +96,7 @@ export default function CharacterInventory() {
             <LoadingButton
               loading={saveInProgress}
               buttonProps={{
-                id: SAVE,
+                id: buttonIdSave,
                 color: "primary",
                 onClick: () => save(),
                 style: { margin: theme.spacing(1) },
@@ -93,7 +105,7 @@ export default function CharacterInventory() {
               {t("buttons.save")}
             </LoadingButton>
             <Button
-              id={CANCEL}
+              id={buttonIdCancel}
               variant="contained"
               onClick={() => setCancelDialogOpen(true)}
               style={{ margin: theme.spacing(1) }}
@@ -107,29 +119,35 @@ export default function CharacterInventory() {
 
       {/* "Are you sure?" dialog for the cancel button */}
       <Dialog
+        id={dialogIdCancel}
         open={cancelDialogOpen}
         onClose={() => setCancelDialogOpen(false)}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
+        <DialogTitle id={dialogTitleIdCancel}>
           {t("charInventory.dialog.title")}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText id={dialogTextIdCancel}>
             {t("charInventory.dialog.content")}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={() => action.exit()}
+            id={dialogButtonIdYes}
+            onClick={() => exit()}
             variant="contained"
             color="secondary"
             autoFocus
           >
             {t("charInventory.dialog.yes")}
           </Button>
-          <Button onClick={() => setCancelDialogOpen(false)} color="primary">
+          <Button
+            id={dialogButtonIdNo}
+            onClick={() => setCancelDialogOpen(false)}
+            color="primary"
+          >
             {t("charInventory.dialog.no")}
           </Button>
         </DialogActions>

@@ -5,20 +5,14 @@ import configureMockStore from "redux-mock-store";
 import "tests/reactI18nextMock";
 
 import { Project } from "api/models";
-import CharacterInventory, { CANCEL, SAVE } from "goals/CharInventoryCreation";
+import CharacterInventory, {
+  buttonIdCancel,
+  buttonIdSave,
+  dialogButtonIdNo,
+  dialogButtonIdYes,
+  dialogIdCancel,
+} from "goals/CharInventoryCreation";
 import { defaultState as characterInventoryState } from "goals/CharInventoryCreation/Redux/CharacterInventoryReducer";
-
-// Constants
-const mockProject = { validCharacters: ["a"] } as Project;
-const mockStore = configureMockStore()({
-  characterInventoryState,
-  currentProjectState: { project: mockProject },
-});
-const UPLOAD_INV = jest.fn();
-
-// Variables
-let charMaster: renderer.ReactTestRenderer;
-let charHandle: renderer.ReactTestInstance;
 
 // This mock bypasses the fact that react-test-renderer does not support portals, with no clean solution.
 // This bypasses the whole issue by replacing the portal-creating object (the Dialog) with a lightweight,
@@ -35,6 +29,34 @@ jest.mock(
   "goals/CharInventoryCreation/components/CharacterDetail",
   () => "div"
 );
+jest.mock(
+  "goals/CharInventoryCreation/Redux/CharacterInventoryActions",
+  () => ({
+    exit: () => mockExit(),
+    loadCharInvData: () => mockLoadCharInvData(),
+    resetInState: () => jest.fn(),
+    setSelectedCharacter: () => mockSetSelectedCharacter(),
+    uploadInventory: () => mockUploadInventory(),
+  })
+);
+jest.mock("types/hooks", () => {
+  return {
+    ...jest.requireActual("types/hooks"),
+    useAppDispatch: () => jest.fn(),
+  };
+});
+
+const mockExit = jest.fn();
+const mockLoadCharInvData = jest.fn();
+const mockSetSelectedCharacter = jest.fn();
+const mockUploadInventory = jest.fn();
+
+let charMaster: renderer.ReactTestRenderer;
+
+const mockStore = configureMockStore()({
+  characterInventoryState,
+  currentProjectState: { project: { validCharacters: ["a"] } },
+});
 
 function renderCharInvCreation() {
   renderer.act(() => {
@@ -44,36 +66,45 @@ function renderCharInvCreation() {
       </Provider>
     );
   });
-  charHandle = charMaster.root.findByType(CharacterInventory);
 }
 
 beforeEach(() => {
-  UPLOAD_INV.mockClear();
-  UPLOAD_INV.mockResolvedValue(null);
+  jest.resetAllMocks();
   renderCharInvCreation();
 });
 
 describe("CharacterInventory", () => {
-  it("renders (snapshot test)", () => {
-    expect(charMaster.toJSON()).toMatchSnapshot();
+  it("loads data on render", () => {
+    expect(mockLoadCharInvData).toHaveBeenCalledTimes(1);
   });
 
-  it("attempts to save progress on save", () => {
-    charMaster.root.findByProps({ id: SAVE }).props.onClick();
-
-    expect(UPLOAD_INV).toHaveBeenCalledTimes(1);
+  it("saves inventory on save", async () => {
+    expect(mockUploadInventory).toHaveBeenCalledTimes(0);
+    const saveButton = charMaster.root.findByProps({ id: buttonIdSave });
+    await renderer.act(async () => saveButton.props.onClick());
+    expect(mockUploadInventory).toHaveBeenCalledTimes(1);
   });
 
-  it("attempts to pop up a dialogue on cancel", () => {
-    charMaster.root.findByProps({ id: CANCEL }).props.onClick();
+  it("opens a dialogue on cancel, closes on no", () => {
+    const cancelDialog = charMaster.root.findByProps({ id: dialogIdCancel });
+    expect(cancelDialog.props.open).toBeFalsy();
 
-    expect(charHandle.instance.state.cancelDialogOpen).toBeTruthy();
+    const cancelButton = charMaster.root.findByProps({ id: buttonIdCancel });
+    renderer.act(() => cancelButton.props.onClick());
+    expect(cancelDialog.props.open).toBeTruthy();
+
+    const noButton = charMaster.root.findByProps({ id: dialogButtonIdNo });
+    renderer.act(() => noButton.props.onClick());
+    expect(cancelDialog.props.open).toBeFalsy();
   });
 
-  /*it("cancels dialog open on close", () => {
-    charHandle.setState({ cancelDialogOpen: true });
-    charHandle.handleClose();
+  it("exits on cancel-yes", () => {
+    const cancelButton = charMaster.root.findByProps({ id: buttonIdCancel });
+    renderer.act(() => cancelButton.props.onClick());
+    expect(mockExit).toBeCalledTimes(0);
 
-    expect(charHandle.instance.state.cancelDialogOpen).toBeFalsy();
-  });*/
+    const yesButton = charMaster.root.findByProps({ id: dialogButtonIdYes });
+    renderer.act(() => yesButton.props.onClick());
+    expect(mockExit).toBeCalledTimes(1);
+  });
 });
