@@ -48,6 +48,7 @@ interface DataEntryTableProps {
   hideQuestions: () => void;
   openTree: () => void;
   showExistingData: () => void;
+  updateHeight: () => void;
 }
 
 interface SenseSwitch {
@@ -204,6 +205,8 @@ export default function DataEntryTable(
       };
     }
   );
+
+  const updateHeight = props.updateHeight;
 
   const [state, setState] = useState<DataEntryTableState>({
     // word data
@@ -411,6 +414,11 @@ export default function DataEntryTable(
   // useEffect functions to manage re-renders.
   // These cannot be async, so use asyncFunction().then(...) as needed.
   ////////////////////////////////////
+
+  /*** Trigger a parent height update if the number of recent entries changes. */
+  useEffect(() => {
+    updateHeight();
+  }, [state.recentWords.length, updateHeight]);
 
   /*** Manages the senseSwitches queue. */
   useEffect(() => {

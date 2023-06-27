@@ -4,6 +4,7 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useRef,
   useState,
 } from "react";
 
@@ -50,13 +51,20 @@ export default function DataEntry(): ReactElement {
   );
   const { id, lang, name } = currentDomain;
 
+  const dataEntryRef = useRef<HTMLDivElement | null>(null);
+
   const [domain, setDomain] = useState(newSemanticDomain(id, name, lang));
   const [domainWords, setDomainWords] = useState<DomainWord[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [height, setHeight] = useState(0);
   const [questionsVisible, setQuestionsVisible] = useState(false);
 
   const { windowWidth } = useWindowSize();
+
+  const updateHeight = useCallback(() => {
+    setHeight(dataEntryRef.current?.clientHeight ?? 0);
+  }, []);
 
   // On first render, open tree.
   useLayoutEffect(() => {
@@ -67,6 +75,11 @@ export default function DataEntry(): ReactElement {
   useLayoutEffect(() => {
     setIsSmallScreen(windowWidth < smallScreenThreshold);
   }, [windowWidth]);
+
+  // Recalculate height if something changed that might affect it.
+  useEffect(() => {
+    updateHeight();
+  }, [domain, questionsVisible, updateHeight, windowWidth]);
 
   // When domain changes, fetch full domain details.
   useEffect(() => {
@@ -86,7 +99,7 @@ export default function DataEntry(): ReactElement {
   return (
     <Grid container justifyContent="center" spacing={3} wrap={"nowrap"}>
       <Grid item>
-        <Paper style={paperStyle}>
+        <Paper ref={dataEntryRef} style={paperStyle}>
           <DataEntryHeader
             domain={domain}
             questionsVisible={questionsVisible}
@@ -100,15 +113,17 @@ export default function DataEntry(): ReactElement {
             showExistingData={() => setDrawerOpen(true)}
             hasDrawerButton={isSmallScreen && domainWords.length > 0}
             hideQuestions={() => setQuestionsVisible(false)}
+            updateHeight={updateHeight}
           />
         </Paper>
       </Grid>
       <ExistingDataTable
         domain={domain}
-        typeDrawer={isSmallScreen}
         domainWords={domainWords}
         drawerOpen={drawerOpen}
+        tableHeight={height}
         toggleDrawer={setDrawerOpen}
+        typeDrawer={isSmallScreen}
       />
 
       <Dialog id={treeViewDialogId} fullScreen open={!!open}>
