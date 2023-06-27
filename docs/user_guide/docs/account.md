@@ -35,7 +35,8 @@ You can add or update your:
 - avatar image;
 - name;
 - phone number;
-- email address.
+- email address;
+- user-interface language.
 
 !!! note
 

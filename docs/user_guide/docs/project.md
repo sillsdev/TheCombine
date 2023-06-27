@@ -35,6 +35,8 @@ A distinguishing and descriptive name is recommended. The project name is part o
 
 ### Project Languages
 
+![Project Languages - Tzotzil](images/projectLanguagesTzotzil.png){ .center }
+
 The _vernacular language_ specified at project creation is fixed.
 
 There may be multiple _analysis languages_ associated with the project, but only the top one in the list is associated
@@ -52,7 +54,7 @@ The _semantic domains language_ controls the language in which semantic domain t
 
 !!! note
 
-    Currently, the maximum size of Lift files supported for import is 250MB.
+    Currently, the maximum size of LIFT files supported for import is 100MB.
 
 !!! note
 
@@ -68,18 +70,12 @@ affixed.
 
 ### Autocomplete
 
-The default setting is On: When a user is entering the [vernacular form](dataEntry.md#vernacular) of a new entry in Data
-Entry, this setting gives suggestions of similar existing entries, allowing the user to select an existing entry and add
-a new sense to that entry, rather than creating a (mostly) duplicate to something previously entered.
+The default setting is On: When a user is entering the vernacular form of a new entry in Data Entry, this setting gives
+suggestions of similar existing entries, allowing the user to select an existing entry and add a new sense to that
+entry, rather than creating a (mostly) duplicate to something previously entered. See
+[Data Entry](dataEntry.md#new-entry-with-duplicate-vernacular-form) for more details.
 
-(This does not effect the [gloss](dataEntry.md#gloss) spelling suggestions, which are based on a dictionary independent
-of existing project data.)
-
-### Definitions
-
-Due to the nature of Rapid Word Collection, [Data Entry](dataEntry.md) in The Combine supports glosses instead of
-definitions. However, if you have imported a project in which senses also have definitions, this setting can enable
-definition support in [Data Cleanup](goals.md).
+(This does not effect gloss spelling suggestions, which are based on a dictionary independent of existing project data.)
 
 ### Project Users
 
@@ -103,8 +99,44 @@ Either search existing users (shows all users with the search term in their name
 new users by email address (they will be automatically added to the project when they make an account via the
 invitation).
 
+### Workshop Schedule
+
+This is only available to the project Owner, allowing a schedule to be set for a Rapid Word Collection workshop. Click
+the first button to select a date range for the workshop. Click the middle button to add or remove specific dates. Click
+the last button to clear the schedule.
+
+![Workshop Schedule](images/projectSchedule.png){ .center }
+
 ### Archive Project
 
 This is only available to the project Owner. Archiving a project makes it inaccessible to all users. This can only be
 undone by a site administrator. Please contact a site administrator if you wish for the project to be entirely deleted
 from the servers.
+
+## Project Statistics
+
+If you are the project owner, there will be another icon alongside the gear icon in App Bar at the top of The Combine.
+This opens statistics about words in the project.
+
+![Project Statistics Button](images/projectStatsButton.png){ .center }
+
+In the context of these statistics, _word_ refers to a sense-domain pair: e.g., an entry with 3 senses, each with 2
+semantic domains, will be counted as 6 words.
+
+### Words per User
+
+A table listing number of words and distinct semantic domains for each project user. Imported words have no associated
+user and will be counted in an "unknownUser" row.
+
+### Words per Domain
+
+A table listing number of words in each semantic domain.
+
+### Words per Day
+
+Line graphs showing words collected during the days specified in the [Workshop Schedule](#workshop-schedule).
+
+### Workshop Progress
+
+Line graphs showing cumulative words collected across the days of the [Workshop Schedule](#workshop-schedule), as well
+as projections for remainder of the workshop.

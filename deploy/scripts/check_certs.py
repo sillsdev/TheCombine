@@ -65,7 +65,7 @@ def get_expiration(secret: str, kubectl_opts: List[str]) -> Optional[str]:
 
 
 def main() -> None:
-    """Setup access to the the target specified on the command line."""
+    """Setup access to the target specified on the command line."""
     args = parse_args()
 
     if args.namespace is not None:
