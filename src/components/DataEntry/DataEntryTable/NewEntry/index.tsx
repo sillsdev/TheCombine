@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 import { Key } from "ts-key-enum";
 
 import { Word, WritingSystem } from "api/models";
-import { focusInput } from "components/DataEntry/DataEntryTable/DataEntryTable";
+import { focusInput } from "components/DataEntry/DataEntryTable";
 import {
   DeleteEntry,
   EntryNote,
@@ -303,11 +303,11 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
       <Grid item xs={2} style={gridItemStyle(1)}>
         <Pronunciations
           wordId={""}
+          audioInFrontend
           pronunciationFiles={newAudioUrls}
           recorder={recorder}
           deleteAudio={(_, fileName: string) => delNewAudioUrl(fileName)}
           uploadAudio={(_, audioFile: File) => addNewAudioUrl(audioFile)}
-          getAudioUrl={(_, fileName: string) => fileName}
         />
       </Grid>
       <Grid item xs={1} style={gridItemStyle(1)}>

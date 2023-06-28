@@ -13,6 +13,8 @@ import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { themeColors } from "types/theme";
 
+export const recordButtonId = "recordingButton";
+
 interface RecorderIconProps {
   wordId: string;
   startRecording: () => void;
@@ -72,7 +74,7 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
         onTouchEnd={handleTouchEnd}
         className={classes.button}
         aria-label="record"
-        id="recordingButton"
+        id={recordButtonId}
         size="large"
       >
         <FiberManualRecord
