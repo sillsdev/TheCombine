@@ -12,7 +12,7 @@ interface ExistingDataTableProps {
   domain: SemanticDomain;
   domainWords: DomainWord[];
   drawerOpen?: boolean;
-  tableHeight?: number;
+  height?: number;
   toggleDrawer: (openClosed: boolean) => void;
   typeDrawer?: boolean;
 }
@@ -60,7 +60,7 @@ export default function ExistingDataTable(
   );
 
   const sxScrollOverflow: SxProps = {
-    maxHeight: Math.max(props.tableHeight ?? 0, windowHeight - appBarHeight),
+    maxHeight: Math.max(props.height ?? 0, windowHeight - appBarHeight),
     overflowY: "scroll",
   };
 

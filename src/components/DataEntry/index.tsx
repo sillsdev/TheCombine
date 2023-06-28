@@ -56,8 +56,8 @@ export default function DataEntry(): ReactElement {
   const [domain, setDomain] = useState(newSemanticDomain(id, name, lang));
   const [domainWords, setDomainWords] = useState<DomainWord[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [height, setHeight] = useState(0);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [questionsVisible, setQuestionsVisible] = useState(false);
 
   const { windowWidth } = useWindowSize();
@@ -76,11 +76,6 @@ export default function DataEntry(): ReactElement {
     setIsSmallScreen(windowWidth < smallScreenThreshold);
   }, [windowWidth]);
 
-  // Recalculate height if something changed that might affect it.
-  useEffect(() => {
-    updateHeight();
-  }, [domain, questionsVisible, updateHeight, windowWidth]);
-
   // When domain changes, fetch full domain details.
   useEffect(() => {
     getSemanticDomainFull(id, lang).then((fullDomain) => {
@@ -89,6 +84,11 @@ export default function DataEntry(): ReactElement {
       }
     });
   }, [id, lang]);
+
+  // Recalculate height if something changed that might affect it.
+  useEffect(() => {
+    updateHeight();
+  }, [domain, questionsVisible, updateHeight, windowWidth]);
 
   const returnControlToCaller = useCallback(async () => {
     const words = filterWordsByDomain(await getFrontierWords(), id);
@@ -107,12 +107,12 @@ export default function DataEntry(): ReactElement {
           />
           <Divider />
           <DataEntryTable
-            semanticDomain={currentDomain}
-            isTreeOpen={open}
-            openTree={() => dispatch(openTreeAction())}
-            showExistingData={() => setDrawerOpen(true)}
             hasDrawerButton={isSmallScreen && domainWords.length > 0}
             hideQuestions={() => setQuestionsVisible(false)}
+            isTreeOpen={open}
+            openTree={() => dispatch(openTreeAction())}
+            semanticDomain={currentDomain}
+            showExistingData={() => setDrawerOpen(true)}
             updateHeight={updateHeight}
           />
         </Paper>
@@ -121,7 +121,7 @@ export default function DataEntry(): ReactElement {
         domain={domain}
         domainWords={domainWords}
         drawerOpen={drawerOpen}
-        tableHeight={height}
+        height={height}
         toggleDrawer={setDrawerOpen}
         typeDrawer={isSmallScreen}
       />
