@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,12 +50,13 @@ namespace BackendFramework.Services
             }
         }
 
-        // This raises error CA1816, which is currently suppressed in .editorconfig and with <NoWarn>.
+#pragma warning disable CA1816, CA2215
         public override void Dispose()
         {
             // TODO: When updating the LiftWriter dependency, check to see if its Dispose() implementation
             //    has been fixed properly to avoid needing to override its Dispose method.
             //    https://github.com/sillsdev/libpalaso/blob/master/SIL.DictionaryServices/Lift/LiftWriter.cs
+            //    Also, re-evaluate our CA1816 violation.
             Dispose(true);
         }
 
@@ -73,9 +75,10 @@ namespace BackendFramework.Services
 
             Disposed = true;
 
-            // Generally, the base class Dispose method would be called here, but it accesses _writer,
+            // Generally, the base class Dispose method would be called here (CA2215), but it accesses _writer,
             // and we are disposing of that ourselves in the child class to fix a memory leak.
         }
+#pragma warning restore CA1816, CA2215
     }
 
     [Serializable]
@@ -83,6 +86,8 @@ namespace BackendFramework.Services
     {
         public MissingProjectException(string message) : base(message) { }
 
+        protected MissingProjectException(SerializationInfo info, StreamingContext context)
+            : base(info, context) { }
     }
 
     public class LiftService : ILiftService
@@ -105,7 +110,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Store status that a user's export is in-progress. </summary>
-        public void SetExportInProgress(string userId, bool isInProgress = true)
+        public void SetExportInProgress(string userId, bool isInProgress)
         {
             _liftExports.Remove(userId);
             if (isInProgress)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.Serialization;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
@@ -244,6 +245,9 @@ namespace BackendFramework.Services
             public InvalidJwtTokenException(string msg) : base(msg) { }
 
             public InvalidJwtTokenException(string msg, Exception innerException) : base(msg, innerException) { }
+
+            protected InvalidJwtTokenException(SerializationInfo info, StreamingContext context)
+                : base(info, context) { }
         }
     }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
@@ -12,6 +13,9 @@ namespace BackendFramework.Helper
     public class InvalidFileException : Exception
     {
         public InvalidFileException(string message) : base(message) { }
+
+        protected InvalidFileException(SerializationInfo info, StreamingContext context)
+            : base(info, context) { }
 
     }
 
