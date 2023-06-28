@@ -29,7 +29,7 @@ router.subscribe((routerState) => {
     console.log(`router.subscribe(${pathname})`);
   }
   const currentPage = store.getState().analyticsState.currentPage;
-  console.log(`Current page: ${currentPage}`);
+
   if (pathname !== currentPage) {
     analytics.track("navigate", {
       source: currentPage,
@@ -38,8 +38,5 @@ router.subscribe((routerState) => {
     store.dispatch(changePage(pathname));
   }
 });
-
-// Force an initial setting of the currentPage
-store.dispatch(changePage(router.state.location.pathname));
 
 export default router;

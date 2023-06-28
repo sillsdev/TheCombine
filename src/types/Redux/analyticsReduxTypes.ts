@@ -1,11 +1,9 @@
-import { Path } from "types/path";
-
 export interface AnalyticsState {
   currentPage: string;
 }
 
 export const defaultState: AnalyticsState = {
-  currentPage: Path.Root,
+  currentPage: "",
 };
 
 export enum AnalyticsActionTypes {
