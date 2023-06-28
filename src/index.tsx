@@ -2,7 +2,6 @@ import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { SnackbarProvider } from "notistack";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-// import { RouterProvider } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
 
 import "i18n";
@@ -17,7 +16,6 @@ ReactDOM.render(
       <SnackbarProvider maxSnack={3} autoHideDuration={5000}>
         <Provider store={store}>
           <PersistGate persistor={persistor}>
-            {/* <RouterProvider router={router} /> */}
             <App />
           </PersistGate>
         </Provider>

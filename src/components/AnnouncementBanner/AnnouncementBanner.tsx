@@ -1,6 +1,12 @@
 import { Cancel } from "@mui/icons-material";
 import { Box, IconButton, Toolbar, Typography } from "@mui/material";
-import React, { useEffect, useState, useCallback } from "react";
+import {
+  CSSProperties,
+  Fragment,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import { BannerType } from "api/models";
 import { getBannerText } from "backend";
@@ -11,21 +17,16 @@ import { useAppSelector } from "types/hooks";
 import { Path } from "types/path";
 import theme, { themeColors } from "types/theme";
 
-interface MarginType {
-  marginTop?: number;
-  marginBottom?: number;
-}
-
 export default function AnnouncementBanner() {
   const [banner, setBanner] = useState<string>("");
-  const [margins, setMargins] = useState<MarginType>({});
+  const [margins, setMargins] = useState<CSSProperties>({});
 
   // Adjust the margins depending on whether there is an AppBar.
   const loc = useAppSelector(
     (state: StoreState) => state.analyticsState.currentPage
   );
 
-  const calculateMargins = useCallback((): MarginType => {
+  const calculateMargins = useCallback((): CSSProperties => {
     return loc === Path.Root || loc.startsWith(Path.AppRoot)
       ? { marginTop: topBarHeight, marginBottom: -topBarHeight }
       : {};
@@ -44,22 +45,15 @@ export default function AnnouncementBanner() {
     setBanner("");
   }
 
-  return (
-    <React.Fragment>
-      {!!banner && (
-        <Toolbar
-          style={{
-            ...margins,
-            backgroundColor: themeColors.warn,
-          }}
-        >
-          <IconButton onClick={closeBanner} size="large">
-            <Cancel />
-          </IconButton>
-          <Box sx={{ width: theme.spacing(2) }} />
-          <Typography>{banner}</Typography>
-        </Toolbar>
-      )}
-    </React.Fragment>
+  return banner ? (
+    <Toolbar style={{ ...margins, backgroundColor: themeColors.warn }}>
+      <IconButton onClick={closeBanner} size="large">
+        <Cancel />
+      </IconButton>
+      <Box sx={{ width: theme.spacing(2) }} />
+      <Typography>{banner}</Typography>
+    </Toolbar>
+  ) : (
+    <Fragment />
   );
 }

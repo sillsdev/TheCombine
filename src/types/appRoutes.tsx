@@ -20,8 +20,7 @@ export const appRoutes: RouteObject[] = [
     element: <LandingPage />,
   },
   {
-    // use routerPath to get the wildcard expression for
-    // the app pages
+    // use routerPath to get the wildcard expression for the app pages
     path: routerPath(Path.AppRoot),
     element: (
       <RequireAuth redirectTo={Path.Login}>

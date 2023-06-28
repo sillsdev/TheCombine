@@ -5,11 +5,6 @@ import { changePage } from "types/Redux/analytics";
 import { appRoutes } from "types/appRoutes";
 import { Path } from "types/path";
 
-/**
- * NOTES:
- *   Move the route definitions to types/appRoutes and
- *   export as AppRoutes.
- */
 const router = createBrowserRouter(appRoutes);
 
 // set up analytics for page navigation
@@ -20,13 +15,11 @@ const router = createBrowserRouter(appRoutes);
 // the time being.  This functionality needs to be verified with future
 // updates to the react-router-dom package.
 router.subscribe((routerState) => {
-  const pathname = routerState.location.pathname
-    ? routerState.location.pathname
-    : Path.Root;
+  const pathname = routerState.location.pathname || Path.Root;
 
   // log navigation while subscribe is officially a private method
   if (process.env.NODE_ENV !== "production") {
-    console.log(`router.subscribe(${pathname})`);
+    console.log(`router.subscribe: "${pathname}"`);
   }
   const currentPage = store.getState().analyticsState.currentPage;
 
