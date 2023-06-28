@@ -43,14 +43,98 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary>
-        /// Find any .list files within a directory.
+        /// Extract a LIFT file to a temporary folder.
+        /// Get all vernacular writing systems from the extracted location.
         /// </summary>
-        private static List<string> FindLiftFiles(string dir)
+        /// <returns> A List of <see cref="WritingSystem"/>s. </returns>
+        [HttpPost("uploadandgetwritingsystems", Name = "UploadLiftFileAndGetWritingSystems")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<WritingSystem>))]
+        // Allow clients to POST large import files to the server (default limit is 28MB).
+        // Note: The HTTP Proxy in front, such as NGINX, also needs to be configured
+        //     to allow large requests through as well.
+        [RequestSizeLimit(250_000_000)]  // 250MB.
+        public async Task<IActionResult> UploadLiftFileAndGetWritingSystems([FromForm] FileUpload fileUpload)
         {
-            return Directory.GetFiles(dir, "*.lift").ToList();
+            var userId = _permissionService.GetUserId(HttpContext);
+            return await UploadLiftFileAndGetWritingSystems(fileUpload, userId);
         }
 
-        /// <summary> Adds data from a zipped directory containing a lift file </summary>
+        internal async Task<IActionResult> UploadLiftFileAndGetWritingSystems(FileUpload fileUpload, string userId)
+        {
+            string extractedLiftRootPath;
+            try
+            {
+                var extractDir = await FileOperations.ExtractZipFile(fileUpload.File);
+                _liftService.StoreImport(userId, extractDir);
+                extractedLiftRootPath = LiftHelper.GetLiftRootFromExtractedZip(extractDir);
+            }
+            catch (Exception e)
+            {
+                _liftService.DeleteImport(userId);
+                return BadRequest(e.Message);
+            }
+
+            return Ok(Language.GetWritingSystems(extractedLiftRootPath).ToList());
+        }
+
+        /// <summary> Adds data from a directory containing a .lift file </summary>
+        /// <returns> Number of words added </returns>
+        [HttpPost("finishupload", Name = "FinishUploadLiftFile")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
+        public async Task<IActionResult> FinishUploadLiftFile(string projectId)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.ImportExport))
+            {
+                return Forbid();
+            }
+            var userId = _permissionService.GetUserId(HttpContext);
+            return await FinishUploadLiftFile(projectId, userId);
+        }
+
+        internal async Task<IActionResult> FinishUploadLiftFile(string projectId, string userId)
+        {
+            // Sanitize projectId
+            if (!Sanitization.SanitizeId(projectId))
+            {
+                return new UnsupportedMediaTypeResult();
+            }
+
+            // Ensure LIFT file has not already been imported.
+            if (!await _projRepo.CanImportLift(projectId))
+            {
+                return BadRequest("A LIFT file has already been uploaded into this project.");
+            }
+
+            var extractDir = _liftService.RetrieveImport(userId);
+            if (String.IsNullOrWhiteSpace(extractDir))
+            {
+                return BadRequest("No in-progress import to finish.");
+            }
+
+            string extractedLiftRootPath;
+            try
+            {
+                extractedLiftRootPath = LiftHelper.GetLiftRootFromExtractedZip(extractDir);
+            }
+            catch (Exception e)
+            {
+                _liftService.DeleteImport(userId);
+                return BadRequest(e.Message);
+            }
+
+            var liftStoragePath = FileStorage.GenerateLiftImportDirPath(projectId);
+
+            // Clear out any files left by a failed import
+            RobustIO.DeleteDirectoryAndContents(liftStoragePath);
+
+            // Copy the extracted contents into the persistent storage location for the project.
+            FileOperations.CopyDirectory(extractedLiftRootPath, liftStoragePath);
+            _liftService.DeleteImport(userId);
+
+            return await AddImportToProject(liftStoragePath, projectId);
+        }
+
+        /// <summary> Adds data from a zipped directory containing a LIFT file </summary>
         /// <returns> Number of words added </returns>
         [HttpPost("upload", Name = "UploadLiftFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
@@ -71,84 +155,48 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
-            // Ensure Lift file has not already been imported.
+            // Ensure LIFT file has not already been imported.
             if (!await _projRepo.CanImportLift(projectId))
             {
-                return BadRequest("A Lift file has already been uploaded.");
+                return BadRequest("A LIFT file has already been uploaded into this project.");
+            }
+
+            string extractDir;
+            string extractedLiftRootPath;
+            try
+            {
+                extractDir = await FileOperations.ExtractZipFile(fileUpload.File);
+                extractedLiftRootPath = LiftHelper.GetLiftRootFromExtractedZip(extractDir);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
             }
 
             var liftStoragePath = FileStorage.GenerateLiftImportDirPath(projectId);
-            const string invalidLiftFileMessagePrefix = "Malformed Lift file: ";
 
             // Clear out any files left by a failed import
             RobustIO.DeleteDirectoryAndContents(liftStoragePath);
-
-            var file = fileUpload.File;
-            if (file is null)
-            {
-                return BadRequest($"${invalidLiftFileMessagePrefix}Null File");
-            }
-
-            // Ensure file is not empty
-            if (file.Length == 0)
-            {
-                return BadRequest($"{invalidLiftFileMessagePrefix}Empty File");
-            }
-
-            // Copy zip file data to a new temporary file
-            fileUpload.FilePath = Path.GetTempFileName();
-            await using (var fs = new FileStream(fileUpload.FilePath, FileMode.OpenOrCreate))
-            {
-                await file.CopyToAsync(fs);
-            }
-
-            // Make temporary destination for extracted files
-            var extractDir = FileOperations.GetRandomTempDir();
-
-            // Extract the zip to new created directory.
-            FileOperations.ExtractZipFile(fileUpload.FilePath, extractDir, true);
-
-            // Search for .lift files to determine the root of the Lift project.
-            string extractedLiftRootPath;
-            // Handle this structuring case:
-            // flex.zip
-            //    | audio
-            //    | WritingSystems
-            //    | project_name.lift
-            //    | project_name.lift-ranges
-            if (FindLiftFiles(extractDir).Count > 0)
-            {
-                extractedLiftRootPath = extractDir;
-            }
-            // Handle the typical structuring case:
-            //  flex.zip
-            //    | project_name
-            //      | audio
-            //      | WritingSystems
-            //      | project_name.lift
-            //      | project_name.lift-ranges
-            else
-            {
-                extractedLiftRootPath = Directory.GetDirectories(extractDir).First();
-            }
 
             // Copy the extracted contents into the persistent storage location for the project.
             FileOperations.CopyDirectory(extractedLiftRootPath, liftStoragePath);
             Directory.Delete(extractDir, true);
 
-            // Validate that only one .lift file is included.
-            var extractedLiftFiles = FindLiftFiles(liftStoragePath);
-            switch (extractedLiftFiles.Count)
+            return await AddImportToProject(liftStoragePath, projectId);
+        }
+
+        private async Task<IActionResult> AddImportToProject(string liftStoragePath, string projectId)
+        {
+            // Sanitize projectId
+            if (!Sanitization.SanitizeId(projectId))
             {
-                case 0:
-                    return BadRequest($"{invalidLiftFileMessagePrefix}No .lift files detected.");
-                case > 1:
-                    return BadRequest($"{invalidLiftFileMessagePrefix}More than one .lift file detected.");
+                return new UnsupportedMediaTypeResult();
             }
 
             int liftParseResult;
             // Sets the projectId of our parser to add words to that project
             var liftMerger = _liftService.GetLiftImporterExporter(projectId, _wordRepo);
+            var importedAnalysisWritingSystems = new List<WritingSystem>();
             var doesImportHaveDefinitions = false;
             var doesImportHaveGrammaticalInfo = false;
             try
@@ -160,17 +208,16 @@ namespace BackendFramework.Controllers
                     return NotFound(projectId);
                 }
 
-                _liftService.LdmlImport(
-                    Path.Combine(liftStoragePath, "WritingSystems"),
-                    proj.VernacularWritingSystem.Bcp47, _projRepo, proj);
+                await _liftService.LdmlImport(liftStoragePath, _projRepo, proj);
 
                 var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(liftMerger);
 
                 // Import words from .lift file
-                liftParseResult = parser.ReadLiftFile(extractedLiftFiles.First());
+                liftParseResult = parser.ReadLiftFile(
+                    FileOperations.FindFilesWithExtension(liftStoragePath, ".lift", true).First());
 
-                // Check if there are any definitions in the imported words
-                // before they are deleted by SaveImportEntries.
+                // Get data from imported words before they're deleted by SaveImportEntries.
+                importedAnalysisWritingSystems = liftMerger.GetImportAnalysisWritingSystems();
                 doesImportHaveDefinitions = liftMerger.DoesImportHaveDefinitions();
                 doesImportHaveGrammaticalInfo = liftMerger.DoesImportHaveGrammaticalInfo();
 
@@ -178,22 +225,35 @@ namespace BackendFramework.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error importing lift file {FileName} into project {ProjectId}",
-                    fileUpload.Name, projectId);
-                return BadRequest("Error processing the lift data. Contact support for help.");
+                _logger.LogError(e, "Error importing LIFT file into project {ProjectId}.", projectId);
+                return BadRequest("Error processing the LIFT data. Contact support for help.");
             }
 
-            // Store that we have imported Lift data already for this project to signal the frontend
-            // not to attempt to import again.
             var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
                 return NotFound(projectId);
             }
 
+            // Add analysis writing systems found in the data, avoiding duplicate and empty bcp47 codes.
+            project.AnalysisWritingSystems.AddRange(importedAnalysisWritingSystems.Where(
+                iws => !project.AnalysisWritingSystems.Any(ws => ws.Bcp47 == iws.Bcp47)));
+            project.AnalysisWritingSystems.RemoveAll(ws => String.IsNullOrWhiteSpace(ws.Bcp47));
+            if (project.AnalysisWritingSystems.Count == 0)
+            {
+                // The list cannot be empty.
+                project.AnalysisWritingSystems.Add(new WritingSystem { Bcp47 = "en", Name = "English" });
+            }
+
+            // Store whether we have imported any senses with definitions or grammatical info
+            // to signal the frontend to display that data for this project.
             project.DefinitionsEnabled = doesImportHaveDefinitions;
             project.GrammaticalInfoEnabled = doesImportHaveGrammaticalInfo;
+
+            // Store that we have imported LIFT data already for this project
+            // to signal the frontend not to attempt to import again in this project.
             project.LiftImported = true;
+
             await _projRepo.Update(projectId, project);
 
             return Ok(liftParseResult);
@@ -281,7 +341,7 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Downloads project data in zip file </summary>
-        /// <returns> Binary Lift file </returns>
+        /// <returns> Binary LIFT file </returns>
         [HttpGet("download", Name = "DownloadLiftFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
         public async Task<IActionResult> DownloadLiftFile(string projectId)
@@ -324,13 +384,13 @@ namespace BackendFramework.Controllers
         internal IActionResult DeleteLiftFile(string userId)
         {
             // Don't check _permissionService.HasProjectPermission,
-            // since the lift-file is user-specific, not tied to a project.
+            // since the LIFT file is user-specific, not tied to a project.
 
             _liftService.DeleteExport(userId);
             return Ok(userId);
         }
 
-        /// <summary> Check if lift import has already happened for this project </summary>
+        /// <summary> Check if LIFT import has already happened for this project </summary>
         /// <returns> A bool </returns>
         [HttpGet("check", Name = "CanUploadLift")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]

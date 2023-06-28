@@ -36,6 +36,8 @@ import {
   BaseAPI,
   RequiredError,
 } from "../base";
+// @ts-ignore
+import { WritingSystem } from "../models";
 /**
  * LiftApi - axios parameter creator
  * @export
@@ -227,6 +229,51 @@ export const LiftApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    finishUploadLiftFile: async (
+      projectId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("finishUploadLiftFile", "projectId", projectId);
+      const localVarPath = `/v1/projects/{projectId}/lift/finishupload`.replace(
+        `{${"projectId"}}`,
+        encodeURIComponent(String(projectId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {any} file
      * @param {string} name
      * @param {string} filePath
@@ -252,6 +299,90 @@ export const LiftApiAxiosParamCreator = function (
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
       );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+      const localVarFormParams = new ((configuration &&
+        configuration.formDataCtor) ||
+        FormData)();
+
+      if (file !== undefined) {
+        localVarFormParams.append("File", file as any);
+      }
+
+      if (name !== undefined) {
+        localVarFormParams.append("Name", name as any);
+      }
+
+      if (filePath !== undefined) {
+        localVarFormParams.append("FilePath", filePath as any);
+      }
+
+      localVarHeaderParameter["Content-Type"] = "multipart/form-data";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = localVarFormParams;
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {any} file
+     * @param {string} name
+     * @param {string} filePath
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    uploadLiftFileAndGetWritingSystems: async (
+      projectId: string,
+      file: any,
+      name: string,
+      filePath: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists(
+        "uploadLiftFileAndGetWritingSystems",
+        "projectId",
+        projectId
+      );
+      // verify required parameter 'file' is not null or undefined
+      assertParamExists("uploadLiftFileAndGetWritingSystems", "file", file);
+      // verify required parameter 'name' is not null or undefined
+      assertParamExists("uploadLiftFileAndGetWritingSystems", "name", name);
+      // verify required parameter 'filePath' is not null or undefined
+      assertParamExists(
+        "uploadLiftFileAndGetWritingSystems",
+        "filePath",
+        filePath
+      );
+      const localVarPath =
+        `/v1/projects/{projectId}/lift/uploadandgetwritingsystems`.replace(
+          `{${"projectId"}}`,
+          encodeURIComponent(String(projectId))
+        );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -402,6 +533,30 @@ export const LiftApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async finishUploadLiftFile(
+      projectId: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.finishUploadLiftFile(
+          projectId,
+          options
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {any} file
      * @param {string} name
      * @param {string} filePath
@@ -424,6 +579,42 @@ export const LiftApiFp = function (configuration?: Configuration) {
         filePath,
         options
       );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {any} file
+     * @param {string} name
+     * @param {string} filePath
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async uploadLiftFileAndGetWritingSystems(
+      projectId: string,
+      file: any,
+      name: string,
+      filePath: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<WritingSystem>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.uploadLiftFileAndGetWritingSystems(
+          projectId,
+          file,
+          name,
+          filePath,
+          options
+        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -492,6 +683,20 @@ export const LiftApiFactory = function (
     /**
      *
      * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    finishUploadLiftFile(
+      projectId: string,
+      options?: any
+    ): AxiosPromise<number> {
+      return localVarFp
+        .finishUploadLiftFile(projectId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {any} file
      * @param {string} name
      * @param {string} filePath
@@ -507,6 +712,32 @@ export const LiftApiFactory = function (
     ): AxiosPromise<number> {
       return localVarFp
         .uploadLiftFile(projectId, file, name, filePath, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {any} file
+     * @param {string} name
+     * @param {string} filePath
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    uploadLiftFileAndGetWritingSystems(
+      projectId: string,
+      file: any,
+      name: string,
+      filePath: string,
+      options?: any
+    ): AxiosPromise<Array<WritingSystem>> {
+      return localVarFp
+        .uploadLiftFileAndGetWritingSystems(
+          projectId,
+          file,
+          name,
+          filePath,
+          options
+        )
         .then((request) => request(axios, basePath));
     },
   };
@@ -569,6 +800,20 @@ export interface LiftApiExportLiftFileRequest {
 }
 
 /**
+ * Request parameters for finishUploadLiftFile operation in LiftApi.
+ * @export
+ * @interface LiftApiFinishUploadLiftFileRequest
+ */
+export interface LiftApiFinishUploadLiftFileRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof LiftApiFinishUploadLiftFile
+   */
+  readonly projectId: string;
+}
+
+/**
  * Request parameters for uploadLiftFile operation in LiftApi.
  * @export
  * @interface LiftApiUploadLiftFileRequest
@@ -599,6 +844,41 @@ export interface LiftApiUploadLiftFileRequest {
    *
    * @type {string}
    * @memberof LiftApiUploadLiftFile
+   */
+  readonly filePath: string;
+}
+
+/**
+ * Request parameters for uploadLiftFileAndGetWritingSystems operation in LiftApi.
+ * @export
+ * @interface LiftApiUploadLiftFileAndGetWritingSystemsRequest
+ */
+export interface LiftApiUploadLiftFileAndGetWritingSystemsRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof LiftApiUploadLiftFileAndGetWritingSystems
+   */
+  readonly projectId: string;
+
+  /**
+   *
+   * @type {any}
+   * @memberof LiftApiUploadLiftFileAndGetWritingSystems
+   */
+  readonly file: any;
+
+  /**
+   *
+   * @type {string}
+   * @memberof LiftApiUploadLiftFileAndGetWritingSystems
+   */
+  readonly name: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof LiftApiUploadLiftFileAndGetWritingSystems
    */
   readonly filePath: string;
 }
@@ -676,6 +956,22 @@ export class LiftApi extends BaseAPI {
 
   /**
    *
+   * @param {LiftApiFinishUploadLiftFileRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof LiftApi
+   */
+  public finishUploadLiftFile(
+    requestParameters: LiftApiFinishUploadLiftFileRequest,
+    options?: any
+  ) {
+    return LiftApiFp(this.configuration)
+      .finishUploadLiftFile(requestParameters.projectId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
    * @param {LiftApiUploadLiftFileRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
@@ -687,6 +983,28 @@ export class LiftApi extends BaseAPI {
   ) {
     return LiftApiFp(this.configuration)
       .uploadLiftFile(
+        requestParameters.projectId,
+        requestParameters.file,
+        requestParameters.name,
+        requestParameters.filePath,
+        options
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {LiftApiUploadLiftFileAndGetWritingSystemsRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof LiftApi
+   */
+  public uploadLiftFileAndGetWritingSystems(
+    requestParameters: LiftApiUploadLiftFileAndGetWritingSystemsRequest,
+    options?: any
+  ) {
+    return LiftApiFp(this.configuration)
+      .uploadLiftFileAndGetWritingSystems(
         requestParameters.projectId,
         requestParameters.file,
         requestParameters.name,

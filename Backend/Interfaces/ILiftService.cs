@@ -8,7 +8,7 @@ namespace BackendFramework.Interfaces
     public interface ILiftService
     {
         ILiftMerger GetLiftImporterExporter(string projectId, IWordRepository wordRepo);
-        void LdmlImport(string filePath, string langTag, IProjectRepository projRepo, Project project);
+        Task<bool> LdmlImport(string filePath, IProjectRepository projRepo, Project project);
         Task<string> LiftExport(string projectId, IWordRepository wordRepo, IProjectRepository projRepo);
 
         // Methods to store, retrieve, and delete an export string in a common dictionary.
@@ -17,12 +17,16 @@ namespace BackendFramework.Interfaces
         bool DeleteExport(string userId);
         void SetExportInProgress(string userId, bool isInProgress);
         bool IsExportInProgress(string userId);
+        void StoreImport(string userId, string filePath);
+        string? RetrieveImport(string userId);
+        bool DeleteImport(string userId);
     }
 
     public interface ILiftMerger : ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>
     {
         bool DoesImportHaveDefinitions();
         bool DoesImportHaveGrammaticalInfo();
+        List<WritingSystem> GetImportAnalysisWritingSystems();
         Task<List<Word>> SaveImportEntries();
     }
 }

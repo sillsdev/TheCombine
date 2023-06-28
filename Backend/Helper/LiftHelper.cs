@@ -1,11 +1,58 @@
 using System;
+using System.IO;
 using System.Linq;
 using SIL.Lift.Parsing;
 
 namespace BackendFramework.Helper
 {
-    public class LiftHelper
+    [Serializable]
+    public class InvalidLiftFileException : InvalidFileException
     {
+        public InvalidLiftFileException(string message) : base("Malformed LIFT file: " + message) { }
+
+    }
+
+    public static class LiftHelper
+    {
+        public static string GetLiftRootFromExtractedZip(string dirPath)
+        {
+            // Search for .lift files to determine the root of the Lift project.
+            string extractedLiftRootPath;
+            // Handle this structuring case:
+            // extractedZipDir
+            //    | audio
+            //    | WritingSystems
+            //    | project_name.lift
+            //    | project_name.lift-ranges
+            if (FileOperations.FindFilesWithExtension(dirPath, ".lift").Count > 0)
+            {
+                extractedLiftRootPath = dirPath;
+            }
+            // Handle the typical structuring case:
+            // extractedZipDir
+            //    | project_name
+            //      | audio
+            //      | WritingSystems
+            //      | project_name.lift
+            //      | project_name.lift-ranges
+            else
+            {
+                extractedLiftRootPath = Directory.GetDirectories(dirPath).First();
+            }
+
+            // Validate that only one .lift file is included.
+            var extractedLiftFiles = FileOperations.FindFilesWithExtension(extractedLiftRootPath, ".lift");
+            switch (extractedLiftFiles.Count)
+            {
+                case 0:
+                    throw new InvalidLiftFileException("No .lift files detected.");
+                case > 1:
+                    throw new InvalidLiftFileException("More than one .lift file detected.");
+            }
+
+            return extractedLiftRootPath;
+        }
+
         /// <summary>
         /// Determine if a <see cref="LiftEntry"/> has any data not handled by The Combine.
         /// </summary>

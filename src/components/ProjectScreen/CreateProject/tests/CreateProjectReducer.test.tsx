@@ -1,63 +1,47 @@
+import {
+  failure,
+  inProgress,
+  reset,
+  success,
+} from "components/ProjectScreen/CreateProject/Redux/CreateProjectActions";
 import * as reducer from "components/ProjectScreen/CreateProject/Redux/CreateProjectReducer";
 import {
-  CreateProjectAction,
-  CreateProjectActionTypes,
   CreateProjectState,
   defaultState,
 } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
 import { StoreAction, StoreActionTypes } from "rootActions";
 
-const emptyWritingSystem = {
-  name: "",
-  bcp47: "",
-  font: "",
-};
-
-const project = {
-  name: "testProjectName",
-  languageData: new File([], "testFile.lift"),
-  vernacularLanguage: emptyWritingSystem,
-  analysisLanguages: [emptyWritingSystem],
-};
-
 describe("CreateProjectReducer", () => {
-  const resultState: CreateProjectState = {
-    name: project.name,
-    inProgress: true,
-    success: false,
-    errorMsg: "",
-    vernacularLanguage: project.vernacularLanguage,
-    analysisLanguages: project.analysisLanguages,
-  };
-
-  const inProgress: CreateProjectAction = {
-    type: CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS,
-    payload: project,
-  };
-
-  // Test with no state
-  test("no state, expecting default state", () => {
-    expect(
-      reducer.createProjectReducer(undefined, {
-        type: CreateProjectActionTypes.CREATE_PROJECT_RESET,
-        payload: project,
-      })
-    ).toEqual(defaultState);
+  test("undefined state and reset action, expecting default state", () => {
+    expect(reducer.createProjectReducer(undefined, reset())).toEqual(
+      defaultState
+    );
   });
 
-  test("default state, expecting create project", () => {
-    expect(
-      reducer.createProjectReducer({} as CreateProjectState, inProgress)
-    ).toEqual(resultState);
+  test("undefined state and failure action, expecting error message", () => {
+    const errorMsg = "";
+    expect(reducer.createProjectReducer(undefined, failure(errorMsg))).toEqual({
+      ...defaultState,
+      errorMsg,
+    });
   });
 
-  test("non-default state, expecting default state", () => {
-    const resetAction: StoreAction = {
-      type: StoreActionTypes.RESET,
-    };
-
+  test("empty state and in-progress action, expecting inProgress", () => {
     expect(
-      reducer.createProjectReducer({} as CreateProjectState, resetAction)
+      reducer.createProjectReducer({} as CreateProjectState, inProgress())
+    ).toEqual({ ...defaultState, inProgress: true });
+  });
+
+  test("empty state and success action, expecting success", () => {
+    expect(
+      reducer.createProjectReducer({} as CreateProjectState, success())
+    ).toEqual({ ...defaultState, success: true });
+  });
+
+  test("empty state and store reset action, expecting default state", () => {
+    const storeResetAction: StoreAction = { type: StoreActionTypes.RESET };
+    expect(
+      reducer.createProjectReducer({} as CreateProjectState, storeResetAction)
     ).toEqual(defaultState);
   });
 });
