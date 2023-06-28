@@ -1,5 +1,5 @@
 import { Provider } from "react-redux";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
@@ -35,9 +35,7 @@ describe("AppBar", () => {
       testRenderer = renderer.create(
         <Provider store={mockStore}>
           <MemoryRouter>
-            <Routes>
-              <Route path="*" element={<AppBar />} />
-            </Routes>
+            <AppBar />
           </MemoryRouter>
         </Provider>
       );
