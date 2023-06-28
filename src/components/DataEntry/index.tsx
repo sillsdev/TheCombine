@@ -51,6 +51,10 @@ export default function DataEntry(): ReactElement {
   );
   const { id, lang, name } = currentDomain;
 
+  /* This ref is for a container of both the <DataEntryHeader> and <DataEntryTable>,
+   * in order to check its height and force the <ExistingDataTable> to not be too tall.
+   * Attach to the <Paper> because the parent <Grid item> won't shrink to its content,
+   * but will match the height of its neighbor <Grid item> in ExistingDataTable. */
   const dataEntryRef = useRef<HTMLDivElement | null>(null);
 
   const [domain, setDomain] = useState(newSemanticDomain(id, name, lang));
