@@ -1,8 +1,20 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace BackendFramework.Helper
 {
+    [Serializable]
+    public class InvalidFileException : Exception
+    {
+        public InvalidFileException(string message) : base(message) { }
+
+    }
+
     /// <summary>
     /// A collection of general purpose file system operations.
     /// </summary>
@@ -45,6 +57,31 @@ namespace BackendFramework.Helper
             return extractionDir;
         }
 
+        /// <summary> Extract a zip file to a unique temporary directory. </summary>
+        /// <param name="file"> An IFormFile zip file. </param>
+        /// <returns> The path to the extracted contents. </returns>
+        public static async Task<string> ExtractZipFile(IFormFile? file)
+        {
+            if (file is null)
+            {
+                throw new InvalidFileException("Null file");
+            }
+            if (file.Length == 0)
+            {
+                throw new InvalidFileException("Empty file");
+            }
+
+            // Copy zip file data to a new temporary file
+            var filePath = Path.GetTempFileName();
+            await using (var fs = new FileStream(filePath, FileMode.OpenOrCreate))
+            {
+                await file.CopyToAsync(fs);
+            }
+
+            // Extract the zip to new created directory.
+            return ExtractZipFile(filePath, null, true);
+        }
+
         /// <summary>
         /// Recursively copies one directory into another.
         /// </summary>
@@ -61,6 +98,27 @@ namespace BackendFramework.Helper
             {
                 CopyDirectory(directory, Path.Combine(targetDir, Path.GetFileName(directory)));
             }
+        }
+
+        /// <summary> Find any files of specified extension within a directory. </summary>
+        public static List<string> FindFilesWithExtension(string dir, string ext, bool recursive = false)
+        {
+            if (dir.Length == 0 || ext.Length == 0)
+            {
+                return new List<string>();
+            }
+            if (ext[0] != '.')
+            {
+                ext = $".{ext}";
+            }
+
+            var files = Directory.GetFiles(dir, $"*{ext}").ToList();
+            if (recursive)
+            {
+                Directory.GetDirectories(dir).ToList()
+                    .ForEach(subDir => files.AddRange(FindFilesWithExtension(subDir, ext, true)));
+            }
+            return files;
         }
     }
 }
