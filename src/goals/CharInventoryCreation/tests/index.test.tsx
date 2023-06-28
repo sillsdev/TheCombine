@@ -13,9 +13,8 @@ import CharacterInventory, {
 } from "goals/CharInventoryCreation";
 import { defaultState as characterInventoryState } from "goals/CharInventoryCreation/Redux/CharacterInventoryReducer";
 
-// This mock bypasses the fact that react-test-renderer does not support portals, with no clean solution.
-// This bypasses the whole issue by replacing the portal-creating object (the Dialog) with a lightweight,
-// innocuous Material-Ui component with no such glitchy properties.
+// Replace Dialog with something that doesn't create portals,
+// because react-test-renderer does not support portals.
 jest.mock("@mui/material", () => {
   const materialUiCore = jest.requireActual("@mui/material");
   return {

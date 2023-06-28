@@ -7,7 +7,7 @@ import {
   DialogTitle,
   Grid,
 } from "@mui/material";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { LoadingButton } from "components/Buttons";
@@ -65,7 +65,7 @@ export default function CharacterInventory() {
   return (
     <>
       <Grid container justifyContent="center" spacing={2}>
-        <Grid item xl={10} lg={9} md={8} xs={12}>
+        <Grid item xl={9} lg={8} md={7} xs={12}>
           <Grid
             container
             spacing={2}
@@ -79,10 +79,8 @@ export default function CharacterInventory() {
           </Grid>
         </Grid>
 
-        <Grid item xl={2} lg={3} md={4} xs={12}>
-          {!selectedCharacter ? (
-            <Fragment />
-          ) : (
+        <Grid item xl={3} lg={4} md={5} xs={12}>
+          {!!selectedCharacter && (
             <CharacterDetail
               character={selectedCharacter}
               close={() => dispatch(setSelectedCharacter(""))}
@@ -91,7 +89,7 @@ export default function CharacterInventory() {
         </Grid>
 
         <Grid item xs={12} style={{ borderTop: "1px solid #ccc" }}>
-          {/* submission buttons */}
+          {/* Submission buttons */}
           <Grid container justifyContent="center">
             <LoadingButton
               loading={saveInProgress}
