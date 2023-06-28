@@ -56,14 +56,14 @@ export default function DataEntry(): ReactElement {
   const [domain, setDomain] = useState(newSemanticDomain(id, name, lang));
   const [domainWords, setDomainWords] = useState<DomainWord[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [height, setHeight] = useState(0);
+  const [height, setHeight] = useState<number>();
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [questionsVisible, setQuestionsVisible] = useState(false);
 
   const { windowWidth } = useWindowSize();
 
   const updateHeight = useCallback(() => {
-    setHeight(dataEntryRef.current?.clientHeight ?? 0);
+    setHeight(dataEntryRef.current?.clientHeight);
   }, []);
 
   // On first render, open tree.
