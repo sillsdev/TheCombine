@@ -1,6 +1,5 @@
 import { Button, MenuItem } from "@mui/material";
 import { Provider } from "react-redux";
-import { MemoryRouter, Route, Routes } from "react-router-dom";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
@@ -17,6 +16,9 @@ jest.mock("backend/localStorage", () => ({
   getAvatar: jest.fn(),
   getCurrentUser: jest.fn(),
   getUserId: () => mockGetUserId(),
+}));
+jest.mock("react-router-dom", () => ({
+  useNavigate: jest.fn(),
 }));
 
 let testRenderer: renderer.ReactTestRenderer;
@@ -43,11 +45,7 @@ describe("UserMenu", () => {
     renderer.act(() => {
       testRenderer = renderer.create(
         <Provider store={mockStore}>
-          <MemoryRouter>
-            <Routes>
-              <Route path="*" element={<UserMenu currentTab={Path.Root} />} />
-            </Routes>
-          </MemoryRouter>
+          <UserMenu currentTab={Path.Root} />
         </Provider>
       );
     });
@@ -74,14 +72,7 @@ function renderMenuList(isAdmin = false) {
   renderer.act(() => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
-        <MemoryRouter>
-          <Routes>
-            <Route
-              path="*"
-              element={<UserMenuList isAdmin={isAdmin} onSelect={jest.fn()} />}
-            />
-          </Routes>
-        </MemoryRouter>
+        <UserMenuList isAdmin={isAdmin} onSelect={jest.fn()} />
       </Provider>
     );
   });

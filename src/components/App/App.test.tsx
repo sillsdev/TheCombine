@@ -1,6 +1,5 @@
 import "jest-canvas-mock";
 import { Provider } from "react-redux";
-import { MemoryRouter } from "react-router-dom";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
@@ -26,9 +25,7 @@ describe("App", () => {
     renderer.act(() => {
       renderer.create(
         <Provider store={mockStore}>
-          <MemoryRouter>
-            <App />
-          </MemoryRouter>
+          <App />
         </Provider>
       );
     });

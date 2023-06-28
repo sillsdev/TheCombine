@@ -1,4 +1,3 @@
-import { MemoryRouter, Route, Routes } from "react-router-dom";
 import renderer, { ReactTestInstance } from "react-test-renderer";
 
 import "tests/reactI18nextMock";
@@ -10,19 +9,17 @@ import NavigationButtons, {
 import { Path } from "types/path";
 import { themeColors } from "types/theme";
 
+jest.mock("react-router-dom", () => ({
+  useNavigate: jest.fn(),
+}));
+
 let testRenderer: renderer.ReactTestRenderer;
 let entryButton: ReactTestInstance | undefined;
 let cleanButton: ReactTestInstance | undefined;
 
 const renderNavButtons = (path: Path): void => {
   renderer.act(() => {
-    testRenderer = renderer.create(
-      <MemoryRouter>
-        <Routes>
-          <Route path="*" element={<NavigationButtons currentTab={path} />} />
-        </Routes>
-      </MemoryRouter>
-    );
+    testRenderer = renderer.create(<NavigationButtons currentTab={path} />);
   });
   entryButton = testRenderer.root.findByProps({ id: dataEntryButtonId });
   cleanButton = testRenderer.root.findByProps({ id: dataCleanupButtonId });
