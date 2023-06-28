@@ -265,24 +265,25 @@ function ImmutableWritingSystem(
           <Typography>{`${props.index + 1}. `}</Typography>
         </Grid>
       )}
+      {!!props.ws.name && (
+        <Grid item>
+          <Typography>
+            {`${t("projectSettings.language.name")}: ${props.ws.name}, `}
+          </Typography>
+        </Grid>
+      )}
       <Grid item>
         <Typography>
-          {t("projectSettings.language.name")}
-          {`: ${props.ws.name}, `}
+          {`${t("projectSettings.language.bcp47")}: ${props.ws.bcp47}`}
         </Typography>
       </Grid>
-      <Grid item>
-        <Typography>
-          {t("projectSettings.language.bcp47")}
-          {`: ${props.ws.bcp47}, `}
-        </Typography>
-      </Grid>
-      <Grid item>
-        <Typography>
-          {t("projectSettings.language.font")}
-          {`: ${props.ws.font}`}
-        </Typography>
-      </Grid>
+      {!!props.ws.font && (
+        <Grid item>
+          <Typography>
+            {`, ${t("projectSettings.language.font")}: ${props.ws.font}`}
+          </Typography>
+        </Grid>
+      )}
       <Grid item>{props.buttons}</Grid>
     </Grid>
   );

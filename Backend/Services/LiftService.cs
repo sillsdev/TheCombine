@@ -89,6 +89,8 @@ namespace BackendFramework.Services
     {
         /// A dictionary shared by all Projects for storing and retrieving paths to exported projects.
         private readonly Dictionary<string, string> _liftExports;
+        /// A dictionary shared by all Projects for storing and retrieving paths to in-process imports.
+        private readonly Dictionary<string, string> _liftImports;
         private const string InProgress = "IN_PROGRESS";
 
         public LiftService()
@@ -99,6 +101,7 @@ namespace BackendFramework.Services
             }
 
             _liftExports = new Dictionary<string, string>();
+            _liftImports = new Dictionary<string, string>();
         }
 
         /// <summary> Store status that a user's export is in-progress. </summary>
@@ -152,19 +155,61 @@ namespace BackendFramework.Services
             return removeSuccessful;
         }
 
-        /// <summary> Imports main character set for a project from an ldml file </summary>
-        public void LdmlImport(string filePath, string langTag, IProjectRepository projRepo, Project project)
+        /// <summary> Store filePath for a user's Lift import. </summary>
+        public void StoreImport(string userId, string filePath)
         {
-            var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
-            var wsf = new LdmlInFolderWritingSystemFactory(wsr);
-            wsf.Create(langTag, out var wsDef);
+            _liftImports.Remove(userId);
+            _liftImports.Add(userId, filePath);
+        }
 
-            // If there is a main character set, import it to the project
+        /// <summary> Retrieve a stored filePath for the user's Lift import. </summary>
+        /// <returns> Path to the Lift file on disk. </returns>
+        public string? RetrieveImport(string userId)
+        {
+            if (!_liftImports.ContainsKey(userId))
+            {
+                return null;
+            }
+
+            return _liftImports[userId];
+        }
+
+        /// <summary> Delete a stored Lift import path and its file on disk. </summary>
+        /// <returns> If the element is successfully found and removed, true; otherwise, false. </returns>
+        public bool DeleteImport(string userId)
+        {
+            var removeSuccessful = _liftImports.Remove(userId, out var dirPath);
+            if (removeSuccessful && Directory.Exists(dirPath))
+            {
+                Directory.Delete(dirPath, true);
+            }
+            return removeSuccessful;
+        }
+
+        /// <summary> Imports main character set for a project from an ldml file. </summary>
+        /// <returns> A bool indicating whether a character set was added to the project. </returns>
+        public async Task<bool> LdmlImport(string dirPath, IProjectRepository projRepo, Project project)
+        {
+            if (!Directory.GetFiles(dirPath, "*.ldml").Any())
+            {
+                dirPath = Path.Combine(dirPath, "WritingSystems");
+            }
+            var wsr = LdmlInFolderWritingSystemRepository.Initialize(dirPath);
+
+            var wsf = new LdmlInFolderWritingSystemFactory(wsr);
+            wsf.Create(project.VernacularWritingSystem.Bcp47, out var wsDef);
+
+            // If there is a main character set, add it to the project
             if (wsDef.CharacterSets.Contains("main"))
             {
-                project.ValidCharacters = wsDef.CharacterSets["main"].Characters.ToList();
-                projRepo.Update(project.Id, project);
+                project.ValidCharacters.AddRange(wsDef.CharacterSets["main"].Characters
+                    .Where(c => !project.ValidCharacters.Contains(c)));
+                project.RejectedCharacters = project.RejectedCharacters
+                    .Where(c => !project.ValidCharacters.Contains(c)).ToList();
+                await projRepo.Update(project.Id, project);
+                return true;
             }
+            return false;
         }
 
         /// <summary> Exports information from a project to a lift package zip </summary>
@@ -575,6 +620,19 @@ namespace BackendFramework.Services
                 return _importEntries.Any(w => w.Senses.Any(
                     s => s.GrammaticalInfo is not null &&
                     s.GrammaticalInfo.CatGroup != GramCatGroup.Unspecified));
+            }
+
+            /// <summary>
+            /// Get all analysis languages found in senses in the private field <see cref="_importEntries"/>
+            /// </summary>
+            /// <returns> A List of all distinct analysis writing systems in the import. </returns>
+            public List<WritingSystem> GetImportAnalysisWritingSystems()
+            {
+                var langTags = _importEntries.SelectMany(
+                    w => w.Senses.SelectMany(s => Language.GetSenseAnalysisLangTags(s))
+                ).Distinct();
+
+                return Language.ConvertLangTagsToWritingSystems(langTags).ToList();
             }
 
             /// <summary>

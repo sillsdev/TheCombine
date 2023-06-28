@@ -17,7 +17,6 @@ export const defaultState = {
   //project
   createProjectState: {
     ...createProjectState,
-    name: "Test",
     success: true,
   },
   currentProjectState: { ...currentProjectState },

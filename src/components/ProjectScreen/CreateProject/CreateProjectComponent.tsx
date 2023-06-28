@@ -4,26 +4,33 @@ import {
   CardContent,
   Grid,
   IconButton,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   TextField,
   Typography,
 } from "@mui/material";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
-import React from "react";
+import React, { Fragment, ReactElement } from "react";
 import { Trans, withTranslation, WithTranslation } from "react-i18next";
 
 import { WritingSystem } from "api/models";
-import { projectDuplicateCheck } from "backend";
+import { projectDuplicateCheck, uploadLiftAndGetWritingSystems } from "backend";
 import { FileInputButton, LoadingDoneButton } from "components/Buttons";
 import theme from "types/theme";
 import { newWritingSystem } from "types/writingSystem";
+
+const vernIdNone = "selectLanguageOptionNone";
+const vernIdOther = "selectLanguageOptionOther";
+const undBcp47 = "und";
 
 interface CreateProjectProps extends WithTranslation {
   asyncCreateProject: (
     name: string,
     vernacularLanguage: WritingSystem,
-    analysisLanguages: WritingSystem[],
-    languageData: File
+    analysisLanguages: WritingSystem[]
   ) => void;
+  asyncFinishProject: (name: string, vernacularLanguage: WritingSystem) => void;
   reset: () => void;
   inProgress: boolean;
   success: boolean;
@@ -34,11 +41,13 @@ interface CreateProjectState {
   name: string;
   error: { empty: boolean; nameTaken: boolean };
   vernLanguage: WritingSystem;
+  vernLangOptions: WritingSystem[];
+  vernLangIsOther?: boolean;
   analysisLanguages: WritingSystem[];
   languageData?: File;
-  fileName?: string;
 }
 
+/** A component for creating a new project. */
 export class CreateProject extends React.Component<
   CreateProjectProps,
   CreateProjectState
@@ -49,12 +58,13 @@ export class CreateProject extends React.Component<
     this.state = {
       name: "",
       error: { empty: false, nameTaken: false },
-      vernLanguage: newWritingSystem("und"),
-      analysisLanguages: [newWritingSystem("und")],
+      vernLanguage: newWritingSystem(undBcp47),
+      vernLangOptions: [],
+      analysisLanguages: [newWritingSystem(undBcp47)],
     };
   }
 
-  setVernBcp47 = (bcp47: string) => {
+  setVernBcp47 = (bcp47: string): void => {
     if (bcp47) {
       this.setState((state) => ({
         vernLanguage: { ...state.vernLanguage, bcp47 },
@@ -62,7 +72,7 @@ export class CreateProject extends React.Component<
     }
   };
 
-  setVernLangName = (name: string) => {
+  setVernLangName = (name: string): void => {
     if (name) {
       this.setState((state) => ({
         vernLanguage: { ...state.vernLanguage, name },
@@ -70,7 +80,7 @@ export class CreateProject extends React.Component<
     }
   };
 
-  setVernFont = (font: string) => {
+  setVernFont = (font: string): void => {
     if (font) {
       this.setState((state) => ({
         vernLanguage: { ...state.vernLanguage, font },
@@ -78,7 +88,7 @@ export class CreateProject extends React.Component<
     }
   };
 
-  setAnalysisBcp47 = (bcp47: string) => {
+  setAnalysisBcp47 = (bcp47: string): void => {
     if (bcp47) {
       this.setState((state) => {
         const analysisLanguages = state.analysisLanguages;
@@ -92,25 +102,25 @@ export class CreateProject extends React.Component<
     }
   };
 
-  setAnalysisLangName = (name: string) => {
+  setAnalysisLangName = (name: string): void => {
     this.setState((state) => {
       const analysisLanguages = state.analysisLanguages;
       if (analysisLanguages.length) {
         analysisLanguages[0].name = name;
       } else {
-        analysisLanguages.push(newWritingSystem("", name));
+        analysisLanguages.push(newWritingSystem(undBcp47, name));
       }
       return { analysisLanguages };
     });
   };
 
-  setAnalysisFont = (font: string) => {
+  setAnalysisFont = (font: string): void => {
     this.setState((state) => {
       const analysisLanguages = state.analysisLanguages;
       if (analysisLanguages.length) {
         analysisLanguages[0].font = font;
       } else {
-        analysisLanguages.push(newWritingSystem("", "", font));
+        analysisLanguages.push(newWritingSystem(undBcp47, "", font));
       }
       return { analysisLanguages };
     });
@@ -124,44 +134,100 @@ export class CreateProject extends React.Component<
     evt: React.ChangeEvent<
       HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
     >
-  ) {
+  ): void {
     const name = evt.target.value;
     this.setState({
       name,
-      error: { empty: name === "", nameTaken: false },
+      error: { empty: !name, nameTaken: false },
     });
   }
 
-  updateLanguageData(languageData?: File) {
-    this.setState({ languageData, fileName: languageData?.name });
+  async updateLanguageData(languageData?: File): Promise<void> {
+    const vernLangOptions = languageData
+      ? await uploadLiftAndGetWritingSystems(languageData)
+      : [];
+    if (vernLangOptions.length) {
+      this.setState({
+        languageData,
+        vernLangOptions,
+        vernLanguage: newWritingSystem(undBcp47),
+      });
+    } else {
+      this.setState({ languageData, vernLangOptions });
+    }
   }
 
-  async createProject(e: React.FormEvent<EventTarget>) {
+  /** A selector listing the vernacular writing systems in the user's upload. */
+  vernLangSelect(): ReactElement {
+    const langs = this.state.vernLangOptions;
+    if (!langs.length) {
+      return <Fragment />;
+    }
+
+    const menuItems = [
+      <MenuItem key={vernIdNone}>
+        {this.props.t("createProject.languageSelect")}
+      </MenuItem>,
+    ];
+    menuItems.push(
+      ...langs.map((lang) => (
+        <MenuItem key={lang.bcp47} value={lang.bcp47}>
+          {lang.name ? `${lang.name} : ${lang.bcp47}` : lang.bcp47}
+        </MenuItem>
+      ))
+    );
+    menuItems.push(
+      <MenuItem key={vernIdOther} value={vernIdOther}>
+        {this.props.t("createProject.languageOptionOther")}
+      </MenuItem>
+    );
+
+    const onChange = (e: SelectChangeEvent): void => {
+      const ws = langs.find((l) => l.bcp47 === e.target.value);
+      if (ws) {
+        this.setState({ vernLangIsOther: false, vernLanguage: ws });
+      } else {
+        this.setState({
+          vernLangIsOther: e.target.value === vernIdOther,
+          vernLanguage: newWritingSystem(undBcp47),
+        });
+      }
+    };
+
+    return (
+      <Select displayEmpty id="create-proj-select-vern" onChange={onChange}>
+        {menuItems}
+      </Select>
+    );
+  }
+
+  async createProject(e: React.FormEvent<EventTarget>): Promise<void> {
     e.preventDefault();
     if (this.props.success) {
       return;
     }
-
     const name = this.state.name.trim();
-    const vernLang = this.state.vernLanguage;
-    const analysisLang = this.state.analysisLanguages;
-    const languageData = this.state.languageData;
-    if (name === "") {
+    if (!name) {
       this.setState({ error: { empty: true, nameTaken: false } });
-    } else if (await projectDuplicateCheck(this.state.name)) {
+      return;
+    }
+    if (await projectDuplicateCheck(this.state.name)) {
       this.setState({ error: { empty: false, nameTaken: true } });
+      return;
+    }
+
+    if (this.state.languageData) {
+      this.props.asyncFinishProject(name, this.state.vernLanguage);
     } else {
       this.props.asyncCreateProject(
         name,
-        vernLang,
-        analysisLang,
-        languageData as File
+        this.state.vernLanguage,
+        this.state.analysisLanguages
       );
     }
   }
 
   render() {
-    //visual definition
     return (
       <Card style={{ width: "100%", maxWidth: 450 }}>
         <form onSubmit={(e) => this.createProject(e)}>
@@ -170,7 +236,7 @@ export class CreateProject extends React.Component<
             <Typography variant="h5" align="center" gutterBottom>
               {this.props.t("createProject.create")}
             </Typography>
-            {/* Project name field */}
+            {/* Project name */}
             <TextField
               id="create-project-name"
               label={this.props.t("createProject.name")}
@@ -219,13 +285,15 @@ export class CreateProject extends React.Component<
                   FillerTextC
                 </Trans>
               </Typography>
-              {/* Displays the name of the selected file */}
-              {this.state.fileName && (
+              {/* Uploaded file name and remove button */}
+              {this.state.languageData && (
                 <Typography
                   variant="body2"
                   style={{ margin: theme.spacing(1) }}
                 >
-                  {"createProject.fileSelected"}: {this.state.fileName}
+                  {`${this.props.t("createProject.fileSelected")}: ${
+                    this.state.languageData.name
+                  }`}
                   <IconButton
                     size="small"
                     onClick={() => this.updateLanguageData()}
@@ -239,28 +307,36 @@ export class CreateProject extends React.Component<
             <Typography style={{ marginTop: theme.spacing(1) }}>
               {this.props.t("projectSettings.language.vernacularLanguage")}
             </Typography>
-            <LanguagePicker
-              value={this.state.vernLanguage.bcp47}
-              setCode={(bcp47: string) => this.setVernBcp47(bcp47)}
-              name={this.state.vernLanguage.name}
-              setName={(name: string) => this.setVernLangName(name)}
-              font={this.state.vernLanguage.font}
-              setFont={(font: string) => this.setVernFont(font)}
-              t={languagePickerStrings_en}
-            />
+            {this.vernLangSelect()}
+            {(this.state.vernLangIsOther ||
+              !this.state.vernLangOptions.length) && (
+              <LanguagePicker
+                value={this.state.vernLanguage.bcp47}
+                setCode={(bcp47: string) => this.setVernBcp47(bcp47)}
+                name={this.state.vernLanguage.name}
+                setName={(name: string) => this.setVernLangName(name)}
+                font={this.state.vernLanguage.font}
+                setFont={(font: string) => this.setVernFont(font)}
+                t={languagePickerStrings_en}
+              />
+            )}
             {/* Analysis language picker */}
             <Typography style={{ marginTop: theme.spacing(1) }}>
               {this.props.t("projectSettings.language.analysisLanguage")}
             </Typography>
-            <LanguagePicker
-              value={this.state.analysisLanguages[0].bcp47}
-              setCode={(bcp47: string) => this.setAnalysisBcp47(bcp47)}
-              name={this.state.analysisLanguages[0].name}
-              setName={(name: string) => this.setAnalysisLangName(name)}
-              font={this.state.analysisLanguages[0].font}
-              setFont={(font: string) => this.setAnalysisFont(font)}
-              t={languagePickerStrings_en}
-            />
+            {this.state.languageData ? (
+              this.props.t("createProject.language")
+            ) : (
+              <LanguagePicker
+                value={this.state.analysisLanguages[0].bcp47}
+                setCode={(bcp47: string) => this.setAnalysisBcp47(bcp47)}
+                name={this.state.analysisLanguages[0].name}
+                setName={(name: string) => this.setAnalysisLangName(name)}
+                font={this.state.analysisLanguages[0].font}
+                setFont={(font: string) => this.setAnalysisFont(font)}
+                t={languagePickerStrings_en}
+              />
+            )}
             {/* Form submission button */}
             <Grid
               container
@@ -268,10 +344,14 @@ export class CreateProject extends React.Component<
               style={{ marginTop: theme.spacing(1) }}
             >
               <LoadingDoneButton
-                loading={this.props.inProgress}
+                buttonProps={{ color: "primary", id: "create-project-submit" }}
+                disabled={
+                  !this.state.vernLanguage.bcp47 ||
+                  this.state.vernLanguage.bcp47 === undBcp47
+                }
                 done={this.props.success}
                 doneText={this.props.t("createProject.success")}
-                buttonProps={{ color: "primary", id: "create-project-submit" }}
+                loading={this.props.inProgress}
               >
                 {this.props.t("createProject.create")}
               </LoadingDoneButton>
