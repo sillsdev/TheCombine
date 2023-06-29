@@ -43,7 +43,9 @@ models/note.ts
 models/password-reset-data.ts
 models/password-reset-request-data.ts
 models/permission.ts
+models/project-role.ts
 models/project.ts
+models/role.ts
 models/semantic-domain-count.ts
 models/semantic-domain-full.ts
 models/semantic-domain-tree-node.ts

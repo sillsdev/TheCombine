@@ -12,36 +12,14 @@
  * Do not edit the class manually.
  */
 
-import { Role } from "./role";
-
 /**
  *
  * @export
- * @interface EmailInvite
+ * @enum {string}
  */
-export interface EmailInvite {
-  /**
-   *
-   * @type {string}
-   * @memberof EmailInvite
-   */
-  email: string;
-  /**
-   *
-   * @type {string}
-   * @memberof EmailInvite
-   */
-  token: string;
-  /**
-   *
-   * @type {Role}
-   * @memberof EmailInvite
-   */
-  role: Role;
-  /**
-   *
-   * @type {string}
-   * @memberof EmailInvite
-   */
-  expireTime: string;
+export enum Role {
+  Owner = "Owner",
+  Administrator = "Administrator",
+  Manager = "Manager",
+  Harvester = "Harvester",
 }

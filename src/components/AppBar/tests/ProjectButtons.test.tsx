@@ -91,14 +91,17 @@ describe("ProjectButtons", () => {
     it("returns true for project owner but not other roles", async () => {
       mockGetCurrentUser.mockReturnValue({ projectRoles: mockProjectRoles });
 
-      const onlyOwner = [Permission.Owner];
+      const onlyOwner = [Permission.Archive];
       mockGetUserRole.mockResolvedValueOnce({ permissions: onlyOwner });
       expect(await getIsAdminOrOwner()).toBeTruthy();
 
       const allButOwner = [
+        Permission.CharacterInventory,
         Permission.DeleteEditSettingsAndUsers,
-        Permission.ImportExport,
+        Permission.Export,
+        Permission.Import,
         Permission.MergeAndReviewEntries,
+        Permission.Statistics,
         Permission.WordEntry,
       ];
       mockGetUserRole.mockResolvedValueOnce({ permissions: allButOwner });

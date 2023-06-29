@@ -85,7 +85,7 @@ export default function ActiveProjectUsers(): ReactElement {
   );
   const currentUserIsProjectOwner = hasProjectPermission(
     currentUser.projectRoles[currentProjectId],
-    Permission.Owner
+    Permission.Archive
   );
 
   const userListItem = (user: User): ReactElement => {
@@ -95,7 +95,7 @@ export default function ActiveProjectUsers(): ReactElement {
     );
     const userIsProjectOwner = hasProjectPermission(
       user.projectRoles[currentProjectId],
-      Permission.Owner
+      Permission.Archive
     );
 
     const manageUser =

@@ -17,31 +17,19 @@ import { Role } from "./role";
 /**
  *
  * @export
- * @interface EmailInvite
+ * @interface ProjectRole
  */
-export interface EmailInvite {
+export interface ProjectRole {
   /**
    *
    * @type {string}
-   * @memberof EmailInvite
+   * @memberof ProjectRole
    */
-  email: string;
-  /**
-   *
-   * @type {string}
-   * @memberof EmailInvite
-   */
-  token: string;
+  projectId: string;
   /**
    *
    * @type {Role}
-   * @memberof EmailInvite
+   * @memberof ProjectRole
    */
   role: Role;
-  /**
-   *
-   * @type {string}
-   * @memberof EmailInvite
-   */
-  expireTime: string;
 }

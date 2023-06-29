@@ -56,7 +56,7 @@ export default function ProjectSettingsComponent() {
   }, [currentRoles, project]);
 
   useEffect(() => {
-    if (permissions.includes(Permission.ImportExport)) {
+    if (permissions.includes(Permission.Import)) {
       canUploadLift().then(setImports);
     }
   }, [permissions, setImports]);
@@ -114,7 +114,7 @@ export default function ProjectSettingsComponent() {
       )}
 
       {/* Import Lift file */}
-      {permissions.includes(Permission.ImportExport) && (
+      {permissions.includes(Permission.Import) && (
         <BaseSettingsComponent
           icon={<CloudUpload />}
           title={t("projectSettings.import.header")}
@@ -131,7 +131,7 @@ export default function ProjectSettingsComponent() {
       )}
 
       {/* Export Lift file */}
-      {permissions.includes(Permission.ImportExport) && (
+      {permissions.includes(Permission.Export) && (
         <BaseSettingsComponent
           icon={<GetApp />}
           title={t("projectSettings.exportProject.label")}
@@ -140,16 +140,18 @@ export default function ProjectSettingsComponent() {
       )}
 
       {/* Autocomplete toggle */}
-      <BaseSettingsComponent
-        icon={<Sms />}
-        title={t("projectSettings.autocomplete.label")}
-        body={
-          <ProjectAutocomplete
-            project={project}
-            updateProject={updateProject}
-          />
-        }
-      />
+      {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+        <BaseSettingsComponent
+          icon={<Sms />}
+          title={t("projectSettings.autocomplete.label")}
+          body={
+            <ProjectAutocomplete
+              project={project}
+              updateProject={updateProject}
+            />
+          }
+        />
+      )}
 
       {/* See current users in project */}
       {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
@@ -170,7 +172,7 @@ export default function ProjectSettingsComponent() {
       )}
 
       {/* Set a workshop schedule */}
-      {permissions.includes(Permission.Owner) && (
+      {permissions.includes(Permission.Statistics) && (
         <BaseSettingsComponent
           icon={<CalendarMonth />}
           title={t("projectSettings.schedule.workshopSchedule")}
@@ -179,7 +181,7 @@ export default function ProjectSettingsComponent() {
       )}
 
       {/* Archive project */}
-      {permissions.includes(Permission.Owner) && (
+      {permissions.includes(Permission.Archive) && (
         <BaseSettingsComponent
           icon={<Archive />}
           title={t("projectSettings.user.archive")}

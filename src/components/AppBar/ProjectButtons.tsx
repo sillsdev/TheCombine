@@ -37,7 +37,7 @@ export async function getIsAdminOrOwner(): Promise<boolean> {
   const userRoleID = user.projectRoles[getProjectId()];
   if (userRoleID) {
     const role = await getUserRole(userRoleID);
-    return role.permissions.includes(Permission.Owner);
+    return role.permissions.includes(Permission.Archive);
   }
   return false;
 }

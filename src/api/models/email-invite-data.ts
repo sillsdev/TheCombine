@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { Permission } from "./permission";
+import { Role } from "./role";
 
 /**
  *
@@ -40,10 +40,10 @@ export interface EmailInviteData {
   projectId: string;
   /**
    *
-   * @type {Array<Permission>}
+   * @type {Role}
    * @memberof EmailInviteData
    */
-  role: Array<Permission>;
+  role: Role;
   /**
    *
    * @type {string}

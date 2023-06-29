@@ -4,7 +4,7 @@ import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import { Permission } from "api/models";
+import { Permission, Role } from "api/models";
 import { addOrUpdateUserRole, removeUserRole } from "backend";
 import { CancelConfirmDialog } from "components/Dialogs";
 import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
@@ -57,15 +57,7 @@ export default function CancelConfirmDialogCollection(
   }
 
   function makeAdmin(userId: string): void {
-    addOrUpdateUserRole(
-      [
-        Permission.WordEntry,
-        Permission.MergeAndReviewEntries,
-        Permission.ImportExport,
-        Permission.DeleteEditSettingsAndUsers,
-      ],
-      userId
-    )
+    addOrUpdateUserRole(Role.Administrator, userId)
       .then(() => {
         setMakeAdmin(false);
         setAnchorEl(undefined);
@@ -81,10 +73,7 @@ export default function CancelConfirmDialogCollection(
   }
 
   function removeAdmin(userId: string): void {
-    addOrUpdateUserRole(
-      [Permission.MergeAndReviewEntries, Permission.WordEntry],
-      userId
-    )
+    addOrUpdateUserRole(Role.Harvester, userId)
       .then(() => {
         setRemoveAdmin(false);
         setAnchorEl(undefined);
@@ -102,26 +91,9 @@ export default function CancelConfirmDialogCollection(
   }
 
   function makeOwner(userId: string): void {
-    addOrUpdateUserRole(
-      [
-        Permission.WordEntry,
-        Permission.MergeAndReviewEntries,
-        Permission.ImportExport,
-        Permission.DeleteEditSettingsAndUsers,
-        Permission.Owner,
-      ],
-      userId
-    )
+    addOrUpdateUserRole(Role.Owner, userId)
       .then(() => {
-        addOrUpdateUserRole(
-          [
-            Permission.WordEntry,
-            Permission.MergeAndReviewEntries,
-            Permission.ImportExport,
-            Permission.DeleteEditSettingsAndUsers,
-          ],
-          props.currentUserId
-        );
+        addOrUpdateUserRole(Role.Administrator, props.currentUserId);
       })
       .then(() => {
         setMakeOwner(false);

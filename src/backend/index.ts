@@ -201,12 +201,13 @@ export async function updateBanner(siteBanner: SiteBanner): Promise<boolean> {
 
 export async function emailInviteToProject(
   projectId: string,
+  role: Api.Role,
   emailAddress: string,
   message: string
 ): Promise<string> {
   const domain = window.location.origin;
   const resp = await inviteApi.emailInviteToProject(
-    { emailInviteData: { emailAddress, message, projectId, domain } },
+    { emailInviteData: { emailAddress, message, projectId, role, domain } },
     defaultOptions()
   );
   return resp.data;
@@ -609,12 +610,13 @@ export async function getUserRole(userRoleId: string): Promise<UserRole> {
 }
 
 export async function addOrUpdateUserRole(
-  permission: Permission[],
+  role: Api.Role,
   userId: string
 ): Promise<string> {
-  const params = { projectId: LocalStorage.getProjectId(), userId, permission };
-  return (await userRoleApi.updateUserRolePermissions(params, defaultOptions()))
-    .data;
+  const projectId = LocalStorage.getProjectId();
+  const projectRole = { projectId, role };
+  const params = { projectId, projectRole, userId };
+  return (await userRoleApi.updateUserRole(params, defaultOptions())).data;
 }
 
 export async function removeUserRole(
