@@ -2,12 +2,16 @@ import renderer, { ReactTestInstance } from "react-test-renderer";
 
 import "tests/reactI18nextMock";
 
-import { Path } from "browserHistory";
 import NavigationButtons, {
   dataCleanupButtonId,
   dataEntryButtonId,
 } from "components/AppBar/NavigationButtons";
+import { Path } from "types/path";
 import { themeColors } from "types/theme";
+
+jest.mock("react-router-dom", () => ({
+  useNavigate: jest.fn(),
+}));
 
 let testRenderer: renderer.ReactTestRenderer;
 let entryButton: ReactTestInstance | undefined;

@@ -1,12 +1,13 @@
 import { ReactElement } from "react";
+import { useNavigate } from "react-router-dom";
 
-import history, { Path } from "browserHistory";
 import { asyncAddGoal } from "components/GoalTimeline/Redux/GoalActions";
 import PageNotFound from "components/PageNotFound/component";
 import { MergeDupContinueDialog } from "goals/MergeDupGoal/MergeDupComponent/MergeDupContinueDialog";
 import { StoreState } from "types";
 import { GoalType } from "types/goals";
 import { useAppDispatch, useAppSelector } from "types/hooks";
+import { Path } from "types/path";
 import { goalTypeToGoal } from "utilities/goalUtilities";
 
 /**
@@ -18,11 +19,13 @@ export default function NextGoalScreen(): ReactElement {
   );
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   function loadNextGoal(shouldContinue: boolean): void {
     if (shouldContinue) {
       dispatch(asyncAddGoal(goalTypeToGoal(goalType)));
     } else {
-      history.push(Path.Goals);
+      navigate(Path.Goals);
     }
   }
 

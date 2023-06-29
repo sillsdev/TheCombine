@@ -1,6 +1,6 @@
 import { Project } from "api/models";
 import { getFrontierWords } from "backend";
-import history, { Path } from "browserHistory";
+import router from "browserRouter";
 import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalActions";
 import { asyncUpdateCurrentProject } from "components/Project/ProjectActions";
 import {
@@ -15,6 +15,7 @@ import {
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { Goal } from "types/goals";
+import { Path } from "types/path";
 
 // Action Creators
 
@@ -172,7 +173,7 @@ export function getAllCharacters() {
 // Helper Functions
 
 export function exit() {
-  history.push(Path.Goals);
+  router.navigate(Path.Goals);
 }
 
 function countCharacterOccurrences(char: string, words: string[]) {

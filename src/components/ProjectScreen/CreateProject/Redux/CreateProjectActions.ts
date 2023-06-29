@@ -1,6 +1,6 @@
 import { WritingSystem } from "api/models";
 import { createProject, finishUploadLift, getProject } from "backend";
-import history, { Path } from "browserHistory";
+import router from "browserRouter";
 import { asyncCreateUserEdits } from "components/GoalTimeline/Redux/GoalActions";
 import { setNewCurrentProject } from "components/Project/ProjectActions";
 import {
@@ -8,6 +8,7 @@ import {
   CreateProjectActionTypes,
 } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
 import { StoreStateDispatch } from "types/Redux/actions";
+import { Path } from "types/path";
 import { newProject } from "types/project";
 
 /** thunk action creator for creating a project without an import. */
@@ -31,7 +32,7 @@ export function asyncCreateProject(
         // Manually pause so they have a chance to see the success message.
         setTimeout(() => {
           dispatch(asyncCreateUserEdits());
-          history.push(Path.ProjSettings);
+          router.navigate(Path.ProjSettings);
         }, 1000);
       })
       .catch((e) => {
@@ -61,7 +62,7 @@ export function asyncFinishProject(
         // Manually pause so they have a chance to see the success message.
         setTimeout(() => {
           dispatch(asyncCreateUserEdits());
-          history.push(Path.ProjSettings);
+          router.navigate(Path.ProjSettings);
         }, 1000);
       })
       .catch((e) => {
