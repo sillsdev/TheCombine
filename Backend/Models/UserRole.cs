@@ -72,26 +72,73 @@ namespace BackendFramework.Models
         }
     }
 
-#pragma warning disable CA1711
-    // Ignoring CA1711, which requires identifiers ending in Permission to implement System.Security.IPermission.
-    public enum Permission
-#pragma warning restore CA1711
+    public static List<Permission> RolePermissions(ProjectRole role)
     {
-        /// <summary> Project Owner by default should be given to the user who created the project </summary>
-        Owner = 6,
 
-        /// <summary> Project Admin, can edit project settings and add and remove users, change userRoles </summary>
-        DeleteEditSettingsAndUsers = 5,
+        /// <summary>
+        /// Project Owner by default should be given to the user who created the project.
+        /// Owner role can be transferred, but there should never be more than one per project.
+        /// </summary>
+        public readonly static List<Permission> Owner = new List<Permission> {
+            Permission.Archive, Permission.Import, Permission.Statistics,
+            Permission.CharacterInventory, Permission.DeleteEditSettingsAndUsers,
+            Permission.Export, Permission.MergeAndReviewEntries,
+            Permission.WordEntry
+        };
 
-        /// <summary> Can import and export lift </summary>
-        ImportExport = 4,
+    /// <summary> Administrator can do Data Entry, all Data Cleanup, and most project settings. </summary>
+    public readonly static List<Permission> Administrator = new List<Permission> {
+            Permission.CharacterInventory, Permission.DeleteEditSettingsAndUsers,
+            Permission.Export, Permission.MergeAndReviewEntries,
+            Permission.WordEntry};
 
-        /// <summary> Can merge words and change the char set </summary>
-        MergeAndReviewEntries = 3,
+    /// <summary> Manager can do Data Entry and basic Data Cleanup. </summary>
+    public readonly static List<Permission> Manager = new List<Permission> {
+            Permission.Export, Permission.MergeAndReviewEntries,
+            Permission.WordEntry };
 
-        // Permission value 2 is currently unused. It is not defined so that it does not propagate through OpenAPI.
+    /// <summary> Harvester can do Data Entry but no Data Cleanup. </summary>
+    public readonly static List<Permission> Harvester = new List<Permission> {
+            Permission.WordEntry };
+}
 
-        /// <summary> Can enter words </summary>
-        WordEntry = 1
-    }
+public enum ProjectRole
+{
+    Owner,
+    Administrator,
+    Manager,
+    Harvester,
+}
+
+#pragma warning disable CA1711
+// Ignoring CA1711, which requires identifiers ending in Permission to implement System.Security.IPermission.
+public enum Permission
+#pragma warning restore CA1711
+{
+    /// <summary> Can archive the project so it's no longer available. This is an owner-only permission. </summary>
+    Archive = 9,
+
+    /// <summary> Can update character inventory. Can also use find-and-replace, which is DANGEROUS! </summary>
+    CharacterInventory = 8,
+
+    /// <summary> Can import data into the project. This can only be done once and cannot be undone. </summary>
+    Import = 7,
+
+    /// <summary> Can see project statistics and update the workshop schedule. </summary>
+    Statistics = 6,
+
+    /// <summary> Can edit project settings and add and remove users, change userRoles. </summary>
+    DeleteEditSettingsAndUsers = 5,
+
+    /// <summary> Can export the project to lift. </summary>
+    Export = 4,
+
+    /// <summary> Can merge and review words. </summary>
+    MergeAndReviewEntries = 3,
+
+    // Permission value 2 is currently unused. It is not defined so that it does not propagate through OpenAPI.
+
+    /// <summary> Can enter words. </summary>
+    WordEntry = 1
+}
 }

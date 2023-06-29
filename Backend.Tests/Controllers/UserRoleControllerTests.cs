@@ -49,17 +49,7 @@ namespace Backend.Tests.Controllers
 
         private UserRole RandomUserRole()
         {
-            var userRole = new UserRole
-            {
-                ProjectId = _projId,
-                Permissions = new List<Permission>
-                {
-                    Permission.DeleteEditSettingsAndUsers,
-                    Permission.ImportExport,
-                    Permission.MergeAndReviewEntries
-                }
-            };
-            return userRole;
+            return new UserRole { Permissions = ProjectRole.Manager, ProjectId = _projId };
         }
 
         [Test]

@@ -25,9 +25,9 @@ namespace BackendFramework.Services
             _permissionService = permissionService;
         }
 
-        public async Task<string> CreateLinkWithToken(Project project, string emailAddress)
+        public async Task<string> CreateLinkWithToken(Project project, List<Permission> role, string emailAddress)
         {
-            var token = new EmailInvite(2, emailAddress);
+            var token = new EmailInvite(2, emailAddress, role);
             project.InviteTokens.Add(token);
             await _projRepo.Update(project.Id, project);
             return $"/invite/{project.Id}/{token.Token}?email={emailAddress}";
@@ -53,17 +53,14 @@ namespace BackendFramework.Services
 
         public async Task<bool> RemoveTokenAndCreateUserRole(Project project, User user, EmailInvite emailInvite)
         {
+            if (emailInvite.Role.Contains(Permission.Archive))
+            {
+                throw new System.Exception("Email invite has Archive permission (reserved for project Owner)!");
+            }
+
             try
             {
-                var userRole = new UserRole
-                {
-                    Permissions = new List<Permission>
-                {
-                    Permission.MergeAndReviewEntries,
-                    Permission.WordEntry
-                },
-                    ProjectId = project.Id
-                };
+                var userRole = new UserRole { Permissions = emailInvite.Role, ProjectId = project.Id };
                 userRole = await _userRoleRepo.Create(userRole);
 
                 // Generate the userRoles and update the user
@@ -73,14 +70,12 @@ namespace BackendFramework.Services
                 var updatedUser = await _permissionService.MakeJwt(user);
                 if (updatedUser is null)
                 {
-                    throw new PermissionService.InvalidJwtTokenException(
-                        "Unable to generate JWT.");
+                    throw new PermissionService.InvalidJwtTokenException("Unable to generate JWT.");
                 }
 
                 await _userRepo.Update(updatedUser.Id, updatedUser);
 
                 // Removes token and updates user
-
                 project.InviteTokens.Remove(emailInvite);
                 await _projRepo.Update(project.Id, project);
 

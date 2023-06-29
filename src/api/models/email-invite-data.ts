@@ -12,6 +12,8 @@
  * Do not edit the class manually.
  */
 
+import { Permission } from "./permission";
+
 /**
  *
  * @export
@@ -36,6 +38,12 @@ export interface EmailInviteData {
    * @memberof EmailInviteData
    */
   projectId: string;
+  /**
+   *
+   * @type {Array<Permission>}
+   * @memberof EmailInviteData
+   */
+  role: Array<Permission>;
   /**
    *
    * @type {string}

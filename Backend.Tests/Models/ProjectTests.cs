@@ -107,7 +107,7 @@ namespace Backend.Tests.Models
             var customField = new CustomField { Name = "CustomFieldName", Type = "type" };
             project.CustomFields.Add(customField);
 
-            var emailInvite = new EmailInvite(10, "user@combine.org");
+            var emailInvite = new EmailInvite(10, "user@combine.org", ProjectRole.Harvester);
             project.InviteTokens.Add(emailInvite);
 
             var project2 = project.Clone();

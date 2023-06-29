@@ -12,6 +12,8 @@
  * Do not edit the class manually.
  */
 
+import { Permission } from "./permission";
+
 /**
  *
  * @export
@@ -30,6 +32,12 @@ export interface EmailInvite {
    * @memberof EmailInvite
    */
   token: string;
+  /**
+   *
+   * @type {Array<Permission>}
+   * @memberof EmailInvite
+   */
+  role: Array<Permission>;
   /**
    *
    * @type {string}

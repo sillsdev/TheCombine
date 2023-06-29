@@ -20,7 +20,10 @@
 export enum Permission {
   WordEntry = "WordEntry",
   MergeAndReviewEntries = "MergeAndReviewEntries",
-  ImportExport = "ImportExport",
+  Export = "Export",
   DeleteEditSettingsAndUsers = "DeleteEditSettingsAndUsers",
-  Owner = "Owner",
+  Statistics = "Statistics",
+  Import = "Import",
+  CharacterInventory = "CharacterInventory",
+  Archive = "Archive",
 }

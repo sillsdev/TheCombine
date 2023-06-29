@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -41,6 +43,12 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
+            // User cannot invite another person with permissions they don't have.
+            if (data.Role.Any(permission =>
+                !_permissionService.HasProjectPermission(HttpContext, permission, projectId)))
+            {
+                return Forbid();
+            }
 
             var project = await _projRepo.GetProject(projectId);
             if (project is null)
@@ -48,7 +56,7 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
-            var linkWithIdentifier = await _inviteService.CreateLinkWithToken(project, data.EmailAddress);
+            var linkWithIdentifier = await _inviteService.CreateLinkWithToken(project, data.Role, data.EmailAddress);
             await _inviteService.EmailLink(data.EmailAddress, data.Message, linkWithIdentifier, data.Domain, project);
             return Ok(linkWithIdentifier);
         }
@@ -116,6 +124,8 @@ namespace BackendFramework.Controllers
             [Required]
             public string ProjectId { get; set; }
             [Required]
+            public List<Permission> Role { get; set; }
+            [Required]
             public string Domain { get; set; }
 
             public EmailInviteData()
@@ -123,6 +133,7 @@ namespace BackendFramework.Controllers
                 EmailAddress = "";
                 Message = "";
                 ProjectId = "";
+                Role = new List<Permission>();
                 Domain = "";
             }
         }
