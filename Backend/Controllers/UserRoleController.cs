@@ -166,9 +166,11 @@ namespace BackendFramework.Controllers
         [HttpPut("{userId}", Name = "UpdateUserRole")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> UpdateUserRole(
-            string projectId, string userId, [FromBody, BindRequired] ProjectRole role)
+            string userId, [FromBody, BindRequired] ProjectRole projectRole)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
+            var projectId = projectRole.ProjectId;
+            if (!_permissionService.HasProjectPermission(
+                HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
             {
                 return Forbid();
             }
@@ -179,7 +181,7 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
-            var permissions = UserRole.RolePermissions(role);
+            var permissions = ProjectRole.RolePermissions(projectRole.Role);
             // User cannot give permissions they don't have.
             if (permissions.Any(permission =>
                 !_permissionService.HasProjectPermission(HttpContext, permission, projectId)))
@@ -216,7 +218,7 @@ namespace BackendFramework.Controllers
                 return NotFound(userRoleId);
             }
 
-            userRole.Permissions = UserRole.RolePermissions(role);
+            userRole.Permissions = ProjectRole.RolePermissions(projectRole.Role);
             var result = await _userRoleRepo.Update(userRoleId, userRole);
             return result switch
             {

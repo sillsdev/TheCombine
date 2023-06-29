@@ -24,7 +24,7 @@ namespace BackendFramework.Services
             _permissionService = permissionService;
         }
 
-        public async Task<string> CreateLinkWithToken(Project project, ProjectRole role, string emailAddress)
+        public async Task<string> CreateLinkWithToken(Project project, Role role, string emailAddress)
         {
             var token = new EmailInvite(2, emailAddress, role);
             project.InviteTokens.Add(token);
@@ -52,14 +52,14 @@ namespace BackendFramework.Services
 
         public async Task<bool> RemoveTokenAndCreateUserRole(Project project, User user, EmailInvite emailInvite)
         {
-            if (emailInvite.Role == ProjectRole.Owner)
+            if (emailInvite.Role == Role.Owner)
             {
                 throw new System.Exception("Email invites cannot make project owners!");
             }
 
             try
             {
-                var permissions = UserRole.RolePermissions(emailInvite.Role);
+                var permissions = ProjectRole.RolePermissions(emailInvite.Role);
                 var userRole = new UserRole { Permissions = permissions, ProjectId = project.Id };
                 userRole = await _userRoleRepo.Create(userRole);
 

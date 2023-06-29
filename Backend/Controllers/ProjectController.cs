@@ -112,7 +112,7 @@ namespace BackendFramework.Controllers
             // Give Project owner privileges to user who creates a Project.
             var userRole = new UserRole
             {
-                Permissions = UserRole.RolePermissions(ProjectRole.Owner),
+                Permissions = ProjectRole.RolePermissions(Role.Owner),
                 ProjectId = project.Id
             };
             userRole = await _userRoleRepo.Create(userRole);

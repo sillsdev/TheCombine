@@ -47,17 +47,17 @@ namespace Backend.Tests.Controllers
             _projId = (await _projRepo.Create(new Project { Name = "UserRoleControllerTests" }))!.Id;
         }
 
-        private UserRole RandomUserRole(ProjectRole role = ProjectRole.Harvester)
+        private UserRole RandomUserRole(Role role = Role.Harvester)
         {
-            return new UserRole { Permissions = UserRole.RolePermissions(role), ProjectId = _projId };
+            return new UserRole { Permissions = ProjectRole.RolePermissions(role), ProjectId = _projId };
         }
 
         [Test]
         public async Task TestGetAllUserRoles()
         {
-            await _userRoleRepo.Create(RandomUserRole(ProjectRole.Harvester));
-            await _userRoleRepo.Create(RandomUserRole(ProjectRole.Manager));
-            await _userRoleRepo.Create(RandomUserRole(ProjectRole.Administrator));
+            await _userRoleRepo.Create(RandomUserRole(Role.Harvester));
+            await _userRoleRepo.Create(RandomUserRole(Role.Manager));
+            await _userRoleRepo.Create(RandomUserRole(Role.Administrator));
 
             var getResult = await _userRoleController.GetProjectUserRoles(_projId);
 
@@ -151,54 +151,49 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task TestUpdateUserRole()
         {
-            var userRole = RandomUserRole(ProjectRole.Harvester);
+            var userRole = RandomUserRole(Role.Harvester);
             await _userRoleRepo.Create(userRole);
             var user = new User { ProjectRoles = { [_projId] = userRole.Id } };
             var userId = (await _userRepo.Create(user))!.Id;
-
-            var updatedRole = ProjectRole.Manager;
-
-            await _userRoleController.UpdateUserRole(_projId, userId, updatedRole);
+            var projectRole = new ProjectRole { ProjectId = _projId, Role = Role.Manager };
+            await _userRoleController.UpdateUserRole(userId, projectRole);
             var action = await _userRoleController.GetUserRole(_projId, userRole.Id);
             var updatedUserRole = ((ObjectResult)action).Value as UserRole;
-            Assert.AreEqual(UserRole.RolePermissions(updatedRole), updatedUserRole?.Permissions);
+            Assert.AreEqual(ProjectRole.RolePermissions(projectRole.Role), updatedUserRole?.Permissions);
         }
 
         [Test]
         public async Task TestCreateNewUpdateUserRole()
         {
-            var userRole = RandomUserRole(ProjectRole.Harvester);
-            var user = new User();
-            var userId = (await _userRepo.Create(user))!.Id;
-
-            var updatedRole = ProjectRole.Manager;
-
-            var result = await _userRoleController.UpdateUserRole(_projId, userId, updatedRole);
+            var userId = (await _userRepo.Create(new User()))!.Id;
+            var projectRole = new ProjectRole { ProjectId = _projId, Role = Role.Manager };
+            var result = await _userRoleController.UpdateUserRole(userId, projectRole);
             var newUserRoleId = (string)((OkObjectResult)result).Value!;
             var action = await _userRoleController.GetUserRole(_projId, newUserRoleId);
             var updatedUserRole = ((ObjectResult)action).Value as UserRole;
-            Assert.AreEqual(UserRole.RolePermissions(updatedRole), updatedUserRole?.Permissions);
+            Assert.AreEqual(ProjectRole.RolePermissions(projectRole.Role), updatedUserRole?.Permissions);
         }
 
         [Test]
         public async Task TestUpdateUserRolesMissingIds()
         {
-            var role = ProjectRole.Harvester;
-            var userRole = RandomUserRole(role);
+            var projectRole = new ProjectRole { ProjectId = _projId, Role = Role.Manager };
 
-            var projectResult = await _userRoleController.UpdateUserRole(MissingId, userRole.Id, role);
-            Assert.IsInstanceOf<NotFoundObjectResult>(projectResult);
+            var missingUserIdResult = await _userRoleController.UpdateUserRole(MissingId, projectRole);
+            Assert.IsInstanceOf<NotFoundObjectResult>(missingUserIdResult);
 
-            var userResult = await _userRoleController.UpdateUserRole(_projId, MissingId, role);
-            Assert.IsInstanceOf<NotFoundObjectResult>(userResult);
+            var userRoleId = (await _userRoleRepo.Create(RandomUserRole(Role.Harvester))).Id;
+            projectRole.ProjectId = MissingId;
+            var missingProjIdResult = await _userRoleController.UpdateUserRole(userRoleId, projectRole);
+            Assert.IsInstanceOf<NotFoundObjectResult>(missingProjIdResult);
         }
 
         [Test]
         public async Task TestUpdateUserRolesNoPermission()
         {
             _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-            var userRole = RandomUserRole();
-            var result = await _userRoleController.UpdateUserRole(_projId, userRole.Id, ProjectRole.Manager);
+            var userRoleId = (await _userRoleRepo.Create(RandomUserRole(Role.Harvester))).Id;
+            var result = await _userRoleController.UpdateUserRole(userRoleId, new ProjectRole());
             Assert.IsInstanceOf<ForbidResult>(result);
         }
 

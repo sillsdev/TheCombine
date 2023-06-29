@@ -12,7 +12,7 @@ namespace BackendFramework.Models
         [Required]
         public string Token { get; set; }
         [Required]
-        public ProjectRole Role { get; set; }
+        public Role Role { get; set; }
         [Required]
         public DateTime ExpireTime { get; set; }
 
@@ -23,13 +23,13 @@ namespace BackendFramework.Models
         {
             Email = "";
             Token = "";
-            Role = ProjectRole.Harvester;
+            Role = Role.Harvester;
         }
 
         public EmailInvite(int daysUntilExpires)
         {
             Email = "";
-            Role = ProjectRole.Harvester;
+            Role = Role.Harvester;
             ExpireTime = DateTime.Now.AddDays(daysUntilExpires);
 
             var byteToken = new byte[TokenSize];
@@ -37,7 +37,7 @@ namespace BackendFramework.Models
             Token = WebEncoders.Base64UrlEncode(byteToken);
         }
 
-        public EmailInvite(int daysUntilExpires, string email, ProjectRole role) : this(daysUntilExpires)
+        public EmailInvite(int daysUntilExpires, string email, Role role) : this(daysUntilExpires)
         {
             Email = email;
             Role = role;

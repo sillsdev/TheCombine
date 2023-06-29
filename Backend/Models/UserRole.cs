@@ -70,14 +70,58 @@ namespace BackendFramework.Models
         {
             return HashCode.Combine(Id, ProjectId, Permissions);
         }
+    }
 
-        public static List<Permission> RolePermissions(ProjectRole role)
+    /// <remarks> This is used in a [FromBody] serializer, so its attributes cannot be set to readonly. </remarks>
+    public class ProjectRole
+    {
+
+        [Required]
+        [BsonElement("projectId")]
+        public string ProjectId { get; set; }
+
+        [Required]
+        [BsonElement("role")]
+        public Role Role { get; set; }
+
+        public ProjectRole()
+        {
+            ProjectId = "";
+            Role = Role.Harvester;
+        }
+
+        public ProjectRole Clone()
+        {
+
+            return new ProjectRole
+            {
+                ProjectId = ProjectId,
+                Role = Role,
+            };
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not ProjectRole other || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            return other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) && other.Role == Role;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(ProjectId, Role);
+        }
+
+        public static List<Permission> RolePermissions(Role role)
         {
             return role switch
             {
                 // Project Owner by default should be given to the user who created the project.
                 // Owner role can be transferred, but there should never be more than one per project.
-                ProjectRole.Owner => new List<Permission> {
+                Role.Owner => new List<Permission> {
                     Permission.Archive, Permission.Import, Permission.Statistics,
                     Permission.CharacterInventory, Permission.DeleteEditSettingsAndUsers,
                     Permission.Export, Permission.MergeAndReviewEntries,
@@ -85,20 +129,20 @@ namespace BackendFramework.Models
                 },
 
                 // Administrator can do Data Entry, all Data Cleanup, and most project settings.
-                ProjectRole.Administrator => new List<Permission> {
+                Role.Administrator => new List<Permission> {
                     Permission.CharacterInventory, Permission.DeleteEditSettingsAndUsers,
                     Permission.Export, Permission.MergeAndReviewEntries,
                     Permission.WordEntry
                 },
 
                 // Manager can do Data Entry and basic Data Cleanup.
-                ProjectRole.Manager => new List<Permission> {
+                Role.Manager => new List<Permission> {
                     Permission.Export, Permission.MergeAndReviewEntries,
                     Permission.WordEntry
                 },
 
                 // Harvester can do Data Entry but no Data Cleanup.
-                ProjectRole.Harvester => new List<Permission> {
+                Role.Harvester => new List<Permission> {
                     Permission.WordEntry
                 },
 
@@ -107,7 +151,7 @@ namespace BackendFramework.Models
         }
     }
 
-    public enum ProjectRole
+    public enum Role
     {
         Owner,
         Administrator,

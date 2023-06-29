@@ -43,7 +43,7 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
             // User cannot give permissions they don't have
-            if (UserRole.RolePermissions(data.Role).Any(permission =>
+            if (ProjectRole.RolePermissions(data.Role).Any(permission =>
                 !_permissionService.HasProjectPermission(HttpContext, permission, projectId)))
             {
                 return Forbid();
@@ -123,7 +123,7 @@ namespace BackendFramework.Controllers
             [Required]
             public string ProjectId { get; set; }
             [Required]
-            public ProjectRole Role { get; set; }
+            public Role Role { get; set; }
             [Required]
             public string Domain { get; set; }
 
@@ -132,7 +132,7 @@ namespace BackendFramework.Controllers
                 EmailAddress = "";
                 Message = "";
                 ProjectId = "";
-                Role = ProjectRole.Harvester;
+                Role = Role.Harvester;
                 Domain = "";
             }
         }
