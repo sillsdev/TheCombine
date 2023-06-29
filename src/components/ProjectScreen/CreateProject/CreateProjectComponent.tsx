@@ -165,7 +165,7 @@ export class CreateProject extends React.Component<
     }
 
     const menuItems = [
-      <MenuItem key={vernIdNone}>
+      <MenuItem key={vernIdNone} value={vernIdNone}>
         {this.props.t("createProject.languageSelect")}
       </MenuItem>,
     ];
@@ -195,7 +195,11 @@ export class CreateProject extends React.Component<
     };
 
     return (
-      <Select displayEmpty id="create-proj-select-vern" onChange={onChange}>
+      <Select
+        defaultValue={vernIdNone}
+        id="create-proj-select-vern"
+        onChange={onChange}
+      >
         {menuItems}
       </Select>
     );

@@ -229,7 +229,6 @@ namespace BackendFramework.Services
             {
                 throw new MissingProjectException($"Project does not exist: {projectId}");
             }
-            var vernacularBcp47 = proj.VernacularWritingSystem.Bcp47;
 
             // Generate the zip dir.
             var tempExportDir = FileOperations.GetRandomTempDir();
@@ -293,7 +292,7 @@ namespace BackendFramework.Services
                 entry.ModifiedTimeIsLocked = true;
 
                 AddNote(entry, wordEntry);
-                AddVern(entry, wordEntry, vernacularBcp47);
+                AddVern(entry, wordEntry, proj.VernacularWritingSystem.Bcp47);
                 AddSenses(entry, wordEntry);
                 await AddAudio(entry, wordEntry, audioDir, projectId);
 
@@ -306,7 +305,7 @@ namespace BackendFramework.Services
                 var entry = new LexEntry(id, wordEntry.Guid);
 
                 AddNote(entry, wordEntry);
-                AddVern(entry, wordEntry, vernacularBcp47);
+                AddVern(entry, wordEntry, proj.VernacularWritingSystem.Bcp47);
                 AddSenses(entry, wordEntry);
                 await AddAudio(entry, wordEntry, audioDir, projectId);
 
@@ -391,10 +390,10 @@ namespace BackendFramework.Services
             // Export character set to ldml.
             var ldmlDir = Path.Combine(zipDir, "WritingSystems");
             Directory.CreateDirectory(ldmlDir);
-            if (vernacularBcp47 != "")
+            if (!String.IsNullOrWhiteSpace(proj.VernacularWritingSystem.Bcp47))
             {
                 var validChars = proj.ValidCharacters;
-                LdmlExport(ldmlDir, vernacularBcp47, validChars);
+                LdmlExport(ldmlDir, proj.VernacularWritingSystem, validChars);
             }
 
             // Compress everything.
@@ -530,11 +529,18 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Exports vernacular language character set to an ldml file </summary>
-        private static void LdmlExport(string filePath, string vernacularBcp47, List<string> validChars)
+        private static void LdmlExport(string filePath, WritingSystem vernacularWS, List<string> validChars)
         {
             var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
             var wsf = new LdmlInFolderWritingSystemFactory(wsr);
-            wsf.Create(vernacularBcp47, out var wsDef);
+            wsf.Create(vernacularWS.Bcp47, out var wsDef);
+
+            // If the vernacular writing system font isn't present, add it.
+            if (!String.IsNullOrWhiteSpace(vernacularWS.Font)
+                && !wsDef.Fonts.Any(f => f.Name == vernacularWS.Font))
+            {
+                wsDef.Fonts.Add(new FontDefinition(vernacularWS.Font));
+            }
 
             // If there isn't already a main character set defined,
             // make one and add it to the writing system definition.
