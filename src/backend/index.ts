@@ -24,10 +24,11 @@ import {
   ChartRootData,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
-import history, { Path } from "browserHistory";
+import router from "browserRouter";
 import authHeader from "components/Login/AuthHeaders";
 import { errorToast } from "components/Toast/SwalToast";
 import { Goal, GoalStep } from "types/goals";
+import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
 import { Bcp47Code } from "types/writingSystem";
 import { convertGoalToEdit } from "utilities/goalUtilities";
@@ -54,7 +55,7 @@ axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
   if (response) {
     const status = response.status;
     if (status === StatusCodes.UNAUTHORIZED) {
-      history.push(Path.Login);
+      router.navigate(Path.Login);
     }
 
     // Check for fatal errors (4xx-5xx).
@@ -222,6 +223,24 @@ export async function validateLink(
 
 /* LiftController.cs */
 
+/** Upload a LIFT file during project creation to get vernacular ws options. */
+export async function uploadLiftAndGetWritingSystems(
+  liftFile: File
+): Promise<Api.WritingSystem[]> {
+  const resp = await liftApi.uploadLiftFileAndGetWritingSystems(
+    { projectId: "nonempty", ...fileUpload(liftFile) },
+    { headers: { ...authHeader(), "Content-Type": "multipart/form-data" } }
+  );
+  return resp.data;
+}
+
+/** Add data from a LIFT file that was uploaded earlier in the project's creation. */
+export async function finishUploadLift(projectId: string): Promise<number> {
+  const options = { headers: authHeader() };
+  return (await liftApi.finishUploadLiftFile({ projectId }, options)).data;
+}
+
+/** Upload a LIFT file and add its data to the specified project. */
 export async function uploadLift(
   projectId: string,
   liftFile: File
@@ -260,6 +279,7 @@ export async function deleteLift(): Promise<void> {
   await liftApi.deleteLiftFile({ projectId: "nonempty" }, defaultOptions());
 }
 
+/** Check if the current project doesn't already have uploaded data. */
 export async function canUploadLift(): Promise<boolean> {
   const projectId = LocalStorage.getProjectId();
   return (await liftApi.canUploadLift({ projectId }, defaultOptions())).data;
@@ -273,6 +293,7 @@ export async function mergeWords(mergeWords: MergeWords[]): Promise<string[]> {
   return (await mergeApi.mergeWords(params, defaultOptions())).data;
 }
 
+/** Restores words that were previously merged and deletes the merge result. */
 export async function undoMerge(wordIds: MergeUndoIds): Promise<boolean> {
   const params = {
     projectId: LocalStorage.getProjectId(),
@@ -669,6 +690,8 @@ export async function updateWord(word: Word): Promise<Word> {
   );
   return { ...word, id: resp.data };
 }
+
+/* StatisticsController.cs */
 
 export async function getSemanticDomainCounts(
   projectId: string,

@@ -4,6 +4,7 @@ import { WritingSystem } from "api/models";
 import CreateProject from "components/ProjectScreen/CreateProject/CreateProjectComponent";
 import {
   asyncCreateProject,
+  asyncFinishProject,
   reset,
 } from "components/ProjectScreen/CreateProject/Redux/CreateProjectActions";
 import { StoreState } from "types";
@@ -23,17 +24,12 @@ function mapDispatchToProps(dispatch: StoreStateDispatch) {
     asyncCreateProject: (
       name: string,
       vernacularLanguage: WritingSystem,
-      analysisLanguages: WritingSystem[],
-      languageData: File
+      analysisLanguages: WritingSystem[]
     ) => {
-      dispatch(
-        asyncCreateProject(
-          name,
-          vernacularLanguage,
-          analysisLanguages,
-          languageData
-        )
-      );
+      dispatch(asyncCreateProject(name, vernacularLanguage, analysisLanguages));
+    },
+    asyncFinishProject: (name: string, vernacularLanguage: WritingSystem) => {
+      dispatch(asyncFinishProject(name, vernacularLanguage));
     },
     reset: () => {
       dispatch(reset());

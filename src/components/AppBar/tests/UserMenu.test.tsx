@@ -5,8 +5,8 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import { Path } from "browserHistory";
 import UserMenu, { getIsAdmin, UserMenuList } from "components/AppBar/UserMenu";
+import { Path } from "types/path";
 import { newUser } from "types/user";
 
 jest.mock("backend", () => ({
@@ -16,6 +16,9 @@ jest.mock("backend/localStorage", () => ({
   getAvatar: jest.fn(),
   getCurrentUser: jest.fn(),
   getUserId: () => mockGetUserId(),
+}));
+jest.mock("react-router-dom", () => ({
+  useNavigate: jest.fn(),
 }));
 
 let testRenderer: renderer.ReactTestRenderer;

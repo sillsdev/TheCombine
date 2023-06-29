@@ -1,16 +1,17 @@
 import { Button } from "@mui/material";
 import renderer from "react-test-renderer";
 
-import { Path } from "browserHistory";
 import Logo from "components/AppBar/Logo";
+import { Path } from "types/path";
 
-jest.mock("browserHistory", () => ({
-  ...jest.requireActual("browserHistory"),
-  __esModule: true,
-  default: { push: (path: Path) => mockPush(path) },
+jest.mock("react-router-dom", () => ({
+  useNavigate:
+    () =>
+    (...args: any) =>
+      mockNavigate(...args),
 }));
 
-const mockPush = jest.fn();
+const mockNavigate = jest.fn();
 
 let testRenderer: renderer.ReactTestRenderer;
 
@@ -23,6 +24,6 @@ beforeAll(() => {
 describe("Logo", () => {
   it("navigates to Project Screen on click", () => {
     testRenderer.root.findByType(Button).props.onClick();
-    expect(mockPush).toBeCalledWith(Path.ProjScreen);
+    expect(mockNavigate).toBeCalledWith(Path.ProjScreen);
   });
 });

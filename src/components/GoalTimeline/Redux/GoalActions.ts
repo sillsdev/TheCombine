@@ -1,6 +1,6 @@
 import * as Backend from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
-import history, { Path } from "browserHistory";
+import router from "browserRouter";
 import {
   GoalActionTypes,
   LoadUserEditsAction,
@@ -14,6 +14,7 @@ import {
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { Goal, GoalStatus, GoalType } from "types/goals";
+import { Path } from "types/path";
 import { convertEditToGoal } from "utilities/goalUtilities";
 
 // Action Creators
@@ -81,7 +82,7 @@ export function asyncAddGoal(goal: Goal) {
       }
 
       // Serve goal.
-      history.push(Path.GoalCurrent);
+      router.navigate(Path.GoalCurrent);
     }
   };
 }
@@ -174,10 +175,10 @@ export function updateStepFromData(goal: Goal): boolean {
 function goalCleanup(goal: Goal): void {
   switch (goal.goalType) {
     case GoalType.MergeDups:
-      history.push(Path.GoalNext);
+      router.navigate(Path.GoalNext);
       break;
     default:
-      history.push(Path.Goals);
+      router.navigate(Path.Goals);
       break;
   }
 }

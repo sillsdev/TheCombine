@@ -7,13 +7,14 @@ import {
 } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { Project } from "api/models";
 import { getAllActiveProjectsByUser } from "backend";
 import { getUserId } from "backend/localStorage";
-import history, { Path } from "browserHistory";
 import { setNewCurrentProject } from "components/Project/ProjectActions";
 import { useAppDispatch } from "types/hooks";
+import { Path } from "types/path";
 
 export default function ChooseProject(): ReactElement {
   const dispatch = useAppDispatch();
@@ -21,6 +22,7 @@ export default function ChooseProject(): ReactElement {
   const [projectList, setProjectList] = useState<Project[]>([]);
 
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const userId = getUserId();
@@ -31,7 +33,7 @@ export default function ChooseProject(): ReactElement {
 
   const selectProject = (project: Project): void => {
     dispatch(setNewCurrentProject(project));
-    history.push(Path.Goals);
+    navigate(Path.Goals);
   };
 
   return (

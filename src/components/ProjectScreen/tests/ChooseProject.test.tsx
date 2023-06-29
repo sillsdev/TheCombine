@@ -14,6 +14,9 @@ jest.mock("backend/localStorage", () => ({
   getUserId: () => "mockId",
 }));
 jest.mock("types/hooks");
+jest.mock("react-router-dom", () => ({
+  useNavigate: jest.fn(),
+}));
 
 const mockGetProjects = jest.fn();
 const mockProj = (id: string): Project => ({ ...newProject(id), id });

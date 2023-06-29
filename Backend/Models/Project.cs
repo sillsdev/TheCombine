@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using SIL.WritingSystems;
 
 namespace BackendFramework.Models
 {
@@ -296,6 +297,13 @@ namespace BackendFramework.Models
             Name = "";
             Bcp47 = "";
             Font = "";
+        }
+
+        public WritingSystem(WritingSystemDefinition wsd)
+        {
+            Name = wsd.Language?.Name ?? "";
+            Bcp47 = wsd.LanguageTag;
+            Font = wsd.DefaultFont?.Name ?? "";
         }
 
         public WritingSystem Clone()

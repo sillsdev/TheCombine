@@ -61,7 +61,7 @@ namespace BackendFramework.Services
 
         /// <summary> Adds a string representation of a step to a specified <see cref="Edit"/> </summary>
         /// <returns> A bool: success of operation </returns>
-        public async Task<bool> AddStepToGoal(string projectId, string userEditId, int goalIndex, string newStep)
+        public async Task<bool> AddStepToGoal(string projectId, string userEditId, int goalIndex, string stepString)
         {
             var oldUserEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
             if (oldUserEdit is null || goalIndex >= oldUserEdit.Edits.Count)
@@ -70,7 +70,7 @@ namespace BackendFramework.Services
             }
 
             var newUserEdit = oldUserEdit.Clone();
-            newUserEdit.Edits[goalIndex].StepData.Add(newStep);
+            newUserEdit.Edits[goalIndex].StepData.Add(stepString);
             var updateResult = await _userEditRepo.Replace(projectId, userEditId, newUserEdit);
             return updateResult;
         }
@@ -78,7 +78,7 @@ namespace BackendFramework.Services
         /// <summary> Updates a specified step to in a specified <see cref="Edit"/> </summary>
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> UpdateStepInGoal(
-            string projectId, string userEditId, int goalIndex, string updatedStep, int stepIndex)
+            string projectId, string userEditId, int goalIndex, string stepString, int stepIndex)
         {
             var oldUserEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
             if (oldUserEdit is null || goalIndex >= oldUserEdit.Edits.Count
@@ -88,7 +88,7 @@ namespace BackendFramework.Services
             }
 
             var newUserEdit = oldUserEdit.Clone();
-            newUserEdit.Edits[goalIndex].StepData[stepIndex] = updatedStep;
+            newUserEdit.Edits[goalIndex].StepData[stepIndex] = stepString;
             var updateResult = await _userEditRepo.Replace(projectId, userEditId, newUserEdit);
             return updateResult;
         }
