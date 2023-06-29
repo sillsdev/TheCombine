@@ -390,7 +390,7 @@ namespace BackendFramework.Services
             // Export character set to ldml.
             var ldmlDir = Path.Combine(zipDir, "WritingSystems");
             Directory.CreateDirectory(ldmlDir);
-            if (vernacularBcp47 != "")
+            if (!String.IsNullOrWhiteSpace(proj.VernacularWritingSystem.Bcp47))
             {
                 var validChars = proj.ValidCharacters;
                 LdmlExport(ldmlDir, proj.VernacularWritingSystem, validChars);
