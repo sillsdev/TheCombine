@@ -18,7 +18,7 @@ router.subscribe((routerState) => {
   const pathname = routerState.location.pathname || Path.Root;
 
   // log navigation while subscribe is officially a private method
-  if (process.env.NODE_ENV !== "production") {
+  if (process.env.NODE_ENV === "development") {
     console.log(`router.subscribe: "${pathname}"`);
   }
   const currentPage = store.getState().analyticsState.currentPage;
