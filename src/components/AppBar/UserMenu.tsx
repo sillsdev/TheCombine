@@ -14,10 +14,10 @@ import {
 } from "@mui/material";
 import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import { getUser } from "backend";
 import * as LocalStorage from "backend/localStorage";
-import history, { openUserGuide, Path } from "browserHistory";
 import {
   buttonMinHeight,
   shortenName,
@@ -26,7 +26,9 @@ import {
 } from "components/AppBar/AppBarTypes";
 import { clearCurrentProject } from "components/Project/ProjectActions";
 import { useAppDispatch } from "types/hooks";
+import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
+import { openUserGuide } from "utilities/pathUtilities";
 
 const idAffix = "user-menu";
 
@@ -135,6 +137,7 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
   const combineAppRelease = RuntimeConfig.getInstance().appRelease();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const iconStyle: React.CSSProperties =
     document.body.dir == "rtl" ? { marginLeft: 6 } : { marginRight: 6 };
@@ -147,7 +150,7 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
           id={`${idAffix}-admin`}
           onClick={() => {
             dispatch(clearCurrentProject());
-            history.push(Path.SiteSettings);
+            navigate(Path.SiteSettings);
             props.onSelect();
           }}
         >
@@ -159,7 +162,7 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
       <MenuItem
         id={`${idAffix}-user`}
         onClick={() => {
-          history.push(Path.UserSettings);
+          navigate(Path.UserSettings);
           props.onSelect();
         }}
       >
@@ -181,7 +184,7 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
       <MenuItem
         id={`${idAffix}-logout`}
         onClick={() => {
-          history.push(Path.Login);
+          navigate(Path.Login);
           props.onSelect();
         }}
       >

@@ -1,4 +1,4 @@
-import { Path } from "browserHistory";
+import { Path } from "types/path";
 import { themeColors } from "types/theme";
 
 export const buttonMinHeight = 40;

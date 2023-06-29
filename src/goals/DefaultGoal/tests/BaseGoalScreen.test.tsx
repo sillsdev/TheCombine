@@ -13,6 +13,8 @@ const createMockStore = configureMockStore([thunk]);
 const mockStoreState = { goalsState: { currentGoal: new Goal() } };
 const mockStore = createMockStore(mockStoreState);
 
+jest.mock("components/PageNotFound/component", () => "div");
+
 describe("BaseGoalScreen", () => {
   it("Renders with default goal without crashing", () => {
     renderer.act(() => {

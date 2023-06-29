@@ -2,15 +2,11 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Button, Card, Grid, TextField, Typography } from "@mui/material";
 import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { resetPassword } from "backend";
-import history, { Path } from "browserHistory";
+import { Path } from "types/path";
 import { meetsPasswordRequirements } from "utilities/utilities";
-
-export interface MatchParams {
-  token: string;
-}
 
 export enum PasswordResetTestIds {
   Password = "PasswordReset.password",
@@ -30,7 +26,7 @@ enum RequestState {
 }
 
 export default function PasswordReset(): ReactElement {
-  const { token } = useParams<MatchParams>();
+  const { token } = useParams();
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [passwordFitsRequirements, setPasswordFitsRequirements] =
@@ -38,10 +34,11 @@ export default function PasswordReset(): ReactElement {
   const [isPasswordConfirmed, setIsPasswordConfirmed] = useState(false);
   const [requestState, setRequestState] = useState(RequestState.None);
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const backToLogin = (event: React.FormEvent<HTMLElement>): void => {
     event.preventDefault();
-    history.push(Path.Login);
+    navigate(Path.Login);
   };
 
   const onSubmit = async (
@@ -67,7 +64,7 @@ export default function PasswordReset(): ReactElement {
   const asyncReset = async (token: string, password: string): Promise<void> => {
     if (await resetPassword(token, password)) {
       setRequestState(RequestState.Success);
-      history.push(Path.Login);
+      navigate(Path.Login);
     } else {
       setRequestState(RequestState.Fail);
     }
