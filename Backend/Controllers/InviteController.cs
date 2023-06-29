@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,8 +42,8 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
-            // User cannot invite another person with permissions they don't have.
-            if (data.Role.Any(permission =>
+            // User cannot give permissions they don't have
+            if (UserRole.RolePermissions(data.Role).Any(permission =>
                 !_permissionService.HasProjectPermission(HttpContext, permission, projectId)))
             {
                 return Forbid();
@@ -124,7 +123,7 @@ namespace BackendFramework.Controllers
             [Required]
             public string ProjectId { get; set; }
             [Required]
-            public List<Permission> Role { get; set; }
+            public ProjectRole Role { get; set; }
             [Required]
             public string Domain { get; set; }
 
@@ -133,7 +132,7 @@ namespace BackendFramework.Controllers
                 EmailAddress = "";
                 Message = "";
                 ProjectId = "";
-                Role = new List<Permission>();
+                Role = ProjectRole.Harvester;
                 Domain = "";
             }
         }

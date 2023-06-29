@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.WebUtilities;
 
@@ -14,7 +12,7 @@ namespace BackendFramework.Models
         [Required]
         public string Token { get; set; }
         [Required]
-        public List<Permission> Role { get; set; }
+        public ProjectRole Role { get; set; }
         [Required]
         public DateTime ExpireTime { get; set; }
 
@@ -25,13 +23,13 @@ namespace BackendFramework.Models
         {
             Email = "";
             Token = "";
-            Role = new List<Permission>();
+            Role = ProjectRole.Harvester;
         }
 
         public EmailInvite(int daysUntilExpires)
         {
             Email = "";
-            Role = new List<Permission>();
+            Role = ProjectRole.Harvester;
             ExpireTime = DateTime.Now.AddDays(daysUntilExpires);
 
             var byteToken = new byte[TokenSize];
@@ -39,7 +37,7 @@ namespace BackendFramework.Models
             Token = WebEncoders.Base64UrlEncode(byteToken);
         }
 
-        public EmailInvite(int daysUntilExpires, string email, List<Permission> role) : this(daysUntilExpires)
+        public EmailInvite(int daysUntilExpires, string email, ProjectRole role) : this(daysUntilExpires)
         {
             Email = email;
             Role = role;
@@ -65,8 +63,7 @@ namespace BackendFramework.Models
 
             return Email.Equals(emailInvite.Email, StringComparison.Ordinal) &&
                    Token.Equals(emailInvite.Token, StringComparison.Ordinal) &&
-                   Role.Count.Equals(emailInvite.Role.Count) &&
-                   Role.All(permission => emailInvite.Role.Contains(permission)) &&
+                   Role == emailInvite.Role &&
                    ExpireTime == emailInvite.ExpireTime;
         }
 

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -25,7 +24,7 @@ namespace BackendFramework.Services
             _permissionService = permissionService;
         }
 
-        public async Task<string> CreateLinkWithToken(Project project, List<Permission> role, string emailAddress)
+        public async Task<string> CreateLinkWithToken(Project project, ProjectRole role, string emailAddress)
         {
             var token = new EmailInvite(2, emailAddress, role);
             project.InviteTokens.Add(token);
@@ -53,14 +52,15 @@ namespace BackendFramework.Services
 
         public async Task<bool> RemoveTokenAndCreateUserRole(Project project, User user, EmailInvite emailInvite)
         {
-            if (emailInvite.Role.Contains(Permission.Archive))
+            if (emailInvite.Role == ProjectRole.Owner)
             {
-                throw new System.Exception("Email invite has Archive permission (reserved for project Owner)!");
+                throw new System.Exception("Email invites cannot make project owners!");
             }
 
             try
             {
-                var userRole = new UserRole { Permissions = emailInvite.Role, ProjectId = project.Id };
+                var permissions = UserRole.RolePermissions(emailInvite.Role);
+                var userRole = new UserRole { Permissions = permissions, ProjectId = project.Id };
                 userRole = await _userRoleRepo.Create(userRole);
 
                 // Generate the userRoles and update the user

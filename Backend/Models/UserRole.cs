@@ -70,75 +70,80 @@ namespace BackendFramework.Models
         {
             return HashCode.Combine(Id, ProjectId, Permissions);
         }
+
+        public static List<Permission> RolePermissions(ProjectRole role)
+        {
+            return role switch
+            {
+                // Project Owner by default should be given to the user who created the project.
+                // Owner role can be transferred, but there should never be more than one per project.
+                ProjectRole.Owner => new List<Permission> {
+                    Permission.Archive, Permission.Import, Permission.Statistics,
+                    Permission.CharacterInventory, Permission.DeleteEditSettingsAndUsers,
+                    Permission.Export, Permission.MergeAndReviewEntries,
+                    Permission.WordEntry
+                },
+
+                // Administrator can do Data Entry, all Data Cleanup, and most project settings.
+                ProjectRole.Administrator => new List<Permission> {
+                    Permission.CharacterInventory, Permission.DeleteEditSettingsAndUsers,
+                    Permission.Export, Permission.MergeAndReviewEntries,
+                    Permission.WordEntry
+                },
+
+                // Manager can do Data Entry and basic Data Cleanup.
+                ProjectRole.Manager => new List<Permission> {
+                    Permission.Export, Permission.MergeAndReviewEntries,
+                    Permission.WordEntry
+                },
+
+                // Harvester can do Data Entry but no Data Cleanup.
+                ProjectRole.Harvester => new List<Permission> {
+                    Permission.WordEntry
+                },
+
+                _ => new List<Permission>(),
+            };
+        }
     }
 
-    public static List<Permission> RolePermissions(ProjectRole role)
+    public enum ProjectRole
     {
-
-        /// <summary>
-        /// Project Owner by default should be given to the user who created the project.
-        /// Owner role can be transferred, but there should never be more than one per project.
-        /// </summary>
-        public readonly static List<Permission> Owner = new List<Permission> {
-            Permission.Archive, Permission.Import, Permission.Statistics,
-            Permission.CharacterInventory, Permission.DeleteEditSettingsAndUsers,
-            Permission.Export, Permission.MergeAndReviewEntries,
-            Permission.WordEntry
-        };
-
-    /// <summary> Administrator can do Data Entry, all Data Cleanup, and most project settings. </summary>
-    public readonly static List<Permission> Administrator = new List<Permission> {
-            Permission.CharacterInventory, Permission.DeleteEditSettingsAndUsers,
-            Permission.Export, Permission.MergeAndReviewEntries,
-            Permission.WordEntry};
-
-    /// <summary> Manager can do Data Entry and basic Data Cleanup. </summary>
-    public readonly static List<Permission> Manager = new List<Permission> {
-            Permission.Export, Permission.MergeAndReviewEntries,
-            Permission.WordEntry };
-
-    /// <summary> Harvester can do Data Entry but no Data Cleanup. </summary>
-    public readonly static List<Permission> Harvester = new List<Permission> {
-            Permission.WordEntry };
-}
-
-public enum ProjectRole
-{
-    Owner,
-    Administrator,
-    Manager,
-    Harvester,
-}
+        Owner,
+        Administrator,
+        Manager,
+        Harvester
+    }
 
 #pragma warning disable CA1711
-// Ignoring CA1711, which requires identifiers ending in Permission to implement System.Security.IPermission.
-public enum Permission
+    // Ignoring CA1711, which requires identifiers ending in Permission to implement System.Security.IPermission.
+    public enum Permission
 #pragma warning restore CA1711
-{
-    /// <summary> Can archive the project so it's no longer available. This is an owner-only permission. </summary>
-    Archive = 9,
+    {
+        /// <summary> Can archive the project so it's no longer available. This is an owner-only permission. </summary>
+        Archive = 9,
 
-    /// <summary> Can update character inventory. Can also use find-and-replace, which is DANGEROUS! </summary>
-    CharacterInventory = 8,
+        /// <summary> Can update character inventory. Can also use find-and-replace, which is DANGEROUS! </summary>
+        CharacterInventory = 8,
 
-    /// <summary> Can import data into the project. This can only be done once and cannot be undone. </summary>
-    Import = 7,
+        /// <summary> Can import data into the project. This can only be done once and cannot be undone. </summary>
+        Import = 7,
 
-    /// <summary> Can see project statistics and update the workshop schedule. </summary>
-    Statistics = 6,
+        /// <summary> Can see project statistics and update the workshop schedule. </summary>
+        Statistics = 6,
 
-    /// <summary> Can edit project settings and add and remove users, change userRoles. </summary>
-    DeleteEditSettingsAndUsers = 5,
+        /// <summary> Can edit project settings and add and remove users, change userRoles. </summary>
+        DeleteEditSettingsAndUsers = 5,
 
-    /// <summary> Can export the project to lift. </summary>
-    Export = 4,
+        /// <summary> Can export the project to lift. </summary>
+        Export = 4,
 
-    /// <summary> Can merge and review words. </summary>
-    MergeAndReviewEntries = 3,
+        /// <summary> Can merge and review words. </summary>
+        MergeAndReviewEntries = 3,
 
-    // Permission value 2 is currently unused. It is not defined so that it does not propagate through OpenAPI.
+        // Permission value 2 is currently unused. It is not defined so that it does not propagate through OpenAPI.
 
-    /// <summary> Can enter words. </summary>
-    WordEntry = 1
-}
+        /// <summary> Can enter words. </summary>
+        WordEntry = 1
+    }
 }

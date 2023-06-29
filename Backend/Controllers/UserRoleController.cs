@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -107,6 +108,13 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
+            // User cannot give permissions they don't have.
+            if (userRole.Permissions.Any(permission =>
+                !_permissionService.HasProjectPermission(HttpContext, permission, projectId)))
+            {
+                return Forbid();
+            }
+
             userRole.ProjectId = projectId;
 
             // Ensure project exists
@@ -155,10 +163,10 @@ namespace BackendFramework.Controllers
         /// and <see cref="User"/> with specified userId.
         /// </summary>
         /// <returns> Id of updated UserRole </returns>
-        [HttpPut("{userId}", Name = "UpdateUserRolePermissions")]
+        [HttpPut("{userId}", Name = "UpdateUserRole")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        public async Task<IActionResult> UpdateUserRolePermissions(
-            string projectId, string userId, [FromBody, BindRequired] Permission[] permissions)
+        public async Task<IActionResult> UpdateUserRole(
+            string projectId, string userId, [FromBody, BindRequired] ProjectRole role)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
@@ -169,6 +177,14 @@ namespace BackendFramework.Controllers
             if (proj is null)
             {
                 return NotFound(projectId);
+            }
+
+            var permissions = UserRole.RolePermissions(role);
+            // User cannot give permissions they don't have.
+            if (permissions.Any(permission =>
+                !_permissionService.HasProjectPermission(HttpContext, permission, projectId)))
+            {
+                return Forbid();
             }
 
             // Fetch the user -> fetch user role -> update user role
@@ -200,7 +216,7 @@ namespace BackendFramework.Controllers
                 return NotFound(userRoleId);
             }
 
-            userRole.Permissions = new List<Permission>(permissions);
+            userRole.Permissions = UserRole.RolePermissions(role);
             var result = await _userRoleRepo.Update(userRoleId, userRole);
             return result switch
             {
