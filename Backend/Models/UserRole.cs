@@ -72,7 +72,10 @@ namespace BackendFramework.Models
         }
     }
 
+#pragma warning disable CA1711
+    // Ignoring CA1711, which requires identifiers ending in Permission to implement System.Security.IPermission.
     public enum Permission
+#pragma warning restore CA1711
     {
         /// <summary> Project Owner by default should be given to the user who created the project </summary>
         Owner = 6,

@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using SIL.Lift.Parsing;
 
 namespace BackendFramework.Helper
@@ -9,6 +10,9 @@ namespace BackendFramework.Helper
     public class InvalidLiftFileException : InvalidFileException
     {
         public InvalidLiftFileException(string message) : base("Malformed LIFT file: " + message) { }
+
+        protected InvalidLiftFileException(SerializationInfo info, StreamingContext context)
+            : base(info, context) { }
 
     }
 

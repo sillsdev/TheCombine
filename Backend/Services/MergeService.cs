@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Runtime.Serialization;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -223,6 +224,9 @@ namespace BackendFramework.Services
             public InvalidBlacklistEntryException() { }
 
             public InvalidBlacklistEntryException(string message) : base(message) { }
+
+            protected InvalidBlacklistEntryException(SerializationInfo info, StreamingContext context)
+                : base(info, context) { }
         }
     }
 }
