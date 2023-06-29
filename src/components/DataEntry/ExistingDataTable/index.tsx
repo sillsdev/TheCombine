@@ -10,10 +10,11 @@ import { useWindowSize } from "utilities/useWindowSize";
 
 interface ExistingDataTableProps {
   domain: SemanticDomain;
-  typeDrawer?: boolean;
   domainWords: DomainWord[];
   drawerOpen?: boolean;
+  height?: number;
   toggleDrawer: (openClosed: boolean) => void;
+  typeDrawer?: boolean;
 }
 
 /**
@@ -59,7 +60,7 @@ export default function ExistingDataTable(
   );
 
   const sxScrollOverflow: SxProps = {
-    maxHeight: windowHeight - appBarHeight,
+    maxHeight: Math.max(props.height ?? 0, windowHeight - appBarHeight),
     overflowY: "scroll",
   };
 

@@ -2,19 +2,15 @@ import { Help } from "@mui/icons-material";
 import { Button, Card, CardContent, Grid, Typography } from "@mui/material";
 import { ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import * as backend from "backend";
-import history, { openUserGuide, Path } from "browserHistory";
 import { asyncSignUp } from "components/Login/Redux/LoginActions";
 import SignUp from "components/Login/SignUpPage/SignUpComponent";
 import { reset } from "rootActions";
 import { useAppDispatch, useAppSelector } from "types/hooks";
-
-interface MatchParams {
-  token: string;
-  project: string;
-}
+import { Path } from "types/path";
+import { openUserGuide } from "utilities/pathUtilities";
 
 export interface ProjectInviteStateProps {
   inProgress: boolean;
@@ -23,7 +19,7 @@ export interface ProjectInviteStateProps {
 }
 
 export default function ProjectInvite(): ReactElement {
-  const { token, project } = useParams<MatchParams>();
+  const { token, project } = useParams();
   const inProgress = useAppSelector((state) => state.loginState.signUpAttempt);
   const success = useAppSelector((state) => state.loginState.signUpSuccess);
   const failureMessage = useAppSelector(
@@ -31,18 +27,22 @@ export default function ProjectInvite(): ReactElement {
   );
 
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
   const [isValidLink, setIsValidLink] = useState(false);
   const [isAlreadyUser, setIsAlreadyUser] = useState(false);
 
   const validateLink = useCallback(async (): Promise<void> => {
-    const status = await backend.validateLink(project, token);
-    if (status.isTokenValid && status.isUserRegistered) {
-      history.push(Path.Login);
-      return;
+    if (!!project && !!token) {
+      const status = await backend.validateLink(project, token);
+      if (status.isTokenValid && status.isUserRegistered) {
+        navigate(Path.Login);
+        return;
+      }
+      setIsValidLink(status.isTokenValid);
+      setIsAlreadyUser(status.isUserRegistered);
     }
-    setIsValidLink(status.isTokenValid);
-    setIsAlreadyUser(status.isUserRegistered);
-  }, [project, token]);
+  }, [project, token, navigate]);
 
   const dispatch = useAppDispatch();
   const idAffix = "invite";
@@ -91,7 +91,7 @@ export default function ProjectInvite(): ReactElement {
                   <Button
                     id={`${idAffix}-signUp`}
                     onClick={() => {
-                      history.push(Path.SignUp);
+                      navigate(Path.SignUp);
                     }}
                   >
                     {t("login.signUp")}
@@ -102,7 +102,7 @@ export default function ProjectInvite(): ReactElement {
                   <Button
                     id={`${idAffix}-login`}
                     onClick={() => {
-                      history.push(Path.Login);
+                      navigate(Path.Login);
                     }}
                   >
                     {t("login.login")}

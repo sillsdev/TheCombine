@@ -6,12 +6,12 @@ import configureMockStore from "redux-mock-store";
 import "tests/reactI18nextMock";
 
 import { Permission } from "api/models";
-import { Path } from "browserHistory";
 import ProjectButtons, {
   getIsAdminOrOwner,
   projButtonId,
   statButtonId,
 } from "components/AppBar/ProjectButtons";
+import { Path } from "types/path";
 import { themeColors } from "types/theme";
 
 jest.mock("backend", () => ({
@@ -20,6 +20,9 @@ jest.mock("backend", () => ({
 jest.mock("backend/localStorage", () => ({
   getCurrentUser: () => mockGetCurrentUser(),
   getProjectId: () => mockProjectId,
+}));
+jest.mock("react-router-dom", () => ({
+  useNavigate: jest.fn(),
 }));
 
 const mockGetCurrentUser = jest.fn();

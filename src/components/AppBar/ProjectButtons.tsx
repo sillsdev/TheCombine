@@ -3,11 +3,11 @@ import { Button, Hidden, Tooltip, Typography } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import { Permission } from "api/models";
 import { getUserRole } from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
-import history, { Path } from "browserHistory";
 import {
   TabProps,
   buttonMinHeight,
@@ -15,6 +15,7 @@ import {
   tabColor,
 } from "components/AppBar/AppBarTypes";
 import { StoreState } from "types";
+import { Path } from "types/path";
 
 export const projButtonId = "project-settings";
 export const statButtonId = "project-statistics";
@@ -49,6 +50,7 @@ export default function ProjectButtons(props: TabProps): ReactElement {
   );
   const [isAdminOrOwner, setIsAdminOrOwner] = useState<boolean>(false);
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     getIsAdminOrOwner().then(setIsAdminOrOwner);
@@ -60,7 +62,7 @@ export default function ProjectButtons(props: TabProps): ReactElement {
         <Tooltip title={t("appBar.statistics")}>
           <Button
             id={statButtonId}
-            onClick={() => history.push(Path.Statistics)}
+            onClick={() => navigate(Path.Statistics)}
             color="inherit"
             style={{
               background: tabColor(props.currentTab, Path.Statistics),
@@ -76,7 +78,7 @@ export default function ProjectButtons(props: TabProps): ReactElement {
       <Tooltip title={t("appBar.projectSettings")}>
         <Button
           id={projButtonId}
-          onClick={() => history.push(Path.ProjSettings)}
+          onClick={() => navigate(Path.ProjSettings)}
           color="inherit"
           style={{
             background: tabColor(props.currentTab, Path.ProjSettings),

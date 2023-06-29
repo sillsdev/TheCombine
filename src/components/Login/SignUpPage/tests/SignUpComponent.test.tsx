@@ -11,6 +11,7 @@ jest.mock("backend", () => ({
   isEmailTaken: () => false,
   isUsernameTaken: () => false,
 }));
+jest.mock("browserRouter");
 
 const mockReset = jest.fn();
 let signUpMaster: renderer.ReactTestRenderer;
