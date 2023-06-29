@@ -301,9 +301,9 @@ namespace BackendFramework.Models
 
         public WritingSystem(WritingSystemDefinition wsd)
         {
-            Name = wsd.Language.Name;
+            Name = wsd.Language?.Name ?? "";
             Bcp47 = wsd.LanguageTag;
-            Font = wsd.DefaultFont.Name;
+            Font = wsd.DefaultFont?.Name ?? "";
         }
 
         public WritingSystem Clone()
