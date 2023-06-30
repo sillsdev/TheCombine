@@ -17,7 +17,7 @@ namespace Backend.Tests.Mocks
             _mergeBlacklist = new List<MergeBlacklistEntry>();
         }
 
-        public Task<List<MergeBlacklistEntry>> GetAll(string projectId, string? userId = null)
+        public Task<List<MergeBlacklistEntry>> GetAllEntries(string projectId, string? userId = null)
         {
             var cloneList = _mergeBlacklist.Select(e => e.Clone()).ToList();
             var enumerable = userId is null ?
@@ -26,7 +26,7 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(enumerable.ToList());
         }
 
-        public Task<MergeBlacklistEntry?> Get(string projectId, string entryId)
+        public Task<MergeBlacklistEntry?> GetEntry(string projectId, string entryId)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(blacklistEntry.Clone());
         }
 
-        public Task<bool> DeleteAll(string projectId)
+        public Task<bool> DeleteAllEntries(string projectId)
         {
             _mergeBlacklist.Clear();
             return Task.FromResult(true);

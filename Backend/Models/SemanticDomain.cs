@@ -16,7 +16,9 @@ namespace BackendFramework.Models
         public string MongoId { get; set; }
         [Required]
         [BsonElement("guid")]
+#pragma warning disable CA1720
         public string Guid { get; set; }
+#pragma warning restore CA1720
         [Required]
         [BsonElement("name")]
         public string Name { get; set; }
@@ -145,7 +147,9 @@ namespace BackendFramework.Models
         public string Lang { get; set; }
         [Required]
         [BsonElement("guid")]
+#pragma warning disable CA1720
         public string Guid { get; set; }
+#pragma warning restore CA1720
         [Required]
         [BsonElement("name")]
         public string Name { get; set; }
