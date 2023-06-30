@@ -1,8 +1,8 @@
 import { Button, ButtonGroup } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
-import { setCharacterStatus } from "goals/CharInventoryCreation/Redux/CharacterInventoryActions";
-import { CharacterStatus } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
+import { CharacterStatus } from "goals/CharacterInventory/CharacterInventoryTypes";
+import { setCharacterStatus } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
 import { useAppDispatch } from "types/hooks";
 
 interface CharacterStatusControlProps {

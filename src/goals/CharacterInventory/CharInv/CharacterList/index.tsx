@@ -3,9 +3,9 @@ import { FormControl, Grid, InputLabel, MenuItem, Select } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { setSelectedCharacter } from "goals/CharInventoryCreation/Redux/CharacterInventoryActions";
-import { CharacterSetEntry } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
-import CharacterCard from "goals/CharInventoryCreation/components/CharacterList/CharacterCard";
+import CharacterCard from "goals/CharacterInventory/CharInv/CharacterList/CharacterCard";
+import { setSelectedCharacter } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
+import { CharacterSetEntry } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 

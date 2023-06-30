@@ -4,7 +4,7 @@ import {
   GoalAction,
   GoalActionTypes,
 } from "components/GoalTimeline/Redux/GoalReduxTypes";
-import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
+import { CreateCharInv } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { HandleFlags } from "goals/HandleFlags/HandleFlags";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import { ReviewEntries } from "goals/ReviewEntries/ReviewEntries";

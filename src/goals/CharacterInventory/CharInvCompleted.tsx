@@ -4,15 +4,17 @@ import React, { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-import { CharacterChange } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
-import CharacterStatusText from "goals/CharInventoryCreation/components/CharacterList/CharacterStatusText";
-import { CreateCharInvChanges } from "goals/CreateCharInv/CreateCharInvTypes";
+import CharacterStatusText from "goals/CharacterInventory/CharInv/CharacterList/CharacterStatusText";
+import {
+  CharacterChange,
+  CharInvChanges,
+} from "goals/CharacterInventory/CharacterInventoryTypes";
 import { StoreState } from "types";
 
 export default function CharInvCompleted(): ReactElement {
   const changes = useSelector(
     (state: StoreState) =>
-      state.goalsState.currentGoal.changes as CreateCharInvChanges
+      state.goalsState.currentGoal.changes as CharInvChanges
   );
   const { t } = useTranslation();
 
@@ -27,7 +29,7 @@ export default function CharInvCompleted(): ReactElement {
 }
 
 function CharInvChangesMade(
-  changes: CreateCharInvChanges
+  changes: CharInvChanges
 ): ReactElement | ReactElement[] {
   const { t } = useTranslation();
 
@@ -37,9 +39,7 @@ function CharInvChangesMade(
   return changes.charChanges.map(CharInvChange);
 }
 
-export function CharInvChangesGoalList(
-  changes: CreateCharInvChanges
-): ReactElement {
+export function CharInvChangesGoalList(changes: CharInvChanges): ReactElement {
   const { t } = useTranslation();
   const changeLimit = 3;
 

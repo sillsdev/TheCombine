@@ -4,14 +4,14 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import CharacterInventory, {
+import CharInv, {
   buttonIdCancel,
   buttonIdSave,
   dialogButtonIdNo,
   dialogButtonIdYes,
   dialogIdCancel,
-} from "goals/CharInventoryCreation";
-import { defaultState as characterInventoryState } from "goals/CharInventoryCreation/Redux/CharacterInventoryReducer";
+} from "goals/CharacterInventory/CharInv";
+import { defaultState as characterInventoryState } from "goals/CharacterInventory/Redux/CharacterInventoryReducer";
 
 // Replace Dialog with something that doesn't create portals,
 // because react-test-renderer does not support portals.
@@ -23,20 +23,14 @@ jest.mock("@mui/material", () => {
   };
 });
 
-jest.mock(
-  "goals/CharInventoryCreation/components/CharacterDetail",
-  () => "div"
-);
-jest.mock(
-  "goals/CharInventoryCreation/Redux/CharacterInventoryActions",
-  () => ({
-    exit: () => mockExit(),
-    loadCharInvData: () => mockLoadCharInvData(),
-    resetInState: () => jest.fn(),
-    setSelectedCharacter: () => mockSetSelectedCharacter(),
-    uploadInventory: () => mockUploadInventory(),
-  })
-);
+jest.mock("goals/CharacterInventory/CharInv/CharacterDetail", () => "div");
+jest.mock("goals/CharacterInventory/Redux/CharacterInventoryActions", () => ({
+  exit: () => mockExit(),
+  loadCharInvData: () => mockLoadCharInvData(),
+  resetInState: () => jest.fn(),
+  setSelectedCharacter: () => mockSetSelectedCharacter(),
+  uploadInventory: () => mockUploadInventory(),
+}));
 jest.mock("types/hooks", () => {
   return {
     ...jest.requireActual("types/hooks"),
@@ -57,7 +51,7 @@ function renderCharInvCreation() {
   renderer.act(() => {
     charMaster = renderer.create(
       <Provider store={mockStore}>
-        <CharacterInventory />
+        <CharInv />
       </Provider>
     );
   });
@@ -68,7 +62,7 @@ beforeEach(() => {
   renderCharInvCreation();
 });
 
-describe("CharacterInventory", () => {
+describe("CharInv", () => {
   it("loads data on render", () => {
     expect(mockLoadCharInvData).toHaveBeenCalledTimes(1);
   });
