@@ -20,6 +20,6 @@
 export enum Role {
   Owner = "Owner",
   Administrator = "Administrator",
-  Manager = "Manager",
+  Editor = "Editor",
   Harvester = "Harvester",
 }

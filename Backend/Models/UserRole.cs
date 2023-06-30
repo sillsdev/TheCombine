@@ -135,8 +135,8 @@ namespace BackendFramework.Models
                     Permission.WordEntry
                 },
 
-                // Manager can do Data Entry and basic Data Cleanup.
-                Role.Manager => new List<Permission> {
+                // Editor can do Data Entry and basic Data Cleanup.
+                Role.Editor => new List<Permission> {
                     Permission.Export, Permission.MergeAndReviewEntries,
                     Permission.WordEntry
                 },
@@ -155,7 +155,7 @@ namespace BackendFramework.Models
     {
         Owner,
         Administrator,
-        Manager,
+        Editor,
         Harvester
     }
 

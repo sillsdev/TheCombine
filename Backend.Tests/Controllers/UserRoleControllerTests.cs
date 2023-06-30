@@ -56,7 +56,7 @@ namespace Backend.Tests.Controllers
         public async Task TestGetAllUserRoles()
         {
             await _userRoleRepo.Create(RandomUserRole(Role.Harvester));
-            await _userRoleRepo.Create(RandomUserRole(Role.Manager));
+            await _userRoleRepo.Create(RandomUserRole(Role.Editor));
             await _userRoleRepo.Create(RandomUserRole(Role.Administrator));
 
             var getResult = await _userRoleController.GetProjectUserRoles(_projId);
@@ -155,7 +155,7 @@ namespace Backend.Tests.Controllers
             await _userRoleRepo.Create(userRole);
             var user = new User { ProjectRoles = { [_projId] = userRole.Id } };
             var userId = (await _userRepo.Create(user))!.Id;
-            var projectRole = new ProjectRole { ProjectId = _projId, Role = Role.Manager };
+            var projectRole = new ProjectRole { ProjectId = _projId, Role = Role.Editor };
             await _userRoleController.UpdateUserRole(userId, projectRole);
             var action = await _userRoleController.GetUserRole(_projId, userRole.Id);
             var updatedUserRole = ((ObjectResult)action).Value as UserRole;
@@ -166,7 +166,7 @@ namespace Backend.Tests.Controllers
         public async Task TestCreateNewUpdateUserRole()
         {
             var userId = (await _userRepo.Create(new User()))!.Id;
-            var projectRole = new ProjectRole { ProjectId = _projId, Role = Role.Manager };
+            var projectRole = new ProjectRole { ProjectId = _projId, Role = Role.Editor };
             var result = await _userRoleController.UpdateUserRole(userId, projectRole);
             var newUserRoleId = (string)((OkObjectResult)result).Value!;
             var action = await _userRoleController.GetUserRole(_projId, newUserRoleId);
@@ -177,7 +177,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task TestUpdateUserRolesMissingIds()
         {
-            var projectRole = new ProjectRole { ProjectId = _projId, Role = Role.Manager };
+            var projectRole = new ProjectRole { ProjectId = _projId, Role = Role.Editor };
 
             var missingUserIdResult = await _userRoleController.UpdateUserRole(MissingId, projectRole);
             Assert.IsInstanceOf<NotFoundObjectResult>(missingUserIdResult);

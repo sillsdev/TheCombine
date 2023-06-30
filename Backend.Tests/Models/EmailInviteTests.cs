@@ -38,7 +38,7 @@ namespace Backend.Tests.Models
         {
             const int daysUntilExpire = 1;
             const string email = "a@a.com";
-            var orig = new EmailInvite(daysUntilExpire, email, Role.Manager);
+            var orig = new EmailInvite(daysUntilExpire, email, Role.Editor);
             var clone = orig.Clone();
 
             var invites = new[] { orig, clone };
