@@ -117,7 +117,7 @@ export function setCharacterStatus(character: string, status: CharacterStatus) {
 }
 
 // Sends the character inventory to the server.
-export function uploadInventory(goal: Goal) {
+export function uploadInventory() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const state = getState();
     const changes = getChangesFromState(state);
@@ -128,7 +128,7 @@ export function uploadInventory(goal: Goal) {
     const updatedProject = updateCurrentProject(state);
     await dispatch(asyncUpdateCurrentProject(updatedProject));
     const updatedGoal: Goal = {
-      ...goal,
+      ...state.goalsState.currentGoal,
       changes: { charChanges: changes },
     };
     await dispatch(asyncUpdateGoal(updatedGoal));
@@ -167,6 +167,17 @@ export function getAllCharacters() {
       });
     });
     dispatch(setCharacterSet(characterSet));
+  };
+}
+
+export function loadCharInvData() {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+    const project = getState().currentProjectState.project;
+    await dispatch(fetchWords());
+    dispatch(setValidCharacters(project.validCharacters));
+    dispatch(setRejectedCharacters(project.rejectedCharacters));
+    await dispatch(getAllCharacters());
+    dispatch(setSelectedCharacter(""));
   };
 }
 
