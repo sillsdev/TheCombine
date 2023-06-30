@@ -2,9 +2,8 @@ import { Action } from "redux";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import { User } from "api/models";
+import { Project } from "api/models";
 import { updateProject } from "backend";
-import * as LocalStorage from "backend/localStorage";
 import { ProjectActionType } from "components/Project/ProjectReduxTypes";
 import * as Actions from "goals/CharInventoryCreation/Redux/CharacterInventoryActions";
 import { defaultState } from "goals/CharInventoryCreation/Redux/CharacterInventoryReducer";
@@ -17,7 +16,6 @@ import {
   newCharacterSetEntry,
 } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
 import { StoreState } from "types";
-import { Goal } from "types/goals";
 import { newProject } from "types/project";
 import { newUser } from "types/user";
 
@@ -30,23 +28,22 @@ const CHARACTER_SET_DATA: CharacterSetEntry[] = [
   { ...newCharacterSetEntry("z"), status: CharacterStatus.Rejected },
   { ...newCharacterSetEntry("m"), status: CharacterStatus.Undecided },
 ];
+
+const characterInventoryState: Partial<CharacterInventoryState> = {
+  characterSet: CHARACTER_SET_DATA,
+  rejectedCharacters: REJECT_DATA,
+  validCharacters: VALID_DATA,
+};
+const project: Partial<Project> = {
+  rejectedCharacters: [],
+  validCharacters: [],
+};
 const MOCK_STATE = {
-  currentProjectState: {
-    project: {
-      characterSet: [],
-      rejectedCharacters: [],
-      validCharacters: [],
-    },
-  },
-  characterInventoryState: {
-    characterSet: CHARACTER_SET_DATA,
-    rejectedCharacters: REJECT_DATA,
-    validCharacters: VALID_DATA,
-  },
+  characterInventoryState,
+  currentProjectState: { project },
+  goalsState: { currentGoal: { changes: {} } },
 };
 
-let oldProjectId: string;
-let oldUser: User | undefined;
 const mockProjectId = "123";
 const mockUserEditId = "456";
 const mockUserId = "789";
@@ -57,28 +54,14 @@ mockUser.workedProjects[mockProjectId] = mockUserEditId;
 jest.mock("backend");
 jest.mock("browserRouter");
 jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({
-  asyncUpdateGoal: (goal: Goal) => mockAsyncUpdateGoal(goal),
+  asyncUpdateGoal: (...args: any[]) => mockAsyncUpdateGoal(...args),
 }));
 const mockAsyncUpdateGoal = jest.fn();
 
 const createMockStore = configureMockStore([thunk]);
 
-beforeAll(() => {
-  // Save things in localStorage to restore once tests are done
-  oldProjectId = LocalStorage.getProjectId();
-  oldUser = LocalStorage.getCurrentUser();
-});
-
 beforeEach(() => {
-  LocalStorage.remove(LocalStorage.LocalStorageKey.ProjectId);
-  LocalStorage.remove(LocalStorage.LocalStorageKey.User);
-});
-
-afterAll(() => {
-  LocalStorage.setProjectId(oldProjectId);
-  if (oldUser) {
-    LocalStorage.setCurrentUser(oldUser);
-  }
+  jest.resetAllMocks();
 });
 
 describe("CharacterInventoryActions", () => {
@@ -93,12 +76,9 @@ describe("CharacterInventoryActions", () => {
     // Mock out the goal-related things called by uploadInventory.
     const mockAction: Action = { type: null };
     mockAsyncUpdateGoal.mockReturnValue(mockAction);
-    const mockGoal = { changes: {} } as Goal;
 
-    LocalStorage.setCurrentUser(mockUser);
-    LocalStorage.setProjectId(mockProjectId);
     const mockStore = createMockStore(MOCK_STATE);
-    const mockUpload = Actions.uploadInventory(mockGoal);
+    const mockUpload = Actions.uploadInventory();
     await mockUpload(
       mockStore.dispatch,
       mockStore.getState as () => StoreState
@@ -106,11 +86,7 @@ describe("CharacterInventoryActions", () => {
     expect(updateProject).toHaveBeenCalledTimes(1);
     expect(mockStore.getActions()).toContainEqual({
       type: ProjectActionType.SET_CURRENT_PROJECT,
-      payload: {
-        characterSet: [],
-        rejectedCharacters: REJECT_DATA,
-        validCharacters: VALID_DATA,
-      },
+      payload: project,
     });
   });
 
