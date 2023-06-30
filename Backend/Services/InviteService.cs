@@ -1,3 +1,5 @@
+using System;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -54,7 +56,7 @@ namespace BackendFramework.Services
         {
             if (emailInvite.Role == Role.Owner)
             {
-                throw new System.Exception("Email invites cannot make project owners!");
+                throw new InviteException("Email invites cannot make project owners!");
             }
 
             try
@@ -85,6 +87,16 @@ namespace BackendFramework.Services
             {
                 return false;
             }
+        }
+
+        [Serializable]
+        public class InviteException : Exception
+        {
+            public InviteException() { }
+
+            public InviteException(string msg) : base(msg) { }
+
+            protected InviteException(SerializationInfo info, StreamingContext context) : base(info, context) { }
         }
     }
 }
