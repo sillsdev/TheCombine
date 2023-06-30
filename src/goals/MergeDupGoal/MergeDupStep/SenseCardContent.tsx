@@ -10,12 +10,10 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import React, { ReactElement } from "react";
-import { useSelector } from "react-redux";
+import { Fragment, ReactElement } from "react";
 
-import { Sense, Status } from "api/models";
-import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
-import { StoreState } from "types";
+import { GramCatGroup, Sense, Status } from "api/models";
+import { IconButtonWithTooltip, PartOfSpeechButton } from "components/Buttons";
 import theme from "types/theme";
 
 interface SenseInLanguage {
@@ -26,7 +24,6 @@ interface SenseInLanguage {
 
 function getSenseInLanguage(
   sense: Sense,
-  includeDefinitions: boolean,
   language: string,
   displaySep = "; "
 ): SenseInLanguage {
@@ -36,7 +33,7 @@ function getSenseInLanguage(
       .filter((g) => g.language === language)
       .map((g) => g.def)
       .join(displaySep),
-    definitionText: includeDefinitions
+    definitionText: sense.definitions.length
       ? sense.definitions
           .filter((d) => d.language === language)
           .map((d) => d.text)
@@ -47,17 +44,14 @@ function getSenseInLanguage(
 
 function getSenseInLanguages(
   sense: Sense,
-  includeDefinitions: boolean,
   languages?: string[]
 ): SenseInLanguage[] {
   if (!languages) {
     languages = sense.glosses.map((g) => g.language);
-    if (includeDefinitions) {
-      languages.push(...sense.definitions.map((d) => d.language));
-    }
+    languages.push(...sense.definitions.map((d) => d.language));
     languages = [...new Set(languages)];
   }
-  return languages.map((l) => getSenseInLanguage(sense, includeDefinitions, l));
+  return languages.map((l) => getSenseInLanguage(sense, l));
 }
 
 function senseText(senseInLangs: SenseInLanguage[]): ReactElement {
@@ -65,7 +59,7 @@ function senseText(senseInLangs: SenseInLanguage[]): ReactElement {
     <Table padding="none">
       <TableBody>
         {senseInLangs.map((sInLang, index) => (
-          <React.Fragment key={index}>
+          <Fragment key={index}>
             <TableRow key={sInLang.language}>
               <TableCell style={{ borderBottom: "none" }}>
                 <Typography variant="caption">{`${sInLang.language}: `}</Typography>
@@ -97,7 +91,7 @@ function senseText(senseInLangs: SenseInLanguage[]): ReactElement {
                 </TableCell>
               </TableRow>
             )}
-          </React.Fragment>
+          </Fragment>
         ))}
       </TableBody>
     </Table>
@@ -112,17 +106,14 @@ interface SenseCardContentProps {
 }
 
 // Only show first sense's glosses/definitions; in merging, others deleted as duplicates.
+// Show first part of speech, if any.
 // Show semantic domains from all senses.
 // In merging, user can select a different one by reordering in the sidebar.
 export default function SenseCardContent(
   props: SenseCardContentProps
 ): ReactElement {
-  const showDefinitions = useSelector(
-    (state: StoreState) => state.currentProjectState.project.definitionsEnabled
-  );
   const senseTextInLangs = getSenseInLanguages(
     props.senses[0],
-    showDefinitions,
     props.languages
   );
   const semDoms = [
@@ -134,23 +125,31 @@ export default function SenseCardContent(
   ];
   const protectedWarning =
     !props.sidebar && props.senses[0].accessibility === Status.Protected;
+  const gramInfo = props.senses
+    .map((s) => s.grammaticalInfo)
+    .find((g) => g.catGroup !== GramCatGroup.Unspecified);
 
   return (
     <CardContent style={{ position: "relative", paddingRight: 40 }}>
+      {/* Icon for part of speech (if any). */}
+      <div style={{ position: "absolute", left: 0, top: 0 }}>
+        {gramInfo && (
+          <PartOfSpeechButton
+            buttonId={`sense-${props.senses[0].guid}-part-of-speech`}
+            gramInfo={gramInfo}
+            onlyIcon
+          />
+        )}
+      </div>
       {/* Warning for protected senses. */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          right: 0,
-        }}
-      >
+      <div style={{ position: "absolute", right: 0, top: 0 }}>
         {protectedWarning && (
           <IconButtonWithTooltip
             icon={<WarningOutlined />}
             textId={"mergeDups.helpText.protectedSense"}
             side={"top"}
             small
+            buttonId={`sense-${props.senses[0].guid}-protected`}
           />
         )}
       </div>
@@ -173,9 +172,9 @@ export default function SenseCardContent(
           </IconButton>
         )}
       </div>
-      {/* List glosses and (if enabled) definitions. */}
+      {/* List glosses and (if any) definitions. */}
       {senseText(senseTextInLangs)}
-      {/* List semantic domains */}
+      {/* List semantic domains. */}
       <Grid container spacing={2}>
         {semDoms.map((dom) => (
           <Grid item key={dom}>

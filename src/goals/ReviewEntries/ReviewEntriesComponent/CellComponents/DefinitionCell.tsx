@@ -13,13 +13,13 @@ import { StoreState } from "types";
 import { themeColors } from "types/theme";
 import { newDefinition } from "types/word";
 
-interface DefinitionCellProps {
+interface DefinitionCellProps extends FieldParameterStandard {
   editable?: boolean;
   sortingByThis?: boolean;
 }
 
 export default function DefinitionCell(
-  props: FieldParameterStandard & DefinitionCellProps
+  props: DefinitionCellProps
 ): ReactElement {
   const analysisLang = useSelector(
     (state: StoreState) =>

@@ -1,5 +1,5 @@
 import { ActionWithPayload } from "types/Redux/actions";
-import { Goal, GoalStatus, GoalStep } from "types/goals";
+import { Goal, GoalsState, GoalType } from "types/goals";
 
 export enum GoalActionTypes {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
@@ -47,3 +47,16 @@ export interface SetGoalStepsAction extends ActionWithPayload<GoalStep[]> {
   type: GoalActionTypes.SET_GOAL_STEPS;
   payload: GoalStep[];
 }
+const implementedTypes: GoalType[] = [
+  GoalType.CreateCharInv,
+  GoalType.MergeDups,
+  GoalType.ReviewEntries,
+];
+
+export const defaultState: GoalsState = {
+  allGoalTypes: implementedTypes,
+  currentGoal: new Goal(),
+  goalTypeSuggestions: [...implementedTypes],
+  history: [],
+  previousGoalType: GoalType.Default,
+};

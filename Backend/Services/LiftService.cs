@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ using SIL.Lift.Options;
 using SIL.Lift.Parsing;
 using SIL.Text;
 using SIL.WritingSystems;
+using Xabe.FFmpeg;
 using static SIL.DictionaryServices.Lift.LiftWriter;
 
 namespace BackendFramework.Services
@@ -48,12 +50,13 @@ namespace BackendFramework.Services
             }
         }
 
-        // This raises error CA1816, which is currently suppressed in .editorconfig and with <NoWarn>.
+#pragma warning disable CA1816, CA2215
         public override void Dispose()
         {
             // TODO: When updating the LiftWriter dependency, check to see if its Dispose() implementation
             //    has been fixed properly to avoid needing to override its Dispose method.
             //    https://github.com/sillsdev/libpalaso/blob/master/SIL.DictionaryServices/Lift/LiftWriter.cs
+            //    Also, re-evaluate our CA1816 violation.
             Dispose(true);
         }
 
@@ -72,9 +75,10 @@ namespace BackendFramework.Services
 
             Disposed = true;
 
-            // Generally, the base class Dispose method would be called here, but it accesses _writer,
+            // Generally, the base class Dispose method would be called here (CA2215), but it accesses _writer,
             // and we are disposing of that ourselves in the child class to fix a memory leak.
         }
+#pragma warning restore CA1816, CA2215
     }
 
     [Serializable]
@@ -82,12 +86,16 @@ namespace BackendFramework.Services
     {
         public MissingProjectException(string message) : base(message) { }
 
+        protected MissingProjectException(SerializationInfo info, StreamingContext context)
+            : base(info, context) { }
     }
 
     public class LiftService : ILiftService
     {
         /// A dictionary shared by all Projects for storing and retrieving paths to exported projects.
         private readonly Dictionary<string, string> _liftExports;
+        /// A dictionary shared by all Projects for storing and retrieving paths to in-process imports.
+        private readonly Dictionary<string, string> _liftImports;
         private const string InProgress = "IN_PROGRESS";
 
         public LiftService()
@@ -98,10 +106,11 @@ namespace BackendFramework.Services
             }
 
             _liftExports = new Dictionary<string, string>();
+            _liftImports = new Dictionary<string, string>();
         }
 
         /// <summary> Store status that a user's export is in-progress. </summary>
-        public void SetExportInProgress(string userId, bool isInProgress = true)
+        public void SetExportInProgress(string userId, bool isInProgress)
         {
             _liftExports.Remove(userId);
             if (isInProgress)
@@ -144,26 +153,68 @@ namespace BackendFramework.Services
         public bool DeleteExport(string userId)
         {
             var removeSuccessful = _liftExports.Remove(userId, out var filePath);
-            if (removeSuccessful && filePath is not null)
+            if (removeSuccessful && filePath is not null && filePath != InProgress)
             {
                 File.Delete(filePath);
             }
             return removeSuccessful;
         }
 
-        /// <summary> Imports main character set for a project from an ldml file </summary>
-        public void LdmlImport(string filePath, string langTag, IProjectRepository projRepo, Project project)
+        /// <summary> Store filePath for a user's Lift import. </summary>
+        public void StoreImport(string userId, string filePath)
         {
-            var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
-            var wsf = new LdmlInFolderWritingSystemFactory(wsr);
-            wsf.Create(langTag, out var wsDef);
+            _liftImports.Remove(userId);
+            _liftImports.Add(userId, filePath);
+        }
 
-            // If there is a main character set, import it to the project
+        /// <summary> Retrieve a stored filePath for the user's Lift import. </summary>
+        /// <returns> Path to the Lift file on disk. </returns>
+        public string? RetrieveImport(string userId)
+        {
+            if (!_liftImports.ContainsKey(userId))
+            {
+                return null;
+            }
+
+            return _liftImports[userId];
+        }
+
+        /// <summary> Delete a stored Lift import path and its file on disk. </summary>
+        /// <returns> If the element is successfully found and removed, true; otherwise, false. </returns>
+        public bool DeleteImport(string userId)
+        {
+            var removeSuccessful = _liftImports.Remove(userId, out var dirPath);
+            if (removeSuccessful && Directory.Exists(dirPath))
+            {
+                Directory.Delete(dirPath, true);
+            }
+            return removeSuccessful;
+        }
+
+        /// <summary> Imports main character set for a project from an ldml file. </summary>
+        /// <returns> A bool indicating whether a character set was added to the project. </returns>
+        public async Task<bool> LdmlImport(string dirPath, IProjectRepository projRepo, Project project)
+        {
+            if (!Directory.GetFiles(dirPath, "*.ldml").Any())
+            {
+                dirPath = Path.Combine(dirPath, "WritingSystems");
+            }
+            var wsr = LdmlInFolderWritingSystemRepository.Initialize(dirPath);
+
+            var wsf = new LdmlInFolderWritingSystemFactory(wsr);
+            wsf.Create(project.VernacularWritingSystem.Bcp47, out var wsDef);
+
+            // If there is a main character set, add it to the project
             if (wsDef.CharacterSets.Contains("main"))
             {
-                project.ValidCharacters = wsDef.CharacterSets["main"].Characters.ToList();
-                projRepo.Update(project.Id, project);
+                project.ValidCharacters.AddRange(wsDef.CharacterSets["main"].Characters
+                    .Where(c => !project.ValidCharacters.Contains(c)));
+                project.RejectedCharacters = project.RejectedCharacters
+                    .Where(c => !project.ValidCharacters.Contains(c)).ToList();
+                await projRepo.Update(project.Id, project);
+                return true;
             }
+            return false;
         }
 
         /// <summary> Exports information from a project to a lift package zip </summary>
@@ -178,7 +229,6 @@ namespace BackendFramework.Services
             {
                 throw new MissingProjectException($"Project does not exist: {projectId}");
             }
-            var vernacularBcp47 = proj.VernacularWritingSystem.Bcp47;
 
             // Generate the zip dir.
             var tempExportDir = FileOperations.GetRandomTempDir();
@@ -242,9 +292,9 @@ namespace BackendFramework.Services
                 entry.ModifiedTimeIsLocked = true;
 
                 AddNote(entry, wordEntry);
-                AddVern(entry, wordEntry, vernacularBcp47);
+                AddVern(entry, wordEntry, proj.VernacularWritingSystem.Bcp47);
                 AddSenses(entry, wordEntry);
-                AddAudio(entry, wordEntry, audioDir, projectId);
+                await AddAudio(entry, wordEntry, audioDir, projectId);
 
                 liftWriter.Add(entry);
             }
@@ -255,9 +305,9 @@ namespace BackendFramework.Services
                 var entry = new LexEntry(id, wordEntry.Guid);
 
                 AddNote(entry, wordEntry);
-                AddVern(entry, wordEntry, vernacularBcp47);
+                AddVern(entry, wordEntry, proj.VernacularWritingSystem.Bcp47);
                 AddSenses(entry, wordEntry);
-                AddAudio(entry, wordEntry, audioDir, projectId);
+                await AddAudio(entry, wordEntry, audioDir, projectId);
 
                 liftWriter.AddDeletedEntry(entry);
             }
@@ -340,10 +390,10 @@ namespace BackendFramework.Services
             // Export character set to ldml.
             var ldmlDir = Path.Combine(zipDir, "WritingSystems");
             Directory.CreateDirectory(ldmlDir);
-            if (vernacularBcp47 != "")
+            if (!String.IsNullOrWhiteSpace(proj.VernacularWritingSystem.Bcp47))
             {
                 var validChars = proj.ValidCharacters;
-                LdmlExport(ldmlDir, vernacularBcp47, validChars);
+                LdmlExport(ldmlDir, proj.VernacularWritingSystem, validChars);
             }
 
             // Compress everything.
@@ -430,22 +480,30 @@ namespace BackendFramework.Services
                 lexSense.Definition.MergeIn(MultiTextBase.Create(defDict));
                 lexSense.Gloss.MergeIn(MultiTextBase.Create(glossDict));
                 lexSense.Id = currentSense.Guid.ToString();
-                entry.Senses.Add(lexSense);
+
+                // Add grammatical info
+                if (currentSense.GrammaticalInfo.CatGroup != GramCatGroup.Unspecified)
+                {
+                    var optionRef = new OptionRef(currentSense.GrammaticalInfo.GrammaticalCategory);
+                    lexSense.Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>(
+                        LexSense.WellKnownProperties.PartOfSpeech, optionRef));
+                }
 
                 // Merge in semantic domains
                 foreach (var semDom in currentSense.SemanticDomains)
                 {
                     var orc = new OptionRefCollection();
                     orc.Add(semDom.Id + " " + semDom.Name);
-
-                    lexSense.Properties.Add(
-                        new KeyValuePair<string, IPalasoDataObjectProperty>("semantic-domain-ddp4", orc));
+                    lexSense.Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>(
+                        LexSense.WellKnownProperties.SemanticDomainDdp4, orc));
                 }
+
+                entry.Senses.Add(lexSense);
             }
         }
 
         /// <summary> Adds pronunciation audio of a word to be written out to lift </summary>
-        private static void AddAudio(LexEntry entry, Word wordEntry, string path, string projectId)
+        private static async Task AddAudio(LexEntry entry, Word wordEntry, string path, string projectId)
         {
             foreach (var audioFile in wordEntry.Audio)
             {
@@ -453,23 +511,36 @@ namespace BackendFramework.Services
                 var src = FileStorage.GenerateAudioFilePath(projectId, audioFile);
                 var dest = Path.Combine(path, audioFile);
 
-                if (File.Exists(src))
+                if (!File.Exists(src)) continue;
+                if (Path.GetExtension(dest).Equals(".webm", StringComparison.OrdinalIgnoreCase))
+                {
+                    dest = Path.ChangeExtension(dest, ".wav");
+                    await FFmpeg.Conversions.New().Start($"-y -i \"{src}\" \"{dest}\"");
+                }
+                else
                 {
                     File.Copy(src, dest, true);
-
-                    var proMultiText = new LiftMultiText { { "href", dest } };
-                    lexPhonetic.MergeIn(MultiText.Create(proMultiText));
-                    entry.Pronunciations.Add(lexPhonetic);
                 }
+
+                var proMultiText = new LiftMultiText { { "href", dest } };
+                lexPhonetic.MergeIn(MultiText.Create(proMultiText));
+                entry.Pronunciations.Add(lexPhonetic);
             }
         }
 
         /// <summary> Exports vernacular language character set to an ldml file </summary>
-        private static void LdmlExport(string filePath, string vernacularBcp47, List<string> validChars)
+        private static void LdmlExport(string filePath, WritingSystem vernacularWS, List<string> validChars)
         {
             var wsr = LdmlInFolderWritingSystemRepository.Initialize(filePath);
             var wsf = new LdmlInFolderWritingSystemFactory(wsr);
-            wsf.Create(vernacularBcp47, out var wsDef);
+            wsf.Create(vernacularWS.Bcp47, out var wsDef);
+
+            // If the vernacular writing system font isn't present, add it.
+            if (!String.IsNullOrWhiteSpace(vernacularWS.Font)
+                && !wsDef.Fonts.Any(f => f.Name == vernacularWS.Font))
+            {
+                wsDef.Fonts.Add(new FontDefinition(vernacularWS.Font));
+            }
 
             // If there isn't already a main character set defined,
             // make one and add it to the writing system definition.
@@ -540,6 +611,39 @@ namespace BackendFramework.Services
             {
                 _projectId = projectId;
                 _wordRepo = wordRepo;
+            }
+
+            /// <summary>
+            /// Check for any Definitions in the private field <see cref="_importEntries"/>
+            /// </summary>
+            /// <returns> A boolean: true if at least one word has a definition. </returns>
+            public bool DoesImportHaveDefinitions()
+            {
+                return _importEntries.Any(w => w.Senses.Any(s => s.Definitions.Count > 0));
+            }
+
+            /// <summary>
+            /// Check for any GrammaticalInfo in the private field <see cref="_importEntries"/>
+            /// </summary>
+            /// <returns> A boolean: true if at least one word has a GramCatGroup other than Unspecified. </returns>
+            public bool DoesImportHaveGrammaticalInfo()
+            {
+                return _importEntries.Any(w => w.Senses.Any(
+                    s => s.GrammaticalInfo is not null &&
+                    s.GrammaticalInfo.CatGroup != GramCatGroup.Unspecified));
+            }
+
+            /// <summary>
+            /// Get all analysis languages found in senses in the private field <see cref="_importEntries"/>
+            /// </summary>
+            /// <returns> A List of all distinct analysis writing systems in the import. </returns>
+            public List<WritingSystem> GetImportAnalysisWritingSystems()
+            {
+                var langTags = _importEntries.SelectMany(
+                    w => w.Senses.SelectMany(s => Language.GetSenseAnalysisLangTags(s))
+                ).Distinct();
+
+                return Language.ConvertLangTagsToWritingSystems(langTags).ToList();
             }
 
             /// <summary>
@@ -641,7 +745,7 @@ namespace BackendFramework.Services
                     var semanticDomainStrings = new List<string>();
                     foreach (var trait in sense.Traits)
                     {
-                        if (trait.Name.StartsWith("semantic-domain"))
+                        if (trait.Name.StartsWith("semantic-domain", StringComparison.OrdinalIgnoreCase))
                         {
                             semanticDomainStrings.Add(trait.Value);
                         }
@@ -659,6 +763,12 @@ namespace BackendFramework.Services
                                 MongoId = ObjectId.GenerateNewId().ToString(),
                                 Name = splitSemDom[1]
                             });
+                    }
+
+                    // Add grammatical info
+                    if (!String.IsNullOrWhiteSpace(sense.GramInfo?.Value))
+                    {
+                        newSense.GrammaticalInfo = new GrammaticalInfo(sense.GramInfo.Value);
                     }
 
                     newWord.Senses.Add(newSense);
@@ -799,6 +909,22 @@ namespace BackendFramework.Services
                     entry.Notes.Add(note);
                 }
             }
+
+            public void MergeInGrammaticalInfo(LiftObject senseOrReversal, string val, List<Trait> traits)
+            {
+                if (senseOrReversal is LiftSense sense)
+                {
+                    if (sense.GramInfo is null)
+                    {
+                        sense.GramInfo = new LiftGrammaticalInfo { Value = val };
+                    }
+                    else
+                    {
+                        sense.GramInfo.Value = val;
+                    }
+                }
+            }
+
             /// <summary> Adds in each semantic domain to a list </summary>
             public void ProcessRangeElement(string range, string id, string guid, string parent,
                 LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml)
@@ -851,7 +977,6 @@ namespace BackendFramework.Services
 
             public void EntryWasDeleted(Extensible info, DateTime dateDeleted) { }
             public void MergeInExampleForm(LiftExample example, LiftMultiText multiText) { }
-            public void MergeInGrammaticalInfo(LiftObject senseOrReversal, string val, List<Trait> traits) { }
 
             public void MergeInPicture(LiftSense sense, string href, LiftMultiText caption) { }
             public void MergeInRelation(

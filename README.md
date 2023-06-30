@@ -1,20 +1,23 @@
 # The Combine
 
 [![Frontend Actions Status][github-actions-frontend-badge]][github-actions]
-[![Frontend Coverage][frontend-codecov-badge]][codecov]
+[![Frontend Coverage][frontend-codecov-badge]][codecov-frontend]
+
 [![Backend Actions Status][github-actions-backend-badge]][github-actions]
-[![Backend Coverage][backend-codecov-badge]][codecov]
-[![Python Actions Status][github-actions-python-badge]][github-actions]
+[![Backend Coverage][backend-codecov-badge]][codecov-backend]
+
 [![CodeQL Actions Status][github-actions-codeql-badge]][github-actions]
+[![Python Actions Status][github-actions-python-badge]][github-actions]
 [![OSSF Scorecard][github-actions-ossf-badge]][github-actions]
 
 [![GitHub release][github-release-badge]][github-version] [![GitHub version][github-version-badge]][github-version]
-![Localization][localization-badge] [![GitHub][github-license-badge]][github-license]
+[![Localization][localization-badge]][localization-crowdin] [![GitHub][github-license-badge]][github-license]
 [![GitHub contributors][github-contribs-badge]][github-contribs]
 
 [github-actions-frontend-badge]: https://github.com/sillsdev/TheCombine/workflows/frontend/badge.svg
 [frontend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=frontend
-[codecov]: https://codecov.io/gh/sillsdev/TheCombine
+[codecov-frontend]: https://app.codecov.io/gh/sillsdev/TheCombine/tree/master/src
+[codecov-backend]: https://app.codecov.io/gh/sillsdev/TheCombine/tree/master/Backend
 [github-actions-backend-badge]: https://github.com/sillsdev/TheCombine/workflows/backend/badge.svg
 [backend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=backend
 [github-actions-python-badge]: https://github.com/sillsdev/TheCombine/workflows/python/badge.svg
@@ -22,7 +25,8 @@
 [github-actions-ossf-badge]:
   https://github.com/sillsdev/TheCombine/workflows/Scorecards%20supply-chain%20security/badge.svg
 [github-actions]: https://github.com/sillsdev/TheCombine/actions
-[localization-badge]: https://img.shields.io/badge/localization-En%20Es%20Fr-blue
+[localization-badge]: https://img.shields.io/badge/localization-Ar%20En%20Es%20Fr%20Pt-blue
+[localization-crowdin]: https://crowdin.com/project/the-combine
 [github-version-badge]: https://img.shields.io/github/package-json/v/sillsdev/TheCombine
 [github-release-badge]: https://img.shields.io/github/v/release/sillsdev/TheCombine
 [github-version]: https://github.com/sillsdev/TheCombine/releases
@@ -49,9 +53,8 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    3. [Running the Automated Tests](#running-the-automated-tests)
    4. [Import Semantic Domains](#import-semantic-domains)
    5. [Generate License Reports](#generate-license-reports)
-   6. [Set Project Version](#set-project-version)
-   7. [Inspect Database](#inspect-database)
-   8. [Cleanup Local Repository](#cleanup-local-repository)
+   6. [Inspect Database](#inspect-database)
+   7. [Cleanup Local Repository](#cleanup-local-repository)
 3. [Setup Local Kubernetes Cluster](#setup-local-kubernetes-cluster)
    1. [Install Rancher Desktop](#install-rancher-desktop)
    2. [Install Docker Desktop](#install-docker-desktop)
@@ -91,25 +94,30 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
      appropriate Node.js version.
 4. [.NET Core SDK 6.0](https://dotnet.microsoft.com/download/dotnet/6.0)
    - On Ubuntu, follow these [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu).
-5. [MongoDB 6.0](https://docs.mongodb.com/manual/administration/install-community/) and add /bin to PATH Environment
-   Variable
+5. [MongoDB 6.0](https://docs.mongodb.com/manual/administration/install-community/) and add its `/bin` to PATH
+   Environment Variable.
    - On Windows, if using [Chocolatey][chocolatey]: `choco install mongodb`
-6. [VS Code](https://code.visualstudio.com/download) and the following extensions:
-   - C# (`ms-dotnettools.csharp`)
-   - Prettier - Code formatter (`esbenp.prettier-vscode`)
+   - If `mongosh` is not a recognized command, you may have to separately install the
+     [MongoDB Shell](https://www.mongodb.com/try/download/shell) and add its `/bin` to your PATH.
+   - If `mongoimport` is not a recognized command, you may have to separately install the
+     [MongoDB Database Tools](https://www.mongodb.com/try/download/database-tools) and add its `/bin` to your PATH.
+6. [VS Code](https://code.visualstudio.com/download).
+   - When you open this repo folder in VS Code, it should recommend the extensions used in this project (see
+     `.vscode/extensions.json`).
 7. [Python](#python): The Python section of this document has instructions for installing _Python 3_ on each of the
    supported platforms and how to setup your virtual environment.
-8. [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.1.250801`
-9. [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
-   `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
-10. [dotnet-project-licenses](https://github.com/tomchavakis/nuget-license)
+8. [FFmpeg](https://www.ffmpeg.org/download.html) and add its `/bin` to your PATH.
+9. [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.1.250801`
+10. [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
+    `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
+11. [dotnet-project-licenses](https://github.com/tomchavakis/nuget-license)
     `dotnet tool update --global dotnet-project-licenses`
 
 ### Prepare the Environment
 
-1. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string **containing at least 16 characters**, such as
-   _This is a secret key_. Set it in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the
-   _System_ app (Windows).
+1. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string **containing at least 32 characters**, such as
+   _This is a secret key that is longer_. Set it in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac
+   10.15+), or the _System_ app (Windows).
 2. If you want the email services to work you will need to set the following environment variables. These values must be
    kept secret, so ask your email administrator to supply them.
 
@@ -427,20 +435,6 @@ npm run license-report-frontend
 
 > Note: This should be performed each time production dependencies are changed.
 
-### Set Project Version
-
-To update the version of the project:
-
-1. Edit package.json `"version"` to a [semantic versioning](https://docs.npmjs.com/about-semantic-versioning) compatible
-   string (e.g. `"0.1.1-alpha.0"`).
-2. Run `npm install` to automatically update `package-lock.json`.
-
-To retrieve the current version of the project from the terminal:
-
-```bash
-npm run --silent version
-```
-
 ### Inspect Database
 
 To browse the database locally during development, open MongoDB Compass Community.
@@ -540,9 +534,9 @@ If the following tools were not installed with either _Rancher Desktop_ or _Dock
 links:
 
 1. [kubectl](https://kubernetes.io/docs/tasks/tools/)
-   - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernete-cli`
+   - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernetes-cli`
 2. [helm](https://helm.sh/docs/intro/install/)
-   - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernete-helm`
+   - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernetes-helm`
 
 ## Setup The Combine
 
@@ -663,20 +657,6 @@ maintenance-7f4b5b89b8-rhgk9   1/1     Running   0          10m
 
 ### Connecting to Your Cluster
 
-#### Network Hosts Configuration
-
-The cluster's ingress controller uses the hostname `thecombine.local` to _The Combine_. To direct traffic for this host
-to the ingress controller, add:
-
-```textfile
-127.0.0.1  thecombine.local
-```
-
-to your network hosts file:
-
-- Windows: `%windir%\System32\drivers\etc\hosts`
-- Linux/macOS: `/etc/hosts`
-
 #### Setup Port Forwarding
 
 _Rancher Desktop only!_
@@ -692,9 +672,8 @@ Note that the port forwarding is not persistent; you need to set it up whenever 
 
 #### Connecting to _The Combine_
 
-Once your host configuration has been setup, you can connect to _The Combine_ by entering the URL
-`https://thecombine.local` in the address bar of your web browser. (`https://thecombine.local:<portnumber>` for _Rancher
-Desktop_)
+You can connect to _The Combine_ by entering the URL `https://thecombine.localhost` in the address bar of your web
+browser. (`https://thecombine.localhost:<portnumber>` for _Rancher Desktop_)
 
 Notes:
 

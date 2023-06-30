@@ -2,8 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import * as Backend from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
-import history, { Path } from "browserHistory";
-import { defaultState } from "components/GoalTimeline/DefaultState";
+import router from "browserRouter";
+import {
+  GoalActionTypes,
+  LoadUserEditsAction,
+  SetCurrentGoalAction,
+} from "components/GoalTimeline/Redux/GoalReduxTypes";
 import { MergeDupData } from "goals/MergeDupGoal/MergeDupsTypes";
 import {
   dispatchMergeStepData,
@@ -11,8 +15,9 @@ import {
 } from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { convertEditToGoal } from "types/goalUtilities";
 import { Goal, GoalStatus, GoalType } from "types/goals";
+import { Path } from "types/path";
+import { convertEditToGoal } from "utilities/goalUtilities";
 
 export const goalSlice = createSlice({
   name: "goal",
@@ -128,7 +133,7 @@ export function asyncAddGoal(goal: Goal) {
       }
 
       // Serve goal.
-      history.push(Path.GoalCurrent);
+      router.navigate(Path.GoalCurrent);
     }
   };
 }
@@ -226,10 +231,10 @@ export function updateStepFromData(goal: Goal): boolean {
 function goalCleanup(goal: Goal): void {
   switch (goal.goalType) {
     case GoalType.MergeDups:
-      history.push(Path.GoalNext);
+      router.navigate(Path.GoalNext);
       break;
     default:
-      history.push(Path.Goals);
+      router.navigate(Path.Goals);
       break;
   }
 }

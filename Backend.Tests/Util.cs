@@ -51,7 +51,6 @@ namespace Backend.Tests
                 Created = RandString(),
                 Vernacular = RandString(),
                 Modified = RandString(),
-                PartOfSpeech = RandString(),
                 Plural = RandString(),
                 History = new List<string>(),
                 Audio = new List<string>(),
@@ -67,6 +66,7 @@ namespace Backend.Tests
             return new Sense
             {
                 Accessibility = Status.Active,
+                GrammaticalInfo = new GrammaticalInfo(RandString()),
                 Glosses = new List<Gloss> { RandomGloss(), RandomGloss(), RandomGloss() },
                 SemanticDomains = new List<SemanticDomain>
                 {

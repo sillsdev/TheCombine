@@ -1,6 +1,6 @@
 import { AutocompleteSetting, Project } from "api/models";
 import { newWritingSystem } from "types/writingSystem";
-import { randomIntString } from "utilities";
+import { randomIntString } from "utilities/utilities";
 
 export function newProject(name = ""): Project {
   return {
@@ -9,6 +9,7 @@ export function newProject(name = ""): Project {
     isActive: true,
     liftImported: false,
     definitionsEnabled: false,
+    grammaticalInfoEnabled: false,
     semanticDomains: [],
     semDomWritingSystem: newWritingSystem(),
     vernacularWritingSystem: newWritingSystem(),

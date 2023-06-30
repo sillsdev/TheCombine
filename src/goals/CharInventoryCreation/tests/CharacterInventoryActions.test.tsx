@@ -14,6 +14,7 @@ import {
   CharacterStatus,
   CharacterInventoryType,
   CharacterChange,
+  newCharacterSetEntry,
 } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
 import { StoreState } from "types";
 import { Goal } from "types/goals";
@@ -23,31 +24,11 @@ import { newUser } from "types/user";
 const VALID_DATA: string[] = ["a", "b"];
 const REJECT_DATA: string[] = ["y", "z"];
 const CHARACTER_SET_DATA: CharacterSetEntry[] = [
-  {
-    character: "a",
-    status: CharacterStatus.Accepted,
-    occurrences: 0,
-  },
-  {
-    character: "b",
-    status: CharacterStatus.Accepted,
-    occurrences: 0,
-  },
-  {
-    character: "y",
-    status: CharacterStatus.Rejected,
-    occurrences: 0,
-  },
-  {
-    character: "z",
-    status: CharacterStatus.Rejected,
-    occurrences: 0,
-  },
-  {
-    character: "m",
-    status: CharacterStatus.Undecided,
-    occurrences: 0,
-  },
+  { ...newCharacterSetEntry("a"), status: CharacterStatus.Accepted },
+  { ...newCharacterSetEntry("b"), status: CharacterStatus.Accepted },
+  { ...newCharacterSetEntry("y"), status: CharacterStatus.Rejected },
+  { ...newCharacterSetEntry("z"), status: CharacterStatus.Rejected },
+  { ...newCharacterSetEntry("m"), status: CharacterStatus.Undecided },
 ];
 const MOCK_STATE = {
   currentProjectState: {
@@ -74,7 +55,7 @@ mockUser.id = mockUserId;
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
 
 jest.mock("backend");
-jest.mock("browserHistory");
+jest.mock("browserRouter");
 jest.mock("components/GoalTimeline/Redux/GoalSlice", () => ({
   asyncUpdateGoal: (goal: Goal) => mockAsyncUpdateGoal(goal),
 }));

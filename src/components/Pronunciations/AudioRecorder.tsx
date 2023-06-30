@@ -1,15 +1,14 @@
-import React from "react";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 import Recorder from "components/Pronunciations/Recorder";
 import RecorderIcon from "components/Pronunciations/RecorderIcon";
-import { UpperRightToastContainer } from "components/Toast/UpperRightToastContainer";
 
 interface RecorderProps {
   wordId: string;
   recorder?: Recorder;
-  uploadAudio?: (wordId: string, audioFile: File) => void;
+  uploadAudio: (wordId: string, audioFile: File) => void;
 }
 
 export function getFileNameForWord(wordId: string): string {
@@ -20,42 +19,33 @@ export function getFileNameForWord(wordId: string): string {
   return compressed.join("") + "_" + new Date().getTime().toString(36);
 }
 
-export default function AudioRecorder(props: RecorderProps) {
+export default function AudioRecorder(props: RecorderProps): ReactElement {
   const { t } = useTranslation();
   const recorder = props.recorder ?? new Recorder();
 
-  function startRecording() {
+  function startRecording(): void {
     recorder.startRecording();
   }
 
-  function stopRecording() {
-    recorder
-      .stopRecording()
-      .then(() => {
-        const blob = recorder.getBlob();
-        const fileName = getFileNameForWord(props.wordId);
-        const file = new File([blob], fileName, {
-          type: blob.type,
-          lastModified: Date.now(),
-        });
-        if (props.uploadAudio) {
-          props.uploadAudio(props.wordId, file);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        toast.error(t("pronunciations.noMicAccess"));
-      });
+  async function stopRecording(): Promise<void> {
+    const blob = await recorder.stopRecording();
+    if (!blob) {
+      toast.error(t("pronunciations.noMicAccess"));
+      return;
+    }
+    const fileName = getFileNameForWord(props.wordId);
+    const options: FilePropertyBag = {
+      lastModified: Date.now(),
+      type: Recorder.blobType,
+    };
+    props.uploadAudio(props.wordId, new File([blob], fileName, options));
   }
 
   return (
-    <React.Fragment>
-      <UpperRightToastContainer />
-      <RecorderIcon
-        wordId={props.wordId}
-        startRecording={startRecording}
-        stopRecording={stopRecording}
-      />
-    </React.Fragment>
+    <RecorderIcon
+      wordId={props.wordId}
+      startRecording={startRecording}
+      stopRecording={stopRecording}
+    />
   );
 }

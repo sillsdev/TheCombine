@@ -1,14 +1,14 @@
 import { Tooltip, IconButton } from "@mui/material";
-import { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
 interface IconButtonWithTooltipProps {
   icon: ReactElement;
-  text?: string;
+  text?: ReactNode;
   textId?: string;
   small?: boolean;
   onClick?: () => void;
-  buttonId?: string;
+  buttonId: string;
   side?: "bottom" | "left" | "right" | "top";
 }
 

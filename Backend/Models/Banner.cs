@@ -52,7 +52,7 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Type.Equals(other.Type) && Text.Equals(other.Text);
+            return Type.Equals(other.Type) && Text.Equals(other.Text, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()

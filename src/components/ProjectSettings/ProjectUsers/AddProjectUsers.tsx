@@ -1,5 +1,5 @@
 import { Button, Grid, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 import { toast } from "react-toastify";
@@ -9,7 +9,6 @@ import * as backend from "backend";
 import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
 import EmailInvite from "components/ProjectSettings/ProjectUsers/EmailInvite";
 import UserList from "components/ProjectSettings/ProjectUsers/UserList";
-import { UpperRightToastContainer } from "components/Toast/UpperRightToastContainer";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { RuntimeConfig } from "types/runtimeConfig";
@@ -25,7 +24,7 @@ const customStyles = {
   },
 };
 
-export default function AddProjectUsers() {
+export default function AddProjectUsers(): ReactElement {
   const projectUsers = useAppSelector(
     (state: StoreState) => state.currentProjectState.users
   );
@@ -37,7 +36,7 @@ export default function AddProjectUsers() {
     Modal.setAppElement("body");
   }, [projectUsers]);
 
-  function addToProject(user: User) {
+  function addToProject(user: User): void {
     if (!projectUsers.map((u) => u.id).includes(user.id)) {
       backend
         .addOrUpdateUserRole(
@@ -56,10 +55,9 @@ export default function AddProjectUsers() {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Grid container spacing={1}>
         <UserList projectUsers={projectUsers} addToProject={addToProject} />
-        <UpperRightToastContainer />
       </Grid>
 
       {RuntimeConfig.getInstance().emailServicesEnabled() && (
@@ -93,6 +91,6 @@ export default function AddProjectUsers() {
           />
         </Modal>
       )}
-    </React.Fragment>
+    </>
   );
 }

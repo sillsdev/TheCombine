@@ -9,7 +9,7 @@ import {
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import LoadingButton from "components/Buttons/LoadingButton";
+import { LoadingButton } from "components/Buttons";
 
 interface ReplaceDialogProps {
   open: boolean;
@@ -44,11 +44,13 @@ export default function CharacterReplaceDialog(props: ReplaceDialogProps) {
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          {t("charInventory.characterSet.replaceAll")}: &quot;
-          <strong>{props.dialogFindValue}</strong>&quot;
+          {t("charInventory.characterSet.replaceAll", {
+            val: props.dialogFindValue,
+          })}
           <br />
-          {t("charInventory.characterSet.replaceWith")}: &quot;
-          <strong>{props.dialogReplaceValue}</strong>&quot; ?
+          {t("charInventory.characterSet.replaceAllWith", {
+            val: props.dialogReplaceValue,
+          })}
         </DialogContentText>
       </DialogContent>
       <DialogActions>

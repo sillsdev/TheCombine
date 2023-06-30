@@ -1,36 +1,41 @@
 import {
   Dialog,
   DialogContent,
-  MenuItem,
+  Divider,
+  Grid,
   MenuList,
   Typography,
 } from "@mui/material";
-import { withStyles } from "@mui/styles";
-import React from "react";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Word } from "api/models";
-import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
+import { GramCatGroup, Sense, Word } from "api/models";
+import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
+import {
+  DomainCell,
+  PartOfSpeechCell,
+} from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import theme from "types/theme";
-import { firstGlossText } from "types/wordUtilities";
+import { firstGlossText } from "utilities/wordUtilities";
 
 interface SenseDialogProps {
   selectedWord: Word;
   open: boolean;
-  handleClose: (senseIndex?: number) => void;
+  // Call handleClose with no input to indicate no selection was made.
+  handleClose: (gloss?: string) => void;
   analysisLang: string;
 }
 
-export default function SenseDialog(props: SenseDialogProps) {
+export default function SenseDialog(props: SenseDialogProps): ReactElement {
   return (
     <Dialog
-      open={props.open}
+      maxWidth={false}
       onClose={(_, reason) => {
         if (reason !== "backdropClick") {
           props.handleClose();
         }
       }}
+      open={props.open}
     >
       <DialogContent>
         <SenseList
@@ -45,59 +50,67 @@ export default function SenseDialog(props: SenseDialogProps) {
 
 interface SenseListProps {
   selectedWord: Word;
-  closeDialog: (senseIndex: number) => void;
+  closeDialog: (gloss: string) => void;
   analysisLang: string;
 }
-
-// Copied from customized menus at https://material-ui.com/components/menus/
-export const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    "&:focus": {
-      backgroundColor: theme.palette.primary.main,
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: theme.palette.common.white,
-      },
-    },
-  },
-}))(MenuItem);
 
 export function SenseList(props: SenseListProps) {
   const { t } = useTranslation();
 
-  return (
-    <React.Fragment>
-      <Typography variant="h3">{t("addWords.selectSense")}</Typography>
-      <MenuList autoFocusItem>
-        {props.selectedWord.senses.map((sense, index) => (
-          <StyledMenuItem
-            onClick={() => props.closeDialog(index)}
-            key={firstGlossText(sense)}
-            id={firstGlossText(sense)}
-          >
-            <div style={{ margin: theme.spacing(4) }}>
-              <h3>{firstGlossText(sense)}</h3>
-            </div>
-            <div style={{ margin: theme.spacing(4) }}>
-              <DomainCell
-                rowData={
-                  new ReviewEntriesWord(
-                    {
-                      ...props.selectedWord,
-                      senses: [sense],
-                    },
-                    props.analysisLang
-                  )
-                }
-              />
-            </div>
-          </StyledMenuItem>
-        ))}
+  const hasPartsOfSpeech = !!props.selectedWord.senses.find(
+    (s) => s.grammaticalInfo.catGroup !== GramCatGroup.Unspecified
+  );
 
-        <StyledMenuItem onClick={() => props.closeDialog(-1)}>
-          {t("addWords.newSenseFor")}
-          {props.selectedWord.vernacular}
-        </StyledMenuItem>
-      </MenuList>
-    </React.Fragment>
+  const menuItem = (sense: Sense): ReactElement => {
+    const entry = new ReviewEntriesWord(
+      { ...props.selectedWord, senses: [sense] },
+      props.analysisLang
+    );
+    const gloss = firstGlossText(sense);
+    return (
+      <StyledMenuItem
+        id={sense.guid}
+        key={sense.guid}
+        onClick={() => props.closeDialog(gloss)}
+      >
+        <Grid
+          container
+          justifyContent="space-between"
+          alignItems="center"
+          spacing={5}
+        >
+          <Grid item xs="auto">
+            <Typography variant="h5">{gloss}</Typography>
+          </Grid>
+          {hasPartsOfSpeech && (
+            <Grid item xs="auto">
+              <PartOfSpeechCell rowData={entry} />
+            </Grid>
+          )}
+          <Grid item xs>
+            <DomainCell rowData={entry} />
+          </Grid>
+        </Grid>
+      </StyledMenuItem>
+    );
+  };
+
+  const menuItems: ReactElement[] = [];
+  for (const s of props.selectedWord.senses) {
+    menuItems.push(menuItem(s));
+    menuItems.push(<Divider key={`${s.guid}-divider`} />);
+  }
+  menuItems.push(
+    <StyledMenuItem key="new-sense" onClick={() => props.closeDialog("")}>
+      {t("addWords.newSenseFor")}
+      {props.selectedWord.vernacular}
+    </StyledMenuItem>
+  );
+
+  return (
+    <>
+      <Typography variant="h3">{t("addWords.selectSense")}</Typography>
+      <MenuList autoFocusItem>{menuItems}</MenuList>
+    </>
   );
 }

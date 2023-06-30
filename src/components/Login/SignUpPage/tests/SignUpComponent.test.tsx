@@ -1,6 +1,6 @@
 import renderer from "react-test-renderer";
 
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
 import SignUp from "components/Login/SignUpPage/SignUpComponent";
 
@@ -11,6 +11,7 @@ jest.mock("backend", () => ({
   isEmailTaken: () => false,
   isUsernameTaken: () => false,
 }));
+jest.mock("browserRouter");
 
 const mockReset = jest.fn();
 let signUpMaster: renderer.ReactTestRenderer;

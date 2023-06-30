@@ -10,6 +10,7 @@ import {
   FlagCell,
   GlossCell,
   NoteCell,
+  PartOfSpeechCell,
   PronunciationsCell,
   SenseCell,
   VernacularCell,
@@ -19,7 +20,7 @@ import {
   ReviewEntriesWord,
   ReviewEntriesWordField,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import { compareFlags } from "types/wordUtilities";
+import { compareFlags } from "utilities/wordUtilities";
 
 enum SortStyle {
   // vernacular, noteText: neither have a customSort defined,
@@ -28,6 +29,7 @@ enum SortStyle {
   Sense,
   Definition,
   Gloss,
+  PartOfSpeech,
   Domain,
   Pronunciation,
   //Note,
@@ -40,6 +42,7 @@ export class ColumnTitle {
   static Senses = t("reviewEntries.columns.senses");
   static Definitions = t("reviewEntries.columns.definitions");
   static Glosses = t("reviewEntries.columns.glosses");
+  static PartOfSpeech = t("reviewEntries.columns.partOfSpeech");
   static Domains = t("reviewEntries.columns.domains");
   static Pronunciations = t("reviewEntries.columns.pronunciations");
   static Note = t("reviewEntries.columns.note");
@@ -215,6 +218,51 @@ const columns: Column<any>[] = [
     },
   },
 
+  // Part of Speech column
+  {
+    title: ColumnTitle.PartOfSpeech,
+    disableClick: true,
+    editable: "never",
+    field: ReviewEntriesWordField.Senses,
+    render: (rowData: ReviewEntriesWord) => (
+      <PartOfSpeechCell rowData={rowData} />
+    ),
+    customFilterAndSearch: (
+      term: string,
+      rowData: ReviewEntriesWord
+    ): boolean => {
+      const regex = cleanRegExp(term);
+      for (const sense of rowData.senses) {
+        const gramInfo = `${sense.partOfSpeech.catGroup} ${sense.partOfSpeech.grammaticalCategory}`;
+        if (regex.exec(gramInfo.toLowerCase())) {
+          return true;
+        }
+      }
+      return false;
+    },
+    customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
+      if (currentSort !== SortStyle.PartOfSpeech) {
+        currentSort = SortStyle.PartOfSpeech;
+      }
+
+      for (
+        let count = 0;
+        count < a.senses.length && count < b.senses.length;
+        count++
+      ) {
+        const gramInfoA = a.senses[count].partOfSpeech;
+        const gramInfoB = b.senses[count].partOfSpeech;
+        if (gramInfoA.catGroup === gramInfoB.catGroup) {
+          return gramInfoA.grammaticalCategory.localeCompare(
+            gramInfoB.grammaticalCategory
+          );
+        }
+        return gramInfoA.catGroup.localeCompare(gramInfoB.catGroup);
+      }
+      return a.senses.length - b.senses.length;
+    },
+  },
+
   // Semantic Domains column
   {
     title: ColumnTitle.Domains,
@@ -332,7 +380,9 @@ const columns: Column<any>[] = [
           }
 
           // If the two glosses SEEM identical, sort by length
-          if (compare === 0) compare = codeA.length - codeB.length;
+          if (compare === 0) {
+            compare = codeA.length - codeB.length;
+          }
         }
         count++;
       }

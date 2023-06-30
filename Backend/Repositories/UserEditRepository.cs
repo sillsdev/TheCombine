@@ -8,7 +8,7 @@ using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
 {
-    /// <summary> Atomic database functions for <see cref="UserEdit"/>s </summary>
+    /// <summary> Atomic database functions for <see cref="UserEdit"/>s. </summary>
     [ExcludeFromCodeCoverage]
     public class UserEditRepository : IUserEditRepository
     {

@@ -1,7 +1,7 @@
 import { AddComment, Comment } from "@mui/icons-material";
 import renderer from "react-test-renderer";
 
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
 import EntryNote from "components/DataEntry/DataEntryTable/EntryCellComponents/EntryNote";
 

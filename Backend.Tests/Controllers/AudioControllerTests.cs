@@ -1,23 +1,36 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class AudioControllerTests
+    public class AudioControllerTests : IDisposable
     {
         private IProjectRepository _projRepo = null!;
         private IWordRepository _wordRepo = null!;
         private PermissionServiceMock _permissionService = null!;
         private WordService _wordService = null!;
         private AudioController _audioController = null!;
-        private WordController _wordController = null!;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _audioController?.Dispose();
+            }
+        }
 
         private string _projId = null!;
 
@@ -29,7 +42,6 @@ namespace Backend.Tests.Controllers
             _permissionService = new PermissionServiceMock();
             _wordService = new WordService(_wordRepo);
             _audioController = new AudioController(_wordRepo, _wordService, _permissionService);
-            _wordController = new WordController(_wordRepo, _wordService, _projRepo, _permissionService);
 
             _projId = _projRepo.Create(new Project { Name = "AudioControllerTests" }).Result!.Id;
         }
@@ -56,9 +68,8 @@ namespace Backend.Tests.Controllers
             // `fileUpload` contains the file stream and the name of the file.
             _ = _audioController.UploadAudioFile(_projId, word.Id, fileUpload).Result;
 
-            var action = _wordController.GetWord(_projId, word.Id).Result;
-            var foundWord = (Word)((ObjectResult)action).Value!;
-            Assert.IsNotNull(foundWord.Audio);
+            var foundWord = _wordRepo.GetWord(_projId, word.Id).Result;
+            Assert.IsNotNull(foundWord?.Audio);
         }
 
         [Test]

@@ -1,4 +1,5 @@
-﻿using Backend.Tests.Mocks;
+﻿using System;
+using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -7,15 +8,28 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class SemanticDomainControllerTests
+    public class SemanticDomainControllerTests : IDisposable
     {
         private ISemanticDomainRepository _semDomRepository = null!;
         private SemanticDomainController _semDomController = null!;
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _semDomController?.Dispose();
+            }
+        }
+
         private const string Id = "1";
         private const string Lang = "en";
         private const string Name = "Universe";
-
         private readonly SemanticDomainFull _semDom = new() { Id = Id, Lang = Lang, Name = Name };
 
         [SetUp]
@@ -26,7 +40,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void SemanticDomainController_GetSemanticDomainFull_DomainFound()
+        public void GetSemanticDomainFullDomainFound()
         {
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(_semDom);
             var domain = (SemanticDomainFull?)(
@@ -37,7 +51,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void SemanticDomainController_GetSemanticDomainFull_DomainNotFound()
+        public void GetSemanticDomainFullDomainNotFound()
         {
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(null);
             var domain = (SemanticDomainFull?)(
@@ -46,7 +60,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void SemanticDomainController_GetSemanticDomainTreeNode_DomainFound()
+        public void GetSemanticDomainTreeNodeDomainFound()
         {
             var treeNode = new SemanticDomainTreeNode(_semDom);
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(treeNode);
@@ -58,7 +72,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void SemanticDomainController_GetSemanticDomainTreeNode_DomainNotFound()
+        public void GetSemanticDomainTreeNodeDomainNotFound()
         {
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(null);
             var domain = (SemanticDomainTreeNode?)(
@@ -67,7 +81,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void SemanticDomainController_GetSemanticDomainTreeNodeByName_DomainFound()
+        public void GetSemanticDomainTreeNodeByNameDomainFound()
         {
             var treeNode = new SemanticDomainTreeNode(_semDom);
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(treeNode);
@@ -79,7 +93,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void SemanticDomainController_GetSemanticDomainTreeNodeByName_DomainNotFound()
+        public void GetSemanticDomainTreeNodeByNameDomainNotFound()
         {
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(null);
             var domain = (SemanticDomainTreeNode?)(

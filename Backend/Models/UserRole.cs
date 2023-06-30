@@ -35,8 +35,8 @@ namespace BackendFramework.Models
         {
             var clone = new UserRole
             {
-                Id = (string)Id.Clone(),
-                ProjectId = (string)ProjectId.Clone(),
+                Id = Id,
+                ProjectId = ProjectId,
                 Permissions = new List<Permission>()
             };
 
@@ -51,7 +51,7 @@ namespace BackendFramework.Models
         public bool ContentEquals(UserRole other)
         {
             return
-                other.ProjectId.Equals(ProjectId) &&
+                other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
                 other.Permissions.Count == Permissions.Count &&
                 other.Permissions.All(Permissions.Contains);
         }
@@ -63,7 +63,7 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return other.Id.Equals(Id) && ContentEquals(other);
+            return other.Id.Equals(Id, StringComparison.Ordinal) && ContentEquals(other);
         }
 
         public override int GetHashCode()
@@ -72,7 +72,10 @@ namespace BackendFramework.Models
         }
     }
 
+#pragma warning disable CA1711
+    // Ignoring CA1711, which requires identifiers ending in Permission to implement System.Security.IPermission.
     public enum Permission
+#pragma warning restore CA1711
     {
         /// <summary> Project Owner by default should be given to the user who created the project </summary>
         Owner = 6,

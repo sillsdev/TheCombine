@@ -2,75 +2,47 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
 import * as action from "components/ProjectScreen/CreateProject/Redux/CreateProjectActions";
-import {
-  defaultState,
-  CreateProjectAction,
-  CreateProjectActionTypes,
-} from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
+import { defaultState } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
+import { newWritingSystem } from "types/writingSystem";
 
-const createMockStore = configureMockStore([thunk]);
+jest.mock("backend", () => ({
+  createProject: () => Promise.reject({ response: "intentional failure" }),
+}));
+
+const mockStore = configureMockStore([thunk])(defaultState);
 
 const project = {
   name: "testProjectName",
-
-  vernacularLanguage: {
-    name: "testVernName",
-    bcp47: "testVernCode",
-    font: "testVernFont",
-  },
-  analysisLanguages: [
-    {
-      name: "testAnalysisName",
-      bcp47: "testAnalysisCode",
-      font: "testAnalysisFont",
-    },
-  ],
-  languageData: new File([], "testFile.lift"),
+  vernacularLanguage: newWritingSystem("testVernCode", "testVernName"),
+  analysisLanguages: [newWritingSystem("testAnalysisCode", "testAnalysisName")],
 };
 
-describe("CreateProjectAction Tests", () => {
-  const mockState = defaultState;
-  const CreateProject: CreateProjectAction = {
-    type: CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS,
-    payload: {
-      name: project.name,
-      vernacularLanguage: project.vernacularLanguage,
-      analysisLanguages: project.analysisLanguages,
-    },
-  };
+beforeEach(() => {
+  mockStore.clearActions();
+});
 
-  test("inProgress returns correct value", () => {
-    expect(
-      action.inProgress(
+describe("CreateProjectActions", () => {
+  test("asyncCreateProject correctly affects state", async () => {
+    await mockStore.dispatch<any>(
+      action.asyncCreateProject(
         project.name,
         project.vernacularLanguage,
         project.analysisLanguages
       )
-    ).toEqual({
-      type: CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS,
-      payload: {
-        name: project.name,
-        vernacularLanguage: project.vernacularLanguage,
-        analysisLanguages: project.analysisLanguages,
-      },
-    });
+    );
+    expect(mockStore.getActions()).toEqual([
+      action.inProgress(),
+      action.failure(), // backend.createProject mocked to fail
+    ]);
   });
 
-  test("asyncCreateProject correctly affects state", () => {
-    const mockStore = createMockStore(mockState);
-    const mockDispatch = mockStore.dispatch<any>(
-      action.asyncCreateProject(
-        project.name,
-        project.vernacularLanguage,
-        project.analysisLanguages,
-        project.languageData
-      )
+  test("asyncFinishProject correctly affects state", async () => {
+    await mockStore.dispatch<any>(
+      action.asyncFinishProject(project.name, project.vernacularLanguage)
     );
-
-    mockDispatch
-      .then(() => {
-        expect(mockStore.getActions()).toEqual([CreateProject]);
-      })
-      .catch(() => fail());
+    expect(mockStore.getActions()).toEqual([
+      action.inProgress(),
+      action.failure(), // backend.createProject mocked to fail
+    ]);
   });
 });

@@ -34,14 +34,14 @@ namespace BackendFramework.Models
         {
             var clone = new MergeBlacklistEntry
             {
-                Id = (string)Id.Clone(),
-                ProjectId = (string)ProjectId.Clone(),
-                UserId = (string)UserId.Clone(),
+                Id = Id,
+                ProjectId = ProjectId,
+                UserId = UserId,
                 WordIds = new List<string>()
             };
             foreach (var id in WordIds)
             {
-                clone.WordIds.Add((string)id.Clone());
+                clone.WordIds.Add(id);
             }
             return clone;
         }
@@ -49,8 +49,8 @@ namespace BackendFramework.Models
         public bool ContentEquals(MergeBlacklistEntry other)
         {
             return
-                other.ProjectId.Equals(ProjectId) &&
-                other.UserId.Equals(UserId) &&
+                other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
+                other.UserId.Equals(UserId, StringComparison.Ordinal) &&
                 other.WordIds.Count == WordIds.Count &&
                 other.WordIds.All(WordIds.Contains);
         }
@@ -61,7 +61,7 @@ namespace BackendFramework.Models
             {
                 return false;
             }
-            return other.Id.Equals(Id) && ContentEquals(other);
+            return other.Id.Equals(Id, StringComparison.Ordinal) && ContentEquals(other);
         }
 
         public override int GetHashCode()

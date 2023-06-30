@@ -8,10 +8,10 @@ license Type:Apache-2.0
 
 ####################################################################################################
 Package:BouncyCastle.Cryptography
-Version:2.1.1
+Version:2.2.1
 project URL:https://www.bouncycastle.org/csharp/
 Description:BouncyCastle.NET is a popular cryptography library for .NET
-licenseUrl:https://www.nuget.org/packages/BouncyCastle.Cryptography/2.1.1/License
+licenseUrl:https://www.nuget.org/packages/BouncyCastle.Cryptography/2.2.1/License
 license Type:LICENSE.md
 
 ####################################################################################################
@@ -58,7 +58,7 @@ license Type:LICENSE.md
 
 ####################################################################################################
 Package:MailKit
-Version:4.0.0
+Version:4.1.0
 project URL:http://www.mimekit.net/
 Description:MailKit is an Open Source cross-platform .NET mail-client library that is based on MimeKit and optimized for mobile devices.
 
@@ -97,11 +97,11 @@ license Type:
 
 ####################################################################################################
 Package:Microsoft.AspNetCore.Authentication.JwtBearer
-Version:6.0.16
+Version:6.0.19
 project URL:https://asp.net/
 Description:ASP.NET Core middleware that enables an application to receive an OpenID Connect bearer token.
 
-This package was built from the source code at https://github.com/dotnet/aspnetcore/tree/d6f154cca3863703cf87c8b840eea9cbe20229b2
+This package was built from the source code at https://github.com/dotnet/aspnetcore/tree/cd9340856ed85215a911c97c44d52373f6cba2f9
 licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
 
@@ -596,7 +596,7 @@ license Type:Apache-2.0
 
 ####################################################################################################
 Package:Microsoft.IdentityModel.Abstractions
-Version:6.30.0
+Version:6.31.0
 project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Description:A package containing thin abstractions for Microsoft.IdentityModel.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -612,7 +612,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:Microsoft.IdentityModel.JsonWebTokens
-Version:6.30.0
+Version:6.31.0
 project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Description:Includes types that provide support for creating, serializing and validating JSON Web Tokens.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -636,7 +636,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:Microsoft.IdentityModel.Logging
-Version:6.30.0
+Version:6.31.0
 project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Description:Includes Event Source based logging support.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -668,7 +668,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:Microsoft.IdentityModel.Tokens
-Version:6.30.0
+Version:6.31.0
 project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Description:Includes types that provide support for SecurityTokens, Cryptographic operations: Signing, Verifying Signatures, Encryption.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -799,7 +799,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:MimeKit
-Version:4.0.0
+Version:4.1.0
 project URL:http://www.mimekit.net/
 Description:MimeKit is an Open Source library for creating and parsing MIME, S/MIME and PGP messages on desktop and mobile platforms. It also supports parsing of Unix mbox files.
 
@@ -817,34 +817,34 @@ license Type:MIT
 
 ####################################################################################################
 Package:MongoDB.Bson
-Version:2.19.1
+Version:2.20.0
 project URL:https://www.mongodb.com/docs/drivers/csharp/
 Description:MongoDB's Official Bson Library.
-licenseUrl:https://www.nuget.org/packages/MongoDB.Bson/2.19.1/License
-license Type:License.txt
+licenseUrl:https://www.nuget.org/packages/MongoDB.Bson/2.20.0/License
+license Type:LICENSE.md
 
 ####################################################################################################
 Package:MongoDB.Driver
-Version:2.19.1
+Version:2.20.0
 project URL:https://www.mongodb.com/docs/drivers/csharp/
 Description:Official .NET driver for MongoDB.
-licenseUrl:https://www.nuget.org/packages/MongoDB.Driver/2.19.1/License
-license Type:License.txt
+licenseUrl:https://www.nuget.org/packages/MongoDB.Driver/2.20.0/License
+license Type:LICENSE.md
 
 ####################################################################################################
 Package:MongoDB.Driver.Core
-Version:2.19.1
+Version:2.20.0
 project URL:https://www.mongodb.com/docs/drivers/csharp/
 Description:Core Component of the Official MongoDB .NET Driver.
-licenseUrl:https://www.nuget.org/packages/MongoDB.Driver.Core/2.19.1/License
-license Type:License.txt
+licenseUrl:https://www.nuget.org/packages/MongoDB.Driver.Core/2.20.0/License
+license Type:LICENSE.md
 
 ####################################################################################################
 Package:MongoDB.Libmongocrypt
-Version:1.7.0
+Version:1.8.0
 project URL:http://www.mongodb.org/display/DOCS/CSharp+Language+Center
 Description:Libmongocrypt wrapper for the .NET driver.
-licenseUrl:https://www.nuget.org/packages/MongoDB.Libmongocrypt/1.7.0/License
+licenseUrl:https://www.nuget.org/packages/MongoDB.Libmongocrypt/1.8.0/License
 license Type:License.txt
 
 ####################################################################################################
@@ -989,7 +989,7 @@ license Type:
 
 ####################################################################################################
 Package:SIL.Core
-Version:12.0.0
+Version:12.0.1
 project URL:https://github.com/sillsdev/libpalaso
 Description:SIL.Core provides general utilities for language software. It is the base library for all Palaso libraries.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -997,7 +997,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:SIL.Core.Desktop
-Version:12.0.0
+Version:12.0.1
 project URL:https://github.com/sillsdev/libpalaso
 Description:SIL.Core.Desktop provides general UI related utilities for language software.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -1005,7 +1005,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:SIL.DictionaryServices
-Version:12.0.0
+Version:12.0.1
 project URL:https://github.com/sillsdev/libpalaso
 Description:SIL.DictionaryServices contains classes for defining a simple lexical model that can be used across applications.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -1013,7 +1013,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:SIL.Lift
-Version:12.0.0
+Version:12.0.1
 project URL:https://github.com/sillsdev/libpalaso
 Description:SIL.Lift contains classes for reading and writing Lexicon Interchange FormaT (LIFT) data. This assembly currently supports LIFT 0.13.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -1021,7 +1021,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:SIL.WritingSystems
-Version:12.0.0
+Version:12.0.1
 project URL:https://github.com/sillsdev/libpalaso
 Description:SIL.WritingSystems contains classes for managing and persisting writing systems using the Locale Data Markup Language (LDML) format. This library also contains classes for processing IETF (BCP-47) language tags and accessing the SIL Locale Data Repository (SLDR).
 licenseUrl:https://licenses.nuget.org/MIT
@@ -1631,6 +1631,18 @@ license Type:MS-EULA
 
 ####################################################################################################
 Package:System.Formats.Asn1
+Version:7.0.0
+project URL:https://dot.net/
+Description:Provides classes that can read and write the ASN.1 BER, CER, and DER data formats.
+
+Commonly Used Types:
+System.Formats.Asn1.AsnReader
+System.Formats.Asn1.AsnWriter
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:System.Formats.Asn1
 Version:6.0.0
 project URL:https://dot.net/
 Description:Provides classes that can read and write the ASN.1 BER, CER, and DER data formats.
@@ -1730,7 +1742,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:System.IdentityModel.Tokens.Jwt
-Version:6.30.0
+Version:6.31.0
 project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Description:Includes types that provide support for creating, serializing and validating JSON Web Tokens.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -3108,7 +3120,7 @@ license Type:MS-EULA
 
 ####################################################################################################
 Package:System.Security.Cryptography.Pkcs
-Version:6.0.2
+Version:7.0.2
 project URL:https://dot.net/
 Description:Provides support for PKCS and CMS algorithms.
 
@@ -3286,6 +3298,17 @@ license Type:MS-EULA
 ####################################################################################################
 Package:System.Text.Encoding.CodePages
 Version:6.0.0
+project URL:https://dot.net/
+Description:Provides support for code-page based encodings, including Windows-1252, Shift-JIS, and GB2312.
+
+Commonly Used Types:
+System.Text.CodePagesEncodingProvider
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:System.Text.Encoding.CodePages
+Version:7.0.0
 project URL:https://dot.net/
 Description:Provides support for code-page based encodings, including Windows-1252, Shift-JIS, and GB2312.
 
@@ -3777,6 +3800,14 @@ Version:1.0.0.39
 project URL:https://github.com/josephmyers/relaxng-tenuto
 Description:RELAX NG validator for .NET
 licenseUrl:
+license Type:
+
+####################################################################################################
+Package:Xabe.FFmpeg
+Version:5.2.6
+project URL:https://ffmpeg.xabe.net/index.html
+Description:Cross-platform wrapper for FFmpeg.
+licenseUrl:https://ffmpeg.xabe.net/license.html
 license Type:
 
 ####################################################################################################

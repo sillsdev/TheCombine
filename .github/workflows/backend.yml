@@ -16,8 +16,10 @@ jobs:
       matrix:
         dotnet: ["6.0.x"]
     steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
-        uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
+        uses: step-security/harden-runner@55d479fb1c5bcad5a4f9099a5d9f37c8857b2845 # v2.4.1
         with:
           disable-sudo: true
           egress-policy: block
@@ -27,26 +29,28 @@ jobs:
             api.nuget.org:443
             codecov.io:443
             dc.services.visualstudio.com:443
+            deb.debian.org:80
+            dotnetbuilds.azureedge.net:443
             dotnetcli.azureedge.net:443
             github.com:443
+            md-hdd-t032zjxllntc.z26.blob.storage.azure.net:443
+            objects.githubusercontent.com:443
             storage.googleapis.com:443
             uploader.codecov.io:443
-            deb.debian.org:80
-            deb.debian.org:443
-            security.debian.org:80
-            security.debian.org:443
-      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
       - name: Setup dotnet
-        uses: actions/setup-dotnet@607fce577a46308457984d59e4954e075820f10a # v3.0.3
+        uses: actions/setup-dotnet@3447fd6a9f9e57506b15f895c5b76d3b197dc7c2 # v3.2.0
         with:
           dotnet-version: ${{ matrix.dotnet }}
+      - name: Install ffmpeg
+        uses: FedericoCarboni/setup-ffmpeg@v2 # v2.0.0
 
       # Coverage.
       - name: run coverage tests
         run: dotnet test Backend.Tests/Backend.Tests.csproj
         shell: bash
       - name: Upload coverage report
-        uses: codecov/codecov-action@894ff025c7b54547a9a2a1e9f228beae737ad3c2 # v3.1.3
+        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         with:
           files: Backend.Tests/coverage.cobertura.xml
           flags: backend
@@ -70,12 +74,15 @@ jobs:
       security-events: write # for github/codeql-action/autobuild to send a status report
     runs-on: ubuntu-20.04
     steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
-        uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
+        uses: step-security/harden-runner@55d479fb1c5bcad5a4f9099a5d9f37c8857b2845 # v2.4.1
         with:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
+            *.blob.storage.azure.net:
             aka.ms:443
             api.github.com:443
             api.nuget.org:443
@@ -85,19 +92,19 @@ jobs:
             objects.githubusercontent.com:443
 
       - name: Checkout repository
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
       # Manually install .NET to work around:
       # https://github.com/github/codeql-action/issues/757
       - name: Setup .NET
-        uses: actions/setup-dotnet@607fce577a46308457984d59e4954e075820f10a # v3.0.3
+        uses: actions/setup-dotnet@3447fd6a9f9e57506b15f895c5b76d3b197dc7c2 # v3.2.0
         with:
           dotnet-version: "6.0.x"
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@29b1f65c5e92e24fe6b6647da1eaabe529cec70f # v2.3.3
+        uses: github/codeql-action/init@f6e388ebf0efc915c6c5b165b019ee61a6746a38 # v2.20.1
         with:
           languages: csharp
       - name: Autobuild
-        uses: github/codeql-action/autobuild@29b1f65c5e92e24fe6b6647da1eaabe529cec70f # v2.3.3
+        uses: github/codeql-action/autobuild@f6e388ebf0efc915c6c5b165b019ee61a6746a38 # v2.20.1
       - name: Upload artifacts if build failed
         uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         if: ${{ failure() }}
@@ -105,30 +112,33 @@ jobs:
           name: tracer-logs
           path: ${{ runner.temp }}/*.log
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@29b1f65c5e92e24fe6b6647da1eaabe529cec70f # v2.3.3
+        uses: github/codeql-action/analyze@f6e388ebf0efc915c6c5b165b019ee61a6746a38 # v2.20.1
 
   docker_build:
     runs-on: ubuntu-22.04
     #    if: ${{ github.event.type }} == "PullRequest"
     steps:
-      # For subfolders, currently a full checkout is required.
-      # See: https://github.com/marketplace/actions/build-and-push-docker-images#path-context
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
-        uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
+        uses: step-security/harden-runner@55d479fb1c5bcad5a4f9099a5d9f37c8857b2845 # v2.4.1
         with:
           disable-sudo: true
+          disable-file-monitoring: true
           egress-policy: block
           allowed-endpoints: >
+            *.data.mcr.microsoft.com:443
             api.nuget.org:443
+            archive.ubuntu.com:80
             dc.services.visualstudio.com:443
             deb.debian.org:80
             github.com:443
-            docker.io:443
-            auth.docker.io:443
-            registry-1.docker.io:443
-            production.cloudflare.docker.com
-            security.debian.org
-      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+            mcr.microsoft.com:443
+            security.ubuntu.com:80
+
+      # For subfolders, currently a full checkout is required.
+      # See: https://github.com/marketplace/actions/build-and-push-docker-images#path-context
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
         with:
           fetch-depth: 0
       - name: Build backend
