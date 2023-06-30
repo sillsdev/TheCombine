@@ -4,10 +4,10 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import { defaultState } from "goals/CharInventoryCreation/Redux/CharacterInventoryReducer";
-import { newCharacterSetEntry } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
-import CharacterList from "goals/CharInventoryCreation/components/CharacterList";
-import CharacterCard from "goals/CharInventoryCreation/components/CharacterList/CharacterCard";
+import CharacterList from "goals/CharacterInventory/CharInv/CharacterList";
+import CharacterCard from "goals/CharacterInventory/CharInv/CharacterList/CharacterCard";
+import { defaultState } from "goals/CharacterInventory/Redux/CharacterInventoryReducer";
+import { newCharacterSetEntry } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 
 const characterSet = ["q", "w", "e", "r", "t", "y"].map(newCharacterSetEntry);
 const mockStore = configureMockStore()({

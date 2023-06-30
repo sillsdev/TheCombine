@@ -7,7 +7,7 @@ import { exportProjectReducer } from "components/ProjectExport/Redux/ExportProje
 import { createProjectReducer } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReducer";
 import { pronunciationsReducer } from "components/Pronunciations/Redux/PronunciationsReducer";
 import { treeViewReducer } from "components/TreeView/Redux/TreeViewReducer";
-import { characterInventoryReducer } from "goals/CharInventoryCreation/Redux/CharacterInventoryReducer";
+import { characterInventoryReducer } from "goals/CharacterInventory/Redux/CharacterInventoryReducer";
 import { mergeDupStepReducer } from "goals/MergeDupGoal/Redux/MergeDupReducer";
 import { reviewEntriesReducer } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReducer";
 import { StoreState } from "types";

@@ -1,8 +1,8 @@
 import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
-import { CharacterStatus } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
-import CharacterStatusText from "goals/CharInventoryCreation/components/CharacterList/CharacterStatusText";
+import CharacterStatusText from "goals/CharacterInventory/CharInv/CharacterList/CharacterStatusText";
+import { CharacterStatus } from "goals/CharacterInventory/CharacterInventoryTypes";
 import theme from "types/theme";
 
 interface CharacterCardProps {

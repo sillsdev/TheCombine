@@ -4,14 +4,16 @@ import router from "browserRouter";
 import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalActions";
 import { asyncUpdateCurrentProject } from "components/Project/ProjectActions";
 import {
+  CharacterStatus,
+  CharacterChange,
+} from "goals/CharacterInventory/CharacterInventoryTypes";
+import {
   CharacterInventoryState,
   CharacterSetEntry,
-  CharacterStatus,
   CharacterInventoryAction,
   CharacterInventoryType,
-  CharacterChange,
   getCharacterStatus,
-} from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
+} from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { Goal } from "types/goals";

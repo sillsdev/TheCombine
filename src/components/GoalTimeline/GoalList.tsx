@@ -8,8 +8,8 @@ import {
 import { CSSProperties, Fragment, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { CharInvChangesGoalList } from "goals/CreateCharInv/CharInvComponent/CharInvCompleted";
-import { CreateCharInvChanges } from "goals/CreateCharInv/CreateCharInvTypes";
+import { CharInvChangesGoalList } from "goals/CharacterInventory/CharInvCompleted";
+import { CharInvChanges } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { MergesCount } from "goals/MergeDupGoal/MergeDupComponent/MergeDupsCompleted";
 import { MergesCompleted } from "goals/MergeDupGoal/MergeDupsTypes";
 import { Goal, GoalStatus, GoalType } from "types/goals";
@@ -146,7 +146,7 @@ function GoalInfo(props: GoalInfoProps): ReactElement {
 function getCompletedGoalInfo(goal: Goal): ReactElement {
   switch (goal.goalType) {
     case GoalType.CreateCharInv:
-      return CharInvChangesGoalList(goal.changes as CreateCharInvChanges);
+      return CharInvChangesGoalList(goal.changes as CharInvChanges);
     case GoalType.MergeDups:
       return MergesCount(goal.changes as MergesCompleted);
     default:
