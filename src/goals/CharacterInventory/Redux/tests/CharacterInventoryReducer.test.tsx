@@ -1,12 +1,12 @@
 import {
   characterInventoryReducer,
   defaultState,
-} from "goals/CharInventoryCreation/Redux/CharacterInventoryReducer";
+} from "goals/CharacterInventory/Redux/CharacterInventoryReducer";
 import {
   CharacterInventoryState,
   CharacterInventoryAction,
   CharacterInventoryType,
-} from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
+} from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 import { StoreAction, StoreActionTypes } from "rootActions";
 
 const DATA: string[] = ["a", "b"];

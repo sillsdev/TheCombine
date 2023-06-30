@@ -1,5 +1,5 @@
 import { Edit, Permission } from "api/models";
-import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
+import { CreateCharInv } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { CreateStrWordInv } from "goals/CreateStrWordInv/CreateStrWordInv";
 import { HandleFlags } from "goals/HandleFlags/HandleFlags";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";

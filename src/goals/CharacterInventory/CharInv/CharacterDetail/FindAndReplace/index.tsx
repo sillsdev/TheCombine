@@ -3,8 +3,8 @@ import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import CharacterReplaceDialog from "goals/CharInventoryCreation/components/CharacterDetail/FindAndReplace/CharacterReplaceDialog";
-import { findAndReplace } from "goals/CharInventoryCreation/components/CharacterDetail/FindAndReplace/FindAndReplaceActions";
+import CharacterReplaceDialog from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace/CharacterReplaceDialog";
+import { findAndReplace } from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace/FindAndReplaceActions";
 import { useAppDispatch } from "types/hooks";
 
 interface FindAndReplaceProps {

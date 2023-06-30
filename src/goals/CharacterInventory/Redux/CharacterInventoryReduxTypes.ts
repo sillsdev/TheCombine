@@ -1,3 +1,5 @@
+import { CharacterStatus } from "goals/CharacterInventory/CharacterInventoryTypes";
+
 export enum CharacterInventoryType {
   SET_VALID_CHARACTERS = "SET_VALID_CHARACTERS",
   SET_REJECTED_CHARACTERS = "SET_REJECTED_CHARACTERS",
@@ -7,12 +9,6 @@ export enum CharacterInventoryType {
   SET_SELECTED_CHARACTER = "SET_SELECTED_CHARACTER",
   SET_CHARACTER_SET = "SET_CHARACTER_SET",
   RESET = "CHAR_INV_RESET",
-}
-
-export enum CharacterStatus {
-  Accepted = "accepted",
-  Rejected = "rejected",
-  Undecided = "undecided",
 }
 
 // Utility function for returning a CharacterStatus from arrays of character data
@@ -29,8 +25,6 @@ export function getCharacterStatus(
   }
   return CharacterStatus.Undecided;
 }
-
-export type CharacterChange = [string, CharacterStatus, CharacterStatus];
 
 export interface CharacterInventoryAction {
   type: CharacterInventoryType;

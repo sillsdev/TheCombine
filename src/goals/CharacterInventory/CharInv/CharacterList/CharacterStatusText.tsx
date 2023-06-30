@@ -2,7 +2,7 @@ import Typography from "@mui/material/Typography";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
-import { CharacterStatus } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
+import { CharacterStatus } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { themeColors } from "types/theme";
 
 interface CharacterStatusTextProps {

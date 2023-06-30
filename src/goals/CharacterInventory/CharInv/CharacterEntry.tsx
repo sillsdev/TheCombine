@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import {
   setRejectedCharacters,
   setValidCharacters,
-} from "goals/CharInventoryCreation/Redux/CharacterInventoryActions";
+} from "goals/CharacterInventory/Redux/CharacterInventoryActions";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import theme from "types/theme";
