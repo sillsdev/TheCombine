@@ -5,16 +5,18 @@ import thunk from "redux-thunk";
 import { Project } from "api/models";
 import { updateProject } from "backend";
 import { ProjectActionType } from "components/Project/ProjectReduxTypes";
-import * as Actions from "goals/CharInventoryCreation/Redux/CharacterInventoryActions";
-import { defaultState } from "goals/CharInventoryCreation/Redux/CharacterInventoryReducer";
+import {
+  CharacterStatus,
+  CharacterChange,
+} from "goals/CharacterInventory/CharacterInventoryTypes";
+import * as Actions from "goals/CharacterInventory/Redux/CharacterInventoryActions";
+import { defaultState } from "goals/CharacterInventory/Redux/CharacterInventoryReducer";
 import {
   CharacterInventoryState,
   CharacterSetEntry,
-  CharacterStatus,
   CharacterInventoryType,
-  CharacterChange,
   newCharacterSetEntry,
-} from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
+} from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 import { StoreState } from "types";
 import { newProject } from "types/project";
 import { newUser } from "types/user";

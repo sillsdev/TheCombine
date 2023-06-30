@@ -2,7 +2,7 @@ import * as backend from "backend";
 import {
   fetchWords,
   getAllCharacters,
-} from "goals/CharInventoryCreation/Redux/CharacterInventoryActions";
+} from "goals/CharacterInventory/Redux/CharacterInventoryActions";
 import { StoreStateDispatch } from "types/Redux/actions";
 
 export function findAndReplace(findValue: string, replaceValue: string) {

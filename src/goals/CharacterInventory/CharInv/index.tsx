@@ -11,17 +11,17 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { LoadingButton } from "components/Buttons";
+import CharacterDetail from "goals/CharacterInventory/CharInv/CharacterDetail";
+import CharacterEntry from "goals/CharacterInventory/CharInv/CharacterEntry";
+import CharacterList from "goals/CharacterInventory/CharInv/CharacterList";
+import CharacterSetHeader from "goals/CharacterInventory/CharInv/CharacterSetHeader";
 import {
   exit,
   loadCharInvData,
   resetInState,
   setSelectedCharacter,
   uploadInventory,
-} from "goals/CharInventoryCreation/Redux/CharacterInventoryActions";
-import CharacterDetail from "goals/CharInventoryCreation/components/CharacterDetail";
-import CharacterEntry from "goals/CharInventoryCreation/components/CharacterEntry";
-import CharacterList from "goals/CharInventoryCreation/components/CharacterList";
-import CharacterSetHeader from "goals/CharInventoryCreation/components/CharacterSetHeader";
+} from "goals/CharacterInventory/Redux/CharacterInventoryActions";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import theme from "types/theme";

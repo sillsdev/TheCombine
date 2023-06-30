@@ -1,10 +1,10 @@
 import { Close } from "@mui/icons-material";
 import { Grid, IconButton, Typography } from "@mui/material";
 
-import CharacterInfo from "goals/CharInventoryCreation/components/CharacterDetail/CharacterInfo";
-import CharacterStatusControl from "goals/CharInventoryCreation/components/CharacterDetail/CharacterStatusControl";
-import CharacterWords from "goals/CharInventoryCreation/components/CharacterDetail/CharacterWords";
-import FindAndReplace from "goals/CharInventoryCreation/components/CharacterDetail/FindAndReplace";
+import CharacterInfo from "goals/CharacterInventory/CharInv/CharacterDetail/CharacterInfo";
+import CharacterStatusControl from "goals/CharacterInventory/CharInv/CharacterDetail/CharacterStatusControl";
+import CharacterWords from "goals/CharacterInventory/CharInv/CharacterDetail/CharacterWords";
+import FindAndReplace from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace";
 import theme from "types/theme";
 
 interface CharacterDetailProps {
