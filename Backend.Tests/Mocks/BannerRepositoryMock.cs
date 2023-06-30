@@ -17,7 +17,7 @@ namespace Backend.Tests.Mocks
             _banners[BannerType.Login] = new Banner { Type = BannerType.Login };
         }
 
-        public Task<Banner> Get(BannerType type)
+        public Task<Banner> GetBanner(BannerType type)
         {
             return Task.FromResult(_banners[type]);
         }

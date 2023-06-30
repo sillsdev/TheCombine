@@ -199,10 +199,10 @@ namespace Backend.Tests.Services
         [Test]
         public void AddMergeToBlacklistTest()
         {
-            _ = _mergeBlacklistRepo.DeleteAll(ProjId).Result;
+            _ = _mergeBlacklistRepo.DeleteAllEntries(ProjId).Result;
             var wordIds = new List<string> { "1", "2" };
             _ = _mergeService.AddToMergeBlacklist(ProjId, UserId, wordIds).Result;
-            var blacklist = _mergeBlacklistRepo.GetAll(ProjId).Result;
+            var blacklist = _mergeBlacklistRepo.GetAllEntries(ProjId).Result;
             Assert.That(blacklist, Has.Count.EqualTo(1));
             var expectedEntry = new MergeBlacklistEntry { ProjectId = ProjId, UserId = UserId, WordIds = wordIds };
             Assert.That(expectedEntry.ContentEquals(blacklist.First()));
@@ -211,7 +211,7 @@ namespace Backend.Tests.Services
         [Test]
         public void AddMergeToBlacklistErrorTest()
         {
-            _ = _mergeBlacklistRepo.DeleteAll(ProjId).Result;
+            _ = _mergeBlacklistRepo.DeleteAllEntries(ProjId).Result;
             var wordIds0 = new List<string>();
             var wordIds1 = new List<string> { "1" };
             Assert.ThrowsAsync<MergeService.InvalidBlacklistEntryException>(
@@ -223,7 +223,7 @@ namespace Backend.Tests.Services
         [Test]
         public void IsInMergeBlacklistTest()
         {
-            _ = _mergeBlacklistRepo.DeleteAll(ProjId).Result;
+            _ = _mergeBlacklistRepo.DeleteAllEntries(ProjId).Result;
             var wordIds = new List<string> { "1", "2", "3" };
             var subWordIds = new List<string> { "3", "2" };
 
@@ -235,7 +235,7 @@ namespace Backend.Tests.Services
         [Test]
         public void IsInMergeBlacklistErrorTest()
         {
-            _ = _mergeBlacklistRepo.DeleteAll(ProjId).Result;
+            _ = _mergeBlacklistRepo.DeleteAllEntries(ProjId).Result;
             var wordIds0 = new List<string>();
             var wordIds1 = new List<string> { "1" };
             Assert.ThrowsAsync<MergeService.InvalidBlacklistEntryException>(
@@ -265,7 +265,7 @@ namespace Backend.Tests.Services
             _ = _mergeBlacklistRepo.Create(entryA);
             _ = _mergeBlacklistRepo.Create(entryB);
 
-            var oldBlacklist = _mergeBlacklistRepo.GetAll(ProjId).Result;
+            var oldBlacklist = _mergeBlacklistRepo.GetAllEntries(ProjId).Result;
             Assert.That(oldBlacklist, Has.Count.EqualTo(2));
 
             // Make sure all wordIds are in the frontier EXCEPT 1.
@@ -282,7 +282,7 @@ namespace Backend.Tests.Services
             Assert.That(updatedEntriesCount, Is.EqualTo(2));
 
             // The only blacklistEntry with at least two ids in the frontier is A.
-            var newBlacklist = _mergeBlacklistRepo.GetAll(ProjId).Result;
+            var newBlacklist = _mergeBlacklistRepo.GetAllEntries(ProjId).Result;
             Assert.That(newBlacklist, Has.Count.EqualTo(1));
             Assert.AreEqual(newBlacklist.First().WordIds, new List<string> { "2", "3" });
         }
