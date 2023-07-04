@@ -390,7 +390,7 @@ namespace BackendFramework.Services
             // Export character set to ldml.
             var ldmlDir = Path.Combine(zipDir, "WritingSystems");
             Directory.CreateDirectory(ldmlDir);
-            if (!String.IsNullOrWhiteSpace(proj.VernacularWritingSystem.Bcp47))
+            if (!string.IsNullOrWhiteSpace(proj.VernacularWritingSystem.Bcp47))
             {
                 var validChars = proj.ValidCharacters;
                 LdmlExport(ldmlDir, proj.VernacularWritingSystem, validChars);
@@ -531,7 +531,7 @@ namespace BackendFramework.Services
             wsf.Create(vernacularWS.Bcp47, out var wsDef);
 
             // If the vernacular writing system font isn't present, add it.
-            if (!String.IsNullOrWhiteSpace(vernacularWS.Font)
+            if (!string.IsNullOrWhiteSpace(vernacularWS.Font)
                 && !wsDef.Fonts.Any(f => f.Name == vernacularWS.Font))
             {
                 wsDef.Fonts.Add(new FontDefinition(vernacularWS.Font));
@@ -648,7 +648,7 @@ namespace BackendFramework.Services
                     w => w.Senses.SelectMany(s => Language.GetSenseAnalysisLangTags(s))
                 ).Distinct();
 
-                return Language.ConvertLangTagsToWritingSystems(langTags).ToList();
+                return Language.ConvertLangTagsToWritingSystems(langTags);
             }
 
             /// <summary>
@@ -771,7 +771,7 @@ namespace BackendFramework.Services
                     }
 
                     // Add grammatical info
-                    if (!String.IsNullOrWhiteSpace(sense.GramInfo?.Value))
+                    if (!string.IsNullOrWhiteSpace(sense.GramInfo?.Value))
                     {
                         newSense.GrammaticalInfo = new GrammaticalInfo(sense.GramInfo.Value);
                     }
