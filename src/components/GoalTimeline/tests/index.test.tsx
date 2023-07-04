@@ -5,17 +5,14 @@ import createMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import { Permission } from "api/models";
+import { Permission } from "api";
 import GoalTimeline, { createSuggestionData } from "components/GoalTimeline";
 import { defaultState } from "components/GoalTimeline/Redux/GoalReduxTypes";
 import { Goal, GoalType, GoalsState } from "types/goals";
 import { goalTypeToGoal } from "utilities/goalUtilities";
 
 jest.mock("backend", () => ({
-  getUserRole: () => ({ permissions: mockPermissions }),
-}));
-jest.mock("backend/localStorage", () => ({
-  getCurrentUser: () => ({ projectRoles: mockProjectRoles }),
+  getCurrentPermissions: () => mockGetCurrentPermissions(),
 }));
 jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({
   asyncAddGoal: (goal: Goal) => mockChooseGoal(goal),
@@ -29,7 +26,7 @@ jest.mock("types/hooks", () => {
 });
 
 const mockChooseGoal = jest.fn();
-const mockPermissions = Object.values(Permission);
+const mockGetCurrentPermissions = jest.fn();
 const mockProjectId = "mockId";
 const mockProjectRoles: { [key: string]: string } = {};
 mockProjectRoles[mockProjectId] = "nonempty";
@@ -42,6 +39,10 @@ let timeLord: renderer.ReactTestRenderer;
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockGetCurrentPermissions.mockResolvedValue([
+    Permission.CharacterInventory,
+    Permission.MergeAndReviewEntries,
+  ]);
 });
 
 describe("GoalTimeline", () => {
