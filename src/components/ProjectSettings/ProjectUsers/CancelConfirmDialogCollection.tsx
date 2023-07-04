@@ -20,7 +20,7 @@ interface CancelConfirmDialogCollectionProps {
   userId: string;
   currentUserId: string;
   isProjectOwner: boolean;
-  userIsProjectAdmin: boolean;
+  userIsProjAdmin: boolean;
 }
 
 /**
@@ -119,7 +119,7 @@ export default function CancelConfirmDialogCollection(
     </MenuItem>,
   ];
   if (props.isProjectOwner) {
-    const adminOption = props.userIsProjectAdmin ? (
+    const adminOption = props.userIsProjAdmin ? (
       <MenuItem
         key={idRemoveAdmin}
         id={idRemoveAdmin}
@@ -138,7 +138,7 @@ export default function CancelConfirmDialogCollection(
     );
     managementOptions.push(adminOption);
 
-    if (props.userIsProjectAdmin) {
+    if (props.userIsProjAdmin) {
       managementOptions.push(
         <MenuItem
           key={idMakeOwner}

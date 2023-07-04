@@ -47,7 +47,9 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
-            return Ok(await _userRoleRepo.GetAllUserRoles(projectId));
+            var userRoles = await _userRoleRepo.GetAllUserRoles(projectId);
+            userRoles.ForEach(ur => ur.Role ??= ProjectRole.PermissionsRole(ur.Permissions));
+            return Ok(userRoles);
         }
 
         /// <summary> Deletes all <see cref="UserRole"/>s for specified <see cref="Project"/></summary>
@@ -72,11 +74,17 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Returns <see cref="UserRole"/> with specified id </summary>
-        [HttpGet("{userRoleId}", Name = "GetUserRole")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserRole))]
-        public async Task<IActionResult> GetUserRole(string projectId, string userRoleId)
+        [HttpGet("current", Name = "GetCurrentPermissions")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Permission>))]
+        public async Task<IActionResult> GetCurrentPermissions(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            {
+                return Forbid();
+            }
+
+            var userId = _permissionService.GetUserId(HttpContext);
+            if (string.IsNullOrWhiteSpace(userId))
             {
                 return Forbid();
             }
@@ -85,16 +93,29 @@ namespace BackendFramework.Controllers
             var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
-                return NotFound(projectId);
+                return NotFound($"project: {projectId}");
             }
 
+            // Ensure user exists
+            var user = await _userRepo.GetUser(userId);
+            if (user is null)
+            {
+                return NotFound($"user: {userId}");
+            }
+
+            var userRoleId = user.ProjectRoles[projectId];
+            if (userRoleId is null)
+            {
+                return Ok(new List<Permission>());
+            }
             var userRole = await _userRoleRepo.GetUserRole(projectId, userRoleId);
             if (userRole is null)
             {
-                return NotFound(userRoleId);
+                return Ok(new List<Permission>());
             }
 
-            return Ok(userRole);
+            userRole.Role ??= ProjectRole.PermissionsRole(userRole.Permissions);
+            return Ok(ProjectRole.RolePermissions((Role)userRole.Role));
         }
 
         /// <summary> Creates a <see cref="UserRole"/> </summary>
@@ -108,6 +129,10 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
+            if (userRole.Role is not null)
+            {
+                userRole.Permissions = ProjectRole.RolePermissions((Role)userRole.Role);
+            }
             // User cannot give permissions they don't have.
             if (userRole.Permissions.Any(permission =>
                 !_permissionService.HasProjectPermission(HttpContext, permission, projectId)))
@@ -219,6 +244,7 @@ namespace BackendFramework.Controllers
             }
 
             userRole.Permissions = ProjectRole.RolePermissions(projectRole.Role);
+            userRole.Role = projectRole.Role;
             var result = await _userRoleRepo.Update(userRoleId, userRole);
             return result switch
             {

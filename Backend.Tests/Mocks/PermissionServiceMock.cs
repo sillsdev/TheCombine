@@ -21,10 +21,24 @@ namespace Backend.Tests.Mocks
         /// <summary>
         /// Generates an HttpContext that will fail permissions checks in the mock.
         /// </summary>
-        public static HttpContext UnauthorizedHttpContext()
+        public static HttpContext UnauthorizedHttpContext(string? userId = null)
         {
             var httpContext = new DefaultHttpContext();
             httpContext.Request.Headers["Authorization"] = UnauthorizedHeader;
+            if (userId is not null)
+            {
+                httpContext.Request.Headers["UserId"] = userId;
+            }
+            return httpContext;
+        }
+
+        /// <summary>
+        /// Generates an HttpContext with the specified userId.
+        /// </summary>
+        public static HttpContext HttpContextWithUserId(string userId)
+        {
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["UserId"] = userId;
             return httpContext;
         }
 

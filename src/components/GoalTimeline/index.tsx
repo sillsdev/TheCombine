@@ -8,8 +8,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
-import { getUserRole } from "backend";
-import { getCurrentUser } from "backend/localStorage";
+import { getCurrentPermissions } from "backend";
 import GoalList from "components/GoalTimeline/GoalList";
 import {
   asyncAddGoal,
@@ -65,9 +64,6 @@ export function createSuggestionData(
 export default function GoalTimeline(): ReactElement {
   const dispatch = useAppDispatch();
 
-  const currentProjectId = useAppSelector(
-    (state: StoreState) => state.currentProjectState.project.id
-  );
   const { allGoalTypes, goalTypeSuggestions, history } = useAppSelector(
     (state: StoreState) => state.goalsState
   );
@@ -96,11 +92,7 @@ export default function GoalTimeline(): ReactElement {
   }, [windowHeight, windowWidth]);
 
   const getGoalTypes = useCallback(async (): Promise<void> => {
-    const userRoleId = getCurrentUser()?.projectRoles[currentProjectId];
-    if (!userRoleId) {
-      return;
-    }
-    const permissions = (await getUserRole(userRoleId)).permissions;
+    const permissions = await getCurrentPermissions();
     const goalTypes = allGoalTypes.filter((t) =>
       permissions.includes(requiredPermission(t))
     );
@@ -108,7 +100,7 @@ export default function GoalTimeline(): ReactElement {
     setSuggestedGoalTypes(
       goalTypes.filter((t) => goalTypeSuggestions.includes(t))
     );
-  }, [allGoalTypes, currentProjectId, goalTypeSuggestions]);
+  }, [allGoalTypes, goalTypeSuggestions]);
 
   useEffect(() => {
     getGoalTypes();

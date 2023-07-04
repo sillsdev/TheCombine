@@ -18,8 +18,9 @@
  * @enum {string}
  */
 export enum Role {
-  Owner = "Owner",
-  Administrator = "Administrator",
-  Editor = "Editor",
+  None = "None",
   Harvester = "Harvester",
+  Editor = "Editor",
+  Administrator = "Administrator",
+  Owner = "Owner",
 }

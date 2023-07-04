@@ -16,7 +16,7 @@ import {
 } from "react";
 import { useSelector } from "react-redux";
 
-import { Permission, User, UserRole } from "api/models";
+import { Role, User, UserRole } from "api/models";
 import { avatarSrc, getUserRoles } from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
 import CancelConfirmDialogCollection from "components/ProjectSettings/ProjectUsers/CancelConfirmDialogCollection";
@@ -46,9 +46,7 @@ export default function ActiveProjectUsers(): ReactElement {
 
   useEffect(() => {
     getUserRoles().then(setProjUserRoles);
-  }, [projectUsers, setProjUserRoles]);
 
-  useEffect(() => {
     const newUserAvatar: Hash<string> = {};
     const promises = projectUsers.map(async (u) => {
       if (u.hasAvatar) {
@@ -56,21 +54,15 @@ export default function ActiveProjectUsers(): ReactElement {
       }
     });
     Promise.all(promises).then(() => setUserAvatar(newUserAvatar));
-  }, [projectUsers, setUserAvatar]);
+  }, [projectUsers]);
 
   useEffect(() => {
     setSortedUsers([...projectUsers].sort(compareUsers));
-  }, [compareUsers, projectUsers, setSortedUsers]);
+  }, [compareUsers, projectUsers]);
 
-  function hasProjectPermission(
-    userRoleId: string,
-    permission: Permission
-  ): boolean {
+  function hasProjectRole(userRoleId: string, role: Role): boolean {
     const userRole = projUserRoles.find((role) => role.id === userRoleId);
-    if (userRole) {
-      return userRole.permissions.includes(permission);
-    }
-    return false;
+    return userRole?.role === role;
   }
 
   const currentUser = getCurrentUser();
@@ -79,44 +71,35 @@ export default function ActiveProjectUsers(): ReactElement {
     return <Fragment />;
   }
 
-  const currentUserIsProjectAdmin = hasProjectPermission(
-    currentUser.projectRoles[currentProjectId],
-    Permission.DeleteEditSettingsAndUsers
-  );
-  const currentUserIsProjectOwner = hasProjectPermission(
-    currentUser.projectRoles[currentProjectId],
-    Permission.Archive
-  );
+  const currentRoleId = currentUser.projectRoles[currentProjectId];
+  const currentIsProjOwner = hasProjectRole(currentRoleId, Role.Owner);
+  const currentIsProjAdminOrOwner =
+    currentIsProjOwner || hasProjectRole(currentRoleId, Role.Administrator);
 
   const userListItem = (user: User): ReactElement => {
-    const userIsProjectAdmin = hasProjectPermission(
-      user.projectRoles[currentProjectId],
-      Permission.DeleteEditSettingsAndUsers
-    );
-    const userIsProjectOwner = hasProjectPermission(
-      user.projectRoles[currentProjectId],
-      Permission.Archive
-    );
-
-    const manageUser =
-      currentUserIsProjectAdmin &&
+    const userRoleId = user.projectRoles[currentProjectId];
+    const userIsProjAdmin = hasProjectRole(userRoleId, Role.Administrator);
+    const canManageUser =
+      currentIsProjAdminOrOwner &&
       user.id !== currentUser.id &&
-      !userIsProjectOwner &&
-      (!userIsProjectAdmin || currentUserIsProjectOwner) ? (
-        <CancelConfirmDialogCollection
-          userId={user.id}
-          currentUserId={currentUser.id}
-          isProjectOwner={currentUserIsProjectOwner}
-          userIsProjectAdmin={userIsProjectAdmin}
-        />
-      ) : (
-        <IconButton disabled size="large">
-          <MoreVert />
-        </IconButton>
-      );
+      !hasProjectRole(userRoleId, Role.Owner) &&
+      (!userIsProjAdmin || currentIsProjOwner);
+
+    const manageUser = canManageUser ? (
+      <CancelConfirmDialogCollection
+        userId={user.id}
+        currentUserId={currentUser.id}
+        isProjectOwner={currentIsProjOwner}
+        userIsProjAdmin={userIsProjAdmin}
+      />
+    ) : (
+      <IconButton disabled size="large">
+        <MoreVert />
+      </IconButton>
+    );
 
     const displayString =
-      currentUserIsProjectOwner || currentUser.isAdmin
+      currentIsProjOwner || currentUser.isAdmin
         ? `${user.name} (${user.username} | ${user.email})`
         : `${user.name} (${user.username})`;
 
@@ -136,7 +119,7 @@ export default function ActiveProjectUsers(): ReactElement {
   return (
     <>
       <SortOptions
-        includeEmail={currentUserIsProjectOwner || currentUser.isAdmin}
+        includeEmail={currentIsProjOwner || currentUser.isAdmin}
         onChange={(e: SelectChangeEvent<UserOrder>) => {
           setUserOrder(e.target.value as UserOrder);
           setReverseSorting(false);

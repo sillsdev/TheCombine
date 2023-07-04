@@ -13,6 +13,7 @@
  */
 
 import { Permission } from "./permission";
+import { Role } from "./role";
 
 /**
  *
@@ -38,4 +39,10 @@ export interface UserRole {
    * @memberof UserRole
    */
   projectId: string;
+  /**
+   *
+   * @type {Role}
+   * @memberof UserRole
+   */
+  role?: Role;
 }

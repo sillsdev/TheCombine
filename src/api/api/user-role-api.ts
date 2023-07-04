@@ -37,6 +37,8 @@ import {
   RequiredError,
 } from "../base";
 // @ts-ignore
+import { Permission } from "../models";
+// @ts-ignore
 import { ProjectRole } from "../models";
 // @ts-ignore
 import { UserRole } from "../models";
@@ -203,13 +205,13 @@ export const UserRoleApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getProjectUserRoles: async (
+    getCurrentPermissions: async (
       projectId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("getProjectUserRoles", "projectId", projectId);
-      const localVarPath = `/v1/projects/{projectId}/userroles`.replace(
+      assertParamExists("getCurrentPermissions", "projectId", projectId);
+      const localVarPath = `/v1/projects/{projectId}/userroles/current`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
       );
@@ -245,22 +247,19 @@ export const UserRoleApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
-     * @param {string} userRoleId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getUserRole: async (
+    getProjectUserRoles: async (
       projectId: string,
-      userRoleId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("getUserRole", "projectId", projectId);
-      // verify required parameter 'userRoleId' is not null or undefined
-      assertParamExists("getUserRole", "userRoleId", userRoleId);
-      const localVarPath = `/v1/projects/{projectId}/userroles/{userRoleId}`
-        .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
-        .replace(`{${"userRoleId"}}`, encodeURIComponent(String(userRoleId)));
+      assertParamExists("getProjectUserRoles", "projectId", projectId);
+      const localVarPath = `/v1/projects/{projectId}/userroles`.replace(
+        `{${"projectId"}}`,
+        encodeURIComponent(String(projectId))
+      );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -441,6 +440,33 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
+    async getCurrentPermissions(
+      projectId: string,
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<Permission>>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getCurrentPermissions(
+          projectId,
+          options
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
     async getProjectUserRoles(
       projectId: string,
       options?: any
@@ -452,32 +478,6 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getProjectUserRoles(projectId, options);
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {string} userRoleId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async getUserRole(
-      projectId: string,
-      userRoleId: string,
-      options?: any
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserRole>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getUserRole(
-        projectId,
-        userRoleId,
-        options
-      );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -580,28 +580,26 @@ export const UserRoleApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
+    getCurrentPermissions(
+      projectId: string,
+      options?: any
+    ): AxiosPromise<Array<Permission>> {
+      return localVarFp
+        .getCurrentPermissions(projectId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
     getProjectUserRoles(
       projectId: string,
       options?: any
     ): AxiosPromise<Array<UserRole>> {
       return localVarFp
         .getProjectUserRoles(projectId, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {string} userRoleId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getUserRole(
-      projectId: string,
-      userRoleId: string,
-      options?: any
-    ): AxiosPromise<UserRole> {
-      return localVarFp
-        .getUserRole(projectId, userRoleId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -682,6 +680,20 @@ export interface UserRoleApiDeleteUserRoleRequest {
 }
 
 /**
+ * Request parameters for getCurrentPermissions operation in UserRoleApi.
+ * @export
+ * @interface UserRoleApiGetCurrentPermissionsRequest
+ */
+export interface UserRoleApiGetCurrentPermissionsRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof UserRoleApiGetCurrentPermissions
+   */
+  readonly projectId: string;
+}
+
+/**
  * Request parameters for getProjectUserRoles operation in UserRoleApi.
  * @export
  * @interface UserRoleApiGetProjectUserRolesRequest
@@ -693,27 +705,6 @@ export interface UserRoleApiGetProjectUserRolesRequest {
    * @memberof UserRoleApiGetProjectUserRoles
    */
   readonly projectId: string;
-}
-
-/**
- * Request parameters for getUserRole operation in UserRoleApi.
- * @export
- * @interface UserRoleApiGetUserRoleRequest
- */
-export interface UserRoleApiGetUserRoleRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof UserRoleApiGetUserRole
-   */
-  readonly projectId: string;
-
-  /**
-   *
-   * @type {string}
-   * @memberof UserRoleApiGetUserRole
-   */
-  readonly userRoleId: string;
 }
 
 /**
@@ -809,6 +800,22 @@ export class UserRoleApi extends BaseAPI {
 
   /**
    *
+   * @param {UserRoleApiGetCurrentPermissionsRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserRoleApi
+   */
+  public getCurrentPermissions(
+    requestParameters: UserRoleApiGetCurrentPermissionsRequest,
+    options?: any
+  ) {
+    return UserRoleApiFp(this.configuration)
+      .getCurrentPermissions(requestParameters.projectId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
    * @param {UserRoleApiGetProjectUserRolesRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
@@ -820,26 +827,6 @@ export class UserRoleApi extends BaseAPI {
   ) {
     return UserRoleApiFp(this.configuration)
       .getProjectUserRoles(requestParameters.projectId, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {UserRoleApiGetUserRoleRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof UserRoleApi
-   */
-  public getUserRole(
-    requestParameters: UserRoleApiGetUserRoleRequest,
-    options?: any
-  ) {
-    return UserRoleApiFp(this.configuration)
-      .getUserRole(
-        requestParameters.projectId,
-        requestParameters.userRoleId,
-        options
-      )
       .then((request) => request(this.axios, this.basePath));
   }
 

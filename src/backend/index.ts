@@ -6,22 +6,23 @@ import * as Api from "api";
 import { BASE_PATH } from "api/base";
 import {
   BannerType,
+  ChartRootData,
   EmailInviteStatus,
   MergeUndoIds,
   MergeWords,
   Permission,
   Project,
+  Role,
+  SemanticDomainCount,
   SemanticDomainFull,
   SemanticDomainTreeNode,
-  SemanticDomainCount,
+  SemanticDomainUserCount,
   SiteBanner,
   User,
   UserEdit,
   UserRole,
   Word,
-  SemanticDomainUserCount,
   WordsPerDayPerUserCount,
-  ChartRootData,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import router from "browserRouter";
@@ -202,7 +203,7 @@ export async function updateBanner(siteBanner: SiteBanner): Promise<boolean> {
 
 export async function emailInviteToProject(
   projectId: string,
-  role: Api.Role,
+  role: Role,
   emailAddress: string,
   message: string
 ): Promise<string> {
@@ -605,13 +606,14 @@ export async function getUserRoles(): Promise<UserRole[]> {
   return (await userRoleApi.getProjectUserRoles(params, defaultOptions())).data;
 }
 
-export async function getUserRole(userRoleId: string): Promise<UserRole> {
-  const params = { projectId: LocalStorage.getProjectId(), userRoleId };
-  return (await userRoleApi.getUserRole(params, defaultOptions())).data;
+export async function getCurrentPermissions(): Promise<Permission[]> {
+  const params = { projectId: LocalStorage.getProjectId() };
+  return (await userRoleApi.getCurrentPermissions(params, defaultOptions()))
+    .data;
 }
 
 export async function addOrUpdateUserRole(
-  role: Api.Role,
+  role: Role,
   userId: string
 ): Promise<string> {
   const projectId = LocalStorage.getProjectId();

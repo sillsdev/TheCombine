@@ -11,14 +11,13 @@ import {
   Sms,
 } from "@mui/icons-material";
 import { Grid, Typography } from "@mui/material";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { Permission, Project } from "api/models";
-import { canUploadLift, getUserRole } from "backend";
-import { getCurrentUser } from "backend/localStorage";
+import { canUploadLift, getCurrentPermissions } from "backend";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
 import {
   asyncRefreshCurrentProjectUsers,
@@ -43,7 +42,6 @@ export default function ProjectSettingsComponent() {
   const project = useAppSelector(
     (state: StoreState) => state.currentProjectState.project
   );
-  const currentRoles = useMemo(() => getCurrentUser()?.projectRoles ?? {}, []);
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [imports, setImports] = useState<boolean>(false);
   const dispatch = useAppDispatch();
@@ -51,19 +49,13 @@ export default function ProjectSettingsComponent() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const roleId = currentRoles[project.id];
-    if (roleId) {
-      getUserRole(roleId).then((role) => setPermissions(role.permissions));
-    }
-  }, [currentRoles, project]);
+    getCurrentPermissions().then(setPermissions);
+  }, [project.id]);
 
   useEffect(() => {
     if (permissions.includes(Permission.Import)) {
       canUploadLift().then(setImports);
     }
-  }, [permissions, setImports]);
-
-  useEffect(() => {
     if (permissions.includes(Permission.DeleteEditSettingsAndUsers)) {
       dispatch(asyncRefreshCurrentProjectUsers());
     }

@@ -24,6 +24,9 @@ namespace BackendFramework.Models
         [BsonElement("projectId")]
         public string ProjectId { get; set; }
 
+        [BsonElement("projectRole")]
+        public Role? Role { get; set; }
+
         public UserRole()
         {
             Id = "";
@@ -37,6 +40,7 @@ namespace BackendFramework.Models
             {
                 Id = Id,
                 ProjectId = ProjectId,
+                Role = Role,
                 Permissions = new List<Permission>()
             };
 
@@ -52,6 +56,7 @@ namespace BackendFramework.Models
         {
             return
                 other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
+                other.Role == Role &&
                 other.Permissions.Count == Permissions.Count &&
                 other.Permissions.All(Permissions.Contains);
         }
@@ -68,7 +73,7 @@ namespace BackendFramework.Models
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, ProjectId, Permissions);
+            return HashCode.Combine(Id, ProjectId, Role, Permissions);
         }
     }
 
@@ -87,7 +92,7 @@ namespace BackendFramework.Models
         public ProjectRole()
         {
             ProjectId = "";
-            Role = Role.Harvester;
+            Role = Role.None;
         }
 
         public ProjectRole Clone()
@@ -113,6 +118,16 @@ namespace BackendFramework.Models
         public override int GetHashCode()
         {
             return HashCode.Combine(ProjectId, Role);
+        }
+
+        // TODO: Remove this function compensation once permissions are replaced with roles in the database.
+        public static Role PermissionsRole(List<Permission> permissions)
+        {
+            return permissions.Contains(Permission.Archive) ? Role.Owner
+                 : permissions.Contains(Permission.DeleteEditSettingsAndUsers) ? Role.Administrator
+                 : permissions.Contains(Permission.MergeAndReviewEntries) ? Role.Editor
+                 : permissions.Contains(Permission.WordEntry) ? Role.Harvester
+                 : Role.None;
         }
 
         public static List<Permission> RolePermissions(Role role)
@@ -152,16 +167,19 @@ namespace BackendFramework.Models
     }
 
     public enum Role
+    // The gaps are intended to allow for more roles in the future.
     {
-        Owner,
-        Administrator,
-        Editor,
-        Harvester
+        Owner = 9,
+        Administrator = 6,
+        Editor = 4,
+        Harvester = 2,
+        None = 0,
     }
 
 #pragma warning disable CA1711
     // Ignoring CA1711, which requires identifiers ending in Permission to implement System.Security.IPermission.
     public enum Permission
+    // TODO: remove explicit integer values after permissions are no longer stored in the database.
 #pragma warning restore CA1711
     {
         /// <summary> Can archive the project so it's no longer available. This is an owner-only permission. </summary>
