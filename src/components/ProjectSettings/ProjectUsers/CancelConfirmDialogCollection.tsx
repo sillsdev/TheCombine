@@ -33,12 +33,12 @@ export default function CancelConfirmDialogCollection(
   props: CancelConfirmDialogCollectionProps
 ): ReactElement {
   const dispatch = useAppDispatch();
-  const [removeUserDialogOpen, setRemoveUser] = useState<boolean>(false);
-  const [makeEditorDialogOpen, setMakeEditor] = useState<boolean>(false);
-  const [removeEditorDialogOpen, setRemoveEditor] = useState<boolean>(false);
-  const [makeAdminDialogOpen, setMakeAdmin] = useState<boolean>(false);
-  const [removeAdminDialogOpen, setRemoveAdmin] = useState<boolean>(false);
-  const [makeOwnerDialogOpen, setMakeOwner] = useState<boolean>(false);
+  const [removeUserDialogOpen, setRemoveUser] = useState(false);
+  const [makeEditorDialogOpen, setMakeEditor] = useState(false);
+  const [removeEditorDialogOpen, setRemoveEditor] = useState(false);
+  const [makeAdminDialogOpen, setMakeAdmin] = useState(false);
+  const [removeAdminDialogOpen, setRemoveAdmin] = useState(false);
+  const [makeOwnerDialogOpen, setMakeOwner] = useState(false);
   const [anchorEl, setAnchorEl] = useState<Element | undefined>(undefined);
   const { t } = useTranslation();
 
@@ -61,11 +61,10 @@ export default function CancelConfirmDialogCollection(
   }
 
   async function updateUserRole(userId: string, role: Role): Promise<void> {
-    if (role === Role.Administrator) {
-      throw new Error(
-        "Cannot use this function to make somebody a project owner."
-      );
+    if (role === Role.Owner) {
+      throw new Error("Cannot use this function to change project owner.");
     }
+
     addOrUpdateUserRole(role, userId)
       .then(() => {
         setAnchorEl(undefined);

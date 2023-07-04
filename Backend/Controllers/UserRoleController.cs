@@ -243,7 +243,7 @@ namespace BackendFramework.Controllers
                 return NotFound(userRoleId);
             }
 
-            userRole.Permissions = ProjectRole.RolePermissions(projectRole.Role);
+            userRole.Permissions = permissions;
             userRole.Role = projectRole.Role;
             var result = await _userRoleRepo.Update(userRoleId, userRole);
             return result switch

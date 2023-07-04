@@ -71,20 +71,14 @@ export default function ActiveProjectUsers(): ReactElement {
     setSortedUsers([...projectUsers].sort(compareUsers));
   }, [compareUsers, projectUsers]);
 
-  function hasProjectRole(userId: string, role: Role): boolean {
-    const userRole = userRoles[userId];
-    return userRole === role;
-  }
-
   const currentUser = getCurrentUser();
   if (!currentUser || !projectId) {
     return <Fragment />;
   }
 
-  const currentRoleId = currentUser.projectRoles[projectId];
-  const currentIsProjOwner = userRoles[currentRoleId] === Role.Owner;
+  const currentIsProjOwner = userRoles[currentUser.id] === Role.Owner;
   const currentIsProjAdminOrOwner =
-    currentIsProjOwner || hasProjectRole(currentRoleId, Role.Administrator);
+    currentIsProjOwner || userRoles[currentUser.id] === Role.Administrator;
 
   const userListItem = (user: User): ReactElement => {
     const userRole = userRoles[user.id];
