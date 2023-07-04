@@ -242,7 +242,7 @@ namespace BackendFramework.Controllers
             if (project.AnalysisWritingSystems.Count == 0)
             {
                 // The list cannot be empty.
-                project.AnalysisWritingSystems.Add(new WritingSystem { Bcp47 = "en", Name = "English" });
+                project.AnalysisWritingSystems.Add(new("en", "English"));
             }
 
             // Store whether we have imported any senses with definitions or grammatical info

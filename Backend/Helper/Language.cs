@@ -30,7 +30,7 @@ namespace BackendFramework.Helper
             }
             var langLookup = new LanguageLookup();
             var writingSystems = langTags.Select(tag =>
-                new WritingSystem { Bcp47 = tag, Name = langLookup.GetLanguageFromCode(tag)?.DesiredName ?? "" });
+                new WritingSystem(tag, langLookup.GetLanguageFromCode(tag)?.DesiredName ?? ""));
             if (!isSldrInitialized)
             {
                 Sldr.Cleanup();
@@ -55,7 +55,7 @@ namespace BackendFramework.Helper
         }
 
         /// <summary> A comparison function for sorting a List of writing systems. </summary>
-        private static int CompareWritingSystems(WritingSystem x, WritingSystem y)
+        public static int CompareWritingSystems(WritingSystem x, WritingSystem y)
         {
             var xTag = x.Bcp47;
             var yTag = y.Bcp47;
@@ -79,11 +79,11 @@ namespace BackendFramework.Helper
                 }
 
                 // Primarily sort by writing system Name.
-                return String.Compare(x.Name, y.Name, StringComparison.InvariantCultureIgnoreCase);
+                return String.Compare(x.Name, y.Name, StringComparison.OrdinalIgnoreCase);
             }
 
             // Secondarily sort by writing system BCP47 tag.
-            return String.Compare(xTag, yTag, StringComparison.InvariantCultureIgnoreCase);
+            return String.Compare(xTag, yTag, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
