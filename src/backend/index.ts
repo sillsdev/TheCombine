@@ -622,15 +622,8 @@ export async function addOrUpdateUserRole(
   return (await userRoleApi.updateUserRole(params, defaultOptions())).data;
 }
 
-export async function removeUserRole(
-  permission: Permission[],
-  userId: string
-): Promise<void> {
-  const params = {
-    projectId: LocalStorage.getProjectId(),
-    userId,
-    permission,
-  };
+export async function removeUserRole(userId: string): Promise<void> {
+  const params = { projectId: LocalStorage.getProjectId(), userId };
   await userRoleApi.deleteUserRole(params, defaultOptions());
 }
 

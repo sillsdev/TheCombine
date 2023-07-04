@@ -16,7 +16,7 @@ import {
 } from "react";
 import { useSelector } from "react-redux";
 
-import { Role, User, UserRole } from "api/models";
+import { Role, User } from "api/models";
 import { avatarSrc, getUserRoles } from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
 import CancelConfirmDialogCollection from "components/ProjectSettings/ProjectUsers/CancelConfirmDialogCollection";
@@ -32,8 +32,10 @@ export default function ActiveProjectUsers(): ReactElement {
   const projectUsers = useSelector(
     (state: StoreState) => state.currentProjectState.users
   );
-  const [projUserRoles, setProjUserRoles] = useState<UserRole[]>([]);
+
+  const [projectId] = useState(getProjectId());
   const [userAvatar, setUserAvatar] = useState<Hash<string>>({});
+  const [userRoles, setUserRoles] = useState<Hash<Role>>({});
   const [userOrder, setUserOrder] = useState<UserOrder>(UserOrder.Username);
   const [reverseSorting, setReverseSorting] = useState<boolean>(false);
   const [sortedUsers, setSortedUsers] = useState<User[]>([]);
@@ -45,8 +47,17 @@ export default function ActiveProjectUsers(): ReactElement {
   );
 
   useEffect(() => {
-    getUserRoles().then(setProjUserRoles);
+    getUserRoles().then((userRoles) => {
+      const roles: Hash<Role> = {};
+      projectUsers.forEach((u) => {
+        const ur = userRoles.find((r) => r.id === u.projectRoles[projectId]);
+        roles[u.id] = ur?.role ?? Role.None;
+      });
+      setUserRoles(roles);
+    });
+  }, [projectId, projectUsers]);
 
+  useEffect(() => {
     const newUserAvatar: Hash<string> = {};
     const promises = projectUsers.map(async (u) => {
       if (u.hasAvatar) {
@@ -60,37 +71,36 @@ export default function ActiveProjectUsers(): ReactElement {
     setSortedUsers([...projectUsers].sort(compareUsers));
   }, [compareUsers, projectUsers]);
 
-  function hasProjectRole(userRoleId: string, role: Role): boolean {
-    const userRole = projUserRoles.find((role) => role.id === userRoleId);
-    return userRole?.role === role;
+  function hasProjectRole(userId: string, role: Role): boolean {
+    const userRole = userRoles[userId];
+    return userRole === role;
   }
 
   const currentUser = getCurrentUser();
-  const currentProjectId = getProjectId();
-  if (!currentUser || !currentProjectId) {
+  if (!currentUser || !projectId) {
     return <Fragment />;
   }
 
-  const currentRoleId = currentUser.projectRoles[currentProjectId];
-  const currentIsProjOwner = hasProjectRole(currentRoleId, Role.Owner);
+  const currentRoleId = currentUser.projectRoles[projectId];
+  const currentIsProjOwner = userRoles[currentRoleId] === Role.Owner;
   const currentIsProjAdminOrOwner =
     currentIsProjOwner || hasProjectRole(currentRoleId, Role.Administrator);
 
   const userListItem = (user: User): ReactElement => {
-    const userRoleId = user.projectRoles[currentProjectId];
-    const userIsProjAdmin = hasProjectRole(userRoleId, Role.Administrator);
+    const userRole = userRoles[user.id];
+    const userIsProjAdmin = userRole === Role.Administrator;
     const canManageUser =
       currentIsProjAdminOrOwner &&
       user.id !== currentUser.id &&
-      !hasProjectRole(userRoleId, Role.Owner) &&
+      userRole !== Role.Owner &&
       (!userIsProjAdmin || currentIsProjOwner);
 
     const manageUser = canManageUser ? (
       <CancelConfirmDialogCollection
-        userId={user.id}
         currentUserId={currentUser.id}
         isProjectOwner={currentIsProjOwner}
-        userIsProjAdmin={userIsProjAdmin}
+        userId={user.id}
+        userRole={userRole}
       />
     ) : (
       <IconButton disabled size="large">
