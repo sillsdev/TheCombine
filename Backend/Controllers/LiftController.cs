@@ -74,7 +74,7 @@ namespace BackendFramework.Controllers
                 return BadRequest(e.Message);
             }
 
-            return Ok(Language.GetWritingSystems(extractedLiftRootPath).ToList());
+            return Ok(Language.GetWritingSystems(extractedLiftRootPath));
         }
 
         /// <summary> Adds data from a directory containing a .lift file </summary>
@@ -106,7 +106,7 @@ namespace BackendFramework.Controllers
             }
 
             var extractDir = _liftService.RetrieveImport(userId);
-            if (String.IsNullOrWhiteSpace(extractDir))
+            if (string.IsNullOrWhiteSpace(extractDir))
             {
                 return BadRequest("No in-progress import to finish.");
             }
@@ -238,11 +238,11 @@ namespace BackendFramework.Controllers
             // Add analysis writing systems found in the data, avoiding duplicate and empty bcp47 codes.
             project.AnalysisWritingSystems.AddRange(importedAnalysisWritingSystems.Where(
                 iws => !project.AnalysisWritingSystems.Any(ws => ws.Bcp47 == iws.Bcp47)));
-            project.AnalysisWritingSystems.RemoveAll(ws => String.IsNullOrWhiteSpace(ws.Bcp47));
+            project.AnalysisWritingSystems.RemoveAll(ws => string.IsNullOrWhiteSpace(ws.Bcp47));
             if (project.AnalysisWritingSystems.Count == 0)
             {
                 // The list cannot be empty.
-                project.AnalysisWritingSystems.Add(new WritingSystem { Bcp47 = "en", Name = "English" });
+                project.AnalysisWritingSystems.Add(new("en", "English"));
             }
 
             // Store whether we have imported any senses with definitions or grammatical info
