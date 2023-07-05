@@ -857,9 +857,8 @@ kubectl exec -it deployment/maintenance -- add_user_to_proj.py --project <PROJEC
 Notes:
 
 1. The `--project` and `--user` options may be shortened to `--p` and `--u` respectively.
-2. The user is added to the project with normal project member permissions (`MergeAndReviewEntries`, and `WordEntry`).
-   Add the `--admin` option to add the user with project administrator permissions (`DeleteEditSettingsAndUsers`,
-   `ImportExport`, `MergeAndReviewEntries`, and `WordEntry`)
+2. The user is added to the project with `Harvester` role. Add the `--editor` option to instead add the user with
+   `Editor` role, or the `--admin` option to instead add the user with `Administrator` role.
 
 #### Backup _TheCombine_
 

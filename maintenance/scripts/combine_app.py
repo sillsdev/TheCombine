@@ -13,15 +13,19 @@ from maint_utils import run_cmd
 
 
 @unique
-class Permission(Enum):
-    """Define enumerated type for Combine user permissions."""
+class Role(Enum):
+    """Define enumerated type for Combine user roles."""
 
-    WordEntry = 1
-    # Integer value 2 is currently unused.
-    MergeAndReviewEntries = 3
-    ImportExport = 4
-    DeleteEditSettingsAndUsers = 5
-    Owner = 6
+    #None = 0
+    # Integer value 1 is currently unused.
+    Harvester = 2
+    # Integer value 3 is currently unused.
+    Editor = 4
+    # Integer value 5 is currently unused.
+    Administrator = 6
+    # Integer value 7 is currently unused.
+    # Integer value 8 is currently unused.
+    Owner = 9
 
 
 class CombineApp:
@@ -160,8 +164,8 @@ class CombineApp:
             return results["_id"]  # type: ignore
         return None
 
-    def get_project_roles(self, proj_id: str, perm: Permission) -> List[Dict[str, Any]]:
-        """Get the list of all user roles for a project that have the requested permission set."""
-        query = f"{{projectId: '{proj_id}', permissions: {{ $all: [{perm.value}]}}}}"
-        result_fields = "{projectId: 1, permissions: 1}"
+    def get_project_roles(self, proj_id: str, role: Role) -> List[Dict[str, Any]]:
+        """Get the list of all user roles for a project that have the requested role."""
+        query = f"{{projectId: '{proj_id}', role: {{ $eq: {role.value}}}}}"
+        result_fields = "{projectId: 1, role: 1}"
         return self.db_query("UserRolesCollection", query, result_fields)
