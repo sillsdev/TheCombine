@@ -1,12 +1,12 @@
 import { Card, Grid, TextField, Typography } from "@mui/material";
 import { FormEvent, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
-import { isEmailTaken, isUsernameTaken } from "backend";
-import history, { Path } from "browserHistory";
-import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
-import { asyncResetRequest } from "components/PasswordReset/Redux/ResetActions";
+import { isEmailTaken, isUsernameTaken, resetPasswordRequest } from "backend";
+import { LoadingDoneButton } from "components/Buttons";
 import { useAppDispatch } from "types/hooks";
+import { Path } from "types/path";
 
 export default function ResetRequest(): ReactElement {
   const dispatch = useAppDispatch();
@@ -15,6 +15,7 @@ export default function ResetRequest(): ReactElement {
   const [isLoading, setIsLoading] = useState(false);
   const [isNotFound, setIsNotFound] = useState(false);
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const onSubmit = (event: FormEvent<HTMLElement>): void => {
     event.preventDefault();
@@ -28,9 +29,9 @@ export default function ResetRequest(): ReactElement {
       (await isEmailTaken(emailOrUsername)) ||
       (await isUsernameTaken(emailOrUsername));
     if (exists) {
-      await dispatch(asyncResetRequest(emailOrUsername));
+      await resetPasswordRequest(emailOrUsername);
       setIsDone(true);
-      setTimeout(() => history.push(Path.Login), 1000);
+      setTimeout(() => navigate(Path.Login), 1000);
     } else {
       setIsNotFound(true);
     }

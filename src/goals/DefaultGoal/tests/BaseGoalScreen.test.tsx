@@ -4,7 +4,7 @@ import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
 import { BaseGoalScreen } from "goals/DefaultGoal/BaseGoalScreen";
 import { Goal } from "types/goals";
@@ -12,6 +12,8 @@ import { Goal } from "types/goals";
 const createMockStore = configureMockStore([thunk]);
 const mockStoreState = { goalsState: { currentGoal: new Goal() } };
 const mockStore = createMockStore(mockStoreState);
+
+jest.mock("components/PageNotFound/component", () => "div");
 
 describe("BaseGoalScreen", () => {
   it("Renders with default goal without crashing", () => {

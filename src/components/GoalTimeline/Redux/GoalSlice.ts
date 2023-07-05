@@ -2,17 +2,19 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import * as Backend from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
-import history, { Path } from "browserHistory";
+import router from "browserRouter";
 import { defaultState } from "components/GoalTimeline/DefaultState";
 import { MergeDupData } from "goals/MergeDupGoal/MergeDupsTypes";
 import {
   dispatchMergeStepData,
   fetchMergeDupsData,
 } from "goals/MergeDupGoal/Redux/MergeDupActions";
+import { StoreActionTypes } from "rootActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { convertEditToGoal } from "types/goalUtilities";
 import { Goal, GoalStatus, GoalType } from "types/goals";
+import { Path } from "types/path";
+import { convertEditToGoal } from "utilities/goalUtilities";
 
 export const goalSlice = createSlice({
   name: "goal",
@@ -37,22 +39,24 @@ export const goalSlice = createSlice({
     setCurrentGoalIndexAction: (state, action) => {
       state.currentGoal.index = action.payload;
     },
-    setCurrentGoalStatusAction: (state, action) => {
+    setCurrentGoalsStateAction: (state, action) => {
       state.currentGoal.status = action.payload;
     },
-    reset: (state) => {
-      state = defaultState;
-    },
+    reset: () => defaultState,
   },
+  extraReducers: (builder) =>
+    builder.addCase(StoreActionTypes.RESET, () => defaultState),
 });
 
-// Remove 'export' and delete GoalActions.ts and GoalReducer.ts before
-// merging with master branch.
+export const actionType = (actionName: string) => {
+  return `${goalSlice.name}/${actionName}Action`;
+};
+
 const {
   loadUserEditsAction,
   setCurrentGoalAction,
   setCurrentGoalIndexAction,
-  setCurrentGoalStatusAction,
+  setCurrentGoalsStateAction,
   reset,
 } = goalSlice.actions;
 
@@ -74,7 +78,7 @@ export function setCurrentGoalIndex(index: number): PayloadAction {
 }
 
 export function setCurrentGoalStatus(status: GoalStatus): PayloadAction {
-  return setCurrentGoalStatusAction(status);
+  return setCurrentGoalsStateAction(status);
 }
 
 // Dispatch Functions
@@ -128,7 +132,7 @@ export function asyncAddGoal(goal: Goal) {
       }
 
       // Serve goal.
-      history.push(Path.GoalCurrent);
+      router.navigate(Path.GoalCurrent);
     }
   };
 }
@@ -226,10 +230,10 @@ export function updateStepFromData(goal: Goal): boolean {
 function goalCleanup(goal: Goal): void {
   switch (goal.goalType) {
     case GoalType.MergeDups:
-      history.push(Path.GoalNext);
+      router.navigate(Path.GoalNext);
       break;
     default:
-      history.push(Path.Goals);
+      router.navigate(Path.Goals);
       break;
   }
 }

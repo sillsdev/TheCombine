@@ -30,5 +30,40 @@
   "[yaml]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "files.insertFinalNewline": true
+  "files.insertFinalNewline": true,
+  "cSpell.words": [
+    "Adposition",
+    "axios",
+    "bootable",
+    "Bson",
+    "containerd",
+    "devs",
+    "Dups",
+    "endcap",
+    "globaltool",
+    "Guids",
+    "kubeconfig",
+    "ldml",
+    "letsencrypt",
+    "Linq",
+    "maint",
+    "mongoimport",
+    "mongosh",
+    "nerdctl",
+    "nspell",
+    "oneshot",
+    "openapi",
+    "Palaso",
+    "piptools",
+    "Prenoun",
+    "Preverb",
+    "reportgenerator",
+    "sillsdev",
+    "Sldr",
+    "targetdir",
+    "textfile",
+    "thecombine",
+    "upsert",
+    "venv"
+  ]
 }

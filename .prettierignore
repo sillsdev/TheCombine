@@ -8,9 +8,6 @@ docs/user_guide/site
 # break the Helm templates.
 **/helm/**/templates/*.yaml
 
-# Ignore generated JavaScript for Release info
-public/scripts/release.js
-
 # Ignore semantic domain import files (valid for mongo but not valid json)
 deploy/scripts/semantic_domains/json/*.json
 database/semantic_domains/*

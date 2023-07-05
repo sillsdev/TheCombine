@@ -51,6 +51,10 @@ export default function ReviewEntriesTable(
   const showDefinitions = useSelector(
     (state: StoreState) => state.currentProjectState.project.definitionsEnabled
   );
+  const showGrammaticalInfo = useSelector(
+    (state: StoreState) =>
+      state.currentProjectState.project.grammaticalInfoEnabled
+  );
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const [maxRows, setMaxRows] = useState(words.length);
@@ -126,11 +130,11 @@ export default function ReviewEntriesTable(
           {t("reviewEntries.title")}
         </Typography>
       }
-      columns={
-        showDefinitions
-          ? columns
-          : columns.filter((c) => c.title !== ColumnTitle.Definitions)
-      }
+      columns={columns.filter(
+        (c) =>
+          (showDefinitions || c.title !== ColumnTitle.Definitions) &&
+          (showGrammaticalInfo || c.title !== ColumnTitle.PartOfSpeech)
+      )}
       data={words}
       onFilterChange={updateMaxRows}
       editable={{

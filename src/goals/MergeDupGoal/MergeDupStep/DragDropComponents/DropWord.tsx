@@ -5,8 +5,7 @@ import { Droppable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 
 import { Flag } from "api/models";
-import FlagButton from "components/Buttons/FlagButton";
-import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import { FlagButton, IconButtonWithTooltip } from "components/Buttons";
 import DragSense from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/DragSense";
 import { flagWord, setVern } from "goals/MergeDupGoal/Redux/MergeDupActions";
 import { MergeTreeState } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
@@ -83,6 +82,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
                   textId={"mergeDups.helpText.protectedWord"}
                   side={"top"}
                   small
+                  buttonId={`word-${props.wordId}-protected`}
                 />
               )}
               <FlagButton

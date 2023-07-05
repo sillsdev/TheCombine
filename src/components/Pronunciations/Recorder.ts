@@ -1,9 +1,11 @@
+import RecordRTC from "recordrtc";
+
 import { errorToast } from "components/Toast/SwalToast";
 
-const RecordRTC = require("recordrtc");
-
 export default class Recorder {
-  private recordRTC: any;
+  private recordRTC?: RecordRTC;
+
+  static blobType: "audio" = "audio";
 
   constructor() {
     navigator.mediaDevices
@@ -12,32 +14,32 @@ export default class Recorder {
       .catch(Recorder.onError);
   }
 
-  startRecording() {
-    if (this.recordRTC) {
-      this.recordRTC.reset();
-      this.recordRTC.startRecording();
-    }
+  startRecording(): void {
+    this.recordRTC?.reset();
+    this.recordRTC?.startRecording();
   }
 
-  stopRecording(): Promise<string> {
-    return new Promise((resolve) => {
-      this.recordRTC.stopRecording(resolve);
+  stopRecording(): Promise<Blob | undefined> {
+    return new Promise<Blob | undefined>((resolve) => {
+      const rec = this.recordRTC;
+      if (rec) {
+        rec.stopRecording(() => resolve(rec.getBlob()));
+      } else {
+        resolve(undefined);
+      }
     });
   }
 
-  getBlob(): Blob {
-    return this.recordRTC.getBlob();
-  }
-
-  private onMicrophoneAvailable(audioStream: MediaStream) {
-    this.recordRTC = new RecordRTC(audioStream, {
+  private onMicrophoneAvailable(audioStream: MediaStream): void {
+    const options: RecordRTC.Options = {
       disableLogs: true, // Comment out or switch to false for dev
-      type: "audio",
       mimeType: "audio/webm;codecs=pcm",
-    });
+      type: Recorder.blobType,
+    };
+    this.recordRTC = new RecordRTC(audioStream, options);
   }
 
-  private static onError(err: Error) {
+  private static onError(err: Error): void {
     console.error(err);
     errorToast.fire({
       title: "Audio Recorder",

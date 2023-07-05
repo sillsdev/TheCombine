@@ -9,11 +9,25 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class UserControllerTests
+    public class UserControllerTests : IDisposable
     {
         private IUserRepository _userRepo = null!;
         private IPermissionService _permissionService = null!;
         private UserController _userController = null!;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _userController?.Dispose();
+            }
+        }
 
         [SetUp]
         public void Setup()
@@ -26,7 +40,12 @@ namespace Backend.Tests.Controllers
 
         private static User RandomUser()
         {
-            var user = new User { Username = Util.RandString(10), Password = Util.RandString(10) };
+            var user = new User
+            {
+                Username = Util.RandString(10),
+                Password = Util.RandString(10),
+                Email = $"{Util.RandString(5)}@{Util.RandString(5)}.com",
+            };
             return user;
         }
 
@@ -45,7 +64,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestGetUser()
         {
-            var user = _userRepo.Create(RandomUser()).Result ?? throw new Exception();
+            var user = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
 
             _userRepo.Create(RandomUser());
             _userRepo.Create(RandomUser());
@@ -70,7 +89,7 @@ namespace Backend.Tests.Controllers
             const string email = "example@gmail.com";
             var user = _userRepo.Create(
                 new User { Email = email, Username = Util.RandString(10), Password = Util.RandString(10) }
-            ).Result ?? throw new Exception();
+            ).Result ?? throw new UserCreationException();
 
             var action = _userController.GetUserByEmail(email).Result;
             Assert.IsInstanceOf<ObjectResult>(action);
@@ -91,9 +110,9 @@ namespace Backend.Tests.Controllers
         {
             _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             const string email = "example@gmail.com";
-            var _ = _userRepo.Create(new User
-            { Email = email, Username = Util.RandString(10), Password = Util.RandString(10) }
-            ).Result ?? throw new Exception();
+            var _ = _userRepo.Create(
+                new User { Email = email, Username = Util.RandString(10), Password = Util.RandString(10) }
+            ).Result ?? throw new UserCreationException();
 
             var action = _userController.GetUserByEmail(email).Result;
             Assert.IsInstanceOf<ForbidResult>(action);
@@ -111,7 +130,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUpdateUser()
         {
-            var origUser = _userRepo.Create(RandomUser()).Result ?? throw new Exception();
+            var origUser = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
             var modUser = origUser.Clone();
             modUser.Username = "Mark";
 
@@ -125,8 +144,8 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUpdateUserCantUpdateIsAdmin()
         {
-            var origUser = _userRepo.Create(RandomUser()).Result ?? throw new Exception();
-            var modUser = origUser.Clone() ?? throw new Exception();
+            var origUser = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
+            var modUser = origUser.Clone() ?? throw new UserCreationException();
             modUser.IsAdmin = true;
 
             _ = _userController.UpdateUser(modUser.Id, modUser);
@@ -139,7 +158,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestDeleteUser()
         {
-            var origUser = _userRepo.Create(RandomUser()).Result ?? throw new Exception();
+            var origUser = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
             Assert.That(_userRepo.GetAllUsers().Result, Has.Count.EqualTo(1));
 
             _ = _userController.DeleteUser(origUser.Id).Result;
@@ -147,7 +166,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestCheckUsername()
+        public void TestIsUsernameUnavailable()
         {
             var user1 = RandomUser();
             var user2 = RandomUser();
@@ -156,24 +175,24 @@ namespace Backend.Tests.Controllers
             _userRepo.Create(user1);
             _userRepo.Create(user2);
 
-            var result1 = (ObjectResult)_userController.CheckUsername(username1.ToLowerInvariant()).Result;
+            var result1 = (ObjectResult)_userController.IsUsernameUnavailable(username1.ToLowerInvariant()).Result;
             Assert.IsTrue((bool)result1.Value!);
 
-            var result2 = (ObjectResult)_userController.CheckUsername(username2.ToUpperInvariant()).Result;
+            var result2 = (ObjectResult)_userController.IsUsernameUnavailable(username2.ToUpperInvariant()).Result;
             Assert.IsTrue((bool)result2.Value!);
 
-            var result3 = (ObjectResult)_userController.CheckUsername(username1).Result;
+            var result3 = (ObjectResult)_userController.IsUsernameUnavailable(username1).Result;
             Assert.IsTrue((bool)result3.Value!);
 
-            var result4 = (ObjectResult)_userController.CheckUsername("NewUsername").Result;
+            var result4 = (ObjectResult)_userController.IsUsernameUnavailable("NewUsername").Result;
             Assert.IsFalse((bool)result4.Value!);
 
-            var result5 = (ObjectResult)_userController.CheckUsername("").Result;
+            var result5 = (ObjectResult)_userController.IsUsernameUnavailable("").Result;
             Assert.IsTrue((bool)result5.Value!);
         }
 
         [Test]
-        public void TestCheckEmail()
+        public void TestIsEmailUnavailable()
         {
             var user1 = RandomUser();
             var user2 = RandomUser();
@@ -182,19 +201,19 @@ namespace Backend.Tests.Controllers
             _userRepo.Create(user1);
             _userRepo.Create(user2);
 
-            var result1 = (ObjectResult)_userController.CheckEmail(email1.ToLowerInvariant()).Result;
+            var result1 = (ObjectResult)_userController.IsEmailUnavailable(email1.ToLowerInvariant()).Result;
             Assert.IsTrue((bool)result1.Value!);
 
-            var result2 = (ObjectResult)_userController.CheckEmail(email2.ToUpperInvariant()).Result;
+            var result2 = (ObjectResult)_userController.IsEmailUnavailable(email2.ToUpperInvariant()).Result;
             Assert.IsTrue((bool)result2.Value!);
 
-            var result3 = (ObjectResult)_userController.CheckEmail(email1).Result;
+            var result3 = (ObjectResult)_userController.IsEmailUnavailable(email1).Result;
             Assert.IsTrue((bool)result3.Value!);
 
-            var result4 = (ObjectResult)_userController.CheckEmail("NewEmail").Result;
+            var result4 = (ObjectResult)_userController.IsEmailUnavailable("new@e.mail").Result;
             Assert.IsFalse((bool)result4.Value!);
 
-            var result5 = (ObjectResult)_userController.CheckEmail("").Result;
+            var result5 = (ObjectResult)_userController.IsEmailUnavailable("").Result;
             Assert.IsTrue((bool)result5.Value!);
         }
     }

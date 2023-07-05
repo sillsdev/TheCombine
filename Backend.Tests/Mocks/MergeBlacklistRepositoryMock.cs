@@ -17,7 +17,7 @@ namespace Backend.Tests.Mocks
             _mergeBlacklist = new List<MergeBlacklistEntry>();
         }
 
-        public Task<List<MergeBlacklistEntry>> GetAll(string projectId, string? userId = null)
+        public Task<List<MergeBlacklistEntry>> GetAllEntries(string projectId, string? userId = null)
         {
             var cloneList = _mergeBlacklist.Select(e => e.Clone()).ToList();
             var enumerable = userId is null ?
@@ -26,7 +26,7 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(enumerable.ToList());
         }
 
-        public Task<MergeBlacklistEntry?> Get(string projectId, string entryId)
+        public Task<MergeBlacklistEntry?> GetEntry(string projectId, string entryId)
         {
             try
             {
@@ -39,14 +39,14 @@ namespace Backend.Tests.Mocks
             }
         }
 
-        public Task<MergeBlacklistEntry> Create(MergeBlacklistEntry entry)
+        public Task<MergeBlacklistEntry> Create(MergeBlacklistEntry blacklistEntry)
         {
-            entry.Id = Guid.NewGuid().ToString();
-            _mergeBlacklist.Add(entry.Clone());
-            return Task.FromResult(entry.Clone());
+            blacklistEntry.Id = Guid.NewGuid().ToString();
+            _mergeBlacklist.Add(blacklistEntry.Clone());
+            return Task.FromResult(blacklistEntry.Clone());
         }
 
-        public Task<bool> DeleteAll(string projectId)
+        public Task<bool> DeleteAllEntries(string projectId)
         {
             _mergeBlacklist.Clear();
             return Task.FromResult(true);
@@ -58,16 +58,17 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_mergeBlacklist.Remove(foundMergeBlacklist));
         }
 
-        public Task<ResultOfUpdate> Update(MergeBlacklistEntry entry)
+        public Task<ResultOfUpdate> Update(MergeBlacklistEntry blacklistEntry)
         {
-            var foundEntry = _mergeBlacklist.Single(e => e.ProjectId == entry.ProjectId && e.Id == entry.Id);
+            var foundEntry = _mergeBlacklist.Single(
+                e => e.ProjectId == blacklistEntry.ProjectId && e.Id == blacklistEntry.Id);
             var success = _mergeBlacklist.Remove(foundEntry);
             if (!success)
             {
                 return Task.FromResult(ResultOfUpdate.NotFound);
             }
 
-            _mergeBlacklist.Add(entry.Clone());
+            _mergeBlacklist.Add(blacklistEntry.Clone());
             return Task.FromResult(ResultOfUpdate.Updated);
         }
     }

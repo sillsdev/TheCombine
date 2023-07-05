@@ -2,9 +2,6 @@
 
 exports[`Pronunciations displays buttons 1`] = `
 Array [
-  <div
-    className="Toastify"
-  />,
   <button
     aria-label="record"
     aria-labelledby={null}

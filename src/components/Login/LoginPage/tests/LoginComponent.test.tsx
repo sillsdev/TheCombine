@@ -1,6 +1,6 @@
 import renderer from "react-test-renderer";
 
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
 import Login from "components/Login/LoginPage/LoginComponent";
 
@@ -11,6 +11,7 @@ jest.mock("backend", () => ({
   getBannerText: () => Promise.resolve(""),
 }));
 
+jest.mock("browserRouter");
 const LOGOUT = jest.fn();
 let loginMaster: renderer.ReactTestRenderer;
 let loginHandle: renderer.ReactTestInstance;
@@ -25,12 +26,6 @@ describe("Testing login component", () => {
     });
     loginHandle = loginMaster.root.findByType(Login);
     LOGOUT.mockClear();
-  });
-
-  it("Renders properly", () => {
-    renderer.act(() => {
-      renderer.create(<Login logout={LOGOUT} reset={LOGOUT} />);
-    });
   });
 
   // These test whether logging in with a username and password (the strings) should result in errors with the username or password (the booleans)

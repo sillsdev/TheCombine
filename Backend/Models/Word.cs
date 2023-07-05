@@ -21,7 +21,9 @@ namespace BackendFramework.Models
         /// </summary>
         [Required]
         [BsonElement("guid")]
+#pragma warning disable CA1720
         public Guid Guid { get; set; }
+#pragma warning restore CA1720
 
         [Required]
         [BsonElement("vernacular")]
@@ -57,10 +59,6 @@ namespace BackendFramework.Models
         public List<string> History { get; set; }
 
         /// <summary> Not implemented in frontend. </summary>
-        [BsonElement("partOfSpeech")]
-        public string PartOfSpeech { get; set; }
-
-        /// <summary> Not implemented in frontend. </summary>
         [BsonElement("editedBy")]
         public List<string> EditedBy { get; set; }
 
@@ -90,7 +88,6 @@ namespace BackendFramework.Models
             Plural = "";
             Created = "";
             Modified = "";
-            PartOfSpeech = "";
             OtherField = "";
             ProjectId = "";
             Accessibility = Status.Active;
@@ -106,15 +103,14 @@ namespace BackendFramework.Models
         {
             var clone = new Word
             {
-                Id = (string)Id.Clone(),
+                Id = Id,
                 Guid = Guid,
-                Vernacular = (string)Vernacular.Clone(),
-                Plural = (string)Plural.Clone(),
-                Created = (string)Created.Clone(),
-                Modified = (string)Modified.Clone(),
-                PartOfSpeech = (string)PartOfSpeech.Clone(),
-                OtherField = (string)OtherField.Clone(),
-                ProjectId = (string)ProjectId.Clone(),
+                Vernacular = Vernacular,
+                Plural = Plural,
+                Created = Created,
+                Modified = Modified,
+                OtherField = OtherField,
+                ProjectId = ProjectId,
                 Accessibility = Accessibility,
                 Audio = new List<string>(),
                 EditedBy = new List<string>(),
@@ -126,15 +122,15 @@ namespace BackendFramework.Models
 
             foreach (var file in Audio)
             {
-                clone.Audio.Add((string)file.Clone());
+                clone.Audio.Add(file);
             }
             foreach (var id in EditedBy)
             {
-                clone.EditedBy.Add((string)id.Clone());
+                clone.EditedBy.Add(id);
             }
             foreach (var id in History)
             {
-                clone.History.Add((string)id.Clone());
+                clone.History.Add(id);
             }
             foreach (var sense in Senses)
             {
@@ -147,11 +143,10 @@ namespace BackendFramework.Models
         public bool ContentEquals(Word other)
         {
             return
-                other.Vernacular.Equals(Vernacular) &&
-                other.Plural.Equals(Plural) &&
-                other.PartOfSpeech.Equals(PartOfSpeech) &&
-                other.OtherField.Equals(OtherField) &&
-                other.ProjectId.Equals(ProjectId) &&
+                other.Vernacular.Equals(Vernacular, StringComparison.Ordinal) &&
+                other.Plural.Equals(Plural, StringComparison.Ordinal) &&
+                other.OtherField.Equals(OtherField, StringComparison.Ordinal) &&
+                other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
 
                 other.Audio.Count == Audio.Count &&
                 other.Audio.All(Audio.Contains) &&
@@ -171,11 +166,11 @@ namespace BackendFramework.Models
             }
 
             return
-                other.Id.Equals(Id) &&
+                other.Id.Equals(Id, StringComparison.Ordinal) &&
                 ContentEquals(other) &&
                 other.Guid == Guid &&
-                other.Created.Equals(Created) &&
-                other.Modified.Equals(Modified) &&
+                other.Created.Equals(Created, StringComparison.Ordinal) &&
+                other.Modified.Equals(Modified, StringComparison.Ordinal) &&
                 other.EditedBy.Count == EditedBy.Count &&
                 other.EditedBy.All(EditedBy.Contains) &&
                 other.History.Count == History.Count &&
@@ -195,7 +190,6 @@ namespace BackendFramework.Models
             hash.Add(Modified);
             hash.Add(Accessibility);
             hash.Add(History);
-            hash.Add(PartOfSpeech);
             hash.Add(EditedBy);
             hash.Add(OtherField);
             hash.Add(ProjectId);
@@ -216,7 +210,7 @@ namespace BackendFramework.Models
         /// <summary>
         /// Append contents of other contained word.
         /// Warning! The following content of the other word are lost:
-        /// Plural, PartOfSpeech, Created, Modified, Accessibility, OtherField.
+        /// Plural, Created, Modified, Accessibility, OtherField.
         /// </summary>
         /// <returns> A bool: true if operation succeeded and word updated. </returns>
         public bool AppendContainedWordContents(Word other, String userId)
@@ -286,8 +280,8 @@ namespace BackendFramework.Models
         {
             return new Note
             {
-                Language = (string)Language.Clone(),
-                Text = (string)Text.Clone()
+                Language = Language,
+                Text = Text
             };
         }
 
@@ -325,7 +319,8 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Language.Equals(other.Language) && Text.Equals(other.Text);
+            return Language.Equals(other.Language, StringComparison.Ordinal) &&
+                Text.Equals(other.Text, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()
@@ -334,161 +329,7 @@ namespace BackendFramework.Models
         }
     }
 
-    public class Sense
-    {
-        /// <summary>
-        /// This Guid is important for Lift round-tripping with other applications and must remain stable through Word
-        /// edits.
-        /// </summary>
-        [Required]
-        [BsonElement("guid")]
-        public Guid Guid { get; set; }
-
-        [Required]
-        [BsonElement("Definitions")]
-        public List<Definition> Definitions { get; set; }
-
-        [Required]
-        [BsonElement("Glosses")]
-        public List<Gloss> Glosses { get; set; }
-
-        [Required]
-        [BsonElement("SemanticDomains")]
-        public List<SemanticDomain> SemanticDomains { get; set; }
-
-        [Required]
-        [BsonElement("accessibility")]
-        [BsonRepresentation(BsonType.String)]
-        public Status Accessibility { get; set; }
-
-        public Sense()
-        {
-            // By default generate a new, unique Guid for each new Sense.
-            Guid = Guid.NewGuid();
-            Accessibility = Status.Active;
-            Definitions = new List<Definition>();
-            Glosses = new List<Gloss>();
-            SemanticDomains = new List<SemanticDomain>();
-        }
-
-        public Sense Clone()
-        {
-            var clone = new Sense
-            {
-                Guid = Guid,
-                Accessibility = Accessibility,
-                Definitions = new List<Definition>(),
-                Glosses = new List<Gloss>(),
-                SemanticDomains = new List<SemanticDomain>(),
-            };
-
-            foreach (var definition in Definitions)
-            {
-                clone.Definitions.Add(definition.Clone());
-            }
-            foreach (var gloss in Glosses)
-            {
-                clone.Glosses.Add(gloss.Clone());
-            }
-            foreach (var sd in SemanticDomains)
-            {
-                clone.SemanticDomains.Add(sd.Clone());
-            }
-
-            return clone;
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not Sense other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return
-                other.Guid == Guid &&
-                other.Accessibility == Accessibility &&
-                other.Definitions.Count == Definitions.Count &&
-                other.Definitions.All(Definitions.Contains) &&
-                other.Glosses.Count == Glosses.Count &&
-                other.Glosses.All(Glosses.Contains) &&
-                other.SemanticDomains.Count == SemanticDomains.Count &&
-                other.SemanticDomains.All(SemanticDomains.Contains);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Guid, Accessibility, Definitions, Glosses, SemanticDomains);
-        }
-
-        public bool IsEmpty()
-        {
-            return
-                Glosses.All(gloss => string.IsNullOrWhiteSpace(gloss.Def)) &&
-                Definitions.All(def => string.IsNullOrWhiteSpace(def.Text));
-        }
-
-        /// <summary>
-        /// Check if all Gloss, Definition strings are contained in other Sense.
-        /// If they are all empty, also require other sense is empty and includes same Semantic Domains.
-        /// </summary>
-        public bool IsContainedIn(Sense other)
-        {
-            if (IsEmpty())
-            {
-                var semDomIds = SemanticDomains.Select(dom => dom.Id);
-                var otherSemDomIds = other.SemanticDomains.Select(dom => dom.Id);
-                return other.IsEmpty() && semDomIds.All(otherSemDomIds.Contains);
-            }
-
-            return
-                Glosses.All(other.Glosses.Contains) &&
-                Definitions.All(other.Definitions.Contains);
-        }
-    }
-
-    public class Definition
-    {
-        /// <summary> The bcp-47 code for the language the definition is written in. </summary>
-        [Required]
-        public string Language { get; set; }
-
-        /// <summary> The definition string. </summary>
-        [Required]
-        public string Text { get; set; }
-
-        public Definition()
-        {
-            Language = "";
-            Text = "";
-        }
-
-        public Definition Clone()
-        {
-            return new Definition
-            {
-                Language = (string)Language.Clone(),
-                Text = (string)Text.Clone()
-            };
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not Definition other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return Language.Equals(other.Language) && Text.Equals(other.Text);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Language, Text);
-        }
-    }
-
-    /// <summary> A flag on a Word or Sense, for Combine data, not for export. </summary>
+    /// <summary> A flag on a Word, for Combine data, not for export. </summary>
     public class Flag
     {
         /// <summary> Indicates if a flag is active. </summary>
@@ -516,7 +357,7 @@ namespace BackendFramework.Models
             return new Flag
             {
                 Active = Active,
-                Text = (string)Text.Clone()
+                Text = Text
             };
         }
 
@@ -527,7 +368,7 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Active.Equals(other.Active) && Text.Equals(other.Text);
+            return Active == other.Active && Text.Equals(other.Text, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()
@@ -556,47 +397,6 @@ namespace BackendFramework.Models
         }
     }
 
-    public class Gloss
-    {
-        /// <summary> The bcp-47 code for the language the gloss is written in. </summary>
-        [Required]
-        public string Language { get; set; }
-
-        /// <summary> The gloss string. </summary>
-        [Required]
-        public string Def { get; set; }
-
-        public Gloss()
-        {
-            Language = "";
-            Def = "";
-        }
-
-        public Gloss Clone()
-        {
-            return new Gloss
-            {
-                Language = (string)Language.Clone(),
-                Def = (string)Def.Clone()
-            };
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not Gloss other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return Language.Equals(other.Language) && Def.Equals(other.Def);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Language, Def);
-        }
-    }
-
     /// <summary> Helper object that contains a file along with its name and path </summary>
     public class FileUpload
     {
@@ -614,15 +414,5 @@ namespace BackendFramework.Models
             Name = "";
             FilePath = "";
         }
-    }
-
-    /// <summary> Information about the status of the word or sense used for merging. </summary>
-    public enum Status
-    {
-        Active,
-        Deleted,
-        Duplicate,
-        Protected,
-        Separate
     }
 }

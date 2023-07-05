@@ -6,7 +6,7 @@ import goalReducer, {
   loadUserEdits,
   setCurrentGoal,
 } from "components/GoalTimeline/Redux/GoalSlice";
-import { CreateCharInv } from "goals/CreateCharInv/CreateCharInv";
+import { CreateCharInv } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { HandleFlags } from "goals/HandleFlags/HandleFlags";
 import { MergeDups } from "goals/MergeDupGoal/MergeDups";
 import { ReviewEntries } from "goals/ReviewEntries/ReviewEntries";
@@ -73,10 +73,7 @@ describe("GoalReducer", () => {
   describe("StoreActionTypes.RESET", () => {
     it("Should return the default state", () => {
       const state = emptyGoalState();
-
-      const action: StoreAction = {
-        type: StoreActionTypes.RESET,
-      };
+      const action: StoreAction = { type: StoreActionTypes.RESET };
       expect(goalReducer(state, action)).toEqual(defaultState);
     });
   });

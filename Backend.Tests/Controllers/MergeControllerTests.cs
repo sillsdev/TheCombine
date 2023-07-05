@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Backend.Tests.Mocks;
@@ -8,16 +9,30 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class MergeControllerTests
+    public class MergeControllerTests : IDisposable
     {
         private IMergeBlacklistRepository _mergeBlacklistRepo = null!;
         private IWordRepository _wordRepo = null!;
-        private IWordService _wordService = null!;
         private IMergeService _mergeService = null!;
         private IPermissionService _permissionService = null!;
+        private IWordService _wordService = null!;
         private MergeController _mergeController = null!;
 
         private const string ProjId = "MergeServiceTestProjId";
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _mergeController?.Dispose();
+            }
+        }
 
         [SetUp]
         public void Setup()
@@ -39,16 +54,16 @@ namespace Backend.Tests.Controllers
 
             // Add two Lists of wordIds.
             _ = _mergeController.BlacklistAdd(ProjId, wordIdsA).Result;
-            var result = _mergeBlacklistRepo.GetAll(ProjId).Result;
+            var result = _mergeBlacklistRepo.GetAllEntries(ProjId).Result;
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result.First().WordIds, Is.EqualTo(wordIdsA));
             _ = _mergeController.BlacklistAdd(ProjId, wordIdsB).Result;
-            result = _mergeBlacklistRepo.GetAll(ProjId).Result;
+            result = _mergeBlacklistRepo.GetAllEntries(ProjId).Result;
             Assert.That(result, Has.Count.EqualTo(2));
 
             // Add a List of wordIds that contains both previous lists.
             _ = _mergeController.BlacklistAdd(ProjId, wordIdsC).Result;
-            result = _mergeBlacklistRepo.GetAll(ProjId).Result;
+            result = _mergeBlacklistRepo.GetAllEntries(ProjId).Result;
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result.First().WordIds, Is.EqualTo(wordIdsC));
         }

@@ -1,11 +1,10 @@
 import { LoginState } from "components/Login/Redux/LoginReduxTypes";
-import { PasswordResetState } from "components/PasswordReset/Redux/ResetReduxTypes";
 import { CurrentProjectState } from "components/Project/ProjectReduxTypes";
 import { ExportProjectState } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { CreateProjectState } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
 import { PronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
-import { TreeViewState } from "components/TreeView/TreeViewReducer";
-import { CharacterInventoryState } from "goals/CharInventoryCreation/Redux/CharacterInventoryReduxTypes";
+import { TreeViewState } from "components/TreeView/Redux/TreeViewReduxTypes";
+import { CharacterInventoryState } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 import { MergeTreeState } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
 import { ReviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
 import { AnalyticsState } from "types/Redux/analyticsReduxTypes";
@@ -15,7 +14,6 @@ import { GoalsState } from "types/goals";
 export interface StoreState {
   //login
   loginState: LoginState;
-  passwordResetState: PasswordResetState;
 
   //project
   createProjectState: CreateProjectState;

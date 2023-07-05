@@ -13,7 +13,7 @@ using static System.Linq.Enumerable;
 
 namespace Backend.Tests.Controllers
 {
-    public class UserEditControllerTests
+    public class UserEditControllerTests : IDisposable
     {
         private IProjectRepository _projRepo = null!;
         private IUserRepository _userRepo = null!;
@@ -21,6 +21,20 @@ namespace Backend.Tests.Controllers
         private IPermissionService _permissionService = null!;
         private IUserEditService _userEditService = null!;
         private UserEditController _userEditController = null!;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _userEditController?.Dispose();
+            }
+        }
 
         private User _jwtAuthenticatedUser = null!;
         private string _projId = null!;
@@ -42,8 +56,8 @@ namespace Backend.Tests.Controllers
 
             _jwtAuthenticatedUser = new User { Username = "user", Password = "pass" };
             await _userRepo.Create(_jwtAuthenticatedUser);
-            _jwtAuthenticatedUser = await _permissionService.Authenticate(
-                _jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password) ?? throw new Exception();
+            _jwtAuthenticatedUser = await _permissionService.Authenticate(_jwtAuthenticatedUser.Username,
+                _jwtAuthenticatedUser.Password) ?? throw new UserAuthenticationException();
             _userEditController.ControllerContext.HttpContext.Request.Headers["UserId"] = _jwtAuthenticatedUser.Id;
             _projId = (await _projRepo.Create(new Project { Name = "UserEditControllerTests" }))!.Id;
         }

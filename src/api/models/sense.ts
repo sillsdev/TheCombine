@@ -14,6 +14,7 @@
 
 import { Definition } from "./definition";
 import { Gloss } from "./gloss";
+import { GrammaticalInfo } from "./grammatical-info";
 import { SemanticDomain } from "./semantic-domain";
 import { Status } from "./status";
 
@@ -29,6 +30,18 @@ export interface Sense {
    * @memberof Sense
    */
   guid: string;
+  /**
+   *
+   * @type {Status}
+   * @memberof Sense
+   */
+  accessibility: Status;
+  /**
+   *
+   * @type {GrammaticalInfo}
+   * @memberof Sense
+   */
+  grammaticalInfo: GrammaticalInfo;
   /**
    *
    * @type {Array<Definition>}
@@ -47,10 +60,4 @@ export interface Sense {
    * @memberof Sense
    */
   semanticDomains: Array<SemanticDomain>;
-  /**
-   *
-   * @type {Status}
-   * @memberof Sense
-   */
-  accessibility: Status;
 }

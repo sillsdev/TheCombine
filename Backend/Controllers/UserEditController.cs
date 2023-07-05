@@ -94,7 +94,7 @@ namespace BackendFramework.Controllers
             await _userEditRepo.Create(userEdit);
             // Update current user
             var currentUserId = _permissionService.GetUserId(HttpContext);
-            var currentUser = await _userRepo.GetUser(currentUserId);
+            var currentUser = await _userRepo.GetUser(currentUserId, false);
             if (currentUser is null)
             {
                 return NotFound(currentUserId);
@@ -155,7 +155,7 @@ namespace BackendFramework.Controllers
                 return Ok(editIndex);
             }
 
-            return NotFound(editIndex.ToString());
+            return NotFound($"{editIndex}");
         }
 
         /// <summary> Adds/updates a step to/in specified goal </summary>

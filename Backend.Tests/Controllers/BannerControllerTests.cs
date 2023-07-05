@@ -1,4 +1,5 @@
-﻿using Backend.Tests.Mocks;
+﻿using System;
+using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -7,11 +8,25 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class BannerControllerTests
+    public class BannerControllerTests : IDisposable
     {
         private IBannerRepository _bannerRepo = null!;
         private IPermissionService _permissionService = null!;
         private BannerController _bannerController = null!;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _bannerController?.Dispose();
+            }
+        }
 
         private const BannerType Type = BannerType.Login;
         private const string Text = "Login Banner Text";

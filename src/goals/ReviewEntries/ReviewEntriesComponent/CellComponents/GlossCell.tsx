@@ -13,14 +13,12 @@ import { StoreState } from "types";
 import { themeColors } from "types/theme";
 import { newGloss } from "types/word";
 
-interface GlossCellProps {
+interface GlossCellProps extends FieldParameterStandard {
   editable?: boolean;
   sortingByThis?: boolean;
 }
 
-export default function GlossCell(
-  props: FieldParameterStandard & GlossCellProps
-): ReactElement {
+export default function GlossCell(props: GlossCellProps): ReactElement {
   const analysisLang = useSelector(
     (state: StoreState) =>
       state.currentProjectState.project.analysisWritingSystems[0].bcp47

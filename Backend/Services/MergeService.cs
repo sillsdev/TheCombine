@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Runtime.Serialization;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -124,7 +125,7 @@ namespace BackendFramework.Services
                 throw new InvalidBlacklistEntryException("Cannot blacklist a list of fewer than 2 wordIds.");
             }
             // When we switch from individual to common blacklist, the userId argument here should be removed.
-            var blacklist = await _mergeBlacklistRepo.GetAll(projectId, userId);
+            var blacklist = await _mergeBlacklistRepo.GetAllEntries(projectId, userId);
             foreach (var entry in blacklist)
             {
                 if (entry.WordIds.All(wordIds.Contains))
@@ -145,7 +146,7 @@ namespace BackendFramework.Services
             {
                 throw new InvalidBlacklistEntryException("Cannot blacklist a list of fewer than 2 wordIds.");
             }
-            var blacklist = await _mergeBlacklistRepo.GetAll(projectId, userId);
+            var blacklist = await _mergeBlacklistRepo.GetAllEntries(projectId, userId);
             foreach (var entry in blacklist)
             {
                 if (wordIds.All(entry.WordIds.Contains))
@@ -164,7 +165,7 @@ namespace BackendFramework.Services
         /// <returns> Number of <see cref="MergeBlacklistEntry"/>s updated. </returns>
         public async Task<int> UpdateMergeBlacklist(string projectId)
         {
-            var oldBlacklist = await _mergeBlacklistRepo.GetAll(projectId);
+            var oldBlacklist = await _mergeBlacklistRepo.GetAllEntries(projectId);
             if (oldBlacklist.Count == 0)
             {
                 return 0;
@@ -223,6 +224,9 @@ namespace BackendFramework.Services
             public InvalidBlacklistEntryException() { }
 
             public InvalidBlacklistEntryException(string message) : base(message) { }
+
+            protected InvalidBlacklistEntryException(SerializationInfo info, StreamingContext context)
+                : base(info, context) { }
         }
     }
 }

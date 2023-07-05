@@ -3,10 +3,10 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
-import { Path } from "browserHistory";
 import UserMenu, { getIsAdmin, UserMenuList } from "components/AppBar/UserMenu";
+import { Path } from "types/path";
 import { newUser } from "types/user";
 
 jest.mock("backend", () => ({
@@ -16,6 +16,9 @@ jest.mock("backend/localStorage", () => ({
   getAvatar: jest.fn(),
   getCurrentUser: jest.fn(),
   getUserId: () => mockGetUserId(),
+}));
+jest.mock("react-router-dom", () => ({
+  useNavigate: jest.fn(),
 }));
 
 let testRenderer: renderer.ReactTestRenderer;
@@ -49,19 +52,14 @@ describe("UserMenu", () => {
     expect(testRenderer.root.findAllByType(Button).length).toEqual(1);
   });
 
-  it("getIsAdmin returns correct value", (done) => {
+  it("getIsAdmin returns correct value", async () => {
     mockUser.isAdmin = false;
-    getIsAdmin().then((result) => {
-      expect(result).toEqual(false);
-      mockUser.isAdmin = true;
-      getIsAdmin().then((result) => {
-        expect(result).toEqual(true);
-        done();
-      });
-    });
+    expect(await getIsAdmin()).toBeFalsy();
+    mockUser.isAdmin = true;
+    expect(await getIsAdmin()).toBeTruthy();
   });
 
-  it("admin users see one more item: Site Settings", async () => {
+  it("UserMenuList has one more item for admins (Site Settings)", () => {
     renderMenuList();
     const normalMenuItems = testRenderer.root.findAllByType(MenuItem).length;
     renderMenuList(true);

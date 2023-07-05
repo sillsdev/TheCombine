@@ -3,7 +3,7 @@ import { useSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
 
 import { isFrontierNonempty } from "backend";
-import LoadingButton from "components/Buttons/LoadingButton";
+import { LoadingButton } from "components/Buttons";
 import { asyncExportProject } from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { StoreState } from "types";
@@ -20,10 +20,10 @@ export default function ExportButton(props: ExportButtonProps) {
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
 
-  function exportProj() {
-    isFrontierNonempty(props.projectId).then((isNonempty) => {
+  async function exportProj() {
+    await isFrontierNonempty(props.projectId).then(async (isNonempty) => {
       if (isNonempty) {
-        dispatch(asyncExportProject(props.projectId));
+        await dispatch(asyncExportProject(props.projectId));
       } else {
         enqueueSnackbar(t("projectExport.cannotExportEmpty"));
       }

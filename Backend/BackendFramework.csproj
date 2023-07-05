@@ -4,10 +4,10 @@
     <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <AnalysisMode>Minimum</AnalysisMode>
+    <AnalysisMode>Recommended</AnalysisMode>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>$(NoWarn);CA1816;CS1591</NoWarn>
+    <NoWarn>$(NoWarn);CA1305;CA1816;CA1848;CS1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Data\sdList.txt" />
@@ -19,26 +19,27 @@
     <PackageReference Include="RelaxNG" Version="3.2.3" >
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.16" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.30.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.30.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.19" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.31.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.31.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="MongoDB.Driver" Version="2.19.1" />
-    <PackageReference Include="MailKit" Version="4.0.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.20.0" />
+    <PackageReference Include="MailKit" Version="4.1.0" />
+    <PackageReference Include="Xabe.FFmpeg" Version="5.2.6"/>
 
     <!-- SIL Maintained Dependencies. -->
     <PackageReference Include="icu.net" Version="2.9.0" />
     <PackageReference Include="Icu4c.Win.Full.Lib" Version="62.2.1-beta" />
-    <PackageReference Include="SIL.Core" Version="12.0.0" />
-    <PackageReference Include="SIL.Core.Desktop" Version="12.0.0">
+    <PackageReference Include="SIL.Core" Version="12.0.1" />
+    <PackageReference Include="SIL.Core.Desktop" Version="12.0.1">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="SIL.DictionaryServices" Version="12.0.0">
+    <PackageReference Include="SIL.DictionaryServices" Version="12.0.1">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="SIL.Lift" Version="12.0.0">
+    <PackageReference Include="SIL.Lift" Version="12.0.1">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="SIL.WritingSystems" Version="12.0.0" />
+    <PackageReference Include="SIL.WritingSystems" Version="12.0.1" />
   </ItemGroup>
 </Project>

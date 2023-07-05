@@ -1,6 +1,7 @@
 import { Box, Grid, Hidden, Typography } from "@mui/material";
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import BottomBar, { bottomBarHeight } from "components/LandingPage/BottomBar";
 import LandingButtons, {
@@ -9,6 +10,7 @@ import LandingButtons, {
 } from "components/LandingPage/LandingButtons";
 import TopBar, { topBarHeight } from "components/LandingPage/TopBar";
 import tractor from "resources/tractor.png";
+import { Path } from "types/path";
 import theme from "types/theme";
 
 const heightBetweenBars =
@@ -18,6 +20,13 @@ const heightBetweenBars =
   parseInt(theme.spacing(1));
 
 export default function LandingPage(): ReactElement {
+  const navigate = useNavigate();
+  useEffect(() => {
+    // If there is an AnnouncementBanner and somebody enters the URL for
+    // the LandingPage when displaying page without an AppBar, this
+    // prevents banner misalignment.
+    navigate(Path.Root);
+  }, [navigate]);
   return (
     <React.Fragment>
       <TopBar />

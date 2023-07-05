@@ -1,5 +1,5 @@
-# User guide build environment using Python 3.13.3-bullseye
-FROM python@sha256:181e49146bfdc8643ebe0f66cd06f27f42df40a0921438e96770dab09797effb AS user_guide_builder
+# User guide build environment
+FROM python:3.11.4-bookworm AS user_guide_builder
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -28,7 +28,7 @@ COPY . ./
 RUN npm run build
 
 # Production environment.
-FROM nginx:1.23
+FROM nginx:1.25
 
 WORKDIR /app
 

@@ -1,7 +1,7 @@
 import { ListItem } from "@mui/material";
 import renderer from "react-test-renderer";
 
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
 import ExportButton from "components/ProjectExport/ExportButton";
 import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
