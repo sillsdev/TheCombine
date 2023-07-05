@@ -99,7 +99,7 @@ namespace Backend.Tests.Models
         [Test]
         public void TestClone()
         {
-            var system = new WritingSystem { Name = "WritingSystemName", Bcp47 = "en", Font = "calibri" };
+            var system = new WritingSystem("en", "WritingSystemName", "calibri");
             var project = new Project { Name = "ProjectName", VernacularWritingSystem = system };
             var domain = new SemanticDomain { Name = "SemanticDomainName", Id = "1" };
             project.SemanticDomains.Add(domain);
@@ -170,35 +170,38 @@ namespace Backend.Tests.Models
 
     public class WritingSystemTests
     {
-        private const string Name = "System 1";
         private const string Bcp47 = "lang-1";
+        private const string Name = "System 1";
         private const string Font = "calibri";
 
         [Test]
         public void TestEquals()
         {
-            var system = new WritingSystem { Name = Name };
-            Assert.That(system.Equals(new WritingSystem { Name = Name }));
+            var system = new WritingSystem(Bcp47, Name);
+            Assert.That(system.Equals(new WritingSystem(Bcp47, Name)));
         }
 
         [Test]
         public void TestEqualsNull()
         {
-            var system = new WritingSystem { Name = Name };
+            var system = new WritingSystem(Bcp47, Name);
             Assert.IsFalse(system.Equals(null));
         }
 
         [Test]
         public void TestNotEquals()
         {
-            var system = new WritingSystem { Name = Name, Bcp47 = Bcp47 };
-            Assert.IsFalse(system.Equals(new WritingSystem { Name = Name }));
+            var system = new WritingSystem(Bcp47, Name);
+            Assert.IsFalse(system.Equals(new WritingSystem(Bcp47)));
+
+            system = new WritingSystem(Bcp47, Name, Font);
+            Assert.IsFalse(system.Equals(new WritingSystem(Bcp47, Name)));
         }
 
         [Test]
         public void TestToString()
         {
-            var system = new WritingSystem { Name = Name, Bcp47 = Bcp47 };
+            var system = new WritingSystem(Bcp47, Name);
             var sysString = system.ToString();
             Assert.IsTrue(sysString.Contains(Name) && sysString.Contains(Bcp47));
         }
@@ -206,7 +209,7 @@ namespace Backend.Tests.Models
         [Test]
         public void TestClone()
         {
-            var system = new WritingSystem { Name = Name, Bcp47 = Bcp47, Font = Font };
+            var system = new WritingSystem(Bcp47, Name, Font);
             var clonedSystem = system.Clone();
             Assert.AreEqual(system, clonedSystem);
         }
