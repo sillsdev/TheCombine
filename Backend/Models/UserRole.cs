@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -15,23 +14,19 @@ namespace BackendFramework.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
-        /// <summary> Integer representation of <see cref="Permission"/> </summary>
-        [Required]
-        [BsonElement("permissions")]
-        public List<Permission> Permissions { get; set; }
-
         [Required]
         [BsonElement("projectId")]
         public string ProjectId { get; set; }
 
-        [BsonElement("projectRole")]
-        public Role? Role { get; set; }
+        [Required]
+        [BsonElement("role")]
+        public Role Role { get; set; }
 
         public UserRole()
         {
             Id = "";
             ProjectId = "";
-            Permissions = new List<Permission>();
+            Role = Role.None;
         }
 
         public UserRole Clone()
@@ -41,13 +36,7 @@ namespace BackendFramework.Models
                 Id = Id,
                 ProjectId = ProjectId,
                 Role = Role,
-                Permissions = new List<Permission>()
             };
-
-            foreach (var permission in Permissions)
-            {
-                clone.Permissions.Add(permission);
-            }
 
             return clone;
         }
@@ -56,9 +45,7 @@ namespace BackendFramework.Models
         {
             return
                 other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
-                other.Role == Role &&
-                other.Permissions.Count == Permissions.Count &&
-                other.Permissions.All(Permissions.Contains);
+                other.Role == Role;
         }
 
         public override bool Equals(object? obj)
@@ -73,7 +60,7 @@ namespace BackendFramework.Models
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, ProjectId, Role, Permissions);
+            return HashCode.Combine(Id, ProjectId, Role);
         }
     }
 
@@ -118,16 +105,6 @@ namespace BackendFramework.Models
         public override int GetHashCode()
         {
             return HashCode.Combine(ProjectId, Role);
-        }
-
-        // TODO: Remove this function compensation once permissions are replaced with roles in the database.
-        public static Role PermissionsRole(List<Permission> permissions)
-        {
-            return permissions.Contains(Permission.Archive) ? Role.Owner
-                 : permissions.Contains(Permission.DeleteEditSettingsAndUsers) ? Role.Administrator
-                 : permissions.Contains(Permission.MergeAndReviewEntries) ? Role.Editor
-                 : permissions.Contains(Permission.WordEntry) ? Role.Harvester
-                 : Role.None;
         }
 
         public static List<Permission> RolePermissions(Role role)
@@ -179,33 +156,30 @@ namespace BackendFramework.Models
 #pragma warning disable CA1711
     // Ignoring CA1711, which requires identifiers ending in Permission to implement System.Security.IPermission.
     public enum Permission
-    // TODO: remove explicit integer values after permissions are no longer stored in the database.
 #pragma warning restore CA1711
     {
         /// <summary> Can archive the project so it's no longer available. This is an owner-only permission. </summary>
-        Archive = 9,
+        Archive,
 
         /// <summary> Can update character inventory. Can also use find-and-replace, which is DANGEROUS! </summary>
-        CharacterInventory = 8,
+        CharacterInventory,
 
         /// <summary> Can import data into the project. This can only be done once and cannot be undone. </summary>
-        Import = 7,
+        Import,
 
         /// <summary> Can see project statistics and update the workshop schedule. </summary>
-        Statistics = 6,
+        Statistics,
 
         /// <summary> Can edit project settings and add and remove users, change userRoles. </summary>
-        DeleteEditSettingsAndUsers = 5,
+        DeleteEditSettingsAndUsers,
 
         /// <summary> Can export the project to lift. </summary>
-        Export = 4,
+        Export,
 
         /// <summary> Can merge and review words. </summary>
-        MergeAndReviewEntries = 3,
-
-        // Permission value 2 is currently unused. It is not defined so that it does not propagate through OpenAPI.
+        MergeAndReviewEntries,
 
         /// <summary> Can enter words. </summary>
-        WordEntry = 1
+        WordEntry
     }
 }

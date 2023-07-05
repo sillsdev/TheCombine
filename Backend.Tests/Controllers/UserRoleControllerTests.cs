@@ -49,7 +49,7 @@ namespace Backend.Tests.Controllers
 
         private UserRole RandomUserRole(Role role = Role.Harvester)
         {
-            return new UserRole { Permissions = ProjectRole.RolePermissions(role), ProjectId = _projId, Role = role };
+            return new UserRole { ProjectId = _projId, Role = role };
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace Backend.Tests.Controllers
             Assert.IsInstanceOf<ObjectResult>(action);
 
             var foundUserRole = ((ObjectResult)action).Value as List<Permission>;
-            Assert.AreEqual(ProjectRole.RolePermissions((Role)userRole.Role!), foundUserRole);
+            Assert.AreEqual(ProjectRole.RolePermissions(userRole.Role!), foundUserRole);
         }
 
         [Test]

@@ -48,7 +48,6 @@ namespace BackendFramework.Controllers
             }
 
             var userRoles = await _userRoleRepo.GetAllUserRoles(projectId);
-            userRoles.ForEach(ur => ur.Role ??= ProjectRole.PermissionsRole(ur.Permissions));
             return Ok(userRoles);
         }
 
@@ -114,8 +113,7 @@ namespace BackendFramework.Controllers
                 return Ok(new List<Permission>());
             }
 
-            userRole.Role ??= ProjectRole.PermissionsRole(userRole.Permissions);
-            return Ok(ProjectRole.RolePermissions((Role)userRole.Role));
+            return Ok(ProjectRole.RolePermissions(userRole.Role));
         }
 
         /// <summary> Creates a <see cref="UserRole"/> </summary>
@@ -129,13 +127,7 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
-            if (userRole.Role is not null)
-            {
-                userRole.Permissions = ProjectRole.RolePermissions((Role)userRole.Role);
-            }
-            // User cannot give permissions they don't have.
-            if (userRole.Permissions.Any(permission =>
-                !_permissionService.HasProjectPermission(HttpContext, permission, projectId)))
+            if (!_permissionService.ContainsProjectRole(HttpContext, userRole.Role, projectId))
             {
                 return Forbid();
             }
@@ -193,9 +185,13 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UpdateUserRole(
             string userId, [FromBody, BindRequired] ProjectRole projectRole)
         {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
+            {
+                return Forbid();
+            }
+
             var projectId = projectRole.ProjectId;
-            if (!_permissionService.HasProjectPermission(
-                HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
+            if (!_permissionService.ContainsProjectRole(HttpContext, projectRole.Role, projectId))
             {
                 return Forbid();
             }
@@ -204,14 +200,6 @@ namespace BackendFramework.Controllers
             if (proj is null)
             {
                 return NotFound(projectId);
-            }
-
-            var permissions = ProjectRole.RolePermissions(projectRole.Role);
-            // User cannot give permissions they don't have.
-            if (permissions.Any(permission =>
-                !_permissionService.HasProjectPermission(HttpContext, permission, projectId)))
-            {
-                return Forbid();
             }
 
             // Fetch the user -> fetch user role -> update user role
@@ -243,7 +231,6 @@ namespace BackendFramework.Controllers
                 return NotFound(userRoleId);
             }
 
-            userRole.Permissions = permissions;
             userRole.Role = projectRole.Role;
             var result = await _userRoleRepo.Update(userRoleId, userRole);
             return result switch

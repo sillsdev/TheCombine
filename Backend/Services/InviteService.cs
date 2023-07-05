@@ -56,13 +56,12 @@ namespace BackendFramework.Services
         {
             if (emailInvite.Role == Role.Owner)
             {
-                throw new InviteException("Email invites cannot make project owners!");
+                throw new InviteException("Email invites cannot make project Owners!");
             }
 
             try
             {
-                var permissions = ProjectRole.RolePermissions(emailInvite.Role);
-                var userRole = new UserRole { Permissions = permissions, ProjectId = project.Id };
+                var userRole = new UserRole { ProjectId = project.Id, Role = emailInvite.Role };
                 userRole = await _userRoleRepo.Create(userRole);
 
                 // Generate the userRoles and update the user
