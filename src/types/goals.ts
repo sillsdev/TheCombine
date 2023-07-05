@@ -2,10 +2,10 @@ import { v4 } from "uuid";
 
 import { User } from "api/models";
 import {
-  CreateCharInvChanges,
-  CreateCharInvData,
-  CreateCharInvStepData,
-} from "goals/CreateCharInv/CreateCharInvTypes";
+  CharInvChanges,
+  CharInvData,
+  CharInvStepData,
+} from "goals/CharacterInventory/CharacterInventoryTypes";
 import {
   MergesCompleted,
   MergeDupData,
@@ -13,9 +13,9 @@ import {
 } from "goals/MergeDupGoal/MergeDupsTypes";
 import { newUser } from "types/user";
 
-export type GoalData = CreateCharInvData | MergeDupData;
-export type GoalStep = CreateCharInvStepData | MergeStepData | {};
-export type GoalChanges = CreateCharInvChanges | MergesCompleted;
+export type GoalData = CharInvData | MergeDupData;
+export type GoalStep = CharInvStepData | MergeStepData | {};
+export type GoalChanges = CharInvChanges | MergesCompleted;
 
 export interface GoalProps {
   goal?: Goal;

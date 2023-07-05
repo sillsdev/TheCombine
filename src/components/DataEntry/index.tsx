@@ -4,6 +4,7 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useRef,
   useState,
 } from "react";
 
@@ -50,13 +51,24 @@ export default function DataEntry(): ReactElement {
   );
   const { id, lang, name } = currentDomain;
 
+  /* This ref is for a container of both the <DataEntryHeader> and <DataEntryTable>,
+   * in order to check its height and update the height of the <ExistingDataTable>.
+   * Attach to the <Paper> because the parent <Grid item> won't shrink to its content,
+   * but will match the height of its neighbor <Grid item> in <ExistingDataTable>. */
+  const dataEntryRef = useRef<HTMLDivElement | null>(null);
+
   const [domain, setDomain] = useState(newSemanticDomain(id, name, lang));
   const [domainWords, setDomainWords] = useState<DomainWord[]>([]);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [height, setHeight] = useState<number>();
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [questionsVisible, setQuestionsVisible] = useState(false);
 
   const { windowWidth } = useWindowSize();
+
+  const updateHeight = useCallback(() => {
+    setHeight(dataEntryRef.current?.clientHeight);
+  }, []);
 
   // On first render, open tree.
   useLayoutEffect(() => {
@@ -77,6 +89,11 @@ export default function DataEntry(): ReactElement {
     });
   }, [id, lang]);
 
+  // Recalculate height if something changed that might affect it.
+  useEffect(() => {
+    updateHeight();
+  }, [domain, questionsVisible, updateHeight, windowWidth]);
+
   const returnControlToCaller = useCallback(async () => {
     const words = filterWordsByDomain(await getFrontierWords(), id);
     setDomainWords(sortDomainWordsByVern(words));
@@ -86,7 +103,7 @@ export default function DataEntry(): ReactElement {
   return (
     <Grid container justifyContent="center" spacing={3} wrap={"nowrap"}>
       <Grid item>
-        <Paper style={paperStyle}>
+        <Paper ref={dataEntryRef} style={paperStyle}>
           <DataEntryHeader
             domain={domain}
             questionsVisible={questionsVisible}
@@ -94,21 +111,23 @@ export default function DataEntry(): ReactElement {
           />
           <Divider />
           <DataEntryTable
-            semanticDomain={currentDomain}
-            isTreeOpen={open}
-            openTree={() => dispatch(openTreeAction())}
-            showExistingData={() => setDrawerOpen(true)}
             hasDrawerButton={isSmallScreen && domainWords.length > 0}
             hideQuestions={() => setQuestionsVisible(false)}
+            isTreeOpen={open}
+            openTree={() => dispatch(openTreeAction())}
+            semanticDomain={currentDomain}
+            showExistingData={() => setDrawerOpen(true)}
+            updateHeight={updateHeight}
           />
         </Paper>
       </Grid>
       <ExistingDataTable
         domain={domain}
-        typeDrawer={isSmallScreen}
         domainWords={domainWords}
         drawerOpen={drawerOpen}
+        height={height}
         toggleDrawer={setDrawerOpen}
+        typeDrawer={isSmallScreen}
       />
 
       <Dialog id={treeViewDialogId} fullScreen open={!!open}>

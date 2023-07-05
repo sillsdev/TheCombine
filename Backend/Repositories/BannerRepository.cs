@@ -26,7 +26,7 @@ namespace BackendFramework.Repositories
             return emptyBanner;
         }
 
-        public async Task<Banner> Get(BannerType type)
+        public async Task<Banner> GetBanner(BannerType type)
         {
             var bannerList = await _bannerDatabase.Banners.FindAsync(x => x.Type == type);
             try
@@ -41,7 +41,7 @@ namespace BackendFramework.Repositories
 
         public async Task<ResultOfUpdate> Update(SiteBanner banner)
         {
-            var existingBanner = await Get(banner.Type);
+            var existingBanner = await GetBanner(banner.Type);
             var filter = Builders<Banner>.Filter.Eq(x => x.Id, existingBanner.Id);
             var updateDef = Builders<Banner>.Update
                 .Set(x => x.Type, banner.Type)

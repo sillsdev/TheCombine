@@ -30,7 +30,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SiteBanner))]
         public async Task<IActionResult> GetBanner(BannerType type)
         {
-            var banner = await _bannerRepo.Get(type);
+            var banner = await _bannerRepo.GetBanner(type);
             return Ok(new SiteBanner { Type = type, Text = banner.Text });
         }
 

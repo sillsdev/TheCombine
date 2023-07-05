@@ -11,9 +11,7 @@ import { StoreState } from "types";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 
-const CharInv = loadable(
-  () => import("goals/CreateCharInv/CharInvComponent/CharInv")
-);
+const CharacterInventory = loadable(() => import("goals/CharacterInventory"));
 const MergeDup = loadable(() => import("goals/MergeDupGoal/MergeDupComponent"));
 const ReviewEntriesComponent = loadable(
   () => import("goals/ReviewEntries/ReviewEntriesComponent")
@@ -23,7 +21,7 @@ function displayComponent(goal: Goal): ReactElement {
   const isCompleted = goal.status === GoalStatus.Completed;
   switch (goal.goalType) {
     case GoalType.CreateCharInv:
-      return <CharInv completed={isCompleted} />;
+      return <CharacterInventory completed={isCompleted} />;
     case GoalType.MergeDups:
       return <MergeDup completed={isCompleted} />;
     case GoalType.ReviewEntries:

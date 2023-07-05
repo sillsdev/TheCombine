@@ -21,7 +21,7 @@ namespace BackendFramework.Repositories
         }
 
         /// <summary> Finds all <see cref="MergeBlacklistEntry"/>s for specified <see cref="Project"/>. </summary>
-        public async Task<List<MergeBlacklistEntry>> GetAll(string projectId, string? userId = null)
+        public async Task<List<MergeBlacklistEntry>> GetAllEntries(string projectId, string? userId = null)
         {
             var listFind = userId is null ?
                 _mergeBlacklistDatabase.MergeBlacklist.Find(e => e.ProjectId == projectId) :
@@ -31,14 +31,14 @@ namespace BackendFramework.Repositories
 
         /// <summary> Removes all <see cref="MergeBlacklistEntry"/>s for specified <see cref="Project"/>. </summary>
         /// <returns> A bool: success of operation. </returns>
-        public async Task<bool> DeleteAll(string projectId)
+        public async Task<bool> DeleteAllEntries(string projectId)
         {
             var deleted = await _mergeBlacklistDatabase.MergeBlacklist.DeleteManyAsync(u => u.ProjectId == projectId);
             return deleted.DeletedCount != 0;
         }
 
         /// <summary> Finds specified <see cref="MergeBlacklistEntry"/> for specified <see cref="Project"/>. </summary>
-        public async Task<MergeBlacklistEntry?> Get(string projectId, string entryId)
+        public async Task<MergeBlacklistEntry?> GetEntry(string projectId, string entryId)
         {
             var filterDef = new FilterDefinitionBuilder<MergeBlacklistEntry>();
             var filter = filterDef.And(

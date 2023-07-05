@@ -115,7 +115,9 @@ namespace BackendFramework.Models
     {
         [Required]
         [BsonElement("guid")]
+#pragma warning disable CA1720
         public Guid Guid { get; set; }
+#pragma warning restore CA1720
 
         /// <summary> Integer representation of enum <see cref="Models.GoalType"/> </summary>
         [Required]

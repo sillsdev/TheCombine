@@ -351,7 +351,7 @@ namespace BackendFramework.Services
                 var resource = assembly.GetManifestResourceStream(semDomListFile);
                 if (resource is null)
                 {
-                    throw new Exception($"Unable to load semantic domain list: {semDomListFile}");
+                    throw new ExportException($"Unable to load semantic domain list: {semDomListFile}");
                 }
 
                 string sdList;
@@ -398,13 +398,8 @@ namespace BackendFramework.Services
 
             // Compress everything.
             var destinationFileName = Path.Combine(FileOperations.GetRandomTempDir(),
-                Path.Combine($"LiftExportCompressed-{proj.Id}_{DateTime.Now:yyyy-MM-dd_hh-mm-ss}.zip"));
-            var zipParentDir = Path.GetDirectoryName(zipDir);
-            if (zipParentDir is null)
-            {
-                throw new Exception($"Unable to find parent dir of: {zipDir}");
-            }
-            ZipFile.CreateFromDirectory(zipParentDir, destinationFileName);
+                $"LiftExportCompressed-{proj.Id}_{DateTime.Now:yyyy-MM-dd_hh-mm-ss}.zip");
+            ZipFile.CreateFromDirectory(tempExportDir, destinationFileName);
 
             // Clean up the temporary folder structure that was compressed.
             Directory.Delete(tempExportDir, true);
@@ -599,6 +594,16 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteEndElement(); //end label
 
             liftRangesWriter.WriteEndElement(); //end range element
+        }
+
+        [Serializable]
+        public class ExportException : Exception
+        {
+            public ExportException() { }
+
+            public ExportException(string msg) : base(msg) { }
+
+            protected ExportException(SerializationInfo info, StreamingContext context) : base(info, context) { }
         }
 
         private sealed class LiftMerger : ILiftMerger

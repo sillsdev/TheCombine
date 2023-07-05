@@ -21,7 +21,9 @@ namespace BackendFramework.Models
         /// </summary>
         [Required]
         [BsonElement("guid")]
+#pragma warning disable CA1720
         public Guid Guid { get; set; }
+#pragma warning restore CA1720
 
         [Required]
         [BsonElement("vernacular")]

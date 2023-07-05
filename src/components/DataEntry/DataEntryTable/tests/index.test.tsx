@@ -89,6 +89,7 @@ const renderTable = async (): Promise<void> => {
           openTree={mockOpenTree}
           hideQuestions={mockHideQuestions}
           showExistingData={jest.fn()}
+          updateHeight={jest.fn()}
         />
       </Provider>
     );

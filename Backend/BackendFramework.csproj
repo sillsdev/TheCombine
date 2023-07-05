@@ -4,10 +4,10 @@
     <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <AnalysisMode>Minimum</AnalysisMode>
+    <AnalysisMode>Recommended</AnalysisMode>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>$(NoWarn);CA1305;CA1816;CS1591</NoWarn>
+    <NoWarn>$(NoWarn);CA1305;CA1816;CA1848;CS1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Data\sdList.txt" />
