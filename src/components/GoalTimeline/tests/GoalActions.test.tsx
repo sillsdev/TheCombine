@@ -6,7 +6,6 @@ import { User, UserEdit } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import { defaultState as goalsState } from "components/GoalTimeline/DefaultState";
 import {
-  defaultState as goalsState,
   GoalActionTypes,
   LoadUserEditsAction,
   SetCurrentGoalAction,

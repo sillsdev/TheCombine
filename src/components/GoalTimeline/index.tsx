@@ -14,7 +14,7 @@ import GoalList from "components/GoalTimeline/GoalList";
 import {
   asyncAddGoal,
   asyncGetUserEdits,
-} from "components/GoalTimeline/Redux/GoalActions";
+} from "components/GoalTimeline/Redux/GoalSlice";
 import { StoreState } from "types";
 import { Goal, GoalType } from "types/goals";
 import { useAppDispatch, useAppSelector } from "types/hooks";

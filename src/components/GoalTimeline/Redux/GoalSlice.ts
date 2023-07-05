@@ -3,11 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import * as Backend from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
 import router from "browserRouter";
-import {
-  GoalActionTypes,
-  LoadUserEditsAction,
-  SetCurrentGoalAction,
-} from "components/GoalTimeline/Redux/GoalReduxTypes";
+import { defaultState } from "components/GoalTimeline/DefaultState";
 import { MergeDupData } from "goals/MergeDupGoal/MergeDupsTypes";
 import {
   dispatchMergeStepData,

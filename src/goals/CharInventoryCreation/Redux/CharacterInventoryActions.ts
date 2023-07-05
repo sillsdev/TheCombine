@@ -2,7 +2,7 @@ import { Project } from "api/models";
 import { getFrontierWords } from "backend";
 import router from "browserRouter";
 import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalSlice";
-import { saveChangesToProject } from "components/Project/ProjectActions";
+import { asyncUpdateCurrentProject } from "components/Project/ProjectActions";
 import {
   CharacterInventoryState,
   CharacterSetEntry,

@@ -15,15 +15,6 @@ import { ValidateChars } from "goals/ValidateChars/ValidateChars";
 import { StoreAction, StoreActionTypes } from "rootActions";
 import { Goal, GoalsState } from "types/goals";
 
-function emptyGoalState(): GoalsState {
-  return {
-    ...defaultState,
-    allGoalTypes: [],
-    currentGoal: { ...new Goal(), guid: expect.any(String) },
-    goalTypeSuggestions: [],
-  };
-}
-
 describe("GoalReducer", () => {
   describe("GoalActionTypes.LOAD_USER_EDITS", () => {
     it("Should return the default state", () => {

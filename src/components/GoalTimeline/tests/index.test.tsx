@@ -17,7 +17,7 @@ jest.mock("backend", () => ({
 jest.mock("backend/localStorage", () => ({
   getCurrentUser: () => ({ projectRoles: mockProjectRoles }),
 }));
-jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({
+jest.mock("components/GoalTimeline/Redux/GoalSlice", () => ({
   asyncAddGoal: (goal: Goal) => mockChooseGoal(goal),
   asyncGetUserEdits: () => jest.fn(),
 }));
