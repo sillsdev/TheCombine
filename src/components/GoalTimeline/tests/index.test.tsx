@@ -5,7 +5,7 @@ import createMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import { Permission } from "api";
+import { Permission } from "api/models";
 import GoalTimeline, { createSuggestionData } from "components/GoalTimeline";
 import { defaultState } from "components/GoalTimeline/Redux/GoalReduxTypes";
 import { Goal, GoalType, GoalsState } from "types/goals";

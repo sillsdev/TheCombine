@@ -54,7 +54,7 @@ def main() -> None:
     args = parse_args()
     combine = CombineApp()
 
-    # 1. Define users role
+    # 1. Define user role
     if args.admin:
         req_role = Role.Administrator
     elif args.editor:
@@ -103,7 +103,7 @@ def main() -> None:
             if args.verbose:
                 print(f"Updated Role {user_role_id} with role {req_role}.")
         elif args.verbose:
-            print(f"No update required: requested role is {req_role.value} but current role is {curr_role}.")
+            print(f"No update: requested role {req_role.value} but current role is {curr_role}.")
     elif len(result) == 0:
         #  4. The user is not in the project
         #    a. create a document in the UserRolesCollection,

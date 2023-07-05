@@ -46,8 +46,7 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
-            var userRoles = await _userRoleRepo.GetAllUserRoles(projectId);
-            return Ok(userRoles);
+            return Ok(await _userRoleRepo.GetAllUserRoles(projectId));
         }
 
         /// <summary> Deletes all <see cref="UserRole"/>s for specified <see cref="Project"/></summary>

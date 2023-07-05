@@ -16,7 +16,7 @@ from maint_utils import run_cmd
 class Role(Enum):
     """Define enumerated type for Combine user roles."""
 
-    #None = 0
+    # None = 0
     # Integer value 1 is currently unused.
     Harvester = 2
     # Integer value 3 is currently unused.
