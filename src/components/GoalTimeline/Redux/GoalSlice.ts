@@ -38,7 +38,7 @@ export const goalSlice = createSlice({
     setCurrentGoalIndexAction: (state, action) => {
       state.currentGoal.index = action.payload;
     },
-    setCurrentGoalStatusAction: (state, action) => {
+    setCurrentGoalsStateAction: (state, action) => {
       state.currentGoal.status = action.payload;
     },
     reset: (state) => {
@@ -53,7 +53,7 @@ const {
   loadUserEditsAction,
   setCurrentGoalAction,
   setCurrentGoalIndexAction,
-  setCurrentGoalStatusAction,
+  setCurrentGoalsStateAction,
   reset,
 } = goalSlice.actions;
 
@@ -75,7 +75,7 @@ export function setCurrentGoalIndex(index: number): PayloadAction {
 }
 
 export function setCurrentGoalStatus(status: GoalStatus): PayloadAction {
-  return setCurrentGoalStatusAction(status);
+  return setCurrentGoalsStateAction(status);
 }
 
 // Dispatch Functions
