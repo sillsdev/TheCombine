@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -36,15 +35,13 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> EmailInviteToProject([FromBody, BindRequired] EmailInviteData data)
         {
-            var projectId = data.ProjectId;
-            if (!_permissionService.HasProjectPermission(
-                HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
                 return Forbid();
             }
-            // User cannot give permissions they don't have
-            if (ProjectRole.RolePermissions(data.Role).Any(permission =>
-                !_permissionService.HasProjectPermission(HttpContext, permission, projectId)))
+
+            var projectId = data.ProjectId;
+            if (!_permissionService.ContainsProjectRole(HttpContext, data.Role, projectId))
             {
                 return Forbid();
             }
