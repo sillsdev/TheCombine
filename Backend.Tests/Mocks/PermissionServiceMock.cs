@@ -96,6 +96,21 @@ namespace Backend.Tests.Mocks
             return HasProjectPermission(request, permission).Result;
         }
 
+        /// <summary>
+        /// By default this will return true, unless the test passes in an <see cref="UnauthorizedHttpContext"/>.
+        ///
+        /// <param name="request">
+        /// Note this parameter is nullable in the mock implementation even though the real implementation it is not
+        /// to support unit testing when `HttpContext`s are not available.
+        /// </param>
+        /// <param name="role"> Same as the real implementation. </param>
+        /// <param name="projectId"> Same as the real implementation. </param>
+        /// </summary>
+        public bool ContainsProjectRole(HttpContext? request, Role role, string projectId)
+        {
+            return IsAuthorizedHttpContext(request);
+        }
+
         public Task<bool> IsViolationEdit(HttpContext request, string userEditId, string projectId)
         {
             return Task.FromResult(false);

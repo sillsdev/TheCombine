@@ -54,7 +54,7 @@ def main() -> None:
     args = parse_args()
     combine = CombineApp()
 
-    # 1. Define user's role
+    # 1. Define users role
     if args.admin:
         req_role = Role.Administrator
     elif args.editor:

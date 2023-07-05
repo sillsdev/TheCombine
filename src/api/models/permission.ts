@@ -18,12 +18,12 @@
  * @enum {string}
  */
 export enum Permission {
-  WordEntry = "WordEntry",
-  MergeAndReviewEntries = "MergeAndReviewEntries",
-  Export = "Export",
-  DeleteEditSettingsAndUsers = "DeleteEditSettingsAndUsers",
-  Statistics = "Statistics",
-  Import = "Import",
-  CharacterInventory = "CharacterInventory",
   Archive = "Archive",
+  CharacterInventory = "CharacterInventory",
+  Import = "Import",
+  Statistics = "Statistics",
+  DeleteEditSettingsAndUsers = "DeleteEditSettingsAndUsers",
+  Export = "Export",
+  MergeAndReviewEntries = "MergeAndReviewEntries",
+  WordEntry = "WordEntry",
 }
