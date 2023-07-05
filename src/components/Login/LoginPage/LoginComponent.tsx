@@ -214,9 +214,8 @@ export class Login extends React.Component<LoginProps, LoginState> {
                 <Grid item xs={4} sm={3}>
                   <Button
                     id={`${idAffix}-signUp`}
-                    onClick={() => {
-                      router.navigate(Path.SignUp);
-                    }}
+                    onClick={() => router.navigate(Path.SignUp)}
+                    variant="outlined"
                   >
                     {this.props.t("login.signUp")}
                   </Button>
