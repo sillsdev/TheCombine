@@ -5,6 +5,7 @@ using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
@@ -99,8 +100,36 @@ namespace Backend.Tests.Controllers
             var action = await _userRoleController.GetCurrentPermissions(_projId);
             Assert.IsInstanceOf<ObjectResult>(action);
 
-            var foundUserRole = ((ObjectResult)action).Value as List<Permission>;
-            Assert.AreEqual(ProjectRole.RolePermissions(userRole.Role!), foundUserRole);
+            var foundPermissions = ((ObjectResult)action).Value as List<Permission>;
+            Assert.AreEqual(ProjectRole.RolePermissions(userRole.Role!), foundPermissions);
+        }
+
+        [Test]
+        public async Task TestGetCurrentPermissionsMissingUserRole()
+        {
+            var user = await _userRepo.Create(new User());
+            _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.HttpContextWithUserId(user!.Id);
+            user.ProjectRoles[_projId] = "id-for-nonexistent-user-role";
+            await _userRepo.Update(user.Id, user);
+
+            var action = await _userRoleController.GetCurrentPermissions(_projId);
+            Assert.IsInstanceOf<ObjectResult>(action);
+
+            var foundPermissions = ((ObjectResult)action).Value as List<Permission>;
+            Assert.AreEqual(foundPermissions!.Count, 0);
+        }
+
+        [Test]
+        public async Task TestGetCurrentPermissionsMissingUserRoleId()
+        {
+            var user = await _userRepo.Create(new User());
+            _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.HttpContextWithUserId(user!.Id);
+
+            var action = await _userRoleController.GetCurrentPermissions(_projId);
+            Assert.IsInstanceOf<ObjectResult>(action);
+
+            var foundPermissions = ((ObjectResult)action).Value as List<Permission>;
+            Assert.AreEqual(foundPermissions!.Count, 0);
         }
 
         [Test]
@@ -176,6 +205,19 @@ namespace Backend.Tests.Controllers
             var action = await _userRoleController.GetCurrentPermissions(_projId);
             var updatedPermissions = ((ObjectResult)action).Value as List<Permission>;
             Assert.AreEqual(ProjectRole.RolePermissions(projectRole.Role), updatedPermissions);
+        }
+
+        [Test]
+        public async Task TestUpdateUserRoleNoChange()
+        {
+            var userRole = RandomUserRole(Role.Harvester);
+            await _userRoleRepo.Create(userRole);
+            var user = new User { ProjectRoles = { [_projId] = userRole.Id } };
+            var userId = (await _userRepo.Create(user))!.Id;
+            _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.HttpContextWithUserId(userId);
+            var projectRole = new ProjectRole { ProjectId = _projId, Role = userRole.Role };
+            var result = await _userRoleController.UpdateUserRole(userId, projectRole);
+            Assert.AreEqual(((ObjectResult)result).StatusCode, StatusCodes.Status304NotModified);
         }
 
         [Test]

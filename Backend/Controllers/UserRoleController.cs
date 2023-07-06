@@ -100,12 +100,11 @@ namespace BackendFramework.Controllers
                 return NotFound($"user: {userId}");
             }
 
-            var userRoleId = user.ProjectRoles[projectId];
-            if (userRoleId is null)
+            if (!user.ProjectRoles.ContainsKey(projectId))
             {
                 return Ok(new List<Permission>());
             }
-            var userRole = await _userRoleRepo.GetUserRole(projectId, userRoleId);
+            var userRole = await _userRoleRepo.GetUserRole(projectId, user.ProjectRoles[projectId]);
             if (userRole is null)
             {
                 return Ok(new List<Permission>());

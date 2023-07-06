@@ -58,6 +58,16 @@ namespace Backend.Tests.Mocks
         public Task<ResultOfUpdate> Update(string userRoleId, UserRole userRole)
         {
             var foundUserRole = _userRoles.Single(ur => ur.Id == userRoleId);
+            if (foundUserRole is null)
+            {
+                return Task.FromResult(ResultOfUpdate.NotFound);
+            }
+
+            if (foundUserRole.ProjectId == userRole.ProjectId && foundUserRole.Role == userRole.Role)
+            {
+                return Task.FromResult(ResultOfUpdate.NoChange);
+            }
+
             var success = _userRoles.Remove(foundUserRole);
             if (!success)
             {
