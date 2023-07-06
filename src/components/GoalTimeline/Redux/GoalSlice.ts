@@ -17,7 +17,7 @@ import { Path } from "types/path";
 import { convertEditToGoal } from "utilities/goalUtilities";
 
 export const goalSlice = createSlice({
-  name: "goal",
+  name: "goalsState",
   initialState: defaultState,
   reducers: {
     loadUserEditsAction: (state, action) => {
