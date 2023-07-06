@@ -19,7 +19,6 @@ import "tests/reactI18nextMock";
 import { Permission } from "api/models";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
 import ProjectSettings from "components/ProjectSettings";
-import { StoreState } from "types";
 import { randomProject } from "types/project";
 
 jest.mock("react-router-dom", () => ({
@@ -54,17 +53,20 @@ jest.mock("types/hooks", () => {
 
 const mockGetCurrentPermissions = jest.fn();
 
-const createMockStore = configureMockStore();
-const createMockState = () =>
-  ({ currentProjectState: { project: randomProject() } } as StoreState);
+const createMockStore = () =>
+  configureMockStore()({
+    currentProjectState: { project: randomProject() },
+  });
 
 let projSettingsRenderer: renderer.ReactTestRenderer;
 let projSettingsInstance: renderer.ReactTestInstance;
 
-const updateProjSettings = async (state: StoreState = createMockState()) => {
+const updateProjSettings = async () => {
   await renderer.act(async () => {
+    // For this update to trigger a permissions refresh, project.id must change.
+    // This is accomplished by randomProject() in createMockStore().
     projSettingsRenderer.update(
-      <Provider store={createMockStore(state)}>
+      <Provider store={createMockStore()}>
         <ProjectSettings />
       </Provider>
     );
@@ -80,7 +82,7 @@ beforeAll(async () => {
   resetMocks();
   await renderer.act(async () => {
     projSettingsRenderer = renderer.create(
-      <Provider store={createMockStore(createMockState())}>
+      <Provider store={createMockStore()}>
         <ProjectSettings />
       </Provider>
     );
@@ -97,9 +99,9 @@ const withArchivePerm = [Archive]; // icon for archive component
 const withDeleteEditPerm = [
   Edit, // icon for ProjectName
   Language, // icon for ProjectLanguages,
-  Sms, // icon for ProjectAutocomplete,
   People, // icon for ActiveProjectUsers
   PersonAdd, // icon for AddProjectUsers
+  Sms, // icon for ProjectAutocomplete,
 ];
 const withExportPerm = [GetApp]; // icon for ExportButton
 const withImportPerm = [CloudUpload]; // icon for ProjectImport
