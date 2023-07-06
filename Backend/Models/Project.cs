@@ -292,6 +292,13 @@ namespace BackendFramework.Models
         [Required]
         public string Font { get; set; }
 
+        public WritingSystem()
+        {
+            Bcp47 = "";
+            Name = "";
+            Font = "";
+        }
+
         public WritingSystem(string bcp47 = "", string name = "", string font = "")
         {
             Bcp47 = bcp47;
