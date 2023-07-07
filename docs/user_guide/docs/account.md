@@ -16,7 +16,7 @@ To create a new account, click the [SIGN UP](../sign-up) button on the Login pag
 
 [Log in](../login) to The Combine with the username and password given at registration.
 
-If you want to change your password, click the "Forget password?" link. Follow the instructions and a password-reset
+If you want to change your password, click the "Forgot password?" link. Follow the instructions and a password-reset
 will be sent to the email address associated with your account.
 
 !!! important
