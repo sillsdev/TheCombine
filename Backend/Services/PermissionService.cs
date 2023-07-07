@@ -145,19 +145,13 @@ namespace BackendFramework.Services
             var projectPermissionsList = GetProjectPermissions(request);
 
             // Assert that the user has all permissions in the specified role
-            foreach (var projectPermissions in projectPermissionsList)
+            foreach (var projPermissions in projectPermissionsList)
             {
-                if (projectPermissions.ProjectId != projectId)
+                if (projPermissions.ProjectId != projectId)
                 {
                     continue;
                 }
-
-                if (ProjectRole.RolePermissions(role).Any(p => !projectPermissions.Permissions.Contains(p)))
-                {
-                    return false;
-                }
-
-                return true;
+                return ProjectRole.RolePermissions(role).All(p => projPermissions.Permissions.Contains(p));
             }
             return false;
         }

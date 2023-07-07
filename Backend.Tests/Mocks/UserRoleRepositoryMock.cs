@@ -63,7 +63,7 @@ namespace Backend.Tests.Mocks
                 return Task.FromResult(ResultOfUpdate.NotFound);
             }
 
-            if (foundUserRole.ProjectId == userRole.ProjectId && foundUserRole.Role == userRole.Role)
+            if (foundUserRole.ContentEquals(userRole))
             {
                 return Task.FromResult(ResultOfUpdate.NoChange);
             }

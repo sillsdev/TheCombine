@@ -23,13 +23,13 @@ namespace BackendFramework.Models
         {
             Email = "";
             Token = "";
-            Role = Role.Harvester;
+            Role = Role.None;
         }
 
         public EmailInvite(int daysUntilExpires)
         {
             Email = "";
-            Role = Role.Harvester;
+            Role = Role.None;
             ExpireTime = DateTime.Now.AddDays(daysUntilExpires);
 
             var byteToken = new byte[TokenSize];
