@@ -29,7 +29,7 @@ const writingSystem = {
 
 export const defaultWritingSystem = writingSystem[Bcp47Code.Default];
 
-// This list should cover the languages in public/locales/
+// This list should match the languages in public/locales/
 export const uiWritingSystems = [
   writingSystem[Bcp47Code.Ar],
   writingSystem[Bcp47Code.En],
@@ -38,7 +38,7 @@ export const uiWritingSystems = [
   writingSystem[Bcp47Code.Pt],
 ];
 
-// This list should cover the languages in deploy/scripts/semantic_domains/xml/
+// This list should match the languages in deploy/scripts/semantic_domains/xml/
 export const semDomWritingSystems = [
   writingSystem[Bcp47Code.Ar],
   writingSystem[Bcp47Code.En],
@@ -50,6 +50,18 @@ export const semDomWritingSystems = [
   writingSystem[Bcp47Code.Pt],
   writingSystem[Bcp47Code.Ru],
   writingSystem[Bcp47Code.Sw],
+];
+
+// This list should match the languages in src/resources/dictionaries/
+export const dictionaryLangs = [
+  Bcp47Code.Ar,
+  Bcp47Code.En,
+  Bcp47Code.Es,
+  Bcp47Code.Fr,
+  Bcp47Code.Hi,
+  Bcp47Code.Pt,
+  Bcp47Code.Ru,
+  Bcp47Code.Sw,
 ];
 
 // Used by i18n for un(der)-supported languages.
