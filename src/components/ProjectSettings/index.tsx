@@ -62,7 +62,7 @@ export default function ProjectSettingsComponent() {
   }, [permissions, dispatch]);
 
   const archiveUpdate = (): void => {
-    toast.success(t("projectSettings.user.archiveToastSuccess"));
+    toast.success(t("projectSettings.archive.archiveToastSuccess"));
     setTimeout(() => {
       navigate(Path.ProjScreen);
     }, 2000);
@@ -178,7 +178,7 @@ export default function ProjectSettingsComponent() {
       {permissions.includes(Permission.Archive) && (
         <BaseSettingsComponent
           icon={<Archive />}
-          title={t("projectSettings.user.archive")}
+          title={t("projectSettings.archive.archive")}
           body={
             <ProjectButtonWithConfirmation
               archive // Project Settings are only available for active projects
