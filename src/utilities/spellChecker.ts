@@ -33,7 +33,7 @@ export default class SpellChecker {
     });
   }
 
-  correct(word: string) {
+  correct(word: string): boolean | undefined {
     return this.spell?.correct(word);
   }
 
