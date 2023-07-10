@@ -165,7 +165,20 @@ namespace BackendFramework.Controllers
             {
                 return NotFound(userId);
             }
+
             var userRoleId = changeUser.ProjectRoles[projectId];
+            var userRole = await _userRoleRepo.GetUserRole(projectId, userRoleId);
+            if (userRole is null)
+            {
+                return NotFound(userRoleId);
+            }
+
+            // Prevent deleting role of another user who has more permissions than the actor.
+            if (!_permissionService.ContainsProjectRole(HttpContext, userRole.Role, projectId))
+            {
+                return Forbid();
+            }
+
             changeUser.ProjectRoles.Remove(projectId);
             await _userRepo.Update(changeUser.Id, changeUser);
             var userRoleRepoResult = await _userRoleRepo.Delete(projectId, userRoleId);
@@ -187,6 +200,7 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
+            // Prevent upgrading another user to have more permissions than the actor.
             var projectId = projectRole.ProjectId;
             if (!_permissionService.ContainsProjectRole(HttpContext, projectRole.Role, projectId))
             {
@@ -226,6 +240,12 @@ namespace BackendFramework.Controllers
             if (userRole is null)
             {
                 return NotFound(userRoleId);
+            }
+
+            // Prevent downgrading another user who has more permissions than the actor.
+            if (!_permissionService.ContainsProjectRole(HttpContext, userRole.Role, projectId))
+            {
+                return Forbid();
             }
 
             userRole.Role = projectRole.Role;
