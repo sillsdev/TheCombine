@@ -10,7 +10,7 @@ import {
   MergesCompleted,
   MergeDupData,
   MergeStepData,
-} from "goals/MergeDupGoal/MergeDupsTypes";
+} from "goals/MergeDuplicates/MergeDupsTypes";
 import { newUser } from "types/user";
 
 export type GoalData = CharInvData | MergeDupData;

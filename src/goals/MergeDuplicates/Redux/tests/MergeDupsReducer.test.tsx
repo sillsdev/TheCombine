@@ -4,17 +4,17 @@ import {
   MergeTreeReference,
   MergeTreeWord,
   newMergeTreeWord,
-} from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
-import * as Actions from "goals/MergeDupGoal/Redux/MergeDupActions";
+} from "goals/MergeDuplicates/MergeDupsTreeTypes";
+import * as Actions from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import {
   defaultState,
   mergeDupStepReducer,
-} from "goals/MergeDupGoal/Redux/MergeDupReducer";
+} from "goals/MergeDuplicates/Redux/MergeDupsReducer";
 import {
   MergeTreeAction,
   MergeTreeActionTypes,
   MergeTreeState,
-} from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
+} from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { StoreAction, StoreActionTypes } from "rootActions";
 import { Hash } from "types/hash";
 import { newFlag, testWordList } from "types/word";

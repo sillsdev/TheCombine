@@ -6,11 +6,11 @@ import {
   LoadUserEditsAction,
   SetCurrentGoalAction,
 } from "components/GoalTimeline/Redux/GoalReduxTypes";
-import { MergeDupData } from "goals/MergeDupGoal/MergeDupsTypes";
+import { MergeDupData } from "goals/MergeDuplicates/MergeDupsTypes";
 import {
   dispatchMergeStepData,
   loadMergeDupsData,
-} from "goals/MergeDupGoal/Redux/MergeDupActions";
+} from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { Goal, GoalStatus, GoalType } from "types/goals";

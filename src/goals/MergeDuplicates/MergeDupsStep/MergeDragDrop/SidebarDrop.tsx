@@ -3,12 +3,12 @@ import { IconButton, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
 
-import SidebarDragSense from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/SidebarDragSense";
+import SidebarDragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/SidebarDragSense";
 import {
   MergeTreeSense,
   Sidebar,
-} from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
-import { setSidebar } from "goals/MergeDupGoal/Redux/MergeDupActions";
+} from "goals/MergeDuplicates/MergeDupsTreeTypes";
+import { setSidebar } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { useAppDispatch } from "types/hooks";
 
 interface SidebarDropProps {

@@ -7,15 +7,15 @@ import { v4 } from "uuid";
 
 import { appBarHeight } from "components/AppBar/AppBarTypes";
 import { CancelConfirmDialog } from "components/Dialogs";
-import DropWord from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/DropWord";
-import SidebarDrop from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/SidebarDrop";
-import { MergeTreeReference } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+import DropWord from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DropWord";
+import SidebarDrop from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/SidebarDrop";
+import { MergeTreeReference } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import {
   combineSense,
   deleteSense,
   moveSense,
   orderSense,
-} from "goals/MergeDupGoal/Redux/MergeDupActions";
+} from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import theme from "types/theme";
