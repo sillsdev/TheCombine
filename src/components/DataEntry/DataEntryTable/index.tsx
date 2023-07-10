@@ -1,6 +1,6 @@
 import { ExitToApp, List as ListIcon } from "@mui/icons-material";
 import { Button, Grid, Typography } from "@mui/material";
-import { useSnackbar } from "notistack";
+import { enqueueSnackbar } from "notistack";
 import {
   FormEvent,
   Fragment,
@@ -228,10 +228,9 @@ export default function DataEntryTable(
     suggestedDups: [],
   });
 
-  const { enqueueSnackbar } = useSnackbar();
   const levDist = useMemo(() => new LevenshteinDistance(), []);
   const newVernInput = useRef<HTMLDivElement>(null);
-  const recorder = useMemo(() => new Recorder(), []);
+  const recorder = useMemo(() => new Recorder(enqueueSnackbar), []);
   const spellChecker = useMemo(() => new SpellChecker(), []);
   useEffect(() => {
     spellChecker.updateLang(analysisLang.bcp47);
