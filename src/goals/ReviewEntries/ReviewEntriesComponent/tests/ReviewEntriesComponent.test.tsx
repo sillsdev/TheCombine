@@ -14,7 +14,6 @@ const mockGetFrontierWords = jest.fn();
 const mockMaterialTable = jest.fn();
 const mockUpdateAllWords = jest.fn();
 const mockUuid = jest.fn();
-const mockEnqueue = jest.fn();
 
 // To deal with the table not wanting to behave in testing.
 jest.mock("@material-table/core", () => ({
@@ -32,11 +31,7 @@ jest.mock("@mui/material", () => {
 
 jest.mock("notistack", () => ({
   ...jest.requireActual("notistack"),
-  useSnackbar: () => {
-    return {
-      enqueueSnackbar: mockEnqueue,
-    };
-  },
+  enqueueSnackbar: jest.fn(),
 }));
 jest.mock("uuid", () => ({ v4: () => mockUuid() }));
 jest.mock("backend", () => ({

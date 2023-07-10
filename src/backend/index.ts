@@ -1,6 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { StatusCodes } from "http-status-codes";
 import { Base64 } from "js-base64";
+import { enqueueSnackbar } from "notistack";
 
 import * as Api from "api";
 import { BASE_PATH } from "api/base";
@@ -27,7 +28,6 @@ import {
 import * as LocalStorage from "backend/localStorage";
 import router from "browserRouter";
 import authHeader from "components/Login/AuthHeaders";
-import { errorToast } from "components/Toast/SwalToast";
 import { Goal, GoalStep } from "types/goals";
 import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
@@ -75,17 +75,15 @@ axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
         return Promise.reject(err);
       }
 
-      errorToast.fire({
-        title: `${status} ${response.statusText}`,
-        text: `${response.data}\n${err.config.url}`,
-      });
+      console.error(err);
+      enqueueSnackbar(`${status} ${response.statusText}\n${err.config.url}`);
     }
   } else {
     // Handle if backend is not reachable.
-    errorToast.fire({
-      title: `${err.message}`,
-      text: `Unable to connect to server. Check your network settings.\n${url}`,
-    });
+    console.error(err);
+    enqueueSnackbar(
+      `Unable to connect to server. Check your network settings.\n${url}`
+    );
   }
 
   return Promise.reject(err);
@@ -360,10 +358,7 @@ export async function getAllActiveProjectsByUser(
       /** If there was an error, the project probably was manually deleted
        from the database or is ill-formatted. */
       console.error(err);
-      await errorToast.fire({
-        title: "Error Fetching Project",
-        text: `Unable to fetch Project: ${projectId}`,
-      });
+      enqueueSnackbar(`Unable to fetch Project: ${projectId}`);
     }
   }
   return projects;
