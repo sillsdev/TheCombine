@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useSnackbar } from "notistack";
+import { enqueueSnackbar } from "notistack";
 import { FormEvent, Fragment, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -36,7 +36,6 @@ export function UserSettings(props: { user: User }): ReactElement {
   const [emailTaken, setEmailTaken] = useState(false);
   const [avatar, setAvatar] = useState(getAvatar());
 
-  const { enqueueSnackbar } = useSnackbar();
   const { t } = useTranslation();
 
   async function isEmailOkay(): Promise<boolean> {

@@ -27,7 +27,7 @@ import { firstGlossText } from "utilities/wordUtilities";
 jest.mock("@mui/material/Autocomplete", () => "div");
 jest.mock("notistack", () => ({
   ...jest.requireActual("notistack"),
-  useSnackbar: () => ({ enqueueSnackbar: jest.fn() }),
+  enqueueSnackbar: jest.fn(),
 }));
 
 jest.mock("backend", () => ({
