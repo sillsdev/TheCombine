@@ -854,11 +854,11 @@ Run:
 kubectl exec -it deployment/maintenance -- add_user_to_proj.py --project <PROJECT_NAME> --user <USER>
 ```
 
-Notes:
+For additional options, run:
 
-1. The `--project` and `--user` options may be shortened to `--p` and `--u` respectively.
-2. The user is added to the project with `Harvester` role. Add the `--editor` option to instead add the user with
-   `Editor` role, or the `--admin` option to instead add the user with `Administrator` role.
+```bash
+kubectl exec -it deployment/maintenance -- add_user_to_proj.py --help`
+```
 
 #### Backup _TheCombine_
 
