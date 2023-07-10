@@ -152,7 +152,7 @@ export default function ProjectSettingsComponent() {
         <BaseSettingsComponent
           icon={<People />}
           title={t("projectSettings.user.currentUsers")}
-          body={<ActiveProjectUsers />}
+          body={<ActiveProjectUsers projectId={project.id} />}
         />
       )}
 

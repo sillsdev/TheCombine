@@ -18,7 +18,7 @@ import { useSelector } from "react-redux";
 
 import { Role, User } from "api/models";
 import { avatarSrc, getUserRoles } from "backend";
-import { getCurrentUser, getProjectId } from "backend/localStorage";
+import { getCurrentUser } from "backend/localStorage";
 import CancelConfirmDialogCollection from "components/ProjectSettings/ProjectUsers/CancelConfirmDialogCollection";
 import SortOptions, {
   UserOrder,
@@ -28,12 +28,13 @@ import { StoreState } from "types";
 import { Hash } from "types/hash";
 import theme from "types/theme";
 
-export default function ActiveProjectUsers(): ReactElement {
+export default function ActiveProjectUsers(props: {
+  projectId: string;
+}): ReactElement {
   const projectUsers = useSelector(
     (state: StoreState) => state.currentProjectState.users
   );
 
-  const [projectId] = useState(getProjectId());
   const [userAvatar, setUserAvatar] = useState<Hash<string>>({});
   const [userRoles, setUserRoles] = useState<Hash<Role>>({});
   const [userOrder, setUserOrder] = useState<UserOrder>(UserOrder.Username);
@@ -50,12 +51,14 @@ export default function ActiveProjectUsers(): ReactElement {
     getUserRoles().then((userRoles) => {
       const roles: Hash<Role> = {};
       projectUsers.forEach((u) => {
-        const ur = userRoles.find((r) => r.id === u.projectRoles[projectId]);
+        const ur = userRoles.find(
+          (r) => r.id === u.projectRoles[props.projectId]
+        );
         roles[u.id] = ur?.role ?? Role.None;
       });
       setUserRoles(roles);
     });
-  }, [projectId, projectUsers]);
+  }, [projectUsers, props.projectId]);
 
   useEffect(() => {
     const newUserAvatar: Hash<string> = {};
@@ -72,7 +75,7 @@ export default function ActiveProjectUsers(): ReactElement {
   }, [compareUsers, projectUsers]);
 
   const currentUser = getCurrentUser();
-  if (!currentUser || !projectId) {
+  if (!currentUser || !props.projectId) {
     return <Fragment />;
   }
 
