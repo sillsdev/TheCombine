@@ -1,5 +1,5 @@
 import { Button, Grid } from "@mui/material";
-import { ReactElement, useCallback, useState } from "react";
+import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { LoadingButton } from "components/Buttons";
@@ -14,27 +14,20 @@ import theme from "types/theme";
 export default function SaveSkipButtons(): ReactElement {
   const dispatch = useAppDispatch();
 
-  const advanceStep = useCallback(
-    async () => await dispatch(asyncAdvanceStep()),
-    [dispatch]
-  );
-  const clearSidebar = useCallback(() => dispatch(setSidebar()), [dispatch]);
-  const merge = useCallback(async () => await dispatch(mergeAll()), [dispatch]);
-
   const [isSaving, setIsSaving] = useState(false);
 
   const { t } = useTranslation();
 
   const next = async (): Promise<void> => {
-    clearSidebar();
+    dispatch(setSidebar());
     setIsSaving(false);
-    await advanceStep();
+    await dispatch(asyncAdvanceStep());
   };
 
   const saveContinue = async (): Promise<void> => {
     setIsSaving(true);
-    clearSidebar();
-    await merge().then(next);
+    dispatch(setSidebar());
+    await dispatch(mergeAll()).then(next);
   };
 
   return (
