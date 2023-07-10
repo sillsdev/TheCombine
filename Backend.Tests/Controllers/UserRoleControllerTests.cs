@@ -101,7 +101,12 @@ namespace Backend.Tests.Controllers
             Assert.IsInstanceOf<ObjectResult>(action);
 
             var foundPermissions = ((ObjectResult)action).Value as List<Permission>;
-            Assert.AreEqual(ProjectRole.RolePermissions(userRole.Role!), foundPermissions);
+            var expectedPermissions = ProjectRole.RolePermissions(userRole.Role!);
+            Assert.AreEqual(expectedPermissions.Count, foundPermissions!.Count);
+            expectedPermissions.ForEach(p =>
+            {
+                Assert.Contains(p, foundPermissions);
+            });
         }
 
         [Test]
@@ -203,8 +208,14 @@ namespace Backend.Tests.Controllers
             var projectRole = new ProjectRole { ProjectId = _projId, Role = Role.Editor };
             await _userRoleController.UpdateUserRole(userId, projectRole);
             var action = await _userRoleController.GetCurrentPermissions(_projId);
+
             var updatedPermissions = ((ObjectResult)action).Value as List<Permission>;
-            Assert.AreEqual(ProjectRole.RolePermissions(projectRole.Role), updatedPermissions);
+            var expectedPermissions = ProjectRole.RolePermissions(projectRole.Role);
+            Assert.AreEqual(expectedPermissions.Count, updatedPermissions!.Count);
+            expectedPermissions.ForEach(p =>
+            {
+                Assert.Contains(p, updatedPermissions);
+            });
         }
 
         [Test]
@@ -229,8 +240,14 @@ namespace Backend.Tests.Controllers
             var newUserRoleId = (string)((OkObjectResult)result).Value!;
             _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.HttpContextWithUserId(userId);
             var action = await _userRoleController.GetCurrentPermissions(_projId);
+
             var updatedPermissions = ((ObjectResult)action).Value as List<Permission>;
-            Assert.AreEqual(ProjectRole.RolePermissions(projectRole.Role), updatedPermissions);
+            var expectedPermissions = ProjectRole.RolePermissions(projectRole.Role);
+            Assert.AreEqual(expectedPermissions.Count, updatedPermissions!.Count);
+            expectedPermissions.ForEach(p =>
+            {
+                Assert.Contains(p, updatedPermissions);
+            });
         }
 
         [Test]
