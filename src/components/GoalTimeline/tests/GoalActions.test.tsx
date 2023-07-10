@@ -14,8 +14,8 @@ import {
 import { CreateCharInv } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { HandleFlags } from "goals/HandleFlags/HandleFlags";
 import {
-  MergeDupData,
   MergeDups,
+  MergeDupsData,
   MergeStepData,
 } from "goals/MergeDuplicates/MergeDupsTypes";
 import { goalDataMock } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
@@ -322,7 +322,7 @@ describe("GoalActions", () => {
 
       actions.updateStepFromData(goal);
       expect((goal.steps[0] as MergeStepData).words).toEqual(
-        (goal.data as MergeDupData).plannedWords[0]
+        (goal.data as MergeDupsData).plannedWords[0]
       );
       expect(goal.currentStep).toEqual(0);
     });

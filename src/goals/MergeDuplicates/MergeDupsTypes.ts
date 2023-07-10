@@ -1,7 +1,7 @@
 import { MergeSourceWord, MergeUndoIds, MergeWords, Word } from "api/models";
 import { Goal, GoalName, GoalType } from "types/goals";
 
-export interface MergeDupData {
+export interface MergeDupsData {
   plannedWords: Word[][];
 }
 
@@ -24,7 +24,7 @@ export function newMergeWords(
 export class MergeDups extends Goal {
   constructor(
     steps: MergeStepData[] = [],
-    data: MergeDupData = { plannedWords: [[]] }
+    data: MergeDupsData = { plannedWords: [[]] }
   ) {
     super(GoalType.MergeDups, GoalName.MergeDups, steps, data);
   }

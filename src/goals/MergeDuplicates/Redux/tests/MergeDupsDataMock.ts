@@ -1,4 +1,4 @@
-import { MergeDupData } from "goals/MergeDuplicates/MergeDupsTypes";
+import { MergeDupsData } from "goals/MergeDuplicates/MergeDupsTypes";
 import { simpleWord } from "types/word";
 
 const wordsArrayMock = () => [
@@ -13,7 +13,7 @@ const wordsArrayMock = () => [
   simpleWord("", ""),
 ];
 
-export const goalDataMock: MergeDupData = {
+export const goalDataMock: MergeDupsData = {
   plannedWords: [
     wordsArrayMock(),
     wordsArrayMock(),
