@@ -56,11 +56,11 @@ def main() -> None:
 
     # 1. Define user role
     if args.admin:
-        req_role = Role.Administrator
+        req_role = Role.Administrator.value
     elif args.editor:
-        req_role = Role.Editor
+        req_role = Role.Editor.value
     else:
-        req_role = Role.Harvester
+        req_role = Role.Harvester.value
 
     # 2. Lookup the user id
     user_id = combine.get_user_id(args.user)
@@ -88,27 +88,21 @@ def main() -> None:
         # The user is in the project
         user_role_id = result[0]["projectRoles"][proj_id]
         select_role = f'{{ _id: ObjectId("{user_role_id}")}}'
-        # Look up the current user role
-        user_role = combine.db_query("UserRolesCollection", select_role)
-        # Update the role if "higher"
-        curr_role = user_role[0]["role"]
-        if req_role.value > curr_role:
-            update_role = f'{{ $set: {{"role" : {req_role.value}}} }}'
-            upd_result = combine.db_cmd(
-                f"db.UserRolesCollection.findOneAndUpdate({select_role}, {update_role})"
-            )
-            if upd_result is None:
-                print(f"Could not update role for {args.user}.", file=sys.stderr)
-                sys.exit(1)
-            if args.verbose:
-                print(f"Updated Role {user_role_id} with role {req_role}.")
-        elif args.verbose:
-            print(f"No update: requested role {req_role.value} but current role is {curr_role}.")
+        # Update the role
+        update_role = f'{{ $set: {{"role" : {req_role}}} }}'
+        upd_result = combine.db_cmd(
+            f"db.UserRolesCollection.findOneAndUpdate({select_role}, {update_role})"
+        )
+        if upd_result is None:
+            print(f"Could not update role for {args.user}.", file=sys.stderr)
+            sys.exit(1)
+        if args.verbose:
+            print(f"Updated Role {user_role_id} with role {req_role}.")
     elif len(result) == 0:
         #  4. The user is not in the project
         #    a. create a document in the UserRolesCollection,
         #    b. set the role field in the user role to the requested role.
-        insert_doc = f'{{ "role" : {req_role.value}, "projectId" : "{proj_id}" }}'
+        insert_doc = f'{{ "role" : {req_role}, "projectId" : "{proj_id}" }}'
         insert_result = combine.db_cmd(f"db.UserRolesCollection.insertOne({insert_doc})")
         if insert_result is not None:
             # c. add the new role to the user's document in the UsersCollection

@@ -20,6 +20,7 @@ namespace BackendFramework.Models
 
         [Required]
         [BsonElement("role")]
+        [BsonRepresentation(BsonType.String)]
         public Role Role { get; set; }
 
         public UserRole()
@@ -144,13 +145,12 @@ namespace BackendFramework.Models
     }
 
     public enum Role
-    // The gaps are intended to allow for more roles in the future.
     {
-        Owner = 9,
-        Administrator = 6,
-        Editor = 4,
-        Harvester = 2,
-        None = 0,
+        Owner,
+        Administrator,
+        Editor,
+        Harvester,
+        None,
     }
 
 #pragma warning disable CA1711

@@ -16,16 +16,12 @@ from maint_utils import run_cmd
 class Role(Enum):
     """Define enumerated type for Combine user roles."""
 
-    # None = 0
-    # Integer value 1 is currently unused.
-    Harvester = 2
-    # Integer value 3 is currently unused.
-    Editor = 4
-    # Integer value 5 is currently unused.
-    Administrator = 6
-    # Integer value 7 is currently unused.
-    # Integer value 8 is currently unused.
-    Owner = 9
+    # Values here match names in the enum Role in Backend/Models/UserRoles.cs
+    Owner = "Owner"
+    Administrator = "Administrator"
+    Editor = "Editor"
+    Harvester = "Harvester"
+    NoRole = "None"
 
 
 class CombineApp:
