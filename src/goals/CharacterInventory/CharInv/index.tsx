@@ -42,7 +42,7 @@ export default function CharacterInventory() {
   const dispatch = useAppDispatch();
 
   const selectedCharacter = useAppSelector(
-    (state: StoreState) => state.characterInventoryState.selectedCharacter,
+    (state: StoreState) => state.characterInventoryState.selectedCharacter
   );
 
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);

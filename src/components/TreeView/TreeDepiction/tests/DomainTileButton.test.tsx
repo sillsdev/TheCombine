@@ -32,7 +32,7 @@ function createTile(direction = Direction.Next) {
         direction={direction}
         domain={domMap[mapIds.parent]}
         onClick={MOCK_ANIMATE}
-      />,
+      />
     );
   });
 }

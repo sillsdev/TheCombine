@@ -30,7 +30,7 @@ function Banner(props: BannerProps): ReactElement {
   }, [props.type]);
 
   const handleOnChange = (
-    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
     setText(e.target.value);
   };

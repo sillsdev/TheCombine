@@ -45,7 +45,7 @@ import { SemanticDomainTreeNode } from "../models";
  * @export
  */
 export const SemanticDomainApiAxiosParamCreator = function (
-  configuration?: Configuration,
+  configuration?: Configuration
 ) {
   return {
     /**
@@ -56,7 +56,7 @@ export const SemanticDomainApiAxiosParamCreator = function (
      */
     getAllSemanticDomainTreeNodes: async (
       lang?: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       const localVarPath = `/v1/semanticdomain/domainGetAll`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -102,7 +102,7 @@ export const SemanticDomainApiAxiosParamCreator = function (
     getSemanticDomainFull: async (
       id?: string,
       lang?: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       const localVarPath = `/v1/semanticdomain/domainFull`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -152,7 +152,7 @@ export const SemanticDomainApiAxiosParamCreator = function (
     getSemanticDomainTreeNode: async (
       id?: string,
       lang?: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       const localVarPath = `/v1/semanticdomain/domainTreeNode`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -202,7 +202,7 @@ export const SemanticDomainApiAxiosParamCreator = function (
     getSemanticDomainTreeNodeByName: async (
       name?: string,
       lang?: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       const localVarPath = `/v1/semanticdomain/domainByName`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -261,23 +261,23 @@ export const SemanticDomainApiFp = function (configuration?: Configuration) {
      */
     async getAllSemanticDomainTreeNodes(
       lang?: string,
-      options?: any,
+      options?: any
     ): Promise<
       (
         axios?: AxiosInstance,
-        basePath?: string,
+        basePath?: string
       ) => AxiosPromise<SemanticDomainTreeNode>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getAllSemanticDomainTreeNodes(
           lang,
-          options,
+          options
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -290,24 +290,24 @@ export const SemanticDomainApiFp = function (configuration?: Configuration) {
     async getSemanticDomainFull(
       id?: string,
       lang?: string,
-      options?: any,
+      options?: any
     ): Promise<
       (
         axios?: AxiosInstance,
-        basePath?: string,
+        basePath?: string
       ) => AxiosPromise<SemanticDomainFull>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getSemanticDomainFull(
           id,
           lang,
-          options,
+          options
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -320,24 +320,24 @@ export const SemanticDomainApiFp = function (configuration?: Configuration) {
     async getSemanticDomainTreeNode(
       id?: string,
       lang?: string,
-      options?: any,
+      options?: any
     ): Promise<
       (
         axios?: AxiosInstance,
-        basePath?: string,
+        basePath?: string
       ) => AxiosPromise<SemanticDomainTreeNode>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getSemanticDomainTreeNode(
           id,
           lang,
-          options,
+          options
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -350,24 +350,24 @@ export const SemanticDomainApiFp = function (configuration?: Configuration) {
     async getSemanticDomainTreeNodeByName(
       name?: string,
       lang?: string,
-      options?: any,
+      options?: any
     ): Promise<
       (
         axios?: AxiosInstance,
-        basePath?: string,
+        basePath?: string
       ) => AxiosPromise<SemanticDomainTreeNode>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getSemanticDomainTreeNodeByName(
           name,
           lang,
-          options,
+          options
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
   };
@@ -380,7 +380,7 @@ export const SemanticDomainApiFp = function (configuration?: Configuration) {
 export const SemanticDomainApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
-  axios?: AxiosInstance,
+  axios?: AxiosInstance
 ) {
   const localVarFp = SemanticDomainApiFp(configuration);
   return {
@@ -392,7 +392,7 @@ export const SemanticDomainApiFactory = function (
      */
     getAllSemanticDomainTreeNodes(
       lang?: string,
-      options?: any,
+      options?: any
     ): AxiosPromise<SemanticDomainTreeNode> {
       return localVarFp
         .getAllSemanticDomainTreeNodes(lang, options)
@@ -408,7 +408,7 @@ export const SemanticDomainApiFactory = function (
     getSemanticDomainFull(
       id?: string,
       lang?: string,
-      options?: any,
+      options?: any
     ): AxiosPromise<SemanticDomainFull> {
       return localVarFp
         .getSemanticDomainFull(id, lang, options)
@@ -424,7 +424,7 @@ export const SemanticDomainApiFactory = function (
     getSemanticDomainTreeNode(
       id?: string,
       lang?: string,
-      options?: any,
+      options?: any
     ): AxiosPromise<SemanticDomainTreeNode> {
       return localVarFp
         .getSemanticDomainTreeNode(id, lang, options)
@@ -440,7 +440,7 @@ export const SemanticDomainApiFactory = function (
     getSemanticDomainTreeNodeByName(
       name?: string,
       lang?: string,
-      options?: any,
+      options?: any
     ): AxiosPromise<SemanticDomainTreeNode> {
       return localVarFp
         .getSemanticDomainTreeNodeByName(name, lang, options)
@@ -542,7 +542,7 @@ export class SemanticDomainApi extends BaseAPI {
    */
   public getAllSemanticDomainTreeNodes(
     requestParameters: SemanticDomainApiGetAllSemanticDomainTreeNodesRequest = {},
-    options?: any,
+    options?: any
   ) {
     return SemanticDomainApiFp(this.configuration)
       .getAllSemanticDomainTreeNodes(requestParameters.lang, options)
@@ -558,13 +558,13 @@ export class SemanticDomainApi extends BaseAPI {
    */
   public getSemanticDomainFull(
     requestParameters: SemanticDomainApiGetSemanticDomainFullRequest = {},
-    options?: any,
+    options?: any
   ) {
     return SemanticDomainApiFp(this.configuration)
       .getSemanticDomainFull(
         requestParameters.id,
         requestParameters.lang,
-        options,
+        options
       )
       .then((request) => request(this.axios, this.basePath));
   }
@@ -578,13 +578,13 @@ export class SemanticDomainApi extends BaseAPI {
    */
   public getSemanticDomainTreeNode(
     requestParameters: SemanticDomainApiGetSemanticDomainTreeNodeRequest = {},
-    options?: any,
+    options?: any
   ) {
     return SemanticDomainApiFp(this.configuration)
       .getSemanticDomainTreeNode(
         requestParameters.id,
         requestParameters.lang,
-        options,
+        options
       )
       .then((request) => request(this.axios, this.basePath));
   }
@@ -598,13 +598,13 @@ export class SemanticDomainApi extends BaseAPI {
    */
   public getSemanticDomainTreeNodeByName(
     requestParameters: SemanticDomainApiGetSemanticDomainTreeNodeByNameRequest = {},
-    options?: any,
+    options?: any
   ) {
     return SemanticDomainApiFp(this.configuration)
       .getSemanticDomainTreeNodeByName(
         requestParameters.name,
         requestParameters.lang,
-        options,
+        options
       )
       .then((request) => request(this.axios, this.basePath));
   }

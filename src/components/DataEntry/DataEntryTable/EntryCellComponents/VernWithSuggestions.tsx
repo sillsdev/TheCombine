@@ -27,7 +27,7 @@ interface VernWithSuggestionsProps {
  * An editable vernacular field for new words, that suggests words already in database.
  */
 export default function VernWithSuggestions(
-  props: VernWithSuggestionsProps,
+  props: VernWithSuggestionsProps
 ): ReactElement {
   useEffect(() => {
     if (props.onUpdate) {

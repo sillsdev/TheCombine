@@ -75,7 +75,7 @@ describe("LoginAction", () => {
       mockAuthenticateUser.mockRejectedValue(new Error(mockUser.username));
       const mockStore = createMockStore(mockState);
       await mockStore.dispatch<any>(
-        LoginAction.asyncLogin(mockUser.username, mockUser.password),
+        LoginAction.asyncLogin(mockUser.username, mockUser.password)
       );
       expect(mockStore.getActions()).toEqual([loginAttempt, loginFailure]);
     });
@@ -84,7 +84,7 @@ describe("LoginAction", () => {
       mockAuthenticateUser.mockResolvedValue(mockUser);
       const mockStore = createMockStore(mockState);
       await mockStore.dispatch<any>(
-        LoginAction.asyncLogin(mockUser.username, mockUser.password),
+        LoginAction.asyncLogin(mockUser.username, mockUser.password)
       );
       expect(mockStore.getActions()).toEqual([loginAttempt, loginSuccess]);
     });
@@ -99,8 +99,8 @@ describe("LoginAction", () => {
           mockUser.name,
           mockUser.username,
           mockUser.email,
-          mockUser.password,
-        ),
+          mockUser.password
+        )
       );
       expect(mockStore.getActions()).toEqual([signUpAttempt, signUpFailure]);
     });
@@ -113,8 +113,8 @@ describe("LoginAction", () => {
           mockUser.name,
           mockUser.username,
           mockUser.email,
-          mockUser.password,
-        ),
+          mockUser.password
+        )
       );
       expect(mockStore.getActions()).toEqual([signUpAttempt, signUpSuccess]);
     });
@@ -124,42 +124,42 @@ describe("LoginAction", () => {
     test("loginAttempt", () => {
       testActionCreatorAgainst(
         LoginAction.loginAttempt,
-        LoginActionTypes.LOGIN_ATTEMPT,
+        LoginActionTypes.LOGIN_ATTEMPT
       );
     });
 
     test("loginFailure", () => {
       testActionCreatorAgainst(
         LoginAction.loginFailure,
-        LoginActionTypes.LOGIN_FAILURE,
+        LoginActionTypes.LOGIN_FAILURE
       );
     });
 
     test("loginSuccess", () => {
       testActionCreatorAgainst(
         LoginAction.loginSuccess,
-        LoginActionTypes.LOGIN_SUCCESS,
+        LoginActionTypes.LOGIN_SUCCESS
       );
     });
 
     test("signUpAttempt", () => {
       testActionCreatorAgainst(
         LoginAction.signUpAttempt,
-        LoginActionTypes.SIGN_UP_ATTEMPT,
+        LoginActionTypes.SIGN_UP_ATTEMPT
       );
     });
 
     test("signUpFailure", () => {
       testActionCreatorAgainst(
         LoginAction.signUpFailure,
-        LoginActionTypes.SIGN_UP_FAILURE,
+        LoginActionTypes.SIGN_UP_FAILURE
       );
     });
 
     test("signUpSuccess", () => {
       testActionCreatorAgainst(
         LoginAction.signUpSuccess,
-        LoginActionTypes.SIGN_UP_SUCCESS,
+        LoginActionTypes.SIGN_UP_SUCCESS
       );
     });
   });
@@ -174,7 +174,7 @@ describe("LoginAction", () => {
 
 function testActionCreatorAgainst(
   LoginAction: (name: string) => UserAction,
-  type: LoginType,
+  type: LoginType
 ) {
   expect(LoginAction(mockUser.username)).toEqual({
     type: type,

@@ -19,7 +19,7 @@ const renderAutocomplete = async (): Promise<void> => {
       <ProjectAutocomplete
         project={mockProject}
         updateProject={mockUpdateProject}
-      />,
+      />
     );
   });
 };

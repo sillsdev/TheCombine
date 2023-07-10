@@ -17,7 +17,7 @@ describe("DeleteCell", () => {
       renderer.create(
         <Provider store={mockStore}>
           <DeleteCell rowData={mockWord} />
-        </Provider>,
+        </Provider>
       );
     });
   });

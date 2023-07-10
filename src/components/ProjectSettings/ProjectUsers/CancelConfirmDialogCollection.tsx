@@ -28,7 +28,7 @@ interface CancelConfirmDialogCollectionProps {
  * ActiveProjectUsers.tsx
  */
 export default function CancelConfirmDialogCollection(
-  props: CancelConfirmDialogCollectionProps,
+  props: CancelConfirmDialogCollectionProps
 ): ReactElement {
   const dispatch = useAppDispatch();
   const [removeUserDialogOpen, setRemoveUser] = useState<boolean>(false);
@@ -44,14 +44,14 @@ export default function CancelConfirmDialogCollection(
         setRemoveUser(false);
         setAnchorEl(undefined);
         toast.success(
-          t("projectSettings.userManagement.userRemovedToastSuccess"),
+          t("projectSettings.userManagement.userRemovedToastSuccess")
         );
         dispatch(asyncRefreshCurrentProjectUsers());
       })
       .catch((err) => {
         console.error(err);
         toast.error(
-          t("projectSettings.userManagement.userRemovedToastFailure"),
+          t("projectSettings.userManagement.userRemovedToastFailure")
         );
       });
   }
@@ -64,13 +64,13 @@ export default function CancelConfirmDialogCollection(
         Permission.ImportExport,
         Permission.DeleteEditSettingsAndUsers,
       ],
-      userId,
+      userId
     )
       .then(() => {
         setMakeAdmin(false);
         setAnchorEl(undefined);
         toast.success(
-          t("projectSettings.userManagement.makeAdminToastSuccess"),
+          t("projectSettings.userManagement.makeAdminToastSuccess")
         );
         dispatch(asyncRefreshCurrentProjectUsers());
       })
@@ -83,20 +83,20 @@ export default function CancelConfirmDialogCollection(
   function removeAdmin(userId: string): void {
     addOrUpdateUserRole(
       [Permission.MergeAndReviewEntries, Permission.WordEntry],
-      userId,
+      userId
     )
       .then(() => {
         setRemoveAdmin(false);
         setAnchorEl(undefined);
         toast.success(
-          t("projectSettings.userManagement.removeAdminToastSuccess"),
+          t("projectSettings.userManagement.removeAdminToastSuccess")
         );
         dispatch(asyncRefreshCurrentProjectUsers());
       })
       .catch((err) => {
         console.error(err);
         toast.error(
-          t("projectSettings.userManagement.removeAdminToastFailure"),
+          t("projectSettings.userManagement.removeAdminToastFailure")
         );
       });
   }
@@ -110,7 +110,7 @@ export default function CancelConfirmDialogCollection(
         Permission.DeleteEditSettingsAndUsers,
         Permission.Owner,
       ],
-      userId,
+      userId
     )
       .then(() => {
         addOrUpdateUserRole(
@@ -120,14 +120,14 @@ export default function CancelConfirmDialogCollection(
             Permission.ImportExport,
             Permission.DeleteEditSettingsAndUsers,
           ],
-          props.currentUserId,
+          props.currentUserId
         );
       })
       .then(() => {
         setMakeOwner(false);
         setAnchorEl(undefined);
         toast.success(
-          t("projectSettings.userManagement.makeOwnerToastSuccess"),
+          t("projectSettings.userManagement.makeOwnerToastSuccess")
         );
         dispatch(asyncRefreshCurrentProjectUsers());
       })
@@ -174,7 +174,7 @@ export default function CancelConfirmDialogCollection(
           onClick={() => setMakeOwner(true)}
         >
           {t("buttons.makeOwner")}
-        </MenuItem>,
+        </MenuItem>
       );
     }
   }

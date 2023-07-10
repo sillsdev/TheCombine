@@ -39,7 +39,7 @@ export class ReviewEntriesWord {
     this.id = word.id;
     this.vernacular = word.vernacular;
     this.senses = word.senses.map(
-      (s) => new ReviewEntriesSense(s, analysisLang),
+      (s) => new ReviewEntriesSense(s, analysisLang)
     );
     this.pronunciationFiles = word.audio;
     this.noteText = word.note.text;

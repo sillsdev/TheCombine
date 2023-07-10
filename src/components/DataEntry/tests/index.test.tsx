@@ -78,28 +78,28 @@ describe("DataEntry", () => {
     await renderDataEntry({ currentDomain: mockDomain });
     expect(mockGetSemanticDomainFull).toBeCalledWith(
       mockDomain.id,
-      mockDomain.lang,
+      mockDomain.lang
     );
   });
 
   it("renders on a small screen", async () => {
     await renderDataEntry(
       { currentDomain: mockDomain },
-      smallScreenThreshold - 1,
+      smallScreenThreshold - 1
     );
   });
 });
 
 async function renderDataEntry(
   treeViewState: Partial<TreeViewState>,
-  windowWidth = smallScreenThreshold + 1,
+  windowWidth = smallScreenThreshold + 1
 ): Promise<void> {
   spyOnUseWindowSize(windowWidth);
   await renderer.act(async () => {
     testHandle = renderer.create(
       <Provider store={mockStore({ treeViewState })}>
         <DataEntry />
-      </Provider>,
+      </Provider>
     );
   });
 }

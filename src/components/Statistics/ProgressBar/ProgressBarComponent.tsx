@@ -27,7 +27,7 @@ export default function ProgressBarComponent() {
     const updateProgress = async () => {
       const statList = await getSemanticDomainCounts(
         LocalStorage.getProjectId(),
-        defaultWritingSystem.bcp47,
+        defaultWritingSystem.bcp47
       );
       let domainCount = 0;
       let wordCount = 0;

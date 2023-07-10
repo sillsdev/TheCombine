@@ -18,7 +18,7 @@ interface SidebarDragSenseProps {
 }
 
 export default function SidebarDragSense(
-  props: SidebarDragSenseProps,
+  props: SidebarDragSenseProps
 ): ReactElement {
   const ref: MergeTreeReference = {
     wordId: props.sidebar.wordId,

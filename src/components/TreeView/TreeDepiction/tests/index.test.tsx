@@ -14,23 +14,23 @@ describe("Tests AddWords", () => {
   testFromNode("Renders correctly: from parent", testDomainMap[mapIds.parent]);
   testFromNode(
     "Renders correctly: node w/ even # of subdomains",
-    testDomainMap[mapIds.evenKid],
+    testDomainMap[mapIds.evenKid]
   );
   testFromNode(
     "Renders correctly: node w/ odd # of subdomains",
-    testDomainMap[mapIds.oddKid],
+    testDomainMap[mapIds.oddKid]
   );
   testFromNode(
     "Renders correctly: node w/ 1 subdomains and 2 siblings",
-    testDomainMap[mapIds.longKid],
+    testDomainMap[mapIds.longKid]
   );
   testFromNode(
     "Renders correctly: node w/ 1 subdomains and no siblings",
-    testDomainMap[mapIds.depth3],
+    testDomainMap[mapIds.depth3]
   );
   testFromNode(
     "Renders correctly: node w/ no subdomains",
-    testDomainMap[mapIds.depth5],
+    testDomainMap[mapIds.depth5]
   );
 });
 
@@ -45,7 +45,7 @@ function testFromNode(message: string, node: SemanticDomainTreeNode) {
 function createTree(domain: SemanticDomainTreeNode) {
   renderer.act(() => {
     treeMaster = renderer.create(
-      <TreeDepiction currentDomain={domain} animate={jest.fn()} />,
+      <TreeDepiction currentDomain={domain} animate={jest.fn()} />
     );
   });
 }

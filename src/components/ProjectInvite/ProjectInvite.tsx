@@ -23,7 +23,7 @@ export default function ProjectInvite(): ReactElement {
   const inProgress = useAppSelector((state) => state.loginState.signUpAttempt);
   const success = useAppSelector((state) => state.loginState.signUpSuccess);
   const failureMessage = useAppSelector(
-    (state) => state.loginState.signUpFailure,
+    (state) => state.loginState.signUpFailure
   );
 
   const { t } = useTranslation();
@@ -62,7 +62,7 @@ export default function ProjectInvite(): ReactElement {
             name: string,
             user: string,
             email: string,
-            password: string,
+            password: string
           ) => {
             dispatch(asyncSignUp(name, user, email, password));
           }}

@@ -27,7 +27,7 @@ export const defaultState: MergeTreeState = {
 
 export const mergeDupStepReducer = (
   state: MergeTreeState = defaultState, //createStore() calls each reducer with undefined state
-  action: MergeTreeAction | StoreAction,
+  action: MergeTreeAction | StoreAction
 ): MergeTreeState => {
   switch (action.type) {
     case MergeTreeActionTypes.CLEAR_TREE: {
@@ -44,7 +44,7 @@ export const mergeDupStepReducer = (
       }
 
       const words: Hash<MergeTreeWord> = JSON.parse(
-        JSON.stringify(state.tree.words),
+        JSON.stringify(state.tree.words)
       );
       const srcWordId = srcRef.wordId;
       const srcGuids = words[srcWordId].sensesGuids[srcRef.mergeSenseId];
@@ -60,7 +60,7 @@ export const mergeDupStepReducer = (
       }
 
       words[destRef.wordId].sensesGuids[destRef.mergeSenseId].push(
-        ...destGuids,
+        ...destGuids
       );
 
       return { ...state, tree: { ...state.tree, words } };
@@ -99,7 +99,7 @@ export const mergeDupStepReducer = (
 
     case MergeTreeActionTypes.FLAG_WORD: {
       const words: Hash<MergeTreeWord> = JSON.parse(
-        JSON.stringify(state.tree.words),
+        JSON.stringify(state.tree.words)
       );
       words[action.payload.wordId].flag = action.payload.flag;
       return { ...state, tree: { ...state.tree, words } };
@@ -109,7 +109,7 @@ export const mergeDupStepReducer = (
       const srcRef = action.payload.ref;
       const destWordId = action.payload.destWordId;
       const words: Hash<MergeTreeWord> = JSON.parse(
-        JSON.stringify(state.tree.words),
+        JSON.stringify(state.tree.words)
       );
 
       const srcWordId = srcRef.wordId;
@@ -160,7 +160,7 @@ export const mergeDupStepReducer = (
         return state;
       }
       const words: Hash<MergeTreeWord> = JSON.parse(
-        JSON.stringify(state.tree.words),
+        JSON.stringify(state.tree.words)
       );
 
       // Check if dropping the sense into a new word.
@@ -222,7 +222,7 @@ export const mergeDupStepReducer = (
 
     case MergeTreeActionTypes.ORDER_SENSE: {
       const word: MergeTreeWord = JSON.parse(
-        JSON.stringify(state.tree.words[action.payload.wordId]),
+        JSON.stringify(state.tree.words[action.payload.wordId])
       );
 
       // Convert the Hash<string[]> to an array to expose the order.

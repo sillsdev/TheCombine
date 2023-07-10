@@ -47,7 +47,7 @@ export default function DataEntry(): ReactElement {
   const dispatch = useAppDispatch();
 
   const { currentDomain, open } = useAppSelector(
-    (state: StoreState) => state.treeViewState,
+    (state: StoreState) => state.treeViewState
   );
   const { id, lang, name } = currentDomain;
 

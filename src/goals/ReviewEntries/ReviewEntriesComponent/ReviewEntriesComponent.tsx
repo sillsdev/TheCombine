@@ -11,12 +11,12 @@ interface ReviewEntriesProps {
   updateAllWords: (words: ReviewEntriesWord[]) => void;
   updateFrontierWord: (
     newData: ReviewEntriesWord,
-    oldData: ReviewEntriesWord,
+    oldData: ReviewEntriesWord
   ) => Promise<void>;
 }
 
 export default function ReviewEntriesComponent(
-  props: ReviewEntriesProps,
+  props: ReviewEntriesProps
 ): ReactElement {
   const [loaded, setLoaded] = useState(false);
   const recorder = useMemo(() => new Recorder(), []);
@@ -25,7 +25,7 @@ export default function ReviewEntriesComponent(
   useEffect(() => {
     getFrontierWords().then((frontier) => {
       updateAllWords(
-        frontier.map((w) => new ReviewEntriesWord(w, undefined, recorder)),
+        frontier.map((w) => new ReviewEntriesWord(w, undefined, recorder))
       );
       setLoaded(true);
     });

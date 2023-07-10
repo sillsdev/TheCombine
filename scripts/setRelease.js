@@ -21,5 +21,5 @@ runPy(
   "deploy/scripts/app_release.py",
   "--set-current",
   "--path",
-  "./public/scripts/release.js",
+  "./public/scripts/release.js"
 );

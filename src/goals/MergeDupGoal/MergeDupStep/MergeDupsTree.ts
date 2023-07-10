@@ -32,7 +32,7 @@ export interface MergeTreeWord {
 export function newMergeTreeSense(
   gloss = "",
   srcWordId = "",
-  order = 0,
+  order = 0
 ): MergeTreeSense {
   return {
     ...newSense(gloss),
@@ -44,7 +44,7 @@ export function newMergeTreeSense(
 
 export function newMergeTreeWord(
   vern = "",
-  sensesGuids?: Hash<string[]>,
+  sensesGuids?: Hash<string[]>
 ): MergeTreeWord {
   return {
     vern,
@@ -57,7 +57,7 @@ export function newMergeTreeWord(
 export function convertSenseToMergeTreeSense(
   sense?: Sense,
   srcWordId = "",
-  order = 0,
+  order = 0
 ): MergeTreeSense {
   return {
     ...(sense ?? newSense()),

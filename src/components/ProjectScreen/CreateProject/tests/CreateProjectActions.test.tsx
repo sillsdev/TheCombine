@@ -27,8 +27,8 @@ describe("CreateProjectActions", () => {
       action.asyncCreateProject(
         project.name,
         project.vernacularLanguage,
-        project.analysisLanguages,
-      ),
+        project.analysisLanguages
+      )
     );
     expect(mockStore.getActions()).toEqual([
       action.inProgress(),
@@ -38,7 +38,7 @@ describe("CreateProjectActions", () => {
 
   test("asyncFinishProject correctly affects state", async () => {
     await mockStore.dispatch<any>(
-      action.asyncFinishProject(project.name, project.vernacularLanguage),
+      action.asyncFinishProject(project.name, project.vernacularLanguage)
     );
     expect(mockStore.getActions()).toEqual([
       action.inProgress(),

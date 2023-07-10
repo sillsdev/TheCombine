@@ -92,7 +92,7 @@ describe("ReviewEntriesActions", () => {
     // Functions to make dispatch and check results at end of each test.
     async function makeDispatch(
       newRevWord: ReviewEntriesWord,
-      oldRevWord: ReviewEntriesWord,
+      oldRevWord: ReviewEntriesWord
     ) {
       await mockStore.dispatch<any>(updateFrontierWord(newRevWord, oldRevWord));
     }
@@ -231,7 +231,7 @@ describe("ReviewEntriesActions", () => {
         expect(
           await makeDispatch(newRevWord, oldRevWord)
             .then(() => false)
-            .catch(() => true),
+            .catch(() => true)
         ).toBeTruthy();
       });
 
@@ -245,7 +245,7 @@ describe("ReviewEntriesActions", () => {
         expect(
           await makeDispatch(newRevWord, mockReviewEntriesWord())
             .then(() => false)
-            .catch(() => true),
+            .catch(() => true)
         ).toBeTruthy();
       });
     });
@@ -301,7 +301,7 @@ describe("ReviewEntriesActions", () => {
       expect(getSenseError(sense, false, true)).toBeUndefined();
       sense.domains = [];
       expect(getSenseError(sense, false, true)).toEqual(
-        "reviewEntries.error.domain",
+        "reviewEntries.error.domain"
       );
     });
   });

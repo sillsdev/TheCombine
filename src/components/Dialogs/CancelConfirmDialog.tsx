@@ -22,7 +22,7 @@ interface CancelConfirmDialogProps {
  * Dialog to cancel or confirm an action
  */
 export default function CancelConfirmDialog(
-  props: CancelConfirmDialogProps,
+  props: CancelConfirmDialogProps
 ): ReactElement {
   const { t } = useTranslation();
 

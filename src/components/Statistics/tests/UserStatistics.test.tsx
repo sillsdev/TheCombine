@@ -30,7 +30,7 @@ jest.mock("backend/localStorage", () => ({
 function setMockFunctions() {
   mockGetProjectId.mockReturnValue(mockProjectId);
   mockGetDomainSenseUserStatistics.mockResolvedValue(
-    mockSemanticDomainUserCountArray,
+    mockSemanticDomainUserCountArray
   );
 }
 
@@ -54,7 +54,7 @@ describe("UserStatistics", () => {
     //Verify ListItem for the DomainSenseUserCount object is present
     const newSenDomCountList = testRenderer.root.findAllByType(ListItem);
     expect(newSenDomCountList.length).toEqual(
-      mockSemanticDomainUserCountArray.length,
+      mockSemanticDomainUserCountArray.length
     );
   });
 });

@@ -16,7 +16,7 @@ export function openTreeAction(): TreeViewAction {
 }
 
 export function setDomainAction(
-  domain: SemanticDomainTreeNode,
+  domain: SemanticDomainTreeNode
 ): TreeViewAction {
   return { type: TreeActionType.SET_CURRENT_DOMAIN, domain };
 }
@@ -37,7 +37,7 @@ export function traverseTree(domain: SemanticDomain) {
           if (response) {
             dispatch(setDomainAction(response));
           }
-        },
+        }
       );
     }
   };

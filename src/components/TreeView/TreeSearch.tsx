@@ -75,7 +75,7 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
 
   // Searches for a semantic domain by name
   async function searchDomainByName(
-    target: string,
+    target: string
   ): Promise<SemanticDomainTreeNode | undefined> {
     return await getSemanticDomainTreeNodeByName(target, lang);
   }
@@ -84,7 +84,7 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
    * for a new domain. */
   function animateSuccessfulSearch(
     domain: SemanticDomainTreeNode,
-    event: React.KeyboardEvent,
+    event: React.KeyboardEvent
   ): void {
     props.animate(domain);
     setInput("");

@@ -32,7 +32,7 @@ i18n
       fallbackLng: i18nFallbacks,
       interpolation: { escapeValue: false },
     },
-    setDir, // Callback function to set the direction ("ltr" vs "rtl") after i18n has initialized
+    setDir // Callback function to set the direction ("ltr" vs "rtl") after i18n has initialized
   );
 
 function setDir(): void {

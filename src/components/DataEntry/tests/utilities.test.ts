@@ -76,10 +76,10 @@ describe("DataEntryComponent", () => {
       const targetDomain = mockDomains[1];
       const expectedWord = unfilteredWords[1];
       const senseIndex = expectedWord.senses.findIndex(
-        (s) => s.semanticDomains[0]?.id == targetDomain.id,
+        (s) => s.semanticDomains[0]?.id == targetDomain.id
       );
       expect(
-        filterWordsByDomain(unfilteredWords, mockDomains[1].id),
+        filterWordsByDomain(unfilteredWords, mockDomains[1].id)
       ).toStrictEqual([new DomainWord(expectedWord, senseIndex)]);
     });
   });
@@ -87,7 +87,7 @@ describe("DataEntryComponent", () => {
   describe("sortDomainWordByVern", () => {
     it("sorts words alphabetically.", () => {
       const words = [mockWord, mockWord, mockWord].map(
-        (w) => new DomainWord(w),
+        (w) => new DomainWord(w)
       );
       words[0].vernacular = "Always";
       words[1].vernacular = "Be";

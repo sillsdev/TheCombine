@@ -22,7 +22,7 @@ function mapDispatchToProps(dispatch: StoreStateDispatch) {
       name: string,
       username: string,
       email: string,
-      password: string,
+      password: string
     ) => {
       dispatch(asyncSignUp(name, username, email, password));
     },

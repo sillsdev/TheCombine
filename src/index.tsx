@@ -22,5 +22,5 @@ ReactDOM.render(
       </SnackbarProvider>
     </ThemeProvider>
   </StyledEngineProvider>,
-  document.getElementById("root"),
+  document.getElementById("root")
 );

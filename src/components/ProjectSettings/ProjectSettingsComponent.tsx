@@ -41,7 +41,7 @@ import { Path } from "types/path";
 
 export default function ProjectSettingsComponent() {
   const project = useAppSelector(
-    (state: StoreState) => state.currentProjectState.project,
+    (state: StoreState) => state.currentProjectState.project
   );
   const currentRoles = useMemo(() => getCurrentUser()?.projectRoles ?? {}, []);
   const [permissions, setPermissions] = useState<Permission[]>([]);
@@ -78,12 +78,12 @@ export default function ProjectSettingsComponent() {
 
   const setProject = useCallback(
     (proj: Project) => dispatch(setNewCurrentProject(proj)),
-    [dispatch],
+    [dispatch]
   );
 
   const updateProject = useCallback(
     async (proj: Project) => await dispatch(asyncUpdateCurrentProject(proj)),
-    [dispatch],
+    [dispatch]
   );
 
   return (

@@ -59,8 +59,8 @@ export function VernList(props: VernListProps) {
 
   const hasPartsOfSpeech = !!props.vernacularWords.find((w) =>
     w.senses.find(
-      (s) => s.grammaticalInfo.catGroup !== GramCatGroup.Unspecified,
-    ),
+      (s) => s.grammaticalInfo.catGroup !== GramCatGroup.Unspecified
+    )
   );
 
   const menuItem = (word: Word): ReactElement => {
@@ -105,7 +105,7 @@ export function VernList(props: VernListProps) {
     <StyledMenuItem key="new-entry" onClick={() => props.closeDialog("")}>
       {t("addWords.newEntryFor")}
       {props.vernacularWords[0].vernacular}
-    </StyledMenuItem>,
+    </StyledMenuItem>
   );
 
   return (

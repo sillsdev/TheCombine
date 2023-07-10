@@ -17,7 +17,7 @@ interface DeleteCellProps {
 export default function DeleteCell(props: DeleteCellProps): ReactElement {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const words = useAppSelector(
-    (state: StoreState) => state.reviewEntriesState.words,
+    (state: StoreState) => state.reviewEntriesState.words
   );
   const dispatch = useAppDispatch();
   const { t } = useTranslation();

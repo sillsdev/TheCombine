@@ -31,7 +31,7 @@ export default function ExportButton(props: ExportButtonProps) {
   }
 
   const exportResult = useAppSelector(
-    (state: StoreState) => state.exportProjectState,
+    (state: StoreState) => state.exportProjectState
   );
   const loading =
     exportResult.status === ExportStatus.Exporting ||

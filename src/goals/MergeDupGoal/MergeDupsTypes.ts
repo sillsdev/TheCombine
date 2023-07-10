@@ -15,7 +15,7 @@ export interface MergesCompleted {
 export function newMergeWords(
   parent: Word,
   children: MergeSourceWord[],
-  deleteOnly = false,
+  deleteOnly = false
 ): MergeWords {
   return { parent, children, deleteOnly };
 }

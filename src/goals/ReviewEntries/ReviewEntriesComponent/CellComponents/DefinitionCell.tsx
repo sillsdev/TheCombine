@@ -19,11 +19,11 @@ interface DefinitionCellProps extends FieldParameterStandard {
 }
 
 export default function DefinitionCell(
-  props: DefinitionCellProps,
+  props: DefinitionCellProps
 ): ReactElement {
   const analysisLang = useSelector(
     (state: StoreState) =>
-      state.currentProjectState.project.analysisWritingSystems[0].bcp47,
+      state.currentProjectState.project.analysisWritingSystems[0].bcp47
   );
   const { t } = useTranslation();
 
@@ -68,7 +68,7 @@ export default function DefinitionCell(
                 : {}
             }
           />
-        ),
+        )
       )}
       bottomCell={props.editable ? SPACER : undefined}
     />

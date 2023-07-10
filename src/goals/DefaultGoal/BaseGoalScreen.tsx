@@ -14,7 +14,7 @@ import { useAppDispatch, useAppSelector } from "types/hooks";
 const CharacterInventory = loadable(() => import("goals/CharacterInventory"));
 const MergeDup = loadable(() => import("goals/MergeDupGoal/MergeDupComponent"));
 const ReviewEntriesComponent = loadable(
-  () => import("goals/ReviewEntries/ReviewEntriesComponent"),
+  () => import("goals/ReviewEntries/ReviewEntriesComponent")
 );
 
 function displayComponent(goal: Goal): ReactElement {
@@ -33,7 +33,7 @@ function displayComponent(goal: Goal): ReactElement {
 
 export default function LoadingGoalScreen(): ReactElement {
   const goalStatus = useAppSelector(
-    (state: StoreState) => state.goalsState.currentGoal.status,
+    (state: StoreState) => state.goalsState.currentGoal.status
   );
   return goalStatus === GoalStatus.Loading ? <Loading /> : <BaseGoalScreen />;
 }
@@ -43,7 +43,7 @@ export default function LoadingGoalScreen(): ReactElement {
  */
 export function BaseGoalScreen(): ReactElement {
   const goal = useAppSelector(
-    (state: StoreState) => state.goalsState.currentGoal,
+    (state: StoreState) => state.goalsState.currentGoal
   );
   const dispatch = useAppDispatch();
   useEffect(() => {

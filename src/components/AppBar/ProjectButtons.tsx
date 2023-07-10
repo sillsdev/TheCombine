@@ -46,7 +46,7 @@ export async function getIsAdminOrOwner(): Promise<boolean> {
 /** A button that redirects to the project settings */
 export default function ProjectButtons(props: TabProps): ReactElement {
   const projectName = useSelector(
-    (state: StoreState) => state.currentProjectState.project.name,
+    (state: StoreState) => state.currentProjectState.project.name
   );
   const [isAdminOrOwner, setIsAdminOrOwner] = useState<boolean>(false);
   const { t } = useTranslation();

@@ -10,7 +10,7 @@ interface ImmutableExistingDataProps {
  * Displays a word users cannot edit any more
  */
 export default function ImmutableExistingData(
-  props: ImmutableExistingDataProps,
+  props: ImmutableExistingDataProps
 ): ReactElement {
   return (
     <Grid container wrap="nowrap" justifyContent="space-around">

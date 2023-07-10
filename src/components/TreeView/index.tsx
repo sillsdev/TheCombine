@@ -22,7 +22,7 @@ import { newSemanticDomain } from "types/semanticDomain";
 import { semDomWritingSystems } from "types/writingSystem";
 
 function getSemDomWritingSystem(
-  lang: WritingSystem,
+  lang: WritingSystem
 ): WritingSystem | undefined {
   return semDomWritingSystems.find((ws) => lang.bcp47.startsWith(ws.bcp47));
 }
@@ -38,14 +38,13 @@ export interface TreeViewProps {
 export default function TreeView(props: TreeViewProps): ReactElement {
   const { exit, returnControlToCaller } = props;
   const currentDomain = useAppSelector(
-    (state: StoreState) => state.treeViewState.currentDomain,
+    (state: StoreState) => state.treeViewState.currentDomain
   );
   const semDomLanguage = useAppSelector(
-    (state: StoreState) => state.treeViewState.language,
+    (state: StoreState) => state.treeViewState.language
   );
   const semDomWritingSystem = useAppSelector(
-    (state: StoreState) =>
-      state.currentProjectState.project.semDomWritingSystem,
+    (state: StoreState) => state.currentProjectState.project.semDomWritingSystem
   );
   const [visible, setVisible] = useState(true);
   const dispatch = useAppDispatch();
@@ -92,7 +91,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
         setVisible(true);
       }
     },
-    [dispatch, returnControlToCaller, setVisible],
+    [dispatch, returnControlToCaller, setVisible]
   );
 
   const animateHandler = async (dom?: SemanticDomain): Promise<void> => {
@@ -142,7 +141,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
             animate(
               "#current-domain",
               { transform: ["none", "scale(.9)", "none"] },
-              { duration: 1 },
+              { duration: 1 }
             );
           }
         }}

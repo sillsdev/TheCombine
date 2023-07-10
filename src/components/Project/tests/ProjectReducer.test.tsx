@@ -16,7 +16,7 @@ describe("ProjectReducer", () => {
     };
 
     expect(projectReducer({} as CurrentProjectState, action)).toEqual(
-      defaultState,
+      defaultState
     );
   });
 
@@ -32,8 +32,8 @@ describe("ProjectReducer", () => {
       expect(
         projectReducer(
           { project: { id }, users: [user] } as CurrentProjectState,
-          action,
-        ),
+          action
+        )
       ).toEqual({ project: action.payload, users: [user] });
     });
 
@@ -49,8 +49,8 @@ describe("ProjectReducer", () => {
             project: { id: "different" },
             users: [newUser()],
           } as CurrentProjectState,
-          action,
-        ),
+          action
+        )
       ).toEqual({ project: action.payload, users: [] });
     });
   });
@@ -66,8 +66,8 @@ describe("ProjectReducer", () => {
       expect(
         projectReducer(
           { project: { id }, users: [newUser()] } as CurrentProjectState,
-          action,
-        ),
+          action
+        )
       ).toEqual({ project: { id }, users: [] });
     });
   });

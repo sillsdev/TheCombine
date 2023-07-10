@@ -18,7 +18,7 @@ interface ProjectButtonWithConfirmationProps {
  * Button for archiving/restoring project (changing isActive)
  */
 export default function ProjectButtonWithConfirmation(
-  props: ButtonProps & ProjectButtonWithConfirmationProps,
+  props: ButtonProps & ProjectButtonWithConfirmationProps
 ) {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();

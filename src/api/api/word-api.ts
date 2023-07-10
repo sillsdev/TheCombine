@@ -43,7 +43,7 @@ import { Word } from "../models";
  * @export
  */
 export const WordApiAxiosParamCreator = function (
-  configuration?: Configuration,
+  configuration?: Configuration
 ) {
   return {
     /**
@@ -56,7 +56,7 @@ export const WordApiAxiosParamCreator = function (
     createWord: async (
       projectId: string,
       word: Word,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("createWord", "projectId", projectId);
@@ -64,7 +64,7 @@ export const WordApiAxiosParamCreator = function (
       assertParamExists("createWord", "word", word);
       const localVarPath = `/v1/projects/{projectId}/words`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId)),
+        encodeURIComponent(String(projectId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -94,7 +94,7 @@ export const WordApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         word,
         localVarRequestOptions,
-        configuration,
+        configuration
       );
 
       return {
@@ -112,7 +112,7 @@ export const WordApiAxiosParamCreator = function (
     deleteFrontierWord: async (
       projectId: string,
       wordId: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("deleteFrontierWord", "projectId", projectId);
@@ -158,13 +158,13 @@ export const WordApiAxiosParamCreator = function (
      */
     deleteProjectWords: async (
       projectId: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("deleteProjectWords", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}/words`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId)),
+        encodeURIComponent(String(projectId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -205,7 +205,7 @@ export const WordApiAxiosParamCreator = function (
     getDuplicateId: async (
       projectId: string,
       word: Word,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("getDuplicateId", "projectId", projectId);
@@ -214,7 +214,7 @@ export const WordApiAxiosParamCreator = function (
       const localVarPath =
         `/v1/projects/{projectId}/words/getduplicateid`.replace(
           `{${"projectId"}}`,
-          encodeURIComponent(String(projectId)),
+          encodeURIComponent(String(projectId))
         );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -244,7 +244,7 @@ export const WordApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         word,
         localVarRequestOptions,
-        configuration,
+        configuration
       );
 
       return {
@@ -260,13 +260,13 @@ export const WordApiAxiosParamCreator = function (
      */
     getProjectFrontierWords: async (
       projectId: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("getProjectFrontierWords", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}/words/frontier`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId)),
+        encodeURIComponent(String(projectId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -305,13 +305,13 @@ export const WordApiAxiosParamCreator = function (
      */
     getProjectWords: async (
       projectId: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("getProjectWords", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}/words`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId)),
+        encodeURIComponent(String(projectId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -352,7 +352,7 @@ export const WordApiAxiosParamCreator = function (
     getWord: async (
       projectId: string,
       wordId: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("getWord", "projectId", projectId);
@@ -398,14 +398,14 @@ export const WordApiAxiosParamCreator = function (
      */
     isFrontierNonempty: async (
       projectId: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("isFrontierNonempty", "projectId", projectId);
       const localVarPath =
         `/v1/projects/{projectId}/words/isfrontiernonempty`.replace(
           `{${"projectId"}}`,
-          encodeURIComponent(String(projectId)),
+          encodeURIComponent(String(projectId))
         );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -450,7 +450,7 @@ export const WordApiAxiosParamCreator = function (
       dupId: string,
       word: Word,
       userId?: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("updateDuplicate", "projectId", projectId);
@@ -493,7 +493,7 @@ export const WordApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         word,
         localVarRequestOptions,
-        configuration,
+        configuration
       );
 
       return {
@@ -513,7 +513,7 @@ export const WordApiAxiosParamCreator = function (
       projectId: string,
       wordId: string,
       word: Word,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("updateWord", "projectId", projectId);
@@ -552,7 +552,7 @@ export const WordApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         word,
         localVarRequestOptions,
-        configuration,
+        configuration
       );
 
       return {
@@ -580,20 +580,20 @@ export const WordApiFp = function (configuration?: Configuration) {
     async createWord(
       projectId: string,
       word: Word,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.createWord(
         projectId,
         word,
-        options,
+        options
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -606,7 +606,7 @@ export const WordApiFp = function (configuration?: Configuration) {
     async deleteFrontierWord(
       projectId: string,
       wordId: string,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
@@ -614,13 +614,13 @@ export const WordApiFp = function (configuration?: Configuration) {
         await localVarAxiosParamCreator.deleteFrontierWord(
           projectId,
           wordId,
-          options,
+          options
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -631,7 +631,7 @@ export const WordApiFp = function (configuration?: Configuration) {
      */
     async deleteProjectWords(
       projectId: string,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
@@ -641,7 +641,7 @@ export const WordApiFp = function (configuration?: Configuration) {
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -654,20 +654,20 @@ export const WordApiFp = function (configuration?: Configuration) {
     async getDuplicateId(
       projectId: string,
       word: Word,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getDuplicateId(
         projectId,
         word,
-        options,
+        options
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -678,20 +678,20 @@ export const WordApiFp = function (configuration?: Configuration) {
      */
     async getProjectFrontierWords(
       projectId: string,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Word>>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getProjectFrontierWords(
           projectId,
-          options,
+          options
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -702,19 +702,19 @@ export const WordApiFp = function (configuration?: Configuration) {
      */
     async getProjectWords(
       projectId: string,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Word>>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getProjectWords(
         projectId,
-        options,
+        options
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -727,20 +727,20 @@ export const WordApiFp = function (configuration?: Configuration) {
     async getWord(
       projectId: string,
       wordId: string,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Word>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getWord(
         projectId,
         wordId,
-        options,
+        options
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -751,7 +751,7 @@ export const WordApiFp = function (configuration?: Configuration) {
      */
     async isFrontierNonempty(
       projectId: string,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
@@ -761,7 +761,7 @@ export const WordApiFp = function (configuration?: Configuration) {
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -778,7 +778,7 @@ export const WordApiFp = function (configuration?: Configuration) {
       dupId: string,
       word: Word,
       userId?: string,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
@@ -787,13 +787,13 @@ export const WordApiFp = function (configuration?: Configuration) {
         dupId,
         word,
         userId,
-        options,
+        options
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -808,7 +808,7 @@ export const WordApiFp = function (configuration?: Configuration) {
       projectId: string,
       wordId: string,
       word: Word,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
@@ -816,13 +816,13 @@ export const WordApiFp = function (configuration?: Configuration) {
         projectId,
         wordId,
         word,
-        options,
+        options
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
   };
@@ -835,7 +835,7 @@ export const WordApiFp = function (configuration?: Configuration) {
 export const WordApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
-  axios?: AxiosInstance,
+  axios?: AxiosInstance
 ) {
   const localVarFp = WordApiFp(configuration);
   return {
@@ -849,7 +849,7 @@ export const WordApiFactory = function (
     createWord(
       projectId: string,
       word: Word,
-      options?: any,
+      options?: any
     ): AxiosPromise<string> {
       return localVarFp
         .createWord(projectId, word, options)
@@ -865,7 +865,7 @@ export const WordApiFactory = function (
     deleteFrontierWord(
       projectId: string,
       wordId: string,
-      options?: any,
+      options?: any
     ): AxiosPromise<string> {
       return localVarFp
         .deleteFrontierWord(projectId, wordId, options)
@@ -879,7 +879,7 @@ export const WordApiFactory = function (
      */
     deleteProjectWords(
       projectId: string,
-      options?: any,
+      options?: any
     ): AxiosPromise<boolean> {
       return localVarFp
         .deleteProjectWords(projectId, options)
@@ -895,7 +895,7 @@ export const WordApiFactory = function (
     getDuplicateId(
       projectId: string,
       word: Word,
-      options?: any,
+      options?: any
     ): AxiosPromise<string> {
       return localVarFp
         .getDuplicateId(projectId, word, options)
@@ -909,7 +909,7 @@ export const WordApiFactory = function (
      */
     getProjectFrontierWords(
       projectId: string,
-      options?: any,
+      options?: any
     ): AxiosPromise<Array<Word>> {
       return localVarFp
         .getProjectFrontierWords(projectId, options)
@@ -923,7 +923,7 @@ export const WordApiFactory = function (
      */
     getProjectWords(
       projectId: string,
-      options?: any,
+      options?: any
     ): AxiosPromise<Array<Word>> {
       return localVarFp
         .getProjectWords(projectId, options)
@@ -939,7 +939,7 @@ export const WordApiFactory = function (
     getWord(
       projectId: string,
       wordId: string,
-      options?: any,
+      options?: any
     ): AxiosPromise<Word> {
       return localVarFp
         .getWord(projectId, wordId, options)
@@ -953,7 +953,7 @@ export const WordApiFactory = function (
      */
     isFrontierNonempty(
       projectId: string,
-      options?: any,
+      options?: any
     ): AxiosPromise<boolean> {
       return localVarFp
         .isFrontierNonempty(projectId, options)
@@ -973,7 +973,7 @@ export const WordApiFactory = function (
       dupId: string,
       word: Word,
       userId?: string,
-      options?: any,
+      options?: any
     ): AxiosPromise<string> {
       return localVarFp
         .updateDuplicate(projectId, dupId, word, userId, options)
@@ -991,7 +991,7 @@ export const WordApiFactory = function (
       projectId: string,
       wordId: string,
       word: Word,
-      options?: any,
+      options?: any
     ): AxiosPromise<string> {
       return localVarFp
         .updateWord(projectId, wordId, word, options)
@@ -1219,7 +1219,7 @@ export class WordApi extends BaseAPI {
    */
   public createWord(
     requestParameters: WordApiCreateWordRequest,
-    options?: any,
+    options?: any
   ) {
     return WordApiFp(this.configuration)
       .createWord(requestParameters.projectId, requestParameters.word, options)
@@ -1235,13 +1235,13 @@ export class WordApi extends BaseAPI {
    */
   public deleteFrontierWord(
     requestParameters: WordApiDeleteFrontierWordRequest,
-    options?: any,
+    options?: any
   ) {
     return WordApiFp(this.configuration)
       .deleteFrontierWord(
         requestParameters.projectId,
         requestParameters.wordId,
-        options,
+        options
       )
       .then((request) => request(this.axios, this.basePath));
   }
@@ -1255,7 +1255,7 @@ export class WordApi extends BaseAPI {
    */
   public deleteProjectWords(
     requestParameters: WordApiDeleteProjectWordsRequest,
-    options?: any,
+    options?: any
   ) {
     return WordApiFp(this.configuration)
       .deleteProjectWords(requestParameters.projectId, options)
@@ -1271,13 +1271,13 @@ export class WordApi extends BaseAPI {
    */
   public getDuplicateId(
     requestParameters: WordApiGetDuplicateIdRequest,
-    options?: any,
+    options?: any
   ) {
     return WordApiFp(this.configuration)
       .getDuplicateId(
         requestParameters.projectId,
         requestParameters.word,
-        options,
+        options
       )
       .then((request) => request(this.axios, this.basePath));
   }
@@ -1291,7 +1291,7 @@ export class WordApi extends BaseAPI {
    */
   public getProjectFrontierWords(
     requestParameters: WordApiGetProjectFrontierWordsRequest,
-    options?: any,
+    options?: any
   ) {
     return WordApiFp(this.configuration)
       .getProjectFrontierWords(requestParameters.projectId, options)
@@ -1307,7 +1307,7 @@ export class WordApi extends BaseAPI {
    */
   public getProjectWords(
     requestParameters: WordApiGetProjectWordsRequest,
-    options?: any,
+    options?: any
   ) {
     return WordApiFp(this.configuration)
       .getProjectWords(requestParameters.projectId, options)
@@ -1336,7 +1336,7 @@ export class WordApi extends BaseAPI {
    */
   public isFrontierNonempty(
     requestParameters: WordApiIsFrontierNonemptyRequest,
-    options?: any,
+    options?: any
   ) {
     return WordApiFp(this.configuration)
       .isFrontierNonempty(requestParameters.projectId, options)
@@ -1352,7 +1352,7 @@ export class WordApi extends BaseAPI {
    */
   public updateDuplicate(
     requestParameters: WordApiUpdateDuplicateRequest,
-    options?: any,
+    options?: any
   ) {
     return WordApiFp(this.configuration)
       .updateDuplicate(
@@ -1360,7 +1360,7 @@ export class WordApi extends BaseAPI {
         requestParameters.dupId,
         requestParameters.word,
         requestParameters.userId,
-        options,
+        options
       )
       .then((request) => request(this.axios, this.basePath));
   }
@@ -1374,14 +1374,14 @@ export class WordApi extends BaseAPI {
    */
   public updateWord(
     requestParameters: WordApiUpdateWordRequest,
-    options?: any,
+    options?: any
   ) {
     return WordApiFp(this.configuration)
       .updateWord(
         requestParameters.projectId,
         requestParameters.wordId,
         requestParameters.word,
-        options,
+        options
       )
       .then((request) => request(this.axios, this.basePath));
   }

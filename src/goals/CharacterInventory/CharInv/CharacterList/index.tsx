@@ -22,7 +22,7 @@ export default function CharacterList() {
   const fontHeight = 65;
 
   const allChars = useAppSelector(
-    (state: StoreState) => state.characterInventoryState.characterSet,
+    (state: StoreState) => state.characterInventoryState.characterSet
   );
 
   const [orderedChars, setOrderedChars] = useState<CharacterSetEntry[]>([]);
@@ -94,7 +94,7 @@ export default function CharacterList() {
 
 function sortBy(
   characterSet: CharacterSetEntry[],
-  sort: SortOrder,
+  sort: SortOrder
 ): CharacterSetEntry[] {
   switch (sort) {
     case SortOrder.CharacterAscending:

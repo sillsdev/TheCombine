@@ -9,10 +9,10 @@ export function useWindowSize(): { windowHeight: number; windowWidth: number } {
     const { clientHeight, clientWidth } = document.documentElement;
     const { innerHeight, innerWidth } = window;
     setWindowHeight(
-      clientHeight ? Math.min(clientHeight, innerHeight) : innerHeight,
+      clientHeight ? Math.min(clientHeight, innerHeight) : innerHeight
     );
     setWindowWidth(
-      clientWidth ? Math.min(clientWidth, innerWidth) : innerWidth,
+      clientWidth ? Math.min(clientWidth, innerWidth) : innerWidth
     );
   };
 

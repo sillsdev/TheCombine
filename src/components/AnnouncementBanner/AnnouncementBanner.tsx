@@ -23,7 +23,7 @@ export default function AnnouncementBanner() {
 
   // Adjust the margins depending on whether there is an AppBar.
   const loc = useAppSelector(
-    (state: StoreState) => state.analyticsState.currentPage,
+    (state: StoreState) => state.analyticsState.currentPage
   );
 
   const calculateMargins = useCallback((): CSSProperties => {

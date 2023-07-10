@@ -23,7 +23,7 @@ interface ExistingDataTableProps {
  * Otherwise, have button to toggle pop-out drawer on left side.
  */
 export default function ExistingDataTable(
-  props: ExistingDataTableProps,
+  props: ExistingDataTableProps
 ): ReactElement {
   const { windowHeight } = useWindowSize();
 

@@ -25,7 +25,7 @@ interface SignUpDispatchProps {
     name: string,
     username: string,
     email: string,
-    password: string,
+    password: string
   ) => void;
   reset: () => void;
 }
@@ -91,7 +91,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
     e: React.ChangeEvent<
       HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
     >,
-    field: K,
+    field: K
   ) {
     const value = e.target.value;
     this.setState({ [field]: value } as Pick<SignUpState, K>);
@@ -203,7 +203,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
                 helperText={this.props.t(
                   this.state.error["username"]
                     ? "login.usernameInvalid"
-                    : "login.usernameRequirements",
+                    : "login.usernameRequirements"
                 )}
                 variant="outlined"
                 style={{ width: "100%" }}
@@ -248,7 +248,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
                 helperText={this.props.t(
                   this.state.error["password"]
                     ? "login.passwordRequirements"
-                    : "login.passwordRequirements",
+                    : "login.passwordRequirements"
                 )}
                 variant="outlined"
                 style={{ width: "100%" }}

@@ -26,7 +26,7 @@ const renderProjLangs = async (project: Project): Promise<void> => {
   mockUpdateProject.mockResolvedValue(undefined);
   await renderer.act(async () => {
     projectMaster = renderer.create(
-      <ProjectLanguages project={project} updateProject={mockUpdateProject} />,
+      <ProjectLanguages project={project} updateProject={mockUpdateProject} />
     );
   });
 };
@@ -66,7 +66,7 @@ describe("ProjectLanguages", () => {
         .props.onClick();
     });
     expect(mockUpdateProject).toBeCalledWith(
-      mockProject([...mockAnalysisWritingSystems, newLang]),
+      mockProject([...mockAnalysisWritingSystems, newLang])
     );
   });
 

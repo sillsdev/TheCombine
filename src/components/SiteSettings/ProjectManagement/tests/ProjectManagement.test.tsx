@@ -33,7 +33,7 @@ describe("ProjectList", () => {
 
   it("Has the right number of archive/restore buttons", () => {
     const projectButtons = testRenderer.root.findAllByType(
-      ProjectButtonWithConfirmation,
+      ProjectButtonWithConfirmation
     );
     expect(projectButtons.length).toEqual(mockProjects.length);
   });

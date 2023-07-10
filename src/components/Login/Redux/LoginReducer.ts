@@ -17,7 +17,7 @@ export const defaultState: LoginState = {
 
 export const loginReducer = (
   state: LoginState = defaultState, //createStore() calls each reducer with undefined state
-  action: StoreAction | UserAction,
+  action: StoreAction | UserAction
 ): LoginState => {
   switch (action.type) {
     case LoginActionTypes.LOGIN_ATTEMPT:

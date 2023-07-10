@@ -11,17 +11,17 @@ interface DomainStatisticsProps {
 }
 
 export default function DomainStatistics(
-  props: DomainStatisticsProps,
+  props: DomainStatisticsProps
 ): ReactElement {
   const [statisticsList, setStatisticsList] = useState<SemanticDomainCount[]>(
-    [],
+    []
   );
 
   useEffect(() => {
     const updateStatisticList = async () => {
       const counts = await getStatisticsCounts(
         LocalStorage.getProjectId(),
-        props.lang,
+        props.lang
       );
       if (counts !== undefined) {
         return setStatisticsList(counts);
@@ -32,7 +32,7 @@ export default function DomainStatistics(
 
   async function getStatisticsCounts(
     projectId: string,
-    lang?: string,
+    lang?: string
   ): Promise<SemanticDomainCount[] | undefined> {
     return await getSemanticDomainCounts(projectId, lang);
   }

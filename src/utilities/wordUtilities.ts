@@ -13,8 +13,8 @@ export function cleanDefinitions(defs: Definition[]): Definition[] {
         .filter((d) => d.language === language)
         .map((d) => d.text)
         .join(sep),
-      language,
-    ),
+      language
+    )
   );
 }
 /** Removes glosses with empty def and combine glosses with same lang. */
@@ -27,8 +27,8 @@ export function cleanGlosses(glosses: Gloss[]): Gloss[] {
         .filter((g) => g.language === language)
         .map((g) => g.def)
         .join(sep),
-      language,
-    ),
+      language
+    )
   );
 }
 
@@ -64,7 +64,7 @@ export function getAnalysisLangsFromWords(words: Word[]): string[] {
 function reduceMultiType<A, B>(
   toReduce: A[],
   initial: B,
-  reducer: (accumulator: B, currentItem: A) => B,
+  reducer: (accumulator: B, currentItem: A) => B
 ): B {
   let accumulated = initial;
   toReduce.forEach((item) => (accumulated = reducer(accumulated, item)));

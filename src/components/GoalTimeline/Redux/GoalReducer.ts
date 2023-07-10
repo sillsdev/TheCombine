@@ -8,7 +8,7 @@ import { GoalsState, GoalType } from "types/goals";
 
 export const goalReducer = (
   state: GoalsState | undefined,
-  action: StoreAction | GoalAction,
+  action: StoreAction | GoalAction
 ): GoalsState => {
   if (!state) {
     return defaultState;
@@ -23,7 +23,7 @@ export const goalReducer = (
     case GoalActionTypes.SET_CURRENT_GOAL: {
       const currentGoal = action.payload;
       const goalTypeSuggestions = state.goalTypeSuggestions.filter(
-        (type, index) => index !== 0 || action.payload.goalType !== type,
+        (type, index) => index !== 0 || action.payload.goalType !== type
       ); // Remove top suggestion if same as goal to add.
       const previousGoalType =
         currentGoal.goalType !== GoalType.Default

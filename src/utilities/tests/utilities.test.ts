@@ -42,10 +42,10 @@ describe("utilities/utilities", () => {
       test("with empty word", () => {
         expect(finder.getDistance("", "")).toEqual(0);
         expect(finder.getDistance(baseWord, "")).toEqual(
-          baseWord.length * testParams.delCost,
+          baseWord.length * testParams.delCost
         );
         expect(finder.getDistance("", baseWord)).toEqual(
-          baseWord.length * testParams.insCost,
+          baseWord.length * testParams.insCost
         );
       });
 
@@ -70,20 +70,20 @@ describe("utilities/utilities", () => {
         "with similar word: %p",
         (_description: string, secondWord: string, expectedDist: number) => {
           expect(finder.getDistance(baseWord, secondWord)).toEqual(
-            expectedDist,
+            expectedDist
           );
-        },
+        }
       );
 
       test("with much different words", () => {
         const diffWord = "QQQ";
         expect(finder.getDistance(diffWord, baseWord)).toEqual(
           diffWord.length * testParams.subCost +
-            (baseWord.length - diffWord.length) * testParams.insCost,
+            (baseWord.length - diffWord.length) * testParams.insCost
         );
         expect(finder.getDistance(baseWord, diffWord)).toEqual(
           diffWord.length * testParams.subCost +
-            (baseWord.length - diffWord.length) * testParams.delCost,
+            (baseWord.length - diffWord.length) * testParams.delCost
         );
       });
     });

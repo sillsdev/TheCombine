@@ -34,7 +34,7 @@ export default function ProjectManagement() {
 export function ProjectList(
   activeProjects: Project[],
   archivedProjects: Project[],
-  updateProjects: () => Promise<void>,
+  updateProjects: () => Promise<void>
 ) {
   function getListItems(projects: Project[]) {
     return projects.map((project) => (

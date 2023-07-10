@@ -45,7 +45,7 @@ import { EmailInviteStatus } from "../models";
  * @export
  */
 export const InviteApiAxiosParamCreator = function (
-  configuration?: Configuration,
+  configuration?: Configuration
 ) {
   return {
     /**
@@ -56,13 +56,13 @@ export const InviteApiAxiosParamCreator = function (
      */
     emailInviteToProject: async (
       emailInviteData: EmailInviteData,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'emailInviteData' is not null or undefined
       assertParamExists(
         "emailInviteToProject",
         "emailInviteData",
-        emailInviteData,
+        emailInviteData
       );
       const localVarPath = `/v1/invite`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -93,7 +93,7 @@ export const InviteApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         emailInviteData,
         localVarRequestOptions,
-        configuration,
+        configuration
       );
 
       return {
@@ -111,7 +111,7 @@ export const InviteApiAxiosParamCreator = function (
     validateToken: async (
       projectId: string,
       token: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("validateToken", "projectId", projectId);
@@ -167,20 +167,20 @@ export const InviteApiFp = function (configuration?: Configuration) {
      */
     async emailInviteToProject(
       emailInviteData: EmailInviteData,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.emailInviteToProject(
           emailInviteData,
-          options,
+          options
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -193,23 +193,23 @@ export const InviteApiFp = function (configuration?: Configuration) {
     async validateToken(
       projectId: string,
       token: string,
-      options?: any,
+      options?: any
     ): Promise<
       (
         axios?: AxiosInstance,
-        basePath?: string,
+        basePath?: string
       ) => AxiosPromise<EmailInviteStatus>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.validateToken(
         projectId,
         token,
-        options,
+        options
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
   };
@@ -222,7 +222,7 @@ export const InviteApiFp = function (configuration?: Configuration) {
 export const InviteApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
-  axios?: AxiosInstance,
+  axios?: AxiosInstance
 ) {
   const localVarFp = InviteApiFp(configuration);
   return {
@@ -234,7 +234,7 @@ export const InviteApiFactory = function (
      */
     emailInviteToProject(
       emailInviteData: EmailInviteData,
-      options?: any,
+      options?: any
     ): AxiosPromise<string> {
       return localVarFp
         .emailInviteToProject(emailInviteData, options)
@@ -250,7 +250,7 @@ export const InviteApiFactory = function (
     validateToken(
       projectId: string,
       token: string,
-      options?: any,
+      options?: any
     ): AxiosPromise<EmailInviteStatus> {
       return localVarFp
         .validateToken(projectId, token, options)
@@ -310,7 +310,7 @@ export class InviteApi extends BaseAPI {
    */
   public emailInviteToProject(
     requestParameters: InviteApiEmailInviteToProjectRequest,
-    options?: any,
+    options?: any
   ) {
     return InviteApiFp(this.configuration)
       .emailInviteToProject(requestParameters.emailInviteData, options)
@@ -326,13 +326,13 @@ export class InviteApi extends BaseAPI {
    */
   public validateToken(
     requestParameters: InviteApiValidateTokenRequest,
-    options?: any,
+    options?: any
   ) {
     return InviteApiFp(this.configuration)
       .validateToken(
         requestParameters.projectId,
         requestParameters.token,
-        options,
+        options
       )
       .then((request) => request(this.axios, this.basePath));
   }

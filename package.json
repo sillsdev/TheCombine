@@ -207,7 +207,8 @@
           "printWidth": 120
         }
       }
-    ]
+    ],
+    "trailingComma": "es5"
   },
   "browserslist": {
     "production": [

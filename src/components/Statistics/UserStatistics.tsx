@@ -12,7 +12,7 @@ interface UserStatisticsProps {
 }
 
 export default function UserStatistics(
-  props: UserStatisticsProps,
+  props: UserStatisticsProps
 ): ReactElement {
   const [domainUserCountList, setDomainUserCountList] = useState<
     SemanticDomainUserCount[]
@@ -23,7 +23,7 @@ export default function UserStatistics(
     const updateSemanticDomainUserCounts = async () => {
       const counts = await getUserStatistics(
         LocalStorage.getProjectId(),
-        props.lang,
+        props.lang
       );
       if (counts !== undefined) {
         return setDomainUserCountList(counts);
@@ -34,7 +34,7 @@ export default function UserStatistics(
 
   async function getUserStatistics(
     projectId: string,
-    lang?: string,
+    lang?: string
   ): Promise<SemanticDomainUserCount[] | undefined> {
     return await getSemanticDomainUserCount(projectId, lang);
   }

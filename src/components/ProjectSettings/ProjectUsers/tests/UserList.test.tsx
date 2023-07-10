@@ -21,7 +21,7 @@ let testRenderer: renderer.ReactTestRenderer;
 const renderUserList = async (users: User[] = []): Promise<void> => {
   await renderer.act(async () => {
     testRenderer = renderer.create(
-      <UserList projectUsers={users} addToProject={jest.fn()} />,
+      <UserList projectUsers={users} addToProject={jest.fn()} />
     );
   });
 };

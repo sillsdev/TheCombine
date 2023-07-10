@@ -79,7 +79,7 @@ export class Goal {
     type = GoalType.Default,
     name = GoalName.Default,
     steps: GoalStep[] = [{}],
-    data?: GoalData,
+    data?: GoalData
   ) {
     this.guid = v4();
     this.goalType = type;

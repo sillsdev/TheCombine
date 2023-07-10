@@ -18,7 +18,7 @@ interface ConfirmDeletionProps {
 }
 
 export default function ConfirmDeletion(
-  props: ConfirmDeletionProps,
+  props: ConfirmDeletionProps
 ): ReactElement {
   const { t } = useTranslation();
 

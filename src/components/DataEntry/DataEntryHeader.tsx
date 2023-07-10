@@ -17,7 +17,7 @@ interface DataEntryHeaderProps {
  * Displays information about the current data entry view
  */
 export default function DataEntryHeader(
-  props: DataEntryHeaderProps,
+  props: DataEntryHeaderProps
 ): ReactElement {
   const domain = props.domain;
   const { t } = useTranslation();

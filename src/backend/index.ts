@@ -68,7 +68,7 @@ axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
       if (
         url !== undefined &&
         whiteListedErrorUrls.some((whiteListedUrl) =>
-          url.endsWith(whiteListedUrl),
+          url.endsWith(whiteListedUrl)
         )
       ) {
         return Promise.reject(err);
@@ -101,7 +101,7 @@ const projectApi = new Api.ProjectApi(config, BASE_PATH, axiosInstance);
 const semanticDomainApi = new Api.SemanticDomainApi(
   config,
   BASE_PATH,
-  axiosInstance,
+  axiosInstance
 );
 const userApi = new Api.UserApi(config, BASE_PATH, axiosInstance);
 const userEditApi = new Api.UserEditApi(config, BASE_PATH, axiosInstance);
@@ -123,19 +123,19 @@ function defaultOptions() {
 
 export async function uploadAudio(
   wordId: string,
-  audioFile: File,
+  audioFile: File
 ): Promise<string> {
   const projectId = LocalStorage.getProjectId();
   const resp = await audioApi.uploadAudioFile(
     { projectId, wordId, ...fileUpload(audioFile) },
-    { headers: { ...authHeader(), "content-type": "application/json" } },
+    { headers: { ...authHeader(), "content-type": "application/json" } }
   );
   return resp.data;
 }
 
 export async function deleteAudio(
   wordId: string,
-  fileName: string,
+  fileName: string
 ): Promise<string> {
   const params = { projectId: LocalStorage.getProjectId(), wordId, fileName };
   return (await audioApi.deleteAudioFile(params, defaultOptions())).data;
@@ -150,7 +150,7 @@ export function getAudioUrl(wordId: string, fileName: string): string {
 
 export async function uploadAvatar(
   userId: string,
-  imgFile: File,
+  imgFile: File
 ): Promise<void> {
   const headers = { ...authHeader(), "content-type": "application/json" };
   await avatarApi.uploadAvatar({ userId, ...fileUpload(imgFile) }, { headers });
@@ -167,8 +167,8 @@ export async function avatarSrc(userId: string): Promise<string> {
     const image = Base64.btoa(
       new Uint8Array(resp.data).reduce(
         (data, byte) => data + String.fromCharCode(byte),
-        "",
-      ),
+        ""
+      )
     );
     return `data:${resp.headers["content-type"].toLowerCase()};base64,${image}`;
   } catch (err) {
@@ -203,19 +203,19 @@ export async function updateBanner(siteBanner: SiteBanner): Promise<boolean> {
 export async function emailInviteToProject(
   projectId: string,
   emailAddress: string,
-  message: string,
+  message: string
 ): Promise<string> {
   const domain = window.location.origin;
   const resp = await inviteApi.emailInviteToProject(
     { emailInviteData: { emailAddress, message, projectId, domain } },
-    defaultOptions(),
+    defaultOptions()
   );
   return resp.data;
 }
 
 export async function validateLink(
   projectId: string,
-  token: string,
+  token: string
 ): Promise<EmailInviteStatus> {
   return (await inviteApi.validateToken({ projectId, token }, defaultOptions()))
     .data;
@@ -225,11 +225,11 @@ export async function validateLink(
 
 /** Upload a LIFT file during project creation to get vernacular ws options. */
 export async function uploadLiftAndGetWritingSystems(
-  liftFile: File,
+  liftFile: File
 ): Promise<Api.WritingSystem[]> {
   const resp = await liftApi.uploadLiftFileAndGetWritingSystems(
     { projectId: "nonempty", ...fileUpload(liftFile) },
-    { headers: { ...authHeader(), "Content-Type": "multipart/form-data" } },
+    { headers: { ...authHeader(), "Content-Type": "multipart/form-data" } }
   );
   return resp.data;
 }
@@ -243,11 +243,11 @@ export async function finishUploadLift(projectId: string): Promise<number> {
 /** Upload a LIFT file and add its data to the specified project. */
 export async function uploadLift(
   projectId: string,
-  liftFile: File,
+  liftFile: File
 ): Promise<number> {
   const resp = await liftApi.uploadLiftFile(
     { projectId, ...fileUpload(liftFile) },
-    { headers: { ...authHeader(), "Content-Type": "multipart/form-data" } },
+    { headers: { ...authHeader(), "Content-Type": "multipart/form-data" } }
   );
   return resp.data;
 }
@@ -264,10 +264,10 @@ export async function downloadLift(projectId: string): Promise<string> {
   const headers = { ...authHeader(), Accept: "application/zip" };
   const resp = await liftApi.downloadLiftFile(
     { projectId },
-    { headers, responseType: "blob" },
+    { headers, responseType: "blob" }
   );
   return URL.createObjectURL(
-    new Blob([resp.request.response], { type: "application/zip" }),
+    new Blob([resp.request.response], { type: "application/zip" })
   );
 }
 
@@ -306,20 +306,20 @@ export async function undoMerge(wordIds: MergeUndoIds): Promise<boolean> {
 export async function blacklistAdd(wordIds: string[]): Promise<void> {
   await mergeApi.blacklistAdd(
     { projectId: LocalStorage.getProjectId(), requestBody: wordIds },
-    defaultOptions(),
+    defaultOptions()
   );
 }
 
 /** Get list of potential duplicates for merging. */
 export async function getDuplicates(
   maxInList: number,
-  maxLists: number,
+  maxLists: number
 ): Promise<Word[][]> {
   const projectId = LocalStorage.getProjectId();
   const userId = LocalStorage.getUserId();
   const resp = await mergeApi.getPotentialDuplicates(
     { projectId, maxInList, maxLists, userId },
-    defaultOptions(),
+    defaultOptions()
   );
   return resp.data;
 }
@@ -345,14 +345,14 @@ export async function createProject(project: Project): Promise<Project> {
 }
 
 export async function getAllActiveProjectsByUser(
-  userId: string,
+  userId: string
 ): Promise<Project[]> {
   const projectIds = Object.keys((await getUser(userId)).projectRoles);
   const projects: Project[] = [];
   for (const projectId of projectIds) {
     try {
       await getProject(projectId).then(
-        (project) => project.isActive && projects.push(project),
+        (project) => project.isActive && projects.push(project)
       );
     } catch (err) {
       /** If there was an error, the project probably was manually deleted
@@ -398,7 +398,7 @@ export async function restoreProject(projectId: string): Promise<string> {
 
 /** Returns a boolean indicating whether the specified project name is already taken. */
 export async function projectDuplicateCheck(
-  projectName: string,
+  projectName: string
 ): Promise<boolean> {
   return (
     await projectApi.projectDuplicateCheck({ projectName }, defaultOptions())
@@ -409,11 +409,11 @@ export async function projectDuplicateCheck(
 
 export async function getSemanticDomainFull(
   id: string,
-  lang?: string,
+  lang?: string
 ): Promise<SemanticDomainFull | undefined> {
   const response = await semanticDomainApi.getSemanticDomainFull(
     { id, lang: lang ? lang : Bcp47Code.Default },
-    defaultOptions(),
+    defaultOptions()
   );
   // The backend response for this methods returns null rather than undefined.
   return response.data ?? undefined;
@@ -421,11 +421,11 @@ export async function getSemanticDomainFull(
 
 export async function getSemanticDomainTreeNode(
   id: string,
-  lang?: string,
+  lang?: string
 ): Promise<SemanticDomainTreeNode | undefined> {
   const response = await semanticDomainApi.getSemanticDomainTreeNode(
     { id, lang: lang ? lang : Bcp47Code.Default },
-    defaultOptions(),
+    defaultOptions()
   );
   // The backend response for this methods returns null rather than undefined.
   return response.data ?? undefined;
@@ -433,22 +433,22 @@ export async function getSemanticDomainTreeNode(
 
 export async function getSemanticDomainTreeNodeByName(
   name: string,
-  lang?: string,
+  lang?: string
 ): Promise<SemanticDomainTreeNode | undefined> {
   const response = await semanticDomainApi.getSemanticDomainTreeNodeByName(
     { name, lang: lang ? lang : Bcp47Code.Default },
-    defaultOptions(),
+    defaultOptions()
   );
   // The backend response for this methods returns null rather than undefined.
   return response.data ?? undefined;
 }
 
 export async function getAllSemanticDomainTreeNodes(
-  lang?: string,
+  lang?: string
 ): Promise<SemanticDomainTreeNode | undefined> {
   const response = await semanticDomainApi.getAllSemanticDomainTreeNodes(
     { lang: lang ? lang : Bcp47Code.Default },
-    defaultOptions(),
+    defaultOptions()
   );
   // The backend response for this methods returns null rather than undefined.
   return response.data ?? undefined;
@@ -457,7 +457,7 @@ export async function getAllSemanticDomainTreeNodes(
 /* UserController.cs */
 
 export async function resetPasswordRequest(
-  emailOrUsername: string,
+  emailOrUsername: string
 ): Promise<boolean> {
   const domain = window.location.origin;
   return await userApi
@@ -470,7 +470,7 @@ export async function resetPasswordRequest(
 
 export async function resetPassword(
   token: string,
-  newPassword: string,
+  newPassword: string
 ): Promise<boolean> {
   return await userApi
     .resetPassword({ passwordResetData: { token, newPassword } })
@@ -496,11 +496,11 @@ export async function isEmailTaken(email: string): Promise<boolean> {
 
 export async function authenticateUser(
   username: string,
-  password: string,
+  password: string
 ): Promise<User> {
   const resp = await userApi.authenticate(
     { credentials: { username, password } },
-    defaultOptions(),
+    defaultOptions()
   );
   const user = resp.data;
   LocalStorage.setCurrentUser(user);
@@ -525,7 +525,7 @@ export async function getUserByEmail(email: string): Promise<User> {
 export async function updateUser(user: User): Promise<User> {
   const resp = await userApi.updateUser(
     { userId: user.id, user },
-    defaultOptions(),
+    defaultOptions()
   );
   const updatedUser = { ...user, id: resp.data };
   if (updatedUser.id === LocalStorage.getUserId()) {
@@ -544,12 +544,12 @@ export async function deleteUser(userId: string): Promise<string> {
  * if goal with same guid already exists in the UserEdit */
 export async function addGoalToUserEdit(
   userEditId: string,
-  goal: Goal,
+  goal: Goal
 ): Promise<number> {
   const edit = convertGoalToEdit(goal);
   const resp = await userEditApi.updateUserEditGoal(
     { projectId: LocalStorage.getProjectId(), userEditId, edit },
-    defaultOptions(),
+    defaultOptions()
   );
   return resp.data;
 }
@@ -559,14 +559,14 @@ export async function addStepToGoal(
   userEditId: string,
   goalIndex: number,
   step: GoalStep,
-  stepIndex?: number, // If undefined, step will be added to end.
+  stepIndex?: number // If undefined, step will be added to end.
 ): Promise<number> {
   const projectId = LocalStorage.getProjectId();
   const stepString = JSON.stringify(step);
   const userEditStepWrapper = { goalIndex, stepString, stepIndex };
   const resp = await userEditApi.updateUserEditStep(
     { projectId, userEditId, userEditStepWrapper },
-    defaultOptions(),
+    defaultOptions()
   );
   return resp.data;
 }
@@ -575,7 +575,7 @@ export async function addStepToGoal(
 export async function createUserEdit(): Promise<User> {
   const resp = await userEditApi.createUserEdit(
     { projectId: LocalStorage.getProjectId() },
-    defaultOptions(),
+    defaultOptions()
   );
   const user = resp.data;
   LocalStorage.setCurrentUser(user);
@@ -584,7 +584,7 @@ export async function createUserEdit(): Promise<User> {
 
 export async function getUserEditById(
   projectId: string,
-  userEditId: string,
+  userEditId: string
 ): Promise<UserEdit> {
   return (
     await userEditApi.getUserEdit({ projectId, userEditId }, defaultOptions())
@@ -611,7 +611,7 @@ export async function getUserRole(userRoleId: string): Promise<UserRole> {
 
 export async function addOrUpdateUserRole(
   permission: Permission[],
-  userId: string,
+  userId: string
 ): Promise<string> {
   const params = { projectId: LocalStorage.getProjectId(), userId, permission };
   return (await userRoleApi.updateUserRolePermissions(params, defaultOptions()))
@@ -620,7 +620,7 @@ export async function addOrUpdateUserRole(
 
 export async function removeUserRole(
   permission: Permission[],
-  userId: string,
+  userId: string
 ): Promise<void> {
   const params = {
     projectId: LocalStorage.getProjectId(),
@@ -671,7 +671,7 @@ export async function isFrontierNonempty(projectId?: string): Promise<boolean> {
 export async function updateDuplicate(
   dupId: string,
   userId: string,
-  word: Word,
+  word: Word
 ): Promise<Word> {
   const params = {
     projectId: LocalStorage.getProjectId(),
@@ -686,7 +686,7 @@ export async function updateDuplicate(
 export async function updateWord(word: Word): Promise<Word> {
   const resp = await wordApi.updateWord(
     { projectId: LocalStorage.getProjectId(), wordId: word.id, word },
-    defaultOptions(),
+    defaultOptions()
   );
   return { ...word, id: resp.data };
 }
@@ -695,11 +695,11 @@ export async function updateWord(word: Word): Promise<Word> {
 
 export async function getSemanticDomainCounts(
   projectId: string,
-  lang?: string,
+  lang?: string
 ): Promise<Array<SemanticDomainCount> | undefined> {
   const response = await statisticsApi.getSemanticDomainCounts(
     { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
-    defaultOptions(),
+    defaultOptions()
   );
   // The backend response for this methods returns null rather than undefined.
   return response.data ?? undefined;
@@ -707,44 +707,44 @@ export async function getSemanticDomainCounts(
 
 export async function getSemanticDomainUserCount(
   projectId: string,
-  lang?: string,
+  lang?: string
 ): Promise<Array<SemanticDomainUserCount> | undefined> {
   const response = await statisticsApi.getSemanticDomainUserCounts(
     { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
-    defaultOptions(),
+    defaultOptions()
   );
   // The backend response for this methods returns null rather than undefined.
   return response.data ?? undefined;
 }
 
 export async function GetWordsPerDayPerUserCounts(
-  projectId: string,
+  projectId: string
 ): Promise<Array<WordsPerDayPerUserCount> | undefined> {
   const response = await statisticsApi.getWordsPerDayPerUserCounts(
     { projectId: projectId },
-    defaultOptions(),
+    defaultOptions()
   );
   // The backend response for this methods returns null rather than undefined.
   return response.data ?? undefined;
 }
 
 export async function getLineChartRootData(
-  projectId: string,
+  projectId: string
 ): Promise<ChartRootData | undefined> {
   const response = await statisticsApi.getLineChartRootData(
     { projectId: projectId },
-    defaultOptions(),
+    defaultOptions()
   );
   // The backend response for this methods returns null rather than undefined.
   return response.data ?? undefined;
 }
 
 export async function getProgressEstimationLineChartRoot(
-  projectId: string,
+  projectId: string
 ): Promise<ChartRootData | undefined> {
   const response = await statisticsApi.getProgressEstimationLineChartRoot(
     { projectId: projectId },
-    defaultOptions(),
+    defaultOptions()
   );
   // The backend response for this methods returns null rather than undefined.
   return response.data ?? undefined;

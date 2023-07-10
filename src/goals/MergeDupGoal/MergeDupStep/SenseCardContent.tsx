@@ -25,7 +25,7 @@ interface SenseInLanguage {
 function getSenseInLanguage(
   sense: Sense,
   language: string,
-  displaySep = "; ",
+  displaySep = "; "
 ): SenseInLanguage {
   return {
     language,
@@ -44,7 +44,7 @@ function getSenseInLanguage(
 
 function getSenseInLanguages(
   sense: Sense,
-  languages?: string[],
+  languages?: string[]
 ): SenseInLanguage[] {
   if (!languages) {
     languages = sense.glosses.map((g) => g.language);
@@ -110,17 +110,17 @@ interface SenseCardContentProps {
 // Show semantic domains from all senses.
 // In merging, user can select a different one by reordering in the sidebar.
 export default function SenseCardContent(
-  props: SenseCardContentProps,
+  props: SenseCardContentProps
 ): ReactElement {
   const senseTextInLangs = getSenseInLanguages(
     props.senses[0],
-    props.languages,
+    props.languages
   );
   const semDoms = [
     ...new Set(
       props.senses.flatMap((s) =>
-        s.semanticDomains.map((dom) => `${dom.id}: ${dom.name}`),
-      ),
+        s.semanticDomains.map((dom) => `${dom.id}: ${dom.name}`)
+      )
     ),
   ];
   const protectedWarning =

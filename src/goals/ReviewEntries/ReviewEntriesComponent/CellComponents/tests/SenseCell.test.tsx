@@ -15,7 +15,7 @@ describe("SenseCell", () => {
           rowData={mockWord}
           value={mockWord.senses}
           delete={jest.fn()}
-        />,
+        />
       );
     });
   });

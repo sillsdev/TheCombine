@@ -17,7 +17,7 @@ describe("FlagCell", () => {
   it("renders editable", () => {
     renderer.act(() => {
       renderer.create(
-        <FlagCell rowData={mockWord} value={mockWord.flag} editable />,
+        <FlagCell rowData={mockWord} value={mockWord.flag} editable />
       );
     });
   });

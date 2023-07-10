@@ -11,7 +11,7 @@ interface CharacterStatusTextProps {
 }
 
 export default function CharacterStatusText(
-  props: CharacterStatusTextProps,
+  props: CharacterStatusTextProps
 ): ReactElement {
   const { t } = useTranslation();
 

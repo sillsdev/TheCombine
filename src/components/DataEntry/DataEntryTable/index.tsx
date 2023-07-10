@@ -70,7 +70,7 @@ enum DefunctStatus {
 export function addSemanticDomainToSense(
   semDom: SemanticDomain,
   word: Word,
-  senseGuid: string,
+  senseGuid: string
 ): Word {
   const sense = word.senses.find((s) => s.guid === senseGuid);
   if (!sense) {
@@ -93,7 +93,7 @@ export function focusInput(ref: RefObject<HTMLDivElement>): void {
 const getSuggestions = (
   text: string,
   all: string[],
-  dist: (a: string, b: string) => number,
+  dist: (a: string, b: string) => number
 ): string[] => {
   if (!text || !all.length) {
     return [];
@@ -135,7 +135,7 @@ export function makeSemDomCurrent(semDom: SemanticDomain): SemanticDomain {
 export function updateEntryGloss(
   entry: WordAccess,
   def: string,
-  semDomId: string,
+  semDomId: string
 ): Word {
   const sense = entry.word.senses.find((s) => s.guid === entry.senseGuid);
   if (!sense) {
@@ -193,7 +193,7 @@ interface DataEntryTableState {
 
 /*** A data entry table containing recent word entries. */
 export default function DataEntryTable(
-  props: DataEntryTableProps,
+  props: DataEntryTableProps
 ): ReactElement {
   const { analysisLang, suggestVerns, vernacularLang } = useAppSelector(
     (state: StoreState) => {
@@ -203,7 +203,7 @@ export default function DataEntryTable(
         suggestVerns: proj.autocompleteSetting === AutocompleteSetting.On,
         vernacularLang: proj.vernacularWritingSystem,
       };
-    },
+    }
   );
 
   const updateHeight = props.updateHeight;
@@ -272,15 +272,15 @@ export default function DataEntryTable(
       }
       setState((prevState) => {
         const recentWords = prevState.recentWords.map((w) =>
-          w.senseGuid === oldGuid ? { ...w, senseGuid: newGuid } : w,
+          w.senseGuid === oldGuid ? { ...w, senseGuid: newGuid } : w
         );
         const senseSwitches = prevState.senseSwitches.filter(
-          (s) => s.oldGuid !== oldGuid,
+          (s) => s.oldGuid !== oldGuid
         );
         return { ...prevState, recentWords, senseSwitches };
       });
     },
-    [state.recentWords],
+    [state.recentWords]
   );
 
   /*** Add to recent entries every sense of the word with the current semantic domain. */
@@ -333,7 +333,7 @@ export default function DataEntryTable(
   const replaceInDisplay = (oldId: string, word: Word): void => {
     setState((prevState) => {
       const recentWords = prevState.recentWords.map((a) =>
-        a.word.id === oldId ? { word, senseGuid: a.senseGuid } : a,
+        a.word.id === oldId ? { word, senseGuid: a.senseGuid } : a
       );
       return { ...prevState, isFetchingFrontier: true, recentWords };
     });
@@ -492,7 +492,7 @@ export default function DataEntryTable(
       return;
     }
     const oldId = ids.find((id) =>
-      state.recentWords.find((w) => w.word.id === id),
+      state.recentWords.find((w) => w.word.id === id)
     );
     if (oldId) {
       // Do an update if there's one to be done.
@@ -521,13 +521,13 @@ export default function DataEntryTable(
           ? prev.allWords.filter(
               (w) =>
                 w.vernacular.trim() === trimmed &&
-                !Object.keys(prev.defunctWordIds).includes(w.id),
+                !Object.keys(prev.defunctWordIds).includes(w.id)
             )
           : [],
         suggestedVerns: getSuggestions(
           prev.newVern,
           prev.allVerns,
-          (a: string, b: string) => levDist.getDistance(a, b),
+          (a: string, b: string) => levDist.getDistance(a, b)
         ),
       };
     });
@@ -542,7 +542,7 @@ export default function DataEntryTable(
   /*** Given an array of audio file urls, add them all to specified word. */
   const addAudiosToBackend = async (
     oldId: string,
-    audioURLs: string[],
+    audioURLs: string[]
   ): Promise<string> => {
     if (!audioURLs.length) {
       return oldId;
@@ -566,7 +566,7 @@ export default function DataEntryTable(
   /*** Given a single audio file, add to specified word. */
   const addAudioFileToWord = async (
     oldId: string,
-    audioFile: File,
+    audioFile: File
   ): Promise<void> => {
     defunctWord(oldId);
     const newId = await backend.uploadAudio(oldId, audioFile);
@@ -580,7 +580,7 @@ export default function DataEntryTable(
   const addDuplicateWord = async (
     word: Word,
     audioURLs: string[],
-    oldId: string,
+    oldId: string
   ): Promise<void> => {
     const isInDisplay =
       state.recentWords.findIndex((w) => w.word.id === oldId) > -1;
@@ -599,7 +599,7 @@ export default function DataEntryTable(
   /*** Deletes specified audio file from specified word. */
   const deleteAudioFromWord = async (
     oldId: string,
-    fileName: string,
+    fileName: string
   ): Promise<void> => {
     defunctWord(oldId);
     const newId = await backend.deleteAudio(oldId, fileName);
@@ -622,7 +622,7 @@ export default function DataEntryTable(
   const addNewWord = async (
     wordToAdd: Word,
     audioURLs: string[],
-    insertIndex?: number,
+    insertIndex?: number
   ): Promise<void> => {
     wordToAdd.note.language = analysisLang.bcp47;
 
@@ -644,7 +644,7 @@ export default function DataEntryTable(
   const updateWordBackAndFront = async (
     wordToUpdate: Word,
     senseGuid: string,
-    audioURLs?: string[],
+    audioURLs?: string[]
   ): Promise<void> => {
     let word = await updateWordInBackend(wordToUpdate);
     if (audioURLs?.length) {
@@ -659,7 +659,7 @@ export default function DataEntryTable(
     // Check if there is a new word, but user exited without pressing enter.
     if (state.newVern) {
       const oldWord = state.allWords.find(
-        (w) => w.vernacular === state.newVern,
+        (w) => w.vernacular === state.newVern
       );
       if (!oldWord) {
         // Existing word not found, so create a new word.
@@ -702,7 +702,7 @@ export default function DataEntryTable(
             t("addWords.senseInWord", {
               val1: oldWord.vernacular,
               val2: state.newGloss,
-            }),
+            })
           );
           if (state.newAudioUrls.length) {
             await addAudiosToBackend(wordId, state.newAudioUrls);
@@ -712,7 +712,7 @@ export default function DataEntryTable(
           await updateWordBackAndFront(
             addSemanticDomainToSense(semDom, oldWord, sense.guid),
             sense.guid,
-            state.newAudioUrls,
+            state.newAudioUrls
           );
           return;
         }
@@ -765,7 +765,7 @@ export default function DataEntryTable(
   const updateRecentVern = async (
     index: number,
     vernacular: string,
-    targetWordId?: string,
+    targetWordId?: string
   ): Promise<void> => {
     if (targetWordId !== undefined) {
       throw new Error("VernDialog on RecentEntry is not yet supported.");
@@ -792,7 +792,7 @@ export default function DataEntryTable(
   /*** Update the gloss def in a recent entry. */
   const updateRecentGloss = async (
     index: number,
-    def: string,
+    def: string
   ): Promise<void> => {
     const oldEntry = state.recentWords[index];
     defunctWord(oldEntry.word.id);
@@ -802,7 +802,7 @@ export default function DataEntryTable(
     // If a sense with a new guid was added, it needs to replace the old sense in the display.
     if (newWord.senses.length > oldEntry.word.senses.length) {
       const newSense = newWord.senses.find(
-        (sense) => !oldEntry.word.senses.find((s) => s.guid === sense.guid),
+        (sense) => !oldEntry.word.senses.find((s) => s.guid === sense.guid)
       );
       if (newSense) {
         queueSenseSwitch(oldEntry.senseGuid, newSense.guid);
@@ -813,7 +813,7 @@ export default function DataEntryTable(
   /*** Update the note text in a recent entry. */
   const updateRecentNote = async (
     index: number,
-    text: string,
+    text: string
   ): Promise<void> => {
     const oldWord = state.recentWords[index].word;
     if (text !== oldWord.note.text) {
@@ -875,7 +875,7 @@ export default function DataEntryTable(
               analysisLang={analysisLang}
               vernacularLang={vernacularLang}
               disabled={Object.keys(state.defunctWordIds).includes(
-                wordAccess.word.id,
+                wordAccess.word.id
               )}
             />
           </Grid>

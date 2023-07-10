@@ -40,13 +40,13 @@ describe("MergeDupReducer", () => {
   // a state with no duplicate senses
   const initState = mergeDupStepReducer(
     undefined,
-    Actions.setWordData(testWordList()),
+    Actions.setWordData(testWordList())
   );
 
   // helper functions for working with a tree
   const getRefByGuid = (
     guid: string,
-    words: Hash<MergeTreeWord>,
+    words: Hash<MergeTreeWord>
   ): MergeTreeReference | undefined => {
     for (const wordId of Object.keys(words)) {
       for (const mergeSenseId of Object.keys(words[wordId].sensesGuids)) {
@@ -91,7 +91,7 @@ describe("MergeDupReducer", () => {
   };
   function checkTreeWords(
     action: MergeTreeAction,
-    expected: Hash<MergeTreeWord>,
+    expected: Hash<MergeTreeWord>
   ) {
     const result = mergeDupStepReducer(mockState, action).tree.words;
     // We have to stringify for this test,
@@ -504,7 +504,7 @@ describe("MergeDupReducer", () => {
     };
 
     expect(mergeDupStepReducer({} as MergeTreeState, action)).toEqual(
-      defaultState,
+      defaultState
     );
   });
 
@@ -512,7 +512,7 @@ describe("MergeDupReducer", () => {
     const wordList = testWordList();
     const treeState = mergeDupStepReducer(
       undefined,
-      Actions.setWordData(wordList),
+      Actions.setWordData(wordList)
     );
     // check if data has all words present
     for (const word of wordList) {
@@ -523,11 +523,11 @@ describe("MergeDupReducer", () => {
         const treeSense = convertSenseToMergeTreeSense(sense, srcWordId, order);
         const senses = treeState.data.senses;
         expect(Object.values(senses).map((s) => JSON.stringify(s))).toContain(
-          JSON.stringify(treeSense),
+          JSON.stringify(treeSense)
         );
         // check that this sense is somewhere in the tree
         expect(
-          getRefByGuid(treeSense.guid, treeState.tree.words),
+          getRefByGuid(treeSense.guid, treeState.tree.words)
         ).toBeDefined();
       }
     }

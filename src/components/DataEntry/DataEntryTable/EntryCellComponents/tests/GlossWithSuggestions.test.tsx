@@ -23,7 +23,7 @@ describe("GlossWithSuggestions", () => {
           handleEnterAndTab={jest.fn()}
           analysisLang={newWritingSystem()}
           textFieldId={"test-gloss"}
-        />,
+        />
       );
     });
   });
@@ -39,7 +39,7 @@ describe("GlossWithSuggestions", () => {
           handleEnterAndTab={jest.fn()}
           analysisLang={newWritingSystem()}
           textFieldId={"test-gloss-new"}
-        />,
+        />
       );
     });
   });
@@ -55,7 +55,7 @@ describe("GlossWithSuggestions", () => {
           handleEnterAndTab={jest.fn()}
           analysisLang={newWritingSystem()}
           textFieldId={"test-gloss-disabled"}
-        />,
+        />
       );
     });
   });

@@ -41,12 +41,12 @@ export function asyncCreateUserEdits() {
 
 export function asyncLoadExistingUserEdits(
   projectId: string,
-  userEditId: string,
+  userEditId: string
 ) {
   return async (dispatch: StoreStateDispatch) => {
     const userEdit = await Backend.getUserEditById(projectId, userEditId);
     const history = userEdit.edits.map((e, index) =>
-      convertEditToGoal(e, index),
+      convertEditToGoal(e, index)
     );
     dispatch(loadUserEdits(history));
   };

@@ -47,7 +47,7 @@ import { Word } from "../models";
  * @export
  */
 export const MergeApiAxiosParamCreator = function (
-  configuration?: Configuration,
+  configuration?: Configuration
 ) {
   return {
     /**
@@ -60,7 +60,7 @@ export const MergeApiAxiosParamCreator = function (
     blacklistAdd: async (
       projectId: string,
       requestBody: Array<string>,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("blacklistAdd", "projectId", projectId);
@@ -69,7 +69,7 @@ export const MergeApiAxiosParamCreator = function (
       const localVarPath =
         `/v1/projects/{projectId}/merge/blacklist/add`.replace(
           `{${"projectId"}}`,
-          encodeURIComponent(String(projectId)),
+          encodeURIComponent(String(projectId))
         );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -99,7 +99,7 @@ export const MergeApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         requestBody,
         localVarRequestOptions,
-        configuration,
+        configuration
       );
 
       return {
@@ -121,7 +121,7 @@ export const MergeApiAxiosParamCreator = function (
       maxInList: number,
       maxLists: number,
       userId: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("getPotentialDuplicates", "projectId", projectId);
@@ -176,7 +176,7 @@ export const MergeApiAxiosParamCreator = function (
     mergeWords: async (
       projectId: string,
       mergeWords: Array<MergeWords>,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("mergeWords", "projectId", projectId);
@@ -184,7 +184,7 @@ export const MergeApiAxiosParamCreator = function (
       assertParamExists("mergeWords", "mergeWords", mergeWords);
       const localVarPath = `/v1/projects/{projectId}/merge`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId)),
+        encodeURIComponent(String(projectId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -214,7 +214,7 @@ export const MergeApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         mergeWords,
         localVarRequestOptions,
-        configuration,
+        configuration
       );
 
       return {
@@ -232,7 +232,7 @@ export const MergeApiAxiosParamCreator = function (
     undoMerge: async (
       projectId: string,
       mergeUndoIds: MergeUndoIds,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("undoMerge", "projectId", projectId);
@@ -240,7 +240,7 @@ export const MergeApiAxiosParamCreator = function (
       assertParamExists("undoMerge", "mergeUndoIds", mergeUndoIds);
       const localVarPath = `/v1/projects/{projectId}/merge/undo`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId)),
+        encodeURIComponent(String(projectId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -270,7 +270,7 @@ export const MergeApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         mergeUndoIds,
         localVarRequestOptions,
-        configuration,
+        configuration
       );
 
       return {
@@ -298,20 +298,20 @@ export const MergeApiFp = function (configuration?: Configuration) {
     async blacklistAdd(
       projectId: string,
       requestBody: Array<string>,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.blacklistAdd(
         projectId,
         requestBody,
-        options,
+        options
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -328,11 +328,11 @@ export const MergeApiFp = function (configuration?: Configuration) {
       maxInList: number,
       maxLists: number,
       userId: string,
-      options?: any,
+      options?: any
     ): Promise<
       (
         axios?: AxiosInstance,
-        basePath?: string,
+        basePath?: string
       ) => AxiosPromise<Array<Array<Word>>>
     > {
       const localVarAxiosArgs =
@@ -341,13 +341,13 @@ export const MergeApiFp = function (configuration?: Configuration) {
           maxInList,
           maxLists,
           userId,
-          options,
+          options
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -360,20 +360,20 @@ export const MergeApiFp = function (configuration?: Configuration) {
     async mergeWords(
       projectId: string,
       mergeWords: Array<MergeWords>,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.mergeWords(
         projectId,
         mergeWords,
-        options,
+        options
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -386,20 +386,20 @@ export const MergeApiFp = function (configuration?: Configuration) {
     async undoMerge(
       projectId: string,
       mergeUndoIds: MergeUndoIds,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.undoMerge(
         projectId,
         mergeUndoIds,
-        options,
+        options
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
   };
@@ -412,7 +412,7 @@ export const MergeApiFp = function (configuration?: Configuration) {
 export const MergeApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
-  axios?: AxiosInstance,
+  axios?: AxiosInstance
 ) {
   const localVarFp = MergeApiFp(configuration);
   return {
@@ -426,7 +426,7 @@ export const MergeApiFactory = function (
     blacklistAdd(
       projectId: string,
       requestBody: Array<string>,
-      options?: any,
+      options?: any
     ): AxiosPromise<Array<string>> {
       return localVarFp
         .blacklistAdd(projectId, requestBody, options)
@@ -446,7 +446,7 @@ export const MergeApiFactory = function (
       maxInList: number,
       maxLists: number,
       userId: string,
-      options?: any,
+      options?: any
     ): AxiosPromise<Array<Array<Word>>> {
       return localVarFp
         .getPotentialDuplicates(projectId, maxInList, maxLists, userId, options)
@@ -462,7 +462,7 @@ export const MergeApiFactory = function (
     mergeWords(
       projectId: string,
       mergeWords: Array<MergeWords>,
-      options?: any,
+      options?: any
     ): AxiosPromise<Array<string>> {
       return localVarFp
         .mergeWords(projectId, mergeWords, options)
@@ -478,7 +478,7 @@ export const MergeApiFactory = function (
     undoMerge(
       projectId: string,
       mergeUndoIds: MergeUndoIds,
-      options?: any,
+      options?: any
     ): AxiosPromise<boolean> {
       return localVarFp
         .undoMerge(projectId, mergeUndoIds, options)
@@ -601,13 +601,13 @@ export class MergeApi extends BaseAPI {
    */
   public blacklistAdd(
     requestParameters: MergeApiBlacklistAddRequest,
-    options?: any,
+    options?: any
   ) {
     return MergeApiFp(this.configuration)
       .blacklistAdd(
         requestParameters.projectId,
         requestParameters.requestBody,
-        options,
+        options
       )
       .then((request) => request(this.axios, this.basePath));
   }
@@ -621,7 +621,7 @@ export class MergeApi extends BaseAPI {
    */
   public getPotentialDuplicates(
     requestParameters: MergeApiGetPotentialDuplicatesRequest,
-    options?: any,
+    options?: any
   ) {
     return MergeApiFp(this.configuration)
       .getPotentialDuplicates(
@@ -629,7 +629,7 @@ export class MergeApi extends BaseAPI {
         requestParameters.maxInList,
         requestParameters.maxLists,
         requestParameters.userId,
-        options,
+        options
       )
       .then((request) => request(this.axios, this.basePath));
   }
@@ -643,13 +643,13 @@ export class MergeApi extends BaseAPI {
    */
   public mergeWords(
     requestParameters: MergeApiMergeWordsRequest,
-    options?: any,
+    options?: any
   ) {
     return MergeApiFp(this.configuration)
       .mergeWords(
         requestParameters.projectId,
         requestParameters.mergeWords,
-        options,
+        options
       )
       .then((request) => request(this.axios, this.basePath));
   }
@@ -666,7 +666,7 @@ export class MergeApi extends BaseAPI {
       .undoMerge(
         requestParameters.projectId,
         requestParameters.mergeUndoIds,
-        options,
+        options
       )
       .then((request) => request(this.axios, this.basePath));
   }

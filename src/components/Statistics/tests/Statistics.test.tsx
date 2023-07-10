@@ -41,7 +41,7 @@ beforeEach(async () => {
         <ThemeProvider theme={theme}>
           <Statistics />{" "}
         </ThemeProvider>
-      </StyledEngineProvider>,
+      </StyledEngineProvider>
     );
   });
 });

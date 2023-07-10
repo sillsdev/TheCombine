@@ -18,7 +18,7 @@ describe("Test Character Inventory Reducer", () => {
       characterInventoryReducer(undefined, {
         type: "" as CharacterInventoryType.SET_VALID_CHARACTERS,
         payload: BAD_RESP,
-      } as CharacterInventoryAction),
+      } as CharacterInventoryAction)
     ).toEqual(defaultState);
   });
 
@@ -27,7 +27,7 @@ describe("Test Character Inventory Reducer", () => {
       characterInventoryReducer(undefined, {
         type: CharacterInventoryType.SET_VALID_CHARACTERS,
         payload: DATA,
-      } as CharacterInventoryAction),
+      } as CharacterInventoryAction)
     ).toEqual({
       validCharacters: DATA,
       allWords: [],
@@ -49,7 +49,7 @@ describe("Test Character Inventory Reducer", () => {
       characterInventoryReducer(inv, {
         type: "" as CharacterInventoryType.SET_VALID_CHARACTERS,
         payload: BAD_RESP,
-      } as CharacterInventoryAction),
+      } as CharacterInventoryAction)
     ).toEqual(inv);
   });
 
@@ -57,7 +57,7 @@ describe("Test Character Inventory Reducer", () => {
     const action: StoreAction = { type: StoreActionTypes.RESET };
 
     expect(
-      characterInventoryReducer({} as CharacterInventoryState, action),
+      characterInventoryReducer({} as CharacterInventoryState, action)
     ).toEqual(defaultState);
   });
 });

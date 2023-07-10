@@ -12,7 +12,7 @@ interface FindAndReplaceProps {
 }
 
 export default function FindAndReplace(
-  props: FindAndReplaceProps,
+  props: FindAndReplaceProps
 ): ReactElement {
   const [findValue, setFindValue] = useState(props.initialFindValue);
   const [replaceValue, setReplaceValue] = useState("");
@@ -32,8 +32,8 @@ export default function FindAndReplace(
         t("charInventory.characterSet.findAndReplaceError", {
           val1: findValue,
           val2: replaceValue,
-        }),
-      ),
+        })
+      )
     );
     setWarningDialogOpen(false);
   };

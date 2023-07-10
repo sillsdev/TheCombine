@@ -162,7 +162,7 @@ describe("MergeDupActions", () => {
       const parentA = wordAnyGuids(
         vernA,
         [senses["S1"], senses["S2"], senses["S3"]],
-        idA,
+        idA
       );
       const parentB = wordAnyGuids(vernB, [senses["S4"]], idB);
       const childA = { srcWordId: idA, getAudio: true };
@@ -331,19 +331,19 @@ describe("MergeDupActions", () => {
       mergeDefinitionIntoSense(sense, defAFr);
       expect(sense.definitions).toHaveLength(2);
       expect(
-        sense.definitions.find((d) => d.language === Bcp47Code.Fr)!.text,
+        sense.definitions.find((d) => d.language === Bcp47Code.Fr)!.text
       ).toEqual(defAFr.text);
 
       const twoEnTexts = `${defAEn.text};${defBEn.text}`;
       mergeDefinitionIntoSense(sense, defBEn);
       expect(sense.definitions).toHaveLength(2);
       expect(
-        sense.definitions.find((d) => d.language === Bcp47Code.En)!.text,
+        sense.definitions.find((d) => d.language === Bcp47Code.En)!.text
       ).toEqual(twoEnTexts);
       mergeDefinitionIntoSense(sense, defAEn);
       expect(sense.definitions).toHaveLength(2);
       expect(
-        sense.definitions.find((d) => d.language === Bcp47Code.En)!.text,
+        sense.definitions.find((d) => d.language === Bcp47Code.En)!.text
       ).toEqual(twoEnTexts);
     });
   });
@@ -351,18 +351,18 @@ describe("MergeDupActions", () => {
   describe("combineIntoFirstSense", () => {
     it("sets all but the first sense to duplicate status", () => {
       const s4 = [newSense(), newSense(), newSense(), newSense()].map(
-        (s) => s as MergeTreeSense,
+        (s) => s as MergeTreeSense
       );
       combineIntoFirstSense(s4);
       expect(s4[0].accessibility).not.toBe(Status.Duplicate);
       expect(
-        s4.filter((s) => s.accessibility === Status.Duplicate),
+        s4.filter((s) => s.accessibility === Status.Duplicate)
       ).toHaveLength(s4.length - 1);
     });
 
     it("gives the first sense the earliest part of speech found in all senses", () => {
       const s3 = [newSense(), newSense(), newSense()].map(
-        (s) => s as MergeTreeSense,
+        (s) => s as MergeTreeSense
       );
       const gramInfo = {
         catGroup: GramCatGroup.Verb,
@@ -384,7 +384,7 @@ describe("MergeDupActions", () => {
 
     it("adds domains to first sense from other senses", () => {
       const s3 = [newSense(), newSense(), newSense()].map(
-        (s) => s as MergeTreeSense,
+        (s) => s as MergeTreeSense
       );
       s3[1].semanticDomains = [
         newSemanticDomain("1", "uno"),

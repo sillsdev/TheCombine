@@ -15,7 +15,7 @@ import { newProject } from "types/project";
 export function asyncCreateProject(
   name: string,
   vernacularWritingSystem: WritingSystem,
-  analysisWritingSystems: WritingSystem[],
+  analysisWritingSystems: WritingSystem[]
 ) {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(inProgress());
@@ -44,7 +44,7 @@ export function asyncCreateProject(
 /** thunk action creator for creating a project with a pre-uploaded import. */
 export function asyncFinishProject(
   name: string,
-  vernacularWritingSystem: WritingSystem,
+  vernacularWritingSystem: WritingSystem
 ) {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(inProgress());

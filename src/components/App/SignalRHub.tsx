@@ -18,7 +18,7 @@ import { useAppDispatch, useAppSelector } from "types/hooks";
 /** A central hub for monitoring export status on SignalR */
 export default function SignalRHub() {
   const exportState = useAppSelector(
-    (state: StoreState) => state.exportProjectState,
+    (state: StoreState) => state.exportProjectState
   );
   const dispatch = useAppDispatch();
   const [connection, setConnection] = useState<HubConnection | undefined>();

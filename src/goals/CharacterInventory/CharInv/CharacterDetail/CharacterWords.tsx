@@ -12,10 +12,10 @@ interface CharacterWordsProps {
 
 /** Displays words that contain a character */
 export default function CharacterWords(
-  props: CharacterWordsProps,
+  props: CharacterWordsProps
 ): ReactElement {
   const allWords = useSelector(
-    (state: StoreState) => state.characterInventoryState.allWords,
+    (state: StoreState) => state.characterInventoryState.allWords
   );
   const { t } = useTranslation();
   const words = getWordsContainingChar(props.character, allWords, 5);
@@ -35,7 +35,7 @@ export default function CharacterWords(
 function getWordsContainingChar(
   character: string,
   words: string[],
-  maxCount: number,
+  maxCount: number
 ): string[] {
   const wordsWithChar: string[] = [];
   for (const word of words) {
@@ -51,7 +51,7 @@ function getWordsContainingChar(
 
 function highlightCharacterInWord(
   character: string,
-  word: string,
+  word: string
 ): ReactElement[] {
   const highlightedWord: ReactElement[] = [];
   for (let i = 0; i < word.length; i++) {

@@ -15,7 +15,7 @@ export function changePage(newPage: string): AnalyticsChangePageAction {
 export const analyticsReducer = (
   //createStore() calls each reducer with undefined state
   state: AnalyticsState = defaultState,
-  action: AnalyticsChangePageAction,
+  action: AnalyticsChangePageAction
 ): AnalyticsState => {
   switch (action.type) {
     case AnalyticsActionTypes.ChangePage:

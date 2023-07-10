@@ -21,7 +21,7 @@ describe("BaseGoalScreen", () => {
       renderer.create(
         <Provider store={mockStore}>
           <BaseGoalScreen />
-        </Provider>,
+        </Provider>
       );
     });
   });

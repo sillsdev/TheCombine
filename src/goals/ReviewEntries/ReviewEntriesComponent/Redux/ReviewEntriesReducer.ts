@@ -8,7 +8,7 @@ import { StoreAction, StoreActionTypes } from "rootActions";
 
 export const reviewEntriesReducer = (
   state: ReviewEntriesState = defaultState, //createStore() calls each reducer with undefined state
-  action: ReviewEntriesAction | StoreAction,
+  action: ReviewEntriesAction | StoreAction
 ): ReviewEntriesState => {
   switch (action.type) {
     case ReviewEntriesActionTypes.UpdateAllWords:
@@ -25,7 +25,7 @@ export const reviewEntriesReducer = (
         words: state.words.map((w) =>
           w.id === action.oldId
             ? { ...action.updatedWord, recorder: w.recorder }
-            : w,
+            : w
         ),
       };
 

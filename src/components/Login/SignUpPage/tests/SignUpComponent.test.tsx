@@ -24,7 +24,7 @@ describe("Testing sign up component", () => {
   beforeEach(() => {
     renderer.act(() => {
       signUpMaster = renderer.create(
-        <SignUp failureMessage="" reset={mockReset} />,
+        <SignUp failureMessage="" reset={mockReset} />
       );
     });
     signUpHandle = signUpMaster.root.findByType(SignUp);
@@ -48,7 +48,7 @@ describe("Testing sign up component", () => {
         false,
         false,
         false,
-        true,
+        true
       );
     });
 
@@ -63,7 +63,7 @@ describe("Testing sign up component", () => {
         true,
         false,
         false,
-        false,
+        false
       );
     });
 
@@ -78,7 +78,7 @@ describe("Testing sign up component", () => {
         false,
         false,
         true,
-        false,
+        false
       );
     });
   });
@@ -94,7 +94,7 @@ async function testSignUp(
   error_username: boolean,
   error_email: boolean,
   error_password: boolean,
-  error_confirmPassword: boolean,
+  error_confirmPassword: boolean
 ) {
   signUpHandle.instance.setState({
     name,

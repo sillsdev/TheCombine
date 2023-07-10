@@ -58,7 +58,7 @@ function createSenseListInstance(word: Word, closeDialog: jest.Mock): void {
             />
           </Provider>
         </ThemeProvider>
-      </StyledEngineProvider>,
+      </StyledEngineProvider>
     );
   });
 }

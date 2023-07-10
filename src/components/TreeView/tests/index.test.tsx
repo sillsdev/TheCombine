@@ -73,7 +73,7 @@ async function renderTree(exit?: () => void): Promise<void> {
     treeMaster = renderer.create(
       <Provider store={mockStore}>
         <TreeView returnControlToCaller={jest.fn()} exit={exit} />
-      </Provider>,
+      </Provider>
     );
   });
 }

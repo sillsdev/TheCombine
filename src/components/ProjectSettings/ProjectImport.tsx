@@ -16,7 +16,7 @@ const selectFileButtonId = "project-import-select-file";
 export const uploadFileButtonId = "project-import-upload-file";
 
 export default function ProjectImport(
-  props: ProjectSettingPropsWithSet,
+  props: ProjectSettingPropsWithSet
 ): ReactElement {
   const [liftFile, setLiftFile] = useState<File | undefined>();
   const [uploadState, setUploadState] = useState(UploadState.Awaiting);

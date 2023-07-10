@@ -52,7 +52,7 @@ function renderCharInvCreation() {
     charMaster = renderer.create(
       <Provider store={mockStore}>
         <CharInv />
-      </Provider>,
+      </Provider>
     );
   });
 }

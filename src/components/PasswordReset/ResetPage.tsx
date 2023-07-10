@@ -42,7 +42,7 @@ export default function PasswordReset(): ReactElement {
   };
 
   const onSubmit = async (
-    event: React.FormEvent<HTMLElement>,
+    event: React.FormEvent<HTMLElement>
   ): Promise<void> => {
     if (token) {
       setRequestState(RequestState.Attempt);
@@ -53,7 +53,7 @@ export default function PasswordReset(): ReactElement {
 
   const onChangePassword = (
     newPassword: string,
-    newConfirmPassword: string,
+    newConfirmPassword: string
   ): void => {
     setPasswordFitsRequirements(meetsPasswordRequirements(newPassword));
     setIsPasswordConfirmed(newPassword === newConfirmPassword);

@@ -14,7 +14,7 @@ import { StoreAction, StoreActionTypes } from "rootActions";
 describe("CreateProjectReducer", () => {
   test("undefined state and reset action, expecting default state", () => {
     expect(reducer.createProjectReducer(undefined, reset())).toEqual(
-      defaultState,
+      defaultState
     );
   });
 
@@ -28,20 +28,20 @@ describe("CreateProjectReducer", () => {
 
   test("empty state and in-progress action, expecting inProgress", () => {
     expect(
-      reducer.createProjectReducer({} as CreateProjectState, inProgress()),
+      reducer.createProjectReducer({} as CreateProjectState, inProgress())
     ).toEqual({ ...defaultState, inProgress: true });
   });
 
   test("empty state and success action, expecting success", () => {
     expect(
-      reducer.createProjectReducer({} as CreateProjectState, success()),
+      reducer.createProjectReducer({} as CreateProjectState, success())
     ).toEqual({ ...defaultState, success: true });
   });
 
   test("empty state and store reset action, expecting default state", () => {
     const storeResetAction: StoreAction = { type: StoreActionTypes.RESET };
     expect(
-      reducer.createProjectReducer({} as CreateProjectState, storeResetAction),
+      reducer.createProjectReducer({} as CreateProjectState, storeResetAction)
     ).toEqual(defaultState);
   });
 });

@@ -47,7 +47,7 @@ import { UserCreatedProject } from "../models";
  * @export
  */
 export const ProjectApiAxiosParamCreator = function (
-  configuration?: Configuration,
+  configuration?: Configuration
 ) {
   return {
     /**
@@ -58,7 +58,7 @@ export const ProjectApiAxiosParamCreator = function (
      */
     createProject: async (
       project: Project,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'project' is not null or undefined
       assertParamExists("createProject", "project", project);
@@ -91,7 +91,7 @@ export const ProjectApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         project,
         localVarRequestOptions,
-        configuration,
+        configuration
       );
 
       return {
@@ -143,13 +143,13 @@ export const ProjectApiAxiosParamCreator = function (
      */
     deleteProject: async (
       projectId: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("deleteProject", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId)),
+        encodeURIComponent(String(projectId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -188,13 +188,13 @@ export const ProjectApiAxiosParamCreator = function (
      */
     getAllProjectUsers: async (
       projectId: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("getAllProjectUsers", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}/users`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId)),
+        encodeURIComponent(String(projectId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -269,13 +269,13 @@ export const ProjectApiAxiosParamCreator = function (
      */
     getProject: async (
       projectId: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("getProject", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId)),
+        encodeURIComponent(String(projectId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -314,13 +314,13 @@ export const ProjectApiAxiosParamCreator = function (
      */
     projectDuplicateCheck: async (
       projectName: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectName' is not null or undefined
       assertParamExists("projectDuplicateCheck", "projectName", projectName);
       const localVarPath = `/v1/projects/duplicate/{projectName}`.replace(
         `{${"projectName"}}`,
-        encodeURIComponent(String(projectName)),
+        encodeURIComponent(String(projectName))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -361,7 +361,7 @@ export const ProjectApiAxiosParamCreator = function (
     putChars: async (
       projectId: string,
       project: Project,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("putChars", "projectId", projectId);
@@ -369,7 +369,7 @@ export const ProjectApiAxiosParamCreator = function (
       assertParamExists("putChars", "project", project);
       const localVarPath = `/v1/projects/{projectId}/characters`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId)),
+        encodeURIComponent(String(projectId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -399,7 +399,7 @@ export const ProjectApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         project,
         localVarRequestOptions,
-        configuration,
+        configuration
       );
 
       return {
@@ -417,7 +417,7 @@ export const ProjectApiAxiosParamCreator = function (
     updateProject: async (
       projectId: string,
       project: Project,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("updateProject", "projectId", projectId);
@@ -425,7 +425,7 @@ export const ProjectApiAxiosParamCreator = function (
       assertParamExists("updateProject", "project", project);
       const localVarPath = `/v1/projects/{projectId}`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId)),
+        encodeURIComponent(String(projectId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -455,7 +455,7 @@ export const ProjectApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         project,
         localVarRequestOptions,
-        configuration,
+        configuration
       );
 
       return {
@@ -481,22 +481,22 @@ export const ProjectApiFp = function (configuration?: Configuration) {
      */
     async createProject(
       project: Project,
-      options?: any,
+      options?: any
     ): Promise<
       (
         axios?: AxiosInstance,
-        basePath?: string,
+        basePath?: string
       ) => AxiosPromise<UserCreatedProject>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.createProject(
         project,
-        options,
+        options
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -505,7 +505,7 @@ export const ProjectApiFp = function (configuration?: Configuration) {
      * @throws {RequiredError}
      */
     async deleteAllProjects(
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
@@ -515,7 +515,7 @@ export const ProjectApiFp = function (configuration?: Configuration) {
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -526,19 +526,19 @@ export const ProjectApiFp = function (configuration?: Configuration) {
      */
     async deleteProject(
       projectId: string,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.deleteProject(
         projectId,
-        options,
+        options
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -549,7 +549,7 @@ export const ProjectApiFp = function (configuration?: Configuration) {
      */
     async getAllProjectUsers(
       projectId: string,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>
     > {
@@ -559,7 +559,7 @@ export const ProjectApiFp = function (configuration?: Configuration) {
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -568,18 +568,18 @@ export const ProjectApiFp = function (configuration?: Configuration) {
      * @throws {RequiredError}
      */
     async getAllProjects(
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Project>>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getAllProjects(
-        options,
+        options
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -590,19 +590,19 @@ export const ProjectApiFp = function (configuration?: Configuration) {
      */
     async getProject(
       projectId: string,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Project>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getProject(
         projectId,
-        options,
+        options
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -613,20 +613,20 @@ export const ProjectApiFp = function (configuration?: Configuration) {
      */
     async projectDuplicateCheck(
       projectName: string,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.projectDuplicateCheck(
           projectName,
-          options,
+          options
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -639,20 +639,20 @@ export const ProjectApiFp = function (configuration?: Configuration) {
     async putChars(
       projectId: string,
       project: Project,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Project>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.putChars(
         projectId,
         project,
-        options,
+        options
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -665,20 +665,20 @@ export const ProjectApiFp = function (configuration?: Configuration) {
     async updateProject(
       projectId: string,
       project: Project,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.updateProject(
         projectId,
         project,
-        options,
+        options
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
   };
@@ -691,7 +691,7 @@ export const ProjectApiFp = function (configuration?: Configuration) {
 export const ProjectApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
-  axios?: AxiosInstance,
+  axios?: AxiosInstance
 ) {
   const localVarFp = ProjectApiFp(configuration);
   return {
@@ -703,7 +703,7 @@ export const ProjectApiFactory = function (
      */
     createProject(
       project: Project,
-      options?: any,
+      options?: any
     ): AxiosPromise<UserCreatedProject> {
       return localVarFp
         .createProject(project, options)
@@ -738,7 +738,7 @@ export const ProjectApiFactory = function (
      */
     getAllProjectUsers(
       projectId: string,
-      options?: any,
+      options?: any
     ): AxiosPromise<Array<User>> {
       return localVarFp
         .getAllProjectUsers(projectId, options)
@@ -773,7 +773,7 @@ export const ProjectApiFactory = function (
      */
     projectDuplicateCheck(
       projectName: string,
-      options?: any,
+      options?: any
     ): AxiosPromise<boolean> {
       return localVarFp
         .projectDuplicateCheck(projectName, options)
@@ -789,7 +789,7 @@ export const ProjectApiFactory = function (
     putChars(
       projectId: string,
       project: Project,
-      options?: any,
+      options?: any
     ): AxiosPromise<Project> {
       return localVarFp
         .putChars(projectId, project, options)
@@ -805,7 +805,7 @@ export const ProjectApiFactory = function (
     updateProject(
       projectId: string,
       project: Project,
-      options?: any,
+      options?: any
     ): AxiosPromise<string> {
       return localVarFp
         .updateProject(projectId, project, options)
@@ -942,7 +942,7 @@ export class ProjectApi extends BaseAPI {
    */
   public createProject(
     requestParameters: ProjectApiCreateProjectRequest,
-    options?: any,
+    options?: any
   ) {
     return ProjectApiFp(this.configuration)
       .createProject(requestParameters.project, options)
@@ -970,7 +970,7 @@ export class ProjectApi extends BaseAPI {
    */
   public deleteProject(
     requestParameters: ProjectApiDeleteProjectRequest,
-    options?: any,
+    options?: any
   ) {
     return ProjectApiFp(this.configuration)
       .deleteProject(requestParameters.projectId, options)
@@ -986,7 +986,7 @@ export class ProjectApi extends BaseAPI {
    */
   public getAllProjectUsers(
     requestParameters: ProjectApiGetAllProjectUsersRequest,
-    options?: any,
+    options?: any
   ) {
     return ProjectApiFp(this.configuration)
       .getAllProjectUsers(requestParameters.projectId, options)
@@ -1014,7 +1014,7 @@ export class ProjectApi extends BaseAPI {
    */
   public getProject(
     requestParameters: ProjectApiGetProjectRequest,
-    options?: any,
+    options?: any
   ) {
     return ProjectApiFp(this.configuration)
       .getProject(requestParameters.projectId, options)
@@ -1030,7 +1030,7 @@ export class ProjectApi extends BaseAPI {
    */
   public projectDuplicateCheck(
     requestParameters: ProjectApiProjectDuplicateCheckRequest,
-    options?: any,
+    options?: any
   ) {
     return ProjectApiFp(this.configuration)
       .projectDuplicateCheck(requestParameters.projectName, options)
@@ -1059,13 +1059,13 @@ export class ProjectApi extends BaseAPI {
    */
   public updateProject(
     requestParameters: ProjectApiUpdateProjectRequest,
-    options?: any,
+    options?: any
   ) {
     return ProjectApiFp(this.configuration)
       .updateProject(
         requestParameters.projectId,
         requestParameters.project,
-        options,
+        options
       )
       .then((request) => request(this.axios, this.basePath));
   }

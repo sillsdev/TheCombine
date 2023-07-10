@@ -60,7 +60,7 @@ export function asyncSignUp(
   name: string,
   username: string,
   email: string,
-  password: string,
+  password: string
 ) {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(signUpAttempt(username));
@@ -76,7 +76,7 @@ export function asyncSignUp(
         }, 1000);
       })
       .catch((err) =>
-        dispatch(signUpFailure(err.response?.status ?? err.message)),
+        dispatch(signUpFailure(err.response?.status ?? err.message))
       );
   };
 }

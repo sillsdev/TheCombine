@@ -20,7 +20,7 @@ let switchMaster: renderer.ReactTestRenderer;
 const renderSwitch = async () => {
   await renderer.act(async () => {
     switchMaster = renderer.create(
-      <ProjectSwitch project={newProject()} setProject={jest.fn()} />,
+      <ProjectSwitch project={newProject()} setProject={jest.fn()} />
     );
   });
 };
@@ -30,7 +30,7 @@ describe("ProjectSwitch", () => {
     mockGetAllActiveProjectsByUser.mockResolvedValueOnce(mockProjects);
     await renderSwitch();
     expect(switchMaster.root.findAllByType(ListItemButton)).toHaveLength(
-      mockProjects.length,
+      mockProjects.length
     );
   });
 });

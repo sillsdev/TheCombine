@@ -65,7 +65,7 @@ function renderWithWord(word: Word) {
             />
           </Provider>
         </ThemeProvider>
-      </StyledEngineProvider>,
+      </StyledEngineProvider>
     );
   });
   testHandle = testMaster.root;

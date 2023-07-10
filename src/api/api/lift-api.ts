@@ -43,7 +43,7 @@ import { WritingSystem } from "../models";
  * @export
  */
 export const LiftApiAxiosParamCreator = function (
-  configuration?: Configuration,
+  configuration?: Configuration
 ) {
   return {
     /**
@@ -54,13 +54,13 @@ export const LiftApiAxiosParamCreator = function (
      */
     canUploadLift: async (
       projectId: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("canUploadLift", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}/lift/check`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId)),
+        encodeURIComponent(String(projectId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -99,13 +99,13 @@ export const LiftApiAxiosParamCreator = function (
      */
     deleteLiftFile: async (
       projectId: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("deleteLiftFile", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}/lift/deleteexport`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId)),
+        encodeURIComponent(String(projectId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -144,13 +144,13 @@ export const LiftApiAxiosParamCreator = function (
      */
     downloadLiftFile: async (
       projectId: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("downloadLiftFile", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}/lift/download`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId)),
+        encodeURIComponent(String(projectId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -189,13 +189,13 @@ export const LiftApiAxiosParamCreator = function (
      */
     exportLiftFile: async (
       projectId: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("exportLiftFile", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}/lift/export`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId)),
+        encodeURIComponent(String(projectId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -234,13 +234,13 @@ export const LiftApiAxiosParamCreator = function (
      */
     finishUploadLiftFile: async (
       projectId: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("finishUploadLiftFile", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}/lift/finishupload`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId)),
+        encodeURIComponent(String(projectId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -285,7 +285,7 @@ export const LiftApiAxiosParamCreator = function (
       file: any,
       name: string,
       filePath: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("uploadLiftFile", "projectId", projectId);
@@ -297,7 +297,7 @@ export const LiftApiAxiosParamCreator = function (
       assertParamExists("uploadLiftFile", "filePath", filePath);
       const localVarPath = `/v1/projects/{projectId}/lift/upload`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId)),
+        encodeURIComponent(String(projectId))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -360,13 +360,13 @@ export const LiftApiAxiosParamCreator = function (
       file: any,
       name: string,
       filePath: string,
-      options: any = {},
+      options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists(
         "uploadLiftFileAndGetWritingSystems",
         "projectId",
-        projectId,
+        projectId
       );
       // verify required parameter 'file' is not null or undefined
       assertParamExists("uploadLiftFileAndGetWritingSystems", "file", file);
@@ -376,12 +376,12 @@ export const LiftApiAxiosParamCreator = function (
       assertParamExists(
         "uploadLiftFileAndGetWritingSystems",
         "filePath",
-        filePath,
+        filePath
       );
       const localVarPath =
         `/v1/projects/{projectId}/lift/uploadandgetwritingsystems`.replace(
           `{${"projectId"}}`,
-          encodeURIComponent(String(projectId)),
+          encodeURIComponent(String(projectId))
         );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -448,19 +448,19 @@ export const LiftApiFp = function (configuration?: Configuration) {
      */
     async canUploadLift(
       projectId: string,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.canUploadLift(
         projectId,
-        options,
+        options
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -471,19 +471,19 @@ export const LiftApiFp = function (configuration?: Configuration) {
      */
     async deleteLiftFile(
       projectId: string,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.deleteLiftFile(
         projectId,
-        options,
+        options
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -494,7 +494,7 @@ export const LiftApiFp = function (configuration?: Configuration) {
      */
     async downloadLiftFile(
       projectId: string,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
     > {
@@ -504,7 +504,7 @@ export const LiftApiFp = function (configuration?: Configuration) {
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -515,19 +515,19 @@ export const LiftApiFp = function (configuration?: Configuration) {
      */
     async exportLiftFile(
       projectId: string,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.exportLiftFile(
         projectId,
-        options,
+        options
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -538,20 +538,20 @@ export const LiftApiFp = function (configuration?: Configuration) {
      */
     async finishUploadLiftFile(
       projectId: string,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.finishUploadLiftFile(
           projectId,
-          options,
+          options
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -568,7 +568,7 @@ export const LiftApiFp = function (configuration?: Configuration) {
       file: any,
       name: string,
       filePath: string,
-      options?: any,
+      options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
     > {
@@ -577,13 +577,13 @@ export const LiftApiFp = function (configuration?: Configuration) {
         file,
         name,
         filePath,
-        options,
+        options
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
     /**
@@ -600,11 +600,11 @@ export const LiftApiFp = function (configuration?: Configuration) {
       file: any,
       name: string,
       filePath: string,
-      options?: any,
+      options?: any
     ): Promise<
       (
         axios?: AxiosInstance,
-        basePath?: string,
+        basePath?: string
       ) => AxiosPromise<Array<WritingSystem>>
     > {
       const localVarAxiosArgs =
@@ -613,13 +613,13 @@ export const LiftApiFp = function (configuration?: Configuration) {
           file,
           name,
           filePath,
-          options,
+          options
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration,
+        configuration
       );
     },
   };
@@ -632,7 +632,7 @@ export const LiftApiFp = function (configuration?: Configuration) {
 export const LiftApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
-  axios?: AxiosInstance,
+  axios?: AxiosInstance
 ) {
   const localVarFp = LiftApiFp(configuration);
   return {
@@ -688,7 +688,7 @@ export const LiftApiFactory = function (
      */
     finishUploadLiftFile(
       projectId: string,
-      options?: any,
+      options?: any
     ): AxiosPromise<number> {
       return localVarFp
         .finishUploadLiftFile(projectId, options)
@@ -708,7 +708,7 @@ export const LiftApiFactory = function (
       file: any,
       name: string,
       filePath: string,
-      options?: any,
+      options?: any
     ): AxiosPromise<number> {
       return localVarFp
         .uploadLiftFile(projectId, file, name, filePath, options)
@@ -728,7 +728,7 @@ export const LiftApiFactory = function (
       file: any,
       name: string,
       filePath: string,
-      options?: any,
+      options?: any
     ): AxiosPromise<Array<WritingSystem>> {
       return localVarFp
         .uploadLiftFileAndGetWritingSystems(
@@ -736,7 +736,7 @@ export const LiftApiFactory = function (
           file,
           name,
           filePath,
-          options,
+          options
         )
         .then((request) => request(axios, basePath));
     },
@@ -899,7 +899,7 @@ export class LiftApi extends BaseAPI {
    */
   public canUploadLift(
     requestParameters: LiftApiCanUploadLiftRequest,
-    options?: any,
+    options?: any
   ) {
     return LiftApiFp(this.configuration)
       .canUploadLift(requestParameters.projectId, options)
@@ -915,7 +915,7 @@ export class LiftApi extends BaseAPI {
    */
   public deleteLiftFile(
     requestParameters: LiftApiDeleteLiftFileRequest,
-    options?: any,
+    options?: any
   ) {
     return LiftApiFp(this.configuration)
       .deleteLiftFile(requestParameters.projectId, options)
@@ -931,7 +931,7 @@ export class LiftApi extends BaseAPI {
    */
   public downloadLiftFile(
     requestParameters: LiftApiDownloadLiftFileRequest,
-    options?: any,
+    options?: any
   ) {
     return LiftApiFp(this.configuration)
       .downloadLiftFile(requestParameters.projectId, options)
@@ -947,7 +947,7 @@ export class LiftApi extends BaseAPI {
    */
   public exportLiftFile(
     requestParameters: LiftApiExportLiftFileRequest,
-    options?: any,
+    options?: any
   ) {
     return LiftApiFp(this.configuration)
       .exportLiftFile(requestParameters.projectId, options)
@@ -963,7 +963,7 @@ export class LiftApi extends BaseAPI {
    */
   public finishUploadLiftFile(
     requestParameters: LiftApiFinishUploadLiftFileRequest,
-    options?: any,
+    options?: any
   ) {
     return LiftApiFp(this.configuration)
       .finishUploadLiftFile(requestParameters.projectId, options)
@@ -979,7 +979,7 @@ export class LiftApi extends BaseAPI {
    */
   public uploadLiftFile(
     requestParameters: LiftApiUploadLiftFileRequest,
-    options?: any,
+    options?: any
   ) {
     return LiftApiFp(this.configuration)
       .uploadLiftFile(
@@ -987,7 +987,7 @@ export class LiftApi extends BaseAPI {
         requestParameters.file,
         requestParameters.name,
         requestParameters.filePath,
-        options,
+        options
       )
       .then((request) => request(this.axios, this.basePath));
   }
@@ -1001,7 +1001,7 @@ export class LiftApi extends BaseAPI {
    */
   public uploadLiftFileAndGetWritingSystems(
     requestParameters: LiftApiUploadLiftFileAndGetWritingSystemsRequest,
-    options?: any,
+    options?: any
   ) {
     return LiftApiFp(this.configuration)
       .uploadLiftFileAndGetWritingSystems(
@@ -1009,7 +1009,7 @@ export class LiftApi extends BaseAPI {
         requestParameters.file,
         requestParameters.name,
         requestParameters.filePath,
-        options,
+        options
       )
       .then((request) => request(this.axios, this.basePath));
   }

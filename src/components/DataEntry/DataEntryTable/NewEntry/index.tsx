@@ -94,7 +94,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
   } = props;
 
   const isTreeOpen = useSelector(
-    (state: StoreState) => state.treeViewState.open,
+    (state: StoreState) => state.treeViewState.open
   );
 
   const [senseOpen, setSenseOpen] = useState(false);
@@ -115,7 +115,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
           return;
       }
     },
-    [glossInput, vernInput],
+    [glossInput, vernInput]
   );
 
   const resetState = useCallback((): void => {
@@ -189,7 +189,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
 
   const handleEnter = async (
     e: KeyboardEvent,
-    checkGloss: boolean,
+    checkGloss: boolean
   ): Promise<void> => {
     if ((true || !vernOpen) && e.key === Key.Enter) {
       // The user can never submit a new entry without a vernacular

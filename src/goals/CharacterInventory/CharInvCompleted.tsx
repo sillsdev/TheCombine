@@ -14,7 +14,7 @@ import { StoreState } from "types";
 export default function CharInvCompleted(): ReactElement {
   const changes = useSelector(
     (state: StoreState) =>
-      state.goalsState.currentGoal.changes as CharInvChanges,
+      state.goalsState.currentGoal.changes as CharInvChanges
   );
   const { t } = useTranslation();
 
@@ -29,7 +29,7 @@ export default function CharInvCompleted(): ReactElement {
 }
 
 function CharInvChangesMade(
-  changes: CharInvChanges,
+  changes: CharInvChanges
 ): ReactElement | ReactElement[] {
   const { t } = useTranslation();
 

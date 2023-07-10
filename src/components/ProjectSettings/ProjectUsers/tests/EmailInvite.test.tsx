@@ -26,7 +26,7 @@ describe("EmailInvite", () => {
     jest.resetAllMocks();
     renderer.act(() => {
       testRenderer = renderer.create(
-        <EmailInvite addToProject={mockAddToProject} close={mockClose} />,
+        <EmailInvite addToProject={mockAddToProject} close={mockClose} />
       );
     });
   });

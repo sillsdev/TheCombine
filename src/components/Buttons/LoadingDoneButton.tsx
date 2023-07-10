@@ -19,7 +19,7 @@ interface LoadingDoneProps {
  * A button that shows a spinning wheel when loading and "done" when done
  */
 export default function LoadingDoneButton(
-  props: LoadingDoneProps,
+  props: LoadingDoneProps
 ): ReactElement {
   const { t } = useTranslation();
 

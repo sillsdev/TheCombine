@@ -18,7 +18,7 @@ jest.mock("@mui/material/MenuItem", () => "div");
 
 jest.mock(
   "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell",
-  () => "div",
+  () => "div"
 );
 
 let testRenderer: renderer.ReactTestRenderer;
@@ -51,7 +51,7 @@ describe("VernList ", () => {
 
 function createVernListInstance(
   _vernacularWords: Word[],
-  _mockCallback: jest.Mock,
+  _mockCallback: jest.Mock
 ): void {
   renderer.act(() => {
     testRenderer = renderer.create(
@@ -65,7 +65,7 @@ function createVernListInstance(
             />
           </Provider>
         </ThemeProvider>
-      </StyledEngineProvider>,
+      </StyledEngineProvider>
     );
   });
 }

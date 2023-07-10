@@ -15,7 +15,7 @@ import { StoreState } from "types";
 interface ReviewEntriesTableProps {
   onRowUpdate: (
     newData: ReviewEntriesWord,
-    oldData: ReviewEntriesWord,
+    oldData: ReviewEntriesWord
   ) => Promise<void>;
 }
 
@@ -43,17 +43,17 @@ const ROWS_PER_PAGE = [10, 50, 250];
 const tableRef: React.RefObject<any> = React.createRef();
 
 export default function ReviewEntriesTable(
-  props: ReviewEntriesTableProps,
+  props: ReviewEntriesTableProps
 ): ReactElement {
   const words = useSelector(
-    (state: StoreState) => state.reviewEntriesState.words,
+    (state: StoreState) => state.reviewEntriesState.words
   );
   const showDefinitions = useSelector(
-    (state: StoreState) => state.currentProjectState.project.definitionsEnabled,
+    (state: StoreState) => state.currentProjectState.project.definitionsEnabled
   );
   const showGrammaticalInfo = useSelector(
     (state: StoreState) =>
-      state.currentProjectState.project.grammaticalInfoEnabled,
+      state.currentProjectState.project.grammaticalInfoEnabled
   );
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
@@ -88,7 +88,7 @@ export default function ReviewEntriesTable(
       },
       editTooltip: t("reviewEntries.materialTable.body.edit"),
       emptyDataSourceMessage: t(
-        "reviewEntries.materialTable.body.emptyDataSourceMessage",
+        "reviewEntries.materialTable.body.emptyDataSourceMessage"
       ),
       filterRow: {
         filterTooltip: t("reviewEntries.materialTable.body.filter"),
@@ -99,11 +99,11 @@ export default function ReviewEntriesTable(
     },
     pagination: {
       labelDisplayedRows: t(
-        "reviewEntries.materialTable.pagination.labelDisplayedRows",
+        "reviewEntries.materialTable.pagination.labelDisplayedRows"
       ),
       labelRows: t("reviewEntries.materialTable.pagination.labelRows"),
       labelRowsPerPage: t(
-        "reviewEntries.materialTable.pagination.labelRowsPerPage",
+        "reviewEntries.materialTable.pagination.labelRowsPerPage"
       ),
       firstAriaLabel: t("reviewEntries.materialTable.pagination.first"),
       firstTooltip: t("reviewEntries.materialTable.pagination.first"),
@@ -133,7 +133,7 @@ export default function ReviewEntriesTable(
       columns={columns.filter(
         (c) =>
           (showDefinitions || c.title !== ColumnTitle.Definitions) &&
-          (showGrammaticalInfo || c.title !== ColumnTitle.PartOfSpeech),
+          (showGrammaticalInfo || c.title !== ColumnTitle.PartOfSpeech)
       )}
       data={words}
       onFilterChange={updateMaxRows}

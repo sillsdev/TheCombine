@@ -8,7 +8,7 @@ import { StoreAction, StoreActionTypes } from "rootActions";
 
 export const exportProjectReducer = (
   state: ExportProjectState = defaultState,
-  action: StoreAction | ExportProjectAction,
+  action: StoreAction | ExportProjectAction
 ): ExportProjectState => {
   switch (action.type) {
     case ExportStatus.Exporting:

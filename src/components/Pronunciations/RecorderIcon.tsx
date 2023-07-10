@@ -23,7 +23,7 @@ interface RecorderIconProps {
 
 export default function RecorderIcon(props: RecorderIconProps): ReactElement {
   const pronunciationsState = useAppSelector(
-    (state: StoreState) => state.pronunciationsState,
+    (state: StoreState) => state.pronunciationsState
   );
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
