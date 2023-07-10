@@ -8,7 +8,7 @@ import { ProjectSettingPropsWithSet } from "components/ProjectSettings/ProjectSe
 import { randomIntString } from "utilities/utilities";
 
 export default function ProjectSwitch(
-  props: ProjectSettingPropsWithSet
+  props: ProjectSettingPropsWithSet,
 ): ReactElement {
   const [projList, setProjList] = useState<Project[]>([]);
 

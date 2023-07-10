@@ -35,12 +35,12 @@ export default function DragSense(props: DragSenseProps): ReactElement {
   const [duplicateCount, setDuplicateCount] = useState<number>(1);
   const analysisLangs = useAppSelector((state: StoreState) =>
     state.currentProjectState.project.analysisWritingSystems.map(
-      (ws) => ws.bcp47
-    )
+      (ws) => ws.bcp47,
+    ),
   );
   const dispatch = useAppDispatch();
   const sidebar = useAppSelector(
-    (state: StoreState) => state.mergeDuplicateGoal.tree.sidebar
+    (state: StoreState) => state.mergeDuplicateGoal.tree.sidebar,
   );
   const isInSidebar =
     sidebar.wordId === props.wordId &&
@@ -53,7 +53,7 @@ export default function DragSense(props: DragSenseProps): ReactElement {
         senses: props.senses,
         wordId: props.wordId,
         mergeSenseId: props.mergeSenseId,
-      })
+      }),
     );
   }, [dispatch, props]);
 
@@ -78,7 +78,7 @@ export default function DragSense(props: DragSenseProps): ReactElement {
     isInSidebar &&
     !arraysEqual(
       sidebar.senses.map((s) => s.guid),
-      props.senses.map((s) => s.guid)
+      props.senses.map((s) => s.guid),
     )
   ) {
     updateSidebar();

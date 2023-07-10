@@ -18,7 +18,7 @@ let uploadButton: renderer.ReactTestInstance;
 const renderImport = async (): Promise<void> => {
   await renderer.act(async () => {
     testRenderer = renderer.create(
-      <ProjectImport project={mockProject} setProject={mockSetProject} />
+      <ProjectImport project={mockProject} setProject={mockSetProject} />,
     );
   });
   uploadButton = testRenderer.root.findByProps({ id: uploadFileButtonId });

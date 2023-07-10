@@ -30,7 +30,7 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
     ReviewEntriesSense | undefined
   >();
   const selectedDomain = useSelector(
-    (state: StoreState) => state.treeViewState?.currentDomain
+    (state: StoreState) => state.treeViewState?.currentDomain,
   );
 
   function prepAddDomain(sense: ReviewEntriesSense): void {
@@ -43,7 +43,7 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
     if (props.editDomains && senseToChange) {
       if (!selectedDomain) {
         throw new Error(
-          "Cannot add domain without the selectedDomain property."
+          "Cannot add domain without the selectedDomain property.",
         );
       }
       if (selectedDomain.mongoId == "") {
@@ -56,7 +56,7 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
             selectedDomain.mongoId!,
             selectedDomain.guid,
             selectedDomain.name,
-            selectedDomain.id
+            selectedDomain.id,
           );
           tempSemanticDomain.userId = getCurrentUser()?.id;
           tempSemanticDomain.created = new Date().toISOString();
@@ -68,19 +68,19 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
 
   function deleteDomain(
     toDelete: SemanticDomain,
-    sense: ReviewEntriesSense
+    sense: ReviewEntriesSense,
   ): void {
     if (props.editDomains) {
       props.editDomains(
         sense.guid,
-        sense.domains.filter((domain) => domain.id !== toDelete.id)
+        sense.domains.filter((domain) => domain.id !== toDelete.id),
       );
     }
   }
 
   function getChipStyle(
     senseIndex: number,
-    domainIndex: number
+    domainIndex: number,
   ): { backgroundColor?: string } {
     return props.sortingByThis && senseIndex === 0 && domainIndex === 0
       ? { backgroundColor: themeColors.highlight as string }

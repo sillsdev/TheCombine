@@ -50,7 +50,7 @@ function testLogin(
   username: string,
   password: string,
   goodUsername: boolean,
-  goodPassword: boolean
+  goodPassword: boolean,
 ) {
   loginHandle.instance.setState({ username, password });
   loginHandle.instance.login(MOCK_EVENT);

@@ -14,7 +14,7 @@ describe("VernacularCell", () => {
   it("renders", () => {
     renderer.act(() => {
       renderer.create(
-        <VernacularCell rowData={mockWord} value={mockWord.vernacular} />
+        <VernacularCell rowData={mockWord} value={mockWord.vernacular} />,
       );
     });
   });
@@ -26,7 +26,7 @@ describe("VernacularCell", () => {
           rowData={mockWord}
           value={mockWord.vernacular}
           editable
-        />
+        />,
       );
     });
   });

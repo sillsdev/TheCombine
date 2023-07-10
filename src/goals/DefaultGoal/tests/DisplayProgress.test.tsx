@@ -23,7 +23,7 @@ describe("DisplayProgress", () => {
       renderer.create(
         <Provider store={mockStore}>
           <DisplayProgress />
-        </Provider>
+        </Provider>,
       );
     });
   });
@@ -34,7 +34,7 @@ describe("DisplayProgress", () => {
       renderer.create(
         <Provider store={mockStore}>
           <DisplayProgress />
-        </Provider>
+        </Provider>,
       );
     });
   });

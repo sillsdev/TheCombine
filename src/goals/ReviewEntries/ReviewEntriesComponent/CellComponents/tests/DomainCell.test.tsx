@@ -18,7 +18,7 @@ describe("DomainCell", () => {
       renderer.create(
         <Provider store={mockStore}>
           <DomainCell rowData={mockWord} editDomains={jest.fn()} />
-        </Provider>
+        </Provider>,
       );
     });
   });
@@ -28,7 +28,7 @@ describe("DomainCell", () => {
       renderer.create(
         <Provider store={mockStore}>
           <DomainCell rowData={mockWord} sortingByThis />
-        </Provider>
+        </Provider>,
       );
     });
   });

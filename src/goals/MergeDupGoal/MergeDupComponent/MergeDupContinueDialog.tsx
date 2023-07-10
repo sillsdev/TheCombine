@@ -7,7 +7,7 @@ export interface MergeDupContinueDialogProps {
 }
 
 export function MergeDupContinueDialog(
-  props: MergeDupContinueDialogProps
+  props: MergeDupContinueDialogProps,
 ): ReactElement {
   const [open, setOpen] = React.useState<boolean>(true);
   const { t } = useTranslation();

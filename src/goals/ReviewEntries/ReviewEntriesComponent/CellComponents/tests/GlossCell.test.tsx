@@ -25,7 +25,7 @@ describe("GlossCell", () => {
       renderer.create(
         <Provider store={mockStore}>
           <GlossCell rowData={mockWord} value={mockWord.senses} sortingByThis />
-        </Provider>
+        </Provider>,
       );
     });
   });
@@ -35,7 +35,7 @@ describe("GlossCell", () => {
       renderer.create(
         <Provider store={mockStore}>
           <GlossCell rowData={mockWord} value={mockWord.senses} editable />
-        </Provider>
+        </Provider>,
       );
     });
   });

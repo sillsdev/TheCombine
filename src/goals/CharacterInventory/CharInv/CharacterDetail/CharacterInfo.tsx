@@ -11,7 +11,7 @@ interface CharacterInfoProps {
 /** Displays basic information about a character */
 export default function CharacterInfo(props: CharacterInfoProps) {
   const allWords = useSelector(
-    (state: StoreState) => state.characterInventoryState.allWords
+    (state: StoreState) => state.characterInventoryState.allWords,
   );
   const { t } = useTranslation();
 

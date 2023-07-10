@@ -8,7 +8,7 @@ interface CharacterInventoryProps {
 }
 
 export default function CharacterInventory(
-  props: CharacterInventoryProps
+  props: CharacterInventoryProps,
 ): ReactElement {
   return props.completed ? <CharInvCompleted /> : <CharInv />;
 }

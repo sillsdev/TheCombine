@@ -41,7 +41,7 @@ import {
  * @export
  */
 export const AvatarApiAxiosParamCreator = function (
-  configuration?: Configuration
+  configuration?: Configuration,
 ) {
   return {
     /**
@@ -52,13 +52,13 @@ export const AvatarApiAxiosParamCreator = function (
      */
     downloadAvatar: async (
       userId: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'userId' is not null or undefined
       assertParamExists("downloadAvatar", "userId", userId);
       const localVarPath = `/v1/users/{userId}/avatar/download`.replace(
         `{${"userId"}}`,
-        encodeURIComponent(String(userId))
+        encodeURIComponent(String(userId)),
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -103,7 +103,7 @@ export const AvatarApiAxiosParamCreator = function (
       file: any,
       name: string,
       filePath: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'userId' is not null or undefined
       assertParamExists("uploadAvatar", "userId", userId);
@@ -115,7 +115,7 @@ export const AvatarApiAxiosParamCreator = function (
       assertParamExists("uploadAvatar", "filePath", filePath);
       const localVarPath = `/v1/users/{userId}/avatar/upload`.replace(
         `{${"userId"}}`,
-        encodeURIComponent(String(userId))
+        encodeURIComponent(String(userId)),
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -182,19 +182,19 @@ export const AvatarApiFp = function (configuration?: Configuration) {
      */
     async downloadAvatar(
       userId: string,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.downloadAvatar(
         userId,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -211,7 +211,7 @@ export const AvatarApiFp = function (configuration?: Configuration) {
       file: any,
       name: string,
       filePath: string,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
@@ -220,13 +220,13 @@ export const AvatarApiFp = function (configuration?: Configuration) {
         file,
         name,
         filePath,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
   };
@@ -239,7 +239,7 @@ export const AvatarApiFp = function (configuration?: Configuration) {
 export const AvatarApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
-  axios?: AxiosInstance
+  axios?: AxiosInstance,
 ) {
   const localVarFp = AvatarApiFp(configuration);
   return {
@@ -268,7 +268,7 @@ export const AvatarApiFactory = function (
       file: any,
       name: string,
       filePath: string,
-      options?: any
+      options?: any,
     ): AxiosPromise<void> {
       return localVarFp
         .uploadAvatar(userId, file, name, filePath, options)
@@ -342,7 +342,7 @@ export class AvatarApi extends BaseAPI {
    */
   public downloadAvatar(
     requestParameters: AvatarApiDownloadAvatarRequest,
-    options?: any
+    options?: any,
   ) {
     return AvatarApiFp(this.configuration)
       .downloadAvatar(requestParameters.userId, options)
@@ -358,7 +358,7 @@ export class AvatarApi extends BaseAPI {
    */
   public uploadAvatar(
     requestParameters: AvatarApiUploadAvatarRequest,
-    options?: any
+    options?: any,
   ) {
     return AvatarApiFp(this.configuration)
       .uploadAvatar(
@@ -366,7 +366,7 @@ export class AvatarApi extends BaseAPI {
         requestParameters.file,
         requestParameters.name,
         requestParameters.filePath,
-        options
+        options,
       )
       .then((request) => request(this.axios, this.basePath));
   }

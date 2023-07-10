@@ -32,7 +32,7 @@ describe("CreateProject", () => {
           <I18nextProvider i18n={i18n}>
             <CreateProjectWithProps />
           </I18nextProvider>
-        </Provider>
+        </Provider>,
       );
     });
   });
@@ -42,7 +42,7 @@ describe("CreateProject", () => {
       projectMaster = renderer.create(
         <Provider store={mockStore}>
           <CreateProjectWithProps />
-        </Provider>
+        </Provider>,
       );
     });
 

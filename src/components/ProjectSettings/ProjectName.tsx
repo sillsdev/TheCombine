@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { ProjectSettingPropsWithUpdate } from "components/ProjectSettings/ProjectSettingsTypes";
 
 export default function ProjectName(
-  props: ProjectSettingPropsWithUpdate
+  props: ProjectSettingPropsWithUpdate,
 ): ReactElement {
   const [projName, setProjName] = useState("");
   const { t } = useTranslation();

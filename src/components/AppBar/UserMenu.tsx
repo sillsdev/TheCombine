@@ -121,7 +121,7 @@ export default function UserMenu(props: TabProps): ReactElement {
 const WrappedUserMenuList = React.forwardRef(
   (props: React.ComponentProps<typeof UserMenuList>, ref) => (
     <UserMenuList {...props} forwardedRef={ref} />
-  )
+  ),
 );
 
 interface UserMenuListProps {

@@ -59,7 +59,7 @@ const ResetPageProviders = ({
 
 const customRender = (
   ui: ReactElement,
-  options?: Omit<RenderOptions, "wrapper">
+  options?: Omit<RenderOptions, "wrapper">,
 ): RenderResult => render(ui, { wrapper: ResetPageProviders, ...options });
 
 describe("PasswordReset", () => {
@@ -70,17 +70,17 @@ describe("PasswordReset", () => {
     const shortPassword = "foo";
     const passwdField = screen.getByTestId(PasswordResetTestIds.Password);
     const passwdConfirm = screen.getByTestId(
-      PasswordResetTestIds.ConfirmPassword
+      PasswordResetTestIds.ConfirmPassword,
     );
 
     await user.type(passwdField, shortPassword);
     await user.type(passwdConfirm, shortPassword);
 
     const reqErrors = screen.queryAllByTestId(
-      PasswordResetTestIds.PasswordReqError
+      PasswordResetTestIds.PasswordReqError,
     );
     const confirmErrors = screen.queryAllByTestId(
-      PasswordResetTestIds.PasswordMatchError
+      PasswordResetTestIds.PasswordMatchError,
     );
     const submitButton = screen.getByTestId(PasswordResetTestIds.SubmitButton);
 
@@ -97,17 +97,17 @@ describe("PasswordReset", () => {
     const confirmEntry = "passward";
     const passwdField = screen.getByTestId(PasswordResetTestIds.Password);
     const passwdConfirm = screen.getByTestId(
-      PasswordResetTestIds.ConfirmPassword
+      PasswordResetTestIds.ConfirmPassword,
     );
 
     await user.type(passwdField, passwordEntry);
     await user.type(passwdConfirm, confirmEntry);
 
     const reqErrors = screen.queryAllByTestId(
-      PasswordResetTestIds.PasswordReqError
+      PasswordResetTestIds.PasswordReqError,
     );
     const confirmErrors = screen.queryAllByTestId(
-      PasswordResetTestIds.PasswordMatchError
+      PasswordResetTestIds.PasswordMatchError,
     );
     const submitButton = screen.getByTestId(PasswordResetTestIds.SubmitButton);
 
@@ -124,17 +124,17 @@ describe("PasswordReset", () => {
     const confirmEntry = "password";
     const passwdField = screen.getByTestId(PasswordResetTestIds.Password);
     const passwdConfirm = screen.getByTestId(
-      PasswordResetTestIds.ConfirmPassword
+      PasswordResetTestIds.ConfirmPassword,
     );
 
     await user.type(passwdField, passwordEntry);
     await user.type(passwdConfirm, confirmEntry);
 
     const reqErrors = screen.queryAllByTestId(
-      PasswordResetTestIds.PasswordReqError
+      PasswordResetTestIds.PasswordReqError,
     );
     const confirmErrors = screen.queryAllByTestId(
-      PasswordResetTestIds.PasswordMatchError
+      PasswordResetTestIds.PasswordMatchError,
     );
     const submitButton = screen.getByTestId(PasswordResetTestIds.SubmitButton);
 
@@ -152,7 +152,7 @@ describe("PasswordReset", () => {
     const confirmEntry = "password";
     const passwdField = screen.getByTestId(PasswordResetTestIds.Password);
     const passwdConfirm = screen.getByTestId(
-      PasswordResetTestIds.ConfirmPassword
+      PasswordResetTestIds.ConfirmPassword,
     );
 
     await user.type(passwdField, passwordEntry);
@@ -164,7 +164,7 @@ describe("PasswordReset", () => {
     });
 
     const resetErrors = screen.queryAllByTestId(
-      PasswordResetTestIds.PasswordResetFail
+      PasswordResetTestIds.PasswordResetFail,
     );
     expect(resetErrors.length).toBeGreaterThan(0);
   });

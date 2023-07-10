@@ -25,7 +25,7 @@ export function newGloss(def = "", language = ""): Gloss {
 export function newSense(
   gloss?: string,
   lang?: string,
-  semDom?: SemanticDomain
+  semDom?: SemanticDomain,
 ): Sense {
   const sense: Sense = {
     guid: v4(),

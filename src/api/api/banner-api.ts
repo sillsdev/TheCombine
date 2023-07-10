@@ -45,7 +45,7 @@ import { SiteBanner } from "../models";
  * @export
  */
 export const BannerApiAxiosParamCreator = function (
-  configuration?: Configuration
+  configuration?: Configuration,
 ) {
   return {
     /**
@@ -56,7 +56,7 @@ export const BannerApiAxiosParamCreator = function (
      */
     getBanner: async (
       type?: BannerType,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       const localVarPath = `/v1/banner`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -100,7 +100,7 @@ export const BannerApiAxiosParamCreator = function (
      */
     updateBanner: async (
       siteBanner: SiteBanner,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'siteBanner' is not null or undefined
       assertParamExists("updateBanner", "siteBanner", siteBanner);
@@ -133,7 +133,7 @@ export const BannerApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         siteBanner,
         localVarRequestOptions,
-        configuration
+        configuration,
       );
 
       return {
@@ -159,19 +159,19 @@ export const BannerApiFp = function (configuration?: Configuration) {
      */
     async getBanner(
       type?: BannerType,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<SiteBanner>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getBanner(
         type,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -182,19 +182,19 @@ export const BannerApiFp = function (configuration?: Configuration) {
      */
     async updateBanner(
       siteBanner: SiteBanner,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.updateBanner(
         siteBanner,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
   };
@@ -207,7 +207,7 @@ export const BannerApiFp = function (configuration?: Configuration) {
 export const BannerApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
-  axios?: AxiosInstance
+  axios?: AxiosInstance,
 ) {
   const localVarFp = BannerApiFp(configuration);
   return {
@@ -280,7 +280,7 @@ export class BannerApi extends BaseAPI {
    */
   public getBanner(
     requestParameters: BannerApiGetBannerRequest = {},
-    options?: any
+    options?: any,
   ) {
     return BannerApiFp(this.configuration)
       .getBanner(requestParameters.type, options)
@@ -296,7 +296,7 @@ export class BannerApi extends BaseAPI {
    */
   public updateBanner(
     requestParameters: BannerApiUpdateBannerRequest,
-    options?: any
+    options?: any,
   ) {
     return BannerApiFp(this.configuration)
       .updateBanner(requestParameters.siteBanner, options)

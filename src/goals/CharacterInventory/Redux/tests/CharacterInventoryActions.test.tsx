@@ -83,7 +83,7 @@ describe("CharacterInventoryActions", () => {
     const mockUpload = Actions.uploadInventory();
     await mockUpload(
       mockStore.dispatch,
-      mockStore.getState as () => StoreState
+      mockStore.getState as () => StoreState,
     );
     expect(updateProject).toHaveBeenCalledTimes(1);
     expect(mockStore.getActions()).toContainEqual({

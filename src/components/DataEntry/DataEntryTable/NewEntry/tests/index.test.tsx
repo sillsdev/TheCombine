@@ -41,7 +41,7 @@ describe("NewEntry", () => {
             suggestedVerns={[]}
             suggestedDups={[]}
           />
-        </Provider>
+        </Provider>,
       );
     });
   });

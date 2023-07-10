@@ -3,7 +3,7 @@ import { Goal, GoalName, GoalType } from "types/goals";
 export class CreateCharInv extends Goal {
   constructor(
     steps: CharInvStepData[] = [{ inventory: [] }],
-    data: CharInvData = { inventory: [[]] }
+    data: CharInvData = { inventory: [[]] },
   ) {
     super(GoalType.CreateCharInv, GoalName.CreateCharInv, steps, data);
   }

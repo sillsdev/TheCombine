@@ -30,12 +30,12 @@ if (fs.existsSync(coverageInfoFile)) {
     console.log(
       "Unable to run reportgenerator executable.\n" +
         "Please follow the Backend Code Coverage Report README instructions " +
-        "to install this."
+        "to install this.",
     );
   }
 } else {
   console.log(
     `${coverageInfoFile} does not exist. First run:\n
-    npm run gen-backend-coverage-report`
+    npm run gen-backend-coverage-report`,
   );
 }

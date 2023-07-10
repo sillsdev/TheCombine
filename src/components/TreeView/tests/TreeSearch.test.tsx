@@ -66,8 +66,8 @@ describe("TreeSearch", () => {
       actHook(() => result.current.handleChange(simulatedInput));
       await actHook(async () =>
         result.current.searchAndSelectDomain(
-          simulatedEnterKey as React.KeyboardEvent
-        )
+          simulatedEnterKey as React.KeyboardEvent,
+        ),
       );
     }
 
@@ -118,7 +118,7 @@ describe("TreeSearch", () => {
       const searchText = "flibbertigibbet";
       await act(
         async () =>
-          await userEvent.type(getSearchInput(), `${searchText}{enter}`)
+          await userEvent.type(getSearchInput(), `${searchText}{enter}`),
       );
       expect(getSearchInput().value).toEqual(searchText);
       // verify that no attempt to switch domains happened
@@ -131,7 +131,7 @@ describe("TreeSearch", () => {
       setupSpies(domMap[mapIds.lastKid]);
       await act(
         async () =>
-          await userEvent.type(getSearchInput(), `${mapIds.lastKid}{enter}`)
+          await userEvent.type(getSearchInput(), `${mapIds.lastKid}{enter}`),
       );
       expect(getSearchInput().value).toEqual("");
       // verify that we would switch to the domain requested

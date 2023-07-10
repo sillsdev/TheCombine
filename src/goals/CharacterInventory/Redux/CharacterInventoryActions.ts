@@ -22,7 +22,7 @@ import { Path } from "types/path";
 // Action Creators
 
 export function addToValidCharacters(
-  chars: string[]
+  chars: string[],
 ): CharacterInventoryAction {
   return {
     type: CharacterInventoryType.ADD_TO_VALID_CHARACTERS,
@@ -31,7 +31,7 @@ export function addToValidCharacters(
 }
 
 export function addToRejectedCharacters(
-  chars: string[]
+  chars: string[],
 ): CharacterInventoryAction {
   return {
     type: CharacterInventoryType.ADD_TO_REJECTED_CHARACTERS,
@@ -47,7 +47,7 @@ export function setValidCharacters(chars: string[]): CharacterInventoryAction {
 }
 
 export function setRejectedCharacters(
-  chars: string[]
+  chars: string[],
 ): CharacterInventoryAction {
   return {
     type: CharacterInventoryType.SET_REJECTED_CHARACTERS,
@@ -63,7 +63,7 @@ export function setAllWords(words: string[]): CharacterInventoryAction {
 }
 
 export function setSelectedCharacter(
-  character: string
+  character: string,
 ): CharacterInventoryAction {
   return {
     type: CharacterInventoryType.SET_SELECTED_CHARACTER,
@@ -72,7 +72,7 @@ export function setSelectedCharacter(
 }
 
 export function setCharacterSet(
-  characterSet: CharacterSetEntry[]
+  characterSet: CharacterSetEntry[],
 ): CharacterInventoryAction {
   return {
     type: CharacterInventoryType.SET_CHARACTER_SET,
@@ -102,13 +102,13 @@ export function setCharacterStatus(character: string, status: CharacterStatus) {
       case CharacterStatus.Undecided:
         const state = getState().characterInventoryState;
         const valid = state.validCharacters.filter(
-          (c: string) => c !== character
+          (c: string) => c !== character,
         );
         if (valid.length < state.validCharacters.length) {
           dispatch(setValidCharacters(valid));
         }
         const rejected = state.rejectedCharacters.filter(
-          (c: string) => c !== character
+          (c: string) => c !== character,
         );
         if (rejected.length < state.rejectedCharacters.length) {
           dispatch(setRejectedCharacters(rejected));
@@ -159,12 +159,12 @@ export function getAllCharacters() {
         character: letter,
         occurrences: countCharacterOccurrences(
           letter,
-          words.map((word) => word.vernacular)
+          words.map((word) => word.vernacular),
         ),
         status: getCharacterStatus(
           letter,
           state.currentProjectState.project.validCharacters,
-          state.currentProjectState.project.rejectedCharacters
+          state.currentProjectState.project.rejectedCharacters,
         ),
       });
     });
@@ -209,7 +209,7 @@ function getChangesFromState(state: StoreState): CharacterChange[] {
 
 export function getChanges(
   proj: Project,
-  charInvState: CharacterInventoryState
+  charInvState: CharacterInventoryState,
 ): CharacterChange[] {
   const oldAcc = proj.validCharacters;
   const newAcc = charInvState.validCharacters;
@@ -234,7 +234,7 @@ function getChange(
   oldAcc: string[],
   newAcc: string[],
   oldRej: string[],
-  newRej: string[]
+  newRej: string[],
 ): CharacterChange | undefined {
   if (oldAcc.includes(c)) {
     if (!newAcc.includes(c)) {

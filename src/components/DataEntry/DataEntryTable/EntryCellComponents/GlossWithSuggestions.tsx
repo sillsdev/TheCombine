@@ -22,11 +22,11 @@ interface GlossWithSuggestionsProps {
  * An editable gloss field that suggests spellings when current word isn't recognized.
  */
 export default function GlossWithSuggestions(
-  props: GlossWithSuggestionsProps
+  props: GlossWithSuggestionsProps,
 ): ReactElement {
   const maxSuggestions = 5;
   const [spellCheck, setSpellCheck] = useState(
-    new SpellChecker(props.analysisLang.bcp47)
+    new SpellChecker(props.analysisLang.bcp47),
   );
 
   useEffect(() => {

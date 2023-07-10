@@ -108,7 +108,7 @@ describe("CellColumns filter and sort functions", () => {
     it("properly sorts a list by sense count", () => {
       if (col?.customSort) {
         const firstWord = [...SORT_BY_GLOSSES, WORD].sort((a, b) =>
-          col.customSort!(a, b, "row")
+          col.customSort!(a, b, "row"),
         )[0];
         // The one with two sense comes first, since the rest have only one.
         expect(firstWord).toEqual(WORD);
@@ -124,7 +124,7 @@ describe("CellColumns filter and sort functions", () => {
     it("returns true when searching a word for an extant definition", () => {
       if (col?.customFilterAndSearch) {
         expect(
-          col.customFilterAndSearch(DEFINITION.text, WORD, {})
+          col.customFilterAndSearch(DEFINITION.text, WORD, {}),
         ).toBeTruthy();
       } else {
         fail();
@@ -142,7 +142,7 @@ describe("CellColumns filter and sort functions", () => {
     it("properly sorts a list by definitions", () => {
       if (col?.customSort) {
         expect(
-          [...SORT_BY_DOMAINS].sort((a, b) => col.customSort!(a, b, "row"))
+          [...SORT_BY_DOMAINS].sort((a, b) => col.customSort!(a, b, "row")),
         ).toEqual(SORT_BY_DEFINIS);
       } else {
         fail();
@@ -172,7 +172,7 @@ describe("CellColumns filter and sort functions", () => {
     it("properly sorts a list by glosses", () => {
       if (col?.customSort) {
         expect(
-          [...SORT_BY_DOMAINS].sort((a, b) => col.customSort!(a, b, "row"))
+          [...SORT_BY_DOMAINS].sort((a, b) => col.customSort!(a, b, "row")),
         ).toEqual(SORT_BY_GLOSSES);
       } else {
         fail();
@@ -186,7 +186,7 @@ describe("CellColumns filter and sort functions", () => {
     it("can find by group", () => {
       if (col?.customFilterAndSearch) {
         expect(
-          col.customFilterAndSearch(PART_OF_SPEECH.catGroup, WORD, {})
+          col.customFilterAndSearch(PART_OF_SPEECH.catGroup, WORD, {}),
         ).toBeTruthy();
       } else {
         fail();
@@ -199,8 +199,8 @@ describe("CellColumns filter and sort functions", () => {
           col.customFilterAndSearch(
             PART_OF_SPEECH.grammaticalCategory,
             WORD,
-            {}
-          )
+            {},
+          ),
         ).toBeTruthy();
       } else {
         fail();
@@ -218,7 +218,7 @@ describe("CellColumns filter and sort functions", () => {
     it("properly sorts a list of by part of speech", () => {
       if (col?.customSort) {
         expect(
-          [...SORT_BY_DOMAINS].sort((a, b) => col.customSort!(a, b, "row"))
+          [...SORT_BY_DOMAINS].sort((a, b) => col.customSort!(a, b, "row")),
         ).toEqual(SORT_BY_PARTOFS);
       } else {
         fail();
@@ -241,10 +241,10 @@ describe("CellColumns filter and sort functions", () => {
     it("returns true when searching for start of domain number but not end", () => {
       if (col?.customFilterAndSearch) {
         expect(
-          col.customFilterAndSearch(DOMAIN.id.substring(0, 3), WORD, {})
+          col.customFilterAndSearch(DOMAIN.id.substring(0, 3), WORD, {}),
         ).toBeTruthy();
         expect(
-          col.customFilterAndSearch(DOMAIN.id.substring(2), WORD, {})
+          col.customFilterAndSearch(DOMAIN.id.substring(2), WORD, {}),
         ).toBeFalsy();
       } else {
         fail();
@@ -291,7 +291,7 @@ describe("CellColumns filter and sort functions", () => {
     it("properly sorts a list by domains", () => {
       if (col?.customSort) {
         expect(
-          [...SORT_BY_GLOSSES].sort((a, b) => col.customSort!(a, b, "row"))
+          [...SORT_BY_GLOSSES].sort((a, b) => col.customSort!(a, b, "row")),
         ).toEqual(SORT_BY_DOMAINS);
       } else {
         fail();
@@ -321,7 +321,7 @@ describe("CellColumns filter and sort functions", () => {
     it("properly sorts a list by flags", () => {
       if (col?.customSort) {
         expect(
-          [...SORT_BY_GLOSSES].sort((a, b) => col.customSort!(a, b, "row"))
+          [...SORT_BY_GLOSSES].sort((a, b) => col.customSort!(a, b, "row")),
         ).toEqual(SORT_BY_FLAGIES);
       } else {
         fail();

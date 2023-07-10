@@ -19,7 +19,7 @@ export default function CharacterEntry(): ReactElement {
   const dispatch = useAppDispatch();
 
   const { rejectedCharacters, validCharacters } = useAppSelector(
-    (state: StoreState) => state.characterInventoryState
+    (state: StoreState) => state.characterInventoryState,
   );
 
   const [checked, setChecked] = useState(false);

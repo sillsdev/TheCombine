@@ -14,7 +14,7 @@ describe("NoteCell", () => {
   it("renders", () => {
     renderer.act(() => {
       renderer.create(
-        <NoteCell rowData={mockWord} value={mockWord.noteText} />
+        <NoteCell rowData={mockWord} value={mockWord.noteText} />,
       );
     });
   });

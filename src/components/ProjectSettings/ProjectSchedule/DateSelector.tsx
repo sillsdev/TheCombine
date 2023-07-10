@@ -29,7 +29,7 @@ export default function DateSelector(props: DateSelectorProps) {
     let currentDate = new Date(
       startDate.getFullYear(),
       startDate.getMonth(),
-      startDate.getDate()
+      startDate.getDate(),
     );
 
     while (currentDate <= endDate) {
@@ -37,7 +37,7 @@ export default function DateSelector(props: DateSelectorProps) {
       currentDate = new Date(
         currentDate.getFullYear(),
         currentDate.getMonth(),
-        currentDate.getDate() + 1 // Will increase month if over range
+        currentDate.getDate() + 1, // Will increase month if over range
       );
     }
     return dates;

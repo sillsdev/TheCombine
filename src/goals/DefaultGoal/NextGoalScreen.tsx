@@ -15,7 +15,7 @@ import { goalTypeToGoal } from "utilities/goalUtilities";
  */
 export default function NextGoalScreen(): ReactElement {
   const goalType = useAppSelector(
-    (state: StoreState) => state.goalsState.previousGoalType
+    (state: StoreState) => state.goalsState.previousGoalType,
   );
 
   const dispatch = useAppDispatch();

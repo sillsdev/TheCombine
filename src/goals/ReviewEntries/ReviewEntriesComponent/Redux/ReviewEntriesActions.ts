@@ -22,7 +22,7 @@ export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
 
 function updateWord(
   oldId: string,
-  updatedWord: ReviewEntriesWord
+  updatedWord: ReviewEntriesWord,
 ): ReviewUpdateWord {
   return {
     type: ReviewEntriesActionTypes.UpdateWord,
@@ -39,7 +39,7 @@ export function clearReviewEntriesState(): ReviewClearReviewEntriesState {
 export function getSenseError(
   sense: ReviewEntriesSense,
   checkGlosses = true,
-  checkDomains = false
+  checkDomains = false,
 ): string | undefined {
   if (checkGlosses && sense.glosses.length === 0) {
     return "reviewEntries.error.gloss";
@@ -56,7 +56,7 @@ export function getSenseError(
 // * If the user attempts to delete all senses, return old senses with deleted senses removed
 function cleanSenses(
   senses: ReviewEntriesSense[],
-  oldSenses: ReviewEntriesSense[]
+  oldSenses: ReviewEntriesSense[],
 ): ReviewEntriesSense[] | string {
   const cleanSenses: ReviewEntriesSense[] = [];
   let error: string | undefined;
@@ -68,7 +68,7 @@ function cleanSenses(
     const domainIds = [...new Set(newSense.domains.map((dom) => dom.id))];
     domainIds.sort();
     newSense.domains = domainIds.map(
-      (id) => newSense.domains.find((dom) => dom.id === id)!
+      (id) => newSense.domains.find((dom) => dom.id === id)!,
     );
 
     // Skip senses which are deleted or empty.
@@ -101,7 +101,7 @@ function cleanSenses(
 // * If neither the word nor oldWord has a vernacular, reject
 function cleanWord(
   word: ReviewEntriesWord,
-  oldWord: ReviewEntriesWord
+  oldWord: ReviewEntriesWord,
 ): ReviewEntriesWord | string {
   if (!word.senses.find((s) => !s.deleted)) {
     return "reviewEntries.error.senses";
@@ -119,7 +119,7 @@ function cleanWord(
 // Converts the ReviewEntriesWord into a Word to send to the backend
 export function updateFrontierWord(
   newData: ReviewEntriesWord,
-  oldData: ReviewEntriesWord
+  oldData: ReviewEntriesWord,
 ) {
   return async (dispatch: StoreStateDispatch) => {
     // Clean + check data; if there's something wrong, return the error.
@@ -134,7 +134,7 @@ export function updateFrontierWord(
     // Update the data.
     editWord.vernacular = editSource.vernacular;
     editWord.senses = editSource.senses.map((s) =>
-      getSenseFromEditSense(s, editWord.senses)
+      getSenseFromEditSense(s, editWord.senses),
     );
     editWord.note = newNote(editSource.noteText, editWord.note?.language);
 
@@ -149,7 +149,7 @@ export function updateFrontierWord(
 // Creates a Sense from a cleaned ReviewEntriesSense and array of old senses.
 export function getSenseFromEditSense(
   editSense: ReviewEntriesSense,
-  oldSenses: Sense[]
+  oldSenses: Sense[],
 ): Sense {
   // If we match an old sense, copy it over.
   const oldSense = oldSenses.find((s) => s.guid === editSense.guid);
@@ -166,7 +166,7 @@ export function getSenseFromEditSense(
 // Performs specified backend Word-updating function, then makes state ReviewEntriesWord-updating dispatch
 function refreshWord(
   oldWordId: string,
-  wordUpdater: (wordId: string) => Promise<string>
+  wordUpdater: (wordId: string) => Promise<string>,
 ) {
   return async (dispatch: StoreStateDispatch): Promise<void> => {
     const newWordId = await wordUpdater(oldWordId);
@@ -177,12 +177,12 @@ function refreshWord(
 
 export function deleteAudio(wordId: string, fileName: string) {
   return refreshWord(wordId, (wordId: string) =>
-    backend.deleteAudio(wordId, fileName)
+    backend.deleteAudio(wordId, fileName),
   );
 }
 
 export function uploadAudio(wordId: string, audioFile: File) {
   return refreshWord(wordId, (wordId: string) =>
-    backend.uploadAudio(wordId, audioFile)
+    backend.uploadAudio(wordId, audioFile),
   );
 }

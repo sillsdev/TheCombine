@@ -10,7 +10,7 @@ interface PartOfSpeechCellProps {
 }
 
 export default function PartOfSpeechCell(
-  props: PartOfSpeechCellProps
+  props: PartOfSpeechCellProps,
 ): ReactElement {
   return (
     <AlignedList

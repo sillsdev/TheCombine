@@ -30,7 +30,7 @@ interface EditTextDialogProps {
  * Dialog for editing text and confirm or cancel the edit
  */
 export default function EditTextDialog(
-  props: EditTextDialogProps
+  props: EditTextDialogProps,
 ): ReactElement {
   const [text, setText] = useState<string>(props.text);
   const { t } = useTranslation();

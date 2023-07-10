@@ -17,7 +17,7 @@ export const defaultState: CharacterInventoryState = {
 
 export const characterInventoryReducer = (
   state: CharacterInventoryState = defaultState,
-  action: StoreAction | CharacterInventoryAction
+  action: StoreAction | CharacterInventoryAction,
 ): CharacterInventoryState => {
   let validCharacters: string[];
   let rejectedCharacters: string[];
@@ -27,7 +27,7 @@ export const characterInventoryReducer = (
       // Set prevents duplicate characters
       validCharacters = [...new Set(action.payload)];
       rejectedCharacters = state.rejectedCharacters.filter(
-        (char) => !validCharacters.includes(char)
+        (char) => !validCharacters.includes(char),
       );
 
       // Set status of characters in character set
@@ -35,7 +35,7 @@ export const characterInventoryReducer = (
         entry.status = getCharacterStatus(
           entry.character,
           validCharacters,
-          rejectedCharacters
+          rejectedCharacters,
         );
         return entry;
       });
@@ -44,7 +44,7 @@ export const characterInventoryReducer = (
     case CharacterInventoryType.SET_REJECTED_CHARACTERS:
       rejectedCharacters = [...new Set(action.payload)];
       validCharacters = state.validCharacters.filter(
-        (char) => !rejectedCharacters.includes(char)
+        (char) => !rejectedCharacters.includes(char),
       );
 
       // Set status of characters in character set
@@ -52,7 +52,7 @@ export const characterInventoryReducer = (
         entry.status = getCharacterStatus(
           entry.character,
           validCharacters,
-          rejectedCharacters
+          rejectedCharacters,
         );
         return entry;
       });
@@ -63,7 +63,7 @@ export const characterInventoryReducer = (
         ...new Set(state.validCharacters.concat(action.payload)),
       ];
       rejectedCharacters = state.rejectedCharacters.filter(
-        (char) => !validCharacters.includes(char)
+        (char) => !validCharacters.includes(char),
       );
 
       // Set status of characters in character set
@@ -71,7 +71,7 @@ export const characterInventoryReducer = (
         entry.status = getCharacterStatus(
           entry.character,
           validCharacters,
-          rejectedCharacters
+          rejectedCharacters,
         );
         return entry;
       });
@@ -82,7 +82,7 @@ export const characterInventoryReducer = (
         ...new Set(state.rejectedCharacters.concat(action.payload)),
       ];
       validCharacters = state.validCharacters.filter(
-        (char) => !rejectedCharacters.includes(char)
+        (char) => !rejectedCharacters.includes(char),
       );
 
       // Set status of characters in character set
@@ -90,7 +90,7 @@ export const characterInventoryReducer = (
         entry.status = getCharacterStatus(
           entry.character,
           validCharacters,
-          rejectedCharacters
+          rejectedCharacters,
         );
         return entry;
       });

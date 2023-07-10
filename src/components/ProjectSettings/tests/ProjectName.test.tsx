@@ -21,7 +21,7 @@ let testRenderer: renderer.ReactTestRenderer;
 const renderName = async (): Promise<void> => {
   await renderer.act(async () => {
     testRenderer = renderer.create(
-      <ProjectName project={mockProject} updateProject={mockUpdateProject} />
+      <ProjectName project={mockProject} updateProject={mockUpdateProject} />,
     );
   });
 };
@@ -33,7 +33,7 @@ describe("ProjectName", () => {
     const name = "new-project-name";
     mockUpdateProject.mockResolvedValueOnce({});
     await renderer.act(async () =>
-      textField.props.onChange({ target: { value: name } })
+      textField.props.onChange({ target: { value: name } }),
     );
     await renderer.act(async () => textField.props.onBlur());
     expect(mockUpdateProject).toBeCalledWith({ ...mockProject, name });
@@ -43,7 +43,7 @@ describe("ProjectName", () => {
     await renderName();
     const textField = testRenderer.root.findByType(TextField);
     await renderer.act(async () =>
-      textField.props.onChange({ target: { value: "new-name" } })
+      textField.props.onChange({ target: { value: "new-name" } }),
     );
     mockUpdateProject.mockRejectedValueOnce({});
     expect(mockToastError).not.toBeCalled();

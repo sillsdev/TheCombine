@@ -10,7 +10,7 @@ describe("AlignedList", () => {
           contents={[<div key={0} />, <div key={1} />]}
           listId={"testId"}
           bottomCell={<div />}
-        />
+        />,
       );
     });
   });

@@ -42,7 +42,7 @@ const renderProjectButtons = async (path = Path.Root) => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
         <ProjectButtons currentTab={path} />
-      </Provider>
+      </Provider>,
     );
   });
 };

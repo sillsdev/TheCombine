@@ -23,7 +23,7 @@ export enum UserOrder {
 
 export function getUserCompare(
   order: UserOrder,
-  reverse = false
+  reverse = false,
 ): (a: User, b: User) => number {
   const rev = reverse ? -1 : 1;
   return (a: User, b: User) => {
@@ -61,7 +61,7 @@ export default function SortOptions(props: SortOptionsProps): ReactElement {
     sortOptions.push(
       <MenuItem key="sortByEmail" value={UserOrder.Email}>
         {t("login.email")}
-      </MenuItem>
+      </MenuItem>,
     );
   }
 

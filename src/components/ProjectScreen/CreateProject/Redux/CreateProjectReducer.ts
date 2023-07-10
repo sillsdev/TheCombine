@@ -8,7 +8,7 @@ import { StoreAction, StoreActionTypes } from "rootActions";
 
 export const createProjectReducer = (
   state: CreateProjectState = defaultState,
-  action: CreateProjectAction | StoreAction
+  action: CreateProjectAction | StoreAction,
 ): CreateProjectState => {
   switch (action.type) {
     case CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS:

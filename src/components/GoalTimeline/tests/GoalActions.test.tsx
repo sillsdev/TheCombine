@@ -22,7 +22,7 @@ import { maxNumSteps } from "utilities/goalUtilities";
 
 jest.mock("goals/MergeDupGoal/Redux/MergeDupActions", () => {
   const realMergeDupActions = jest.requireActual(
-    "goals/MergeDupGoal/Redux/MergeDupActions"
+    "goals/MergeDupGoal/Redux/MergeDupActions",
   );
   return {
     ...realMergeDupActions,
@@ -38,7 +38,7 @@ jest.mock("backend", () => ({
     id: string,
     goalIndex: number,
     step: string,
-    stepIndex?: number
+    stepIndex?: number,
   ) => mockAddStepToGoal(id, goalIndex, step, stepIndex),
   createUserEdit: () => mockCreateUserEdit(),
   getUser: (id: string) => mockGetUser(id),
@@ -136,7 +136,7 @@ describe("GoalActions", () => {
 
   it("asyncLoadExistingUserEdits should create an async action to load user edits", async () => {
     await mockStore.dispatch<any>(
-      actions.asyncLoadExistingUserEdits(mockProjectId, mockUserEditId)
+      actions.asyncLoadExistingUserEdits(mockProjectId, mockUserEditId),
     );
     const loadUserEdits: LoadUserEditsAction = {
       type: GoalActionTypes.LOAD_USER_EDITS,
@@ -192,10 +192,10 @@ describe("GoalActions", () => {
       const goal: Goal = new CreateCharInv();
       goal.index = 0;
       await mockStore.dispatch<any>(
-        actions.asyncLoadNewGoal(goal, mockUserEditId)
+        actions.asyncLoadNewGoal(goal, mockUserEditId),
       );
       expect(mockStore.getActions()[0].type).toEqual(
-        GoalActionTypes.SET_CURRENT_GOAL
+        GoalActionTypes.SET_CURRENT_GOAL,
       );
       expect(mockAddGoalToUserEdit).toBeCalledTimes(0);
       expect(mockAddStepToGoal).toBeCalledTimes(0);
@@ -207,7 +207,7 @@ describe("GoalActions", () => {
       goal.numSteps = maxNumSteps(goal.goalType);
       goal.steps = [{ words: [...goalDataMock.plannedWords[0]] }];
       await mockStore.dispatch<any>(
-        actions.asyncLoadNewGoal(goal, mockUserEditId)
+        actions.asyncLoadNewGoal(goal, mockUserEditId),
       );
       expect(mockDispatchMergeStepData).toBeCalledTimes(1);
       expect(mockLoadMergeDupsData).toBeCalledTimes(1);
@@ -247,7 +247,7 @@ describe("GoalActions", () => {
       await mockStore.dispatch<any>(actions.asyncAdvanceStep());
       expect(mockAddStepToGoal).toBeCalledTimes(1);
       expect(mockStore.getActions()[0].type).toEqual(
-        GoalActionTypes.SET_CURRENT_GOAL
+        GoalActionTypes.SET_CURRENT_GOAL,
       );
     });
 
@@ -280,7 +280,7 @@ describe("GoalActions", () => {
       await mockStore.dispatch<any>(actions.asyncUpdateGoal(goal));
       expect(mockStore.getActions().length).toEqual(1);
       expect(mockStore.getActions()[0].type).toEqual(
-        GoalActionTypes.SET_CURRENT_GOAL
+        GoalActionTypes.SET_CURRENT_GOAL,
       );
       expect(mockAddGoalToUserEdit).toBeCalledTimes(1);
     });
@@ -324,7 +324,7 @@ describe("GoalActions", () => {
 
       actions.updateStepFromData(goal);
       expect((goal.steps[0] as MergeStepData).words).toEqual(
-        (goal.data as MergeDupData).plannedWords[0]
+        (goal.data as MergeDupData).plannedWords[0],
       );
       expect(goal.currentStep).toEqual(0);
     });

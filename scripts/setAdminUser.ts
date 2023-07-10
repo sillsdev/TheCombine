@@ -17,6 +17,6 @@ if (args.length > 0) {
   console.log(`stdout: ${cmd.stdout.toString()}`);
 } else {
   console.log(
-    "Must provide username as an argument, e.g. npm run set-admin-user -- myUserName"
+    "Must provide username as an argument, e.g. npm run set-admin-user -- myUserName",
   );
 }

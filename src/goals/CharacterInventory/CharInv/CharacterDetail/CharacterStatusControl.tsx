@@ -10,7 +10,7 @@ interface CharacterStatusControlProps {
 }
 
 export default function CharacterStatusControl(
-  props: CharacterStatusControlProps
+  props: CharacterStatusControlProps,
 ) {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();

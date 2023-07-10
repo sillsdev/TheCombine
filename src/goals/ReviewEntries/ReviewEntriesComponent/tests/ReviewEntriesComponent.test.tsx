@@ -66,7 +66,7 @@ const mockStore = configureMockStore()(state);
 
 function setMockFunctions() {
   mockGetFrontierWords.mockResolvedValue(
-    mockReviewEntryWords.map(mockCreateWord)
+    mockReviewEntryWords.map(mockCreateWord),
   );
   mockMaterialTable.mockReturnValue(React.Fragment);
 }
@@ -87,7 +87,7 @@ beforeEach(async () => {
           updateAllWords={mockUpdateAllWords}
           updateFrontierWord={jest.fn()}
         />
-      </Provider>
+      </Provider>,
     );
   });
 });
@@ -98,7 +98,7 @@ describe("ReviewEntriesComponent", () => {
       mockReviewEntryWords.map((word) => ({
         ...word,
         recorder: expect.any(Object),
-      }))
+      })),
     );
   });
 });

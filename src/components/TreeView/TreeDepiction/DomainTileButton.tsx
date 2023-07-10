@@ -91,7 +91,7 @@ interface DomainTileButtonProps extends DomainTileProps {
 
 // Creates a semantic domain tile, which can be clicked on to navigate to that semantic domain
 export default function DomainTileButton(
-  props: DomainTileButtonProps
+  props: DomainTileButtonProps,
 ): ReactElement {
   return (
     <Button

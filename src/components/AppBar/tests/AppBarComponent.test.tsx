@@ -37,7 +37,7 @@ describe("AppBar", () => {
           <MemoryRouter>
             <AppBar />
           </MemoryRouter>
-        </Provider>
+        </Provider>,
       );
     });
   });

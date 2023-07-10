@@ -26,5 +26,5 @@ function mapDispatchToProps(dispatch: StoreStateDispatch) {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(MergeDupStepComponent);

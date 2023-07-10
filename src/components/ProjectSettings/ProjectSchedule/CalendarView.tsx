@@ -17,7 +17,7 @@ export default function CalendarView(props: CalendarViewProps) {
   function customDayRenderer(
     day: Dayjs,
     _selectedDays: Array<Dayjs | null>,
-    pickersDayProps: PickersDayProps<Dayjs>
+    pickersDayProps: PickersDayProps<Dayjs>,
   ) {
     const date = day.toDate();
     const selected =
@@ -26,7 +26,7 @@ export default function CalendarView(props: CalendarViewProps) {
         (d) =>
           d.getDate() === date.getDate() &&
           d.getMonth() === date.getMonth() &&
-          d.getFullYear() === date.getFullYear()
+          d.getFullYear() === date.getFullYear(),
       ) >= 0;
     return <PickersDay {...pickersDayProps} selected={selected} />;
   }

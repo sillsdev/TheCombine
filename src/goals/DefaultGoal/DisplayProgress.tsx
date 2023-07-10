@@ -12,13 +12,13 @@ export default function DisplayProgress() {
   /* We cannot use a single selector for state.goalsState.currentGoal and define everything on that;
  currentStep needs its own targeted selector for it to re-render as the user progresses. */
   const currentStep = useSelector(
-    (state: StoreState) => state.goalsState.currentGoal.currentStep
+    (state: StoreState) => state.goalsState.currentGoal.currentStep,
   );
   const numSteps = useSelector(
-    (state: StoreState) => state.goalsState.currentGoal.numSteps
+    (state: StoreState) => state.goalsState.currentGoal.numSteps,
   );
   const goalType = useSelector(
-    (state: StoreState) => state.goalsState.currentGoal.goalType
+    (state: StoreState) => state.goalsState.currentGoal.goalType,
   );
   const { t } = useTranslation();
 

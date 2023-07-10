@@ -16,7 +16,7 @@ import { Path } from "types/path";
 import { routerPath } from "utilities/pathUtilities";
 
 const BaseGoalScreen = loadable(
-  () => import("goals/DefaultGoal/BaseGoalScreen")
+  () => import("goals/DefaultGoal/BaseGoalScreen"),
 );
 const DataEntry = loadable(() => import("components/DataEntry"));
 const GoalTimeline = loadable(() => import("components/GoalTimeline"));

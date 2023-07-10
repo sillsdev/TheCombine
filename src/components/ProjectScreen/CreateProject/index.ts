@@ -24,7 +24,7 @@ function mapDispatchToProps(dispatch: StoreStateDispatch) {
     asyncCreateProject: (
       name: string,
       vernacularLanguage: WritingSystem,
-      analysisLanguages: WritingSystem[]
+      analysisLanguages: WritingSystem[],
     ) => {
       dispatch(asyncCreateProject(name, vernacularLanguage, analysisLanguages));
     },

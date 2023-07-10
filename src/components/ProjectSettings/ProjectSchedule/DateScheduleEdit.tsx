@@ -21,14 +21,14 @@ interface DateScheduleEditProps {
 
 export default function DateScheduleEdit(props: DateScheduleEditProps) {
   const [projectSchedule, setProjectSchedule] = useState<Date[]>(
-    props.projectSchedule
+    props.projectSchedule,
   );
   const { t } = useTranslation();
   // Custom renderer for CalendarPicker
   function customDayRenderer(
     day: Dayjs,
     _selectedDays: Array<Dayjs | null>,
-    pickersDayProps: PickersDayProps<Dayjs>
+    pickersDayProps: PickersDayProps<Dayjs>,
   ) {
     const date = day.toDate();
     const selected =
@@ -36,7 +36,7 @@ export default function DateScheduleEdit(props: DateScheduleEditProps) {
         (d) =>
           d.getDate() === date.getDate() &&
           d.getMonth() === date.getMonth() &&
-          d.getFullYear() === date.getFullYear()
+          d.getFullYear() === date.getFullYear(),
       ) >= 0;
     return <PickersDay {...pickersDayProps} selected={selected} />;
   }
@@ -46,7 +46,7 @@ export default function DateScheduleEdit(props: DateScheduleEditProps) {
     const projectId = LocalStorage.getProjectId();
     const project = await getProject(projectId);
     project.workshopSchedule = projectSchedule.map((date) =>
-      date.toISOString()
+      date.toISOString(),
     );
     await updateProject(project);
     props.close();
@@ -64,7 +64,7 @@ export default function DateScheduleEdit(props: DateScheduleEditProps) {
         (d) =>
           d.getFullYear() === date.getFullYear() &&
           d.getMonth() === date.getMonth() &&
-          d.getDate() === date.getDate()
+          d.getDate() === date.getDate(),
       );
       if (index >= 0) {
         schedule.splice(index, 1);

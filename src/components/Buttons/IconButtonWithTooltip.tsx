@@ -13,7 +13,7 @@ interface IconButtonWithTooltipProps {
 }
 
 export default function IconButtonWithTooltip(
-  props: IconButtonWithTooltipProps
+  props: IconButtonWithTooltipProps,
 ): ReactElement {
   const { t } = useTranslation();
 

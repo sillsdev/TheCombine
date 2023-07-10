@@ -45,7 +45,7 @@ import { UserRole } from "../models";
  * @export
  */
 export const UserRoleApiAxiosParamCreator = function (
-  configuration?: Configuration
+  configuration?: Configuration,
 ) {
   return {
     /**
@@ -58,7 +58,7 @@ export const UserRoleApiAxiosParamCreator = function (
     createUserRole: async (
       projectId: string,
       userRole: UserRole,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("createUserRole", "projectId", projectId);
@@ -66,7 +66,7 @@ export const UserRoleApiAxiosParamCreator = function (
       assertParamExists("createUserRole", "userRole", userRole);
       const localVarPath = `/v1/projects/{projectId}/userroles`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId))
+        encodeURIComponent(String(projectId)),
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -96,7 +96,7 @@ export const UserRoleApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         userRole,
         localVarRequestOptions,
-        configuration
+        configuration,
       );
 
       return {
@@ -112,13 +112,13 @@ export const UserRoleApiAxiosParamCreator = function (
      */
     deleteProjectUserRoles: async (
       projectId: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("deleteProjectUserRoles", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}/userroles`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId))
+        encodeURIComponent(String(projectId)),
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -159,7 +159,7 @@ export const UserRoleApiAxiosParamCreator = function (
     deleteUserRole: async (
       projectId: string,
       userId: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("deleteUserRole", "projectId", projectId);
@@ -205,13 +205,13 @@ export const UserRoleApiAxiosParamCreator = function (
      */
     getProjectUserRoles: async (
       projectId: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("getProjectUserRoles", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}/userroles`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId))
+        encodeURIComponent(String(projectId)),
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -252,7 +252,7 @@ export const UserRoleApiAxiosParamCreator = function (
     getUserRole: async (
       projectId: string,
       userRoleId: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("getUserRole", "projectId", projectId);
@@ -302,7 +302,7 @@ export const UserRoleApiAxiosParamCreator = function (
       projectId: string,
       userId: string,
       permission: Array<Permission>,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("updateUserRolePermissions", "projectId", projectId);
@@ -341,7 +341,7 @@ export const UserRoleApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         permission,
         localVarRequestOptions,
-        configuration
+        configuration,
       );
 
       return {
@@ -369,20 +369,20 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
     async createUserRole(
       projectId: string,
       userRole: UserRole,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.createUserRole(
         projectId,
         userRole,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -393,20 +393,20 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
      */
     async deleteProjectUserRoles(
       projectId: string,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.deleteProjectUserRoles(
           projectId,
-          options
+          options,
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -419,20 +419,20 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
     async deleteUserRole(
       projectId: string,
       userId: string,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserRole(
         projectId,
         userId,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -443,11 +443,11 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
      */
     async getProjectUserRoles(
       projectId: string,
-      options?: any
+      options?: any,
     ): Promise<
       (
         axios?: AxiosInstance,
-        basePath?: string
+        basePath?: string,
       ) => AxiosPromise<Array<UserRole>>
     > {
       const localVarAxiosArgs =
@@ -456,7 +456,7 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -469,20 +469,20 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
     async getUserRole(
       projectId: string,
       userRoleId: string,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserRole>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getUserRole(
         projectId,
         userRoleId,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -497,7 +497,7 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
       projectId: string,
       userId: string,
       permission: Array<Permission>,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
@@ -506,13 +506,13 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
           projectId,
           userId,
           permission,
-          options
+          options,
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
   };
@@ -525,7 +525,7 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
 export const UserRoleApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
-  axios?: AxiosInstance
+  axios?: AxiosInstance,
 ) {
   const localVarFp = UserRoleApiFp(configuration);
   return {
@@ -539,7 +539,7 @@ export const UserRoleApiFactory = function (
     createUserRole(
       projectId: string,
       userRole: UserRole,
-      options?: any
+      options?: any,
     ): AxiosPromise<string> {
       return localVarFp
         .createUserRole(projectId, userRole, options)
@@ -553,7 +553,7 @@ export const UserRoleApiFactory = function (
      */
     deleteProjectUserRoles(
       projectId: string,
-      options?: any
+      options?: any,
     ): AxiosPromise<boolean> {
       return localVarFp
         .deleteProjectUserRoles(projectId, options)
@@ -569,7 +569,7 @@ export const UserRoleApiFactory = function (
     deleteUserRole(
       projectId: string,
       userId: string,
-      options?: any
+      options?: any,
     ): AxiosPromise<boolean> {
       return localVarFp
         .deleteUserRole(projectId, userId, options)
@@ -583,7 +583,7 @@ export const UserRoleApiFactory = function (
      */
     getProjectUserRoles(
       projectId: string,
-      options?: any
+      options?: any,
     ): AxiosPromise<Array<UserRole>> {
       return localVarFp
         .getProjectUserRoles(projectId, options)
@@ -599,7 +599,7 @@ export const UserRoleApiFactory = function (
     getUserRole(
       projectId: string,
       userRoleId: string,
-      options?: any
+      options?: any,
     ): AxiosPromise<UserRole> {
       return localVarFp
         .getUserRole(projectId, userRoleId, options)
@@ -617,7 +617,7 @@ export const UserRoleApiFactory = function (
       projectId: string,
       userId: string,
       permission: Array<Permission>,
-      options?: any
+      options?: any,
     ): AxiosPromise<string> {
       return localVarFp
         .updateUserRolePermissions(projectId, userId, permission, options)
@@ -761,13 +761,13 @@ export class UserRoleApi extends BaseAPI {
    */
   public createUserRole(
     requestParameters: UserRoleApiCreateUserRoleRequest,
-    options?: any
+    options?: any,
   ) {
     return UserRoleApiFp(this.configuration)
       .createUserRole(
         requestParameters.projectId,
         requestParameters.userRole,
-        options
+        options,
       )
       .then((request) => request(this.axios, this.basePath));
   }
@@ -781,7 +781,7 @@ export class UserRoleApi extends BaseAPI {
    */
   public deleteProjectUserRoles(
     requestParameters: UserRoleApiDeleteProjectUserRolesRequest,
-    options?: any
+    options?: any,
   ) {
     return UserRoleApiFp(this.configuration)
       .deleteProjectUserRoles(requestParameters.projectId, options)
@@ -797,13 +797,13 @@ export class UserRoleApi extends BaseAPI {
    */
   public deleteUserRole(
     requestParameters: UserRoleApiDeleteUserRoleRequest,
-    options?: any
+    options?: any,
   ) {
     return UserRoleApiFp(this.configuration)
       .deleteUserRole(
         requestParameters.projectId,
         requestParameters.userId,
-        options
+        options,
       )
       .then((request) => request(this.axios, this.basePath));
   }
@@ -817,7 +817,7 @@ export class UserRoleApi extends BaseAPI {
    */
   public getProjectUserRoles(
     requestParameters: UserRoleApiGetProjectUserRolesRequest,
-    options?: any
+    options?: any,
   ) {
     return UserRoleApiFp(this.configuration)
       .getProjectUserRoles(requestParameters.projectId, options)
@@ -833,13 +833,13 @@ export class UserRoleApi extends BaseAPI {
    */
   public getUserRole(
     requestParameters: UserRoleApiGetUserRoleRequest,
-    options?: any
+    options?: any,
   ) {
     return UserRoleApiFp(this.configuration)
       .getUserRole(
         requestParameters.projectId,
         requestParameters.userRoleId,
-        options
+        options,
       )
       .then((request) => request(this.axios, this.basePath));
   }
@@ -853,14 +853,14 @@ export class UserRoleApi extends BaseAPI {
    */
   public updateUserRolePermissions(
     requestParameters: UserRoleApiUpdateUserRolePermissionsRequest,
-    options?: any
+    options?: any,
   ) {
     return UserRoleApiFp(this.configuration)
       .updateUserRolePermissions(
         requestParameters.projectId,
         requestParameters.userId,
         requestParameters.permission,
-        options
+        options,
       )
       .then((request) => request(this.axios, this.basePath));
   }

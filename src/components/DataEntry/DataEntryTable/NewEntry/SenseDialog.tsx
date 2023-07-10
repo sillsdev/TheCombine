@@ -58,13 +58,13 @@ export function SenseList(props: SenseListProps) {
   const { t } = useTranslation();
 
   const hasPartsOfSpeech = !!props.selectedWord.senses.find(
-    (s) => s.grammaticalInfo.catGroup !== GramCatGroup.Unspecified
+    (s) => s.grammaticalInfo.catGroup !== GramCatGroup.Unspecified,
   );
 
   const menuItem = (sense: Sense): ReactElement => {
     const entry = new ReviewEntriesWord(
       { ...props.selectedWord, senses: [sense] },
-      props.analysisLang
+      props.analysisLang,
     );
     const gloss = firstGlossText(sense);
     return (
@@ -104,7 +104,7 @@ export function SenseList(props: SenseListProps) {
     <StyledMenuItem key="new-sense" onClick={() => props.closeDialog("")}>
       {t("addWords.newSenseFor")}
       {props.selectedWord.vernacular}
-    </StyledMenuItem>
+    </StyledMenuItem>,
   );
 
   return (

@@ -14,7 +14,7 @@ export default function Loading(): ReactElement {
     animate(
       "#loading-tractor",
       { transform: [`translateX(${half}px)`, `translateX(-${half}px)`] },
-      { duration: 10, repeat: Infinity, easing: "linear" }
+      { duration: 10, repeat: Infinity, easing: "linear" },
     );
   }, []);
 

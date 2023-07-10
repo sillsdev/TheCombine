@@ -28,7 +28,7 @@ import { newWritingSystem, semDomWritingSystems } from "types/writingSystem";
 import { getAnalysisLangsFromWords } from "utilities/wordUtilities";
 
 export default function ProjectLanguages(
-  props: ProjectSettingPropsWithUpdate
+  props: ProjectSettingPropsWithUpdate,
 ): ReactElement {
   const [add, setAdd] = useState(false);
   const [isNewLang, setIsNewLang] = useState(false);
@@ -41,7 +41,7 @@ export default function ProjectLanguages(
       !!newLang.bcp47 &&
         !props.project.analysisWritingSystems
           .map((ws) => ws.bcp47)
-          .includes(newLang.bcp47)
+          .includes(newLang.bcp47),
     );
   }, [newLang.bcp47, props.project.analysisWritingSystems]);
 
@@ -55,7 +55,7 @@ export default function ProjectLanguages(
       .catch((err) => {
         console.error(err);
         toast.error(
-          t("projectSettings.language.makeDefaultAnalysisLanguageFailed")
+          t("projectSettings.language.makeDefaultAnalysisLanguageFailed"),
         );
       });
   };
@@ -128,7 +128,7 @@ export default function ProjectLanguages(
       .catch((err) => {
         console.error(err);
         toast.error(
-          t("projectSettings.language.updateSemDomWritingSystemFailed")
+          t("projectSettings.language.updateSemDomWritingSystemFailed"),
         );
       });
   };
@@ -254,7 +254,7 @@ interface ImmutableWritingSystemProps {
 }
 
 function ImmutableWritingSystem(
-  props: ImmutableWritingSystemProps
+  props: ImmutableWritingSystemProps,
 ): ReactElement {
   const { t } = useTranslation();
 

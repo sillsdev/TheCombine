@@ -95,7 +95,7 @@ const columns: Column<any>[] = [
     filterPlaceholder: "#",
     customFilterAndSearch: (
       filter: string,
-      rowData: ReviewEntriesWord
+      rowData: ReviewEntriesWord,
     ): boolean => {
       return parseInt(filter) === rowData.senses.length;
     },
@@ -111,7 +111,7 @@ const columns: Column<any>[] = [
           props.onRowDataChange({
             ...props.rowData,
             senses: props.rowData.senses.map((s) =>
-              s.guid === guid ? { ...s, deleted: !s.deleted } : s
+              s.guid === guid ? { ...s, deleted: !s.deleted } : s,
             ),
           });
         }
@@ -138,7 +138,7 @@ const columns: Column<any>[] = [
     ),
     customFilterAndSearch: (
       term: string,
-      rowData: ReviewEntriesWord
+      rowData: ReviewEntriesWord,
     ): boolean => {
       const regex = cleanRegExp(term);
       for (const sense of rowData.senses) {
@@ -187,7 +187,7 @@ const columns: Column<any>[] = [
     ),
     customFilterAndSearch: (
       term: string,
-      rowData: ReviewEntriesWord
+      rowData: ReviewEntriesWord,
     ): boolean => {
       const regex = cleanRegExp(term);
       for (const sense of rowData.senses) {
@@ -229,7 +229,7 @@ const columns: Column<any>[] = [
     ),
     customFilterAndSearch: (
       term: string,
-      rowData: ReviewEntriesWord
+      rowData: ReviewEntriesWord,
     ): boolean => {
       const regex = cleanRegExp(term);
       for (const sense of rowData.senses) {
@@ -254,7 +254,7 @@ const columns: Column<any>[] = [
         const gramInfoB = b.senses[count].partOfSpeech;
         if (gramInfoA.catGroup === gramInfoB.catGroup) {
           return gramInfoA.grammaticalCategory.localeCompare(
-            gramInfoB.grammaticalCategory
+            gramInfoB.grammaticalCategory,
           );
         }
         return gramInfoA.catGroup.localeCompare(gramInfoB.catGroup);
@@ -280,7 +280,7 @@ const columns: Column<any>[] = [
           props.onRowDataChange({
             ...props.rowData,
             senses: props.rowData.senses.map((s) =>
-              s.guid === guid ? { ...s, domains } : s
+              s.guid === guid ? { ...s, domains } : s,
             ),
           });
         }
@@ -289,7 +289,7 @@ const columns: Column<any>[] = [
     },
     customFilterAndSearch: (
       term: string,
-      rowData: ReviewEntriesWord
+      rowData: ReviewEntriesWord,
     ): boolean => {
       /*
        * Search term expected in one of two formats:
@@ -406,7 +406,7 @@ const columns: Column<any>[] = [
     ),
     customFilterAndSearch: (
       filter: string,
-      rowData: ReviewEntriesWord
+      rowData: ReviewEntriesWord,
     ): boolean => {
       return parseInt(filter) === rowData.pronunciationFiles.length;
     },
@@ -451,7 +451,7 @@ const columns: Column<any>[] = [
     ),
     customFilterAndSearch: (
       filter: string,
-      rowData: ReviewEntriesWord
+      rowData: ReviewEntriesWord,
     ): boolean => {
       return rowData.flag.text.includes(filter);
     },

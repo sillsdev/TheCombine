@@ -24,7 +24,7 @@ describe("VernWithSuggestions", () => {
           onBlur={jest.fn()}
           vernacularLang={newWritingSystem()}
           textFieldId={"test-vern"}
-        />
+        />,
       );
     });
   });
@@ -41,7 +41,7 @@ describe("VernWithSuggestions", () => {
           onBlur={jest.fn()}
           vernacularLang={newWritingSystem()}
           textFieldId={"test-vern-new"}
-        />
+        />,
       );
     });
   });
@@ -58,7 +58,7 @@ describe("VernWithSuggestions", () => {
           onBlur={jest.fn()}
           vernacularLang={newWritingSystem()}
           textFieldId={"test-vern-disabled"}
-        />
+        />,
       );
     });
   });

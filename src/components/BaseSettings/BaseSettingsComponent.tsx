@@ -10,7 +10,7 @@ interface BaseSettingsProps {
 }
 
 export default function BaseSettingsComponent(
-  props: BaseSettingsProps
+  props: BaseSettingsProps,
 ): ReactElement {
   const [isVisible, setIsVisible] = useState(true);
 

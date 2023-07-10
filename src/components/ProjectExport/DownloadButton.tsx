@@ -34,10 +34,10 @@ interface DownloadButtonProps {
  * when a user's export is done, so there should be exactly one copy of this
  * component rendered at any given time in the logged-in app. */
 export default function DownloadButton(
-  props: DownloadButtonProps
+  props: DownloadButtonProps,
 ): ReactElement {
   const exportState = useAppSelector(
-    (state: StoreState) => state.exportProjectState
+    (state: StoreState) => state.exportProjectState,
   );
   const dispatch = useAppDispatch();
   const [fileName, setFileName] = useState<string | undefined>();

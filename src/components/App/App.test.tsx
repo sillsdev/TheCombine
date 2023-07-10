@@ -28,7 +28,7 @@ describe("App", () => {
       renderer.create(
         <Provider store={mockStore}>
           <App />
-        </Provider>
+        </Provider>,
       );
     });
   });

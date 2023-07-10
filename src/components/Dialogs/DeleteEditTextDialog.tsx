@@ -34,7 +34,7 @@ interface DeleteEditTextDialogProps {
  * Dialog for editing text, with distinction between cancel and delete.
  */
 export default function DeleteEditTextDialog(
-  props: DeleteEditTextDialogProps
+  props: DeleteEditTextDialogProps,
 ): ReactElement {
   const [loading, setLoading] = useState<boolean>(false);
   const [text, setText] = useState<string>(props.text);

@@ -59,40 +59,40 @@ describe("TreeNavigator", () => {
 
     it("getOnlyChild returns undefined if no children", () => {
       const { current } = renderHook(() =>
-        useTreeNavigation(noBrothersNoKids)
+        useTreeNavigation(noBrothersNoKids),
       ).result;
       expect(current.getOnlyChild()).toBeUndefined();
     });
 
     it("getOnlyChild returns undefined if more than one child", () => {
       const { current } = renderHook(() =>
-        useTreeNavigation(twoBrothersManyKids)
+        useTreeNavigation(twoBrothersManyKids),
       ).result;
       expect(current.getOnlyChild()).toBeUndefined();
     });
 
     it("getOnlyChild returns child if only one", () => {
       const { current } = renderHook(() =>
-        useTreeNavigation(noBrothersOneKid)
+        useTreeNavigation(noBrothersOneKid),
       ).result;
       expect(current.getOnlyChild()).toEqual(
-        semDomFromTreeNode(domMap[mapIds.depth4])
+        semDomFromTreeNode(domMap[mapIds.depth4]),
       );
     });
 
     it("returns the expected parent and siblings", () => {
       // The domain twoBrothersManyKids is the middle child of parentDomain.
       const { current } = renderHook(() =>
-        useTreeNavigation(twoBrothersManyKids)
+        useTreeNavigation(twoBrothersManyKids),
       ).result;
       expect(current.getNextSibling()).toEqual(
-        semDomFromTreeNode(domMap[mapIds.lastKid])
+        semDomFromTreeNode(domMap[mapIds.lastKid]),
       );
       expect(current.getParent()).toEqual(
-        semDomFromTreeNode(domMap[mapIds.parent])
+        semDomFromTreeNode(domMap[mapIds.parent]),
       );
       expect(current.getPrevSibling()).toEqual(
-        semDomFromTreeNode(domMap[mapIds.firstKid])
+        semDomFromTreeNode(domMap[mapIds.firstKid]),
       );
     });
   });

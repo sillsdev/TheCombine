@@ -9,7 +9,7 @@ import { newProject } from "types/project";
 
 export const projectReducer = (
   state = defaultState,
-  action: ProjectAction | StoreAction
+  action: ProjectAction | StoreAction,
 ): CurrentProjectState => {
   switch (action.type) {
     case ProjectActionType.SET_CURRENT_PROJECT:

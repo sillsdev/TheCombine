@@ -36,7 +36,7 @@ export default function BottomBar(): ReactElement {
                 color="inherit"
                 onClick={() =>
                   window.open(
-                    "https://software.sil.org/language-software-privacy-policy/"
+                    "https://software.sil.org/language-software-privacy-policy/",
                   )
                 }
                 id="privacy-policy"

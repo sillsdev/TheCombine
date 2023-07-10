@@ -51,7 +51,7 @@ const result: ReviewEntriesWord = {
 describe("ReviewEntriesReducer", () => {
   it("Returns default state when passed undefined state", () => {
     expect(reviewEntriesReducer(undefined, { type: undefined } as any)).toEqual(
-      defaultState
+      defaultState,
     );
   });
 
@@ -60,7 +60,7 @@ describe("ReviewEntriesReducer", () => {
       reviewEntriesReducer(defaultState, {
         type: ReviewEntriesActionTypes.UpdateAllWords,
         words: mockWords(),
-      })
+      }),
     ).toEqual(mockState);
   });
 
@@ -70,7 +70,7 @@ describe("ReviewEntriesReducer", () => {
         type: ReviewEntriesActionTypes.UpdateWord,
         oldId: mockWords()[0].id,
         updatedWord: { ...reviewEntriesWord, id: result.id },
-      })
+      }),
     ).toEqual({ ...mockState, words: [result, mockWords()[1]] });
   });
 });

@@ -85,7 +85,7 @@ export class LevenshteinDistance {
         matrix[i][j] = Math.min(
           matrix[i - 1][j] + this.deletionCost,
           matrix[i][j - 1] + this.insertionCost,
-          matrix[i - 1][j - 1] + tempSubCost
+          matrix[i - 1][j - 1] + tempSubCost,
         );
       }
     }

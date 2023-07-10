@@ -17,7 +17,7 @@ import { newFlag } from "types/word";
 export default function MergeDupsCompleted(): ReactElement {
   const changes = useSelector(
     (state: StoreState) =>
-      state.goalsState.currentGoal.changes as MergesCompleted
+      state.goalsState.currentGoal.changes as MergesCompleted,
   );
   const { t } = useTranslation();
 
@@ -107,8 +107,8 @@ function UndoButton(props: UndoButtonProps): ReactElement {
     function checkFrontier(): void {
       getFrontierWords().then((words) =>
         setUndoBtnEnabled(
-          props.merge ? doWordsIncludeMerges(words, props.merge) : false
-        )
+          props.merge ? doWordsIncludeMerges(words, props.merge) : false,
+        ),
       );
     }
     checkFrontier();
@@ -150,7 +150,7 @@ function UndoButton(props: UndoButtonProps): ReactElement {
 
 export function doWordsIncludeMerges(
   words: Word[],
-  merge: MergeUndoIds
+  merge: MergeUndoIds,
 ): boolean {
   const wordIds = words.map((word) => word.id);
   // The undo operation will fail if any of the children are in the frontier.

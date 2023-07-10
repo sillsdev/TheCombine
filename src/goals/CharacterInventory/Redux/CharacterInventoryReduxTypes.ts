@@ -15,7 +15,7 @@ export enum CharacterInventoryType {
 export function getCharacterStatus(
   char: string,
   validChars: string[],
-  rejectedChars: string[]
+  rejectedChars: string[],
 ): CharacterStatus {
   if (validChars.includes(char)) {
     return CharacterStatus.Accepted;

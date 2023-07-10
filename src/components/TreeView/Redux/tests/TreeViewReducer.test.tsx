@@ -11,7 +11,7 @@ import { newSemanticDomainTreeNode } from "types/semanticDomain";
 describe("Test the TreeViewReducer", () => {
   it("Returns defaultState when passed undefined", () => {
     expect(treeViewReducer(undefined, {} as TreeViewAction)).toEqual(
-      defaultState
+      defaultState,
     );
   });
 
@@ -28,7 +28,7 @@ describe("Test the TreeViewReducer", () => {
   it("Returns state passed in when passed an invalid action", () => {
     const badAction = { type: "Nothing" } as any as TreeViewAction;
     expect(treeViewReducer({ ...defaultState, open: true }, badAction)).toEqual(
-      { ...defaultState, open: true }
+      { ...defaultState, open: true },
     );
   });
 
@@ -36,8 +36,8 @@ describe("Test the TreeViewReducer", () => {
     expect(
       treeViewReducer(
         { ...defaultState, open: true },
-        { type: TreeActionType.CLOSE_TREE }
-      )
+        { type: TreeActionType.CLOSE_TREE },
+      ),
     ).toEqual({ ...defaultState, open: false });
   });
 
@@ -45,8 +45,8 @@ describe("Test the TreeViewReducer", () => {
     expect(
       treeViewReducer(
         { ...defaultState, open: false },
-        { type: TreeActionType.OPEN_TREE }
-      )
+        { type: TreeActionType.OPEN_TREE },
+      ),
     ).toEqual({ ...defaultState, open: true });
   });
 
@@ -56,7 +56,7 @@ describe("Test the TreeViewReducer", () => {
       treeViewReducer(defaultState, {
         type: TreeActionType.SET_CURRENT_DOMAIN,
         domain: payload,
-      })
+      }),
     ).toEqual({ ...defaultState, currentDomain: payload });
   });
 });

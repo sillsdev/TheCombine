@@ -54,7 +54,7 @@ beforeAll(() => {
             />
           </Provider>
         </ThemeProvider>
-      </StyledEngineProvider>
+      </StyledEngineProvider>,
     );
   });
 });
@@ -84,7 +84,7 @@ describe("Pronunciations", () => {
               />
             </Provider>
           </ThemeProvider>
-        </StyledEngineProvider>
+        </StyledEngineProvider>,
       );
     });
 
@@ -111,7 +111,7 @@ describe("Pronunciations", () => {
               />
             </Provider>
           </StyledEngineProvider>
-        </ThemeProvider>
+        </ThemeProvider>,
       );
     });
     const iconRelease = testRenderer.root
@@ -136,7 +136,7 @@ describe("Pronunciations", () => {
               />
             </Provider>
           </StyledEngineProvider>
-        </ThemeProvider>
+        </ThemeProvider>,
       );
     });
     const iconPress = testRenderer.root

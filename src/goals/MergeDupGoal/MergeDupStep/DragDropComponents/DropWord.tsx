@@ -31,9 +31,9 @@ export default function DropWord(props: DropWordProps): ReactElement {
     verns.push(
       ...new Set(
         Object.values(treeWord.sensesGuids).flatMap((guids) =>
-          guids.map((g) => data.words[data.senses[g].srcWordId].vernacular)
-        )
-      )
+          guids.map((g) => data.words[data.senses[g].srcWordId].vernacular),
+        ),
+      ),
     );
   }
 
@@ -103,7 +103,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
               {!!treeWord &&
                 Object.keys(treeWord.sensesGuids).map((id, index) => {
                   const senses = treeWord.sensesGuids[id].map(
-                    (g) => data.senses[g]
+                    (g) => data.senses[g],
                   );
                   return (
                     <DragSense

@@ -49,7 +49,7 @@ import { UserEditStepWrapper } from "../models";
  * @export
  */
 export const UserEditApiAxiosParamCreator = function (
-  configuration?: Configuration
+  configuration?: Configuration,
 ) {
   return {
     /**
@@ -60,13 +60,13 @@ export const UserEditApiAxiosParamCreator = function (
      */
     createUserEdit: async (
       projectId: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("createUserEdit", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}/useredits`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId))
+        encodeURIComponent(String(projectId)),
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -107,7 +107,7 @@ export const UserEditApiAxiosParamCreator = function (
     deleteUserEdit: async (
       projectId: string,
       userEditId: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("deleteUserEdit", "projectId", projectId);
@@ -153,13 +153,13 @@ export const UserEditApiAxiosParamCreator = function (
      */
     getProjectUserEdits: async (
       projectId: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("getProjectUserEdits", "projectId", projectId);
       const localVarPath = `/v1/projects/{projectId}/useredits`.replace(
         `{${"projectId"}}`,
-        encodeURIComponent(String(projectId))
+        encodeURIComponent(String(projectId)),
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -200,7 +200,7 @@ export const UserEditApiAxiosParamCreator = function (
     getUserEdit: async (
       projectId: string,
       userEditId: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("getUserEdit", "projectId", projectId);
@@ -250,7 +250,7 @@ export const UserEditApiAxiosParamCreator = function (
       projectId: string,
       userEditId: string,
       edit: Edit,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("updateUserEditGoal", "projectId", projectId);
@@ -289,7 +289,7 @@ export const UserEditApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         edit,
         localVarRequestOptions,
-        configuration
+        configuration,
       );
 
       return {
@@ -309,7 +309,7 @@ export const UserEditApiAxiosParamCreator = function (
       projectId: string,
       userEditId: string,
       userEditStepWrapper: UserEditStepWrapper,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("updateUserEditStep", "projectId", projectId);
@@ -319,7 +319,7 @@ export const UserEditApiAxiosParamCreator = function (
       assertParamExists(
         "updateUserEditStep",
         "userEditStepWrapper",
-        userEditStepWrapper
+        userEditStepWrapper,
       );
       const localVarPath = `/v1/projects/{projectId}/useredits/{userEditId}`
         .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
@@ -352,7 +352,7 @@ export const UserEditApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         userEditStepWrapper,
         localVarRequestOptions,
-        configuration
+        configuration,
       );
 
       return {
@@ -378,19 +378,19 @@ export const UserEditApiFp = function (configuration?: Configuration) {
      */
     async createUserEdit(
       projectId: string,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.createUserEdit(
         projectId,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -403,20 +403,20 @@ export const UserEditApiFp = function (configuration?: Configuration) {
     async deleteUserEdit(
       projectId: string,
       userEditId: string,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserEdit(
         projectId,
         userEditId,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -427,11 +427,11 @@ export const UserEditApiFp = function (configuration?: Configuration) {
      */
     async getProjectUserEdits(
       projectId: string,
-      options?: any
+      options?: any,
     ): Promise<
       (
         axios?: AxiosInstance,
-        basePath?: string
+        basePath?: string,
       ) => AxiosPromise<Array<UserEdit>>
     > {
       const localVarAxiosArgs =
@@ -440,7 +440,7 @@ export const UserEditApiFp = function (configuration?: Configuration) {
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -453,20 +453,20 @@ export const UserEditApiFp = function (configuration?: Configuration) {
     async getUserEdit(
       projectId: string,
       userEditId: string,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserEdit>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getUserEdit(
         projectId,
         userEditId,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -481,7 +481,7 @@ export const UserEditApiFp = function (configuration?: Configuration) {
       projectId: string,
       userEditId: string,
       edit: Edit,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
     > {
@@ -490,13 +490,13 @@ export const UserEditApiFp = function (configuration?: Configuration) {
           projectId,
           userEditId,
           edit,
-          options
+          options,
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -511,7 +511,7 @@ export const UserEditApiFp = function (configuration?: Configuration) {
       projectId: string,
       userEditId: string,
       userEditStepWrapper: UserEditStepWrapper,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
     > {
@@ -520,13 +520,13 @@ export const UserEditApiFp = function (configuration?: Configuration) {
           projectId,
           userEditId,
           userEditStepWrapper,
-          options
+          options,
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
   };
@@ -539,7 +539,7 @@ export const UserEditApiFp = function (configuration?: Configuration) {
 export const UserEditApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
-  axios?: AxiosInstance
+  axios?: AxiosInstance,
 ) {
   const localVarFp = UserEditApiFp(configuration);
   return {
@@ -564,7 +564,7 @@ export const UserEditApiFactory = function (
     deleteUserEdit(
       projectId: string,
       userEditId: string,
-      options?: any
+      options?: any,
     ): AxiosPromise<void> {
       return localVarFp
         .deleteUserEdit(projectId, userEditId, options)
@@ -578,7 +578,7 @@ export const UserEditApiFactory = function (
      */
     getProjectUserEdits(
       projectId: string,
-      options?: any
+      options?: any,
     ): AxiosPromise<Array<UserEdit>> {
       return localVarFp
         .getProjectUserEdits(projectId, options)
@@ -594,7 +594,7 @@ export const UserEditApiFactory = function (
     getUserEdit(
       projectId: string,
       userEditId: string,
-      options?: any
+      options?: any,
     ): AxiosPromise<UserEdit> {
       return localVarFp
         .getUserEdit(projectId, userEditId, options)
@@ -612,7 +612,7 @@ export const UserEditApiFactory = function (
       projectId: string,
       userEditId: string,
       edit: Edit,
-      options?: any
+      options?: any,
     ): AxiosPromise<number> {
       return localVarFp
         .updateUserEditGoal(projectId, userEditId, edit, options)
@@ -630,7 +630,7 @@ export const UserEditApiFactory = function (
       projectId: string,
       userEditId: string,
       userEditStepWrapper: UserEditStepWrapper,
-      options?: any
+      options?: any,
     ): AxiosPromise<number> {
       return localVarFp
         .updateUserEditStep(projectId, userEditId, userEditStepWrapper, options)
@@ -781,7 +781,7 @@ export class UserEditApi extends BaseAPI {
    */
   public createUserEdit(
     requestParameters: UserEditApiCreateUserEditRequest,
-    options?: any
+    options?: any,
   ) {
     return UserEditApiFp(this.configuration)
       .createUserEdit(requestParameters.projectId, options)
@@ -797,13 +797,13 @@ export class UserEditApi extends BaseAPI {
    */
   public deleteUserEdit(
     requestParameters: UserEditApiDeleteUserEditRequest,
-    options?: any
+    options?: any,
   ) {
     return UserEditApiFp(this.configuration)
       .deleteUserEdit(
         requestParameters.projectId,
         requestParameters.userEditId,
-        options
+        options,
       )
       .then((request) => request(this.axios, this.basePath));
   }
@@ -817,7 +817,7 @@ export class UserEditApi extends BaseAPI {
    */
   public getProjectUserEdits(
     requestParameters: UserEditApiGetProjectUserEditsRequest,
-    options?: any
+    options?: any,
   ) {
     return UserEditApiFp(this.configuration)
       .getProjectUserEdits(requestParameters.projectId, options)
@@ -833,13 +833,13 @@ export class UserEditApi extends BaseAPI {
    */
   public getUserEdit(
     requestParameters: UserEditApiGetUserEditRequest,
-    options?: any
+    options?: any,
   ) {
     return UserEditApiFp(this.configuration)
       .getUserEdit(
         requestParameters.projectId,
         requestParameters.userEditId,
-        options
+        options,
       )
       .then((request) => request(this.axios, this.basePath));
   }
@@ -853,14 +853,14 @@ export class UserEditApi extends BaseAPI {
    */
   public updateUserEditGoal(
     requestParameters: UserEditApiUpdateUserEditGoalRequest,
-    options?: any
+    options?: any,
   ) {
     return UserEditApiFp(this.configuration)
       .updateUserEditGoal(
         requestParameters.projectId,
         requestParameters.userEditId,
         requestParameters.edit,
-        options
+        options,
       )
       .then((request) => request(this.axios, this.basePath));
   }
@@ -874,14 +874,14 @@ export class UserEditApi extends BaseAPI {
    */
   public updateUserEditStep(
     requestParameters: UserEditApiUpdateUserEditStepRequest,
-    options?: any
+    options?: any,
   ) {
     return UserEditApiFp(this.configuration)
       .updateUserEditStep(
         requestParameters.projectId,
         requestParameters.userEditId,
         requestParameters.userEditStepWrapper,
-        options
+        options,
       )
       .then((request) => request(this.axios, this.basePath));
   }

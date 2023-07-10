@@ -27,7 +27,7 @@ interface ClickableAvatarProps {
 
 /** An avatar with a camera icon when hovered */
 export default function ClickableAvatar(
-  props: ClickableAvatarProps
+  props: ClickableAvatarProps,
 ): ReactElement {
   const [avatarDialogOpen, setAvatarDialogOpen] = useState(false);
   const classes = makeStyles(clickableAvatarClassProps)();

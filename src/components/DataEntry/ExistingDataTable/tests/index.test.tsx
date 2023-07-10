@@ -8,7 +8,7 @@ jest.mock("@mui/material/Drawer", () => "div");
 
 jest.mock(
   "components/DataEntry/ExistingDataTable/ImmutableExistingData",
-  () => "div"
+  () => "div",
 );
 
 const mockWords = [new DomainWord(newWord()), new DomainWord(newWord())];
@@ -21,7 +21,7 @@ describe("ExistingData", () => {
           domain={newSemanticDomain()}
           domainWords={mockWords}
           toggleDrawer={jest.fn()}
-        />
+        />,
       );
     });
   });
@@ -34,7 +34,7 @@ describe("ExistingData", () => {
           drawerOpen
           toggleDrawer={jest.fn()}
           typeDrawer
-        />
+        />,
       );
     });
   });

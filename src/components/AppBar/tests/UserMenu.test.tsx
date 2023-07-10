@@ -46,7 +46,7 @@ describe("UserMenu", () => {
       testRenderer = renderer.create(
         <Provider store={mockStore}>
           <UserMenu currentTab={Path.Root} />
-        </Provider>
+        </Provider>,
       );
     });
     expect(testRenderer.root.findAllByType(Button).length).toEqual(1);
@@ -73,7 +73,7 @@ function renderMenuList(isAdmin = false) {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
         <UserMenuList isAdmin={isAdmin} onSelect={jest.fn()} />
-      </Provider>
+      </Provider>,
     );
   });
 }

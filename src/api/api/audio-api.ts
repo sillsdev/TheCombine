@@ -41,7 +41,7 @@ import {
  * @export
  */
 export const AudioApiAxiosParamCreator = function (
-  configuration?: Configuration
+  configuration?: Configuration,
 ) {
   return {
     /**
@@ -56,7 +56,7 @@ export const AudioApiAxiosParamCreator = function (
       projectId: string,
       wordId: string,
       fileName: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("deleteAudioFile", "projectId", projectId);
@@ -110,7 +110,7 @@ export const AudioApiAxiosParamCreator = function (
       projectId: string,
       wordId: string,
       fileName: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("downloadAudioFile", "projectId", projectId);
@@ -168,7 +168,7 @@ export const AudioApiAxiosParamCreator = function (
       file: any,
       name: string,
       filePath: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("uploadAudioFile", "projectId", projectId);
@@ -253,7 +253,7 @@ export const AudioApiFp = function (configuration?: Configuration) {
       projectId: string,
       wordId: string,
       fileName: string,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
@@ -261,13 +261,13 @@ export const AudioApiFp = function (configuration?: Configuration) {
         projectId,
         wordId,
         fileName,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -282,7 +282,7 @@ export const AudioApiFp = function (configuration?: Configuration) {
       projectId: string,
       wordId: string,
       fileName: string,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
     > {
@@ -291,13 +291,13 @@ export const AudioApiFp = function (configuration?: Configuration) {
           projectId,
           wordId,
           fileName,
-          options
+          options,
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -316,7 +316,7 @@ export const AudioApiFp = function (configuration?: Configuration) {
       file: any,
       name: string,
       filePath: string,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
@@ -326,13 +326,13 @@ export const AudioApiFp = function (configuration?: Configuration) {
         file,
         name,
         filePath,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
   };
@@ -345,7 +345,7 @@ export const AudioApiFp = function (configuration?: Configuration) {
 export const AudioApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
-  axios?: AxiosInstance
+  axios?: AxiosInstance,
 ) {
   const localVarFp = AudioApiFp(configuration);
   return {
@@ -361,7 +361,7 @@ export const AudioApiFactory = function (
       projectId: string,
       wordId: string,
       fileName: string,
-      options?: any
+      options?: any,
     ): AxiosPromise<string> {
       return localVarFp
         .deleteAudioFile(projectId, wordId, fileName, options)
@@ -379,7 +379,7 @@ export const AudioApiFactory = function (
       projectId: string,
       wordId: string,
       fileName: string,
-      options?: any
+      options?: any,
     ): AxiosPromise<any> {
       return localVarFp
         .downloadAudioFile(projectId, wordId, fileName, options)
@@ -401,7 +401,7 @@ export const AudioApiFactory = function (
       file: any,
       name: string,
       filePath: string,
-      options?: any
+      options?: any,
     ): AxiosPromise<string> {
       return localVarFp
         .uploadAudioFile(projectId, wordId, file, name, filePath, options)
@@ -524,14 +524,14 @@ export class AudioApi extends BaseAPI {
    */
   public deleteAudioFile(
     requestParameters: AudioApiDeleteAudioFileRequest,
-    options?: any
+    options?: any,
   ) {
     return AudioApiFp(this.configuration)
       .deleteAudioFile(
         requestParameters.projectId,
         requestParameters.wordId,
         requestParameters.fileName,
-        options
+        options,
       )
       .then((request) => request(this.axios, this.basePath));
   }
@@ -545,14 +545,14 @@ export class AudioApi extends BaseAPI {
    */
   public downloadAudioFile(
     requestParameters: AudioApiDownloadAudioFileRequest,
-    options?: any
+    options?: any,
   ) {
     return AudioApiFp(this.configuration)
       .downloadAudioFile(
         requestParameters.projectId,
         requestParameters.wordId,
         requestParameters.fileName,
-        options
+        options,
       )
       .then((request) => request(this.axios, this.basePath));
   }
@@ -566,7 +566,7 @@ export class AudioApi extends BaseAPI {
    */
   public uploadAudioFile(
     requestParameters: AudioApiUploadAudioFileRequest,
-    options?: any
+    options?: any,
   ) {
     return AudioApiFp(this.configuration)
       .uploadAudioFile(
@@ -575,7 +575,7 @@ export class AudioApi extends BaseAPI {
         requestParameters.file,
         requestParameters.name,
         requestParameters.filePath,
-        options
+        options,
       )
       .then((request) => request(this.axios, this.basePath));
   }

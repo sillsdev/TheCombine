@@ -21,7 +21,7 @@ beforeEach(async () => {
     testRenderer = renderer.create(
       <Provider store={mockStore}>
         <CharacterList />
-      </Provider>
+      </Provider>,
     );
   });
 });

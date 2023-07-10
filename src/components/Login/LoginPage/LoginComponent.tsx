@@ -74,7 +74,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
   componentDidMount() {
     this.props.reset();
     getBannerText(BannerType.Login).then((loginBanner) =>
-      this.setState({ loginBanner })
+      this.setState({ loginBanner }),
     );
   }
 
@@ -83,7 +83,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
     e: React.ChangeEvent<
       HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
     >,
-    field: K
+    field: K,
   ) {
     const value = e.target.value;
 
@@ -196,7 +196,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
                     onExpire={() => this.setState({ isVerified: false })}
                     onError={() =>
                       console.error(
-                        "Something went wrong, check your connection."
+                        "Something went wrong, check your connection.",
                       )
                     }
                   />

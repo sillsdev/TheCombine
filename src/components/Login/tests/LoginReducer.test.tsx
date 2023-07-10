@@ -39,14 +39,14 @@ describe("LoginReducer Tests", () => {
   test("no state, expecting login attempt", () => {
     action.type = LoginActionTypes.LOGIN_ATTEMPT;
     expect(LoginReducer.loginReducer(undefined, action)).toEqual(
-      loginAttemptState
+      loginAttemptState,
     );
   });
 
   test("default state, expecting login attempt", () => {
     action.type = LoginActionTypes.LOGIN_ATTEMPT;
     expect(LoginReducer.loginReducer(dummyState, action)).toEqual(
-      loginAttemptState
+      loginAttemptState,
     );
   });
 
@@ -61,7 +61,7 @@ describe("LoginReducer Tests", () => {
 
     action.type = LoginActionTypes.LOGIN_FAILURE;
     expect(LoginReducer.loginReducer(dummyState, action)).toEqual(
-      loginFailureState
+      loginFailureState,
     );
   });
 
@@ -89,7 +89,7 @@ describe("LoginReducer Tests", () => {
     action.type = LoginActionTypes.LOGIN_SUCCESS;
 
     expect(LoginReducer.loginReducer(dummyState, action)).toEqual(
-      loginSuccessState
+      loginSuccessState,
     );
   });
 
@@ -102,7 +102,7 @@ describe("LoginReducer Tests", () => {
     };
     action.type = LoginActionTypes.SIGN_UP_SUCCESS;
     expect(LoginReducer.loginReducer(dummyState, action)).toEqual(
-      signUpSuccessState
+      signUpSuccessState,
     );
   });
 
@@ -115,7 +115,7 @@ describe("LoginReducer Tests", () => {
     };
     action.type = LoginActionTypes.SIGN_UP_FAILURE;
     expect(LoginReducer.loginReducer(dummyState, action)).toEqual(
-      signUpFailureState
+      signUpFailureState,
     );
   });
 
@@ -125,7 +125,7 @@ describe("LoginReducer Tests", () => {
     };
 
     expect(LoginReducer.loginReducer({} as LoginState, resetAction)).toEqual(
-      LoginReducer.defaultState
+      LoginReducer.defaultState,
     );
   });
 });

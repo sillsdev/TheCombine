@@ -20,7 +20,7 @@ describe("DataEntryHeader", () => {
     const instance = createDataEntryHeaderInstance(
       newSemanticDomain(),
       true,
-      jest.fn()
+      jest.fn(),
     );
     const questionSwitch = instance.findByProps({ id: visSwitchId });
     expect(questionSwitch.props.disabled).toBeTruthy();
@@ -51,7 +51,7 @@ describe("DataEntryHeader", () => {
     const instance: ReactTestInstance = createDataEntryHeaderInstance(
       newDomain,
       false,
-      mockCallback
+      mockCallback,
     );
 
     instance.findByProps({ id: visSwitchId }).props.onChange();
@@ -62,7 +62,7 @@ describe("DataEntryHeader", () => {
 function createDataEntryHeaderInstance(
   _domain: SemanticDomainFull,
   _questionsVisible: boolean,
-  _mockCallback: jest.Mock
+  _mockCallback: jest.Mock,
 ): ReactTestInstance {
   return renderer.create(
     <Provider store={mockStore}>
@@ -71,6 +71,6 @@ function createDataEntryHeaderInstance(
         questionsVisible={_questionsVisible}
         setQuestionVisibility={_mockCallback}
       />
-    </Provider>
+    </Provider>,
   ).root;
 }

@@ -26,7 +26,7 @@ const customStyles = {
 
 export default function AddProjectUsers(): ReactElement {
   const projectUsers = useAppSelector(
-    (state: StoreState) => state.currentProjectState.users
+    (state: StoreState) => state.currentProjectState.users,
   );
   const dispatch = useAppDispatch();
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -41,7 +41,7 @@ export default function AddProjectUsers(): ReactElement {
       backend
         .addOrUpdateUserRole(
           [Permission.MergeAndReviewEntries, Permission.WordEntry],
-          user.id
+          user.id,
         )
         .then(() => {
           toast.success(t("projectSettings.invite.toastSuccess"));

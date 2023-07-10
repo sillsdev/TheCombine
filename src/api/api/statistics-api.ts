@@ -49,7 +49,7 @@ import { WordsPerDayPerUserCount } from "../models";
  * @export
  */
 export const StatisticsApiAxiosParamCreator = function (
-  configuration?: Configuration
+  configuration?: Configuration,
 ) {
   return {
     /**
@@ -60,14 +60,14 @@ export const StatisticsApiAxiosParamCreator = function (
      */
     getLineChartRootData: async (
       projectId: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("getLineChartRootData", "projectId", projectId);
       const localVarPath =
         `/v1/projects/{projectId}/statistics/GetLineChartRootData`.replace(
           `{${"projectId"}}`,
-          encodeURIComponent(String(projectId))
+          encodeURIComponent(String(projectId)),
         );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -106,18 +106,18 @@ export const StatisticsApiAxiosParamCreator = function (
      */
     getProgressEstimationLineChartRoot: async (
       projectId: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists(
         "getProgressEstimationLineChartRoot",
         "projectId",
-        projectId
+        projectId,
       );
       const localVarPath =
         `/v1/projects/{projectId}/statistics/GetProgressEstimationLineChartRoot`.replace(
           `{${"projectId"}}`,
-          encodeURIComponent(String(projectId))
+          encodeURIComponent(String(projectId)),
         );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -158,14 +158,14 @@ export const StatisticsApiAxiosParamCreator = function (
     getSemanticDomainCounts: async (
       projectId: string,
       lang?: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("getSemanticDomainCounts", "projectId", projectId);
       const localVarPath =
         `/v1/projects/{projectId}/statistics/GetSemanticDomainCounts`.replace(
           `{${"projectId"}}`,
-          encodeURIComponent(String(projectId))
+          encodeURIComponent(String(projectId)),
         );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -210,14 +210,14 @@ export const StatisticsApiAxiosParamCreator = function (
     getSemanticDomainUserCounts: async (
       projectId: string,
       lang?: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("getSemanticDomainUserCounts", "projectId", projectId);
       const localVarPath =
         `/v1/projects/{projectId}/statistics/GetSemanticDomainUserCounts`.replace(
           `{${"projectId"}}`,
-          encodeURIComponent(String(projectId))
+          encodeURIComponent(String(projectId)),
         );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -260,14 +260,14 @@ export const StatisticsApiAxiosParamCreator = function (
      */
     getWordsPerDayPerUserCounts: async (
       projectId: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("getWordsPerDayPerUserCounts", "projectId", projectId);
       const localVarPath =
         `/v1/projects/{projectId}/statistics/GetWordsPerDayPerUserCounts`.replace(
           `{${"projectId"}}`,
-          encodeURIComponent(String(projectId))
+          encodeURIComponent(String(projectId)),
         );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -317,20 +317,20 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
      */
     async getLineChartRootData(
       projectId: string,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<ChartRootData>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getLineChartRootData(
           projectId,
-          options
+          options,
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -341,20 +341,20 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
      */
     async getProgressEstimationLineChartRoot(
       projectId: string,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<ChartRootData>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getProgressEstimationLineChartRoot(
           projectId,
-          options
+          options,
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -367,24 +367,24 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
     async getSemanticDomainCounts(
       projectId: string,
       lang?: string,
-      options?: any
+      options?: any,
     ): Promise<
       (
         axios?: AxiosInstance,
-        basePath?: string
+        basePath?: string,
       ) => AxiosPromise<Array<SemanticDomainCount>>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getSemanticDomainCounts(
           projectId,
           lang,
-          options
+          options,
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -397,24 +397,24 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
     async getSemanticDomainUserCounts(
       projectId: string,
       lang?: string,
-      options?: any
+      options?: any,
     ): Promise<
       (
         axios?: AxiosInstance,
-        basePath?: string
+        basePath?: string,
       ) => AxiosPromise<Array<SemanticDomainUserCount>>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getSemanticDomainUserCounts(
           projectId,
           lang,
-          options
+          options,
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -425,23 +425,23 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
      */
     async getWordsPerDayPerUserCounts(
       projectId: string,
-      options?: any
+      options?: any,
     ): Promise<
       (
         axios?: AxiosInstance,
-        basePath?: string
+        basePath?: string,
       ) => AxiosPromise<Array<WordsPerDayPerUserCount>>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getWordsPerDayPerUserCounts(
           projectId,
-          options
+          options,
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
   };
@@ -454,7 +454,7 @@ export const StatisticsApiFp = function (configuration?: Configuration) {
 export const StatisticsApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
-  axios?: AxiosInstance
+  axios?: AxiosInstance,
 ) {
   const localVarFp = StatisticsApiFp(configuration);
   return {
@@ -466,7 +466,7 @@ export const StatisticsApiFactory = function (
      */
     getLineChartRootData(
       projectId: string,
-      options?: any
+      options?: any,
     ): AxiosPromise<ChartRootData> {
       return localVarFp
         .getLineChartRootData(projectId, options)
@@ -480,7 +480,7 @@ export const StatisticsApiFactory = function (
      */
     getProgressEstimationLineChartRoot(
       projectId: string,
-      options?: any
+      options?: any,
     ): AxiosPromise<ChartRootData> {
       return localVarFp
         .getProgressEstimationLineChartRoot(projectId, options)
@@ -496,7 +496,7 @@ export const StatisticsApiFactory = function (
     getSemanticDomainCounts(
       projectId: string,
       lang?: string,
-      options?: any
+      options?: any,
     ): AxiosPromise<Array<SemanticDomainCount>> {
       return localVarFp
         .getSemanticDomainCounts(projectId, lang, options)
@@ -512,7 +512,7 @@ export const StatisticsApiFactory = function (
     getSemanticDomainUserCounts(
       projectId: string,
       lang?: string,
-      options?: any
+      options?: any,
     ): AxiosPromise<Array<SemanticDomainUserCount>> {
       return localVarFp
         .getSemanticDomainUserCounts(projectId, lang, options)
@@ -526,7 +526,7 @@ export const StatisticsApiFactory = function (
      */
     getWordsPerDayPerUserCounts(
       projectId: string,
-      options?: any
+      options?: any,
     ): AxiosPromise<Array<WordsPerDayPerUserCount>> {
       return localVarFp
         .getWordsPerDayPerUserCounts(projectId, options)
@@ -635,7 +635,7 @@ export class StatisticsApi extends BaseAPI {
    */
   public getLineChartRootData(
     requestParameters: StatisticsApiGetLineChartRootDataRequest,
-    options?: any
+    options?: any,
   ) {
     return StatisticsApiFp(this.configuration)
       .getLineChartRootData(requestParameters.projectId, options)
@@ -651,7 +651,7 @@ export class StatisticsApi extends BaseAPI {
    */
   public getProgressEstimationLineChartRoot(
     requestParameters: StatisticsApiGetProgressEstimationLineChartRootRequest,
-    options?: any
+    options?: any,
   ) {
     return StatisticsApiFp(this.configuration)
       .getProgressEstimationLineChartRoot(requestParameters.projectId, options)
@@ -667,13 +667,13 @@ export class StatisticsApi extends BaseAPI {
    */
   public getSemanticDomainCounts(
     requestParameters: StatisticsApiGetSemanticDomainCountsRequest,
-    options?: any
+    options?: any,
   ) {
     return StatisticsApiFp(this.configuration)
       .getSemanticDomainCounts(
         requestParameters.projectId,
         requestParameters.lang,
-        options
+        options,
       )
       .then((request) => request(this.axios, this.basePath));
   }
@@ -687,13 +687,13 @@ export class StatisticsApi extends BaseAPI {
    */
   public getSemanticDomainUserCounts(
     requestParameters: StatisticsApiGetSemanticDomainUserCountsRequest,
-    options?: any
+    options?: any,
   ) {
     return StatisticsApiFp(this.configuration)
       .getSemanticDomainUserCounts(
         requestParameters.projectId,
         requestParameters.lang,
-        options
+        options,
       )
       .then((request) => request(this.axios, this.basePath));
   }
@@ -707,7 +707,7 @@ export class StatisticsApi extends BaseAPI {
    */
   public getWordsPerDayPerUserCounts(
     requestParameters: StatisticsApiGetWordsPerDayPerUserCountsRequest,
-    options?: any
+    options?: any,
   ) {
     return StatisticsApiFp(this.configuration)
       .getWordsPerDayPerUserCounts(requestParameters.projectId, options)

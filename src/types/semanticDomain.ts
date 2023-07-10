@@ -10,7 +10,7 @@ import { Bcp47Code } from "types/writingSystem";
 export function newSemanticDomain(
   id = "",
   name = "",
-  lang = Bcp47Code.Default as string
+  lang = Bcp47Code.Default as string,
 ): SemanticDomainFull {
   return { id, name, guid: "", questions: [], description: "", lang };
 }
@@ -21,7 +21,7 @@ export function newSemanticDomainForMongoDB(
   name = "",
   id = "",
   lang = Bcp47Code.Default as string,
-  userId = ""
+  userId = "",
 ): SemanticDomain {
   return { mongoId, guid, name, id, lang, userId };
 }
@@ -29,7 +29,7 @@ export function newSemanticDomainForMongoDB(
 export function newSemanticDomainTreeNode(
   id = "",
   name = "",
-  lang = Bcp47Code.Default as string
+  lang = Bcp47Code.Default as string,
 ): SemanticDomainTreeNode {
   return {
     parent: undefined,
@@ -44,14 +44,14 @@ export function newSemanticDomainTreeNode(
 }
 
 export function newSemanticDomainUserCount(
-  domainSet = new Set<string>()
+  domainSet = new Set<string>(),
 ): SemanticDomainUserCount {
   return { id: "", domainSet: domainSet };
 }
 
 export function newSemanticDomainCount(
   semanticDomainTreeNode: SemanticDomainTreeNode,
-  count = 0
+  count = 0,
 ): SemanticDomainCount {
   return {
     semanticDomainTreeNode: semanticDomainTreeNode,
@@ -60,14 +60,14 @@ export function newSemanticDomainCount(
 }
 
 export function semDomFromTreeNode(
-  node: SemanticDomainTreeNode
+  node: SemanticDomainTreeNode,
 ): SemanticDomainFull {
   const dom = newSemanticDomain(node.id, node.name, node.lang);
   return { ...dom, guid: node.guid };
 }
 
 export function treeNodeFromSemDom(
-  dom: SemanticDomain
+  dom: SemanticDomain,
 ): SemanticDomainTreeNode {
   const node = newSemanticDomainTreeNode(dom.id, dom.name, dom.lang);
   return { ...node, guid: dom.guid };

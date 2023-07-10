@@ -25,7 +25,7 @@ export const trashId = "trash-drop";
 export default function MergeDragDrop(): ReactElement {
   const dispatch = useAppDispatch();
   const mergeState = useAppSelector(
-    (state: StoreState) => state.mergeDuplicateGoal
+    (state: StoreState) => state.mergeDuplicateGoal,
   );
   const [senseToDelete, setSenseToDelete] = useState<string>("");
   const { t } = useTranslation();
@@ -60,7 +60,7 @@ export default function MergeDragDrop(): ReactElement {
         return;
       }
       const combineRef: MergeTreeReference = JSON.parse(
-        res.combine.draggableId
+        res.combine.draggableId,
       );
       if (combineRef.order !== undefined) {
         // Case 2b: If the target is a sidebar sub-sense, it cannot receive a combine.

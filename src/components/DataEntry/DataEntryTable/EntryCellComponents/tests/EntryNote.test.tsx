@@ -13,7 +13,7 @@ let testHandle: renderer.ReactTestInstance;
 function renderWithText(text: string) {
   renderer.act(() => {
     testMaster = renderer.create(
-      <EntryNote noteText={text} updateNote={jest.fn()} buttonId="" />
+      <EntryNote noteText={text} updateNote={jest.fn()} buttonId="" />,
     );
   });
   testHandle = testMaster.root;

@@ -49,7 +49,7 @@ describe("GoalTimeline", () => {
     await renderTimeline(defaultState.allGoalTypes, allGoals);
     const buttons = timeLord.root.findAllByType(Button);
     expect(buttons).toHaveLength(
-      defaultState.allGoalTypes.length + allGoals.length
+      defaultState.allGoalTypes.length + allGoals.length,
     );
   });
 
@@ -62,7 +62,7 @@ describe("GoalTimeline", () => {
     await renderer.act(async () => goalButton.props.onClick());
     expect(mockChooseGoal).toBeCalledTimes(1);
     expect(mockChooseGoal.mock.calls[0][0].goalType).toEqual(
-      defaultState.allGoalTypes[goalNumber]
+      defaultState.allGoalTypes[goalNumber],
     );
   });
 
@@ -75,7 +75,7 @@ describe("GoalTimeline", () => {
     it("suggests all but the first of the available suggestions", () => {
       const suggestions = createSuggestionData(
         defaultState.allGoalTypes,
-        defaultState.allGoalTypes
+        defaultState.allGoalTypes,
       );
       expect(suggestions).toEqual(allGoalsWithAnyGuids.slice(1));
     });
@@ -84,7 +84,7 @@ describe("GoalTimeline", () => {
       const sliceIndex = 2;
       const suggestions = createSuggestionData(
         defaultState.allGoalTypes,
-        defaultState.allGoalTypes.slice(sliceIndex)
+        defaultState.allGoalTypes.slice(sliceIndex),
       );
       const expectedGoals = [
         ...allGoalsWithAnyGuids.slice(sliceIndex + 1),
@@ -102,7 +102,7 @@ describe("GoalTimeline", () => {
 
 async function renderTimeline(
   goalTypeSuggestions?: GoalType[],
-  history?: Goal[]
+  history?: Goal[],
 ): Promise<void> {
   const currentProjectState = { project: { id: mockProjectId } };
   const goalsState: GoalsState = {
@@ -115,7 +115,7 @@ async function renderTimeline(
     timeLord = renderer.create(
       <Provider store={createMockStore()({ currentProjectState, goalsState })}>
         <GoalTimeline />
-      </Provider>
+      </Provider>,
     );
   });
 }

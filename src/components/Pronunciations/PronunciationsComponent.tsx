@@ -27,7 +27,7 @@ export function Pronunciations(props: PronunciationProps): ReactElement {
         }
         deleteAudio={props.deleteAudio}
       />
-    )
+    ),
   );
 
   return (
@@ -46,7 +46,7 @@ export function Pronunciations(props: PronunciationProps): ReactElement {
 // https://dmitripavlutin.com/use-react-memo-wisely/#11-custom-equality-check-of-props
 function pronunciationPropsAreEqual(
   prev: PronunciationProps,
-  next: PronunciationProps
+  next: PronunciationProps,
 ): boolean {
   return (
     prev.wordId === next.wordId &&

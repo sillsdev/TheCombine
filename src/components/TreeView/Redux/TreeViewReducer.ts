@@ -8,7 +8,7 @@ import { StoreAction, StoreActionTypes } from "rootActions";
 
 export const treeViewReducer = (
   state: TreeViewState = defaultState,
-  action: StoreAction | TreeViewAction
+  action: StoreAction | TreeViewAction,
 ): TreeViewState => {
   switch (action.type) {
     case TreeActionType.CLOSE_TREE:

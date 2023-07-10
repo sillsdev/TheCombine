@@ -14,7 +14,7 @@ function mapDispatchToProps(dispatch: StoreStateDispatch) {
       dispatch(updateAllWords(words)),
     updateFrontierWord: (
       newData: ReviewEntriesWord,
-      oldData: ReviewEntriesWord
+      oldData: ReviewEntriesWord,
     ) => dispatch(updateFrontierWord(newData, oldData)),
   };
 }

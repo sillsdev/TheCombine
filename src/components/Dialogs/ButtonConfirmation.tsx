@@ -25,7 +25,7 @@ interface ButtonConfirmationProps {
  * Dialog for a button to confirm or cancel its click action
  */
 export default function ButtonConfirmation(
-  props: ButtonConfirmationProps
+  props: ButtonConfirmationProps,
 ): ReactElement {
   const [loading, setLoading] = useState<boolean>(false);
   const { t } = useTranslation();

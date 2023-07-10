@@ -91,7 +91,7 @@ const renderTable = async (): Promise<void> => {
           showExistingData={jest.fn()}
           updateHeight={jest.fn()}
         />
-      </Provider>
+      </Provider>,
     );
   });
 };
@@ -210,7 +210,7 @@ describe("DataEntryTable", () => {
   describe("updateWordWithNewGloss", () => {
     const changeSemDoms = (
       word: Word,
-      semanticDomains: SemanticDomain[]
+      semanticDomains: SemanticDomain[],
     ): Word => {
       const senses = [...word.senses];
       senses[0] = { ...senses[0], semanticDomains };

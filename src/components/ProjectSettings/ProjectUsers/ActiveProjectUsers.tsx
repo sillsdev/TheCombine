@@ -30,7 +30,7 @@ import theme from "types/theme";
 
 export default function ActiveProjectUsers(): ReactElement {
   const projectUsers = useSelector(
-    (state: StoreState) => state.currentProjectState.users
+    (state: StoreState) => state.currentProjectState.users,
   );
   const [projUserRoles, setProjUserRoles] = useState<UserRole[]>([]);
   const [userAvatar, setUserAvatar] = useState<Hash<string>>({});
@@ -41,7 +41,7 @@ export default function ActiveProjectUsers(): ReactElement {
   const compareUsers = useCallback(
     (a: User, b: User): number =>
       getUserCompare(userOrder, reverseSorting)(a, b),
-    [reverseSorting, userOrder]
+    [reverseSorting, userOrder],
   );
 
   useEffect(() => {
@@ -64,7 +64,7 @@ export default function ActiveProjectUsers(): ReactElement {
 
   function hasProjectPermission(
     userRoleId: string,
-    permission: Permission
+    permission: Permission,
   ): boolean {
     const userRole = projUserRoles.find((role) => role.id === userRoleId);
     if (userRole) {
@@ -81,21 +81,21 @@ export default function ActiveProjectUsers(): ReactElement {
 
   const currentUserIsProjectAdmin = hasProjectPermission(
     currentUser.projectRoles[currentProjectId],
-    Permission.DeleteEditSettingsAndUsers
+    Permission.DeleteEditSettingsAndUsers,
   );
   const currentUserIsProjectOwner = hasProjectPermission(
     currentUser.projectRoles[currentProjectId],
-    Permission.Owner
+    Permission.Owner,
   );
 
   const userListItem = (user: User): ReactElement => {
     const userIsProjectAdmin = hasProjectPermission(
       user.projectRoles[currentProjectId],
-      Permission.DeleteEditSettingsAndUsers
+      Permission.DeleteEditSettingsAndUsers,
     );
     const userIsProjectOwner = hasProjectPermission(
       user.projectRoles[currentProjectId],
-      Permission.Owner
+      Permission.Owner,
     );
 
     const manageUser =

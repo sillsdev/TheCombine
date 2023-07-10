@@ -49,7 +49,7 @@ import { User } from "../models";
  * @export
  */
 export const UserApiAxiosParamCreator = function (
-  configuration?: Configuration
+  configuration?: Configuration,
 ) {
   return {
     /**
@@ -60,7 +60,7 @@ export const UserApiAxiosParamCreator = function (
      */
     authenticate: async (
       credentials: Credentials,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'credentials' is not null or undefined
       assertParamExists("authenticate", "credentials", credentials);
@@ -93,7 +93,7 @@ export const UserApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         credentials,
         localVarRequestOptions,
-        configuration
+        configuration,
       );
 
       return {
@@ -139,7 +139,7 @@ export const UserApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         user,
         localVarRequestOptions,
-        configuration
+        configuration,
       );
 
       return {
@@ -155,13 +155,13 @@ export const UserApiAxiosParamCreator = function (
      */
     deleteUser: async (
       userId: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'userId' is not null or undefined
       assertParamExists("deleteUser", "userId", userId);
       const localVarPath = `/v1/users/{userId}`.replace(
         `{${"userId"}}`,
-        encodeURIComponent(String(userId))
+        encodeURIComponent(String(userId)),
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -236,13 +236,13 @@ export const UserApiAxiosParamCreator = function (
      */
     getUser: async (
       userId: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'userId' is not null or undefined
       assertParamExists("getUser", "userId", userId);
       const localVarPath = `/v1/users/{userId}`.replace(
         `{${"userId"}}`,
-        encodeURIComponent(String(userId))
+        encodeURIComponent(String(userId)),
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -281,13 +281,13 @@ export const UserApiAxiosParamCreator = function (
      */
     getUserByEmail: async (
       email: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'email' is not null or undefined
       assertParamExists("getUserByEmail", "email", email);
       const localVarPath = `/v1/users/getemail/{email}`.replace(
         `{${"email"}}`,
-        encodeURIComponent(String(email))
+        encodeURIComponent(String(email)),
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -326,13 +326,13 @@ export const UserApiAxiosParamCreator = function (
      */
     isEmailUnavailable: async (
       email: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'email' is not null or undefined
       assertParamExists("isEmailUnavailable", "email", email);
       const localVarPath = `/v1/users/isemailtaken/{email}`.replace(
         `{${"email"}}`,
-        encodeURIComponent(String(email))
+        encodeURIComponent(String(email)),
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -371,13 +371,13 @@ export const UserApiAxiosParamCreator = function (
      */
     isUsernameUnavailable: async (
       username: string,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'username' is not null or undefined
       assertParamExists("isUsernameUnavailable", "username", username);
       const localVarPath = `/v1/users/isusernametaken/{username}`.replace(
         `{${"username"}}`,
-        encodeURIComponent(String(username))
+        encodeURIComponent(String(username)),
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -416,13 +416,13 @@ export const UserApiAxiosParamCreator = function (
      */
     resetPassword: async (
       passwordResetData: PasswordResetData,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'passwordResetData' is not null or undefined
       assertParamExists(
         "resetPassword",
         "passwordResetData",
-        passwordResetData
+        passwordResetData,
       );
       const localVarPath = `/v1/users/forgot/reset`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -453,7 +453,7 @@ export const UserApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         passwordResetData,
         localVarRequestOptions,
-        configuration
+        configuration,
       );
 
       return {
@@ -469,13 +469,13 @@ export const UserApiAxiosParamCreator = function (
      */
     resetPasswordRequest: async (
       passwordResetRequestData: PasswordResetRequestData,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'passwordResetRequestData' is not null or undefined
       assertParamExists(
         "resetPasswordRequest",
         "passwordResetRequestData",
-        passwordResetRequestData
+        passwordResetRequestData,
       );
       const localVarPath = `/v1/users/forgot`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -506,7 +506,7 @@ export const UserApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         passwordResetRequestData,
         localVarRequestOptions,
-        configuration
+        configuration,
       );
 
       return {
@@ -524,7 +524,7 @@ export const UserApiAxiosParamCreator = function (
     updateUser: async (
       userId: string,
       user: User,
-      options: any = {}
+      options: any = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'userId' is not null or undefined
       assertParamExists("updateUser", "userId", userId);
@@ -532,7 +532,7 @@ export const UserApiAxiosParamCreator = function (
       assertParamExists("updateUser", "user", user);
       const localVarPath = `/v1/users/{userId}`.replace(
         `{${"userId"}}`,
-        encodeURIComponent(String(userId))
+        encodeURIComponent(String(userId)),
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -562,7 +562,7 @@ export const UserApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         user,
         localVarRequestOptions,
-        configuration
+        configuration,
       );
 
       return {
@@ -588,19 +588,19 @@ export const UserApiFp = function (configuration?: Configuration) {
      */
     async authenticate(
       credentials: Credentials,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.authenticate(
         credentials,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -611,19 +611,19 @@ export const UserApiFp = function (configuration?: Configuration) {
      */
     async createUser(
       user: User,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.createUser(
         user,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -634,19 +634,19 @@ export const UserApiFp = function (configuration?: Configuration) {
      */
     async deleteUser(
       userId: string,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUser(
         userId,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -655,18 +655,18 @@ export const UserApiFp = function (configuration?: Configuration) {
      * @throws {RequiredError}
      */
     async getAllUsers(
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getAllUsers(
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -677,19 +677,19 @@ export const UserApiFp = function (configuration?: Configuration) {
      */
     async getUser(
       userId: string,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getUser(
         userId,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -700,19 +700,19 @@ export const UserApiFp = function (configuration?: Configuration) {
      */
     async getUserByEmail(
       email: string,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getUserByEmail(
         email,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -723,7 +723,7 @@ export const UserApiFp = function (configuration?: Configuration) {
      */
     async isEmailUnavailable(
       email: string,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
@@ -733,7 +733,7 @@ export const UserApiFp = function (configuration?: Configuration) {
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -744,20 +744,20 @@ export const UserApiFp = function (configuration?: Configuration) {
      */
     async isUsernameUnavailable(
       username: string,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.isUsernameUnavailable(
           username,
-          options
+          options,
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -768,19 +768,19 @@ export const UserApiFp = function (configuration?: Configuration) {
      */
     async resetPassword(
       passwordResetData: PasswordResetData,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.resetPassword(
         passwordResetData,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -791,20 +791,20 @@ export const UserApiFp = function (configuration?: Configuration) {
      */
     async resetPasswordRequest(
       passwordResetRequestData: PasswordResetRequestData,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.resetPasswordRequest(
           passwordResetRequestData,
-          options
+          options,
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -817,20 +817,20 @@ export const UserApiFp = function (configuration?: Configuration) {
     async updateUser(
       userId: string,
       user: User,
-      options?: any
+      options?: any,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.updateUser(
         userId,
         user,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
   };
@@ -843,7 +843,7 @@ export const UserApiFp = function (configuration?: Configuration) {
 export const UserApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
-  axios?: AxiosInstance
+  axios?: AxiosInstance,
 ) {
   const localVarFp = UserApiFp(configuration);
   return {
@@ -931,7 +931,7 @@ export const UserApiFactory = function (
      */
     isUsernameUnavailable(
       username: string,
-      options?: any
+      options?: any,
     ): AxiosPromise<boolean> {
       return localVarFp
         .isUsernameUnavailable(username, options)
@@ -945,7 +945,7 @@ export const UserApiFactory = function (
      */
     resetPassword(
       passwordResetData: PasswordResetData,
-      options?: any
+      options?: any,
     ): AxiosPromise<void> {
       return localVarFp
         .resetPassword(passwordResetData, options)
@@ -959,7 +959,7 @@ export const UserApiFactory = function (
      */
     resetPasswordRequest(
       passwordResetRequestData: PasswordResetRequestData,
-      options?: any
+      options?: any,
     ): AxiosPromise<void> {
       return localVarFp
         .resetPasswordRequest(passwordResetRequestData, options)
@@ -975,7 +975,7 @@ export const UserApiFactory = function (
     updateUser(
       userId: string,
       user: User,
-      options?: any
+      options?: any,
     ): AxiosPromise<string> {
       return localVarFp
         .updateUser(userId, user, options)
@@ -1147,7 +1147,7 @@ export class UserApi extends BaseAPI {
    */
   public authenticate(
     requestParameters: UserApiAuthenticateRequest,
-    options?: any
+    options?: any,
   ) {
     return UserApiFp(this.configuration)
       .authenticate(requestParameters.credentials, options)
@@ -1163,7 +1163,7 @@ export class UserApi extends BaseAPI {
    */
   public createUser(
     requestParameters: UserApiCreateUserRequest,
-    options?: any
+    options?: any,
   ) {
     return UserApiFp(this.configuration)
       .createUser(requestParameters.user, options)
@@ -1179,7 +1179,7 @@ export class UserApi extends BaseAPI {
    */
   public deleteUser(
     requestParameters: UserApiDeleteUserRequest,
-    options?: any
+    options?: any,
   ) {
     return UserApiFp(this.configuration)
       .deleteUser(requestParameters.userId, options)
@@ -1220,7 +1220,7 @@ export class UserApi extends BaseAPI {
    */
   public getUserByEmail(
     requestParameters: UserApiGetUserByEmailRequest,
-    options?: any
+    options?: any,
   ) {
     return UserApiFp(this.configuration)
       .getUserByEmail(requestParameters.email, options)
@@ -1236,7 +1236,7 @@ export class UserApi extends BaseAPI {
    */
   public isEmailUnavailable(
     requestParameters: UserApiIsEmailUnavailableRequest,
-    options?: any
+    options?: any,
   ) {
     return UserApiFp(this.configuration)
       .isEmailUnavailable(requestParameters.email, options)
@@ -1252,7 +1252,7 @@ export class UserApi extends BaseAPI {
    */
   public isUsernameUnavailable(
     requestParameters: UserApiIsUsernameUnavailableRequest,
-    options?: any
+    options?: any,
   ) {
     return UserApiFp(this.configuration)
       .isUsernameUnavailable(requestParameters.username, options)
@@ -1268,7 +1268,7 @@ export class UserApi extends BaseAPI {
    */
   public resetPassword(
     requestParameters: UserApiResetPasswordRequest,
-    options?: any
+    options?: any,
   ) {
     return UserApiFp(this.configuration)
       .resetPassword(requestParameters.passwordResetData, options)
@@ -1284,7 +1284,7 @@ export class UserApi extends BaseAPI {
    */
   public resetPasswordRequest(
     requestParameters: UserApiResetPasswordRequestRequest,
-    options?: any
+    options?: any,
   ) {
     return UserApiFp(this.configuration)
       .resetPasswordRequest(requestParameters.passwordResetRequestData, options)
@@ -1300,7 +1300,7 @@ export class UserApi extends BaseAPI {
    */
   public updateUser(
     requestParameters: UserApiUpdateUserRequest,
-    options?: any
+    options?: any,
   ) {
     return UserApiFp(this.configuration)
       .updateUser(requestParameters.userId, requestParameters.user, options)

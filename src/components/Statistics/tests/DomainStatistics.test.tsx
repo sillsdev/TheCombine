@@ -55,7 +55,7 @@ describe("DomainStatistics", () => {
     //Verify ListItem for the SemanticDomainCount object is present
     const newSenDomCountList = testRenderer.root.findAllByType(ListItem);
     expect(newSenDomCountList.length).toEqual(
-      mockSemanticDomainCountArray.length
+      mockSemanticDomainCountArray.length,
     );
   });
 });

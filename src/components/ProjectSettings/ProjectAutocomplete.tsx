@@ -7,12 +7,12 @@ import { AutocompleteSetting } from "api/models";
 import { ProjectSettingPropsWithUpdate } from "components/ProjectSettings/ProjectSettingsTypes";
 
 export default function ProjectAutocomplete(
-  props: ProjectSettingPropsWithUpdate
+  props: ProjectSettingPropsWithUpdate,
 ): ReactElement {
   const { t } = useTranslation();
 
   const updateAutocompleteSetting = async (
-    autocompleteSetting: AutocompleteSetting
+    autocompleteSetting: AutocompleteSetting,
   ): Promise<void> => {
     props.updateProject({ ...props.project, autocompleteSetting });
   };

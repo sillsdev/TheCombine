@@ -16,7 +16,7 @@ const renderSortOptions = (props: Partial<SortOptionsProps> = {}): void => {
         includeEmail={props.includeEmail}
         onChange={props.onChange ?? jest.fn()}
         onReverseClick={props.onReverseClick}
-      />
+      />,
     );
   });
 };

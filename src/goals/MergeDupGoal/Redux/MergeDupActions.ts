@@ -52,7 +52,7 @@ export function clearTree(): ClearTreeMergeAction {
 
 export function combineSense(
   src: MergeTreeReference,
-  dest: MergeTreeReference
+  dest: MergeTreeReference,
 ): CombineSenseMergeAction {
   return { type: MergeTreeActionTypes.COMBINE_SENSE, payload: { src, dest } };
 }
@@ -68,7 +68,7 @@ export function flagWord(wordId: string, flag: Flag): FlagWord {
 export function moveSense(
   ref: MergeTreeReference,
   destWordId: string,
-  destOrder: number
+  destOrder: number,
 ): MoveDuplicateMergeAction | MoveSenseMergeAction {
   if (ref.order === undefined) {
     return {
@@ -85,7 +85,7 @@ export function moveSense(
 
 export function orderSense(
   ref: MergeTreeReference,
-  order: number
+  order: number,
 ): OrderDuplicateMergeAction | OrderSenseMergeAction {
   if (ref.order === undefined) {
     return {
@@ -113,7 +113,7 @@ export function setWordData(words: Word[]): SetDataMergeAction {
 
 export function setVern(
   wordId: string,
-  vern: string
+  vern: string,
 ): SetVernacularMergeAction {
   return {
     type: MergeTreeActionTypes.SET_VERNACULAR,
@@ -127,7 +127,7 @@ export function setVern(
 // Returns the MergeWords, or undefined if the parent and child are identical.
 function getMergeWords(
   wordId: string,
-  mergeTree: MergeTreeState
+  mergeTree: MergeTreeState,
 ): MergeWords | undefined {
   // Find and build MergeSourceWord[].
   const word = mergeTree.tree.words[wordId];
@@ -136,7 +136,7 @@ function getMergeWords(
 
     // List of all non-deleted senses.
     const nonDeleted = Object.values(mergeTree.tree.words).flatMap((w) =>
-      Object.values(w.sensesGuids).flatMap((s) => s)
+      Object.values(w.sensesGuids).flatMap((s) => s),
     );
 
     // Create list of all senses and add merge type tags slit by src word.
@@ -191,7 +191,7 @@ function getMergeWords(
         onlyChild[0].srcWordId === wordId &&
         onlyChild.length === data.words[wordId].senses.length &&
         !onlyChild.find(
-          (s) => ![Status.Active, Status.Protected].includes(s.accessibility)
+          (s) => ![Status.Active, Status.Protected].includes(s.accessibility),
         ) &&
         compareFlags(word.flag, data.words[wordId].flag) === 0
       ) {
@@ -235,14 +235,14 @@ export function mergeAll() {
     // Handle words with all senses deleted.
     const possibleWords = Object.values(mergeTree.data.words);
     const nonDeletedSenses = Object.values(mergeTree.tree.words).flatMap((w) =>
-      Object.values(w.sensesGuids).flatMap((s) => s)
+      Object.values(w.sensesGuids).flatMap((s) => s),
     );
     const deletedWords = possibleWords.filter(
       (w) =>
-        !w.senses.map((s) => s.guid).find((g) => nonDeletedSenses.includes(g))
+        !w.senses.map((s) => s.guid).find((g) => nonDeletedSenses.includes(g)),
     );
     const mergeWordsArray = deletedWords.map((w) =>
-      newMergeWords(w, [{ srcWordId: w.id, getAudio: false }], true)
+      newMergeWords(w, [{ srcWordId: w.id, getAudio: false }], true),
     );
 
     // Merge words.
@@ -257,7 +257,7 @@ export function mergeAll() {
       const parentIds = await backend.mergeWords(mergeWordsArray);
       const childIds = [
         ...new Set(
-          mergeWordsArray.flatMap((m) => m.children).map((s) => s.srcWordId)
+          mergeWordsArray.flatMap((m) => m.children).map((s) => s.srcWordId),
         ),
       ];
       const completedMerge = { childIds, parentIds };
@@ -271,7 +271,7 @@ export function mergeAll() {
 
 function addCompletedMergeToGoal(
   goal: MergeDups,
-  completedMerge: MergeUndoIds
+  completedMerge: MergeUndoIds,
 ) {
   return async (dispatch: StoreStateDispatch) => {
     if (goal.goalType === GoalType.MergeDups) {
@@ -326,7 +326,7 @@ export function combineIntoFirstSense(senses: MergeTreeSense[]): void {
     dupSense.accessibility = Status.Duplicate;
     // Put the duplicate's definitions in the main sense.
     dupSense.definitions.forEach((def) =>
-      mergeDefinitionIntoSense(mainSense, def)
+      mergeDefinitionIntoSense(mainSense, def),
     );
     // Use the duplicate's part of speech if not specified in the main sense.
     if (mainSense.grammaticalInfo.catGroup === GramCatGroup.Unspecified) {
@@ -345,13 +345,13 @@ export function combineIntoFirstSense(senses: MergeTreeSense[]): void {
 export function mergeDefinitionIntoSense(
   sense: MergeTreeSense,
   def: Definition,
-  sep = ";"
+  sep = ";",
 ): void {
   if (!def.text.length) {
     return;
   }
   const defIndex = sense.definitions.findIndex(
-    (d) => d.language === def.language
+    (d) => d.language === def.language,
   );
   if (defIndex === -1) {
     sense.definitions.push({ ...def });

@@ -33,14 +33,14 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     button: { marginRight: theme.spacing(1) },
     icon: { color: themeColors.success },
-  })
+  }),
 );
 
 export default function AudioPlayer(props: PlayerProps): ReactElement {
   const isPlaying = useAppSelector(
     (state: StoreState) =>
       state.pronunciationsState.payload === props.fileName &&
-      state.pronunciationsState.type === PronunciationsStatus.Playing
+      state.pronunciationsState.type === PronunciationsStatus.Playing,
   );
 
   const [audio] = useState<HTMLAudioElement>(new Audio(props.pronunciationUrl));

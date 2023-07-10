@@ -99,7 +99,7 @@ export default function ChildrenRow(props: TreeRowProps): ReactElement {
             domain={child}
             onClick={(d) => props.animate(d)}
           />
-        </ImageListItem>
+        </ImageListItem>,
       );
     });
     return subdomains;

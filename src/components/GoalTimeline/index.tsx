@@ -42,17 +42,17 @@ const timelineStyle: { [key: string]: CSSProperties } = {
 // Extracted for testing purposes.
 export function createSuggestionData(
   availableGoalTypes: GoalType[],
-  goalTypeSuggestions: GoalType[]
+  goalTypeSuggestions: GoalType[],
 ): Goal[] {
   const suggestions = goalTypeSuggestions.filter((t) =>
-    availableGoalTypes.includes(t)
+    availableGoalTypes.includes(t),
   );
   if (!suggestions.length) {
     return availableGoalTypes.map(goalTypeToGoal);
   }
   const secondarySuggestions = suggestions.slice(1);
   const nonSuggestions = availableGoalTypes.filter(
-    (t) => !suggestions.includes(t)
+    (t) => !suggestions.includes(t),
   );
   secondarySuggestions.push(...nonSuggestions);
   return secondarySuggestions.map(goalTypeToGoal);
@@ -66,10 +66,10 @@ export default function GoalTimeline(): ReactElement {
   const dispatch = useAppDispatch();
 
   const currentProjectId = useAppSelector(
-    (state: StoreState) => state.currentProjectState.project.id
+    (state: StoreState) => state.currentProjectState.project.id,
   );
   const { allGoalTypes, goalTypeSuggestions, history } = useAppSelector(
-    (state: StoreState) => state.goalsState
+    (state: StoreState) => state.goalsState,
   );
 
   const chooseGoal = (goal: Goal) => dispatch(asyncAddGoal(goal));
@@ -102,11 +102,11 @@ export default function GoalTimeline(): ReactElement {
     }
     const permissions = (await getUserRole(userRoleId)).permissions;
     const goalTypes = allGoalTypes.filter((t) =>
-      permissions.includes(requiredPermission(t))
+      permissions.includes(requiredPermission(t)),
     );
     setAvailableGoalTypes(goalTypes);
     setSuggestedGoalTypes(
-      goalTypes.filter((t) => goalTypeSuggestions.includes(t))
+      goalTypes.filter((t) => goalTypeSuggestions.includes(t)),
     );
   }, [allGoalTypes, currentProjectId, goalTypeSuggestions]);
 

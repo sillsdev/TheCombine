@@ -19,7 +19,7 @@ type Orientation = "horizontal" | "vertical";
 function gridStyle(
   orientation: Orientation,
   size: number,
-  scrollVisible?: boolean
+  scrollVisible?: boolean,
 ): CSSProperties {
   switch (orientation) {
     case "horizontal":
@@ -97,7 +97,7 @@ export function makeGoalTile(
   size: number,
   orientation: Orientation,
   goal?: Goal,
-  buttonProps?: ButtonProps
+  buttonProps?: ButtonProps,
 ): ReactElement {
   return (
     <ImageListItem key={goal?.guid + orientation} cols={1}>

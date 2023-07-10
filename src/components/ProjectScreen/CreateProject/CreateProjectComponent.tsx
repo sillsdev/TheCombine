@@ -28,7 +28,7 @@ interface CreateProjectProps extends WithTranslation {
   asyncCreateProject: (
     name: string,
     vernacularLanguage: WritingSystem,
-    analysisLanguages: WritingSystem[]
+    analysisLanguages: WritingSystem[],
   ) => void;
   asyncFinishProject: (name: string, vernacularLanguage: WritingSystem) => void;
   reset: () => void;
@@ -133,7 +133,7 @@ export class CreateProject extends React.Component<
   updateName(
     evt: React.ChangeEvent<
       HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
-    >
+    >,
   ): void {
     const name = evt.target.value;
     this.setState({
@@ -174,12 +174,12 @@ export class CreateProject extends React.Component<
         <MenuItem key={lang.bcp47} value={lang.bcp47}>
           {lang.name ? `${lang.name} : ${lang.bcp47}` : lang.bcp47}
         </MenuItem>
-      ))
+      )),
     );
     menuItems.push(
       <MenuItem key={vernIdOther} value={vernIdOther}>
         {this.props.t("createProject.languageOptionOther")}
-      </MenuItem>
+      </MenuItem>,
     );
 
     const onChange = (e: SelectChangeEvent): void => {
@@ -226,7 +226,7 @@ export class CreateProject extends React.Component<
       this.props.asyncCreateProject(
         name,
         this.state.vernLanguage,
-        this.state.analysisLanguages
+        this.state.analysisLanguages,
       );
     }
   }

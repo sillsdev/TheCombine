@@ -24,7 +24,7 @@ interface LandingButtonsProps {
 }
 
 export default function LandingButtons(
-  props: LandingButtonsProps
+  props: LandingButtonsProps,
 ): ReactElement {
   const navigate = useNavigate();
   return (

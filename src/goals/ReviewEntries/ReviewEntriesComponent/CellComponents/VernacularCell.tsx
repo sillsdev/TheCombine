@@ -9,7 +9,7 @@ interface VernacularCellProps extends FieldParameterStandard {
 }
 
 export default function VernacularCell(
-  props: VernacularCellProps
+  props: VernacularCellProps,
 ): ReactElement {
   const { t } = useTranslation();
 

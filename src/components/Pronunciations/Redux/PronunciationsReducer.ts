@@ -8,7 +8,7 @@ import { StoreAction, StoreActionTypes } from "rootActions";
 
 export const pronunciationsReducer = (
   state: PronunciationsState = defaultState,
-  action: StoreAction | PronunciationsAction
+  action: StoreAction | PronunciationsAction,
 ): PronunciationsState => {
   switch (action.type) {
     case PronunciationsStatus.Playing:

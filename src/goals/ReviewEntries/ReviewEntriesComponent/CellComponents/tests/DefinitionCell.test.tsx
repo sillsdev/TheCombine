@@ -29,7 +29,7 @@ describe("DefinitionCell", () => {
             value={mockWord.senses}
             sortingByThis
           />
-        </Provider>
+        </Provider>,
       );
     });
   });
@@ -39,7 +39,7 @@ describe("DefinitionCell", () => {
       renderer.create(
         <Provider store={mockStore}>
           <DefinitionCell rowData={mockWord} value={mockWord.senses} editable />
-        </Provider>
+        </Provider>,
       );
     });
   });

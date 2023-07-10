@@ -41,7 +41,7 @@ export default function UserList(props: UserListProps): ReactElement {
   const compareUsers = useCallback(
     (a: User, b: User): number =>
       getUserCompare(userOrder, reverseSorting)(a, b),
-    [reverseSorting, userOrder]
+    [reverseSorting, userOrder],
   );
 
   useEffect(() => {
@@ -62,7 +62,7 @@ export default function UserList(props: UserListProps): ReactElement {
     setFilteredUsers(
       filterInput.length
         ? props.allUsers.filter((u) => doesTextMatchUser(filterInput, u))
-        : []
+        : [],
     );
   }, [filterInput, props.allUsers]);
 
