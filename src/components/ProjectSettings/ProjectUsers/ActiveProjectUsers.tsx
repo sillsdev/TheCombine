@@ -77,17 +77,13 @@ export default function ActiveProjectUsers(): ReactElement {
   }
 
   const currentIsProjOwner = userRoles[currentUser.id] === Role.Owner;
-  const currentIsProjAdminOrOwner =
-    currentIsProjOwner || userRoles[currentUser.id] === Role.Administrator;
 
   const userListItem = (user: User): ReactElement => {
     const userRole = userRoles[user.id];
-    const userIsProjAdmin = userRole === Role.Administrator;
     const canManageUser =
-      currentIsProjAdminOrOwner &&
       user.id !== currentUser.id &&
       userRole !== Role.Owner &&
-      (!userIsProjAdmin || currentIsProjOwner);
+      (currentIsProjOwner || userRole !== Role.Administrator);
 
     const manageUser = canManageUser ? (
       <CancelConfirmDialogCollection
