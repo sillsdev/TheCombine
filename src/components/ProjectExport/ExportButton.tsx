@@ -1,5 +1,5 @@
 import { ButtonProps } from "@mui/material/Button";
-import { useSnackbar } from "notistack";
+import { enqueueSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
 
 import { isFrontierNonempty } from "backend";
@@ -18,7 +18,6 @@ interface ExportButtonProps {
 export default function ExportButton(props: ExportButtonProps) {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const { enqueueSnackbar } = useSnackbar();
 
   async function exportProj() {
     await isFrontierNonempty(props.projectId).then(async (isNonempty) => {

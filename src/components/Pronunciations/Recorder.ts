@@ -1,17 +1,17 @@
 import RecordRTC from "recordrtc";
 
-import { errorToast } from "components/Toast/SwalToast";
-
 export default class Recorder {
+  private toast: (text: string) => void;
   private recordRTC?: RecordRTC;
 
   static blobType: "audio" = "audio";
 
-  constructor() {
+  constructor(toast?: (text: string) => void) {
+    this.toast = toast ?? alert;
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then((audioStream) => this.onMicrophoneAvailable(audioStream))
-      .catch(Recorder.onError);
+      .catch((err) => this.onError(err));
   }
 
   startRecording(): void {
@@ -39,11 +39,8 @@ export default class Recorder {
     this.recordRTC = new RecordRTC(audioStream, options);
   }
 
-  private static onError(err: Error): void {
+  private onError(err: Error): void {
     console.error(err);
-    errorToast.fire({
-      title: "Audio Recorder",
-      text: "Error getting audio stream!",
-    });
+    this.toast("Error getting audio stream!");
   }
 }
