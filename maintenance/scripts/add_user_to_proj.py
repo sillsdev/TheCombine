@@ -35,8 +35,10 @@ def parse_args() -> argparse.Namespace:
         "--user", required=True, help="Username or e-mail of the user to be added to the project"
     )
     parser.add_argument(
-        "--role", choices=[role.value for role in Role if role != Role.Owner],
-        default=Role.Harvester.value, help="Project role of the user to be added"
+        "--role",
+        choices=[role.value for role in Role if role != Role.Owner],
+        default=Role.Harvester.value,
+        help="Project role of the user to be added",
     )
     parser.add_argument(
         "--verbose", action="store_true", help="Print intermediate values to aid in debugging"
