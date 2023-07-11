@@ -286,34 +286,29 @@ namespace BackendFramework.Models
     public class WritingSystem
     {
         [Required]
-        public string Name { get; set; }
-        [Required]
         public string Bcp47 { get; set; }
+        [Required]
+        public string Name { get; set; }
         [Required]
         public string Font { get; set; }
 
-        public WritingSystem()
+        public WritingSystem(string bcp47 = "", string name = "", string font = "")
         {
-            Name = "";
-            Bcp47 = "";
-            Font = "";
+            Bcp47 = bcp47;
+            Name = name;
+            Font = font;
         }
 
         public WritingSystem(WritingSystemDefinition wsd)
         {
-            Name = wsd.Language?.Name ?? "";
             Bcp47 = wsd.LanguageTag;
+            Name = wsd.Language?.Name ?? "";
             Font = wsd.DefaultFont?.Name ?? "";
         }
 
         public WritingSystem Clone()
         {
-            return new WritingSystem
-            {
-                Name = Name,
-                Bcp47 = Bcp47,
-                Font = Font
-            };
+            return new(Bcp47, Name, Font);
         }
 
         public override bool Equals(object? obj)
@@ -323,14 +318,14 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Name.Equals(ws.Name, StringComparison.Ordinal) &&
-                Bcp47.Equals(ws.Bcp47, StringComparison.Ordinal) &&
+            return Bcp47.Equals(ws.Bcp47, StringComparison.Ordinal) &&
+                Name.Equals(ws.Name, StringComparison.Ordinal) &&
                 Font.Equals(ws.Font, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Bcp47, Font);
+            return HashCode.Combine(Bcp47, Name, Font);
         }
 
         public override string ToString()

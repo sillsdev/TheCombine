@@ -155,7 +155,7 @@ namespace BackendFramework.Helper
         public static GramCatGroup GetGramCatGroup(string grammaticalCategory)
         {
             var gramCat = removeAccents(grammaticalCategory);
-            if (String.IsNullOrWhiteSpace(Regex.Match(gramCat, @"[^\W]+").Value))
+            if (string.IsNullOrWhiteSpace(Regex.Match(gramCat, @"[^\W]+").Value))
             {
                 return GramCatGroup.Unspecified;
             }

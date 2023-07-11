@@ -132,12 +132,7 @@ namespace Backend.Tests
 
         public static WritingSystem RandomWritingSystem()
         {
-            return new WritingSystem
-            {
-                Name = RandString(),
-                Bcp47 = RandString(),
-                Font = RandString()
-            };
+            return new(RandString(), RandString(), RandString());
         }
     }
 }
