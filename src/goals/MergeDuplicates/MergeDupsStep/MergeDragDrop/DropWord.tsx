@@ -6,9 +6,12 @@ import { useTranslation } from "react-i18next";
 
 import { Flag } from "api/models";
 import { FlagButton, IconButtonWithTooltip } from "components/Buttons";
-import DragSense from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/DragSense";
-import { flagWord, setVern } from "goals/MergeDupGoal/Redux/MergeDupActions";
-import { MergeTreeState } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
+import DragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DragSense";
+import {
+  flagWord,
+  setVern,
+} from "goals/MergeDuplicates/Redux/MergeDupsActions";
+import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { useAppDispatch } from "types/hooks";
 import theme from "types/theme";
 

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { asyncAddGoal } from "components/GoalTimeline/Redux/GoalActions";
 import PageNotFound from "components/PageNotFound/component";
-import { MergeDupContinueDialog } from "goals/MergeDupGoal/MergeDupComponent/MergeDupContinueDialog";
+import MergeDupsContinueDialog from "goals/MergeDuplicates/MergeDupsContinueDialog";
 import { StoreState } from "types";
 import { GoalType } from "types/goals";
 import { useAppDispatch, useAppSelector } from "types/hooks";
@@ -31,7 +31,7 @@ export default function NextGoalScreen(): ReactElement {
 
   switch (goalType) {
     case GoalType.MergeDups:
-      return <MergeDupContinueDialog onSelection={loadNextGoal} />;
+      return <MergeDupsContinueDialog onSelection={loadNextGoal} />;
     default:
       return <PageNotFound />;
   }

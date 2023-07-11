@@ -5,14 +5,14 @@ import { setCurrentGoal } from "components/GoalTimeline/Redux/GoalActions";
 import PageNotFound from "components/PageNotFound/component";
 import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
 import Loading from "goals/DefaultGoal/Loading";
-import { clearTree } from "goals/MergeDupGoal/Redux/MergeDupActions";
+import { clearTree } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { clearReviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesActions";
 import { StoreState } from "types";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 
 const CharacterInventory = loadable(() => import("goals/CharacterInventory"));
-const MergeDup = loadable(() => import("goals/MergeDupGoal/MergeDupComponent"));
+const MergeDup = loadable(() => import("goals/MergeDuplicates"));
 const ReviewEntriesComponent = loadable(
   () => import("goals/ReviewEntries/ReviewEntriesComponent")
 );
