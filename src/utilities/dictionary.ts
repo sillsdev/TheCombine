@@ -7,11 +7,6 @@ export default async function (bcp47: Bcp47Code) {
   // The cases should match the languages in src/resources/dictionaries/.
   // Explicitly name each resource file to prevent exclusion in webpack tree shaking.
   switch (bcp47) {
-    case Bcp47Code.Ar:
-      return {
-        aff: (await import("resources/dictionaries/ar.aff")).default,
-        dic: (await import("resources/dictionaries/ar.dic")).default,
-      };
     case Bcp47Code.En:
       return {
         aff: (await import("resources/dictionaries/en.aff")).default,
