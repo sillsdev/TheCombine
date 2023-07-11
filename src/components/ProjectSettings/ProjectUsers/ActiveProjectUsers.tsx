@@ -14,7 +14,6 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useSelector } from "react-redux";
 
 import { Role, User } from "api/models";
 import { avatarSrc, getUserRoles } from "backend";
@@ -26,12 +25,13 @@ import SortOptions, {
 } from "components/ProjectSettings/ProjectUsers/SortOptions";
 import { StoreState } from "types";
 import { Hash } from "types/hash";
+import { useAppSelector } from "types/hooks";
 import theme from "types/theme";
 
 export default function ActiveProjectUsers(props: {
   projectId: string;
 }): ReactElement {
-  const projectUsers = useSelector(
+  const projectUsers = useAppSelector(
     (state: StoreState) => state.currentProjectState.users
   );
 
@@ -48,7 +48,7 @@ export default function ActiveProjectUsers(props: {
   );
 
   useEffect(() => {
-    getUserRoles().then((userRoles) => {
+    getUserRoles(props.projectId).then((userRoles) => {
       const roles: Hash<Role> = {};
       projectUsers.forEach((u) => {
         const ur = userRoles.find(
@@ -84,14 +84,16 @@ export default function ActiveProjectUsers(props: {
   const userListItem = (user: User): ReactElement => {
     const userRole = userRoles[user.id];
     const canManageUser =
-      user.id !== currentUser.id &&
       userRole !== Role.Owner &&
-      (currentIsProjOwner || userRole !== Role.Administrator);
+      (currentIsProjOwner ||
+        currentUser.isAdmin ||
+        userRole !== Role.Administrator);
 
     const manageUser = canManageUser ? (
       <CancelConfirmDialogCollection
         currentUserId={currentUser.id}
         isProjectOwner={currentIsProjOwner}
+        projectId={props.projectId}
         userId={user.id}
         userRole={userRole}
       />

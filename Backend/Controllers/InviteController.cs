@@ -41,7 +41,7 @@ namespace BackendFramework.Controllers
             }
 
             var projectId = data.ProjectId;
-            if (!_permissionService.ContainsProjectRole(HttpContext, data.Role, projectId))
+            if (!await _permissionService.ContainsProjectRole(HttpContext, data.Role, projectId))
             {
                 return Forbid();
             }
