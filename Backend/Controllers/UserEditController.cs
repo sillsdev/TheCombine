@@ -122,7 +122,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UpdateUserEditGoal(
             string projectId, string userEditId, [FromBody, BindRequired] Edit newEdit)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndReviewEntries))
             {
                 return Forbid();
             }
@@ -165,7 +165,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UpdateUserEditStep(string projectId, string userEditId,
             [FromBody, BindRequired] UserEditStepWrapper stepEdit)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndReviewEntries))
             {
                 return Forbid();
             }
@@ -222,7 +222,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteUserEdit(string projectId, string userEditId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Owner))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
             {
                 return Forbid();
             }

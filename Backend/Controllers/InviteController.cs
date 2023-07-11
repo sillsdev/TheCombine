@@ -35,9 +35,13 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> EmailInviteToProject([FromBody, BindRequired] EmailInviteData data)
         {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
+            {
+                return Forbid();
+            }
+
             var projectId = data.ProjectId;
-            if (!_permissionService.HasProjectPermission(
-                HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
+            if (!_permissionService.ContainsProjectRole(HttpContext, data.Role, projectId))
             {
                 return Forbid();
             }
@@ -48,7 +52,7 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
-            var linkWithIdentifier = await _inviteService.CreateLinkWithToken(project, data.EmailAddress);
+            var linkWithIdentifier = await _inviteService.CreateLinkWithToken(project, data.Role, data.EmailAddress);
             await _inviteService.EmailLink(data.EmailAddress, data.Message, linkWithIdentifier, data.Domain, project);
             return Ok(linkWithIdentifier);
         }
@@ -116,6 +120,8 @@ namespace BackendFramework.Controllers
             [Required]
             public string ProjectId { get; set; }
             [Required]
+            public Role Role { get; set; }
+            [Required]
             public string Domain { get; set; }
 
             public EmailInviteData()
@@ -123,6 +129,7 @@ namespace BackendFramework.Controllers
                 EmailAddress = "";
                 Message = "";
                 ProjectId = "";
+                Role = Role.Harvester;
                 Domain = "";
             }
         }

@@ -12,30 +12,15 @@
  * Do not edit the class manually.
  */
 
-import { Role } from "./role";
-
 /**
  *
  * @export
- * @interface UserRole
+ * @enum {string}
  */
-export interface UserRole {
-  /**
-   *
-   * @type {string}
-   * @memberof UserRole
-   */
-  id: string;
-  /**
-   *
-   * @type {string}
-   * @memberof UserRole
-   */
-  projectId: string;
-  /**
-   *
-   * @type {Role}
-   * @memberof UserRole
-   */
-  role: Role;
+export enum Role {
+  None = "None",
+  Harvester = "Harvester",
+  Editor = "Editor",
+  Administrator = "Administrator",
+  Owner = "Owner",
 }

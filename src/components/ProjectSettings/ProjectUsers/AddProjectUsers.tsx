@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 import { toast } from "react-toastify";
 
-import { Permission, User } from "api/models";
+import { Role, User } from "api/models";
 import * as backend from "backend";
 import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
 import EmailInvite from "components/ProjectSettings/ProjectUsers/EmailInvite";
@@ -39,10 +39,7 @@ export default function AddProjectUsers(): ReactElement {
   function addToProject(user: User): void {
     if (!projectUsers.map((u) => u.id).includes(user.id)) {
       backend
-        .addOrUpdateUserRole(
-          [Permission.MergeAndReviewEntries, Permission.WordEntry],
-          user.id
-        )
+        .addOrUpdateUserRole(Role.Harvester, user.id)
         .then(() => {
           toast.success(t("projectSettings.invite.toastSuccess"));
           dispatch(asyncRefreshCurrentProjectUsers());
