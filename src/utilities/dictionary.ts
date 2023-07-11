@@ -46,12 +46,3 @@ export default async function (bcp47: Bcp47Code) {
       return;
   }
 }
-
-/*export default async function (bcp47: Bcp47Code) {
-  const load = async (fileName: string) =>
-    (await import(`resources/dictionaries/${fileName}`)).default;
-  return {
-    aff: await load(`${bcp47}.aff`),
-    dic: await load(`${bcp47}.dic`),
-  };
-}*/

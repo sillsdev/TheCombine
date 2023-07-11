@@ -57,8 +57,8 @@ export default class SpellChecker {
 
     let suggestions = this.spell.suggest(final);
     if (!suggestions.length) {
-      // Try extending the current word by two characters.
-      suggestions.push(...this.spell.suggest(`${final}aa`));
+      // Extend the current word to get suggestions 1 or 2 characters longer.
+      suggestions = this.spell.suggest(`${final}..`);
     }
 
     if (suggestions.length && words.length) {
