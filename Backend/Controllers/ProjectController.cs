@@ -112,15 +112,8 @@ namespace BackendFramework.Controllers
             // Give Project owner privileges to user who creates a Project.
             var userRole = new UserRole
             {
-                Permissions = new List<Permission>
-                {
-                    Permission.Owner,
-                    Permission.DeleteEditSettingsAndUsers,
-                    Permission.ImportExport,
-                    Permission.MergeAndReviewEntries,
-                    Permission.WordEntry
-                },
-                ProjectId = project.Id
+                ProjectId = project.Id,
+                Role = Role.Owner
             };
             userRole = await _userRoleRepo.Create(userRole);
 
@@ -165,7 +158,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Project))]
         public async Task<IActionResult> PutChars(string projectId, [FromBody, BindRequired] Project project)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndReviewEntries))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.CharacterInventory))
             {
                 return Forbid();
             }
@@ -188,7 +181,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteProject(string projectId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Owner))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Archive))
             {
                 return Forbid();
             }

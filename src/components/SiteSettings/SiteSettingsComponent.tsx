@@ -22,7 +22,7 @@ export default function SiteSettingsComponent() {
       {/* User List */}
       <BaseSettingsComponent
         icon={<People />}
-        title={t("projectSettings.userList")}
+        title={t("siteSettings.userList")}
         body={<UserManagement />}
       />
 
