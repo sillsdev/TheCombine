@@ -40,7 +40,7 @@ export default class SpellChecker {
   // If the word string is multiple words (separated by spaces)
   // find spelling suggestions for the last word.
   getSpellingSuggestions(word: string): string[] {
-    if (!this.spell) {
+    if (!this.spell || !word) {
       return [];
     }
 
@@ -54,7 +54,13 @@ export default class SpellChecker {
     if (!final) {
       return [];
     }
+
     let suggestions = this.spell.suggest(final);
+    if (!suggestions.length) {
+      // Try extending the current word by two characters.
+      suggestions.push(...this.spell.suggest(`${final}aa`));
+    }
+
     if (suggestions.length && words.length) {
       const allButFinal = words.join(" ") + " ";
       suggestions = suggestions.map((w) => allButFinal + w);
