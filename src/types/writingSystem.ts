@@ -52,18 +52,6 @@ export const semDomWritingSystems = [
   writingSystem[Bcp47Code.Sw],
 ];
 
-// This list should match the languages in src/resources/dictionaries/
-export const dictionaryLangs = [
-  Bcp47Code.Ar,
-  Bcp47Code.En,
-  Bcp47Code.Es,
-  Bcp47Code.Fr,
-  Bcp47Code.Hi,
-  Bcp47Code.Pt,
-  Bcp47Code.Ru,
-  Bcp47Code.Sw,
-];
-
 // Used by i18n for un(der)-supported languages.
 export const i18nFallbacks = {
   // Example for how to add non-English fallbacks:
