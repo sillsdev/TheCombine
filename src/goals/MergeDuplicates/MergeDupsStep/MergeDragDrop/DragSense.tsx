@@ -2,10 +2,10 @@ import { Card } from "@mui/material";
 import { ReactElement, useCallback, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 
-import { trashId } from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/MergeDragDrop";
-import { MergeTreeSense } from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
-import SenseCardContent from "goals/MergeDupGoal/MergeDupStep/SenseCardContent";
-import { setSidebar } from "goals/MergeDupGoal/Redux/MergeDupActions";
+import { trashId } from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop";
+import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardContent";
+import { MergeTreeSense } from "goals/MergeDuplicates/MergeDupsTreeTypes";
+import { setSidebar } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import theme from "types/theme";

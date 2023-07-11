@@ -6,11 +6,11 @@ import {
   LoadUserEditsAction,
   SetCurrentGoalAction,
 } from "components/GoalTimeline/Redux/GoalReduxTypes";
-import { MergeDupData } from "goals/MergeDupGoal/MergeDupsTypes";
+import { MergeDupsData } from "goals/MergeDuplicates/MergeDupsTypes";
 import {
   dispatchMergeStepData,
   loadMergeDupsData,
-} from "goals/MergeDupGoal/Redux/MergeDupActions";
+} from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { Goal, GoalStatus, GoalType } from "types/goals";
@@ -162,7 +162,7 @@ export async function loadGoalData(goal: Goal): Promise<boolean> {
 export function updateStepFromData(goal: Goal): boolean {
   switch (goal.goalType) {
     case GoalType.MergeDups:
-      const currentGoalData = goal.data as MergeDupData;
+      const currentGoalData = goal.data as MergeDupsData;
       goal.steps[goal.currentStep] = {
         words: currentGoalData.plannedWords[goal.currentStep],
       };

@@ -4,7 +4,7 @@ import {
   MergeTree,
   MergeTreeReference,
   Sidebar,
-} from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+} from "goals/MergeDuplicates/MergeDupsTreeTypes";
 
 export enum MergeTreeActionTypes {
   CLEAR_TREE = "CLEAR_TREE",
