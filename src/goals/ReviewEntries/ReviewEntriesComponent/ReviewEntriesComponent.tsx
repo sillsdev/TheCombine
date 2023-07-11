@@ -1,3 +1,4 @@
+import { enqueueSnackbar } from "notistack";
 import { ReactElement, useEffect, useMemo, useState } from "react";
 
 import { getFrontierWords } from "backend";
@@ -19,7 +20,7 @@ export default function ReviewEntriesComponent(
   props: ReviewEntriesProps
 ): ReactElement {
   const [loaded, setLoaded] = useState(false);
-  const recorder = useMemo(() => new Recorder(), []);
+  const recorder = useMemo(() => new Recorder(enqueueSnackbar), []);
   const { updateAllWords, updateFrontierWord } = props;
 
   useEffect(() => {
