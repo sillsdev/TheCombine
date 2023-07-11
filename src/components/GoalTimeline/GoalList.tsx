@@ -10,8 +10,8 @@ import { useTranslation } from "react-i18next";
 
 import { CharInvChangesGoalList } from "goals/CharacterInventory/CharInvCompleted";
 import { CharInvChanges } from "goals/CharacterInventory/CharacterInventoryTypes";
-import { MergesCount } from "goals/MergeDupGoal/MergeDupComponent/MergeDupsCompleted";
-import { MergesCompleted } from "goals/MergeDupGoal/MergeDupsTypes";
+import { MergesCount } from "goals/MergeDuplicates/MergeDupsCompleted";
+import { MergesCompleted } from "goals/MergeDuplicates/MergeDupsTypes";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 
 type Orientation = "horizontal" | "vertical";

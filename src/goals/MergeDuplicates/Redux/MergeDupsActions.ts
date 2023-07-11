@@ -15,13 +15,13 @@ import {
   MergeTreeReference,
   MergeTreeSense,
   Sidebar,
-} from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
-import { MergeDups } from "goals/MergeDupGoal/MergeDups";
+} from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import {
+  MergeDups,
   MergesCompleted,
   MergeStepData,
   newMergeWords,
-} from "goals/MergeDupGoal/MergeDupsTypes";
+} from "goals/MergeDuplicates/MergeDupsTypes";
 import {
   ClearTreeMergeAction,
   CombineSenseMergeAction,
@@ -36,7 +36,7 @@ import {
   SetDataMergeAction,
   SetSidebarMergeAction,
   SetVernacularMergeAction,
-} from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
+} from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { GoalType } from "types/goals";

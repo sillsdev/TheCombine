@@ -10,12 +10,12 @@ import {
   MergeTreeSense,
   MergeTreeWord,
   newMergeTreeWord,
-} from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
+} from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import {
   MergeTreeAction,
   MergeTreeActionTypes,
   MergeTreeState,
-} from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
+} from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { StoreAction, StoreActionTypes } from "rootActions";
 import { Hash } from "types/hash";
 

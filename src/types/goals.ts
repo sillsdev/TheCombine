@@ -7,13 +7,13 @@ import {
   CharInvStepData,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
 import {
-  MergesCompleted,
-  MergeDupData,
+  MergeDupsData,
   MergeStepData,
-} from "goals/MergeDupGoal/MergeDupsTypes";
+  MergesCompleted,
+} from "goals/MergeDuplicates/MergeDupsTypes";
 import { newUser } from "types/user";
 
-export type GoalData = CharInvData | MergeDupData;
+export type GoalData = CharInvData | MergeDupsData;
 export type GoalStep = CharInvStepData | MergeStepData | {};
 export type GoalChanges = CharInvChanges | MergesCompleted;
 

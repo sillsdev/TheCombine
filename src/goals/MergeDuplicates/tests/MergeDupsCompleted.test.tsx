@@ -1,5 +1,5 @@
 import { MergeUndoIds, Word } from "api/models";
-import { doWordsIncludeMerges } from "goals/MergeDupGoal/MergeDupComponent/MergeDupsCompleted";
+import { doWordsIncludeMerges } from "goals/MergeDuplicates/MergeDupsCompleted";
 import { newWord } from "types/word";
 
 describe("doWordsIncludeMerges", () => {
