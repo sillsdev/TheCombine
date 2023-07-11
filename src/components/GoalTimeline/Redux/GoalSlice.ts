@@ -3,12 +3,16 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import * as Backend from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
 import router from "browserRouter";
-import { defaultState } from "components/GoalTimeline/DefaultState";
-import { MergeDupData } from "goals/MergeDupGoal/MergeDupsTypes";
+import {
+  GoalActionTypes,
+  LoadUserEditsAction,
+  SetCurrentGoalAction,
+} from "components/GoalTimeline/Redux/GoalReduxTypes";
+import { MergeDupsData } from "goals/MergeDuplicates/MergeDupsTypes";
 import {
   dispatchMergeStepData,
-  fetchMergeDupsData,
-} from "goals/MergeDupGoal/Redux/MergeDupActions";
+  loadMergeDupsData,
+} from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { StoreActionTypes } from "rootActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
@@ -217,7 +221,7 @@ export async function loadGoalData(goal: Goal): Promise<boolean> {
 export function updateStepFromData(goal: Goal): boolean {
   switch (goal.goalType) {
     case GoalType.MergeDups:
-      const currentGoalData = goal.data as MergeDupData;
+      const currentGoalData = goal.data as MergeDupsData;
       goal.steps[goal.currentStep] = {
         words: currentGoalData.plannedWords[goal.currentStep],
       };

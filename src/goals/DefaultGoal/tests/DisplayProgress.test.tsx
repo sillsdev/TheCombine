@@ -6,7 +6,7 @@ import thunk from "redux-thunk";
 import "tests/reactI18nextMock";
 
 import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
-import { MergeDups } from "goals/MergeDupGoal/MergeDups";
+import { MergeDups } from "goals/MergeDuplicates/MergeDupsTypes";
 import { Goal } from "types/goals";
 
 const createMockStore = configureMockStore([thunk]);
