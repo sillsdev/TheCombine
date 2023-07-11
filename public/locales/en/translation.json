@@ -103,6 +103,7 @@
   "siteSettings": {
     "archiveProjectText": "This project will not be accessible to any users.",
     "restoreProjectText": "Somebody probably had a good reason to archive this project. Are you sure you want to restore it?",
+    "userList": "Users",
     "deleteUser": {
       "confirm": "Confirm deleting user from The Combine database.",
       "toastSuccess": "User successfully deleted from The Combine.",
@@ -155,18 +156,29 @@
     "name": "Project Name",
     "nameUpdateFailed": "Project name is already taken.",
     "projectList": "Projects",
-    "userList": "Users",
+    "user": {
+      "currentUsers": "Current Users",
+      "addUser": "Add User"
+    },
+    "roles": {
+      "harvester": "Harvester",
+      "editor": "Editor",
+      "administrator": "Administrator",
+      "owner": "Owner"
+    },
     "userManagement": {
-      "makeAdminWarning": "Make this user a project admin?",
-      "makeOwnerWarning": "Transfer project ownership to this user?",
-      "removeAdminWarning": "Remove project admin from this user?",
+      "removeFromProject": "Remove from project",
+      "changeProjectRole": "Change project role:",
+      "makeOwner": "Make project Owner",
       "removeUserWarning": "Remove this user from the project?",
+      "makeHarvesterWarning": "Make this user a project Harvester?",
+      "makeEditorWarning": "Make this user a project Editor?",
+      "makeAdminWarning": "Make this user a project Administrator?",
+      "makeOwnerWarning": "Transfer project ownership to this user?",
       "userRemovedToastSuccess": "User removed from the project.",
       "userRemovedToastFailure": "Failed to remove user from the project.",
-      "makeAdminToastSuccess": "Project admin given to user.",
-      "makeAdminToastFailure": "Failed to give project admin to user.",
-      "removeAdminToastSuccess": "Project admin removed from user.",
-      "removeAdminToastFailure": "Failed to remove project admin from user.",
+      "userRoleUpdateToastSuccess": "User role updated successful.",
+      "userRoleUpdateToastFailure": "Failed to update user role.",
       "makeOwnerToastSuccess": "Project ownership transferred.",
       "makeOwnerToastFailure": "Failed to transfer project ownership.",
       "manageUser": "Manage User",
@@ -179,18 +191,7 @@
       "done": "Done!",
       "notAllowed": "You have already imported a Lift file to this project."
     },
-    "user": {
-      "currentUsers": "Current Users",
-      "usersAndRoles": "Users and Roles",
-      "addUser": "Add User",
-      "selectUser": "Choose a user",
-      "selectRole": "Choose their role",
-      "confirmUser": "Select this user",
-      "roles": {
-        "typist": "Typist",
-        "cleaner": "Cleaner",
-        "admin": "Admin"
-      },
+    "archive": {
       "archive": "Archive Project",
       "archiveToastSuccess": "Project Archived!"
     },
@@ -402,13 +403,9 @@
     "exit": "Exit",
     "export": "Export",
     "invite": "Invite",
-    "makeAdmin": "Make Admin",
-    "makeOwner": "Make Owner",
     "proceedWithCaution": "Proceed with Caution!",
     "reject": "Reject",
     "rejected": "Rejected",
-    "removeAdmin": "Remove Project Admin",
-    "removeFromProject": "Remove from Project",
     "reset": "Reset",
     "restore": "Restore",
     "save": "Save",

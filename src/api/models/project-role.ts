@@ -17,25 +17,19 @@ import { Role } from "./role";
 /**
  *
  * @export
- * @interface UserRole
+ * @interface ProjectRole
  */
-export interface UserRole {
+export interface ProjectRole {
   /**
    *
    * @type {string}
-   * @memberof UserRole
-   */
-  id: string;
-  /**
-   *
-   * @type {string}
-   * @memberof UserRole
+   * @memberof ProjectRole
    */
   projectId: string;
   /**
    *
    * @type {Role}
-   * @memberof UserRole
+   * @memberof ProjectRole
    */
   role: Role;
 }

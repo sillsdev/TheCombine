@@ -11,14 +11,13 @@ import {
   Sms,
 } from "@mui/icons-material";
 import { Grid, Typography } from "@mui/material";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { Permission, Project } from "api/models";
-import { canUploadLift, getUserRole } from "backend";
-import { getCurrentUser } from "backend/localStorage";
+import { canUploadLift, getCurrentPermissions } from "backend";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
 import {
   asyncRefreshCurrentProjectUsers,
@@ -43,7 +42,6 @@ export default function ProjectSettingsComponent() {
   const project = useAppSelector(
     (state: StoreState) => state.currentProjectState.project
   );
-  const currentRoles = useMemo(() => getCurrentUser()?.projectRoles ?? {}, []);
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [imports, setImports] = useState<boolean>(false);
   const dispatch = useAppDispatch();
@@ -51,26 +49,20 @@ export default function ProjectSettingsComponent() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const roleId = currentRoles[project.id];
-    if (roleId) {
-      getUserRole(roleId).then((role) => setPermissions(role.permissions));
-    }
-  }, [currentRoles, project]);
+    getCurrentPermissions().then(setPermissions);
+  }, [project.id]);
 
   useEffect(() => {
-    if (permissions.includes(Permission.ImportExport)) {
+    if (permissions.includes(Permission.Import)) {
       canUploadLift().then(setImports);
     }
-  }, [permissions, setImports]);
-
-  useEffect(() => {
     if (permissions.includes(Permission.DeleteEditSettingsAndUsers)) {
       dispatch(asyncRefreshCurrentProjectUsers());
     }
   }, [permissions, dispatch]);
 
   const archiveUpdate = (): void => {
-    toast.success(t("projectSettings.user.archiveToastSuccess"));
+    toast.success(t("projectSettings.archive.archiveToastSuccess"));
     setTimeout(() => {
       navigate(Path.ProjScreen);
     }, 2000);
@@ -116,7 +108,7 @@ export default function ProjectSettingsComponent() {
       )}
 
       {/* Import Lift file */}
-      {permissions.includes(Permission.ImportExport) && (
+      {permissions.includes(Permission.Import) && (
         <BaseSettingsComponent
           icon={<CloudUpload />}
           title={t("projectSettings.import.header")}
@@ -133,7 +125,7 @@ export default function ProjectSettingsComponent() {
       )}
 
       {/* Export Lift file */}
-      {permissions.includes(Permission.ImportExport) && (
+      {permissions.includes(Permission.Export) && (
         <BaseSettingsComponent
           icon={<GetApp />}
           title={t("projectSettings.exportProject.label")}
@@ -142,23 +134,25 @@ export default function ProjectSettingsComponent() {
       )}
 
       {/* Autocomplete toggle */}
-      <BaseSettingsComponent
-        icon={<Sms />}
-        title={t("projectSettings.autocomplete.label")}
-        body={
-          <ProjectAutocomplete
-            project={project}
-            updateProject={updateProject}
-          />
-        }
-      />
+      {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+        <BaseSettingsComponent
+          icon={<Sms />}
+          title={t("projectSettings.autocomplete.label")}
+          body={
+            <ProjectAutocomplete
+              project={project}
+              updateProject={updateProject}
+            />
+          }
+        />
+      )}
 
       {/* See current users in project */}
       {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
         <BaseSettingsComponent
           icon={<People />}
           title={t("projectSettings.user.currentUsers")}
-          body={<ActiveProjectUsers />}
+          body={<ActiveProjectUsers projectId={project.id} />}
         />
       )}
 
@@ -172,7 +166,7 @@ export default function ProjectSettingsComponent() {
       )}
 
       {/* Set a workshop schedule */}
-      {permissions.includes(Permission.Owner) && (
+      {permissions.includes(Permission.Statistics) && (
         <BaseSettingsComponent
           icon={<CalendarMonth />}
           title={t("projectSettings.schedule.workshopSchedule")}
@@ -181,10 +175,10 @@ export default function ProjectSettingsComponent() {
       )}
 
       {/* Archive project */}
-      {permissions.includes(Permission.Owner) && (
+      {permissions.includes(Permission.Archive) && (
         <BaseSettingsComponent
           icon={<Archive />}
-          title={t("projectSettings.user.archive")}
+          title={t("projectSettings.archive.archive")}
           body={
             <ProjectButtonWithConfirmation
               archive // Project Settings are only available for active projects

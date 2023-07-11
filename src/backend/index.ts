@@ -7,22 +7,23 @@ import * as Api from "api";
 import { BASE_PATH } from "api/base";
 import {
   BannerType,
+  ChartRootData,
   EmailInviteStatus,
   MergeUndoIds,
   MergeWords,
   Permission,
   Project,
+  Role,
+  SemanticDomainCount,
   SemanticDomainFull,
   SemanticDomainTreeNode,
-  SemanticDomainCount,
+  SemanticDomainUserCount,
   SiteBanner,
   User,
   UserEdit,
   UserRole,
   Word,
-  SemanticDomainUserCount,
   WordsPerDayPerUserCount,
-  ChartRootData,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import router from "browserRouter";
@@ -200,12 +201,13 @@ export async function updateBanner(siteBanner: SiteBanner): Promise<boolean> {
 
 export async function emailInviteToProject(
   projectId: string,
+  role: Role,
   emailAddress: string,
   message: string
 ): Promise<string> {
   const domain = window.location.origin;
   const resp = await inviteApi.emailInviteToProject(
-    { emailInviteData: { emailAddress, message, projectId, domain } },
+    { emailInviteData: { emailAddress, message, projectId, role, domain } },
     defaultOptions()
   );
   return resp.data;
@@ -599,29 +601,24 @@ export async function getUserRoles(): Promise<UserRole[]> {
   return (await userRoleApi.getProjectUserRoles(params, defaultOptions())).data;
 }
 
-export async function getUserRole(userRoleId: string): Promise<UserRole> {
-  const params = { projectId: LocalStorage.getProjectId(), userRoleId };
-  return (await userRoleApi.getUserRole(params, defaultOptions())).data;
-}
-
-export async function addOrUpdateUserRole(
-  permission: Permission[],
-  userId: string
-): Promise<string> {
-  const params = { projectId: LocalStorage.getProjectId(), userId, permission };
-  return (await userRoleApi.updateUserRolePermissions(params, defaultOptions()))
+export async function getCurrentPermissions(): Promise<Permission[]> {
+  const params = { projectId: LocalStorage.getProjectId() };
+  return (await userRoleApi.getCurrentPermissions(params, defaultOptions()))
     .data;
 }
 
-export async function removeUserRole(
-  permission: Permission[],
+export async function addOrUpdateUserRole(
+  role: Role,
   userId: string
-): Promise<void> {
-  const params = {
-    projectId: LocalStorage.getProjectId(),
-    userId,
-    permission,
-  };
+): Promise<string> {
+  const projectId = LocalStorage.getProjectId();
+  const projectRole = { projectId, role };
+  const params = { projectId, projectRole, userId };
+  return (await userRoleApi.updateUserRole(params, defaultOptions())).data;
+}
+
+export async function removeUserRole(userId: string): Promise<void> {
+  const params = { projectId: LocalStorage.getProjectId(), userId };
   await userRoleApi.deleteUserRole(params, defaultOptions());
 }
 

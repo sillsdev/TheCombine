@@ -25,9 +25,9 @@ export function requiredPermission(type: GoalType): Permission {
     case GoalType.ReviewEntries:
       return Permission.MergeAndReviewEntries;
     case GoalType.CreateCharInv:
-      return Permission.DeleteEditSettingsAndUsers;
+      return Permission.CharacterInventory;
     default:
-      return Permission.Owner;
+      return Permission.Archive;
   }
 }
 

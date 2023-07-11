@@ -7,7 +7,7 @@ import "tests/reactI18nextMock";
 
 import { Permission } from "api/models";
 import ProjectButtons, {
-  getIsAdminOrOwner,
+  getHasStatsPermission,
   projButtonId,
   statButtonId,
 } from "components/AppBar/ProjectButtons";
@@ -15,18 +15,17 @@ import { Path } from "types/path";
 import { themeColors } from "types/theme";
 
 jest.mock("backend", () => ({
-  getUserRole: () => mockGetUserRole(),
+  getCurrentPermissions: () => mockGetCurrentPermissions(),
 }));
 jest.mock("backend/localStorage", () => ({
   getCurrentUser: () => mockGetCurrentUser(),
-  getProjectId: () => mockProjectId,
 }));
 jest.mock("react-router-dom", () => ({
   useNavigate: jest.fn(),
 }));
 
+const mockGetCurrentPermissions = jest.fn();
 const mockGetCurrentUser = jest.fn();
-const mockGetUserRole = jest.fn();
 const mockProjectId = "proj-id";
 const mockProjectRoles: { [key: string]: string } = {};
 mockProjectRoles[mockProjectId] = "non-empty-string";
@@ -49,6 +48,7 @@ const renderProjectButtons = async (path = Path.Root) => {
 
 beforeEach(() => {
   jest.resetAllMocks();
+  mockGetCurrentPermissions.mockResolvedValue([]);
 });
 
 describe("ProjectButtons", () => {
@@ -86,26 +86,27 @@ describe("ProjectButtons", () => {
 
   describe("getIsAdminOrOwner", () => {
     it("returns true for admin users", async () => {
-      expect(await getIsAdminOrOwner()).toBeFalsy();
+      expect(await getHasStatsPermission()).toBeFalsy();
       mockGetCurrentUser.mockReturnValueOnce({ isAdmin: true });
-      expect(await getIsAdminOrOwner()).toBeTruthy();
+      expect(await getHasStatsPermission()).toBeTruthy();
     });
 
-    it("returns true for project owner but not other roles", async () => {
-      mockGetCurrentUser.mockReturnValue({ projectRoles: mockProjectRoles });
+    it("returns true only for those with the statistics permission", async () => {
+      const onlyStats = [Permission.Statistics];
+      mockGetCurrentPermissions.mockResolvedValueOnce(onlyStats);
+      expect(await getHasStatsPermission()).toBeTruthy();
 
-      const onlyOwner = [Permission.Owner];
-      mockGetUserRole.mockResolvedValueOnce({ permissions: onlyOwner });
-      expect(await getIsAdminOrOwner()).toBeTruthy();
-
-      const allButOwner = [
+      const allButStats = [
+        Permission.Archive,
+        Permission.CharacterInventory,
         Permission.DeleteEditSettingsAndUsers,
-        Permission.ImportExport,
+        Permission.Export,
+        Permission.Import,
         Permission.MergeAndReviewEntries,
         Permission.WordEntry,
       ];
-      mockGetUserRole.mockResolvedValueOnce({ permissions: allButOwner });
-      expect(await getIsAdminOrOwner()).toBeFalsy();
+      mockGetCurrentPermissions.mockResolvedValueOnce(allButStats);
+      expect(await getHasStatsPermission()).toBeFalsy();
     });
   });
 });
