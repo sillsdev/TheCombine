@@ -2,13 +2,13 @@ import { Card } from "@mui/material";
 import { ReactElement } from "react";
 import { Draggable } from "react-beautiful-dnd";
 
-import { trashId } from "goals/MergeDupGoal/MergeDupStep/DragDropComponents/MergeDragDrop";
+import { trashId } from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop";
+import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardContent";
 import {
   MergeTreeReference,
   MergeTreeSense,
   Sidebar,
-} from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
-import SenseCardContent from "goals/MergeDupGoal/MergeDupStep/SenseCardContent";
+} from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import theme from "types/theme";
 
 interface SidebarDragSenseProps {

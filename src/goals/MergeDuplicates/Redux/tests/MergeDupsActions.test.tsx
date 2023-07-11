@@ -10,9 +10,8 @@ import {
   MergeTreeSense,
   newMergeTreeSense,
   newMergeTreeWord,
-} from "goals/MergeDupGoal/MergeDupStep/MergeDupsTree";
-import { MergeDups } from "goals/MergeDupGoal/MergeDups";
-import { newMergeWords } from "goals/MergeDupGoal/MergeDupsTypes";
+} from "goals/MergeDuplicates/MergeDupsTreeTypes";
+import { MergeDups, newMergeWords } from "goals/MergeDuplicates/MergeDupsTypes";
 import {
   combineIntoFirstSense,
   dispatchMergeStepData,
@@ -20,13 +19,13 @@ import {
   mergeDefinitionIntoSense,
   moveSense,
   orderSense,
-} from "goals/MergeDupGoal/Redux/MergeDupActions";
+} from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import {
   MergeTreeAction,
   MergeTreeActionTypes,
   MergeTreeState,
-} from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
-import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MergeDupDataMock";
+} from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
+import { goalDataMock } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
 import { GoalsState, GoalType } from "types/goals";
 import { newSemanticDomain } from "types/semanticDomain";
 import {

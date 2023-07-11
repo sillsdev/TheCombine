@@ -2,7 +2,7 @@ import { Edit, Permission } from "api/models";
 import { CreateCharInv } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { CreateStrWordInv } from "goals/CreateStrWordInv/CreateStrWordInv";
 import { HandleFlags } from "goals/HandleFlags/HandleFlags";
-import { MergeDups } from "goals/MergeDupGoal/MergeDups";
+import { MergeDups } from "goals/MergeDuplicates/MergeDupsTypes";
 import { ReviewEntries } from "goals/ReviewEntries/ReviewEntries";
 import { SpellCheckGloss } from "goals/SpellCheckGloss/SpellCheckGloss";
 import { ValidateChars } from "goals/ValidateChars/ValidateChars";
