@@ -5,7 +5,7 @@ import { CreateProjectState } from "components/ProjectScreen/CreateProject/Redux
 import { PronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { TreeViewState } from "components/TreeView/Redux/TreeViewReduxTypes";
 import { CharacterInventoryState } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
-import { MergeTreeState } from "goals/MergeDupGoal/Redux/MergeDupReduxTypes";
+import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { ReviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
 import { AnalyticsState } from "types/Redux/analyticsReduxTypes";
 import { GoalsState } from "types/goals";

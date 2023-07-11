@@ -13,23 +13,21 @@ import {
 } from "components/GoalTimeline/Redux/GoalReduxTypes";
 import { CreateCharInv } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { HandleFlags } from "goals/HandleFlags/HandleFlags";
-import { MergeDups } from "goals/MergeDupGoal/MergeDups";
-import { MergeDupData, MergeStepData } from "goals/MergeDupGoal/MergeDupsTypes";
-import { goalDataMock } from "goals/MergeDupGoal/Redux/tests/MergeDupDataMock";
+import {
+  MergeDups,
+  MergeDupsData,
+  MergeStepData,
+} from "goals/MergeDuplicates/MergeDupsTypes";
+import { goalDataMock } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
 import { Goal } from "types/goals";
 import { newUser } from "types/user";
 import { maxNumSteps } from "utilities/goalUtilities";
 
-jest.mock("goals/MergeDupGoal/Redux/MergeDupActions", () => {
-  const realMergeDupActions = jest.requireActual(
-    "goals/MergeDupGoal/Redux/MergeDupActions"
-  );
-  return {
-    ...realMergeDupActions,
-    dispatchMergeStepData: (goal: MergeDups) => mockDispatchMergeStepData(goal),
-    loadMergeDupsData: (goal: MergeDups) => mockLoadMergeDupsData(goal),
-  };
-});
+jest.mock("goals/MergeDuplicates/Redux/MergeDupsActions", () => ({
+  ...jest.requireActual("goals/MergeDuplicates/Redux/MergeDupsActions"),
+  dispatchMergeStepData: (goal: MergeDups) => mockDispatchMergeStepData(goal),
+  loadMergeDupsData: (goal: MergeDups) => mockLoadMergeDupsData(goal),
+}));
 
 jest.mock("backend", () => ({
   addGoalToUserEdit: (id: string, goal: Goal) =>
@@ -324,7 +322,7 @@ describe("GoalActions", () => {
 
       actions.updateStepFromData(goal);
       expect((goal.steps[0] as MergeStepData).words).toEqual(
-        (goal.data as MergeDupData).plannedWords[0]
+        (goal.data as MergeDupsData).plannedWords[0]
       );
       expect(goal.currentStep).toEqual(0);
     });
