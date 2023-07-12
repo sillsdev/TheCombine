@@ -21,10 +21,24 @@ namespace Backend.Tests.Mocks
         /// <summary>
         /// Generates an HttpContext that will fail permissions checks in the mock.
         /// </summary>
-        public static HttpContext UnauthorizedHttpContext()
+        public static HttpContext UnauthorizedHttpContext(string? userId = null)
         {
             var httpContext = new DefaultHttpContext();
             httpContext.Request.Headers["Authorization"] = UnauthorizedHeader;
+            if (userId is not null)
+            {
+                httpContext.Request.Headers["UserId"] = userId;
+            }
+            return httpContext;
+        }
+
+        /// <summary>
+        /// Generates an HttpContext with the specified userId.
+        /// </summary>
+        public static HttpContext HttpContextWithUserId(string userId)
+        {
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["UserId"] = userId;
             return httpContext;
         }
 
@@ -77,9 +91,19 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(IsAuthorizedHttpContext(request));
         }
 
-        public bool HasProjectPermission(HttpContext request, Permission permission, string projectId)
+        /// <summary>
+        /// By default this will return true, unless the test passes in an <see cref="UnauthorizedHttpContext"/>.
+        ///
+        /// <param name="request">
+        /// Note this parameter is nullable in the mock implementation even though the real implementation it is not
+        /// to support unit testing when `HttpContext`s are not available.
+        /// </param>
+        /// <param name="role"> Same as the real implementation. </param>
+        /// <param name="projectId"> Same as the real implementation. </param>
+        /// </summary>
+        public Task<bool> ContainsProjectRole(HttpContext? request, Role role, string projectId)
         {
-            return HasProjectPermission(request, permission).Result;
+            return Task.FromResult(IsAuthorizedHttpContext(request));
         }
 
         public Task<bool> IsViolationEdit(HttpContext request, string userEditId, string projectId)

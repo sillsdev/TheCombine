@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { Permission } from "./permission";
+import { Role } from "./role";
 
 /**
  *
@@ -28,14 +28,14 @@ export interface UserRole {
   id: string;
   /**
    *
-   * @type {Array<Permission>}
-   * @memberof UserRole
-   */
-  permissions: Array<Permission>;
-  /**
-   *
    * @type {string}
    * @memberof UserRole
    */
   projectId: string;
+  /**
+   *
+   * @type {Role}
+   * @memberof UserRole
+   */
+  role: Role;
 }

@@ -12,6 +12,8 @@
  * Do not edit the class manually.
  */
 
+import { Role } from "./role";
+
 /**
  *
  * @export
@@ -36,6 +38,12 @@ export interface EmailInviteData {
    * @memberof EmailInviteData
    */
   projectId: string;
+  /**
+   *
+   * @type {Role}
+   * @memberof EmailInviteData
+   */
+  role: Role;
   /**
    *
    * @type {string}

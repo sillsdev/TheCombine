@@ -1,26 +1,28 @@
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
+import { Check, MoreVert } from "@mui/icons-material";
+import { Icon, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import { Permission } from "api/models";
+import { Role } from "api/models";
 import { addOrUpdateUserRole, removeUserRole } from "backend";
 import { CancelConfirmDialog } from "components/Dialogs";
-import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
+import { asyncRefreshProjectUsers } from "components/Project/ProjectActions";
 import { useAppDispatch } from "types/hooks";
 
 const idAffix = "user-options";
 const idRemoveUser = `${idAffix}-remove`;
-const idAddAdmin = `${idAffix}-admin-add`;
-const idRemoveAdmin = `${idAffix}-admin-remove`;
-const idMakeOwner = `${idAffix}-owner-make`;
+const idHarvester = `${idAffix}-harvester`;
+const idEditor = `${idAffix}-editor`;
+const idAdmin = `${idAffix}-admin`;
+const idOwner = `${idAffix}-owner`;
 
 interface CancelConfirmDialogCollectionProps {
-  userId: string;
   currentUserId: string;
   isProjectOwner: boolean;
-  userIsProjectAdmin: boolean;
+  projectId: string;
+  userId: string;
+  userRole: Role;
 }
 
 /**
@@ -31,22 +33,27 @@ export default function CancelConfirmDialogCollection(
   props: CancelConfirmDialogCollectionProps
 ): ReactElement {
   const dispatch = useAppDispatch();
-  const [removeUserDialogOpen, setRemoveUser] = useState<boolean>(false);
-  const [makeAdminDialogOpen, setMakeAdmin] = useState<boolean>(false);
-  const [removeAdminDialogOpen, setRemoveAdmin] = useState<boolean>(false);
-  const [makeOwnerDialogOpen, setMakeOwner] = useState<boolean>(false);
+  const [removeUserDialogOpen, setRemoveUser] = useState(false);
+  const [makeHarvesterDialogOpen, setMakeHarvester] = useState(false);
+  const [makeEditorDialogOpen, setMakeEditor] = useState(false);
+  const [makeAdminDialogOpen, setMakeAdmin] = useState(false);
+  const [makeOwnerDialogOpen, setMakeOwner] = useState(false);
   const [anchorEl, setAnchorEl] = useState<Element | undefined>(undefined);
   const { t } = useTranslation();
 
+  async function refreshUsers(): Promise<void> {
+    await dispatch(asyncRefreshProjectUsers(props.projectId));
+  }
+
   function removeUser(userId: string): void {
-    removeUserRole([Permission.DeleteEditSettingsAndUsers], userId)
+    removeUserRole(props.projectId, userId)
       .then(() => {
         setRemoveUser(false);
         setAnchorEl(undefined);
         toast.success(
           t("projectSettings.userManagement.userRemovedToastSuccess")
         );
-        dispatch(asyncRefreshCurrentProjectUsers());
+        refreshUsers();
       })
       .catch((err) => {
         console.error(err);
@@ -56,70 +63,45 @@ export default function CancelConfirmDialogCollection(
       });
   }
 
-  function makeAdmin(userId: string): void {
-    addOrUpdateUserRole(
-      [
-        Permission.WordEntry,
-        Permission.MergeAndReviewEntries,
-        Permission.ImportExport,
-        Permission.DeleteEditSettingsAndUsers,
-      ],
-      userId
-    )
-      .then(() => {
-        setMakeAdmin(false);
-        setAnchorEl(undefined);
-        toast.success(
-          t("projectSettings.userManagement.makeAdminToastSuccess")
-        );
-        dispatch(asyncRefreshCurrentProjectUsers());
-      })
-      .catch((err) => {
-        console.error(err);
-        toast.error(t("projectSettings.userManagement.makeAdminToastFailure"));
-      });
-  }
+  async function updateUserRole(userId: string, role: Role): Promise<void> {
+    if (role === Role.Owner) {
+      throw new Error("Cannot use this function to change project owner.");
+    }
 
-  function removeAdmin(userId: string): void {
-    addOrUpdateUserRole(
-      [Permission.MergeAndReviewEntries, Permission.WordEntry],
-      userId
-    )
+    addOrUpdateUserRole(props.projectId, role, userId)
       .then(() => {
-        setRemoveAdmin(false);
         setAnchorEl(undefined);
         toast.success(
-          t("projectSettings.userManagement.removeAdminToastSuccess")
+          t("projectSettings.userManagement.userRoleUpdateToastSuccess")
         );
-        dispatch(asyncRefreshCurrentProjectUsers());
+        refreshUsers();
       })
       .catch((err) => {
         console.error(err);
         toast.error(
-          t("projectSettings.userManagement.removeAdminToastFailure")
+          t("projectSettings.userManagement.userRoleUpdateToastFailure")
         );
       });
   }
 
+  function makeHarvester(userId: string): void {
+    updateUserRole(userId, Role.Harvester).then(() => setMakeHarvester(false));
+  }
+
+  function makeEditor(userId: string): void {
+    updateUserRole(userId, Role.Editor).then(() => setMakeEditor(false));
+  }
+
+  function makeAdmin(userId: string): void {
+    updateUserRole(userId, Role.Administrator).then(() => setMakeAdmin(false));
+  }
+
   function makeOwner(userId: string): void {
-    addOrUpdateUserRole(
-      [
-        Permission.WordEntry,
-        Permission.MergeAndReviewEntries,
-        Permission.ImportExport,
-        Permission.DeleteEditSettingsAndUsers,
-        Permission.Owner,
-      ],
-      userId
-    )
+    addOrUpdateUserRole(props.projectId, Role.Owner, userId)
       .then(() => {
         addOrUpdateUserRole(
-          [
-            Permission.WordEntry,
-            Permission.MergeAndReviewEntries,
-            Permission.ImportExport,
-            Permission.DeleteEditSettingsAndUsers,
-          ],
+          props.projectId,
+          Role.Administrator,
           props.currentUserId
         );
       })
@@ -129,7 +111,7 @@ export default function CancelConfirmDialogCollection(
         toast.success(
           t("projectSettings.userManagement.makeOwnerToastSuccess")
         );
-        dispatch(asyncRefreshCurrentProjectUsers());
+        refreshUsers();
       })
       .catch((err) => {
         console.error(err);
@@ -139,44 +121,52 @@ export default function CancelConfirmDialogCollection(
 
   const managementOptions: ReactElement[] = [
     <MenuItem
-      key={idRemoveUser}
+      divider
       id={idRemoveUser}
+      key={idRemoveUser}
       onClick={() => setRemoveUser(true)}
     >
-      {t("buttons.removeFromProject")}
+      {t("projectSettings.userManagement.removeFromProject")}
+    </MenuItem>,
+    <MenuItem key="project-role" disabled>
+      {t("projectSettings.userManagement.changeProjectRole")}
+    </MenuItem>,
+    <MenuItem
+      disabled={props.userRole === Role.Harvester}
+      id={idHarvester}
+      key={idHarvester}
+      onClick={() => setMakeHarvester(true)}
+    >
+      {props.userRole === Role.Harvester ? <Check /> : <Icon />}
+      {t("projectSettings.roles.harvester")}
+    </MenuItem>,
+    <MenuItem
+      disabled={props.userRole === Role.Editor}
+      id={idEditor}
+      key={idEditor}
+      onClick={() => setMakeEditor(true)}
+    >
+      {props.userRole === Role.Editor ? <Check /> : <Icon />}
+      {t("projectSettings.roles.editor")}
+    </MenuItem>,
+    <MenuItem
+      disabled={props.userRole === Role.Administrator}
+      divider={props.isProjectOwner && props.userRole === Role.Administrator}
+      id={idAdmin}
+      key={idAdmin}
+      onClick={() => setMakeAdmin(true)}
+    >
+      {props.userRole === Role.Administrator ? <Check /> : <Icon />}
+      {t("projectSettings.roles.administrator")}
     </MenuItem>,
   ];
-  if (props.isProjectOwner) {
-    const adminOption = props.userIsProjectAdmin ? (
-      <MenuItem
-        key={idRemoveAdmin}
-        id={idRemoveAdmin}
-        onClick={() => setRemoveAdmin(true)}
-      >
-        {t("buttons.removeAdmin")}
-      </MenuItem>
-    ) : (
-      <MenuItem
-        key={idAddAdmin}
-        id={idAddAdmin}
-        onClick={() => setMakeAdmin(true)}
-      >
-        {t("buttons.makeAdmin")}
+
+  if (props.isProjectOwner && props.userRole === Role.Administrator) {
+    managementOptions.push(
+      <MenuItem key={idOwner} id={idOwner} onClick={() => setMakeOwner(true)}>
+        {t("projectSettings.userManagement.makeOwner")}
       </MenuItem>
     );
-    managementOptions.push(adminOption);
-
-    if (props.userIsProjectAdmin) {
-      managementOptions.push(
-        <MenuItem
-          key={idMakeOwner}
-          id={idMakeOwner}
-          onClick={() => setMakeOwner(true)}
-        >
-          {t("buttons.makeOwner")}
-        </MenuItem>
-      );
-    }
   }
 
   return (
@@ -190,28 +180,36 @@ export default function CancelConfirmDialogCollection(
         buttonIdConfirm={`${idRemoveUser}-confirm`}
       />
       <CancelConfirmDialog
+        open={makeHarvesterDialogOpen}
+        textId="projectSettings.userManagement.makeHarvesterWarning"
+        handleCancel={() => setMakeHarvester(false)}
+        handleConfirm={() => makeHarvester(props.userId)}
+        buttonIdCancel={`${idHarvester}-cancel`}
+        buttonIdConfirm={`${idHarvester}-confirm`}
+      />
+      <CancelConfirmDialog
+        open={makeEditorDialogOpen}
+        textId="projectSettings.userManagement.makeEditorWarning"
+        handleCancel={() => setMakeEditor(false)}
+        handleConfirm={() => makeEditor(props.userId)}
+        buttonIdCancel={`${idEditor}-cancel`}
+        buttonIdConfirm={`${idEditor}-confirm`}
+      />
+      <CancelConfirmDialog
         open={makeAdminDialogOpen}
         textId="projectSettings.userManagement.makeAdminWarning"
         handleCancel={() => setMakeAdmin(false)}
         handleConfirm={() => makeAdmin(props.userId)}
-        buttonIdCancel={`${idAddAdmin}-cancel`}
-        buttonIdConfirm={`${idAddAdmin}-confirm`}
-      />
-      <CancelConfirmDialog
-        open={removeAdminDialogOpen}
-        textId="projectSettings.userManagement.removeAdminWarning"
-        handleCancel={() => setRemoveAdmin(false)}
-        handleConfirm={() => removeAdmin(props.userId)}
-        buttonIdCancel={`${idRemoveAdmin}-cancel`}
-        buttonIdConfirm={`${idRemoveAdmin}-confirm`}
+        buttonIdCancel={`${idAdmin}-cancel`}
+        buttonIdConfirm={`${idAdmin}-confirm`}
       />
       <CancelConfirmDialog
         open={makeOwnerDialogOpen}
         textId="projectSettings.userManagement.makeOwnerWarning"
         handleCancel={() => setMakeOwner(false)}
         handleConfirm={() => makeOwner(props.userId)}
-        buttonIdCancel={`${idMakeOwner}-cancel`}
-        buttonIdConfirm={`${idMakeOwner}-confirm`}
+        buttonIdCancel={`${idOwner}-cancel`}
+        buttonIdConfirm={`${idOwner}-confirm`}
       />
       <Tooltip
         title={t("projectSettings.userManagement.manageUser")}
@@ -222,7 +220,7 @@ export default function CancelConfirmDialogCollection(
           onClick={(event) => setAnchorEl(event.currentTarget)}
           size="large"
         >
-          <MoreVertIcon />
+          <MoreVert />
         </IconButton>
       </Tooltip>
       <Menu

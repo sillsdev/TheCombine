@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import validator from "validator";
 
-import { User } from "api/models";
+import { Role, User } from "api/models";
 import * as backend from "backend";
 import { getProjectId } from "backend/localStorage";
 import { LoadingDoneButton } from "components/Buttons";
@@ -30,7 +30,12 @@ export default function EmailInvite(props: InviteProps): ReactElement {
       props.addToProject(user);
       toast.error(t("projectSettings.invite.userExists"));
     } else {
-      await backend.emailInviteToProject(getProjectId(), email, message);
+      await backend.emailInviteToProject(
+        getProjectId(),
+        Role.Harvester,
+        email,
+        message
+      );
     }
     setIsDone(true);
     setIsLoading(false);
