@@ -91,11 +91,6 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(IsAuthorizedHttpContext(request));
         }
 
-        public bool HasProjectPermission(HttpContext request, Permission permission, string projectId)
-        {
-            return HasProjectPermission(request, permission).Result;
-        }
-
         /// <summary>
         /// By default this will return true, unless the test passes in an <see cref="UnauthorizedHttpContext"/>.
         ///
@@ -106,9 +101,9 @@ namespace Backend.Tests.Mocks
         /// <param name="role"> Same as the real implementation. </param>
         /// <param name="projectId"> Same as the real implementation. </param>
         /// </summary>
-        public bool ContainsProjectRole(HttpContext? request, Role role, string projectId)
+        public Task<bool> ContainsProjectRole(HttpContext? request, Role role, string projectId)
         {
-            return IsAuthorizedHttpContext(request);
+            return Task.FromResult(IsAuthorizedHttpContext(request));
         }
 
         public Task<bool> IsViolationEdit(HttpContext request, string userEditId, string projectId)

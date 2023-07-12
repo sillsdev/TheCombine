@@ -5,6 +5,7 @@ import { Project } from "api/models";
 import { getAllProjects } from "backend";
 import ExportButton from "components/ProjectExport/ExportButton";
 import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
+import ProjectUsersButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectUsersButtonWithConfirmation";
 import theme from "types/theme";
 
 export default function ProjectManagement() {
@@ -47,10 +48,9 @@ export function ProjectList(
           {project.name}
         </Typography>
         {/* Export Lift file */}
-        <ExportButton
-          projectId={project.id}
-          buttonProps={{ style: { marginRight: theme.spacing(1) } }}
-        />
+        <ExportButton projectId={project.id} />
+        {/* Manage project users. */}
+        <ProjectUsersButtonWithConfirmation projectId={project.id} />
         {/* Archive active project or restore archived project. */}
         <ProjectButtonWithConfirmation
           archive={project.isActive}
