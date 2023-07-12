@@ -20,7 +20,7 @@ import { Permission, Project } from "api/models";
 import { canUploadLift, getCurrentPermissions } from "backend";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
 import {
-  asyncRefreshCurrentProjectUsers,
+  asyncRefreshProjectUsers,
   asyncUpdateCurrentProject,
   setNewCurrentProject,
 } from "components/Project/ProjectActions";
@@ -57,9 +57,9 @@ export default function ProjectSettingsComponent() {
       canUploadLift().then(setImports);
     }
     if (permissions.includes(Permission.DeleteEditSettingsAndUsers)) {
-      dispatch(asyncRefreshCurrentProjectUsers());
+      dispatch(asyncRefreshProjectUsers(project.id));
     }
-  }, [permissions, dispatch]);
+  }, [dispatch, permissions, project.id]);
 
   const archiveUpdate = (): void => {
     toast.success(t("projectSettings.archive.archiveToastSuccess"));
