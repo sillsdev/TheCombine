@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { Role } from "api/models";
 import { addOrUpdateUserRole, removeUserRole } from "backend";
 import { CancelConfirmDialog } from "components/Dialogs";
-import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
+import { asyncRefreshProjectUsers } from "components/Project/ProjectActions";
 import { useAppDispatch } from "types/hooks";
 
 const idAffix = "user-options";
@@ -20,6 +20,7 @@ const idOwner = `${idAffix}-owner`;
 interface CancelConfirmDialogCollectionProps {
   currentUserId: string;
   isProjectOwner: boolean;
+  projectId: string;
   userId: string;
   userRole: Role;
 }
@@ -40,15 +41,19 @@ export default function CancelConfirmDialogCollection(
   const [anchorEl, setAnchorEl] = useState<Element | undefined>(undefined);
   const { t } = useTranslation();
 
+  async function refreshUsers(): Promise<void> {
+    await dispatch(asyncRefreshProjectUsers(props.projectId));
+  }
+
   function removeUser(userId: string): void {
-    removeUserRole(userId)
+    removeUserRole(props.projectId, userId)
       .then(() => {
         setRemoveUser(false);
         setAnchorEl(undefined);
         toast.success(
           t("projectSettings.userManagement.userRemovedToastSuccess")
         );
-        dispatch(asyncRefreshCurrentProjectUsers());
+        refreshUsers();
       })
       .catch((err) => {
         console.error(err);
@@ -63,13 +68,13 @@ export default function CancelConfirmDialogCollection(
       throw new Error("Cannot use this function to change project owner.");
     }
 
-    addOrUpdateUserRole(role, userId)
+    addOrUpdateUserRole(props.projectId, role, userId)
       .then(() => {
         setAnchorEl(undefined);
         toast.success(
           t("projectSettings.userManagement.userRoleUpdateToastSuccess")
         );
-        dispatch(asyncRefreshCurrentProjectUsers());
+        refreshUsers();
       })
       .catch((err) => {
         console.error(err);
@@ -92,9 +97,13 @@ export default function CancelConfirmDialogCollection(
   }
 
   function makeOwner(userId: string): void {
-    addOrUpdateUserRole(Role.Owner, userId)
+    addOrUpdateUserRole(props.projectId, Role.Owner, userId)
       .then(() => {
-        addOrUpdateUserRole(Role.Administrator, props.currentUserId);
+        addOrUpdateUserRole(
+          props.projectId,
+          Role.Administrator,
+          props.currentUserId
+        );
       })
       .then(() => {
         setMakeOwner(false);
@@ -102,7 +111,7 @@ export default function CancelConfirmDialogCollection(
         toast.success(
           t("projectSettings.userManagement.makeOwnerToastSuccess")
         );
-        dispatch(asyncRefreshCurrentProjectUsers());
+        refreshUsers();
       })
       .catch((err) => {
         console.error(err);

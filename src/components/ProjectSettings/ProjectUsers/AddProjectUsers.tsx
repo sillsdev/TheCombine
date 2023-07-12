@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 
 import { Role, User } from "api/models";
 import * as backend from "backend";
-import { asyncRefreshCurrentProjectUsers } from "components/Project/ProjectActions";
+import { asyncRefreshProjectUsers } from "components/Project/ProjectActions";
 import EmailInvite from "components/ProjectSettings/ProjectUsers/EmailInvite";
 import UserList from "components/ProjectSettings/ProjectUsers/UserList";
 import { StoreState } from "types";
@@ -25,6 +25,9 @@ const customStyles = {
 };
 
 export default function AddProjectUsers(): ReactElement {
+  const projectId = useAppSelector(
+    (state: StoreState) => state.currentProjectState.project.id
+  );
   const projectUsers = useAppSelector(
     (state: StoreState) => state.currentProjectState.users
   );
@@ -39,10 +42,10 @@ export default function AddProjectUsers(): ReactElement {
   function addToProject(user: User): void {
     if (!projectUsers.map((u) => u.id).includes(user.id)) {
       backend
-        .addOrUpdateUserRole(Role.Harvester, user.id)
+        .addOrUpdateUserRole(projectId, Role.Harvester, user.id)
         .then(() => {
           toast.success(t("projectSettings.invite.toastSuccess"));
-          dispatch(asyncRefreshCurrentProjectUsers());
+          dispatch(asyncRefreshProjectUsers(projectId));
         })
         .catch((err) => {
           console.error(err);
