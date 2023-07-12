@@ -23,13 +23,13 @@ export interface WritingSystem {
    * @type {string}
    * @memberof WritingSystem
    */
-  name: string;
+  bcp47: string;
   /**
    *
    * @type {string}
    * @memberof WritingSystem
    */
-  bcp47: string;
+  name: string;
   /**
    *
    * @type {string}

@@ -330,8 +330,8 @@ export async function getAllProjects(): Promise<Project[]> {
   return (await projectApi.getAllProjects(defaultOptions())).data;
 }
 
-export async function getAllUsersInCurrentProject(): Promise<User[]> {
-  const params = { projectId: LocalStorage.getProjectId() };
+export async function getAllProjectUsers(projectId?: string): Promise<User[]> {
+  const params = { projectId: projectId ?? LocalStorage.getProjectId() };
   return (await projectApi.getAllProjectUsers(params, defaultOptions())).data;
 }
 
@@ -596,8 +596,8 @@ export async function getAllUserEdits(): Promise<UserEdit[]> {
 
 /* UserRoleController.cs */
 
-export async function getUserRoles(): Promise<UserRole[]> {
-  const params = { projectId: LocalStorage.getProjectId() };
+export async function getUserRoles(projectId?: string): Promise<UserRole[]> {
+  const params = { projectId: projectId ?? LocalStorage.getProjectId() };
   return (await userRoleApi.getProjectUserRoles(params, defaultOptions())).data;
 }
 
@@ -608,17 +608,20 @@ export async function getCurrentPermissions(): Promise<Permission[]> {
 }
 
 export async function addOrUpdateUserRole(
+  projectId: string,
   role: Role,
   userId: string
 ): Promise<string> {
-  const projectId = LocalStorage.getProjectId();
   const projectRole = { projectId, role };
   const params = { projectId, projectRole, userId };
   return (await userRoleApi.updateUserRole(params, defaultOptions())).data;
 }
 
-export async function removeUserRole(userId: string): Promise<void> {
-  const params = { projectId: LocalStorage.getProjectId(), userId };
+export async function removeUserRole(
+  projectId: string,
+  userId: string
+): Promise<void> {
+  const params = { projectId, userId };
   await userRoleApi.deleteUserRole(params, defaultOptions());
 }
 

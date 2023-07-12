@@ -113,12 +113,12 @@ namespace BackendFramework.Services
                 // If there is no project ID, do not allow changes
                 return false;
             }
-
             var projectId = pathString.Substring(projIdIndex, ProjIdLength);
+
             return HasProjectPermission(request, permission, projectId);
         }
 
-        public bool HasProjectPermission(HttpContext request, Permission permission, string projectId)
+        private static bool HasProjectPermission(HttpContext request, Permission permission, string projectId)
         {
             // Retrieve JWT token from HTTP request and convert to object
             var projectPermissionsList = GetProjectPermissions(request);
@@ -139,8 +139,20 @@ namespace BackendFramework.Services
             return false;
         }
 
-        public bool ContainsProjectRole(HttpContext request, Role role, string projectId)
+        public async Task<bool> ContainsProjectRole(HttpContext request, Role role, string projectId)
         {
+            var user = await _userRepo.GetUser(GetUserId(request));
+            if (user is null)
+            {
+                return false;
+            }
+
+            // Database administrators implicitly possess all permissions.
+            if (user.IsAdmin)
+            {
+                return true;
+            }
+
             // Retrieve JWT token from HTTP request and convert to object
             var projectPermissionsList = GetProjectPermissions(request);
 

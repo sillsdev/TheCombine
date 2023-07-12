@@ -101,6 +101,7 @@
     "title": "Select Project"
   },
   "siteSettings": {
+    "projectRoles": "Project roles",
     "archiveProjectText": "This project will not be accessible to any users.",
     "restoreProjectText": "Somebody probably had a good reason to archive this project. Are you sure you want to restore it?",
     "userList": "Users",

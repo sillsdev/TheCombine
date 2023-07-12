@@ -124,7 +124,7 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
-            if (!_permissionService.ContainsProjectRole(HttpContext, userRole.Role, projectId))
+            if (!await _permissionService.ContainsProjectRole(HttpContext, userRole.Role, projectId))
             {
                 return Forbid();
             }
@@ -174,7 +174,7 @@ namespace BackendFramework.Controllers
             }
 
             // Prevent deleting role of another user who has more permissions than the actor.
-            if (!_permissionService.ContainsProjectRole(HttpContext, userRole.Role, projectId))
+            if (!await _permissionService.ContainsProjectRole(HttpContext, userRole.Role, projectId))
             {
                 return Forbid();
             }
@@ -202,7 +202,7 @@ namespace BackendFramework.Controllers
 
             // Prevent upgrading another user to have more permissions than the actor.
             var projectId = projectRole.ProjectId;
-            if (!_permissionService.ContainsProjectRole(HttpContext, projectRole.Role, projectId))
+            if (!await _permissionService.ContainsProjectRole(HttpContext, projectRole.Role, projectId))
             {
                 return Forbid();
             }
@@ -243,7 +243,7 @@ namespace BackendFramework.Controllers
             }
 
             // Prevent downgrading another user who has more permissions than the actor.
-            if (!_permissionService.ContainsProjectRole(HttpContext, userRole.Role, projectId))
+            if (!await _permissionService.ContainsProjectRole(HttpContext, userRole.Role, projectId))
             {
                 return Forbid();
             }

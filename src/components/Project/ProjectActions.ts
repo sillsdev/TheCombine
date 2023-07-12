@@ -1,5 +1,5 @@
 import { Project, User } from "api/models";
-import { getAllUsersInCurrentProject, updateProject } from "backend";
+import { getAllProjectUsers, updateProject } from "backend";
 import { setProjectId } from "backend/localStorage";
 import {
   ProjectAction,
@@ -14,7 +14,7 @@ export function setCurrentProject(payload?: Project): ProjectAction {
   };
 }
 
-function setCurrentProjectUsers(payload?: User[]): ProjectAction {
+export function setCurrentProjectUsers(payload?: User[]): ProjectAction {
   return {
     type: ProjectActionType.SET_CURRENT_PROJECT_USERS,
     payload,
@@ -36,9 +36,9 @@ export function asyncUpdateCurrentProject(project: Project) {
   };
 }
 
-export function asyncRefreshCurrentProjectUsers() {
+export function asyncRefreshProjectUsers(projectId: string) {
   return async (dispatch: StoreStateDispatch) => {
-    dispatch(setCurrentProjectUsers(await getAllUsersInCurrentProject()));
+    dispatch(setCurrentProjectUsers(await getAllProjectUsers(projectId)));
   };
 }
 
