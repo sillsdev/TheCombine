@@ -27,16 +27,6 @@ export default async function (bcp47: Bcp47Code) {
         aff: (await import("resources/dictionaries/hi.aff")).default,
         dic: (await import("resources/dictionaries/hi.dic")).default,
       };
-    case Bcp47Code.Pt:
-      return {
-        aff: (await import("resources/dictionaries/pt.aff")).default,
-        dic: (await import("resources/dictionaries/pt.dic")).default,
-      };
-    case Bcp47Code.Ru:
-      return {
-        aff: (await import("resources/dictionaries/ru.aff")).default,
-        dic: (await import("resources/dictionaries/ru.dic")).default,
-      };
     case Bcp47Code.Sw:
       return {
         aff: (await import("resources/dictionaries/sw.aff")).default,
