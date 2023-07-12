@@ -10,7 +10,9 @@ import DataEntryTable, {
   WordAccess,
   addSemanticDomainToSense,
   exitButtonId,
+  getSuggestions,
   makeSemDomCurrent,
+  maxSuggestions,
   updateEntryGloss,
 } from "components/DataEntry/DataEntryTable";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
@@ -20,7 +22,7 @@ import {
   newSemanticDomainTreeNode,
   semDomFromTreeNode,
 } from "types/semanticDomain";
-import { multiSenseWord, newSense, simpleWord } from "types/word";
+import { multiSenseWord, newSense, newWord, simpleWord } from "types/word";
 import { Bcp47Code } from "types/writingSystem";
 import { firstGlossText } from "utilities/wordUtilities";
 
@@ -31,12 +33,13 @@ jest.mock("notistack", () => ({
 }));
 
 jest.mock("backend", () => ({
-  createWord: (word: Word) => mockCreateWord(word),
-  getDuplicateId: jest.fn(),
-  getFrontierWords: () => mockGetFrontierWords(),
-  getProject: (id: string) => mockGetProject(id),
-  getWord: (id: string) => mockGetWord(id),
-  updateWord: (word: Word) => mockUpdateWord(word),
+  createWord: (...args: any[]) => mockCreateWord(...args),
+  getDuplicateId: (...args: any[]) => mockGetDuplicateId(...args),
+  getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
+  getProject: (...args: any[]) => mockGetProject(...args),
+  getWord: (...args: any[]) => mockGetWord(...args),
+  updateDuplicate: (...args: any[]) => mockUpdateDuplicate(...args),
+  updateWord: (...args: any[]) => mockUpdateWord(...args),
 }));
 jest.mock("backend/localStorage", () => ({
   getUserId: () => mockUserId,
@@ -60,11 +63,13 @@ const mockUserId = "mockUserId";
 const mockStore = configureMockStore()(defaultState);
 
 const mockCreateWord = jest.fn();
+const mockGetDuplicateId = jest.fn();
 const mockGetFrontierWords = jest.fn();
 const mockGetProject = jest.fn();
 const mockGetWord = jest.fn();
 const mockHideQuestions = jest.fn();
 const mockOpenTree = jest.fn();
+const mockUpdateDuplicate = jest.fn();
 const mockUpdateWord = jest.fn();
 
 function setMocks(): void {
@@ -72,6 +77,7 @@ function setMocks(): void {
   mockGetFrontierWords.mockResolvedValue([mockMultiWord]);
   mockGetProject.mockResolvedValue(newProject());
   mockGetWord.mockResolvedValue(mockMultiWord);
+  mockUpdateDuplicate.mockResolvedValue(mockWord());
   mockUpdateWord.mockResolvedValue(mockWord());
 }
 
@@ -162,6 +168,34 @@ describe("DataEntryTable", () => {
     });
   });
 
+  describe("getSuggestions", () => {
+    it("deals with an empty string", () => {
+      expect(getSuggestions("", ["a"], jest.fn())).toHaveLength(0);
+    });
+
+    it("deals with an empty array", () => {
+      expect(getSuggestions("a", [], jest.fn())).toHaveLength(0);
+    });
+
+    it("gives suggestions that begin with the string, shortest first", () => {
+      const all = ["abcd", "abc", "abcde", "ab"];
+      const expected = ["ab", "abc", "abcd", "abcde"];
+      expect(getSuggestions("a", all, jest.fn())).toEqual(expected);
+    });
+
+    it("returns at most maxSuggestions suggestions", () => {
+      const all = ["aa", "ab", "ac", "ad", "ae", "af", "ag", "ah"];
+      expect(all.length).toBeGreaterThan(maxSuggestions);
+      expect(getSuggestions("a", all, jest.fn())).toHaveLength(maxSuggestions);
+    });
+
+    it("fills up suggestions with other that don't start with the string", () => {
+      const noA = ["b", "c", "d", "e", "f", "g", "h"];
+      expect(noA.length).toBeGreaterThanOrEqual(maxSuggestions);
+      expect(getSuggestions("a", noA, () => 0)).toHaveLength(maxSuggestions);
+    });
+  });
+
   describe("makeSemDomCurrent", () => {
     it("adds timestamp and the current user", () => {
       expect(mockSemDom.created).toBeUndefined;
@@ -174,6 +208,11 @@ describe("DataEntryTable", () => {
   });
 
   describe("updateEntryGloss", () => {
+    it("throws error when entry doesn't have sense with specified guid", () => {
+      const entry: WordAccess = { word: newWord(), senseGuid: "gibberish" };
+      expect(() => updateEntryGloss(entry, "def", "semDomId")).toThrowError();
+    });
+
     it("directly updates a sense with no other semantic domains", () => {
       const senseIndex = 1;
       const sense = mockMultiWord.senses[senseIndex];
@@ -256,6 +295,48 @@ describe("DataEntryTable", () => {
         await testHandle.props.updateWordWithNewGloss(mockMultiWord.id);
       });
       expect(mockUpdateWord).toBeCalledTimes(1);
+    });
+  });
+
+  describe("addNewWord", () => {
+    const vern = "vern";
+    const glossDef = "gloss";
+    const noteText = "note";
+    const setNewState = (): void => {
+      renderer.act(() => {
+        testHandle.props.setNewVern(vern);
+        testHandle.props.setNewGloss(glossDef);
+        testHandle.props.setNewNote(noteText);
+      });
+    };
+
+    it("checks for duplicate and, if so, updates it", async () => {
+      await renderTable();
+      testHandle = testRenderer.root.findByType(NewEntry);
+      mockGetDuplicateId.mockResolvedValueOnce(true);
+      await renderer.act(async () => {
+        await testHandle.props.addNewEntry();
+      });
+      expect(mockUpdateDuplicate).toBeCalledTimes(1);
+      expect(mockCreateWord).not.toBeCalled();
+    });
+
+    it("adds with state's vern, gloss, and note", async () => {
+      await renderTable();
+      testHandle = testRenderer.root.findByType(NewEntry);
+      setNewState();
+      await renderer.act(async () => {
+        try {
+          await testHandle.props.addNewEntry();
+        } catch {
+          // Allow for errors after createWord() is called.
+        }
+      });
+      expect(mockCreateWord).toBeCalledTimes(1);
+      const wordAdded: Word = mockCreateWord.mock.calls[0][0];
+      expect(wordAdded.vernacular).toEqual(vern);
+      expect(wordAdded.senses[0].glosses[0].def).toEqual(glossDef);
+      expect(wordAdded.note.text).toEqual(noteText);
     });
   });
 });

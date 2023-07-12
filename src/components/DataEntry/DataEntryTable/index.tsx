@@ -40,6 +40,7 @@ import { LevenshteinDistance } from "utilities/utilities";
 import { firstGlossText } from "utilities/wordUtilities";
 
 export const exitButtonId = "exit-to-domain-tree";
+export const maxSuggestions = 5;
 
 interface DataEntryTableProps {
   semanticDomain: SemanticDomainTreeNode;
@@ -90,15 +91,14 @@ export function focusInput(ref: RefObject<HTMLDivElement>): void {
 }
 
 /*** Find suggestions for given text from a list of strings. */
-const getSuggestions = (
+export function getSuggestions(
   text: string,
   all: string[],
   dist: (a: string, b: string) => number
-): string[] => {
+): string[] {
   if (!text || !all.length) {
     return [];
   }
-  const maxSuggestions = 5;
   const maxDistance = 3;
 
   const some = all
@@ -118,7 +118,7 @@ const getSuggestions = (
     }
   }
   return some;
-};
+}
 
 /*** Return a copy of the semantic domain with current UserId and timestamp. */
 export function makeSemDomCurrent(semDom: SemanticDomain): SemanticDomain {
