@@ -71,11 +71,17 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Returns <see cref="UserRole"/> with specified id </summary>
-        [HttpGet("{userRoleId}", Name = "GetUserRole")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserRole))]
-        public async Task<IActionResult> GetUserRole(string projectId, string userRoleId)
+        [HttpGet("current", Name = "GetCurrentPermissions")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Permission>))]
+        public async Task<IActionResult> GetCurrentPermissions(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            {
+                return Forbid();
+            }
+
+            var userId = _permissionService.GetUserId(HttpContext);
+            if (string.IsNullOrWhiteSpace(userId))
             {
                 return Forbid();
             }
@@ -84,16 +90,27 @@ namespace BackendFramework.Controllers
             var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
-                return NotFound(projectId);
+                return NotFound($"project: {projectId}");
             }
 
-            var userRole = await _userRoleRepo.GetUserRole(projectId, userRoleId);
+            // Ensure user exists
+            var user = await _userRepo.GetUser(userId);
+            if (user is null)
+            {
+                return NotFound($"user: {userId}");
+            }
+
+            if (!user.ProjectRoles.ContainsKey(projectId))
+            {
+                return Ok(new List<Permission>());
+            }
+            var userRole = await _userRoleRepo.GetUserRole(projectId, user.ProjectRoles[projectId]);
             if (userRole is null)
             {
-                return NotFound(userRoleId);
+                return Ok(new List<Permission>());
             }
 
-            return Ok(userRole);
+            return Ok(ProjectRole.RolePermissions(userRole.Role));
         }
 
         /// <summary> Creates a <see cref="UserRole"/> </summary>
@@ -103,6 +120,11 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> CreateUserRole(string projectId, [FromBody, BindRequired] UserRole userRole)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
+            {
+                return Forbid();
+            }
+
+            if (!await _permissionService.ContainsProjectRole(HttpContext, userRole.Role, projectId))
             {
                 return Forbid();
             }
@@ -143,7 +165,20 @@ namespace BackendFramework.Controllers
             {
                 return NotFound(userId);
             }
+
             var userRoleId = changeUser.ProjectRoles[projectId];
+            var userRole = await _userRoleRepo.GetUserRole(projectId, userRoleId);
+            if (userRole is null)
+            {
+                return NotFound(userRoleId);
+            }
+
+            // Prevent deleting role of another user who has more permissions than the actor.
+            if (!await _permissionService.ContainsProjectRole(HttpContext, userRole.Role, projectId))
+            {
+                return Forbid();
+            }
+
             changeUser.ProjectRoles.Remove(projectId);
             await _userRepo.Update(changeUser.Id, changeUser);
             var userRoleRepoResult = await _userRoleRepo.Delete(projectId, userRoleId);
@@ -155,12 +190,19 @@ namespace BackendFramework.Controllers
         /// and <see cref="User"/> with specified userId.
         /// </summary>
         /// <returns> Id of updated UserRole </returns>
-        [HttpPut("{userId}", Name = "UpdateUserRolePermissions")]
+        [HttpPut("{userId}", Name = "UpdateUserRole")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        public async Task<IActionResult> UpdateUserRolePermissions(
-            string projectId, string userId, [FromBody, BindRequired] Permission[] permissions)
+        public async Task<IActionResult> UpdateUserRole(
+            string userId, [FromBody, BindRequired] ProjectRole projectRole)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
+            {
+                return Forbid();
+            }
+
+            // Prevent upgrading another user to have more permissions than the actor.
+            var projectId = projectRole.ProjectId;
+            if (!await _permissionService.ContainsProjectRole(HttpContext, projectRole.Role, projectId))
             {
                 return Forbid();
             }
@@ -200,7 +242,13 @@ namespace BackendFramework.Controllers
                 return NotFound(userRoleId);
             }
 
-            userRole.Permissions = new List<Permission>(permissions);
+            // Prevent downgrading another user who has more permissions than the actor.
+            if (!await _permissionService.ContainsProjectRole(HttpContext, userRole.Role, projectId))
+            {
+                return Forbid();
+            }
+
+            userRole.Role = projectRole.Role;
             var result = await _userRoleRepo.Update(userRoleId, userRole);
             return result switch
             {

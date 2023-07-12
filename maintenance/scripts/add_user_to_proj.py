@@ -5,24 +5,20 @@ Add user to a project.
 This script will add a user to a Combine project in the database
 
 To add the user to the project, we need to:
- 1. If the --admin argument is used, set the requested permissions to
-        [DeleteEditSettingsAndUsers, ImportExport, MergeAndReviewEntries, WordEntry]
-    otherwise
-        [MergeAndReviewEntries, WordEntry]
- 2. Look up the user id - check the "user" info against the username and
-    email fields in the UsersCollection.
- 3. Check to see if the user is already in the project.  If he/she is
-    already a member merge the requested permissions with the current permissions.
+ 1. Look up the user id from the provided username/email.
+ 2. Look up the project id from the provided project name.
+ 3. Check to see if the user is already in the project.
+    If so (and if they're not the project owner), update their role.
  4. If the user is not in the project:
      a. create a document in the UserRolesCollection,
-     b. set the permissions field in the user role to the requested permissions.
+     b. set the role field in the user role to the requested role.
      c. add the new role to the user's document in the UsersCollection
 """
 
 import argparse
 import sys
 
-from combine_app import CombineApp, Permission
+from combine_app import CombineApp, Role
 
 
 def parse_args() -> argparse.Namespace:
@@ -33,13 +29,16 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
-        "--project", required=True, help="Project(s) to be removed from TheCombine."
+        "--project", required=True, help="Name of the project to which the user is being added"
     )
     parser.add_argument(
         "--user", required=True, help="Username or e-mail of the user to be added to the project"
     )
     parser.add_argument(
-        "--admin", action="store_true", help="Add the user as an admin for the project"
+        "--role",
+        choices=[role.value for role in Role if role != Role.Owner],
+        default=Role.Harvester.value,
+        help="Project role of the user to be added",
     )
     parser.add_argument(
         "--verbose", action="store_true", help="Print intermediate values to aid in debugging"
@@ -52,21 +51,7 @@ def main() -> None:
     args = parse_args()
     combine = CombineApp()
 
-    # 1. Define user permission sets
-    if args.admin:
-        req_permissions = [
-            Permission.DeleteEditSettingsAndUsers.value,
-            Permission.ImportExport.value,
-            Permission.MergeAndReviewEntries.value,
-            Permission.WordEntry.value,
-        ]
-    else:
-        req_permissions = [
-            Permission.MergeAndReviewEntries.value,
-            Permission.WordEntry.value,
-        ]
-
-    # 2. Lookup the user id
+    # 1. Look up the user id.
     user_id = combine.get_user_id(args.user)
     if user_id is None:
         print(f"Cannot find user {args.user}")
@@ -74,7 +59,7 @@ def main() -> None:
     if args.verbose:
         print(f"User Id: {user_id}")
 
-    # Look up the project id
+    # 2. Look up the project id.
     proj_id = combine.get_project_id(args.project)
     if proj_id is None:
         print(f"Cannot find project {args.project}")
@@ -92,28 +77,26 @@ def main() -> None:
         # The user is in the project
         user_role_id = result[0]["projectRoles"][proj_id]
         select_role = f'{{ _id: ObjectId("{user_role_id}")}}'
-        # Look up the current permissions
-        user_role = combine.db_query("UserRolesCollection", select_role)
-        # Merge current permissions with the requested permissions
-        curr_permissions = user_role[0]["permissions"]
-        if not (set(req_permissions)).issubset(set(curr_permissions)):
-            new_permissions = list(set(curr_permissions + req_permissions))
-            update_role = f'{{ $set: {{"permissions" : {new_permissions}}} }}'
-            upd_result = combine.db_cmd(
-                f"db.UserRolesCollection.findOneAndUpdate({select_role}, {update_role})"
-            )
-            if upd_result is None:
-                print(f"Could not update role for {args.user}.", file=sys.stderr)
-                sys.exit(1)
-            if args.verbose:
-                print(f"Updated Role {user_role_id} with permissions {req_permissions}")
-        elif args.verbose:
-            print(f"No update required.  Current permissions are {curr_permissions}")
+        # Don't update if they're the project owner
+        user_role = combine.db_query("UserRolesCollection", select_role)[0]["role"]
+        if user_role == Role.Owner.value:
+            print(f"Could not update role for {args.user}, the project owner", file=sys.stderr)
+            sys.exit(1)
+        # Update the role
+        update_role = f'{{ $set: {{"role" : {args.role}}} }}'
+        upd_result = combine.db_cmd(
+            f"db.UserRolesCollection.findOneAndUpdate({select_role}, {update_role})"
+        )
+        if upd_result is None:
+            print(f"Could not update role for {args.user}.", file=sys.stderr)
+            sys.exit(1)
+        if args.verbose:
+            print(f"Updated Role {user_role_id} with role {args.role}.")
     elif len(result) == 0:
         #  4. The user is not in the project
         #    a. create a document in the UserRolesCollection,
-        #    b. set the permissions field in the user role to the requested permissions.
-        insert_doc = f'{{ "permissions" : {req_permissions}, "projectId" : "{proj_id}" }}'
+        #    b. set the role field in the user role to the requested role.
+        insert_doc = f'{{ "role" : {args.role}, "projectId" : "{proj_id}" }}'
         insert_result = combine.db_cmd(f"db.UserRolesCollection.insertOne({insert_doc})")
         if insert_result is not None:
             # c. add the new role to the user's document in the UsersCollection
@@ -127,7 +110,7 @@ def main() -> None:
                 print(f"Could not add new role to {args.user}.", file=sys.stderr)
                 sys.exit(1)
             if args.verbose:
-                print(f"{args.user} added to {args.project} with permissions {req_permissions}")
+                print(f"{args.user} added to {args.project} with role {args.role}.")
         else:
             print(f"Could not create role for {args.user} in {args.project}.", file=sys.stderr)
             sys.exit(1)

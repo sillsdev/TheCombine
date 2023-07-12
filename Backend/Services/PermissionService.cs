@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Claims;
 using System.Text;
@@ -91,8 +92,7 @@ namespace BackendFramework.Services
         /// </remarks>
         public async Task<bool> HasProjectPermission(HttpContext request, Permission permission)
         {
-            var userId = GetUserId(request);
-            var user = await _userRepo.GetUser(userId);
+            var user = await _userRepo.GetUser(GetUserId(request));
             if (user is null)
             {
                 return false;
@@ -113,12 +113,12 @@ namespace BackendFramework.Services
                 // If there is no project ID, do not allow changes
                 return false;
             }
-
             var projectId = pathString.Substring(projIdIndex, ProjIdLength);
+
             return HasProjectPermission(request, permission, projectId);
         }
 
-        public bool HasProjectPermission(HttpContext request, Permission permission, string projectId)
+        private static bool HasProjectPermission(HttpContext request, Permission permission, string projectId)
         {
             // Retrieve JWT token from HTTP request and convert to object
             var projectPermissionsList = GetProjectPermissions(request);
@@ -135,6 +135,35 @@ namespace BackendFramework.Services
                 {
                     return true;
                 }
+            }
+            return false;
+        }
+
+        public async Task<bool> ContainsProjectRole(HttpContext request, Role role, string projectId)
+        {
+            var user = await _userRepo.GetUser(GetUserId(request));
+            if (user is null)
+            {
+                return false;
+            }
+
+            // Database administrators implicitly possess all permissions.
+            if (user.IsAdmin)
+            {
+                return true;
+            }
+
+            // Retrieve JWT token from HTTP request and convert to object
+            var projectPermissionsList = GetProjectPermissions(request);
+
+            // Assert that the user has all permissions in the specified role
+            foreach (var projPermissions in projectPermissionsList)
+            {
+                if (projPermissions.ProjectId != projectId)
+                {
+                    continue;
+                }
+                return ProjectRole.RolePermissions(role).All(p => projPermissions.Permissions.Contains(p));
             }
             return false;
         }
@@ -204,7 +233,8 @@ namespace BackendFramework.Services
                     return null;
                 }
 
-                var validEntry = new ProjectPermissions(projectRoleKey, userRole.Permissions);
+                var permissions = ProjectRole.RolePermissions(userRole.Role);
+                var validEntry = new ProjectPermissions(projectRoleKey, permissions);
                 projectPermissionMap.Add(validEntry);
             }
 

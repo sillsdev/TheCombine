@@ -12,28 +12,24 @@
  * Do not edit the class manually.
  */
 
+import { Role } from "./role";
+
 /**
  *
  * @export
- * @interface WritingSystem
+ * @interface ProjectRole
  */
-export interface WritingSystem {
+export interface ProjectRole {
   /**
    *
    * @type {string}
-   * @memberof WritingSystem
+   * @memberof ProjectRole
    */
-  bcp47: string;
+  projectId: string;
   /**
    *
-   * @type {string}
-   * @memberof WritingSystem
+   * @type {Role}
+   * @memberof ProjectRole
    */
-  name: string;
-  /**
-   *
-   * @type {string}
-   * @memberof WritingSystem
-   */
-  font: string;
+  role: Role;
 }

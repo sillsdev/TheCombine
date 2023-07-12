@@ -6,8 +6,8 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { Permission } from "api/models";
-import { getUserRole } from "backend";
-import { getCurrentUser, getProjectId } from "backend/localStorage";
+import { getCurrentPermissions } from "backend";
+import { getCurrentUser } from "backend/localStorage";
 import {
   TabProps,
   buttonMinHeight,
@@ -27,20 +27,11 @@ const enum projNameLength {
   xl = 75,
 }
 
-export async function getIsAdminOrOwner(): Promise<boolean> {
-  const user = getCurrentUser();
-  if (!user) {
-    return false;
-  }
-  if (user.isAdmin) {
+export async function getHasStatsPermission(): Promise<boolean> {
+  if (getCurrentUser()?.isAdmin) {
     return true;
   }
-  const userRoleID = user.projectRoles[getProjectId()];
-  if (userRoleID) {
-    const role = await getUserRole(userRoleID);
-    return role.permissions.includes(Permission.Owner);
-  }
-  return false;
+  return (await getCurrentPermissions()).includes(Permission.Statistics);
 }
 
 /** A button that redirects to the project settings */
@@ -48,17 +39,17 @@ export default function ProjectButtons(props: TabProps): ReactElement {
   const projectName = useSelector(
     (state: StoreState) => state.currentProjectState.project.name
   );
-  const [isAdminOrOwner, setIsAdminOrOwner] = useState<boolean>(false);
+  const [hasStatsPermission, setHasStatsPermission] = useState<boolean>(false);
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    getIsAdminOrOwner().then(setIsAdminOrOwner);
-  }, [setIsAdminOrOwner]);
+    getHasStatsPermission().then(setHasStatsPermission);
+  }, []);
 
   return (
     <>
-      {isAdminOrOwner && (
+      {hasStatsPermission && (
         <Tooltip title={t("appBar.statistics")}>
           <Button
             id={statButtonId}

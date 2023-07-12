@@ -15,25 +15,12 @@
 /**
  *
  * @export
- * @interface WritingSystem
+ * @enum {string}
  */
-export interface WritingSystem {
-  /**
-   *
-   * @type {string}
-   * @memberof WritingSystem
-   */
-  bcp47: string;
-  /**
-   *
-   * @type {string}
-   * @memberof WritingSystem
-   */
-  name: string;
-  /**
-   *
-   * @type {string}
-   * @memberof WritingSystem
-   */
-  font: string;
+export enum Role {
+  Owner = "Owner",
+  Administrator = "Administrator",
+  Editor = "Editor",
+  Harvester = "Harvester",
+  None = "None",
 }
