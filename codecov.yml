@@ -1,5 +1,6 @@
 ignore:
   - "src/api"
+  - "src/backend/index.ts"
   - "src/resources"
   - "src/types"
   - "**/*Mock.ts"
