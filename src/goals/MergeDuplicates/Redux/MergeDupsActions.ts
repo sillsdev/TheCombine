@@ -41,7 +41,6 @@ import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { GoalType } from "types/goals";
 import { Hash } from "types/hash";
-import { maxNumSteps } from "utilities/goalUtilities";
 import { compareFlags } from "utilities/wordUtilities";
 
 // Action Creators
@@ -295,10 +294,6 @@ export function dispatchMergeStepData(goal: MergeDups) {
       dispatch(setWordData(stepWords));
     }
   };
-}
-
-export async function fetchMergeDupsData(goal: MergeDups): Promise<Word[][]> {
-  return await backend.getDuplicates(5, maxNumSteps(goal.goalType));
 }
 
 /** Modifies the mutable input sense list. */

@@ -6,16 +6,13 @@ import { getCurrentUser, getProjectId } from "backend/localStorage";
 import router from "browserRouter";
 import { defaultState } from "components/GoalTimeline/DefaultState";
 import { MergeDupsData } from "goals/MergeDuplicates/MergeDupsTypes";
-import {
-  dispatchMergeStepData,
-  fetchMergeDupsData,
-} from "goals/MergeDuplicates/Redux/MergeDupsActions";
+import { dispatchMergeStepData } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { StoreActionTypes } from "rootActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 import { Path } from "types/path";
-import { convertEditToGoal } from "utilities/goalUtilities";
+import { convertEditToGoal, maxNumSteps } from "utilities/goalUtilities";
 
 export const goalSlice = createSlice({
   name: "goalsState",
@@ -155,13 +152,12 @@ export function asyncLoadNewGoal(goal: Goal, userEditId: string) {
     dispatch(setCurrentGoal(goal));
     // Load data.
     if (goal.goalType === GoalType.MergeDups) {
-      const mergeDupsData = await fetchMergeDupsData(goal);
-      dispatch(loadGoalData(mergeDupsData));
+      const data = await Backend.getDuplicates(5, maxNumSteps(goal.goalType));
+      dispatch(loadGoalData(data));
       dispatch(dispatchStepData(goal));
       await Backend.addGoalToUserEdit(userEditId, goal);
       await saveCurrentStep(goal);
     }
-
     dispatch(setCurrentGoalStatus(GoalStatus.InProgress));
   };
 }

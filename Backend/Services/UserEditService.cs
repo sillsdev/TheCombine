@@ -21,7 +21,7 @@ namespace BackendFramework.Services
         /// </summary>
         /// <returns>
         /// Tuple of
-        ///     bool: success of operation
+        ///     bool: true if edit replaced, false if nothing modified
         ///     int: index at which the edit was placed or -1 on failure
         /// </returns>
         public async Task<Tuple<bool, int>> AddGoalToUserEdit(string projectId, string userEditId, Edit edit)
@@ -50,13 +50,9 @@ namespace BackendFramework.Services
             }
 
             // Replace the old UserEdit object with the new one that contains the new/updated edit
-            var replaceSucceeded = await _userEditRepo.Replace(projectId, userEditId, newUserEdit);
-            if (!replaceSucceeded)
-            {
-                indexOfNewestEdit = invalidEditIndex;
-            }
+            var editReplaced = await _userEditRepo.Replace(projectId, userEditId, newUserEdit);
 
-            return new Tuple<bool, int>(replaceSucceeded, indexOfNewestEdit);
+            return new Tuple<bool, int>(editReplaced, indexOfNewestEdit);
         }
 
         /// <summary> Adds a string representation of a step to a specified <see cref="Edit"/> </summary>
