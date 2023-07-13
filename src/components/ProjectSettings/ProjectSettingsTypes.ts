@@ -7,5 +7,6 @@ export interface ProjectSettingPropsWithSet {
 
 export interface ProjectSettingPropsWithUpdate {
   project: Project;
+  readOnly?: boolean;
   updateProject: (project: Project) => Promise<void>;
 }

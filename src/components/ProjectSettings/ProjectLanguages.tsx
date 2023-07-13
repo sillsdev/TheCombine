@@ -27,6 +27,12 @@ import theme from "types/theme";
 import { newWritingSystem, semDomWritingSystems } from "types/writingSystem";
 import { getAnalysisLangsFromWords } from "utilities/wordUtilities";
 
+const addAnalysisLangButtonId = "analysis-language-new";
+const addAnalysisLangCleanButtonId = "analysis-language-new-clear";
+const addAnalysisLangConfirmButtonId = "analysis-language-new-confirm";
+const getProjAnalysisLangsButtonId = "analysis-language-get";
+const semDomLangSelectId = "semantic-domains-language";
+
 export default function ProjectLanguages(
   props: ProjectSettingPropsWithUpdate
 ): ReactElement {
@@ -89,7 +95,7 @@ export default function ProjectLanguages(
   };
 
   const writingSystemButtons = (index: number): ReactElement => {
-    return index === 0 ? (
+    return index === 0 || props.readOnly ? (
       // The top writing system is default and needs no buttons.
       <Fragment />
     ) : (
@@ -139,16 +145,104 @@ export default function ProjectLanguages(
     setNewLang(newWritingSystem());
   };
 
+  const addAnalysisLangButtons = (): ReactElement => (
+    <>
+      <IconButtonWithTooltip
+        icon={<Add />}
+        textId="projectSettings.language.addAnalysisLanguage"
+        onClick={() => setAdd(true)}
+        buttonId={addAnalysisLangButtonId}
+      />
+      <IconButtonWithTooltip
+        icon={<Search />}
+        textId="projectSettings.language.getGlossLanguages"
+        onClick={() => getActiveAnalysisLangs()}
+        buttonId={getProjAnalysisLangsButtonId}
+      />
+      {langsInProj}
+    </>
+  );
+
+  const addAnalysisLangPicker = (): ReactElement => (
+    <Grid container spacing={1} alignItems="center">
+      <Grid item>
+        <LanguagePicker
+          value={newLang.name}
+          setCode={(bcp47: string) =>
+            setNewLang((prev: WritingSystem) => ({ ...prev, bcp47 }))
+          }
+          name={newLang.bcp47}
+          setName={(name: string) =>
+            setNewLang((prev: WritingSystem) => ({ ...prev, name }))
+          }
+          font={newLang.font}
+          setFont={(font: string) =>
+            setNewLang((prev: WritingSystem) => ({ ...prev, font }))
+          }
+          t={languagePickerStrings_en}
+        />
+      </Grid>{" "}
+      <Grid item>
+        <IconButton
+          disabled={!isNewLang}
+          onClick={() => addAnalysisWritingSystem()}
+          id={addAnalysisLangConfirmButtonId}
+          size="large"
+        >
+          <Done />
+        </IconButton>
+      </Grid>{" "}
+      <Grid item>
+        <IconButton
+          onClick={() => resetState()}
+          id={addAnalysisLangCleanButtonId}
+          size="large"
+        >
+          <Clear />
+        </IconButton>
+      </Grid>
+    </Grid>
+  );
+
+  const semDomLangSelect = (): ReactElement => (
+    <Select
+      variant="standard"
+      id={semDomLangSelectId}
+      value={props.project.semDomWritingSystem.bcp47}
+      onChange={(event: SelectChangeEvent<string>) =>
+        setSemDomWritingSystem(event.target.value as string)
+      }
+      /* Use `displayEmpty` and a conditional `renderValue` function to force
+       * something to appear when the menu is closed and its value is "" */
+      displayEmpty
+      renderValue={
+        props.project.semDomWritingSystem.bcp47
+          ? undefined
+          : () => t("projectSettings.language.semanticDomainsDefault")
+      }
+    >
+      <MenuItem value={""}>
+        {t("projectSettings.language.semanticDomainsDefault")}
+      </MenuItem>
+      {semDomWritingSystems.map((ws) => (
+        <MenuItem key={ws.bcp47} value={ws.bcp47}>
+          {`${ws.bcp47} (${ws.name})`}
+        </MenuItem>
+      ))}
+    </Select>
+  );
+
   return (
     <>
-      <Typography>
+      {/* Vernacular language */}
+      <Typography variant="h6">
         {t("projectSettings.language.vernacular")}
-        {": "}
       </Typography>
       <ImmutableWritingSystem ws={props.project.vernacularWritingSystem} />
-      <Typography style={{ marginTop: theme.spacing(1) }}>
+
+      {/* Analysis languages */}
+      <Typography style={{ marginTop: theme.spacing(1) }} variant="h6">
         {t("projectSettings.language.analysis")}
-        {": "}
       </Typography>
       {props.project.analysisWritingSystems.map((writingSystem, index) => (
         <ImmutableWritingSystem
@@ -158,91 +252,18 @@ export default function ProjectLanguages(
           buttons={writingSystemButtons(index)}
         />
       ))}
-      {add ? (
-        <Grid container spacing={1} alignItems="center">
-          <Grid item>
-            <LanguagePicker
-              value={newLang.name}
-              setCode={(bcp47: string) =>
-                setNewLang((prev: WritingSystem) => ({ ...prev, bcp47 }))
-              }
-              name={newLang.bcp47}
-              setName={(name: string) =>
-                setNewLang((prev: WritingSystem) => ({ ...prev, name }))
-              }
-              font={newLang.font}
-              setFont={(font: string) =>
-                setNewLang((prev: WritingSystem) => ({ ...prev, font }))
-              }
-              t={languagePickerStrings_en}
-            />
-          </Grid>{" "}
-          <Grid item>
-            <IconButton
-              disabled={!isNewLang}
-              onClick={() => addAnalysisWritingSystem()}
-              id="analysis-language-new-confirm"
-              size="large"
-            >
-              <Done />
-            </IconButton>
-          </Grid>{" "}
-          <Grid item>
-            <IconButton
-              onClick={() => resetState()}
-              id="analysis-language-new-clear"
-              size="large"
-            >
-              <Clear />
-            </IconButton>
-          </Grid>
-        </Grid>
-      ) : (
+      {!props.readOnly &&
+        (add ? addAnalysisLangPicker() : addAnalysisLangButtons())}
+
+      {/* Semantic domains language */}
+      {!props.readOnly && (
         <>
-          <IconButtonWithTooltip
-            icon={<Add />}
-            textId="projectSettings.language.addAnalysisLanguage"
-            onClick={() => setAdd(true)}
-            buttonId={"analysis-language-new"}
-          />
-          <IconButtonWithTooltip
-            icon={<Search />}
-            textId="projectSettings.language.getGlossLanguages"
-            onClick={() => getActiveAnalysisLangs()}
-            buttonId={"analysis-language-get"}
-          />
-          {langsInProj}
+          <Typography variant="h6">
+            {t("projectSettings.language.semanticDomains")}
+          </Typography>
+          {semDomLangSelect()}
         </>
       )}
-      <Typography>
-        {t("projectSettings.language.semanticDomains")}
-        {": "}
-      </Typography>
-      <Select
-        variant="standard"
-        id="semantic-domains-language"
-        value={props.project.semDomWritingSystem.bcp47}
-        onChange={(event: SelectChangeEvent<string>) =>
-          setSemDomWritingSystem(event.target.value as string)
-        }
-        /* Use `displayEmpty` and a conditional `renderValue` function to force
-         * something to appear when the menu is closed and its value is "" */
-        displayEmpty
-        renderValue={
-          props.project.semDomWritingSystem.bcp47
-            ? undefined
-            : () => t("projectSettings.language.semanticDomainsDefault")
-        }
-      >
-        <MenuItem value={""}>
-          {t("projectSettings.language.semanticDomainsDefault")}
-        </MenuItem>
-        {semDomWritingSystems.map((ws) => (
-          <MenuItem key={ws.bcp47} value={ws.bcp47}>
-            {`${ws.bcp47} (${ws.name})`}
-          </MenuItem>
-        ))}
-      </Select>
     </>
   );
 }
