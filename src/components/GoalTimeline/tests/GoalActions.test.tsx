@@ -21,7 +21,7 @@ import { maxNumSteps } from "utilities/goalUtilities";
 jest.mock("goals/MergeDuplicates/Redux/MergeDupsActions", () => ({
   ...jest.requireActual("goals/MergeDuplicates/Redux/MergeDupsActions"),
   dispatchMergeStepData: (goal: MergeDups) => mockDispatchMergeStepData(goal),
-  loadMergeDupsData: (goal: MergeDups) => mockLoadMergeDupsData(goal),
+  fetchMergeDupsData: (goal: MergeDups) => mockFetchMergeDupsData(goal),
 }));
 
 jest.mock("backend", () => ({
@@ -50,7 +50,7 @@ const mockCreateUserEdit = jest.fn();
 const mockDispatchMergeStepData = jest.fn();
 const mockGetUser = jest.fn();
 const mockGetUserEditById = jest.fn();
-const mockLoadMergeDupsData = jest.fn();
+const mockFetchMergeDupsData = jest.fn();
 const mockUpdateUser = jest.fn();
 function setMockFunctions() {
   mockAddGoalToUserEdit.mockResolvedValue(0);
@@ -179,7 +179,7 @@ describe("GoalSlice", () => {
         )
       );
       expect(mockDispatchMergeStepData).toBeCalledTimes(1);
-      expect(mockLoadMergeDupsData).toBeCalledTimes(1);
+      expect(mockFetchMergeDupsData).toBeCalledTimes(1);
     });
   });
 
@@ -274,13 +274,14 @@ describe("GoalSlice", () => {
   describe("loadGoalData", () => {
     it("should load MergeDups data", async () => {
       const goal = new MergeDups();
-      await actions.loadGoalData(goal);
-      expect(mockLoadMergeDupsData).toBeCalledTimes(1);
+      actions.asyncLoadNewGoal(goal, "userEditIdString");
+      expect(mockFetchMergeDupsData).toBeCalledTimes(1);
     });
 
     it("should not load data for an unimplemented goal", async () => {
       const goal = new HandleFlags();
-      expect(await actions.loadGoalData(goal)).toEqual(false);
+      actions.asyncLoadNewGoal(goal, "userEditIdString");
+      expect(mockFetchMergeDupsData).toBeCalledTimes(0);
     });
   });
 

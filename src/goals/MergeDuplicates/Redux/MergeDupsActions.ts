@@ -275,13 +275,12 @@ function addCompletedMergeToGoal(
 ) {
   return async (dispatch: StoreStateDispatch) => {
     if (goal.goalType === GoalType.MergeDups) {
-      const changes = (goal.changes ?? {}) as MergesCompleted;
+      const changes = ({ ...goal.changes } ?? {}) as MergesCompleted;
       if (!changes.merges) {
         changes.merges = [];
       }
       changes.merges.push(completedMerge);
-      goal.changes = changes;
-      await dispatch(asyncUpdateGoal(goal));
+      await dispatch(asyncUpdateGoal({ ...goal, changes: changes }));
     }
   };
 }

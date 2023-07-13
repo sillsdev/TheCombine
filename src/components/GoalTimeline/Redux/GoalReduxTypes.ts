@@ -1,8 +1,10 @@
+import { Word } from "api/models";
 import { ActionWithPayload } from "types/Redux/actions";
 import { Goal, GoalsState, GoalStep, GoalType } from "types/goals";
 
 export enum GoalActionTypes {
   LOAD_USER_EDITS = "LOAD_USER_EDITS",
+  LOAD_GOAL_DATA = "LOAD_GOAL_DATA",
   SET_CURRENT_GOAL = "SET_CURRENT_GOAL",
   SET_CURRENT_GOAL_INDEX = "SET_CURRENT_GOAL_INDEX",
   SET_CURRENT_GOALS_STATE = "SET_CURRENT_GOALS_STATE",
@@ -12,6 +14,7 @@ export enum GoalActionTypes {
 
 export type GoalAction =
   | LoadUserEditsAction
+  | LoadGoalDataAction
   | SetCurrentGoalAction
   | SetGoalIndexAction
   | SetGoalsStateAction
@@ -21,6 +24,11 @@ export type GoalAction =
 export interface LoadUserEditsAction extends ActionWithPayload<Goal[]> {
   type: GoalActionTypes.LOAD_USER_EDITS;
   payload: Goal[];
+}
+
+export interface LoadGoalDataAction extends ActionWithPayload<Word[][]> {
+  type: GoalActionTypes.LOAD_GOAL_DATA;
+  payload: Word[][];
 }
 
 export interface SetCurrentGoalAction extends ActionWithPayload<Goal> {
