@@ -1,3 +1,4 @@
+import { ReactElement } from "react";
 import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
@@ -16,6 +17,7 @@ import DataEntryTable, {
   updateEntryGloss,
 } from "components/DataEntry/DataEntryTable";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
+import { RecentEntryProps } from "components/DataEntry/DataEntryTable/RecentEntry";
 import { newProject } from "types/project";
 import {
   newSemanticDomain,
@@ -34,6 +36,7 @@ jest.mock("notistack", () => ({
 
 jest.mock("backend", () => ({
   createWord: (...args: any[]) => mockCreateWord(...args),
+  deleteFrontierWord: jest.fn(),
   getDuplicateId: (...args: any[]) => mockGetDuplicateId(...args),
   getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
   getProject: (...args: any[]) => mockGetProject(...args),
@@ -44,7 +47,10 @@ jest.mock("backend", () => ({
 jest.mock("backend/localStorage", () => ({
   getUserId: () => mockUserId,
 }));
-jest.mock("components/DataEntry/DataEntryTable/RecentEntry", () => "div");
+jest.mock(
+  "components/DataEntry/DataEntryTable/RecentEntry",
+  () => MockRecentEntry
+);
 jest.mock("components/Pronunciations/PronunciationsComponent", () => "div");
 jest.mock("components/Pronunciations/Recorder");
 jest.mock("utilities/utilities");
@@ -53,6 +59,10 @@ jest.spyOn(window, "alert").mockImplementation(() => {});
 
 let testRenderer: renderer.ReactTestRenderer;
 let testHandle: renderer.ReactTestInstance;
+
+function MockRecentEntry(props: RecentEntryProps): ReactElement {
+  return <div />;
+}
 
 const mockWord = (): Word => simpleWord("mockVern", "mockGloss");
 const mockMultiWord = multiSenseWord("vern", ["gloss1", "gloss2"]);
@@ -100,6 +110,19 @@ const renderTable = async (): Promise<void> => {
       </Provider>
     );
   });
+};
+
+const addRecentEntry = async (word?: Word): Promise<string> => {
+  word ??= mockWord();
+  if (!word.senses[0].semanticDomains.length) {
+    word.senses[0].semanticDomains.push(mockSemDom);
+  }
+  mockCreateWord.mockResolvedValueOnce(word);
+  mockGetWord.mockResolvedValueOnce(word);
+  await renderer.act(async () => {
+    await testRenderer.root.findByType(NewEntry).props.addNewEntry();
+  });
+  return word.id;
 };
 
 describe("DataEntryTable", () => {
@@ -151,6 +174,12 @@ describe("DataEntryTable", () => {
   });
 
   describe("addSemanticDomainToSense", () => {
+    it("throws error when word doesn't have sense with specified guid", () => {
+      expect(() =>
+        addSemanticDomainToSense(newSemanticDomain(), mockWord(), "gibberish")
+      ).toThrowError();
+    });
+
     it("adds a semantic domain to existing sense", () => {
       const word = mockWord();
       const gloss = "senseToBeModified";
@@ -299,19 +328,9 @@ describe("DataEntryTable", () => {
   });
 
   describe("addNewWord", () => {
-    const vern = "vern";
-    const glossDef = "gloss";
-    const noteText = "note";
-    const setNewState = (): void => {
-      renderer.act(() => {
-        testHandle.props.setNewVern(vern);
-        testHandle.props.setNewGloss(glossDef);
-        testHandle.props.setNewNote(noteText);
-      });
-    };
+    beforeEach(async () => await renderTable());
 
     it("checks for duplicate and, if so, updates it", async () => {
-      await renderTable();
       testHandle = testRenderer.root.findByType(NewEntry);
       mockGetDuplicateId.mockResolvedValueOnce(true);
       await renderer.act(async () => {
@@ -321,10 +340,39 @@ describe("DataEntryTable", () => {
       expect(mockCreateWord).not.toBeCalled();
     });
 
-    it("adds with state's vern, gloss, and note", async () => {
-      await renderTable();
+    it("adds updated duplicate senses to recent entries", async () => {
       testHandle = testRenderer.root.findByType(NewEntry);
-      setNewState();
+      mockGetDuplicateId.mockResolvedValueOnce(true);
+      const word = mockWord();
+      const semDomSenseCount = 3;
+      for (let i = 0; i < semDomSenseCount; i++) {
+        word.senses.push({
+          ...newSense(`sense${i}`),
+          semanticDomains: [mockSemDom],
+        });
+      }
+      mockGetWord.mockResolvedValueOnce(word);
+      expect(testRenderer.root.findAllByType(MockRecentEntry)).toHaveLength(0);
+      await renderer.act(async () => {
+        await testHandle.props.addNewEntry();
+      });
+      expect(testRenderer.root.findAllByType(MockRecentEntry)).toHaveLength(
+        semDomSenseCount
+      );
+    });
+
+    it("adds with state's vern, gloss, and note", async () => {
+      const vern = "vern";
+      const glossDef = "gloss";
+      const noteText = "note";
+
+      testHandle = testRenderer.root.findByType(NewEntry);
+      renderer.act(() => {
+        testHandle.props.setNewVern(vern);
+        testHandle.props.setNewGloss(glossDef);
+        testHandle.props.setNewNote(noteText);
+      });
+
       await renderer.act(async () => {
         try {
           await testHandle.props.addNewEntry();
@@ -333,10 +381,58 @@ describe("DataEntryTable", () => {
         }
       });
       expect(mockCreateWord).toBeCalledTimes(1);
+
       const wordAdded: Word = mockCreateWord.mock.calls[0][0];
       expect(wordAdded.vernacular).toEqual(vern);
       expect(wordAdded.senses[0].glosses[0].def).toEqual(glossDef);
       expect(wordAdded.note.text).toEqual(noteText);
+    });
+
+    it("adds added word to recent entries", async () => {
+      expect(testRenderer.root.findAllByType(MockRecentEntry)).toHaveLength(0);
+      const wordId = await addRecentEntry();
+      const recentEntry = testRenderer.root.findByType(MockRecentEntry);
+      expect(recentEntry.props.entry.id).toEqual(wordId);
+    });
+  });
+
+  describe("undoRecentEntry", () => {
+    beforeEach(async () => await renderTable());
+
+    it("removes a recent entry", async () => {
+      await addRecentEntry();
+      const recentEntry = testRenderer.root.findByType(MockRecentEntry);
+      await renderer.act(async () => {
+        await recentEntry.props.removeEntry();
+      });
+      expect(testRenderer.root.findAllByType(MockRecentEntry)).toHaveLength(0);
+    });
+  });
+
+  describe("updateRecentVern", () => {
+    beforeEach(async () => await renderTable());
+
+    it("changes the recent entry's vernacular", async () => {
+      const wordId = await addRecentEntry();
+      const recentEntry = testRenderer.root.findByType(MockRecentEntry);
+
+      // Verify that the setup is good for this test
+      const senses: Sense[] = recentEntry.props.entry.senses;
+      expect(senses).toHaveLength(1);
+      expect(senses[0].semanticDomains).toHaveLength(1);
+      expect(mockUpdateWord).toBeCalledTimes(0);
+
+      // Update the vernacular
+      const newVern = "not the vern generated in addRecentEntry";
+      await renderer.act(async () => {
+        await recentEntry.props.updateVern(newVern);
+      });
+
+      // Confirm the backend update was correctly called
+      expect(mockUpdateWord).toBeCalledTimes(1);
+      const calledWith: Word = mockUpdateWord.mock.calls[0][0];
+      expect(calledWith.id).toEqual(wordId);
+      expect(calledWith.vernacular).toEqual(newVern);
     });
   });
 });
