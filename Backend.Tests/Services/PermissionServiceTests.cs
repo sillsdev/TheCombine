@@ -18,6 +18,8 @@ namespace Backend.Tests.Services
 
         private HttpContext createHttpContextWithUser(User user)
         {
+            var longEnoughString = "12345678901234567890123456789012";
+            Environment.SetEnvironmentVariable("COMBINE_JWT_SECRET_KEY", longEnoughString);
             user = _userRepo.Create(user).Result!;
             user = _permService.MakeJwt(user).Result!;
             var httpContext = new DefaultHttpContext();
