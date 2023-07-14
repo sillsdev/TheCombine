@@ -58,7 +58,9 @@ namespace Backend.Tests.Services
         [Test]
         public void GetSemanticDomainCountsTestNullDomainList()
         {
+            // Add a word to the database and leave the semantic domain list null
             _wordRepo.AddFrontier(getWordWithDomain());
+
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Has.Count.EqualTo(0));
         }
@@ -66,8 +68,10 @@ namespace Backend.Tests.Services
         [Test]
         public void GetSemanticDomainCountsTestEmptyDomainList()
         {
+            // Add to the database a word and an empty list of semantic domains
             ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(new List<SemanticDomainTreeNode>());
             _wordRepo.AddFrontier(getWordWithDomain());
+
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Has.Count.EqualTo(0));
         }
@@ -75,7 +79,9 @@ namespace Backend.Tests.Services
         [Test]
         public void GetSemanticDomainCountsTestEmptyFrontier()
         {
+            // Add to the database a semantic domain but no word
             ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(TreeNodes);
+
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Has.Count.EqualTo(0));
         }
@@ -83,8 +89,10 @@ namespace Backend.Tests.Services
         [Test]
         public void GetSemanticDomainCountsTestIdMismatch()
         {
-            _wordRepo.AddFrontier(getWordWithDomain("different-id"));
+            // Add to the database a semantic domain and a word with a different semantic domain
             ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(TreeNodes);
+            _wordRepo.AddFrontier(getWordWithDomain("different-id"));
+
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result.First().Count, Is.EqualTo(0));
@@ -93,8 +101,10 @@ namespace Backend.Tests.Services
         [Test]
         public void GetSemanticDomainCountsTestIdMatch()
         {
-            _wordRepo.AddFrontier(getWordWithDomain());
+            // Add to the database a semantic domain and a word with the same semantic domain
             ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(TreeNodes);
+            _wordRepo.AddFrontier(getWordWithDomain());
+
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result.First().Count, Is.EqualTo(1));
@@ -111,6 +121,7 @@ namespace Backend.Tests.Services
         public void GetProgressEstimationLineChartRootTestEmptyFrontier()
         {
             var nonEmptySchedule = new List<DateTime> { DateTime.Now };
+
             var result = _statsService.GetProgressEstimationLineChartRoot(ProjId, nonEmptySchedule).Result;
             Assert.That(result.Dates, Has.Count.EqualTo(0));
             Assert.That(result.Datasets, Has.Count.EqualTo(0));
@@ -120,6 +131,7 @@ namespace Backend.Tests.Services
         public void GetProgressEstimationLineChartRootTestEmptySchedule()
         {
             _wordRepo.AddFrontier(getWordWithDomain());
+
             var result = _statsService.GetProgressEstimationLineChartRoot(ProjId, new List<DateTime>()).Result;
             Assert.That(result.Dates, Has.Count.EqualTo(0));
             Assert.That(result.Datasets, Has.Count.EqualTo(0));
@@ -130,6 +142,7 @@ namespace Backend.Tests.Services
         {
             _wordRepo.AddFrontier(getWordWithDomain());
             var nonEmptySchedule = new List<DateTime> { DateTime.Now };
+
             var result = _statsService.GetProgressEstimationLineChartRoot(ProjId, nonEmptySchedule).Result;
             Assert.That(result.Dates, Has.Count.EqualTo(0));
             Assert.That(result.Datasets, Has.Count.EqualTo(0));
@@ -142,6 +155,7 @@ namespace Backend.Tests.Services
             word.Senses[0].SemanticDomains[0].Created = DateTime.Now.ToString();
             _wordRepo.AddFrontier(word);
             var nonEmptySchedule = new List<DateTime> { DateTime.Now };
+
             var result = _statsService.GetProgressEstimationLineChartRoot(ProjId, nonEmptySchedule).Result;
             Assert.That(result.Dates, Has.Count.EqualTo(nonEmptySchedule.Count));
         }
@@ -162,6 +176,7 @@ namespace Backend.Tests.Services
             {
                 _userRepo.Create(getUserWithProjId());
             }
+
             var result = _statsService.GetSemanticDomainUserCounts(ProjId).Result;
             // Count is + 1 for the default "unknownUser"
             Assert.That(result, Has.Count.EqualTo(userCount + 1));
@@ -178,6 +193,7 @@ namespace Backend.Tests.Services
                 word.Senses[0].SemanticDomains[0].UserId = user.Id;
                 _wordRepo.AddFrontier(word);
             }
+
             var result = _statsService.GetSemanticDomainUserCounts(ProjId).Result;
             Assert.That(result.Find(uc => uc.Id == user.Id)!.WordCount, Is.EqualTo(wordCount));
         }
