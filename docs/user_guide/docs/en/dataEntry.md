@@ -18,7 +18,7 @@ A word as found in the vernacular language, usually spelled either phonetically 
 
 ### Gloss
 
-An entry can have multiple senses/glosses, though only one can be added when the entry is first created.
+While an entry can have multiple senses/glosses, only one can be added when the entry is first created.
 
 ### Note
 
@@ -28,7 +28,7 @@ to the entry's note.
 ### Recording
 
 You can add multiple recordings to an entry (e.g., a male voice and a female voice). As with the [Note](#note), audio
-recordings are associated with the entry and not its senses.
+recordings are associated with the entry and not individual senses.
 
 To record audio, there is a red circle button. For each recorded audio, there is a green triangle button.
 
@@ -41,7 +41,7 @@ press-and-hold to bring up a menu (with options to play or delete).
 ## New Entry with Duplicate Vernacular Form
 
 If you submit a new entry with identical vernacular form and gloss to an existing entry, that entry will be updated
-instead of a new entry created. For example. If you submit [Vernacular: dedo; Gloss: finger] in domain 2.1.3.1 (Arm) and
+instead of a new entry created. For example, if you submit [Vernacular: dedo; Gloss: finger] in domain 2.1.3.1 (Arm) and
 again in domain 2.1.3.3 (Finger, Toe), the result will be a single entry for "dedo" with a single sense that has gloss
 "finger" and two domains.
 
