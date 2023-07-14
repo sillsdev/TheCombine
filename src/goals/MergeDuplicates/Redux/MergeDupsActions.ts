@@ -1,3 +1,5 @@
+import { produce } from "immer";
+
 import {
   Definition,
   Flag,
@@ -41,6 +43,7 @@ import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { GoalType } from "types/goals";
 import { Hash } from "types/hash";
+import { maxNumSteps } from "utilities/goalUtilities";
 import { compareFlags } from "utilities/wordUtilities";
 
 // Action Creators
@@ -274,11 +277,15 @@ function addCompletedMergeToGoal(
 ) {
   return async (dispatch: StoreStateDispatch) => {
     if (goal.goalType === GoalType.MergeDups) {
-      const changes = ({ ...goal.changes } ?? {}) as MergesCompleted;
-      if (!changes.merges) {
-        changes.merges = [];
-      }
-      changes.merges.push(completedMerge);
+      const changes: MergesCompleted = produce(
+        { ...goal.changes } as MergesCompleted,
+        (draft) => {
+          if (!draft.merges) {
+            draft.merges = [];
+          }
+          draft.merges.push(completedMerge);
+        }
+      );
       await dispatch(asyncUpdateGoal({ ...goal, changes: changes }));
     }
   };
@@ -294,6 +301,10 @@ export function dispatchMergeStepData(goal: MergeDups) {
       dispatch(setWordData(stepWords));
     }
   };
+}
+
+export async function fetchMergeDupsData(goal: MergeDups): Promise<Word[][]> {
+  return await backend.getDuplicates(5, maxNumSteps(goal.goalType));
 }
 
 /** Modifies the mutable input sense list. */

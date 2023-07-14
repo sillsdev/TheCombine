@@ -543,6 +543,7 @@ export async function addGoalToUserEdit(
   userEditId: string,
   goal: Goal
 ): Promise<number> {
+  console.log("addGoalToUserEdit()");
   const edit = convertGoalToEdit(goal);
   const resp = await userEditApi.updateUserEditGoal(
     { projectId: LocalStorage.getProjectId(), userEditId, edit },
