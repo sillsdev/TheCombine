@@ -341,8 +341,7 @@ describe("DataEntryTable", () => {
     });
 
     it("adds updated duplicate senses to recent entries", async () => {
-      testHandle = testRenderer.root.findByType(NewEntry);
-      mockGetDuplicateId.mockResolvedValueOnce(true);
+      // Create word with specified number of senses that have mockSemDom in semanticDomains
       const word = mockWord();
       const semDomSenseCount = 3;
       for (let i = 0; i < semDomSenseCount; i++) {
@@ -351,10 +350,15 @@ describe("DataEntryTable", () => {
           semanticDomains: [mockSemDom],
         });
       }
+
+      // Setup the test scenario
+      mockGetDuplicateId.mockResolvedValueOnce(true);
       mockGetWord.mockResolvedValueOnce(word);
+
+      // Verify that the number of recent entries increases by the correct amount
       expect(testRenderer.root.findAllByType(MockRecentEntry)).toHaveLength(0);
       await renderer.act(async () => {
-        await testHandle.props.addNewEntry();
+        await testRenderer.root.findByType(NewEntry).props.addNewEntry();
       });
       expect(testRenderer.root.findAllByType(MockRecentEntry)).toHaveLength(
         semDomSenseCount
@@ -362,17 +366,19 @@ describe("DataEntryTable", () => {
     });
 
     it("adds with state's vern, gloss, and note", async () => {
+      testHandle = testRenderer.root.findByType(NewEntry);
+
+      // Set the component's state
       const vern = "vern";
       const glossDef = "gloss";
       const noteText = "note";
-
-      testHandle = testRenderer.root.findByType(NewEntry);
       renderer.act(() => {
         testHandle.props.setNewVern(vern);
         testHandle.props.setNewGloss(glossDef);
         testHandle.props.setNewNote(noteText);
       });
 
+      // Trigger the function to add a new entry
       await renderer.act(async () => {
         try {
           await testHandle.props.addNewEntry();
@@ -380,8 +386,9 @@ describe("DataEntryTable", () => {
           // Allow for errors after createWord() is called.
         }
       });
-      expect(mockCreateWord).toBeCalledTimes(1);
 
+      // Verify that createWord() was called with a word with the correct values
+      expect(mockCreateWord).toBeCalledTimes(1);
       const wordAdded: Word = mockCreateWord.mock.calls[0][0];
       expect(wordAdded.vernacular).toEqual(vern);
       expect(wordAdded.senses[0].glosses[0].def).toEqual(glossDef);
@@ -413,10 +420,11 @@ describe("DataEntryTable", () => {
     beforeEach(async () => await renderTable());
 
     it("changes the recent entry's vernacular", async () => {
+      // Setup the scenario
       const wordId = await addRecentEntry();
       const recentEntry = testRenderer.root.findByType(MockRecentEntry);
 
-      // Verify that the setup is good for this test
+      // Verify that the setup meets the intended conditions within updateRecentVern
       const senses: Sense[] = recentEntry.props.entry.senses;
       expect(senses).toHaveLength(1);
       expect(senses[0].semanticDomains).toHaveLength(1);
