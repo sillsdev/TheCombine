@@ -74,10 +74,12 @@ def main() -> None:
 
     backend_job: Optional[subprocess.Popen[str]] = None
     if args.backend:
-        logging.info("Starting backend process")
+        backend_cmd = ["dotnet", "run"]
+        backend_dir = project_dir / "Backend"
+        logging.info(f"Starting backend process: {backend_cmd} cwd={backend_dir}")
         backend_job = subprocess.Popen(
-            ["dotnet", "run"],
-            cwd=project_dir / "Backend",
+            backend_cmd,
+            cwd=backend_dir,
         )
         # replace with a more elegant solution, i.e. read stdout/stderr to see
         # if process started or if it exited
@@ -108,11 +110,15 @@ def main() -> None:
                 ]
             )
         output_file.writelines(["  },\n", "  hooks: true\n", "};\n\n", "export default config\n"])
+    codegen_cmd = ["npx", "@rtk-query/codegen-openapi", openapi_config.relative_to(project_dir)]
+    logging.info(f"Running codegen: {codegen_cmd}, cwd={project_dir}");
     subprocess.run(
-        ["npx", "@rtk-query/codegen-openapi", openapi_config.relative_to(project_dir)],
+        codegen_cmd,
         cwd=project_dir,
     )
-    subprocess.run(["npm", "run", "lint:fix-layout"], cwd=project_dir)
+    lint_cmd = ["npm", "run", "lint:fix-layout"]
+    logging.info(f"Reformatting frontend code: {lint_cmd} cwd={project_dir}")
+    subprocess.run(lint_cmd, cwd=project_dir)
     if backend_job is not None:
         backend_status = backend_job.poll()
         if backend_status is None:
