@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import argparse
-from contextlib import closing
 import json
 import logging
 from pathlib import Path
+import platform
 import re
 import subprocess
 import time
@@ -80,6 +80,7 @@ def main() -> None:
         backend_job = subprocess.Popen(
             backend_cmd,
             cwd=backend_dir,
+            universal_newlines=True,
         )
         # replace with a more elegant solution, i.e. read stdout/stderr to see
         # if process started or if it exited
@@ -110,15 +111,13 @@ def main() -> None:
                 ]
             )
         output_file.writelines(["  },\n", "  hooks: true\n", "};\n\n", "export default config\n"])
-    codegen_cmd = ["npx", "@rtk-query/codegen-openapi", openapi_config.relative_to(project_dir)]
-    logging.info(f"Running codegen: {codegen_cmd}, cwd={project_dir}");
+    needs_shell = platform.system() == "Windows"
     subprocess.run(
-        codegen_cmd,
+        ["npx", "@rtk-query/codegen-openapi", openapi_config.relative_to(project_dir)],
         cwd=project_dir,
+        shell=needs_shell,
     )
-    lint_cmd = ["npm", "run", "lint:fix-layout"]
-    logging.info(f"Reformatting frontend code: {lint_cmd} cwd={project_dir}")
-    subprocess.run(lint_cmd, cwd=project_dir)
+    subprocess.run(["npm", "run", "lint:fix-layout"], cwd=project_dir, shell=needs_shell)
     if backend_job is not None:
         backend_status = backend_job.poll()
         if backend_status is None:
