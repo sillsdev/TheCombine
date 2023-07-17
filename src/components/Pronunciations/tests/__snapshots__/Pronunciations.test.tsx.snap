@@ -30,7 +30,7 @@ Array [
       className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium makeStyles-iconRelease-3 css-i4bv87-MuiSvgIcon-root"
       data-testid="FiberManualRecordIcon"
       focusable="false"
-      id="icon"
+      id="recordingIcon"
       viewBox="0 0 24 24"
     >
       <circle
