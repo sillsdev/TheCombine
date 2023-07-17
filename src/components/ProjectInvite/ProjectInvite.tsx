@@ -16,51 +16,40 @@ export default function ProjectInvite(): ReactElement {
     (state) => state.loginState.signUpFailure
   );
 
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { token, project } = useParams();
   const [isValidLink, setIsValidLink] = useState(false);
 
   const validateLink = useCallback(async (): Promise<void> => {
-    if (!project || !token) {
-      return;
+    if (project && token) {
+      const status = await backend.validateLink(project, token);
+      if (status.isTokenValid && status.isUserRegistered) {
+        navigate(Path.Login);
+        return;
+      }
+      setIsValidLink(status.isTokenValid);
     }
-    const status = await backend.validateLink(project, token);
-    if (status.isTokenValid && status.isUserRegistered) {
-      navigate(Path.Login);
-      return;
-    }
-    setIsValidLink(status.isTokenValid);
   }, [project, token, navigate]);
-
-  const dispatch = useAppDispatch();
-  const idAffix = "invite";
 
   useEffect(() => {
     validateLink();
   });
 
-  return (
-    <>
-      {isValidLink && (
-        <SignUp
-          inProgress={inProgress}
-          success={success}
-          failureMessage={failureMessage}
-          signUp={(
-            name: string,
-            user: string,
-            email: string,
-            password: string
-          ) => {
-            dispatch(asyncSignUp(name, user, email, password));
-          }}
-          reset={() => {
-            dispatch(reset());
-          }}
-          returnToEmailInvite={validateLink}
-        />
-      )}
-      {!isValidLink && <InvalidLink textId="invite.invalidInvitationURL" />}
-    </>
+  return isValidLink ? (
+    <SignUp
+      inProgress={inProgress}
+      success={success}
+      failureMessage={failureMessage}
+      signUp={(name: string, user: string, email: string, password: string) => {
+        dispatch(asyncSignUp(name, user, email, password));
+      }}
+      reset={() => {
+        dispatch(reset());
+      }}
+      returnToEmailInvite={validateLink}
+    />
+  ) : (
+    <InvalidLink textId="invite.invalidInvitationURL" />
   );
 }

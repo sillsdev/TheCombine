@@ -40,10 +40,9 @@ export default function PasswordReset(): ReactElement {
   const [requestState, setRequestState] = useState(RequestState.None);
 
   const validateLink = useCallback(async (): Promise<void> => {
-    if (!token) {
-      return;
+    if (token) {
+      setIsValidLink(await validateResetToken(token));
     }
-    setIsValidLink(await validateResetToken(token));
   }, [token]);
 
   useEffect(() => {
@@ -84,11 +83,7 @@ export default function PasswordReset(): ReactElement {
     }
   };
 
-  if (!isValidLink) {
-    return <InvalidLink textId="passwordReset.invalidURL" />;
-  }
-
-  return (
+  return isValidLink ? (
     <Grid container justifyContent="center">
       <Card style={{ padding: 10, width: 450 }}>
         <form onSubmit={onSubmit}>
@@ -189,5 +184,7 @@ export default function PasswordReset(): ReactElement {
         </form>
       </Card>
     </Grid>
+  ) : (
+    <InvalidLink textId="passwordReset.invalidURL" />
   );
 }
