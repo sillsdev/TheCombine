@@ -4,7 +4,6 @@ import {
   cleanup,
   render,
   RenderOptions,
-  RenderResult,
   screen,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -30,6 +29,7 @@ const mockPasswordReset = jest.fn((token: string, newPassword: string) => {
 jest.mock("backend", () => ({
   resetPassword: (token: string, newPassword: string) =>
     mockPasswordReset(token, newPassword),
+  validateResetToken: () => Promise.resolve(true),
 }));
 
 // This test relies on nothing in the store so mock an empty store
@@ -57,15 +57,19 @@ const ResetPageProviders = ({
   );
 };
 
-const customRender = (
+const customRender = async (
   ui: ReactElement,
   options?: Omit<RenderOptions, "wrapper">
-): RenderResult => render(ui, { wrapper: ResetPageProviders, ...options });
+): Promise<void> => {
+  await act(async () => {
+    render(ui, { wrapper: ResetPageProviders, ...options });
+  });
+};
 
 describe("PasswordReset", () => {
   it("renders with password length error", async () => {
     const user = userEvent.setup();
-    customRender(<PasswordReset />);
+    await customRender(<PasswordReset />);
 
     const shortPassword = "foo";
     const passwdField = screen.getByTestId(PasswordResetTestIds.Password);
@@ -73,8 +77,10 @@ describe("PasswordReset", () => {
       PasswordResetTestIds.ConfirmPassword
     );
 
-    await user.type(passwdField, shortPassword);
-    await user.type(passwdConfirm, shortPassword);
+    await act(async () => {
+      await user.type(passwdField, shortPassword);
+      await user.type(passwdConfirm, shortPassword);
+    });
 
     const reqErrors = screen.queryAllByTestId(
       PasswordResetTestIds.PasswordReqError
@@ -91,7 +97,7 @@ describe("PasswordReset", () => {
 
   it("renders with password match error", async () => {
     const user = userEvent.setup();
-    customRender(<PasswordReset />);
+    await customRender(<PasswordReset />);
 
     const passwordEntry = "password";
     const confirmEntry = "passward";
@@ -100,8 +106,10 @@ describe("PasswordReset", () => {
       PasswordResetTestIds.ConfirmPassword
     );
 
-    await user.type(passwdField, passwordEntry);
-    await user.type(passwdConfirm, confirmEntry);
+    await act(async () => {
+      await user.type(passwdField, passwordEntry);
+      await user.type(passwdConfirm, confirmEntry);
+    });
 
     const reqErrors = screen.queryAllByTestId(
       PasswordResetTestIds.PasswordReqError
@@ -118,7 +126,7 @@ describe("PasswordReset", () => {
 
   it("renders with no password errors", async () => {
     const user = userEvent.setup();
-    customRender(<PasswordReset />);
+    await customRender(<PasswordReset />);
 
     const passwordEntry = "password";
     const confirmEntry = "password";
@@ -127,8 +135,10 @@ describe("PasswordReset", () => {
       PasswordResetTestIds.ConfirmPassword
     );
 
-    await user.type(passwdField, passwordEntry);
-    await user.type(passwdConfirm, confirmEntry);
+    await act(async () => {
+      await user.type(passwdField, passwordEntry);
+      await user.type(passwdConfirm, confirmEntry);
+    });
 
     const reqErrors = screen.queryAllByTestId(
       PasswordResetTestIds.PasswordReqError
@@ -146,7 +156,7 @@ describe("PasswordReset", () => {
   it("renders with expire error", async () => {
     // rerender the component with the resetFailure prop set.
     const user = userEvent.setup();
-    customRender(<PasswordReset />);
+    await customRender(<PasswordReset />);
 
     const passwordEntry = "password";
     const confirmEntry = "password";
@@ -155,8 +165,10 @@ describe("PasswordReset", () => {
       PasswordResetTestIds.ConfirmPassword
     );
 
-    await user.type(passwdField, passwordEntry);
-    await user.type(passwdConfirm, confirmEntry);
+    await act(async () => {
+      await user.type(passwdField, passwordEntry);
+      await user.type(passwdConfirm, confirmEntry);
+    });
 
     const submitButton = screen.getByTestId(PasswordResetTestIds.SubmitButton);
     await act(async () => {

@@ -1,10 +1,11 @@
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Button, Card, Grid, TextField, Typography } from "@mui/material";
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { resetPassword } from "backend";
+import { resetPassword, validateResetToken } from "backend";
+import InvalidLink from "components/InvalidLink";
 import { Path } from "types/path";
 import { meetsPasswordRequirements } from "utilities/utilities";
 
@@ -26,15 +27,28 @@ enum RequestState {
 }
 
 export default function PasswordReset(): ReactElement {
+  const navigate = useNavigate();
   const { token } = useParams();
+  const { t } = useTranslation();
+
+  const [isPasswordConfirmed, setIsPasswordConfirmed] = useState(false);
+  const [isValidLink, setIsValidLink] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [passwordFitsRequirements, setPasswordFitsRequirements] =
     useState(false);
-  const [isPasswordConfirmed, setIsPasswordConfirmed] = useState(false);
   const [requestState, setRequestState] = useState(RequestState.None);
-  const { t } = useTranslation();
-  const navigate = useNavigate();
+
+  const validateLink = useCallback(async (): Promise<void> => {
+    if (!token) {
+      return;
+    }
+    setIsValidLink(await validateResetToken(token));
+  }, [token]);
+
+  useEffect(() => {
+    validateLink();
+  });
 
   const backToLogin = (event: React.FormEvent<HTMLElement>): void => {
     event.preventDefault();
@@ -69,6 +83,10 @@ export default function PasswordReset(): ReactElement {
       setRequestState(RequestState.Fail);
     }
   };
+
+  if (!isValidLink) {
+    return <InvalidLink textId="passwordReset.invalidURL" />;
+  }
 
   return (
     <Grid container justifyContent="center">
