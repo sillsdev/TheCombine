@@ -22,7 +22,6 @@ import {
   SemanticDomainTreeNode,
   Sense,
   Word,
-  WritingSystem,
 } from "api/models";
 import * as backend from "backend";
 import { getUserId } from "backend/localStorage";
@@ -196,17 +195,17 @@ interface DataEntryTableState {
 export default function DataEntryTable(
   props: DataEntryTableProps
 ): ReactElement {
-  const analysisLang: WritingSystem = useAppSelector(
+  const analysisLang = useAppSelector(
     (state: StoreState) =>
       state.currentProjectState.project.analysisWritingSystems[0] ??
       defaultWritingSystem
   );
-  const suggestVerns = useAppSelector<boolean>(
+  const suggestVerns = useAppSelector(
     (state: StoreState) =>
       state.currentProjectState.project.autocompleteSetting ===
       AutocompleteSetting.On
   );
-  const vernacularLang = useAppSelector<WritingSystem>(
+  const vernacularLang = useAppSelector(
     (state: StoreState) =>
       state.currentProjectState.project.vernacularWritingSystem
   );
