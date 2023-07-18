@@ -4,7 +4,6 @@ import {
   cleanup,
   render,
   RenderOptions,
-  RenderResult,
   screen,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -19,24 +18,24 @@ import PasswordReset, {
 } from "components/PasswordReset/ResetPage";
 import { Path } from "types/path";
 
-const mockPasswordReset = jest.fn((token: string, newPassword: string) => {
-  if (token === "resetSuccess") {
-    return Promise.resolve();
-  } else {
-    return Promise.reject();
-  }
-});
+const mockPasswordReset = jest.fn();
+const mockValidateResetToken = jest.fn();
 
 jest.mock("backend", () => ({
-  resetPassword: (token: string, newPassword: string) =>
-    mockPasswordReset(token, newPassword),
+  resetPassword: (...args: any[]) => mockPasswordReset(...args),
+  validateResetToken: (...args: any[]) => mockValidateResetToken(...args),
 }));
 
 // This test relies on nothing in the store so mock an empty store
 const mockStore = configureMockStore()();
 
+const setupMocks = (): void => {
+  mockValidateResetToken.mockResolvedValue(true);
+};
+
 beforeEach(() => {
   jest.clearAllMocks();
+  setupMocks();
 });
 
 afterEach(cleanup);
@@ -57,15 +56,19 @@ const ResetPageProviders = ({
   );
 };
 
-const customRender = (
+const customRender = async (
   ui: ReactElement,
   options?: Omit<RenderOptions, "wrapper">
-): RenderResult => render(ui, { wrapper: ResetPageProviders, ...options });
+): Promise<void> => {
+  await act(async () => {
+    render(ui, { wrapper: ResetPageProviders, ...options });
+  });
+};
 
 describe("PasswordReset", () => {
   it("renders with password length error", async () => {
     const user = userEvent.setup();
-    customRender(<PasswordReset />);
+    await customRender(<PasswordReset />);
 
     const shortPassword = "foo";
     const passwdField = screen.getByTestId(PasswordResetTestIds.Password);
@@ -73,8 +76,10 @@ describe("PasswordReset", () => {
       PasswordResetTestIds.ConfirmPassword
     );
 
-    await user.type(passwdField, shortPassword);
-    await user.type(passwdConfirm, shortPassword);
+    await act(async () => {
+      await user.type(passwdField, shortPassword);
+      await user.type(passwdConfirm, shortPassword);
+    });
 
     const reqErrors = screen.queryAllByTestId(
       PasswordResetTestIds.PasswordReqError
@@ -91,7 +96,7 @@ describe("PasswordReset", () => {
 
   it("renders with password match error", async () => {
     const user = userEvent.setup();
-    customRender(<PasswordReset />);
+    await customRender(<PasswordReset />);
 
     const passwordEntry = "password";
     const confirmEntry = "passward";
@@ -100,8 +105,10 @@ describe("PasswordReset", () => {
       PasswordResetTestIds.ConfirmPassword
     );
 
-    await user.type(passwdField, passwordEntry);
-    await user.type(passwdConfirm, confirmEntry);
+    await act(async () => {
+      await user.type(passwdField, passwordEntry);
+      await user.type(passwdConfirm, confirmEntry);
+    });
 
     const reqErrors = screen.queryAllByTestId(
       PasswordResetTestIds.PasswordReqError
@@ -118,7 +125,7 @@ describe("PasswordReset", () => {
 
   it("renders with no password errors", async () => {
     const user = userEvent.setup();
-    customRender(<PasswordReset />);
+    await customRender(<PasswordReset />);
 
     const passwordEntry = "password";
     const confirmEntry = "password";
@@ -127,8 +134,10 @@ describe("PasswordReset", () => {
       PasswordResetTestIds.ConfirmPassword
     );
 
-    await user.type(passwdField, passwordEntry);
-    await user.type(passwdConfirm, confirmEntry);
+    await act(async () => {
+      await user.type(passwdField, passwordEntry);
+      await user.type(passwdConfirm, confirmEntry);
+    });
 
     const reqErrors = screen.queryAllByTestId(
       PasswordResetTestIds.PasswordReqError
@@ -146,7 +155,7 @@ describe("PasswordReset", () => {
   it("renders with expire error", async () => {
     // rerender the component with the resetFailure prop set.
     const user = userEvent.setup();
-    customRender(<PasswordReset />);
+    await customRender(<PasswordReset />);
 
     const passwordEntry = "password";
     const confirmEntry = "password";
@@ -155,10 +164,13 @@ describe("PasswordReset", () => {
       PasswordResetTestIds.ConfirmPassword
     );
 
-    await user.type(passwdField, passwordEntry);
-    await user.type(passwdConfirm, confirmEntry);
+    await act(async () => {
+      await user.type(passwdField, passwordEntry);
+      await user.type(passwdConfirm, confirmEntry);
+    });
 
     const submitButton = screen.getByTestId(PasswordResetTestIds.SubmitButton);
+    mockPasswordReset.mockResolvedValueOnce(false);
     await act(async () => {
       await user.click(submitButton);
     });
@@ -167,5 +179,15 @@ describe("PasswordReset", () => {
       PasswordResetTestIds.PasswordResetFail
     );
     expect(resetErrors.length).toBeGreaterThan(0);
+  });
+
+  it("renders the InvalidLink component if token not valid", async () => {
+    mockValidateResetToken.mockResolvedValueOnce(false);
+    await customRender(<PasswordReset />);
+    for (const id of Object.values(PasswordResetTestIds)) {
+      expect(screen.queryAllByTestId(id)).toHaveLength(0);
+    }
+    // The textId will show up as text because t() is mocked to return its input.
+    expect(screen.queryAllByText("passwordReset.invalidURL")).toBeTruthy;
   });
 });

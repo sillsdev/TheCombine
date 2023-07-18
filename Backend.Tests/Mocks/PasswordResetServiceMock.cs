@@ -16,6 +16,12 @@ namespace Backend.Tests.Mocks
             return Task.CompletedTask;
         }
 
+        public Task<bool> ValidateToken(string token)
+        {
+            // TODO: More sophisticated mock
+            return Task.FromResult(true);
+        }
+
         public Task<bool> ResetPassword(string token, string password)
         {
             // TODO: More sophisticated mock
