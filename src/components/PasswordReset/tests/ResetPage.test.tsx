@@ -18,25 +18,24 @@ import PasswordReset, {
 } from "components/PasswordReset/ResetPage";
 import { Path } from "types/path";
 
-const mockPasswordReset = jest.fn((token: string, newPassword: string) => {
-  if (token === "resetSuccess") {
-    return Promise.resolve();
-  } else {
-    return Promise.reject();
-  }
-});
+const mockPasswordReset = jest.fn();
+const mockValidateResetToken = jest.fn();
 
 jest.mock("backend", () => ({
-  resetPassword: (token: string, newPassword: string) =>
-    mockPasswordReset(token, newPassword),
-  validateResetToken: () => Promise.resolve(true),
+  resetPassword: (...args: any[]) => mockPasswordReset(...args),
+  validateResetToken: (...args: any[]) => mockValidateResetToken(...args),
 }));
 
 // This test relies on nothing in the store so mock an empty store
 const mockStore = configureMockStore()();
 
+const setupMocks = (): void => {
+  mockValidateResetToken.mockResolvedValue(true);
+};
+
 beforeEach(() => {
   jest.clearAllMocks();
+  setupMocks();
 });
 
 afterEach(cleanup);
@@ -171,6 +170,7 @@ describe("PasswordReset", () => {
     });
 
     const submitButton = screen.getByTestId(PasswordResetTestIds.SubmitButton);
+    mockPasswordReset.mockResolvedValueOnce(false);
     await act(async () => {
       await user.click(submitButton);
     });
@@ -179,5 +179,15 @@ describe("PasswordReset", () => {
       PasswordResetTestIds.PasswordResetFail
     );
     expect(resetErrors.length).toBeGreaterThan(0);
+  });
+
+  it("renders the InvalidLink component if token not valid", async () => {
+    mockValidateResetToken.mockResolvedValueOnce(false);
+    await customRender(<PasswordReset />);
+    for (const id of Object.values(PasswordResetTestIds)) {
+      expect(screen.queryAllByTestId(id)).toHaveLength(0);
+    }
+    // The textId will show up as text because t() is mocked to return its input.
+    expect(screen.queryAllByText("passwordReset.invalidURL")).toBeTruthy;
   });
 });

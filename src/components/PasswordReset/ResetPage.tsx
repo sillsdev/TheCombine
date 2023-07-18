@@ -49,18 +49,16 @@ export default function PasswordReset(): ReactElement {
     validateLink();
   });
 
-  const backToLogin = (event: React.FormEvent<HTMLElement>): void => {
-    event.preventDefault();
+  const backToLogin = (e: React.FormEvent<HTMLElement>): void => {
+    e.preventDefault();
     navigate(Path.Login);
   };
 
-  const onSubmit = async (
-    event: React.FormEvent<HTMLElement>
-  ): Promise<void> => {
+  const onSubmit = async (e: React.FormEvent<HTMLElement>): Promise<void> => {
     if (token) {
       setRequestState(RequestState.Attempt);
       await asyncReset(token, password);
-      event.preventDefault();
+      e.preventDefault();
     }
   };
 
@@ -146,7 +144,7 @@ export default function PasswordReset(): ReactElement {
           <Grid container justifyContent="flex-end" spacing={2}>
             <Grid item>
               {requestState === RequestState.Fail ? (
-                <React.Fragment>
+                <>
                   <Typography
                     id="passwordReset.resetFail"
                     data-testid={PasswordResetTestIds.PasswordResetFail}
@@ -166,7 +164,7 @@ export default function PasswordReset(): ReactElement {
                     &nbsp;
                     <ExitToAppIcon />
                   </Button>
-                </React.Fragment>
+                </>
               ) : (
                 <Button
                   id="password-reset-submit"
