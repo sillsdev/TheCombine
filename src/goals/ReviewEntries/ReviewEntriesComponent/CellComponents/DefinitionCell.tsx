@@ -1,5 +1,5 @@
 import { Input, TextField } from "@mui/material";
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -84,28 +84,25 @@ interface DefinitionListProps {
 
 function DefinitionList(props: DefinitionListProps): ReactElement {
   const langs = props.definitions.map((g) => g.language);
-  if (!langs.includes(props.defaultLang)) {
-    props.onChange([
-      ...props.definitions,
-      newDefinition("", props.defaultLang),
-    ]);
-  }
+  const definitions = langs.includes(props.defaultLang)
+    ? props.definitions
+    : [...props.definitions, newDefinition("", props.defaultLang)];
 
   return (
-    <React.Fragment>
-      {props.definitions.map((g, i) => (
+    <>
+      {definitions.map((g, i) => (
         <DefinitionField
           definition={g}
           key={`${props.keyPrefix}-${i}`}
           textFieldId={`${props.keyPrefix}-${i}-text`}
           onChange={(definition: Definition) => {
-            const updatedDefinitions = [...props.definitions];
+            const updatedDefinitions = [...definitions];
             updatedDefinitions.splice(i, 1, definition);
             props.onChange(updatedDefinitions);
           }}
         />
       ))}
-    </React.Fragment>
+    </>
   );
 }
 
