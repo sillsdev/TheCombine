@@ -1,7 +1,7 @@
 strict: true
 theme:
   name: material
-  custom_dir: "../../overrides/"
+  custom_dir: "../../default/"
   palette:
     primary: blue
   icon:
