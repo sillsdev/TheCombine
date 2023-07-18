@@ -2,7 +2,7 @@
 
 ## Review Entries
 
-The Review Entries table shows all entries in a project.
+The Review Entries table shows all of the entries in the selected project.
 
 ### Sorting and Filtering Columns
 
@@ -10,28 +10,29 @@ The columns are: Edit, Vernacular, Senses, Glosses, Domains, Pronunciations, Not
 
 ![Review Entries column headers](images/reviewEntriesColumns.png)
 
-At the top of columns with predominantly text content (Vernacular, Glosses, Domains, Note, or Flag), you can sort
+At the top of a column with predominantly text content (Vernacular, Glosses, Domains, Note, or Flag), you can sort
 alphabetically or filter with a text search.
 
-At the top of the Senses and Pronunciations columns, you can sort or filter by the number of senses or recordings that
-entries have.
+At the top of either the Senses or Pronunciations column, you can sort or filter by the number of senses or recordings
+that entries have.
 
-Due to the nature of Rapid Word Collection, [Data Entry](dataEntry.md) in The Combine does not support adding
-definitions or parts of speech. However, if you have imported a project in which senses have definitions or part of
-speech, additional columns with that information will automatically be added to the Review Entries table.
+Due to the nature of Rapid Word Collection, [Data Entry](dataEntry.md) in The Combine does not support the addition of
+definitions or parts of speech. However, if the project has imported data in which definitions or parts of speech were
+already present, additional columns will automatically be added to the Review Entries table.
 
 ### Editing Entry Rows
 
-You can record, play, or delete an entry's audio recordings with the icons in the Pronunciations column. You can delete
-an entire entry with the icon in the Delete column.
+You can record, play, or delete an entry's audio recordings by using the icons in the Pronunciations column. You can
+delete an entire entry by using the icon in the Delete column.
 
 To edit an entry's vernacular form, senses (including glosses and domains), note, or flag, click the icon in the Edit
 column.
 
 ## Merge Duplicates
 
-This tool automatically finds sets of potential duplicate entries. First it presents sets of words with identical
-vernacular forms. Then it presents sets with similar vernacular forms or identical glosses (or definitions).
+This tool automatically finds sets of potential duplicate entries (up to 5 entries in each set, and up to 12 sets in
+each pass). First it presents sets of words with identical vernacular forms. Then it presents sets with similar
+vernacular forms or identical glosses (or definitions).
 
 ![Merge Duplicates two entries](images/mergeTwo.png)
 
@@ -56,7 +57,7 @@ If you drag a sense card over another sense card, the other sense card also turn
 ![Merge Duplicates merging a sense](images/mergeMerge.png)
 
 Dropping a sense card onto another sense card (when they are both green) merges the senses. This causes a blue sidebar
-to appear on the right, showing what senses are being merged.
+to appear on the right, showing which senses are being merged.
 
 ![Merge Duplicates senses merged](images/mergeSidebar.png)
 
@@ -74,12 +75,12 @@ Click on the right angle bracket (>) to close or open the blue sidebar.
 ### Delete a Sense
 
 To delete a sense entirely, drag its card to the garbage can icon in the lower-left corner. When the sense card turns
-red, release.
+red, release it.
 
 ![Merge Duplicates deleting a sense](images/mergeDelete.png)
 
 If you delete the only remaining sense of a column, the whole column will disappear, and that entire entry will be
-deleted when you save.
+deleted when you Save & Continue.
 
 ![Merge Duplicates sense deleted](images/mergeDeleted.png)
 
@@ -90,7 +91,7 @@ There is a flag icon at the top-right corner of every column (to the right of th
 ![Merge Duplicates flagging an entry](images/mergeFlag.png){ .center }
 
 You can click on the flag icon to flag the entry for future inspection or editing. (You can sort flagged entries in
-[Review Entries](#review-entries).) When you flag an entry, you are given the option to add text.
+[Review Entries](#review-entries).) When you flag an entry, you are given the option to add text to the flag.
 
 ![Merge Duplicates adding or editing a flag](images/mergeEditFlag.png){ .center }
 
@@ -119,14 +120,14 @@ deleted senses), updating the words in the database. Second, it saves any unmerg
 
 !!! note
 
-    If one of the words in an intentionally unmerged set is edited (e.g., in Review Entries), then the set can appear again as potential duplicates.
+    If one of the words in an intentionally unmerged set is edited (e.g., in Review Entries), then the set may appear again as potential duplicates.
 
 #### Skip
 
 ![Merge Duplicates Skip button](images/mergeSkip.png)
 
-The grey "Skip" button resets any changes made to the set of potential duplicates. The same set will be suggested again
-the next time Merge Duplicates is opened.
+The grey "Skip" button resets any changes made to the set of potential duplicates. The same set will be presented as
+potential duplicates again the next time Merge Duplicates is opened.
 
 ### Merging with Imported Data
 
@@ -144,10 +145,11 @@ information will appear in the Merge Duplicate sense cards as follows:
 
 #### Protected Entries and Senses
 
-If an entry or sense was imported with other data not supported in The Combine, it is protected to prevent its deletion.
-The sense card of a protected sense will have a yellow background—it cannot be deleted or dropped into another sense
-card. The column of a protected entry will have a yellow header (where the vernacular and flag are located). When a
-protected entry has only one sense, that sense card cannot be moved.
+If an imported entry or sense contains data not supported in The Combine (e.g., etymologies or sense reversals), it is
+protected to prevent its deletion. If a sense is protected, its card will have a yellow background—it cannot be deleted
+or dropped into (i.e., merged into) another sense card. If an entire entry is protected, its column will have a yellow
+header (where the vernacular and flag are located). When a protected entry has only one sense, that sense card cannot be
+moved.
 
 ## Create Character Inventory
 
