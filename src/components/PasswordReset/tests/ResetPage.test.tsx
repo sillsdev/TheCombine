@@ -1,18 +1,13 @@
 import "@testing-library/jest-dom";
-import {
-  act,
-  cleanup,
-  render,
-  RenderOptions,
-  screen,
-} from "@testing-library/react";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 import { Provider } from "react-redux";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
+
 import PasswordReset, {
   PasswordResetTestIds,
 } from "components/PasswordReset/ResetPage";
@@ -43,7 +38,7 @@ afterEach(cleanup);
 const ResetPageProviders = ({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }): ReactElement => {
   return (
     <Provider store={mockStore}>
@@ -56,12 +51,9 @@ const ResetPageProviders = ({
   );
 };
 
-const customRender = async (
-  ui: ReactElement,
-  options?: Omit<RenderOptions, "wrapper">
-): Promise<void> => {
+const customRender = async (ui: ReactElement): Promise<void> => {
   await act(async () => {
-    render(ui, { wrapper: ResetPageProviders, ...options });
+    render(ui, { wrapper: ResetPageProviders });
   });
 };
 
