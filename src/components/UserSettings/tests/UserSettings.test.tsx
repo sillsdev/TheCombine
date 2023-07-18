@@ -1,8 +1,6 @@
 import "@testing-library/jest-dom";
 import { act, cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Provider } from "react-redux";
-import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
@@ -14,24 +12,21 @@ import {
 import { newUser } from "types/user";
 
 const mockIsEmailTaken = jest.fn();
-const mockToUnicode = jest.fn();
 const mockUpdateUser = jest.fn();
 
 jest.mock("notistack", () => ({
   ...jest.requireActual("notistack"),
   enqueueSnackbar: jest.fn(),
 }));
-jest.mock("punycode/", () => ({
-  toUnicode: (...args: any[]) => mockToUnicode(...args),
-}));
 
 jest.mock("backend", () => ({
   isEmailTaken: (...args: any[]) => mockIsEmailTaken(...args),
   updateUser: (...args: any[]) => mockUpdateUser(...args),
 }));
-jest.mock("backend/localStorage");
+jest.mock("i18n", () => ({
+  updateLangFromUser: jest.fn(),
+}));
 
-const mockStore = configureMockStore()();
 const mockUser = (): User => {
   const user = newUser("My Name", "my-username");
   user.email = "e@mail.com";
@@ -41,8 +36,8 @@ const mockUser = (): User => {
 };
 
 const setupMocks = (): void => {
-  mockToUnicode.mockImplementation((text: string) => text);
   mockIsEmailTaken.mockResolvedValue(false);
+  mockUpdateUser.mockImplementation((user: User) => user);
 };
 
 beforeEach(() => {
@@ -52,13 +47,9 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-const renderUserSettings = async (user = newUser()): Promise<void> => {
+const renderUserSettings = async (user = mockUser()): Promise<void> => {
   await act(async () => {
-    render(
-      <Provider store={mockStore}>
-        <UserSettings user={user} />
-      </Provider>
-    );
+    render(<UserSettings user={user} />);
   });
 };
 
@@ -76,18 +67,49 @@ describe("UserSettings", () => {
   });
 
   it("disables button until something is changed", async () => {
-    const user = mockUser();
     const agent = userEvent.setup();
-    await renderUserSettings(user);
+    await renderUserSettings();
 
     const submitButton = screen.getByTestId(UserSettingsIds.ButtonSubmit);
-    expect(submitButton).toBeDisabled();
 
-    const nameField = screen.getByTestId(UserSettingsIds.FieldName);
-    // This act() is triggering `thrown: "Error: Error: connect ECONNREFUSED ::1:80`
+    const typeAndCheckEnabled = async (id: UserSettingsIds): Promise<void> => {
+      expect(submitButton).toBeDisabled();
+      const field = screen.getByTestId(id);
+      await act(async () => {
+        await agent.type(field, "?");
+      });
+      expect(submitButton).toBeEnabled();
+      await act(async () => {
+        await agent.type(field, "{backspace}");
+      });
+    };
+
+    await typeAndCheckEnabled(UserSettingsIds.FieldEmail);
+    await typeAndCheckEnabled(UserSettingsIds.FieldName);
+    await typeAndCheckEnabled(UserSettingsIds.FieldPhone);
+  });
+
+  it("updates user when something is changed and submitted", async () => {
+    const agent = userEvent.setup();
+    await renderUserSettings();
+
+    expect(mockUpdateUser).toBeCalledTimes(0);
     await act(async () => {
-      await agent.type(nameField, "different-username");
+      await agent.type(screen.getByTestId(UserSettingsIds.FieldName), "a");
+      await agent.click(screen.getByTestId(UserSettingsIds.ButtonSubmit));
     });
-    expect(submitButton).toBeEnabled();
+    expect(mockUpdateUser).toBeCalledTimes(1);
+  });
+
+  it("doesn't update user when email is taken", async () => {
+    const agent = userEvent.setup();
+    await renderUserSettings(mockUser());
+
+    mockIsEmailTaken.mockResolvedValueOnce(true);
+    await act(async () => {
+      await agent.type(screen.getByTestId(UserSettingsIds.FieldEmail), "a");
+      await agent.click(screen.getByTestId(UserSettingsIds.ButtonSubmit));
+    });
+    expect(mockUpdateUser).toBeCalledTimes(0);
   });
 });
