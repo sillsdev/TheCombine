@@ -21,6 +21,10 @@ import { updateLangFromUser } from "i18n";
 import theme from "types/theme";
 import { uiWritingSystems } from "types/writingSystem";
 
+// Chrome silently converts non-ASCII characters in a Textfield of type="email".
+// Use punycode.toUnicode() to convert them from punycode back to Unicode.
+const punycode = require("punycode/");
+
 const idAffix = "user-settings";
 
 export default (): ReactElement => {
@@ -39,14 +43,27 @@ export function UserSettings(props: { user: User }): ReactElement {
   const { t } = useTranslation();
 
   async function isEmailOkay(): Promise<boolean> {
-    const unchanged = email.toLowerCase() === props.user.email.toLowerCase();
-    return unchanged || !(await isEmailTaken(email));
+    const unicodeEmail = punycode.toUnicode(email.toLowerCase());
+    const unchanged = unicodeEmail === props.user.email.toLowerCase();
+    return unchanged || !(await isEmailTaken(unicodeEmail));
   }
+
+  const disabled =
+    name === props.user.name &&
+    phone === props.user.phone &&
+    punycode.toUnicode(email) === props.user.email &&
+    uiLang === (props.user.uiLang ?? "");
 
   async function onSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
     if (await isEmailOkay()) {
-      await updateUser({ ...props.user, name, phone, email, uiLang });
+      await updateUser({
+        ...props.user,
+        name,
+        phone,
+        email: punycode.toUnicode(email),
+        uiLang,
+      });
       updateLangFromUser();
       enqueueSnackbar(t("userSettings.updateSuccess"));
     } else {
@@ -170,6 +187,7 @@ export function UserSettings(props: { user: User }): ReactElement {
 
                 <Grid item container justifyContent="flex-end">
                   <Button
+                    disabled={disabled}
                     type="submit"
                     variant="contained"
                     id={`${idAffix}-save`}
