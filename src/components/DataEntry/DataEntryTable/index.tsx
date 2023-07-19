@@ -35,10 +35,12 @@ import { useAppSelector } from "types/hooks";
 import theme from "types/theme";
 import { newNote, newSense, newWord, simpleWord } from "types/word";
 import { defaultWritingSystem } from "types/writingSystem";
+import SpellChecker from "utilities/spellChecker";
 import { LevenshteinDistance } from "utilities/utilities";
 import { firstGlossText } from "utilities/wordUtilities";
 
 export const exitButtonId = "exit-to-domain-tree";
+export const maxSuggestions = 5;
 
 interface DataEntryTableProps {
   semanticDomain: SemanticDomainTreeNode;
@@ -89,15 +91,14 @@ export function focusInput(ref: RefObject<HTMLDivElement>): void {
 }
 
 /*** Find suggestions for given text from a list of strings. */
-const getSuggestions = (
+export function getSuggestions(
   text: string,
   all: string[],
   dist: (a: string, b: string) => number
-): string[] => {
+): string[] {
   if (!text || !all.length) {
     return [];
   }
-  const maxSuggestions = 5;
   const maxDistance = 3;
 
   const some = all
@@ -117,7 +118,7 @@ const getSuggestions = (
     }
   }
   return some;
-};
+}
 
 /*** Return a copy of the semantic domain with current UserId and timestamp. */
 export function makeSemDomCurrent(semDom: SemanticDomain): SemanticDomain {
@@ -232,6 +233,10 @@ export default function DataEntryTable(
 
   const levDist = useMemo(() => new LevenshteinDistance(), []);
   const newVernInput = useRef<HTMLDivElement>(null);
+  const spellChecker = useMemo(() => new SpellChecker(), []);
+  useEffect(() => {
+    spellChecker.updateLang(analysisLang.bcp47);
+  }, [analysisLang.bcp47, spellChecker]);
   const { t } = useTranslation();
 
   ////////////////////////////////////
@@ -871,6 +876,7 @@ export default function DataEntryTable(
               deleteAudioFromWord={(wordId: string, fileName: string) =>
                 deleteAudioFromWord(wordId, fileName)
               }
+              spellChecker={spellChecker}
               focusNewEntry={() => focusInput(newVernInput)}
               analysisLang={analysisLang}
               vernacularLang={vernacularLang}
@@ -883,6 +889,7 @@ export default function DataEntryTable(
 
         <Grid item xs={12}>
           <NewEntry
+            spellChecker={spellChecker}
             analysisLang={analysisLang}
             vernacularLang={vernacularLang}
             // Parent handles new entry state of child:
