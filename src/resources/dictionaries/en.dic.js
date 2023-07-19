@@ -1,4 +1,4 @@
-const dicEn = `49270
+export default `49270
 0/nm
 0th/pt
 1/n1
@@ -49269,5 +49269,3 @@ zydeco/M
 zygote/SM
 zygotic
 zymurgy/M`;
-
-export default dicEn;

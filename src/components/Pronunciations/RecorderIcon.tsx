@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from "types/hooks";
 import { themeColors } from "types/theme";
 
 export const recordButtonId = "recordingButton";
+export const recordIconId = "recordingIcon";
 
 interface RecorderIconProps {
   wordId: string;
@@ -84,7 +85,7 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
               ? classes.iconPress
               : classes.iconRelease
           }
-          id="icon"
+          id={recordIconId}
         />
       </IconButton>
     </Tooltip>

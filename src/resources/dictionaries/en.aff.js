@@ -1,4 +1,5 @@
-const affEn = `SET UTF-8
+export default `# https://cgit.freedesktop.org/libreoffice/dictionaries/tree/en
+SET UTF-8
 TRY esianrtolcdugmphbyfvkwzESIANRTOLCDUGMPHBYFVKWZ'
 ICONV 1
 ICONV ’ '
@@ -203,5 +204,3 @@ REP shun tion
 REP shun sion
 REP shun cion
 REP size cise`;
-
-export default affEn;
