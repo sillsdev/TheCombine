@@ -23,6 +23,7 @@ jest.mock("backend", () => ({
   isEmailTaken: (...args: any[]) => mockIsEmailTaken(...args),
   updateUser: (...args: any[]) => mockUpdateUser(...args),
 }));
+// Mock "i18n", else `thrown: "Error: Error: connect ECONNREFUSED ::1:80 [...]`
 jest.mock("i18n", () => ({
   updateLangFromUser: jest.fn(),
 }));
@@ -93,9 +94,9 @@ describe("UserSettings", () => {
     const agent = userEvent.setup();
     await renderUserSettings();
 
-    expect(mockUpdateUser).toBeCalledTimes(0);
     await act(async () => {
       await agent.type(screen.getByTestId(UserSettingsIds.FieldName), "a");
+      expect(mockUpdateUser).toBeCalledTimes(0);
       await agent.click(screen.getByTestId(UserSettingsIds.ButtonSubmit));
     });
     expect(mockUpdateUser).toBeCalledTimes(1);
@@ -105,9 +106,9 @@ describe("UserSettings", () => {
     const agent = userEvent.setup();
     await renderUserSettings(mockUser());
 
-    mockIsEmailTaken.mockResolvedValueOnce(true);
     await act(async () => {
       await agent.type(screen.getByTestId(UserSettingsIds.FieldEmail), "a");
+      mockIsEmailTaken.mockResolvedValueOnce(true);
       await agent.click(screen.getByTestId(UserSettingsIds.ButtonSubmit));
     });
     expect(mockUpdateUser).toBeCalledTimes(0);
