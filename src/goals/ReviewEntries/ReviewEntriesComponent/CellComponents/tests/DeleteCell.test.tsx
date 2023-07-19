@@ -4,7 +4,7 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import { DeleteCell } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents";
+import DeleteCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DeleteCell";
 import { defaultState as reviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/WordsMock";
 
