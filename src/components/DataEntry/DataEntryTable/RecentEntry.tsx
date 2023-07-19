@@ -16,7 +16,7 @@ import { firstGlossText } from "utilities/wordUtilities";
 
 const idAffix = "recent-entry";
 
-interface RecentEntryProps {
+export interface RecentEntryProps {
   rowIndex: number;
   entry: Word;
   senseGuid: string;
