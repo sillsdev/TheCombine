@@ -1,4 +1,4 @@
-const dicFr = `80853
+export default `80853
 &amp;
 1er/--
 1ers/--
@@ -80851,5 +80851,3 @@ zzzz
 ω
 ℓ/U.||--
 Ω/U.||--`;
-
-export default dicFr;

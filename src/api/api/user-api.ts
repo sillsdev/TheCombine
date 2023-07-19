@@ -570,6 +570,51 @@ export const UserApiAxiosParamCreator = function (
         options: localVarRequestOptions,
       };
     },
+    /**
+     *
+     * @param {string} token
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    validateResetToken: async (
+      token: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'token' is not null or undefined
+      assertParamExists("validateResetToken", "token", token);
+      const localVarPath = `/v1/users/forgot/reset/validate/{token}`.replace(
+        `{${"token"}}`,
+        encodeURIComponent(String(token))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
   };
 };
 
@@ -833,6 +878,27 @@ export const UserApiFp = function (configuration?: Configuration) {
         configuration
       );
     },
+    /**
+     *
+     * @param {string} token
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async validateResetToken(
+      token: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.validateResetToken(token, options);
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
   };
 };
 
@@ -979,6 +1045,17 @@ export const UserApiFactory = function (
     ): AxiosPromise<string> {
       return localVarFp
         .updateUser(userId, user, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} token
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    validateResetToken(token: string, options?: any): AxiosPromise<boolean> {
+      return localVarFp
+        .validateResetToken(token, options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -1129,6 +1206,20 @@ export interface UserApiUpdateUserRequest {
    * @memberof UserApiUpdateUser
    */
   readonly user: User;
+}
+
+/**
+ * Request parameters for validateResetToken operation in UserApi.
+ * @export
+ * @interface UserApiValidateResetTokenRequest
+ */
+export interface UserApiValidateResetTokenRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof UserApiValidateResetToken
+   */
+  readonly token: string;
 }
 
 /**
@@ -1304,6 +1395,22 @@ export class UserApi extends BaseAPI {
   ) {
     return UserApiFp(this.configuration)
       .updateUser(requestParameters.userId, requestParameters.user, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {UserApiValidateResetTokenRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public validateResetToken(
+    requestParameters: UserApiValidateResetTokenRequest,
+    options?: any
+  ) {
+    return UserApiFp(this.configuration)
+      .validateResetToken(requestParameters.token, options)
       .then((request) => request(this.axios, this.basePath));
   }
 }
