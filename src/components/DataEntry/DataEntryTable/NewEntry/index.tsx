@@ -27,6 +27,7 @@ import Pronunciations from "components/Pronunciations/PronunciationsComponent";
 import Recorder from "components/Pronunciations/Recorder";
 import { StoreState } from "types";
 import theme from "types/theme";
+import SpellChecker from "utilities/spellChecker";
 
 const idAffix = "new-entry";
 
@@ -45,6 +46,7 @@ interface NewEntryProps {
   analysisLang: WritingSystem;
   vernacularLang: WritingSystem;
   recorder?: Recorder;
+  spellChecker?: SpellChecker;
   // Parent component handles new entry state:
   addNewEntry: () => Promise<void>;
   updateWordWithNewGloss: (wordId: string) => Promise<void>;
@@ -288,6 +290,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
           analysisLang={analysisLang}
           textFieldId={`${idAffix}-gloss`}
           onUpdate={() => conditionalFocus(FocusTarget.Gloss)}
+          spellChecker={props.spellChecker}
         />
       </Grid>
       <Grid item xs={1} style={gridItemStyle(1)}>

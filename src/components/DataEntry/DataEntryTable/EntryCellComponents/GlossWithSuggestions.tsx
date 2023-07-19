@@ -1,5 +1,5 @@
 import { Autocomplete, TextField } from "@mui/material";
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { Key } from "ts-key-enum";
 
 import { WritingSystem } from "api";
@@ -16,6 +16,7 @@ interface GlossWithSuggestionsProps {
   analysisLang: WritingSystem;
   textFieldId: string;
   onUpdate?: () => void;
+  spellChecker?: SpellChecker;
 }
 
 /**
@@ -25,21 +26,12 @@ export default function GlossWithSuggestions(
   props: GlossWithSuggestionsProps
 ): ReactElement {
   const maxSuggestions = 5;
-  const [spellCheck, setSpellCheck] = useState(
-    new SpellChecker(props.analysisLang.bcp47)
-  );
 
   useEffect(() => {
     if (props.onUpdate) {
       props.onUpdate();
     }
   });
-
-  useEffect(() => {
-    if (props.analysisLang.bcp47 !== spellCheck.lang) {
-      setSpellCheck(new SpellChecker(props.analysisLang.bcp47));
-    }
-  }, [props.analysisLang.bcp47, spellCheck.lang]);
 
   return (
     <Autocomplete
@@ -52,7 +44,7 @@ export default function GlossWithSuggestions(
       }
       // freeSolo allows use of a typed entry not available as a drop-down option
       freeSolo
-      options={spellCheck.getSpellingSuggestions(props.gloss)}
+      options={props.spellChecker?.getSpellingSuggestions(props.gloss) ?? []}
       value={props.gloss}
       onBlur={() => {
         if (props.onBlur) {

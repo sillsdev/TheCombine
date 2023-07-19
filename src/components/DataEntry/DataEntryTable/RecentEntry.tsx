@@ -12,6 +12,7 @@ import Pronunciations from "components/Pronunciations/PronunciationsComponent";
 import Recorder from "components/Pronunciations/Recorder";
 import theme from "types/theme";
 import { newGloss } from "types/word";
+import SpellChecker from "utilities/spellChecker";
 import { firstGlossText } from "utilities/wordUtilities";
 
 const idAffix = "recent-entry";
@@ -31,6 +32,7 @@ export interface RecentEntryProps {
   analysisLang: WritingSystem;
   vernacularLang: WritingSystem;
   disabled?: boolean;
+  spellChecker?: SpellChecker;
 }
 
 /**
@@ -109,6 +111,7 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
           }}
           analysisLang={props.analysisLang}
           textFieldId={`${idAffix}-${props.rowIndex}-gloss`}
+          spellChecker={props.spellChecker}
         />
       </Grid>
       <Grid

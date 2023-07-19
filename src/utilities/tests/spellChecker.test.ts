@@ -1,29 +1,30 @@
 import SpellChecker from "utilities/spellChecker";
 
-describe("SpellChecker", () => {
-  it("constructs properly", () => {
-    const spellChecker = new SpellChecker();
-    const properties = Object.keys(spellChecker);
-    let hasSpellProperty = false;
-    for (const property of properties) {
-      if (property === "spell") {
-        hasSpellProperty = true;
-      }
-    }
-    expect(hasSpellProperty).toEqual(true);
-  });
+jest.mock(
+  "utilities/dictionary",
+  () => () => Promise.resolve({ aff: "SET UTF-8", dic: `1\n${mockValidWord}` })
+);
 
+const mockValidWord = "mock";
+
+describe("SpellChecker", () => {
   describe("correct", () => {
-    it("detects a correctly spelled word", () => {
-      const spellChecker = new SpellChecker();
-      const isSpelledCorrectly = spellChecker.correct("word");
-      expect(isSpelledCorrectly).toEqual(true);
+    it("detects a correctly spelled word", (done) => {
+      const spellChecker = new SpellChecker("en");
+      // Give the dictionary half-a-sec to load.
+      setTimeout(() => {
+        expect(spellChecker.correct(mockValidWord)).toEqual(true);
+        done();
+      }, 500);
     });
 
-    it("detects a misspelled word", () => {
-      const spellChecker = new SpellChecker();
-      const isSpelledCorrectly = spellChecker.correct("abjkdsjf");
-      expect(isSpelledCorrectly).toEqual(false);
+    it("detects a misspelled word", (done) => {
+      const spellChecker = new SpellChecker("en");
+      // Give the dictionary half-a-sec to load.
+      setTimeout(() => {
+        expect(spellChecker.correct("abjkdsjf")).toEqual(false);
+        done();
+      }, 500);
     });
   });
 
