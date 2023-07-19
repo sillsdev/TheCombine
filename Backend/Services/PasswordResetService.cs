@@ -29,9 +29,15 @@ namespace BackendFramework.Services
             await _passwordResets.ClearAll(email);
         }
 
+        public async Task<bool> ValidateToken(string token)
+        {
+            var request = await _passwordResets.FindByToken(token);
+            return request is not null && DateTime.Now <= request.ExpireTime;
+        }
+
         /// <summary> Reset a users password using a Password reset request token. </summary>
         /// <returns> Returns false if the request is invalid or expired. </returns>
-        async Task<bool> IPasswordResetService.ResetPassword(string token, string password)
+        public async Task<bool> ResetPassword(string token, string password)
         {
             var request = await _passwordResets.FindByToken(token);
             if (request is null || DateTime.Now > request.ExpireTime)
