@@ -68,6 +68,15 @@ namespace BackendFramework.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
+        /// <summary> Validates password reset token in url </summary>
+        [AllowAnonymous]
+        [HttpGet("forgot/reset/validate/{token}", Name = "ValidateResetToken")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        public async Task<IActionResult> ValidateResetToken(string token)
+        {
+            return Ok(await _passwordResetService.ValidateToken(token));
+        }
+
         /// <summary> Resets a password using a token </summary>
         [AllowAnonymous]
         [HttpPost("forgot/reset", Name = "ResetPassword")]

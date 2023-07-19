@@ -70,6 +70,7 @@
     "emailError": "Please enter a valid email."
   },
   "passwordReset": {
+    "invalidURL": "Password Reset link is invalid.",
     "emailOrUsername": "Email OR Username",
     "resetRequestTitle": "Reset Password Request",
     "resetTitle": "Reset Password",

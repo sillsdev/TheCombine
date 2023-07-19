@@ -10,6 +10,7 @@ import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
 import RecorderIcon, {
   recordButtonId,
+  recordIconId,
 } from "components/Pronunciations/RecorderIcon";
 import {
   PronunciationsState,
@@ -58,6 +59,7 @@ beforeAll(() => {
     );
   });
 });
+
 describe("Pronunciations", () => {
   it("renders one record button and one play button for each pronunciation file", () => {
     expect(testRenderer.root.findAllByType(AudioRecorder)).toHaveLength(1);
@@ -73,7 +75,7 @@ describe("Pronunciations", () => {
     const mockStartRecording = jest.fn();
     const mockStopRecording = jest.fn();
     renderer.act(() => {
-      testRenderer.update(
+      testRenderer = renderer.create(
         <StyledEngineProvider injectFirst>
           <ThemeProvider theme={theme}>
             <Provider store={mockStore}>
@@ -99,7 +101,7 @@ describe("Pronunciations", () => {
 
   it("default style is iconRelease", () => {
     renderer.act(() => {
-      testRenderer.update(
+      testRenderer = renderer.create(
         <ThemeProvider theme={theme}>
           <StyledEngineProvider>
             <Provider store={mockStore}>
@@ -114,17 +116,15 @@ describe("Pronunciations", () => {
         </ThemeProvider>
       );
     });
-    const iconRelease = testRenderer.root
-      .findByProps({ id: "icon" })
-      .props.className.includes("iconRelease");
-    expect(iconRelease).toBeTruthy();
+    const icon = testRenderer.root.findByProps({ id: recordIconId });
+    expect(icon.props.className.includes("iconRelease")).toBeTruthy();
   });
 
   it("style depends on pronunciations state", () => {
     const wordId = "1";
     const mockStore2 = createMockStore(mockRecordingState(wordId));
     renderer.act(() => {
-      testRenderer.update(
+      testRenderer = renderer.create(
         <ThemeProvider theme={theme}>
           <StyledEngineProvider>
             <Provider store={mockStore2}>
@@ -139,9 +139,7 @@ describe("Pronunciations", () => {
         </ThemeProvider>
       );
     });
-    const iconPress = testRenderer.root
-      .findByProps({ id: "icon" })
-      .props.className.includes("iconPress");
-    expect(iconPress).toBeTruthy();
+    const icon = testRenderer.root.findByProps({ id: recordIconId });
+    expect(icon.props.className.includes("iconPress")).toBeTruthy();
   });
 });

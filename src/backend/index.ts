@@ -465,6 +465,10 @@ export async function resetPasswordRequest(
     .catch(() => false);
 }
 
+export async function validateResetToken(token: string): Promise<boolean> {
+  return (await userApi.validateResetToken({ token })).data;
+}
+
 export async function resetPassword(
   token: string,
   newPassword: string

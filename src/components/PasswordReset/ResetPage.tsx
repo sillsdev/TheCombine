@@ -1,10 +1,11 @@
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Button, Card, Grid, TextField, Typography } from "@mui/material";
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { resetPassword } from "backend";
+import { resetPassword, validateResetToken } from "backend";
+import InvalidLink from "components/InvalidLink";
 import { Path } from "types/path";
 import { meetsPasswordRequirements } from "utilities/utilities";
 
@@ -26,28 +27,38 @@ enum RequestState {
 }
 
 export default function PasswordReset(): ReactElement {
+  const navigate = useNavigate();
   const { token } = useParams();
+  const { t } = useTranslation();
+
+  const [isPasswordConfirmed, setIsPasswordConfirmed] = useState(false);
+  const [isValidLink, setIsValidLink] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [passwordFitsRequirements, setPasswordFitsRequirements] =
     useState(false);
-  const [isPasswordConfirmed, setIsPasswordConfirmed] = useState(false);
   const [requestState, setRequestState] = useState(RequestState.None);
-  const { t } = useTranslation();
-  const navigate = useNavigate();
 
-  const backToLogin = (event: React.FormEvent<HTMLElement>): void => {
-    event.preventDefault();
+  const validateLink = useCallback(async (): Promise<void> => {
+    if (token) {
+      setIsValidLink(await validateResetToken(token));
+    }
+  }, [token]);
+
+  useEffect(() => {
+    validateLink();
+  });
+
+  const backToLogin = (e: React.FormEvent<HTMLElement>): void => {
+    e.preventDefault();
     navigate(Path.Login);
   };
 
-  const onSubmit = async (
-    event: React.FormEvent<HTMLElement>
-  ): Promise<void> => {
+  const onSubmit = async (e: React.FormEvent<HTMLElement>): Promise<void> => {
     if (token) {
       setRequestState(RequestState.Attempt);
       await asyncReset(token, password);
-      event.preventDefault();
+      e.preventDefault();
     }
   };
 
@@ -70,7 +81,7 @@ export default function PasswordReset(): ReactElement {
     }
   };
 
-  return (
+  return isValidLink ? (
     <Grid container justifyContent="center">
       <Card style={{ padding: 10, width: 450 }}>
         <form onSubmit={onSubmit}>
@@ -133,7 +144,7 @@ export default function PasswordReset(): ReactElement {
           <Grid container justifyContent="flex-end" spacing={2}>
             <Grid item>
               {requestState === RequestState.Fail ? (
-                <React.Fragment>
+                <>
                   <Typography
                     id="passwordReset.resetFail"
                     data-testid={PasswordResetTestIds.PasswordResetFail}
@@ -153,7 +164,7 @@ export default function PasswordReset(): ReactElement {
                     &nbsp;
                     <ExitToAppIcon />
                   </Button>
-                </React.Fragment>
+                </>
               ) : (
                 <Button
                   id="password-reset-submit"
@@ -171,5 +182,7 @@ export default function PasswordReset(): ReactElement {
         </form>
       </Card>
     </Grid>
+  ) : (
+    <InvalidLink textId="passwordReset.invalidURL" />
   );
 }

@@ -1,5 +1,5 @@
 import { Input, TextField } from "@mui/material";
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -82,25 +82,25 @@ interface GlossListProps {
 
 function GlossList(props: GlossListProps): ReactElement {
   const langs = props.glosses.map((g) => g.language);
-  if (!langs.includes(props.defaultLang)) {
-    props.onChange([...props.glosses, newGloss("", props.defaultLang)]);
-  }
+  const glosses = langs.includes(props.defaultLang)
+    ? props.glosses
+    : [...props.glosses, newGloss("", props.defaultLang)];
 
   return (
-    <React.Fragment>
-      {props.glosses.map((g, i) => (
+    <>
+      {glosses.map((g, i) => (
         <GlossField
           gloss={g}
           key={`${props.keyPrefix}-${i}`}
           textFieldId={`${props.keyPrefix}-${i}-text`}
           onChange={(gloss: Gloss) => {
-            const updatedGlosses = [...props.glosses];
+            const updatedGlosses = [...glosses];
             updatedGlosses.splice(i, 1, gloss);
             props.onChange(updatedGlosses);
           }}
         />
       ))}
-    </React.Fragment>
+    </>
   );
 }
 
