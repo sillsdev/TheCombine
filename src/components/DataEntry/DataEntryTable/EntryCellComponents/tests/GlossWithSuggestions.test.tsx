@@ -3,6 +3,7 @@ import renderer from "react-test-renderer";
 
 import GlossWithSuggestions from "components/DataEntry/DataEntryTable/EntryCellComponents/GlossWithSuggestions";
 import { newWritingSystem } from "types/writingSystem";
+import SpellChecker from "utilities/spellChecker";
 
 // A work-around for this console error: https://github.com/mui/material-ui/issues/28687#issuecomment-1513741911
 jest.mock("@mui/base/node/useAutocomplete/useAutocomplete", () => () => ({
@@ -55,6 +56,22 @@ describe("GlossWithSuggestions", () => {
           handleEnterAndTab={jest.fn()}
           analysisLang={newWritingSystem()}
           textFieldId={"test-gloss-disabled"}
+        />
+      );
+    });
+  });
+
+  it("renders with spell checker", () => {
+    renderer.act(() => {
+      renderer.create(
+        <GlossWithSuggestions
+          gloss={""}
+          glossInput={React.createRef<HTMLDivElement>()}
+          updateGlossField={jest.fn()}
+          handleEnterAndTab={jest.fn()}
+          analysisLang={newWritingSystem()}
+          textFieldId={"test-gloss"}
+          spellChecker={new SpellChecker("en")}
         />
       );
     });
