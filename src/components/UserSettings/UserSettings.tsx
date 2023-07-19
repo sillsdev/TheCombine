@@ -25,15 +25,13 @@ import { uiWritingSystems } from "types/writingSystem";
 // Use punycode.toUnicode() to convert them from punycode back to Unicode.
 const punycode = require("punycode/");
 
-const idAffix = "user-settings";
-
 export enum UserSettingsIds {
-  ButtonSubmit = `${idAffix}-submit`,
-  FieldEmail = `${idAffix}-email`,
-  FieldName = `${idAffix}-name`,
-  FieldPhone = `${idAffix}-phone`,
-  FieldUsername = `${idAffix}-username`,
-  SelectUiLang = `${idAffix}-ui-lang`,
+  ButtonSubmit = "user-settings-submit",
+  FieldEmail = "user-settings-email",
+  FieldName = "user-settings-name",
+  FieldPhone = "user-settings-phone",
+  FieldUsername = "user-settings-username",
+  SelectUiLang = "user-settings-ui-lang",
 }
 
 export default (): ReactElement => {
