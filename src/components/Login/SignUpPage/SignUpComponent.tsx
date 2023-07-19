@@ -18,6 +18,10 @@ import {
   meetsUsernameRequirements,
 } from "utilities/utilities";
 
+// Chrome silently converts non-ASCII characters in a Textfield of type="email".
+// Use punycode.toUnicode() to convert them from punycode back to Unicode.
+const punycode = require("punycode/");
+
 const idAffix = "signUp";
 
 interface SignUpDispatchProps {
@@ -111,9 +115,8 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
     }
   }
 
-  async checkEmail(username: string) {
-    const emailTaken = await isEmailTaken(username);
-    if (emailTaken) {
+  async checkEmail(email: string) {
+    if (await isEmailTaken(punycode.toUnicode(email))) {
       this.setState((prevState) => ({
         error: { ...prevState.error, email: true },
       }));
@@ -124,7 +127,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
     e.preventDefault();
     const name = this.state.name.trim();
     const username = this.state.username.trim();
-    const email = this.state.email.trim();
+    const email = punycode.toUnicode(this.state.email.trim());
     const password = this.state.password.trim();
     const confirmPassword = this.state.confirmPassword.trim();
 

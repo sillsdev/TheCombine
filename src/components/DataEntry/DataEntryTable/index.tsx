@@ -196,15 +196,19 @@ interface DataEntryTableState {
 export default function DataEntryTable(
   props: DataEntryTableProps
 ): ReactElement {
-  const { analysisLang, suggestVerns, vernacularLang } = useAppSelector(
-    (state: StoreState) => {
-      const proj = state.currentProjectState.project;
-      return {
-        analysisLang: proj.analysisWritingSystems[0] ?? defaultWritingSystem,
-        suggestVerns: proj.autocompleteSetting === AutocompleteSetting.On,
-        vernacularLang: proj.vernacularWritingSystem,
-      };
-    }
+  const analysisLang = useAppSelector(
+    (state: StoreState) =>
+      state.currentProjectState.project.analysisWritingSystems[0] ??
+      defaultWritingSystem
+  );
+  const suggestVerns = useAppSelector(
+    (state: StoreState) =>
+      state.currentProjectState.project.autocompleteSetting ===
+      AutocompleteSetting.On
+  );
+  const vernacularLang = useAppSelector(
+    (state: StoreState) =>
+      state.currentProjectState.project.vernacularWritingSystem
   );
 
   const updateHeight = props.updateHeight;
