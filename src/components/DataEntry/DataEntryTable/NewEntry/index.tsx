@@ -24,7 +24,6 @@ import {
 import SenseDialog from "components/DataEntry/DataEntryTable/NewEntry/SenseDialog";
 import VernDialog from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
-import Recorder from "components/Pronunciations/Recorder";
 import { StoreState } from "types";
 import theme from "types/theme";
 import SpellChecker from "utilities/spellChecker";
@@ -45,7 +44,6 @@ const gridItemStyle = (spacing: number): CSSProperties => ({
 interface NewEntryProps {
   analysisLang: WritingSystem;
   vernacularLang: WritingSystem;
-  recorder?: Recorder;
   spellChecker?: SpellChecker;
   // Parent component handles new entry state:
   addNewEntry: () => Promise<void>;
@@ -74,7 +72,6 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
   const {
     analysisLang,
     vernacularLang,
-    recorder,
     // Parent component handles new entry state:
     addNewEntry,
     updateWordWithNewGloss,
@@ -308,7 +305,6 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
           wordId={""}
           audioInFrontend
           pronunciationFiles={newAudioUrls}
-          recorder={recorder}
           deleteAudio={(_, fileName: string) => delNewAudioUrl(fileName)}
           uploadAudio={(_, audioFile: File) => addNewAudioUrl(audioFile)}
         />

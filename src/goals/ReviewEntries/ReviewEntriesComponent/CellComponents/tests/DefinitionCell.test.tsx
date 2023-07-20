@@ -4,7 +4,7 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import { DefinitionCell } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents";
+import DefinitionCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DefinitionCell";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/WordsMock";
 import { defaultWritingSystem } from "types/writingSystem";
 
