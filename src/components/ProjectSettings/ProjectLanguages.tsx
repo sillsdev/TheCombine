@@ -256,13 +256,19 @@ export default function ProjectLanguages(
         (add ? addAnalysisLangPicker() : addAnalysisLangButtons())}
 
       {/* Semantic domains language */}
-      {!props.readOnly && (
-        <>
-          <Typography variant="h6">
-            {t("projectSettings.language.semanticDomains")}
+      <Typography style={{ marginTop: theme.spacing(1) }} variant="h6">
+        {t("projectSettings.language.semanticDomains")}
+      </Typography>
+      {props.readOnly ? (
+        props.project.semDomWritingSystem.bcp47 ? (
+          <ImmutableWritingSystem ws={props.project.semDomWritingSystem} />
+        ) : (
+          <Typography>
+            {t("projectSettings.language.semanticDomainsDefault")}
           </Typography>
-          {semDomLangSelect()}
-        </>
+        )
+      ) : (
+        semDomLangSelect()
       )}
     </>
   );
@@ -286,25 +292,21 @@ function ImmutableWritingSystem(
           <Typography>{`${props.index + 1}. `}</Typography>
         </Grid>
       )}
-      {!!props.ws.name && (
-        <Grid item>
-          <Typography>
+      <Grid item>
+        {!!props.ws.name && (
+          <Typography display="inline">
             {`${t("projectSettings.language.name")}: ${props.ws.name}, `}
           </Typography>
-        </Grid>
-      )}
-      <Grid item>
-        <Typography>
+        )}
+        <Typography display="inline">
           {`${t("projectSettings.language.bcp47")}: ${props.ws.bcp47}`}
         </Typography>
-      </Grid>
-      {!!props.ws.font && (
-        <Grid item>
-          <Typography>
+        {!!props.ws.font && (
+          <Typography display="inline">
             {`, ${t("projectSettings.language.font")}: ${props.ws.font}`}
           </Typography>
-        </Grid>
-      )}
+        )}
+      </Grid>
       <Grid item>{props.buttons}</Grid>
     </Grid>
   );
