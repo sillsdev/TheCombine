@@ -2,7 +2,7 @@ import renderer from "react-test-renderer";
 
 import "tests/reactI18nextMock";
 
-import { VernacularCell } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents";
+import VernacularCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/VernacularCell";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/WordsMock";
 
 // The multiline TextField causes problems in the mock environment.

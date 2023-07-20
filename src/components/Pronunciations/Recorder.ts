@@ -7,7 +7,7 @@ export default class Recorder {
   static blobType: "audio" = "audio";
 
   constructor(toast?: (text: string) => void) {
-    this.toast = toast ?? alert;
+    this.toast = toast ?? ((text: string) => alert(text));
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then((audioStream) => this.onMicrophoneAvailable(audioStream))
