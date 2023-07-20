@@ -3,13 +3,11 @@ import { memo, ReactElement } from "react";
 import { getAudioUrl } from "backend";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
-import Recorder from "components/Pronunciations/Recorder";
 
 interface PronunciationProps {
   wordId: string;
   audioInFrontend?: boolean;
   pronunciationFiles: string[];
-  recorder?: Recorder;
   deleteAudio: (wordId: string, fileName: string) => void;
   uploadAudio: (wordId: string, audioFile: File) => void;
 }
@@ -32,11 +30,7 @@ export function Pronunciations(props: PronunciationProps): ReactElement {
 
   return (
     <>
-      <AudioRecorder
-        wordId={props.wordId}
-        recorder={props.recorder}
-        uploadAudio={props.uploadAudio}
-      />
+      <AudioRecorder wordId={props.wordId} uploadAudio={props.uploadAudio} />
       {audioButtons}
     </>
   );
