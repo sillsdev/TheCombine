@@ -1,5 +1,5 @@
 import { Button, Grid, TextField } from "@mui/material";
-import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
+import { ChangeEvent, ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { BannerType } from "api/models";
@@ -8,11 +8,11 @@ import theme from "types/theme";
 
 export default function Banners(): ReactElement {
   return (
-    <React.Fragment>
+    <>
       {[BannerType.Announcement, BannerType.Login].map((type) => (
         <Banner key={type} type={type} />
       ))}
-    </React.Fragment>
+    </>
   );
 }
 
@@ -31,20 +31,20 @@ function Banner(props: BannerProps): ReactElement {
 
   const handleOnChange = (
     e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
+  ): void => {
     setText(e.target.value);
   };
 
-  const handleSaveClick = async () => {
+  const handleSaveClick = async (): Promise<void> => {
     await updateBanner({ type: props.type, text });
   };
 
-  const handleResetClick = async () => {
+  const handleResetClick = async (): Promise<void> => {
     await updateBanner({ type: props.type, text: "" });
     setText("");
   };
 
-  const labelId = (type: BannerType) => {
+  const labelId = (type: BannerType): string => {
     switch (type) {
       case BannerType.Announcement:
         return "siteSettings.banners.announcementBanner";
@@ -75,7 +75,7 @@ function Banner(props: BannerProps): ReactElement {
         />
       </Grid>
 
-      <Grid item sm={2}>
+      <Grid item>
         <Button
           id={`${idAffix}-save`}
           type="submit"
@@ -87,7 +87,7 @@ function Banner(props: BannerProps): ReactElement {
         </Button>
       </Grid>
 
-      <Grid item sm={2}>
+      <Grid item>
         <Button
           id={`${idAffix}-reset`}
           type="reset"

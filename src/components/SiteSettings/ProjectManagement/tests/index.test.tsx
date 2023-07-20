@@ -4,8 +4,8 @@ import renderer from "react-test-renderer";
 import "tests/reactI18nextMock";
 
 import ExportButton from "components/ProjectExport/ExportButton";
+import { ProjectList } from "components/SiteSettings/ProjectManagement";
 import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
-import { ProjectList } from "components/SiteSettings/ProjectManagement/ProjectManagement";
 import ProjectUsersButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectUsersButtonWithConfirmation";
 import { randomProject } from "types/project";
 
