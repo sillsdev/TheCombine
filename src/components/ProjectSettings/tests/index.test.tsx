@@ -10,6 +10,7 @@ import {
   PersonAdd,
   Sms,
 } from "@mui/icons-material";
+import { ElementType } from "react";
 import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
@@ -20,6 +21,7 @@ import { Permission } from "api/models";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
 import ProjectSettings from "components/ProjectSettings";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
+import ProjectSchedule from "components/ProjectSettings/ProjectSchedule/ProjectSchedule";
 import { randomProject } from "types/project";
 
 jest.mock("react-router-dom", () => ({
@@ -33,10 +35,6 @@ jest.mock("backend", () => ({
 jest.mock("components/Project/ProjectActions");
 jest.mock("components/ProjectExport/ExportButton", () => "div");
 jest.mock("components/ProjectSettings/ProjectImport", () => "div");
-jest.mock(
-  "components/ProjectSettings/ProjectSchedule/ProjectSchedule",
-  () => "div"
-);
 jest.mock(
   "components/ProjectSettings/ProjectUsers/ActiveProjectUsers",
   () => "div"
@@ -98,6 +96,7 @@ beforeEach(() => {
 const withNoPerm = [
   List, // icon for ProjectSwitch
   Language, // icon for ProjectLanguages (but readOnly w/o DeleteEditPerm)
+  CalendarMonth, // icon for ProjectSchedule (but readOnly w/o StatsPerm)
 ];
 const withArchivePerm = [Archive]; // icon for archive component
 const withDeleteEditPerm = [
@@ -108,7 +107,7 @@ const withDeleteEditPerm = [
 ];
 const withExportPerm = [GetApp]; // icon for ExportButton
 const withImportPerm = [CloudUpload]; // icon for ProjectImport
-const withStatsPerm = [CalendarMonth]; // icon for ProjectSchedule
+const withStatsPerm: ElementType[] = [];
 
 describe("ProjectSettings", () => {
   test("with no permissions", async () => {
@@ -122,6 +121,9 @@ describe("ProjectSettings", () => {
 
     expect(
       projSettingsInstance.findByType(ProjectLanguages).props.readOnly
+    ).toBeTruthy();
+    expect(
+      projSettingsInstance.findByType(ProjectSchedule).props.readOnly
     ).toBeTruthy();
   });
 
@@ -184,5 +186,9 @@ describe("ProjectSettings", () => {
     expect(
       projSettingsInstance.findAllByType(BaseSettingsComponent)
     ).toHaveLength(withNoPerm.length + withStatsPerm.length);
+
+    expect(
+      projSettingsInstance.findByType(ProjectSchedule).props.readOnly
+    ).toBeFalsy();
   });
 });
