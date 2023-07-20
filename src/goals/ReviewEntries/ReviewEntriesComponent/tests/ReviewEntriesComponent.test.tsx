@@ -89,11 +89,6 @@ beforeEach(async () => {
 
 describe("ReviewEntriesComponent", () => {
   it("Initializes correctly", () => {
-    expect(mockUpdateAllWords).toHaveBeenCalledWith(
-      mockReviewEntryWords.map((word) => ({
-        ...word,
-        recorder: expect.any(Object),
-      }))
-    );
+    expect(mockUpdateAllWords).toHaveBeenCalledWith(mockReviewEntryWords);
   });
 });
