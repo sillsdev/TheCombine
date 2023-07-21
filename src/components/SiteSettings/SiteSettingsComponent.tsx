@@ -15,7 +15,7 @@ export default function SiteSettingsComponent() {
       {/* Project List */}
       <BaseSettingsComponent
         icon={<List />}
-        title={t("projectSettings.projectList")}
+        title={t("siteSettings.projectList")}
         body={<ProjectManagement />}
       />
 
