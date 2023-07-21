@@ -24,10 +24,14 @@ const customStyles = {
   },
 };
 
-export default function AddProjectUsers(): ReactElement {
-  const projectId = useAppSelector(
-    (state: StoreState) => state.currentProjectState.project.id
-  );
+interface AddProjectUsersProps {
+  projectId: string;
+  siteAdmin?: boolean;
+}
+
+export default function AddProjectUsers(
+  props: AddProjectUsersProps
+): ReactElement {
   const projectUsers = useAppSelector(
     (state: StoreState) => state.currentProjectState.users
   );
@@ -42,10 +46,10 @@ export default function AddProjectUsers(): ReactElement {
   function addToProject(user: User): void {
     if (!projectUsers.map((u) => u.id).includes(user.id)) {
       backend
-        .addOrUpdateUserRole(projectId, Role.Harvester, user.id)
+        .addOrUpdateUserRole(props.projectId, Role.Harvester, user.id)
         .then(() => {
           toast.success(t("projectSettings.invite.toastSuccess"));
-          dispatch(asyncRefreshProjectUsers(projectId));
+          dispatch(asyncRefreshProjectUsers(props.projectId));
         })
         .catch((err) => {
           console.error(err);
@@ -57,7 +61,11 @@ export default function AddProjectUsers(): ReactElement {
   return (
     <>
       <Grid container spacing={1}>
-        <UserList projectUsers={projectUsers} addToProject={addToProject} />
+        <UserList
+          addToProject={addToProject}
+          minSearchLength={props.siteAdmin ? 1 : 3}
+          projectUsers={projectUsers}
+        />
       </Grid>
 
       {RuntimeConfig.getInstance().emailServicesEnabled() && (
