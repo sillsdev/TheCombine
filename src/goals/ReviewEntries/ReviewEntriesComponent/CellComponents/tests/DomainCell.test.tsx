@@ -4,7 +4,7 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import { DomainCell } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents";
+import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/WordsMock";
 
 jest.mock("components/TreeView", () => "div");

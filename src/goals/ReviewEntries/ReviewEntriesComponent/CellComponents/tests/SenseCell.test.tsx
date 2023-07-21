@@ -2,7 +2,7 @@ import renderer from "react-test-renderer";
 
 import "tests/reactI18nextMock";
 
-import { SenseCell } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents";
+import SenseCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCell";
 import mockWords from "goals/ReviewEntries/ReviewEntriesComponent/tests/WordsMock";
 
 const mockWord = mockWords()[1];

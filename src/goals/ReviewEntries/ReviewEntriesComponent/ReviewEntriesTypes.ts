@@ -8,7 +8,6 @@ import {
   Status,
   Word,
 } from "api/models";
-import Recorder from "components/Pronunciations/Recorder";
 import { newSense, newWord } from "types/word";
 import { cleanDefinitions, cleanGlosses } from "utilities/wordUtilities";
 
@@ -30,9 +29,8 @@ export class ReviewEntriesWord {
   noteText: string;
   flag: Flag;
   protected: boolean;
-  recorder?: Recorder;
 
-  constructor(word?: Word, analysisLang?: string, commonRecorder?: Recorder) {
+  constructor(word?: Word, analysisLang?: string) {
     if (!word) {
       word = newWord();
     }
@@ -45,7 +43,6 @@ export class ReviewEntriesWord {
     this.noteText = word.note.text;
     this.flag = word.flag;
     this.protected = word.accessibility === Status.Protected;
-    this.recorder = commonRecorder;
   }
 }
 
