@@ -6,6 +6,7 @@ using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
@@ -50,6 +51,26 @@ namespace Backend.Tests.Controllers
         public void TearDown()
         {
             _projRepo.Delete(_projId);
+        }
+
+        [Test]
+        public void TestDownloadAudioFileInvalidArguments()
+        {
+            var result = _audioController.DownloadAudioFile("invalid/projId", "wordId", "fileName");
+            Assert.That(result is UnsupportedMediaTypeResult);
+
+            result = _audioController.DownloadAudioFile("projId", "invalid/wordId", "fileName");
+            Assert.That(result is UnsupportedMediaTypeResult);
+
+            result = _audioController.DownloadAudioFile("projId", "wordId", "invalid/fileName");
+            Assert.That(result is UnsupportedMediaTypeResult);
+        }
+
+        [Test]
+        public void TestDownloadAudioFileNoFile()
+        {
+            var result = _audioController.DownloadAudioFile("projId", "wordId", "fileName");
+            Assert.That(result is BadRequestObjectResult);
         }
 
         [Test]
