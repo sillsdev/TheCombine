@@ -9,7 +9,7 @@ import { ProjectSettingPropsWithSet } from "components/ProjectSettings/ProjectSe
 export default function ProjectSelect(
   props: ProjectSettingPropsWithSet
 ): ReactElement {
-  const [projList, setProjList] = useState<Project[]>([props.project]);
+  const [projList, setProjList] = useState<Project[]>([]);
 
   useEffect(() => {
     const userId = getUserId();
@@ -19,11 +19,19 @@ export default function ProjectSelect(
   }, [props.project.name]);
 
   const handleChange = (e: SelectChangeEvent) => {
+    if (e.target.name === props.project.name) {
+      return;
+    }
     const proj = projList.find((p) => p.name === e.target.value);
     if (proj) {
       props.setProject(proj);
     }
   };
+
+  // This prevents an out-of-range Select error while useEffect is underway.
+  const projListWithProj = projList.find((p) => p.name === props.project.name)
+    ? projList
+    : [props.project, ...projList];
 
   return (
     <Select
@@ -31,7 +39,7 @@ export default function ProjectSelect(
       sx={{ maxWidth: "100%" }}
       value={props.project.name}
     >
-      {projList.map((p, i) => (
+      {projListWithProj.map((p, i) => (
         <MenuItem key={i} value={p.name}>
           {p.name}
         </MenuItem>
