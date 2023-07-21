@@ -1,8 +1,6 @@
-import { enqueueSnackbar } from "notistack";
-import { ReactElement, useEffect, useMemo, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 
 import { getFrontierWords } from "backend";
-import Recorder from "components/Pronunciations/Recorder";
 import ReviewEntriesTable from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTable";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
@@ -20,17 +18,14 @@ export default function ReviewEntriesComponent(
   props: ReviewEntriesProps
 ): ReactElement {
   const [loaded, setLoaded] = useState(false);
-  const recorder = useMemo(() => new Recorder(enqueueSnackbar), []);
   const { updateAllWords, updateFrontierWord } = props;
 
   useEffect(() => {
     getFrontierWords().then((frontier) => {
-      updateAllWords(
-        frontier.map((w) => new ReviewEntriesWord(w, undefined, recorder))
-      );
+      updateAllWords(frontier.map((w) => new ReviewEntriesWord(w)));
       setLoaded(true);
     });
-  }, [updateAllWords, recorder]);
+  }, [updateAllWords]);
 
   return loaded ? (
     <ReviewEntriesTable

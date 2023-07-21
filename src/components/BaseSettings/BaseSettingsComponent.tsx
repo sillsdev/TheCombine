@@ -29,7 +29,7 @@ export default function BaseSettingsComponent(
       </Grid>
       <Grid item>
         <Typography
-          variant="h6"
+          variant="h5"
           style={{ marginBottom: isVisible ? theme.spacing(2) : 0 }}
           onClick={() => toggleVisibility()}
         >

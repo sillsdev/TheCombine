@@ -29,7 +29,6 @@ import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
 import { filterWordsWithSenses } from "components/DataEntry/utilities";
 import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
-import Recorder from "components/Pronunciations/Recorder";
 import { StoreState } from "types";
 import { Hash } from "types/hash";
 import { useAppSelector } from "types/hooks";
@@ -234,7 +233,6 @@ export default function DataEntryTable(
 
   const levDist = useMemo(() => new LevenshteinDistance(), []);
   const newVernInput = useRef<HTMLDivElement>(null);
-  const recorder = useMemo(() => new Recorder(enqueueSnackbar), []);
   const spellChecker = useMemo(() => new SpellChecker(), []);
   useEffect(() => {
     spellChecker.updateLang(analysisLang.bcp47);
@@ -878,7 +876,6 @@ export default function DataEntryTable(
               deleteAudioFromWord={(wordId: string, fileName: string) =>
                 deleteAudioFromWord(wordId, fileName)
               }
-              recorder={recorder}
               spellChecker={spellChecker}
               focusNewEntry={() => focusInput(newVernInput)}
               analysisLang={analysisLang}
@@ -892,7 +889,6 @@ export default function DataEntryTable(
 
         <Grid item xs={12}>
           <NewEntry
-            recorder={recorder}
             spellChecker={spellChecker}
             analysisLang={analysisLang}
             vernacularLang={vernacularLang}
