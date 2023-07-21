@@ -1,3 +1,4 @@
+import { Button, Select } from "@mui/material";
 import { LanguagePicker } from "mui-language-picker";
 import renderer from "react-test-renderer";
 
@@ -22,11 +23,18 @@ function mockProject(systems?: WritingSystem[]) {
   return { ...newProject(), analysisWritingSystems: systems ?? [] };
 }
 
-const renderProjLangs = async (project: Project): Promise<void> => {
+const renderProjLangs = async (
+  project: Project,
+  readOnly = false
+): Promise<void> => {
   mockUpdateProject.mockResolvedValue(undefined);
   await renderer.act(async () => {
     projectMaster = renderer.create(
-      <ProjectLanguages project={project} updateProject={mockUpdateProject} />
+      <ProjectLanguages
+        project={project}
+        readOnly={readOnly}
+        updateProject={mockUpdateProject}
+      />
     );
   });
 };
@@ -43,8 +51,10 @@ const renderAndClickAdd = async (): Promise<void> => {
 };
 
 describe("ProjectLanguages", () => {
-  it("renders", async () => {
-    await renderProjLangs(mockProject([...mockAnalysisWritingSystems]));
+  it("renders readOnly", async () => {
+    await renderProjLangs(mockProject([...mockAnalysisWritingSystems]), true);
+    expect(projectMaster.root.findAllByType(Button)).toHaveLength(0);
+    expect(projectMaster.root.findAllByType(Select)).toHaveLength(0);
   });
 
   it("can add language to project", async () => {
