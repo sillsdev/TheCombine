@@ -4,13 +4,16 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Divider,
   IconButton,
+  Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { asyncRefreshProjectUsers } from "components/Project/ProjectActions";
 import ActiveProjectUsers from "components/ProjectSettings/ProjectUsers/ActiveProjectUsers";
+import AddProjectUsers from "components/ProjectSettings/ProjectUsers/AddProjectUsers";
 import { useAppDispatch } from "types/hooks";
 import theme from "types/theme";
 
@@ -40,7 +43,7 @@ export default function ProjectUsersButtonWithConfirmation(
       </Button>
       <Dialog maxWidth={false} onClose={() => setOpen(false)} open={open}>
         <DialogTitle>
-          {t("siteSettings.projectRoles")}
+          <Typography variant="h5">{t("siteSettings.projectRoles")}</Typography>
           <IconButton
             aria-label="close"
             onClick={() => setOpen(false)}
@@ -58,6 +61,8 @@ export default function ProjectUsersButtonWithConfirmation(
 function ProjUsersDialogContent(props: { projectId: string }) {
   const dispatch = useAppDispatch();
 
+  const { t } = useTranslation();
+
   useEffect(() => {
     dispatch(asyncRefreshProjectUsers(props.projectId));
   }, [dispatch, props.projectId]);
@@ -65,6 +70,11 @@ function ProjUsersDialogContent(props: { projectId: string }) {
   return (
     <DialogContent>
       <ActiveProjectUsers projectId={props.projectId} />
+      <Divider sx={{ my: 2 }} />
+      <Typography variant="h6" sx={{ mb: 1 }}>
+        {t("siteSettings.addProjectUsers")}
+      </Typography>
+      <AddProjectUsers projectId={props.projectId} siteAdmin />
     </DialogContent>
   );
 }

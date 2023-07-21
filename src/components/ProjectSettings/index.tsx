@@ -96,16 +96,20 @@ export default function ProjectSettingsComponent() {
         />
       )}
 
-      {/*Project Vernacular and Analysis Languages*/}
-      {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
-        <BaseSettingsComponent
-          icon={<Language />}
-          title={t("projectSettings.language.languages")}
-          body={
-            <ProjectLanguages project={project} updateProject={updateProject} />
-          }
-        />
-      )}
+      {/*Project languages*/}
+      <BaseSettingsComponent
+        icon={<Language />}
+        title={t("projectSettings.language.languages")}
+        body={
+          <ProjectLanguages
+            project={project}
+            readOnly={
+              !permissions.includes(Permission.DeleteEditSettingsAndUsers)
+            }
+            updateProject={updateProject}
+          />
+        }
+      />
 
       {/* Import Lift file */}
       {permissions.includes(Permission.Import) && (
@@ -161,7 +165,7 @@ export default function ProjectSettingsComponent() {
         <BaseSettingsComponent
           icon={<PersonAdd />}
           title={t("projectSettings.user.addUser")}
-          body={<AddProjectUsers />}
+          body={<AddProjectUsers projectId={project.id} />}
         />
       )}
 

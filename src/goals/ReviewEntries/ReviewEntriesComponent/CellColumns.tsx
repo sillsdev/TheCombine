@@ -401,7 +401,6 @@ const columns: Column<any>[] = [
       <PronunciationsCell
         wordId={rowData.id}
         pronunciationFiles={rowData.pronunciationFiles}
-        recorder={rowData.recorder}
       />
     ),
     customFilterAndSearch: (
