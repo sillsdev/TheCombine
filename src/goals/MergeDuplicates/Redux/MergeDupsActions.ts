@@ -1,17 +1,17 @@
-import { produce } from "immer";
-
 import {
   Definition,
   Flag,
   GramCatGroup,
   MergeSourceWord,
-  MergeUndoIds,
   MergeWords,
   Status,
   Word,
 } from "api/models";
 import * as backend from "backend";
-import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalSlice";
+import {
+  asyncAddCompletedMergeToGoal,
+  asyncUpdateGoal,
+} from "components/GoalTimeline/Redux/GoalSlice";
 import {
   defaultSidebar,
   MergeTreeReference,
@@ -20,7 +20,6 @@ import {
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import {
   MergeDups,
-  MergesCompleted,
   MergeStepData,
   newMergeWords,
 } from "goals/MergeDuplicates/MergeDupsTypes";
@@ -41,7 +40,6 @@ import {
 } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { GoalType } from "types/goals";
 import { Hash } from "types/hash";
 import { maxNumSteps } from "utilities/goalUtilities";
 import { compareFlags } from "utilities/wordUtilities";
@@ -263,30 +261,12 @@ export function mergeAll() {
         ),
       ];
       const completedMerge = { childIds, parentIds };
-      const goal = getState().goalsState.currentGoal;
-      if (goal) {
-        await dispatch(addCompletedMergeToGoal(goal, completedMerge));
+      if (getState().goalsState.currentGoal) {
+        dispatch(asyncAddCompletedMergeToGoal(completedMerge));
+        // need to look up the currentGoal again since the previous dispatch
+        // will result in a new goal object
+        await dispatch(asyncUpdateGoal(getState().goalsState.currentGoal));
       }
-    }
-  };
-}
-
-function addCompletedMergeToGoal(
-  goal: MergeDups,
-  completedMerge: MergeUndoIds
-) {
-  return async (dispatch: StoreStateDispatch) => {
-    if (goal.goalType === GoalType.MergeDups) {
-      const changes: MergesCompleted = produce(
-        { ...goal.changes } as MergesCompleted,
-        (draft) => {
-          if (!draft.merges) {
-            draft.merges = [];
-          }
-          draft.merges.push(completedMerge);
-        }
-      );
-      await dispatch(asyncUpdateGoal({ ...goal, changes: changes }));
     }
   };
 }

@@ -1,11 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { produce } from "immer";
 
+import { MergeUndoIds } from "api/models";
 import * as Backend from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
 import router from "browserRouter";
 import { defaultState } from "components/GoalTimeline/DefaultState";
-import { MergeDupsData } from "goals/MergeDuplicates/MergeDupsTypes";
+import {
+  MergeDupsData,
+  MergesCompleted,
+} from "goals/MergeDuplicates/MergeDupsTypes";
 import {
   dispatchMergeStepData,
   fetchMergeDupsData,
@@ -43,6 +47,16 @@ export const goalSlice = createSlice({
     setCurrentGoalsStateAction: (state, action) => {
       state.currentGoal.status = action.payload;
     },
+    addCompletedMergeToGoalAction: (state, action) => {
+      if (state.currentGoal.goalType == GoalType.MergeDups) {
+        const changes = { ...state.currentGoal.changes } as MergesCompleted;
+        if (!changes.merges) {
+          changes.merges = [];
+        }
+        changes.merges.push(action.payload);
+        state.currentGoal.changes = changes;
+      }
+    },
     reset: () => defaultState,
   },
   extraReducers: (builder) =>
@@ -58,6 +72,7 @@ const {
   setCurrentGoalAction,
   setCurrentGoalIndexAction,
   setCurrentGoalsStateAction,
+  addCompletedMergeToGoalAction,
   reset,
 } = goalSlice.actions;
 
@@ -82,6 +97,11 @@ export function setCurrentGoalStatus(status: GoalStatus): PayloadAction {
   return setCurrentGoalsStateAction(status);
 }
 
+export function asyncAddCompletedMergeToGoal(
+  completedMerge: MergeUndoIds
+): PayloadAction {
+  return addCompletedMergeToGoalAction(completedMerge);
+}
 // Dispatch Functions
 
 export function asyncCreateUserEdits() {
@@ -142,13 +162,17 @@ export function asyncLoadNewGoal(goal: Goal, userEditId: string) {
   return async (dispatch: StoreStateDispatch) => {
     // Load data.
     if (await loadGoalData(goal)) {
-      updateStepFromData(goal);
-      dispatch(dispatchStepData(goal));
-      await Backend.addGoalToUserEdit(userEditId, goal);
-      await saveCurrentStep(goal);
+      const updatedGoal: Goal = produce(goal, (draft) => {
+        updateStepFromData(draft);
+      });
+      dispatch(dispatchStepData(updatedGoal));
+      await Backend.addGoalToUserEdit(userEditId, updatedGoal);
+      await saveCurrentStep(updatedGoal);
+      dispatch(setCurrentGoal(updatedGoal));
+    } else {
+      dispatch(setCurrentGoal(goal));
     }
 
-    dispatch(setCurrentGoal(goal));
     dispatch(setCurrentGoalStatus(GoalStatus.InProgress));
   };
 }
