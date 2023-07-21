@@ -28,8 +28,9 @@ export function doesTextMatchUser(text: string, user: User): boolean {
 }
 
 interface UserListProps {
-  projectUsers: User[];
   addToProject: (user: User) => void;
+  minSearchLength: number;
+  projectUsers: User[];
 }
 
 export default function UserList(props: UserListProps): ReactElement {
@@ -68,7 +69,7 @@ export default function UserList(props: UserListProps): ReactElement {
 
   const updateUsers = (text: string): void => {
     setFilterInput(text);
-    if (text.length >= 3) {
+    if (text.length >= props.minSearchLength) {
       const filterUsers = (users: User[]): User[] =>
         users.filter((u) => doesTextMatchUser(text, u));
       setFilteredNonProjUsers(filterUsers(nonProjUsers));

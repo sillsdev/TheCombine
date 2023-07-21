@@ -165,7 +165,7 @@ export default function ProjectSettingsComponent() {
         <BaseSettingsComponent
           icon={<PersonAdd />}
           title={t("projectSettings.user.addUser")}
-          body={<AddProjectUsers />}
+          body={<AddProjectUsers projectId={project.id} />}
         />
       )}
 
