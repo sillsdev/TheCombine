@@ -7,7 +7,7 @@ import Banners from "components/SiteSettings/Banners";
 import ProjectManagement from "components/SiteSettings/ProjectManagement";
 import UserManagement from "components/SiteSettings/UserManagement";
 
-const enum SiteSettingsTab {
+export const enum SiteSettingsTab {
   Projects,
   Users,
   Banners,
@@ -26,6 +26,7 @@ export default function SiteSettings(): ReactElement {
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs onChange={handleChange} value={tab}>
           <Tab
+            data-testid={SiteSettingsTab.Projects}
             id={SiteSettingsTab.Projects.toString()}
             label={
               <Grid container>
@@ -36,6 +37,7 @@ export default function SiteSettings(): ReactElement {
             value={SiteSettingsTab.Projects}
           />
           <Tab
+            data-testid={SiteSettingsTab.Users}
             id={SiteSettingsTab.Users.toString()}
             label={
               <Grid container>
@@ -46,6 +48,7 @@ export default function SiteSettings(): ReactElement {
             value={SiteSettingsTab.Users}
           />
           <Tab
+            data-testid={SiteSettingsTab.Banners}
             id={SiteSettingsTab.Banners.toString()}
             label={
               <Grid container>
