@@ -21,8 +21,6 @@ cryptography==41.0.2
     # via pyopenssl
 dnspython==2.4.0
     # via pymongo
-exceptiongroup==1.1.2
-    # via anyio
 google-auth==2.22.0
     # via kubernetes
 h11==0.14.0
@@ -35,10 +33,12 @@ idna==3.4
     # via
     #   anyio
     #   requests
-kubernetes==26.1.0
+kubernetes==27.2.0
     # via -r requirements.in
 oauthlib==3.2.2
-    # via requests-oauthlib
+    # via
+    #   kubernetes
+    #   requests-oauthlib
 pyasn1==0.5.0
     # via
     #   pyasn1-modules
@@ -80,6 +80,3 @@ urllib3==1.26.16
     #   requests
 websocket-client==1.6.1
     # via kubernetes
-
-# The following packages are considered to be unsafe in a requirements file:
-# setuptools
