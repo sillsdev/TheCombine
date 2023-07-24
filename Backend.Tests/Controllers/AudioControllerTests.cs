@@ -90,7 +90,7 @@ namespace Backend.Tests.Controllers
             _ = _audioController.UploadAudioFile(_projId, word.Id, fileUpload).Result;
 
             var foundWord = _wordRepo.GetWord(_projId, word.Id).Result;
-            Assert.IsNotNull(foundWord?.Audio);
+            Assert.That(foundWord?.Audio, Is.Not.Null);
         }
 
         [Test]
@@ -119,7 +119,7 @@ namespace Backend.Tests.Controllers
 
             // Ensure the word with deleted audio is in the frontier
             Assert.That(frontier, Has.Count.EqualTo(1));
-            Assert.AreNotEqual(frontier[0].Id, origWord.Id);
+            Assert.That(frontier[0].Id, Is.Not.EqualTo(origWord.Id));
             Assert.That(frontier[0].Audio, Has.Count.EqualTo(0));
             Assert.That(frontier[0].History, Has.Count.EqualTo(1));
         }

@@ -49,7 +49,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_invalidIds))]
         public void TestInvalidIds(string id)
         {
-            Assert.Throws<InvalidIdException>(() => SanitizeId(id));
+            Assert.That(() => SanitizeId(id), Throws.TypeOf<InvalidIdException>());
         }
 
         private static List<string> _validFileNames = new()
@@ -98,7 +98,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_invalidFileNames))]
         public void TestInvalidFileNames(string fileName)
         {
-            Assert.Throws<InvalidFileNameException>(() => SanitizeFileName(fileName));
+            Assert.That(() => SanitizeFileName(fileName), Throws.TypeOf<InvalidFileNameException>());
         }
 
         private static List<List<string>> _namesUnfriendlyFriendly = new()
