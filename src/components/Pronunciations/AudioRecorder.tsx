@@ -1,13 +1,13 @@
-import { ReactElement } from "react";
+import { ReactElement, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 import Recorder from "components/Pronunciations/Recorder";
+import RecorderContext from "components/Pronunciations/RecorderContext";
 import RecorderIcon from "components/Pronunciations/RecorderIcon";
 
 interface RecorderProps {
   wordId: string;
-  recorder?: Recorder;
   uploadAudio: (wordId: string, audioFile: File) => void;
 }
 
@@ -20,8 +20,8 @@ export function getFileNameForWord(wordId: string): string {
 }
 
 export default function AudioRecorder(props: RecorderProps): ReactElement {
+  const recorder = useContext(RecorderContext);
   const { t } = useTranslation();
-  const recorder = props.recorder ?? new Recorder();
 
   function startRecording(): void {
     recorder.startRecording();

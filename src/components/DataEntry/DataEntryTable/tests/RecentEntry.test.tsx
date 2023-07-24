@@ -15,7 +15,6 @@ import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
 import { EditTextDialog } from "components/Dialogs";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
-import Recorder from "components/Pronunciations/Recorder";
 import { defaultState as pronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import theme from "types/theme";
 import { simpleWord } from "types/word";
@@ -58,7 +57,6 @@ function renderWithWord(word: Word) {
               removeEntry={jest.fn()}
               addAudioToWord={jest.fn()}
               deleteAudioFromWord={jest.fn()}
-              recorder={new Recorder()}
               focusNewEntry={jest.fn()}
               analysisLang={newWritingSystem()}
               vernacularLang={newWritingSystem()}

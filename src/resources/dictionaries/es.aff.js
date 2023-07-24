@@ -1,4 +1,5 @@
-const affEs = `SET UTF-8
+export default `# https://cgit.freedesktop.org/libreoffice/dictionaries/tree/es
+SET UTF-8
 FLAG UTF-8
 TRY aeroinsctldumpbgfvhzóíjáqéñxyúükwAEROINSCTLDUMPBGFVHZÓÍJÁQÉÑXYÚÜKW
 REP 20
@@ -6902,5 +6903,3 @@ SFX ú cir zcámonos ucir
 SFX ú uir úyanse uir
 SFX ú uir úyase uir
 SFX ú ir yámonos uir`;
-
-export default affEs;

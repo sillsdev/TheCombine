@@ -2,10 +2,13 @@ import { DeleteForever, VpnKey } from "@mui/icons-material";
 import {
   Avatar,
   Button,
+  ButtonProps,
   Grid,
   Input,
   List,
   ListItem,
+  ListItemAvatar,
+  ListItemIcon,
   ListItemText,
   SelectChangeEvent,
   Typography,
@@ -66,30 +69,34 @@ export default function UserList(props: UserListProps): ReactElement {
     );
   }, [filterInput, props.allUsers]);
 
+  const userListButton = (user: User): ButtonProps => {
+    const disabled = user.isAdmin || user.id === getUserId();
+    return (
+      <Button
+        disabled={disabled}
+        id={`user-delete-${user.username}`}
+        onClick={disabled ? undefined : () => props.handleOpenModal(user)}
+        style={{ minWidth: 0 }}
+      >
+        {disabled ? <VpnKey /> : <DeleteForever />}
+      </Button>
+    );
+  };
+
   const userListItem = (user: User): ReactElement => {
     return (
       <ListItem key={user.id}>
-        <Avatar
-          alt="User Avatar"
-          src={userAvatar[user.id]}
-          style={{ marginRight: theme.spacing(1) }}
-        />
+        <ListItemIcon>{userListButton(user)}</ListItemIcon>
+        <ListItemAvatar>
+          <Avatar
+            alt="User Avatar"
+            src={userAvatar[user.id]}
+            style={{ marginRight: theme.spacing(1) }}
+          />
+        </ListItemAvatar>
         <ListItemText
           primary={`${user.name} (${user.username} | ${user.email})`}
         />
-        {user.id !== getUserId() &&
-          (user.isAdmin ? (
-            <Button disabled>
-              <VpnKey />
-            </Button>
-          ) : (
-            <Button
-              onClick={() => props.handleOpenModal(user)}
-              id={`user-delete-${user.username}`}
-            >
-              <DeleteForever />
-            </Button>
-          ))}
       </ListItem>
     );
   };

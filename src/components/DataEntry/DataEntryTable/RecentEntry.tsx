@@ -9,9 +9,9 @@ import {
   VernWithSuggestions,
 } from "components/DataEntry/DataEntryTable/EntryCellComponents";
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
-import Recorder from "components/Pronunciations/Recorder";
 import theme from "types/theme";
 import { newGloss } from "types/word";
+import SpellChecker from "utilities/spellChecker";
 import { firstGlossText } from "utilities/wordUtilities";
 
 const idAffix = "recent-entry";
@@ -26,11 +26,11 @@ export interface RecentEntryProps {
   removeEntry: () => void;
   addAudioToWord: (wordId: string, audioFile: File) => void;
   deleteAudioFromWord: (wordId: string, fileName: string) => void;
-  recorder: Recorder;
   focusNewEntry: () => void;
   analysisLang: WritingSystem;
   vernacularLang: WritingSystem;
   disabled?: boolean;
+  spellChecker?: SpellChecker;
 }
 
 /**
@@ -109,6 +109,7 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
           }}
           analysisLang={props.analysisLang}
           textFieldId={`${idAffix}-${props.rowIndex}-gloss`}
+          spellChecker={props.spellChecker}
         />
       </Grid>
       <Grid
@@ -141,7 +142,6 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
           <Pronunciations
             wordId={props.entry.id}
             pronunciationFiles={props.entry.audio}
-            recorder={props.recorder}
             deleteAudio={(wordId: string, fileName: string) => {
               props.deleteAudioFromWord(wordId, fileName);
             }}

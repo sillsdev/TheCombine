@@ -7,7 +7,7 @@ import AppBar from "components/AppBar/AppBarComponent";
 import PageNotFound from "components/PageNotFound/component";
 import ProjectScreen from "components/ProjectScreen";
 import ProjectSettings from "components/ProjectSettings";
-import SiteSettings from "components/SiteSettings/SiteSettingsComponent";
+import SiteSettings from "components/SiteSettings";
 import Statistics from "components/Statistics/Statistics";
 import UserSettings from "components/UserSettings/UserSettings";
 import NextGoalScreen from "goals/DefaultGoal/NextGoalScreen";

@@ -298,6 +298,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
                     onClick={() => {
                       router.navigate(Path.Login);
                     }}
+                    variant="outlined"
                   >
                     {this.props.t("login.backToLogin")}
                   </Button>
