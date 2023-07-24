@@ -31,7 +31,6 @@ namespace BackendFramework.Services
             Dictionary<string, int> hashMap = new Dictionary<string, int>();
             List<SemanticDomainTreeNode>? domainTreeNodeList = await _domainRepo.GetAllSemanticDomainTreeNodes(lang);
             List<Word> wordList = await _wordRepo.GetFrontier(projectId);
-            List<SemanticDomainCount> resList = new List<SemanticDomainCount>();
 
             if (domainTreeNodeList is null || !domainTreeNodeList.Any() || !wordList.Any())
             {
@@ -49,6 +48,7 @@ namespace BackendFramework.Services
                 }
             }
 
+            List<SemanticDomainCount> resList = new List<SemanticDomainCount>();
             foreach (SemanticDomainTreeNode domainTreeNode in domainTreeNodeList)
             {
                 resList.Add(new SemanticDomainCount(domainTreeNode, hashMap.GetValueOrDefault(domainTreeNode.Id, 0)));
@@ -132,7 +132,7 @@ namespace BackendFramework.Services
             List<string> workshopSchedule = new List<string>();
             Dictionary<string, int> totalCountDictionary = new Dictionary<string, int>();
 
-            // if not schedule yet or wordList is empty return new ChartRootData
+            // If no schedule yet or wordList is empty, return empty ChartRootData
             if (!schedule.Any() || !wordList.Any())
             {
                 return LineChartData;
@@ -172,6 +172,13 @@ namespace BackendFramework.Services
                     }
                 }
             }
+
+            // If no semantic domain has Created, return empty ChartRootData
+            if (!totalCountDictionary.Any())
+            {
+                return LineChartData;
+            }
+
             var averageValue = 0;
             workshopSchedule.Sort();
             var totalCountList = totalCountDictionary.Values.ToList();
