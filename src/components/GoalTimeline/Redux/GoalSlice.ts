@@ -1,7 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { produce } from "immer";
+import { Action, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { MergeUndoIds } from "api/models";
+import { MergeUndoIds, Word } from "api/models";
 import * as Backend from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
 import router from "browserRouter";
@@ -25,6 +24,21 @@ export const goalSlice = createSlice({
   name: "goalsState",
   initialState: defaultState,
   reducers: {
+    addCompletedMergeToGoalAction: (state, action) => {
+      if (state.currentGoal.goalType == GoalType.MergeDups) {
+        const changes = { ...state.currentGoal.changes } as MergesCompleted;
+        if (!changes.merges) {
+          changes.merges = [];
+        }
+        changes.merges.push(action.payload);
+        state.currentGoal.changes = changes;
+      }
+    },
+    incrementCurrentGoalStepAction: (state) => {
+      if (state.currentGoal.currentStep + 1 < state.currentGoal.numSteps) {
+        state.currentGoal.currentStep++;
+      }
+    },
     loadUserEditsAction: (state, action) => {
       const history = [...action.payload];
       state.previousGoalType =
@@ -47,17 +61,23 @@ export const goalSlice = createSlice({
     setCurrentGoalsStateAction: (state, action) => {
       state.currentGoal.status = action.payload;
     },
-    addCompletedMergeToGoalAction: (state, action) => {
-      if (state.currentGoal.goalType == GoalType.MergeDups) {
-        const changes = { ...state.currentGoal.changes } as MergesCompleted;
-        if (!changes.merges) {
-          changes.merges = [];
-        }
-        changes.merges.push(action.payload);
-        state.currentGoal.changes = changes;
+    setGoalDataAction: (state, action) => {
+      if (action.payload.length > 0) {
+        state.currentGoal.data = { plannedWords: action.payload };
+        state.currentGoal.numSteps = action.payload.length;
+        state.currentGoal.currentStep = 0;
+        state.currentGoal.steps = [];
       }
     },
     reset: () => defaultState,
+    updateStepFromDataAction: (state) => {
+      if (state.currentGoal.goalType === GoalType.MergeDups) {
+        const currentGoalData = state.currentGoal.data as MergeDupsData;
+        state.currentGoal.steps[state.currentGoal.currentStep] = {
+          words: currentGoalData,
+        };
+      }
+    },
   },
   extraReducers: (builder) =>
     builder.addCase(StoreActionTypes.RESET, () => defaultState),
@@ -68,16 +88,27 @@ export const actionType = (actionName: string) => {
 };
 
 const {
+  addCompletedMergeToGoalAction,
+  incrementCurrentGoalStepAction,
   loadUserEditsAction,
   setCurrentGoalAction,
   setCurrentGoalIndexAction,
   setCurrentGoalsStateAction,
-  addCompletedMergeToGoalAction,
+  setGoalDataAction,
   reset,
+  updateStepFromDataAction,
 } = goalSlice.actions;
 
 // Action Creators
+export function asyncAddCompletedMergeToGoal(
+  completedMerge: MergeUndoIds
+): PayloadAction {
+  return addCompletedMergeToGoalAction(completedMerge);
+}
 
+export function incrementCurrentGoalStep(): Action {
+  return incrementCurrentGoalStepAction();
+}
 export function loadUserEdits(history?: Goal[]): PayloadAction {
   return loadUserEditsAction(history ?? []);
 }
@@ -97,11 +128,14 @@ export function setCurrentGoalStatus(status: GoalStatus): PayloadAction {
   return setCurrentGoalsStateAction(status);
 }
 
-export function asyncAddCompletedMergeToGoal(
-  completedMerge: MergeUndoIds
-): PayloadAction {
-  return addCompletedMergeToGoalAction(completedMerge);
+export function setGoalData(goalData: Word[][]): PayloadAction {
+  return setGoalDataAction(goalData);
 }
+
+export function updateStepFromData(): Action {
+  return updateStepFromDataAction();
+}
+
 // Dispatch Functions
 
 export function asyncCreateUserEdits() {
@@ -159,43 +193,36 @@ export function asyncAddGoal(goal: Goal) {
 }
 
 export function asyncLoadNewGoal(goal: Goal, userEditId: string) {
-  return async (dispatch: StoreStateDispatch) => {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     // Load data.
-    if (await loadGoalData(goal)) {
-      const updatedGoal: Goal = produce(goal, (draft) => {
-        updateStepFromData(draft);
-      });
+    dispatch(setCurrentGoal(goal));
+    const goalData = await loadGoalData(goal);
+    if (goalData.length > 0) {
+      dispatch(setGoalData(goalData));
+      dispatch(updateStepFromData());
+      const updatedGoal = getState().goalsState.currentGoal;
       dispatch(dispatchStepData(updatedGoal));
       await Backend.addGoalToUserEdit(userEditId, updatedGoal);
       await saveCurrentStep(updatedGoal);
-      dispatch(setCurrentGoal(updatedGoal));
-    } else {
-      dispatch(setCurrentGoal(goal));
     }
-
     dispatch(setCurrentGoalStatus(GoalStatus.InProgress));
   };
 }
 
 export function asyncAdvanceStep() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    const goalsState = getState().goalsState;
-    // copy the goal so that we don't mutate the state directly.
-    const goal = { ...goalsState.currentGoal };
-    goal.currentStep++;
-    if (goal.currentStep < goal.numSteps) {
+    const initialStep = getState().goalsState.currentGoal.currentStep;
+    dispatch(incrementCurrentGoalStep());
+    if (initialStep != getState().goalsState.currentGoal.currentStep) {
       // Update data.
-      const updatedGoal: Goal = produce(goal, (draft) => {
-        updateStepFromData(draft);
-      });
+      dispatch(updateStepFromData());
       // Dispatch to state.
-      dispatch(setCurrentGoal(updatedGoal));
-      dispatch(dispatchStepData({ ...updatedGoal }));
-
+      const updatedGoal = getState().goalsState.currentGoal;
+      dispatch(dispatchStepData(updatedGoal));
       // Save to database.
       await saveCurrentStep(updatedGoal);
     } else {
-      goalCleanup(goal);
+      goalCleanup(getState().goalsState.currentGoal);
     }
   };
 }
@@ -225,31 +252,12 @@ export function asyncUpdateGoal(goal: Goal) {
 // Helper Functions
 
 // Returns true if input goal updated.
-export async function loadGoalData(goal: Goal): Promise<boolean> {
+export async function loadGoalData(goal: Goal): Promise<Word[][]> {
   switch (goal.goalType) {
     case GoalType.MergeDups:
-      const mergeDupsData = await fetchMergeDupsData(goal);
-      goal.data = { plannedWords: mergeDupsData };
-      goal.numSteps = mergeDupsData.length;
-      goal.currentStep = 0;
-      goal.steps = [];
-      return true;
+      return await fetchMergeDupsData(goal);
     default:
-      return false;
-  }
-}
-
-// Returns true if input goal updated.
-export function updateStepFromData(goal: Goal): boolean {
-  switch (goal.goalType) {
-    case GoalType.MergeDups:
-      const currentGoalData = goal.data as MergeDupsData;
-      goal.steps[goal.currentStep] = {
-        words: currentGoalData.plannedWords[goal.currentStep],
-      };
-      return true;
-    default:
-      return false;
+      return [];
   }
 }
 
