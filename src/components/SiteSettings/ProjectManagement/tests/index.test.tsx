@@ -4,8 +4,9 @@ import renderer from "react-test-renderer";
 import "tests/reactI18nextMock";
 
 import ExportButton from "components/ProjectExport/ExportButton";
+import { ProjectList } from "components/SiteSettings/ProjectManagement";
 import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
-import { ProjectList } from "components/SiteSettings/ProjectManagement/ProjectManagement";
+import ProjectUsersButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectUsersButtonWithConfirmation";
 import { randomProject } from "types/project";
 
 const mockProjects = [randomProject(), randomProject(), randomProject()];
@@ -34,6 +35,13 @@ describe("ProjectList", () => {
   it("Has the right number of archive/restore buttons", () => {
     const projectButtons = testRenderer.root.findAllByType(
       ProjectButtonWithConfirmation
+    );
+    expect(projectButtons.length).toEqual(mockProjects.length);
+  });
+
+  it("Has the right number of project roles buttons", () => {
+    const projectButtons = testRenderer.root.findAllByType(
+      ProjectUsersButtonWithConfirmation
     );
     expect(projectButtons.length).toEqual(mockProjects.length);
   });

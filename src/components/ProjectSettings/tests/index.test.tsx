@@ -19,6 +19,7 @@ import "tests/reactI18nextMock";
 import { Permission } from "api/models";
 import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
 import ProjectSettings from "components/ProjectSettings";
+import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
 import { randomProject } from "types/project";
 
 jest.mock("react-router-dom", () => ({
@@ -94,14 +95,16 @@ beforeEach(() => {
   resetMocks();
 });
 
-const withNoPerm = [List]; // icon for ProjectSwitch
+const withNoPerm = [
+  List, // icon for ProjectSwitch
+  Language, // icon for ProjectLanguages (but readOnly w/o DeleteEditPerm)
+];
 const withArchivePerm = [Archive]; // icon for archive component
 const withDeleteEditPerm = [
   Edit, // icon for ProjectName
-  Language, // icon for ProjectLanguages,
   People, // icon for ActiveProjectUsers
   PersonAdd, // icon for AddProjectUsers
-  Sms, // icon for ProjectAutocomplete,
+  Sms, // icon for ProjectAutocomplete
 ];
 const withExportPerm = [GetApp]; // icon for ExportButton
 const withImportPerm = [CloudUpload]; // icon for ProjectImport
@@ -116,6 +119,10 @@ describe("ProjectSettings", () => {
     expect(
       projSettingsInstance.findAllByType(BaseSettingsComponent)
     ).toHaveLength(withNoPerm.length);
+
+    expect(
+      projSettingsInstance.findByType(ProjectLanguages).props.readOnly
+    ).toBeTruthy();
   });
 
   test("with Permission.Archive", async () => {
@@ -140,6 +147,10 @@ describe("ProjectSettings", () => {
     expect(
       projSettingsInstance.findAllByType(BaseSettingsComponent)
     ).toHaveLength(withNoPerm.length + withDeleteEditPerm.length);
+
+    expect(
+      projSettingsInstance.findByType(ProjectLanguages).props.readOnly
+    ).toBeFalsy();
   });
 
   test("with Permission.Export", async () => {
