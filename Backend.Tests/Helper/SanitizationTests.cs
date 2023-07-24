@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BackendFramework.Helper;
 using static BackendFramework.Helper.Sanitization;
 using NUnit.Framework;
 
@@ -15,7 +16,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_validIds))]
         public void TestValidIds(string id)
         {
-            Assert.That(SanitizeId(id));
+            Assert.That(SanitizeId(id), Is.EqualTo(id));
         }
 
         private static List<string> _invalidIds = new()
@@ -48,7 +49,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_invalidIds))]
         public void TestInvalidIds(string id)
         {
-            Assert.False(SanitizeId(id));
+            Assert.That(() => SanitizeId(id), Throws.TypeOf<InvalidIdException>());
         }
 
         private static List<string> _validFileNames = new()
@@ -68,7 +69,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_validFileNames))]
         public void TestValidFileNames(string fileName)
         {
-            Assert.That(SanitizeFileName(fileName));
+            Assert.That(SanitizeFileName(fileName), Is.EqualTo(fileName));
         }
 
         private static List<string> _invalidFileNames = new()
@@ -97,7 +98,7 @@ namespace Backend.Tests.Helper
         [TestCaseSource(nameof(_invalidFileNames))]
         public void TestInvalidFileNames(string fileName)
         {
-            Assert.False(SanitizeFileName(fileName));
+            Assert.That(() => SanitizeFileName(fileName), Throws.TypeOf<InvalidFileNameException>());
         }
 
         private static List<List<string>> _namesUnfriendlyFriendly = new()
