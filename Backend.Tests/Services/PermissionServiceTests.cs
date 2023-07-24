@@ -46,13 +46,13 @@ namespace Backend.Tests.Services
         [Test]
         public void GetUserIdTestReturnsNonemptyId()
         {
-            Assert.False(String.IsNullOrEmpty(_permService.GetUserId(createHttpContextWithUser(new User()))));
+            Assert.That(String.IsNullOrEmpty(_permService.GetUserId(createHttpContextWithUser(new User()))), Is.False);
         }
 
         [Test]
         public void IsUserIdAuthorizedTestFalse()
         {
-            Assert.False(_permService.IsUserIdAuthorized(createHttpContextWithUser(new User()), "other-id"));
+            Assert.That(_permService.IsUserIdAuthorized(createHttpContextWithUser(new User()), "other-id"), Is.False);
         }
 
         [Test]
@@ -60,40 +60,40 @@ namespace Backend.Tests.Services
         {
             var httpContext = createHttpContextWithUser(new User());
             var userId = _userRepo.GetAllUsers().Result.First().Id;
-            Assert.True(_permService.IsUserIdAuthorized(httpContext, userId));
+            Assert.That(_permService.IsUserIdAuthorized(httpContext, userId), Is.True);
         }
 
         [Test]
         public void IsCurrentUserAuthorizedTestTrue()
         {
-            Assert.True(_permService.IsCurrentUserAuthorized(createHttpContextWithUser(new User())));
+            Assert.That(_permService.IsCurrentUserAuthorized(createHttpContextWithUser(new User())), Is.True);
         }
 
         [Test]
         public void IsSiteAdminTestFalse()
         {
-            Assert.False(_permService.IsSiteAdmin(createHttpContextWithUser(new User())).Result);
+            Assert.That(_permService.IsSiteAdmin(createHttpContextWithUser(new User())).Result, Is.False);
         }
 
         [Test]
         public void IsSiteAdminTestTrue()
         {
             var httpContext = createHttpContextWithUser(new User { IsAdmin = true });
-            Assert.True(_permService.IsSiteAdmin(httpContext).Result);
+            Assert.That(_permService.IsSiteAdmin(httpContext).Result, Is.True);
         }
 
         [Test]
         public void HasProjectPermissionTestAdmin()
         {
             var httpContext = createHttpContextWithUser(new User { IsAdmin = true });
-            Assert.True(_permService.HasProjectPermission(httpContext, Permission.Archive).Result);
+            Assert.That(_permService.HasProjectPermission(httpContext, Permission.Archive).Result, Is.True);
         }
 
         [Test]
         public void ContainsProjectRoleTestAdmin()
         {
             var httpContext = createHttpContextWithUser(new User { IsAdmin = true });
-            Assert.True(_permService.ContainsProjectRole(httpContext, Role.Owner, "project-id").Result);
+            Assert.That(_permService.ContainsProjectRole(httpContext, Role.Owner, "project-id").Result, Is.True);
         }
     }
 }
