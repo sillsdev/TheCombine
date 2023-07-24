@@ -1,5 +1,5 @@
 import { List, ListItem, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 
 import { Project } from "api/models";
 import { getAllProjects } from "backend";
@@ -17,7 +17,7 @@ export default function ProjectManagement() {
     updateProjectList();
   }, [setAllProjects]);
 
-  async function updateProjectList() {
+  async function updateProjectList(): Promise<void> {
     await getAllProjects().then(setAllProjects);
   }
 
@@ -36,8 +36,8 @@ export function ProjectList(
   activeProjects: Project[],
   archivedProjects: Project[],
   updateProjects: () => Promise<void>
-) {
-  function getListItems(projects: Project[]) {
+): ReactElement {
+  function getListItems(projects: Project[]): ReactElement[] {
     return projects.map((project) => (
       <ListItem key={project.id}>
         <Typography

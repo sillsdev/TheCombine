@@ -74,10 +74,10 @@
     "emailOrUsername": "Email OR Username",
     "resetRequestTitle": "Reset Password Request",
     "resetTitle": "Reset Password",
-    "resetRequestInstructions": "We will send a one time reset link for your account to your email",
+    "resetRequestInstructions": "We will send a one-time reset link for your account to your email.",
     "submit": "Submit",
     "resetFail": "Password reset error",
-    "notFoundError": "No match found",
+    "resetDone": "If you have correctly entered your email or username, a password reset link has been sent to your email address.",
     "backToLogin": "Back To Login"
   },
   "userMenu": {
