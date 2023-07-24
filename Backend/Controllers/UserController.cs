@@ -43,7 +43,8 @@ namespace BackendFramework.Controllers
 
             if (user is null)
             {
-                return NotFound(data.EmailOrUsername);
+                // Return Ok to avoid revealing to the frontend whether the user exists.
+                return Ok();
             }
 
             // Create password reset.
