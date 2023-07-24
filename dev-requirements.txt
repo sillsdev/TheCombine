@@ -18,7 +18,7 @@ cachetools==5.3.1
     # via
     #   google-auth
     #   tox
-certifi==2023.5.7
+certifi==2023.7.22
     # via
     #   httpcore
     #   kubernetes
@@ -29,7 +29,7 @@ chardet==5.1.0
     # via tox
 charset-normalizer==3.2.0
     # via requests
-click==8.1.5
+click==8.1.6
     # via
     #   black
     #   mkdocs
@@ -94,7 +94,7 @@ jinja2==3.1.2
     #   mkdocs-material
 jinja2-base64-filters==0.1.4
     # via -r dev-requirements.in
-kubernetes==26.1.0
+kubernetes==27.2.0
     # via -r dev-requirements.in
 markdown==3.3.7
     # via
@@ -112,9 +112,9 @@ mkdocs==1.4.3
     # via
     #   mkdocs-htmlproofer-plugin
     #   mkdocs-material
-mkdocs-htmlproofer-plugin==0.13.1
+mkdocs-htmlproofer-plugin==1.0.0
     # via -r dev-requirements.in
-mkdocs-material==9.1.18
+mkdocs-material==9.1.19
     # via -r dev-requirements.in
 mkdocs-material-extensions==1.1.1
     # via mkdocs-material
@@ -125,7 +125,9 @@ mypy-extensions==1.0.0
     #   black
     #   mypy
 oauthlib==3.2.2
-    # via requests-oauthlib
+    # via
+    #   kubernetes
+    #   requests-oauthlib
 packaging==23.1
     # via
     #   black
@@ -171,7 +173,7 @@ python-dateutil==2.8.2
     # via
     #   ghp-import
     #   kubernetes
-pyyaml==6.0
+pyyaml==6.0.1
     # via
     #   -r dev-requirements.in
     #   kubernetes
@@ -212,15 +214,15 @@ tomli==2.0.1
     #   tox
 tox==4.6.4
     # via -r dev-requirements.in
-types-pyopenssl==23.2.0.1
+types-pyopenssl==23.2.0.2
     # via -r dev-requirements.in
-types-python-dateutil==2.8.19.13
+types-python-dateutil==2.8.19.14
     # via -r dev-requirements.in
-types-pyyaml==6.0.12.10
+types-pyyaml==6.0.12.11
     # via -r dev-requirements.in
-types-requests==2.31.0.1
+types-requests==2.31.0.2
     # via -r dev-requirements.in
-types-urllib3==1.26.25.13
+types-urllib3==1.26.25.14
     # via types-requests
 typing-extensions==4.7.1
     # via mypy
@@ -229,12 +231,9 @@ urllib3==1.26.16
     #   google-auth
     #   kubernetes
     #   requests
-virtualenv==20.24.0
+virtualenv==20.24.1
     # via tox
 watchdog==3.0.0
     # via mkdocs
 websocket-client==1.6.1
     # via kubernetes
-
-# The following packages are considered to be unsafe in a requirements file:
-# setuptools
