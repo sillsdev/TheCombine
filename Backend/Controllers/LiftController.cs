@@ -94,7 +94,11 @@ namespace BackendFramework.Controllers
         internal async Task<IActionResult> FinishUploadLiftFile(string projectId, string userId)
         {
             // Sanitize projectId
-            if (!Sanitization.SanitizeId(projectId))
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+            }
+            catch
             {
                 return new UnsupportedMediaTypeResult();
             }
@@ -150,7 +154,11 @@ namespace BackendFramework.Controllers
             }
 
             // Sanitize projectId
-            if (!Sanitization.SanitizeId(projectId))
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+            }
+            catch
             {
                 return new UnsupportedMediaTypeResult();
             }
@@ -188,7 +196,11 @@ namespace BackendFramework.Controllers
         private async Task<IActionResult> AddImportToProject(string liftStoragePath, string projectId)
         {
             // Sanitize projectId
-            if (!Sanitization.SanitizeId(projectId))
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+            }
+            catch
             {
                 return new UnsupportedMediaTypeResult();
             }
@@ -277,7 +289,11 @@ namespace BackendFramework.Controllers
             }
 
             // Sanitize projectId
-            if (!Sanitization.SanitizeId(projectId))
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+            }
+            catch
             {
                 return new UnsupportedMediaTypeResult();
             }
@@ -402,7 +418,11 @@ namespace BackendFramework.Controllers
             }
 
             // Sanitize user input
-            if (!Sanitization.SanitizeId(projectId))
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+            }
+            catch
             {
                 return new UnsupportedMediaTypeResult();
             }

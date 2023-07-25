@@ -6,6 +6,7 @@ using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
@@ -53,6 +54,26 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestDownloadAudioFileInvalidArguments()
+        {
+            var result = _audioController.DownloadAudioFile("invalid/projId", "wordId", "fileName");
+            Assert.That(result is UnsupportedMediaTypeResult);
+
+            result = _audioController.DownloadAudioFile("projId", "invalid/wordId", "fileName");
+            Assert.That(result is UnsupportedMediaTypeResult);
+
+            result = _audioController.DownloadAudioFile("projId", "wordId", "invalid/fileName");
+            Assert.That(result is UnsupportedMediaTypeResult);
+        }
+
+        [Test]
+        public void TestDownloadAudioFileNoFile()
+        {
+            var result = _audioController.DownloadAudioFile("projId", "wordId", "fileName");
+            Assert.That(result is BadRequestObjectResult);
+        }
+
+        [Test]
         public void TestAudioImport()
         {
             const string soundFileName = "sound.mp3";
@@ -69,7 +90,7 @@ namespace Backend.Tests.Controllers
             _ = _audioController.UploadAudioFile(_projId, word.Id, fileUpload).Result;
 
             var foundWord = _wordRepo.GetWord(_projId, word.Id).Result;
-            Assert.IsNotNull(foundWord?.Audio);
+            Assert.That(foundWord?.Audio, Is.Not.Null);
         }
 
         [Test]
@@ -98,7 +119,7 @@ namespace Backend.Tests.Controllers
 
             // Ensure the word with deleted audio is in the frontier
             Assert.That(frontier, Has.Count.EqualTo(1));
-            Assert.AreNotEqual(frontier[0].Id, origWord.Id);
+            Assert.That(frontier[0].Id, Is.Not.EqualTo(origWord.Id));
             Assert.That(frontier[0].Audio, Has.Count.EqualTo(0));
             Assert.That(frontier[0].History, Has.Count.EqualTo(1));
         }
