@@ -7,6 +7,7 @@ import {
   ReactElement,
   RefObject,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -35,7 +36,7 @@ import { useAppSelector } from "types/hooks";
 import theme from "types/theme";
 import { newNote, newSense, newWord, simpleWord } from "types/word";
 import { defaultWritingSystem } from "types/writingSystem";
-import SpellChecker from "utilities/spellChecker";
+import SpellCheckerContext from "utilities/spellCheckerContext";
 import { LevenshteinDistance } from "utilities/utilities";
 import { firstGlossText } from "utilities/wordUtilities";
 
@@ -233,7 +234,7 @@ export default function DataEntryTable(
 
   const levDist = useMemo(() => new LevenshteinDistance(), []);
   const newVernInput = useRef<HTMLDivElement>(null);
-  const spellChecker = useMemo(() => new SpellChecker(), []);
+  const spellChecker = useContext(SpellCheckerContext);
   useEffect(() => {
     spellChecker.updateLang(analysisLang.bcp47);
   }, [analysisLang.bcp47, spellChecker]);
@@ -876,7 +877,6 @@ export default function DataEntryTable(
               deleteAudioFromWord={(wordId: string, fileName: string) =>
                 deleteAudioFromWord(wordId, fileName)
               }
-              spellChecker={spellChecker}
               focusNewEntry={() => focusInput(newVernInput)}
               analysisLang={analysisLang}
               vernacularLang={vernacularLang}
@@ -889,7 +889,6 @@ export default function DataEntryTable(
 
         <Grid item xs={12}>
           <NewEntry
-            spellChecker={spellChecker}
             analysisLang={analysisLang}
             vernacularLang={vernacularLang}
             // Parent handles new entry state of child:
