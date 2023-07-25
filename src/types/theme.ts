@@ -4,7 +4,8 @@ import {
   responsiveFontSizes,
   PaletteOptions,
 } from "@mui/material/styles";
-import { TypographyOptions } from "@mui/material/styles/createTypography";
+
+import fontOverrides from "types/fontFace";
 
 export type HEX = `#${string}`;
 
@@ -32,27 +33,27 @@ const palette: Partial<PaletteOptions> = {
   tonalOffset: 0.2,
 };
 
-const typography: Partial<TypographyOptions> = {
-  // Copied from default theme
-  fontFamily: [
-    '"Roboto"',
-    '"Noto Sans"',
-    '"Helvetica"',
-    '"Arial"',
-    "sans-serif",
-  ].join(","),
-};
+// Extended from default theme with SIL fonts
+const fontFamily: React.CSSProperties["fontFamily"] = [
+  "Roboto",
+  "'Noto Sans'",
+  "Helvetica",
+  "Arial",
+  "sans-serif",
+  "CharisSIL",
+].join(",");
 
 const dynamicFontParams = { factor: 2 };
 
 // Theme for the entire project
 const baseTheme = createTheme({
-  typography: { ...typography },
-  palette: { ...palette } as PaletteOptions,
-  spacing: 8,
   components: {
     MuiButtonBase: { styleOverrides: { root: { disableRipple: false } } },
+    MuiCssBaseline: { styleOverrides: fontOverrides },
   },
+  palette: { ...palette },
+  spacing: 8,
+  typography: { fontFamily },
 });
 
 // Can have a number of additional options passed in; here, sticks with defaults

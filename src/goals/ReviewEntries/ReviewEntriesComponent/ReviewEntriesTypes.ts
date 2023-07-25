@@ -7,6 +7,7 @@ import {
   Sense,
   Status,
   Word,
+  WritingSystem,
 } from "api/models";
 import { newSense, newWord } from "types/word";
 import { cleanDefinitions, cleanGlosses } from "utilities/wordUtilities";
@@ -30,14 +31,18 @@ export class ReviewEntriesWord {
   flag: Flag;
   protected: boolean;
 
-  constructor(word?: Word, analysisLang?: string) {
+  constructor(
+    word?: Word,
+    analysisLang?: string,
+    writingSystems?: WritingSystem[]
+  ) {
     if (!word) {
       word = newWord();
     }
     this.id = word.id;
     this.vernacular = word.vernacular;
     this.senses = word.senses.map(
-      (s) => new ReviewEntriesSense(s, analysisLang)
+      (s) => new ReviewEntriesSense(s, analysisLang, writingSystems)
     );
     this.pronunciationFiles = word.audio;
     this.noteText = word.note.text;
@@ -49,13 +54,17 @@ export class ReviewEntriesWord {
 export class ReviewEntriesSense {
   guid: string;
   definitions: Definition[];
-  glosses: Gloss[];
+  glosses: ReviewEntriesGloss[];
   partOfSpeech: GrammaticalInfo;
   domains: SemanticDomain[];
   deleted: boolean;
   protected: boolean;
 
-  constructor(sense?: Sense, analysisLang?: string) {
+  constructor(
+    sense?: Sense,
+    analysisLang?: string,
+    writingSystems?: WritingSystem[]
+  ) {
     if (!sense) {
       sense = newSense();
     }
@@ -68,6 +77,11 @@ export class ReviewEntriesSense {
       ? sense.glosses.filter((g) => g.language === analysisLang)
       : sense.glosses;
     this.glosses = cleanGlosses(this.glosses);
+    if (writingSystems) {
+      this.glosses = this.glosses.map(
+        (g) => new ReviewEntriesGloss(g.def, g.language, writingSystems)
+      );
+    }
     this.partOfSpeech = sense.grammaticalInfo;
     this.domains = [...sense.semanticDomains];
     this.deleted = sense.accessibility === Status.Deleted;
@@ -82,5 +96,21 @@ export class ReviewEntriesSense {
   }
   static glossString(sense: ReviewEntriesSense): string {
     return sense.glosses.map((g) => g.def).join(ReviewEntriesSense.SEPARATOR);
+  }
+}
+
+export class ReviewEntriesGloss implements Gloss {
+  def: string;
+  language: string;
+  font?: string;
+
+  constructor(def = "", language = "", writingSystems?: WritingSystem[]) {
+    this.def = def;
+    this.language = language;
+    const writingSystem = writingSystems?.find((ws) => ws.bcp47 === language);
+    if (writingSystem) {
+      console.info(writingSystems);
+      this.font = writingSystem.font;
+    }
   }
 }

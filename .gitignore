@@ -5,12 +5,12 @@
 /.pnp
 .pnp.js
 
-# Testing
+# Testing coverage
 /coverage*
 /Backend.Tests/coverage*
 
 # Production
-/build
+build
 
 # Generated files for development use
 docker-compose.yml
@@ -37,28 +37,21 @@ yarn-debug.log*
 yarn-error.log*
 
 # Visual Studio
-.vs/*
+.vs
 
 # Backend
-Backend/.vs/**/*
-Backend/bin
-Backend/obj
-Backend/build
-/**/obj/**/*
-Backend.Tests/bin
-Backend.Tests/obj
+bin
+obj
 Backend/BackendFramework.csproj.user
 BackendFramework.sln.DotSettings.user
-Backend/.vscode/**/*
-Backend/SIL.Lift/**/*
+Backend/.vscode
+Backend/SIL.Lift
 Backend/ql-database
-/**/*.xml
-/**/*.lift
-/**/*.orig
-Backend.Tests/bin/Audio/*.mp3
-/**/*.~un
-/**/*.swp
-Backend.Tests/bin/Avatars/*
+**/*.xml
+**/*.lift
+**/*.orig
+**/*.~un
+**/*.swp
 mongo_database
 
 # User Guide
@@ -73,6 +66,9 @@ docs/user_guide/site
 __pycache__
 *.pyc
 venv
+
+# Intermediate and output files for font import scripts
+src/resources/fonts
 
 # Intermediate and output files for Semantic Domain import scripts
 !deploy/scripts/semantic_domains/xml/*.xml
