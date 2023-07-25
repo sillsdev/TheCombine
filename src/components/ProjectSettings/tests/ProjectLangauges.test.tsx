@@ -19,7 +19,7 @@ let projectMaster: renderer.ReactTestRenderer;
 let pickerHandle: renderer.ReactTestInstance;
 let buttonHandle: renderer.ReactTestInstance;
 
-function mockProject(systems?: WritingSystem[]) {
+function mockProject(systems?: WritingSystem[]): Project {
   return { ...newProject(), analysisWritingSystems: systems ?? [] };
 }
 
