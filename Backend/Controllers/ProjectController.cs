@@ -187,7 +187,11 @@ namespace BackendFramework.Controllers
             }
 
             // Sanitize user input.
-            if (!Sanitization.SanitizeId(projectId))
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+            }
+            catch
             {
                 return new UnsupportedMediaTypeResult();
             }

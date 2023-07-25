@@ -39,8 +39,13 @@ namespace BackendFramework.Controllers
             // }
 
             // Sanitize user input
-            if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId) ||
-                !Sanitization.SanitizeFileName(fileName))
+            try
+            {
+                fileName = Sanitization.SanitizeFileName(fileName);
+                projectId = Sanitization.SanitizeId(projectId);
+                wordId = Sanitization.SanitizeId(wordId);
+            }
+            catch
             {
                 return new UnsupportedMediaTypeResult();
             }
@@ -71,7 +76,12 @@ namespace BackendFramework.Controllers
             }
 
             // sanitize user input
-            if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId))
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+                wordId = Sanitization.SanitizeId(wordId);
+            }
+            catch
             {
                 return new UnsupportedMediaTypeResult();
             }
@@ -123,7 +133,13 @@ namespace BackendFramework.Controllers
             }
 
             // sanitize user input
-            if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId))
+            try
+            {
+                fileName = Sanitization.SanitizeFileName(fileName);
+                projectId = Sanitization.SanitizeId(projectId);
+                wordId = Sanitization.SanitizeId(wordId);
+            }
+            catch
             {
                 return new UnsupportedMediaTypeResult();
             }
