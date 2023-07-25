@@ -116,6 +116,7 @@ namespace BackendFramework.Models
                 Username = Username,
                 UILang = UILang,
                 Token = Token,
+                IsAdmin = IsAdmin,
                 WorkedProjects = new Dictionary<string, string>(),
                 ProjectRoles = new Dictionary<string, string>()
             };
@@ -148,6 +149,7 @@ namespace BackendFramework.Models
                 other.Username.Equals(Username, StringComparison.Ordinal) &&
                 other.UILang.Equals(UILang, StringComparison.Ordinal) &&
                 other.Token.Equals(Token, StringComparison.Ordinal) &&
+                other.IsAdmin == IsAdmin &&
 
                 other.WorkedProjects.Count == WorkedProjects.Count &&
                 other.WorkedProjects.All(WorkedProjects.Contains) &&
@@ -183,6 +185,7 @@ namespace BackendFramework.Models
             hash.Add(Username);
             hash.Add(UILang);
             hash.Add(Token);
+            hash.Add(IsAdmin);
             return hash.ToHashCode();
         }
 
