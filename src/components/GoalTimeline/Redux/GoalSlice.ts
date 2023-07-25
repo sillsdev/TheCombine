@@ -74,7 +74,7 @@ export const goalSlice = createSlice({
       if (state.currentGoal.goalType === GoalType.MergeDups) {
         const currentGoalData = state.currentGoal.data as MergeDupsData;
         state.currentGoal.steps[state.currentGoal.currentStep] = {
-          words: currentGoalData,
+          words: currentGoalData.plannedWords[state.currentGoal.currentStep],
         };
       }
     },
