@@ -75,11 +75,9 @@ namespace Backend.Tests.Controllers
             _projRepo.Create(Util.RandomProject());
             _projRepo.Create(Util.RandomProject());
 
-            var action = _projController.GetProject(project!.Id).Result;
-            Assert.That(action, Is.InstanceOf<ObjectResult>());
-
-            var foundProjects = ((ObjectResult)action).Value as Project;
-            Assert.That(project, Is.EqualTo(foundProjects));
+            var result = _projController.GetProject(project!.Id).Result;
+            Assert.That(result, Is.InstanceOf<ObjectResult>());
+            Assert.That(((ObjectResult)result).Value, Is.EqualTo(project));
         }
 
         [Test]
@@ -122,7 +120,7 @@ namespace Backend.Tests.Controllers
             Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(3));
 
             _ = _projController.DeleteAllProjects().Result;
-            Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(0));
+            Assert.That(_projRepo.GetAllProjects().Result, Is.Empty);
         }
 
         [Test]

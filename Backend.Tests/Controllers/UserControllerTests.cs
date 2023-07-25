@@ -69,18 +69,16 @@ namespace Backend.Tests.Controllers
             _userRepo.Create(RandomUser());
             _userRepo.Create(RandomUser());
 
-            var action = _userController.GetUser(user.Id).Result;
-            Assert.That(action, Is.InstanceOf<ObjectResult>());
-
-            var foundUser = (User)((ObjectResult)action).Value!;
-            Assert.That(foundUser, Is.EqualTo(user));
+            var result = _userController.GetUser(user.Id).Result;
+            Assert.That(result, Is.InstanceOf<ObjectResult>());
+            Assert.That(((ObjectResult)result).Value, Is.EqualTo(user));
         }
 
         [Test]
         public void TestGetMissingUser()
         {
-            var action = _userController.GetUser("INVALID_USER_ID").Result;
-            Assert.That(action, Is.InstanceOf<NotFoundObjectResult>());
+            var result = _userController.GetUser("INVALID_USER_ID").Result;
+            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
         }
 
         [Test]
@@ -91,18 +89,16 @@ namespace Backend.Tests.Controllers
                 new User { Email = email, Username = Util.RandString(10), Password = Util.RandString(10) }
             ).Result ?? throw new UserCreationException();
 
-            var action = _userController.GetUserByEmail(email).Result;
-            Assert.That(action, Is.InstanceOf<ObjectResult>());
-
-            var foundUser = (User)((ObjectResult)action).Value!;
-            Assert.That(foundUser, Is.EqualTo(user));
+            var result = _userController.GetUserByEmail(email).Result;
+            Assert.That(result, Is.InstanceOf<ObjectResult>());
+            Assert.That(((ObjectResult)result).Value, Is.EqualTo(user));
         }
 
         [Test]
         public void TestGetMissingEmail()
         {
-            var action = _userController.GetUserByEmail("INVALID_EMAIL@gmail.com").Result;
-            Assert.That(action, Is.InstanceOf<NotFoundObjectResult>());
+            var result = _userController.GetUserByEmail("INVALID_EMAIL@gmail.com").Result;
+            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
         }
 
         [Test]
@@ -114,8 +110,8 @@ namespace Backend.Tests.Controllers
                 new User { Email = email, Username = Util.RandString(10), Password = Util.RandString(10) }
             ).Result ?? throw new UserCreationException();
 
-            var action = _userController.GetUserByEmail(email).Result;
-            Assert.That(action, Is.InstanceOf<ForbidResult>());
+            var result = _userController.GetUserByEmail(email).Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 
         [Test]
@@ -162,7 +158,7 @@ namespace Backend.Tests.Controllers
             Assert.That(_userRepo.GetAllUsers().Result, Has.Count.EqualTo(1));
 
             _ = _userController.DeleteUser(origUser.Id).Result;
-            Assert.That(_userRepo.GetAllUsers().Result, Has.Count.EqualTo(0));
+            Assert.That(_userRepo.GetAllUsers().Result, Is.Empty);
         }
 
         [Test]

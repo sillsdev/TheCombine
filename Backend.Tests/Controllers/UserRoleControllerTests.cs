@@ -285,7 +285,7 @@ namespace Backend.Tests.Controllers
 
             await _userRoleController.DeleteUserRole(_projId, userId);
 
-            Assert.That(await _userRoleRepo.GetAllUserRoles(_projId), Has.Count.EqualTo(0));
+            Assert.That(await _userRoleRepo.GetAllUserRoles(_projId), Is.Empty);
             fetchedUser = await _userRepo.GetUser(userId);
             Assert.That(fetchedUser, Is.Not.Null);
             Assert.That(fetchedUser!.ProjectRoles, Does.Not.ContainKey(_projId));
@@ -322,7 +322,7 @@ namespace Backend.Tests.Controllers
             Assert.That(await _userRoleRepo.GetAllUserRoles(_projId), Has.Count.EqualTo(3));
 
             await _userRoleController.DeleteProjectUserRoles(_projId);
-            Assert.That(await _userRoleRepo.GetAllUserRoles(_projId), Has.Count.EqualTo(0));
+            Assert.That(await _userRoleRepo.GetAllUserRoles(_projId), Is.Empty);
         }
 
         [Test]
