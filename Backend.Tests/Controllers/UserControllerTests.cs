@@ -58,7 +58,7 @@ namespace Backend.Tests.Controllers
 
             var users = ((ObjectResult)_userController.GetAllUsers().Result).Value as List<User>;
             Assert.That(users, Has.Count.EqualTo(3));
-            _userRepo.GetAllUsers().Result.ForEach(user => Assert.Contains(user, users));
+            _userRepo.GetAllUsers().Result.ForEach(user => Assert.That(users, Does.Contain(user)));
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace Backend.Tests.Controllers
             _userRepo.Create(RandomUser());
 
             var action = _userController.GetUser(user.Id).Result;
-            Assert.IsInstanceOf<ObjectResult>(action);
+            Assert.That(action, Is.InstanceOf<ObjectResult>());
 
             var foundUser = (User)((ObjectResult)action).Value!;
             Assert.That(foundUser, Is.EqualTo(user));
@@ -80,7 +80,7 @@ namespace Backend.Tests.Controllers
         public void TestGetMissingUser()
         {
             var action = _userController.GetUser("INVALID_USER_ID").Result;
-            Assert.IsInstanceOf<NotFoundObjectResult>(action);
+            Assert.That(action, Is.InstanceOf<NotFoundObjectResult>());
         }
 
         [Test]
@@ -92,7 +92,7 @@ namespace Backend.Tests.Controllers
             ).Result ?? throw new UserCreationException();
 
             var action = _userController.GetUserByEmail(email).Result;
-            Assert.IsInstanceOf<ObjectResult>(action);
+            Assert.That(action, Is.InstanceOf<ObjectResult>());
 
             var foundUser = (User)((ObjectResult)action).Value!;
             Assert.That(foundUser, Is.EqualTo(user));
@@ -102,7 +102,7 @@ namespace Backend.Tests.Controllers
         public void TestGetMissingEmail()
         {
             var action = _userController.GetUserByEmail("INVALID_EMAIL@gmail.com").Result;
-            Assert.IsInstanceOf<NotFoundObjectResult>(action);
+            Assert.That(action, Is.InstanceOf<NotFoundObjectResult>());
         }
 
         [Test]
@@ -115,7 +115,7 @@ namespace Backend.Tests.Controllers
             ).Result ?? throw new UserCreationException();
 
             var action = _userController.GetUserByEmail(email).Result;
-            Assert.IsInstanceOf<ForbidResult>(action);
+            Assert.That(action, Is.InstanceOf<ForbidResult>());
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace Backend.Tests.Controllers
             var user = RandomUser();
             var id = (string)((ObjectResult)_userController.CreateUser(user).Result).Value!;
             user.Id = id;
-            Assert.Contains(user, _userRepo.GetAllUsers().Result);
+            Assert.That(_userRepo.GetAllUsers().Result, Does.Contain(user));
         }
 
         [Test]
@@ -138,7 +138,7 @@ namespace Backend.Tests.Controllers
 
             var users = _userRepo.GetAllUsers().Result;
             Assert.That(users, Has.Count.EqualTo(1));
-            Assert.Contains(modUser, users);
+            Assert.That(users, Does.Contain(modUser));
         }
 
         [Test]
@@ -152,7 +152,7 @@ namespace Backend.Tests.Controllers
 
             var users = _userRepo.GetAllUsers().Result;
             Assert.That(users, Has.Count.EqualTo(1));
-            Assert.Contains(modUser, users);
+            Assert.That(users, Does.Contain(modUser));
         }
 
         [Test]
@@ -176,19 +176,19 @@ namespace Backend.Tests.Controllers
             _userRepo.Create(user2);
 
             var result1 = (ObjectResult)_userController.IsUsernameUnavailable(username1.ToLowerInvariant()).Result;
-            Assert.IsTrue((bool)result1.Value!);
+            Assert.That(result1.Value, Is.True);
 
             var result2 = (ObjectResult)_userController.IsUsernameUnavailable(username2.ToUpperInvariant()).Result;
-            Assert.IsTrue((bool)result2.Value!);
+            Assert.That(result2.Value, Is.True);
 
             var result3 = (ObjectResult)_userController.IsUsernameUnavailable(username1).Result;
-            Assert.IsTrue((bool)result3.Value!);
+            Assert.That(result3.Value, Is.True);
 
             var result4 = (ObjectResult)_userController.IsUsernameUnavailable("NewUsername").Result;
-            Assert.IsFalse((bool)result4.Value!);
+            Assert.That(result4.Value, Is.False);
 
             var result5 = (ObjectResult)_userController.IsUsernameUnavailable("").Result;
-            Assert.IsTrue((bool)result5.Value!);
+            Assert.That(result5.Value, Is.True);
         }
 
         [Test]
@@ -202,19 +202,19 @@ namespace Backend.Tests.Controllers
             _userRepo.Create(user2);
 
             var result1 = (ObjectResult)_userController.IsEmailUnavailable(email1.ToLowerInvariant()).Result;
-            Assert.IsTrue((bool)result1.Value!);
+            Assert.That(result1.Value, Is.True);
 
             var result2 = (ObjectResult)_userController.IsEmailUnavailable(email2.ToUpperInvariant()).Result;
-            Assert.IsTrue((bool)result2.Value!);
+            Assert.That(result2.Value, Is.True);
 
             var result3 = (ObjectResult)_userController.IsEmailUnavailable(email1).Result;
-            Assert.IsTrue((bool)result3.Value!);
+            Assert.That(result3.Value, Is.True);
 
             var result4 = (ObjectResult)_userController.IsEmailUnavailable("new@e.mail").Result;
-            Assert.IsFalse((bool)result4.Value!);
+            Assert.That(result4.Value, Is.False);
 
             var result5 = (ObjectResult)_userController.IsEmailUnavailable("").Result;
-            Assert.IsTrue((bool)result5.Value!);
+            Assert.That(result5.Value, Is.True);
         }
     }
 }
