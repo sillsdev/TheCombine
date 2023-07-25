@@ -29,9 +29,11 @@ export default function ProjectSelect(
   };
 
   // This prevents an out-of-range Select error while useEffect is underway.
-  const projListWithProj = projList.find((p) => p.name === props.project.name)
-    ? projList
-    : [props.project, ...projList];
+  const projectList = [...projList];
+  if (!projectList.find((p) => p.name === props.project.name)) {
+    projectList.push(props.project);
+  }
+  projectList.sort((a: Project, b: Project) => a.name.localeCompare(b.name));
 
   return (
     <Select
@@ -39,7 +41,7 @@ export default function ProjectSelect(
       sx={{ maxWidth: "100%" }}
       value={props.project.name}
     >
-      {projListWithProj.map((p, i) => (
+      {projectList.map((p, i) => (
         <MenuItem key={i} value={p.name}>
           {p.name}
         </MenuItem>
