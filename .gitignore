@@ -5,12 +5,12 @@
 /.pnp
 .pnp.js
 
-# Testing coverage
+# Testing
 /coverage*
 /Backend.Tests/coverage*
 
 # Production
-build
+/build
 
 # Generated files for development use
 docker-compose.yml
@@ -37,21 +37,28 @@ yarn-debug.log*
 yarn-error.log*
 
 # Visual Studio
-.vs
+.vs/*
 
 # Backend
-bin
-obj
+Backend/.vs/**/*
+Backend/bin
+Backend/obj
+Backend/build
+/**/obj/**/*
+Backend.Tests/bin
+Backend.Tests/obj
 Backend/BackendFramework.csproj.user
 BackendFramework.sln.DotSettings.user
-Backend/.vscode
-Backend/SIL.Lift
+Backend/.vscode/**/*
+Backend/SIL.Lift/**/*
 Backend/ql-database
-**/*.xml
-**/*.lift
-**/*.orig
-**/*.~un
-**/*.swp
+/**/*.xml
+/**/*.lift
+/**/*.orig
+Backend.Tests/bin/Audio/*.mp3
+/**/*.~un
+/**/*.swp
+Backend.Tests/bin/Avatars/*
 mongo_database
 
 # User Guide

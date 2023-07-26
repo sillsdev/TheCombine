@@ -53,17 +53,18 @@ def main() -> None:
         logging.info(f"Making {target_dir}")
         os.mkdir(target_dir)
 
-    ts_declare_path = Path.joinpath(target_dir, "fonts.d.ts")
-    if not os.path.exists(ts_declare_path):
-        logging.info(f"Making TypeScript declaration file for font files: {ts_declare_path}")
-        with open(ts_declare_path, "w") as ts_file:
-            ts_file.writelines(
-                [
-                    'declare module "*.ttf";\n',
-                    'declare module "*.woff";\n',
-                    'declare module "*.woff2";\n',
-                ]
-            )
+    if args.download:
+        ts_declare_path = Path.joinpath(target_dir, "fonts.d.ts")
+        if not os.path.exists(ts_declare_path):
+            logging.info(f"Making TypeScript declaration file for font files: {ts_declare_path}")
+            with open(ts_declare_path, "w") as ts_file:
+                ts_file.writelines(
+                    [
+                        'declare module "*.ttf";\n',
+                        'declare module "*.woff";\n',
+                        'declare module "*.woff2";\n',
+                    ]
+                )
 
     source_url = "https://github.com/silnrsi/fonts/raw/main/families.json"
     families_file_path = Path.joinpath(target_dir, "families.json")
