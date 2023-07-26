@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Fetches the SIL fonts needed to support Mui-Language-Picker
+Generates font support for all SIL fonts used in Mui-Language-Picker.
 """
 
 import argparse
@@ -8,8 +8,8 @@ import json
 import logging
 import os
 from pathlib import Path
-import re
 from shutil import rmtree
+from typing import List
 import urllib.request
 
 import requests
@@ -18,8 +18,12 @@ import requests
 def parse_args() -> argparse.Namespace:
     """Define command line arguments for parser."""
     parser = argparse.ArgumentParser(
-        description="Download all needed SIL fonts to src/resources/fonts",
+        description="Prepares all needed SIL fonts in src/resources/fonts.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument("-c", "--clean", action="store_true", help="Delete src/resources/fonts")
+    parser.add_argument(
+        "-d", "--download", action="store_true", help="Download fonts (for NUC deployment)"
     )
     parser.add_argument(
         "-v",
@@ -27,7 +31,6 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Print intermediate values to aid in debugging",
     )
-    parser.add_argument("-c", "--clean", action="store_true", help="Delete src/resources/fonts")
     return parser.parse_args()
 
 
@@ -38,7 +41,9 @@ def main() -> None:
     else:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
 
+    # Assumes script is run from The Combine's root directory
     target_dir = Path("./src/resources/fonts").absolute()
+
     if args.clean:
         logging.info(f"Deleting {target_dir}")
         if target_dir.is_dir():
@@ -88,26 +93,41 @@ def main() -> None:
         "taiheritagepro",
     ]
 
+    # The Mui Language Picker name doesn't always match the current font.
+    # https://github.com/sillsdev/mui-language-picker/blob/master/src/langPicker/fontList.js > fontMap
+    MLP_family_override = {
+        "galatiasil": "Galatia",  # MLP omits SIL
+        "namdhinggo": "Namdhinggo SIL",  # MLP adds SIL
+        "scheherazadenew": "Scheherazade",  # MLP omits New
+    }
+
+    # These will be filed with the lines needed to generate the font .ts file.
+    import_lines: List[str] = []
+    css_lines: List[str] = []
+
     with open(families_file_path, "r") as families_file:
         families: dict = json.load(families_file)
-
         for id in family_ids:
-            logging.info(id)
+            logging.info(f"Font: {id}")
+
+            # Get font info from the file of font families.
+            if not id in families.keys():
+                logging.warning(f"Font {id} not in file {families_file_path}")
+                continue
             font_info: dict = families[id]
+            family: str = font_info["family"]
+
+            # Check that the font is current and licensed as expected.
             if font_info["distributable"] != True:
-                logging.warning(f"{id}: Not distributable")
+                logging.warning(f"{family}: Not distributable")
             if font_info["license"] != "OFL":
-                logging.warning(f"{id}: Non-OFL license: {font_info['license']}")
+                logging.warning(f"{family}: Non-OFL license: {font_info['license']}")
             if font_info["source"] != "SIL":
-                logging.warning(f"{id}: Non-SIL source: {font_info['source']}")
+                logging.warning(f"{family}: Non-SIL source: {font_info['source']}")
             if font_info["status"] != "current":
-                logging.warning(f"{id}: Non-current status: {font_info['status']}")
+                logging.warning(f"{family}: Non-current status: {font_info['status']}")
 
-            subdir = Path.joinpath(target_dir, id)
-            if not os.path.exists(subdir):
-                logging.info(f"Making {id} font subdirectory.")
-                os.mkdir(subdir)
-
+            # Determine which format to use, with preference for woff2 if available.
             defaults: dict = font_info["defaults"]
             format = ""
             for key in ["woff2", "woff", "ttf"]:
@@ -115,36 +135,100 @@ def main() -> None:
                     format = key
                     break
             if format == "":
-                logging.warning(f"{id}: 'ttf', 'woff', 'woff2' formats all unavailable")
+                logging.warning(f"{family}: 'ttf', 'woff', 'woff2' formats all unavailable")
+                continue
+            logging.info(f"{family}: Using format '{format}'")
 
-            logging.info(f"Fetching font files for: {font_info['family']}")
+            # Determine the naming convention in this font's files.
             default_name: str = defaults[format]
-
-            file_name_parts = default_name.split("Regular.")
-            styles = [""]
-            if len(file_name_parts) == 2:
+            if "Regular." in default_name:
                 # Most fonts
-                file_name_prefix = file_name_parts[0]
-                styles = ["Bold", "BoldItalic", "Italic", "Regular"]
+                file_name_prefix = default_name.split("-Regular.")[0]
+                style_suffixes = ["-Bold", "-BoldItalic", "-Italic", "-Regular"]
+            elif "R." in default_name:
+                # Galatia SIL, Sophia Nubian
+                file_name_prefix = default_name.split("R.")[0]
+                style_suffixes = ["B", "BI", "I", "R"]
             else:
-                # Ezra, Galatia, SophiaNubian
-                file_name_parts = default_name.split(".")
-                file_name_prefix = file_name_parts[0]
-                if file_name_prefix[-1] == "R":
-                    # Galatia, SophiaNubian
-                    file_name_prefix = file_name_prefix[:-1]
-                    styles = ["B", "BI", "I", "R"]
+                # Ezra SIL
+                file_name_prefix = default_name.split(".")[0]
+                style_suffixes = [""]
+
+            if args.download:
+                logging.info(f"{family}: Populating font subfolder '{id}'")
+                subdir = Path.joinpath(target_dir, id)
+                if not os.path.exists(subdir):
+                    os.mkdir(subdir)
 
             files: dict = font_info["files"]
-            for style in styles:
-                file_name = f"{file_name_prefix}{style}.{format}"
+            for style_suffix in style_suffixes:
+                file_name = f"{file_name_prefix}{style_suffix}.{format}"
                 if file_name in files.keys():
+                    # Build the css info for this font in this style.
+                    css_lines.append("@font-face {\n")
+                    css_lines.append("  font-display: swap;\n")
+                    if id in MLP_family_override.keys():
+                        css_lines.append(f"  font-family: '{MLP_family_override[id]}';\n")
+                    else:
+                        css_lines.append(f"  font-family: '{family}';\n")
+                    variable_name = f"{file_name_prefix}_"
+                    if style_suffix in ["-Regular", "R", ""]:
+                        css_lines.append("  font-style: normal;\n")
+                        css_lines.append("  font-weight: normal;\n")
+                        css_line_local = f"local('{family}'), local('{family} Regular'),"
+                        variable_name += "Regular"
+                    elif style_suffix in ["-Bold", "B"]:
+                        css_lines.append("  font-style: normal;\n")
+                        css_lines.append("  font-weight: bold;\n")
+                        css_line_local = f"local('{family} Bold'),"
+                        variable_name += "Bold"
+                    elif style_suffix in ["-Italic", "I"]:
+                        css_lines.append("  font-style: italic;\n")
+                        css_lines.append("  font-weight: normal;\n")
+                        css_line_local = f"local('{family} Italic'),"
+                        variable_name += "Italic"
+                    elif style_suffix in ["-BoldItalic", "BI"]:
+                        css_lines.append("  font-style: italic;\n")
+                        css_lines.append("  font-weight: bold;\n")
+                        css_line_local = f"local('{family} Bold Italic'),"
+                        variable_name += "BoldItalic"
+                    else:
+                        logging.error(f"Impossible font style suffix: {style_suffix}")
+                        continue
+
+                    # Build the url source, downloading if requested.
                     src = files[file_name]["flourl"]
-                    dest = Path.joinpath(subdir, file_name)
-                    req = requests.get(src)
-                    logging.info(f"Downloading {src} to {dest}")
-                    with open(dest, "wb") as out:
-                        out.write(req.content)
+                    if args.download:
+                        dest = Path.joinpath(subdir, file_name)
+                        import_lines.append(
+                            f'import {variable_name} from "resources/fonts/{id}/{file_name}";\n'
+                        )
+                        css_line_url = "url(${" + variable_name + "})"
+                        # With the https://fonts.languagetechnology.org "flourl" urls,
+                        # urllib.request.urlretrieve() is denied (403), but requests.get() works.
+                        req = requests.get(src)
+                        logging.info(f"Downloading {src} to {dest}")
+                        with open(dest, "wb") as out:
+                            out.write(req.content)
+                    else:
+                        css_line_url = f"url('{src}')"
+
+                    # Finish the css info for this font in this style.
+                    css_lines.append(
+                        f"  src: {css_line_local} {css_line_url} format('{format}');\n"
+                    )
+                    css_lines.append("}\n")
+
+    # Create font override file
+    css_file_path = Path.joinpath(target_dir, "silFonts.ts")
+    logging.info(f"Generating font overrides file: {css_file_path}")
+    with open(css_file_path, "w") as css_file:
+        if len(import_lines) > 0:
+            css_file.writelines(import_lines)
+            css_file.write("\n")
+        css_file.write("export default `\n")
+        css_file.writelines(css_lines)
+        css_file.write("`;\n")
 
 
 if __name__ == "__main__":

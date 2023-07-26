@@ -6,6 +6,7 @@ import {
 } from "@mui/material/styles";
 
 import fontOverrides from "types/fontFace";
+//import fontOverrides from "resources/fonts/silFonts";
 
 export type HEX = `#${string}`;
 
@@ -35,12 +36,12 @@ const palette: Partial<PaletteOptions> = {
 
 // Extended from default theme with SIL fonts
 const fontFamily: React.CSSProperties["fontFamily"] = [
+  "'Noto Sans Tangut'",
   "Roboto",
   "'Noto Sans'",
   "Helvetica",
   "Arial",
   "sans-serif",
-  "CharisSIL",
 ].join(",");
 
 const dynamicFontParams = { factor: 2 };

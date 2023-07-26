@@ -48,12 +48,27 @@ export class Font {
   }
 }
 
-export default ``;
+const silFonts = async () => {
+  try {
+    return await import("resources/fonts/silFonts");
+  } catch {
+    return ``;
+  }
+};
+//export default await silFonts();
+export default `
+@font-face {
+  font-display: swap;
+  font-family: 'Noto Sans Tangut';
+  src: url('https://github.com/notofonts/notofonts.github.io/raw/main/fonts/NotoSerifTangut/googlefonts/ttf/NotoSerifTangut-Regular.ttf');
+}
+`;
+
 /*
 @font-face {
   font-display: swap;
   font-family: 'Abyssinica SIL';
-  src: local('Abyssinica SIL'), local('Abyssinica SIL Regular'), url(${AbyssinicaSIL_Regular}) format('woff2')
+  src: local('Abyssinica SIL'), local('Abyssinica SIL Regular'), url(${AbyssinicaSIL_Regular}) format('woff2');
 }
 @font-face {
   font-display: swap;
