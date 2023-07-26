@@ -40,13 +40,14 @@ yarn-error.log*
 .vs
 
 # Backend
-bin
 obj
+Backend/bin
 Backend/BackendFramework.csproj.user
 BackendFramework.sln.DotSettings.user
 Backend/.vscode
 Backend/SIL.Lift
 Backend/ql-database
+Backend.Tests/bin
 *.xml
 *.lift
 *.orig
