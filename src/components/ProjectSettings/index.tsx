@@ -152,7 +152,7 @@ export default function ProjectSettingsComponent() {
             }
           />
         )}
-        
+
         {/* See current users in project */}
         {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
           <BaseSettingsComponent
