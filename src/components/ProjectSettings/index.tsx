@@ -152,7 +152,7 @@ export default function ProjectSettingsComponent() {
             }
           />
         )}
-
+        
         {/* See current users in project */}
         {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
           <BaseSettingsComponent
@@ -171,14 +171,18 @@ export default function ProjectSettingsComponent() {
           />
         )}
 
-        {/* Set a workshop schedule */}
-        {permissions.includes(Permission.Statistics) && (
-          <BaseSettingsComponent
-            icon={<CalendarMonth />}
-            title={t("projectSettings.schedule.workshopSchedule")}
-            body={<ProjectSchedule projectId={project.id} />}
-          />
-        )}
+        {/* Workshop schedule */}
+        <BaseSettingsComponent
+          icon={<CalendarMonth />}
+          title={t("projectSettings.schedule.workshopSchedule")}
+          body={
+            <ProjectSchedule
+              project={project}
+              readOnly={!permissions.includes(Permission.Statistics)}
+              updateProject={updateProject}
+            />
+          }
+        />
 
         {/* Archive project */}
         {permissions.includes(Permission.Archive) && (

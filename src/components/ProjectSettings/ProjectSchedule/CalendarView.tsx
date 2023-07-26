@@ -7,18 +7,19 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs, { Dayjs } from "dayjs";
+import { ReactElement } from "react";
 
 interface CalendarViewProps {
   projectSchedule: Date[];
 }
 
-export default function CalendarView(props: CalendarViewProps) {
+export default function CalendarView(props: CalendarViewProps): ReactElement {
   // Custom renderer for CalendarPicker
   function customDayRenderer(
     day: Dayjs,
     _selectedDays: Array<Dayjs | null>,
     pickersDayProps: PickersDayProps<Dayjs>
-  ) {
+  ): ReactElement {
     const date = day.toDate();
     const selected =
       props.projectSchedule &&
@@ -31,8 +32,12 @@ export default function CalendarView(props: CalendarViewProps) {
     return <PickersDay {...pickersDayProps} selected={selected} />;
   }
 
-  function handleCalendarView(monthToRender?: Dayjs[]) {
-    return monthToRender?.map((tempDayjs) => (
+  function handleCalendarView(monthToRender?: Dayjs[]): ReactElement[] {
+    if (!monthToRender) {
+      return [];
+    }
+
+    return monthToRender.map((tempDayjs) => (
       <CalendarPicker
         key={"calendarPick" + tempDayjs.toString()}
         components={{ LeftArrowIcon: Icon, RightArrowIcon: Icon }}
@@ -49,7 +54,7 @@ export default function CalendarView(props: CalendarViewProps) {
     ));
   }
 
-  function getScheduledMonths(schedule: Array<Date>) {
+  function getScheduledMonths(schedule: Array<Date>): Dayjs[] {
     const monthSet = new Set<string>();
     const tempMonths = new Array<Dayjs>();
     if (schedule && schedule.length) {
