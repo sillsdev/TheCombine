@@ -107,10 +107,6 @@ export class ReviewEntriesGloss implements Gloss {
   constructor(def = "", language = "", writingSystems?: WritingSystem[]) {
     this.def = def;
     this.language = language;
-    const writingSystem = writingSystems?.find((ws) => ws.bcp47 === language);
-    if (writingSystem) {
-      console.info(writingSystems);
-      this.font = writingSystem.font;
-    }
+    this.font = writingSystems?.find((ws) => ws.bcp47 === language)?.font;
   }
 }

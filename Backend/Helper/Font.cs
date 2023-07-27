@@ -25,15 +25,11 @@ namespace BackendFramework.Helper
             sortedFonts.Sort();
 
             var fontId = "notoseriftangut";
-            var dir = FileStorage.GenerateFontDirPath(fontId);
-            if (!Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
-            }
 
             var family = "Noto Serif Tangut";
             var variant = Variant.Regular;
-            var filePath = Path.Combine(dir, "NotoSerifTangut-Regular.ttf");
+            var fileName = "NotoSerifTangut-Regular.ttf";
+            var filePath = FileStorage.GenerateFontFilePath(fontId, fileName);
             var format = "ttf";
             //var mlpFamily = "Noto Sans Tangut";
 
@@ -47,8 +43,8 @@ namespace BackendFramework.Helper
                 await stream.CopyToAsync(fs);
             }
 
-            var path = "%PUBLIC_URL%/NotoSerifTangut-Regular.ttf";
-            return new List<string> { GenerateFontCss(family, variant, path, format) };
+            var rel_path = FileStorage.GenerateFontFilePath(fontId, fileName, true);
+            return new List<string> { GenerateFontCss(family, variant, $"%BASE_PATH%/{rel_path}", format) };
         }
 
         public static string GenerateFontCss(

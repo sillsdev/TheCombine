@@ -4,7 +4,7 @@ import { Theme, ThemeProvider, createTheme } from "@mui/material/styles";
 import { ReactElement, useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import { getFonts } from "backend";
+import { apiBaseURL, getFonts } from "backend";
 import SignalRHub from "components/App/SignalRHub";
 import AppBar from "components/AppBar/AppBarComponent";
 import PageNotFound from "components/PageNotFound/component";
@@ -38,11 +38,11 @@ export default function AppWithBar(): ReactElement {
   useEffect(() => {
     if (projId) {
       getFonts(projId).then((fontCss) => {
-        console.info(process.env);
         setStyleOverrides(
           fontCss[0]
-            .replace("\r", "")
-            .replace("%PUBLIC_URL%", process.env.PUBLIC_URL)
+            .replaceAll("\r", "")
+            .replaceAll("\\", "/")
+            .replace("%BASE_PATH%", `${apiBaseURL}/projects`)
         );
       });
     }
@@ -62,10 +62,6 @@ export default function AppWithBar(): ReactElement {
               ...theme.components?.MuiCssBaseline,
               styleOverrides,
             },
-          },
-          typography: {
-            ...theme.typography,
-            fontFamily: "'Noto Serif Tangut'",
           },
         })
       : theme;

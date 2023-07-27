@@ -13,8 +13,8 @@ namespace BackendFramework.Helper
     {
         private const string CombineFilesDir = ".CombineFiles";
         private const string AvatarsDir = "Avatars";
-        private const string FontsDir = "Fonts";
-        private const string publicEnvName = "PUBLIC_URL";
+        private const string FontsDir = "fonts";
+        private const string publicEnvName = "FRONTEND_PUBLIC_URL";
         private static readonly string ImportExtractedLocation = Path.Combine("Import", "ExtractedLocation");
         private static readonly string LiftImportSuffix = Path.Combine(ImportExtractedLocation, "Lift");
         private static readonly string AudioPathSuffix = Path.Combine(LiftImportSuffix, "audio");
@@ -103,20 +103,39 @@ namespace BackendFramework.Helper
             return GenerateFilePath(AvatarsDir, userId, FileType.Avatar);
         }
 
-        /// <summary> Generate the path to where fonts are stored. </summary>
+        /// <summary>
+        /// Generate the path to where Avatar images are stored.
+        /// </summary>
         /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
-        public static string GenerateFontDirPath(string fontId)
+        public static string GenerateFontFilePath(string fontId, string fileName, bool relative = false)
         {
             fontId = Sanitization.SanitizeId(fontId);
 
-            if (fontId == "assets")
+            if (relative)
             {
-                throw new InvalidIdException();
+                return Path.Combine(GetFontsDir(fontId, true), fileName);
             }
 
-            var publicDirPath = Environment.GetEnvironmentVariable(publicEnvName)!;
+            return GenerateFilePath(GetFontsDir(fontId), fileName);
+        }
 
-            return Path.Combine(publicDirPath, FontsDir, fontId);
+        public static string GetFrontendPublicDirPath()
+        {
+            return Environment.GetEnvironmentVariable(publicEnvName) ?? "";
+        }
+
+        /// <summary> Generate the path to where fonts are stored. </summary>
+        /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
+        public static string GetFontsDir(string fontId, bool relative = false)
+        {
+            fontId = Sanitization.SanitizeId(fontId);
+
+            if (relative)
+            {
+                return Path.Combine(FontsDir, fontId);
+            }
+
+            return GenerateDirPath(Path.Combine(FontsDir, fontId), true);
         }
 
         /// <summary>

@@ -35,7 +35,7 @@ import { Bcp47Code } from "types/writingSystem";
 import { convertGoalToEdit } from "utilities/goalUtilities";
 
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
-const apiBaseURL = `${baseURL}/v1`;
+export const apiBaseURL = `${baseURL}/v1`;
 const config_parameters: Api.ConfigurationParameters = { basePath: baseURL };
 const config = new Api.Configuration(config_parameters);
 

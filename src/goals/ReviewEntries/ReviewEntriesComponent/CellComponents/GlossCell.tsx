@@ -84,7 +84,6 @@ interface GlossListProps {
 
 function GlossList(props: GlossListProps): ReactElement {
   const langs = props.glosses.map((g) => g.language);
-  console.info(props.glosses);
   const glosses = langs.includes(props.defaultLang.bcp47)
     ? props.glosses
     : [
