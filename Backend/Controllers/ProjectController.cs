@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -214,6 +215,37 @@ namespace BackendFramework.Controllers
 
             var projectIdWithName = await _projRepo.GetProjectIdByName(projectName);
             return Ok(projectIdWithName is not null);
+        }
+
+        [HttpGet("{projectId}/fonts", Name = "GetProjectFonts")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<string>))]
+        public async Task<IActionResult> GetProjectFonts(string projectId)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            {
+                return Forbid();
+            }
+
+            // Sanitize user input.
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+            }
+            catch
+            {
+                return new UnsupportedMediaTypeResult();
+            }
+
+            var proj = await _projRepo.GetProject(projectId);
+            if (proj is null)
+            {
+                return NotFound(projectId);
+            }
+
+            var fonts = proj.AnalysisWritingSystems.Select(ws => ws.Font).ToList();
+            fonts.Add(proj.VernacularWritingSystem.Font);
+
+            return Ok(await Font.GetFonts(fonts));
         }
     }
 }

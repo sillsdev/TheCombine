@@ -308,6 +308,51 @@ export const ProjectApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProjectFonts: async (
+      projectId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("getProjectFonts", "projectId", projectId);
+      const localVarPath = `/v1/projects/{projectId}/fonts`.replace(
+        `{${"projectId"}}`,
+        encodeURIComponent(String(projectId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @param {string} projectName
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -607,6 +652,29 @@ export const ProjectApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getProjectFonts(
+      projectId: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getProjectFonts(
+        projectId,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
      * @param {string} projectName
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -767,6 +835,20 @@ export const ProjectApiFactory = function (
     },
     /**
      *
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getProjectFonts(
+      projectId: string,
+      options?: any
+    ): AxiosPromise<Array<string>> {
+      return localVarFp
+        .getProjectFonts(projectId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {string} projectName
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -866,6 +948,20 @@ export interface ProjectApiGetProjectRequest {
    *
    * @type {string}
    * @memberof ProjectApiGetProject
+   */
+  readonly projectId: string;
+}
+
+/**
+ * Request parameters for getProjectFonts operation in ProjectApi.
+ * @export
+ * @interface ProjectApiGetProjectFontsRequest
+ */
+export interface ProjectApiGetProjectFontsRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof ProjectApiGetProjectFonts
    */
   readonly projectId: string;
 }
@@ -1018,6 +1114,22 @@ export class ProjectApi extends BaseAPI {
   ) {
     return ProjectApiFp(this.configuration)
       .getProject(requestParameters.projectId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {ProjectApiGetProjectFontsRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ProjectApi
+   */
+  public getProjectFonts(
+    requestParameters: ProjectApiGetProjectFontsRequest,
+    options?: any
+  ) {
+    return ProjectApiFp(this.configuration)
+      .getProjectFonts(requestParameters.projectId, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

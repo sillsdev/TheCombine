@@ -5,7 +5,7 @@ import {
   PaletteOptions,
 } from "@mui/material/styles";
 
-import fontOverrides from "types/fontFace";
+//import fontOverrides from "types/fontFace";
 //import fontOverrides from "resources/fonts/silFonts";
 
 export type HEX = `#${string}`;
@@ -36,7 +36,7 @@ const palette: Partial<PaletteOptions> = {
 
 // Extended from default theme with SIL fonts
 const fontFamily: React.CSSProperties["fontFamily"] = [
-  "'Noto Sans Tangut'",
+  // "'Noto Serif Tangut'",
   "Roboto",
   "'Noto Sans'",
   "Helvetica",
@@ -50,7 +50,7 @@ const dynamicFontParams = { factor: 2 };
 const baseTheme = createTheme({
   components: {
     MuiButtonBase: { styleOverrides: { root: { disableRipple: false } } },
-    MuiCssBaseline: { styleOverrides: fontOverrides },
+    //MuiCssBaseline: { styleOverrides: fontOverrides },
   },
   palette: { ...palette },
   spacing: 8,

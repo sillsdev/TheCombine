@@ -59,10 +59,16 @@ const silFonts = async () => {
 export default `
 @font-face {
   font-display: swap;
-  font-family: 'Noto Sans Tangut';
+  font-family: 'Noto Serif Tangut';
   src: url('https://github.com/notofonts/notofonts.github.io/raw/main/fonts/NotoSerifTangut/googlefonts/ttf/NotoSerifTangut-Regular.ttf');
 }
 `;
+/*@font-face {
+  font-display: swap;
+  font-family: 'Noto Sans Tangut';
+  src: url('https://github.com/notofonts/notofonts.github.io/raw/main/fonts/NotoSerifTangut/googlefonts/ttf/NotoSerifTangut-Regular.ttf');
+}
+`;*/
 
 /*
 @font-face {

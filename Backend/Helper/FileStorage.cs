@@ -13,6 +13,8 @@ namespace BackendFramework.Helper
     {
         private const string CombineFilesDir = ".CombineFiles";
         private const string AvatarsDir = "Avatars";
+        private const string FontsDir = "Fonts";
+        private const string publicEnvName = "PUBLIC_URL";
         private static readonly string ImportExtractedLocation = Path.Combine("Import", "ExtractedLocation");
         private static readonly string LiftImportSuffix = Path.Combine(ImportExtractedLocation, "Lift");
         private static readonly string AudioPathSuffix = Path.Combine(LiftImportSuffix, "audio");
@@ -99,6 +101,22 @@ namespace BackendFramework.Helper
             userId = Sanitization.SanitizeId(userId);
 
             return GenerateFilePath(AvatarsDir, userId, FileType.Avatar);
+        }
+
+        /// <summary> Generate the path to where fonts are stored. </summary>
+        /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
+        public static string GenerateFontDirPath(string fontId)
+        {
+            fontId = Sanitization.SanitizeId(fontId);
+
+            if (fontId == "assets")
+            {
+                throw new InvalidIdException();
+            }
+
+            var publicDirPath = Environment.GetEnvironmentVariable(publicEnvName)!;
+
+            return Path.Combine(publicDirPath, FontsDir, fontId);
         }
 
         /// <summary>
