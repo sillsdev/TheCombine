@@ -10,22 +10,25 @@
     <NoWarn>$(NoWarn);CA1305;CA1816;CA1848;CS1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Data\fontFamilies.json" />
     <None Remove="Data\sdList.txt" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Data\fontFamilies.json" />
     <EmbeddedResource Include="Data\sdList.txt" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="RelaxNG" Version="3.2.3" >
-      <NoWarn>NU1701</NoWarn>
-    </PackageReference>
+    <PackageReference Include="MailKit" Version="4.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.20" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.32.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.32.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.20.0" />
-    <PackageReference Include="MailKit" Version="4.1.0" />
-    <PackageReference Include="Xabe.FFmpeg" Version="5.2.6"/>
+    <PackageReference Include="Newtonsoft.JSON" Version="13.0.3" />
+    <PackageReference Include="RelaxNG" Version="3.2.3">
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.32.0" />
+    <PackageReference Include="Xabe.FFmpeg" Version="5.2.6" />
 
     <!-- SIL Maintained Dependencies. -->
     <PackageReference Include="icu.net" Version="2.9.0" />

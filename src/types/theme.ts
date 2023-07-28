@@ -50,7 +50,6 @@ const dynamicFontParams = { factor: 2 };
 const baseTheme = createTheme({
   components: {
     MuiButtonBase: { styleOverrides: { root: { disableRipple: false } } },
-    //MuiCssBaseline: { styleOverrides: fontOverrides },
   },
   palette: { ...palette },
   spacing: 8,
