@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace BackendFramework.Helper
 {
@@ -46,39 +45,6 @@ namespace BackendFramework.Helper
 
             var rel_path = FileStorage.GenerateFontFilePath(fontId, fileName, true);
             return new List<string> { GenerateFontCss(family, variant, $"%BASE_PATH%/{rel_path}", format) };
-        }
-
-        private static Dictionary<string, FontFamilyInfo>? GetFontFamilyInfo()
-        {
-            const string fontFamiliesFile = "BackendFramework.Data.fontFamilies.json";
-            var serializer = new JsonSerializer();
-            var reader = new JsonTextReader(new StreamReader(fontFamiliesFile));
-            return serializer.Deserialize<Dictionary<string, FontFamilyInfo>>(reader);
-        }
-
-        private class FontFamilyInfo
-        {
-            public Dictionary<string, string>? defaults { get; set; }
-            public bool distributable { get; set; }
-            public string? fallback { get; set; }
-            public string? family { get; set; }
-            public string? familyid { get; set; }
-            public Dictionary<string, FontFileInfo>? files { get; set; }
-            public string? license { get; set; }
-            public string? packageurl { get; set; }
-            public string? siteurl { get; set; }
-            public string? status { get; set; }
-            public string? version { get; set; }
-            public string? ziproot { get; set; }
-        }
-
-        private class FontFileInfo
-        {
-            public Dictionary<string, int>? axes { get; set; }
-            public string? flourl { get; set; }
-            public string? packagepath { get; set; }
-            public string? url { get; set; }
-            public string? zippath { get; set; }
         }
 
         public static string GenerateFontCss(
