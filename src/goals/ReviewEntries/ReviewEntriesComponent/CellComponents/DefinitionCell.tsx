@@ -3,12 +3,14 @@ import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-import { Definition } from "api/models";
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 import AlignedList, {
   SPACER,
 } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
-import { ReviewEntriesSense } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import {
+  ReviewEntriesDefinition,
+  ReviewEntriesSense,
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreState } from "types";
 import { themeColors } from "types/theme";
 import { newDefinition } from "types/word";
@@ -76,10 +78,10 @@ export default function DefinitionCell(
 }
 
 interface DefinitionListProps {
-  definitions: Definition[];
+  definitions: ReviewEntriesDefinition[];
   defaultLang: string;
   keyPrefix: string;
-  onChange: (definitions: Definition[]) => void;
+  onChange: (definitions: ReviewEntriesDefinition[]) => void;
 }
 
 function DefinitionList(props: DefinitionListProps): ReactElement {
@@ -95,7 +97,7 @@ function DefinitionList(props: DefinitionListProps): ReactElement {
           definition={g}
           key={`${props.keyPrefix}-${i}`}
           textFieldId={`${props.keyPrefix}-${i}-text`}
-          onChange={(definition: Definition) => {
+          onChange={(definition: ReviewEntriesDefinition) => {
             const updatedDefinitions = [...definitions];
             updatedDefinitions.splice(i, 1, definition);
             props.onChange(updatedDefinitions);
@@ -107,15 +109,16 @@ function DefinitionList(props: DefinitionListProps): ReactElement {
 }
 
 interface DefinitionFieldProps {
-  definition: Definition;
+  definition: ReviewEntriesDefinition;
   textFieldId: string;
-  onChange: (definition: Definition) => void;
+  onChange: (definition: ReviewEntriesDefinition) => void;
 }
 
 function DefinitionField(props: DefinitionFieldProps): ReactElement {
   return (
     <TextField
       id={props.textFieldId}
+      inputProps={{ style: { fontFamily: props.definition.font } }}
       label={`${props.definition.language}:`}
       variant="outlined"
       margin="dense"

@@ -9,6 +9,7 @@ import ReviewEntriesComponent from "goals/ReviewEntries/ReviewEntriesComponent/R
 import mockWords, {
   mockCreateWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/tests/WordsMock";
+import { defaultWritingSystem } from "types/writingSystem";
 
 const mockGetFrontierWords = jest.fn();
 const mockMaterialTable = jest.fn();
@@ -45,7 +46,11 @@ jest.mock("components/TreeView", () => "div");
 const mockReviewEntryWords = mockWords();
 const state = {
   currentProjectState: {
-    project: { definitionsEnabled: true },
+    project: {
+      analysisWritingSystems: [defaultWritingSystem],
+      definitionsEnabled: true,
+      vernacularWritingSystem: defaultWritingSystem,
+    },
   },
   reviewEntriesState: { words: mockReviewEntryWords },
   treeViewState: {

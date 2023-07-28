@@ -53,12 +53,13 @@ export class ReviewEntriesWord {
 
 export class ReviewEntriesSense {
   guid: string;
-  definitions: Definition[];
+  definitions: ReviewEntriesDefinition[];
   glosses: ReviewEntriesGloss[];
   partOfSpeech: GrammaticalInfo;
   domains: SemanticDomain[];
   deleted: boolean;
   protected: boolean;
+  fonts?: string;
 
   constructor(
     sense?: Sense,
@@ -77,15 +78,24 @@ export class ReviewEntriesSense {
       ? sense.glosses.filter((g) => g.language === analysisLang)
       : sense.glosses;
     this.glosses = cleanGlosses(this.glosses);
-    if (writingSystems) {
-      this.glosses = this.glosses.map(
-        (g) => new ReviewEntriesGloss(g.def, g.language, writingSystems)
-      );
-    }
     this.partOfSpeech = sense.grammaticalInfo;
     this.domains = [...sense.semanticDomains];
     this.deleted = sense.accessibility === Status.Deleted;
     this.protected = sense.accessibility === Status.Protected;
+
+    if (writingSystems) {
+      this.fonts =
+        writingSystems
+          .filter((ws) => !!ws.font)
+          .map((ws) => `'${ws.font}'`)
+          .join(",") || undefined; // Make undefined if empty string
+      this.definitions = this.definitions.map(
+        (g) => new ReviewEntriesDefinition(g.text, g.language, writingSystems)
+      );
+      this.glosses = this.glosses.map(
+        (g) => new ReviewEntriesGloss(g.def, g.language, writingSystems)
+      );
+    }
   }
 
   private static SEPARATOR = "; ";
@@ -99,6 +109,19 @@ export class ReviewEntriesSense {
   }
 }
 
+export class ReviewEntriesDefinition implements Definition {
+  text: string;
+  language: string;
+  font?: string;
+
+  constructor(text = "", language = "", writingSystems?: WritingSystem[]) {
+    this.text = text;
+    this.language = language;
+    this.font =
+      writingSystems?.find((ws) => ws.bcp47 === language)?.font || undefined;
+  }
+}
+
 export class ReviewEntriesGloss implements Gloss {
   def: string;
   language: string;
@@ -107,6 +130,7 @@ export class ReviewEntriesGloss implements Gloss {
   constructor(def = "", language = "", writingSystems?: WritingSystem[]) {
     this.def = def;
     this.language = language;
-    this.font = writingSystems?.find((ws) => ws.bcp47 === language)?.font;
+    this.font =
+      writingSystems?.find((ws) => ws.bcp47 === language)?.font || undefined;
   }
 }
