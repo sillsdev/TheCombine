@@ -68,234 +68,27 @@ def main() -> None:
     logging.info(f"Downloading {source_url} to {families_file_path}")
     urllib.request.urlretrieve(source_url, families_file_path)
 
-    family_ids_google = [
-        "badami",
-        "dokchampa",
-        "ebrima",
-        "kayahli",
-        "khmermondulkiri",
-        "kyebogyisil",
-        "lisutzimu",
-        "notonastaliqurdu",
-        "notosans",
-        "notosansadlam",
-        "notosansanatolianhieroglyphs",
-        "notosansarabic",
-        "notosansarmenian",
-        "notosansavestan",
-        "notosansbalinese",
-        "notosansbamum",
-        "notosansbassavah",
-        "notosansbatak",
-        "notosansbengali",
-        "notosansbhaiksuki",
-        "notosansbrahmi",
-        "notosansbuginese",
-        "notosansbuhid",
-        "notosanscanadianaboriginal",
-        "notosanscarian",
-        "notosanscaucasianalbanian",
-        "notosanschakma",
-        "notosanscham",
-        "notosanscherokee",
-        "notosanscoptic",
-        "notosanscuneiform",
-        "notosanscypriot",
-        "notosansdeseret",
-        "notosansdevanagari",
-        "notosansduployan",
-        "notosansegyptianhieroglyphs",
-        "notosanselbasan",
-        "notosansethiopic",
-        "notosansgeorgian",
-        "notosansglagolitic",
-        "notosansgothic",
-        "notosansgrantha",
-        "notosansgujarati",
-        "notosansgurmukhi",
-        "notosanshanunoo",
-        "notosanshatran",
-        "notosanshebrew",
-        "notosansimperialaramaic",
-        "notosansinscriptionalpahlavi",
-        "notosansinscriptionalparthian",
-        "notosansjavanese",
-        "notosansjp",
-        "notosanskaithi",
-        "notosanskannada",
-        "notosanskayahli",
-        "notosanskharoshthi",
-        "notosanskhmer",
-        "notosanskhojki",
-        "notosanskhudawadi",
-        "notosanskr",
-        "notosanslao",
-        "notosansleke",
-        "notosanslepcha",
-        "notosanslimbu",
-        "notosanslineara",
-        "notosanslinearb",
-        "notosanslisu",
-        "notosanslycian",
-        "notosanslydian",
-        "notosansmahajani",
-        "notosansmalayalam",
-        "notosansmandaic",
-        "notosansmanichaean",
-        "notosansmarchen",
-        "notosansmeeteimayek",
-        "notosansmendekikakui",
-        "notosansmeroitic",
-        "notosansmeroiticcursive",
-        "notosansmiao",
-        "notosansmodi",
-        "notosansmongolian",
-        "notosansmro",
-        "notosansmultani",
-        "notosansmyanmar",
-        "notosansnko",
-        "notosansnabataean",
-        "notosansnandinagari",
-        "notosansnewtailue",
-        "notosansnewa",
-        "notosansogham",
-        "notosansolchiki",
-        "notosansoldpermic",
-        "notosansoldhungarian",
-        "notosansolditalic",
-        "notosansoldnortharabian",
-        "notosansoldpersian",
-        "notosansoldsoutharabian",
-        "notosansoldturkic",
-        "notosansoriya",
-        "notosansosage",
-        "notosansosmanya",
-        "notosanspahawhhmong",
-        "notosanspalmyrene",
-        "notosanspaucinhau",
-        "notosansphagspa",
-        "notosansphoenician",
-        "notosanspsalterpahlavi",
-        "notosansrejang",
-        "notosansrunic",
-        "notosanssamaritan",
-        "notosanssaurashtra",
-        "notosanssc",
-        "notosansshuishu",
-        "notosanssiddham",
-        "notosanssinhala",
-        "notosanssorasompeng",
-        "notosanssylotinagri",
-        "notosanssyriac",
-        "notosanstagalog",
-        "notosanstagbanwa",
-        "notosanstaile",
-        "notosanstaitham",
-        "notosanstaiviet",
-        "notosanstakri",
-        "notosanstamil",
-        "notosanstangut",
-        "notosanstc",
-        "notosanstelugu",
-        "notosansthaana",
-        "notosansthai",
-        "notosanstibetan",
-        "notosanstifinagh",
-        "notosanstirhuta",
-        "notosansugaritic",
-        "notosansvai",
-        "notosanswarangciti",
-        "notosansyi",
-        "notoserif",
-        "notoserifahom",
-        "notoserifarmenian",
-        "notoserifbengali",
-        "notoserifdevanagari",
-        "notoserifethiopic",
-        "notoserifgeorgian",
-        "notoserifgujarati",
-        "notoserifgurmukhi",
-        "notoserifhebrew",
-        "notoserifjp",
-        "notoserifkannada",
-        "notoserifkhmer",
-        "notoserifkr",
-        "notoseriflao",
-        "notoserifmalayalam",
-        "notoserifmyanmar",
-        "notoserifsc",
-        "notoserifsinhala",
-        "notoseriftamil",
-        "notoseriftc",
-        "notoseriftelugu",
-        "notoserifthai",
-        "notoseriftibetan",
-        "saysetthamx",
-        "shishan",
-        "surma",
-        "thiruvalluvar",
-    ]
-
-    family_ids_sil = [
-        "abyssinicasil",
-        "annapurnasil",
-        "awaminastaliq",
-        "charissil",
-        "daibannasil",
-        "doulossil",
-        "ezrasil",
-        "galatiasil",
-        "gentiumplus",
-        "harmattan",
-        "mingzat",
-        "namdhinggo",
-        "narnoor",
-        "nokyung",
-        "nuosusil",
-        "padauk",
-        "scheherazadenew",
-        "shimenkan",
-        "sophianubian",
-        "taiheritagepro",
-    ]
-
     # Todo: Add info for these font's directly to this script.
-    MLP_families_not_in_file = {"simsun": "Sim Sun", "notoseriftangut": "Noto Serif Tangut"}
+    mlp_families_not_in_file = {"simsun": "Sim Sun", "notosanstangut": "Noto Serif Tangut"}
 
-    # The Mui Language Picker name doesn't always match the current font.
-    # Todo: Investigate which ones it removes spaces from.
-    # https://github.com/sillsdev/mui-language-picker/blob/master/src/langPicker/fontList.js > fontMap
-    MLP_family_override = {
-        "badami": "KNDA Badami",  # MLP adds KNDA
-        "galatiasil": "Galatia",  # MLP omits SIL
-        "kyebogyisil": "Kyebogyi",  # MLP omits SIL
-        "namdhinggo": "Namdhinggo SIL",  # MLP adds SIL
-        "notosans": "NotoSansLatin",  # MLP has both w and w/o Latin
-        "notosansjp": "Noto Sans CJK JP",  # MLP add CJK
-        "notosanskr": "Noto Sans CJK JP",  # MLP add CJK
-        "notosanssc": "Noto Sans CJK JP",  # MLP add CJK
-        "notosanstc": "Noto Sans CJK JP",  # MLP add CJK
-        "notoserif": "NotoSerifLatin",  # MLP has both w and w/o Latin
-        "notoserifjp": "Noto Sans CJK JP",  # MLP add CJK
-        "notoserifkr": "Noto Sans CJK JP",  # MLP add CJK
-        "notoserifsc": "Noto Sans CJK JP",  # MLP add CJK
-        "notoseriftangut": "NotoSansTangut",  # Sans unavailable, but Serif available
-        "notoseriftc": "Noto Sans CJK JP",  # MLP add CJK
-        "scheherazadenew": "Scheherazade",  # MLP omits New
-        "thiruvalluvar": "TAML ThiruValluvar",  # MLP adds TAML
-    }
+    with open(families_file_path, "r") as nrsi_families_file:
+        families: dict = json.load(nrsi_families_file)
 
-    with open(families_file_path, "r") as families_file:
-        families: dict = json.load(families_file)
+    with open("deploy/scripts/font_lists/mui-language-picker-fonts.txt", "r") as mlp_families_file:
+        mlp_ids = [f.strip().replace(" ", "").lower() for f in mlp_families_file.readlines()]
 
-    for id in family_ids_google:
-        logging.info(f"Font: {id}")
+    with open("deploy/scripts/font_lists/mlp-nrsi-font-map.json", "r") as mlp_nrsi_map_file:
+        mlp_nrsi_map: dict = json.load(mlp_nrsi_map_file)
+
+    for mlp_id in mlp_ids:
+        nrsi_id = mlp_nrsi_map[mlp_id] if mlp_id in mlp_nrsi_map.keys() else mlp_id
+        logging.info(f"Font: {mlp_id}/{nrsi_id}")
 
         # Get font info from the file of font families.
-        if not id in families.keys():
-            logging.warning(f"Font {id} not in file {families_file_path}")
+        if not nrsi_id in families.keys():
+            logging.warning(f"Font {nrsi_id} not in file {families_file_path}")
             continue
-        font_info: dict = families[id]
+        font_info: dict = families[nrsi_id]
         family: str = font_info["family"]
 
         # Check that the font is current and licensed as expected.
@@ -307,33 +100,16 @@ def main() -> None:
             logging.warning(f"{family}: Non-OFL license: {font_info['license']}")
         if "source" not in font_info.keys():
             logging.warning(f"{family}: No source")
-        elif font_info["source"] != "Google":
-            logging.warning(f"{family}: Non-Google source: {font_info['source']}")
+        elif font_info["source"] not in ["Google", "SIL"]:
+            logging.warning(f"{family}: Non-Google, non-SIL source: {font_info['source']}")
         if "status" not in font_info.keys():
             logging.warning(f"{family}: No status")
         elif font_info["status"] != "current":
             logging.warning(f"{family}: Non-current status: {font_info['status']}")
 
-    """
-    for id in family_ids_sil:
-        logging.info(f"Font: {id}")
-
-        # Get font info from the file of font families.
-        if not id in families.keys():
-            logging.warning(f"Font {id} not in file {families_file_path}")
+        if "defaults" not in font_info.keys():
+            logging.warning(f"{family}: No defaults")
             continue
-        font_info: dict = families[id]
-        family: str = font_info["family"]
-
-        # Check that the font is current and licensed as expected.
-        if font_info["distributable"] != True:
-            logging.warning(f"{family}: Not distributable")
-        if font_info["license"] != "OFL":
-            logging.warning(f"{family}: Non-OFL license: {font_info['license']}")
-        if font_info["source"] != "SIL":
-            logging.warning(f"{family}: Non-SIL source: {font_info['source']}")
-        if font_info["status"] != "current":
-            logging.warning(f"{family}: Non-current status: {font_info['status']}")
 
         # Determine which format to use, with preference for woff2 if available.
         defaults: dict = font_info["defaults"]
@@ -349,10 +125,15 @@ def main() -> None:
 
         # Determine the naming convention in this font's files.
         default_name: str = defaults[format]
+        logging.info(f"{family}: default {default_name}")
         if "Regular." in default_name:
             # Most fonts
             file_name_prefix = default_name.split("-Regular.")[0]
             style_suffixes = ["-Bold", "-BoldItalic", "-Italic", "-Regular"]
+        elif "-R." in default_name:
+            # Khmer Mondulkiri
+            file_name_prefix = default_name.split("-R.")[0]
+            style_suffixes = ["-B", "-BI", "-I", "-R"]
         elif "R." in default_name:
             # Galatia SIL, Sophia Nubian
             file_name_prefix = default_name.split("R.")[0]
@@ -362,13 +143,18 @@ def main() -> None:
             file_name_prefix = default_name.split(".")[0]
             style_suffixes = [""]
 
-        logging.info(f"{family}: Populating font subfolder '{id}'")
-        subdir = Path.joinpath(target_dir, id)
+        if "files" not in font_info.keys():
+            logging.warning(f"{family}: no file list")
+            continue
+
+        logging.info(f"{family}: Populating font subfolder '{mlp_id}'")
+        subdir = Path.joinpath(target_dir, mlp_id)
         if not os.path.exists(subdir):
             os.mkdir(subdir)
-        # These will be filed with the lines needed to generate the font's css file.
+        # To fill with the content of the font family's css file.
         css_lines: List[str] = []
 
+    """
         files: dict = font_info["files"]
         for style_suffix in style_suffixes:
             file_name = f"{file_name_prefix}{style_suffix}.{format}"

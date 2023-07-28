@@ -14,7 +14,6 @@ namespace BackendFramework.Helper
         private const string CombineFilesDir = ".CombineFiles";
         private const string AvatarsDir = "Avatars";
         private const string FontsDir = "fonts";
-        private const string publicEnvName = "FRONTEND_PUBLIC_URL";
         private static readonly string ImportExtractedLocation = Path.Combine("Import", "ExtractedLocation");
         private static readonly string LiftImportSuffix = Path.Combine(ImportExtractedLocation, "Lift");
         private static readonly string AudioPathSuffix = Path.Combine(LiftImportSuffix, "audio");
@@ -117,11 +116,6 @@ namespace BackendFramework.Helper
             }
 
             return GenerateFilePath(GetFontsDir(fontId), fileName);
-        }
-
-        public static string GetFrontendPublicDirPath()
-        {
-            return Environment.GetEnvironmentVariable(publicEnvName) ?? "";
         }
 
         /// <summary> Generate the path to where fonts are stored. </summary>
