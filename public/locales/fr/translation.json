@@ -90,6 +90,7 @@
   },
   "selectProject": { "title": "Sélectionner un projet" },
   "siteSettings": {
+    "projectList": "Projets",
     "archiveProjectText": "Ce projet ne sera accessible à aucun utilisateur.",
     "restoreProjectText": "Quelqu'un avait probablement une bonne raison d'archiver ce projet. Voulez-vous vraiment le restaurer ?",
     "deleteUser": {
@@ -141,7 +142,6 @@
       "updateSemDomWritingSystemFailed": "Impossible de mettre à jour la langue des champs sémantiques"
     },
     "name": "Nom du projet",
-    "projectList": "Projets",
     "user": {
       "currentUsers": "Utilisateurs actuels",
       "addUser": "Ajouter un utilisateur"
