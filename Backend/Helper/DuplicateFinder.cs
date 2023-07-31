@@ -130,7 +130,7 @@ namespace BackendFramework.Helper
             var identicalWords = new List<Word> { Capacity = _maxInList - 1 };
             foreach (var other in collection)
             {
-                if (word.Vernacular == other.Vernacular)
+                if (word.Vernacular == other.Vernacular && MightShareGramCatGroups(word, other))
                 {
                     identicalWords.Add(other);
                     if (identicalWords.Count == _maxInList - 1)
@@ -190,6 +190,7 @@ namespace BackendFramework.Helper
 
         /// <summary>
         /// Computes an edit-distance based score indicating similarity of specified <see cref="Word"/>s.
+        /// Adds a penalty in the score if the words have different Grammatical Category Groups.
         /// </summary>
         /// <param name="wordA"> The first of two Words to compare. </param>
         /// <param name="wordB"> The second of two Words to compare. </param>
@@ -201,19 +202,21 @@ namespace BackendFramework.Helper
         {
             var vernScore = GetScaledDistance(wordA.Vernacular, wordB.Vernacular);
 
+            var penalty = 0.0;
             // Add a penalty if the words have all different grammatical category groups
             if (!MightShareGramCatGroups(wordA, wordB))
             {
                 vernScore += 1.5;
+                penalty += 1.5;
             }
 
-            if (checkGlossThreshold is null || vernScore <= checkGlossThreshold || vernScore > _maxScore)
+            if (checkGlossThreshold is null || vernScore <= checkGlossThreshold + penalty || vernScore > _maxScore)
             {
                 return vernScore;
             }
             if (HaveIdenticalDefinition(wordA, wordB) || HaveIdenticalGloss(wordA, wordB))
             {
-                return (double)checkGlossThreshold;
+                return (double)checkGlossThreshold + penalty;
             }
             return vernScore;
         }
@@ -285,23 +288,24 @@ namespace BackendFramework.Helper
         }
 
         /// <summary>
-        /// Check if two <see cref="Word"/>s have any potentially common grammatical category groups.
+        /// Check if two <see cref="Word"/>s have a common grammatical category group,
+        /// or if the grammatical category group is unspecified in every sense of one of the words.
         /// </summary>
         public static bool MightShareGramCatGroups(Word wordA, Word wordB)
         {
             var catGroupsA = wordA.Senses.Select(s => s.GrammaticalInfo.CatGroup).Distinct().ToList();
-            if (catGroupsA.Contains(GramCatGroup.Unspecified))
+            if (catGroupsA.Count == 1 && catGroupsA.Contains(GramCatGroup.Unspecified))
             {
                 return true;
             }
 
             var catGroupsB = wordB.Senses.Select(s => s.GrammaticalInfo.CatGroup).Distinct().ToList();
-            if (catGroupsB.Contains(GramCatGroup.Unspecified))
+            if (catGroupsB.Count == 1 && catGroupsB.Contains(GramCatGroup.Unspecified))
             {
                 return true;
             }
 
-            return catGroupsA.Any(cg => catGroupsB.Contains(cg));
+            return catGroupsA.Any(cg => cg != GramCatGroup.Unspecified && catGroupsB.Contains(cg));
         }
 
         /// <summary>

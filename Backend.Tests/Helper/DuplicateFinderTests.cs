@@ -34,6 +34,9 @@ namespace Backend.Tests.Helper
         {
             const string vern = "Vertacular!";
             _frontier = Util.RandomWordList(10);
+            _frontier.ForEach(w =>
+                w.Senses.ForEach(s => s.GrammaticalInfo.CatGroup = GramCatGroup.Unspecified)
+            );
             _frontier.ElementAt(1).Vernacular = vern;
             _frontier.ElementAt(2).Vernacular = vern;
             _frontier.ElementAt(5).Vernacular = vern;
@@ -173,21 +176,20 @@ namespace Backend.Tests.Helper
         public void MightShareGramCatGroupsTest()
         {
             var nounSense = new Sense { GrammaticalInfo = new GrammaticalInfo { CatGroup = GramCatGroup.Noun } };
-            var otherSense = new Sense { GrammaticalInfo = new GrammaticalInfo { CatGroup = GramCatGroup.Other } };
             var unspecifiedSense = new Sense { GrammaticalInfo = new GrammaticalInfo { CatGroup = GramCatGroup.Unspecified } };
             var verbSense = new Sense { GrammaticalInfo = new GrammaticalInfo { CatGroup = GramCatGroup.Verb } };
 
             var nnWord = new Word { Senses = new List<Sense> { nounSense.Clone(), nounSense.Clone() } };
+            var uuWord = new Word { Senses = new List<Sense> { unspecifiedSense.Clone(), unspecifiedSense.Clone() } };
             var vnWord = new Word { Senses = new List<Sense> { verbSense.Clone(), nounSense.Clone() } };
-            var voWord = new Word { Senses = new List<Sense> { verbSense.Clone(), otherSense.Clone() } };
             var vuWord = new Word { Senses = new List<Sense> { verbSense.Clone(), unspecifiedSense.Clone() } };
 
             Assert.That(DuplicateFinder.MightShareGramCatGroups(nnWord, vnWord), Is.True);
-            Assert.That(DuplicateFinder.MightShareGramCatGroups(nnWord, voWord), Is.False);
+            Assert.That(DuplicateFinder.MightShareGramCatGroups(nnWord, vuWord), Is.False);
 
-            // An unspecified CatGroup in either word is automatically true.
-            Assert.That(DuplicateFinder.MightShareGramCatGroups(vuWord, nnWord), Is.True);
-            Assert.That(DuplicateFinder.MightShareGramCatGroups(nnWord, vuWord), Is.True);
+            // An unspecified CatGroup on all senses of either word is automatically true.
+            Assert.That(DuplicateFinder.MightShareGramCatGroups(uuWord, nnWord), Is.True);
+            Assert.That(DuplicateFinder.MightShareGramCatGroups(nnWord, uuWord), Is.True);
         }
     }
 }
