@@ -1067,7 +1067,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/core-downloads-tracker 5.14.1
+@mui/core-downloads-tracker 5.14.2
 MIT
 The MIT License (MIT)
 
@@ -1092,7 +1092,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/icons-material 5.13.7
+@mui/icons-material 5.14.1
 MIT
 The MIT License (MIT)
 
@@ -1117,7 +1117,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/material 5.14.1
+@mui/material 5.14.2
 MIT
 The MIT License (MIT)
 
@@ -1491,7 +1491,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 @segment/facade 3.4.9
-MIT*
+null
 (The MIT License)
 
 Copyright (c) 2016 Segment.io <friends@segment.com>
@@ -1517,7 +1517,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 @segment/isodate-traverse 1.1.1
-MIT*
+null
 Copyright (c) 2016 Segment.io, Inc. (friends@segment.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -1540,7 +1540,7 @@ THE SOFTWARE.
 
 
 @segment/isodate 1.0.3
-MIT*
+null
 Copyright (c) 2016 Segment.io, Inc. (friends@segment.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -41071,7 +41071,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-dayjs 1.11.7
+dayjs 1.11.9
 MIT
 MIT License
 
@@ -42862,7 +42862,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 new-date 1.0.3
-MIT*
+null
 Copyright (c) 2016 Segment.io, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
