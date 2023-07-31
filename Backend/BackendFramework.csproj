@@ -20,8 +20,8 @@
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.20" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.32.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.32.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.32.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.32.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.20.0" />
     <PackageReference Include="MailKit" Version="4.1.0" />
