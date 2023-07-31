@@ -190,34 +190,38 @@ namespace BackendFramework.Helper
 
         /// <summary>
         /// Computes an edit-distance based score indicating similarity of specified <see cref="Word"/>s.
-        /// Adds a penalty in the score if the words have different Grammatical Category Groups.
         /// </summary>
         /// <param name="wordA"> The first of two Words to compare. </param>
         /// <param name="wordB"> The second of two Words to compare. </param>
         /// <param name="checkGlossThreshold">
-        /// A double (optional): If the Words' vernaculars have a score between this threshold and the _maxScore,
-        /// and if the Words share a common definition/gloss, then we override the score with this threshold.</param>
+        /// A double (default 1.0): If the Words' vernaculars have a score between this threshold and the _maxScore,
+        /// and if the Words share a common definition/gloss, then we override the score with this threshold.
+        /// </param>
+        /// <param name="gramCatPenalty">
+        /// A double (default 1.5): A penalty added to the score if the words have different GramCatGroups.
+        /// </param>
         /// <returns> A double: the adjusted distance between the words. </returns>
-        public double GetWordScore(Word wordA, Word wordB, double? checkGlossThreshold = 1.0)
+        public double GetWordScore(
+            Word wordA, Word wordB, double checkGlossThreshold = 1.0, double gramCatPenalty = 1.5)
         {
             var vernScore = GetScaledDistance(wordA.Vernacular, wordB.Vernacular);
 
-            var penalty = 0.0;
-            // Add a penalty if the words have all different grammatical category groups
             if (!MightShareGramCatGroups(wordA, wordB))
             {
-                vernScore += 1.5;
-                penalty += 1.5;
+                checkGlossThreshold += gramCatPenalty;
+                vernScore += gramCatPenalty;
             }
 
-            if (checkGlossThreshold is null || vernScore <= checkGlossThreshold + penalty || vernScore > _maxScore)
+            if (vernScore <= checkGlossThreshold || vernScore > _maxScore)
             {
                 return vernScore;
             }
+
             if (HaveIdenticalDefinition(wordA, wordB) || HaveIdenticalGloss(wordA, wordB))
             {
-                return (double)checkGlossThreshold + penalty;
+                return (double)checkGlossThreshold;
             }
+
             return vernScore;
         }
 
