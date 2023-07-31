@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generates font support for all SIL fonts used in Mui-Language-Picker.
+Generates font support for all fonts used in Mui-Language-Picker.
 """
 
 import argparse
@@ -63,28 +63,46 @@ def main() -> None:
         logging.info(f"Making {target_dir}")
         os.mkdir(target_dir)
 
-    source_url = "https://github.com/silnrsi/fonts/raw/main/families.json"
-    families_file_path = target_dir.joinpath("families.json")
-    logging.info(f"Downloading {source_url} to {families_file_path}")
-    urllib.request.urlretrieve(source_url, families_file_path)
-
-    # Todo: Add info for these font's directly to this script.
-    mlp_families_not_in_file = {"simsun": "Sim Sun", "notosanstangut": "Noto Serif Tangut"}
-
-    with open(families_file_path, "r") as nrsi_families_file:
-        families: dict = json.load(nrsi_families_file)
+    source_dir = "https://s3.amazonaws.com/fonts.siltranscriber.org/"
 
     with open("deploy/scripts/font_lists/mui-language-picker-fonts.txt", "r") as mlp_families_file:
         mlp_families = [f.strip() for f in mlp_families_file.readlines()]
-        mlp_ids = [f.strip().replace(" ", "").lower() for f in mlp_families_file.readlines()]
-
-    with open("deploy/scripts/font_lists/mlp-nrsi-font-map.json", "r") as mlp_nrsi_map_file:
-        mlp_nrsi_map: dict = json.load(mlp_nrsi_map_file)
 
     for mlp_family in mlp_families:
-        mlp_id = mlp_family.replace(" ", "").lower()
-        nrsi_id = mlp_nrsi_map[mlp_id] if mlp_id in mlp_nrsi_map.keys() else mlp_id
-        logging.info(f"Font: {mlp_id}/{nrsi_id}")
+        family = mlp_family.replace(" ", "")
+        logging.info(f"Font: {family}")
+
+        logging.info(f"{family}: Populating font subfolder '{family}'")
+        subdir = target_dir.joinpath(family)
+        if not os.path.exists(subdir):
+            os.mkdir(subdir)
+
+        css_source = f"{source_dir}{family}.css"
+        css_target = subdir.joinpath(f"{family}.css")                    
+        # With the https://s3.amazonaws.com/fonts.siltranscriber.org/ urls,
+        # urllib.request.urlretrieve() is denied (403), but requests.get() works.
+        logging.info(f"Downloading {css_source}")
+        req = requests.get(css_source)
+
+        if "Error" in req.text:
+            logging.warning(f"Download failed: {css_source}")
+            continue
+
+        if not args.download:
+            logging.info(f"Saving to {css_target}")
+            with open(css_target, "wb") as out:
+                out.write(req.content)
+            continue
+
+        css_lines = [l for l in req.iter_lines()]
+        for i in range(len(css_lines)):
+            line: str = css_lines[i]
+            if line[:4] == "src:":
+                src_parts = line.split("'")
+                logging.info(f"Downloading {src_parts[1]}")
+                
+
+        '''
 
         # Get font info from the file of font families.
         if not nrsi_id in families.keys():
@@ -92,26 +110,6 @@ def main() -> None:
             continue
         font_info: dict = families[nrsi_id]
         family: str = font_info["family"]
-
-        # Check that the font is current and licensed as expected.
-        if font_info["distributable"] != True:
-            logging.warning(f"{family}: Not distributable")
-        if "license" not in font_info.keys():
-            logging.warning(f"{family}: No license")
-        elif font_info["license"] != "OFL":
-            logging.warning(f"{family}: Non-OFL license: {font_info['license']}")
-        if "source" not in font_info.keys():
-            logging.warning(f"{family}: No source")
-        elif font_info["source"] not in ["Google", "SIL"]:
-            logging.warning(f"{family}: Non-Google, non-SIL source: {font_info['source']}")
-        if "status" not in font_info.keys():
-            logging.warning(f"{family}: No status")
-        elif font_info["status"] != "current":
-            logging.warning(f"{family}: Non-current status: {font_info['status']}")
-
-        if "defaults" not in font_info.keys():
-            logging.warning(f"{family}: No defaults")
-            continue
 
         # Determine which format to use, with preference for woff2 if available.
         defaults: dict = font_info["defaults"]
@@ -148,13 +146,6 @@ def main() -> None:
         if "files" not in font_info.keys():
             logging.warning(f"{family}: no file list")
             continue
-
-        logging.info(f"{family}: Populating font subfolder '{mlp_id}'")
-        subdir = Path.joinpath(target_dir, mlp_id)
-        if not os.path.exists(subdir):
-            os.mkdir(subdir)
-        # To fill with the content of the font family's css file.
-        css_lines: List[str] = []
 
     
         files: dict = font_info["files"]
@@ -222,7 +213,7 @@ def main() -> None:
         logging.info(f"Writing css info for font family: {css_file_path}")
         with open(css_file_path, "w") as css_file:
             css_file.writelines(css_lines)
-
+        '''
 
 if __name__ == "__main__":
     main()
