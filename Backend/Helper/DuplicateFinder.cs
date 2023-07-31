@@ -200,6 +200,13 @@ namespace BackendFramework.Helper
         public double GetWordScore(Word wordA, Word wordB, double? checkGlossThreshold = 1.0)
         {
             var vernScore = GetScaledDistance(wordA.Vernacular, wordB.Vernacular);
+
+            // Add a penalty if the words have all different grammatical category groups
+            if (!MightShareGramCatGroups(wordA, wordB))
+            {
+                vernScore += 1.5;
+            }
+
             if (checkGlossThreshold is null || vernScore <= checkGlossThreshold || vernScore > _maxScore)
             {
                 return vernScore;
@@ -275,6 +282,26 @@ namespace BackendFramework.Helper
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Check if two <see cref="Word"/>s have any potentially common grammatical category groups.
+        /// </summary>
+        public static bool MightShareGramCatGroups(Word wordA, Word wordB)
+        {
+            var catGroupsA = wordA.Senses.Select(s => s.GrammaticalInfo.CatGroup).Distinct().ToList();
+            if (catGroupsA.Contains(GramCatGroup.Unspecified))
+            {
+                return true;
+            }
+
+            var catGroupsB = wordB.Senses.Select(s => s.GrammaticalInfo.CatGroup).Distinct().ToList();
+            if (catGroupsB.Contains(GramCatGroup.Unspecified))
+            {
+                return true;
+            }
+
+            return catGroupsA.Any(cg => catGroupsB.Contains(cg));
         }
 
         /// <summary>
