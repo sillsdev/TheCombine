@@ -69,7 +69,6 @@ export const goalSlice = createSlice({
         state.currentGoal.steps = [];
       }
     },
-    reset: () => defaultState,
     updateStepFromDataAction: (state) => {
       if (state.currentGoal.goalType === GoalType.MergeDups) {
         const currentGoalData = state.currentGoal.data as MergeDupsData;
@@ -95,7 +94,6 @@ const {
   setCurrentGoalIndexAction,
   setCurrentGoalsStateAction,
   setGoalDataAction,
-  reset,
   updateStepFromDataAction,
 } = goalSlice.actions;
 

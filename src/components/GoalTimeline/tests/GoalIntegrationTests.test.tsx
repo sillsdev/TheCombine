@@ -1,14 +1,13 @@
 import "@testing-library/jest-dom";
-import { combineReducers, Reducer, configureStore } from "@reduxjs/toolkit";
 import { act, cleanup, render, RenderOptions } from "@testing-library/react";
 import { ReactElement } from "react";
 import { Provider } from "react-redux";
-import thunk from "redux-thunk";
+import { PersistGate } from "redux-persist/integration/react";
 
 import { User, UserEdit } from "api/models";
 import GoalTimeline from "components/GoalTimeline";
-import { goalSlice } from "components/GoalTimeline/Redux/GoalSlice";
-import { Goal, GoalsState } from "types/goals";
+import { persistor, store } from "store";
+import { Goal } from "types/goals";
 import { newUser } from "types/user";
 
 jest.mock("backend", () => ({
@@ -57,26 +56,16 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-interface GoalsTestState {
-  goalsState: GoalsState;
-}
-
-export const testReducer: Reducer<GoalsTestState> =
-  combineReducers<GoalsTestState>({
-    goalsState: goalSlice.reducer,
-  });
-
-const testStore = configureStore({
-  reducer: testReducer,
-  middleware: [thunk],
-});
-
 const GoalTimelineProviders = ({
   children,
 }: {
   children: React.ReactNode;
 }): ReactElement => {
-  return <Provider store={testStore}>{children}</Provider>;
+  return (
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>{children}</PersistGate>
+    </Provider>
+  );
 };
 
 const customRender = async (

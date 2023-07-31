@@ -19,6 +19,12 @@ export const analyticsReducer = (
 ): AnalyticsState => {
   switch (action.type) {
     case AnalyticsActionTypes.ChangePage:
+      if (action.newPage !== state.currentPage) {
+        analytics.track("navigate", {
+          source: state.currentPage,
+          destination: action.newPage,
+        });
+      }
       return {
         ...state,
         currentPage: action.newPage,
