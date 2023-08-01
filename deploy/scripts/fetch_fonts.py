@@ -78,7 +78,7 @@ def main() -> None:
             os.mkdir(subdir)
 
         css_source = f"{source_dir}{family}.css"
-        css_target = subdir.joinpath(f"{family}.css")                    
+        css_target = subdir.joinpath(f"{family}.css")
         # With the https://s3.amazonaws.com/fonts.siltranscriber.org/ urls,
         # urllib.request.urlretrieve() is denied (403), but requests.get() works.
         logging.info(f"Downloading {css_source}")
@@ -100,9 +100,8 @@ def main() -> None:
             if line[:4] == "src:":
                 src_parts = line.split("'")
                 logging.info(f"Downloading {src_parts[1]}")
-                
 
-        '''
+        """
 
         # Get font info from the file of font families.
         if not nrsi_id in families.keys():
@@ -213,7 +212,8 @@ def main() -> None:
         logging.info(f"Writing css info for font family: {css_file_path}")
         with open(css_file_path, "w") as css_file:
             css_file.writelines(css_lines)
-        '''
+        """
+
 
 if __name__ == "__main__":
     main()
