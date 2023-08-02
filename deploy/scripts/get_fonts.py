@@ -168,14 +168,19 @@ def main() -> None:
         exit(1)
     target_dir = root_dir.joinpath("fonts")
 
-    langs = extractLangSubtags(args.langs)
-    logging.info(f"Lang-tags to download fonts for: {', '.join(langs)}")
+    if args.langs:
+        langs = extractLangSubtags(args.langs)
+        logging.info(f"Lang-tags to download fonts for: {', '.join(langs)}")
 
-    scripts = fetchScriptsForLangs(langs)
-    logging.info(f"Scripts used for specified lang-tags: {', '.join(scripts)}")
+        scripts = fetchScriptsForLangs(langs)
+        logging.info(f"Scripts used for specified lang-tags: {', '.join(scripts)}")
 
-    fonts = fetchFontsForScripts(scripts)
-    logging.info(f"Default fonts and fonts used for specified lang-tags: {', '.join(fonts)}")
+        fonts = fetchFontsForScripts(scripts)
+        logging.info(f"Default fonts and fonts used for specified lang-tags: {', '.join(fonts)}")
+    else:
+        mlp_fonts_file_path = "deploy/scripts/font_lists/mui-language-picker-fonts.txt"
+        with open(mlp_fonts_file_path, "r") as mlp_fonts_list:
+            fonts = [f.strip().replace(" ", "") for f in mlp_fonts_list.readlines()]
 
     if args.clean:
         logging.info(f"Deleting {target_dir}")
@@ -190,24 +195,30 @@ def main() -> None:
     logging.info(f"Downloading font families info to {families_file_path}")
     families = fetchFontFamiliesInfo(families_file_path)
 
-    # Todo: Add info for these font's directly to this script.
-    # mlp_families_not_in_file = {"notosanstangut": "Noto Serif Tangut"}
-    # with open("deploy/scripts/font_lists/mui-language-picker-fonts.txt", "r") as mlp_families_file:
-    #    mlp_families = [f.strip() for f in mlp_families_file.readlines()]
-    # with open("deploy/scripts/font_lists/mlp-nrsi-font-map.json", "r") as mlp_nrsi_map_file:
-    #    mlp_nrsi_map: dict = json.load(mlp_nrsi_map_file)
-
+    with open("deploy/scripts/font_lists/mlp-nrsi-font-map.json", "r") as mlp_nrsi_map_file:
+        mlp_nrsi_map: dict = json.load(mlp_nrsi_map_file)
     with open("deploy/scripts/font_lists/nrsi-mlp-font-map.json", "r") as nrsi_mlp_map_file:
         nrsi_mlp_map: dict = json.load(nrsi_mlp_map_file)
 
+    # Pre-seed with corrections to the in-file fallbacks.
+    google_fallback: dict[str] = {
+        "NotoSansLeke": "",
+        "NotoSansMeroiticCursive": "Noto Sans Meroitic",
+        "NotoSansShuishu": "",
+        "NotoSansTangut": "Noto Serif Tangut",
+        "NotoSansTibetan": "Noto Serif Tibetan",
+    }
+
     for font in fonts:
+        # logging.warning(f"Font: {font}")
         font_id = font.lower()
-        logging.info(f"Font: {font}")
+        if not args.langs and font_id in mlp_nrsi_map.keys():
+            font_id = mlp_nrsi_map[font_id]
 
         # Get font family info from font families info, using fallback font if necessary
         while font_id != "" and font_id in families.keys():
             font_info: dict = families[font_id]
-            family = font_info["family"]
+            family: str = font_info["family"]
             if checkFontInfo(font_info):
                 break
             if "fallback" in font_info.keys():
@@ -215,6 +226,14 @@ def main() -> None:
                 logging.warning(f"{family}: Using fallback {font_id}")
             else:
                 logging.warning(f"{family}: No fallback")
+                if (
+                    not args.langs
+                    and "source" in font_info.keys()
+                    and font_info["source"] == "Google"
+                ):
+                    if font not in google_fallback.keys():
+                        google_fallback[font] = family
+                    logging.info(f"Google fallbacks: {font}/{google_fallback[font]}")
                 font_id = ""
         else:
             if font_id != "":
@@ -223,7 +242,6 @@ def main() -> None:
 
         # Get the font's default file info.
         file_name = getFontDefault(font_info["defaults"])
-        logging.info(f"{family}: default {file_name}")
         files: dict = font_info["files"]
         if file_name not in files.keys():
             logging.error(f"{family}: Default file not in file list")
@@ -239,7 +257,6 @@ def main() -> None:
 
         # Build the url source, downloading if requested.
         if "flourl" not in file_info.keys():
-            logging.info(f"{file_name}: No 'flourl' for this file")
             if "url" not in file_info.keys():
                 logging.warning(f"{file_name}: No 'flourl' or 'url' for this file")
                 continue
@@ -247,16 +264,19 @@ def main() -> None:
         else:
             src = file_info["flourl"]
 
-        # With the https://fonts.languagetechnology.org "flourl" urls,
-        # urllib.request.urlretrieve() is denied (403), but requests.get() works.
-        req = requests.get(src)
-        dest = Path.joinpath(target_dir, file_name)
-        logging.info(f"Downloading {src} to {dest}")
-        with open(dest, "wb") as out:
-            out.write(req.content)
+        if args.langs:
+            # With the https://fonts.languagetechnology.org "flourl" urls,
+            # urllib.request.urlretrieve() is denied (403), but requests.get() works.
+            req = requests.get(src)
+            dest = Path.joinpath(target_dir, file_name)
+            logging.info(f"Downloading {src} to {dest}")
+            with open(dest, "wb") as out:
+                out.write(req.content)
+            css_lines.append(f"  src: {css_line_local} url('{dest}');\n")
+        else:
+            css_lines.append(f"  src: {css_line_local} url('{src}');\n")
 
         # Finish the css info for this font in this style.
-        css_lines.append(f"  src: {css_line_local} url('{dest}');\n")
         css_lines.append("}\n")
 
         # Create font override file
@@ -271,6 +291,13 @@ def main() -> None:
             logging.info(f"Writing css info for font family: {css_file_path}")
             with open(css_file_path, "w") as css_file:
                 css_file.writelines(css_lines)
+
+    if not args.langs:
+        keys = [key for key in google_fallback.keys() if google_fallback[key] != ""]
+        google_fallback_lines = [f"{key}:{google_fallback[key]}\n" for key in sorted(keys)]
+        google_fallback_file_path = target_dir.joinpath("google_fallback.txt")
+        with open(google_fallback_file_path, "w") as google_fallback_file:
+            google_fallback_file.writelines(google_fallback_lines)
 
 
 if __name__ == "__main__":

@@ -182,23 +182,20 @@ export const ProjectApiAxiosParamCreator = function (
     },
     /**
      *
-     * @param {string} fontId
      * @param {string} fileName
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     downloadFont: async (
-      fontId: string,
       fileName: string,
       options: any = {}
     ): Promise<RequestArgs> => {
-      // verify required parameter 'fontId' is not null or undefined
-      assertParamExists("downloadFont", "fontId", fontId);
       // verify required parameter 'fileName' is not null or undefined
       assertParamExists("downloadFont", "fileName", fileName);
-      const localVarPath = `/v1/projects/font/{fontId}/{fileName}`
-        .replace(`{${"fontId"}}`, encodeURIComponent(String(fontId)))
-        .replace(`{${"fileName"}}`, encodeURIComponent(String(fileName)));
+      const localVarPath = `/v1/projects/fonts/{fileName}`.replace(
+        `{${"fileName"}}`,
+        encodeURIComponent(String(fileName))
+      );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -636,20 +633,17 @@ export const ProjectApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {string} fontId
      * @param {string} fileName
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async downloadFont(
-      fontId: string,
       fileName: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.downloadFont(
-        fontId,
         fileName,
         options
       );
@@ -874,18 +868,13 @@ export const ProjectApiFactory = function (
     },
     /**
      *
-     * @param {string} fontId
      * @param {string} fileName
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    downloadFont(
-      fontId: string,
-      fileName: string,
-      options?: any
-    ): AxiosPromise<any> {
+    downloadFont(fileName: string, options?: any): AxiosPromise<any> {
       return localVarFp
-        .downloadFont(fontId, fileName, options)
+        .downloadFont(fileName, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1020,13 +1009,6 @@ export interface ProjectApiDeleteProjectRequest {
  * @interface ProjectApiDownloadFontRequest
  */
 export interface ProjectApiDownloadFontRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof ProjectApiDownloadFont
-   */
-  readonly fontId: string;
-
   /**
    *
    * @type {string}
@@ -1196,11 +1178,7 @@ export class ProjectApi extends BaseAPI {
     options?: any
   ) {
     return ProjectApiFp(this.configuration)
-      .downloadFont(
-        requestParameters.fontId,
-        requestParameters.fileName,
-        options
-      )
+      .downloadFont(requestParameters.fileName, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

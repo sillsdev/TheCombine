@@ -13,7 +13,7 @@ namespace BackendFramework.Helper
     {
         private const string CombineFilesDir = ".CombineFiles";
         private const string AvatarsDir = "Avatars";
-        private const string FontsDir = "fonts";
+        private const string FontsDir = "fonts"; // Match deploy/scripts/get_fonts.py
         private static readonly string ImportExtractedLocation = Path.Combine("Import", "ExtractedLocation");
         private static readonly string LiftImportSuffix = Path.Combine(ImportExtractedLocation, "Lift");
         private static readonly string AudioPathSuffix = Path.Combine(LiftImportSuffix, "audio");
@@ -102,34 +102,30 @@ namespace BackendFramework.Helper
             return GenerateFilePath(AvatarsDir, userId, FileType.Avatar);
         }
 
-        /// <summary>
-        /// Generate the path to where Avatar images are stored.
-        /// </summary>
-        /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
-        public static string GenerateFontFilePath(string fontId, string fileName, bool relative = false)
+        /// <summary> Generate the path of the css file for a font. </summary>
+        /// <exception cref="InvalidFileNameException"> Throws when font is invalid. </exception>
+        public static string GenerateFontCssFilePath(string font, bool relative = false)
         {
-            fontId = Sanitization.SanitizeId(fontId);
-
-            if (relative)
-            {
-                return Path.Combine(GetFontsDir(fontId, true), fileName);
-            }
-
-            return GenerateFilePath(GetFontsDir(fontId), fileName);
+            font = font.Replace(" ", "");
+            var fileName = $"{font}.css";
+            fileName = Sanitization.SanitizeFileName(fileName);
+            return GenerateFontFilePath(fileName, relative);
         }
 
-        /// <summary> Generate the path to where fonts are stored. </summary>
-        /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
-        public static string GetFontsDir(string fontId, bool relative = false)
+        /// <summary> Get the path of the Google font fallback file. </summary>
+        public static string GetGoogleFallbackFilePath()
         {
-            fontId = Sanitization.SanitizeId(fontId);
+            return GenerateFontFilePath("google_fallback.txt");
+        }
 
+        /// <summary> Generate the path of a font. </summary>
+        public static string GenerateFontFilePath(string fileName, bool relative = false)
+        {
             if (relative)
             {
-                return Path.Combine(FontsDir, fontId);
+                return Path.Combine(FontsDir, fileName);
             }
-
-            return GenerateDirPath(Path.Combine(FontsDir, fontId), true);
+            return GenerateFilePath(GenerateDirPath(FontsDir, true), fileName);
         }
 
         /// <summary>

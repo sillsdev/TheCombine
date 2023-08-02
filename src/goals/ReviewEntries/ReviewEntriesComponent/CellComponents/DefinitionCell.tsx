@@ -118,7 +118,9 @@ function DefinitionField(props: DefinitionFieldProps): ReactElement {
   return (
     <TextField
       id={props.textFieldId}
-      inputProps={{ style: { fontFamily: props.definition.font } }}
+      inputProps={{
+        style: { fontFamily: props.definition.font?.replaceAll(" ", "") },
+      }}
       label={`${props.definition.language}:`}
       variant="outlined"
       margin="dense"

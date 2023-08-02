@@ -30,6 +30,10 @@ export default function AppWithBar(): ReactElement {
   const projId = useAppSelector(
     (state: StoreState) => state.currentProjectState.project.id
   );
+  const projLangCount = useAppSelector(
+    (state: StoreState) =>
+      state.currentProjectState.project.analysisWritingSystems.length
+  );
 
   const [styleOverrides, setStyleOverrides] = useState<string>();
 
@@ -37,16 +41,17 @@ export default function AppWithBar(): ReactElement {
 
   useEffect(() => {
     if (projId) {
-      getFonts(projId).then((fontCss) => {
+      getFonts(projId).then((cssLines) => {
         setStyleOverrides(
-          fontCss[0]
+          cssLines
+            .join("\n")
             .replaceAll("\r", "")
             .replaceAll("\\", "/")
             .replace("%BASE_PATH%", `${apiBaseURL}/projects`)
         );
       });
     }
-  }, [projId]);
+  }, [projId, projLangCount]);
 
   useEffect(() => {
     console.info(styleOverrides);

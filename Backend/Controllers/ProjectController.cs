@@ -251,9 +251,9 @@ namespace BackendFramework.Controllers
         /// <summary> Gets the font file in the form of a stream from disk. </summary>
         /// <returns> Font file stream. </returns>
         [AllowAnonymous]
-        [HttpGet("fonts/{fontId}/{fileName}", Name = "DownloadFont")]
+        [HttpGet("fonts/{fileName}", Name = "DownloadFont")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
-        public IActionResult DownloadFont(string fontId, string fileName)
+        public IActionResult DownloadFont(string fileName)
         {
             // SECURITY: Omitting authentication so the frontend can use the API endpoint directly as a URL.
             // if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
@@ -264,7 +264,6 @@ namespace BackendFramework.Controllers
             // Sanitize user input
             try
             {
-                fontId = Sanitization.SanitizeId(fontId);
                 fileName = Sanitization.SanitizeFileName(fileName);
             }
             catch
@@ -272,7 +271,7 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
-            var filePath = FileStorage.GenerateFontFilePath(fontId, fileName);
+            var filePath = FileStorage.GenerateFontFilePath(fileName);
             if (!System.IO.File.Exists(filePath))
             {
                 return BadRequest("Font file does not exist.");
