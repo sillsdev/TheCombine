@@ -130,7 +130,7 @@ namespace BackendFramework.Helper
             var identicalWords = new List<Word> { Capacity = _maxInList - 1 };
             foreach (var other in collection)
             {
-                if (word.Vernacular == other.Vernacular && MightShareGramCatGroups(word, other))
+                if (word.Vernacular == other.Vernacular && HaveCommonGramCatGroup(word, other))
                 {
                     identicalWords.Add(other);
                     if (identicalWords.Count == _maxInList - 1)
@@ -206,7 +206,7 @@ namespace BackendFramework.Helper
         {
             var vernScore = GetScaledDistance(wordA.Vernacular, wordB.Vernacular);
 
-            if (!MightShareGramCatGroups(wordA, wordB))
+            if (!HaveCommonGramCatGroup(wordA, wordB))
             {
                 checkGlossThreshold += gramCatPenalty;
                 vernScore += gramCatPenalty;
@@ -295,7 +295,7 @@ namespace BackendFramework.Helper
         /// Check if two <see cref="Word"/>s have a common grammatical category group,
         /// or if the grammatical category group is unspecified in every sense of one of the words.
         /// </summary>
-        public static bool MightShareGramCatGroups(Word wordA, Word wordB)
+        public static bool HaveCommonGramCatGroup(Word wordA, Word wordB)
         {
             var catGroupsA = wordA.Senses.Select(s => s.GrammaticalInfo.CatGroup).Distinct().ToList();
             if (catGroupsA.Count == 1 && catGroupsA.Contains(GramCatGroup.Unspecified))

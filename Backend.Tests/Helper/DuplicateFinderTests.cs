@@ -184,12 +184,12 @@ namespace Backend.Tests.Helper
             var vnWord = new Word { Senses = new List<Sense> { verbSense.Clone(), nounSense.Clone() } };
             var vuWord = new Word { Senses = new List<Sense> { verbSense.Clone(), unspecifiedSense.Clone() } };
 
-            Assert.That(DuplicateFinder.MightShareGramCatGroups(nnWord, vnWord), Is.True);
-            Assert.That(DuplicateFinder.MightShareGramCatGroups(nnWord, vuWord), Is.False);
+            Assert.That(DuplicateFinder.HaveCommonGramCatGroup(nnWord, vnWord), Is.True);
+            Assert.That(DuplicateFinder.HaveCommonGramCatGroup(nnWord, vuWord), Is.False);
 
             // An unspecified CatGroup on all senses of either word is automatically true.
-            Assert.That(DuplicateFinder.MightShareGramCatGroups(uuWord, nnWord), Is.True);
-            Assert.That(DuplicateFinder.MightShareGramCatGroups(nnWord, uuWord), Is.True);
+            Assert.That(DuplicateFinder.HaveCommonGramCatGroup(uuWord, nnWord), Is.True);
+            Assert.That(DuplicateFinder.HaveCommonGramCatGroup(nnWord, uuWord), Is.True);
         }
     }
 }
