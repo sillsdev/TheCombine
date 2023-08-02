@@ -5,7 +5,6 @@ import {
   Edit,
   GetApp,
   Language,
-  List,
   People,
   PersonAdd,
   Sms,
@@ -94,7 +93,6 @@ beforeEach(() => {
 });
 
 const withNoPerm = [
-  List, // icon for ProjectSwitch
   Language, // icon for ProjectLanguages (but readOnly w/o DeleteEditPerm)
   CalendarMonth, // icon for ProjectSchedule (but readOnly w/o StatsPerm)
 ];

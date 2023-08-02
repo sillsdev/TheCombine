@@ -96,6 +96,7 @@
   },
   "selectProject": { "title": "حدد المشروع" },
   "siteSettings": {
+    "projectList": "مشاريع",
     "archiveProjectText": "لن يكون هذا المشروع متاحا لأي مستخدم.",
     "restoreProjectText": "ربما كان لدى شخص ما سبب جيد لأرشفة هذا المشروع. هل أنت متأكد من أنك تريد استعادته؟",
     "deleteUser": {
@@ -147,7 +148,6 @@
     },
     "name": "اسم المسروع",
     "nameUpdateFailed": "عذراً، سبق التسجيل بهذا الاسم من قبل.",
-    "projectList": "مشاريع",
     "user": {
       "currentUsers": "المستخدمين الحاليين",
       "addUser": "إضافة مستعمل"
