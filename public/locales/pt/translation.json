@@ -92,6 +92,7 @@
   },
   "selectProject": { "title": "Selecionar Projeto" },
   "siteSettings": {
+    "projectList": "Projetos",
     "archiveProjectText": "Este projeto não será acessível a nenhum utilizador.",
     "restoreProjectText": "Alguém provavelmente tinha uma boa razão para arquivar este projeto. Tens a certeza que o queres restaurar?",
     "deleteUser": {
@@ -141,7 +142,6 @@
       "updateSemDomWritingSystemFailed": "Falha na atualização do idioma dos domínios semânticos"
     },
     "name": "Nome do Projeto",
-    "projectList": "Projetos",
     "user": {
       "currentUsers": "Usuários atuais",
       "addUser": "Adicionar usuário"

@@ -31,7 +31,7 @@ export default function SiteSettings(): ReactElement {
             label={
               <Grid container>
                 <List />
-                <Typography>{t("projectSettings.projectList")}</Typography>
+                <Typography>{t("siteSettings.projectList")}</Typography>
               </Grid>
             }
             value={SiteSettingsTab.Projects}
