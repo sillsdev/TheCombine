@@ -94,6 +94,7 @@
   },
   "selectProject": { "title": "Seleccionar Proyecto" },
   "siteSettings": {
+    "projectList": "Proyectos",
     "archiveProjectText": "Este proyecto no será accesible para ningún usuario.",
     "restoreProjectText": "Alguien probablemente tuvo una buena razón para archivar este proyecto. ¿Seguro que quieres restaurarlo?",
     "userList": "Usuarios",
@@ -148,7 +149,6 @@
     },
     "name": "Nombre del Proyecto",
     "nameUpdateFailed": "El nombre del proyecto ya está en uso.",
-    "projectList": "Proyectos",
     "user": {
       "currentUsers": "Usuarios actuales",
       "addUser": "Agregar usuario"
