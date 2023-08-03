@@ -68,7 +68,6 @@ def checkFontInfo(font_info: dict) -> bool:
         return False
     if "license" not in font_info.keys():
         logging.warning(f"{family}: No license")
-        return False
     elif font_info["license"] != "OFL":
         logging.warning(f"{family}: Non-OFL license: {font_info['license']}")
     if "source" not in font_info.keys():
