@@ -60,6 +60,7 @@ def getFontDefault(defaults: dict) -> str:
 
 
 def checkFontInfo(font_info: dict) -> bool:
+    """Given an entry from the font families info file, check if the font family is usable. """
     family: str = font_info["family"]
 
     # Check that the font is current and licensed as expected.
@@ -164,7 +165,7 @@ def main() -> None:
 
     root_dir = Path(args.root)
     if not os.path.exists(root_dir):
-        logging.error("Root directory specified with --root_dir not valid")
+        logging.error("Root directory specified with -r not valid")
         exit(1)
     target_dir = root_dir.joinpath("fonts")
 
@@ -209,7 +210,7 @@ def main() -> None:
     }
 
     for font in fonts:
-        # logging.warning(f"Font: {font}")
+        logging.info(f"Font: {font}")
         font_id = font.lower()
         if not args.langs and font in mlp_map.keys():
             font_id = mlp_map[font].lower()
@@ -232,7 +233,7 @@ def main() -> None:
                 ):
                     if font not in google_fallback.keys():
                         google_fallback[font] = family
-                    logging.info(f"Google fallbacks: {font}/{google_fallback[font]}")
+                    logging.info(f"Google fallback: {font}/{google_fallback[font]}")
                 font_id = ""
         else:
             if font_id != "":
