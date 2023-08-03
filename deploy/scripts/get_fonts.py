@@ -15,6 +15,12 @@ import urllib.request
 
 import requests
 
+PATH_MLP_FONT_LIST = "deploy/scripts/font_lists/mui-language-picker-fonts.txt"
+PATH_MLP_FONT_MAP = "deploy/scripts/font_lists/mui-language-picker-font-map.json"
+URL_FONT_FAMILIES_INFO = "https://github.com/silnrsi/fonts/raw/main/families.json"
+URL_LANG_TAGS_LIST = "https://ldml.api.sil.org/en?query=langtags"
+URL_SCRIPT_FONT_TABLE = "https://raw.githubusercontent.com/silnrsi/langfontfinder/main/data/script2font.csv"
+
 
 def parse_args() -> argparse.Namespace:
     """Define command line arguments for parser."""
@@ -98,8 +104,7 @@ def fetchScriptsForLangs(langs: List[str]) -> List[str]:
     """Given a list of language tags, look up and return all script tags used with the languages."""
     langs = [lang.lower() for lang in langs]
     scripts = []
-    ldml_langtags_source = "https://ldml.api.sil.org/en?query=langtags"
-    req = requests.get(ldml_langtags_source)
+    req = requests.get(URL_LANG_TAGS_LIST)
     for line in req.iter_lines():
         tags: List[str] = line.decode("UTF-8").split(" = ")
         if len(tags) == 0 or tags[0].split("-")[0].strip("*") not in langs:
@@ -120,10 +125,7 @@ def fetchFontsForScripts(scripts: List[str]) -> List[str]:
     # Always include the Mui-Language-Picker default/safe fonts (except "SimSun", which is proprietary).
     fonts = ["AnnapurnaSIL", "CharisSIL", "DoulosSIL", "NotoSans", "ScheherazadeNew"]
 
-    script_font_source = (
-        "https://raw.githubusercontent.com/silnrsi/langfontfinder/main/data/script2font.csv"
-    )
-    req = requests.get(script_font_source)
+    req = requests.get(URL_SCRIPT_FONT_TABLE)
     script_font_table = reader(
         req.content.decode("UTF-8").splitlines(), delimiter=",", quotechar='"'
     )
@@ -148,8 +150,7 @@ def fetchFontsForScripts(scripts: List[str]) -> List[str]:
 
 
 def fetchFontFamiliesInfo(targetPath: str) -> dict:
-    source_url = "https://github.com/silnrsi/fonts/raw/main/families.json"
-    urllib.request.urlretrieve(source_url, targetPath)
+    urllib.request.urlretrieve(URL_FONT_FAMILIES_INFO, targetPath)
     with open(targetPath, "r") as families_file:
         families: dict = json.load(families_file)
     return families
@@ -178,8 +179,7 @@ def main() -> None:
         fonts = fetchFontsForScripts(scripts)
         logging.info(f"Default fonts and fonts used for specified lang-tags: {', '.join(fonts)}")
     else:
-        mlp_fonts_file_path = "deploy/scripts/font_lists/mui-language-picker-fonts.txt"
-        with open(mlp_fonts_file_path, "r") as mlp_fonts_list:
+        with open(PATH_MLP_FONT_LIST, "r") as mlp_fonts_list:
             fonts = [f.strip().replace(" ", "") for f in mlp_fonts_list.readlines()]
 
     if args.clean:
@@ -195,10 +195,10 @@ def main() -> None:
     logging.info(f"Downloading font families info to {families_file_path}")
     families = fetchFontFamiliesInfo(families_file_path)
 
-    with open("deploy/scripts/font_lists/mlp-nrsi-font-map.json", "r") as mlp_nrsi_map_file:
-        mlp_nrsi_map: dict = json.load(mlp_nrsi_map_file)
-    with open("deploy/scripts/font_lists/nrsi-mlp-font-map.json", "r") as nrsi_mlp_map_file:
-        nrsi_mlp_map: dict = json.load(nrsi_mlp_map_file)
+    with open(PATH_MLP_FONT_MAP, "r") as mlp_map_file:
+        mlp_map: dict = json.load(mlp_map_file)
+        # Assumes no two keys map to the same value.
+        mlp_map_rev = {val: key for key, val in mlp_map.items()}
 
     # Pre-seed with corrections to the in-file fallbacks.
     google_fallback: dict[str] = {
@@ -212,8 +212,8 @@ def main() -> None:
     for font in fonts:
         # logging.warning(f"Font: {font}")
         font_id = font.lower()
-        if not args.langs and font_id in mlp_nrsi_map.keys():
-            font_id = mlp_nrsi_map[font_id]
+        if not args.langs and font_id in mlp_map.keys():
+            font_id = mlp_map[font_id]
 
         # Get font family info from font families info, using fallback font if necessary
         while font_id != "" and font_id in families.keys():
@@ -284,8 +284,8 @@ def main() -> None:
         logging.info(f"Writing css info for font family: {css_file_path}")
         with open(css_file_path, "w") as css_file:
             css_file.writelines(css_lines)
-        if font in nrsi_mlp_map.keys():
-            font = nrsi_mlp_map[font]
+        if font in mlp_map_rev.keys():
+            font = mlp_map_rev[font]
             css_file_path = target_dir.joinpath(f"{font}.css")
             css_lines[2] = f"  font-family: '{font}';\n"
             logging.info(f"Writing css info for font family: {css_file_path}")
