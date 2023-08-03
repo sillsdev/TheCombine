@@ -5,9 +5,6 @@ import {
   PaletteOptions,
 } from "@mui/material/styles";
 
-//import fontOverrides from "types/fontFace";
-//import fontOverrides from "resources/fonts/silFonts";
-
 export type HEX = `#${string}`;
 
 // Constants which define colors later:
@@ -36,7 +33,7 @@ const palette: Partial<PaletteOptions> = {
 
 // Extended from default theme with SIL fonts
 const fontFamily: React.CSSProperties["fontFamily"] = [
-  // "'Noto Serif Tangut'",
+  // Copied from default theme
   "Roboto",
   "'Noto Sans'",
   "Helvetica",
