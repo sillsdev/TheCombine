@@ -211,8 +211,8 @@ def main() -> None:
     for font in fonts:
         # logging.warning(f"Font: {font}")
         font_id = font.lower()
-        if not args.langs and font_id in mlp_map.keys():
-            font_id = mlp_map[font_id]
+        if not args.langs and font in mlp_map.keys():
+            font_id = mlp_map[font].lower()
 
         # Get font family info from font families info, using fallback font if necessary
         while font_id != "" and font_id in families.keys():
