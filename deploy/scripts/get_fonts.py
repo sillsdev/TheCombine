@@ -227,7 +227,6 @@ def main() -> None:
                 font_id: str = font_info["fallback"]
                 logging.warning(f"{family}: Using fallback {font_id}")
             else:
-                logging.warning(f"{family}: No fallback")
                 if (
                     not args.langs
                     and "source" in font_info.keys()
@@ -235,7 +234,11 @@ def main() -> None:
                 ):
                     if font not in google_fallback.keys():
                         google_fallback[font] = family
-                    logging.info(f"Google fallback: {font}/{google_fallback[font]}")
+                    logging.warning(
+                        f"Google fallback for {font}: {google_fallback[font] or 'none'}"
+                    )
+                else:
+                    logging.warning(f"{family}: No fallback")
                 font_id = ""
         else:
             if font_id != "":
