@@ -6,6 +6,7 @@ import {
   ListItem,
   ListItemText,
   SelectChangeEvent,
+  Chip,
 } from "@mui/material";
 import {
   Fragment,
@@ -108,6 +109,15 @@ export default function ActiveProjectUsers(props: {
         ? `${user.name} (${user.username} | ${user.email})`
         : `${user.name} (${user.username})`;
 
+    const userBadge =
+      userRole === Role.Administrator ? (
+        <Chip label="Administrator" size="small" />
+      ) : userRole === Role.Owner ? (
+        <Chip label="Owner" size="small" />
+      ) : (
+        ""
+      );
+
     return (
       <ListItem key={user.id}>
         <Avatar
@@ -116,6 +126,7 @@ export default function ActiveProjectUsers(props: {
           style={{ marginRight: theme.spacing(1) }}
         />
         <ListItemText primary={displayString} />
+        {userBadge}
         {manageUser}
       </ListItem>
     );
