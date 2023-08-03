@@ -14,13 +14,15 @@ from typing import List
 
 import requests
 
-DIR_NAME_FONTS = "Fonts" # Match Backend/Helper/FileStorage.cs
-FILE_NAME_GOOGLE_FALLBACK = "GoogleFallback.txt" # Match Backend/Helper/FileStorage.cs
+DIR_NAME_FONTS = "Fonts"  # Match Backend/Helper/FileStorage.cs
+FILE_NAME_GOOGLE_FALLBACK = "GoogleFallback.txt"  # Match Backend/Helper/FileStorage.cs
 PATH_MLP_FONT_LIST = "deploy/scripts/font_lists/mui_language_picker_fonts.txt"
 PATH_MLP_FONT_MAP = "deploy/scripts/font_lists/mui_language_picker_font_map.json"
 URL_FONT_FAMILIES_INFO = "https://github.com/silnrsi/fonts/raw/main/families.json"
 URL_LANG_TAGS_LIST = "https://ldml.api.sil.org/en?query=langtags"
-URL_SCRIPT_FONT_TABLE = "https://raw.githubusercontent.com/silnrsi/langfontfinder/main/data/script2font.csv"
+URL_SCRIPT_FONT_TABLE = (
+    "https://raw.githubusercontent.com/silnrsi/langfontfinder/main/data/script2font.csv"
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -61,7 +63,7 @@ def getFontDefault(defaults: dict) -> str:
 
 
 def checkFontInfo(font_info: dict) -> bool:
-    """Given an entry from the font families info file, check if the font family is usable. """
+    """Given an entry from the font families info file, check if the font family is usable."""
     family: str = font_info["family"]
 
     # Check that the font is current and licensed as expected.
