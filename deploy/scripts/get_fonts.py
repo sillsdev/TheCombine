@@ -11,12 +11,13 @@ import os
 from pathlib import Path
 from shutil import rmtree
 from typing import List
-import urllib.request
 
 import requests
 
-PATH_MLP_FONT_LIST = "deploy/scripts/font_lists/mui-language-picker-fonts.txt"
-PATH_MLP_FONT_MAP = "deploy/scripts/font_lists/mui-language-picker-font-map.json"
+DIR_NAME_FONTS = "Fonts" # Match Backend/Helper/FileStorage.cs
+FILE_NAME_GOOGLE_FALLBACK = "GoogleFallback.txt" # Match Backend/Helper/FileStorage.cs
+PATH_MLP_FONT_LIST = "deploy/scripts/font_lists/mui_language_picker_fonts.txt"
+PATH_MLP_FONT_MAP = "deploy/scripts/font_lists/mui_language_picker_font_map.json"
 URL_FONT_FAMILIES_INFO = "https://github.com/silnrsi/fonts/raw/main/families.json"
 URL_LANG_TAGS_LIST = "https://ldml.api.sil.org/en?query=langtags"
 URL_SCRIPT_FONT_TABLE = "https://raw.githubusercontent.com/silnrsi/langfontfinder/main/data/script2font.csv"
@@ -104,6 +105,7 @@ def fetchScriptsForLangs(langs: List[str]) -> List[str]:
     """Given a list of language tags, look up and return all script tags used with the languages."""
     langs = [lang.lower() for lang in langs]
     scripts = []
+    logging.info(f"Downloading lang-tag list from {URL_LANG_TAGS_LIST}")
     req = requests.get(URL_LANG_TAGS_LIST)
     for line in req.iter_lines():
         tags: List[str] = line.decode("UTF-8").split(" = ")
@@ -125,6 +127,7 @@ def fetchFontsForScripts(scripts: List[str]) -> List[str]:
     # Always include the Mui-Language-Picker default/safe fonts (except "SimSun", which is proprietary).
     fonts = ["AnnapurnaSIL", "CharisSIL", "DoulosSIL", "NotoSans", "ScheherazadeNew"]
 
+    logging.info(f"Downloading script font table from {URL_SCRIPT_FONT_TABLE}")
     req = requests.get(URL_SCRIPT_FONT_TABLE)
     script_font_table = reader(
         req.content.decode("UTF-8").splitlines(), delimiter=",", quotechar='"'
@@ -149,11 +152,10 @@ def fetchFontsForScripts(scripts: List[str]) -> List[str]:
     return fonts
 
 
-def fetchFontFamiliesInfo(targetPath: str) -> dict:
-    urllib.request.urlretrieve(URL_FONT_FAMILIES_INFO, targetPath)
-    with open(targetPath, "r") as families_file:
-        families: dict = json.load(families_file)
-    return families
+def fetchFontFamiliesInfo() -> dict:
+    logging.info(f"Downloading font families info from {URL_FONT_FAMILIES_INFO}")
+    req = requests.get(URL_FONT_FAMILIES_INFO)
+    return json.loads(req.content)
 
 
 def main() -> None:
@@ -167,7 +169,7 @@ def main() -> None:
     if not os.path.exists(root_dir):
         logging.error("Root directory specified with -r not valid")
         exit(1)
-    target_dir = root_dir.joinpath("fonts")
+    target_dir = root_dir.joinpath(DIR_NAME_FONTS)
 
     if args.langs:
         langs = extractLangSubtags(args.langs)
@@ -191,9 +193,7 @@ def main() -> None:
         logging.info(f"Making {target_dir}")
         os.mkdir(target_dir)
 
-    families_file_path = target_dir.joinpath("families.json")
-    logging.info(f"Downloading font families info to {families_file_path}")
-    families = fetchFontFamiliesInfo(families_file_path)
+    families = fetchFontFamiliesInfo()
 
     with open(PATH_MLP_FONT_MAP, "r") as mlp_map_file:
         mlp_map: dict = json.load(mlp_map_file)
@@ -237,7 +237,7 @@ def main() -> None:
                 font_id = ""
         else:
             if font_id != "":
-                logging.warning(f"Font {font_id} not in file {families_file_path}")
+                logging.warning(f"Font {font_id} not in {URL_FONT_FAMILIES_INFO}")
             continue
 
         # Get the font's default file info.
@@ -268,7 +268,7 @@ def main() -> None:
             # With the https://fonts.languagetechnology.org "flourl" urls,
             # urllib.request.urlretrieve() is denied (403), but requests.get() works.
             req = requests.get(src)
-            dest = Path.joinpath(target_dir, file_name)
+            dest = target_dir.joinpath(file_name)
             logging.info(f"Downloading {src} to {dest}")
             with open(dest, "wb") as out:
                 out.write(req.content)
@@ -295,7 +295,7 @@ def main() -> None:
     if not args.langs:
         keys = [key for key in google_fallback.keys() if google_fallback[key] != ""]
         google_fallback_lines = [f"{key}:{google_fallback[key]}\n" for key in sorted(keys)]
-        google_fallback_file_path = target_dir.joinpath("google_fallback.txt")
+        google_fallback_file_path = target_dir.joinpath(FILE_NAME_GOOGLE_FALLBACK)
         with open(google_fallback_file_path, "w") as google_fallback_file:
             google_fallback_file.writelines(google_fallback_lines)
 

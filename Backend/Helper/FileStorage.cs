@@ -13,7 +13,8 @@ namespace BackendFramework.Helper
     {
         private const string CombineFilesDir = ".CombineFiles";
         private const string AvatarsDir = "Avatars";
-        private const string FontsDir = "fonts"; // Match deploy/scripts/get_fonts.py
+        private const string FontsDir = "Fonts"; // Match deploy/scripts/get_fonts.py
+        private const string GoogleFallbackFileName = "GoogleFallback.txt"; // Match deploy/scripts/get_fonts.py
         private static readonly string ImportExtractedLocation = Path.Combine("Import", "ExtractedLocation");
         private static readonly string LiftImportSuffix = Path.Combine(ImportExtractedLocation, "Lift");
         private static readonly string AudioPathSuffix = Path.Combine(LiftImportSuffix, "audio");
@@ -115,7 +116,7 @@ namespace BackendFramework.Helper
         /// <summary> Get the path of the Google font fallback file. </summary>
         public static string GetGoogleFallbackFilePath()
         {
-            return GenerateFontFilePath("google_fallback.txt");
+            return GenerateFontFilePath(GoogleFallbackFileName);
         }
 
         /// <summary> Generate the path of a font. </summary>
