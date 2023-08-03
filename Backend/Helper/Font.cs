@@ -6,28 +6,34 @@ using System.Threading.Tasks;
 
 namespace BackendFramework.Helper
 {
+    /// <summary>
+    /// Helper for fetching fonts and font css info to send to the frontend.
+    /// </summary>
     public static class Font
     {
+        private const string googleFontUrl = "https://fonts.googleapis.com/css?dispay=swap&family=";
+
         /// <summary>
-        /// ............
+        /// Given a list of fonts, fetch the deploy-generated css files.
+        /// If offline (i.e., on a NUC), each css file contains the path of a font file loaded during deployment.
+        /// Otherwise, the css files (including any fallbacks fetched from Google) have urls for the requested fonts.
         /// </summary>
         public static async Task<List<string>> GetFonts(List<string> fonts)
         {
-            var sortedFonts = fonts.Select(f => f.Replace(" ", "")).Distinct<string>().ToList();
+            var sortedFonts = fonts.Select(f => f.Replace(" ", "")).Distinct().ToList();
             sortedFonts.Sort();
 
-            var googleFontUrl = "https://fonts.googleapis.com/css?dispay=swap&family=";
             var googleFallbackPath = FileStorage.GetGoogleFallbackFilePath();
             var googleFallback = new Dictionary<string, string>();
 
             HttpClient? client = null;
-            // Add check for not NUC here.
+            // Todo: Add check for not-NUC here.
             if (File.Exists(googleFallbackPath))
             {
                 client = new HttpClient();
                 // Spoof a modern browser for Google to return fonts in woff2 and with broad Unicode support.
                 client.DefaultRequestHeaders.Add("User-Agent", "Firefox/116.0");
-                googleFallback = (await File.ReadAllLinesAsync(FileStorage.GetGoogleFallbackFilePath()))
+                googleFallback = (await File.ReadAllLinesAsync(googleFallbackPath))
                     .Where(line => line.Contains(':'))
                     .Select(line => line.Split(':'))
                     .ToDictionary(pair => pair[0].Trim(), pair => pair[1].Trim());
