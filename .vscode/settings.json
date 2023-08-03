@@ -68,5 +68,6 @@
     "thecombine",
     "upsert",
     "venv"
-  ]
+  ],
+  "git.branchProtection": ["master", "main"]
 }
