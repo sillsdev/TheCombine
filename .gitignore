@@ -5,12 +5,12 @@
 /.pnp
 .pnp.js
 
-# Testing
+# Testing coverage
 /coverage*
 /Backend.Tests/coverage*
 
 # Production
-/build
+build
 
 # Generated files for development use
 docker-compose.yml
@@ -37,28 +37,22 @@ yarn-debug.log*
 yarn-error.log*
 
 # Visual Studio
-.vs/*
+.vs
 
 # Backend
-Backend/.vs/**/*
+obj
 Backend/bin
-Backend/obj
-Backend/build
-/**/obj/**/*
-Backend.Tests/bin
-Backend.Tests/obj
 Backend/BackendFramework.csproj.user
 BackendFramework.sln.DotSettings.user
-Backend/.vscode/**/*
-Backend/SIL.Lift/**/*
+Backend/.vscode
+Backend/SIL.Lift
 Backend/ql-database
-/**/*.xml
-/**/*.lift
-/**/*.orig
-Backend.Tests/bin/Audio/*.mp3
-/**/*.~un
-/**/*.swp
-Backend.Tests/bin/Avatars/*
+Backend.Tests/bin
+*.xml
+*.lift
+*.orig
+*.~un
+*.swp
 mongo_database
 
 # User Guide
@@ -89,18 +83,16 @@ database/semantic_domains/*
 **/charts/*.tgz
 
 # Helm charts - generated from templates
-**/Chart.yaml
-**/Chart.lock
-
-# Host file to be used for ad hoc testing/development
-*.hosts.yml
-*.hosts.yaml
+Chart.yaml
+Chart.lock
 
 # YAML files for ad hoc testing/development
+*.hosts.yml
+*.hosts.yaml
 _*.yml
 _*.yaml
 _*.j2
-deploy/scripts/setup_files/**/dev_*.yaml
+dev_*.yaml
 
 # Emacs backup files (this is Jim's fault)
 *~

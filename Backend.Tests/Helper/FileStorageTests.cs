@@ -1,4 +1,5 @@
 ﻿using System;
+using BackendFramework.Helper;
 using static BackendFramework.Helper.FileStorage;
 using NUnit.Framework;
 
@@ -11,7 +12,7 @@ namespace Backend.Tests.Helper
         {
             Assert.That(FileTypeExtension(FileType.Audio), Is.EqualTo(".webm"));
             Assert.That(FileTypeExtension(FileType.Avatar), Is.EqualTo(".jpg"));
-            Assert.Throws<NotImplementedException>(() => { FileTypeExtension((FileType)99); });
+            Assert.That(() => FileTypeExtension((FileType)99), Throws.TypeOf<NotImplementedException>());
         }
 
         [Test]
@@ -19,22 +20,14 @@ namespace Backend.Tests.Helper
         {
             const string invalidId = "@";
             const string validId = "a";
-            Assert.Throws<InvalidIdException>(
-                () => GenerateAudioFilePathForWord(invalidId, validId));
-            Assert.Throws<InvalidIdException>(
-                () => GenerateAudioFilePathForWord(validId, invalidId));
-            Assert.Throws<InvalidIdException>(
-                () => GenerateAudioFilePath(invalidId, "file.mp3"));
-            Assert.Throws<InvalidIdException>(
-                () => GenerateAudioFileDirPath(invalidId));
-            Assert.Throws<InvalidIdException>(
-                () => GenerateImportExtractedLocationDirPath(invalidId));
-            Assert.Throws<InvalidIdException>(
-                () => GenerateLiftImportDirPath(invalidId));
-            Assert.Throws<InvalidIdException>(
-                () => GenerateAvatarFilePath(invalidId));
-            Assert.Throws<InvalidIdException>(
-                () => GetProjectDir(invalidId));
+            Assert.That(() => GenerateAudioFilePathForWord(invalidId, validId), Throws.TypeOf<InvalidIdException>());
+            Assert.That(() => GenerateAudioFilePathForWord(validId, invalidId), Throws.TypeOf<InvalidIdException>());
+            Assert.That(() => GenerateAudioFilePath(invalidId, "file.mp3"), Throws.TypeOf<InvalidIdException>());
+            Assert.That(() => GenerateAudioFileDirPath(invalidId), Throws.TypeOf<InvalidIdException>());
+            Assert.That(() => GenerateImportExtractedLocationDirPath(invalidId), Throws.TypeOf<InvalidIdException>());
+            Assert.That(() => GenerateLiftImportDirPath(invalidId), Throws.TypeOf<InvalidIdException>());
+            Assert.That(() => GenerateAvatarFilePath(invalidId), Throws.TypeOf<InvalidIdException>());
+            Assert.That(() => GetProjectDir(invalidId), Throws.TypeOf<InvalidIdException>());
         }
     }
 }

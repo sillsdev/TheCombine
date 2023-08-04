@@ -1,7 +1,7 @@
 {
   "generic": {
     "404Title": "404: Página no encontrada",
-    "404Text": "Haga clic en la cosechadora para volver al inicio.",
+    "404Text": "Haga clic en The Combine para volver al inicio.",
     "loadingTitle": "Cargando...",
     "loadingText": "Por favor, espere mientras The Combine procesa sus datos."
   },
@@ -9,7 +9,7 @@
     "subtitle": "Una aplicación web para recopilar rápidamente muchos conjuntos de palabras",
     "privacyPolicy": "Política de privacidad",
     "descriptionP1": "Las palabras son los bloques de construcción de la lengua, vitales tanto para comunicar información como para compartir la cultura. Un diccionario, lleno de palabras y sus significados, es un recurso lingüístico fundamental, que ayuda a documentar y preservar la lengua para las generaciones futuras dentro de la comunidad y proporciona un puente para la comunicación con otras comunidades. Sin embargo, muchas comunidades lingüísticas minoritarias de todo el mundo carecen de este recurso en su lengua, lo que las coloca en una situación de desventaja.",
-    "descriptionP2": "The Combine es una herramienta fácil de usar en el proceso de Recopilación Rápida de Palabras (RWC), un método para reunir las palabras que servirán de base para un diccionario bilingüe. En el centro del proceso de RWC se encuentran los hablantes nativos de una determinada comunidad lingüística. Un grupo de 4 a 6 hablantes nativos, a los que se les presenta un dominio semántico a la vez, proponen todas las palabras de su lengua que se les ocurran relacionadas con ese dominio. El Combine facilita la introducción de estas palabras en una base de datos, junto con traducciones, grabaciones de audio y notas, para captar mejor su forma y significado.",
+    "descriptionP2": "The Combine es una herramienta fácil de usar en el proceso de Recopilación Rápida de Palabras (RWC), un método para reunir las palabras que servirán de base para un diccionario bilingüe. En el centro del proceso de RWC se encuentran los hablantes nativos de una determinada comunidad lingüística. Un grupo de 4 a 6 hablantes nativos, a los que se les presenta un dominio semántico a la vez, proponen todas las palabras de su lengua que se les ocurran relacionadas con ese dominio. The Combine facilita la introducción de estas palabras en una base de datos, junto con traducciones, grabaciones de audio y notas, para captar mejor su forma y significado.",
     "descriptionP3": "Las personas con poco conocimiento lingüístico previo y una experiencia informática limitada pueden aprender rápidamente a utilizar las principales funciones de recopilación de palabras de The Combine. A continuación, las palabras resultantes pueden organizarse y editarse dentro de The Combine antes de exportar los datos para utilizarlos en otras herramientas como FLEx.",
     "descriptionP4": "¡Inscríbase para comenzar con su colección de palabras!"
   },
@@ -19,10 +19,10 @@
   },
   "addWords": {
     "selectEntry": "Seleccionar una entrada",
-    "selectSense": "Seleccionar un sentido",
+    "selectSense": "Seleccionar una acepción",
     "newEntryFor": "Nueva entrada para: ",
-    "newSenseFor": "Nuevo sentido para: ",
-    "senseInWord": "La palabra ya tiene este sentido en este dominio semántico",
+    "newSenseFor": "Nueva acepción para: ",
+    "senseInWord": "La palabra ya tiene esta acepción en este dominio semántico: {{ val1 }}, {{ val2 }}",
     "deleteRow": "Borrar esta fila",
     "deleteRowWarning": "¡Esta fila se eliminará permanentemente!",
     "addNote": "Agregar una nota",
@@ -35,9 +35,12 @@
     "wordInDatabase": "Esta palabra ya está en la base de datos"
   },
   "appBar": {
-    "dataEntry": "entrada de datos",
-    "dataCleanup": "limpieza de datos"
+    "dataEntry": "Entrada de datos",
+    "dataCleanup": "Limpieza de datos",
+    "statistics": "Estadísticas de datos",
+    "projectSettings": "Configuración del proyecto"
   },
+  "invite": {},
   "login": {
     "title": "Iniciar Sesión",
     "name": "Su nombre",
@@ -52,53 +55,57 @@
     "signUpNew": "Registrar un nuevo usuario",
     "signUpSuccess": "Usuario creado",
     "signUpFailed": "Error al registrarse",
-    "usernameInvalid": "Este nombre de usuario es demasiado corto o ya está en uso",
+    "usernameInvalid": "Este nombre de usuario es demasiado corto o ya está en uso.",
     "usernameRequirements": "El nombre de usuario debe tener 3 caracteres o más.",
-    "emailTaken": "Este correo electrónico ya está en uso",
+    "emailTaken": "Este correo electrónico ya está en uso.",
     "networkError": "Error de red",
     "loggingIn": "Iniciando sesión...",
     "required": "Requerido",
     "confirmPassword": "Confirmar contraseña",
-    "confirmPasswordError": "Las contraseñas no coinciden",
+    "confirmPasswordError": "Las contraseñas no coinciden.",
     "email": "Correo electrónico",
-    "emailError": "Por favor, ingrese un correo electrónico válida"
+    "emailError": "Por favor, ingrese un correo electrónico válida."
   },
   "passwordReset": {
     "emailOrUsername": "Correo electrónico o nombre de usuario",
     "resetRequestTitle": "Solicitud de restablecimiento de contraseña",
     "resetTitle": "Restablecer la contraseña",
-    "resetRequestInstructions": "Le enviaremos a su correo electrónico un enlace para restablecer su cuenta una sola vez",
+    "resetRequestInstructions": "Le enviaremos a su correo electrónico un enlace para restablecer su cuenta una sola vez.",
     "submit": "Enviar",
     "resetFail": "Error al restablecer la contraseña",
-    "notFoundError": "No se encontraron coincidencia",
     "backToLogin": "Volver al inicio de sesión"
   },
   "userMenu": {
     "siteSettings": "Configuración del sitio",
-    "projectSettings": "Configuración del proyecto",
     "userSettings": "Configuración de usuario",
     "logout": "Cerrar Sesión",
     "userGuide": "Guía del usuario"
   },
   "createProject": {
     "name": "Nombre del Proyecto",
+    "nameTaken": "Nombre tomado",
     "upload?": "¿Cargar los datos existentes?",
     "uploadFormat": "El archivo debe ser una carpeta comprimida que contenga un proyecto <1>Lexicon Interchange FormaT (LIFT)</1>.",
     "create": "Crear Proyecto",
     "fileSelected": "Archivo seleccionado",
-    "success": "¡Proyecto creado!",
-    "nameTaken": "Nombre tomado"
+    "languageOptionOther": "otro",
+    "languageSelect": "Seleccionar de idiomas en el archivo:",
+    "success": "¡Proyecto creado!"
   },
   "selectProject": { "title": "Seleccionar Proyecto" },
   "siteSettings": {
+    "projectList": "Proyectos",
     "archiveProjectText": "Este proyecto no será accesible para ningún usuario.",
     "restoreProjectText": "Alguien probablemente tuvo una buena razón para archivar este proyecto. ¿Seguro que quieres restaurarlo?",
+    "userList": "Usuarios",
     "deleteUser": {
-      "confirm": "Confirmar la eliminación del usuario de la base de datos de Combine",
-      "toastSuccess": "Usuario eliminado con éxito",
-      "toastFailure": "Error al eliminar el usuario"
+      "confirm": "Confirmar la eliminación del usuario de la base de datos de The Combine.",
+      "toastSuccess": "Usuario eliminado con éxito de The Combine.",
+      "toastFailure": "Error al eliminar el usuario de The Combine."
     },
-    "populateUsers": { "toastFailure": "Fallo al rellenar los usuarios" },
+    "populateUsers": {
+      "toastFailure": "Fallo al rellenar la lista de todos los usuarios."
+    },
     "banners": {
       "title": "Banners",
       "loginBanner": "Banner de inicio de sesión",
@@ -106,6 +113,10 @@
     }
   },
   "userSettings": {
+    "contact": "Información de contacto",
+    "phone": "Número de teléfono",
+    "uiLanguage": "Idioma de la interfaz de usuario",
+    "uiLanguageDefault": "(Por defecto, el idioma del navegador)",
     "updateSuccess": "Configuración actualizada correctamente."
   },
   "projectExport": {
@@ -132,24 +143,27 @@
       "deleteAnalysisLanguage": "Eliminar este idioma de análisis.",
       "getGlossLanguages": "Encuentre todos los códigos de idioma utilizados en los datos actuales.",
       "addAnalysisLanguageFailed": "No se ha podido añadir el lenguaje de análisis",
-      "makeDefaultAnalysisLanguageFailed": "Fallo en el análisis de la lengua por defecto",
+      "makeDefaultAnalysisLanguageFailed": "No se ha podido establecer el lenguaje de análisis por defecto",
       "deleteAnalysisLanguageFailed": "Fallo en la eliminación del lenguaje de análisis",
       "updateSemDomWritingSystemFailed": "Fallo en la actualización del lenguaje de los dominios semánticos"
     },
     "name": "Nombre del Proyecto",
-    "projectList": "Proyectos",
-    "userList": "Usuarios",
+    "nameUpdateFailed": "El nombre del proyecto ya está en uso.",
+    "user": {
+      "currentUsers": "Usuarios actuales",
+      "addUser": "Agregar usuario"
+    },
+    "roles": {
+      "editor": "Editor",
+      "administrator": "Administrador",
+      "owner": "Propietario"
+    },
     "userManagement": {
-      "makeAdminWarning": "¿Hacer de este usuario un administrador del proyecto?",
+      "removeUserWarning": "¿Eliminar a este usuario del proyecto?",
+      "makeAdminWarning": "¿Hacer de este usuario un Administrador del proyecto?",
       "makeOwnerWarning": "¿Transferir la propiedad del proyecto a este usuario?",
-      "removeAdminWarning": "¿Eliminar la administración del proyecto de este usuario?",
-      "removeUserWarning": "¿Quitar a este usuario del proyecto?",
-      "userRemovedToastSuccess": "¡Usuario eliminado!",
+      "userRemovedToastSuccess": "Usuario eliminado del proyecto.",
       "userRemovedToastFailure": "Error al eliminar el usuario.",
-      "makeAdminToastSuccess": "¡Usuario dado de administración del proyecto!",
-      "makeAdminToastFailure": "No se ha podido dar la administración del proyecto al usuario.",
-      "removeAdminToastSuccess": "¡Se ha eliminado la administración de proyectos del usuario!",
-      "removeAdminToastFailure": "No se ha podido eliminar la administración del proyecto del usuario.",
       "makeOwnerToastSuccess": "¡Transferencia de la responsabilidad del proyecto!",
       "makeOwnerToastFailure": "No se ha transferido la responsabilidad del proyecto.",
       "manageUser": "Administrar usuario",
@@ -157,27 +171,25 @@
     },
     "import": {
       "header": "Importar datos",
-      "body": "Los datos importados se añadirán a este proyecto. El Combine no hará ningún intento de deduplicar, sobrescribir o sincronizar.",
+      "body": "Los datos importados se añadirán a este proyecto. The Combine no hará ningún intento de deduplicar, sobrescribir o sincronizar.",
       "chooseFile": "Elegir archivo",
       "done": "¡Hecho!",
       "notAllowed": "Ya ha importado un archivo Lift a este proyecto."
     },
-    "user": {
-      "currentUsers": "Usuarios actuales",
-      "usersAndRoles": "Usuarios y roles",
-      "addUser": "Agregar usuario",
-      "selectUser": "Escoger un usuario",
-      "selectRole": "Escoger rol",
-      "confirmUser": "Seleccionar este usuario",
-      "roles": {
-        "typist": "Mecanógrafo",
-        "cleaner": "Limpiador",
-        "admin": "Administrador"
-      },
+    "archive": {
       "archive": "Archivar el proyecto",
       "archiveToastSuccess": "¡Proyecto archivado!"
     },
-    "schedule": {},
+    "schedule": {
+      "workshopSchedule": "Calendario de talleres",
+      "startDate": "Fecha de inicio",
+      "endDate": "Fecha de finalización",
+      "selectedDateAlert": "La fecha de inicio debe ser anterior a la fecha de finalización.",
+      "setDays": "Establezca el intervalo de días para el taller.",
+      "editDays": "Ajuste el horario del taller.",
+      "removeDays": "Eliminar todos los días del taller.",
+      "removeAll": "¿Estás seguro de que quiere eliminar todas las fechas?"
+    },
     "exportProject": { "label": "Exportar el proyecto" },
     "autocomplete": {
       "label": "Autocompletar",
@@ -191,14 +203,14 @@
     },
     "invite": {
       "inviteByEmailLabel": "Invitar por correo electrónico",
-      "userExists": "¡Este usuario ya está registrado!",
+      "userExists": "Este usuario ya está registrado.",
       "or": "O",
       "searchPlaceholder": "Buscar...",
       "searchTitle": "Buscar usuarios",
       "emailLabel": "Correo electrónico",
       "messageLabel": "Mensaje",
-      "toastSuccess": "¡Usuario agregado!",
-      "toastFail": "¡Error al agregar usuario!"
+      "toastSuccess": "Usuario agregado al proyecto.",
+      "toastFail": "Error al agregar usuario al proyecto."
     }
   },
   "goal": {
@@ -210,7 +222,8 @@
       "noHistory": "Nada aún",
       "done": "Todo listo"
     },
-    "progress": "Paso {{ val1 }} de {{ val2 }}"
+    "progress": "Paso {{ val1 }} de {{ val2 }}",
+    "progressMerge": "Conjunto de combinación {{ val1 }} de {{ val2 }}"
   },
   "createStrWordInv": { "title": "Crear inventario de palabras estructurales" },
   "handleFlags": { "title": "Manejar banderas" },
@@ -219,31 +232,38 @@
   "validateStrWords": { "title": "Validar los caracteres estructurales" },
   "reviewEntries": {
     "title": "Revisar entradas",
-    "sense": "Sentido",
+    "sense": "Acepción",
     "noVernacular": "¡No hay entrada vernácula!",
     "noDefinition": "No hay definiciones",
     "noGloss": "No hay entrada de glosas",
     "noDomain": "Ningún dominio seleccionado",
     "noNote": "Sin nota",
     "deleteWordWarning": "¡Esta palabra se eliminará permanentemente!",
+    "deleteDisabled": "Se importó con datos que The Combine no maneja, por lo que no se puede eliminar.",
     "error": {
       "gloss": "Las glosas no pueden dejarse en blanco",
       "domain": "Los dominios no pueden dejarse en blanco",
-      "senses": "No se puede guardar una entrada sin sentidos",
+      "senses": "No se puede guardar una entrada sin acepciones",
       "vernacular": "El vernáculo no puede dejarse en blanco"
     },
     "columns": {
       "definitions": "Definiciones",
       "delete": "Eliminar",
       "domains": "Dominios",
+      "flag": "Bandera",
       "glosses": "Glosas",
       "note": "Nota",
+      "partOfSpeech": "Parte de la oración",
       "pronunciations": "Pronunciaciones",
-      "senses": "Sentidos",
+      "senses": "Acepciones",
       "vernacular": "Vernáculo"
     },
     "materialTable": {
-      "body": { "edit": "Editar" },
+      "body": {
+        "edit": "Editar",
+        "emptyDataSourceMessage": "No hay entradas para mostrar",
+        "filter": "Filtro"
+      },
       "pagination": {
         "labelDisplayedRows": "{from}-{to} de {count}",
         "labelRows": "filas",
@@ -275,14 +295,14 @@
       "noCharacters": "¡Todavía no hay caracteres! Escriba caracteres en el cuadro de abajo para empezar.",
       "required": "Agrega caracteres ingresándolos en este cuadro",
       "advanced": "Avanzado",
-      "occurrences": "ocurrencias",
+      "occurrences": "{{ val }} ocurrencias",
       "find": "Buscar",
       "replace": "Reemplazar",
       "replaceWith": "Reemplazar con",
-      "replaceAll": "Reemplazar todas las ocurrencias de",
+      "replaceAll": "Reemplazar todas las ocurrencias de: {{ val }}",
+      "replaceAllWith": "Reemplazar con: {{ val }}",
       "findAndReplace": "Buscar y Reemplazar",
-      "apply": "aplicar",
-      "charDetails": "(Los detalles de los caracteres no se han implementado.)"
+      "apply": "aplicar"
     },
     "sampleWords": {
       "title": "Palabras de muestra",
@@ -304,26 +324,28 @@
   "mergeDups": {
     "title": "Combinar duplicados",
     "helpText": {
-      "dragCard": "Arrastre una tarjeta aquí para combinarla.",
+      "dragCard": "Arrastre una tarjeta aquí para combinarla",
       "root": "Arrastra las palabras aquí para comenzar a combinarlas",
       "dups": "Arrastra las palabras duplicadas aquí",
-      "sense": "Arrastra un nuevo sentido aquí",
+      "sense": "Arrastra una nueva acepción aquí",
       "saveAndContinue": "Guardar los cambios y cargar un nuevo conjunto de palabras",
       "skip": "Descartar los cambios y cargar un nuevo conjunto de palabras",
       "list": "Arrastre esta palabra hacia la derecha para comenzar a combinarla con otras palabras",
       "noDups": "No hay nada que combinar.",
-      "delete": "Borrar el sentido",
-      "deleteDialog": "¿Borrar este sentido?"
+      "delete": "Borrar la acepción",
+      "deleteDialog": "¿Borrar esta acepción?",
+      "protectedSense": "Esta acepción fue importado con datos que The Combine no maneja, por lo que no puede ser borrado o añadido a otra acepción. Puede mover esta acepción a otra palabra o añadir otras acepciones a éste para combinarlos.",
+      "protectedWord": "Esta palabra se importó con datos que The Combine no maneja, por lo que para evitar que se borre, no se puede eliminar su acepción final."
     },
-    "completed": { "number": "Número de fusiones realizadas: " },
+    "completed": { "number": "Número de combinaciones realizadas: " },
     "continueDialog": {
-      "title": "¿Continuar con la fusión?",
+      "title": "¿Continuar con la combinación?",
       "yes": "si",
       "no": "no"
     },
     "undo": {
-      "undo": "Deshacer la fusión",
-      "undoDialog": "¿Deshacer esta fusión?",
+      "undo": "Deshacer la combinación",
+      "undoDialog": "¿Deshacer esta combinación?",
       "undoDisabled": "Deshacer no disponible"
     }
   },
@@ -349,13 +371,9 @@
     "exit": "Salir",
     "export": "Exportar",
     "invite": "Invitar",
-    "makeAdmin": "Hazle administrador",
-    "makeOwner": "Hazle dueño",
     "proceedWithCaution": "¡Procede con precaución!",
     "reject": "Rechazar",
     "rejected": "Rechazado",
-    "removeAdmin": "Eliminar administrador del proyecto",
-    "removeFromProject": "Eliminar del proyecto",
     "reset": "Restablecer",
     "restore": "Restaurar",
     "save": "Guardar",
@@ -371,8 +389,17 @@
     "deleteRecording": "Eliminar grabación"
   },
   "statistics": {
+    "title": "Estadísticas de datos: {{ val }}",
+    "domainProgress": "Progreso del dominio",
+    "domainsCollected": "Dominios recogidos: {{ val }}",
+    "wordsCollected": "Palabras recogidas: {{ val }}",
     "percent": "{{ val }}%",
-    "view": {},
+    "view": {
+      "user": "Palabras por usuario",
+      "domain": "Palabras por dominio",
+      "day": "Palabras por día",
+      "workshop": "Progresos del taller"
+    },
     "column": {
       "domainNumber": "Número de dominio:",
       "domainName": "Nombre de dominio:",
@@ -380,6 +407,20 @@
       "domainCount": "Dominios:",
       "senseCount": "Palabras:"
     },
-    "axisLabel": { "date": "Fecha" }
+    "axisLabel": { "date": "Fecha", "words": "Palabras recogidas" }
+  },
+  "grammaticalCategory": {
+    "group": {
+      "Adjective": "Adjetivo",
+      "Adposition": "Adposición",
+      "Adverb": "Adverbio",
+      "Classifier": "Clasificador",
+      "Determiner": "Determinante",
+      "Interjection": "Interjección",
+      "Noun": "Sustantivo",
+      "Participle": "Participio",
+      "Particle": "Partícula",
+      "Verb": "Verbo"
+    }
   }
 }

@@ -22,7 +22,7 @@
     "selectSense": "Selecione um sentido",
     "newEntryFor": "Nova entrada para: ",
     "newSenseFor": "Novo sentido para: ",
-    "senseInWord": "A palavra já tem este sentido neste domínio semântico",
+    "senseInWord": "A palavra já tem este sentido neste domínio semântico: {{ val1 }}, {{ val2 }}",
     "deleteRow": "Excluir esta linha",
     "deleteRowWarning": "Esta linha será permanentemente apagada!",
     "addNote": "Adicionar uma nota",
@@ -35,9 +35,12 @@
     "wordInDatabase": "Esta palavra já está no banco de dados"
   },
   "appBar": {
-    "dataEntry": "entrada de dados",
-    "dataCleanup": "limpeza de dados"
+    "dataEntry": "Entrada de dados",
+    "dataCleanup": "Limpeza de dados",
+    "statistics": "Estatísticas de dados",
+    "projectSettings": "Configurações do projeto"
   },
+  "invite": {},
   "login": {
     "title": "Entrar",
     "name": "Seu Nome",
@@ -52,60 +55,64 @@
     "signUpNew": "Cadastrar Novo Usuário",
     "signUpSuccess": "Usuário Criado",
     "signUpFailed": "Falha no cadastro",
-    "usernameInvalid": "Este nome de usuário é muito curto ou já está ocupado",
+    "usernameInvalid": "O nome de usuário é muito curto ou já está ocupado.",
     "usernameRequirements": "O nome de usuário deve ter 3 caracteres ou mais.",
-    "emailTaken": "Já existe um usuário com esse endereço de e-mail",
+    "emailTaken": "Já existe um usuário com esse endereço de e-mail.",
     "networkError": "Erro de rede",
     "loggingIn": "Fazendo login...",
     "required": "Obrigatório",
     "confirmPassword": "Confirmar Senha",
-    "confirmPasswordError": "As senhas não combinam",
+    "confirmPasswordError": "As senhas não combinam.",
     "email": "E-mail",
-    "emailError": "Por favor, insira um e-mail válido"
+    "emailError": "Por favor, insira um e-mail válido."
   },
   "passwordReset": {
-    "emailOrUsername": "Email OU Nome de usuário",
+    "emailOrUsername": "E-mail OU Nome de usuário",
     "resetRequestTitle": "Reinicializar pedido de senha",
     "resetTitle": "Redefinir Senha",
-    "resetRequestInstructions": "Nós enviaremos um link de reinicialização da sua conta para o seu e-mail",
+    "resetRequestInstructions": "Nós enviaremos um link de reinicialização da sua conta para o seu e-mail.",
     "submit": "Confirmar",
     "resetFail": "Erro de redefinição de senha",
-    "notFoundError": "Não foi encontrada nenhuma correspondência",
     "backToLogin": "Voltar para Login"
   },
   "userMenu": {
     "siteSettings": "Configurações do site",
-    "projectSettings": "Configurações do Projeto",
     "userSettings": "Configurações de Usuário",
     "logout": "Sair",
     "userGuide": "Guia do Usuário"
   },
   "createProject": {
     "name": "Nome do Projeto",
+    "nameTaken": "Nome tomado",
     "upload?": "Carregar dados existentes?",
     "uploadFormat": "O arquivo deve ser uma pasta zipada que contenha um <1>Lexicon Interchange FormaT (LIFT)</1> projeto.",
     "create": "Criar Projeto",
     "fileSelected": "Arquivo selecionado",
-    "success": "Projeto Criado!",
-    "nameTaken": "Nome tomado"
+    "success": "Projeto Criado!"
   },
   "selectProject": { "title": "Selecionar Projeto" },
   "siteSettings": {
+    "projectList": "Projetos",
     "archiveProjectText": "Este projeto não será acessível a nenhum utilizador.",
     "restoreProjectText": "Alguém provavelmente tinha uma boa razão para arquivar este projeto. Tens a certeza que o queres restaurar?",
     "deleteUser": {
-      "confirm": "Confirmar exclusão de usuário do banco de dados combinado",
-      "toastSuccess": "Usuário excluído com sucesso",
-      "toastFailure": "Falha em excluir usuário"
+      "confirm": "Confirmar exclusão de usuário do banco de dados de The Combine.",
+      "toastSuccess": "Usuário excluído com sucesso de The Combine.",
+      "toastFailure": "Falha em excluir usuário de The Combine."
     },
-    "populateUsers": { "toastFailure": "Falha no preenchimento dos usuários" },
+    "populateUsers": {
+      "toastFailure": "Falha no preenchimento a lista de todos os usuários."
+    },
     "banners": {
       "title": "Banners",
       "loginBanner": "Banner de Login",
       "announcementBanner": "Banner de Anúncio"
     }
   },
-  "userSettings": { "updateSuccess": "Configurações atualizadas com sucesso." },
+  "userSettings": {
+    "uiLanguageDefault": "(Definir o idioma do navegador como padrão)",
+    "updateSuccess": "Configurações atualizadas com sucesso."
+  },
   "projectExport": {
     "cannotExportEmpty": "O projeto está vazio. Não é possível exportar um projeto sem palavras.",
     "downloadInProgress": "Download em progresso",
@@ -135,20 +142,18 @@
       "updateSemDomWritingSystemFailed": "Falha na atualização do idioma dos domínios semânticos"
     },
     "name": "Nome do Projeto",
-    "projectList": "Projetos",
-    "userList": "Usuários",
+    "user": {
+      "currentUsers": "Usuários atuais",
+      "addUser": "Adicionar usuário"
+    },
+    "roles": {},
     "userManagement": {
+      "removeUserWarning": "Remover esse usuário do projeto?",
       "makeAdminWarning": "Definir este usuário como administrador de projeto?",
       "makeOwnerWarning": "Transferir a propriedade do projeto para este usuário?",
-      "removeAdminWarning": "Remover o administrador do projeto deste usuário?",
-      "removeUserWarning": "Remover esse usuário do projeto?",
-      "userRemovedToastSuccess": "Usuário Removido!",
+      "userRemovedToastSuccess": "Usuário removido do projeto.",
       "userRemovedToastFailure": "Falha ao Remover Usuário.",
-      "makeAdminToastSuccess": "Este Usuário foi configurado como Administrador de Projetos!",
-      "makeAdminToastFailure": "Falha ao definir usuário como administrador do projeto.",
-      "removeAdminToastSuccess": "Removido Administrador do Projeto do Usuário!",
-      "removeAdminToastFailure": "Falha ao remover o administrador do projeto do usuário.",
-      "makeOwnerToastSuccess": "Propriedade do Projeto Transferida!",
+      "makeOwnerToastSuccess": "Propriedade do projeto transferida.",
       "makeOwnerToastFailure": "Falha ao transferir propriedade do projeto.",
       "manageUser": "Gerenciar Usuário",
       "reverseOrder": "Ordem Reversa"
@@ -160,18 +165,7 @@
       "done": "Concluído!",
       "notAllowed": "Você já importou um arquivo Lift para este projeto."
     },
-    "user": {
-      "currentUsers": "Usuários atuais",
-      "usersAndRoles": "Usuários e Funções",
-      "addUser": "Adicionar usuário",
-      "selectUser": "Escolher um usuário",
-      "selectRole": "Escolher sua função",
-      "confirmUser": "Selecionar este usuário",
-      "roles": {
-        "typist": "Digitador",
-        "cleaner": "Revisor",
-        "admin": "Administrador"
-      },
+    "archive": {
       "archive": "Arquivar Projeto",
       "archiveToastSuccess": "Projeto Arquivado!"
     },
@@ -189,14 +183,14 @@
     },
     "invite": {
       "inviteByEmailLabel": "Convidar por e-mail",
-      "userExists": "Esse usuário já está registrado!",
+      "userExists": "Esse usuário já está registrado.",
       "or": "OU",
       "searchPlaceholder": "Procurar...",
       "searchTitle": "Encontrar usuários",
       "emailLabel": "E-mail",
       "messageLabel": "Mensagem",
-      "toastSuccess": "Adicionado Utilizador!",
-      "toastFail": "Falha ao adicionar usuário!"
+      "toastSuccess": "Adicionado usuário do projeto.",
+      "toastFail": "Falha ao adicionar usuário ao projeto."
     }
   },
   "goal": {
@@ -236,6 +230,8 @@
       "domains": "Domínios",
       "glosses": "Glosas",
       "note": "Nota",
+      "partOfSpeech": "Classe gramatical",
+      "pronunciations": "Pronúncias",
       "senses": "Sentidos",
       "vernacular": "Vernáculo"
     },
@@ -244,8 +240,10 @@
       "pagination": {
         "labelDisplayedRows": "{from}-{to} de {count}",
         "labelRows": "linhas",
+        "labelRowsPerPage": "Linhas por página:",
         "first": "Primeira página",
-        "last": "Última página"
+        "last": "Última página",
+        "previous": "Página anterior"
       },
       "toolbar": {}
     }
@@ -254,7 +252,7 @@
     "title": "Criar Inventário de Caracteres",
     "characters": "caracteres",
     "examples": "Exemplos",
-    "occurrences": "{{ val }} ocorrências",
+    "occurrences": "ocorrências",
     "status": "status",
     "sortBy": "Ordenar por",
     "characterSet": {
@@ -269,14 +267,14 @@
       "noCharacters": "Nenhum caractere ainda! Digite os caracteres na caixa abaixo para começar.",
       "required": "Adicionar caracteres, digitando nesta caixa",
       "advanced": "Avançado",
-      "occurrences": "ocorrências",
+      "occurrences": "{{ val }} ocorrências",
       "find": "Localizar",
       "replace": "Substituir",
       "replaceWith": "Substituir por",
-      "replaceAll": "Substituir todas as ocorrências de",
+      "replaceAll": "Substituir todas as ocorrências de: {{ val }}",
+      "replaceAllWith": "Substituir por: {{ val }}",
       "findAndReplace": "Localizar & Substituir",
-      "apply": "aplicar",
-      "charDetails": "(Detalhes de Caracteres não foram implementados.)"
+      "apply": "aplicar"
     },
     "sampleWords": {
       "title": "Palavras de Exemplo",
@@ -298,7 +296,7 @@
   "mergeDups": {
     "title": "Mesclar Duplicações",
     "helpText": {
-      "dragCard": "Arraste um cartão aqui para mesclar.",
+      "dragCard": "Arraste um cartão aqui para mesclar",
       "root": "Arrastar as palavras aqui para começar a mesclar",
       "dups": "Arrastar palavras duplicadas aqui",
       "sense": "Arrastar novo sentido aqui",
@@ -343,13 +341,9 @@
     "exit": "Sair",
     "export": "Exportar",
     "invite": "Convite",
-    "makeAdmin": "Definir como Administrador",
-    "makeOwner": "Definir como proprietário",
     "proceedWithCaution": "Proceda com cautela!",
     "reject": "Rejeição",
     "rejected": "Rejeitado",
-    "removeAdmin": "Remover o Administrador do Projeto",
-    "removeFromProject": "Remover do Projeto",
     "reset": "Redefinir",
     "restore": "Restaurar",
     "save": "Salvar",
@@ -365,6 +359,7 @@
     "deleteRecording": "Eliminar Gravação"
   },
   "statistics": {
+    "title": "Estatísticas de dados: {{ val }}",
     "percent": "{{ val }}%",
     "view": {},
     "column": {
@@ -375,5 +370,25 @@
       "senseCount": "Palavras:"
     },
     "axisLabel": {}
+  },
+  "grammaticalCategory": {
+    "group": {
+      "Adjective": "Adjetivo",
+      "Adposition": "Adposição",
+      "Adverb": "Advérbio",
+      "Classifier": "Classificador",
+      "Connective": "Conectivo",
+      "Determiner": "Determinante",
+      "ExistentialMarker": "Marcador existencial",
+      "Expletive": "Expletivo",
+      "Interjection": "Interjeição",
+      "Noun": "Nome",
+      "Participle": "Particípio",
+      "Particle": "Partícula",
+      "Prenoun": "Prenome",
+      "Preverb": "Prevérbio",
+      "ProForm": "Proforma",
+      "Verb": "Verbo"
+    }
   }
 }

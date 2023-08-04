@@ -26,7 +26,6 @@ import VernDialog from "components/DataEntry/DataEntryTable/NewEntry/VernDialog"
 import Pronunciations from "components/Pronunciations/PronunciationsComponent";
 import { StoreState } from "types";
 import theme from "types/theme";
-import SpellChecker from "utilities/spellChecker";
 
 const idAffix = "new-entry";
 
@@ -44,7 +43,6 @@ const gridItemStyle = (spacing: number): CSSProperties => ({
 interface NewEntryProps {
   analysisLang: WritingSystem;
   vernacularLang: WritingSystem;
-  spellChecker?: SpellChecker;
   // Parent component handles new entry state:
   addNewEntry: () => Promise<void>;
   updateWordWithNewGloss: (wordId: string) => Promise<void>;
@@ -287,7 +285,6 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
           analysisLang={analysisLang}
           textFieldId={`${idAffix}-gloss`}
           onUpdate={() => conditionalFocus(FocusTarget.Gloss)}
-          spellChecker={props.spellChecker}
         />
       </Grid>
       <Grid item xs={1} style={gridItemStyle(1)}>

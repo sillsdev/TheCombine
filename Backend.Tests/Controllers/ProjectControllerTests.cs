@@ -64,7 +64,7 @@ namespace Backend.Tests.Controllers
 
             var projects = ((ObjectResult)_projController.GetAllProjects().Result).Value as List<Project>;
             Assert.That(projects, Has.Count.EqualTo(3));
-            _projRepo.GetAllProjects().Result.ForEach(project => Assert.Contains(project, projects));
+            _projRepo.GetAllProjects().Result.ForEach(project => Assert.That(projects, Does.Contain(project)));
         }
 
         [Test]
@@ -75,11 +75,9 @@ namespace Backend.Tests.Controllers
             _projRepo.Create(Util.RandomProject());
             _projRepo.Create(Util.RandomProject());
 
-            var action = _projController.GetProject(project!.Id).Result;
-            Assert.IsInstanceOf<ObjectResult>(action);
-
-            var foundProjects = ((ObjectResult)action).Value as Project;
-            Assert.AreEqual(project, foundProjects);
+            var result = _projController.GetProject(project!.Id).Result;
+            Assert.That(result, Is.InstanceOf<ObjectResult>());
+            Assert.That(((ObjectResult)result).Value, Is.EqualTo(project));
         }
 
         [Test]
@@ -88,7 +86,7 @@ namespace Backend.Tests.Controllers
             var project = Util.RandomProject();
             var userProject = (UserCreatedProject)((ObjectResult)_projController.CreateProject(project).Result).Value!;
             project.Id = userProject.Project.Id;
-            Assert.Contains(project, _projRepo.GetAllProjects().Result);
+            Assert.That(_projRepo.GetAllProjects().Result, Does.Contain(project));
         }
 
         [Test]
@@ -100,7 +98,7 @@ namespace Backend.Tests.Controllers
 
             _ = _projController.UpdateProject(modProject.Id, modProject);
             Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(1));
-            Assert.Contains(modProject, _projRepo.GetAllProjects().Result);
+            Assert.That(_projRepo.GetAllProjects().Result, Does.Contain(modProject));
         }
 
         [Test]
@@ -122,7 +120,7 @@ namespace Backend.Tests.Controllers
             Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(3));
 
             _ = _projController.DeleteAllProjects().Result;
-            Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(0));
+            Assert.That(_projRepo.GetAllProjects().Result, Is.Empty);
         }
 
         [Test]
@@ -134,12 +132,10 @@ namespace Backend.Tests.Controllers
             var modProject = project1!.Clone();
             modProject.Name = "Proj";
             _ = _projController.UpdateProject(modProject.Id, modProject);
-            var isOldProjDup =
-                ((ObjectResult)_projController.ProjectDuplicateCheck("Proj").Result).Value!;
-            Assert.IsTrue((bool)isOldProjDup);
-            var isNewProjDup =
-                ((ObjectResult)_projController.ProjectDuplicateCheck("NewProj").Result).Value!;
-            Assert.IsFalse((bool)isNewProjDup);
+            var isOldProjDupResult = (ObjectResult)_projController.ProjectDuplicateCheck("Proj").Result;
+            Assert.That(isOldProjDupResult.Value, Is.True);
+            var isNewProjDupResult = (ObjectResult)_projController.ProjectDuplicateCheck("NewProj").Result;
+            Assert.That(isNewProjDupResult.Value, Is.False);
         }
     }
 }
