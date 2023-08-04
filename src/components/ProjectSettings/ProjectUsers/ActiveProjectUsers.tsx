@@ -1,12 +1,12 @@
 import { MoreVert } from "@mui/icons-material";
 import {
   Avatar,
+  Chip,
   IconButton,
   List,
   ListItem,
   ListItemText,
   SelectChangeEvent,
-  Chip,
 } from "@mui/material";
 import {
   Fragment,
