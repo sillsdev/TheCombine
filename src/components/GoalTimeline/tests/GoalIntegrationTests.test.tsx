@@ -60,27 +60,6 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-// const GoalTimelineProviders = ({
-//   children,
-// }: {
-//   children: React.ReactNode;
-// }): ReactElement => {
-//   return (
-//     <Provider store={testStore}>
-//       <PersistGate persistor={persistor}>{children}</PersistGate>
-//     </Provider>
-//   );
-// };
-
-// const customRender = async (
-//   ui: ReactElement,
-//   options?: Omit<RenderOptions, "wrapper">
-// ): Promise<void> => {
-//   await act(async () => {
-//     render(ui, { wrapper: GoalTimelineProviders, ...options });
-//   });
-// };
-
 describe("GoalTimeline", () => {
   it("renders Goal screen", async () => {
     await act(async () => {
