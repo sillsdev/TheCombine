@@ -202,13 +202,10 @@ def main() -> None:
         # Assumes no two keys map to the same value.
         mlp_map_rev = {val: key for key, val in mlp_map.items()}
 
-    # Pre-seed with corrections to the in-file fallbacks.
+    # Pre-seed with overrides to the in-file fallbacks.
     google_fallback: dict[str] = {
         "NotoSansLeke": "",
-        "NotoSansMeroiticCursive": "Noto Sans Meroitic",
         "NotoSansShuishu": "",
-        "NotoSansTangut": "Noto Serif Tangut",
-        "NotoSansTibetan": "Noto Serif Tibetan",
     }
 
     for font in fonts:
