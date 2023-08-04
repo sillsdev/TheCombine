@@ -1,7 +1,7 @@
 import { Project } from "api/models";
 import { getFrontierWords } from "backend";
 import router from "browserRouter";
-import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalSlice";
+import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalActions";
 import { asyncUpdateCurrentProject } from "components/Project/ProjectActions";
 import {
   CharacterStatus,

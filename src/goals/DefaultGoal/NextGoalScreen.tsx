@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { asyncAddGoal } from "components/GoalTimeline/Redux/GoalSlice";
+import { asyncAddGoal } from "components/GoalTimeline/Redux/GoalActions";
 import PageNotFound from "components/PageNotFound/component";
 import MergeDupsContinueDialog from "goals/MergeDuplicates/MergeDupsContinueDialog";
 import { StoreState } from "types";

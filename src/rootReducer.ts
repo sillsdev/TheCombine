@@ -1,6 +1,6 @@
 import { combineReducers, Reducer } from "redux";
 
-import goalsReducer from "components/GoalTimeline/Redux/GoalSlice";
+import { goalsReducer } from "components/GoalTimeline/Redux/GoalReducer";
 import { loginReducer } from "components/Login/Redux/LoginReducer";
 import { projectReducer } from "components/Project/ProjectReducer";
 import { exportProjectReducer } from "components/ProjectExport/Redux/ExportProjectReducer";

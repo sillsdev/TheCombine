@@ -11,7 +11,7 @@ import * as backend from "backend";
 import {
   asyncAddCompletedMergeToGoal,
   asyncUpdateGoal,
-} from "components/GoalTimeline/Redux/GoalSlice";
+} from "components/GoalTimeline/Redux/GoalActions";
 import {
   defaultSidebar,
   MergeTreeReference,
@@ -271,9 +271,10 @@ export function mergeAll() {
   };
 }
 
-// Used in MergeDups cases of GoalSlice functions
+// Used in MergeDups cases of GoalActions functions
 
 export function dispatchMergeStepData(goal: MergeDups) {
+  console.log("dispatchMergeStepData() called.");
   return (dispatch: StoreStateDispatch) => {
     const stepData = goal.steps[goal.currentStep] as MergeStepData;
     if (stepData) {

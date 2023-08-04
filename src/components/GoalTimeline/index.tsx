@@ -13,7 +13,7 @@ import GoalList from "components/GoalTimeline/GoalList";
 import {
   asyncAddGoal,
   asyncGetUserEdits,
-} from "components/GoalTimeline/Redux/GoalSlice";
+} from "components/GoalTimeline/Redux/GoalActions";
 import { StoreState } from "types";
 import { Goal, GoalType } from "types/goals";
 import { useAppDispatch, useAppSelector } from "types/hooks";

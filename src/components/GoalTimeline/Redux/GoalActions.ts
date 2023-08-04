@@ -1,92 +1,10 @@
-import { Action, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Action, PayloadAction } from "@reduxjs/toolkit";
 
 import { MergeUndoIds, Word } from "api/models";
 import * as Backend from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
 import router from "browserRouter";
-import { defaultState } from "components/GoalTimeline/DefaultState";
 import {
-  MergeDupsData,
-  MergesCompleted,
-} from "goals/MergeDuplicates/MergeDupsTypes";
-import {
-  dispatchMergeStepData,
-  fetchMergeDupsData,
-} from "goals/MergeDuplicates/Redux/MergeDupsActions";
-import { StoreActionTypes } from "rootActions";
-import { StoreState } from "types";
-import { StoreStateDispatch } from "types/Redux/actions";
-import { Goal, GoalStatus, GoalType } from "types/goals";
-import { Path } from "types/path";
-import { convertEditToGoal } from "utilities/goalUtilities";
-
-export const goalSlice = createSlice({
-  name: "goalsState",
-  initialState: defaultState,
-  reducers: {
-    addCompletedMergeToGoalAction: (state, action) => {
-      if (state.currentGoal.goalType == GoalType.MergeDups) {
-        const changes = { ...state.currentGoal.changes } as MergesCompleted;
-        if (!changes.merges) {
-          changes.merges = [];
-        }
-        changes.merges.push(action.payload);
-        state.currentGoal.changes = changes;
-      }
-    },
-    incrementCurrentGoalStepAction: (state) => {
-      if (state.currentGoal.currentStep + 1 < state.currentGoal.numSteps) {
-        state.currentGoal.currentStep++;
-      }
-    },
-    loadUserEditsAction: (state, action) => {
-      const history = [...action.payload];
-      state.previousGoalType =
-        history[history.length - 1]?.goalType ?? GoalType.Default;
-      state.history = history;
-    },
-    setCurrentGoalAction: (state, action) => {
-      state.currentGoal = action.payload;
-      state.goalTypeSuggestions = state.goalTypeSuggestions.filter(
-        (type, index) => index !== 0 || action.payload.goalType !== type
-      ); // Remove top suggestion if same as goal to add.
-      state.previousGoalType =
-        state.currentGoal.goalType !== GoalType.Default
-          ? state.currentGoal.goalType
-          : state.previousGoalType;
-    },
-    setCurrentGoalIndexAction: (state, action) => {
-      state.currentGoal.index = action.payload;
-    },
-    setCurrentGoalsStateAction: (state, action) => {
-      state.currentGoal.status = action.payload;
-    },
-    setGoalDataAction: (state, action) => {
-      if (action.payload.length > 0) {
-        state.currentGoal.data = { plannedWords: action.payload };
-        state.currentGoal.numSteps = action.payload.length;
-        state.currentGoal.currentStep = 0;
-        state.currentGoal.steps = [];
-      }
-    },
-    updateStepFromDataAction: (state) => {
-      if (state.currentGoal.goalType === GoalType.MergeDups) {
-        const currentGoalData = state.currentGoal.data as MergeDupsData;
-        state.currentGoal.steps[state.currentGoal.currentStep] = {
-          words: currentGoalData.plannedWords[state.currentGoal.currentStep],
-        };
-      }
-    },
-  },
-  extraReducers: (builder) =>
-    builder.addCase(StoreActionTypes.RESET, () => defaultState),
-});
-
-export const actionType = (actionName: string) => {
-  return `${goalSlice.name}/${actionName}Action`;
-};
-
-const {
   addCompletedMergeToGoalAction,
   incrementCurrentGoalStepAction,
   loadUserEditsAction,
@@ -95,7 +13,16 @@ const {
   setCurrentGoalsStateAction,
   setGoalDataAction,
   updateStepFromDataAction,
-} = goalSlice.actions;
+} from "components/GoalTimeline/Redux/GoalReducer";
+import {
+  dispatchMergeStepData,
+  fetchMergeDupsData,
+} from "goals/MergeDuplicates/Redux/MergeDupsActions";
+import { StoreState } from "types";
+import { StoreStateDispatch } from "types/Redux/actions";
+import { Goal, GoalStatus, GoalType } from "types/goals";
+import { Path } from "types/path";
+import { convertEditToGoal } from "utilities/goalUtilities";
 
 // Action Creators
 export function asyncAddCompletedMergeToGoal(
@@ -290,5 +217,3 @@ async function saveCurrentStep(goal: Goal) {
     await Backend.addStepToGoal(userEditId, goal.index, step, goal.currentStep);
   }
 }
-
-export default goalSlice.reducer;

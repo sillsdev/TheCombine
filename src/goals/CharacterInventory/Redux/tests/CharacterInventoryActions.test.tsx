@@ -55,7 +55,7 @@ mockUser.workedProjects[mockProjectId] = mockUserEditId;
 
 jest.mock("backend");
 jest.mock("browserRouter");
-jest.mock("components/GoalTimeline/Redux/GoalSlice", () => ({
+jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({
   asyncUpdateGoal: (...args: any[]) => mockAsyncUpdateGoal(...args),
 }));
 const mockAsyncUpdateGoal = jest.fn();

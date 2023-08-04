@@ -14,7 +14,7 @@ import { goalTypeToGoal } from "utilities/goalUtilities";
 jest.mock("backend", () => ({
   getCurrentPermissions: () => mockGetCurrentPermissions(),
 }));
-jest.mock("components/GoalTimeline/Redux/GoalSlice", () => ({
+jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({
   asyncAddGoal: (goal: Goal) => mockChooseGoal(goal),
   asyncGetUserEdits: () => jest.fn(),
 }));

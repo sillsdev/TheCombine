@@ -1,7 +1,7 @@
 import { WritingSystem } from "api/models";
 import { createProject, finishUploadLift, getProject } from "backend";
 import router from "browserRouter";
-import { asyncCreateUserEdits } from "components/GoalTimeline/Redux/GoalSlice";
+import { asyncCreateUserEdits } from "components/GoalTimeline/Redux/GoalActions";
 import { setNewCurrentProject } from "components/Project/ProjectActions";
 import {
   CreateProjectAction,
