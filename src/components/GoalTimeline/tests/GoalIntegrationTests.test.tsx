@@ -1,15 +1,12 @@
 import "@testing-library/jest-dom";
-import { act, cleanup, render, RenderOptions } from "@testing-library/react";
-import { ReactElement } from "react";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
+import { act, cleanup } from "@testing-library/react";
 
 import "tests/reactI18nextMock.ts";
 import { Permission, User, UserEdit } from "api/models";
 import GoalTimeline from "components/GoalTimeline";
-import { persistor, setupStore } from "store";
 import { Goal } from "types/goals";
 import { newUser } from "types/user";
+import { renderWithProviders } from "utilities/test-utils";
 
 jest.mock("backend", () => ({
   addGoalToUserEdit: (id: string, goal: Goal) =>
@@ -56,8 +53,6 @@ const mockUser = newUser();
 mockUser.id = mockUserId;
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
 
-var testStore = setupStore();
-
 beforeEach(() => {
   jest.clearAllMocks();
   setMockFunctions();
@@ -65,29 +60,31 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-const GoalTimelineProviders = ({
-  children,
-}: {
-  children: React.ReactNode;
-}): ReactElement => {
-  return (
-    <Provider store={testStore}>
-      <PersistGate persistor={persistor}>{children}</PersistGate>
-    </Provider>
-  );
-};
+// const GoalTimelineProviders = ({
+//   children,
+// }: {
+//   children: React.ReactNode;
+// }): ReactElement => {
+//   return (
+//     <Provider store={testStore}>
+//       <PersistGate persistor={persistor}>{children}</PersistGate>
+//     </Provider>
+//   );
+// };
 
-const customRender = async (
-  ui: ReactElement,
-  options?: Omit<RenderOptions, "wrapper">
-): Promise<void> => {
-  await act(async () => {
-    render(ui, { wrapper: GoalTimelineProviders, ...options });
-  });
-};
+// const customRender = async (
+//   ui: ReactElement,
+//   options?: Omit<RenderOptions, "wrapper">
+// ): Promise<void> => {
+//   await act(async () => {
+//     render(ui, { wrapper: GoalTimelineProviders, ...options });
+//   });
+// };
 
 describe("GoalTimeline", () => {
   it("renders Goal screen", async () => {
-    await customRender(<GoalTimeline />);
+    await act(async () => {
+      renderWithProviders(<GoalTimeline />);
+    });
   });
 });
