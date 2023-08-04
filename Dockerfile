@@ -32,8 +32,9 @@ FROM nginx:1.25
 
 WORKDIR /app
 
-ENV USER_GUIDE_HOST_DIR /usr/share/nginx/user_guide
-ENV FRONTEND_HOST_DIR /usr/share/nginx/html
+ENV HOST_DIR /usr/share/nginx
+ENV USER_GUIDE_HOST_DIR ${HOST_DIR}/user_guide
+ENV FRONTEND_HOST_DIR ${HOST_DIR}/html
 
 RUN mkdir /etc/nginx/templates
 RUN mkdir /etc/nginx/page_templates
@@ -47,6 +48,7 @@ COPY nginx/pages/url_moved_home.html /etc/nginx/page_templates/url_moved_home.ht
 COPY public/favicon.ico ${FRONTEND_HOST_DIR}/url_moved/favicon.ico
 COPY src/resources/tractor.png ${FRONTEND_HOST_DIR}/url_moved/tractor.png
 COPY public/scripts/release.js ${FRONTEND_HOST_DIR}/scripts/release.js
+COPY public/fonts ${HOST_DIR}
 
 # Setup nginx configuration templates
 COPY nginx/templates/* /etc/nginx/templates/

@@ -14,7 +14,7 @@ from typing import List
 
 import requests
 
-DIR_NAME_FONTS = "Fonts"  # Match Backend/Helper/FileStorage.cs
+DIR_NAME_FONTS = "fonts"  # Match Backend/Helper/FileStorage.cs
 FILE_NAME_GOOGLE_FALLBACK = "GoogleFallback.txt"  # Match Backend/Helper/FileStorage.cs
 PATH_MLP_FONT_LIST = "deploy/scripts/font_lists/mui_language_picker_fonts.txt"
 PATH_MLP_FONT_MAP = "deploy/scripts/font_lists/mui_language_picker_font_map.json"
@@ -41,7 +41,7 @@ def parse_args() -> argparse.Namespace:
         "-r",
         "--root",
         action="store_true",
-        default="C:/Users/danie/.CombineFiles",
+        default="public/",
         help="Directory in which the fonts directory should live",
     )
     parser.add_argument(

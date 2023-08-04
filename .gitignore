@@ -68,6 +68,9 @@ __pycache__
 *.pyc
 venv
 
+# Intermediate and output files for font import
+public/fonts/
+
 # Intermediate and output files for Semantic Domain import scripts
 !deploy/scripts/semantic_domains/xml/*.xml
 deploy/scripts/semantic_domains/json/*.json

@@ -13,7 +13,7 @@ namespace BackendFramework.Helper
     {
         private const string CombineFilesDir = ".CombineFiles";
         private const string AvatarsDir = "Avatars";
-        private const string FontsDir = "Fonts"; // Match deploy/scripts/get_fonts.py
+        private const string FontsDir = "fonts"; // Match deploy/scripts/get_fonts.py
         private const string GoogleFallbackFileName = "GoogleFallback.txt"; // Match deploy/scripts/get_fonts.py
         private static readonly string ImportExtractedLocation = Path.Combine("Import", "ExtractedLocation");
         private static readonly string LiftImportSuffix = Path.Combine(ImportExtractedLocation, "Lift");
@@ -105,12 +105,12 @@ namespace BackendFramework.Helper
 
         /// <summary> Generate the path of the css file for a font. </summary>
         /// <exception cref="InvalidFileNameException"> Throws when font is invalid. </exception>
-        public static string GenerateFontCssFilePath(string font, bool relative = false)
+        public static string GenerateFontCssFilePath(string font)
         {
             font = font.Replace(" ", "");
             var fileName = $"{font}.css";
             fileName = Sanitization.SanitizeFileName(fileName);
-            return GenerateFontFilePath(fileName, relative);
+            return GenerateFontFilePath(fileName);
         }
 
         /// <summary> Get the path of the Google font fallback file. </summary>
@@ -126,7 +126,17 @@ namespace BackendFramework.Helper
             {
                 return Path.Combine(FontsDir, fileName);
             }
-            return GenerateFilePath(GenerateDirPath(FontsDir, true), fileName);
+            return Path.Combine(GetFontsDir(), fileName);
+        }
+
+        /// <summary> Get the path of the fonts directory. </summary>
+        public static string GetFontsDir()
+        {
+            if (Environment.GetEnvironmentVariable("COMBINE_IS_IN_CONTAINER") is null)
+            {
+                return Path.Combine(Directory.GetParent(Environment.CurrentDirectory!)!.ToString(), "public/fonts");
+            }
+            return Path.Combine(Environment.GetEnvironmentVariable("HOST_DIR")!, FontsDir);
         }
 
         /// <summary>
