@@ -59,6 +59,7 @@
     "Prenoun",
     "Preverb",
     "reportgenerator",
+    "sched",
     "sillsdev",
     "Sldr",
     "Subtag",
@@ -67,5 +68,6 @@
     "thecombine",
     "upsert",
     "venv"
-  ]
+  ],
+  "git.branchProtection": ["master", "main"]
 }

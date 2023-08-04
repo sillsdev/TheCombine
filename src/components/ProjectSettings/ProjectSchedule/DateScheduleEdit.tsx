@@ -7,29 +7,33 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Dayjs } from "dayjs";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { getProject, updateProject } from "backend";
-import * as LocalStorage from "backend/localStorage";
+import { Project } from "api/models";
 import { LoadingButton } from "components/Buttons";
 
 interface DateScheduleEditProps {
   close: () => void;
+  project: Project;
   projectSchedule: Date[];
+  updateProject: (project: Project) => Promise<void>;
 }
 
-export default function DateScheduleEdit(props: DateScheduleEditProps) {
+export default function DateScheduleEdit(
+  props: DateScheduleEditProps
+): ReactElement {
   const [projectSchedule, setProjectSchedule] = useState<Date[]>(
     props.projectSchedule
   );
   const { t } = useTranslation();
+
   // Custom renderer for CalendarPicker
   function customDayRenderer(
     day: Dayjs,
     _selectedDays: Array<Dayjs | null>,
     pickersDayProps: PickersDayProps<Dayjs>
-  ) {
+  ): ReactElement {
     const date = day.toDate();
     const selected =
       projectSchedule.findIndex(
@@ -41,19 +45,18 @@ export default function DateScheduleEdit(props: DateScheduleEditProps) {
     return <PickersDay {...pickersDayProps} selected={selected} />;
   }
 
-  async function handleSubmit() {
+  async function handleSubmit(): Promise<void> {
     // update the schedule to the project setting
-    const projectId = LocalStorage.getProjectId();
-    const project = await getProject(projectId);
-    project.workshopSchedule = projectSchedule.map((date) =>
-      date.toISOString()
-    );
-    await updateProject(project);
+    const updatedSchedule = projectSchedule.map((date) => date.toISOString());
+    await props.updateProject({
+      ...props.project,
+      workshopSchedule: updatedSchedule,
+    });
     props.close();
   }
 
   // If the date already exists, delete it; otherwise, add it
-  function handleCalendarChange(day: Dayjs | null) {
+  function handleCalendarChange(day: Dayjs | null): void {
     if (!day) {
       return;
     }

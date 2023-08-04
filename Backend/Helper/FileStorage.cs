@@ -33,26 +33,15 @@ namespace BackendFramework.Helper
                 : base(info, context) { }
         }
 
-        /// <summary> Indicates an invalid input id. </summary>
-        [Serializable]
-        public class InvalidIdException : Exception
-        {
-            public InvalidIdException() { }
-
-            protected InvalidIdException(SerializationInfo info, StreamingContext context)
-                : base(info, context) { }
-        }
-
         /// <summary>
         /// Generate a path to the file name of an audio file for the Project based on the Word ID.
         /// </summary>
         /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
         public static string GenerateAudioFilePathForWord(string projectId, string wordId)
         {
-            if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId))
-            {
-                throw new InvalidIdException();
-            }
+            projectId = Sanitization.SanitizeId(projectId);
+            wordId = Sanitization.SanitizeId(wordId);
+
             return GenerateProjectFilePath(projectId, AudioPathSuffix, wordId, FileType.Audio);
         }
 
@@ -62,10 +51,8 @@ namespace BackendFramework.Helper
         /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
         public static string GenerateAudioFilePath(string projectId, string fileName)
         {
-            if (!Sanitization.SanitizeId(projectId))
-            {
-                throw new InvalidIdException();
-            }
+            projectId = Sanitization.SanitizeId(projectId);
+
             return GenerateProjectFilePath(projectId, AudioPathSuffix, fileName);
         }
 
@@ -75,10 +62,8 @@ namespace BackendFramework.Helper
         /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
         public static string GenerateAudioFileDirPath(string projectId, bool createDir = true)
         {
-            if (!Sanitization.SanitizeId(projectId))
-            {
-                throw new InvalidIdException();
-            }
+            projectId = Sanitization.SanitizeId(projectId);
+
             return GenerateProjectDirPath(projectId, AudioPathSuffix, createDir);
         }
 
@@ -89,10 +74,8 @@ namespace BackendFramework.Helper
         /// <remarks> This function is not expected to be used often. </remarks>
         public static string GenerateImportExtractedLocationDirPath(string projectId, bool createDir = true)
         {
-            if (!Sanitization.SanitizeId(projectId))
-            {
-                throw new InvalidIdException();
-            }
+            projectId = Sanitization.SanitizeId(projectId);
+
             return GenerateProjectDirPath(projectId, ImportExtractedLocation, createDir);
         }
 
@@ -102,10 +85,8 @@ namespace BackendFramework.Helper
         /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
         public static string GenerateLiftImportDirPath(string projectId, bool createDir = true)
         {
-            if (!Sanitization.SanitizeId(projectId))
-            {
-                throw new InvalidIdException();
-            }
+            projectId = Sanitization.SanitizeId(projectId);
+
             return GenerateProjectDirPath(projectId, LiftImportSuffix, createDir);
         }
 
@@ -115,10 +96,8 @@ namespace BackendFramework.Helper
         /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
         public static string GenerateAvatarFilePath(string userId)
         {
-            if (!Sanitization.SanitizeId(userId))
-            {
-                throw new InvalidIdException();
-            }
+            userId = Sanitization.SanitizeId(userId);
+
             return GenerateFilePath(AvatarsDir, userId, FileType.Avatar);
         }
 
@@ -128,10 +107,8 @@ namespace BackendFramework.Helper
         /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
         public static string GetProjectDir(string projectId)
         {
-            if (!Sanitization.SanitizeId(projectId))
-            {
-                throw new InvalidIdException();
-            }
+            projectId = Sanitization.SanitizeId(projectId);
+
             return GenerateProjectDirPath(projectId, "", false);
         }
 

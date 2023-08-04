@@ -5,12 +5,11 @@ import {
   Edit,
   GetApp,
   Language,
-  List,
   People,
   PersonAdd,
   Sms,
 } from "@mui/icons-material";
-import { Grid, Typography } from "@mui/material";
+import { Divider, Grid, Typography } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -30,7 +29,7 @@ import ProjectImport from "components/ProjectSettings/ProjectImport";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
 import ProjectName from "components/ProjectSettings/ProjectName";
 import ProjectSchedule from "components/ProjectSettings/ProjectSchedule/ProjectSchedule";
-import ProjectSwitch from "components/ProjectSettings/ProjectSwitch";
+import ProjectSelect from "components/ProjectSettings/ProjectSelect";
 import ActiveProjectUsers from "components/ProjectSettings/ProjectUsers/ActiveProjectUsers";
 import AddProjectUsers from "components/ProjectSettings/ProjectUsers/AddProjectUsers";
 import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
@@ -79,120 +78,128 @@ export default function ProjectSettingsComponent() {
   );
 
   return (
-    <Grid container justifyContent="center" spacing={6}>
-      {/* Project List */}
-      <BaseSettingsComponent
-        icon={<List />}
-        title={t("projectSettings.projectList")}
-        body={<ProjectSwitch project={project} setProject={setProject} />}
-      />
+    <>
+      {/* Project list */}
+      <Typography display="inline" sx={{ p: 1 }}>
+        {t("projectSettings.project")}
+      </Typography>
+      <ProjectSelect project={project} setProject={setProject} />
+      <Divider sx={{ my: 1 }} />
 
-      {/* Project name */}
-      {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
-        <BaseSettingsComponent
-          icon={<Edit />}
-          title={t("projectSettings.name")}
-          body={<ProjectName project={project} updateProject={updateProject} />}
-        />
-      )}
-
-      {/*Project languages*/}
-      <BaseSettingsComponent
-        icon={<Language />}
-        title={t("projectSettings.language.languages")}
-        body={
-          <ProjectLanguages
-            project={project}
-            readOnly={
-              !permissions.includes(Permission.DeleteEditSettingsAndUsers)
+      <Grid container spacing={6}>
+        {/* Project name */}
+        {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+          <BaseSettingsComponent
+            icon={<Edit />}
+            title={t("projectSettings.name")}
+            body={
+              <ProjectName project={project} updateProject={updateProject} />
             }
-            updateProject={updateProject}
           />
-        }
-      />
+        )}
 
-      {/* Import Lift file */}
-      {permissions.includes(Permission.Import) && (
+        {/*Project languages*/}
         <BaseSettingsComponent
-          icon={<CloudUpload />}
-          title={t("projectSettings.import.header")}
+          icon={<Language />}
+          title={t("projectSettings.language.languages")}
           body={
-            imports ? (
-              <ProjectImport project={project} setProject={setProject} />
-            ) : (
-              <Typography variant="body2">
-                {t("projectSettings.import.notAllowed")}
-              </Typography>
-            )
-          }
-        />
-      )}
-
-      {/* Export Lift file */}
-      {permissions.includes(Permission.Export) && (
-        <BaseSettingsComponent
-          icon={<GetApp />}
-          title={t("projectSettings.exportProject.label")}
-          body={<ExportButton projectId={project.id} />}
-        />
-      )}
-
-      {/* Autocomplete toggle */}
-      {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
-        <BaseSettingsComponent
-          icon={<Sms />}
-          title={t("projectSettings.autocomplete.label")}
-          body={
-            <ProjectAutocomplete
+            <ProjectLanguages
               project={project}
+              readOnly={
+                !permissions.includes(Permission.DeleteEditSettingsAndUsers)
+              }
               updateProject={updateProject}
             />
           }
         />
-      )}
 
-      {/* See current users in project */}
-      {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
-        <BaseSettingsComponent
-          icon={<People />}
-          title={t("projectSettings.user.currentUsers")}
-          body={<ActiveProjectUsers projectId={project.id} />}
-        />
-      )}
+        {/* Import Lift file */}
+        {permissions.includes(Permission.Import) && (
+          <BaseSettingsComponent
+            icon={<CloudUpload />}
+            title={t("projectSettings.import.header")}
+            body={
+              imports ? (
+                <ProjectImport project={project} setProject={setProject} />
+              ) : (
+                <Typography variant="body2">
+                  {t("projectSettings.import.notAllowed")}
+                </Typography>
+              )
+            }
+          />
+        )}
 
-      {/* Add users to project */}
-      {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
-        <BaseSettingsComponent
-          icon={<PersonAdd />}
-          title={t("projectSettings.user.addUser")}
-          body={<AddProjectUsers projectId={project.id} />}
-        />
-      )}
+        {/* Export Lift file */}
+        {permissions.includes(Permission.Export) && (
+          <BaseSettingsComponent
+            icon={<GetApp />}
+            title={t("projectSettings.exportProject.label")}
+            body={<ExportButton projectId={project.id} />}
+          />
+        )}
 
-      {/* Set a workshop schedule */}
-      {permissions.includes(Permission.Statistics) && (
+        {/* Autocomplete toggle */}
+        {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+          <BaseSettingsComponent
+            icon={<Sms />}
+            title={t("projectSettings.autocomplete.label")}
+            body={
+              <ProjectAutocomplete
+                project={project}
+                updateProject={updateProject}
+              />
+            }
+          />
+        )}
+
+        {/* See current users in project */}
+        {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+          <BaseSettingsComponent
+            icon={<People />}
+            title={t("projectSettings.user.currentUsers")}
+            body={<ActiveProjectUsers projectId={project.id} />}
+          />
+        )}
+
+        {/* Add users to project */}
+        {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+          <BaseSettingsComponent
+            icon={<PersonAdd />}
+            title={t("projectSettings.user.addUser")}
+            body={<AddProjectUsers projectId={project.id} />}
+          />
+        )}
+
+        {/* Workshop schedule */}
         <BaseSettingsComponent
           icon={<CalendarMonth />}
           title={t("projectSettings.schedule.workshopSchedule")}
-          body={<ProjectSchedule projectId={project.id} />}
-        />
-      )}
-
-      {/* Archive project */}
-      {permissions.includes(Permission.Archive) && (
-        <BaseSettingsComponent
-          icon={<Archive />}
-          title={t("projectSettings.archive.archive")}
           body={
-            <ProjectButtonWithConfirmation
-              archive // Project Settings are only available for active projects
-              projectId={project.id}
-              updateParent={archiveUpdate}
-              warn
+            <ProjectSchedule
+              project={project}
+              readOnly={!permissions.includes(Permission.Statistics)}
+              updateProject={updateProject}
             />
           }
         />
-      )}
-    </Grid>
+
+        {/* Archive project */}
+        {permissions.includes(Permission.Archive) && (
+          <BaseSettingsComponent
+            icon={<Archive />}
+            title={t("projectSettings.archive.archive")}
+            body={
+              <ProjectButtonWithConfirmation
+                archive // Project Settings are only available for active projects
+                projectId={project.id}
+                updateParent={archiveUpdate}
+                warn
+              />
+            }
+          />
+        )}
+      </Grid>
+    </>
   );
 }

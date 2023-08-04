@@ -5,24 +5,29 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Dayjs } from "dayjs";
 import { enqueueSnackbar } from "notistack";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { getProject, updateProject } from "backend";
-import * as LocalStorage from "backend/localStorage";
+import { Project } from "api/models";
 import { LoadingButton } from "components/Buttons";
 
 interface DateSelectorProps {
   close: () => void;
+  project: Project;
+  updateProject: (project: Project) => Promise<void>;
 }
 
-export default function DateSelector(props: DateSelectorProps) {
+export default function DateSelector(props: DateSelectorProps): ReactElement {
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
   const { t } = useTranslation();
 
   // Returns an array of dates between the two dates
-  const getDatesBetween = (startDate: Date, endDate: Date) => {
+  const getDatesBetween = (startDate?: Date, endDate?: Date): string[] => {
+    if (!startDate || !endDate) {
+      return [];
+    }
+
     const dates = [];
 
     // Strip hours minutes seconds etc.
@@ -43,21 +48,17 @@ export default function DateSelector(props: DateSelectorProps) {
     return dates;
   };
 
-  async function handleSubmit() {
+  async function handleSubmit(): Promise<void> {
     // protect start date before end date
     if (startDate! > endDate!) {
       enqueueSnackbar(t("projectSettings.schedule.selectedDateAlert"));
       return;
     }
     // update the schedule to the project setting
-    const projectId = LocalStorage.getProjectId();
-    const project = await getProject(projectId);
-    let updateDateString: string[] = [];
-    if (startDate && endDate) {
-      updateDateString = getDatesBetween(startDate.toDate(), endDate.toDate());
-    }
-    project.workshopSchedule = updateDateString;
-    await updateProject(project);
+    await props.updateProject({
+      ...props.project,
+      workshopSchedule: getDatesBetween(startDate?.toDate(), endDate?.toDate()),
+    });
     props.close();
   }
 
