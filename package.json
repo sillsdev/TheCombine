@@ -109,7 +109,7 @@
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-react": "^7.33.0",
     "eslint-plugin-react-hooks": "^4.3.0",
-    "eslint-plugin-unused-imports": "^2.0.0",
+    "eslint-plugin-unused-imports": "^3.0.0",
     "jest-canvas-mock": "^2.5.2",
     "license-checker-rseidelsohn": "^4.2.6",
     "madge": "^6.1.0",
