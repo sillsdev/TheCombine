@@ -166,23 +166,25 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> CreateUser([FromBody, BindRequired] User user)
         {
+            if (string.IsNullOrWhiteSpace(user.Username)
+                || await _userRepo.GetUserByEmailOrUsername(user.Username) is not null)
+            {
+                // Use GetUserByEmailOrUsername to prevent using an existing user's email
+                // as a username.
+                return BadRequest("login.usernameTaken");
+            }
+            if (string.IsNullOrWhiteSpace(user.Email)
+                || await _userRepo.GetUserByEmail(user.Email) is not null)
+            {
+                return BadRequest("login.emailTaken");
+            }
+
             var returnUser = await _userRepo.Create(user);
             if (returnUser is null)
             {
-                return BadRequest("User creation failed.");
+                return BadRequest("login.signUpFailed");
             }
             return Ok(user.Id);
-        }
-
-        /// <summary> Checks whether specified username is taken or empty. </summary>
-        [AllowAnonymous]
-        [HttpGet("isusernametaken/{username}", Name = "IsUsernameUnavailable")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        public async Task<IActionResult> IsUsernameUnavailable(string username)
-        {
-            var isUnavailable = string.IsNullOrWhiteSpace(username)
-                || await _userRepo.GetUserByUsername(username) is not null;
-            return Ok(isUnavailable);
         }
 
         /// <summary> Checks whether specified email address is taken or empty. </summary>
