@@ -134,9 +134,9 @@ namespace BackendFramework.Helper
         {
             if (Environment.GetEnvironmentVariable("COMBINE_IS_IN_CONTAINER") is null)
             {
-                return Path.Combine(Directory.GetParent(Environment.CurrentDirectory!)!.ToString(), "public/fonts");
+                return Path.Combine(Directory.GetParent(Environment.CurrentDirectory!)!.ToString(), "nginx", FontsDir);
             }
-            return Path.Combine(Environment.GetEnvironmentVariable("HOST_DIR")!, FontsDir);
+            return Path.Combine("/usr/share/nginx", FontsDir);
         }
 
         /// <summary>

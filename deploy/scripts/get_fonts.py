@@ -41,7 +41,7 @@ def parse_args() -> argparse.Namespace:
         "-r",
         "--root",
         action="store_true",
-        default="public/",
+        default="nginx/",
         help="Directory in which the fonts directory should live",
     )
     parser.add_argument(
@@ -274,7 +274,7 @@ def main() -> None:
             logging.info(f"Downloading {src} to {dest}")
             with open(dest, "wb") as out:
                 out.write(req.content)
-            css_lines.append(f"  src: {css_line_local} url('{dest}');\n")
+            css_lines.append(f"  src: {css_line_local} url('{f'/usr/share/nginx/{DIR_NAME_FONTS}/{file_name}'}');\n")
         else:
             css_lines.append(f"  src: {css_line_local} url('{src}');\n")
 
