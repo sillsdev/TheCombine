@@ -1,3 +1,4 @@
+import ReCaptcha from "@matt-block/react-recaptcha-v2";
 import {
   Button,
   Card,
@@ -12,7 +13,9 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import { isEmailTaken, isUsernameTaken } from "backend";
 import router from "browserRouter";
 import { LoadingDoneButton } from "components/Buttons";
+import { captchaStyle } from "components/Login/LoginPage/LoginComponent";
 import { Path } from "types/path";
+import { RuntimeConfig } from "types/runtimeConfig";
 import {
   meetsPasswordRequirements,
   meetsUsernameRequirements,
@@ -53,6 +56,7 @@ interface SignUpState {
   email: string;
   password: string;
   confirmPassword: string;
+  isVerified: boolean;
   error: {
     name: boolean;
     username: boolean;
@@ -71,6 +75,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
       email: "",
       password: "",
       confirmPassword: "",
+      isVerified: !RuntimeConfig.getInstance().captchaRequired(),
       error: {
         name: false,
         username: false,
@@ -287,6 +292,27 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
                 >
                   {this.props.t(failureMessageId)}
                 </Typography>
+              )}
+
+              {RuntimeConfig.getInstance().captchaRequired() && (
+                <div
+                  className="form-group"
+                  id={`${idAffix}-captcha`}
+                  style={captchaStyle}
+                >
+                  <ReCaptcha
+                    siteKey={RuntimeConfig.getInstance().captchaSiteKey()}
+                    theme="light"
+                    size="normal"
+                    onSuccess={() => this.setState({ isVerified: true })}
+                    onExpire={() => this.setState({ isVerified: false })}
+                    onError={() =>
+                      console.error(
+                        "Something went wrong, check your connection."
+                      )
+                    }
+                  />
+                </div>
               )}
 
               {/* Sign Up and Login buttons */}
