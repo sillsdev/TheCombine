@@ -61,7 +61,6 @@
     "usernameRequirements": "Username must be 3 characters or longer.",
     "usernameTaken": "Username not available.",
     "emailTaken": "Email address not available.",
-    "networkError": "Network error",
     "loggingIn": "Logging in...",
     "required": "Required",
     "confirmPassword": "Confirm Password",
