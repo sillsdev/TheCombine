@@ -15,6 +15,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Role, User } from "api/models";
 import { avatarSrc, getUserRoles } from "backend";
@@ -41,6 +42,8 @@ export default function ActiveProjectUsers(props: {
   const [userOrder, setUserOrder] = useState<UserOrder>(UserOrder.Username);
   const [reverseSorting, setReverseSorting] = useState<boolean>(false);
   const [sortedUsers, setSortedUsers] = useState<User[]>([]);
+
+  const { t } = useTranslation();
 
   const compareUsers = useCallback(
     (a: User, b: User): number =>
@@ -111,9 +114,9 @@ export default function ActiveProjectUsers(props: {
 
     const userBadge =
       userRole === Role.Administrator ? (
-        <Chip label="Administrator" size="small" />
+        <Chip label={t("projectSettings.roles.administrator")} size="small" />
       ) : userRole === Role.Owner ? (
-        <Chip label="Owner" size="small" />
+        <Chip label={t("projectSettings.roles.owner")} size="small" />
       ) : (
         ""
       );
