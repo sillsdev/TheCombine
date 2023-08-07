@@ -44,7 +44,7 @@ jobs:
         env:
           CI: true
       - name: Upload coverage report
-        id: coverageUpload
+        id: uploadCoverage
         continue-on-error: true
         uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         with:
@@ -53,8 +53,7 @@ jobs:
           name: Frontend
           fail_ci_if_error: true
       - name: Upload coverage report - take 2 (if the first attempt fails)
-        if: steps.coverageUpload.outcome == 'failure'
-        continue-on-error: true
+        if: steps.uploadCoverage.outcome == 'failure'
         uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         with:
           files: coverage/clover.xml
