@@ -23,10 +23,6 @@ import { openUserGuide } from "utilities/pathUtilities";
 
 const idAffix = "login";
 
-export const captchaStyle = {
-  margin: "5px",
-};
-
 export interface LoginDispatchProps {
   login?: (username: string, password: string) => void;
   logout: () => void;
@@ -70,6 +66,10 @@ export class Login extends React.Component<LoginProps, LoginState> {
       loginBanner: "",
     };
   }
+
+  captchaStyle = {
+    margin: "5px",
+  };
 
   componentDidMount() {
     this.props.reset();
@@ -186,7 +186,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
                 <div
                   className="form-group"
                   id={`${idAffix}-captcha`}
-                  style={captchaStyle}
+                  style={this.captchaStyle}
                 >
                   <ReCaptcha
                     siteKey={RuntimeConfig.getInstance().captchaSiteKey()}
