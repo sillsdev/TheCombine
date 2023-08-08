@@ -120,12 +120,8 @@ namespace BackendFramework.Helper
         }
 
         /// <summary> Generate the path of a font. </summary>
-        public static string GenerateFontFilePath(string fileName, bool relative = false)
+        public static string GenerateFontFilePath(string fileName)
         {
-            if (relative)
-            {
-                return Path.Combine(FontsDir, fileName);
-            }
             return Path.Combine(GetFontsDir(), fileName);
         }
 
@@ -134,7 +130,9 @@ namespace BackendFramework.Helper
         {
             if (Environment.GetEnvironmentVariable("COMBINE_IS_IN_CONTAINER") is null)
             {
-                return Path.Combine(Directory.GetParent(Environment.CurrentDirectory!)!.ToString(), "nginx", FontsDir);
+                // Only for development.
+                // This "public" should match get_fonts.py > dev_override_output.
+                return Path.Combine(Directory.GetParent(Environment.CurrentDirectory!)!.ToString(), "public", FontsDir);
             }
             return Path.Combine("/home/app", FontsDir);
         }

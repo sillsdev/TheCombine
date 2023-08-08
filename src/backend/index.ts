@@ -402,7 +402,7 @@ export async function projectDuplicateCheck(
   ).data;
 }
 
-/** Downloads the requested fonts and returns their location. */
+/** Get css data for the requested fonts. */
 export async function getFonts(projectId: string): Promise<string[]> {
   return (await projectApi.getProjectFonts({ projectId }, defaultOptions()))
     .data;

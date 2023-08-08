@@ -2,10 +2,9 @@
 """
 Generates font support for all SIL fonts used in Mui-Language-Picker.
 
-This script requires the following environment variables to
-be set:
-  font_dir          directory where the font-data persistent storage is
-                    mounted.
+This script uses the following environment variables:
+  FONT_DIR          directory where the font-data persistent storage is mounted.
+  FRONTEND_FONT_DIR directory where the frontend sees the font-data.
 """
 
 import argparse
@@ -28,8 +27,12 @@ url_lang_tags_list = "https://ldml.api.sil.org/en?query=langtags"
 url_script_font_table = (
     "https://raw.githubusercontent.com/silnrsi/langfontfinder/main/data/script2font.csv"
 )
-DEFAULT_OUTPUT_DIR = os.getenv("font_dir", "/mnt/fonts");
-FRONTEND_FONT_LOCATION = os.getenv("FRONTEND_FONT_LOCATION", "/usr/share/nginx/fonts");
+default_output_dir = os.getenv("FONT_DIR", "/mnt/fonts")
+frontend_font_dir = os.getenv("FRONTEND_FONT_DIR", "/usr/share/nginx/fonts")
+
+# Overrides for the -f and -o args to be used when this runs in development.
+dev_override_frontend = "fonts"
+dev_override_output = scripts_dir.parent.parent / "public"
 
 def parse_args() -> argparse.Namespace:
     """Define command line arguments for parser."""
@@ -37,18 +40,28 @@ def parse_args() -> argparse.Namespace:
         description="Prepares all needed fonts.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("-c", "--clean", action="store_true", help="Delete the contents of the fonts directory")
+    parser.add_argument(
+        "-c", "--clean", action="store_true", help="Delete the contents of the fonts directory."
+    )
     parser.add_argument(
         "-l",
         "--langs",
         help="Comma-separated list of lang-tags of the languages for which fonts should be downloaded.",
     )
-    parser.add_argument("--output", "-o", default=DEFAULT_OUTPUT_DIR, help="Output directory for font data.")
+    parser.add_argument(
+        "-f",
+        "--frontend",
+        default=frontend_font_dir,
+        help="Directory path of hosted fonts, for the css data the frontend uses.",
+    )
+    parser.add_argument(
+        "-o", "--output", default=default_output_dir, help="Output directory for font data."
+    )
     parser.add_argument(
         "-v",
         "--verbose",
         action="store_true",
-        help="Print intermediate values to aid in debugging",
+        help="Print intermediate values to aid in debugging.",
     )
     args = parser.parse_args()
     args.output = Path(args.output)
@@ -138,10 +151,19 @@ def fetchFontsForScripts(scripts: List[str]) -> List[str]:
     )
 
     # Get the font-column indices
+    script_font_table_font_columns = [
+        "Default Font",
+        "WSTech primary",
+        "NLCI",
+        "Microsoft",
+        "Other",
+        "Noto Sans",
+        "Noto Serif",
+        "WSTech secondary",
+    ]
     header_row: List[str] = next(script_font_table)
-    font_index = header_row.index("Default Font")
     font_indices = [
-        i for i in range(font_index, len(header_row)) if header_row[i] != "Default Features"
+        i for i in range(len(header_row)) if header_row[i] in script_font_table_font_columns
     ]
 
     for row in script_font_table:
@@ -168,6 +190,15 @@ def main() -> None:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
     else:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
+
+    # Cursory check for if this script is running in dev outside a container.
+    if dev_override_output.exists():
+        logging.warning("It appears you are running this script in development.")
+        logging.warning(f"Using: -f {dev_override_frontend} -o {dev_override_output}")
+        args.frontend = dev_override_frontend
+        args.output = dev_override_output / "fonts"
+        if not args.output.is_dir():
+            os.mkdir(args.output)
 
     if not args.output.is_dir():
         logging.error("Invalid output directory")
@@ -269,7 +300,7 @@ def main() -> None:
             logging.info(f"Downloading {src} to {dest}")
             with open(dest, "wb") as out:
                 out.write(req.content)
-            css_lines.append(f"  src: {css_line_local} url('{f'{FRONTEND_FONT_LOCATION}/{file_name}'}');\n")
+            css_lines.append(f"  src: {css_line_local} url('{args.frontend}/{file_name}');\n")
         else:
             css_lines.append(f"  src: {css_line_local} url('{src}');\n")
 
@@ -290,11 +321,10 @@ def main() -> None:
                 css_file.writelines(css_lines)
 
     if not args.langs:
-        keys = [key for key in google_fallback.keys() if google_fallback[key] != ""]
-        google_fallback_lines = [f"{key}:{google_fallback[key]}\n" for key in sorted(keys)]
-        google_fallback_file_path = args.output / file_name_google_fallback
-        with open(google_fallback_file_path, "w") as google_fallback_file:
-            google_fallback_file.writelines(google_fallback_lines)
+        gf_lines = [f"{key}:{google_fallback[key]}\n" for key in google_fallback.keys()]
+        gf_file_path = args.output / file_name_google_fallback
+        with open(gf_file_path, "w") as gf_file:
+            gf_file.writelines(gf_lines)
 
 
 if __name__ == "__main__":
