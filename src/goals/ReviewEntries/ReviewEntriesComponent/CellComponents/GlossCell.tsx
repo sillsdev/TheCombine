@@ -121,9 +121,11 @@ function GlossField(props: GlossFieldProps): ReactElement {
   return (
     <TextField
       id={props.textFieldId}
-      inputProps={{
-        style: { fontFamily: props.gloss.font?.replaceAll(" ", "") },
-      }}
+      inputProps={
+        props.gloss.font
+          ? { style: { fontFamily: props.gloss.font.replaceAll(" ", "") } }
+          : {}
+      }
       label={`${props.gloss.language}:`}
       variant="outlined"
       margin="dense"

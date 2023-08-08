@@ -99,7 +99,7 @@ def checkFontInfo(font_info: dict) -> bool:
 def extractLangSubtags(langs: str, sep=",") -> List[str]:
     """Given a string of (comma-separated) lang tags, return list of the initial language subtags."""
     tags: List[str] = [lang.strip() for lang in langs.split(sep) if lang.strip() != ""]
-    subtags = [tag.split("-")[0].lower() for tag in langs]
+    subtags = [tag.split("-")[0].lower() for tag in tags]
     langs = [subtag for subtag in set(subtags) if subtag != ""]
     langs.sort()
     return langs
@@ -201,11 +201,8 @@ def main() -> None:
         # Assumes no two keys map to the same value.
         mlp_map_rev = {val: key for key, val in mlp_map.items()}
 
-    # Pre-seed with overrides to the in-file fallbacks.
-    google_fallback: dict[str] = {
-        "NotoSansLeke": "",
-        "NotoSansShuishu": "",
-    }
+    # For Google fonts with no font url in-file
+    google_fallback: dict[str] = {}
 
     for font in fonts:
         logging.info(f"Font: {font}")
@@ -228,8 +225,7 @@ def main() -> None:
                     and "source" in font_info.keys()
                     and font_info["source"] == "Google"
                 ):
-                    if font not in google_fallback.keys():
-                        google_fallback[font] = family
+                    google_fallback[font] = family
                     logging.warning(
                         f"Google fallback for {font}: {google_fallback[font] or 'none'}"
                     )

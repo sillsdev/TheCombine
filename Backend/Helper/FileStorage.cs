@@ -136,7 +136,7 @@ namespace BackendFramework.Helper
             {
                 return Path.Combine(Directory.GetParent(Environment.CurrentDirectory!)!.ToString(), "nginx", FontsDir);
             }
-            return Path.Combine("/usr/share/nginx", FontsDir);
+            return Path.Combine("/home/app", FontsDir);
         }
 
         /// <summary>
