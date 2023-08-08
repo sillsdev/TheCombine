@@ -70,9 +70,17 @@ spec:
             - containerPort: 80
             - containerPort: 443
           resources: {}
+          volumeMounts:
+            - mountPath: /usr/share/nginx/html/fonts
+              name: font-data
       restartPolicy: Always
 {{- if ne .Values.global.pullSecretName "None" }}
       imagePullSecrets:
          - name: {{ .Values.global.pullSecretName }}
 {{- end }}
+      volumes:
+        - name: font-data
+          persistentVolumeClaim:
+            claimName: font-data
+
 status: {}

@@ -17,7 +17,7 @@ cert-manager:
     name: cert-manager
     reference: jetstack/cert-manager
     namespace: cert-manager
-    version: v1.7.1
+    version: v1.12.3
     wait: true
     override:
       installCRDs: true

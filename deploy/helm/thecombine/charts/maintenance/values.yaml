@@ -46,3 +46,5 @@ waitTime: "120"
 awsS3BackupLoc: backups
 dbFilesSubdir: dump
 backendFilesSubdir: ".CombineFiles"
+
+fontsDir: "/mnt/fonts"

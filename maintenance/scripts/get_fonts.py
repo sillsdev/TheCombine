@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """
 Generates font support for all SIL fonts used in Mui-Language-Picker.
+
+This script requires the following environment variables to
+be set:
+  font_dir          directory where the font-data persistent storage is
+                    mounted.
 """
 
 import argparse
@@ -14,16 +19,17 @@ from typing import List
 
 import requests
 
-DIR_NAME_FONTS = "fonts"  # Match Backend/Helper/FileStorage.cs
-FILE_NAME_GOOGLE_FALLBACK = "GoogleFallback.txt"  # Match Backend/Helper/FileStorage.cs
-PATH_MLP_FONT_LIST = "deploy/scripts/font_lists/mui_language_picker_fonts.txt"
-PATH_MLP_FONT_MAP = "deploy/scripts/font_lists/mui_language_picker_font_map.json"
-URL_FONT_FAMILIES_INFO = "https://github.com/silnrsi/fonts/raw/main/families.json"
-URL_LANG_TAGS_LIST = "https://ldml.api.sil.org/en?query=langtags"
-URL_SCRIPT_FONT_TABLE = (
+scripts_dir = Path(__file__).resolve().parent
+file_name_google_fallback = "GoogleFallback.txt"  # Match Backend/Helper/FileStorage.cs
+mlp_font_list = scripts_dir / "font_lists" / "mui_language_picker_fonts.txt"
+mlp_font_map = scripts_dir / "font_lists" / "mui_language_picker_font_map.json"
+url_font_families_info = "https://github.com/silnrsi/fonts/raw/main/families.json"
+url_lang_tags_list = "https://ldml.api.sil.org/en?query=langtags"
+url_script_font_table = (
     "https://raw.githubusercontent.com/silnrsi/langfontfinder/main/data/script2font.csv"
 )
-
+DEFAULT_OUTPUT_DIR = os.getenv("font_dir", "/mnt/fonts");
+FRONTEND_FONT_LOCATION = os.getenv("FRONTEND_FONT_LOCATION", "/usr/share/nginx/fonts");
 
 def parse_args() -> argparse.Namespace:
     """Define command line arguments for parser."""
@@ -31,26 +37,22 @@ def parse_args() -> argparse.Namespace:
         description="Prepares all needed fonts.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("-c", "--clean", action="store_true", help="Delete the fonts directory")
+    parser.add_argument("-c", "--clean", action="store_true", help="Delete the contents of the fonts directory")
     parser.add_argument(
         "-l",
         "--langs",
         help="Comma-separated list of lang-tags of the languages for which fonts should be downloaded.",
     )
-    parser.add_argument(
-        "-r",
-        "--root",
-        action="store_true",
-        default="nginx/",
-        help="Directory in which the fonts directory should live",
-    )
+    parser.add_argument("--output", "-o", default=DEFAULT_OUTPUT_DIR, help="Output directory for font data.")
     parser.add_argument(
         "-v",
         "--verbose",
         action="store_true",
         help="Print intermediate values to aid in debugging",
     )
-    return parser.parse_args()
+    args = parser.parse_args()
+    args.output = Path(args.output)
+    return args
 
 
 def getFontDefault(defaults: dict) -> str:
@@ -97,7 +99,7 @@ def checkFontInfo(font_info: dict) -> bool:
 def extractLangSubtags(langs: str, sep=",") -> List[str]:
     """Given a string of (comma-separated) lang tags, return list of the initial language subtags."""
     tags: List[str] = [lang.strip() for lang in langs.split(sep) if lang.strip() != ""]
-    subtags = [tag.split("-")[0].lower() for tag in tags]
+    subtags = [tag.split("-")[0].lower() for tag in langs]
     langs = [subtag for subtag in set(subtags) if subtag != ""]
     langs.sort()
     return langs
@@ -107,8 +109,8 @@ def fetchScriptsForLangs(langs: List[str]) -> List[str]:
     """Given a list of language tags, look up and return all script tags used with the languages."""
     langs = [lang.lower() for lang in langs]
     scripts = []
-    logging.info(f"Downloading lang-tag list from {URL_LANG_TAGS_LIST}")
-    req = requests.get(URL_LANG_TAGS_LIST)
+    logging.info(f"Downloading lang-tag list from {url_lang_tags_list}")
+    req = requests.get(url_lang_tags_list)
     for line in req.iter_lines():
         tags: List[str] = line.decode("UTF-8").split(" = ")
         if len(tags) == 0 or tags[0].split("-")[0].strip("*") not in langs:
@@ -129,8 +131,8 @@ def fetchFontsForScripts(scripts: List[str]) -> List[str]:
     # Always include the Mui-Language-Picker default/safe fonts (except "SimSun", which is proprietary).
     fonts = ["AnnapurnaSIL", "CharisSIL", "DoulosSIL", "NotoSans", "ScheherazadeNew"]
 
-    logging.info(f"Downloading script font table from {URL_SCRIPT_FONT_TABLE}")
-    req = requests.get(URL_SCRIPT_FONT_TABLE)
+    logging.info(f"Downloading script font table from {url_script_font_table}")
+    req = requests.get(url_script_font_table)
     script_font_table = reader(
         req.content.decode("UTF-8").splitlines(), delimiter=",", quotechar='"'
     )
@@ -155,8 +157,8 @@ def fetchFontsForScripts(scripts: List[str]) -> List[str]:
 
 
 def fetchFontFamiliesInfo() -> dict:
-    logging.info(f"Downloading font families info from {URL_FONT_FAMILIES_INFO}")
-    req = requests.get(URL_FONT_FAMILIES_INFO)
+    logging.info(f"Downloading font families info from {url_font_families_info}")
+    req = requests.get(url_font_families_info)
     return json.loads(req.content)
 
 
@@ -167,11 +169,9 @@ def main() -> None:
     else:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
 
-    root_dir = Path(args.root)
-    if not os.path.exists(root_dir):
-        logging.error("Root directory specified with -r not valid")
+    if not args.output.is_dir():
+        logging.error("Invalid output directory")
         exit(1)
-    target_dir = root_dir.joinpath(DIR_NAME_FONTS)
 
     if args.langs:
         langs = extractLangSubtags(args.langs)
@@ -183,21 +183,20 @@ def main() -> None:
         fonts = fetchFontsForScripts(scripts)
         logging.info(f"Default fonts and fonts used for specified lang-tags: {', '.join(fonts)}")
     else:
-        with open(PATH_MLP_FONT_LIST, "r") as mlp_fonts_list:
+        with open(mlp_font_list, "r") as mlp_fonts_list:
             fonts = [f.strip().replace(" ", "") for f in mlp_fonts_list.readlines()]
 
     if args.clean:
-        logging.info(f"Deleting {target_dir}")
-        if target_dir.is_dir():
-            rmtree(target_dir)
-
-    if not os.path.exists(target_dir):
-        logging.info(f"Making {target_dir}")
-        os.mkdir(target_dir)
+        for path in args.output.iterdir():
+            logging.info(f"Deleting {path}")
+            if path.is_dir():
+                rmtree(path)
+            else:
+                path.unlink()
 
     families = fetchFontFamiliesInfo()
 
-    with open(PATH_MLP_FONT_MAP, "r") as mlp_map_file:
+    with open(mlp_font_map, "r") as mlp_map_file:
         mlp_map: dict = json.load(mlp_map_file)
         # Assumes no two keys map to the same value.
         mlp_map_rev = {val: key for key, val in mlp_map.items()}
@@ -239,7 +238,7 @@ def main() -> None:
                 font_id = ""
         else:
             if font_id != "":
-                logging.warning(f"Font {font_id} not in {URL_FONT_FAMILIES_INFO}")
+                logging.warning(f"Font {font_id} not in {url_font_families_info}")
             continue
 
         # Get the font's default file info.
@@ -270,11 +269,11 @@ def main() -> None:
             # With the https://fonts.languagetechnology.org "flourl" urls,
             # urllib.request.urlretrieve() is denied (403), but requests.get() works.
             req = requests.get(src)
-            dest = target_dir.joinpath(file_name)
+            dest = args.output / file_name
             logging.info(f"Downloading {src} to {dest}")
             with open(dest, "wb") as out:
                 out.write(req.content)
-            css_lines.append(f"  src: {css_line_local} url('{f'/usr/share/nginx/{DIR_NAME_FONTS}/{file_name}'}');\n")
+            css_lines.append(f"  src: {css_line_local} url('{f'{FRONTEND_FONT_LOCATION}/{file_name}'}');\n")
         else:
             css_lines.append(f"  src: {css_line_local} url('{src}');\n")
 
@@ -282,13 +281,13 @@ def main() -> None:
         css_lines.append("}\n")
 
         # Create font override file
-        css_file_path = target_dir.joinpath(f"{font}.css")
+        css_file_path = args.output / f"{font}.css"
         logging.info(f"Writing css info for font family: {css_file_path}")
         with open(css_file_path, "w") as css_file:
             css_file.writelines(css_lines)
         if font in mlp_map_rev.keys():
             font = mlp_map_rev[font]
-            css_file_path = target_dir.joinpath(f"{font}.css")
+            css_file_path = args.output / f"{font}.css"
             css_lines[2] = f"  font-family: '{font}';\n"
             logging.info(f"Writing css info for font family: {css_file_path}")
             with open(css_file_path, "w") as css_file:
@@ -297,7 +296,7 @@ def main() -> None:
     if not args.langs:
         keys = [key for key in google_fallback.keys() if google_fallback[key] != ""]
         google_fallback_lines = [f"{key}:{google_fallback[key]}\n" for key in sorted(keys)]
-        google_fallback_file_path = target_dir.joinpath(FILE_NAME_GOOGLE_FALLBACK)
+        google_fallback_file_path = args.output / file_name_google_fallback
         with open(google_fallback_file_path, "w") as google_fallback_file:
             google_fallback_file.writelines(google_fallback_lines)
 

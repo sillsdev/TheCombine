@@ -88,9 +88,16 @@ spec:
                   key: backup_filter
                   name: env-maintenance
           resources: {}
+          volumeMounts:
+            - mountPath: {{ .Values.fontsDir }}
+              name: font-data
       restartPolicy: Always
 {{- if ne .Values.global.pullSecretName "None" }}
       imagePullSecrets:
          - name: {{ .Values.global.pullSecretName }}
 {{- end }}
+      volumes:
+        - name: font-data
+          persistentVolumeClaim:
+            claimName: font-data
 status: {}
