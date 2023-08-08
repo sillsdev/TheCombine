@@ -112,15 +112,6 @@ export default function ActiveProjectUsers(props: {
         ? `${user.name} (${user.username} | ${user.email})`
         : `${user.name} (${user.username})`;
 
-    const userBadge =
-      userRole === Role.Administrator ? (
-        <Chip label={t("projectSettings.roles.administrator")} size="small" />
-      ) : userRole === Role.Owner ? (
-        <Chip label={t("projectSettings.roles.owner")} size="small" />
-      ) : (
-        ""
-      );
-
     return (
       <ListItem key={user.id}>
         <Avatar
@@ -129,7 +120,11 @@ export default function ActiveProjectUsers(props: {
           style={{ marginRight: theme.spacing(1) }}
         />
         <ListItemText primary={displayString} />
-        {userBadge}
+        <Chip
+          label={t(`projectSettings.roles.${`${userRole}`.toLowerCase()}`)}
+          size="small"
+        />
+
         {manageUser}
       </ListItem>
     );
