@@ -1,6 +1,7 @@
 import { MoreVert } from "@mui/icons-material";
 import {
   Avatar,
+  Chip,
   IconButton,
   List,
   ListItem,
@@ -14,6 +15,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Role, User } from "api/models";
 import { avatarSrc, getUserRoles } from "backend";
@@ -40,6 +42,8 @@ export default function ActiveProjectUsers(props: {
   const [userOrder, setUserOrder] = useState<UserOrder>(UserOrder.Username);
   const [reverseSorting, setReverseSorting] = useState<boolean>(false);
   const [sortedUsers, setSortedUsers] = useState<User[]>([]);
+
+  const { t } = useTranslation();
 
   const compareUsers = useCallback(
     (a: User, b: User): number =>
@@ -116,6 +120,11 @@ export default function ActiveProjectUsers(props: {
           style={{ marginRight: theme.spacing(1) }}
         />
         <ListItemText primary={displayString} />
+        <Chip
+          label={t(`projectSettings.roles.${`${userRole}`.toLowerCase()}`)}
+          size="small"
+        />
+
         {manageUser}
       </ListItem>
     );
