@@ -1,12 +1,17 @@
 import { GramCatGroup, Sense, Word } from "api/models";
 import {
-  ReviewEntriesDefinition,
-  ReviewEntriesGloss,
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { newSemanticDomain } from "types/semanticDomain";
-import { newFlag, newNote, newSense, newWord } from "types/word";
+import {
+  newDefinition,
+  newFlag,
+  newGloss,
+  newNote,
+  newSense,
+  newWord,
+} from "types/word";
 import { Bcp47Code } from "types/writingSystem";
 
 export default function mockWords(): ReviewEntriesWord[] {
@@ -20,12 +25,12 @@ export default function mockWords(): ReviewEntriesWord[] {
           ...new ReviewEntriesSense(),
           guid: "1",
           glosses: [
-            new ReviewEntriesGloss("bup", Bcp47Code.En),
-            new ReviewEntriesGloss("AHH", Bcp47Code.Es),
+            newGloss("bup", Bcp47Code.En),
+            newGloss("AHH", Bcp47Code.Es),
           ],
           definitions: [
-            new ReviewEntriesDefinition("bup-bup", Bcp47Code.Ar),
-            new ReviewEntriesDefinition("AHH-AHH", Bcp47Code.Fr),
+            newDefinition("bup-bup", Bcp47Code.Ar),
+            newDefinition("AHH-AHH", Bcp47Code.Fr),
           ],
           domains: [newSemanticDomain("number", "domain")],
         },
@@ -40,7 +45,7 @@ export default function mockWords(): ReviewEntriesWord[] {
         {
           ...new ReviewEntriesSense(),
           guid: "2",
-          glosses: [new ReviewEntriesGloss("gloss", Bcp47Code.En)],
+          glosses: [newGloss("gloss", Bcp47Code.En)],
           domains: [newSemanticDomain("number", "domain")],
           partOfSpeech: {
             catGroup: GramCatGroup.Other,

@@ -1,8 +1,9 @@
 import { TextField } from "@mui/material";
-import { ReactElement } from "react";
+import { ReactElement, useContext } from "react";
 import { useTranslation } from "react-i18next";
 
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
+import FontContext from "utilities/fontContext";
 
 interface VernacularCellProps extends FieldParameterStandard {
   editable?: boolean;
@@ -11,6 +12,7 @@ interface VernacularCellProps extends FieldParameterStandard {
 export default function VernacularCell(
   props: VernacularCellProps
 ): ReactElement {
+  const fontMap = useContext(FontContext);
   const { t } = useTranslation();
 
   return (
@@ -25,6 +27,7 @@ export default function VernacularCell(
       InputProps={{
         readOnly: !props.editable,
         disableUnderline: !props.editable,
+        style: { fontFamily: fontMap[""] || "inherit" },
       }}
       // Handles editing local word
       onChange={(event) =>

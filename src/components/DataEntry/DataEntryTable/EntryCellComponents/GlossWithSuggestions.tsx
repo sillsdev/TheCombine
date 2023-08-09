@@ -3,6 +3,7 @@ import React, { ReactElement, useContext, useEffect } from "react";
 import { Key } from "ts-key-enum";
 
 import { WritingSystem } from "api";
+import FontContext from "utilities/fontContext";
 import SpellCheckerContext from "utilities/spellCheckerContext";
 
 interface GlossWithSuggestionsProps {
@@ -24,6 +25,7 @@ interface GlossWithSuggestionsProps {
 export default function GlossWithSuggestions(
   props: GlossWithSuggestionsProps
 ): ReactElement {
+  const fontMap = useContext(FontContext);
   const spellChecker = useContext(SpellCheckerContext);
 
   const maxSuggestions = 5;
@@ -64,6 +66,11 @@ export default function GlossWithSuggestions(
         <TextField
           {...params}
           fullWidth
+          InputProps={{
+            style: {
+              fontFamily: fontMap[props.analysisLang.bcp47] || "inherit",
+            },
+          }}
           inputRef={props.glossInput}
           label={props.isNew ? props.analysisLang.name : ""}
           variant={props.isNew ? "outlined" : "standard"}

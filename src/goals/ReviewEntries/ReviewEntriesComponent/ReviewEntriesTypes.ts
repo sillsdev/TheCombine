@@ -7,7 +7,6 @@ import {
   Sense,
   Status,
   Word,
-  WritingSystem,
 } from "api/models";
 import { newSense, newWord } from "types/word";
 import { cleanDefinitions, cleanGlosses } from "utilities/wordUtilities";
@@ -31,18 +30,14 @@ export class ReviewEntriesWord {
   flag: Flag;
   protected: boolean;
 
-  constructor(
-    word?: Word,
-    analysisLang?: string,
-    writingSystems?: WritingSystem[]
-  ) {
+  constructor(word?: Word, analysisLang?: string) {
     if (!word) {
       word = newWord();
     }
     this.id = word.id;
     this.vernacular = word.vernacular;
     this.senses = word.senses.map(
-      (s) => new ReviewEntriesSense(s, analysisLang, writingSystems)
+      (s) => new ReviewEntriesSense(s, analysisLang)
     );
     this.pronunciationFiles = word.audio;
     this.noteText = word.note.text;
@@ -53,19 +48,15 @@ export class ReviewEntriesWord {
 
 export class ReviewEntriesSense {
   guid: string;
-  definitions: ReviewEntriesDefinition[];
-  glosses: ReviewEntriesGloss[];
+  definitions: Definition[];
+  glosses: Gloss[];
   partOfSpeech: GrammaticalInfo;
   domains: SemanticDomain[];
   deleted: boolean;
   protected: boolean;
   fonts?: string;
 
-  constructor(
-    sense?: Sense,
-    analysisLang?: string,
-    writingSystems?: WritingSystem[]
-  ) {
+  constructor(sense?: Sense, analysisLang?: string) {
     if (!sense) {
       sense = newSense();
     }
@@ -82,20 +73,6 @@ export class ReviewEntriesSense {
     this.domains = [...sense.semanticDomains];
     this.deleted = sense.accessibility === Status.Deleted;
     this.protected = sense.accessibility === Status.Protected;
-
-    if (writingSystems) {
-      this.fonts =
-        writingSystems
-          .filter((ws) => !!ws.font)
-          .map((ws) => `'${ws.font}'`)
-          .join(",") || undefined; // Make undefined if empty string
-      this.definitions = this.definitions.map(
-        (g) => new ReviewEntriesDefinition(g.text, g.language, writingSystems)
-      );
-      this.glosses = this.glosses.map(
-        (g) => new ReviewEntriesGloss(g.def, g.language, writingSystems)
-      );
-    }
   }
 
   private static SEPARATOR = "; ";
@@ -106,31 +83,5 @@ export class ReviewEntriesSense {
   }
   static glossString(sense: ReviewEntriesSense): string {
     return sense.glosses.map((g) => g.def).join(ReviewEntriesSense.SEPARATOR);
-  }
-}
-
-export class ReviewEntriesDefinition implements Definition {
-  text: string;
-  language: string;
-  font?: string;
-
-  constructor(text = "", language = "", writingSystems?: WritingSystem[]) {
-    this.text = text;
-    this.language = language;
-    this.font =
-      writingSystems?.find((ws) => ws.bcp47 === language)?.font || undefined;
-  }
-}
-
-export class ReviewEntriesGloss implements Gloss {
-  def: string;
-  language: string;
-  font?: string;
-
-  constructor(def = "", language = "", writingSystems?: WritingSystem[]) {
-    this.def = def;
-    this.language = language;
-    this.font =
-      writingSystems?.find((ws) => ws.bcp47 === language)?.font || undefined;
   }
 }

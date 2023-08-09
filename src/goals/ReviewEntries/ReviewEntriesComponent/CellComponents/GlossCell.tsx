@@ -1,19 +1,18 @@
 import { Input, TextField } from "@mui/material";
-import { ReactElement } from "react";
+import { ReactElement, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-import { WritingSystem } from "api";
+import { Gloss, WritingSystem } from "api";
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 import AlignedList, {
   SPACER,
 } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
-import {
-  ReviewEntriesGloss,
-  ReviewEntriesSense,
-} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { ReviewEntriesSense } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreState } from "types";
 import { themeColors } from "types/theme";
+import { newGloss } from "types/word";
+import FontContext from "utilities/fontContext";
 
 interface GlossCellProps extends FieldParameterStandard {
   editable?: boolean;
@@ -76,22 +75,17 @@ export default function GlossCell(props: GlossCellProps): ReactElement {
 }
 
 interface GlossListProps {
-  glosses: ReviewEntriesGloss[];
+  glosses: Gloss[];
   defaultLang: WritingSystem;
   keyPrefix: string;
-  onChange: (glosses: ReviewEntriesGloss[]) => void;
+  onChange: (glosses: Gloss[]) => void;
 }
 
 function GlossList(props: GlossListProps): ReactElement {
   const langs = props.glosses.map((g) => g.language);
   const glosses = langs.includes(props.defaultLang.bcp47)
     ? props.glosses
-    : [
-        ...props.glosses,
-        new ReviewEntriesGloss("", props.defaultLang.bcp47, [
-          props.defaultLang,
-        ]),
-      ];
+    : [...props.glosses, newGloss("", props.defaultLang.bcp47)];
 
   return (
     <>
@@ -100,7 +94,7 @@ function GlossList(props: GlossListProps): ReactElement {
           gloss={g}
           key={`${props.keyPrefix}-${i}`}
           textFieldId={`${props.keyPrefix}-${i}-text`}
-          onChange={(gloss: ReviewEntriesGloss) => {
+          onChange={(gloss: Gloss) => {
             const updatedGlosses = [...glosses];
             updatedGlosses.splice(i, 1, gloss);
             props.onChange(updatedGlosses);
@@ -112,20 +106,19 @@ function GlossList(props: GlossListProps): ReactElement {
 }
 
 interface GlossFieldProps {
-  gloss: ReviewEntriesGloss;
+  gloss: Gloss;
   textFieldId: string;
-  onChange: (gloss: ReviewEntriesGloss) => void;
+  onChange: (gloss: Gloss) => void;
 }
 
 function GlossField(props: GlossFieldProps): ReactElement {
+  const fontMap = useContext(FontContext);
   return (
     <TextField
       id={props.textFieldId}
-      inputProps={
-        props.gloss.font
-          ? { style: { fontFamily: props.gloss.font.replaceAll(" ", "") } }
-          : {}
-      }
+      InputProps={{
+        style: { fontFamily: fontMap[props.gloss.language] || "inherit" },
+      }}
       label={`${props.gloss.language}:`}
       variant="outlined"
       margin="dense"

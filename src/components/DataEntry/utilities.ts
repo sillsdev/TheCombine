@@ -32,6 +32,6 @@ export function filterWordsByDomain(
 export function sortDomainWordsByVern(words: DomainWord[]): DomainWord[] {
   return words.sort((a, b) => {
     const comp = a.vernacular.localeCompare(b.vernacular);
-    return comp !== 0 ? comp : a.gloss.localeCompare(b.gloss);
+    return comp !== 0 ? comp : a.gloss.def.localeCompare(b.gloss.def);
   });
 }

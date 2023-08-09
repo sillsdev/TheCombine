@@ -1,19 +1,18 @@
 import { Input, TextField } from "@mui/material";
-import { ReactElement } from "react";
+import { ReactElement, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
+import { Definition } from "api/models";
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 import AlignedList, {
   SPACER,
 } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
-import {
-  ReviewEntriesDefinition,
-  ReviewEntriesSense,
-} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { ReviewEntriesSense } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreState } from "types";
 import { themeColors } from "types/theme";
 import { newDefinition } from "types/word";
+import FontContext from "utilities/fontContext";
 
 interface DefinitionCellProps extends FieldParameterStandard {
   editable?: boolean;
@@ -78,10 +77,10 @@ export default function DefinitionCell(
 }
 
 interface DefinitionListProps {
-  definitions: ReviewEntriesDefinition[];
+  definitions: Definition[];
   defaultLang: string;
   keyPrefix: string;
-  onChange: (definitions: ReviewEntriesDefinition[]) => void;
+  onChange: (definitions: Definition[]) => void;
 }
 
 function DefinitionList(props: DefinitionListProps): ReactElement {
@@ -97,7 +96,7 @@ function DefinitionList(props: DefinitionListProps): ReactElement {
           definition={g}
           key={`${props.keyPrefix}-${i}`}
           textFieldId={`${props.keyPrefix}-${i}-text`}
-          onChange={(definition: ReviewEntriesDefinition) => {
+          onChange={(definition: Definition) => {
             const updatedDefinitions = [...definitions];
             updatedDefinitions.splice(i, 1, definition);
             props.onChange(updatedDefinitions);
@@ -109,20 +108,19 @@ function DefinitionList(props: DefinitionListProps): ReactElement {
 }
 
 interface DefinitionFieldProps {
-  definition: ReviewEntriesDefinition;
+  definition: Definition;
   textFieldId: string;
-  onChange: (definition: ReviewEntriesDefinition) => void;
+  onChange: (definition: Definition) => void;
 }
 
 function DefinitionField(props: DefinitionFieldProps): ReactElement {
+  const fontMap = useContext(FontContext);
   return (
     <TextField
       id={props.textFieldId}
-      inputProps={
-        props.definition.font
-          ? { style: { fontFamily: props.definition.font.replaceAll(" ", "") } }
-          : {}
-      }
+      InputProps={{
+        style: { fontFamily: fontMap[props.definition.language] || "inherit" },
+      }}
       label={`${props.definition.language}:`}
       variant="outlined"
       margin="dense"

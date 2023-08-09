@@ -1,10 +1,11 @@
 import { Typography } from "@mui/material";
-import { ReactElement } from "react";
+import { ReactElement, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import { StoreState } from "types";
 import { themeColors } from "types/theme";
+import FontContext from "utilities/fontContext";
 
 interface CharacterWordsProps {
   character: string;
@@ -14,6 +15,7 @@ interface CharacterWordsProps {
 export default function CharacterWords(
   props: CharacterWordsProps
 ): ReactElement {
+  const fontMap = useContext(FontContext);
   const allWords = useSelector(
     (state: StoreState) => state.characterInventoryState.allWords
   );
@@ -24,7 +26,11 @@ export default function CharacterWords(
     <>
       <Typography variant="overline">{t("charInventory.examples")}</Typography>
       {words.map((word) => (
-        <Typography variant="body1" key={`${props.character}_${word}`}>
+        <Typography
+          key={`${props.character}_${word}`}
+          style={{ fontFamily: fontMap[""] || "inherit" }}
+          variant="body1"
+        >
           {highlightCharacterInWord(props.character, word)}
         </Typography>
       ))}

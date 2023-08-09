@@ -27,21 +27,15 @@ export default function ReviewEntriesComponent(
   const { updateAllWords, updateFrontierWord } = props;
 
   const analysisLang = proj.analysisWritingSystems[0]?.bcp47;
-  const writingSystems = [
-    proj.vernacularWritingSystem,
-    ...proj.analysisWritingSystems,
-  ];
 
   useEffect(() => {
     getFrontierWords().then((frontier) => {
       updateAllWords(
-        frontier.map(
-          (w) => new ReviewEntriesWord(w, analysisLang, writingSystems)
-        )
+        frontier.map((w) => new ReviewEntriesWord(w, analysisLang))
       );
       setLoaded(true);
     });
-  }, [proj.id, updateAllWords]);
+  }, [analysisLang, proj.id, updateAllWords]);
 
   return loaded ? (
     <ReviewEntriesTable

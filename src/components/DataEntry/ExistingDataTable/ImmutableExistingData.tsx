@@ -3,7 +3,9 @@ import { ReactElement } from "react";
 
 interface ImmutableExistingDataProps {
   vernacular: string;
+  vern_font?: string;
   gloss: string;
+  gloss_font?: string;
 }
 
 /**
@@ -24,7 +26,12 @@ export default function ImmutableExistingData(
           position: "relative",
         }}
       >
-        <Typography variant="body1">{props.vernacular}</Typography>
+        <Typography
+          style={{ fontFamily: props.vern_font || "inherit" }}
+          variant="body1"
+        >
+          {props.vernacular}
+        </Typography>
       </Grid>
       <Grid
         item
@@ -36,7 +43,12 @@ export default function ImmutableExistingData(
           position: "relative",
         }}
       >
-        <Typography variant="body1">{props.gloss}</Typography>
+        <Typography
+          style={{ fontFamily: props.gloss_font || "inherit" }}
+          variant="body1"
+        >
+          {props.gloss}
+        </Typography>
       </Grid>
     </Grid>
   );
