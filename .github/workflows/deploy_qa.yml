@@ -76,8 +76,9 @@ jobs:
         uses: step-security/harden-runner@cba0d00b1fc9a034e1e642ea0f1103c282990604 # v2.5.0
         with:
           disable-sudo: true
-          egress-policy: audit
+          egress-policy: block
           allowed-endpoints: >
+            *.actions.githubusercontent.com:443
             api.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
             github.com:443
             sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
