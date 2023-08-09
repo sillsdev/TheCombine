@@ -3,8 +3,8 @@
 Generates font support for all SIL fonts used in Mui-Language-Picker.
 
 This script uses the following environment variables:
-  FONT_DIR          directory where the font-data persistent storage is mounted.
-  FRONTEND_FONT_DIR directory where the frontend sees the font-data.
+  font_dir          directory where the font-data persistent storage is mounted.
+  frontend_font_dir directory where the frontend sees the font-data.
 """
 
 import argparse
@@ -27,8 +27,8 @@ url_lang_tags_list = "https://ldml.api.sil.org/en?query=langtags"
 url_script_font_table = (
     "https://raw.githubusercontent.com/silnrsi/langfontfinder/main/data/script2font.csv"
 )
-default_output_dir = os.getenv("FONT_DIR", "/mnt/fonts")
-frontend_font_dir = os.getenv("FRONTEND_FONT_DIR", "/usr/share/nginx/fonts")
+default_output_dir = os.getenv("font_dir", "/mnt/fonts")
+frontend_font_dir = os.getenv("frontend_font_dir", "/usr/share/nginx/fonts")
 
 
 def parse_args() -> argparse.Namespace:
