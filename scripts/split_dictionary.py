@@ -1,0 +1,135 @@
+#!/usr/bin/env python3
+"""
+Splits a dictionary file into smaller files.
+"""
+
+import argparse
+import logging
+import os
+from pathlib import Path
+from shutil import rmtree
+from typing import List
+
+import requests
+
+combine_dir = Path(__file__).resolve().parent.parent
+dictionary_dir = combine_dir / "src" / "resources" / "dictionaries"
+utilities_dir = combine_dir / "src" / "utilities"
+
+
+def parse_args() -> argparse.Namespace:
+    def lang_tag_type(tag) -> str:
+        if not tag.isalpha():
+            raise argparse.ArgumentTypeError("Language tag must be only letters")
+        if len(tag) not in [2, 3]:
+            raise argparse.ArgumentTypeError("Language tag must be 2 or 3 letters long")
+        return tag
+
+    """Define command line arguments for parser."""
+    parser = argparse.ArgumentParser(
+        description="Prepares all needed fonts.",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "-l",
+        "--lang",
+        help="2- or 3-letter language tag",
+        required=True,
+        type=lang_tag_type
+    )
+    parser.add_argument(
+        "-d",
+        "--dict",
+        help="Override the path of the .dic.js file to be split",
+    )
+    parser.add_argument(
+        "-t",
+        "--threshold",
+        default=1000,
+        help="Minimum entry count for a letter to have its own file",
+        type=int
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Print intermediate values to aid in debugging.",
+    )
+    args = parser.parse_args()
+    args.lang = args.lang.lower()
+    if args.dict:
+        args.dict = Path(args.dict)
+    return args
+
+
+def write_dict_part(file_path: Path, entries: List[str]) -> None:
+    with open(file_path, "w") as file:
+        file.write(f"export default `{len(entries)}\n")
+        entries[-1] += "`;"
+        for entry in entries:
+            file.write(entry+"\n")
+
+
+def main() -> None:
+    args = parse_args()
+    if args.verbose:
+        logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
+    else:
+        logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
+
+    if not args.dict:
+        args.dict = dictionary_dir / f"{args.lang}.dic.js"
+
+    if not args.dict.is_file():
+        logging.error("Invalid dictionary file")
+        exit(1)
+
+    subdir = dictionary_dir / args.lang
+
+    with open(args.dict, "r") as dict_file:
+        dict_file.readline() # Get past the first line
+        all_entries = [line.strip("`;\n") for line in dict_file.readlines()]
+
+    if subdir.is_dir():
+        for path in subdir.iterdir():
+            logging.info(f"Deleting {path}")
+            if path.is_dir():
+                rmtree(path)
+            else:
+                path.unlink()
+    Path.mkdir(subdir, exist_ok=True)
+
+    entries_by_first_letter: dict[List[str]] = {}
+
+    for entry in all_entries:
+        if not entry:
+            continue
+        first_letter = entry[0].lower()
+        if first_letter not in entries_by_first_letter:
+            entries_by_first_letter[first_letter] = []
+            logging.info(f"Gathering entries beginning with {first_letter}")
+        entries_by_first_letter[first_letter].append(entry)
+
+    first_letters: List[str] = []
+    other_entries: List[str] = []
+    for letter in entries_by_first_letter:
+        entries = entries_by_first_letter[letter]
+        if len(entries) < args.threshold:
+            other_entries.extend(entries)
+            continue
+        
+        first_letters.append(first_letter)
+        file_path = subdir / f"u{ord(letter)}.dic.js"
+        logging.info(f"Saving {len(entries)} entries to {file_path}")
+        write_dict_part(file_path, entries)
+
+    file_path = subdir / "u.dic.js"
+    logging.info(f"Saving {len(other_entries)} entries to {file_path}")
+    write_dict_part(file_path, other_entries)
+
+    index_file_path = subdir / "index.ts"
+    logging.info(f"Generating {index_file_path}")
+
+
+if __name__ == "__main__":
+    main()
