@@ -16,29 +16,29 @@ namespace Backend.Tests.Models
         public void TestEquals()
         {
             var sense = new Sense { Guid = _commonGuid, Accessibility = Accessibility };
-            Assert.That(sense.Equals(new Sense { Guid = _commonGuid, Accessibility = Accessibility }));
+            Assert.That(sense.Equals(new Sense { Guid = _commonGuid, Accessibility = Accessibility }), Is.True);
         }
 
         [Test]
         public void TestEqualsNull()
         {
             var sense = new Sense { Accessibility = Accessibility };
-            Assert.IsFalse(sense.Equals(null));
+            Assert.That(sense.Equals(null), Is.False);
         }
 
         [Test]
         public void TestClone()
         {
             var sense = new Sense { Accessibility = Status.Deleted };
-            Assert.AreEqual(sense, sense.Clone());
+            Assert.That(sense, Is.EqualTo(sense.Clone()));
         }
 
         [Test]
         public void TestHashCode()
         {
-            Assert.AreNotEqual(
+            Assert.That(
                 new Sense { Guid = _commonGuid, Accessibility = Status.Active }.GetHashCode(),
-                new Sense { Guid = _commonGuid, Accessibility = Status.Deleted }.GetHashCode());
+                Is.Not.EqualTo(new Sense { Guid = _commonGuid, Accessibility = Status.Deleted }.GetHashCode()));
         }
 
         [Test]
@@ -48,13 +48,13 @@ namespace Backend.Tests.Models
             var fullDef = new Definition { Language = "l2", Text = "something" };
             var emptyGloss = new Gloss { Language = "l3" };
             var fullGloss = new Gloss { Language = "l4", Def = "anything" };
-            Assert.IsFalse(new Sense { Glosses = new List<Gloss> { emptyGloss, fullGloss } }.IsEmpty());
-            Assert.IsFalse(new Sense { Definitions = new List<Definition> { fullDef, emptyDef } }.IsEmpty());
-            Assert.IsTrue(new Sense
+            Assert.That(new Sense { Glosses = new List<Gloss> { emptyGloss, fullGloss } }.IsEmpty(), Is.False);
+            Assert.That(new Sense { Definitions = new List<Definition> { fullDef, emptyDef } }.IsEmpty(), Is.False);
+            Assert.That(new Sense
             {
                 Definitions = new List<Definition> { emptyDef },
                 Glosses = new List<Gloss> { emptyGloss }
-            }.IsEmpty());
+            }.IsEmpty(), Is.True);
         }
 
         [Test]
@@ -67,11 +67,11 @@ namespace Backend.Tests.Models
             var domGlossSense = new Sense { Glosses = glossList, SemanticDomains = domList };
             var defGlossSense = new Sense { Definitions = defList, Glosses = glossList };
             // For empty senses, semantic domains are checked.
-            Assert.IsTrue((new Sense()).IsContainedIn(domSense));
-            Assert.IsFalse(domSense.IsContainedIn(new Sense()));
+            Assert.That((new Sense()).IsContainedIn(domSense), Is.True);
+            Assert.That(domSense.IsContainedIn(new Sense()), Is.False);
             // For non-empty senses, semantic domains aren't checked.
-            Assert.IsTrue(domGlossSense.IsContainedIn(defGlossSense));
-            Assert.IsFalse(defGlossSense.IsContainedIn(domGlossSense));
+            Assert.That(domGlossSense.IsContainedIn(defGlossSense), Is.True);
+            Assert.That(defGlossSense.IsContainedIn(domGlossSense), Is.False);
         }
     }
 
@@ -84,30 +84,30 @@ namespace Backend.Tests.Models
         public void TestEquals()
         {
             var definition = new Definition { Language = Language, Text = Text };
-            Assert.That(definition.Equals(new Definition { Language = Language, Text = Text }));
+            Assert.That(definition.Equals(new Definition { Language = Language, Text = Text }), Is.True);
         }
 
         [Test]
         public void TestNotEquals()
         {
             var definition = new Definition { Language = Language, Text = Text };
-            Assert.IsFalse(definition.Equals(new Definition { Language = Language, Text = "Different text" }));
-            Assert.IsFalse(definition.Equals(new Definition { Language = "Different language", Text = Text }));
+            Assert.That(definition.Equals(new Definition { Language = Language, Text = "Different text" }), Is.False);
+            Assert.That(definition.Equals(new Definition { Language = "Different language", Text = Text }), Is.False);
         }
 
         [Test]
         public void TestEqualsNull()
         {
             var definition = new Definition { Language = Language, Text = Text };
-            Assert.IsFalse(definition.Equals(null));
+            Assert.That(definition.Equals(null), Is.False);
         }
 
         [Test]
         public void TestHashCode()
         {
             var defHash = new Definition { Language = Language, Text = Text }.GetHashCode();
-            Assert.AreNotEqual(defHash, new Definition { Language = "DifferentLang", Text = Text }.GetHashCode());
-            Assert.AreNotEqual(defHash, new Definition { Language = Language, Text = "DifferentText" }.GetHashCode());
+            Assert.That(defHash, Is.Not.EqualTo(new Definition { Language = "DifferentLang", Text = Text }.GetHashCode()));
+            Assert.That(defHash, Is.Not.EqualTo(new Definition { Language = Language, Text = "DifferentText" }.GetHashCode()));
         }
     }
 
@@ -120,22 +120,22 @@ namespace Backend.Tests.Models
         public void TestEquals()
         {
             var gloss = new Gloss { Language = Language, Def = Def };
-            Assert.That(gloss.Equals(new Gloss { Language = Language, Def = Def }));
+            Assert.That(gloss.Equals(new Gloss { Language = Language, Def = Def }), Is.True);
         }
 
         [Test]
         public void TestEqualsNull()
         {
             var gloss = new Gloss { Language = Language, Def = Def };
-            Assert.IsFalse(gloss.Equals(null));
+            Assert.That(gloss.Equals(null), Is.False);
         }
 
         [Test]
         public void TestHashCode()
         {
-            Assert.AreNotEqual(
+            Assert.That(
                 new Gloss { Language = "1" }.GetHashCode(),
-                new Gloss { Language = "2" }.GetHashCode()
+                Is.Not.EqualTo(new Gloss { Language = "2" }.GetHashCode())
             );
         }
     }
@@ -150,7 +150,7 @@ namespace Backend.Tests.Models
         {
             var gramInfo1 = new GrammaticalInfo { CatGroup = CatGroup, GrammaticalCategory = GrammaticalCategory };
             var gramInfo2 = new GrammaticalInfo { CatGroup = CatGroup, GrammaticalCategory = GrammaticalCategory };
-            Assert.That(gramInfo1.Equals(gramInfo2));
+            Assert.That(gramInfo1.Equals(gramInfo2), Is.True);
         }
 
         [Test]
@@ -163,10 +163,10 @@ namespace Backend.Tests.Models
         [Test]
         public void TestHashCode()
         {
-            Assert.AreNotEqual(new GrammaticalInfo("1").GetHashCode(), new GrammaticalInfo("2").GetHashCode());
-            Assert.AreNotEqual(
+            Assert.That(new GrammaticalInfo("1").GetHashCode(), Is.Not.EqualTo(new GrammaticalInfo("2").GetHashCode()));
+            Assert.That(
                 new GrammaticalInfo { CatGroup = GramCatGroup.Prenoun }.GetHashCode(),
-                new GrammaticalInfo { CatGroup = GramCatGroup.Preverb }.GetHashCode()
+                Is.Not.EqualTo(new GrammaticalInfo { CatGroup = GramCatGroup.Preverb }.GetHashCode())
             );
         }
     }

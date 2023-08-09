@@ -20,27 +20,27 @@ namespace Backend.Tests.Models
         public void TestCloneEquals()
         {
             var field = new EmailInvite { Email = Email1, Token = Token1, Role = Role1, ExpireTime = _expireTime1 };
-            Assert.AreEqual(field, field.Clone());
+            Assert.That(field, Is.EqualTo(field.Clone()));
         }
 
         [Test]
         public void TestEqualsNull()
         {
-            Assert.AreNotEqual(new EmailInvite(), null);
+            Assert.That(new EmailInvite(), Is.Not.EqualTo(null));
         }
 
         [Test]
         public void TestNotEquals()
         {
             var invite = new EmailInvite { Email = Email1, Token = Token1, Role = Role1, ExpireTime = _expireTime1 };
-            Assert.AreNotEqual(invite,
-                new EmailInvite { Email = Email2, Token = Token1, Role = Role1, ExpireTime = _expireTime1 });
-            Assert.AreNotEqual(invite,
-                new EmailInvite { Email = Email1, Token = Token2, Role = Role1, ExpireTime = _expireTime1 });
-            Assert.AreNotEqual(invite,
-                new EmailInvite { Email = Email1, Token = Token1, Role = Role2, ExpireTime = _expireTime1 });
-            Assert.AreNotEqual(invite,
-                new EmailInvite { Email = Email1, Token = Token1, Role = Role1, ExpireTime = _expireTime2 });
+            Assert.That(invite,
+                Is.Not.EqualTo(new EmailInvite { Email = Email2, Token = Token1, Role = Role1, ExpireTime = _expireTime1 }));
+            Assert.That(invite,
+                Is.Not.EqualTo(new EmailInvite { Email = Email1, Token = Token2, Role = Role1, ExpireTime = _expireTime1 }));
+            Assert.That(invite,
+                Is.Not.EqualTo(new EmailInvite { Email = Email1, Token = Token1, Role = Role2, ExpireTime = _expireTime1 }));
+            Assert.That(invite,
+                Is.Not.EqualTo(new EmailInvite { Email = Email1, Token = Token1, Role = Role1, ExpireTime = _expireTime2 }));
         }
 
         [Test]
@@ -56,21 +56,21 @@ namespace Backend.Tests.Models
         [Test]
         public void TestHashCode()
         {
-            Assert.AreNotEqual(
+            Assert.That(
                 new EmailInvite { Email = Email1 }.GetHashCode(),
-                new EmailInvite { Email = Email2 }.GetHashCode()
+                Is.Not.EqualTo(new EmailInvite { Email = Email2 }.GetHashCode())
             );
-            Assert.AreNotEqual(
+            Assert.That(
                 new EmailInvite { Token = Token1 }.GetHashCode(),
-                new EmailInvite { Token = Token2 }.GetHashCode()
+                Is.Not.EqualTo(new EmailInvite { Token = Token2 }.GetHashCode())
             );
-            Assert.AreNotEqual(
+            Assert.That(
                 new EmailInvite { Role = Role1 }.GetHashCode(),
-                new EmailInvite { Role = Role2 }.GetHashCode()
+                Is.Not.EqualTo(new EmailInvite { Role = Role2 }.GetHashCode())
             );
-            Assert.AreNotEqual(
+            Assert.That(
                 new EmailInvite { ExpireTime = _expireTime1 }.GetHashCode(),
-                new EmailInvite { ExpireTime = _expireTime2 }.GetHashCode()
+                Is.Not.EqualTo(new EmailInvite { ExpireTime = _expireTime2 }.GetHashCode())
             );
         }
     }

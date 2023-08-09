@@ -12,33 +12,33 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEquals()
         {
-            Assert.That(_siteBanner.Equals(new SiteBanner { Type = Type, Text = Text }));
+            Assert.That(_siteBanner.Equals(new SiteBanner { Type = Type, Text = Text }), Is.True);
         }
 
         [Test]
         public void TestNotEquals()
         {
-            Assert.IsFalse(_siteBanner.Equals(
-                new SiteBanner { Type = BannerType.Announcement, Text = Text }));
-            Assert.IsFalse(_siteBanner.Equals(
-                new SiteBanner { Type = Type, Text = "Different Text" }));
+            Assert.That(_siteBanner.Equals(
+                new SiteBanner { Type = BannerType.Announcement, Text = Text }), Is.False);
+            Assert.That(_siteBanner.Equals(
+                new SiteBanner { Type = Type, Text = "Different Text" }), Is.False);
         }
 
         [Test]
         public void TestEqualsNull()
         {
-            Assert.IsFalse(_siteBanner.Equals(null));
+            Assert.That(_siteBanner.Equals(null), Is.False);
         }
 
         [Test]
         public void TestHashCode()
         {
-            Assert.AreNotEqual(
+            Assert.That(
                 _siteBanner.GetHashCode(),
-                new SiteBanner { Type = BannerType.Announcement, Text = Text }.GetHashCode());
-            Assert.AreNotEqual(
+                Is.Not.EqualTo(new SiteBanner { Type = BannerType.Announcement, Text = Text }.GetHashCode()));
+            Assert.That(
                 _siteBanner.GetHashCode(),
-                new SiteBanner { Type = Type, Text = "Different Text" }.GetHashCode());
+                Is.Not.EqualTo(new SiteBanner { Type = Type, Text = "Different Text" }.GetHashCode()));
         }
     }
 }
