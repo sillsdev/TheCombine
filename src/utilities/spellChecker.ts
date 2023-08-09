@@ -47,7 +47,8 @@ export default class SpellChecker {
     this.loaded.push(letter);
     if (dictPart) {
       console.info(`Loading new dictionary part: ${letter}`);
-      this.spell.dictionary(dictPart);
+      //this.spell.dictionary(dictPart); // broken
+      this.spell.personal(dictPart); // doesn't interact with the aff
     }
   }
 

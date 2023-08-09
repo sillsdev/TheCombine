@@ -31,6 +31,12 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "files.insertFinalNewline": true,
+  "cSpell.ignorePaths": [
+    "*.aff.js",
+    "*.dic.js",
+    "node_modules",
+    "package-lock.json"
+  ],
   "cSpell.words": [
     "Adposition",
     "axios",
