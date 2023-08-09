@@ -5,9 +5,11 @@ import dictionary from "utilities/dictionary";
 
 export default class SpellChecker {
   private bcp47: Bcp47Code | undefined;
+  private loaded: string[];
   private spell: nspell | undefined;
 
   constructor(lang?: string) {
+    this.loaded = [];
     this.updateLang(lang);
   }
 
@@ -33,6 +35,22 @@ export default class SpellChecker {
     });
   }
 
+  async load(letter: string): Promise<void> {
+    if (!letter || !this.spell || !this.bcp47) {
+      return;
+    }
+    letter = letter[0].toLocaleLowerCase();
+    if (this.loaded.includes(letter)) {
+      return;
+    }
+    const dictPart = (await dictionary(this.bcp47, letter, this.loaded))?.dic;
+    this.loaded.push(letter);
+    if (dictPart) {
+      console.info(`Loading new dictionary part: ${letter}`);
+      this.spell.dictionary(dictPart);
+    }
+  }
+
   correct(word: string): boolean | undefined {
     return this.spell?.correct(word);
   }
@@ -54,6 +72,8 @@ export default class SpellChecker {
     if (!final) {
       return [];
     }
+
+    this.load(final[0]);
 
     let suggestions = this.spell.suggest(final);
     if (!suggestions.length) {
