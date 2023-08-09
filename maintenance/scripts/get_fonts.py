@@ -30,6 +30,7 @@ url_script_font_table = (
 default_output_dir = os.getenv("FONT_DIR", "/mnt/fonts")
 frontend_font_dir = os.getenv("FRONTEND_FONT_DIR", "/usr/share/nginx/fonts")
 
+
 def parse_args() -> argparse.Namespace:
     """Define command line arguments for parser."""
     parser = argparse.ArgumentParser(

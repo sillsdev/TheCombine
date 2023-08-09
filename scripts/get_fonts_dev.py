@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 
-"""Runs maintenance/scripts/get_fonts.py with dev arguments for -f and -o
+"""Runs maintenance/scripts/get_fonts.py with dev arguments for -f and -o"""
 
-Requirements:
-    - npm/node installed and in PATH
-    - java 8+ installed and in PATH
-"""
 import argparse
 import os
 from pathlib import Path
@@ -15,6 +11,7 @@ EXIT_SUCCESS = 0
 
 dev_frontend_font_dir = "fonts"
 dev_output_dir = Path(__file__).resolve().parent.parent / "public" / "fonts"
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -56,6 +53,7 @@ def execute(command: List[str], check: bool = True) -> None:
     if check and ret != EXIT_SUCCESS:
         raise RuntimeError(f"Execution failed with return code: {ret}")
 
+
 def main() -> None:
     args = parse_args()
 
@@ -63,18 +61,18 @@ def main() -> None:
         os.mkdir(args.output)
 
     exec_args = [
-            "python",
-            "maintenance/scripts/get_fonts.py",
-            f"-f {args.frontend}",
-            f"-o {args.output}",
-        ]
+        "python",
+        "maintenance/scripts/get_fonts.py",
+        f"-f {args.frontend}",
+        f"-o {args.output}",
+    ]
     if args.clean:
         exec_args.append("-c")
     if args.langs:
         exec_args.append(f"-l {args.langs}")
     if args.verbose:
         exec_args.append("-v")
-    execute(exec_args    )
+    execute(exec_args)
 
 
 if __name__ == "__main__":
