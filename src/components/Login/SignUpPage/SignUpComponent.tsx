@@ -1,3 +1,4 @@
+import ReCaptcha from "@matt-block/react-recaptcha-v2";
 import {
   Button,
   Card,
@@ -9,10 +10,11 @@ import {
 import React from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 
-import { isEmailTaken, isUsernameTaken } from "backend";
 import router from "browserRouter";
 import { LoadingDoneButton } from "components/Buttons";
+import { captchaStyle } from "components/Login/LoginPage/LoginComponent";
 import { Path } from "types/path";
+import { RuntimeConfig } from "types/runtimeConfig";
 import {
   meetsPasswordRequirements,
   meetsUsernameRequirements,
@@ -53,6 +55,7 @@ interface SignUpState {
   email: string;
   password: string;
   confirmPassword: string;
+  isVerified: boolean;
   error: {
     name: boolean;
     username: boolean;
@@ -71,6 +74,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
       email: "",
       password: "",
       confirmPassword: "",
+      isVerified: !RuntimeConfig.getInstance().captchaRequired(),
       error: {
         name: false,
         username: false,
@@ -104,21 +108,10 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
     }));
   }
 
-  async checkUsername(username: string) {
-    if (
-      !meetsUsernameRequirements(this.state.username) ||
-      (await isUsernameTaken(username))
-    ) {
+  async checkUsername() {
+    if (!meetsUsernameRequirements(this.state.username)) {
       this.setState((prevState) => ({
         error: { ...prevState.error, username: true },
-      }));
-    }
-  }
-
-  async checkEmail(email: string) {
-    if (await isEmailTaken(punycode.toUnicode(email))) {
-      this.setState((prevState) => ({
-        error: { ...prevState.error, email: true },
       }));
     }
   }
@@ -134,9 +127,8 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
     // Error checking.
     const error = { ...this.state.error };
     error.name = name === "";
-    error.username =
-      !meetsUsernameRequirements(username) || (await isUsernameTaken(username));
-    error.email = email === "" || (await isEmailTaken(email));
+    error.username = !meetsUsernameRequirements(username);
+    error.email = email === "";
     error.password = !meetsPasswordRequirements(password);
     error.confirmPassword = password !== confirmPassword;
 
@@ -154,14 +146,6 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
   }
 
   render() {
-    // Determine error message id
-    // Intentional weak comparison. props.failureMessage may evaluate to number
-    // eslint-disable-next-line eqeqeq
-    const failureMessageId =
-      this.props.failureMessage == "400"
-        ? "login.signUpFailed"
-        : "login.networkError";
-
     return (
       <Grid container justifyContent="center">
         <Card style={{ width: 450 }}>
@@ -201,13 +185,9 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
                 label={this.props.t("login.username")}
                 value={this.state.username}
                 onChange={(e) => this.updateField(e, "username")}
-                onBlur={() => this.checkUsername(this.state.username)}
+                onBlur={() => this.checkUsername()}
                 error={this.state.error["username"]}
-                helperText={this.props.t(
-                  this.state.error["username"]
-                    ? "login.usernameInvalid"
-                    : "login.usernameRequirements"
-                )}
+                helperText={this.props.t("login.usernameRequirements")}
                 variant="outlined"
                 style={{ width: "100%" }}
                 margin="normal"
@@ -223,15 +203,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
                 label={this.props.t("login.email")}
                 value={this.state.email}
                 onChange={(e) => this.updateField(e, "email")}
-                onBlur={() =>
-                  this.state.email ? this.checkEmail(this.state.email) : null
-                }
                 error={this.state.error["email"]}
-                helperText={
-                  this.state.error["email"]
-                    ? this.props.t("login.emailTaken")
-                    : undefined
-                }
                 variant="outlined"
                 style={{ width: "100%" }}
                 margin="normal"
@@ -248,11 +220,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
                 value={this.state.password}
                 onChange={(e) => this.updateField(e, "password")}
                 error={this.state.error["password"]}
-                helperText={this.props.t(
-                  this.state.error["password"]
-                    ? "login.passwordRequirements"
-                    : "login.passwordRequirements"
-                )}
+                helperText={this.props.t("login.passwordRequirements")}
                 variant="outlined"
                 style={{ width: "100%" }}
                 margin="normal"
@@ -285,8 +253,29 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
                   variant="body2"
                   style={{ marginTop: 24, marginBottom: 24, color: "red" }}
                 >
-                  {this.props.t(failureMessageId)}
+                  {this.props.t(this.props.failureMessage)}
                 </Typography>
+              )}
+
+              {RuntimeConfig.getInstance().captchaRequired() && (
+                <div
+                  className="form-group"
+                  id={`${idAffix}-captcha`}
+                  style={captchaStyle}
+                >
+                  <ReCaptcha
+                    siteKey={RuntimeConfig.getInstance().captchaSiteKey()}
+                    theme="light"
+                    size="normal"
+                    onSuccess={() => this.setState({ isVerified: true })}
+                    onExpire={() => this.setState({ isVerified: false })}
+                    onError={() =>
+                      console.error(
+                        "Something went wrong, check your connection."
+                      )
+                    }
+                  />
+                </div>
               )}
 
               {/* Sign Up and Login buttons */}
@@ -305,6 +294,7 @@ export class SignUp extends React.Component<SignUpProps, SignUpState> {
                 </Grid>
                 <Grid item>
                   <LoadingDoneButton
+                    disabled={!this.state.isVerified}
                     loading={this.props.inProgress}
                     done={this.props.success}
                     doneText={this.props.t("login.signUpSuccess")}

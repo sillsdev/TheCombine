@@ -76,7 +76,7 @@ export function asyncSignUp(
         }, 1000);
       })
       .catch((err) =>
-        dispatch(signUpFailure(err.response?.status ?? err.message))
+        dispatch(signUpFailure(err.response?.data ?? err.message))
       );
   };
 }

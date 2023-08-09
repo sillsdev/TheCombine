@@ -74,7 +74,7 @@ namespace Backend.Tests.Controllers
             _ = _avatarController.UploadAvatar(_jwtAuthenticatedUser.Id, fileUpload).Result;
 
             var foundUser = _userRepo.GetUser(_jwtAuthenticatedUser.Id).Result;
-            Assert.IsNotNull(foundUser?.Avatar);
+            Assert.That(foundUser?.Avatar, Is.Not.Null);
 
             // Clean up.
             DeleteAvatarFile(_jwtAuthenticatedUser.Id);

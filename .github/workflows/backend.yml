@@ -50,6 +50,16 @@ jobs:
         run: dotnet test Backend.Tests/Backend.Tests.csproj
         shell: bash
       - name: Upload coverage report
+        id: uploadCoverage
+        continue-on-error: true
+        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
+        with:
+          files: Backend.Tests/coverage.cobertura.xml
+          flags: backend
+          name: Backend
+          fail_ci_if_error: true
+      - name: Upload coverage report - take 2 (if the first attempt fails)
+        if: steps.uploadCoverage.outcome == 'failure'
         uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         with:
           files: Backend.Tests/coverage.cobertura.xml

@@ -491,11 +491,6 @@ export async function addUser(user: User): Promise<User> {
   return { ...user, id: resp.data };
 }
 
-/** Returns true if the username is in use already. */
-export async function isUsernameTaken(username: string): Promise<boolean> {
-  return (await userApi.isUsernameUnavailable({ username })).data;
-}
-
 /** Returns true if the email address is in use already. */
 export async function isEmailTaken(email: string): Promise<boolean> {
   return (await userApi.isEmailUnavailable({ email })).data;
