@@ -24,13 +24,17 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
+            *.actions.githubusercontent.com:443
             aka.ms:443
             api.github.com:443
             api.nuget.org:443
             codecov.io:443
             dc.services.visualstudio.com:443
+            deb.debian.org:80
+            dotnetbuilds.azureedge.net:443
             dotnetcli.azureedge.net:443
             github.com:443
+            md-hdd-t032zjxllntc.z26.blob.storage.azure.net:443
             objects.githubusercontent.com:443
             storage.googleapis.com:443
             uploader.codecov.io:443
@@ -89,6 +93,7 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
+            *.actions.githubusercontent.com:443
             aka.ms:443
             api.github.com:443
             api.nuget.org:443

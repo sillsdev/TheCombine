@@ -50,11 +50,13 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
+            *.actions.githubusercontent.com:443
             api.github.com:443
             api.nuget.org:443
             dc.services.visualstudio.com:443
             files.pythonhosted.org:443
             github.com:443
+            objects.githubusercontent.com:443
             pypi.org:443
       - name: Checkout repository
         uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
