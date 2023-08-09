@@ -30,10 +30,6 @@ url_script_font_table = (
 default_output_dir = os.getenv("FONT_DIR", "/mnt/fonts")
 frontend_font_dir = os.getenv("FRONTEND_FONT_DIR", "/usr/share/nginx/fonts")
 
-# Overrides for the -f and -o args to be used when this runs in development.
-dev_override_frontend = "fonts"
-dev_override_output = scripts_dir.parent.parent / "public"
-
 def parse_args() -> argparse.Namespace:
     """Define command line arguments for parser."""
     parser = argparse.ArgumentParser(
@@ -190,15 +186,6 @@ def main() -> None:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
     else:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
-
-    # Cursory check for if this script is running in dev outside a container.
-    if dev_override_output.exists():
-        logging.warning("It appears you are running this script in development.")
-        logging.warning(f"Using: -f {dev_override_frontend} -o {dev_override_output}")
-        args.frontend = dev_override_frontend
-        args.output = dev_override_output / "fonts"
-        if not args.output.is_dir():
-            os.mkdir(args.output)
 
     if not args.output.is_dir():
         logging.error("Invalid output directory")
