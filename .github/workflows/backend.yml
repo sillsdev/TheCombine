@@ -137,6 +137,7 @@ jobs:
           disable-file-monitoring: true
           egress-policy: block
           allowed-endpoints: >
+            *.actions.githubusercontent.com:443
             api.nuget.org:443
             archive.ubuntu.com:80
             dc.services.visualstudio.com:443
