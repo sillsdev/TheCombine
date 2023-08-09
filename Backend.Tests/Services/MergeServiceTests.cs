@@ -46,7 +46,7 @@ namespace Backend.Tests.Services
 
             // There should only be 1 word added and it should be identical to what we passed in
             Assert.That(newWords, Has.Count.EqualTo(1));
-            Assert.That(newWords.First().ContentEquals(thisWord));
+            Assert.That(newWords.First().ContentEquals(thisWord), Is.True);
 
             // Check that the only word in the frontier is the new word
             var frontier = _wordRepo.GetFrontier(ProjId).Result;
@@ -92,7 +92,7 @@ namespace Backend.Tests.Services
             {
                 var child = Util.RandomWord(ProjId);
                 var id = _wordRepo.Create(child).Result.Id;
-                Assert.IsNotNull(_wordRepo.GetWord(ProjId, id).Result);
+                Assert.That(_wordRepo.GetWord(ProjId, id).Result, Is.Not.Null);
                 mergeWords.Children.Add(new MergeSourceWord { SrcWordId = id });
             }
             Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(numberOfChildren));
@@ -105,7 +105,7 @@ namespace Backend.Tests.Services
             Assert.That(dbParent.History, Has.Count.EqualTo(numberOfChildren));
 
             // Confirm that parent added to repo and children not in frontier.
-            Assert.IsNotNull(_wordRepo.GetWord(ProjId, dbParent.Id).Result);
+            Assert.That(_wordRepo.GetWord(ProjId, dbParent.Id).Result, Is.Not.Null);
             Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(1));
         }
 
@@ -118,13 +118,13 @@ namespace Backend.Tests.Services
             var newWords = _mergeService.Merge(ProjId, mergeWordsList).Result;
 
             Assert.That(newWords, Has.Count.EqualTo(wordCount));
-            Assert.AreNotEqual(newWords.First().Id, newWords.Last().Id);
+            Assert.That(newWords.First().Id, Is.Not.EqualTo(newWords.Last().Id));
 
             var frontier = _wordRepo.GetFrontier(ProjId).Result;
             Assert.That(frontier, Has.Count.EqualTo(wordCount));
-            Assert.AreNotEqual(frontier.First().Id, frontier.Last().Id);
-            Assert.Contains(frontier.First(), newWords);
-            Assert.Contains(frontier.Last(), newWords);
+            Assert.That(frontier.First().Id, Is.Not.EqualTo(frontier.Last().Id));
+            Assert.That(newWords, Does.Contain(frontier.First()));
+            Assert.That(newWords, Does.Contain(frontier.Last()));
         }
 
         [Test]
@@ -146,19 +146,19 @@ namespace Backend.Tests.Services
 
             // There should only be 1 word added and it should be identical to what we passed in
             Assert.That(newWords, Has.Count.EqualTo(1));
-            Assert.That(newWords.First().ContentEquals(thisWord));
+            Assert.That(newWords.First().ContentEquals(thisWord), Is.True);
 
             var childIds = mergeObject.Children.Select(word => word.SrcWordId).ToList();
             var parentIds = new List<string> { newWords[0].Id };
             var mergedWord = new MergeUndoIds(parentIds, childIds);
             var undo = _mergeService.UndoMerge(ProjId, mergedWord).Result;
-            Assert.IsTrue(undo);
+            Assert.That(undo, Is.True);
 
             var frontierWords = _wordRepo.GetFrontier(ProjId).Result;
             var frontierWordIds = frontierWords.Select(word => word.Id).ToList();
 
             Assert.That(frontierWords, Has.Count.EqualTo(1));
-            Assert.Contains(childIds[0], frontierWordIds);
+            Assert.That(frontierWordIds, Does.Contain(childIds[0]));
         }
 
         [Test]
@@ -171,7 +171,7 @@ namespace Backend.Tests.Services
             {
                 var child = Util.RandomWord(ProjId);
                 var id = _wordRepo.Create(child).Result.Id;
-                Assert.IsNotNull(_wordRepo.GetWord(ProjId, id).Result);
+                Assert.That(_wordRepo.GetWord(ProjId, id).Result, Is.Not.Null);
                 mergeWords.Children.Add(new MergeSourceWord { SrcWordId = id });
             }
             Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(numberOfChildren));
@@ -185,15 +185,15 @@ namespace Backend.Tests.Services
             var parentIds = new List<string> { newWords[0].Id };
             var mergedWord = new MergeUndoIds(parentIds, childIds);
             var undo = _mergeService.UndoMerge(ProjId, mergedWord).Result;
-            Assert.IsTrue(undo);
+            Assert.That(undo, Is.True);
 
             var frontierWords = _wordRepo.GetFrontier(ProjId).Result;
             var frontierWordIds = frontierWords.Select(word => word.Id).ToList();
 
             Assert.That(frontierWords, Has.Count.EqualTo(numberOfChildren));
-            Assert.Contains(childIds[0], frontierWordIds);
-            Assert.Contains(childIds[1], frontierWordIds);
-            Assert.Contains(childIds[2], frontierWordIds);
+            Assert.That(frontierWordIds, Does.Contain(childIds[0]));
+            Assert.That(frontierWordIds, Does.Contain(childIds[1]));
+            Assert.That(frontierWordIds, Does.Contain(childIds[2]));
         }
 
         [Test]
@@ -205,7 +205,7 @@ namespace Backend.Tests.Services
             var blacklist = _mergeBlacklistRepo.GetAllEntries(ProjId).Result;
             Assert.That(blacklist, Has.Count.EqualTo(1));
             var expectedEntry = new MergeBlacklistEntry { ProjectId = ProjId, UserId = UserId, WordIds = wordIds };
-            Assert.That(expectedEntry.ContentEquals(blacklist.First()));
+            Assert.That(expectedEntry.ContentEquals(blacklist.First()), Is.True);
         }
 
         [Test]
@@ -214,10 +214,10 @@ namespace Backend.Tests.Services
             _ = _mergeBlacklistRepo.DeleteAllEntries(ProjId).Result;
             var wordIds0 = new List<string>();
             var wordIds1 = new List<string> { "1" };
-            Assert.ThrowsAsync<MergeService.InvalidBlacklistEntryException>(
-                async () => { await _mergeService.AddToMergeBlacklist(ProjId, UserId, wordIds0); });
-            Assert.ThrowsAsync<MergeService.InvalidBlacklistEntryException>(
-                async () => { await _mergeService.AddToMergeBlacklist(ProjId, UserId, wordIds1); });
+            Assert.That(
+                async () => { await _mergeService.AddToMergeBlacklist(ProjId, UserId, wordIds0); }, Throws.TypeOf<MergeService.InvalidBlacklistEntryException>());
+            Assert.That(
+                async () => { await _mergeService.AddToMergeBlacklist(ProjId, UserId, wordIds1); }, Throws.TypeOf<MergeService.InvalidBlacklistEntryException>());
         }
 
         [Test]
@@ -227,9 +227,9 @@ namespace Backend.Tests.Services
             var wordIds = new List<string> { "1", "2", "3" };
             var subWordIds = new List<string> { "3", "2" };
 
-            Assert.IsFalse(_mergeService.IsInMergeBlacklist(ProjId, subWordIds).Result);
+            Assert.That(_mergeService.IsInMergeBlacklist(ProjId, subWordIds).Result, Is.False);
             _ = _mergeService.AddToMergeBlacklist(ProjId, UserId, wordIds).Result;
-            Assert.IsTrue(_mergeService.IsInMergeBlacklist(ProjId, subWordIds).Result);
+            Assert.That(_mergeService.IsInMergeBlacklist(ProjId, subWordIds).Result, Is.True);
         }
 
         [Test]
@@ -238,10 +238,10 @@ namespace Backend.Tests.Services
             _ = _mergeBlacklistRepo.DeleteAllEntries(ProjId).Result;
             var wordIds0 = new List<string>();
             var wordIds1 = new List<string> { "1" };
-            Assert.ThrowsAsync<MergeService.InvalidBlacklistEntryException>(
-                async () => { await _mergeService.IsInMergeBlacklist(ProjId, wordIds0); });
-            Assert.ThrowsAsync<MergeService.InvalidBlacklistEntryException>(
-                async () => { await _mergeService.IsInMergeBlacklist(ProjId, wordIds1); });
+            Assert.That(
+                async () => { await _mergeService.IsInMergeBlacklist(ProjId, wordIds0); }, Throws.TypeOf<MergeService.InvalidBlacklistEntryException>());
+            Assert.That(
+                async () => { await _mergeService.IsInMergeBlacklist(ProjId, wordIds1); }, Throws.TypeOf<MergeService.InvalidBlacklistEntryException>());
         }
 
         [Test]
@@ -284,7 +284,7 @@ namespace Backend.Tests.Services
             // The only blacklistEntry with at least two ids in the frontier is A.
             var newBlacklist = _mergeBlacklistRepo.GetAllEntries(ProjId).Result;
             Assert.That(newBlacklist, Has.Count.EqualTo(1));
-            Assert.AreEqual(newBlacklist.First().WordIds, new List<string> { "2", "3" });
+            Assert.That(newBlacklist.First().WordIds, Is.EqualTo(new List<string> { "2", "3" }));
         }
     }
 }
