@@ -30,7 +30,7 @@ interface VernWithSuggestionsProps {
 export default function VernWithSuggestions(
   props: VernWithSuggestionsProps
 ): ReactElement {
-  const fontMap = useContext(FontContext);
+  const fontContext = useContext(FontContext);
 
   useEffect(() => {
     if (props.onUpdate) {
@@ -68,7 +68,7 @@ export default function VernWithSuggestions(
           fullWidth
           InputProps={{
             style: {
-              fontFamily: fontMap[props.vernacularLang.bcp47] || "inherit",
+              fontFamily: fontContext.getLangFont(props.vernacularLang.bcp47),
             },
           }}
           inputRef={props.vernInput}

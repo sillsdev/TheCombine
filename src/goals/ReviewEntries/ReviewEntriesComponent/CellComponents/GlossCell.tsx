@@ -112,12 +112,12 @@ interface GlossFieldProps {
 }
 
 function GlossField(props: GlossFieldProps): ReactElement {
-  const fontMap = useContext(FontContext);
+  const fontContext = useContext(FontContext);
   return (
     <TextField
       id={props.textFieldId}
       InputProps={{
-        style: { fontFamily: fontMap[props.gloss.language] || "inherit" },
+        style: { fontFamily: fontContext.getLangFont(props.gloss.language) },
       }}
       label={`${props.gloss.language}:`}
       variant="outlined"

@@ -12,7 +12,7 @@ interface VernacularCellProps extends FieldParameterStandard {
 export default function VernacularCell(
   props: VernacularCellProps
 ): ReactElement {
-  const fontMap = useContext(FontContext);
+  const fontContext = useContext(FontContext);
   const { t } = useTranslation();
 
   return (
@@ -27,7 +27,7 @@ export default function VernacularCell(
       InputProps={{
         readOnly: !props.editable,
         disableUnderline: !props.editable,
-        style: { fontFamily: fontMap[""] || "inherit" },
+        style: { fontFamily: fontContext.vernacularFont },
       }}
       // Handles editing local word
       onChange={(event) =>

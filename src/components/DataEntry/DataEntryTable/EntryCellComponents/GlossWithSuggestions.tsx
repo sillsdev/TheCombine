@@ -25,7 +25,7 @@ interface GlossWithSuggestionsProps {
 export default function GlossWithSuggestions(
   props: GlossWithSuggestionsProps
 ): ReactElement {
-  const fontMap = useContext(FontContext);
+  const fontContext = useContext(FontContext);
   const spellChecker = useContext(SpellCheckerContext);
 
   const maxSuggestions = 5;
@@ -68,7 +68,7 @@ export default function GlossWithSuggestions(
           fullWidth
           InputProps={{
             style: {
-              fontFamily: fontMap[props.analysisLang.bcp47] || "inherit",
+              fontFamily: fontContext.getLangFont(props.analysisLang.bcp47),
             },
           }}
           inputRef={props.glossInput}

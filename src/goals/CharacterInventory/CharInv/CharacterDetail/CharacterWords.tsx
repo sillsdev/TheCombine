@@ -15,7 +15,7 @@ interface CharacterWordsProps {
 export default function CharacterWords(
   props: CharacterWordsProps
 ): ReactElement {
-  const fontMap = useContext(FontContext);
+  const fontContext = useContext(FontContext);
   const allWords = useSelector(
     (state: StoreState) => state.characterInventoryState.allWords
   );
@@ -28,7 +28,7 @@ export default function CharacterWords(
       {words.map((word) => (
         <Typography
           key={`${props.character}_${word}`}
-          style={{ fontFamily: fontMap[""] || "inherit" }}
+          style={{ fontFamily: fontContext.vernacularFont }}
           variant="body1"
         >
           {highlightCharacterInWord(props.character, word)}

@@ -1,7 +1,7 @@
 import loadable from "@loadable/component";
 import { CssBaseline } from "@mui/material";
 import { Theme, ThemeProvider, createTheme } from "@mui/material/styles";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useMemo, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import { getFonts } from "backend";
@@ -16,10 +16,9 @@ import UserSettings from "components/UserSettings/UserSettings";
 import NextGoalScreen from "goals/DefaultGoal/NextGoalScreen";
 import { updateLangFromUser } from "i18n";
 import { StoreState } from "types";
-import { Hash } from "types/hash";
 import { useAppSelector } from "types/hooks";
 import { Path } from "types/path";
-import FontContext from "utilities/fontContext";
+import FontContext, { ProjectFonts } from "utilities/fontContext";
 import { routerPath } from "utilities/pathUtilities";
 
 const BaseGoalScreen = loadable(
@@ -29,18 +28,12 @@ const DataEntry = loadable(() => import("components/DataEntry"));
 const GoalTimeline = loadable(() => import("components/GoalTimeline"));
 
 export default function AppWithBar(): ReactElement {
-  const fontMap = useAppSelector(
-    (state: StoreState) => {
-      const proj = state.currentProjectState.project;
-      const vernWS = proj.vernacularWritingSystem;
-      const map: Hash<string> = { "": vernWS.font.replaceAll(" ", "") };
-      map[vernWS.bcp47] = vernWS.font;
-      proj.analysisWritingSystems.forEach((ws) => {
-        map[ws.bcp47] = ws.font.replaceAll(" ", "");
-      });
-      return map;
-    },
-    (map1, map2) => Object.keys(map2).every((key) => map1[key] == map2[key])
+  const proj = useAppSelector(
+    (state: StoreState) => state.currentProjectState.project,
+    (proj1, proj2) =>
+      proj1.id === proj2.id &&
+      proj1.analysisWritingSystems.length ===
+        proj2.analysisWritingSystems.length
   );
   const projId = useAppSelector(
     (state: StoreState) => state.currentProjectState.project.id
@@ -49,6 +42,8 @@ export default function AppWithBar(): ReactElement {
     (state: StoreState) =>
       state.currentProjectState.project.analysisWritingSystems.length
   );
+
+  const projFonts = useMemo(() => new ProjectFonts(proj), [proj]);
 
   const [styleOverrides, setStyleOverrides] = useState<string>();
 
@@ -86,7 +81,7 @@ export default function AppWithBar(): ReactElement {
     <>
       <SignalRHub />
       <AppBar />
-      <FontContext.Provider value={fontMap}>
+      <FontContext.Provider value={projFonts}>
         <ThemeProvider theme={overrideThemeFont}>
           <CssBaseline />
           <Routes>

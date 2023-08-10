@@ -26,7 +26,7 @@ interface ExistingDataTableProps {
 export default function ExistingDataTable(
   props: ExistingDataTableProps
 ): ReactElement {
-  const fontMap = useContext(FontContext);
+  const fontContext = useContext(FontContext);
   const { windowHeight } = useWindowSize();
 
   if (!props.domainWords.length) {
@@ -41,9 +41,9 @@ export default function ExistingDataTable(
         <ImmutableExistingData
           key={`${domainWord.wordGuid}-${domainWord.senseGuid}`}
           vernacular={domainWord.vernacular}
-          vern_font={fontMap[""]}
+          vern_font={fontContext.vernacularFont}
           gloss={domainWord.gloss.def}
-          gloss_font={fontMap[domainWord.gloss.language]}
+          gloss_font={fontContext.getLangFont(domainWord.gloss.language)}
         />
       ))}
     </List>

@@ -114,12 +114,14 @@ interface DefinitionFieldProps {
 }
 
 function DefinitionField(props: DefinitionFieldProps): ReactElement {
-  const fontMap = useContext(FontContext);
+  const fontContext = useContext(FontContext);
   return (
     <TextField
       id={props.textFieldId}
       InputProps={{
-        style: { fontFamily: fontMap[props.definition.language] || "inherit" },
+        style: {
+          fontFamily: fontContext.getLangFont(props.definition.language),
+        },
       }}
       label={`${props.definition.language}:`}
       variant="outlined"
