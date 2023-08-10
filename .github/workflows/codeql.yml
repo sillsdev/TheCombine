@@ -50,6 +50,7 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
+            *.actions.githubusercontent.com:443
             api.github.com:443
             api.nuget.org:443
             dc.services.visualstudio.com:443

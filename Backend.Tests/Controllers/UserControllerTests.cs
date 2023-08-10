@@ -124,6 +124,37 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestCreateUserBadUsername()
+        {
+            var user = RandomUser();
+            _userRepo.Create(user);
+            var user2 = RandomUser();
+            user2.Username = " ";
+            var result = _userController.CreateUser(user).Result;
+            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            user2.Username = user.Username;
+            result = _userController.CreateUser(user).Result;
+            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            user2.Username = user.Email;
+            result = _userController.CreateUser(user).Result;
+            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+        }
+
+        [Test]
+        public void TestCreateUserBadEmail()
+        {
+            var user = RandomUser();
+            _userRepo.Create(user);
+            var user2 = RandomUser();
+            user2.Email = " ";
+            var result = _userController.CreateUser(user).Result;
+            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            user2.Email = user.Email;
+            result = _userController.CreateUser(user).Result;
+            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+        }
+
+        [Test]
         public void TestUpdateUser()
         {
             var origUser = _userRepo.Create(RandomUser()).Result ?? throw new UserCreationException();
@@ -159,32 +190,6 @@ namespace Backend.Tests.Controllers
 
             _ = _userController.DeleteUser(origUser.Id).Result;
             Assert.That(_userRepo.GetAllUsers().Result, Is.Empty);
-        }
-
-        [Test]
-        public void TestIsUsernameUnavailable()
-        {
-            var user1 = RandomUser();
-            var user2 = RandomUser();
-            var username1 = user1.Username;
-            var username2 = user2.Username;
-            _userRepo.Create(user1);
-            _userRepo.Create(user2);
-
-            var result1 = (ObjectResult)_userController.IsUsernameUnavailable(username1.ToLowerInvariant()).Result;
-            Assert.That(result1.Value, Is.True);
-
-            var result2 = (ObjectResult)_userController.IsUsernameUnavailable(username2.ToUpperInvariant()).Result;
-            Assert.That(result2.Value, Is.True);
-
-            var result3 = (ObjectResult)_userController.IsUsernameUnavailable(username1).Result;
-            Assert.That(result3.Value, Is.True);
-
-            var result4 = (ObjectResult)_userController.IsUsernameUnavailable("NewUsername").Result;
-            Assert.That(result4.Value, Is.False);
-
-            var result5 = (ObjectResult)_userController.IsUsernameUnavailable("").Result;
-            Assert.That(result5.Value, Is.True);
         }
 
         [Test]
