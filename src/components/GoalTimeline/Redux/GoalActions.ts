@@ -76,9 +76,9 @@ export function asyncLoadExistingUserEdits(
 ) {
   return async (dispatch: StoreStateDispatch) => {
     const userEdit = await Backend.getUserEditById(projectId, userEditId);
-    const history = userEdit.edits.map((e, index) =>
-      convertEditToGoal(e, index)
-    );
+    const history = userEdit.edits.map((e, index) => {
+      return convertEditToGoal(e, index);
+    });
     dispatch(loadUserEdits(history));
   };
 }
@@ -121,7 +121,8 @@ export function asyncLoadNewGoal(goal: Goal, userEditId: string) {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     // Load data.
     dispatch(setCurrentGoal(goal));
-    const goalData = await loadGoalData(goal);
+    const currentGoal = getState().goalsState.currentGoal;
+    const goalData = await loadGoalData(currentGoal.goalType);
     if (goalData.length > 0) {
       dispatch(setGoalData(goalData));
       dispatch(updateStepFromData());
@@ -177,10 +178,10 @@ export function asyncUpdateGoal(goal: Goal) {
 // Helper Functions
 
 // Returns true if input goal updated.
-export async function loadGoalData(goal: Goal): Promise<Word[][]> {
-  switch (goal.goalType) {
+export async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
+  switch (goalType) {
     case GoalType.MergeDups:
-      return await fetchMergeDupsData(goal);
+      return await fetchMergeDupsData(goalType);
     default:
       return [];
   }

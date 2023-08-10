@@ -40,6 +40,7 @@ import {
 } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
+import { GoalType } from "types/goals";
 import { Hash } from "types/hash";
 import { maxNumSteps } from "utilities/goalUtilities";
 import { compareFlags } from "utilities/wordUtilities";
@@ -274,7 +275,6 @@ export function mergeAll() {
 // Used in MergeDups cases of GoalActions functions
 
 export function dispatchMergeStepData(goal: MergeDups) {
-  console.log("dispatchMergeStepData() called.");
   return (dispatch: StoreStateDispatch) => {
     const stepData = goal.steps[goal.currentStep] as MergeStepData;
     if (stepData) {
@@ -284,8 +284,10 @@ export function dispatchMergeStepData(goal: MergeDups) {
   };
 }
 
-export async function fetchMergeDupsData(goal: MergeDups): Promise<Word[][]> {
-  return await backend.getDuplicates(5, maxNumSteps(goal.goalType));
+export async function fetchMergeDupsData(
+  goalType: GoalType
+): Promise<Word[][]> {
+  return await backend.getDuplicates(5, maxNumSteps(goalType));
 }
 
 /** Modifies the mutable input sense list. */

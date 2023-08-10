@@ -113,6 +113,7 @@ export function makeGoalTile(
             goal.goalType !== GoalType.CreateCharInv &&
             goal.goalType !== GoalType.MergeDups)
         }
+        role="goal-button"
       >
         <GoalInfo goal={goal} />
       </Button>
