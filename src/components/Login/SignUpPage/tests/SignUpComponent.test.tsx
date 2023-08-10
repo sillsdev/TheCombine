@@ -7,10 +7,6 @@ import SignUp from "components/Login/SignUpPage/SignUpComponent";
 jest.mock("@matt-block/react-recaptcha-v2", () => () => (
   <div id="mockRecaptcha">Recaptcha</div>
 ));
-jest.mock("backend", () => ({
-  isEmailTaken: () => false,
-  isUsernameTaken: () => false,
-}));
 jest.mock("browserRouter");
 
 const mockReset = jest.fn();

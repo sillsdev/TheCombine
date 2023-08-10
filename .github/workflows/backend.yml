@@ -24,6 +24,7 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
+            *.actions.githubusercontent.com:443
             aka.ms:443
             api.github.com:443
             api.nuget.org:443
@@ -50,6 +51,16 @@ jobs:
         run: dotnet test Backend.Tests/Backend.Tests.csproj
         shell: bash
       - name: Upload coverage report
+        id: uploadCoverage
+        continue-on-error: true
+        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
+        with:
+          files: Backend.Tests/coverage.cobertura.xml
+          flags: backend
+          name: Backend
+          fail_ci_if_error: true
+      - name: Upload coverage report - take 2 (if the first attempt fails)
+        if: steps.uploadCoverage.outcome == 'failure'
         uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         with:
           files: Backend.Tests/coverage.cobertura.xml
@@ -82,7 +93,7 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
-            *.blob.storage.azure.net:
+            *.actions.githubusercontent.com:443
             aka.ms:443
             api.github.com:443
             api.nuget.org:443
@@ -127,6 +138,7 @@ jobs:
           disable-file-monitoring: true
           egress-policy: block
           allowed-endpoints: >
+            *.actions.githubusercontent.com:443
             *.data.mcr.microsoft.com:443
             api.nuget.org:443
             archive.ubuntu.com:80
@@ -135,7 +147,6 @@ jobs:
             github.com:443
             mcr.microsoft.com:443
             security.ubuntu.com:80
-
       # For subfolders, currently a full checkout is required.
       # See: https://github.com/marketplace/actions/build-and-push-docker-images#path-context
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
