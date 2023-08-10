@@ -35,20 +35,18 @@ export default class SpellChecker {
     });
   }
 
-  async load(letter: string): Promise<void> {
-    if (!letter || !this.spell || !this.bcp47) {
+  async load(start: string): Promise<void> {
+    if (!start || !this.spell || !this.bcp47) {
       return;
     }
-    letter = letter[0].toLocaleLowerCase();
-    if (this.loaded.includes(letter)) {
-      return;
+    start = start.toLocaleLowerCase();
+    const { dic, exc } = await dictionary(this.bcp47, start, this.loaded);
+    if (exc && !this.loaded.includes(exc)) {
+      this.loaded.push(exc);
     }
-    const dictPart = (await dictionary(this.bcp47, letter, this.loaded))?.dic;
-    this.loaded.push(letter);
-    if (dictPart) {
-      console.info(`Loading new dictionary part: ${letter}`);
-      //this.spell.dictionary(dictPart); // broken
-      this.spell.personal(dictPart); // doesn't interact with the aff
+    if (dic) {
+      console.info(`Loading new dictionary part: ${start}`);
+      this.spell.personal(dic);
     }
   }
 
@@ -74,7 +72,7 @@ export default class SpellChecker {
       return [];
     }
 
-    this.load(final[0]);
+    this.load(final);
 
     let suggestions = this.spell.suggest(final);
     if (!suggestions.length) {

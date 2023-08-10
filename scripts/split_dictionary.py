@@ -8,6 +8,7 @@ import logging
 from pathlib import Path
 from shutil import rmtree
 from typing import List
+from unicodedata import normalize
 
 combine_dir = Path(__file__).resolve().parent.parent
 dictionary_dir = combine_dir / "src" / "resources" / "dictionaries"
@@ -28,18 +29,28 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
+        "-i",
+        "--input",
+        help="Override the path of the .txt file to be split",
+    )
+    parser.add_argument(
         "-l", "--lang", help="2- or 3-letter language tag", required=True, type=lang_tag_type
     )
     parser.add_argument(
-        "-d",
-        "--dict",
-        help="Override the path of the .dic.js file to be split",
+        "-n", "--normalize", choices=["NFC", "NFD", "NFKC", "NFKD"], default="NFKD"
     )
     parser.add_argument(
         "-t",
         "--threshold",
-        default=1000,
-        help="Minimum entry count for a letter to have its own file",
+        default=3000,
+        help="Minimum entry count for a word-start to have its own file",
+        type=int,
+    )
+    parser.add_argument(
+        "-T",
+        "--Threshold",
+        default=35000,
+        help="Minimum entry count for a word-start to be split into multiple files",
         type=int,
     )
     parser.add_argument(
@@ -50,14 +61,20 @@ def parse_args() -> argparse.Namespace:
     )
     args = parser.parse_args()
     args.lang = args.lang.lower()
-    if args.dict:
-        args.dict = Path(args.dict)
+    if args.input:
+        args.input = Path(args.input)
     return args
 
 
-def write_dict_part(file_path: Path, entries: List[str]) -> None:
+def write_dict_part(file_path: Path, entries: List[str], include_count = False) -> None:
+    if not len(entries):
+        return
+    
     with open(file_path, "w", encoding="utf-8") as file:
-        file.write(f"export default `{len(entries)}\n")
+        if include_count:
+            file.write(f"export default `{len(entries)}\n")
+        else:
+            file.write("export default `")
         entries[-1] += "`;"
         for entry in entries:
             file.write(entry + "\n")
@@ -70,18 +87,17 @@ def main() -> None:
     else:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
 
-    if not args.dict:
-        args.dict = dictionary_dir / f"{args.lang}.dic.js"
+    if not args.input:
+        args.input = dictionary_dir / f"{args.lang}.txt"
 
-    if not args.dict.is_file():
+    if not args.input.is_file():
         logging.error("Invalid dictionary file")
         exit(1)
 
     subdir = dictionary_dir / args.lang
 
-    with open(args.dict, "r", encoding="utf-8") as dict_file:
-        dict_file.readline()  # Get past the first line
-        all_entries = [line.strip("`;\n") for line in dict_file.readlines()]
+    with open(args.input, "r", encoding="utf-8") as file:
+        all_entries = [normalize(args.normalize, line.strip()) for line in file.readlines()]
 
     if subdir.is_dir():
         for path in subdir.iterdir():
@@ -92,56 +108,85 @@ def main() -> None:
                 path.unlink()
     Path.mkdir(subdir, exist_ok=True)
 
-    entries_by_first_letter: dict[List[str]] = {}
+    def split_and_export_entries(entries: List[str], all_starts: List[str], start: str = "") -> None:
+        logging.info(f"Splitting {len(entries)} entries beginning with '{start}'")
+        entry_sets: dict[List[str]] = {}
+        for entry in entries:
+            others: List[str] = []
+            if len(entry) <= len(start):
+                others.append(entry)
+                continue
 
-    for entry in all_entries:
-        if not entry:
-            continue
-        first_letter = entry[0].lower()
-        if first_letter not in entries_by_first_letter:
-            entries_by_first_letter[first_letter] = []
-            logging.info(f"Gathering entries beginning with {first_letter}")
-        entries_by_first_letter[first_letter].append(entry)
+            sub_start = entry[:len(start)+1].lower()
+            if sub_start not in entry_sets:
+                entry_sets[sub_start] = []
+            entry_sets[sub_start].append(entry)
+            
+        for key in entry_sets:
+            #logging.info(f"Gathering entries beginning with '{key}'")
+            subentries = entry_sets[key]
+            if len(subentries) < args.threshold:
+                others.extend(subentries)
+                continue
 
-    first_letters: List[str] = []
-    other_entries: List[str] = []
-    for letter in entries_by_first_letter:
-        entries = entries_by_first_letter[letter]
-        if len(entries) < args.threshold:
-            other_entries.extend(entries)
-            continue
+            elif len(subentries) > args.Threshold:
+                split_and_export_entries(subentries, all_starts, key)
+                continue
 
-        first_letters.append(letter)
-        file_path = subdir / f"u{ord(letter)}.dic.js"
-        logging.info(f"Saving {len(entries)} entries to {file_path}")
-        write_dict_part(file_path, entries)
+            all_starts.append(key)
+            file_path = subdir / f"u{'-'.join(map(lambda c:str(ord(c)), key))}.dic.js"
+            logging.info(f"Saving {len(subentries)} entries to {file_path}")
+            write_dict_part(file_path, subentries)
 
-    file_path = subdir / "u.dic.js"
-    logging.info(f"Saving {len(other_entries)} entries to {file_path}")
-    write_dict_part(file_path, other_entries)
+        file_path = subdir / f"u{'-'.join(map(lambda c:str(ord(c)), start))}.dic.js"
+        if (len(others)):
+            logging.info(f"Saving {len(others)} entries to {file_path}")
+            write_dict_part(file_path, others, start == "")
+
+    word_starts: List[str] = []
+    split_and_export_entries(all_entries, word_starts)
 
     index_file_path = subdir / "index.ts"
     logging.info(f"Generating {index_file_path}")
-    cmd = f"python scripts/split_dictionary.py -l {args.lang} -t {args.threshold}"
-    index_lines = [f"// This file was generated by `{cmd}`.\n\n"]
-    file_path = f"resources/dictionaries/{args.lang}/u.dic"
-    index_lines.extend(
-        [
-            "export default async function (letter?: string, exclude?: string[]) {\n",
-            "  if (!letter) {\n",
-            f'    return (await import("{file_path}")).default;\n',
-            "  }\n\n",
-            "  const code = letter.toLocaleLowerCase()[0].charCodeAt(0);\n",
-            "  const excludeCodes = exclude?.map(l => l.toLocaleLowerCase()[0].charCodeAt(0))\n",
-            "  if (excludeCodes?.includes(code)) {\n    return;\n  }\n\n",
-            "  switch (code) {\n",
-        ]
+
+    case_lines: List[str] = []
+    switch_lines: List[str] = []
+    for start in word_starts:
+        case = '-'.join(map(lambda c:str(ord(c)), start))
+        case_lines.append(f'  "{case}",\n')
+        switch_lines.append(f'    case "{case}":\n')
+        file_path = f"resources/dictionaries/{args.lang}/u{case}.dic"
+        switch_lines.append(f'      return [startCode, (await import("{file_path}")).default];\n')
+
+    cmd = f"python scripts/split_dictionary.py -l {args.lang} -t {args.threshold} -T {args.Threshold}"
+    index_lines = [f"// This file was generated by `{cmd}`.\n\nconst cases = [\n"]
+    index_lines.extend(case_lines)
+    index_lines.append(''']
+
+export default async function (start?: string, exclude?: string[]): Promise<[string?,string?]> {
+  if (!start) {
+    return ["", (await import("resources/dictionaries/'''+args.lang+'''/u.dic")).default];
+  }
+
+  const startCase = start.split("").map(c=>c.toLocaleLowerCase().charCodeAt(0))
+  var startCode = startCase.join("-")
+  while (startCode){
+    if (cases.includes(startCode)){
+      break
+    }
+    startCase.pop()
+    startCode = startCase.join("-")
+  }
+
+  if (!startCode || exclude?.includes(startCode)) {
+    return [undefined, undefined]
+  }
+
+  switch (startCode) {
+'''
     )
-    for letter in first_letters:
-        index_lines.append(f"    case {ord(letter)}:\n")
-        file_path = f"resources/dictionaries/{args.lang}/u{ord(letter)}.dic"
-        index_lines.append(f'      return (await import("{file_path}")).default;\n')
-    index_lines.append("    default:\n      return;\n    }\n}\n")
+    index_lines.extend(switch_lines)
+    index_lines.append("    default:\n      return [undefined, undefined];\n    }\n}\n")
     with open(index_file_path, "w") as index_file:
         index_file.writelines(index_lines)
 

@@ -1,5 +1,4 @@
-export default `1136
-पंकज
+export default `पंकज
 पंख
 पंखुड़ियों
 पंखे

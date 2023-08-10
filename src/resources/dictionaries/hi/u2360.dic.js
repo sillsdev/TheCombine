@@ -1,5 +1,4 @@
-export default `1584
-सँभल
+export default `सँभल
 सँभाल
 सँभालना
 सँभालेंगी

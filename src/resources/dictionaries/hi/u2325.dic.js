@@ -1,5 +1,4 @@
-export default `1134
-कंकड़ियां
+export default `कंकड़ियां
 कंकाल
 कंग
 कंचनजंगा
