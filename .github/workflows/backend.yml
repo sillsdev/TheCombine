@@ -24,6 +24,7 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
+            *.actions.githubusercontent.com:443
             aka.ms:443
             api.github.com:443
             api.nuget.org:443
@@ -92,7 +93,7 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
-            *.blob.storage.azure.net:
+            *.actions.githubusercontent.com:443
             aka.ms:443
             api.github.com:443
             api.nuget.org:443
@@ -137,6 +138,7 @@ jobs:
           disable-file-monitoring: true
           egress-policy: block
           allowed-endpoints: >
+            *.actions.githubusercontent.com:443
             *.data.mcr.microsoft.com:443
             api.nuget.org:443
             archive.ubuntu.com:80
@@ -145,7 +147,6 @@ jobs:
             github.com:443
             mcr.microsoft.com:443
             security.ubuntu.com:80
-
       # For subfolders, currently a full checkout is required.
       # See: https://github.com/marketplace/actions/build-and-push-docker-images#path-context
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
