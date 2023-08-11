@@ -11,6 +11,7 @@ import {
   asyncAdvanceStep,
   asyncGetUserEdits,
   asyncUpdateGoal,
+  setCurrentGoal,
 } from "components/GoalTimeline/Redux/GoalActions";
 import {
   CharacterChange,
@@ -125,6 +126,19 @@ describe("GoalTimeline", () => {
     // Expect 1 button for each of the Goal Types + one for the
     // "No History" element in the history list.
     expect(goalButtonList.length).toBe(4);
+  });
+});
+
+describe("Set empty goal", () => {
+  it("set current goal, no arguments", async () => {
+    const store = setupStore();
+    await act(async () => {
+      renderWithProviders(<GoalTimeline />, { store: store });
+      await store.dispatch(setCurrentGoal());
+    });
+    expect(store.getState().goalsState.currentGoal.goalType).toEqual(
+      GoalType.Default
+    );
   });
 });
 
