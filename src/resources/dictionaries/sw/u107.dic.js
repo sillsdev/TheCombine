@@ -1,4 +1,4 @@
-export default `K.K.
+export default `K
 KISARA
 KTY
 Kaaba
@@ -198,7 +198,7 @@ Kimijikenda
 Kimilili
 Kimisri
 Kimrima
-Kimtang'ata
+Kimtang
 Kimvita
 Kimwaga
 Kinachoshangaza
@@ -307,8 +307,10 @@ Kuruwetu
 Kushi
 Kwaresima
 Kwarto
-k.m
-k.m.
+kijani
+ke
+kijivu
+k
 ka
 kaa
 kaaba
@@ -409,7 +411,6 @@ kadhibia
 kadhibiana
 kadhibika
 kadhibisha
-kadhibisha.
 kadhibishana
 kadhibishia
 kadhibishika
@@ -759,7 +760,7 @@ kando
 kandokando
 kandoni
 kandwa
-kang'ata
+kang
 kanga
 kangaga
 kangaichi
@@ -834,7 +835,6 @@ kanzika
 kanzisha
 kanzo
 kanzu
-kanzu's
 kanzuni
 kao
 kaona
@@ -1178,7 +1178,6 @@ kazula
 kazungukwa
 kazusha
 kazwa
-ke
 keba
 kebar
 kebe
@@ -1254,7 +1253,7 @@ kenekana
 kenekea
 kenekesha
 kenekwa
-keng'eta
+keng
 kenga
 kengana
 kenge
@@ -1299,8 +1298,7 @@ kereketeka
 kereketwa
 keremkerem
 keremkeremu
-kereng'ende
-kereng'enje
+kereng
 keresha
 kereza
 kerezana
@@ -1352,7 +1350,6 @@ khabari
 khafifu
 khalifa
 khamsa
-khamsa-wa-ishirini
 khamsini
 khanga
 khasa
@@ -1634,8 +1631,6 @@ kichunguzo
 kichupa
 kichusi
 kichwa
-kichwa-chekundu
-kichwa-cheupe
 kichwamgomba
 kichwangomba
 kichwani
@@ -1650,11 +1645,8 @@ kidanga
 kidani
 kidaraja
 kidari
-kidari-cheupe
-kidari-cheusi
 kidato
 kidau
-kidau-cha-mpamba
 kidawa
 kidawati
 kidazi
@@ -1764,7 +1756,6 @@ kielekezi
 kielekezo
 kielelezi
 kielelezo
-kielelezo-skrini
 kielezi
 kielezo
 kielimu
@@ -1917,8 +1908,7 @@ kigego
 kigelegele
 kigeni
 kigeregenja
-kigereng'enz
-kigereng'enza
+kigereng
 kigesi
 kigeugeu
 kigeuzi
@@ -1935,8 +1925,7 @@ kigoma
 kigomba
 kigombegombe
 kigome
-kigong'ondo
-kigong'ota
+kigong
 kigongo
 kigono
 kigori
@@ -2044,7 +2033,6 @@ kijambia
 kijamii
 kijana
 kijanadume
-kijani
 kijanja
 kijarida
 kijaruba
@@ -2102,7 +2090,6 @@ kijituuzima
 kijiutando
 kijivalie
 kijivi
-kijivu
 kijivujivu
 kijiwe
 kijizi
@@ -2458,7 +2445,7 @@ kilichomshabi
 kilichomvua
 kilichonaswa
 kilichonata
-kilichong'olew
+kilichong
 kilichonukuliw
 kilichonyoka
 kilichonyolewa
@@ -2860,7 +2847,7 @@ kimuktadha
 kimulimu
 kimulimuli
 kimungu
-kimuri-muri
+kimuri
 kimurimuri
 kimuyemuye
 kimuziki
@@ -2991,10 +2978,10 @@ kinachonadiwa
 kinachonasa
 kinachonata
 kinachonepa
-kinachong'aa
+kinachong
 kinachonich
 kinachonifu
-kinachoning'in
+kinachoning
 kinachontaw
 kinachonyumbuk
 kinachooneka
@@ -3118,7 +3105,7 @@ kinaendelea
 kinafaa
 kinafanya
 kinafiki
-kinaga-ubaga
+kinaga
 kinaganaga
 kinagaubaga
 kinagiri
@@ -3155,7 +3142,7 @@ kinanasi
 kinanda
 kinande
 kinanga
-kinaning'in
+kinaning
 kinaniuma
 kinaonekana
 kinaonyesha
@@ -3234,14 +3221,7 @@ kinembe
 kinena
 kinene
 kinengwe
-king'irimoto
-king'onda
-king'ong'o
-king'ongo
-king'onyo
-king'ora
-king'ota
-king'oto
+king
 kinga
 kingaja
 kingali
@@ -3308,8 +3288,7 @@ kini
 kinichotengene
 kinidhamu
 kinindia
-kining'ina
-kining'iniacho
+kining
 kinipite
 kinjia
 kinjorinjori
@@ -3343,7 +3322,7 @@ kinyangalika
 kinyangarika
 kinyanyavu
 kinyavunyavu
-kinyefu-nyefu
+kinyefu
 kinyefunyefu
 kinyegele
 kinyegenyege
@@ -3358,9 +3337,9 @@ kinyesi
 kinyevu
 kinyevunyevu
 kinyezi
-kinying'inya
+kinying
 kinyo
-kinyong'onyo
+kinyong
 kinyonga
 kinyonge
 kinyongo
@@ -4627,7 +4606,7 @@ kondoo
 kondrati
 konea
 konesha
-kong'ota
+kong
 konga
 kongamana
 kongamania
@@ -4782,7 +4761,6 @@ koromo
 koromwa
 korona
 korongo
-korongo-nyangumi
 kororo
 korosho
 korota
@@ -6390,7 +6368,7 @@ kukimbizana
 kukimeza
 kukiminya
 kukinai
-kuking'oa
+kuking
 kukinga
 kukingama
 kukingia
@@ -6557,7 +6535,7 @@ kukumilia
 kukumiminia
 kukumiwa
 kukumiza
-kukung'uta
+kukung
 kukungojea
 kukunguwaa
 kukunia
@@ -6771,7 +6749,7 @@ kulikokota
 kulikoni
 kulikubali
 kulikufuru
-kulikung'uta
+kulikung
 kulikunja
 kulikuwa
 kulikuwako
@@ -7167,14 +7145,11 @@ kumnasa
 kumngoja
 kumngojea
 kumnogeshea
-kumnung'unik
-kumnung'uniki
+kumnung
 kumnusisha
 kumnusuru
 kumnyamazisha
 kumnyang
-kumnyang'any
-kumnyang'anya
 kumnyanyapaa
 kumnyenyekea
 kumnyeshea
@@ -7486,7 +7461,6 @@ kumzungusha
 kumzungushi
 kumzuru
 kuna
-kuna-mti-se
 kunaashiria
 kunachangia
 kunadi
@@ -7548,17 +7522,6 @@ kunenepa
 kunenepesha
 kunepa
 kung
-kung'aa
-kung'amua
-kung'ang'an
-kung'ara
-kung'arishwa
-kung'atuka
-kung'oa
-kung'oka
-kung'olea
-kung'uta
-kung'uto
 kunga
 kungali
 kungaliko
@@ -7637,10 +7600,9 @@ kunikumbuka
 kunikuza
 kuniletea
 kunilinda
-kuning'inia
-kuning'inizwa
+kuning
 kuninga
-kuninyang'a
+kuninyang
 kuniokoa
 kuniomba
 kuniombea
@@ -7719,7 +7681,7 @@ kuno
 kunoga
 kunolea
 kunona
-kunong'ona
+kunong
 kunradhi
 kuntu
 kunufaika
@@ -7731,7 +7693,6 @@ kunukuliwa
 kunukuu
 kununa
 kunung
-kunung'unika
 kununu
 kununua
 kununulia
@@ -7758,7 +7719,6 @@ kunyamaa
 kunyamaza
 kunyamazisha
 kunyang
-kunyang'any
 kunyanyasa
 kunyanyaswa
 kunyanyua
@@ -7781,7 +7741,7 @@ kunyoa
 kunyoka
 kunyolea
 kunyolewa
-kunyong'onyea
+kunyong
 kunyonga
 kunyonganyonga
 kunyongea
@@ -9977,7 +9937,7 @@ kuyakomesha
 kuyakosa
 kuyakubali
 kuyakumbuka
-kuyakung'uta
+kuyakung
 kuyakusanya
 kuyakuta
 kuyalinda
@@ -9986,7 +9946,7 @@ kuyamaizi
 kuyameza
 kuyamudu
 kuyanasa
-kuyang'oa
+kuyang
 kuyanukuu
 kuyaokoa
 kuyaona
@@ -10410,4 +10370,5 @@ kwini
 kwinini
 kwisha
 kwiu
-kwk`;
+kwk
+kiotomati`;

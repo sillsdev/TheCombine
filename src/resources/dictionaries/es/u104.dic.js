@@ -1,4 +1,6 @@
-export default `Habana
+export default `Huallo
+HH
+Habana
 Hacarí
 Hacienda
 Hadji
@@ -135,7 +137,8 @@ Hoyal
 Hoyo
 Hoyos
 Huabal
-Huac-Huas
+Huac
+Huas
 Huaca
 Huacachi
 Huacana
@@ -193,7 +196,6 @@ Huamelúlpam
 Huampara
 Huamuxtitlán
 Huanca
-Huanca-Huanca
 Huancabamba
 Huancan
 Huancane
@@ -273,7 +275,7 @@ Huautepec
 Huautla
 Huawei
 Huaxpaltepec
-Huay-Huay
+Huay
 Huaya
 Huayacocotla
 Huayacundo

@@ -46,7 +46,7 @@ Umra
 Umrah
 Unachotakiwa
 Unafikili
-Ung'eng'e
+Ung
 Unguja
 Unyasa
 Uondoeni
@@ -76,6 +76,19 @@ Uyunani
 Uzia
 Uzungu
 u
+uta
+ubaga
+unik
+uniki
+uto
+unika
+unye
+ungumu
+uniko
+unikaji
+uni
+unya
+ungwe
 ua
 uabudiwaji
 uachaji
@@ -1113,7 +1126,7 @@ ukandamizaj
 ukandamizaji
 ukandamizwaji
 ukando
-ukang'aa
+ukang
 ukaniangazia
 ukanifanya
 ukanijalia
@@ -1128,7 +1141,7 @@ ukanisikili
 ukanitetee
 ukano
 ukanushaji
-ukanyang'an
+ukanyang
 ukanyauka
 ukanyesha
 ukao
@@ -1304,7 +1317,7 @@ ukilipa
 ukimbizi
 ukimhoji
 ukimhuzunis
-ukimnyang'anya
+ukimnyang
 ukimpa
 ukimsifu
 ukimsikiliz
@@ -1323,8 +1336,7 @@ ukimya
 ukinaifu
 ukindani
 ukindu
-uking'aa
-uking'wafua
+uking
 ukingo
 ukingoni
 ukiniabudu
@@ -1720,7 +1732,7 @@ ulimwongoza
 ulimzunguka
 ulindaji
 ulindi
-uling'aa
+uling
 ulinganifu
 ulinganisho
 ulingano
@@ -1834,11 +1846,11 @@ uliona
 ulionao
 ulionekana
 ulionesha
-uliong'olewa
+uliong
 uliongezeka
 uliongozwa
 ulioniletea
-ulioning'inizw
+ulioning
 ulionipa
 ulionipatia
 ulionyauka
@@ -2058,7 +2070,7 @@ uliwahi
 uliwaingia
 uliwakomboa
 uliwali
-uliwang'ali
+uliwang
 uliwaongoza
 uliwapenda
 uliwasalimi
@@ -2363,7 +2375,7 @@ umemwachia
 umemwagika
 umemwona
 umemwondoa
-umeng'olewa
+umeng
 umeniacha
 umeniadhibu
 umenichukia
@@ -2812,7 +2824,7 @@ unamwona
 unamwonyesha
 unanasi
 unane
-unang'aa
+unang
 unanidaka
 unanidunda
 unaniita
@@ -2923,7 +2935,7 @@ unaonata
 unaonekana
 unaonesa
 unaonesha
-unaong'aa
+unaong
 unaongea
 unaongezeka
 unaongoza
@@ -3064,7 +3076,7 @@ unapomsaidi
 unapomsaidia
 unapomtumia
 unapomwadhi
-unapong'aa
+unapong
 unaponiadhi
 unaponihuku
 unapoomba
@@ -3265,10 +3277,7 @@ unenaji
 unene
 uneni
 unenyekevu
-ung'ae
-ung'aro
-ung'ongo
-ung'oya
+ung
 unga
 ungali
 ungalibaki
@@ -3373,7 +3382,6 @@ unijaribu
 unijibu
 unijie
 unijulishe
-unika
 unikia
 unikinge
 unikome
@@ -3415,8 +3423,7 @@ uniwie
 unizunguke
 unju
 unjukuti
-unong'onezi
-unong'ono
+unong
 unono
 ununaji
 ununo
@@ -3435,7 +3442,7 @@ unyakuzi
 unyama
 unyamavu
 unyambi
-unyang'anyi
+unyang
 unyange
 unyanya
 unyanyapaa
@@ -3471,13 +3478,11 @@ unyimivu
 unyo
 unyoaji
 unyofu
-unyog'onyev
+unyog
 unyogofu
 unyogovu
 unyokaji
-unyong'onye
-unyong'onyevu
-unyong'onyo
+unyong
 unyonga
 unyonge
 unyongeunyonge
@@ -3571,7 +3576,6 @@ upambano
 upambanuzi
 upambo
 upana
-upana-bendi
 upandaji
 upande
 upandeupande
@@ -4171,8 +4175,6 @@ uskani
 usku
 uslimini
 uso
-uso-mweupe
-uso-njano
 usodai
 usodawi
 usogora
@@ -4236,7 +4238,6 @@ ususuani
 uswa
 uswahili
 uswahilini
-uta
 utaa
 utaabishaji
 utaachiwa
@@ -4343,7 +4344,7 @@ utakapokabidh
 utakapokuja
 utakapokuwa
 utakapomaliz
-utakapong'a
+utakapong
 utakaponirud
 utakaporudis
 utakaposema
@@ -4437,8 +4438,6 @@ utandike
 utando
 utandu
 utang
-utang'aa
-utang'olewa
 utanga
 utangamano
 utangaza
@@ -4664,7 +4663,6 @@ utiriri
 utisho
 utitiri
 utiwe
-uto
 utoaji
 utoao
 utobwe
@@ -4696,7 +4694,6 @@ utoro
 utoshelevu
 utoshelezi
 utosi
-utosi-weusi
 utosini
 utoto
 utotole
@@ -5095,4 +5092,5 @@ uzuuiliaji
 uzuwiaji
 uzuzi
 uzuzu
-uzwa`;
+uzwa
+uten`;

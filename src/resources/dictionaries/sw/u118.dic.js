@@ -1,7 +1,8 @@
 export default `Vihiga
 Voi
 Voo
-v.h.
+vitendo
+v
 va
 vaa
 vaan
@@ -662,7 +663,7 @@ vimondo
 vimoto
 vimoyo
 vimulimuli
-vimuri-muri
+vimuri
 vimwondo
 vimya
 vina
@@ -805,11 +806,7 @@ vincha
 vindoro
 vinembe
 vinena
-ving'aavyo
-ving'irimoto
-ving'onyo
-ving'ora
-ving'oto
+ving
 vingaja
 vingali
 vingaliko
@@ -835,7 +832,7 @@ vingirikisha
 vingirisha
 vingune
 vinihifadhi
-vining'ina
+vining
 vinipeleke
 viniweke
 vinjar
@@ -860,7 +857,7 @@ vinyago
 vinyama
 vinyamkela
 vinyangaa
-vinyefu-nyefu
+vinyefu
 vinyeleo
 vinyeo
 vinyesi
@@ -869,7 +866,7 @@ vinyia
 vinyika
 vinyisha
 vinyo
-vinyong'onyo
+vinyong
 vinyonga
 vinyongo
 vinyonyo
@@ -1171,7 +1168,6 @@ vitelemsho
 vitembe
 vitendawili
 vitendea
-vitendo
 vitenge
 vitengele
 vitengo

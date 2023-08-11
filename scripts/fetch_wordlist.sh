@@ -113,7 +113,7 @@ else
 fi
 
 echo "Converting to .txt wordlist"
-cmd="npm run wordlist -- ${DIC} -psuo ${DIR}${LANG}.txt"
+cmd="npm run wordlist -- ${DIC} -po ${DIR}${LANG}.txt"
 if [[ $DRYRUN -eq 1 ]] ; then
   echo "$cmd"
 else

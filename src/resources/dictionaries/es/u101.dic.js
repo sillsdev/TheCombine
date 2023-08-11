@@ -1,4 +1,5 @@
-export default `Ebanal
+export default `e
+Ebanal
 Ebano
 Ebebiyín
 Ebro
@@ -647,7 +648,7 @@ Edrimán
 Eduar
 Eduard
 Eduardo
-Educ.ar
+Educ
 Edwar
 Edward
 Edén

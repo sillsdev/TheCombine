@@ -43,7 +43,7 @@ Ajemi
 Akaiko
 Akamatwa
 Akaya
-Akhlaaq-Tabia
+Akhlaaq
 Akichangia
 Akilimali
 Akiongelea
@@ -140,6 +140,7 @@ Azimio
 Aziza
 Azori
 Azoto
+ata
 a
 aa
 aabudiwaye
@@ -813,7 +814,7 @@ akaeleza
 akaenda
 akaendelea
 akaeneza
-akaf'a
+akaf
 akafa
 akafagia
 akafanikiwa
@@ -954,7 +955,8 @@ akakileta
 akakimbia
 akakimbilia
 akakimbizwa
-akaking'ang'a
+akaking
+ang
 akakinyunyi
 akakipa
 akakipura
@@ -1656,7 +1658,7 @@ akikukuta
 akikulazimisha
 akikumbuka
 akikunyang
-akikunyang'anya
+anya
 akikuona
 akikupeleka
 akikupiga
@@ -2385,7 +2387,7 @@ alikibadili
 alikichukua
 alikiendea
 alikika
-alikikung'u
+alikikung
 alikimbia
 alikimbilia
 alikimwa
@@ -2614,7 +2616,8 @@ alimzaa
 alimzaba
 alinabihika
 alinena
-aling'amua
+aling
+amua
 alinguruma
 aliniambia
 alinibakua
@@ -2639,7 +2642,7 @@ alinisalimish
 alinitokea
 alinituma
 alinjia
-alinong'ona
+alinong
 alinukuliwa
 alinukuu
 alinunua
@@ -4313,7 +4316,8 @@ amemwonea
 amemzuilia
 amenakili
 amenasuliwa
-ameng'ang'ania
+ameng
+ania
 ameniacha
 ameniadhibu
 ameniambia
@@ -4508,7 +4512,7 @@ ameukumbuka
 ameuliwa
 ameumba
 ameumbwa
-ameung'oa
+ameung
 ameungana
 ameupaka
 ameupenda
@@ -4709,7 +4713,8 @@ amlete
 amlipe
 ammi
 amngoje
-amnyang'any
+amnyang
+any
 amnyonyowe
 amonia
 ampasendi
@@ -4760,7 +4765,6 @@ amtukuze
 amtumikiaye
 amtumikie
 amu
-amua
 amuali
 amuana
 amueni
@@ -5464,7 +5468,7 @@ anauchukua
 anaufafanua
 anauhukumu
 anauingia
-anaukung'uta
+anaukung
 anauliza
 anauma
 anaumwa
@@ -5856,7 +5860,7 @@ anayenijali
 anayenikana
 anayenikarib
 anayenikaribi
-anayening'i
+anayening
 anayeninyang
 anayeniona
 anayenionea
@@ -5870,7 +5874,7 @@ anayenitumik
 anayeniuliza
 anayenizoeza
 anayenunua
-anayenyang'any
+anayenyang
 anayenyonyesha
 anayeogelea
 anayeomba
@@ -6292,7 +6296,7 @@ angemtoa
 angemtumia
 angenidhara
 angeniletea
-angening'amua
+angening
 angenitukan
 angeokoka
 angeokolewa
@@ -6353,7 +6357,6 @@ angusika
 angusisha
 angwa
 ani
-ania
 aniambiaye
 anieli
 anifikirie
@@ -6419,8 +6422,6 @@ anusha
 anutha
 anuwai
 anwani
-anwani-IP
-anya
 anyamaze
 anyi
 anyoe
@@ -6941,7 +6942,6 @@ asumini
 asusa
 aswa
 aswali
-ata
 ataacha
 ataachwa
 ataadhibiwa
@@ -7217,7 +7217,7 @@ atakula
 atakuletea
 atakulipeni
 atakumbukwa
-atakung'oa
+atakung
 atakunyakua
 atakunywa
 atakupa
@@ -7268,7 +7268,7 @@ atamkomboa
 atamkuta
 atamlinda
 atamlipa
-atamnyang'a
+atamnyang
 atampa
 atampatia
 atampenda
@@ -7860,4 +7860,25 @@ azmamu
 azuiaye
 azuka
 azungumze
-azungumzie`;
+azungumzie
+ayni
+arayo
+an
+arishwa
+aalo
+amung
+anio
+arizo
+aro
+ariza
+anyen
+anda
+andu
+anaa
+anivu
+arange
+arisha
+ating
+ae
+aavyo
+aazo`;

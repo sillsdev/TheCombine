@@ -1,4 +1,5 @@
-export default `Phara
+export default `P
+Phara
 pH
 Plaa
 Placa

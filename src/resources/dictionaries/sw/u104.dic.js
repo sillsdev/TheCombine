@@ -565,7 +565,7 @@ hakumwambia
 hakumwamini
 hakumwona
 hakuna
-hakung'amua
+hakung
 hakungaliku
 hakuniacha
 hakunihuzun
@@ -2906,7 +2906,7 @@ hunde
 hundi
 hunena
 hunesa
-hung'aa
+hung
 hungekuwa
 hungepewa
 hungoja
@@ -2920,7 +2920,7 @@ huniheshimu
 hunijalia
 hunika
 hunikimbia
-huning'inizwa
+huning
 hunioni
 hunipa
 hunipendi
@@ -2931,7 +2931,7 @@ hunisikiliza
 hunitangulia
 huniwafiki
 huno
-hunong'onez
+hunong
 hunrunzi
 huntha
 hunuiwa
@@ -3033,7 +3033,7 @@ hurudia
 hurudiwarud
 huruju
 huruka
-hurul-ayni
+hurul
 hurulaini
 huruma
 hurumia
@@ -3470,4 +3470,5 @@ huzururazuru
 huzururazurur
 huzururazurura
 huzusha
-hwenda`;
+hwenda
+h`;

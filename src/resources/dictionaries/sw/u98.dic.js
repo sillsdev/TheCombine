@@ -1,4 +1,4 @@
-export default `B.K
+export default `B
 Baali
 Babati
 Babuloni
@@ -91,6 +91,7 @@ Bute
 Butere
 Bwagamoyo
 Bwana
+bob
 ba
 baa
 baad
@@ -446,7 +447,7 @@ bandulika
 bandulisha
 banduliwa
 banduru
-bang'ang'a
+bang
 bangaya
 bangaza
 bange
@@ -583,7 +584,6 @@ bassi
 bastola
 basua
 bata
-bata-miti
 batabata
 bataliani
 batalioni
@@ -640,7 +640,6 @@ bausha
 bavu
 bavuni
 bawa
-bawa-kijani
 bawaba
 bawabu
 bawasili
@@ -930,7 +929,6 @@ bimbirizisha
 bimbirizwa
 bimkubwa
 bin
-bin-ami
 binaadam
 binaadamu
 binadamu
@@ -1016,7 +1014,6 @@ bismillahi
 bitana
 bitarehe
 biti
-biti-32
 bitimarembo
 bitmarembo
 bitozi
@@ -1156,12 +1153,7 @@ bonde
 bondeni
 bondia
 boneti
-bong'oa
-bong'oka
-bong'olea
-bong'oleka
-bong'olesha
-bong'olewa
+bong
 bonga
 bongana
 bonge
@@ -1574,9 +1566,6 @@ bwambwa
 bwambwara
 bwamkubwa
 bwana
-bwana'ke
-bwana'ngu
-bwana-maneno
 bwanaarusi
 bwanake
 bwanashamba

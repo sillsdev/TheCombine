@@ -1,4 +1,5 @@
-export default `RAE
+export default `Ragat
+RAE
 Rabanedo
 Rabolargo
 Rada
@@ -42,7 +43,7 @@ Ranracancha
 Ranrahirca
 Ransang
 Rapayan
-Rapu-Rapu
+Rapu
 Raquel
 Rasgón
 Raspadura

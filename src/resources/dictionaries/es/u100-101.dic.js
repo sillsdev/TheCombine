@@ -1,4 +1,5 @@
-export default `Deagan
+export default `de
+Deagan
 Dean
 Deán
 deambula

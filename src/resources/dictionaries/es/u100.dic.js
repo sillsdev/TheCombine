@@ -1,4 +1,5 @@
-export default `DD.HH.
+export default `d
+DD
 DNI
 Dña
 DVD

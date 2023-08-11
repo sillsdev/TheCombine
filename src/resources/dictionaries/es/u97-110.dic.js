@@ -22,7 +22,6 @@ Anchonga
 Anchucaya
 Anclar
 Anco
-Anco_Huallo
 Ancud
 Ancuyá
 Ancón
@@ -124,6 +123,7 @@ Anzá
 Anáhuac
 Añatuya
 Añisoc
+an
 anabaptismo
 anabaptismos
 anabaptista

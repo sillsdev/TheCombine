@@ -50,7 +50,8 @@ Lahúy
 Lajarcia
 Lajas
 Lajitas
-Lal-lo
+Lal
+lo
 Lala
 Lalana
 Lalaquiz
@@ -11439,7 +11440,6 @@ llévenlo
 llévenlos
 llévense
 llévese
-lo
 loa
 loaba
 loabais

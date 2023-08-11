@@ -134,8 +134,13 @@ Winde
 Witu
 Wizarani
 Wundanyi
-w
+wazi
 wa
+wafua
+wenya
+wangu
+weusi
+w
 waa
 waabudu
 waachane
@@ -859,7 +864,7 @@ wakamzika
 wakamzunguka
 wakandamizaji
 wakanena
-wakang'ang'an
+wakang
 wakaniambia
 wakanichukia
 wakanipa
@@ -1041,7 +1046,7 @@ wakawakomea
 wakawakusan
 wakawakuta
 wakawaleta
-wakawanung'u
+wakawanung
 wakawaombea
 wakawaona
 wakawaonea
@@ -1077,7 +1082,7 @@ wakaweka
 wakaweza
 wakayaacha
 wakayakumbuk
-wakayakung'u
+wakayakung
 wakayaona
 wakayatandaz
 wakayaweka
@@ -1257,8 +1262,7 @@ wakingoja
 wakingojea
 wakinitupa
 wakinivamia
-wakinong'on
-wakinong'ona
+wakinong
 wakinunua
 wakinyamaza
 wakinywa
@@ -1774,7 +1778,7 @@ walimkuta
 walimlaumu
 walimletea
 walimlilia
-walimnyang'a
+walimnyang
 walimo
 walimokuwa
 walimpa
@@ -1846,7 +1850,7 @@ walinitegea
 walinivamia
 walinizidi
 walinizungu
-walinung'uni
+walinung
 walinunua
 walinyimwa
 walinzi
@@ -2782,7 +2786,7 @@ wamenitoboa
 wamenizidi
 wamenizingi
 wamenjipanga
-wamenyang'a
+wamenyang
 wamenyimwa
 wamenyongwa
 wameokoka
@@ -3347,7 +3351,6 @@ wananiwazia
 wananizingi
 wananoa
 wananung
-wananung'uni
 wananunua
 wananyamazi
 wananyanyaswa
@@ -4061,10 +4064,6 @@ wanenaji
 wanene
 wanenea
 wang
-wang'ara
-wang'ariza
-wang'oaji
-wang'olewe
 wanga
 wangafu
 wangali
@@ -4115,7 +4114,6 @@ wangojamila
 wangoje
 wangojeao
 wangojezi
-wangu
 wangurumizi
 wanguwangu
 wangwa
@@ -4196,7 +4194,6 @@ wanyamapori
 wanyamaze
 wanyamazishe
 wanyang
-wanyang'any
 wanyangalika
 wanyanyaswa
 wanyapara
@@ -4938,7 +4935,7 @@ watamwona
 watamwua
 watanda
 watanena
-watang'ara
+watang
 watanga
 watangatanga
 watangazaji
@@ -5384,7 +5381,6 @@ wazazi
 wazee
 wazegazega
 wazembe
-wazi
 wazidi
 wazielewe
 wazijua
@@ -5494,7 +5490,6 @@ weuaji
 weuo
 weupe
 weupeweupe
-weusi
 wevi
 wewe
 wewedeka

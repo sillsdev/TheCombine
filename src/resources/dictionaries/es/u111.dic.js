@@ -1,4 +1,5 @@
-export default `O
+export default `ob
+O
 ONG
 ONU
 Oasis
@@ -234,7 +235,6 @@ Ozámiz
 Oñate
 o
 oasis
-ob
 obandeña
 obandeñas
 obandeño

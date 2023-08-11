@@ -1,4 +1,5 @@
-export default `Riachuelo
+export default `R
+Riachuelo
 Ribarroja
 Ribas
 Riberalta
@@ -1467,7 +1468,7 @@ Ruiz
 Ruiza
 Rumanía
 Rumisapa
-Rupa-Rupa
+Rupa
 Rurrenabaque
 Rusia
 Ruíz

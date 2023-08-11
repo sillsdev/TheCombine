@@ -1,4 +1,5 @@
-export default `Pabellón
+export default `Pampa
+Pabellón
 Pabla
 Pablo
 Paca
@@ -183,7 +184,6 @@ Pambana
 Pambilero
 Pamilacan
 Pamoctan
-Pampa
 Pampachiri
 Pampacolca
 Pampamarca
@@ -258,7 +258,7 @@ Pantanillo
 Pantano
 Pantanos
 Pantar
-Pantau-Ragat
+Pantau
 Pantelhó
 Pantepec
 Pantukan

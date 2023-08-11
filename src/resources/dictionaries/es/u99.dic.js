@@ -1,4 +1,5 @@
-export default `CD
+export default `C
+CD
 Cdad
 CFE
 cf

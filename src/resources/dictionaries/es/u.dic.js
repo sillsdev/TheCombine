@@ -155,6 +155,7 @@ kárstica
 kársticas
 kárstico
 kársticos
+́Lang
 Quebrachal
 Quebrada
 Quebradagrande
@@ -282,7 +283,6 @@ Quitasueño
 Quitay
 Quitilipi
 Quito
-Quito-Arma
 Quitratúe
 Quitupan
 Quituro

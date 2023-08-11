@@ -44,6 +44,9 @@ Italia
 Iten
 Izraili
 i
+iza
+izo
+inizwa
 ia
 iache
 iahidi
@@ -616,7 +619,7 @@ ilimwathiri
 ilimwingia
 ilimwokoa
 ilimwonyesha
-iling'aa
+iling
 ilinikabili
 iliniua
 ilinizunguk
@@ -936,8 +939,9 @@ iliyomwagwa
 iliyomwondo
 iliyonaswa
 iliyonayo
-iliyong'ole
-iliyoning'iniz
+iliyong
+iliyoning
+iniz
 iliyonona
 iliyonuiwa
 iliyonyanyuka
@@ -1350,7 +1354,7 @@ imewaanguki
 imewadia
 imewafanya
 imewahi
-imewanyang'anya
+imewanyang
 imewapa
 imewapasa
 imewataka
@@ -1543,8 +1547,7 @@ inamtaka
 inamtosha
 inamwabudu
 inamwisha
-inang'aa
-inang'ara
+inang
 inanibidi
 inanifanya
 inanipasa
@@ -1916,11 +1919,11 @@ inayomwagwa
 inayomwambu
 inayomwamini
 inayomwezesha
-inayong'aa
+inayong
 inayonilind
 inayonisonona
 inayonunuliwa
-inayonyang'any
+inayonyang
 inayonyesha
 inayonyonywa
 inayoonekan
@@ -2031,7 +2034,7 @@ inayotumaini
 inayotumia
 inayotumika
 inayotumiwa
-inayotung'a
+inayotung
 inayoua
 inayoujia
 inayoundwa
@@ -2080,7 +2083,7 @@ indiketa
 indiko
 ine
 inesha
-ing'arayo
+ing
 ingali
 ingalifanyik
 ingalifanyika
@@ -2148,7 +2151,6 @@ injikiza
 injikwa
 injili
 injini
-injini-tafuti
 injinia
 inkishafi
 inna
@@ -2453,7 +2455,7 @@ itakapokwenda
 itakapokwis
 itakapolia
 itakapomalizik
-itakapong'o
+itakapong
 itakapopamb
 itakapopambazuka
 itakapopita
@@ -2711,7 +2713,6 @@ iya
 iyepakwa
 iyetupinga
 iz
-iza
 izae
 izana
 izara
@@ -2720,8 +2721,14 @@ izibe
 izika
 izingatiwe
 izisha
-izo
 izraili
 izu
 izungukayo
-izwa`;
+izwa
+in
+irimoto
+iniacho
+inya
+inia
+iniza
+inizw`;

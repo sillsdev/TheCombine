@@ -1,6 +1,6 @@
-export default `S.L.P.
+export default `S
 SAWA
-Saba-Saba
+Saba
 Sabarei
 Sabasaba
 Sadoki
@@ -116,7 +116,7 @@ Sinza
 Sirengo
 Siria
 Sisera
-Sista-du
+Sista
 Sistani
 Skewa
 Smurna
@@ -152,6 +152,10 @@ Surah
 Susana
 Swai
 Syongila
+s
+skrini
+se
+shingo
 sa
 saa
 saada
@@ -336,7 +340,6 @@ sajiliwa
 sajin
 sajini
 saka
-saka-mke-wangu
 sakafiana
 sakafika
 sakafilia
@@ -682,7 +685,7 @@ senene
 seneneko
 seneta
 senezo
-seng'enge
+seng
 senga
 sengana
 senge
@@ -983,7 +986,7 @@ shemeji
 shemere
 shemeri
 shemesi
-shemng'ombe
+shemng
 shemshi
 shemsi
 sheneza
@@ -1111,9 +1114,7 @@ shindiliwa
 shindisha
 shindo
 shindwa
-shingo
-shingo-nyeusi
-shingo-sufu
+sufu
 shingoni
 shinikizana
 shinikizia
@@ -1838,7 +1839,6 @@ skeli
 sketa
 sketi
 skonzi
-skrini
 skrubu
 skuli
 skurubu
@@ -2218,7 +2218,6 @@ sudusu
 suezi
 sufi
 sufii
-sufu
 sufufu
 sufulia
 sufuri

@@ -325,7 +325,7 @@ Mtambuu
 Mtanabahisho
 Mtanda
 Mtandio
-Mtang'ata
+Mtang
 Mtanganyika
 Mtangawizi
 Mtange
@@ -372,7 +372,7 @@ Mungatsi
 Mungiki
 Mungu
 Mungubariki
-Murang'a
+Murang
 Murangering
 Murka
 Musa
@@ -444,7 +444,13 @@ Myahudi
 Myunani
 Mzanzibari
 Mzungu
-m.y.
+miti
+maneno
+msingi
+m
+mpamba
+muri
+mti
 maa
 maabadi
 maabara
@@ -1433,7 +1439,7 @@ makundi
 makundimakun
 makundimakund
 makundimakundi
-makung'uto
+makung
 makungu
 makunguru
 makungwi
@@ -1595,7 +1601,7 @@ mamoja
 mamosi
 mamsahib
 mamuiani
-mamung'unye
+mamung
 mamwana
 mamwinyi
 man
@@ -1625,15 +1631,10 @@ manena
 manenani
 manene
 manenemane
-maneno
 manenohaya
 manesi
 maneva
-mang'amung'a
-mang'amung'amu
-mang'ang'amu
-mang'ati
-mang'ungumu
+mang
 manga
 mangaja
 mangangia
@@ -1671,8 +1672,7 @@ manne
 manoari
 manokoa
 manoleo
-manong'onezo
-manong'ono
+manong
 manoo
 manoti
 manowari
@@ -1684,7 +1684,7 @@ manukato
 manuko
 manuku
 manukuu
-manung'uniko
+manung
 manuwari
 manuwio
 manuwiyo
@@ -2352,7 +2352,7 @@ matindija
 matingo
 matinguu
 matini
-matini-msimbo
+msimbo
 matinifora
 matirivyogo
 matisha
@@ -2463,7 +2463,7 @@ maumbufu
 maume
 maumivu
 maundifu
-maung'uniko
+maung
 maungamo
 maunganifu
 maungio
@@ -2821,7 +2821,7 @@ mbulukwa
 mbumbumbu
 mbumburisho
 mbundugo
-mbung'o
+mbung
 mbungati
 mbunge
 mbungo
@@ -2851,7 +2851,6 @@ mbwanda
 mbwara
 mbwawa
 mbwe
-mbwe-mbwe
 mbwedu
 mbweha
 mbweko
@@ -2965,7 +2964,7 @@ mchipukizi
 mchipwi
 mchiririko
 mchirizi
-mchirizi-mweupe
+mweupe
 mchiriziko
 mchirizo
 mchobeo
@@ -3196,7 +3195,6 @@ menyekeka
 menyekesha
 menyesha
 menyu
-menyu-vitendo
 menywa
 mepagawa
 mepesi
@@ -3325,7 +3323,6 @@ mfugo
 mfujaji
 mfukize
 mfuko
-mfuko-shingo
 mfukoni
 mfukuaji
 mfukuto
@@ -3449,12 +3446,10 @@ mgomboz
 mgombozi
 mgomo
 mgomvi
-mgong'oto
+mgong
 mgongaji
 mgongano
 mgongo
-mgongo-mweupe
-mgongo-pinki
 mgongoni
 mgoni
 mgonjwa
@@ -3789,7 +3784,6 @@ miguruto
 migusano
 miguso
 miguu
-miguu-mifupi
 miguuni
 migwisho
 mihadarati
@@ -3921,7 +3915,7 @@ mikumbo
 mikumbuu
 mikunde
 mikundu
-mikung'uto
+mikung
 mikunga
 mikunguru
 mikunjo
@@ -4026,11 +4020,7 @@ minazi
 mindi
 minenguo
 mineso
-ming'ang'anio
-ming'ao
-ming'arizo
-ming'aro
-ming'inya
+ming
 mingapi
 minghairi
 mingi
@@ -4045,7 +4035,7 @@ minkari
 minne
 minofu
 minoga
-minong'ono
+minong
 mintaarafu
 mintaraf
 mintarafu
@@ -4313,7 +4303,6 @@ mithili
 mithilisha
 mithilishia
 mithilishika
-miti
 mitihani
 mitikiti
 mitiko
@@ -4456,7 +4445,6 @@ mjenzi
 mjesuti
 mjeuri
 mji
-mji.mang'amung
 mjia
 mjiandikishe
 mjiari
@@ -4609,7 +4597,7 @@ mkandamizaji
 mkandamizo
 mkandarasi
 mkando
-mkang'oa
+mkang
 mkangaja
 mkanganyiko
 mkangazi
@@ -4724,7 +4712,7 @@ mkeshe
 mketo
 mkewe
 mkia
-mkia-mrefu
+mrefu
 mkiambiwa
 mkiandamana
 mkiani
@@ -4932,7 +4920,7 @@ mkundaji
 mkunde
 mkundu
 mkunduni
-mkung'uto
+mkung
 mkunga
 mkunge
 mkungu
@@ -5094,8 +5082,7 @@ mlicho
 mlichokishu
 mlichokuwa
 mlichomtende
-mlichonong'o
-mlichonong'on
+mlichonong
 mlichopata
 mlichosema
 mlichunge
@@ -5424,7 +5411,7 @@ mmoyomoyo
 mmrima
 mmsipoona
 mmumunye
-mmung'unye
+mmung
 mmunina
 mmwagiko
 mmwaka
@@ -5713,13 +5700,7 @@ mneneji
 mneni
 mnepo
 mneso
-mng'ang'anio
-mng'ao
-mng'ariza
-mng'arizo
-mng'aro
-mng'oaji
-mng'ongo
+mng
 mngago
 mngali
 mngalifanya
@@ -5773,9 +5754,7 @@ mno
 mnofu
 mnoga
 mnokoa
-mnong'onezi
-mnong'oni
-mnong'ono
+mnong
 mnono
 mnubi
 mnukauvundo
@@ -5785,8 +5764,7 @@ mnuko
 mnumanuma
 mnuna
 mnunaji
-mnung'unikaji
-mnung'uniko
+mnung
 mnunguri
 mnuni
 mnuno
@@ -5800,8 +5778,6 @@ mnyamavu
 mnyambuliko
 mnyampara
 mnyang
-mnyang'anyen
-mnyang'anyi
 mnyangalika
 mnyange
 mnyanya
@@ -5879,7 +5855,7 @@ momonyolewa
 momonyosha
 momote
 mondo
-mong'onyoa
+mong
 moni
 monita
 monkoa
@@ -5939,7 +5915,6 @@ mpalilio
 mpalilizi
 mpalio
 mpalizi
-mpamba
 mpambaji
 mpambake
 mpambanisho
@@ -5968,7 +5943,6 @@ mpapatiko
 mpapayu
 mpapindi
 mpapura
-mpapura-pumbu
 mpapuro
 mparachichi
 mparaganyo
@@ -6174,7 +6148,6 @@ mrasimu
 mratabu
 mratibu
 mrau
-mrefu
 mregaa
 mrehani
 mrejaa
@@ -6512,7 +6485,6 @@ msimacho
 msimamia
 msimamizi
 msimamo
-msimbo
 msimdharau
 msimhuzunis
 msimiko
@@ -6539,7 +6511,6 @@ msinga
 msingaji
 msingefuri
 msingelia
-msingi
 msingizia
 msingwe
 msiniamini
@@ -6547,7 +6518,6 @@ msinililie
 msinisababi
 msinji
 msinung
-msinung'uni
 msinyimane
 msinywe
 msinzi
@@ -6900,7 +6870,7 @@ mtande
 mtandikaji
 mtandio
 mtando
-mtang'ara
+mtang
 mtanga
 mtangamano
 mtangatanga
@@ -7086,7 +7056,6 @@ mteua
 mteule
 mteuo
 mteuzi
-mti
 mtia
 mtiaji
 mtibuko
@@ -7369,8 +7338,7 @@ muna
 munasaba
 munda
 mundu
-mung'unya
-mung'unye
+mung
 mungu
 mungualiye
 mungunao
@@ -7618,7 +7586,6 @@ mwamamke
 mwamana
 mwamba
 mwambaa
-mwambaa-menyu
 mwambaji
 mwambani
 mwambao
@@ -7912,7 +7879,6 @@ mwerezi
 mweru
 mwetu
 mweuo
-mweupe
 mweusi
 mwewe
 mweza
@@ -7980,8 +7946,6 @@ mwiteni
 mwitikio
 mwitiko
 mwito
-mwito-ingia
-mwito-toka
 mwitu
 mwituni
 mwiva

@@ -1,4 +1,4 @@
-export default `11293
+export default `11307
 CRC
 Chachage
 Chalinze
@@ -6,7 +6,7 @@ Changamwe
 Chaurembo
 Chebiemit
 Chebloch
-Check-bob
+Check
 Chehe
 Chelago
 Chenyenge
@@ -136,7 +136,6 @@ chagulia
 chagulisha
 chaguliwa
 chaguo
-chaguo-msingi
 chaguza
 chaguzi
 chahusika
@@ -251,7 +250,7 @@ chandalua
 chandarua
 chando
 chane
-chang'aa
+chang
 changa
 changamana
 changamano
@@ -296,7 +295,6 @@ changishika
 changishwa
 changiza
 changizo
-changizo.ji
 chango
 changu
 changua
@@ -525,7 +523,7 @@ chelezeka
 chelezesha
 chelezo
 chelezwa
-chem-chem
+chem
 chema
 chemba
 chembamba
@@ -1181,7 +1179,7 @@ chupilia
 chupio
 chupisha
 chupiwa
-chupu-chupu
+chupu
 chupuchupu
 chupwa
 chura
@@ -1248,6 +1246,7 @@ chwea
 chwechwe
 chwelewa
 chwewa
+chakac
 Dachi
 Dadaab
 Dalai
@@ -1291,6 +1290,7 @@ Dorka
 Drusila
 Dukana
 Dunuba
+du
 da
 daa
 daathar
@@ -1453,7 +1453,6 @@ dandiwa
 dandwa
 danedane
 dang
-dang'a
 danga
 dangany
 danganya
@@ -1960,7 +1959,7 @@ dimu
 dinari
 dind
 dinda
-dinda.disia
+disia
 dindi
 dindia
 dindiana
@@ -2015,13 +2014,11 @@ diro
 dirwa
 dis
 dishi
-disia
 disii
 disika
 disisha
 diskaunti
 diski
-diski-ROM
 disko
 dispensari
 diswa
@@ -2101,12 +2098,6 @@ doma
 dome
 dominika
 domo
-domo-bluu
-domo-jekundu
-domo-kijivu
-domo-ngazi
-domo-njano
-domo-wazi
 domokaya
 domomwiko
 don
@@ -2200,7 +2191,6 @@ dramumeja
 dresa
 dreva
 drili
-du
 dua
 duala
 dualia
@@ -2501,6 +2491,7 @@ Euodia
 Eutuko
 Ewaso
 Ezekieli
+eng
 e
 ea
 ebagua
@@ -2751,7 +2742,6 @@ enezea
 enezeka
 enezi
 enezwa
-eng
 enga
 engaeng
 engaenga
@@ -2885,6 +2875,9 @@ ezuliana
 ezulika
 ezuliwa
 ezusha
+eta
+enje
+enge
 FILEMONI
 Falada
 Fanta
@@ -4774,10 +4767,8 @@ giligili
 gilotini
 gimba
 gimbi
-ging'iza
-ging'izo
+ging
 gingi
-gingi'izo
 ginginiza
 ginginizo
 gingiri
@@ -4911,8 +4902,6 @@ gonelea
 gonesha
 gonezi
 gong
-gong'ota
-gong'otoa
 gonga
 gongamlango
 gongan
@@ -4959,9 +4948,7 @@ gori
 gorofa
 goromoe
 goromwe
-gorong'ondo
-gorong'ondwa
-gorong'ondwe
+gorong
 goshi
 got
 gota
@@ -5297,6 +5284,8 @@ Jumatatu
 Jumba
 Jumuia
 Juni
+ji
+jekundu
 ja
 jaa
 jaala
@@ -5515,7 +5504,6 @@ jego
 jehanamu
 jekejeke
 jeki
-jekundu
 jela
 jelebi
 jelezi
@@ -5574,7 +5562,6 @@ jeupe
 jeuri
 jeusi
 jezi
-ji
 jia
 jiaminia
 jiaminisha
@@ -5605,7 +5592,6 @@ jibodosha
 jibu
 jibwa
 jicho
-jicho-jekundu
 jichoni
 jichora
 jichumia
@@ -6063,6 +6049,7 @@ juzika
 juzisha
 juzu
 juzuu
+jalizi
 Obedi
 Octoba
 Ofiri
@@ -6088,8 +6075,49 @@ Oropoi
 OtoXXX
 Ovambo
 Oyugis
-o
+osa
+ona
 oa
+oka
+olea
+oleka
+olesha
+olewa
+ota
+otoa
+ondo
+ondwa
+ondwe
+onez
+ole
+o
+olew
+onda
+ong
+ongo
+onyo
+ora
+oto
+onyea
+one
+oe
+onezo
+ono
+on
+oaji
+onezi
+oni
+onyoa
+oeni
+ofoa
+ofu
+ombe
+onzi
+oo
+oneza
+onong
+onya
+onyeza
 oama
 oamia
 oamika
@@ -6135,7 +6163,6 @@ ogopwa
 ogunduliwa
 ohaa
 oili
-oka
 okaidishwa
 okea
 okeka
@@ -6166,11 +6193,6 @@ oktavo
 okwa
 ola
 olana
-ole
-olea
-oleka
-olesha
-olewa
 oleza
 oli
 olimpiki
@@ -6181,7 +6203,6 @@ omba
 ombana
 ombaomba
 ombasha
-ombe
 ombea
 ombeaneni
 ombeka
@@ -6220,12 +6241,10 @@ omoleka
 omolewa
 omora
 omosha
-ona
 onana
 onania
 onanika
 onanisha
-ondo
 ondoa
 ondoana
 ondoeni
@@ -6297,7 +6316,6 @@ ongozanisha
 ongozea
 ongozeka
 ongozwa
-oni
 onia
 onja
 onjana
@@ -6312,11 +6330,8 @@ onjeshwa
 onji
 onjo
 onjwa
-ono
 onwa
-onya
 onyana
-onyea
 onyeka
 onyesha
 onyeshana
@@ -6325,7 +6340,6 @@ onyesheka
 onyesheni
 onyesho
 onyeshwa
-onyo
 onywa
 opago
 opareta
@@ -6355,7 +6369,6 @@ osheni
 oshewa
 oshwa
 ostahili
-ota
 otama
 otamia
 otamisha
@@ -6393,6 +6406,10 @@ ozeka
 ozesha
 ozi
 ozwa
+onyev
+onye
+onyevu
+olewe
 Pafo
 Palestina
 Pamfulia
@@ -6434,6 +6451,9 @@ Protestanti
 Ptoyo
 Pude
 Pumbuji
+P
+pinki
+pumbu
 pa
 paa
 paanda
@@ -6518,7 +6538,6 @@ pake
 paketi
 paki
 pakia
-pakia-kiotomati
 pakiana
 pakika
 pakio
@@ -7245,7 +7264,7 @@ pilipili
 piliza
 pilizana
 pilizwa
-pilka-pilka
+pilka
 pima
 pimaji
 pimajoto
@@ -7309,7 +7328,6 @@ pinguo
 pingusi
 pingwa
 pini
-pinki
 pinzani
 pipa
 pipani
@@ -7566,8 +7584,6 @@ presha
 printa
 profesa
 programu
-programu-jalizi
-programu-tumizi
 projekta
 projekti
 propaganda
@@ -7632,7 +7648,6 @@ pumbavu
 pumbaza
 pumbazana
 pumbo
-pumbu
 pumnziko
 pumu
 pumua
@@ -7822,6 +7837,7 @@ Rumuruti
 Rusaganya
 Rusumo
 Ruthi
+ROM
 ra
 raba
 rabana
@@ -7951,7 +7967,6 @@ randwa
 ranga
 rangaito
 rangi
-rangi-mbili
 rangirangi
 ranki
 rapua
@@ -8548,6 +8563,7 @@ Yulio
 Yunia
 Yusto
 Yusufu
+y
 ya
 yaa
 yaachwe
@@ -8657,7 +8673,7 @@ yakamfuata
 yakamsalia
 yakamwagika
 yakamwiva
-yakang'aa
+yakang
 yakanisonga
 yakanitoka
 yakanusha
@@ -8700,12 +8716,12 @@ yakikaa
 yakikauka
 yakimrembuka
 yakimwagika
-yaking'aa
+yaking
 yakingojewa
 yakini
 yakinia
 yakinifu
-yakining'inia
+yakining
 yakionekana
 yakiongezeka
 yakipangwa
@@ -8739,7 +8755,7 @@ yakosa
 yakufukizia
 yakuhusu
 yakumbwa
-yakung'uten
+yakung
 yakupe
 yakupendeze
 yakusifu
@@ -9082,7 +9098,7 @@ yamenianguk
 yamenifika
 yameniletea
 yamenipata
-yamenyong'o
+yamenyong
 yameondolewa
 yameonekana
 yameonesha
@@ -9193,7 +9209,7 @@ yanamaanish
 yanamfanya
 yanamkabili
 yananakshiwa
-yanang'aa
+yanang
 yananiangam
 yananichoshea
 yananiendea
@@ -9396,9 +9412,9 @@ yanayomtokea
 yanayomulika
 yanayomweze
 yanayonata
-yanayong'aa
+yanayong
 yanayonihusu
-yanayoning'i
+yanayoning
 yanayonuha
 yanayonuka
 yanayonukia
@@ -9500,14 +9516,13 @@ yanayozungumzw
 yanazidi
 yanazua
 yanenavyo
-yang'oe
+yang
 yangali
 yangaliko
 yangalikwenda
 yangalimo
 yangalipo
 yange
-yange-pwani
 yangeandikwa
 yangeharibi
 yangeishi
@@ -10776,8 +10791,7 @@ zinazomshawish
 zinazomtoka
 zinazomwezesha
 zinazonata
-zinazoning'ini
-zinazoning'inia
+zinazoning
 zinazonishuh
 zinazonukia
 zinazooneka
@@ -10882,7 +10896,6 @@ zinduna
 zinduo
 zindusha
 zing
-zing'aazo
 zinga
 zingali
 zingaliko
@@ -11291,4 +11304,5 @@ zuzuliwa
 zuzusha
 zuzuwa
 zuzuwaa
-zuzuwalika`;
+zuzuwalika
+32`;

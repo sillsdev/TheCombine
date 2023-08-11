@@ -1,4 +1,5 @@
-export default `Taashira
+export default `Tabia
+Taashira
 Taban
 Tabari
 Tabata
@@ -81,7 +82,7 @@ Torakoniti
 Tororo
 Troa
 Trofimo
-Truf'osa
+Truf
 Trufena
 Tsavo
 Tseikuru
@@ -111,7 +112,10 @@ Tutaigeuza
 Tutatumia
 Twagiramungu
 Twaha
-t'aa
+tafuti
+toka
+tumizi
+t
 ta
 taa
 taabani
@@ -1398,7 +1402,7 @@ tindo
 tindwa
 tine
 tineja
-ting'ating'a
+ting
 tinga
 tingatinga
 tinge
@@ -1548,7 +1552,6 @@ tojeka
 tojesha
 tojo
 tojwa
-toka
 tokajasho
 tokakazi
 tokana
@@ -1946,7 +1949,7 @@ tukawanunulia
 tukawapa
 tukawatembel
 tukaweka
-tukayang'oe
+tukayang
 tukazikwa
 tukia
 tukiacha
@@ -2269,8 +2272,6 @@ tumbi
 tumbili
 tumbiri
 tumbo
-tumbo-jekundu
-tumbo-kahawia
 tumboni
 tumbu
 tumbua
@@ -2413,7 +2414,6 @@ tumikia
 tumikieni
 tumisha
 tumiwa
-tumizi
 tumjue
 tumkaribie
 tumngoje
@@ -2682,7 +2682,7 @@ tunawatuma
 tunaweza
 tunawezaje
 tunayaandiki
-tunayakung'u
+tunayakung
 tunayaona
 tunayapata
 tunaye
@@ -3083,7 +3083,6 @@ twamwona
 twana
 twanena
 twanga
-twanga.chakac
 twangana
 twangia
 twangika

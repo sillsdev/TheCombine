@@ -1,15 +1,14 @@
 import nspell from "nspell";
 
 import { Bcp47Code } from "types/writingSystem";
-import dictionary from "utilities/dictionary";
+import DictionaryLoader from "utilities/dictionaryLoader";
 
 export default class SpellChecker {
   private bcp47: Bcp47Code | undefined;
-  private loaded: string[];
+  private dictLoader: DictionaryLoader | undefined;
   private spell: nspell | undefined;
 
   constructor(lang?: string) {
-    this.loaded = [];
     this.updateLang(lang);
   }
 
@@ -24,7 +23,8 @@ export default class SpellChecker {
     }
 
     this.bcp47 = bcp47;
-    await dictionary(bcp47).then((result) => {
+    this.dictLoader = new DictionaryLoader(bcp47);
+    await this.dictLoader.loadDictionary().then((result) => {
       if (result) {
         const { aff, dic } = result;
         this.spell = nspell(aff, dic);
@@ -36,14 +36,11 @@ export default class SpellChecker {
   }
 
   async load(start: string): Promise<void> {
-    if (!start || !this.spell || !this.bcp47) {
+    if (!start || !this.dictLoader || !this.bcp47 || !this.spell) {
       return;
     }
-    start = start.toLocaleLowerCase();
-    const { dic, exc } = await dictionary(this.bcp47, start, this.loaded);
-    if (exc && !this.loaded.includes(exc)) {
-      this.loaded.push(exc);
-    }
+
+    const dic = await this.dictLoader.loadDictPart(start.toLocaleLowerCase());
     if (dic) {
       console.info(`Loading new dictionary part: ${start}`);
       this.spell.personal(dic);

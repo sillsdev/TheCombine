@@ -62,6 +62,7 @@ Lusia
 Lustra
 Lustrana
 Luswani
+L
 la
 laa
 laabizika
@@ -194,7 +195,6 @@ landia
 landika
 landwa
 lango
-lango-msingi
 langu
 langua
 languana
@@ -529,8 +529,7 @@ likimtoka
 likimwanguki
 likimwangukia
 likimwendesha
-likinong'one
-likinong'onez
+likinong
 likiona
 likiongozwa
 likisema
@@ -883,7 +882,7 @@ limeleta
 limelowekwa
 limemea
 limemzunguka
-limeng'oka
+limeng
 limenikasirish
 limenizungu
 limeona
@@ -1121,7 +1120,7 @@ linamtiriri
 linamwenda
 linamwombea
 linanifurah
-linaning'inia
+linaning
 linaondoka
 linaonekana
 linaonesha
@@ -1190,8 +1189,7 @@ lindika
 lindisha
 lindo
 lindwa
-ling'aalo
-ling'oe
+ling
 linga
 lingali
 lingaliko
