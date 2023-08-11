@@ -11,7 +11,6 @@ import {
   asyncAdvanceStep,
   asyncGetUserEdits,
   asyncUpdateGoal,
-  setCurrentGoal,
 } from "components/GoalTimeline/Redux/GoalActions";
 import {
   CharacterChange,
@@ -163,20 +162,6 @@ describe("asyncGetUserEdits", () => {
   });
 });
 
-describe("asyncAddCompletedMergeToGoal", () => {
-  it("dispatch action", async () => {
-    const store = setupStore();
-    await act(async () => {
-      renderWithProviders(<GoalTimeline />, { store: store });
-      store.dispatch(setCurrentGoal(new MergeDups()));
-      store.dispatch(asyncAddCompletedMergeToGoal(mockCompletedMerge));
-    });
-    const changes = store.getState().goalsState.currentGoal
-      .changes as MergesCompleted;
-    expect(changes.merges).toEqual([mockCompletedMerge]);
-  });
-});
-
 describe("asyncAddGoal", () => {
   it("new MergeDups goal", async () => {
     LocalStorage.setCurrentUser(mockUser);
@@ -293,7 +278,7 @@ describe("asyncUpdateGoal", () => {
     await act(async () => {
       renderWithProviders(<GoalTimeline />, { store: store });
     });
-    // create mergeDups goal
+    // create CreateCharInv goal
     const goal = new CreateCharInv();
     await act(async () => {
       store.dispatch(asyncAddGoal(goal));
@@ -314,6 +299,34 @@ describe("asyncUpdateGoal", () => {
     const changes = store.getState().goalsState.currentGoal
       .changes as CharInvChanges;
     expect(changes!.charChanges).toEqual(mockCharInvChanges);
+    //  - backend is called to addGoalToUserEdit
+    expect(mockAddGoalToUserEdit).toBeCalled();
+  });
+  it("update MergeDups goal", async () => {
+    // setup the test scenario
+    LocalStorage.setCurrentUser(mockUser);
+    LocalStorage.setProjectId("123");
+    const store = setupStore();
+    await act(async () => {
+      renderWithProviders(<GoalTimeline />, { store: store });
+    });
+    // create MergeDups goal
+    const goal = new MergeDups();
+    await act(async () => {
+      store.dispatch(asyncAddGoal(goal));
+    });
+    //   - dispatch asyncUpdateGoal(new goal)
+    await act(async () => {
+      await store.dispatch(asyncAddCompletedMergeToGoal(mockCompletedMerge));
+      await store.dispatch(
+        asyncUpdateGoal(store.getState().goalsState.currentGoal)
+      );
+    });
+    // verify:
+    //  - current value is now new goal
+    const changes = store.getState().goalsState.currentGoal
+      .changes as MergesCompleted;
+    expect(changes.merges).toEqual([mockCompletedMerge]);
     //  - backend is called to addGoalToUserEdit
     expect(mockAddGoalToUserEdit).toBeCalled();
   });

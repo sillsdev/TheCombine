@@ -9,7 +9,6 @@ import {
   incrementCurrentGoalStepAction,
   loadUserEditsAction,
   setCurrentGoalAction,
-  // setCurrentGoalIndexAction,
   setCurrentGoalsStateAction,
   setGoalDataAction,
   updateStepFromDataAction,
@@ -44,10 +43,6 @@ export function setCurrentGoal(goal?: Goal): PayloadAction {
   }
   return setCurrentGoalAction({ ...goal });
 }
-
-// export function setCurrentGoalIndex(index: number): PayloadAction {
-//   return setCurrentGoalIndexAction(index);
-// }
 
 export function setCurrentGoalStatus(status: GoalStatus): PayloadAction {
   return setCurrentGoalsStateAction(status);

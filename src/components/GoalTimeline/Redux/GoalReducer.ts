@@ -43,9 +43,6 @@ export const goalSlice = createSlice({
           ? state.currentGoal.goalType
           : state.previousGoalType;
     },
-    // setCurrentGoalIndexAction: (state, action) => {
-    //   state.currentGoal.index = action.payload;
-    // },
     setCurrentGoalsStateAction: (state, action) => {
       state.currentGoal.status = action.payload;
     },
@@ -70,16 +67,11 @@ export const goalSlice = createSlice({
     builder.addCase(StoreActionTypes.RESET, () => defaultState),
 });
 
-// export const actionType = (actionName: string) => {
-//   return `${goalSlice.name}/${actionName}Action`;
-// };
-
 export const {
   addCompletedMergeToGoalAction,
   incrementCurrentGoalStepAction,
   loadUserEditsAction,
   setCurrentGoalAction,
-  // setCurrentGoalIndexAction,
   setCurrentGoalsStateAction,
   setGoalDataAction,
   updateStepFromDataAction,
