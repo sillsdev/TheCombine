@@ -8,9 +8,18 @@ import GoalTimeline from "components/GoalTimeline";
 import {
   asyncAddCompletedMergeToGoal,
   asyncAddGoal,
+  asyncAdvanceStep,
   asyncGetUserEdits,
+  asyncUpdateGoal,
   setCurrentGoal,
 } from "components/GoalTimeline/Redux/GoalActions";
+import {
+  CharacterChange,
+  CharacterStatus,
+  CharInvChanges,
+  CharInvData,
+  CreateCharInv,
+} from "goals/CharacterInventory/CharacterInventoryTypes";
 import {
   MergeDups,
   MergeDupsData,
@@ -75,6 +84,9 @@ const mockCompletedMerge: MergeUndoIds = {
   parentIds: ["1", "2"],
   childIds: ["3", "4"],
 };
+const mockCharInvChanges: CharacterChange[] = [
+  ["'", CharacterStatus.Undecided, CharacterStatus.Accepted],
+];
 const mockUserEdit: UserEdit = {
   id: mockUserEditId,
   edits: [
@@ -166,7 +178,7 @@ describe("asyncAddCompletedMergeToGoal", () => {
 });
 
 describe("asyncAddGoal", () => {
-  it("Add a new goal", async () => {
+  it("new MergeDups goal", async () => {
     LocalStorage.setCurrentUser(mockUser);
     LocalStorage.setProjectId("123");
     const store = setupStore();
@@ -184,30 +196,125 @@ describe("asyncAddGoal", () => {
     expect(currentGoal.status).toEqual(GoalStatus.InProgress);
     expect(currentGoal.numSteps).toEqual(8);
     expect(currentGoal.currentStep).toEqual(0);
-    console.log(`currentGoal.data: ${typeof currentGoal.data}`);
-    console.log(`goalDataMock: ${typeof goalDataMock}`);
     const goalData = currentGoal.data as MergeDupsData;
     expect(goalData).toEqual(goalDataMock);
     expect(mockNavigate).toHaveBeenCalledWith(Path.GoalCurrent);
   });
+  it("new CreateCharInv goal", async () => {
+    LocalStorage.setCurrentUser(mockUser);
+    LocalStorage.setProjectId("123");
+    const store = setupStore();
+    await act(async () => {
+      renderWithProviders(<GoalTimeline />, { store: store });
+    });
+
+    const goal = new CreateCharInv();
+    await act(async () => {
+      store.dispatch(asyncAddGoal(goal));
+    });
+    // verify the new goal was loaded
+    const currentGoal = store.getState().goalsState
+      .currentGoal as CreateCharInv;
+    expect(currentGoal.goalType).toEqual(GoalType.CreateCharInv);
+    expect(currentGoal.status).toEqual(GoalStatus.InProgress);
+    expect(currentGoal.numSteps).toEqual(1);
+    expect(currentGoal.currentStep).toEqual(0);
+    const goalData = currentGoal.data as CharInvData;
+    expect(goalData.inventory.length).toEqual(1);
+    expect(goalData.inventory[0].length).toEqual(0);
+    expect(mockNavigate).toHaveBeenCalledWith(Path.GoalCurrent);
+  });
 });
-// it("asyncAdvanceStep", async () => {
-// //   - create mergeDups goal
-// //   - verify current step is first step
-// //   - dispatch asyncAdvanceStep * number of steps
-// //       * verify current step is incremented each time
-// //       * if last step
-// //          > verify goalCleanup called last time
-// //       * else
-// //          > verify step is updated from the data
-// //          > verify dispatchMergeStepData is called
-// });
-// it("asyncUpdateGoal", async () => {
-// //   - create goal and set as current goal
-// //   - set getUserEditId to return valid value
-// //   - create new goal
-// //   - dispatch asyncUpdateGoal(new goal)
-// //   - verify:
-// //       o current value is now new goal
-// //       o backend is called to addGoalToUserEdit
-// });
+describe("asyncAdvanceStep", () => {
+  it("advance MergeDups goal", async () => {
+    // setup the test scenario
+    LocalStorage.setCurrentUser(mockUser);
+    LocalStorage.setProjectId("123");
+    const store = setupStore();
+    await act(async () => {
+      renderWithProviders(<GoalTimeline />, { store: store });
+    });
+    // create mergeDups goal
+    const goal = new MergeDups();
+    await act(async () => {
+      store.dispatch(asyncAddGoal(goal));
+    });
+    let currentGoal = store.getState().goalsState.currentGoal as MergeDups;
+    expect(currentGoal.currentStep).toBe(0);
+    expect(currentGoal.numSteps).toEqual(8);
+    // iterate over all but the last step
+    const numSteps = currentGoal.numSteps;
+    for (var i = 0; i < numSteps - 1; i++) {
+      // dispatch asyncAdvanceStep
+      await act(async () => {
+        store.dispatch(asyncAdvanceStep());
+      });
+      // verify current step is incremented each time
+      currentGoal = store.getState().goalsState.currentGoal as MergeDups;
+      expect(currentGoal.currentStep).toEqual(i + 1);
+      // verify step is updated from the data
+      // verify dispatchMergeStepData is called
+    }
+    // iterate past the last step
+    await act(async () => {
+      store.dispatch(asyncAdvanceStep());
+    });
+    expect(store.getState().goalsState.currentGoal.currentStep).toBe(7);
+    expect(mockNavigate).toHaveBeenCalledWith(Path.GoalNext);
+  });
+  it("advance CreateCharInv goal", async () => {
+    // setup the test scenario
+    LocalStorage.setCurrentUser(mockUser);
+    LocalStorage.setProjectId("123");
+    const store = setupStore();
+    await act(async () => {
+      renderWithProviders(<GoalTimeline />, { store: store });
+    });
+    // create character inventory goal
+    const goal = new CreateCharInv();
+    await act(async () => {
+      store.dispatch(asyncAddGoal(goal));
+    });
+    expect(store.getState().goalsState.currentGoal.numSteps).toBe(1);
+    // iterate past the last step
+    await act(async () => {
+      store.dispatch(asyncAdvanceStep());
+    });
+    expect(store.getState().goalsState.currentGoal.currentStep).toBe(0);
+    expect(mockNavigate).toHaveBeenCalledWith(Path.Goals);
+  });
+});
+describe("asyncUpdateGoal", () => {
+  it("update CreateCharInv goal", async () => {
+    // setup the test scenario
+    LocalStorage.setCurrentUser(mockUser);
+    LocalStorage.setProjectId("123");
+    const store = setupStore();
+    await act(async () => {
+      renderWithProviders(<GoalTimeline />, { store: store });
+    });
+    // create mergeDups goal
+    const goal = new CreateCharInv();
+    await act(async () => {
+      store.dispatch(asyncAddGoal(goal));
+    });
+    //   - dispatch asyncUpdateGoal(new goal)
+    const initialGoal = store.getState().goalsState
+      .currentGoal as CreateCharInv;
+    const updatedGoal = {
+      ...initialGoal,
+      changes: { charChanges: mockCharInvChanges },
+    };
+    await act(async () => {
+      await store.dispatch(asyncUpdateGoal(updatedGoal));
+    });
+    // verify:
+    //  - current value is now new goal
+    expect(initialGoal === store.getState().goalsState.currentGoal).toBeFalsy();
+    const changes = store.getState().goalsState.currentGoal
+      .changes as CharInvChanges;
+    expect(changes!.charChanges).toEqual(mockCharInvChanges);
+    //  - backend is called to addGoalToUserEdit
+    expect(mockAddGoalToUserEdit).toBeCalled();
+  });
+});
