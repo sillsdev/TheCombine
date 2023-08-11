@@ -48,7 +48,7 @@ export const mergeDupStepReducer = (
       );
       const srcWordId = srcRef.wordId;
       const srcGuids = words[srcWordId].sensesGuids[srcRef.mergeSenseId];
-      const destGuids = [];
+      const destGuids: string[] = [];
       if (srcRef.order === undefined || srcGuids.length === 1) {
         destGuids.push(...srcGuids);
         delete words[srcWordId].sensesGuids[srcRef.mergeSenseId];
