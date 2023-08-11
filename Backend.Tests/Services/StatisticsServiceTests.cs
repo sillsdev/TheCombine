@@ -62,7 +62,7 @@ namespace Backend.Tests.Services
             _wordRepo.AddFrontier(getWordWithDomain());
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
-            Assert.That(result, Has.Count.EqualTo(0));
+            Assert.That(result, Is.Empty);
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace Backend.Tests.Services
             _wordRepo.AddFrontier(getWordWithDomain());
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
-            Assert.That(result, Has.Count.EqualTo(0));
+            Assert.That(result, Is.Empty);
         }
 
         [Test]
@@ -83,7 +83,7 @@ namespace Backend.Tests.Services
             ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(TreeNodes);
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
-            Assert.That(result, Has.Count.EqualTo(0));
+            Assert.That(result, Is.Empty);
         }
 
         [Test]
@@ -95,7 +95,7 @@ namespace Backend.Tests.Services
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Has.Count.EqualTo(1));
-            Assert.That(result.First().Count, Is.EqualTo(0));
+            Assert.That(result.First(), Has.Count.EqualTo(0));
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace Backend.Tests.Services
         public void GetWordsPerDayPerUserCountsTestEmptyFrontier()
         {
             var result = _statsService.GetWordsPerDayPerUserCounts(ProjId).Result;
-            Assert.That(result, Has.Count.EqualTo(0));
+            Assert.That(result, Is.Empty);
         }
 
         [Test]
@@ -123,8 +123,8 @@ namespace Backend.Tests.Services
             var nonEmptySchedule = new List<DateTime> { DateTime.Now };
 
             var result = _statsService.GetProgressEstimationLineChartRoot(ProjId, nonEmptySchedule).Result;
-            Assert.That(result.Dates, Has.Count.EqualTo(0));
-            Assert.That(result.Datasets, Has.Count.EqualTo(0));
+            Assert.That(result.Dates, Is.Empty);
+            Assert.That(result.Datasets, Is.Empty);
         }
 
         [Test]
@@ -133,8 +133,8 @@ namespace Backend.Tests.Services
             _wordRepo.AddFrontier(getWordWithDomain());
 
             var result = _statsService.GetProgressEstimationLineChartRoot(ProjId, new List<DateTime>()).Result;
-            Assert.That(result.Dates, Has.Count.EqualTo(0));
-            Assert.That(result.Datasets, Has.Count.EqualTo(0));
+            Assert.That(result.Dates, Is.Empty);
+            Assert.That(result.Datasets, Is.Empty);
         }
 
         [Test]
@@ -144,8 +144,8 @@ namespace Backend.Tests.Services
             var nonEmptySchedule = new List<DateTime> { DateTime.Now };
 
             var result = _statsService.GetProgressEstimationLineChartRoot(ProjId, nonEmptySchedule).Result;
-            Assert.That(result.Dates, Has.Count.EqualTo(0));
-            Assert.That(result.Datasets, Has.Count.EqualTo(0));
+            Assert.That(result.Dates, Is.Empty);
+            Assert.That(result.Datasets, Is.Empty);
         }
 
         [Test]
@@ -164,8 +164,8 @@ namespace Backend.Tests.Services
         public void GetLineChartRootDataTestNoData()
         {
             var result = _statsService.GetLineChartRootData(ProjId).Result;
-            Assert.That(result.Dates, Has.Count.EqualTo(0));
-            Assert.That(result.Datasets, Has.Count.EqualTo(0));
+            Assert.That(result.Dates, Is.Empty);
+            Assert.That(result.Datasets, Is.Empty);
         }
 
         [Test]

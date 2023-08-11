@@ -31,7 +31,7 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEqualsNull()
         {
-            Assert.That(new UserRole(), Is.Not.EqualTo(null));
+            Assert.That(new UserRole().Equals(null), Is.False);
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEqualsNull()
         {
-            Assert.That(new ProjectRole(), Is.Not.EqualTo(null));
+            Assert.That(new ProjectRole().Equals(null), Is.False);
         }
 
         [Test]

@@ -26,7 +26,7 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEqualsNull()
         {
-            Assert.That(new EmailInvite(), Is.Not.EqualTo(null));
+            Assert.That(new EmailInvite().Equals(null), Is.False);
         }
 
         [Test]

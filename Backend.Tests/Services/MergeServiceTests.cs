@@ -77,9 +77,9 @@ namespace Backend.Tests.Services
             var newWords = _mergeService.Merge(ProjId, new List<MergeWords> { mergeObject }).Result;
 
             // There should be no word added and no words left in the frontier.
-            Assert.That(newWords, Has.Count.EqualTo(0));
+            Assert.That(newWords, Is.Empty);
             var frontier = _wordRepo.GetFrontier(ProjId).Result;
-            Assert.That(frontier, Has.Count.EqualTo(0));
+            Assert.That(frontier, Is.Empty);
         }
 
         [Test]
