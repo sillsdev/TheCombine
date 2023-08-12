@@ -55,6 +55,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    5. [Generate License Reports](#generate-license-reports)
    6. [Inspect Database](#inspect-database)
    7. [Cleanup Local Repository](#cleanup-local-repository)
+   8. [Generate API Files for RTK Query](#generate-api-files-for-rtk-query)
 3. [Setup Local Kubernetes Cluster](#setup-local-kubernetes-cluster)
    1. [Install Rancher Desktop](#install-rancher-desktop)
    2. [Install Docker Desktop](#install-docker-desktop)
@@ -450,6 +451,26 @@ of development setup errors. Run from within a Python virtual environment.
 
 ```bash
 python scripts/cleanup_local_repo.py
+```
+
+### Generate API Files for RTK Query
+
+_Generating the API Files for RTK Query is for Future Development. The script to create the files has been created to
+prepare for moving to the Redux Toolkit (RTK) Query library for querying and updating the backend. This section explains
+how to generate the files needed to proceed with migrating to RTK Query._
+
+To generate the API files for RTK Query, run the following commands from your Python virtual environment:
+
+If the backend is already running, run:
+
+```bash
+python scripts/generate-rtk-query.py
+```
+
+otherwise, run:
+
+```bash
+python scripts/generate-rtk-query.py --backend
 ```
 
 ## Setup Local Kubernetes Cluster

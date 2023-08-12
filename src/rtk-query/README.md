@@ -1,6 +1,6 @@
-# Generating the API files for RTK Query
+# Use of RTK Query in _The Combine_
 
-_(to be added to project README.md when merged with `master`)_
+_This is for future development only! See [Issue #2468](https://github.com/sillsdev/TheCombine/issues/2468)_
 
 ## Regenerate OpenAPI bindings for frontend
 
