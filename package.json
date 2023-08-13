@@ -59,7 +59,7 @@
     "i18next-browser-languagedetector": "^7.1.0",
     "i18next-http-backend": "^2.1.1",
     "js-base64": "^3.7.5",
-    "make-dir": "^3.1.0",
+    "make-dir": "^4.0.0",
     "motion": "^10.16.2",
     "mui-language-picker": "^1.2.7",
     "notistack": "^3.0.1",
