@@ -207,16 +207,13 @@ export default async function (start?: string, exclude?: string[]): Promise<[str
 
     langs_index_file_path = dictionary_dir / "index.ts"
     logging.info(f"Generating {langs_index_file_path}")
-    aff_lines: List[str] = []
     dic_lines: List[str] = []
     import_lines: List[str] = []
     for file_path in dictionary_dir.iterdir():
-        if "".join(file_path.suffixes) == ".aff.js":
-            lang: str = file_path.stem.split(".")[0]
-            lang_index_path = dictionary_dir / lang / "index.ts"
+        if file_path.is_dir():
+            lang: str = file_path.stem
+            lang_index_path = file_path / "index.ts"
             if lang_index_path.is_file():
-                aff_lines.append(f'    case Bcp47Code.{lang.capitalize()}:\n')
-                aff_lines.append(f'return (await import("resources/dictionaries/{lang}.aff")).default;\n')
                 dic_lines.append(f'    case Bcp47Code.{lang.capitalize()}:\n')
                 dic_lines.append(f'      return (await {lang}Dic(start, exclude)) ?? [undefined, undefined];\n')
                 import_lines.append(f'import {lang}Dic from "resources/dictionaries/{lang}";\n')
@@ -227,17 +224,6 @@ export default async function (start?: string, exclude?: string[]): Promise<[str
             "// https://cgit.freedesktop.org/libreoffice/dictionaries\n\n",
             *import_lines,
             """import { Bcp47Code } from "types/writingSystem";
-
-/** For a given lang-tag, return the associated .aff string. */
-export async function getAff(bcp47: Bcp47Code): Promise<string> {
-  switch (bcp47) {
-""",
-            *aff_lines,
-            """
-    default:
-      return "";
-  }
-}
 
 /** For a given lang-tag, string start, and list of keys to exclude,
  * return the key associated with the start and a dictionary piece,

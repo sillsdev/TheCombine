@@ -122,4 +122,5 @@ else
   $cmd
 fi
 
+rm $AFF
 rm $DIC

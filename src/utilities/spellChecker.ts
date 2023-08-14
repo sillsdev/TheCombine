@@ -24,10 +24,9 @@ export default class SpellChecker {
 
     this.bcp47 = bcp47;
     this.dictLoader = new DictionaryLoader(bcp47);
-    await this.dictLoader.loadDictionary().then((result) => {
-      if (result) {
-        const { aff, dic } = result;
-        this.spell = nspell(aff, dic);
+    await this.dictLoader.loadDictionary().then((dic) => {
+      if (dic !== undefined) {
+        this.spell = nspell("SET UTF-8", dic);
         if (process.env.NODE_ENV === "development") {
           console.log(`Loaded spell-checker: ${bcp47}`);
         }
@@ -40,9 +39,9 @@ export default class SpellChecker {
       return;
     }
 
-    const dic = await this.dictLoader.loadDictPart(start.toLocaleLowerCase());
+    const dic = await this.dictLoader.loadDictPart(start);
     if (dic) {
-      console.info(`Loading new dictionary part: ${start}`);
+      console.info(`Loading dictionary part containing: ${start}`);
       this.spell.personal(dic);
     }
   }
@@ -69,6 +68,7 @@ export default class SpellChecker {
       return [];
     }
 
+    // Don't await--just load for future use.
     this.load(final);
 
     let suggestions = this.spell.suggest(final);

@@ -1,4 +1,4 @@
-import { getAff, getKeyDic } from "resources/dictionaries";
+import { getKeyDic } from "resources/dictionaries";
 import { Bcp47Code } from "types/writingSystem";
 
 export default class DictionaryLoader {
@@ -9,12 +9,9 @@ export default class DictionaryLoader {
     this.lang = bcp47;
   }
 
-  async loadDictionary(): Promise<{ aff: string; dic: string } | undefined> {
-    const aff = await getAff(this.lang);
+  async loadDictionary(): Promise<string | undefined> {
     const [_, dic] = await getKeyDic(this.lang);
-    if (aff) {
-      return { aff, dic: dic ?? "" };
-    }
+    return dic;
   }
 
   async loadDictPart(start: string): Promise<string | undefined> {
