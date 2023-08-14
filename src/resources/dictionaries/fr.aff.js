@@ -1,3 +1,4 @@
+export default `# https://cgit.freedesktop.org/libreoffice/dictionaries/tree/fr_FR
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
@@ -6014,4 +6015,4 @@ SFX q. ivre écu/d'q' vivre
 SFX q. aire u/d'q' aire
 SFX q. dre du/d'q' dre
 SFX q. valoir valu/d'q' .valoir
-SFX q. aître u/d'q' aître
+SFX q. aître u/d'q' aître`;
