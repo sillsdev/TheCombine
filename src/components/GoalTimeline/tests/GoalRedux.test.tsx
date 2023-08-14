@@ -122,7 +122,7 @@ describe("GoalTimeline", () => {
       renderWithProviders(<GoalTimeline />);
     });
     // has the expected number of buttons
-    const goalButtonList = screen.queryAllByRole("goal-button");
+    const goalButtonList = screen.queryAllByTestId("goal-button");
     // Expect 1 button for each of the Goal Types + one for the
     // "No History" element in the history list.
     expect(goalButtonList.length).toBe(4);
