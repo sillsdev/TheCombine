@@ -2,6 +2,7 @@ ignore:
   - "src/api"
   - "src/backend/index.ts"
   - "src/resources"
+  - "src/rtk-query"
   - "src/types"
   - "**/*Mock.ts"
   - "**/*Types.ts"
