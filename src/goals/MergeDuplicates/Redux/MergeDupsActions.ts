@@ -9,7 +9,7 @@ import {
 } from "api/models";
 import * as backend from "backend";
 import {
-  asyncAddCompletedMergeToGoal,
+  addCompletedMergeToGoal,
   asyncUpdateGoal,
 } from "components/GoalTimeline/Redux/GoalActions";
 import {
@@ -263,7 +263,7 @@ export function mergeAll() {
       ];
       const completedMerge = { childIds, parentIds };
       if (getState().goalsState.currentGoal) {
-        dispatch(asyncAddCompletedMergeToGoal(completedMerge));
+        dispatch(addCompletedMergeToGoal(completedMerge));
         // need to look up the currentGoal again since the previous dispatch
         // will result in a new goal object
         await dispatch(asyncUpdateGoal(getState().goalsState.currentGoal));

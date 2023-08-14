@@ -8,7 +8,7 @@ import {
 import { StoreActionTypes } from "rootActions";
 import { GoalType } from "types/goals";
 
-export const goalSlice = createSlice({
+const goalSlice = createSlice({
   name: "goalsState",
   initialState: defaultState,
   reducers: {
@@ -77,4 +77,4 @@ export const {
   updateStepFromDataAction,
 } = goalSlice.actions;
 
-export const goalsReducer = goalSlice.reducer;
+export default goalSlice.reducer;

@@ -6,7 +6,7 @@ import { MergeUndoIds, Permission, User, UserEdit } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import GoalTimeline from "components/GoalTimeline";
 import {
-  asyncAddCompletedMergeToGoal,
+  addCompletedMergeToGoal,
   asyncAddGoal,
   asyncAdvanceStep,
   asyncGetUserEdits,
@@ -134,7 +134,7 @@ describe("Set empty goal", () => {
     const store = setupStore();
     await act(async () => {
       renderWithProviders(<GoalTimeline />, { store: store });
-      await store.dispatch(setCurrentGoal());
+      store.dispatch(setCurrentGoal());
     });
     expect(store.getState().goalsState.currentGoal.goalType).toEqual(
       GoalType.Default
@@ -199,6 +199,7 @@ describe("asyncAddGoal", () => {
     expect(goalData).toEqual(goalDataMock);
     expect(mockNavigate).toHaveBeenCalledWith(Path.GoalCurrent);
   });
+
   it("new CreateCharInv goal", async () => {
     LocalStorage.setCurrentUser(mockUser);
     LocalStorage.setProjectId("123");
@@ -224,6 +225,7 @@ describe("asyncAddGoal", () => {
     expect(mockNavigate).toHaveBeenCalledWith(Path.GoalCurrent);
   });
 });
+
 describe("asyncAdvanceStep", () => {
   it("advance MergeDups goal", async () => {
     // setup the test scenario
@@ -261,6 +263,7 @@ describe("asyncAdvanceStep", () => {
     expect(store.getState().goalsState.currentGoal.currentStep).toBe(7);
     expect(mockNavigate).toHaveBeenCalledWith(Path.GoalNext);
   });
+
   it("advance CreateCharInv goal", async () => {
     // setup the test scenario
     LocalStorage.setCurrentUser(mockUser);
@@ -283,6 +286,7 @@ describe("asyncAdvanceStep", () => {
     expect(mockNavigate).toHaveBeenCalledWith(Path.Goals);
   });
 });
+
 describe("asyncUpdateGoal", () => {
   it("update CreateCharInv goal", async () => {
     // setup the test scenario
@@ -316,6 +320,7 @@ describe("asyncUpdateGoal", () => {
     //  - backend is called to addGoalToUserEdit
     expect(mockAddGoalToUserEdit).toBeCalled();
   });
+
   it("update MergeDups goal", async () => {
     // setup the test scenario
     LocalStorage.setCurrentUser(mockUser);
@@ -331,7 +336,7 @@ describe("asyncUpdateGoal", () => {
     });
     //   - dispatch asyncUpdateGoal(new goal)
     await act(async () => {
-      await store.dispatch(asyncAddCompletedMergeToGoal(mockCompletedMerge));
+      store.dispatch(addCompletedMergeToGoal(mockCompletedMerge));
       await store.dispatch(
         asyncUpdateGoal(store.getState().goalsState.currentGoal)
       );

@@ -453,26 +453,6 @@ of development setup errors. Run from within a Python virtual environment.
 python scripts/cleanup_local_repo.py
 ```
 
-### Generate API Files for RTK Query
-
-_Generating the API Files for RTK Query is for Future Development. The script to create the files has been created to
-prepare for moving to the Redux Toolkit (RTK) Query library for querying and updating the backend. This section explains
-how to generate the files needed to proceed with migrating to RTK Query._
-
-To generate the API files for RTK Query, run the following commands from your Python virtual environment:
-
-If the backend is already running, run:
-
-```bash
-python scripts/generate_rtk_query.py
-```
-
-otherwise, run:
-
-```bash
-python scripts/generate_rtk_query.py --backend
-```
-
 ## Setup Local Kubernetes Cluster
 
 This section describes how to create a local Kubernetes cluster using either _Rancher Desktop_ or _Docker Desktop_.

@@ -24,7 +24,7 @@ import { Path } from "types/path";
 import { convertEditToGoal } from "utilities/goalUtilities";
 
 // Action Creators
-export function asyncAddCompletedMergeToGoal(
+export function addCompletedMergeToGoal(
   completedMerge: MergeUndoIds
 ): PayloadAction {
   return addCompletedMergeToGoalAction(completedMerge);
