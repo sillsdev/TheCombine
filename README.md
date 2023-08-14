@@ -464,13 +464,13 @@ To generate the API files for RTK Query, run the following commands from your Py
 If the backend is already running, run:
 
 ```bash
-python scripts/generate-rtk-query.py
+python scripts/generate_rtk_query.py
 ```
 
 otherwise, run:
 
 ```bash
-python scripts/generate-rtk-query.py --backend
+python scripts/generate_rtk_query.py --backend
 ```
 
 ## Setup Local Kubernetes Cluster

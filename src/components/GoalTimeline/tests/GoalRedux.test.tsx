@@ -252,7 +252,7 @@ describe("asyncAdvanceStep", () => {
       currentGoal = store.getState().goalsState.currentGoal as MergeDups;
       expect(currentGoal.currentStep).toEqual(i + 1);
       // verify step is updated from the data
-      // verify dispatchMergeStepData is called
+      expect(currentGoal.steps.length).toEqual(i + 2);
     }
     // iterate past the last step
     await act(async () => {
