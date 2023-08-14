@@ -63,7 +63,9 @@ done
 SRC=https://cgit.freedesktop.org/libreoffice/dictionaries/plain/
 case ${LANG} in
   ar)
-    URL=${SRC}ar/ar
+    # URL=${SRC}ar/ar
+    echo "Manually download the wordlist from https://sourceforge.net/projects/arabic-wordlist/"
+    exit 1
     ;;
   en)
     URL=${SRC}en/en_US

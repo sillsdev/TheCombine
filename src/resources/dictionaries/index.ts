@@ -3,21 +3,30 @@
 // Dictionary files source (MPLv2):
 // https://cgit.freedesktop.org/libreoffice/dictionaries
 
+import arDic from "resources/dictionaries/ar";
 import enDic from "resources/dictionaries/en";
 import esDic from "resources/dictionaries/es";
 import hiDic from "resources/dictionaries/hi";
+import ptDic from "resources/dictionaries/pt";
+import ruDic from "resources/dictionaries/ru";
 import swDic from "resources/dictionaries/sw";
 import { Bcp47Code } from "types/writingSystem";
 
 /** For a given lang-tag, return the associated .aff string. */
 export async function getAff(bcp47: Bcp47Code): Promise<string> {
   switch (bcp47) {
+    case Bcp47Code.Ar:
+return (await import("resources/dictionaries/ar.aff")).default;
     case Bcp47Code.En:
 return (await import("resources/dictionaries/en.aff")).default;
     case Bcp47Code.Es:
 return (await import("resources/dictionaries/es.aff")).default;
     case Bcp47Code.Hi:
 return (await import("resources/dictionaries/hi.aff")).default;
+    case Bcp47Code.Pt:
+return (await import("resources/dictionaries/pt.aff")).default;
+    case Bcp47Code.Ru:
+return (await import("resources/dictionaries/ru.aff")).default;
     case Bcp47Code.Sw:
 return (await import("resources/dictionaries/sw.aff")).default;
 
@@ -35,12 +44,18 @@ export async function getKeyDic(
   exclude?: string[]
 ): Promise<[string?, string?]> {
   switch (bcp47) {
+    case Bcp47Code.Ar:
+      return (await arDic(start, exclude)) ?? [undefined, undefined];
     case Bcp47Code.En:
       return (await enDic(start, exclude)) ?? [undefined, undefined];
     case Bcp47Code.Es:
       return (await esDic(start, exclude)) ?? [undefined, undefined];
     case Bcp47Code.Hi:
       return (await hiDic(start, exclude)) ?? [undefined, undefined];
+    case Bcp47Code.Pt:
+      return (await ptDic(start, exclude)) ?? [undefined, undefined];
+    case Bcp47Code.Ru:
+      return (await ruDic(start, exclude)) ?? [undefined, undefined];
     case Bcp47Code.Sw:
       return (await swDic(start, exclude)) ?? [undefined, undefined];
     default:
