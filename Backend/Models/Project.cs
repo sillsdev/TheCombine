@@ -291,6 +291,7 @@ namespace BackendFramework.Models
         public string Name { get; set; }
         [Required]
         public string Font { get; set; }
+        public bool? Rtl { get; set; }
 
         public WritingSystem()
         {
@@ -299,11 +300,12 @@ namespace BackendFramework.Models
             Font = "";
         }
 
-        public WritingSystem(string bcp47 = "", string name = "", string font = "")
+        public WritingSystem(string bcp47 = "", string name = "", string font = "", bool? rtl = null)
         {
             Bcp47 = bcp47;
             Name = name;
             Font = font;
+            Rtl = rtl;
         }
 
         public WritingSystem(WritingSystemDefinition wsd)
@@ -311,11 +313,15 @@ namespace BackendFramework.Models
             Bcp47 = wsd.LanguageTag;
             Name = wsd.Language?.Name ?? "";
             Font = wsd.DefaultFont?.Name ?? "";
+            if (wsd.RightToLeftScript)
+            {
+                Rtl = true;
+            }
         }
 
         public WritingSystem Clone()
         {
-            return new(Bcp47, Name, Font);
+            return new(Bcp47, Name, Font, Rtl);
         }
 
         public override bool Equals(object? obj)
@@ -327,17 +333,23 @@ namespace BackendFramework.Models
 
             return Bcp47.Equals(ws.Bcp47, StringComparison.Ordinal) &&
                 Name.Equals(ws.Name, StringComparison.Ordinal) &&
-                Font.Equals(ws.Font, StringComparison.Ordinal);
+                Font.Equals(ws.Font, StringComparison.Ordinal) &&
+                Rtl == ws.Rtl;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Bcp47, Name, Font);
+            return HashCode.Combine(Bcp47, Name, Font, Rtl ?? false);
         }
 
         public override string ToString()
         {
-            return $"<name: {Name}, bcp47: {Bcp47}, font: {Font}>";
+            var outString = $"name: {Name}, bcp47: {Bcp47}, font: {Font}";
+            if (Rtl ?? false)
+            {
+                outString += $", rtl: True";
+            }
+            return $"<{outString}>";
         }
     }
 
