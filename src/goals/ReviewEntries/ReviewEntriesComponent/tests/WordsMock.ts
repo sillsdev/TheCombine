@@ -23,7 +23,7 @@ export default function mockWords(): ReviewEntriesWord[] {
       senses: [
         {
           ...new ReviewEntriesSense(),
-          guid: "1",
+          guid: "0.0",
           glosses: [
             newGloss("bup", Bcp47Code.En),
             newGloss("AHH", Bcp47Code.Es),
@@ -44,7 +44,7 @@ export default function mockWords(): ReviewEntriesWord[] {
       senses: [
         {
           ...new ReviewEntriesSense(),
-          guid: "2",
+          guid: "1.1",
           glosses: [newGloss("gloss", Bcp47Code.En)],
           domains: [newSemanticDomain("number", "domain")],
           partOfSpeech: {
