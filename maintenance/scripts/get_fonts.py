@@ -14,7 +14,7 @@ import logging
 import os
 from pathlib import Path
 from shutil import rmtree
-from typing import List
+from typing import Any, List
 
 import requests
 
@@ -44,7 +44,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "-l",
         "--langs",
-        help="Comma-separated list of lang-tags of the languages for which fonts should be downloaded.",
+        help="Comma-separated list of lang-tags for which fonts should be downloaded.",
     )
     parser.add_argument(
         "-f",
@@ -66,7 +66,7 @@ def parse_args() -> argparse.Namespace:
     return args
 
 
-def getFontDefault(defaults: dict) -> str:
+def get_font_default(defaults: dict[str, str]) -> str:
     """Determine which default file to use, with preference for woff2 if available."""
     keys = ["woff2", "woff", "ttf"]
     for key in keys:
@@ -75,12 +75,12 @@ def getFontDefault(defaults: dict) -> str:
     return ""
 
 
-def checkFontInfo(font_info: dict) -> bool:
+def check_font_info(font_info: dict[str, Any]) -> bool:
     """Given an entry from the font families info file, check if the font family is usable."""
     family: str = font_info["family"]
 
     # Check that the font is current and licensed as expected.
-    if font_info["distributable"] != True:
+    if not font_info["distributable"]:
         logging.warning(f"{family}: Not distributable")
         return False
     if "license" not in font_info.keys():
@@ -96,7 +96,7 @@ def checkFontInfo(font_info: dict) -> bool:
     elif font_info["status"] != "current":
         logging.warning(f"{family}: Non-current status: {font_info['status']}")
 
-    if "defaults" not in font_info.keys() or getFontDefault(font_info["defaults"]) == "":
+    if "defaults" not in font_info.keys() or get_font_default(font_info["defaults"]) == "":
         logging.warning(f"{family}: No defaults")
         return False
 
@@ -107,17 +107,17 @@ def checkFontInfo(font_info: dict) -> bool:
     return True
 
 
-def extractLangSubtags(langs: str, sep=",") -> List[str]:
-    """Given a string of (comma-separated) lang tags, return list of the initial language subtags."""
-    tags: List[str] = [lang.strip() for lang in langs.split(sep) if lang.strip() != ""]
+def extract_lang_subtags(langs: str, sep: str = ",") -> List[str]:
+    """Given a (comma-separated) string langtags, return list of the initial lang subtags."""
+    tags = [lang.strip() for lang in langs.split(sep) if lang.strip() != ""]
     subtags = [tag.split("-")[0].lower() for tag in tags]
-    langs = [subtag for subtag in set(subtags) if subtag != ""]
-    langs.sort()
-    return langs
+    lang_list = [subtag for subtag in set(subtags) if subtag != ""]
+    lang_list.sort()
+    return lang_list
 
 
-def fetchScriptsForLangs(langs: List[str]) -> List[str]:
-    """Given a list of language tags, look up and return all script tags used with the languages."""
+def fetch_scripts_for_langs(langs: List[str]) -> List[str]:
+    """Given a list of langtags, look up and return all script tags used with the languages."""
     langs = [lang.lower() for lang in langs]
     scripts = []
     logging.info(f"Downloading lang-tag list from {url_lang_tags_list}")
@@ -135,11 +135,11 @@ def fetchScriptsForLangs(langs: List[str]) -> List[str]:
     return scripts
 
 
-def fetchFontsForScripts(scripts: List[str]) -> List[str]:
-    """Given a list of script tags, look up and return the default fonts used with the languages."""
+def fetch_fonts_for_scripts(scripts: List[str]) -> List[str]:
+    """Given a list of script tags, look up the default fonts used with those scripts."""
     scripts = [script.capitalize() for script in scripts]
 
-    # Always include the Mui-Language-Picker default/safe fonts (except "SimSun", which is proprietary).
+    # Always have the Mui-Language-Picker default/safe fonts (except proprietary "SimSun").
     fonts = ["AnnapurnaSIL", "CharisSIL", "DoulosSIL", "NotoSans", "ScheherazadeNew"]
 
     logging.info(f"Downloading script font table from {url_script_font_table}")
@@ -176,10 +176,11 @@ def fetchFontsForScripts(scripts: List[str]) -> List[str]:
     return fonts
 
 
-def fetchFontFamiliesInfo() -> dict:
+def fetch_font_families_info() -> dict[str, Any]:
     logging.info(f"Downloading font families info from {url_font_families_info}")
     req = requests.get(url_font_families_info)
-    return json.loads(req.content)
+    content: dict[str, Any] = json.loads(req.content)
+    return content
 
 
 def main() -> None:
@@ -194,13 +195,13 @@ def main() -> None:
         exit(1)
 
     if args.langs:
-        langs = extractLangSubtags(args.langs)
+        langs = extract_lang_subtags(args.langs)
         logging.info(f"Lang-tags to download fonts for: {', '.join(langs)}")
 
-        scripts = fetchScriptsForLangs(langs)
+        scripts = fetch_scripts_for_langs(langs)
         logging.info(f"Scripts used for specified lang-tags: {', '.join(scripts)}")
 
-        fonts = fetchFontsForScripts(scripts)
+        fonts = fetch_fonts_for_scripts(scripts)
         logging.info(f"Default fonts and fonts used for specified lang-tags: {', '.join(fonts)}")
     else:
         with open(mlp_font_list, "r") as mlp_fonts_list:
@@ -214,30 +215,30 @@ def main() -> None:
             else:
                 path.unlink()
 
-    families = fetchFontFamiliesInfo()
+    families = fetch_font_families_info()
 
     with open(mlp_font_map, "r") as mlp_map_file:
-        mlp_map: dict = json.load(mlp_map_file)
+        mlp_map: dict[str, str] = json.load(mlp_map_file)
         # Assumes no two keys map to the same value.
         mlp_map_rev = {val: key for key, val in mlp_map.items()}
 
     # For Google fonts with no font url in-file
-    google_fallback: dict[str] = {}
+    google_fallback: dict[str, str] = {}
 
     for font in fonts:
         logging.info(f"Font: {font}")
-        font_id = font.lower()
+        font_id: str = font.lower()
         if not args.langs and font in mlp_map.keys():
             font_id = mlp_map[font].lower()
 
         # Get font family info from font families info, using fallback font if necessary
         while font_id != "" and font_id in families.keys():
-            font_info: dict = families[font_id]
+            font_info: dict[str, Any] = families[font_id]
             family: str = font_info["family"]
-            if checkFontInfo(font_info):
+            if check_font_info(font_info):
                 break
             if "fallback" in font_info.keys():
-                font_id: str = font_info["fallback"]
+                font_id = font_info["fallback"]
                 logging.warning(f"{family}: Using fallback {font_id}")
             else:
                 if (
@@ -258,12 +259,12 @@ def main() -> None:
             continue
 
         # Get the font's default file info.
-        file_name = getFontDefault(font_info["defaults"])
-        files: dict = font_info["files"]
+        file_name = get_font_default(font_info["defaults"])
+        files: dict[str, Any] = font_info["files"]
         if file_name not in files.keys():
             logging.error(f"{family}: Default file not in file list")
             continue
-        file_info: dict = files[file_name]
+        file_info: dict[str, Any] = files[file_name]
 
         # Build the css info for this font in this style.
         css_lines: List[str] = []

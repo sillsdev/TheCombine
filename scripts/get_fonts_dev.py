@@ -24,7 +24,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "-l",
         "--langs",
-        help="Comma-separated list of lang-tags of the languages for which fonts should be downloaded.",
+        help="Comma-separated list of lang-tags for which fonts should be downloaded.",
     )
     parser.add_argument(
         "-f",
