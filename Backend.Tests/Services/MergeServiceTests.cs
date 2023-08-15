@@ -191,9 +191,7 @@ namespace Backend.Tests.Services
             var frontierWordIds = frontierWords.Select(word => word.Id).ToList();
 
             Assert.That(frontierWords, Has.Count.EqualTo(numberOfChildren));
-            Assert.That(frontierWordIds, Does.Contain(childIds[0]));
-            Assert.That(frontierWordIds, Does.Contain(childIds[1]));
-            Assert.That(frontierWordIds, Does.Contain(childIds[2]));
+            childIds.ForEach(id => Assert.That(frontierWordIds, Does.Contain(id)));
         }
 
         [Test]

@@ -95,7 +95,7 @@ namespace Backend.Tests.Services
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Has.Count.EqualTo(1));
-            Assert.That(result.First(), Has.Count.EqualTo(0));
+            Assert.That(result.First(), Is.Empty);
         }
 
         [Test]
