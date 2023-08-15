@@ -19,15 +19,15 @@ namespace Backend.Tests.Models
             var mergeEmpty = new MergeUndoIds();
             var mergeNonEmpty = new MergeUndoIds { ParentIds = _parentIds1, ChildIds = _childIds1 };
 
-            Assert.That(mergeEmpty.Equals(new MergeUndoIds()));
-            Assert.That(mergeNonEmpty.Equals(new MergeUndoIds { ParentIds = _parentIds1, ChildIds = _childIds1 }));
+            Assert.That(mergeEmpty.Equals(new MergeUndoIds()), Is.True);
+            Assert.That(mergeNonEmpty.Equals(new MergeUndoIds { ParentIds = _parentIds1, ChildIds = _childIds1 }), Is.True);
         }
 
         [Test]
         public void TestCloneEquals()
         {
             var merge = new MergeUndoIds { ParentIds = _parentIds1, ChildIds = _childIds1 };
-            Assert.That(merge.Equals(merge.Clone()));
+            Assert.That(merge.Equals(merge.Clone()), Is.True);
         }
 
         [Test]
@@ -40,15 +40,15 @@ namespace Backend.Tests.Models
             var mergeNonEmpty4 = new MergeUndoIds { ParentIds = _parentIds1, ChildIds = _childIds3 };
             var mergeNonEmpty5 = new MergeUndoIds { ParentIds = _parentIds3, ChildIds = _childIds1 };
 
-            Assert.IsFalse(mergeEmpty.Equals(mergeNonEmpty1));
+            Assert.That(mergeEmpty.Equals(mergeNonEmpty1), Is.False);
             // Test one added child.
-            Assert.IsFalse(mergeNonEmpty1.Equals(mergeNonEmpty2));
+            Assert.That(mergeNonEmpty1.Equals(mergeNonEmpty2), Is.False);
             // Test one added parent.
-            Assert.IsFalse(mergeNonEmpty1.Equals(mergeNonEmpty3));
+            Assert.That(mergeNonEmpty1.Equals(mergeNonEmpty3), Is.False);
             // Test one different child.
-            Assert.IsFalse(mergeNonEmpty1.Equals(mergeNonEmpty4));
+            Assert.That(mergeNonEmpty1.Equals(mergeNonEmpty4), Is.False);
             // Test one different parent.
-            Assert.IsFalse(mergeNonEmpty1.Equals(mergeNonEmpty5));
+            Assert.That(mergeNonEmpty1.Equals(mergeNonEmpty5), Is.False);
         }
 
         [Test]
@@ -57,16 +57,16 @@ namespace Backend.Tests.Models
             var mergeEmpty = new MergeUndoIds();
             var mergeNonEmpty = new MergeUndoIds { ParentIds = _parentIds1, ChildIds = _childIds1 };
 
-            Assert.IsFalse(mergeEmpty.Equals(null));
-            Assert.IsFalse(mergeNonEmpty.Equals(null));
+            Assert.That(mergeEmpty.Equals(null), Is.False);
+            Assert.That(mergeNonEmpty.Equals(null), Is.False);
         }
 
         [Test]
         public void TestHashCode()
         {
-            Assert.AreEqual(
+            Assert.That(
                 new MergeUndoIds { ParentIds = _parentIds1, ChildIds = _childIds1 }.GetHashCode(),
-                new MergeUndoIds { ParentIds = _parentIds1, ChildIds = _childIds1 }.GetHashCode());
+                Is.EqualTo(new MergeUndoIds { ParentIds = _parentIds1, ChildIds = _childIds1 }.GetHashCode()));
         }
     }
 }
