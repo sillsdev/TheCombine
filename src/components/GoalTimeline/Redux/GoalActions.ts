@@ -161,7 +161,7 @@ export function dispatchStepData(goal: Goal) {
 }
 
 export function asyncUpdateGoal() {
-  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+  return async (_dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const userEditId = getUserEditId();
     if (userEditId) {
       await Backend.addGoalToUserEdit(
