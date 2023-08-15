@@ -19,9 +19,10 @@ from typing import List
 import requests
 
 scripts_dir = Path(__file__).resolve().parent
-file_name_google_fallback = "GoogleFallback.txt"  # Match Backend/Helper/FileStorage.cs
-mlp_font_list = scripts_dir / "font_lists" / "mui_language_picker_fonts.txt"
-mlp_font_map = scripts_dir / "font_lists" / "mui_language_picker_font_map.json"
+file_name_google_fallback = "GoogleFallback.txt"
+font_lists_dir = scripts_dir / "font_lists"
+mlp_font_list = font_lists_dir / "mui_language_picker_fonts.txt"
+mlp_font_map = font_lists_dir / "mui_language_picker_font_map.json"
 url_font_families_info = "https://github.com/silnrsi/fonts/raw/main/families.json"
 url_lang_tags_list = "https://ldml.api.sil.org/en?query=langtags"
 url_script_font_table = (

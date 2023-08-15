@@ -11,10 +11,15 @@ namespace BackendFramework.Helper
     /// </summary>
     public static class FileStorage
     {
-        private const string CombineFilesDir = ".CombineFiles";
         private const string AvatarsDir = "Avatars";
-        private const string FontsDir = "fonts"; // Match deploy/scripts/get_fonts.py
-        private const string GoogleFallbackFileName = "GoogleFallback.txt"; // Match deploy/scripts/get_fonts.py
+        private const string CombineFilesDir = ".CombineFiles";
+        private const string ContainerAppRoot = "/home/app";
+        private const string EnvVarHomeLinux = "HOME";
+        private const string EnvVarHomeWindows = "UserProfile";
+        private const string EnvVarInContainer = "COMBINE_IS_IN_CONTAINER";
+        private const string FontsDir = "fonts";
+        private const string GoogleFallbackFileName = "GoogleFallback.txt";
+        private const string PublicDir = "public";
         private static readonly string ImportExtractedLocation = Path.Combine("Import", "ExtractedLocation");
         private static readonly string LiftImportSuffix = Path.Combine(ImportExtractedLocation, "Lift");
         private static readonly string AudioPathSuffix = Path.Combine(LiftImportSuffix, "audio");
@@ -128,13 +133,12 @@ namespace BackendFramework.Helper
         /// <summary> Get the path of the fonts directory. </summary>
         public static string GetFontsDir()
         {
-            if (Environment.GetEnvironmentVariable("COMBINE_IS_IN_CONTAINER") is null)
+            if (Environment.GetEnvironmentVariable(EnvVarInContainer) is null)
             {
                 // Only for development.
-                // This "public" should match get_fonts.py > dev_override_output.
-                return Path.Combine(Directory.GetParent(Environment.CurrentDirectory!)!.ToString(), "public", FontsDir);
+                return Path.Combine(Directory.GetParent(Environment.CurrentDirectory!)!.ToString(), PublicDir, FontsDir);
             }
-            return Path.Combine("/home/app", FontsDir);
+            return Path.Combine(ContainerAppRoot, FontsDir);
         }
 
         /// <summary>
@@ -160,8 +164,8 @@ namespace BackendFramework.Helper
         private static string GetHomePath()
         {
             // Generate path to home on Linux or Windows.
-            var homePath =
-                Environment.GetEnvironmentVariable("HOME") ?? Environment.GetEnvironmentVariable("UserProfile");
+            var homePath = Environment.GetEnvironmentVariable(EnvVarHomeLinux) ??
+                Environment.GetEnvironmentVariable(EnvVarHomeWindows);
 
             // Ensure home directory is found correctly.
             if (homePath is null)
