@@ -1,9 +1,8 @@
 import SpellChecker from "utilities/spellChecker";
 
-jest.mock(
-  "utilities/dictionary",
-  () => () => Promise.resolve({ aff: "SET UTF-8", dic: `1\n${mockValidWord}` })
-);
+jest.mock("resources/dictionaries", () => ({
+  getKeyDic: () => Promise.resolve(["", `1\n${mockValidWord}`]),
+}));
 
 const mockValidWord = "mock";
 
