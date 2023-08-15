@@ -6,10 +6,11 @@ Splits a dictionary file into smaller files.
 import argparse
 import logging
 from pathlib import Path
-from regex import sub
 from shutil import rmtree
 from typing import List
 from unicodedata import normalize
+
+from regex import sub
 
 combine_dir = Path(__file__).resolve().parent.parent
 dictionary_dir = combine_dir / "src" / "resources" / "dictionaries"
@@ -17,7 +18,7 @@ utilities_dir = combine_dir / "src" / "utilities"
 
 
 def parse_args() -> argparse.Namespace:
-    def lang_tag_type(tag) -> str:
+    def lang_tag_type(tag: str) -> str:
         if not tag.isalpha():
             raise argparse.ArgumentTypeError("Language tag must be only letters")
         if len(tag) not in [2, 3]:
@@ -37,9 +38,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "-l", "--lang", help="2- or 3-letter language tag", required=True, type=lang_tag_type
     )
-    parser.add_argument(
-        "-m", "--max", help="Max word length", type=int
-    )
+    parser.add_argument("-m", "--max", help="Max word length", type=int)
     parser.add_argument(
         "-n", "--normalize", choices=["NFC", "NFD", "NFKC", "NFKD"], default="NFKD"
     )
@@ -70,10 +69,10 @@ def parse_args() -> argparse.Namespace:
     return args
 
 
-def write_dict_part(file_path: Path, entries: List[str], include_count = False) -> None:
+def write_dict_part(file_path: Path, entries: List[str], include_count: bool = False) -> None:
     if not len(entries):
         return
-    
+
     with open(file_path, "w", encoding="utf-8") as file:
         if include_count:
             file.write(f"export default `{len(entries)}\n")
@@ -103,7 +102,7 @@ def main() -> None:
     all_entries: List[str] = []
     with open(args.input, "r", encoding="utf-8") as file:
         for line in file.readlines():
-            words = sub(u"\\p{P}+"," ",normalize(args.normalize, line)).split()
+            words = sub("\\p{P}+", " ", normalize(args.normalize, line)).split()
             all_entries.extend(words)
 
     if subdir.is_dir():
@@ -115,10 +114,12 @@ def main() -> None:
                 path.unlink()
     Path.mkdir(subdir, exist_ok=True)
 
-    def split_and_export_entries(entries: List[str], all_starts: List[str], start: str = "") -> None:
+    def split_and_export_entries(
+        entries: List[str], all_starts: List[str], start: str = ""
+    ) -> None:
         logging.info(f"Splitting {len(entries)} entries beginning with '{start}'")
-        entry_sets: dict[dict[bool]] = {}
-        others: dict[bool] = {}
+        entry_sets: dict[str, dict[str, bool]] = {}
+        others: dict[str, bool] = {}
 
         for entry in entries:
             if args.max and len(entry) > args.max:
@@ -128,13 +129,12 @@ def main() -> None:
                 others[entry] = True
                 continue
 
-            sub_start = entry[:len(start)+1].lower()
+            sub_start = entry[: len(start) + 1].lower()
             if sub_start not in entry_sets:
                 entry_sets[sub_start] = {}
             entry_sets[sub_start][entry] = True
-            
+
         for key, val in entry_sets.items():
-            #logging.info(f"Gathering entries beginning with '{key}'")
             subentries = list(val.keys())
             if len(subentries) < args.threshold:
                 for subentry in subentries:
@@ -146,13 +146,13 @@ def main() -> None:
                 continue
 
             all_starts.append(key)
-            file_path = subdir / f"u{'-'.join(map(lambda c:str(ord(c)), key))}.dic.js"
+            file_path = subdir / f"u{'-'.join([str(ord(c)) for c in key])}.dic.js"
             logging.info(f"Saving {len(subentries)} entries to {file_path}")
             write_dict_part(file_path, subentries)
 
-        file_path = subdir / f"u{'-'.join(map(lambda c:str(ord(c)), start))}.dic.js"
+        file_path = subdir / f"u{'-'.join([str(ord(c)) for c in start])}.dic.js"
         other_words = list(others.keys())
-        if (len(other_words)):
+        if len(other_words):
             logging.info(f"Saving {len(other_words)} entries to {file_path}")
             write_dict_part(file_path, other_words, start == "")
 
@@ -165,22 +165,30 @@ def main() -> None:
     case_lines: List[str] = []
     switch_lines: List[str] = []
     for start in sorted(word_starts):
-        case = '-'.join(map(lambda c:str(ord(c)), start))
+        case = "-".join([str(ord(c)) for c in start])
         case_lines.append(f'  "{case}",\n')
         switch_lines.append(f'    case "{case}":\n')
-        file_path = f"resources/dictionaries/{args.lang}/u{case}.dic"
-        switch_lines.append(f'      return [startCode, (await import("{file_path}")).default];\n')
+        import_path = f"resources/dictionaries/{args.lang}/u{case}.dic"
+        switch_lines.append(
+            f'      return [startCode, (await import("{import_path}")).default];\n'
+        )
 
-    cmd = f"python scripts/split_dictionary.py -l {args.lang} -t {args.threshold} -T {args.Threshold}"
+    cmd = (
+        "python scripts/split_dictionary.py"
+        f" -l {args.lang} -t {args.threshold} -T {args.Threshold}"
+    )
     if args.max:
         cmd += f" -m {args.max}"
     index_lines = [f"// This file was generated by `{cmd}`.\n\nconst cases = [\n"]
     index_lines.extend(case_lines)
-    index_lines.append(''']
+    index_lines.append(
+        """]
 
 export default async function (start?: string, exclude?: string[]): Promise<[string?,string?]> {
   if (!start) {
-    return ["", (await import("resources/dictionaries/'''+args.lang+'''/u.dic")).default];
+    return ["", (await import("resources/dictionaries/"""
+        + args.lang
+        + """/u.dic")).default];
   }
 
   const startCase = start.split("").map(c=>c.toLocaleLowerCase().charCodeAt(0))
@@ -198,7 +206,7 @@ export default async function (start?: string, exclude?: string[]): Promise<[str
   }
 
   switch (startCode) {
-'''
+"""
     )
     index_lines.extend(switch_lines)
     index_lines.append("    default:\n      return [undefined, undefined];\n    }\n}\n")
@@ -214,18 +222,21 @@ export default async function (start?: string, exclude?: string[]): Promise<[str
             lang: str = file_path.stem
             lang_index_path = file_path / "index.ts"
             if lang_index_path.is_file():
-                dic_lines.append(f'    case Bcp47Code.{lang.capitalize()}:\n')
-                dic_lines.append(f'      return (await {lang}Dic(start, exclude)) ?? [undefined, undefined];\n')
+                dic_lines.append(f"    case Bcp47Code.{lang.capitalize()}:\n")
+                dic_lines.append(
+                    f"      return (await {lang}Dic(start, exclude)) ?? [undefined, undefined];\n"
+                )
                 import_lines.append(f'import {lang}Dic from "resources/dictionaries/{lang}";\n')
     with open(langs_index_file_path, "w") as langs_index_file:
-        langs_index_file.writelines([
-            "// This file was generated by scripts/split_dictionary.py\n\n",
-            "// Arabic word-list source (GPLv3):\n",
-            "// https://sourceforge.net/projects/arabic-wordlist\n"
-            "// Other languages source (MPLv2):\n",
-            "// https://cgit.freedesktop.org/libreoffice/dictionaries\n\n",
-            *import_lines,
-            """import { Bcp47Code } from "types/writingSystem";
+        langs_index_file.writelines(
+            [
+                "// This file was generated by scripts/split_dictionary.py\n\n",
+                "// Arabic word-list source (GPLv3):\n",
+                "// https://sourceforge.net/projects/arabic-wordlist\n"
+                "// Other languages source (MPLv2):\n",
+                "// https://cgit.freedesktop.org/libreoffice/dictionaries\n\n",
+                *import_lines,
+                """import { Bcp47Code } from "types/writingSystem";
 
 /** For a given lang-tag, string start, and list of keys to exclude,
  * return the key associated with the start and a dictionary piece,
@@ -237,9 +248,10 @@ export async function getKeyDic(
 ): Promise<[string?, string?]> {
   switch (bcp47) {
 """,
-            *dic_lines,
-            "    default:\n      return [undefined, undefined];\n  }\n}\n"
-        ])
+                *dic_lines,
+                "    default:\n      return [undefined, undefined];\n  }\n}\n",
+            ]
+        )
 
 
 if __name__ == "__main__":
