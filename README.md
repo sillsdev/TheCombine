@@ -55,7 +55,6 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    5. [Generate License Reports](#generate-license-reports)
    6. [Inspect Database](#inspect-database)
    7. [Cleanup Local Repository](#cleanup-local-repository)
-   8. [Generate API Files for RTK Query](#generate-api-files-for-rtk-query)
 3. [Setup Local Kubernetes Cluster](#setup-local-kubernetes-cluster)
    1. [Install Rancher Desktop](#install-rancher-desktop)
    2. [Install Docker Desktop](#install-docker-desktop)

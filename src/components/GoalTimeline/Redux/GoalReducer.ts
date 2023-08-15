@@ -13,7 +13,7 @@ const goalSlice = createSlice({
   initialState: defaultState,
   reducers: {
     addCompletedMergeToGoalAction: (state, action) => {
-      if (state.currentGoal.goalType == GoalType.MergeDups) {
+      if (state.currentGoal.goalType === GoalType.MergeDups) {
         const changes = { ...state.currentGoal.changes } as MergesCompleted;
         if (!changes.merges) {
           changes.merges = [];

@@ -38,7 +38,7 @@ export function loadUserEdits(history?: Goal[]): PayloadAction {
 }
 
 export function setCurrentGoal(goal?: Goal): PayloadAction {
-  if (goal == null) {
+  if (goal === null) {
     return setCurrentGoalAction(new Goal());
   }
   return setCurrentGoalAction({ ...goal });

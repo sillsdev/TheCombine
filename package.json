@@ -83,7 +83,6 @@
     "validator": "^13.9.0"
   },
   "devDependencies": {
-    "@rtk-query/codegen-openapi": "^1.0.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.5",
     "@testing-library/react-hooks": "^8.0.0",
@@ -105,7 +104,6 @@
     "@types/validator": "^13.7.17",
     "@typescript-eslint/eslint-plugin": "^5.60.1",
     "@typescript-eslint/parser": "^5.60.1",
-    "esbuild-runner": "^2.2.2",
     "eslint": "^8.44.0",
     "eslint-import-resolver-typescript": "^3.5.5",
     "eslint-plugin-import": "^2.27.5",
