@@ -12,14 +12,14 @@ namespace Backend.Tests.Models
         public void TestEquals()
         {
             var project = new Project { Name = Name };
-            Assert.That(project.Equals(new Project { Name = Name }));
+            Assert.That(project.Equals(new Project { Name = Name }), Is.True);
         }
 
         [Test]
         public void TestEqualsNull()
         {
             var project = new Project { Name = Name };
-            Assert.IsFalse(project.Equals(null));
+            Assert.That(project.Equals(null), Is.False);
         }
 
         [Test]
@@ -29,71 +29,71 @@ namespace Backend.Tests.Models
 
             var project2 = project.Clone();
             project2.IsActive = !project.IsActive;
-            Assert.IsFalse(project.Equals(project2));
+            Assert.That(project.Equals(project2), Is.False);
 
             project2 = project.Clone();
             project2.LiftImported = !project.LiftImported;
-            Assert.IsFalse(project.Equals(project2));
+            Assert.That(project.Equals(project2), Is.False);
 
             project2 = project.Clone();
             project2.DefinitionsEnabled = !project.DefinitionsEnabled;
-            Assert.IsFalse(project.Equals(project2));
+            Assert.That(project.Equals(project2), Is.False);
 
             project2 = project.Clone();
             project2.GrammaticalInfoEnabled = !project.GrammaticalInfoEnabled;
-            Assert.IsFalse(project.Equals(project2));
+            Assert.That(project.Equals(project2), Is.False);
 
             project2 = project.Clone();
             project2.AutocompleteSetting = 1 - project.AutocompleteSetting;
-            Assert.IsFalse(project.Equals(project2));
+            Assert.That(project.Equals(project2), Is.False);
 
             project2 = project.Clone();
             project2.SemDomWritingSystem.Bcp47 = "diff";
-            Assert.IsFalse(project.Equals(project2));
+            Assert.That(project.Equals(project2), Is.False);
 
             project2 = project.Clone();
             project2.VernacularWritingSystem.Name = "different";
-            Assert.IsFalse(project.Equals(project2));
+            Assert.That(project.Equals(project2), Is.False);
 
             project2 = project.Clone();
             project2.AnalysisWritingSystems.Add(new WritingSystem());
-            Assert.IsFalse(project.Equals(project2));
+            Assert.That(project.Equals(project2), Is.False);
 
             project2 = project.Clone();
             project2.SemanticDomains.Add(new SemanticDomain());
-            Assert.IsFalse(project.Equals(project2));
+            Assert.That(project.Equals(project2), Is.False);
 
             project2 = project.Clone();
             project.ValidCharacters.Add("a");
             project2.ValidCharacters.Add("b");
-            Assert.IsFalse(project.Equals(project2));
+            Assert.That(project.Equals(project2), Is.False);
 
             project2 = project.Clone();
             project.RejectedCharacters.Add("a");
             project2.RejectedCharacters.Add("b");
-            Assert.IsFalse(project.Equals(project2));
+            Assert.That(project.Equals(project2), Is.False);
 
             project2 = project.Clone();
             project2.CustomFields.Add(new CustomField());
-            Assert.IsFalse(project.Equals(project2));
+            Assert.That(project.Equals(project2), Is.False);
 
             project2 = project.Clone();
             project.WordFields.Add("a");
             project2.WordFields.Add("b");
-            Assert.IsFalse(project.Equals(project2));
+            Assert.That(project.Equals(project2), Is.False);
 
             project2 = project.Clone();
             project.PartsOfSpeech.Add("a");
             project2.PartsOfSpeech.Add("b");
-            Assert.IsFalse(project.Equals(project2));
+            Assert.That(project.Equals(project2), Is.False);
 
             project2 = project.Clone();
             project2.InviteTokens.Add(new EmailInvite());
-            Assert.IsFalse(project.Equals(project2));
+            Assert.That(project.Equals(project2), Is.False);
 
             project2 = project.Clone();
             project2.WorkshopSchedule.Add(DateTime.Now);
-            Assert.IsFalse(project.Equals(project2));
+            Assert.That(project.Equals(project2), Is.False);
         }
 
         [Test]
@@ -111,15 +111,15 @@ namespace Backend.Tests.Models
             project.InviteTokens.Add(emailInvite);
 
             var project2 = project.Clone();
-            Assert.AreEqual(project, project2);
+            Assert.That(project, Is.EqualTo(project2));
         }
 
         [Test]
         public void TestHashCode()
         {
-            Assert.AreNotEqual(
+            Assert.That(
                 new Project { Name = Name }.GetHashCode(),
-                new Project { Name = "Different Name" }.GetHashCode()
+                Is.Not.EqualTo(new Project { Name = "Different Name" }.GetHashCode())
             );
         }
     }
@@ -133,37 +133,37 @@ namespace Backend.Tests.Models
         public void TestEquals()
         {
             var field = new CustomField { Name = Name, Type = Type };
-            Assert.That(field.Equals(new CustomField { Name = Name, Type = Type }));
+            Assert.That(field.Equals(new CustomField { Name = Name, Type = Type }), Is.True);
         }
 
         [Test]
         public void TestEqualsNull()
         {
             var field = new CustomField { Name = Name };
-            Assert.IsFalse(field.Equals(null));
+            Assert.That(field.Equals(null), Is.False);
         }
 
         [Test]
         public void TestNotEquals()
         {
             var field = new CustomField { Name = Name, Type = Type };
-            Assert.IsFalse(field.Equals(new CustomField { Name = Name, Type = "Other Type" }));
-            Assert.IsFalse(field.Equals(new CustomField { Name = "Other Name", Type = Type }));
+            Assert.That(field.Equals(new CustomField { Name = Name, Type = "Other Type" }), Is.False);
+            Assert.That(field.Equals(new CustomField { Name = "Other Name", Type = Type }), Is.False);
         }
 
         [Test]
         public void TestClone()
         {
             var field = new CustomField { Name = Name, Type = Type };
-            Assert.AreEqual(field, field.Clone());
+            Assert.That(field, Is.EqualTo(field.Clone()));
         }
 
         [Test]
         public void TestHashCode()
         {
-            Assert.AreNotEqual(
+            Assert.That(
                 new CustomField { Name = Name }.GetHashCode(),
-                new CustomField { Name = "Different Name" }.GetHashCode()
+                Is.Not.EqualTo(new CustomField { Name = "Different Name" }.GetHashCode())
             );
         }
     }
@@ -178,24 +178,24 @@ namespace Backend.Tests.Models
         public void TestEquals()
         {
             var system = new WritingSystem(Bcp47, Name);
-            Assert.That(system.Equals(new WritingSystem(Bcp47, Name)));
+            Assert.That(system.Equals(new WritingSystem(Bcp47, Name)), Is.True);
         }
 
         [Test]
         public void TestEqualsNull()
         {
             var system = new WritingSystem(Bcp47, Name);
-            Assert.IsFalse(system.Equals(null));
+            Assert.That(system.Equals(null), Is.False);
         }
 
         [Test]
         public void TestNotEquals()
         {
             var system = new WritingSystem(Bcp47, Name);
-            Assert.IsFalse(system.Equals(new WritingSystem(Bcp47)));
+            Assert.That(system.Equals(new WritingSystem(Bcp47)), Is.False);
 
             system = new WritingSystem(Bcp47, Name, Font);
-            Assert.IsFalse(system.Equals(new WritingSystem(Bcp47, Name)));
+            Assert.That(system.Equals(new WritingSystem(Bcp47, Name)), Is.False);
         }
 
         [Test]
@@ -203,7 +203,7 @@ namespace Backend.Tests.Models
         {
             var system = new WritingSystem(Bcp47, Name);
             var sysString = system.ToString();
-            Assert.IsTrue(sysString.Contains(Name) && sysString.Contains(Bcp47));
+            Assert.That(sysString.Contains(Name) && sysString.Contains(Bcp47), Is.True);
         }
 
         [Test]
@@ -211,7 +211,7 @@ namespace Backend.Tests.Models
         {
             var system = new WritingSystem(Bcp47, Name, Font);
             var clonedSystem = system.Clone();
-            Assert.AreEqual(system, clonedSystem);
+            Assert.That(system, Is.EqualTo(clonedSystem));
         }
     }
 }
