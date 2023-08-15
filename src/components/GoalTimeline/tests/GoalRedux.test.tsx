@@ -305,21 +305,10 @@ describe("asyncUpdateGoal", () => {
     const initialGoal = store.getState().goalsState
       .currentGoal as CreateCharInv;
     await act(async () => {
-      // store.dispatch(
-      //   setCurrentGoal({
-      //     ...initialGoal,
-      //     changes: { charChanges: mockCharInvChanges },
-      //   })
-      // );
       store.dispatch(setCurrentGoal(initialGoal));
       await store.dispatch(asyncUpdateGoal());
     });
     // verify:
-    //  - current value is now new goal
-    // expect(initialGoal === store.getState().goalsState.currentGoal).toBeFalsy();
-    // const changes = store.getState().goalsState.currentGoal
-    //   .changes as CharInvChanges;
-    // expect(changes!.charChanges).toEqual(mockCharInvChanges);
     //  - backend is called to addGoalToUserEdit
     expect(mockAddGoalToUserEdit).toBeCalled();
   });
