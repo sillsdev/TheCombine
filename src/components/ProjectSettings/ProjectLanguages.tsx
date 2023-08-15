@@ -179,6 +179,12 @@ export default function ProjectLanguages(
           setFont={(font: string) =>
             setNewLang((prev: WritingSystem) => ({ ...prev, font }))
           }
+          setDir={(rtl: boolean) =>
+            setNewLang((prev: WritingSystem) => ({
+              ...prev,
+              rtl: rtl || undefined,
+            }))
+          }
           t={languagePickerStrings_en}
         />
       </Grid>{" "}
