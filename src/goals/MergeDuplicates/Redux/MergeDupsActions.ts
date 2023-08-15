@@ -266,7 +266,7 @@ export function mergeAll() {
         dispatch(addCompletedMergeToGoal(completedMerge));
         // need to look up the currentGoal again since the previous dispatch
         // will result in a new goal object
-        await dispatch(asyncUpdateGoal(getState().goalsState.currentGoal));
+        await dispatch(asyncUpdateGoal());
       }
     }
   };

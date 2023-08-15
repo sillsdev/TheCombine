@@ -38,10 +38,10 @@ export function loadUserEdits(history?: Goal[]): PayloadAction {
 }
 
 export function setCurrentGoal(goal?: Goal): PayloadAction {
-  if (goal === null) {
-    return setCurrentGoalAction(new Goal());
+  if (goal) {
+    return setCurrentGoalAction({ ...goal });
   }
-  return setCurrentGoalAction({ ...goal });
+  return setCurrentGoalAction(new Goal());
 }
 
 export function setCurrentGoalStatus(status: GoalStatus): PayloadAction {
@@ -160,12 +160,14 @@ export function dispatchStepData(goal: Goal) {
   };
 }
 
-export function asyncUpdateGoal(goal: Goal) {
-  return async (dispatch: StoreStateDispatch) => {
+export function asyncUpdateGoal() {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const userEditId = getUserEditId();
     if (userEditId) {
-      dispatch(setCurrentGoal(goal));
-      await Backend.addGoalToUserEdit(userEditId, goal);
+      await Backend.addGoalToUserEdit(
+        userEditId,
+        getState().goalsState.currentGoal
+      );
     }
   };
 }
