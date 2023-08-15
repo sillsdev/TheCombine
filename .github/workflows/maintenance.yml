@@ -8,16 +8,6 @@ permissions: # added using https://github.com/step-security/secure-workflows
   contents: read
 
 jobs:
-  test_env:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install pre-requisites
-        run: |
-          echo https://dl.k8s.io/release/$KUBECTL_VERSION/linux/amd64/kubectl
-        shell: bash
-        env:
-          KUBECTL_VERSION: ${{ vars.KUBECTL_VERSION }}
-
   docker_build:
     if: ${{ github.event.type }} == "PullRequest"
     runs-on: ubuntu-latest
