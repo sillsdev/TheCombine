@@ -23,8 +23,8 @@ export function quicksort<T>(arr: T[], score: (item: T) => number): T[] {
   const pivotIndex = 0;
   const pivot = arr[0];
 
-  const less = [];
-  const greater = [];
+  const less: T[] = [];
+  const greater: T[] = [];
 
   for (let i = 0; i < arr.length; i++) {
     if (i !== pivotIndex) {

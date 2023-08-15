@@ -28,7 +28,7 @@ export default function DateSelector(props: DateSelectorProps): ReactElement {
       return [];
     }
 
-    const dates = [];
+    const dates: string[] = [];
 
     // Strip hours minutes seconds etc.
     let currentDate = new Date(
