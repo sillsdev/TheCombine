@@ -11,22 +11,22 @@ namespace Backend.Tests.Models
         public void TestEquals()
         {
             var user = new User { Name = Name };
-            Assert.That(user.Equals(new User { Name = Name }));
+            Assert.That(user.Equals(new User { Name = Name }), Is.True);
         }
 
         [Test]
         public void TestEqualsNull()
         {
             var user = new User { Name = Name };
-            Assert.IsFalse(user.Equals(null));
+            Assert.That(user.Equals(null), Is.False);
         }
 
         [Test]
         public void TestHashCode()
         {
-            Assert.AreNotEqual(
+            Assert.That(
                 new User { Name = Name }.GetHashCode(),
-                new User { Name = "Different Name" }.GetHashCode()
+                Is.Not.EqualTo(new User { Name = "Different Name" }.GetHashCode())
             );
         }
 
@@ -34,9 +34,9 @@ namespace Backend.Tests.Models
         public void TestSanitize()
         {
             var user = new User { Avatar = "ava", Password = "pas", Token = "tok" };
-            Assert.IsFalse(user.Equals(new User()));
+            Assert.That(user.Equals(new User()), Is.False);
             user.Sanitize();
-            Assert.IsTrue(user.Equals(new User()));
+            Assert.That(user.Equals(new User()), Is.True);
         }
     }
 
@@ -46,8 +46,8 @@ namespace Backend.Tests.Models
         public void TestConstructor()
         {
             var credentials = new Credentials();
-            Assert.AreEqual(credentials.Username, "");
-            Assert.AreEqual(credentials.Password, "");
+            Assert.That(credentials.Username, Is.EqualTo(""));
+            Assert.That(credentials.Password, Is.EqualTo(""));
         }
     }
 }

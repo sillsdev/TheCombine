@@ -11,8 +11,8 @@ namespace Backend.Tests.Helper
         public void HashPasswordValidRoundtrip()
         {
             var hash = HashPassword(Password);
-            Assert.AreNotEqual(Password, hash);
-            Assert.That(ValidatePassword(hash, Password));
+            Assert.That(hash, Is.Not.EqualTo(Password));
+            Assert.That(ValidatePassword(hash, Password), Is.True);
         }
 
         [Test]
@@ -21,7 +21,7 @@ namespace Backend.Tests.Helper
             var hash = HashPassword(Password);
             // Change a single byte of the hash and validate that the hash fails.
             hash[0] ^= 0xff;
-            Assert.IsFalse(ValidatePassword(hash, Password));
+            Assert.That(ValidatePassword(hash, Password), Is.False);
         }
 
         [Test]
@@ -29,7 +29,7 @@ namespace Backend.Tests.Helper
         {
             var hash = HashPassword(Password);
             var mutatedPassword = $"Z{Password}";
-            Assert.IsFalse(ValidatePassword(hash, mutatedPassword));
+            Assert.That(ValidatePassword(hash, mutatedPassword), Is.False);
         }
     }
 }
