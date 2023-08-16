@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-import { Project } from "api";
+import { Project } from "api/models";
 import { Hash } from "types/hash";
 
 export class ProjectFonts {

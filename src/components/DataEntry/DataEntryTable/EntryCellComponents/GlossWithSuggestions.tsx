@@ -2,7 +2,7 @@ import { Autocomplete } from "@mui/material";
 import React, { ReactElement, useContext, useEffect } from "react";
 import { Key } from "ts-key-enum";
 
-import { WritingSystem } from "api";
+import { WritingSystem } from "api/models";
 import { TextFieldWithFont } from "utilities/fontComponents";
 import SpellCheckerContext from "utilities/spellCheckerContext";
 

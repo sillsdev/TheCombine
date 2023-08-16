@@ -2,7 +2,7 @@ import { Autocomplete, AutocompleteCloseReason } from "@mui/material";
 import React, { ReactElement, useEffect } from "react";
 import { Key } from "ts-key-enum";
 
-import { WritingSystem } from "api";
+import { WritingSystem } from "api/models";
 import { TextFieldWithFont } from "utilities/fontComponents";
 
 interface VernWithSuggestionsProps {
