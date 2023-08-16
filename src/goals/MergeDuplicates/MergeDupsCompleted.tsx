@@ -1,6 +1,6 @@
 import { ArrowRightAlt } from "@mui/icons-material";
 import { Button, Card, Grid, Paper, Typography } from "@mui/material";
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -13,6 +13,7 @@ import { MergesCompleted } from "goals/MergeDuplicates/MergeDupsTypes";
 import { StoreState } from "types";
 import theme from "types/theme";
 import { newFlag } from "types/word";
+import FontContext from "utilities/fontContext";
 
 export default function MergeDupsCompleted(): ReactElement {
   const changes = useSelector(
@@ -165,8 +166,11 @@ interface WordPaperProps {
 }
 
 function WordPaper(props: WordPaperProps): ReactElement {
+  const fontContext = useContext(FontContext);
+
   const [word, setWord] = useState<Word | undefined>();
   const [flag, setFlag] = useState<Flag>(newFlag());
+
   useEffect(() => {
     getWord(props.wordId).then(setWord);
   }, [props.wordId, setWord]);
@@ -188,7 +192,12 @@ function WordPaper(props: WordPaperProps): ReactElement {
         >
           <Grid container justifyContent="space-between">
             <Grid>
-              <Typography variant="h5">{word?.vernacular}</Typography>
+              <Typography
+                style={{ fontFamily: fontContext.vernacularFont }}
+                variant="h5"
+              >
+                {word?.vernacular}
+              </Typography>
             </Grid>
             <Grid>
               <FlagButton flag={flag} buttonId={`word-${props.wordId}-flag`} />
