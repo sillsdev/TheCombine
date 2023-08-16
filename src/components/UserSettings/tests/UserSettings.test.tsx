@@ -50,7 +50,7 @@ afterEach(cleanup);
 
 const renderUserSettings = async (user = mockUser()): Promise<void> => {
   await act(async () => {
-    render(<UserSettings user={user} />);
+    render(<UserSettings user={user} setUser={() => {}} />);
   });
 };
 
