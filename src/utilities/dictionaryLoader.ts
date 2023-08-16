@@ -18,6 +18,7 @@ export default class DictionaryLoader {
     if (!start) {
       return;
     }
+    // "NFKD" to match the --normalize argument of split_dictionary.py
     start = start.normalize("NFKD").toLocaleLowerCase();
     const [exc, dic] = await getKeyDic(this.lang, start, this.loaded);
     if (!exc || this.loaded.includes(exc)) {
