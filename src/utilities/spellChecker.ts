@@ -57,14 +57,18 @@ export default class SpellChecker {
       return [];
     }
 
-    // Remove excess whitespace
-    const words = word
-      .trim()
-      .split(" ")
-      .filter((w) => w);
-
-    const final = words.pop();
+    // Trim whitespace from the start and non-letter/-mark/-number characters from the end.
+    // Use of \p{L}\p{M}\p{N} here matches that in split_dictionary.py.
+    // Cf. https://en.wikipedia.org/wiki/Unicode_character_property
+    word = word.trimStart().replace(/[^\p{L}\p{M}\p{N}]$/u, "");
+    if (!word) {
+      return [];
+    }
+    // Split by non-letter/-mark/-number characters.
+    const final = word.split(/[^\p{L}\p{M}\p{N}]/u).pop();
     if (!final) {
+      // The above `.replace(...)` and `!word`-check make this impossible,
+      // but it mollifies Typescript and is a good backstop for any future changes.
       return [];
     }
 
@@ -77,8 +81,8 @@ export default class SpellChecker {
       suggestions = this.spell.suggest(`${final}..`);
     }
 
-    if (suggestions.length && words.length) {
-      const allButFinal = words.join(" ") + " ";
+    const allButFinal = word.slice(0, word.length - final.length);
+    if (suggestions.length && allButFinal) {
       suggestions = suggestions.map((w) => allButFinal + w);
     }
     return suggestions;

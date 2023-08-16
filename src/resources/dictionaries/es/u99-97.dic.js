@@ -156,7 +156,6 @@ Calbiga
 Calbuco
 Calca
 Caldas
-Caldas‎
 Caldera
 Calderas
 Calderón

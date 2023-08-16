@@ -45,14 +45,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "-t",
         "--threshold",
-        default=2500,
+        default=2000,
         help="Minimum entry count for a word-start to have its own file",
         type=int,
     )
     parser.add_argument(
         "-T",
         "--Threshold",
-        default=25000,
+        default=20000,
         help="Minimum entry count for a word-start to be split into multiple files",
         type=int,
     )
@@ -102,11 +102,12 @@ def main() -> None:
     all_entries: List[str] = []
     with open(args.input, "r", encoding="utf-8") as file:
         for line in file.readlines():
-            words = sub("\\p{P}+", " ", normalize(args.normalize, line)).split()
+            # The characters sub()-ed here should match those used in spellChecker.ts
+            # Cf. https://en.wikipedia.org/wiki/Unicode_character_property
+            words = sub("[^\\p{L}\\p{M}\\p{N}]+", " ", normalize(args.normalize, line)).split()
             if args.max:
-                all_entries.extend([w for w in words if len(w) <= args.max])
-            else:
-                all_entries.extend(words)
+                words = [w for w in words if len(w) <= args.max]
+            all_entries.extend(words)
 
     if subdir.is_dir():
         for path in subdir.iterdir():

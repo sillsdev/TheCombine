@@ -2738,6 +2738,7 @@ papelera
 papeleras
 papelero
 papeleros
+papelerí
 papeleta
 papeletas
 papeletea
