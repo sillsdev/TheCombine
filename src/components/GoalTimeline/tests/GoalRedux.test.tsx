@@ -6,7 +6,8 @@ import { MergeUndoIds, Permission, User, UserEdit } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import GoalTimeline from "components/GoalTimeline";
 import {
-  addGoalChanges,
+  addCharInvChanges,
+  addCompletedMergeToGoal,
   asyncAddGoal,
   asyncAdvanceStep,
   asyncGetUserEdits,
@@ -14,6 +15,8 @@ import {
   setCurrentGoal,
 } from "components/GoalTimeline/Redux/GoalActions";
 import {
+  CharacterStatus,
+  CharInvChanges,
   CharInvData,
   CreateCharInv,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
@@ -81,6 +84,10 @@ const mockCompletedMerge: MergeUndoIds = {
   parentIds: ["1", "2"],
   childIds: ["3", "4"],
 };
+const mockCharInvChanges: CharInvChanges = {
+  charChanges: [["'", CharacterStatus.Undecided, CharacterStatus.Accepted]],
+};
+
 const mockUserEdit: UserEdit = {
   id: mockUserEditId,
   edits: [
@@ -287,11 +294,14 @@ describe("asyncUpdateGoal", () => {
     await act(async () => {
       store.dispatch(asyncAddGoal(goal));
     });
-    //   - dispatch asyncUpdateGoal()
     const initialGoal = store.getState().goalsState
       .currentGoal as CreateCharInv;
+    store.dispatch(addCharInvChanges(mockCharInvChanges));
+    expect(store.getState().goalsState.currentGoal.changes).toBe(
+      mockCharInvChanges
+    );
+    //   - dispatch asyncUpdateGoal()
     await act(async () => {
-      store.dispatch(setCurrentGoal(initialGoal));
       await store.dispatch(asyncUpdateGoal());
     });
     // verify:
@@ -312,8 +322,7 @@ describe("asyncUpdateGoal", () => {
     });
     //   - dispatch asyncUpdateGoal()
     await act(async () => {
-      const changes = { merges: [mockCompletedMerge] };
-      store.dispatch(addGoalChanges(changes));
+      store.dispatch(addCompletedMergeToGoal(mockCompletedMerge));
       await store.dispatch(asyncUpdateGoal());
     });
     // verify:

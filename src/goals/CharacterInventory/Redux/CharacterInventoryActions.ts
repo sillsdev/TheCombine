@@ -2,8 +2,8 @@ import { Project } from "api/models";
 import { getFrontierWords } from "backend";
 import router from "browserRouter";
 import {
+  addCharInvChanges,
   asyncUpdateGoal,
-  setCurrentGoal,
 } from "components/GoalTimeline/Redux/GoalActions";
 import { asyncUpdateCurrentProject } from "components/Project/ProjectActions";
 import {
@@ -131,12 +131,7 @@ export function uploadInventory() {
     }
     const updatedProject = updateCurrentProject(state);
     await dispatch(asyncUpdateCurrentProject(updatedProject));
-    dispatch(
-      setCurrentGoal({
-        ...state.goalsState.currentGoal,
-        changes: { charChanges: changes },
-      })
-    );
+    dispatch(addCharInvChanges({ charChanges: changes }));
     await dispatch(asyncUpdateGoal());
     exit();
   };

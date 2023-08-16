@@ -1,11 +1,12 @@
 import { Action, PayloadAction } from "@reduxjs/toolkit";
 
-import { Word } from "api/models";
+import { MergeUndoIds, Word } from "api/models";
 import * as Backend from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
 import router from "browserRouter";
 import {
-  addGoalChangesAction,
+  addCharInvChangesAction,
+  addCompletedMergeToGoalAction,
   incrementCurrentGoalStepAction,
   loadUserEditsAction,
   setCurrentGoalAction,
@@ -13,19 +14,23 @@ import {
   setGoalDataAction,
   updateStepFromDataAction,
 } from "components/GoalTimeline/Redux/GoalReducer";
+import { CharInvChanges } from "goals/CharacterInventory/CharacterInventoryTypes";
 import {
   dispatchMergeStepData,
   fetchMergeDupsData,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { Goal, GoalChanges, GoalStatus, GoalType } from "types/goals";
+import { Goal, GoalStatus, GoalType } from "types/goals";
 import { Path } from "types/path";
 import { convertEditToGoal } from "utilities/goalUtilities";
 
 // Action Creators
-export function addGoalChanges(changes: GoalChanges): PayloadAction {
-  return addGoalChangesAction(changes);
+export function addCharInvChanges(changes: CharInvChanges): PayloadAction {
+  return addCharInvChangesAction(changes);
+}
+export function addCompletedMergeToGoal(changes: MergeUndoIds): PayloadAction {
+  return addCompletedMergeToGoalAction(changes);
 }
 
 export function incrementCurrentGoalStep(): Action {
