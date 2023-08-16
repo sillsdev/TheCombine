@@ -10,12 +10,12 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { ReactElement, useContext } from "react";
+import { ReactElement } from "react";
 
 import { GramCatGroup, Sense, Status } from "api/models";
 import { IconButtonWithTooltip, PartOfSpeechButton } from "components/Buttons";
 import theme from "types/theme";
-import FontContext from "utilities/fontContext";
+import { TypographyWithFont } from "utilities/fontComponents";
 
 interface SenseInLanguage {
   language: string; // bcp-47 code
@@ -60,9 +60,7 @@ interface SenseTextRowsProps {
 }
 
 function SenseTextRows(props: SenseTextRowsProps): ReactElement {
-  const fontContext = useContext(FontContext);
   const lang = props.senseInLang.language;
-  const fontFamily = fontContext.getLangFont(lang);
   return (
     <>
       <TableRow key={lang}>
@@ -73,12 +71,13 @@ function SenseTextRows(props: SenseTextRowsProps): ReactElement {
           </Typography>
         </TableCell>
         <TableCell style={{ borderBottom: "none" }}>
-          <Typography
+          <TypographyWithFont
+            lang={lang}
+            style={{ marginBottom: theme.spacing(1) }}
             variant="h5"
-            style={{ fontFamily, marginBottom: theme.spacing(1) }}
           >
             {props.senseInLang.glossText}
-          </Typography>
+          </TypographyWithFont>
         </TableCell>
       </TableRow>
       {!!props.senseInLang.definitionText && (
@@ -92,13 +91,13 @@ function SenseTextRows(props: SenseTextRowsProps): ReactElement {
                 paddingLeft: theme.spacing(1),
               }}
             >
-              <Typography
+              <TypographyWithFont
                 color="textSecondary"
-                style={{ fontFamily }}
+                lang={lang}
                 variant="h6"
               >
                 {props.senseInLang.definitionText}
-              </Typography>
+              </TypographyWithFont>
             </div>
           </TableCell>
         </TableRow>

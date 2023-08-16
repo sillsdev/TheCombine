@@ -1,11 +1,12 @@
-import { Grid, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import { ReactElement } from "react";
+
+import { TypographyWithFont } from "utilities/fontComponents";
 
 interface ImmutableExistingDataProps {
   vernacular: string;
-  vern_font?: string;
   gloss: string;
-  gloss_font?: string;
+  glossLang?: string;
 }
 
 /**
@@ -26,12 +27,9 @@ export default function ImmutableExistingData(
           position: "relative",
         }}
       >
-        <Typography
-          style={{ fontFamily: props.vern_font || "inherit" }}
-          variant="body1"
-        >
+        <TypographyWithFont variant="body1" vernacular>
           {props.vernacular}
-        </Typography>
+        </TypographyWithFont>
       </Grid>
       <Grid
         item
@@ -43,12 +41,9 @@ export default function ImmutableExistingData(
           position: "relative",
         }}
       >
-        <Typography
-          style={{ fontFamily: props.gloss_font || "inherit" }}
-          variant="body1"
-        >
+        <TypographyWithFont analysis lang={props.glossLang} variant="body1">
           {props.gloss}
-        </Typography>
+        </TypographyWithFont>
       </Grid>
     </Grid>
   );

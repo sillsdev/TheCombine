@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import CharacterStatusText from "goals/CharacterInventory/CharInv/CharacterList/CharacterStatusText";
 import { CharacterStatus } from "goals/CharacterInventory/CharacterInventoryTypes";
 import theme from "types/theme";
+import { TypographyWithFont } from "utilities/fontComponents";
 
 interface CharacterCardProps {
   char: string;
@@ -23,20 +24,21 @@ export default function CharacterCard(props: CharacterCardProps) {
       onClick={props.onClick}
     >
       <CardActionArea>
-        <Typography
-          variant="h2"
+        <TypographyWithFont
           align="center"
+          id="character"
           style={{
             height: props.fontHeight,
             marginLeft: theme.spacing(1),
             paddingTop: theme.spacing(1),
           }}
-          id="character"
+          variant="h2"
+          vernacular
         >
           {props.char}
           {""}
           {/* There is a zero-width joiner here to make height consistent for non-printing characters. */}
-        </Typography>
+        </TypographyWithFont>
 
         <CardContent>
           <Typography gutterBottom variant="h6" component="h2">

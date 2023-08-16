@@ -1,12 +1,11 @@
 import { Drawer, Grid, List, SxProps } from "@mui/material";
-import { Fragment, ReactElement, useContext } from "react";
+import { Fragment, ReactElement } from "react";
 
 import { SemanticDomain } from "api/models";
 import { appBarHeight } from "components/AppBar/AppBarTypes";
 import ImmutableExistingData from "components/DataEntry/ExistingDataTable/ImmutableExistingData";
 import theme from "types/theme";
 import { DomainWord } from "types/word";
-import FontContext from "utilities/fontContext";
 import { useWindowSize } from "utilities/useWindowSize";
 
 interface ExistingDataTableProps {
@@ -26,7 +25,6 @@ interface ExistingDataTableProps {
 export default function ExistingDataTable(
   props: ExistingDataTableProps
 ): ReactElement {
-  const fontContext = useContext(FontContext);
   const { windowHeight } = useWindowSize();
 
   if (!props.domainWords.length) {
@@ -41,9 +39,8 @@ export default function ExistingDataTable(
         <ImmutableExistingData
           key={`${domainWord.wordGuid}-${domainWord.senseGuid}`}
           vernacular={domainWord.vernacular}
-          vern_font={fontContext.vernacularFont}
           gloss={domainWord.gloss.def}
-          gloss_font={fontContext.getLangFont(domainWord.gloss.language)}
+          glossLang={domainWord.gloss.language}
         />
       ))}
     </List>

@@ -1,6 +1,6 @@
 import { WarningOutlined } from "@mui/icons-material";
 import { Grid, MenuItem, Paper, Select, Typography } from "@mui/material";
-import { ReactElement, useContext } from "react";
+import { ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 
@@ -14,7 +14,7 @@ import {
 import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { useAppDispatch } from "types/hooks";
 import theme from "types/theme";
-import FontContext from "utilities/fontContext";
+import { TypographyWithFont } from "utilities/fontComponents";
 
 interface DropWordProps {
   mergeState: MergeTreeState;
@@ -23,7 +23,6 @@ interface DropWordProps {
 
 export default function DropWord(props: DropWordProps): ReactElement {
   const dispatch = useAppDispatch();
-  const fontContext = useContext(FontContext);
   const { t } = useTranslation();
 
   const treeWord = props.mergeState.tree.words[props.wordId];
@@ -75,12 +74,9 @@ export default function DropWord(props: DropWordProps): ReactElement {
               >
                 {verns.map((vern) => (
                   <MenuItem value={vern} key={props.wordId + vern}>
-                    <Typography
-                      style={{ fontFamily: fontContext.vernacularFont }}
-                      variant="h5"
-                    >
+                    <TypographyWithFont variant="h5" vernacular>
                       {vern}
-                    </Typography>
+                    </TypographyWithFont>
                   </MenuItem>
                 ))}
               </Select>

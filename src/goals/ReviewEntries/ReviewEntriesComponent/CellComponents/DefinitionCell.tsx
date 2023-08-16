@@ -1,5 +1,5 @@
-import { Input, TextField } from "@mui/material";
-import { ReactElement, useContext } from "react";
+import { Input } from "@mui/material";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -12,7 +12,7 @@ import { ReviewEntriesSense } from "goals/ReviewEntries/ReviewEntriesComponent/R
 import { StoreState } from "types";
 import { themeColors } from "types/theme";
 import { newDefinition } from "types/word";
-import FontContext from "utilities/fontContext";
+import { TextFieldWithFont } from "utilities/fontComponents";
 
 interface DefinitionCellProps extends FieldParameterStandard {
   editable?: boolean;
@@ -114,16 +114,11 @@ interface DefinitionFieldProps {
 }
 
 function DefinitionField(props: DefinitionFieldProps): ReactElement {
-  const fontContext = useContext(FontContext);
   return (
-    <TextField
+    <TextFieldWithFont
       id={props.textFieldId}
-      InputProps={{
-        style: {
-          fontFamily: fontContext.getLangFont(props.definition.language),
-        },
-      }}
       label={`${props.definition.language}:`}
+      lang={props.definition.language}
       variant="outlined"
       margin="dense"
       multiline

@@ -1,5 +1,5 @@
-import { Input, TextField } from "@mui/material";
-import { ReactElement, useContext } from "react";
+import { Input } from "@mui/material";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -12,7 +12,7 @@ import { ReviewEntriesSense } from "goals/ReviewEntries/ReviewEntriesComponent/R
 import { StoreState } from "types";
 import { themeColors } from "types/theme";
 import { newGloss } from "types/word";
-import FontContext from "utilities/fontContext";
+import { TextFieldWithFont } from "utilities/fontComponents";
 
 interface GlossCellProps extends FieldParameterStandard {
   editable?: boolean;
@@ -112,14 +112,11 @@ interface GlossFieldProps {
 }
 
 function GlossField(props: GlossFieldProps): ReactElement {
-  const fontContext = useContext(FontContext);
   return (
-    <TextField
+    <TextFieldWithFont
       id={props.textFieldId}
-      InputProps={{
-        style: { fontFamily: fontContext.getLangFont(props.gloss.language) },
-      }}
       label={`${props.gloss.language}:`}
+      lang={props.gloss.language}
       variant="outlined"
       margin="dense"
       multiline

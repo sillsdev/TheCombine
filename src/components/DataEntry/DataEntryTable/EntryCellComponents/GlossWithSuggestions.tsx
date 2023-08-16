@@ -1,9 +1,9 @@
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete } from "@mui/material";
 import React, { ReactElement, useContext, useEffect } from "react";
 import { Key } from "ts-key-enum";
 
 import { WritingSystem } from "api";
-import FontContext from "utilities/fontContext";
+import { TextFieldWithFont } from "utilities/fontComponents";
 import SpellCheckerContext from "utilities/spellCheckerContext";
 
 interface GlossWithSuggestionsProps {
@@ -25,7 +25,6 @@ interface GlossWithSuggestionsProps {
 export default function GlossWithSuggestions(
   props: GlossWithSuggestionsProps
 ): ReactElement {
-  const fontContext = useContext(FontContext);
   const spellChecker = useContext(SpellCheckerContext);
 
   const maxSuggestions = 5;
@@ -63,16 +62,13 @@ export default function GlossWithSuggestions(
         props.updateGlossField(newInputValue);
       }}
       renderInput={(params) => (
-        <TextField
+        <TextFieldWithFont
           {...params}
+          analysis
           fullWidth
-          InputProps={{
-            style: {
-              fontFamily: fontContext.getLangFont(props.analysisLang.bcp47),
-            },
-          }}
           inputRef={props.glossInput}
           label={props.isNew ? props.analysisLang.name : ""}
+          lang={props.analysisLang.bcp47}
           variant={props.isNew ? "outlined" : "standard"}
         />
       )}

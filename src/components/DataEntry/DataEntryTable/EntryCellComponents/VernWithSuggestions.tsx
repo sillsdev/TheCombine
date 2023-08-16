@@ -1,13 +1,9 @@
-import {
-  Autocomplete,
-  AutocompleteCloseReason,
-  TextField,
-} from "@mui/material";
-import React, { ReactElement, useContext, useEffect } from "react";
+import { Autocomplete, AutocompleteCloseReason } from "@mui/material";
+import React, { ReactElement, useEffect } from "react";
 import { Key } from "ts-key-enum";
 
 import { WritingSystem } from "api";
-import FontContext from "utilities/fontContext";
+import { TextFieldWithFont } from "utilities/fontComponents";
 
 interface VernWithSuggestionsProps {
   isNew?: boolean;
@@ -30,8 +26,6 @@ interface VernWithSuggestionsProps {
 export default function VernWithSuggestions(
   props: VernWithSuggestionsProps
 ): ReactElement {
-  const fontContext = useContext(FontContext);
-
   useEffect(() => {
     if (props.onUpdate) {
       props.onUpdate();
@@ -63,17 +57,13 @@ export default function VernWithSuggestions(
       }}
       onClose={props.onClose}
       renderInput={(params) => (
-        <TextField
+        <TextFieldWithFont
           {...params}
           fullWidth
-          InputProps={{
-            style: {
-              fontFamily: fontContext.getLangFont(props.vernacularLang.bcp47),
-            },
-          }}
           inputRef={props.vernInput}
           label={props.isNew ? props.vernacularLang.name : ""}
           variant={props.isNew ? "outlined" : "standard"}
+          vernacular
         />
       )}
     />
