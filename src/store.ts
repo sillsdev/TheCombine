@@ -13,8 +13,8 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 // set REACT_APP_IMMUTABLE_CHECK to 1 in .env.development.local
 // (in the project's root folder)
 const immutableCheckConfig =
-  process.env.NODE_ENV == "development" &&
-  process.env.REACT_APP_IMMUTABLE_CHECK == "1"
+  process.env.NODE_ENV === "development" &&
+  process.env.REACT_APP_IMMUTABLE_CHECK === "1"
     ? { warnAfter: 1000 }
     : false;
 
@@ -32,7 +32,7 @@ export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
         immutableCheck: immutableCheckConfig,
         serializableCheck: false,
       }),
-    devTools: true,
+    devTools: process.env.NODE_ENV === "development",
     preloadedState,
   });
 };

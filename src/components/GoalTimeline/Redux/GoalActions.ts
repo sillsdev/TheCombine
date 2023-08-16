@@ -38,10 +38,7 @@ export function loadUserEdits(history?: Goal[]): PayloadAction {
 }
 
 export function setCurrentGoal(goal?: Goal): PayloadAction {
-  if (goal) {
-    return setCurrentGoalAction({ ...goal });
-  }
-  return setCurrentGoalAction(new Goal());
+  return setCurrentGoalAction(goal ? { ...goal } : new Goal());
 }
 
 export function setCurrentGoalStatus(status: GoalStatus): PayloadAction {
