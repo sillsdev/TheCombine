@@ -150,7 +150,7 @@ describe("asyncGetUserEdits", () => {
     });
     const convertGoalToEditSpy = jest.spyOn(goalUtilities, "convertEditToGoal");
     await store.dispatch(asyncGetUserEdits());
-    expect(store.getState().goalsState.history.length).toEqual(1);
+    expect(store.getState().goalsState.history).toHaveLength(1);
     expect(convertGoalToEditSpy).toBeCalledTimes(1);
   });
   it("backend returns no user edits", async () => {
@@ -167,7 +167,7 @@ describe("asyncGetUserEdits", () => {
 
     // dispatch the action
     await store.dispatch(asyncGetUserEdits());
-    expect(store.getState().goalsState.history.length).toEqual(0);
+    expect(store.getState().goalsState.history).toHaveLength(0);
     expect(convertGoalToEditSpy).toBeCalledTimes(0);
   });
 });
@@ -212,8 +212,8 @@ describe("asyncAddGoal", () => {
     expect(currentGoal.numSteps).toEqual(1);
     expect(currentGoal.currentStep).toEqual(0);
     const goalData = currentGoal.data as CharInvData;
-    expect(goalData.inventory.length).toEqual(1);
-    expect(goalData.inventory[0].length).toEqual(0);
+    expect(goalData.inventory).toHaveLength(1);
+    expect(goalData.inventory[0]).toHaveLength(0);
     expect(mockNavigate).toHaveBeenCalledWith(Path.GoalCurrent);
   });
 });
@@ -244,7 +244,7 @@ describe("asyncAdvanceStep", () => {
       currentGoal = store.getState().goalsState.currentGoal as MergeDups;
       expect(currentGoal.currentStep).toEqual(i + 1);
       // verify step is updated from the data
-      expect(currentGoal.steps.length).toEqual(i + 2);
+      expect(currentGoal.steps).toHaveLength(i + 2);
     }
     // iterate past the last step
     await act(async () => {
