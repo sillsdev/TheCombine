@@ -1,11 +1,11 @@
 import { Action, PayloadAction } from "@reduxjs/toolkit";
 
-import { MergeUndoIds, Word } from "api/models";
+import { Word } from "api/models";
 import * as Backend from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
 import router from "browserRouter";
 import {
-  addCompletedMergeToGoalAction,
+  addGoalChangesAction,
   incrementCurrentGoalStepAction,
   loadUserEditsAction,
   setCurrentGoalAction,
@@ -19,15 +19,13 @@ import {
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { Goal, GoalStatus, GoalType } from "types/goals";
+import { Goal, GoalChanges, GoalStatus, GoalType } from "types/goals";
 import { Path } from "types/path";
 import { convertEditToGoal } from "utilities/goalUtilities";
 
 // Action Creators
-export function addCompletedMergeToGoal(
-  completedMerge: MergeUndoIds
-): PayloadAction {
-  return addCompletedMergeToGoalAction(completedMerge);
+export function addGoalChanges(changes: GoalChanges): PayloadAction {
+  return addGoalChangesAction(changes);
 }
 
 export function incrementCurrentGoalStep(): Action {

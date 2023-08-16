@@ -9,8 +9,9 @@ import {
 } from "api/models";
 import * as backend from "backend";
 import {
-  addCompletedMergeToGoal,
+  // addCompletedMergeToGoal,
   asyncUpdateGoal,
+  setCurrentGoal,
 } from "components/GoalTimeline/Redux/GoalActions";
 import {
   defaultSidebar,
@@ -20,6 +21,7 @@ import {
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import {
   MergeDups,
+  MergesCompleted,
   MergeStepData,
   newMergeWords,
 } from "goals/MergeDuplicates/MergeDupsTypes";
@@ -263,9 +265,18 @@ export function mergeAll() {
       ];
       const completedMerge = { childIds, parentIds };
       if (getState().goalsState.currentGoal) {
-        dispatch(addCompletedMergeToGoal(completedMerge));
-        // need to look up the currentGoal again since the previous dispatch
-        // will result in a new goal object
+        //dispatch(addCompletedMergeToGoal(completedMerge));
+        const state = getState();
+        const changes = {
+          ...state.goalsState.currentGoal.changes,
+        } as MergesCompleted;
+        if (!changes.merges) {
+          changes.merges = [];
+        }
+        changes.merges.push(completedMerge);
+        dispatch(
+          setCurrentGoal({ ...state.goalsState.currentGoal, changes: changes })
+        );
         await dispatch(asyncUpdateGoal());
       }
     }

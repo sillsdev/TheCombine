@@ -1,10 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { defaultState } from "components/GoalTimeline/DefaultState";
-import {
-  MergeDupsData,
-  MergesCompleted,
-} from "goals/MergeDuplicates/MergeDupsTypes";
+import { MergeDupsData } from "goals/MergeDuplicates/MergeDupsTypes";
 import { StoreActionTypes } from "rootActions";
 import { GoalType } from "types/goals";
 
@@ -12,15 +9,8 @@ const goalSlice = createSlice({
   name: "goalsState",
   initialState: defaultState,
   reducers: {
-    addCompletedMergeToGoalAction: (state, action) => {
-      if (state.currentGoal.goalType === GoalType.MergeDups) {
-        const changes = { ...state.currentGoal.changes } as MergesCompleted;
-        if (!changes.merges) {
-          changes.merges = [];
-        }
-        changes.merges.push(action.payload);
-        state.currentGoal.changes = changes;
-      }
+    addGoalChangesAction: (state, action) => {
+      state.currentGoal.changes = action.payload;
     },
     incrementCurrentGoalStepAction: (state) => {
       if (state.currentGoal.currentStep + 1 < state.currentGoal.numSteps) {
@@ -68,7 +58,7 @@ const goalSlice = createSlice({
 });
 
 export const {
-  addCompletedMergeToGoalAction,
+  addGoalChangesAction,
   incrementCurrentGoalStepAction,
   loadUserEditsAction,
   setCurrentGoalAction,

@@ -6,7 +6,7 @@ import { MergeUndoIds, Permission, User, UserEdit } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import GoalTimeline from "components/GoalTimeline";
 import {
-  addCompletedMergeToGoal,
+  addGoalChanges,
   asyncAddGoal,
   asyncAdvanceStep,
   asyncGetUserEdits,
@@ -14,9 +14,6 @@ import {
   setCurrentGoal,
 } from "components/GoalTimeline/Redux/GoalActions";
 import {
-  CharacterChange,
-  CharacterStatus,
-  // CharInvChanges,
   CharInvData,
   CreateCharInv,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
@@ -84,9 +81,6 @@ const mockCompletedMerge: MergeUndoIds = {
   parentIds: ["1", "2"],
   childIds: ["3", "4"],
 };
-const mockCharInvChanges: CharacterChange[] = [
-  ["'", CharacterStatus.Undecided, CharacterStatus.Accepted],
-];
 const mockUserEdit: UserEdit = {
   id: mockUserEditId,
   edits: [
@@ -109,9 +103,15 @@ const mockUser = newUser("First Last", "username");
 mockUser.id = mockUserId;
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
 
+function setupLocalStorage() {
+  LocalStorage.setCurrentUser(mockUser);
+  LocalStorage.setProjectId(mockProjectId);
+}
+
 beforeEach(() => {
   jest.clearAllMocks();
   setMockFunctions();
+  setupLocalStorage();
 });
 
 afterEach(cleanup);
@@ -125,7 +125,7 @@ describe("GoalTimeline", () => {
     const goalButtonList = screen.queryAllByTestId("goal-button");
     // Expect 1 button for each of the Goal Types + one for the
     // "No History" element in the history list.
-    expect(goalButtonList.length).toBe(4);
+    expect(goalButtonList).toHaveLength(4);
   });
 });
 
@@ -149,16 +149,12 @@ describe("asyncGetUserEdits", () => {
       renderWithProviders(<GoalTimeline />, { store: store });
     });
     const convertGoalToEditSpy = jest.spyOn(goalUtilities, "convertEditToGoal");
-    LocalStorage.setCurrentUser(mockUser);
-    LocalStorage.setProjectId(mockProjectId);
     await store.dispatch(asyncGetUserEdits());
     expect(store.getState().goalsState.history.length).toEqual(1);
     expect(convertGoalToEditSpy).toBeCalledTimes(1);
   });
   it("backend returns no user edits", async () => {
     // render the GoalTimeline
-    LocalStorage.setCurrentUser(mockUser);
-    LocalStorage.setProjectId(mockProjectId);
     const store = setupStore();
     await act(async () => {
       renderWithProviders(<GoalTimeline />, { store: store });
@@ -178,8 +174,6 @@ describe("asyncGetUserEdits", () => {
 
 describe("asyncAddGoal", () => {
   it("new MergeDups goal", async () => {
-    LocalStorage.setCurrentUser(mockUser);
-    LocalStorage.setProjectId("123");
     const store = setupStore();
     await act(async () => {
       renderWithProviders(<GoalTimeline />, { store: store });
@@ -201,8 +195,6 @@ describe("asyncAddGoal", () => {
   });
 
   it("new CreateCharInv goal", async () => {
-    LocalStorage.setCurrentUser(mockUser);
-    LocalStorage.setProjectId("123");
     const store = setupStore();
     await act(async () => {
       renderWithProviders(<GoalTimeline />, { store: store });
@@ -229,8 +221,6 @@ describe("asyncAddGoal", () => {
 describe("asyncAdvanceStep", () => {
   it("advance MergeDups goal", async () => {
     // setup the test scenario
-    LocalStorage.setCurrentUser(mockUser);
-    LocalStorage.setProjectId("123");
     const store = setupStore();
     await act(async () => {
       renderWithProviders(<GoalTimeline />, { store: store });
@@ -266,8 +256,6 @@ describe("asyncAdvanceStep", () => {
 
   it("advance CreateCharInv goal", async () => {
     // setup the test scenario
-    LocalStorage.setCurrentUser(mockUser);
-    LocalStorage.setProjectId("123");
     const store = setupStore();
     await act(async () => {
       renderWithProviders(<GoalTimeline />, { store: store });
@@ -290,8 +278,6 @@ describe("asyncAdvanceStep", () => {
 describe("asyncUpdateGoal", () => {
   it("update CreateCharInv goal", async () => {
     // setup the test scenario
-    LocalStorage.setCurrentUser(mockUser);
-    LocalStorage.setProjectId("123");
     const store = setupStore();
     await act(async () => {
       renderWithProviders(<GoalTimeline />, { store: store });
@@ -315,8 +301,6 @@ describe("asyncUpdateGoal", () => {
 
   it("update MergeDups goal", async () => {
     // setup the test scenario
-    LocalStorage.setCurrentUser(mockUser);
-    LocalStorage.setProjectId("123");
     const store = setupStore();
     await act(async () => {
       renderWithProviders(<GoalTimeline />, { store: store });
@@ -328,7 +312,8 @@ describe("asyncUpdateGoal", () => {
     });
     //   - dispatch asyncUpdateGoal()
     await act(async () => {
-      store.dispatch(addCompletedMergeToGoal(mockCompletedMerge));
+      const changes = { merges: [mockCompletedMerge] };
+      store.dispatch(addGoalChanges(changes));
       await store.dispatch(asyncUpdateGoal());
     });
     // verify:
