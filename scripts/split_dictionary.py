@@ -154,7 +154,7 @@ def main() -> None:
         file_path = subdir / f"u{'-'.join([str(ord(c)) for c in start])}.dic.js"
         other_words = list(others.keys())
         if len(other_words):
-            if (start):
+            if start:
                 all_starts.append(start)
             logging.info(f"Saving {len(other_words)} entries to {file_path}")
             write_dict_part(file_path, other_words, start == "")
