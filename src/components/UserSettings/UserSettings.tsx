@@ -35,11 +35,19 @@ export enum UserSettingsIds {
 }
 
 export default (): ReactElement => {
-  const potentialUser = getCurrentUser();
-  return potentialUser ? <UserSettings user={potentialUser} /> : <Fragment />;
+  const [potentialUser, setPotentialUser] = useState(getCurrentUser());
+
+  return potentialUser ? (
+    <UserSettings user={potentialUser} setUser={setPotentialUser} />
+  ) : (
+    <Fragment />
+  );
 };
 
-export function UserSettings(props: { user: User }): ReactElement {
+export function UserSettings(props: {
+  user: User;
+  setUser: Function;
+}): ReactElement {
   const [name, setName] = useState(props.user.name);
   const [phone, setPhone] = useState(props.user.phone);
   const [email, setEmail] = useState(props.user.email);
@@ -74,18 +82,7 @@ export function UserSettings(props: { user: User }): ReactElement {
       });
       updateLangFromUser();
       enqueueSnackbar(t("userSettings.updateSuccess"));
-
-      // modify name with SetName to update disabled
-      setName("");
-
-      // grab user from localStorage
-      var currentUser = getCurrentUser();
-      props.user.name = currentUser?.name!;
-      props.user.phone = currentUser?.phone!;
-      props.user.email = currentUser?.email!;
-      props.user.uiLang = currentUser?.uiLang!;
-
-      setName(props.user.name);
+      props.setUser(getCurrentUser());
     } else {
       setEmailTaken(true);
     }
