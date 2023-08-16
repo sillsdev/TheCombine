@@ -2,7 +2,7 @@ import { Project } from "api/models";
 import { getFrontierWords } from "backend";
 import router from "browserRouter";
 import {
-  addCharInvChanges,
+  addCharInvChangesToGoal,
   asyncUpdateGoal,
 } from "components/GoalTimeline/Redux/GoalActions";
 import { asyncUpdateCurrentProject } from "components/Project/ProjectActions";
@@ -131,7 +131,7 @@ export function uploadInventory() {
     }
     const updatedProject = updateCurrentProject(state);
     await dispatch(asyncUpdateCurrentProject(updatedProject));
-    dispatch(addCharInvChanges(changes));
+    dispatch(addCharInvChangesToGoal(changes));
     await dispatch(asyncUpdateGoal());
     exit();
   };

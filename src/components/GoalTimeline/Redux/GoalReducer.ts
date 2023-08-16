@@ -12,7 +12,7 @@ const goalSlice = createSlice({
   name: "goalsState",
   initialState: defaultState,
   reducers: {
-    addCharInvChangesAction: (state, action) => {
+    addCharInvChangesToGoalAction: (state, action) => {
       if (state.currentGoal.goalType === GoalType.CreateCharInv) {
         state.currentGoal.changes = { charChanges: action.payload };
       }
@@ -27,7 +27,7 @@ const goalSlice = createSlice({
         state.currentGoal.changes = changes;
       }
     },
-    incrementCurrentGoalStepAction: (state) => {
+    incrementGoalStepAction: (state) => {
       if (state.currentGoal.currentStep + 1 < state.currentGoal.numSteps) {
         state.currentGoal.currentStep++;
       }
@@ -48,7 +48,7 @@ const goalSlice = createSlice({
           ? state.currentGoal.goalType
           : state.previousGoalType;
     },
-    setCurrentGoalsStateAction: (state, action) => {
+    setGoalStatusAction: (state, action) => {
       state.currentGoal.status = action.payload;
     },
     setGoalDataAction: (state, action) => {
@@ -73,12 +73,12 @@ const goalSlice = createSlice({
 });
 
 export const {
-  addCharInvChangesAction,
+  addCharInvChangesToGoalAction,
   addCompletedMergeToGoalAction,
-  incrementCurrentGoalStepAction,
+  incrementGoalStepAction,
   loadUserEditsAction,
   setCurrentGoalAction,
-  setCurrentGoalsStateAction,
+  setGoalStatusAction,
   setGoalDataAction,
   updateStepFromDataAction,
 } = goalSlice.actions;

@@ -5,12 +5,12 @@ import * as Backend from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
 import router from "browserRouter";
 import {
-  addCharInvChangesAction,
+  addCharInvChangesToGoalAction,
   addCompletedMergeToGoalAction,
-  incrementCurrentGoalStepAction,
+  incrementGoalStepAction,
   loadUserEditsAction,
   setCurrentGoalAction,
-  setCurrentGoalsStateAction,
+  setGoalStatusAction,
   setGoalDataAction,
   updateStepFromDataAction,
 } from "components/GoalTimeline/Redux/GoalReducer";
@@ -26,18 +26,19 @@ import { Path } from "types/path";
 import { convertEditToGoal } from "utilities/goalUtilities";
 
 // Action Creators
-export function addCharInvChanges(
+export function addCharInvChangesToGoal(
   charChanges: CharacterChange[]
 ): PayloadAction {
-  return addCharInvChangesAction(charChanges);
+  return addCharInvChangesToGoalAction(charChanges);
 }
 export function addCompletedMergeToGoal(changes: MergeUndoIds): PayloadAction {
   return addCompletedMergeToGoalAction(changes);
 }
 
-export function incrementCurrentGoalStep(): Action {
-  return incrementCurrentGoalStepAction();
+export function incrementGoalStep(): Action {
+  return incrementGoalStepAction();
 }
+
 export function loadUserEdits(history?: Goal[]): PayloadAction {
   return loadUserEditsAction(history ?? []);
 }
@@ -47,7 +48,7 @@ export function setCurrentGoal(goal?: Goal): PayloadAction {
 }
 
 export function setCurrentGoalStatus(status: GoalStatus): PayloadAction {
-  return setCurrentGoalsStateAction(status);
+  return setGoalStatusAction(status);
 }
 
 export function setGoalData(goalData: Word[][]): PayloadAction {
@@ -135,7 +136,7 @@ export function asyncLoadNewGoal(goal: Goal, userEditId: string) {
 export function asyncAdvanceStep() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const initialStep = getState().goalsState.currentGoal.currentStep;
-    dispatch(incrementCurrentGoalStep());
+    dispatch(incrementGoalStep());
     if (initialStep != getState().goalsState.currentGoal.currentStep) {
       // Update data.
       dispatch(updateStepFromData());
@@ -176,7 +177,7 @@ export function asyncUpdateGoal() {
 
 // Helper Functions
 
-// Returns true if input goal updated.
+// Returns goal data if the goal is MergeDups.
 export async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
   switch (goalType) {
     case GoalType.MergeDups:

@@ -57,10 +57,10 @@ jest.mock("backend");
 jest.mock("browserRouter");
 jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({
   asyncUpdateGoal: (...args: any[]) => mockAsyncUpdateGoal(...args),
-  setCurrentGoal: (...args: any[]) => mockSetCurrentGoal(...args),
+  addCharInvChangesToGoal: (...args: any[]) => mockAddCharInvChanges(...args),
 }));
 const mockAsyncUpdateGoal = jest.fn();
-const mockSetCurrentGoal = jest.fn();
+const mockAddCharInvChanges = jest.fn();
 
 const createMockStore = configureMockStore([thunk]);
 
@@ -80,7 +80,7 @@ describe("CharacterInventoryActions", () => {
     // Mock out the goal-related things called by uploadInventory.
     const mockAction: Action = { type: null };
     mockAsyncUpdateGoal.mockReturnValue(mockAction);
-    mockSetCurrentGoal.mockReturnValue(mockAction);
+    mockAddCharInvChanges.mockReturnValue(mockAction);
 
     const mockStore = createMockStore(MOCK_STATE);
     const mockUpload = Actions.uploadInventory();

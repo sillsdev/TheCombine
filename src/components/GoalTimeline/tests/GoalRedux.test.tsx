@@ -6,7 +6,7 @@ import { MergeUndoIds, Permission, User, UserEdit } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import GoalTimeline from "components/GoalTimeline";
 import {
-  addCharInvChanges,
+  addCharInvChangesToGoal,
   addCompletedMergeToGoal,
   asyncAddGoal,
   asyncAdvanceStep,
@@ -243,7 +243,7 @@ describe("asyncAdvanceStep", () => {
     expect(currentGoal.numSteps).toEqual(8);
     // iterate over all but the last step
     const numSteps = currentGoal.numSteps;
-    for (var i = 0; i < numSteps - 1; i++) {
+    for (let i = 0; i < numSteps - 1; i++) {
       // dispatch asyncAdvanceStep
       await act(async () => {
         store.dispatch(asyncAdvanceStep());
@@ -295,7 +295,7 @@ describe("asyncUpdateGoal", () => {
     await act(async () => {
       store.dispatch(asyncAddGoal(goal));
     });
-    store.dispatch(addCharInvChanges(mockCharInvChanges));
+    store.dispatch(addCharInvChangesToGoal(mockCharInvChanges));
     const changes = store.getState().goalsState.currentGoal
       .changes as CharInvChanges;
     expect(changes!.charChanges).toBe(mockCharInvChanges);
@@ -319,7 +319,7 @@ describe("asyncUpdateGoal", () => {
     await act(async () => {
       store.dispatch(asyncAddGoal(goal));
     });
-    //   - dispatch asyncUpdateGoal()
+    // dispatch asyncUpdateGoal()
     await act(async () => {
       store.dispatch(addCompletedMergeToGoal(mockCompletedMerge));
       await store.dispatch(asyncUpdateGoal());
