@@ -73,6 +73,18 @@ export function UserSettings(props: { user: User }): ReactElement {
       });
       updateLangFromUser();
       enqueueSnackbar(t("userSettings.updateSuccess"));
+
+      // modify name with SetName to update disabled
+      setName("");
+
+      // grab user from localStorage
+      var currentUser = getCurrentUser();
+      props.user.name = currentUser?.name!;
+      props.user.phone = currentUser?.phone!;
+      props.user.email = currentUser?.email!;
+      props.user.uiLang = currentUser?.uiLang!;
+
+      setName(props.user.name);
     } else {
       setEmailTaken(true);
     }
