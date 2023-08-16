@@ -54,7 +54,6 @@ export class ReviewEntriesSense {
   domains: SemanticDomain[];
   deleted: boolean;
   protected: boolean;
-  fonts?: string;
 
   constructor(sense?: Sense, analysisLang?: string) {
     if (!sense) {
