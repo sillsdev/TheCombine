@@ -45,14 +45,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "-t",
         "--threshold",
-        default=3000,
+        default=2500,
         help="Minimum entry count for a word-start to have its own file",
         type=int,
     )
     parser.add_argument(
         "-T",
         "--Threshold",
-        default=30000,
+        default=25000,
         help="Minimum entry count for a word-start to be split into multiple files",
         type=int,
     )
@@ -103,7 +103,10 @@ def main() -> None:
     with open(args.input, "r", encoding="utf-8") as file:
         for line in file.readlines():
             words = sub("\\p{P}+", " ", normalize(args.normalize, line)).split()
-            all_entries.extend(words)
+            if args.max:
+                all_entries.extend([w for w in words if len(w) <= args.max])
+            else:
+                all_entries.extend(words)
 
     if subdir.is_dir():
         for path in subdir.iterdir():
@@ -122,9 +125,6 @@ def main() -> None:
         others: dict[str, bool] = {}
 
         for entry in entries:
-            if args.max and len(entry) > args.max:
-                continue
-
             if len(entry) <= len(start):
                 others[entry] = True
                 continue
@@ -153,6 +153,8 @@ def main() -> None:
         file_path = subdir / f"u{'-'.join([str(ord(c)) for c in start])}.dic.js"
         other_words = list(others.keys())
         if len(other_words):
+            if (start):
+                all_starts.append(start)
             logging.info(f"Saving {len(other_words)} entries to {file_path}")
             write_dict_part(file_path, other_words, start == "")
 
