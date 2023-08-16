@@ -9,6 +9,11 @@ import { defaultState } from "components/App/DefaultState";
 import { persistor, setupStore } from "store";
 import type { AppStore, RootState } from "store";
 
+// These test utilities are leveraged from the Redux documentation for Writing Tests:
+// https://redux.js.org/usage/writing-tests
+// Specifically, see the section on "Integration Testing Connected Components
+// and Redux Logic"
+
 // This type interface extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
 interface ExtendedRenderOptions extends Omit<RenderOptions, "queries"> {

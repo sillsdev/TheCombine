@@ -263,7 +263,6 @@ export function mergeAll() {
       ];
       const completedMerge = { childIds, parentIds };
       if (getState().goalsState.currentGoal) {
-        //dispatch(addCompletedMergeToGoal(completedMerge));
         dispatch(addCompletedMergeToGoal(completedMerge));
         await dispatch(asyncUpdateGoal());
       }
