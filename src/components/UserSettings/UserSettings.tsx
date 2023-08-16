@@ -70,6 +70,7 @@ export function UserSettings(props: { user: User }): ReactElement {
         phone,
         email: punycode.toUnicode(email),
         uiLang,
+        hasAvatar: !!avatar,
       });
       updateLangFromUser();
       enqueueSnackbar(t("userSettings.updateSuccess"));
