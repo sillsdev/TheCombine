@@ -29,7 +29,7 @@ runs:
     - name: Install pre-requisites
       run: |
         cd
-        echo "Installing kubectl ${{ inputs.kubectl_version }}""
+        echo "Installing kubectl version '${{ inputs.kubectl_version }}'"
         curl -LO https://dl.k8s.io/release/${{ inputs.kubectl_version }}/linux/amd64/kubectl
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
         kubectl version --output=yaml
