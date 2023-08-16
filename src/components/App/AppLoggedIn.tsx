@@ -60,6 +60,7 @@ export default function AppWithBar(): ReactElement {
   }, [projId, projLangCount]);
 
   useEffect(() => {
+    // Remove this useEffect after the backend update is finished.
     console.info(styleOverrides);
   }, [styleOverrides]);
 
