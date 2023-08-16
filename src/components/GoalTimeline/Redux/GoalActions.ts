@@ -14,7 +14,7 @@ import {
   setGoalDataAction,
   updateStepFromDataAction,
 } from "components/GoalTimeline/Redux/GoalReducer";
-import { CharInvChanges } from "goals/CharacterInventory/CharacterInventoryTypes";
+import { CharacterChange } from "goals/CharacterInventory/CharacterInventoryTypes";
 import {
   dispatchMergeStepData,
   fetchMergeDupsData,
@@ -26,8 +26,10 @@ import { Path } from "types/path";
 import { convertEditToGoal } from "utilities/goalUtilities";
 
 // Action Creators
-export function addCharInvChanges(changes: CharInvChanges): PayloadAction {
-  return addCharInvChangesAction(changes);
+export function addCharInvChanges(
+  charChanges: CharacterChange[]
+): PayloadAction {
+  return addCharInvChangesAction(charChanges);
 }
 export function addCompletedMergeToGoal(changes: MergeUndoIds): PayloadAction {
   return addCompletedMergeToGoalAction(changes);

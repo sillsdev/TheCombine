@@ -14,7 +14,7 @@ const goalSlice = createSlice({
   reducers: {
     addCharInvChangesAction: (state, action) => {
       if (state.currentGoal.goalType === GoalType.CreateCharInv) {
-        state.currentGoal.changes = action.payload;
+        state.currentGoal.changes = { charChanges: action.payload };
       }
     },
     addCompletedMergeToGoalAction: (state, action) => {

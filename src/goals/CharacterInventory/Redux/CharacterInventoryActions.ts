@@ -131,7 +131,7 @@ export function uploadInventory() {
     }
     const updatedProject = updateCurrentProject(state);
     await dispatch(asyncUpdateCurrentProject(updatedProject));
-    dispatch(addCharInvChanges({ charChanges: changes }));
+    dispatch(addCharInvChanges(changes));
     await dispatch(asyncUpdateGoal());
     exit();
   };
