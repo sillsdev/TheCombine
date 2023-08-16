@@ -20,9 +20,10 @@ export default class DictionaryLoader {
     }
     start = start.normalize("NFKD").toLocaleLowerCase();
     const [exc, dic] = await getKeyDic(this.lang, start, this.loaded);
-    if (exc && !this.loaded.includes(exc)) {
-      this.loaded.push(exc);
+    if (!exc || this.loaded.includes(exc)) {
+      return;
     }
+    this.loaded.push(exc);
     return dic;
   }
 }
