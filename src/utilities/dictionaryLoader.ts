@@ -5,15 +5,15 @@ import { Bcp47Code } from "types/writingSystem";
 export default class DictionaryLoader {
   private readonly loaded: Hash<boolean> = {};
   readonly lang: Bcp47Code;
-  private readonly keys: string[];
+  private readonly keys: string[] | undefined;
 
   constructor(bcp47: Bcp47Code) {
     this.lang = bcp47;
-    this.keys = getKeys(bcp47) ?? [];
+    this.keys = getKeys(bcp47);
   }
 
   private getKey(start: string): string {
-    if (!start) {
+    if (!start || !this.keys) {
       return "";
     }
     const startArray = start
@@ -21,7 +21,7 @@ export default class DictionaryLoader {
       .normalize("NFKD")
       .toLocaleLowerCase()
       .split("")
-      .map((c) => c.toLocaleLowerCase().charCodeAt(0));
+      .map((c) => c.charCodeAt(0));
     var startCase = "";
     while (true) {
       startCase = startArray.join("-");
@@ -42,10 +42,13 @@ export default class DictionaryLoader {
       return;
     }
     this.loaded[key] = true;
+    if (process.env.NODE_ENV === "development") {
+      console.log(`Loading dictionary part ${key}, containing: ${start}`);
+    }
     const dic = await getDic(this.lang, key);
     if (!dic) {
+      console.error(`Failed to load dictionary part ${key} (for ${start})`);
       delete this.loaded[key];
-      return;
     }
     return dic;
   }

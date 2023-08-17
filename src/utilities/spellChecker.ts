@@ -41,7 +41,6 @@ export default class SpellChecker {
 
     const dic = await this.dictLoader.loadDictPart(start);
     if (dic) {
-      console.info(`Loading dictionary part containing: ${start}`);
       this.spell.personal(dic);
     }
   }
