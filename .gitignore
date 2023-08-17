@@ -68,6 +68,11 @@ __pycache__
 *.pyc
 venv
 
+# Intermediate files for dictionary import scripts
+src/resources/dictionaries/*.aff
+src/resources/dictionaries/*.dic
+src/resources/dictionaries/*.txt
+
 # Intermediate and output files for Semantic Domain import scripts
 !deploy/scripts/semantic_domains/xml/*.xml
 deploy/scripts/semantic_domains/json/*.json

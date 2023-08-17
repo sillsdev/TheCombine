@@ -136,7 +136,7 @@
       "jest": true
     },
     "ignorePatterns": [
-      "src/resources/dictionaries"
+      "*.dic.js"
     ],
     "rules": {
       "@typescript-eslint/no-empty-interface": "warn",

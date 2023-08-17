@@ -16,9 +16,8 @@
     "jsx": "react-jsx",
     "downlevelIteration": true,
     "baseUrl": "src",
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitAny": false
+    "noFallthroughCasesInSwitch": true
   },
-  "exclude": ["src/resources/dictionaries/*/*.dic.js"],
+  "exclude": ["*.dic.js"],
   "include": ["src", "scripts"]
 }

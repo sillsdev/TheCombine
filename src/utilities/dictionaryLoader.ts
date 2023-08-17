@@ -43,11 +43,11 @@ export default class DictionaryLoader {
     }
     this.loaded[key] = true;
     if (process.env.NODE_ENV === "development") {
-      console.log(`Loading dictionary part ${key}, containing: ${start}`);
+      console.log(`Loading dictionary part ${key} (with: "${start}")`);
     }
     const dic = await getDic(this.lang, key);
     if (!dic) {
-      console.error(`Failed to load dictionary part ${key} (for ${start})`);
+      console.error(`Failed to load dictionary part ${key} (with: "${start}")`);
       delete this.loaded[key];
     }
     return dic;
