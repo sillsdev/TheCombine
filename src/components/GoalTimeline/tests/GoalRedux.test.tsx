@@ -28,27 +28,20 @@ import {
 } from "goals/MergeDuplicates/MergeDupsTypes";
 import { goalDataMock } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
 import { setupStore } from "store";
-import { Goal, GoalStatus, GoalType } from "types/goals";
+import { GoalStatus, GoalType } from "types/goals";
 import { Path } from "types/path";
 import { newUser } from "types/user";
 import * as goalUtilities from "utilities/goalUtilities";
 import { renderWithProviders } from "utilities/testUtilities";
 
 jest.mock("backend", () => ({
-  addGoalToUserEdit: (id: string, goal: Goal) =>
-    mockAddGoalToUserEdit(id, goal),
-  addStepToGoal: (
-    id: string,
-    goalIndex: number,
-    step: string,
-    stepIndex?: number
-  ) => mockAddStepToGoal(id, goalIndex, step, stepIndex),
+  addGoalToUserEdit: (...args: any[]) => mockAddGoalToUserEdit(...args),
+  addStepToGoal: (...args: any[]) => mockAddStepToGoal(...args),
   createUserEdit: () => mockCreateUserEdit(),
   getCurrentPermissions: () => mockGetCurrentPermissions(),
   getDuplicates: () => mockGetDuplicates(),
   getUser: (id: string) => mockGetUser(id),
-  getUserEditById: (id: string, index: string) =>
-    mockGetUserEditById(id, index),
+  getUserEditById: (...args: any[]) => mockGetUserEditById(...args),
   updateUser: (user: User) => mockUpdateUser(user),
 }));
 

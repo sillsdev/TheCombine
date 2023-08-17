@@ -23,7 +23,7 @@ import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 import { Path } from "types/path";
-import { convertEditToGoal } from "utilities/goalUtilities";
+import { convertEditToGoal, maxNumSteps } from "utilities/goalUtilities";
 
 // Action Creation Functions
 
@@ -207,7 +207,7 @@ function goalCleanup(goal: Goal): void {
 export async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
   switch (goalType) {
     case GoalType.MergeDups:
-      return await fetchMergeDupsData(goalType);
+      return await fetchMergeDupsData(5, maxNumSteps(goalType));
     default:
       return [];
   }
