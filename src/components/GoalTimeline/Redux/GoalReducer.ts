@@ -48,9 +48,6 @@ const goalSlice = createSlice({
           ? state.currentGoal.goalType
           : state.previousGoalType;
     },
-    setGoalStatusAction: (state, action) => {
-      state.currentGoal.status = action.payload;
-    },
     setGoalDataAction: (state, action) => {
       if (action.payload.length > 0) {
         state.currentGoal.data = { plannedWords: action.payload };
@@ -58,6 +55,9 @@ const goalSlice = createSlice({
         state.currentGoal.currentStep = 0;
         state.currentGoal.steps = [];
       }
+    },
+    setGoalStatusAction: (state, action) => {
+      state.currentGoal.status = action.payload;
     },
     updateStepFromDataAction: (state) => {
       if (state.currentGoal.goalType === GoalType.MergeDups) {

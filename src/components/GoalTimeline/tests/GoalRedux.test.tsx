@@ -299,7 +299,7 @@ describe("asyncUpdateGoal", () => {
     const changes = store.getState().goalsState.currentGoal
       .changes as CharInvChanges;
     expect(changes!.charChanges).toBe(mockCharInvChanges);
-    //   - dispatch asyncUpdateGoal()
+    // dispatch asyncUpdateGoal()
     await act(async () => {
       await store.dispatch(asyncUpdateGoal());
     });

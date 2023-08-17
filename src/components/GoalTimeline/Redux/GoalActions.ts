@@ -25,12 +25,14 @@ import { Goal, GoalStatus, GoalType } from "types/goals";
 import { Path } from "types/path";
 import { convertEditToGoal } from "utilities/goalUtilities";
 
-// Action Creators
+// Action Creation Functions
+
 export function addCharInvChangesToGoal(
   charChanges: CharacterChange[]
 ): PayloadAction {
   return addCharInvChangesToGoalAction(charChanges);
 }
+
 export function addCompletedMergeToGoal(changes: MergeUndoIds): PayloadAction {
   return addCompletedMergeToGoalAction(changes);
 }
@@ -47,12 +49,12 @@ export function setCurrentGoal(goal?: Goal): PayloadAction {
   return setCurrentGoalAction(goal ? { ...goal } : new Goal());
 }
 
-export function setGoalStatus(status: GoalStatus): PayloadAction {
-  return setGoalStatusAction(status);
-}
-
 export function setGoalData(goalData: Word[][]): PayloadAction {
   return setGoalDataAction(goalData);
+}
+
+export function setGoalStatus(status: GoalStatus): PayloadAction {
+  return setGoalStatusAction(status);
 }
 
 export function updateStepFromData(): Action {
@@ -60,41 +62,6 @@ export function updateStepFromData(): Action {
 }
 
 // Dispatch Functions
-
-export function asyncCreateUserEdits() {
-  return async (dispatch: StoreStateDispatch) => {
-    dispatch(loadUserEdits([]));
-    await Backend.createUserEdit();
-  };
-}
-
-export function asyncLoadExistingUserEdits(
-  projectId: string,
-  userEditId: string
-) {
-  return async (dispatch: StoreStateDispatch) => {
-    const userEdit = await Backend.getUserEditById(projectId, userEditId);
-    const history = userEdit.edits.map((e, index) => {
-      return convertEditToGoal(e, index);
-    });
-    dispatch(loadUserEdits(history));
-  };
-}
-
-export function asyncGetUserEdits() {
-  return async (dispatch: StoreStateDispatch) => {
-    const projectId = getProjectId();
-    if (projectId) {
-      const userEditId = getUserEditId();
-
-      if (userEditId) {
-        await dispatch(asyncLoadExistingUserEdits(projectId, userEditId));
-      } else {
-        await dispatch(asyncCreateUserEdits());
-      }
-    }
-  };
-}
 
 export function asyncAddGoal(goal: Goal) {
   return async (dispatch: StoreStateDispatch) => {
@@ -112,24 +79,6 @@ export function asyncAddGoal(goal: Goal) {
       // Serve goal.
       router.navigate(Path.GoalCurrent);
     }
-  };
-}
-
-export function asyncLoadNewGoal(goal: Goal, userEditId: string) {
-  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    // Load data.
-    dispatch(setCurrentGoal(goal));
-    const currentGoal = getState().goalsState.currentGoal;
-    const goalData = await loadGoalData(currentGoal.goalType);
-    if (goalData.length > 0) {
-      dispatch(setGoalData(goalData));
-      dispatch(updateStepFromData());
-      const updatedGoal = getState().goalsState.currentGoal;
-      dispatch(dispatchStepData(updatedGoal));
-      await Backend.addGoalToUserEdit(userEditId, updatedGoal);
-      await saveCurrentStep(updatedGoal);
-    }
-    dispatch(setGoalStatus(GoalStatus.InProgress));
   };
 }
 
@@ -151,15 +100,56 @@ export function asyncAdvanceStep() {
   };
 }
 
-export function dispatchStepData(goal: Goal) {
-  return (dispatch: StoreStateDispatch) => {
-    switch (goal.goalType) {
-      case GoalType.MergeDups:
-        dispatch(dispatchMergeStepData(goal));
-        break;
-      default:
-        break;
+export function asyncCreateUserEdits() {
+  return async (dispatch: StoreStateDispatch) => {
+    dispatch(loadUserEdits([]));
+    await Backend.createUserEdit();
+  };
+}
+
+export function asyncGetUserEdits() {
+  return async (dispatch: StoreStateDispatch) => {
+    const projectId = getProjectId();
+    if (projectId) {
+      const userEditId = getUserEditId();
+
+      if (userEditId) {
+        await dispatch(asyncLoadExistingUserEdits(projectId, userEditId));
+      } else {
+        await dispatch(asyncCreateUserEdits());
+      }
     }
+  };
+}
+
+export function asyncLoadExistingUserEdits(
+  projectId: string,
+  userEditId: string
+) {
+  return async (dispatch: StoreStateDispatch) => {
+    const userEdit = await Backend.getUserEditById(projectId, userEditId);
+    const history = userEdit.edits.map((e, index) => {
+      return convertEditToGoal(e, index);
+    });
+    dispatch(loadUserEdits(history));
+  };
+}
+
+export function asyncLoadNewGoal(goal: Goal, userEditId: string) {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+    // Load data.
+    dispatch(setCurrentGoal(goal));
+    const currentGoal = getState().goalsState.currentGoal;
+    const goalData = await loadGoalData(currentGoal.goalType);
+    if (goalData.length > 0) {
+      dispatch(setGoalData(goalData));
+      dispatch(updateStepFromData());
+      const updatedGoal = getState().goalsState.currentGoal;
+      dispatch(dispatchStepData(updatedGoal));
+      await Backend.addGoalToUserEdit(userEditId, updatedGoal);
+      await saveCurrentStep(updatedGoal);
+    }
+    dispatch(setGoalStatus(GoalStatus.InProgress));
   };
 }
 
@@ -175,16 +165,31 @@ export function asyncUpdateGoal() {
   };
 }
 
+export function dispatchStepData(goal: Goal) {
+  return (dispatch: StoreStateDispatch) => {
+    switch (goal.goalType) {
+      case GoalType.MergeDups:
+        dispatch(dispatchMergeStepData(goal));
+        break;
+      default:
+        break;
+    }
+  };
+}
+
 // Helper Functions
 
-// Returns goal data if the goal is MergeDups.
-export async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
-  switch (goalType) {
-    case GoalType.MergeDups:
-      return await fetchMergeDupsData(goalType);
-    default:
-      return [];
+export function getUserEditId(): string | undefined {
+  const user = getCurrentUser();
+  if (user) {
+    const projectId = getProjectId();
+    const projectIds = Object.keys(user.workedProjects);
+    const key = projectIds.find((id) => id === projectId);
+    if (key) {
+      return user.workedProjects[key];
+    }
   }
+  return undefined;
 }
 
 function goalCleanup(goal: Goal): void {
@@ -198,17 +203,14 @@ function goalCleanup(goal: Goal): void {
   }
 }
 
-export function getUserEditId(): string | undefined {
-  const user = getCurrentUser();
-  if (user) {
-    const projectId = getProjectId();
-    const projectIds = Object.keys(user.workedProjects);
-    const key = projectIds.find((id) => id === projectId);
-    if (key) {
-      return user.workedProjects[key];
-    }
+// Returns goal data if the goal is MergeDups.
+export async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
+  switch (goalType) {
+    case GoalType.MergeDups:
+      return await fetchMergeDupsData(goalType);
+    default:
+      return [];
   }
-  return undefined;
 }
 
 async function saveCurrentStep(goal: Goal) {
