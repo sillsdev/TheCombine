@@ -78,8 +78,8 @@ export const {
   incrementGoalStepAction,
   loadUserEditsAction,
   setCurrentGoalAction,
-  setGoalStatusAction,
   setGoalDataAction,
+  setGoalStatusAction,
   updateStepFromDataAction,
 } = goalSlice.actions;
 

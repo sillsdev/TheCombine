@@ -15,8 +15,8 @@ import {
   setCurrentGoal,
 } from "components/GoalTimeline/Redux/GoalActions";
 import {
-  CharacterStatus,
   CharacterChange,
+  CharacterStatus,
   CharInvChanges,
   CharInvData,
   CreateCharInv,

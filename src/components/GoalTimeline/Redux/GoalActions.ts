@@ -10,8 +10,8 @@ import {
   incrementGoalStepAction,
   loadUserEditsAction,
   setCurrentGoalAction,
-  setGoalStatusAction,
   setGoalDataAction,
+  setGoalStatusAction,
   updateStepFromDataAction,
 } from "components/GoalTimeline/Redux/GoalReducer";
 import { CharacterChange } from "goals/CharacterInventory/CharacterInventoryTypes";
