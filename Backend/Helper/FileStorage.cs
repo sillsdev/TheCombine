@@ -14,8 +14,6 @@ namespace BackendFramework.Helper
         private const string AvatarsDir = "Avatars";
         private const string CombineFilesDir = ".CombineFiles";
         private const string ContainerAppRoot = "/home/app";
-        private const string EnvVarHomeLinux = "HOME";
-        private const string EnvVarHomeWindows = "UserProfile";
         private const string EnvVarInContainer = "COMBINE_IS_IN_CONTAINER";
         private const string FontsDir = "fonts";
         private const string GoogleFallbackFileName = "GoogleFallback.txt";
@@ -164,8 +162,8 @@ namespace BackendFramework.Helper
         private static string GetHomePath()
         {
             // Generate path to home on Linux or Windows.
-            var homePath = Environment.GetEnvironmentVariable(EnvVarHomeLinux) ??
-                Environment.GetEnvironmentVariable(EnvVarHomeWindows);
+            var homePath =
+                Environment.GetEnvironmentVariable("HOME") ?? Environment.GetEnvironmentVariable("UserProfile");
 
             // Ensure home directory is found correctly.
             if (homePath is null)
