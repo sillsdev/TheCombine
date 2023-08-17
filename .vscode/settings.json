@@ -32,9 +32,11 @@
   },
   "files.insertFinalNewline": true,
   "cSpell.ignorePaths": [
+    "*.dic.js",
     "node_modules",
     "package-lock.json",
-    "src/resources/dictionaries"
+    "public/locales/",
+    "!public/locales/en/"
   ],
   "cSpell.words": [
     "Adposition",
