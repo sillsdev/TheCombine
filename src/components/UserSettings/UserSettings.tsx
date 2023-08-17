@@ -46,7 +46,7 @@ export default (): ReactElement => {
 
 export function UserSettings(props: {
   user: User;
-  setUser: Function;
+  setUser: (user?: User) => void;
 }): ReactElement {
   const [name, setName] = useState(props.user.name);
   const [phone, setPhone] = useState(props.user.phone);
