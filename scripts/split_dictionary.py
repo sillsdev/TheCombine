@@ -172,9 +172,7 @@ def main() -> None:
         key_lines.append(f'  "{key}",\n')
         switch_lines.append(f'    case "{key}":\n')
         import_path = f"resources/dictionaries/{args.lang}/u{key}.dic"
-        switch_lines.append(
-            f'      return (await import("{import_path}")).default;\n'
-        )
+        switch_lines.append(f'      return (await import("{import_path}")).default;\n')
 
     cmd = (
         "python scripts/split_dictionary.py"
@@ -205,17 +203,26 @@ export default async function (key?: string): Promise<string | undefined> {
     langs_index_file_path = dictionary_dir / "index.ts"
     logging.info(f"Generating {langs_index_file_path}")
     import_lines: List[str] = []
-    key_lines: List[str] = []
+    keys_lines: List[str] = []
     dic_lines: List[str] = []
     for file_path in dictionary_dir.iterdir():
         if file_path.is_dir():
             lang: str = file_path.stem
             lang_index_path = file_path / "index.ts"
             if lang_index_path.is_file():
-                import_lines.append("import " + lang + "Dic, { keys as " + lang+'Keys } from "resources/dictionaries/'+lang+ '";\n')
-                key_lines.append(f"    case Bcp47Code.{lang.capitalize()}:\n      return {lang}Keys;\n")
-                dic_lines.append(f"    case Bcp47Code.{lang.capitalize()}:\n      return await {lang}Dic(key);\n"
+                import_lines.append(
+                    "import "
+                    + lang
+                    + "Dic, { keys as "
+                    + lang
+                    + 'Keys } from "resources/dictionaries/'
+                    + lang
+                    + '";\n'
                 )
+                keys_lines.append(f"    case Bcp47Code.{lang.capitalize()}:\n")
+                keys_lines.append(f"      return {lang}Keys;\n")
+                dic_lines.append(f"    case Bcp47Code.{lang.capitalize()}:\n")
+                dic_lines.append(f"      return await {lang}Dic(key);\n")
     with open(langs_index_file_path, "w") as langs_index_file:
         langs_index_file.writelines(
             [
@@ -232,7 +239,7 @@ export default async function (key?: string): Promise<string | undefined> {
 export function getKeys(bcp47: Bcp47Code): string[] | undefined {
   switch (bcp47) {
 """,
-                *key_lines,
+                *keys_lines,
                 """    default:
       return;
   }
