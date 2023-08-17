@@ -5,42 +5,66 @@
 // Other languages source (MPLv2):
 // https://cgit.freedesktop.org/libreoffice/dictionaries
 
-import arDic from "resources/dictionaries/ar";
-import enDic from "resources/dictionaries/en";
-import esDic from "resources/dictionaries/es";
-import frDic from "resources/dictionaries/fr";
-import hiDic from "resources/dictionaries/hi";
-import ptDic from "resources/dictionaries/pt";
-import ruDic from "resources/dictionaries/ru";
-import swDic from "resources/dictionaries/sw";
+import arDic, { keys as arKeys } from "resources/dictionaries/ar";
+import enDic, { keys as enKeys } from "resources/dictionaries/en";
+import esDic, { keys as esKeys } from "resources/dictionaries/es";
+import frDic, { keys as frKeys } from "resources/dictionaries/fr";
+import hiDic, { keys as hiKeys } from "resources/dictionaries/hi";
+import ptDic, { keys as ptKeys } from "resources/dictionaries/pt";
+import ruDic, { keys as ruKeys } from "resources/dictionaries/ru";
+import swDic, { keys as swKeys } from "resources/dictionaries/sw";
 import { Bcp47Code } from "types/writingSystem";
 
-/** For a given lang-tag, string start, and list of keys to exclude,
- * return the key associated with the start and a dictionary piece,
- * or [undefined, undefined] if there is no dic or if the key is in exclude.  */
-export async function getKeyDic(
-  bcp47: Bcp47Code,
-  start?: string,
-  exclude?: string[]
-): Promise<[string?, string?]> {
+/** For a given lang-tag, return the associated dictionary keys,
+ * or undefined if there is no dic for the lang-tag. */
+export function getKeys(bcp47: Bcp47Code): string[] | undefined {
   switch (bcp47) {
     case Bcp47Code.Ar:
-      return (await arDic(start, exclude)) ?? [undefined, undefined];
+      return arKeys;
     case Bcp47Code.En:
-      return (await enDic(start, exclude)) ?? [undefined, undefined];
+      return enKeys;
     case Bcp47Code.Es:
-      return (await esDic(start, exclude)) ?? [undefined, undefined];
+      return esKeys;
     case Bcp47Code.Fr:
-      return (await frDic(start, exclude)) ?? [undefined, undefined];
+      return frKeys;
     case Bcp47Code.Hi:
-      return (await hiDic(start, exclude)) ?? [undefined, undefined];
+      return hiKeys;
     case Bcp47Code.Pt:
-      return (await ptDic(start, exclude)) ?? [undefined, undefined];
+      return ptKeys;
     case Bcp47Code.Ru:
-      return (await ruDic(start, exclude)) ?? [undefined, undefined];
+      return ruKeys;
     case Bcp47Code.Sw:
-      return (await swDic(start, exclude)) ?? [undefined, undefined];
+      return swKeys;
     default:
-      return [undefined, undefined];
+      return;
+  }
+}
+
+/** For a given lang-tag and dict key,
+ * return the dictionary piece associated with that key,
+ * or undefined if there is no dictionary for the lang-tag. */
+export async function getDic(
+  bcp47: Bcp47Code,
+  key?: string
+): Promise<string | undefined> {
+  switch (bcp47) {
+    case Bcp47Code.Ar:
+      return await arDic(key);
+    case Bcp47Code.En:
+      return await enDic(key);
+    case Bcp47Code.Es:
+      return await esDic(key);
+    case Bcp47Code.Fr:
+      return await frDic(key);
+    case Bcp47Code.Hi:
+      return await hiDic(key);
+    case Bcp47Code.Pt:
+      return await ptDic(key);
+    case Bcp47Code.Ru:
+      return await ruDic(key);
+    case Bcp47Code.Sw:
+      return await swDic(key);
+    default:
+      return;
   }
 }

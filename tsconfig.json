@@ -19,6 +19,6 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false
   },
-  "exclude": ["src/resources/dictionaries"],
+  "exclude": ["src/resources/dictionaries/*/*.dic.js"],
   "include": ["src", "scripts"]
 }
