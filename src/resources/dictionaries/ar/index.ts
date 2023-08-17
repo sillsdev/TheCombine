@@ -58,6 +58,6 @@ export default async function (key?: string): Promise<string | undefined> {
     case "1610":
       return (await import("resources/dictionaries/ar/u1610.dic")).default;
     default:
-      return undefined;
+      return;
   }
 }

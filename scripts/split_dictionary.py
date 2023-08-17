@@ -196,7 +196,7 @@ export default async function (key?: string): Promise<string | undefined> {
 """
     )
     index_lines.extend(switch_lines)
-    index_lines.append("    default:\n      return undefined;\n    }\n}\n")
+    index_lines.append("    default:\n      return;\n  }\n}\n")
     with open(index_file_path, "w") as index_file:
         index_file.writelines(index_lines)
 
