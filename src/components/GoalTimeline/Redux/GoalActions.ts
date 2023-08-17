@@ -47,7 +47,7 @@ export function setCurrentGoal(goal?: Goal): PayloadAction {
   return setCurrentGoalAction(goal ? { ...goal } : new Goal());
 }
 
-export function setCurrentGoalStatus(status: GoalStatus): PayloadAction {
+export function setGoalStatus(status: GoalStatus): PayloadAction {
   return setGoalStatusAction(status);
 }
 
@@ -129,7 +129,7 @@ export function asyncLoadNewGoal(goal: Goal, userEditId: string) {
       await Backend.addGoalToUserEdit(userEditId, updatedGoal);
       await saveCurrentStep(updatedGoal);
     }
-    dispatch(setCurrentGoalStatus(GoalStatus.InProgress));
+    dispatch(setGoalStatus(GoalStatus.InProgress));
   };
 }
 
