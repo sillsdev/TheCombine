@@ -1,7 +1,8 @@
 import SpellChecker from "utilities/spellChecker";
 
 jest.mock("resources/dictionaries", () => ({
-  getKeyDic: () => Promise.resolve(["", `1\n${mockValidWord}`]),
+  getDic: () => Promise.resolve(`1\n${mockValidWord}`),
+  getKeys: () => [],
 }));
 
 const mockValidWord = "mock";
