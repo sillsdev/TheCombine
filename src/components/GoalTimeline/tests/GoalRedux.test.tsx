@@ -162,15 +162,14 @@ describe("asyncGetUserEdits", () => {
 
   it("creates new user edits", async () => {
     const store = setupStore();
-    LocalStorage.setCurrentUser(newUser("", ""));
-    const convertGoalToEditSpy = jest.spyOn(goalUtilities, "convertEditToGoal");
 
     await act(async () => {
       renderWithProviders(<GoalTimeline />, { store: store });
     });
+    LocalStorage.setCurrentUser(newUser("", ""));
     await store.dispatch(asyncGetUserEdits());
     expect(store.getState().goalsState.history).toHaveLength(0);
-    expect(convertGoalToEditSpy).toBeCalledTimes(0);
+    expect(mockCreateUserEdit).toBeCalledTimes(1);
   });
 });
 
