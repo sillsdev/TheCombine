@@ -7,7 +7,7 @@ import "tests/reactI18nextMock";
 
 import { Permission } from "api/models";
 import GoalTimeline, { createSuggestionData } from "components/GoalTimeline";
-import { defaultState } from "components/GoalTimeline/Redux/GoalReduxTypes";
+import { defaultState } from "components/GoalTimeline/DefaultState";
 import { Goal, GoalType, GoalsState } from "types/goals";
 import { goalTypeToGoal } from "utilities/goalUtilities";
 
