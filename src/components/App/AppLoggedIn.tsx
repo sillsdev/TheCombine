@@ -1,5 +1,4 @@
 import loadable from "@loadable/component";
-import { CssBaseline } from "@mui/material";
 import { ReactElement, useEffect, useMemo } from "react";
 import { Route, Routes } from "react-router-dom";
 
@@ -43,7 +42,6 @@ export default function AppWithBar(): ReactElement {
       <SignalRHub />
       <AppBar />
       <FontContext.Provider value={projFonts}>
-        <CssBaseline />
         <Routes>
           <Route path={routerPath(Path.DataEntry)} element={<DataEntry />} />
           <Route path={routerPath(Path.Goals)} element={<GoalTimeline />} />
