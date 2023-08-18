@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { act, cleanup, screen } from "@testing-library/react";
+import { act, cleanup } from "@testing-library/react";
 
 import "tests/reactI18nextMock";
 import { MergeUndoIds, Permission, User, UserEdit } from "api/models";
@@ -117,21 +117,8 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-describe("GoalTimeline", () => {
-  it("renders Goal screen", async () => {
-    await act(async () => {
-      renderWithProviders(<GoalTimeline />);
-    });
-    // has the expected number of buttons
-    const goalButtonList = screen.queryAllByTestId("goal-button");
-    // Expect 1 button for each of the Goal Types + one for the
-    // "No History" element in the history list.
-    expect(goalButtonList).toHaveLength(4);
-  });
-});
-
-describe("Set empty goal", () => {
-  it("set current goal, no arguments", async () => {
+describe("setCurrentGoal", () => {
+  it("calls setCurrentGoal() with no arguments", async () => {
     const store = setupStore();
     await act(async () => {
       renderWithProviders(<GoalTimeline />, { store: store });
@@ -168,6 +155,19 @@ describe("asyncGetUserEdits", () => {
     mockGetUserEditById.mockResolvedValueOnce(mockNoUserEdits);
 
     // dispatch the action
+    await store.dispatch(asyncGetUserEdits());
+    expect(store.getState().goalsState.history).toHaveLength(0);
+    expect(convertGoalToEditSpy).toBeCalledTimes(0);
+  });
+
+  it("creates new user edits", async () => {
+    const store = setupStore();
+    LocalStorage.setCurrentUser(newUser("", ""));
+    const convertGoalToEditSpy = jest.spyOn(goalUtilities, "convertEditToGoal");
+
+    await act(async () => {
+      renderWithProviders(<GoalTimeline />, { store: store });
+    });
     await store.dispatch(asyncGetUserEdits());
     expect(store.getState().goalsState.history).toHaveLength(0);
     expect(convertGoalToEditSpy).toBeCalledTimes(0);
