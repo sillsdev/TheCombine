@@ -154,6 +154,7 @@ describe("asyncGetUserEdits", () => {
     expect(store.getState().goalsState.history).toHaveLength(1);
     expect(convertGoalToEditSpy).toBeCalledTimes(1);
   });
+
   it("backend returns no user edits", async () => {
     // render the GoalTimeline
     const store = setupStore();
