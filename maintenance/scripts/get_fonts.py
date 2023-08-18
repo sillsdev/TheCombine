@@ -314,12 +314,12 @@ def main() -> None:
 
     env_line = 'REACT_APP_EXTRA_FONTS="'
     if not args.langs:
-        fallback_lines = ['{\n']
+        fallback_lines = ["{\n"]
         for key, val in google_fallback.items():
             env_line += f"&family={val.replace(' ', '+')}"
             fallback_lines.append(f'  "{key}": "{val}",\n')
         env_line += '"\n'
-        fallback_lines[-1] = fallback_lines[-1].replace(",","")
+        fallback_lines[-1] = fallback_lines[-1].replace(",", "")
         fallback_lines.append("}\n")
         with open(args.output / file_name_env, "w") as env_file:
             env_file.write(env_line)
