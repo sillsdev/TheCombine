@@ -1,10 +1,8 @@
 import loadable from "@loadable/component";
 import { CssBaseline } from "@mui/material";
-import { Theme, ThemeProvider, createTheme } from "@mui/material/styles";
-import { ReactElement, useEffect, useMemo, useState } from "react";
+import { ReactElement, useEffect, useMemo } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import { getFonts } from "backend";
 import SignalRHub from "components/App/SignalRHub";
 import AppBar from "components/AppBar/AppBarComponent";
 import PageNotFound from "components/PageNotFound/component";
@@ -35,90 +33,47 @@ export default function AppWithBar(): ReactElement {
       proj1.analysisWritingSystems.length ===
         proj2.analysisWritingSystems.length
   );
-  const projId = useAppSelector(
-    (state: StoreState) => state.currentProjectState.project.id
-  );
-  const projLangCount = useAppSelector(
-    (state: StoreState) =>
-      state.currentProjectState.project.analysisWritingSystems.length
-  );
 
   const projFonts = useMemo(() => new ProjectFonts(proj), [proj]);
 
-  const [styleOverrides, setStyleOverrides] = useState<string>();
-
   useEffect(updateLangFromUser, []);
-
-  useEffect(() => {
-    if (projId) {
-      getFonts(projId).then((cssLines) => {
-        setStyleOverrides(
-          cssLines.join("\n").replaceAll("\r", "").replaceAll("\\", "/")
-        );
-      });
-    }
-  }, [projId, projLangCount]);
-
-  useEffect(() => {
-    // Remove this useEffect after the backend update is finished.
-    console.info(styleOverrides);
-  }, [styleOverrides]);
-
-  const overrideThemeFont = (theme: Theme) =>
-    styleOverrides
-      ? createTheme({
-          ...theme,
-          components: {
-            ...theme.components,
-            MuiCssBaseline: {
-              ...theme.components?.MuiCssBaseline,
-              styleOverrides,
-            },
-          },
-        })
-      : theme;
 
   return (
     <>
       <SignalRHub />
       <AppBar />
       <FontContext.Provider value={projFonts}>
-        <ThemeProvider theme={overrideThemeFont}>
-          <CssBaseline />
-          <Routes>
-            <Route path={routerPath(Path.DataEntry)} element={<DataEntry />} />
-            <Route path={routerPath(Path.Goals)} element={<GoalTimeline />} />
-            <Route
-              path={routerPath(Path.GoalCurrent)}
-              element={<BaseGoalScreen />}
-            />
-            <Route
-              path={routerPath(Path.GoalNext)}
-              element={<NextGoalScreen />}
-            />
-            <Route
-              path={routerPath(Path.ProjScreen)}
-              element={<ProjectScreen />}
-            />
-            <Route
-              path={routerPath(Path.ProjSettings)}
-              element={<ProjectSettings />}
-            />
-            <Route
-              path={routerPath(Path.SiteSettings)}
-              element={<SiteSettings />}
-            />
-            <Route
-              path={routerPath(Path.Statistics)}
-              element={<Statistics />}
-            />
-            <Route
-              path={routerPath(Path.UserSettings)}
-              element={<UserSettings />}
-            />
-            <Route path="*" element={<PageNotFound />} />
-          </Routes>
-        </ThemeProvider>
+        <CssBaseline />
+        <Routes>
+          <Route path={routerPath(Path.DataEntry)} element={<DataEntry />} />
+          <Route path={routerPath(Path.Goals)} element={<GoalTimeline />} />
+          <Route
+            path={routerPath(Path.GoalCurrent)}
+            element={<BaseGoalScreen />}
+          />
+          <Route
+            path={routerPath(Path.GoalNext)}
+            element={<NextGoalScreen />}
+          />
+          <Route
+            path={routerPath(Path.ProjScreen)}
+            element={<ProjectScreen />}
+          />
+          <Route
+            path={routerPath(Path.ProjSettings)}
+            element={<ProjectSettings />}
+          />
+          <Route
+            path={routerPath(Path.SiteSettings)}
+            element={<SiteSettings />}
+          />
+          <Route path={routerPath(Path.Statistics)} element={<Statistics />} />
+          <Route
+            path={routerPath(Path.UserSettings)}
+            element={<UserSettings />}
+          />
+          <Route path="*" element={<PageNotFound />} />
+        </Routes>
       </FontContext.Provider>
     </>
   );

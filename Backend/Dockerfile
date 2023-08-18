@@ -22,7 +22,6 @@ ENV DOTNET_PRINT_TELEMETRY_MESSAGE=false
 ENV HOME=/home/app
 ENV APP_HOME=${HOME}/backend
 ENV APP_FILES=${HOME}/.CombineFiles
-ENV APP_FONTS=${HOME}/fonts
 
 # Install system dependencies.
 RUN apt-get update \
@@ -41,7 +40,6 @@ RUN groupadd -r app && \
 ## Set up application install directory.
 RUN mkdir $APP_HOME && \
   mkdir $APP_FILES && \
-  mkdir $APP_FONTS && \
   # Give access to the entire home folder so the backend can create files and folders there.
   chown -R app:app $HOME
 WORKDIR $APP_HOME

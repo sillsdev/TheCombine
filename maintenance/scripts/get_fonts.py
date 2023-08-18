@@ -19,7 +19,9 @@ from typing import Any, List
 import requests
 
 scripts_dir = Path(__file__).resolve().parent
-file_name_google_fallback = "GoogleFallback.txt"
+file_name_css = "fonts.css"
+file_name_env = ".env.fonts"
+file_name_fallback = "fallback.json"
 font_lists_dir = scripts_dir / "font_lists"
 mlp_font_list = font_lists_dir / "mui_language_picker_fonts.txt"
 mlp_font_map = font_lists_dir / "mui_language_picker_font_map.json"
@@ -223,6 +225,7 @@ def main() -> None:
         mlp_map_rev = {val: key for key, val in mlp_map.items()}
 
     # For Google fonts with no font url in-file
+    all_css_lines: List[str] = []
     google_fallback: dict[str, str] = {}
 
     for font in fonts:
@@ -296,25 +299,32 @@ def main() -> None:
 
         # Finish the css info for this font in this style.
         css_lines.append("}\n")
+        all_css_lines.extend(css_lines)
 
-        # Create font override file
-        css_file_path = args.output / f"{font}.css"
-        logging.info(f"Writing css info for font family: {css_file_path}")
-        with open(css_file_path, "w") as css_file:
-            css_file.writelines(css_lines)
         if font in mlp_map_rev.keys():
             font = mlp_map_rev[font]
-            css_file_path = args.output / f"{font}.css"
             css_lines[2] = f"  font-family: '{font}';\n"
-            logging.info(f"Writing css info for font family: {css_file_path}")
-            with open(css_file_path, "w") as css_file:
-                css_file.writelines(css_lines)
+            all_css_lines.extend(css_lines)
 
+    # Create font css file
+    css_file_path = args.output / file_name_css
+    logging.info("Writing css info for all fonts")
+    with open(css_file_path, "w") as css_file:
+        css_file.writelines(all_css_lines)
+
+    env_line = 'REACT_APP_EXTRA_FONTS="'
     if not args.langs:
-        gf_lines = [f"{key}:{google_fallback[key]}\n" for key in google_fallback.keys()]
-        gf_file_path = args.output / file_name_google_fallback
-        with open(gf_file_path, "w") as gf_file:
-            gf_file.writelines(gf_lines)
+        fallback_lines = ['{\n']
+        for key, val in google_fallback.items():
+            env_line += f"&family={val.replace(' ', '+')}"
+            fallback_lines.append(f'  "{key}": "{val}",\n')
+        env_line += '"\n'
+        fallback_lines[-1] = fallback_lines[-1].replace(",","")
+        fallback_lines.append("}\n")
+        with open(args.output / file_name_env, "w") as env_file:
+            env_file.write(env_line)
+        with open(args.output / file_name_fallback, "w") as fallback_file:
+            fallback_file.writelines(fallback_lines)
 
 
 if __name__ == "__main__":
