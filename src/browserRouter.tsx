@@ -21,15 +21,7 @@ router.subscribe((routerState) => {
   if (process.env.NODE_ENV === "development") {
     console.log(`router.subscribe: "${pathname}"`);
   }
-  const currentPage = store.getState().analyticsState.currentPage;
-
-  if (pathname !== currentPage) {
-    analytics.track("navigate", {
-      source: currentPage,
-      destination: pathname,
-    });
-    store.dispatch(changePage(pathname));
-  }
+  store.dispatch(changePage(pathname));
 });
 
 export default router;
