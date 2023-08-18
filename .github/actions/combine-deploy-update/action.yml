@@ -17,6 +17,9 @@ inputs:
   kube_context:
     description: "Context for the kubectl commands"
     required: true
+  kubectl_version:
+    description: "Version of kubectl to install on the runner"
+    required: true
   update_cert_proxy:
     description: "Specification for whether the combine-cert-proxy should be updated."
     required: true
@@ -26,12 +29,10 @@ runs:
     - name: Install pre-requisites
       run: |
         cd
-        curl -LO https://dl.k8s.io/release/$KUBECTL_VERSION/linux/amd64/kubectl
+        curl -LO https://dl.k8s.io/release/${{ inputs.kubectl_version }}/bin/linux/amd64/kubectl
         sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
         kubectl version --output=yaml
       shell: bash
-      env:
-        KUBECTL_VERSION: ${{ vars.KUBECTL_VERSION }}
     - name: Deploy updated images
       run: echo "Update images with version ${{ inputs.image_tag }}"
       shell: bash
