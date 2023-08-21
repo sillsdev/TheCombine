@@ -9,7 +9,7 @@ from typing import List
 
 EXIT_SUCCESS = 0
 
-dev_frontend_font_dir = "fonts"
+dev_frontend_font_dir = "/fonts"
 dev_output_dir = Path(__file__).resolve().parent.parent / "public" / "fonts"
 
 

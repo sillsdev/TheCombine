@@ -72,8 +72,7 @@ venv
 *.ttf
 *.woff
 *.woff2
-public/fonts/*
-!public/fonts/fonts.css
+public/fonts
 
 # Intermediate and output files for Semantic Domain import scripts
 !deploy/scripts/semantic_domains/xml/*.xml
