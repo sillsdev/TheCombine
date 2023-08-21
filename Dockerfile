@@ -33,15 +33,15 @@ FROM nginx:1.25
 WORKDIR /app
 
 ENV HOST_DIR /usr/share/nginx
-ENV FONTS_HOST_DIR ${HOST_DIR}/fonts
 ENV FRONTEND_HOST_DIR ${HOST_DIR}/html
+ENV REACT_APP_FONT_DIR ${HOST_DIR}/fonts
 ENV USER_GUIDE_HOST_DIR ${HOST_DIR}/user_guide
 
 RUN mkdir /etc/nginx/templates
 RUN mkdir /etc/nginx/page_templates
-RUN mkdir ${FONTS_HOST_DIR}
 RUN mkdir ${FRONTEND_HOST_DIR}/scripts
 RUN mkdir ${FRONTEND_HOST_DIR}/url_moved
+RUN mkdir ${REACT_APP_FONT_DIR}
 
 # Setup web content
 COPY --from=user_guide_builder /app/docs/user_guide/site ${USER_GUIDE_HOST_DIR}
