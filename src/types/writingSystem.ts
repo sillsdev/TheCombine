@@ -65,7 +65,11 @@ export const i18nLangs = uiWritingSystems.map((ws) => ws.bcp47); //.concat(["it"
 export function newWritingSystem(
   bcp47 = "",
   name = "",
-  font = ""
+  font = "",
+  rtl?: boolean
 ): WritingSystem {
+  if (rtl) {
+    return { bcp47, name, font, rtl };
+  }
   return { bcp47, name, font };
 }
