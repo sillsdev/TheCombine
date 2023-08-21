@@ -196,6 +196,9 @@ namespace Backend.Tests.Models
 
             system = new WritingSystem(Bcp47, Name, Font);
             Assert.That(system.Equals(new WritingSystem(Bcp47, Name)), Is.False);
+
+            system = new WritingSystem(Bcp47, Name, Font, true);
+            Assert.That(system.Equals(new WritingSystem(Bcp47, Name, Font)), Is.False);
         }
 
         [Test]
@@ -203,13 +206,18 @@ namespace Backend.Tests.Models
         {
             var system = new WritingSystem(Bcp47, Name);
             var sysString = system.ToString();
-            Assert.That(sysString.Contains(Name) && sysString.Contains(Bcp47), Is.True);
+            Assert.That(sysString, Does.Contain(Name));
+            Assert.That(sysString, Does.Contain(Bcp47));
+            Assert.That(sysString.ToLowerInvariant(), Does.Not.Contain("rtl"));
+            system.Rtl = true;
+            sysString = system.ToString();
+            Assert.That(sysString.ToLowerInvariant(), Does.Contain("rtl"));
         }
 
         [Test]
         public void TestClone()
         {
-            var system = new WritingSystem(Bcp47, Name, Font);
+            var system = new WritingSystem(Bcp47, Name, Font, true);
             var clonedSystem = system.Clone();
             Assert.That(system, Is.EqualTo(clonedSystem));
         }
