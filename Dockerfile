@@ -38,7 +38,7 @@ ENV USER_GUIDE_HOST_DIR ${HOST_DIR}/user_guide
 
 RUN mkdir /etc/nginx/templates
 RUN mkdir /etc/nginx/page_templates
-RUN mkdir ${FRONTEND_HOST_DIR}/fonts
+RUN mkdir ${HOST_DIR}/fonts
 RUN mkdir ${FRONTEND_HOST_DIR}/scripts
 RUN mkdir ${FRONTEND_HOST_DIR}/url_moved
 
