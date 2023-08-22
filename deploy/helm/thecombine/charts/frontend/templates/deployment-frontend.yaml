@@ -71,7 +71,7 @@ spec:
             - containerPort: 443
           resources: {}
           volumeMounts:
-            - mountPath: /usr/share/nginx/html/fonts
+            - mountPath: /usr/share/nginx/fonts
               name: font-data
       restartPolicy: Always
 {{- if ne .Values.global.pullSecretName "None" }}
