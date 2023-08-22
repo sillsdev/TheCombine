@@ -31,6 +31,10 @@ jobs:
             api.nuget.org:443
             archive.ubuntu.com:80
             auth.docker.io:443
+            dc.services.visualstudio.com:443
+            deb.debian.org:80
+            docker.io:443
+            dotnetcli.azureedge.net:443
             files.pythonhosted.org:443
             github.com:443
             mcr.microsoft.com:443
@@ -39,6 +43,9 @@ jobs:
             pypi.org:443
             registry-1.docker.io:443
             registry.npmjs.org:443
+            security.debian.org:80
+            security.ubuntu.com:80
+            storage.googleapis.com:443
             sts.us-east-1.amazonaws.com:443
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
       - name: Build The Combine
@@ -62,15 +69,16 @@ jobs:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
         with:
           fetch-depth: 0
-      - name: Deploy The Combine Update
+      - name: Deploy The Combine Update to QA
         uses: ./.github/actions/combine-deploy-update
         with:
           image_registry: public.ecr.aws
           image_registry_alias: "/thecombine"
           image_tag: ${{ needs.build.outputs.image_tag }}
           kube_context: ${{ secrets.LTOPS_K8S_STAGING_CONTEXT }}
+          kubectl_version: ${{ vars.KUBECTL_VERSION }}
           update_cert_proxy: false
-      - name: Deploy The Combine Update
+      - name: Deploy The Combine Update to Production
         uses: ./.github/actions/combine-deploy-update
         with:
           image_registry: public.ecr.aws
