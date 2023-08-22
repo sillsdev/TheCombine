@@ -9,7 +9,6 @@ from typing import List
 
 EXIT_SUCCESS = 0
 
-dev_frontend_font_dir = "/fonts"
 dev_output_dir = Path(__file__).resolve().parent.parent / "public" / "fonts"
 
 
@@ -29,7 +28,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "-f",
         "--frontend",
-        default=dev_frontend_font_dir,
         help="Directory path of hosted fonts, for the css data the frontend uses.",
     )
     parser.add_argument(
@@ -63,11 +61,12 @@ def main() -> None:
     exec_args = [
         "python",
         "maintenance/scripts/get_fonts.py",
-        f"-f {args.frontend}",
         f"-o {args.output}",
     ]
     if args.clean:
         exec_args.append("-c")
+    if args.frontend:
+        exec_args.append(f"-f {args.frontend}")
     if args.langs:
         exec_args.append(f"-l {args.langs}")
     if args.verbose:

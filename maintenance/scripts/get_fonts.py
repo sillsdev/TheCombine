@@ -4,7 +4,6 @@ Generates font support for all SIL fonts used in Mui-Language-Picker.
 
 This script uses the following environment variables:
   font_dir          directory where the font-data persistent storage is mounted.
-  frontend_font_dir directory where the frontend sees the font-data.
 """
 
 import argparse
@@ -21,6 +20,7 @@ import requests
 scripts_dir = Path(__file__).resolve().parent
 file_name_fallback = "fallback.json"
 font_lists_dir = scripts_dir / "font_lists"
+frontend_font_dir = "/fonts"
 mlp_font_list = font_lists_dir / "mui_language_picker_fonts.txt"
 mlp_font_map = font_lists_dir / "mui_language_picker_font_map.json"
 url_font_families_info = "https://github.com/silnrsi/fonts/raw/main/families.json"
@@ -29,7 +29,6 @@ url_script_font_table = (
     "https://raw.githubusercontent.com/silnrsi/langfontfinder/main/data/script2font.csv"
 )
 default_output_dir = os.getenv("font_dir", "/mnt/fonts")
-frontend_font_dir = os.getenv("frontend_font_dir", "/usr/share/nginx/fonts")
 
 
 def parse_args() -> argparse.Namespace:
