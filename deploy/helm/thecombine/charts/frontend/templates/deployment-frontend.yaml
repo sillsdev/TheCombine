@@ -59,6 +59,11 @@ spec:
                 configMapKeyRef:
                   key: ENV_HTTP_ONLY
                   name: env-frontend
+            - name: REACT_APP_FONT_DIR
+              valueFrom:
+                configMapKeyRef:
+                  key: REACT_APP_FONT_DIR
+                  name: env-frontend
             {{- if .Values.configAnalyticsWriteKey }}
             - name: CONFIG_ANALYTICS_WRITE_KEY
               valueFrom:
