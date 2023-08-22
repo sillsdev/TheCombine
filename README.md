@@ -474,12 +474,15 @@ virtual environment, with `-h`/`--help` to see its usage details.
 python scripts/split_dictionary.py --help
 ```
 
-For some languages, the wordlist is too large for practical use, so a maximum word-length is imposed with `-m`/`--max`:
+For some languages, the wordlist is too large for practical use. Generally try to keep the folder for each language
+under 2.5 MB, to avoid such errors as
+`FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory` in the Kubernetes build. For smaller
+folder sizes, impose a maximum word-length with `-m`/`--max`:
 
 - `python scripts/split_dictionary.py -l ar -m 4`
 - `python scripts/split_dictionary.py -l es -m 9`
 - `python scripts/split_dictionary.py -l fr -m 10`
-- `python scripts/split_dictionary.py -l pt -m 8`
+- `python scripts/split_dictionary.py -l pt -m 7`
 - `python scripts/split_dictionary.py -l ru -m 7`
 
 Adjust the `-t`/`--threshold` and `-T`/`--Threshold` parameters to split a wordlist into more, smaller files; e.g.:
