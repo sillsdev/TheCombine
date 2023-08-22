@@ -1,7 +1,10 @@
 import { Project } from "api/models";
 import { getFrontierWords } from "backend";
 import router from "browserRouter";
-import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalActions";
+import {
+  addCharInvChangesToGoal,
+  asyncUpdateGoal,
+} from "components/GoalTimeline/Redux/GoalActions";
 import { asyncUpdateCurrentProject } from "components/Project/ProjectActions";
 import {
   CharacterStatus,
@@ -16,7 +19,6 @@ import {
 } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { Goal } from "types/goals";
 import { Path } from "types/path";
 
 // Action Creators
@@ -129,11 +131,8 @@ export function uploadInventory() {
     }
     const updatedProject = updateCurrentProject(state);
     await dispatch(asyncUpdateCurrentProject(updatedProject));
-    const updatedGoal: Goal = {
-      ...state.goalsState.currentGoal,
-      changes: { charChanges: changes },
-    };
-    await dispatch(asyncUpdateGoal(updatedGoal));
+    dispatch(addCharInvChangesToGoal(changes));
+    await dispatch(asyncUpdateGoal());
     exit();
   };
 }

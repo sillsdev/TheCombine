@@ -3,13 +3,15 @@ import {
   Flag,
   GramCatGroup,
   MergeSourceWord,
-  MergeUndoIds,
   MergeWords,
   Status,
   Word,
 } from "api/models";
 import * as backend from "backend";
-import { asyncUpdateGoal } from "components/GoalTimeline/Redux/GoalActions";
+import {
+  addCompletedMergeToGoal,
+  asyncUpdateGoal,
+} from "components/GoalTimeline/Redux/GoalActions";
 import {
   defaultSidebar,
   MergeTreeReference,
@@ -18,7 +20,6 @@ import {
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import {
   MergeDups,
-  MergesCompleted,
   MergeStepData,
   newMergeWords,
 } from "goals/MergeDuplicates/MergeDupsTypes";
@@ -39,9 +40,7 @@ import {
 } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { GoalType } from "types/goals";
 import { Hash } from "types/hash";
-import { maxNumSteps } from "utilities/goalUtilities";
 import { compareFlags } from "utilities/wordUtilities";
 
 // Action Creators
@@ -261,27 +260,10 @@ export function mergeAll() {
         ),
       ];
       const completedMerge = { childIds, parentIds };
-      const goal = getState().goalsState.currentGoal;
-      if (goal) {
-        await dispatch(addCompletedMergeToGoal(goal, completedMerge));
+      if (getState().goalsState.currentGoal) {
+        dispatch(addCompletedMergeToGoal(completedMerge));
+        await dispatch(asyncUpdateGoal());
       }
-    }
-  };
-}
-
-function addCompletedMergeToGoal(
-  goal: MergeDups,
-  completedMerge: MergeUndoIds
-) {
-  return async (dispatch: StoreStateDispatch) => {
-    if (goal.goalType === GoalType.MergeDups) {
-      const changes = (goal.changes ?? {}) as MergesCompleted;
-      if (!changes.merges) {
-        changes.merges = [];
-      }
-      changes.merges.push(completedMerge);
-      goal.changes = changes;
-      await dispatch(asyncUpdateGoal(goal));
     }
   };
 }
@@ -298,17 +280,11 @@ export function dispatchMergeStepData(goal: MergeDups) {
   };
 }
 
-/** Modifies the mutable input goal. */
-export async function loadMergeDupsData(goal: MergeDups): Promise<void> {
-  const newGroups = await backend.getDuplicates(5, maxNumSteps(goal.goalType));
-
-  // Add data to goal.
-  goal.data = { plannedWords: newGroups };
-  goal.numSteps = newGroups.length;
-
-  // Reset goal steps.
-  goal.currentStep = 0;
-  goal.steps = [];
+export async function fetchMergeDupsData(
+  maxInList: number,
+  maxLists: number
+): Promise<Word[][]> {
+  return await backend.getDuplicates(maxInList, maxLists);
 }
 
 /** Modifies the mutable input sense list. */

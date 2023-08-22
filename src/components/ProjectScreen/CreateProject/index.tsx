@@ -74,6 +74,9 @@ export default function CreateProject(): ReactElement {
       setVernLang((prev) => ({ ...prev, font }));
     }
   };
+  const setVernRtl = (rtl: boolean): void => {
+    setVernLang((prev) => ({ ...prev, rtl: rtl || undefined }));
+  };
 
   const setAnalysisBcp47 = (bcp47: string): void => {
     if (bcp47) {
@@ -89,6 +92,9 @@ export default function CreateProject(): ReactElement {
     if (font) {
       setAnalysisLang((prev) => ({ ...prev, font }));
     }
+  };
+  const setAnalysisRtl = (rtl: boolean): void => {
+    setAnalysisLang((prev) => ({ ...prev, rtl: rtl || undefined }));
   };
 
   const updateName = (
@@ -258,6 +264,7 @@ export default function CreateProject(): ReactElement {
               setName={setVernName}
               font={vernLang.font}
               setFont={setVernFont}
+              setDir={setVernRtl}
               t={languagePickerStrings_en}
             />
           )}
@@ -275,6 +282,7 @@ export default function CreateProject(): ReactElement {
               setName={setAnalysisName}
               font={analysisLang.font}
               setFont={setAnalysisFont}
+              setDir={setAnalysisRtl}
               t={languagePickerStrings_en}
             />
           )}
