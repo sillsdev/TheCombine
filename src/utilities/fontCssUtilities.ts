@@ -1,7 +1,7 @@
 import { Project } from "api";
 import { Hash } from "types/hash";
 
-const fontDir = process.env.REACT_APP_FONT_DIR || "/fonts";
+const fontDir = "/fonts";
 const fallbackFilePath = `${fontDir}/fallback.json`;
 
 async function fetchText(url: string): Promise<string> {

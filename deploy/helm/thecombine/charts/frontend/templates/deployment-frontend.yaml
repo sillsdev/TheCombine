@@ -59,11 +59,6 @@ spec:
                 configMapKeyRef:
                   key: ENV_HTTP_ONLY
                   name: env-frontend
-            - name: REACT_APP_FONT_DIR
-              valueFrom:
-                configMapKeyRef:
-                  key: REACT_APP_FONT_DIR
-                  name: env-frontend
             {{- if .Values.configAnalyticsWriteKey }}
             - name: CONFIG_ANALYTICS_WRITE_KEY
               valueFrom:
@@ -76,7 +71,7 @@ spec:
             - containerPort: 443
           resources: {}
           volumeMounts:
-            - mountPath: /usr/share/nginx/fonts
+            - mountPath: /usr/share/nginx/html/fonts
               name: font-data
       restartPolicy: Always
 {{- if ne .Values.global.pullSecretName "None" }}

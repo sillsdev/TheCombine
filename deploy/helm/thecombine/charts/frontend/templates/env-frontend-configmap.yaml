@@ -16,4 +16,3 @@ data:
   CONFIG_ANALYTICS_WRITE_KEY: {{ .Values.configAnalyticsWriteKey | quote }}
   {{- end }}
   ENV_HTTP_ONLY: "yes"
-  REACT_APP_FONT_DIR: "/usr/share/nginx/fonts"
