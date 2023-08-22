@@ -3,8 +3,8 @@
 """Runs maintenance/scripts/get_fonts.py with dev arguments for -f and -o"""
 
 import argparse
-import os
 from pathlib import Path
+import platform
 import subprocess
 
 project_dir = Path(__file__).resolve().parent.parent
@@ -63,7 +63,7 @@ def main() -> None:
     if args.verbose:
         command.append("-v")
     print(f"Running command: {command}")
-    subprocess.run(command, shell=(os.name == "nt"), check=True, text=True)
+    subprocess.run(command, shell=(platform.system() == "Windows"), check=True, text=True)
 
 
 if __name__ == "__main__":
