@@ -1391,7 +1391,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@remix-run/router 1.7.2
+@remix-run/router 1.8.0
 MIT
 MIT License
 
@@ -40946,7 +40946,7 @@ SOFTWARE.
 
 
 
-cross-fetch 3.1.5
+cross-fetch 3.1.6
 MIT
 The MIT License (MIT)
 
@@ -42079,9 +42079,9 @@ SOFTWARE.
 
 
 
-i18next-http-backend 2.1.1
+i18next-http-backend 2.2.1
 MIT
-Copyright (c) 2022 i18next
+Copyright (c) 2023 i18next
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -42102,11 +42102,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-i18next 22.5.0
+i18next 23.4.4
 MIT
 The MIT License (MIT)
 
-Copyright (c) 2022 i18next
+Copyright (c) 2023 i18next
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -42916,7 +42916,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-node-fetch 2.6.7
+node-fetch 2.6.13
 MIT
 The MIT License (MIT)
 
@@ -43527,7 +43527,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-react-router-dom 6.14.2
+react-router-dom 6.15.0
 MIT
 MIT License
 
@@ -43554,7 +43554,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-react-router 6.14.2
+react-router 6.15.0
 MIT
 MIT License
 
