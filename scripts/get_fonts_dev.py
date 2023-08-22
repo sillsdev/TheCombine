@@ -3,12 +3,9 @@
 """Runs maintenance/scripts/get_fonts.py with dev arguments for -f and -o"""
 
 import argparse
-import importlib.util
 import os
 from pathlib import Path
 import subprocess
-import sys
-from typing import List
 
 project_dir = Path(__file__).resolve().parent.parent
 
@@ -55,6 +52,7 @@ def main() -> None:
     args.output.mkdir(mode=0o755, parents=True, exist_ok=True)
 
     command = [
+        "python",
         project_dir / "maintenance" / "scripts" / "get_fonts.py",
         "-o",
         args.output,
@@ -68,7 +66,7 @@ def main() -> None:
     if args.verbose:
         command.append("-v")
     print(f"Running command: {command}")
-    subprocess.run(command, shell=False, check=True, text=True)
+    subprocess.run(command, shell=(os.name=="nt"), check=True, text=True)
 
 
 if __name__ == "__main__":
