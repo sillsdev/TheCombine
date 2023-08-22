@@ -402,12 +402,6 @@ export async function projectDuplicateCheck(
   ).data;
 }
 
-/** Get css data for the requested fonts. */
-export async function getFonts(projectId: string): Promise<string[]> {
-  return (await projectApi.getProjectFonts({ projectId }, defaultOptions()))
-    .data;
-}
-
 /* SemanticDomainController.cs */
 
 export async function getSemanticDomainFull(

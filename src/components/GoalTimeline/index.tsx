@@ -118,6 +118,7 @@ export default function GoalTimeline(): ReactElement {
         disabled={done}
         onClick={() => chooseGoal(goal)}
         id={`new-goal-${goal.name}`}
+        data-testid="goal-button"
       >
         <Typography variant="h4">
           {t(done ? "goal.selector.done" : goal.name + ".title")}

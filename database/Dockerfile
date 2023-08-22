@@ -1,4 +1,4 @@
-FROM mongo:6.0.8-jammy
+FROM mongo:7.0.0-jammy
 
 WORKDIR /
 

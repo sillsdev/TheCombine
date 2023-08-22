@@ -4,7 +4,6 @@ import { Theme, ThemeProvider, createTheme } from "@mui/material/styles";
 import { ReactElement, useEffect, useMemo, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import { getFonts } from "backend";
 import SignalRHub from "components/App/SignalRHub";
 import AppBar from "components/AppBar/AppBarComponent";
 import PageNotFound from "components/PageNotFound/component";
@@ -19,6 +18,7 @@ import { StoreState } from "types";
 import { useAppSelector } from "types/hooks";
 import { Path } from "types/path";
 import FontContext, { ProjectFonts } from "utilities/fontContext";
+import { getProjCss } from "utilities/fontCssUtilities";
 import { routerPath } from "utilities/pathUtilities";
 
 const BaseGoalScreen = loadable(
@@ -35,13 +35,6 @@ export default function AppWithBar(): ReactElement {
       proj1.analysisWritingSystems.length ===
         proj2.analysisWritingSystems.length
   );
-  const projId = useAppSelector(
-    (state: StoreState) => state.currentProjectState.project.id
-  );
-  const projLangCount = useAppSelector(
-    (state: StoreState) =>
-      state.currentProjectState.project.analysisWritingSystems.length
-  );
 
   const projFonts = useMemo(() => new ProjectFonts(proj), [proj]);
 
@@ -50,14 +43,14 @@ export default function AppWithBar(): ReactElement {
   useEffect(updateLangFromUser, []);
 
   useEffect(() => {
-    if (projId) {
-      getFonts(projId).then((cssLines) => {
+    if (proj.id) {
+      getProjCss(proj).then((cssLines) => {
         setStyleOverrides(
           cssLines.join("\n").replaceAll("\r", "").replaceAll("\\", "/")
         );
       });
     }
-  }, [projId, projLangCount]);
+  }, [proj]);
 
   useEffect(() => {
     // Remove this useEffect after the backend update is finished.

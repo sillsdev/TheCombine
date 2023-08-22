@@ -36,4 +36,10 @@ export interface WritingSystem {
    * @memberof WritingSystem
    */
   font: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof WritingSystem
+   */
+  rtl?: boolean | null;
 }

@@ -11,13 +11,8 @@ namespace BackendFramework.Helper
     /// </summary>
     public static class FileStorage
     {
-        private const string AvatarsDir = "Avatars";
         private const string CombineFilesDir = ".CombineFiles";
-        private const string ContainerAppRoot = "/home/app";
-        private const string EnvVarInContainer = "COMBINE_IS_IN_CONTAINER";
-        private const string FontsDir = "fonts";
-        private const string GoogleFallbackFileName = "GoogleFallback.txt";
-        private const string PublicDir = "public";
+        private const string AvatarsDir = "Avatars";
         private static readonly string ImportExtractedLocation = Path.Combine("Import", "ExtractedLocation");
         private static readonly string LiftImportSuffix = Path.Combine(ImportExtractedLocation, "Lift");
         private static readonly string AudioPathSuffix = Path.Combine(LiftImportSuffix, "audio");
@@ -104,39 +99,6 @@ namespace BackendFramework.Helper
             userId = Sanitization.SanitizeId(userId);
 
             return GenerateFilePath(AvatarsDir, userId, FileType.Avatar);
-        }
-
-        /// <summary> Generate the path of the css file for a font. </summary>
-        /// <exception cref="InvalidFileNameException"> Throws when font is invalid. </exception>
-        public static string GenerateFontCssFilePath(string font)
-        {
-            font = font.Replace(" ", "");
-            var fileName = $"{font}.css";
-            fileName = Sanitization.SanitizeFileName(fileName);
-            return GenerateFontFilePath(fileName);
-        }
-
-        /// <summary> Get the path of the Google font fallback file. </summary>
-        public static string GetGoogleFallbackFilePath()
-        {
-            return GenerateFontFilePath(GoogleFallbackFileName);
-        }
-
-        /// <summary> Generate the path of a font. </summary>
-        public static string GenerateFontFilePath(string fileName)
-        {
-            return Path.Combine(GetFontsDir(), fileName);
-        }
-
-        /// <summary> Get the path of the fonts directory. </summary>
-        public static string GetFontsDir()
-        {
-            if (Environment.GetEnvironmentVariable(EnvVarInContainer) is null)
-            {
-                // Only for development.
-                return Path.Combine(Directory.GetParent(Environment.CurrentDirectory!)!.ToString(), PublicDir, FontsDir);
-            }
-            return Path.Combine(ContainerAppRoot, FontsDir);
         }
 
         /// <summary>

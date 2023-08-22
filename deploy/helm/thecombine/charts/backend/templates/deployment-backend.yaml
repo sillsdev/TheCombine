@@ -83,8 +83,6 @@ spec:
           volumeMounts:
             - mountPath: /home/app/.CombineFiles
               name: backend-data
-            - mountPath: /home/app/fonts
-              name: font-data
       restartPolicy: Always
 {{- if ne .Values.global.pullSecretName "None" }}
       imagePullSecrets:
@@ -94,7 +92,4 @@ spec:
         - name: backend-data
           persistentVolumeClaim:
             claimName: backend-data
-        - name: font-data
-          persistentVolumeClaim:
-            claimName: font-data
 status: {}

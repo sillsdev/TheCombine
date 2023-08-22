@@ -1,6 +1,6 @@
 import { combineReducers, Reducer } from "redux";
 
-import { goalReducer } from "components/GoalTimeline/Redux/GoalReducer";
+import goalsReducer from "components/GoalTimeline/Redux/GoalReducer";
 import { loginReducer } from "components/Login/Redux/LoginReducer";
 import { projectReducer } from "components/Project/ProjectReducer";
 import { exportProjectReducer } from "components/ProjectExport/Redux/ExportProjectReducer";
@@ -28,7 +28,7 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   pronunciationsState: pronunciationsReducer,
 
   //goal timeline and current goal
-  goalsState: goalReducer,
+  goalsState: goalsReducer,
 
   //merge duplicates goal
   mergeDuplicateGoal: mergeDupStepReducer,

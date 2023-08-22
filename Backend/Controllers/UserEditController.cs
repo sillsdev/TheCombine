@@ -137,17 +137,22 @@ namespace BackendFramework.Controllers
             var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
-                return NotFound(projectId);
+                return NotFound($"projectId: {projectId}");
             }
 
             // Ensure userEdit exists
             var toBeMod = await _userEditRepo.GetUserEdit(projectId, userEditId);
             if (toBeMod is null)
             {
-                return NotFound(userEditId);
+                return NotFound($"userEditId: {userEditId}");
             }
 
             var (isSuccess, editIndex) = await _userEditService.AddGoalToUserEdit(projectId, userEditId, newEdit);
+
+            if (editIndex == -1)
+            {
+                return BadRequest("UserEdit found but update failed.");
+            }
 
             // If the replacement was successful
             if (isSuccess)
@@ -155,7 +160,7 @@ namespace BackendFramework.Controllers
                 return Ok(editIndex);
             }
 
-            return NotFound($"{editIndex}");
+            return StatusCode(StatusCodes.Status304NotModified, editIndex);
         }
 
         /// <summary> Adds/updates a step to/in specified goal </summary>
