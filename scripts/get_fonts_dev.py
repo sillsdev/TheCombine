@@ -62,7 +62,7 @@ def main() -> None:
     if args.clean:
         command.append("-c")
     if args.frontend:
-        exec_args.extend(["-f", args.frontend])
+        command.extend(["-f", args.frontend])
     if args.langs:
         command.extend(["-l", args.langs])
     if args.verbose:
