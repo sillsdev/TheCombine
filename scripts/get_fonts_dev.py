@@ -8,10 +8,7 @@ from pathlib import Path
 import subprocess
 
 project_dir = Path(__file__).resolve().parent.parent
-
-EXIT_SUCCESS = 0
-
-dev_output_dir = Path(__file__).resolve().parent.parent / "public" / "fonts"
+dev_output_dir = project_dir / "public" / "fonts"
 
 
 def parse_args() -> argparse.Namespace:
@@ -66,7 +63,7 @@ def main() -> None:
     if args.verbose:
         command.append("-v")
     print(f"Running command: {command}")
-    subprocess.run(command, shell=(os.name=="nt"), check=True, text=True)
+    subprocess.run(command, shell=(os.name == "nt"), check=True, text=True)
 
 
 if __name__ == "__main__":
