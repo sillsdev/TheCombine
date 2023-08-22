@@ -14,7 +14,6 @@ from regex import sub
 
 combine_dir = Path(__file__).resolve().parent.parent
 dictionary_dir = combine_dir / "src" / "resources" / "dictionaries"
-utilities_dir = combine_dir / "src" / "utilities"
 
 
 def parse_args() -> argparse.Namespace:

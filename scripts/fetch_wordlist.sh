@@ -32,6 +32,11 @@ usage() {
 USAGE
 }
 
+if [[ $# -eq 0 ]] ; then
+  usage
+  exit 0
+fi
+
 DRYRUN=0
 LANG=
 while [[ $# -gt 0 ]] ; do

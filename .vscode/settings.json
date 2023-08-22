@@ -74,7 +74,9 @@
     "textfile",
     "thecombine",
     "upsert",
-    "venv"
+    "venv",
+    "wordlist",
+    "wordlists"
   ],
   "git.branchProtection": ["master", "main"]
 }
