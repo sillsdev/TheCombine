@@ -3,14 +3,19 @@
 """Runs maintenance/scripts/get_fonts.py with dev arguments for -f and -o"""
 
 import argparse
+import importlib.util
 import os
 from pathlib import Path
+import subprocess
+import sys
 from typing import List
+
+project_dir = Path(__file__).resolve().parent.parent
 
 EXIT_SUCCESS = 0
 
 dev_frontend_font_dir = "fonts"
-dev_output_dir = Path(__file__).resolve().parent.parent / "public" / "fonts"
+dev_output_dir = project_dir / "public" / dev_frontend_font_dir
 
 
 def parse_args() -> argparse.Namespace:
@@ -46,33 +51,26 @@ def parse_args() -> argparse.Namespace:
     return args
 
 
-def execute(command: List[str], check: bool = True) -> None:
-    exec_command = " ".join(command)
-    print(f"Executing: {exec_command}")
-    ret = os.system(exec_command)
-    if check and ret != EXIT_SUCCESS:
-        raise RuntimeError(f"Execution failed with return code: {ret}")
-
-
 def main() -> None:
     args = parse_args()
 
-    if not args.output.is_dir():
-        os.mkdir(args.output)
+    args.output.mkdir(mode=0o755, parents=True, exist_ok=True)
 
-    exec_args = [
-        "python",
-        "maintenance/scripts/get_fonts.py",
-        f"-f {args.frontend}",
-        f"-o {args.output}",
+    command = [
+        project_dir / "maintenance" / "scripts" / "get_fonts.py",
+        "-f",
+        args.frontend,
+        "-o",
+        args.output,
     ]
     if args.clean:
-        exec_args.append("-c")
+        command.append("-c")
     if args.langs:
-        exec_args.append(f"-l {args.langs}")
+        command.append(f"-l {args.langs}")
     if args.verbose:
-        exec_args.append("-v")
-    execute(exec_args)
+        command.append("-v")
+    print(f"Running command: {command}")
+    subprocess.run(command, shell=False, check=True, text=True)
 
 
 if __name__ == "__main__":

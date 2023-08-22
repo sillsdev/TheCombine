@@ -29,7 +29,7 @@ url_script_font_table = (
     "https://raw.githubusercontent.com/silnrsi/langfontfinder/main/data/script2font.csv"
 )
 default_output_dir = os.getenv("font_dir", "/mnt/fonts")
-frontend_font_dir = os.getenv("frontend_font_dir", "/usr/share/nginx/fonts")
+frontend_font_dir = os.getenv("frontend_font_dir", "/fonts")
 
 
 def parse_args() -> argparse.Namespace:
