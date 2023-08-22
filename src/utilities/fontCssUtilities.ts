@@ -1,11 +1,11 @@
 import { Project } from "api";
 import { Hash } from "types/hash";
 
-const fontDir = process.env.REACT_APP_FONT_DIR || "/fonts";
+const fontDir = "/fonts";
 const fallbackFilePath = `${fontDir}/fallback.json`;
 
-async function fetchText(pathOrUrl: string): Promise<string> {
-  return await (await (await fetch(pathOrUrl)).blob()).text();
+async function fetchText(url: string): Promise<string> {
+  return await (await (await fetch(url)).blob()).text();
 }
 
 async function fetchCss(
@@ -23,6 +23,7 @@ async function fetchCss(
     default:
       return;
   }
+  console.info(cssUrl);
   return await fetchText(cssUrl);
 }
 

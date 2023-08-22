@@ -14,8 +14,7 @@ project_dir = Path(__file__).resolve().parent.parent
 
 EXIT_SUCCESS = 0
 
-dev_frontend_font_dir = "fonts"
-dev_output_dir = project_dir / "public" / dev_frontend_font_dir
+dev_output_dir = Path(__file__).resolve().parent.parent / "public" / "fonts"
 
 
 def parse_args() -> argparse.Namespace:
@@ -34,7 +33,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "-f",
         "--frontend",
-        default=dev_frontend_font_dir,
         help="Directory path of hosted fonts, for the css data the frontend uses.",
     )
     parser.add_argument(
@@ -58,15 +56,15 @@ def main() -> None:
 
     command = [
         project_dir / "maintenance" / "scripts" / "get_fonts.py",
-        "-f",
-        args.frontend,
         "-o",
         args.output,
     ]
     if args.clean:
         command.append("-c")
+    if args.frontend:
+        exec_args.extend(["-f", args.frontend])
     if args.langs:
-        command.append(f"-l {args.langs}")
+        command.extend(["-l", args.langs])
     if args.verbose:
         command.append("-v")
     print(f"Running command: {command}")
