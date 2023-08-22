@@ -59,7 +59,7 @@ export default class SpellChecker {
     // Trim whitespace from the start and non-letter/-mark/-number characters from the end.
     // Use of \p{L}\p{M}\p{N} here matches that in split_dictionary.py.
     // Cf. https://en.wikipedia.org/wiki/Unicode_character_property
-    word = word.trimStart().replace(/[^\p{L}\p{M}\p{N}]$/u, "");
+    word = word.trimStart().replace(/[^\p{L}\p{M}\p{N}]*$/u, "");
     if (!word) {
       return [];
     }
