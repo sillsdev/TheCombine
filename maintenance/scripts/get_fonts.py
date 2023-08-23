@@ -234,27 +234,26 @@ def main() -> None:
         while font_id != "" and font_id in families.keys():
             font_info: dict[str, Any] = families[font_id]
             family: str = font_info["family"]
+            from_google: bool = (
+                not args.langs and "source" in font_info.keys() and font_info["source"] == "Google"
+            )
             if check_font_info(font_info):
                 break
             if "fallback" in font_info.keys():
                 font_id = font_info["fallback"]
                 logging.warning(f"{family}: Using fallback {font_id}")
             else:
-                if (
-                    not args.langs
-                    and "source" in font_info.keys()
-                    and font_info["source"] == "Google"
-                ):
-                    google_fallback[font] = family
-                    logging.warning(
-                        f"Google fallback for {font}: {google_fallback[font] or 'none'}"
-                    )
-                else:
+                if not from_google:
                     logging.warning(f"{family}: No fallback")
                 font_id = ""
         else:
             if font_id != "":
                 logging.warning(f"Font {font_id} not in {url_font_families_info}")
+            continue
+
+        if from_google:
+            google_fallback[font] = family
+            logging.info(f"Using Google fallback for {font}: {google_fallback[font]}")
             continue
 
         # Get the font's default file info.

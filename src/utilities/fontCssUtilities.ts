@@ -4,13 +4,22 @@ import { Hash } from "types/hash";
 const fontDir = "/fonts";
 const fallbackFilePath = `${fontDir}/fallback.json`;
 
-async function fetchText(url: string): Promise<string> {
-  return await (await (await fetch(url)).blob()).text();
+async function fetchText(url: string): Promise<string | undefined> {
+  let text: string | undefined;
+  try {
+    text = await (await (await fetch(url)).blob()).text();
+  } catch {
+    if (process.env.NODE_ENV === "development") {
+      console.log(`Failed to fetch ${url}`);
+    }
+  }
+  return text;
 }
 
 async function fetchCss(
   font: string,
-  source: string
+  source: string,
+  substitute?: string
 ): Promise<string | undefined> {
   var cssUrl = "";
   switch (source) {
@@ -23,8 +32,14 @@ async function fetchCss(
     default:
       return;
   }
-  console.info(cssUrl);
-  return await fetchText(cssUrl);
+
+  const cssText = await fetchText(cssUrl);
+  if (cssText && substitute) {
+    // This assumes the only place in the css info with the full, capitalized font name
+    // is the "font-family: ..." (as is the case from the Google api).
+    return cssText.replaceAll(font, substitute);
+  }
+  return cssText;
 }
 
 async function getFallbacks(
@@ -45,8 +60,8 @@ async function getFallbacks(
   const fallback = fallbackJson[source];
   const cssPromises = fonts
     .filter((f) => f in fallback)
-    .map((f) => fallback[f])
-    .map(async (f) => await fetchCss(f, source));
+    .map((f) => [f, fallback[f]])
+    .map(async (fs) => await fetchCss(fs[1], source, fs[0]));
   return (await Promise.all(cssPromises)).filter((css): css is string => !!css);
 }
 
