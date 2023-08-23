@@ -204,7 +204,9 @@ def main() -> None:
         logging.info(f"Scripts used for specified lang-tags: {', '.join(scripts)}")
 
         script_fonts = fetch_fonts_for_scripts(scripts)
-        logging.info(f"Default fonts and fonts used for specified lang-tags: {', '.join(script_fonts)}")
+        logging.info(
+            f"Default fonts and fonts used for specified lang-tags: {', '.join(script_fonts)}"
+        )
 
     if args.clean:
         for path in args.output.iterdir():
