@@ -193,6 +193,9 @@ def main() -> None:
         logging.error("Invalid output directory")
         exit(1)
 
+    with open(mlp_font_list, "r") as mlp_fonts_list:
+        fonts = [f.strip().replace(" ", "") for f in mlp_fonts_list.readlines()]
+
     if args.langs:
         langs = extract_lang_subtags(args.langs)
         logging.info(f"Lang-tags to download fonts for: {', '.join(langs)}")
@@ -200,11 +203,8 @@ def main() -> None:
         scripts = fetch_scripts_for_langs(langs)
         logging.info(f"Scripts used for specified lang-tags: {', '.join(scripts)}")
 
-        fonts = fetch_fonts_for_scripts(scripts)
-        logging.info(f"Default fonts and fonts used for specified lang-tags: {', '.join(fonts)}")
-    else:
-        with open(mlp_font_list, "r") as mlp_fonts_list:
-            fonts = [f.strip().replace(" ", "") for f in mlp_fonts_list.readlines()]
+        script_fonts = fetch_fonts_for_scripts(scripts)
+        logging.info(f"Default fonts and fonts used for specified lang-tags: {', '.join(script_fonts)}")
 
     if args.clean:
         for path in args.output.iterdir():
@@ -254,6 +254,9 @@ def main() -> None:
         if from_google:
             google_fallback[font] = family
             logging.info(f"Using Google fallback for {font}: {google_fallback[font]}")
+            continue
+
+        if args.langs and family.replace(" ", "") not in script_fonts:
             continue
 
         # Get the font's default file info.
