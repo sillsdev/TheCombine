@@ -11,11 +11,11 @@ import UserSettingsGetUser, {
 } from "components/UserSettings/UserSettings";
 import { newUser } from "types/user";
 
-const mockIsEmailTaken = jest.fn();
-const mockUpdateUser = jest.fn();
-const mockSetUser = jest.fn();
-const mockGetCurrentUser = jest.fn();
 const mockGetAvatar = jest.fn();
+const mockGetCurrentUser = jest.fn();
+const mockIsEmailTaken = jest.fn();
+const mockSetUser = jest.fn();
+const mockUpdateUser = jest.fn();
 
 jest.mock("notistack", () => ({
   ...jest.requireActual("notistack"),
@@ -45,21 +45,11 @@ const mockUser = (): User => {
 };
 
 const setupMocks = (): void => {
+  mockGetAvatar.mockReturnValue("");
+  mockGetCurrentUser.mockReturnValue(mockUser());
   mockIsEmailTaken.mockResolvedValue(false);
+  mockSetUser.mockImplementation(async (user?: User) => {});
   mockUpdateUser.mockImplementation((user: User) => user);
-  mockSetUser.mockImplementation(async (user?: User) => {
-    //
-  });
-  mockGetCurrentUser
-    .mockImplementationOnce(() => {
-      return mockUser();
-    })
-    .mockImplementationOnce(() => {
-      var user = mockUser();
-      user.email = "e@mail.com?";
-      return user;
-    });
-  mockGetAvatar.mockImplementation((user: User) => {});
 };
 
 beforeEach(() => {
@@ -75,7 +65,7 @@ const renderUserSettings = async (user = mockUser()): Promise<void> => {
   });
 };
 
-const renderUserSettingsGetUser = async (user = mockUser()): Promise<void> => {
+const renderUserSettingsGetUser = async (): Promise<void> => {
   await act(async () => {
     render(<UserSettingsGetUser />);
   });
@@ -119,38 +109,34 @@ describe("UserSettings", () => {
 
   it("disables button when change is saved", async () => {
     const agent = userEvent.setup();
+    const stringToType = "?";
+    const user = mockUser();
     await renderUserSettingsGetUser();
     const submitButton = screen.getByTestId(UserSettingsIds.ButtonSubmit);
 
     const typeAndCheckEnabled = async (id: UserSettingsIds): Promise<void> => {
-      const field = screen.getByTestId(id);
-      console.log(screen.getByTestId(UserSettingsIds.FieldEmail));
-
       expect(submitButton).toBeDisabled();
-
       await act(async () => {
-        await agent.type(field, "?");
+        await agent.type(screen.getByTestId(id), stringToType);
       });
-
       expect(submitButton).toBeEnabled();
       await act(async () => {
         await agent.click(submitButton);
       });
-
       expect(submitButton).toBeDisabled();
-
-      await act(async () => {
-        await agent.type(field, "{backspace}");
-      });
-      expect(submitButton).toBeEnabled();
-      await act(async () => {
-        await agent.type(field, "?");
-      });
     };
 
+    user.email += stringToType;
+    mockGetCurrentUser.mockReturnValueOnce({ ...user });
     await typeAndCheckEnabled(UserSettingsIds.FieldEmail);
-    //await typeAndCheckEnabled(UserSettingsIds.FieldName);
-    //await typeAndCheckEnabled(UserSettingsIds.FieldPhone);
+
+    user.name += stringToType;
+    mockGetCurrentUser.mockReturnValueOnce({ ...user });
+    await typeAndCheckEnabled(UserSettingsIds.FieldName);
+
+    user.phone += stringToType;
+    mockGetCurrentUser.mockReturnValueOnce({ ...user });
+    await typeAndCheckEnabled(UserSettingsIds.FieldPhone);
   });
 
   it("updates user when something is changed and submitted", async () => {
