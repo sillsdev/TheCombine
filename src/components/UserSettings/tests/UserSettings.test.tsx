@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event";
 import "tests/reactI18nextMock";
 
 import { User } from "api/models";
-import {
+import UserSettingsGetUser, {
   UserSettings,
   UserSettingsIds,
 } from "components/UserSettings/UserSettings";
@@ -13,6 +13,9 @@ import { newUser } from "types/user";
 
 const mockIsEmailTaken = jest.fn();
 const mockUpdateUser = jest.fn();
+const mockSetUser = jest.fn();
+const mockGetCurrentUser = jest.fn();
+const mockGetAvatar = jest.fn();
 
 jest.mock("notistack", () => ({
   ...jest.requireActual("notistack"),
@@ -23,6 +26,11 @@ jest.mock("backend", () => ({
   isEmailTaken: (...args: any[]) => mockIsEmailTaken(...args),
   updateUser: (...args: any[]) => mockUpdateUser(...args),
 }));
+jest.mock("backend/localStorage", () => ({
+  getAvatar: (...args: any[]) => mockGetAvatar(...args),
+  getCurrentUser: (...args: any[]) => mockGetCurrentUser(...args),
+}));
+
 // Mock "i18n", else `thrown: "Error: Error: connect ECONNREFUSED ::1:80 [...]`
 jest.mock("i18n", () => ({
   updateLangFromUser: jest.fn(),
@@ -39,6 +47,19 @@ const mockUser = (): User => {
 const setupMocks = (): void => {
   mockIsEmailTaken.mockResolvedValue(false);
   mockUpdateUser.mockImplementation((user: User) => user);
+  mockSetUser.mockImplementation(async (user?: User) => {
+    //
+  });
+  mockGetCurrentUser
+    .mockImplementationOnce(() => {
+      return mockUser();
+    })
+    .mockImplementationOnce(() => {
+      var user = mockUser();
+      user.email = "e@mail.com?";
+      return user;
+    });
+  mockGetAvatar.mockImplementation((user: User) => {});
 };
 
 beforeEach(() => {
@@ -50,7 +71,13 @@ afterEach(cleanup);
 
 const renderUserSettings = async (user = mockUser()): Promise<void> => {
   await act(async () => {
-    render(<UserSettings user={user} setUser={() => {}} />);
+    render(<UserSettings user={user} setUser={mockSetUser} />);
+  });
+};
+
+const renderUserSettingsGetUser = async (user = mockUser()): Promise<void> => {
+  await act(async () => {
+    render(<UserSettingsGetUser />);
   });
 };
 
@@ -88,6 +115,42 @@ describe("UserSettings", () => {
     await typeAndCheckEnabled(UserSettingsIds.FieldEmail);
     await typeAndCheckEnabled(UserSettingsIds.FieldName);
     await typeAndCheckEnabled(UserSettingsIds.FieldPhone);
+  });
+
+  it("disables button when change is saved", async () => {
+    const agent = userEvent.setup();
+    await renderUserSettingsGetUser();
+    const submitButton = screen.getByTestId(UserSettingsIds.ButtonSubmit);
+
+    const typeAndCheckEnabled = async (id: UserSettingsIds): Promise<void> => {
+      const field = screen.getByTestId(id);
+      console.log(screen.getByTestId(UserSettingsIds.FieldEmail));
+
+      expect(submitButton).toBeDisabled();
+
+      await act(async () => {
+        await agent.type(field, "?");
+      });
+
+      expect(submitButton).toBeEnabled();
+      await act(async () => {
+        await agent.click(submitButton);
+      });
+
+      expect(submitButton).toBeDisabled();
+
+      await act(async () => {
+        await agent.type(field, "{backspace}");
+      });
+      expect(submitButton).toBeEnabled();
+      await act(async () => {
+        await agent.type(field, "?");
+      });
+    };
+
+    await typeAndCheckEnabled(UserSettingsIds.FieldEmail);
+    //await typeAndCheckEnabled(UserSettingsIds.FieldName);
+    //await typeAndCheckEnabled(UserSettingsIds.FieldPhone);
   });
 
   it("updates user when something is changed and submitted", async () => {

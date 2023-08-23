@@ -34,7 +34,7 @@ export enum UserSettingsIds {
   SelectUiLang = "user-settings-ui-lang",
 }
 
-export default (): ReactElement => {
+export default function UserSettingsGetUser(): ReactElement {
   const [potentialUser, setPotentialUser] = useState(getCurrentUser());
 
   return potentialUser ? (
@@ -42,7 +42,7 @@ export default (): ReactElement => {
   ) : (
     <Fragment />
   );
-};
+}
 
 export function UserSettings(props: {
   user: User;
