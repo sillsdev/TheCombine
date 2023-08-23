@@ -22,7 +22,7 @@ export const themeColors: { [key: string]: HEX } = {
 };
 
 // Constants used in multiple themes
-const palette: Partial<PaletteOptions> = {
+const palette: PaletteOptions = {
   primary: { main: themeColors.primary },
   secondary: { main: themeColors.secondary },
   error: { main: themeColors.error },
@@ -48,7 +48,7 @@ const baseTheme = createTheme({
   components: {
     MuiButtonBase: { styleOverrides: { root: { disableRipple: false } } },
   },
-  palette: { ...palette },
+  palette,
   spacing: 8,
   typography: { fontFamily },
 });
