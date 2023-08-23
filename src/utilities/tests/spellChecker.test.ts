@@ -1,7 +1,7 @@
 import SpellChecker from "utilities/spellChecker";
 
 jest.mock("resources/dictionaries", () => ({
-  getDic: () => Promise.resolve(`1\n${mockValidWord}`),
+  getDict: () => Promise.resolve(`1\n${mockValidWord}`),
   getKeys: () => [],
 }));
 
@@ -28,9 +28,12 @@ describe("SpellChecker", () => {
     });
   });
 
-  it("getSpellingSuggestions returns an array", () => {
-    const spellChecker = new SpellChecker();
-    const spellingSuggestions = spellChecker.getSpellingSuggestions("abjkdsjf");
-    expect(spellingSuggestions.length).toBeGreaterThanOrEqual(0);
+  describe("getSpellingSuggestions", () => {
+    it("returns an array", () => {
+      const spellChecker = new SpellChecker();
+      const spellingSuggestions =
+        spellChecker.getSpellingSuggestions("abjkdsjf");
+      expect(spellingSuggestions.length).toBeGreaterThanOrEqual(0);
+    });
   });
 });

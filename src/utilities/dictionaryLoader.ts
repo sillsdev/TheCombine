@@ -1,4 +1,4 @@
-import { getDic, getKeys } from "resources/dictionaries";
+import { getDict, getKeys } from "resources/dictionaries";
 import { Hash } from "types/hash";
 import { Bcp47Code } from "types/writingSystem";
 
@@ -12,42 +12,55 @@ export default class DictionaryLoader {
     this.keys = getKeys(bcp47);
   }
 
-  private getKey(start: string): string {
-    if (!start || !this.keys) {
+  /**
+   * Input string `word` is a (partial) word typed by a user.
+   *
+   * Output string `key` is the key for the dictionary part
+   *   that contains or would contain the word;
+   *   the key is "-"-joined unicode numbers (e.g., "101-109" for "em").
+   *
+   * For example:
+   *   the `es` dictionary has 4 parts for words beginning with "e":
+   *   those beginning with "em", "en", "es", and "e" (everything else);
+   *   with input word "Emp" then the key for the "em"-part would be returned;
+   *   with input word "extra" the key for the "e"-part would be returned.
+   */
+  getKey(word: string): string {
+    if (!word || !this.keys) {
       return "";
     }
-    const startArray = start
+    const charCodes = word
       // "NFKD" to match the --normalize argument of split_dictionary.py
       .normalize("NFKD")
       .toLocaleLowerCase()
       .split("")
       .map((c) => c.charCodeAt(0));
-    var startCase = "";
+    var key = "";
     while (true) {
-      startCase = startArray.join("-");
-      if (!startCase || this.keys.includes(startCase)) {
-        return startCase;
+      key = charCodes.join("-");
+      if (!key || this.keys.includes(key)) {
+        return key;
       }
-      startArray.pop();
+      charCodes.pop();
     }
   }
 
   async loadDictionary(): Promise<string | undefined> {
-    return await getDic(this.lang);
+    return await getDict(this.lang);
   }
 
-  async loadDictPart(start: string): Promise<string | undefined> {
-    const key = this.getKey(start);
+  async loadDictPart(word: string): Promise<string | undefined> {
+    const key = this.getKey(word);
     if (!key || key in this.loaded) {
       return;
     }
     this.loaded[key] = true;
     if (process.env.NODE_ENV === "development") {
-      console.log(`Loading dictionary part ${key} (with: "${start}")`);
+      console.log(`Loading dictionary part ${key} (with: "${word}")`);
     }
-    const dic = await getDic(this.lang, key);
+    const dic = await getDict(this.lang, key);
     if (!dic) {
-      console.error(`Failed to load dictionary part ${key} (with: "${start}")`);
+      console.error(`Failed to load dictionary part ${key} (with: "${word}")`);
       delete this.loaded[key];
     }
     return dic;

@@ -43,7 +43,7 @@ export function getKeys(bcp47: Bcp47Code): string[] | undefined {
 /** For a given lang-tag and dict key,
  * return the dictionary piece associated with that key,
  * or undefined if there is no dictionary for the lang-tag. */
-export async function getDic(
+export async function getDict(
   bcp47: Bcp47Code,
   key?: string
 ): Promise<string | undefined> {

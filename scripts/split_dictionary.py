@@ -219,11 +219,11 @@ def main() -> None:
             "  switch (bcp47) {\n",
         ]
         # ... and the function for getting the dictionary parts for a language...
-        dic_lines = [
+        dict_lines = [
             "/** For a given lang-tag and dict key,\n"
             " * return the dictionary piece associated with that key,\n"
             " * or undefined if there is no dictionary for the lang-tag. */\n"
-            "export async function getDic(\n"
+            "export async function getDict(\n"
             "  bcp47: Bcp47Code,\n"
             "  key?: string\n"
             "): Promise<string | undefined> {\n"
@@ -238,13 +238,13 @@ def main() -> None:
                     import_lines.append(f'from "resources/dictionaries/{lang}";\n')
                     keys_lines.append(f"    case Bcp47Code.{lang.capitalize()}:\n")
                     keys_lines.append(f"      return {lang}Keys;\n")
-                    dic_lines.append(f"    case Bcp47Code.{lang.capitalize()}:\n")
-                    dic_lines.append(f"      return await {lang}Dic(key);\n")
+                    dict_lines.append(f"    case Bcp47Code.{lang.capitalize()}:\n")
+                    dict_lines.append(f"      return await {lang}Dic(key);\n")
         import_lines.append('import { Bcp47Code } from "types/writingSystem";\n\n')
         keys_lines.append("    default:\n      return;\n  }\n}\n\n")
-        dic_lines.append("    default:\n      return;\n  }\n}\n")
+        dict_lines.append("    default:\n      return;\n  }\n}\n")
 
-        return [*header_lines, *import_lines, *keys_lines, *dic_lines]
+        return [*header_lines, *import_lines, *keys_lines, *dict_lines]
 
     langs_index_file_path = dictionary_dir / "index.ts"
     logging.info(f"Generating {langs_index_file_path}")
