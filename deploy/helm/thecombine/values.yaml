@@ -54,5 +54,3 @@ maintenance:
   maxBackups: "3"
 
 ingressClass: nginx
-
-fontStorageSize: 1Gi
