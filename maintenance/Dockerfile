@@ -8,7 +8,7 @@
 #    secret accordingly.
 # The scripts are written in Python.
 
-FROM sillsdev/aws-kubectl:0.2.1
+FROM sillsdev/aws-kubectl:0.3.0
 
 USER root
 
@@ -18,25 +18,25 @@ RUN apt-get update && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
-# Create a 'user' user so the program doesn't run as root.
+# Use 'user' user (in sillsdev/aws-kubectl image) so the program
+# doesn't run as root.
 ENV HOME=/home/user
-ENV FONT_DIR=/mnt/fonts
+ENV FONT_DIR=${HOME}/fonts
 
-RUN mkdir -m 777 -p ${FONT_DIR}
-RUN groupadd -r user && \
-  useradd -r -g user -d $HOME -s /sbin/nologin -c "Docker image user" app
-
+# switch to non-root user
 USER user
 WORKDIR ${HOME}
 
 ENV PATH ${PATH}:${HOME}/.local/bin
 
-COPY requirements.txt .
-
-RUN pip3 install -r requirements.txt
-
 RUN mkdir -p .local/bin
 RUN mkdir -p .local/bin/font_lists
+RUN mkdir -p ${FONT_DIR}
+RUN chown user:user ${FONT_DIR}
+
+COPY --chown=user:user requirements.txt .
+
+RUN pip3 install -r requirements.txt
 
 COPY --chown=user:user scripts/*.py ./.local/bin/
 COPY --chown=user:user scripts/*.sh ./.local/bin/
