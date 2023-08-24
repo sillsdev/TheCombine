@@ -477,17 +477,12 @@ python scripts/split_dictionary.py --help
 For some languages, the wordlist is too large for practical use. Generally try to keep the folder for each language
 under 2.5 MB, to avoid such errors as
 `FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory` in the Kubernetes build. For smaller
-folder sizes, impose a maximum word-length with `-m`/`--max`:
-
-- `python scripts/split_dictionary.py -l ar -m 4`
-- `python scripts/split_dictionary.py -l es -m 9`
-- `python scripts/split_dictionary.py -l fr -m 10`
-- `python scripts/split_dictionary.py -l pt -m 7`
-- `python scripts/split_dictionary.py -l ru -m 7`
+folder sizes, default maximum word-lengths are automatically imposed for some languages: (`ar`, `es`, `fr`, `pt`, `ru`).
+Use `-m`/`--max` to override the defaults, with `-m -1` to force no limit.
 
 Adjust the `-t`/`--threshold` and `-T`/`--Threshold` parameters to split a wordlist into more, smaller files; e.g.:
 
-- `python scripts/split_dictionary.py -l hi -t 700`
+- `python scripts/split_dictionary.py -l hi -t 1000`
 - `python scripts/split_dictionary.py -l sw -t 1500`
 
 The top of each language's `index.ts` file states which values of `-m`, `-t`, and `-T` were used for that language.
