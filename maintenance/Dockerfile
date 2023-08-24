@@ -21,12 +21,7 @@ RUN apt-get update && \
 # Use 'user' user (in sillsdev/aws-kubectl image) so the program
 # doesn't run as root.
 ENV HOME=/home/user
-ENV FONT_DIR=/mnt/fonts
-
-#RUN mkdir -m 777 -p ${FONT_DIR}
-
-# Create the home directory for the new app user.
-RUN mkdir -p ${HOME}
+ENV FONT_DIR=${HOME}/fonts
 
 # switch to non-root user
 USER user
@@ -34,12 +29,14 @@ WORKDIR ${HOME}
 
 ENV PATH ${PATH}:${HOME}/.local/bin
 
-COPY requirements.txt .
-
-RUN pip3 install -r requirements.txt
-
 RUN mkdir -p .local/bin
 RUN mkdir -p .local/bin/font_lists
+RUN mkdir -p ${FONT_DIR}
+RUN chown user:user ${FONT_DIR}
+
+COPY --chown=user:user requirements.txt .
+
+RUN pip3 install -r requirements.txt
 
 COPY --chown=user:user scripts/*.py ./.local/bin/
 COPY --chown=user:user scripts/*.sh ./.local/bin/
