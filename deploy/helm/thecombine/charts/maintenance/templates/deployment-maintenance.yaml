@@ -33,7 +33,7 @@ spec:
           imagePullPolicy: {{ template "maintenance.imagePullPolicy" . }}
           securityContext:
             runAsUser: 999
-            runAsGroup: 999        
+            runAsGroup: 999
           env:
             # Values for AWS Access
             - name: AWS_ACCESS_KEY_ID
