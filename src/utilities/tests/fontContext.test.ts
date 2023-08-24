@@ -33,6 +33,7 @@ describe("ProjectFonts", () => {
 
       const projFonts = new ProjectFonts(proj);
       expect(projFonts.analysisFont === aFont[0].replaceAll(" ", ""));
+      expect(projFonts.getLangFont("") === inherit);
       [0, 1, 2].forEach((i) => {
         expect(projFonts.getLangFont(aBcp[i]) === aFont[i].replaceAll(" ", ""));
       });
