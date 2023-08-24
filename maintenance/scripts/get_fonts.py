@@ -127,6 +127,7 @@ def fetch_scripts_for_langs(langs: List[str]) -> List[str]:
             continue
         for tag in tags:
             for subtag in tag.split("-"):
+                # Script tabs always have length 4.
                 if len(subtag) == 4 and subtag not in scripts:
                     scripts.append(subtag)
 
@@ -147,7 +148,7 @@ def fetch_fonts_for_scripts(scripts: List[str]) -> List[str]:
         req.content.decode("UTF-8").splitlines(), delimiter=",", quotechar='"'
     )
 
-    # Get the font-column indices
+    # Use the font-column headers to determine all font-column indices.
     script_font_table_font_columns = [
         "Default Font",
         "WSTech primary",
@@ -163,6 +164,7 @@ def fetch_fonts_for_scripts(scripts: List[str]) -> List[str]:
         i for i in range(len(header_row)) if header_row[i] in script_font_table_font_columns
     ]
 
+    # Collect all fonts for the specified scripts.
     for row in script_font_table:
         if len(row) == 0 or row[0] not in scripts:
             continue
@@ -194,6 +196,7 @@ def main() -> None:
         exit(1)
 
     with open(mlp_font_list, "r") as mlp_fonts_list:
+        # MLP use of spaces in fonts is inconsistent, so remove all spaces for simplicity.
         fonts = [f.strip().replace(" ", "") for f in mlp_fonts_list.readlines()]
 
     if args.langs:
@@ -223,7 +226,7 @@ def main() -> None:
         # Assumes no two keys map to the same value.
         mlp_map_rev = {val: key for key, val in mlp_map.items()}
 
-    # For Google fonts with no font url in-file
+    # Fonts for which the frontend will get css files from Google's font API.
     google_fallback: dict[str, str] = {}
 
     for font in fonts:
@@ -232,7 +235,7 @@ def main() -> None:
         if not args.langs and font in mlp_map.keys():
             font_id = mlp_map[font].lower()
 
-        # Get font family info from font families info, using fallback font if necessary
+        # Get font family info from font families info, using fallback font if necessary.
         while font_id != "" and font_id in families.keys():
             font_info: dict[str, Any] = families[font_id]
             family: str = font_info["family"]
@@ -240,6 +243,7 @@ def main() -> None:
                 not args.langs and "source" in font_info.keys() and font_info["source"] == "Google"
             )
             if check_font_info(font_info):
+                # The font is available for download and distribution.
                 break
             if "fallback" in font_info.keys():
                 font_id = font_info["fallback"]
@@ -253,11 +257,13 @@ def main() -> None:
                 logging.warning(f"Font {font_id} not in {url_font_families_info}")
             continue
 
+        # When not downloading, prefer fetching css info from Google when available.
         if from_google:
             google_fallback[font] = family
             logging.info(f"Using Google fallback for {font}: {google_fallback[font]}")
             continue
 
+        # When downloading, only download fonts used for scripts of the specified langs.
         if args.langs and family.replace(" ", "") not in script_fonts:
             continue
 
@@ -277,13 +283,13 @@ def main() -> None:
         css_line_local = f"local('{family}'), local('{family} Regular'),"
 
         # Build the url source, downloading if requested.
-        if "flourl" not in file_info.keys():
-            if "url" not in file_info.keys():
-                logging.warning(f"{file_name}: No 'flourl' or 'url' for this file")
-                continue
+        if "flourl" in file_info.keys():
+            src = file_info["flourl"]
+        elif "url" in file_info.keys():
             src = file_info["url"]
         else:
-            src = file_info["flourl"]
+            logging.warning(f"{file_name}: No 'flourl' or 'url' for this file")
+            continue
 
         if args.langs:
             # With the https://fonts.languagetechnology.org "flourl" urls,
@@ -304,6 +310,8 @@ def main() -> None:
         with open(css_file_path, "w") as css_file:
             css_file.writelines(css_lines)
 
+        # If the font corresponds to a different MPL font name,
+        # create a css file for that font name too.
         if font in mlp_map_rev.keys():
             font = mlp_map_rev[font]
             css_lines[2] = f"  font-family: '{font}';\n"
@@ -316,6 +324,7 @@ def main() -> None:
         fallback_lines = ['{\n  "google": {\n']
         for key, val in google_fallback.items():
             fallback_lines.append(f'    "{key}": "{val}",\n')
+        # Remove the final comma to satisfy Prettier.
         fallback_lines[-1] = fallback_lines[-1].replace(",", "")
         fallback_lines.append("  }\n}\n")
         with open(args.output / file_name_fallback, "w") as fallback_file:
