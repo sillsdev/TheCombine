@@ -73,6 +73,7 @@ spec:
           volumeMounts:
             - mountPath: /usr/share/nginx/fonts
               name: font-data
+              readOnly: true
       restartPolicy: Always
 {{- if ne .Values.global.pullSecretName "None" }}
       imagePullSecrets:

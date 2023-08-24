@@ -91,6 +91,7 @@ spec:
           volumeMounts:
             - mountPath: {{ .Values.fontsDir }}
               name: font-data
+              readOnly: false
       restartPolicy: Always
 {{- if ne .Values.global.pullSecretName "None" }}
       imagePullSecrets:

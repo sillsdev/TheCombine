@@ -8,7 +8,7 @@
 #    secret accordingly.
 # The scripts are written in Python.
 
-FROM sillsdev/aws-kubectl:0.2.1
+FROM sillsdev/aws-kubectl:0.3.0
 
 USER root
 
@@ -18,14 +18,17 @@ RUN apt-get update && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
-# Create a 'user' user so the program doesn't run as root.
+# Use 'user' user (in sillsdev/aws-kubectl image) so the program
+# doesn't run as root.
 ENV HOME=/home/user
 ENV FONT_DIR=/mnt/fonts
 
-RUN mkdir -m 777 -p ${FONT_DIR}
-RUN groupadd -r user && \
-  useradd -r -g user -d $HOME -s /sbin/nologin -c "Docker image user" app
+#RUN mkdir -m 777 -p ${FONT_DIR}
 
+# Create the home directory for the new app user.
+RUN mkdir -p ${HOME}
+
+# switch to non-root user
 USER user
 WORKDIR ${HOME}
 
