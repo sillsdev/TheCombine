@@ -235,7 +235,7 @@ def main() -> None:
     for font in fonts:
         logging.info(f"Font: {font}")
         font_id: str = font.lower()
-        if not args.langs and font in mlp_map.keys():
+        if font in mlp_map.keys():
             font_id = mlp_map[font].lower()
 
         # Get font family info from font families info, using fallback font if necessary.
@@ -254,21 +254,26 @@ def main() -> None:
             else:
                 logging.info(f"{family}: No fallback")
                 font_id = ""
-        else:
+
+        # When downloading, only download fonts used for scripts of the specified langs.
+        if args.langs and family.replace(" ", "") not in script_fonts:
+            logging.info(f"Skipping font {font} as irrelevant for specified langs.")
+            continue
+
+        # Check if font was determined available.
+        if font_id == "" or font_id not in families.keys():
             if font in mlp_fonts_known_unavailable:
                 logging.info(f"Font {font} not available (but we knew that already)")
+            elif args.langs:
+                logging.warning(f"Font {font} not available for download")
             else:
-                logging.warning(f"Font {font} not available!")
+                logging.warning(f"Font {font} css info not available")
             continue
 
         # When not downloading, prefer fetching css info from Google when available.
         if from_google:
             google_fallback[font] = family
             logging.info(f"Using Google fallback for {font}: {google_fallback[font]}")
-            continue
-
-        # When downloading, only download fonts used for scripts of the specified langs.
-        if args.langs and family.replace(" ", "") not in script_fonts:
             continue
 
         # Get the font's default file info.
