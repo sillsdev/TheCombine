@@ -28,11 +28,12 @@ describe("DictionaryLoader", () => {
       const loader = new DictionaryLoader(bcp47);
       expect(loader.getKey("")).toEqual("");
       expect(loader.getKey("what?")).toEqual("");
-      expect(loader.getKey("avast")).toEqual("97");
+      expect(loader.getKey("AVAST!")).toEqual("97");
       // "á" decomposes into 2 characters
       expect(loader.getKey("ábc")).toEqual("97");
       expect(loader.getKey("About")).toEqual("97-98");
       expect(loader.getKey("aBCDeF")).toEqual("97-98-99");
+      expect(loader.getKey("abçedilla")).toEqual("97-98-99");
     });
   });
 

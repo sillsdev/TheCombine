@@ -37,8 +37,10 @@ describe("SpellChecker", () => {
     const punctuation = "`~!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?";
 
     it("strips initial whitespace", () => {
-      expect(SpellChecker.cleanAndSplit(`${whiteSpace}${lWord}`)).toEqual({
-        allButFinal: "",
+      expect(
+        SpellChecker.cleanAndSplit(`${whiteSpace}${punctuation}${lWord}`)
+      ).toEqual({
+        allButFinal: punctuation,
         final: lWord,
       });
     });
