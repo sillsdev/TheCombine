@@ -22,6 +22,7 @@ file_name_fallback = "fallback.json"
 font_lists_dir = scripts_dir / "font_lists"
 mlp_font_list = font_lists_dir / "mui_language_picker_fonts.txt"
 mlp_font_map = font_lists_dir / "mui_language_picker_font_map.json"
+mlp_fonts_known_unavailable = ["NotoSansLeke", "NotoSansShuishu", "SimSun"]
 url_font_families_info = "https://github.com/silnrsi/fonts/raw/main/families.json"
 url_lang_tags_list = "https://ldml.api.sil.org/en?query=langtags"
 url_script_font_table = (
@@ -80,27 +81,29 @@ def check_font_info(font_info: dict[str, Any]) -> bool:
 
     # Check that the font is current and licensed as expected.
     if not font_info["distributable"]:
-        logging.warning(f"{family}: Not distributable")
+        logging.info(f"{family}: Not distributable")
         return False
     if "license" not in font_info.keys():
-        logging.warning(f"{family}: No license")
+        logging.info(f"{family}: No license")
+        return False
     elif font_info["license"] != "OFL":
-        logging.warning(f"{family}: Non-OFL license: {font_info['license']}")
+        logging.info(f"{family}: Non-OFL license: {font_info['license']}")
+        return False
     if "source" not in font_info.keys():
-        logging.warning(f"{family}: No source")
+        logging.info(f"{family}: No source")
     elif font_info["source"] not in ["Google", "SIL"]:
-        logging.warning(f"{family}: Non-Google, non-SIL source: {font_info['source']}")
+        logging.info(f"{family}: Non-Google, non-SIL source: {font_info['source']}")
     if "status" not in font_info.keys():
-        logging.warning(f"{family}: No status")
+        logging.info(f"{family}: No status")
     elif font_info["status"] != "current":
-        logging.warning(f"{family}: Non-current status: {font_info['status']}")
+        logging.info(f"{family}: Non-current status: {font_info['status']}")
 
     if "defaults" not in font_info.keys() or get_font_default(font_info["defaults"]) == "":
-        logging.warning(f"{family}: No defaults")
+        logging.info(f"{family}: No defaults")
         return False
 
     if "files" not in font_info.keys():
-        logging.warning(f"{family}: No file list")
+        logging.info(f"{family}: No file list")
         return False
 
     return True
@@ -242,19 +245,20 @@ def main() -> None:
             from_google: bool = (
                 not args.langs and "source" in font_info.keys() and font_info["source"] == "Google"
             )
-            if check_font_info(font_info):
-                # The font is available for download and distribution.
+            if check_font_info(font_info) or from_google:
+                # Font available.
                 break
             if "fallback" in font_info.keys():
                 font_id = font_info["fallback"]
-                logging.warning(f"{family}: Using fallback {font_id}")
+                logging.info(f"{family}: Using fallback {font_id}")
             else:
-                if not from_google:
-                    logging.warning(f"{family}: No fallback")
+                logging.info(f"{family}: No fallback")
                 font_id = ""
         else:
-            if font_id != "":
-                logging.warning(f"Font {font_id} not in {url_font_families_info}")
+            if font in mlp_fonts_known_unavailable:
+                logging.info(f"Font {font} not available (but we knew that already)")
+            else:
+                logging.warning(f"Font {font} not available!")
             continue
 
         # When not downloading, prefer fetching css info from Google when available.
