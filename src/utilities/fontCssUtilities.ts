@@ -8,6 +8,7 @@ const fallbackFilePath = `${fontDir}/fallback.json`;
 async function fetchText(url: string): Promise<string | undefined> {
   let text: string | undefined;
   try {
+    // TODO: This `try`/`catch` isn't enough to prevent 404 errors outside development.
     text = await (await (await fetch(url)).blob()).text();
   } catch {
     if (process.env.NODE_ENV === "development") {
