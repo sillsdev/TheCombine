@@ -4,6 +4,7 @@ import { Hash } from "types/hash";
 const fontDir = "/fonts";
 const fallbackFilePath = `${fontDir}/fallback.json`;
 
+/** Given a url, returns the text content of the result, or undefined if fetch fails. */
 async function fetchText(url: string): Promise<string | undefined> {
   let text: string | undefined;
   try {
@@ -16,6 +17,8 @@ async function fetchText(url: string): Promise<string | undefined> {
   return text;
 }
 
+/** Given a font and source, returns css info for the font from the source.
+ * If substitute is specified, sub that in as the "font-family". */
 async function fetchCss(
   font: string,
   source: string,
@@ -42,6 +45,8 @@ async function fetchCss(
   return cssText;
 }
 
+/** Given a list of fonts with no local css files,
+ * returns css info from a remote source (default: google). */
 async function getFallbacks(
   fonts: string[],
   source = "google"
@@ -65,13 +70,16 @@ async function getFallbacks(
   return (await Promise.all(cssPromises)).filter((css): css is string => !!css);
 }
 
+/** Given an array of font names, returns css info for them all. */
 async function getCss(fonts: string[]) {
+  // Get local css files when available.
   const cssDict: Hash<string> = {};
   const cssPromises = fonts.map(async (f) => {
     cssDict[f] = (await fetchCss(f, "local")) ?? "";
   });
   await Promise.all(cssPromises);
 
+  // Get remote fallbacks for the rest.
   const cssStrings: string[] = [];
   const needFallback: string[] = [];
   fonts.forEach((f) => {
@@ -82,10 +90,13 @@ async function getCss(fonts: string[]) {
       needFallback.push(f);
     }
   });
+  // TODO: If on NUC, don't execute this line with getFallbacks().
   cssStrings.push(...(await getFallbacks(needFallback)));
+
   return cssStrings;
 }
 
+/** Given a project, returns css info for all project language fonts. */
 export async function getProjCss(proj: Project) {
   const fonts = proj.analysisWritingSystems.map((ws) => ws.font);
   fonts.push(proj.vernacularWritingSystem.font);
