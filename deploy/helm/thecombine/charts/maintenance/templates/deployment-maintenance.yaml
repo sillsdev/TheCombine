@@ -35,7 +35,7 @@ spec:
             runAsUser: 999
             runAsGroup: 999
           env:
-            # Values for AWS Access
+            # values for AWS Access
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
@@ -61,7 +61,7 @@ spec:
                 configMapKeyRef:
                   key: aws_bucket
                   name: env-maintenance
-            # Values used for backup/restore
+            # values used for backup/restore
             - name: db_files_subdir
               valueFrom:
                 configMapKeyRef:
