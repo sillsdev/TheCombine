@@ -33,8 +33,8 @@ FROM nginx:1.25
 WORKDIR /app
 
 ENV HOST_DIR /usr/share/nginx
-ENV FRONTEND_HOST_DIR ${HOST_DIR}/html
 ENV USER_GUIDE_HOST_DIR ${HOST_DIR}/user_guide
+ENV FRONTEND_HOST_DIR ${HOST_DIR}/html
 
 RUN mkdir /etc/nginx/templates
 RUN mkdir /etc/nginx/page_templates

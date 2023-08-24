@@ -193,6 +193,9 @@ def main() -> None:
         logging.error("Invalid output directory")
         exit(1)
 
+    with open(mlp_font_list, "r") as mlp_fonts_list:
+        fonts = [f.strip().replace(" ", "") for f in mlp_fonts_list.readlines()]
+
     if args.langs:
         langs = extract_lang_subtags(args.langs)
         logging.info(f"Lang-tags to download fonts for: {', '.join(langs)}")
@@ -200,11 +203,10 @@ def main() -> None:
         scripts = fetch_scripts_for_langs(langs)
         logging.info(f"Scripts used for specified lang-tags: {', '.join(scripts)}")
 
-        fonts = fetch_fonts_for_scripts(scripts)
-        logging.info(f"Default fonts and fonts used for specified lang-tags: {', '.join(fonts)}")
-    else:
-        with open(mlp_font_list, "r") as mlp_fonts_list:
-            fonts = [f.strip().replace(" ", "") for f in mlp_fonts_list.readlines()]
+        script_fonts = fetch_fonts_for_scripts(scripts)
+        logging.info(
+            f"Default fonts and fonts used for specified lang-tags: {', '.join(script_fonts)}"
+        )
 
     if args.clean:
         for path in args.output.iterdir():
@@ -234,27 +236,29 @@ def main() -> None:
         while font_id != "" and font_id in families.keys():
             font_info: dict[str, Any] = families[font_id]
             family: str = font_info["family"]
+            from_google: bool = (
+                not args.langs and "source" in font_info.keys() and font_info["source"] == "Google"
+            )
             if check_font_info(font_info):
                 break
             if "fallback" in font_info.keys():
                 font_id = font_info["fallback"]
                 logging.warning(f"{family}: Using fallback {font_id}")
             else:
-                if (
-                    not args.langs
-                    and "source" in font_info.keys()
-                    and font_info["source"] == "Google"
-                ):
-                    google_fallback[font] = family
-                    logging.warning(
-                        f"Google fallback for {font}: {google_fallback[font] or 'none'}"
-                    )
-                else:
+                if not from_google:
                     logging.warning(f"{family}: No fallback")
                 font_id = ""
         else:
             if font_id != "":
                 logging.warning(f"Font {font_id} not in {url_font_families_info}")
+            continue
+
+        if from_google:
+            google_fallback[font] = family
+            logging.info(f"Using Google fallback for {font}: {google_fallback[font]}")
+            continue
+
+        if args.langs and family.replace(" ", "") not in script_fonts:
             continue
 
         # Get the font's default file info.
