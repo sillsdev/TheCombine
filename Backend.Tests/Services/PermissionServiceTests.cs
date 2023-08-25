@@ -40,7 +40,7 @@ namespace Backend.Tests.Services
         {
             var user = _userRepo.Create(new User()).Result!;
             var result = _permService.MakeJwt(user).Result;
-            Assert.IsInstanceOf<User>(result);
+            Assert.That(result, Is.InstanceOf<User>());
         }
 
         [Test]

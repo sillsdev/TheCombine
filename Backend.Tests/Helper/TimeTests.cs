@@ -16,8 +16,8 @@ namespace Backend.Tests.Helper
         public void TestUtcNowIso8601()
         {
             var time = UtcNowIso8601();
-            Assert.That(time.Contains('T'));
-            Assert.That(time.EndsWith('Z'));
+            Assert.That(time.Contains('T'), Is.True);
+            Assert.That(time.EndsWith('Z'), Is.True);
             Assert.That(DateTime.Now, Is.EqualTo(DateTime.Parse(time)).Within(TimeSpan.FromSeconds(10)));
         }
     }

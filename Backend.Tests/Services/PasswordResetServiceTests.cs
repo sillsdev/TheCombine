@@ -31,7 +31,7 @@ namespace Backend.Tests.Services
             _userRepo.Create(user);
 
             var res = _passwordResetService.CreatePasswordReset(Email).Result;
-            Assert.Contains(res, _passwordResets.GetResets());
+            Assert.That(_passwordResets.GetResets(), Does.Contain(res));
         }
 
         [Test]
@@ -41,8 +41,8 @@ namespace Backend.Tests.Services
             _userRepo.Create(user);
 
             var request = _passwordResetService.CreatePasswordReset(Email).Result;
-            Assert.IsTrue(_passwordResetService.ResetPassword(request.Token, Password).Result);
-            Assert.IsEmpty(_passwordResets.GetResets());
+            Assert.That(_passwordResetService.ResetPassword(request.Token, Password).Result, Is.True);
+            Assert.That(_passwordResets.GetResets(), Is.Empty);
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace Backend.Tests.Services
             var request = _passwordResetService.CreatePasswordReset(Email).Result;
             request.ExpireTime = DateTime.Now.AddMinutes(-1);
 
-            Assert.IsFalse(_passwordResetService.ResetPassword(request.Token, Password).Result);
+            Assert.That(_passwordResetService.ResetPassword(request.Token, Password).Result, Is.False);
         }
 
         [Test]
@@ -64,9 +64,9 @@ namespace Backend.Tests.Services
             _userRepo.Create(user);
 
             var request = _passwordResetService.CreatePasswordReset(Email).Result;
-            Assert.That(request.Email == Email);
+            Assert.That(request.Email == Email, Is.True);
             var task = _passwordResetService.ResetPassword("NotARealToken", Password);
-            Assert.IsFalse(task.Result);
+            Assert.That(task.Result, Is.False);
         }
     }
 }

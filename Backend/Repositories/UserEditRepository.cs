@@ -81,7 +81,7 @@ namespace BackendFramework.Repositories
                 x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, userEditId));
 
             var result = await _userEditDatabase.UserEdits.ReplaceOneAsync(filter, userEdit);
-            return result.IsAcknowledged && result.ModifiedCount == 1;
+            return result.ModifiedCount == 1;
         }
     }
 }

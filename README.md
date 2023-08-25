@@ -54,12 +54,13 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    4. [Import Semantic Domains](#import-semantic-domains)
    5. [Generate License Reports](#generate-license-reports)
    6. [Inspect Database](#inspect-database)
-   7. [Cleanup Local Repository](#cleanup-local-repository)
+   7. [Add or Update Dictionary Files](#add-or-update-dictionary-files)
+   8. [Cleanup Local Repository](#cleanup-local-repository)
 3. [Setup Local Kubernetes Cluster](#setup-local-kubernetes-cluster)
    1. [Install Rancher Desktop](#install-rancher-desktop)
    2. [Install Docker Desktop](#install-docker-desktop)
    3. [Install Kubernetes Tools](#install-kubernetes-tools)
-4. [Setup The Combine](#setup-the-combine)
+4. [Setup _The Combine_](#setup-the-combine)
    1. [Install Required Charts](#install-required-charts)
    2. [Build _The Combine_ Containers](#build-the-combine-containers)
    3. [Setup Environment Variables](#setup-environment-variables)
@@ -94,13 +95,20 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
      appropriate Node.js version.
 4. [.NET Core SDK 6.0](https://dotnet.microsoft.com/download/dotnet/6.0)
    - On Ubuntu, follow these [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu).
-5. [MongoDB 6.0](https://docs.mongodb.com/manual/administration/install-community/) and add its `/bin` to PATH
-   Environment Variable.
+5. [MongoDB](https://mongodb.com/docs/manual/administration/install-community/) provides instructions on how to install
+   the current release of MongoDB.
+
    - On Windows, if using [Chocolatey][chocolatey]: `choco install mongodb`
+
+   After installation:
+
+   - Add mongo's `/bin` directory to your PATH environment variable.
+   - Disable automatically start of the `mongod` service on your development host.
    - If `mongosh` is not a recognized command, you may have to separately install the
      [MongoDB Shell](https://www.mongodb.com/try/download/shell) and add its `/bin` to your PATH.
    - If `mongoimport` is not a recognized command, you may have to separately install the
      [MongoDB Database Tools](https://www.mongodb.com/try/download/database-tools) and add its `/bin` to your PATH.
+
 6. [VS Code](https://code.visualstudio.com/download).
    - When you open this repo folder in VS Code, it should recommend the extensions used in this project (see
      `.vscode/extensions.json`).
@@ -442,6 +450,43 @@ To browse the database locally during development, open MongoDB Compass Communit
 1. Under New Connection, enter `mongodb://localhost:27017`
 2. Under Databases, select CombineDatabase
 
+### Add or Update Dictionary Files
+
+The dictionary files for spell-check functionality in _The Combine_ are split into parts to allow lazy-loading, for the
+sake of devices with limited bandwidth. There are scripts for generating these files in `src/resources/dictionaries/`;
+files in this directory should _not_ be manually edited.
+
+The bash script `scripts/fetch_wordlists.sh` is used to fetch dictionary files for a given language (e.g., `es`) from
+https://cgit.freedesktop.org/libreoffice/dictionaries/ and convert them to raw wordlists (e.g.,
+`src/resources/dictionaries/es.txt`). Execute the script with no arguments for its usage details. Any language not
+currently supported can be manually added as a case in this script.
+
+```bash
+./scripts/fetch_wordlist.sh
+```
+
+The python script `scripts/split_dictionary.py` takes a wordlist textfile (e.g., `src/resources/dictionaries/es.txt`),
+splits it into multiple TypeScript files (e.g., into `src/resources/dictionaries/es/` with index file
+`.../es/index.ts`), and updates `src/resources/dictionaries/index.ts` accordingly. Run the script within a Python
+virtual environment, with `-h`/`--help` to see its usage details.
+
+```bash
+python scripts/split_dictionary.py --help
+```
+
+For some languages, the wordlist is too large for practical use. Generally try to keep the folder for each language
+under 2.5 MB, to avoid such errors as
+`FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory` in the Kubernetes build. For smaller
+folder sizes, default maximum word-lengths are automatically imposed for some languages: (`ar`, `es`, `fr`, `pt`, `ru`).
+Use `-m`/`--max` to override the defaults, with `-m -1` to force no limit.
+
+Adjust the `-t`/`--threshold` and `-T`/`--Threshold` parameters to split a wordlist into more, smaller files; e.g.:
+
+- `python scripts/split_dictionary.py -l hi -t 1000`
+- `python scripts/split_dictionary.py -l sw -t 1500`
+
+The top of each language's `index.ts` file states which values of `-m`, `-t`, and `-T` were used for that language.
+
 ### Cleanup Local Repository
 
 It's sometimes possible for a developer's local temporary state to get out of sync with other developers or CI. This
@@ -538,7 +583,7 @@ links:
 2. [helm](https://helm.sh/docs/intro/install/)
    - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernetes-helm`
 
-## Setup The Combine
+## Setup _The Combine_
 
 This section describes how to build and deploy _The Combine_ to your Kubernetes cluster. Unless specified otherwise, all
 of the commands below are run from _The Combine's_ project directory and are run in an activated Python virtual

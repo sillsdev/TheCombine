@@ -167,17 +167,23 @@ export default function ProjectLanguages(
     <Grid container spacing={1} alignItems="center">
       <Grid item>
         <LanguagePicker
-          value={newLang.name}
+          value={newLang.bcp47}
           setCode={(bcp47: string) =>
             setNewLang((prev: WritingSystem) => ({ ...prev, bcp47 }))
           }
-          name={newLang.bcp47}
+          name={newLang.name}
           setName={(name: string) =>
             setNewLang((prev: WritingSystem) => ({ ...prev, name }))
           }
           font={newLang.font}
           setFont={(font: string) =>
             setNewLang((prev: WritingSystem) => ({ ...prev, font }))
+          }
+          setDir={(rtl: boolean) =>
+            setNewLang((prev: WritingSystem) => ({
+              ...prev,
+              rtl: rtl || undefined,
+            }))
           }
           t={languagePickerStrings_en}
         />

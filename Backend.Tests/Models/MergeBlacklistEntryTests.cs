@@ -23,7 +23,7 @@ namespace Backend.Tests.Models
                 WordIds = _wordIds
             };
             var entryB = entryA.Clone();
-            Assert.That(entryA.Equals(entryB));
+            Assert.That(entryA.Equals(entryB), Is.True);
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace Backend.Tests.Models
                 UserId = UserId,
                 WordIds = _wordIdsReversed
             };
-            Assert.That(entryA.Equals(entryB));
+            Assert.That(entryA.Equals(entryB), Is.True);
         }
 
         [Test]
@@ -52,26 +52,26 @@ namespace Backend.Tests.Models
             var entryA = new MergeBlacklistEntry();
             var entryB = new MergeBlacklistEntry();
             entryA.Id = EntryId;
-            Assert.IsFalse(entryA.Equals(entryB));
+            Assert.That(entryA.Equals(entryB), Is.False);
 
             entryB = entryA.Clone();
             entryA.ProjectId = ProjId;
-            Assert.IsFalse(entryA.Equals(entryB));
+            Assert.That(entryA.Equals(entryB), Is.False);
 
             entryB = entryA.Clone();
             entryA.UserId = UserId;
-            Assert.IsFalse(entryA.Equals(entryB));
+            Assert.That(entryA.Equals(entryB), Is.False);
 
             entryB = entryA.Clone();
             entryA.WordIds = _wordIds;
-            Assert.IsFalse(entryA.Equals(entryB));
+            Assert.That(entryA.Equals(entryB), Is.False);
         }
 
         [Test]
         public void TestEqualsNull()
         {
             var edit = new MergeBlacklistEntry { ProjectId = ProjId };
-            Assert.IsFalse(edit.Equals(null));
+            Assert.That(edit.Equals(null), Is.False);
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace Backend.Tests.Models
                 UserId = UserId,
                 WordIds = _wordIdsReversed
             };
-            Assert.AreNotEqual(entryA.GetHashCode(), entryB.GetHashCode());
+            Assert.That(entryA.GetHashCode(), Is.Not.EqualTo(entryB.GetHashCode()));
         }
     }
 }
