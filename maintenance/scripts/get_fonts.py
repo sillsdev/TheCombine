@@ -195,7 +195,7 @@ def main() -> None:
         logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.WARNING)
 
     if not args.output.is_dir():
-        logging.error("Invalid output directory")
+        logging.error(f"Invalid output directory: '{args.output}'")
         exit(1)
 
     with open(mlp_font_list, "r") as mlp_fonts_list:
@@ -217,10 +217,11 @@ def main() -> None:
     if args.clean:
         for path in args.output.iterdir():
             logging.info(f"Deleting {path}")
-            if path.is_dir():
-                rmtree(path)
-            else:
-                path.unlink()
+            if path.name != "lost+found":
+                if path.is_dir():
+                    rmtree(path)
+                else:
+                    path.unlink()
 
     families = fetch_font_families_info()
 
