@@ -1,10 +1,16 @@
 import nspell from "nspell";
 
 import { Bcp47Code } from "types/writingSystem";
-import dictionary from "utilities/dictionary";
+import DictionaryLoader from "utilities/dictionaryLoader";
+
+interface SplitWord {
+  allButFinal?: string;
+  final?: string;
+}
 
 export default class SpellChecker {
   private bcp47: Bcp47Code | undefined;
+  private dictLoader: DictionaryLoader | undefined;
   private spell: nspell | undefined;
 
   constructor(lang?: string) {
@@ -22,10 +28,10 @@ export default class SpellChecker {
     }
 
     this.bcp47 = bcp47;
-    await dictionary(bcp47).then((result) => {
-      if (result) {
-        const { aff, dic } = result;
-        this.spell = nspell(aff, dic);
+    this.dictLoader = new DictionaryLoader(bcp47);
+    await this.dictLoader.loadDictionary().then((dic) => {
+      if (dic !== undefined) {
+        this.spell = nspell("SET UTF-8", dic);
         if (process.env.NODE_ENV === "development") {
           console.log(`Loaded spell-checker: ${bcp47}`);
         }
@@ -33,27 +39,54 @@ export default class SpellChecker {
     });
   }
 
+  // Given a word, load the dictionary part matching the start of the word.
+  async load(word: string): Promise<void> {
+    if (!word || !this.dictLoader || !this.bcp47 || !this.spell) {
+      return;
+    }
+
+    const part = await this.dictLoader.loadDictPart(word);
+    if (part) {
+      this.spell.personal(part);
+    }
+  }
+
   correct(word: string): boolean | undefined {
     return this.spell?.correct(word);
   }
 
-  // If the word string is multiple words (separated by spaces)
+  static cleanAndSplit(word: string): SplitWord {
+    // Trim whitespace from the start and non-letter/-mark/-number characters from the end.
+    // Use of \p{L}\p{M}\p{N} here matches that in split_dictionary.py.
+    // Cf. https://en.wikipedia.org/wiki/Unicode_character_property
+    word = word.trimStart().replace(/[^\p{L}\p{M}\p{N}]*$/u, "");
+    if (!word) {
+      return {};
+    }
+    // Split by non-letter/-mark/-number characters.
+    const final = word.split(/[^\p{L}\p{M}\p{N}]/u).pop();
+    if (!final) {
+      // The above `.replace(...)` and `!word`-check make this impossible,
+      // but it mollifies Typescript and is a good backstop for any future changes.
+      return {};
+    }
+    const allButFinal = word.slice(0, word.length - final.length);
+    return { allButFinal, final };
+  }
+
+  // If the word string is multiple words, separate and
   // find spelling suggestions for the last word.
   getSpellingSuggestions(word: string): string[] {
     if (!this.spell || !word) {
       return [];
     }
-
-    // Remove excess whitespace
-    const words = word
-      .trim()
-      .split(" ")
-      .filter((w) => w);
-
-    const final = words.pop();
+    const { allButFinal, final } = SpellChecker.cleanAndSplit(word);
     if (!final) {
       return [];
     }
+
+    // Don't await--just load for future use.
+    this.load(final);
 
     let suggestions = this.spell.suggest(final);
     if (!suggestions.length) {
@@ -61,8 +94,7 @@ export default class SpellChecker {
       suggestions = this.spell.suggest(`${final}..`);
     }
 
-    if (suggestions.length && words.length) {
-      const allButFinal = words.join(" ") + " ";
+    if (suggestions.length && allButFinal) {
       suggestions = suggestions.map((w) => allButFinal + w);
     }
     return suggestions;
