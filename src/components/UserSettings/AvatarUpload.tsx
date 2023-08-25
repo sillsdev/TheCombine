@@ -25,6 +25,7 @@ export default function AvatarUpload(props: { doneCallback?: () => void }) {
 
   async function upload(e: React.FormEvent<EventTarget>) {
     e.preventDefault();
+    e.stopPropagation();
     if (file) {
       setLoading(true);
       await uploadAvatar(getUserId(), file)

@@ -34,12 +34,20 @@ export enum UserSettingsIds {
   SelectUiLang = "user-settings-ui-lang",
 }
 
-export default (): ReactElement => {
-  const potentialUser = getCurrentUser();
-  return potentialUser ? <UserSettings user={potentialUser} /> : <Fragment />;
-};
+export default function UserSettingsGetUser(): ReactElement {
+  const [potentialUser, setPotentialUser] = useState(getCurrentUser());
 
-export function UserSettings(props: { user: User }): ReactElement {
+  return potentialUser ? (
+    <UserSettings user={potentialUser} setUser={setPotentialUser} />
+  ) : (
+    <Fragment />
+  );
+}
+
+export function UserSettings(props: {
+  user: User;
+  setUser: (user?: User) => void;
+}): ReactElement {
   const [name, setName] = useState(props.user.name);
   const [phone, setPhone] = useState(props.user.phone);
   const [email, setEmail] = useState(props.user.email);
@@ -70,9 +78,11 @@ export function UserSettings(props: { user: User }): ReactElement {
         phone,
         email: punycode.toUnicode(email),
         uiLang,
+        hasAvatar: !!avatar,
       });
       updateLangFromUser();
       enqueueSnackbar(t("userSettings.updateSuccess"));
+      props.setUser(getCurrentUser());
     } else {
       setEmailTaken(true);
     }
