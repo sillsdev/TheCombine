@@ -47,6 +47,6 @@ awsS3BackupLoc: backups
 dbFilesSubdir: dump
 backendFilesSubdir: ".CombineFiles"
 
-fontsDir: "/home/user/fonts"
+fontsDir: "/mnt/fonts"
 frontendFontDir: "/fonts"
 fontStorageSize: 1Gi
