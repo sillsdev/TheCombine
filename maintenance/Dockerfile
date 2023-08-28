@@ -21,7 +21,10 @@ RUN apt-get update && \
 # Use 'user' user (in sillsdev/aws-kubectl image) so the program
 # doesn't run as root.
 ENV HOME=/home/user
-ENV FONT_DIR=${HOME}/fonts
+ENV FONT_DIR=/var/local/fonts
+
+RUN mkdir -p ${FONT_DIR}
+RUN chown user:user ${FONT_DIR}
 
 # switch to non-root user
 USER user
@@ -31,8 +34,6 @@ ENV PATH ${PATH}:${HOME}/.local/bin
 
 RUN mkdir -p .local/bin
 RUN mkdir -p .local/bin/font_lists
-RUN mkdir -p ${FONT_DIR}
-RUN chown user:user ${FONT_DIR}
 
 COPY --chown=user:user requirements.txt .
 

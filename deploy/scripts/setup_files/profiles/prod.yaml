@@ -25,6 +25,7 @@ charts:
       maxBackups: "3"
     global:
       awsS3Location: prod.thecombine.app
+      fontStorageAccessMode: ReadWriteMany
       pullSecretName: None
     certManager:
       enabled: false

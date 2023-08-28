@@ -13,6 +13,7 @@ charts:
       configAnalyticsWriteKey: "AoebaDJNjSlOMRUH87EaNjvwkQpfLoyy"
     global:
       awsS3Location: prod.thecombine.app
+      fontStorageAccessMode: ReadWriteMany
     tlsSecretName: thecombine-app-tls
     certManager:
       enabled: false

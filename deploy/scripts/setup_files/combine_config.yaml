@@ -42,6 +42,14 @@ targets:
       thecombine:
         global:
           serverName: nuc3.thecombine.app
+  nuc_test:
+    profile: nuc_test
+    env_vars_required: true
+    override:
+      # override values for 'thecombine' chart
+      thecombine:
+        global:
+          serverName: nuc-test.thecombine.app
 
   qa:
     profile: staging
@@ -84,6 +92,9 @@ profiles:
     charts:
       - thecombine
       - create-admin-user
+  nuc_test:
+    charts:
+      - thecombine
   staging: # Profile for the QA server
     charts:
       - thecombine

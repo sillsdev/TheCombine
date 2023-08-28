@@ -1,0 +1,19 @@
+---
+################################################
+# Profile specific configuration items
+#
+# Profile: nuc
+################################################
+
+charts:
+  thecombine:
+    aws-login:
+      enabled: true
+    global:
+      awsS3Location: dev.thecombine.app
+
+    cert-proxy-client:
+      enabled: true
+
+    certManager:
+      enabled: false

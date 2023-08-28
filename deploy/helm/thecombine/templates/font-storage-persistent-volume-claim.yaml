@@ -6,12 +6,8 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   accessModes:
-  {{- if eq "RollingUpdate" .Values.global.updateStrategy  }}
-    - ReadWriteMany
-  {{- else }}
-    - ReadWriteOnce
-  {{- end }}
+    - {{ .Values.global.fontStorageAccessMode }}
   resources:
     requests:
-      storage: {{ .Values.fontStorageSize | quote }}
+      storage: {{ .Values.global.fontStorageSize | quote }}
 status: {}
