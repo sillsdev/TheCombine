@@ -5,6 +5,7 @@ import {
   Delete,
   Done,
   Search,
+  BorderColor,
 } from "@mui/icons-material";
 import {
   Grid,
@@ -40,7 +41,14 @@ export default function ProjectLanguages(
   const [isNewLang, setIsNewLang] = useState(false);
   const [langsInProj, setLangsInProj] = useState("");
   const [newLang, setNewLang] = useState(newWritingSystem());
+  const [changeVernName, setChangeVernName] = useState(false);
+  const [newVernLang, setNewVernLang] = useState(
+    props.project.vernacularWritingSystem
+  );
   const { t } = useTranslation();
+
+  const isNewName =
+    newVernLang.name !== props.project.vernacularWritingSystem.name;
 
   useEffect(() => {
     setIsNewLang(
@@ -143,6 +151,18 @@ export default function ProjectLanguages(
     setAdd(false);
     setLangsInProj("");
     setNewLang(newWritingSystem());
+    setChangeVernName(false);
+  };
+
+  const updateVernacularName = async (): Promise<void> => {
+    const vernacularWritingSystem = newVernLang;
+    await props
+      .updateProject({ ...props.project, vernacularWritingSystem })
+      .then(() => resetState())
+      .catch((err) => {
+        console.error(err);
+        toast.error("Failed to update vernacular language"); // todo
+      });
   };
 
   const addAnalysisLangButtons = (): ReactElement => (
@@ -238,13 +258,69 @@ export default function ProjectLanguages(
     </Select>
   );
 
+  const vernacularLanguageDisplay = (): ReactElement => (
+    <ImmutableWritingSystem
+      ws={props.project.vernacularWritingSystem}
+      buttons={
+        <IconButtonWithTooltip
+          icon={<BorderColor fontSize="inherit" />}
+          textId={languagePickerStrings_en.changeName} // todo
+          small
+          onClick={() => {
+            setChangeVernName(true);
+          }}
+          buttonId={`vernacular-language-edit`} // todo
+        />
+      }
+    />
+  );
+
+  const vernacularLanguageEditor = (): ReactElement => (
+    <Grid container spacing={1} alignItems="center">
+      <Grid item>
+        <LanguagePicker
+          value={props.project.vernacularWritingSystem.bcp47} // editing this field and submitting will throw error
+          name={newVernLang.name}
+          setName={(name: string) =>
+            setNewVernLang((prev: WritingSystem) => ({ ...prev, name }))
+          }
+          font={props.project.vernacularWritingSystem.font} // editing this field and submitting will throw error
+          t={languagePickerStrings_en}
+        />
+      </Grid>{" "}
+      <Grid item>
+        <IconButton
+          disabled={!isNewName}
+          onClick={() => {
+            updateVernacularName();
+          }}
+          id={`vernacular-language-edit-confirm`} // todo
+          size="large"
+        >
+          <Done />
+        </IconButton>
+      </Grid>{" "}
+      <Grid item>
+        <IconButton
+          onClick={() => resetState()}
+          id={`vernacular-language-edit-clear`} // todo
+          size="large"
+        >
+          <Clear />
+        </IconButton>
+      </Grid>
+    </Grid>
+  );
+
   return (
     <>
       {/* Vernacular language */}
       <Typography variant="h6">
         {t("projectSettings.language.vernacular")}
       </Typography>
-      <ImmutableWritingSystem ws={props.project.vernacularWritingSystem} />
+      {changeVernName
+        ? vernacularLanguageEditor()
+        : vernacularLanguageDisplay()}
 
       {/* Analysis languages */}
       <Typography style={{ marginTop: theme.spacing(1) }} variant="h6">
