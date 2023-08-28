@@ -47,7 +47,7 @@ jobs:
             security.ubuntu.com:80
             storage.googleapis.com:443
             sts.us-east-1.amazonaws.com:443
-      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
+      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
       - name: Build The Combine
         id: build_combine
         uses: ./.github/actions/combine-build
@@ -66,7 +66,7 @@ jobs:
     needs: build
     runs-on: [self-hosted, thecombine]
     steps:
-      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
+      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
         with:
           fetch-depth: 0
       - name: Deploy The Combine Update to QA
