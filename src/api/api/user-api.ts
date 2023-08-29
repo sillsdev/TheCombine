@@ -659,9 +659,8 @@ export const UserApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<User>>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getAllUsers(
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getAllUsers(options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
