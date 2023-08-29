@@ -1,18 +1,20 @@
 import {
   Add,
   ArrowUpward,
+  BorderColor,
   Clear,
   Delete,
   Done,
   Search,
-  BorderColor,
 } from "@mui/icons-material";
 import {
+  Button,
   Grid,
   IconButton,
   MenuItem,
   Select,
   SelectChangeEvent,
+  TextField,
   Typography,
 } from "@mui/material";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
@@ -38,17 +40,12 @@ export default function ProjectLanguages(
   props: ProjectSettingPropsWithUpdate
 ): ReactElement {
   const [add, setAdd] = useState(false);
+  const [changeVernName, setChangeVernName] = useState(false);
   const [isNewLang, setIsNewLang] = useState(false);
   const [langsInProj, setLangsInProj] = useState("");
   const [newLang, setNewLang] = useState(newWritingSystem());
-  const [changeVernName, setChangeVernName] = useState(false);
-  const [newVernLang, setNewVernLang] = useState(
-    props.project.vernacularWritingSystem
-  );
+  const [newVernName, setNewVernName] = useState("");
   const { t } = useTranslation();
-
-  const isNewName =
-    newVernLang.name !== props.project.vernacularWritingSystem.name;
 
   useEffect(() => {
     setIsNewLang(
@@ -57,7 +54,12 @@ export default function ProjectLanguages(
           .map((ws) => ws.bcp47)
           .includes(newLang.bcp47)
     );
-  }, [newLang.bcp47, props.project.analysisWritingSystems]);
+    setNewVernName(props.project.vernacularWritingSystem.name);
+  }, [
+    newLang.bcp47,
+    props.project.analysisWritingSystems,
+    props.project.vernacularWritingSystem.name,
+  ]);
 
   const setNewAnalysisDefault = async (index: number): Promise<void> => {
     const analysisWritingSystems = [...props.project.analysisWritingSystems];
@@ -151,18 +153,23 @@ export default function ProjectLanguages(
     setAdd(false);
     setLangsInProj("");
     setNewLang(newWritingSystem());
-    setChangeVernName(false);
   };
 
   const updateVernacularName = async (): Promise<void> => {
-    const vernacularWritingSystem = newVernLang;
-    await props
-      .updateProject({ ...props.project, vernacularWritingSystem })
-      .then(() => resetState())
-      .catch((err) => {
-        console.error(err);
-        toast.error("Failed to update vernacular language"); // todo
-      });
+    if (newVernName != props.project.vernacularWritingSystem.name) {
+      var vernacularWritingSystem = props.project.vernacularWritingSystem;
+      vernacularWritingSystem.name = newVernName;
+      await props
+        .updateProject({
+          ...props.project,
+          vernacularWritingSystem,
+        }) // clone and fill in - spread // todo
+        .then(() => resetState())
+        .catch((err) => {
+          console.error(err);
+          toast.error("Failed to update vernacular language"); // todo
+        });
+    }
   };
 
   const addAnalysisLangButtons = (): ReactElement => (
@@ -276,38 +283,28 @@ export default function ProjectLanguages(
   );
 
   const vernacularLanguageEditor = (): ReactElement => (
-    <Grid container spacing={1} alignItems="center">
-      <Grid item>
-        <LanguagePicker
-          value={props.project.vernacularWritingSystem.bcp47} // editing this field and submitting will throw error
-          name={newVernLang.name}
-          setName={(name: string) =>
-            setNewVernLang((prev: WritingSystem) => ({ ...prev, name }))
-          }
-          font={props.project.vernacularWritingSystem.font} // editing this field and submitting will throw error
-          t={languagePickerStrings_en}
-        />
-      </Grid>{" "}
-      <Grid item>
-        <IconButton
-          disabled={!isNewName}
-          onClick={() => {
+    <Grid container spacing={1}>
+      <Grid item xs={12}>
+        <TextField
+          variant="standard"
+          id="vernacular-name"
+          value={newVernName}
+          onChange={(e) => setNewVernName(e.target.value)}
+          onBlur={() => {
             updateVernacularName();
+            setChangeVernName(false);
           }}
-          id={`vernacular-language-edit-confirm`} // todo
-          size="large"
-        >
-          <Done />
-        </IconButton>
-      </Grid>{" "}
+        />
+      </Grid>
       <Grid item>
-        <IconButton
-          onClick={() => resetState()}
-          id={`vernacular-language-edit-clear`} // todo
-          size="large"
+        <Button
+          // No onClick necessary, as name updates on blur away from TextField.
+          variant="contained"
+          color="primary"
+          id="vernacular-name-save"
         >
-          <Clear />
-        </IconButton>
+          {t("buttons.save")}
+        </Button>
       </Grid>
     </Grid>
   );
