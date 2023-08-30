@@ -29,7 +29,7 @@ url_script_font_table = (
     "https://raw.githubusercontent.com/silnrsi/langfontfinder/main/data/script2font.csv"
 )
 default_output_dir = os.getenv("font_dir", "/mnt/fonts")
-frontend_font_dir = os.getenv("frontend_font_dir", "/fonts")
+default_local_font_url = os.getenv("local_font_url", "/fonts")
 
 
 def parse_args() -> argparse.Namespace:
@@ -47,10 +47,11 @@ def parse_args() -> argparse.Namespace:
         help="Comma-separated list of lang-tags for which fonts should be downloaded.",
     )
     parser.add_argument(
-        "-f",
-        "--frontend",
-        default=frontend_font_dir,
-        help="Directory path of hosted fonts, for the css data the frontend uses.",
+        "-u",
+        "--url",
+        dest="local_font_url",
+        default=default_local_font_url,
+        help="URL for locally hosted fonts, for the css data used by the client.",
     )
     parser.add_argument(
         "-o", "--output", default=default_output_dir, help="Output directory for font data."
@@ -309,7 +310,7 @@ def main() -> None:
             logging.info(f"Downloading {src} to {dest}")
             with open(dest, "wb") as out:
                 out.write(req.content)
-            css_lines.append(f"  src: {css_line_local} url('{args.frontend}/{file_name}');\n")
+            css_lines.append(f"  src: {css_line_local} url('{args.local_font_url}/{file_name}');\n")
         else:
             css_lines.append(f"  src: {css_line_local} url('{src}');\n")
 

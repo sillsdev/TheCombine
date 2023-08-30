@@ -18,4 +18,4 @@ data:
   wait_time: {{ .Values.waitTime | quote }}
   max_backups: {{ .Values.maxBackups | quote }}
   font_dir: {{ .Values.fontsDir | quote }}
-  frontend_font_dir: {{ .Values.frontendFontDir | quote }}
+  local_font_url: {{ .Values.localFontUrl | quote }}

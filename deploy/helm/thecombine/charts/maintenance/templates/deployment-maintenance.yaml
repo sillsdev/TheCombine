@@ -98,10 +98,10 @@ spec:
                 configMapKeyRef:
                   key: font_dir
                   name: env-maintenance
-            - name: frontend_font_dir
+            - name: local_font_url
               valueFrom:
                 configMapKeyRef:
-                  key: frontend_font_dir
+                  key: local_font_url
                   name: env-maintenance
           resources: {}
           volumeMounts:

@@ -12,9 +12,7 @@ FROM sillsdev/aws-kubectl:0.3.0
 
 USER root
 
-RUN apt-get update && \
-  apt-get install -y python3 python3-pip nano && \
-  apt-get autoremove && \
+RUN apt-get autoremove && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
@@ -37,8 +35,8 @@ RUN mkdir -p .local/bin/font_lists
 
 COPY --chown=user:user requirements.txt .
 
-RUN pip3 install -r requirements.txt
+# RUN pip3 install -r requirements.txt
 
-COPY --chown=user:user scripts/*.py ./.local/bin/
-COPY --chown=user:user scripts/*.sh ./.local/bin/
-COPY --chown=user:user scripts/font_lists/* ./.local/bin/font_lists
+# COPY --chown=user:user scripts/*.py ./.local/bin/
+# COPY --chown=user:user scripts/*.sh ./.local/bin/
+# COPY --chown=user:user scripts/font_lists/* ./.local/bin/font_lists
