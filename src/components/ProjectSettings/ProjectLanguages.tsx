@@ -291,9 +291,10 @@ export default function ProjectLanguages(
           value={newVernName}
           onChange={(e) => setNewVernName(e.target.value)}
           onBlur={() => {
-            updateVernacularName();
             setChangeVernName(false);
+            setNewVernName(props.project.vernacularWritingSystem.name);
           }}
+          autoFocus
         />
       </Grid>
       <Grid item>
@@ -302,6 +303,9 @@ export default function ProjectLanguages(
           variant="contained"
           color="primary"
           id="vernacular-name-save"
+          onMouseDown={() => {
+            updateVernacularName();
+          }}
         >
           {t("buttons.save")}
         </Button>
