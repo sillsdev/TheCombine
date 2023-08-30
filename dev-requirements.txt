@@ -8,8 +8,12 @@ attrs==23.1.0
     # via
     #   flake8-bugbear
     #   flake8-eradicate
+babel==2.12.1
+    # via mkdocs-material
 beautifulsoup4==4.12.2
-    # via mkdocs-htmlproofer-plugin
+    # via
+    #   mkdocs-htmlproofer-plugin
+    #   readtime
 black==23.7.0
     # via -r dev-requirements.in
 cachetools==5.3.1
@@ -39,6 +43,8 @@ cryptography==41.0.3
     # via
     #   pyopenssl
     #   types-pyopenssl
+cssselect==1.2.0
+    # via pyquery
 distlib==0.3.7
     # via virtualenv
 dnspython==2.4.2
@@ -85,12 +91,18 @@ jinja2-base64-filters==0.1.4
     # via -r dev-requirements.in
 kubernetes==27.2.0
     # via -r dev-requirements.in
+lxml==4.9.3
+    # via
+    #   mkdocs-material
+    #   pyquery
 markdown==3.4.4
     # via
     #   mkdocs
     #   mkdocs-htmlproofer-plugin
     #   mkdocs-material
     #   pymdown-extensions
+markdown2==2.4.10
+    # via readtime
 markupsafe==2.1.3
     # via
     #   jinja2
@@ -105,7 +117,7 @@ mkdocs==1.5.2
     #   mkdocs-material
 mkdocs-htmlproofer-plugin==1.0.0
     # via -r dev-requirements.in
-mkdocs-material==9.1.21
+mkdocs-material==9.2.5
     # via -r dev-requirements.in
 mkdocs-material-extensions==1.1.1
     # via mkdocs-material
@@ -125,6 +137,8 @@ packaging==23.1
     #   mkdocs
     #   pyproject-api
     #   tox
+paginate==0.5.6
+    # via mkdocs-material
 pathspec==0.11.2
     # via
     #   black
@@ -137,7 +151,7 @@ platformdirs==3.10.0
     #   mkdocs
     #   tox
     #   virtualenv
-pluggy==1.2.0
+pluggy==1.3.0
     # via tox
 pyasn1==0.5.0
     # via
@@ -155,12 +169,14 @@ pygments==2.16.1
     # via mkdocs-material
 pymdown-extensions==10.1
     # via mkdocs-material
-pymongo==4.4.1
+pymongo==4.5.0
     # via -r dev-requirements.in
 pyopenssl==23.2.0
     # via -r dev-requirements.in
 pyproject-api==1.5.4
     # via tox
+pyquery==2.0.0
+    # via readtime
 pyreadline3==3.4.1
     # via -r dev-requirements.in
 python-dateutil==2.8.2
@@ -176,6 +192,8 @@ pyyaml==6.0.1
     #   pyyaml-env-tag
 pyyaml-env-tag==0.1
     # via mkdocs
+readtime==3.0.0
+    # via mkdocs-material
 regex==2023.8.8
     # via mkdocs-material
 requests==2.31.0
@@ -201,7 +219,7 @@ tomli==2.0.1
     #   mypy
     #   pyproject-api
     #   tox
-tox==4.9.0
+tox==4.10.0
     # via -r dev-requirements.in
 types-pyopenssl==23.2.0.2
     # via -r dev-requirements.in
@@ -224,5 +242,5 @@ virtualenv==20.24.3
     # via tox
 watchdog==3.0.0
     # via mkdocs
-websocket-client==1.6.1
+websocket-client==1.6.2
     # via kubernetes
