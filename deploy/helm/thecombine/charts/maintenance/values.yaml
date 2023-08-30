@@ -49,3 +49,4 @@ backendFilesSubdir: ".CombineFiles"
 
 fontsDir: "/home/user/fonts"
 localFontUrl: "/fonts"
+localLangList: ""

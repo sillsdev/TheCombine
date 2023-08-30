@@ -11,6 +11,8 @@ charts:
       enabled: true
     global:
       awsS3Location: dev.thecombine.app
+    maintenance:
+      localLangList: "ar en es fr pt"
 
     cert-proxy-client:
       enabled: true

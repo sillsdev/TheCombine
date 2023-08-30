@@ -375,6 +375,16 @@ Where:
 
   Note that:
 
+  - When the `./setup_combine.py` script is used to install _The Combine_ on a NUC, it will install the fonts required
+    for Arabic, English, French, Portuguese, and Spanish. If additional fonts will be required, add the following
+    argument to the `setup_combine.py` commands above:
+
+    ```bash
+    ./setup_combine.py ... --set maintenace.localLangList="<languageList>"
+    ```
+
+    where `<languageList>` is a space delimited string of the language codes whose fonts should be installed locally.
+
   - Starting with version 0.7.25, the tag will start with a ‘v’, even if the release does not (we are transitioning to
     the format where release versions start with a ‘v’).
   - You can see the version of the latest release on the GitHub page for The Combine,

@@ -9,7 +9,7 @@ import subprocess
 
 project_dir = Path(__file__).resolve().parent.parent
 dev_output_dir = project_dir / "public" / "fonts"
-
+default_local_font_url = "/fonts"
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -21,13 +21,16 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "-l",
-        "--langs",
-        help="Comma-separated list of lang-tags for which fonts should be downloaded.",
+        "--lang",
+        dest="langs",
+        nargs="*",
+        help="List of language tags for which fonts should be downloaded.",
     )
     parser.add_argument(
-        "-f",
-        "--frontend",
-        help="Directory path of hosted fonts, for the css data the frontend uses.",
+        "-u",
+        "--url",
+        dest="local_font_url",
+        help="URL for locally hosted fonts, for the css data used by the client.",
     )
     parser.add_argument(
         "-o", "--output", default=dev_output_dir, help="Output directory for font data."
@@ -56,13 +59,14 @@ def main() -> None:
     ]
     if args.clean:
         command.append("-c")
-    if args.frontend:
-        command.extend(["-f", args.frontend])
+    if args.local_font_url:
+        command.append("-f")
+        command.extend(args.local_font_url)
     if args.langs:
-        command.extend(["-l", args.langs])
+        command.append("-l")
+        command.extend(args.langs)
     if args.verbose:
         command.append("-v")
-    print(f"Running command: {command}")
     subprocess.run(command, shell=(platform.system() == "Windows"), check=True, text=True)
 
 

@@ -14,6 +14,8 @@ charts:
     global:
       awsS3Location: prod.thecombine.app
       pullSecretName: None
+    maintenance:
+      localLangList: "ar en es fr pt"
 
     cert-proxy-client:
       enabled: true

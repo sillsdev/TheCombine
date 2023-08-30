@@ -60,6 +60,11 @@ def parse_args() -> argparse.Namespace:
         dest="dry_run",
     )
     parser.add_argument(
+        "--list-targets",
+        action="store_true",
+        help="List the available targets and exit.",
+    )
+    parser.add_argument(
         "--wait",
         action="store_true",
         help="Invoke the 'helm install' command with the '--wait' option.",
@@ -203,6 +208,11 @@ def main() -> None:
         combine_charts.generate(args.image_tag)
     else:
         combine_charts.generate(get_release())
+
+    if args.list_targets:
+        for target in config["targets"].keys():
+            print(f"   {target}")
+        sys.exit(ExitStatus.SUCCESS.value)
 
     target = args.target
     while target not in config["targets"]:
