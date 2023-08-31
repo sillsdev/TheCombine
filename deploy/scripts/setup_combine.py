@@ -23,7 +23,7 @@ import os
 from pathlib import Path
 import sys
 import tempfile
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from app_release import get_release
 from aws_env import init_aws_environment
@@ -43,7 +43,9 @@ def parse_args() -> argparse.Namespace:
         description="Generate Helm Charts for The Combine.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
+    # Arguments used by the Kubernetes tools
     add_kube_opts(parser)
+    # Arguments specific to setting up The Combine
     parser.add_argument(
         "--clean", action="store_true", help="Delete chart, if it exists, before installing."
     )
@@ -58,6 +60,12 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Invoke the 'helm install' command with the '--dry-run' option.",
         dest="dry_run",
+    )
+    parser.add_argument(
+        "--langs",
+        "-l",
+        nargs="*",
+        help="Language(s) that require fonts to be installed on the target cluster.",
     )
     parser.add_argument(
         "--list-targets",
@@ -174,6 +182,21 @@ def add_override_values(
         with open(override_file, "w") as file:
             yaml.dump(config["override"][chart], file)
         helm_cmd.extend(["-f", str(override_file)])
+
+
+def add_language_overrides(
+    config: Dict[str, Any],
+    *,
+    chart: str,
+    langs: Optional[List[str]],
+) -> None:
+    """Update override configuration with any languages specfied on the command line."""
+    override_config = config["override"][chart]
+    if langs:
+        if "maintenance" not in override_config:
+            override_config["maintenance"] = {"localLangList": langs}
+        else:
+            override_config["maintenance"]["localLangList"] = langs
 
 
 def add_profile_values(
@@ -322,6 +345,8 @@ def main() -> None:
                         str(secrets_file),
                     ]
                 )
+
+            add_language_overrides(this_config, chart=chart, langs=args.langs)
 
             add_override_values(
                 this_config,

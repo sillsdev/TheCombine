@@ -38,9 +38,11 @@ spec:
           - --
           - /usr/bin/python3
           - /home/user/.local/bin/get_fonts.py
-{{- if empty .Values.localLangList | not }}
+{{- if .Values.localLangList }}
           - --langs
-          - {{ split " " .Values.localLangList }}
+          {{- range $lang := .Values.localLangList }}
+          - {{ $lang | quote }}
+          {{- end }}
 {{- end }}
         resources: {}
         securityContext:
