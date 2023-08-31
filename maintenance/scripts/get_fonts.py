@@ -132,7 +132,7 @@ def fetch_scripts_for_langs(langs: List[str]) -> List[str]:
             continue
         for tag in tags:
             for subtag in tag.split("-"):
-                # Script tabs always have length 4.
+                # Script tags always have length 4.
                 if len(subtag) == 4 and subtag not in scripts:
                     scripts.append(subtag)
 
