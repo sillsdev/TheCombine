@@ -163,11 +163,13 @@ export default function ProjectLanguages(
         .updateProject({
           ...props.project,
           vernacularWritingSystem,
-        }) // clone and fill in - spread // todo
+        })
         .then(() => resetState())
         .catch((err) => {
           console.error(err);
-          toast.error("Failed to update vernacular language"); // todo
+          toast.error(
+            t("projectSettings.language.updateVernacularLanguageNameFailed")
+          );
         });
     }
   };
@@ -271,12 +273,12 @@ export default function ProjectLanguages(
       buttons={
         <IconButtonWithTooltip
           icon={<BorderColor fontSize="inherit" />}
-          textId={languagePickerStrings_en.changeName} // todo
+          textId={t("projectSettings.language.changeName")}
           small
           onClick={() => {
             setChangeVernName(true);
           }}
-          buttonId={`vernacular-language-edit`} // todo
+          buttonId={`vernacular-language-edit`}
         />
       }
     />
@@ -299,7 +301,6 @@ export default function ProjectLanguages(
       </Grid>
       <Grid item>
         <Button
-          // No onClick necessary, as name updates on blur away from TextField.
           variant="contained"
           color="primary"
           id="vernacular-name-save"
