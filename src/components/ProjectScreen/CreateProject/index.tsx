@@ -270,7 +270,7 @@ export default function CreateProject(): ReactElement {
           )}
           {/* Analysis language picker */}
           <Typography style={{ marginTop: theme.spacing(1) }}>
-            {t("projectSettings.language.analysisLang")}
+            {t("projectSettings.language.analysisLanguage")}
           </Typography>
           {languageData ? (
             t("createProject.language")
