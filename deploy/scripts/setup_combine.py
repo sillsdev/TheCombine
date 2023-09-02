@@ -144,7 +144,7 @@ def create_secrets(
     if len(missing_env_vars) > 0:
         print("The following environment variables are not defined:")
         print(", ".join(missing_env_vars))
-        if not env_vars_req and input("Continue?(y/N)").upper().startswith("Y"):
+        if not env_vars_req:
             return secrets_written
         sys.exit(ExitStatus.FAILURE.value)
 
