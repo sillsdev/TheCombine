@@ -27,7 +27,7 @@ global:
   combineSmtpPassword: "Override"
   fontStorageAccessMode: "ReadWriteOnce"
   fontStorageSize: 1Gi
-  offline: "false"
+  offline: false
   imageTag: "latest"
   # Define the image registry to use (may be blank for local images)
   imageRegistry: awsEcr
