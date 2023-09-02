@@ -20,7 +20,7 @@ targets:
           serverName: thecombine.localhost
   nuc1:
     profile: nuc
-    env_vars_required: true
+    env_vars_required: false
     override:
       # override values for 'thecombine' chart
       thecombine:
@@ -28,7 +28,7 @@ targets:
           serverName: nuc1.thecombine.app
   nuc2:
     profile: nuc
-    env_vars_required: true
+    env_vars_required: false
     override:
       # override values for 'thecombine' chart
       thecombine:
@@ -36,7 +36,7 @@ targets:
           serverName: nuc2.thecombine.app
   nuc3:
     profile: nuc
-    env_vars_required: true
+    env_vars_required: false
     override:
       # override values for 'thecombine' chart
       thecombine:
@@ -44,7 +44,7 @@ targets:
           serverName: nuc3.thecombine.app
   nuc_test:
     profile: nuc_test
-    env_vars_required: true
+    env_vars_required: false
     override:
       # override values for 'thecombine' chart
       thecombine:
