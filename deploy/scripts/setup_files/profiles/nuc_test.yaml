@@ -11,6 +11,10 @@ charts:
       enabled: true
     global:
       awsS3Location: dev.thecombine.app
+      combineSmtpUsername: ""
+    frontend:
+      configOffline: true
+      configEmailEnabled: false
     maintenance:
       localLangList:
         - "ar"

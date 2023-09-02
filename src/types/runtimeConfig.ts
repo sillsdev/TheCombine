@@ -2,6 +2,7 @@ interface RuntimeConfigItems {
   baseUrl: string;
   captchaRequired: boolean;
   captchaSiteKey: string;
+  offline: boolean;
   emailServicesEnabled: boolean;
   showCertExpiration: boolean;
 }
@@ -17,6 +18,7 @@ const defaultConfig: RuntimeConfigItems = {
   baseUrl: "http://localhost:5000",
   captchaRequired: true,
   captchaSiteKey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
+  offline: false,
   emailServicesEnabled: true,
   showCertExpiration: true,
 };
@@ -47,13 +49,10 @@ export class RuntimeConfig {
       return window.runtimeConfig.baseUrl;
     }
 
-    let baseUrl: string;
     if (window.runtimeConfig.hasOwnProperty("useConnectionBaseUrlForApi")) {
-      baseUrl = `${window.location.protocol}//${window.location.host}`;
-    } else {
-      baseUrl = defaultConfig.baseUrl;
+      return `${window.location.protocol}//${window.location.host}`;
     }
-    return baseUrl;
+    return defaultConfig.baseUrl;
   }
 
   public appRelease(): string {
@@ -78,10 +77,20 @@ export class RuntimeConfig {
   }
 
   public emailServicesEnabled(): boolean {
+    if (RuntimeConfig._instance.offline()) {
+      return false;
+    }
     if (window.runtimeConfig.hasOwnProperty("emailServicesEnabled")) {
       return window.runtimeConfig.emailServicesEnabled;
     }
     return defaultConfig.emailServicesEnabled;
+  }
+
+  public offline(): boolean {
+    if (window.runtimeConfig.hasOwnProperty("offline")) {
+      return window.runtimeConfig.offline;
+    }
+    return defaultConfig.offline;
   }
 
   public showCertExpiration(): boolean {

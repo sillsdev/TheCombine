@@ -1,5 +1,6 @@
 import { Project } from "api";
 import { Hash } from "types/hash";
+import { RuntimeConfig } from "types/runtimeConfig";
 
 const fontDir = "/fonts";
 const fallbackFilePath = `${fontDir}/fallback.json`;
@@ -91,9 +92,10 @@ async function getCss(fonts: string[]) {
       needFallback.push(f);
     }
   });
-  // TODO: If on NUC, don't execute this line with getFallbacks().
-  cssStrings.push(...(await getFallbacks(needFallback)));
-
+  // If no internet expected, don't execute this line with getFallbacks().
+  if (!RuntimeConfig.getInstance().offline()) {
+    cssStrings.push(...(await getFallbacks(needFallback)));
+  }
   return cssStrings;
 }
 

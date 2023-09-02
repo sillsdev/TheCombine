@@ -3,6 +3,7 @@
 # Declare variables to be passed into your templates.
 
 global:
+  combineSmtpUsername: "Override"
   serverName: localhost
   pullSecretName: aws-login-credentials
   # Update strategy should be "Recreate" or "Rolling Update"
@@ -17,6 +18,7 @@ imageName: combine_frontend
 combineAddlDomainList: ""
 configCaptchaRequired: "false"
 configCaptchaSiteKey: "None - from frontend chart"
-configEmailEnabled: "false"
+configOffline: "false"
+configEmailEnabled: "true"
 configShowCertExpiration: "false"
 configAnalyticsWriteKey: ""
