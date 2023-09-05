@@ -38,16 +38,11 @@ export default function ProjectName(
       </Grid>
       <Grid item>
         <Button
-          // No onClick necessary, as name updates on blur away from TextField.
           variant="contained"
           color="primary"
           id="project-name-save"
-          onMouseDown={(e) => {
-            e.preventDefault();
-          }}
-          onClick={() => {
-            updateProjectName();
-          }}
+          onClick={() => updateProjectName()}
+          onMouseDown={(e) => e.preventDefault()}
         >
           {t("buttons.save")}
         </Button>
