@@ -45,7 +45,6 @@ def parse_args() -> argparse.Namespace:
         "--langs",
         "-l",
         nargs="*",
-        dest="langs",
         help="List of language tags for which fonts should be downloaded.",
     )
     parser.add_argument(
@@ -246,7 +245,9 @@ def main() -> None:
             font_info = families[font_id]
             family: str = font_info["family"]
             from_google = (
-                args.langs and "source" in font_info.keys() and font_info["source"] == "Google"
+                (not args.langs)
+                and "source" in font_info.keys()
+                and font_info["source"] == "Google"
             )
             if check_font_info(font_info) or from_google:
                 # Font available.

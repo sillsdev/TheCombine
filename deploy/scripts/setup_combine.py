@@ -190,7 +190,7 @@ def add_language_overrides(
     chart: str,
     langs: Optional[List[str]],
 ) -> None:
-    """Update override configuration with any languages specfied on the command line."""
+    """Update override configuration with any languages specified on the command line."""
     override_config = config["override"][chart]
     if langs:
         if "maintenance" not in override_config:
