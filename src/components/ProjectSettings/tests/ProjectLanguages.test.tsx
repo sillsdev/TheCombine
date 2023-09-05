@@ -1,11 +1,15 @@
-import { Button, Select } from "@mui/material";
+import { Button, IconButton, Select } from "@mui/material";
 import { LanguagePicker } from "mui-language-picker";
 import renderer from "react-test-renderer";
 
 import "tests/reactI18nextMock";
 
 import { Project, WritingSystem } from "api/models";
-import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
+import ProjectLanguages, {
+  editVernacularNameButtonId,
+  editVernacularNameFieldId,
+  editVernacularNameSaveButtonId,
+} from "components/ProjectSettings/ProjectLanguages";
 import { newProject } from "types/project";
 import { newWritingSystem } from "types/writingSystem";
 
@@ -54,7 +58,31 @@ describe("ProjectLanguages", () => {
   it("renders readOnly", async () => {
     await renderProjLangs(mockProject([...mockAnalysisWritingSystems]), true);
     expect(projectMaster.root.findAllByType(Button)).toHaveLength(0);
+    expect(projectMaster.root.findAllByType(IconButton)).toHaveLength(0);
     expect(projectMaster.root.findAllByType(Select)).toHaveLength(0);
+  });
+
+  it("can change vernacular language name", async () => {
+    await renderProjLangs(mockProject([...mockAnalysisWritingSystems]));
+    const newName = "Vern Lang";
+    await renderer.act(async () => {
+      projectMaster.root
+        .findByProps({ id: editVernacularNameButtonId })
+        .props.onClick();
+    });
+    await renderer.act(async () => {
+      projectMaster.root
+        .findByProps({ id: editVernacularNameFieldId })
+        .props.onChange({ target: { value: newName } });
+    });
+    await renderer.act(async () => {
+      projectMaster.root
+        .findByProps({ id: editVernacularNameSaveButtonId })
+        .props.onClick();
+    });
+    expect(
+      mockUpdateProject.mock.calls[0][0].vernacularWritingSystem.name
+    ).toEqual(newName);
   });
 
   it("can add language to project", async () => {

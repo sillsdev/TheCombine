@@ -33,6 +33,9 @@ import { getAnalysisLangsFromWords } from "utilities/wordUtilities";
 const addAnalysisLangButtonId = "analysis-language-new";
 const addAnalysisLangCleanButtonId = "analysis-language-new-clear";
 const addAnalysisLangConfirmButtonId = "analysis-language-new-confirm";
+export const editVernacularNameButtonId = "vernacular-language-edit";
+export const editVernacularNameFieldId = "vernacular-language-name";
+export const editVernacularNameSaveButtonId = "vernacular-language-save";
 const getProjAnalysisLangsButtonId = "analysis-language-get";
 const semDomLangSelectId = "semantic-domains-language";
 
@@ -54,12 +57,11 @@ export default function ProjectLanguages(
           .map((ws) => ws.bcp47)
           .includes(newLang.bcp47)
     );
+  }, [newLang.bcp47, props.project.analysisWritingSystems]);
+
+  useEffect(() => {
     setNewVernName(props.project.vernacularWritingSystem.name);
-  }, [
-    newLang.bcp47,
-    props.project.analysisWritingSystems,
-    props.project.vernacularWritingSystem.name,
-  ]);
+  }, [props.project.vernacularWritingSystem.name]);
 
   const setNewAnalysisDefault = async (index: number): Promise<void> => {
     const analysisWritingSystems = [...props.project.analysisWritingSystems];
@@ -156,22 +158,26 @@ export default function ProjectLanguages(
   };
 
   const updateVernacularName = async (): Promise<void> => {
-    if (newVernName != props.project.vernacularWritingSystem.name) {
-      var vernacularWritingSystem = props.project.vernacularWritingSystem;
-      vernacularWritingSystem.name = newVernName;
-      await props
-        .updateProject({
-          ...props.project,
-          vernacularWritingSystem,
-        })
-        .then(() => resetState())
-        .catch((err) => {
-          console.error(err);
-          toast.error(
-            t("projectSettings.language.updateVernacularLanguageNameFailed")
-          );
-        });
+    if (
+      !newVernName ||
+      newVernName === props.project.vernacularWritingSystem.name
+    ) {
+      return;
     }
+
+    const vernacularWritingSystem: WritingSystem = {
+      ...props.project.vernacularWritingSystem,
+      name: newVernName,
+    };
+    await props
+      .updateProject({ ...props.project, vernacularWritingSystem })
+      .then(() => resetState())
+      .catch((err) => {
+        console.error(err);
+        toast.error(
+          t("projectSettings.language.updateVernacularLanguageNameFailed")
+        );
+      });
   };
 
   const addAnalysisLangButtons = (): ReactElement => (
@@ -271,15 +277,17 @@ export default function ProjectLanguages(
     <ImmutableWritingSystem
       ws={props.project.vernacularWritingSystem}
       buttons={
-        <IconButtonWithTooltip
-          icon={<BorderColor fontSize="inherit" />}
-          textId={t("projectSettings.language.changeName")}
-          small
-          onClick={() => {
-            setChangeVernName(true);
-          }}
-          buttonId={`vernacular-language-edit`}
-        />
+        props.readOnly ? (
+          <Fragment />
+        ) : (
+          <IconButtonWithTooltip
+            icon={<BorderColor fontSize="inherit" />}
+            textId={"projectSettings.language.changeName"}
+            small
+            onClick={() => setChangeVernName(true)}
+            buttonId={editVernacularNameButtonId}
+          />
+        )
       }
     />
   );
@@ -289,7 +297,7 @@ export default function ProjectLanguages(
       <Grid item xs={12}>
         <TextField
           variant="standard"
-          id="vernacular-name"
+          id={editVernacularNameFieldId}
           value={newVernName}
           onChange={(e) => setNewVernName(e.target.value)}
           onBlur={() => {
@@ -303,10 +311,9 @@ export default function ProjectLanguages(
         <Button
           variant="contained"
           color="primary"
-          id="vernacular-name-save"
-          onMouseDown={() => {
-            updateVernacularName();
-          }}
+          id={editVernacularNameSaveButtonId}
+          onClick={() => updateVernacularName()}
+          onMouseDown={(e) => e.preventDefault()}
         >
           {t("buttons.save")}
         </Button>
