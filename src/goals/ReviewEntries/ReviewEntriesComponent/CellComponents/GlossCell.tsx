@@ -52,6 +52,7 @@ export default function GlossCell(props: GlossCellProps): ReactElement {
             }
           />
         ) : (
+          // TODO: Use analysis language font(s) to display this concatenated gloss string.
           <Input
             fullWidth
             key={`glosses${props.rowData.id}`}
