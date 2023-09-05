@@ -17,27 +17,27 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
-        "-c", "--clean", action="store_true", help="Delete the contents of the fonts directory."
+        "--clean", "-c", action="store_true", help="Delete the contents of the fonts directory."
     )
     parser.add_argument(
+        "--langs",
         "-l",
-        "--lang",
-        dest="langs",
         nargs="*",
+        metavar="LANG",
         help="List of language tags for which fonts should be downloaded.",
     )
     parser.add_argument(
-        "-u",
         "--url",
+        "-u",
         dest="local_font_url",
         help="URL for locally hosted fonts, for the css data used by the client.",
     )
     parser.add_argument(
-        "-o", "--output", default=dev_output_dir, help="Output directory for font data."
+        "--output", "-o", default=dev_output_dir, help="Output directory for font data."
     )
     parser.add_argument(
-        "-v",
         "--verbose",
+        "-v",
         action="store_true",
         help="Print intermediate values to aid in debugging.",
     )
