@@ -52,11 +52,6 @@ export default function AppWithBar(): ReactElement {
     }
   }, [proj]);
 
-  useEffect(() => {
-    // Remove this useEffect after the backend update is finished.
-    console.info(styleOverrides);
-  }, [styleOverrides]);
-
   const overrideThemeFont = (theme: Theme) =>
     styleOverrides
       ? createTheme({
