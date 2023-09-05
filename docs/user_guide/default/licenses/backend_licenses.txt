@@ -58,7 +58,7 @@ license Type:LICENSE.md
 
 ####################################################################################################
 Package:MailKit
-Version:4.1.0
+Version:4.2.0
 project URL:http://www.mimekit.net/
 Description:MailKit is an Open Source cross-platform .NET mail-client library that is based on MimeKit and optimized for mobile devices.
 
@@ -799,7 +799,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:MimeKit
-Version:4.1.0
+Version:4.2.0
 project URL:http://www.mimekit.net/
 Description:MimeKit is an Open Source library for creating and parsing MIME, S/MIME and PGP messages on desktop and mobile platforms. It also supports parsing of Unix mbox files.
 
