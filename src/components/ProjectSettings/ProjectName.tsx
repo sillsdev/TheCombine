@@ -33,7 +33,7 @@ export default function ProjectName(
           id="project-name"
           value={projName}
           onChange={(e) => setProjName(e.target.value)}
-          onBlur={() => updateProjectName()}
+          onBlur={() => setProjName(props.project.name)}
         />
       </Grid>
       <Grid item>
@@ -42,6 +42,12 @@ export default function ProjectName(
           variant="contained"
           color="primary"
           id="project-name-save"
+          onMouseDown={(e) => {
+            e.preventDefault();
+          }}
+          onClick={() => {
+            updateProjectName();
+          }}
         >
           {t("buttons.save")}
         </Button>

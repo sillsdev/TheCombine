@@ -1,5 +1,5 @@
 # These files are very large and slow to format.
-src/resources/dictionaries
+*.dic.js
 docs/user_guide/site
 
 # Prettier cannot handle Helm Templates.

@@ -572,9 +572,8 @@ export const ProjectApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Project>>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getAllProjects(
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getAllProjects(options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,

@@ -31,6 +31,13 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "files.insertFinalNewline": true,
+  "cSpell.ignorePaths": [
+    "*.dic.js",
+    "node_modules",
+    "package-lock.json",
+    "public/locales/",
+    "!public/locales/en/"
+  ],
   "cSpell.words": [
     "Adposition",
     "axios",
@@ -67,7 +74,9 @@
     "textfile",
     "thecombine",
     "upsert",
-    "venv"
+    "venv",
+    "wordlist",
+    "wordlists"
   ],
   "git.branchProtection": ["master", "main"]
 }
