@@ -45,6 +45,7 @@ def parse_args() -> argparse.Namespace:
         "--langs",
         "-l",
         nargs="*",
+        metavar="LANG",
         help="List of language tags for which fonts should be downloaded.",
     )
     parser.add_argument(
