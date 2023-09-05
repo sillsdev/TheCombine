@@ -9,7 +9,6 @@ import subprocess
 
 project_dir = Path(__file__).resolve().parent.parent
 dev_output_dir = project_dir / "public" / "fonts"
-default_local_font_url = "/fonts"
 
 
 def parse_args() -> argparse.Namespace:
