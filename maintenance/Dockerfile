@@ -21,6 +21,7 @@ RUN apt-get update && \
 # Use 'user' user (in sillsdev/aws-kubectl image) so the program
 # doesn't run as root.
 ENV HOME=/home/user
+ENV SCRIPT_DIR=${HOME}/.local/bin
 ENV FONT_DIR=/var/local/fonts
 
 RUN mkdir -p ${FONT_DIR}
@@ -30,15 +31,14 @@ RUN chown user:user ${FONT_DIR}
 USER user
 WORKDIR ${HOME}
 
-ENV PATH ${PATH}:${HOME}/.local/bin
+ENV PATH ${PATH}:${SCRIPT_DIR}
 
-RUN mkdir -p .local/bin
-RUN mkdir -p .local/bin/font_lists
+RUN mkdir -p ${SCRIPT_DIR}/font_lists
 
 COPY --chown=user:user requirements.txt .
 
 RUN pip3 install -r requirements.txt
 
-COPY --chown=user:user scripts/*.py ./.local/bin/
-COPY --chown=user:user scripts/*.sh ./.local/bin/
-COPY --chown=user:user scripts/font_lists/* ./.local/bin/font_lists
+COPY --chown=user:user scripts/*.py ${SCRIPT_DIR}
+COPY --chown=user:user scripts/*.sh ${SCRIPT_DIR}
+COPY --chown=user:user scripts/font_lists/* ${SCRIPT_DIR}/font_lists
