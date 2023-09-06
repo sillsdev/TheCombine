@@ -148,6 +148,7 @@
       "bcp47": "BCP 47 Code",
       "name": "Name",
       "font": "Font",
+      "rtl": "Direction: right-to-left",
       "changeName": "Change Name",
       "addAnalysisLanguage": "Add an alternate analysis language",
       "makeDefaultAnalysisLanguage": "Make this the default analysis language",

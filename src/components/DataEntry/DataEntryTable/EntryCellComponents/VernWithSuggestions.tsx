@@ -59,7 +59,6 @@ export default function VernWithSuggestions(
       renderInput={(params) => (
         <TextFieldWithFont
           {...params}
-          dir={props.vernacularLang.rtl ? "rtl" : undefined}
           fullWidth
           inputRef={props.vernInput}
           label={props.isNew ? props.vernacularLang.name : ""}
