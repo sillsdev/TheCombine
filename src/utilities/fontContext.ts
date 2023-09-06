@@ -1,7 +1,13 @@
-import { createContext } from "react";
+import { CSSProperties, createContext } from "react";
 
 import { Project } from "api/models";
 import { Hash } from "types/hash";
+
+export type WithFontProps = {
+  analysis?: boolean;
+  lang?: string;
+  vernacular?: boolean;
+};
 
 export class ProjectFonts {
   readonly analysisFont: string;
@@ -40,6 +46,28 @@ export class ProjectFonts {
       return this.langMap[bcp47] || this.inherit;
     }
     return this.inherit;
+  }
+
+  /**
+   * Conditionally adds a fontFamily to the style.
+   * Precedence, from highest to lowest, moving to the next one if falsy:
+   *   vernacular;
+   *   lang;
+   *   analysis;
+   *   fontFamily of input style;
+   *   "inherit".
+   */
+  addFontToStyle(props: WithFontProps, style?: CSSProperties): CSSProperties {
+    return {
+      ...style,
+      fontFamily: props.vernacular
+        ? this.vernacularFont
+        : props.lang
+        ? this.getLangFont(props.lang)
+        : props.analysis
+        ? this.analysisFont
+        : style?.fontFamily ?? "inherit",
+    };
   }
 }
 

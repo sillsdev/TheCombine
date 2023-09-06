@@ -6,31 +6,21 @@ import {
 } from "@mui/material";
 import { ReactElement, useContext } from "react";
 
-import FontContext from "utilities/fontContext";
+import FontContext, { WithFontProps } from "utilities/fontContext";
 
-/** Various MUI components for use within a FontContext
- * to add the appropriate font to that component.
- *
- * Each component's input props are extended with 3 optional props:
- *   analysis: bool? (used to apply the default analysis font)
- *   lang: string? (bcp47 lang-tag for applying the appropriate analysis font)
- *   vernacular: bool? (used to apply the vernacular font)
- *
- * Precedence, from highest to lowest, moving to the next one if falsy:
- *   vernacular
- *   lang
- *   analysis
- *   fontFamily specified in MUI props
- *   "inherit"
+/* Various MUI components for use within a FontContext
+ * to add the appropriate font to that component. */
+
+// Cannot use `interface` with `extends` because TextFieldProps isn't static.
+type TextFieldWithFontProps = TextFieldProps & WithFontProps;
+
+/**
+ * TextField modified for use within a FontContext.
+ * Input props are extended with 3 optional props:
+ *   analysis: bool? (used to apply the default analysis font);
+ *   lang: string? (bcp47 lang-tag for applying the appropriate analysis font);
+ *   vernacular: bool? (used to apply the vernacular font).
  */
-
-// Cannot use `extends` because TextFieldProps isn't static.
-type TextFieldWithFontProps = TextFieldProps & {
-  analysis?: boolean;
-  lang?: string;
-  vernacular?: boolean;
-};
-
 export function TextFieldWithFont(props: TextFieldWithFontProps): ReactElement {
   const fontContext = useContext(FontContext);
   // Use spread to remove the custom props from what is passed into TextField.
@@ -40,27 +30,24 @@ export function TextFieldWithFont(props: TextFieldWithFontProps): ReactElement {
       {...textFieldProps}
       InputProps={{
         ...textFieldProps.InputProps,
-        style: {
-          ...textFieldProps.InputProps?.style,
-          fontFamily: vernacular
-            ? fontContext.vernacularFont
-            : lang
-            ? fontContext.getLangFont(lang)
-            : analysis
-            ? fontContext.analysisFont
-            : textFieldProps.InputProps?.style?.fontFamily ?? "inherit",
-        },
+        style: fontContext.addFontToStyle(
+          { analysis, lang, vernacular },
+          textFieldProps.InputProps?.style
+        ),
       }}
     />
   );
 }
 
-interface TypographyWithFontProps extends TypographyProps {
-  analysis?: boolean;
-  lang?: string;
-  vernacular?: boolean;
-}
+type TypographyWithFontProps = TypographyProps & WithFontProps;
 
+/**
+ * Typography modified for use within a FontContext.
+ * Input props are extended with 3 optional props:
+ *   analysis: bool? (used to apply the default analysis font);
+ *   lang: string? (bcp47 lang-tag for applying the appropriate analysis font);
+ *   vernacular: bool? (used to apply the vernacular font).
+ */
 export function TypographyWithFont(
   props: TypographyWithFontProps
 ): ReactElement {
@@ -70,16 +57,10 @@ export function TypographyWithFont(
   return (
     <Typography
       {...typographyProps}
-      style={{
-        ...typographyProps.style,
-        fontFamily: vernacular
-          ? fontContext.vernacularFont
-          : lang
-          ? fontContext.getLangFont(lang)
-          : analysis
-          ? fontContext.analysisFont
-          : typographyProps.style?.fontFamily ?? "inherit",
-      }}
+      style={fontContext.addFontToStyle(
+        { analysis, lang, vernacular },
+        typographyProps.style
+      )}
     />
   );
 }
