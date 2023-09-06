@@ -12,7 +12,7 @@ async function fetchText(url: string): Promise<string | undefined> {
     return await (await resp.blob()).text();
   }
 
-  if (RuntimeConfig.getInstance().offline()) {
+  if (RuntimeConfig.getInstance().isOffline()) {
     // In an offline setting, all necessary fonts should be pre-loaded.
     console.log(
       `Failed to load file: ${url}\nPlease notify the admin this font is unavailable.`
@@ -100,7 +100,7 @@ async function getCss(fonts: string[]) {
     }
   });
   // If no internet expected, don't execute this line with getFallbacks().
-  if (!RuntimeConfig.getInstance().offline()) {
+  if (!RuntimeConfig.getInstance().isOffline()) {
     cssStrings.push(...(await getFallbacks(needFallback)));
   }
   return cssStrings;

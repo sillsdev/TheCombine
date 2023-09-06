@@ -77,7 +77,7 @@ export class RuntimeConfig {
   }
 
   public emailServicesEnabled(): boolean {
-    if (RuntimeConfig._instance.offline()) {
+    if (RuntimeConfig._instance.isOffline()) {
       return false;
     }
     if (window.runtimeConfig.hasOwnProperty("emailServicesEnabled")) {
@@ -86,7 +86,7 @@ export class RuntimeConfig {
     return defaultConfig.emailServicesEnabled;
   }
 
-  public offline(): boolean {
+  public isOffline(): boolean {
     if (window.runtimeConfig.hasOwnProperty("offline")) {
       return window.runtimeConfig.offline;
     }
