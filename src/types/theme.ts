@@ -31,7 +31,6 @@ const palette: PaletteOptions = {
   tonalOffset: 0.2,
 };
 
-// Extended from default theme with SIL fonts
 const fontFamily: React.CSSProperties["fontFamily"] = [
   "'Noto Sans'",
   "'Open Sans'",
