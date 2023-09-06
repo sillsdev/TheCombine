@@ -33,7 +33,7 @@ Array [
             className="MuiListItemText-root css-tlelie-MuiListItemText-root"
           >
             <span
-              className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-8unep3-MuiTypography-root"
+              className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-din1g1-MuiTypography-root"
             >
               statistics.view.user
             </span>
@@ -67,7 +67,7 @@ Array [
             className="MuiListItemText-root css-tlelie-MuiListItemText-root"
           >
             <span
-              className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-8unep3-MuiTypography-root"
+              className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-din1g1-MuiTypography-root"
             >
               statistics.view.domain
             </span>
@@ -101,7 +101,7 @@ Array [
             className="MuiListItemText-root css-tlelie-MuiListItemText-root"
           >
             <span
-              className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-8unep3-MuiTypography-root"
+              className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-din1g1-MuiTypography-root"
             >
               statistics.view.day
             </span>
@@ -135,7 +135,7 @@ Array [
             className="MuiListItemText-root css-tlelie-MuiListItemText-root"
           >
             <span
-              className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-8unep3-MuiTypography-root"
+              className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-din1g1-MuiTypography-root"
             >
               statistics.view.workshop
             </span>
@@ -153,7 +153,7 @@ Array [
         className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
       >
         <h4
-          className="MuiTypography-root MuiTypography-h4 MuiTypography-alignCenter css-1oob4j9-MuiTypography-root"
+          className="MuiTypography-root MuiTypography-h4 MuiTypography-alignCenter css-1qq3s3i-MuiTypography-root"
         >
           statistics.title
         </h4>
@@ -162,7 +162,7 @@ Array [
         className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
       >
         <h5
-          className="MuiTypography-root MuiTypography-h5 MuiTypography-alignCenter css-1cq4eck-MuiTypography-root"
+          className="MuiTypography-root MuiTypography-h5 MuiTypography-alignCenter css-18h2fkd-MuiTypography-root"
         >
           statistics.view.user
         </h5>
@@ -198,7 +198,7 @@ Array [
                   }
                 >
                   <h6
-                    className="MuiTypography-root MuiTypography-subtitle1 css-av7p8-MuiTypography-root"
+                    className="MuiTypography-root MuiTypography-subtitle1 css-120zmbg-MuiTypography-root"
                   >
                     statistics.column.username
                   </h6>
@@ -214,7 +214,7 @@ Array [
                   }
                 >
                   <h6
-                    className="MuiTypography-root MuiTypography-subtitle1 css-av7p8-MuiTypography-root"
+                    className="MuiTypography-root MuiTypography-subtitle1 css-120zmbg-MuiTypography-root"
                   >
                     statistics.column.domainCount
                   </h6>
@@ -230,7 +230,7 @@ Array [
                   }
                 >
                   <h6
-                    className="MuiTypography-root MuiTypography-subtitle1 css-av7p8-MuiTypography-root"
+                    className="MuiTypography-root MuiTypography-subtitle1 css-120zmbg-MuiTypography-root"
                   >
                     statistics.column.senseCount
                   </h6>
@@ -258,7 +258,7 @@ Array [
             className="MuiListItemText-root css-tlelie-MuiListItemText-root"
           >
             <span
-              className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-8unep3-MuiTypography-root"
+              className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-din1g1-MuiTypography-root"
             >
               statistics.domainProgress
             </span>
@@ -290,7 +290,7 @@ Array [
               className="MuiBox-root css-0"
             >
               <p
-                className="MuiTypography-root MuiTypography-body2 css-5coedv-MuiTypography-root"
+                className="MuiTypography-root MuiTypography-body2 css-1wbcreq-MuiTypography-root"
               >
                 statistics.percent
               </p>
@@ -308,7 +308,7 @@ Array [
             className="MuiListItemText-root css-tlelie-MuiListItemText-root"
           >
             <span
-              className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-8unep3-MuiTypography-root"
+              className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-din1g1-MuiTypography-root"
             >
               statistics.domainsCollected
             </span>
@@ -325,7 +325,7 @@ Array [
             className="MuiListItemText-root css-tlelie-MuiListItemText-root"
           >
             <span
-              className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-8unep3-MuiTypography-root"
+              className="MuiTypography-root MuiTypography-body1 MuiListItemText-primary css-din1g1-MuiTypography-root"
             >
               statistics.wordsCollected
             </span>
