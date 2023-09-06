@@ -1,12 +1,12 @@
 import { Grid } from "@mui/material";
 import { ReactElement } from "react";
 
+import { Gloss } from "api/models";
 import { TypographyWithFont } from "utilities/fontComponents";
 
 interface ImmutableExistingDataProps {
+  gloss: Gloss;
   vernacular: string;
-  gloss: string;
-  glossLang?: string;
 }
 
 /**
@@ -34,15 +34,19 @@ export default function ImmutableExistingData(
       <Grid
         item
         xs={5}
-        key={"gloss_" + props.gloss}
+        key={"gloss_" + props.gloss.def}
         style={{
           borderBottomStyle: "dotted",
           borderBottomWidth: 1,
           position: "relative",
         }}
       >
-        <TypographyWithFont analysis lang={props.glossLang} variant="body1">
-          {props.gloss}
+        <TypographyWithFont
+          analysis
+          lang={props.gloss.language}
+          variant="body1"
+        >
+          {props.gloss.def}
         </TypographyWithFont>
       </Grid>
     </Grid>
