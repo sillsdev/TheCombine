@@ -43,7 +43,7 @@ spec:
           restartPolicy: Never
           schedulerName: default-scheduler
           terminationGracePeriodSeconds: 30
-  schedule: {{ .Values.backupSchedule }}
+  schedule: {{ .Values.updateFontsSchedule }}
   successfulJobsHistoryLimit: 1
   suspend: false
 {{- end }}
