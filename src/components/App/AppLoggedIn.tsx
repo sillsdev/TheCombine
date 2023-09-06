@@ -33,7 +33,12 @@ export default function AppWithBar(): ReactElement {
     (proj1, proj2) =>
       proj1.id === proj2.id &&
       proj1.analysisWritingSystems.length ===
-        proj2.analysisWritingSystems.length
+        proj2.analysisWritingSystems.length &&
+      proj1.analysisWritingSystems.every(
+        (ws, i) =>
+          proj2.analysisWritingSystems[i].bcp47 === ws.bcp47 &&
+          proj2.analysisWritingSystems[i].font === ws.font
+      )
   );
 
   const projFonts = useMemo(() => new ProjectFonts(proj), [proj]);
