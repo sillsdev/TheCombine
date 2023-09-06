@@ -89,10 +89,11 @@ profiles:
       - thecombine
   nuc: # Profile for a NUC or a machine whose TLS certificate will be created by another
     # system and is downloaded from AWS S3
+    # Container images must be stored in AWS ECR Public repositories
     charts:
       - thecombine
       - create-admin-user
-  nuc_test:
+  nuc_test: # Profile for using a NUC running container images from the AWS ECR Private repositories
     charts:
       - thecombine
   staging: # Profile for the QA server
