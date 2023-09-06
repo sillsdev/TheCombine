@@ -68,6 +68,12 @@ __pycache__
 *.pyc
 venv
 
+# Font files
+*.ttf
+*.woff
+*.woff2
+public/fonts
+
 # Intermediate files for dictionary import scripts
 src/resources/dictionaries/*.aff
 src/resources/dictionaries/*.dic

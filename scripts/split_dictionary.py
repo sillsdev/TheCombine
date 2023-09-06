@@ -30,39 +30,39 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
-        "-i",
         "--input",
+        "-i",
         help="Override the path of the .txt file to be split",
     )
     parser.add_argument(
-        "-l", "--lang", help="2- or 3-letter language tag", required=True, type=lang_tag_type
+        "--lang", "-l", help="2- or 3-letter language tag", required=True, type=lang_tag_type
     )
     parser.add_argument(
-        "-m",
         "--max",
+        "-m",
         help="Override the lang's default max word-length, or -1 to force no limit",
         type=int,
     )
     parser.add_argument(
-        "-n", "--normalize", choices=["NFC", "NFD", "NFKC", "NFKD"], default="NFKD"
+        "--normalize", "-n", choices=["NFC", "NFD", "NFKC", "NFKD"], default="NFKD"
     )
     parser.add_argument(
-        "-t",
         "--threshold",
+        "-t",
         default=2000,
         help="Minimum entry count for a word-start to have its own file",
         type=int,
     )
     parser.add_argument(
-        "-T",
         "--Threshold",
+        "-T",
         default=20000,
         help="Minimum entry count for a word-start to be split into multiple files",
         type=int,
     )
     parser.add_argument(
-        "-v",
         "--verbose",
+        "-v",
         action="store_true",
         help="Print intermediate values to aid in debugging.",
     )

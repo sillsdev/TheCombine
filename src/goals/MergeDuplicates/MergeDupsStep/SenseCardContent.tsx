@@ -10,11 +10,12 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { Fragment, ReactElement } from "react";
+import { ReactElement } from "react";
 
 import { GramCatGroup, Sense, Status } from "api/models";
 import { IconButtonWithTooltip, PartOfSpeechButton } from "components/Buttons";
 import theme from "types/theme";
+import { TypographyWithFont } from "utilities/fontComponents";
 
 interface SenseInLanguage {
   language: string; // bcp-47 code
@@ -54,47 +55,54 @@ function getSenseInLanguages(
   return languages.map((l) => getSenseInLanguage(sense, l));
 }
 
-function senseText(senseInLangs: SenseInLanguage[]): ReactElement {
+interface SenseTextRowsProps {
+  senseInLang: SenseInLanguage;
+}
+
+function SenseTextRows(props: SenseTextRowsProps): ReactElement {
+  const lang = props.senseInLang.language;
   return (
-    <Table padding="none">
-      <TableBody>
-        {senseInLangs.map((sInLang, index) => (
-          <Fragment key={index}>
-            <TableRow key={sInLang.language}>
-              <TableCell style={{ borderBottom: "none" }}>
-                <Typography variant="caption">{`${sInLang.language}: `}</Typography>
-              </TableCell>
-              <TableCell style={{ borderBottom: "none" }}>
-                <Typography
-                  variant="h5"
-                  style={{ marginBottom: theme.spacing(1) }}
-                >
-                  {sInLang.glossText}
-                </Typography>
-              </TableCell>
-            </TableRow>
-            {!!sInLang.definitionText && (
-              <TableRow key={sInLang.language + "def"}>
-                <TableCell style={{ borderBottom: "none" }} />
-                <TableCell style={{ borderBottom: "none" }}>
-                  <div
-                    style={{
-                      marginBottom: theme.spacing(1),
-                      paddingLeft: theme.spacing(1),
-                      borderLeft: "1px solid black",
-                    }}
-                  >
-                    <Typography variant="h6" color="textSecondary">
-                      {sInLang.definitionText}
-                    </Typography>
-                  </div>
-                </TableCell>
-              </TableRow>
-            )}
-          </Fragment>
-        ))}
-      </TableBody>
-    </Table>
+    <>
+      <TableRow key={lang}>
+        <TableCell style={{ borderBottom: "none" }}>
+          <Typography variant="caption">
+            {lang}
+            {":"}
+          </Typography>
+        </TableCell>
+        <TableCell style={{ borderBottom: "none" }}>
+          <TypographyWithFont
+            lang={lang}
+            style={{ marginBottom: theme.spacing(1) }}
+            variant="h5"
+          >
+            {props.senseInLang.glossText}
+          </TypographyWithFont>
+        </TableCell>
+      </TableRow>
+      {!!props.senseInLang.definitionText && (
+        <TableRow key={lang + "def"}>
+          <TableCell style={{ borderBottom: "none" }} />
+          <TableCell style={{ borderBottom: "none" }}>
+            <div
+              style={{
+                borderLeft: "1px solid black",
+                marginBottom: theme.spacing(1),
+                paddingLeft: theme.spacing(1),
+              }}
+            >
+              <TypographyWithFont
+                color="textSecondary"
+                lang={lang}
+                variant="h6"
+              >
+                {props.senseInLang.definitionText}
+              </TypographyWithFont>
+            </div>
+          </TableCell>
+        </TableRow>
+      )}
+    </>
   );
 }
 
@@ -173,7 +181,13 @@ export default function SenseCardContent(
         )}
       </div>
       {/* List glosses and (if any) definitions. */}
-      {senseText(senseTextInLangs)}
+      <Table padding="none">
+        <TableBody>
+          {senseTextInLangs.map((senseInLang, index) => (
+            <SenseTextRows key={index} senseInLang={senseInLang} />
+          ))}
+        </TableBody>
+      </Table>
       {/* List semantic domains. */}
       <Grid container spacing={2}>
         {semDoms.map((dom) => (

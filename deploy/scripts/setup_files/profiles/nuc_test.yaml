@@ -7,14 +7,11 @@
 
 charts:
   thecombine:
-    # Disable AWS Login - only run released images from
-    # public.ecr.aws/thecombine
     aws-login:
-      enabled: false
+      enabled: true
     global:
-      awsS3Location: prod.thecombine.app
+      awsS3Location: dev.thecombine.app
       combineSmtpUsername: ""
-      pullSecretName: None
     frontend:
       configOffline: true
       configEmailEnabled: false

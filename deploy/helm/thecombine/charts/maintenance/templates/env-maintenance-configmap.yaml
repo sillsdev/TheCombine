@@ -17,3 +17,5 @@ data:
   backup_filter: {{ template "maintenance.backupNameFilter" . }}
   wait_time: {{ .Values.waitTime | quote }}
   max_backups: {{ .Values.maxBackups | quote }}
+  font_dir: {{ .Values.fontsDir | quote }}
+  local_font_url: {{ .Values.localFontUrl | quote }}

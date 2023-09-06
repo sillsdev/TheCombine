@@ -1,12 +1,9 @@
-import {
-  Autocomplete,
-  AutocompleteCloseReason,
-  TextField,
-} from "@mui/material";
+import { Autocomplete, AutocompleteCloseReason } from "@mui/material";
 import React, { ReactElement, useEffect } from "react";
 import { Key } from "ts-key-enum";
 
-import { WritingSystem } from "api";
+import { WritingSystem } from "api/models";
+import { TextFieldWithFont } from "utilities/fontComponents";
 
 interface VernWithSuggestionsProps {
   isNew?: boolean;
@@ -60,13 +57,14 @@ export default function VernWithSuggestions(
       }}
       onClose={props.onClose}
       renderInput={(params) => (
-        <TextField
+        <TextFieldWithFont
           {...params}
           dir={props.vernacularLang.rtl ? "rtl" : undefined}
           fullWidth
           inputRef={props.vernInput}
           label={props.isNew ? props.vernacularLang.name : ""}
           variant={props.isNew ? "outlined" : "standard"}
+          vernacular
         />
       )}
     />

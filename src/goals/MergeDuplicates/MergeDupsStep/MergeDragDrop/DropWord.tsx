@@ -14,6 +14,7 @@ import {
 import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { useAppDispatch } from "types/hooks";
 import theme from "types/theme";
+import { TypographyWithFont } from "utilities/fontComponents";
 
 interface DropWordProps {
   mergeState: MergeTreeState;
@@ -73,7 +74,9 @@ export default function DropWord(props: DropWordProps): ReactElement {
               >
                 {verns.map((vern) => (
                   <MenuItem value={vern} key={props.wordId + vern}>
-                    <Typography variant="h5">{vern}</Typography>
+                    <TypographyWithFont variant="h5" vernacular>
+                      {vern}
+                    </TypographyWithFont>
                   </MenuItem>
                 ))}
               </Select>

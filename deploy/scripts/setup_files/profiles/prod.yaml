@@ -23,8 +23,13 @@ charts:
       backupSchedule: "15 03 * * *"
       # Maximum number of backups to keep on AWS S3 service
       maxBackups: "3"
+      #######################################
+      # Update font schedule
+      # Run every Sunday at 02:15 UTC
+      updateFontsSchedule: "15 02 * * 0"
     global:
       awsS3Location: prod.thecombine.app
+      fontStorageAccessMode: ReadWriteMany
       pullSecretName: None
     certManager:
       enabled: false

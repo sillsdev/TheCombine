@@ -32,11 +32,13 @@ FROM nginx:1.25
 
 WORKDIR /app
 
-ENV USER_GUIDE_HOST_DIR /usr/share/nginx/user_guide
-ENV FRONTEND_HOST_DIR /usr/share/nginx/html
+ENV HOST_DIR /usr/share/nginx
+ENV USER_GUIDE_HOST_DIR ${HOST_DIR}/user_guide
+ENV FRONTEND_HOST_DIR ${HOST_DIR}/html
 
 RUN mkdir /etc/nginx/templates
 RUN mkdir /etc/nginx/page_templates
+RUN mkdir ${HOST_DIR}/fonts
 RUN mkdir ${FRONTEND_HOST_DIR}/scripts
 RUN mkdir ${FRONTEND_HOST_DIR}/url_moved
 

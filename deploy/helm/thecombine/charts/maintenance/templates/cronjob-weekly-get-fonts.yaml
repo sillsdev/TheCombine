@@ -1,8 +1,8 @@
-{{- if empty .Values.backupSchedule | not }}
+{{- if empty .Values.updateFontsSchedule | not }}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: daily-backup
+  name: update-fonts
   namespace: {{ .Release.Namespace | quote }}
 spec:
   concurrencyPolicy: Allow
@@ -20,7 +20,7 @@ spec:
           containers:
           - image: sillsdev/aws-kubectl:0.3.0
             imagePullPolicy: Always
-            name: daily-backup
+            name: update-fonts
             command:
               - kubectl
             args:
@@ -29,7 +29,7 @@ spec:
               - exec
               - deployment/maintenance
               - --
-              - combine-backup-job.sh
+              - get-fonts.sh
             resources: {}
             securityContext:
               capabilities: {}
@@ -43,7 +43,7 @@ spec:
           restartPolicy: Never
           schedulerName: default-scheduler
           terminationGracePeriodSeconds: 30
-  schedule: {{ .Values.backupSchedule }}
+  schedule: {{ .Values.updateFontsSchedule }}
   successfulJobsHistoryLimit: 1
   suspend: false
 {{- end }}

@@ -22,6 +22,7 @@ export function filterWordsByDomain(
     );
     for (const sense of senses) {
       if (sense.semanticDomains.map((dom) => dom.id).includes(domainId)) {
+        // Only the first gloss is shown, and no definitions.
         domainWords.push(new DomainWord({ ...currentWord, senses: [sense] }));
       }
     }
@@ -30,8 +31,9 @@ export function filterWordsByDomain(
 }
 
 export function sortDomainWordsByVern(words: DomainWord[]): DomainWord[] {
-  return words.sort((a, b) => {
-    const comp = a.vernacular.localeCompare(b.vernacular);
-    return comp !== 0 ? comp : a.gloss.localeCompare(b.gloss);
-  });
+  return words.sort(
+    (a, b) =>
+      a.vernacular.localeCompare(b.vernacular) ||
+      a.gloss.def.localeCompare(b.gloss.def)
+  );
 }

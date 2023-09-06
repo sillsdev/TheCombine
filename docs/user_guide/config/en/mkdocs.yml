@@ -60,4 +60,5 @@ nav:
   - Admin: admin.md
   - Third-Party Licenses:
       - Backend: licenses/backend_licenses.txt
+      - Fonts: licenses/OFL.txt
       - Frontend: licenses/frontend_licenses.txt

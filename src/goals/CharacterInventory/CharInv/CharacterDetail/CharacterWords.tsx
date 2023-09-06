@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 
 import { StoreState } from "types";
 import { themeColors } from "types/theme";
+import { TypographyWithFont } from "utilities/fontComponents";
 
 interface CharacterWordsProps {
   character: string;
@@ -24,9 +25,13 @@ export default function CharacterWords(
     <>
       <Typography variant="overline">{t("charInventory.examples")}</Typography>
       {words.map((word) => (
-        <Typography variant="body1" key={`${props.character}_${word}`}>
+        <TypographyWithFont
+          key={`${props.character}_${word}`}
+          variant="body1"
+          vernacular
+        >
           {highlightCharacterInWord(props.character, word)}
-        </Typography>
+        </TypographyWithFont>
       ))}
     </>
   );

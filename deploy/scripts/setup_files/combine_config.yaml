@@ -20,7 +20,7 @@ targets:
           serverName: thecombine.localhost
   nuc1:
     profile: nuc
-    env_vars_required: true
+    env_vars_required: false
     override:
       # override values for 'thecombine' chart
       thecombine:
@@ -28,7 +28,7 @@ targets:
           serverName: nuc1.thecombine.app
   nuc2:
     profile: nuc
-    env_vars_required: true
+    env_vars_required: false
     override:
       # override values for 'thecombine' chart
       thecombine:
@@ -36,12 +36,20 @@ targets:
           serverName: nuc2.thecombine.app
   nuc3:
     profile: nuc
-    env_vars_required: true
+    env_vars_required: false
     override:
       # override values for 'thecombine' chart
       thecombine:
         global:
           serverName: nuc3.thecombine.app
+  nuc_test:
+    profile: nuc_test
+    env_vars_required: false
+    override:
+      # override values for 'thecombine' chart
+      thecombine:
+        global:
+          serverName: nuc-test.thecombine.app
 
   qa:
     profile: staging
@@ -81,9 +89,13 @@ profiles:
       - thecombine
   nuc: # Profile for a NUC or a machine whose TLS certificate will be created by another
     # system and is downloaded from AWS S3
+    # Container images must be stored in AWS ECR Public repositories
     charts:
       - thecombine
       - create-admin-user
+  nuc_test: # Profile for using a NUC running container images from the AWS ECR Private repositories
+    charts:
+      - thecombine
   staging: # Profile for the QA server
     charts:
       - thecombine

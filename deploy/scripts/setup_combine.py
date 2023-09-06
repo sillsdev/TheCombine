@@ -23,7 +23,7 @@ import os
 from pathlib import Path
 import sys
 import tempfile
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from app_release import get_release
 from aws_env import init_aws_environment
@@ -43,7 +43,9 @@ def parse_args() -> argparse.Namespace:
         description="Generate Helm Charts for The Combine.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
+    # Arguments used by the Kubernetes tools
     add_kube_opts(parser)
+    # Arguments specific to setting up The Combine
     parser.add_argument(
         "--clean", action="store_true", help="Delete chart, if it exists, before installing."
     )
@@ -58,6 +60,18 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Invoke the 'helm install' command with the '--dry-run' option.",
         dest="dry_run",
+    )
+    parser.add_argument(
+        "--langs",
+        "-l",
+        nargs="*",
+        metavar="LANG",
+        help="Language(s) that require fonts to be installed on the target cluster.",
+    )
+    parser.add_argument(
+        "--list-targets",
+        action="store_true",
+        help="List the available targets and exit.",
     )
     parser.add_argument(
         "--wait",
@@ -131,7 +145,7 @@ def create_secrets(
     if len(missing_env_vars) > 0:
         print("The following environment variables are not defined:")
         print(", ".join(missing_env_vars))
-        if not env_vars_req and input("Continue?(y/N)").upper().startswith("Y"):
+        if not env_vars_req:
             return secrets_written
         sys.exit(ExitStatus.FAILURE.value)
 
@@ -171,6 +185,21 @@ def add_override_values(
         helm_cmd.extend(["-f", str(override_file)])
 
 
+def add_language_overrides(
+    config: Dict[str, Any],
+    *,
+    chart: str,
+    langs: Optional[List[str]],
+) -> None:
+    """Update override configuration with any languages specified on the command line."""
+    override_config = config["override"][chart]
+    if langs:
+        if "maintenance" not in override_config:
+            override_config["maintenance"] = {"localLangList": langs}
+        else:
+            override_config["maintenance"]["localLangList"] = langs
+
+
 def add_profile_values(
     config: Dict[str, Any], *, profile_name: str, chart: str, temp_dir: Path, helm_cmd: List[str]
 ) -> None:
@@ -203,6 +232,11 @@ def main() -> None:
         combine_charts.generate(args.image_tag)
     else:
         combine_charts.generate(get_release())
+
+    if args.list_targets:
+        for target in config["targets"].keys():
+            print(f"   {target}")
+        sys.exit(ExitStatus.SUCCESS.value)
 
     target = args.target
     while target not in config["targets"]:
@@ -312,6 +346,8 @@ def main() -> None:
                         str(secrets_file),
                     ]
                 )
+
+            add_language_overrides(this_config, chart=chart, langs=args.langs)
 
             add_override_values(
                 this_config,

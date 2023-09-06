@@ -25,6 +25,9 @@ global:
   combineJwtSecretKey: "Override"
   combineSmtpUsername: "Override"
   combineSmtpPassword: "Override"
+  fontStorageAccessMode: "ReadWriteOnce"
+  fontStorageSize: 1Gi
+  offline: false
   imageTag: "latest"
   # Define the image registry to use (may be blank for local images)
   imageRegistry: awsEcr
@@ -52,5 +55,6 @@ maintenance:
   backupSchedule: ""
   # Maximum number of backups to keep on AWS S3 service
   maxBackups: "3"
+  updateFontsSchedule: ""
 
 ingressClass: nginx

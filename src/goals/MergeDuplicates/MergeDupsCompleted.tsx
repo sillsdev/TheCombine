@@ -1,6 +1,6 @@
 import { ArrowRightAlt } from "@mui/icons-material";
 import { Button, Card, Grid, Paper, Typography } from "@mui/material";
-import React, { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -13,6 +13,7 @@ import { MergesCompleted } from "goals/MergeDuplicates/MergeDupsTypes";
 import { StoreState } from "types";
 import theme from "types/theme";
 import { newFlag } from "types/word";
+import { TypographyWithFont } from "utilities/fontComponents";
 
 export default function MergeDupsCompleted(): ReactElement {
   const changes = useSelector(
@@ -22,21 +23,13 @@ export default function MergeDupsCompleted(): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <React.Fragment>
+    <>
       <Typography component="h1" variant="h4">
         {t("mergeDups.title")}
       </Typography>
-      {MergesMade(changes)}
-    </React.Fragment>
-  );
-}
-
-function MergesMade(changes: MergesCompleted): ReactElement {
-  return (
-    <div>
       {MergesCount(changes)}
       {changes.merges?.map(MergeChange)}
-    </div>
+    </>
   );
 }
 
@@ -188,7 +181,9 @@ function WordPaper(props: WordPaperProps): ReactElement {
         >
           <Grid container justifyContent="space-between">
             <Grid>
-              <Typography variant="h5">{word?.vernacular}</Typography>
+              <TypographyWithFont variant="h5" vernacular>
+                {word?.vernacular}
+              </TypographyWithFont>
             </Grid>
             <Grid>
               <FlagButton flag={flag} buttonId={`word-${props.wordId}-flag`} />

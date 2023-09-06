@@ -1,8 +1,9 @@
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete } from "@mui/material";
 import React, { ReactElement, useContext, useEffect } from "react";
 import { Key } from "ts-key-enum";
 
-import { WritingSystem } from "api";
+import { WritingSystem } from "api/models";
+import { TextFieldWithFont } from "utilities/fontComponents";
 import SpellCheckerContext from "utilities/spellCheckerContext";
 
 interface GlossWithSuggestionsProps {
@@ -61,12 +62,14 @@ export default function GlossWithSuggestions(
         props.updateGlossField(newInputValue);
       }}
       renderInput={(params) => (
-        <TextField
+        <TextFieldWithFont
           {...params}
+          analysis
           dir={props.analysisLang.rtl ? "rtl" : undefined}
           fullWidth
           inputRef={props.glossInput}
           label={props.isNew ? props.analysisLang.name : ""}
+          lang={props.analysisLang.bcp47}
           variant={props.isNew ? "outlined" : "standard"}
         />
       )}

@@ -6,9 +6,11 @@ import configureMockStore from "redux-mock-store";
 import "tests/reactI18nextMock";
 
 import ReviewEntriesComponent from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesComponent";
+import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import mockWords, {
   mockCreateWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/tests/WordsMock";
+import { defaultWritingSystem } from "types/writingSystem";
 
 const mockGetFrontierWords = jest.fn();
 const mockMaterialTable = jest.fn();
@@ -45,7 +47,11 @@ jest.mock("components/TreeView", () => "div");
 const mockReviewEntryWords = mockWords();
 const state = {
   currentProjectState: {
-    project: { definitionsEnabled: true },
+    project: {
+      analysisWritingSystems: [defaultWritingSystem],
+      definitionsEnabled: true,
+      vernacularWritingSystem: defaultWritingSystem,
+    },
   },
   reviewEntriesState: { words: mockReviewEntryWords },
   treeViewState: {
@@ -89,6 +95,11 @@ beforeEach(async () => {
 
 describe("ReviewEntriesComponent", () => {
   it("Initializes correctly", () => {
-    expect(mockUpdateAllWords).toHaveBeenCalledWith(mockReviewEntryWords);
+    expect(mockUpdateAllWords).toHaveBeenCalledTimes(1);
+    const wordIds = mockUpdateAllWords.mock.calls[0][0].map(
+      (w: ReviewEntriesWord) => w.id
+    );
+    expect(wordIds).toHaveLength(mockReviewEntryWords.length);
+    mockReviewEntryWords.forEach((w) => expect(wordIds).toContain(w.id));
   });
 });
