@@ -33,9 +33,9 @@ const palette: PaletteOptions = {
 
 // Extended from default theme with SIL fonts
 const fontFamily: React.CSSProperties["fontFamily"] = [
-  // Copied from default theme
-  "Roboto",
   "'Noto Sans'",
+  "'Open Sans'",
+  "Roboto",
   "Helvetica",
   "Arial",
   "sans-serif",
