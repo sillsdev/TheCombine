@@ -1,7 +1,12 @@
 import MaterialTable from "@material-table/core";
 import { Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
-import React, { ReactElement, useEffect, useState } from "react";
+import React, {
+  ReactElement,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -56,6 +61,7 @@ export default function ReviewEntriesTable(
       state.currentProjectState.project.grammaticalInfoEnabled
   );
   const { t } = useTranslation();
+  const [isLoading, setIsLoading] = useState(false);
   const [maxRows, setMaxRows] = useState(words.length);
   const [pageState, setPageState] = useState(getPageState(words.length));
 
@@ -77,7 +83,11 @@ export default function ReviewEntriesTable(
       }
       return { pageSize: options[i], pageSizeOptions: options };
     });
-  }, [maxRows, setPageState]);
+  }, [maxRows]);
+
+  useLayoutEffect(() => {
+    setIsLoading(false);
+  }, [isLoading]);
 
   const materialTableLocalization = {
     body: {
@@ -124,6 +134,7 @@ export default function ReviewEntriesTable(
     <MaterialTable<any>
       tableRef={tableRef}
       icons={tableIcons}
+      isLoading={isLoading}
       title={
         <Typography component="h1" variant="h4">
           {t("reviewEntries.title")}
@@ -136,6 +147,7 @@ export default function ReviewEntriesTable(
       )}
       data={words}
       onFilterChange={updateMaxRows}
+      onRowsPerPageChange={() => setIsLoading(true)}
       editable={{
         onRowUpdate: (newData: ReviewEntriesWord, oldData: ReviewEntriesWord) =>
           new Promise(async (resolve, reject) => {
