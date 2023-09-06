@@ -51,11 +51,7 @@ export class ProjectFonts {
   /**
    * Conditionally adds a fontFamily to the style.
    * Precedence, from highest to lowest, moving to the next one if falsy:
-   *   vernacular;
-   *   lang;
-   *   analysis;
-   *   fontFamily of input style;
-   *   "inherit".
+   *   vernacular; lang; analysis; fontFamily of input style; "inherit".
    */
   addFontToStyle(props: WithFontProps, style?: CSSProperties): CSSProperties {
     return {
@@ -66,7 +62,7 @@ export class ProjectFonts {
         ? this.getLangFont(props.lang)
         : props.analysis
         ? this.analysisFont
-        : style?.fontFamily ?? "inherit",
+        : style?.fontFamily ?? this.inherit,
     };
   }
 }
