@@ -47,6 +47,11 @@ awsS3BackupLoc: backups
 dbFilesSubdir: dump
 backendFilesSubdir: ".CombineFiles"
 
+#######################################
+# Variables controlling font updates
+#######################################
+
+updateFontsSchedule: ""
 fontsDir: "/home/user/fonts"
 localFontUrl: "/fonts"
 localLangList: []
