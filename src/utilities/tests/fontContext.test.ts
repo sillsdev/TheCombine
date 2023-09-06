@@ -26,16 +26,16 @@ describe("ProjectFonts", () => {
       const vernFont = "Noto Sans Vern";
 
       const proj = newProject();
-      proj.analysisWritingSystems = [0, 1, 2].map((i) =>
-        newWritingSystem(aBcp[i], `name${i}`, aFont[i])
+      proj.analysisWritingSystems = aBcp.map((bcp, i) =>
+        newWritingSystem(bcp, `name${i}`, aFont[i])
       );
       proj.vernacularWritingSystem.font = vernFont;
 
       const projFonts = new ProjectFonts(proj);
       expect(projFonts.analysisFont === aFont[0].replaceAll(" ", ""));
       expect(projFonts.getLangFont("") === inherit);
-      [0, 1, 2].forEach((i) => {
-        expect(projFonts.getLangFont(aBcp[i]) === aFont[i].replaceAll(" ", ""));
+      aBcp.forEach((bcp, i) => {
+        expect(projFonts.getLangFont(bcp) === aFont[i].replaceAll(" ", ""));
       });
       expect(projFonts.getLangFont("not-a-lang-in-the-proj") === inherit);
       expect(projFonts.vernacularFont === vernFont.replaceAll(" ", ""));
