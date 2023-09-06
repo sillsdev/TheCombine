@@ -7,16 +7,21 @@ const fallbackFilePath = `${fontDir}/fallback.json`;
 
 /** Given a url, returns the text content of the result, or undefined if fetch fails. */
 async function fetchText(url: string): Promise<string | undefined> {
-  let text: string | undefined;
-  try {
-    // TODO: This `try`/`catch` isn't enough to prevent 404 errors outside development.
-    text = await (await (await fetch(url)).blob()).text();
-  } catch {
-    if (process.env.NODE_ENV === "development") {
-      console.log(`Failed to fetch ${url}`);
-    }
+  const resp = await fetch(url);
+  if (resp.ok) {
+    return await (await resp.blob()).text();
   }
-  return text;
+
+  if (RuntimeConfig.getInstance().offline()) {
+    // In an offline setting, all necessary fonts should be pre-loaded.
+    console.log(
+      `Failed to load file: ${url}\nPlease notify the admin this font is unavailable.`
+    );
+  } else {
+    console.log(
+      `Checked if this file exists: ${url}\nIt does not and that is probably okay.`
+    );
+  }
 }
 
 /** Given a font and source, returns css info for the font from the source.
@@ -58,10 +63,12 @@ async function getFallbacks(
   }
   const fallbackText = await fetchText(fallbackFilePath);
   if (!fallbackText || fallbackText[0] !== "{") {
+    console.error(`Failed to load: ${fallbackFilePath}`);
     return [];
   }
   const fallbackJson: Hash<Hash<string>> = JSON.parse(fallbackText);
   if (!(source in fallbackJson) || !fallbackJson[source]) {
+    console.error(`Source "${source}" not in file: ${fallbackFilePath}`);
     return [];
   }
   const fallback = fallbackJson[source];
