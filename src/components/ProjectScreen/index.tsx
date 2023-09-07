@@ -14,7 +14,7 @@ export default function ProjectScreen(): ReactElement {
   useEffect(() => {
     dispatch(clearCurrentProject());
     dispatch(resetTreeAction());
-  });
+  }, [dispatch]);
 
   return (
     <Grid container justifyContent="center" spacing={2}>
