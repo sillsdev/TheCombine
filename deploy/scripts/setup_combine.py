@@ -347,7 +347,8 @@ def main() -> None:
                     ]
                 )
 
-            add_language_overrides(this_config, chart=chart, langs=args.langs)
+            if config["charts"][chart]["install_langs"]:
+                add_language_overrides(this_config, chart=chart, langs=args.langs)
 
             add_override_values(
                 this_config,
