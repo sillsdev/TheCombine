@@ -48,8 +48,8 @@ export class ProjectFonts {
     if (vernFont) {
       this.vernacularFont = vernFont;
       this.langMap[proj.vernacularWritingSystem.bcp47] = vernFont;
-      this.rtlLangs[proj.vernacularWritingSystem.bcp47] = true;
       if (proj.vernacularWritingSystem.rtl) {
+        this.rtlLangs[proj.vernacularWritingSystem.bcp47] = true;
         this.vernacularDir = this.rtl;
       }
     }
@@ -69,9 +69,9 @@ export class ProjectFonts {
   }
 
   /**
-   * Conditionally adds a fontFamily to the style.
+   * Conditionally adds a fontFamily (and direction) to the style.
    * Precedence, from highest to lowest, moving to the next one if falsy:
-   *   vernacular; lang; analysis; fontFamily of input style; "inherit".
+   *   vernacular; lang; analysis; input style; "inherit" (direction undefined).
    */
   addFontToStyle(props: WithFontProps, style?: CSSProperties): CSSProperties {
     return {
