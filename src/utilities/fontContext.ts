@@ -26,7 +26,7 @@ export class ProjectFonts {
       return;
     }
 
-    proj.analysisWritingSystems.reverse().forEach((ws) => {
+    [...proj.analysisWritingSystems].reverse().forEach((ws) => {
       const font = ws.font.replaceAll(" ", "");
       if (font) {
         this.langMap[ws.bcp47] = font;
