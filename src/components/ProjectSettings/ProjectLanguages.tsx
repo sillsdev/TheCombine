@@ -386,7 +386,7 @@ function ImmutableWritingSystem(
       <Grid item>
         {!!props.ws.name && (
           <Typography display="inline">
-            {`${t("projectSettings.language.name")}: ${props.ws.name} ; `}
+            {`${t("projectSettings.language.name")}: ${props.ws.name}, `}
           </Typography>
         )}
         <Typography display="inline">
@@ -394,12 +394,7 @@ function ImmutableWritingSystem(
         </Typography>
         {!!props.ws.font && (
           <Typography display="inline">
-            {` ; ${t("projectSettings.language.font")}: ${props.ws.font}`}
-          </Typography>
-        )}
-        {props.ws.rtl && (
-          <Typography display="inline">
-            {` ; ${t("projectSettings.language.rtl")}`}
+            {`, ${t("projectSettings.language.font")}: ${props.ws.font}`}
           </Typography>
         )}
       </Grid>
