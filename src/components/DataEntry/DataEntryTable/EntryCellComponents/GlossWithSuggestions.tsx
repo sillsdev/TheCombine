@@ -65,7 +65,6 @@ export default function GlossWithSuggestions(
         <TextFieldWithFont
           {...params}
           analysis
-          dir={props.analysisLang.rtl ? "rtl" : undefined}
           fullWidth
           inputRef={props.glossInput}
           label={props.isNew ? props.analysisLang.name : ""}
