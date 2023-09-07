@@ -26,6 +26,7 @@ export class ProjectFonts {
       return;
     }
 
+    // Don't .reverse() the array directly, as that may improperly mutate a state.
     [...proj.analysisWritingSystems].reverse().forEach((ws) => {
       const font = ws.font.replaceAll(" ", "");
       if (font) {
