@@ -26,10 +26,9 @@ export class ProjectFonts {
       return;
     }
 
-    // Don't .reverse() the array directly, as that may improperly mutate a state.
-    [...proj.analysisWritingSystems].reverse().forEach((ws) => {
+    proj.analysisWritingSystems.forEach((ws) => {
       const font = ws.font.replaceAll(" ", "");
-      if (font) {
+      if (font && !(ws.bcp47 in this.langMap)) {
         this.langMap[ws.bcp47] = font;
         if (ws.rtl) {
           this.rtlLangs[ws.bcp47] = true;
