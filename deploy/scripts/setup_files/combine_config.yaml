@@ -49,7 +49,7 @@ targets:
       # override values for 'thecombine' chart
       thecombine:
         global:
-          serverName: nuc-test.thecombine.app
+          serverName: nuc1.thecombine.app
 
   qa:
     profile: staging

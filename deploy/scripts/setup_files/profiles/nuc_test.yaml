@@ -10,7 +10,7 @@ charts:
     aws-login:
       enabled: true
     global:
-      awsS3Location: dev.thecombine.app
+      awsS3Location: prod.thecombine.app
       combineSmtpUsername: ""
     frontend:
       configOffline: true
