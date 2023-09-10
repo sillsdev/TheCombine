@@ -40,7 +40,7 @@
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@loadable/component": "^5.15.0",
-    "@material-table/core": "^6.2.1",
+    "@material-table/core": "^6.2.3",
     "@matt-block/react-recaptcha-v2": "^2.0.1",
     "@microsoft/signalr": "^6.0.7",
     "@mui/icons-material": "^5.14.1",
