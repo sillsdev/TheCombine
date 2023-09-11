@@ -904,8 +904,8 @@ export default function DataEntryTable(
             vernacularLang={vernacularLang}
             // Parent handles new entry state of child:
             addNewEntry={addNewEntry}
-            updateWordWithNewGloss={updateWordWithNewEntry}
             resetNewEntry={resetNewEntry}
+            updateWordWithNewGloss={updateWordWithNewEntry}
             newAudioUrls={state.newAudioUrls}
             addNewAudioUrl={addNewAudioUrl}
             delNewAudioUrl={delNewAudioUrl}

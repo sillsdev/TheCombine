@@ -73,8 +73,8 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     vernacularLang,
     // Parent component handles new entry state:
     addNewEntry,
-    updateWordWithNewGloss,
     resetNewEntry,
+    updateWordWithNewGloss,
     newAudioUrls,
     addNewAudioUrl,
     delNewAudioUrl,
