@@ -25,6 +25,7 @@ describe("NewEntry", () => {
             vernacularLang={newWritingSystem()}
             // Parent component handles new entry state:
             addNewEntry={jest.fn()}
+            resetNewEntry={jest.fn()}
             updateWordWithNewGloss={jest.fn()}
             newAudioUrls={[]}
             addNewAudioUrl={jest.fn()}
