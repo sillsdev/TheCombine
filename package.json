@@ -48,7 +48,7 @@
     "@mui/styles": "^5.14.3",
     "@redux-devtools/extension": "^3.2.5",
     "@reduxjs/toolkit": "^1.9.5",
-    "@segment/analytics-next": "^1.53.0",
+    "@segment/analytics-next": "^1.55.0",
     "axios": "^0.27.2",
     "chart.js": "^4.3.0",
     "crypto-js": "^4.1.1",
