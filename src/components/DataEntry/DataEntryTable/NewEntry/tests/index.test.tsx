@@ -26,6 +26,7 @@ describe("NewEntry", () => {
             // Parent component handles new entry state:
             addNewEntry={jest.fn()}
             updateWordWithNewGloss={jest.fn()}
+            resetNewEntry={jest.fn()}
             newAudioUrls={[]}
             addNewAudioUrl={jest.fn()}
             delNewAudioUrl={jest.fn()}

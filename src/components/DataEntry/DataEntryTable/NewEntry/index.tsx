@@ -45,6 +45,7 @@ interface NewEntryProps {
   vernacularLang: WritingSystem;
   // Parent component handles new entry state:
   addNewEntry: () => Promise<void>;
+  resetNewEntry: () => void;
   updateWordWithNewGloss: (wordId: string) => Promise<void>;
   newAudioUrls: string[];
   addNewAudioUrl: (file: File) => void;
@@ -73,6 +74,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     // Parent component handles new entry state:
     addNewEntry,
     updateWordWithNewGloss,
+    resetNewEntry,
     newAudioUrls,
     addNewAudioUrl,
     delNewAudioUrl,
@@ -116,13 +118,10 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
   );
 
   const resetState = useCallback((): void => {
-    setNewGloss("");
-    setNewNote("");
-    setNewVern("");
+    resetNewEntry();
     setVernOpen(false);
-    // May also need to reset newAudioUrls in the parent component.
     focus(FocusTarget.Vernacular);
-  }, [focus, setNewGloss, setNewNote, setNewVern, setVernOpen]);
+  }, [focus, resetNewEntry, setVernOpen]);
 
   /** Reset when tree opens, except for the first time it is open. */
   useEffect(() => {
