@@ -14,7 +14,7 @@ interface VernWithSuggestionsProps {
   onBlur: () => void;
   onClose?: (e: React.ChangeEvent<{}>, reason: AutocompleteCloseReason) => void;
   suggestedVerns?: string[];
-  handleEnterAndTab: (e: React.KeyboardEvent) => void;
+  handleEnter: (e: React.KeyboardEvent) => void;
   vernacularLang: WritingSystem;
   textFieldId: string;
   onUpdate?: () => void;
@@ -49,10 +49,10 @@ export default function VernWithSuggestions(
         // onInputChange is triggered by typing
         props.updateVernField(value);
       }}
-      onKeyUp={(e: React.KeyboardEvent) => {
-        if (e.key === Key.Enter || e.key === Key.Tab) {
+      onKeyDown={(e: React.KeyboardEvent) => {
+        if (e.key === Key.Enter) {
           e.preventDefault();
-          props.handleEnterAndTab(e);
+          props.handleEnter(e);
         }
       }}
       onClose={props.onClose}

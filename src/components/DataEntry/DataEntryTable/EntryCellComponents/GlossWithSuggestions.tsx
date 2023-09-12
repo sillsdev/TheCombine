@@ -10,9 +10,9 @@ interface GlossWithSuggestionsProps {
   isNew?: boolean;
   isDisabled?: boolean;
   gloss: string;
-  glossInput?: React.RefObject<HTMLDivElement>;
+  glossInput?: React.RefObject<HTMLInputElement>;
   updateGlossField: (newValue: string) => void;
-  handleEnterAndTab: (e: React.KeyboardEvent) => void;
+  handleEnter: () => void;
   onBlur?: () => void;
   analysisLang: WritingSystem;
   textFieldId: string;
@@ -39,7 +39,7 @@ export default function GlossWithSuggestions(
     <Autocomplete
       id={props.textFieldId}
       disabled={props.isDisabled}
-      filterOptions={(options: unknown[]) =>
+      filterOptions={(options: string[]) =>
         options.length <= maxSuggestions
           ? options
           : options.slice(0, maxSuggestions)
@@ -54,11 +54,12 @@ export default function GlossWithSuggestions(
         }
       }}
       onChange={(_e, newValue) => {
-        const newText = newValue ? (newValue as string) : "";
-        props.updateGlossField(newText);
+        // onChange is triggered when an option is selected
+        props.updateGlossField(newValue ?? "");
       }}
       inputValue={props.gloss}
       onInputChange={(_e, newInputValue) => {
+        // onInputChange is triggered by typing
         props.updateGlossField(newInputValue);
       }}
       renderInput={(params) => (
@@ -72,10 +73,10 @@ export default function GlossWithSuggestions(
           variant={props.isNew ? "outlined" : "standard"}
         />
       )}
-      onKeyUp={(e: React.KeyboardEvent) => {
-        if (e.key === Key.Enter || e.key === Key.Tab) {
+      onKeyDown={(e: React.KeyboardEvent) => {
+        if (e.key === Key.Enter) {
           e.preventDefault();
-          props.handleEnterAndTab(e);
+          props.handleEnter();
         }
       }}
     />

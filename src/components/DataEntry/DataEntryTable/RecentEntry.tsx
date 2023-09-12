@@ -1,6 +1,5 @@
 import { Grid } from "@mui/material";
 import { ReactElement, useState } from "react";
-import { Key } from "ts-key-enum";
 
 import { Word, WritingSystem } from "api/models";
 import {
@@ -78,10 +77,8 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
           isDisabled={props.disabled || props.entry.senses.length > 1}
           updateVernField={setVernacular}
           onBlur={() => conditionallyUpdateVern()}
-          handleEnterAndTab={(e) => {
-            if (vernacular && e.key === Key.Enter) {
-              props.focusNewEntry();
-            }
+          handleEnter={() => {
+            vernacular && props.focusNewEntry();
           }}
           vernacularLang={props.vernacularLang}
           textFieldId={`${idAffix}-${props.rowIndex}-vernacular`}
@@ -101,10 +98,8 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
           isDisabled={props.disabled}
           updateGlossField={setGloss}
           onBlur={() => conditionallyUpdateGloss()}
-          handleEnterAndTab={(e) => {
-            if (gloss && e.key === Key.Enter) {
-              props.focusNewEntry();
-            }
+          handleEnter={() => {
+            gloss && props.focusNewEntry();
           }}
           analysisLang={props.analysisLang}
           textFieldId={`${idAffix}-${props.rowIndex}-gloss`}

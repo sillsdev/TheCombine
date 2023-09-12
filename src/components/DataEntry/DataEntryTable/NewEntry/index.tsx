@@ -1,7 +1,6 @@
 import { AutocompleteCloseReason, Grid, Typography } from "@mui/material";
 import {
   CSSProperties,
-  KeyboardEvent,
   ReactElement,
   RefObject,
   useCallback,
@@ -11,7 +10,6 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import { Key } from "ts-key-enum";
 
 import { Word, WritingSystem } from "api/models";
 import { focusInput } from "components/DataEntry/DataEntryTable";
@@ -101,7 +99,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
   const [vernOpen, setVernOpen] = useState(false);
   const [wasTreeClosed, setWasTreeClosed] = useState(false);
 
-  const glossInput = useRef<HTMLDivElement>(null);
+  const glossInput = useRef<HTMLInputElement>(null);
 
   const focus = useCallback(
     (target: FocusTarget): void => {
@@ -183,23 +181,18 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     }
   };
 
-  const handleEnter = async (
-    e: KeyboardEvent,
-    checkGloss: boolean
-  ): Promise<void> => {
-    if ((true || !vernOpen) && e.key === Key.Enter) {
-      // The user can never submit a new entry without a vernacular
-      if (newVern) {
-        // The user can conditionally submit a new entry without a gloss
-        if (newGloss || !checkGloss) {
-          await addOrUpdateWord();
-          focus(FocusTarget.Vernacular);
-        } else {
-          focus(FocusTarget.Gloss);
-        }
-      } else {
+  const handleEnter = async (checkGloss: boolean): Promise<void> => {
+    // The user can never submit a new entry without a vernacular
+    if (newVern) {
+      // The user can conditionally submit a new entry without a gloss
+      if (newGloss || !checkGloss) {
+        await addOrUpdateWord();
         focus(FocusTarget.Vernacular);
+      } else {
+        focus(FocusTarget.Gloss);
       }
+    } else {
+      focus(FocusTarget.Vernacular);
     }
   };
 
@@ -251,7 +244,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
             suggestedVerns={suggestedVerns}
             // To prevent unintentional no-gloss submissions:
             // If enter pressed from the vern field, check whether gloss is empty
-            handleEnterAndTab={(e: KeyboardEvent) => handleEnter(e, true)}
+            handleEnter={() => handleEnter(true)}
             vernacularLang={vernacularLang}
             textFieldId={`${idAffix}-vernacular`}
             onUpdate={() => conditionalFocus(FocusTarget.Vernacular)}
@@ -280,7 +273,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
           updateGlossField={setNewGloss}
           // To allow intentional no-gloss submissions:
           // If enter pressed from the gloss field, don't check whether gloss is empty
-          handleEnterAndTab={(e: KeyboardEvent) => handleEnter(e, false)}
+          handleEnter={() => handleEnter(false)}
           analysisLang={analysisLang}
           textFieldId={`${idAffix}-gloss`}
           onUpdate={() => conditionalFocus(FocusTarget.Gloss)}

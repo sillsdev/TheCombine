@@ -39,7 +39,7 @@ export default function DataEntryHeader(
         color="primary"
         style={{ paddingTop: "8px" }}
         disabled={!domain.questions.length}
-        onKeyUp={(e) => {
+        onKeyDown={(e) => {
           if (e.key === Key.Enter) {
             props.setQuestionVisibility(!props.questionsVisible);
           }
