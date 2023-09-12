@@ -9,12 +9,12 @@ interface VernWithSuggestionsProps {
   isNew?: boolean;
   isDisabled?: boolean;
   vernacular: string;
-  vernInput?: React.RefObject<HTMLDivElement>;
+  vernInput?: React.RefObject<HTMLInputElement>;
   updateVernField: (newValue: string, openDialog?: boolean) => void;
   onBlur: () => void;
   onClose?: (e: React.ChangeEvent<{}>, reason: AutocompleteCloseReason) => void;
   suggestedVerns?: string[];
-  handleEnter: (e: React.KeyboardEvent) => void;
+  handleEnter: () => void;
   vernacularLang: WritingSystem;
   textFieldId: string;
   onUpdate?: () => void;
@@ -52,7 +52,7 @@ export default function VernWithSuggestions(
       onKeyDown={(e: React.KeyboardEvent) => {
         if (e.key === Key.Enter) {
           e.preventDefault();
-          props.handleEnter(e);
+          props.handleEnter();
         }
       }}
       onClose={props.onClose}

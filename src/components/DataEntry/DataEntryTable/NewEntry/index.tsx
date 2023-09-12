@@ -54,7 +54,7 @@ interface NewEntryProps {
   setNewNote: (note: string) => void;
   newVern: string;
   setNewVern: (vern: string) => void;
-  vernInput: RefObject<HTMLDivElement>;
+  vernInput: RefObject<HTMLInputElement>;
   // Parent component handles vern suggestion state:
   selectedDup?: Word;
   setSelectedDup: (id?: string) => void;
