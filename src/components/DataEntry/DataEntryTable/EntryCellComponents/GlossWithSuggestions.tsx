@@ -72,7 +72,7 @@ export default function GlossWithSuggestions(
           variant={props.isNew ? "outlined" : "standard"}
         />
       )}
-      onKeyPress={(e: React.KeyboardEvent) => {
+      onKeyUp={(e: React.KeyboardEvent) => {
         if (e.key === Key.Enter || e.key === Key.Tab) {
           e.preventDefault();
           props.handleEnterAndTab(e);

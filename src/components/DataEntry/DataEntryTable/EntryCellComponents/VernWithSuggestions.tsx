@@ -49,7 +49,7 @@ export default function VernWithSuggestions(
         // onInputChange is triggered by typing
         props.updateVernField(value);
       }}
-      onKeyPress={(e: React.KeyboardEvent) => {
+      onKeyUp={(e: React.KeyboardEvent) => {
         if (e.key === Key.Enter || e.key === Key.Tab) {
           e.preventDefault();
           props.handleEnterAndTab(e);
