@@ -1,5 +1,6 @@
 import { Grid } from "@mui/material";
 import { ReactElement, useState } from "react";
+import { Key } from "ts-key-enum";
 
 import { Word, WritingSystem } from "api/models";
 import {
@@ -77,8 +78,8 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
           isDisabled={props.disabled || props.entry.senses.length > 1}
           updateVernField={setVernacular}
           onBlur={() => conditionallyUpdateVern()}
-          handleEnterAndTab={() => {
-            if (vernacular) {
+          handleEnterAndTab={(e) => {
+            if (vernacular && e.key === Key.Enter) {
               props.focusNewEntry();
             }
           }}
@@ -100,8 +101,8 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
           isDisabled={props.disabled}
           updateGlossField={setGloss}
           onBlur={() => conditionallyUpdateGloss()}
-          handleEnterAndTab={() => {
-            if (gloss) {
+          handleEnterAndTab={(e) => {
+            if (gloss && e.key === Key.Enter) {
               props.focusNewEntry();
             }
           }}
