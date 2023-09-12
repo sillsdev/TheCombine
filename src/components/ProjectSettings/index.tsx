@@ -4,13 +4,21 @@ import {
   CloudUpload,
   Edit,
   GetApp,
+  ImportExport,
   Language,
   People,
   PersonAdd,
+  Settings,
   Sms,
 } from "@mui/icons-material";
-import { Divider, Grid, Typography } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { Box, Divider, Grid, Tab, Tabs, Typography } from "@mui/material";
+import {
+  ReactElement,
+  SyntheticEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -37,17 +45,28 @@ import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { Path } from "types/path";
 
+export const enum ProjectSettingsTab {
+  Basic,
+  Languages,
+  Users,
+  ImportExport,
+  Schedule,
+}
+
 export default function ProjectSettingsComponent() {
+  const dispatch = useAppDispatch();
   const project = useAppSelector(
     (state: StoreState) => state.currentProjectState.project
   );
-  const [permissions, setPermissions] = useState<Permission[]>([]);
-  const [imports, setImports] = useState<boolean>(false);
-  const dispatch = useAppDispatch();
-  const { t } = useTranslation();
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
+  const [imports, setImports] = useState<boolean>(false);
+  const [permissions, setPermissions] = useState<Permission[]>([]);
+  const [tab, setTab] = useState(ProjectSettingsTab.Languages);
 
   useEffect(() => {
+    setTab(ProjectSettingsTab.Languages);
     getCurrentPermissions().then(setPermissions);
   }, [project.id]);
 
@@ -59,6 +78,9 @@ export default function ProjectSettingsComponent() {
       dispatch(asyncRefreshProjectUsers(project.id));
     }
   }, [dispatch, permissions, project.id]);
+
+  const handleChange = (_e: SyntheticEvent, val: ProjectSettingsTab): void =>
+    setTab(val);
 
   const archiveUpdate = (): void => {
     toast.success(t("projectSettings.archive.archiveToastSuccess"));
@@ -86,120 +108,224 @@ export default function ProjectSettingsComponent() {
       <ProjectSelect project={project} setProject={setProject} />
       <Divider sx={{ my: 1 }} />
 
-      <Grid container spacing={6}>
-        {/* Project name */}
-        {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
-          <BaseSettingsComponent
-            icon={<Edit />}
-            title={t("projectSettings.name")}
-            body={
-              <ProjectName project={project} updateProject={updateProject} />
-            }
-          />
-        )}
-
-        {/*Project languages*/}
-        <BaseSettingsComponent
-          icon={<Language />}
-          title={t("projectSettings.language.languages")}
-          body={
-            <ProjectLanguages
-              project={project}
-              readOnly={
-                !permissions.includes(Permission.DeleteEditSettingsAndUsers)
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Tabs onChange={handleChange} value={tab}>
+          {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+            <Tab
+              data-testid={ProjectSettingsTab.Basic}
+              id={ProjectSettingsTab.Basic.toString()}
+              label={
+                <Grid container>
+                  <Settings />
+                  <Typography>{t("projectSettings.tab.basic")}</Typography>
+                </Grid>
               }
-              updateProject={updateProject}
+              value={ProjectSettingsTab.Basic}
             />
-          }
-        />
-
-        {/* Import Lift file */}
-        {permissions.includes(Permission.Import) && (
-          <BaseSettingsComponent
-            icon={<CloudUpload />}
-            title={t("projectSettings.import.header")}
-            body={
-              imports ? (
-                <ProjectImport project={project} setProject={setProject} />
-              ) : (
-                <Typography variant="body2">
-                  {t("projectSettings.import.notAllowed")}
-                </Typography>
-              )
+          )}
+          <Tab
+            data-testid={ProjectSettingsTab.Languages}
+            id={ProjectSettingsTab.Languages.toString()}
+            label={
+              <Grid container>
+                <Language />
+                <Typography>{t("projectSettings.tab.languages")}</Typography>
+              </Grid>
             }
+            value={ProjectSettingsTab.Languages}
           />
-        )}
-
-        {/* Export Lift file */}
-        {permissions.includes(Permission.Export) && (
-          <BaseSettingsComponent
-            icon={<GetApp />}
-            title={t("projectSettings.exportProject.label")}
-            body={<ExportButton projectId={project.id} />}
+          {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+            <Tab
+              data-testid={ProjectSettingsTab.Users}
+              id={ProjectSettingsTab.Users.toString()}
+              label={
+                <Grid container>
+                  <People />
+                  <Typography>{t("projectSettings.tab.users")}</Typography>
+                </Grid>
+              }
+              value={ProjectSettingsTab.Users}
+            />
+          )}
+          {permissions.includes(Permission.Export) && (
+            <Tab
+              data-testid={ProjectSettingsTab.ImportExport}
+              id={ProjectSettingsTab.ImportExport.toString()}
+              label={
+                permissions.includes(Permission.Import) ? (
+                  <Grid container>
+                    <ImportExport />
+                    <Typography>
+                      {t("projectSettings.tab.importExport")}
+                    </Typography>
+                  </Grid>
+                ) : (
+                  <Grid container>
+                    <GetApp />
+                    <Typography>{t("projectSettings.tab.export")}</Typography>
+                  </Grid>
+                )
+              }
+              value={ProjectSettingsTab.ImportExport}
+            />
+          )}
+          <Tab
+            data-testid={ProjectSettingsTab.Schedule}
+            id={ProjectSettingsTab.Schedule.toString()}
+            label={
+              <Grid container>
+                <CalendarMonth />
+                <Typography>{t("projectSettings.tab.schedule")}</Typography>
+              </Grid>
+            }
+            value={ProjectSettingsTab.Schedule}
           />
-        )}
+        </Tabs>
+      </Box>
 
-        {/* Autocomplete toggle */}
-        {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+      <TabPanel value={tab} index={ProjectSettingsTab.Basic}>
+        <Grid container spacing={6}>
+          {/* Project name */}
+          {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+            <BaseSettingsComponent
+              icon={<Edit />}
+              title={t("projectSettings.name")}
+              body={
+                <ProjectName project={project} updateProject={updateProject} />
+              }
+            />
+          )}
+
+          {/* Autocomplete toggle */}
+          {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+            <BaseSettingsComponent
+              icon={<Sms />}
+              title={t("projectSettings.autocomplete.label")}
+              body={
+                <ProjectAutocomplete
+                  project={project}
+                  updateProject={updateProject}
+                />
+              }
+            />
+          )}
+
+          {/* Archive project */}
+          {permissions.includes(Permission.Archive) && (
+            <BaseSettingsComponent
+              icon={<Archive />}
+              title={t("projectSettings.archive.archive")}
+              body={
+                <ProjectButtonWithConfirmation
+                  archive // Project Settings are only available for active projects
+                  projectId={project.id}
+                  updateParent={archiveUpdate}
+                  warn
+                />
+              }
+            />
+          )}
+        </Grid>
+      </TabPanel>
+      <TabPanel value={tab} index={ProjectSettingsTab.Languages}>
+        <Grid container spacing={6}>
+          {/*Project languages*/}
           <BaseSettingsComponent
-            icon={<Sms />}
-            title={t("projectSettings.autocomplete.label")}
+            icon={<Language />}
+            title={t("projectSettings.language.languages")}
             body={
-              <ProjectAutocomplete
+              <ProjectLanguages
                 project={project}
+                readOnly={
+                  !permissions.includes(Permission.DeleteEditSettingsAndUsers)
+                }
                 updateProject={updateProject}
               />
             }
           />
-        )}
-
-        {/* See current users in project */}
-        {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
-          <BaseSettingsComponent
-            icon={<People />}
-            title={t("projectSettings.user.currentUsers")}
-            body={<ActiveProjectUsers projectId={project.id} />}
-          />
-        )}
-
-        {/* Add users to project */}
-        {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
-          <BaseSettingsComponent
-            icon={<PersonAdd />}
-            title={t("projectSettings.user.addUser")}
-            body={<AddProjectUsers projectId={project.id} />}
-          />
-        )}
-
-        {/* Workshop schedule */}
-        <BaseSettingsComponent
-          icon={<CalendarMonth />}
-          title={t("projectSettings.schedule.workshopSchedule")}
-          body={
-            <ProjectSchedule
-              project={project}
-              readOnly={!permissions.includes(Permission.Statistics)}
-              updateProject={updateProject}
+        </Grid>
+      </TabPanel>
+      <TabPanel value={tab} index={ProjectSettingsTab.Users}>
+        <Grid container spacing={6}>
+          {/* See current users in project */}
+          {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+            <BaseSettingsComponent
+              icon={<People />}
+              title={t("projectSettings.user.currentUsers")}
+              body={<ActiveProjectUsers projectId={project.id} />}
             />
-          }
-        />
+          )}
 
-        {/* Archive project */}
-        {permissions.includes(Permission.Archive) && (
+          {/* Add users to project */}
+          {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+            <BaseSettingsComponent
+              icon={<PersonAdd />}
+              title={t("projectSettings.user.addUser")}
+              body={<AddProjectUsers projectId={project.id} />}
+            />
+          )}
+        </Grid>
+      </TabPanel>
+      <TabPanel value={tab} index={ProjectSettingsTab.ImportExport}>
+        <Grid container spacing={6}>
+          {/* Import Lift file */}
+          {permissions.includes(Permission.Import) && (
+            <BaseSettingsComponent
+              icon={<CloudUpload />}
+              title={t("projectSettings.import.header")}
+              body={
+                imports ? (
+                  <ProjectImport project={project} setProject={setProject} />
+                ) : (
+                  <Typography variant="body2">
+                    {t("projectSettings.import.notAllowed")}
+                  </Typography>
+                )
+              }
+            />
+          )}
+
+          {/* Export Lift file */}
+          {permissions.includes(Permission.Export) && (
+            <BaseSettingsComponent
+              icon={<GetApp />}
+              title={t("projectSettings.exportProject.label")}
+              body={<ExportButton projectId={project.id} />}
+            />
+          )}
+        </Grid>
+      </TabPanel>
+      <TabPanel value={tab} index={ProjectSettingsTab.Schedule}>
+        <Grid container spacing={6}>
+          {/* Workshop schedule */}
           <BaseSettingsComponent
-            icon={<Archive />}
-            title={t("projectSettings.archive.archive")}
+            icon={<CalendarMonth />}
+            title={t("projectSettings.schedule.workshopSchedule")}
             body={
-              <ProjectButtonWithConfirmation
-                archive // Project Settings are only available for active projects
-                projectId={project.id}
-                updateParent={archiveUpdate}
-                warn
+              <ProjectSchedule
+                project={project}
+                readOnly={!permissions.includes(Permission.Statistics)}
+                updateProject={updateProject}
               />
             }
           />
-        )}
-      </Grid>
+        </Grid>
+      </TabPanel>
     </>
+  );
+}
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: ProjectSettingsTab;
+  value: ProjectSettingsTab;
+}
+
+function TabPanel(props: TabPanelProps): ReactElement {
+  const { children, index, value } = props;
+  return (
+    <div hidden={value !== index} id={`tab-panel-${index}`} role={"tabpanel"}>
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
   );
 }
