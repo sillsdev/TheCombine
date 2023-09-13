@@ -7,7 +7,7 @@ import { archiveProject, restoreProject } from "backend";
 import { ButtonConfirmation } from "components/Dialogs";
 import { themeColors } from "types/theme";
 
-interface ProjectArchiveProps {
+interface ProjectArchiveProps extends ButtonProps {
   archive?: boolean;
   projectId: string;
   updateParent: () => void | Promise<void>;
@@ -17,9 +17,7 @@ interface ProjectArchiveProps {
 /**
  * Button for archiving/restoring project (changing isActive)
  */
-export default function ProjectArchive(
-  props: ButtonProps & ProjectArchiveProps
-) {
+export default function ProjectArchive(props: ProjectArchiveProps) {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
 
