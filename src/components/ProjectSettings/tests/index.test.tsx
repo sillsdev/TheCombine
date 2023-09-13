@@ -88,7 +88,7 @@ describe("ProjectSettings", () => {
     for (const component of withNoPerm) {
       expect(projSettingsInstance.findByType(component)).toBeTruthy();
     }
-    expect(projSettingsInstance.findAllByType(SettingsBase)).toHaveLength(
+    expect(projSettingsInstance.findAllByType(BaseSettings)).toHaveLength(
       withNoPerm.length
     );
 
@@ -106,7 +106,7 @@ describe("ProjectSettings", () => {
     for (const component of withArchivePerm) {
       expect(projSettingsInstance.findByType(component)).toBeTruthy();
     }
-    expect(projSettingsInstance.findAllByType(SettingsBase)).toHaveLength(
+    expect(projSettingsInstance.findAllByType(BaseSettings)).toHaveLength(
       withNoPerm.length + withArchivePerm.length
     );
   });
@@ -119,7 +119,7 @@ describe("ProjectSettings", () => {
     for (const component of withDeleteEditPerm) {
       expect(projSettingsInstance.findByType(component)).toBeTruthy();
     }
-    expect(projSettingsInstance.findAllByType(SettingsBase)).toHaveLength(
+    expect(projSettingsInstance.findAllByType(BaseSettings)).toHaveLength(
       withNoPerm.length + withDeleteEditPerm.length
     );
 
@@ -134,7 +134,7 @@ describe("ProjectSettings", () => {
     for (const component of withExportPerm) {
       expect(projSettingsInstance.findByType(component)).toBeTruthy();
     }
-    expect(projSettingsInstance.findAllByType(SettingsBase)).toHaveLength(
+    expect(projSettingsInstance.findAllByType(BaseSettings)).toHaveLength(
       withNoPerm.length + withExportPerm.length
     );
   });
@@ -145,7 +145,7 @@ describe("ProjectSettings", () => {
     for (const component of withImportPerm) {
       expect(projSettingsInstance.findByType(component)).toBeTruthy();
     }
-    expect(projSettingsInstance.findAllByType(SettingsBase)).toHaveLength(
+    expect(projSettingsInstance.findAllByType(BaseSettings)).toHaveLength(
       withNoPerm.length + withImportPerm.length
     );
   });
@@ -156,7 +156,7 @@ describe("ProjectSettings", () => {
     for (const component of withStatsPerm) {
       expect(projSettingsInstance.findByType(component)).toBeTruthy();
     }
-    expect(projSettingsInstance.findAllByType(SettingsBase)).toHaveLength(
+    expect(projSettingsInstance.findAllByType(BaseSettings)).toHaveLength(
       withNoPerm.length + withStatsPerm.length
     );
 

@@ -9,7 +9,7 @@ interface BaseSettingsProps {
   body: ReactNode;
 }
 
-export default function SettingsBase(props: BaseSettingsProps): ReactElement {
+export default function BaseSettings(props: BaseSettingsProps): ReactElement {
   const [isVisible, setIsVisible] = useState(true);
 
   const toggleVisibility = (): void => {
