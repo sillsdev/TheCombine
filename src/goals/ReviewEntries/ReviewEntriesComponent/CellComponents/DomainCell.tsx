@@ -47,7 +47,10 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
         );
       }
       if (selectedDomain.mongoId == "") {
-        throw new Error("SelectedSemanticDomainTreeNode have no mongoId");
+        throw new Error("SelectedSemanticDomainTreeNode have no mongoId.");
+      }
+      if (senseToChange.domains.find((d) => d.id === selectedDomain.id)) {
+        throw new Error("Sense already has that semantic domain.");
       }
       props.editDomains(senseToChange.guid, [
         ...senseToChange.domains,
