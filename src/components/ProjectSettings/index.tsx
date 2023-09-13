@@ -66,6 +66,7 @@ export default function ProjectSettingsComponent() {
   const [tab, setTab] = useState(ProjectSettingsTab.Languages);
 
   useEffect(() => {
+    // Default to Languages tab as it's available for any permissions.
     setTab(ProjectSettingsTab.Languages);
     getCurrentPermissions().then(setPermissions);
   }, [project.id]);
