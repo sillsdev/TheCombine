@@ -17,7 +17,7 @@ import configureMockStore from "redux-mock-store";
 import "tests/reactI18nextMock";
 
 import { Permission } from "api/models";
-import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
+import SettingsBase from "components/BaseSettings";
 import ProjectSettings from "components/ProjectSettings";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
 import ProjectSchedule from "components/ProjectSettings/ProjectSchedule/ProjectSchedule";
@@ -113,9 +113,9 @@ describe("ProjectSettings", () => {
     for (const component of withNoPerm) {
       expect(projSettingsInstance.findByType(component)).toBeTruthy();
     }
-    expect(
-      projSettingsInstance.findAllByType(BaseSettingsComponent)
-    ).toHaveLength(withNoPerm.length);
+    expect(projSettingsInstance.findAllByType(SettingsBase)).toHaveLength(
+      withNoPerm.length
+    );
 
     expect(
       projSettingsInstance.findByType(ProjectLanguages).props.readOnly
@@ -131,9 +131,9 @@ describe("ProjectSettings", () => {
     for (const component of withArchivePerm) {
       expect(projSettingsInstance.findByType(component)).toBeTruthy();
     }
-    expect(
-      projSettingsInstance.findAllByType(BaseSettingsComponent)
-    ).toHaveLength(withNoPerm.length + withArchivePerm.length);
+    expect(projSettingsInstance.findAllByType(SettingsBase)).toHaveLength(
+      withNoPerm.length + withArchivePerm.length
+    );
   });
 
   test("with Permission.DeleteEditSettingsAndUsers", async () => {
@@ -144,9 +144,9 @@ describe("ProjectSettings", () => {
     for (const component of withDeleteEditPerm) {
       expect(projSettingsInstance.findByType(component)).toBeTruthy();
     }
-    expect(
-      projSettingsInstance.findAllByType(BaseSettingsComponent)
-    ).toHaveLength(withNoPerm.length + withDeleteEditPerm.length);
+    expect(projSettingsInstance.findAllByType(SettingsBase)).toHaveLength(
+      withNoPerm.length + withDeleteEditPerm.length
+    );
 
     expect(
       projSettingsInstance.findByType(ProjectLanguages).props.readOnly
@@ -159,9 +159,9 @@ describe("ProjectSettings", () => {
     for (const component of withExportPerm) {
       expect(projSettingsInstance.findByType(component)).toBeTruthy();
     }
-    expect(
-      projSettingsInstance.findAllByType(BaseSettingsComponent)
-    ).toHaveLength(withNoPerm.length + withExportPerm.length);
+    expect(projSettingsInstance.findAllByType(SettingsBase)).toHaveLength(
+      withNoPerm.length + withExportPerm.length
+    );
   });
 
   test("with Permission.Import", async () => {
@@ -170,9 +170,9 @@ describe("ProjectSettings", () => {
     for (const component of withImportPerm) {
       expect(projSettingsInstance.findByType(component)).toBeTruthy();
     }
-    expect(
-      projSettingsInstance.findAllByType(BaseSettingsComponent)
-    ).toHaveLength(withNoPerm.length + withImportPerm.length);
+    expect(projSettingsInstance.findAllByType(SettingsBase)).toHaveLength(
+      withNoPerm.length + withImportPerm.length
+    );
   });
 
   test("with Permission.Statistics", async () => {
@@ -181,9 +181,9 @@ describe("ProjectSettings", () => {
     for (const component of withStatsPerm) {
       expect(projSettingsInstance.findByType(component)).toBeTruthy();
     }
-    expect(
-      projSettingsInstance.findAllByType(BaseSettingsComponent)
-    ).toHaveLength(withNoPerm.length + withStatsPerm.length);
+    expect(projSettingsInstance.findAllByType(SettingsBase)).toHaveLength(
+      withNoPerm.length + withStatsPerm.length
+    );
 
     expect(
       projSettingsInstance.findByType(ProjectSchedule).props.readOnly

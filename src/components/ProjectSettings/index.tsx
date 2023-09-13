@@ -25,22 +25,22 @@ import { toast } from "react-toastify";
 
 import { Permission, Project } from "api/models";
 import { canUploadLift, getCurrentPermissions } from "backend";
-import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
+import SettingsBase from "components/BaseSettings";
 import {
   asyncRefreshProjectUsers,
   asyncUpdateCurrentProject,
   setNewCurrentProject,
 } from "components/Project/ProjectActions";
 import ExportButton from "components/ProjectExport/ExportButton";
+import ProjectArchive from "components/ProjectSettings/ProjectArchive";
 import ProjectAutocomplete from "components/ProjectSettings/ProjectAutocomplete";
 import ProjectImport from "components/ProjectSettings/ProjectImport";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
 import ProjectName from "components/ProjectSettings/ProjectName";
 import ProjectSchedule from "components/ProjectSettings/ProjectSchedule/ProjectSchedule";
 import ProjectSelect from "components/ProjectSettings/ProjectSelect";
-import ActiveProjectUsers from "components/ProjectSettings/ProjectUsers/ActiveProjectUsers";
-import AddProjectUsers from "components/ProjectSettings/ProjectUsers/AddProjectUsers";
-import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
+import ActiveProjectUsers from "components/ProjectUsers/ActiveProjectUsers";
+import AddProjectUsers from "components/ProjectUsers/AddProjectUsers";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { Path } from "types/path";
@@ -187,7 +187,7 @@ export default function ProjectSettingsComponent() {
         <Grid container spacing={6}>
           {/* Project name */}
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
-            <BaseSettingsComponent
+            <SettingsBase
               icon={<Edit />}
               title={t("projectSettings.name")}
               body={
@@ -198,7 +198,7 @@ export default function ProjectSettingsComponent() {
 
           {/* Autocomplete toggle */}
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
-            <BaseSettingsComponent
+            <SettingsBase
               icon={<Sms />}
               title={t("projectSettings.autocomplete.label")}
               body={
@@ -212,11 +212,11 @@ export default function ProjectSettingsComponent() {
 
           {/* Archive project */}
           {permissions.includes(Permission.Archive) && (
-            <BaseSettingsComponent
+            <SettingsBase
               icon={<Archive />}
               title={t("projectSettings.archive.archive")}
               body={
-                <ProjectButtonWithConfirmation
+                <ProjectArchive
                   archive // Project Settings are only available for active projects
                   projectId={project.id}
                   updateParent={archiveUpdate}
@@ -230,7 +230,7 @@ export default function ProjectSettingsComponent() {
       <TabPanel value={tab} index={ProjectSettingsTab.Languages}>
         <Grid container spacing={6}>
           {/*Project languages*/}
-          <BaseSettingsComponent
+          <SettingsBase
             icon={<Language />}
             title={t("projectSettings.language.languages")}
             body={
@@ -249,7 +249,7 @@ export default function ProjectSettingsComponent() {
         <Grid container spacing={6}>
           {/* See current users in project */}
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
-            <BaseSettingsComponent
+            <SettingsBase
               icon={<People />}
               title={t("projectSettings.user.currentUsers")}
               body={<ActiveProjectUsers projectId={project.id} />}
@@ -258,7 +258,7 @@ export default function ProjectSettingsComponent() {
 
           {/* Add users to project */}
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
-            <BaseSettingsComponent
+            <SettingsBase
               icon={<PersonAdd />}
               title={t("projectSettings.user.addUser")}
               body={<AddProjectUsers projectId={project.id} />}
@@ -270,7 +270,7 @@ export default function ProjectSettingsComponent() {
         <Grid container spacing={6}>
           {/* Import Lift file */}
           {permissions.includes(Permission.Import) && (
-            <BaseSettingsComponent
+            <SettingsBase
               icon={<CloudUpload />}
               title={t("projectSettings.import.header")}
               body={
@@ -287,7 +287,7 @@ export default function ProjectSettingsComponent() {
 
           {/* Export Lift file */}
           {permissions.includes(Permission.Export) && (
-            <BaseSettingsComponent
+            <SettingsBase
               icon={<GetApp />}
               title={t("projectSettings.exportProject.label")}
               body={<ExportButton projectId={project.id} />}
@@ -298,7 +298,7 @@ export default function ProjectSettingsComponent() {
       <TabPanel value={tab} index={ProjectSettingsTab.Schedule}>
         <Grid container spacing={6}>
           {/* Workshop schedule */}
-          <BaseSettingsComponent
+          <SettingsBase
             icon={<CalendarMonth />}
             title={t("projectSettings.schedule.workshopSchedule")}
             body={

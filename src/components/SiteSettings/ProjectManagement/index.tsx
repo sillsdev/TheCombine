@@ -4,7 +4,7 @@ import { ReactElement, useEffect, useState } from "react";
 import { Project } from "api/models";
 import { getAllProjects } from "backend";
 import ExportButton from "components/ProjectExport/ExportButton";
-import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
+import ProjectArchive from "components/ProjectSettings/ProjectArchive";
 import ProjectUsersButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectUsersButtonWithConfirmation";
 import theme from "types/theme";
 
@@ -52,7 +52,7 @@ export function ProjectList(
         {/* Manage project users. */}
         <ProjectUsersButtonWithConfirmation projectId={project.id} />
         {/* Archive active project or restore archived project. */}
-        <ProjectButtonWithConfirmation
+        <ProjectArchive
           archive={project.isActive}
           projectId={project.id}
           updateParent={updateProjects}
