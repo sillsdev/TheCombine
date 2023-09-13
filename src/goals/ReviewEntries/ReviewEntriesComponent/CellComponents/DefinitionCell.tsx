@@ -1,18 +1,19 @@
-import { Input } from "@mui/material";
+import { Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-import { Definition } from "api/models";
+import { Definition, WritingSystem } from "api/models";
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 import AlignedList, {
   SPACER,
 } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
-import { ReviewEntriesSense } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreState } from "types";
-import { themeColors } from "types/theme";
 import { newDefinition } from "types/word";
-import { TextFieldWithFont } from "utilities/fontComponents";
+import {
+  TextFieldWithFont,
+  TypographyWithFont,
+} from "utilities/fontComponents";
 
 interface DefinitionCellProps extends FieldParameterStandard {
   editable?: boolean;
@@ -24,83 +25,86 @@ export default function DefinitionCell(
 ): ReactElement {
   const analysisLang = useSelector(
     (state: StoreState) =>
-      state.currentProjectState.project.analysisWritingSystems[0].bcp47
+      state.currentProjectState.project.analysisWritingSystems[0]
   );
-  const { t } = useTranslation();
 
   return (
     <AlignedList
       listId={`senses${props.rowData.id}`}
-      contents={props.rowData.senses.map((sense, index) =>
-        props.editable ? (
-          <DefinitionList
-            definitions={sense.definitions}
-            defaultLang={analysisLang}
-            keyPrefix={`row-${props.rowData.id}-definition`}
-            key={`row-${props.rowData.id}-definition`}
-            onChange={(definitions) =>
-              props.onRowDataChange &&
-              props.onRowDataChange({
-                ...props.rowData,
-                senses: [
-                  ...props.rowData.senses.slice(0, index),
-                  {
-                    ...sense,
-                    definitions,
-                  },
-                  ...props.rowData.senses.slice(index + 1),
-                ],
-              })
-            }
-          />
-        ) : (
-          <Input
-            fullWidth
-            key={`definitions${props.rowData.id}`}
-            value={ReviewEntriesSense.definitionString(props.value[index])}
-            placeholder={t("reviewEntries.noDefinition")}
-            disabled={sense.deleted}
-            readOnly
-            disableUnderline
-            multiline
-            style={
-              props.sortingByThis && index === 0
-                ? { backgroundColor: themeColors.highlight }
-                : {}
-            }
-          />
-        )
-      )}
+      contents={props.rowData.senses.map((sense, index) => (
+        <DefinitionList
+          defaultLang={analysisLang}
+          definitions={sense.definitions}
+          editable={props.editable && !sense.deleted}
+          idPrefix={`row-${props.rowData.id}-definition`}
+          key={`row-${props.rowData.id}-definition`}
+          onChange={(definitions) =>
+            props.onRowDataChange &&
+            props.onRowDataChange({
+              ...props.rowData,
+              senses: [
+                ...props.rowData.senses.slice(0, index),
+                {
+                  ...sense,
+                  definitions,
+                },
+                ...props.rowData.senses.slice(index + 1),
+              ],
+            })
+          }
+        />
+      ))}
       bottomCell={props.editable ? SPACER : undefined}
     />
   );
 }
 
 interface DefinitionListProps {
+  defaultLang: WritingSystem;
   definitions: Definition[];
-  defaultLang: string;
-  keyPrefix: string;
+  editable?: boolean;
+  idPrefix: string;
   onChange: (definitions: Definition[]) => void;
 }
 
 function DefinitionList(props: DefinitionListProps): ReactElement {
-  const langs = props.definitions.map((g) => g.language);
-  const definitions = langs.includes(props.defaultLang)
+  const { t } = useTranslation();
+
+  if (!props.editable) {
+    if (!props.definitions.find((d) => d.text)) {
+      return <Typography>{t("reviewEntries.noDefinition")}</Typography>;
+    }
+    return (
+      <>
+        {props.definitions
+          .filter((d) => d.text)
+          .map((d, i) => (
+            <TypographyWithFont analysis key={i} lang={d.language}>
+              {d.text}
+            </TypographyWithFont>
+          ))}
+      </>
+    );
+  }
+
+  const definitions = props.definitions.find(
+    (d) => d.language === props.defaultLang.bcp47
+  )
     ? props.definitions
-    : [...props.definitions, newDefinition("", props.defaultLang)];
+    : [...props.definitions, newDefinition("", props.defaultLang.bcp47)];
 
   return (
     <>
-      {definitions.map((g, i) => (
+      {definitions.map((d, i) => (
         <DefinitionField
-          definition={g}
-          key={`${props.keyPrefix}-${i}`}
-          textFieldId={`${props.keyPrefix}-${i}-text`}
+          definition={d}
+          key={i}
           onChange={(definition: Definition) => {
             const updatedDefinitions = [...definitions];
             updatedDefinitions.splice(i, 1, definition);
             props.onChange(updatedDefinitions);
           }}
+          textFieldId={`${props.idPrefix}-${i}-text`}
         />
       ))}
     </>
@@ -125,10 +129,9 @@ function DefinitionField(props: DefinitionFieldProps): ReactElement {
       value={props.definition.text}
       error={props.definition.text.length === 0}
       onChange={(event) =>
-        props.onChange({
-          language: props.definition.language,
-          text: event.target.value,
-        })
+        props.onChange(
+          newDefinition(event.target.value, props.definition.language)
+        )
       }
     />
   );

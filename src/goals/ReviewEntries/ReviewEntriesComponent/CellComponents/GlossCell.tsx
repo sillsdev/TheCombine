@@ -32,7 +32,7 @@ export default function GlossCell(props: GlossCellProps): ReactElement {
       contents={props.rowData.senses.map((sense, index) => (
         <GlossList
           defaultLang={analysisLang}
-          editable={props.editable}
+          editable={props.editable && !sense.deleted}
           glosses={sense.glosses}
           idPrefix={`row-${props.rowData.id}-gloss`}
           key={`row-${props.rowData.id}-gloss`}
@@ -94,12 +94,12 @@ function GlossList(props: GlossListProps): ReactElement {
         <GlossField
           gloss={g}
           key={i}
-          textFieldId={`${props.idPrefix}-${i}-text`}
           onChange={(gloss: Gloss) => {
             const updatedGlosses = [...glosses];
             updatedGlosses.splice(i, 1, gloss);
             props.onChange(updatedGlosses);
           }}
+          textFieldId={`${props.idPrefix}-${i}-text`}
         />
       ))}
     </>
