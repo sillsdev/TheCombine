@@ -20,7 +20,7 @@ import { Permission } from "api/models";
 import SettingsBase from "components/BaseSettings";
 import ProjectSettings from "components/ProjectSettings";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
-import ProjectSchedule from "components/ProjectSettings/ProjectSchedule/ProjectSchedule";
+import ProjectSchedule from "components/ProjectSettings/ProjectSchedule";
 import { randomProject } from "types/project";
 
 jest.mock("react-router-dom", () => ({
@@ -34,14 +34,8 @@ jest.mock("backend", () => ({
 jest.mock("components/Project/ProjectActions");
 jest.mock("components/ProjectExport/ExportButton", () => "div");
 jest.mock("components/ProjectSettings/ProjectImport", () => "div");
-jest.mock(
-  "components/ProjectSettings/ProjectUsers/ActiveProjectUsers",
-  () => "div"
-);
-jest.mock(
-  "components/ProjectSettings/ProjectUsers/AddProjectUsers",
-  () => "div"
-);
+jest.mock("components/ProjectUsers/ActiveProjectUsers", () => "div");
+jest.mock("components/ProjectUsers/AddProjectUsers", () => "div");
 jest.mock("types/hooks", () => {
   return {
     ...jest.requireActual("types/hooks"),

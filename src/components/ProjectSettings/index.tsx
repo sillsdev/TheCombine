@@ -37,7 +37,7 @@ import ProjectAutocomplete from "components/ProjectSettings/ProjectAutocomplete"
 import ProjectImport from "components/ProjectSettings/ProjectImport";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
 import ProjectName from "components/ProjectSettings/ProjectName";
-import ProjectSchedule from "components/ProjectSettings/ProjectSchedule/ProjectSchedule";
+import ProjectSchedule from "components/ProjectSettings/ProjectSchedule";
 import ProjectSelect from "components/ProjectSettings/ProjectSelect";
 import ActiveProjectUsers from "components/ProjectUsers/ActiveProjectUsers";
 import AddProjectUsers from "components/ProjectUsers/AddProjectUsers";
@@ -169,17 +169,20 @@ export default function ProjectSettingsComponent() {
               value={ProjectSettingsTab.ImportExport}
             />
           )}
-          <Tab
-            data-testid={ProjectSettingsTab.Schedule}
-            id={ProjectSettingsTab.Schedule.toString()}
-            label={
-              <Grid container>
-                <CalendarMonth />
-                <Typography>{t("projectSettings.tab.schedule")}</Typography>
-              </Grid>
-            }
-            value={ProjectSettingsTab.Schedule}
-          />
+          {(permissions.includes(Permission.Statistics) ||
+            project.workshopSchedule?.length) && (
+            <Tab
+              data-testid={ProjectSettingsTab.Schedule}
+              id={ProjectSettingsTab.Schedule.toString()}
+              label={
+                <Grid container>
+                  <CalendarMonth />
+                  <Typography>{t("projectSettings.tab.schedule")}</Typography>
+                </Grid>
+              }
+              value={ProjectSettingsTab.Schedule}
+            />
+          )}
         </Tabs>
       </Box>
 

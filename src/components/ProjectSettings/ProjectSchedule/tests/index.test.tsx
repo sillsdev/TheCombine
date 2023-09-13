@@ -4,7 +4,7 @@ import renderer from "react-test-renderer";
 import "tests/reactI18nextMock";
 
 import { Project } from "api/models";
-import ProjectSchedule from "components/ProjectSettings/ProjectSchedule/ProjectSchedule";
+import ProjectSchedule from "components/ProjectSettings/ProjectSchedule";
 import { newProject } from "types/project";
 
 const mockUpdateProject = jest.fn();
