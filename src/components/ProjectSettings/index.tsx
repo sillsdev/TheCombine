@@ -291,12 +291,10 @@ interface SettingsTabsProps {
 }
 
 function SettingsTabs(props: SettingsTabsProps): ReactElement {
-  const { t } = useTranslation();
-
-  const { hideLabels, permissions, setTab, tab } = props;
+  const { hideLabels, permissions, tab } = props;
 
   const handleChange = (_e: SyntheticEvent, val: ProjectSettingsTab): void =>
-    setTab(val);
+    props.setTab(val);
 
   return (
     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
