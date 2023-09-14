@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import { Definition, WritingSystem } from "api/models";
+import Overlay from "components/Overlay";
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 import AlignedList, {
   SPACER,
@@ -32,27 +33,28 @@ export default function DefinitionCell(
     <AlignedList
       listId={`senses${props.rowData.id}`}
       contents={props.rowData.senses.map((sense, index) => (
-        <DefinitionList
-          defaultLang={analysisLang}
-          definitions={sense.definitions}
-          editable={props.editable && !sense.deleted}
-          idPrefix={`row-${props.rowData.id}-definition`}
-          key={`row-${props.rowData.id}-definition`}
-          onChange={(definitions) =>
-            props.onRowDataChange &&
-            props.onRowDataChange({
-              ...props.rowData,
-              senses: [
-                ...props.rowData.senses.slice(0, index),
-                {
-                  ...sense,
-                  definitions,
-                },
-                ...props.rowData.senses.slice(index + 1),
-              ],
-            })
-          }
-        />
+        <Overlay key={index} on={sense.deleted}>
+          <DefinitionList
+            defaultLang={analysisLang}
+            definitions={sense.definitions}
+            editable={props.editable && !sense.deleted}
+            idPrefix={`row-${props.rowData.id}-definition`}
+            onChange={(definitions) =>
+              props.onRowDataChange &&
+              props.onRowDataChange({
+                ...props.rowData,
+                senses: [
+                  ...props.rowData.senses.slice(0, index),
+                  {
+                    ...sense,
+                    definitions,
+                  },
+                  ...props.rowData.senses.slice(index + 1),
+                ],
+              })
+            }
+          />
+        </Overlay>
       ))}
       bottomCell={props.editable ? SPACER : undefined}
     />

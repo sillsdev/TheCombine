@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import { Gloss, WritingSystem } from "api/models";
+import Overlay from "components/Overlay";
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 import AlignedList, {
   SPACER,
@@ -30,24 +31,25 @@ export default function GlossCell(props: GlossCellProps): ReactElement {
     <AlignedList
       listId={`senses${props.rowData.id}`}
       contents={props.rowData.senses.map((sense, index) => (
-        <GlossList
-          defaultLang={analysisLang}
-          editable={props.editable && !sense.deleted}
-          glosses={sense.glosses}
-          idPrefix={`row-${props.rowData.id}-gloss`}
-          key={`row-${props.rowData.id}-gloss`}
-          onChange={(glosses) =>
-            props.onRowDataChange &&
-            props.onRowDataChange({
-              ...props.rowData,
-              senses: [
-                ...props.rowData.senses.slice(0, index),
-                { ...sense, glosses },
-                ...props.rowData.senses.slice(index + 1),
-              ],
-            })
-          }
-        />
+        <Overlay key={index} on={sense.deleted}>
+          <GlossList
+            defaultLang={analysisLang}
+            editable={props.editable && !sense.deleted}
+            glosses={sense.glosses}
+            idPrefix={`row-${props.rowData.id}-gloss`}
+            onChange={(glosses) =>
+              props.onRowDataChange &&
+              props.onRowDataChange({
+                ...props.rowData,
+                senses: [
+                  ...props.rowData.senses.slice(0, index),
+                  { ...sense, glosses },
+                  ...props.rowData.senses.slice(index + 1),
+                ],
+              })
+            }
+          />
+        </Overlay>
       ))}
       bottomCell={props.editable ? SPACER : undefined}
     />
