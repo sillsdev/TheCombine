@@ -3,6 +3,7 @@ import { Chip, Dialog, Grid, IconButton } from "@mui/material";
 import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 import { SemanticDomain } from "api/models";
 import { getCurrentUser } from "backend/localStorage";
@@ -47,7 +48,13 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
         );
       }
       if (selectedDomain.mongoId == "") {
-        throw new Error("SelectedSemanticDomainTreeNode have no mongoId");
+        throw new Error("SelectedSemanticDomainTreeNode have no mongoId.");
+      }
+      if (senseToChange.domains.find((d) => d.id === selectedDomain.id)) {
+        toast.error(
+          t("reviewEntries.duplicateDomain", { val: selectedDomain.id })
+        );
+        return;
       }
       props.editDomains(senseToChange.guid, [
         ...senseToChange.domains,

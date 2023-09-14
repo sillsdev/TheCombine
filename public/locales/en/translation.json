@@ -269,6 +269,7 @@
     "noDefinition": "No definitions input",
     "noGloss": "No glosses input",
     "noDomain": "No domain selected",
+    "duplicateDomain": "This sense already has domain {{ val }}.",
     "noNote": "No note",
     "deleteWordWarning": "This word will be permanently deleted!",
     "deleteDisabled": "This was imported with data that The Combine doesn't handle, so it may not be deleted.",

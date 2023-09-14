@@ -18,6 +18,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -94,6 +95,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -128,6 +130,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 2",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -139,6 +142,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 3",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -199,6 +203,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 2",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -225,6 +230,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -236,6 +242,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -256,6 +263,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -276,6 +284,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -296,6 +305,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -316,6 +326,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -336,6 +347,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -356,6 +368,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -376,6 +389,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -396,6 +410,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -416,6 +431,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -427,6 +443,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 3",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -503,6 +520,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -514,6 +532,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 3",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -590,6 +609,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -601,6 +621,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 3",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -696,6 +717,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -772,6 +794,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -806,6 +829,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 2",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -892,6 +916,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 3",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -952,6 +977,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 2",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -978,6 +1004,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -989,6 +1016,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1009,6 +1037,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1020,6 +1049,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 3",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1115,6 +1145,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1191,6 +1222,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1225,6 +1257,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 2",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1236,6 +1269,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 3",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1296,6 +1330,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 2",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1322,6 +1357,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1333,6 +1369,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1353,6 +1390,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1364,6 +1402,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 3",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1459,6 +1498,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1535,6 +1575,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1569,6 +1610,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 2",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1580,6 +1622,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 3",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1640,6 +1683,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 2",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1741,6 +1785,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1752,6 +1797,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1772,6 +1818,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1792,6 +1839,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1812,6 +1860,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1832,6 +1881,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1852,6 +1902,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1872,6 +1923,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1892,6 +1944,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1912,6 +1965,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1932,6 +1986,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1952,6 +2007,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1972,6 +2028,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -1992,6 +2049,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -2012,6 +2070,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -2023,6 +2082,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 3",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -2099,6 +2159,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -2110,6 +2171,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 3",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -2186,6 +2248,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -2197,6 +2260,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 3",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -2273,6 +2337,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -2284,6 +2349,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 3",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -2379,6 +2445,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -2455,6 +2522,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -2489,6 +2557,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 2",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -2500,6 +2569,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 3",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -2560,6 +2630,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 2",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -2593,6 +2664,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -2669,6 +2741,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -2703,6 +2776,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 2",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -2789,6 +2863,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 3",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -2849,6 +2924,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 2",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -2950,6 +3026,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -2961,6 +3038,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -2981,6 +3059,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -3001,6 +3080,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -3021,6 +3101,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -3041,6 +3122,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -3061,6 +3143,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -3081,6 +3164,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -3101,6 +3185,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -3121,6 +3206,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -3141,6 +3227,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -3152,6 +3239,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 3",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -3228,6 +3316,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -3239,6 +3328,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 3",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -3315,6 +3405,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 1",
             "gridRowEnd": "span 1",
             "height": "auto",
@@ -3326,6 +3417,7 @@ Array [
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
           Object {
+            "breakInside": undefined,
             "gridColumnEnd": "span 3",
             "gridRowEnd": "span 1",
             "height": "auto",
