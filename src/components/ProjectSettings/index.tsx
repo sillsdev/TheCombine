@@ -45,12 +45,24 @@ import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { Path } from "types/path";
 
-export const enum ProjectSettingsTab {
-  Basic,
-  Languages,
-  Users,
-  ImportExport,
-  Schedule,
+export enum ProjectSettingsTab {
+  Basic = "TabBasic",
+  Languages = "TabLanguages",
+  Users = "TabUsers",
+  ImportExport = "TabImportExport",
+  Schedule = "TabSchedule",
+}
+
+export enum Setting {
+  Archive = "SettingArchive",
+  Autocomplete = "SettingAutocomplete",
+  Export = "SettingExport",
+  Import = "SettingImport",
+  Languages = "SettingLanguages",
+  Name = "SettingName",
+  Schedule = "SettingSchedule",
+  UserAdd = "SettingUserAdd",
+  Users = "SettingUsers",
 }
 
 export default function ProjectSettingsComponent() {
@@ -107,11 +119,13 @@ export default function ProjectSettingsComponent() {
         {t("projectSettings.project")}
       </Typography>
       <ProjectSelect project={project} setProject={setProject} />
+
       <Divider sx={{ my: 1 }} />
 
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs onChange={handleChange} value={tab}>
-          {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+          {(permissions.includes(Permission.DeleteEditSettingsAndUsers) ||
+            permissions.includes(Permission.Archive)) && (
             <Tab
               data-testid={ProjectSettingsTab.Basic}
               id={ProjectSettingsTab.Basic.toString()}
@@ -124,6 +138,7 @@ export default function ProjectSettingsComponent() {
               value={ProjectSettingsTab.Basic}
             />
           )}
+
           <Tab
             data-testid={ProjectSettingsTab.Languages}
             id={ProjectSettingsTab.Languages.toString()}
@@ -135,6 +150,7 @@ export default function ProjectSettingsComponent() {
             }
             value={ProjectSettingsTab.Languages}
           />
+
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
             <Tab
               data-testid={ProjectSettingsTab.Users}
@@ -148,7 +164,9 @@ export default function ProjectSettingsComponent() {
               value={ProjectSettingsTab.Users}
             />
           )}
-          {permissions.includes(Permission.Export) && (
+
+          {(permissions.includes(Permission.Export) ||
+            permissions.includes(Permission.Import)) && (
             <Tab
               data-testid={ProjectSettingsTab.ImportExport}
               id={ProjectSettingsTab.ImportExport.toString()}
@@ -170,6 +188,7 @@ export default function ProjectSettingsComponent() {
               value={ProjectSettingsTab.ImportExport}
             />
           )}
+
           {(permissions.includes(Permission.Statistics) ||
             project.workshopSchedule?.length) && (
             <Tab
@@ -192,7 +211,7 @@ export default function ProjectSettingsComponent() {
           {/* Project name */}
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
             <BaseSettings
-              icon={<Edit />}
+              icon={<Edit data-testid={Setting.Name} />}
               title={t("projectSettings.name")}
               body={
                 <ProjectName project={project} updateProject={updateProject} />
@@ -203,7 +222,7 @@ export default function ProjectSettingsComponent() {
           {/* Autocomplete toggle */}
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
             <BaseSettings
-              icon={<Sms />}
+              icon={<Sms data-testid={Setting.Autocomplete} />}
               title={t("projectSettings.autocomplete.label")}
               body={
                 <ProjectAutocomplete
@@ -217,7 +236,7 @@ export default function ProjectSettingsComponent() {
           {/* Archive project */}
           {permissions.includes(Permission.Archive) && (
             <BaseSettings
-              icon={<Archive />}
+              icon={<Archive data-testid={Setting.Archive} />}
               title={t("projectSettings.archive.archive")}
               body={
                 <ProjectArchive
@@ -231,11 +250,12 @@ export default function ProjectSettingsComponent() {
           )}
         </Grid>
       </TabPanel>
+
       <TabPanel value={tab} index={ProjectSettingsTab.Languages}>
         <Grid container spacing={6}>
           {/*Project languages*/}
           <BaseSettings
-            icon={<Language />}
+            icon={<Language data-testid={Setting.Languages} />}
             title={t("projectSettings.language.languages")}
             body={
               <ProjectLanguages
@@ -249,12 +269,13 @@ export default function ProjectSettingsComponent() {
           />
         </Grid>
       </TabPanel>
+
       <TabPanel value={tab} index={ProjectSettingsTab.Users}>
         <Grid container spacing={6}>
           {/* See current users in project */}
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
             <BaseSettings
-              icon={<People />}
+              icon={<People data-testid={Setting.Users} />}
               title={t("projectSettings.user.currentUsers")}
               body={<ActiveProjectUsers projectId={project.id} />}
             />
@@ -263,19 +284,20 @@ export default function ProjectSettingsComponent() {
           {/* Add users to project */}
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
             <BaseSettings
-              icon={<PersonAdd />}
+              icon={<PersonAdd data-testid={Setting.UserAdd} />}
               title={t("projectSettings.user.addUser")}
               body={<AddProjectUsers projectId={project.id} />}
             />
           )}
         </Grid>
       </TabPanel>
+
       <TabPanel value={tab} index={ProjectSettingsTab.ImportExport}>
         <Grid container spacing={6}>
           {/* Import Lift file */}
           {permissions.includes(Permission.Import) && (
             <BaseSettings
-              icon={<CloudUpload />}
+              icon={<CloudUpload data-testid={Setting.Import} />}
               title={t("projectSettings.import.header")}
               body={
                 imports ? (
@@ -292,18 +314,19 @@ export default function ProjectSettingsComponent() {
           {/* Export Lift file */}
           {permissions.includes(Permission.Export) && (
             <BaseSettings
-              icon={<GetApp />}
+              icon={<GetApp data-testid={Setting.Export} />}
               title={t("projectSettings.exportProject.label")}
               body={<ExportButton projectId={project.id} />}
             />
           )}
         </Grid>
       </TabPanel>
+
       <TabPanel value={tab} index={ProjectSettingsTab.Schedule}>
         <Grid container spacing={6}>
           {/* Workshop schedule */}
           <BaseSettings
-            icon={<CalendarMonth />}
+            icon={<CalendarMonth data-testid={Setting.Schedule} />}
             title={t("projectSettings.schedule.workshopSchedule")}
             body={
               <ProjectSchedule

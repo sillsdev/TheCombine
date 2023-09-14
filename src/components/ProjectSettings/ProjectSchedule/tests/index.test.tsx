@@ -1,4 +1,4 @@
-import { IconButton } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import renderer from "react-test-renderer";
 
 import "tests/reactI18nextMock";
@@ -39,6 +39,7 @@ describe("ProjectSchedule", () => {
 
   it("renders readOnly with no buttons", async () => {
     await renderProjSched(undefined, true);
+    expect(projectMaster.root.findAllByType(Button)).toHaveLength(0);
     expect(projectMaster.root.findAllByType(IconButton)).toHaveLength(0);
   });
 });

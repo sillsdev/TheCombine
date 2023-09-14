@@ -1,42 +1,5 @@
-import {
-  Archive,
-  CalendarMonth,
-  CloudUpload,
-  Edit,
-  GetApp,
-  Language,
-  People,
-  PersonAdd,
-  Sms,
-} from "@mui/icons-material";
-import { ElementType } from "react";
-
 import { Permission } from "api/models";
-import { ProjectSettingsTab } from "components/ProjectSettings";
-
-export enum Setting {
-  Archive,
-  Autocomplete,
-  Export,
-  Import,
-  Languages,
-  Name,
-  Schedule,
-  UserAdd,
-  Users,
-}
-
-const iconBySetting: Record<Setting, ElementType> = {
-  [Setting.Archive]: Archive,
-  [Setting.Autocomplete]: Sms,
-  [Setting.Export]: GetApp,
-  [Setting.Import]: CloudUpload,
-  [Setting.Languages]: Language,
-  [Setting.Name]: Edit,
-  [Setting.Schedule]: CalendarMonth,
-  [Setting.UserAdd]: PersonAdd,
-  [Setting.Users]: People,
-};
+import { ProjectSettingsTab, Setting } from "components/ProjectSettings";
 
 const settingsByTab: Record<ProjectSettingsTab, Setting[]> = {
   [ProjectSettingsTab.Basic]: [
@@ -67,14 +30,40 @@ const settingsByPermission: Record<Permission, Setting[]> = {
   [Permission.WordEntry]: [],
 };
 
-const settingsWithReadOnly = [Setting.Languages, Setting.Schedule];
+function readOnlySettings(hasSchedule: boolean): Setting[] {
+  return hasSchedule
+    ? [Setting.Languages, Setting.Schedule]
+    : [Setting.Languages];
+}
 
-export const whichSettings = (
-  tab: ProjectSettingsTab,
+export function whichSettings(
   perm: Permission,
-  readOnly = false
-): Setting[] => {
-  const forAll = readOnly ? settingsWithReadOnly : [];
-  const settings = [...forAll, ...settingsByPermission[perm]];
+  hasSchedule = false,
+  tab?: ProjectSettingsTab
+): Setting[] {
+  const settings = [
+    ...readOnlySettings(hasSchedule),
+    ...settingsByPermission[perm],
+  ];
+  if (!tab) {
+    return settings;
+  }
   return settingsByTab[tab].filter((s) => settings.includes(s));
-};
+}
+
+function tabHasSomeSetting(
+  tab: ProjectSettingsTab,
+  settings: Setting[]
+): boolean {
+  return settingsByTab[tab].findIndex((s) => settings.includes(s)) !== -1;
+}
+
+export function whichTabs(
+  perm: Permission,
+  hasSchedule = false
+): ProjectSettingsTab[] {
+  const settings = whichSettings(perm, hasSchedule);
+  return Object.values(ProjectSettingsTab).filter((t) =>
+    tabHasSomeSetting(t, settings)
+  );
+}
