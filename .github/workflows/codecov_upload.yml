@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [master]
   workflow_run:
-    workflows: [backend, frontend]
+    workflows: ["backend", "frontend"]
     types: [completed]
 
 permissions:
