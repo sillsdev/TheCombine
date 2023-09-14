@@ -44,24 +44,12 @@ jobs:
       - run: npm run test-frontend:coverage
         env:
           CI: true
-      - name: Upload coverage report
-        id: uploadCoverage
-        continue-on-error: true
-        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v3
         with:
-          files: coverage/clover.xml
-          flags: frontend
-          name: Frontend
-          fail_ci_if_error: true
-      - name: Upload coverage report - take 2 (if the first attempt fails)
-        if: steps.uploadCoverage.outcome == 'failure'
-        id: uploadCoverage2
-        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
-        with:
-          files: coverage/clover.xml
-          flags: frontend
-          name: Frontend
-          fail_ci_if_error: true
+          name: coverage-frontend
+          path: coverage/clover.xml
+          retention-days: 7
 
       # Release build.
       - run: npm run build
