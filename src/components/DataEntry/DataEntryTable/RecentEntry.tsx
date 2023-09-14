@@ -50,8 +50,12 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
   }
 
   function conditionallyUpdateVern(): void {
-    if (props.entry.vernacular !== vernacular) {
-      props.updateVern(vernacular);
+    if (vernacular.trim()) {
+      if (props.entry.vernacular !== vernacular) {
+        props.updateVern(vernacular);
+      }
+    } else {
+      setVernacular(props.entry.vernacular);
     }
   }
 

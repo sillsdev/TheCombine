@@ -681,7 +681,7 @@ export default function DataEntryTable(
       );
       if (!oldWord) {
         // Existing word not found, so create a new word.
-        addNewEntry();
+        await addNewEntry();
       } else {
         // Found an existing word, so add a sense to it.
         await updateWordWithNewEntry(oldWord.id);
