@@ -11,7 +11,16 @@ import {
   Settings,
   Sms,
 } from "@mui/icons-material";
-import { Box, Divider, Grid, Tab, Tabs, Typography } from "@mui/material";
+import {
+  Box,
+  Divider,
+  Grid,
+  Hidden,
+  Tab,
+  Tabs,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import {
   ReactElement,
   SyntheticEvent,
@@ -92,9 +101,6 @@ export default function ProjectSettingsComponent() {
     }
   }, [dispatch, permissions, project.id]);
 
-  const handleChange = (_e: SyntheticEvent, val: ProjectSettingsTab): void =>
-    setTab(val);
-
   const archiveUpdate = (): void => {
     toast.success(t("projectSettings.archive.archiveToastSuccess"));
     setTimeout(() => {
@@ -122,89 +128,23 @@ export default function ProjectSettingsComponent() {
 
       <Divider sx={{ my: 1 }} />
 
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs onChange={handleChange} value={tab}>
-          {(permissions.includes(Permission.DeleteEditSettingsAndUsers) ||
-            permissions.includes(Permission.Archive)) && (
-            <Tab
-              data-testid={ProjectSettingsTab.Basic}
-              id={ProjectSettingsTab.Basic.toString()}
-              label={
-                <Grid container>
-                  <Settings />
-                  <Typography>{t("projectSettings.tab.basic")}</Typography>
-                </Grid>
-              }
-              value={ProjectSettingsTab.Basic}
-            />
-          )}
-
-          <Tab
-            data-testid={ProjectSettingsTab.Languages}
-            id={ProjectSettingsTab.Languages.toString()}
-            label={
-              <Grid container>
-                <Language />
-                <Typography>{t("projectSettings.tab.languages")}</Typography>
-              </Grid>
-            }
-            value={ProjectSettingsTab.Languages}
-          />
-
-          {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
-            <Tab
-              data-testid={ProjectSettingsTab.Users}
-              id={ProjectSettingsTab.Users.toString()}
-              label={
-                <Grid container>
-                  <People />
-                  <Typography>{t("projectSettings.tab.users")}</Typography>
-                </Grid>
-              }
-              value={ProjectSettingsTab.Users}
-            />
-          )}
-
-          {(permissions.includes(Permission.Export) ||
-            permissions.includes(Permission.Import)) && (
-            <Tab
-              data-testid={ProjectSettingsTab.ImportExport}
-              id={ProjectSettingsTab.ImportExport.toString()}
-              label={
-                permissions.includes(Permission.Import) ? (
-                  <Grid container>
-                    <ImportExport />
-                    <Typography>
-                      {t("projectSettings.tab.importExport")}
-                    </Typography>
-                  </Grid>
-                ) : (
-                  <Grid container>
-                    <GetApp />
-                    <Typography>{t("projectSettings.tab.export")}</Typography>
-                  </Grid>
-                )
-              }
-              value={ProjectSettingsTab.ImportExport}
-            />
-          )}
-
-          {(permissions.includes(Permission.Statistics) ||
-            project.workshopSchedule?.length) && (
-            <Tab
-              data-testid={ProjectSettingsTab.Schedule}
-              id={ProjectSettingsTab.Schedule.toString()}
-              label={
-                <Grid container>
-                  <CalendarMonth />
-                  <Typography>{t("projectSettings.tab.schedule")}</Typography>
-                </Grid>
-              }
-              value={ProjectSettingsTab.Schedule}
-            />
-          )}
-        </Tabs>
-      </Box>
+      <Hidden mdDown>
+        <SettingsTabs
+          hasSchedule={!!project.workshopSchedule?.length}
+          permissions={permissions}
+          setTab={setTab}
+          tab={tab}
+        />
+      </Hidden>
+      <Hidden mdUp>
+        <SettingsTabs
+          hasSchedule={!!project.workshopSchedule?.length}
+          hideLabels
+          permissions={permissions}
+          setTab={setTab}
+          tab={tab}
+        />
+      </Hidden>
 
       <TabPanel value={tab} index={ProjectSettingsTab.Basic}>
         <Grid container spacing={6}>
@@ -339,6 +279,135 @@ export default function ProjectSettingsComponent() {
         </Grid>
       </TabPanel>
     </>
+  );
+}
+
+interface SettingsTabsProps {
+  hasSchedule: boolean;
+  hideLabels?: boolean;
+  permissions: Permission[];
+  setTab: (tab: ProjectSettingsTab) => void;
+  tab: ProjectSettingsTab;
+}
+
+function SettingsTabs(props: SettingsTabsProps): ReactElement {
+  const { t } = useTranslation();
+
+  const { hideLabels, permissions, setTab, tab } = props;
+
+  const handleChange = (_e: SyntheticEvent, val: ProjectSettingsTab): void =>
+    setTab(val);
+
+  return (
+    <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Tabs onChange={handleChange} value={tab}>
+        {(permissions.includes(Permission.DeleteEditSettingsAndUsers) ||
+          permissions.includes(Permission.Archive)) && (
+          <Tab
+            data-testid={ProjectSettingsTab.Basic}
+            id={ProjectSettingsTab.Basic.toString()}
+            label={
+              <TabLabel
+                hideLabel={hideLabels}
+                icon={<Settings />}
+                textId={"projectSettings.tab.basic"}
+              />
+            }
+            sx={{ minWidth: 0 }}
+            value={ProjectSettingsTab.Basic}
+          />
+        )}
+
+        <Tab
+          data-testid={ProjectSettingsTab.Languages}
+          id={ProjectSettingsTab.Languages.toString()}
+          label={
+            <TabLabel
+              hideLabel={hideLabels}
+              icon={<Language />}
+              textId={"projectSettings.tab.languages"}
+            />
+          }
+          sx={{ minWidth: 0 }}
+          value={ProjectSettingsTab.Languages}
+        />
+
+        {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+          <Tab
+            data-testid={ProjectSettingsTab.Users}
+            id={ProjectSettingsTab.Users.toString()}
+            label={
+              <TabLabel
+                hideLabel={hideLabels}
+                icon={<People />}
+                textId={"projectSettings.tab.users"}
+              />
+            }
+            sx={{ minWidth: 0 }}
+            value={ProjectSettingsTab.Users}
+          />
+        )}
+
+        {(permissions.includes(Permission.Export) ||
+          permissions.includes(Permission.Import)) && (
+          <Tab
+            data-testid={ProjectSettingsTab.ImportExport}
+            id={ProjectSettingsTab.ImportExport.toString()}
+            label={
+              permissions.includes(Permission.Import) ? (
+                <TabLabel
+                  hideLabel={hideLabels}
+                  icon={<ImportExport />}
+                  textId={"projectSettings.tab.importExport"}
+                />
+              ) : (
+                <TabLabel
+                  hideLabel={hideLabels}
+                  icon={<GetApp />}
+                  textId={"projectSettings.tab.export"}
+                />
+              )
+            }
+            sx={{ minWidth: 0 }}
+            value={ProjectSettingsTab.ImportExport}
+          />
+        )}
+
+        {(permissions.includes(Permission.Statistics) || props.hasSchedule) && (
+          <Tab
+            data-testid={ProjectSettingsTab.Schedule}
+            id={ProjectSettingsTab.Schedule.toString()}
+            label={
+              <TabLabel
+                hideLabel={hideLabels}
+                icon={<CalendarMonth />}
+                textId={"projectSettings.tab.schedule"}
+              />
+            }
+            sx={{ minWidth: 0 }}
+            value={ProjectSettingsTab.Schedule}
+          />
+        )}
+      </Tabs>
+    </Box>
+  );
+}
+
+interface TabLabelProps {
+  hideLabel?: boolean;
+  icon: ReactElement;
+  textId: string;
+}
+
+function TabLabel(props: TabLabelProps): ReactElement {
+  const { t } = useTranslation();
+  return props.hideLabel ? (
+    <Tooltip title={t(props.textId)}>{props.icon}</Tooltip>
+  ) : (
+    <Grid container>
+      {props.icon}
+      <Typography>{t(props.textId)}</Typography>
+    </Grid>
   );
 }
 
