@@ -63,13 +63,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: coverage
-      - name: Unzip artifact
-        run: ls; unzip coverage
       - name: Upload coverage report
         uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         with:
           fail_ci_if_error: true
-          files: coverage/clover.xml
+          files: clover.xml
           flags: frontend
           name: Frontend
 
