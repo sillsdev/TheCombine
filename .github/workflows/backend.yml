@@ -35,7 +35,6 @@ jobs:
             github.com:443
             md-hdd-t032zjxllntc.z26.blob.storage.azure.net:443
             objects.githubusercontent.com:443
-            storage.googleapis.com:443
       - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
       - name: Setup dotnet
         uses: actions/setup-dotnet@3447fd6a9f9e57506b15f895c5b76d3b197dc7c2 # v3.2.0
@@ -76,12 +75,12 @@ jobs:
         uses: step-security/harden-runner@8ca2b8b2ece13480cda6dacd3511b49857a23c09 # v2.5.1
         with:
           disable-sudo: true
-          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+          egress-policy: block
           allowed-endpoints: >
-            *.actions.githubusercontent.com:443
             api.github.com:443
             codecov.io:443
             github.com:443
+            storage.googleapis.com:443
             uploader.codecov.io:443
       - name: Checkout repository
         uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
@@ -89,8 +88,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: coverage
-      - name: Remove the BOM
-        run: sed -i '1s/^\xEF\xBB\xBF//' coverage.cobertura.xml
       - name: Upload coverage report
         uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         with:
