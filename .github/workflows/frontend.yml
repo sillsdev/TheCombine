@@ -47,7 +47,8 @@ jobs:
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v3
         with:
-          name: coverage-frontend
+          if-no-files-found: error
+          name: coverage
           path: coverage/clover.xml
           retention-days: 7
 
@@ -61,12 +62,14 @@ jobs:
       - name: Download coverage artifact
         uses: actions/download-artifact@v3
         with:
-          name: coverage-frontend
-          path: clover.xml
+          name: coverage
+      - name: Unzip artifact
+        run: unzip coverage.zip
       - name: Upload coverage report
         uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         with:
-          files: clover.xml
+          fail_ci_if_error: true
+          files: coverage/clover.xml
           flags: frontend
           name: Frontend
 
