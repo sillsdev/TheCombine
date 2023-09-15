@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { LoadingButton } from "components/Buttons";
 import { asyncAdvanceStep } from "components/GoalTimeline/Redux/GoalActions";
 import {
+  deferMerge,
   mergeAll,
   setSidebar,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
@@ -22,6 +23,12 @@ export default function SaveSkipButtons(): ReactElement {
     dispatch(setSidebar());
     setIsSaving(false);
     await dispatch(asyncAdvanceStep());
+  };
+
+  const defer = async (): Promise<void> => {
+    setIsSaving(false);
+    dispatch(setSidebar());
+    await dispatch(deferMerge()).then(next);
   };
 
   const saveContinue = async (): Promise<void> => {
@@ -50,11 +57,11 @@ export default function SaveSkipButtons(): ReactElement {
           color="secondary"
           variant="contained"
           style={{ marginRight: theme.spacing(3) }}
-          onClick={next}
-          title={t("mergeDups.helpText.skip")}
+          onClick={defer /*next*/}
+          title={t("mergeDups.helpText.skip")} // t("mergeDups.helpText.skip")
           id="merge-skip"
         >
-          {t("buttons.skip")}
+          {"Defer"} {/* t("buttons.skip")*/}
         </Button>
       </Grid>
     </Grid>

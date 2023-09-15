@@ -310,6 +310,14 @@ export async function blacklistAdd(wordIds: string[]): Promise<void> {
   );
 }
 
+/** Adds a list of wordIds to current project's merge blacklist */
+export async function graylistAdd(wordIds: string[]): Promise<void> {
+  await mergeApi.graylistAdd(
+    { projectId: LocalStorage.getProjectId(), requestBody: wordIds },
+    defaultOptions()
+  );
+}
+
 /** Get list of potential duplicates for merging. */
 export async function getDuplicates(
   maxInList: number,

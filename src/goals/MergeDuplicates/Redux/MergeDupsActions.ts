@@ -224,6 +224,16 @@ function getMergeWords(
   }
 }
 
+export function deferMerge() {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+    const mergeTree = getState().mergeDuplicateGoal;
+    console.log("test", mergeTree);
+
+    // Add to graylist.
+    await backend.graylistAdd(Object.keys(mergeTree.data.words));
+  };
+}
+
 export function mergeAll() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const mergeTree = getState().mergeDuplicateGoal;

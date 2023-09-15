@@ -15,7 +15,7 @@ namespace Backend.Tests.Models
         [Test]
         public void TestClone()
         {
-            var entryA = new MergeBlacklistEntry
+            var entryA = new MergeWordSetEntry
             {
                 Id = EntryId,
                 ProjectId = ProjId,
@@ -29,14 +29,14 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEquals()
         {
-            var entryA = new MergeBlacklistEntry
+            var entryA = new MergeWordSetEntry
             {
                 Id = EntryId,
                 ProjectId = ProjId,
                 UserId = UserId,
                 WordIds = _wordIds
             };
-            var entryB = new MergeBlacklistEntry
+            var entryB = new MergeWordSetEntry
             {
                 Id = EntryId,
                 ProjectId = ProjId,
@@ -49,8 +49,8 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEqualsFalse()
         {
-            var entryA = new MergeBlacklistEntry();
-            var entryB = new MergeBlacklistEntry();
+            var entryA = new MergeWordSetEntry();
+            var entryB = new MergeWordSetEntry();
             entryA.Id = EntryId;
             Assert.That(entryA.Equals(entryB), Is.False);
 
@@ -70,21 +70,21 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEqualsNull()
         {
-            var edit = new MergeBlacklistEntry { ProjectId = ProjId };
+            var edit = new MergeWordSetEntry { ProjectId = ProjId };
             Assert.That(edit.Equals(null), Is.False);
         }
 
         [Test]
         public void TestHashCode()
         {
-            var entryA = new MergeBlacklistEntry
+            var entryA = new MergeWordSetEntry
             {
                 Id = EntryId,
                 ProjectId = ProjId,
                 UserId = UserId,
                 WordIds = _wordIdsReversed
             };
-            var entryB = new MergeBlacklistEntry
+            var entryB = new MergeWordSetEntry
             {
                 Id = "DifferentTestId",
                 ProjectId = ProjId,

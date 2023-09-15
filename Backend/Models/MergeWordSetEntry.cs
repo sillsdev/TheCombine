@@ -7,7 +7,7 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace BackendFramework.Models
 {
     /// <summary> A List of wordIds to avoid in future merges. </summary>
-    public class MergeBlacklistEntry
+    public class MergeWordSetEntry
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
@@ -22,7 +22,7 @@ namespace BackendFramework.Models
         [BsonElement("wordIds")]
         public List<string> WordIds { get; set; }
 
-        public MergeBlacklistEntry()
+        public MergeWordSetEntry()
         {
             Id = "";
             ProjectId = "";
@@ -30,9 +30,9 @@ namespace BackendFramework.Models
             WordIds = new List<string>();
         }
 
-        public MergeBlacklistEntry Clone()
+        public MergeWordSetEntry Clone()
         {
-            var clone = new MergeBlacklistEntry
+            var clone = new MergeWordSetEntry
             {
                 Id = Id,
                 ProjectId = ProjectId,
@@ -46,7 +46,7 @@ namespace BackendFramework.Models
             return clone;
         }
 
-        public bool ContentEquals(MergeBlacklistEntry other)
+        public bool ContentEquals(MergeWordSetEntry other)
         {
             return
                 other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
@@ -57,7 +57,7 @@ namespace BackendFramework.Models
 
         public override bool Equals(object? obj)
         {
-            if (obj is not MergeBlacklistEntry other || GetType() != obj.GetType())
+            if (obj is not MergeWordSetEntry other || GetType() != obj.GetType())
             {
                 return false;
             }

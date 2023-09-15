@@ -10,7 +10,8 @@ namespace Backend.Tests.Services
 {
     public class MergeServiceTests
     {
-        private IMergeBlacklistRepository _mergeBlacklistRepo = null!;
+        private IMergeWordSetRepository _mergeBlacklistRepo = null!;
+        private IMergeWordSetRepository _mergeGraylistRepo = null!;
         private IWordRepository _wordRepo = null!;
         private IWordService _wordService = null!;
         private IMergeService _mergeService = null!;
@@ -22,9 +23,10 @@ namespace Backend.Tests.Services
         public void Setup()
         {
             _mergeBlacklistRepo = new MergeBlacklistRepositoryMock();
+            _mergeBlacklistRepo = new MergeBlacklistRepositoryMock();
             _wordRepo = new WordRepositoryMock();
             _wordService = new WordService(_wordRepo);
-            _mergeService = new MergeService(_mergeBlacklistRepo, _wordRepo, _wordService);
+            _mergeService = new MergeService(_mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
         }
 
         [Test]
@@ -202,7 +204,7 @@ namespace Backend.Tests.Services
             _ = _mergeService.AddToMergeBlacklist(ProjId, UserId, wordIds).Result;
             var blacklist = _mergeBlacklistRepo.GetAllEntries(ProjId).Result;
             Assert.That(blacklist, Has.Count.EqualTo(1));
-            var expectedEntry = new MergeBlacklistEntry { ProjectId = ProjId, UserId = UserId, WordIds = wordIds };
+            var expectedEntry = new MergeWordSetEntry { ProjectId = ProjId, UserId = UserId, WordIds = wordIds };
             Assert.That(expectedEntry.ContentEquals(blacklist.First()), Is.True);
         }
 
@@ -245,14 +247,14 @@ namespace Backend.Tests.Services
         [Test]
         public void UpdateMergeBlacklistTest()
         {
-            var entryA = new MergeBlacklistEntry
+            var entryA = new MergeWordSetEntry
             {
                 Id = "A",
                 ProjectId = ProjId,
                 UserId = UserId,
                 WordIds = new List<string> { "1", "2", "3" }
             };
-            var entryB = new MergeBlacklistEntry
+            var entryB = new MergeWordSetEntry
             {
                 Id = "B",
                 ProjectId = ProjId,
