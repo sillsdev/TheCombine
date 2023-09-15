@@ -26,11 +26,9 @@ jobs:
           allowed-endpoints: >
             *.actions.githubusercontent.com:443
             api.github.com:443
-            codecov.io:443
             github.com:443
             registry.npmjs.org:443
             storage.googleapis.com:443
-            uploader.codecov.io:443
       - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3.8.1
@@ -59,12 +57,25 @@ jobs:
     needs: lint_test_build
     runs-on: ubuntu-latest
     steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
+      - name: Harden Runner
+        uses: step-security/harden-runner@8ca2b8b2ece13480cda6dacd3511b49857a23c09 # v2.5.1
+        with:
+          disable-sudo: true
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+          allowed-endpoints: >
+            *.actions.githubusercontent.com:443
+            api.github.com:443
+            codecov.io:443
+            github.com:443
+            uploader.codecov.io:443
+      - name: Checkout repository
+        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
       - name: Download coverage artifact
         uses: actions/download-artifact@v3
         with:
           name: coverage
-      - name: Remove the BOM
-        run: sed -i -e '$a\' clover.xml; sed -i '1s/^\xEF\xBB\xBF//' clover.xml
       - name: Upload coverage report
         uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         with:
