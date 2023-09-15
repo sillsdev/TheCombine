@@ -67,6 +67,22 @@ jobs:
       - run: dotnet tool install -g dotnet-format
       - run: dotnet-format --check
 
+  upload_coverage:
+    needs: test_build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage-backend
+          path: coverage.cobertura.xml
+      - name: Upload coverage report
+        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
+        with:
+          files: coverage.cobertura.xml
+          flags: backend
+          name: Backend
+
   CodeQL_build:
     permissions:
       actions: read # for github/codeql-action/init to get workflow details

@@ -54,6 +54,22 @@ jobs:
       # Release build.
       - run: npm run build
 
+  upload_coverage:
+    needs: lint_test_build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage-frontend
+          path: clover.xml
+      - name: Upload coverage report
+        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
+        with:
+          files: clover.xml
+          flags: frontend
+          name: Frontend
+
   docker_build:
     runs-on: ubuntu-latest
     if: ${{ github.event.type }} == "PullRequest"
