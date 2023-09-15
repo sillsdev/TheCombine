@@ -63,8 +63,9 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: coverage
+          path: ~/
       - name: Unzip artifact
-        run: unzip coverage
+        run: unzip ~/coverage
       - name: Upload coverage report
         uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         with:
