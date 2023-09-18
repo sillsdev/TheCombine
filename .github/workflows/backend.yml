@@ -28,7 +28,6 @@ jobs:
             aka.ms:443
             api.github.com:443
             api.nuget.org:443
-            codecov.io:443
             dc.services.visualstudio.com:443
             deb.debian.org:80
             dotnetbuilds.azureedge.net:443
@@ -36,9 +35,7 @@ jobs:
             github.com:443
             md-hdd-t032zjxllntc.z26.blob.storage.azure.net:443
             objects.githubusercontent.com:443
-            storage.googleapis.com:443
-            uploader.codecov.io:443
-      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
       - name: Setup dotnet
         uses: actions/setup-dotnet@3447fd6a9f9e57506b15f895c5b76d3b197dc7c2 # v3.2.0
         with:
@@ -47,27 +44,16 @@ jobs:
         uses: FedericoCarboni/setup-ffmpeg@v2 # v2.0.0
 
       # Coverage.
-      - name: run coverage tests
+      - name: Run coverage tests
         run: dotnet test Backend.Tests/Backend.Tests.csproj
         shell: bash
-      - name: Upload coverage report
-        id: uploadCoverage
-        continue-on-error: true
-        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v3
         with:
-          files: Backend.Tests/coverage.cobertura.xml
-          flags: backend
-          name: Backend
-          fail_ci_if_error: true
-      - name: Upload coverage report - take 2 (if the first attempt fails)
-        if: steps.uploadCoverage.outcome == 'failure'
-        id: uploadCoverage2
-        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
-        with:
-          files: Backend.Tests/coverage.cobertura.xml
-          flags: backend
-          name: Backend
-          fail_ci_if_error: true
+          if-no-files-found: error
+          name: coverage
+          path: Backend.Tests/coverage.cobertura.xml
+          retention-days: 7
 
       # Development build.
       - run: dotnet build BackendFramework.sln
@@ -78,6 +64,37 @@ jobs:
       # Fmt.
       - run: dotnet tool install -g dotnet-format
       - run: dotnet-format --check
+
+  upload_coverage:
+    needs: test_build
+    runs-on: ubuntu-latest
+    steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
+      - name: Harden Runner
+        uses: step-security/harden-runner@8ca2b8b2ece13480cda6dacd3511b49857a23c09 # v2.5.1
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+            codecov.io:443
+            github.com:443
+            storage.googleapis.com:443
+            uploader.codecov.io:443
+      - name: Checkout repository
+        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage
+      - name: Upload coverage report
+        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
+        with:
+          fail_ci_if_error: true
+          files: coverage.cobertura.xml
+          flags: backend
+          name: Backend
 
   CodeQL_build:
     permissions:
@@ -104,7 +121,7 @@ jobs:
             objects.githubusercontent.com:443
 
       - name: Checkout repository
-        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
       # Manually install .NET to work around:
       # https://github.com/github/codeql-action/issues/757
       - name: Setup .NET
@@ -118,7 +135,7 @@ jobs:
       - name: Autobuild
         uses: github/codeql-action/autobuild@00e563ead9f72a8461b24876bee2d0c2e8bd2ee8 # v2.21.5
       - name: Upload artifacts if build failed
-        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
+        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
         if: ${{ failure() }}
         with:
           name: tracer-logs
@@ -150,7 +167,7 @@ jobs:
             security.ubuntu.com:80
       # For subfolders, currently a full checkout is required.
       # See: https://github.com/marketplace/actions/build-and-push-docker-images#path-context
-      - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
         with:
           fetch-depth: 0
       - name: Build backend

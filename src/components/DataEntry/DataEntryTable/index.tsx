@@ -346,6 +346,17 @@ export default function DataEntryTable(
     });
   };
 
+  /*** Clear all new entry state elements. */
+  const resetNewEntry = (): void => {
+    setState((prevState) => ({
+      ...prevState,
+      newAudioUrls: [],
+      newGloss: "",
+      newNote: "",
+      newVern: "",
+    }));
+  };
+
   /*** Add an audio file to newAudioUrls. */
   const addNewAudioUrl = (file: File): void => {
     setState((prevState) => {
@@ -670,7 +681,7 @@ export default function DataEntryTable(
       );
       if (!oldWord) {
         // Existing word not found, so create a new word.
-        addNewEntry();
+        await addNewEntry();
       } else {
         // Found an existing word, so add a sense to it.
         await updateWordWithNewEntry(oldWord.id);
@@ -893,6 +904,7 @@ export default function DataEntryTable(
             vernacularLang={vernacularLang}
             // Parent handles new entry state of child:
             addNewEntry={addNewEntry}
+            resetNewEntry={resetNewEntry}
             updateWordWithNewGloss={updateWordWithNewEntry}
             newAudioUrls={state.newAudioUrls}
             addNewAudioUrl={addNewAudioUrl}
