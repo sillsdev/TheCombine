@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 from dataclasses import dataclass
 import logging
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -193,7 +194,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--nerdctl",
         action="store_true",
-        help="Use 'nerdctl' instead of 'docker' to build images.",
+        help="Use 'nerdctl' instead of 'docker' to build images.\nDEPRECATED.  Set the environment variable CONTAINER_CLI to 'nerdctl' or 'docker' instead.",
     )
     parser.add_argument(
         "--namespace",
@@ -240,12 +241,13 @@ def main() -> None:
     logging.basicConfig(format="%(levelname)s:%(message)s", level=log_level)
 
     # Setup required build engine - docker or nerdctl
-    if args.nerdctl:
-        build_cmd = ["nerdctl", "-n", args.namespace, "build"]
-        push_cmd = ["nerdctl", "-n", args.namespace, "push"]
+    container_cli = os.getenv("CONTAINER_CLI", "nerdctl" if args.nerdctl else "docker")
+    if container_cli == "nerdctl":
+        build_cmd = [container_cli, "-n", args.namespace, "build"]
+        push_cmd = [container_cli, "-n", args.namespace, "push"]
     else:
-        build_cmd = ["docker", "buildx", "build"]
-        push_cmd = ["docker", "push"]
+        build_cmd = [container_cli, "buildx", "build"]
+        push_cmd = [container_cli, "push"]
 
     # Setup build options
     build_opts: List[str] = []
