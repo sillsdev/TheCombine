@@ -38,23 +38,27 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
   const classes = useStyles();
 
   function toggleIsRecordingToTrue(): void {
+    //console.info("onMouseDown");
     dispatch(recording(props.wordId));
     props.startRecording();
   }
   function toggleIsRecordingToFalse(): void {
+    //console.info("onMouseUp");
     props.stopRecording();
     dispatch(reset());
   }
 
   function handleTouchStart(): void {
+    console.info("onTouchStart");
     // Temporarily disable context menu since some browsers
     // interpret a long-press touch as a right-click.
     document.addEventListener("contextmenu", disableContextMenu, false);
-    toggleIsRecordingToTrue();
+    //toggleIsRecordingToTrue();
   }
   function handleTouchEnd(): void {
+    console.info("onTouchEnd");
     enableContextMenu();
-    toggleIsRecordingToFalse();
+    //toggleIsRecordingToFalse();
   }
 
   function disableContextMenu(event: any): void {
@@ -69,10 +73,30 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
     <Tooltip title={t("pronunciations.recordTooltip")} placement="top">
       <IconButton
         tabIndex={-1}
-        onMouseDown={toggleIsRecordingToTrue}
+        //onMouseDown={toggleIsRecordingToTrue}
+        onMouseDown={() => console.info("onMouseDown")}
         onTouchStart={handleTouchStart}
-        onMouseUp={toggleIsRecordingToFalse}
+        //onMouseUp={toggleIsRecordingToFalse}
+        onMouseUp={() => console.info("onMouseUp")}
         onTouchEnd={handleTouchEnd}
+        onAuxClick={() => console.info("onAuxClick")}
+        onAuxClickCapture={() => console.info("onAuxClickCapture")}
+        onClick={() => console.info("onClick")}
+        onClickCapture={() => console.info("onClickCapture")}
+        onDoubleClick={() => console.info("onDoubleClick")}
+        onDoubleClickCapture={() => console.info("onDoubleClickCapture")}
+        onMouseDownCapture={() => console.info("onMouseDownCapture")}
+        onMouseUpCapture={() => console.info("onMouseUpCapture")}
+        onPointerDown={toggleIsRecordingToTrue} //() => console.info("onPointerDown")}
+        onPointerDownCapture={() => console.info("onPointerDownCapture")}
+        onPointerUp={toggleIsRecordingToFalse} //() => console.info("onPointerUp")}
+        onPointerUpCapture={() => console.info("onPointerUpCapture")}
+        onSelect={() => console.info("onSelect")}
+        onSelectCapture={() => console.info("onSelectCapture")}
+        onTouchCancel={() => console.info("onTouchCancel")}
+        onTouchCancelCapture={() => console.info("onTouchCancelCapture")}
+        onTouchEndCapture={() => console.info("onTouchEndCapture")}
+        onTouchStartCapture={() => console.info("onTouchStartCapture")}
         className={classes.button}
         aria-label="record"
         id={recordButtonId}
