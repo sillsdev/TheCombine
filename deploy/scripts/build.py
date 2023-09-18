@@ -13,13 +13,14 @@ When 'docker' is used for the build, the BuildKit backend will be enabled.
 
 from __future__ import annotations
 
-import argparse
+from argparse import ArgumentParser, HelpFormatter, Namespace
 from dataclasses import dataclass
 import logging
 import os
 from pathlib import Path
 import subprocess
 import sys
+import textwrap
 import time
 from typing import Callable, Dict, List, Optional
 
@@ -168,11 +169,33 @@ def get_image_name(repo: Optional[str], component: str, tag: Optional[str]) -> s
     return f"combine_{component}{tag_str}"
 
 
-def parse_args() -> argparse.Namespace:
+class RawFormatter(HelpFormatter):
+    """
+    Allow new lines in help text.
+
+    see https://stackoverflow.com/questions/3853722/how-to-insert-newlines-on-argparse-help-text
+    """
+
+    def _fill_text(self, text, width, indent):  # type: ignore
+        """Strip the indent from the original python definition that plagues most of us."""
+        text = textwrap.dedent(text)
+        text = textwrap.indent(text, indent)  # Apply any requested indent.
+        text = text.splitlines()  # Make a list of lines
+        text = [textwrap.fill(line, width) for line in text]  # Wrap each line
+        text = "\n".join(text)  # Join the lines again
+        return str(text)
+
+
+def parse_args() -> Namespace:
     """Parse user command line arguments."""
-    parser = argparse.ArgumentParser(
+    parser = ArgumentParser(
         description="Build containerd container images for project.",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        epilog="""
+         NOTE:
+         The '--nerdctl' option is DEPRECATED and will be removed in future versions.
+         Set the environment variable CONTAINER_CLI to 'nerdctl' or 'docker' instead.
+        """,
+        formatter_class=RawFormatter,
     )
     parser.add_argument(
         "--build-args", nargs="*", help="Build arguments to pass to the docker build."
@@ -194,7 +217,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--nerdctl",
         action="store_true",
-        help="Use 'nerdctl' instead of 'docker' to build images.\nDEPRECATED.  Set the environment variable CONTAINER_CLI to 'nerdctl' or 'docker' instead.",
+        help="Use 'nerdctl' instead of 'docker' to build images.",
     )
     parser.add_argument(
         "--namespace",
