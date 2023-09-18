@@ -423,7 +423,7 @@
   "pronunciations": {
     "recordTooltip": "Press and hold to record.",
     "playTooltip": "Click to play; shift click to delete.",
-    "noMicAccess": "Recording error: Could not access a microphone.",
+    "noRecording": "Recording too short or no microphone access.",
     "deleteRecording": "Delete Recording"
   },
   "statistics": {

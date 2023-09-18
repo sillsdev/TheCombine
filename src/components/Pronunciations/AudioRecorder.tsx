@@ -30,7 +30,7 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
   async function stopRecording(): Promise<void> {
     const blob = await recorder.stopRecording();
     if (!blob) {
-      toast.error(t("pronunciations.noMicAccess"));
+      toast.warning(t("pronunciations.noRecording"));
       return;
     }
     const fileName = getFileNameForWord(props.wordId);
