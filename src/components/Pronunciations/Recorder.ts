@@ -23,20 +23,8 @@ export default class Recorder {
     return new Promise<Blob | undefined>((resolve) => {
       const rec = this.recordRTC;
       if (rec) {
-        rec.stopRecording(() => {
-          const blob = rec.getBlob();
-          console.info(blob.size);
-          if (blob.size < 150000) {
-            // This not only prevents unusably short recordings,
-            // but also guards against #2606.
-            console.warn("Recording too short.");
-            resolve(undefined);
-          } else {
-            resolve(blob);
-          }
-        });
+        rec.stopRecording(() => resolve(rec.getBlob()));
       } else {
-        console.error("No microphone access.");
         resolve(undefined);
       }
     });
