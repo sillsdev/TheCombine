@@ -55,11 +55,9 @@ export default function CalendarView(props: CalendarViewProps): ReactElement {
   }
 
   function getScheduledMonths(schedule: Array<Date>): Dayjs[] {
-    // toISOString() gives YYYY-MM-DDTHH:mm:ss.sssZ; we just want YYYY-MM-01
-    const months = schedule.map((d) => `${d.toISOString().slice(0, 8)}01`);
-    return Array.from(new Set(months))
-      .sort()
-      .map((d) => dayjs(d));
+    // toISOString() gives YYYY-MM-DDTHH:mm:ss.sssZ; we just need YYYY-MM
+    const months = schedule.map((d) => d.toISOString().slice(0, 7));
+    return Array.from(new Set(months)).sort().map(dayjs);
   }
 
   return (
