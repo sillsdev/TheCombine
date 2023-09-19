@@ -71,7 +71,7 @@ describe("Pronunciations", () => {
     expect(testRenderer.toJSON()).toMatchSnapshot();
   });
 
-  it("pointereDown and pointerUp", () => {
+  it("pointerDown and pointerUp", () => {
     const mockStartRecording = jest.fn();
     const mockStopRecording = jest.fn();
     renderer.act(() => {
