@@ -40,7 +40,6 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
     sense.glosses.push(newGloss("", props.analysisLang.bcp47));
   }
   const [gloss, setGloss] = useState(firstGlossText(sense));
-  const [hovering, setHovering] = useState(false);
   const [vernacular, setVernacular] = useState(props.entry.vernacular);
 
   function conditionallyUpdateGloss(): void {
@@ -60,13 +59,7 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
   }
 
   return (
-    <Grid
-      id={`${idAffix}-${props.rowIndex}`}
-      container
-      onMouseEnter={() => setHovering(true)}
-      onMouseLeave={() => setHovering(false)}
-      alignItems="center"
-    >
+    <Grid alignItems="center" container id={`${idAffix}-${props.rowIndex}`}>
       <Grid
         item
         xs={4}
@@ -161,7 +154,7 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
           position: "relative",
         }}
       >
-        {!props.disabled && hovering && (
+        {!props.disabled && (
           <DeleteEntry
             removeEntry={() => props.removeEntry()}
             buttonId={`${idAffix}-${props.rowIndex}-delete`}
