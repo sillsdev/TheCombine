@@ -5,18 +5,11 @@ import { toast } from "react-toastify";
 import Recorder from "components/Pronunciations/Recorder";
 import RecorderContext from "components/Pronunciations/RecorderContext";
 import RecorderIcon from "components/Pronunciations/RecorderIcon";
+import { getFileNameForWord } from "components/Pronunciations/utilities";
 
 interface RecorderProps {
   wordId: string;
   uploadAudio: (wordId: string, audioFile: File) => void;
-}
-
-export function getFileNameForWord(wordId: string): string {
-  const fourCharParts = wordId.match(/.{1,6}/g);
-  const compressed = fourCharParts?.map((i) =>
-    Number("0x" + i).toString(36)
-  ) ?? ["unknownWord"];
-  return compressed.join("") + "_" + new Date().getTime().toString(36);
 }
 
 export default function AudioRecorder(props: RecorderProps): ReactElement {
