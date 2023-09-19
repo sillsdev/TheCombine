@@ -5,9 +5,9 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
+import Pronunciations from "components/Pronunciations";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
-import Pronunciations from "components/Pronunciations/PronunciationsComponent";
 import RecorderIcon, {
   recordButtonId,
   recordIconId,

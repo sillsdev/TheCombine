@@ -23,7 +23,7 @@ import {
 } from "components/DataEntry/DataEntryTable/EntryCellComponents";
 import SenseDialog from "components/DataEntry/DataEntryTable/NewEntry/SenseDialog";
 import VernDialog from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
-import Pronunciations from "components/Pronunciations/PronunciationsComponent";
+import Pronunciations from "components/Pronunciations";
 import { StoreState } from "types";
 import theme from "types/theme";
 

@@ -5,7 +5,7 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import ReviewEntriesComponent from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesComponent";
+import ReviewEntriesComponent from "goals/ReviewEntries/ReviewEntriesComponent";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import mockWords, {
   mockCreateWord,
@@ -37,7 +37,9 @@ jest.mock("notistack", () => ({
 }));
 jest.mock("uuid", () => ({ v4: () => mockUuid() }));
 jest.mock("backend", () => ({
-  getFrontierWords: () => mockGetFrontierWords(),
+  getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
+  updateAllWords: (...args: any[]) => mockUpdateAllWords(...args),
+  updateFrontierWord: jest.fn(),
 }));
 // Mock the node module used by AudioRecorder.
 jest.mock("components/Pronunciations/Recorder");
@@ -84,10 +86,7 @@ beforeEach(async () => {
   await renderer.act(async () => {
     renderer.create(
       <Provider store={mockStore}>
-        <ReviewEntriesComponent
-          updateAllWords={mockUpdateAllWords}
-          updateFrontierWord={jest.fn()}
-        />
+        <ReviewEntriesComponent />
       </Provider>
     );
   });

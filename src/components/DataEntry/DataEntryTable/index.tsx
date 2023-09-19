@@ -29,7 +29,7 @@ import { getUserId } from "backend/localStorage";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
 import { filterWordsWithSenses } from "components/DataEntry/utilities";
-import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
+import { uploadFileFromUrl } from "components/Pronunciations/utilities";
 import { StoreState } from "types";
 import { Hash } from "types/hash";
 import { useAppSelector } from "types/hooks";
@@ -568,14 +568,7 @@ export default function DataEntryTable(
     defunctWord(oldId);
     let newId = oldId;
     for (const audioURL of audioURLs) {
-      const audioBlob = await fetch(audioURL).then((result) => result.blob());
-      const fileName = getFileNameForWord(newId);
-      const audioFile = new File([audioBlob], fileName, {
-        type: audioBlob.type,
-        lastModified: Date.now(),
-      });
-      newId = await backend.uploadAudio(newId, audioFile);
-      URL.revokeObjectURL(audioURL);
+      newId = await uploadFileFromUrl(newId, audioURL);
     }
     defunctWord(oldId, newId);
     return newId;

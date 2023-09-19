@@ -8,7 +8,7 @@ import {
   GlossWithSuggestions,
   VernWithSuggestions,
 } from "components/DataEntry/DataEntryTable/EntryCellComponents";
-import Pronunciations from "components/Pronunciations/PronunciationsComponent";
+import Pronunciations from "components/Pronunciations";
 import theme from "types/theme";
 import { newGloss } from "types/word";
 import { firstGlossText } from "utilities/wordUtilities";

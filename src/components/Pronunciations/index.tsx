@@ -5,11 +5,12 @@ import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 
 interface PronunciationProps {
-  wordId: string;
   audioInFrontend?: boolean;
   pronunciationFiles: string[];
-  deleteAudio: (wordId: string, fileName: string) => void;
-  uploadAudio: (wordId: string, audioFile: File) => void;
+  spacer?: ReactElement;
+  wordId: string;
+  deleteAudio?: (wordId: string, fileName: string) => void;
+  uploadAudio?: (wordId: string, audioFile: File) => void;
 }
 
 /** Audio recording/playing component */
@@ -30,7 +31,10 @@ export function Pronunciations(props: PronunciationProps): ReactElement {
 
   return (
     <>
-      <AudioRecorder wordId={props.wordId} uploadAudio={props.uploadAudio} />
+      {!!props.uploadAudio && (
+        <AudioRecorder wordId={props.wordId} uploadAudio={props.uploadAudio} />
+      )}
+      {props.spacer}
       {audioButtons}
     </>
   );

@@ -78,7 +78,9 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
 
   function deleteOrTogglePlay(event?: any): void {
     if (event?.shiftKey) {
-      setDeleteConf(true);
+      if (props.deleteAudio) {
+        setDeleteConf(true);
+      }
     } else {
       togglePlay();
     }
@@ -106,7 +108,10 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
 
   return (
     <>
-      <Tooltip title={t("pronunciations.playTooltip")} placement="top">
+      <Tooltip
+        placement="top"
+        title={props.deleteAudio ? t("pronunciations.playTooltip") : undefined}
+      >
         <IconButton
           tabIndex={-1}
           onClick={deleteOrTogglePlay}
@@ -147,6 +152,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
           )}
         </MenuItem>
         <MenuItem
+          disabled={!props.deleteAudio}
           id="audio-delete"
           onClick={() => {
             setDeleteConf(true);
