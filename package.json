@@ -104,7 +104,7 @@
     "@types/segment-analytics": "^0.0.34",
     "@types/uuid": "^9.0.4",
     "@types/validator": "^13.11.1",
-    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.2",
     "@typescript-eslint/parser": "^6.3.0",
     "css-mediaquery": "^0.1.2",
     "eslint": "^8.44.0",
