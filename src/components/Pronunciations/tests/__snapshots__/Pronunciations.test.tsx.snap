@@ -19,6 +19,8 @@ Array [
     onMouseLeave={[Function]}
     onMouseOver={[Function]}
     onMouseUp={[Function]}
+    onPointerDown={[Function]}
+    onPointerUp={[Function]}
     onTouchEnd={[Function]}
     onTouchMove={[Function]}
     onTouchStart={[Function]}

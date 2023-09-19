@@ -71,7 +71,7 @@ describe("Pronunciations", () => {
     expect(testRenderer.toJSON()).toMatchSnapshot();
   });
 
-  it("mouseDown and mouseUp", () => {
+  it("pointerDown and pointerUp", () => {
     const mockStartRecording = jest.fn();
     const mockStopRecording = jest.fn();
     renderer.act(() => {
@@ -91,11 +91,11 @@ describe("Pronunciations", () => {
     });
 
     expect(mockStartRecording).not.toBeCalled();
-    testRenderer.root.findByProps({ id: recordButtonId }).props.onMouseDown();
+    testRenderer.root.findByProps({ id: recordButtonId }).props.onPointerDown();
     expect(mockStartRecording).toBeCalled();
 
     expect(mockStopRecording).not.toBeCalled();
-    testRenderer.root.findByProps({ id: recordButtonId }).props.onMouseUp();
+    testRenderer.root.findByProps({ id: recordButtonId }).props.onPointerUp();
     expect(mockStopRecording).toBeCalled();
   });
 

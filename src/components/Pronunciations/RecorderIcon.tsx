@@ -50,11 +50,9 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
     // Temporarily disable context menu since some browsers
     // interpret a long-press touch as a right-click.
     document.addEventListener("contextmenu", disableContextMenu, false);
-    toggleIsRecordingToTrue();
   }
   function handleTouchEnd(): void {
     enableContextMenu();
-    toggleIsRecordingToFalse();
   }
 
   function disableContextMenu(event: any): void {
@@ -68,15 +66,15 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
   return (
     <Tooltip title={t("pronunciations.recordTooltip")} placement="top">
       <IconButton
-        tabIndex={-1}
-        onMouseDown={toggleIsRecordingToTrue}
-        onTouchStart={handleTouchStart}
-        onMouseUp={toggleIsRecordingToFalse}
-        onTouchEnd={handleTouchEnd}
-        className={classes.button}
         aria-label="record"
+        className={classes.button}
         id={recordButtonId}
+        onPointerDown={toggleIsRecordingToTrue}
+        onPointerUp={toggleIsRecordingToFalse}
+        onTouchEnd={handleTouchEnd}
+        onTouchStart={handleTouchStart}
         size="large"
+        tabIndex={-1}
       >
         <FiberManualRecord
           className={
