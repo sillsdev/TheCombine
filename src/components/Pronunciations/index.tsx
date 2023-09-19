@@ -7,9 +7,10 @@ import AudioRecorder from "components/Pronunciations/AudioRecorder";
 interface PronunciationProps {
   audioInFrontend?: boolean;
   pronunciationFiles: string[];
+  overrideMemo?: boolean;
   spacer?: ReactElement;
   wordId: string;
-  deleteAudio?: (wordId: string, fileName: string) => void;
+  deleteAudio: (wordId: string, fileName: string) => void;
   uploadAudio?: (wordId: string, audioFile: File) => void;
 }
 
@@ -18,13 +19,14 @@ export function Pronunciations(props: PronunciationProps): ReactElement {
   const audioButtons: ReactElement[] = props.pronunciationFiles.map(
     (fileName) => (
       <AudioPlayer
-        key={fileName}
-        wordId={props.wordId}
         fileName={fileName}
+        key={fileName}
         pronunciationUrl={
           props.audioInFrontend ? fileName : getAudioUrl(props.wordId, fileName)
         }
-        deleteAudio={props.deleteAudio}
+        deleteAudio={(fileName: string) =>
+          props.deleteAudio(props.wordId, fileName)
+        }
       />
     )
   );
@@ -46,6 +48,9 @@ function pronunciationPropsAreEqual(
   prev: PronunciationProps,
   next: PronunciationProps
 ): boolean {
+  if (next.overrideMemo) {
+    return false;
+  }
   return (
     prev.wordId === next.wordId &&
     JSON.stringify(prev.pronunciationFiles) ===

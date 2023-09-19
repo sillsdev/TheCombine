@@ -22,11 +22,10 @@ import { useAppDispatch, useAppSelector } from "types/hooks";
 import { themeColors } from "types/theme";
 
 interface PlayerProps {
-  pronunciationUrl: string;
-  wordId: string;
+  deleteAudio: (fileName: string) => void;
   fileName: string;
-  deleteAudio?: (wordId: string, fileName: string) => void;
   isPlaying?: boolean;
+  pronunciationUrl: string;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -62,12 +61,6 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
     }
   }, [audio, dispatchReset, isPlaying]);
 
-  function deleteAudio(): void {
-    if (props.deleteAudio) {
-      props.deleteAudio(props.wordId, props.fileName);
-    }
-  }
-
   function togglePlay(): void {
     if (!isPlaying) {
       dispatch(playing(props.fileName));
@@ -78,9 +71,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
 
   function deleteOrTogglePlay(event?: any): void {
     if (event?.shiftKey) {
-      if (props.deleteAudio) {
-        setDeleteConf(true);
-      }
+      setDeleteConf(true);
     } else {
       togglePlay();
     }
@@ -108,10 +99,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
 
   return (
     <>
-      <Tooltip
-        placement="top"
-        title={props.deleteAudio ? t("pronunciations.playTooltip") : undefined}
-      >
+      <Tooltip title={t("pronunciations.playTooltip")} placement="top">
         <IconButton
           tabIndex={-1}
           onClick={deleteOrTogglePlay}
@@ -152,7 +140,6 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
           )}
         </MenuItem>
         <MenuItem
-          disabled={!props.deleteAudio}
           id="audio-delete"
           onClick={() => {
             setDeleteConf(true);
@@ -167,7 +154,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
         textId="buttons.deletePermanently"
         titleId="pronunciations.deleteRecording"
         onClose={() => setDeleteConf(false)}
-        onConfirm={deleteAudio}
+        onConfirm={() => props.deleteAudio(props.fileName)}
         buttonIdClose="audio-delete-cancel"
         buttonIdConfirm="audio-delete-confirm"
       />

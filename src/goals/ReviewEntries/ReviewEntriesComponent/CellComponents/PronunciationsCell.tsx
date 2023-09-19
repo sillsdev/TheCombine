@@ -28,9 +28,11 @@ export default function PronunciationsCell(props: PronunciationsCellProps) {
   return props.audioFunctions ? (
     <Pronunciations
       audioInFrontend
+      overrideMemo
       pronunciationFiles={props.pronunciationsNew ?? []}
       spacer={
         <Pronunciations
+          overrideMemo
           pronunciationFiles={props.pronunciationFiles}
           wordId={props.wordId}
           deleteAudio={(_, fileName: string) => delOldAudio!(fileName)}
