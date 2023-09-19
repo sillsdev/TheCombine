@@ -1,5 +1,6 @@
 import { uploadAudio } from "backend";
 
+/** Generate a timestamp-based file name for the given `wordId`. */
 export function getFileNameForWord(wordId: string): string {
   const fourCharParts = wordId.match(/.{1,6}/g);
   const compressed = fourCharParts?.map((i) =>
@@ -8,16 +9,8 @@ export function getFileNameForWord(wordId: string): string {
   return compressed.join("") + "_" + new Date().getTime().toString(36);
 }
 
-/*export async function uploadFile(wordId: string, file: File): Promise<string> {
-  const fileName = getFileNameForWord(wordId);
-  const audioFile = new File([file.slice()], fileName, {
-    type: file.type,
-    lastModified: Date.now(),
-  });
-  const newId = await uploadAudio(wordId, audioFile);
-  return newId;
-}*/
-
+/** Given an audio file `url` that was generated with `URL.createObjectURL()`,
+ * add that audio file to the word with the given `wordId`. */
 export async function uploadFileFromUrl(
   wordId: string,
   url: string
