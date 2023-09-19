@@ -4,8 +4,8 @@ import renderer from "react-test-renderer";
 import "tests/reactI18nextMock";
 
 import ExportButton from "components/ProjectExport/ExportButton";
+import ProjectArchive from "components/ProjectSettings/ProjectArchive";
 import { ProjectList } from "components/SiteSettings/ProjectManagement";
-import ProjectButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectButtonWithConfirmation";
 import ProjectUsersButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectUsersButtonWithConfirmation";
 import { randomProject } from "types/project";
 
@@ -33,9 +33,7 @@ describe("ProjectList", () => {
   });
 
   it("Has the right number of archive/restore buttons", () => {
-    const projectButtons = testRenderer.root.findAllByType(
-      ProjectButtonWithConfirmation
-    );
+    const projectButtons = testRenderer.root.findAllByType(ProjectArchive);
     expect(projectButtons.length).toEqual(mockProjects.length);
   });
 

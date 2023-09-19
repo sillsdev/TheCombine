@@ -136,6 +136,14 @@
   },
   "projectSettings": {
     "project": "Project:",
+    "tab": {
+      "basic": "Basic Settings",
+      "export": "Export",
+      "importExport": "Import/Export",
+      "languages": "Languages",
+      "schedule": "Schedule",
+      "users": "Users"
+    },
     "language": {
       "header": "Language",
       "vernacular": "Vernacular",
@@ -144,7 +152,7 @@
       "analysisLanguage": "Analysis Language",
       "semanticDomains": "Semantic Domains",
       "semanticDomainsDefault": "(Default to browser language)",
-      "languages": "Languages",
+      "languages": "Project Languages",
       "bcp47": "BCP 47 Code",
       "name": "Name",
       "font": "Font",

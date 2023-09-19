@@ -17,15 +17,7 @@ import { User } from "api/models";
 import { avatarSrc, getAllUsers } from "backend";
 import { Hash } from "types/hash";
 import theme from "types/theme";
-
-export function doesTextMatchUser(text: string, user: User): boolean {
-  const lower = text.toLocaleLowerCase();
-  return (
-    user.name.toLocaleLowerCase().includes(lower) ||
-    user.username.toLocaleLowerCase().includes(lower) ||
-    user.email.toLocaleLowerCase().includes(lower)
-  );
-}
+import { doesTextMatchUser } from "types/user";
 
 interface UserListProps {
   addToProject: (user: User) => void;
