@@ -1,5 +1,5 @@
 import { Autocomplete } from "@mui/material";
-import React, { ReactElement, useContext, useEffect } from "react";
+import React, { ReactElement, useContext, useEffect, useState } from "react";
 import { Key } from "ts-key-enum";
 
 import { WritingSystem } from "api/models";
@@ -27,6 +27,11 @@ export default function GlossWithSuggestions(
 ): ReactElement {
   const spellChecker = useContext(SpellCheckerContext);
 
+  const [pressableEnter, setPressableEnter] = useState(true);
+  const [pressingEnter, setPressingEnter] = useState(false);
+  const [pressedEnter, setPressedEnter] = useState(false);
+
+  const { gloss, handleEnter } = props;
   const maxSuggestions = 5;
 
   useEffect(() => {
@@ -34,6 +39,31 @@ export default function GlossWithSuggestions(
       props.onUpdate();
     }
   });
+
+  // Trigger handleEnter when Enter is onKeyUp; this allows a user's spelling suggestion
+  // selection to update the gloss value.
+  // However, only trigger it if Enter was here for onKeyDown; this prevents an Enter
+  // started in the SenseDialog and ended here from submitting the new word.
+  useEffect(() => {
+    if (pressedEnter && pressableEnter) {
+      if (pressingEnter) {
+        handleEnter();
+        setPressableEnter(false);
+        setPressingEnter(false);
+      } else {
+        setPressedEnter(false);
+      }
+    }
+  }, [handleEnter, pressableEnter, pressedEnter, pressingEnter]);
+  // pressableEnter is used to prevent double-submitting;
+  // it needs to be reset when the gloss is cleared.
+  useEffect(() => {
+    if (!gloss) {
+      setPressedEnter(false);
+      setPressingEnter(false);
+      setPressableEnter(true);
+    }
+  }, [gloss, pressableEnter]);
 
   return (
     <Autocomplete
@@ -74,9 +104,13 @@ export default function GlossWithSuggestions(
         />
       )}
       onKeyDown={(e: React.KeyboardEvent) => {
-        if (e.key === Key.Enter) {
-          e.preventDefault();
-          props.handleEnter();
+        if (e.key === Key.Enter && !pressedEnter && pressableEnter) {
+          setPressingEnter(true);
+        }
+      }}
+      onKeyUp={(e: React.KeyboardEvent) => {
+        if (e.key === Key.Enter && pressableEnter) {
+          setPressedEnter(true);
         }
       }}
     />
