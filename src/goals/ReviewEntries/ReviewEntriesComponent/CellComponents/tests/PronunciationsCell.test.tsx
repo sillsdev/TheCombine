@@ -90,7 +90,6 @@ describe("PronunciationsCell", () => {
       });
       expect(mockDeleteAudio).toBeCalled();
       expect(mockDispatch).toBeCalled();
-
       expect(mockDelNewAudio).not.toBeCalled();
       expect(mockDelOldAudio).not.toBeCalled();
     });
@@ -102,15 +101,14 @@ describe("PronunciationsCell", () => {
       });
       expect(mockUploadAudio).toBeCalled();
       expect(mockDispatch).toBeCalled();
-
       expect(mockAddNewAudio).not.toBeCalled();
     });
   });
 
   describe("in edit mode", () => {
     it("renders", async () => {
-      const mockAudioOld = ["1", "2", "3"];
-      const mockAudioNew = ["4"];
+      const mockAudioOld = ["1", "2", "3", "4"];
+      const mockAudioNew = ["5", "6"];
       await renderPronunciationsCell(mockAudioOld, mockAudioNew);
       const playButtons = testRenderer.root.findAllByType(AudioPlayer);
       expect(playButtons).toHaveLength(
@@ -151,7 +149,6 @@ describe("PronunciationsCell", () => {
         testRenderer.root.findByType(AudioRecorder).props.uploadAudio();
       });
       expect(mockAddNewAudio).toBeCalled();
-
       expect(mockUploadAudio).not.toBeCalled();
       expect(mockDispatch).not.toBeCalled();
     });
