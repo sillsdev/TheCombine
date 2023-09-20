@@ -20,11 +20,11 @@ import { useTranslation } from "react-i18next";
 import { Role, User } from "api/models";
 import { avatarSrc, getUserRoles } from "backend";
 import { getCurrentUser } from "backend/localStorage";
-import CancelConfirmDialogCollection from "components/ProjectSettings/ProjectUsers/CancelConfirmDialogCollection";
+import CancelConfirmDialogCollection from "components/ProjectUsers/CancelConfirmDialogCollection";
 import SortOptions, {
   UserOrder,
   getUserCompare,
-} from "components/ProjectSettings/ProjectUsers/SortOptions";
+} from "components/ProjectUsers/SortOptions";
 import { StoreState } from "types";
 import { Hash } from "types/hash";
 import { useAppSelector } from "types/hooks";
