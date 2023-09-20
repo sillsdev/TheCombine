@@ -51,9 +51,9 @@ def run_cmd(
             check=check_results,
             shell=shell_needed,
         )
-        if (results.stdout):
+        if results.stdout:
             logging.info(f"STDOUT: {results.stdout}")
-        if (results.stderr):
+        if results.stderr:
             logging.info(f"STDERR: {results.stderr}")
         return results
 
