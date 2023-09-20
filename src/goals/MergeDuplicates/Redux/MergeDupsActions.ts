@@ -234,6 +234,13 @@ export function deferMerge() {
   };
 }
 
+export async function fetchMergeGrayDupsData(
+  maxInList: number,
+  maxLists: number
+): Promise<Word[][]> {
+  return await backend.getGrayDuplicates(maxInList, maxLists);
+}
+
 export function mergeAll() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const mergeTree = getState().mergeDuplicateGoal;

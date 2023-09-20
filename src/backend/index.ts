@@ -310,7 +310,7 @@ export async function blacklistAdd(wordIds: string[]): Promise<void> {
   );
 }
 
-/** Adds a list of wordIds to current project's merge blacklist */
+/** Adds a list of wordIds to current project's merge graylist */
 export async function graylistAdd(wordIds: string[]): Promise<void> {
   await mergeApi.graylistAdd(
     { projectId: LocalStorage.getProjectId(), requestBody: wordIds },
@@ -331,6 +331,29 @@ export async function getDuplicates(
   );
   return resp.data;
 }
+
+/** Get list of potential graylist duplicates for graylist merging. */
+export async function getGrayDuplicates(
+  maxInList: number,
+  maxLists: number
+): Promise<Word[][]> {
+  const projectId = LocalStorage.getProjectId();
+  const userId = LocalStorage.getUserId();
+  const resp = await mergeApi.getPotentialGrayDuplicates(
+    { projectId, maxInList, maxLists, userId },
+    defaultOptions()
+  );
+  return resp.data;
+}
+
+/*
+/** Get list of of wordIds to the current project's merge graylist 
+export async function getGraylistEntries(): Promise<Word[][]> {
+  const projectId = LocalStorage.getProjectId();
+  const userId = LocalStorage.getUserId();
+  const resp = await  
+}
+*/
 
 /* ProjectController.cs */
 

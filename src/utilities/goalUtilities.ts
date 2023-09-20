@@ -2,7 +2,10 @@ import { Edit, Permission } from "api/models";
 import { CreateCharInv } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { CreateStrWordInv } from "goals/CreateStrWordInv/CreateStrWordInv";
 import { HandleFlags } from "goals/HandleFlags/HandleFlags";
-import { MergeDups } from "goals/MergeDuplicates/MergeDupsTypes";
+import {
+  MergeDups,
+  ReviewDeferredDups,
+} from "goals/MergeDuplicates/MergeDupsTypes";
 import { ReviewEntries } from "goals/ReviewEntries/ReviewEntries";
 import { SpellCheckGloss } from "goals/SpellCheckGloss/SpellCheckGloss";
 import { ValidateChars } from "goals/ValidateChars/ValidateChars";
@@ -22,6 +25,7 @@ export function maxNumSteps(type: GoalType): number {
 export function requiredPermission(type: GoalType): Permission {
   switch (type) {
     case GoalType.MergeDups:
+    case GoalType.ReviewDeferredDups:
     case GoalType.ReviewEntries:
       return Permission.MergeAndReviewEntries;
     case GoalType.CreateCharInv:
@@ -49,6 +53,8 @@ export function goalTypeToGoal(type: GoalType): Goal {
       return new ValidateChars();
     case GoalType.ValidateStrWords:
       return new ValidateStrWords();
+    case GoalType.ReviewDeferredDups:
+      return new ReviewDeferredDups();
     default:
       return new Goal();
   }

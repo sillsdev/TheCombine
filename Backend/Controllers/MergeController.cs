@@ -121,7 +121,7 @@ namespace BackendFramework.Controllers
         /// <param name="maxLists"> Max number of lists of potential duplicates. </param>
         /// <param name="userId"> Id of user whose merge graylist is to be used. </param>
         /// <returns> List of Lists of <see cref="Word"/>s. </returns>
-        [HttpGet("dupsgray/{maxInList:int}/{maxLists:int}/{userId}", Name = "GetPotentialGrayDuplicates")]
+        [HttpGet("graydups/{maxInList:int}/{maxLists:int}/{userId}", Name = "GetPotentialGrayDuplicates")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<List<Word>>))]
         public async Task<IActionResult> GetPotentialGrayDuplicates(
             string projectId, int maxInList, int maxLists, string userId)

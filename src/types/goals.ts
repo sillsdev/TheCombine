@@ -41,6 +41,7 @@ export enum GoalType {
   SpellcheckGloss = 5,
   ValidateChars = 1,
   ValidateStrWords = 3,
+  ReviewDeferredDups = 8,
 }
 
 // These strings must match what is in src/resources/translations.json.
@@ -54,6 +55,7 @@ export enum GoalName {
   SpellcheckGloss = "spellcheckGloss",
   ValidateChars = "validateChars",
   ValidateStrWords = "validateStrWords",
+  ReviewDeferredDups = "ReviewDeferredDups",
 }
 
 export enum GoalStatus {
