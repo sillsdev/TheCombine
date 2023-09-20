@@ -11,7 +11,7 @@ import platform
 import subprocess
 import sys
 import time
-from typing import List, Optional
+from typing import Optional, Sequence, Union
 
 project_dir = Path(__file__).resolve().parent.parent
 
@@ -38,7 +38,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def run_cmd(
-    cmd: List[str], *, check_results: bool = True, shell_needed: bool = True
+    cmd: Sequence[Union[str, Path]], *, check_results: bool = True, shell_needed: bool = True
 ) -> subprocess.CompletedProcess[str]:
     """Run a command with subprocess and catch any CalledProcessErrors."""
     try:
@@ -78,6 +78,8 @@ def main() -> None:
             db_cmd,
             cwd=project_dir,
             universal_newlines=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
         )
         # replace with a more elegant solution, i.e. read stdout/stderr to see
         # if process started or if it exited
@@ -85,29 +87,29 @@ def main() -> None:
     shell_needed = platform.system() == "Windows"
     script_dir = project_dir / "deploy" / "scripts"
     xml_files = (script_dir / "semantic_domains" / "xml").glob("**/*.xml")
-    gen_xml_cmd = [script_dir / "sem_dom_import.py"] + [str(x) for x in list(xml_files)]
-    results = run_cmd(gen_xml_cmd, shell_needed=shell_needed, check_results=True)
+    gen_xml_cmd = [script_dir / "sem_dom_import.py"] + list(xml_files)
+    run_cmd(gen_xml_cmd, shell_needed=shell_needed, check_results=True)
     import_cmd = ["mongoimport", "-d", "CombineDatabase"]
     if not args.verbose:
         import_cmd.append("--quiet")
-    results = run_cmd(
+    run_cmd(
         import_cmd
         + [
             "-c",
             "SemanticDomains",
-            str(script_dir / "semantic_domains" / "json" / "nodes.json"),
+            script_dir / "semantic_domains" / "json" / "nodes.json",
             "--mode=upsert",
             "--upsertFields=id,lang,guid",
         ],
         shell_needed=shell_needed,
         check_results=True,
     )
-    results = run_cmd(
+    run_cmd(
         import_cmd
         + [
             "-c",
             "SemanticDomainTree",
-            str(script_dir / "semantic_domains" / "json" / "tree.json"),
+            script_dir / "semantic_domains" / "json" / "tree.json",
             "--mode=upsert",
             "--upsertFields=id,lang,guid",
         ],
@@ -115,12 +117,12 @@ def main() -> None:
         check_results=True,
     )
     if db_job is not None:
-        backend_status = db_job.poll()
-        if backend_status is None:
+        db_status = db_job.poll()
+        if db_status is None:
             db_job.terminate()
-            logging.info("Backend terminated.")
+            logging.info("Database terminated.")
         else:
-            logging.info(f"Backend exited with return code: {backend_status}.")
+            logging.error(f"Database exited with return code: {db_status}.")
 
 
 if __name__ == "__main__":
