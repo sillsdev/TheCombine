@@ -1,13 +1,13 @@
 import { Button } from "@mui/material";
 import { ButtonProps } from "@mui/material/Button";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { archiveProject, restoreProject } from "backend";
 import { ButtonConfirmation } from "components/Dialogs";
 import { themeColors } from "types/theme";
 
-interface ProjectButtonWithConfirmationProps {
+interface ProjectArchiveProps extends ButtonProps {
   archive?: boolean;
   projectId: string;
   updateParent: () => void | Promise<void>;
@@ -17,9 +17,7 @@ interface ProjectButtonWithConfirmationProps {
 /**
  * Button for archiving/restoring project (changing isActive)
  */
-export default function ProjectButtonWithConfirmation(
-  props: ButtonProps & ProjectButtonWithConfirmationProps
-) {
+export default function ProjectArchive(props: ProjectArchiveProps) {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
 
@@ -41,7 +39,7 @@ export default function ProjectButtonWithConfirmation(
   }
 
   return (
-    <React.Fragment>
+    <>
       <Button
         variant="contained"
         color={props.warn ? "secondary" : "primary"}
@@ -68,6 +66,6 @@ export default function ProjectButtonWithConfirmation(
           props.archive ? "archive" : "restore"
         }-confirm`}
       />
-    </React.Fragment>
+    </>
   );
 }
