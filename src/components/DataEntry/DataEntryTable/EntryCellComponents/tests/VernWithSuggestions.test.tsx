@@ -20,9 +20,9 @@ describe("VernWithSuggestions", () => {
       renderer.create(
         <VernWithSuggestions
           vernacular={"vern"}
-          vernInput={React.createRef<HTMLDivElement>()}
+          vernInput={React.createRef<HTMLInputElement>()}
           updateVernField={jest.fn()}
-          handleEnterAndTab={jest.fn()}
+          handleEnter={jest.fn()}
           onBlur={jest.fn()}
           vernacularLang={newWritingSystem()}
           textFieldId={"test-vern"}
@@ -37,9 +37,9 @@ describe("VernWithSuggestions", () => {
         <VernWithSuggestions
           isNew
           vernacular={""}
-          vernInput={React.createRef<HTMLDivElement>()}
+          vernInput={React.createRef<HTMLInputElement>()}
           updateVernField={jest.fn()}
-          handleEnterAndTab={jest.fn()}
+          handleEnter={jest.fn()}
           onBlur={jest.fn()}
           vernacularLang={newWritingSystem()}
           textFieldId={"test-vern-new"}
@@ -54,9 +54,9 @@ describe("VernWithSuggestions", () => {
         <VernWithSuggestions
           isDisabled
           vernacular={""}
-          vernInput={React.createRef<HTMLDivElement>()}
+          vernInput={React.createRef<HTMLInputElement>()}
           updateVernField={jest.fn()}
-          handleEnterAndTab={jest.fn()}
+          handleEnter={jest.fn()}
           onBlur={jest.fn()}
           vernacularLang={newWritingSystem()}
           textFieldId={"test-vern-disabled"}

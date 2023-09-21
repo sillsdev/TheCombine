@@ -20,9 +20,9 @@ describe("GlossWithSuggestions", () => {
       renderer.create(
         <GlossWithSuggestions
           gloss={"gloss"}
-          glossInput={React.createRef<HTMLDivElement>()}
+          glossInput={React.createRef<HTMLInputElement>()}
           updateGlossField={jest.fn()}
-          handleEnterAndTab={jest.fn()}
+          handleEnter={jest.fn()}
           analysisLang={newWritingSystem()}
           textFieldId={"test-gloss"}
         />
@@ -36,9 +36,9 @@ describe("GlossWithSuggestions", () => {
         <GlossWithSuggestions
           isNew
           gloss={""}
-          glossInput={React.createRef<HTMLDivElement>()}
+          glossInput={React.createRef<HTMLInputElement>()}
           updateGlossField={jest.fn()}
-          handleEnterAndTab={jest.fn()}
+          handleEnter={jest.fn()}
           analysisLang={newWritingSystem()}
           textFieldId={"test-gloss-new"}
         />
@@ -52,9 +52,9 @@ describe("GlossWithSuggestions", () => {
         <GlossWithSuggestions
           isDisabled
           gloss={""}
-          glossInput={React.createRef<HTMLDivElement>()}
+          glossInput={React.createRef<HTMLInputElement>()}
           updateGlossField={jest.fn()}
-          handleEnterAndTab={jest.fn()}
+          handleEnter={jest.fn()}
           analysisLang={newWritingSystem()}
           textFieldId={"test-gloss-disabled"}
         />

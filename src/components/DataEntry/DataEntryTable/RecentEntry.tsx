@@ -74,10 +74,8 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
           isDisabled={props.disabled || props.entry.senses.length > 1}
           updateVernField={setVernacular}
           onBlur={() => conditionallyUpdateVern()}
-          handleEnterAndTab={() => {
-            if (vernacular) {
-              props.focusNewEntry();
-            }
+          handleEnter={() => {
+            vernacular && props.focusNewEntry();
           }}
           vernacularLang={props.vernacularLang}
           textFieldId={`${idAffix}-${props.rowIndex}-vernacular`}
@@ -97,10 +95,8 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
           isDisabled={props.disabled}
           updateGlossField={setGloss}
           onBlur={() => conditionallyUpdateGloss()}
-          handleEnterAndTab={() => {
-            if (gloss) {
-              props.focusNewEntry();
-            }
+          handleEnter={() => {
+            gloss && props.focusNewEntry();
           }}
           analysisLang={props.analysisLang}
           textFieldId={`${idAffix}-${props.rowIndex}-gloss`}
