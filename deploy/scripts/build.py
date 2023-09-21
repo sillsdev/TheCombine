@@ -273,7 +273,7 @@ def main() -> None:
             build_cmd = [container_cli, "buildx", "build"]
             push_cmd = [container_cli, "push"]
         case _:
-            logging.critical(f"Container CLI {container_cli} is not supported.")
+            logging.critical(f"Container CLI '{container_cli}' is not supported.")
             sys.exit(1)
 
     # Setup build options
