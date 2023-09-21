@@ -395,8 +395,8 @@ Auto-format frontend code in the `src` folder.
 
 ### Import Semantic Domains
 
-Imports Semantic Domains from the XML files in `./deploy/scripts/semantic_domains/xml`. Run from within a Python virtual
-environment.
+To import Semantic Domains from the XML files in `./deploy/scripts/semantic_domains/xml`. Run from within a Python
+virtual environment.
 
 1. Generate the files for import into the Mongo database:
 
@@ -458,9 +458,9 @@ sake of devices with limited bandwidth. There are scripts for generating these f
 files in this directory should _not_ be manually edited.
 
 The bash script `scripts/fetch_wordlists.sh` is used to fetch dictionary files for a given language (e.g., `es`) from
-https://cgit.freedesktop.org/libreoffice/dictionaries/ and convert them to raw wordlists (e.g.,
-`src/resources/dictionaries/es.txt`). Execute the script with no arguments for its usage details. Any language not
-currently supported can be manually added as a case in this script.
+the [LibreOffice dictionaries](https://cgit.freedesktop.org/libreoffice/dictionaries/) and convert them to raw wordlists
+(e.g., `src/resources/dictionaries/es.txt`). Execute the script with no arguments for its usage details. Any language
+not currently supported can be manually added as a case in this script.
 
 ```bash
 ./scripts/fetch_wordlist.sh
@@ -611,13 +611,21 @@ Build _The Combine_ containers by running the build script in an activated Pytho
 _TheCombine_'s project directory. (See the [Python](#python) section to create the virtual environment.)
 
 ```bash
-python deploy/scripts/build.py [--nerdctl]
+python deploy/scripts/build.py
 ```
 
 Notes:
 
-- Use the `--nerdctl` option if you are using _Rancher Desktop_ with the `containerd` for the container runtime. If you
-  are using _Docker Desktop_ or _Rancher Desktop_ with the `dockerd` container runtime, omit this option.
+- If you are using _Rancher Desktop_ with `containerd` for the container runtime, set the following environment variable
+  in your user profile:
+
+  ```bash
+  export CONTAINER_CLI="nerdctl"
+  ```
+
+  If you are using _Docker Desktop_ or _Rancher Desktop_ with the `dockerd` container runtime, clear this variable or
+  set its value to `docker`.
+
 - Run with the `--help` option to see all available options.
 - If you see errors like:
 
