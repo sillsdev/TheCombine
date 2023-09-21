@@ -27,7 +27,10 @@ export default function ChooseProject(): ReactElement {
   useEffect(() => {
     const userId = getUserId();
     if (userId) {
-      getAllActiveProjectsByUser(userId).then(setProjectList);
+      getAllActiveProjectsByUser(userId).then((projects) => {
+        projects.sort((a: Project, b: Project) => a.name.localeCompare(b.name));
+        setProjectList(projects);
+      });
     }
   }, []);
 

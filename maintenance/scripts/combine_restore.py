@@ -92,12 +92,14 @@ def main() -> None:
             aws_backup_list: List[Tuple[str, str]] = []
             for backup_row in backup_list_output:
                 backup_components = backup_row.split()
-                aws_backup_list.append(
-                    (
-                        humanfriendly.format_size(int(backup_components[2])),
-                        aws_strip_bucket(backup_components[3]),
+                # Check for a directory listing
+                if re.match(r".*/$", backup_components[3]) is None:
+                    aws_backup_list.append(
+                        (
+                            humanfriendly.format_size(int(backup_components[2])),
+                            aws_strip_bucket(backup_components[3]),
+                        )
                     )
-                )
 
             # Print out the list of backups to choose from.  In the process,
             # update each line in the backup list to be the AWS S3 object name

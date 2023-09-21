@@ -27,7 +27,7 @@ spec:
       containers:
         - name: frontend
           image: {{ template "frontend.containerImage" . }}
-          imagePullPolicy: {{ template "frontend.imagePullPolicy" . }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           env:
             - name: CERT_ADDL_DOMAINS
               valueFrom:

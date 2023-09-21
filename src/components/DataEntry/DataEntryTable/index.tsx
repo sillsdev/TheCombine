@@ -233,7 +233,7 @@ export default function DataEntryTable(
   });
 
   const levDist = useMemo(() => new LevenshteinDistance(), []);
-  const newVernInput = useRef<HTMLDivElement>(null);
+  const newVernInput = useRef<HTMLInputElement>(null);
   const spellChecker = useContext(SpellCheckerContext);
   useEffect(() => {
     spellChecker.updateLang(analysisLang.bcp47);

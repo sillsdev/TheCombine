@@ -36,7 +36,7 @@ describe("NewEntry", () => {
             setNewNote={jest.fn()}
             newVern={""}
             setNewVern={jest.fn()}
-            vernInput={createRef<HTMLDivElement>()}
+            vernInput={createRef<HTMLInputElement>()}
             // Parent component handles vern suggestion state:
             setSelectedDup={jest.fn()}
             suggestedVerns={[]}
