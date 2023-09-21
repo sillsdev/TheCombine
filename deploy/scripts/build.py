@@ -265,12 +265,16 @@ def main() -> None:
 
     # Setup required build engine - docker or nerdctl
     container_cli = os.getenv("CONTAINER_CLI", "nerdctl" if args.nerdctl else "docker")
-    if container_cli == "nerdctl":
-        build_cmd = [container_cli, "-n", args.namespace, "build"]
-        push_cmd = [container_cli, "-n", args.namespace, "push"]
-    else:
-        build_cmd = [container_cli, "buildx", "build"]
-        push_cmd = [container_cli, "push"]
+    match container_cli:
+        case "nerdctl":
+            build_cmd = [container_cli, "-n", args.namespace, "build"]
+            push_cmd = [container_cli, "-n", args.namespace, "push"]
+        case "docker":
+            build_cmd = [container_cli, "buildx", "build"]
+            push_cmd = [container_cli, "push"]
+        case _:
+            logging.critical(f"Container CLI {container_cli} is not supported.")
+            sys.exit(1)
 
     # Setup build options
     build_opts: List[str] = []
