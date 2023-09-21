@@ -70,6 +70,8 @@ def main() -> None:
     args = parse_args()
     log_level = logging.INFO if args.verbose else logging.WARNING
     logging.basicConfig(format="%(levelname)s:%(message)s", level=log_level)
+    shell_needed = platform.system() == "Windows"
+
     db_job: Optional[subprocess.Popen[str]] = None
     if args.database:
         db_cmd = ["npm", "run", "database"]
@@ -80,6 +82,7 @@ def main() -> None:
             universal_newlines=True,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
+            shell=shell_needed
         )
         # replace with a more elegant solution, i.e. read stdout/stderr to see
         # if process started or if it exited
