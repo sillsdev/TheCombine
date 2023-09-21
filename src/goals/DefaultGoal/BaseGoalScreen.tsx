@@ -6,6 +6,7 @@ import PageNotFound from "components/PageNotFound/component";
 import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
 import Loading from "goals/DefaultGoal/Loading";
 import { clearTree } from "goals/MergeDuplicates/Redux/MergeDupsActions";
+import ReviewDeferredDuplicates from "goals/ReviewDeferredDuplicates";
 import { clearReviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesActions";
 import { StoreState } from "types";
 import { Goal, GoalStatus, GoalType } from "types/goals";
@@ -26,6 +27,8 @@ function displayComponent(goal: Goal): ReactElement {
       return <MergeDup completed={isCompleted} />;
     case GoalType.ReviewEntries:
       return <ReviewEntriesComponent />;
+    case GoalType.ReviewDeferredDups:
+      return <ReviewDeferredDuplicates completed={isCompleted} />;
     default:
       return <PageNotFound />;
   }

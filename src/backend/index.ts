@@ -346,15 +346,6 @@ export async function getGrayDuplicates(
   return resp.data;
 }
 
-/*
-/** Get list of of wordIds to the current project's merge graylist 
-export async function getGraylistEntries(): Promise<Word[][]> {
-  const projectId = LocalStorage.getProjectId();
-  const userId = LocalStorage.getUserId();
-  const resp = await  
-}
-*/
-
 /* ProjectController.cs */
 
 export async function getAllProjects(): Promise<Project[]> {

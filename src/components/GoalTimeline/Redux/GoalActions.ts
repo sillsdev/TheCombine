@@ -18,6 +18,7 @@ import { CharacterChange } from "goals/CharacterInventory/CharacterInventoryType
 import {
   dispatchMergeStepData,
   fetchMergeDupsData,
+  fetchMergeGrayDupsData,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
@@ -171,6 +172,9 @@ export function dispatchStepData(goal: Goal) {
       case GoalType.MergeDups:
         dispatch(dispatchMergeStepData(goal));
         break;
+      case GoalType.ReviewDeferredDups:
+        dispatch(dispatchMergeStepData(goal));
+        break;
       default:
         break;
     }
@@ -208,6 +212,8 @@ export async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
   switch (goalType) {
     case GoalType.MergeDups:
       return await fetchMergeDupsData(5, maxNumSteps(goalType));
+    case GoalType.ReviewDeferredDups:
+      return await fetchMergeGrayDupsData(maxNumSteps(goalType));
     default:
       return [];
   }

@@ -90,9 +90,9 @@ export default function GoalTimeline(): ReactElement {
     }
     const updateHasGraylist = async () => {
       setHasGraylist(
-        //await graylist.then((res) => {
-        await fetchMergeGrayDupsData(5, 12).then((res) => {
-          // to-do: don't hard code max min values
+        await fetchMergeGrayDupsData(12).then((res) => {
+          // to-do: don't hard code values
+          console.log("gray", res);
           if (res.length !== 0) {
             return true;
           }
