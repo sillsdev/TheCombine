@@ -395,19 +395,36 @@ Auto-format frontend code in the `src` folder.
 
 ### Import Semantic Domains
 
-To imports Semantic Domains from the XML files in `./deploy/scripts/semantic_domains/xml`. Run from within a Python
+To import Semantic Domains from the XML files in `./deploy/scripts/semantic_domains/xml`. Run from within a Python
 virtual environment.
 
-```bash
-python scripts/import_sem_doms.py [--database | -d] [--verbose | -v]
-```
+1. Generate the files for import into the Mongo database:
 
-#### Options:
+   ```bash
+   cd ./deploy/scripts
+   python sem_dom_import.py <xml_filename> [<xml_filename> ...]
+   ```
 
-`--database` | `-d`: Start the database before the import and terminate it when done. If the database is already
-running, this is not necessary.
+   where `<xml_filename>` is the name of the file(s) to import. Currently each file contains English and one other
+   language.
 
-`--verbose` | `-v`: Print additional output
+2. Start the database:
+
+   ```bash
+   npm run database
+   ```
+
+3. Import the files that were created.
+
+   There are two files that were created for each language in step 1, a `nodes.json` and a `tree.json`. The `nodes.json`
+   file contains the detailed data for each node in the semantic domain tree; the `tree.json` file contains the tree
+   structure of the semantic domains. To import the semantic domain data, run:
+
+   ```bash
+   cd ./deploy/scripts/semantic_domains/json
+   mongoimport -d CombineDatabase -c SemanticDomains nodes.json --mode=upsert --upsertFields=id,lang,guid
+   mongoimport -d CombineDatabase -c SemanticDomainTree tree.json --mode=upsert --upsertFields=id,lang,guid
+   ```
 
 ### Generate License Reports
 
