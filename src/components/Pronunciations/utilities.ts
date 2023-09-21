@@ -10,7 +10,8 @@ export function getFileNameForWord(wordId: string): string {
 }
 
 /** Given an audio file `url` that was generated with `URL.createObjectURL()`,
- * add that audio file to the word with the given `wordId`. */
+ * add that audio file to the word with the given `wordId`.
+ * Return the id of the updated word. */
 export async function uploadFileFromUrl(
   wordId: string,
   url: string
