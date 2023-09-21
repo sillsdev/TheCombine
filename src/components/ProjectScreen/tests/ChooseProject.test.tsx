@@ -27,10 +27,11 @@ const mockProj = (name: string): Project => ({
 
 let testRenderer: renderer.ReactTestRenderer;
 
-const findText = (item: renderer.ReactTestInstance, text: string) => {
-  return item.find(
+const hasText = (item: renderer.ReactTestInstance, text: string): boolean => {
+  const found = item.findAll(
     (node) => node.children.length === 1 && node.children[0] === text
   );
+  return found.length !== 0;
 };
 
 it("renders with projects in alphabetical order", async () => {
@@ -41,10 +42,10 @@ it("renders with projects in alphabetical order", async () => {
   });
   const items = testRenderer.root.findAllByType(ListItemButton);
   expect(items).toHaveLength(unordered.length);
-  expect(() => findText(items[0], unordered[0])).toThrow;
-  expect(() => findText(items[1], unordered[1])).toThrow;
-  expect(() => findText(items[2], unordered[2])).toThrow;
-  expect(findText(items[0], unordered[2])).toBeTruthy;
-  expect(findText(items[1], unordered[0])).toBeTruthy;
-  expect(findText(items[2], unordered[1])).toBeTruthy;
+  expect(hasText(items[0], unordered[0])).toBeFalsy;
+  expect(hasText(items[1], unordered[1])).toBeFalsy;
+  expect(hasText(items[2], unordered[2])).toBeFalsy;
+  expect(hasText(items[0], unordered[2])).toBeTruthy;
+  expect(hasText(items[1], unordered[0])).toBeTruthy;
+  expect(hasText(items[2], unordered[1])).toBeTruthy;
 });
