@@ -213,7 +213,7 @@ export async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
     case GoalType.MergeDups:
       return await fetchMergeDupsData(5, maxNumSteps(goalType));
     case GoalType.ReviewDeferredDups:
-      return await fetchMergeGrayDupsData(maxNumSteps(goalType));
+      return await fetchMergeGrayDupsData(5, maxNumSteps(goalType));
     default:
       return [];
   }

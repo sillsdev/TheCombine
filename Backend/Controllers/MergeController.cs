@@ -136,5 +136,25 @@ namespace BackendFramework.Controllers
                 await _mergeService.GetPotentialGrayDuplicates(projectId, maxInList, maxLists, userId));
         }
 
+        /// <summary> Get lists of graylist entries. </summary>
+        /// <param name="projectId"> Id of project in which to search the frontier for potential duplicates. </param>
+        /// <param name="maxLists"> Max number of lists of potential duplicates. </param>
+        /// <param name="userId"> Id of user whose merge graylist is to be used. </param>
+        /// <returns> List of Lists of <see cref="Word"/>s. </returns>
+        [HttpGet("getgraylist/{maxLists}/{userId}", Name = "GetGraylistEntries")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<MergeWordSetEntry>))]
+        public async Task<IActionResult> getGraylistEntries(
+            string projectId, int maxLists, string userId)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndReviewEntries))
+            {
+                return Forbid();
+            }
+
+            await _mergeService.UpdateMergeGraylist(projectId);
+            return Ok(
+                await _mergeService.GetGraylistEntries(projectId, maxLists, userId));
+        }
+
     }
 }

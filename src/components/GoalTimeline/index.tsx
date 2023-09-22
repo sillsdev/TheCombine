@@ -8,13 +8,13 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
-import { getCurrentPermissions } from "backend";
+import { getCurrentPermissions, getGraylistEntries } from "backend";
 import GoalList from "components/GoalTimeline/GoalList";
 import {
   asyncAddGoal,
   asyncGetUserEdits,
 } from "components/GoalTimeline/Redux/GoalActions";
-import { fetchMergeGrayDupsData } from "goals/MergeDuplicates/Redux/MergeDupsActions";
+//import { fetchMergeGrayDupsData } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { StoreState } from "types";
 import { Goal, GoalType } from "types/goals";
 import { useAppDispatch, useAppSelector } from "types/hooks";
@@ -90,7 +90,7 @@ export default function GoalTimeline(): ReactElement {
     }
     const updateHasGraylist = async () => {
       setHasGraylist(
-        await fetchMergeGrayDupsData(12).then((res) => {
+        await getGraylistEntries(12).then((res) => {
           // to-do: don't hard code values
           console.log("gray", res);
           if (res.length !== 0) {

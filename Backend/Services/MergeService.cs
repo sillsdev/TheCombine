@@ -345,5 +345,29 @@ namespace BackendFramework.Services
             protected InvalidGraylistEntryException(SerializationInfo info, StreamingContext context)
                 : base(info, context) { }
         }
+
+
+        /// <summary>
+        /// Get Lists of all entries <see cref="MergeWordSetEntry"/>s in specified <see cref="Project"/>'s graylist.
+        /// </summary>
+        public async Task<List<List<Word>>> GetGraylistEntries(
+            string projectId, int maxLists, string? userId = null)
+        {
+
+            var graylistEntry = await _mergeGraylistRepo.GetAllEntries(projectId, userId); // reutrns List<MergeWordSetEntry>
+            var frontierWords = (await _wordRepo.GetFrontier(projectId));
+            var wordLists = new List<List<Word>> { Capacity = maxLists };
+
+
+            foreach (var entry in graylistEntry)
+            {
+
+                var subList = new List<Word>();
+                subList = (entry.WordIds.Select(wordId => (frontierWords.Where(word => wordId == word.Id).ToList()[0])).ToList());
+
+                wordLists.Add(subList);
+            }
+            return wordLists;
+        }
     }
 }

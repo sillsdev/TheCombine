@@ -235,10 +235,14 @@ export function deferMerge() {
 }
 
 export async function fetchMergeGrayDupsData(
-  //maxInList: number,
+  maxInList: number,
   maxLists: number
 ): Promise<Word[][]> {
-  return await backend.getGrayDuplicates(5, maxLists);
+  return await backend.getGrayDuplicates(maxInList, maxLists);
+}
+
+export async function getGraylistEntries(maxLists: number): Promise<Word[][]> {
+  return await backend.getGraylistEntries(maxLists);
 }
 
 export function mergeAll() {

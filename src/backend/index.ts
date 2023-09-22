@@ -346,6 +346,17 @@ export async function getGrayDuplicates(
   return resp.data;
 }
 
+/** Get list of potential graylist duplicates for graylist merging. */
+export async function getGraylistEntries(maxLists: number): Promise<Word[][]> {
+  const projectId = LocalStorage.getProjectId();
+  const userId = LocalStorage.getUserId();
+  const resp = await mergeApi.getGraylistEntries(
+    { projectId, maxLists, userId },
+    defaultOptions()
+  );
+  return resp.data;
+}
+
 /* ProjectController.cs */
 
 export async function getAllProjects(): Promise<Project[]> {
