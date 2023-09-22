@@ -294,7 +294,7 @@ namespace BackendFramework.Services
             {
                 collection = await _wordRepo.GetFrontier(projectId);
                 wordLists = await dupFinder.GetSimilarWords(
-                    collection, wordIds => IsInMergeBlacklist(projectId, wordIds, userId));
+                    collection, wordIds => IsInMergeBlacklist(projectId, wordIds, userId), wordIds => IsInMergeGraylist(projectId, wordIds, userId));
             }
 
             return wordLists;
@@ -321,15 +321,15 @@ namespace BackendFramework.Services
 
             // First pass, only look for words with identical vernacular.
             var collection = await _wordRepo.GetFrontier(projectId);
-            var wordLists = await dupFinder.GetIdenticalGrayVernWords(
+            var wordLists = await dupFinder.GetIdenticalVernWords(
                 collection, wordIds => IsInMergeGraylist(projectId, wordIds, userId));
 
             // If no such sets found, look for similar words.
             if (wordLists.Count == 0)
             {
                 collection = await _wordRepo.GetFrontier(projectId);
-                wordLists = await dupFinder.GetSimilarGrayWords(
-                    collection, wordIds => IsInMergeGraylist(projectId, wordIds, userId));
+                wordLists = await dupFinder.GetSimilarWords(
+                    collection, wordIds => IsInMergeBlacklist(projectId, wordIds, userId), wordIds => IsInMergeGraylist(projectId, wordIds, userId));
             }
 
             return wordLists;
@@ -353,19 +353,16 @@ namespace BackendFramework.Services
         public async Task<List<List<Word>>> GetGraylistEntries(
             string projectId, int maxLists, string? userId = null)
         {
-
-            var graylistEntry = await _mergeGraylistRepo.GetAllEntries(projectId, userId); // reutrns List<MergeWordSetEntry>
-            var frontierWords = (await _wordRepo.GetFrontier(projectId));
+            var graylist = await _mergeGraylistRepo.GetAllEntries(projectId, userId);
+            var frontier = await _wordRepo.GetFrontier(projectId);
             var wordLists = new List<List<Word>> { Capacity = maxLists };
-
-
-            foreach (var entry in graylistEntry)
+            foreach (var entry in graylist)
             {
-
-                var subList = new List<Word>();
-                subList = (entry.WordIds.Select(wordId => (frontierWords.Where(word => wordId == word.Id).ToList()[0])).ToList());
-
-                wordLists.Add(subList);
+                if (wordLists.Count == maxLists)
+                {
+                    break;
+                }
+                wordLists.Add(frontier.Where(w => entry.WordIds.Contains(w.Id)).ToList());
             }
             return wordLists;
         }

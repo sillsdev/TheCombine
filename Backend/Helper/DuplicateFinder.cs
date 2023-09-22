@@ -56,51 +56,13 @@ namespace BackendFramework.Helper
             return wordLists;
         }
 
-        /// <summary>
-        /// Get from specified List several sub-Lists,
-        /// each with multiple <see cref="Word"/>s having a common Vernacular and are in Graylist.
-        /// </summary>
-        public async Task<List<List<Word>>> GetIdenticalGrayVernWords(
-            List<Word> collection, Func<List<string>, Task<bool>> isInGraylist)
-        {
-            var wordLists = new List<List<Word>> { Capacity = _maxLists };
-            while (collection.Count > 0 && wordLists.Count < _maxLists)
-            {
-                var word = collection.First();
-                collection.RemoveAt(0);
-                var similarWords = GetIdenticalVernToWord(word, collection);
-                if (similarWords.Count == 0)
-                {
-                    continue;
-                }
-
-                // Check if set is in blacklist.
-                var ids = new List<string> { word.Id };
-                ids.AddRange(similarWords.Select(w => w.Id));
-                //if (await isInBlacklist(ids))
-                //{
-                //continue;
-                //}
-                if (!(await isInGraylist(ids)))
-                {
-                    continue;
-                }
-
-                // Remove from collection and add to main list.
-                similarWords.ForEach(w => collection.Remove(w));
-                similarWords.Insert(0, word);
-                wordLists.Add(similarWords);
-            }
-            return wordLists;
-        }
-
         /// <summary> Get from specified List several sub-Lists, each a set of similar <see cref="Word"/>s. </summary>
         /// <returns>
         /// A List of Lists: each inner list is ordered by similarity to the first entry in the List;
         /// the outer list is ordered by similarity of the first two items in each inner List.
         /// </returns>
         public async Task<List<List<Word>>> GetSimilarWords(
-            List<Word> collection, Func<List<string>, Task<bool>> isInBlacklist)
+            List<Word> collection, Func<List<string>, Task<bool>> isInBlacklist, Func<List<string>, Task<bool>> isInGraylist)
         {
             double currentMax = _maxScore;
             var wordLists = new List<Tuple<double, List<Word>>> { Capacity = _maxLists + 1 };
@@ -122,75 +84,7 @@ namespace BackendFramework.Helper
                 // Check if set is in blacklist.
                 var ids = new List<string> { word.Id };
                 ids.AddRange(similarWords.Select(w => w.Item2.Id));
-                if (await isInBlacklist(ids))
-                {
-                    continue;
-                }
-
-                // Remove similar words from collection and add them to list with main word.
-                var newWordList = Tuple.Create(score, new List<Word> { word });
-                similarWords.ForEach(w =>
-                {
-                    collection.Remove(w.Item2);
-                    newWordList.Item2.Add(w.Item2);
-                });
-
-                // Insert at correct place in list.
-                var i = wordLists.FindIndex(pair => score <= pair.Item1);
-                if (i == -1)
-                {
-                    wordLists.Add(newWordList);
-                }
-                else
-                {
-                    wordLists.Insert(i, newWordList);
-                }
-
-                // If list is now too long, boot the last one, recycling its similar words.
-                if (wordLists.Count == _maxLists + 1)
-                {
-                    var toRecycle = wordLists.Last().Item2;
-                    toRecycle.RemoveAt(0);
-                    foreach (var simWord in toRecycle)
-                    {
-                        collection.Add(simWord);
-                    }
-                    wordLists.RemoveAt(_maxLists);
-                    currentMax = wordLists.Last().Item1;
-                }
-            }
-            return wordLists.Select(list => list.Item2).ToList();
-        }
-
-        /// <summary> Get from specified List several sub-Lists, each a set of similar <see cref="Word"/>s. </summary>
-        /// <returns>
-        /// A List of Lists: each inner list is ordered by similarity to the first entry in the List;
-        /// the outer list is ordered by similarity of the first two items in each inner List.
-        /// </returns>
-        public async Task<List<List<Word>>> GetSimilarGrayWords(
-            List<Word> collection, Func<List<string>, Task<bool>> isInGraylist)
-        {
-            double currentMax = _maxScore;
-            var wordLists = new List<Tuple<double, List<Word>>> { Capacity = _maxLists + 1 };
-            while (collection.Count > 0 && (wordLists.Count < _maxLists || currentMax > 0))
-            {
-                var word = collection.First();
-                collection.RemoveAt(0);
-                var similarWords = GetSimilarToWord(word, collection);
-                if (similarWords.Count == 0)
-                {
-                    continue;
-                }
-                var score = similarWords.First().Item1;
-                if (score > currentMax || (wordLists.Count >= _maxLists && Math.Abs(score - currentMax) < 0.001))
-                {
-                    continue;
-                }
-
-                // Verify if set is in Graylist.
-                var ids = new List<string> { word.Id };
-                ids.AddRange(similarWords.Select(w => w.Item2.Id));
-                if (!(await isInGraylist(ids)))
+                if (await isInBlacklist(ids) || await isInGraylist(ids))
                 {
                     continue;
                 }
