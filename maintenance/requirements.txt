@@ -24,7 +24,7 @@ humanfriendly==10.0
     # via -r requirements.in
 idna==3.4
     # via requests
-kubernetes==27.2.0
+kubernetes==28.1.0
     # via -r requirements.in
 oauthlib==3.2.2
     # via
