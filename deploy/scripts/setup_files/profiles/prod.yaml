@@ -30,6 +30,7 @@ charts:
     global:
       awsS3Location: prod.thecombine.app
       fontStorageAccessMode: ReadWriteMany
+      imagePullPolicy: Always
       pullSecretName: None
     certManager:
       enabled: false

@@ -5,7 +5,7 @@ import "tests/reactI18nextMock.ts";
 import SortOptions, {
   SortOptionsProps,
   reverseButtonId,
-} from "components/ProjectSettings/ProjectUsers/SortOptions";
+} from "components/ProjectUsers/SortOptions";
 
 let testRenderer: renderer.ReactTestRenderer;
 

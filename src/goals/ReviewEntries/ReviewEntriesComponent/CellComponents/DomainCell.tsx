@@ -1,12 +1,13 @@
 import { Add } from "@mui/icons-material";
 import { Chip, Dialog, Grid, IconButton } from "@mui/material";
-import React, { ReactElement, useState } from "react";
+import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 import { SemanticDomain } from "api/models";
 import { getCurrentUser } from "backend/localStorage";
+import Overlay from "components/Overlay";
 import TreeView from "components/TreeView";
 import AlignedList, {
   SPACER,
@@ -96,51 +97,53 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <React.Fragment>
+    <>
       <AlignedList
         key={`domainCell:${props.rowData.id}`}
         listId={`domains${props.rowData.id}`}
         contents={props.rowData.senses.map((sense, senseIndex) => (
-          <Grid container direction="row" spacing={2} key={senseIndex}>
-            {sense.domains.length > 0 ? (
-              sense.domains.map((domain, domainIndex) => (
-                <Grid
-                  item
-                  key={`${domain.name}::${props.rowData.id}:${sense.guid}`}
-                >
+          <Overlay key={senseIndex} on={sense.deleted}>
+            <Grid container direction="row" spacing={2}>
+              {sense.domains.length > 0 ? (
+                sense.domains.map((domain, domainIndex) => (
+                  <Grid
+                    item
+                    key={`${domain.name}::${props.rowData.id}:${sense.guid}`}
+                  >
+                    <Chip
+                      color={sense.deleted ? "secondary" : "default"}
+                      style={getChipStyle(senseIndex, domainIndex)}
+                      label={`${domain.id}: ${domain.name}`}
+                      onDelete={
+                        props.editDomains && !sense.deleted
+                          ? () => deleteDomain(domain, sense)
+                          : undefined
+                      }
+                      id={`sense-${sense.guid}-domain-${domainIndex}`}
+                    />
+                  </Grid>
+                ))
+              ) : (
+                <Grid item xs key={`noDomain${sense.guid}`}>
                   <Chip
-                    color={sense.deleted ? "secondary" : "default"}
-                    style={getChipStyle(senseIndex, domainIndex)}
-                    label={`${domain.id}: ${domain.name}`}
-                    onDelete={
-                      props.editDomains && !sense.deleted
-                        ? () => deleteDomain(domain, sense)
-                        : undefined
-                    }
-                    id={`sense-${sense.guid}-domain-${domainIndex}`}
+                    label={t("reviewEntries.noDomain")}
+                    color={props.sortingByThis ? "default" : "secondary"}
+                    style={getChipStyle(senseIndex, 0)}
                   />
                 </Grid>
-              ))
-            ) : (
-              <Grid item xs key={`noDomain${sense.guid}`}>
-                <Chip
-                  label={t("reviewEntries.noDomain")}
-                  color={props.sortingByThis ? "default" : "secondary"}
-                  style={getChipStyle(senseIndex, 0)}
-                />
-              </Grid>
-            )}
-            {props.editDomains && !sense.deleted && (
-              <IconButton
-                key={`buttonFor${sense.guid}`}
-                onClick={() => prepAddDomain(sense)}
-                id={`sense-${sense.guid}-domain-add`}
-                size="large"
-              >
-                <Add />
-              </IconButton>
-            )}
-          </Grid>
+              )}
+              {props.editDomains && !sense.deleted && (
+                <IconButton
+                  key={`buttonFor${sense.guid}`}
+                  onClick={() => prepAddDomain(sense)}
+                  id={`sense-${sense.guid}-domain-add`}
+                  size="large"
+                >
+                  <Add />
+                </IconButton>
+              )}
+            </Grid>
+          </Overlay>
         ))}
         bottomCell={props.editDomains ? SPACER : undefined}
       />
@@ -150,6 +153,6 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
           returnControlToCaller={addDomain}
         />
       </Dialog>
-    </React.Fragment>
+    </>
   );
 }

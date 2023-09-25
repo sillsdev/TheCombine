@@ -40,7 +40,6 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
     sense.glosses.push(newGloss("", props.analysisLang.bcp47));
   }
   const [gloss, setGloss] = useState(firstGlossText(sense));
-  const [hovering, setHovering] = useState(false);
   const [vernacular, setVernacular] = useState(props.entry.vernacular);
 
   function conditionallyUpdateGloss(): void {
@@ -60,13 +59,7 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
   }
 
   return (
-    <Grid
-      id={`${idAffix}-${props.rowIndex}`}
-      container
-      onMouseEnter={() => setHovering(true)}
-      onMouseLeave={() => setHovering(false)}
-      alignItems="center"
-    >
+    <Grid alignItems="center" container id={`${idAffix}-${props.rowIndex}`}>
       <Grid
         item
         xs={4}
@@ -81,10 +74,8 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
           isDisabled={props.disabled || props.entry.senses.length > 1}
           updateVernField={setVernacular}
           onBlur={() => conditionallyUpdateVern()}
-          handleEnterAndTab={() => {
-            if (vernacular) {
-              props.focusNewEntry();
-            }
+          handleEnter={() => {
+            vernacular && props.focusNewEntry();
           }}
           vernacularLang={props.vernacularLang}
           textFieldId={`${idAffix}-${props.rowIndex}-vernacular`}
@@ -104,10 +95,8 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
           isDisabled={props.disabled}
           updateGlossField={setGloss}
           onBlur={() => conditionallyUpdateGloss()}
-          handleEnterAndTab={() => {
-            if (gloss) {
-              props.focusNewEntry();
-            }
+          handleEnter={() => {
+            gloss && props.focusNewEntry();
           }}
           analysisLang={props.analysisLang}
           textFieldId={`${idAffix}-${props.rowIndex}-gloss`}
@@ -161,7 +150,7 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
           position: "relative",
         }}
       >
-        {!props.disabled && hovering && (
+        {!props.disabled && (
           <DeleteEntry
             removeEntry={() => props.removeEntry()}
             buttonId={`${idAffix}-${props.rowIndex}-delete`}
