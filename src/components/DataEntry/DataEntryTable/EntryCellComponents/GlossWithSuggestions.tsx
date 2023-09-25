@@ -3,7 +3,7 @@ import React, { ReactElement, useContext, useEffect } from "react";
 import { Key } from "ts-key-enum";
 
 import { WritingSystem } from "api/models";
-import { TextFieldWithFont } from "utilities/fontComponents";
+import { LiWithFont, TextFieldWithFont } from "utilities/fontComponents";
 import SpellCheckerContext from "utilities/spellCheckerContext";
 
 interface GlossWithSuggestionsProps {
@@ -75,6 +75,16 @@ export default function GlossWithSuggestions(
           lang={props.analysisLang.bcp47}
           variant={props.isNew ? "outlined" : "standard"}
         />
+      )}
+      renderOption={(liProps, option, { selected }) => (
+        <LiWithFont
+          {...liProps}
+          analysis
+          aria-selected={selected}
+          lang={props.analysisLang.bcp47}
+        >
+          {option}
+        </LiWithFont>
       )}
       onKeyPress={(e: React.KeyboardEvent) => {
         if (e.key === Key.Enter) {
