@@ -1,6 +1,6 @@
 import {
   ExitToApp,
-  Help,
+  Info,
   Person,
   SettingsApplications,
 } from "@mui/icons-material";
@@ -177,7 +177,7 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
           props.onSelect();
         }}
       >
-        <Help style={iconStyle} />
+        <Info style={iconStyle} />
         {t("userMenu.userGuide")}
       </MenuItem>
 
