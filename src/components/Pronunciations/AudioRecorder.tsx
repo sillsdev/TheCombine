@@ -9,7 +9,7 @@ import { getFileNameForWord } from "components/Pronunciations/utilities";
 
 interface RecorderProps {
   wordId: string;
-  uploadAudio: (wordId: string, audioFile: File) => void;
+  uploadAudio: (audioFile: File) => void;
 }
 
 export default function AudioRecorder(props: RecorderProps): ReactElement {
@@ -31,7 +31,7 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
       lastModified: Date.now(),
       type: Recorder.blobType,
     };
-    props.uploadAudio(props.wordId, new File([blob], fileName, options));
+    props.uploadAudio(new File([blob], fileName, options));
   }
 
   return (

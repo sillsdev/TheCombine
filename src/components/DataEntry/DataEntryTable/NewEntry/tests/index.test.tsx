@@ -10,7 +10,7 @@ import { newWritingSystem } from "types/writingSystem";
 
 jest.mock("@mui/material/Autocomplete", () => "div");
 
-jest.mock("components/Pronunciations", () => "div");
+jest.mock("components/Pronunciations/PronunciationsFrontend", () => "div");
 jest.mock("components/Pronunciations/Recorder");
 
 const mockStore = configureMockStore()({ treeViewState: { open: false } });

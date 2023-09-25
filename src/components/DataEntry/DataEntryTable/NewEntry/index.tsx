@@ -21,7 +21,7 @@ import {
 } from "components/DataEntry/DataEntryTable/EntryCellComponents";
 import SenseDialog from "components/DataEntry/DataEntryTable/NewEntry/SenseDialog";
 import VernDialog from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
-import Pronunciations from "components/Pronunciations";
+import PronunciationsFrontend from "components/Pronunciations/PronunciationsFrontend";
 import { StoreState } from "types";
 import theme from "types/theme";
 
@@ -290,12 +290,10 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
         )}
       </Grid>
       <Grid item xs={2} style={gridItemStyle(1)}>
-        <Pronunciations
-          wordId={""}
-          audioInFrontend
+        <PronunciationsFrontend
           pronunciationFiles={newAudioUrls}
-          deleteAudio={(_, fileName: string) => delNewAudioUrl(fileName)}
-          uploadAudio={(_, audioFile: File) => addNewAudioUrl(audioFile)}
+          deleteAudio={delNewAudioUrl}
+          uploadAudio={addNewAudioUrl}
         />
       </Grid>
       <Grid item xs={1} style={gridItemStyle(1)}>

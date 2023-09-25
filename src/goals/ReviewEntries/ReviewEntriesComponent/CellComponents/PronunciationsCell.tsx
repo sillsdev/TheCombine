@@ -1,4 +1,5 @@
-import Pronunciations from "components/Pronunciations";
+import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
+import PronunciationsFrontend from "components/Pronunciations/PronunciationsFrontend";
 import {
   deleteAudio,
   uploadAudio,
@@ -18,32 +19,30 @@ interface PronunciationsCellProps {
 
 export default function PronunciationsCell(props: PronunciationsCellProps) {
   const dispatch = useAppDispatch();
-  const dispatchDelete = (wordId: string, fileName: string) =>
-    dispatch(deleteAudio(wordId, fileName));
-  const dispatchUpload = (oldWordId: string, audioFile: File) =>
-    dispatch(uploadAudio(oldWordId, audioFile));
+  const dispatchDelete = (fileName: string) =>
+    dispatch(deleteAudio(props.wordId, fileName));
+  const dispatchUpload = (audioFile: File) =>
+    dispatch(uploadAudio(props.wordId, audioFile));
 
   const { addNewAudio, delNewAudio, delOldAudio } = props.audioFunctions ?? {};
 
   return props.audioFunctions ? (
-    <Pronunciations
-      audioInFrontend
-      overrideMemo
-      pronunciationFiles={props.pronunciationsNew ?? []}
-      spacer={
-        <Pronunciations
+    <PronunciationsFrontend
+      elemBetweenRecordAndPlay={
+        <PronunciationsBackend
           overrideMemo
+          playerOnly
           pronunciationFiles={props.pronunciationFiles}
           wordId={props.wordId}
-          deleteAudio={(_, fileName: string) => delOldAudio!(fileName)}
+          deleteAudio={delOldAudio!}
         />
       }
-      wordId={""}
-      deleteAudio={(_, fileName: string) => delNewAudio!(fileName)}
-      uploadAudio={(_, audioFile: File) => addNewAudio!(audioFile)}
+      pronunciationFiles={props.pronunciationsNew ?? []}
+      deleteAudio={delNewAudio!}
+      uploadAudio={addNewAudio!}
     />
   ) : (
-    <Pronunciations
+    <PronunciationsBackend
       pronunciationFiles={props.pronunciationFiles}
       wordId={props.wordId}
       deleteAudio={dispatchDelete}

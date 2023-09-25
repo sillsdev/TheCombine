@@ -8,7 +8,7 @@ import {
   GlossWithSuggestions,
   VernWithSuggestions,
 } from "components/DataEntry/DataEntryTable/EntryCellComponents";
-import Pronunciations from "components/Pronunciations";
+import Pronunciations from "components/Pronunciations/PronunciationsBackend";
 import theme from "types/theme";
 import { newGloss } from "types/word";
 import { firstGlossText } from "utilities/wordUtilities";
@@ -132,11 +132,11 @@ export default function RecentEntry(props: RecentEntryProps): ReactElement {
           <Pronunciations
             wordId={props.entry.id}
             pronunciationFiles={props.entry.audio}
-            deleteAudio={(wordId: string, fileName: string) => {
-              props.deleteAudioFromWord(wordId, fileName);
+            deleteAudio={(fileName: string) => {
+              props.deleteAudioFromWord(props.entry.id, fileName);
             }}
-            uploadAudio={(wordId: string, audioFile: File) => {
-              props.addAudioToWord(wordId, audioFile);
+            uploadAudio={(audioFile: File) => {
+              props.addAudioToWord(props.entry.id, audioFile);
             }}
           />
         )}
