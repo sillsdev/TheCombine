@@ -16,7 +16,7 @@ import { useWindowSize } from "utilities/useWindowSize";
 export const dataEntryButtonId = "data-entry";
 export const dataCleanupButtonId = "data-cleanup";
 
-const navButtonMaxWidthProportion = 0.19;
+const navButtonMaxWidthProportion = 0.2;
 
 /** Buttons for navigating to Data Entry and Data Cleanup */
 export default function NavigationButtons(props: TabProps): ReactElement {

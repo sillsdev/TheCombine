@@ -33,9 +33,8 @@ import { openUserGuide } from "utilities/pathUtilities";
 const idAffix = "user-menu";
 
 const enum usernameLength {
-  md = 13,
-  lg = 19,
-  xl = 25,
+  lg = 12,
+  xl = 24,
 }
 
 export async function getIsAdmin(): Promise<boolean> {
@@ -81,14 +80,11 @@ export default function UserMenu(props: TabProps): ReactElement {
         id={`avatar-${idAffix}`}
       >
         {username ? (
-          <Hidden mdDown>
+          <Hidden lgDown>
             <Typography style={{ marginLeft: 5, marginRight: 5 }}>
               <Hidden xlDown>{shortenName(username, usernameLength.xl)}</Hidden>
               <Hidden xlUp lgDown>
                 {shortenName(username, usernameLength.lg)}
-              </Hidden>
-              <Hidden lgUp mdDown>
-                {shortenName(username, usernameLength.md)}
               </Hidden>
             </Typography>
           </Hidden>

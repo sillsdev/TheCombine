@@ -21,10 +21,9 @@ export const projButtonId = "project-settings";
 export const statButtonId = "project-statistics";
 
 const enum projNameLength {
-  sm = 11,
-  md = 21,
-  lg = 41,
-  xl = 71,
+  md = 17,
+  lg = 34,
+  xl = 51,
 }
 
 export async function getHasStatsPermission(): Promise<boolean> {
@@ -78,7 +77,7 @@ export default function ProjectButtons(props: TabProps): ReactElement {
           }}
         >
           <Settings />
-          <Hidden smDown>
+          <Hidden mdDown>
             <Typography
               display="inline"
               style={{ marginLeft: 5, marginRight: 5 }}
@@ -91,9 +90,6 @@ export default function ProjectButtons(props: TabProps): ReactElement {
               </Hidden>
               <Hidden mdDown lgUp>
                 {shortenName(projectName, projNameLength.md)}
-              </Hidden>
-              <Hidden mdUp smDown>
-                {shortenName(projectName, projNameLength.sm)}
               </Hidden>
             </Typography>
           </Hidden>
