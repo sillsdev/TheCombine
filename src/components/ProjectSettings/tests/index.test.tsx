@@ -1,26 +1,22 @@
-import {
-  Archive,
-  CalendarMonth,
-  CloudUpload,
-  Edit,
-  GetApp,
-  Language,
-  People,
-  PersonAdd,
-  Sms,
-} from "@mui/icons-material";
-import { ElementType } from "react";
+import "@testing-library/jest-dom";
+import { act, cleanup, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import mediaQuery from "css-mediaquery";
 import { Provider } from "react-redux";
-import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
 import { Permission } from "api/models";
-import BaseSettingsComponent from "components/BaseSettings/BaseSettingsComponent";
-import ProjectSettings from "components/ProjectSettings";
-import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
-import ProjectSchedule from "components/ProjectSettings/ProjectSchedule/ProjectSchedule";
+import { defaultState as exportProjectState } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
+import ProjectSettings, {
+  ProjectSettingsTab,
+  Setting,
+} from "components/ProjectSettings";
+import {
+  whichSettings,
+  whichTabs,
+} from "components/ProjectSettings/tests/SettingsTabTypes";
 import { randomProject } from "types/project";
 
 jest.mock("react-router-dom", () => ({
@@ -29,19 +25,11 @@ jest.mock("react-router-dom", () => ({
 
 jest.mock("backend", () => ({
   canUploadLift: () => Promise.resolve(false),
+  getAllUsers: () => Promise.resolve([]),
   getCurrentPermissions: () => mockGetCurrentPermissions(),
+  getUserRoles: () => Promise.resolve([]),
 }));
 jest.mock("components/Project/ProjectActions");
-jest.mock("components/ProjectExport/ExportButton", () => "div");
-jest.mock("components/ProjectSettings/ProjectImport", () => "div");
-jest.mock(
-  "components/ProjectSettings/ProjectUsers/ActiveProjectUsers",
-  () => "div"
-);
-jest.mock(
-  "components/ProjectSettings/ProjectUsers/AddProjectUsers",
-  () => "div"
-);
 jest.mock("types/hooks", () => {
   return {
     ...jest.requireActual("types/hooks"),
@@ -51,20 +39,23 @@ jest.mock("types/hooks", () => {
 
 const mockGetCurrentPermissions = jest.fn();
 
-const createMockStore = () =>
-  configureMockStore()({
-    currentProjectState: { project: randomProject() },
+const createMockStore = (hasSchedule = false) => {
+  const project = randomProject();
+  if (hasSchedule) {
+    project.workshopSchedule = [new Date().toString()];
+  }
+  return configureMockStore()({
+    currentProjectState: { project, users: [] },
+    exportProjectState,
   });
+};
 
-let projSettingsRenderer: renderer.ReactTestRenderer;
-let projSettingsInstance: renderer.ReactTestInstance;
-
-const updateProjSettings = async () => {
-  await renderer.act(async () => {
+const updateProjSettings = async (hasSchedule = false) => {
+  await act(async () => {
     // For this update to trigger a permissions refresh, project.id must change.
     // This is accomplished by randomProject() in createMockStore().
-    projSettingsRenderer.update(
-      <Provider store={createMockStore()}>
+    render(
+      <Provider store={createMockStore(hasSchedule)}>
         <ProjectSettings />
       </Provider>
     );
@@ -76,117 +67,103 @@ const resetMocks = () => {
   mockGetCurrentPermissions.mockResolvedValue([]);
 };
 
+// Modified from mui.com/material-ui/react-use-media-query/#testing
+const createMatchMedia = (
+  width: number
+): ((query: string) => MediaQueryList) => {
+  return (query: string) =>
+    ({
+      matches: mediaQuery.match(query, { width }),
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+    }) as any;
+};
+
 beforeAll(async () => {
+  // Required for the <Hidden> elements to show up
+  window.matchMedia = createMatchMedia(window.innerWidth);
+
   resetMocks();
-  await renderer.act(async () => {
-    projSettingsRenderer = renderer.create(
+  await act(async () => {
+    render(
       <Provider store={createMockStore()}>
         <ProjectSettings />
       </Provider>
     );
   });
-  projSettingsInstance = projSettingsRenderer.root;
 });
 
 beforeEach(() => {
   resetMocks();
 });
 
-const withNoPerm = [
-  Language, // icon for ProjectLanguages (but readOnly w/o DeleteEditPerm)
-  CalendarMonth, // icon for ProjectSchedule (but readOnly w/o StatsPerm)
-];
-const withArchivePerm = [Archive]; // icon for archive component
-const withDeleteEditPerm = [
-  Edit, // icon for ProjectName
-  People, // icon for ActiveProjectUsers
-  PersonAdd, // icon for AddProjectUsers
-  Sms, // icon for ProjectAutocomplete
-];
-const withExportPerm = [GetApp]; // icon for ExportButton
-const withImportPerm = [CloudUpload]; // icon for ProjectImport
-const withStatsPerm: ElementType[] = [];
+afterEach(cleanup);
+
+const isPanelVisible = (tab: ProjectSettingsTab): void => {
+  const panels = screen.queryAllByRole("tabpanel");
+  expect(panels).toHaveLength(1);
+  expect(panels[0].id.includes(tab.toString()));
+};
 
 describe("ProjectSettings", () => {
-  test("with no permissions", async () => {
-    await updateProjSettings();
-    for (const component of withNoPerm) {
-      expect(projSettingsInstance.findByType(component)).toBeTruthy();
-    }
-    expect(
-      projSettingsInstance.findAllByType(BaseSettingsComponent)
-    ).toHaveLength(withNoPerm.length);
-
-    expect(
-      projSettingsInstance.findByType(ProjectLanguages).props.readOnly
-    ).toBeTruthy();
-    expect(
-      projSettingsInstance.findByType(ProjectSchedule).props.readOnly
-    ).toBeTruthy();
+  test("languages tab available and enabled by default", async () => {
+    isPanelVisible(ProjectSettingsTab.Languages);
+    screen.getByTestId(Setting.Languages);
   });
 
-  test("with Permission.Archive", async () => {
-    mockGetCurrentPermissions.mockResolvedValue([Permission.Archive]);
+  test("enable the correct panel when tab is clicked", async () => {
+    const agent = userEvent.setup();
+    mockGetCurrentPermissions.mockResolvedValue(Object.values(Permission));
     await updateProjSettings();
-    for (const component of withArchivePerm) {
-      expect(projSettingsInstance.findByType(component)).toBeTruthy();
+    const tabs = Object.values(ProjectSettingsTab);
+    expect(screen.queryAllByRole("tab")).toHaveLength(tabs.length);
+    for (const tab of tabs) {
+      await act(async () => {
+        await agent.click(screen.getByTestId(tab));
+      });
+      isPanelVisible(tab);
     }
-    expect(
-      projSettingsInstance.findAllByType(BaseSettingsComponent)
-    ).toHaveLength(withNoPerm.length + withArchivePerm.length);
   });
 
-  test("with Permission.DeleteEditSettingsAndUsers", async () => {
-    mockGetCurrentPermissions.mockResolvedValue([
-      Permission.DeleteEditSettingsAndUsers,
-    ]);
-    await updateProjSettings();
-    for (const component of withDeleteEditPerm) {
-      expect(projSettingsInstance.findByType(component)).toBeTruthy();
+  describe("correct settings in each tab for each permission (w/o schedule)", () => {
+    const hasSchedule = false;
+    for (const perm of Object.values(Permission)) {
+      test(`permission ${perm}`, async () => {
+        const agent = userEvent.setup();
+        mockGetCurrentPermissions.mockResolvedValue([perm]);
+        await updateProjSettings(hasSchedule);
+        const tabs = whichTabs(perm, hasSchedule);
+        expect(screen.queryAllByRole("tab")).toHaveLength(tabs.length);
+        for (const tab of tabs) {
+          await act(async () => {
+            await agent.click(screen.getByTestId(tab));
+          });
+          whichSettings(perm, hasSchedule, tab).forEach((s) =>
+            screen.getByTestId(s)
+          );
+        }
+      });
     }
-    expect(
-      projSettingsInstance.findAllByType(BaseSettingsComponent)
-    ).toHaveLength(withNoPerm.length + withDeleteEditPerm.length);
-
-    expect(
-      projSettingsInstance.findByType(ProjectLanguages).props.readOnly
-    ).toBeFalsy();
   });
 
-  test("with Permission.Export", async () => {
-    mockGetCurrentPermissions.mockResolvedValue([Permission.Export]);
-    await updateProjSettings();
-    for (const component of withExportPerm) {
-      expect(projSettingsInstance.findByType(component)).toBeTruthy();
+  describe("correct settings in each tab for each permission (w/ schedule)", () => {
+    const hasSchedule = true;
+    for (const perm of Object.values(Permission)) {
+      test(`permission ${perm}`, async () => {
+        const agent = userEvent.setup();
+        mockGetCurrentPermissions.mockResolvedValue([perm]);
+        await updateProjSettings(hasSchedule);
+        const tabs = whichTabs(perm, hasSchedule);
+        expect(screen.queryAllByRole("tab")).toHaveLength(tabs.length);
+        for (const tab of tabs) {
+          await act(async () => {
+            await agent.click(screen.getByTestId(tab));
+          });
+          whichSettings(perm, hasSchedule, tab).forEach((s) =>
+            screen.getByTestId(s)
+          );
+        }
+      });
     }
-    expect(
-      projSettingsInstance.findAllByType(BaseSettingsComponent)
-    ).toHaveLength(withNoPerm.length + withExportPerm.length);
-  });
-
-  test("with Permission.Import", async () => {
-    mockGetCurrentPermissions.mockResolvedValue([Permission.Import]);
-    await updateProjSettings();
-    for (const component of withImportPerm) {
-      expect(projSettingsInstance.findByType(component)).toBeTruthy();
-    }
-    expect(
-      projSettingsInstance.findAllByType(BaseSettingsComponent)
-    ).toHaveLength(withNoPerm.length + withImportPerm.length);
-  });
-
-  test("with Permission.Statistics", async () => {
-    mockGetCurrentPermissions.mockResolvedValue([Permission.Statistics]);
-    await updateProjSettings();
-    for (const component of withStatsPerm) {
-      expect(projSettingsInstance.findByType(component)).toBeTruthy();
-    }
-    expect(
-      projSettingsInstance.findAllByType(BaseSettingsComponent)
-    ).toHaveLength(withNoPerm.length + withStatsPerm.length);
-
-    expect(
-      projSettingsInstance.findByType(ProjectSchedule).props.readOnly
-    ).toBeFalsy();
   });
 });

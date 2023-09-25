@@ -3,18 +3,18 @@ import React, { ReactElement, useEffect } from "react";
 import { Key } from "ts-key-enum";
 
 import { WritingSystem } from "api/models";
-import { TextFieldWithFont } from "utilities/fontComponents";
+import { LiWithFont, TextFieldWithFont } from "utilities/fontComponents";
 
 interface VernWithSuggestionsProps {
   isNew?: boolean;
   isDisabled?: boolean;
   vernacular: string;
-  vernInput?: React.RefObject<HTMLDivElement>;
+  vernInput?: React.RefObject<HTMLInputElement>;
   updateVernField: (newValue: string, openDialog?: boolean) => void;
   onBlur: () => void;
   onClose?: (e: React.ChangeEvent<{}>, reason: AutocompleteCloseReason) => void;
   suggestedVerns?: string[];
-  handleEnterAndTab: (e: React.KeyboardEvent) => void;
+  handleEnter: () => void;
   vernacularLang: WritingSystem;
   textFieldId: string;
   onUpdate?: () => void;
@@ -50,9 +50,8 @@ export default function VernWithSuggestions(
         props.updateVernField(value);
       }}
       onKeyPress={(e: React.KeyboardEvent) => {
-        if (e.key === Key.Enter || e.key === Key.Tab) {
-          e.preventDefault();
-          props.handleEnterAndTab(e);
+        if (e.key === Key.Enter) {
+          props.handleEnter();
         }
       }}
       onClose={props.onClose}
@@ -65,6 +64,11 @@ export default function VernWithSuggestions(
           variant={props.isNew ? "outlined" : "standard"}
           vernacular
         />
+      )}
+      renderOption={(liProps, option, { selected }) => (
+        <LiWithFont {...liProps} aria-selected={selected} vernacular>
+          {option}
+        </LiWithFont>
       )}
     />
   );

@@ -12,8 +12,8 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { asyncRefreshProjectUsers } from "components/Project/ProjectActions";
-import ActiveProjectUsers from "components/ProjectSettings/ProjectUsers/ActiveProjectUsers";
-import AddProjectUsers from "components/ProjectSettings/ProjectUsers/AddProjectUsers";
+import ActiveProjectUsers from "components/ProjectUsers/ActiveProjectUsers";
+import AddProjectUsers from "components/ProjectUsers/AddProjectUsers";
 import { useAppDispatch } from "types/hooks";
 import theme from "types/theme";
 
