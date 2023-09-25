@@ -69,15 +69,15 @@ export default function UserMenu(props: TabProps): ReactElement {
       <Button
         aria-controls="user-menu"
         aria-haspopup="true"
-        onClick={handleClick}
         color="secondary"
+        id={`avatar-${idAffix}`}
+        onClick={handleClick}
         style={{
           background: tabColor(props.currentTab, Path.UserSettings),
           minHeight: buttonMinHeight,
           minWidth: 0,
           padding: 0,
         }}
-        id={`avatar-${idAffix}`}
       >
         {username ? (
           <Hidden lgDown>
@@ -98,11 +98,11 @@ export default function UserMenu(props: TabProps): ReactElement {
         )}
       </Button>
       <Menu
-        id={idAffix}
         anchorEl={anchorElement}
-        open={Boolean(anchorElement)}
-        onClose={handleClose}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        id={idAffix}
+        onClose={handleClose}
+        open={Boolean(anchorElement)}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
       >
         <WrappedUserMenuList isAdmin={isAdmin} onSelect={handleClose} />
@@ -189,8 +189,8 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
       </MenuItem>
 
       <MenuItem
-        id={`${idAffix}-version`}
         disabled
+        id={`${idAffix}-version`}
         style={{ justifyContent: "center" }}
       >
         {combineAppRelease}

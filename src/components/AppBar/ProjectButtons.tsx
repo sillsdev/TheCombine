@@ -51,14 +51,14 @@ export default function ProjectButtons(props: TabProps): ReactElement {
       {hasStatsPermission && (
         <Tooltip title={t("appBar.statistics")}>
           <Button
+            color="inherit"
             id={statButtonId}
             onClick={() => navigate(Path.Statistics)}
-            color="inherit"
             style={{
               background: tabColor(props.currentTab, Path.Statistics),
+              margin: 5,
               minHeight: buttonMinHeight,
               minWidth: 0,
-              margin: 5,
             }}
           >
             <BarChart />
@@ -67,9 +67,9 @@ export default function ProjectButtons(props: TabProps): ReactElement {
       )}
       <Tooltip title={t("appBar.projectSettings")}>
         <Button
+          color="inherit"
           id={projButtonId}
           onClick={() => navigate(Path.ProjSettings)}
-          color="inherit"
           style={{
             background: tabColor(props.currentTab, Path.ProjSettings),
             minHeight: buttonMinHeight,

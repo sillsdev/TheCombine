@@ -13,14 +13,14 @@ export default function UserGuideButton(): ReactElement {
   return (
     <Tooltip title={t("userMenu.userGuide")}>
       <Button
+        color="inherit"
         id="app-bar-guide"
         onClick={openUserGuide}
-        color="inherit"
         style={{
           background: themeColors.lightShade,
+          margin: 5,
           minHeight: buttonMinHeight,
           minWidth: 0,
-          margin: 5,
         }}
       >
         <Info />
