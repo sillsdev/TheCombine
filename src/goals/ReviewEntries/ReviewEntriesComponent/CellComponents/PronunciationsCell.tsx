@@ -1,4 +1,5 @@
-import Pronunciations from "components/Pronunciations/PronunciationsComponent";
+import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
+import PronunciationsFrontend from "components/Pronunciations/PronunciationsFrontend";
 import {
   deleteAudio,
   uploadAudio,
@@ -6,22 +7,44 @@ import {
 import { useAppDispatch } from "types/hooks";
 
 interface PronunciationsCellProps {
-  wordId: string;
+  audioFunctions?: {
+    addNewAudio: (file: File) => void;
+    delNewAudio: (url: string) => void;
+    delOldAudio: (fileName: string) => void;
+  };
   pronunciationFiles: string[];
+  pronunciationsNew?: string[];
+  wordId: string;
 }
 
-/** Used to connect the pronunciation component to the deleteAudio and uploadAudio actions */
 export default function PronunciationsCell(props: PronunciationsCellProps) {
   const dispatch = useAppDispatch();
-  const dispatchDelete = (wordId: string, fileName: string) =>
-    dispatch(deleteAudio(wordId, fileName));
-  const dispatchUpload = (oldWordId: string, audioFile: File) =>
-    dispatch(uploadAudio(oldWordId, audioFile));
+  const dispatchDelete = (fileName: string) =>
+    dispatch(deleteAudio(props.wordId, fileName));
+  const dispatchUpload = (audioFile: File) =>
+    dispatch(uploadAudio(props.wordId, audioFile));
 
-  return (
-    <Pronunciations
-      wordId={props.wordId}
+  const { addNewAudio, delNewAudio, delOldAudio } = props.audioFunctions ?? {};
+
+  return props.audioFunctions ? (
+    <PronunciationsFrontend
+      elemBetweenRecordAndPlay={
+        <PronunciationsBackend
+          overrideMemo
+          playerOnly
+          pronunciationFiles={props.pronunciationFiles}
+          wordId={props.wordId}
+          deleteAudio={delOldAudio!}
+        />
+      }
+      pronunciationFiles={props.pronunciationsNew ?? []}
+      deleteAudio={delNewAudio!}
+      uploadAudio={addNewAudio!}
+    />
+  ) : (
+    <PronunciationsBackend
       pronunciationFiles={props.pronunciationFiles}
+      wordId={props.wordId}
       deleteAudio={dispatchDelete}
       uploadAudio={dispatchUpload}
     />
