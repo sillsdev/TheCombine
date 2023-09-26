@@ -130,6 +130,7 @@
   },
   "projectSettings": {
     "project": "项目：",
+    "tab": { "export": "导出", "languages": "语言", "users": "用户" },
     "language": {
       "header": "语言",
       "vernacular": "土语",
@@ -138,7 +139,7 @@
       "analysisLanguage": "分析语言",
       "semanticDomains": "语义域",
       "semanticDomainsDefault": "(把浏览器语言设置为默认)",
-      "languages": "语言",
+      "languages": "项目语言",
       "bcp47": "BCP 47 代码",
       "name": "名称",
       "font": "字体",
