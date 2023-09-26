@@ -80,6 +80,7 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.0",
     "ts-key-enum": "^2.0.12",
+    "typeahead-standalone": "^4.23.0",
     "uuid": "^9.0.1",
     "validator": "^13.11.0"
   },

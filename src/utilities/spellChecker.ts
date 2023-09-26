@@ -11,6 +11,7 @@ interface SplitWord {
 export default class SpellChecker {
   private bcp47: Bcp47Code | undefined;
   private dictLoader: DictionaryLoader | undefined;
+  public dictLoaded: string[] = [];
   private spell: nspell | undefined;
 
   constructor(lang?: string) {
@@ -32,6 +33,7 @@ export default class SpellChecker {
     await this.dictLoader.loadDictionary().then((dic) => {
       if (dic !== undefined) {
         this.spell = nspell("SET UTF-8", dic);
+        this.dictLoaded.push(...dic.split("\n"));
         if (process.env.NODE_ENV === "development") {
           console.log(`Loaded spell-checker: ${bcp47}`);
         }
@@ -47,6 +49,7 @@ export default class SpellChecker {
 
     const part = await this.dictLoader.loadDictPart(word);
     if (part) {
+      this.dictLoaded.push(...part.split("\n"));
       this.spell.personal(part);
     }
   }
