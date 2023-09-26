@@ -5,7 +5,8 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import ReviewEntriesComponent from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesComponent";
+import ReviewEntriesComponent from "goals/ReviewEntries/ReviewEntriesComponent";
+import * as actions from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesActions";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import mockWords, {
   mockCreateWord,
@@ -14,7 +15,6 @@ import { defaultWritingSystem } from "types/writingSystem";
 
 const mockGetFrontierWords = jest.fn();
 const mockMaterialTable = jest.fn();
-const mockUpdateAllWords = jest.fn();
 const mockUuid = jest.fn();
 
 // To deal with the table not wanting to behave in testing.
@@ -37,11 +37,16 @@ jest.mock("notistack", () => ({
 }));
 jest.mock("uuid", () => ({ v4: () => mockUuid() }));
 jest.mock("backend", () => ({
-  getFrontierWords: () => mockGetFrontierWords(),
+  getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
 }));
 // Mock the node module used by AudioRecorder.
 jest.mock("components/Pronunciations/Recorder");
 jest.mock("components/TreeView", () => "div");
+jest.mock("types/hooks", () => ({
+  useAppDispatch: () => jest.fn(),
+}));
+
+const updateAllWordsSpy = jest.spyOn(actions, "updateAllWords");
 
 // Mock store + axios
 const mockReviewEntryWords = mockWords();
@@ -66,6 +71,7 @@ const state = {
 const mockStore = configureMockStore()(state);
 
 function setMockFunctions() {
+  jest.clearAllMocks();
   mockGetFrontierWords.mockResolvedValue(
     mockReviewEntryWords.map(mockCreateWord)
   );
@@ -84,10 +90,7 @@ beforeEach(async () => {
   await renderer.act(async () => {
     renderer.create(
       <Provider store={mockStore}>
-        <ReviewEntriesComponent
-          updateAllWords={mockUpdateAllWords}
-          updateFrontierWord={jest.fn()}
-        />
+        <ReviewEntriesComponent />
       </Provider>
     );
   });
@@ -95,8 +98,8 @@ beforeEach(async () => {
 
 describe("ReviewEntriesComponent", () => {
   it("Initializes correctly", () => {
-    expect(mockUpdateAllWords).toHaveBeenCalledTimes(1);
-    const wordIds = mockUpdateAllWords.mock.calls[0][0].map(
+    expect(updateAllWordsSpy).toHaveBeenCalled();
+    const wordIds = updateAllWordsSpy.mock.calls[0][0].map(
       (w: ReviewEntriesWord) => w.id
     );
     expect(wordIds).toHaveLength(mockReviewEntryWords.length);

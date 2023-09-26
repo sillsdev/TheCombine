@@ -64,7 +64,7 @@ function cleanRegExp(input: string): RegExp {
 export interface FieldParameterStandard {
   rowData: ReviewEntriesWord;
   value: any;
-  onRowDataChange?: (...args: any) => any;
+  onRowDataChange?: (word: ReviewEntriesWord) => any;
 }
 
 let currentSort: SortStyle = SortStyle.None;
@@ -394,26 +394,59 @@ const columns: Column<any>[] = [
   // Audio column
   {
     title: ColumnTitle.Pronunciations,
+    // field determines what is passed as props.value to editComponent
     field: ReviewEntriesWordField.Pronunciations,
-    editable: "never",
     filterPlaceholder: "#",
     render: (rowData: ReviewEntriesWord) => (
       <PronunciationsCell
+        pronunciationFiles={rowData.audio}
         wordId={rowData.id}
-        pronunciationFiles={rowData.pronunciationFiles}
+      />
+    ),
+    editComponent: (props: FieldParameterStandard) => (
+      <PronunciationsCell
+        audioFunctions={{
+          addNewAudio: (file: File): void => {
+            props.onRowDataChange &&
+              props.onRowDataChange({
+                ...props.rowData,
+                audioNew: [
+                  ...(props.rowData.audioNew ?? []),
+                  URL.createObjectURL(file),
+                ],
+              });
+          },
+          delNewAudio: (url: string): void => {
+            props.onRowDataChange &&
+              props.onRowDataChange({
+                ...props.rowData,
+                audioNew: props.rowData.audioNew?.filter((u) => u !== url),
+              });
+          },
+          delOldAudio: (fileName: string): void => {
+            props.onRowDataChange &&
+              props.onRowDataChange({
+                ...props.rowData,
+                audio: props.rowData.audio.filter((f) => f !== fileName),
+              });
+          },
+        }}
+        pronunciationFiles={props.rowData.audio}
+        pronunciationsNew={props.rowData.audioNew}
+        wordId={props.rowData.id}
       />
     ),
     customFilterAndSearch: (
       filter: string,
       rowData: ReviewEntriesWord
     ): boolean => {
-      return parseInt(filter) === rowData.pronunciationFiles.length;
+      return parseInt(filter) === rowData.audio.length;
     },
     customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
       if (currentSort !== SortStyle.Pronunciation) {
         currentSort = SortStyle.Pronunciation;
       }
-      return b.pronunciationFiles.length - a.pronunciationFiles.length;
+      return b.audio.length - a.audio.length;
     },
   },
 

@@ -10,7 +10,7 @@ import { newWritingSystem } from "types/writingSystem";
 
 jest.mock("@mui/material/Autocomplete", () => "div");
 
-jest.mock("components/Pronunciations/PronunciationsComponent", () => "div");
+jest.mock("components/Pronunciations/PronunciationsFrontend", () => "div");
 jest.mock("components/Pronunciations/Recorder");
 
 const mockStore = configureMockStore()({ treeViewState: { open: false } });
@@ -25,6 +25,7 @@ describe("NewEntry", () => {
             vernacularLang={newWritingSystem()}
             // Parent component handles new entry state:
             addNewEntry={jest.fn()}
+            resetNewEntry={jest.fn()}
             updateWordWithNewGloss={jest.fn()}
             newAudioUrls={[]}
             addNewAudioUrl={jest.fn()}
@@ -35,7 +36,7 @@ describe("NewEntry", () => {
             setNewNote={jest.fn()}
             newVern={""}
             setNewVern={jest.fn()}
-            vernInput={createRef<HTMLDivElement>()}
+            vernInput={createRef<HTMLInputElement>()}
             // Parent component handles vern suggestion state:
             setSelectedDup={jest.fn()}
             suggestedVerns={[]}

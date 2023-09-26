@@ -44,7 +44,7 @@ spec:
     spec:
       containers:
         - image: {{ template "database.containerImage" . }}
-          imagePullPolicy: {{ template "database.imagePullPolicy" . }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           name: database
           ports:
             - containerPort: 27017

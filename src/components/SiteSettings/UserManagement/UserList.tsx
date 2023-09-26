@@ -22,10 +22,10 @@ import { getUserId } from "backend/localStorage";
 import SortOptions, {
   UserOrder,
   getUserCompare,
-} from "components/ProjectSettings/ProjectUsers/SortOptions";
-import { doesTextMatchUser } from "components/ProjectSettings/ProjectUsers/UserList";
+} from "components/ProjectUsers/SortOptions";
 import { Hash } from "types/hash";
 import theme from "types/theme";
+import { doesTextMatchUser } from "types/user";
 
 interface UserListProps {
   allUsers: User[];

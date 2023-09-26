@@ -15,11 +15,11 @@ import FontContext, { WithFontProps } from "utilities/fontContext";
 type TextFieldWithFontProps = TextFieldProps & WithFontProps;
 
 /**
- * TextField modified for use within a FontContext.
- * Input props are extended with 3 optional props:
- *   analysis: bool? (used to apply the default analysis font);
- *   lang: string? (bcp47 lang-tag for applying the appropriate analysis font);
- *   vernacular: bool? (used to apply the vernacular font).
+ * `TextField` modified for use within a `FontContext`.
+ * The props are extended with 3 optional props:
+ *   `analysis: bool?` (used to apply the default analysis font);
+ *   `lang: string?` (bcp47 lang-tag for applying the appropriate analysis font);
+ *   `vernacular: bool?` (used to apply the vernacular font).
  */
 export function TextFieldWithFont(props: TextFieldWithFontProps): ReactElement {
   const fontContext = useContext(FontContext);
@@ -42,11 +42,11 @@ export function TextFieldWithFont(props: TextFieldWithFontProps): ReactElement {
 type TypographyWithFontProps = TypographyProps & WithFontProps;
 
 /**
- * Typography modified for use within a FontContext.
- * Input props are extended with 3 optional props:
- *   analysis: bool? (used to apply the default analysis font);
- *   lang: string? (bcp47 lang-tag for applying the appropriate analysis font);
- *   vernacular: bool? (used to apply the vernacular font).
+ * `Typography` modified for use within a `FontContext`.
+ * The props are extended with 3 optional props:
+ *   `analysis: bool?` (used to apply the default analysis font);
+ *   `lang: string?` (bcp47 lang-tag for applying the appropriate analysis font);
+ *   `vernacular: bool?` (used to apply the vernacular font).
  */
 export function TypographyWithFont(
   props: TypographyWithFontProps
@@ -60,6 +60,34 @@ export function TypographyWithFont(
       style={fontContext.addFontToStyle(
         { analysis, lang, vernacular },
         typographyProps.style
+      )}
+    />
+  );
+}
+
+type LiWithFontProps = React.DetailedHTMLProps<
+  React.LiHTMLAttributes<HTMLLIElement>,
+  HTMLLIElement
+> &
+  WithFontProps;
+
+/**
+ * `li` modified for use within a `FontContext`.
+ * The props are extended with 3 optional props:
+ *   `analysis: bool?` (used to apply the default analysis font);
+ *   `lang: string?` (bcp47 lang-tag for applying the appropriate analysis font);
+ *   `vernacular: bool?` (used to apply the vernacular font).
+ */
+export function LiWithFont(props: LiWithFontProps) {
+  const fontContext = useContext(FontContext);
+  // Use spread to remove the custom props from what is passed into li.
+  const { analysis, lang, vernacular, ...liProps } = props;
+  return (
+    <li
+      {...liProps}
+      style={fontContext.addFontToStyle(
+        { analysis, lang, vernacular },
+        liProps.style
       )}
     />
   );

@@ -1,7 +1,6 @@
 import { AutocompleteCloseReason, Grid, Typography } from "@mui/material";
 import {
   CSSProperties,
-  KeyboardEvent,
   ReactElement,
   RefObject,
   useCallback,
@@ -11,7 +10,6 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import { Key } from "ts-key-enum";
 
 import { Word, WritingSystem } from "api/models";
 import { focusInput } from "components/DataEntry/DataEntryTable";
@@ -23,7 +21,7 @@ import {
 } from "components/DataEntry/DataEntryTable/EntryCellComponents";
 import SenseDialog from "components/DataEntry/DataEntryTable/NewEntry/SenseDialog";
 import VernDialog from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
-import Pronunciations from "components/Pronunciations/PronunciationsComponent";
+import PronunciationsFrontend from "components/Pronunciations/PronunciationsFrontend";
 import { StoreState } from "types";
 import theme from "types/theme";
 
@@ -45,6 +43,7 @@ interface NewEntryProps {
   vernacularLang: WritingSystem;
   // Parent component handles new entry state:
   addNewEntry: () => Promise<void>;
+  resetNewEntry: () => void;
   updateWordWithNewGloss: (wordId: string) => Promise<void>;
   newAudioUrls: string[];
   addNewAudioUrl: (file: File) => void;
@@ -55,7 +54,7 @@ interface NewEntryProps {
   setNewNote: (note: string) => void;
   newVern: string;
   setNewVern: (vern: string) => void;
-  vernInput: RefObject<HTMLDivElement>;
+  vernInput: RefObject<HTMLInputElement>;
   // Parent component handles vern suggestion state:
   selectedDup?: Word;
   setSelectedDup: (id?: string) => void;
@@ -72,6 +71,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     vernacularLang,
     // Parent component handles new entry state:
     addNewEntry,
+    resetNewEntry,
     updateWordWithNewGloss,
     newAudioUrls,
     addNewAudioUrl,
@@ -99,7 +99,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
   const [vernOpen, setVernOpen] = useState(false);
   const [wasTreeClosed, setWasTreeClosed] = useState(false);
 
-  const glossInput = useRef<HTMLDivElement>(null);
+  const glossInput = useRef<HTMLInputElement>(null);
 
   const focus = useCallback(
     (target: FocusTarget): void => {
@@ -116,13 +116,10 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
   );
 
   const resetState = useCallback((): void => {
-    setNewGloss("");
-    setNewNote("");
-    setNewVern("");
+    resetNewEntry();
     setVernOpen(false);
-    // May also need to reset newAudioUrls in the parent component.
     focus(FocusTarget.Vernacular);
-  }, [focus, setNewGloss, setNewNote, setNewVern, setVernOpen]);
+  }, [focus, resetNewEntry, setVernOpen]);
 
   /** Reset when tree opens, except for the first time it is open. */
   useEffect(() => {
@@ -184,23 +181,18 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     }
   };
 
-  const handleEnter = async (
-    e: KeyboardEvent,
-    checkGloss: boolean
-  ): Promise<void> => {
-    if ((true || !vernOpen) && e.key === Key.Enter) {
-      // The user can never submit a new entry without a vernacular
-      if (newVern) {
-        // The user can conditionally submit a new entry without a gloss
-        if (newGloss || !checkGloss) {
-          await addOrUpdateWord();
-          focus(FocusTarget.Vernacular);
-        } else {
-          focus(FocusTarget.Gloss);
-        }
-      } else {
+  const handleEnter = async (checkGloss: boolean): Promise<void> => {
+    // The user can never submit a new entry without a vernacular
+    if (newVern) {
+      // The user can conditionally submit a new entry without a gloss
+      if (newGloss || !checkGloss) {
+        await addOrUpdateWord();
         focus(FocusTarget.Vernacular);
+      } else {
+        focus(FocusTarget.Gloss);
       }
+    } else {
+      focus(FocusTarget.Vernacular);
     }
   };
 
@@ -252,7 +244,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
             suggestedVerns={suggestedVerns}
             // To prevent unintentional no-gloss submissions:
             // If enter pressed from the vern field, check whether gloss is empty
-            handleEnterAndTab={(e: KeyboardEvent) => handleEnter(e, true)}
+            handleEnter={() => handleEnter(true)}
             vernacularLang={vernacularLang}
             textFieldId={`${idAffix}-vernacular`}
             onUpdate={() => conditionalFocus(FocusTarget.Vernacular)}
@@ -281,7 +273,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
           updateGlossField={setNewGloss}
           // To allow intentional no-gloss submissions:
           // If enter pressed from the gloss field, don't check whether gloss is empty
-          handleEnterAndTab={(e: KeyboardEvent) => handleEnter(e, false)}
+          handleEnter={() => handleEnter(false)}
           analysisLang={analysisLang}
           textFieldId={`${idAffix}-gloss`}
           onUpdate={() => conditionalFocus(FocusTarget.Gloss)}
@@ -298,12 +290,10 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
         )}
       </Grid>
       <Grid item xs={2} style={gridItemStyle(1)}>
-        <Pronunciations
-          wordId={""}
-          audioInFrontend
+        <PronunciationsFrontend
           pronunciationFiles={newAudioUrls}
-          deleteAudio={(_, fileName: string) => delNewAudioUrl(fileName)}
-          uploadAudio={(_, audioFile: File) => addNewAudioUrl(audioFile)}
+          deleteAudio={delNewAudioUrl}
+          uploadAudio={addNewAudioUrl}
         />
       </Grid>
       <Grid item xs={1} style={gridItemStyle(1)}>

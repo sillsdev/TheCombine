@@ -42,14 +42,26 @@ targets:
       thecombine:
         global:
           serverName: nuc3.thecombine.app
-  nuc_test:
-    profile: nuc_test
+  # the "QA" versions of the NUC configurations are for running QA/test versions of
+  # The Combine software pulled from the AWS ECR Private Repository.  The serverName
+  # matches the production configuration so that the correct certificate can be
+  # fetched from AWS S3.
+  nuc1_qa:
+    profile: nuc_qa
     env_vars_required: false
     override:
       # override values for 'thecombine' chart
       thecombine:
         global:
-          serverName: nuc-test.thecombine.app
+          serverName: nuc1.thecombine.app
+  nuc2_qa:
+    profile: nuc_qa
+    env_vars_required: false
+    override:
+      # override values for 'thecombine' chart
+      thecombine:
+        global:
+          serverName: nuc2.thecombine.app
 
   qa:
     profile: staging
@@ -93,7 +105,7 @@ profiles:
     charts:
       - thecombine
       - create-admin-user
-  nuc_test: # Profile for using a NUC running container images from the AWS ECR Private repositories
+  nuc_qa: # Profile for using a NUC running container images from the AWS ECR Private repositories
     charts:
       - thecombine
   staging: # Profile for the QA server
