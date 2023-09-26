@@ -21,10 +21,9 @@ export const projButtonId = "project-settings";
 export const statButtonId = "project-statistics";
 
 const enum projNameLength {
-  sm = 15,
-  md = 25,
-  lg = 45,
-  xl = 75,
+  md = 17,
+  lg = 34,
+  xl = 51,
 }
 
 export async function getHasStatsPermission(): Promise<boolean> {
@@ -52,14 +51,14 @@ export default function ProjectButtons(props: TabProps): ReactElement {
       {hasStatsPermission && (
         <Tooltip title={t("appBar.statistics")}>
           <Button
+            color="inherit"
             id={statButtonId}
             onClick={() => navigate(Path.Statistics)}
-            color="inherit"
             style={{
               background: tabColor(props.currentTab, Path.Statistics),
+              margin: 5,
               minHeight: buttonMinHeight,
               minWidth: 0,
-              margin: 5,
             }}
           >
             <BarChart />
@@ -68,9 +67,9 @@ export default function ProjectButtons(props: TabProps): ReactElement {
       )}
       <Tooltip title={t("appBar.projectSettings")}>
         <Button
+          color="inherit"
           id={projButtonId}
           onClick={() => navigate(Path.ProjSettings)}
-          color="inherit"
           style={{
             background: tabColor(props.currentTab, Path.ProjSettings),
             minHeight: buttonMinHeight,
@@ -78,7 +77,7 @@ export default function ProjectButtons(props: TabProps): ReactElement {
           }}
         >
           <Settings />
-          <Hidden smDown>
+          <Hidden mdDown>
             <Typography
               display="inline"
               style={{ marginLeft: 5, marginRight: 5 }}
@@ -91,9 +90,6 @@ export default function ProjectButtons(props: TabProps): ReactElement {
               </Hidden>
               <Hidden mdDown lgUp>
                 {shortenName(projectName, projNameLength.md)}
-              </Hidden>
-              <Hidden mdUp smDown>
-                {shortenName(projectName, projNameLength.sm)}
               </Hidden>
             </Typography>
           </Hidden>
