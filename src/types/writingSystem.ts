@@ -53,6 +53,7 @@ export const semDomWritingSystems = [
   writingSystem[Bcp47Code.Pt],
   writingSystem[Bcp47Code.Ru],
   writingSystem[Bcp47Code.Sw],
+  writingSystem[Bcp47Code.Zh],
 ];
 
 // Used by i18n for un(der)-supported languages.
