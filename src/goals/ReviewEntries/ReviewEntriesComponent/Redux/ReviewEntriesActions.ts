@@ -1,5 +1,6 @@
 import { Sense } from "api/models";
 import * as backend from "backend";
+import { uploadFileFromUrl } from "components/Pronunciations/utilities";
 import {
   ReviewClearReviewEntriesState,
   ReviewEntriesActionTypes,
@@ -128,6 +129,14 @@ export function updateFrontierWord(
       return Promise.reject(editSource);
     }
 
+    // Set aside audio changes for last.
+    const delAudio = oldData.audio.filter(
+      (o) => !newData.audio.find((n) => n === o)
+    );
+    const addAudio = [...(newData.audioNew ?? [])];
+    editSource.audio = oldData.audio;
+    delete editSource.audioNew;
+
     // Get the original word, for updating.
     const editWord = await backend.getWord(editSource.id);
 
@@ -140,6 +149,15 @@ export function updateFrontierWord(
 
     // Update the word in the backend, and retrieve the id.
     editSource.id = (await backend.updateWord(editWord)).id;
+
+    // Add/remove audio.
+    for (const url of addAudio) {
+      editSource.id = await uploadFileFromUrl(editSource.id, url);
+    }
+    for (const fileName of delAudio) {
+      editSource.id = await backend.deleteAudio(editSource.id, fileName);
+    }
+    editSource.audio = (await backend.getWord(editSource.id)).audio;
 
     // Update the review entries word in the state.
     dispatch(updateWord(editWord.id, editSource));
