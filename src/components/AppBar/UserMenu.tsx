@@ -1,6 +1,6 @@
 import {
   ExitToApp,
-  Help,
+  Info,
   Person,
   SettingsApplications,
 } from "@mui/icons-material";
@@ -33,9 +33,8 @@ import { openUserGuide } from "utilities/pathUtilities";
 const idAffix = "user-menu";
 
 const enum usernameLength {
-  md = 13,
-  lg = 19,
-  xl = 25,
+  lg = 12,
+  xl = 24,
 }
 
 export async function getIsAdmin(): Promise<boolean> {
@@ -70,25 +69,22 @@ export default function UserMenu(props: TabProps): ReactElement {
       <Button
         aria-controls="user-menu"
         aria-haspopup="true"
-        onClick={handleClick}
         color="secondary"
+        id={`avatar-${idAffix}`}
+        onClick={handleClick}
         style={{
           background: tabColor(props.currentTab, Path.UserSettings),
           minHeight: buttonMinHeight,
           minWidth: 0,
           padding: 0,
         }}
-        id={`avatar-${idAffix}`}
       >
         {username ? (
-          <Hidden mdDown>
+          <Hidden lgDown>
             <Typography style={{ marginLeft: 5, marginRight: 5 }}>
               <Hidden xlDown>{shortenName(username, usernameLength.xl)}</Hidden>
               <Hidden xlUp lgDown>
                 {shortenName(username, usernameLength.lg)}
-              </Hidden>
-              <Hidden lgUp mdDown>
-                {shortenName(username, usernameLength.md)}
               </Hidden>
             </Typography>
           </Hidden>
@@ -102,11 +98,11 @@ export default function UserMenu(props: TabProps): ReactElement {
         )}
       </Button>
       <Menu
-        id={idAffix}
         anchorEl={anchorElement}
-        open={Boolean(anchorElement)}
-        onClose={handleClose}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        id={idAffix}
+        onClose={handleClose}
+        open={Boolean(anchorElement)}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
       >
         <WrappedUserMenuList isAdmin={isAdmin} onSelect={handleClose} />
@@ -177,7 +173,7 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
           props.onSelect();
         }}
       >
-        <Help style={iconStyle} />
+        <Info style={iconStyle} />
         {t("userMenu.userGuide")}
       </MenuItem>
 
@@ -193,8 +189,8 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
       </MenuItem>
 
       <MenuItem
-        id={`${idAffix}-version`}
         disabled
+        id={`${idAffix}-version`}
         style={{ justifyContent: "center" }}
       >
         {combineAppRelease}
