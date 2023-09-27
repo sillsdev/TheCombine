@@ -1,4 +1,4 @@
-import { Button, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -12,21 +12,22 @@ import {
 import { useAppDispatch } from "types/hooks";
 import theme from "types/theme";
 
-export default function SaveSkipButtons(): ReactElement {
+export default function SaveDeferButtons(): ReactElement {
   const dispatch = useAppDispatch();
 
+  const [isDeferring, setIsDeferring] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const { t } = useTranslation();
 
   const next = async (): Promise<void> => {
-    dispatch(setSidebar());
+    setIsDeferring(false);
     setIsSaving(false);
     await dispatch(asyncAdvanceStep());
   };
 
   const defer = async (): Promise<void> => {
-    setIsSaving(false);
+    setIsDeferring(true);
     dispatch(setSidebar());
     await dispatch(deferMerge()).then(next);
   };
@@ -53,16 +54,19 @@ export default function SaveSkipButtons(): ReactElement {
         >
           {t("buttons.saveAndContinue")}
         </LoadingButton>
-        <Button
-          color="secondary"
-          variant="contained"
-          style={{ marginRight: theme.spacing(3) }}
-          onClick={defer /*next*/}
-          title={t("mergeDups.helpText.defer")}
-          id="merge-defer"
+        <LoadingButton
+          loading={isDeferring}
+          buttonProps={{
+            color: "secondary",
+            variant: "contained",
+            style: { marginRight: theme.spacing(3) },
+            onClick: defer,
+            title: t("mergeDups.helpText.defer"),
+            id: "merge-defer",
+          }}
         >
           {t("buttons.defer")}
-        </Button>
+        </LoadingButton>
       </Grid>
     </Grid>
   );
