@@ -14,7 +14,6 @@ import {
   asyncAddGoal,
   asyncGetUserEdits,
 } from "components/GoalTimeline/Redux/GoalActions";
-//import { fetchMergeGrayDupsData } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { StoreState } from "types";
 import { Goal, GoalType } from "types/goals";
 import { useAppDispatch, useAppSelector } from "types/hooks";
@@ -77,7 +76,6 @@ export default function GoalTimeline(): ReactElement {
   const [loaded, setLoaded] = useState(false);
   const [portrait, setPortrait] = useState(true);
   const [hasGraylist, setHasGraylist] = useState(false);
-  //const [graylist, setGraylist] = useState<Promise<Word[][]>>(fetchMergeGrayDupsData(5, 12));
 
   const { t } = useTranslation();
 
@@ -90,14 +88,7 @@ export default function GoalTimeline(): ReactElement {
     }
     const updateHasGraylist = async () => {
       setHasGraylist(
-        await getGraylistEntries(12).then((res) => {
-          // to-do: don't hard code values
-          console.log("gray", res);
-          if (res.length !== 0) {
-            return true;
-          }
-          return false;
-        })
+        await getGraylistEntries(1).then((res) => res.length !== 0)
       );
     };
     updateHasGraylist();

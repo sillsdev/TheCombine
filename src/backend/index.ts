@@ -332,21 +332,7 @@ export async function getDuplicates(
   return resp.data;
 }
 
-/** Get list of potential graylist duplicates for graylist merging. */
-export async function getGrayDuplicates(
-  maxInList: number,
-  maxLists: number
-): Promise<Word[][]> {
-  const projectId = LocalStorage.getProjectId();
-  const userId = LocalStorage.getUserId();
-  const resp = await mergeApi.getPotentialGrayDuplicates(
-    { projectId, maxInList, maxLists, userId },
-    defaultOptions()
-  );
-  return resp.data;
-}
-
-/** Get list of potential graylist duplicates for graylist merging. */
+/** Get list of deferred potential duplicates from graylist for merging. */
 export async function getGraylistEntries(maxLists: number): Promise<Word[][]> {
   const projectId = LocalStorage.getProjectId();
   const userId = LocalStorage.getUserId();

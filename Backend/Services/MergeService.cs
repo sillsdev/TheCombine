@@ -311,30 +311,6 @@ namespace BackendFramework.Services
                 : base(info, context) { }
         }
 
-        /// <summary>
-        /// Get Lists of potential gray duplicate <see cref="Word"/>s in specified <see cref="Project"/>'s frontier.
-        /// </summary>
-        public async Task<List<List<Word>>> GetPotentialGrayDuplicates(
-            string projectId, int maxInList, int maxLists, string? userId = null)
-        {
-            var dupFinder = new DuplicateFinder(maxInList, maxLists, 3);
-
-            // First pass, only look for words with identical vernacular.
-            var collection = await _wordRepo.GetFrontier(projectId);
-            var wordLists = await dupFinder.GetIdenticalVernWords(
-                collection, wordIds => IsInMergeGraylist(projectId, wordIds, userId));
-
-            // If no such sets found, look for similar words.
-            if (wordLists.Count == 0)
-            {
-                collection = await _wordRepo.GetFrontier(projectId);
-                wordLists = await dupFinder.GetSimilarWords(
-                    collection, wordIds => IsInMergeBlacklist(projectId, wordIds, userId), wordIds => IsInMergeGraylist(projectId, wordIds, userId));
-            }
-
-            return wordLists;
-        }
-
         [Serializable]
         public class InvalidGraylistEntryException : Exception
         {

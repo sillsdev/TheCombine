@@ -39,6 +39,8 @@ import {
 // @ts-ignore
 import { MergeUndoIds } from "../models";
 // @ts-ignore
+import { MergeWordSetEntry } from "../models";
+// @ts-ignore
 import { MergeWords } from "../models";
 // @ts-ignore
 import { Word } from "../models";
@@ -110,24 +112,28 @@ export const MergeApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
-     * @param {Array<string>} requestBody
+     * @param {number} maxLists
+     * @param {string} userId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    graylistAdd: async (
+    getGraylistEntries: async (
       projectId: string,
-      requestBody: Array<string>,
+      maxLists: number,
+      userId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("graylistAdd", "projectId", projectId);
-      // verify required parameter 'requestBody' is not null or undefined
-      assertParamExists("graylistAdd", "requestBody", requestBody);
+      assertParamExists("getGraylistEntries", "projectId", projectId);
+      // verify required parameter 'maxLists' is not null or undefined
+      assertParamExists("getGraylistEntries", "maxLists", maxLists);
+      // verify required parameter 'userId' is not null or undefined
+      assertParamExists("getGraylistEntries", "userId", userId);
       const localVarPath =
-        `/v1/projects/{projectId}/merge/graylist/add`.replace(
-          `{${"projectId"}}`,
-          encodeURIComponent(String(projectId))
-        );
+        `/v1/projects/{projectId}/merge/getgraylist/{maxLists}/{userId}`
+          .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
+          .replace(`{${"maxLists"}}`, encodeURIComponent(String(maxLists)))
+          .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -136,14 +142,12 @@ export const MergeApiAxiosParamCreator = function (
       }
 
       const localVarRequestOptions = {
-        method: "PUT",
+        method: "GET",
         ...baseOptions,
         ...options,
       };
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
-
-      localVarHeaderParameter["Content-Type"] = "application/json";
 
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
       let headersFromBaseOptions =
@@ -153,11 +157,6 @@ export const MergeApiAxiosParamCreator = function (
         ...headersFromBaseOptions,
         ...options.headers,
       };
-      localVarRequestOptions.data = serializeDataIfNeeded(
-        requestBody,
-        localVarRequestOptions,
-        configuration
-      );
 
       return {
         url: toPathString(localVarUrlObj),
@@ -226,33 +225,24 @@ export const MergeApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
-     * @param {number} maxInList
-     * @param {number} maxLists
-     * @param {string} userId
+     * @param {Array<string>} requestBody
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getPotentialGrayDuplicates: async (
+    graylistAdd: async (
       projectId: string,
-      maxInList: number,
-      maxLists: number,
-      userId: string,
+      requestBody: Array<string>,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("getPotentialGrayDuplicates", "projectId", projectId);
-      // verify required parameter 'maxInList' is not null or undefined
-      assertParamExists("getPotentialGrayDuplicates", "maxInList", maxInList);
-      // verify required parameter 'maxLists' is not null or undefined
-      assertParamExists("getPotentialGrayDuplicates", "maxLists", maxLists);
-      // verify required parameter 'userId' is not null or undefined
-      assertParamExists("getPotentialGrayDuplicates", "userId", userId);
+      assertParamExists("graylistAdd", "projectId", projectId);
+      // verify required parameter 'requestBody' is not null or undefined
+      assertParamExists("graylistAdd", "requestBody", requestBody);
       const localVarPath =
-        `/v1/projects/{projectId}/merge/graydups/{maxInList}/{maxLists}/{userId}`
-          .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
-          .replace(`{${"maxInList"}}`, encodeURIComponent(String(maxInList)))
-          .replace(`{${"maxLists"}}`, encodeURIComponent(String(maxLists)))
-          .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+        `/v1/projects/{projectId}/merge/graylist/add`.replace(
+          `{${"projectId"}}`,
+          encodeURIComponent(String(projectId))
+        );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -261,12 +251,14 @@ export const MergeApiAxiosParamCreator = function (
       }
 
       const localVarRequestOptions = {
-        method: "GET",
+        method: "PUT",
         ...baseOptions,
         ...options,
       };
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
       let headersFromBaseOptions =
@@ -276,60 +268,11 @@ export const MergeApiAxiosParamCreator = function (
         ...headersFromBaseOptions,
         ...options.headers,
       };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {number} maxLists
-     * @param {string} userId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getGraylistEntries: async (
-      projectId: string,
-      maxLists: number,
-      userId: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("getGraylistEntries", "projectId", projectId);
-      // verify  required parameter 'maxLists' is not null or undefined
-      assertParamExists("getGraylistEntries", "maxLists", maxLists);
-      // verify required parameter 'userId' is not null or undefined
-      assertParamExists("getGraylistEntries", "userId", userId);
-      const localVarPath =
-        `/v1/projects/{projectId}/merge/getgraylist/{maxLists}/{userId}`
-          .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
-          .replace(`{${"maxLists"}}`, encodeURIComponent(String(maxLists)))
-          .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "GET",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        requestBody,
+        localVarRequestOptions,
+        configuration
+      );
 
       return {
         url: toPathString(localVarUrlObj),
@@ -487,22 +430,29 @@ export const MergeApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
-     * @param {Array<string>} requestBody
+     * @param {number} maxLists
+     * @param {string} userId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async graylistAdd(
+    async getGraylistEntries(
       projectId: string,
-      requestBody: Array<string>,
+      maxLists: number,
+      userId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<Array<MergeWordSetEntry>>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.blacklistAdd(
-        projectId,
-        requestBody,
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getGraylistEntries(
+          projectId,
+          maxLists,
+          userId,
+          options
+        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -549,65 +499,22 @@ export const MergeApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
-     * @param {number} maxInList
-     * @param {number} maxLists
-     * @param {string} userId
+     * @param {Array<string>} requestBody
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async getPotentialGrayDuplicates(
+    async graylistAdd(
       projectId: string,
-      maxInList: number,
-      maxLists: number,
-      userId: string,
+      requestBody: Array<string>,
       options?: any
     ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string
-      ) => AxiosPromise<Array<Array<Word>>>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>
     > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.getPotentialGrayDuplicates(
-          projectId,
-          maxInList,
-          maxLists,
-          userId,
-          options
-        );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
+      const localVarAxiosArgs = await localVarAxiosParamCreator.graylistAdd(
+        projectId,
+        requestBody,
+        options
       );
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {number} maxLists
-     * @param {string} userId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async getGraylistEntries(
-      projectId: string,
-      maxLists: number,
-      userId: string,
-      options?: any
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string
-      ) => AxiosPromise<Array<Array<Word>>>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.getGraylistEntries(
-          projectId,
-          maxLists,
-          userId,
-          options
-        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -700,17 +607,19 @@ export const MergeApiFactory = function (
     /**
      *
      * @param {string} projectId
-     * @param {Array<string>} requestBody
+     * @param {number} maxLists
+     * @param {string} userId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    graylistAdd(
+    getGraylistEntries(
       projectId: string,
-      requestBody: Array<string>,
+      maxLists: number,
+      userId: string,
       options?: any
-    ): AxiosPromise<Array<string>> {
+    ): AxiosPromise<Array<MergeWordSetEntry>> {
       return localVarFp
-        .graylistAdd(projectId, requestBody, options)
+        .getGraylistEntries(projectId, maxLists, userId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -731,6 +640,22 @@ export const MergeApiFactory = function (
     ): AxiosPromise<Array<Array<Word>>> {
       return localVarFp
         .getPotentialDuplicates(projectId, maxInList, maxLists, userId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {Array<string>} requestBody
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    graylistAdd(
+      projectId: string,
+      requestBody: Array<string>,
+      options?: any
+    ): AxiosPromise<Array<string>> {
+      return localVarFp
+        .graylistAdd(projectId, requestBody, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -790,24 +715,31 @@ export interface MergeApiBlacklistAddRequest {
 }
 
 /**
- * Request parameters for graylistAdd operation in MergeApi.
+ * Request parameters for getGraylistEntries operation in MergeApi.
  * @export
- * @interface MergeApiGraylistAddRequest
+ * @interface MergeApiGetGraylistEntriesRequest
  */
-export interface MergeApiGraylistAddRequest {
+export interface MergeApiGetGraylistEntriesRequest {
   /**
    *
    * @type {string}
-   * @memberof MergeApiGraylistAdd
+   * @memberof MergeApiGetGraylistEntries
    */
   readonly projectId: string;
 
   /**
    *
-   * @type {Array<string>}
-   * @memberof MergeApiGraylistAdd
+   * @type {number}
+   * @memberof MergeApiGetGraylistEntries
    */
-  readonly requestBody: Array<string>;
+  readonly maxLists: number;
+
+  /**
+   *
+   * @type {string}
+   * @memberof MergeApiGetGraylistEntries
+   */
+  readonly userId: string;
 }
 
 /**
@@ -846,67 +778,26 @@ export interface MergeApiGetPotentialDuplicatesRequest {
 }
 
 /**
- * Request parameters for getPotentialGrayDuplicates operation in MergeApi.
+ * Request parameters for graylistAdd operation in MergeApi.
  * @export
- * @interface MergeApiGetPotentialGrayDuplicatesRequest
+ * @interface MergeApiGraylistAddRequest
  */
-export interface MergeApiGetPotentialGrayDuplicatesRequest {
+export interface MergeApiGraylistAddRequest {
   /**
    *
    * @type {string}
-   * @memberof MergeApiGetPotentialGrayDuplicates
+   * @memberof MergeApiGraylistAdd
    */
   readonly projectId: string;
 
   /**
    *
-   * @type {number}
-   * @memberof MergeApiGetPotentialGrayDuplicates
+   * @type {Array<string>}
+   * @memberof MergeApiGraylistAdd
    */
-  readonly maxInList: number;
-
-  /**
-   *
-   * @type {number}
-   * @memberof MergeApiGetPotentialDuplicates
-   */
-  readonly maxLists: number;
-
-  /**
-   *
-   * @type {string}
-   * @memberof MergeApiGetPotentialGrayDuplicates
-   */
-  readonly userId: string;
+  readonly requestBody: Array<string>;
 }
 
-/**
- * Request parameters for getGraylistEntries operation in MergeApi.
- * @export
- * @interface MergeApiGetGraylistEntriesRequest
- */
-export interface MergeApiGetGraylistEntriesRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof MergeApiGetGraylistEntries
-   */
-  readonly projectId: string;
-
-  /**
-   *
-   * @type {number}
-   * @memberof MergeApiGetGraylistEntries
-   */
-  readonly maxLists: number;
-
-  /**
-   *
-   * @type {string}
-   * @memberof MergeApiGetGraylistEntries
-   */
-  readonly userId: string;
-}
 /**
  * Request parameters for mergeWords operation in MergeApi.
  * @export
@@ -978,19 +869,20 @@ export class MergeApi extends BaseAPI {
 
   /**
    *
-   * @param {MergeApiGraylistAddRequest} requestParameters Request parameters.
+   * @param {MergeApiGetGraylistEntriesRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof MergeApi
    */
-  public graylistAdd(
-    requestParameters: MergeApiGraylistAddRequest,
+  public getGraylistEntries(
+    requestParameters: MergeApiGetGraylistEntriesRequest,
     options?: any
   ) {
     return MergeApiFp(this.configuration)
-      .graylistAdd(
+      .getGraylistEntries(
         requestParameters.projectId,
-        requestParameters.requestBody,
+        requestParameters.maxLists,
+        requestParameters.userId,
         options
       )
       .then((request) => request(this.axios, this.basePath));
@@ -1020,42 +912,19 @@ export class MergeApi extends BaseAPI {
 
   /**
    *
-   * @param {MergeApiGetPotentialGrayDuplicatesRequest} requestParameters Request parameters.
+   * @param {MergeApiGraylistAddRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof MergeApi
    */
-  public getPotentialGrayDuplicates(
-    requestParameters: MergeApiGetPotentialGrayDuplicatesRequest,
+  public graylistAdd(
+    requestParameters: MergeApiGraylistAddRequest,
     options?: any
   ) {
     return MergeApiFp(this.configuration)
-      .getPotentialGrayDuplicates(
+      .graylistAdd(
         requestParameters.projectId,
-        requestParameters.maxInList,
-        requestParameters.maxLists,
-        requestParameters.userId,
-        options
-      )
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {MergeApiGetGraylistEntriesRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof MergeApi
-   */
-  public getGraylistEntries(
-    requestParameters: MergeApiGetGraylistEntriesRequest,
-    options?: any
-  ) {
-    return MergeApiFp(this.configuration)
-      .getGraylistEntries(
-        requestParameters.projectId,
-        requestParameters.maxLists,
-        requestParameters.userId,
+        requestParameters.requestBody,
         options
       )
       .then((request) => request(this.axios, this.basePath));

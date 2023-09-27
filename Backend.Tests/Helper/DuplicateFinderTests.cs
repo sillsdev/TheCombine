@@ -13,6 +13,7 @@ namespace Backend.Tests.Helper
         private DuplicateFinder _dupFinder = null!;
         private List<Word> _frontier = null!;
         private Func<List<string>, Task<bool>> _isInBlacklist = null!;
+        private Func<List<string>, Task<bool>> _isInGraylist = null!;
 
         private const int MaxInList = 4;
         private const int MaxLists = 3;
@@ -27,6 +28,7 @@ namespace Backend.Tests.Helper
             _dupFinder = new DuplicateFinder(MaxInList, MaxLists, MaxScore);
             _frontier = new List<Word>();
             _isInBlacklist = _ => Task.FromResult(false);
+            _isInGraylist = _ => Task.FromResult(false);
         }
 
         [Test]
@@ -50,7 +52,7 @@ namespace Backend.Tests.Helper
         {
             _frontier = Util.RandomWordList(MaxInList * MaxLists, ProjId);
             _dupFinder = new DuplicateFinder(MaxInList, MaxLists, NoMaxScore);
-            var wordLists = _dupFinder.GetSimilarWords(_frontier, _isInBlacklist).Result;
+            var wordLists = _dupFinder.GetSimilarWords(_frontier, _isInBlacklist, _isInGraylist).Result;
             Assert.That(wordLists, Has.Count.EqualTo(MaxLists));
             Assert.That(wordLists.First(), Has.Count.EqualTo(MaxInList));
             Assert.That(wordLists.Last(), Has.Count.EqualTo(MaxInList));
@@ -63,7 +65,7 @@ namespace Backend.Tests.Helper
             // Ensure at least one set of similar words, in case MaxScore is too low.
             _frontier.Last().Vernacular = _frontier.First().Vernacular;
 
-            var wordLists = _dupFinder.GetSimilarWords(_frontier, _isInBlacklist).Result;
+            var wordLists = _dupFinder.GetSimilarWords(_frontier, _isInBlacklist, _isInGraylist).Result;
             var firstList = wordLists.First();
             var firstMin = _dupFinder.GetWordScore(firstList.First(), firstList.ElementAt(1));
             var firstMax = _dupFinder.GetWordScore(firstList.First(), firstList.Last());
@@ -93,7 +95,7 @@ namespace Backend.Tests.Helper
             // Make sure the first set only is blacklisted, so all but the first word end up in a lone list.
             _isInBlacklist = wordList => Task.FromResult(wordList.First() == _frontier.First().Vernacular);
             _dupFinder = new DuplicateFinder(MaxInList, MaxLists, NoMaxScore);
-            var wordLists = _dupFinder.GetSimilarWords(_frontier, _isInBlacklist).Result;
+            var wordLists = _dupFinder.GetSimilarWords(_frontier, _isInBlacklist, _isInGraylist).Result;
             Assert.That(wordLists, Has.Count.EqualTo(1));
             Assert.That(wordLists.First(), Has.Count.EqualTo(MaxInList));
         }

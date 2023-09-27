@@ -15,6 +15,7 @@ export * from "./gram-cat-group";
 export * from "./grammatical-info";
 export * from "./merge-source-word";
 export * from "./merge-undo-ids";
+export * from "./merge-word-set-entry";
 export * from "./merge-words";
 export * from "./note";
 export * from "./password-reset-data";
