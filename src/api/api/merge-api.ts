@@ -39,8 +39,6 @@ import {
 // @ts-ignore
 import { MergeUndoIds } from "../models";
 // @ts-ignore
-import { MergeWordSetEntry } from "../models";
-// @ts-ignore
 import { MergeWords } from "../models";
 // @ts-ignore
 import { Word } from "../models";
@@ -444,7 +442,7 @@ export const MergeApiFp = function (configuration?: Configuration) {
       (
         axios?: AxiosInstance,
         basePath?: string
-      ) => AxiosPromise<Array<MergeWordSetEntry>>
+      ) => AxiosPromise<Array<Array<Word>>>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.getGraylistEntries(
@@ -617,7 +615,7 @@ export const MergeApiFactory = function (
       maxLists: number,
       userId: string,
       options?: any
-    ): AxiosPromise<Array<MergeWordSetEntry>> {
+    ): AxiosPromise<Array<Array<Word>>> {
       return localVarFp
         .getGraylistEntries(projectId, maxLists, userId, options)
         .then((request) => request(axios, basePath));

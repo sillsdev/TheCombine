@@ -121,7 +121,7 @@ namespace BackendFramework.Controllers
         /// <param name="userId"> Id of user whose merge graylist is to be used. </param>
         /// <returns> List of Lists of <see cref="Word"/>s. </returns>
         [HttpGet("getgraylist/{maxLists}/{userId}", Name = "GetGraylistEntries")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<MergeWordSetEntry>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<List<Word>>))]
         public async Task<IActionResult> getGraylistEntries(
             string projectId, int maxLists, string userId)
         {
