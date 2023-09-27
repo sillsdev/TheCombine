@@ -69,5 +69,28 @@ namespace Backend.Tests.Controllers
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result.First().WordIds, Is.EqualTo(wordIdsC));
         }
+
+        [Test]
+        public void GreylistAddTest()
+        {
+            var wordIdsA = new List<string> { "1", "2" };
+            var wordIdsB = new List<string> { "3", "1" };
+            var wordIdsC = new List<string> { "1", "2", "3" };
+
+            // Add two Lists of wordIds.
+            _ = _mergeController.GraylistAdd(ProjId, wordIdsA).Result;
+            var result = _mergeGraylistRepo.GetAllEntries(ProjId).Result;
+            Assert.That(result, Has.Count.EqualTo(1));
+            Assert.That(result.First().WordIds, Is.EqualTo(wordIdsA));
+            _ = _mergeController.GraylistAdd(ProjId, wordIdsB).Result;
+            result = _mergeGraylistRepo.GetAllEntries(ProjId).Result;
+            Assert.That(result, Has.Count.EqualTo(2));
+
+            // Add a List of wordIds that contains both previous lists.
+            _ = _mergeController.GraylistAdd(ProjId, wordIdsC).Result;
+            result = _mergeGraylistRepo.GetAllEntries(ProjId).Result;
+            Assert.That(result, Has.Count.EqualTo(1));
+            Assert.That(result.First().WordIds, Is.EqualTo(wordIdsC));
+        }
     }
 }

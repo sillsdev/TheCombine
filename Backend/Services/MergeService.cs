@@ -287,14 +287,16 @@ namespace BackendFramework.Services
             // First pass, only look for words with identical vernacular.
             var collection = await _wordRepo.GetFrontier(projectId);
             var wordLists = await dupFinder.GetIdenticalVernWords(
-                collection, wordIds => IsInMergeBlacklist(projectId, wordIds, userId));
+                collection, wordIds => IsInMergeBlacklist(projectId, wordIds, userId),
+                    wordIds => IsInMergeGraylist(projectId, wordIds, userId));
 
             // If no such sets found, look for similar words.
             if (wordLists.Count == 0)
             {
                 collection = await _wordRepo.GetFrontier(projectId);
                 wordLists = await dupFinder.GetSimilarWords(
-                    collection, wordIds => IsInMergeBlacklist(projectId, wordIds, userId), wordIds => IsInMergeGraylist(projectId, wordIds, userId));
+                    collection, wordIds => IsInMergeBlacklist(projectId, wordIds, userId),
+                    wordIds => IsInMergeGraylist(projectId, wordIds, userId));
             }
 
             return wordLists;

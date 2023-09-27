@@ -42,7 +42,7 @@ namespace Backend.Tests.Helper
             _frontier.ElementAt(1).Vernacular = vern;
             _frontier.ElementAt(2).Vernacular = vern;
             _frontier.ElementAt(5).Vernacular = vern;
-            var wordLists = _dupFinder.GetIdenticalVernWords(_frontier, _isInBlacklist).Result;
+            var wordLists = _dupFinder.GetIdenticalVernWords(_frontier, _isInBlacklist, _isInGraylist).Result;
             Assert.That(wordLists, Has.Count.EqualTo(1));
             Assert.That(wordLists.First(), Has.Count.EqualTo(3));
         }
