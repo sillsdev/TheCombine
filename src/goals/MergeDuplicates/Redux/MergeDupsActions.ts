@@ -21,6 +21,7 @@ import {
 import {
   MergeDups,
   MergeStepData,
+  ReviewDeferredDups,
   newMergeWords,
 } from "goals/MergeDuplicates/MergeDupsTypes";
 import {
@@ -277,7 +278,7 @@ export function mergeAll() {
 
 // Used in MergeDups cases of GoalActions functions
 
-export function dispatchMergeStepData(goal: MergeDups) {
+export function dispatchMergeStepData(goal: MergeDups | ReviewDeferredDups) {
   return (dispatch: StoreStateDispatch) => {
     const stepData = goal.steps[goal.currentStep] as MergeStepData;
     if (stepData) {
@@ -285,13 +286,6 @@ export function dispatchMergeStepData(goal: MergeDups) {
       dispatch(setWordData(stepWords));
     }
   };
-}
-
-export async function fetchMergeDupsData(
-  maxInList: number,
-  maxLists: number
-): Promise<Word[][]> {
-  return await backend.getDuplicates(maxInList, maxLists);
 }
 
 /** Modifies the mutable input sense list. */

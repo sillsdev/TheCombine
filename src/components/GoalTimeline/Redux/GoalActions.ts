@@ -2,7 +2,7 @@ import { Action, PayloadAction } from "@reduxjs/toolkit";
 
 import { MergeUndoIds, Word } from "api/models";
 import * as Backend from "backend";
-import { getGraylistEntries } from "backend";
+import { getDuplicates, getGraylistEntries } from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
 import router from "browserRouter";
 import {
@@ -16,10 +16,7 @@ import {
   updateStepFromDataAction,
 } from "components/GoalTimeline/Redux/GoalReducer";
 import { CharacterChange } from "goals/CharacterInventory/CharacterInventoryTypes";
-import {
-  dispatchMergeStepData,
-  fetchMergeDupsData,
-} from "goals/MergeDuplicates/Redux/MergeDupsActions";
+import { dispatchMergeStepData } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { Goal, GoalStatus, GoalType } from "types/goals";
@@ -207,11 +204,11 @@ function goalCleanup(goal: Goal): void {
   }
 }
 
-// Returns goal data if the goal is MergeDups.
+// Returns goal data for some goal types.
 export async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
   switch (goalType) {
     case GoalType.MergeDups:
-      return await fetchMergeDupsData(5, maxNumSteps(goalType));
+      return await getDuplicates(5, maxNumSteps(goalType));
     case GoalType.ReviewDeferredDups:
       return await getGraylistEntries(maxNumSteps(goalType));
     default:

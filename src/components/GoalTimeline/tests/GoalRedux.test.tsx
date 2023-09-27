@@ -25,6 +25,7 @@ import {
   MergeDups,
   MergeDupsData,
   MergesCompleted,
+  ReviewDeferredDups,
 } from "goals/MergeDuplicates/MergeDupsTypes";
 import { goalDataMock } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
 import { setupStore } from "store";
@@ -312,6 +313,31 @@ describe("asyncUpdateGoal", () => {
     });
     // create MergeDups goal
     const goal = new MergeDups();
+    await act(async () => {
+      store.dispatch(asyncAddGoal(goal));
+    });
+    // dispatch asyncUpdateGoal()
+    await act(async () => {
+      store.dispatch(addCompletedMergeToGoal(mockCompletedMerge));
+      await store.dispatch(asyncUpdateGoal());
+    });
+    // verify:
+    //  - current value is now new goal
+    const changes = store.getState().goalsState.currentGoal
+      .changes as MergesCompleted;
+    expect(changes.merges).toEqual([mockCompletedMerge]);
+    //  - backend is called to addGoalToUserEdit
+    expect(mockAddGoalToUserEdit).toBeCalled();
+  });
+
+  it("update ReviewDeferredDups goal", async () => {
+    // setup the test scenario
+    const store = setupStore();
+    await act(async () => {
+      renderWithProviders(<GoalTimeline />, { store: store });
+    });
+    // create ReviewDeferredDups goal
+    const goal = new ReviewDeferredDups();
     await act(async () => {
       store.dispatch(asyncAddGoal(goal));
     });

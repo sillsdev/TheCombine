@@ -25,10 +25,10 @@ function displayComponent(goal: Goal): ReactElement {
       return <CharacterInventory completed={isCompleted} />;
     case GoalType.MergeDups:
       return <MergeDup completed={isCompleted} />;
-    case GoalType.ReviewEntries:
-      return <ReviewEntriesComponent />;
     case GoalType.ReviewDeferredDups:
       return <ReviewDeferredDuplicates completed={isCompleted} />;
+    case GoalType.ReviewEntries:
+      return <ReviewEntriesComponent />;
     default:
       return <PageNotFound />;
   }
