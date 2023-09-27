@@ -225,24 +225,10 @@ function getMergeWords(
 }
 
 export function deferMerge() {
-  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+  return async (_: StoreStateDispatch, getState: () => StoreState) => {
     const mergeTree = getState().mergeDuplicateGoal;
-    console.log("test", mergeTree);
-
-    // Add to graylist.
     await backend.graylistAdd(Object.keys(mergeTree.data.words));
   };
-}
-
-export async function fetchMergeGrayDupsData(
-  maxInList: number,
-  maxLists: number
-): Promise<Word[][]> {
-  return await backend.getGrayDuplicates(maxInList, maxLists);
-}
-
-export async function getGraylistEntries(maxLists: number): Promise<Word[][]> {
-  return await backend.getGraylistEntries(maxLists);
 }
 
 export function mergeAll() {
