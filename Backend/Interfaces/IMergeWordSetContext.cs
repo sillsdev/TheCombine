@@ -5,6 +5,6 @@ namespace BackendFramework.Interfaces
 {
     public interface IMergeWordSetContext
     {
-        IMongoCollection<MergeWordSetEntry> MergeWordSet { get; }
+        IMongoCollection<MergeWordSet> MergeWordSet { get; }
     }
 }

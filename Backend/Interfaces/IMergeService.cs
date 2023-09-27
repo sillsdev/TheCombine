@@ -8,8 +8,8 @@ namespace BackendFramework.Interfaces
     {
         Task<List<Word>> Merge(string projectId, List<MergeWords> mergeWordsList);
         Task<bool> UndoMerge(string projectId, MergeUndoIds ids);
-        Task<MergeWordSetEntry> AddToMergeBlacklist(string projectId, string userId, List<string> wordIds);
-        Task<MergeWordSetEntry> AddToMergeGraylist(string projectId, string userId, List<string> wordIds);
+        Task<MergeWordSet> AddToMergeBlacklist(string projectId, string userId, List<string> wordIds);
+        Task<MergeWordSet> AddToMergeGraylist(string projectId, string userId, List<string> wordIds);
         Task<bool> IsInMergeBlacklist(string projectId, List<string> wordIds, string? userId = null);
         Task<bool> IsInMergeGraylist(string projectId, List<string> wordIds, string? userId = null);
         Task<int> UpdateMergeBlacklist(string projectId);

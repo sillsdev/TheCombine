@@ -7,11 +7,11 @@ namespace BackendFramework.Interfaces
 {
     public interface IMergeWordSetRepository
     {
-        Task<List<MergeWordSetEntry>> GetAllEntries(string projectId, string? userId = null);
-        Task<MergeWordSetEntry?> GetEntry(string projectId, string entryId);
-        Task<MergeWordSetEntry> Create(MergeWordSetEntry wordSetEntry);
+        Task<List<MergeWordSet>> GetAllSets(string projectId, string? userId = null);
+        Task<MergeWordSet?> GetSet(string projectId, string entryId);
+        Task<MergeWordSet> Create(MergeWordSet wordSetEntry);
         Task<bool> Delete(string projectId, string entryId);
         Task<bool> DeleteAllEntries(string projectId);
-        Task<ResultOfUpdate> Update(MergeWordSetEntry wordSetEntry);
+        Task<ResultOfUpdate> Update(MergeWordSet wordSetEntry);
     }
 }

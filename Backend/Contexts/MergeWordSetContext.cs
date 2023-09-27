@@ -17,7 +17,7 @@ namespace BackendFramework.Contexts
             _db = client.GetDatabase(options.Value.CombineDatabase);
         }
 
-        public IMongoCollection<MergeWordSetEntry> MergeWordSet => _db.GetCollection<MergeWordSetEntry>(
+        public IMongoCollection<MergeWordSet> MergeWordSet => _db.GetCollection<MergeWordSet>(
             "MergeWordSetCollection");
     }
 }

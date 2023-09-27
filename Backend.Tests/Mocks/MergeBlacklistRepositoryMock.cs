@@ -10,14 +10,14 @@ namespace Backend.Tests.Mocks
 {
     public class MergeBlacklistRepositoryMock : IMergeWordSetRepository
     {
-        private readonly List<MergeWordSetEntry> _mergeBlacklist;
+        private readonly List<MergeWordSet> _mergeBlacklist;
 
         public MergeBlacklistRepositoryMock()
         {
-            _mergeBlacklist = new List<MergeWordSetEntry>();
+            _mergeBlacklist = new List<MergeWordSet>();
         }
 
-        public Task<List<MergeWordSetEntry>> GetAllEntries(string projectId, string? userId = null)
+        public Task<List<MergeWordSet>> GetAllSets(string projectId, string? userId = null)
         {
             var cloneList = _mergeBlacklist.Select(e => e.Clone()).ToList();
             var enumerable = userId is null ?
@@ -26,20 +26,20 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(enumerable.ToList());
         }
 
-        public Task<MergeWordSetEntry?> GetEntry(string projectId, string entryId)
+        public Task<MergeWordSet?> GetSet(string projectId, string entryId)
         {
             try
             {
                 var foundMergeBlacklist = _mergeBlacklist.Single(entry => entry.Id == entryId);
-                return Task.FromResult<MergeWordSetEntry?>(foundMergeBlacklist.Clone());
+                return Task.FromResult<MergeWordSet?>(foundMergeBlacklist.Clone());
             }
             catch (InvalidOperationException)
             {
-                return Task.FromResult<MergeWordSetEntry?>(null);
+                return Task.FromResult<MergeWordSet?>(null);
             }
         }
 
-        public Task<MergeWordSetEntry> Create(MergeWordSetEntry wordSetEntry)
+        public Task<MergeWordSet> Create(MergeWordSet wordSetEntry)
         {
             wordSetEntry.Id = Guid.NewGuid().ToString();
             _mergeBlacklist.Add(wordSetEntry.Clone());
@@ -58,7 +58,7 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_mergeBlacklist.Remove(foundMergeBlacklist));
         }
 
-        public Task<ResultOfUpdate> Update(MergeWordSetEntry wordSetEntry)
+        public Task<ResultOfUpdate> Update(MergeWordSet wordSetEntry)
         {
             var foundEntry = _mergeBlacklist.Single(
                 e => e.ProjectId == wordSetEntry.ProjectId && e.Id == wordSetEntry.Id);
