@@ -200,12 +200,20 @@ namespace Backend.Tests.Services
         public void AddMergeToBlacklistTest()
         {
             _ = _mergeBlacklistRepo.DeleteAllEntries(ProjId).Result;
+            _ = _mergeGraylistRepo.DeleteAllEntries(ProjId).Result;
             var wordIds = new List<string> { "1", "2" };
+
+            // Adding to blacklist should clear from graylist
+            _ = _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds).Result;
+            Assert.That(_mergeGraylistRepo.GetAllSets(ProjId).Result, Is.Not.Empty);
+
             _ = _mergeService.AddToMergeBlacklist(ProjId, UserId, wordIds).Result;
             var blacklist = _mergeBlacklistRepo.GetAllSets(ProjId).Result;
             Assert.That(blacklist, Has.Count.EqualTo(1));
             var expectedEntry = new MergeWordSet { ProjectId = ProjId, UserId = UserId, WordIds = wordIds };
             Assert.That(expectedEntry.ContentEquals(blacklist.First()), Is.True);
+
+            Assert.That(_mergeGraylistRepo.GetAllSets(ProjId).Result, Is.Empty);
         }
 
         [Test]
@@ -287,7 +295,6 @@ namespace Backend.Tests.Services
             Assert.That(newBlacklist.First().WordIds, Is.EqualTo(new List<string> { "2", "3" }));
         }
 
-
         [Test]
         public void AddMergeToGraylistTest()
         {
@@ -304,12 +311,45 @@ namespace Backend.Tests.Services
         public void AddMergeToGraylistErrorTest()
         {
             _ = _mergeGraylistRepo.DeleteAllEntries(ProjId).Result;
-            var wordIds0 = new List<string>();
+            var wordIds = new List<string>();
             var wordIds1 = new List<string> { "1" };
             Assert.That(
-                async () => { await _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds0); }, Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
+                async () => { await _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds); },
+                Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
             Assert.That(
-                async () => { await _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds1); }, Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
+                async () => { await _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds1); },
+                Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
+        }
+
+        [Test]
+        public void RemoveFromMergeGraylistTest()
+        {
+            _ = _mergeGraylistRepo.DeleteAllEntries(ProjId).Result;
+            var wordIds12 = new List<string> { "1", "2" };
+            var wordIds13 = new List<string> { "1", "3" };
+            _ = _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds12).Result;
+            _ = _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds13).Result;
+            var graylist = _mergeGraylistRepo.GetAllSets(ProjId).Result;
+            Assert.That(graylist, Has.Count.EqualTo(2));
+            var wordIds123 = new List<string> { "1", "2", "3" };
+            var removed = _mergeService.RemoveFromMergeGraylist(ProjId, UserId, wordIds123).Result;
+            Assert.That(removed, Has.Count.EqualTo(2));
+            graylist = _mergeGraylistRepo.GetAllSets(ProjId).Result;
+            Assert.That(graylist, Is.Empty);
+        }
+
+        [Test]
+        public void RemoveFromMergeGraylistErrorTest()
+        {
+            _ = _mergeGraylistRepo.DeleteAllEntries(ProjId).Result;
+            var wordIds = new List<string>();
+            var wordIds1 = new List<string> { "1" };
+            Assert.That(
+                async () => { await _mergeService.RemoveFromMergeGraylist(ProjId, UserId, wordIds); },
+                Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
+            Assert.That(
+                async () => { await _mergeService.RemoveFromMergeGraylist(ProjId, UserId, wordIds1); },
+                Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
         }
 
         [Test]

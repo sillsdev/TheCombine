@@ -10,6 +10,7 @@ namespace BackendFramework.Interfaces
         Task<bool> UndoMerge(string projectId, MergeUndoIds ids);
         Task<MergeWordSet> AddToMergeBlacklist(string projectId, string userId, List<string> wordIds);
         Task<MergeWordSet> AddToMergeGraylist(string projectId, string userId, List<string> wordIds);
+        Task<List<string>> RemoveFromMergeGraylist(string projectId, string userId, List<string> wordIds);
         Task<bool> IsInMergeBlacklist(string projectId, List<string> wordIds, string? userId = null);
         Task<bool> IsInMergeGraylist(string projectId, List<string> wordIds, string? userId = null);
         Task<int> UpdateMergeBlacklist(string projectId);

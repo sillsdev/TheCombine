@@ -126,7 +126,6 @@ namespace BackendFramework.Services
             {
                 throw new InvalidMergeWordSetException("Cannot blacklist a list of fewer than 2 wordIds.");
             }
-            // When we switch from individual to common blacklist, the userId argument here should be removed.
             var blacklist = await _mergeBlacklistRepo.GetAllSets(projectId, userId);
             foreach (var entry in blacklist)
             {
@@ -135,6 +134,7 @@ namespace BackendFramework.Services
                     await _mergeBlacklistRepo.Delete(projectId, entry.Id);
                 }
             }
+            await RemoveFromMergeGraylist(projectId, userId, wordIds);
             var newEntry = new MergeWordSet { ProjectId = projectId, UserId = userId, WordIds = wordIds };
             return await _mergeBlacklistRepo.Create(newEntry);
         }
@@ -149,7 +149,6 @@ namespace BackendFramework.Services
             {
                 throw new InvalidMergeWordSetException("Cannot graylist a list of fewer than 2 wordIds.");
             }
-            // When we switch from individual to common graylist, the userId argument here should be removed.
             var graylist = await _mergeGraylistRepo.GetAllSets(projectId, userId);
             foreach (var entry in graylist)
             {
@@ -160,6 +159,29 @@ namespace BackendFramework.Services
             }
             var newEntry = new MergeWordSet { ProjectId = projectId, UserId = userId, WordIds = wordIds };
             return await _mergeGraylistRepo.Create(newEntry);
+        }
+
+        /// <summary> Remove a List of wordIds from MergeGraylist of specified <see cref="Project"/>. </summary>
+        /// <exception cref="InvalidMergeWordSetException"> Throws when wordIds has count less than 2. </exception>
+        /// <returns> List of ids of <see cref="MergeWordSet"/> sets removed. </returns>
+        public async Task<List<string>> RemoveFromMergeGraylist(
+            string projectId, string userId, List<string> wordIds)
+        {
+            if (wordIds.Count < 2)
+            {
+                throw new InvalidMergeWordSetException("Cannot have a graylist entry with fewer than 2 wordIds.");
+            }
+            var graylist = await _mergeGraylistRepo.GetAllSets(projectId, userId);
+            var removed = new List<string>();
+            foreach (var entry in graylist)
+            {
+                if (entry.WordIds.All(wordIds.Contains))
+                {
+                    await _mergeGraylistRepo.Delete(projectId, entry.Id);
+                    removed.Add(entry.Id);
+                }
+            }
+            return removed;
         }
 
         /// <summary> Check if List of wordIds is in MergeBlacklist for specified <see cref="Project"/>. </summary>
