@@ -276,6 +276,24 @@ namespace BackendFramework.Services
             return updateCount;
         }
 
+        /// <summary> Get Lists of entries in specified <see cref="Project"/>'s graylist. </summary>
+        public async Task<List<List<Word>>> GetGraylistEntries(
+            string projectId, int maxLists, string? userId = null)
+        {
+            var graylist = await _mergeGraylistRepo.GetAllSets(projectId, userId);
+            var frontier = await _wordRepo.GetFrontier(projectId);
+            var wordLists = new List<List<Word>> { Capacity = maxLists };
+            foreach (var entry in graylist)
+            {
+                if (wordLists.Count == maxLists)
+                {
+                    break;
+                }
+                wordLists.Add(frontier.Where(w => entry.WordIds.Contains(w.Id)).ToList());
+            }
+            return wordLists;
+        }
+
         /// <summary>
         /// Get Lists of potential duplicate <see cref="Word"/>s in specified <see cref="Project"/>'s frontier.
         /// </summary>
@@ -311,26 +329,6 @@ namespace BackendFramework.Services
 
             protected InvalidMergeWordSetException(SerializationInfo info, StreamingContext context)
                 : base(info, context) { }
-        }
-
-        /// <summary>
-        /// Get Lists of all entries <see cref="MergeWordSet"/>s in specified <see cref="Project"/>'s graylist.
-        /// </summary>
-        public async Task<List<List<Word>>> GetGraylistEntries(
-            string projectId, int maxLists, string? userId = null)
-        {
-            var graylist = await _mergeGraylistRepo.GetAllSets(projectId, userId);
-            var frontier = await _wordRepo.GetFrontier(projectId);
-            var wordLists = new List<List<Word>> { Capacity = maxLists };
-            foreach (var entry in graylist)
-            {
-                if (wordLists.Count == maxLists)
-                {
-                    break;
-                }
-                wordLists.Add(frontier.Where(w => entry.WordIds.Contains(w.Id)).ToList());
-            }
-            return wordLists;
         }
     }
 }

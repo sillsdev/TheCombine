@@ -23,7 +23,7 @@ namespace Backend.Tests.Services
         public void Setup()
         {
             _mergeBlacklistRepo = new MergeBlacklistRepositoryMock();
-            _mergeBlacklistRepo = new MergeBlacklistRepositoryMock();
+            _mergeGraylistRepo = new MergeGraylistRepositoryMock();
             _wordRepo = new WordRepositoryMock();
             _wordService = new WordService(_wordRepo);
             _mergeService = new MergeService(_mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
@@ -285,6 +285,98 @@ namespace Backend.Tests.Services
             var newBlacklist = _mergeBlacklistRepo.GetAllSets(ProjId).Result;
             Assert.That(newBlacklist, Has.Count.EqualTo(1));
             Assert.That(newBlacklist.First().WordIds, Is.EqualTo(new List<string> { "2", "3" }));
+        }
+
+
+        [Test]
+        public void AddMergeToGraylistTest()
+        {
+            _ = _mergeGraylistRepo.DeleteAllEntries(ProjId).Result;
+            var wordIds = new List<string> { "1", "2" };
+            _ = _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds).Result;
+            var graylist = _mergeGraylistRepo.GetAllSets(ProjId).Result;
+            Assert.That(graylist, Has.Count.EqualTo(1));
+            var expectedEntry = new MergeWordSet { ProjectId = ProjId, UserId = UserId, WordIds = wordIds };
+            Assert.That(expectedEntry.ContentEquals(graylist.First()), Is.True);
+        }
+
+        [Test]
+        public void AddMergeToGraylistErrorTest()
+        {
+            _ = _mergeGraylistRepo.DeleteAllEntries(ProjId).Result;
+            var wordIds0 = new List<string>();
+            var wordIds1 = new List<string> { "1" };
+            Assert.That(
+                async () => { await _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds0); }, Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
+            Assert.That(
+                async () => { await _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds1); }, Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
+        }
+
+        [Test]
+        public void IsInMergeGraylistTest()
+        {
+            _ = _mergeGraylistRepo.DeleteAllEntries(ProjId).Result;
+            var wordIds = new List<string> { "1", "2", "3" };
+            var subWordIds = new List<string> { "3", "2" };
+
+            Assert.That(_mergeService.IsInMergeGraylist(ProjId, subWordIds).Result, Is.False);
+            _ = _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds).Result;
+            Assert.That(_mergeService.IsInMergeGraylist(ProjId, subWordIds).Result, Is.True);
+        }
+
+        [Test]
+        public void IsInMergeGraylistErrorTest()
+        {
+            _ = _mergeGraylistRepo.DeleteAllEntries(ProjId).Result;
+            var wordIds0 = new List<string>();
+            var wordIds1 = new List<string> { "1" };
+            Assert.That(
+                async () => { await _mergeService.IsInMergeGraylist(ProjId, wordIds0); }, Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
+            Assert.That(
+                async () => { await _mergeService.IsInMergeGraylist(ProjId, wordIds1); }, Throws.TypeOf<MergeService.InvalidMergeWordSetException>());
+        }
+
+        [Test]
+        public void UpdateMergeGraylistTest()
+        {
+            var entryA = new MergeWordSet
+            {
+                Id = "A",
+                ProjectId = ProjId,
+                UserId = UserId,
+                WordIds = new List<string> { "1", "2", "3" }
+            };
+            var entryB = new MergeWordSet
+            {
+                Id = "B",
+                ProjectId = ProjId,
+                UserId = UserId,
+                WordIds = new List<string> { "1", "4" }
+            };
+
+            _ = _mergeGraylistRepo.Create(entryA);
+            _ = _mergeGraylistRepo.Create(entryB);
+
+            var oldGraylist = _mergeGraylistRepo.GetAllSets(ProjId).Result;
+            Assert.That(oldGraylist, Has.Count.EqualTo(2));
+
+            // Make sure all wordIds are in the frontier EXCEPT 1.
+            var frontier = new List<Word>
+            {
+                new() {Id = "2", ProjectId = ProjId},
+                new() {Id = "3", ProjectId = ProjId},
+                new() {Id = "4", ProjectId = ProjId}
+            };
+            _ = _wordRepo.AddFrontier(frontier).Result;
+
+            // All entries affected.
+            var updatedEntriesCount = _mergeService.UpdateMergeGraylist(ProjId).Result;
+            Assert.That(updatedEntriesCount, Is.EqualTo(2));
+
+            // The only graylistEntry with at least two ids in the frontier is A.
+            var newGraylist = _mergeGraylistRepo.GetAllSets(ProjId).Result;
+            Assert.That(newGraylist, Has.Count.EqualTo(1));
+            Assert.That(newGraylist.First().WordIds, Is.EqualTo(new List<string> { "2", "3" }));
         }
     }
 }
