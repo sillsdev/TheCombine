@@ -299,7 +299,7 @@ export const MergeApiAxiosParamCreator = function (
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("getGraylistEntries", "projectId", projectId);
       // verify  required parameter 'maxLists' is not null or undefined
-      assertParamExists("getGrayListEntries", "maxLists", maxLists);
+      assertParamExists("getGraylistEntries", "maxLists", maxLists);
       // verify required parameter 'userId' is not null or undefined
       assertParamExists("getGraylistEntries", "userId", userId);
       const localVarPath =

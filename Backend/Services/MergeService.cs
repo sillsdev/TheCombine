@@ -189,7 +189,7 @@ namespace BackendFramework.Services
         {
             if (wordIds.Count < 2)
             {
-                throw new InvalidGraylistEntryException("Cannot grayList a list of fewer than 2 wordIds.");
+                throw new InvalidGraylistEntryException("Cannot graylist a list of fewer than 2 wordIds.");
             }
             var graylist = await _mergeGraylistRepo.GetAllEntries(projectId, userId);
             foreach (var entry in graylist)
