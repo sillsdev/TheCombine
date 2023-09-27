@@ -10,16 +10,3 @@
     {{- printf "%s:%s" .Values.imageName .Values.global.imageTag }}
   {{- end }}
 {{- end }}
-
-{{/* Get the Image Pull Policy */}}
-{{- define "database.imagePullPolicy" }}
-  {{- if .Values.global.imagePullPolicy }}
-    {{- print .Values.global.imagePullPolicy }}
-  {{- else }}
-    {{- if eq .Values.global.imageTag "latest" }}
-      {{- print "Always" }}
-    {{- else }}
-      {{- print "IfNotPresent" }}
-    {{- end }}
-  {{- end }}
-{{- end }}

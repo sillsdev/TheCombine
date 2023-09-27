@@ -30,7 +30,7 @@ spec:
           command: [ "/bin/bash", "-c", "--" ]
           args: [ 'sleep infinity & PID=$! ; trap "kill $PID" INT TERM ; wait' ]
           image: {{ template "maintenance.containerImage" . }}
-          imagePullPolicy: {{ template "maintenance.imagePullPolicy" . }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           securityContext:
             runAsUser: 999
             runAsGroup: 999

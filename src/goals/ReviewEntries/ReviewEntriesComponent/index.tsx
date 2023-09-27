@@ -1,36 +1,29 @@
 import { ReactElement, useEffect, useState } from "react";
 
 import { getFrontierWords } from "backend";
+import {
+  updateAllWords,
+  updateFrontierWord,
+} from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesActions";
 import ReviewEntriesTable from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTable";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import { useAppDispatch } from "types/hooks";
 
-// Component state/props
-interface ReviewEntriesProps {
-  // Dispatch changes
-  updateAllWords: (words: ReviewEntriesWord[]) => void;
-  updateFrontierWord: (
-    newData: ReviewEntriesWord,
-    oldData: ReviewEntriesWord
-  ) => Promise<void>;
-}
-
-export default function ReviewEntriesComponent(
-  props: ReviewEntriesProps
-): ReactElement {
+export default function ReviewEntriesComponent(): ReactElement {
+  const dispatch = useAppDispatch();
   const [loaded, setLoaded] = useState(false);
-  const { updateAllWords, updateFrontierWord } = props;
 
   useEffect(() => {
     getFrontierWords().then((frontier) => {
-      updateAllWords(frontier.map((w) => new ReviewEntriesWord(w)));
+      dispatch(updateAllWords(frontier.map((w) => new ReviewEntriesWord(w))));
       setLoaded(true);
     });
-  }, [updateAllWords]);
+  }, [dispatch]);
 
   return loaded ? (
     <ReviewEntriesTable
       onRowUpdate={(newData: ReviewEntriesWord, oldData: ReviewEntriesWord) =>
-        updateFrontierWord(newData, oldData)
+        dispatch(updateFrontierWord(newData, oldData))
       }
     />
   ) : (
