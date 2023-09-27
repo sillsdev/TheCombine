@@ -58,10 +58,10 @@ export default function SaveSkipButtons(): ReactElement {
           variant="contained"
           style={{ marginRight: theme.spacing(3) }}
           onClick={defer /*next*/}
-          title={t("mergeDups.helpText.skip")} // t("mergeDups.helpText.skip")
-          id="merge-skip"
+          title={t("mergeDups.helpText.defer")}
+          id="merge-defer"
         >
-          {"Defer"} {/* t("buttons.skip")*/}
+          {t("buttons.defer")}
         </Button>
       </Grid>
     </Grid>

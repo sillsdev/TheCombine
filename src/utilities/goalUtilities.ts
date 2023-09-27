@@ -17,7 +17,7 @@ export function maxNumSteps(type: GoalType): number {
     case GoalType.MergeDups:
       return 12;
     case GoalType.ReviewDeferredDups:
-      return 12;
+      return 99;
     default:
       return 1;
   }
