@@ -47,16 +47,16 @@ export function goalTypeToGoal(type: GoalType): Goal {
       return new HandleFlags();
     case GoalType.MergeDups:
       return new MergeDups();
+    case GoalType.ReviewDeferredDups:
+      return new ReviewDeferredDups();
     case GoalType.ReviewEntries:
       return new ReviewEntries();
-    case GoalType.SpellcheckGloss:
+    case GoalType.SpellCheckGloss:
       return new SpellCheckGloss();
     case GoalType.ValidateChars:
       return new ValidateChars();
     case GoalType.ValidateStrWords:
       return new ValidateStrWords();
-    case GoalType.ReviewDeferredDups:
-      return new ReviewDeferredDups();
     default:
       return new Goal();
   }

@@ -185,7 +185,7 @@ namespace BackendFramework.Models
         CreateStrWordInv,
         ValidateStrWords,
         MergeDups,
-        SpellcheckGloss,
+        SpellCheckGloss,
         ViewFind,
         HandleFlags
     }

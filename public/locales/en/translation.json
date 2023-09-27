@@ -261,6 +261,9 @@
   "handleFlags": {
     "title": "Handle Flags"
   },
+  "reviewDeferredDups": {
+    "title": "Review Deferred Duplicates"
+  },
   "spellCheckGloss": {
     "title": "Spell Check Glossary"
   },
@@ -268,7 +271,7 @@
     "title": "Validate Characters"
   },
   "validateStrWords": {
-    "title": "Validate Structural Characters"
+    "title": "Validate Structural Words"
   },
   "reviewEntries": {
     "title": "Review Entries",
