@@ -111,7 +111,8 @@ export function makeGoalTile(
           !goal ||
           (goal.status === GoalStatus.Completed &&
             goal.goalType !== GoalType.CreateCharInv &&
-            goal.goalType !== GoalType.MergeDups)
+            goal.goalType !== GoalType.MergeDups &&
+            goal.goalType !== GoalType.ReviewDeferredDups)
         }
         data-testid="goal-button"
       >
@@ -149,6 +150,7 @@ function getCompletedGoalInfo(goal: Goal): ReactElement {
     case GoalType.CreateCharInv:
       return CharInvChangesGoalList(goal.changes as CharInvChanges);
     case GoalType.MergeDups:
+    case GoalType.ReviewDeferredDups:
       return MergesCount(goal.changes as MergesCompleted);
     default:
       return <Fragment />;

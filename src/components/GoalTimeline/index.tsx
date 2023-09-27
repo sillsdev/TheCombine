@@ -73,9 +73,9 @@ export default function GoalTimeline(): ReactElement {
   const [availableGoalTypes, setAvailableGoalTypes] = useState<GoalType[]>([]);
   const [suggestedGoalTypes, setSuggestedGoalTypes] = useState<GoalType[]>([]);
 
+  const [hasGraylist, setHasGraylist] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [portrait, setPortrait] = useState(true);
-  const [hasGraylist, setHasGraylist] = useState(false);
 
   const { t } = useTranslation();
 
@@ -86,13 +86,12 @@ export default function GoalTimeline(): ReactElement {
       dispatch(asyncGetUserEdits());
       setLoaded(true);
     }
-    const updateHasGraylist = async () => {
+    const updateHasGraylist = async () =>
       setHasGraylist(
         await getGraylistEntries(1).then((res) => res.length !== 0)
       );
-    };
     updateHasGraylist();
-  }, [dispatch, loaded, hasGraylist]);
+  }, [dispatch, loaded]);
 
   useEffect(() => {
     setPortrait(windowWidth - 40 < windowHeight);

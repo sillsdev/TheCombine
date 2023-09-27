@@ -40,6 +40,7 @@ jest.mock("backend", () => ({
   createUserEdit: () => mockCreateUserEdit(),
   getCurrentPermissions: () => mockGetCurrentPermissions(),
   getDuplicates: () => mockGetDuplicates(),
+  getGraylistEntries: (maxLists: number) => mockGetGraylistEntries(maxLists),
   getUser: (id: string) => mockGetUser(id),
   getUserEditById: (...args: any[]) => mockGetUserEditById(...args),
   updateUser: (user: User) => mockUpdateUser(user),
@@ -54,6 +55,7 @@ const mockAddStepToGoal = jest.fn();
 const mockCreateUserEdit = jest.fn();
 const mockGetCurrentPermissions = jest.fn();
 const mockGetDuplicates = jest.fn();
+const mockGetGraylistEntries = jest.fn();
 const mockGetUser = jest.fn();
 const mockGetUserEditById = jest.fn();
 const mockNavigate = jest.fn();
@@ -67,6 +69,7 @@ function setMockFunctions() {
     Permission.MergeAndReviewEntries,
   ]);
   mockGetDuplicates.mockResolvedValue(goalDataMock.plannedWords);
+  mockGetGraylistEntries.mockResolvedValue([]);
   mockGetUser.mockResolvedValue(mockUser);
   mockGetUserEditById.mockResolvedValue(mockUserEdit);
   mockUpdateUser.mockResolvedValue(mockUser);
