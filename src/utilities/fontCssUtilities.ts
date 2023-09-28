@@ -26,7 +26,7 @@ async function fetchText(url: string): Promise<string | undefined> {
 
 /** Given a font and source, returns css info for the font from the source.
  * If substitute is specified, sub that in as the "font-family". */
-async function fetchCss(
+export async function fetchCss(
   font: string,
   source: string,
   substitute?: string
@@ -80,7 +80,7 @@ async function getFallbacks(
 }
 
 /** Given an array of font names, returns css info for them all. */
-async function getCss(fonts: string[]) {
+export async function getCss(fonts: string[]) {
   // Get local css files when available.
   const cssDict: Hash<string> = {};
   const cssPromises = fonts.map(async (f) => {
