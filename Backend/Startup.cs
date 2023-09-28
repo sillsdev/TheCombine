@@ -196,7 +196,8 @@ namespace BackendFramework
             services.AddSingleton<ILiftService, LiftService>();
 
             // Merge types
-            services.AddTransient<IMergeWordSetContext, MergeWordSetContext>();
+            services.AddTransient<IMergeBlacklistContext, MergeBlacklistContext>();
+            services.AddTransient<IMergeGraylistContext, MergeGraylistContext>();
             services.AddTransient<IMergeWordSetRepository, MergeBlacklistRepository>();
             services.AddTransient<IMergeWordSetRepository, MergeGraylistRepository>();
             services.AddTransient<IMergeService, MergeService>();

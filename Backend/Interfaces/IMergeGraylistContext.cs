@@ -3,8 +3,8 @@ using MongoDB.Driver;
 
 namespace BackendFramework.Interfaces
 {
-    public interface IMergeWordSetContext
+    public interface IMergeGraylistContext
     {
-        IMongoCollection<MergeWordSet> MergeWordSet { get; }
+        IMongoCollection<MergeWordSet> MergeGraylist { get; }
     }
 }
