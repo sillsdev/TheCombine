@@ -111,8 +111,7 @@ namespace BackendFramework.Controllers
             }
 
             await _mergeService.UpdateMergeBlacklist(projectId);
-            return Ok(
-                await _mergeService.GetPotentialDuplicates(projectId, maxInList, maxLists, userId));
+            return Ok(await _mergeService.GetPotentialDuplicates(projectId, maxInList, maxLists, userId));
         }
 
         /// <summary> Get lists of graylist entries. </summary>
@@ -131,8 +130,7 @@ namespace BackendFramework.Controllers
             }
 
             await _mergeService.UpdateMergeGraylist(projectId);
-            return Ok(
-                await _mergeService.GetGraylistEntries(projectId, maxLists, userId));
+            return Ok(await _mergeService.GetGraylistEntries(projectId, maxLists, userId));
         }
 
     }

@@ -126,6 +126,9 @@ namespace BackendFramework.Services
             {
                 throw new InvalidMergeWordSetException("Cannot blacklist a list of fewer than 2 wordIds.");
             }
+
+            // It's possible to add a superset of an existing blacklist entry,
+            // so we cleanup by removing all entries fully contained in the new entry.
             var blacklist = await _mergeBlacklistRepo.GetAllSets(projectId, userId);
             foreach (var entry in blacklist)
             {
@@ -149,6 +152,9 @@ namespace BackendFramework.Services
             {
                 throw new InvalidMergeWordSetException("Cannot graylist a list of fewer than 2 wordIds.");
             }
+
+            // It's possible to add a superset of an existing graylist entry,
+            // so we cleanup by removing all entries fully contained in the new entry.
             var graylist = await _mergeGraylistRepo.GetAllSets(projectId, userId);
             foreach (var entry in graylist)
             {
@@ -163,7 +169,7 @@ namespace BackendFramework.Services
 
         /// <summary> Remove a List of wordIds from MergeGraylist of specified <see cref="Project"/>. </summary>
         /// <exception cref="InvalidMergeWordSetException"> Throws when wordIds has count less than 2. </exception>
-        /// <returns> List of ids of <see cref="MergeWordSet"/> sets removed. </returns>
+        /// <returns> List of removed <see cref="MergeWordSet"/> ids. </returns>
         public async Task<List<string>> RemoveFromMergeGraylist(
             string projectId, string userId, List<string> wordIds)
         {
@@ -171,6 +177,8 @@ namespace BackendFramework.Services
             {
                 throw new InvalidMergeWordSetException("Cannot have a graylist entry with fewer than 2 wordIds.");
             }
+
+            // Remove all graylist entries fully contained in the input List.
             var graylist = await _mergeGraylistRepo.GetAllSets(projectId, userId);
             var removed = new List<string>();
             foreach (var entry in graylist)
