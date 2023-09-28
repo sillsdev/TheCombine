@@ -178,6 +178,9 @@ namespace BackendFramework.Models
         }
     }
 
+    // The numerical value of each entry in this enum is a permanent id,
+    // so the order should never change and entries should not be deleted.
+    // New goal types are to be added to the end.
     public enum GoalType
     {
         CreateCharInv,
@@ -187,6 +190,7 @@ namespace BackendFramework.Models
         MergeDups,
         SpellCheckGloss,
         ViewFind,
-        HandleFlags
+        HandleFlags,
+        ReviewDeferredDups
     }
 }
