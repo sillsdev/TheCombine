@@ -10,8 +10,8 @@ namespace Backend.Tests.Services
 {
     public class MergeServiceTests
     {
-        private IMergeWordSetRepository _mergeBlacklistRepo = null!;
-        private IMergeWordSetRepository _mergeGraylistRepo = null!;
+        private IMergeBlacklistRepository _mergeBlacklistRepo = null!;
+        private IMergeGraylistRepository _mergeGraylistRepo = null!;
         private IWordRepository _wordRepo = null!;
         private IWordService _wordService = null!;
         private IMergeService _mergeService = null!;

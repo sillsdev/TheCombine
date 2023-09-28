@@ -12,13 +12,13 @@ namespace BackendFramework.Services
     /// <summary> More complex functions and application logic for <see cref="Word"/>s </summary>
     public class MergeService : IMergeService
     {
-        private readonly IMergeWordSetRepository _mergeBlacklistRepo;
-        private readonly IMergeWordSetRepository _mergeGraylistRepo;
+        private readonly IMergeBlacklistRepository _mergeBlacklistRepo;
+        private readonly IMergeGraylistRepository _mergeGraylistRepo;
         private readonly IWordRepository _wordRepo;
         private readonly IWordService _wordService;
 
-        public MergeService(
-            IMergeWordSetRepository mergeBlacklistRepo, IMergeWordSetRepository mergeGraylistRepo, IWordRepository wordRepo, IWordService wordService)
+        public MergeService(IMergeBlacklistRepository mergeBlacklistRepo, IMergeGraylistRepository mergeGraylistRepo,
+            IWordRepository wordRepo, IWordService wordService)
         {
             _mergeBlacklistRepo = mergeBlacklistRepo;
             _mergeGraylistRepo = mergeGraylistRepo;

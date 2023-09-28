@@ -8,7 +8,7 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    public class MergeGraylistRepositoryMock : IMergeWordSetRepository
+    public class MergeGraylistRepositoryMock : IMergeGraylistRepository
     {
         private readonly List<MergeWordSet> _mergeGraylist;
 

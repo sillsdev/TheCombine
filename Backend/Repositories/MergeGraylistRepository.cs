@@ -11,7 +11,7 @@ namespace BackendFramework.Repositories
 {
     /// <summary> Atomic database functions for <see cref="MergeWordSet"/>s. </summary>
     [ExcludeFromCodeCoverage]
-    public class MergeGraylistRepository : IMergeWordSetRepository
+    public class MergeGraylistRepository : IMergeGraylistRepository
     {
         private readonly IMergeGraylistContext _mergeGraylistDatabase;
 
