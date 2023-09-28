@@ -26,6 +26,7 @@ charts:
         - "es"
         - "fr"
         - "pt"
+        - "zh"
 
     cert-proxy-client:
       enabled: true
