@@ -99,11 +99,11 @@ export default function GoalTimeline(): ReactElement {
 
   const getGoalTypes = useCallback(async (): Promise<void> => {
     const permissions = await getCurrentPermissions();
-    const goalTypes = hasGraylist
-      ? allGoalTypes
-          .filter((t) => permissions.includes(requiredPermission(t)))
-          .concat([GoalType.ReviewDeferredDups])
-      : allGoalTypes.filter((t) => permissions.includes(requiredPermission(t)));
+    const goalTypes = (
+      hasGraylist
+        ? allGoalTypes.concat([GoalType.ReviewDeferredDups])
+        : allGoalTypes
+    ).filter((t) => permissions.includes(requiredPermission(t)));
     setAvailableGoalTypes(goalTypes);
     setSuggestedGoalTypes(
       goalTypes.filter((t) => goalTypeSuggestions.includes(t))
