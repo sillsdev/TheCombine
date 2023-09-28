@@ -31,7 +31,7 @@ namespace BackendFramework.Repositories
 
         /// <summary> Removes all <see cref="MergeWordSet"/>s for specified <see cref="Project"/>. </summary>
         /// <returns> A bool: success of operation. </returns>
-        public async Task<bool> DeleteAllEntries(string projectId)
+        public async Task<bool> DeleteAllSets(string projectId)
         {
             var deleted = await _mergeGraylistDatabase.MergeGraylist.DeleteManyAsync(u => u.ProjectId == projectId);
             return deleted.DeletedCount != 0;

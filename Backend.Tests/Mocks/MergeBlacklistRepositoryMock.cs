@@ -46,7 +46,7 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(wordSetEntry.Clone());
         }
 
-        public Task<bool> DeleteAllEntries(string projectId)
+        public Task<bool> DeleteAllSets(string projectId)
         {
             _mergeBlacklist.Clear();
             return Task.FromResult(true);

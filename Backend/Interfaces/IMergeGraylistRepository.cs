@@ -11,7 +11,7 @@ namespace BackendFramework.Interfaces
         Task<MergeWordSet?> GetSet(string projectId, string entryId);
         Task<MergeWordSet> Create(MergeWordSet wordSetEntry);
         Task<bool> Delete(string projectId, string entryId);
-        Task<bool> DeleteAllEntries(string projectId);
+        Task<bool> DeleteAllSets(string projectId);
         Task<ResultOfUpdate> Update(MergeWordSet wordSetEntry);
     }
 }

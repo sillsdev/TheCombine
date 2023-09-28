@@ -199,8 +199,8 @@ namespace Backend.Tests.Services
         [Test]
         public void AddMergeToBlacklistTest()
         {
-            _ = _mergeBlacklistRepo.DeleteAllEntries(ProjId).Result;
-            _ = _mergeGraylistRepo.DeleteAllEntries(ProjId).Result;
+            _ = _mergeBlacklistRepo.DeleteAllSets(ProjId).Result;
+            _ = _mergeGraylistRepo.DeleteAllSets(ProjId).Result;
             var wordIds = new List<string> { "1", "2" };
 
             // Adding to blacklist should clear from graylist
@@ -219,7 +219,7 @@ namespace Backend.Tests.Services
         [Test]
         public void AddMergeToBlacklistErrorTest()
         {
-            _ = _mergeBlacklistRepo.DeleteAllEntries(ProjId).Result;
+            _ = _mergeBlacklistRepo.DeleteAllSets(ProjId).Result;
             var wordIds0 = new List<string>();
             var wordIds1 = new List<string> { "1" };
             Assert.That(
@@ -231,7 +231,7 @@ namespace Backend.Tests.Services
         [Test]
         public void IsInMergeBlacklistTest()
         {
-            _ = _mergeBlacklistRepo.DeleteAllEntries(ProjId).Result;
+            _ = _mergeBlacklistRepo.DeleteAllSets(ProjId).Result;
             var wordIds = new List<string> { "1", "2", "3" };
             var subWordIds = new List<string> { "3", "2" };
 
@@ -243,7 +243,7 @@ namespace Backend.Tests.Services
         [Test]
         public void IsInMergeBlacklistErrorTest()
         {
-            _ = _mergeBlacklistRepo.DeleteAllEntries(ProjId).Result;
+            _ = _mergeBlacklistRepo.DeleteAllSets(ProjId).Result;
             var wordIds0 = new List<string>();
             var wordIds1 = new List<string> { "1" };
             Assert.That(
@@ -298,7 +298,7 @@ namespace Backend.Tests.Services
         [Test]
         public void AddMergeToGraylistTest()
         {
-            _ = _mergeGraylistRepo.DeleteAllEntries(ProjId).Result;
+            _ = _mergeGraylistRepo.DeleteAllSets(ProjId).Result;
             var wordIds = new List<string> { "1", "2" };
             _ = _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds).Result;
             var graylist = _mergeGraylistRepo.GetAllSets(ProjId).Result;
@@ -310,7 +310,7 @@ namespace Backend.Tests.Services
         [Test]
         public void AddMergeToGraylistErrorTest()
         {
-            _ = _mergeGraylistRepo.DeleteAllEntries(ProjId).Result;
+            _ = _mergeGraylistRepo.DeleteAllSets(ProjId).Result;
             var wordIds = new List<string>();
             var wordIds1 = new List<string> { "1" };
             Assert.That(
@@ -324,7 +324,7 @@ namespace Backend.Tests.Services
         [Test]
         public void RemoveFromMergeGraylistTest()
         {
-            _ = _mergeGraylistRepo.DeleteAllEntries(ProjId).Result;
+            _ = _mergeGraylistRepo.DeleteAllSets(ProjId).Result;
             var wordIds12 = new List<string> { "1", "2" };
             var wordIds13 = new List<string> { "1", "3" };
             _ = _mergeService.AddToMergeGraylist(ProjId, UserId, wordIds12).Result;
@@ -341,7 +341,7 @@ namespace Backend.Tests.Services
         [Test]
         public void RemoveFromMergeGraylistErrorTest()
         {
-            _ = _mergeGraylistRepo.DeleteAllEntries(ProjId).Result;
+            _ = _mergeGraylistRepo.DeleteAllSets(ProjId).Result;
             var wordIds = new List<string>();
             var wordIds1 = new List<string> { "1" };
             Assert.That(
@@ -355,7 +355,7 @@ namespace Backend.Tests.Services
         [Test]
         public void IsInMergeGraylistTest()
         {
-            _ = _mergeGraylistRepo.DeleteAllEntries(ProjId).Result;
+            _ = _mergeGraylistRepo.DeleteAllSets(ProjId).Result;
             var wordIds = new List<string> { "1", "2", "3" };
             var subWordIds = new List<string> { "3", "2" };
 
@@ -367,7 +367,7 @@ namespace Backend.Tests.Services
         [Test]
         public void IsInMergeGraylistErrorTest()
         {
-            _ = _mergeGraylistRepo.DeleteAllEntries(ProjId).Result;
+            _ = _mergeGraylistRepo.DeleteAllSets(ProjId).Result;
             var wordIds0 = new List<string>();
             var wordIds1 = new List<string> { "1" };
             Assert.That(
