@@ -25,7 +25,7 @@
 [github-actions-ossf-badge]:
   https://github.com/sillsdev/TheCombine/workflows/Scorecards%20supply-chain%20security/badge.svg
 [github-actions]: https://github.com/sillsdev/TheCombine/actions
-[localization-badge]: https://img.shields.io/badge/localization-Ar%20En%20Es%20Fr%20Pt-blue
+[localization-badge]: https://img.shields.io/badge/localization-Ar%20En%20Es%20Fr%20Pt%20Zh-blue
 [localization-crowdin]: https://crowdin.com/project/the-combine
 [github-version-badge]: https://img.shields.io/github/package-json/v/sillsdev/TheCombine
 [github-release-badge]: https://img.shields.io/github/v/release/sillsdev/TheCombine
