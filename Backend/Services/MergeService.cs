@@ -332,19 +332,19 @@ namespace BackendFramework.Services
         {
             var dupFinder = new DuplicateFinder(maxInList, maxLists, 3);
 
-            // First pass, only look for words with identical vernacular.
             var collection = await _wordRepo.GetFrontier(projectId);
-            var wordLists = await dupFinder.GetIdenticalVernWords(
-                collection, wordIds => IsInMergeBlacklist(projectId, wordIds, userId),
-                    wordIds => IsInMergeGraylist(projectId, wordIds, userId));
+            async Task<bool> isUnavailableSet(List<string> wordIds) =>
+                (await IsInMergeBlacklist(projectId, wordIds, userId)) ||
+                (await IsInMergeGraylist(projectId, wordIds, userId));
+
+            // First pass, only look for words with identical vernacular.
+            var wordLists = await dupFinder.GetIdenticalVernWords(collection, isUnavailableSet);
 
             // If no such sets found, look for similar words.
             if (wordLists.Count == 0)
             {
                 collection = await _wordRepo.GetFrontier(projectId);
-                wordLists = await dupFinder.GetSimilarWords(
-                    collection, wordIds => IsInMergeBlacklist(projectId, wordIds, userId),
-                    wordIds => IsInMergeGraylist(projectId, wordIds, userId));
+                wordLists = await dupFinder.GetSimilarWords(collection, isUnavailableSet);
             }
 
             return wordLists;

@@ -26,8 +26,8 @@ namespace BackendFramework.Helper
         /// Get from specified List several sub-Lists,
         /// each with multiple <see cref="Word"/>s having a common Vernacular.
         /// </summary>
-        public async Task<List<List<Word>>> GetIdenticalVernWords(List<Word> collection,
-            Func<List<string>, Task<bool>> isInBlacklist, Func<List<string>, Task<bool>> isInGraylist)
+        public async Task<List<List<Word>>> GetIdenticalVernWords(
+            List<Word> collection, Func<List<string>, Task<bool>> isUnavailableSet)
         {
             var wordLists = new List<List<Word>> { Capacity = _maxLists };
             while (collection.Count > 0 && wordLists.Count < _maxLists)
@@ -43,7 +43,7 @@ namespace BackendFramework.Helper
                 // Check if set is in blacklist or graylist.
                 var ids = new List<string> { word.Id };
                 ids.AddRange(similarWords.Select(w => w.Id));
-                if (await isInBlacklist(ids) || await isInGraylist(ids))
+                if (await isUnavailableSet(ids))
                 {
                     continue;
                 }
@@ -62,7 +62,7 @@ namespace BackendFramework.Helper
         /// the outer list is ordered by similarity of the first two items in each inner List.
         /// </returns>
         public async Task<List<List<Word>>> GetSimilarWords(
-            List<Word> collection, Func<List<string>, Task<bool>> isInBlacklist, Func<List<string>, Task<bool>> isInGraylist)
+            List<Word> collection, Func<List<string>, Task<bool>> isUnavailableSet)
         {
             double currentMax = _maxScore;
             var wordLists = new List<Tuple<double, List<Word>>> { Capacity = _maxLists + 1 };
@@ -84,7 +84,7 @@ namespace BackendFramework.Helper
                 // Check if set is in blacklist or graylist.
                 var ids = new List<string> { word.Id };
                 ids.AddRange(similarWords.Select(w => w.Item2.Id));
-                if (await isInBlacklist(ids) || await isInGraylist(ids))
+                if (await isUnavailableSet(ids))
                 {
                     continue;
                 }
