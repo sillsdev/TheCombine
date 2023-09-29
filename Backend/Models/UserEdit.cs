@@ -119,7 +119,7 @@ namespace BackendFramework.Models
         public Guid Guid { get; set; }
 #pragma warning restore CA1720
 
-        /// <summary> Integer representation of enum <see cref="Models.GoalType"/> </summary>
+        /// <summary> Integer representation of enum GoalType in src/types/goals.ts </summary>
         [Required]
         [BsonElement("goalType")]
         public int GoalType { get; set; }
@@ -176,17 +176,5 @@ namespace BackendFramework.Models
         {
             return HashCode.Combine(Guid, GoalType, StepData, Changes);
         }
-    }
-
-    public enum GoalType
-    {
-        CreateCharInv,
-        ValidateChars,
-        CreateStrWordInv,
-        ValidateStrWords,
-        MergeDups,
-        SpellcheckGloss,
-        ViewFind,
-        HandleFlags
     }
 }

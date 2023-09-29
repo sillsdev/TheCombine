@@ -105,7 +105,7 @@ Click on the red flag icon to edit the text or remove the flag.
 ### Finishing a Set
 
 There are two buttons at the bottom for wrapping up work on the current set of potential duplicates and moving on to the
-next set: "Save & Continue" and "Skip".
+next set: "Save & Continue" and "Defer".
 
 #### Save & Continue
 
@@ -122,12 +122,12 @@ deleted senses), updating the words in the database. Second, it saves any unmerg
 
     If one of the words in an intentionally unmerged set is edited (e.g., in Review Entries), then the set may appear again as potential duplicates.
 
-#### Skip
+#### Defer
 
-![Merge Duplicates Skip button](images/mergeSkip.png)
+![Merge Duplicates Defer button](images/mergeDefer.png)
 
-The grey "Skip" button resets any changes made to the set of potential duplicates. The same set will be presented as
-potential duplicates again the next time Merge Duplicates is opened.
+The grey "Defer" button resets any changes made to the set of potential duplicates. The deferred set can be re-visited
+via Review Deferred Duplicates.
 
 ### Merging with Imported Data
 

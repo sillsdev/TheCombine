@@ -50,6 +50,7 @@
     "Dups",
     "endcap",
     "globaltool",
+    "graylist",
     "Guids",
     "kubeconfig",
     "langtags",

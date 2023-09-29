@@ -4,18 +4,18 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Models
 {
-    public class MergeBlacklistEntryTests
+    public class MergeWordSetTests
     {
-        private const string EntryId = "MergeBlacklistEntryTestId";
-        private const string ProjId = "MergeBlacklistEntryTestProjectId";
-        private const string UserId = "MergeBlacklistEntryTestUserId";
+        private const string EntryId = "MergeWordSetTestId";
+        private const string ProjId = "MergeWordSetTestProjectId";
+        private const string UserId = "MergeWordSetTestUserId";
         private readonly List<string> _wordIds = new() { "word1", "word2" };
         private readonly List<string> _wordIdsReversed = new() { "word2", "word1" };
 
         [Test]
         public void TestClone()
         {
-            var entryA = new MergeBlacklistEntry
+            var entryA = new MergeWordSet
             {
                 Id = EntryId,
                 ProjectId = ProjId,
@@ -29,14 +29,14 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEquals()
         {
-            var entryA = new MergeBlacklistEntry
+            var entryA = new MergeWordSet
             {
                 Id = EntryId,
                 ProjectId = ProjId,
                 UserId = UserId,
                 WordIds = _wordIds
             };
-            var entryB = new MergeBlacklistEntry
+            var entryB = new MergeWordSet
             {
                 Id = EntryId,
                 ProjectId = ProjId,
@@ -49,8 +49,8 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEqualsFalse()
         {
-            var entryA = new MergeBlacklistEntry();
-            var entryB = new MergeBlacklistEntry();
+            var entryA = new MergeWordSet();
+            var entryB = new MergeWordSet();
             entryA.Id = EntryId;
             Assert.That(entryA.Equals(entryB), Is.False);
 
@@ -70,21 +70,21 @@ namespace Backend.Tests.Models
         [Test]
         public void TestEqualsNull()
         {
-            var edit = new MergeBlacklistEntry { ProjectId = ProjId };
+            var edit = new MergeWordSet { ProjectId = ProjId };
             Assert.That(edit.Equals(null), Is.False);
         }
 
         [Test]
         public void TestHashCode()
         {
-            var entryA = new MergeBlacklistEntry
+            var entryA = new MergeWordSet
             {
                 Id = EntryId,
                 ProjectId = ProjId,
                 UserId = UserId,
                 WordIds = _wordIdsReversed
             };
-            var entryB = new MergeBlacklistEntry
+            var entryB = new MergeWordSet
             {
                 Id = "DifferentTestId",
                 ProjectId = ProjId,

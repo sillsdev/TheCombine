@@ -25,6 +25,7 @@ import {
   MergeDups,
   MergeDupsData,
   MergesCompleted,
+  ReviewDeferredDups,
 } from "goals/MergeDuplicates/MergeDupsTypes";
 import { goalDataMock } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
 import { setupStore } from "store";
@@ -40,6 +41,7 @@ jest.mock("backend", () => ({
   createUserEdit: () => mockCreateUserEdit(),
   getCurrentPermissions: () => mockGetCurrentPermissions(),
   getDuplicates: () => mockGetDuplicates(),
+  getGraylistEntries: (maxLists: number) => mockGetGraylistEntries(maxLists),
   getUser: (id: string) => mockGetUser(id),
   getUserEditById: (...args: any[]) => mockGetUserEditById(...args),
   updateUser: (user: User) => mockUpdateUser(user),
@@ -54,6 +56,7 @@ const mockAddStepToGoal = jest.fn();
 const mockCreateUserEdit = jest.fn();
 const mockGetCurrentPermissions = jest.fn();
 const mockGetDuplicates = jest.fn();
+const mockGetGraylistEntries = jest.fn();
 const mockGetUser = jest.fn();
 const mockGetUserEditById = jest.fn();
 const mockNavigate = jest.fn();
@@ -67,6 +70,7 @@ function setMockFunctions() {
     Permission.MergeAndReviewEntries,
   ]);
   mockGetDuplicates.mockResolvedValue(goalDataMock.plannedWords);
+  mockGetGraylistEntries.mockResolvedValue([]);
   mockGetUser.mockResolvedValue(mockUser);
   mockGetUserEditById.mockResolvedValue(mockUserEdit);
   mockUpdateUser.mockResolvedValue(mockUser);
@@ -309,6 +313,31 @@ describe("asyncUpdateGoal", () => {
     });
     // create MergeDups goal
     const goal = new MergeDups();
+    await act(async () => {
+      store.dispatch(asyncAddGoal(goal));
+    });
+    // dispatch asyncUpdateGoal()
+    await act(async () => {
+      store.dispatch(addCompletedMergeToGoal(mockCompletedMerge));
+      await store.dispatch(asyncUpdateGoal());
+    });
+    // verify:
+    //  - current value is now new goal
+    const changes = store.getState().goalsState.currentGoal
+      .changes as MergesCompleted;
+    expect(changes.merges).toEqual([mockCompletedMerge]);
+    //  - backend is called to addGoalToUserEdit
+    expect(mockAddGoalToUserEdit).toBeCalled();
+  });
+
+  it("update ReviewDeferredDups goal", async () => {
+    // setup the test scenario
+    const store = setupStore();
+    await act(async () => {
+      renderWithProviders(<GoalTimeline />, { store: store });
+    });
+    // create ReviewDeferredDups goal
+    const goal = new ReviewDeferredDups();
     await act(async () => {
       store.dispatch(asyncAddGoal(goal));
     });
