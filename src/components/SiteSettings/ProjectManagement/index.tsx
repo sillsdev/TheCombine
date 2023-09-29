@@ -15,7 +15,7 @@ export default function ProjectManagement() {
 
   useEffect(() => {
     updateProjectList();
-  }, [setAllProjects]);
+  }, []);
 
   async function updateProjectList(): Promise<void> {
     await getAllProjects().then(setAllProjects);
@@ -24,9 +24,17 @@ export default function ProjectManagement() {
   // Sort projects into active vs archived as conditional effect here rather than inside
   // the ProjectList function to avoid react mounting/rendering error in console.
   useEffect(() => {
-    setActiveProjects(allProjects.filter((project) => project.isActive));
-    setArchivedProjects(allProjects.filter((project) => !project.isActive));
-  }, [allProjects, setActiveProjects, setArchivedProjects]);
+    setActiveProjects(
+      allProjects
+        .filter((project) => project.isActive)
+        .sort((a: Project, b: Project) => a.name.localeCompare(b.name))
+    );
+    setArchivedProjects(
+      allProjects
+        .filter((project) => !project.isActive)
+        .sort((a: Project, b: Project) => a.name.localeCompare(b.name))
+    );
+  }, [allProjects]);
 
   return ProjectList(activeProjects, archivedProjects, updateProjectList);
 }
