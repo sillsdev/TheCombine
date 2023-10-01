@@ -50,7 +50,7 @@
     "@reduxjs/toolkit": "^1.9.5",
     "@segment/analytics-next": "^1.55.0",
     "axios": "^0.27.2",
-    "chart.js": "^4.3.0",
+    "chart.js": "^4.4.0",
     "crypto-js": "^4.1.1",
     "dayjs": "^1.11.9",
     "distinct-colors": "^3.0.0",
