@@ -99,7 +99,7 @@
     "@types/react-dom": "^17.0.11",
     "@types/react-modal": "^3.16.0",
     "@types/react-test-renderer": "^17.0.0",
-    "@types/recordrtc": "^5.6.11",
+    "@types/recordrtc": "^5.6.12",
     "@types/redux-mock-store": "^1.0.3",
     "@types/segment-analytics": "^0.0.34",
     "@types/uuid": "^9.0.4",
