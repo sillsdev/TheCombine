@@ -691,7 +691,9 @@ export default function DataEntryTable(
   const addNewEntry = async (): Promise<void> => {
     const word = newWord(state.newVern);
     const lang = analysisLang.bcp47;
-    word.senses.push(newSense(state.newGloss, lang, props.semanticDomain));
+    word.senses.push(
+      newSense(state.newGloss, lang, makeSemDomCurrent(props.semanticDomain))
+    );
     word.note = newNote(state.newNote, lang);
     await addNewWord(word, state.newAudioUrls);
   };
