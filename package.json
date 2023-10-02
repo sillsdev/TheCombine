@@ -39,7 +39,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.0",
     "@emotion/styled": "^11.11.0",
-    "@loadable/component": "^5.15.0",
+    "@loadable/component": "^5.15.3",
     "@material-table/core": "^6.2.4",
     "@matt-block/react-recaptcha-v2": "^2.0.1",
     "@microsoft/signalr": "^6.0.7",
@@ -91,7 +91,7 @@
     "@types/crypto-js": "^4.1.2",
     "@types/css-mediaquery": "^0.1.2",
     "@types/jest": "^29.5.5",
-    "@types/loadable__component": "^5.13.4",
+    "@types/loadable__component": "^5.13.5",
     "@types/node": "^20.5.1",
     "@types/nspell": "^2.1.1",
     "@types/react": "^17.0.34",
