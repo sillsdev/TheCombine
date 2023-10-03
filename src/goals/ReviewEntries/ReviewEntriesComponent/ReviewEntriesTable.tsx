@@ -147,7 +147,7 @@ export default function ReviewEntriesTable(
       )}
       data={words}
       onFilterChange={updateMaxRows}
-      onRowsPerPageChange={() => setIsLoading(true)}
+      onRowsPerPageChange={() => new Promise((res) => setTimeout(res, 3000))}
       editable={{
         onRowUpdate: (newData: ReviewEntriesWord, oldData: ReviewEntriesWord) =>
           new Promise(async (resolve, reject) => {
