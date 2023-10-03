@@ -148,6 +148,7 @@ namespace BackendFramework.Services
         public async Task<MergeWordSet> AddToMergeGraylist(
             string projectId, string userId, List<string> wordIds)
         {
+            wordIds = wordIds.Distinct().ToList();
             if (wordIds.Count < 2)
             {
                 throw new InvalidMergeWordSetException("Cannot graylist a list of fewer than 2 wordIds.");
@@ -169,10 +170,11 @@ namespace BackendFramework.Services
 
         /// <summary> Remove a List of wordIds from MergeGraylist of specified <see cref="Project"/>. </summary>
         /// <exception cref="InvalidMergeWordSetException"> Throws when wordIds has count less than 2. </exception>
-        /// <returns> List of removed <see cref="MergeWordSet"/> ids. </returns>
-        public async Task<List<string>> RemoveFromMergeGraylist(
+        /// <returns> Boolean indicating whether anything was removed. </returns>
+        public async Task<bool> RemoveFromMergeGraylist(
             string projectId, string userId, List<string> wordIds)
         {
+            wordIds = wordIds.Distinct().ToList();
             if (wordIds.Count < 2)
             {
                 throw new InvalidMergeWordSetException("Cannot have a graylist entry with fewer than 2 wordIds.");
@@ -180,16 +182,15 @@ namespace BackendFramework.Services
 
             // Remove all graylist entries fully contained in the input List.
             var graylist = await _mergeGraylistRepo.GetAllSets(projectId, userId);
-            var removed = new List<string>();
             foreach (var entry in graylist)
             {
-                if (entry.WordIds.All(wordIds.Contains))
+                if (entry.WordIds.All(wordIds.Contains) && wordIds.Count == entry.WordIds.Count)
                 {
                     await _mergeGraylistRepo.Delete(projectId, entry.Id);
-                    removed.Add(entry.Id);
+                    return true;
                 }
             }
-            return removed;
+            return false;
         }
 
         /// <summary> Check if List of wordIds is in MergeBlacklist for specified <see cref="Project"/>. </summary>
