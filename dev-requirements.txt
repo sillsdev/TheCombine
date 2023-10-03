@@ -198,12 +198,6 @@ six==1.16.0
     #   python-dateutil
 soupsieve==2.5
     # via beautifulsoup4
-tomli==2.0.1
-    # via
-    #   black
-    #   mypy
-    #   pyproject-api
-    #   tox
 tox==4.11.3
     # via -r dev-requirements.in
 types-pyopenssl==23.2.0.2
@@ -217,10 +211,8 @@ types-requests==2.31.0.5
 types-urllib3==1.26.25.14
     # via types-requests
 typing-extensions==4.8.0
-    # via
-    #   black
-    #   mypy
-urllib3==1.26.16
+    # via mypy
+urllib3==1.26.17
     # via
     #   google-auth
     #   kubernetes
