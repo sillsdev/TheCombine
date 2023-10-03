@@ -10,6 +10,7 @@ import React, {
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
+import Overlay from "components/Overlay";
 import columns, {
   ColumnTitle,
 } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
@@ -44,7 +45,7 @@ function getPageState(wordCount: number): PageState {
 }
 
 // Constants
-const ROWS_PER_PAGE = [10, 50, 250];
+const ROWS_PER_PAGE = [10, 50, 200];
 const tableRef: React.RefObject<any> = React.createRef();
 
 export default function ReviewEntriesTable(
@@ -135,43 +136,52 @@ export default function ReviewEntriesTable(
   };
 
   return (
-    <MaterialTable<any>
-      tableRef={tableRef}
-      icons={tableIcons}
-      isLoading={isLoading}
-      title={
-        <Typography component="h1" variant="h4">
-          {t("reviewEntries.title")}
-        </Typography>
-      }
-      beforePageChange={() => {
-        console.info("setting isLoading to true");
-        setIsLoading(true);
-      }}
-      columns={columns.filter(
-        (c) =>
-          (showDefinitions || c.title !== ColumnTitle.Definitions) &&
-          (showGrammaticalInfo || c.title !== ColumnTitle.PartOfSpeech)
-      )}
-      data={words}
-      onFilterChange={updateMaxRows}
-      onRowsPerPageChange={() => setIsLoading(false)}
-      onPageChange={() => setIsLoading(false)}
-      //onRowsPerPageChange={() => new Promise((res) => setTimeout(res, 3000))}
-      editable={{
-        onRowUpdate: (newData: ReviewEntriesWord, oldData: ReviewEntriesWord) =>
-          new Promise(async (resolve, reject) => {
-            await props
-              .onRowUpdate(newData, oldData)
-              .then(resolve)
-              .catch((reason) => {
-                enqueueSnackbar(t(reason));
-                reject(reason);
-              });
-          }),
-      }}
-      options={{ draggable: false, filtering: true, ...pageState }}
-      localization={materialTableLocalization}
-    />
+    <Overlay on={isLoading}>
+      <MaterialTable<any>
+        tableRef={tableRef}
+        icons={tableIcons}
+        isLoading={isLoading}
+        title={
+          <Typography component="h1" variant="h4">
+            {t("reviewEntries.title")}
+          </Typography>
+        }
+        /*beforePageChange={() => {
+          console.info("setting isLoading to true");
+          setIsLoading(true);
+        }}*/
+        columns={columns.filter(
+          (c) =>
+            (showDefinitions || c.title !== ColumnTitle.Definitions) &&
+            (showGrammaticalInfo || c.title !== ColumnTitle.PartOfSpeech)
+        )}
+        data={words}
+        onFilterChange={updateMaxRows}
+        onRowsPerPageChanging={() => {
+          console.info("setting isLoading to true");
+          setIsLoading(true);
+        }}
+        //onRowsPerPageChange={() => setIsLoading(false)}
+        onPageChange={() => setIsLoading(false)}
+        //onRowsPerPageChange={() => new Promise((res) => setTimeout(res, 3000))}
+        editable={{
+          onRowUpdate: (
+            newData: ReviewEntriesWord,
+            oldData: ReviewEntriesWord
+          ) =>
+            new Promise(async (resolve, reject) => {
+              await props
+                .onRowUpdate(newData, oldData)
+                .then(resolve)
+                .catch((reason) => {
+                  enqueueSnackbar(t(reason));
+                  reject(reason);
+                });
+            }),
+        }}
+        options={{ draggable: false, filtering: true, ...pageState }}
+        localization={materialTableLocalization}
+      />
+    </Overlay>
   );
 }
