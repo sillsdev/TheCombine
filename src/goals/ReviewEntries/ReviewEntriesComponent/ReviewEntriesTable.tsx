@@ -4,7 +4,7 @@ import { enqueueSnackbar } from "notistack";
 import React, {
   ReactElement,
   useEffect,
-  //useLayoutEffect,
+  useLayoutEffect,
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
@@ -61,7 +61,7 @@ export default function ReviewEntriesTable(
       state.currentProjectState.project.grammaticalInfoEnabled
   );
   const { t } = useTranslation();
-  //const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [maxRows, setMaxRows] = useState(words.length);
   const [pageState, setPageState] = useState(getPageState(words.length));
 
@@ -85,9 +85,13 @@ export default function ReviewEntriesTable(
     });
   }, [maxRows]);
 
-  /*useLayoutEffect(() => {
-    setIsLoading(false);
-  }, [isLoading]);*/
+  useLayoutEffect(() => {
+    console.info(`useLayoutEffect: isLoading is ${isLoading}`);
+  }, [isLoading]);
+
+  useEffect(() => {
+    console.info(`useEffect: isLoading is ${isLoading}`);
+  }, [isLoading]);
 
   const materialTableLocalization = {
     body: {
@@ -134,12 +138,16 @@ export default function ReviewEntriesTable(
     <MaterialTable<any>
       tableRef={tableRef}
       icons={tableIcons}
-      //isLoading={isLoading}
+      isLoading={isLoading}
       title={
         <Typography component="h1" variant="h4">
           {t("reviewEntries.title")}
         </Typography>
       }
+      beforePageChange={() => {
+        console.info("setting isLoading to true");
+        setIsLoading(true);
+      }}
       columns={columns.filter(
         (c) =>
           (showDefinitions || c.title !== ColumnTitle.Definitions) &&
@@ -147,6 +155,8 @@ export default function ReviewEntriesTable(
       )}
       data={words}
       onFilterChange={updateMaxRows}
+      onRowsPerPageChange={() => setIsLoading(false)}
+      onPageChange={() => setIsLoading(false)}
       //onRowsPerPageChange={() => new Promise((res) => setTimeout(res, 3000))}
       editable={{
         onRowUpdate: (newData: ReviewEntriesWord, oldData: ReviewEntriesWord) =>
