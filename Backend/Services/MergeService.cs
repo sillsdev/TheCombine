@@ -180,7 +180,7 @@ namespace BackendFramework.Services
                 throw new InvalidMergeWordSetException("Cannot have a graylist entry with fewer than 2 wordIds.");
             }
 
-            // Remove all graylist entries fully contained in the input List.
+            // Remove only the set of wordIds, if in graylist (not any subsets)
             var graylist = await _mergeGraylistRepo.GetAllSets(projectId, userId);
             foreach (var entry in graylist)
             {
