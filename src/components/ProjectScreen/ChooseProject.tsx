@@ -36,7 +36,7 @@ export default function ChooseProject(): ReactElement {
 
   const selectProject = (project: Project): void => {
     dispatch(setNewCurrentProject(project));
-    navigate(Path.Goals);
+    navigate(Path.DataEntry);
   };
 
   return (
