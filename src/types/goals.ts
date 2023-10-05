@@ -37,8 +37,9 @@ export enum GoalType {
   CreateStrWordInv = 2,
   HandleFlags = 7,
   MergeDups = 4,
+  ReviewDeferredDups = 8,
   ReviewEntries = 6,
-  SpellcheckGloss = 5,
+  SpellCheckGloss = 5,
   ValidateChars = 1,
   ValidateStrWords = 3,
 }
@@ -50,8 +51,9 @@ export enum GoalName {
   CreateStrWordInv = "createStrWordInv",
   HandleFlags = "handleFlags",
   MergeDups = "mergeDups",
+  ReviewDeferredDups = "reviewDeferredDups",
   ReviewEntries = "reviewEntries",
-  SpellcheckGloss = "spellcheckGloss",
+  SpellCheckGloss = "spellCheckGloss",
   ValidateChars = "validateChars",
   ValidateStrWords = "validateStrWords",
 }

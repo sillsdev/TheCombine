@@ -3,7 +3,7 @@ import React, { ReactElement, useEffect } from "react";
 import { Key } from "ts-key-enum";
 
 import { WritingSystem } from "api/models";
-import { TextFieldWithFont } from "utilities/fontComponents";
+import { LiWithFont, TextFieldWithFont } from "utilities/fontComponents";
 
 interface VernWithSuggestionsProps {
   isNew?: boolean;
@@ -64,6 +64,11 @@ export default function VernWithSuggestions(
           variant={props.isNew ? "outlined" : "standard"}
           vernacular
         />
+      )}
+      renderOption={(liProps, option, { selected }) => (
+        <LiWithFont {...liProps} aria-selected={selected} vernacular>
+          {option}
+        </LiWithFont>
       )}
     />
   );

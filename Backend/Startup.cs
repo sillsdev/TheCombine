@@ -197,7 +197,9 @@ namespace BackendFramework
 
             // Merge types
             services.AddTransient<IMergeBlacklistContext, MergeBlacklistContext>();
+            services.AddTransient<IMergeGraylistContext, MergeGraylistContext>();
             services.AddTransient<IMergeBlacklistRepository, MergeBlacklistRepository>();
+            services.AddTransient<IMergeGraylistRepository, MergeGraylistRepository>();
             services.AddTransient<IMergeService, MergeService>();
 
             // Password Reset types

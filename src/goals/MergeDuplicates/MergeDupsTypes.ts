@@ -29,3 +29,17 @@ export class MergeDups extends Goal {
     super(GoalType.MergeDups, GoalName.MergeDups, steps, data);
   }
 }
+
+export class ReviewDeferredDups extends Goal {
+  constructor(
+    steps: MergeStepData[] = [],
+    data: MergeDupsData = { plannedWords: [[]] }
+  ) {
+    super(
+      GoalType.ReviewDeferredDups,
+      GoalName.ReviewDeferredDups,
+      steps,
+      data
+    );
+  }
+}

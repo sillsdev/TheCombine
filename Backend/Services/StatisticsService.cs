@@ -89,27 +89,30 @@ namespace BackendFramework.Services
                         // The created timestamp may not exist for some model
                         if (!string.IsNullOrEmpty(sd.Created))
                         {
-                            DateTime tempDate = ParseDateTimePermissivelyWithException(sd.Created);
-                            var userName = userNameIdDictionary.GetValueOrDefault(sd.UserId, "");
-                            // WordsPerDayPerUserCount exist for particular day
-                            if (shortTimeDictionary.ContainsKey(tempDate.ToISO8601TimeFormatDateOnlyString()) &&
-                                !string.IsNullOrEmpty(userName))
-                            {
-                                var chartNode = shortTimeDictionary[tempDate.ToISO8601TimeFormatDateOnlyString()];
-                                chartNode.UserNameCountDictionary[userName] = chartNode
-                                    .UserNameCountDictionary.GetValueOrDefault(userName, 0) + 1;
-                            }
-                            // WordsPerDayPerUserCount NOT exist, create one and update to the Dictionary
-                            else
+                            var dateKey = ParseDateTimePermissivelyWithException(sd.Created)
+                                .ToISO8601TimeFormatDateOnlyString();
+                            if (!shortTimeDictionary.ContainsKey(dateKey))
                             {
                                 var tempBarChartNode = new WordsPerDayPerUserCount(sd.Created);
                                 foreach (User u in projectUsers)
                                 {
                                     tempBarChartNode.UserNameCountDictionary.Add(u.Username, 0);
                                 }
-                                tempBarChartNode.UserNameCountDictionary[userName] = 1;
-                                shortTimeDictionary.Add(
-                                    tempBarChartNode.DateTime.ToISO8601TimeFormatDateOnlyString(), tempBarChartNode);
+                                shortTimeDictionary.Add(dateKey, tempBarChartNode);
+                            }
+
+                            var chartNode = shortTimeDictionary[dateKey];
+                            var username = userNameIdDictionary.GetValueOrDefault(sd.UserId, "?");
+                            // A semantic domain shouldn't usually have `.Created` without a valid `.UserId`;
+                            // this case is a safe-guard to allow a project owner to see statistics even if there's an
+                            // error in the user reckoning (e.g., if a user is removed from the project mid-workshop).
+                            if (!chartNode.UserNameCountDictionary.ContainsKey(username))
+                            {
+                                chartNode.UserNameCountDictionary.Add(username, 1);
+                            }
+                            else
+                            {
+                                chartNode.UserNameCountDictionary[username] += 1;
                             }
                         }
                     }
