@@ -71,6 +71,7 @@
     "piptools",
     "Prenoun",
     "Preverb",
+    "recaptcha",
     "reportgenerator",
     "sched",
     "sillsdev",

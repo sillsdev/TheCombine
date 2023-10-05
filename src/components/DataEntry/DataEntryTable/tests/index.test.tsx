@@ -1,6 +1,11 @@
 import { ReactElement } from "react";
 import { Provider } from "react-redux";
-import renderer from "react-test-renderer";
+import {
+  ReactTestInstance,
+  ReactTestRenderer,
+  act,
+  create,
+} from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
@@ -17,7 +22,6 @@ import DataEntryTable, {
   updateEntryGloss,
 } from "components/DataEntry/DataEntryTable";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
-import { RecentEntryProps } from "components/DataEntry/DataEntryTable/RecentEntry";
 import { newProject } from "types/project";
 import {
   newSemanticDomain,
@@ -57,10 +61,10 @@ jest.mock("utilities/utilities");
 
 jest.spyOn(window, "alert").mockImplementation(() => {});
 
-let testRenderer: renderer.ReactTestRenderer;
-let testHandle: renderer.ReactTestInstance;
+let testRenderer: ReactTestRenderer;
+let testHandle: ReactTestInstance;
 
-function MockRecentEntry(props: RecentEntryProps): ReactElement {
+function MockRecentEntry(): ReactElement {
   return <div />;
 }
 
@@ -97,8 +101,8 @@ beforeEach(() => {
 });
 
 const renderTable = async (): Promise<void> => {
-  await renderer.act(async () => {
-    testRenderer = renderer.create(
+  await act(async () => {
+    testRenderer = create(
       <Provider store={mockStore}>
         <DataEntryTable
           semanticDomain={mockTreeNode}
@@ -119,7 +123,7 @@ const addRecentEntry = async (word?: Word): Promise<string> => {
   }
   mockCreateWord.mockResolvedValueOnce(word);
   mockGetWord.mockResolvedValueOnce(word);
-  await renderer.act(async () => {
+  await act(async () => {
     await testRenderer.root.findByType(NewEntry).props.addNewEntry();
   });
   return word.id;
@@ -140,7 +144,7 @@ describe("DataEntryTable", () => {
     it("hides questions", async () => {
       expect(mockHideQuestions).not.toBeCalled();
       testHandle = testRenderer.root.findByProps({ id: exitButtonId });
-      await renderer.act(async () => await testHandle.props.onClick());
+      await act(async () => await testHandle.props.onClick());
       expect(mockHideQuestions).toBeCalled();
     });
 
@@ -149,9 +153,9 @@ describe("DataEntryTable", () => {
       testHandle = testRenderer.root.findByType(NewEntry);
       expect(testHandle).not.toBeNull;
       // Set newVern but not newGloss.
-      await renderer.act(async () => testHandle.props.setNewVern("hasVern"));
+      await act(async () => testHandle.props.setNewVern("hasVern"));
       testHandle = testRenderer.root.findByProps({ id: exitButtonId });
-      await renderer.act(async () => await testHandle.props.onClick());
+      await act(async () => await testHandle.props.onClick());
       expect(mockCreateWord).toBeCalledTimes(1);
     });
 
@@ -159,16 +163,16 @@ describe("DataEntryTable", () => {
       testHandle = testRenderer.root.findByType(NewEntry);
       expect(testHandle).not.toBeNull;
       // Set newGloss but not newVern.
-      await renderer.act(async () => testHandle.props.setNewGloss("hasGloss"));
+      await act(async () => testHandle.props.setNewGloss("hasGloss"));
       testHandle = testRenderer.root.findByProps({ id: exitButtonId });
-      await renderer.act(async () => await testHandle.props.onClick());
+      await act(async () => await testHandle.props.onClick());
       expect(mockCreateWord).not.toBeCalled();
     });
 
     it("opens the domain tree", async () => {
       expect(mockOpenTree).not.toBeCalled();
       testHandle = testRenderer.root.findByProps({ id: exitButtonId });
-      await renderer.act(async () => await testHandle.props.onClick());
+      await act(async () => await testHandle.props.onClick());
       expect(mockOpenTree).toBeCalledTimes(1);
     });
   });
@@ -293,7 +297,7 @@ describe("DataEntryTable", () => {
       mockGetFrontierWords.mockResolvedValue([word]);
       await renderTable();
       testHandle = testRenderer.root.findByType(NewEntry);
-      await renderer.act(async () => {
+      await act(async () => {
         await testHandle.props.setNewGloss(firstGlossText(word.senses[0]));
         await testHandle.props.updateWordWithNewGloss(word.id);
       });
@@ -309,7 +313,7 @@ describe("DataEntryTable", () => {
       mockGetFrontierWords.mockResolvedValue([word]);
       await renderTable();
       testHandle = testRenderer.root.findByType(NewEntry);
-      await renderer.act(async () => {
+      await act(async () => {
         await testHandle.props.setNewGloss(firstGlossText(word.senses[0]));
         await testHandle.props.updateWordWithNewGloss(word.id);
       });
@@ -319,7 +323,7 @@ describe("DataEntryTable", () => {
     it("updates word in backend if gloss doesn't exist", async () => {
       await renderTable();
       testHandle = testRenderer.root.findByType(NewEntry);
-      await renderer.act(async () => {
+      await act(async () => {
         await testHandle.props.setNewGloss("differentGloss");
         await testHandle.props.updateWordWithNewGloss(mockMultiWord.id);
       });
@@ -333,7 +337,7 @@ describe("DataEntryTable", () => {
     it("checks for duplicate and, if so, updates it", async () => {
       testHandle = testRenderer.root.findByType(NewEntry);
       mockGetDuplicateId.mockResolvedValueOnce(true);
-      await renderer.act(async () => {
+      await act(async () => {
         await testHandle.props.addNewEntry();
       });
       expect(mockUpdateDuplicate).toBeCalledTimes(1);
@@ -357,7 +361,7 @@ describe("DataEntryTable", () => {
 
       // Verify that the number of recent entries increases by the correct amount
       expect(testRenderer.root.findAllByType(MockRecentEntry)).toHaveLength(0);
-      await renderer.act(async () => {
+      await act(async () => {
         await testRenderer.root.findByType(NewEntry).props.addNewEntry();
       });
       expect(testRenderer.root.findAllByType(MockRecentEntry)).toHaveLength(
@@ -372,14 +376,14 @@ describe("DataEntryTable", () => {
       const vern = "vern";
       const glossDef = "gloss";
       const noteText = "note";
-      renderer.act(() => {
+      act(() => {
         testHandle.props.setNewVern(vern);
         testHandle.props.setNewGloss(glossDef);
         testHandle.props.setNewNote(noteText);
       });
 
       // Trigger the function to add a new entry
-      await renderer.act(async () => {
+      await act(async () => {
         try {
           await testHandle.props.addNewEntry();
         } catch {
@@ -409,7 +413,7 @@ describe("DataEntryTable", () => {
     it("removes a recent entry", async () => {
       await addRecentEntry();
       const recentEntry = testRenderer.root.findByType(MockRecentEntry);
-      await renderer.act(async () => {
+      await act(async () => {
         await recentEntry.props.removeEntry();
       });
       expect(testRenderer.root.findAllByType(MockRecentEntry)).toHaveLength(0);
@@ -432,7 +436,7 @@ describe("DataEntryTable", () => {
 
       // Update the vernacular
       const newVern = "not the vern generated in addRecentEntry";
-      await renderer.act(async () => {
+      await act(async () => {
         await recentEntry.props.updateVern(newVern);
       });
 
