@@ -14,7 +14,6 @@ declare module "i18next" {
   }
 }
 
-/* eslint-disable import/no-named-as-default-member */
 i18n
   .use(Backend)
   .use(LanguageDetector)
