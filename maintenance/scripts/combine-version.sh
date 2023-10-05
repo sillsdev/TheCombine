@@ -14,11 +14,13 @@ else
         REPO="public.ecr.aws/thecombine/"
     else
         REPO="$AWS_ACCOUNT.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com"
+        if ! kubectl get secrets aws-login-credentials 2>&1 >/dev/null ; then
+            echo "The requested version is in a private repo and this device does not have access to it."
+            exit 1
+        fi
     fi
-
-    REPO=`kubectl describe deployment $deployment | grep "Image.*combine_" | sed -Ee "s/^ +Image: .*://"`
-    kubectl -n thecombine set image deployment/database database="public.ecr.aws/thecombine/combine_database:$1"
-    kubectl -n thecombine set image deployment/backend backend="public.ecr.aws/thecombine/combine_backend:$1"
-    kubectl -n thecombine set image deployment/frontend frontend="public.ecr.aws/thecombine/combine_frontend:$1"
-    kubectl -n thecombine set image deployment/maintenance maintenance="public.ecr.aws/thecombine/combine_maint:$1"
+    kubectl -n thecombine set image deployment/database database="$REPO/combine_database:$1"
+    kubectl -n thecombine set image deployment/backend backend="$REPO/combine_backend:$1"
+    kubectl -n thecombine set image deployment/frontend frontend="$REPO/combine_frontend:$1"
+    kubectl -n thecombine set image deployment/maintenance maintenance="$REPO/combine_maint:$1"
 fi
