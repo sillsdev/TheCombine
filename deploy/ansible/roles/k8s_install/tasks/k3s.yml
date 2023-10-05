@@ -6,10 +6,10 @@
 ################################################
 - name: Install k3s
   shell:
-    cmd: curl -sfL https://get.k3s.io | sh -s - {{ k3s_options | join(' ') }}
+    cmd: curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="{{ k3s_version }}" sh -s - {{ k3s_options | join(' ') }}
     creates: /usr/local/bin/k3s
 
-# Change KillMode from "process" to "mixed" to eliminate 90 wait for k3s containers
+# Change KillMode from "process" to "mixed" to eliminate 90s wait for k3s containers
 # to exit.  This limits the ability to upgrade k3s in-place without stopping the
 # current containers but that is not needed for the NUC use case.
 - name: Patch k3s service
