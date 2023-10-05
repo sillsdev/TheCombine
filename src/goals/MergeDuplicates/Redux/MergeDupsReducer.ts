@@ -1,22 +1,18 @@
+import { createSlice } from "@reduxjs/toolkit";
 import { v4 } from "uuid";
 
-import { Word } from "api/models";
+import { GramCatGroup, Status, Word } from "api/models";
 import {
   convertSenseToMergeTreeSense,
   convertWordToMergeTreeWord,
   defaultSidebar,
   defaultTree,
-  MergeTree,
   MergeTreeSense,
   MergeTreeWord,
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
-import {
-  MergeTreeAction,
-  MergeTreeActionTypes,
-  MergeTreeState,
-} from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
-import { StoreAction, StoreActionTypes } from "rootActions";
+import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
+import { StoreActionTypes } from "rootActions";
 import { Hash } from "types/hash";
 
 const defaultData = { words: {}, senses: {} };
@@ -25,52 +21,88 @@ export const defaultState: MergeTreeState = {
   tree: defaultTree,
 };
 
-export const mergeDupStepReducer = (
-  state: MergeTreeState = defaultState, //createStore() calls each reducer with undefined state
-  action: MergeTreeAction | StoreAction
-): MergeTreeState => {
-  switch (action.type) {
-    case MergeTreeActionTypes.CLEAR_TREE: {
-      return defaultState;
-    }
+const mergeDupStepSlice = createSlice({
+  name: "mergeDupStepReducer",
+  initialState: defaultState,
+  reducers: {
+    clearTreeAction: (state) => {
+      state = defaultState;
+    },
+    combineIntoFirstSenseAction: (state, action) => {
+      // Set the first sense to be merged as Active/Protected.
+      // This was the top sense when the sidebar was opened.
+      const senses: MergeTreeSense[] = action.payload;
+      const mainSense = senses[0];
+      mainSense.accessibility = mainSense.protected
+        ? Status.Protected
+        : Status.Active;
 
-    case MergeTreeActionTypes.COMBINE_SENSE: {
+      // Merge the rest as duplicates.
+      // These were senses dropped into another sense.
+      senses.slice(1).forEach((dupSense) => {
+        dupSense.accessibility = Status.Duplicate;
+        // Put the duplicate's definitions in the main sense.
+        const sep = ";";
+        dupSense.definitions.forEach((def) => {
+          if (def.text.length) {
+            const defIndex = mainSense.definitions.findIndex(
+              (d) => d.language === def.language
+            );
+            if (defIndex === -1) {
+              mainSense.definitions.push({ ...def });
+            } else {
+              const oldText = mainSense.definitions[defIndex].text;
+              if (!oldText.split(sep).includes(def.text)) {
+                mainSense.definitions[
+                  defIndex
+                ].text = `${oldText}${sep}${def.text}`;
+              }
+            }
+          }
+        });
+        // Use the duplicate's part of speech if not specified in the main sense.
+        if (mainSense.grammaticalInfo.catGroup === GramCatGroup.Unspecified) {
+          mainSense.grammaticalInfo = { ...dupSense.grammaticalInfo };
+        }
+        // Put the duplicate's domains in the main sense.
+        dupSense.semanticDomains.forEach((dom) => {
+          if (!mainSense.semanticDomains.find((d) => d.id === dom.id)) {
+            mainSense.semanticDomains.push({ ...dom });
+          }
+        });
+      });
+      state.tree.sidebar.senses = senses;
+    },
+    combineSenseAction: (state, action) => {
       const srcRef = action.payload.src;
       const destRef = action.payload.dest;
 
       // Ignore dropping a sense (or one of its sub-senses) into itself.
-      if (srcRef.mergeSenseId === destRef.mergeSenseId) {
-        return state;
-      }
-
-      const words: Hash<MergeTreeWord> = JSON.parse(
-        JSON.stringify(state.tree.words)
-      );
-      const srcWordId = srcRef.wordId;
-      const srcGuids = words[srcWordId].sensesGuids[srcRef.mergeSenseId];
-      const destGuids: string[] = [];
-      if (srcRef.order === undefined || srcGuids.length === 1) {
-        destGuids.push(...srcGuids);
-        delete words[srcWordId].sensesGuids[srcRef.mergeSenseId];
-        if (!Object.keys(words[srcWordId].sensesGuids).length) {
-          delete words[srcWordId];
+      if (srcRef.mergeSenseId !== destRef.mergeSenseId) {
+        const words = state.tree.words;
+        const srcWordId = srcRef.wordId;
+        const srcGuids = words[srcWordId].sensesGuids[srcRef.mergeSenseId];
+        const destGuids: string[] = [];
+        if (srcRef.order === undefined || srcGuids.length === 1) {
+          destGuids.push(...srcGuids);
+          delete words[srcWordId].sensesGuids[srcRef.mergeSenseId];
+          if (!Object.keys(words[srcWordId].sensesGuids).length) {
+            delete words[srcWordId];
+          }
+        } else {
+          destGuids.push(srcGuids.splice(srcRef.order, 1)[0]);
         }
-      } else {
-        destGuids.push(srcGuids.splice(srcRef.order, 1)[0]);
+
+        words[destRef.wordId].sensesGuids[destRef.mergeSenseId].push(
+          ...destGuids
+        );
+        state.tree.words = words;
       }
-
-      words[destRef.wordId].sensesGuids[destRef.mergeSenseId].push(
-        ...destGuids
-      );
-
-      return { ...state, tree: { ...state.tree, words } };
-    }
-
-    case MergeTreeActionTypes.DELETE_SENSE: {
+    },
+    deleteSenseAction: (state, action) => {
       const srcRef = action.payload.src;
       const srcWordId = srcRef.wordId;
-      const tree: MergeTree = JSON.parse(JSON.stringify(state.tree));
-      const words = tree.words;
+      const words = state.tree.words;
 
       const sensesGuids = words[srcWordId].sensesGuids;
       if (srcRef.order !== undefined) {
@@ -85,40 +117,66 @@ export const mergeDupStepReducer = (
         delete words[srcWordId];
       }
 
-      let sidebar = tree.sidebar;
+      const sidebar = state.tree.sidebar;
       if (
         sidebar.wordId === srcRef.wordId &&
         sidebar.mergeSenseId === srcRef.mergeSenseId &&
         srcRef.order === undefined
       ) {
-        sidebar = defaultSidebar;
+        state.tree.sidebar = defaultSidebar;
       }
+    },
+    flagWordAction: (state, action) => {
+      state.tree.words[action.payload.wordId].flag = action.payload.flag;
+    },
+    moveSenseAction: (state, action) => {
+      if (action.payload.ref.order === undefined) {
+        // MOVE_SENSE,
+        const srcWordId = action.payload.ref.wordId;
+        const mergeSenseId = action.payload.ref.mergeSenseId;
+        const destWordId = action.payload.destWordId;
 
-      return { ...state, tree: { ...state.tree, words, sidebar } };
-    }
+        if (srcWordId === destWordId) {
+          return;
+        }
+        const words = state.tree.words;
 
-    case MergeTreeActionTypes.FLAG_WORD: {
-      const words: Hash<MergeTreeWord> = JSON.parse(
-        JSON.stringify(state.tree.words)
-      );
-      words[action.payload.wordId].flag = action.payload.flag;
-      return { ...state, tree: { ...state.tree, words } };
-    }
+        // Check if dropping the sense into a new word.
+        if (words[destWordId] === undefined) {
+          if (Object.keys(words[srcWordId].sensesGuids).length === 1) {
+            return state;
+          }
+          words[destWordId] = newMergeTreeWord();
+        }
 
-    case MergeTreeActionTypes.MOVE_DUPLICATE: {
+        // Update the destWord.
+        const guids = words[srcWordId].sensesGuids[mergeSenseId];
+        const sensesPairs = Object.entries(words[destWordId].sensesGuids);
+        sensesPairs.splice(action.payload.destOrder, 0, [mergeSenseId, guids]);
+        const newSensesGuids: Hash<string[]> = {};
+        sensesPairs.forEach(([key, value]) => (newSensesGuids[key] = value));
+        words[destWordId].sensesGuids = newSensesGuids;
+
+        // Cleanup the srcWord.
+        delete words[srcWordId].sensesGuids[mergeSenseId];
+        if (!Object.keys(words[srcWordId].sensesGuids).length) {
+          delete words[srcWordId];
+        }
+      }
+    },
+    moveDuplicateAction: (state, action) => {
       const srcRef = action.payload.ref;
+      // Verify that the ref.order field is defined
+      if (srcRef.order === undefined) {
+        return;
+      }
       const destWordId = action.payload.destWordId;
-      const words: Hash<MergeTreeWord> = JSON.parse(
-        JSON.stringify(state.tree.words)
-      );
+      const words = state.tree.words;
 
       const srcWordId = srcRef.wordId;
       let mergeSenseId = srcRef.mergeSenseId;
 
       // Get guid of sense being restored from the sidebar.
-      if (srcRef.order === undefined) {
-        return state;
-      }
       const srcGuids = words[srcWordId].sensesGuids[mergeSenseId];
       const guid = srcGuids.splice(srcRef.order, 1)[0];
 
@@ -130,7 +188,7 @@ export const mergeDupStepReducer = (
       if (srcGuids.length === 0) {
         // If there are no guids left, this is a full move.
         if (srcWordId === destWordId) {
-          return state;
+          return;
         }
         delete words[srcWordId].sensesGuids[mergeSenseId];
         if (!Object.keys(words[srcWordId].sensesGuids).length) {
@@ -147,48 +205,8 @@ export const mergeDupStepReducer = (
       const newSensesGuids: Hash<string[]> = {};
       sensesPairs.forEach(([key, value]) => (newSensesGuids[key] = value));
       words[destWordId].sensesGuids = newSensesGuids;
-
-      return { ...state, tree: { ...state.tree, words } };
-    }
-
-    case MergeTreeActionTypes.MOVE_SENSE: {
-      const srcWordId = action.payload.wordId;
-      const mergeSenseId = action.payload.mergeSenseId;
-      const destWordId = action.payload.destWordId;
-
-      if (srcWordId === destWordId) {
-        return state;
-      }
-      const words: Hash<MergeTreeWord> = JSON.parse(
-        JSON.stringify(state.tree.words)
-      );
-
-      // Check if dropping the sense into a new word.
-      if (words[destWordId] === undefined) {
-        if (Object.keys(words[srcWordId].sensesGuids).length === 1) {
-          return state;
-        }
-        words[destWordId] = newMergeTreeWord();
-      }
-
-      // Update the destWord.
-      const guids = [...words[srcWordId].sensesGuids[mergeSenseId]];
-      const sensesPairs = Object.entries(words[destWordId].sensesGuids);
-      sensesPairs.splice(action.payload.destOrder, 0, [mergeSenseId, guids]);
-      const newSensesGuids: Hash<string[]> = {};
-      sensesPairs.forEach(([key, value]) => (newSensesGuids[key] = value));
-      words[destWordId].sensesGuids = newSensesGuids;
-
-      // Cleanup the srcWord.
-      delete words[srcWordId].sensesGuids[mergeSenseId];
-      if (!Object.keys(words[srcWordId].sensesGuids).length) {
-        delete words[srcWordId];
-      }
-
-      return { ...state, tree: { ...state.tree, words } };
-    }
-
-    case MergeTreeActionTypes.ORDER_DUPLICATE: {
+    },
+    orderDuplicateAction: (state, action) => {
       const ref = action.payload.ref;
 
       const oldOrder = ref.order;
@@ -196,7 +214,7 @@ export const mergeDupStepReducer = (
 
       // Ensure the reorder is valid.
       if (oldOrder === undefined || oldOrder === newOrder) {
-        return state;
+        return;
       }
 
       // Move the guid.
@@ -205,25 +223,13 @@ export const mergeDupStepReducer = (
       const guid = guids.splice(oldOrder, 1)[0];
       guids.splice(newOrder, 0, guid);
 
-      //
       const sensesGuids = { ...oldSensesGuids };
       sensesGuids[ref.mergeSenseId] = guids;
 
-      const word: MergeTreeWord = {
-        ...state.tree.words[ref.wordId],
-        sensesGuids,
-      };
-
-      const words = { ...state.tree.words };
-      words[ref.wordId] = word;
-
-      return { ...state, tree: { ...state.tree, words } };
-    }
-
-    case MergeTreeActionTypes.ORDER_SENSE: {
-      const word: MergeTreeWord = JSON.parse(
-        JSON.stringify(state.tree.words[action.payload.wordId])
-      );
+      state.tree.words[ref.wordId].sensesGuids = sensesGuids;
+    },
+    orderSenseAction: (state, action) => {
+      const word = state.tree.words[action.payload.wordId];
 
       // Convert the Hash<string[]> to an array to expose the order.
       const sensePairs = Object.entries(word.sensesGuids);
@@ -234,7 +240,7 @@ export const mergeDupStepReducer = (
 
       // Ensure the move is valid.
       if (oldOrder === -1 || newOrder === undefined || oldOrder === newOrder) {
-        return state;
+        return;
       }
 
       // Move the sense pair to its new place.
@@ -247,54 +253,46 @@ export const mergeDupStepReducer = (
         word.sensesGuids[key] = value;
       }
 
-      const words = { ...state.tree.words };
-      words[action.payload.wordId] = word;
-
-      return { ...state, tree: { ...state.tree, words } };
-    }
-
-    case MergeTreeActionTypes.SET_DATA: {
+      state.tree.words[action.payload.wordId] = word;
+    },
+    setSidebarAction: (state, action) => {},
+    setWordDataAction: (state, action) => {
       if (action.payload.length === 0) {
-        return defaultState;
-      }
-      const words: Hash<Word> = {};
-      const senses: Hash<MergeTreeSense> = {};
-      const wordsTree: Hash<MergeTreeWord> = {};
-      action.payload.forEach((word) => {
-        words[word.id] = JSON.parse(JSON.stringify(word));
-        word.senses.forEach((s, order) => {
-          senses[s.guid] = convertSenseToMergeTreeSense(s, word.id, order);
+        state = defaultState;
+      } else {
+        const words: Hash<Word> = {};
+        const senses: Hash<MergeTreeSense> = {};
+        const wordsTree: Hash<MergeTreeWord> = {};
+        action.payload.forEach((word: Word) => {
+          words[word.id] = JSON.parse(JSON.stringify(word));
+          word.senses.forEach((s, order) => {
+            senses[s.guid] = convertSenseToMergeTreeSense(s, word.id, order);
+          });
+          wordsTree[word.id] = convertWordToMergeTreeWord(word);
         });
-        wordsTree[word.id] = convertWordToMergeTreeWord(word);
-      });
-      return {
-        ...state,
-        tree: { ...state.tree, words: wordsTree },
-        data: { senses, words },
-      };
-    }
+        state.tree.words = wordsTree;
+        state.data = { senses, words };
+      }
+    },
+    setVernacularAction: (state, action) => {},
+  },
+  extraReducers: (builder) =>
+    builder.addCase(StoreActionTypes.RESET, () => defaultState),
+});
 
-    case MergeTreeActionTypes.SET_SIDEBAR: {
-      const sidebar = action.payload;
-      return { ...state, tree: { ...state.tree, sidebar } };
-    }
+export const {
+  clearTreeAction,
+  combineIntoFirstSenseAction,
+  combineSenseAction,
+  deleteSenseAction,
+  flagWordAction,
+  moveDuplicateAction,
+  moveSenseAction,
+  orderDuplicateAction,
+  orderSenseAction,
+  setSidebarAction,
+  setWordDataAction,
+  setVernacularAction,
+} = mergeDupStepSlice.actions;
 
-    case MergeTreeActionTypes.SET_VERNACULAR: {
-      const word = { ...state.tree.words[action.payload.wordId] };
-      word.vern = action.payload.vern;
-
-      const words = { ...state.tree.words };
-      words[action.payload.wordId] = word;
-
-      return { ...state, tree: { ...state.tree, words } };
-    }
-
-    case StoreActionTypes.RESET: {
-      return defaultState;
-    }
-
-    default: {
-      return state;
-    }
-  }
-};
+export default mergeDupStepSlice.reducer;

@@ -1,12 +1,6 @@
-import {
-  Definition,
-  Flag,
-  GramCatGroup,
-  MergeSourceWord,
-  MergeWords,
-  Status,
-  Word,
-} from "api/models";
+import { Action, PayloadAction } from "@reduxjs/toolkit";
+
+import { MergeSourceWord, MergeWords, Status, Word } from "api/models";
 import * as backend from "backend";
 import {
   addCompletedMergeToGoal,
@@ -24,100 +18,80 @@ import {
   newMergeWords,
 } from "goals/MergeDuplicates/MergeDupsTypes";
 import {
-  ClearTreeMergeAction,
-  CombineSenseMergeAction,
-  DeleteSenseMergeAction,
-  FlagWord,
-  MergeTreeActionTypes,
+  clearTreeAction,
+  combineIntoFirstSenseAction,
+  combineSenseAction,
+  deleteSenseAction,
+  flagWordAction,
+  moveDuplicateAction,
+  moveSenseAction,
+  orderDuplicateAction,
+  orderSenseAction,
+  setSidebarAction,
+  setWordDataAction,
+  setVernacularAction,
+} from "goals/MergeDuplicates/Redux/MergeDupsReducer";
+import {
+  CombineSenseMergePayload,
+  FlagWordPayload,
   MergeTreeState,
-  MoveDuplicateMergeAction,
-  MoveSenseMergeAction,
-  OrderDuplicateMergeAction,
-  OrderSenseMergeAction,
-  SetDataMergeAction,
-  SetSidebarMergeAction,
-  SetVernacularMergeAction,
+  MoveSensePayload,
+  OrderSensePayload,
+  SetVernacularPayload,
 } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { Hash } from "types/hash";
 import { compareFlags } from "utilities/wordUtilities";
 
-// Action Creators
+// Action Creation Functions
 
-export function clearTree(): ClearTreeMergeAction {
-  return { type: MergeTreeActionTypes.CLEAR_TREE };
+export function clearTree(): Action {
+  return clearTreeAction();
 }
 
-export function combineSense(
-  src: MergeTreeReference,
-  dest: MergeTreeReference
-): CombineSenseMergeAction {
-  return { type: MergeTreeActionTypes.COMBINE_SENSE, payload: { src, dest } };
+export function combineIntoFirstSense(senses: MergeTreeSense[]): PayloadAction {
+  return combineIntoFirstSenseAction(senses);
 }
 
-export function deleteSense(src: MergeTreeReference): DeleteSenseMergeAction {
-  return { type: MergeTreeActionTypes.DELETE_SENSE, payload: { src } };
+export function combineSense(payload: CombineSenseMergePayload): PayloadAction {
+  return combineSenseAction(payload);
 }
 
-export function flagWord(wordId: string, flag: Flag): FlagWord {
-  return { type: MergeTreeActionTypes.FLAG_WORD, payload: { wordId, flag } };
+export function deleteSense(payload: MergeTreeReference): PayloadAction {
+  return deleteSenseAction(payload);
 }
 
-export function moveSense(
-  ref: MergeTreeReference,
-  destWordId: string,
-  destOrder: number
-): MoveDuplicateMergeAction | MoveSenseMergeAction {
-  if (ref.order === undefined) {
-    return {
-      type: MergeTreeActionTypes.MOVE_SENSE,
-      payload: { ...ref, destWordId, destOrder },
-    };
+export function flagWord(payload: FlagWordPayload): PayloadAction {
+  return flagWordAction(payload);
+}
+
+export function moveSense(payload: MoveSensePayload): PayloadAction {
+  if (payload.ref.order === undefined) {
+    return moveSenseAction(payload);
+  } else {
+    return moveDuplicateAction(payload);
   }
-  // If ref.order is defined, the sense is being moved out of the sidebar.
-  return {
-    type: MergeTreeActionTypes.MOVE_DUPLICATE,
-    payload: { ref, destWordId, destOrder },
-  };
 }
 
-export function orderSense(
-  ref: MergeTreeReference,
-  order: number
-): OrderDuplicateMergeAction | OrderSenseMergeAction {
-  if (ref.order === undefined) {
-    return {
-      type: MergeTreeActionTypes.ORDER_SENSE,
-      payload: { ...ref, order },
-    };
+export function orderSense(payload: OrderSensePayload): PayloadAction {
+  if (payload.ref.order === undefined) {
+    return orderSenseAction(payload);
+  } else {
+    return orderDuplicateAction(payload);
   }
-  // If ref.order is defined, the sense is being ordered within the sidebar.
-  return {
-    type: MergeTreeActionTypes.ORDER_DUPLICATE,
-    payload: { ref, order },
-  };
 }
 
-export function setSidebar(sidebar?: Sidebar): SetSidebarMergeAction {
-  return {
-    type: MergeTreeActionTypes.SET_SIDEBAR,
-    payload: sidebar ?? defaultSidebar,
-  };
+export function setSidebar(sidebar?: Sidebar): PayloadAction {
+  return setSidebarAction(sidebar ?? defaultSidebar);
 }
 
-export function setWordData(words: Word[]): SetDataMergeAction {
-  return { type: MergeTreeActionTypes.SET_DATA, payload: words };
+export function setWordData(words: Word[]): PayloadAction {
+  return setWordDataAction(words);
 }
 
-export function setVern(
-  wordId: string,
-  vern: string
-): SetVernacularMergeAction {
-  return {
-    type: MergeTreeActionTypes.SET_VERNACULAR,
-    payload: { wordId, vern },
-  };
+export function setVern(payload: SetVernacularPayload): PayloadAction {
+  return setVernacularAction(payload);
 }
 
 // Dispatch Functions
@@ -285,56 +259,4 @@ export async function fetchMergeDupsData(
   maxLists: number
 ): Promise<Word[][]> {
   return await backend.getDuplicates(maxInList, maxLists);
-}
-
-/** Modifies the mutable input sense list. */
-export function combineIntoFirstSense(senses: MergeTreeSense[]): void {
-  // Set the first sense to be merged as Active/Protected.
-  // This was the top sense when the sidebar was opened.
-  const mainSense = senses[0];
-  mainSense.accessibility = mainSense.protected
-    ? Status.Protected
-    : Status.Active;
-
-  // Merge the rest as duplicates.
-  // These were senses dropped into another sense.
-  senses.slice(1).forEach((dupSense) => {
-    dupSense.accessibility = Status.Duplicate;
-    // Put the duplicate's definitions in the main sense.
-    dupSense.definitions.forEach((def) =>
-      mergeDefinitionIntoSense(mainSense, def)
-    );
-    // Use the duplicate's part of speech if not specified in the main sense.
-    if (mainSense.grammaticalInfo.catGroup === GramCatGroup.Unspecified) {
-      mainSense.grammaticalInfo = { ...dupSense.grammaticalInfo };
-    }
-    // Put the duplicate's domains in the main sense.
-    dupSense.semanticDomains.forEach((dom) => {
-      if (!mainSense.semanticDomains.find((d) => d.id === dom.id)) {
-        mainSense.semanticDomains.push({ ...dom });
-      }
-    });
-  });
-}
-
-/** Modifies the mutable input sense. */
-export function mergeDefinitionIntoSense(
-  sense: MergeTreeSense,
-  def: Definition,
-  sep = ";"
-): void {
-  if (!def.text.length) {
-    return;
-  }
-  const defIndex = sense.definitions.findIndex(
-    (d) => d.language === def.language
-  );
-  if (defIndex === -1) {
-    sense.definitions.push({ ...def });
-  } else {
-    const oldText = sense.definitions[defIndex].text;
-    if (!oldText.split(sep).includes(def.text)) {
-      sense.definitions[defIndex].text = `${oldText}${sep}${def.text}`;
-    }
-  }
 }
