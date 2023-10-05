@@ -1,5 +1,5 @@
 import { KeyboardArrowDown } from "@mui/icons-material";
-import { Button, Collapse, Grid, TextField } from "@mui/material";
+import { Button, Collapse, Grid } from "@mui/material";
 import { ReactElement, ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -10,6 +10,7 @@ import {
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import theme from "types/theme";
+import { TextFieldWithFont } from "utilities/fontComponents";
 
 /**
  * Allows for viewing and entering accepted and rejected characters in a
@@ -84,7 +85,7 @@ interface CharactersInputProps {
 
 function CharactersInput(props: CharactersInputProps): ReactElement {
   return (
-    <TextField
+    <TextFieldWithFont
       autoComplete="off"
       fullWidth
       id={props.id}
@@ -97,6 +98,7 @@ function CharactersInput(props: CharactersInputProps): ReactElement {
       style={{ maxWidth: 512, marginTop: theme.spacing(1) }}
       value={props.characters.join("")}
       variant="outlined"
+      vernacular
     />
   );
 }

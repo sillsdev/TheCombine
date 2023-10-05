@@ -1,0 +1,49 @@
+{{- if empty .Values.updateFontsSchedule | not }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: update-fonts
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  concurrencyPolicy: Allow
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+    spec:
+      ttlSecondsAfterFinished: 86400
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          serviceAccountName: {{ .Values.serviceAccount.name }}
+          containers:
+          - image: sillsdev/aws-kubectl:0.3.0
+            imagePullPolicy: Always
+            name: update-fonts
+            command:
+              - kubectl
+            args:
+              - -n
+              - thecombine
+              - exec
+              - deployment/maintenance
+              - --
+              - get-fonts.sh
+            resources: {}
+            securityContext:
+              capabilities: {}
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
+{{- if ne .Values.global.pullSecretName "None" }}
+          imagePullSecrets:
+            - name: {{ .Values.global.pullSecretName }}
+{{- end }}
+          dnsPolicy: ClusterFirst
+          restartPolicy: Never
+          schedulerName: default-scheduler
+          terminationGracePeriodSeconds: 30
+  schedule: {{ .Values.updateFontsSchedule }}
+  successfulJobsHistoryLimit: 1
+  suspend: false
+{{- end }}

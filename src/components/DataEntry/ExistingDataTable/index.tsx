@@ -38,8 +38,8 @@ export default function ExistingDataTable(
       {props.domainWords.map((domainWord) => (
         <ImmutableExistingData
           key={`${domainWord.wordGuid}-${domainWord.senseGuid}`}
-          vernacular={domainWord.vernacular}
           gloss={domainWord.gloss}
+          vernacular={domainWord.vernacular}
         />
       ))}
     </List>

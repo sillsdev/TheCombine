@@ -1,8 +1,8 @@
-import { TextField } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
+import { TextFieldWithFont } from "utilities/fontComponents";
 
 interface VernacularCellProps extends FieldParameterStandard {
   editable?: boolean;
@@ -14,7 +14,7 @@ export default function VernacularCell(
   const { t } = useTranslation();
 
   return (
-    <TextField
+    <TextFieldWithFont
       variant="standard"
       key={`row-${props.rowData.id}-vernacular`}
       id={`row-${props.rowData.id}-vernacular-text`}
@@ -34,6 +34,7 @@ export default function VernacularCell(
           vernacular: event.target.value,
         })
       }
+      vernacular
     />
   );
 }

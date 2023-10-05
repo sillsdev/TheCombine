@@ -16,7 +16,7 @@ export enum ReviewEntriesWordField {
   Id = "id",
   Vernacular = "vernacular",
   Senses = "senses",
-  Pronunciations = "pronunciationFiles",
+  Pronunciations = "audio",
   Note = "noteText",
   Flag = "flag",
 }
@@ -25,7 +25,8 @@ export class ReviewEntriesWord {
   id: string;
   vernacular: string;
   senses: ReviewEntriesSense[];
-  pronunciationFiles: string[];
+  audio: string[];
+  audioNew?: string[];
   noteText: string;
   flag: Flag;
   protected: boolean;
@@ -39,7 +40,7 @@ export class ReviewEntriesWord {
     this.senses = word.senses.map(
       (s) => new ReviewEntriesSense(s, analysisLang)
     );
-    this.pronunciationFiles = word.audio;
+    this.audio = word.audio;
     this.noteText = word.note.text;
     this.flag = word.flag;
     this.protected = word.accessibility === Status.Protected;

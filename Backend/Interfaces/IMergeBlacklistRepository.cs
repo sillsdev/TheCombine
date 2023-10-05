@@ -7,11 +7,11 @@ namespace BackendFramework.Interfaces
 {
     public interface IMergeBlacklistRepository
     {
-        Task<List<MergeBlacklistEntry>> GetAllEntries(string projectId, string? userId = null);
-        Task<MergeBlacklistEntry?> GetEntry(string projectId, string entryId);
-        Task<MergeBlacklistEntry> Create(MergeBlacklistEntry blacklistEntry);
+        Task<List<MergeWordSet>> GetAllSets(string projectId, string? userId = null);
+        Task<MergeWordSet?> GetSet(string projectId, string entryId);
+        Task<MergeWordSet> Create(MergeWordSet wordSetEntry);
         Task<bool> Delete(string projectId, string entryId);
-        Task<bool> DeleteAllEntries(string projectId);
-        Task<ResultOfUpdate> Update(MergeBlacklistEntry blacklistEntry);
+        Task<bool> DeleteAllSets(string projectId);
+        Task<ResultOfUpdate> Update(MergeWordSet wordSetEntry);
     }
 }

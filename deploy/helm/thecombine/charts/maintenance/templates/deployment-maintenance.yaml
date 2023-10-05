@@ -30,8 +30,12 @@ spec:
           command: [ "/bin/bash", "-c", "--" ]
           args: [ 'sleep infinity & PID=$! ; trap "kill $PID" INT TERM ; wait' ]
           image: {{ template "maintenance.containerImage" . }}
-          imagePullPolicy: {{ template "maintenance.imagePullPolicy" . }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          securityContext:
+            runAsUser: 999
+            runAsGroup: 999
           env:
+            # values for AWS Access
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
@@ -57,6 +61,7 @@ spec:
                 configMapKeyRef:
                   key: aws_bucket
                   name: env-maintenance
+            # values used for backup/restore
             - name: db_files_subdir
               valueFrom:
                 configMapKeyRef:
@@ -87,10 +92,29 @@ spec:
                 configMapKeyRef:
                   key: backup_filter
                   name: env-maintenance
+            #  values used for font caching
+            - name: font_dir
+              valueFrom:
+                configMapKeyRef:
+                  key: font_dir
+                  name: env-maintenance
+            - name: local_font_url
+              valueFrom:
+                configMapKeyRef:
+                  key: local_font_url
+                  name: env-maintenance
           resources: {}
+          volumeMounts:
+            - mountPath: {{ .Values.fontsDir }}
+              name: font-data
+              readOnly: false
       restartPolicy: Always
 {{- if ne .Values.global.pullSecretName "None" }}
       imagePullSecrets:
          - name: {{ .Values.global.pullSecretName }}
 {{- end }}
+      volumes:
+        - name: font-data
+          persistentVolumeClaim:
+            claimName: font-data
 status: {}

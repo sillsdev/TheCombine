@@ -27,7 +27,7 @@ spec:
       containers:
         - name: frontend
           image: {{ template "frontend.containerImage" . }}
-          imagePullPolicy: {{ template "frontend.imagePullPolicy" . }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           env:
             - name: CERT_ADDL_DOMAINS
               valueFrom:
@@ -49,15 +49,20 @@ spec:
                 configMapKeyRef:
                   key: CONFIG_USE_CONNECTION_URL
                   name: env-frontend
+            - name: CONFIG_OFFLINE
+              valueFrom:
+                configMapKeyRef:
+                  key: CONFIG_OFFLINE
+                  name: env-frontend
+            - name: CONFIG_EMAIL_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: CONFIG_EMAIL_ENABLED
+                  name: env-frontend
             - name: SERVER_NAME
               valueFrom:
                 configMapKeyRef:
                   key: SERVER_NAME
-                  name: env-frontend
-            - name: ENV_HTTP_ONLY
-              valueFrom:
-                configMapKeyRef:
-                  key: ENV_HTTP_ONLY
                   name: env-frontend
             {{- if .Values.configAnalyticsWriteKey }}
             - name: CONFIG_ANALYTICS_WRITE_KEY
@@ -70,9 +75,18 @@ spec:
             - containerPort: 80
             - containerPort: 443
           resources: {}
+          volumeMounts:
+            - mountPath: /usr/share/nginx/fonts
+              name: font-data
+              readOnly: true
       restartPolicy: Always
 {{- if ne .Values.global.pullSecretName "None" }}
       imagePullSecrets:
          - name: {{ .Values.global.pullSecretName }}
 {{- end }}
+      volumes:
+        - name: font-data
+          persistentVolumeClaim:
+            claimName: font-data
+
 status: {}

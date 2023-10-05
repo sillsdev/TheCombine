@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  creationTimestamp: null
+  name: font-data
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+    - {{ .Values.global.fontStorageAccessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.global.fontStorageSize | quote }}
+status: {}

@@ -136,6 +136,14 @@
   },
   "projectSettings": {
     "project": "Project:",
+    "tab": {
+      "basic": "Basic Settings",
+      "export": "Export",
+      "importExport": "Import/Export",
+      "languages": "Languages",
+      "schedule": "Schedule",
+      "users": "Users"
+    },
     "language": {
       "header": "Language",
       "vernacular": "Vernacular",
@@ -144,7 +152,7 @@
       "analysisLanguage": "Analysis Language",
       "semanticDomains": "Semantic Domains",
       "semanticDomainsDefault": "(Default to browser language)",
-      "languages": "Languages",
+      "languages": "Project Languages",
       "bcp47": "BCP 47 Code",
       "name": "Name",
       "font": "Font",
@@ -253,14 +261,17 @@
   "handleFlags": {
     "title": "Handle Flags"
   },
+  "reviewDeferredDups": {
+    "title": "Review Deferred Duplicates"
+  },
   "spellCheckGloss": {
-    "title": "Spell Check Glossary"
+    "title": "Spell Check Gloss"
   },
   "validateChars": {
     "title": "Validate Characters"
   },
   "validateStrWords": {
-    "title": "Validate Structural Characters"
+    "title": "Validate Structural Words"
   },
   "reviewEntries": {
     "title": "Review Entries",
@@ -269,6 +280,7 @@
     "noDefinition": "No definitions input",
     "noGloss": "No glosses input",
     "noDomain": "No domain selected",
+    "duplicateDomain": "This sense already has domain {{ val }}.",
     "noNote": "No note",
     "deleteWordWarning": "This word will be permanently deleted!",
     "deleteDisabled": "This was imported with data that The Combine doesn't handle, so it may not be deleted.",
@@ -364,7 +376,7 @@
       "dups": "Drag duplicate words here",
       "sense": "Drag new sense here",
       "saveAndContinue": "Save changes and load a new set of words",
-      "skip": "Discard changes and load a new set of words",
+      "defer": "Discard changes and load a new set of words",
       "list": "Drag this word to the right to start merging it with other words",
       "noDups": "Nothing to merge.",
       "delete": "Delete sense",
@@ -402,6 +414,7 @@
     "cancel": "Cancel",
     "clearText": "Clear text",
     "confirm": "Confirm",
+    "defer": "Defer",
     "delete": "Delete",
     "deletePermanently": "Delete permanently?",
     "done": "Done",
@@ -415,7 +428,6 @@
     "restore": "Restore",
     "save": "Save",
     "saveAndContinue": "Save & Continue",
-    "skip": "Skip",
     "undecided": "Undecided",
     "upload": "Upload"
   },

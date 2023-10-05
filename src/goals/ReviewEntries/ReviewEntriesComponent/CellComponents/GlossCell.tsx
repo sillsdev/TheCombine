@@ -1,17 +1,20 @@
-import { Input, TextField } from "@mui/material";
+import { Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-import { Gloss } from "api/models";
+import { Gloss, WritingSystem } from "api/models";
+import Overlay from "components/Overlay";
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 import AlignedList, {
   SPACER,
 } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
-import { ReviewEntriesSense } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreState } from "types";
-import { themeColors } from "types/theme";
 import { newGloss } from "types/word";
+import {
+  TextFieldWithFont,
+  TypographyWithFont,
+} from "utilities/fontComponents";
 
 interface GlossCellProps extends FieldParameterStandard {
   editable?: boolean;
@@ -21,83 +24,84 @@ interface GlossCellProps extends FieldParameterStandard {
 export default function GlossCell(props: GlossCellProps): ReactElement {
   const analysisLang = useSelector(
     (state: StoreState) =>
-      state.currentProjectState.project.analysisWritingSystems[0].bcp47
+      state.currentProjectState.project.analysisWritingSystems[0]
   );
-  const { t } = useTranslation();
 
   return (
     <AlignedList
       listId={`senses${props.rowData.id}`}
-      contents={props.rowData.senses.map((sense, index) =>
-        props.editable ? (
+      contents={props.rowData.senses.map((sense, index) => (
+        <Overlay key={index} on={sense.deleted}>
           <GlossList
-            glosses={sense.glosses}
             defaultLang={analysisLang}
-            keyPrefix={`row-${props.rowData.id}-gloss`}
-            key={`row-${props.rowData.id}-gloss`}
+            editable={props.editable && !sense.deleted}
+            glosses={sense.glosses}
+            idPrefix={`row-${props.rowData.id}-gloss`}
             onChange={(glosses) =>
               props.onRowDataChange &&
               props.onRowDataChange({
                 ...props.rowData,
                 senses: [
                   ...props.rowData.senses.slice(0, index),
-                  {
-                    ...sense,
-                    glosses,
-                  },
+                  { ...sense, glosses },
                   ...props.rowData.senses.slice(index + 1),
                 ],
               })
             }
           />
-        ) : (
-          <Input
-            fullWidth
-            key={`glosses${props.rowData.id}`}
-            value={ReviewEntriesSense.glossString(props.value[index])}
-            placeholder={t("reviewEntries.noGloss")}
-            disabled={sense.deleted}
-            readOnly
-            disableUnderline
-            multiline
-            style={
-              props.sortingByThis && index === 0
-                ? { backgroundColor: themeColors.highlight }
-                : {}
-            }
-          />
-        )
-      )}
+        </Overlay>
+      ))}
       bottomCell={props.editable ? SPACER : undefined}
     />
   );
 }
 
 interface GlossListProps {
+  defaultLang: WritingSystem;
+  editable?: boolean;
   glosses: Gloss[];
-  defaultLang: string;
-  keyPrefix: string;
+  idPrefix: string;
   onChange: (glosses: Gloss[]) => void;
 }
 
 function GlossList(props: GlossListProps): ReactElement {
-  const langs = props.glosses.map((g) => g.language);
-  const glosses = langs.includes(props.defaultLang)
+  const { t } = useTranslation();
+
+  if (!props.editable) {
+    if (!props.glosses.find((g) => g.def)) {
+      return <Typography>{t("reviewEntries.noGloss")}</Typography>;
+    }
+    return (
+      <>
+        {props.glosses
+          .filter((g) => g.def)
+          .map((g, i) => (
+            <TypographyWithFont analysis key={i} lang={g.language}>
+              {g.def}
+            </TypographyWithFont>
+          ))}
+      </>
+    );
+  }
+
+  const glosses = props.glosses.find(
+    (g) => g.language === props.defaultLang.bcp47
+  )
     ? props.glosses
-    : [...props.glosses, newGloss("", props.defaultLang)];
+    : [...props.glosses, newGloss("", props.defaultLang.bcp47)];
 
   return (
     <>
       {glosses.map((g, i) => (
         <GlossField
           gloss={g}
-          key={`${props.keyPrefix}-${i}`}
-          textFieldId={`${props.keyPrefix}-${i}-text`}
+          key={i}
           onChange={(gloss: Gloss) => {
             const updatedGlosses = [...glosses];
             updatedGlosses.splice(i, 1, gloss);
             props.onChange(updatedGlosses);
           }}
+          textFieldId={`${props.idPrefix}-${i}-text`}
         />
       ))}
     </>
@@ -112,19 +116,17 @@ interface GlossFieldProps {
 
 function GlossField(props: GlossFieldProps): ReactElement {
   return (
-    <TextField
+    <TextFieldWithFont
       id={props.textFieldId}
       label={`${props.gloss.language}:`}
+      lang={props.gloss.language}
       variant="outlined"
       margin="dense"
       multiline
       value={props.gloss.def}
       error={props.gloss.def.length === 0}
       onChange={(event) =>
-        props.onChange({
-          language: props.gloss.language,
-          def: event.target.value,
-        })
+        props.onChange(newGloss(event.target.value, props.gloss.language))
       }
     />
   );

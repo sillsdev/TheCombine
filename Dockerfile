@@ -1,5 +1,5 @@
 # User guide build environment
-FROM python:3.10.12-slim-bookworm AS user_guide_builder
+FROM python:3.10.13-slim-bookworm AS user_guide_builder
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -16,7 +16,7 @@ COPY docs/user_guide docs/user_guide
 RUN tox -e user-guide
 
 # Frontend build environment.
-FROM node:18.17.1-bookworm-slim AS frontend_builder
+FROM node:18.18.0-bookworm-slim AS frontend_builder
 WORKDIR /app
 
 # Install app dependencies.
@@ -32,11 +32,13 @@ FROM nginx:1.25
 
 WORKDIR /app
 
-ENV USER_GUIDE_HOST_DIR /usr/share/nginx/user_guide
-ENV FRONTEND_HOST_DIR /usr/share/nginx/html
+ENV HOST_DIR /usr/share/nginx
+ENV USER_GUIDE_HOST_DIR ${HOST_DIR}/user_guide
+ENV FRONTEND_HOST_DIR ${HOST_DIR}/html
 
 RUN mkdir /etc/nginx/templates
 RUN mkdir /etc/nginx/page_templates
+RUN mkdir ${HOST_DIR}/fonts
 RUN mkdir ${FRONTEND_HOST_DIR}/scripts
 RUN mkdir ${FRONTEND_HOST_DIR}/url_moved
 

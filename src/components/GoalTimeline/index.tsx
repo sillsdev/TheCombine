@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
-import { getCurrentPermissions } from "backend";
+import { getCurrentPermissions, getGraylistEntries } from "backend";
 import GoalList from "components/GoalTimeline/GoalList";
 import {
   asyncAddGoal,
@@ -73,6 +73,7 @@ export default function GoalTimeline(): ReactElement {
   const [availableGoalTypes, setAvailableGoalTypes] = useState<GoalType[]>([]);
   const [suggestedGoalTypes, setSuggestedGoalTypes] = useState<GoalType[]>([]);
 
+  const [hasGraylist, setHasGraylist] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [portrait, setPortrait] = useState(true);
 
@@ -85,6 +86,11 @@ export default function GoalTimeline(): ReactElement {
       dispatch(asyncGetUserEdits());
       setLoaded(true);
     }
+    const updateHasGraylist = async () =>
+      setHasGraylist(
+        await getGraylistEntries(1).then((res) => res.length !== 0)
+      );
+    updateHasGraylist();
   }, [dispatch, loaded]);
 
   useEffect(() => {
@@ -93,14 +99,16 @@ export default function GoalTimeline(): ReactElement {
 
   const getGoalTypes = useCallback(async (): Promise<void> => {
     const permissions = await getCurrentPermissions();
-    const goalTypes = allGoalTypes.filter((t) =>
-      permissions.includes(requiredPermission(t))
-    );
+    const goalTypes = (
+      hasGraylist
+        ? allGoalTypes.concat([GoalType.ReviewDeferredDups])
+        : allGoalTypes
+    ).filter((t) => permissions.includes(requiredPermission(t)));
     setAvailableGoalTypes(goalTypes);
     setSuggestedGoalTypes(
       goalTypes.filter((t) => goalTypeSuggestions.includes(t))
     );
-  }, [allGoalTypes, goalTypeSuggestions]);
+  }, [allGoalTypes, goalTypeSuggestions, hasGraylist]);
 
   useEffect(() => {
     getGoalTypes();

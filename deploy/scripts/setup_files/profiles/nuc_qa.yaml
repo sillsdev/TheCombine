@@ -1,0 +1,32 @@
+---
+################################################
+# Profile specific configuration items
+#
+# Profile: nuc
+################################################
+
+charts:
+  thecombine:
+    aws-login:
+      enabled: true
+    global:
+      awsS3Location: prod.thecombine.app
+      combineSmtpUsername: ""
+      imagePullPolicy: Always
+    frontend:
+      configOffline: true
+      configEmailEnabled: false
+    maintenance:
+      localLangList:
+        - "ar"
+        - "en"
+        - "es"
+        - "fr"
+        - "pt"
+        - "zh"
+
+    cert-proxy-client:
+      enabled: true
+
+    certManager:
+      enabled: false

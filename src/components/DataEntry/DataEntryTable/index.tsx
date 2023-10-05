@@ -29,7 +29,7 @@ import { getUserId } from "backend/localStorage";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
 import { filterWordsWithSenses } from "components/DataEntry/utilities";
-import { getFileNameForWord } from "components/Pronunciations/AudioRecorder";
+import { uploadFileFromUrl } from "components/Pronunciations/utilities";
 import { StoreState } from "types";
 import { Hash } from "types/hash";
 import { useAppSelector } from "types/hooks";
@@ -233,7 +233,7 @@ export default function DataEntryTable(
   });
 
   const levDist = useMemo(() => new LevenshteinDistance(), []);
-  const newVernInput = useRef<HTMLDivElement>(null);
+  const newVernInput = useRef<HTMLInputElement>(null);
   const spellChecker = useContext(SpellCheckerContext);
   useEffect(() => {
     spellChecker.updateLang(analysisLang.bcp47);
@@ -344,6 +344,17 @@ export default function DataEntryTable(
       );
       return { ...prevState, isFetchingFrontier: true, recentWords };
     });
+  };
+
+  /*** Clear all new entry state elements. */
+  const resetNewEntry = (): void => {
+    setState((prevState) => ({
+      ...prevState,
+      newAudioUrls: [],
+      newGloss: "",
+      newNote: "",
+      newVern: "",
+    }));
   };
 
   /*** Add an audio file to newAudioUrls. */
@@ -557,14 +568,7 @@ export default function DataEntryTable(
     defunctWord(oldId);
     let newId = oldId;
     for (const audioURL of audioURLs) {
-      const audioBlob = await fetch(audioURL).then((result) => result.blob());
-      const fileName = getFileNameForWord(newId);
-      const audioFile = new File([audioBlob], fileName, {
-        type: audioBlob.type,
-        lastModified: Date.now(),
-      });
-      newId = await backend.uploadAudio(newId, audioFile);
-      URL.revokeObjectURL(audioURL);
+      newId = await uploadFileFromUrl(newId, audioURL);
     }
     defunctWord(oldId, newId);
     return newId;
@@ -670,7 +674,7 @@ export default function DataEntryTable(
       );
       if (!oldWord) {
         // Existing word not found, so create a new word.
-        addNewEntry();
+        await addNewEntry();
       } else {
         // Found an existing word, so add a sense to it.
         await updateWordWithNewEntry(oldWord.id);
@@ -687,7 +691,9 @@ export default function DataEntryTable(
   const addNewEntry = async (): Promise<void> => {
     const word = newWord(state.newVern);
     const lang = analysisLang.bcp47;
-    word.senses.push(newSense(state.newGloss, lang, props.semanticDomain));
+    word.senses.push(
+      newSense(state.newGloss, lang, makeSemDomCurrent(props.semanticDomain))
+    );
     word.note = newNote(state.newNote, lang);
     await addNewWord(word, state.newAudioUrls);
   };
@@ -893,6 +899,7 @@ export default function DataEntryTable(
             vernacularLang={vernacularLang}
             // Parent handles new entry state of child:
             addNewEntry={addNewEntry}
+            resetNewEntry={resetNewEntry}
             updateWordWithNewGloss={updateWordWithNewEntry}
             newAudioUrls={state.newAudioUrls}
             addNewAudioUrl={addNewAudioUrl}

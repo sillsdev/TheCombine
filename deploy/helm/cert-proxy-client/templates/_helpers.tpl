@@ -11,19 +11,6 @@
   {{- end }}
 {{- end }}
 
-{{/* Get the Image Pull Policy */}}
-{{- define "cert-proxy-client.imagePullPolicy" }}
-  {{- if .Values.imagePullPolicy }}
-    {{- print .Values.imagePullPolicy }}
-  {{- else }}
-    {{- if eq .Values.global.imageTag "latest" }}
-      {{- print "Always" }}
-    {{- else }}
-      {{- print "IfNotPresent" }}
-    {{- end }}
-  {{- end }}
-{{- end }}
-
 {{/* Build the SSL Certificate secret name */}}
 {{- define "cert-proxy-client.certSecretName" -}}
   {{- $hostString := replace "." "-" .Values.global.serverName }}

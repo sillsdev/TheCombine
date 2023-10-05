@@ -5,11 +5,13 @@ import VernWithSuggestions from "components/DataEntry/DataEntryTable/EntryCellCo
 import { newWritingSystem } from "types/writingSystem";
 
 // A work-around for this console error: https://github.com/mui/material-ui/issues/28687#issuecomment-1513741911
-jest.mock("@mui/base/node/useAutocomplete/useAutocomplete", () => () => ({
-  getInputLabelProps: jest.fn(),
-  getInputProps: () => ({ onMouseDown: jest.fn() }),
-  getListboxProps: () => ({ ref: {} }),
-  getRootProps: jest.fn(),
+jest.mock("@mui/base/node/useAutocomplete/useAutocomplete", () => ({
+  useAutocomplete: () => ({
+    getInputLabelProps: jest.fn(),
+    getInputProps: () => ({ onMouseDown: jest.fn() }),
+    getListboxProps: () => ({ ref: {} }),
+    getRootProps: jest.fn(),
+  }),
 }));
 
 describe("VernWithSuggestions", () => {
@@ -18,9 +20,9 @@ describe("VernWithSuggestions", () => {
       renderer.create(
         <VernWithSuggestions
           vernacular={"vern"}
-          vernInput={React.createRef<HTMLDivElement>()}
+          vernInput={React.createRef<HTMLInputElement>()}
           updateVernField={jest.fn()}
-          handleEnterAndTab={jest.fn()}
+          handleEnter={jest.fn()}
           onBlur={jest.fn()}
           vernacularLang={newWritingSystem()}
           textFieldId={"test-vern"}
@@ -35,9 +37,9 @@ describe("VernWithSuggestions", () => {
         <VernWithSuggestions
           isNew
           vernacular={""}
-          vernInput={React.createRef<HTMLDivElement>()}
+          vernInput={React.createRef<HTMLInputElement>()}
           updateVernField={jest.fn()}
-          handleEnterAndTab={jest.fn()}
+          handleEnter={jest.fn()}
           onBlur={jest.fn()}
           vernacularLang={newWritingSystem()}
           textFieldId={"test-vern-new"}
@@ -52,9 +54,9 @@ describe("VernWithSuggestions", () => {
         <VernWithSuggestions
           isDisabled
           vernacular={""}
-          vernInput={React.createRef<HTMLDivElement>()}
+          vernInput={React.createRef<HTMLInputElement>()}
           updateVernField={jest.fn()}
-          handleEnterAndTab={jest.fn()}
+          handleEnter={jest.fn()}
           onBlur={jest.fn()}
           vernacularLang={newWritingSystem()}
           textFieldId={"test-vern-disabled"}

@@ -2,7 +2,10 @@ import { Edit, Permission } from "api/models";
 import { CreateCharInv } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { CreateStrWordInv } from "goals/CreateStrWordInv/CreateStrWordInv";
 import { HandleFlags } from "goals/HandleFlags/HandleFlags";
-import { MergeDups } from "goals/MergeDuplicates/MergeDupsTypes";
+import {
+  MergeDups,
+  ReviewDeferredDups,
+} from "goals/MergeDuplicates/MergeDupsTypes";
 import { ReviewEntries } from "goals/ReviewEntries/ReviewEntries";
 import { SpellCheckGloss } from "goals/SpellCheckGloss/SpellCheckGloss";
 import { ValidateChars } from "goals/ValidateChars/ValidateChars";
@@ -13,6 +16,8 @@ export function maxNumSteps(type: GoalType): number {
   switch (type) {
     case GoalType.MergeDups:
       return 12;
+    case GoalType.ReviewDeferredDups:
+      return 99;
     default:
       return 1;
   }
@@ -22,6 +27,7 @@ export function maxNumSteps(type: GoalType): number {
 export function requiredPermission(type: GoalType): Permission {
   switch (type) {
     case GoalType.MergeDups:
+    case GoalType.ReviewDeferredDups:
     case GoalType.ReviewEntries:
       return Permission.MergeAndReviewEntries;
     case GoalType.CreateCharInv:
@@ -41,9 +47,11 @@ export function goalTypeToGoal(type: GoalType): Goal {
       return new HandleFlags();
     case GoalType.MergeDups:
       return new MergeDups();
+    case GoalType.ReviewDeferredDups:
+      return new ReviewDeferredDups();
     case GoalType.ReviewEntries:
       return new ReviewEntries();
-    case GoalType.SpellcheckGloss:
+    case GoalType.SpellCheckGloss:
       return new SpellCheckGloss();
     case GoalType.ValidateChars:
       return new ValidateChars();
