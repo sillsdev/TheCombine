@@ -12,7 +12,7 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
-import React, { ReactElement, useState } from "react";
+import React, { forwardRef, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -114,11 +114,12 @@ export default function UserMenu(props: TabProps): ReactElement {
 // <Menu> automatically applies a ref to its first child for anchoring. The
 // following prevents a console warning: "Function components cannot be given refs.
 // Attempts to access this ref will fail. Did you mean to use React.forwardRef()?"
-const WrappedUserMenuList = React.forwardRef(
-  (props: React.ComponentProps<typeof UserMenuList>, ref) => (
-    <UserMenuList {...props} forwardedRef={ref} />
-  )
-);
+const WrappedUserMenuList = forwardRef(function WrappedUserMenuList(
+  props: React.ComponentProps<typeof UserMenuList>,
+  ref
+) {
+  return <UserMenuList {...props} forwardedRef={ref} />;
+});
 
 interface UserMenuListProps {
   isAdmin: boolean;
