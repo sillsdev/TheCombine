@@ -2,7 +2,6 @@ import { Status, Word } from "api/models";
 import {
   filterWordsByDomain,
   filterWordsWithSenses,
-  sortDomainWordsByVern,
 } from "components/DataEntry/utilities";
 import { newSemanticDomain } from "types/semanticDomain";
 import { DomainWord, newSense, simpleWord } from "types/word";
@@ -81,20 +80,6 @@ describe("DataEntryComponent", () => {
       expect(
         filterWordsByDomain(unfilteredWords, mockDomains[1].id)
       ).toStrictEqual([new DomainWord(expectedWord, senseIndex)]);
-    });
-  });
-
-  describe("sortDomainWordByVern", () => {
-    it("sorts words alphabetically.", () => {
-      const words = [mockWord, mockWord, mockWord].map(
-        (w) => new DomainWord(w)
-      );
-      words[0].vernacular = "Always";
-      words[1].vernacular = "Be";
-      words[2].vernacular = "?character";
-
-      const expectedList: DomainWord[] = [words[2], words[0], words[1]];
-      expect(sortDomainWordsByVern([...words])).toStrictEqual(expectedList);
     });
   });
 });
