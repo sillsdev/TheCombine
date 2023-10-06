@@ -376,7 +376,7 @@ describe("DataEntryTable", () => {
       const vern = "vern";
       const glossDef = "gloss";
       const noteText = "note";
-      act(() => {
+      await act(async () => {
         testHandle.props.setNewVern(vern);
         testHandle.props.setNewGloss(glossDef);
         testHandle.props.setNewNote(noteText);

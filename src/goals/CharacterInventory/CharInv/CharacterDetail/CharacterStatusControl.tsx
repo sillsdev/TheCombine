@@ -1,4 +1,5 @@
 import { Button, ButtonGroup } from "@mui/material";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { CharacterStatus } from "goals/CharacterInventory/CharacterInventoryTypes";
@@ -11,7 +12,7 @@ interface CharacterStatusControlProps {
 
 export default function CharacterStatusControl(
   props: CharacterStatusControlProps
-) {
+): ReactElement {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
 

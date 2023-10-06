@@ -17,7 +17,7 @@ import { Bcp47Code } from "types/writingSystem";
 
 const mockGetWord = jest.fn();
 const mockUpdateWord = jest.fn();
-function mockGetWordResolve(data: Word) {
+function mockGetWordResolve(data: Word): void {
   mockGetWord.mockResolvedValue(JSON.parse(JSON.stringify(data)));
 }
 
@@ -57,7 +57,7 @@ function sense1(): Sense {
     semanticDomains: [{ ...domain1 }],
   };
 }
-function sense1_local() {
+function sense1_local(): ReviewEntriesSense {
   return new ReviewEntriesSense(sense1());
 }
 function mockFrontierWord(vernacular = "word"): Word {
@@ -93,10 +93,10 @@ describe("ReviewEntriesActions", () => {
     async function makeDispatch(
       newRevWord: ReviewEntriesWord,
       oldRevWord: ReviewEntriesWord
-    ) {
+    ): Promise<void> {
       await mockStore.dispatch<any>(updateFrontierWord(newRevWord, oldRevWord));
     }
-    function checkResultantData(newFrontierWord: Word) {
+    function checkResultantData(newFrontierWord: Word): void {
       expect(mockUpdateWord.mock.calls[0][0]).toEqual(newFrontierWord);
     }
 

@@ -8,7 +8,7 @@ import ProjectArchive from "components/ProjectSettings/ProjectArchive";
 import ProjectUsersButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectUsersButtonWithConfirmation";
 import theme from "types/theme";
 
-export default function ProjectManagement() {
+export default function ProjectManagement(): ReactElement {
   const [allProjects, setAllProjects] = useState<Project[]>([]);
   const [activeProjects, setActiveProjects] = useState<Project[]>([]);
   const [archivedProjects, setArchivedProjects] = useState<Project[]>([]);
