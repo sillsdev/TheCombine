@@ -54,7 +54,7 @@ interface SenseListProps {
   analysisLang: string;
 }
 
-export function SenseList(props: SenseListProps) {
+export function SenseList(props: SenseListProps): ReactElement {
   const { t } = useTranslation();
 
   const hasPartsOfSpeech = !!props.selectedWord.senses.find(

@@ -21,7 +21,7 @@ import { useAppDispatch, useAppSelector } from "types/hooks";
 import { themeColors } from "types/theme";
 import { getNowDateTimeString } from "utilities/utilities";
 
-function makeExportName(projectName: string) {
+function makeExportName(projectName: string): string {
   return `${projectName}_${getNowDateTimeString()}.zip`;
 }
 
@@ -104,7 +104,7 @@ export default function DownloadButton(
     }
   }
 
-  function iconColor() {
+  function iconColor(): `#${string}` {
     return exportState.status === ExportStatus.Failure
       ? themeColors.error
       : props.colorSecondary

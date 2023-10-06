@@ -17,7 +17,7 @@ export default class SpellChecker {
     this.updateLang(lang);
   }
 
-  async updateLang(lang?: string) {
+  async updateLang(lang?: string): Promise<void> {
     if (!lang) {
       this.bcp47 = undefined;
       return;

@@ -1,5 +1,5 @@
 import { ListItem } from "@mui/material";
-import renderer from "react-test-renderer";
+import { ReactTestRenderer, act, create } from "react-test-renderer";
 
 import "tests/reactI18nextMock";
 
@@ -7,7 +7,7 @@ import { SemanticDomainUserCount } from "api";
 import UserStatistics from "components/Statistics/UserStatistics";
 import { newSemanticDomainUserCount } from "types/semanticDomain";
 
-let testRenderer: renderer.ReactTestRenderer;
+let testRenderer: ReactTestRenderer;
 
 const mockProjectId = "mockProjectId";
 const mockSemanticDomainUserCount = newSemanticDomainUserCount();
@@ -27,7 +27,7 @@ jest.mock("backend/localStorage", () => ({
   getProjectId: () => mockGetProjectId(),
 }));
 
-function setMockFunctions() {
+function setMockFunctions(): void {
   mockGetProjectId.mockReturnValue(mockProjectId);
   mockGetDomainSenseUserStatistics.mockResolvedValue(
     mockSemanticDomainUserCountArray
@@ -37,8 +37,8 @@ function setMockFunctions() {
 beforeEach(async () => {
   jest.clearAllMocks();
   setMockFunctions();
-  await renderer.act(async () => {
-    testRenderer = renderer.create(<UserStatistics lang={""} />);
+  await act(async () => {
+    testRenderer = create(<UserStatistics lang={""} />);
   });
 });
 
