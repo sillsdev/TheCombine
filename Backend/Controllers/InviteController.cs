@@ -147,12 +147,12 @@ namespace BackendFramework.Controllers
         [Required]
         public bool IsTokenValid { get; set; }
         [Required]
-        public bool isUserValid { get; set; }
+        public bool IsUserValid { get; set; }
 
         public EmailInviteStatus(bool isTokenValid, bool isUserRegistered)
         {
             IsTokenValid = isTokenValid;
-            isUserValid = isUserRegistered;
+            IsUserValid = isUserRegistered;
         }
     }
 }

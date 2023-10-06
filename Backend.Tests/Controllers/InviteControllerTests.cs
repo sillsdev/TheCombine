@@ -102,7 +102,7 @@ namespace Backend.Tests.Controllers
 
             var status = (EmailInviteStatus)value!;
             Assert.That(status.IsTokenValid, Is.False);
-            Assert.That(status.isUserValid, Is.False);
+            Assert.That(status.IsUserValid, Is.False);
         }
 
         [Test]
@@ -115,7 +115,7 @@ namespace Backend.Tests.Controllers
 
             var status = (EmailInviteStatus)value!;
             Assert.That(status.IsTokenValid, Is.False);
-            Assert.That(status.isUserValid, Is.False);
+            Assert.That(status.IsUserValid, Is.False);
         }
 
         [Test]
@@ -128,7 +128,7 @@ namespace Backend.Tests.Controllers
 
             var status = (EmailInviteStatus)value!;
             Assert.That(status.IsTokenValid, Is.True);
-            Assert.That(status.isUserValid, Is.False);
+            Assert.That(status.IsUserValid, Is.False);
         }
 
         [Test]
@@ -144,7 +144,7 @@ namespace Backend.Tests.Controllers
 
             var status = (EmailInviteStatus)value!;
             Assert.That(status.IsTokenValid, Is.True);
-            Assert.That(status.isUserValid, Is.False);
+            Assert.That(status.IsUserValid, Is.False);
         }
 
         [Test]
@@ -159,7 +159,7 @@ namespace Backend.Tests.Controllers
 
             var status = (EmailInviteStatus)value!;
             Assert.That(status.IsTokenValid, Is.False);
-            Assert.That(status.isUserValid, Is.True);
+            Assert.That(status.IsUserValid, Is.True);
         }
     }
 }
