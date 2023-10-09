@@ -1,5 +1,4 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { ToolkitStore } from "@reduxjs/toolkit/dist/configureStore";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
@@ -19,9 +18,8 @@ const immutableCheckConfig =
     ? { warnAfter: 1000 }
     : false;
 
-export const setupStore = (
-  preloadedState?: PreloadedState<RootState>
-): ToolkitStore => {
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
   return configureStore({
     reducer: persistedReducer,
     // for each of the default middleware items set to:
