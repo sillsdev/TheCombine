@@ -35,12 +35,12 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> EmailInviteToProject([FromBody, BindRequired] EmailInviteData data)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
+            var projectId = data.ProjectId;
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
             {
                 return Forbid();
             }
-
-            var projectId = data.ProjectId;
             if (!await _permissionService.ContainsProjectRole(HttpContext, data.Role, projectId))
             {
                 return Forbid();
