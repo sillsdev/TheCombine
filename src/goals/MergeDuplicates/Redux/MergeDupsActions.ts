@@ -1,14 +1,6 @@
 import { Action, PayloadAction } from "@reduxjs/toolkit";
 
-import {
-  Flag,
-  GramCatGroup,
-  MergeSourceWord,
-  MergeWords,
 import { MergeSourceWord, MergeWords, Status, Word } from "api/models";
-  Status,
-  Word,
-} from "api/models";
 import * as backend from "backend";
 import {
   addCompletedMergeToGoal,
@@ -275,56 +267,4 @@ export async function fetchMergeDupsData(
   maxLists: number
 ): Promise<Word[][]> {
   return await backend.getDuplicates(maxInList, maxLists);
-}
-
-/** Modifies the mutable input sense list. */
-export function combineIntoFirstSense(senses: MergeTreeSense[]): void {
-  // Set the first sense to be merged as Active/Protected.
-  // This was the top sense when the sidebar was opened.
-  const mainSense = senses[0];
-  mainSense.accessibility = mainSense.protected
-    ? Status.Protected
-    : Status.Active;
-
-  // Merge the rest as duplicates.
-  // These were senses dropped into another sense.
-  senses.slice(1).forEach((dupSense) => {
-    dupSense.accessibility = Status.Duplicate;
-    // Put the duplicate's definitions in the main sense.
-    dupSense.definitions.forEach((def) =>
-      mergeDefinitionIntoSense(mainSense, def)
-    );
-    // Use the duplicate's part of speech if not specified in the main sense.
-    if (mainSense.grammaticalInfo.catGroup === GramCatGroup.Unspecified) {
-      mainSense.grammaticalInfo = { ...dupSense.grammaticalInfo };
-    }
-    // Put the duplicate's domains in the main sense.
-    dupSense.semanticDomains.forEach((dom) => {
-      if (!mainSense.semanticDomains.find((d) => d.id === dom.id)) {
-        mainSense.semanticDomains.push({ ...dom });
-      }
-    });
-  });
-}
-
-/** Modifies the mutable input sense. */
-export function mergeDefinitionIntoSense(
-  sense: MergeTreeSense,
-  def: Definition,
-  sep = ";"
-): void {
-  if (!def.text.length) {
-    return;
-  }
-  const defIndex = sense.definitions.findIndex(
-    (d) => d.language === def.language
-  );
-  if (defIndex === -1) {
-    sense.definitions.push({ ...def });
-  } else {
-    const oldText = sense.definitions[defIndex].text;
-    if (!oldText.split(sep).includes(def.text)) {
-      sense.definitions[defIndex].text = `${oldText}${sep}${def.text}`;
-    }
-  }
 }

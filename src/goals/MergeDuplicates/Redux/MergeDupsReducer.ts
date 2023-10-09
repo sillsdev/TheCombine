@@ -100,7 +100,7 @@ const mergeDupStepSlice = createSlice({
       }
     },
     deleteSenseAction: (state, action) => {
-      const srcRef = action.payload.src;
+      const srcRef = action.payload;
       const srcWordId = srcRef.wordId;
       const words = state.tree.words;
 
@@ -229,12 +229,15 @@ const mergeDupStepSlice = createSlice({
       state.tree.words[ref.wordId].sensesGuids = sensesGuids;
     },
     orderSenseAction: (state, action) => {
-      const word = state.tree.words[action.payload.wordId];
+      const word = state.tree.words[action.payload.ref.wordId];
+      // const word: MergeTreeWord = JSON.parse(
+      //   JSON.stringify(state.tree.words[action.payload.wordId])
+      // );
 
       // Convert the Hash<string[]> to an array to expose the order.
       const sensePairs = Object.entries(word.sensesGuids);
 
-      const mergeSenseId = action.payload.mergeSenseId;
+      const mergeSenseId = action.payload.ref.mergeSenseId;
       const oldOrder = sensePairs.findIndex((p) => p[0] === mergeSenseId);
       const newOrder = action.payload.order;
 
@@ -253,9 +256,11 @@ const mergeDupStepSlice = createSlice({
         word.sensesGuids[key] = value;
       }
 
-      state.tree.words[action.payload.wordId] = word;
+      state.tree.words[action.payload.ref.wordId] = word;
     },
-    setSidebarAction: (state, action) => {},
+    setSidebarAction: (state, action) => {
+      state.tree.sidebar = action.payload;
+    },
     setWordDataAction: (state, action) => {
       if (action.payload.length === 0) {
         state = defaultState;
@@ -274,7 +279,9 @@ const mergeDupStepSlice = createSlice({
         state.data = { senses, words };
       }
     },
-    setVernacularAction: (state, action) => {},
+    setVernacularAction: (state, action) => {
+      state.tree.words[action.payload.wordId].vern = action.payload.vern;
+    },
   },
   extraReducers: (builder) =>
     builder.addCase(StoreActionTypes.RESET, () => defaultState),
