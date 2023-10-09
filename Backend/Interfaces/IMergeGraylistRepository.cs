@@ -5,7 +5,7 @@ using BackendFramework.Models;
 
 namespace BackendFramework.Interfaces
 {
-    public interface IMergeBlacklistRepository
+    public interface IMergeGraylistRepository
     {
         Task<List<MergeWordSet>> GetAllSets(string projectId, string? userId = null);
         Task<MergeWordSet?> GetSet(string projectId, string entryId);

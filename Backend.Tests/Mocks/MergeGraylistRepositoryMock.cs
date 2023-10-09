@@ -8,18 +8,18 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    public class MergeBlacklistRepositoryMock : IMergeBlacklistRepository
+    public class MergeGraylistRepositoryMock : IMergeGraylistRepository
     {
-        private readonly List<MergeWordSet> _mergeBlacklist;
+        private readonly List<MergeWordSet> _mergeGraylist;
 
-        public MergeBlacklistRepositoryMock()
+        public MergeGraylistRepositoryMock()
         {
-            _mergeBlacklist = new List<MergeWordSet>();
+            _mergeGraylist = new List<MergeWordSet>();
         }
 
         public Task<List<MergeWordSet>> GetAllSets(string projectId, string? userId = null)
         {
-            var cloneList = _mergeBlacklist.Select(e => e.Clone()).ToList();
+            var cloneList = _mergeGraylist.Select(e => e.Clone()).ToList();
             var enumerable = userId is null ?
                 cloneList.Where(e => e.ProjectId == projectId) :
                 cloneList.Where(e => e.ProjectId == projectId && e.UserId == userId);
@@ -30,8 +30,8 @@ namespace Backend.Tests.Mocks
         {
             try
             {
-                var foundMergeBlacklist = _mergeBlacklist.Single(entry => entry.Id == entryId);
-                return Task.FromResult<MergeWordSet?>(foundMergeBlacklist.Clone());
+                var foundMergeGraylist = _mergeGraylist.Single(entry => entry.Id == entryId);
+                return Task.FromResult<MergeWordSet?>(foundMergeGraylist.Clone());
             }
             catch (InvalidOperationException)
             {
@@ -42,33 +42,33 @@ namespace Backend.Tests.Mocks
         public Task<MergeWordSet> Create(MergeWordSet wordSetEntry)
         {
             wordSetEntry.Id = Guid.NewGuid().ToString();
-            _mergeBlacklist.Add(wordSetEntry.Clone());
+            _mergeGraylist.Add(wordSetEntry.Clone());
             return Task.FromResult(wordSetEntry.Clone());
         }
 
         public Task<bool> DeleteAllSets(string projectId)
         {
-            _mergeBlacklist.Clear();
+            _mergeGraylist.Clear();
             return Task.FromResult(true);
         }
 
         public Task<bool> Delete(string projectId, string entryId)
         {
-            var foundMergeBlacklist = _mergeBlacklist.Single(entry => entry.Id == entryId);
-            return Task.FromResult(_mergeBlacklist.Remove(foundMergeBlacklist));
+            var foundMergeGraylist = _mergeGraylist.Single(entry => entry.Id == entryId);
+            return Task.FromResult(_mergeGraylist.Remove(foundMergeGraylist));
         }
 
         public Task<ResultOfUpdate> Update(MergeWordSet wordSetEntry)
         {
-            var foundEntry = _mergeBlacklist.Single(
+            var foundEntry = _mergeGraylist.Single(
                 e => e.ProjectId == wordSetEntry.ProjectId && e.Id == wordSetEntry.Id);
-            var success = _mergeBlacklist.Remove(foundEntry);
+            var success = _mergeGraylist.Remove(foundEntry);
             if (!success)
             {
                 return Task.FromResult(ResultOfUpdate.NotFound);
             }
 
-            _mergeBlacklist.Add(wordSetEntry.Clone());
+            _mergeGraylist.Add(wordSetEntry.Clone());
             return Task.FromResult(ResultOfUpdate.Updated);
         }
     }

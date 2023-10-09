@@ -18,7 +18,10 @@ const goalSlice = createSlice({
       }
     },
     addCompletedMergeToGoalAction: (state, action) => {
-      if (state.currentGoal.goalType === GoalType.MergeDups) {
+      if (
+        state.currentGoal.goalType === GoalType.MergeDups ||
+        state.currentGoal.goalType === GoalType.ReviewDeferredDups
+      ) {
         const changes = { ...state.currentGoal.changes } as MergesCompleted;
         if (!changes.merges) {
           changes.merges = [];
@@ -60,7 +63,10 @@ const goalSlice = createSlice({
       state.currentGoal.status = action.payload;
     },
     updateStepFromDataAction: (state) => {
-      if (state.currentGoal.goalType === GoalType.MergeDups) {
+      if (
+        state.currentGoal.goalType === GoalType.MergeDups ||
+        state.currentGoal.goalType === GoalType.ReviewDeferredDups
+      ) {
         const currentGoalData = state.currentGoal.data as MergeDupsData;
         state.currentGoal.steps[state.currentGoal.currentStep] = {
           words: currentGoalData.plannedWords[state.currentGoal.currentStep],

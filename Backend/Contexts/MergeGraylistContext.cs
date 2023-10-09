@@ -7,17 +7,17 @@ using MongoDB.Driver;
 namespace BackendFramework.Contexts
 {
     [ExcludeFromCodeCoverage]
-    public class MergeBlacklistContext : IMergeBlacklistContext
+    public class MergeGraylistContext : IMergeGraylistContext
     {
         private readonly IMongoDatabase _db;
 
-        public MergeBlacklistContext(IOptions<Startup.Settings> options)
+        public MergeGraylistContext(IOptions<Startup.Settings> options)
         {
             var client = new MongoClient(options.Value.ConnectionString);
             _db = client.GetDatabase(options.Value.CombineDatabase);
         }
 
-        public IMongoCollection<MergeWordSet> MergeBlacklist => _db.GetCollection<MergeWordSet>(
-            "MergeBlacklistCollection");
+        public IMongoCollection<MergeWordSet> MergeGraylist => _db.GetCollection<MergeWordSet>(
+            "MergeGraylistCollection");
     }
 }

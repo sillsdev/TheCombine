@@ -1,5 +1,7 @@
 import { Goal, GoalsState, GoalType } from "types/goals";
 
+// GoalType.ReviewDeferredDups is also implemented,
+// but is conditionally available
 const implementedTypes: GoalType[] = [
   GoalType.CreateCharInv,
   GoalType.MergeDups,

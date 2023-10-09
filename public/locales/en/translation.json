@@ -261,14 +261,17 @@
   "handleFlags": {
     "title": "Handle Flags"
   },
+  "reviewDeferredDups": {
+    "title": "Review Deferred Duplicates"
+  },
   "spellCheckGloss": {
-    "title": "Spell Check Glossary"
+    "title": "Spell Check Gloss"
   },
   "validateChars": {
     "title": "Validate Characters"
   },
   "validateStrWords": {
-    "title": "Validate Structural Characters"
+    "title": "Validate Structural Words"
   },
   "reviewEntries": {
     "title": "Review Entries",
@@ -373,7 +376,7 @@
       "dups": "Drag duplicate words here",
       "sense": "Drag new sense here",
       "saveAndContinue": "Save changes and load a new set of words",
-      "skip": "Discard changes and load a new set of words",
+      "defer": "Discard changes and load a new set of words",
       "list": "Drag this word to the right to start merging it with other words",
       "noDups": "Nothing to merge.",
       "delete": "Delete sense",
@@ -411,6 +414,7 @@
     "cancel": "Cancel",
     "clearText": "Clear text",
     "confirm": "Confirm",
+    "defer": "Defer",
     "delete": "Delete",
     "deletePermanently": "Delete permanently?",
     "done": "Done",
@@ -424,7 +428,6 @@
     "restore": "Restore",
     "save": "Save",
     "saveAndContinue": "Save & Continue",
-    "skip": "Skip",
     "undecided": "Undecided",
     "upload": "Upload"
   },
