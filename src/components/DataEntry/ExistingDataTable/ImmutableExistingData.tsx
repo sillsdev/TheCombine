@@ -5,8 +5,8 @@ import { Gloss } from "api/models";
 import { TypographyWithFont } from "utilities/fontComponents";
 
 /** Style with a top dotted line if the index isn't 0. */
-function TopStyle(index: number): CSSProperties {
-  return index ? { borderTopStyle: "dotted", borderTopWidth: 1 } : {};
+function TopStyle(index: number, style?: "solid" | "dotted"): CSSProperties {
+  return index ? { borderTopStyle: style ?? "solid", borderTopWidth: 1 } : {};
 }
 
 interface ImmutableExistingDataProps {
@@ -40,7 +40,7 @@ export default function ImmutableExistingData(
             analysis
             key={i}
             lang={g.language}
-            style={TopStyle(i)}
+            style={TopStyle(i, "dotted")}
             variant="body1"
           >
             {g.def}
