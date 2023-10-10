@@ -146,6 +146,7 @@ export function updateFrontierWord(
       getSenseFromEditSense(s, editWord.senses)
     );
     editWord.note = newNote(editSource.noteText, editWord.note?.language);
+    editWord.flag = { ...editSource.flag };
 
     // Update the word in the backend, and retrieve the id.
     editSource.id = (await backend.updateWord(editWord)).id;
