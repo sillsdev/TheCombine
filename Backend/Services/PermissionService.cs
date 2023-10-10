@@ -86,10 +86,6 @@ namespace BackendFramework.Services
             return user.IsAdmin;
         }
 
-        /// <remarks>
-        /// This method magically looks up the Project ID by inspecting the route.
-        /// It is not suitable for any routes that do not contain ...projects/PROJECT_ID... in the route.
-        /// </remarks>
         public async Task<bool> HasProjectPermission(HttpContext request, Permission permission, string projectId)
         {
             var user = await _userRepo.GetUser(GetUserId(request));
@@ -98,7 +94,7 @@ namespace BackendFramework.Services
                 return false;
             }
 
-            // Database administrators implicitly possess all permissions.
+            // Site administrators implicitly possess all permissions.
             if (user.IsAdmin)
             {
                 return true;
