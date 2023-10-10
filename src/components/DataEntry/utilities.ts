@@ -40,7 +40,7 @@ export function filterWordsByDomain(
   const domainWords: DomainWord[] = [];
   const wordsInDomain = filterWordsWithSenses(words, domainId);
   wordsInDomain.sort((a, b) => a.vernacular.localeCompare(b.vernacular));
-  for (const w of words) {
+  for (const w of wordsInDomain) {
     domainWords.push(
       ...w.senses
         .filter((s) => isActiveInDomain(s, domainId))
