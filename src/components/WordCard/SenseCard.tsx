@@ -1,17 +1,18 @@
-import { Card, CardContent, Chip, Grid } from "@mui/material";
+import { Card, CardContent, Grid } from "@mui/material";
 import { ReactElement } from "react";
 
 import { GramCatGroup, Sense } from "api/models";
 import { PartOfSpeechButton } from "components/Buttons";
-import SenseCardText from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/SenseCardText";
+import DomainChip from "components/WordCard/DomainChip";
+import SenseCardText from "components/WordCard/SenseCardText";
 
 interface SenseCardProps {
-  sense: Sense;
   languages?: string[];
+  provenance?: boolean;
+  sense: Sense;
 }
 
 export default function SenseCard(props: SenseCardProps): ReactElement {
-  const doms = props.sense.semanticDomains.map((d) => `${d.id}: ${d.name}`);
   const gramInfo = props.sense.grammaticalInfo;
 
   return (
@@ -31,9 +32,9 @@ export default function SenseCard(props: SenseCardProps): ReactElement {
         <SenseCardText sense={props.sense} languages={props.languages} />
         {/* List semantic domains. */}
         <Grid container spacing={2}>
-          {doms.map((dom) => (
-            <Grid item key={dom}>
-              <Chip label={dom} />
+          {props.sense.semanticDomains.map((d) => (
+            <Grid item key={d.guid}>
+              <DomainChip domain={d} provenance={props.provenance} />
             </Grid>
           ))}
         </Grid>

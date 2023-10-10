@@ -1,11 +1,11 @@
 import { History } from "@mui/icons-material";
-import { Grid, ListItem, Modal, Paper } from "@mui/material";
+import { Dialog, Grid } from "@mui/material";
 import { Fragment, ReactElement, useState } from "react";
 
 import { Pedigree } from "api/models";
 import { getWordHistory } from "backend";
 import { IconButtonWithTooltip } from "components/Buttons";
-import WordCard from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/WordCard";
+import WordCard from "components/WordCard";
 
 interface HistoryCellProps {
   wordId: string;
@@ -23,15 +23,9 @@ export default function HistoryCell(props: HistoryCellProps): ReactElement {
         icon={<History />}
         onClick={getHistory}
       />
-      <Modal onClose={() => setHistory(undefined)} open={!!history}>
-        {history ? (
-          <Paper>
-            <WordTree tree={history} />
-          </Paper>
-        ) : (
-          <Fragment />
-        )}
-      </Modal>
+      <Dialog fullScreen onClose={() => setHistory(undefined)} open={!!history}>
+        {history ? <WordTree tree={history} /> : <Fragment />}
+      </Dialog>
     </>
   );
 }
@@ -40,7 +34,7 @@ function WordTree(props: { tree: Pedigree }): ReactElement {
   return (
     <>
       {props.tree.parents ? (
-        <Grid container>
+        <Grid alignItems="flex-end" container justifyContent="space-around">
           {props.tree.parents.map((p) => (
             <Grid item key={p.word.id}>
               <WordTree tree={p} />
@@ -48,9 +42,9 @@ function WordTree(props: { tree: Pedigree }): ReactElement {
           ))}
         </Grid>
       ) : null}
-      <ListItem>
-        <WordCard word={props.tree.word} />
-      </ListItem>
+      <Grid container justifyContent="space-around">
+        <WordCard provenance word={props.tree.word} />
+      </Grid>
     </>
   );
 }

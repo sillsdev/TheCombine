@@ -483,5 +483,12 @@
       "Other": "Other",
       "Unspecified": "Unspecified"
     }
+  },
+  "wordHistory": {
+    "wordId": "Word id: {{ val }}",
+    "wordCreated": "Word created: {{ val }}",
+    "wordModified": "Word modified: {{ val }}",
+    "domainAdded": "Domain added: {{ val }}",
+    "user": "By user: {{ val }}"
   }
 }
