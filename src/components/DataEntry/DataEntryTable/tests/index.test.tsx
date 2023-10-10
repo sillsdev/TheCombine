@@ -308,12 +308,23 @@ describe("DataEntryTable", () => {
       ]);
       mockGetFrontierWords.mockResolvedValue([word]);
       await renderTable();
+      const senseIndex = 0;
+
       testHandle = testRenderer.root.findByType(NewEntry);
+      const glossText = firstGlossText(word.senses[senseIndex]);
       await renderer.act(async () => {
-        await testHandle.props.setNewGloss(firstGlossText(word.senses[0]));
+        await testHandle.props.setNewGloss(glossText);
         await testHandle.props.updateWordWithNewGloss(word.id);
       });
       expect(mockUpdateWord).toBeCalledTimes(1);
+
+      // Confirm the semantic domain was added.
+      const wordUpdated: Word = mockUpdateWord.mock.calls[0][0];
+      const semDoms = wordUpdated.senses[senseIndex].semanticDomains;
+      const semDomAdded = semDoms.find((d) => d.id === mockSemDomId);
+      expect(semDomAdded?.created).toBeTruthy();
+      expect(semDomAdded?.id).toEqual(mockSemDomId);
+      expect(semDomAdded?.userId).toEqual(mockUserId);
     });
 
     it("updates word in backend if gloss doesn't exist", async () => {
@@ -365,7 +376,7 @@ describe("DataEntryTable", () => {
       );
     });
 
-    it("adds with state's vern, gloss, and note", async () => {
+    it("adds with state's vern, gloss, note and with correct semantic domain", async () => {
       testHandle = testRenderer.root.findByType(NewEntry);
 
       // Set the component's state
@@ -393,6 +404,12 @@ describe("DataEntryTable", () => {
       expect(wordAdded.vernacular).toEqual(vern);
       expect(wordAdded.senses[0].glosses[0].def).toEqual(glossDef);
       expect(wordAdded.note.text).toEqual(noteText);
+
+      // Verify that the semantic domain is correctly filled
+      const semDomAdded = wordAdded.senses[0].semanticDomains[0];
+      expect(semDomAdded.created).toBeTruthy();
+      expect(semDomAdded.id).toEqual(mockSemDomId);
+      expect(semDomAdded.userId).toEqual(mockUserId);
     });
 
     it("adds added word to recent entries", async () => {
