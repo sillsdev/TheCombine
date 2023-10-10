@@ -49,6 +49,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
@@ -109,7 +110,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="parent.svg"
-          width={51}
+          width={45}
         />
       </li>
     </ul>
@@ -221,11 +222,35 @@ Array [
       style={
         Object {
           "gap": 0,
-          "gridTemplateColumns": "repeat(11, 1fr)",
-          "width": 550,
+          "gridTemplateColumns": "repeat(23, 1fr)",
+          "width": 1012,
         }
       }
     >
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+          }
+        }
+      />
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+          }
+        }
+      />
       <li
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
@@ -256,7 +281,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="leftEndcap.svg"
-          width={51}
+          width={45}
         />
       </li>
       <li
@@ -277,7 +302,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={51}
+          width={45}
         />
       </li>
       <li
@@ -298,7 +323,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={51}
+          width={45}
         />
       </li>
       <li
@@ -319,7 +344,91 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={51}
+          width={45}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={45}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={45}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={45}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={45}
         />
       </li>
       <li
@@ -340,7 +449,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="intersect.svg"
-          width={51}
+          width={45}
         />
       </li>
       <li
@@ -361,7 +470,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={51}
+          width={45}
         />
       </li>
       <li
@@ -382,7 +491,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={51}
+          width={45}
         />
       </li>
       <li
@@ -403,7 +512,91 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={51}
+          width={45}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={45}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={45}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={45}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={45}
         />
       </li>
       <li
@@ -424,7 +617,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="rightEndcap.svg"
-          width={51}
+          width={45}
         />
       </li>
       <li
@@ -444,7 +637,31 @@ Array [
         style={
           Object {
             "breakInside": undefined,
-            "gridColumnEnd": "span 3",
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+          }
+        }
+      />
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+          }
+        }
+      />
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 7",
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
@@ -474,6 +691,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
@@ -533,7 +751,7 @@ Array [
         style={
           Object {
             "breakInside": undefined,
-            "gridColumnEnd": "span 3",
+            "gridColumnEnd": "span 7",
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
@@ -563,6 +781,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
@@ -622,7 +841,7 @@ Array [
         style={
           Object {
             "breakInside": undefined,
-            "gridColumnEnd": "span 3",
+            "gridColumnEnd": "span 7",
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
@@ -652,6 +871,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
@@ -748,6 +968,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
@@ -860,6 +1081,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
@@ -995,11 +1217,35 @@ Array [
       style={
         Object {
           "gap": 0,
-          "gridTemplateColumns": "repeat(3, 1fr)",
-          "width": 150,
+          "gridTemplateColumns": "repeat(7, 1fr)",
+          "width": 350,
         }
       }
     >
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+          }
+        }
+      />
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+          }
+        }
+      />
       <li
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
@@ -1050,7 +1296,31 @@ Array [
         style={
           Object {
             "breakInside": undefined,
-            "gridColumnEnd": "span 3",
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+          }
+        }
+      />
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+          }
+        }
+      />
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 7",
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
@@ -1080,6 +1350,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
@@ -1176,6 +1447,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
@@ -1348,11 +1620,35 @@ Array [
       style={
         Object {
           "gap": 0,
-          "gridTemplateColumns": "repeat(3, 1fr)",
-          "width": 150,
+          "gridTemplateColumns": "repeat(7, 1fr)",
+          "width": 350,
         }
       }
     >
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+          }
+        }
+      />
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+          }
+        }
+      />
       <li
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
@@ -1403,7 +1699,31 @@ Array [
         style={
           Object {
             "breakInside": undefined,
-            "gridColumnEnd": "span 3",
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+          }
+        }
+      />
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+          }
+        }
+      />
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 7",
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
@@ -1433,6 +1753,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
@@ -1529,6 +1850,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
@@ -1589,7 +1911,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="parent.svg"
-          width={51}
+          width={34}
         />
       </li>
     </ul>
@@ -1714,6 +2036,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
@@ -1776,11 +2099,35 @@ Array [
       style={
         Object {
           "gap": 0,
-          "gridTemplateColumns": "repeat(15, 1fr)",
-          "width": 750,
+          "gridTemplateColumns": "repeat(31, 1fr)",
+          "width": 1023,
         }
       }
     >
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+          }
+        }
+      />
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+          }
+        }
+      />
       <li
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
@@ -1811,7 +2158,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="leftEndcap.svg"
-          width={51}
+          width={34}
         />
       </li>
       <li
@@ -1832,7 +2179,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={51}
+          width={34}
         />
       </li>
       <li
@@ -1853,7 +2200,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={51}
+          width={34}
         />
       </li>
       <li
@@ -1874,7 +2221,91 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={51}
+          width={34}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={34}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={34}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={34}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={34}
         />
       </li>
       <li
@@ -1895,7 +2326,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="teeUpRight.svg"
-          width={51}
+          width={34}
         />
       </li>
       <li
@@ -1916,7 +2347,49 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={51}
+          width={34}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={34}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={34}
         />
       </li>
       <li
@@ -1937,7 +2410,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="teeDown.svg"
-          width={51}
+          width={34}
         />
       </li>
       <li
@@ -1958,7 +2431,49 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={51}
+          width={34}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={34}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={34}
         />
       </li>
       <li
@@ -1979,7 +2494,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="teeUpLeft.svg"
-          width={51}
+          width={34}
         />
       </li>
       <li
@@ -2000,7 +2515,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={51}
+          width={34}
         />
       </li>
       <li
@@ -2021,7 +2536,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={51}
+          width={34}
         />
       </li>
       <li
@@ -2042,7 +2557,91 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={51}
+          width={34}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={34}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={34}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={34}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={34}
         />
       </li>
       <li
@@ -2063,7 +2662,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="rightEndcap.svg"
-          width={51}
+          width={34}
         />
       </li>
       <li
@@ -2083,7 +2682,31 @@ Array [
         style={
           Object {
             "breakInside": undefined,
-            "gridColumnEnd": "span 3",
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+          }
+        }
+      />
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+          }
+        }
+      />
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 7",
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
@@ -2113,6 +2736,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
@@ -2172,7 +2796,7 @@ Array [
         style={
           Object {
             "breakInside": undefined,
-            "gridColumnEnd": "span 3",
+            "gridColumnEnd": "span 7",
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
@@ -2202,6 +2826,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
@@ -2261,7 +2886,7 @@ Array [
         style={
           Object {
             "breakInside": undefined,
-            "gridColumnEnd": "span 3",
+            "gridColumnEnd": "span 7",
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
@@ -2291,6 +2916,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
@@ -2350,7 +2976,7 @@ Array [
         style={
           Object {
             "breakInside": undefined,
-            "gridColumnEnd": "span 3",
+            "gridColumnEnd": "span 7",
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
@@ -2380,6 +3006,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
@@ -2476,6 +3103,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
@@ -2695,6 +3323,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
@@ -2755,7 +3384,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="parent.svg"
-          width={51}
+          width={45}
         />
       </li>
     </ul>
@@ -2807,6 +3436,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
@@ -2955,6 +3585,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
@@ -3017,11 +3648,35 @@ Array [
       style={
         Object {
           "gap": 0,
-          "gridTemplateColumns": "repeat(11, 1fr)",
-          "width": 550,
+          "gridTemplateColumns": "repeat(23, 1fr)",
+          "width": 1012,
         }
       }
     >
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+          }
+        }
+      />
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+          }
+        }
+      />
       <li
         className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
         style={
@@ -3052,7 +3707,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="leftEndcap.svg"
-          width={51}
+          width={45}
         />
       </li>
       <li
@@ -3073,7 +3728,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={51}
+          width={45}
         />
       </li>
       <li
@@ -3094,7 +3749,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={51}
+          width={45}
         />
       </li>
       <li
@@ -3115,7 +3770,91 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={51}
+          width={45}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={45}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={45}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={45}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={45}
         />
       </li>
       <li
@@ -3136,7 +3875,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="intersect.svg"
-          width={51}
+          width={45}
         />
       </li>
       <li
@@ -3157,7 +3896,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={51}
+          width={45}
         />
       </li>
       <li
@@ -3178,7 +3917,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={51}
+          width={45}
         />
       </li>
       <li
@@ -3199,7 +3938,91 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="span.svg"
-          width={51}
+          width={45}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={45}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={45}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={45}
+        />
+      </li>
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+            "transform": "scaleY(-1)",
+          }
+        }
+      >
+        <img
+          alt="span.svg"
+          className="MuiImageListItem-img"
+          height={60}
+          src="span.svg"
+          width={45}
         />
       </li>
       <li
@@ -3220,7 +4043,7 @@ Array [
           className="MuiImageListItem-img"
           height={60}
           src="rightEndcap.svg"
-          width={51}
+          width={45}
         />
       </li>
       <li
@@ -3240,7 +4063,31 @@ Array [
         style={
           Object {
             "breakInside": undefined,
-            "gridColumnEnd": "span 3",
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+          }
+        }
+      />
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 1",
+            "gridRowEnd": "span 1",
+            "height": "auto",
+            "marginBottom": undefined,
+          }
+        }
+      />
+      <li
+        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        style={
+          Object {
+            "breakInside": undefined,
+            "gridColumnEnd": "span 7",
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
@@ -3270,6 +4117,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
@@ -3329,7 +4177,7 @@ Array [
         style={
           Object {
             "breakInside": undefined,
-            "gridColumnEnd": "span 3",
+            "gridColumnEnd": "span 7",
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
@@ -3359,6 +4207,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
@@ -3418,7 +4267,7 @@ Array [
         style={
           Object {
             "breakInside": undefined,
-            "gridColumnEnd": "span 3",
+            "gridColumnEnd": "span 7",
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
@@ -3448,6 +4297,7 @@ Array [
               "height": "95%",
               "left": 0,
               "margin": "2.5%",
+              "padding": "5px",
               "width": "95%",
             }
           }
