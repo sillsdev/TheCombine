@@ -33,6 +33,8 @@
   "files.insertFinalNewline": true,
   "cSpell.ignorePaths": [
     "*.dic.js",
+    "docs/user_guide/docs/",
+    "!docs/user_guide/docs/en",
     "node_modules",
     "package-lock.json",
     "public/locales/",
