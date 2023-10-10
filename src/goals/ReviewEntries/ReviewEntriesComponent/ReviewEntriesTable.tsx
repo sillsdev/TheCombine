@@ -39,7 +39,7 @@ function getPageState(wordCount: number): PageState {
 }
 
 // Constants
-const ROWS_PER_PAGE = [10, 50, 250];
+const ROWS_PER_PAGE = [10, 50, 200];
 const tableRef: React.RefObject<any> = createRef();
 
 export default function ReviewEntriesTable(

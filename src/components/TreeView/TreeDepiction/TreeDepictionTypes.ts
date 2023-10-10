@@ -1,8 +1,8 @@
 import { SemanticDomain, SemanticDomainTreeNode } from "api/models";
 
 const MAX_COL_WIDTH = 50; // Max gap.
-const MIN_COL_WIDTH = 30; // Multiply this by RATIO_TILE_TO_GAP for min tile width.
-export const RATIO_TILE_TO_GAP = 3; // Must be odd.
+const MIN_COL_WIDTH = 12; // Multiply this by RATIO_TILE_TO_GAP for min tile width.
+export const RATIO_TILE_TO_GAP = 7; // Must be odd.
 
 export function getNumCols(numChildren: number) {
   return numChildren * (RATIO_TILE_TO_GAP + 1) - 1;

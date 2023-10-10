@@ -24,6 +24,7 @@ exports[`DomainTileButton renders tile and matches the latest snapshot 1`] = `
       "height": "95%",
       "left": 0,
       "margin": "2.5%",
+      "padding": "5px",
       "width": "95%",
     }
   }

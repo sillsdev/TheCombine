@@ -12,7 +12,7 @@ import {
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { newSemanticDomain } from "types/semanticDomain";
-import { newGloss, newSense, newWord } from "types/word";
+import { newFlag, newGloss, newNote, newSense, newWord } from "types/word";
 import { Bcp47Code } from "types/writingSystem";
 
 const mockGetWord = jest.fn();
@@ -100,7 +100,7 @@ describe("ReviewEntriesActions", () => {
       expect(mockUpdateWord.mock.calls[0][0]).toEqual(newFrontierWord);
     }
 
-    describe("Adds data", () => {
+    describe("Changes data", () => {
       it("Changes the vernacular.", async () => {
         const newRevWord = mockReviewEntriesWord("foo2");
         const newFrontierWord = mockFrontierWord("foo2");
@@ -109,6 +109,44 @@ describe("ReviewEntriesActions", () => {
         checkResultantData(newFrontierWord);
       });
 
+      it("Changes the note.", async () => {
+        const oldNoteText = "old-note";
+        const oldRevWord = mockReviewEntriesWord();
+        oldRevWord.noteText = oldNoteText;
+        const oldFrontierWord = mockFrontierWord();
+        oldFrontierWord.note = newNote(oldNoteText, Bcp47Code.Pt);
+
+        const newNoteText = "new-note";
+        const newRevWord = mockReviewEntriesWord();
+        newRevWord.noteText = newNoteText;
+        const newFrontierWord = mockFrontierWord();
+        newFrontierWord.note = newNote(newNoteText, Bcp47Code.Pt);
+
+        mockGetWordResolve(oldFrontierWord);
+        await makeDispatch(newRevWord, oldRevWord);
+        checkResultantData(newFrontierWord);
+      });
+
+      it("Changes the flag.", async () => {
+        const oldFlagText = "old-flag";
+        const oldRevWord = mockReviewEntriesWord();
+        oldRevWord.flag = newFlag(oldFlagText);
+        const oldFrontierWord = mockFrontierWord();
+        oldFrontierWord.flag = newFlag(oldFlagText);
+
+        const newFlagText = "new-flag";
+        const newRevWord = mockReviewEntriesWord();
+        newRevWord.flag = newFlag(newFlagText);
+        const newFrontierWord = mockFrontierWord();
+        newFrontierWord.flag = newFlag(newFlagText);
+
+        mockGetWordResolve(oldFrontierWord);
+        await makeDispatch(newRevWord, oldRevWord);
+        checkResultantData(newFrontierWord);
+      });
+    });
+
+    describe("Adds data", () => {
       it("Adds a gloss to an extant sense.", async () => {
         const newRevWord = mockReviewEntriesWord();
         newRevWord.senses[0].glosses.push(gloss1);
@@ -141,6 +179,17 @@ describe("ReviewEntriesActions", () => {
         await makeDispatch(newRevWord, mockReviewEntriesWord());
         checkResultantData(newFrontierWord);
       });
+
+      it("Adds a flag.", async () => {
+        const newFlagText = "new-flag";
+        const newRevWord = mockReviewEntriesWord();
+        newRevWord.flag = newFlag(newFlagText);
+        const newFrontierWord = mockFrontierWord();
+        newFrontierWord.flag = newFlag(newFlagText);
+
+        await makeDispatch(newRevWord, mockReviewEntriesWord());
+        checkResultantData(newFrontierWord);
+      });
     });
 
     describe("Removes data", () => {
@@ -153,6 +202,7 @@ describe("ReviewEntriesActions", () => {
         });
         const newRevWord = mockReviewEntriesWord();
         newRevWord.senses.push(oldSense);
+
         const oldFrontierWord = mockFrontierWord();
         const oldFrontierSense = sense1();
         oldFrontierWord.senses.push({
@@ -176,6 +226,7 @@ describe("ReviewEntriesActions", () => {
         });
         const newRevWord = mockReviewEntriesWord();
         newRevWord.senses.push(oldSense);
+
         const oldFrontierWord = mockFrontierWord();
         const oldFrontierSense = sense1();
         oldFrontierWord.senses.push({
@@ -195,6 +246,18 @@ describe("ReviewEntriesActions", () => {
         oldRevWord.senses.push(sense1_local());
         const oldFrontierWord = mockFrontierWord();
         oldFrontierWord.senses.push(sense1());
+
+        mockGetWordResolve(oldFrontierWord);
+        await makeDispatch(mockReviewEntriesWord(), oldRevWord);
+        checkResultantData(mockFrontierWord());
+      });
+
+      it("Removes the flag.", async () => {
+        const oldFlagText = "old-flag";
+        const oldRevWord = mockReviewEntriesWord();
+        oldRevWord.flag = newFlag(oldFlagText);
+        const oldFrontierWord = mockFrontierWord();
+        oldRevWord.flag = newFlag(oldFlagText);
 
         mockGetWordResolve(oldFrontierWord);
         await makeDispatch(mockReviewEntriesWord(), oldRevWord);
