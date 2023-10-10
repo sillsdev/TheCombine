@@ -15,12 +15,14 @@ import { themeColors } from "types/theme";
 
 jest.mock("backend", () => ({
   hasPermission: (perm: Permission) => mockHasPermission(perm),
+  isSiteAdmin: () => mockIsSiteAdmin(),
 }));
 jest.mock("react-router-dom", () => ({
   useNavigate: jest.fn(),
 }));
 
 const mockHasPermission = jest.fn();
+const mockIsSiteAdmin = jest.fn();
 const mockProjectId = "proj-id";
 const mockProjectRoles: { [key: string]: string } = {};
 mockProjectRoles[mockProjectId] = "non-empty-string";
@@ -53,7 +55,7 @@ describe("ProjectButtons", () => {
   });
 
   it("has second button for admin or project owner", async () => {
-    mockHasPermission.mockReturnValueOnce(true);
+    mockHasPermission.mockResolvedValueOnce(true);
     await renderProjectButtons();
     expect(testRenderer.root.findAllByType(Button)).toHaveLength(2);
   });
@@ -69,7 +71,7 @@ describe("ProjectButtons", () => {
   });
 
   it("has stats tab shaded correctly", async () => {
-    mockHasPermission.mockReturnValue(true);
+    mockHasPermission.mockResolvedValue(true);
     await renderProjectButtons();
     let button = testRenderer.root.findByProps({ id: statButtonId });
     expect(button.props.style.background).toEqual(themeColors.lightShade);

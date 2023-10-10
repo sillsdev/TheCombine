@@ -16,7 +16,7 @@ import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { getUser } from "backend";
+import { isSiteAdmin } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import {
   buttonMinHeight,
@@ -37,14 +37,6 @@ const enum usernameLength {
   xl = 24,
 }
 
-export async function getIsAdmin(): Promise<boolean> {
-  const user = await getUser(LocalStorage.getUserId());
-  if (user) {
-    return user.isAdmin;
-  }
-  return false;
-}
-
 /**
  * Avatar in AppBar with dropdown UserMenu
  */
@@ -62,7 +54,7 @@ export default function UserMenu(props: TabProps): ReactElement {
     setAnchorElement(undefined);
   }
 
-  getIsAdmin().then(setIsAdmin);
+  isSiteAdmin().then(setIsAdmin);
 
   return (
     <>

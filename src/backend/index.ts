@@ -590,6 +590,10 @@ export async function deleteUser(userId: string): Promise<string> {
   return (await userApi.deleteUser({ userId }, defaultOptions())).data;
 }
 
+export async function isSiteAdmin(): Promise<boolean> {
+  return (await userApi.isUserSiteAdmin(defaultOptions())).data;
+}
+
 /* UserEditController.cs */
 
 /** Returns index of added goal, or of updated goal

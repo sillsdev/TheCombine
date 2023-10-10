@@ -14,6 +14,7 @@ import mockWords, {
 import { defaultWritingSystem } from "types/writingSystem";
 
 const mockGetFrontierWords = jest.fn();
+const mockHasPermission = jest.fn();
 const mockMaterialTable = jest.fn();
 const mockUuid = jest.fn();
 
@@ -38,6 +39,7 @@ jest.mock("notistack", () => ({
 jest.mock("uuid", () => ({ v4: () => mockUuid() }));
 jest.mock("backend", () => ({
   getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
+  hasPermission: (...args: any[]) => mockHasPermission(...args),
 }));
 // Mock the node module used by AudioRecorder.
 jest.mock("components/Pronunciations/Recorder");
@@ -75,6 +77,7 @@ function setMockFunctions() {
   mockGetFrontierWords.mockResolvedValue(
     mockReviewEntryWords.map(mockCreateWord)
   );
+  mockHasPermission.mockResolvedValue(false);
   mockMaterialTable.mockReturnValue(React.Fragment);
 }
 
