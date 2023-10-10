@@ -104,6 +104,7 @@ export default function DomainTileButton(
         width: "95%",
         height: "95%",
         margin: "2.5%",
+        padding: "5px",
       }}
       variant={"outlined"}
     >
