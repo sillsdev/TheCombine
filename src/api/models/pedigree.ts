@@ -12,19 +12,24 @@
  * Do not edit the class manually.
  */
 
+import { Word } from "./word";
+
 /**
  *
  * @export
- * @enum {string}
+ * @interface Pedigree
  */
-export enum Permission {
-  Archive = "Archive",
-  CharacterInventory = "CharacterInventory",
-  WordHistory = "WordHistory",
-  Import = "Import",
-  Statistics = "Statistics",
-  DeleteEditSettingsAndUsers = "DeleteEditSettingsAndUsers",
-  Export = "Export",
-  MergeAndReviewEntries = "MergeAndReviewEntries",
-  WordEntry = "WordEntry",
+export interface Pedigree {
+  /**
+   *
+   * @type {Word}
+   * @memberof Pedigree
+   */
+  word: Word;
+  /**
+   *
+   * @type {Array<Pedigree>}
+   * @memberof Pedigree
+   */
+  parents: Array<Pedigree>;
 }

@@ -139,5 +139,23 @@ namespace BackendFramework.Services
             var duplicatedWord = frontier.Find(w => w.Contains(word));
             return duplicatedWord?.Id;
         }
+
+        /// <summary> Builds a <see cref="Pedigree"/> from a <see cref="Word"/>'s history. </summary>
+        public async Task<Pedigree> GeneratePedigree(string projId, Word word)
+        {
+            var tree = new Pedigree(word);
+            foreach (var id in word.History)
+            {
+                if (!tree.HasAncestor(id))
+                {
+                    var parent = await _wordRepo.GetWord(projId, id);
+                    if (parent is not null)
+                    {
+                        tree.Parents.Add(await GeneratePedigree(projId, parent));
+                    }
+                }
+            }
+            return tree;
+        }
     }
 }

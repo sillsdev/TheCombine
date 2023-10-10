@@ -3,6 +3,7 @@ import DeleteCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponent
 import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
 import FlagCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/FlagCell";
 import GlossCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell";
+import HistoryCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/HistoryCell";
 import NoteCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/NoteCell";
 import PartOfSpeechCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/PartOfSpeechCell";
 import PronunciationsCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/PronunciationsCell";
@@ -15,6 +16,7 @@ export {
   DomainCell,
   FlagCell,
   GlossCell,
+  HistoryCell,
   NoteCell,
   PartOfSpeechCell,
   PronunciationsCell,

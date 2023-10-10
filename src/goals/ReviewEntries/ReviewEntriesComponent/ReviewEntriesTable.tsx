@@ -5,6 +5,8 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
+import { Permission } from "api/models";
+import { hasPermission } from "backend";
 import columns, {
   ColumnTitle,
 } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
@@ -45,6 +47,9 @@ const tableRef: React.RefObject<any> = React.createRef();
 export default function ReviewEntriesTable(
   props: ReviewEntriesTableProps
 ): ReactElement {
+  const projId = useSelector(
+    (state: StoreState) => state.currentProjectState.project.id
+  );
   const words = useSelector(
     (state: StoreState) => state.reviewEntriesState.words
   );
@@ -58,6 +63,7 @@ export default function ReviewEntriesTable(
   const { t } = useTranslation();
   const [maxRows, setMaxRows] = useState(words.length);
   const [pageState, setPageState] = useState(getPageState(words.length));
+  const [showHistory, setShowHistory] = useState(false);
 
   const updateMaxRows = () => {
     if (tableRef.current) {
@@ -78,6 +84,10 @@ export default function ReviewEntriesTable(
       return { pageSize: options[i], pageSizeOptions: options };
     });
   }, [maxRows, setPageState]);
+
+  useEffect(() => {
+    hasPermission(Permission.WordHistory).then(setShowHistory);
+  }, [projId]);
 
   const materialTableLocalization = {
     body: {
@@ -132,7 +142,8 @@ export default function ReviewEntriesTable(
       columns={columns.filter(
         (c) =>
           (showDefinitions || c.title !== ColumnTitle.Definitions) &&
-          (showGrammaticalInfo || c.title !== ColumnTitle.PartOfSpeech)
+          (showGrammaticalInfo || c.title !== ColumnTitle.PartOfSpeech) &&
+          (showHistory || c.title !== ColumnTitle.History)
       )}
       data={words}
       onFilterChange={updateMaxRows}

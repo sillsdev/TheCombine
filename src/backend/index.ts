@@ -11,6 +11,7 @@ import {
   EmailInviteStatus,
   MergeUndoIds,
   MergeWords,
+  Pedigree,
   Permission,
   Project,
   Role,
@@ -655,6 +656,11 @@ export async function getCurrentPermissions(): Promise<Permission[]> {
     .data;
 }
 
+export async function hasPermission(perm: Permission): Promise<boolean> {
+  const params = { body: perm, projectId: LocalStorage.getProjectId() };
+  return (await userRoleApi.hasPermission(params, defaultOptions())).data;
+}
+
 export async function addOrUpdateUserRole(
   projectId: string,
   role: Role,
@@ -727,4 +733,9 @@ export async function updateWord(word: Word): Promise<Word> {
     defaultOptions()
   );
   return { ...word, id: resp.data };
+}
+
+export async function getWordHistory(wordId: string): Promise<Pedigree> {
+  const params = { projectId: LocalStorage.getProjectId(), wordId };
+  return (await wordApi.getWordHistory(params, defaultOptions())).data;
 }

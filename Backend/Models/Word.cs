@@ -397,7 +397,7 @@ namespace BackendFramework.Models
         }
     }
 
-    /// <summary> Helper object that contains a file along with its name and path </summary>
+    /// <summary> Helper object that contains a file along with its name and path. </summary>
     public class FileUpload
     {
         [Required]
@@ -413,6 +413,32 @@ namespace BackendFramework.Models
             File = null;
             Name = "";
             FilePath = "";
+        }
+    }
+
+    /// <summary> The family tree of a word's history. </summary>
+    public class Pedigree
+    {
+        [Required]
+        public Word Word { get; set; }
+        [Required]
+        public List<Pedigree> Parents { get; set; }
+
+        public Pedigree() : this(new Word()) { }
+
+        public Pedigree(Word word)
+        {
+            Word = word;
+            Parents = new List<Pedigree>();
+        }
+
+        public bool HasAncestor(string wordId)
+        {
+            if (Word.Id == wordId)
+            {
+                return true;
+            }
+            return Parents.Any(p => p.HasAncestor(wordId));
         }
     }
 }

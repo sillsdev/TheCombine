@@ -9,6 +9,7 @@ import {
   DomainCell,
   FlagCell,
   GlossCell,
+  HistoryCell,
   NoteCell,
   PartOfSpeechCell,
   PronunciationsCell,
@@ -47,6 +48,7 @@ export class ColumnTitle {
   static Pronunciations = t("reviewEntries.columns.pronunciations");
   static Note = t("reviewEntries.columns.note");
   static Flag = t("reviewEntries.columns.flag");
+  static History = t("reviewEntries.columns.history");
   static Delete = t("reviewEntries.columns.delete");
 }
 
@@ -492,6 +494,19 @@ const columns: Column<any>[] = [
         currentSort = SortStyle.Flag;
       }
       return compareFlags(a.flag, b.flag);
+    },
+  },
+
+  // History column
+  {
+    title: ColumnTitle.History,
+    filtering: false,
+    sorting: false,
+    editable: "never",
+    // Fix column to minimum width.
+    width: 0,
+    render: (rowData: ReviewEntriesWord) => {
+      return <HistoryCell wordId={rowData.id} />;
     },
   },
 

@@ -250,5 +250,27 @@ namespace BackendFramework.Controllers
             await _wordService.Update(projectId, wordId, word);
             return Ok(word.Id);
         }
+
+        /// <summary> Returns <see cref="Pedigree"/> for history of <see cref="Word"/> with specified id. </summary>
+        [HttpGet("history/{wordId}", Name = "GetWordHistory")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Pedigree))]
+        public async Task<IActionResult> GetWordHistory(string projectId, string wordId)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            {
+                return Forbid();
+            }
+            var proj = await _projRepo.GetProject(projectId);
+            if (proj is null)
+            {
+                return NotFound(projectId);
+            }
+            var word = await _wordRepo.GetWord(projectId, wordId);
+            if (word is null)
+            {
+                return NotFound(wordId);
+            }
+            return Ok(await _wordService.GeneratePedigree(projectId, word));
+        }
     }
 }

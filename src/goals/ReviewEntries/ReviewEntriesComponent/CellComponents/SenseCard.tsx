@@ -15,7 +15,7 @@ export default function SenseCard(props: SenseCardProps): ReactElement {
   const gramInfo = props.sense.grammaticalInfo;
 
   return (
-    <Card>
+    <Card style={{ backgroundColor: "white" }}>
       <CardContent style={{ position: "relative", paddingRight: 40 }}>
         {/* Icon for part of speech (if any). */}
         <div style={{ position: "absolute", left: 0, top: 0 }}>

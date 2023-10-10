@@ -42,6 +42,7 @@ models/merge-words.ts
 models/note.ts
 models/password-reset-data.ts
 models/password-reset-request-data.ts
+models/pedigree.ts
 models/permission.ts
 models/project-role.ts
 models/project.ts

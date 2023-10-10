@@ -355,5 +355,49 @@ namespace Backend.Tests.Models
             expectedFlag.Text += $"; {Text2}";
             Assert.That(oldFlag.Equals(expectedFlag), Is.True);
         }
+
+        [Test]
+        public void TestPedigreeHasAncestorDepth0()
+        {
+            var wordId = "depth0";
+            var tree = new Pedigree(new Word { Id = wordId });
+            Assert.That(tree.HasAncestor(wordId), Is.True);
+        }
+
+        [Test]
+        public void TestPedigreeHasAncestorDepth1()
+        {
+            var wordId = "depth1";
+            var tree = new Pedigree();
+            tree.Parents.Add(new Pedigree());
+            tree.Parents.Add(new Pedigree());
+            tree.Parents.Add(new Pedigree(new Word { Id = wordId }));
+            Assert.That(tree.HasAncestor(wordId), Is.True);
+        }
+
+        [Test]
+        public void TestPedigreeHasAncestorDepth2()
+        {
+            var wordId = "depth2";
+            var tree1 = new Pedigree();
+            tree1.Parents.Add(new Pedigree(new Word { Id = wordId }));
+            var tree0 = new Pedigree();
+            tree0.Parents.Add(tree1);
+            tree0.Parents.Add(new Pedigree());
+            Assert.That(tree0.HasAncestor(wordId), Is.True);
+        }
+
+        [Test]
+        public void TestPedigreeHasAncestorFalse()
+        {
+            var tree3 = new Pedigree(new Word { Id = "depth-3" });
+            var tree2 = new Pedigree(new Word { Id = "depth-2" });
+            tree2.Parents.Add(tree3);
+            var tree1 = new Pedigree(new Word { Id = "depth-1" });
+            tree1.Parents.Add(tree2);
+            var tree0 = new Pedigree(new Word { Id = "depth-0" });
+            tree0.Parents.Add(tree1);
+            Assert.That(tree0.HasAncestor("not-in-tree"), Is.False);
+        }
     }
 }

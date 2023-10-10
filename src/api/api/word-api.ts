@@ -37,6 +37,8 @@ import {
   RequiredError,
 } from "../base";
 // @ts-ignore
+import { Pedigree } from "../models";
+// @ts-ignore
 import { Word } from "../models";
 /**
  * WordApi - axios parameter creator
@@ -359,6 +361,54 @@ export const WordApiAxiosParamCreator = function (
       // verify required parameter 'wordId' is not null or undefined
       assertParamExists("getWord", "wordId", wordId);
       const localVarPath = `/v1/projects/{projectId}/words/{wordId}`
+        .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
+        .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)));
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} wordId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getWordHistory: async (
+      projectId: string,
+      wordId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("getWordHistory", "projectId", projectId);
+      // verify required parameter 'wordId' is not null or undefined
+      assertParamExists("getWordHistory", "wordId", wordId);
+      const localVarPath = `/v1/projects/{projectId}/words/history/{wordId}`
         .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
         .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)));
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -746,6 +796,32 @@ export const WordApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
+     * @param {string} wordId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getWordHistory(
+      projectId: string,
+      wordId: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Pedigree>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getWordHistory(
+        projectId,
+        wordId,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -948,6 +1024,22 @@ export const WordApiFactory = function (
     /**
      *
      * @param {string} projectId
+     * @param {string} wordId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getWordHistory(
+      projectId: string,
+      wordId: string,
+      options?: any
+    ): AxiosPromise<Pedigree> {
+      return localVarFp
+        .getWordHistory(projectId, wordId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -1122,6 +1214,27 @@ export interface WordApiGetWordRequest {
    *
    * @type {string}
    * @memberof WordApiGetWord
+   */
+  readonly wordId: string;
+}
+
+/**
+ * Request parameters for getWordHistory operation in WordApi.
+ * @export
+ * @interface WordApiGetWordHistoryRequest
+ */
+export interface WordApiGetWordHistoryRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof WordApiGetWordHistory
+   */
+  readonly projectId: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof WordApiGetWordHistory
    */
   readonly wordId: string;
 }
@@ -1324,6 +1437,26 @@ export class WordApi extends BaseAPI {
   public getWord(requestParameters: WordApiGetWordRequest, options?: any) {
     return WordApiFp(this.configuration)
       .getWord(requestParameters.projectId, requestParameters.wordId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {WordApiGetWordHistoryRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof WordApi
+   */
+  public getWordHistory(
+    requestParameters: WordApiGetWordHistoryRequest,
+    options?: any
+  ) {
+    return WordApiFp(this.configuration)
+      .getWordHistory(
+        requestParameters.projectId,
+        requestParameters.wordId,
+        options
+      )
       .then((request) => request(this.axios, this.basePath));
   }
 

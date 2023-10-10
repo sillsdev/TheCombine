@@ -115,7 +115,7 @@ namespace BackendFramework.Models
                 // Project Owner by default should be given to the user who created the project.
                 // Owner role can be transferred, but there should never be more than one per project.
                 Role.Owner => new List<Permission> {
-                    Permission.Archive, Permission.Import, Permission.Statistics,
+                    Permission.Archive, Permission.Import, Permission.Statistics, Permission.WordHistory,
                     Permission.CharacterInventory, Permission.DeleteEditSettingsAndUsers,
                     Permission.Export, Permission.MergeAndReviewEntries,
                     Permission.WordEntry
@@ -163,6 +163,9 @@ namespace BackendFramework.Models
 
         /// <summary> Can update character inventory. Can also use find-and-replace, which is DANGEROUS! </summary>
         CharacterInventory,
+
+        /// <summary> Can view full word history, including who made changes. </summary>
+        WordHistory,
 
         /// <summary> Can import data into the project. This can only be done once and cannot be undone. </summary>
         Import,
