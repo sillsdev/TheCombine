@@ -32,6 +32,7 @@ const settingsByPermission: Record<Permission, Setting[]> = {
   [Permission.MergeAndReviewEntries]: [],
   [Permission.Statistics]: [Setting.Schedule],
   [Permission.WordEntry]: [],
+  [Permission.WordHistory]: [],
 };
 
 /** Returns a list of settings for which there is a read-only version available to all
