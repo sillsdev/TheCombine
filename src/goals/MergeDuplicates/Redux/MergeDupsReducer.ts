@@ -144,7 +144,7 @@ const mergeDupStepSlice = createSlice({
         // Check if dropping the sense into a new word.
         if (words[destWordId] === undefined) {
           if (Object.keys(words[srcWordId].sensesGuids).length === 1) {
-            return state;
+            return;
           }
           words[destWordId] = newMergeTreeWord();
         }

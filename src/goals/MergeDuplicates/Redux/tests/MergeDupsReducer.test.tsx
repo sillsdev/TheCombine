@@ -6,9 +6,8 @@ import {
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import * as Actions from "goals/MergeDuplicates/Redux/MergeDupsActions";
-import {
+import mergeDupStepReducer, {
   defaultState,
-  mergeDupStepReducer,
 } from "goals/MergeDuplicates/Redux/MergeDupsReducer";
 import {
   MergeTreeAction,
@@ -34,7 +33,10 @@ function getMockUuid(increment = true): string {
 
 beforeEach(() => {
   mockUuid.v4.mockImplementation(getMockUuid);
+  jest.clearAllMocks();
 });
+
+afterEach(cleanup);
 
 describe("MergeDupReducer", () => {
   // a state with no duplicate senses
