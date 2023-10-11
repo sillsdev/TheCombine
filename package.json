@@ -127,6 +127,7 @@
   },
   "eslintConfig": {
     "extends": [
+      "plugin:@typescript-eslint/recommended",
       "plugin:react/recommended",
       "plugin:react/jsx-runtime",
       "plugin:react-hooks/recommended",
@@ -142,8 +143,9 @@
     ],
     "rules": {
       "@typescript-eslint/no-empty-interface": "warn",
+      "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-inferrable-types": "warn",
-      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": "warn",
       "@typescript-eslint/switch-exhaustiveness-check": "warn",
       "import/first": "warn",
       "import/newline-after-import": "warn",
@@ -173,9 +175,8 @@
       ],
       "no-undef": "off",
       "prefer-const": "warn",
-      "react/display-name": "off",
       "react/jsx-boolean-value": "warn",
-      "unused-imports/no-unused-imports": "error"
+      "unused-imports/no-unused-imports": "warn"
     },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -189,6 +190,7 @@
       "react",
       "unused-imports"
     ],
+    "root": true,
     "settings": {
       "react": {
         "version": "detect"
