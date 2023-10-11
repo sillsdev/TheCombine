@@ -4,7 +4,7 @@
 
 Navegue o busque el dominio de su interés.
 
-!!! tip
+!!! tip "Consejo"
 
     Para agilizar la búsqueda de un dominio, The Combine insertará automáticamente `.` entre los dígitos consecutivos a medida que usted
     escriba. Por ejemplo, `1234` se convertirá automáticamente en `1.2.3.4`. Este comportamiento no se produce si se introduce algún carácter no numérico
@@ -67,7 +67,7 @@ crear una nueva entrada.
 
 Si elige crear una nueva entrada, se cerrará el cuadro emergente y entonces podrá escribir la glosa de su nueva entrada.
 
-!!! note
+!!! note "Nota"
 
     Aunque haya seleccionado crear una nueva entrada, si la glosa que escribe es idéntica a una glosa de otra entrada con la misma forma vernácula, no se creará una nueva entrada, sino que se actualizará esa entrada.
 

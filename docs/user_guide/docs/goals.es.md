@@ -61,7 +61,7 @@ que aparezca una barra lateral azul aparezca a la derecha, mostrando cuales acep
 
 ![Fusionar duplicados acepciones fusionadas](../images/mergeSidebar.png)
 
-!!! important
+!!! warning "Importante"
 
     Cuando se fusionan varias acepciones, se conservan todos los dominios semánticos, pero **sólo la acepción superior de la barra lateral** conserva sus glosas (y definiciones).
 
@@ -117,11 +117,11 @@ El botón azul "Guardar y continuar" hace dos cosas. En primer lugar, guarda tod
 todas las acepciones movidas, fusionadas o eliminadas), actualizando las palabras en la base de datos. En segundo lugar,
 guarda las palabras no falsificadas como no duplicadas.
 
-!!! tip
+!!! tip "Consejo"
 
     ¿Los duplicados potenciales no son duplicados? Sólo tiene que pulsar Guardar y Continuar para decirle a The Combine que no le vuelva a mostrar ese conjunto.
 
-!!! note
+!!! note "Nota"
 
     Si una de las palabras de un conjunto no fusionado intencionadamente se edita (por ejemplo, en las entradas de revisión), el conjunto puede volver a aparecer como duplicados potenciales.
 
@@ -180,7 +180,7 @@ carácter, su valor Unicode "U+", el número de veces que aparece en las formas 
 
 Haga clic en una ficha de personaje para abrir un panel para ese personaje.
 
-!!! tip
+!!! tip "Consejo"
 
     Puede que tenga que desplazarse para ver el panel. Si su ventana es lo suficientemente ancha, habrá un margen en blanco a la
     derecha; el panel estará en la parte superior de éste. Si su ventana es estrecha, los azulejos llenarán todo el lado derecho de la
@@ -200,6 +200,6 @@ En la parte inferior del panel se encuentra la herramienta Buscar y Reemplazar. 
 sustituirse por otra cosa, escriba el carácter o cadena de sustitución en la casilla "Sustituir por" y pulse el botón
 APLICAR.
 
-!!! important
+!!! warning "Importante"
 
     La operación de buscar y reemplazar realiza cambios en las entradas, no en el inventario de personajes. No **se puede deshacer**

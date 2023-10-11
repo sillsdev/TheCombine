@@ -79,7 +79,7 @@ La _lengua vernácula_ especificada en la creación del proyecto es fija.
 Puede haber varios _idiomas de análisis_ asociados al proyecto, pero sólo el primero de la lista se asocia con las
 nuevas entradas de datos.
 
-!!! note
+!!! note "Nota"
 
     Si el proyecto tiene glosas en varios idiomas, esos idiomas deben añadirse aquí para que todas las glosas aparezcan
     en [Limpieza de datos](goals.md). Pulse el icono de la lupa para ver todos los códigos de idioma presentes en el proyecto.
@@ -115,7 +115,7 @@ Un _Editor_ tiene permiso para hacer todo lo que puede hacer un _Recolector_, ad
 Un _Administrador_ tiene permiso para hacer todo lo que puede hacer un _Editor_, así como para modificar la mayoría de
 los ajustes del proyecto y los usuarios.
 
-!!! important
+!!! warning "Importante"
 
     Sólo hay un propietario por proyecto. Si hace "Propietario del proyecto" a otro usuario, pasará automáticamente de Propietario a
     Administrador para el proyecto, y ya no podrá archivar el proyecto ni hacer/quitar de Administrador a otros usuarios.
@@ -132,11 +132,11 @@ automáticamente al proyecto cuando se hagan una cuenta a través de la invitaci
 
 #### Importar {#import}
 
-!!! note
+!!! note "Nota"
 
     Actualmente, el tamaño máximo de los archivos LIFT admitidos para la importación es de 100 MB.
 
-!!! note
+!!! note "Nota"
 
     Actualmente, sólo se puede importar un archivo LIFT por proyecto.
 
@@ -146,7 +146,7 @@ Tras pulsar el botón Exportar, puede navegar por otras partes del sitio web mie
 descargar. Aparecerá un icono de descarga en la barra de aplicaciones cuando la exportación esté lista para su descarga.
 El nombre de archivo por defecto es el nombre del proyecto con una marca de tiempo añadida.
 
-!!! important
+!!! warning "Importante"
 
     Un proyecto que haya alcanzado cientos de MB de tamaño puede tardar varios minutos en exportarse.
 

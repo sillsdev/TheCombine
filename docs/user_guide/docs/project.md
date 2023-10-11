@@ -77,7 +77,7 @@ The _vernacular language_ specified at project creation is fixed.
 There may be multiple _analysis languages_ associated with the project, but only the top one in the list is associated
 with new data entries.
 
-!!! note
+!!! note "Note"
 
     If the project has glosses in multiple languages, those languages must be added here for all the glosses to show up
     in [Data Cleanup](goals.md). Click the magnifying glass icon to see all language codes present in the project.
@@ -113,7 +113,7 @@ An _Editor_ has permission to do everything that a _Harvester_ can do, as well a
 An _Administrator_ has permission to do everything that an _Editor_ can do, as well as modify most project settings and
 users.
 
-!!! important
+!!! warning "Important"
 
     There is only one Owner per project. If you "Make project Owner" another user, you will automatically change from Owner to
     Administrator for the project, and you will no longer be able to archive the project or make/remove Administrator on other users.
@@ -130,11 +130,11 @@ invitation).
 
 #### Import {#import}
 
-!!! note
+!!! note "Note"
 
     Currently, the maximum size of LIFT files supported for import is 100MB.
 
-!!! note
+!!! note "Note"
 
     Currently, only one LIFT file can be imported per project.
 
@@ -144,7 +144,7 @@ After clicking the Export button, you can navigate to other parts of the website
 download. A download icon will appear in the App Bar when the export is ready for download. The default filename is the
 project name with a timestamp affixed.
 
-!!! important
+!!! warning "Important"
 
     A project that has reached hundreds of MB in size may take multiple minutes to export.
 

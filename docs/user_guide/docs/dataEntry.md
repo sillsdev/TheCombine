@@ -4,7 +4,7 @@
 
 Browse or search for the domain of interest.
 
-!!! tip
+!!! tip "Tip"
 
     To make searching for a domain quicker, The Combine will automatically insert `.` between consecutive digits as you
     type. For example, `1234` will automatically become `1.2.3.4`. This behavior does not happen if any non-numeric
@@ -64,7 +64,7 @@ that vernacular form and can to choose whether to update one of those entries or
 
 If you choose to create a new entry, the pop-up box will close, and you can then type the gloss for your new entry.
 
-!!! note
+!!! note "Note"
 
     Even if you selected to create a new entry, if the gloss you type is identical to a gloss of another entry with the same vernacular form, a new entry will not be created, but rather that entry will be updated.
 

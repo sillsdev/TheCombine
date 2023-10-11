@@ -1,3 +1,4 @@
+strict: true
 theme:
   name: material
   custom_dir: "assets/"
@@ -14,6 +15,7 @@ theme:
     - search.share
     - search.suggest
 site_name: The Combine
+site_description: A Web App for Harvesting Words Together
 docs_dir: "docs/"
 site_dir: "site/"
 use_directory_urls: false
@@ -24,7 +26,6 @@ copyright: © 2019-2023 SIL International
 plugins:
   - i18n:
       docs_structure: suffix
-      fallback_to_default: true
       languages:
         - locale: en
           default: true
@@ -33,7 +34,15 @@ plugins:
         - locale: es
           name: Español
           build: true
+          nav_translations:
+            Overview: Resumen
+            Account: Cuenta
+            Projects: Proyectos
+            Data Entry: Entrada de datos
+            Data Cleanup: Depuración de datos
+            Admin: Administración
   - search:
+      lang: [en, es]
   # This plugin is used to validate URLs (including some anchors).
   # Uncomment to build the docs with this validation enabled.
   # This is commented out by default because this requires network I/O to validate URLs, so it is
@@ -77,3 +86,6 @@ nav:
       - Backend: licenses/backend_licenses.txt
       - Fonts: licenses/OFL.txt
       - Frontend: licenses/frontend_licenses.txt
+validation:
+  links:
+    not_found: info

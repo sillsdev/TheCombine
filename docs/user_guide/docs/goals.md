@@ -61,7 +61,7 @@ to appear on the right, showing which senses are being merged.
 
 ![Merge Duplicates senses merged](images/mergeSidebar.png)
 
-!!! important
+!!! warning "Important"
 
     When multiple senses are merged, all semantic domains are preserved, but **only the top sense in the sidebar** has its glosses (and definitions) preserved.
 
@@ -114,11 +114,11 @@ next set: "Save & Continue" and "Defer".
 The blue "Save and Continue" button does two things. First, it saves all changes made (i.e., all moved, merged, or
 deleted senses), updating the words in the database. Second, it saves any unmerged words as non-duplicates.
 
-!!! tip
+!!! tip "Tip"
 
     Are the potential duplicates not duplicates? Just click Save & Continue to tell The Combine not to show you that set again.
 
-!!! note
+!!! note "Note"
 
     If one of the words in an intentionally unmerged set is edited (e.g., in Review Entries), then the set may appear again as potential duplicates.
 
@@ -174,7 +174,7 @@ character, its Unicode "U+" value, the number of times it occurs in entry vernac
 
 Click on a character tile to open a panel for that character.
 
-!!! tip
+!!! tip "Tip"
 
     You may have to scroll to see the panel. If your window is wide enough, there will be a blank margin on the
     right; the panel will be at the top of this. If your window is narrow, tiles fill all the way to the right side of the
@@ -193,6 +193,6 @@ until you click the SAVE button at the bottom of the page.)
 At the bottom of the panel is a Find-and-Replace tool. If _every_ occurrence of the character should be replaced with
 something else, type the replacement character or string in the "Replace with" box and click the APPLY button.
 
-!!! important
+!!! warning "Important"
 
     The find-and-replace operation makes changes to entries, not to the character inventory. It **cannot be undone!**

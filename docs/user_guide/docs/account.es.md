@@ -8,7 +8,7 @@ Cómo registrarse, iniciar sesión y editar su cuenta.
 
 Para crear una nueva cuenta, pulse el botón [REGISTRARSE](../../sign-up) en la página de inicio de sesión.
 
-!!! note
+!!! note "Nota"
 
     La dirección de correo electrónico se utiliza para restablecer su contraseña, por lo que sólo se permite una cuenta por dirección de correo electrónico.
 
@@ -20,7 +20,7 @@ inscripción.
 Si desea cambiar su contraseña, haga clic en el enlace "¿Olvidó su contraseña?". Siga las instrucciones y un
 restablecimiento de contraseña será enviada a la dirección de correo electrónico asociada a su cuenta.
 
-!!! important
+!!! warning "Importante"
 
     El nombre de usuario y la dirección de correo electrónico **no** distinguen entre mayúsculas y minúsculas. La contraseña **es** sensible a mayúsculas y minúsculas.
 
@@ -40,6 +40,6 @@ Puede añadir o actualizar su:
 - dirección de correo electrónico;
 - lenguaje de interfaz de usuario.
 
-!!! note
+!!! note "Nota"
 
     El nombre de usuario elegido en el momento de la inscripción es permanente y no puede cambiarse.
