@@ -100,14 +100,15 @@ click this to open a user management menu with the following options:
         Harvester
         Editor
         Administrator
-    Make project Owner [only available to the Owner modifying an Administrator]
+    Make project Owner
+        [only available to the Owner modifying an Administrator]
 </pre>
 
 A _Harvester_ can do [Data Entry](./dataEntry.md) but not [Data Cleanup](./goals.md). In project settings, they can see
 the project languages and workshop schedule, but cannot make any changes.
 
 An _Editor_ has permission to do everything that a _Harvester_ can do, as well as
-[Review Entries](./goals.md#review-entries), [Merge Duplicates](./goals.md#review-entries), and [Export](#export).
+[Review Entries](./goals.md#review-entries), [Merge Duplicates](./goals.md#merge-duplicates), and [Export](#export).
 
 An _Administrator_ has permission to do everything that an _Editor_ can do, as well as modify most project settings and
 users.
@@ -141,7 +142,7 @@ invitation).
 
 After clicking the Export button, you can navigate to other parts of the website while the data is being prepared for
 download. A download icon will appear in the App Bar when the export is ready for download. The default filename is the
-[project name](#project-name) with a timestamp affixed.
+project name with a timestamp affixed.
 
 !!! important
 

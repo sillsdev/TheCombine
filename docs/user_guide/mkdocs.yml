@@ -1,14 +1,12 @@
-strict: true
 theme:
   name: material
-  custom_dir: "../../default/"
+  custom_dir: "assets/"
   palette:
     primary: blue
   icon:
     logo: material/barley
     repo: fontawesome/brands/github
   favicon: images/favicon.ico
-  language: es
   # Disable pulling Google fonts from the Internet, to support offline networks.
   font: false
   features:
@@ -16,16 +14,26 @@ theme:
     - search.share
     - search.suggest
 site_name: The Combine
-docs_dir: "../../docs/es"
-site_dir: "../../site/es"
+docs_dir: "docs/"
+site_dir: "site/"
 use_directory_urls: false
 repo_url: https://github.com/sillsdev/TheCombine
 edit_uri: edit/master/docs/user_guide/docs/
 repo_name: sillsdev/TheCombine
 copyright: © 2019-2023 SIL International
 plugins:
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: true
+      languages:
+        - locale: en
+          default: true
+          name: English
+          build: true
+        - locale: es
+          name: Español
+          build: true
   - search:
-      lang: es
   # This plugin is used to validate URLs (including some anchors).
   # Uncomment to build the docs with this validation enabled.
   # This is commented out by default because this requires network I/O to validate URLs, so it is
@@ -40,7 +48,7 @@ extra_css:
 extra:
   alternate:
     - name: English
-      link: /en/
+      link: /
       lang: en
     - name: Español
       link: /es/

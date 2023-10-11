@@ -27,8 +27,8 @@ to the entry's note.
 
 ### Recording
 
-You can add multiple recordings to an entry (e.g., a male voice and a female voice). As with the [Note](#note), audio
-recordings are associated with the entry and not individual senses.
+You can add multiple recordings to an entry (e.g., a male voice and a female voice). As with the note, audio recordings
+are associated with the entry and not individual senses.
 
 To record audio, there is a red circle button. For each recorded audio, there is a green triangle button.
 
