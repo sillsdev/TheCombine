@@ -39,7 +39,7 @@ su audio, o pulse Mayúsculas y haga clic para borrar su grabación.
 **En una pantalla táctil:** Mantenga pulsado el círculo rojo para grabar. Pulse un triángulo verde para reproducir su
 audio, o manténgalo pulsado para abrir un menú (con opciones para reproducir o eliminar).
 
-## Nueva entrada con formulario vernáculo duplicado
+## Nueva entrada con formulario vernáculo duplicado {#new-entry-with-duplicate-vernacular-form}
 
 Si presenta una nueva entrada con idéntica forma vernácula y glosa a una entrada existente, se actualizará dicha entrada
 en lugar de crearse una nueva entrada. Por ejemplo, si presenta [Vernáculo: finger; Glosa: dedo] en el dominio 2.1.3.1
@@ -48,7 +48,7 @@ en lugar de crearse una nueva entrada. Por ejemplo, si presenta [Vernáculo: fin
 
 The Combine dispone de una función opcional de facilitar la introducción de palabras que ya existen en el proyecto pero
 que se recogen de nuevo en nuevo dominio semántico. Esta función puede activarse o desactivarse en
-[Configuración del proyecto > Autocompletar](project.md#autocompletar). Cuando el ajuste está activado, al escribir la
+[Configuración del proyecto > Autocompletar](project.md#autocomplete). Cuando el ajuste está activado, al escribir la
 forma vernácula en Entrada de datos, aparece un menú desplegable con formas vernáculas idénticas/similares que ya
 existen como entradas en el proyecto. Si ve que la palabra que escribe ya está en el proyecto, puede pulser en la
 palabra en la lista de sugerencias, en lugar de tener que escribir el resto de la palabra. Cuando la configuración está

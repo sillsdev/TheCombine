@@ -1,6 +1,6 @@
 # Data Cleanup / Goals
 
-## Review Entries
+## Review Entries {#review-entries}
 
 The Review Entries table shows all of the entries in the selected project.
 
@@ -28,7 +28,7 @@ delete an entire entry by using the icon in the Delete column.
 To edit an entry's vernacular form, senses (including glosses and domains), note, or flag, click the icon in the Edit
 column.
 
-## Merge Duplicates
+## Merge Duplicates {#merge-duplicates}
 
 This tool automatically finds sets of potential duplicate entries (up to 5 entries in each set, and up to 12 sets in
 each pass). First it presents sets of words with identical vernacular forms. Then it presents sets with similar

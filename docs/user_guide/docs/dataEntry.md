@@ -38,7 +38,7 @@ delete its recording.
 **On a touch screen:** Press-and-hold the red circle to record. Tap a green triangle to play its audio, or
 press-and-hold to bring up a menu (with options to play or delete).
 
-## New Entry with Duplicate Vernacular Form
+## New Entry with Duplicate Vernacular Form {#new-entry-with-duplicate-vernacular-form}
 
 If you submit a new entry with identical vernacular form and gloss to an existing entry, that entry will be updated
 instead of a new entry created. For example, if you submit [Vernacular: dedo; Gloss: finger] in domain 2.1.3.1 (Arm) and

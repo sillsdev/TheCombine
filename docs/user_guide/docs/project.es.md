@@ -15,7 +15,7 @@ Si tiene datos léxicos en un archivo [LIFT](https://software.sil.org/lifttools)
 [Lexique Pro](https://software.sil.org/lexiquepro)), puede hacer clic en el botón BROWSE junto a "¿Cargar los datos
 existentes?" para importar los datos a su proyecto.
 
-Si decide no importar datos durante la creación del proyecto, podrá hacerlo más adelante (véase [más abajo](#importar)).
+Si decide no importar datos durante la creación del proyecto, podrá hacerlo más adelante (véase [más abajo](#import)).
 
 ### Idioma vernáculo
 
@@ -30,7 +30,7 @@ permitirá elegir la lengua vernácula del proyecto entre todas las lenguas de l
 
 La _lengua de análisis_ es la lengua primaria a la que se traduce la lengua vernácula. Ésta suele ser una lengua
 regional, nacional, oficial o mayoritaria del lugar donde se habla la lengua vernácula. Análisis adicionales pueden
-añadirse tras la creación del proyecto (véase [más abajo](#idiomas-del-proyecto)).
+añadirse tras la creación del proyecto (véase [más abajo](#project-languages)).
 
 Si selecciona un archivo LIFT para importarlo durante la creación del proyecto, cada idioma utilizado en una definición
 o glosa se añadirá automáticamente al proyecto como lengua de análisis.
@@ -49,15 +49,15 @@ siguientes ajustes están disponibles para los usuarios del proyecto con permiso
 #### Nombre del Proyecto
 
 Se recomienda un nombre distintivo y descriptivo. El nombre del proyecto forma parte del nombre del archivo cuando usted
-[exporte](#exportar) su proyecto.
+[exporte](#export) su proyecto.
 
-#### Autocompletar
+#### Autocompletar {#autocomplete}
 
 El ajuste por defecto es Activado: Cuando un usuario está introduciendo la forma vernácula de una nueva entrada en
 Entrada de datos, este ajuste ofrece sugerencias de entradas similares existentes, lo que permite al usuario seleccionar
 una entrada existente y añadir una nueva acepción a esa entrada, en lugar de crear un duplicado (en su mayoría) a algo
-introducido previamente. Consulte [Introducción de datos](dataEntry.md#nueva-entrada-con-formulario-vernáculo-duplicado)
-para más detalles.
+introducido previamente. Consulte [Introducción de datos](dataEntry.md#new-entry-with-duplicate-vernacular-form) para
+más detalles.
 
 (Esto no afecta a las sugerencias ortográficas para la glosa, ya que dichas sugerencias se basan en un diccionario
 independiente de los datos existentes del proyecto)
@@ -68,7 +68,7 @@ Sólo está disponible para el Propietario del proyecto. Archivar un proyecto lo
 Esto sólo puede ser deshacer por un administrador del sitio. Póngase en contacto con un administrador del sitio si desea
 que el proyecto se elimine por completo de los servidores.
 
-### Idiomas del proyecto
+### Idiomas del proyecto {#project-languages}
 
 ![Idiomas](../images/projectSettings2Langs.png){ width=750 .center }
 
@@ -110,8 +110,7 @@ Una _cosechadora_ puede hacer [entrada de datos](./dataEntry.md) pero no [limpie
 del proyecto, pueden ver los idiomas del proyecto y el calendario del taller, pero no pueden realizar ningún cambio.
 
 Un _Editor_ tiene permiso para hacer todo lo que puede hacer un _Recolector_, además de
-[Revisar entradas](./goals.md#revisar-entradas), [Combinar duplicados](./goals.md#combinar-duplicados) y
-[Exportar](#exportar).
+[Revisar entradas](./goals.md#review-entries), [Combinar duplicados](./goals.md#merge-duplicates) y [Exportar](#export).
 
 Un _Administrador_ tiene permiso para hacer todo lo que puede hacer un _Editor_, así como para modificar la mayoría de
 los ajustes del proyecto y los usuarios.
@@ -124,14 +123,14 @@ los ajustes del proyecto y los usuarios.
 #### Agregar usuarios
 
 Buscar usuarios existentes (muestra todos los usuarios con el término de búsqueda en su nombre, nombre de usuario o
-dirección de correo electrónico), o invitar a a nuevos usuarios por dirección de correo electrónico (se añadirán
+dirección de correo electrónico), o invitar a nuevos usuarios por dirección de correo electrónico (se añadirán
 automáticamente al proyecto cuando se hagan una cuenta a través de la invitación).
 
 ### Importar/Exportar
 
 ![Importar/Exportar](../images/projectSettings4Port.png){ width=750 .center }
 
-#### Importar
+#### Importar {#import}
 
 !!! note
 
@@ -141,7 +140,7 @@ automáticamente al proyecto cuando se hagan una cuenta a través de la invitaci
 
     Actualmente, sólo se puede importar un archivo LIFT por proyecto.
 
-#### Exportar
+#### Exportar {#export}
 
 Tras pulsar el botón Exportar, puede navegar por otras partes del sitio web mientras se preparan los datos para la
 descargar. Aparecerá un icono de descarga en la barra de aplicaciones cuando la exportación esté lista para su descarga.
@@ -151,7 +150,7 @@ El nombre de archivo por defecto es el nombre del proyecto con una marca de tiem
 
     Un proyecto que haya alcanzado cientos de MB de tamaño puede tardar varios minutos en exportarse.
 
-### Calendario de talleres
+### Calendario de talleres {#workshop-schedule}
 
 ![Calendario de talleres](../images/projectSettings5Sched.png){ width=750 .center }
 
@@ -174,7 +173,7 @@ acepciones, cada uno con 2 dominios semánticos, se contará como 6 palabras.
 ### Palabras por usuario
 
 Una tabla con el número de palabras y dominios semánticos distintos para cada usuario del proyecto. Las palabras
-importadas no tienen un usuario y se contabilizarán en una fila "Usuario desconocido".
+importadas no tienen un usuario y se contabilizarán en una fila "unknownUser".
 
 ### Palabras por dominio
 
@@ -183,9 +182,9 @@ Una tabla con el número de palabras de cada dominio semántico.
 ### Palabras por día
 
 Gráficos lineales que muestran las palabras recogidas durante los días especificados en el
-[programa del taller](#calendario-de-talleres).
+[Calendario de talleres](#workshop-schedule).
 
 ### Progresos del taller
 
-Gráficos lineales que muestran las palabras acumuladas a lo largo de los días del [programa](#calendario-de-talleres)
-del taller, así como así como las previsiones para el resto del taller.
+Gráficos lineales que muestran las palabras acumuladas a lo largo de los días del
+[Calendario de talleres](#workshop-schedule), así como las previsiones para el resto del taller.

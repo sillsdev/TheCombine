@@ -1,6 +1,6 @@
 # Depuración de datos / Objetivos
 
-## Revisar entradas
+## Revisar entradas {#review-entries}
 
 La tabla Revisar entradas muestra todas las entradas del proyecto seleccionado.
 
@@ -28,7 +28,7 @@ Puede eliminar una entrada completa con el icono de la columna Suprimir.
 Para editar la forma vernácula, los acepciones (incluidas las glosas y los dominios), la nota o la bandera de una
 entrada, haga clic en el icono de la columna Editar.
 
-## Combinar duplicados
+## Combinar duplicados {#merge-duplicates}
 
 Esta herramienta encuentra automáticamente conjuntos de entradas potencialmente duplicadas (hasta 5 entrada en cada
 conjunto, y hasta 12 conjuntos en cada pasa). Primero presenta conjuntos de palabras con idénticas formas vernáculas. A
@@ -92,8 +92,8 @@ Hay un icono de bandera en la esquina superior derecha de cada columna (a la der
 ![Fusionar duplicados marcar una entrada](../images/mergeFlag.png){ .center }
 
 Puede hacer clic en el icono de la bandera para marcar la entrada para una futura inspección o edición. (Puede
-clasificar las entradas marcadas en [Revisar entradas](#revisar-entradas)) Cuando marque una entrada, se le dará la
-opción de añadir texto a la bandera.
+clasificar las entradas marcadas en [Revisar entradas](#review-entries)) Cuando marque una entrada, se le dará la opción
+de añadir texto a la bandera.
 
 ![Fusionar duplicados añadiendo o editando una bandera](../images/mergeEditFlag.png){ .center }
 
@@ -163,7 +163,7 @@ Las herramientas de inventario de personajes sólo están disponibles para los a
 _Crear un inventario de caracteres_ proporciona una visión general de cada carácter unicode que aparece en las formas
 vernáculas del entradas del proyecto. Esto le permite identificar qué caracteres se utilizan habitualmente en la lengua
 y "aceptarlos" como parte del inventario de caracteres de la lengua. El inventario de caracteres forma parte del archivo
-LDML para la lengua vernácula de un proyecto lengua vernácula que se incluye cuando se [exporta](project.md#exportar) el
+LDML para la lengua vernácula de un proyecto lengua vernácula que se incluye cuando se [exporta](project.md#export) el
 proyecto. La aceptación de los caracteres conducirá a una representación precisa de la lengua en Unicode, el Ethnologue
 y otros estándares y recursos lingüísticos.
 

@@ -50,7 +50,7 @@ Settings for managing the project. The following settings are available for proj
 A distinguishing and descriptive name is recommended. The project name is part of the filename when you
 [export](#export) your project.
 
-#### Autocomplete
+#### Autocomplete {#autocomplete}
 
 The default setting is On: When a user is entering the vernacular form of a new entry in Data Entry, this setting gives
 suggestions of similar existing entries, allowing the user to select an existing entry and add a new sense to that
@@ -66,7 +66,7 @@ This is only available to the project Owner. Archiving a project makes it inacce
 undone by a site administrator. Please contact a site administrator if you wish for the project to be entirely deleted
 from the servers.
 
-### Project Languages
+### Project Languages {#project-languages}
 
 ![Languages](images/projectSettings2Langs.png){ width=750 .center }
 
@@ -128,7 +128,7 @@ invitation).
 
 ![Import/Export](images/projectSettings4Port.png){ width=750 .center }
 
-#### Import
+#### Import {#import}
 
 !!! note
 
@@ -138,7 +138,7 @@ invitation).
 
     Currently, only one LIFT file can be imported per project.
 
-#### Export
+#### Export {#export}
 
 After clicking the Export button, you can navigate to other parts of the website while the data is being prepared for
 download. A download icon will appear in the App Bar when the export is ready for download. The default filename is the
@@ -148,7 +148,7 @@ project name with a timestamp affixed.
 
     A project that has reached hundreds of MB in size may take multiple minutes to export.
 
-### Workshop Schedule
+### Workshop Schedule {#workshop-schedule}
 
 ![Workshop Schedule](images/projectSettings5Sched.png){ width=750 .center }
 
