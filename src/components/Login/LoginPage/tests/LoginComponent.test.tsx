@@ -1,28 +1,37 @@
-import renderer from "react-test-renderer";
+import {
+  ReactTestInstance,
+  ReactTestRenderer,
+  act,
+  create,
+} from "react-test-renderer";
 
 import "tests/reactI18nextMock";
 
 import Login from "components/Login/LoginPage/LoginComponent";
 
-jest.mock("@matt-block/react-recaptcha-v2", () => () => (
-  <div id="mockRecaptcha">Recaptcha</div>
-));
+jest.mock(
+  "@matt-block/react-recaptcha-v2",
+  () =>
+    function MockRecaptcha() {
+      return <div id="mockRecaptcha">Recaptcha</div>;
+    }
+);
 jest.mock("backend", () => ({
   getBannerText: () => Promise.resolve(""),
 }));
 
 jest.mock("browserRouter");
 const LOGOUT = jest.fn();
-let loginMaster: renderer.ReactTestRenderer;
-let loginHandle: renderer.ReactTestInstance;
+let loginMaster: ReactTestRenderer;
+let loginHandle: ReactTestInstance;
 
 const DATA = "stuff";
 const MOCK_EVENT = { preventDefault: jest.fn(), target: { value: DATA } };
 
 describe("Testing login component", () => {
-  beforeEach(() => {
-    renderer.act(() => {
-      loginMaster = renderer.create(<Login logout={LOGOUT} reset={LOGOUT} />);
+  beforeEach(async () => {
+    await act(async () => {
+      loginMaster = create(<Login logout={LOGOUT} reset={LOGOUT} />);
     });
     loginHandle = loginMaster.root.findByType(Login);
     LOGOUT.mockClear();
