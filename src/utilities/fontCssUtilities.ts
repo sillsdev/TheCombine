@@ -31,7 +31,7 @@ export async function fetchCss(
   source: string,
   substitute?: string
 ): Promise<string | undefined> {
-  var cssUrl = "";
+  let cssUrl = "";
   switch (source) {
     case "local":
       cssUrl = `${fontDir}/${font.replace(" ", "")}.css`;
