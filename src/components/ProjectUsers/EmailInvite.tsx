@@ -43,6 +43,7 @@ export default function EmailInvite(props: InviteProps): ReactElement {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line import/no-named-as-default-member
     setIsValid(validator.isEmail(email) && email !== "example@gmail.com");
   }, [email, setIsValid]);
 
