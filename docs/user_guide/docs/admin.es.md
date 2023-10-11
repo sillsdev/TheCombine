@@ -2,7 +2,7 @@
 
 Los administradores del sitio disponen de una opción más en el menú de usuario: "Configuración del sitio".
 
-![Menú de usuario - Administrador](../images/userMenuAdmin.png) {.center}
+![Menú de usuario - Administrador](../images/userMenuAdmin.png){ .center }
 
 ## Administración de proyectos
 
@@ -26,7 +26,7 @@ Combine. Estos banners están destinados a mostrar a los usuarios mensajes impor
 con la instancia de The Combine. Los usos podrían incluir actualizaciones programadas, tiempos de inactividad
 planificados o próximos cambios en el servidor.
 
-![Banner de anuncios](../images/announcementBanner.png) {.center}
+![Banner de anuncios](../images/announcementBanner.png){ .center }
 
 ### Banner de inicio de sesión
 

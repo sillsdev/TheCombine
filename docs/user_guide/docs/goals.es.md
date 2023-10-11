@@ -89,18 +89,18 @@ cuando pulse Guardar y Continuar.
 
 Hay un icono de bandera en la esquina superior derecha de cada columna (a la derecha del formulario vernáculo).
 
-![Fusionar duplicados marcar una entrada](../images/mergeFlag.png) {.center}
+![Fusionar duplicados marcar una entrada](../images/mergeFlag.png){ .center }
 
 Puede hacer clic en el icono de la bandera para marcar la entrada para una futura inspección o edición. (Puede
 clasificar las entradas marcadas en [Revisar entradas](#revisar-entradas)) Cuando marque una entrada, se le dará la
 opción de añadir texto a la bandera.
 
-![Fusionar duplicados añadiendo o editando una bandera](../images/mergeEditFlag.png) {.center}
+![Fusionar duplicados añadiendo o editando una bandera](../images/mergeEditFlag.png){ .center }
 
 Tanto si se escribe texto como si no, sabrá que la entrada está marcada porque el icono de la bandera aparecerá en rojo
 sólido. Si ha añadido texto, puede pasar el cursor por encima de la bandera para ver el texto.
 
-![Fusionar Duplica una entrada marcada](../images/mergeFlagged.png) {.center}
+![Fusionar Duplica una entrada marcada](../images/mergeFlagged.png){ .center }
 
 Pulse sobre el icono de la bandera roja para editar el texto o eliminar la bandera.
 
@@ -186,13 +186,13 @@ Haga clic en una ficha de personaje para abrir un panel para ese personaje.
     derecha; el panel estará en la parte superior de éste. Si su ventana es estrecha, los azulejos llenarán todo el lado derecho de la
     ventana; el panel estará en la parte inferior, debajo de todos los azulejos.
 
-![Inventario de personajes panel de personajes](../images/characterInventoryPanel.png) {.center}
+![Inventario de personajes panel de personajes](../images/characterInventoryPanel.png){ .center }
 
 El centro del panel muestra hasta 5 ejemplos de formas vernáculas en las que aparece el carácter, resaltando el carácter
 en cada ocurrencia.
 
 En la parte superior del panel hay tres botones para designar si el carácter debe incluirse en el inventario de
-caracteres de la lengua vernácula: "ACEPTAR", "INDECIDIR" y "RECHAZAR". Al pulsar cualquiera de estos botones se
+caracteres de la lengua vernácula: "ACEPTAR", "NO DECIDIDO" y "RECHAZAR". Al pulsar cualquiera de estos botones se
 actualizará la designación en la parte inferior de la ficha de personaje. (Estas actualizaciones del inventario del
 personaje no se guardan en el proyecto hasta que pulse el botón GUARDAR en la parte inferior de la página)
 

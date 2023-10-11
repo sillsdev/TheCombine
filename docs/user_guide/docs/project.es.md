@@ -6,7 +6,7 @@ Un proyecto es para una sola lengua vernácula.
 
 Al crear un proyecto, tiene la opción de empezar con un proyecto vacío o de importar los datos léxicos existentes.
 
-![Crear proyecto - Tzotzil](../images/projectCreateTzotzil.png) {.center}
+![Crear proyecto - Tzotzil](../images/projectCreateTzotzil.png){ .center }
 
 ### Importar los datos existentes
 
@@ -72,7 +72,7 @@ que el proyecto se elimine por completo de los servidores.
 
 ![Idiomas](../images/projectSettings2Langs.png){ width=750 .center }
 
-![Idiomas del proyecto - Tzotzil](../images/projectLanguagesTzotzil.png) {.center}
+![Idiomas del proyecto - Tzotzil](../images/projectLanguagesTzotzil.png){ .center }
 
 La _lengua vernácula_ especificada en la creación del proyecto es fija.
 
@@ -159,14 +159,14 @@ Sólo está disponible para el Propietario del proyecto, lo que permite fijar un
 rápida de palabras. Haga clic en el primer botón para seleccionar un intervalo de fechas para el taller. Pulse el botón
 central para añadir o eliminar fechas concretas. Pulse el último botón para borrar la programación.
 
-![Calendario de talleres](../images/projectSchedule.png) {.center}
+![Calendario de talleres](../images/projectSchedule.png){ .center }
 
 ## Estadísticas del proyecto
 
 Si usted es el Propietario del proyecto, habrá otro icono junto al icono del engranaje en la App Bar, en la parte
 superior de The Combine. Esto abre las estadísticas sobre las palabras en el proyecto.
 
-![Botón de estadísticas del proyecto](../images/projectStatsButton.png) {.center}
+![Botón de estadísticas del proyecto](../images/projectStatsButton.png){ .center }
 
 En el contexto de estas estadísticas, _palabra_ se refiere a un par acepción-dominio: por ejemplo, una entrada con 3
 acepciones, cada uno con 2 dominios semánticos, se contará como 6 palabras.

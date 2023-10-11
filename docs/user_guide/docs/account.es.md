@@ -2,11 +2,11 @@
 
 Cómo registrarse, iniciar sesión y editar su cuenta.
 
-![Inicio de sesión](../images/login.png) {.center}
+![Inicio de sesión](../images/login.png){ .center }
 
 ## Registrarse
 
-Para crear una nueva cuenta, pulse el botón [INSCRIBIRSE](../../sign-up) en la página de inicio de sesión.
+Para crear una nueva cuenta, pulse el botón [REGISTRARSE](../../sign-up) en la página de inicio de sesión.
 
 !!! note
 
@@ -30,7 +30,7 @@ Tras iniciar sesión, aparecerá una barra de aplicaciones azul en la parte supe
 avatar en el extremo derecho de la App Barra para abrir el Menú de Usuario. Seleccione "Configuración de usuario" para
 cambiar los ajustes de cuenta/perfil.
 
-![Menú de usuario](../images/userMenu.png) {.center}
+![Menú de usuario](../images/userMenu.png){ .center }
 
 Puede añadir o actualizar su:
 
