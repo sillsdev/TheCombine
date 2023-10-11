@@ -18,7 +18,7 @@ import domMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
 import { newSemanticDomainTreeNode } from "types/semanticDomain";
 
 // Handles
-const MOCK_ANIMATE = jest.fn((_domain: SemanticDomainTreeNode) => {
+const MOCK_ANIMATE = jest.fn(() => {
   console.log("MockAnimateCalled");
   return Promise.resolve();
 });

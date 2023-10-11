@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import { Component } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 
 import { BannerType } from "api/models";
@@ -57,7 +57,7 @@ interface LoginError {
 }
 
 /** The login page (also doubles as a logout page) */
-export class Login extends React.Component<LoginProps, LoginState> {
+export class Login extends Component<LoginProps, LoginState> {
   constructor(props: LoginProps) {
     super(props);
     this.props.logout(); // Loading this page will reset the app, both store and localStorage

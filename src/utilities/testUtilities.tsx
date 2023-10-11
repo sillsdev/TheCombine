@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import React, { PropsWithChildren } from "react";
+import { PropsWithChildren, ReactElement } from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
@@ -22,7 +22,7 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, "queries"> {
 }
 
 export function renderWithProviders(
-  ui: React.ReactElement,
+  ui: ReactElement,
   {
     preloadedState = {
       ...defaultState,
@@ -33,7 +33,7 @@ export function renderWithProviders(
     ...renderOptions
   }: ExtendedRenderOptions = {}
 ) {
-  function Wrapper({ children }: PropsWithChildren<{}>): JSX.Element {
+  function Wrapper({ children }: PropsWithChildren<object>): JSX.Element {
     return (
       <Provider store={store}>
         <PersistGate persistor={persistor}>{children}</PersistGate>

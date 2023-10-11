@@ -7,7 +7,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
+import { Component } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 
 import router from "browserRouter";
@@ -22,6 +22,7 @@ import {
 
 // Chrome silently converts non-ASCII characters in a Textfield of type="email".
 // Use punycode.toUnicode() to convert them from punycode back to Unicode.
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const punycode = require("punycode/");
 
 const idAffix = "signUp";
@@ -65,7 +66,7 @@ interface SignUpState {
   };
 }
 
-export class SignUp extends React.Component<SignUpProps, SignUpState> {
+export class SignUp extends Component<SignUpProps, SignUpState> {
   constructor(props: SignUpProps) {
     super(props);
     this.state = {
