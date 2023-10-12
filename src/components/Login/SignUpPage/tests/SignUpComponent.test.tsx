@@ -98,7 +98,7 @@ async function testSignUp(
   error_email: boolean,
   error_password: boolean,
   error_confirmPassword: boolean
-) {
+): Promise<void> {
   signUpHandle.instance.setState({
     name,
     username,

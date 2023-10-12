@@ -1,5 +1,6 @@
 import { ButtonProps } from "@mui/material/Button";
 import { enqueueSnackbar } from "notistack";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { isFrontierNonempty } from "backend";
@@ -15,11 +16,11 @@ interface ExportButtonProps {
 }
 
 /** A button for exporting project to Lift file */
-export default function ExportButton(props: ExportButtonProps) {
+export default function ExportButton(props: ExportButtonProps): ReactElement {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
-  async function exportProj() {
+  async function exportProj(): Promise<void> {
     await isFrontierNonempty(props.projectId).then(async (isNonempty) => {
       if (isNonempty) {
         await dispatch(asyncExportProject(props.projectId));

@@ -40,12 +40,12 @@ export default function DeleteEditTextDialog(
   const [text, setText] = useState<string>(props.text);
   const { t } = useTranslation();
 
-  function onCancel() {
+  function onCancel(): void {
     setText(props.text);
     props.close();
   }
 
-  function onDelete() {
+  function onDelete(): void {
     setText(props.text);
     if (props.onDelete) {
       props.onDelete();
@@ -53,20 +53,23 @@ export default function DeleteEditTextDialog(
     props.close();
   }
 
-  async function onSave() {
+  async function onSave(): Promise<void> {
     setLoading(true);
     await props.updateText(text);
     setLoading(false);
     props.close();
   }
 
-  function escapeClose(_: any, reason: "backdropClick" | "escapeKeyDown") {
+  function escapeClose(
+    _: any,
+    reason: "backdropClick" | "escapeKeyDown"
+  ): void {
     if (reason === "escapeKeyDown") {
       onCancel();
     }
   }
 
-  function confirmIfEnter(event: React.KeyboardEvent<any>) {
+  function confirmIfEnter(event: React.KeyboardEvent<any>): void {
     if (event.key === Key.Enter) {
       onSave();
     }
