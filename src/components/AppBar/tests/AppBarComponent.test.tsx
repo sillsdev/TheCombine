@@ -18,7 +18,7 @@ jest.mock("backend", () => ({
 
 const mockStore = configureMockStore()(defaultState);
 
-function setMockFunctions() {
+function setMockFunctions(): void {
   mockGetUser.mockResolvedValue(mockUser);
 }
 

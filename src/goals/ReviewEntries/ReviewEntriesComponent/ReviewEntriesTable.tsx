@@ -60,7 +60,7 @@ export default function ReviewEntriesTable(
   const [pageState, setPageState] = useState(getPageState(words.length));
   const [scrollToTop, setScrollToTop] = useState(false);
 
-  const updateMaxRows = () => {
+  const updateMaxRows = (): void => {
     if (tableRef.current) {
       const tableRows = tableRef.current.state.data.length;
       if (tableRows !== maxRows) {

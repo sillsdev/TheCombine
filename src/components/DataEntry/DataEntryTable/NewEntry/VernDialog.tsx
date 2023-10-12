@@ -54,7 +54,7 @@ interface VernListProps {
   analysisLang?: string;
 }
 
-export function VernList(props: VernListProps) {
+export function VernList(props: VernListProps): ReactElement {
   const { t } = useTranslation();
 
   const hasPartsOfSpeech = !!props.vernacularWords.find((w) =>
