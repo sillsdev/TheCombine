@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { SemanticDomain } from "api/models";
 import { getUser } from "backend";
+import { friendlySep, getDateTimeString } from "utilities/utilities";
 
 interface DomainChipProps {
   domain: SemanticDomain;
@@ -17,7 +18,6 @@ export default function DomainChip(props: DomainChipProps): ReactElement {
   const { created, name, id, userId } = props.domain;
 
   useEffect(() => {
-    console.info(`provenance: ${provenance}`);
     if (provenance && userId) {
       getUser(userId).then((u) => setUsername(u.username));
     }
@@ -26,7 +26,11 @@ export default function DomainChip(props: DomainChipProps): ReactElement {
   const text = `${id}: ${name}`;
   const provenanceText: string[] = [];
   if (props.provenance && created) {
-    provenanceText.push(t("wordHistory.domainAdded", { val: created }));
+    provenanceText.push(
+      t("wordHistory.domainAdded", {
+        val: getDateTimeString(created, friendlySep),
+      })
+    );
   }
   if (username) {
     provenanceText.push(t("wordHistory.user", { val: username }));

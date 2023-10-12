@@ -8,7 +8,7 @@ import { EntryNote } from "components/DataEntry/DataEntryTable/EntryCellComponen
 import { PronunciationsBackend } from "components/Pronunciations/PronunciationsBackend";
 import SenseCard from "components/WordCard/SenseCard";
 import { TypographyWithFont } from "utilities/fontComponents";
-import { getDateTimeString } from "utilities/utilities";
+import { friendlySep, getDateTimeString } from "utilities/utilities";
 
 interface WordCardProps {
   languages?: string[];
@@ -19,11 +19,7 @@ interface WordCardProps {
 export default function WordCard(props: WordCardProps): ReactElement {
   const { languages, provenance, word } = props;
   const { audio, flag, id, note, senses } = word;
-  const created = new Date(word.created);
-  const modified = new Date(word.modified);
   const { t } = useTranslation();
-
-  const sep = { date: "/", dateTime: " ", time: ":" };
 
   return (
     <Card style={{ backgroundColor: "lightgray" }}>
@@ -65,11 +61,11 @@ export default function WordCard(props: WordCardProps): ReactElement {
             {t("wordHistory.wordId", { val: id })}
             <br />
             {t("wordHistory.wordCreated", {
-              val: getDateTimeString(created, sep),
+              val: getDateTimeString(word.created, friendlySep),
             })}
             <br />
             {t("wordHistory.wordModified", {
-              val: getDateTimeString(modified, sep),
+              val: getDateTimeString(word.modified, friendlySep),
             })}
           </Typography>
         )}
