@@ -35,10 +35,11 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
+            var userId = _permissionService.GetUserId(HttpContext);
 
             try
             {
-                var newWords = await _mergeService.Merge(projectId, mergeWordsList);
+                var newWords = await _mergeService.Merge(projectId, userId, mergeWordsList);
                 return Ok(newWords.Select(w => w.Id).ToList());
             }
             catch
@@ -57,8 +58,9 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
+            var userId = _permissionService.GetUserId(HttpContext);
 
-            var undo = await _mergeService.UndoMerge(projectId, merge);
+            var undo = await _mergeService.UndoMerge(projectId, userId, merge);
             return Ok(undo);
         }
 

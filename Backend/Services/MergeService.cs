@@ -28,10 +28,14 @@ namespace BackendFramework.Services
 
         /// <summary> Prepares a merge parent to be added to the database. </summary>
         /// <returns> Word to add. </returns>
-        private async Task<Word> MergePrepParent(string projectId, MergeWords mergeWords)
+        private async Task<Word> MergePrepParent(string projectId, string userId, MergeWords mergeWords)
         {
             var parent = mergeWords.Parent.Clone();
             parent.ProjectId = projectId;
+            if (userId != parent.EditedBy.LastOrDefault(""))
+            {
+                parent.EditedBy.Add(userId);
+            }
             parent.History = new List<string>();
 
             // Add child to history.
@@ -73,17 +77,17 @@ namespace BackendFramework.Services
         /// from the frontier, and adds the new words to the database.
         /// </summary>
         /// <returns> List of new words added. </returns>
-        public async Task<List<Word>> Merge(string projectId, List<MergeWords> mergeWordsList)
+        public async Task<List<Word>> Merge(string projectId, string userId, List<MergeWords> mergeWordsList)
         {
             var keptWords = mergeWordsList.Where(m => !m.DeleteOnly);
-            var newWords = keptWords.Select(m => MergePrepParent(projectId, m).Result).ToList();
+            var newWords = keptWords.Select(m => MergePrepParent(projectId, userId, m).Result).ToList();
             await Task.WhenAll(mergeWordsList.Select(m => MergeDeleteChildren(projectId, m)));
             return await _wordRepo.Create(newWords);
         }
 
         /// <summary> Undo merge </summary>
         /// <returns> True if merge was successfully undone </returns>
-        public async Task<bool> UndoMerge(string projectId, MergeUndoIds ids)
+        public async Task<bool> UndoMerge(string projectId, string userId, MergeUndoIds ids)
         {
             foreach (var parentId in ids.ParentIds)
             {
@@ -109,7 +113,7 @@ namespace BackendFramework.Services
             // Separate foreach loop for deletion to prevent partial undos
             foreach (var parentId in ids.ParentIds)
             {
-                await _wordService.DeleteFrontierWord(projectId, parentId);
+                await _wordService.DeleteFrontierWord(projectId, userId, parentId);
             }
 
             await _wordRepo.AddFrontier(childWords);

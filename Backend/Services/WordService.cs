@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -17,7 +18,7 @@ namespace BackendFramework.Services
 
         /// <summary> Makes a new word in Frontier that has deleted tag on each sense </summary>
         /// <returns> A bool: success of operation </returns>
-        public async Task<bool> Delete(string projectId, string wordId)
+        public async Task<bool> Delete(string projectId, string userId, string wordId)
         {
             var wordIsInFrontier = await _wordRepo.DeleteFrontier(projectId, wordId);
 
@@ -35,6 +36,7 @@ namespace BackendFramework.Services
 
             wordToDelete.Id = "";
             wordToDelete.Modified = "";
+            wordToDelete.EditedBy = new List<string> { userId };
             wordToDelete.History = new List<string> { wordId };
             wordToDelete.Accessibility = Status.Deleted;
 
@@ -50,7 +52,7 @@ namespace BackendFramework.Services
 
         /// <summary> Removes audio with specified Id from a word </summary>
         /// <returns> New word </returns>
-        public async Task<Word?> Delete(string projectId, string wordId, string fileName)
+        public async Task<Word?> Delete(string projectId, string userId, string wordId, string fileName)
         {
             var wordWithAudioToDelete = await _wordRepo.GetWord(projectId, wordId);
             if (wordWithAudioToDelete is null)
@@ -69,9 +71,10 @@ namespace BackendFramework.Services
             wordWithAudioToDelete.Audio.Remove(fileName);
             wordWithAudioToDelete.Id = "";
             wordWithAudioToDelete.Modified = "";
-            wordWithAudioToDelete.ProjectId = projectId;
-
-            // Keep track of the old word, adding it to the history.
+            if (userId != wordWithAudioToDelete.EditedBy.LastOrDefault(""))
+            {
+                wordWithAudioToDelete.EditedBy.Add(userId);
+            }
             wordWithAudioToDelete.History.Add(wordId);
 
             wordWithAudioToDelete = await _wordRepo.Create(wordWithAudioToDelete);
@@ -81,7 +84,7 @@ namespace BackendFramework.Services
 
         /// <summary> Deletes word in frontier collection and adds word with deleted tag in word collection </summary>
         /// <returns> A string: id of new word </returns>
-        public async Task<string?> DeleteFrontierWord(string projectId, string wordId)
+        public async Task<string?> DeleteFrontierWord(string projectId, string userId, string wordId)
         {
             var wordIsInFrontier = await _wordRepo.DeleteFrontier(projectId, wordId);
             if (!wordIsInFrontier)
@@ -97,11 +100,12 @@ namespace BackendFramework.Services
 
             word.Id = "";
             word.Modified = "";
-            word.ProjectId = projectId;
-            word.Accessibility = Status.Deleted;
-
-            // Keep track of the old word, adding it to the history.
+            if (userId != word.EditedBy.LastOrDefault(""))
+            {
+                word.EditedBy.Add(userId);
+            }
             word.History.Add(wordId);
+            word.Accessibility = Status.Deleted;
 
             var deletedWord = await _wordRepo.Add(word);
             return deletedWord.Id;
@@ -109,7 +113,7 @@ namespace BackendFramework.Services
 
         /// <summary> Makes a new word in the Frontier with changes made </summary>
         /// <returns> A bool: success of operation </returns>
-        public async Task<bool> Update(string projectId, string wordId, Word word)
+        public async Task<bool> Update(string projectId, string userId, string wordId, Word word)
         {
             var wordIsInFrontier = await _wordRepo.DeleteFrontier(projectId, wordId);
 
@@ -122,8 +126,10 @@ namespace BackendFramework.Services
             word.Id = "";
             word.ProjectId = projectId;
             word.Modified = "";
-
-            // Keep track of the old word, adding it to the history.
+            if (userId != word.EditedBy.LastOrDefault(""))
+            {
+                word.EditedBy.Add(userId);
+            }
             word.History.Add(wordId);
 
             await _wordRepo.Create(word);

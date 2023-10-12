@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -60,7 +61,8 @@ namespace BackendFramework.Controllers
             {
                 return NotFound(projectId);
             }
-            var id = await _wordService.DeleteFrontierWord(projectId, wordId);
+            var userId = _permissionService.GetUserId(HttpContext);
+            var id = await _wordService.DeleteFrontierWord(projectId, userId, wordId);
             if (id is null)
             {
                 return NotFound(wordId);
@@ -169,7 +171,7 @@ namespace BackendFramework.Controllers
         [HttpPost("{dupId}", Name = "UpdateDuplicate")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> UpdateDuplicate(
-            string projectId, string dupId, string? userId, [FromBody, BindRequired] Word word)
+            string projectId, string dupId, [FromBody, BindRequired] Word word)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
             {
@@ -188,16 +190,13 @@ namespace BackendFramework.Controllers
                 return NotFound(dupId);
             }
 
-            if (string.IsNullOrEmpty(userId))
-            {
-                userId = "";
-            }
+            var userId = _permissionService.GetUserId(HttpContext);
             if (!duplicatedWord.AppendContainedWordContents(word, userId))
             {
                 return Conflict();
             }
 
-            await _wordService.Update(duplicatedWord.ProjectId, duplicatedWord.Id, duplicatedWord);
+            await _wordService.Update(duplicatedWord.ProjectId, userId, duplicatedWord.Id, duplicatedWord);
 
             return Ok(duplicatedWord.Id);
         }
@@ -218,6 +217,11 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
             word.ProjectId = projectId;
+            var userId = _permissionService.GetUserId(HttpContext);
+            if (userId != word.EditedBy.LastOrDefault(""))
+            {
+                word.EditedBy.Add(userId);
+            }
 
             await _wordRepo.Create(word);
             return Ok(word.Id);
@@ -247,7 +251,8 @@ namespace BackendFramework.Controllers
 
             // Add the found id to the updated word.
             word.Id = document.Id;
-            await _wordService.Update(projectId, wordId, word);
+            var userId = _permissionService.GetUserId(HttpContext);
+            await _wordService.Update(projectId, userId, wordId, word);
             return Ok(word.Id);
         }
     }
