@@ -144,8 +144,10 @@ namespace BackendFramework.Services
         public async Task<Pedigree> GeneratePedigree(string projId, Word word)
         {
             var tree = new Pedigree(word);
-            foreach (var id in word.History)
+            // Iterate backwards through the history and construct the pedigree depth-first.
+            for (int i = word.History.Count - 1; i >= 0; i--)
             {
+                var id = word.History[i];
                 if (!tree.HasAncestor(id))
                 {
                     var parent = await _wordRepo.GetWord(projId, id);
