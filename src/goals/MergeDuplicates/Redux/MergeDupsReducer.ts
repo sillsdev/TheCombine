@@ -25,8 +25,8 @@ const mergeDupStepSlice = createSlice({
   name: "mergeDupStepReducer",
   initialState: defaultState,
   reducers: {
-    clearTreeAction: (state) => {
-      state = defaultState;
+    clearTreeAction: () => {
+      return defaultState;
     },
     combineIntoFirstSenseAction: (state, action) => {
       // Set the first sense to be merged as Active/Protected.
