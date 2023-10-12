@@ -13,9 +13,9 @@ afterEach(cleanup);
 
 describe("Render MergeDups", () => {
   it("Renders MergeDups with no errors", async () => {
-    const store= setupStore();
+    const store = setupStore();
     await act(async () => {
-      renderWithProviders(<MergeDupsStep />, {store: store});
+      renderWithProviders(<MergeDupsStep />, { store: store });
     });
   });
 });
