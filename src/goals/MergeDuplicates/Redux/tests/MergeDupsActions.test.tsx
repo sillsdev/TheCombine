@@ -20,19 +20,23 @@ import {
   orderSense,
   setWordData,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
-import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
+import {
+  MergeTreeAction,
+  MergeTreeActionTypes,
+  MergeTreeState,
+} from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { goalDataMock } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
-import { setupStore } from "store";
 import { GoalsState, GoalType } from "types/goals";
 import { newSemanticDomain } from "types/semanticDomain";
 import {
   multiSenseWord,
+  newDefinition,
   newFlag,
   newGrammaticalInfo,
   newSense,
   newWord,
 } from "types/word";
-// import { Bcp47Code } from "types/writingSystem";
+import { Bcp47Code } from "types/writingSystem";
 
 // Used when the guids don't matter.
 function wordAnyGuids(vern: string, senses: Sense[], id: string): Word {
@@ -248,36 +252,33 @@ describe("MergeDupActions", () => {
 
   describe("dispatchMergeStepData", () => {
     it("creates an action to add MergeDups data", async () => {
-      const store = setupStore();
       const goal = new MergeDups();
       goal.steps = [{ words: [...goalDataMock.plannedWords[0]] }];
 
-      await store.dispatch<any>(dispatchMergeStepData(goal));
-      store.dispatch(setWordData([...goalDataMock.plannedWords[0]]));
-      expect(store.getActions()).toEqual([setWordData]);
+      const mockStore = createMockStore();
+      await mockStore.dispatch<any>(dispatchMergeStepData(goal));
+      const setWordData: MergeTreeAction = {
+        type: MergeTreeActionTypes.SET_DATA,
+        payload: [...goalDataMock.plannedWords[0]],
+      };
+      expect(mockStore.getActions()).toEqual([setWordData]);
     });
   });
 
   describe("moveSense", () => {
     const wordId = "mockWordId";
     const mergeSenseId = "mockSenseId";
-    const store = setupStore();
 
     it("creates a MOVE_SENSE action when going from word to word", () => {
       const mockRef: MergeTreeReference = { wordId, mergeSenseId };
-      store.dispatch(
-        moveSense({ ref: mockRef, destWordId: wordId, destOrder: -1 })
-      );
-      const destWordRef = store.getState().mergeDuplicateGoal.tree.words[wordId];
-      // expect(destWordRef.).toEqual(MergeTreeActionTypes.MOVE_SENSE);
+      const resultAction = moveSense(mockRef, wordId, -1);
+      expect(resultAction.type).toEqual(MergeTreeActionTypes.MOVE_SENSE);
     });
 
     it("creates a MOVE_DUPLICATE action when going from sidebar to word", () => {
       const mockRef: MergeTreeReference = { wordId, mergeSenseId, order: 0 };
-      store.dispatch(
-        moveSense({ ref: mockRef, destWordId: wordId, destOrder: -1 })
-      );
-      // expect(resultAction.type).toEqual(MergeTreeActionTypes.MOVE_DUPLICATE);
+      const resultAction = moveSense(mockRef, wordId, -1);
+      expect(resultAction.type).toEqual(MergeTreeActionTypes.MOVE_DUPLICATE);
     });
   });
 
