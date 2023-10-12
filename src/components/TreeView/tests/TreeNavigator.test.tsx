@@ -147,7 +147,7 @@ describe("TreeNavigator", () => {
   });
 });
 
-function simulateKey(key: Key) {
+function simulateKey(key: Key): void {
   const keyDownHandler = eventListeners.get("keydown");
   expect(keyDownHandler).not.toBeUndefined();
   const simulatedArrowKey: Partial<KeyboardEvent> = { key };

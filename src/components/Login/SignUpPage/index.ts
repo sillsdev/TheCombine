@@ -16,6 +16,7 @@ function mapStateToProps(state: StoreState): SignUpStateProps {
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     signUp: (

@@ -1,7 +1,8 @@
+import { Word } from "api/models";
 import { MergeDupsData } from "goals/MergeDuplicates/MergeDupsTypes";
 import { simpleWord } from "types/word";
 
-const wordsArrayMock = () => [
+const wordsArrayMock = (): Word[] => [
   // Each simpleWord() has a randomly generated id
   simpleWord("", ""),
   simpleWord("", ""),

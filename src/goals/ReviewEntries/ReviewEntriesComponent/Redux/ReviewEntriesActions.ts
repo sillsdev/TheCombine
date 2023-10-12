@@ -194,13 +194,19 @@ function refreshWord(
   };
 }
 
-export function deleteAudio(wordId: string, fileName: string) {
+export function deleteAudio(
+  wordId: string,
+  fileName: string
+): (dispatch: StoreStateDispatch) => Promise<void> {
   return refreshWord(wordId, (wordId: string) =>
     backend.deleteAudio(wordId, fileName)
   );
 }
 
-export function uploadAudio(wordId: string, audioFile: File) {
+export function uploadAudio(
+  wordId: string,
+  audioFile: File
+): (dispatch: StoreStateDispatch) => Promise<void> {
   return refreshWord(wordId, (wordId: string) =>
     backend.uploadAudio(wordId, audioFile)
   );

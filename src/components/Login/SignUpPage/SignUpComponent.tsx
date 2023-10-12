@@ -7,7 +7,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Component } from "react";
+import { Component, ReactElement } from "react";
 import { withTranslation, WithTranslation } from "react-i18next";
 
 import router from "browserRouter";
@@ -86,7 +86,7 @@ export class SignUp extends Component<SignUpProps, SignUpState> {
     };
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     const search = window.location.search;
     const email = new URLSearchParams(search).get("email");
     if (email) {
@@ -101,7 +101,7 @@ export class SignUp extends Component<SignUpProps, SignUpState> {
       HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
     >,
     field: K
-  ) {
+  ): void {
     const value = e.target.value;
     this.setState({ [field]: value } as Pick<SignUpState, K>);
     this.setState((prevState) => ({
@@ -109,7 +109,7 @@ export class SignUp extends Component<SignUpProps, SignUpState> {
     }));
   }
 
-  async checkUsername() {
+  async checkUsername(): Promise<void> {
     if (!meetsUsernameRequirements(this.state.username)) {
       this.setState((prevState) => ({
         error: { ...prevState.error, username: true },
@@ -117,7 +117,7 @@ export class SignUp extends Component<SignUpProps, SignUpState> {
     }
   }
 
-  async signUp(e: React.FormEvent<HTMLFormElement>) {
+  async signUp(e: React.FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
     const name = this.state.name.trim();
     const username = this.state.username.trim();
@@ -146,7 +146,7 @@ export class SignUp extends Component<SignUpProps, SignUpState> {
     }
   }
 
-  render() {
+  render(): ReactElement {
     return (
       <Grid container justifyContent="center">
         <Card style={{ width: 450 }}>

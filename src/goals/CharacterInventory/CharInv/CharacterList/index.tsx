@@ -1,6 +1,6 @@
 import { ArrowDownward, ArrowUpward } from "@mui/icons-material";
 import { FormControl, Grid, InputLabel, MenuItem, Select } from "@mui/material";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import CharacterCard from "goals/CharacterInventory/CharInv/CharacterList/CharacterCard";
@@ -17,7 +17,7 @@ enum SortOrder {
   Status,
 }
 
-export default function CharacterList() {
+export default function CharacterList(): ReactElement {
   const cardWidth = 150;
   const fontHeight = 65;
 

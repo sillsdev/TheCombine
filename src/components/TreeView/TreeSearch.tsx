@@ -93,7 +93,9 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
   }
 
   // Dispatch the search for a specified domain, and switches to it if it exists
-  async function searchAndSelectDomain(event: React.KeyboardEvent) {
+  async function searchAndSelectDomain(
+    event: React.KeyboardEvent
+  ): Promise<void> {
     event.bubbles = false;
 
     if (event.key === Key.Enter) {
@@ -117,7 +119,7 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
   }
 
   // Change the input on typing
-  function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+  function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>): void {
     setInput(insertDecimalPoints(event.target.value));
     // Reset the error dialogue when input is changes to avoid showing an error
     // when a valid domain is entered, but Enter hasn't been pushed yet.
@@ -133,7 +135,7 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
 }
 
 // Prevents keystrokes from reaching parent components; must be called onKeyDown
-function stopPropagation(event: React.KeyboardEvent) {
+function stopPropagation(event: React.KeyboardEvent): void {
   if (event.stopPropagation) {
     event.stopPropagation();
   }
