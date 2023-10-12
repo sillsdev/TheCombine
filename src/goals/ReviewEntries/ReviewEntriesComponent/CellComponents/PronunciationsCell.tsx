@@ -1,3 +1,5 @@
+import { ReactElement } from "react";
+
 import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
 import PronunciationsFrontend from "components/Pronunciations/PronunciationsFrontend";
 import {
@@ -17,11 +19,13 @@ interface PronunciationsCellProps {
   wordId: string;
 }
 
-export default function PronunciationsCell(props: PronunciationsCellProps) {
+export default function PronunciationsCell(
+  props: PronunciationsCellProps
+): ReactElement {
   const dispatch = useAppDispatch();
-  const dispatchDelete = (fileName: string) =>
+  const dispatchDelete = (fileName: string): Promise<void> =>
     dispatch(deleteAudio(props.wordId, fileName));
-  const dispatchUpload = (audioFile: File) =>
+  const dispatchUpload = (audioFile: File): Promise<void> =>
     dispatch(uploadAudio(props.wordId, audioFile));
 
   const { addNewAudio, delNewAudio, delOldAudio } = props.audioFunctions ?? {};

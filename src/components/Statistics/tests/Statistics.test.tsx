@@ -1,5 +1,5 @@
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
-import renderer from "react-test-renderer";
+import { ReactTestRenderer, act, create } from "react-test-renderer";
 
 import "tests/reactI18nextMock";
 
@@ -7,7 +7,7 @@ import Statistics from "components/Statistics/Statistics";
 import { newProject } from "types/project";
 import theme from "types/theme";
 
-let testRenderer: renderer.ReactTestRenderer;
+let testRenderer: ReactTestRenderer;
 
 const mockProject = newProject();
 const mockProjectId = "mockProjectId";
@@ -27,7 +27,7 @@ jest.mock("backend/localStorage", () => ({
   getProjectId: () => mockGetProjectId(),
 }));
 
-function setMockFunctions() {
+function setMockFunctions(): void {
   mockGetProjectId.mockReturnValue(mockProjectId);
   mockGetProject.mockResolvedValue(mockProject);
 }
@@ -35,8 +35,8 @@ function setMockFunctions() {
 beforeEach(async () => {
   jest.clearAllMocks();
   setMockFunctions();
-  await renderer.act(async () => {
-    testRenderer = renderer.create(
+  await act(async () => {
+    testRenderer = create(
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <Statistics />{" "}

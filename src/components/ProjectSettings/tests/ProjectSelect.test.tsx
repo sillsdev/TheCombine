@@ -1,5 +1,5 @@
 import { Select } from "@mui/material";
-import renderer from "react-test-renderer";
+import { ReactTestRenderer, act, create } from "react-test-renderer";
 
 import ProjectSelect from "components/ProjectSettings/ProjectSelect";
 import { newProject, randomProject } from "types/project";
@@ -15,11 +15,11 @@ const mockGetAllActiveProjectsByUser = jest.fn();
 
 const mockProjects = [randomProject(), randomProject(), randomProject()];
 
-let selectMaster: renderer.ReactTestRenderer;
+let selectMaster: ReactTestRenderer;
 
-const renderSwitch = async (proj = newProject()) => {
-  await renderer.act(async () => {
-    selectMaster = renderer.create(
+const renderSwitch = async (proj = newProject()): Promise<void> => {
+  await act(async () => {
+    selectMaster = create(
       <ProjectSelect project={proj} setProject={jest.fn()} />
     );
   });
