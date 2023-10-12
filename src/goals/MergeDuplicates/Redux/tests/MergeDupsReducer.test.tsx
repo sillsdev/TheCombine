@@ -95,7 +95,7 @@ describe("MergeDupReducer", () => {
   function checkTreeWords(
     action: Action | PayloadAction,
     expected: Hash<MergeTreeWord>
-  ) {
+  ): void {
     const result = mergeDupStepReducer(mockState, action).tree.words;
     // We have to stringify for this test,
     // because the order of the .sensesGuids matters.

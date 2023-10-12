@@ -50,7 +50,7 @@ export default function Statistics(): ReactElement {
     getProject().then(setCurrentProject);
   }, []);
 
-  function componentToDisplay(view: viewEnum) {
+  function componentToDisplay(view: viewEnum): ReactElement {
     switch (view) {
       case viewEnum.User:
         return <DomainUserStatistics lang={lang} />;
@@ -76,7 +76,7 @@ export default function Statistics(): ReactElement {
     }
   }
 
-  function handleDisplay() {
+  function handleDisplay(): ReactElement[] {
     return [
       <Grid item key={"statistics-title"}>
         <Typography variant="h4" align="center">
@@ -94,7 +94,7 @@ export default function Statistics(): ReactElement {
     ];
   }
 
-  function handleButton() {
+  function handleButton(): ReactElement {
     return (
       <List className={classes.root}>
         <ListItemButton

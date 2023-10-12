@@ -18,7 +18,7 @@ export default function UserStatistics(
   >([]);
 
   useEffect(() => {
-    const updateSemanticDomainUserCounts = async () => {
+    const updateSemanticDomainUserCounts = async (): Promise<void> => {
       const counts = await getUserStatistics(
         LocalStorage.getProjectId(),
         props.lang
