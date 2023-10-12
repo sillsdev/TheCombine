@@ -1,5 +1,6 @@
 import { Close } from "@mui/icons-material";
 import { Grid, IconButton, Typography } from "@mui/material";
+import { ReactElement } from "react";
 
 import CharacterInfo from "goals/CharacterInventory/CharInv/CharacterDetail/CharacterInfo";
 import CharacterStatusControl from "goals/CharacterInventory/CharInv/CharacterDetail/CharacterStatusControl";
@@ -13,7 +14,9 @@ interface CharacterDetailProps {
 }
 
 /** A view displaying detailed information about a character */
-export default function CharacterDetail(props: CharacterDetailProps) {
+export default function CharacterDetail(
+  props: CharacterDetailProps
+): ReactElement {
   return (
     <Grid
       container

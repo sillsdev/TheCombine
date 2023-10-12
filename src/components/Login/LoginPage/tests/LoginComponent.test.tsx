@@ -60,7 +60,7 @@ function testLogin(
   password: string,
   goodUsername: boolean,
   goodPassword: boolean
-) {
+): void {
   loginHandle.instance.setState({ username, password });
   loginHandle.instance.login(MOCK_EVENT);
   expect(loginHandle.instance.state.error).toEqual({
