@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { act, cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import mediaQuery from "css-mediaquery";
+import { match } from "css-mediaquery";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
@@ -73,7 +73,7 @@ const createMatchMedia = (
 ): ((query: string) => MediaQueryList) => {
   return (query: string) =>
     ({
-      matches: mediaQuery.match(query, { width }),
+      matches: match(query, { width }),
       addListener: jest.fn(),
       removeListener: jest.fn(),
     }) as any;

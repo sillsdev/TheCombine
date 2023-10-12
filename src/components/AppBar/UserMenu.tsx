@@ -97,20 +97,11 @@ export default function UserMenu(props: TabProps): ReactElement {
         open={Boolean(anchorElement)}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
       >
-        <WrappedUserMenuList isAdmin={isAdmin} onSelect={handleClose} />
+        <UserMenuList isAdmin={isAdmin} onSelect={handleClose} />
       </Menu>
     </>
   );
 }
-
-// <Menu> automatically applies a ref to its first child for anchoring. The
-// following prevents a console warning: "Function components cannot be given refs.
-// Attempts to access this ref will fail. Did you mean to use React.forwardRef()?"
-const WrappedUserMenuList = React.forwardRef(
-  (props: React.ComponentProps<typeof UserMenuList>, ref) => (
-    <UserMenuList {...props} forwardedRef={ref} />
-  )
-);
 
 interface UserMenuListProps {
   isAdmin: boolean;

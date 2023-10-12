@@ -1,7 +1,7 @@
 import MaterialTable from "@material-table/core";
 import { Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, createRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -41,8 +41,8 @@ function getPageState(wordCount: number): PageState {
 }
 
 // Constants
-const ROWS_PER_PAGE = [10, 50, 250];
-const tableRef: React.RefObject<any> = React.createRef();
+const ROWS_PER_PAGE = [10, 50, 200];
+const tableRef: React.RefObject<any> = createRef();
 
 export default function ReviewEntriesTable(
   props: ReviewEntriesTableProps
