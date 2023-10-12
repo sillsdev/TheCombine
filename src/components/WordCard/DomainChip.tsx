@@ -8,6 +8,7 @@ import { friendlySep, getDateTimeString } from "utilities/utilities";
 
 interface DomainChipProps {
   domain: SemanticDomain;
+  minimal?: boolean;
   provenance?: boolean;
 }
 
@@ -23,17 +24,17 @@ export default function DomainChip(props: DomainChipProps): ReactElement {
     }
   }, [provenance, userId]);
 
-  const text = `${id}: ${name}`;
-  const provenanceText: string[] = [];
+  const text = props.minimal ? id : `${id}: ${name}`;
+  const hoverText = props.minimal ? [`${id}: ${name}`] : [];
   if (props.provenance && created) {
-    provenanceText.push(
+    hoverText.push(
       t("wordHistory.domainAdded", {
         val: getDateTimeString(created, friendlySep),
       })
     );
   }
   if (username) {
-    provenanceText.push(t("wordHistory.user", { val: username }));
+    hoverText.push(t("wordHistory.user", { val: username }));
   }
-  return <Chip label={text} title={provenanceText.join("\n")} />;
+  return <Chip label={text} title={hoverText.join("\n")} />;
 }

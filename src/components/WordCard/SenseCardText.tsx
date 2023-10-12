@@ -51,6 +51,7 @@ function getSenseInLanguages(
 
 interface SenseTextRowsProps {
   senseInLang: SenseInLanguage;
+  hideDefs?: boolean;
 }
 
 function SenseTextRows(props: SenseTextRowsProps): ReactElement {
@@ -74,7 +75,7 @@ function SenseTextRows(props: SenseTextRowsProps): ReactElement {
           </TypographyWithFont>
         </TableCell>
       </TableRow>
-      {!!props.senseInLang.definitionText && (
+      {!!props.senseInLang.definitionText && !props.hideDefs && (
         <TableRow key={lang + "def"}>
           <TableCell style={{ borderBottom: "none" }} />
           <TableCell style={{ borderBottom: "none" }}>
@@ -101,8 +102,9 @@ function SenseTextRows(props: SenseTextRowsProps): ReactElement {
 }
 
 interface SenseCardTextProps {
-  sense: Sense;
   languages?: string[];
+  minimal?: boolean;
+  sense: Sense;
 }
 
 // Only show first sense's glosses/definitions; in merging, others deleted as duplicates.
@@ -116,7 +118,11 @@ export default function SenseCardText(props: SenseCardTextProps): ReactElement {
     <Table padding="none">
       <TableBody>
         {senseTextInLangs.map((senseInLang, index) => (
-          <SenseTextRows key={index} senseInLang={senseInLang} />
+          <SenseTextRows
+            hideDefs={props.minimal}
+            key={index}
+            senseInLang={senseInLang}
+          />
         ))}
       </TableBody>
     </Table>

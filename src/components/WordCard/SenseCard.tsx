@@ -8,6 +8,7 @@ import SenseCardText from "components/WordCard/SenseCardText";
 
 interface SenseCardProps {
   languages?: string[];
+  minimal?: boolean;
   provenance?: boolean;
   sense: Sense;
 }
@@ -29,12 +30,20 @@ export default function SenseCard(props: SenseCardProps): ReactElement {
           )}
         </div>
         {/* List glosses and (if any) definitions. */}
-        <SenseCardText sense={props.sense} languages={props.languages} />
+        <SenseCardText
+          languages={props.languages}
+          minimal={props.minimal}
+          sense={props.sense}
+        />
         {/* List semantic domains. */}
         <Grid container spacing={2}>
           {props.sense.semanticDomains.map((d) => (
             <Grid item key={d.guid}>
-              <DomainChip domain={d} provenance={props.provenance} />
+              <DomainChip
+                domain={d}
+                minimal={props.minimal}
+                provenance={props.provenance}
+              />
             </Grid>
           ))}
         </Grid>
