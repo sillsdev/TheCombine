@@ -26,6 +26,7 @@ import { Hash } from "types/hash";
 import { newFlag, testWordList } from "types/word";
 
 jest.mock("uuid");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const mockUuid = require("uuid") as { v4: jest.Mock };
 
 let uuidIndex = 0;
