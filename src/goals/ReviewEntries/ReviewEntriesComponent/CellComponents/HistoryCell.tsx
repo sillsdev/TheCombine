@@ -33,8 +33,11 @@ export default function HistoryCell(props: HistoryCellProps): ReactElement {
 function WordTree(props: { tree: Pedigree }): ReactElement {
   return (
     <>
+      <Grid container justifyContent="space-around">
+        <WordCard provenance word={props.tree.word} />
+      </Grid>
       {props.tree.parents ? (
-        <Grid alignItems="flex-end" container justifyContent="space-around">
+        <Grid alignItems="flex-start" container justifyContent="space-around">
           {props.tree.parents.map((p) => (
             <Grid item key={p.word.id}>
               <WordTree tree={p} />
@@ -42,9 +45,6 @@ function WordTree(props: { tree: Pedigree }): ReactElement {
           ))}
         </Grid>
       ) : null}
-      <Grid container justifyContent="space-around">
-        <WordCard provenance word={props.tree.word} />
-      </Grid>
     </>
   );
 }
