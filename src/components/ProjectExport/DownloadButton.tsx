@@ -19,10 +19,10 @@ import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxT
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { themeColors } from "types/theme";
-import { getNowDateTimeString } from "utilities/utilities";
+import { getDateTimeString } from "utilities/utilities";
 
 function makeExportName(projectName: string) {
-  return `${projectName}_${getNowDateTimeString()}.zip`;
+  return `${projectName}_${getDateTimeString()}.zip`;
 }
 
 interface DownloadButtonProps {
