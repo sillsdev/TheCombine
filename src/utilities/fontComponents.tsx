@@ -78,7 +78,7 @@ type LiWithFontProps = React.DetailedHTMLProps<
  *   `lang: string?` (bcp47 lang-tag for applying the appropriate analysis font);
  *   `vernacular: bool?` (used to apply the vernacular font).
  */
-export function LiWithFont(props: LiWithFontProps) {
+export function LiWithFont(props: LiWithFontProps): ReactElement {
   const fontContext = useContext(FontContext);
   // Use spread to remove the custom props from what is passed into li.
   const { analysis, lang, vernacular, ...liProps } = props;

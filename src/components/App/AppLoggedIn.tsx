@@ -57,7 +57,7 @@ export default function AppWithBar(): ReactElement {
     }
   }, [proj]);
 
-  const overrideThemeFont = (theme: Theme) =>
+  const overrideThemeFont = (theme: Theme): Theme =>
     styleOverrides
       ? createTheme({
           ...theme,
