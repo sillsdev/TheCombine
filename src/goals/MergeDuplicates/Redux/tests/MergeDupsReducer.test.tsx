@@ -17,7 +17,6 @@ import {
   setWordData,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import mergeDupStepReducer, {
-  moveSenseAction,
   defaultState,
 } from "goals/MergeDuplicates/Redux/MergeDupsReducer";
 import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
@@ -475,7 +474,7 @@ describe("MergeDupReducer", () => {
         destWordId: destWordId,
         destOrder: 1,
       });
-      expect(testAction.type).toEqual(moveSenseAction);
+      expect(testAction.type).toEqual("mergeDupStepReducer/moveSenseAction");
 
       const expectedWords = testTreeWords();
       delete expectedWords[srcWordId];
