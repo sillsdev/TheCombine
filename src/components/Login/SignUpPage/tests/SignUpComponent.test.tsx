@@ -1,27 +1,34 @@
-import renderer from "react-test-renderer";
+import {
+  ReactTestInstance,
+  ReactTestRenderer,
+  act,
+  create,
+} from "react-test-renderer";
 
 import "tests/reactI18nextMock";
 
 import SignUp from "components/Login/SignUpPage/SignUpComponent";
 
-jest.mock("@matt-block/react-recaptcha-v2", () => () => (
-  <div id="mockRecaptcha">Recaptcha</div>
-));
+jest.mock(
+  "@matt-block/react-recaptcha-v2",
+  () =>
+    function MockRecaptcha() {
+      return <div id="mockRecaptcha">Recaptcha</div>;
+    }
+);
 jest.mock("browserRouter");
 
 const mockReset = jest.fn();
-let signUpMaster: renderer.ReactTestRenderer;
-let signUpHandle: renderer.ReactTestInstance;
+let signUpMaster: ReactTestRenderer;
+let signUpHandle: ReactTestInstance;
 
 const DATA = "stuff";
 const MOCK_EVENT = { preventDefault: jest.fn(), target: { value: DATA } };
 
 describe("Testing sign up component", () => {
-  beforeEach(() => {
-    renderer.act(() => {
-      signUpMaster = renderer.create(
-        <SignUp failureMessage="" reset={mockReset} />
-      );
+  beforeEach(async () => {
+    await act(async () => {
+      signUpMaster = create(<SignUp failureMessage="" reset={mockReset} />);
     });
     signUpHandle = signUpMaster.root.findByType(SignUp);
     mockReset.mockClear();
@@ -91,7 +98,7 @@ async function testSignUp(
   error_email: boolean,
   error_password: boolean,
   error_confirmPassword: boolean
-) {
+): Promise<void> {
   signUpHandle.instance.setState({
     name,
     username,

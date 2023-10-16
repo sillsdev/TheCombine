@@ -20,6 +20,7 @@ import { Hash } from "types/hash";
 import { newFlag, testWordList } from "types/word";
 
 jest.mock("uuid");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const mockUuid = require("uuid") as { v4: jest.Mock };
 
 let uuidIndex = 0;
@@ -92,7 +93,7 @@ describe("MergeDupReducer", () => {
   function checkTreeWords(
     action: MergeTreeAction,
     expected: Hash<MergeTreeWord>
-  ) {
+  ): void {
     const result = mergeDupStepReducer(mockState, action).tree.words;
     // We have to stringify for this test,
     // because the order of the .sensesGuids matters.

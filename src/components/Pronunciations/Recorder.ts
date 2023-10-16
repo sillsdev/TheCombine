@@ -4,7 +4,7 @@ export default class Recorder {
   private toast: (text: string) => void;
   private recordRTC?: RecordRTC;
 
-  static blobType: "audio" = "audio";
+  static blobType: RecordRTC.Options["type"] = "audio";
 
   constructor(toast?: (text: string) => void) {
     this.toast = toast ?? ((text: string) => alert(text));

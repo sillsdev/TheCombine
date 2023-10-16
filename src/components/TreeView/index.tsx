@@ -66,7 +66,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
     if (!exit) {
       return;
     }
-    const handleEsc = (event: KeyboardEvent) => {
+    const handleEsc = (event: KeyboardEvent): void => {
       if (exit && event.key === Key.Escape) {
         exit();
       }

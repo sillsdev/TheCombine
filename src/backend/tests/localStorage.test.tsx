@@ -32,7 +32,7 @@ afterAll(() => {
   }
 });
 
-function expectAllEmpty() {
+function expectAllEmpty(): void {
   expect(LocalStorage.getAvatar()).toEqual("");
   expect(LocalStorage.getClosedBanner()).toEqual("");
   expect(LocalStorage.getCurrentUser()).toEqual(undefined);

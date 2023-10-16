@@ -18,7 +18,7 @@ import domMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
 import { newSemanticDomainTreeNode } from "types/semanticDomain";
 
 // Handles
-const MOCK_ANIMATE = jest.fn((_domain: SemanticDomainTreeNode) => {
+const MOCK_ANIMATE = jest.fn(() => {
   console.log("MockAnimateCalled");
   return Promise.resolve();
 });
@@ -35,7 +35,7 @@ function getSearchInput(): HTMLInputElement {
   return screen.getByTestId(testId);
 }
 
-function setupSpies(domain: SemanticDomainTreeNode | undefined) {
+function setupSpies(domain: SemanticDomainTreeNode | undefined): void {
   jest.spyOn(backend, "getSemanticDomainTreeNode").mockResolvedValue(domain);
   jest
     .spyOn(backend, "getSemanticDomainTreeNodeByName")
@@ -44,7 +44,7 @@ function setupSpies(domain: SemanticDomainTreeNode | undefined) {
 
 describe("TreeSearch", () => {
   describe("searchAndSelectDomain", () => {
-    async function simulateTypeAndEnter(input: string) {
+    async function simulateTypeAndEnter(input: string): Promise<void> {
       // Simulate the user typing a string
       const simulatedInput = {
         target: { value: input },

@@ -1,6 +1,6 @@
 import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router-dom";
-import renderer from "react-test-renderer";
+import { act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
@@ -18,9 +18,7 @@ jest.mock("backend", () => ({
 
 const mockStore = configureMockStore()(defaultState);
 
-let testRenderer: renderer.ReactTestRenderer;
-
-function setMockFunctions() {
+function setMockFunctions(): void {
   mockGetUser.mockResolvedValue(mockUser);
 }
 
@@ -30,9 +28,9 @@ beforeAll(() => {
 });
 
 describe("AppBar", () => {
-  it("renders", () => {
-    renderer.act(() => {
-      testRenderer = renderer.create(
+  it("renders", async () => {
+    await act(async () => {
+      create(
         <Provider store={mockStore}>
           <MemoryRouter>
             <AppBar />
