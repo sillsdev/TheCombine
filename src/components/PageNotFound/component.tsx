@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import React from "react";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -10,12 +10,12 @@ import { Path } from "types/path";
  * A custom 404 page that should be displayed anytime the user tries to navigate
  * to a nonexistent route.
  */
-export default function PageNotFound() {
+export default function PageNotFound(): ReactElement {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
-    <React.Fragment>
+    <>
       <Typography variant="h4" style={{ textAlign: "center" }}>
         {t("generic.404Title")}
       </Typography>
@@ -30,6 +30,6 @@ export default function PageNotFound() {
       <Typography variant="h5" style={{ textAlign: "center" }}>
         {t("generic.404Text")}
       </Typography>
-    </React.Fragment>
+    </>
   );
 }
