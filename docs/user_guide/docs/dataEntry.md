@@ -53,14 +53,14 @@ project. If you see that the word you are typing is already in the project, you 
 suggestions, instead of having to typing the remainder of the word. When the setting is off, the vernacular word must be
 typed in its entirety; no existing potential matches will be suggested.
 
-![Data Entry duplicate vernacular forms](images/data-entry-dup-vern.png){ .center }
+![Data Entry duplicate vernacular forms](images/data-entry-dup-vern.png){.center}
 
 Whether you type a form that matches an existing entry in the project or select one of the suggestions offered by The
 Combine, a box will pop up with options. (This box will not pop up if the Autocomplete setting is off or if you type a
 vernacular form that does not yet exist in the project.) In the pop-up box, you will be shown all existing entries with
 that vernacular form and can to choose whether to update one of those entries or create a new entry.
 
-![Data Entry duplicate vernacular entries](images/data-entry-dup-vern-select-entry.png){ .center }
+![Data Entry duplicate vernacular entries](images/data-entry-dup-vern-select-entry.png){.center}
 
 If you choose to create a new entry, the pop-up box will close, and you can then type the gloss for your new entry.
 
@@ -71,4 +71,4 @@ If you choose to create a new entry, the pop-up box will close, and you can then
 If you instead choose to update one of the existing entries, a second box will appear. Here you can choose to update an
 existing sense on the selected entry or to add a new sense to that entry.
 
-![Data Entry duplicate vernacular senses](images/data-entry-dup-vern-select-sense.png){ .center }
+![Data Entry duplicate vernacular senses](images/data-entry-dup-vern-select-sense.png){.center}

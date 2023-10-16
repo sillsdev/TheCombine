@@ -2,7 +2,7 @@
 
 How to sign up, log in, and edit your account.
 
-![Login](images/login.png){ .center }
+![Login](images/login.png){.center}
 
 ## Sign Up
 
@@ -28,7 +28,7 @@ will be sent to the email address associated with your account.
 After login, there is a blue App Bar along the top of The Combine. Click on the avatar icon at the right end of the App
 Bar to open the User Menu. Select "User Settings" to change account/profile settings.
 
-![User Menu](images/userMenu.png){ .center }
+![User Menu](images/userMenu.png){.center}
 
 You can add or update your:
 

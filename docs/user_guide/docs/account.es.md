@@ -2,7 +2,7 @@
 
 Cómo registrarse, iniciar sesión y editar su cuenta.
 
-![Inicio de sesión](../images/login.png){ .center }
+![Inicio de sesión](../images/login.png){.center}
 
 ## Registrarse
 
@@ -14,11 +14,9 @@ Para crear una nueva cuenta, pulse el botón [REGISTRARSE](../../sign-up) en la 
 
 ## Iniciar Sesión
 
-[Iniciar Sesión](../../login) a The Combine con el nombre de usuario y la contraseña facilitados en el momento de la
-inscripción.
+[Iniciar Sesión](../../login) a The Combine con el nombre de usuario y la contraseña facilitados en el momento de la inscripción.
 
-Si desea cambiar su contraseña, haga clic en el enlace "¿Olvidó su contraseña?". Siga las instrucciones y un
-restablecimiento de contraseña será enviada a la dirección de correo electrónico asociada a su cuenta.
+Si desea cambiar su contraseña, haga clic en el enlace "¿Olvidó su contraseña?". Siga las instrucciones y un restablecimiento de contraseña será enviada a la dirección de correo electrónico asociada a su cuenta.
 
 !!! warning "Importante"
 
@@ -26,11 +24,9 @@ restablecimiento de contraseña será enviada a la dirección de correo electró
 
 ## Configuración
 
-Tras iniciar sesión, aparecerá una barra de aplicaciones azul en la parte superior de The Combine. Pulse el icono del
-avatar en el extremo derecho de la App Barra para abrir el Menú de Usuario. Seleccione "Configuración de usuario" para
-cambiar los ajustes de cuenta/perfil.
+Tras iniciar sesión, aparecerá una barra de aplicaciones azul en la parte superior de The Combine. Pulse el icono del avatar en el extremo derecho de la App Barra para abrir el Menú de Usuario. Seleccione "Configuración de usuario" para cambiar los ajustes de cuenta/perfil.
 
-![Menú de usuario](../images/userMenu.png){ .center }
+![Menú de usuario](../images/userMenu.png){.center}
 
 Puede añadir o actualizar su:
 

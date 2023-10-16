@@ -88,17 +88,17 @@ deleted when you Save & Continue.
 
 There is a flag icon at the top-right corner of every column (to the right of the vernacular form).
 
-![Merge Duplicates flagging an entry](images/mergeFlag.png){ .center }
+![Merge Duplicates flagging an entry](images/mergeFlag.png){.center}
 
 You can click on the flag icon to flag the entry for future inspection or editing. (You can sort flagged entries in
 [Review Entries](#review-entries).) When you flag an entry, you are given the option to add text to the flag.
 
-![Merge Duplicates adding or editing a flag](images/mergeEditFlag.png){ .center }
+![Merge Duplicates adding or editing a flag](images/mergeEditFlag.png){.center}
 
 Whether or not any text is typed, you will know that the entry is flagged because the flag icon will be solid red. If
 you added text, you can hover your cursor over the flag to see the text.
 
-![Merge Duplicates a flagged entry](images/mergeFlagged.png){ .center }
+![Merge Duplicates a flagged entry](images/mergeFlagged.png){.center}
 
 Click on the red flag icon to edit the text or remove the flag.
 
@@ -141,7 +141,7 @@ information will appear in the Merge Duplicate sense cards as follows:
   category (e.g., noun or verb). Hover your cursor over the hexagon to see the specific grammatical category (e.g.,
   proper noun or transitive verb).
 
-![Merge Duplicates sense with definitions and part of speech](images/mergeSenseDefinitionsPartOfSpeech.png){ .center }
+![Merge Duplicates sense with definitions and part of speech](images/mergeSenseDefinitionsPartOfSpeech.png){.center}
 
 #### Protected Entries and Senses
 
@@ -180,7 +180,7 @@ Click on a character tile to open a panel for that character.
     right; the panel will be at the top of this. If your window is narrow, tiles fill all the way to the right side of the
     window; the panel will be at the bottom, below all the tiles.
 
-![Character Inventory character panel](images/characterInventoryPanel.png){ .center }
+![Character Inventory character panel](images/characterInventoryPanel.png){.center}
 
 The middle of the panel shows up to 5 example vernacular forms in which the character occurs, highlighting the character
 in each occurrence.

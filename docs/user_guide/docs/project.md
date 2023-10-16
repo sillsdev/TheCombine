@@ -6,7 +6,7 @@ A project is for a single vernacular language.
 
 When creating a project, you have the option to start with an empty project or to import existing lexical data.
 
-![Create Project - Tzotzil](images/projectCreateTzotzil.png){ .center }
+![Create Project - Tzotzil](images/projectCreateTzotzil.png){.center}
 
 ### Import Existing Data
 
@@ -43,7 +43,7 @@ Settings for managing the project. The following settings are available for proj
 
 ### Basic Settings
 
-![BasicSettings](images/projectSettings1Basic.png){ width=750 .center }
+![BasicSettings](images/projectSettings1Basic.png){width=750 .center}
 
 #### Project Name
 
@@ -68,9 +68,9 @@ from the servers.
 
 ### Project Languages {#project-languages}
 
-![Languages](images/projectSettings2Langs.png){ width=750 .center }
+![Languages](images/projectSettings2Langs.png){width=750 .center}
 
-![Project Languages - Tzotzil](images/projectLanguagesTzotzil.png){ .center }
+![Project Languages - Tzotzil](images/projectLanguagesTzotzil.png){.center}
 
 The _vernacular language_ specified at project creation is fixed.
 
@@ -87,7 +87,7 @@ The _semantic domains language_ controls the language in which semantic domain t
 
 ### Project Users
 
-![Users](images/projectSettings3Users.png){ width=750 .center }
+![Users](images/projectSettings3Users.png){width=750 .center}
 
 #### Current Users
 
@@ -126,7 +126,7 @@ invitation).
 
 ### Import/Export
 
-![Import/Export](images/projectSettings4Port.png){ width=750 .center }
+![Import/Export](images/projectSettings4Port.png){width=750 .center}
 
 #### Import {#import}
 
@@ -150,20 +150,20 @@ project name with a timestamp affixed.
 
 ### Workshop Schedule {#workshop-schedule}
 
-![Workshop Schedule](images/projectSettings5Sched.png){ width=750 .center }
+![Workshop Schedule](images/projectSettings5Sched.png){width=750 .center}
 
 This is only available to the project Owner, allowing a schedule to be set for a Rapid Word Collection workshop. Click
 the first button to select a date range for the workshop. Click the middle button to add or remove specific dates. Click
 the last button to clear the schedule.
 
-![Workshop Schedule](images/projectSchedule.png){ .center }
+![Workshop Schedule](images/projectSchedule.png){.center}
 
 ## Project Statistics
 
 If you are the project Owner, there will be another icon alongside the gear icon in App Bar at the top of The Combine.
 This opens statistics about words in the project.
 
-![Project Statistics Button](images/projectStatsButton.png){ .center }
+![Project Statistics Button](images/projectStatsButton.png){.center}
 
 In the context of these statistics, _word_ refers to a sense-domain pair: e.g., an entry with 3 senses, each with 2
 semantic domains, will be counted as 6 words.
