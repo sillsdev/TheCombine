@@ -129,11 +129,11 @@ jobs:
         with:
           dotnet-version: "6.0.x"
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@2cb752a87e96af96708ab57187ab6372ee1973ab # v2.22.0
+        uses: github/codeql-action/init@fdcae64e1484d349b3366718cdfef3d404390e85 # v2.22.1
         with:
           languages: csharp
       - name: Autobuild
-        uses: github/codeql-action/autobuild@2cb752a87e96af96708ab57187ab6372ee1973ab # v2.22.0
+        uses: github/codeql-action/autobuild@fdcae64e1484d349b3366718cdfef3d404390e85 # v2.22.1
       - name: Upload artifacts if build failed
         uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
         if: ${{ failure() }}
@@ -141,7 +141,7 @@ jobs:
           name: tracer-logs
           path: ${{ runner.temp }}/*.log
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@2cb752a87e96af96708ab57187ab6372ee1973ab # v2.22.0
+        uses: github/codeql-action/analyze@fdcae64e1484d349b3366718cdfef3d404390e85 # v2.22.1
 
   docker_build:
     runs-on: ubuntu-22.04
