@@ -10,7 +10,6 @@ export default function NoteCell(props: FieldParameterStandard): ReactElement {
   return (
     <TextField
       variant="standard"
-      key={`row-${props.rowData.id}-note`}
       id={`row-${props.rowData.id}-note-text`}
       multiline
       value={props.value}

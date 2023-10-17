@@ -865,9 +865,12 @@ export default function DataEntryTable(
         </Grid>
 
         {state.recentWords.map((wordAccess, index) => (
-          <Grid item xs={12} key={index}>
+          <Grid
+            item
+            key={`${wordAccess.word.id}_${wordAccess.senseGuid}`}
+            xs={12}
+          >
             <RecentEntry
-              key={wordAccess.word.id + "_" + wordAccess.senseGuid}
               rowIndex={index}
               entry={wordAccess.word}
               senseGuid={wordAccess.senseGuid}

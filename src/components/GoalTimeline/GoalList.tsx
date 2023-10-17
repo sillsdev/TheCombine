@@ -62,17 +62,24 @@ export default function GoalList(props: GoalListProps): ReactElement {
       onMouseOver={() => setScrollVisible(props.scrollable)}
       onMouseLeave={() => setScrollVisible(false)}
     >
-      {props.data.length > 0
-        ? props.data.map((g, i) => {
-            const buttonProps = {
-              id: props.completed
-                ? `completed-goal-${i}`
-                : `new-goal-${g.name}`,
-              onClick: () => props.handleChange(g),
-            };
-            return makeGoalTile(tileSize, props.orientation, g, buttonProps);
-          })
-        : makeGoalTile(tileSize, props.orientation)}
+      {props.data.length > 0 ? (
+        props.data.map((g) => {
+          const id = props.completed
+            ? `completed-goal-${g.guid}`
+            : `new-goal-${g.name}`;
+          return (
+            <GoalTile
+              buttonProps={{ id, onClick: () => props.handleChange(g) }}
+              goal={g}
+              key={id}
+              orientation={props.orientation}
+              size={tileSize}
+            />
+          );
+        })
+      ) : (
+        <GoalTile size={tileSize} orientation={props.orientation} />
+      )}
       <div
         ref={(element: HTMLDivElement) => {
           if (props.scrollToEnd && element) {
@@ -93,19 +100,21 @@ function buttonStyle(orientation: Orientation, size: number): CSSProperties {
   }
 }
 
-export function makeGoalTile(
-  size: number,
-  orientation: Orientation,
-  goal?: Goal,
-  buttonProps?: ButtonProps
-): ReactElement {
+interface GoalTileProps {
+  buttonProps?: ButtonProps;
+  goal?: Goal;
+  orientation: Orientation;
+  size: number;
+}
+function GoalTile(props: GoalTileProps): ReactElement {
+  const goal = props.goal;
   return (
-    <ImageListItem key={goal?.guid + orientation} cols={1}>
+    <ImageListItem key={goal?.guid + props.orientation} cols={1}>
       <Button
-        {...buttonProps}
+        {...props.buttonProps}
         color="primary"
         variant={goal ? "outlined" : "contained"}
-        style={buttonStyle(orientation, size)}
+        style={buttonStyle(props.orientation, props.size)}
         disabled={
           /* Hide completed, except goalTypes for which the completed view is implemented. */
           !goal ||

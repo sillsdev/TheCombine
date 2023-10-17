@@ -20,7 +20,6 @@ export default function ImmutableExistingData(
       <Grid
         item
         xs={5}
-        key={"vernacular_" + props.vernacular}
         style={{
           borderBottomStyle: "dotted",
           borderBottomWidth: 1,
@@ -34,7 +33,6 @@ export default function ImmutableExistingData(
       <Grid
         item
         xs={5}
-        key={"gloss_" + props.gloss.def}
         style={{
           borderBottomStyle: "dotted",
           borderBottomWidth: 1,

@@ -14,10 +14,9 @@ export default function PartOfSpeechCell(
 ): ReactElement {
   return (
     <AlignedList
-      key={`partOfSpeechCell:${props.rowData.id}`}
       listId={`partsOfSpeech${props.rowData.id}`}
-      contents={props.rowData.senses.map((sense, senseIndex) => (
-        <Grid container direction="row" spacing={2} key={senseIndex}>
+      contents={props.rowData.senses.map((sense) => (
+        <Grid container direction="row" key={sense.guid} spacing={2}>
           <PartOfSpeechButton
             buttonId={`sense-${sense.guid}-part-of-speech`}
             gramInfo={sense.partOfSpeech}
