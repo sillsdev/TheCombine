@@ -109,7 +109,7 @@ interface GoalTileProps {
 function GoalTile(props: GoalTileProps): ReactElement {
   const goal = props.goal;
   return (
-    <ImageListItem key={goal?.guid + props.orientation} cols={1}>
+    <ImageListItem cols={1}>
       <Button
         {...props.buttonProps}
         color="primary"

@@ -77,8 +77,8 @@ function setMockFunctions(): void {
 }
 
 const mockProjectId = "123";
-const mockUserId = "789";
 const mockUserEditId = "456";
+const mockUserId = "789";
 const mockCompletedMerge: MergeUndoIds = {
   parentIds: ["1", "2"],
   childIds: ["3", "4"],
@@ -88,14 +88,14 @@ const mockCharInvChanges: CharacterChange[] = [
 ];
 
 const mockEdit = (): Edit => ({
-  guid: "edit-guid",
-  goalType: 4,
-  stepData: [],
   changes: JSON.stringify(mockCompletedMerge),
+  goalType: 4,
+  guid: "edit-guid",
+  stepData: [],
 });
 const mockUserEdits = (hasEdit: boolean): UserEdit => ({
-  id: mockUserEditId,
   edits: hasEdit ? [mockEdit()] : [],
+  id: mockUserEditId,
   projectId: mockProjectId,
 });
 const mockUser = (): User => ({
