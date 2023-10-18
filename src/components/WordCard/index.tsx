@@ -14,6 +14,7 @@ import { FlagButton, IconButtonWithTooltip } from "components/Buttons";
 import { EntryNote } from "components/DataEntry/DataEntryTable/EntryCellComponents";
 import { PronunciationsBackend } from "components/Pronunciations/PronunciationsBackend";
 import SenseCard from "components/WordCard/SenseCard";
+import SummarySenseCard from "components/WordCard/SummarySenseCard";
 import { themeColors } from "types/theme";
 import { TypographyWithFont } from "utilities/fontComponents";
 import { friendlySep, getDateTimeString } from "utilities/utilities";
@@ -66,8 +67,29 @@ export default function WordCard(props: WordCardProps): ReactElement {
             />
           )}
         </div>
+        {/* Audio playback. */}
+        {audio.length > 0 && full && (
+          <PronunciationsBackend
+            deleteAudio={() => {}}
+            playerOnly
+            pronunciationFiles={audio}
+            wordId={id}
+          />
+        )}
         {/* Senses. */}
-        {full || senses.length <= 2 ? (
+        {full ? (
+          senses.map((s) => (
+            <SenseCard
+              key={s.guid}
+              languages={languages}
+              provenance={provenance}
+              sense={s}
+            />
+          ))
+        ) : (
+          <SummarySenseCard senses={senses} />
+        )}
+        {/*full || senses.length <= 2 ? (
           senses.map((s) => (
             <SenseCard
               key={s.guid}
@@ -92,25 +114,11 @@ export default function WordCard(props: WordCardProps): ReactElement {
               } more senses`}</Typography>
             </Card>
           </>
-        ) : null}
-        {/* Audio playback. */}
-        {audio.length > 0 && full && (
-          <PronunciationsBackend
-            deleteAudio={() => {}}
-            playerOnly
-            pronunciationFiles={audio}
-            wordId={id}
-          />
-        )}
+            ) : null*/}
         {/* Timestamps */}
         {provenance && (
           <Typography display="block" variant="caption">
             {t("wordHistory.wordId", { val: id })}
-            {full && <br />}
-            {full &&
-              t("wordHistory.wordCreated", {
-                val: getDateTimeString(word.created, friendlySep),
-              })}
             <br />
             {t("wordHistory.wordModified", {
               val: getDateTimeString(word.modified, friendlySep),
