@@ -49,6 +49,31 @@ function getSenseInLanguages(
   return languages.map((l) => getSenseInLanguage(sense, l));
 }
 
+interface SenseCardTextProps {
+  languages?: string[];
+  minimal?: boolean;
+  sense: Sense;
+}
+
+// Show glosses and (if not minimal) definitions
+export default function SenseCardText(props: SenseCardTextProps): ReactElement {
+  const senseTextInLangs = getSenseInLanguages(props.sense, props.languages);
+
+  return (
+    <Table padding="none">
+      <TableBody>
+        {senseTextInLangs.map((senseInLang, index) => (
+          <SenseTextRows
+            hideDefs={props.minimal}
+            key={index}
+            senseInLang={senseInLang}
+          />
+        ))}
+      </TableBody>
+    </Table>
+  );
+}
+
 interface SenseTextRowsProps {
   senseInLang: SenseInLanguage;
   hideDefs?: boolean;
@@ -69,7 +94,7 @@ function SenseTextRows(props: SenseTextRowsProps): ReactElement {
           <TypographyWithFont
             lang={lang}
             style={{ marginBottom: theme.spacing(1) }}
-            variant="h5"
+            variant="h6"
           >
             {props.senseInLang.glossText}
           </TypographyWithFont>
@@ -86,11 +111,7 @@ function SenseTextRows(props: SenseTextRowsProps): ReactElement {
                 paddingLeft: theme.spacing(1),
               }}
             >
-              <TypographyWithFont
-                color="textSecondary"
-                lang={lang}
-                variant="h6"
-              >
+              <TypographyWithFont color="textSecondary" lang={lang}>
                 {props.senseInLang.definitionText}
               </TypographyWithFont>
             </div>
@@ -98,33 +119,5 @@ function SenseTextRows(props: SenseTextRowsProps): ReactElement {
         </TableRow>
       )}
     </>
-  );
-}
-
-interface SenseCardTextProps {
-  languages?: string[];
-  minimal?: boolean;
-  sense: Sense;
-}
-
-// Only show first sense's glosses/definitions; in merging, others deleted as duplicates.
-// Show first part of speech, if any.
-// Show semantic domains from all senses.
-// In merging, user can select a different one by reordering in the sidebar.
-export default function SenseCardText(props: SenseCardTextProps): ReactElement {
-  const senseTextInLangs = getSenseInLanguages(props.sense, props.languages);
-
-  return (
-    <Table padding="none">
-      <TableBody>
-        {senseTextInLangs.map((senseInLang, index) => (
-          <SenseTextRows
-            hideDefs={props.minimal}
-            key={index}
-            senseInLang={senseInLang}
-          />
-        ))}
-      </TableBody>
-    </Table>
   );
 }

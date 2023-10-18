@@ -38,12 +38,8 @@ export default function SenseCard(props: SenseCardProps): ReactElement {
         {/* List semantic domains. */}
         <Grid container spacing={2}>
           {props.sense.semanticDomains.map((d) => (
-            <Grid item key={d.guid}>
-              <DomainChip
-                domain={d}
-                minimal={props.minimal}
-                provenance={props.provenance}
-              />
+            <Grid item key={`${d.id}_${d.name}`}>
+              <DomainChip domain={d} provenance={props.provenance} />
             </Grid>
           ))}
         </Grid>

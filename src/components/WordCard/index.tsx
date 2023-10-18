@@ -104,7 +104,7 @@ export default function WordCard(props: WordCardProps): ReactElement {
         )}
         {/* Timestamps */}
         {provenance && (
-          <Typography>
+          <Typography display="block" variant="caption">
             {t("wordHistory.wordId", { val: id })}
             {full && <br />}
             {full &&

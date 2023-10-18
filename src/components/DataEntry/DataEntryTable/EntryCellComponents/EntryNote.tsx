@@ -19,7 +19,7 @@ export default function EntryNote(props: EntryNoteProps): ReactElement {
   const { t } = useTranslation();
 
   const handleClick = (): void => {
-    if (!props.updateNote) {
+    if (props.updateNote) {
       setNoteOpen(true);
     }
   };
