@@ -261,10 +261,3 @@ export function dispatchMergeStepData(goal: MergeDups | ReviewDeferredDups) {
     }
   };
 }
-
-export async function fetchMergeDupsData(
-  maxInList: number,
-  maxLists: number
-): Promise<Word[][]> {
-  return await backend.getDuplicates(maxInList, maxLists);
-}
