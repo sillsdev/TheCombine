@@ -7,7 +7,7 @@ import {
   DialogTitle,
   Grid,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { LoadingButton } from "components/Buttons";
@@ -38,7 +38,7 @@ const dialogTitleIdCancel = `${idPrefix}-cancel-dialog-title`;
 /**
  * Allows users to define a character inventory for a project
  */
-export default function CharacterInventory() {
+export default function CharacterInventory(): ReactElement {
   const dispatch = useAppDispatch();
 
   const selectedCharacter = useAppSelector(

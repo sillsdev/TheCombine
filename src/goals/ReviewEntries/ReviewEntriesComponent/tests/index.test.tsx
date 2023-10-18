@@ -1,6 +1,6 @@
-import React from "react";
+import { Fragment } from "react";
 import { Provider } from "react-redux";
-import renderer from "react-test-renderer";
+import { act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
@@ -72,13 +72,13 @@ const state = {
 };
 const mockStore = configureMockStore()(state);
 
-function setMockFunctions() {
+function setMockFunctions(): void {
   jest.clearAllMocks();
   mockGetFrontierWords.mockResolvedValue(
     mockReviewEntryWords.map(mockCreateWord)
   );
   mockHasPermission.mockResolvedValue(false);
-  mockMaterialTable.mockReturnValue(React.Fragment);
+  mockMaterialTable.mockReturnValue(Fragment);
 }
 
 beforeEach(async () => {
@@ -90,8 +90,8 @@ beforeEach(async () => {
     }
   }
 
-  await renderer.act(async () => {
-    renderer.create(
+  await act(async () => {
+    create(
       <Provider store={mockStore}>
         <ReviewEntriesComponent />
       </Provider>

@@ -1,6 +1,6 @@
 import { AddComment, Comment } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import React, { useState } from "react";
+import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { EditTextDialog } from "components/Dialogs";
@@ -14,7 +14,7 @@ interface EntryNoteProps {
 /**
  * A note adding/editing button
  */
-export default function EntryNote(props: EntryNoteProps) {
+export default function EntryNote(props: EntryNoteProps): ReactElement {
   const [noteOpen, setNoteOpen] = useState<boolean>(false);
   const { t } = useTranslation();
 
@@ -25,7 +25,7 @@ export default function EntryNote(props: EntryNoteProps) {
   };
 
   return (
-    <React.Fragment>
+    <>
       <Tooltip
         title={props.noteText ? props.noteText : t("addWords.addNote")}
         placement="top"
@@ -44,6 +44,6 @@ export default function EntryNote(props: EntryNoteProps) {
         buttonIdConfirm="note-edit-confirm"
         textFieldId="note-text-field"
       />
-    </React.Fragment>
+    </>
   );
 }

@@ -1,6 +1,6 @@
 import { Button, MenuItem } from "@mui/material";
 import { Provider } from "react-redux";
-import renderer from "react-test-renderer";
+import { act, create, ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
@@ -19,13 +19,13 @@ jest.mock("react-router-dom", () => ({
   useNavigate: jest.fn(),
 }));
 
-let testRenderer: renderer.ReactTestRenderer;
+let testRenderer: ReactTestRenderer;
 
 const mockStore = configureMockStore()();
 
 const mockIsSiteAdmin = jest.fn();
 
-function setMockFunctions() {
+function setMockFunctions(): void {
   mockIsSiteAdmin.mockResolvedValue(false);
 }
 
@@ -36,8 +36,8 @@ beforeEach(() => {
 
 describe("UserMenu", () => {
   it("renders", async () => {
-    await renderer.act(async () => {
-      testRenderer = renderer.create(
+    await act(async () => {
+      testRenderer = create(
         <Provider store={mockStore}>
           <UserMenu currentTab={Path.Root} />
         </Provider>
@@ -57,9 +57,9 @@ describe("UserMenuList", () => {
   });
 });
 
-async function renderMenuList(isAdmin = false) {
-  await renderer.act(async () => {
-    testRenderer = renderer.create(
+async function renderMenuList(isAdmin = false): Promise<void> {
+  await act(async () => {
+    testRenderer = create(
       <Provider store={mockStore}>
         <UserMenuList isAdmin={isAdmin} onSelect={jest.fn()} />
       </Provider>

@@ -80,7 +80,7 @@ async function getFallbacks(
 }
 
 /** Given an array of font names, returns css info for them all. */
-export async function getCss(fonts: string[]) {
+export async function getCss(fonts: string[]): Promise<string[]> {
   // Get local css files when available.
   const cssDict: Hash<string> = {};
   const cssPromises = fonts.map(async (f) => {
@@ -107,7 +107,7 @@ export async function getCss(fonts: string[]) {
 }
 
 /** Given a project, returns css info for all project language fonts. */
-export async function getProjCss(proj: Project) {
+export async function getProjCss(proj: Project): Promise<string[]> {
   const fonts = proj.analysisWritingSystems.map((ws) => ws.font);
   fonts.push(proj.vernacularWritingSystem.font);
   const filtered = [...new Set(fonts.filter((f) => f))];

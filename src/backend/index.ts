@@ -110,11 +110,12 @@ const wordApi = new Api.WordApi(config, BASE_PATH, axiosInstance);
 
 // Backend controllers receiving a file via a "[FromForm] FileUpload fileUpload" param
 // have the internal fields expanded by openapi-generator as params in our Api.
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function fileUpload(file: File) {
   return { file, filePath: "", name: "" };
 }
 
-function defaultOptions() {
+function defaultOptions(): object {
   return { headers: authHeader() };
 }
 

@@ -63,9 +63,10 @@ export default function ReviewEntriesTable(
   const { t } = useTranslation();
   const [maxRows, setMaxRows] = useState(words.length);
   const [pageState, setPageState] = useState(getPageState(words.length));
+  const [scrollToTop, setScrollToTop] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
-  const updateMaxRows = () => {
+  const updateMaxRows = (): void => {
     if (tableRef.current) {
       const tableRows = tableRef.current.state.data.length;
       if (tableRows !== maxRows) {
@@ -84,6 +85,15 @@ export default function ReviewEntriesTable(
       return { pageSize: options[i], pageSizeOptions: options };
     });
   }, [maxRows, setPageState]);
+
+  useEffect(() => {
+    // onRowsPerPageChange={() => window.scrollTo({ top: 0 })} doesn't work.
+    // This useEffect on an intermediate state triggers scrolling at the right time.
+    if (scrollToTop) {
+      window.scrollTo({ behavior: "smooth", top: 0 });
+      setScrollToTop(false);
+    }
+  }, [scrollToTop]);
 
   useEffect(() => {
     hasPermission(Permission.WordHistory).then(setShowHistory);
@@ -147,6 +157,7 @@ export default function ReviewEntriesTable(
       )}
       data={words}
       onFilterChange={updateMaxRows}
+      onRowsPerPageChange={() => setScrollToTop(true)}
       editable={{
         onRowUpdate: (newData: ReviewEntriesWord, oldData: ReviewEntriesWord) =>
           new Promise(async (resolve, reject) => {

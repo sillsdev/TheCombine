@@ -13,7 +13,7 @@ interface HistoryCellProps {
 
 export default function HistoryCell(props: HistoryCellProps): ReactElement {
   const [history, setHistory] = useState<Pedigree | undefined>();
-  const getHistory = async () => {
+  const getHistory = async (): Promise<void> => {
     await getWordHistory(props.wordId).then(setHistory);
   };
   return (

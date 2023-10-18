@@ -15,7 +15,7 @@ jest.mock("backend", () => ({
 const mockIsSiteAdmin = jest.fn();
 const mockStore = configureMockStore()(defaultState);
 
-function setMockFunctions() {
+function setMockFunctions(): void {
   mockIsSiteAdmin.mockResolvedValue(false);
 }
 
