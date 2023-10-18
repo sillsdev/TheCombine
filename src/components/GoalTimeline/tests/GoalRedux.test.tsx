@@ -72,7 +72,7 @@ function setMockFunctions(): void {
   mockGetDuplicates.mockResolvedValue(goalDataMock.plannedWords);
   mockGetGraylistEntries.mockResolvedValue([]);
   mockGetUser.mockResolvedValue(mockUser());
-  mockGetUserEditById.mockResolvedValue(mockUserEdits(true));
+  mockGetUserEditById.mockResolvedValue(mockUserEdit(true));
   mockUpdateUser.mockResolvedValue(mockUser());
 }
 
@@ -93,7 +93,7 @@ const mockEdit = (): Edit => ({
   guid: "edit-guid",
   stepData: [],
 });
-const mockUserEdits = (hasEdit: boolean): UserEdit => ({
+const mockUserEdit = (hasEdit: boolean): UserEdit => ({
   edits: hasEdit ? [mockEdit()] : [],
   id: mockUserEditId,
   projectId: mockProjectId,
@@ -156,7 +156,7 @@ describe("asyncGetUserEdits", () => {
     // setup mocks for testing the action/reducers
     jest.clearAllMocks();
     const convertEditToGoalSpy = jest.spyOn(goalUtilities, "convertEditToGoal");
-    mockGetUserEditById.mockResolvedValueOnce(mockUserEdits(false));
+    mockGetUserEditById.mockResolvedValueOnce(mockUserEdit(false));
 
     // dispatch the action
     await act(async () => {

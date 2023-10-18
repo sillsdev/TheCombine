@@ -190,6 +190,7 @@ export function getUserEditId(): string | undefined {
       return user.workedProjects[key];
     }
   }
+  return undefined;
 }
 
 function goalCleanup(goal: Goal): void {

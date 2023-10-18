@@ -55,6 +55,9 @@ export default function GoalList(props: GoalListProps): ReactElement {
   const [scrollVisible, setScrollVisible] = useState<boolean | undefined>();
   const tileSize = props.size / 3 - 1.25;
 
+  const id = (g: Goal): string =>
+    props.completed ? `completed-goal-${g.guid}` : `new-goal-${g.name}`;
+
   return (
     <ImageList
       style={gridStyle(props.orientation, props.size, scrollVisible)}
@@ -63,20 +66,15 @@ export default function GoalList(props: GoalListProps): ReactElement {
       onMouseLeave={() => setScrollVisible(false)}
     >
       {props.data.length > 0 ? (
-        props.data.map((g) => {
-          const id = props.completed
-            ? `completed-goal-${g.guid}`
-            : `new-goal-${g.name}`;
-          return (
-            <GoalTile
-              buttonProps={{ id, onClick: () => props.handleChange(g) }}
-              goal={g}
-              key={id}
-              orientation={props.orientation}
-              size={tileSize}
-            />
-          );
-        })
+        props.data.map((g) => (
+          <GoalTile
+            buttonProps={{ id: id(g), onClick: () => props.handleChange(g) }}
+            goal={g}
+            key={g.guid || g.name}
+            orientation={props.orientation}
+            size={tileSize}
+          />
+        ))
       ) : (
         <GoalTile size={tileSize} orientation={props.orientation} />
       )}
@@ -106,6 +104,7 @@ interface GoalTileProps {
   orientation: Orientation;
   size: number;
 }
+
 function GoalTile(props: GoalTileProps): ReactElement {
   const goal = props.goal;
   return (
@@ -134,6 +133,7 @@ function GoalTile(props: GoalTileProps): ReactElement {
 interface GoalInfoProps {
   goal?: Goal;
 }
+
 function GoalInfo(props: GoalInfoProps): ReactElement {
   const { t } = useTranslation();
 

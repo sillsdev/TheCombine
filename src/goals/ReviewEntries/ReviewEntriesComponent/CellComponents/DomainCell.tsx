@@ -106,7 +106,7 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
             <Grid container direction="row" spacing={2}>
               {sense.domains.length > 0 ? (
                 sense.domains.map((domain, domainIndex) => (
-                  <Grid item key={domain.id}>
+                  <Grid item key={`${domain.id}_${domain.name}`}>
                     <Chip
                       color={sense.deleted ? "secondary" : "default"}
                       style={getChipStyle(senseIndex, domainIndex)}
