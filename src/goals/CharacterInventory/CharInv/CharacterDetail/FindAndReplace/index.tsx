@@ -8,6 +8,13 @@ import { findAndReplace } from "goals/CharacterInventory/CharInv/CharacterDetail
 import { useAppDispatch } from "types/hooks";
 import { TextFieldWithFont } from "utilities/fontComponents";
 
+const idPrefix = "find-and-replace";
+const fieldIdFind = `${idPrefix}-find-field`;
+const fieldIdReplace = `${idPrefix}-replace-field`;
+export const buttonIdSubmit = `${idPrefix}-submit-button`;
+export const buttonIdCancel = `${idPrefix}-cancel-button`;
+export const buttonIdConfirm = `${idPrefix}-confirm-button`;
+
 interface FindAndReplaceProps {
   initialFindValue: string;
 }
@@ -25,7 +32,7 @@ export default function FindAndReplace(
   useEffect(() => {
     setFindValue(props.initialFindValue);
     setReplaceValue("");
-  }, [props.initialFindValue, setFindValue, setReplaceValue]);
+  }, [props.initialFindValue]);
 
   const dispatchFindAndReplace = async (): Promise<void> => {
     await dispatch(findAndReplace(findValue, replaceValue)).catch(() =>
@@ -45,6 +52,7 @@ export default function FindAndReplace(
         {t("charInventory.characterSet.findAndReplace")}
       </Typography>
       <TextFieldWithFont
+        id={fieldIdFind}
         label={t("charInventory.characterSet.find")}
         value={findValue}
         onChange={(e) => setFindValue(e.target.value)}
@@ -55,6 +63,7 @@ export default function FindAndReplace(
         vernacular
       />
       <TextFieldWithFont
+        id={fieldIdReplace}
         label={t("charInventory.characterSet.replaceWith")}
         value={replaceValue}
         onChange={(e) => setReplaceValue(e.target.value)}
@@ -64,7 +73,11 @@ export default function FindAndReplace(
         inputProps={{ maxLength: 100 }}
         vernacular
       />
-      <Button color="primary" onClick={() => setWarningDialogOpen(true)}>
+      <Button
+        color="primary"
+        id={buttonIdSubmit}
+        onClick={() => setWarningDialogOpen(true)}
+      >
         {t("charInventory.characterSet.apply")}
       </Button>
       <CharacterReplaceDialog
@@ -72,7 +85,9 @@ export default function FindAndReplace(
         dialogFindValue={findValue}
         dialogReplaceValue={replaceValue}
         handleCancel={() => setWarningDialogOpen(false)}
-        handleAccept={dispatchFindAndReplace}
+        handleConfirm={dispatchFindAndReplace}
+        idCancel={buttonIdCancel}
+        idConfirm={buttonIdConfirm}
       />
     </>
   );
