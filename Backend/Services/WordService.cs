@@ -16,6 +16,38 @@ namespace BackendFramework.Services
             _wordRepo = wordRepo;
         }
 
+        private static Word PrepEditedData(string userId, Word word)
+        {
+            word.Id = "";
+            word.Modified = "";
+            if (!string.IsNullOrWhiteSpace(userId) && userId != word.EditedBy.LastOrDefault(""))
+            {
+                word.EditedBy.Add(userId);
+            }
+            return word;
+        }
+
+        /// <summary> Creates a new word with updated metadata. </summary>
+        /// <returns> The created word </returns>
+        public async Task<Word> Create(string userId, Word word)
+        {
+            return await _wordRepo.Create(PrepEditedData(userId, word));
+        }
+
+        /// <summary> Creates a new word with updated metadata. </summary>
+        /// <returns> The created word </returns>
+        public async Task<List<Word>> Create(string userId, List<Word> words)
+        {
+            return await _wordRepo.Create(words.Select(w => PrepEditedData(userId, w)).ToList());
+        }
+
+        /// <summary> Adds a new word with updated metadata. </summary>
+        /// <returns> The added word </returns>
+        private async Task<Word> Add(string userId, Word word)
+        {
+            return await _wordRepo.Add(PrepEditedData(userId, word));
+        }
+
         /// <summary> Makes a new word in Frontier that has deleted tag on each sense </summary>
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> Delete(string projectId, string userId, string wordId)
@@ -34,9 +66,7 @@ namespace BackendFramework.Services
                 return false;
             }
 
-            wordToDelete.Id = "";
-            wordToDelete.Modified = "";
-            wordToDelete.EditedBy = new List<string> { userId };
+            wordToDelete.EditedBy = new List<string>();
             wordToDelete.History = new List<string> { wordId };
             wordToDelete.Accessibility = Status.Deleted;
 
@@ -45,12 +75,12 @@ namespace BackendFramework.Services
                 senseAcc.Accessibility = Status.Deleted;
             }
 
-            await _wordRepo.Create(wordToDelete);
+            await Create(userId, wordToDelete);
 
             return wordIsInFrontier;
         }
 
-        /// <summary> Removes audio with specified Id from a word </summary>
+        /// <summary> Removes audio with specified fileName from a word </summary>
         /// <returns> New word </returns>
         public async Task<Word?> Delete(string projectId, string userId, string wordId, string fileName)
         {
@@ -69,17 +99,9 @@ namespace BackendFramework.Services
             }
 
             wordWithAudioToDelete.Audio.Remove(fileName);
-            wordWithAudioToDelete.Id = "";
-            wordWithAudioToDelete.Modified = "";
-            if (userId != wordWithAudioToDelete.EditedBy.LastOrDefault(""))
-            {
-                wordWithAudioToDelete.EditedBy.Add(userId);
-            }
             wordWithAudioToDelete.History.Add(wordId);
 
-            wordWithAudioToDelete = await _wordRepo.Create(wordWithAudioToDelete);
-
-            return wordWithAudioToDelete;
+            return await Create(userId, wordWithAudioToDelete);
         }
 
         /// <summary> Deletes word in frontier collection and adds word with deleted tag in word collection </summary>
@@ -98,17 +120,28 @@ namespace BackendFramework.Services
                 return null;
             }
 
-            word.Id = "";
-            word.Modified = "";
-            if (userId != word.EditedBy.LastOrDefault(""))
-            {
-                word.EditedBy.Add(userId);
-            }
             word.History.Add(wordId);
             word.Accessibility = Status.Deleted;
 
-            var deletedWord = await _wordRepo.Add(word);
-            return deletedWord.Id;
+            return (await Add(userId, word)).Id;
+        }
+
+        /// <summary> Restores words to the Frontier </summary>
+        /// <returns> A bool: true if successful, false if any don't exist or are already in the Frontier. </returns>
+        public async Task<bool> RestoreFrontierWords(string projectId, List<string> wordIds)
+        {
+            var words = new List<Word>();
+            foreach (var id in wordIds)
+            {
+                var word = await _wordRepo.GetWord(projectId, id);
+                if (word is null || !await _wordRepo.IsInFrontier(projectId, id))
+                {
+                    return false;
+                }
+                words.Add(word);
+            }
+            await _wordRepo.AddFrontier(words);
+            return true;
         }
 
         /// <summary> Makes a new word in the Frontier with changes made </summary>
@@ -123,16 +156,10 @@ namespace BackendFramework.Services
                 return wordIsInFrontier;
             }
 
-            word.Id = "";
             word.ProjectId = projectId;
-            word.Modified = "";
-            if (userId != word.EditedBy.LastOrDefault(""))
-            {
-                word.EditedBy.Add(userId);
-            }
             word.History.Add(wordId);
 
-            await _wordRepo.Create(word);
+            await Create(userId, word);
 
             return wordIsInFrontier;
         }

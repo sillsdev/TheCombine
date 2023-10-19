@@ -28,14 +28,10 @@ namespace BackendFramework.Services
 
         /// <summary> Prepares a merge parent to be added to the database. </summary>
         /// <returns> Word to add. </returns>
-        private async Task<Word> MergePrepParent(string projectId, string userId, MergeWords mergeWords)
+        private async Task<Word> MergePrepParent(string projectId, MergeWords mergeWords)
         {
             var parent = mergeWords.Parent.Clone();
             parent.ProjectId = projectId;
-            if (userId != parent.EditedBy.LastOrDefault(""))
-            {
-                parent.EditedBy.Add(userId);
-            }
             parent.History = new List<string>();
 
             // Add child to history.
@@ -56,11 +52,6 @@ namespace BackendFramework.Services
             // Remove duplicates.
             parent.Audio = parent.Audio.Distinct().ToList();
             parent.History = parent.History.Distinct().ToList();
-
-            // Clear fields to be automatically regenerated.
-            parent.Id = "";
-            parent.Modified = "";
-
             return parent;
         }
 
@@ -80,9 +71,9 @@ namespace BackendFramework.Services
         public async Task<List<Word>> Merge(string projectId, string userId, List<MergeWords> mergeWordsList)
         {
             var keptWords = mergeWordsList.Where(m => !m.DeleteOnly);
-            var newWords = keptWords.Select(m => MergePrepParent(projectId, userId, m).Result).ToList();
+            var newWords = keptWords.Select(m => MergePrepParent(projectId, m).Result).ToList();
             await Task.WhenAll(mergeWordsList.Select(m => MergeDeleteChildren(projectId, m)));
-            return await _wordRepo.Create(newWords);
+            return await _wordService.Create(userId, newWords);
         }
 
         /// <summary> Undo merge </summary>
@@ -98,25 +89,15 @@ namespace BackendFramework.Services
                 }
             }
 
-            var childWords = new List<Word>();
-            foreach (var childId in ids.ChildIds)
+            // If children are not restorable, return without any undo.
+            if (!await _wordService.RestoreFrontierWords(projectId, ids.ChildIds))
             {
-                var childWord = await _wordRepo.GetWord(projectId, childId);
-                if (childWord is null)
-                {
-                    return false;
-                }
-                childWords.Add(childWord);
-            }
-
-
-            // Separate foreach loop for deletion to prevent partial undos
+                return false;
+            };
             foreach (var parentId in ids.ParentIds)
             {
                 await _wordService.DeleteFrontierWord(projectId, userId, parentId);
             }
-
-            await _wordRepo.AddFrontier(childWords);
             return true;
         }
 

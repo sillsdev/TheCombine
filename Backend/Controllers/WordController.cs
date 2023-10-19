@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -27,24 +26,6 @@ namespace BackendFramework.Controllers
             _wordRepo = repo;
             _permissionService = permissionService;
             _wordService = wordService;
-        }
-
-        /// <summary> Deletes all <see cref="Word"/>s for specified <see cref="Project"/>. </summary>
-        /// <returns> true: if success, false: if there were no words </returns>
-        [HttpDelete(Name = "DeleteProjectWords")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        public async Task<IActionResult> DeleteProjectWords(string projectId)
-        {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Archive))
-            {
-                return Forbid();
-            }
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
-            }
-            return Ok(await _wordRepo.DeleteAllWords(projectId));
         }
 
         /// <summary> Deletes specified Frontier <see cref="Word"/>. </summary>
@@ -218,13 +199,7 @@ namespace BackendFramework.Controllers
             }
             word.ProjectId = projectId;
             var userId = _permissionService.GetUserId(HttpContext);
-            if (userId != word.EditedBy.LastOrDefault(""))
-            {
-                word.EditedBy.Add(userId);
-            }
-
-            await _wordRepo.Create(word);
-            return Ok(word.Id);
+            return Ok((await _wordService.Create(userId, word)).Id);
         }
 
         /// <summary> Updates a <see cref="Word"/>. </summary>
