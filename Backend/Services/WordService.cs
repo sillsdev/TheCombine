@@ -134,7 +134,7 @@ namespace BackendFramework.Services
             foreach (var id in wordIds)
             {
                 var word = await _wordRepo.GetWord(projectId, id);
-                if (word is null || !await _wordRepo.IsInFrontier(projectId, id))
+                if (word is null || await _wordRepo.IsInFrontier(projectId, id))
                 {
                     return false;
                 }
