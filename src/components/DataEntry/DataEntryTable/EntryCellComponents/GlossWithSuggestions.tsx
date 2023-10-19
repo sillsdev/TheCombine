@@ -1,5 +1,5 @@
 import { Autocomplete } from "@mui/material";
-import React, { ReactElement, useContext, useEffect, useRef } from "react";
+import React, { ReactElement, useContext, useEffect } from "react";
 import { Key } from "ts-key-enum";
 import typeahead from "typeahead-standalone";
 import "typeahead-standalone/dist/basic.css";
@@ -102,20 +102,13 @@ export default function GlossWithSuggestions(
 }
 
 function LookAhead(props: { dict: string[] }): ReactElement {
-  const inputRef = useRef<HTMLDivElement | null>(null);
-  if (inputRef.current) {
-    console.info(props.dict.length);
+  useEffect(() => {
+    console.info(props.dict);
     typeahead({
       input: document.getElementById("test") as HTMLInputElement,
-      source: {
-        local: props.dict,
-      },
+      source: { local: props.dict },
     });
-  }
+  }, [props.dict, props.dict.length]);
 
-  return (
-    <div ref={inputRef}>
-      <input autoComplete="off" id="test" type="search" />
-    </div>
-  );
+  return <input autoComplete="off" id="test" type="search" />;
 }
