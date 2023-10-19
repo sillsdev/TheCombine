@@ -1,17 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Models;
 
 namespace BackendFramework.Interfaces
 {
-    public interface IUserRoleRepository
+    public interface IUserRoleRepository : IRepositoryByProjectId<UserRole>
     {
-        Task<List<UserRole>> GetAllUserRoles(string projectId);
-        Task<UserRole?> GetUserRole(string projectId, string userRoleId);
-        Task<UserRole> Create(UserRole userRole);
-        Task<bool> Delete(string projectId, string userRoleId);
-        Task<bool> DeleteAllUserRoles(string projectId);
-        Task<ResultOfUpdate> Update(string userRoleId, UserRole userRole);
+        Task<ResultOfUpdate> Update(string entryId, UserRole entry);
     }
 }

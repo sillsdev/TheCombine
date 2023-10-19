@@ -59,7 +59,7 @@ namespace Backend.Tests.Services
         {
             var result = _inviteService.RemoveTokenAndCreateUserRole(_proj, _user, new EmailInvite()).Result;
             Assert.That(result, Is.True);
-            var userRoles = _userRoleRepo.GetAllUserRoles(_proj.Id).Result;
+            var userRoles = _userRoleRepo.GetAllEntries(_proj.Id).Result;
             Assert.That(userRoles, Has.Count.EqualTo(1));
             var userRole = userRoles.First();
             Assert.That(_userRepo.GetUser(_user.Id).Result!.ProjectRoles[_proj.Id], Is.EqualTo(userRole.Id));

@@ -17,16 +17,19 @@ namespace Backend.Tests.Mocks
             _mergeGraylist = new List<MergeWordSet>();
         }
 
-        public Task<List<MergeWordSet>> GetAllSets(string projectId, string? userId = null)
+        public Task<List<MergeWordSet>> GetAllEntries(string projectId)
         {
-            var cloneList = _mergeGraylist.Select(e => e.Clone()).ToList();
-            var enumerable = userId is null ?
-                cloneList.Where(e => e.ProjectId == projectId) :
-                cloneList.Where(e => e.ProjectId == projectId && e.UserId == userId);
-            return Task.FromResult(enumerable.ToList());
+            var list = _mergeGraylist.Where(e => e.ProjectId == projectId).ToList();
+            return Task.FromResult(list.Select(e => e.Clone()).ToList());
         }
 
-        public Task<MergeWordSet?> GetSet(string projectId, string entryId)
+        public Task<List<MergeWordSet>> GetAllEntries(string projectId, string userId)
+        {
+            var list = _mergeGraylist.Where(e => e.ProjectId == projectId && e.UserId == userId).ToList();
+            return Task.FromResult(list.Select(e => e.Clone()).ToList());
+        }
+
+        public Task<MergeWordSet?> GetEntry(string projectId, string entryId)
         {
             try
             {
@@ -39,14 +42,14 @@ namespace Backend.Tests.Mocks
             }
         }
 
-        public Task<MergeWordSet> Create(MergeWordSet wordSetEntry)
+        public Task<MergeWordSet> Create(MergeWordSet entry)
         {
-            wordSetEntry.Id = Guid.NewGuid().ToString();
-            _mergeGraylist.Add(wordSetEntry.Clone());
-            return Task.FromResult(wordSetEntry.Clone());
+            entry.Id = Guid.NewGuid().ToString();
+            _mergeGraylist.Add(entry.Clone());
+            return Task.FromResult(entry.Clone());
         }
 
-        public Task<bool> DeleteAllSets(string projectId)
+        public Task<bool> DeleteAll(string projectId)
         {
             _mergeGraylist.Clear();
             return Task.FromResult(true);
@@ -58,17 +61,17 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_mergeGraylist.Remove(foundMergeGraylist));
         }
 
-        public Task<ResultOfUpdate> Update(MergeWordSet wordSetEntry)
+        public Task<ResultOfUpdate> Update(MergeWordSet entry)
         {
             var foundEntry = _mergeGraylist.Single(
-                e => e.ProjectId == wordSetEntry.ProjectId && e.Id == wordSetEntry.Id);
+                e => e.ProjectId == entry.ProjectId && e.Id == entry.Id);
             var success = _mergeGraylist.Remove(foundEntry);
             if (!success)
             {
                 return Task.FromResult(ResultOfUpdate.NotFound);
             }
 
-            _mergeGraylist.Add(wordSetEntry.Clone());
+            _mergeGraylist.Add(entry.Clone());
             return Task.FromResult(ResultOfUpdate.Updated);
         }
     }

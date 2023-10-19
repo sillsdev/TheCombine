@@ -79,7 +79,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task TestGetAllUserEdits()
+        public async Task TestGetAllEntries()
         {
             await _userEditRepo.Create(RandomUserEdit());
             await _userEditRepo.Create(RandomUserEdit());
@@ -90,11 +90,11 @@ namespace Backend.Tests.Controllers
 
             var edits = ((ObjectResult)getResult).Value as List<UserEdit>;
             Assert.That(edits, Has.Count.EqualTo(3));
-            (await _userEditRepo.GetAllUserEdits(_projId)).ForEach(edit => Assert.That(edits, Does.Contain(edit)));
+            (await _userEditRepo.GetAllEntries(_projId)).ForEach(edit => Assert.That(edits, Does.Contain(edit)));
         }
 
         [Test]
-        public async Task TestGetAllUserEditsNoPermission()
+        public async Task TestGetAllEntriesNoPermission()
         {
             _userEditController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
@@ -104,7 +104,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task TestGetAllUserEditsMissingProject()
+        public async Task TestGetAllEntriesMissingProject()
         {
             var result = await _userEditController.GetProjectUserEdits(MissingId);
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
@@ -154,7 +154,7 @@ namespace Backend.Tests.Controllers
             var userEdit = new UserEdit { ProjectId = _projId };
             var updatedUser = (User)((ObjectResult)await _userEditController.CreateUserEdit(_projId)).Value!;
             userEdit.Id = updatedUser.WorkedProjects[_projId];
-            Assert.That(await _userEditRepo.GetAllUserEdits(_projId), Does.Contain(userEdit));
+            Assert.That(await _userEditRepo.GetAllEntries(_projId), Does.Contain(userEdit));
         }
 
         [Test]
@@ -177,7 +177,7 @@ namespace Backend.Tests.Controllers
 
             await _userEditController.UpdateUserEditGoal(_projId, userEdit.Id, newEdit);
 
-            var allUserEdits = await _userEditRepo.GetAllUserEdits(_projId);
+            var allUserEdits = await _userEditRepo.GetAllEntries(_projId);
             Assert.That(allUserEdits, Does.Contain(updatedUserEdit));
         }
 
@@ -229,9 +229,9 @@ namespace Backend.Tests.Controllers
             await _userEditController.UpdateUserEditStep(_projId, origUserEdit.Id, stepWrapperObj);
 
             // Step count should have increased by 1.
-            Assert.That(await _userEditRepo.GetAllUserEdits(_projId), Has.Count.EqualTo(count + 1));
+            Assert.That(await _userEditRepo.GetAllEntries(_projId), Has.Count.EqualTo(count + 1));
 
-            var userEdit = await _userEditRepo.GetUserEdit(_projId, origUserEdit.Id);
+            var userEdit = await _userEditRepo.GetEntry(_projId, origUserEdit.Id);
             Assert.That(userEdit, Is.Not.Null);
             Assert.That(userEdit!.Edits[modGoalIndex].StepData, Does.Contain(stringStep));
 
@@ -245,9 +245,9 @@ namespace Backend.Tests.Controllers
             await _userEditController.UpdateUserEditStep(_projId, origUserEdit.Id, stepWrapperObj);
 
             // Step count should not have further increased.
-            Assert.That(await _userEditRepo.GetAllUserEdits(_projId), Has.Count.EqualTo(count + 1));
+            Assert.That(await _userEditRepo.GetAllEntries(_projId), Has.Count.EqualTo(count + 1));
 
-            userEdit = await _userEditRepo.GetUserEdit(_projId, origUserEdit.Id);
+            userEdit = await _userEditRepo.GetEntry(_projId, origUserEdit.Id);
             Assert.That(userEdit, Is.Not.Null);
             Assert.That(userEdit!.Edits[modGoalIndex].StepData, Does.Contain(modStringStep));
         }
@@ -279,10 +279,10 @@ namespace Backend.Tests.Controllers
         public async Task TestDeleteUserEdit()
         {
             var origUserEdit = await _userEditRepo.Create(RandomUserEdit());
-            Assert.That(await _userEditRepo.GetAllUserEdits(_projId), Has.Count.EqualTo(1));
+            Assert.That(await _userEditRepo.GetAllEntries(_projId), Has.Count.EqualTo(1));
 
             await _userEditController.DeleteUserEdit(_projId, origUserEdit.Id);
-            Assert.That(await _userEditRepo.GetAllUserEdits(_projId), Is.Empty);
+            Assert.That(await _userEditRepo.GetAllEntries(_projId), Is.Empty);
         }
 
         [Test]

@@ -27,7 +27,7 @@ namespace BackendFramework.Services
         public async Task<Tuple<bool, int>> AddGoalToUserEdit(string projectId, string userEditId, Edit edit)
         {
             // Get userEdit to change
-            var oldUserEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
+            var oldUserEdit = await _userEditRepo.GetEntry(projectId, userEditId);
             const int invalidEditIndex = -1;
             var failureResult = new Tuple<bool, int>(false, invalidEditIndex);
             if (oldUserEdit is null)
@@ -59,7 +59,7 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> AddStepToGoal(string projectId, string userEditId, int goalIndex, string stepString)
         {
-            var oldUserEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
+            var oldUserEdit = await _userEditRepo.GetEntry(projectId, userEditId);
             if (oldUserEdit is null || goalIndex >= oldUserEdit.Edits.Count)
             {
                 return false;
@@ -76,7 +76,7 @@ namespace BackendFramework.Services
         public async Task<bool> UpdateStepInGoal(
             string projectId, string userEditId, int goalIndex, string stepString, int stepIndex)
         {
-            var oldUserEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
+            var oldUserEdit = await _userEditRepo.GetEntry(projectId, userEditId);
             if (oldUserEdit is null || goalIndex >= oldUserEdit.Edits.Count
                 || stepIndex >= oldUserEdit.Edits[goalIndex].StepData.Count)
             {

@@ -17,17 +17,17 @@ namespace Backend.Tests.Mocks
             _userRoles = new List<UserRole>();
         }
 
-        public Task<List<UserRole>> GetAllUserRoles(string projectId)
+        public Task<List<UserRole>> GetAllEntries(string projectId)
         {
             var cloneList = _userRoles.Select(userRole => userRole.Clone()).ToList();
             return Task.FromResult(cloneList.Where(userRole => userRole.ProjectId == projectId).ToList());
         }
 
-        public Task<UserRole?> GetUserRole(string projectId, string userRoleId)
+        public Task<UserRole?> GetEntry(string projectId, string entryId)
         {
             try
             {
-                var foundUserRole = _userRoles.Single(userRole => userRole.Id == userRoleId);
+                var foundUserRole = _userRoles.Single(userRole => userRole.Id == entryId);
                 return Task.FromResult<UserRole?>(foundUserRole.Clone());
             }
             catch (InvalidOperationException)
@@ -36,34 +36,34 @@ namespace Backend.Tests.Mocks
             }
         }
 
-        public Task<UserRole> Create(UserRole userRole)
+        public Task<UserRole> Create(UserRole entry)
         {
-            userRole.Id = Guid.NewGuid().ToString();
-            _userRoles.Add(userRole.Clone());
-            return Task.FromResult(userRole.Clone());
+            entry.Id = Guid.NewGuid().ToString();
+            _userRoles.Add(entry.Clone());
+            return Task.FromResult(entry.Clone());
         }
 
-        public Task<bool> DeleteAllUserRoles(string projectId)
+        public Task<bool> DeleteAll(string projectId)
         {
             _userRoles.Clear();
             return Task.FromResult(true);
         }
 
-        public Task<bool> Delete(string projectId, string userRoleId)
+        public Task<bool> Delete(string projectId, string entryId)
         {
-            var foundUserRole = _userRoles.Single(userRole => userRole.Id == userRoleId);
+            var foundUserRole = _userRoles.Single(userRole => userRole.Id == entryId);
             return Task.FromResult(_userRoles.Remove(foundUserRole));
         }
 
-        public Task<ResultOfUpdate> Update(string userRoleId, UserRole userRole)
+        public Task<ResultOfUpdate> Update(string entryId, UserRole entry)
         {
-            var foundUserRole = _userRoles.Single(ur => ur.Id == userRoleId);
+            var foundUserRole = _userRoles.Single(ur => ur.Id == entryId);
             if (foundUserRole is null)
             {
                 return Task.FromResult(ResultOfUpdate.NotFound);
             }
 
-            if (foundUserRole.ContentEquals(userRole))
+            if (foundUserRole.ContentEquals(entry))
             {
                 return Task.FromResult(ResultOfUpdate.NoChange);
             }
@@ -74,7 +74,7 @@ namespace Backend.Tests.Mocks
                 return Task.FromResult(ResultOfUpdate.NotFound);
             }
 
-            _userRoles.Add(userRole.Clone());
+            _userRoles.Add(entry.Clone());
             return Task.FromResult(ResultOfUpdate.Updated);
         }
     }

@@ -98,39 +98,37 @@ namespace BackendFramework.Controllers
         /// <param name="projectId"> Id of project in which to search the frontier for potential duplicates. </param>
         /// <param name="maxInList"> Max number of words allowed within a list of potential duplicates. </param>
         /// <param name="maxLists"> Max number of lists of potential duplicates. </param>
-        /// <param name="userId"> Id of user whose merge blacklist is to be used. </param>
         /// <returns> List of Lists of <see cref="Word"/>s. </returns>
         [HttpGet("dups/{maxInList:int}/{maxLists:int}/{userId}", Name = "GetPotentialDuplicates")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<List<Word>>))]
-        public async Task<IActionResult> GetPotentialDuplicates(
-            string projectId, int maxInList, int maxLists, string userId)
+        public async Task<IActionResult> GetPotentialDuplicates(string projectId, int maxInList, int maxLists)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndReviewEntries))
             {
                 return Forbid();
             }
 
+            var userId = _permissionService.GetUserId(HttpContext);
             await _mergeService.UpdateMergeBlacklist(projectId);
-            return Ok(await _mergeService.GetPotentialDuplicates(projectId, maxInList, maxLists, userId));
+            return Ok(await _mergeService.GetPotentialDuplicates(projectId, userId, maxInList, maxLists));
         }
 
         /// <summary> Get lists of graylist entries. </summary>
         /// <param name="projectId"> Id of project in which to search the frontier for potential duplicates. </param>
         /// <param name="maxLists"> Max number of lists of potential duplicates. </param>
-        /// <param name="userId"> Id of user whose merge graylist is to be used. </param>
         /// <returns> List of Lists of <see cref="Word"/>s. </returns>
         [HttpGet("getgraylist/{maxLists}/{userId}", Name = "GetGraylistEntries")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<List<Word>>))]
-        public async Task<IActionResult> getGraylistEntries(
-            string projectId, int maxLists, string userId)
+        public async Task<IActionResult> GetGraylistEntries(string projectId, int maxLists)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndReviewEntries))
             {
                 return Forbid();
             }
 
+            var userId = _permissionService.GetUserId(HttpContext);
             await _mergeService.UpdateMergeGraylist(projectId);
-            return Ok(await _mergeService.GetGraylistEntries(projectId, maxLists, userId));
+            return Ok(await _mergeService.GetGraylistEntries(projectId, userId, maxLists));
         }
 
     }

@@ -129,7 +129,7 @@ namespace BackendFramework.Services
 
             // It's possible to add a superset of an existing blacklist entry,
             // so we cleanup by removing all entries fully contained in the new entry.
-            var blacklist = await _mergeBlacklistRepo.GetAllSets(projectId, userId);
+            var blacklist = await _mergeBlacklistRepo.GetAllEntries(projectId, userId);
             foreach (var entry in blacklist)
             {
                 if (entry.WordIds.All(wordIds.Contains))
@@ -156,7 +156,7 @@ namespace BackendFramework.Services
 
             // It's possible to add a superset of an existing graylist entry,
             // so we cleanup by removing all entries fully contained in the new entry.
-            var graylist = await _mergeGraylistRepo.GetAllSets(projectId, userId);
+            var graylist = await _mergeGraylistRepo.GetAllEntries(projectId, userId);
             foreach (var entry in graylist)
             {
                 if (entry.WordIds.All(wordIds.Contains))
@@ -181,7 +181,7 @@ namespace BackendFramework.Services
             }
 
             // Remove only the set of wordIds, if in graylist (not any subsets)
-            var graylist = await _mergeGraylistRepo.GetAllSets(projectId, userId);
+            var graylist = await _mergeGraylistRepo.GetAllEntries(projectId, userId);
             foreach (var entry in graylist)
             {
                 if (entry.WordIds.All(wordIds.Contains) && wordIds.Count == entry.WordIds.Count)
@@ -196,13 +196,13 @@ namespace BackendFramework.Services
         /// <summary> Check if List of wordIds is in MergeBlacklist for specified <see cref="Project"/>. </summary>
         /// <exception cref="InvalidMergeWordSetException"> Throws when wordIds has count less than 2. </exception>
         /// <returns> A bool, true if in the blacklist. </returns>
-        public async Task<bool> IsInMergeBlacklist(string projectId, List<string> wordIds, string? userId = null)
+        public async Task<bool> IsInMergeBlacklist(string projectId, string userId, List<string> wordIds)
         {
             if (wordIds.Count < 2)
             {
                 throw new InvalidMergeWordSetException("Cannot blacklist a list of fewer than 2 wordIds.");
             }
-            var blacklist = await _mergeBlacklistRepo.GetAllSets(projectId, userId);
+            var blacklist = await _mergeBlacklistRepo.GetAllEntries(projectId, userId);
             foreach (var entry in blacklist)
             {
                 if (wordIds.All(entry.WordIds.Contains))
@@ -216,13 +216,13 @@ namespace BackendFramework.Services
         /// <summary> Check if List of wordIds is in MergeGraylist for specified <see cref="Project"/>. </summary>
         /// <exception cref="InvalidMergeWordSetException"> Throws when wordIds has count less than 2. </exception>
         /// <returns> A bool, true if in the graylist. </returns>
-        public async Task<bool> IsInMergeGraylist(string projectId, List<string> wordIds, string? userId = null)
+        public async Task<bool> IsInMergeGraylist(string projectId, string userId, List<string> wordIds)
         {
             if (wordIds.Count < 2)
             {
                 throw new InvalidMergeWordSetException("Cannot graylist a list of fewer than 2 wordIds.");
             }
-            var graylist = await _mergeGraylistRepo.GetAllSets(projectId, userId);
+            var graylist = await _mergeGraylistRepo.GetAllEntries(projectId, userId);
             foreach (var entry in graylist)
             {
                 if (wordIds.All(entry.WordIds.Contains))
@@ -241,7 +241,7 @@ namespace BackendFramework.Services
         /// <returns> Number of <see cref="MergeWordSet"/>s updated. </returns>
         public async Task<int> UpdateMergeBlacklist(string projectId)
         {
-            var oldBlacklist = await _mergeBlacklistRepo.GetAllSets(projectId);
+            var oldBlacklist = await _mergeBlacklistRepo.GetAllEntries(projectId);
             if (oldBlacklist.Count == 0)
             {
                 return 0;
@@ -278,7 +278,7 @@ namespace BackendFramework.Services
         /// <returns> Number of <see cref="MergeWordSet"/>s updated. </returns>
         public async Task<int> UpdateMergeGraylist(string projectId)
         {
-            var oldGraylist = await _mergeGraylistRepo.GetAllSets(projectId);
+            var oldGraylist = await _mergeGraylistRepo.GetAllEntries(projectId);
             if (oldGraylist.Count == 0)
             {
                 return 0;
@@ -308,10 +308,9 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Get Lists of entries in specified <see cref="Project"/>'s graylist. </summary>
-        public async Task<List<List<Word>>> GetGraylistEntries(
-            string projectId, int maxLists, string? userId = null)
+        public async Task<List<List<Word>>> GetGraylistEntries(string projectId, string userId, int maxLists)
         {
-            var graylist = await _mergeGraylistRepo.GetAllSets(projectId, userId);
+            var graylist = await _mergeGraylistRepo.GetAllEntries(projectId, userId);
             var frontier = await _wordRepo.GetFrontier(projectId);
             var wordLists = new List<List<Word>> { Capacity = maxLists };
             foreach (var entry in graylist)
@@ -329,14 +328,14 @@ namespace BackendFramework.Services
         /// Get Lists of potential duplicate <see cref="Word"/>s in specified <see cref="Project"/>'s frontier.
         /// </summary>
         public async Task<List<List<Word>>> GetPotentialDuplicates(
-            string projectId, int maxInList, int maxLists, string? userId = null)
+            string projectId, string userId, int maxInList, int maxLists)
         {
             var dupFinder = new DuplicateFinder(maxInList, maxLists, 3);
 
             var collection = await _wordRepo.GetFrontier(projectId);
             async Task<bool> isUnavailableSet(List<string> wordIds) =>
-                (await IsInMergeBlacklist(projectId, wordIds, userId)) ||
-                (await IsInMergeGraylist(projectId, wordIds, userId));
+                (await IsInMergeBlacklist(projectId, userId, wordIds)) ||
+                (await IsInMergeGraylist(projectId, userId, wordIds));
 
             // First pass, only look for words with identical vernacular.
             var wordLists = await dupFinder.GetIdenticalVernWords(collection, isUnavailableSet);

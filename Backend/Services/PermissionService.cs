@@ -227,7 +227,7 @@ namespace BackendFramework.Services
             foreach (var (projectRoleKey, projectRoleValue) in user.ProjectRoles)
             {
                 // Convert each userRoleId to its respective role and add to the mapping
-                var userRole = await _userRoleRepo.GetUserRole(projectRoleKey, projectRoleValue);
+                var userRole = await _userRoleRepo.GetEntry(projectRoleKey, projectRoleValue);
                 if (userRole is null)
                 {
                     return null;

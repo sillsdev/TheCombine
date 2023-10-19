@@ -46,7 +46,7 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
-            return Ok(await _userRoleRepo.GetAllUserRoles(projectId));
+            return Ok(await _userRoleRepo.GetAllEntries(projectId));
         }
 
         /// <summary> Deletes all <see cref="UserRole"/>s for specified <see cref="Project"/></summary>
@@ -67,7 +67,7 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
-            return Ok(await _userRoleRepo.DeleteAllUserRoles(projectId));
+            return Ok(await _userRoleRepo.DeleteAll(projectId));
         }
 
         /// <summary> Returns <see cref="UserRole"/> with specified id </summary>
@@ -104,7 +104,7 @@ namespace BackendFramework.Controllers
             {
                 return Ok(new List<Permission>());
             }
-            var userRole = await _userRoleRepo.GetUserRole(projectId, user.ProjectRoles[projectId]);
+            var userRole = await _userRoleRepo.GetEntry(projectId, user.ProjectRoles[projectId]);
             if (userRole is null)
             {
                 return Ok(new List<Permission>());
@@ -167,7 +167,7 @@ namespace BackendFramework.Controllers
             }
 
             var userRoleId = changeUser.ProjectRoles[projectId];
-            var userRole = await _userRoleRepo.GetUserRole(projectId, userRoleId);
+            var userRole = await _userRoleRepo.GetEntry(projectId, userRoleId);
             if (userRole is null)
             {
                 return NotFound(userRoleId);
@@ -236,7 +236,7 @@ namespace BackendFramework.Controllers
                 changeUser.ProjectRoles.Add(projectId, userRoleId);
                 await _userRepo.Update(changeUser.Id, changeUser);
             }
-            var userRole = await _userRoleRepo.GetUserRole(projectId, userRoleId);
+            var userRole = await _userRoleRepo.GetEntry(projectId, userRoleId);
             if (userRole is null)
             {
                 return NotFound(userRoleId);

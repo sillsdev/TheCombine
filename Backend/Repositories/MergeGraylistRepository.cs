@@ -20,25 +20,29 @@ namespace BackendFramework.Repositories
             _mergeGraylistDatabase = collectionSettings;
         }
 
-        /// <summary> Finds all <see cref="MergeWordSet"/>s for specified <see cref="Project"/>. </summary>
-        public async Task<List<MergeWordSet>> GetAllSets(string projectId, string? userId = null)
+        /// <summary> Finds all <see cref="MergeWordSet"/>s for specified project. </summary>
+        public async Task<List<MergeWordSet>> GetAllEntries(string projectId)
         {
-            var listFind = userId is null ?
-                _mergeGraylistDatabase.MergeGraylist.Find(e => e.ProjectId == projectId) :
-                _mergeGraylistDatabase.MergeGraylist.Find(e => e.ProjectId == projectId && e.UserId == userId);
-            return await listFind.ToListAsync();
+            return await _mergeGraylistDatabase.MergeGraylist.Find(e => e.ProjectId == projectId).ToListAsync();
+        }
+
+        /// <summary> Finds all <see cref="MergeWordSet"/>s for specified project and user. </summary>
+        public async Task<List<MergeWordSet>> GetAllEntries(string projectId, string userId)
+        {
+            return await _mergeGraylistDatabase.MergeGraylist
+                .Find(e => e.ProjectId == projectId && e.UserId == userId).ToListAsync();
         }
 
         /// <summary> Removes all <see cref="MergeWordSet"/>s for specified <see cref="Project"/>. </summary>
         /// <returns> A bool: success of operation. </returns>
-        public async Task<bool> DeleteAllSets(string projectId)
+        public async Task<bool> DeleteAll(string projectId)
         {
             var deleted = await _mergeGraylistDatabase.MergeGraylist.DeleteManyAsync(u => u.ProjectId == projectId);
             return deleted.DeletedCount != 0;
         }
 
         /// <summary> Finds specified <see cref="MergeWordSet"/> for specified <see cref="Project"/>. </summary>
-        public async Task<MergeWordSet?> GetSet(string projectId, string entryId)
+        public async Task<MergeWordSet?> GetEntry(string projectId, string entryId)
         {
             var filterDef = new FilterDefinitionBuilder<MergeWordSet>();
             var filter = filterDef.And(
@@ -58,10 +62,10 @@ namespace BackendFramework.Repositories
 
         /// <summary> Adds a <see cref="MergeWordSet"/>. </summary>
         /// <returns> The MergeWordSet created. </returns>
-        public async Task<MergeWordSet> Create(MergeWordSet wordSetEntry)
+        public async Task<MergeWordSet> Create(MergeWordSet entry)
         {
-            await _mergeGraylistDatabase.MergeGraylist.InsertOneAsync(wordSetEntry);
-            return wordSetEntry;
+            await _mergeGraylistDatabase.MergeGraylist.InsertOneAsync(entry);
+            return entry;
         }
 
         /// <summary> Removes specified <see cref="MergeWordSet"/> for specified <see cref="Project"/>. </summary>
@@ -78,13 +82,13 @@ namespace BackendFramework.Repositories
 
         /// <summary> Updates specified <see cref="MergeWordSet"/>. </summary>
         /// <returns> A <see cref="ResultOfUpdate"/> enum: success of operation. </returns>
-        public async Task<ResultOfUpdate> Update(MergeWordSet wordSetEntry)
+        public async Task<ResultOfUpdate> Update(MergeWordSet entry)
         {
-            var filter = Builders<MergeWordSet>.Filter.Eq(x => x.Id, wordSetEntry.Id);
+            var filter = Builders<MergeWordSet>.Filter.Eq(x => x.Id, entry.Id);
             var updateDef = Builders<MergeWordSet>.Update
-                .Set(x => x.ProjectId, wordSetEntry.ProjectId)
-                .Set(x => x.UserId, wordSetEntry.UserId)
-                .Set(x => x.WordIds, wordSetEntry.WordIds);
+                .Set(x => x.ProjectId, entry.ProjectId)
+                .Set(x => x.UserId, entry.UserId)
+                .Set(x => x.WordIds, entry.WordIds);
 
             var updateResult = await _mergeGraylistDatabase.MergeGraylist.UpdateOneAsync(filter, updateDef);
             if (!updateResult.IsAcknowledged)

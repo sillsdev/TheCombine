@@ -49,7 +49,7 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
-            return Ok(await _userEditRepo.GetAllUserEdits(projectId));
+            return Ok(await _userEditRepo.GetAllEntries(projectId));
         }
 
         /// <summary> Returns <see cref="UserEdit"/>s with specified id </summary>
@@ -70,7 +70,7 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
-            var userEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
+            var userEdit = await _userEditRepo.GetEntry(projectId, userEditId);
             if (userEdit is null)
             {
                 return NotFound(userEditId);
@@ -141,7 +141,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure userEdit exists
-            var toBeMod = await _userEditRepo.GetUserEdit(projectId, userEditId);
+            var toBeMod = await _userEditRepo.GetEntry(projectId, userEditId);
             if (toBeMod is null)
             {
                 return NotFound($"userEditId: {userEditId}");
@@ -189,7 +189,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure userEdit exists.
-            var document = await _userEditRepo.GetUserEdit(projectId, userEditId);
+            var document = await _userEditRepo.GetEntry(projectId, userEditId);
             if (document is null)
             {
                 return NotFound(projectId);

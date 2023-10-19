@@ -11,12 +11,11 @@ namespace BackendFramework.Interfaces
         Task<MergeWordSet> AddToMergeBlacklist(string projectId, string userId, List<string> wordIds);
         Task<MergeWordSet> AddToMergeGraylist(string projectId, string userId, List<string> wordIds);
         Task<bool> RemoveFromMergeGraylist(string projectId, string userId, List<string> wordIds);
-        Task<bool> IsInMergeBlacklist(string projectId, List<string> wordIds, string? userId = null);
-        Task<bool> IsInMergeGraylist(string projectId, List<string> wordIds, string? userId = null);
+        Task<bool> IsInMergeBlacklist(string projectId, string userId, List<string> wordIds);
+        Task<bool> IsInMergeGraylist(string projectId, string userId, List<string> wordIds);
         Task<int> UpdateMergeBlacklist(string projectId);
         Task<int> UpdateMergeGraylist(string projectId);
-        Task<List<List<Word>>> GetPotentialDuplicates(
-            string projectId, int maxInList, int maxLists, string? userId = null);
-        Task<List<List<Word>>> GetGraylistEntries(string projectId, int maxLists, string? userId = null);
+        Task<List<List<Word>>> GetPotentialDuplicates(string projectId, string userId, int maxInList, int maxLists);
+        Task<List<List<Word>>> GetGraylistEntries(string projectId, string userId, int maxLists);
     }
 }
