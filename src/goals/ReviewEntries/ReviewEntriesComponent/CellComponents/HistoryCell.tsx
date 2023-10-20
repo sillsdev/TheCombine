@@ -7,6 +7,9 @@ import { getWordHistory } from "backend";
 import { IconButtonWithTooltip } from "components/Buttons";
 import WordCard from "components/WordCard";
 
+export const buttonId = (wordId: string): string => `row-${wordId}-history`;
+export const buttonIdExit = "history-exit";
+
 interface HistoryCellProps {
   wordId: string;
 }
@@ -19,14 +22,14 @@ export default function HistoryCell(props: HistoryCellProps): ReactElement {
   return (
     <>
       <IconButtonWithTooltip
-        buttonId={`word-${props.wordId}-history`}
+        buttonId={buttonId(props.wordId)}
         icon={<History />}
         onClick={getHistory}
       />
       <Dialog fullScreen onClose={() => setHistory(undefined)} open={!!history}>
         <Grid container justifyContent="flex-end">
           <IconButtonWithTooltip
-            buttonId={"word-history-exit-button"}
+            buttonId={buttonIdExit}
             icon={<Close />}
             onClick={() => setHistory(undefined)}
             textId={"buttons.exit"}
