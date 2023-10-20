@@ -8,7 +8,7 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { asyncRefreshProjectUsers } from "components/Project/ProjectActions";
@@ -26,7 +26,7 @@ interface ProjectUsersButtonWithConfirmationProps {
  */
 export default function ProjectUsersButtonWithConfirmation(
   props: ProjectUsersButtonWithConfirmationProps
-) {
+): ReactElement {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
 
@@ -58,7 +58,7 @@ export default function ProjectUsersButtonWithConfirmation(
   );
 }
 
-function ProjUsersDialogContent(props: { projectId: string }) {
+function ProjUsersDialogContent(props: { projectId: string }): ReactElement {
   const dispatch = useAppDispatch();
 
   const { t } = useTranslation();

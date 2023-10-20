@@ -4,6 +4,7 @@ import {
   semDomFromTreeNode,
 } from "types/semanticDomain";
 
+/* eslint-disable @typescript-eslint/no-duplicate-enum-values */
 export enum mapIds {
   "head" = "Sem",
   "parent" = "1",
@@ -17,6 +18,7 @@ export enum mapIds {
   "depth4" = "1.2.1.1",
   "depth5" = "1.2.1.1.1",
 }
+/* eslint-enable @typescript-eslint/no-duplicate-enum-values */
 
 const nodeMap: TreeNodeMap = {};
 

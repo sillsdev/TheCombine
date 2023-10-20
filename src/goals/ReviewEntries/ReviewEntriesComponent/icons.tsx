@@ -15,6 +15,7 @@ import Search from "@mui/icons-material/Search";
 import ViewColumn from "@mui/icons-material/ViewColumn";
 import { forwardRef, Ref } from "react";
 
+/* eslint-disable react/display-name */
 const tableIcons = {
   Add: forwardRef((props: any, ref: Ref<SVGSVGElement>) => (
     <AddBox {...props} ref={ref} />

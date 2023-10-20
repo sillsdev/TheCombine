@@ -35,25 +35,28 @@ export default function EditTextDialog(
   const [text, setText] = useState<string>(props.text);
   const { t } = useTranslation();
 
-  async function onConfirm() {
+  async function onConfirm(): Promise<void> {
     props.close();
     if (text !== props.text) {
       await props.updateText(text);
     }
   }
 
-  function onCancel() {
+  function onCancel(): void {
     setText(props.text);
     props.close();
   }
 
-  function escapeClose(_: any, reason: "backdropClick" | "escapeKeyDown") {
+  function escapeClose(
+    _: any,
+    reason: "backdropClick" | "escapeKeyDown"
+  ): void {
     if (reason === "escapeKeyDown") {
       props.close();
     }
   }
 
-  function confirmIfEnter(event: React.KeyboardEvent<any>) {
+  function confirmIfEnter(event: React.KeyboardEvent<any>): void {
     if (event.key === Key.Enter) {
       onConfirm();
     }

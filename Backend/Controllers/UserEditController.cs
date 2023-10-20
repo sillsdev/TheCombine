@@ -37,7 +37,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserEdit>))]
         public async Task<IActionResult> GetProjectUserEdits(string projectId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
             }
@@ -58,7 +58,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserEdit))]
         public async Task<IActionResult> GetUserEdit(string projectId, string userEditId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
             }
@@ -84,7 +84,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
         public async Task<IActionResult> CreateUserEdit(string projectId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndReviewEntries))
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
                 return Forbid();
             }
@@ -122,7 +123,8 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UpdateUserEditGoal(
             string projectId, string userEditId, [FromBody, BindRequired] Edit newEdit)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndReviewEntries))
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
                 return Forbid();
             }
@@ -170,7 +172,8 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UpdateUserEditStep(string projectId, string userEditId,
             [FromBody, BindRequired] UserEditStepWrapper stepEdit)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndReviewEntries))
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
                 return Forbid();
             }
@@ -227,7 +230,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteUserEdit(string projectId, string userEditId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
             {
                 return Forbid();
             }

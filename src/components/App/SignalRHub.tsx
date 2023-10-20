@@ -3,7 +3,13 @@ import {
   HubConnectionBuilder,
   HubConnectionState,
 } from "@microsoft/signalr";
-import { Fragment, useCallback, useEffect, useState } from "react";
+import {
+  Fragment,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import { baseURL } from "backend";
 import { getUserId } from "backend/localStorage";
@@ -16,7 +22,7 @@ import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 
 /** A central hub for monitoring export status on SignalR */
-export default function SignalRHub() {
+export default function SignalRHub(): ReactElement {
   const exportState = useAppSelector(
     (state: StoreState) => state.exportProjectState
   );

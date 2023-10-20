@@ -42,7 +42,10 @@ describe("DictionaryLoader", () => {
     const mockWord0 = "foo";
     const mockWord1 = "bar";
     const mockKey1 = mockWord1.charCodeAt(0).toString();
-    const mockDict = (_lang: Bcp47Code, key?: string) =>
+    const mockDict = (
+      _lang: Bcp47Code,
+      key?: string
+    ): Promise<string | undefined> =>
       Promise.resolve(
         key === mockKey1 ? mockWord1 : key ? undefined : `1\n${mockWord0}`
       );

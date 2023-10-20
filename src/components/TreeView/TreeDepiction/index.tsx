@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 
 import ChildrenRow from "components/TreeView/TreeDepiction/ChildrenRow";
 import CurrentRow from "components/TreeView/TreeDepiction/CurrentRow";
@@ -10,7 +10,7 @@ import {
 } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
 import { useWindowSize } from "utilities/useWindowSize";
 
-export default function TreeDepiction(props: TreeDepictionProps) {
+export default function TreeDepiction(props: TreeDepictionProps): ReactElement {
   const [colWidth, setColWidth] = useState(0);
 
   const { windowWidth } = useWindowSize();

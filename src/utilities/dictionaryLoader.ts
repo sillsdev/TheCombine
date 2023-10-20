@@ -35,7 +35,7 @@ export default class DictionaryLoader {
       .toLocaleLowerCase()
       .split("")
       .map((c) => c.charCodeAt(0));
-    var key = "";
+    let key = "";
     while (true) {
       key = charCodes.join("-");
       if (!key || this.keys.includes(key)) {

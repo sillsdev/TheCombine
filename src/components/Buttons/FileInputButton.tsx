@@ -1,17 +1,17 @@
 import { Button } from "@mui/material";
 import { ButtonProps } from "@mui/material/Button";
-import React, { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 
 interface BrowseProps {
   updateFile: (file: File) => void;
   accept?: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
   buttonProps?: ButtonProps;
 }
 
 // This button links to a set of functions
 export default function FileInputButton(props: BrowseProps): ReactElement {
-  function updateFirstFile(files: FileList) {
+  function updateFirstFile(files: FileList): void {
     const file = files[0];
     if (file) {
       props.updateFile(file);
@@ -19,7 +19,7 @@ export default function FileInputButton(props: BrowseProps): ReactElement {
   }
 
   return (
-    <React.Fragment>
+    <>
       {/* The actual file input element is hidden... */}
       <input
         id="file-input"
@@ -38,6 +38,6 @@ export default function FileInputButton(props: BrowseProps): ReactElement {
           {props.children}
         </Button>
       </label>
-    </React.Fragment>
+    </>
   );
 }

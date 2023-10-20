@@ -184,11 +184,11 @@ export function loadCharInvData() {
 
 // Helper Functions
 
-export function exit() {
+export function exit(): void {
   router.navigate(Path.Goals);
 }
 
-function countCharacterOccurrences(char: string, words: string[]) {
+function countCharacterOccurrences(char: string, words: string[]): number {
   let count = 0;
   for (const word of words) {
     for (const letter of word) {

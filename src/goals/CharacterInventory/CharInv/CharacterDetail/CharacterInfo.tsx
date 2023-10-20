@@ -1,4 +1,5 @@
 import { Typography } from "@mui/material";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -9,7 +10,7 @@ interface CharacterInfoProps {
 }
 
 /** Displays basic information about a character */
-export default function CharacterInfo(props: CharacterInfoProps) {
+export default function CharacterInfo(props: CharacterInfoProps): ReactElement {
   const allWords = useSelector(
     (state: StoreState) => state.characterInventoryState.allWords
   );
@@ -28,12 +29,12 @@ export default function CharacterInfo(props: CharacterInfoProps) {
   );
 }
 
-function charToHexValue(char: string) {
+function charToHexValue(char: string): string {
   const hex = char.charCodeAt(0).toString(16).toUpperCase();
   return `U+${"0".repeat(4 - hex.length)}${hex}`;
 }
 
-function countCharacterOccurrences(char: string, words: string[]) {
+function countCharacterOccurrences(char: string, words: string[]): number {
   let count = 0;
   for (const word of words) {
     for (const letter of word) {

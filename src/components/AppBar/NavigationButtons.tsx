@@ -1,15 +1,19 @@
 import { PlaylistAdd, Rule } from "@mui/icons-material";
 import { Button, Hidden, Tooltip, Typography } from "@mui/material";
-import { ReactElement } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { Permission } from "api/models";
+import { getCurrentPermissions } from "backend";
 import {
   TabProps,
   appBarHeight,
   buttonMinHeight,
   tabColor,
 } from "components/AppBar/AppBarTypes";
+import { StoreState } from "types";
+import { useAppSelector } from "types/hooks";
 import { Path } from "types/path";
 import { useWindowSize } from "utilities/useWindowSize";
 
@@ -20,6 +24,20 @@ const navButtonMaxWidthProportion = 0.2;
 
 /** Buttons for navigating to Data Entry and Data Cleanup */
 export default function NavigationButtons(props: TabProps): ReactElement {
+  const projectId = useAppSelector(
+    (state: StoreState) => state.currentProjectState.project.id
+  );
+  const [hasGoalPermission, setHasGoalPermission] = useState(false);
+
+  useEffect(() => {
+    getCurrentPermissions().then((perms) => {
+      setHasGoalPermission(
+        perms.includes(Permission.CharacterInventory) ||
+          perms.includes(Permission.MergeAndReviewEntries)
+      );
+    });
+  }, [projectId]);
+
   return (
     <>
       <NavButton
@@ -29,13 +47,15 @@ export default function NavigationButtons(props: TabProps): ReactElement {
         targetPath={Path.DataEntry}
         textId="appBar.dataEntry"
       />
-      <NavButton
-        buttonId={dataCleanupButtonId}
-        currentTab={props.currentTab}
-        icon={<Rule />}
-        targetPath={Path.Goals}
-        textId="appBar.dataCleanup"
-      />
+      {hasGoalPermission && (
+        <NavButton
+          buttonId={dataCleanupButtonId}
+          currentTab={props.currentTab}
+          icon={<Rule />}
+          targetPath={Path.Goals}
+          textId="appBar.dataCleanup"
+        />
+      )}
     </>
   );
 }

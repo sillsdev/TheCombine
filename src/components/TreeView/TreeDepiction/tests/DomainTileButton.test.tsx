@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import renderer from "react-test-renderer";
+import { ReactTestRenderer, act, create } from "react-test-renderer";
 
 import "tests/reactI18nextMock";
 
@@ -7,17 +7,17 @@ import DomainTileButton from "components/TreeView/TreeDepiction/DomainTileButton
 import { Direction } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
 import domMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
 
-let tileMaster: renderer.ReactTestRenderer;
+let tileMaster: ReactTestRenderer;
 const MOCK_ANIMATE = jest.fn();
 
 describe("DomainTileButton", () => {
-  it("renders tile and matches the latest snapshot", () => {
-    createTile();
+  it("renders tile and matches the latest snapshot", async () => {
+    await createTile();
     snapTest();
   });
 
-  it("calls function on click", () => {
-    createTile();
+  it("calls function on click", async () => {
+    await createTile();
     expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
     tileMaster.root.findByType(Button).props.onClick();
     expect(MOCK_ANIMATE).toHaveBeenCalledTimes(1);
@@ -25,9 +25,9 @@ describe("DomainTileButton", () => {
 });
 
 // Creates the tile
-function createTile(direction = Direction.Next) {
-  renderer.act(() => {
-    tileMaster = renderer.create(
+async function createTile(direction = Direction.Next): Promise<void> {
+  await act(async () => {
+    tileMaster = create(
       <DomainTileButton
         direction={direction}
         domain={domMap[mapIds.parent]}
@@ -38,6 +38,6 @@ function createTile(direction = Direction.Next) {
 }
 
 // Perform a snapshot test
-function snapTest() {
+function snapTest(): void {
   expect(tileMaster.toJSON()).toMatchSnapshot();
 }

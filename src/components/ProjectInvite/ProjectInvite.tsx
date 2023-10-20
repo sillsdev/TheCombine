@@ -24,7 +24,7 @@ export default function ProjectInvite(): ReactElement {
   const validateLink = useCallback(async (): Promise<void> => {
     if (project && token) {
       const status = await backend.validateLink(project, token);
-      if (status.isTokenValid && status.isUserRegistered) {
+      if (status.isTokenValid && status.isUserValid) {
         navigate(Path.Login);
         return;
       }

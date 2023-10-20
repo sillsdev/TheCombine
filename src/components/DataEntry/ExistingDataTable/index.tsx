@@ -35,11 +35,12 @@ export default function ExistingDataTable(
 
   const list = (): ReactElement => (
     <List style={{ minWidth: "300px" }}>
-      {props.domainWords.map((domainWord) => (
+      {props.domainWords.map((w, i) => (
         <ImmutableExistingData
-          key={`${domainWord.wordGuid}-${domainWord.senseGuid}`}
-          gloss={domainWord.gloss}
-          vernacular={domainWord.vernacular}
+          glosses={w.glosses}
+          index={i}
+          key={`${w.wordGuid}-${w.senseGuid}`}
+          vernacular={w.vernacular}
         />
       ))}
     </List>

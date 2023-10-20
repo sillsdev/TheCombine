@@ -1,7 +1,10 @@
+import { Provider } from "react-redux";
 import renderer, { ReactTestInstance } from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
+import { Permission } from "api";
 import NavigationButtons, {
   dataCleanupButtonId,
   dataEntryButtonId,
@@ -13,38 +16,98 @@ jest.mock("react-router-dom", () => ({
   useNavigate: jest.fn(),
 }));
 
-let testRenderer: renderer.ReactTestRenderer;
-let entryButton: ReactTestInstance | undefined;
-let cleanButton: ReactTestInstance | undefined;
+jest.mock("backend", () => ({
+  getCurrentPermissions: () => mockGetCurrentPermissions(),
+}));
 
-const renderNavButtons = (path: Path): void => {
-  renderer.act(() => {
-    testRenderer = renderer.create(<NavigationButtons currentTab={path} />);
+const mockGetCurrentPermissions = jest.fn();
+const mockStore = configureMockStore()({
+  currentProjectState: { project: { id: "" } },
+});
+
+let testRenderer: renderer.ReactTestRenderer;
+let entryButton: ReactTestInstance;
+let cleanButton: ReactTestInstance;
+
+const renderNavButtons = async (
+  path: Path,
+  permission = Permission.MergeAndReviewEntries
+): Promise<void> => {
+  mockGetCurrentPermissions.mockResolvedValue([permission]);
+  await renderer.act(async () => {
+    testRenderer = renderer.create(
+      <Provider store={mockStore}>
+        <NavigationButtons currentTab={path} />
+      </Provider>
+    );
   });
+};
+
+const renderNavButtonsWithPath = async (path: Path): Promise<void> => {
+  await renderNavButtons(path, Permission.MergeAndReviewEntries);
   entryButton = testRenderer.root.findByProps({ id: dataEntryButtonId });
   cleanButton = testRenderer.root.findByProps({ id: dataCleanupButtonId });
 };
 
-describe("NavigationButtons", () => {
-  it("highlights the correct tab", () => {
-    renderNavButtons(Path.Statistics);
-    expect(entryButton?.props.style.background).toEqual(themeColors.lightShade);
-    expect(cleanButton?.props.style.background).toEqual(themeColors.lightShade);
+const renderNavButtonsWithPermission = async (
+  perm: Permission
+): Promise<void> => {
+  await renderNavButtons(Path.DataEntry, perm);
+  entryButton = testRenderer.root.findByProps({ id: dataEntryButtonId });
+  const cleanupButtons = testRenderer.root.findAllByProps({
+    id: dataCleanupButtonId,
+  });
+  if (cleanupButtons.length) {
+    cleanButton = cleanupButtons[0];
+  }
+};
 
-    renderNavButtons(Path.DataEntry);
+beforeEach(() => {
+  jest.resetAllMocks();
+});
+
+describe("NavigationButtons", () => {
+  it("only shows the data cleanup tab for the correct permissions", async () => {
+    for (const perm of Object.values(Permission)) {
+      await renderNavButtonsWithPermission(perm);
+      if (
+        perm === Permission.CharacterInventory ||
+        perm === Permission.MergeAndReviewEntries
+      ) {
+        expect(cleanButton).toBeTruthy;
+      } else {
+        expect(cleanButton).toBeUndefined;
+      }
+    }
+  });
+
+  it("highlights the correct tab", async () => {
+    await renderNavButtonsWithPath(Path.DataEntry);
     expect(entryButton?.props.style.background).toEqual(themeColors.darkShade);
     expect(cleanButton?.props.style.background).toEqual(themeColors.lightShade);
 
-    renderNavButtons(Path.Goals);
+    await renderNavButtonsWithPath(Path.Goals);
     expect(entryButton?.props.style.background).toEqual(themeColors.lightShade);
     expect(cleanButton?.props.style.background).toEqual(themeColors.darkShade);
 
-    renderNavButtons(Path.GoalCurrent);
+    await renderNavButtonsWithPath(Path.GoalCurrent);
     expect(entryButton?.props.style.background).toEqual(themeColors.lightShade);
     expect(cleanButton?.props.style.background).toEqual(themeColors.darkShade);
 
-    renderNavButtons(Path.GoalNext);
+    await renderNavButtonsWithPath(Path.GoalNext);
     expect(entryButton?.props.style.background).toEqual(themeColors.lightShade);
     expect(cleanButton?.props.style.background).toEqual(themeColors.darkShade);
+
+    await renderNavButtonsWithPath(Path.ProjSettings);
+    expect(entryButton?.props.style.background).toEqual(themeColors.lightShade);
+    expect(cleanButton?.props.style.background).toEqual(themeColors.lightShade);
+
+    await renderNavButtonsWithPath(Path.Statistics);
+    expect(entryButton?.props.style.background).toEqual(themeColors.lightShade);
+    expect(cleanButton?.props.style.background).toEqual(themeColors.lightShade);
+
+    await renderNavButtonsWithPath(Path.UserSettings);
+    expect(entryButton?.props.style.background).toEqual(themeColors.lightShade);
+    expect(cleanButton?.props.style.background).toEqual(themeColors.lightShade);
   });
 });

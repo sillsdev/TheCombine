@@ -1,6 +1,6 @@
 import { ThemeProvider } from "@mui/material/styles";
 import { Provider } from "react-redux";
-import renderer from "react-test-renderer";
+import { ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
@@ -47,13 +47,13 @@ const mockAudioFunctions = {
 };
 
 // Render the cell component with a store and theme
-let testRenderer: renderer.ReactTestRenderer;
+let testRenderer: ReactTestRenderer;
 const renderPronunciationsCell = async (
   pronunciationFiles: string[],
   pronunciationsNew?: string[]
-) => {
-  await renderer.act(async () => {
-    testRenderer = renderer.create(
+): Promise<void> => {
+  await act(async () => {
+    testRenderer = create(
       <ThemeProvider theme={theme}>
         <Provider store={mockStore}>
           <PronunciationsCell
@@ -85,7 +85,7 @@ describe("PronunciationsCell", () => {
 
     it("has player that dispatches action", async () => {
       await renderPronunciationsCell(["1"]);
-      await renderer.act(async () => {
+      await act(async () => {
         testRenderer.root.findByType(AudioPlayer).props.deleteAudio();
       });
       expect(mockDeleteAudio).toBeCalled();
@@ -96,7 +96,7 @@ describe("PronunciationsCell", () => {
 
     it("has recorder that dispatches action", async () => {
       await renderPronunciationsCell([]);
-      await renderer.act(async () => {
+      await act(async () => {
         testRenderer.root.findByType(AudioRecorder).props.uploadAudio();
       });
       expect(mockUploadAudio).toBeCalled();
@@ -123,7 +123,7 @@ describe("PronunciationsCell", () => {
       const playButtons = testRenderer.root.findAllByType(AudioPlayer);
 
       // player for audio present prior to row edit
-      await renderer.act(async () => {
+      await act(async () => {
         playButtons[0].props.deleteAudio();
       });
       expect(mockDelOldAudio).toBeCalled();
@@ -134,7 +134,7 @@ describe("PronunciationsCell", () => {
       jest.resetAllMocks();
 
       // player for audio added during row edit
-      await renderer.act(async () => {
+      await act(async () => {
         playButtons[1].props.deleteAudio();
       });
       expect(mockDelNewAudio).toBeCalled();
@@ -145,7 +145,7 @@ describe("PronunciationsCell", () => {
 
     it("has recorder that calls a prop function", async () => {
       await renderPronunciationsCell([], []);
-      await renderer.act(async () => {
+      await act(async () => {
         testRenderer.root.findByType(AudioRecorder).props.uploadAudio();
       });
       expect(mockAddNewAudio).toBeCalled();

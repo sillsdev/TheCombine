@@ -85,8 +85,9 @@ namespace Backend.Tests.Mocks
         /// to support unit testing when `HttpContext`s are not available.
         /// </param>
         /// <param name="permission"> Same as the real implementation. </param>
+        /// <param name="projectId"> Same as the real implementation. </param>
         /// </summary>
-        public Task<bool> HasProjectPermission(HttpContext? request, Permission permission)
+        public Task<bool> HasProjectPermission(HttpContext? request, Permission permission, string projectId)
         {
             return Task.FromResult(IsAuthorizedHttpContext(request));
         }

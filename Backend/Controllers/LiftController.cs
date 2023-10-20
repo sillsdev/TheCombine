@@ -83,7 +83,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
         public async Task<IActionResult> FinishUploadLiftFile(string projectId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Import))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Import, projectId))
             {
                 return Forbid();
             }
@@ -148,7 +148,7 @@ namespace BackendFramework.Controllers
         [RequestSizeLimit(250_000_000)]  // 250MB.
         public async Task<IActionResult> UploadLiftFile(string projectId, [FromForm] FileUpload fileUpload)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Import))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Import, projectId))
             {
                 return Forbid();
             }
@@ -283,7 +283,7 @@ namespace BackendFramework.Controllers
 
         private async Task<IActionResult> ExportLiftFile(string projectId, string userId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Export))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Export, projectId))
             {
                 return Forbid();
             }
@@ -368,7 +368,7 @@ namespace BackendFramework.Controllers
 
         internal async Task<IActionResult> DownloadLiftFile(string projectId, string userId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Export))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Export, projectId))
             {
                 return Forbid();
             }
@@ -412,7 +412,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> CanUploadLift(string projectId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Import))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Import, projectId))
             {
                 return Forbid();
             }

@@ -216,7 +216,7 @@ export async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
   }
 }
 
-async function saveCurrentStep(goal: Goal) {
+async function saveCurrentStep(goal: Goal): Promise<void> {
   const userEditId = getUserEditId();
   if (userEditId) {
     const step = goal.steps[goal.currentStep];

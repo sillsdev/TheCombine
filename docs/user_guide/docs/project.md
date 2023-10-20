@@ -6,7 +6,7 @@ A project is for a single vernacular language.
 
 When creating a project, you have the option to start with an empty project or to import existing lexical data.
 
-![Create Project - Tzotzil](images/projectCreateTzotzil.png){ .center }
+![Create Project - Tzotzil](images/projectCreateTzotzil.png){.center}
 
 ### Import Existing Data
 
@@ -43,14 +43,14 @@ Settings for managing the project. The following settings are available for proj
 
 ### Basic Settings
 
-![BasicSettings](images/projectSettings1Basic.png){ width=750 .center }
+![BasicSettings](images/projectSettings1Basic.png){width=750 .center}
 
 #### Project Name
 
 A distinguishing and descriptive name is recommended. The project name is part of the filename when you
 [export](#export) your project.
 
-#### Autocomplete
+#### Autocomplete {#autocomplete}
 
 The default setting is On: When a user is entering the vernacular form of a new entry in Data Entry, this setting gives
 suggestions of similar existing entries, allowing the user to select an existing entry and add a new sense to that
@@ -66,18 +66,18 @@ This is only available to the project Owner. Archiving a project makes it inacce
 undone by a site administrator. Please contact a site administrator if you wish for the project to be entirely deleted
 from the servers.
 
-### Project Languages
+### Project Languages {#project-languages}
 
-![Languages](images/projectSettings2Langs.png){ width=750 .center }
+![Languages](images/projectSettings2Langs.png){width=750 .center}
 
-![Project Languages - Tzotzil](images/projectLanguagesTzotzil.png){ .center }
+![Project Languages - Tzotzil](images/projectLanguagesTzotzil.png){.center}
 
 The _vernacular language_ specified at project creation is fixed.
 
 There may be multiple _analysis languages_ associated with the project, but only the top one in the list is associated
 with new data entries.
 
-!!! note
+!!! note "Note"
 
     If the project has glosses in multiple languages, those languages must be added here for all the glosses to show up
     in [Data Cleanup](goals.md). Click the magnifying glass icon to see all language codes present in the project.
@@ -87,7 +87,7 @@ The _semantic domains language_ controls the language in which semantic domain t
 
 ### Project Users
 
-![Users](images/projectSettings3Users.png){ width=750 .center }
+![Users](images/projectSettings3Users.png){width=750 .center}
 
 #### Current Users
 
@@ -100,19 +100,20 @@ click this to open a user management menu with the following options:
         Harvester
         Editor
         Administrator
-    Make project Owner [only available to the Owner modifying an Administrator]
+    Make project Owner
+        [only available to the Owner modifying an Administrator]
 </pre>
 
 A _Harvester_ can do [Data Entry](./dataEntry.md) but not [Data Cleanup](./goals.md). In project settings, they can see
 the project languages and workshop schedule, but cannot make any changes.
 
 An _Editor_ has permission to do everything that a _Harvester_ can do, as well as
-[Review Entries](./goals.md#review-entries), [Merge Duplicates](./goals.md#review-entries), and [Export](#export).
+[Review Entries](./goals.md#review-entries), [Merge Duplicates](./goals.md#merge-duplicates), and [Export](#export).
 
 An _Administrator_ has permission to do everything that an _Editor_ can do, as well as modify most project settings and
 users.
 
-!!! important
+!!! warning "Important"
 
     There is only one Owner per project. If you "Make project Owner" another user, you will automatically change from Owner to
     Administrator for the project, and you will no longer be able to archive the project or make/remove Administrator on other users.
@@ -125,44 +126,44 @@ invitation).
 
 ### Import/Export
 
-![Import/Export](images/projectSettings4Port.png){ width=750 .center }
+![Import/Export](images/projectSettings4Port.png){width=750 .center}
 
-#### Import
+#### Import {#import}
 
-!!! note
+!!! note "Note"
 
     Currently, the maximum size of LIFT files supported for import is 100MB.
 
-!!! note
+!!! note "Note"
 
     Currently, only one LIFT file can be imported per project.
 
-#### Export
+#### Export {#export}
 
 After clicking the Export button, you can navigate to other parts of the website while the data is being prepared for
 download. A download icon will appear in the App Bar when the export is ready for download. The default filename is the
-[project name](#project-name) with a timestamp affixed.
+project name with a timestamp affixed.
 
-!!! important
+!!! warning "Important"
 
     A project that has reached hundreds of MB in size may take multiple minutes to export.
 
-### Workshop Schedule
+### Workshop Schedule {#workshop-schedule}
 
-![Workshop Schedule](images/projectSettings5Sched.png){ width=750 .center }
+![Workshop Schedule](images/projectSettings5Sched.png){width=750 .center}
 
 This is only available to the project Owner, allowing a schedule to be set for a Rapid Word Collection workshop. Click
 the first button to select a date range for the workshop. Click the middle button to add or remove specific dates. Click
 the last button to clear the schedule.
 
-![Workshop Schedule](images/projectSchedule.png){ .center }
+![Workshop Schedule](images/projectSchedule.png){.center}
 
 ## Project Statistics
 
 If you are the project Owner, there will be another icon alongside the gear icon in App Bar at the top of The Combine.
 This opens statistics about words in the project.
 
-![Project Statistics Button](images/projectStatsButton.png){ .center }
+![Project Statistics Button](images/projectStatsButton.png){.center}
 
 In the context of these statistics, _word_ refers to a sense-domain pair: e.g., an entry with 3 senses, each with 2
 semantic domains, will be counted as 6 words.

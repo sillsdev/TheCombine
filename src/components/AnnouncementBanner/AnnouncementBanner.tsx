@@ -3,6 +3,7 @@ import { Box, IconButton, Toolbar, Typography } from "@mui/material";
 import {
   CSSProperties,
   Fragment,
+  ReactElement,
   useCallback,
   useEffect,
   useState,
@@ -17,7 +18,7 @@ import { useAppSelector } from "types/hooks";
 import { Path } from "types/path";
 import theme, { themeColors } from "types/theme";
 
-export default function AnnouncementBanner() {
+export default function AnnouncementBanner(): ReactElement {
   const [banner, setBanner] = useState<string>("");
   const [margins, setMargins] = useState<CSSProperties>({});
 
@@ -40,7 +41,7 @@ export default function AnnouncementBanner() {
     });
   }, [loc, calculateMargins]);
 
-  function closeBanner() {
+  function closeBanner(): void {
     setClosedBanner(banner);
     setBanner("");
   }

@@ -1,6 +1,5 @@
 import { Card, Grid, ListItem, List } from "@mui/material";
 import { ReactElement, useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 
 import { SemanticDomainUserCount } from "api/models";
 import { getSemanticDomainUserCount } from "backend";
@@ -17,10 +16,9 @@ export default function UserStatistics(
   const [domainUserCountList, setDomainUserCountList] = useState<
     SemanticDomainUserCount[]
   >([]);
-  const { t } = useTranslation();
 
   useEffect(() => {
-    const updateSemanticDomainUserCounts = async () => {
+    const updateSemanticDomainUserCounts = async (): Promise<void> => {
       const counts = await getUserStatistics(
         LocalStorage.getProjectId(),
         props.lang

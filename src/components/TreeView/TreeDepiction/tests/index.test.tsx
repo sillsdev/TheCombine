@@ -1,4 +1,4 @@
-import renderer from "react-test-renderer";
+import { ReactTestRenderer, act, create } from "react-test-renderer";
 
 import "tests/reactI18nextMock.ts";
 
@@ -8,7 +8,7 @@ import testDomainMap, {
   mapIds,
 } from "components/TreeView/tests/SemanticDomainMock";
 
-let treeMaster: renderer.ReactTestRenderer;
+let treeMaster: ReactTestRenderer;
 
 describe("Tests AddWords", () => {
   testFromNode("Renders correctly: from parent", testDomainMap[mapIds.parent]);
@@ -35,16 +35,16 @@ describe("Tests AddWords", () => {
 });
 
 // Perform a snapshot test
-function testFromNode(message: string, node: SemanticDomainTreeNode) {
-  it(message, () => {
-    createTree(node);
+function testFromNode(message: string, node: SemanticDomainTreeNode): void {
+  it(message, async () => {
+    await createTree(node);
     expect(treeMaster.toJSON()).toMatchSnapshot();
   });
 }
 
-function createTree(domain: SemanticDomainTreeNode) {
-  renderer.act(() => {
-    treeMaster = renderer.create(
+async function createTree(domain: SemanticDomainTreeNode): Promise<void> {
+  await act(async () => {
+    treeMaster = create(
       <TreeDepiction currentDomain={domain} animate={jest.fn()} />
     );
   });

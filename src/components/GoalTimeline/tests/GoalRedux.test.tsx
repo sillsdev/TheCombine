@@ -61,7 +61,7 @@ const mockGetUser = jest.fn();
 const mockGetUserEditById = jest.fn();
 const mockNavigate = jest.fn();
 const mockUpdateUser = jest.fn();
-function setMockFunctions() {
+function setMockFunctions(): void {
   mockAddGoalToUserEdit.mockResolvedValue(0);
   mockAddStepToGoal.mockResolvedValue(0);
   mockCreateUserEdit.mockResolvedValue(mockUser);
@@ -108,7 +108,7 @@ const mockUser = newUser("First Last", "username");
 mockUser.id = mockUserId;
 mockUser.workedProjects[mockProjectId] = mockUserEditId;
 
-function setupLocalStorage() {
+function setupLocalStorage(): void {
   LocalStorage.setCurrentUser(mockUser);
   LocalStorage.setProjectId(mockProjectId);
 }

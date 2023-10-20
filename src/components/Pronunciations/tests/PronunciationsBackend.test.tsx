@@ -1,6 +1,6 @@
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { Provider } from "react-redux";
-import renderer from "react-test-renderer";
+import { ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
@@ -18,13 +18,15 @@ jest
 jest.mock("components/Pronunciations/Recorder");
 
 // Test variables
-let testRenderer: renderer.ReactTestRenderer;
+let testRenderer: ReactTestRenderer;
 const mockAudio = ["a.wav", "b.wav"];
 const mockStore = configureMockStore()({ pronunciationsState });
 
-const renderPronunciationsBackend = async (withRecord: boolean) => {
-  await renderer.act(async () => {
-    testRenderer = renderer.create(
+const renderPronunciationsBackend = async (
+  withRecord: boolean
+): Promise<void> => {
+  await act(async () => {
+    testRenderer = create(
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <Provider store={mockStore}>

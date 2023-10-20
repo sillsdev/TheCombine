@@ -1,6 +1,6 @@
 import { Divider, List, ListItem, ListItemText, Theme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { getSemanticDomainCounts } from "backend";
@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function ProgressBarComponent() {
+export default function ProgressBarComponent(): ReactElement {
   const { t } = useTranslation();
   const classes = useStyles();
   const [progressRatio, setProgressRatio] = useState<number>(0);
@@ -24,7 +24,7 @@ export default function ProgressBarComponent() {
   const [totalWordCount, setTotalWordCount] = useState<number>(0);
 
   useEffect(() => {
-    const updateProgress = async () => {
+    const updateProgress = async (): Promise<void> => {
       const statList = await getSemanticDomainCounts(
         LocalStorage.getProjectId(),
         defaultWritingSystem.bcp47

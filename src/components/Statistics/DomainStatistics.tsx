@@ -18,7 +18,7 @@ export default function DomainStatistics(
   );
 
   useEffect(() => {
-    const updateStatisticList = async () => {
+    const updateStatisticList = async (): Promise<void> => {
       const counts = await getStatisticsCounts(
         LocalStorage.getProjectId(),
         props.lang

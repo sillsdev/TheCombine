@@ -3,6 +3,7 @@ import { WritingSystem } from "api/models";
 export enum Bcp47Code {
   Default = "en",
   Ar = "ar", // Arabic
+  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
   En = "en", // English
   Es = "es", // Spanish
   Fr = "fr", // French

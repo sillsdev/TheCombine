@@ -2,9 +2,9 @@
 
 Site administrators have one more option in the User Menu: "Site Settings".
 
-![User Menu - Admin](images/userMenuAdmin.png){ .center }
+![User Menu - Admin](images/userMenuAdmin.png){.center}
 
-## Project Managements
+## Project Management
 
 Administrators can export or archive/restore any project. Archiving a project makes it invisible and inaccessible to all
 users, even the project creator, but any admin can restore the project. There is at present no way to permanently delete
@@ -24,7 +24,7 @@ The announcement banner places a bright banner across the top of the page when u
 are intended for displaying important, short-term messages to users related to the instance of The Combine. Uses could
 include scheduled upgrades, planned down time, or upcoming server changes.
 
-![Announcement Banner](images/announcementBanner.png){ .center }
+![Announcement Banner](images/announcementBanner.png){.center}
 
 ### Login Banner
 
@@ -32,4 +32,4 @@ The login banner places a message at the bottom of the login page. This banner i
 information about an instance of The Combine that users may need to know, such as who to contact regarding support,
 version upgrades, or database backup policies.
 
-![Login Banner](images/loginBanner.png){ width=400 .center }
+![Login Banner](images/loginBanner.png){width=400 .center}

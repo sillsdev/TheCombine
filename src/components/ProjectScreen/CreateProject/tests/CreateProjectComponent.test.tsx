@@ -1,6 +1,11 @@
 import { LanguagePicker } from "mui-language-picker";
 import { Provider } from "react-redux";
-import renderer from "react-test-renderer";
+import {
+  ReactTestInstance,
+  ReactTestRenderer,
+  act,
+  create,
+} from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
@@ -30,18 +35,22 @@ const mockState = {
 };
 const mockStore = createMockStore(mockState);
 
-const mockEvent = (value = "") => ({
-  preventDefault: jest.fn(),
+const mockChangeEvent = (
+  value: string
+): { target: Partial<EventTarget & HTMLSelectElement> } => ({
   target: { value },
 });
+const mockSubmitEvent = (): Partial<React.FormEvent<HTMLFormElement>> => ({
+  preventDefault: jest.fn(),
+});
 
-let projectMaster: renderer.ReactTestRenderer;
-let projectHandle: renderer.ReactTestInstance;
+let projectMaster: ReactTestRenderer;
+let projectHandle: ReactTestInstance;
 4;
 
 beforeAll(async () => {
-  await renderer.act(async () => {
-    projectMaster = renderer.create(
+  await act(async () => {
+    projectMaster = create(
       <Provider store={mockStore}>
         <CreateProject />
       </Provider>
@@ -59,22 +68,26 @@ describe("CreateProject", () => {
     const nameField = projectHandle.findByProps({ id: fieldIdName });
     expect(nameField.props.error).toBeFalsy();
 
-    await renderer.act(async () => {
-      projectHandle.findByProps({ id: formId }).props.onSubmit(mockEvent());
+    await act(async () => {
+      projectHandle
+        .findByProps({ id: formId })
+        .props.onSubmit(mockSubmitEvent());
     });
     expect(nameField.props.error).toBeTruthy();
   });
 
   it("errors on taken name", async () => {
     const nameField = projectHandle.findByProps({ id: fieldIdName });
-    await renderer.act(async () => {
-      nameField.props.onChange(mockEvent("non-empty"));
+    await act(async () => {
+      nameField.props.onChange(mockChangeEvent("non-empty-value"));
     });
     expect(nameField.props.error).toBeFalsy();
 
     mockProjectDuplicateCheck.mockResolvedValueOnce(true);
-    await renderer.act(async () => {
-      projectHandle.findByProps({ id: formId }).props.onSubmit(mockEvent());
+    await act(async () => {
+      projectHandle
+        .findByProps({ id: formId })
+        .props.onSubmit(mockSubmitEvent());
     });
     expect(nameField.props.error).toBeTruthy();
   });
@@ -85,7 +98,7 @@ describe("CreateProject", () => {
     const langPickers = projectHandle.findAllByType(LanguagePicker);
     expect(langPickers).toHaveLength(2);
 
-    await renderer.act(async () => {
+    await act(async () => {
       langPickers[0].props.setCode("non-empty");
     });
     expect(button.props.disabled).toBeFalsy();
@@ -97,7 +110,7 @@ describe("CreateProject", () => {
 
     // File with no writing systems only disables analysis lang picker.
     mockUploadLiftAndGetWritingSystems.mockResolvedValueOnce([]);
-    await renderer.act(async () => {
+    await act(async () => {
       button.props.updateFile(new File([], ""));
     });
     expect(projectHandle.findAllByType(LanguagePicker)).toHaveLength(1);
@@ -106,7 +119,7 @@ describe("CreateProject", () => {
     mockUploadLiftAndGetWritingSystems.mockResolvedValueOnce([
       newWritingSystem(),
     ]);
-    await renderer.act(async () => {
+    await act(async () => {
       button.props.updateFile(new File([], "oneLang"));
     });
     expect(projectHandle.findAllByType(LanguagePicker)).toHaveLength(0);
@@ -116,7 +129,7 @@ describe("CreateProject", () => {
     const button = projectHandle.findByType(FileInputButton);
     const langs = [newWritingSystem("redLang"), newWritingSystem("blueLang")];
     mockUploadLiftAndGetWritingSystems.mockResolvedValueOnce(langs);
-    await renderer.act(async () => {
+    await act(async () => {
       button.props.updateFile(new File([], "twoLang"));
     });
     const vernSelect = projectHandle.findByProps({ id: selectIdVern });

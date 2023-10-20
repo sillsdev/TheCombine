@@ -6,7 +6,7 @@ import { ReactElement, useState } from "react";
 import { getAvatar } from "backend/localStorage";
 import AvatarUpload from "components/UserSettings/AvatarUpload";
 
-const clickableAvatarClassProps: Styles<DefaultTheme, {}> = {
+const clickableAvatarClassProps: Styles<DefaultTheme, object> = {
   avatar: { width: 60, height: 60 },
   avatarOverlay: {
     transition: "opacity 0.2s",

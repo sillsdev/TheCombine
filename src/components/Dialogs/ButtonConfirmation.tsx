@@ -30,7 +30,7 @@ export default function ButtonConfirmation(
   const [loading, setLoading] = useState<boolean>(false);
   const { t } = useTranslation();
 
-  async function onConfirm() {
+  async function onConfirm(): Promise<void> {
     setLoading(true);
     await props.onConfirm();
     setLoading(false);

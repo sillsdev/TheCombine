@@ -86,7 +86,7 @@ namespace Backend.Tests.Services
         public void HasProjectPermissionTestAdmin()
         {
             var httpContext = createHttpContextWithUser(new User { IsAdmin = true });
-            Assert.That(_permService.HasProjectPermission(httpContext, Permission.Archive).Result, Is.True);
+            Assert.That(_permService.HasProjectPermission(httpContext, Permission.Archive, "ProjId").Result, Is.True);
         }
 
         [Test]

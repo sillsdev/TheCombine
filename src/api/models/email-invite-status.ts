@@ -29,5 +29,5 @@ export interface EmailInviteStatus {
    * @type {boolean}
    * @memberof EmailInviteStatus
    */
-  isUserRegistered: boolean;
+  isUserValid: boolean;
 }

@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import { ButtonProps } from "@mui/material/Button";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { archiveProject, restoreProject } from "backend";
@@ -17,25 +17,20 @@ interface ProjectArchiveProps extends ButtonProps {
 /**
  * Button for archiving/restoring project (changing isActive)
  */
-export default function ProjectArchive(props: ProjectArchiveProps) {
+export default function ProjectArchive(
+  props: ProjectArchiveProps
+): ReactElement {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
 
-  async function updateProj() {
+  async function updateProj(): Promise<void> {
     if (props.archive) {
       await archiveProject(props.projectId);
     } else {
       await restoreProject(props.projectId);
     }
-    handleClose();
-    await props.updateParent();
-  }
-
-  function handleOpen() {
-    setOpen(true);
-  }
-  function handleClose() {
     setOpen(false);
+    await props.updateParent();
   }
 
   return (
@@ -43,7 +38,7 @@ export default function ProjectArchive(props: ProjectArchiveProps) {
       <Button
         variant="contained"
         color={props.warn ? "secondary" : "primary"}
-        onClick={handleOpen}
+        onClick={() => setOpen(true)}
         id={`proj-${props.projectId}-${props.archive ? "archive" : "restore"}`}
         style={props.warn ? { color: themeColors.error } : {}}
       >
@@ -57,7 +52,7 @@ export default function ProjectArchive(props: ProjectArchiveProps) {
             : "siteSettings.restoreProjectText"
         }
         titleId="buttons.proceedWithCaution"
-        onClose={handleClose}
+        onClose={() => setOpen(false)}
         onConfirm={updateProj}
         buttonIdClose={`proj-${props.projectId}-${
           props.archive ? "archive" : "restore"

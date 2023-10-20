@@ -68,7 +68,8 @@ export default function GoalTimeline(): ReactElement {
     (state: StoreState) => state.goalsState
   );
 
-  const chooseGoal = (goal: Goal) => dispatch(asyncAddGoal(goal));
+  const chooseGoal = (goal: Goal): Promise<void> =>
+    dispatch(asyncAddGoal(goal));
 
   const [availableGoalTypes, setAvailableGoalTypes] = useState<GoalType[]>([]);
   const [suggestedGoalTypes, setSuggestedGoalTypes] = useState<GoalType[]>([]);
@@ -86,7 +87,7 @@ export default function GoalTimeline(): ReactElement {
       dispatch(asyncGetUserEdits());
       setLoaded(true);
     }
-    const updateHasGraylist = async () =>
+    const updateHasGraylist = async (): Promise<void> =>
       setHasGraylist(
         await getGraylistEntries(1).then((res) => res.length !== 0)
       );

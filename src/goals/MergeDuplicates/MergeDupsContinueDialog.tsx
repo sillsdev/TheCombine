@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
-import React, { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface MergeDupsContinueDialogProps {
@@ -9,7 +9,7 @@ export interface MergeDupsContinueDialogProps {
 export default function MergeDupsContinueDialog(
   props: MergeDupsContinueDialogProps
 ): ReactElement {
-  const [open, setOpen] = React.useState<boolean>(true);
+  const [open, setOpen] = useState<boolean>(true);
   const { t } = useTranslation();
 
   const { onSelection } = props;

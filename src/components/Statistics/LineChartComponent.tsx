@@ -9,7 +9,7 @@ import {
   PointElement,
 } from "chart.js";
 import distinctColors from "distinct-colors";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { useTranslation } from "react-i18next";
 
@@ -55,11 +55,13 @@ function FilteredData(numbers: number[]): number[] {
   return numbers.map((num) => (num ? num : NaN));
 }
 
-export default function LineChartComponent(props: LineChartProps) {
+export default function LineChartComponent(
+  props: LineChartProps
+): ReactElement {
   const [chartData, setChartData] = useState(getDefaultProps());
 
   useEffect(() => {
-    const updateChartList = async () => {
+    const updateChartList = async (): Promise<void> => {
       const tempData = await props.fetchData();
       const newChartData = getDefaultProps();
       if (tempData) {

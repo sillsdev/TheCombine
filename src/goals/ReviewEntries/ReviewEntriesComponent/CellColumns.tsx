@@ -106,7 +106,7 @@ const columns: Column<any>[] = [
       return b.senses.length - a.senses.length;
     },
     editComponent: (props: FieldParameterStandard) => {
-      const deleteSense = (guid: string) => {
+      const deleteSense = (guid: string): void => {
         if (props.onRowDataChange) {
           props.onRowDataChange({
             ...props.rowData,
@@ -275,7 +275,7 @@ const columns: Column<any>[] = [
       />
     ),
     editComponent: (props: FieldParameterStandard) => {
-      const editDomains = (guid: string, domains: SemanticDomain[]) => {
+      const editDomains = (guid: string, domains: SemanticDomain[]): void => {
         if (props.onRowDataChange) {
           props.onRowDataChange({
             ...props.rowData,

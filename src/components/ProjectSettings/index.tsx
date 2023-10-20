@@ -74,7 +74,7 @@ export enum Setting {
   Users = "SettingUsers",
 }
 
-export default function ProjectSettingsComponent() {
+export default function ProjectSettingsComponent(): ReactElement {
   const dispatch = useAppDispatch();
   const project = useAppSelector(
     (state: StoreState) => state.currentProjectState.project

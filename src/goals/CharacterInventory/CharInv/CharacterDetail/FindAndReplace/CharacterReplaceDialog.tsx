@@ -6,7 +6,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { LoadingButton } from "components/Buttons";
@@ -22,11 +22,13 @@ interface ReplaceDialogProps {
 /**
  * Dialog to confirm replacement
  */
-export default function CharacterReplaceDialog(props: ReplaceDialogProps) {
+export default function CharacterReplaceDialog(
+  props: ReplaceDialogProps
+): ReactElement {
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
 
-  async function submitFindAndReplace() {
+  async function submitFindAndReplace(): Promise<void> {
     setLoading(true);
     await props.handleAccept();
     setLoading(false);

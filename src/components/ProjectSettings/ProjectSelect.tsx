@@ -18,7 +18,7 @@ export default function ProjectSelect(
     }
   }, [props.project.name]);
 
-  const handleChange = (e: SelectChangeEvent) => {
+  const handleChange = (e: SelectChangeEvent): void => {
     if (e.target.name === props.project.name) {
       return;
     }

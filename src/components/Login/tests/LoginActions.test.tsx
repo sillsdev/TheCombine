@@ -175,7 +175,7 @@ describe("LoginAction", () => {
 function testActionCreatorAgainst(
   LoginAction: (name: string) => UserAction,
   type: LoginType
-) {
+): void {
   expect(LoginAction(mockUser.username)).toEqual({
     type: type,
     payload: { username: mockUser.username },

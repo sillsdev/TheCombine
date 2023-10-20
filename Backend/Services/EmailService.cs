@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using BackendFramework.Interfaces;
 using System.Threading.Tasks;
 using MimeKit;
 
 namespace BackendFramework.Services
 {
+    [ExcludeFromCodeCoverage]
     public class EmailService : IEmailService
     {
         private readonly IEmailContext _emailContext;

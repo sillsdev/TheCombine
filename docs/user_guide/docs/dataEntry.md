@@ -4,7 +4,7 @@
 
 Browse or search for the domain of interest.
 
-!!! tip
+!!! tip "Tip"
 
     To make searching for a domain quicker, The Combine will automatically insert `.` between consecutive digits as you
     type. For example, `1234` will automatically become `1.2.3.4`. This behavior does not happen if any non-numeric
@@ -27,8 +27,8 @@ to the entry's note.
 
 ### Recording
 
-You can add multiple recordings to an entry (e.g., a male voice and a female voice). As with the [Note](#note), audio
-recordings are associated with the entry and not individual senses.
+You can add multiple recordings to an entry (e.g., a male voice and a female voice). As with the note, audio recordings
+are associated with the entry and not individual senses.
 
 To record audio, there is a red circle button. For each recorded audio, there is a green triangle button.
 
@@ -38,7 +38,7 @@ delete its recording.
 **On a touch screen:** Press-and-hold the red circle to record. Tap a green triangle to play its audio, or
 press-and-hold to bring up a menu (with options to play or delete).
 
-## New Entry with Duplicate Vernacular Form
+## New Entry with Duplicate Vernacular Form {#new-entry-with-duplicate-vernacular-form}
 
 If you submit a new entry with identical vernacular form and gloss to an existing entry, that entry will be updated
 instead of a new entry created. For example, if you submit [Vernacular: dedo; Gloss: finger] in domain 2.1.3.1 (Arm) and
@@ -53,22 +53,22 @@ project. If you see that the word you are typing is already in the project, you 
 suggestions, instead of having to typing the remainder of the word. When the setting is off, the vernacular word must be
 typed in its entirety; no existing potential matches will be suggested.
 
-![Data Entry duplicate vernacular forms](images/data-entry-dup-vern.png){ .center }
+![Data Entry duplicate vernacular forms](images/data-entry-dup-vern.png){.center}
 
 Whether you type a form that matches an existing entry in the project or select one of the suggestions offered by The
 Combine, a box will pop up with options. (This box will not pop up if the Autocomplete setting is off or if you type a
 vernacular form that does not yet exist in the project.) In the pop-up box, you will be shown all existing entries with
 that vernacular form and can to choose whether to update one of those entries or create a new entry.
 
-![Data Entry duplicate vernacular entries](images/data-entry-dup-vern-select-entry.png){ .center }
+![Data Entry duplicate vernacular entries](images/data-entry-dup-vern-select-entry.png){.center}
 
 If you choose to create a new entry, the pop-up box will close, and you can then type the gloss for your new entry.
 
-!!! note
+!!! note "Note"
 
     Even if you selected to create a new entry, if the gloss you type is identical to a gloss of another entry with the same vernacular form, a new entry will not be created, but rather that entry will be updated.
 
 If you instead choose to update one of the existing entries, a second box will appear. Here you can choose to update an
 existing sense on the selected entry or to add a new sense to that entry.
 
-![Data Entry duplicate vernacular senses](images/data-entry-dup-vern-select-sense.png){ .center }
+![Data Entry duplicate vernacular senses](images/data-entry-dup-vern-select-sense.png){.center}

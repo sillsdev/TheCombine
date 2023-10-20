@@ -3,6 +3,7 @@ import { Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import React, {
   ReactElement,
+  createRef,
   useEffect,
   useLayoutEffect,
   useState,
@@ -46,7 +47,7 @@ function getPageState(wordCount: number): PageState {
 
 // Constants
 const ROWS_PER_PAGE = [10, 50, 200];
-const tableRef: React.RefObject<any> = React.createRef();
+const tableRef: React.RefObject<any> = createRef();
 
 export default function ReviewEntriesTable(
   props: ReviewEntriesTableProps
@@ -65,8 +66,9 @@ export default function ReviewEntriesTable(
   const [isLoading, setIsLoading] = useState(false);
   const [maxRows, setMaxRows] = useState(words.length);
   const [pageState, setPageState] = useState(getPageState(words.length));
+  const [scrollToTop, setScrollToTop] = useState(false);
 
-  const updateMaxRows = () => {
+  const updateMaxRows = (): void => {
     if (tableRef.current) {
       const tableRows = tableRef.current.state.data.length;
       if (tableRows !== maxRows) {
@@ -93,6 +95,15 @@ export default function ReviewEntriesTable(
   useEffect(() => {
     console.info(`useEffect: isLoading is ${isLoading}`);
   }, [isLoading]);
+
+  useEffect(() => {
+    // onRowsPerPageChange={() => window.scrollTo({ top: 0 })} doesn't work.
+    // This useEffect on an intermediate state triggers scrolling at the right time.
+    if (scrollToTop) {
+      window.scrollTo({ behavior: "smooth", top: 0 });
+      setScrollToTop(false);
+    }
+  }, [scrollToTop]);
 
   const materialTableLocalization = {
     body: {
@@ -164,6 +175,7 @@ export default function ReviewEntriesTable(
         //onRowsPerPageChange={() => setIsLoading(false)}
         onPageChange={() => setIsLoading(false)}
         //onRowsPerPageChange={() => new Promise((res) => setTimeout(res, 3000))}
+        onRowsPerPageChange={() => setScrollToTop(true)}
         editable={{
           onRowUpdate: (
             newData: ReviewEntriesWord,

@@ -1,4 +1,5 @@
 import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import CharacterStatusText from "goals/CharacterInventory/CharInv/CharacterList/CharacterStatusText";
@@ -15,7 +16,7 @@ interface CharacterCardProps {
   cardWidth: number;
 }
 
-export default function CharacterCard(props: CharacterCardProps) {
+export default function CharacterCard(props: CharacterCardProps): ReactElement {
   const { t } = useTranslation();
 
   return (
