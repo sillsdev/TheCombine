@@ -1,17 +1,21 @@
 import { Grid } from "@mui/material";
-import { ReactElement } from "react";
+import { CSSProperties, ReactElement } from "react";
 
 import { Gloss } from "api/models";
 import { TypographyWithFont } from "utilities/fontComponents";
 
+/** Style with a top dotted line if the index isn't 0. */
+function TopStyle(index: number, style?: "solid" | "dotted"): CSSProperties {
+  return index ? { borderTopStyle: style ?? "solid", borderTopWidth: 1 } : {};
+}
+
 interface ImmutableExistingDataProps {
-  gloss: Gloss;
+  glosses: Gloss[];
+  index: number;
   vernacular: string;
 }
 
-/**
- * Displays a word users cannot edit any more
- */
+/** Displays a word-sense that the user cannot edit. */
 export default function ImmutableExistingData(
   props: ImmutableExistingDataProps
 ): ReactElement {
@@ -19,13 +23,8 @@ export default function ImmutableExistingData(
     <Grid container wrap="nowrap" justifyContent="space-around">
       <Grid
         item
+        style={{ ...TopStyle(props.index), position: "relative" }}
         xs={5}
-        key={"vernacular_" + props.vernacular}
-        style={{
-          borderBottomStyle: "dotted",
-          borderBottomWidth: 1,
-          position: "relative",
-        }}
       >
         <TypographyWithFont variant="body1" vernacular>
           {props.vernacular}
@@ -33,21 +32,20 @@ export default function ImmutableExistingData(
       </Grid>
       <Grid
         item
+        style={{ ...TopStyle(props.index), position: "relative" }}
         xs={5}
-        key={"gloss_" + props.gloss.def}
-        style={{
-          borderBottomStyle: "dotted",
-          borderBottomWidth: 1,
-          position: "relative",
-        }}
       >
-        <TypographyWithFont
-          analysis
-          lang={props.gloss.language}
-          variant="body1"
-        >
-          {props.gloss.def}
-        </TypographyWithFont>
+        {props.glosses.map((g, i) => (
+          <TypographyWithFont
+            analysis
+            key={i}
+            lang={g.language}
+            style={TopStyle(i, "dotted")}
+            variant="body1"
+          >
+            {g.def}
+          </TypographyWithFont>
+        ))}
       </Grid>
     </Grid>
   );
