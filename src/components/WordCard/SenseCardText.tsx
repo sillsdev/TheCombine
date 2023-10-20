@@ -5,7 +5,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { ReactElement } from "react";
+import { CSSProperties, ReactElement } from "react";
 
 import { Sense } from "api/models";
 import theme from "types/theme";
@@ -14,7 +14,7 @@ import { TypographyWithFont } from "utilities/fontComponents";
 interface SenseInLanguage {
   language: string; // bcp-47 code
   glossText: string;
-  definitionText?: string;
+  definitionText: string;
 }
 
 function getSenseInLanguage(
@@ -22,19 +22,15 @@ function getSenseInLanguage(
   language: string,
   displaySep = "; "
 ): SenseInLanguage {
-  return {
-    language,
-    glossText: sense.glosses
-      .filter((g) => g.language === language)
-      .map((g) => g.def)
-      .join(displaySep),
-    definitionText: sense.definitions.length
-      ? sense.definitions
-          .filter((d) => d.language === language)
-          .map((d) => d.text)
-          .join(displaySep)
-      : undefined,
-  };
+  const glossText = sense.glosses
+    .filter((g) => g.language === language)
+    .map((g) => g.def)
+    .join(displaySep);
+  const definitionText = sense.definitions
+    .filter((d) => d.language === language)
+    .map((d) => d.text)
+    .join(displaySep);
+  return { language, glossText, definitionText };
 }
 
 function getSenseInLanguages(
@@ -50,12 +46,12 @@ function getSenseInLanguages(
 }
 
 interface SenseCardTextProps {
-  languages?: string[];
-  minimal?: boolean;
   sense: Sense;
+  hideDefs?: boolean;
+  languages?: string[];
 }
 
-// Show glosses and (if not minimal) definitions
+// Show glosses and (if not hideDefs) definitions.
 export default function SenseCardText(props: SenseCardTextProps): ReactElement {
   const senseTextInLangs = getSenseInLanguages(props.sense, props.languages);
 
@@ -64,7 +60,7 @@ export default function SenseCardText(props: SenseCardTextProps): ReactElement {
       <TableBody>
         {senseTextInLangs.map((senseInLang, index) => (
           <SenseTextRows
-            hideDefs={props.minimal}
+            hideDefs={props.hideDefs}
             key={index}
             senseInLang={senseInLang}
           />
@@ -73,6 +69,12 @@ export default function SenseCardText(props: SenseCardTextProps): ReactElement {
     </Table>
   );
 }
+
+const defStyle: CSSProperties = {
+  borderLeft: "1px solid black",
+  marginBottom: theme.spacing(1),
+  paddingLeft: theme.spacing(1),
+};
 
 interface SenseTextRowsProps {
   senseInLang: SenseInLanguage;
@@ -83,6 +85,7 @@ function SenseTextRows(props: SenseTextRowsProps): ReactElement {
   const lang = props.senseInLang.language;
   return (
     <>
+      {/* Gloss */}
       <TableRow key={lang}>
         <TableCell style={{ borderBottom: "none" }}>
           <Typography variant="caption">
@@ -100,17 +103,13 @@ function SenseTextRows(props: SenseTextRowsProps): ReactElement {
           </TypographyWithFont>
         </TableCell>
       </TableRow>
+
+      {/* Definition */}
       {!!props.senseInLang.definitionText && !props.hideDefs && (
         <TableRow key={lang + "def"}>
           <TableCell style={{ borderBottom: "none" }} />
           <TableCell style={{ borderBottom: "none" }}>
-            <div
-              style={{
-                borderLeft: "1px solid black",
-                marginBottom: theme.spacing(1),
-                paddingLeft: theme.spacing(1),
-              }}
-            >
+            <div style={defStyle}>
               <TypographyWithFont color="textSecondary" lang={lang}>
                 {props.senseInLang.definitionText}
               </TypographyWithFont>

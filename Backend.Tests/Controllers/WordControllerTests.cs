@@ -397,5 +397,40 @@ namespace Backend.Tests.Controllers
             var wordResult = await _wordController.UpdateWord(_projId, MissingId, modWord);
             Assert.That(wordResult, Is.InstanceOf<NotFoundObjectResult>());
         }
+
+        [Test]
+        public async Task TestGetWordHistoryNoPermission()
+        {
+            _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
+            var origWord = await _wordRepo.Create(Util.RandomWord(_projId));
+            var result = await _wordController.GetWordHistory(_projId, origWord.Id);
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public async Task TestGetWordHistoryMissingIds()
+        {
+            var origWord = await _wordRepo.Create(Util.RandomWord(_projId));
+            var projectResult = await _wordController.GetWordHistory(MissingId, origWord.Id);
+            Assert.That(projectResult, Is.InstanceOf<NotFoundObjectResult>());
+
+            var wordResult = await _wordController.GetWordHistory(_projId, MissingId);
+            Assert.That(wordResult, Is.InstanceOf<NotFoundObjectResult>());
+        }
+
+        [Test]
+        public async Task TestGetWordHistoryParentCount()
+        {
+            var father = await _wordRepo.Create(Util.RandomWord(_projId));
+            var mother = await _wordRepo.Create(Util.RandomWord(_projId));
+            var word = Util.RandomWord(_projId);
+            word.History = new List<string> { father.Id, mother.Id };
+            word = await _wordRepo.Create(word);
+            var result = await _wordController.GetWordHistory(_projId, word.Id);
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            var pedigree = (Pedigree)((OkObjectResult)result).Value!;
+            Assert.That(pedigree.Parents, Has.Count.EqualTo(2));
+        }
     }
 }

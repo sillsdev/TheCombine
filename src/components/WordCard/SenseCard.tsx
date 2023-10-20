@@ -14,30 +14,32 @@ interface SenseCardProps {
 }
 
 export default function SenseCard(props: SenseCardProps): ReactElement {
-  const gramInfo = props.sense.grammaticalInfo;
+  const { grammaticalInfo, semanticDomains } = props.sense;
 
   return (
-    <Card style={{ backgroundColor: "white" }}>
-      <CardContent style={{ position: "relative", paddingRight: 40 }}>
-        {/* Icon for part of speech (if any). */}
+    <Card style={{ backgroundColor: "white", marginBottom: 10 }}>
+      <CardContent style={{ position: "relative" }}>
+        {/* Part of speech (if any) */}
         <div style={{ position: "absolute", left: 0, top: 0 }}>
-          {gramInfo.catGroup !== GramCatGroup.Unspecified && (
+          {grammaticalInfo.catGroup !== GramCatGroup.Unspecified && (
             <PartOfSpeechButton
               buttonId={`sense-${props.sense.guid}-part-of-speech`}
-              gramInfo={gramInfo}
+              gramInfo={grammaticalInfo}
               onlyIcon
             />
           )}
         </div>
-        {/* List glosses and (if any) definitions. */}
+
+        {/* Glosses and (if any) definitions */}
         <SenseCardText
+          hideDefs={props.minimal}
           languages={props.languages}
-          minimal={props.minimal}
           sense={props.sense}
         />
-        {/* List semantic domains. */}
-        <Grid container spacing={2}>
-          {props.sense.semanticDomains.map((d) => (
+
+        {/* Semantic domains */}
+        <Grid container spacing={1}>
+          {semanticDomains.map((d) => (
             <Grid item key={`${d.id}_${d.name}`}>
               <DomainChip domain={d} provenance={props.provenance} />
             </Grid>

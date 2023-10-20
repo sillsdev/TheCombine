@@ -16,9 +16,11 @@ interface HistoryCellProps {
 
 export default function HistoryCell(props: HistoryCellProps): ReactElement {
   const [history, setHistory] = useState<Pedigree | undefined>();
+
   const getHistory = async (): Promise<void> => {
     await getWordHistory(props.wordId).then(setHistory);
   };
+
   return (
     <>
       <IconButtonWithTooltip
@@ -42,16 +44,22 @@ export default function HistoryCell(props: HistoryCellProps): ReactElement {
 }
 
 function WordTree(props: { tree: Pedigree }): ReactElement {
+  const { parents, word } = props.tree;
+
   const [showParents, setShowParents] = useState(true);
-  const { word, parents } = props.tree;
+
   const arrowStyle = { color: showParents ? "black" : "gray" };
+
   return (
     <>
+      {/* Word */}
       <Grid container justifyContent="space-around">
         <WordCard provenance word={word} />
       </Grid>
+
       {parents.length > 0 && (
         <>
+          {/* Arrow */}
           <Grid container justifyContent="space-around">
             <IconButtonWithTooltip
               buttonId={`word-${word.id}`}
@@ -66,6 +74,8 @@ function WordTree(props: { tree: Pedigree }): ReactElement {
               text={parents.length}
             />
           </Grid>
+
+          {/* Parent word(s) */}
           {showParents && (
             <Grid
               alignItems="flex-start"

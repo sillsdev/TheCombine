@@ -141,7 +141,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Builds a <see cref="Pedigree"/> from a <see cref="Word"/>'s history. </summary>
-        public async Task<Pedigree> GeneratePedigree(string projId, Word word)
+        public async Task<Pedigree> GeneratePedigree(string projectId, Word word)
         {
             var tree = new Pedigree(word);
             // Iterate backwards through the history and construct the pedigree depth-first.
@@ -150,10 +150,10 @@ namespace BackendFramework.Services
                 var id = word.History[i];
                 if (!tree.HasAncestor(id))
                 {
-                    var parent = await _wordRepo.GetWord(projId, id);
+                    var parent = await _wordRepo.GetWord(projectId, id);
                     if (parent is not null)
                     {
-                        tree.Parents.Add(await GeneratePedigree(projId, parent));
+                        tree.Parents.Add(await GeneratePedigree(projectId, parent));
                     }
                 }
             }

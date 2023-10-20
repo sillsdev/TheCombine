@@ -63,7 +63,7 @@ export function firstGlossText(sense: Sense): string {
 }
 
 /**
- * Given a word-array, return a string-array with any language code found in
+ * Given a word array, return a string array with any language code found in
  * a definition or gloss of any sense.
  */
 export function getAnalysisLangsFromWords(words: Word[]): string[] {
@@ -85,7 +85,7 @@ function wordReducer(accumulator: string[], word: Word): string[] {
   return [...new Set([...accumulator, ...newLangs])];
 }
 
-/** Given a grammatical-info-array, return an array with one per GramCatGroup. */
+/** Given a grammatical-info array, return an array with one per GramCatGroup. */
 export function groupGramInfo(
   infos: GrammaticalInfo[],
   sep = " ; "

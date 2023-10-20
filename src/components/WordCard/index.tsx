@@ -6,7 +6,7 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { ReactElement, useState } from "react";
+import { Fragment, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Word } from "api/models";
@@ -35,31 +35,31 @@ export default function WordCard(props: WordCardProps): ReactElement {
 
   return (
     <Card style={{ backgroundColor: "lightgray" }}>
-      <CardContent style={{ position: "relative", paddingRight: 40 }}>
+      <CardContent style={{ position: "relative" }}>
         {/* Vernacular */}
         <TypographyWithFont variant="h5" vernacular>
           {word.vernacular}
         </TypographyWithFont>
-        {/* Icons for audio, note, flag (if any). */}
+
+        {/* Icons for audio, note, flag (if any); button for expand/collapse */}
         <div style={{ position: "absolute", right: 0, top: 0 }}>
           {!full && <AudioSummary count={audio.length} />}
           {!!note.text && <EntryNote noteText={note.text} />}
           {flag.active && <FlagButton flag={flag} />}
-          {full ? (
-            <IconButtonWithTooltip
-              buttonId={buttonIdFull(word.id)}
-              icon={<CloseFullscreen style={{ color: "black" }} />}
-              onClick={() => setFull(false)}
-            />
-          ) : (
-            <IconButtonWithTooltip
-              buttonId={buttonIdFull(word.id)}
-              icon={<OpenInFull style={{ color: "gray" }} />}
-              onClick={() => setFull(true)}
-            />
-          )}
+          <IconButtonWithTooltip
+            buttonId={buttonIdFull(word.id)}
+            icon={
+              full ? (
+                <CloseFullscreen style={{ color: "black" }} />
+              ) : (
+                <OpenInFull style={{ color: "gray" }} />
+              )
+            }
+            onClick={() => setFull(!full)}
+          />
         </div>
-        {/* Audio playback. */}
+
+        {/* Audio playback */}
         {audio.length > 0 && full && (
           <PronunciationsBackend
             deleteAudio={() => {}}
@@ -68,7 +68,8 @@ export default function WordCard(props: WordCardProps): ReactElement {
             wordId={id}
           />
         )}
-        {/* Senses. */}
+
+        {/* Senses */}
         {full ? (
           senses.map((s) => (
             <SenseCard
@@ -81,6 +82,7 @@ export default function WordCard(props: WordCardProps): ReactElement {
         ) : (
           <SummarySenseCard senses={senses} />
         )}
+
         {/* Timestamps */}
         {provenance && (
           <Typography display="block" variant="caption">
@@ -104,6 +106,6 @@ export function AudioSummary(props: { count: number }): ReactElement {
       </Badge>
     </IconButton>
   ) : (
-    <div />
+    <Fragment />
   );
 }

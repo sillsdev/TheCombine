@@ -1,4 +1,4 @@
-import { Card, CardContent, Chip, Typography } from "@mui/material";
+import { Card, CardContent, Chip, Grid, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -26,9 +26,9 @@ export default function SummarySenseCard(
   const domIds = [...new Set(semDoms.map((d) => d.id))].sort();
 
   return (
-    <Card style={{ backgroundColor: "white" }}>
-      <CardContent style={{ position: "relative", paddingRight: 40 }}>
-        {/* Icon for part of speech (if any). */}
+    <Card style={{ backgroundColor: "white", marginBottom: 10 }}>
+      <CardContent style={{ position: "relative" }}>
+        {/* Parts of speech */}
         {groupedGramInfo.map((info) => (
           <PartOfSpeechButton
             buttonId={`senses-${senseGuids}-part-of-speech-${info.catGroup}`}
@@ -37,14 +37,20 @@ export default function SummarySenseCard(
             onlyIcon
           />
         ))}
-        {/* Number of senses. */}
+
+        {/* Sense count */}
         <Typography display="block" variant="h5">
           {t("wordHistory.senseCount", { val: props.senses.length })}
         </Typography>
-        {/* Semantic domain numbers. */}
-        {domIds.map((id) => (
-          <Chip key={id} label={id} />
-        ))}
+
+        {/* Semantic domain numbers */}
+        <Grid container spacing={1}>
+          {domIds.map((id) => (
+            <Grid item key={id}>
+              <Chip label={id} />
+            </Grid>
+          ))}
+        </Grid>
       </CardContent>
     </Card>
   );

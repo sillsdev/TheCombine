@@ -34,7 +34,7 @@ beforeEach(async () => {
 });
 
 describe("HistoryCell", () => {
-  it("has full and summary views", async () => {
+  it("has summary and full views", async () => {
     const button = cardHandle.root.findByProps({ id: buttonId });
     expect(cardHandle.root.findByType(AudioSummary).props.count).toEqual(
       mockWord.audio.length
