@@ -31,7 +31,8 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> MergeWords(
             string projectId, [FromBody, BindRequired] List<MergeWords> mergeWordsList)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndReviewEntries))
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
                 return Forbid();
             }
@@ -54,7 +55,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> UndoMerge(string projectId, [FromBody, BindRequired] MergeUndoIds merge)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndReviewEntries))
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
                 return Forbid();
             }
@@ -70,7 +72,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<string>))]
         public async Task<IActionResult> BlacklistAdd(string projectId, [FromBody, BindRequired] List<string> wordIds)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndReviewEntries))
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
                 return Forbid();
             }
@@ -86,7 +89,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<string>))]
         public async Task<IActionResult> GraylistAdd(string projectId, [FromBody, BindRequired] List<string> wordIds)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndReviewEntries))
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
                 return Forbid();
             }
@@ -107,7 +111,8 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> GetPotentialDuplicates(
             string projectId, int maxInList, int maxLists, string userId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndReviewEntries))
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
                 return Forbid();
             }
@@ -126,7 +131,8 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> getGraylistEntries(
             string projectId, int maxLists, string userId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndReviewEntries))
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
                 return Forbid();
             }
