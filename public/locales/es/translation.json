@@ -15,7 +15,8 @@
   },
   "treeView": {
     "findDomain": "Buscar un dominio",
-    "domainNotFound": "Dominio no encontrado"
+    "domainNotFound": "Dominio no encontrado",
+    "returnToTop": "Volver a la parte superior del árbol de dominios."
   },
   "addWords": {
     "selectEntry": "Seleccionar una entrada",
@@ -40,7 +41,9 @@
     "statistics": "Estadísticas de datos",
     "projectSettings": "Configuración del proyecto"
   },
-  "invite": {},
+  "invite": {
+    "invalidInvitationURL": "El enlace de invitación al proyecto no es válido."
+  },
   "login": {
     "title": "Iniciar Sesión",
     "name": "Su nombre",
@@ -55,10 +58,9 @@
     "signUpNew": "Registrar un nuevo usuario",
     "signUpSuccess": "Usuario creado",
     "signUpFailed": "Error al registrarse",
-    "usernameInvalid": "Este nombre de usuario es demasiado corto o ya está en uso.",
     "usernameRequirements": "El nombre de usuario debe tener 3 caracteres o más.",
-    "emailTaken": "Este correo electrónico ya está en uso.",
-    "networkError": "Error de red",
+    "usernameTaken": "Nombre de usuario no disponible.",
+    "emailTaken": "Correo electrónico no disponible.",
     "loggingIn": "Iniciando sesión...",
     "required": "Requerido",
     "confirmPassword": "Confirmar contraseña",
@@ -67,12 +69,14 @@
     "emailError": "Por favor, ingrese un correo electrónico válida."
   },
   "passwordReset": {
+    "invalidURL": "El enlace para restablecer la contraseña no es válido.",
     "emailOrUsername": "Correo electrónico o nombre de usuario",
     "resetRequestTitle": "Solicitud de restablecimiento de contraseña",
     "resetTitle": "Restablecer la contraseña",
     "resetRequestInstructions": "Le enviaremos a su correo electrónico un enlace para restablecer su cuenta una sola vez.",
     "submit": "Enviar",
     "resetFail": "Error al restablecer la contraseña",
+    "resetDone": "Si ha introducido correctamente su dirección de correo electrónico o su nombre de usuario, se le habrá enviado un enlace para restablecer la contraseña.",
     "backToLogin": "Volver al inicio de sesión"
   },
   "userMenu": {
@@ -88,6 +92,7 @@
     "uploadFormat": "El archivo debe ser una carpeta comprimida que contenga un proyecto <1>Lexicon Interchange FormaT (LIFT)</1>.",
     "create": "Crear Proyecto",
     "fileSelected": "Archivo seleccionado",
+    "language": "La información lingüística del proyecto se extraerá automáticamente de los datos cargados.",
     "languageOptionOther": "otro",
     "languageSelect": "Seleccionar de idiomas en el archivo:",
     "success": "¡Proyecto creado!"
@@ -95,6 +100,8 @@
   "selectProject": { "title": "Seleccionar Proyecto" },
   "siteSettings": {
     "projectList": "Proyectos",
+    "projectRoles": "Roles del proyecto",
+    "addProjectUsers": "Agregar usuarios del proyecto",
     "archiveProjectText": "Este proyecto no será accesible para ningún usuario.",
     "restoreProjectText": "Alguien probablemente tuvo una buena razón para archivar este proyecto. ¿Seguro que quieres restaurarlo?",
     "userList": "Usuarios",
@@ -126,6 +133,15 @@
     "exportInProgress": "Exportación en curso"
   },
   "projectSettings": {
+    "project": "Proyecto:",
+    "tab": {
+      "basic": "Configuración básica",
+      "export": "Exportar",
+      "importExport": "Importar/Exportar",
+      "languages": "Idiomas",
+      "schedule": "Programar",
+      "users": "Usuarios"
+    },
     "language": {
       "header": "Idioma",
       "vernacular": "Vernáculo",
@@ -134,14 +150,16 @@
       "analysisLanguage": "Idioma de análisis",
       "semanticDomains": "Dominios semánticos",
       "semanticDomainsDefault": "(Por defecto, el idioma del navegador)",
-      "languages": "Idiomas",
+      "languages": "Idiomas del proyecto",
       "bcp47": "Código BCP 47",
       "name": "Nombre",
       "font": "Fuente",
+      "changeName": "Cambiar nombre",
       "addAnalysisLanguage": "Agregar un idioma de análisis alternativo",
       "makeDefaultAnalysisLanguage": "Haga que este sea el idioma de análisis por defecto.",
       "deleteAnalysisLanguage": "Eliminar este idioma de análisis.",
       "getGlossLanguages": "Encuentre todos los códigos de idioma utilizados en los datos actuales.",
+      "updateVernacularLanguageNameFailed": "Error al actualizar el nombre del idioma vernáculo",
       "addAnalysisLanguageFailed": "No se ha podido añadir el lenguaje de análisis",
       "makeDefaultAnalysisLanguageFailed": "No se ha podido establecer el lenguaje de análisis por defecto",
       "deleteAnalysisLanguageFailed": "Fallo en la eliminación del lenguaje de análisis",
@@ -154,16 +172,24 @@
       "addUser": "Agregar usuario"
     },
     "roles": {
+      "harvester": "Cosechador",
       "editor": "Editor",
       "administrator": "Administrador",
       "owner": "Propietario"
     },
     "userManagement": {
+      "removeFromProject": "Eliminar del proyecto",
+      "changeProjectRole": "Cambiar rol del proyecto:",
+      "makeOwner": "Hacer propietario del proyecto",
       "removeUserWarning": "¿Eliminar a este usuario del proyecto?",
+      "makeHarvesterWarning": "¿Hacer a este usuario un cosechador de proyecto?",
+      "makeEditorWarning": "¿Hacer de este usuario un editor de proyecto?",
       "makeAdminWarning": "¿Hacer de este usuario un Administrador del proyecto?",
       "makeOwnerWarning": "¿Transferir la propiedad del proyecto a este usuario?",
       "userRemovedToastSuccess": "Usuario eliminado del proyecto.",
       "userRemovedToastFailure": "Error al eliminar el usuario.",
+      "userRoleUpdateToastSuccess": "Rol de usuario actualizado con éxito.",
+      "userRoleUpdateToastFailure": "Error al actualizar el rol de usuario.",
       "makeOwnerToastSuccess": "¡Transferencia de la responsabilidad del proyecto!",
       "makeOwnerToastFailure": "No se ha transferido la responsabilidad del proyecto.",
       "manageUser": "Administrar usuario",
@@ -227,6 +253,7 @@
   },
   "createStrWordInv": { "title": "Crear inventario de palabras estructurales" },
   "handleFlags": { "title": "Manejar banderas" },
+  "reviewDeferredDups": { "title": "Revisar duplicados aplazados" },
   "spellCheckGloss": { "title": "Corregir la ortografía del glosario" },
   "validateChars": { "title": "Validar caracteres" },
   "validateStrWords": { "title": "Validar los caracteres estructurales" },
@@ -237,6 +264,7 @@
     "noDefinition": "No hay definiciones",
     "noGloss": "No hay entrada de glosas",
     "noDomain": "Ningún dominio seleccionado",
+    "duplicateDomain": "Esta acepción ya tiene el dominio {{ val }}.",
     "noNote": "Sin nota",
     "deleteWordWarning": "¡Esta palabra se eliminará permanentemente!",
     "deleteDisabled": "Se importó con datos que The Combine no maneja, por lo que no se puede eliminar.",
@@ -302,6 +330,7 @@
       "replaceAll": "Reemplazar todas las ocurrencias de: {{ val }}",
       "replaceAllWith": "Reemplazar con: {{ val }}",
       "findAndReplace": "Buscar y Reemplazar",
+      "findAndReplaceError": "Error al procesar: encontrar ( {{ val1 }} ), reemplazar ( {{  val2 }})",
       "apply": "aplicar"
     },
     "sampleWords": {
@@ -329,7 +358,7 @@
       "dups": "Arrastra las palabras duplicadas aquí",
       "sense": "Arrastra una nueva acepción aquí",
       "saveAndContinue": "Guardar los cambios y cargar un nuevo conjunto de palabras",
-      "skip": "Descartar los cambios y cargar un nuevo conjunto de palabras",
+      "defer": "Descartar los cambios y cargar un nuevo conjunto de palabras",
       "list": "Arrastre esta palabra hacia la derecha para comenzar a combinarla con otras palabras",
       "noDups": "No hay nada que combinar.",
       "delete": "Borrar la acepción",
@@ -365,6 +394,7 @@
     "cancel": "Cancelar",
     "clearText": "Borrar el texto",
     "confirm": "Confirmar",
+    "defer": "Aplazar",
     "delete": "Eliminar",
     "deletePermanently": "¿Eliminar permanentemente?",
     "done": "Terminado",
@@ -378,7 +408,6 @@
     "restore": "Restaurar",
     "save": "Guardar",
     "saveAndContinue": "Guardar y Continuar",
-    "skip": "Saltar",
     "undecided": "No decidido",
     "upload": "Subir"
   },
@@ -415,12 +444,20 @@
       "Adposition": "Adposición",
       "Adverb": "Adverbio",
       "Classifier": "Clasificador",
+      "Connective": "Conectivo",
       "Determiner": "Determinante",
+      "ExistentialMarker": "Marcador existencial",
+      "Expletive": "Expletivo",
       "Interjection": "Interjección",
       "Noun": "Sustantivo",
       "Participle": "Participio",
       "Particle": "Partícula",
-      "Verb": "Verbo"
+      "Prenoun": "Prefijos adjetivales",
+      "Preverb": "Prefijos verbales separables",
+      "ProForm": "Proforma",
+      "Verb": "Verbo",
+      "Other": "Otra",
+      "Unspecified": "No especificado"
     }
   }
 }
