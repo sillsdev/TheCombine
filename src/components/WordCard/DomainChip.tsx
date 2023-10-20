@@ -8,15 +8,15 @@ import { friendlySep, getDateTimeString } from "utilities/utilities";
 
 interface DomainChipProps {
   domain: SemanticDomain;
-  minimal?: boolean;
   provenance?: boolean;
 }
 
 export default function DomainChip(props: DomainChipProps): ReactElement {
+  const { provenance } = props;
+  const { created, name, id, userId } = props.domain;
+
   const [username, setUsername] = useState("");
   const { t } = useTranslation();
-  const provenance = props.provenance;
-  const { created, name, id, userId } = props.domain;
 
   useEffect(() => {
     if (provenance && userId) {
@@ -24,17 +24,14 @@ export default function DomainChip(props: DomainChipProps): ReactElement {
     }
   }, [provenance, userId]);
 
-  const text = props.minimal ? id : `${id}: ${name}`;
-  const hoverText = props.minimal ? [`${id}: ${name}`] : [];
-  if (props.provenance && created) {
-    hoverText.push(
-      t("wordHistory.domainAdded", {
-        val: getDateTimeString(created, friendlySep),
-      })
-    );
+  const labelText = `${id}: ${name}`;
+  const hoverText = [];
+  if (provenance && created) {
+    const val = getDateTimeString(created, friendlySep);
+    hoverText.push(t("wordHistory.domainAdded", { val }));
   }
-  if (username) {
+  if (provenance && username) {
     hoverText.push(t("wordHistory.user", { val: username }));
   }
-  return <Chip label={text} title={hoverText.join("\n")} />;
+  return <Chip label={labelText} title={hoverText.join("\n")} />;
 }
