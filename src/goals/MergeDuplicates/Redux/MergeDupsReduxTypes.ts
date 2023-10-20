@@ -1,4 +1,4 @@
-import { Flag } from "api/models";
+import { Flag, MergeWords } from "api/models";
 import {
   MergeData,
   MergeTree,
@@ -18,6 +18,7 @@ export interface FlagWordPayload {
 export interface MergeTreeState {
   data: MergeData;
   tree: MergeTree;
+  mergeWords: MergeWords[];
 }
 
 export interface MoveSensePayload {
