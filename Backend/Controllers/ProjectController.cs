@@ -47,7 +47,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<User>))]
         public async Task<IActionResult> GetAllProjectUsers(string projectId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
             {
                 return Forbid();
             }
@@ -76,7 +77,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Project))]
         public async Task<IActionResult> GetProject(string projectId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
             }
@@ -139,7 +140,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> UpdateProject(string projectId, [FromBody, BindRequired] Project project)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
             {
                 return Forbid();
             }
@@ -158,7 +160,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Project))]
         public async Task<IActionResult> PutChars(string projectId, [FromBody, BindRequired] Project project)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.CharacterInventory))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.CharacterInventory, projectId))
             {
                 return Forbid();
             }
@@ -181,7 +183,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteProject(string projectId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Archive))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Archive, projectId))
             {
                 return Forbid();
             }
