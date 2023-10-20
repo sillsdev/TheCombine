@@ -8,6 +8,7 @@ import DataEntry, {
   smallScreenThreshold,
   treeViewDialogId,
 } from "components/DataEntry";
+import { defaultState as currentProjectState } from "components/Project/ProjectReduxTypes";
 import { openTreeAction } from "components/TreeView/Redux/TreeViewActions";
 import {
   TreeViewAction,
@@ -97,7 +98,7 @@ async function renderDataEntry(
   spyOnUseWindowSize(windowWidth);
   await renderer.act(async () => {
     testHandle = renderer.create(
-      <Provider store={mockStore({ treeViewState })}>
+      <Provider store={mockStore({ currentProjectState, treeViewState })}>
         <DataEntry />
       </Provider>
     );

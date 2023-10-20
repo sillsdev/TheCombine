@@ -6,7 +6,7 @@ namespace BackendFramework.Interfaces
 {
     public interface IPermissionService
     {
-        Task<bool> HasProjectPermission(HttpContext request, Permission permission);
+        Task<bool> HasProjectPermission(HttpContext request, Permission permission, string projectId);
         Task<bool> ContainsProjectRole(HttpContext request, Role role, string projectId);
         Task<bool> IsSiteAdmin(HttpContext request);
         bool IsUserIdAuthorized(HttpContext request, string userId);
