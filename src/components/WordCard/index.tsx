@@ -25,6 +25,8 @@ interface WordCardProps {
   word: Word;
 }
 
+export const buttonIdFull = (wordId: string): string => `word-${wordId}-full`;
+
 export default function WordCard(props: WordCardProps): ReactElement {
   const { languages, provenance, word } = props;
   const { audio, flag, id, note, senses } = word;
@@ -38,30 +40,20 @@ export default function WordCard(props: WordCardProps): ReactElement {
         <TypographyWithFont variant="h5" vernacular>
           {word.vernacular}
         </TypographyWithFont>
-        {/* Icons for note & flag (if any). */}
+        {/* Icons for audio, note, flag (if any). */}
         <div style={{ position: "absolute", right: 0, top: 0 }}>
-          {!full && audio.length > 0 && (
-            <IconButton>
-              <Badge badgeContent={audio.length}>
-                <PlayArrow style={{ color: themeColors.success }} />
-              </Badge>
-            </IconButton>
-          )}
-          {!!note.text && (
-            <EntryNote buttonId={`word-${id}-note`} noteText={note.text} />
-          )}
-          {flag.active && (
-            <FlagButton flag={flag} buttonId={`word-${id}-flag`} />
-          )}
+          {!full && <AudioSummary count={audio.length} />}
+          {!!note.text && <EntryNote noteText={note.text} />}
+          {flag.active && <FlagButton flag={flag} />}
           {full ? (
             <IconButtonWithTooltip
-              buttonId={`word-${word.id}-collapse`}
+              buttonId={buttonIdFull(word.id)}
               icon={<CloseFullscreen style={{ color: "black" }} />}
               onClick={() => setFull(false)}
             />
           ) : (
             <IconButtonWithTooltip
-              buttonId={`word-${word.id}-expand`}
+              buttonId={buttonIdFull(word.id)}
               icon={<OpenInFull style={{ color: "gray" }} />}
               onClick={() => setFull(true)}
             />
@@ -101,5 +93,17 @@ export default function WordCard(props: WordCardProps): ReactElement {
         )}
       </CardContent>
     </Card>
+  );
+}
+
+export function AudioSummary(props: { count: number }): ReactElement {
+  return props.count > 0 ? (
+    <IconButton>
+      <Badge badgeContent={props.count}>
+        <PlayArrow style={{ color: themeColors.success }} />
+      </Badge>
+    </IconButton>
+  ) : (
+    <div />
   );
 }

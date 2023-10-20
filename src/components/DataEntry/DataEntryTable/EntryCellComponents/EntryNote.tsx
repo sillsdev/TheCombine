@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { EditTextDialog } from "components/Dialogs";
 
 interface EntryNoteProps {
-  buttonId: string;
+  buttonId?: string;
   noteText: string;
   updateNote?: (newText: string) => void | Promise<void>;
 }
