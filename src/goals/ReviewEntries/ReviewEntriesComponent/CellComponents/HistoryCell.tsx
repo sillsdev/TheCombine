@@ -1,4 +1,4 @@
-import { History } from "@mui/icons-material";
+import { Close, History, Merge, Straight } from "@mui/icons-material";
 import { Dialog, Grid } from "@mui/material";
 import { Fragment, ReactElement, useState } from "react";
 
@@ -24,6 +24,14 @@ export default function HistoryCell(props: HistoryCellProps): ReactElement {
         onClick={getHistory}
       />
       <Dialog fullScreen onClose={() => setHistory(undefined)} open={!!history}>
+        <Grid container justifyContent="flex-end">
+          <IconButtonWithTooltip
+            buttonId={"word-history-exit-button"}
+            icon={<Close />}
+            onClick={() => setHistory(undefined)}
+            textId={"buttons.exit"}
+          />
+        </Grid>
         {history ? <WordTree tree={history} /> : <Fragment />}
       </Dialog>
     </>
@@ -31,20 +39,46 @@ export default function HistoryCell(props: HistoryCellProps): ReactElement {
 }
 
 function WordTree(props: { tree: Pedigree }): ReactElement {
+  const [showParents, setShowParents] = useState(true);
+  const { word, parents } = props.tree;
+  const arrowStyle = { color: showParents ? "black" : "gray" };
   return (
     <>
       <Grid container justifyContent="space-around">
-        <WordCard provenance word={props.tree.word} />
+        <WordCard provenance word={word} />
       </Grid>
-      {props.tree.parents ? (
-        <Grid alignItems="flex-start" container justifyContent="space-around">
-          {props.tree.parents.map((p) => (
-            <Grid item key={p.word.id}>
-              <WordTree tree={p} />
+      {parents.length > 0 && (
+        <>
+          <Grid container justifyContent="space-around">
+            <IconButtonWithTooltip
+              buttonId={`word-${word.id}`}
+              icon={
+                parents.length > 1 ? (
+                  <Merge fontSize="large" style={arrowStyle} />
+                ) : (
+                  <Straight fontSize="large" style={arrowStyle} />
+                )
+              }
+              onClick={() => setShowParents(!showParents)}
+              text={parents.length}
+            />
+          </Grid>
+          {showParents && (
+            <Grid
+              alignItems="flex-start"
+              container
+              justifyContent="space-around"
+              wrap="nowrap"
+            >
+              {parents.map((p) => (
+                <Grid item key={p.word.id}>
+                  <WordTree tree={p} />
+                </Grid>
+              ))}
             </Grid>
-          ))}
-        </Grid>
-      ) : null}
+          )}
+        </>
+      )}
     </>
   );
 }

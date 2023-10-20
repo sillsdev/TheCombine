@@ -488,7 +488,7 @@
     "senseCount": "Senses: {{ val }}",
     "wordId": "Id: {{ val }}",
     "wordModified": "Modified: {{ val }}",
-    "domainAdded": "Domain added: {{ val }}",
+    "domainAdded": "Added: {{ val }}",
     "user": "By user: {{ val }}"
   }
 }

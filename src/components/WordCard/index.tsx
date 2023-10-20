@@ -56,13 +56,13 @@ export default function WordCard(props: WordCardProps): ReactElement {
           {full ? (
             <IconButtonWithTooltip
               buttonId={`word-${word.id}-collapse`}
-              icon={<CloseFullscreen />}
+              icon={<CloseFullscreen style={{ color: "black" }} />}
               onClick={() => setFull(false)}
             />
           ) : (
             <IconButtonWithTooltip
               buttonId={`word-${word.id}-expand`}
-              icon={<OpenInFull />}
+              icon={<OpenInFull style={{ color: "gray" }} />}
               onClick={() => setFull(true)}
             />
           )}
@@ -89,32 +89,6 @@ export default function WordCard(props: WordCardProps): ReactElement {
         ) : (
           <SummarySenseCard senses={senses} />
         )}
-        {/*full || senses.length <= 2 ? (
-          senses.map((s) => (
-            <SenseCard
-              key={s.guid}
-              languages={languages}
-              minimal={!full}
-              provenance={provenance}
-              sense={s}
-            />
-          ))
-        ) : senses.length > 2 ? (
-          <>
-            <SenseCard
-              key={senses[0].guid}
-              languages={languages}
-              minimal={!full}
-              provenance={provenance}
-              sense={senses[0]}
-            />
-            <Card style={{ backgroundColor: "white" }}>
-              <Typography variant="h6">{`+${
-                senses.length - 1
-              } more senses`}</Typography>
-            </Card>
-          </>
-            ) : null*/}
         {/* Timestamps */}
         {provenance && (
           <Typography display="block" variant="caption">
