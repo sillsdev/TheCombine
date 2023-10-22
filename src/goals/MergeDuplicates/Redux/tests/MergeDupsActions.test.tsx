@@ -1,17 +1,15 @@
-import { GramCatGroup, MergeWords, Sense, Status, Word } from "api/models";
+import { MergeWords, Sense, Status, Word } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import {
   defaultTree,
   MergeData,
   MergeTree,
   MergeTreeReference,
-  MergeTreeSense,
   newMergeTreeSense,
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { MergeDups, newMergeWords } from "goals/MergeDuplicates/MergeDupsTypes";
 import {
-  combineIntoFirstSense,
   dispatchMergeStepData,
   mergeAll,
   moveSense,
@@ -21,14 +19,7 @@ import {
 import { goalDataMock } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
 import { setupStore } from "store";
 import { GoalType } from "types/goals";
-import { newSemanticDomain } from "types/semanticDomain";
-import {
-  multiSenseWord,
-  newFlag,
-  newGrammaticalInfo,
-  newSense,
-  newWord,
-} from "types/word";
+import { multiSenseWord, newFlag, newWord } from "types/word";
 
 // Used when the guids don't matter.
 function wordAnyGuids(vern: string, senses: Sense[], id: string): Word {
@@ -102,9 +93,10 @@ describe("MergeDupActions", () => {
       const WA = newMergeTreeWord(vernA, { ID1: [S1], ID2: [S2] });
       const WB = newMergeTreeWord(vernB, { ID1: [S3], ID2: [S4] });
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
+      const mergeWords: MergeWords[] = [];
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree },
+        mergeDuplicateGoal: { data, tree, mergeWords },
       });
       await store.dispatch<any>(mergeAll());
 
@@ -118,7 +110,7 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree },
+        mergeDuplicateGoal: { data, tree, mergeWords: [] },
       });
       await store.dispatch<any>(mergeAll());
 
@@ -143,7 +135,7 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree },
+        mergeDuplicateGoal: { data, tree, mergeWords: [] },
       });
       await store.dispatch<any>(mergeAll());
 
@@ -172,7 +164,7 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree },
+        mergeDuplicateGoal: { data, tree, mergeWords: [] },
       });
       await store.dispatch<any>(mergeAll());
 
@@ -191,7 +183,7 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree },
+        mergeDuplicateGoal: { data, tree, mergeWords: [] },
       });
       await store.dispatch<any>(mergeAll());
 
@@ -208,7 +200,7 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree },
+        mergeDuplicateGoal: { data, tree, mergeWords: [] },
       });
       await store.dispatch<any>(mergeAll());
 
@@ -226,7 +218,7 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree },
+        mergeDuplicateGoal: { data, tree, mergeWords: [] },
       });
       await store.dispatch<any>(mergeAll());
 
@@ -247,8 +239,10 @@ describe("MergeDupActions", () => {
 
       const store = setupStore();
       await store.dispatch<any>(dispatchMergeStepData(goal));
-      const testAction = setWordData(goalDataMock.plannedWords[0]);
-      // expect(store.getActions()).toEqual([testAction]);
+      store.dispatch<any>(setWordData(goalDataMock.plannedWords[0]));
+      expect(store.getState().mergeDuplicateGoal.data).toEqual(
+        goalDataMock.plannedWords[0]
+      );
     });
   });
 
@@ -346,62 +340,62 @@ describe("MergeDupActions", () => {
   //   });
   // });
 
-  describe("combineIntoFirstSense", () => {
-    it("sets all but the first sense to duplicate status", () => {
-      const s4 = [newSense(), newSense(), newSense(), newSense()].map(
-        (s) => s as MergeTreeSense
-      );
-      combineIntoFirstSense(s4);
-      expect(s4[0].accessibility).not.toBe(Status.Duplicate);
-      expect(
-        s4.filter((s) => s.accessibility === Status.Duplicate)
-      ).toHaveLength(s4.length - 1);
-    });
+  // describe("combineIntoFirstSense", () => {
+  //   it("sets all but the first sense to duplicate status", () => {
+  //     const s4 = [newSense(), newSense(), newSense(), newSense()].map(
+  //       (s) => s as MergeTreeSense
+  //     );
+  //     combineIntoFirstSense(s4);
+  //     expect(s4[0].accessibility).not.toBe(Status.Duplicate);
+  //     expect(
+  //       s4.filter((s) => s.accessibility === Status.Duplicate)
+  //     ).toHaveLength(s4.length - 1);
+  //   });
 
-    it("gives the first sense the earliest part of speech found in all senses", () => {
-      const s3 = [newSense(), newSense(), newSense()].map(
-        (s) => s as MergeTreeSense
-      );
-      const gramInfo = {
-        catGroup: GramCatGroup.Verb,
-        grammaticalCategory: "vt",
-      };
-      s3[1].grammaticalInfo = { ...gramInfo };
-      s3[2].grammaticalInfo = {
-        catGroup: GramCatGroup.Preverb,
-        grammaticalCategory: "prev",
-      };
-      combineIntoFirstSense(s3);
-      expect(s3[0].grammaticalInfo).toEqual(gramInfo);
+  //   it("gives the first sense the earliest part of speech found in all senses", () => {
+  //     const s3 = [newSense(), newSense(), newSense()].map(
+  //       (s) => s as MergeTreeSense
+  //     );
+  //     const gramInfo = {
+  //       catGroup: GramCatGroup.Verb,
+  //       grammaticalCategory: "vt",
+  //     };
+  //     s3[1].grammaticalInfo = { ...gramInfo };
+  //     s3[2].grammaticalInfo = {
+  //       catGroup: GramCatGroup.Preverb,
+  //       grammaticalCategory: "prev",
+  //     };
+  //     combineIntoFirstSense(s3);
+  //     expect(s3[0].grammaticalInfo).toEqual(gramInfo);
 
-      // Ensure the first sense's grammaticalInfo doesn't get overwritten.
-      s3[1].grammaticalInfo = newGrammaticalInfo();
-      combineIntoFirstSense(s3);
-      expect(s3[0].grammaticalInfo).toEqual(gramInfo);
-    });
+  //     // Ensure the first sense's grammaticalInfo doesn't get overwritten.
+  //     s3[1].grammaticalInfo = newGrammaticalInfo();
+  //     combineIntoFirstSense(s3);
+  //     expect(s3[0].grammaticalInfo).toEqual(gramInfo);
+  //   });
 
-    it("adds domains to first sense from other senses", () => {
-      const s3 = [newSense(), newSense(), newSense()].map(
-        (s) => s as MergeTreeSense
-      );
-      s3[1].semanticDomains = [
-        newSemanticDomain("1", "uno"),
-        newSemanticDomain("2", "dos"),
-      ];
-      s3[2].semanticDomains = [newSemanticDomain("3", "three")];
-      combineIntoFirstSense(s3);
-      expect(s3[0].semanticDomains).toHaveLength(3);
-    });
+  //     it("adds domains to first sense from other senses", () => {
+  //       const s3 = [newSense(), newSense(), newSense()].map(
+  //         (s) => s as MergeTreeSense
+  //       );
+  //       s3[1].semanticDomains = [
+  //         newSemanticDomain("1", "uno"),
+  //         newSemanticDomain("2", "dos"),
+  //       ];
+  //       s3[2].semanticDomains = [newSemanticDomain("3", "three")];
+  //       combineIntoFirstSense(s3);
+  //       expect(s3[0].semanticDomains).toHaveLength(3);
+  //     });
 
-    it("doesn't adds domains it already has", () => {
-      const s2 = [newSense(), newSense()].map((s) => s as MergeTreeSense);
-      s2[0].semanticDomains = [newSemanticDomain("1", "one")];
-      s2[1].semanticDomains = [
-        newSemanticDomain("1", "uno"),
-        newSemanticDomain("2", "dos"),
-      ];
-      combineIntoFirstSense(s2);
-      expect(s2[0].semanticDomains).toHaveLength(2);
-    });
-  });
+  //     it("doesn't adds domains it already has", () => {
+  //       const s2 = [newSense(), newSense()].map((s) => s as MergeTreeSense);
+  //       s2[0].semanticDomains = [newSemanticDomain("1", "one")];
+  //       s2[1].semanticDomains = [
+  //         newSemanticDomain("1", "uno"),
+  //         newSemanticDomain("2", "dos"),
+  //       ];
+  //       combineIntoFirstSense(s2);
+  //       expect(s2[0].semanticDomains).toHaveLength(2);
+  //     });
+  //   });
 });

@@ -91,6 +91,7 @@ describe("MergeDupReducer", () => {
       sidebar: defaultSidebar,
       words: testTreeWords(),
     },
+    mergeWords: [],
   };
   function checkTreeWords(
     action: Action | PayloadAction,
