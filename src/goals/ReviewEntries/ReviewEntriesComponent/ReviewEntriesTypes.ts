@@ -29,6 +29,7 @@ export class ReviewEntriesWord {
   audioNew?: string[];
   noteText: string;
   flag: Flag;
+  historyLength: number;
   protected: boolean;
 
   constructor(word?: Word, analysisLang?: string) {
@@ -43,6 +44,7 @@ export class ReviewEntriesWord {
     this.audio = word.audio;
     this.noteText = word.note.text;
     this.flag = word.flag;
+    this.historyLength = word.history.length;
     this.protected = word.accessibility === Status.Protected;
   }
 }

@@ -44,7 +44,7 @@ let cellHandle: ReactTestRenderer;
 
 const renderHistoryCell = async (): Promise<void> => {
   await act(async () => {
-    cellHandle = create(<HistoryCell wordId={mockWord.id} />);
+    cellHandle = create(<HistoryCell historyCount={1} wordId={mockWord.id} />);
   });
 };
 

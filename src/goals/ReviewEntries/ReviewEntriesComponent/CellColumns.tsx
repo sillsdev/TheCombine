@@ -24,17 +24,16 @@ import {
 import { compareFlags } from "utilities/wordUtilities";
 
 enum SortStyle {
-  // vernacular, noteText: neither have a customSort defined,
-  // so there is currently no way to trigger their SortStyles.
-  //Vernacular,
+  Vernacular,
   Sense,
   Definition,
   Gloss,
   PartOfSpeech,
   Domain,
   Pronunciation,
-  //Note,
+  Note,
   Flag,
+  History,
   None,
 }
 
@@ -82,6 +81,12 @@ const columns: Column<any>[] = [
     editComponent: (props: FieldParameterStandard) => (
       <VernacularCell {...props} editable />
     ),
+    customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
+      if (currentSort !== SortStyle.Vernacular) {
+        currentSort = SortStyle.Vernacular;
+      }
+      return a.vernacular.localeCompare(b.vernacular);
+    },
   },
 
   // Senses column
@@ -468,6 +473,12 @@ const columns: Column<any>[] = [
       />
     ),
     editComponent: (props: FieldParameterStandard) => <NoteCell {...props} />,
+    customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
+      if (currentSort !== SortStyle.Note) {
+        currentSort = SortStyle.Note;
+      }
+      return a.noteText.localeCompare(b.noteText);
+    },
   },
 
   // Flag column
@@ -501,12 +512,19 @@ const columns: Column<any>[] = [
   {
     title: ColumnTitle.History,
     filtering: false,
-    sorting: false,
     editable: "never",
     // Fix column to minimum width.
     width: 0,
     render: (rowData: ReviewEntriesWord) => {
-      return <HistoryCell wordId={rowData.id} />;
+      return (
+        <HistoryCell historyCount={rowData.historyLength} wordId={rowData.id} />
+      );
+    },
+    customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
+      if (currentSort !== SortStyle.History) {
+        currentSort = SortStyle.History;
+      }
+      return b.historyLength - a.historyLength;
     },
   },
 

@@ -1,5 +1,5 @@
 import { Close, History, Merge, Straight } from "@mui/icons-material";
-import { Dialog, Grid } from "@mui/material";
+import { Badge, Dialog, Grid, IconButton } from "@mui/material";
 import { Fragment, ReactElement, useState } from "react";
 
 import { Pedigree } from "api/models";
@@ -11,6 +11,7 @@ export const buttonId = (wordId: string): string => `row-${wordId}-history`;
 export const buttonIdExit = "history-exit";
 
 interface HistoryCellProps {
+  historyCount: number;
   wordId: string;
 }
 
@@ -23,11 +24,15 @@ export default function HistoryCell(props: HistoryCellProps): ReactElement {
 
   return (
     <>
-      <IconButtonWithTooltip
-        buttonId={buttonId(props.wordId)}
-        icon={<History />}
+      <IconButton
+        disabled={!props.historyCount}
+        id={buttonId(props.wordId)}
         onClick={getHistory}
-      />
+      >
+        <Badge badgeContent={props.historyCount}>
+          <History />
+        </Badge>
+      </IconButton>
       <Dialog fullScreen onClose={() => setHistory(undefined)} open={!!history}>
         <Grid container justifyContent="flex-end">
           <IconButtonWithTooltip
