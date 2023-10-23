@@ -114,7 +114,8 @@ export function mergeAll() {
     // Merge words.
     dispatch(getMergeWords());
 
-    const mergeWordsArray = getState().mergeDuplicateGoal.mergeWords;
+    const mergeWordsArray = [...getState().mergeDuplicateGoal.mergeWords];
+    dispatch(clearMergeWords());
     if (mergeWordsArray.length) {
       const parentIds = await backend.mergeWords(mergeWordsArray);
       const childIds = [
@@ -125,7 +126,6 @@ export function mergeAll() {
       const completedMerge = { childIds, parentIds };
       dispatch(addCompletedMergeToGoal(completedMerge));
       await dispatch(asyncUpdateGoal());
-      dispatch(clearMergeWords());
     }
   };
 }
