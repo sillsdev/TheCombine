@@ -92,10 +92,19 @@ const SENSES: Partial<ReviewEntriesSense>[] = [
   },
 ];
 
-const WORD_0 = { senses: [SENSES[0]], flag: { ...newFlag(), active: true } };
-const WORD_1 = { senses: [SENSES[1]], flag: newFlag("Z is for Zebra") };
-const WORD_2 = { senses: [SENSES[2]], flag: newFlag("A is for Aardvark") };
-const WORD_3 = { senses: [SENSES[3]], flag: newFlag() };
+const WORD_0 = {
+  senses: [SENSES[0]],
+  flag: { ...newFlag(), active: true },
+} as ReviewEntriesWord;
+const WORD_1 = {
+  senses: [SENSES[1]],
+  flag: newFlag("Z is for Zebra"),
+} as ReviewEntriesWord;
+const WORD_2 = {
+  senses: [SENSES[2]],
+  flag: newFlag("A is for Aardvark"),
+} as ReviewEntriesWord;
+const WORD_3 = { senses: [SENSES[3]], flag: newFlag() } as ReviewEntriesWord;
 
 const SORT_BY_DEFINIS = [WORD_1, WORD_3, WORD_0, WORD_2];
 const SORT_BY_GLOSSES = [WORD_3, WORD_1, WORD_2, WORD_0];

@@ -18,7 +18,6 @@ import {
 
 interface GlossCellProps extends FieldParameterStandard {
   editable?: boolean;
-  sortingByThis?: boolean;
 }
 
 export default function GlossCell(props: GlossCellProps): ReactElement {

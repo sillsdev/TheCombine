@@ -11,6 +11,18 @@ import {
 import { newSense, newWord } from "types/word";
 import { cleanDefinitions, cleanGlosses } from "utilities/wordUtilities";
 
+export enum ColumnId {
+  Vernacular,
+  Senses,
+  Definitions,
+  Glosses,
+  PartOfSpeech,
+  Domains,
+  Pronunciations,
+  Note,
+  Flag,
+}
+
 // These must match the ReviewEntriesWord fields for use in ReviewEntriesTable
 export enum ReviewEntriesWordField {
   Id = "id",
@@ -19,6 +31,7 @@ export enum ReviewEntriesWordField {
   Pronunciations = "audio",
   Note = "noteText",
   Flag = "flag",
+  History = "historyLength",
 }
 
 export class ReviewEntriesWord {
