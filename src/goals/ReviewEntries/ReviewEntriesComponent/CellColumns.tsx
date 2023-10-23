@@ -111,7 +111,7 @@ const columns: Column<ReviewEntriesWord>[] = [
     field: ReviewEntriesWordField.Senses,
     disableClick: true,
     render: (rowData: ReviewEntriesWord) => (
-      <DefinitionCell value={rowData.senses} rowData={rowData} />
+      <DefinitionCell rowData={rowData} value={rowData.senses} />
     ),
     editComponent: (props: FieldParameterStandard) => (
       <DefinitionCell {...props} editable />
@@ -153,7 +153,7 @@ const columns: Column<ReviewEntriesWord>[] = [
     field: ReviewEntriesWordField.Senses,
     disableClick: true,
     render: (rowData: ReviewEntriesWord) => (
-      <GlossCell value={rowData.senses} rowData={rowData} />
+      <GlossCell rowData={rowData} value={rowData.senses} />
     ),
     editComponent: (props: FieldParameterStandard) => (
       <GlossCell {...props} editable />
