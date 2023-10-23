@@ -14,7 +14,7 @@ import {
   flagWord,
   moveSense,
   orderSense,
-  setWordData,
+  setData,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import mergeDupStepReducer, {
   defaultState,
@@ -44,7 +44,7 @@ beforeEach(() => {
 
 describe("MergeDupReducer", () => {
   // a state with no duplicate senses
-  const initState = mergeDupStepReducer(undefined, setWordData(testWordList()));
+  const initState = mergeDupStepReducer(undefined, setData(testWordList()));
 
   // helper functions for working with a tree
   const getRefByGuid = (
@@ -534,7 +534,7 @@ describe("MergeDupReducer", () => {
 
   test("setWordData", () => {
     const wordList = testWordList();
-    const treeState = mergeDupStepReducer(undefined, setWordData(wordList));
+    const treeState = mergeDupStepReducer(undefined, setData(wordList));
     // check if data has all words present
     for (const word of wordList) {
       const srcWordId = word.id;

@@ -27,8 +27,8 @@ import {
   moveSenseAction,
   orderDuplicateAction,
   orderSenseAction,
+  setDataAction,
   setSidebarAction,
-  setWordDataAction,
   setVernacularAction,
 } from "goals/MergeDuplicates/Redux/MergeDupsReducer";
 import {
@@ -87,8 +87,8 @@ export function setSidebar(sidebar?: Sidebar): PayloadAction {
   return setSidebarAction(sidebar ?? defaultSidebar);
 }
 
-export function setWordData(words: Word[]): PayloadAction {
-  return setWordDataAction(words);
+export function setData(words: Word[]): PayloadAction {
+  return setDataAction(words);
 }
 
 export function setVern(payload: SetVernacularPayload): PayloadAction {
@@ -137,7 +137,7 @@ export function dispatchMergeStepData(goal: MergeDups | ReviewDeferredDups) {
     const stepData = goal.steps[goal.currentStep] as MergeStepData;
     if (stepData) {
       const stepWords = stepData.words ?? [];
-      dispatch(setWordData(stepWords));
+      dispatch(setData(stepWords));
     }
   };
 }

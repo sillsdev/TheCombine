@@ -343,7 +343,7 @@ const mergeDupStepSlice = createSlice({
     setSidebarAction: (state, action) => {
       state.tree.sidebar = action.payload;
     },
-    setWordDataAction: (state, action) => {
+    setDataAction: (state, action) => {
       if (action.payload.length === 0) {
         state = defaultState;
       } else {
@@ -359,6 +359,7 @@ const mergeDupStepSlice = createSlice({
         });
         state.tree.words = wordsTree;
         state.data = { senses, words };
+        state.mergeWords = [];
       }
     },
     setVernacularAction: (state, action) => {
@@ -425,8 +426,8 @@ export const {
   moveSenseAction,
   orderDuplicateAction,
   orderSenseAction,
+  setDataAction,
   setSidebarAction,
-  setWordDataAction,
   setVernacularAction,
 } = mergeDupStepSlice.actions;
 
