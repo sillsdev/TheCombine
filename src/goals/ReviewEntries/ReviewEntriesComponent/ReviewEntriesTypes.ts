@@ -31,7 +31,6 @@ export enum ReviewEntriesWordField {
   Pronunciations = "audio",
   Note = "noteText",
   Flag = "flag",
-  History = "historyLength",
 }
 
 export class ReviewEntriesWord {
