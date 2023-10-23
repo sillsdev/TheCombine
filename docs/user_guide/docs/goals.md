@@ -1,6 +1,6 @@
 # Data Cleanup / Goals
 
-## Review Entries
+## Review Entries {#review-entries}
 
 The Review Entries table shows all of the entries in the selected project.
 
@@ -28,7 +28,7 @@ delete an entire entry by using the icon in the Delete column.
 To edit an entry's vernacular form, senses (including glosses and domains), note, or flag, click the icon in the Edit
 column.
 
-## Merge Duplicates
+## Merge Duplicates {#merge-duplicates}
 
 This tool automatically finds sets of potential duplicate entries (up to 5 entries in each set, and up to 12 sets in
 each pass). First it presents sets of words with identical vernacular forms. Then it presents sets with similar
@@ -61,7 +61,7 @@ to appear on the right, showing which senses are being merged.
 
 ![Merge Duplicates senses merged](images/mergeSidebar.png)
 
-!!! important
+!!! warning "Important"
 
     When multiple senses are merged, all semantic domains are preserved, but **only the top sense in the sidebar** has its glosses (and definitions) preserved.
 
@@ -88,17 +88,17 @@ deleted when you Save & Continue.
 
 There is a flag icon at the top-right corner of every column (to the right of the vernacular form).
 
-![Merge Duplicates flagging an entry](images/mergeFlag.png){ .center }
+![Merge Duplicates flagging an entry](images/mergeFlag.png){.center}
 
 You can click on the flag icon to flag the entry for future inspection or editing. (You can sort flagged entries in
 [Review Entries](#review-entries).) When you flag an entry, you are given the option to add text to the flag.
 
-![Merge Duplicates adding or editing a flag](images/mergeEditFlag.png){ .center }
+![Merge Duplicates adding or editing a flag](images/mergeEditFlag.png){.center}
 
 Whether or not any text is typed, you will know that the entry is flagged because the flag icon will be solid red. If
 you added text, you can hover your cursor over the flag to see the text.
 
-![Merge Duplicates a flagged entry](images/mergeFlagged.png){ .center }
+![Merge Duplicates a flagged entry](images/mergeFlagged.png){.center}
 
 Click on the red flag icon to edit the text or remove the flag.
 
@@ -114,11 +114,11 @@ next set: "Save & Continue" and "Defer".
 The blue "Save and Continue" button does two things. First, it saves all changes made (i.e., all moved, merged, or
 deleted senses), updating the words in the database. Second, it saves any unmerged words as non-duplicates.
 
-!!! tip
+!!! tip "Tip"
 
     Are the potential duplicates not duplicates? Just click Save & Continue to tell The Combine not to show you that set again.
 
-!!! note
+!!! note "Note"
 
     If one of the words in an intentionally unmerged set is edited (e.g., in Review Entries), then the set may appear again as potential duplicates.
 
@@ -141,7 +141,7 @@ information will appear in the Merge Duplicate sense cards as follows:
   category (e.g., noun or verb). Hover your cursor over the hexagon to see the specific grammatical category (e.g.,
   proper noun or transitive verb).
 
-![Merge Duplicates sense with definitions and part of speech](images/mergeSenseDefinitionsPartOfSpeech.png){ .center }
+![Merge Duplicates sense with definitions and part of speech](images/mergeSenseDefinitionsPartOfSpeech.png){.center}
 
 #### Protected Entries and Senses
 
@@ -174,13 +174,13 @@ character, its Unicode "U+" value, the number of times it occurs in entry vernac
 
 Click on a character tile to open a panel for that character.
 
-!!! tip
+!!! tip "Tip"
 
     You may have to scroll to see the panel. If your window is wide enough, there will be a blank margin on the
     right; the panel will be at the top of this. If your window is narrow, tiles fill all the way to the right side of the
     window; the panel will be at the bottom, below all the tiles.
 
-![Character Inventory character panel](images/characterInventoryPanel.png){ .center }
+![Character Inventory character panel](images/characterInventoryPanel.png){.center}
 
 The middle of the panel shows up to 5 example vernacular forms in which the character occurs, highlighting the character
 in each occurrence.
@@ -193,6 +193,6 @@ until you click the SAVE button at the bottom of the page.)
 At the bottom of the panel is a Find-and-Replace tool. If _every_ occurrence of the character should be replaced with
 something else, type the replacement character or string in the "Replace with" box and click the APPLY button.
 
-!!! important
+!!! warning "Important"
 
     The find-and-replace operation makes changes to entries, not to the character inventory. It **cannot be undone!**
