@@ -146,7 +146,7 @@ const mergeDupStepSlice = createSlice({
             const sensesToCombine = guids
               .map((g) => data.senses[g])
               .map((s) => senses[s.srcWordId][s.order]);
-            combineIntoFirstSense(state, sensesToCombine);
+            combineIntoFirstSense(sensesToCombine);
           });
 
           // Clean order of senses in each src word to reflect backend order.
@@ -370,10 +370,7 @@ const mergeDupStepSlice = createSlice({
 });
 
 // Helper Functions
-function combineIntoFirstSense(
-  state: MergeTreeState,
-  senses: MergeTreeSense[]
-): void {
+function combineIntoFirstSense(senses: MergeTreeSense[]): void {
   // Set the first sense to be merged as Active/Protected.
   // This was the top sense when the sidebar was opened.
   const mainSense = senses[0];
@@ -415,7 +412,6 @@ function combineIntoFirstSense(
       }
     });
   });
-  state.tree.sidebar.senses = senses;
 }
 
 export const {
