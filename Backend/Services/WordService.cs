@@ -135,8 +135,8 @@ namespace BackendFramework.Services
         /// <returns> The id string of the existing word, or null if none. </returns>
         public async Task<string?> FindContainingWord(Word word)
         {
-            var frontier = await _wordRepo.GetFrontier(word.ProjectId);
-            var duplicatedWord = frontier.Find(w => w.Contains(word));
+            var wordsWithVern = await _wordRepo.GetFrontierWithVernacular(word.ProjectId, word.Vernacular);
+            var duplicatedWord = wordsWithVern.Find(w => w.Contains(word));
             return duplicatedWord?.Id;
         }
     }

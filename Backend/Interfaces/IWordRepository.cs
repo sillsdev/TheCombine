@@ -14,6 +14,7 @@ namespace BackendFramework.Interfaces
         Task<bool> DeleteAllWords(string projectId);
         Task<bool> IsFrontierNonempty(string projectId);
         Task<List<Word>> GetFrontier(string projectId);
+        Task<List<Word>> GetFrontierWithVernacular(string projectId, string vernacular);
         Task<Word> AddFrontier(Word word);
         Task<List<Word>> AddFrontier(List<Word> words);
         Task<bool> DeleteFrontier(string projectId, string wordId);
