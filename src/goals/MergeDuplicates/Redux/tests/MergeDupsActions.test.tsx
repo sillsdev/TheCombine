@@ -10,6 +10,7 @@ import {
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { MergeDups, newMergeWords } from "goals/MergeDuplicates/MergeDupsTypes";
 import {
+  deferMerge,
   dispatchMergeStepData,
   mergeAll,
   moveSense,
@@ -36,9 +37,12 @@ const mockMergeWords = jest.fn();
 jest.mock("backend", () => ({
   blacklistAdd: jest.fn(),
   getWord: jest.fn(),
+  graylistAdd: () => mockGraylistAdd(),
   mergeWords: (mergeWordsArray: MergeWords[]) =>
     mockMergeWords(mergeWordsArray),
 }));
+
+const mockGraylistAdd = jest.fn();
 
 const mockGoal = new MergeDups();
 mockGoal.data = goalDataMock;
@@ -248,7 +252,7 @@ describe("MergeDupActions", () => {
     const wordId = "mockWordId";
     const mergeSenseId = "mockSenseId";
 
-    it("creates a MOVE_SENSE action when going from word to word", () => {
+    it("creates a moveSenseAction when going from word to word", () => {
       const mockRef: MergeTreeReference = { wordId, mergeSenseId };
       const resultAction = moveSense({
         ref: mockRef,
@@ -258,7 +262,7 @@ describe("MergeDupActions", () => {
       expect(resultAction.type).toEqual("mergeDupStepReducer/moveSenseAction");
     });
 
-    it("creates a MOVE_DUPLICATE action when going from sidebar to word", () => {
+    it("creates a moveDuplicateAction when going from sidebar to word", () => {
       const mockRef: MergeTreeReference = { wordId, mergeSenseId, order: 0 };
       const resultAction = moveSense({
         ref: mockRef,
@@ -276,13 +280,13 @@ describe("MergeDupActions", () => {
     const mergeSenseId = "mockSenseId";
     const mockOrder = 0;
 
-    it("creates an ORDER_SENSE action when moving within a word", () => {
+    it("creates an orderSenseAction when moving within a word", () => {
       const mockRef: MergeTreeReference = { wordId, mergeSenseId };
       const resultAction = orderSense({ ref: mockRef, order: mockOrder });
       expect(resultAction.type).toEqual("mergeDupStepReducer/orderSenseAction");
     });
 
-    it("creates an ORDER_DUPLICATE action when moving within the sidebar", () => {
+    it("creates an orderDuplicateAction when moving within the sidebar", () => {
       const mockRef: MergeTreeReference = { wordId, mergeSenseId, order: 0 };
       const resultAction = orderSense({ ref: mockRef, order: mockOrder });
       expect(resultAction.type).toEqual(
@@ -291,6 +295,20 @@ describe("MergeDupActions", () => {
     });
   });
 
+  describe("deferMerge", () => {
+    it("add merge to graylist", () => {
+      const WA = newMergeTreeWord(vernA, { ID1: [S1], ID2: [S2] });
+      WA.flag = newFlag("New flag");
+      const WB = newMergeTreeWord(vernB, { ID1: [S3], ID2: [S4] });
+      const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
+      const store = setupStore({
+        ...preloadedState,
+        mergeDuplicateGoal: { data, tree, mergeWords: [] },
+      });
+      store.dispatch<any>(deferMerge());
+      expect(mockGraylistAdd).toHaveBeenCalledTimes(1);
+    });
+  });
   // describe("mergeDefinitionIntoSense", () => {
   //   const defAEn = newDefinition("a", Bcp47Code.En);
   //   const defAFr = newDefinition("a", Bcp47Code.Fr);
