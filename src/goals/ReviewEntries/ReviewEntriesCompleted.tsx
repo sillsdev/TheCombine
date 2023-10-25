@@ -1,11 +1,11 @@
 import { ArrowRightAlt } from "@mui/icons-material";
-import { Button, Grid, Typography } from "@mui/material";
-import { ReactElement, useEffect, useState } from "react";
+import { Grid, Typography } from "@mui/material";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import { getFrontierWords, getWord, updateWord } from "backend";
-import { CancelConfirmDialog } from "components/Dialogs";
+import { UndoButton } from "components/Buttons";
 import {
   EntriesEdited,
   EntryEdit,
@@ -41,7 +41,17 @@ export function EditsCount(changes: EntriesEdited): ReactElement {
   );
 }
 
+async function undoEdit(edit: EntryEdit): Promise<void> {
+  const oldWord = await getWord(edit.oldId);
+  await updateWord({ ...oldWord, id: edit.newId });
+}
+
 function EditedEntry(props: { edit: EntryEdit }): ReactElement {
+  const handleIsUndoAllowed = (): Promise<boolean> =>
+    getFrontierWords().then(
+      (words) => words.findIndex((w) => w.id === props.edit.newId) !== -1
+    );
+
   return (
     <Grid container style={{ flexWrap: "nowrap", overflow: "auto" }}>
       <Typography>{props.edit.oldId}</Typography>
@@ -58,68 +68,15 @@ function EditedEntry(props: { edit: EntryEdit }): ReactElement {
       </Grid>
       <Typography>{props.edit.newId}</Typography>
       <UndoButton
-        edit={props.edit}
-        textId="reviewEntries.undo.undo"
-        dialogId="reviewEntries.undo.undoDialog"
-        disabledId="reviewEntries.undo.undoDisabled"
+        buttonIdEnabled={`edit-undo-${props.edit.newId}`}
+        buttonIdCancel="edit-undo-cancel"
+        buttonIdConfirm="edit-undo-confirm"
+        textIdDialog="reviewEntries.undo.undoDialog"
+        textIdDisabled="reviewEntries.undo.undoDisabled"
+        textIdEnabled="reviewEntries.undo.undo"
+        isUndoAllowed={handleIsUndoAllowed}
+        undo={() => undoEdit(props.edit)}
       />
     </Grid>
   );
 }
-
-interface UndoButtonProps {
-  edit: EntryEdit;
-  textId: string;
-  dialogId: string;
-  disabledId: string;
-}
-
-function UndoButton(props: UndoButtonProps): ReactElement {
-  const [isUndoEnabled, setUndoEnabled] = useState<boolean>(false);
-  const [undoDialogOpen, setUndoDialogOpen] = useState<boolean>(false);
-  const { t } = useTranslation();
-
-  useEffect(() => {
-    function checkFrontier(): void {
-      getFrontierWords().then((words) =>
-        setUndoEnabled(words.findIndex((w) => w.id === props.edit.newId) !== -1)
-      );
-    }
-    checkFrontier();
-  });
-
-  return isUndoEnabled ? (
-    <Grid container direction="column" justifyContent="center">
-      <div>
-        <Button
-          variant="outlined"
-          id={`edit-undo-${props.edit.newId}`}
-          onClick={() => setUndoDialogOpen(true)}
-        >
-          {t(props.textId)}
-        </Button>
-        <CancelConfirmDialog
-          open={undoDialogOpen}
-          textId={props.dialogId}
-          handleCancel={() => setUndoDialogOpen(false)}
-          handleConfirm={() =>
-            undoEdit(props.edit).then(() => setUndoDialogOpen(false))
-          }
-          buttonIdCancel="edit-undo-cancel"
-          buttonIdConfirm="edit-undo-confirm"
-        />
-      </div>
-    </Grid>
-  ) : (
-    <Grid container direction="column" justifyContent="center">
-      <div>
-        <Button disabled>{t(props.disabledId)}</Button>
-      </div>
-    </Grid>
-  );
-}
-
-const undoEdit = async (edit: EntryEdit): Promise<void> => {
-  const oldWord = await getWord(edit.oldId);
-  await updateWord({ ...oldWord, id: edit.newId });
-};
