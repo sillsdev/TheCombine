@@ -1,5 +1,6 @@
 import { Sense } from "api/models";
 import * as backend from "backend";
+import { addEntryEditToGoal } from "components/GoalTimeline/Redux/GoalActions";
 import { uploadFileFromUrl } from "components/Pronunciations/utilities";
 import {
   ReviewClearReviewEntriesState,
@@ -30,15 +31,15 @@ export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
   };
 }
 
-// TODO: also dispatch(addEntryEditToGoal({newId: updatedWord.id, oldId}))
-function updateWord(
-  oldId: string,
-  updatedWord: ReviewEntriesWord
-): ReviewUpdateWord {
-  return {
-    type: ReviewEntriesActionTypes.UpdateWord,
-    oldId,
-    updatedWord,
+function updateWord(oldId: string, updatedWord: ReviewEntriesWord) {
+  return (dispatch: StoreStateDispatch) => {
+    dispatch(addEntryEditToGoal({ newId: updatedWord.id, oldId }));
+    const update: ReviewUpdateWord = {
+      type: ReviewEntriesActionTypes.UpdateWord,
+      oldId,
+      updatedWord,
+    };
+    dispatch(update);
   };
 }
 
