@@ -5,3 +5,6 @@ ignore:
   - "src/types"
   - "**/*Mock.ts"
   - "**/*Types.ts"
+parsers:
+  javascript:
+    enable_partials: yes
