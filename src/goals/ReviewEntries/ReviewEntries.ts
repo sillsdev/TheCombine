@@ -5,3 +5,12 @@ export class ReviewEntries extends Goal {
     super(GoalType.ReviewEntries, GoalName.ReviewEntries);
   }
 }
+
+export type EntryEdit = {
+  newId: string;
+  oldId: string;
+};
+
+export interface EntriesEdited {
+  entryEdits: EntryEdit[];
+}

@@ -30,6 +30,7 @@ export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
   };
 }
 
+// TODO: also dispatch(addEntryEditToGoal({newId: updatedWord.id, oldId}))
 function updateWord(
   oldId: string,
   updatedWord: ReviewEntriesWord

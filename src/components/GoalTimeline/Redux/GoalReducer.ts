@@ -5,6 +5,7 @@ import {
   MergeDupsData,
   MergesCompleted,
 } from "goals/MergeDuplicates/MergeDupsTypes";
+import { EntriesEdited, EntryEdit } from "goals/ReviewEntries/ReviewEntries";
 import { StoreActionTypes } from "rootActions";
 import { GoalType } from "types/goals";
 
@@ -27,6 +28,24 @@ const goalSlice = createSlice({
           changes.merges = [];
         }
         changes.merges.push(action.payload);
+        state.currentGoal.changes = changes;
+      }
+    },
+    addEntryEditToGoalAction: (state, action) => {
+      if (state.currentGoal.goalType === GoalType.ReviewEntries) {
+        const changes = { ...state.currentGoal.changes } as EntriesEdited;
+        if (!changes.entryEdits) {
+          changes.entryEdits = [];
+        }
+        const newEdit = action.payload as EntryEdit;
+        const oldEdit = changes.entryEdits.find(
+          (e) => e.newId === newEdit.oldId
+        );
+        if (oldEdit) {
+          oldEdit.newId = newEdit.newId;
+        } else {
+          changes.entryEdits.push(newEdit);
+        }
         state.currentGoal.changes = changes;
       }
     },
@@ -81,6 +100,7 @@ const goalSlice = createSlice({
 export const {
   addCharInvChangesToGoalAction,
   addCompletedMergeToGoalAction,
+  addEntryEditToGoalAction,
   incrementGoalStepAction,
   loadUserEditsAction,
   setCurrentGoalAction,

@@ -8,6 +8,7 @@ import router from "browserRouter";
 import {
   addCharInvChangesToGoalAction,
   addCompletedMergeToGoalAction,
+  addEntryEditToGoalAction,
   incrementGoalStepAction,
   loadUserEditsAction,
   setCurrentGoalAction,
@@ -17,6 +18,7 @@ import {
 } from "components/GoalTimeline/Redux/GoalReducer";
 import { CharacterChange } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { dispatchMergeStepData } from "goals/MergeDuplicates/Redux/MergeDupsActions";
+import { EntryEdit } from "goals/ReviewEntries/ReviewEntries";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { Goal, GoalStatus, GoalType } from "types/goals";
@@ -29,6 +31,10 @@ export function addCharInvChangesToGoal(
   charChanges: CharacterChange[]
 ): PayloadAction {
   return addCharInvChangesToGoalAction(charChanges);
+}
+
+export function addEntryEditToGoal(entryEdit: EntryEdit): PayloadAction {
+  return addEntryEditToGoalAction(entryEdit);
 }
 
 export function addCompletedMergeToGoal(changes: MergeUndoIds): PayloadAction {
