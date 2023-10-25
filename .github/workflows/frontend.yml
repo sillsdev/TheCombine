@@ -46,7 +46,7 @@ jobs:
         with:
           if-no-files-found: error
           name: coverage
-          path: coverage/clover.xml
+          path: coverage/coverage-final.json
           retention-days: 7
 
       # Release build.
@@ -79,7 +79,7 @@ jobs:
         uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         with:
           fail_ci_if_error: true
-          files: clover.xml
+          files: coverage-final.json
           flags: frontend
           name: Frontend
 
