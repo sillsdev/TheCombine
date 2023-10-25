@@ -1,17 +1,10 @@
-import { GramCatGroup, Sense, Word } from "api/models";
+import { GramCatGroup } from "api/models";
 import {
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { newSemanticDomain } from "types/semanticDomain";
-import {
-  newDefinition,
-  newFlag,
-  newGloss,
-  newNote,
-  newSense,
-  newWord,
-} from "types/word";
+import { newDefinition, newFlag, newGloss } from "types/word";
 import { Bcp47Code } from "types/writingSystem";
 
 export default function mockWords(): ReviewEntriesWord[] {
@@ -56,25 +49,4 @@ export default function mockWords(): ReviewEntriesWord[] {
       flag: newFlag("second word"),
     },
   ];
-}
-
-export function mockCreateWord(word: ReviewEntriesWord): Word {
-  return {
-    ...newWord(word.vernacular),
-    id: word.id,
-    senses: word.senses.map((sense) => createMockSense(sense)),
-    note: newNote(word.noteText),
-    flag: word.flag,
-  };
-}
-
-function createMockSense(sense: ReviewEntriesSense): Sense {
-  return {
-    ...newSense(),
-    guid: sense.guid,
-    definitions: [...sense.definitions],
-    glosses: [...sense.glosses],
-    grammaticalInfo: sense.partOfSpeech,
-    semanticDomains: [...sense.domains],
-  };
 }

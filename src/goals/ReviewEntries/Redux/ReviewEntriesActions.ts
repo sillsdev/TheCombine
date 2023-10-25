@@ -1,6 +1,9 @@
 import { Sense } from "api/models";
 import * as backend from "backend";
-import { addEntryEditToGoal } from "components/GoalTimeline/Redux/GoalActions";
+import {
+  addEntryEditToGoal,
+  asyncUpdateGoal,
+} from "components/GoalTimeline/Redux/GoalActions";
 import { uploadFileFromUrl } from "components/Pronunciations/utilities";
 import {
   ReviewClearReviewEntriesState,
@@ -32,8 +35,9 @@ export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
 }
 
 function updateWord(oldId: string, updatedWord: ReviewEntriesWord) {
-  return (dispatch: StoreStateDispatch) => {
+  return async (dispatch: StoreStateDispatch) => {
     dispatch(addEntryEditToGoal({ newId: updatedWord.id, oldId }));
+    await dispatch(asyncUpdateGoal());
     const update: ReviewUpdateWord = {
       type: ReviewEntriesActionTypes.UpdateWord,
       oldId,
@@ -174,7 +178,7 @@ export function updateFrontierWord(
     editSource.audio = (await backend.getWord(editSource.id)).audio;
 
     // Update the review entries word in the state.
-    dispatch(updateWord(editWord.id, editSource));
+    await dispatch(updateWord(editWord.id, editSource));
   };
 }
 
@@ -203,7 +207,7 @@ function refreshWord(
   return async (dispatch: StoreStateDispatch): Promise<void> => {
     const newWordId = await wordUpdater(oldWordId);
     const word = await backend.getWord(newWordId);
-    dispatch(updateWord(oldWordId, new ReviewEntriesWord(word)));
+    await dispatch(updateWord(oldWordId, new ReviewEntriesWord(word)));
   };
 }
 

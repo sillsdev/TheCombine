@@ -9,7 +9,7 @@ import {
   Word,
 } from "api/models";
 import { Goal, GoalName, GoalType } from "types/goals";
-import { newSense, newWord } from "types/word";
+import { newNote, newSense, newWord } from "types/word";
 import { cleanDefinitions, cleanGlosses } from "utilities/wordUtilities";
 
 export enum ColumnId {
@@ -112,4 +112,36 @@ export class ReviewEntriesSense {
   static glossString(sense: ReviewEntriesSense): string {
     return sense.glosses.map((g) => g.def).join(ReviewEntriesSense.SEPARATOR);
   }
+}
+
+/** Reverse map of the ReviewEntriesSense constructor.
+ * Important: Not everything is preserved! */
+function senseFromReviewEntriesSense(revSense: ReviewEntriesSense): Sense {
+  return {
+    ...newSense(),
+    accessibility: revSense.protected
+      ? Status.Protected
+      : revSense.deleted
+      ? Status.Deleted
+      : Status.Active,
+    definitions: revSense.definitions.map((d) => ({ ...d })),
+    glosses: revSense.glosses.map((g) => ({ ...g })),
+    grammaticalInfo: revSense.partOfSpeech,
+    guid: revSense.guid,
+    semanticDomains: revSense.domains.map((dom) => ({ ...dom })),
+  };
+}
+
+/** Reverse map of the ReviewEntriesWord constructor.
+ * Important: Not everything is preserved! */
+export function wordFromReviewEntriesWord(revWord: ReviewEntriesWord): Word {
+  return {
+    ...newWord(revWord.vernacular),
+    accessibility: revWord.protected ? Status.Protected : Status.Active,
+    audio: [...revWord.audio],
+    id: revWord.id,
+    flag: { ...revWord.flag },
+    note: newNote(revWord.noteText),
+    senses: revWord.senses.map(senseFromReviewEntriesSense),
+  };
 }

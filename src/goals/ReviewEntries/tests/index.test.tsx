@@ -7,8 +7,11 @@ import "tests/reactI18nextMock";
 
 import ReviewEntries from "goals/ReviewEntries";
 import * as actions from "goals/ReviewEntries/Redux/ReviewEntriesActions";
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";
-import mockWords, { mockCreateWord } from "goals/ReviewEntries/tests/WordsMock";
+import {
+  ReviewEntriesWord,
+  wordFromReviewEntriesWord,
+} from "goals/ReviewEntries/ReviewEntriesTypes";
+import mockWords from "goals/ReviewEntries/tests/WordsMock";
 import { defaultWritingSystem } from "types/writingSystem";
 
 const mockGetFrontierWords = jest.fn();
@@ -33,16 +36,16 @@ jest.mock("notistack", () => ({
   ...jest.requireActual("notistack"),
   enqueueSnackbar: jest.fn(),
 }));
-jest.mock("uuid", () => ({ v4: () => mockUuid() }));
+jest.mock("uuid", () => ({
+  v4: () => mockUuid(),
+}));
 jest.mock("backend", () => ({
   getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
 }));
 // Mock the node module used by AudioRecorder.
 jest.mock("components/Pronunciations/Recorder");
 jest.mock("components/TreeView", () => "div");
-jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({
-  addEntryEditToGoal: () => jest.fn(),
-}));
+jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({}));
 jest.mock("types/hooks", () => ({
   useAppDispatch: () => jest.fn(),
 }));
@@ -70,7 +73,7 @@ const mockStore = configureMockStore()(state);
 function setMockFunctions(): void {
   jest.clearAllMocks();
   mockGetFrontierWords.mockResolvedValue(
-    mockReviewEntryWords.map(mockCreateWord)
+    mockReviewEntryWords.map(wordFromReviewEntriesWord)
   );
   mockMaterialTable.mockReturnValue(Fragment);
 }

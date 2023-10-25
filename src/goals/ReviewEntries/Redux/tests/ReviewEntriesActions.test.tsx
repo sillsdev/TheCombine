@@ -25,9 +25,12 @@ jest.mock("backend", () => ({
   getWord: (wordId: string) => mockGetWord(wordId),
   updateWord: (word: Word) => mockUpdateWord(word),
 }));
-
 jest.mock("backend/localStorage", () => ({
   getProjectId: jest.fn(),
+}));
+jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({
+  addEntryEditToGoal: () => jest.fn(),
+  asyncUpdateGoal: () => jest.fn(),
 }));
 
 const mockStore = configureMockStore([thunk])();

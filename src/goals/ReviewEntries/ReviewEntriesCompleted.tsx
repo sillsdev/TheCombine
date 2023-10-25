@@ -24,12 +24,20 @@ export default function ReviewEntriesCompleted(): ReactElement {
       <Typography component="h1" variant="h4">
         {t("reviewEntries.title")}
       </Typography>
-      <Typography>
-        {t("reviewEntries.completed.number")}
-        {changes.entryEdits?.length ?? 0}
-      </Typography>
+      {EditsCount(changes)}
       {changes.entryEdits?.map((e) => <EditedEntry edit={e} key={e.newId} />)}
     </>
+  );
+}
+
+export function EditsCount(changes: EntriesEdited): ReactElement {
+  const { t } = useTranslation();
+
+  return (
+    <Typography>
+      {t("reviewEntries.completed.number")}
+      {changes.entryEdits?.length ?? 0}
+    </Typography>
   );
 }
 
@@ -82,7 +90,7 @@ function UndoButton(props: UndoButtonProps): ReactElement {
 
   return isUndoEnabled ? (
     <Grid container direction="column" justifyContent="center">
-      <>
+      <div>
         <Button
           variant="outlined"
           id={`edit-undo-${props.edit.newId}`}
@@ -100,13 +108,13 @@ function UndoButton(props: UndoButtonProps): ReactElement {
           buttonIdCancel="edit-undo-cancel"
           buttonIdConfirm="edit-undo-confirm"
         />
-      </>
+      </div>
     </Grid>
   ) : (
     <Grid container direction="column" justifyContent="center">
-      <>
+      <div>
         <Button disabled>{t(props.disabledId)}</Button>
-      </>
+      </div>
     </Grid>
   );
 }
