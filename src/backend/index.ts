@@ -709,15 +709,9 @@ export async function isFrontierNonempty(projectId?: string): Promise<boolean> {
 
 export async function updateDuplicate(
   dupId: string,
-  userId: string,
   word: Word
 ): Promise<Word> {
-  const params = {
-    projectId: LocalStorage.getProjectId(),
-    dupId,
-    userId,
-    word,
-  };
+  const params = { projectId: LocalStorage.getProjectId(), dupId, word };
   const resp = await wordApi.updateDuplicate(params, defaultOptions());
   return await getWord(resp.data);
 }
