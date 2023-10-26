@@ -31,7 +31,7 @@
     "test-backend": "         dotnet test Backend.Tests/Backend.Tests.csproj",
     "test-backend:coverage": "dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:Threshold=77",
     "test-frontend": "         react-scripts               test",
-    "test-frontend:coverage": "react-scripts               test --coverage --watchAll=false",
+    "test-frontend:coverage": "react-scripts               test --coverage --coverageReporters=cobertura --watchAll=false",
     "test-frontend:debug": "   react-scripts --inspect-brk test --runInBand --no-cache",
     "test:ci": "dotnet test Backend.Tests/Backend.Tests.csproj && CI=true react-scripts test --ci --all --testResultsProcessor jest-teamcity-reporter",
     "wordlist": "hunspell-reader words"
