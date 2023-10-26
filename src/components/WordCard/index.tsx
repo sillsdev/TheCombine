@@ -41,11 +41,16 @@ export default function WordCard(props: WordCardProps): ReactElement {
           {word.vernacular}
         </TypographyWithFont>
 
-        {/* Icons for audio, note, flag (if any); button for expand/collapse */}
         <div style={{ position: "absolute", right: 0, top: 0 }}>
-          {!full && <AudioSummary count={audio.length} />}
-          {!!note.text && <EntryNote noteText={note.text} />}
-          {flag.active && <FlagButton flag={flag} />}
+          {/* Condensed audio, note, flag */}
+          {!full && (
+            <>
+              <AudioSummary count={audio.length} />
+              {!!note.text && <EntryNote noteText={note.text} />}
+              {flag.active && <FlagButton flag={flag} />}
+            </>
+          )}
+          {/* Button for expand/condense */}
           <IconButtonWithTooltip
             buttonId={buttonIdFull(word.id)}
             icon={
@@ -59,14 +64,30 @@ export default function WordCard(props: WordCardProps): ReactElement {
           />
         </div>
 
-        {/* Audio playback */}
-        {audio.length > 0 && full && (
-          <PronunciationsBackend
-            deleteAudio={() => {}}
-            playerOnly
-            pronunciationFiles={audio}
-            wordId={id}
-          />
+        {/* Expanded audio, note, flag */}
+        {full && (
+          <>
+            {audio.length > 0 && (
+              <PronunciationsBackend
+                deleteAudio={() => {}}
+                playerOnly
+                pronunciationFiles={audio}
+                wordId={id}
+              />
+            )}
+            {!!note.text && (
+              <div style={{ display: "block" }}>
+                <EntryNote noteText={note.text} />
+                <Typography display="inline">{note.text}</Typography>
+              </div>
+            )}
+            {flag.active && (
+              <div style={{ display: "block" }}>
+                <FlagButton flag={flag} />
+                <Typography display="inline">{flag.text}</Typography>
+              </div>
+            )}
+          </>
         )}
 
         {/* Senses */}
