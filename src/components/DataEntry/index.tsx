@@ -13,10 +13,7 @@ import AppBar from "components/AppBar/AppBarComponent";
 import DataEntryHeader from "components/DataEntry/DataEntryHeader";
 import DataEntryTable from "components/DataEntry/DataEntryTable";
 import ExistingDataTable from "components/DataEntry/ExistingDataTable";
-import {
-  filterWordsByDomain,
-  sortDomainWordsByVern,
-} from "components/DataEntry/utilities";
+import { filterWordsByDomain } from "components/DataEntry/utilities";
 import TreeView from "components/TreeView";
 import {
   closeTreeAction,
@@ -46,6 +43,10 @@ const paperStyle = {
 export default function DataEntry(): ReactElement {
   const dispatch = useAppDispatch();
 
+  const analysisLang = useAppSelector(
+    (state: StoreState) =>
+      state.currentProjectState.project.analysisWritingSystems[0].bcp47
+  );
   const { currentDomain, open } = useAppSelector(
     (state: StoreState) => state.treeViewState
   );
@@ -95,10 +96,11 @@ export default function DataEntry(): ReactElement {
   }, [domain, questionsVisible, updateHeight, windowWidth]);
 
   const returnControlToCaller = useCallback(async () => {
-    const words = filterWordsByDomain(await getFrontierWords(), id);
-    setDomainWords(sortDomainWordsByVern(words));
+    setDomainWords(
+      filterWordsByDomain(await getFrontierWords(), id, analysisLang)
+    );
     dispatch(closeTreeAction());
-  }, [dispatch, id]);
+  }, [analysisLang, dispatch, id]);
 
   return (
     <Grid container justifyContent="center" spacing={3} wrap={"nowrap"}>

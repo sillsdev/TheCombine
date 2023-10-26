@@ -78,14 +78,14 @@ export class DomainWord {
   wordGuid: string;
   vernacular: string;
   senseGuid: string;
-  gloss: Gloss;
+  glosses: Gloss[];
 
-  constructor(word: Word, senseIndex = 0, glossIndex = 0) {
+  constructor(word: Word, senseIndex = 0) {
     const sense = word.senses[senseIndex] ?? newSense();
-    this.gloss = sense.glosses[glossIndex] ?? newGloss();
     this.wordGuid = word.guid;
     this.vernacular = word.vernacular;
     this.senseGuid = sense.guid;
+    this.glosses = sense.glosses;
   }
 }
 

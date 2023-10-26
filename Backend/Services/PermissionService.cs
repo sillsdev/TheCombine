@@ -86,11 +86,7 @@ namespace BackendFramework.Services
             return user.IsAdmin;
         }
 
-        /// <remarks>
-        /// This method magically looks up the Project ID by inspecting the route.
-        /// It is not suitable for any routes that do not contain ...projects/PROJECT_ID... in the route.
-        /// </remarks>
-        public async Task<bool> HasProjectPermission(HttpContext request, Permission permission)
+        public async Task<bool> HasProjectPermission(HttpContext request, Permission permission, string projectId)
         {
             var user = await _userRepo.GetUser(GetUserId(request));
             if (user is null)
@@ -98,45 +94,14 @@ namespace BackendFramework.Services
                 return false;
             }
 
-            // Database administrators implicitly possess all permissions.
+            // Site administrators implicitly possess all permissions.
             if (user.IsAdmin)
             {
                 return true;
             }
 
-            // Retrieve project ID from HTTP request
-            // TODO: This method of retrieving the project ID is brittle, should use regex or some other method.
-            var pathString = request.Request.Path.ToString();
-            var projIdIndex = pathString.LastIndexOf(ProjPath, StringComparison.OrdinalIgnoreCase) + ProjPath.Length;
-            if (projIdIndex + ProjIdLength > pathString.Length)
-            {
-                // If there is no project ID, do not allow changes
-                return false;
-            }
-            var projectId = pathString.Substring(projIdIndex, ProjIdLength);
-
-            return HasProjectPermission(request, permission, projectId);
-        }
-
-        private static bool HasProjectPermission(HttpContext request, Permission permission, string projectId)
-        {
-            // Retrieve JWT token from HTTP request and convert to object
-            var projectPermissionsList = GetProjectPermissions(request);
-
-            // Assert that the user has permission for this function
-            foreach (var projectPermissions in projectPermissionsList)
-            {
-                if (projectPermissions.ProjectId != projectId)
-                {
-                    continue;
-                }
-
-                if (projectPermissions.Permissions.Contains(permission))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return GetProjectPermissions(request).Any(
+                p => p.ProjectId == projectId && p.Permissions.Contains(permission));
         }
 
         public async Task<bool> ContainsProjectRole(HttpContext request, Role role, string projectId)
