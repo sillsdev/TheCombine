@@ -72,7 +72,7 @@ jobs:
         with:
           if-no-files-found: error
           name: coverage
-          path: coverage/clover.xml
+          path: coverage/cobertura-coverage.xml
           retention-days: 7
 
   upload_coverage:
@@ -102,7 +102,7 @@ jobs:
         uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         with:
           fail_ci_if_error: true
-          files: clover.xml
+          files: cobertura-coverage.xml
           flags: frontend
           name: Frontend
 
