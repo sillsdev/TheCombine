@@ -16,10 +16,10 @@ interface HistoryCellProps {
 }
 
 export default function HistoryCell(props: HistoryCellProps): ReactElement {
-  const [history, setHistory] = useState<Pedigree | undefined>();
+  const [pedigree, setPedigree] = useState<Pedigree | undefined>();
 
   const getHistory = async (): Promise<void> => {
-    await getWordHistory(props.wordId).then(setHistory);
+    await getWordHistory(props.wordId).then(setPedigree);
   };
 
   return (
@@ -33,23 +33,35 @@ export default function HistoryCell(props: HistoryCellProps): ReactElement {
           <History />
         </Badge>
       </IconButton>
-      <Dialog fullScreen onClose={() => setHistory(undefined)} open={!!history}>
+      <Dialog
+        fullScreen
+        onClose={() => setPedigree(undefined)}
+        open={!!pedigree}
+      >
         <Grid container justifyContent="flex-end">
           <IconButtonWithTooltip
             buttonId={buttonIdExit}
             icon={<Close />}
-            onClick={() => setHistory(undefined)}
+            onClick={() => setPedigree(undefined)}
             textId={"buttons.exit"}
           />
         </Grid>
-        {history ? <WordTree tree={history} /> : <Fragment />}
+        {pedigree ? (
+          <Grid container justifyContent="space-around">
+            <Grid item>
+              <WordTree pedigree={pedigree} />
+            </Grid>
+          </Grid>
+        ) : (
+          <Fragment />
+        )}
       </Dialog>
     </>
   );
 }
 
-function WordTree(props: { tree: Pedigree }): ReactElement {
-  const { parents, word } = props.tree;
+function WordTree(props: { pedigree: Pedigree }): ReactElement {
+  const { parents, word } = props.pedigree;
 
   const [showParents, setShowParents] = useState(true);
 
@@ -80,20 +92,35 @@ function WordTree(props: { tree: Pedigree }): ReactElement {
             />
           </Grid>
 
-          {/* Parent word(s) */}
           {showParents && (
-            <Grid
-              alignItems="flex-start"
-              container
-              justifyContent="space-around"
-              wrap="nowrap"
-            >
-              {parents.map((p) => (
-                <Grid item key={p.word.id}>
-                  <WordTree tree={p} />
-                </Grid>
-              ))}
-            </Grid>
+            <>
+              {/* Bracket */}
+              {parents.length > 1 && (
+                <div
+                  style={{
+                    border: "2px solid black",
+                    borderBottom: "0px",
+                    height: "16px",
+                    width: "100%",
+                  }}
+                />
+              )}
+
+              {/* Parent word(s) */}
+              <Grid
+                alignItems="flex-start"
+                columnSpacing="8px"
+                container
+                justifyContent="space-around"
+                wrap="nowrap"
+              >
+                {parents.map((p) => (
+                  <Grid item key={p.word.id}>
+                    <WordTree pedigree={p} />
+                  </Grid>
+                ))}
+              </Grid>
+            </>
           )}
         </>
       )}
