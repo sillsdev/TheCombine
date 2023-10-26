@@ -597,7 +597,7 @@ export default function DataEntryTable(
       state.recentWords.findIndex((w) => w.word.id === oldId) > -1;
 
     defunctWord(oldId);
-    const newWord = await backend.updateDuplicate(oldId, getUserId(), word);
+    const newWord = await backend.updateDuplicate(oldId, word);
     defunctWord(oldId, newWord.id);
 
     const newId = await addAudiosToBackend(newWord.id, audioURLs);

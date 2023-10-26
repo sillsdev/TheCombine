@@ -65,6 +65,11 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_frontier.Find(w => w.ProjectId == projectId) is not null);
         }
 
+        public Task<bool> IsInFrontier(string projectId, string wordId)
+        {
+            return Task.FromResult(_frontier.Find(w => w.ProjectId == projectId && w.Id == wordId) is not null);
+        }
+
         public Task<List<Word>> GetFrontier(string projectId)
         {
             return Task.FromResult(_frontier.Where(w => w.ProjectId == projectId).Select(w => w.Clone()).ToList());

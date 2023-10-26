@@ -6,8 +6,8 @@ namespace BackendFramework.Interfaces
 {
     public interface IMergeService
     {
-        Task<List<Word>> Merge(string projectId, List<MergeWords> mergeWordsList);
-        Task<bool> UndoMerge(string projectId, MergeUndoIds ids);
+        Task<List<Word>> Merge(string projectId, string userId, List<MergeWords> mergeWordsList);
+        Task<bool> UndoMerge(string projectId, string userId, MergeUndoIds ids);
         Task<MergeWordSet> AddToMergeBlacklist(string projectId, string userId, List<string> wordIds);
         Task<MergeWordSet> AddToMergeGraylist(string projectId, string userId, List<string> wordIds);
         Task<bool> RemoveFromMergeGraylist(string projectId, string userId, List<string> wordIds);
