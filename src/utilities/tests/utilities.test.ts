@@ -20,7 +20,7 @@ describe("utilities/utilities", () => {
     // This tests will fail intermittently if there is a bug with the 0-prepend
     it("returns string of correct length", () => {
       const expectedLength = "YYYY-MM-DD_hh-mm-ss".length;
-      expect(utilities.getDateTimeString().length).toBe(expectedLength);
+      expect(utilities.getDateTimeString()).toHaveLength(expectedLength);
     });
   });
 
