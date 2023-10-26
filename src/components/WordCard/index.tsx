@@ -6,10 +6,11 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { Fragment, ReactElement, useState } from "react";
+import { Fragment, ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Word } from "api/models";
+import { getUser } from "backend";
 import { FlagButton, IconButtonWithTooltip } from "components/Buttons";
 import { EntryNote } from "components/DataEntry/DataEntryTable/EntryCellComponents";
 import { PronunciationsBackend } from "components/Pronunciations/PronunciationsBackend";
@@ -29,9 +30,18 @@ export const buttonIdFull = (wordId: string): string => `word-${wordId}-full`;
 
 export default function WordCard(props: WordCardProps): ReactElement {
   const { languages, provenance, word } = props;
-  const { audio, flag, id, note, senses } = word;
+  const { audio, editedBy, flag, id, note, senses } = word;
   const [full, setFull] = useState(false);
+  const [username, setUsername] = useState("");
   const { t } = useTranslation();
+
+  useEffect(() => {
+    if (provenance && editedBy?.length) {
+      getUser(editedBy[editedBy.length - 1]).then((u) =>
+        setUsername(u.username)
+      );
+    }
+  }, [editedBy, provenance]);
 
   return (
     <Card style={{ backgroundColor: "lightgray" }}>
@@ -112,6 +122,12 @@ export default function WordCard(props: WordCardProps): ReactElement {
             {t("wordHistory.wordModified", {
               val: getDateTimeString(word.modified, friendlySep),
             })}
+            {!!username && (
+              <>
+                <br />
+                {t("wordHistory.user", { val: username })}
+              </>
+            )}
           </Typography>
         )}
       </CardContent>
