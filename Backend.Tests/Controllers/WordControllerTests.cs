@@ -50,36 +50,6 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task TestDeleteAllWords()
-        {
-            await _wordRepo.Create(Util.RandomWord(_projId));
-            await _wordRepo.Create(Util.RandomWord(_projId));
-            const string diffProjId = "OTHER_PROJECT";
-            await _wordRepo.Create(Util.RandomWord(diffProjId));
-
-            await _wordController.DeleteProjectWords(_projId);
-            Assert.That(await _wordRepo.GetAllWords(_projId), Is.Empty);
-            Assert.That(await _wordRepo.GetFrontier(_projId), Is.Empty);
-            Assert.That(await _wordRepo.GetAllWords(diffProjId), Has.Count.EqualTo(1));
-            Assert.That(await _wordRepo.GetFrontier(diffProjId), Has.Count.EqualTo(1));
-        }
-
-        [Test]
-        public async Task TestDeleteAllWordsNoPermission()
-        {
-            _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-            var result = await _wordController.DeleteProjectWords(_projId);
-            Assert.That(result, Is.InstanceOf<ForbidResult>());
-        }
-
-        [Test]
-        public async Task TestDeleteAllWordsMissingProject()
-        {
-            var result = await _wordController.DeleteProjectWords(MissingId);
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
-        }
-
-        [Test]
         public async Task TestDeleteFrontierWord()
         {
             var wordToDelete = await _wordRepo.Create(Util.RandomWord(_projId));
@@ -275,7 +245,8 @@ namespace Backend.Tests.Controllers
             var dupWord = origWord.Clone();
             dupWord.Flag = new Flag("New Flag");
             var expectedWord = dupWord.Clone();
-            var id = (string)((ObjectResult)await _wordController.UpdateDuplicate(_projId, origWord.Id, "", dupWord)).Value!;
+            var result = (ObjectResult)await _wordController.UpdateDuplicate(_projId, origWord.Id, dupWord);
+            var id = (string)result.Value!;
             var updatedWord = await _wordRepo.GetWord(_projId, id);
             Assert.That(expectedWord.ContentEquals(updatedWord!), Is.True);
         }
@@ -286,7 +257,7 @@ namespace Backend.Tests.Controllers
             _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
 
             var word = await _wordRepo.Create(Util.RandomWord(_projId));
-            var result = await _wordController.UpdateDuplicate(_projId, word.Id, "", word);
+            var result = await _wordController.UpdateDuplicate(_projId, word.Id, word);
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 
@@ -294,7 +265,7 @@ namespace Backend.Tests.Controllers
         public async Task TestUpdateDuplicateMissingProject()
         {
             var word = await _wordRepo.Create(Util.RandomWord(_projId));
-            var result = await _wordController.UpdateDuplicate(MissingId, word.Id, "", word);
+            var result = await _wordController.UpdateDuplicate(MissingId, word.Id, word);
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
         }
 
@@ -302,7 +273,7 @@ namespace Backend.Tests.Controllers
         public async Task TestUpdateDuplicateMissingWord()
         {
             var word = Util.RandomWord(_projId);
-            var result = await _wordController.UpdateDuplicate(_projId, MissingId, "", word);
+            var result = await _wordController.UpdateDuplicate(_projId, MissingId, word);
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
         }
 
@@ -312,7 +283,7 @@ namespace Backend.Tests.Controllers
             var origWord = await _wordRepo.Create(Util.RandomWord(_projId));
             var nonDup = origWord.Clone();
             nonDup.Vernacular = "differentVern";
-            var result = await _wordController.UpdateDuplicate(_projId, origWord.Id, "", nonDup);
+            var result = await _wordController.UpdateDuplicate(_projId, origWord.Id, nonDup);
             Assert.That(result, Is.InstanceOf<ConflictResult>());
         }
 

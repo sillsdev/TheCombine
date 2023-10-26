@@ -44,7 +44,7 @@ namespace Backend.Tests.Services
                 }
             };
 
-            var newWords = _mergeService.Merge(ProjId, new List<MergeWords> { mergeObject }).Result;
+            var newWords = _mergeService.Merge(ProjId, UserId, new List<MergeWords> { mergeObject }).Result;
 
             // There should only be 1 word added and it should be identical to what we passed in
             Assert.That(newWords, Has.Count.EqualTo(1));
@@ -76,7 +76,7 @@ namespace Backend.Tests.Services
                 DeleteOnly = true
             };
 
-            var newWords = _mergeService.Merge(ProjId, new List<MergeWords> { mergeObject }).Result;
+            var newWords = _mergeService.Merge(ProjId, UserId, new List<MergeWords> { mergeObject }).Result;
 
             // There should be no word added and no words left in the frontier.
             Assert.That(newWords, Is.Empty);
@@ -100,7 +100,7 @@ namespace Backend.Tests.Services
             Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(numberOfChildren));
 
             var mergeWordsList = new List<MergeWords> { mergeWords };
-            var newWords = _mergeService.Merge(ProjId, mergeWordsList).Result;
+            var newWords = _mergeService.Merge(ProjId, UserId, mergeWordsList).Result;
 
             // Check for correct history length.
             var dbParent = newWords.First();
@@ -117,7 +117,7 @@ namespace Backend.Tests.Services
             int wordCount = 100;
             var randWords = Util.RandomWordList(wordCount, ProjId);
             var mergeWordsList = randWords.Select(word => new MergeWords { Parent = word }).ToList();
-            var newWords = _mergeService.Merge(ProjId, mergeWordsList).Result;
+            var newWords = _mergeService.Merge(ProjId, UserId, mergeWordsList).Result;
 
             Assert.That(newWords, Has.Count.EqualTo(wordCount));
             Assert.That(newWords.First().Id, Is.Not.EqualTo(newWords.Last().Id));
@@ -144,7 +144,7 @@ namespace Backend.Tests.Services
                 }
             };
 
-            var newWords = _mergeService.Merge(ProjId, new List<MergeWords> { mergeObject }).Result;
+            var newWords = _mergeService.Merge(ProjId, UserId, new List<MergeWords> { mergeObject }).Result;
 
             // There should only be 1 word added and it should be identical to what we passed in
             Assert.That(newWords, Has.Count.EqualTo(1));
@@ -153,7 +153,7 @@ namespace Backend.Tests.Services
             var childIds = mergeObject.Children.Select(word => word.SrcWordId).ToList();
             var parentIds = new List<string> { newWords[0].Id };
             var mergedWord = new MergeUndoIds(parentIds, childIds);
-            var undo = _mergeService.UndoMerge(ProjId, mergedWord).Result;
+            var undo = _mergeService.UndoMerge(ProjId, UserId, mergedWord).Result;
             Assert.That(undo, Is.True);
 
             var frontierWords = _wordRepo.GetFrontier(ProjId).Result;
@@ -179,14 +179,14 @@ namespace Backend.Tests.Services
             Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(numberOfChildren));
 
             var mergeWordsList = new List<MergeWords> { mergeWords };
-            var newWords = _mergeService.Merge(ProjId, mergeWordsList).Result;
+            var newWords = _mergeService.Merge(ProjId, UserId, mergeWordsList).Result;
 
             Assert.That(_wordRepo.GetFrontier(ProjId).Result, Has.Count.EqualTo(1));
 
             var childIds = mergeWords.Children.Select(word => word.SrcWordId).ToList();
             var parentIds = new List<string> { newWords[0].Id };
             var mergedWord = new MergeUndoIds(parentIds, childIds);
-            var undo = _mergeService.UndoMerge(ProjId, mergedWord).Result;
+            var undo = _mergeService.UndoMerge(ProjId, UserId, mergedWord).Result;
             Assert.That(undo, Is.True);
 
             var frontierWords = _wordRepo.GetFrontier(ProjId).Result;

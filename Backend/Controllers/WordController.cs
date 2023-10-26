@@ -28,24 +28,6 @@ namespace BackendFramework.Controllers
             _wordService = wordService;
         }
 
-        /// <summary> Deletes all <see cref="Word"/>s for specified <see cref="Project"/>. </summary>
-        /// <returns> true: if success, false: if there were no words </returns>
-        [HttpDelete(Name = "DeleteProjectWords")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        public async Task<IActionResult> DeleteProjectWords(string projectId)
-        {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Archive, projectId))
-            {
-                return Forbid();
-            }
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
-            }
-            return Ok(await _wordRepo.DeleteAllWords(projectId));
-        }
-
         /// <summary> Deletes specified Frontier <see cref="Word"/>. </summary>
         [HttpDelete("frontier/{wordId}", Name = "DeleteFrontierWord")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
@@ -60,7 +42,8 @@ namespace BackendFramework.Controllers
             {
                 return NotFound(projectId);
             }
-            var id = await _wordService.DeleteFrontierWord(projectId, wordId);
+            var userId = _permissionService.GetUserId(HttpContext);
+            var id = await _wordService.DeleteFrontierWord(projectId, userId, wordId);
             if (id is null)
             {
                 return NotFound(wordId);
@@ -169,7 +152,7 @@ namespace BackendFramework.Controllers
         [HttpPost("{dupId}", Name = "UpdateDuplicate")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> UpdateDuplicate(
-            string projectId, string dupId, string? userId, [FromBody, BindRequired] Word word)
+            string projectId, string dupId, [FromBody, BindRequired] Word word)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
@@ -188,16 +171,13 @@ namespace BackendFramework.Controllers
                 return NotFound(dupId);
             }
 
-            if (string.IsNullOrEmpty(userId))
-            {
-                userId = "";
-            }
+            var userId = _permissionService.GetUserId(HttpContext);
             if (!duplicatedWord.AppendContainedWordContents(word, userId))
             {
                 return Conflict();
             }
 
-            await _wordService.Update(duplicatedWord.ProjectId, duplicatedWord.Id, duplicatedWord);
+            await _wordService.Update(duplicatedWord.ProjectId, userId, duplicatedWord.Id, duplicatedWord);
 
             return Ok(duplicatedWord.Id);
         }
@@ -218,9 +198,8 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
             word.ProjectId = projectId;
-
-            await _wordRepo.Create(word);
-            return Ok(word.Id);
+            var userId = _permissionService.GetUserId(HttpContext);
+            return Ok((await _wordService.Create(userId, word)).Id);
         }
 
         /// <summary> Updates a <see cref="Word"/>. </summary>
@@ -247,7 +226,8 @@ namespace BackendFramework.Controllers
 
             // Add the found id to the updated word.
             word.Id = document.Id;
-            await _wordService.Update(projectId, wordId, word);
+            var userId = _permissionService.GetUserId(HttpContext);
+            await _wordService.Update(projectId, userId, wordId, word);
             return Ok(word.Id);
         }
 
