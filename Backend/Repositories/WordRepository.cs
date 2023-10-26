@@ -131,6 +131,14 @@ namespace BackendFramework.Repositories
             return word is not null;
         }
 
+        /// <summary> Checks if specified word is in Frontier for specified <see cref="Project"/> </summary>
+        public async Task<bool> IsInFrontier(string projectId, string wordId)
+        {
+            var word = await _wordDatabase.Frontier
+                .Find(w => w.ProjectId == projectId && w.Id == wordId).FirstOrDefaultAsync();
+            return word is not null;
+        }
+
         /// <summary> Finds all <see cref="Word"/>s in the Frontier for specified <see cref="Project"/> </summary>
         public async Task<List<Word>> GetFrontier(string projectId)
         {
@@ -200,23 +208,6 @@ namespace BackendFramework.Repositories
             if (deleted)
             {
                 await AddFrontier(word);
-            }
-            return deleted;
-        }
-
-        /// <summary> Updates <see cref="Word"/> in the Words collection with same wordId and projectId </summary>
-        /// <returns> A bool: success of operation </returns>
-        private async Task<bool> UpdateWord(Word word)
-        {
-            var filterDef = new FilterDefinitionBuilder<Word>();
-            var filter = filterDef.And(
-                filterDef.Eq(x => x.ProjectId, word.ProjectId),
-                filterDef.Eq(x => x.Id, word.Id));
-
-            var deleted = (await _wordDatabase.Words.DeleteOneAsync(filter)).DeletedCount > 0;
-            if (deleted)
-            {
-                await Add(word);
             }
             return deleted;
         }
