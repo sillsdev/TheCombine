@@ -158,7 +158,9 @@ export function updateFrontierWord(
     for (const fileName of delAudio) {
       editSource.id = await backend.deleteAudio(editSource.id, fileName);
     }
-    editSource.audio = (await backend.getWord(editSource.id)).audio;
+    const updatedWord = await backend.getWord(editSource.id);
+    editSource.audio = updatedWord.audio;
+    editSource.historyLength = updatedWord.history.length;
 
     // Update the review entries word in the state.
     dispatch(updateWord(editWord.id, editSource));
