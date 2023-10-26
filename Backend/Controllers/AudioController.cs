@@ -74,6 +74,7 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
+            var userId = _permissionService.GetUserId(HttpContext);
 
             // sanitize user input
             try
@@ -117,7 +118,7 @@ namespace BackendFramework.Controllers
             word.Audio.Add(Path.GetFileName(fileUpload.FilePath));
 
             // Update the word with new audio file
-            await _wordService.Update(projectId, wordId, word);
+            await _wordService.Update(projectId, userId, wordId, word);
 
             return Ok(word.Id);
         }
@@ -131,6 +132,7 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
+            var userId = _permissionService.GetUserId(HttpContext);
 
             // sanitize user input
             try
@@ -144,7 +146,7 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
-            var newWord = await _wordService.Delete(projectId, wordId, fileName);
+            var newWord = await _wordService.Delete(projectId, userId, wordId, fileName);
             if (newWord is not null)
             {
                 return Ok(newWord.Id);

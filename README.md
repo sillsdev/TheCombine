@@ -11,8 +11,11 @@
 [![OSSF Scorecard][github-actions-ossf-badge]][github-actions]
 
 [![GitHub release][github-release-badge]][github-version] [![GitHub version][github-version-badge]][github-version]
-[![Localization][localization-badge]][localization-crowdin] [![GitHub][github-license-badge]][github-license]
-[![GitHub contributors][github-contribs-badge]][github-contribs]
+[![GitHub][github-license-badge]][github-license] [![GitHub contributors][github-contribs-badge]][github-contribs]
+
+[![User Interface][localization-ui-badge]][localization-crowdin-combine]
+[![Semantic Domains][localization-sd-badge]][localization-crowdin-flex]
+[![User Guide][localization-ug-badge]][localization-crowdin-combine]
 
 [github-actions-frontend-badge]: https://github.com/sillsdev/TheCombine/workflows/frontend/badge.svg
 [frontend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=frontend
@@ -24,9 +27,13 @@
 [github-actions-codeql-badge]: https://github.com/sillsdev/TheCombine/workflows/CodeQL/badge.svg
 [github-actions-ossf-badge]:
   https://github.com/sillsdev/TheCombine/workflows/Scorecards%20supply-chain%20security/badge.svg
+[localization-ui-badge]: https://img.shields.io/badge/User%20Interface-Ar%20En%20Es%20Fr%20Pt%20Zh-blue
 [github-actions]: https://github.com/sillsdev/TheCombine/actions
-[localization-badge]: https://img.shields.io/badge/localization-Ar%20En%20Es%20Fr%20Pt%20Zh-blue
-[localization-crowdin]: https://crowdin.com/project/the-combine
+[localization-sd-badge]:
+  https://img.shields.io/badge/Semantic%20Domains-Ar%20En%20Es%20Fr%20Hi%20Ml%20My%20Pt%20Ru%20Sw%20Zh-blue
+[localization-ug-badge]: https://img.shields.io/badge/User%20Guide-En%20Es-blue
+[localization-crowdin-combine]: https://crowdin.com/project/the-combine
+[localization-crowdin-flex]: https://crowdin.com/project/fieldworks
 [github-version-badge]: https://img.shields.io/github/package-json/v/sillsdev/TheCombine
 [github-release-badge]: https://img.shields.io/github/v/release/sillsdev/TheCombine
 [github-version]: https://github.com/sillsdev/TheCombine/releases
