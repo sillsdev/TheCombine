@@ -15,8 +15,10 @@ interface ReplaceDialogProps {
   open: boolean;
   dialogFindValue: string;
   dialogReplaceValue: string;
-  handleAccept: () => Promise<void>;
   handleCancel: () => void;
+  handleConfirm: () => Promise<void>;
+  idCancel?: string;
+  idConfirm?: string;
 }
 
 /**
@@ -30,7 +32,7 @@ export default function CharacterReplaceDialog(
 
   async function submitFindAndReplace(): Promise<void> {
     setLoading(true);
-    await props.handleAccept();
+    await props.handleConfirm();
     setLoading(false);
   }
 
@@ -56,12 +58,21 @@ export default function CharacterReplaceDialog(
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={props.handleCancel} variant="outlined" color="primary">
+        <Button
+          color="primary"
+          id={props.idCancel}
+          onClick={props.handleCancel}
+          variant="outlined"
+        >
           {t("buttons.cancel")}
         </Button>
         <LoadingButton
+          buttonProps={{
+            color: "primary",
+            id: props.idConfirm,
+            onClick: submitFindAndReplace,
+          }}
           loading={loading}
-          buttonProps={{ onClick: submitFindAndReplace, color: "primary" }}
         >
           {t("buttons.confirm")}
         </LoadingButton>
