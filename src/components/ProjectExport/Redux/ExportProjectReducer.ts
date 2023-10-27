@@ -9,7 +9,6 @@ import { StoreActionTypes } from "rootActions";
 const exportProjectSlice = createSlice({
   name: "exportProjectState",
   initialState: defaultState,
-  /* eslint-disable @typescript-eslint/no-unused-vars */
   reducers: {
     downloadingAction: (state, action) => {
       state.projectId = action.payload;
@@ -32,7 +31,6 @@ const exportProjectSlice = createSlice({
       state.status = ExportStatus.Success;
     },
   },
-  /* eslint-enable @typescript-eslint/no-unused-vars */
   extraReducers: (builder) =>
     builder.addCase(StoreActionTypes.RESET, () => defaultState),
 });
