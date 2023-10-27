@@ -1,7 +1,14 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import * as action from "components/ProjectScreen/CreateProject/Redux/CreateProjectActions";
+import {
+  asyncCreateProject,
+  asyncFinishProject,
+} from "components/ProjectScreen/CreateProject/Redux/CreateProjectActions";
+import {
+  failureAction,
+  inProgressAction,
+} from "components/ProjectScreen/CreateProject/Redux/CreateProjectReducer";
 import { defaultState } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
 import { newWritingSystem } from "types/writingSystem";
 
@@ -24,25 +31,25 @@ beforeEach(() => {
 describe("CreateProjectActions", () => {
   test("asyncCreateProject correctly affects state", async () => {
     await mockStore.dispatch<any>(
-      action.asyncCreateProject(
+      asyncCreateProject(
         project.name,
         project.vernacularLanguage,
         project.analysisLanguages
       )
     );
     expect(mockStore.getActions()).toEqual([
-      action.inProgress(),
-      action.failure(), // backend.createProject mocked to fail
+      inProgressAction(),
+      failureAction(expect.any(String)), // backend.createProject mocked to fail
     ]);
   });
 
   test("asyncFinishProject correctly affects state", async () => {
     await mockStore.dispatch<any>(
-      action.asyncFinishProject(project.name, project.vernacularLanguage)
+      asyncFinishProject(project.name, project.vernacularLanguage)
     );
     expect(mockStore.getActions()).toEqual([
-      action.inProgress(),
-      action.failure(), // backend.createProject mocked to fail
+      inProgressAction(),
+      failureAction(expect.any(String)), // backend.createProject mocked to fail
     ]);
   });
 });

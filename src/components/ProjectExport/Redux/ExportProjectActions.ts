@@ -1,20 +1,54 @@
+import { Action, PayloadAction } from "@reduxjs/toolkit";
+
 import { deleteLift, downloadLift, exportLift } from "backend";
 import {
-  ExportProjectAction,
-  ExportStatus,
-} from "components/ProjectExport/Redux/ExportProjectReduxTypes";
+  downloadingAction,
+  exportingAction,
+  failureAction,
+  resetAction,
+  successAction,
+} from "components/ProjectExport/Redux//ExportProjectReducer";
 import { StoreStateDispatch } from "types/Redux/actions";
+
+// Action Creation Functions
+
+export function exporting(projectId: string): PayloadAction {
+  return exportingAction(projectId);
+}
+
+export function downloading(projectId: string): PayloadAction {
+  return downloadingAction(projectId);
+}
+
+export function failure(projectId: string): PayloadAction {
+  return failureAction(projectId);
+}
+
+export function reset(): Action {
+  return resetAction();
+}
+
+export function success(projectId: string): PayloadAction {
+  return successAction(projectId);
+}
+
+// Dispatch Functions
 
 export function asyncExportProject(projectId: string) {
   return async (dispatch: StoreStateDispatch) => {
+    console.info("dispatching export");
     dispatch(exporting(projectId));
+    console.info("exporting");
     await exportLift(projectId).catch(() => dispatch(failure(projectId)));
+    console.info("exported");
   };
 }
 
 export function asyncDownloadExport(projectId: string) {
   return async (dispatch: StoreStateDispatch) => {
+    console.info("dispatching download");
     dispatch(downloading(projectId));
+    console.info("downloading");
     return await downloadLift(projectId).catch(() => {
       dispatch(failure(projectId));
     });
@@ -26,32 +60,4 @@ export function asyncResetExport() {
     dispatch(reset());
     await deleteLift();
   };
-}
-
-function exporting(projectId: string): ExportProjectAction {
-  return {
-    type: ExportStatus.Exporting,
-    projectId,
-  };
-}
-function downloading(projectId: string): ExportProjectAction {
-  return {
-    type: ExportStatus.Downloading,
-    projectId,
-  };
-}
-export function success(projectId: string): ExportProjectAction {
-  return {
-    type: ExportStatus.Success,
-    projectId,
-  };
-}
-export function failure(projectId: string): ExportProjectAction {
-  return {
-    type: ExportStatus.Failure,
-    projectId,
-  };
-}
-function reset(): ExportProjectAction {
-  return { type: ExportStatus.Default };
 }

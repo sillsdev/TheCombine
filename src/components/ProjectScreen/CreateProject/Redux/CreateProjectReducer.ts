@@ -4,12 +4,12 @@ import { defaultState } from "components/ProjectScreen/CreateProject/Redux/Creat
 import { StoreActionTypes } from "rootActions";
 
 const createProjectSlice = createSlice({
-  name: "goalsState",
+  name: "createProjectState",
   initialState: defaultState,
   /* eslint-disable @typescript-eslint/no-unused-vars */
   reducers: {
     failureAction: (state, action) => {
-      state = { ...defaultState, errorMsg: action.payload.errorMsg ?? "" };
+      state = { ...defaultState, errorMsg: action.payload };
     },
     inProgressAction: (state) => {
       state = { ...defaultState, inProgress: true };
