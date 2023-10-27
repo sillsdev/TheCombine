@@ -1,17 +1,41 @@
+import { Action, PayloadAction } from "@reduxjs/toolkit";
+
 import { WritingSystem } from "api/models";
 import { createProject, finishUploadLift, getProject } from "backend";
 import router from "browserRouter";
 import { asyncCreateUserEdits } from "components/GoalTimeline/Redux/GoalActions";
 import { setNewCurrentProject } from "components/Project/ProjectActions";
 import {
-  CreateProjectAction,
-  CreateProjectActionTypes,
-} from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
+  failureAction,
+  inProgressAction,
+  resetAction,
+  successAction,
+} from "components/ProjectScreen/CreateProject/Redux/CreateProjectReducer";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { Path } from "types/path";
 import { newProject } from "types/project";
 
-/** thunk action creator for creating a project without an import. */
+// Action Creation Functions
+
+export function failure(errorMsg = ""): PayloadAction {
+  return failureAction(errorMsg);
+}
+
+export function inProgress(): Action {
+  return inProgressAction();
+}
+
+export function reset(): Action {
+  return resetAction();
+}
+
+export function success(): Action {
+  return successAction();
+}
+
+// Dispatch Functions
+
+/*** Create a project without an import. */
 export function asyncCreateProject(
   name: string,
   vernacularWritingSystem: WritingSystem,
@@ -41,7 +65,7 @@ export function asyncCreateProject(
   };
 }
 
-/** thunk action creator for creating a project with a pre-uploaded import. */
+/*** Create a project with a pre-uploaded import. */
 export function asyncFinishProject(
   name: string,
   vernacularWritingSystem: WritingSystem
@@ -68,33 +92,5 @@ export function asyncFinishProject(
       .catch((e) => {
         dispatch(failure(e.response?.statusText));
       });
-  };
-}
-
-export function inProgress(): CreateProjectAction {
-  return {
-    type: CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS,
-    payload: {},
-  };
-}
-
-export function success(): CreateProjectAction {
-  return {
-    type: CreateProjectActionTypes.CREATE_PROJECT_SUCCESS,
-    payload: {},
-  };
-}
-
-export function failure(errorMsg = ""): CreateProjectAction {
-  return {
-    type: CreateProjectActionTypes.CREATE_PROJECT_FAILURE,
-    payload: { errorMsg },
-  };
-}
-
-export function reset(): CreateProjectAction {
-  return {
-    type: CreateProjectActionTypes.CREATE_PROJECT_RESET,
-    payload: {},
   };
 }

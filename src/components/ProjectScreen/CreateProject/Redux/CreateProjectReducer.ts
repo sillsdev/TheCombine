@@ -1,27 +1,32 @@
-import {
-  CreateProjectAction,
-  CreateProjectActionTypes,
-  CreateProjectState,
-  defaultState,
-} from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
-import { StoreAction, StoreActionTypes } from "rootActions";
+import { createSlice } from "@reduxjs/toolkit";
 
-export const createProjectReducer = (
-  state: CreateProjectState = defaultState,
-  action: CreateProjectAction | StoreAction
-): CreateProjectState => {
-  switch (action.type) {
-    case CreateProjectActionTypes.CREATE_PROJECT_IN_PROGRESS:
-      return { ...defaultState, inProgress: true };
-    case CreateProjectActionTypes.CREATE_PROJECT_SUCCESS:
-      return { ...defaultState, success: true };
-    case CreateProjectActionTypes.CREATE_PROJECT_FAILURE:
-      return { ...defaultState, errorMsg: action.payload.errorMsg ?? "" };
-    case CreateProjectActionTypes.CREATE_PROJECT_RESET:
-      return defaultState;
-    case StoreActionTypes.RESET:
-      return defaultState;
-    default:
-      return state;
-  }
-};
+import { defaultState } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
+import { StoreActionTypes } from "rootActions";
+
+const createProjectSlice = createSlice({
+  name: "goalsState",
+  initialState: defaultState,
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  reducers: {
+    failureAction: (state, action) => {
+      state = { ...defaultState, errorMsg: action.payload.errorMsg ?? "" };
+    },
+    inProgressAction: (state) => {
+      state = { ...defaultState, inProgress: true };
+    },
+    resetAction: (state) => {
+      state = defaultState;
+    },
+    successAction: (state) => {
+      state = { ...defaultState, success: true };
+    },
+  },
+  /* eslint-enable @typescript-eslint/no-unused-vars */
+  extraReducers: (builder) =>
+    builder.addCase(StoreActionTypes.RESET, () => defaultState),
+});
+
+export const { failureAction, inProgressAction, resetAction, successAction } =
+  createProjectSlice.actions;
+
+export default createProjectSlice.reducer;
