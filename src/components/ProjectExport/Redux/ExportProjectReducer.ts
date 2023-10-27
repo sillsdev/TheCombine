@@ -12,41 +12,24 @@ const exportProjectSlice = createSlice({
   /* eslint-disable @typescript-eslint/no-unused-vars */
   reducers: {
     downloadingAction: (state, action) => {
-      console.info("updating state to downloading");
-      console.info(action);
-      state = {
-        ...defaultState,
-        projectId: action.payload,
-        status: ExportStatus.Downloading,
-      };
-      console.info(state);
+      state.projectId = action.payload;
+      state.status = ExportStatus.Downloading;
     },
     exportingAction: (state, action) => {
-      console.info("updating state to exporting");
-      console.info(action);
-      state = {
-        ...defaultState,
-        projectId: action.payload,
-        status: ExportStatus.Exporting,
-      };
-      console.info(state);
+      state.projectId = action.payload;
+      state.status = ExportStatus.Exporting;
     },
     failureAction: (state, action) => {
-      state = {
-        ...defaultState,
-        projectId: action.payload,
-        status: ExportStatus.Failure,
-      };
+      state.projectId = action.payload;
+      state.status = ExportStatus.Failure;
     },
     resetAction: (state) => {
-      state = { ...defaultState, status: ExportStatus.Default };
+      state.projectId = "";
+      state.status = ExportStatus.Default;
     },
     successAction: (state, action) => {
-      state = {
-        ...defaultState,
-        projectId: action.payload,
-        status: ExportStatus.Success,
-      };
+      state.projectId = action.payload;
+      state.status = ExportStatus.Success;
     },
   },
   /* eslint-enable @typescript-eslint/no-unused-vars */

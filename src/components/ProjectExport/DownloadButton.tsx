@@ -36,12 +36,8 @@ interface DownloadButtonProps {
 export default function DownloadButton(
   props: DownloadButtonProps
 ): ReactElement {
-  const projectId = useAppSelector((state: StoreState) => {
-    console.info(state.exportProjectState);
-    return state.exportProjectState.projectId;
-  });
-  const status = useAppSelector(
-    (state: StoreState) => state.exportProjectState.status
+  const exportState = useAppSelector(
+    (state: StoreState) => state.exportProjectState
   );
   const dispatch = useAppDispatch();
   const [fileName, setFileName] = useState<string | undefined>();
@@ -64,26 +60,25 @@ export default function DownloadButton(
 
   useEffect(() => {
     if (fileName) {
-      dispatch(asyncDownloadExport(projectId)).then((url) => {
+      dispatch(asyncDownloadExport(exportState.projectId)).then((url) => {
         if (url) {
           setFileUrl(url);
           reset();
         }
       });
     }
-  }, [dispatch, fileName, projectId, reset]);
+  }, [dispatch, exportState.projectId, fileName, reset, setFileUrl]);
 
   useEffect(() => {
-    console.info("exportState updated");
-    if (status === ExportStatus.Success) {
-      getProjectName(projectId).then((projectName) => {
+    if (exportState.status === ExportStatus.Success) {
+      getProjectName(exportState.projectId).then((projectName) => {
         setFileName(makeExportName(projectName));
       });
     }
-  }, [projectId, status]);
+  }, [exportState, setFileName]);
 
   function textId(): string {
-    switch (status) {
+    switch (exportState.status) {
       case ExportStatus.Exporting:
         return "projectExport.exportInProgress";
       case ExportStatus.Success:
@@ -97,7 +92,7 @@ export default function DownloadButton(
   }
 
   function icon(): ReactElement {
-    switch (status) {
+    switch (exportState.status) {
       case ExportStatus.Exporting:
       case ExportStatus.Downloading:
       case ExportStatus.Success:
@@ -110,7 +105,7 @@ export default function DownloadButton(
   }
 
   function iconColor(): `#${string}` {
-    return status === ExportStatus.Failure
+    return exportState.status === ExportStatus.Failure
       ? themeColors.error
       : props.colorSecondary
       ? themeColors.secondary
@@ -118,7 +113,7 @@ export default function DownloadButton(
   }
 
   function iconFunction(): () => void {
-    switch (status) {
+    switch (exportState.status) {
       case ExportStatus.Failure:
         return reset;
       default:
@@ -127,8 +122,8 @@ export default function DownloadButton(
   }
 
   return (
-    <>
-      {status !== ExportStatus.Default && (
+    <Fragment>
+      {exportState.status !== ExportStatus.Default && (
         <Tooltip title={t(textId())} placement="bottom">
           <IconButton
             tabIndex={-1}
@@ -150,6 +145,6 @@ export default function DownloadButton(
           (This link should not be visible)
         </a>
       )}
-    </>
+    </Fragment>
   );
 }

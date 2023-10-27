@@ -36,19 +36,14 @@ export function success(projectId: string): PayloadAction {
 
 export function asyncExportProject(projectId: string) {
   return async (dispatch: StoreStateDispatch) => {
-    console.info("dispatching export");
     dispatch(exporting(projectId));
-    console.info("exporting");
     await exportLift(projectId).catch(() => dispatch(failure(projectId)));
-    console.info("exported");
   };
 }
 
 export function asyncDownloadExport(projectId: string) {
   return async (dispatch: StoreStateDispatch) => {
-    console.info("dispatching download");
     dispatch(downloading(projectId));
-    console.info("downloading");
     return await downloadLift(projectId).catch(() => {
       dispatch(failure(projectId));
     });
