@@ -1,9 +1,18 @@
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import {
+  ColumnId,
+  ReviewEntriesWord,
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 
 export enum ReviewEntriesActionTypes {
+  SortBy = "SORT_BY",
   UpdateAllWords = "UPDATE_ALL_WORDS",
   UpdateWord = "UPDATE_WORD",
   ClearReviewEntriesState = "CLEAR_REVIEW_ENTRIES_STATE",
+}
+
+export interface ReviewSortBy {
+  type: ReviewEntriesActionTypes.SortBy;
+  sortBy?: ColumnId;
 }
 
 export interface ReviewUpdateWords {
@@ -22,6 +31,7 @@ export interface ReviewClearReviewEntriesState {
 }
 
 export type ReviewEntriesAction =
+  | ReviewSortBy
   | ReviewUpdateWords
   | ReviewUpdateWord
   | ReviewClearReviewEntriesState;
@@ -29,11 +39,13 @@ export type ReviewEntriesAction =
 export interface ReviewEntriesState {
   words: ReviewEntriesWord[];
   isRecording: boolean;
-  wordBeingRecorded: string | undefined;
+  sortBy?: ColumnId;
+  wordBeingRecorded?: string;
 }
 
 export const defaultState: ReviewEntriesState = {
   words: [],
   isRecording: false,
+  sortBy: undefined,
   wordBeingRecorded: undefined,
 };

@@ -18,7 +18,6 @@ import {
 
 interface DefinitionCellProps extends FieldParameterStandard {
   editable?: boolean;
-  sortingByThis?: boolean;
 }
 
 export default function DefinitionCell(
