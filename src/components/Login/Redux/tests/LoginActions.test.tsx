@@ -28,7 +28,6 @@ const mockPassword = "testPass";
 const mockUsername = "testUsername";
 const mockUser = {
   ...newUser(mockName, mockUsername, mockPassword),
-  token: "testToken",
   email: mockEmail,
 };
 
@@ -40,10 +39,22 @@ const persistedDefaultState: PreloadedState<RootState> = {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  jest.useFakeTimers();
 });
 
 describe("LoginAction", () => {
   describe("asyncLogIn", () => {
+    it("correctly affects state on failure", async () => {
+      const store = setupStore();
+      mockAuthenticateUser.mockRejectedValueOnce({});
+      await store.dispatch(asyncLogIn(mockUsername, mockPassword));
+      const loginState = store.getState().loginState;
+      expect(loginState.error).not.toEqual("");
+      expect(loginState.loginStatus).toEqual(LoginStatus.Failure);
+      expect(loginState.signupStatus).toEqual(LoginStatus.Default);
+      expect(loginState.username).toEqual(mockUsername);
+    });
+
     it("correctly affects state on success", async () => {
       const store = setupStore();
       mockAuthenticateUser.mockResolvedValueOnce(mockUser);
@@ -54,19 +65,26 @@ describe("LoginAction", () => {
       expect(loginState.signupStatus).toEqual(LoginStatus.Default);
       expect(loginState.username).toEqual(mockUsername);
     });
-    it("correctly affects state on success", async () => {
-      const store = setupStore();
-      mockAuthenticateUser.mockRejectedValueOnce({});
-      await store.dispatch(asyncLogIn(mockUsername, mockPassword));
-      const loginState = store.getState().loginState;
-      expect(loginState.error).not.toEqual("");
-      expect(loginState.loginStatus).toEqual(LoginStatus.Failure);
-      expect(loginState.signupStatus).toEqual(LoginStatus.Default);
-      expect(loginState.username).toEqual(mockUsername);
-    });
   });
 
   describe("asyncSignUp", () => {
+    it("correctly affects state on failure", async () => {
+      const store = setupStore();
+      mockAddUser.mockRejectedValueOnce({});
+      await store.dispatch(
+        asyncSignUp(mockName, mockUsername, mockEmail, mockPassword)
+      );
+      const loginState = store.getState().loginState;
+      expect(loginState.error).not.toEqual("");
+      expect(loginState.loginStatus).toEqual(LoginStatus.Default);
+      expect(loginState.signupStatus).toEqual(LoginStatus.Failure);
+      expect(loginState.username).toEqual(mockUsername);
+
+      // A failed signup does not trigger a login.
+      jest.runAllTimers();
+      expect(mockAuthenticateUser).not.toBeCalled();
+    });
+
     it("correctly affects state on success", async () => {
       const store = setupStore();
       mockAddUser.mockResolvedValueOnce({});
@@ -78,20 +96,11 @@ describe("LoginAction", () => {
       expect(loginState.loginStatus).toEqual(LoginStatus.Default);
       expect(loginState.signupStatus).toEqual(LoginStatus.Success);
       expect(loginState.username).toEqual(mockUsername);
-    });
-    it("correctly affects state on success", async () => {
-      const store = setupStore();
-      mockAddUser.mockRejectedValueOnce({});
-      await store.dispatch(
-        asyncSignUp(mockName, mockUsername, mockEmail, mockPassword)
-      );
-      const loginState = store.getState().loginState;
-      expect(loginState.error).not.toEqual("");
-      expect(loginState.loginStatus).toEqual(LoginStatus.Default);
-      expect(loginState.signupStatus).toEqual(LoginStatus.Failure);
-      expect(loginState.username).toEqual(mockUsername);
-      // A successful signup triggers a login using `setTimeout`,
-      // so this test concludes before those dispatches happen.
+
+      // A successful signup triggers a login using `setTimeout`.
+      mockAuthenticateUser.mockRejectedValueOnce({});
+      jest.runAllTimers();
+      expect(mockAuthenticateUser).toBeCalledTimes(1);
     });
   });
 
