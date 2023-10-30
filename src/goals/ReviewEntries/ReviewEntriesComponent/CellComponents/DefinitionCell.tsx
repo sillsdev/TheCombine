@@ -32,7 +32,7 @@ export default function DefinitionCell(
     <AlignedList
       listId={`senses${props.rowData.id}`}
       contents={props.rowData.senses.map((sense, index) => (
-        <Overlay key={index} on={sense.deleted}>
+        <Overlay key={sense.guid} on={sense.deleted}>
           <DefinitionList
             defaultLang={analysisLang}
             definitions={sense.definitions}

@@ -414,7 +414,6 @@ const columns: Column<ReviewEntriesWord>[] = [
     render: (rowData: ReviewEntriesWord) => (
       <Input
         fullWidth
-        key={`note${rowData.id}`}
         value={rowData.noteText}
         readOnly
         disableUnderline

@@ -17,7 +17,6 @@ import CreateProject, {
   formId,
   selectIdVern,
 } from "components/ProjectScreen/CreateProject";
-import { defaultState } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
 import { newWritingSystem } from "types/writingSystem";
 
 jest.mock("backend", () => ({
@@ -29,10 +28,7 @@ const mockProjectDuplicateCheck = jest.fn();
 const mockUploadLiftAndGetWritingSystems = jest.fn();
 
 const createMockStore = configureMockStore();
-const mockState = {
-  currentProjectState: { project: {} },
-  createProjectState: defaultState,
-};
+const mockState = { currentProjectState: { project: {} } };
 const mockStore = createMockStore(mockState);
 
 const mockChangeEvent = (
