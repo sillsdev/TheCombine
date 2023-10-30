@@ -1,3 +1,5 @@
+import { Action, PayloadAction } from "@reduxjs/toolkit";
+
 import { Project } from "api/models";
 import { getFrontierWords } from "backend";
 import router from "browserRouter";
@@ -11,83 +13,58 @@ import {
   CharacterChange,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
 import {
+  addToRejectedCharactersAction,
+  addToValidCharactersAction,
+  resetAction,
+  setAllWordsAction,
+  setCharacterSetAction,
+  setRejectedCharactersAction,
+  setSelectedCharacterAction,
+  setValidCharactersAction,
+} from "goals/CharacterInventory/Redux/CharacterInventoryReducer";
+import {
   CharacterInventoryState,
   CharacterSetEntry,
-  CharacterInventoryAction,
-  CharacterInventoryType,
   getCharacterStatus,
 } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { Path } from "types/path";
 
-// Action Creators
+// Action Creation Functions
 
-export function addToValidCharacters(
-  chars: string[]
-): CharacterInventoryAction {
-  return {
-    type: CharacterInventoryType.ADD_TO_VALID_CHARACTERS,
-    payload: chars,
-  };
+export function addToRejectedCharacters(char: string): PayloadAction {
+  return addToRejectedCharactersAction(char);
 }
 
-export function addToRejectedCharacters(
-  chars: string[]
-): CharacterInventoryAction {
-  return {
-    type: CharacterInventoryType.ADD_TO_REJECTED_CHARACTERS,
-    payload: chars,
-  };
+export function addToValidCharacters(char: string): PayloadAction {
+  return addToValidCharactersAction(char);
 }
 
-export function setValidCharacters(chars: string[]): CharacterInventoryAction {
-  return {
-    type: CharacterInventoryType.SET_VALID_CHARACTERS,
-    payload: chars,
-  };
+export function reset(): Action {
+  return resetAction();
 }
 
-export function setRejectedCharacters(
-  chars: string[]
-): CharacterInventoryAction {
-  return {
-    type: CharacterInventoryType.SET_REJECTED_CHARACTERS,
-    payload: chars,
-  };
-}
-
-export function setAllWords(words: string[]): CharacterInventoryAction {
-  return {
-    type: CharacterInventoryType.SET_ALL_WORDS,
-    payload: words,
-  };
-}
-
-export function setSelectedCharacter(
-  character: string
-): CharacterInventoryAction {
-  return {
-    type: CharacterInventoryType.SET_SELECTED_CHARACTER,
-    payload: [character],
-  };
+export function setAllWords(words: string[]): PayloadAction {
+  return setAllWordsAction(words);
 }
 
 export function setCharacterSet(
   characterSet: CharacterSetEntry[]
-): CharacterInventoryAction {
-  return {
-    type: CharacterInventoryType.SET_CHARACTER_SET,
-    payload: [],
-    characterSet,
-  };
+): PayloadAction {
+  return setCharacterSetAction(characterSet);
 }
 
-export function resetInState(): CharacterInventoryAction {
-  return {
-    type: CharacterInventoryType.RESET,
-    payload: [],
-  };
+export function setRejectedCharacters(chars: string[]): PayloadAction {
+  return setRejectedCharactersAction(chars);
+}
+
+export function setSelectedCharacter(character: string): PayloadAction {
+  return setSelectedCharacterAction(character);
+}
+
+export function setValidCharacters(chars: string[]): PayloadAction {
+  return setValidCharactersAction(chars);
 }
 
 // Dispatch Functions
@@ -96,10 +73,10 @@ export function setCharacterStatus(character: string, status: CharacterStatus) {
   return (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     switch (status) {
       case CharacterStatus.Accepted:
-        dispatch(addToValidCharacters([character]));
+        dispatch(addToValidCharacters(character));
         break;
       case CharacterStatus.Rejected:
-        dispatch(addToRejectedCharacters([character]));
+        dispatch(addToRejectedCharacters(character));
         break;
       case CharacterStatus.Undecided:
         const state = getState().characterInventoryState;
@@ -120,7 +97,7 @@ export function setCharacterStatus(character: string, status: CharacterStatus) {
   };
 }
 
-// Sends the character inventory to the server.
+/** Sends the in-state character inventory to the server. */
 export function uploadInventory() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const state = getState();
@@ -146,28 +123,17 @@ export function fetchWords() {
 
 export function getAllCharacters() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    const state = getState();
-    const words = await getFrontierWords();
-    const charactersWithDuplicates: string[] = [];
-    words.forEach((word) => charactersWithDuplicates.push(...word.vernacular));
-    const characters = [...new Set(charactersWithDuplicates)];
-
-    const characterSet: CharacterSetEntry[] = [];
-    characters.forEach((letter) => {
-      characterSet.push({
-        character: letter,
-        occurrences: countCharacterOccurrences(
-          letter,
-          words.map((word) => word.vernacular)
-        ),
-        status: getCharacterStatus(
-          letter,
-          state.currentProjectState.project.validCharacters,
-          state.currentProjectState.project.rejectedCharacters
-        ),
-      });
-    });
-    dispatch(setCharacterSet(characterSet));
+    const allWords = getState().characterInventoryState.allWords;
+    const characters = new Set<string>();
+    allWords.forEach((w) => [...w].forEach((c) => characters.add(c)));
+    const { rejectedCharacters, validCharacters } =
+      getState().currentProjectState.project;
+    const entries: CharacterSetEntry[] = [...characters].map((c) => ({
+      character: c,
+      occurrences: countOccurrences(c, allWords),
+      status: getCharacterStatus(c, validCharacters, rejectedCharacters),
+    }));
+    dispatch(setCharacterSet(entries));
   };
 }
 
@@ -188,7 +154,10 @@ export function exit(): void {
   router.navigate(Path.Goals);
 }
 
-function countCharacterOccurrences(char: string, words: string[]): number {
+function countOccurrences(char: string, words: string[]): number {
+  if (char.length !== 1) {
+    console.error(`countOccurrences expects length 1 char, but got: ${char}`);
+  }
   let count = 0;
   for (const word of words) {
     for (const letter of word) {
@@ -263,7 +232,7 @@ function getChange(
 }
 
 function updateCurrentProject(state: StoreState): Project {
-  const project = state.currentProjectState.project;
+  const project = { ...state.currentProjectState.project };
   project.validCharacters = state.characterInventoryState.validCharacters;
   project.rejectedCharacters = state.characterInventoryState.rejectedCharacters;
   return project;

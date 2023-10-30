@@ -1,35 +1,96 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import {
-  CharacterInventoryAction,
-  CharacterInventoryType,
-  CharacterInventoryState,
-  CharacterSetEntry,
   getCharacterStatus,
   defaultState,
 } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
-import { StoreAction, StoreActionTypes } from "rootActions";
+import { StoreActionTypes } from "rootActions";
 
-const exportProjectSlice = createSlice({
-  name: "exportProjectState",
+const characterInventorySlice = createSlice({
+  name: "characterInventoryState",
   initialState: defaultState,
   reducers: {
-    downloadingAction: (state, action) => {
-      state.projectId = action.payload;
-      state.status = ExportStatus.Downloading;
+    addToRejectedCharactersAction: (state, action) => {
+      if (!state.rejectedCharacters.includes(action.payload)) {
+        state.rejectedCharacters.push(action.payload);
+      }
+
+      const index = state.validCharacters.findIndex((c) => c == action.payload);
+      if (index !== -1) {
+        state.validCharacters.splice(index, 1);
+      }
+
+      const entry = state.characterSet.find(
+        (e) => e.character === action.payload
+      );
+      if (entry) {
+        entry.status = getCharacterStatus(
+          entry.character,
+          state.validCharacters,
+          state.rejectedCharacters
+        );
+      }
     },
-    exportingAction: (state, action) => {
-      state.projectId = action.payload;
-      state.status = ExportStatus.Exporting;
-    },
-    failureAction: (state, action) => {
-      state.projectId = action.payload;
-      state.status = ExportStatus.Failure;
+    addToValidCharactersAction: (state, action) => {
+      if (!state.validCharacters.includes(action.payload)) {
+        state.validCharacters.push(action.payload);
+      }
+
+      const index = state.rejectedCharacters.findIndex(
+        (c) => c == action.payload
+      );
+      if (index !== -1) {
+        state.rejectedCharacters.splice(index, 1);
+      }
+
+      const entry = state.characterSet.find(
+        (e) => e.character === action.payload
+      );
+      if (entry) {
+        entry.status = getCharacterStatus(
+          entry.character,
+          state.validCharacters,
+          state.rejectedCharacters
+        );
+      }
     },
     resetAction: () => defaultState,
-    successAction: (state, action) => {
-      state.projectId = action.payload;
-      state.status = ExportStatus.Success;
+    setAllWordsAction: (state, action) => {
+      state.allWords = action.payload;
+    },
+    setCharacterSetAction: (state, action) => {
+      if (action.payload) {
+        state.characterSet = action.payload;
+      }
+    },
+    setRejectedCharactersAction: (state, action) => {
+      state.rejectedCharacters = [...new Set(action.payload as string)];
+      state.validCharacters = state.validCharacters.filter(
+        (char) => !state.rejectedCharacters.includes(char)
+      );
+      for (const entry of state.characterSet) {
+        entry.status = getCharacterStatus(
+          entry.character,
+          state.validCharacters,
+          state.rejectedCharacters
+        );
+      }
+    },
+    setSelectedCharacterAction: (state, action) => {
+      state.selectedCharacter = action.payload;
+    },
+    setValidCharactersAction: (state, action) => {
+      state.validCharacters = [...new Set(action.payload as string)];
+      state.rejectedCharacters = state.rejectedCharacters.filter(
+        (char) => !state.validCharacters.includes(char)
+      );
+      for (const entry of state.characterSet) {
+        entry.status = getCharacterStatus(
+          entry.character,
+          state.validCharacters,
+          state.rejectedCharacters
+        );
+      }
     },
   },
   extraReducers: (builder) =>
@@ -37,114 +98,14 @@ const exportProjectSlice = createSlice({
 });
 
 export const {
-  downloadingAction,
-  exportingAction,
-  failureAction,
+  addToRejectedCharactersAction,
+  addToValidCharactersAction,
   resetAction,
-  successAction,
-} = exportProjectSlice.actions;
+  setAllWordsAction,
+  setCharacterSetAction,
+  setRejectedCharactersAction,
+  setSelectedCharacterAction,
+  setValidCharactersAction,
+} = characterInventorySlice.actions;
 
-export default exportProjectSlice.reducer;
-
-export const characterInventoryReducer = (
-  state: CharacterInventoryState = defaultState,
-  action: StoreAction | CharacterInventoryAction
-): CharacterInventoryState => {
-  let validCharacters: string[];
-  let rejectedCharacters: string[];
-  let characterSet: CharacterSetEntry[];
-  switch (action.type) {
-    case CharacterInventoryType.SET_VALID_CHARACTERS:
-      // Set prevents duplicate characters
-      validCharacters = [...new Set(action.payload)];
-      rejectedCharacters = state.rejectedCharacters.filter(
-        (char) => !validCharacters.includes(char)
-      );
-
-      // Set status of characters in character set
-      characterSet = state.characterSet.map((entry) => {
-        entry.status = getCharacterStatus(
-          entry.character,
-          validCharacters,
-          rejectedCharacters
-        );
-        return entry;
-      });
-      return { ...state, validCharacters, rejectedCharacters, characterSet };
-
-    case CharacterInventoryType.SET_REJECTED_CHARACTERS:
-      rejectedCharacters = [...new Set(action.payload)];
-      validCharacters = state.validCharacters.filter(
-        (char) => !rejectedCharacters.includes(char)
-      );
-
-      // Set status of characters in character set
-      characterSet = state.characterSet.map((entry) => {
-        entry.status = getCharacterStatus(
-          entry.character,
-          validCharacters,
-          rejectedCharacters
-        );
-        return entry;
-      });
-      return { ...state, validCharacters, rejectedCharacters, characterSet };
-
-    case CharacterInventoryType.ADD_TO_VALID_CHARACTERS:
-      validCharacters = [
-        ...new Set(state.validCharacters.concat(action.payload)),
-      ];
-      rejectedCharacters = state.rejectedCharacters.filter(
-        (char) => !validCharacters.includes(char)
-      );
-
-      // Set status of characters in character set
-      characterSet = state.characterSet.map((entry) => {
-        entry.status = getCharacterStatus(
-          entry.character,
-          validCharacters,
-          rejectedCharacters
-        );
-        return entry;
-      });
-      return { ...state, validCharacters, rejectedCharacters, characterSet };
-
-    case CharacterInventoryType.ADD_TO_REJECTED_CHARACTERS:
-      rejectedCharacters = [
-        ...new Set(state.rejectedCharacters.concat(action.payload)),
-      ];
-      validCharacters = state.validCharacters.filter(
-        (char) => !rejectedCharacters.includes(char)
-      );
-
-      // Set status of characters in character set
-      characterSet = state.characterSet.map((entry) => {
-        entry.status = getCharacterStatus(
-          entry.character,
-          validCharacters,
-          rejectedCharacters
-        );
-        return entry;
-      });
-      return { ...state, validCharacters, rejectedCharacters, characterSet };
-
-    case CharacterInventoryType.SET_SELECTED_CHARACTER:
-      return { ...state, selectedCharacter: action.payload[0] };
-
-    case CharacterInventoryType.SET_ALL_WORDS:
-      return { ...state, allWords: action.payload };
-
-    case CharacterInventoryType.SET_CHARACTER_SET:
-      return action.characterSet
-        ? { ...state, characterSet: action.characterSet }
-        : state;
-
-    case CharacterInventoryType.RESET:
-      return defaultState;
-
-    case StoreActionTypes.RESET:
-      return defaultState;
-
-    default:
-      return state;
-  }
-};
+export default characterInventorySlice.reducer;
