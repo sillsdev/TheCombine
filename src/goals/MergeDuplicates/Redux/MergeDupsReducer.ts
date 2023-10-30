@@ -109,8 +109,7 @@ const mergeDupStepSlice = createSlice({
       );
 
       // Merge words.
-      const wordIds = Object.keys(state.tree.words);
-      wordIds.forEach((wordId) => {
+      for (const wordId in state.tree.words) {
         // Find and build MergeSourceWord[].
         const word = state.tree.words[wordId];
         if (word) {
@@ -172,7 +171,7 @@ const mergeDupStepSlice = createSlice({
               ) &&
               compareFlags(word.flag, data.words[wordId].flag) === 0
             ) {
-              return;
+              continue;
             }
           }
 
@@ -212,7 +211,7 @@ const mergeDupStepSlice = createSlice({
 
           state.mergeWords.push(newMergeWords(parent, children));
         }
-      });
+      }
     },
     moveSenseAction: (state, action) => {
       if (action.payload.ref.order === undefined) {
