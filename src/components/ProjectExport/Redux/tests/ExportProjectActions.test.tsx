@@ -28,19 +28,19 @@ const persistedDefaultState: PreloadedState<RootState> = {
 describe("ExportProjectActions", () => {
   describe("asyncDownloadExport", () => {
     it("correctly affects state on success", async () => {
-      const mockStore = setupStore();
+      const store = setupStore();
       mockDownloadList.mockResolvedValueOnce({});
-      await mockStore.dispatch<any>(asyncDownloadExport(mockProjId));
-      const { projectId, status } = mockStore.getState().exportProjectState;
+      await store.dispatch(asyncDownloadExport(mockProjId));
+      const { projectId, status } = store.getState().exportProjectState;
       expect(projectId).toEqual(mockProjId);
       expect(status).toEqual(ExportStatus.Downloading);
     });
 
     it("correctly affects state on failure", async () => {
-      const mockStore = setupStore();
+      const store = setupStore();
       mockDownloadList.mockRejectedValueOnce({});
-      await mockStore.dispatch<any>(asyncDownloadExport(mockProjId));
-      const { projectId, status } = mockStore.getState().exportProjectState;
+      await store.dispatch(asyncDownloadExport(mockProjId));
+      const { projectId, status } = store.getState().exportProjectState;
       expect(projectId).toEqual(mockProjId);
       expect(status).toEqual(ExportStatus.Failure);
     });
@@ -48,19 +48,19 @@ describe("ExportProjectActions", () => {
 
   describe("asyncExportProject", () => {
     it("correctly affects state on success", async () => {
-      const mockStore = setupStore();
+      const store = setupStore();
       mockExportLift.mockResolvedValueOnce({});
-      await mockStore.dispatch<any>(asyncExportProject(mockProjId));
-      const { projectId, status } = mockStore.getState().exportProjectState;
+      await store.dispatch(asyncExportProject(mockProjId));
+      const { projectId, status } = store.getState().exportProjectState;
       expect(projectId).toEqual(mockProjId);
       expect(status).toEqual(ExportStatus.Exporting);
     });
 
     it("correctly affects state on failure", async () => {
-      const mockStore = setupStore();
+      const store = setupStore();
       mockExportLift.mockRejectedValueOnce({});
-      await mockStore.dispatch<any>(asyncExportProject(mockProjId));
-      const { projectId, status } = mockStore.getState().exportProjectState;
+      await store.dispatch(asyncExportProject(mockProjId));
+      const { projectId, status } = store.getState().exportProjectState;
       expect(projectId).toEqual(mockProjId);
       expect(status).toEqual(ExportStatus.Failure);
     });
@@ -72,12 +72,12 @@ describe("ExportProjectActions", () => {
         projectId: "nonempty-string",
         status: ExportStatus.Success,
       };
-      const mockStore = setupStore({
+      const store = setupStore({
         ...persistedDefaultState,
         exportProjectState: nonDefaultState,
       });
-      await mockStore.dispatch<any>(asyncResetExport());
-      const { projectId, status } = mockStore.getState().exportProjectState;
+      await store.dispatch(asyncResetExport());
+      const { projectId, status } = store.getState().exportProjectState;
       expect(projectId).toEqual("");
       expect(status).toEqual(ExportStatus.Default);
     });
