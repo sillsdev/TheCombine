@@ -5,24 +5,25 @@ import Login, {
   LoginStateProps,
 } from "components/Login/LoginPage/LoginComponent";
 import {
-  asyncLogin,
+  asyncLogIn,
   logoutAndResetStore,
 } from "components/Login/Redux/LoginActions";
+import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";
 import { reset } from "rootActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState): LoginStateProps {
   return {
-    loginAttempt: state.loginState && state.loginState.loginAttempt,
-    loginFailure: state.loginState && state.loginState.loginFailure,
+    loginAttempt: state.loginState.loginStatus === LoginStatus.Attempt,
+    loginFailure: state.loginState.loginStatus === LoginStatus.Failure,
   };
 }
 
 function mapDispatchToProps(dispatch: StoreStateDispatch): LoginDispatchProps {
   return {
     login: (username: string, password: string) => {
-      dispatch(asyncLogin(username, password));
+      dispatch(asyncLogIn(username, password));
     },
     logout: () => {
       dispatch(logoutAndResetStore());

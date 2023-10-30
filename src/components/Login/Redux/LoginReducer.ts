@@ -1,72 +1,53 @@
+import { createSlice } from "@reduxjs/toolkit";
+
 import {
-  LoginActionTypes,
-  LoginState,
-  UserAction,
+  LoginStatus,
+  defaultState,
 } from "components/Login/Redux/LoginReduxTypes";
-import { StoreAction, StoreActionTypes } from "rootActions";
+import { StoreActionTypes } from "rootActions";
 
-export const defaultState: LoginState = {
-  username: "",
-  loginAttempt: false,
-  loginFailure: false,
-  loginSuccess: false,
-  signUpAttempt: false,
-  signUpFailure: "",
-  signUpSuccess: false,
-};
+const exportProjectSlice = createSlice({
+  name: "exportProjectState",
+  initialState: defaultState,
+  reducers: {
+    setLoginAttemptAction: (state, action) => {
+      state.error = "";
+      state.loginStatus = LoginStatus.Attempt;
+      state.signupStatus = LoginStatus.Default;
+      state.username = action.payload;
+    },
+    setLoginFailureAction: (state, action) => {
+      state.error = action.payload;
+      state.loginStatus = LoginStatus.Failure;
+    },
+    setLoginSuccessAction: (state) => {
+      state.loginStatus = LoginStatus.Success;
+    },
+    setSignupAttemptAction: (state, action) => {
+      state.error = "";
+      state.loginStatus = LoginStatus.Default;
+      state.signupStatus = LoginStatus.Attempt;
+      state.username = action.payload;
+    },
+    setSignupFailureAction: (state, action) => {
+      state.error = action.payload;
+      state.signupStatus = LoginStatus.Failure;
+    },
+    setSignupSuccessAction: (state) => {
+      state.signupStatus = LoginStatus.Success;
+    },
+  },
+  extraReducers: (builder) =>
+    builder.addCase(StoreActionTypes.RESET, () => defaultState),
+});
 
-export const loginReducer = (
-  state: LoginState = defaultState, //createStore() calls each reducer with undefined state
-  action: StoreAction | UserAction
-): LoginState => {
-  switch (action.type) {
-    case LoginActionTypes.LOGIN_ATTEMPT:
-      return {
-        ...state,
-        username: action.payload.username,
-        loginAttempt: true,
-        loginSuccess: false,
-        loginFailure: false,
-      };
-    case LoginActionTypes.LOGIN_FAILURE:
-      return {
-        ...state,
-        username: action.payload.username,
-        loginAttempt: false,
-        loginFailure: true,
-        loginSuccess: false,
-      };
-    case LoginActionTypes.LOGIN_SUCCESS:
-      return {
-        ...state,
-        username: action.payload.username,
-        loginSuccess: true,
-      };
-    case LoginActionTypes.SIGN_UP_ATTEMPT:
-      return {
-        ...state,
-        username: action.payload.username,
-        signUpAttempt: true,
-        signUpFailure: "",
-        signUpSuccess: false,
-      };
-    case LoginActionTypes.SIGN_UP_SUCCESS:
-      return {
-        ...state,
-        username: action.payload.username,
-        signUpAttempt: false,
-        signUpSuccess: true,
-      };
-    case LoginActionTypes.SIGN_UP_FAILURE:
-      return {
-        ...state,
-        signUpAttempt: false,
-        signUpFailure: action.payload.username,
-        signUpSuccess: false,
-      };
-    case StoreActionTypes.RESET:
-      return defaultState;
-    default:
-      return state;
-  }
-};
+export const {
+  setLoginAttemptAction,
+  setLoginFailureAction,
+  setLoginSuccessAction,
+  setSignupAttemptAction,
+  setSignupFailureAction,
+  setSignupSuccessAction,
+} = exportProjectSlice.actions;
+
+export default exportProjectSlice.reducer;
