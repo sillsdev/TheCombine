@@ -40,6 +40,14 @@ export interface CharacterInventoryState {
   characterSet: CharacterSetEntry[];
 }
 
+export const defaultState: CharacterInventoryState = {
+  validCharacters: [],
+  rejectedCharacters: [],
+  allWords: [],
+  selectedCharacter: "",
+  characterSet: [],
+};
+
 /** A character with its occurrences and status,
  * for sorting and filtering in a list */
 export interface CharacterSetEntry {

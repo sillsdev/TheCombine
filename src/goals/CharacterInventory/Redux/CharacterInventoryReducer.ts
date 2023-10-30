@@ -1,19 +1,50 @@
+import { createSlice } from "@reduxjs/toolkit";
+
 import {
   CharacterInventoryAction,
   CharacterInventoryType,
   CharacterInventoryState,
   CharacterSetEntry,
   getCharacterStatus,
+  defaultState,
 } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 import { StoreAction, StoreActionTypes } from "rootActions";
 
-export const defaultState: CharacterInventoryState = {
-  validCharacters: [],
-  rejectedCharacters: [],
-  allWords: [],
-  selectedCharacter: "",
-  characterSet: [],
-};
+const exportProjectSlice = createSlice({
+  name: "exportProjectState",
+  initialState: defaultState,
+  reducers: {
+    downloadingAction: (state, action) => {
+      state.projectId = action.payload;
+      state.status = ExportStatus.Downloading;
+    },
+    exportingAction: (state, action) => {
+      state.projectId = action.payload;
+      state.status = ExportStatus.Exporting;
+    },
+    failureAction: (state, action) => {
+      state.projectId = action.payload;
+      state.status = ExportStatus.Failure;
+    },
+    resetAction: () => defaultState,
+    successAction: (state, action) => {
+      state.projectId = action.payload;
+      state.status = ExportStatus.Success;
+    },
+  },
+  extraReducers: (builder) =>
+    builder.addCase(StoreActionTypes.RESET, () => defaultState),
+});
+
+export const {
+  downloadingAction,
+  exportingAction,
+  failureAction,
+  resetAction,
+  successAction,
+} = exportProjectSlice.actions;
+
+export default exportProjectSlice.reducer;
 
 export const characterInventoryReducer = (
   state: CharacterInventoryState = defaultState,
