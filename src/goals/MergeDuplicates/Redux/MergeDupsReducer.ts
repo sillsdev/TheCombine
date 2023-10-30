@@ -79,6 +79,9 @@ const mergeDupStepSlice = createSlice({
       }
 
       const sidebar = state.tree.sidebar;
+      // If the sense is being deleted from the words column
+      // and the sense is also shown in the sidebar,
+      // then reset the sidebar.
       if (
         sidebar.wordId === srcRef.wordId &&
         sidebar.mergeSenseId === srcRef.mergeSenseId &&

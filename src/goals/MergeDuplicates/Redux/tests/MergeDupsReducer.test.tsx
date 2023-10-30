@@ -12,6 +12,7 @@ import {
   combineSense,
   deleteSense,
   flagWord,
+  getMergeWords,
   moveSense,
   orderSense,
   setData,
@@ -20,7 +21,12 @@ import mergeDupStepReducer, {
   defaultState,
 } from "goals/MergeDuplicates/Redux/MergeDupsReducer";
 import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
+import {
+  mergeTwoSensesScenario,
+  mergeTwoWordsScenario,
+} from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
 import { StoreAction, StoreActionTypes } from "rootActions";
+import { setupStore } from "store";
 import { Hash } from "types/hash";
 import { newFlag, testWordList } from "types/word";
 
@@ -43,9 +49,6 @@ beforeEach(() => {
 });
 
 describe("MergeDupReducer", () => {
-  // a state with no duplicate senses
-  const initState = mergeDupStepReducer(undefined, setData(testWordList()));
-
   // helper functions for working with a tree
   const getRefByGuid = (
     guid: string,
@@ -64,8 +67,12 @@ describe("MergeDupReducer", () => {
   };
 
   test("clearTree", () => {
-    const newState = mergeDupStepReducer(initState, clearTree());
-    expect(JSON.stringify(newState)).toEqual(JSON.stringify(defaultState));
+    const store = setupStore();
+    store.dispatch(setData(testWordList()));
+    store.dispatch(clearTree());
+    expect(JSON.stringify(store.getState().mergeDuplicateGoal)).toEqual(
+      JSON.stringify(defaultState)
+    );
   });
 
   function testTreeWords(): Hash<MergeTreeWord> {
@@ -346,6 +353,42 @@ describe("MergeDupReducer", () => {
       expectedWords[wordId].flag = testFlag;
 
       checkTreeWords(testAction, expectedWords);
+    });
+  });
+
+  describe("getMergeWords", () => {
+    it("sense moved from one word to another", () => {
+      const store = setupStore(mergeTwoWordsScenario.initialState());
+      store.dispatch(getMergeWords());
+      const mergeArray = store.getState().mergeDuplicateGoal.mergeWords;
+      expect(mergeArray.length).toEqual(1);
+      expect(mergeArray[0].parent.id).toEqual(
+        mergeTwoWordsScenario.expectedResult[0].parent
+      );
+      const senses = mergeArray[0].parent.senses.map((s) => s.guid).sort();
+      expect(senses).toEqual(mergeTwoWordsScenario.expectedResult[0].senses);
+      const semDoms = mergeArray[0].parent.senses
+        .flatMap((s) => s.semanticDomains.map((d) => d.id))
+        .sort();
+      expect(semDoms).toEqual(mergeTwoWordsScenario.expectedResult[0].semDoms);
+    });
+
+    it("sense from one word combined with sense in another", () => {
+      const store = setupStore(mergeTwoSensesScenario.initialState());
+      const inputState = store.getState().mergeDuplicateGoal;
+      console.log(JSON.stringify(inputState, null, 2));
+      store.dispatch(getMergeWords());
+      const mergeArray = store.getState().mergeDuplicateGoal.mergeWords;
+      expect(mergeArray.length).toEqual(1);
+      expect(mergeArray[0].parent.id).toEqual(
+        mergeTwoSensesScenario.expectedResult[0].parent
+      );
+      const senses = mergeArray[0].parent.senses.map((s) => s.guid).sort();
+      expect(senses).toEqual(mergeTwoSensesScenario.expectedResult[0].senses);
+      const semDoms = mergeArray[0].parent.senses
+        .flatMap((s) => s.semanticDomains.map((d) => d.id))
+        .sort();
+      expect(semDoms).toEqual(mergeTwoSensesScenario.expectedResult[0].semDoms);
     });
   });
 
