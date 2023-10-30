@@ -6,8 +6,8 @@ import {
 } from "components/Login/Redux/LoginReduxTypes";
 import { StoreActionTypes } from "rootActions";
 
-const exportProjectSlice = createSlice({
-  name: "exportProjectState",
+const loginSlice = createSlice({
+  name: "loginState",
   initialState: defaultState,
   reducers: {
     setLoginAttemptAction: (state, action) => {
@@ -48,6 +48,6 @@ export const {
   setSignupAttemptAction,
   setSignupFailureAction,
   setSignupSuccessAction,
-} = exportProjectSlice.actions;
+} = loginSlice.actions;
 
-export default exportProjectSlice.reducer;
+export default loginSlice.reducer;
