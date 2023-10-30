@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
-import React, { Fragment, ReactElement, useEffect, useState } from "react";
+import React, { Fragment, ReactElement, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 
 import { WritingSystem } from "api/models";
@@ -20,10 +20,8 @@ import { FileInputButton, LoadingDoneButton } from "components/Buttons";
 import {
   asyncCreateProject,
   asyncFinishProject,
-  reset,
-} from "components/ProjectScreen/CreateProject/Redux/CreateProjectActions";
-import { StoreState } from "types";
-import { useAppDispatch, useAppSelector } from "types/hooks";
+} from "components/ProjectScreen/CreateProjectActions";
+import { useAppDispatch } from "types/hooks";
 import theme from "types/theme";
 import { newWritingSystem } from "types/writingSystem";
 
@@ -41,18 +39,12 @@ const undBcp47 = "und";
 export default function CreateProject(): ReactElement {
   const dispatch = useAppDispatch();
 
-  const { inProgress, success } = useAppSelector(
-    (state: StoreState) => state.createProjectState
-  );
-
-  useEffect(() => {
-    dispatch(reset());
-  }, [dispatch]);
-
   const [analysisLang, setAnalysisLang] = useState(newWritingSystem(undBcp47));
   const [error, setError] = useState({ empty: false, nameTaken: false });
   const [languageData, setLanguageData] = useState<File | undefined>();
+  const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
+  const [success, setSuccess] = useState(false);
   const [vernLang, setVernLang] = useState(newWritingSystem(undBcp47));
   const [vernLangIsOther, setVernLangIsOther] = useState(false);
   const [vernLangOptions, setVernLangOptions] = useState<WritingSystem[]>([]);
@@ -178,10 +170,16 @@ export default function CreateProject(): ReactElement {
       return;
     }
 
+    setLoading(true);
+
     if (languageData) {
-      dispatch(asyncFinishProject(name, vernLang));
+      await dispatch(asyncFinishProject(name, vernLang)).then(() =>
+        setSuccess(true)
+      );
     } else {
-      dispatch(asyncCreateProject(name, vernLang, [analysisLang]));
+      await dispatch(asyncCreateProject(name, vernLang, [analysisLang])).then(
+        () => setSuccess(true)
+      );
     }
   };
 
@@ -297,7 +295,7 @@ export default function CreateProject(): ReactElement {
               disabled={!vernLang.bcp47 || vernLang.bcp47 === undBcp47}
               done={success}
               doneText={t("createProject.success")}
-              loading={inProgress}
+              loading={loading}
             >
               {t("createProject.create")}
             </LoadingDoneButton>
