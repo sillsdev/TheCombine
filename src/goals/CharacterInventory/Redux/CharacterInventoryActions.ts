@@ -13,8 +13,8 @@ import {
   CharacterChange,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
 import {
-  addToRejectedCharactersAction,
-  addToValidCharactersAction,
+  addRejectedCharacterAction,
+  addValidCharacterAction,
   resetAction,
   setAllWordsAction,
   setCharacterSetAction,
@@ -33,12 +33,12 @@ import { Path } from "types/path";
 
 // Action Creation Functions
 
-export function addToRejectedCharacters(char: string): PayloadAction {
-  return addToRejectedCharactersAction(char);
+export function addRejectedCharacter(char: string): PayloadAction {
+  return addRejectedCharacterAction(char);
 }
 
-export function addToValidCharacters(char: string): PayloadAction {
-  return addToValidCharactersAction(char);
+export function addValidCharacter(char: string): PayloadAction {
+  return addValidCharacterAction(char);
 }
 
 export function reset(): Action {
@@ -73,10 +73,10 @@ export function setCharacterStatus(character: string, status: CharacterStatus) {
   return (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     switch (status) {
       case CharacterStatus.Accepted:
-        dispatch(addToValidCharacters(character));
+        dispatch(addValidCharacter(character));
         break;
       case CharacterStatus.Rejected:
-        dispatch(addToRejectedCharacters(character));
+        dispatch(addRejectedCharacter(character));
         break;
       case CharacterStatus.Undecided:
         const state = getState().characterInventoryState;

@@ -10,7 +10,7 @@ const characterInventorySlice = createSlice({
   name: "characterInventoryState",
   initialState: defaultState,
   reducers: {
-    addToRejectedCharactersAction: (state, action) => {
+    addRejectedCharacterAction: (state, action) => {
       if (!state.rejectedCharacters.includes(action.payload)) {
         state.rejectedCharacters.push(action.payload);
       }
@@ -31,7 +31,7 @@ const characterInventorySlice = createSlice({
         );
       }
     },
-    addToValidCharactersAction: (state, action) => {
+    addValidCharacterAction: (state, action) => {
       if (!state.validCharacters.includes(action.payload)) {
         state.validCharacters.push(action.payload);
       }
@@ -98,8 +98,8 @@ const characterInventorySlice = createSlice({
 });
 
 export const {
-  addToRejectedCharactersAction,
-  addToValidCharactersAction,
+  addRejectedCharacterAction,
+  addValidCharacterAction,
   resetAction,
   setAllWordsAction,
   setCharacterSetAction,
