@@ -38,8 +38,8 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function AudioPlayer(props: PlayerProps): ReactElement {
   const isPlaying = useAppSelector(
     (state: StoreState) =>
-      state.pronunciationsState.payload === props.fileName &&
-      state.pronunciationsState.type === PronunciationsStatus.Playing
+      state.pronunciationsState.fileName === props.fileName &&
+      state.pronunciationsState.status === PronunciationsStatus.Playing
   );
 
   const [audio] = useState<HTMLAudioElement>(new Audio(props.pronunciationUrl));
