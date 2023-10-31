@@ -101,7 +101,7 @@ export type GetMergeWordsScenario = {
 //     vern: foo
 //     senses: bar, baz
 //
-//  Sense bah is dragged to Word2 as an additional sense
+//  Sense "bah" is dragged to "Word2" as an additional sense
 export const mergeTwoWordsScenario: GetMergeWordsScenario = {
   initialState: () => {
     return {
@@ -166,7 +166,7 @@ export const mergeTwoWordsScenario: GetMergeWordsScenario = {
 //     vern: foo
 //     senses: bar, baz
 //
-//  Sense bah is dragged to Word2 and merged with sense bar
+//  Sense "bah" is dragged to Word2 and merged with sense "bar"
 export const mergeTwoSensesScenario: GetMergeWordsScenario = {
   initialState: () => {
     return {
@@ -187,7 +187,7 @@ export const mergeTwoSensesScenario: GetMergeWordsScenario = {
             "guid-sense-baz": convertSenseToMergeTreeSense(
               senseBaz,
               wordFoo2.id,
-              0
+              1
             ),
           },
           words: {
