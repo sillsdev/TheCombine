@@ -375,8 +375,6 @@ describe("MergeDupReducer", () => {
 
     it("sense from one word combined with sense in another", () => {
       const store = setupStore(mergeTwoSensesScenario.initialState());
-      const inputState = store.getState().mergeDuplicateGoal;
-      console.log(JSON.stringify(inputState, null, 2));
       store.dispatch(getMergeWords());
       const mergeArray = store.getState().mergeDuplicateGoal.mergeWords;
       expect(mergeArray.length).toEqual(1);
