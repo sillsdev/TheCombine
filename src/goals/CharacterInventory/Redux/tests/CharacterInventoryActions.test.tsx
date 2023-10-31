@@ -4,7 +4,6 @@ import thunk from "redux-thunk";
 
 import { Project } from "api/models";
 import { updateProject } from "backend";
-import { ProjectActionType } from "components/Project/ProjectReduxTypes";
 import {
   CharacterStatus,
   CharacterChange,
@@ -89,10 +88,6 @@ describe("CharacterInventoryActions", () => {
       mockStore.getState as () => StoreState
     );
     expect(updateProject).toHaveBeenCalledTimes(1);
-    expect(mockStore.getActions()).toContainEqual({
-      type: ProjectActionType.SET_CURRENT_PROJECT,
-      payload: project,
-    });
   });
 
   test("getChanges returns correct changes", () => {

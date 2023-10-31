@@ -2,7 +2,7 @@ import { combineReducers, Reducer } from "redux";
 
 import goalsReducer from "components/GoalTimeline/Redux/GoalReducer";
 import { loginReducer } from "components/Login/Redux/LoginReducer";
-import { projectReducer } from "components/Project/ProjectReducer";
+import projectReducer from "components/Project/ProjectReducer";
 import exportProjectReducer from "components/ProjectExport/Redux/ExportProjectReducer";
 import { pronunciationsReducer } from "components/Pronunciations/Redux/PronunciationsReducer";
 import { treeViewReducer } from "components/TreeView/Redux/TreeViewReducer";
