@@ -6,11 +6,6 @@ export enum ExportStatus {
   Failure = "FAILURE",
 }
 
-export interface ExportProjectAction {
-  type: ExportStatus;
-  projectId?: string;
-}
-
 export interface ExportProjectState {
   projectId: string;
   status: ExportStatus;

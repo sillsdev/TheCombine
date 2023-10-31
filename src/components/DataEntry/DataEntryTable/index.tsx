@@ -597,7 +597,7 @@ export default function DataEntryTable(
       state.recentWords.findIndex((w) => w.word.id === oldId) > -1;
 
     defunctWord(oldId);
-    const newWord = await backend.updateDuplicate(oldId, getUserId(), word);
+    const newWord = await backend.updateDuplicate(oldId, word);
     defunctWord(oldId, newWord.id);
 
     const newId = await addAudiosToBackend(newWord.id, audioURLs);
@@ -865,9 +865,12 @@ export default function DataEntryTable(
         </Grid>
 
         {state.recentWords.map((wordAccess, index) => (
-          <Grid item xs={12} key={index}>
+          <Grid
+            item
+            key={`${wordAccess.word.id}_${wordAccess.senseGuid}`}
+            xs={12}
+          >
             <RecentEntry
-              key={wordAccess.word.id + "_" + wordAccess.senseGuid}
               rowIndex={index}
               entry={wordAccess.word}
               senseGuid={wordAccess.senseGuid}
