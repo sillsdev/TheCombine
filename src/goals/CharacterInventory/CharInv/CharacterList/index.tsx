@@ -36,7 +36,7 @@ export default function CharacterList(): ReactElement {
   };
 
   useEffect(() => {
-    setOrderedChars(sortBy(allChars, sortOrder));
+    setOrderedChars(sortBy([...allChars], sortOrder));
   }, [allChars, setOrderedChars, sortOrder]);
 
   return (
