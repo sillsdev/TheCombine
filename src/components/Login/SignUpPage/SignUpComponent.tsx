@@ -13,6 +13,7 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import router from "browserRouter";
 import { LoadingDoneButton } from "components/Buttons";
 import { captchaStyle } from "components/Login/LoginPage/LoginComponent";
+import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";
 import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
 import {
@@ -38,9 +39,8 @@ interface SignUpDispatchProps {
 }
 
 export interface SignUpStateProps {
-  inProgress?: boolean;
-  success?: boolean;
   failureMessage: string;
+  status: LoginStatus;
 }
 
 interface SignUpProps
@@ -296,8 +296,8 @@ export class SignUp extends Component<SignUpProps, SignUpState> {
                 <Grid item>
                   <LoadingDoneButton
                     disabled={!this.state.isVerified}
-                    loading={this.props.inProgress}
-                    done={this.props.success}
+                    loading={this.props.status === LoginStatus.Attempt}
+                    done={this.props.status === LoginStatus.Success}
                     doneText={this.props.t("login.signUpSuccess")}
                     buttonProps={{
                       id: `${idAffix}-signUp`,

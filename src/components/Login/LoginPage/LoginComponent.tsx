@@ -16,6 +16,7 @@ import { BannerType } from "api/models";
 import { getBannerText } from "backend";
 import router from "browserRouter";
 import { LoadingButton } from "components/Buttons";
+import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";
 import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
 import theme from "types/theme";
@@ -34,8 +35,7 @@ export interface LoginDispatchProps {
 }
 
 export interface LoginStateProps {
-  loginAttempt?: boolean;
-  loginFailure?: boolean;
+  status: LoginStatus;
 }
 
 interface LoginProps
@@ -173,7 +173,7 @@ export class Login extends Component<LoginProps, LoginState> {
               )}
 
               {/* "Failed to log in" */}
-              {this.props.loginFailure && (
+              {this.props.status === LoginStatus.Failure && (
                 <Typography
                   variant="body2"
                   style={{ marginTop: 24, marginBottom: 24, color: "red" }}
@@ -229,7 +229,7 @@ export class Login extends Component<LoginProps, LoginState> {
                       color: "primary",
                     }}
                     disabled={!this.state.isVerified}
-                    loading={this.props.loginAttempt}
+                    loading={this.props.status === LoginStatus.Attempt}
                   >
                     {this.props.t("login.login")}
                   </LoadingButton>
