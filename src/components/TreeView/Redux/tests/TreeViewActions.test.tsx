@@ -44,20 +44,19 @@ describe("TreeViewActions", () => {
   describe("traverseTree", () => {
     it("dispatches on successful", async () => {
       const store = setupStore();
-      const dom = newSemanticDomain("id");
+      const dom = newSemanticDomain(mockId);
       mockGetSemDomTreeNode.mockResolvedValue(dom);
       await store.dispatch(traverseTree(dom));
       const { currentDomain } = store.getState().treeViewState;
-      expect(currentDomain.id).toEqual(dom.id);
+      expect(currentDomain.id).toEqual(mockId);
     });
 
     it("does not dispatch on undefined", async () => {
       const store = setupStore();
       mockGetSemDomTreeNode.mockResolvedValue(undefined);
-      const dom = newSemanticDomain("id");
-      await store.dispatch(traverseTree(dom));
+      await store.dispatch(traverseTree(newSemanticDomain(mockId)));
       const { currentDomain } = store.getState().treeViewState;
-      expect(currentDomain.id).not.toEqual(dom.id);
+      expect(currentDomain.id).not.toEqual(mockId);
     });
   });
 
