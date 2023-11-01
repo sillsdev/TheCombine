@@ -229,7 +229,7 @@ export class Login extends Component<LoginProps, LoginState> {
                       color: "primary",
                     }}
                     disabled={!this.state.isVerified}
-                    loading={this.props.status === LoginStatus.Attempt}
+                    loading={this.props.status === LoginStatus.InProgress}
                   >
                     {this.props.t("login.login")}
                   </LoadingButton>

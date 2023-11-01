@@ -12,7 +12,7 @@ const loginSlice = createSlice({
   reducers: {
     setLoginAttemptAction: (state, action) => {
       state.error = "";
-      state.loginStatus = LoginStatus.Attempt;
+      state.loginStatus = LoginStatus.InProgress;
       state.signupStatus = LoginStatus.Default;
       state.username = action.payload;
     },
@@ -26,7 +26,7 @@ const loginSlice = createSlice({
     setSignupAttemptAction: (state, action) => {
       state.error = "";
       state.loginStatus = LoginStatus.Default;
-      state.signupStatus = LoginStatus.Attempt;
+      state.signupStatus = LoginStatus.InProgress;
       state.username = action.payload;
     },
     setSignupFailureAction: (state, action) => {

@@ -296,7 +296,7 @@ export class SignUp extends Component<SignUpProps, SignUpState> {
                 <Grid item>
                   <LoadingDoneButton
                     disabled={!this.state.isVerified}
-                    loading={this.props.status === LoginStatus.Attempt}
+                    loading={this.props.status === LoginStatus.InProgress}
                     done={this.props.status === LoginStatus.Success}
                     doneText={this.props.t("login.signUpSuccess")}
                     buttonProps={{

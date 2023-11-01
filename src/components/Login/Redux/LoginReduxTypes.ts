@@ -1,7 +1,7 @@
 export enum LoginStatus {
-  Attempt = "Attempt",
   Default = "Default",
   Failure = "Failure",
+  InProgress = "InProgress",
   Success = "Success",
 }
 
