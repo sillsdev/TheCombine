@@ -11,7 +11,7 @@ import {
   setSignupAttemptAction,
   setSignupFailureAction,
   setSignupSuccessAction,
-} from "components/Login/Redux//LoginReducer";
+} from "components/Login/Redux/LoginReducer";
 import { reset } from "rootActions";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { Path } from "types/path";
