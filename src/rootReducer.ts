@@ -5,7 +5,7 @@ import { loginReducer } from "components/Login/Redux/LoginReducer";
 import { projectReducer } from "components/Project/ProjectReducer";
 import exportProjectReducer from "components/ProjectExport/Redux/ExportProjectReducer";
 import { pronunciationsReducer } from "components/Pronunciations/Redux/PronunciationsReducer";
-import { treeViewReducer } from "components/TreeView/Redux/TreeViewReducer";
+import treeViewReducer from "components/TreeView/Redux/TreeViewReducer";
 import { characterInventoryReducer } from "goals/CharacterInventory/Redux/CharacterInventoryReducer";
 import { mergeDupStepReducer } from "goals/MergeDuplicates/Redux/MergeDupsReducer";
 import { reviewEntriesReducer } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReducer";
