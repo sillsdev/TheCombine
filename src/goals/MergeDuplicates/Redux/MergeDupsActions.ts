@@ -17,8 +17,8 @@ import {
   ReviewDeferredDups,
 } from "goals/MergeDuplicates/MergeDupsTypes";
 import {
-  clearTreeAction,
   clearMergeWordsAction,
+  clearTreeAction,
   combineSenseAction,
   deleteSenseAction,
   flagWordAction,
@@ -43,12 +43,12 @@ import { StoreStateDispatch } from "types/Redux/actions";
 
 // Action Creation Functions
 
-export function clearTree(): Action {
-  return clearTreeAction();
-}
-
 export function clearMergeWords(): Action {
   return clearMergeWordsAction();
+}
+
+export function clearTree(): Action {
+  return clearTreeAction();
 }
 
 export function combineSense(payload: CombineSenseMergePayload): PayloadAction {

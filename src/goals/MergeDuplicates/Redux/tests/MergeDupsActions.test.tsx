@@ -102,7 +102,7 @@ describe("MergeDupActions", () => {
         ...preloadedState,
         mergeDuplicateGoal: { data, tree, mergeWords },
       });
-      await store.dispatch<any>(mergeAll());
+      await store.dispatch(mergeAll());
 
       expect(mockMergeWords).not.toHaveBeenCalled();
     });
@@ -116,7 +116,7 @@ describe("MergeDupActions", () => {
         ...preloadedState,
         mergeDuplicateGoal: { data, tree, mergeWords: [] },
       });
-      await store.dispatch<any>(mergeAll());
+      await store.dispatch(mergeAll());
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
       const parentA = wordAnyGuids(vernA, [senses["S1"], senses["S2"]], idA);
@@ -141,7 +141,7 @@ describe("MergeDupActions", () => {
         ...preloadedState,
         mergeDuplicateGoal: { data, tree, mergeWords: [] },
       });
-      await store.dispatch<any>(mergeAll());
+      await store.dispatch(mergeAll());
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
       const parentA = wordAnyGuids(
@@ -170,7 +170,7 @@ describe("MergeDupActions", () => {
         ...preloadedState,
         mergeDuplicateGoal: { data, tree, mergeWords: [] },
       });
-      await store.dispatch<any>(mergeAll());
+      await store.dispatch(mergeAll());
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
 
@@ -189,7 +189,7 @@ describe("MergeDupActions", () => {
         ...preloadedState,
         mergeDuplicateGoal: { data, tree, mergeWords: [] },
       });
-      await store.dispatch<any>(mergeAll());
+      await store.dispatch(mergeAll());
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
       const parent = wordAnyGuids(vernA, [senses["S1"]], idA);
@@ -206,7 +206,7 @@ describe("MergeDupActions", () => {
         ...preloadedState,
         mergeDuplicateGoal: { data, tree, mergeWords: [] },
       });
-      await store.dispatch<any>(mergeAll());
+      await store.dispatch(mergeAll());
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
       const child = { srcWordId: idB, getAudio: false };
@@ -224,7 +224,7 @@ describe("MergeDupActions", () => {
         ...preloadedState,
         mergeDuplicateGoal: { data, tree, mergeWords: [] },
       });
-      await store.dispatch<any>(mergeAll());
+      await store.dispatch(mergeAll());
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
 
@@ -242,7 +242,7 @@ describe("MergeDupActions", () => {
       goal.steps = [{ words: [...goalDataMock.plannedWords[0]] }];
 
       const store = setupStore();
-      await store.dispatch<any>(dispatchMergeStepData(goal));
+      await store.dispatch(dispatchMergeStepData(goal));
       const setDataAction = setData(goalDataMock.plannedWords[0]);
       expect(setDataAction.type).toEqual("mergeDupStepReducer/setDataAction");
     });
@@ -305,7 +305,7 @@ describe("MergeDupActions", () => {
         ...preloadedState,
         mergeDuplicateGoal: { data, tree, mergeWords: [] },
       });
-      store.dispatch<any>(deferMerge());
+      store.dispatch(deferMerge());
       expect(mockGraylistAdd).toHaveBeenCalledTimes(1);
     });
   });

@@ -28,11 +28,11 @@ const mergeDupStepSlice = createSlice({
   name: "mergeDupStepReducer",
   initialState: defaultState,
   reducers: {
-    clearTreeAction: () => {
-      return defaultState;
-    },
     clearMergeWordsAction: (state) => {
       state.mergeWords = [];
+    },
+    clearTreeAction: () => {
+      return defaultState;
     },
     combineSenseAction: (state, action) => {
       const srcRef = action.payload.src;
@@ -418,8 +418,8 @@ function combineIntoFirstSense(senses: MergeTreeSense[]): void {
 }
 
 export const {
-  clearTreeAction,
   clearMergeWordsAction,
+  clearTreeAction,
   combineSenseAction,
   deleteSenseAction,
   flagWordAction,
