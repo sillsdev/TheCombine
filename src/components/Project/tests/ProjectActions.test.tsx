@@ -3,8 +3,8 @@ import { PreloadedState } from "redux";
 import { Project } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import {
-  asyncUpdateCurrentProject,
   asyncRefreshProjectUsers,
+  asyncUpdateCurrentProject,
   clearCurrentProject,
   setNewCurrentProject,
 } from "components/Project/ProjectActions";
@@ -29,7 +29,7 @@ const persistedDefaultState: PreloadedState<RootState> = {
 
 describe("ProjectActions", () => {
   describe("asyncUpdateCurrentProject", () => {
-    it("correctly affects state for different id", async () => {
+    it("updates the backend and correctly affects state for different id", async () => {
       const proj: Project = { ...newProject(), id: mockProjId };
       const store = setupStore({
         ...persistedDefaultState,
@@ -43,7 +43,7 @@ describe("ProjectActions", () => {
       expect(users).toHaveLength(0);
     });
 
-    it("correctly affects state for same id", async () => {
+    it("updates the backend and correctly affects state for same id", async () => {
       const proj: Project = { ...newProject(), id: mockProjId };
       const store = setupStore({
         ...persistedDefaultState,

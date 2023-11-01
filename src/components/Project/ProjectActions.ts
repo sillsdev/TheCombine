@@ -27,17 +27,16 @@ export function setCurrentProjectUsers(users?: User[]): PayloadAction {
 
 // Dispatch Functions
 
+export function asyncRefreshProjectUsers(projectId: string) {
+  return async (dispatch: StoreStateDispatch) => {
+    dispatch(setCurrentProjectUsers(await getAllProjectUsers(projectId)));
+  };
+}
+
 export function asyncUpdateCurrentProject(project: Project) {
   return async (dispatch: StoreStateDispatch) => {
     await updateProject(project);
     dispatch(setCurrentProject(project));
-  };
-}
-
-/** Should only be called with projectId matching that in currentProjectState. */
-export function asyncRefreshProjectUsers(projectId: string) {
-  return async (dispatch: StoreStateDispatch) => {
-    dispatch(setCurrentProjectUsers(await getAllProjectUsers(projectId)));
   };
 }
 
