@@ -2,11 +2,15 @@ import { ReactElement, useEffect, useState } from "react";
 
 import { getFrontierWords } from "backend";
 import {
+  sortBy,
   updateAllWords,
   updateFrontierWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesActions";
 import ReviewEntriesTable from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTable";
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import {
+  ColumnId,
+  ReviewEntriesWord,
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { useAppDispatch } from "types/hooks";
 
 export default function ReviewEntriesComponent(): ReactElement {
@@ -22,9 +26,10 @@ export default function ReviewEntriesComponent(): ReactElement {
 
   return loaded ? (
     <ReviewEntriesTable
-      onRowUpdate={(newData: ReviewEntriesWord, oldData: ReviewEntriesWord) =>
+      onRowUpdate={(newData: ReviewEntriesWord, oldData?: ReviewEntriesWord) =>
         dispatch(updateFrontierWord(newData, oldData))
       }
+      onSort={(columnId?: ColumnId) => dispatch(sortBy(columnId))}
     />
   ) : (
     <div />

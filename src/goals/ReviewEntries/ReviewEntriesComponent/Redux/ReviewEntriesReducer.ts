@@ -11,12 +11,13 @@ export const reviewEntriesReducer = (
   action: ReviewEntriesAction | StoreAction
 ): ReviewEntriesState => {
   switch (action.type) {
+    case ReviewEntriesActionTypes.SortBy:
+      // Change which column is being sorted by
+      return { ...state, sortBy: action.sortBy };
+
     case ReviewEntriesActionTypes.UpdateAllWords:
       // Update the local words
-      return {
-        ...state,
-        words: action.words,
-      };
+      return { ...state, words: action.words };
 
     case ReviewEntriesActionTypes.UpdateWord:
       // Update the word of specified id
