@@ -22,6 +22,7 @@ import mergeDupStepReducer, {
 } from "goals/MergeDuplicates/Redux/MergeDupsReducer";
 import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import {
+  mergeTwoDefinitionsScenario,
   mergeTwoSensesScenario,
   mergeTwoWordsScenario,
 } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
@@ -361,32 +362,51 @@ describe("MergeDupReducer", () => {
       const store = setupStore(mergeTwoWordsScenario.initialState());
       store.dispatch(getMergeWords());
       const mergeArray = store.getState().mergeDuplicateGoal.mergeWords;
+      const expectedResult = mergeTwoWordsScenario.expectedResult;
       expect(mergeArray.length).toEqual(1);
-      expect(mergeArray[0].parent.id).toEqual(
-        mergeTwoWordsScenario.expectedResult[0].parent
-      );
+      expect(mergeArray[0].parent.id).toEqual(expectedResult[0].parent);
       const senses = mergeArray[0].parent.senses.map((s) => s.guid).sort();
-      expect(senses).toEqual(mergeTwoWordsScenario.expectedResult[0].senses);
+      expect(senses).toEqual(expectedResult[0].senses);
       const semDoms = mergeArray[0].parent.senses
         .flatMap((s) => s.semanticDomains.map((d) => d.id))
         .sort();
-      expect(semDoms).toEqual(mergeTwoWordsScenario.expectedResult[0].semDoms);
+      expect(semDoms).toEqual(expectedResult[0].semDoms);
+      const defs = mergeArray[0].parent.senses.map((s) => s.definitions);
+      expect(defs).toEqual(expectedResult[0].defs);
     });
 
     it("sense from one word combined with sense in another", () => {
       const store = setupStore(mergeTwoSensesScenario.initialState());
       store.dispatch(getMergeWords());
       const mergeArray = store.getState().mergeDuplicateGoal.mergeWords;
+      const expectedResult = mergeTwoSensesScenario.expectedResult;
       expect(mergeArray.length).toEqual(1);
-      expect(mergeArray[0].parent.id).toEqual(
-        mergeTwoSensesScenario.expectedResult[0].parent
-      );
+      expect(mergeArray[0].parent.id).toEqual(expectedResult[0].parent);
       const senses = mergeArray[0].parent.senses.map((s) => s.guid).sort();
-      expect(senses).toEqual(mergeTwoSensesScenario.expectedResult[0].senses);
+      expect(senses).toEqual(expectedResult[0].senses);
       const semDoms = mergeArray[0].parent.senses
         .flatMap((s) => s.semanticDomains.map((d) => d.id))
         .sort();
-      expect(semDoms).toEqual(mergeTwoSensesScenario.expectedResult[0].semDoms);
+      expect(semDoms).toEqual(expectedResult[0].semDoms);
+      const defs = mergeArray[0].parent.senses.map((s) => s.definitions);
+      expect(defs).toEqual(expectedResult[0].defs);
+    });
+
+    it("combine senses with definitions", () => {
+      const store = setupStore(mergeTwoDefinitionsScenario.initialState());
+      store.dispatch(getMergeWords());
+      const mergeArray = store.getState().mergeDuplicateGoal.mergeWords;
+      const expectedResult = mergeTwoDefinitionsScenario.expectedResult;
+      expect(mergeArray.length).toEqual(1);
+      expect(mergeArray[0].parent.id).toEqual(expectedResult[0].parent);
+      const senses = mergeArray[0].parent.senses.map((s) => s.guid).sort();
+      expect(senses).toEqual(expectedResult[0].senses);
+      const semDoms = mergeArray[0].parent.senses
+        .flatMap((s) => s.semanticDomains.map((d) => d.id))
+        .sort();
+      expect(semDoms).toEqual(expectedResult[0].semDoms);
+      const defs = mergeArray[0].parent.senses.map((s) => s.definitions);
+      expect(defs).toEqual(expectedResult[0].defs);
     });
   });
 
