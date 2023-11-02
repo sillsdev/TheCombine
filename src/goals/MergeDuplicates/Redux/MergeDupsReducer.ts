@@ -31,7 +31,7 @@ export const defaultState: MergeTreeState = {
   mergeWords: [],
 };
 
-const mergeDupStepSlice = createSlice({
+const mergeDuplicatesSlice = createSlice({
   name: "mergeDupStepReducer",
   initialState: defaultState,
   reducers: {
@@ -455,6 +455,6 @@ export const {
   setDataAction,
   setSidebarAction,
   setVernacularAction,
-} = mergeDupStepSlice.actions;
+} = mergeDuplicatesSlice.actions;
 
-export default mergeDupStepSlice.reducer;
+export default mergeDuplicatesSlice.reducer;

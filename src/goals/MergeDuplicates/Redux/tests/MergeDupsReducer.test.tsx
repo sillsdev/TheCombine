@@ -49,7 +49,7 @@ beforeEach(() => {
   mockUuid.v4.mockImplementation(getMockUuid);
 });
 
-describe("MergeDupReducer", () => {
+describe("MergeDupsReducer", () => {
   // helper functions for working with a tree
   const getRefByGuid = (
     guid: string,
