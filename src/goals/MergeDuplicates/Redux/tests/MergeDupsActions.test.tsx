@@ -242,7 +242,7 @@ describe("MergeDupActions", () => {
       goal.steps = [{ words: [...goalDataMock.plannedWords[0]] }];
 
       const store = setupStore();
-      await store.dispatch(dispatchMergeStepData(goal));
+      store.dispatch(dispatchMergeStepData(goal));
       const setDataAction = setData(goalDataMock.plannedWords[0]);
       expect(setDataAction.type).toEqual("mergeDupStepReducer/setDataAction");
     });
