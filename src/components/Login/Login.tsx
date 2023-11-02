@@ -73,7 +73,7 @@ export default function Login(): ReactElement {
     e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ): void => setUsername(e.target.value);
 
-  const login = (e: FormEvent): void => {
+  const logIn = (e: FormEvent): void => {
     e.preventDefault();
     const p = password.trim();
     const u = username.trim();
@@ -87,7 +87,7 @@ export default function Login(): ReactElement {
   return (
     <Grid container justifyContent="center">
       <Card style={{ width: 450 }}>
-        <form id={LoginIds.Form} onSubmit={login}>
+        <form id={LoginIds.Form} onSubmit={logIn}>
           <CardContent>
             {/* Title */}
             <Typography variant="h5" align="center" gutterBottom>

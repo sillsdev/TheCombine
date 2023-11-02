@@ -66,7 +66,8 @@ export function asyncSignUp(
   name: string,
   username: string,
   email: string,
-  password: string
+  password: string,
+  onSuccess?: () => void
 ) {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(signupAttempt(username));
@@ -77,6 +78,9 @@ export function asyncSignUp(
       .addUser(user)
       .then(() => {
         dispatch(signupSuccess());
+        if (onSuccess) {
+          onSuccess();
+        }
         setTimeout(() => {
           dispatch(asyncLogIn(username, password));
         }, 1000);
