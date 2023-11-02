@@ -234,9 +234,6 @@ const mergeDuplicatesSlice = createSlice({
     },
     orderSenseAction: (state, action) => {
       const word = state.tree.words[action.payload.ref.wordId];
-      // const word: MergeTreeWord = JSON.parse(
-      //   JSON.stringify(state.tree.words[action.payload.wordId])
-      // );
 
       // Convert the Hash<string[]> to an array to expose the order.
       const sensePairs = Object.entries(word.sensesGuids);
