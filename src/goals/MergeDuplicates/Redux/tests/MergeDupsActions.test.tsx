@@ -32,6 +32,7 @@ function wordAnyGuids(vern: string, senses: Sense[], id: string): Word {
   };
 }
 
+const mockGraylistAdd = jest.fn();
 const mockMergeWords = jest.fn();
 
 jest.mock("backend", () => ({
@@ -41,8 +42,6 @@ jest.mock("backend", () => ({
   mergeWords: (mergeWordsArray: MergeWords[]) =>
     mockMergeWords(mergeWordsArray),
 }));
-
-const mockGraylistAdd = jest.fn();
 
 const mockGoal = new MergeDups();
 mockGoal.data = goalDataMock;
@@ -57,7 +56,11 @@ const preloadedState = {
     history: [mockGoal],
     previousGoalType: GoalType.Default,
   },
-  mergeDuplicateGoal: { data: {} as MergeData, tree: {} as MergeTree },
+  mergeDuplicateGoal: {
+    data: {} as MergeData,
+    tree: {} as MergeTree,
+    mergeWords: [],
+  },
   _persist: { version: 1, rehydrated: false },
 };
 
@@ -97,10 +100,9 @@ describe("MergeDupActions", () => {
       const WA = newMergeTreeWord(vernA, { ID1: [S1], ID2: [S2] });
       const WB = newMergeTreeWord(vernB, { ID1: [S3], ID2: [S4] });
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
-      const mergeWords: MergeWords[] = [];
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree, mergeWords },
+        mergeDuplicateGoal: { data, tree, mergeWords: [] },
       });
       await store.dispatch(mergeAll());
 
