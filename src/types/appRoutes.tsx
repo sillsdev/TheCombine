@@ -2,7 +2,7 @@ import loadable from "@loadable/component";
 import { RouteObject } from "react-router-dom";
 
 import LandingPage from "components/LandingPage";
-import Login from "components/Login/LoginPage";
+import Login from "components/Login/Login";
 import SignUp from "components/Login/SignUpPage";
 import PageNotFound from "components/PageNotFound/component";
 import PasswordRequest from "components/PasswordReset/Request";

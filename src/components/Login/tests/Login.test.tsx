@@ -1,7 +1,10 @@
-import "@testing-library/jest-dom";
-import { act, cleanup, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
+import {
+  ReactTestInstance,
+  ReactTestRenderer,
+  act,
+  create,
+} from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
@@ -23,41 +26,78 @@ jest.mock("browserRouter");
 jest.mock("components/Login/Redux/LoginActions", () => ({
   asyncLogIn: (...args: any[]) => mockAsyncLogIn(...args),
 }));
+jest.mock("types/hooks", () => {
+  return {
+    ...jest.requireActual("types/hooks"),
+    useAppDispatch: () => jest.fn(),
+  };
+});
 
 const mockAsyncLogIn = jest.fn();
+const mockEvent = { preventDefault: jest.fn(), target: { value: "nonempty" } };
 const mockStore = configureMockStore()({ loginState });
+
+let loginMaster: ReactTestRenderer;
+let loginHandle: ReactTestInstance;
 
 const renderLogin = async (): Promise<void> => {
   await act(async () => {
-    render(
+    loginMaster = create(
       <Provider store={mockStore}>
         <Login />
       </Provider>
     );
   });
+  loginHandle = loginMaster.root.findByType(Login);
 };
 
 beforeEach(async () => {
   jest.clearAllMocks();
 });
 
-afterEach(cleanup);
-
 describe("Login", () => {
   describe("submit button", () => {
     it("errors when no username", async () => {
-      const agent = userEvent.setup();
       await renderLogin();
-      const field = screen.getByTestId(LoginIds.FieldPassword);
+      const fieldPass = loginHandle.findByProps({ id: LoginIds.FieldPassword });
+      const fieldUser = loginHandle.findByProps({ id: LoginIds.FieldUsername });
+      const form = loginHandle.findByProps({ id: LoginIds.Form });
       await act(async () => {
-        await agent.type(field, "?");
-        await userEvent.click(screen.getByTestId(LoginIds.ButtonLogIn));
+        await fieldPass.props.onChange(mockEvent);
+        await form.props.onSubmit(mockEvent);
       });
+      expect(fieldPass.props.error).toBeFalsy();
+      expect(fieldUser.props.error).toBeTruthy();
       expect(mockAsyncLogIn).not.toBeCalled();
     });
 
-    it("errors when no password", async () => {});
+    it("errors when no password", async () => {
+      await renderLogin();
+      const fieldPass = loginHandle.findByProps({ id: LoginIds.FieldPassword });
+      const fieldUser = loginHandle.findByProps({ id: LoginIds.FieldUsername });
+      const form = loginHandle.findByProps({ id: LoginIds.Form });
+      await act(async () => {
+        await fieldUser.props.onChange(mockEvent);
+        await form.props.onSubmit(mockEvent);
+      });
+      expect(fieldPass.props.error).toBeTruthy();
+      expect(fieldUser.props.error).toBeFalsy();
+      expect(mockAsyncLogIn).not.toBeCalled();
+    });
 
-    it("submits when username and password", async () => {});
+    it("submits when username and password", async () => {
+      await renderLogin();
+      const fieldPass = loginHandle.findByProps({ id: LoginIds.FieldPassword });
+      const fieldUser = loginHandle.findByProps({ id: LoginIds.FieldUsername });
+      const form = loginHandle.findByProps({ id: LoginIds.Form });
+      await act(async () => {
+        await fieldPass.props.onChange(mockEvent);
+        await fieldUser.props.onChange(mockEvent);
+        await form.props.onSubmit(mockEvent);
+      });
+      expect(fieldPass.props.error).toBeFalsy();
+      expect(fieldUser.props.error).toBeFalsy();
+      expect(mockAsyncLogIn).toBeCalled();
+    });
   });
 });

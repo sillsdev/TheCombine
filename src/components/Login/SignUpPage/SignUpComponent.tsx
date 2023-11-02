@@ -1,4 +1,3 @@
-import ReCaptcha from "@matt-block/react-recaptcha-v2";
 import {
   Button,
   Card,
@@ -12,7 +11,7 @@ import { withTranslation, WithTranslation } from "react-i18next";
 
 import router from "browserRouter";
 import { LoadingDoneButton } from "components/Buttons";
-import { captchaStyle } from "components/Login/LoginPage/LoginComponent";
+import Captcha from "components/Login/Captcha";
 import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";
 import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
@@ -258,28 +257,12 @@ export class SignUp extends Component<SignUpProps, SignUpState> {
                 </Typography>
               )}
 
-              {RuntimeConfig.getInstance().captchaRequired() && (
-                <div
-                  className="form-group"
-                  id={`${idAffix}-captcha`}
-                  style={captchaStyle}
-                >
-                  <ReCaptcha
-                    siteKey={RuntimeConfig.getInstance().captchaSiteKey()}
-                    theme="light"
-                    size="normal"
-                    onSuccess={() => this.setState({ isVerified: true })}
-                    onExpire={() => this.setState({ isVerified: false })}
-                    onError={() =>
-                      console.error(
-                        "Something went wrong, check your connection."
-                      )
-                    }
-                  />
-                </div>
-              )}
+              <Captcha
+                onExpire={() => this.setState({ isVerified: false })}
+                onSuccess={() => this.setState({ isVerified: false })}
+              />
 
-              {/* Sign Up and Login buttons */}
+              {/* Sign Up and Log In buttons */}
               <Grid container justifyContent="flex-end" spacing={2}>
                 <Grid item>
                   <Button

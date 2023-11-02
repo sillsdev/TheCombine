@@ -1,4 +1,3 @@
-import ReCaptcha from "@matt-block/react-recaptcha-v2";
 import { Help } from "@mui/icons-material";
 import {
   Button,
@@ -22,6 +21,7 @@ import { BannerType } from "api/models";
 import { getBannerText } from "backend";
 import router from "browserRouter";
 import { LoadingButton } from "components/Buttons";
+import Captcha from "components/Login/Captcha";
 import { asyncLogIn } from "components/Login/Redux/LoginActions";
 import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";
 import { reset } from "rootActions";
@@ -36,7 +36,6 @@ export enum LoginIds {
   ButtonLogIn = "login-log-in-button",
   ButtonSignUp = "login-sign-up-button",
   ButtonUserGuide = "login-user-guide-button",
-  DivCaptcha = "login-captcha-div",
   FieldPassword = "login-password-field",
   FieldUsername = "login-username-field",
   Form = "login-form",
@@ -88,7 +87,7 @@ export default function Login(): ReactElement {
   return (
     <Grid container justifyContent="center">
       <Card style={{ width: 450 }}>
-        <form data-testid={LoginIds.Form} id={LoginIds.Form} onSubmit={login}>
+        <form id={LoginIds.Form} onSubmit={login}>
           <CardContent>
             {/* Title */}
             <Typography variant="h5" align="center" gutterBottom>
@@ -99,7 +98,6 @@ export default function Login(): ReactElement {
             <TextField
               autoComplete="username"
               autoFocus
-              data-testid={LoginIds.FieldUsername}
               error={usernameError}
               helperText={usernameError ? t("login.required") : undefined}
               id={LoginIds.FieldUsername}
@@ -116,7 +114,6 @@ export default function Login(): ReactElement {
             {/* Password field */}
             <TextField
               autoComplete="current-password"
-              data-testid={LoginIds.FieldPassword}
               error={passwordError}
               helperText={passwordError ? t("login.required") : undefined}
               id={LoginIds.FieldPassword}
@@ -155,26 +152,10 @@ export default function Login(): ReactElement {
               </Typography>
             )}
 
-            {RuntimeConfig.getInstance().captchaRequired() && (
-              <div
-                className="form-group"
-                id={LoginIds.DivCaptcha}
-                style={{ margin: "5px" }}
-              >
-                <ReCaptcha
-                  onError={() =>
-                    console.error(
-                      "Something went wrong; check your connection."
-                    )
-                  }
-                  onExpire={() => setIsVerified(false)}
-                  onSuccess={() => setIsVerified(true)}
-                  siteKey={RuntimeConfig.getInstance().captchaSiteKey()}
-                  size="normal"
-                  theme="light"
-                />
-              </div>
-            )}
+            <Captcha
+              onExpire={() => setIsVerified(false)}
+              onSuccess={() => setIsVerified(true)}
+            />
 
             {/* User Guide, Sign Up, and Log In buttons */}
             <Grid container justifyContent="flex-end" spacing={2}>
@@ -198,7 +179,6 @@ export default function Login(): ReactElement {
                 <LoadingButton
                   buttonProps={{
                     color: "primary",
-                    "data-testid": LoginIds.ButtonLogIn,
                     id: LoginIds.ButtonLogIn,
                     type: "submit",
                   }}
