@@ -4,7 +4,6 @@ import {
   defaultTree,
   MergeData,
   MergeTree,
-  MergeTreeReference,
   newMergeTreeSense,
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
@@ -13,8 +12,6 @@ import {
   deferMerge,
   dispatchMergeStepData,
   mergeAll,
-  moveSense,
-  orderSense,
   setData,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { goalDataMock } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
@@ -247,53 +244,6 @@ describe("MergeDupActions", () => {
       store.dispatch(dispatchMergeStepData(goal));
       const setDataAction = setData(goalDataMock.plannedWords[0]);
       expect(setDataAction.type).toEqual("mergeDupStepReducer/setDataAction");
-    });
-  });
-
-  describe("moveSense", () => {
-    const wordId = "mockWordId";
-    const mergeSenseId = "mockSenseId";
-
-    it("creates a moveSenseAction when going from word to word", () => {
-      const mockRef: MergeTreeReference = { wordId, mergeSenseId };
-      const resultAction = moveSense({
-        ref: mockRef,
-        destWordId: wordId,
-        destOrder: -1,
-      });
-      expect(resultAction.type).toEqual("mergeDupStepReducer/moveSenseAction");
-    });
-
-    it("creates a moveDuplicateAction when going from sidebar to word", () => {
-      const mockRef: MergeTreeReference = { wordId, mergeSenseId, order: 0 };
-      const resultAction = moveSense({
-        ref: mockRef,
-        destWordId: wordId,
-        destOrder: -1,
-      });
-      expect(resultAction.type).toEqual(
-        "mergeDupStepReducer/moveDuplicateAction"
-      );
-    });
-  });
-
-  describe("orderSense", () => {
-    const wordId = "mockWordId";
-    const mergeSenseId = "mockSenseId";
-    const mockOrder = 0;
-
-    it("creates an orderSenseAction when moving within a word", () => {
-      const mockRef: MergeTreeReference = { wordId, mergeSenseId };
-      const resultAction = orderSense({ ref: mockRef, order: mockOrder });
-      expect(resultAction.type).toEqual("mergeDupStepReducer/orderSenseAction");
-    });
-
-    it("creates an orderDuplicateAction when moving within the sidebar", () => {
-      const mockRef: MergeTreeReference = { wordId, mergeSenseId, order: 0 };
-      const resultAction = orderSense({ ref: mockRef, order: mockOrder });
-      expect(resultAction.type).toEqual(
-        "mergeDupStepReducer/orderDuplicateAction"
-      );
     });
   });
 
