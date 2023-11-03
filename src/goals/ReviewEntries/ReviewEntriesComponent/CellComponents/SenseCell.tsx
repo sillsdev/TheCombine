@@ -30,7 +30,6 @@ export default function SenseCell(props: SenseCellProps): ReactElement {
 
   return (
     <AlignedList
-      key={`delete:${props.rowData.id}`}
       listId={`delete${props.rowData.id}`}
       contents={props.rowData.senses.map((sense) => (
         <Tooltip
