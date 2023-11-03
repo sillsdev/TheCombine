@@ -134,15 +134,13 @@ const mergeDuplicatesSlice = createSlice({
       }
     },
     moveSenseAction: (state, action) => {
-      if (action.payload.ref.order === undefined) {
+      const srcWordId = action.payload.ref.wordId;
+      const destWordId = action.payload.destWordId;
+      const srcOrder = action.payload.ref.order;
+      if (srcOrder === undefined && srcWordId === destWordId) {
         // MOVE_SENSE,
-        const srcWordId = action.payload.ref.wordId;
         const mergeSenseId = action.payload.ref.mergeSenseId;
-        const destWordId = action.payload.destWordId;
 
-        if (srcWordId === destWordId) {
-          return;
-        }
         const words = state.tree.words;
 
         // Check if dropping the sense into a new word.
@@ -171,44 +169,43 @@ const mergeDuplicatesSlice = createSlice({
     moveDuplicateAction: (state, action) => {
       const srcRef = action.payload.ref;
       // Verify that the ref.order field is defined
-      if (srcRef.order === undefined) {
-        return;
-      }
-      const destWordId = action.payload.destWordId;
-      const words = state.tree.words;
+      if (srcRef.order !== undefined) {
+        const destWordId = action.payload.destWordId;
+        const words = state.tree.words;
 
-      const srcWordId = srcRef.wordId;
-      let mergeSenseId = srcRef.mergeSenseId;
+        const srcWordId = srcRef.wordId;
+        let mergeSenseId = srcRef.mergeSenseId;
 
-      // Get guid of sense being restored from the sidebar.
-      const srcGuids = words[srcWordId].sensesGuids[mergeSenseId];
-      const guid = srcGuids.splice(srcRef.order, 1)[0];
+        // Get guid of sense being restored from the sidebar.
+        const srcGuids = words[srcWordId].sensesGuids[mergeSenseId];
+        const guid = srcGuids.splice(srcRef.order, 1)[0];
 
-      // Check if dropping the sense into a new word.
-      if (words[destWordId] === undefined) {
-        words[destWordId] = newMergeTreeWord();
-      }
-
-      if (srcGuids.length === 0) {
-        // If there are no guids left, this is a full move.
-        if (srcWordId === destWordId) {
-          return;
+        // Check if dropping the sense into a new word.
+        if (words[destWordId] === undefined) {
+          words[destWordId] = newMergeTreeWord();
         }
-        delete words[srcWordId].sensesGuids[mergeSenseId];
-        if (!Object.keys(words[srcWordId].sensesGuids).length) {
-          delete words[srcWordId];
-        }
-      } else {
-        // Otherwise, create a new sense in the destWord.
-        mergeSenseId = v4();
-      }
 
-      // Update the destWord.
-      const sensesPairs = Object.entries(words[destWordId].sensesGuids);
-      sensesPairs.splice(action.payload.destOrder, 0, [mergeSenseId, [guid]]);
-      const newSensesGuids: Hash<string[]> = {};
-      sensesPairs.forEach(([key, value]) => (newSensesGuids[key] = value));
-      words[destWordId].sensesGuids = newSensesGuids;
+        if (srcGuids.length === 0) {
+          // If there are no guids left, this is a full move.
+          if (srcWordId === destWordId) {
+            return;
+          }
+          delete words[srcWordId].sensesGuids[mergeSenseId];
+          if (!Object.keys(words[srcWordId].sensesGuids).length) {
+            delete words[srcWordId];
+          }
+        } else {
+          // Otherwise, create a new sense in the destWord.
+          mergeSenseId = v4();
+        }
+
+        // Update the destWord.
+        const sensesPairs = Object.entries(words[destWordId].sensesGuids);
+        sensesPairs.splice(action.payload.destOrder, 0, [mergeSenseId, [guid]]);
+        const newSensesGuids: Hash<string[]> = {};
+        sensesPairs.forEach(([key, value]) => (newSensesGuids[key] = value));
+        words[destWordId].sensesGuids = newSensesGuids;
+      }
     },
     orderDuplicateAction: (state, action) => {
       const ref = action.payload.ref;
@@ -217,20 +214,18 @@ const mergeDuplicatesSlice = createSlice({
       const newOrder = action.payload.order;
 
       // Ensure the reorder is valid.
-      if (oldOrder === undefined || oldOrder === newOrder) {
-        return;
+      if (oldOrder !== undefined && oldOrder !== newOrder) {
+        // Move the guid.
+        const oldSensesGuids = state.tree.words[ref.wordId].sensesGuids;
+        const guids = [...oldSensesGuids[ref.mergeSenseId]];
+        const guid = guids.splice(oldOrder, 1)[0];
+        guids.splice(newOrder, 0, guid);
+
+        const sensesGuids = { ...oldSensesGuids };
+        sensesGuids[ref.mergeSenseId] = guids;
+
+        state.tree.words[ref.wordId].sensesGuids = sensesGuids;
       }
-
-      // Move the guid.
-      const oldSensesGuids = state.tree.words[ref.wordId].sensesGuids;
-      const guids = [...oldSensesGuids[ref.mergeSenseId]];
-      const guid = guids.splice(oldOrder, 1)[0];
-      guids.splice(newOrder, 0, guid);
-
-      const sensesGuids = { ...oldSensesGuids };
-      sensesGuids[ref.mergeSenseId] = guids;
-
-      state.tree.words[ref.wordId].sensesGuids = sensesGuids;
     },
     orderSenseAction: (state, action) => {
       const word = state.tree.words[action.payload.ref.wordId];
@@ -243,21 +238,19 @@ const mergeDuplicatesSlice = createSlice({
       const newOrder = action.payload.order;
 
       // Ensure the move is valid.
-      if (oldOrder === -1 || newOrder === undefined || oldOrder === newOrder) {
-        return;
+      if (oldOrder !== -1 && newOrder !== undefined && oldOrder !== newOrder) {
+        // Move the sense pair to its new place.
+        const pair = sensePairs.splice(oldOrder, 1)[0];
+        sensePairs.splice(newOrder, 0, pair);
+
+        // Rebuild the Hash<string[]>.
+        word.sensesGuids = {};
+        for (const [key, value] of sensePairs) {
+          word.sensesGuids[key] = value;
+        }
+
+        state.tree.words[action.payload.ref.wordId] = word;
       }
-
-      // Move the sense pair to its new place.
-      const pair = sensePairs.splice(oldOrder, 1)[0];
-      sensePairs.splice(newOrder, 0, pair);
-
-      // Rebuild the Hash<string[]>.
-      word.sensesGuids = {};
-      for (const [key, value] of sensePairs) {
-        word.sensesGuids[key] = value;
-      }
-
-      state.tree.words[action.payload.ref.wordId] = word;
     },
     setSidebarAction: (state, action) => {
       state.tree.sidebar = action.payload;
