@@ -135,7 +135,7 @@ export default function Signup(props: SignupProps): ReactElement {
       [SignupField.Username]: !meetsUsernameRequirements(username),
       [SignupField.Email]: !email,
       [SignupField.Password1]: !meetsPasswordRequirements(password1),
-      [SignupField.Password2]: password1 !== password2!,
+      [SignupField.Password2]: password1 !== password2,
     };
 
     if (Object.values(err).some((e) => e)) {
@@ -255,9 +255,7 @@ export default function Signup(props: SignupProps): ReactElement {
               <Grid item>
                 <Button
                   id={SignupId.ButtonLogIn}
-                  onClick={() => {
-                    router.navigate(Path.Login);
-                  }}
+                  onClick={() => router.navigate(Path.Login)}
                   type="button"
                   variant="outlined"
                 >

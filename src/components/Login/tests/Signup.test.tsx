@@ -35,8 +35,9 @@ jest.mock("types/hooks", () => {
 });
 
 const mockAsyncSignUp = jest.fn();
-const mockChangeEvent = (text: string): ChangeEvent =>
-  ({ target: { value: text } }) as any as ChangeEvent;
+const mockChangeEvent = (text: string): Partial<ChangeEvent> => ({
+  target: { value: text } as HTMLTextAreaElement | HTMLInputElement,
+});
 const mockFormEvent: Partial<FormEvent> = { preventDefault: jest.fn() };
 const mockStore = configureMockStore()({ loginState });
 
