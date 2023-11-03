@@ -4,6 +4,7 @@ import {
   CardContent,
   Grid,
   TextField,
+  TextFieldProps,
   Typography,
 } from "@mui/material";
 import {
@@ -115,8 +116,7 @@ export default function Signup(props: SignupProps): ReactElement {
     e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
     field: SignupField
   ): void => {
-    const partialRecord = { [field]: e.target.value };
-    setFieldText((prev) => ({ ...prev, ...partialRecord }));
+    setFieldText((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
   const signUp = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
@@ -132,10 +132,10 @@ export default function Signup(props: SignupProps): ReactElement {
     // Check for bad field values.
     const err: SignupError = {
       [SignupField.Name]: !name,
+      [SignupField.Username]: !meetsUsernameRequirements(username),
       [SignupField.Email]: !email,
       [SignupField.Password1]: !meetsPasswordRequirements(password1),
       [SignupField.Password2]: password1 !== password2!,
-      [SignupField.Username]: !meetsUsernameRequirements(username),
     };
 
     if (Object.values(err).some((e) => e)) {
@@ -145,6 +145,14 @@ export default function Signup(props: SignupProps): ReactElement {
         asyncSignUp(name, username, email, password1, props.returnToEmailInvite)
       );
     }
+  };
+
+  const defaultTextFieldProps: TextFieldProps = {
+    inputProps: { maxLength: 100 },
+    margin: "normal",
+    required: true,
+    style: { width: "100%" },
+    variant: "outlined",
   };
 
   return (
@@ -159,6 +167,7 @@ export default function Signup(props: SignupProps): ReactElement {
 
             {/* Name field */}
             <TextField
+              {...defaultTextFieldProps}
               autoComplete="name"
               autoFocus
               error={fieldError[SignupField.Name]}
@@ -166,68 +175,52 @@ export default function Signup(props: SignupProps): ReactElement {
                 fieldError[SignupField.Name] ? t("login.required") : undefined
               }
               id={SignupId.FieldName}
-              inputProps={{ maxLength: 100 }}
               label={t("login.name")}
-              margin="normal"
               onChange={(e) => updateField(e, SignupField.Name)}
-              required
-              style={{ width: "100%" }}
               value={fieldText[SignupField.Name]}
-              variant="outlined"
             />
 
             {/* Username field */}
             <TextField
+              {...defaultTextFieldProps}
               autoComplete="username"
               error={fieldError[SignupField.Username]}
               helperText={t("login.usernameRequirements")}
               id={SignupId.FieldUsername}
-              inputProps={{ maxLength: 100 }}
               label={t("login.username")}
-              margin="normal"
               onBlur={() => checkUsername()}
               onChange={(e) => updateField(e, SignupField.Username)}
-              required
-              style={{ width: "100%" }}
               value={fieldText[SignupField.Username]}
-              variant="outlined"
             />
 
             {/* Email field */}
             <TextField
+              {...defaultTextFieldProps}
               autoComplete="email"
               error={fieldError[SignupField.Email]}
               id={SignupId.FieldEmail}
-              inputProps={{ maxLength: 100 }}
               label={t("login.email")}
-              margin="normal"
               onChange={(e) => updateField(e, SignupField.Email)}
-              required
-              style={{ width: "100%" }}
               type="email"
               value={fieldText[SignupField.Email]}
-              variant="outlined"
             />
 
             {/* Password field */}
             <TextField
+              {...defaultTextFieldProps}
               autoComplete="new-password"
               error={fieldError[SignupField.Password1]}
               helperText={t("login.passwordRequirements")}
               id={SignupId.FieldPassword1}
-              inputProps={{ maxLength: 100 }}
               label={t("login.password")}
-              margin="normal"
               onChange={(e) => updateField(e, SignupField.Password1)}
-              required
-              style={{ width: "100%" }}
               type="password"
               value={fieldText[SignupField.Password1]}
-              variant="outlined"
             />
 
             {/* Confirm Password field */}
             <TextField
+              {...defaultTextFieldProps}
               autoComplete="new-password"
               error={fieldError[SignupField.Password2]}
               helperText={
@@ -236,14 +229,10 @@ export default function Signup(props: SignupProps): ReactElement {
                   : undefined
               }
               id={SignupId.FieldPassword2}
-              inputProps={{ maxLength: 100 }}
               label={t("login.confirmPassword")}
-              margin="normal"
               onChange={(e) => updateField(e, SignupField.Password2)}
-              style={{ width: "100%" }}
               type="password"
               value={fieldText[SignupField.Password2]}
-              variant="outlined"
             />
 
             {/* "Failed to sign up" */}

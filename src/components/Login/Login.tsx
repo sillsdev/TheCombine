@@ -6,6 +6,7 @@ import {
   Grid,
   Link,
   TextField,
+  TextFieldProps,
   Typography,
 } from "@mui/material";
 import {
@@ -84,6 +85,14 @@ export default function Login(): ReactElement {
     }
   };
 
+  const defaultTextFieldProps: TextFieldProps = {
+    inputProps: { maxLength: 100 },
+    margin: "normal",
+    required: true,
+    style: { width: "100%" },
+    variant: "outlined",
+  };
+
   return (
     <Grid container justifyContent="center">
       <Card style={{ width: 450 }}>
@@ -96,36 +105,28 @@ export default function Login(): ReactElement {
 
             {/* Username field */}
             <TextField
+              {...defaultTextFieldProps}
               autoComplete="username"
               autoFocus
               error={usernameError}
               helperText={usernameError ? t("login.required") : undefined}
               id={LoginId.FieldUsername}
-              inputProps={{ maxLength: 100 }}
               label={t("login.username")}
-              margin="normal"
               onChange={handleUpdateUsername}
-              required
-              style={{ width: "100%" }}
               value={username}
-              variant="outlined"
             />
 
             {/* Password field */}
             <TextField
+              {...defaultTextFieldProps}
               autoComplete="current-password"
               error={passwordError}
               helperText={passwordError ? t("login.required") : undefined}
               id={LoginId.FieldPassword}
-              inputProps={{ maxLength: 100 }}
               label={t("login.password")}
-              margin="normal"
               onChange={handleUpdatePassword}
-              required
-              style={{ width: "100%" }}
               type="password"
               value={password}
-              variant="outlined"
             />
 
             {/* "Forgot password?" link to reset password */}
