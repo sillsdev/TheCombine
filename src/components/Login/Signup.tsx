@@ -6,7 +6,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ChangeEvent, ReactElement, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  ReactElement,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import router from "browserRouter";
@@ -50,10 +56,9 @@ const defaultSignupText: SignupText = {
   [SignupField.Username]: "",
 };
 
-export enum SignupIds {
+export enum SignupId {
   ButtonLogIn = "signup-log-in-button",
   ButtonSignUp = "signup-sign-up-button",
-  ButtonUserGuide = "signup-user-guide-button",
   FieldEmail = "signup-email-field",
   FieldName = "signup-name-field",
   FieldPassword1 = "signup-password1-field",
@@ -71,7 +76,7 @@ interface SignupProps {
   returnToEmailInvite?: () => void;
 }
 
-/** The signup page */
+/** The Signup page (also used for ProjectInvite) */
 export default function Signup(props: SignupProps): ReactElement {
   const dispatch = useAppDispatch();
 
@@ -97,7 +102,7 @@ export default function Signup(props: SignupProps): ReactElement {
   }, [dispatch]);
 
   const errorField = (field: SignupField): void => {
-    setFieldText({ ...fieldText, [field]: true });
+    setFieldError((prev) => ({ ...prev, [field]: true }));
   };
 
   const checkUsername = (): void => {
@@ -114,15 +119,17 @@ export default function Signup(props: SignupProps): ReactElement {
     setFieldText((prev) => ({ ...prev, ...partialRecord }));
   };
 
-  const signUp = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  const signUp = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
+
+    // Trim whitespace off fields.
     const name = fieldText[SignupField.Name].trim();
     const username = fieldText[SignupField.Username].trim();
     const email = punycode.toUnicode(fieldText[SignupField.Email].trim());
     const password1 = fieldText[SignupField.Password1].trim();
     const password2 = fieldText[SignupField.Password2].trim();
 
-    // Error checking.
+    // Check for bad field values.
     const err: SignupError = {
       [SignupField.Name]: !name,
       [SignupField.Email]: !email,
@@ -130,6 +137,7 @@ export default function Signup(props: SignupProps): ReactElement {
       [SignupField.Password2]: password1 !== password2!,
       [SignupField.Username]: !meetsUsernameRequirements(username),
     };
+
     if (Object.values(err).some((e) => e)) {
       setFieldError(err);
     } else {
@@ -142,107 +150,107 @@ export default function Signup(props: SignupProps): ReactElement {
   return (
     <Grid container justifyContent="center">
       <Card style={{ width: 450 }}>
-        <form onSubmit={(e) => signUp(e)}>
+        <form id={SignupId.Form} onSubmit={signUp}>
           <CardContent>
             {/* Title */}
-            <Typography variant="h5" align="center" gutterBottom>
-              {t("signup.signUpNew")}
+            <Typography align="center" gutterBottom variant="h5">
+              {t("login.signUpNew")}
             </Typography>
 
             {/* Name field */}
             <TextField
-              id={SignupIds.FieldName}
-              required
-              autoFocus
               autoComplete="name"
-              label={t("signup.name")}
-              value={fieldText[SignupField.Name]}
-              onChange={(e) => updateField(e, SignupField.Name)}
+              autoFocus
               error={fieldError[SignupField.Name]}
               helperText={
-                fieldError[SignupField.Name] ? t("signup.required") : undefined
+                fieldError[SignupField.Name] ? t("login.required") : undefined
               }
-              variant="outlined"
-              style={{ width: "100%" }}
-              margin="normal"
+              id={SignupId.FieldName}
               inputProps={{ maxLength: 100 }}
+              label={t("login.name")}
+              margin="normal"
+              onChange={(e) => updateField(e, SignupField.Name)}
+              required
+              style={{ width: "100%" }}
+              value={fieldText[SignupField.Name]}
+              variant="outlined"
             />
 
             {/* Username field */}
             <TextField
-              id={SignupIds.FieldUsername}
-              required
               autoComplete="username"
-              label={t("signup.username")}
-              value={fieldText[SignupField.Username]}
-              onChange={(e) => updateField(e, SignupField.Username)}
-              onBlur={() => checkUsername()}
               error={fieldError[SignupField.Username]}
-              helperText={t("signup.usernameRequirements")}
-              variant="outlined"
-              style={{ width: "100%" }}
-              margin="normal"
+              helperText={t("login.usernameRequirements")}
+              id={SignupId.FieldUsername}
               inputProps={{ maxLength: 100 }}
+              label={t("login.username")}
+              margin="normal"
+              onBlur={() => checkUsername()}
+              onChange={(e) => updateField(e, SignupField.Username)}
+              required
+              style={{ width: "100%" }}
+              value={fieldText[SignupField.Username]}
+              variant="outlined"
             />
 
-            {/* email field */}
+            {/* Email field */}
             <TextField
-              id={SignupIds.FieldEmail}
-              required
-              type="email"
               autoComplete="email"
-              label={t("signup.email")}
-              value={fieldText[SignupField.Email]}
-              onChange={(e) => updateField(e, SignupField.Email)}
               error={fieldError[SignupField.Email]}
-              variant="outlined"
-              style={{ width: "100%" }}
-              margin="normal"
+              id={SignupId.FieldEmail}
               inputProps={{ maxLength: 100 }}
+              label={t("login.email")}
+              margin="normal"
+              onChange={(e) => updateField(e, SignupField.Email)}
+              required
+              style={{ width: "100%" }}
+              type="email"
+              value={fieldText[SignupField.Email]}
+              variant="outlined"
             />
 
             {/* Password field */}
             <TextField
-              id={SignupIds.FieldPassword1}
-              required
               autoComplete="new-password"
-              label={t("signup.password")}
+              error={fieldError[SignupField.Password1]}
+              helperText={t("login.passwordRequirements")}
+              id={SignupId.FieldPassword1}
+              inputProps={{ maxLength: 100 }}
+              label={t("login.password")}
+              margin="normal"
+              onChange={(e) => updateField(e, SignupField.Password1)}
+              required
+              style={{ width: "100%" }}
               type="password"
               value={fieldText[SignupField.Password1]}
-              onChange={(e) => updateField(e, SignupField.Password1)}
-              error={fieldError[SignupField.Password1]}
-              helperText={t("signup.passwordRequirements")}
               variant="outlined"
-              style={{ width: "100%" }}
-              margin="normal"
-              inputProps={{ maxLength: 100 }}
             />
 
             {/* Confirm Password field */}
             <TextField
-              id={SignupIds.FieldPassword2}
               autoComplete="new-password"
-              label={t("signup.confirmPassword")}
-              type="password"
-              value={fieldText[SignupField.Password2]}
-              onChange={(e) => updateField(e, SignupField.Password2)}
               error={fieldError[SignupField.Password2]}
               helperText={
-                fieldError[SignupField.Password1]
-                  ? t("signup.confirmPasswordError")
+                fieldError[SignupField.Password2]
+                  ? t("login.confirmPasswordError")
                   : undefined
               }
-              variant="outlined"
-              style={{ width: "100%" }}
-              margin="normal"
+              id={SignupId.FieldPassword2}
               inputProps={{ maxLength: 100 }}
+              label={t("login.confirmPassword")}
+              margin="normal"
+              onChange={(e) => updateField(e, SignupField.Password2)}
+              style={{ width: "100%" }}
+              type="password"
+              value={fieldText[SignupField.Password2]}
+              variant="outlined"
             />
 
             {/* "Failed to sign up" */}
             {!!error && (
               <Typography
+                style={{ color: "red", marginBottom: 24, marginTop: 24 }}
                 variant="body2"
-                style={{ marginTop: 24, marginBottom: 24, color: "red" }}
               >
                 {t(error)}
               </Typography>
@@ -257,28 +265,28 @@ export default function Signup(props: SignupProps): ReactElement {
             <Grid container justifyContent="flex-end" spacing={2}>
               <Grid item>
                 <Button
-                  id={SignupIds.ButtonLogIn}
-                  type="button"
+                  id={SignupId.ButtonLogIn}
                   onClick={() => {
                     router.navigate(Path.Login);
                   }}
+                  type="button"
                   variant="outlined"
                 >
-                  {t("signup.backToLogin")}
+                  {t("login.backToLogin")}
                 </Button>
               </Grid>
               <Grid item>
                 <LoadingDoneButton
-                  disabled={!isVerified}
-                  loading={signupStatus === LoginStatus.InProgress}
-                  done={signupStatus === LoginStatus.Success}
-                  doneText={t("signup.signUpSuccess")}
                   buttonProps={{
-                    id: SignupIds.ButtonSignUp,
                     color: "primary",
+                    id: SignupId.ButtonSignUp,
                   }}
+                  disabled={!isVerified}
+                  done={signupStatus === LoginStatus.Success}
+                  doneText={t("login.signUpSuccess")}
+                  loading={signupStatus === LoginStatus.InProgress}
                 >
-                  {t("signup.signUp")}
+                  {t("login.signUp")}
                 </LoadingDoneButton>
               </Grid>
             </Grid>

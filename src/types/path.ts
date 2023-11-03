@@ -11,7 +11,7 @@ export enum Path {
   PwRequest = "/forgot/request",
   PwReset = "/forgot/reset",
   Root = "/",
-  SignUp = "/sign-up",
+  Signup = "/signup",
   SiteSettings = "/app/site-settings",
   Statistics = "/app/statistics",
   UserSettings = "/app/user-settings",

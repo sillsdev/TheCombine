@@ -32,7 +32,7 @@ import { RuntimeConfig } from "types/runtimeConfig";
 import theme from "types/theme";
 import { openUserGuide } from "utilities/pathUtilities";
 
-export enum LoginIds {
+export enum LoginId {
   ButtonLogIn = "login-log-in-button",
   ButtonSignUp = "login-sign-up-button",
   ButtonUserGuide = "login-user-guide-button",
@@ -41,7 +41,7 @@ export enum LoginIds {
   Form = "login-form",
 }
 
-/** The login page (also doubles as a logout page) */
+/** The Login page (also doubles as a Logout page) */
 export default function Login(): ReactElement {
   const dispatch = useAppDispatch();
 
@@ -87,7 +87,7 @@ export default function Login(): ReactElement {
   return (
     <Grid container justifyContent="center">
       <Card style={{ width: 450 }}>
-        <form id={LoginIds.Form} onSubmit={logIn}>
+        <form id={LoginId.Form} onSubmit={logIn}>
           <CardContent>
             {/* Title */}
             <Typography variant="h5" align="center" gutterBottom>
@@ -100,7 +100,7 @@ export default function Login(): ReactElement {
               autoFocus
               error={usernameError}
               helperText={usernameError ? t("login.required") : undefined}
-              id={LoginIds.FieldUsername}
+              id={LoginId.FieldUsername}
               inputProps={{ maxLength: 100 }}
               label={t("login.username")}
               margin="normal"
@@ -116,7 +116,7 @@ export default function Login(): ReactElement {
               autoComplete="current-password"
               error={passwordError}
               helperText={passwordError ? t("login.required") : undefined}
-              id={LoginIds.FieldPassword}
+              id={LoginId.FieldPassword}
               inputProps={{ maxLength: 100 }}
               label={t("login.password")}
               margin="normal"
@@ -160,15 +160,15 @@ export default function Login(): ReactElement {
             {/* User Guide, Sign Up, and Log In buttons */}
             <Grid container justifyContent="flex-end" spacing={2}>
               <Grid item xs={4} sm={6}>
-                <Button id={LoginIds.ButtonUserGuide} onClick={openUserGuide}>
+                <Button id={LoginId.ButtonUserGuide} onClick={openUserGuide}>
                   <Help />
                 </Button>
               </Grid>
 
               <Grid item xs={4} sm={3}>
                 <Button
-                  id={LoginIds.ButtonSignUp}
-                  onClick={() => router.navigate(Path.SignUp)}
+                  id={LoginId.ButtonSignUp}
+                  onClick={() => router.navigate(Path.Signup)}
                   variant="outlined"
                 >
                   {t("login.signUp")}
@@ -179,7 +179,7 @@ export default function Login(): ReactElement {
                 <LoadingButton
                   buttonProps={{
                     color: "primary",
-                    id: LoginIds.ButtonLogIn,
+                    id: LoginId.ButtonLogIn,
                     type: "submit",
                   }}
                   disabled={!isVerified}

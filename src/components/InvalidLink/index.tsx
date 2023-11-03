@@ -35,7 +35,7 @@ export default function InvalidLink(props: InvalidLinkProps): ReactElement {
               <Button
                 id={`${idAffix}-signUp`}
                 onClick={() => {
-                  navigate(Path.SignUp);
+                  navigate(Path.Signup);
                 }}
               >
                 {t("login.signUp")}

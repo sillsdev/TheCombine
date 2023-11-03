@@ -3,11 +3,11 @@ import { RouteObject } from "react-router-dom";
 
 import LandingPage from "components/LandingPage";
 import Login from "components/Login/Login";
-import SignUp from "components/Login/SignUpPage";
+import ProjectInvite from "components/Login/ProjectInvite";
+import Signup from "components/Login/Signup";
 import PageNotFound from "components/PageNotFound/component";
 import PasswordRequest from "components/PasswordReset/Request";
 import PasswordReset from "components/PasswordReset/ResetPage";
-import ProjectInvite from "components/ProjectInvite/ProjectInvite";
 import RequireAuth from "components/RequireAuth";
 import { Path } from "types/path";
 import { routerPath } from "utilities/pathUtilities";
@@ -33,8 +33,8 @@ export const appRoutes: RouteObject[] = [
     element: <Login />,
   },
   {
-    path: Path.SignUp,
-    element: <SignUp />,
+    path: Path.Signup,
+    element: <Signup />,
   },
   {
     path: `${Path.PwReset}/:token`,

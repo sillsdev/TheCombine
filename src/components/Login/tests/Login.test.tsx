@@ -9,7 +9,7 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import Login, { LoginIds } from "components/Login/Login";
+import Login, { LoginId } from "components/Login/Login";
 import { defaultState as loginState } from "components/Login/Redux/LoginReduxTypes";
 
 jest.mock(
@@ -59,9 +59,9 @@ describe("Login", () => {
   describe("submit button", () => {
     it("errors when no username", async () => {
       await renderLogin();
-      const fieldPass = loginHandle.findByProps({ id: LoginIds.FieldPassword });
-      const fieldUser = loginHandle.findByProps({ id: LoginIds.FieldUsername });
-      const form = loginHandle.findByProps({ id: LoginIds.Form });
+      const fieldPass = loginHandle.findByProps({ id: LoginId.FieldPassword });
+      const fieldUser = loginHandle.findByProps({ id: LoginId.FieldUsername });
+      const form = loginHandle.findByProps({ id: LoginId.Form });
       await act(async () => {
         await fieldPass.props.onChange(mockEvent);
         await form.props.onSubmit(mockEvent);
@@ -73,9 +73,9 @@ describe("Login", () => {
 
     it("errors when no password", async () => {
       await renderLogin();
-      const fieldPass = loginHandle.findByProps({ id: LoginIds.FieldPassword });
-      const fieldUser = loginHandle.findByProps({ id: LoginIds.FieldUsername });
-      const form = loginHandle.findByProps({ id: LoginIds.Form });
+      const fieldPass = loginHandle.findByProps({ id: LoginId.FieldPassword });
+      const fieldUser = loginHandle.findByProps({ id: LoginId.FieldUsername });
+      const form = loginHandle.findByProps({ id: LoginId.Form });
       await act(async () => {
         await fieldUser.props.onChange(mockEvent);
         await form.props.onSubmit(mockEvent);
@@ -87,9 +87,9 @@ describe("Login", () => {
 
     it("submits when username and password", async () => {
       await renderLogin();
-      const fieldPass = loginHandle.findByProps({ id: LoginIds.FieldPassword });
-      const fieldUser = loginHandle.findByProps({ id: LoginIds.FieldUsername });
-      const form = loginHandle.findByProps({ id: LoginIds.Form });
+      const fieldPass = loginHandle.findByProps({ id: LoginId.FieldPassword });
+      const fieldUser = loginHandle.findByProps({ id: LoginId.FieldUsername });
+      const form = loginHandle.findByProps({ id: LoginId.Form });
       await act(async () => {
         await fieldPass.props.onChange(mockEvent);
         await fieldUser.props.onChange(mockEvent);
