@@ -236,7 +236,7 @@ describe("MergeDupActions", () => {
   });
 
   describe("dispatchMergeStepData", () => {
-    it("creates an action to add MergeDups data", async () => {
+    it("creates an action to add MergeDups data", () => {
       const goal = new MergeDups();
       goal.steps = [{ words: [...goalDataMock.plannedWords[0]] }];
 
