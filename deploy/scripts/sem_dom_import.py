@@ -347,7 +347,7 @@ def main() -> None:
         args.input_files,
         args.output_dir,
         flatten_questions=(args.question_mode == "flat"),
-        simple = args.simple
+        simple=args.simple,
     )
 
 
