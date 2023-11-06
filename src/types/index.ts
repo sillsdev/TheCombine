@@ -1,7 +1,6 @@
 import { LoginState } from "components/Login/Redux/LoginReduxTypes";
 import { CurrentProjectState } from "components/Project/ProjectReduxTypes";
 import { ExportProjectState } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
-import { CreateProjectState } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReduxTypes";
 import { PronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { TreeViewState } from "components/TreeView/Redux/TreeViewReduxTypes";
 import { CharacterInventoryState } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
@@ -16,7 +15,6 @@ export interface StoreState {
   loginState: LoginState;
 
   //project
-  createProjectState: CreateProjectState;
   currentProjectState: CurrentProjectState;
   exportProjectState: ExportProjectState;
 

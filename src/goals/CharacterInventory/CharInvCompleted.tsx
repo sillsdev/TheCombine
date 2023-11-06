@@ -1,6 +1,6 @@
 import { ArrowRightAlt } from "@mui/icons-material";
 import { Typography } from "@mui/material";
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -19,24 +19,17 @@ export default function CharInvCompleted(): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <React.Fragment>
+    <>
       <Typography component="h1" variant="h4">
         {t("charInventory.title")}
       </Typography>
-      {CharInvChangesMade(changes)}
-    </React.Fragment>
+      {changes.charChanges?.length ? (
+        changes.charChanges.map((c) => <CharInvChange change={c} key={c[0]} />)
+      ) : (
+        <Typography>{t("charInventory.changes.noChanges")}</Typography>
+      )}
+    </>
   );
-}
-
-function CharInvChangesMade(
-  changes: CharInvChanges
-): ReactElement | ReactElement[] {
-  const { t } = useTranslation();
-
-  if (!changes.charChanges?.length) {
-    return <Typography>{t("charInventory.changes.noChanges")}</Typography>;
-  }
-  return changes.charChanges.map(CharInvChange);
 }
 
 export function CharInvChangesGoalList(changes: CharInvChanges): ReactElement {
@@ -48,32 +41,36 @@ export function CharInvChangesGoalList(changes: CharInvChanges): ReactElement {
   }
   if (changes.charChanges.length > changeLimit) {
     return (
-      <React.Fragment>
+      <>
         <Typography />
-        {changes.charChanges.slice(0, changeLimit - 1).map(CharInvChange)}
+        {changes.charChanges.slice(0, changeLimit - 1).map((c) => (
+          <CharInvChange change={c} key={c[0]} />
+        ))}
         <Typography>
           {`+${changes.charChanges.length - 3} `}
           {t("charInventory.changes.more")}
         </Typography>
-      </React.Fragment>
+      </>
     );
   }
   return (
-    <React.Fragment>
+    <>
       <Typography />
-      {changes.charChanges.map(CharInvChange)}
-    </React.Fragment>
+      {changes.charChanges.map((c) => (
+        <CharInvChange change={c} key={c[0]} />
+      ))}
+    </>
   );
 }
 
-function CharInvChange(change: CharacterChange): ReactElement {
+function CharInvChange(props: { change: CharacterChange }): ReactElement {
   return (
-    <React.Fragment key={change[0]}>
-      <Typography display="inline">{`${change[0]}: `}</Typography>
-      <CharacterStatusText status={change[1]} inline />
+    <>
+      <Typography display="inline">{`${props.change[0]}: `}</Typography>
+      <CharacterStatusText status={props.change[1]} inline />
       <ArrowRightAlt fontSize="inherit" />
-      <CharacterStatusText status={change[2]} inline />
+      <CharacterStatusText status={props.change[2]} inline />
       <Typography />
-    </React.Fragment>
+    </>
   );
 }
