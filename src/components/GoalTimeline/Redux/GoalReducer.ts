@@ -5,7 +5,10 @@ import {
   MergeDupsData,
   MergesCompleted,
 } from "goals/MergeDuplicates/MergeDupsTypes";
-import { EntriesEdited, EntryEdit } from "goals/ReviewEntries/ReviewEntries";
+import {
+  EntriesEdited,
+  EntryEdit,
+} from "goals/ReviewEntries/ReviewEntriesTypes";
 import { StoreActionTypes } from "rootActions";
 import { GoalType } from "types/goals";
 

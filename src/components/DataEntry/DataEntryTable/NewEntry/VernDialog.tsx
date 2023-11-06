@@ -15,8 +15,8 @@ import {
   DomainCell,
   GlossCell,
   PartOfSpeechCell,
-} from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents";
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+} from "goals/ReviewEntries/ReviewEntriesTable/CellComponents";
+import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";
 
 interface vernDialogProps {
   vernacularWords: Word[];

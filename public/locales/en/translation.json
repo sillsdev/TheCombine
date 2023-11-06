@@ -320,6 +320,11 @@
       "toolbar": {
         "search": "Search"
       }
+    },
+    "undo": {
+      "undo": "Undo Edit",
+      "undoDialog": "Undo this edit?",
+      "undoDisabled": "Undo Unavailable"
     }
   },
   "charInventory": {

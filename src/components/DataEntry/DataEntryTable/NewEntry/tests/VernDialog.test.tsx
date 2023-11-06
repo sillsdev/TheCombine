@@ -16,7 +16,7 @@ import { defaultWritingSystem } from "types/writingSystem";
 //  MUI: Unable to set focus to a MenuItem whose component has not been rendered.
 jest.mock("@mui/material/MenuItem", () => "div");
 
-jest.mock("goals/ReviewEntries/ReviewEntriesComponent/CellComponents", () => ({
+jest.mock("goals/ReviewEntries/ReviewEntriesTable/CellComponents", () => ({
   DomainCell: () => <div />,
   GlossCell: () => <div />,
   PartOfSpeechCell: () => <div />,

@@ -11,7 +11,7 @@ import {
   MergeStepData,
   MergesCompleted,
 } from "goals/MergeDuplicates/MergeDupsTypes";
-import { EntriesEdited } from "goals/ReviewEntries/ReviewEntries";
+import { EntriesEdited } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { newUser } from "types/user";
 
 export type GoalData = CharInvData | MergeDupsData;

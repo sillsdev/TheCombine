@@ -6,7 +6,7 @@ import { defaultState as pronunciationsState } from "components/Pronunciations/R
 import { defaultState as treeViewState } from "components/TreeView/Redux/TreeViewReduxTypes";
 import { defaultState as characterInventoryState } from "goals/CharacterInventory/Redux/CharacterInventoryReducer";
 import { defaultState as mergeDuplicateGoal } from "goals/MergeDuplicates/Redux/MergeDupsReducer";
-import { defaultState as reviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
+import { defaultState as reviewEntriesState } from "goals/ReviewEntries/Redux/ReviewEntriesReduxTypes";
 import { defaultState as analyticsState } from "types/Redux/analyticsReduxTypes";
 
 export const defaultState = {

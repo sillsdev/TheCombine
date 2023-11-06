@@ -18,7 +18,7 @@ import {
 } from "components/GoalTimeline/Redux/GoalReducer";
 import { CharacterChange } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { dispatchMergeStepData } from "goals/MergeDuplicates/Redux/MergeDupsActions";
-import { EntryEdit } from "goals/ReviewEntries/ReviewEntries";
+import { EntryEdit } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { Goal, GoalStatus, GoalType } from "types/goals";
