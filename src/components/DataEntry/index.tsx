@@ -100,39 +100,42 @@ export default function DataEntry(): ReactElement {
   }, [analysisLang, dispatch, id]);
 
   return (
-    <Grid container justifyContent="center" spacing={3} wrap={"nowrap"}>
-      <Grid item>
-        <Paper ref={dataEntryRef} style={paperStyle}>
-          <DataEntryHeader
+    <>
+      {!open && !!domain.guid && (
+        <Grid container justifyContent="center" spacing={3} wrap={"nowrap"}>
+          <Grid item>
+            <Paper ref={dataEntryRef} style={paperStyle}>
+              <DataEntryHeader
+                domain={domain}
+                questionsVisible={questionsVisible}
+                setQuestionVisibility={setQuestionsVisible}
+              />
+              <Divider />
+              <DataEntryTable
+                hasDrawerButton={isSmallScreen && domainWords.length > 0}
+                hideQuestions={() => setQuestionsVisible(false)}
+                isTreeOpen={open}
+                openTree={() => dispatch(openTree())}
+                semanticDomain={currentDomain}
+                showExistingData={() => setDrawerOpen(true)}
+                updateHeight={updateHeight}
+              />
+            </Paper>
+          </Grid>
+          <ExistingDataTable
             domain={domain}
-            questionsVisible={questionsVisible}
-            setQuestionVisibility={setQuestionsVisible}
+            domainWords={domainWords}
+            drawerOpen={drawerOpen}
+            height={height}
+            toggleDrawer={setDrawerOpen}
+            typeDrawer={isSmallScreen}
           />
-          <Divider />
-          <DataEntryTable
-            hasDrawerButton={isSmallScreen && domainWords.length > 0}
-            hideQuestions={() => setQuestionsVisible(false)}
-            isTreeOpen={open}
-            openTree={() => dispatch(openTree())}
-            semanticDomain={currentDomain}
-            showExistingData={() => setDrawerOpen(true)}
-            updateHeight={updateHeight}
-          />
-        </Paper>
-      </Grid>
-      <ExistingDataTable
-        domain={domain}
-        domainWords={domainWords}
-        drawerOpen={drawerOpen}
-        height={height}
-        toggleDrawer={setDrawerOpen}
-        typeDrawer={isSmallScreen}
-      />
-
-      <Dialog id={treeViewDialogId} fullScreen open={!!open}>
+        </Grid>
+      )}
+      <Dialog id={treeViewDialogId} fullScreen open={open}>
         <AppBar />
         <TreeView returnControlToCaller={returnControlToCaller} />
       </Dialog>
-    </Grid>
+    </>
   );
 }

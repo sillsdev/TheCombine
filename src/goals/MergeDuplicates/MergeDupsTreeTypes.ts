@@ -55,12 +55,12 @@ export function newMergeTreeWord(
 }
 
 export function convertSenseToMergeTreeSense(
-  sense?: Sense,
+  sense: Sense,
   srcWordId = "",
   order = 0
 ): MergeTreeSense {
   return {
-    ...(sense ?? newSense()),
+    ...sense,
     srcWordId,
     order,
     protected: sense?.accessibility === Status.Protected,
