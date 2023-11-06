@@ -138,7 +138,6 @@ const mergeDuplicatesSlice = createSlice({
       const destWordId = action.payload.destWordId;
       const srcOrder = action.payload.ref.order;
       if (srcOrder === undefined && srcWordId !== destWordId) {
-        // MOVE_SENSE,
         const mergeSenseId = action.payload.ref.mergeSenseId;
 
         const words = state.tree.words;
