@@ -4,15 +4,24 @@ import { uploadFileFromUrl } from "components/Pronunciations/utilities";
 import {
   ReviewClearReviewEntriesState,
   ReviewEntriesActionTypes,
+  ReviewSortBy,
   ReviewUpdateWord,
   ReviewUpdateWords,
 } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
 import {
+  ColumnId,
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { newNote, newSense } from "types/word";
+
+export function sortBy(columnId?: ColumnId): ReviewSortBy {
+  return {
+    type: ReviewEntriesActionTypes.SortBy,
+    sortBy: columnId,
+  };
+}
 
 export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
   return {
@@ -120,9 +129,11 @@ function cleanWord(
 // Converts the ReviewEntriesWord into a Word to send to the backend
 export function updateFrontierWord(
   newData: ReviewEntriesWord,
-  oldData: ReviewEntriesWord
+  oldData?: ReviewEntriesWord
 ) {
   return async (dispatch: StoreStateDispatch) => {
+    oldData ??= new ReviewEntriesWord();
+
     // Clean + check data; if there's something wrong, return the error.
     const editSource = cleanWord(newData, oldData);
     if (typeof editSource === "string") {

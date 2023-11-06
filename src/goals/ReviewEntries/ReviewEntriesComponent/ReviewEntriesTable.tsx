@@ -1,4 +1,4 @@
-import MaterialTable from "@material-table/core";
+import MaterialTable, { OrderByCollection } from "@material-table/core";
 import { Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import React, { ReactElement, createRef, useEffect, useState } from "react";
@@ -7,18 +7,20 @@ import { useSelector } from "react-redux";
 
 import { Permission } from "api/models";
 import { hasPermission } from "backend";
-import columns, {
-  ColumnTitle,
-} from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import columns from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
+import {
+  ColumnId,
+  ReviewEntriesWord,
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import tableIcons from "goals/ReviewEntries/ReviewEntriesComponent/icons";
 import { StoreState } from "types";
 
 interface ReviewEntriesTableProps {
   onRowUpdate: (
     newData: ReviewEntriesWord,
-    oldData: ReviewEntriesWord
+    oldData?: ReviewEntriesWord
   ) => Promise<void>;
+  onSort: (columnId?: ColumnId) => void;
 }
 
 interface PageState {
@@ -99,6 +101,21 @@ export default function ReviewEntriesTable(
     hasPermission(Permission.WordHistory).then(setShowHistory);
   }, [projId]);
 
+  const activeColumns = columns.filter(
+    (c) =>
+      (showDefinitions || c.id !== ColumnId.Definitions) &&
+      (showGrammaticalInfo || c.id !== ColumnId.PartOfSpeech) &&
+      (showHistory || c.title !== ColumnId.History)
+  );
+
+  const onOrderCollectionChange = (order: OrderByCollection[]): void => {
+    if (!order.length) {
+      props.onSort(undefined);
+    } else {
+      props.onSort(activeColumns[order[0].orderBy].id as ColumnId);
+    }
+  };
+
   const materialTableLocalization = {
     body: {
       editRow: {
@@ -141,7 +158,7 @@ export default function ReviewEntriesTable(
   };
 
   return (
-    <MaterialTable<any>
+    <MaterialTable<ReviewEntriesWord>
       tableRef={tableRef}
       icons={tableIcons}
       title={
@@ -149,17 +166,16 @@ export default function ReviewEntriesTable(
           {t("reviewEntries.title")}
         </Typography>
       }
-      columns={columns.filter(
-        (c) =>
-          (showDefinitions || c.title !== ColumnTitle.Definitions) &&
-          (showGrammaticalInfo || c.title !== ColumnTitle.PartOfSpeech) &&
-          (showHistory || c.title !== ColumnTitle.History)
-      )}
+      columns={activeColumns}
       data={words}
       onFilterChange={updateMaxRows}
+      onOrderCollectionChange={onOrderCollectionChange}
       onRowsPerPageChange={() => setScrollToTop(true)}
       editable={{
-        onRowUpdate: (newData: ReviewEntriesWord, oldData: ReviewEntriesWord) =>
+        onRowUpdate: (
+          newData: ReviewEntriesWord,
+          oldData?: ReviewEntriesWord
+        ) =>
           new Promise(async (resolve, reject) => {
             await props
               .onRowUpdate(newData, oldData)

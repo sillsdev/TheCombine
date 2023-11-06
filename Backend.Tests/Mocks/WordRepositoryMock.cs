@@ -75,6 +75,12 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_frontier.Where(w => w.ProjectId == projectId).Select(w => w.Clone()).ToList());
         }
 
+        public Task<List<Word>> GetFrontierWithVernacular(string projectId, string vernacular)
+        {
+            return Task.FromResult(_frontier.Where(
+                w => w.ProjectId == projectId && w.Vernacular == vernacular).Select(w => w.Clone()).ToList());
+        }
+
         public Task<Word> AddFrontier(Word word)
         {
             _frontier.Add(word.Clone());

@@ -145,6 +145,13 @@ namespace BackendFramework.Repositories
             return await _wordDatabase.Frontier.Find(w => w.ProjectId == projectId).ToListAsync();
         }
 
+        /// <summary> Finds all <see cref="Word"/>s in Frontier of specified project with specified vern </summary>
+        public async Task<List<Word>> GetFrontierWithVernacular(string projectId, string vernacular)
+        {
+            return await _wordDatabase.Frontier.Find(
+                w => w.ProjectId == projectId && w.Vernacular == vernacular).ToListAsync();
+        }
+
         /// <summary> Adds a <see cref="Word"/> only to the Frontier </summary>
         /// <param name="word"></param>
         /// <returns> The word created </returns>

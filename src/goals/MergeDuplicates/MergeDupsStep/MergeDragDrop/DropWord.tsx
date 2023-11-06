@@ -43,7 +43,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
 
   // reset vern if not in vern list
   if (treeWord && !verns.includes(treeWord.vern)) {
-    dispatch(setVern(props.wordId, verns[0] || ""));
+    dispatch(setVern({ wordId: props.wordId, vern: verns[0] || "" }));
   }
 
   return (
@@ -69,7 +69,12 @@ export default function DropWord(props: DropWordProps): ReactElement {
                 variant="standard"
                 value={treeWord.vern}
                 onChange={(e) =>
-                  dispatch(setVern(props.wordId, e.target.value as string))
+                  dispatch(
+                    setVern({
+                      wordId: props.wordId,
+                      vern: e.target.value as string,
+                    })
+                  )
                 }
               >
                 {verns.map((vern) => (
@@ -94,7 +99,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
               <FlagButton
                 flag={treeWord.flag}
                 updateFlag={(newFlag: Flag) => {
-                  dispatch(flagWord(props.wordId, newFlag));
+                  dispatch(flagWord({ wordId: props.wordId, flag: newFlag }));
                 }}
                 buttonId={`word-${props.wordId}-flag`}
               />

@@ -17,25 +17,12 @@ import {
   VernacularCell,
 } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents";
 import {
+  ColumnId,
   ReviewEntriesSense,
   ReviewEntriesWord,
   ReviewEntriesWordField,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { compareFlags } from "utilities/wordUtilities";
-
-enum SortStyle {
-  Vernacular,
-  Sense,
-  Definition,
-  Gloss,
-  PartOfSpeech,
-  Domain,
-  Pronunciation,
-  Note,
-  Flag,
-  History,
-  None,
-}
 
 export class ColumnTitle {
   static Vernacular = t("reviewEntries.columns.vernacular");
@@ -68,10 +55,10 @@ export interface FieldParameterStandard {
   onRowDataChange?: (word: ReviewEntriesWord) => any;
 }
 
-let currentSort: SortStyle = SortStyle.None;
-const columns: Column<any>[] = [
+const columns: Column<ReviewEntriesWord>[] = [
   // Vernacular column
   {
+    id: ColumnId.Vernacular,
     title: ColumnTitle.Vernacular,
     // field determines what is passed as props.value to editComponent
     field: ReviewEntriesWordField.Vernacular,
@@ -81,16 +68,11 @@ const columns: Column<any>[] = [
     editComponent: (props: FieldParameterStandard) => (
       <VernacularCell {...props} editable />
     ),
-    customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
-      if (currentSort !== SortStyle.Vernacular) {
-        currentSort = SortStyle.Vernacular;
-      }
-      return a.vernacular.localeCompare(b.vernacular);
-    },
   },
 
   // Senses column
   {
+    id: ColumnId.Senses,
     title: ColumnTitle.Senses,
     // field determines what is passed as props.value to editComponent
     field: ReviewEntriesWordField.Senses,
@@ -106,12 +88,8 @@ const columns: Column<any>[] = [
     ): boolean => {
       return parseInt(filter) === rowData.senses.length;
     },
-    customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
-      if (currentSort !== SortStyle.Sense) {
-        currentSort = SortStyle.Sense;
-      }
-      return b.senses.length - a.senses.length;
-    },
+    customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number =>
+      b.senses.length - a.senses.length,
     editComponent: (props: FieldParameterStandard) => {
       const deleteSense = (guid: string): void => {
         if (props.onRowDataChange) {
@@ -129,16 +107,13 @@ const columns: Column<any>[] = [
 
   // Definitions column
   {
+    id: ColumnId.Definitions,
     title: ColumnTitle.Definitions,
     // field determines what is passed as props.value to editComponent
     field: ReviewEntriesWordField.Senses,
     disableClick: true,
     render: (rowData: ReviewEntriesWord) => (
-      <DefinitionCell
-        value={rowData.senses}
-        rowData={rowData}
-        sortingByThis={currentSort === SortStyle.Definition}
-      />
+      <DefinitionCell rowData={rowData} value={rowData.senses} />
     ),
     editComponent: (props: FieldParameterStandard) => (
       <DefinitionCell {...props} editable />
@@ -157,10 +132,6 @@ const columns: Column<any>[] = [
       return false;
     },
     customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
-      if (currentSort !== SortStyle.Definition) {
-        currentSort = SortStyle.Definition;
-      }
-
       for (
         let count = 0;
         count < a.senses.length && count < b.senses.length;
@@ -178,16 +149,13 @@ const columns: Column<any>[] = [
 
   // Glosses column
   {
+    id: ColumnId.Glosses,
     title: ColumnTitle.Glosses,
     // field determines what is passed as props.value to editComponent
     field: ReviewEntriesWordField.Senses,
     disableClick: true,
     render: (rowData: ReviewEntriesWord) => (
-      <GlossCell
-        value={rowData.senses}
-        rowData={rowData}
-        sortingByThis={currentSort === SortStyle.Gloss}
-      />
+      <GlossCell rowData={rowData} value={rowData.senses} />
     ),
     editComponent: (props: FieldParameterStandard) => (
       <GlossCell {...props} editable />
@@ -206,10 +174,6 @@ const columns: Column<any>[] = [
       return false;
     },
     customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
-      if (currentSort !== SortStyle.Gloss) {
-        currentSort = SortStyle.Gloss;
-      }
-
       for (
         let count = 0;
         count < a.senses.length && count < b.senses.length;
@@ -227,6 +191,7 @@ const columns: Column<any>[] = [
 
   // Part of Speech column
   {
+    id: ColumnId.PartOfSpeech,
     title: ColumnTitle.PartOfSpeech,
     disableClick: true,
     editable: "never",
@@ -248,10 +213,6 @@ const columns: Column<any>[] = [
       return false;
     },
     customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
-      if (currentSort !== SortStyle.PartOfSpeech) {
-        currentSort = SortStyle.PartOfSpeech;
-      }
-
       for (
         let count = 0;
         count < a.senses.length && count < b.senses.length;
@@ -272,15 +233,11 @@ const columns: Column<any>[] = [
 
   // Semantic Domains column
   {
+    id: ColumnId.Domains,
     title: ColumnTitle.Domains,
     // field determines what is passed as props.value to editComponent
     field: ReviewEntriesWordField.Senses,
-    render: (rowData: ReviewEntriesWord) => (
-      <DomainCell
-        rowData={rowData}
-        sortingByThis={currentSort === SortStyle.Domain}
-      />
-    ),
+    render: (rowData: ReviewEntriesWord) => <DomainCell rowData={rowData} />,
     editComponent: (props: FieldParameterStandard) => {
       const editDomains = (guid: string, domains: SemanticDomain[]): void => {
         if (props.onRowDataChange) {
@@ -336,10 +293,6 @@ const columns: Column<any>[] = [
       return false;
     },
     customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
-      if (currentSort !== SortStyle.Domain) {
-        currentSort = SortStyle.Domain;
-      }
-
       let count = 0;
       let compare = 0;
 
@@ -400,6 +353,7 @@ const columns: Column<any>[] = [
 
   // Audio column
   {
+    id: ColumnId.Pronunciations,
     title: ColumnTitle.Pronunciations,
     // field determines what is passed as props.value to editComponent
     field: ReviewEntriesWordField.Pronunciations,
@@ -449,23 +403,19 @@ const columns: Column<any>[] = [
     ): boolean => {
       return parseInt(filter) === rowData.audio.length;
     },
-    customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
-      if (currentSort !== SortStyle.Pronunciation) {
-        currentSort = SortStyle.Pronunciation;
-      }
-      return b.audio.length - a.audio.length;
-    },
+    customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number =>
+      b.audio.length - a.audio.length,
   },
 
   // Note column
   {
+    id: ColumnId.Note,
     title: ColumnTitle.Note,
     // field determines what is passed as props.value to editComponent
     field: ReviewEntriesWordField.Note,
     render: (rowData: ReviewEntriesWord) => (
       <Input
         fullWidth
-        key={`note${rowData.id}`}
         value={rowData.noteText}
         readOnly
         disableUnderline
@@ -473,16 +423,11 @@ const columns: Column<any>[] = [
       />
     ),
     editComponent: (props: FieldParameterStandard) => <NoteCell {...props} />,
-    customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
-      if (currentSort !== SortStyle.Note) {
-        currentSort = SortStyle.Note;
-      }
-      return a.noteText.localeCompare(b.noteText);
-    },
   },
 
   // Flag column
   {
+    id: ColumnId.Flag,
     title: ColumnTitle.Flag,
     // field determines what is passed as props.value to editComponent
     field: ReviewEntriesWordField.Flag,
@@ -500,16 +445,13 @@ const columns: Column<any>[] = [
     ): boolean => {
       return rowData.flag.text.includes(filter);
     },
-    customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
-      if (currentSort !== SortStyle.Flag) {
-        currentSort = SortStyle.Flag;
-      }
-      return compareFlags(a.flag, b.flag);
-    },
+    customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number =>
+      compareFlags(a.flag, b.flag),
   },
 
   // History column
   {
+    id: ColumnId.History,
     title: ColumnTitle.History,
     filtering: false,
     editable: "never",
@@ -521,15 +463,13 @@ const columns: Column<any>[] = [
       );
     },
     customSort: (a: ReviewEntriesWord, b: ReviewEntriesWord): number => {
-      if (currentSort !== SortStyle.History) {
-        currentSort = SortStyle.History;
-      }
       return b.historyLength - a.historyLength;
     },
   },
 
   // Delete Entry column
   {
+    id: ColumnId.Delete,
     title: ColumnTitle.Delete,
     filtering: false,
     sorting: false,

@@ -13,6 +13,7 @@ import AlignedList, {
   SPACER,
 } from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
 import {
+  ColumnId,
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
@@ -22,7 +23,6 @@ import { themeColors } from "types/theme";
 
 interface DomainCellProps {
   rowData: ReviewEntriesWord;
-  sortingByThis?: boolean;
   editDomains?: (guid: string, newDomains: SemanticDomain[]) => void;
 }
 
@@ -31,8 +31,12 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
   const [senseToChange, setSenseToChange] = useState<
     ReviewEntriesSense | undefined
   >();
+
+  const sortingByThis = useSelector(
+    (state: StoreState) => state.reviewEntriesState.sortBy === ColumnId.Domains
+  );
   const selectedDomain = useSelector(
-    (state: StoreState) => state.treeViewState?.currentDomain
+    (state: StoreState) => state.treeViewState.currentDomain
   );
 
   function prepAddDomain(sense: ReviewEntriesSense): void {
@@ -90,7 +94,7 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
     senseIndex: number,
     domainIndex: number
   ): { backgroundColor?: string } {
-    return props.sortingByThis && senseIndex === 0 && domainIndex === 0
+    return sortingByThis && senseIndex === 0 && domainIndex === 0
       ? { backgroundColor: themeColors.highlight as string }
       : {};
   }
@@ -102,14 +106,11 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
         key={`domainCell:${props.rowData.id}`}
         listId={`domains${props.rowData.id}`}
         contents={props.rowData.senses.map((sense, senseIndex) => (
-          <Overlay key={senseIndex} on={sense.deleted}>
+          <Overlay key={sense.guid} on={sense.deleted}>
             <Grid container direction="row" spacing={2}>
               {sense.domains.length > 0 ? (
                 sense.domains.map((domain, domainIndex) => (
-                  <Grid
-                    item
-                    key={`${domain.name}::${props.rowData.id}:${sense.guid}`}
-                  >
+                  <Grid item key={`${domain.id}_${domain.name}`}>
                     <Chip
                       color={sense.deleted ? "secondary" : "default"}
                       style={getChipStyle(senseIndex, domainIndex)}
@@ -124,17 +125,16 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
                   </Grid>
                 ))
               ) : (
-                <Grid item xs key={`noDomain${sense.guid}`}>
+                <Grid item xs>
                   <Chip
                     label={t("reviewEntries.noDomain")}
-                    color={props.sortingByThis ? "default" : "secondary"}
+                    color={sortingByThis ? "default" : "secondary"}
                     style={getChipStyle(senseIndex, 0)}
                   />
                 </Grid>
               )}
               {props.editDomains && !sense.deleted && (
                 <IconButton
-                  key={`buttonFor${sense.guid}`}
                   onClick={() => prepAddDomain(sense)}
                   id={`sense-${sense.guid}-domain-add`}
                   size="large"

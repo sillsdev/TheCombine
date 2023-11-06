@@ -7,6 +7,7 @@ import {
 
 import "tests/reactI18nextMock";
 
+import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";
 import SignUp from "components/Login/SignUpPage/SignUpComponent";
 
 jest.mock(
@@ -28,7 +29,13 @@ const MOCK_EVENT = { preventDefault: jest.fn(), target: { value: DATA } };
 describe("Testing sign up component", () => {
   beforeEach(async () => {
     await act(async () => {
-      signUpMaster = create(<SignUp failureMessage="" reset={mockReset} />);
+      signUpMaster = create(
+        <SignUp
+          failureMessage=""
+          reset={mockReset}
+          status={LoginStatus.Default}
+        />
+      );
     });
     signUpHandle = signUpMaster.root.findByType(SignUp);
     mockReset.mockClear();
