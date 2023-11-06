@@ -1,29 +1,43 @@
+import { createSlice } from "@reduxjs/toolkit";
+
 import {
   defaultState,
-  ExportProjectAction,
-  ExportProjectState,
   ExportStatus,
 } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
-import { StoreAction, StoreActionTypes } from "rootActions";
+import { StoreActionTypes } from "rootActions";
 
-export const exportProjectReducer = (
-  state: ExportProjectState = defaultState,
-  action: StoreAction | ExportProjectAction
-): ExportProjectState => {
-  switch (action.type) {
-    case ExportStatus.Exporting:
-    case ExportStatus.Downloading:
-    case ExportStatus.Success:
-    case ExportStatus.Failure:
-      return {
-        ...defaultState,
-        projectId: action.projectId ?? "",
-        status: action.type,
-      };
-    case ExportStatus.Default:
-    case StoreActionTypes.RESET:
-      return defaultState;
-    default:
-      return state;
-  }
-};
+const exportProjectSlice = createSlice({
+  name: "exportProjectState",
+  initialState: defaultState,
+  reducers: {
+    downloadingAction: (state, action) => {
+      state.projectId = action.payload;
+      state.status = ExportStatus.Downloading;
+    },
+    exportingAction: (state, action) => {
+      state.projectId = action.payload;
+      state.status = ExportStatus.Exporting;
+    },
+    failureAction: (state, action) => {
+      state.projectId = action.payload;
+      state.status = ExportStatus.Failure;
+    },
+    resetAction: () => defaultState,
+    successAction: (state, action) => {
+      state.projectId = action.payload;
+      state.status = ExportStatus.Success;
+    },
+  },
+  extraReducers: (builder) =>
+    builder.addCase(StoreActionTypes.RESET, () => defaultState),
+});
+
+export const {
+  downloadingAction,
+  exportingAction,
+  failureAction,
+  resetAction,
+  successAction,
+} = exportProjectSlice.actions;
+
+export default exportProjectSlice.reducer;
