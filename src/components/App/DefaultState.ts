@@ -1,5 +1,5 @@
 import { defaultState as goalTimelineState } from "components/GoalTimeline/DefaultState";
-import { defaultState as loginState } from "components/Login/Redux/LoginReducer";
+import { defaultState as loginState } from "components/Login/Redux/LoginReduxTypes";
 import { defaultState as currentProjectState } from "components/Project/ProjectReduxTypes";
 import { defaultState as exportProjectState } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { defaultState as pronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";

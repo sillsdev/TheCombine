@@ -431,7 +431,7 @@ describe("DataEntryTable", () => {
       await addRecentEntry();
       const recentEntry = testRenderer.root.findByType(MockRecentEntry);
       await act(async () => {
-        await recentEntry.props.removeEntry();
+        await recentEntry.props.removeEntry(recentEntry.props.rowIndex);
       });
       expect(testRenderer.root.findAllByType(MockRecentEntry)).toHaveLength(0);
     });
@@ -454,7 +454,7 @@ describe("DataEntryTable", () => {
       // Update the vernacular
       const newVern = "not the vern generated in addRecentEntry";
       await act(async () => {
-        await recentEntry.props.updateVern(newVern);
+        await recentEntry.props.updateVern(recentEntry.props.rowIndex, newVern);
       });
 
       // Confirm the backend update was correctly called
