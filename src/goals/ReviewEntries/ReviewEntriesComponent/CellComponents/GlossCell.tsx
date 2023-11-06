@@ -18,7 +18,6 @@ import {
 
 interface GlossCellProps extends FieldParameterStandard {
   editable?: boolean;
-  sortingByThis?: boolean;
 }
 
 export default function GlossCell(props: GlossCellProps): ReactElement {
@@ -31,7 +30,7 @@ export default function GlossCell(props: GlossCellProps): ReactElement {
     <AlignedList
       listId={`senses${props.rowData.id}`}
       contents={props.rowData.senses.map((sense, index) => (
-        <Overlay key={index} on={sense.deleted}>
+        <Overlay key={sense.guid} on={sense.deleted}>
           <GlossList
             defaultLang={analysisLang}
             editable={props.editable && !sense.deleted}

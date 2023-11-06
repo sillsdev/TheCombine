@@ -41,8 +41,8 @@ export default function ProjectSelect(
       sx={{ maxWidth: "100%" }}
       value={props.project.name}
     >
-      {projectList.map((p, i) => (
-        <MenuItem key={i} value={p.name}>
+      {projectList.map((p) => (
+        <MenuItem key={p.id} value={p.name}>
           {p.name}
         </MenuItem>
       ))}

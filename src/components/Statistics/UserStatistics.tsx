@@ -61,18 +61,9 @@ function TableRow(props: { counts: SemanticDomainUserCount }): ReactElement {
   return (
     <ListItem style={{ minWidth: "600px" }}>
       <Grid container wrap="nowrap" justifyContent="space-around">
-        <TableCell
-          key={"username_" + props.counts.id}
-          text={props.counts.username}
-        />
-        <TableCell
-          key={"domCount_" + props.counts.id}
-          text={props.counts.domainCount}
-        />
-        <TableCell
-          key={"wordCount_" + props.counts.id}
-          text={props.counts.wordCount}
-        />
+        <TableCell text={props.counts.username} />
+        <TableCell text={props.counts.domainCount} />
+        <TableCell text={props.counts.wordCount} />
       </Grid>
     </ListItem>
   );

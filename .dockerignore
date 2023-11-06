@@ -2,15 +2,16 @@
 **
 
 # Except the following.
+!docs/user_guide
 !nginx
 !public
 !src
-!docs/user_guide
 !.env
+!.eslintrc.cjs
 !dev-requirements.txt
 !package*.json
-!tsconfig.json
 !tox.ini
+!tsconfig.json
 
 # Ignore user guide build directory.
 docs/user_guide/site

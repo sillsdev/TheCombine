@@ -16,7 +16,6 @@ export default function VernacularCell(
   return (
     <TextFieldWithFont
       variant="standard"
-      key={`row-${props.rowData.id}-vernacular`}
       id={`row-${props.rowData.id}-vernacular-text`}
       multiline
       value={props.value}

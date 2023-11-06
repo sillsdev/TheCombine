@@ -39,7 +39,7 @@ export default function CalendarView(props: CalendarViewProps): ReactElement {
 
     return monthToRender.map((tempDayjs) => (
       <CalendarPicker
-        key={"calendarPick" + tempDayjs.toString()}
+        key={tempDayjs.toISOString()}
         components={{ LeftArrowIcon: Icon, RightArrowIcon: Icon }}
         readOnly
         disabled
