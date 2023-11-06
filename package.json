@@ -209,6 +209,12 @@
     }
   },
   "jest": {
+    "coverageReporters": [
+      "cobertura",
+      "lcov",
+      "text",
+      "text-summary"
+    ],
     "transformIgnorePatterns": [
       "/node_modules/(!${axios})"
     ]

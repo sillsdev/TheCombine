@@ -107,7 +107,7 @@ describe("ExistingEntry", () => {
       await updateVernAndBlur(mockVern);
       expect(mockUpdateVern).toBeCalledTimes(0);
       await updateVernAndBlur(mockText);
-      expect(mockUpdateVern).toBeCalledWith(mockText);
+      expect(mockUpdateVern).toBeCalledWith(0, mockText);
     });
   });
 
@@ -125,7 +125,7 @@ describe("ExistingEntry", () => {
       await updateGlossAndBlur(mockGloss);
       expect(mockUpdateGloss).toBeCalledTimes(0);
       await updateGlossAndBlur(mockText);
-      expect(mockUpdateGloss).toBeCalledWith(mockText);
+      expect(mockUpdateGloss).toBeCalledWith(0, mockText);
     });
   });
 
@@ -136,7 +136,7 @@ describe("ExistingEntry", () => {
       await act(async () => {
         testHandle.props.updateText(mockText);
       });
-      expect(mockUpdateNote).toBeCalledWith(mockText);
+      expect(mockUpdateNote).toBeCalledWith(0, mockText);
     });
   });
 });
