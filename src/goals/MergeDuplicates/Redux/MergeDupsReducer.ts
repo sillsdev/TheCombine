@@ -137,7 +137,7 @@ const mergeDuplicatesSlice = createSlice({
       const srcWordId = action.payload.ref.wordId;
       const destWordId = action.payload.destWordId;
       const srcOrder = action.payload.ref.order;
-      if (srcOrder === undefined && srcWordId === destWordId) {
+      if (srcOrder === undefined && srcWordId !== destWordId) {
         // MOVE_SENSE,
         const mergeSenseId = action.payload.ref.mergeSenseId;
 
