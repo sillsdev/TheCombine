@@ -64,6 +64,12 @@ def parse_args() -> argparse.Namespace:
         default="flat",
         help="Structure to be used for the domain questions.",
     )
+    parser.add_argument(
+        "--simple",
+        "-s",
+        action="store_true",
+        help="Export only SemanticDomain items for Backend/Data",
+    )
     logging_group = parser.add_mutually_exclusive_group()
     logging_group.add_argument(
         "--verbose", "-v", action="store_true", help="Print detailed progress information."
@@ -251,7 +257,7 @@ def get_sem_doms(node: ElementTree.Element, parent: SemDomTreeMap, prev: SemDomM
     return return_set
 
 
-def write_json(output_dir: Path) -> None:
+def write_json(output_dir: Path, simple: bool = False) -> None:
     """
     Serialize the domain_nodes and domain_tree structures to JSON files.
 
@@ -261,6 +267,15 @@ def write_json(output_dir: Path) -> None:
     """
     if not output_dir.is_dir():
         output_dir.mkdir()
+
+    if simple:
+        for lang in domain_nodes:
+            output_file = output_dir / f"{lang}.json"
+            with open(output_file, "w") as file:
+                for id in domain_nodes[lang]:
+                    file.write(f"{domain_nodes[lang][id].to_semantic_domain().to_json()}\n")
+        return
+
     output_file = output_dir / "nodes.json"
     with open(output_file, "w") as file:
         for lang in domain_nodes:
@@ -274,7 +289,11 @@ def write_json(output_dir: Path) -> None:
 
 
 def generate_semantic_domains(
-    input_files: List[Path], output_dir: Path, *, flatten_questions: bool = True
+    input_files: List[Path],
+    output_dir: Path,
+    *,
+    flatten_questions: bool = True,
+    simple: bool = False,
 ) -> None:
     for xml_file in input_files:
         logging.info(f"Parsing {xml_file}")
@@ -311,7 +330,7 @@ def generate_semantic_domains(
         logging.info(f"Number of {lang} Tree Nodes: {len(domain_tree[lang])}")
     if not flatten_questions:
         SemanticDomainFull.flatten_questions = False
-    write_json(output_dir)
+    write_json(output_dir, simple)
 
 
 def main() -> None:
@@ -325,7 +344,10 @@ def main() -> None:
         log_level = logging.WARNING
     logging.basicConfig(format="%(levelname)s:%(message)s", level=log_level)
     generate_semantic_domains(
-        args.input_files, args.output_dir, flatten_questions=(args.question_mode == "flat")
+        args.input_files,
+        args.output_dir,
+        flatten_questions=(args.question_mode == "flat"),
+        simple = args.simple
     )
 
 
