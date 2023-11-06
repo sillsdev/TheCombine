@@ -10,7 +10,7 @@ import { characterInventoryReducer } from "goals/CharacterInventory/Redux/Charac
 import { mergeDupStepReducer } from "goals/MergeDuplicates/Redux/MergeDupsReducer";
 import { reviewEntriesReducer } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReducer";
 import { StoreState } from "types";
-import { analyticsReducer } from "types/Redux/analytics";
+import analyticsReducer from "types/Redux/analytics";
 
 export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   //login

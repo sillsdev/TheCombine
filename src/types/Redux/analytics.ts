@@ -1,36 +1,31 @@
-import {
-  AnalyticsActionTypes,
-  AnalyticsChangePageAction,
-  AnalyticsState,
-  defaultState,
-} from "types/Redux/analyticsReduxTypes";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-export function changePage(newPage: string): AnalyticsChangePageAction {
-  return {
-    type: AnalyticsActionTypes.ChangePage,
-    newPage,
-  };
-}
+import { StoreActionTypes } from "rootActions";
+import { defaultState } from "types/Redux/analyticsReduxTypes";
 
-export const analyticsReducer = (
-  //createStore() calls each reducer with undefined state
-  state: AnalyticsState = defaultState,
-  action: AnalyticsChangePageAction
-): AnalyticsState => {
-  switch (action.type) {
-    case AnalyticsActionTypes.ChangePage:
-      if (action.newPage !== state.currentPage) {
+const analyticsSlice = createSlice({
+  name: "analyticsState",
+  initialState: defaultState,
+  reducers: {
+    changePageAction: (state, action) => {
+      if (action.payload !== state.currentPage) {
         analytics.track("navigate", {
+          destination: action.payload,
           source: state.currentPage,
-          destination: action.newPage,
         });
       }
-      return {
-        ...state,
-        currentPage: action.newPage,
-      };
+      state.currentPage = action.payload;
+    },
+    resetAction: () => defaultState,
+  },
+  extraReducers: (builder) =>
+    builder.addCase(StoreActionTypes.RESET, () => defaultState),
+});
 
-    default:
-      return state;
-  }
-};
+const { changePageAction } = analyticsSlice.actions;
+
+export default analyticsSlice.reducer;
+
+export function changePage(newPage: string): PayloadAction {
+  return changePageAction(newPage);
+}
