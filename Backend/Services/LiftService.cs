@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -949,16 +950,17 @@ namespace BackendFramework.Services
 
             // The following are unused and are not implemented, but may still be called by the Lexicon Merger
             // They may be useful later if we need to add more complex attributes to words in The Combine
+            [ExcludeFromCodeCoverage]
             public LiftExample GetOrMakeExample(LiftSense sense, Extensible info)
             {
                 return new LiftExample { Content = new LiftMultiText() };
             }
-
+            [ExcludeFromCodeCoverage]
             public LiftObject GetOrMakeParentReversal(LiftObject parent, LiftMultiText contents, string type)
             {
                 return new LiftReversal();
             }
-
+            [ExcludeFromCodeCoverage]
             public LiftSense GetOrMakeSubsense(LiftSense sense, Extensible info, string rawXml)
             {
                 return new LiftSense(info, new Guid(), sense)
@@ -967,35 +969,40 @@ namespace BackendFramework.Services
                     Gloss = new LiftMultiText()
                 };
             }
-
+            [ExcludeFromCodeCoverage]
             public LiftObject MergeInEtymology(LiftEntry entry, string source, string type, LiftMultiText form,
-                LiftMultiText gloss, string rawXml)
+                        LiftMultiText gloss, string rawXml)
             {
                 return new LiftEtymology();
             }
-
+            [ExcludeFromCodeCoverage]
             public LiftObject MergeInReversal(
-                LiftSense sense, LiftObject parent, LiftMultiText contents, string type, string rawXml)
+                        LiftSense sense, LiftObject parent, LiftMultiText contents, string type, string rawXml)
             {
                 return new LiftReversal();
             }
-
+            [ExcludeFromCodeCoverage]
             public LiftObject MergeInVariant(LiftEntry entry, LiftMultiText contents, string rawXml)
             {
                 return new LiftVariant();
             }
-
+            [ExcludeFromCodeCoverage]
             public void EntryWasDeleted(Extensible info, DateTime dateDeleted) { }
+            [ExcludeFromCodeCoverage]
             public void MergeInExampleForm(LiftExample example, LiftMultiText multiText) { }
-
+            [ExcludeFromCodeCoverage]
             public void MergeInPicture(LiftSense sense, string href, LiftMultiText caption) { }
+            [ExcludeFromCodeCoverage]
             public void MergeInRelation(
-                LiftObject extensible, string relationTypeName, string targetId, string rawXml)
+                        LiftObject extensible, string relationTypeName, string targetId, string rawXml)
             { }
+            [ExcludeFromCodeCoverage]
             public void MergeInSource(LiftExample example, string source) { }
+            [ExcludeFromCodeCoverage]
             public void MergeInTranslationForm(
-                LiftExample example, string type, LiftMultiText multiText, string rawXml)
+                        LiftExample example, string type, LiftMultiText multiText, string rawXml)
             { }
+            [ExcludeFromCodeCoverage]
             public void ProcessFieldDefinition(string tag, LiftMultiText description) { }
         }
     }
