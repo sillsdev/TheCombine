@@ -347,8 +347,9 @@ namespace BackendFramework.Services
                 liftRangesWriter.WriteStartElement("range");
                 liftRangesWriter.WriteAttributeString("id", "semantic-domain-ddp4");
 
-                // Choose language from analysis languages, defaulting to "en"
+                // This list should match the contents of Backend/Data/
                 List<string> sdLangs = new() { "ar", "en", "es", "fr", "hi", "ml", "my", "pt", "ru", "sw", "zh" };
+                // Choose language from analysis languages, defaulting to "en"
                 var lang = proj.AnalysisWritingSystems.Find(ws => sdLangs.Contains(ws.Bcp47))?.Bcp47 ?? "en";
 
                 // Pull from resources file with all English semantic domains

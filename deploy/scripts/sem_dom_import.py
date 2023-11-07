@@ -281,6 +281,9 @@ def write_json(output_dir: Path, simple: bool = False) -> None:
                 for id in nodes:
                     file.write(f"{nodes[id].to_semantic_domain().to_json(capital=True)},\n")
                 file.write("]\n")
+        langChangeWarning = """If you add/remove languages in Backend/Data:
+\tUpdate both BackendFramework.csproj and LiftExport() in LiftServices.cs"""
+        logging.warning(langChangeWarning)
         return
 
     output_file = output_dir / "nodes.json"
