@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Security;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml;
 using BackendFramework.Helper;
@@ -345,9 +346,13 @@ namespace BackendFramework.Services
                 liftRangesWriter.WriteStartElement("range");
                 liftRangesWriter.WriteAttributeString("id", "semantic-domain-ddp4");
 
+                // Choose language from analysis languages, defaulting to "en"
+                List<string> sdLangs = new() { "ar", "en", "es", "fr", "hi", "ml", "my", "pt", "ru", "sw", "zh" };
+                var lang = proj.AnalysisWritingSystems.Find(ws => sdLangs.Contains(ws.Bcp47))?.Bcp47 ?? "en";
+
                 // Pull from resources file with all English semantic domains
                 var assembly = typeof(LiftService).GetTypeInfo().Assembly;
-                const string semDomListFile = "BackendFramework.Data.sdList.txt";
+                var semDomListFile = $"BackendFramework.Data.ddp4-{lang}.json";
                 var resource = assembly.GetManifestResourceStream(semDomListFile);
                 if (resource is null)
                 {
@@ -360,13 +365,13 @@ namespace BackendFramework.Services
                     sdList = await reader.ReadToEndAsync();
                 }
 
-                var sdLines = sdList.Split(Environment.NewLine);
-                foreach (var line in sdLines)
+                var options = new JsonSerializerOptions { AllowTrailingCommas = true };
+                var semDoms = JsonSerializer.Deserialize<List<SemanticDomain>>(sdList, options)!;
+                foreach (var sd in semDoms)
                 {
-                    if (line != "")
+                    if (sd.Id != "Sem")
                     {
-                        var items = line.Split("`");
-                        WriteRangeElement(liftRangesWriter, items[0], items[1], items[2]);
+                        WriteRangeElement(liftRangesWriter, sd.Id, sd.Guid, sd.Name);
                     }
                 }
 

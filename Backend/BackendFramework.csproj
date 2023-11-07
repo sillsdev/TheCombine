@@ -10,10 +10,30 @@
     <NoWarn>$(NoWarn);CA1305;CA1816;CA1848;CS1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Data\sdList.txt" />
+    <None Remove="Data\ddp4-ar.json" />
+    <None Remove="Data\ddp4-en.json" />
+    <None Remove="Data\ddp4-es.json" />
+    <None Remove="Data\ddp4-fr.json" />
+    <None Remove="Data\ddp4-hi.json" />
+    <None Remove="Data\ddp4-ml.json" />
+    <None Remove="Data\ddp4-my.json" />
+    <None Remove="Data\ddp4-pt.json" />
+    <None Remove="Data\ddp4-ru.json" />
+    <None Remove="Data\ddp4-sw.json" />
+    <None Remove="Data\ddp4-zh.json" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Data\sdList.txt" />
+    <EmbeddedResource Include="Data\ddp4-ar.json" />
+    <EmbeddedResource Include="Data\ddp4-en.json" />
+    <EmbeddedResource Include="Data\ddp4-es.json" />
+    <EmbeddedResource Include="Data\ddp4-fr.json" />
+    <EmbeddedResource Include="Data\ddp4-hi.json" />
+    <EmbeddedResource Include="Data\ddp4-ml.json" />
+    <EmbeddedResource Include="Data\ddp4-my.json" />
+    <EmbeddedResource Include="Data\ddp4-pt.json" />
+    <EmbeddedResource Include="Data\ddp4-ru.json" />
+    <EmbeddedResource Include="Data\ddp4-sw.json" />
+    <EmbeddedResource Include="Data\ddp4-zh.json" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="RelaxNG" Version="3.2.3" >

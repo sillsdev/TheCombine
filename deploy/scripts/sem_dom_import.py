@@ -1,12 +1,16 @@
 #! /usr/bin/env python3
 """
 Create data files for importing the Semantic Domain information into the Mongo database.
+(Or data files for exporting Semantic Domain information in a .lift-ranges file.)
 
 There are 2 files that are created for each language:
  - <lang>/tree.json -  the semantic domain hierarchy; it contains the data for the
                        SemanticDomainTree collection
  - <lang>/nodes.json - the contents of each element in the hierarchy; it contains the
                        data for the SemanticDomainNodes collection
+
+(Or if the --simple/-s flag is used, files of the form ddp4-<lang>.json are created
+for use in Backend/Data.)
 """
 
 from __future__ import annotations
@@ -270,10 +274,13 @@ def write_json(output_dir: Path, simple: bool = False) -> None:
 
     if simple:
         for lang in domain_nodes:
-            output_file = output_dir / f"{lang}.json"
+            output_file = output_dir / f"ddp4-{lang}.json"
             with open(output_file, "w") as file:
-                for id in domain_nodes[lang]:
-                    file.write(f"{domain_nodes[lang][id].to_semantic_domain().to_json()}\n")
+                file.write("[\n")
+                nodes = domain_nodes[lang]
+                for id in nodes:
+                    file.write(f"{nodes[id].to_semantic_domain().to_json(capital=True)},\n")
+                file.write("]\n")
         return
 
     output_file = output_dir / "nodes.json"

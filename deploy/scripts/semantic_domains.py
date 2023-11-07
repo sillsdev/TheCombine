@@ -20,13 +20,22 @@ class SemanticDomain:
         self.name = _name
         self.id = _id
 
-    def to_json(self) -> str:
-        data = {
-            "guid": "" if self.guid is None else str(self.guid),
-            "lang": self.lang,
-            "name": self.name,
-            "id": self.id,
-        }
+    def to_json(self, *, capital: bool = False) -> str:
+        data = (
+            {
+                "Guid": "" if self.guid is None else str(self.guid),
+                "Lang": self.lang,
+                "Name": self.name,
+                "Id": self.id,
+            }
+            if capital
+            else {
+                "guid": "" if self.guid is None else str(self.guid),
+                "lang": self.lang,
+                "name": self.name,
+                "id": self.id,
+            }
+        )
         return json.dumps(data, indent=4)
 
     def to_dict(self) -> Dict[str, str]:
