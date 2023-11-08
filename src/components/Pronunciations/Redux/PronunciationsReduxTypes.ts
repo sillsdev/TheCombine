@@ -1,20 +1,17 @@
 export enum PronunciationsStatus {
-  Default = "DEFAULT",
+  Inactive = "INACTIVE",
   Playing = "PLAYING",
   Recording = "RECORDING",
 }
 
-export interface PronunciationsAction {
-  type: PronunciationsStatus;
-  payload?: string;
-}
-
 export interface PronunciationsState {
-  type: PronunciationsStatus;
-  payload: string;
+  fileName: string;
+  status: PronunciationsStatus;
+  wordId: string;
 }
 
 export const defaultState: PronunciationsState = {
-  type: PronunciationsStatus.Default,
-  payload: "",
+  fileName: "",
+  status: PronunciationsStatus.Inactive,
+  wordId: "",
 };
