@@ -1,5 +1,5 @@
 export enum PronunciationsStatus {
-  Default = "DEFAULT",
+  Inactive = "INACTIVE",
   Playing = "PLAYING",
   Recording = "RECORDING",
 }
@@ -12,6 +12,6 @@ export interface PronunciationsState {
 
 export const defaultState: PronunciationsState = {
   fileName: "",
-  status: PronunciationsStatus.Default,
+  status: PronunciationsStatus.Inactive,
   wordId: "",
 };

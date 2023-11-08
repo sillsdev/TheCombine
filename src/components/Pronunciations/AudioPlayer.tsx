@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import { ButtonConfirmation } from "components/Dialogs";
 import {
   playing,
-  reset,
+  resetPronunciations,
 } from "components/Pronunciations/Redux/PronunciationsActions";
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { StoreState } from "types";
@@ -48,7 +48,10 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
 
   const classes = useStyles();
   const dispatch = useAppDispatch();
-  const dispatchReset = useCallback(() => dispatch(reset()), [dispatch]);
+  const dispatchReset = useCallback(
+    () => dispatch(resetPronunciations()),
+    [dispatch]
+  );
   const { t } = useTranslation();
 
   useEffect(() => {

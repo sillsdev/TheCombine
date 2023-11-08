@@ -16,6 +16,6 @@ export function recording(wordId: string): PayloadAction {
   return setRecordingAction(wordId);
 }
 
-export function reset(): Action {
+export function resetPronunciations(): Action {
   return resetAction();
 }

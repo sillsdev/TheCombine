@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 
 import {
   recording,
-  reset,
+  resetPronunciations,
 } from "components/Pronunciations/Redux/PronunciationsActions";
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { StoreState } from "types";
@@ -46,7 +46,7 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
   }
   function toggleIsRecordingToFalse(): void {
     props.stopRecording();
-    dispatch(reset());
+    dispatch(resetPronunciations());
   }
 
   function handleTouchStart(): void {
