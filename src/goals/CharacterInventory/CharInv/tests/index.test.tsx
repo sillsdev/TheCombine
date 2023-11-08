@@ -11,7 +11,7 @@ import CharInv, {
   dialogButtonIdYes,
   dialogIdCancel,
 } from "goals/CharacterInventory/CharInv";
-import { defaultState as characterInventoryState } from "goals/CharacterInventory/Redux/CharacterInventoryReducer";
+import { defaultState as characterInventoryState } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 
 // Replace Dialog with something that doesn't create portals,
 // because react-test-renderer does not support portals.
@@ -27,7 +27,7 @@ jest.mock("goals/CharacterInventory/CharInv/CharacterDetail", () => "div");
 jest.mock("goals/CharacterInventory/Redux/CharacterInventoryActions", () => ({
   exit: () => mockExit(),
   loadCharInvData: () => mockLoadCharInvData(),
-  resetInState: () => jest.fn(),
+  reset: () => jest.fn(),
   setSelectedCharacter: () => mockSetSelectedCharacter(),
   uploadInventory: () => mockUploadInventory(),
 }));

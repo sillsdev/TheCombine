@@ -36,8 +36,9 @@ export default function CharacterList(): ReactElement {
   };
 
   useEffect(() => {
-    setOrderedChars(sortBy(allChars, sortOrder));
-  }, [allChars, setOrderedChars, sortOrder]);
+    // Spread allChars to not mutate the Redux state.
+    setOrderedChars(sortBy([...allChars], sortOrder));
+  }, [allChars, sortOrder]);
 
   return (
     <>
