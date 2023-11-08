@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 import { SemanticDomain } from "api/models";
-import { getCurrentUser } from "backend/localStorage";
 import Overlay from "components/Overlay";
 import TreeView from "components/TreeView";
 import AlignedList, {
@@ -63,17 +62,7 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
       }
       props.editDomains(senseToChange.guid, [
         ...senseToChange.domains,
-        (function () {
-          const tempSemanticDomain = newSemanticDomainForMongoDB(
-            selectedDomain.mongoId!,
-            selectedDomain.guid,
-            selectedDomain.name,
-            selectedDomain.id
-          );
-          tempSemanticDomain.userId = getCurrentUser()?.id;
-          tempSemanticDomain.created = new Date().toISOString();
-          return tempSemanticDomain;
-        })(),
+        newSemanticDomainForMongoDB(selectedDomain),
       ]);
     }
   }

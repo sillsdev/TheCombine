@@ -326,8 +326,8 @@ namespace BackendFramework.Services
                     Path.GetFileName).ToList().Single();
             }
 
-            var importLiftDir = firstImportDir ?? "";
-            var rangesSrc = Path.Combine(extractedPathToImport, importLiftDir, $"{importLiftDir}.lift-ranges");
+            var rangesSrc = Directory.GetFiles(
+                Path.Combine(extractedPathToImport, firstImportDir ?? ""), "*.lift-ranges").FirstOrDefault();
 
             // If there are no new semantic domains, and the old lift-ranges file is still around, just copy it
             if (proj.SemanticDomains.Count == 0 && File.Exists(rangesSrc))
@@ -349,31 +349,31 @@ namespace BackendFramework.Services
 
                 // This list should match the contents of Backend/Data/
                 List<string> sdLangs = new() { "ar", "en", "es", "fr", "hi", "ml", "my", "pt", "ru", "sw", "zh" };
-                // Choose language from analysis languages, defaulting to "en"
-                var lang = proj.AnalysisWritingSystems.Find(ws => sdLangs.Contains(ws.Bcp47))?.Bcp47 ?? "en";
-
-                // Pull from resources file with all English semantic domains
                 var assembly = typeof(LiftService).GetTypeInfo().Assembly;
-                var semDomListFile = $"BackendFramework.Data.ddp4-{lang}.json";
-                var resource = assembly.GetManifestResourceStream(semDomListFile);
-                if (resource is null)
-                {
-                    throw new ExportException($"Unable to load semantic domain list: {semDomListFile}");
-                }
 
-                string sdList;
-                using (var reader = new StreamReader(resource, Encoding.UTF8))
+                var wordLangs = allWords
+                    .SelectMany(w => w.Senses.SelectMany(s => s.SemanticDomains.Select(d => d.Lang)))
+                    .Distinct().Where(sdLangs.Contains);
+                foreach (var lang in wordLangs)
                 {
-                    sdList = await reader.ReadToEndAsync();
-                }
+                    var semDomListFile = $"BackendFramework.Data.ddp4-{lang}.json";
+                    var resource = assembly.GetManifestResourceStream(semDomListFile)
+                        ?? throw new ExportException($"Unable to load semantic domain list: {semDomListFile}");
 
-                var options = new JsonSerializerOptions { AllowTrailingCommas = true };
-                var semDoms = JsonSerializer.Deserialize<List<SemanticDomain>>(sdList, options)!;
-                foreach (var sd in semDoms)
-                {
-                    if (sd.Id != "Sem")
+                    string sdList;
+                    using (var reader = new StreamReader(resource, Encoding.UTF8))
                     {
-                        WriteRangeElement(liftRangesWriter, sd.Id, sd.Guid, sd.Name);
+                        sdList = await reader.ReadToEndAsync();
+                    }
+
+                    var semDoms = JsonSerializer.Deserialize<List<SemanticDomain>>(
+                        sdList, new JsonSerializerOptions { AllowTrailingCommas = true })!;
+                    foreach (var sd in semDoms)
+                    {
+                        if (sd.Id != "Sem")
+                        {
+                            WriteRangeElement(liftRangesWriter, sd.Id, sd.Guid, sd.Name, sd.Lang);
+                        }
                     }
                 }
 
@@ -383,7 +383,7 @@ namespace BackendFramework.Services
                     var guid = string.IsNullOrEmpty(sd.Guid) || sd.Guid == Guid.Empty.ToString()
                            ? Guid.NewGuid().ToString()
                            : sd.Guid;
-                    WriteRangeElement(liftRangesWriter, sd.Id, guid, sd.Name);
+                    WriteRangeElement(liftRangesWriter, sd.Id, guid, sd.Name, sd.Lang);
                 }
 
                 await liftRangesWriter.WriteEndElementAsync(); //end semantic-domain-ddp4 range
@@ -580,21 +580,21 @@ namespace BackendFramework.Services
         }
 
         private static void WriteRangeElement(
-            XmlWriter liftRangesWriter, string id, string guid, string name)
+            XmlWriter liftRangesWriter, string id, string guid, string name, string lang)
         {
             liftRangesWriter.WriteStartElement("range-element");
             liftRangesWriter.WriteAttributeString("id", $"{id} {name}");
             liftRangesWriter.WriteAttributeString("guid", guid);
 
             liftRangesWriter.WriteStartElement("label");
-            liftRangesWriter.WriteAttributeString("lang", "en");
+            liftRangesWriter.WriteAttributeString("lang", lang);
             liftRangesWriter.WriteStartElement("text");
             liftRangesWriter.WriteString(name);
             liftRangesWriter.WriteEndElement(); //end text
             liftRangesWriter.WriteEndElement(); //end label
 
             liftRangesWriter.WriteStartElement("abbrev");
-            liftRangesWriter.WriteAttributeString("lang", "en");
+            liftRangesWriter.WriteAttributeString("lang", lang);
             liftRangesWriter.WriteStartElement("text");
             liftRangesWriter.WriteString(id);
             liftRangesWriter.WriteEndElement(); //end text
