@@ -15,7 +15,7 @@ import {
 import {
   addRejectedCharacterAction,
   addValidCharacterAction,
-  resetAction,
+  resetCharInvAction,
   setAllWordsAction,
   setCharacterSetAction,
   setRejectedCharactersAction,
@@ -42,7 +42,7 @@ export function addValidCharacter(char: string): PayloadAction {
 }
 
 export function resetCharInv(): Action {
-  return resetAction();
+  return resetCharInvAction();
 }
 
 export function setAllWords(words: string[]): PayloadAction {

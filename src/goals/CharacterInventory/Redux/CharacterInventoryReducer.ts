@@ -54,7 +54,7 @@ const characterInventorySlice = createSlice({
         );
       }
     },
-    resetAction: () => defaultState,
+    resetCharInvAction: () => defaultState,
     setAllWordsAction: (state, action) => {
       state.allWords = action.payload;
     },
@@ -100,7 +100,7 @@ const characterInventorySlice = createSlice({
 export const {
   addRejectedCharacterAction,
   addValidCharacterAction,
-  resetAction,
+  resetCharInvAction,
   setAllWordsAction,
   setCharacterSetAction,
   setRejectedCharactersAction,

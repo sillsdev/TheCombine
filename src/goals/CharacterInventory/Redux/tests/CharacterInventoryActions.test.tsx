@@ -163,12 +163,15 @@ describe("CharacterInventoryActions", () => {
         ...persistedDefaultState,
         characterInventoryState: {
           ...persistedDefaultState.characterInventoryState,
+          // Words containing the characters 1 through 9
           allWords: ["123", "45246", "735111189"],
         },
       });
       await store.dispatch(getAllCharacters());
       const { characterSet } = store.getState().characterInventoryState;
       expect(characterSet).toHaveLength(9);
+      const chars = characterSet.map((char) => char.character);
+      [..."123456789"].forEach((c) => expect(chars).toContain(c));
     });
   });
 
