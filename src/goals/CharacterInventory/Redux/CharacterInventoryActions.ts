@@ -41,7 +41,7 @@ export function addValidCharacter(char: string): PayloadAction {
   return addValidCharacterAction(char);
 }
 
-export function reset(): Action {
+export function resetCharInv(): Action {
   return resetAction();
 }
 
@@ -100,14 +100,20 @@ export function setCharacterStatus(character: string, status: CharacterStatus) {
 /** Sends the in-state character inventory to the server. */
 export function uploadInventory() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    const state = getState();
-    const changes = getChangesFromState(state);
+    const charInvState = getState().characterInventoryState;
+    const project = getState().currentProjectState.project;
+    const changes = getChanges(project, charInvState);
     if (!changes.length) {
       exit();
       return;
     }
-    const updatedProject = updateCurrentProject(state);
-    await dispatch(asyncUpdateCurrentProject(updatedProject));
+    await dispatch(
+      asyncUpdateCurrentProject({
+        ...project,
+        rejectedCharacters: charInvState.rejectedCharacters,
+        validCharacters: charInvState.validCharacters,
+      })
+    );
     dispatch(addCharInvChangesToGoal(changes));
     await dispatch(asyncUpdateGoal());
     exit();
@@ -169,19 +175,13 @@ function countOccurrences(char: string, words: string[]): number {
   return count;
 }
 
-function getChangesFromState(state: StoreState): CharacterChange[] {
-  const proj = state.currentProjectState.project;
-  const charInvState = state.characterInventoryState;
-  return getChanges(proj, charInvState);
-}
-
 export function getChanges(
-  proj: Project,
+  project: Project,
   charInvState: CharacterInventoryState
 ): CharacterChange[] {
-  const oldAcc = proj.validCharacters;
+  const oldAcc = project.validCharacters;
   const newAcc = charInvState.validCharacters;
-  const oldRej = proj.rejectedCharacters;
+  const oldRej = project.rejectedCharacters;
   const newRej = charInvState.rejectedCharacters;
   const allCharacters = [
     ...new Set([...oldAcc, ...newAcc, ...oldRej, ...newRej]),
@@ -229,11 +229,4 @@ function getChange(
     return [c, CharacterStatus.Undecided, CharacterStatus.Rejected];
   }
   return undefined;
-}
-
-function updateCurrentProject(state: StoreState): Project {
-  const project = { ...state.currentProjectState.project };
-  project.validCharacters = state.characterInventoryState.validCharacters;
-  project.rejectedCharacters = state.characterInventoryState.rejectedCharacters;
-  return project;
 }

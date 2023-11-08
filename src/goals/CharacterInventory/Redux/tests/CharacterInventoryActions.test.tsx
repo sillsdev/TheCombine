@@ -77,6 +77,7 @@ describe("CharacterInventoryActions", () => {
       expect(state.characterSet[0].status).toEqual(CharacterStatus.Accepted);
       expect(state.rejectedCharacters).toHaveLength(0);
       expect(state.validCharacters).toHaveLength(1);
+      expect(state.validCharacters[0]).toEqual(character);
     });
 
     it("changes character from Accepted to Undecided", () => {
@@ -94,6 +95,7 @@ describe("CharacterInventoryActions", () => {
       const state = store.getState().characterInventoryState;
       expect(state.characterSet[0].status).toEqual(CharacterStatus.Rejected);
       expect(state.rejectedCharacters).toHaveLength(1);
+      expect(state.rejectedCharacters[0]).toEqual(character);
       expect(state.validCharacters).toHaveLength(0);
     });
   });
@@ -134,7 +136,11 @@ describe("CharacterInventoryActions", () => {
       expect(mockAsyncUpdateCurrentProject).toHaveBeenCalledTimes(1);
       const proj: Project = mockAsyncUpdateCurrentProject.mock.calls[0][0];
       expect(proj.rejectedCharacters).toHaveLength(rejectedCharacters.length);
+      rejectedCharacters.forEach((c) =>
+        expect(proj.rejectedCharacters).toContain(c)
+      );
       expect(proj.validCharacters).toHaveLength(validCharacters.length);
+      validCharacters.forEach((c) => expect(proj.validCharacters).toContain(c));
       expect(mockAsyncUpdateGoal).toHaveBeenCalledTimes(1);
     });
   });
@@ -142,11 +148,12 @@ describe("CharacterInventoryActions", () => {
   describe("fetchWords", () => {
     it("correctly affects state", async () => {
       const store = setupStore();
-      const words = [newWord("v1"), newWord("v2")];
-      mockGetFrontierWords.mockResolvedValueOnce(words);
+      const verns = ["v1", "v2", "v3", "v4"];
+      mockGetFrontierWords.mockResolvedValueOnce(verns.map((v) => newWord(v)));
       await store.dispatch(fetchWords());
       const { allWords } = store.getState().characterInventoryState;
-      expect(allWords).toHaveLength(words.length);
+      expect(allWords).toHaveLength(verns.length);
+      verns.forEach((v) => expect(allWords).toContain(v));
     });
   });
 
@@ -168,9 +175,10 @@ describe("CharacterInventoryActions", () => {
   describe("loadCharInvData", () => {
     it("correctly affects state", async () => {
       // Mock data with distinct characters
-      const mockWord = newWord("1234");
+      const mockVern = "1234";
       const rejectedCharacters = ["r", "e", "j"];
       const validCharacters = ["v", "a", "l", "i", "d"];
+
       const store = setupStore({
         ...persistedDefaultState,
         currentProjectState: {
@@ -178,13 +186,26 @@ describe("CharacterInventoryActions", () => {
           project: { ...newProject(), rejectedCharacters, validCharacters },
         },
       });
-      mockGetFrontierWords.mockResolvedValueOnce([mockWord]);
+      mockGetFrontierWords.mockResolvedValueOnce([newWord(mockVern)]);
       await store.dispatch(loadCharInvData());
       const state = store.getState().characterInventoryState;
+
       expect(state.allWords).toHaveLength(1);
-      expect(state.characterSet).toHaveLength(mockWord.vernacular.length);
+      expect(state.allWords[0]).toEqual(mockVern);
+
+      expect(state.characterSet).toHaveLength(mockVern.length);
+      const chars = state.characterSet.map((char) => char.character);
+      [...mockVern].forEach((c) => expect(chars).toContain(c));
+
       expect(state.rejectedCharacters).toHaveLength(rejectedCharacters.length);
+      rejectedCharacters.forEach((c) =>
+        expect(state.rejectedCharacters).toContain(c)
+      );
+
       expect(state.validCharacters).toHaveLength(validCharacters.length);
+      validCharacters.forEach((c) =>
+        expect(state.validCharacters).toContain(c)
+      );
     });
   });
 

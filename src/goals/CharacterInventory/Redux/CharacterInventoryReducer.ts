@@ -64,7 +64,7 @@ const characterInventorySlice = createSlice({
       }
     },
     setRejectedCharactersAction: (state, action) => {
-      state.rejectedCharacters = [...new Set(action.payload as string)];
+      state.rejectedCharacters = [...new Set(action.payload as string[])];
       state.validCharacters = state.validCharacters.filter(
         (char) => !state.rejectedCharacters.includes(char)
       );
@@ -80,7 +80,7 @@ const characterInventorySlice = createSlice({
       state.selectedCharacter = action.payload;
     },
     setValidCharactersAction: (state, action) => {
-      state.validCharacters = [...new Set(action.payload as string)];
+      state.validCharacters = [...new Set(action.payload as string[])];
       state.rejectedCharacters = state.rejectedCharacters.filter(
         (char) => !state.validCharacters.includes(char)
       );

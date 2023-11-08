@@ -18,7 +18,7 @@ import CharacterSetHeader from "goals/CharacterInventory/CharInv/CharacterSetHea
 import {
   exit,
   loadCharInvData,
-  reset,
+  resetCharInv,
   setSelectedCharacter,
   uploadInventory,
 } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
@@ -54,7 +54,7 @@ export default function CharacterInventory(): ReactElement {
     dispatch(loadCharInvData());
 
     // Call when component unmounts.
-    () => dispatch(reset());
+    () => dispatch(resetCharInv());
   }, [dispatch]);
 
   const save = async (): Promise<void> => {
