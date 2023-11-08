@@ -3,7 +3,7 @@ import { Action, PayloadAction } from "@reduxjs/toolkit";
 import { SemanticDomain, SemanticDomainTreeNode } from "api/models";
 import { getSemanticDomainTreeNode } from "backend";
 import {
-  resetAction,
+  resetTreeAction,
   setCurrentDomainAction,
   setDomainLanguageAction,
   setTreeOpenAction,
@@ -22,7 +22,7 @@ export function openTree(): PayloadAction {
 }
 
 export function resetTree(): Action {
-  return resetAction();
+  return resetTreeAction();
 }
 
 export function setCurrentDomain(

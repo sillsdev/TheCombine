@@ -7,7 +7,7 @@ const treeViewSlice = createSlice({
   name: "treeViewState",
   initialState: defaultState,
   reducers: {
-    resetAction: () => defaultState,
+    resetTreeAction: () => defaultState,
     setCurrentDomainAction: (state, action) => {
       state.currentDomain = action.payload;
     },
@@ -24,7 +24,7 @@ const treeViewSlice = createSlice({
 });
 
 export const {
-  resetAction,
+  resetTreeAction,
   setCurrentDomainAction,
   setDomainLanguageAction,
   setTreeOpenAction,
