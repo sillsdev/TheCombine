@@ -8,6 +8,7 @@ import {
 import "tests/reactI18nextMock";
 
 import Login from "components/Login/LoginPage/LoginComponent";
+import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";
 
 jest.mock(
   "@matt-block/react-recaptcha-v2",
@@ -31,7 +32,9 @@ const MOCK_EVENT = { preventDefault: jest.fn(), target: { value: DATA } };
 describe("Testing login component", () => {
   beforeEach(async () => {
     await act(async () => {
-      loginMaster = create(<Login logout={LOGOUT} reset={LOGOUT} />);
+      loginMaster = create(
+        <Login logout={LOGOUT} reset={LOGOUT} status={LoginStatus.Default} />
+      );
     });
     loginHandle = loginMaster.root.findByType(Login);
     LOGOUT.mockClear();
