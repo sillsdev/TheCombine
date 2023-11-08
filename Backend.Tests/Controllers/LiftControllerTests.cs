@@ -226,6 +226,38 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestUploadLiftFileNoPermission()
+        {
+            _liftController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _liftController.UploadLiftFile(_projId, new FileUpload()).Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestUploadLiftFileInvalidProjectId()
+        {
+            var result = _liftController.UploadLiftFile("../hack", new FileUpload()).Result;
+            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
+        }
+
+        [Test]
+        public void TestUploadLiftFileAlreadyImported()
+        {
+            var projId = _projRepo.Create(new Project { Name = "already has import", LiftImported = true }).Result!.Id;
+            var result = _liftController.UploadLiftFile(projId, new FileUpload()).Result;
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+            Assert.That(((BadRequestObjectResult)result).Value, Contains.Substring("LIFT"));
+        }
+
+        [Test]
+        public void TestUploadLiftFileBadFile()
+        {
+            var result = _liftController.UploadLiftFile(_projId, new FileUpload()).Result;
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+            Assert.That(((BadRequestObjectResult)result).Value, Is.InstanceOf<string>());
+        }
+
+        [Test]
         public void TestUploadLiftFileAndGetWritingSystems()
         {
             var fileName = "Natqgu.zip";
@@ -272,6 +304,21 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestFinishUploadLiftFileNoPermission()
+        {
+            _liftController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _liftController.FinishUploadLiftFile(_projId).Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestFinishUploadLiftFileInvalidProjectId()
+        {
+            var result = _liftController.FinishUploadLiftFile("../hack", UserId).Result;
+            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
+        }
+
+        [Test]
         public async Task TestModifiedTimeExportsToLift()
         {
             var word = Util.RandomWord(_projId);
@@ -286,12 +333,82 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestExportLiftFileNoPermission()
+        {
+            _liftController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _liftController.ExportLiftFile(_projId).Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestExportLiftFileInvalidProjectId()
+        {
+            var result = _liftController.ExportLiftFile("../hack").Result;
+            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
+        }
+
+        [Test]
+        public void TestExportLiftFileNoProject()
+        {
+            var result = _liftController.ExportLiftFile("non-existent-project").Result;
+            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+        }
+
+        [Test]
+        public void TestExportLiftFileNoWordsInProject()
+        {
+            var result = _liftController.ExportLiftFile(_projId).Result;
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+        }
+
+        [Test]
         public void TestExportInvalidProjectId()
         {
             const string invalidProjectId = "INVALID_ID";
             Assert.That(
                 async () => await _liftController.CreateLiftExportThenSignal(invalidProjectId, UserId),
                 Throws.TypeOf<MissingProjectException>());
+        }
+
+        [Test]
+        public void TestDownloadLiftFileNoPermission()
+        {
+            _liftController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _liftController.DownloadLiftFile(_projId).Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestCanUploadLiftNoPermission()
+        {
+            _liftController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _liftController.CanUploadLift(_projId).Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestCanUploadLiftInvalidProjectId()
+        {
+            var result = _liftController.CanUploadLift("../hack").Result;
+            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
+        }
+
+        [Test]
+        public void TestCanUploadLiftFalse()
+        {
+            var projId = _projRepo.Create(new Project { Name = "has import", LiftImported = true }).Result!.Id;
+            var result = _liftController.CanUploadLift(projId).Result;
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(((OkObjectResult)result).Value, Is.False);
+        }
+
+        [Test]
+        public void TestCanUploadLiftTrue()
+        {
+            var projId = _projRepo.Create(new Project { Name = "has no import", LiftImported = false }).Result!.Id;
+            var result = _liftController.CanUploadLift(projId).Result;
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(((OkObjectResult)result).Value, Is.True);
         }
 
         /// <summary>

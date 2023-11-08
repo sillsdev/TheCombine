@@ -1,42 +1,23 @@
-import configureMockStore from "redux-mock-store";
-import thunk from "redux-thunk";
-
-import { GramCatGroup, MergeWords, Sense, Status, Word } from "api/models";
+import { MergeWords, Sense, Status, Word } from "api/models";
+import { defaultState } from "components/App/DefaultState";
 import {
   defaultTree,
   MergeData,
   MergeTree,
-  MergeTreeReference,
-  MergeTreeSense,
   newMergeTreeSense,
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { MergeDups, newMergeWords } from "goals/MergeDuplicates/MergeDupsTypes";
 import {
-  combineIntoFirstSense,
+  deferMerge,
   dispatchMergeStepData,
   mergeAll,
-  mergeDefinitionIntoSense,
-  moveSense,
-  orderSense,
+  setData,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
-import {
-  MergeTreeAction,
-  MergeTreeActionTypes,
-  MergeTreeState,
-} from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { goalDataMock } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
-import { GoalsState, GoalType } from "types/goals";
-import { newSemanticDomain } from "types/semanticDomain";
-import {
-  multiSenseWord,
-  newDefinition,
-  newFlag,
-  newGrammaticalInfo,
-  newSense,
-  newWord,
-} from "types/word";
-import { Bcp47Code } from "types/writingSystem";
+import { setupStore } from "store";
+import { GoalType } from "types/goals";
+import { multiSenseWord, newFlag, newWord } from "types/word";
 
 // Used when the guids don't matter.
 function wordAnyGuids(vern: string, senses: Sense[], id: string): Word {
@@ -48,11 +29,13 @@ function wordAnyGuids(vern: string, senses: Sense[], id: string): Word {
   };
 }
 
+const mockGraylistAdd = jest.fn();
 const mockMergeWords = jest.fn();
 
 jest.mock("backend", () => ({
   blacklistAdd: jest.fn(),
   getWord: jest.fn(),
+  graylistAdd: () => mockGraylistAdd(),
   mergeWords: (mergeWordsArray: MergeWords[]) =>
     mockMergeWords(mergeWordsArray),
 }));
@@ -60,12 +43,9 @@ jest.mock("backend", () => ({
 const mockGoal = new MergeDups();
 mockGoal.data = goalDataMock;
 mockGoal.steps = [{ words: [] }, { words: [] }];
-const createMockStore = configureMockStore([thunk]);
 
-const mockStoreState: {
-  goalsState: GoalsState;
-  mergeDuplicateGoal: MergeTreeState;
-} = {
+const preloadedState = {
+  ...defaultState,
   goalsState: {
     allGoalTypes: [],
     currentGoal: new MergeDups(),
@@ -73,7 +53,12 @@ const mockStoreState: {
     history: [mockGoal],
     previousGoalType: GoalType.Default,
   },
-  mergeDuplicateGoal: { data: {} as MergeData, tree: {} as MergeTree },
+  mergeDuplicateGoal: {
+    data: {} as MergeData,
+    tree: {} as MergeTree,
+    mergeWords: [],
+  },
+  _persist: { version: 1, rehydrated: false },
 };
 
 const vernA = "AAA";
@@ -112,11 +97,11 @@ describe("MergeDupActions", () => {
       const WA = newMergeTreeWord(vernA, { ID1: [S1], ID2: [S2] });
       const WB = newMergeTreeWord(vernB, { ID1: [S3], ID2: [S4] });
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
-      const mockStore = createMockStore({
-        ...mockStoreState,
-        mergeDuplicateGoal: { data, tree },
+      const store = setupStore({
+        ...preloadedState,
+        mergeDuplicateGoal: { data, tree, mergeWords: [] },
       });
-      await mockStore.dispatch<any>(mergeAll());
+      await store.dispatch(mergeAll());
 
       expect(mockMergeWords).not.toHaveBeenCalled();
     });
@@ -126,11 +111,11 @@ describe("MergeDupActions", () => {
       const WA = newMergeTreeWord(vernA, { ID1: [S1, S3], ID2: [S2] });
       const WB = newMergeTreeWord(vernB, { ID1: [S4] });
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
-      const mockStore = createMockStore({
-        ...mockStoreState,
-        mergeDuplicateGoal: { data, tree },
+      const store = setupStore({
+        ...preloadedState,
+        mergeDuplicateGoal: { data, tree, mergeWords: [] },
       });
-      await mockStore.dispatch<any>(mergeAll());
+      await store.dispatch(mergeAll());
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
       const parentA = wordAnyGuids(vernA, [senses["S1"], senses["S2"]], idA);
@@ -151,11 +136,11 @@ describe("MergeDupActions", () => {
       const WA = newMergeTreeWord(vernA, { ID1: [S1], ID2: [S2], ID3: [S3] });
       const WB = newMergeTreeWord(vernB, { ID1: [S4] });
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
-      const mockStore = createMockStore({
-        ...mockStoreState,
-        mergeDuplicateGoal: { data, tree },
+      const store = setupStore({
+        ...preloadedState,
+        mergeDuplicateGoal: { data, tree, mergeWords: [] },
       });
-      await mockStore.dispatch<any>(mergeAll());
+      await store.dispatch(mergeAll());
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
       const parentA = wordAnyGuids(
@@ -180,11 +165,11 @@ describe("MergeDupActions", () => {
       const WA = newMergeTreeWord(vernA, { ID1: [S1, S2] });
       const WB = newMergeTreeWord(vernB, { ID1: [S3], ID2: [S4] });
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
-      const mockStore = createMockStore({
-        ...mockStoreState,
-        mergeDuplicateGoal: { data, tree },
+      const store = setupStore({
+        ...preloadedState,
+        mergeDuplicateGoal: { data, tree, mergeWords: [] },
       });
-      await mockStore.dispatch<any>(mergeAll());
+      await store.dispatch(mergeAll());
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
 
@@ -199,11 +184,11 @@ describe("MergeDupActions", () => {
       const WA = newMergeTreeWord(vernA, { ID1: [S1] });
       const WB = newMergeTreeWord(vernB, { ID1: [S3], ID2: [S4] });
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
-      const mockStore = createMockStore({
-        ...mockStoreState,
-        mergeDuplicateGoal: { data, tree },
+      const store = setupStore({
+        ...preloadedState,
+        mergeDuplicateGoal: { data, tree, mergeWords: [] },
       });
-      await mockStore.dispatch<any>(mergeAll());
+      await store.dispatch(mergeAll());
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
       const parent = wordAnyGuids(vernA, [senses["S1"]], idA);
@@ -216,11 +201,11 @@ describe("MergeDupActions", () => {
     it("delete all senses from a word", async () => {
       const WA = newMergeTreeWord(vernA, { ID1: [S1], ID2: [S2] });
       const tree: MergeTree = { ...defaultTree, words: { WA } };
-      const mockStore = createMockStore({
-        ...mockStoreState,
-        mergeDuplicateGoal: { data, tree },
+      const store = setupStore({
+        ...preloadedState,
+        mergeDuplicateGoal: { data, tree, mergeWords: [] },
       });
-      await mockStore.dispatch<any>(mergeAll());
+      await store.dispatch(mergeAll());
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
       const child = { srcWordId: idB, getAudio: false };
@@ -234,11 +219,11 @@ describe("MergeDupActions", () => {
       WA.flag = newFlag("New flag");
       const WB = newMergeTreeWord(vernB, { ID1: [S3], ID2: [S4] });
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
-      const mockStore = createMockStore({
-        ...mockStoreState,
-        mergeDuplicateGoal: { data, tree },
+      const store = setupStore({
+        ...preloadedState,
+        mergeDuplicateGoal: { data, tree, mergeWords: [] },
       });
-      await mockStore.dispatch<any>(mergeAll());
+      await store.dispatch(mergeAll());
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
 
@@ -251,158 +236,29 @@ describe("MergeDupActions", () => {
   });
 
   describe("dispatchMergeStepData", () => {
-    it("creates an action to add MergeDups data", async () => {
+    it("creates an action to add MergeDups data", () => {
       const goal = new MergeDups();
       goal.steps = [{ words: [...goalDataMock.plannedWords[0]] }];
 
-      const mockStore = createMockStore();
-      await mockStore.dispatch<any>(dispatchMergeStepData(goal));
-      const setWordData: MergeTreeAction = {
-        type: MergeTreeActionTypes.SET_DATA,
-        payload: [...goalDataMock.plannedWords[0]],
-      };
-      expect(mockStore.getActions()).toEqual([setWordData]);
+      const store = setupStore();
+      store.dispatch(dispatchMergeStepData(goal));
+      const setDataAction = setData(goalDataMock.plannedWords[0]);
+      expect(setDataAction.type).toEqual("mergeDupStepReducer/setDataAction");
     });
   });
 
-  describe("moveSense", () => {
-    const wordId = "mockWordId";
-    const mergeSenseId = "mockSenseId";
-
-    it("creates a MOVE_SENSE action when going from word to word", () => {
-      const mockRef: MergeTreeReference = { wordId, mergeSenseId };
-      const resultAction = moveSense(mockRef, wordId, -1);
-      expect(resultAction.type).toEqual(MergeTreeActionTypes.MOVE_SENSE);
-    });
-
-    it("creates a MOVE_DUPLICATE action when going from sidebar to word", () => {
-      const mockRef: MergeTreeReference = { wordId, mergeSenseId, order: 0 };
-      const resultAction = moveSense(mockRef, wordId, -1);
-      expect(resultAction.type).toEqual(MergeTreeActionTypes.MOVE_DUPLICATE);
-    });
-  });
-
-  describe("orderSense", () => {
-    const wordId = "mockWordId";
-    const mergeSenseId = "mockSenseId";
-    const mockOrder = 0;
-
-    it("creates an ORDER_SENSE action when moving within a word", () => {
-      const mockRef: MergeTreeReference = { wordId, mergeSenseId };
-      const resultAction = orderSense(mockRef, mockOrder);
-      expect(resultAction.type).toEqual(MergeTreeActionTypes.ORDER_SENSE);
-    });
-
-    it("creates an ORDER_DUPLICATE action when moving within the sidebar", () => {
-      const mockRef: MergeTreeReference = { wordId, mergeSenseId, order: 0 };
-      const resultAction = orderSense(mockRef, mockOrder);
-      expect(resultAction.type).toEqual(MergeTreeActionTypes.ORDER_DUPLICATE);
-    });
-  });
-
-  describe("mergeDefinitionIntoSense", () => {
-    const defAEn = newDefinition("a", Bcp47Code.En);
-    const defAFr = newDefinition("a", Bcp47Code.Fr);
-    const defBEn = newDefinition("b", Bcp47Code.En);
-    let sense: MergeTreeSense;
-
-    beforeEach(() => {
-      sense = newSense() as MergeTreeSense;
-    });
-
-    it("ignores definitions with empty text", () => {
-      mergeDefinitionIntoSense(sense, newDefinition());
-      expect(sense.definitions).toHaveLength(0);
-      mergeDefinitionIntoSense(sense, newDefinition("", Bcp47Code.En));
-      expect(sense.definitions).toHaveLength(0);
-    });
-
-    it("adds definitions with new languages", () => {
-      mergeDefinitionIntoSense(sense, defAEn);
-      expect(sense.definitions).toHaveLength(1);
-      mergeDefinitionIntoSense(sense, defAFr);
-      expect(sense.definitions).toHaveLength(2);
-    });
-
-    it("only adds definitions with new text", () => {
-      sense.definitions.push({ ...defAEn }, { ...defAFr });
-
-      mergeDefinitionIntoSense(sense, defAFr);
-      expect(sense.definitions).toHaveLength(2);
-      expect(
-        sense.definitions.find((d) => d.language === Bcp47Code.Fr)!.text
-      ).toEqual(defAFr.text);
-
-      const twoEnTexts = `${defAEn.text};${defBEn.text}`;
-      mergeDefinitionIntoSense(sense, defBEn);
-      expect(sense.definitions).toHaveLength(2);
-      expect(
-        sense.definitions.find((d) => d.language === Bcp47Code.En)!.text
-      ).toEqual(twoEnTexts);
-      mergeDefinitionIntoSense(sense, defAEn);
-      expect(sense.definitions).toHaveLength(2);
-      expect(
-        sense.definitions.find((d) => d.language === Bcp47Code.En)!.text
-      ).toEqual(twoEnTexts);
-    });
-  });
-
-  describe("combineIntoFirstSense", () => {
-    it("sets all but the first sense to duplicate status", () => {
-      const s4 = [newSense(), newSense(), newSense(), newSense()].map(
-        (s) => s as MergeTreeSense
-      );
-      combineIntoFirstSense(s4);
-      expect(s4[0].accessibility).not.toBe(Status.Duplicate);
-      expect(
-        s4.filter((s) => s.accessibility === Status.Duplicate)
-      ).toHaveLength(s4.length - 1);
-    });
-
-    it("gives the first sense the earliest part of speech found in all senses", () => {
-      const s3 = [newSense(), newSense(), newSense()].map(
-        (s) => s as MergeTreeSense
-      );
-      const gramInfo = {
-        catGroup: GramCatGroup.Verb,
-        grammaticalCategory: "vt",
-      };
-      s3[1].grammaticalInfo = { ...gramInfo };
-      s3[2].grammaticalInfo = {
-        catGroup: GramCatGroup.Preverb,
-        grammaticalCategory: "prev",
-      };
-      combineIntoFirstSense(s3);
-      expect(s3[0].grammaticalInfo).toEqual(gramInfo);
-
-      // Ensure the first sense's grammaticalInfo doesn't get overwritten.
-      s3[1].grammaticalInfo = newGrammaticalInfo();
-      combineIntoFirstSense(s3);
-      expect(s3[0].grammaticalInfo).toEqual(gramInfo);
-    });
-
-    it("adds domains to first sense from other senses", () => {
-      const s3 = [newSense(), newSense(), newSense()].map(
-        (s) => s as MergeTreeSense
-      );
-      s3[1].semanticDomains = [
-        newSemanticDomain("1", "uno"),
-        newSemanticDomain("2", "dos"),
-      ];
-      s3[2].semanticDomains = [newSemanticDomain("3", "three")];
-      combineIntoFirstSense(s3);
-      expect(s3[0].semanticDomains).toHaveLength(3);
-    });
-
-    it("doesn't adds domains it already has", () => {
-      const s2 = [newSense(), newSense()].map((s) => s as MergeTreeSense);
-      s2[0].semanticDomains = [newSemanticDomain("1", "one")];
-      s2[1].semanticDomains = [
-        newSemanticDomain("1", "uno"),
-        newSemanticDomain("2", "dos"),
-      ];
-      combineIntoFirstSense(s2);
-      expect(s2[0].semanticDomains).toHaveLength(2);
+  describe("deferMerge", () => {
+    it("add merge to graylist", () => {
+      const WA = newMergeTreeWord(vernA, { ID1: [S1], ID2: [S2] });
+      WA.flag = newFlag("New flag");
+      const WB = newMergeTreeWord(vernB, { ID1: [S3], ID2: [S4] });
+      const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
+      const store = setupStore({
+        ...preloadedState,
+        mergeDuplicateGoal: { data, tree, mergeWords: [] },
+      });
+      store.dispatch(deferMerge());
+      expect(mockGraylistAdd).toHaveBeenCalledTimes(1);
     });
   });
 });

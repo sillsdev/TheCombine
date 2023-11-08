@@ -55,7 +55,13 @@ export default function MergeDragDrop(): ReactElement {
         // Case 2a: Cannot merge a protected sense into another sense.
         if (sourceId !== res.combine.droppableId) {
           // The target sense is in a different word, so move instead of combine.
-          dispatch(moveSense(senseRef, res.combine.droppableId, 0));
+          dispatch(
+            moveSense({
+              ref: senseRef,
+              destWordId: res.combine.droppableId,
+              destOrder: 0,
+            })
+          );
         }
         return;
       }
@@ -66,7 +72,7 @@ export default function MergeDragDrop(): ReactElement {
         // Case 2b: If the target is a sidebar sub-sense, it cannot receive a combine.
         return;
       }
-      dispatch(combineSense(senseRef, combineRef));
+      dispatch(combineSense({ src: senseRef, dest: combineRef }));
     } else if (res.destination) {
       const destId = res.destination.droppableId;
       // Case 3: The sense was dropped in a droppable.
@@ -77,7 +83,13 @@ export default function MergeDragDrop(): ReactElement {
           return;
         }
         // Move the sense to the dest MergeWord.
-        dispatch(moveSense(senseRef, destId, res.destination.index));
+        dispatch(
+          moveSense({
+            ref: senseRef,
+            destWordId: destId,
+            destOrder: res.destination.index,
+          })
+        );
       } else {
         // Case 3b: The source & dest droppables are the same, so we reorder, not move.
         const order = res.destination.index;
@@ -90,7 +102,7 @@ export default function MergeDragDrop(): ReactElement {
           // If the sense wasn't moved or was moved within the sidebar above a protected sense, do nothing.
           return;
         }
-        dispatch(orderSense(senseRef, order));
+        dispatch(orderSense({ ref: senseRef, order: order }));
       }
     }
   }
