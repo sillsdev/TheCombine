@@ -16,7 +16,6 @@ const analyticsSlice = createSlice({
       }
       state.currentPage = action.payload;
     },
-    resetAction: () => defaultState,
   },
   extraReducers: (builder) =>
     builder.addCase(StoreActionTypes.RESET, () => defaultState),
