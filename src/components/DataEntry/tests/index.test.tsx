@@ -9,11 +9,8 @@ import DataEntry, {
   treeViewDialogId,
 } from "components/DataEntry";
 import { defaultState as currentProjectState } from "components/Project/ProjectReduxTypes";
-import { openTreeAction } from "components/TreeView/Redux/TreeViewActions";
-import {
-  TreeViewAction,
-  TreeViewState,
-} from "components/TreeView/Redux/TreeViewReduxTypes";
+import { openTree } from "components/TreeView/Redux/TreeViewActions";
+import { TreeViewState } from "components/TreeView/Redux/TreeViewReduxTypes";
 import { newSemanticDomainTreeNode } from "types/semanticDomain";
 import * as useWindowSize from "utilities/useWindowSize";
 
@@ -39,7 +36,7 @@ jest.mock("types/hooks", () => {
   };
 });
 
-const mockDispatch = jest.fn((action: TreeViewAction) => action);
+const mockDispatch = jest.fn((action: any) => action);
 const mockDomain = newSemanticDomainTreeNode("mockId", "mockName", "mockLang");
 const mockGetSemanticDomainFull = jest.fn();
 const mockStore = createMockStore();
@@ -72,7 +69,7 @@ describe("DataEntry", () => {
 
   it("dispatches to open the tree", async () => {
     await renderDataEntry({ currentDomain: mockDomain });
-    expect(mockDispatch).toHaveBeenCalledWith(openTreeAction());
+    expect(mockDispatch).toHaveBeenCalledWith(openTree());
   });
 
   it("fetches domain", async () => {

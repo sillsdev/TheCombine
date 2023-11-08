@@ -15,10 +15,7 @@ import DataEntryTable from "components/DataEntry/DataEntryTable";
 import ExistingDataTable from "components/DataEntry/ExistingDataTable";
 import { filterWordsByDomain } from "components/DataEntry/utilities";
 import TreeView from "components/TreeView";
-import {
-  closeTreeAction,
-  openTreeAction,
-} from "components/TreeView/Redux/TreeViewActions";
+import { closeTree, openTree } from "components/TreeView/Redux/TreeViewActions";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { newSemanticDomain } from "types/semanticDomain";
@@ -73,7 +70,7 @@ export default function DataEntry(): ReactElement {
 
   // On first render, open tree.
   useLayoutEffect(() => {
-    dispatch(openTreeAction());
+    dispatch(openTree());
   }, [dispatch]);
 
   // When window width changes, check if there's space for the sidebar.
@@ -99,7 +96,7 @@ export default function DataEntry(): ReactElement {
     setDomainWords(
       filterWordsByDomain(await getFrontierWords(), id, analysisLang)
     );
-    dispatch(closeTreeAction());
+    dispatch(closeTree());
   }, [analysisLang, dispatch, id]);
 
   return (
@@ -118,7 +115,7 @@ export default function DataEntry(): ReactElement {
                 hasDrawerButton={isSmallScreen && domainWords.length > 0}
                 hideQuestions={() => setQuestionsVisible(false)}
                 isTreeOpen={open}
-                openTree={() => dispatch(openTreeAction())}
+                openTree={() => dispatch(openTree())}
                 semanticDomain={currentDomain}
                 showExistingData={() => setDrawerOpen(true)}
                 updateHeight={updateHeight}
