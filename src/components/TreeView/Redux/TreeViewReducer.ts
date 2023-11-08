@@ -1,39 +1,33 @@
-import {
-  TreeViewAction,
-  TreeActionType,
-  TreeViewState,
-  defaultState,
-} from "components/TreeView/Redux/TreeViewReduxTypes";
-import { StoreAction, StoreActionTypes } from "rootActions";
+import { createSlice } from "@reduxjs/toolkit";
 
-export const treeViewReducer = (
-  state: TreeViewState = defaultState,
-  action: StoreAction | TreeViewAction
-): TreeViewState => {
-  switch (action.type) {
-    case TreeActionType.CLOSE_TREE:
-      return { ...state, open: false };
-    case TreeActionType.OPEN_TREE:
-      return { ...state, open: true };
-    case TreeActionType.RESET_TREE:
-      return defaultState;
-    case TreeActionType.SET_DOMAIN_LANGUAGE:
-      if (!action.language) {
-        throw new Error("Cannot set domain language to undefined.");
-      }
-      return {
-        ...state,
-        currentDomain: { ...state.currentDomain, lang: action.language },
-        language: action.language,
-      };
-    case TreeActionType.SET_CURRENT_DOMAIN:
-      if (!action.domain) {
-        throw new Error("Cannot set the current domain to undefined.");
-      }
-      return { ...state, currentDomain: action.domain };
-    case StoreActionTypes.RESET:
-      return defaultState;
-    default:
-      return state;
-  }
-};
+import { defaultState } from "components/TreeView/Redux/TreeViewReduxTypes";
+import { StoreActionTypes } from "rootActions";
+
+const treeViewSlice = createSlice({
+  name: "treeViewState",
+  initialState: defaultState,
+  reducers: {
+    resetTreeAction: () => defaultState,
+    setCurrentDomainAction: (state, action) => {
+      state.currentDomain = action.payload;
+    },
+    setDomainLanguageAction: (state, action) => {
+      state.currentDomain.lang = action.payload;
+      state.language = action.payload;
+    },
+    setTreeOpenAction: (state, action) => {
+      state.open = action.payload;
+    },
+  },
+  extraReducers: (builder) =>
+    builder.addCase(StoreActionTypes.RESET, () => defaultState),
+});
+
+export const {
+  resetTreeAction,
+  setCurrentDomainAction,
+  setDomainLanguageAction,
+  setTreeOpenAction,
+} = treeViewSlice.actions;
+
+export default treeViewSlice.reducer;
