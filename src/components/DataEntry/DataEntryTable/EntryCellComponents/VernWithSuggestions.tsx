@@ -12,7 +12,7 @@ interface VernWithSuggestionsProps {
   vernInput?: React.RefObject<HTMLInputElement>;
   updateVernField: (newValue: string, openDialog?: boolean) => void;
   onBlur: () => void;
-  onClose?: (e: React.ChangeEvent<{}>, reason: AutocompleteCloseReason) => void;
+  onClose?: (e: React.SyntheticEvent, reason: AutocompleteCloseReason) => void;
   suggestedVerns?: string[];
   handleEnter: () => void;
   vernacularLang: WritingSystem;

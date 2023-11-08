@@ -1,22 +1,24 @@
-import MaterialTable from "@material-table/core";
+import MaterialTable, { OrderByCollection } from "@material-table/core";
 import { Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, createRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-import columns, {
-  ColumnTitle,
-} from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+import columns from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
+import {
+  ColumnId,
+  ReviewEntriesWord,
+} from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import tableIcons from "goals/ReviewEntries/ReviewEntriesComponent/icons";
 import { StoreState } from "types";
 
 interface ReviewEntriesTableProps {
   onRowUpdate: (
     newData: ReviewEntriesWord,
-    oldData: ReviewEntriesWord
+    oldData?: ReviewEntriesWord
   ) => Promise<void>;
+  onSort: (columnId?: ColumnId) => void;
 }
 
 interface PageState {
@@ -39,8 +41,8 @@ function getPageState(wordCount: number): PageState {
 }
 
 // Constants
-const ROWS_PER_PAGE = [10, 50, 250];
-const tableRef: React.RefObject<any> = React.createRef();
+const ROWS_PER_PAGE = [10, 50, 200];
+const tableRef: React.RefObject<any> = createRef();
 
 export default function ReviewEntriesTable(
   props: ReviewEntriesTableProps
@@ -58,8 +60,9 @@ export default function ReviewEntriesTable(
   const { t } = useTranslation();
   const [maxRows, setMaxRows] = useState(words.length);
   const [pageState, setPageState] = useState(getPageState(words.length));
+  const [scrollToTop, setScrollToTop] = useState(false);
 
-  const updateMaxRows = () => {
+  const updateMaxRows = (): void => {
     if (tableRef.current) {
       const tableRows = tableRef.current.state.data.length;
       if (tableRows !== maxRows) {
@@ -78,6 +81,29 @@ export default function ReviewEntriesTable(
       return { pageSize: options[i], pageSizeOptions: options };
     });
   }, [maxRows, setPageState]);
+
+  useEffect(() => {
+    // onRowsPerPageChange={() => window.scrollTo({ top: 0 })} doesn't work.
+    // This useEffect on an intermediate state triggers scrolling at the right time.
+    if (scrollToTop) {
+      window.scrollTo({ behavior: "smooth", top: 0 });
+      setScrollToTop(false);
+    }
+  }, [scrollToTop]);
+
+  const activeColumns = columns.filter(
+    (c) =>
+      (showDefinitions || c.id !== ColumnId.Definitions) &&
+      (showGrammaticalInfo || c.id !== ColumnId.PartOfSpeech)
+  );
+
+  const onOrderCollectionChange = (order: OrderByCollection[]): void => {
+    if (!order.length) {
+      props.onSort(undefined);
+    } else {
+      props.onSort(activeColumns[order[0].orderBy].id as ColumnId);
+    }
+  };
 
   const materialTableLocalization = {
     body: {
@@ -121,7 +147,7 @@ export default function ReviewEntriesTable(
   };
 
   return (
-    <MaterialTable<any>
+    <MaterialTable<ReviewEntriesWord>
       tableRef={tableRef}
       icons={tableIcons}
       title={
@@ -129,15 +155,16 @@ export default function ReviewEntriesTable(
           {t("reviewEntries.title")}
         </Typography>
       }
-      columns={columns.filter(
-        (c) =>
-          (showDefinitions || c.title !== ColumnTitle.Definitions) &&
-          (showGrammaticalInfo || c.title !== ColumnTitle.PartOfSpeech)
-      )}
+      columns={activeColumns}
       data={words}
       onFilterChange={updateMaxRows}
+      onOrderCollectionChange={onOrderCollectionChange}
+      onRowsPerPageChange={() => setScrollToTop(true)}
       editable={{
-        onRowUpdate: (newData: ReviewEntriesWord, oldData: ReviewEntriesWord) =>
+        onRowUpdate: (
+          newData: ReviewEntriesWord,
+          oldData?: ReviewEntriesWord
+        ) =>
           new Promise(async (resolve, reject) => {
             await props
               .onRowUpdate(newData, oldData)

@@ -1,8 +1,9 @@
+import { Close } from "@mui/icons-material";
 import {
   Dialog,
   DialogContent,
-  Divider,
   Grid,
+  IconButton,
   MenuList,
   Typography,
 } from "@mui/material";
@@ -50,11 +51,11 @@ export default function VernDialog(props: vernDialogProps): ReactElement {
 
 interface VernListProps {
   vernacularWords: Word[];
-  closeDialog: (wordId: string) => void;
+  closeDialog: (wordId?: string) => void;
   analysisLang?: string;
 }
 
-export function VernList(props: VernListProps) {
+export function VernList(props: VernListProps): ReactElement {
   const { t } = useTranslation();
 
   const hasPartsOfSpeech = !!props.vernacularWords.find((w) =>
@@ -96,11 +97,7 @@ export function VernList(props: VernListProps) {
     );
   };
 
-  const menuItems: ReactElement[] = [];
-  for (const w of props.vernacularWords) {
-    menuItems.push(menuItem(w));
-    menuItems.push(<Divider key={`${w.id}-divider`} />);
-  }
+  const menuItems = props.vernacularWords.map(menuItem);
   menuItems.push(
     <StyledMenuItem key="new-entry" onClick={() => props.closeDialog("")}>
       {t("addWords.newEntryFor")}
@@ -110,7 +107,16 @@ export function VernList(props: VernListProps) {
 
   return (
     <>
+      {/* Cancel button */}
+      <IconButton
+        onClick={() => props.closeDialog()}
+        style={{ position: "absolute", right: 0, top: 0 }}
+      >
+        <Close />
+      </IconButton>
+      {/* Header */}
       <Typography variant="h3">{t("addWords.selectEntry")}</Typography>
+      {/* Entry options */}
       <MenuList autoFocusItem>{menuItems}</MenuList>
     </>
   );

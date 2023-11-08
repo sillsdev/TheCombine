@@ -1,5 +1,5 @@
 import { Provider } from "react-redux";
-import renderer from "react-test-renderer";
+import { act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
@@ -20,19 +20,19 @@ const mockStore = configureMockStore()({
 const mockWord = mockWords()[0];
 
 describe("GlossCell", () => {
-  it("renders sort-stylized", () => {
-    renderer.act(() => {
-      renderer.create(
+  it("renders", async () => {
+    await act(async () => {
+      create(
         <Provider store={mockStore}>
-          <GlossCell rowData={mockWord} value={mockWord.senses} sortingByThis />
+          <GlossCell rowData={mockWord} value={mockWord.senses} />
         </Provider>
       );
     });
   });
 
-  it("renders editable", () => {
-    renderer.act(() => {
-      renderer.create(
+  it("renders editable", async () => {
+    await act(async () => {
+      create(
         <Provider store={mockStore}>
           <GlossCell rowData={mockWord} value={mockWord.senses} editable />
         </Provider>

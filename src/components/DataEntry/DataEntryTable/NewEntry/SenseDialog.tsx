@@ -1,8 +1,9 @@
+import { Close } from "@mui/icons-material";
 import {
   Dialog,
   DialogContent,
-  Divider,
   Grid,
+  IconButton,
   MenuList,
   Typography,
 } from "@mui/material";
@@ -50,11 +51,11 @@ export default function SenseDialog(props: SenseDialogProps): ReactElement {
 
 interface SenseListProps {
   selectedWord: Word;
-  closeDialog: (gloss: string) => void;
+  closeDialog: (gloss?: string) => void;
   analysisLang: string;
 }
 
-export function SenseList(props: SenseListProps) {
+export function SenseList(props: SenseListProps): ReactElement {
   const { t } = useTranslation();
 
   const hasPartsOfSpeech = !!props.selectedWord.senses.find(
@@ -95,11 +96,7 @@ export function SenseList(props: SenseListProps) {
     );
   };
 
-  const menuItems: ReactElement[] = [];
-  for (const s of props.selectedWord.senses) {
-    menuItems.push(menuItem(s));
-    menuItems.push(<Divider key={`${s.guid}-divider`} />);
-  }
+  const menuItems = props.selectedWord.senses.map(menuItem);
   menuItems.push(
     <StyledMenuItem key="new-sense" onClick={() => props.closeDialog("")}>
       {t("addWords.newSenseFor")}
@@ -109,7 +106,16 @@ export function SenseList(props: SenseListProps) {
 
   return (
     <>
+      {/* Cancel button */}
+      <IconButton
+        onClick={() => props.closeDialog()}
+        style={{ position: "absolute", right: 0, top: 0 }}
+      >
+        <Close />
+      </IconButton>
+      {/* Header */}
       <Typography variant="h3">{t("addWords.selectSense")}</Typography>
+      {/* Sense options */}
       <MenuList autoFocusItem>{menuItems}</MenuList>
     </>
   );

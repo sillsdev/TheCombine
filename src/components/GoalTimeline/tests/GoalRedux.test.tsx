@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 import { act, cleanup } from "@testing-library/react";
 
 import "tests/reactI18nextMock";
-import { MergeUndoIds, Permission, User, UserEdit } from "api/models";
+import { Edit, MergeUndoIds, Permission, User, UserEdit } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import GoalTimeline from "components/GoalTimeline";
 import {
@@ -61,23 +61,24 @@ const mockGetUser = jest.fn();
 const mockGetUserEditById = jest.fn();
 const mockNavigate = jest.fn();
 const mockUpdateUser = jest.fn();
-function setMockFunctions() {
+function setMockFunctions(): void {
   mockAddGoalToUserEdit.mockResolvedValue(0);
   mockAddStepToGoal.mockResolvedValue(0);
-  mockCreateUserEdit.mockResolvedValue(mockUser);
+  mockCreateUserEdit.mockResolvedValue(mockUser());
   mockGetCurrentPermissions.mockResolvedValue([
     Permission.CharacterInventory,
     Permission.MergeAndReviewEntries,
   ]);
   mockGetDuplicates.mockResolvedValue(goalDataMock.plannedWords);
   mockGetGraylistEntries.mockResolvedValue([]);
-  mockGetUser.mockResolvedValue(mockUser);
-  mockGetUserEditById.mockResolvedValue(mockUserEdit);
-  mockUpdateUser.mockResolvedValue(mockUser);
+  mockGetUser.mockResolvedValue(mockUser());
+  mockGetUserEditById.mockResolvedValue(mockUserEdit(true));
+  mockUpdateUser.mockResolvedValue(mockUser());
 }
 
 const mockProjectId = "123";
 const mockUserEditId = "456";
+const mockUserId = "789";
 const mockCompletedMerge: MergeUndoIds = {
   parentIds: ["1", "2"],
   childIds: ["3", "4"],
@@ -86,34 +87,31 @@ const mockCharInvChanges: CharacterChange[] = [
   ["'", CharacterStatus.Undecided, CharacterStatus.Accepted],
 ];
 
-const mockUserEdit: UserEdit = {
+const mockEdit = (): Edit => ({
+  changes: JSON.stringify(mockCompletedMerge),
+  goalType: 4,
+  guid: "edit-guid",
+  stepData: [],
+});
+const mockUserEdit = (hasEdit: boolean): UserEdit => ({
+  edits: hasEdit ? [mockEdit()] : [],
   id: mockUserEditId,
-  edits: [
-    {
-      guid: "edit-guid",
-      goalType: 4,
-      stepData: [],
-      changes: JSON.stringify(mockCompletedMerge),
-    },
-  ],
-  projectId: "",
-};
-const mockNoUserEdits: UserEdit = {
-  id: mockUserEditId,
-  edits: [],
-  projectId: "",
-};
-const mockUserId = "789";
-const mockUser = newUser("First Last", "username");
-mockUser.id = mockUserId;
-mockUser.workedProjects[mockProjectId] = mockUserEditId;
+  projectId: mockProjectId,
+});
+const mockUser = (): User => ({
+  ...newUser("First Last", "username"),
+  id: mockUserId,
+  workedProjects: { [mockProjectId]: mockUserEditId },
+});
 
-function setupLocalStorage() {
-  LocalStorage.setCurrentUser(mockUser);
+function setupLocalStorage(): void {
+  LocalStorage.setCurrentUser(mockUser());
   LocalStorage.setProjectId(mockProjectId);
 }
 
 beforeEach(() => {
+  // Restore any spied functions before clearing all
+  jest.restoreAllMocks();
   jest.clearAllMocks();
   setMockFunctions();
   setupLocalStorage();
@@ -140,10 +138,12 @@ describe("asyncGetUserEdits", () => {
     await act(async () => {
       renderWithProviders(<GoalTimeline />, { store: store });
     });
-    const convertGoalToEditSpy = jest.spyOn(goalUtilities, "convertEditToGoal");
-    await store.dispatch(asyncGetUserEdits());
+    const convertEditToGoalSpy = jest.spyOn(goalUtilities, "convertEditToGoal");
+    await act(async () => {
+      await store.dispatch(asyncGetUserEdits());
+    });
     expect(store.getState().goalsState.history).toHaveLength(1);
-    expect(convertGoalToEditSpy).toBeCalledTimes(1);
+    expect(convertEditToGoalSpy).toBeCalledTimes(1);
   });
 
   it("backend returns no user edits", async () => {
@@ -155,23 +155,26 @@ describe("asyncGetUserEdits", () => {
 
     // setup mocks for testing the action/reducers
     jest.clearAllMocks();
-    const convertGoalToEditSpy = jest.spyOn(goalUtilities, "convertEditToGoal");
-    mockGetUserEditById.mockResolvedValueOnce(mockNoUserEdits);
+    const convertEditToGoalSpy = jest.spyOn(goalUtilities, "convertEditToGoal");
+    mockGetUserEditById.mockResolvedValueOnce(mockUserEdit(false));
 
     // dispatch the action
-    await store.dispatch(asyncGetUserEdits());
+    await act(async () => {
+      await store.dispatch(asyncGetUserEdits());
+    });
     expect(store.getState().goalsState.history).toHaveLength(0);
-    expect(convertGoalToEditSpy).toBeCalledTimes(0);
+    expect(convertEditToGoalSpy).toBeCalledTimes(0);
   });
 
   it("creates new user edits", async () => {
     const store = setupStore();
-
     await act(async () => {
       renderWithProviders(<GoalTimeline />, { store: store });
     });
-    LocalStorage.setCurrentUser(newUser("", ""));
-    await store.dispatch(asyncGetUserEdits());
+    LocalStorage.setCurrentUser(newUser());
+    await act(async () => {
+      await store.dispatch(asyncGetUserEdits());
+    });
     expect(store.getState().goalsState.history).toHaveLength(0);
     expect(mockCreateUserEdit).toBeCalledTimes(1);
   });
@@ -186,7 +189,7 @@ describe("asyncAddGoal", () => {
 
     const goal = new MergeDups();
     await act(async () => {
-      store.dispatch(asyncAddGoal(goal));
+      await store.dispatch(asyncAddGoal(goal));
     });
     // verify the new goal was loaded
     const currentGoal = store.getState().goalsState.currentGoal as MergeDups;
@@ -207,7 +210,7 @@ describe("asyncAddGoal", () => {
 
     const goal = new CreateCharInv();
     await act(async () => {
-      store.dispatch(asyncAddGoal(goal));
+      await store.dispatch(asyncAddGoal(goal));
     });
     // verify the new goal was loaded
     const currentGoal = store.getState().goalsState
@@ -233,7 +236,7 @@ describe("asyncAdvanceStep", () => {
     // create mergeDups goal
     const goal = new MergeDups();
     await act(async () => {
-      store.dispatch(asyncAddGoal(goal));
+      await store.dispatch(asyncAddGoal(goal));
     });
     let currentGoal = store.getState().goalsState.currentGoal as MergeDups;
     expect(currentGoal.currentStep).toBe(0);
@@ -243,7 +246,7 @@ describe("asyncAdvanceStep", () => {
     for (let i = 0; i < numSteps - 1; i++) {
       // dispatch asyncAdvanceStep
       await act(async () => {
-        store.dispatch(asyncAdvanceStep());
+        await store.dispatch(asyncAdvanceStep());
       });
       // verify current step is incremented each time
       currentGoal = store.getState().goalsState.currentGoal as MergeDups;
@@ -253,7 +256,7 @@ describe("asyncAdvanceStep", () => {
     }
     // iterate past the last step
     await act(async () => {
-      store.dispatch(asyncAdvanceStep());
+      await store.dispatch(asyncAdvanceStep());
     });
     expect(store.getState().goalsState.currentGoal.currentStep).toBe(7);
     expect(mockNavigate).toHaveBeenCalledWith(Path.GoalNext);
@@ -268,12 +271,12 @@ describe("asyncAdvanceStep", () => {
     // create character inventory goal
     const goal = new CreateCharInv();
     await act(async () => {
-      store.dispatch(asyncAddGoal(goal));
+      await store.dispatch(asyncAddGoal(goal));
     });
     expect(store.getState().goalsState.currentGoal.numSteps).toBe(1);
     // iterate past the last step
     await act(async () => {
-      store.dispatch(asyncAdvanceStep());
+      await store.dispatch(asyncAdvanceStep());
     });
     expect(store.getState().goalsState.currentGoal.currentStep).toBe(0);
     expect(mockNavigate).toHaveBeenCalledWith(Path.Goals);
@@ -290,9 +293,9 @@ describe("asyncUpdateGoal", () => {
     // create CreateCharInv goal
     const goal = new CreateCharInv();
     await act(async () => {
-      store.dispatch(asyncAddGoal(goal));
+      await store.dispatch(asyncAddGoal(goal));
+      store.dispatch(addCharInvChangesToGoal(mockCharInvChanges));
     });
-    store.dispatch(addCharInvChangesToGoal(mockCharInvChanges));
     const changes = store.getState().goalsState.currentGoal
       .changes as CharInvChanges;
     expect(changes!.charChanges).toBe(mockCharInvChanges);
@@ -314,7 +317,7 @@ describe("asyncUpdateGoal", () => {
     // create MergeDups goal
     const goal = new MergeDups();
     await act(async () => {
-      store.dispatch(asyncAddGoal(goal));
+      await store.dispatch(asyncAddGoal(goal));
     });
     // dispatch asyncUpdateGoal()
     await act(async () => {
@@ -339,7 +342,7 @@ describe("asyncUpdateGoal", () => {
     // create ReviewDeferredDups goal
     const goal = new ReviewDeferredDups();
     await act(async () => {
-      store.dispatch(asyncAddGoal(goal));
+      await store.dispatch(asyncAddGoal(goal));
     });
     // dispatch asyncUpdateGoal()
     await act(async () => {

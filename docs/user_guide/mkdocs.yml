@@ -1,14 +1,13 @@
 strict: true
 theme:
   name: material
-  custom_dir: "../../default/"
+  custom_dir: "assets/"
   palette:
     primary: blue
   icon:
     logo: material/barley
     repo: fontawesome/brands/github
   favicon: images/favicon.ico
-  language: en
   # Disable pulling Google fonts from the Internet, to support offline networks.
   font: false
   features:
@@ -16,16 +15,34 @@ theme:
     - search.share
     - search.suggest
 site_name: The Combine
-docs_dir: "../../docs/en"
-site_dir: "../../site/en"
+site_description: A Web App for Harvesting Words Together
+docs_dir: "docs/"
+site_dir: "site/"
 use_directory_urls: false
 repo_url: https://github.com/sillsdev/TheCombine
 edit_uri: edit/master/docs/user_guide/docs/
 repo_name: sillsdev/TheCombine
 copyright: © 2019-2023 SIL International
 plugins:
+  - i18n:
+      docs_structure: suffix
+      languages:
+        - locale: en
+          default: true
+          name: English
+          build: true
+        - locale: es
+          name: Español
+          build: true
+          nav_translations:
+            Overview: Resumen
+            Account: Cuenta
+            Projects: Proyectos
+            Data Entry: Entrada de datos
+            Data Cleanup: Depuración de datos
+            Admin: Administración
   - search:
-      lang: en
+      lang: [en, es]
   # This plugin is used to validate URLs (including some anchors).
   # Uncomment to build the docs with this validation enabled.
   # This is commented out by default because this requires network I/O to validate URLs, so it is
@@ -38,12 +55,19 @@ markdown_extensions:
 extra_css:
   - static/stylesheets/extra.css
 extra:
+  alternate:
+    - name: English
+      link: /
+      lang: en
+    - name: Español
+      link: /es/
+      lang: es
   social:
     - icon: fontawesome/solid/globe
       link: https://www.sil.org/
     - icon: fontawesome/brands/github
       link: https://github.com/sillsdev
-    - icon: fontawesome/brands/twitter
+    - icon: fontawesome/brands/x-twitter
       link: https://twitter.com/silintl
     - icon: fontawesome/brands/facebook
       link: https://www.facebook.com/SIL.International/
@@ -62,3 +86,6 @@ nav:
       - Backend: licenses/backend_licenses.txt
       - Fonts: licenses/OFL.txt
       - Frontend: licenses/frontend_licenses.txt
+validation:
+  links:
+    not_found: info

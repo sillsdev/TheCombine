@@ -10,12 +10,12 @@ import { StoreStateDispatch } from "types/Redux/actions";
 
 function mapStateToProps(state: StoreState): SignUpStateProps {
   return {
-    inProgress: state.loginState.signUpAttempt,
-    success: state.loginState.signUpSuccess,
-    failureMessage: state.loginState.signUpFailure,
+    failureMessage: state.loginState.error,
+    status: state.loginState.signupStatus,
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function mapDispatchToProps(dispatch: StoreStateDispatch) {
   return {
     signUp: (

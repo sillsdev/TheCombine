@@ -1,3 +1,5 @@
+import { Action, PayloadAction } from "@reduxjs/toolkit";
+
 import {
   convertSenseToMergeTreeSense,
   defaultSidebar,
@@ -5,21 +7,32 @@ import {
   MergeTreeWord,
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
-import * as Actions from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import {
+  clearTree,
+  combineSense,
+  deleteSense,
+  flagWord,
+  getMergeWords,
+  moveSense,
+  orderSense,
+  setData,
+} from "goals/MergeDuplicates/Redux/MergeDupsActions";
+import mergeDupStepReducer, {
   defaultState,
-  mergeDupStepReducer,
 } from "goals/MergeDuplicates/Redux/MergeDupsReducer";
+import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import {
-  MergeTreeAction,
-  MergeTreeActionTypes,
-  MergeTreeState,
-} from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
+  mergeTwoDefinitionsScenario,
+  mergeTwoSensesScenario,
+  mergeTwoWordsScenario,
+} from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
 import { StoreAction, StoreActionTypes } from "rootActions";
+import { setupStore } from "store";
 import { Hash } from "types/hash";
 import { newFlag, testWordList } from "types/word";
 
 jest.mock("uuid");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const mockUuid = require("uuid") as { v4: jest.Mock };
 
 let uuidIndex = 0;
@@ -36,13 +49,7 @@ beforeEach(() => {
   mockUuid.v4.mockImplementation(getMockUuid);
 });
 
-describe("MergeDupReducer", () => {
-  // a state with no duplicate senses
-  const initState = mergeDupStepReducer(
-    undefined,
-    Actions.setWordData(testWordList())
-  );
-
+describe("MergeDupsReducer", () => {
   // helper functions for working with a tree
   const getRefByGuid = (
     guid: string,
@@ -61,8 +68,12 @@ describe("MergeDupReducer", () => {
   };
 
   test("clearTree", () => {
-    const newState = mergeDupStepReducer(initState, Actions.clearTree());
-    expect(JSON.stringify(newState)).toEqual(JSON.stringify(defaultState));
+    const store = setupStore();
+    store.dispatch(setData(testWordList()));
+    store.dispatch(clearTree());
+    expect(JSON.stringify(store.getState().mergeDuplicateGoal)).toEqual(
+      JSON.stringify(defaultState)
+    );
   });
 
   function testTreeWords(): Hash<MergeTreeWord> {
@@ -88,11 +99,12 @@ describe("MergeDupReducer", () => {
       sidebar: defaultSidebar,
       words: testTreeWords(),
     },
+    mergeWords: [],
   };
   function checkTreeWords(
-    action: MergeTreeAction,
+    action: Action | PayloadAction,
     expected: Hash<MergeTreeWord>
-  ) {
+  ): void {
     const result = mergeDupStepReducer(mockState, action).tree.words;
     // We have to stringify for this test,
     // because the order of the .sensesGuids matters.
@@ -114,7 +126,7 @@ describe("MergeDupReducer", () => {
         mergeSenseId: `${destWordId}_senseA`,
       };
 
-      const testAction = Actions.combineSense(srcRef, destRef);
+      const testAction = combineSense({ src: srcRef, dest: destRef });
 
       const expectedWords = testTreeWords();
       expectedWords[srcWordId].sensesGuids = {
@@ -141,7 +153,7 @@ describe("MergeDupReducer", () => {
         mergeSenseId: `${destWordId}_senseA`,
       };
 
-      const testAction = Actions.combineSense(srcRef, destRef);
+      const testAction = combineSense({ src: srcRef, dest: destRef });
 
       const expectedWords = testTreeWords();
       expectedWords[destWordId].sensesGuids = {
@@ -168,7 +180,7 @@ describe("MergeDupReducer", () => {
         mergeSenseId: `${destWordId}_senseA`,
       };
 
-      const testAction = Actions.combineSense(srcRef, destRef);
+      const testAction = combineSense({ src: srcRef, dest: destRef });
 
       const expectedWords = testTreeWords();
       delete expectedWords[srcWordId];
@@ -191,7 +203,7 @@ describe("MergeDupReducer", () => {
         mergeSenseId: `${wordId}_senseA`,
       };
 
-      const testAction = Actions.combineSense(srcRef, destRef);
+      const testAction = combineSense({ src: srcRef, dest: destRef });
 
       const expectedWords = testTreeWords();
       expectedWords[wordId].sensesGuids = {
@@ -214,7 +226,7 @@ describe("MergeDupReducer", () => {
         mergeSenseId: `${destWordId}_senseA`,
       };
 
-      const testAction = Actions.combineSense(srcRef, destRef);
+      const testAction = combineSense({ src: srcRef, dest: destRef });
 
       const expectedWords = testTreeWords();
       expectedWords[srcWordId].sensesGuids = {
@@ -240,7 +252,7 @@ describe("MergeDupReducer", () => {
         mergeSenseId: `${destWordId}_senseA`,
       };
 
-      const testAction = Actions.combineSense(srcRef, destRef);
+      const testAction = combineSense({ src: srcRef, dest: destRef });
 
       const expectedWords = testTreeWords();
       delete expectedWords[srcWordId];
@@ -261,7 +273,7 @@ describe("MergeDupReducer", () => {
         mergeSenseId: `${wordId}_senseA`,
       };
 
-      const testAction = Actions.deleteSense(testRef);
+      const testAction = deleteSense(testRef);
 
       const expectedWords = testTreeWords();
       delete expectedWords[wordId].sensesGuids[testRef.mergeSenseId];
@@ -276,7 +288,7 @@ describe("MergeDupReducer", () => {
         mergeSenseId: `${wordId}_senseB`,
       };
 
-      const testAction = Actions.deleteSense(testRef);
+      const testAction = deleteSense(testRef);
 
       const expectedWords = testTreeWords();
       delete expectedWords[wordId].sensesGuids[testRef.mergeSenseId];
@@ -291,7 +303,7 @@ describe("MergeDupReducer", () => {
         mergeSenseId: `${wordId}_senseA`,
       };
 
-      const testAction = Actions.deleteSense(testRef);
+      const testAction = deleteSense(testRef);
 
       const expectedWords = testTreeWords();
       delete expectedWords[wordId];
@@ -307,7 +319,7 @@ describe("MergeDupReducer", () => {
         order: 0,
       };
 
-      const testAction = Actions.deleteSense(testRef);
+      const testAction = deleteSense(testRef);
 
       const expectedWords = testTreeWords();
       expectedWords[wordId].sensesGuids = { word2_senseA: ["word2_senseA_1"] };
@@ -323,7 +335,7 @@ describe("MergeDupReducer", () => {
         order: 0,
       };
 
-      const testAction = Actions.deleteSense(srcRef);
+      const testAction = deleteSense(srcRef);
 
       const expectedWords = testTreeWords();
       delete expectedWords[srcWordId];
@@ -336,12 +348,65 @@ describe("MergeDupReducer", () => {
     it("adds a flag to a word", () => {
       const wordId = "word1";
       const testFlag = newFlag("flagged");
-      const testAction = Actions.flagWord(wordId, testFlag);
+      const testAction = flagWord({ wordId: wordId, flag: testFlag });
 
       const expectedWords = testTreeWords();
       expectedWords[wordId].flag = testFlag;
 
       checkTreeWords(testAction, expectedWords);
+    });
+  });
+
+  describe("getMergeWords", () => {
+    it("sense moved from one word to another", () => {
+      const store = setupStore(mergeTwoWordsScenario.initialState());
+      store.dispatch(getMergeWords());
+      const mergeArray = store.getState().mergeDuplicateGoal.mergeWords;
+      const expectedResult = mergeTwoWordsScenario.expectedResult;
+      expect(mergeArray.length).toEqual(1);
+      expect(mergeArray[0].parent.id).toEqual(expectedResult[0].parent);
+      const senses = mergeArray[0].parent.senses.map((s) => s.guid).sort();
+      expect(senses).toEqual(expectedResult[0].senses);
+      const semDoms = mergeArray[0].parent.senses
+        .flatMap((s) => s.semanticDomains.map((d) => d.id))
+        .sort();
+      expect(semDoms).toEqual(expectedResult[0].semDoms);
+      const defs = mergeArray[0].parent.senses.map((s) => s.definitions);
+      expect(defs).toEqual(expectedResult[0].defs);
+    });
+
+    it("sense from one word combined with sense in another", () => {
+      const store = setupStore(mergeTwoSensesScenario.initialState());
+      store.dispatch(getMergeWords());
+      const mergeArray = store.getState().mergeDuplicateGoal.mergeWords;
+      const expectedResult = mergeTwoSensesScenario.expectedResult;
+      expect(mergeArray.length).toEqual(1);
+      expect(mergeArray[0].parent.id).toEqual(expectedResult[0].parent);
+      const senses = mergeArray[0].parent.senses.map((s) => s.guid).sort();
+      expect(senses).toEqual(expectedResult[0].senses);
+      const semDoms = mergeArray[0].parent.senses
+        .flatMap((s) => s.semanticDomains.map((d) => d.id))
+        .sort();
+      expect(semDoms).toEqual(expectedResult[0].semDoms);
+      const defs = mergeArray[0].parent.senses.map((s) => s.definitions);
+      expect(defs).toEqual(expectedResult[0].defs);
+    });
+
+    it("combine senses with definitions", () => {
+      const store = setupStore(mergeTwoDefinitionsScenario.initialState());
+      store.dispatch(getMergeWords());
+      const mergeArray = store.getState().mergeDuplicateGoal.mergeWords;
+      const expectedResult = mergeTwoDefinitionsScenario.expectedResult;
+      expect(mergeArray.length).toEqual(1);
+      expect(mergeArray[0].parent.id).toEqual(expectedResult[0].parent);
+      const senses = mergeArray[0].parent.senses.map((s) => s.guid).sort();
+      expect(senses).toEqual(expectedResult[0].senses);
+      const semDoms = mergeArray[0].parent.senses
+        .flatMap((s) => s.semanticDomains.map((d) => d.id))
+        .sort();
+      expect(semDoms).toEqual(expectedResult[0].semDoms);
+      const defs = mergeArray[0].parent.senses.map((s) => s.definitions);
+      expect(defs).toEqual(expectedResult[0].defs);
     });
   });
 
@@ -357,7 +422,11 @@ describe("MergeDupReducer", () => {
 
       // Intercept the uuid that will be assigned.
       const nextGuid = getMockUuid(false);
-      const testAction = Actions.moveSense(testRef, wordId, 1);
+      const testAction = moveSense({
+        ref: testRef,
+        destWordId: wordId,
+        destOrder: 1,
+      });
 
       const expectedWords = testTreeWords();
       expectedWords[wordId].sensesGuids = { word2_senseA: ["word2_senseA_1"] };
@@ -381,7 +450,11 @@ describe("MergeDupReducer", () => {
 
       // Intercept the uuid that will be assigned.
       const nextGuid = getMockUuid(false);
-      const testAction = Actions.moveSense(testRef, destWordId, 2);
+      const testAction = moveSense({
+        ref: testRef,
+        destWordId: destWordId,
+        destOrder: 2,
+      });
 
       const expectedWords = testTreeWords();
       expectedWords[srcWordId].sensesGuids = {
@@ -404,7 +477,11 @@ describe("MergeDupReducer", () => {
 
       const destWordId = "word1";
 
-      const testAction = Actions.moveSense(testRef, destWordId, 1);
+      const testAction = moveSense({
+        ref: testRef,
+        destWordId: destWordId,
+        destOrder: 1,
+      });
 
       const expectedWords = testTreeWords();
       expectedWords[srcWordId].sensesGuids = {
@@ -427,7 +504,11 @@ describe("MergeDupReducer", () => {
 
       const destWordId = "word1";
 
-      const testAction = Actions.moveSense(testRef, destWordId, 1);
+      const testAction = moveSense({
+        ref: testRef,
+        destWordId: destWordId,
+        destOrder: 1,
+      });
 
       const expectedWords = testTreeWords();
       expectedWords[srcWordId].sensesGuids = {
@@ -450,8 +531,12 @@ describe("MergeDupReducer", () => {
 
       const destWordId = "word2";
 
-      const testAction = Actions.moveSense(testRef, destWordId, 1);
-      expect(testAction.type).toEqual(MergeTreeActionTypes.MOVE_SENSE);
+      const testAction = moveSense({
+        ref: testRef,
+        destWordId: destWordId,
+        destOrder: 1,
+      });
+      expect(testAction.type).toEqual("mergeDupStepReducer/moveSenseAction");
 
       const expectedWords = testTreeWords();
       delete expectedWords[srcWordId];
@@ -470,7 +555,7 @@ describe("MergeDupReducer", () => {
       const mergeSenseId = `${wordId}_senseA`;
       const testRef: MergeTreeReference = { wordId, mergeSenseId, order: 0 };
 
-      const testAction = Actions.orderSense(testRef, 1);
+      const testAction = orderSense({ ref: testRef, order: 1 });
 
       const expectedWords = testTreeWords();
       expectedWords[wordId].sensesGuids[mergeSenseId] = [
@@ -486,7 +571,7 @@ describe("MergeDupReducer", () => {
       const mergeSenseId = `${wordId}_senseA`;
       const testRef: MergeTreeReference = { wordId, mergeSenseId };
 
-      const testAction = Actions.orderSense(testRef, 1);
+      const testAction = orderSense({ ref: testRef, order: 1 });
 
       const expectedWords = testTreeWords();
       expectedWords[wordId].sensesGuids = {
@@ -510,10 +595,7 @@ describe("MergeDupReducer", () => {
 
   test("setWordData", () => {
     const wordList = testWordList();
-    const treeState = mergeDupStepReducer(
-      undefined,
-      Actions.setWordData(wordList)
-    );
+    const treeState = mergeDupStepReducer(undefined, setData(wordList));
     // check if data has all words present
     for (const word of wordList) {
       const srcWordId = word.id;

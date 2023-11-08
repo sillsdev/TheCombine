@@ -10,11 +10,8 @@ import { useAppDispatch, useAppSelector } from "types/hooks";
 import { Path } from "types/path";
 
 export default function ProjectInvite(): ReactElement {
-  const inProgress = useAppSelector((state) => state.loginState.signUpAttempt);
-  const success = useAppSelector((state) => state.loginState.signUpSuccess);
-  const failureMessage = useAppSelector(
-    (state) => state.loginState.signUpFailure
-  );
+  const status = useAppSelector((state) => state.loginState.signupStatus);
+  const failureMessage = useAppSelector((state) => state.loginState.error);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -24,7 +21,7 @@ export default function ProjectInvite(): ReactElement {
   const validateLink = useCallback(async (): Promise<void> => {
     if (project && token) {
       const status = await backend.validateLink(project, token);
-      if (status.isTokenValid && status.isUserRegistered) {
+      if (status.isTokenValid && status.isUserValid) {
         navigate(Path.Login);
         return;
       }
@@ -38,8 +35,7 @@ export default function ProjectInvite(): ReactElement {
 
   return isValidLink ? (
     <SignUp
-      inProgress={inProgress}
-      success={success}
+      status={status}
       failureMessage={failureMessage}
       signUp={(name: string, user: string, email: string, password: string) => {
         dispatch(asyncSignUp(name, user, email, password));

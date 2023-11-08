@@ -1,6 +1,11 @@
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { Provider } from "react-redux";
-import renderer from "react-test-renderer";
+import {
+  ReactTestInstance,
+  ReactTestRenderer,
+  act,
+  create,
+} from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
@@ -38,12 +43,12 @@ const mockUpdateGloss = jest.fn();
 const mockUpdateNote = jest.fn();
 const mockUpdateVern = jest.fn();
 
-let testMaster: renderer.ReactTestRenderer;
-let testHandle: renderer.ReactTestInstance;
+let testMaster: ReactTestRenderer;
+let testHandle: ReactTestInstance;
 
-function renderWithWord(word: Word) {
-  renderer.act(() => {
-    testMaster = renderer.create(
+async function renderWithWord(word: Word): Promise<void> {
+  await act(async () => {
+    testMaster = create(
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <Provider store={mockStore}>
@@ -75,14 +80,14 @@ beforeEach(() => {
 
 describe("ExistingEntry", () => {
   describe("component", () => {
-    it("renders recorder and no players", () => {
-      renderWithWord(mockWord);
+    it("renders recorder and no players", async () => {
+      await renderWithWord(mockWord);
       expect(testHandle.findAllByType(AudioPlayer).length).toEqual(0);
       expect(testHandle.findAllByType(AudioRecorder).length).toEqual(1);
     });
 
-    it("renders recorder and 3 players", () => {
-      renderWithWord({ ...mockWord, audio: ["a.wav", "b.wav", "c.wav"] });
+    it("renders recorder and 3 players", async () => {
+      await renderWithWord({ ...mockWord, audio: ["a.wav", "b.wav", "c.wav"] });
       expect(testHandle.findAllByType(AudioPlayer).length).toEqual(3);
       expect(testHandle.findAllByType(AudioRecorder).length).toEqual(1);
     });
@@ -90,10 +95,10 @@ describe("ExistingEntry", () => {
 
   describe("vernacular", () => {
     it("updates if changed", async () => {
-      renderWithWord(mockWord);
+      await renderWithWord(mockWord);
       testHandle = testHandle.findByType(VernWithSuggestions);
-      async function updateVernAndBlur(text: string) {
-        await renderer.act(async () => {
+      async function updateVernAndBlur(text: string): Promise<void> {
+        await act(async () => {
           await testHandle.props.updateVernField(text);
           await testHandle.props.onBlur();
         });
@@ -102,16 +107,16 @@ describe("ExistingEntry", () => {
       await updateVernAndBlur(mockVern);
       expect(mockUpdateVern).toBeCalledTimes(0);
       await updateVernAndBlur(mockText);
-      expect(mockUpdateVern).toBeCalledWith(mockText);
+      expect(mockUpdateVern).toBeCalledWith(0, mockText);
     });
   });
 
   describe("gloss", () => {
     it("updates if changed", async () => {
-      renderWithWord(mockWord);
+      await renderWithWord(mockWord);
       testHandle = testHandle.findByType(GlossWithSuggestions);
-      async function updateGlossAndBlur(text: string) {
-        await renderer.act(async () => {
+      async function updateGlossAndBlur(text: string): Promise<void> {
+        await act(async () => {
           await testHandle.props.updateGlossField(text);
           await testHandle.props.onBlur();
         });
@@ -120,18 +125,18 @@ describe("ExistingEntry", () => {
       await updateGlossAndBlur(mockGloss);
       expect(mockUpdateGloss).toBeCalledTimes(0);
       await updateGlossAndBlur(mockText);
-      expect(mockUpdateGloss).toBeCalledWith(mockText);
+      expect(mockUpdateGloss).toBeCalledWith(0, mockText);
     });
   });
 
   describe("note", () => {
-    it("updates text", () => {
-      renderWithWord(mockWord);
+    it("updates text", async () => {
+      await renderWithWord(mockWord);
       testHandle = testHandle.findByType(EntryNote).findByType(EditTextDialog);
-      renderer.act(() => {
+      await act(async () => {
         testHandle.props.updateText(mockText);
       });
-      expect(mockUpdateNote).toBeCalledWith(mockText);
+      expect(mockUpdateNote).toBeCalledWith(0, mockText);
     });
   });
 });

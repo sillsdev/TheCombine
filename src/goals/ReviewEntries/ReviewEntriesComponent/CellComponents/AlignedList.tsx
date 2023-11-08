@@ -16,7 +16,7 @@ export default function AlignedList(props: AlignedListProps): ReactElement {
         <Grid
           item
           xs
-          key={`alignedList:${props.listId}:${index}`}
+          key={index}
           style={
             props.bottomCell || index + 1 !== props.contents.length
               ? { borderBottom: "1px solid lightgrey" }

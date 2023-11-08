@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import { Provider } from "react-redux";
-import renderer from "react-test-renderer";
+import { ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
@@ -30,15 +30,15 @@ const mockProjectId = "proj-id";
 const mockProjectRoles: { [key: string]: string } = {};
 mockProjectRoles[mockProjectId] = "non-empty-string";
 
-let testRenderer: renderer.ReactTestRenderer;
+let testRenderer: ReactTestRenderer;
 
 const mockStore = configureMockStore()({
   currentProjectState: { project: { name: "" } },
 });
 
-const renderProjectButtons = async (path = Path.Root) => {
-  await renderer.act(async () => {
-    testRenderer = renderer.create(
+const renderProjectButtons = async (path = Path.Root): Promise<void> => {
+  await act(async () => {
+    testRenderer = create(
       <Provider store={mockStore}>
         <ProjectButtons currentTab={path} />
       </Provider>

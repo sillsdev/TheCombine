@@ -48,7 +48,7 @@ const setupMocks = (): void => {
   mockGetAvatar.mockReturnValue("");
   mockGetCurrentUser.mockReturnValue(mockUser());
   mockIsEmailTaken.mockResolvedValue(false);
-  mockSetUser.mockImplementation(async (user?: User) => {});
+  mockSetUser.mockImplementation(async () => {});
   mockUpdateUser.mockImplementation((user: User) => user);
 };
 

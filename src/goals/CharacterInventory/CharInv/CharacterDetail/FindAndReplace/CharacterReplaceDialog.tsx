@@ -6,7 +6,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { LoadingButton } from "components/Buttons";
@@ -15,20 +15,24 @@ interface ReplaceDialogProps {
   open: boolean;
   dialogFindValue: string;
   dialogReplaceValue: string;
-  handleAccept: () => Promise<void>;
   handleCancel: () => void;
+  handleConfirm: () => Promise<void>;
+  idCancel?: string;
+  idConfirm?: string;
 }
 
 /**
  * Dialog to confirm replacement
  */
-export default function CharacterReplaceDialog(props: ReplaceDialogProps) {
+export default function CharacterReplaceDialog(
+  props: ReplaceDialogProps
+): ReactElement {
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
 
-  async function submitFindAndReplace() {
+  async function submitFindAndReplace(): Promise<void> {
     setLoading(true);
-    await props.handleAccept();
+    await props.handleConfirm();
     setLoading(false);
   }
 
@@ -54,12 +58,21 @@ export default function CharacterReplaceDialog(props: ReplaceDialogProps) {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={props.handleCancel} variant="outlined" color="primary">
+        <Button
+          color="primary"
+          id={props.idCancel}
+          onClick={props.handleCancel}
+          variant="outlined"
+        >
           {t("buttons.cancel")}
         </Button>
         <LoadingButton
+          buttonProps={{
+            color: "primary",
+            id: props.idConfirm,
+            onClick: submitFindAndReplace,
+          }}
           loading={loading}
-          buttonProps={{ onClick: submitFindAndReplace, color: "primary" }}
         >
           {t("buttons.confirm")}
         </LoadingButton>

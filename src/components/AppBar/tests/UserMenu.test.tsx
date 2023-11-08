@@ -1,6 +1,6 @@
 import { Button, MenuItem } from "@mui/material";
 import { Provider } from "react-redux";
-import renderer from "react-test-renderer";
+import { act, create, ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
@@ -21,7 +21,7 @@ jest.mock("react-router-dom", () => ({
   useNavigate: jest.fn(),
 }));
 
-let testRenderer: renderer.ReactTestRenderer;
+let testRenderer: ReactTestRenderer;
 
 const mockStore = configureMockStore()();
 
@@ -30,7 +30,7 @@ const mockGetUserId = jest.fn();
 const mockUser = newUser();
 const mockUserId = "mockUserId";
 
-function setMockFunctions() {
+function setMockFunctions(): void {
   mockGetUser.mockResolvedValue(mockUser);
   mockGetUserId.mockReturnValue(mockUserId);
 }
@@ -41,9 +41,9 @@ beforeEach(() => {
 });
 
 describe("UserMenu", () => {
-  it("renders without crashing", () => {
-    renderer.act(() => {
-      testRenderer = renderer.create(
+  it("renders without crashing", async () => {
+    await act(async () => {
+      testRenderer = create(
         <Provider store={mockStore}>
           <UserMenu currentTab={Path.Root} />
         </Provider>
@@ -59,18 +59,18 @@ describe("UserMenu", () => {
     expect(await getIsAdmin()).toBeTruthy();
   });
 
-  it("UserMenuList has one more item for admins (Site Settings)", () => {
-    renderMenuList();
+  it("UserMenuList has one more item for admins (Site Settings)", async () => {
+    await renderMenuList();
     const normalMenuItems = testRenderer.root.findAllByType(MenuItem).length;
-    renderMenuList(true);
+    await renderMenuList(true);
     const adminMenuItems = testRenderer.root.findAllByType(MenuItem).length;
     expect(adminMenuItems).toBe(normalMenuItems + 1);
   });
 });
 
-function renderMenuList(isAdmin = false) {
-  renderer.act(() => {
-    testRenderer = renderer.create(
+async function renderMenuList(isAdmin = false): Promise<void> {
+  await act(async () => {
+    testRenderer = create(
       <Provider store={mockStore}>
         <UserMenuList isAdmin={isAdmin} onSelect={jest.fn()} />
       </Provider>

@@ -4,15 +4,24 @@ import { uploadFileFromUrl } from "components/Pronunciations/utilities";
 import {
   ReviewClearReviewEntriesState,
   ReviewEntriesActionTypes,
+  ReviewSortBy,
   ReviewUpdateWord,
   ReviewUpdateWords,
 } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReduxTypes";
 import {
+  ColumnId,
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { newNote, newSense } from "types/word";
+
+export function sortBy(columnId?: ColumnId): ReviewSortBy {
+  return {
+    type: ReviewEntriesActionTypes.SortBy,
+    sortBy: columnId,
+  };
+}
 
 export function updateAllWords(words: ReviewEntriesWord[]): ReviewUpdateWords {
   return {
@@ -120,9 +129,11 @@ function cleanWord(
 // Converts the ReviewEntriesWord into a Word to send to the backend
 export function updateFrontierWord(
   newData: ReviewEntriesWord,
-  oldData: ReviewEntriesWord
+  oldData?: ReviewEntriesWord
 ) {
   return async (dispatch: StoreStateDispatch) => {
+    oldData ??= new ReviewEntriesWord();
+
     // Clean + check data; if there's something wrong, return the error.
     const editSource = cleanWord(newData, oldData);
     if (typeof editSource === "string") {
@@ -146,6 +157,7 @@ export function updateFrontierWord(
       getSenseFromEditSense(s, editWord.senses)
     );
     editWord.note = newNote(editSource.noteText, editWord.note?.language);
+    editWord.flag = { ...editSource.flag };
 
     // Update the word in the backend, and retrieve the id.
     editSource.id = (await backend.updateWord(editWord)).id;
@@ -193,13 +205,19 @@ function refreshWord(
   };
 }
 
-export function deleteAudio(wordId: string, fileName: string) {
+export function deleteAudio(
+  wordId: string,
+  fileName: string
+): (dispatch: StoreStateDispatch) => Promise<void> {
   return refreshWord(wordId, (wordId: string) =>
     backend.deleteAudio(wordId, fileName)
   );
 }
 
-export function uploadAudio(wordId: string, audioFile: File) {
+export function uploadAudio(
+  wordId: string,
+  audioFile: File
+): (dispatch: StoreStateDispatch) => Promise<void> {
   return refreshWord(wordId, (wordId: string) =>
     backend.uploadAudio(wordId, audioFile)
   );

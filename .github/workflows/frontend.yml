@@ -10,7 +10,7 @@ permissions: # added using https://github.com/step-security/secure-workflows
   contents: read
 
 jobs:
-  lint_test_build:
+  lint_build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -19,7 +19,7 @@ jobs:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
       # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
-        uses: step-security/harden-runner@8ca2b8b2ece13480cda6dacd3511b49857a23c09 # v2.5.1
+        uses: step-security/harden-runner@1b05615854632b887b69ae1be8cbefe72d3ae423 # v2.6.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -28,16 +28,42 @@ jobs:
             api.github.com:443
             github.com:443
             registry.npmjs.org:443
-      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+      - name: Checkout repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3.8.1
+        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm run fmt-frontend-check
       - run: npm run lint
+      - run: npm run build
 
-      # Coverage.
+  test_coverage:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18]
+    steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
+      - name: Harden Runner
+        uses: step-security/harden-runner@1b05615854632b887b69ae1be8cbefe72d3ae423 # v2.6.0
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            *.actions.githubusercontent.com:443
+            api.github.com:443
+            github.com:443
+            registry.npmjs.org:443
+      - name: Checkout repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
       - run: npm run test-frontend:coverage
         env:
           CI: true
@@ -46,20 +72,17 @@ jobs:
         with:
           if-no-files-found: error
           name: coverage
-          path: coverage/clover.xml
+          path: coverage/cobertura-coverage.xml
           retention-days: 7
 
-      # Release build.
-      - run: npm run build
-
   upload_coverage:
-    needs: lint_test_build
+    needs: test_coverage
     runs-on: ubuntu-latest
     steps:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
       # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
-        uses: step-security/harden-runner@8ca2b8b2ece13480cda6dacd3511b49857a23c09 # v2.5.1
+        uses: step-security/harden-runner@1b05615854632b887b69ae1be8cbefe72d3ae423 # v2.6.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -70,7 +93,7 @@ jobs:
             storage.googleapis.com:443
             uploader.codecov.io:443
       - name: Checkout repository
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Download coverage artifact
         uses: actions/download-artifact@v3
         with:
@@ -79,7 +102,7 @@ jobs:
         uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         with:
           fail_ci_if_error: true
-          files: clover.xml
+          files: cobertura-coverage.xml
           flags: frontend
           name: Frontend
 
@@ -90,7 +113,7 @@ jobs:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
       # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
-        uses: step-security/harden-runner@8ca2b8b2ece13480cda6dacd3511b49857a23c09 # v2.5.1
+        uses: step-security/harden-runner@1b05615854632b887b69ae1be8cbefe72d3ae423 # v2.6.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -103,7 +126,7 @@ jobs:
             pypi.org:443
             registry-1.docker.io:443
             registry.npmjs.org:443
-      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           fetch-depth: 0
       - name: Build frontend
