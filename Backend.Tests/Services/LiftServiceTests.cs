@@ -66,7 +66,8 @@ namespace Backend.Tests.Services
             List<SemanticDomain> frDoms = new() { new() { Lang = "fr" }, new() };
             List<SemanticDomain> ptDoms = new() { new(), new() { Lang = "pt" } };
             List<SemanticDomain> zzDoms = new() { new() { Lang = "zz" } };
-            List<Word> projWords = new() {
+            List<Word> projWords = new()
+            {
                 // First semantic domain of the second sense of a word
                 new() { Senses = new() { new(), new() { SemanticDomains = frDoms } } },
                 // Second semantic domain of the first sense of a word
