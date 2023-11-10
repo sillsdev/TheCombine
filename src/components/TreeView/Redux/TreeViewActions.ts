@@ -1,60 +1,57 @@
+import { Action, PayloadAction } from "@reduxjs/toolkit";
+
 import { SemanticDomain, SemanticDomainTreeNode } from "api/models";
 import { getSemanticDomainTreeNode } from "backend";
 import {
-  TreeActionType,
-  TreeViewAction,
-} from "components/TreeView/Redux/TreeViewReduxTypes";
+  resetTreeAction,
+  setCurrentDomainAction,
+  setDomainLanguageAction,
+  setTreeOpenAction,
+} from "components/TreeView/Redux/TreeViewReducer";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 
-export function closeTreeAction(): TreeViewAction {
-  return { type: TreeActionType.CLOSE_TREE };
+// Action Creation Functions
+
+export function closeTree(): PayloadAction {
+  return setTreeOpenAction(false);
 }
 
-export function openTreeAction(): TreeViewAction {
-  return { type: TreeActionType.OPEN_TREE };
+export function openTree(): PayloadAction {
+  return setTreeOpenAction(true);
 }
 
-export function setDomainAction(
+export function resetTree(): Action {
+  return resetTreeAction();
+}
+
+export function setCurrentDomain(
   domain: SemanticDomainTreeNode
-): TreeViewAction {
-  return { type: TreeActionType.SET_CURRENT_DOMAIN, domain };
+): PayloadAction {
+  return setCurrentDomainAction(domain);
 }
 
-export function setDomainLanguageAction(language: string): TreeViewAction {
-  return { type: TreeActionType.SET_DOMAIN_LANGUAGE, language };
+export function setDomainLanguage(language: string): PayloadAction {
+  return setDomainLanguageAction(language);
 }
 
-export function resetTreeAction(): TreeViewAction {
-  return { type: TreeActionType.RESET_TREE };
-}
+// Dispatch Functions
 
 export function traverseTree(domain: SemanticDomain) {
   return async (dispatch: StoreStateDispatch) => {
-    if (domain) {
-      await getSemanticDomainTreeNode(domain.id, domain.lang).then(
-        (response) => {
-          if (response) {
-            dispatch(setDomainAction(response));
-          }
-        }
-      );
+    if (domain.id) {
+      const dom = await getSemanticDomainTreeNode(domain.id, domain.lang);
+      if (dom) {
+        dispatch(setCurrentDomain(dom));
+      }
     }
   };
 }
 
-export function updateTreeLanguage(language: string) {
-  return (dispatch: StoreStateDispatch) => {
-    if (language) {
-      dispatch(setDomainLanguageAction(language));
-    }
-  };
-}
-
-export function initTreeDomain(language = "") {
+export function initTreeDomain(lang = "") {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    const currentDomain = getState().treeViewState.currentDomain;
-    currentDomain.lang = language;
-    await dispatch(traverseTree(currentDomain));
+    await dispatch(
+      traverseTree({ ...getState().treeViewState.currentDomain, lang })
+    );
   };
 }
