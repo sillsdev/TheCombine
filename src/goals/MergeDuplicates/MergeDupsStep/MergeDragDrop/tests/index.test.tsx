@@ -22,6 +22,12 @@ import {
   newWord,
 } from "types/word";
 
+jest.mock("react-beautiful-dnd", () => ({
+  ...jest.requireActual("react-beautiful-dnd"),
+  Draggable: ({ children }: any) =>
+    children({ draggableProps: {}, innerRef: jest.fn() }, {}, {}),
+  Droppable: ({ children }: any) => children({ innerRef: jest.fn() }, {}),
+}));
 jest.mock("react-router-dom", () => ({
   useNavigate: jest.fn(),
 }));
