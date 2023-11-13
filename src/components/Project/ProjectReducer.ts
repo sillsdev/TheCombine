@@ -1,27 +1,28 @@
-import {
-  CurrentProjectState,
-  defaultState,
-  ProjectAction,
-  ProjectActionType,
-} from "components/Project/ProjectReduxTypes";
-import { StoreAction, StoreActionTypes } from "rootActions";
-import { newProject } from "types/project";
+import { createSlice } from "@reduxjs/toolkit";
 
-export const projectReducer = (
-  state = defaultState,
-  action: ProjectAction | StoreAction
-): CurrentProjectState => {
-  switch (action.type) {
-    case ProjectActionType.SET_CURRENT_PROJECT:
-      if (action.payload?.id === state.project.id) {
-        return { ...state, project: action.payload };
+import { defaultState } from "components/Project/ProjectReduxTypes";
+import { StoreActionTypes } from "rootActions";
+
+const projectSlice = createSlice({
+  name: "currentProjectState",
+  initialState: defaultState,
+  reducers: {
+    resetAction: () => defaultState,
+    setProjectAction: (state, action) => {
+      if (state.project.id !== action.payload.id) {
+        state.users = [];
       }
-      return { project: action.payload ?? newProject(), users: [] };
-    case ProjectActionType.SET_CURRENT_PROJECT_USERS:
-      return { ...state, users: action.payload ?? [] };
-    case StoreActionTypes.RESET:
-      return defaultState;
-    default:
-      return state;
-  }
-};
+      state.project = action.payload;
+    },
+    setUsersAction: (state, action) => {
+      state.users = action.payload;
+    },
+  },
+  extraReducers: (builder) =>
+    builder.addCase(StoreActionTypes.RESET, () => defaultState),
+});
+
+export const { resetAction, setProjectAction, setUsersAction } =
+  projectSlice.actions;
+
+export default projectSlice.reducer;
