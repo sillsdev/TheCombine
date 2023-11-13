@@ -377,7 +377,7 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteStartElement("range");
             liftRangesWriter.WriteAttributeString("id", "semantic-domain-ddp4");
 
-            // This list should match the contents of Backend/Data/
+            // Each entry in this list should have a ddp4-{code}.json file under Backend/Data/
             List<string> sdLangs = new() { "ar", "en", "es", "fr", "hi", "ml", "my", "pt", "ru", "sw", "zh" };
             var wordLangs = projWords
                 .SelectMany(w => w.Senses.SelectMany(s => s.SemanticDomains.Select(d => d.Lang)))
