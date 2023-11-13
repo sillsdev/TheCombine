@@ -23,7 +23,9 @@ namespace BackendFramework.Repositories
         /// <summary>  Finds all <see cref="Word"/>s with specified projectId </summary>
         public async Task<List<Word>> GetAllWords(string projectId)
         {
-            return await _wordDatabase.Words.Find(w => w.ProjectId == projectId).ToListAsync();
+            // A variant in FLEx can export as an entry without any senses.
+            // We don't want to show those in The Combine (or edit/delete/merge them).
+            return await _wordDatabase.Words.Find(w => w.ProjectId == projectId && w.Senses.Count > 0).ToListAsync();
         }
 
         /// <summary> Finds <see cref="Word"/> with specified wordId and projectId </summary>
@@ -127,7 +129,10 @@ namespace BackendFramework.Repositories
         /// <summary> Checks if Frontier is nonempty for specified <see cref="Project"/> </summary>
         public async Task<bool> IsFrontierNonempty(string projectId)
         {
-            var word = await _wordDatabase.Frontier.Find(w => w.ProjectId == projectId).FirstOrDefaultAsync();
+            // A variant in FLEx can export as an entry without any senses.
+            // We don't want to show those in The Combine (or edit/delete/merge them).
+            var word = await _wordDatabase.Frontier.Find(
+                w => w.ProjectId == projectId && w.Senses.Count > 0).FirstOrDefaultAsync();
             return word is not null;
         }
 
@@ -142,14 +147,19 @@ namespace BackendFramework.Repositories
         /// <summary> Finds all <see cref="Word"/>s in the Frontier for specified <see cref="Project"/> </summary>
         public async Task<List<Word>> GetFrontier(string projectId)
         {
-            return await _wordDatabase.Frontier.Find(w => w.ProjectId == projectId).ToListAsync();
+            // A variant in FLEx can export as an entry without any senses.
+            // We don't want to show those in The Combine (or edit/delete/merge them).
+            return await _wordDatabase.Frontier.Find(
+                w => w.ProjectId == projectId && w.Senses.Count > 0).ToListAsync();
         }
 
         /// <summary> Finds all <see cref="Word"/>s in Frontier of specified project with specified vern </summary>
         public async Task<List<Word>> GetFrontierWithVernacular(string projectId, string vernacular)
         {
+            // A variant in FLEx can export as an entry without any senses.
+            // We don't want to show those in The Combine (or edit/delete/merge them).
             return await _wordDatabase.Frontier.Find(
-                w => w.ProjectId == projectId && w.Vernacular == vernacular).ToListAsync();
+                w => w.ProjectId == projectId && w.Vernacular == vernacular && w.Senses.Count > 0).ToListAsync();
         }
 
         /// <summary> Adds a <see cref="Word"/> only to the Frontier </summary>
