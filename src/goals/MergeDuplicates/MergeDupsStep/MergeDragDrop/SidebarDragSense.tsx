@@ -52,12 +52,12 @@ export default function SidebarDragSense(
                 snapshot.draggingOver === trashId
                   ? "red"
                   : snapshot.isDragging
-                  ? "lightgreen"
-                  : props.sense.protected
-                  ? "lightyellow"
-                  : props.index === 0
-                  ? "white"
-                  : "lightgrey",
+                    ? "lightgreen"
+                    : props.sense.protected
+                      ? "lightyellow"
+                      : props.index === 0
+                        ? "white"
+                        : "lightgrey",
             }}
           >
             <SenseCardContent senses={[props.sense]} sidebar />

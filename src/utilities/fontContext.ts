@@ -79,17 +79,17 @@ export class ProjectFonts {
       direction: props.vernacular
         ? this.vernacularDir
         : props.lang
-        ? this.getLangDir(props.lang)
-        : props.analysis
-        ? this.analysisDir
-        : style?.direction,
+          ? this.getLangDir(props.lang)
+          : props.analysis
+            ? this.analysisDir
+            : style?.direction,
       fontFamily: props.vernacular
         ? this.vernacularFont
         : props.lang
-        ? this.getLangFont(props.lang)
-        : props.analysis
-        ? this.analysisFont
-        : style?.fontFamily ?? this.inherit,
+          ? this.getLangFont(props.lang)
+          : props.analysis
+            ? this.analysisFont
+            : style?.fontFamily ?? this.inherit,
     };
   }
 }

@@ -410,9 +410,8 @@ function combineIntoFirstSense(senses: MergeTreeSense[]): void {
         } else {
           const oldText = mainSense.definitions[defIndex].text;
           if (!oldText.split(sep).includes(def.text)) {
-            mainSense.definitions[
-              defIndex
-            ].text = `${oldText}${sep}${def.text}`;
+            mainSense.definitions[defIndex].text =
+              `${oldText}${sep}${def.text}`;
           }
         }
       }

@@ -40,10 +40,10 @@ export function compareFlags(a: Flag, b: Flag): number {
   return a.active && b.active
     ? a.text.localeCompare(b.text)
     : a.active
-    ? -1
-    : b.active
-    ? 1
-    : 0;
+      ? -1
+      : b.active
+        ? 1
+        : 0;
 }
 
 /**

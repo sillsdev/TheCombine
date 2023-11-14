@@ -108,8 +108,8 @@ export default function DownloadButton(
     return exportState.status === ExportStatus.Failure
       ? themeColors.error
       : props.colorSecondary
-      ? themeColors.secondary
-      : themeColors.primary;
+        ? themeColors.secondary
+        : themeColors.primary;
   }
 
   function iconFunction(): () => void {
