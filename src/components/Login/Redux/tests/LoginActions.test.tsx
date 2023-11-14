@@ -82,7 +82,7 @@ describe("LoginAction", () => {
 
       // A failed signup does not trigger a login.
       jest.runAllTimers();
-      expect(mockAuthenticateUser).not.toBeCalled();
+      expect(mockAuthenticateUser).not.toHaveBeenCalled();
     });
 
     it("correctly affects state on success", async () => {
@@ -100,7 +100,7 @@ describe("LoginAction", () => {
       // A successful signup triggers a login using `setTimeout`.
       mockAuthenticateUser.mockRejectedValueOnce({});
       jest.runAllTimers();
-      expect(mockAuthenticateUser).toBeCalledTimes(1);
+      expect(mockAuthenticateUser).toHaveBeenCalledTimes(1);
     });
   });
 

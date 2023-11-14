@@ -134,7 +134,7 @@ describe("DataEntryTable", () => {
     beforeEach(async () => await renderTable());
 
     it("gets frontier word", () => {
-      expect(mockGetFrontierWords).toBeCalledTimes(1);
+      expect(mockGetFrontierWords).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -142,21 +142,21 @@ describe("DataEntryTable", () => {
     beforeEach(async () => await renderTable());
 
     it("hides questions", async () => {
-      expect(mockHideQuestions).not.toBeCalled();
+      expect(mockHideQuestions).not.toHaveBeenCalled();
       testHandle = testRenderer.root.findByProps({ id: exitButtonId });
       await act(async () => await testHandle.props.onClick());
-      expect(mockHideQuestions).toBeCalled();
+      expect(mockHideQuestions).toHaveBeenCalled();
     });
 
     it("creates word when new entry has vernacular", async () => {
-      expect(mockCreateWord).not.toBeCalled();
+      expect(mockCreateWord).not.toHaveBeenCalled();
       testHandle = testRenderer.root.findByType(NewEntry);
       expect(testHandle).not.toBeNull;
       // Set newVern but not newGloss.
       await act(async () => testHandle.props.setNewVern("hasVern"));
       testHandle = testRenderer.root.findByProps({ id: exitButtonId });
       await act(async () => await testHandle.props.onClick());
-      expect(mockCreateWord).toBeCalledTimes(1);
+      expect(mockCreateWord).toHaveBeenCalledTimes(1);
     });
 
     it("doesn't create word when new entry has no vernacular", async () => {
@@ -166,14 +166,14 @@ describe("DataEntryTable", () => {
       await act(async () => testHandle.props.setNewGloss("hasGloss"));
       testHandle = testRenderer.root.findByProps({ id: exitButtonId });
       await act(async () => await testHandle.props.onClick());
-      expect(mockCreateWord).not.toBeCalled();
+      expect(mockCreateWord).not.toHaveBeenCalled();
     });
 
     it("opens the domain tree", async () => {
-      expect(mockOpenTree).not.toBeCalled();
+      expect(mockOpenTree).not.toHaveBeenCalled();
       testHandle = testRenderer.root.findByProps({ id: exitButtonId });
       await act(async () => await testHandle.props.onClick());
-      expect(mockOpenTree).toBeCalledTimes(1);
+      expect(mockOpenTree).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -301,7 +301,7 @@ describe("DataEntryTable", () => {
         await testHandle.props.setNewGloss(firstGlossText(word.senses[0]));
         await testHandle.props.updateWordWithNewGloss(word.id);
       });
-      expect(mockUpdateWord).not.toBeCalled();
+      expect(mockUpdateWord).not.toHaveBeenCalled();
     });
 
     it("updates word in backend if gloss exists with different semantic domain", async () => {
@@ -320,7 +320,7 @@ describe("DataEntryTable", () => {
         await testHandle.props.setNewGloss(glossText);
         await testHandle.props.updateWordWithNewGloss(word.id);
       });
-      expect(mockUpdateWord).toBeCalledTimes(1);
+      expect(mockUpdateWord).toHaveBeenCalledTimes(1);
 
       // Confirm the semantic domain was added.
       const wordUpdated: Word = mockUpdateWord.mock.calls[0][0];
@@ -338,7 +338,7 @@ describe("DataEntryTable", () => {
         await testHandle.props.setNewGloss("differentGloss");
         await testHandle.props.updateWordWithNewGloss(mockMultiWord.id);
       });
-      expect(mockUpdateWord).toBeCalledTimes(1);
+      expect(mockUpdateWord).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -351,8 +351,8 @@ describe("DataEntryTable", () => {
       await act(async () => {
         await testHandle.props.addNewEntry();
       });
-      expect(mockUpdateDuplicate).toBeCalledTimes(1);
-      expect(mockCreateWord).not.toBeCalled();
+      expect(mockUpdateDuplicate).toHaveBeenCalledTimes(1);
+      expect(mockCreateWord).not.toHaveBeenCalled();
     });
 
     it("adds updated duplicate senses to recent entries", async () => {
@@ -403,7 +403,7 @@ describe("DataEntryTable", () => {
       });
 
       // Verify that createWord() was called with a word with the correct values
-      expect(mockCreateWord).toBeCalledTimes(1);
+      expect(mockCreateWord).toHaveBeenCalledTimes(1);
       const wordAdded: Word = mockCreateWord.mock.calls[0][0];
       expect(wordAdded.vernacular).toEqual(vern);
       expect(wordAdded.senses[0].glosses[0].def).toEqual(glossDef);
@@ -449,7 +449,7 @@ describe("DataEntryTable", () => {
       const senses: Sense[] = recentEntry.props.entry.senses;
       expect(senses).toHaveLength(1);
       expect(senses[0].semanticDomains).toHaveLength(1);
-      expect(mockUpdateWord).toBeCalledTimes(0);
+      expect(mockUpdateWord).toHaveBeenCalledTimes(0);
 
       // Update the vernacular
       const newVern = "not the vern generated in addRecentEntry";
@@ -458,7 +458,7 @@ describe("DataEntryTable", () => {
       });
 
       // Confirm the backend update was correctly called
-      expect(mockUpdateWord).toBeCalledTimes(1);
+      expect(mockUpdateWord).toHaveBeenCalledTimes(1);
       const calledWith: Word = mockUpdateWord.mock.calls[0][0];
       expect(calledWith.id).toEqual(wordId);
       expect(calledWith.vernacular).toEqual(newVern);

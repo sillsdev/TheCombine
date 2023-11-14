@@ -75,7 +75,7 @@ describe("GoalTimeline", () => {
       id: `new-goal-${allGoals[goalNumber].name}`,
     });
     await renderer.act(async () => goalButton.props.onClick());
-    expect(mockChooseGoal).toBeCalledTimes(1);
+    expect(mockChooseGoal).toHaveBeenCalledTimes(1);
     expect(mockChooseGoal.mock.calls[0][0].goalType).toEqual(
       defaultState.allGoalTypes[goalNumber]
     );

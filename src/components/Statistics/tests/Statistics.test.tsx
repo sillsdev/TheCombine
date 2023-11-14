@@ -52,7 +52,7 @@ describe("Statistics", () => {
   });
   it("useEffect hook was called", async () => {
     //Verify the mock function called
-    expect(mockGetProject).toBeCalled();
-    expect(mockGetProjectId).toBeCalled();
+    expect(mockGetProject).toHaveBeenCalled();
+    expect(mockGetProjectId).toHaveBeenCalled();
   });
 });

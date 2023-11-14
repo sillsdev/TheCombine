@@ -48,8 +48,8 @@ describe("ProjectName", () => {
       textField.props.onChange({ target: { value: "new-name" } })
     );
     mockUpdateProject.mockRejectedValueOnce({});
-    expect(mockToastError).not.toBeCalled();
+    expect(mockToastError).not.toHaveBeenCalled();
     await renderer.act(async () => saveButton.props.onClick());
-    expect(mockToastError).toBeCalledTimes(1);
+    expect(mockToastError).toHaveBeenCalledTimes(1);
   });
 });
