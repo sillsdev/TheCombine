@@ -37,7 +37,6 @@
     "wordlist": "hunspell-reader words"
   },
   "dependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@loadable/component": "^5.15.3",
     "@material-table/core": "^6.3.0",
     "@matt-block/react-recaptcha-v2": "^2.0.1",
@@ -82,6 +81,7 @@
     "validator": "^13.11.0"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/react": "^14.1.0",
     "@testing-library/user-event": "^14.5.1",
