@@ -29,15 +29,6 @@ class SemanticDomain:
         }
         return json.dumps(data, indent=4)
 
-    def to_json_capitalized(self) -> str:
-        data = {
-            "Guid": "" if self.guid is None else str(self.guid),
-            "Lang": self.lang,
-            "Name": self.name,
-            "Id": self.id,
-        }
-        return json.dumps(data, indent=4)
-
     def to_dict(self) -> Dict[str, str]:
         return {
             "guid": "" if self.guid is None else str(self.guid),

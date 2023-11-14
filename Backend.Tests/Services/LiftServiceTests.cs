@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using Backend.Tests.Mocks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Services;
@@ -9,6 +10,7 @@ namespace Backend.Tests.Services
 {
     public class LiftServiceTests
     {
+        private ISemanticDomainRepository _semDomRepo = null!;
         private ILiftService _liftService = null!;
 
         private const string FileName = "file.lift-ranges";
@@ -18,7 +20,8 @@ namespace Backend.Tests.Services
         [SetUp]
         public void Setup()
         {
-            _liftService = new LiftService();
+            _semDomRepo = new SemanticDomainRepositoryMock();
+            _liftService = new LiftService(_semDomRepo);
         }
 
         [Test]
@@ -76,6 +79,7 @@ namespace Backend.Tests.Services
                 new() { Senses = new() { new() { SemanticDomains = zzDoms } } }
             };
 
+            ((SemanticDomainRepositoryMock)_semDomRepo).SetValidLangs(new() { "en", "fr", "pt" });
             var langs = _liftService.CreateLiftRanges(projWords, new(), FileName).Result;
             Assert.That(langs, Has.Count.EqualTo(2));
             Assert.That(langs, Does.Contain("fr"));

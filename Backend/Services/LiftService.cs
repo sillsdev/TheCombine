@@ -4,11 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
 using System.Security;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml;
 using BackendFramework.Helper;
@@ -94,14 +91,18 @@ namespace BackendFramework.Services
 
     public class LiftService : ILiftService
     {
+        private readonly ISemanticDomainRepository _semDomRepo;
+
         /// A dictionary shared by all Projects for storing and retrieving paths to exported projects.
         private readonly Dictionary<string, string> _liftExports;
         /// A dictionary shared by all Projects for storing and retrieving paths to in-process imports.
         private readonly Dictionary<string, string> _liftImports;
         private const string InProgress = "IN_PROGRESS";
 
-        public LiftService()
+        public LiftService(ISemanticDomainRepository semDomRepo)
         {
+            _semDomRepo = semDomRepo;
+
             if (!Sldr.IsInitialized)
             {
                 Sldr.Initialize(true);
@@ -377,29 +378,16 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteStartElement("range");
             liftRangesWriter.WriteAttributeString("id", "semantic-domain-ddp4");
 
-            // Each entry in this list should have a ddp4-{code}.json file under Backend/Data/
-            List<string> sdLangs = new() { "ar", "en", "es", "fr", "hi", "ml", "my", "pt", "ru", "sw", "zh" };
             var wordLangs = projWords
-                .SelectMany(w => w.Senses.SelectMany(s => s.SemanticDomains.Select(d => d.Lang)))
-                .Distinct().Where(sdLangs.Contains).ToList();
-            var assembly = typeof(LiftService).GetTypeInfo().Assembly;
+                .SelectMany(w => w.Senses.SelectMany(s => s.SemanticDomains.Select(d => d.Lang))).Distinct();
+            var exportLangs = new List<string>();
             foreach (var lang in wordLangs)
             {
-                var semDomListFile = $"BackendFramework.Data.ddp4-{lang}.json";
-                var resource = assembly.GetManifestResourceStream(semDomListFile)
-                    ?? throw new ExportException($"Unable to load semantic domain list: {semDomListFile}");
-
-                string sdList;
-                using (var reader = new StreamReader(resource, Encoding.UTF8))
+                var semDoms = await _semDomRepo.GetAllSemanticDomainTreeNodes(lang);
+                if (semDoms is not null && semDoms.Count > 0)
                 {
-                    sdList = await reader.ReadToEndAsync();
-                }
-
-                var semDoms = JsonSerializer.Deserialize<List<SemanticDomain>>(
-                    sdList, new JsonSerializerOptions { AllowTrailingCommas = true })!;
-                foreach (var sd in semDoms)
-                {
-                    if (sd.Id != "Sem")
+                    exportLangs.Add(lang);
+                    foreach (var sd in semDoms)
                     {
                         WriteRangeElement(liftRangesWriter, sd.Id, sd.Guid, sd.Name, sd.Lang);
                     }
@@ -421,7 +409,7 @@ namespace BackendFramework.Services
 
             await liftRangesWriter.FlushAsync();
             liftRangesWriter.Close();
-            return wordLangs;
+            return exportLangs;
         }
 
         /// <summary> Adds <see cref="Note"/> of a word to be written out to lift </summary>

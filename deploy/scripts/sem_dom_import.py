@@ -1,16 +1,12 @@
 #! /usr/bin/env python3
 """
 Create data files for importing the Semantic Domain information into the Mongo database.
-(Or data files for exporting Semantic Domain information in a .lift-ranges file.)
 
 There are 2 files that are created for each language:
  - <lang>/tree.json -  the semantic domain hierarchy; it contains the data for the
                        SemanticDomainTree collection
  - <lang>/nodes.json - the contents of each element in the hierarchy; it contains the
                        data for the SemanticDomainNodes collection
-
-(Or if the --simple/-s flag is used, files of the form ddp4-<lang>.json are created
-for use in Backend/Data.)
 """
 
 from __future__ import annotations
@@ -67,12 +63,6 @@ def parse_args() -> argparse.Namespace:
         choices=["full", "flat"],
         default="flat",
         help="Structure to be used for the domain questions.",
-    )
-    parser.add_argument(
-        "--simple",
-        "-s",
-        action="store_true",
-        help="Export only SemanticDomain items for Backend/Data",
     )
     logging_group = parser.add_mutually_exclusive_group()
     logging_group.add_argument(
@@ -261,7 +251,7 @@ def get_sem_doms(node: ElementTree.Element, parent: SemDomTreeMap, prev: SemDomM
     return return_set
 
 
-def write_json(output_dir: Path, simple: bool = False) -> None:
+def write_json(output_dir: Path) -> None:
     """
     Serialize the domain_nodes and domain_tree structures to JSON files.
 
@@ -271,22 +261,6 @@ def write_json(output_dir: Path, simple: bool = False) -> None:
     """
     if not output_dir.is_dir():
         output_dir.mkdir()
-
-    if simple:
-        for lang in domain_nodes:
-            output_file = output_dir / f"ddp4-{lang}.json"
-            with open(output_file, "w") as file:
-                file.write("[\n")
-                nodes = domain_nodes[lang]
-                for id in nodes:
-                    file.write(f"{nodes[id].to_semantic_domain().to_json_capitalized()},\n")
-                file.write("]\n")
-        logging.warning(
-            """If you add/remove languages in Backend/Data:
-\tUpdate both BackendFramework.csproj and LiftExport() in LiftServices.cs"""
-        )
-        return
-
     output_file = output_dir / "nodes.json"
     with open(output_file, "w") as file:
         for lang in domain_nodes:
@@ -300,11 +274,7 @@ def write_json(output_dir: Path, simple: bool = False) -> None:
 
 
 def generate_semantic_domains(
-    input_files: List[Path],
-    output_dir: Path,
-    *,
-    flatten_questions: bool = True,
-    simple: bool = False,
+    input_files: List[Path], output_dir: Path, *, flatten_questions: bool = True
 ) -> None:
     for xml_file in input_files:
         logging.info(f"Parsing {xml_file}")
@@ -341,7 +311,7 @@ def generate_semantic_domains(
         logging.info(f"Number of {lang} Tree Nodes: {len(domain_tree[lang])}")
     if not flatten_questions:
         SemanticDomainFull.flatten_questions = False
-    write_json(output_dir, simple)
+    write_json(output_dir)
 
 
 def main() -> None:
@@ -355,10 +325,7 @@ def main() -> None:
         log_level = logging.WARNING
     logging.basicConfig(format="%(levelname)s:%(message)s", level=log_level)
     generate_semantic_domains(
-        args.input_files,
-        args.output_dir,
-        flatten_questions=(args.question_mode == "flat"),
-        simple=args.simple,
+        args.input_files, args.output_dir, flatten_questions=(args.question_mode == "flat")
     )
 
 
