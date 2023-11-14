@@ -48,7 +48,7 @@
       "name": "Debug Jest Tests",
       "port": 9229,
       "request": "attach",
-      "skipFiles": ["<node_internals>/**", "*.dic"],
+      "skipFiles": ["<node_internals>/**"],
       "type": "pwa-node"
     },
     {
