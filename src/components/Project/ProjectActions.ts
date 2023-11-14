@@ -1,31 +1,35 @@
+import { Action, PayloadAction } from "@reduxjs/toolkit";
+
 import { Project, User } from "api/models";
 import { getAllProjectUsers, updateProject } from "backend";
 import { setProjectId } from "backend/localStorage";
 import {
-  ProjectAction,
-  ProjectActionType,
-} from "components/Project/ProjectReduxTypes";
+  resetAction,
+  setProjectAction,
+  setUsersAction,
+} from "components/Project/ProjectReducer";
 import { StoreStateDispatch } from "types/Redux/actions";
+import { newProject } from "types/project";
 
-export function setCurrentProject(payload?: Project): ProjectAction {
-  return {
-    type: ProjectActionType.SET_CURRENT_PROJECT,
-    payload,
-  };
+// Action Creation Functions
+
+export function resetCurrentProject(): Action {
+  return resetAction();
 }
 
-export function setCurrentProjectUsers(payload?: User[]): ProjectAction {
-  return {
-    type: ProjectActionType.SET_CURRENT_PROJECT_USERS,
-    payload,
-  };
+export function setCurrentProject(project?: Project): PayloadAction {
+  return setProjectAction(project ?? newProject());
 }
 
-export function clearCurrentProject() {
-  return (dispatch: StoreStateDispatch) => {
-    setProjectId();
-    dispatch(setCurrentProject());
-    dispatch(setCurrentProjectUsers());
+export function setCurrentProjectUsers(users?: User[]): PayloadAction {
+  return setUsersAction(users ?? []);
+}
+
+// Dispatch Functions
+
+export function asyncRefreshProjectUsers(projectId: string) {
+  return async (dispatch: StoreStateDispatch) => {
+    dispatch(setCurrentProjectUsers(await getAllProjectUsers(projectId)));
   };
 }
 
@@ -36,9 +40,10 @@ export function asyncUpdateCurrentProject(project: Project) {
   };
 }
 
-export function asyncRefreshProjectUsers(projectId: string) {
-  return async (dispatch: StoreStateDispatch) => {
-    dispatch(setCurrentProjectUsers(await getAllProjectUsers(projectId)));
+export function clearCurrentProject() {
+  return (dispatch: StoreStateDispatch) => {
+    setProjectId();
+    dispatch(resetCurrentProject());
   };
 }
 

@@ -1,119 +1,111 @@
+import { createSlice } from "@reduxjs/toolkit";
+
 import {
-  CharacterInventoryAction,
-  CharacterInventoryType,
-  CharacterInventoryState,
-  CharacterSetEntry,
   getCharacterStatus,
+  defaultState,
 } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
-import { StoreAction, StoreActionTypes } from "rootActions";
+import { StoreActionTypes } from "rootActions";
 
-export const defaultState: CharacterInventoryState = {
-  validCharacters: [],
-  rejectedCharacters: [],
-  allWords: [],
-  selectedCharacter: "",
-  characterSet: [],
-};
+const characterInventorySlice = createSlice({
+  name: "characterInventoryState",
+  initialState: defaultState,
+  reducers: {
+    addRejectedCharacterAction: (state, action) => {
+      if (!state.rejectedCharacters.includes(action.payload)) {
+        state.rejectedCharacters.push(action.payload);
+      }
 
-export const characterInventoryReducer = (
-  state: CharacterInventoryState = defaultState,
-  action: StoreAction | CharacterInventoryAction
-): CharacterInventoryState => {
-  let validCharacters: string[];
-  let rejectedCharacters: string[];
-  let characterSet: CharacterSetEntry[];
-  switch (action.type) {
-    case CharacterInventoryType.SET_VALID_CHARACTERS:
-      // Set prevents duplicate characters
-      validCharacters = [...new Set(action.payload)];
-      rejectedCharacters = state.rejectedCharacters.filter(
-        (char) => !validCharacters.includes(char)
+      const index = state.validCharacters.findIndex((c) => c == action.payload);
+      if (index !== -1) {
+        state.validCharacters.splice(index, 1);
+      }
+
+      const entry = state.characterSet.find(
+        (e) => e.character === action.payload
       );
-
-      // Set status of characters in character set
-      characterSet = state.characterSet.map((entry) => {
+      if (entry) {
         entry.status = getCharacterStatus(
           entry.character,
-          validCharacters,
-          rejectedCharacters
+          state.validCharacters,
+          state.rejectedCharacters
         );
-        return entry;
-      });
-      return { ...state, validCharacters, rejectedCharacters, characterSet };
+      }
+    },
+    addValidCharacterAction: (state, action) => {
+      if (!state.validCharacters.includes(action.payload)) {
+        state.validCharacters.push(action.payload);
+      }
 
-    case CharacterInventoryType.SET_REJECTED_CHARACTERS:
-      rejectedCharacters = [...new Set(action.payload)];
-      validCharacters = state.validCharacters.filter(
-        (char) => !rejectedCharacters.includes(char)
+      const index = state.rejectedCharacters.findIndex(
+        (c) => c == action.payload
       );
+      if (index !== -1) {
+        state.rejectedCharacters.splice(index, 1);
+      }
 
-      // Set status of characters in character set
-      characterSet = state.characterSet.map((entry) => {
+      const entry = state.characterSet.find(
+        (e) => e.character === action.payload
+      );
+      if (entry) {
         entry.status = getCharacterStatus(
           entry.character,
-          validCharacters,
-          rejectedCharacters
+          state.validCharacters,
+          state.rejectedCharacters
         );
-        return entry;
-      });
-      return { ...state, validCharacters, rejectedCharacters, characterSet };
-
-    case CharacterInventoryType.ADD_TO_VALID_CHARACTERS:
-      validCharacters = [
-        ...new Set(state.validCharacters.concat(action.payload)),
-      ];
-      rejectedCharacters = state.rejectedCharacters.filter(
-        (char) => !validCharacters.includes(char)
+      }
+    },
+    resetCharInvAction: () => defaultState,
+    setAllWordsAction: (state, action) => {
+      state.allWords = action.payload;
+    },
+    setCharacterSetAction: (state, action) => {
+      if (action.payload) {
+        state.characterSet = action.payload;
+      }
+    },
+    setRejectedCharactersAction: (state, action) => {
+      state.rejectedCharacters = [...new Set(action.payload as string[])];
+      state.validCharacters = state.validCharacters.filter(
+        (char) => !state.rejectedCharacters.includes(char)
       );
-
-      // Set status of characters in character set
-      characterSet = state.characterSet.map((entry) => {
+      for (const entry of state.characterSet) {
         entry.status = getCharacterStatus(
           entry.character,
-          validCharacters,
-          rejectedCharacters
+          state.validCharacters,
+          state.rejectedCharacters
         );
-        return entry;
-      });
-      return { ...state, validCharacters, rejectedCharacters, characterSet };
-
-    case CharacterInventoryType.ADD_TO_REJECTED_CHARACTERS:
-      rejectedCharacters = [
-        ...new Set(state.rejectedCharacters.concat(action.payload)),
-      ];
-      validCharacters = state.validCharacters.filter(
-        (char) => !rejectedCharacters.includes(char)
+      }
+    },
+    setSelectedCharacterAction: (state, action) => {
+      state.selectedCharacter = action.payload;
+    },
+    setValidCharactersAction: (state, action) => {
+      state.validCharacters = [...new Set(action.payload as string[])];
+      state.rejectedCharacters = state.rejectedCharacters.filter(
+        (char) => !state.validCharacters.includes(char)
       );
-
-      // Set status of characters in character set
-      characterSet = state.characterSet.map((entry) => {
+      for (const entry of state.characterSet) {
         entry.status = getCharacterStatus(
           entry.character,
-          validCharacters,
-          rejectedCharacters
+          state.validCharacters,
+          state.rejectedCharacters
         );
-        return entry;
-      });
-      return { ...state, validCharacters, rejectedCharacters, characterSet };
+      }
+    },
+  },
+  extraReducers: (builder) =>
+    builder.addCase(StoreActionTypes.RESET, () => defaultState),
+});
 
-    case CharacterInventoryType.SET_SELECTED_CHARACTER:
-      return { ...state, selectedCharacter: action.payload[0] };
+export const {
+  addRejectedCharacterAction,
+  addValidCharacterAction,
+  resetCharInvAction,
+  setAllWordsAction,
+  setCharacterSetAction,
+  setRejectedCharactersAction,
+  setSelectedCharacterAction,
+  setValidCharactersAction,
+} = characterInventorySlice.actions;
 
-    case CharacterInventoryType.SET_ALL_WORDS:
-      return { ...state, allWords: action.payload };
-
-    case CharacterInventoryType.SET_CHARACTER_SET:
-      return action.characterSet
-        ? { ...state, characterSet: action.characterSet }
-        : state;
-
-    case CharacterInventoryType.RESET:
-      return defaultState;
-
-    case StoreActionTypes.RESET:
-      return defaultState;
-
-    default:
-      return state;
-  }
-};
+export default characterInventorySlice.reducer;

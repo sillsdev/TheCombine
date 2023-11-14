@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 
 import {
   recording,
-  reset,
+  resetPronunciations,
 } from "components/Pronunciations/Redux/PronunciationsActions";
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { StoreState } from "types";
@@ -23,9 +23,12 @@ interface RecorderIconProps {
 }
 
 export default function RecorderIcon(props: RecorderIconProps): ReactElement {
-  const pronunciationsState = useAppSelector(
-    (state: StoreState) => state.pronunciationsState
+  const isRecording = useAppSelector(
+    (state: StoreState) =>
+      state.pronunciationsState.status === PronunciationsStatus.Recording &&
+      state.pronunciationsState.wordId === props.wordId
   );
+
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
@@ -43,7 +46,7 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
   }
   function toggleIsRecordingToFalse(): void {
     props.stopRecording();
-    dispatch(reset());
+    dispatch(resetPronunciations());
   }
 
   function handleTouchStart(): void {
@@ -77,12 +80,7 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
         tabIndex={-1}
       >
         <FiberManualRecord
-          className={
-            pronunciationsState.type === PronunciationsStatus.Recording &&
-            pronunciationsState.payload === props.wordId
-              ? classes.iconPress
-              : classes.iconRelease
-          }
+          className={isRecording ? classes.iconPress : classes.iconRelease}
           id={recordIconId}
         />
       </IconButton>
