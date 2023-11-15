@@ -5,7 +5,7 @@ import {
   downloadingAction,
   exportingAction,
   failureAction,
-  resetAction,
+  resetExportAction,
   successAction,
 } from "components/ProjectExport/Redux//ExportProjectReducer";
 import { StoreStateDispatch } from "types/Redux/actions";
@@ -24,8 +24,8 @@ export function failure(projectId: string): PayloadAction {
   return failureAction(projectId);
 }
 
-export function reset(): Action {
-  return resetAction();
+export function resetExport(): Action {
+  return resetExportAction();
 }
 
 export function success(projectId: string): PayloadAction {
@@ -52,7 +52,7 @@ export function asyncDownloadExport(projectId: string) {
 
 export function asyncResetExport() {
   return async (dispatch: StoreStateDispatch) => {
-    dispatch(reset());
+    dispatch(resetExport());
     await deleteLift();
   };
 }
