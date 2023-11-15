@@ -17,7 +17,7 @@ import {
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
-import theme, { themeColors } from "types/theme";
+import { themeColors } from "types/theme";
 
 interface PlayerProps {
   deleteAudio: (fileName: string) => void;
@@ -103,7 +103,6 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
           aria-label="play"
           id={`audio-${props.fileName}`}
           size="large"
-          sx={{ marginRight: theme.spacing(1) }}
         >
           {isPlaying ? <Stop sx={iconStyle} /> : <PlayArrow sx={iconStyle} />}
         </IconButton>

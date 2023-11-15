@@ -10,7 +10,7 @@ import { persistor, store } from "store";
 import theme from "types/theme";
 
 const container = document.getElementById("root");
-const root = createRoot(container!); // createRoot(container!) if you use TypeScript
+const root = createRoot(container!);
 root.render(
   <StyledEngineProvider injectFirst>
     <ThemeProvider theme={theme}>

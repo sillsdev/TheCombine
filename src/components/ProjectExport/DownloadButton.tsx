@@ -59,7 +59,7 @@ export default function DownloadButton(
   }, [downloadLink, fileUrl]);
 
   useEffect(() => {
-    if (fileName) {
+    if (fileName && exportState.projectId) {
       dispatch(asyncDownloadExport(exportState.projectId)).then((url) => {
         if (url) {
           setFileUrl(url);
