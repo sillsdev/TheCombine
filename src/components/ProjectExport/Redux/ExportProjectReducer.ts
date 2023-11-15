@@ -22,7 +22,7 @@ const exportProjectSlice = createSlice({
       state.projectId = action.payload;
       state.status = ExportStatus.Failure;
     },
-    resetAction: () => defaultState,
+    resetExportAction: () => defaultState,
     successAction: (state, action) => {
       state.projectId = action.payload;
       state.status = ExportStatus.Success;
@@ -36,7 +36,7 @@ export const {
   downloadingAction,
   exportingAction,
   failureAction,
-  resetAction,
+  resetExportAction,
   successAction,
 } = exportProjectSlice.actions;
 

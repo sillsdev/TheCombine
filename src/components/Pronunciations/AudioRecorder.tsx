@@ -10,6 +10,7 @@ import { getFileNameForWord } from "components/Pronunciations/utilities";
 interface RecorderProps {
   wordId: string;
   uploadAudio: (audioFile: File) => void;
+  onClick?: () => void;
 }
 
 export default function AudioRecorder(props: RecorderProps): ReactElement {
@@ -21,6 +22,9 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
   }
 
   async function stopRecording(): Promise<void> {
+    if (props.onClick) {
+      props.onClick();
+    }
     const blob = await recorder.stopRecording();
     if (!blob) {
       toast.error(t("pronunciations.noMicAccess"));
