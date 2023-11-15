@@ -74,8 +74,8 @@ namespace BackendFramework.Models
     public class UserEditStepWrapper
     {
         [Required]
-        [BsonElement("goalIndex")]
-        public int GoalIndex { get; set; }
+        [BsonElement("editGuid")]
+        public Guid EditGuid { get; set; }
 
         [Required]
         [BsonElement("stepString")]
@@ -86,9 +86,9 @@ namespace BackendFramework.Models
         [BsonElement("stepIndex")]
         public int? StepIndex { get; set; }
 
-        public UserEditStepWrapper(int goalIndex, string stepString, int? stepIndex = null)
+        public UserEditStepWrapper(Guid editGuid, string stepString, int? stepIndex = null)
         {
-            GoalIndex = goalIndex;
+            EditGuid = editGuid;
             StepString = stepString;
             StepIndex = stepIndex;
         }
@@ -100,14 +100,14 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return other.GoalIndex == GoalIndex &&
+            return other.EditGuid == EditGuid &&
                 other.StepString.Equals(StepString, StringComparison.Ordinal) &&
                 other.StepIndex == StepIndex;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(GoalIndex, StepString, StepIndex);
+            return HashCode.Combine(EditGuid, StepString, StepIndex);
         }
     }
 
