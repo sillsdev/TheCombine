@@ -1,3 +1,4 @@
+import { IconButton } from "@mui/material";
 import { Provider } from "react-redux";
 import { ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
@@ -34,7 +35,7 @@ jest.mock("react-router-dom", () => ({
 
 jest.mock("backend", () => ({}));
 jest.mock("goals/MergeDuplicates/Redux/MergeDupsActions", () => ({
-  setSidebar: jest.fn(),
+  setSidebar: (...args: any[]) => mockSetSidebar(...args),
 }));
 jest.mock("types/hooks", () => {
   return {
@@ -42,6 +43,8 @@ jest.mock("types/hooks", () => {
     useAppDispatch: () => jest.fn(),
   };
 });
+
+const mockSetSidebar = jest.fn();
 
 let testRenderer: ReactTestRenderer;
 
@@ -130,11 +133,26 @@ beforeEach(async () => {
 });
 
 describe("MergeDragDrop", () => {
-  it("renders with one more column than words", async () => {
+  it("render all columns with right number of senses", async () => {
     const wordCols = testRenderer.root.findAllByType(DropWord);
     expect(wordCols).toHaveLength(3);
     expect(wordCols[0].findAllByType(DragSense)).toHaveLength(1);
     expect(wordCols[1].findAllByType(DragSense)).toHaveLength(2);
     expect(wordCols[2].findAllByType(DragSense)).toHaveLength(0);
+  });
+
+  it("renders with button for opening the sidebar", async () => {
+    const iconButtons = testRenderer.root.findAllByType(IconButton);
+    const sidebarButtons = iconButtons.filter((b) =>
+      b.props.id.includes("sidebar")
+    );
+    expect(sidebarButtons).toHaveLength(1);
+    mockSetSidebar.mockReset();
+    await act(async () => {
+      sidebarButtons[0].props.onClick();
+    });
+    expect(mockSetSidebar).toHaveBeenCalledTimes(1);
+    const callArg = mockSetSidebar.mock.calls[0][0];
+    expect(callArg.mergeSenseId).toEqual("word1_senseA");
   });
 });
