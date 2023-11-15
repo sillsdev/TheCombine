@@ -66,11 +66,14 @@ export function asyncAddGoal(goal: Goal) {
     const userEditId = getUserEditId();
     if (userEditId) {
       dispatch(setCurrentGoal(goal));
+
+      // Check if this is a new goal.
       if (goal.status !== GoalStatus.Completed) {
         await Backend.addGoalToUserEdit(userEditId, goal);
         // Load the new goal, but don't await, to allow a loading screen.
         dispatch(asyncLoadNewGoal(goal, userEditId));
       }
+
       // Serve goal.
       router.navigate(Path.GoalCurrent);
     }

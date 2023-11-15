@@ -21,8 +21,8 @@ namespace BackendFramework.Services
         /// </summary>
         /// <returns>
         /// Tuple of
-        ///     bool: true if edit replaced, false if nothing modified
-        ///     int: index at which the edit was placed or -1 on failure
+        ///     bool: true if Edit added/updated, false if nothing modified
+        ///     Guid?: guid of added/updated Edit, or null if UserEdit not found
         /// </returns>
         public async Task<Tuple<bool, Guid?>> AddGoalToUserEdit(string projectId, string userEditId, Edit edit)
         {
@@ -35,15 +35,14 @@ namespace BackendFramework.Services
             }
 
             // Update existing Edit if guid exists, otherwise add new one at end of List.
-            var indexOfEdit = userEdit.Edits.FindLastIndex(e => e.Guid == edit.Guid);
-            if (indexOfEdit > -1)
+            var editIndex = userEdit.Edits.FindLastIndex(e => e.Guid == edit.Guid);
+            if (editIndex > -1)
             {
-                userEdit.Edits[indexOfEdit] = edit;
+                userEdit.Edits[editIndex] = edit;
             }
             else
             {
                 userEdit.Edits.Add(edit);
-                indexOfEdit = userEdit.Edits.Count - 1;
             }
 
             // Replace the old UserEdit object with the new one that contains the new/updated edit
