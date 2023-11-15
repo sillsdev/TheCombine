@@ -12,7 +12,6 @@ import {
   setSignupFailureAction,
   setSignupSuccessAction,
 } from "components/Login/Redux/LoginReducer";
-import { reset } from "rootActions";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { Path } from "types/path";
 import { newUser } from "types/user";
@@ -63,17 +62,12 @@ export function asyncLogIn(username: string, password: string) {
   };
 }
 
-export function logoutAndResetStore() {
-  return (dispatch: StoreStateDispatch) => {
-    dispatch(reset());
-  };
-}
-
 export function asyncSignUp(
   name: string,
   username: string,
   email: string,
-  password: string
+  password: string,
+  onSuccess?: () => void
 ) {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(signupAttempt(username));
@@ -84,6 +78,9 @@ export function asyncSignUp(
       .addUser(user)
       .then(() => {
         dispatch(signupSuccess());
+        if (onSuccess) {
+          onSuccess();
+        }
         setTimeout(() => {
           dispatch(asyncLogIn(username, password));
         }, 1000);
