@@ -122,25 +122,25 @@ export const mergeTwoWordsScenario: GetMergeWordsScenario = {
       mergeDuplicateGoal: {
         data: {
           senses: {
-            "guid-sense-bah": convertSenseToMergeTreeSense(
+            [senseBah.guid]: convertSenseToMergeTreeSense(
               senseBah,
               wordFoo1.id,
               0
             ),
-            "guid-sense-bar": convertSenseToMergeTreeSense(
+            [senseBar.guid]: convertSenseToMergeTreeSense(
               senseBar,
               wordFoo2.id,
               0
             ),
-            "guid-sense-baz": convertSenseToMergeTreeSense(
+            [senseBaz.guid]: convertSenseToMergeTreeSense(
               senseBaz,
               wordFoo2.id,
               1
             ),
           },
           words: {
-            "wordId-foo1": wordFoo1,
-            "wordId-foo2": wordFoo2,
+            [wordFoo1.id]: wordFoo1,
+            [wordFoo2.id]: wordFoo2,
           },
         },
         tree: {
@@ -150,7 +150,7 @@ export const mergeTwoWordsScenario: GetMergeWordsScenario = {
             mergeSenseId: "",
           },
           words: {
-            "wordId-foo2": convertWordToMergeTreeWord({
+            [wordFoo2.id]: convertWordToMergeTreeWord({
               ...wordFoo2,
               senses: [senseBar, senseBaz, senseBah],
             }),
@@ -162,11 +162,11 @@ export const mergeTwoWordsScenario: GetMergeWordsScenario = {
   },
   expectedResult: [
     {
-      parent: "wordId-foo2",
-      senses: ["guid-sense-bah", "guid-sense-bar", "guid-sense-baz"],
+      parent: wordFoo2.id,
+      senses: [senseBah.guid, senseBar.guid, senseBaz.guid],
       semDoms: ["3", "4"],
       defs: [[], [], [definitionBah]],
-      children: ["wordId-foo1", "wordId-foo2"],
+      children: [wordFoo1.id, wordFoo2.id],
     },
   ],
 };
@@ -188,25 +188,25 @@ export const mergeTwoSensesScenario: GetMergeWordsScenario = {
       mergeDuplicateGoal: {
         data: {
           senses: {
-            "guid-sense-bah": convertSenseToMergeTreeSense(
+            [senseBah.guid]: convertSenseToMergeTreeSense(
               senseBah,
               wordFoo1.id,
               0
             ),
-            "guid-sense-bar": convertSenseToMergeTreeSense(
+            [senseBar.guid]: convertSenseToMergeTreeSense(
               senseBar,
               wordFoo2.id,
               0
             ),
-            "guid-sense-baz": convertSenseToMergeTreeSense(
+            [senseBaz.guid]: convertSenseToMergeTreeSense(
               senseBaz,
               wordFoo2.id,
               1
             ),
           },
           words: {
-            "wordId-foo1": wordFoo1,
-            "wordId-foo2": wordFoo2,
+            [wordFoo1.id]: wordFoo1,
+            [wordFoo2.id]: wordFoo2,
           },
         },
         tree: {
@@ -216,7 +216,7 @@ export const mergeTwoSensesScenario: GetMergeWordsScenario = {
             mergeSenseId: "",
           },
           words: {
-            "wordId-foo2": newMergeTreeWord(wordFoo2.vernacular, {
+            [wordFoo2.id]: newMergeTreeWord(wordFoo2.vernacular, {
               word2_senseA: [senseBar.guid],
               word2_senseB: [senseBaz.guid, senseBah.guid],
             }),
@@ -228,11 +228,11 @@ export const mergeTwoSensesScenario: GetMergeWordsScenario = {
   },
   expectedResult: [
     {
-      parent: "wordId-foo2",
-      senses: ["guid-sense-bar", "guid-sense-baz"],
+      parent: wordFoo2.id,
+      senses: [senseBar.guid, senseBaz.guid],
       semDoms: ["3", "4"],
       defs: [[], [definitionBah]],
-      children: ["wordId-foo1", "wordId-foo2"],
+      children: [wordFoo1.id, wordFoo2.id],
     },
   ],
 };
@@ -254,25 +254,25 @@ export const mergeTwoDefinitionsScenario: GetMergeWordsScenario = {
       mergeDuplicateGoal: {
         data: {
           senses: {
-            "guid-sense-bah": convertSenseToMergeTreeSense(
+            [senseBah.guid]: convertSenseToMergeTreeSense(
               senseBah,
               wordFoo1.id,
               0
             ),
-            "guid-sense-bar": convertSenseToMergeTreeSense(
+            [senseBar.guid]: convertSenseToMergeTreeSense(
               senseBar,
               wordFoo2.id,
               0
             ),
-            "guid-sense-bag": convertSenseToMergeTreeSense(
+            [senseBag.guid]: convertSenseToMergeTreeSense(
               senseBag,
               wordFoo2.id,
               1
             ),
           },
           words: {
-            "wordId-foo1": wordFoo1,
-            "wordId-foo2": { ...wordFoo2, senses: [senseBar, senseBag] },
+            [wordFoo1.id]: wordFoo1,
+            [wordFoo2.id]: { ...wordFoo2, senses: [senseBar, senseBag] },
           },
         },
         tree: {
@@ -282,7 +282,7 @@ export const mergeTwoDefinitionsScenario: GetMergeWordsScenario = {
             mergeSenseId: "",
           },
           words: {
-            "wordId-foo2": newMergeTreeWord(wordFoo2.vernacular, {
+            [wordFoo2.id]: newMergeTreeWord(wordFoo2.vernacular, {
               word2_senseA: [senseBar.guid],
               word2_senseB: [senseBag.guid, senseBah.guid],
             }),
@@ -294,11 +294,11 @@ export const mergeTwoDefinitionsScenario: GetMergeWordsScenario = {
   },
   expectedResult: [
     {
-      parent: "wordId-foo2",
-      senses: ["guid-sense-bag", "guid-sense-bar"],
+      parent: wordFoo2.id,
+      senses: [senseBag.guid, senseBar.guid],
       semDoms: ["3", "3", "4"],
       defs: [[], [definitionBagBah]],
-      children: ["wordId-foo1", "wordId-foo2"],
+      children: [wordFoo1.id, wordFoo2.id],
     },
   ],
 };

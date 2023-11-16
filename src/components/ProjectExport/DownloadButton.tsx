@@ -42,10 +42,12 @@ export default function DownloadButton(
   const dispatch = useAppDispatch();
   const [fileName, setFileName] = useState<string | undefined>();
   const [fileUrl, setFileUrl] = useState<string | undefined>();
+  const [projectName, setProjectName] = useState("");
   const { t } = useTranslation();
   const downloadLink = createRef<HTMLAnchorElement>();
 
   const reset = useCallback(async (): Promise<void> => {
+    setFileName(undefined);
     await dispatch(asyncResetExport());
   }, [dispatch]);
 
@@ -67,25 +69,31 @@ export default function DownloadButton(
         }
       });
     }
-  }, [dispatch, exportState.projectId, fileName, reset, setFileUrl]);
+  }, [dispatch, exportState.projectId, fileName, reset]);
 
   useEffect(() => {
-    if (exportState.status === ExportStatus.Success) {
-      getProjectName(exportState.projectId).then((projectName) => {
-        setFileName(makeExportName(projectName));
-      });
+    if (exportState.projectId) {
+      getProjectName(exportState.projectId).then(setProjectName);
+    } else {
+      setProjectName("");
     }
-  }, [exportState, setFileName]);
+  }, [exportState.projectId]);
 
-  function textId(): string {
+  useEffect(() => {
+    if (exportState.status === ExportStatus.Success && projectName) {
+      setFileName(makeExportName(projectName));
+    }
+  }, [exportState.status, projectName]);
+
+  function tooltipText(): string {
     switch (exportState.status) {
       case ExportStatus.Exporting:
-        return "projectExport.exportInProgress";
+        return t("projectExport.exportInProgress", { val: projectName });
       case ExportStatus.Success:
       case ExportStatus.Downloading:
-        return "projectExport.downloadInProgress";
+        return t("projectExport.downloadInProgress", { val: projectName });
       case ExportStatus.Failure:
-        return "projectExport.exportFailed";
+        return t("projectExport.exportFailed", { val: projectName });
       default:
         throw new Error("Not implemented");
     }
@@ -122,9 +130,9 @@ export default function DownloadButton(
   }
 
   return (
-    <Fragment>
+    <>
       {exportState.status !== ExportStatus.Default && (
-        <Tooltip title={t(textId())} placement="bottom">
+        <Tooltip title={tooltipText()} placement="bottom">
           <IconButton
             tabIndex={-1}
             onClick={iconFunction()}
@@ -145,6 +153,6 @@ export default function DownloadButton(
           (This link should not be visible)
         </a>
       )}
-    </Fragment>
+    </>
   );
 }

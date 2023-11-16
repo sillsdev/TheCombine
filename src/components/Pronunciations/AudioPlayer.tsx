@@ -23,6 +23,7 @@ interface PlayerProps {
   deleteAudio: (fileName: string) => void;
   fileName: string;
   isPlaying?: boolean;
+  onClick?: () => void;
   pronunciationUrl: string;
 }
 
@@ -65,6 +66,9 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
   }
 
   function deleteOrTogglePlay(event?: any): void {
+    if (props.onClick) {
+      props.onClick();
+    }
     if (event?.shiftKey) {
       setDeleteConf(true);
     } else {
