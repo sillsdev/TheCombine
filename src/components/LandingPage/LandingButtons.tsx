@@ -64,7 +64,7 @@ export function SignUpButton(props: SignUpButtonProps): ReactElement {
 
   return (
     <LandingButton
-      onClick={() => navigate(Path.SignUp)}
+      onClick={() => navigate(Path.Signup)}
       textId="login.signUp"
       buttonId={`${props.buttonIdPrefix ?? idAffix}-signUp`}
       filled

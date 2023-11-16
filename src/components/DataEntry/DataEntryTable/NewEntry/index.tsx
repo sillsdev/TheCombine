@@ -294,6 +294,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
           pronunciationFiles={newAudioUrls}
           deleteAudio={delNewAudioUrl}
           uploadAudio={addNewAudioUrl}
+          onClick={() => focus(FocusTarget.Gloss)}
         />
       </Grid>
       <Grid item xs={1} style={gridItemStyle(1)}>
