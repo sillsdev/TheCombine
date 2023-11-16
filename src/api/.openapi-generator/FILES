@@ -10,6 +10,7 @@ api/lift-api.ts
 api/merge-api.ts
 api/project-api.ts
 api/semantic-domain-api.ts
+api/speaker-api.ts
 api/statistics-api.ts
 api/user-api.ts
 api/user-edit-api.ts
@@ -23,6 +24,8 @@ index.ts
 models/autocomplete-setting.ts
 models/banner-type.ts
 models/chart-root-data.ts
+models/consent-type.ts
+models/consent.ts
 models/credentials.ts
 models/custom-field.ts
 models/dataset.ts
@@ -53,6 +56,7 @@ models/semantic-domain-user-count.ts
 models/semantic-domain.ts
 models/sense.ts
 models/site-banner.ts
+models/speaker.ts
 models/status.ts
 models/user-created-project.ts
 models/user-edit-step-wrapper.ts

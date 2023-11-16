@@ -1,6 +1,8 @@
 export * from "./autocomplete-setting";
 export * from "./banner-type";
 export * from "./chart-root-data";
+export * from "./consent";
+export * from "./consent-type";
 export * from "./credentials";
 export * from "./custom-field";
 export * from "./dataset";
@@ -30,6 +32,7 @@ export * from "./semantic-domain-tree-node";
 export * from "./semantic-domain-user-count";
 export * from "./sense";
 export * from "./site-banner";
+export * from "./speaker";
 export * from "./status";
 export * from "./user";
 export * from "./user-created-project";
