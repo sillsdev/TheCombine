@@ -49,7 +49,7 @@ export default function UserList(props: UserListProps): ReactElement {
 
   useEffect(() => {
     setSortedUsers([...filteredUsers].sort(compareUsers));
-  }, [compareUsers, filteredUsers, setFilteredUsers]);
+  }, [compareUsers, filteredUsers]);
 
   useEffect(() => {
     const newUserAvatar: Hash<string> = {};
@@ -59,7 +59,7 @@ export default function UserList(props: UserListProps): ReactElement {
       }
     });
     Promise.all(promises).then(() => setUserAvatar(newUserAvatar));
-  }, [props.allUsers, setUserAvatar]);
+  }, [props.allUsers]);
 
   useEffect(() => {
     setFilteredUsers(

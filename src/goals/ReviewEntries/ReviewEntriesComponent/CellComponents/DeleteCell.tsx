@@ -1,6 +1,6 @@
 import { Delete } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import React, { ReactElement, useState } from "react";
+import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { deleteFrontierWord as deleteFromBackend } from "backend";
@@ -40,7 +40,7 @@ export default function DeleteCell(props: DeleteCellProps): ReactElement {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Tooltip
         title={disabled ? t("reviewEntries.deleteDisabled") : ""}
         placement={document.body.dir === "rtl" ? "right" : "left"}
@@ -64,6 +64,6 @@ export default function DeleteCell(props: DeleteCellProps): ReactElement {
         buttonIdCancel="row-delete-cancel"
         buttonIdConfirm="row-delete-confirm"
       />
-    </React.Fragment>
+    </>
   );
 }

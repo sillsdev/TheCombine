@@ -160,12 +160,13 @@ interface WordPaperProps {
 function WordPaper(props: WordPaperProps): ReactElement {
   const [word, setWord] = useState<Word | undefined>();
   const [flag, setFlag] = useState<Flag>(newFlag());
+
   useEffect(() => {
     getWord(props.wordId).then(setWord);
-  }, [props.wordId, setWord]);
+  }, [props.wordId]);
   useEffect(() => {
     setFlag(word?.flag ?? newFlag());
-  }, [word, setFlag]);
+  }, [word]);
 
   return (
     <Grid key={props.wordId} style={{ margin: theme.spacing(1) }}>

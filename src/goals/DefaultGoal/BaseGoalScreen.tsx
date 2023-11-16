@@ -1,5 +1,5 @@
 import loadable from "@loadable/component";
-import React, { ReactElement, useEffect } from "react";
+import { ReactElement, useEffect } from "react";
 
 import { setCurrentGoal } from "components/GoalTimeline/Redux/GoalActions";
 import PageNotFound from "components/PageNotFound/component";
@@ -58,9 +58,9 @@ export function BaseGoalScreen(): ReactElement {
   }, [dispatch]);
 
   return (
-    <React.Fragment>
+    <>
       {goal.status !== GoalStatus.Completed && <DisplayProgress />}
       {displayComponent(goal)}
-    </React.Fragment>
+    </>
   );
 }
