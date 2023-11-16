@@ -1,6 +1,6 @@
 import { PreloadedState } from "redux";
 
-import { Project } from "api/models";
+import { Project, Speaker } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import {
   asyncRefreshProjectUsers,
@@ -33,13 +33,18 @@ describe("ProjectActions", () => {
       const proj: Project = { ...newProject(), id: mockProjId };
       const store = setupStore({
         ...persistedDefaultState,
-        currentProjectState: { project: proj, users: [newUser()] },
+        currentProjectState: {
+          project: proj,
+          speaker: {} as Speaker,
+          users: [newUser()],
+        },
       });
       const id = "new-id";
       await store.dispatch(asyncUpdateCurrentProject({ ...proj, id }));
       expect(mockUpdateProject).toBeCalledTimes(1);
-      const { project, users } = store.getState().currentProjectState;
+      const { project, speaker, users } = store.getState().currentProjectState;
       expect(project.id).toEqual(id);
+      expect(speaker).toBeUndefined();
       expect(users).toHaveLength(0);
     });
 
@@ -47,13 +52,18 @@ describe("ProjectActions", () => {
       const proj: Project = { ...newProject(), id: mockProjId };
       const store = setupStore({
         ...persistedDefaultState,
-        currentProjectState: { project: proj, users: [newUser()] },
+        currentProjectState: {
+          project: proj,
+          speaker: {} as Speaker,
+          users: [newUser()],
+        },
       });
       const name = "new-name";
       await store.dispatch(asyncUpdateCurrentProject({ ...proj, name }));
       expect(mockUpdateProject).toBeCalledTimes(1);
-      const { project, users } = store.getState().currentProjectState;
+      const { project, speaker, users } = store.getState().currentProjectState;
       expect(project.name).toEqual(name);
+      expect(speaker).not.toBeUndefined();
       expect(users).toHaveLength(1);
     });
   });
@@ -63,13 +73,18 @@ describe("ProjectActions", () => {
       const proj: Project = { ...newProject(), id: mockProjId };
       const store = setupStore({
         ...persistedDefaultState,
-        currentProjectState: { project: proj, users: [] },
+        currentProjectState: {
+          project: proj,
+          speaker: {} as Speaker,
+          users: [],
+        },
       });
       const mockUsers = [newUser(), newUser(), newUser()];
       mockGetAllProjectUsers.mockResolvedValueOnce(mockUsers);
       await store.dispatch(asyncRefreshProjectUsers("mockProjId"));
-      const { project, users } = store.getState().currentProjectState;
+      const { project, speaker, users } = store.getState().currentProjectState;
       expect(project.id).toEqual(mockProjId);
+      expect(speaker).not.toBeUndefined();
       expect(users).toHaveLength(mockUsers.length);
     });
   });
@@ -78,6 +93,7 @@ describe("ProjectActions", () => {
     it("correctly affects state", () => {
       const nonDefaultState = {
         project: { ...newProject(), id: "nonempty-string" },
+        speaker: {} as Speaker,
         users: [newUser()],
       };
       const store = setupStore({
@@ -85,8 +101,9 @@ describe("ProjectActions", () => {
         currentProjectState: nonDefaultState,
       });
       store.dispatch(clearCurrentProject());
-      const { project, users } = store.getState().currentProjectState;
+      const { project, speaker, users } = store.getState().currentProjectState;
       expect(project.id).toEqual("");
+      expect(speaker).toBeUndefined();
       expect(users).toHaveLength(0);
     });
   });

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using IO = System.IO;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -6,7 +7,6 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BackendFramework.Controllers
 {
@@ -81,9 +81,9 @@ namespace BackendFramework.Controllers
 
         /// <summary> Creates a <see cref="Speaker"/> for the specified projectId </summary>
         /// <returns> Id of created Speaker </returns>
-        [HttpPost(Name = "CreateSpeaker")]
+        [HttpGet("/create/{name}", Name = "CreateSpeaker")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        public async Task<IActionResult> CreateSpeaker(string projectId, [FromBody, BindRequired] Speaker speaker)
+        public async Task<IActionResult> CreateSpeaker(string projectId, string name)
         {
             // Check permissions
             if (!await _permissionService.HasProjectPermission(
@@ -93,7 +93,7 @@ namespace BackendFramework.Controllers
             }
 
             // Create speaker and return id
-            speaker.ProjectId = projectId;
+            var speaker = new Speaker { Name = name, ProjectId = projectId };
             return Ok((await _speakerRepo.Create(speaker)).Id);
         }
 
@@ -120,12 +120,11 @@ namespace BackendFramework.Controllers
             return Ok(await _speakerRepo.Delete(projectId, speakerId));
         }
 
-        /// <summary> Updates the <see cref="Speaker"/> for the specified projectId and speakerId </summary>
+        /// <summary> Removes consent of the <see cref="Speaker"/> for specified projectId and speakerId </summary>
         /// <returns> Id of updated Speaker </returns>
-        [HttpPut("{speakerId}", Name = "UpdateSpeaker")]
+        [HttpGet("removeconsent/{speakerId}", Name = "RemoveConsent")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        public async Task<IActionResult> UpdateSpeaker(
-            string projectId, string speakerId, [FromBody, BindRequired] Speaker speaker)
+        public async Task<IActionResult> RemoveConsent(string projectId, string speakerId)
         {
             // Check permissions
             if (!await _permissionService.HasProjectPermission(
@@ -134,9 +133,26 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
-            // Update speaker and return result
-            speaker.Id = speakerId;
-            speaker.ProjectId = projectId;
+            // Ensure the speaker exists
+            var speaker = await _speakerRepo.GetSpeaker(projectId, speakerId);
+            if (speaker is null)
+            {
+                return NotFound(speakerId);
+            }
+
+            // Delete consent file
+            if (string.IsNullOrEmpty(speaker.Consent.FileName))
+            {
+                return StatusCode(StatusCodes.Status304NotModified, speakerId);
+            }
+            var FilePath = FileStorage.GenerateAudioFilePath(projectId, speaker.Consent.FileName);
+            if (IO.File.Exists(FilePath))
+            {
+                IO.File.Delete(FilePath);
+            }
+
+            // Update speaker and return result with id
+            speaker.Consent = new();
             return await _speakerRepo.Update(speakerId, speaker) switch
             {
                 ResultOfUpdate.NotFound => NotFound(speakerId),
@@ -147,7 +163,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Updates the <see cref="Speaker"/>'s name for the specified projectId and speakerId </summary>
         /// <returns> Id of updated Speaker </returns>
-        [HttpGet("{speakerId}/changename/{name}", Name = "UpdateSpeakerName")]
+        [HttpGet("update/{speakerId}/{name}", Name = "UpdateSpeakerName")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> UpdateSpeakerName(string projectId, string speakerId, string name)
         {
@@ -165,13 +181,76 @@ namespace BackendFramework.Controllers
                 return NotFound(speakerId);
             }
 
-            // Update name and return result
+            // Update name and return result with id
             speaker.Name = name;
             return await _speakerRepo.Update(speakerId, speaker) switch
             {
                 ResultOfUpdate.NotFound => NotFound(speakerId),
                 ResultOfUpdate.Updated => Ok(speakerId),
                 _ => StatusCode(StatusCodes.Status304NotModified, speakerId)
+            };
+        }
+
+        /// <summary>
+        /// Adds an audio consent from <see cref="FileUpload"/>
+        /// locally to ~/.CombineFiles/{ProjectId}/Import/ExtractedLocation/Lift/audio
+        /// and updates the <see cref="Consent"/> of the specified <see cref="Speaker"/>
+        /// </summary>
+        /// <returns> Updated speaker </returns>
+        [HttpPost("uploadconsentaudio/{speakerId}", Name = "UploadConsentAudio")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Speaker))]
+        public async Task<IActionResult> UploadConsentAudio(string projectId, string speakerId,
+            [FromForm] FileUpload fileUpload)
+        {
+            // Sanitize user input
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+                speakerId = Sanitization.SanitizeId(speakerId);
+            }
+            catch
+            {
+                return new UnsupportedMediaTypeResult();
+            }
+
+            // Check permissions
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
+            {
+                return Forbid();
+            }
+
+            // Ensure the speaker exists
+            var speaker = await _speakerRepo.GetSpeaker(projectId, speakerId);
+            if (speaker is null)
+            {
+                return NotFound(speakerId);
+            }
+
+            // Ensure file is valid
+            var file = fileUpload.File;
+            if (file is null)
+            {
+                return BadRequest("Null File");
+            }
+            if (file.Length == 0)
+            {
+                return BadRequest("Empty File");
+            }
+
+            // Copy file data to a local file with speakerId-dependent name
+            fileUpload.FilePath = FileStorage.GenerateAudioFilePathForWord(projectId, speakerId);
+            await using (var fs = new IO.FileStream(fileUpload.FilePath, IO.FileMode.Create))
+            {
+                await file.CopyToAsync(fs);
+            }
+
+            // Update speaker consent and return result with speaker
+            var fileName = IO.Path.GetFileName(fileUpload.FilePath);
+            speaker.Consent = new() { FileName = fileName, FileType = ConsentType.Audio };
+            return await _speakerRepo.Update(speakerId, speaker) switch
+            {
+                ResultOfUpdate.NotFound => NotFound(speaker),
+                _ => Ok(speaker),
             };
         }
     }

@@ -48,23 +48,21 @@ export const SpeakerApiAxiosParamCreator = function (
   return {
     /**
      *
-     * @param {string} projectId
-     * @param {Speaker} speaker
+     * @param {string} name
+     * @param {string} [projectId]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     createSpeaker: async (
-      projectId: string,
-      speaker: Speaker,
+      name: string,
+      projectId?: string,
       options: any = {}
     ): Promise<RequestArgs> => {
-      // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("createSpeaker", "projectId", projectId);
-      // verify required parameter 'speaker' is not null or undefined
-      assertParamExists("createSpeaker", "speaker", speaker);
-      const localVarPath = `/v1/projects/{projectId}/speakers`.replace(
-        `{${"projectId"}}`,
-        encodeURIComponent(String(projectId))
+      // verify required parameter 'name' is not null or undefined
+      assertParamExists("createSpeaker", "name", name);
+      const localVarPath = `/create/{name}`.replace(
+        `{${"name"}}`,
+        encodeURIComponent(String(name))
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -74,14 +72,16 @@ export const SpeakerApiAxiosParamCreator = function (
       }
 
       const localVarRequestOptions = {
-        method: "POST",
+        method: "GET",
         ...baseOptions,
         ...options,
       };
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
 
-      localVarHeaderParameter["Content-Type"] = "application/json";
+      if (projectId !== undefined) {
+        localVarQueryParameter["projectId"] = projectId;
+      }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
       let headersFromBaseOptions =
@@ -91,11 +91,6 @@ export const SpeakerApiAxiosParamCreator = function (
         ...headersFromBaseOptions,
         ...options.headers,
       };
-      localVarRequestOptions.data = serializeDataIfNeeded(
-        speaker,
-        localVarRequestOptions,
-        configuration
-      );
 
       return {
         url: toPathString(localVarUrlObj),
@@ -292,25 +287,22 @@ export const SpeakerApiAxiosParamCreator = function (
      *
      * @param {string} projectId
      * @param {string} speakerId
-     * @param {Speaker} speaker
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateSpeaker: async (
+    removeConsent: async (
       projectId: string,
       speakerId: string,
-      speaker: Speaker,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("updateSpeaker", "projectId", projectId);
+      assertParamExists("removeConsent", "projectId", projectId);
       // verify required parameter 'speakerId' is not null or undefined
-      assertParamExists("updateSpeaker", "speakerId", speakerId);
-      // verify required parameter 'speaker' is not null or undefined
-      assertParamExists("updateSpeaker", "speaker", speaker);
-      const localVarPath = `/v1/projects/{projectId}/speakers/{speakerId}`
-        .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
-        .replace(`{${"speakerId"}}`, encodeURIComponent(String(speakerId)));
+      assertParamExists("removeConsent", "speakerId", speakerId);
+      const localVarPath =
+        `/v1/projects/{projectId}/speakers/removeconsent/{speakerId}`
+          .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
+          .replace(`{${"speakerId"}}`, encodeURIComponent(String(speakerId)));
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -319,14 +311,12 @@ export const SpeakerApiAxiosParamCreator = function (
       }
 
       const localVarRequestOptions = {
-        method: "PUT",
+        method: "GET",
         ...baseOptions,
         ...options,
       };
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
-
-      localVarHeaderParameter["Content-Type"] = "application/json";
 
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
       let headersFromBaseOptions =
@@ -336,11 +326,6 @@ export const SpeakerApiAxiosParamCreator = function (
         ...headersFromBaseOptions,
         ...options.headers,
       };
-      localVarRequestOptions.data = serializeDataIfNeeded(
-        speaker,
-        localVarRequestOptions,
-        configuration
-      );
 
       return {
         url: toPathString(localVarUrlObj),
@@ -368,7 +353,7 @@ export const SpeakerApiAxiosParamCreator = function (
       // verify required parameter 'name' is not null or undefined
       assertParamExists("updateSpeakerName", "name", name);
       const localVarPath =
-        `/v1/projects/{projectId}/speakers/{speakerId}/changename/{name}`
+        `/v1/projects/{projectId}/speakers/update/{speakerId}/{name}`
           .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
           .replace(`{${"speakerId"}}`, encodeURIComponent(String(speakerId)))
           .replace(`{${"name"}}`, encodeURIComponent(String(name)));
@@ -401,6 +386,85 @@ export const SpeakerApiAxiosParamCreator = function (
         options: localVarRequestOptions,
       };
     },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} speakerId
+     * @param {any} file
+     * @param {string} name
+     * @param {string} filePath
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    uploadConsentAudio: async (
+      projectId: string,
+      speakerId: string,
+      file: any,
+      name: string,
+      filePath: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("uploadConsentAudio", "projectId", projectId);
+      // verify required parameter 'speakerId' is not null or undefined
+      assertParamExists("uploadConsentAudio", "speakerId", speakerId);
+      // verify required parameter 'file' is not null or undefined
+      assertParamExists("uploadConsentAudio", "file", file);
+      // verify required parameter 'name' is not null or undefined
+      assertParamExists("uploadConsentAudio", "name", name);
+      // verify required parameter 'filePath' is not null or undefined
+      assertParamExists("uploadConsentAudio", "filePath", filePath);
+      const localVarPath =
+        `/v1/projects/{projectId}/speakers/uploadconsentaudio/{speakerId}`
+          .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
+          .replace(`{${"speakerId"}}`, encodeURIComponent(String(speakerId)));
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+      const localVarFormParams = new ((configuration &&
+        configuration.formDataCtor) ||
+        FormData)();
+
+      if (file !== undefined) {
+        localVarFormParams.append("File", file as any);
+      }
+
+      if (name !== undefined) {
+        localVarFormParams.append("Name", name as any);
+      }
+
+      if (filePath !== undefined) {
+        localVarFormParams.append("FilePath", filePath as any);
+      }
+
+      localVarHeaderParameter["Content-Type"] = "multipart/form-data";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = localVarFormParams;
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
   };
 };
 
@@ -413,21 +477,21 @@ export const SpeakerApiFp = function (configuration?: Configuration) {
   return {
     /**
      *
-     * @param {string} projectId
-     * @param {Speaker} speaker
+     * @param {string} name
+     * @param {string} [projectId]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async createSpeaker(
-      projectId: string,
-      speaker: Speaker,
+      name: string,
+      projectId?: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.createSpeaker(
+        name,
         projectId,
-        speaker,
         options
       );
       return createRequestFunction(
@@ -538,22 +602,19 @@ export const SpeakerApiFp = function (configuration?: Configuration) {
      *
      * @param {string} projectId
      * @param {string} speakerId
-     * @param {Speaker} speaker
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async updateSpeaker(
+    async removeConsent(
       projectId: string,
       speakerId: string,
-      speaker: Speaker,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.updateSpeaker(
+      const localVarAxiosArgs = await localVarAxiosParamCreator.removeConsent(
         projectId,
         speakerId,
-        speaker,
         options
       );
       return createRequestFunction(
@@ -593,6 +654,42 @@ export const SpeakerApiFp = function (configuration?: Configuration) {
         configuration
       );
     },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} speakerId
+     * @param {any} file
+     * @param {string} name
+     * @param {string} filePath
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async uploadConsentAudio(
+      projectId: string,
+      speakerId: string,
+      file: any,
+      name: string,
+      filePath: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Speaker>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.uploadConsentAudio(
+          projectId,
+          speakerId,
+          file,
+          name,
+          filePath,
+          options
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
   };
 };
 
@@ -609,18 +706,18 @@ export const SpeakerApiFactory = function (
   return {
     /**
      *
-     * @param {string} projectId
-     * @param {Speaker} speaker
+     * @param {string} name
+     * @param {string} [projectId]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     createSpeaker(
-      projectId: string,
-      speaker: Speaker,
+      name: string,
+      projectId?: string,
       options?: any
     ): AxiosPromise<string> {
       return localVarFp
-        .createSpeaker(projectId, speaker, options)
+        .createSpeaker(name, projectId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -687,18 +784,16 @@ export const SpeakerApiFactory = function (
      *
      * @param {string} projectId
      * @param {string} speakerId
-     * @param {Speaker} speaker
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateSpeaker(
+    removeConsent(
       projectId: string,
       speakerId: string,
-      speaker: Speaker,
       options?: any
     ): AxiosPromise<string> {
       return localVarFp
-        .updateSpeaker(projectId, speakerId, speaker, options)
+        .removeConsent(projectId, speakerId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -719,6 +814,28 @@ export const SpeakerApiFactory = function (
         .updateSpeakerName(projectId, speakerId, name, options)
         .then((request) => request(axios, basePath));
     },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} speakerId
+     * @param {any} file
+     * @param {string} name
+     * @param {string} filePath
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    uploadConsentAudio(
+      projectId: string,
+      speakerId: string,
+      file: any,
+      name: string,
+      filePath: string,
+      options?: any
+    ): AxiosPromise<Speaker> {
+      return localVarFp
+        .uploadConsentAudio(projectId, speakerId, file, name, filePath, options)
+        .then((request) => request(axios, basePath));
+    },
   };
 };
 
@@ -733,14 +850,14 @@ export interface SpeakerApiCreateSpeakerRequest {
    * @type {string}
    * @memberof SpeakerApiCreateSpeaker
    */
-  readonly projectId: string;
+  readonly name: string;
 
   /**
    *
-   * @type {Speaker}
+   * @type {string}
    * @memberof SpeakerApiCreateSpeaker
    */
-  readonly speaker: Speaker;
+  readonly projectId?: string;
 }
 
 /**
@@ -814,31 +931,24 @@ export interface SpeakerApiGetSpeakerRequest {
 }
 
 /**
- * Request parameters for updateSpeaker operation in SpeakerApi.
+ * Request parameters for removeConsent operation in SpeakerApi.
  * @export
- * @interface SpeakerApiUpdateSpeakerRequest
+ * @interface SpeakerApiRemoveConsentRequest
  */
-export interface SpeakerApiUpdateSpeakerRequest {
+export interface SpeakerApiRemoveConsentRequest {
   /**
    *
    * @type {string}
-   * @memberof SpeakerApiUpdateSpeaker
+   * @memberof SpeakerApiRemoveConsent
    */
   readonly projectId: string;
 
   /**
    *
    * @type {string}
-   * @memberof SpeakerApiUpdateSpeaker
+   * @memberof SpeakerApiRemoveConsent
    */
   readonly speakerId: string;
-
-  /**
-   *
-   * @type {Speaker}
-   * @memberof SpeakerApiUpdateSpeaker
-   */
-  readonly speaker: Speaker;
 }
 
 /**
@@ -870,6 +980,48 @@ export interface SpeakerApiUpdateSpeakerNameRequest {
 }
 
 /**
+ * Request parameters for uploadConsentAudio operation in SpeakerApi.
+ * @export
+ * @interface SpeakerApiUploadConsentAudioRequest
+ */
+export interface SpeakerApiUploadConsentAudioRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof SpeakerApiUploadConsentAudio
+   */
+  readonly projectId: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof SpeakerApiUploadConsentAudio
+   */
+  readonly speakerId: string;
+
+  /**
+   *
+   * @type {any}
+   * @memberof SpeakerApiUploadConsentAudio
+   */
+  readonly file: any;
+
+  /**
+   *
+   * @type {string}
+   * @memberof SpeakerApiUploadConsentAudio
+   */
+  readonly name: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof SpeakerApiUploadConsentAudio
+   */
+  readonly filePath: string;
+}
+
+/**
  * SpeakerApi - object-oriented interface
  * @export
  * @class SpeakerApi
@@ -889,8 +1041,8 @@ export class SpeakerApi extends BaseAPI {
   ) {
     return SpeakerApiFp(this.configuration)
       .createSpeaker(
+        requestParameters.name,
         requestParameters.projectId,
-        requestParameters.speaker,
         options
       )
       .then((request) => request(this.axios, this.basePath));
@@ -970,20 +1122,19 @@ export class SpeakerApi extends BaseAPI {
 
   /**
    *
-   * @param {SpeakerApiUpdateSpeakerRequest} requestParameters Request parameters.
+   * @param {SpeakerApiRemoveConsentRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof SpeakerApi
    */
-  public updateSpeaker(
-    requestParameters: SpeakerApiUpdateSpeakerRequest,
+  public removeConsent(
+    requestParameters: SpeakerApiRemoveConsentRequest,
     options?: any
   ) {
     return SpeakerApiFp(this.configuration)
-      .updateSpeaker(
+      .removeConsent(
         requestParameters.projectId,
         requestParameters.speakerId,
-        requestParameters.speaker,
         options
       )
       .then((request) => request(this.axios, this.basePath));
@@ -1005,6 +1156,29 @@ export class SpeakerApi extends BaseAPI {
         requestParameters.projectId,
         requestParameters.speakerId,
         requestParameters.name,
+        options
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {SpeakerApiUploadConsentAudioRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof SpeakerApi
+   */
+  public uploadConsentAudio(
+    requestParameters: SpeakerApiUploadConsentAudioRequest,
+    options?: any
+  ) {
+    return SpeakerApiFp(this.configuration)
+      .uploadConsentAudio(
+        requestParameters.projectId,
+        requestParameters.speakerId,
+        requestParameters.file,
+        requestParameters.name,
+        requestParameters.filePath,
         options
       )
       .then((request) => request(this.axios, this.basePath));
