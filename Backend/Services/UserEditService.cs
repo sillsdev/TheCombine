@@ -28,10 +28,9 @@ namespace BackendFramework.Services
         {
             // Get userEdit to change
             var userEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
-            var failureResult = new Tuple<bool, Guid?>(false, null);
             if (userEdit is null)
             {
-                return failureResult;
+                return new Tuple<bool, Guid?>(false, null);
             }
 
             // Update existing Edit if guid exists, otherwise add new one at end of List.

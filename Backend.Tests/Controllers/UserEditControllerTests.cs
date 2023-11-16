@@ -264,8 +264,7 @@ namespace Backend.Tests.Controllers
         {
 
             var userEdit = await _userEditRepo.Create(RandomUserEdit());
-            var firstEditGuid = userEdit.Edits.First().Guid;
-            var stepWrapper = new UserEditStepWrapper(firstEditGuid, "one step");
+            var stepWrapper = new UserEditStepWrapper(userEdit.Edits.First().Guid, "step");
 
             var noProjResult = await _userEditController.UpdateUserEditStep(MissingId, userEdit.Id, stepWrapper);
             Assert.That(noProjResult, Is.InstanceOf<NotFoundObjectResult>());
@@ -273,8 +272,8 @@ namespace Backend.Tests.Controllers
             var noUserEditResult = await _userEditController.UpdateUserEditStep(_projId, MissingId, stepWrapper);
             Assert.That(noUserEditResult, Is.InstanceOf<NotFoundObjectResult>());
 
-            var noEditResult = await _userEditController.UpdateUserEditStep(
-                _projId, userEdit.Id, new UserEditStepWrapper(Guid.NewGuid(), "another step"));
+            var diffGuidWrapper = new UserEditStepWrapper(Guid.NewGuid(), "step");
+            var noEditResult = await _userEditController.UpdateUserEditStep(_projId, userEdit.Id, diffGuidWrapper);
             Assert.That(noEditResult, Is.InstanceOf<NotFoundObjectResult>());
         }
 
