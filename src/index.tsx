@@ -1,6 +1,6 @@
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { SnackbarProvider } from "notistack";
-import { render } from "react-dom";
+import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
@@ -9,8 +9,9 @@ import App from "components/App/component";
 import { persistor, store } from "store";
 import theme from "types/theme";
 
-//Provider connects store to component containers
-render(
+const container = document.getElementById("root");
+const root = createRoot(container!);
+root.render(
   <StyledEngineProvider injectFirst>
     <ThemeProvider theme={theme}>
       <SnackbarProvider maxSnack={3} autoHideDuration={5000}>
@@ -21,6 +22,5 @@ render(
         </Provider>
       </SnackbarProvider>
     </ThemeProvider>
-  </StyledEngineProvider>,
-  document.getElementById("root")
+  </StyledEngineProvider>
 );

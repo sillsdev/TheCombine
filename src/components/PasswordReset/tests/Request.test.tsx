@@ -44,11 +44,9 @@ describe("ResetRequest", () => {
     const button = screen.getByRole("button");
     expect(button).toBeDisabled();
 
-    // Act
+    // Agent
     const field = screen.getByTestId(PasswordRequestIds.FieldEmailOrUsername);
-    await act(async () => {
-      await agent.type(field, "a");
-    });
+    await agent.type(field, "a");
 
     // After
     expect(button).toBeEnabled();
@@ -64,12 +62,10 @@ describe("ResetRequest", () => {
     expect(screen.queryAllByRole("button")).toHaveLength(1);
     expect(screen.queryByTestId(PasswordRequestIds.ButtonLogin)).toBeNull();
 
-    // Act
+    // Agent
     const field = screen.getByTestId(PasswordRequestIds.FieldEmailOrUsername);
-    await act(async () => {
-      await agent.type(field, "a");
-      await agent.click(screen.getByRole("button"));
-    });
+    await agent.type(field, "a");
+    await agent.click(screen.getByRole("button"));
 
     // After
     expect(screen.queryAllByRole("textbox")).toHaveLength(0);

@@ -119,11 +119,11 @@ describe("CharacterDetail", () => {
         cancelButton.props.onClick();
         submitButton.props.onClick();
       });
-      expect(mockFindAndReplace).not.toBeCalled();
+      expect(mockFindAndReplace).not.toHaveBeenCalled();
       await act(async () => {
         await confButton.props.onClick();
       });
-      expect(mockFindAndReplace).toBeCalled();
+      expect(mockFindAndReplace).toHaveBeenCalled();
     });
   });
 });

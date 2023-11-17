@@ -61,7 +61,7 @@ export default function DownloadButton(
   }, [downloadLink, fileUrl]);
 
   useEffect(() => {
-    if (fileName) {
+    if (fileName && exportState.projectId) {
       dispatch(asyncDownloadExport(exportState.projectId)).then((url) => {
         if (url) {
           setFileUrl(url);
@@ -116,8 +116,8 @@ export default function DownloadButton(
     return exportState.status === ExportStatus.Failure
       ? themeColors.error
       : props.colorSecondary
-      ? themeColors.secondary
-      : themeColors.primary;
+        ? themeColors.secondary
+        : themeColors.primary;
   }
 
   function iconFunction(): () => void {

@@ -116,12 +116,12 @@ export default function DragSense(props: DragSenseProps): ReactElement {
             background: isInSidebar
               ? "lightblue"
               : props.isProtectedSense
-              ? "lightyellow"
-              : snapshot.draggingOver === trashId
-              ? "red"
-              : snapshot.isDragging || snapshot.combineTargetFor
-              ? "lightgreen"
-              : "white",
+                ? "lightyellow"
+                : snapshot.draggingOver === trashId
+                  ? "red"
+                  : snapshot.isDragging || snapshot.combineTargetFor
+                    ? "lightgreen"
+                    : "white",
           }}
         >
           <SenseCardContent

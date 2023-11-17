@@ -105,7 +105,7 @@ describe("ExistingEntry", () => {
       }
 
       await updateVernAndBlur(mockVern);
-      expect(mockUpdateVern).toBeCalledTimes(0);
+      expect(mockUpdateVern).toHaveBeenCalledTimes(0);
       await updateVernAndBlur(mockText);
       expect(mockUpdateVern).toBeCalledWith(0, mockText);
     });
@@ -123,7 +123,7 @@ describe("ExistingEntry", () => {
       }
 
       await updateGlossAndBlur(mockGloss);
-      expect(mockUpdateGloss).toBeCalledTimes(0);
+      expect(mockUpdateGloss).toHaveBeenCalledTimes(0);
       await updateGlossAndBlur(mockText);
       expect(mockUpdateGloss).toBeCalledWith(0, mockText);
     });

@@ -2,7 +2,6 @@ import { DeleteForever, VpnKey } from "@mui/icons-material";
 import {
   Avatar,
   Button,
-  ButtonProps,
   Grid,
   Input,
   List,
@@ -69,7 +68,7 @@ export default function UserList(props: UserListProps): ReactElement {
     );
   }, [filterInput, props.allUsers]);
 
-  const userListButton = (user: User): ButtonProps => {
+  const userListButton = (user: User): ReactElement => {
     const disabled = user.isAdmin || user.id === getUserId();
     return (
       <Button

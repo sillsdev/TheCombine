@@ -50,21 +50,21 @@ describe("TreeView", () => {
   it("exits via exit button", async () => {
     const mockExit = jest.fn();
     await renderTree(mockExit);
-    expect(mockExit).not.toBeCalled();
+    expect(mockExit).not.toHaveBeenCalled();
     renderer.act(() => {
       findById(exitButtonId).props.onClick();
     });
-    expect(mockExit).toBeCalledTimes(1);
+    expect(mockExit).toHaveBeenCalledTimes(1);
   });
 
   it("exits via escape key", async () => {
     const mockExit = jest.fn();
     await renderTree(mockExit);
-    expect(mockExit).not.toBeCalled();
+    expect(mockExit).not.toHaveBeenCalled();
     renderer.act(() => {
       window.dispatchEvent(new KeyboardEvent("keydown", { key: Key.Escape }));
     });
-    expect(mockExit).toBeCalledTimes(1);
+    expect(mockExit).toHaveBeenCalledTimes(1);
   });
 });
 
