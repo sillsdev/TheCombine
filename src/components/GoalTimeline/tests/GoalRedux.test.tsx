@@ -143,7 +143,7 @@ describe("asyncGetUserEdits", () => {
       await store.dispatch(asyncGetUserEdits());
     });
     expect(store.getState().goalsState.history).toHaveLength(1);
-    expect(convertEditToGoalSpy).toBeCalledTimes(1);
+    expect(convertEditToGoalSpy).toHaveBeenCalledTimes(1);
   });
 
   it("backend returns no user edits", async () => {
@@ -163,7 +163,7 @@ describe("asyncGetUserEdits", () => {
       await store.dispatch(asyncGetUserEdits());
     });
     expect(store.getState().goalsState.history).toHaveLength(0);
-    expect(convertEditToGoalSpy).toBeCalledTimes(0);
+    expect(convertEditToGoalSpy).toHaveBeenCalledTimes(0);
   });
 
   it("creates new user edits", async () => {
@@ -176,7 +176,7 @@ describe("asyncGetUserEdits", () => {
       await store.dispatch(asyncGetUserEdits());
     });
     expect(store.getState().goalsState.history).toHaveLength(0);
-    expect(mockCreateUserEdit).toBeCalledTimes(1);
+    expect(mockCreateUserEdit).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -305,7 +305,7 @@ describe("asyncUpdateGoal", () => {
     });
     // verify:
     //  - backend is called to addGoalToUserEdit
-    expect(mockAddGoalToUserEdit).toBeCalled();
+    expect(mockAddGoalToUserEdit).toHaveBeenCalled();
   });
 
   it("update MergeDups goal", async () => {
@@ -330,7 +330,7 @@ describe("asyncUpdateGoal", () => {
       .changes as MergesCompleted;
     expect(changes.merges).toEqual([mockCompletedMerge]);
     //  - backend is called to addGoalToUserEdit
-    expect(mockAddGoalToUserEdit).toBeCalled();
+    expect(mockAddGoalToUserEdit).toHaveBeenCalled();
   });
 
   it("update ReviewDeferredDups goal", async () => {
@@ -355,6 +355,6 @@ describe("asyncUpdateGoal", () => {
       .changes as MergesCompleted;
     expect(changes.merges).toEqual([mockCompletedMerge]);
     //  - backend is called to addGoalToUserEdit
-    expect(mockAddGoalToUserEdit).toBeCalled();
+    expect(mockAddGoalToUserEdit).toHaveBeenCalled();
   });
 });

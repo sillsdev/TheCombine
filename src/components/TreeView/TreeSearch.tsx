@@ -18,8 +18,21 @@ export const testId = "testSearch";
 
 export default function TreeSearch(props: TreeSearchProps): ReactElement {
   const { t } = useTranslation();
-  const { input, handleChange, searchAndSelectDomain, searchError } =
+  const { input, handleChange, searchAndSelectDomain, searchError, setInput } =
     useTreeSearch(props);
+
+  const handleOnKeyUp = (event: React.KeyboardEvent): void => {
+    event.bubbles = false;
+    if (event.key === Key.Enter) {
+      // Use onKeyUp so that this fires after onChange, to facilitate
+      // error state clearing.
+      event.stopPropagation();
+      searchAndSelectDomain(event);
+    } else if (event.key === Key.Backspace)
+      if (input && input[input.length - 1] === ".") {
+        setInput(input.slice(0, input.length - 1));
+      }
+  };
 
   return (
     <Grid style={{ maxWidth: 200 }}>
@@ -30,9 +43,7 @@ export default function TreeSearch(props: TreeSearchProps): ReactElement {
         label={t("treeView.findDomain")}
         onKeyDown={stopPropagation}
         onChange={handleChange}
-        // Use onKeyUp so that this fires after onChange, to facilitate
-        // error state clearing.
-        onKeyUp={searchAndSelectDomain}
+        onKeyUp={handleOnKeyUp}
         margin="normal"
         autoComplete="off"
         inputProps={{ "data-testid": testId }}
@@ -65,6 +76,7 @@ interface TreeSearchState {
   handleChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   searchAndSelectDomain: (event: React.KeyboardEvent) => void;
   searchError: boolean;
+  setInput: (text: string) => void;
 }
 
 // Exported for unit testing only
@@ -96,26 +108,20 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
   async function searchAndSelectDomain(
     event: React.KeyboardEvent
   ): Promise<void> {
-    event.bubbles = false;
-
-    if (event.key === Key.Enter) {
-      event.preventDefault();
-
-      // Search for domain
-      let domain: SemanticDomainTreeNode | undefined;
-      if (!isNaN(parseInt(input))) {
-        domain = await getSemanticDomainTreeNode(input, lang);
-      } else {
-        domain = await searchDomainByName(input);
-      }
-      if (domain) {
-        animateSuccessfulSearch(domain, event);
-        // Return to indicate success and skip setting error state.
-        return;
-      }
-      // Did not find a domain through either numerical or textual search.
-      setSearchError(true);
+    // Search for domain
+    let domain: SemanticDomainTreeNode | undefined;
+    if (!isNaN(parseInt(input))) {
+      domain = await getSemanticDomainTreeNode(input, lang);
+    } else {
+      domain = await searchDomainByName(input);
     }
+    if (domain) {
+      animateSuccessfulSearch(domain, event);
+      // Return to indicate success and skip setting error state.
+      return;
+    }
+    // Did not find a domain through either numerical or textual search.
+    setSearchError(true);
   }
 
   // Change the input on typing
@@ -131,6 +137,7 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
     handleChange,
     searchAndSelectDomain,
     searchError,
+    setInput,
   };
 }
 

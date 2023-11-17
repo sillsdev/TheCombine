@@ -85,10 +85,10 @@ describe("PronunciationsCell", () => {
       await act(async () => {
         testRenderer.root.findByType(AudioPlayer).props.deleteAudio();
       });
-      expect(mockDeleteAudio).toBeCalled();
-      expect(mockDispatch).toBeCalled();
-      expect(mockDelNewAudio).not.toBeCalled();
-      expect(mockDelOldAudio).not.toBeCalled();
+      expect(mockDeleteAudio).toHaveBeenCalled();
+      expect(mockDispatch).toHaveBeenCalled();
+      expect(mockDelNewAudio).not.toHaveBeenCalled();
+      expect(mockDelOldAudio).not.toHaveBeenCalled();
     });
 
     it("has recorder that dispatches action", async () => {
@@ -96,9 +96,9 @@ describe("PronunciationsCell", () => {
       await act(async () => {
         testRenderer.root.findByType(AudioRecorder).props.uploadAudio();
       });
-      expect(mockUploadAudio).toBeCalled();
-      expect(mockDispatch).toBeCalled();
-      expect(mockAddNewAudio).not.toBeCalled();
+      expect(mockUploadAudio).toHaveBeenCalled();
+      expect(mockDispatch).toHaveBeenCalled();
+      expect(mockAddNewAudio).not.toHaveBeenCalled();
     });
   });
 
@@ -123,10 +123,10 @@ describe("PronunciationsCell", () => {
       await act(async () => {
         playButtons[0].props.deleteAudio();
       });
-      expect(mockDelOldAudio).toBeCalled();
-      expect(mockDelNewAudio).not.toBeCalled();
-      expect(mockDeleteAudio).not.toBeCalled();
-      expect(mockDispatch).not.toBeCalled();
+      expect(mockDelOldAudio).toHaveBeenCalled();
+      expect(mockDelNewAudio).not.toHaveBeenCalled();
+      expect(mockDeleteAudio).not.toHaveBeenCalled();
+      expect(mockDispatch).not.toHaveBeenCalled();
 
       jest.resetAllMocks();
 
@@ -134,10 +134,10 @@ describe("PronunciationsCell", () => {
       await act(async () => {
         playButtons[1].props.deleteAudio();
       });
-      expect(mockDelNewAudio).toBeCalled();
-      expect(mockDelOldAudio).not.toBeCalled();
-      expect(mockDeleteAudio).not.toBeCalled();
-      expect(mockDispatch).not.toBeCalled();
+      expect(mockDelNewAudio).toHaveBeenCalled();
+      expect(mockDelOldAudio).not.toHaveBeenCalled();
+      expect(mockDeleteAudio).not.toHaveBeenCalled();
+      expect(mockDispatch).not.toHaveBeenCalled();
     });
 
     it("has recorder that calls a prop function", async () => {
@@ -145,9 +145,9 @@ describe("PronunciationsCell", () => {
       await act(async () => {
         testRenderer.root.findByType(AudioRecorder).props.uploadAudio();
       });
-      expect(mockAddNewAudio).toBeCalled();
-      expect(mockUploadAudio).not.toBeCalled();
-      expect(mockDispatch).not.toBeCalled();
+      expect(mockAddNewAudio).toHaveBeenCalled();
+      expect(mockUploadAudio).not.toHaveBeenCalled();
+      expect(mockDispatch).not.toHaveBeenCalled();
     });
   });
 });

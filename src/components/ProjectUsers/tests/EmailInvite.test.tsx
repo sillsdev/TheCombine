@@ -37,7 +37,7 @@ describe("EmailInvite", () => {
         .findByType(LoadingDoneButton)
         .props.buttonProps.onClick();
     });
-    expect(mockClose).toBeCalledTimes(1);
+    expect(mockClose).toHaveBeenCalledTimes(1);
   });
 
   it("adds user if already exists", async () => {
@@ -47,8 +47,8 @@ describe("EmailInvite", () => {
         .findByType(LoadingDoneButton)
         .props.buttonProps.onClick();
     });
-    expect(mockAddToProject).toBeCalledTimes(1);
-    expect(mockEmailInviteToProject).not.toBeCalled();
+    expect(mockAddToProject).toHaveBeenCalledTimes(1);
+    expect(mockEmailInviteToProject).not.toHaveBeenCalled();
   });
 
   it("invite user if doesn't exists", async () => {
@@ -58,7 +58,7 @@ describe("EmailInvite", () => {
         .findByType(LoadingDoneButton)
         .props.buttonProps.onClick();
     });
-    expect(mockAddToProject).not.toBeCalled();
-    expect(mockEmailInviteToProject).toBeCalledTimes(1);
+    expect(mockAddToProject).not.toHaveBeenCalled();
+    expect(mockEmailInviteToProject).toHaveBeenCalledTimes(1);
   });
 });

@@ -21,15 +21,13 @@ export interface MergeTreeState {
   mergeWords: MergeWords[];
 }
 
-export interface MoveSensePayload {
-  ref: MergeTreeReference;
+export interface MoveSensePayload extends OrderSensePayload {
   destWordId: string;
-  destOrder: number;
 }
 
 export interface OrderSensePayload {
-  ref: MergeTreeReference;
-  order: number;
+  src: MergeTreeReference;
+  destOrder: number;
 }
 
 export interface SetVernacularPayload {

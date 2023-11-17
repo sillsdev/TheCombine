@@ -40,7 +40,7 @@ describe("fontCssUtilities", () => {
       const cssStrings = await getCss(["font"]);
       expect(cssStrings).toHaveLength(1);
       expect(cssStrings).toContain(css);
-      expect(mockFetchText).toBeCalledTimes(1);
+      expect(mockFetchText).toHaveBeenCalledTimes(1);
     });
 
     it("get fallbacks if no css data fetched", async () => {
@@ -49,7 +49,7 @@ describe("fontCssUtilities", () => {
       );
       mockFetchText.mockResolvedValueOnce('{"google": {}}');
       expect(await getCss(["font"])).toHaveLength(0);
-      expect(mockFetchText).toBeCalledTimes(2);
+      expect(mockFetchText).toHaveBeenCalledTimes(2);
     });
   });
 

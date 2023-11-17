@@ -41,8 +41,18 @@ plugins:
             Data Entry: Entrada de datos
             Data Cleanup: Depuración de datos
             Admin: Administración
+        - locale: zh
+          name: 中文
+          build: true
+          nav_translations:
+            Overview: 概览
+            Account: 账号
+            Projects: 项目
+            Data Entry: 词条输入
+            Data Cleanup: 数据清理
+            Admin: 管理
   - search:
-      lang: [en, es]
+      lang: [en, es, zh]
   # This plugin is used to validate URLs (including some anchors).
   # Uncomment to build the docs with this validation enabled.
   # This is commented out by default because this requires network I/O to validate URLs, so it is
@@ -62,6 +72,9 @@ extra:
     - name: Español
       link: /es/
       lang: es
+    - name: 中文
+      link: /zh/
+      lang: zh
   social:
     - icon: fontawesome/solid/globe
       link: https://www.sil.org/

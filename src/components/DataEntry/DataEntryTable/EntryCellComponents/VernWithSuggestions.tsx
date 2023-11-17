@@ -57,11 +57,11 @@ export default function VernWithSuggestions(
       onClose={props.onClose}
       renderInput={(params) => (
         <TextFieldWithFont
-          {...params}
+          {...(params as any)}
           fullWidth
           inputRef={props.vernInput}
           label={props.isNew ? props.vernacularLang.name : ""}
-          variant={props.isNew ? "outlined" : "standard"}
+          variant={(props.isNew ? "outlined" : "standard") as any}
           vernacular
         />
       )}

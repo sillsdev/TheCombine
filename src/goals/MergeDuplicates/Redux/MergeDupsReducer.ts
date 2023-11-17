@@ -134,11 +134,11 @@ const mergeDuplicatesSlice = createSlice({
       }
     },
     moveSenseAction: (state, action) => {
-      const srcWordId = action.payload.ref.wordId;
+      const srcWordId = action.payload.src.wordId;
       const destWordId = action.payload.destWordId;
-      const srcOrder = action.payload.ref.order;
+      const srcOrder = action.payload.src.order;
       if (srcOrder === undefined && srcWordId !== destWordId) {
-        const mergeSenseId = action.payload.ref.mergeSenseId;
+        const mergeSenseId = action.payload.src.mergeSenseId;
 
         const words = state.tree.words;
 
@@ -166,7 +166,7 @@ const mergeDuplicatesSlice = createSlice({
       }
     },
     moveDuplicateAction: (state, action) => {
-      const srcRef = action.payload.ref;
+      const srcRef = action.payload.src;
       // Verify that the ref.order field is defined
       if (srcRef.order !== undefined) {
         const destWordId = action.payload.destWordId;
@@ -207,10 +207,10 @@ const mergeDuplicatesSlice = createSlice({
       }
     },
     orderDuplicateAction: (state, action) => {
-      const ref = action.payload.ref;
+      const ref = action.payload.src;
 
       const oldOrder = ref.order;
-      const newOrder = action.payload.order;
+      const newOrder = action.payload.destOrder;
 
       // Ensure the reorder is valid.
       if (oldOrder !== undefined && oldOrder !== newOrder) {
@@ -227,14 +227,14 @@ const mergeDuplicatesSlice = createSlice({
       }
     },
     orderSenseAction: (state, action) => {
-      const word = state.tree.words[action.payload.ref.wordId];
+      const word = state.tree.words[action.payload.src.wordId];
 
       // Convert the Hash<string[]> to an array to expose the order.
       const sensePairs = Object.entries(word.sensesGuids);
 
-      const mergeSenseId = action.payload.ref.mergeSenseId;
+      const mergeSenseId = action.payload.src.mergeSenseId;
       const oldOrder = sensePairs.findIndex((p) => p[0] === mergeSenseId);
-      const newOrder = action.payload.order;
+      const newOrder = action.payload.destOrder;
 
       // Ensure the move is valid.
       if (oldOrder !== -1 && newOrder !== undefined && oldOrder !== newOrder) {
@@ -248,7 +248,7 @@ const mergeDuplicatesSlice = createSlice({
           word.sensesGuids[key] = value;
         }
 
-        state.tree.words[action.payload.ref.wordId] = word;
+        state.tree.words[action.payload.src.wordId] = word;
       }
     },
     setSidebarAction: (state, action) => {
@@ -410,9 +410,8 @@ function combineIntoFirstSense(senses: MergeTreeSense[]): void {
         } else {
           const oldText = mainSense.definitions[defIndex].text;
           if (!oldText.split(sep).includes(def.text)) {
-            mainSense.definitions[
-              defIndex
-            ].text = `${oldText}${sep}${def.text}`;
+            mainSense.definitions[defIndex].text =
+              `${oldText}${sep}${def.text}`;
           }
         }
       }
