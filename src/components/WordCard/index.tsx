@@ -44,7 +44,7 @@ export default function WordCard(props: WordCardProps): ReactElement {
   }, [editedBy, provenance]);
 
   return (
-    <Card style={{ backgroundColor: "lightgray" }}>
+    <Card style={{ backgroundColor: "lightgray", minWidth: "200px" }}>
       <CardContent style={{ position: "relative" }}>
         {/* Vernacular */}
         <TypographyWithFont variant="h5" vernacular>
@@ -117,15 +117,15 @@ export default function WordCard(props: WordCardProps): ReactElement {
         {/* Timestamps */}
         {provenance && (
           <Typography display="block" variant="caption">
-            {t("wordHistory.wordId", { val: id })}
+            {t("wordCard.wordId", { val: id })}
             <br />
-            {t("wordHistory.wordModified", {
+            {t("wordCard.wordModified", {
               val: getDateTimeString(word.modified, friendlySep),
             })}
             {!!username && (
               <>
                 <br />
-                {t("wordHistory.user", { val: username })}
+                {t("wordCard.user", { val: username })}
               </>
             )}
           </Typography>

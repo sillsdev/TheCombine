@@ -1,11 +1,11 @@
 import { ArrowRightAlt } from "@mui/icons-material";
-import { Grid, Typography } from "@mui/material";
-import { Fragment, ReactElement, useEffect, useState } from "react";
+import { Grid, List, ListItem, Typography } from "@mui/material";
+import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import { Word } from "api/models";
-import { getFrontierWords, getWord, updateWord } from "backend";
+import { getWord, isInFrontier, updateWord } from "backend";
 import { UndoButton } from "components/Buttons";
 import WordCard from "components/WordCard";
 import {
@@ -27,7 +27,9 @@ export default function ReviewEntriesCompleted(): ReactElement {
         {t("reviewEntries.title")}
       </Typography>
       {EditsCount(changes)}
-      {changes.entryEdits?.map((e) => <EditedEntry edit={e} key={e.newId} />)}
+      <List>
+        {changes.entryEdits?.map((e) => <EditedEntry edit={e} key={e.newId} />)}
+      </List>
     </>
   );
 }
@@ -61,36 +63,33 @@ function EditedEntry(props: { edit: EntryEdit }): ReactElement {
     getWord(newId).then(setNewWord);
   }, [newId]);
 
-  const handleIsUndoAllowed = (): Promise<boolean> =>
-    getFrontierWords().then(
-      (words) => words.findIndex((w) => w.id === newId) !== -1
-    );
-
   return (
-    <Grid container style={{ flexWrap: "nowrap", overflow: "auto" }}>
-      {oldWord ? <WordCard word={oldWord} /> : <Fragment />}
-      <Grid key={"arrow"} style={{ margin: theme.spacing(1) }}>
-        <ArrowRightAlt
-          fontSize="large"
-          style={{
-            position: "relative",
-            left: "50%",
-            top: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
+    <ListItem>
+      <Grid container rowSpacing={4} wrap="nowrap">
+        <Grid item>{!!oldWord && <WordCard word={oldWord} />}</Grid>
+        <Grid key={"arrow"} style={{ margin: theme.spacing(1) }}>
+          <ArrowRightAlt
+            fontSize="large"
+            style={{
+              position: "relative",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          />
+        </Grid>
+        <Grid item>{!!newWord && <WordCard word={newWord} />}</Grid>
+        <UndoButton
+          buttonIdEnabled={`edit-undo-${props.edit.newId}`}
+          buttonIdCancel="edit-undo-cancel"
+          buttonIdConfirm="edit-undo-confirm"
+          textIdDialog="reviewEntries.undo.undoDialog"
+          textIdDisabled="reviewEntries.undo.undoDisabled"
+          textIdEnabled="reviewEntries.undo.undo"
+          isUndoAllowed={() => isInFrontier(newId)}
+          undo={() => undoEdit(props.edit)}
         />
       </Grid>
-      {newWord ? <WordCard word={newWord} /> : <Fragment />}
-      <UndoButton
-        buttonIdEnabled={`edit-undo-${props.edit.newId}`}
-        buttonIdCancel="edit-undo-cancel"
-        buttonIdConfirm="edit-undo-confirm"
-        textIdDialog="reviewEntries.undo.undoDialog"
-        textIdDisabled="reviewEntries.undo.undoDisabled"
-        textIdEnabled="reviewEntries.undo.undo"
-        isUndoAllowed={handleIsUndoAllowed}
-        undo={() => undoEdit(props.edit)}
-      />
-    </Grid>
+    </ListItem>
   );
 }

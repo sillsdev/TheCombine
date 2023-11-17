@@ -40,7 +40,7 @@ export default function SummarySenseCard(
 
         {/* Sense count */}
         <Typography display="block" variant="h5">
-          {t("wordHistory.senseCount", { val: props.senses.length })}
+          {t("wordCard.senseCount", { val: props.senses.length })}
         </Typography>
 
         {/* Semantic domain numbers */}
