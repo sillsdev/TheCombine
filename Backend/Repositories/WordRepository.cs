@@ -20,21 +20,43 @@ namespace BackendFramework.Repositories
             _wordDatabase = collectionSettings;
         }
 
-        /// <summary>  Finds all <see cref="Word"/>s with specified projectId </summary>
+        /// <summary>
+        /// Creates a mongo filter for all words in a specified project (and optionally with specified vernacular).
+        /// Since a variant in FLEx can export as an entry without any senses, filters out 0-sense words.
+        /// </summary>
+        private static FilterDefinition<Word> GetAllProjectWordsFilter(string projectId, string? vernacular = null)
+        {
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            return (vernacular is null)
+                ? filterDef.And(filterDef.Eq(w => w.ProjectId, projectId), filterDef.SizeGt(w => w.Senses, 0))
+                : filterDef.And(filterDef.Eq(w => w.ProjectId, projectId), filterDef.SizeGt(w => w.Senses, 0),
+                    filterDef.Eq(w => w.Vernacular, vernacular));
+        }
+
+        /// <summary> Creates a mongo filter for words in a specified project with specified wordId. </summary>
+        private static FilterDefinition<Word> GetProjectWordFilter(string projectId, string wordId)
+        {
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            return filterDef.And(filterDef.Eq(w => w.ProjectId, projectId), filterDef.Eq(w => w.Id, wordId));
+        }
+
+        /// <summary> Creates a mongo filter for words in a specified project with specified wordIds. </summary>
+        private static FilterDefinition<Word> GetProjectWordsFilter(string projectId, List<string> wordIds)
+        {
+            var filterDef = new FilterDefinitionBuilder<Word>();
+            return filterDef.And(filterDef.Eq(w => w.ProjectId, projectId), filterDef.In(w => w.Id, wordIds));
+        }
+
+        /// <summary> Finds all <see cref="Word"/>s with specified projectId </summary>
         public async Task<List<Word>> GetAllWords(string projectId)
         {
-            return await _wordDatabase.Words.Find(w => w.ProjectId == projectId).ToListAsync();
+            return await _wordDatabase.Words.Find(GetAllProjectWordsFilter(projectId)).ToListAsync();
         }
 
         /// <summary> Finds <see cref="Word"/> with specified wordId and projectId </summary>
         public async Task<Word?> GetWord(string projectId, string wordId)
         {
-            var filterDef = new FilterDefinitionBuilder<Word>();
-            var filter = filterDef.And(
-                filterDef.Eq(x => x.ProjectId, projectId),
-                filterDef.Eq(x => x.Id, wordId));
-
-            var wordList = await _wordDatabase.Words.FindAsync(filter);
+            var wordList = await _wordDatabase.Words.FindAsync(GetProjectWordFilter(projectId, wordId));
             try
             {
                 return await wordList.FirstAsync();
@@ -127,29 +149,26 @@ namespace BackendFramework.Repositories
         /// <summary> Checks if Frontier is nonempty for specified <see cref="Project"/> </summary>
         public async Task<bool> IsFrontierNonempty(string projectId)
         {
-            var word = await _wordDatabase.Frontier.Find(w => w.ProjectId == projectId).FirstOrDefaultAsync();
+            var word = await _wordDatabase.Frontier.Find(GetAllProjectWordsFilter(projectId)).FirstOrDefaultAsync();
             return word is not null;
         }
 
         /// <summary> Checks if specified word is in Frontier for specified <see cref="Project"/> </summary>
         public async Task<bool> IsInFrontier(string projectId, string wordId)
         {
-            var word = await _wordDatabase.Frontier
-                .Find(w => w.ProjectId == projectId && w.Id == wordId).FirstOrDefaultAsync();
-            return word is not null;
+            return (await _wordDatabase.Frontier.CountDocumentsAsync(GetProjectWordFilter(projectId, wordId))) > 0;
         }
 
         /// <summary> Finds all <see cref="Word"/>s in the Frontier for specified <see cref="Project"/> </summary>
         public async Task<List<Word>> GetFrontier(string projectId)
         {
-            return await _wordDatabase.Frontier.Find(w => w.ProjectId == projectId).ToListAsync();
+            return await _wordDatabase.Frontier.Find(GetAllProjectWordsFilter(projectId)).ToListAsync();
         }
 
         /// <summary> Finds all <see cref="Word"/>s in Frontier of specified project with specified vern </summary>
         public async Task<List<Word>> GetFrontierWithVernacular(string projectId, string vernacular)
         {
-            return await _wordDatabase.Frontier.Find(
-                w => w.ProjectId == projectId && w.Vernacular == vernacular).ToListAsync();
+            return await _wordDatabase.Frontier.Find(GetAllProjectWordsFilter(projectId, vernacular)).ToListAsync();
         }
 
         /// <summary> Adds a <see cref="Word"/> only to the Frontier </summary>
@@ -174,12 +193,7 @@ namespace BackendFramework.Repositories
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteFrontier(string projectId, string wordId)
         {
-            var filterDef = new FilterDefinitionBuilder<Word>();
-            var filter = filterDef.And(
-                filterDef.Eq(x => x.ProjectId, projectId),
-                filterDef.Eq(x => x.Id, wordId));
-
-            var deleted = await _wordDatabase.Frontier.DeleteOneAsync(filter);
+            var deleted = await _wordDatabase.Frontier.DeleteOneAsync(GetProjectWordFilter(projectId, wordId));
             return deleted.DeletedCount > 0;
         }
 
@@ -187,29 +201,8 @@ namespace BackendFramework.Repositories
         /// <returns> Number of words deleted </returns>
         public async Task<long> DeleteFrontier(string projectId, List<string> wordIds)
         {
-            var filterDef = new FilterDefinitionBuilder<Word>();
-            var filter = filterDef.And(
-                filterDef.Eq(x => x.ProjectId, projectId),
-                filterDef.In(x => x.Id, wordIds));
-            var deleted = await _wordDatabase.Frontier.DeleteManyAsync(filter);
+            var deleted = await _wordDatabase.Frontier.DeleteManyAsync(GetProjectWordsFilter(projectId, wordIds));
             return deleted.DeletedCount;
-        }
-
-        /// <summary> Updates <see cref="Word"/> in the Frontier collection with same wordId and projectId </summary>
-        /// <returns> A bool: success of operation </returns>
-        public async Task<bool> UpdateFrontier(Word word)
-        {
-            var filterDef = new FilterDefinitionBuilder<Word>();
-            var filter = filterDef.And(
-                filterDef.Eq(x => x.ProjectId, word.ProjectId),
-                filterDef.Eq(x => x.Id, word.Id));
-
-            var deleted = (await _wordDatabase.Frontier.DeleteOneAsync(filter)).DeletedCount > 0;
-            if (deleted)
-            {
-                await AddFrontier(word);
-            }
-            return deleted;
         }
     }
 }

@@ -3,17 +3,10 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import * as backend from "backend";
 import InvalidLink from "components/InvalidLink";
-import { asyncSignUp } from "components/Login/Redux/LoginActions";
-import SignUp from "components/Login/SignUpPage/SignUpComponent";
-import { reset } from "rootActions";
-import { useAppDispatch, useAppSelector } from "types/hooks";
+import Signup from "components/Login/Signup";
 import { Path } from "types/path";
 
 export default function ProjectInvite(): ReactElement {
-  const status = useAppSelector((state) => state.loginState.signupStatus);
-  const failureMessage = useAppSelector((state) => state.loginState.error);
-
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { token, project } = useParams();
   const [isValidLink, setIsValidLink] = useState(false);
@@ -34,17 +27,7 @@ export default function ProjectInvite(): ReactElement {
   });
 
   return isValidLink ? (
-    <SignUp
-      status={status}
-      failureMessage={failureMessage}
-      signUp={(name: string, user: string, email: string, password: string) => {
-        dispatch(asyncSignUp(name, user, email, password));
-      }}
-      reset={() => {
-        dispatch(reset());
-      }}
-      returnToEmailInvite={validateLink}
-    />
+    <Signup returnToEmailInvite={validateLink} />
   ) : (
     <InvalidLink textId="invite.invalidInvitationURL" />
   );

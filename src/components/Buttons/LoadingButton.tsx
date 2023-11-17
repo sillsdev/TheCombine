@@ -5,7 +5,7 @@ import React, { ReactElement } from "react";
 import { themeColors } from "types/theme";
 
 interface LoadingProps {
-  buttonProps?: ButtonProps;
+  buttonProps?: ButtonProps & { "data-testid"?: string };
   children?: React.ReactNode;
   disabled?: boolean;
   loading?: boolean;

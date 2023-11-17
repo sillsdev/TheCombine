@@ -68,7 +68,7 @@ export function getMergeWords(): Action {
 }
 
 export function moveSense(payload: MoveSensePayload): PayloadAction {
-  if (payload.ref.order === undefined) {
+  if (payload.src.order === undefined) {
     return moveSenseAction(payload);
   } else {
     return moveDuplicateAction(payload);
@@ -76,7 +76,7 @@ export function moveSense(payload: MoveSensePayload): PayloadAction {
 }
 
 export function orderSense(payload: OrderSensePayload): PayloadAction {
-  if (payload.ref.order === undefined) {
+  if (payload.src.order === undefined) {
     return orderSenseAction(payload);
   } else {
     return orderDuplicateAction(payload);
