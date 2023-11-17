@@ -39,7 +39,7 @@ beforeAll(() => {
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <Provider store={mockStore}>
-            <AudioRecorder wordId="2" uploadAudio={jest.fn()} />
+            <AudioRecorder id="2" uploadAudio={jest.fn()} />
           </Provider>
         </ThemeProvider>
       </StyledEngineProvider>
@@ -57,9 +57,9 @@ describe("Pronunciations", () => {
           <ThemeProvider theme={theme}>
             <Provider store={mockStore}>
               <RecorderIcon
+                id={"mockId"}
                 startRecording={mockStartRecording}
                 stopRecording={mockStopRecording}
-                wordId={"mockId"}
               />
             </Provider>
           </ThemeProvider>
@@ -82,7 +82,7 @@ describe("Pronunciations", () => {
         <ThemeProvider theme={theme}>
           <StyledEngineProvider>
             <Provider store={mockStore}>
-              <AudioRecorder wordId="1" uploadAudio={jest.fn()} />
+              <AudioRecorder id="1" uploadAudio={jest.fn()} />
             </Provider>
           </StyledEngineProvider>
         </ThemeProvider>
@@ -100,7 +100,7 @@ describe("Pronunciations", () => {
         <ThemeProvider theme={theme}>
           <StyledEngineProvider>
             <Provider store={mockStore2}>
-              <AudioRecorder wordId={wordId} uploadAudio={jest.fn()} />
+              <AudioRecorder id={wordId} uploadAudio={jest.fn()} />
             </Provider>
           </StyledEngineProvider>
         </ThemeProvider>

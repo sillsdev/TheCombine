@@ -38,7 +38,7 @@ export function PronunciationsBackend(
   return (
     <>
       {!props.playerOnly && !!props.uploadAudio && (
-        <AudioRecorder wordId={props.wordId} uploadAudio={props.uploadAudio} />
+        <AudioRecorder id={props.wordId} uploadAudio={props.uploadAudio} />
       )}
       {audioButtons}
     </>

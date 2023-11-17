@@ -2,6 +2,7 @@ import ButtonConfirmation from "components/Dialogs/ButtonConfirmation";
 import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 import DeleteEditTextDialog from "components/Dialogs/DeleteEditTextDialog";
 import EditTextDialog from "components/Dialogs/EditTextDialog";
+import RecordAudioDialog from "components/Dialogs/RecordAudioDialog";
 import SubmitTextDialog from "components/Dialogs/SubmitTextDialog";
 import UploadImageDialog from "components/Dialogs/UploadImageDialog";
 
@@ -10,6 +11,7 @@ export {
   CancelConfirmDialog,
   DeleteEditTextDialog,
   EditTextDialog,
+  RecordAudioDialog,
   SubmitTextDialog,
   UploadImageDialog,
 };

@@ -30,7 +30,7 @@ export default function PronunciationsFrontend(
   return (
     <>
       <AudioRecorder
-        wordId={""}
+        id={""}
         uploadAudio={props.uploadAudio}
         onClick={props.onClick}
       />

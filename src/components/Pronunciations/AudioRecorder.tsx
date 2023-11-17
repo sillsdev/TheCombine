@@ -8,7 +8,7 @@ import RecorderIcon from "components/Pronunciations/RecorderIcon";
 import { getFileNameForWord } from "components/Pronunciations/utilities";
 
 interface RecorderProps {
-  wordId: string;
+  id: string;
   uploadAudio: (audioFile: File) => void;
   onClick?: () => void;
 }
@@ -30,7 +30,7 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
       toast.error(t("pronunciations.noMicAccess"));
       return;
     }
-    const fileName = getFileNameForWord(props.wordId);
+    const fileName = getFileNameForWord(props.id);
     const options: FilePropertyBag = {
       lastModified: Date.now(),
       type: Recorder.blobType,
@@ -40,7 +40,7 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
 
   return (
     <RecorderIcon
-      wordId={props.wordId}
+      id={props.id}
       startRecording={startRecording}
       stopRecording={stopRecording}
     />

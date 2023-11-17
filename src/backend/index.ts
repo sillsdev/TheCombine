@@ -8,6 +8,7 @@ import { BASE_PATH } from "api/base";
 import {
   BannerType,
   ChartRootData,
+  ConsentType,
   EmailInviteStatus,
   MergeUndoIds,
   MergeWords,
@@ -515,20 +516,20 @@ export async function updateSpeakerName(
   return (await speakerApi.updateSpeakerName(params, defaultOptions())).data;
 }
 
-/** Uploads audio consent for specified speaker (in current project if no projectId given).
- * Overwrites any previous consent for the speaker.
+/** Uploads consent for specified speaker; overwrites previous consent.
  * Returns updated speaker. */
-export async function uploadConsentAudio(
-  speakerId: string,
-  audioFile: File,
-  projectId?: string
+export async function uploadConsent(
+  speaker: Speaker,
+  file: File
 ): Promise<Speaker> {
-  projectId = projectId || LocalStorage.getProjectId();
-  const resp = await speakerApi.uploadConsentAudio(
-    { projectId, speakerId, ...fileUpload(audioFile) },
-    { headers: { ...authHeader(), "content-type": "application/json" } }
-  );
-  return resp.data;
+  const { consent, id, projectId } = speaker;
+  const params = { projectId, speakerId: id, ...fileUpload(file) };
+  const headers = { ...authHeader(), "content-type": "application/json" };
+  const response =
+    consent.fileType === ConsentType.Audio
+      ? await speakerApi.uploadConsentAudio(params, { headers })
+      : await speakerApi.uploadConsentImage(params, { headers });
+  return response.data;
 }
 
 /* StatisticsController.cs */

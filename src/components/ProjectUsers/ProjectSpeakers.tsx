@@ -22,11 +22,13 @@ import {
   deleteSpeaker,
   getAllSpeakers,
   updateSpeakerName,
+  uploadConsent,
 } from "backend";
 import { IconButtonWithTooltip } from "components/Buttons";
 import {
   CancelConfirmDialog,
   EditTextDialog,
+  RecordAudioDialog,
   SubmitTextDialog,
   UploadImageDialog,
 } from "components/Dialogs";
@@ -98,13 +100,7 @@ function SpeakerListItem(props: ProjSpeakerProps): ReactElement {
     <ListItem>
       <ListItemText primary={name} />
       {consentButton}
-      <ListItemIcon onClick={() => {}}>
-        <IconButtonWithTooltip
-          buttonId={`project-speaker-${id}-record`}
-          icon={<Mic />}
-          textId="projectSettings.speaker.consent.record"
-        />
-      </ListItemIcon>
+      <RecordConsentAudioIcon {...props} />
       <UploadConsentImageIcon {...props} />
       <EditSpeakerNameIcon {...props} />
       <DeleteSpeakerIcon {...props} />
@@ -112,11 +108,38 @@ function SpeakerListItem(props: ProjSpeakerProps): ReactElement {
   );
 }
 
+function RecordConsentAudioIcon(props: ProjSpeakerProps): ReactElement {
+  const [open, setOpen] = useState(false);
+
+  const handleUploadAudio = async (audioFile: File): Promise<void> => {
+    await uploadConsent(props.speaker, audioFile);
+    await props.refresh();
+  };
+
+  return (
+    <ListItemIcon>
+      <IconButtonWithTooltip
+        buttonId={`project-speaker-${props.speaker.id}-record`}
+        icon={<Mic />}
+        onClick={() => setOpen(true)}
+        textId="projectSettings.speaker.consent.record"
+      />
+      <RecordAudioDialog
+        audioId={props.speaker.id}
+        close={() => setOpen(false)}
+        open={open}
+        titleId="projectSettings.speaker.consent.record"
+        uploadAudio={handleUploadAudio}
+      />
+    </ListItemIcon>
+  );
+}
+
 function UploadConsentImageIcon(props: ProjSpeakerProps): ReactElement {
   const [open, setOpen] = useState(false);
 
-  const handleUploadImage = async (imgFile: File): Promise<void> => {
-    //TODO await (props.speaker.id, name, props.projectId);
+  const handleUploadImage = async (imageFile: File): Promise<void> => {
+    await uploadConsent(props.speaker, imageFile);
     await props.refresh();
   };
 
