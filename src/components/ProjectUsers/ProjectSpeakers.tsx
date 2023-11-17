@@ -3,8 +3,8 @@ import {
   AddPhotoAlternate,
   Delete,
   Edit,
-  FiberManualRecord,
   Image,
+  Mic,
   PlayArrow,
 } from "@mui/icons-material";
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
@@ -24,8 +24,11 @@ import {
   updateSpeakerName,
 } from "backend";
 import { IconButtonWithTooltip } from "components/Buttons";
-import { CancelConfirmDialog, EditTextDialog } from "components/Dialogs";
-import SubmitTextDialog from "components/Dialogs/SubmitTextDialog";
+import {
+  CancelConfirmDialog,
+  EditTextDialog,
+  SubmitTextDialog,
+} from "components/Dialogs";
 
 export default function ProjectSpeakers(props: {
   projectId: string;
@@ -97,7 +100,7 @@ function SpeakerListItem(props: ProjSpeakerProps): ReactElement {
       <ListItemIcon onClick={() => {}}>
         <IconButtonWithTooltip
           buttonId={`project-speaker-${id}-record`}
-          icon={<FiberManualRecord />}
+          icon={<Mic />}
           textId="projectSettings.speaker.consent.record"
         />
       </ListItemIcon>
