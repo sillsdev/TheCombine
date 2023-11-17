@@ -200,6 +200,7 @@
     "speaker": {
       "label": "Manage speakers",
       "add": "Add a speaker",
+      "enterName": "Enter the name of a new speaker",
       "delete": "Delete this speaker",
       "edit": "Edit speaker's name",
       "consent": {

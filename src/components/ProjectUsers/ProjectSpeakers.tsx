@@ -8,42 +8,65 @@ import {
   PlayArrow,
 } from "@mui/icons-material";
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
-import { Fragment, ReactElement, useEffect, useState } from "react";
+import {
+  Fragment,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import { ConsentType, Speaker } from "api/models";
-import { getAllSpeakers } from "backend";
+import {
+  createSpeaker,
+  deleteSpeaker,
+  getAllSpeakers,
+  updateSpeakerName,
+} from "backend";
 import { IconButtonWithTooltip } from "components/Buttons";
+import { CancelConfirmDialog, EditTextDialog } from "components/Dialogs";
+import SubmitTextDialog from "components/Dialogs/SubmitTextDialog";
 
 export default function ProjectSpeakers(props: {
   projectId: string;
 }): ReactElement {
   const [projSpeakers, setProjSpeakers] = useState<Speaker[]>([]);
 
-  useEffect(() => {
+  const getProjectSpeakers = useCallback(() => {
     getAllSpeakers(props.projectId).then((speakers) =>
       setProjSpeakers(speakers.sort((a, b) => a.name.localeCompare(b.name)))
     );
   }, [props.projectId]);
 
+  useEffect(() => {
+    getProjectSpeakers();
+  }, [getProjectSpeakers]);
+
   return (
     <List>
       {projSpeakers.map((s) => (
-        <SpeakerListItem key={s.id} speaker={s} />
+        <SpeakerListItem
+          key={s.id}
+          projectId={props.projectId}
+          refresh={getProjectSpeakers}
+          speaker={s}
+        />
       ))}
-      <ListItem>
-        <ListItemIcon onClick={() => {}}>
-          <IconButtonWithTooltip
-            buttonId={"project-speakers-add"}
-            icon={<Add />}
-            textId="projectSettings.speaker.add"
-          />
-        </ListItemIcon>
-      </ListItem>
+      <AddSpeakerListItem
+        projectId={props.projectId}
+        refresh={getProjectSpeakers}
+      />
     </List>
   );
 }
 
-export function SpeakerListItem(props: { speaker: Speaker }): ReactElement {
+interface ProjSpeakerProps {
+  projectId: string;
+  refresh: () => void | Promise<void>;
+  speaker: Speaker;
+}
+
+function SpeakerListItem(props: ProjSpeakerProps): ReactElement {
   const { consent, id, name } = props.speaker;
   const consentButton = !consent.fileName ? (
     <Fragment />
@@ -85,20 +108,106 @@ export function SpeakerListItem(props: { speaker: Speaker }): ReactElement {
           textId="projectSettings.speaker.consent.upload"
         />
       </ListItemIcon>
-      <ListItemIcon onClick={() => {}}>
+      <EditSpeakerNameIcon {...props} />
+      <DeleteSpeakerIcon {...props} />
+    </ListItem>
+  );
+}
+
+function EditSpeakerNameIcon(props: ProjSpeakerProps): ReactElement {
+  const [open, setOpen] = useState(false);
+
+  const handleUpdateText = async (name: string): Promise<void> => {
+    await updateSpeakerName(props.speaker.id, name, props.projectId);
+    await props.refresh();
+  };
+
+  return (
+    <ListItemIcon>
+      <IconButtonWithTooltip
+        buttonId={`project-speaker-${props.speaker.id}-edit`}
+        icon={<Edit />}
+        onClick={() => setOpen(true)}
+        textId="projectSettings.speaker.edit"
+      />
+      <EditTextDialog
+        buttonIdCancel={"project-speakers-edit-cancel"}
+        buttonIdConfirm={"project-speakers-edit-confirm"}
+        close={() => setOpen(false)}
+        open={open}
+        text={props.speaker.name}
+        textFieldId={"project-speakers-edit-name"}
+        titleId={"projectSettings.speaker.edit"}
+        updateText={handleUpdateText}
+      />
+    </ListItemIcon>
+  );
+}
+
+function DeleteSpeakerIcon(props: ProjSpeakerProps): ReactElement {
+  const [open, setOpen] = useState(false);
+
+  const handleConfirm = async (): Promise<void> => {
+    await deleteSpeaker(props.speaker.id, props.projectId);
+    await props.refresh();
+  };
+
+  return (
+    <ListItemIcon>
+      <IconButtonWithTooltip
+        buttonId={`project-speaker-${props.speaker.id}-delete`}
+        icon={<Delete />}
+        onClick={() => setOpen(true)}
+        textId="projectSettings.speaker.delete"
+      />
+      <CancelConfirmDialog
+        buttonIdCancel={"project-speakers-delete-cancel"}
+        buttonIdConfirm={"project-speakers-delete-confirm"}
+        handleCancel={() => setOpen(false)}
+        handleConfirm={handleConfirm}
+        open={open}
+        textId={
+          props.speaker.consent.fileName
+            ? "projectSettings.speaker.consent.warning"
+            : "projectSettings.speaker.delete"
+        }
+      />
+    </ListItemIcon>
+  );
+}
+
+interface AddSpeakerProps {
+  projectId: string;
+  refresh: () => void | Promise<void>;
+}
+
+function AddSpeakerListItem(props: AddSpeakerProps): ReactElement {
+  const [open, setOpen] = useState(false);
+
+  const handleSubmitText = async (name: string): Promise<void> => {
+    await createSpeaker(name, props.projectId);
+    await props.refresh();
+  };
+
+  return (
+    <ListItem>
+      <ListItemIcon>
         <IconButtonWithTooltip
-          buttonId={`project-speaker-${id}-edit`}
-          icon={<Edit />}
-          textId="projectSettings.speaker.edit"
+          buttonId={"project-speakers-add"}
+          icon={<Add />}
+          onClick={() => setOpen(true)}
+          textId="projectSettings.speaker.add"
         />
       </ListItemIcon>
-      <ListItemIcon onClick={() => {}}>
-        <IconButtonWithTooltip
-          buttonId={`project-speaker-${id}-delete`}
-          icon={<Delete />}
-          textId="projectSettings.speaker.delete"
-        />
-      </ListItemIcon>
+      <SubmitTextDialog
+        buttonIdCancel={"project-speakers-add-cancel"}
+        buttonIdConfirm={"project-speakers-add-confirm"}
+        close={() => setOpen(false)}
+        open={open}
+        submitText={handleSubmitText}
+        textFieldId={"project-speakers-add-name"}
+        titleId={"projectSettings.speaker.enterName"}
+      />
     </ListItem>
   );
 }
