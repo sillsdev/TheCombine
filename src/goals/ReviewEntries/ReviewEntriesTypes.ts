@@ -122,8 +122,8 @@ function senseFromReviewEntriesSense(revSense: ReviewEntriesSense): Sense {
     accessibility: revSense.protected
       ? Status.Protected
       : revSense.deleted
-      ? Status.Deleted
-      : Status.Active,
+        ? Status.Deleted
+        : Status.Active,
     definitions: revSense.definitions.map((d) => ({ ...d })),
     glosses: revSense.glosses.map((g) => ({ ...g })),
     grammaticalInfo: revSense.partOfSpeech,
