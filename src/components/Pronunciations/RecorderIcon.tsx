@@ -1,6 +1,5 @@
 import { FiberManualRecord } from "@mui/icons-material";
-import { IconButton, Theme, Tooltip } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { IconButton, Tooltip } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -32,14 +31,6 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
-  const useStyles = makeStyles((theme: Theme) => ({
-    button: { marginRight: theme.spacing(1) },
-    iconPress: { color: themeColors.recordActive },
-    iconRelease: { color: themeColors.recordIdle },
-  }));
-
-  const classes = useStyles();
-
   function toggleIsRecordingToTrue(): void {
     dispatch(recording(props.wordId));
     props.startRecording();
@@ -70,7 +61,6 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
     <Tooltip title={t("pronunciations.recordTooltip")} placement="top">
       <IconButton
         aria-label="record"
-        className={classes.button}
         id={recordButtonId}
         onPointerDown={toggleIsRecordingToTrue}
         onPointerUp={toggleIsRecordingToFalse}
@@ -80,8 +70,12 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
         tabIndex={-1}
       >
         <FiberManualRecord
-          className={isRecording ? classes.iconPress : classes.iconRelease}
           id={recordIconId}
+          sx={{
+            color: isRecording
+              ? themeColors.recordActive
+              : themeColors.recordIdle,
+          }}
         />
       </IconButton>
     </Tooltip>

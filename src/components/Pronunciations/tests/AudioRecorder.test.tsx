@@ -15,7 +15,7 @@ import {
   PronunciationsStatus,
 } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { StoreState } from "types";
-import theme from "types/theme";
+import theme, { themeColors } from "types/theme";
 
 jest.mock("components/Pronunciations/Recorder");
 
@@ -67,16 +67,16 @@ describe("Pronunciations", () => {
       );
     });
 
-    expect(mockStartRecording).not.toBeCalled();
+    expect(mockStartRecording).not.toHaveBeenCalled();
     testRenderer.root.findByProps({ id: recordButtonId }).props.onPointerDown();
-    expect(mockStartRecording).toBeCalled();
+    expect(mockStartRecording).toHaveBeenCalled();
 
-    expect(mockStopRecording).not.toBeCalled();
+    expect(mockStopRecording).not.toHaveBeenCalled();
     testRenderer.root.findByProps({ id: recordButtonId }).props.onPointerUp();
-    expect(mockStopRecording).toBeCalled();
+    expect(mockStopRecording).toHaveBeenCalled();
   });
 
-  test("default style is iconRelease", () => {
+  test("default style is idle", () => {
     act(() => {
       testRenderer = create(
         <ThemeProvider theme={theme}>
@@ -89,7 +89,7 @@ describe("Pronunciations", () => {
       );
     });
     const icon = testRenderer.root.findByProps({ id: recordIconId });
-    expect(icon.props.className.includes("iconRelease")).toBeTruthy();
+    expect(icon.props.sx.color).toEqual(themeColors.recordIdle);
   });
 
   test("style depends on pronunciations state", () => {
@@ -107,6 +107,6 @@ describe("Pronunciations", () => {
       );
     });
     const icon = testRenderer.root.findByProps({ id: recordIconId });
-    expect(icon.props.className.includes("iconPress")).toBeTruthy();
+    expect(icon.props.sx.color).toEqual(themeColors.recordActive);
   });
 });

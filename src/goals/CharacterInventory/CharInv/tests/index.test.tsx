@@ -90,10 +90,10 @@ describe("CharInv", () => {
   it("exits on cancel-yes", async () => {
     const cancelButton = charMaster.root.findByProps({ id: buttonIdCancel });
     await act(async () => cancelButton.props.onClick());
-    expect(mockExit).toBeCalledTimes(0);
+    expect(mockExit).toHaveBeenCalledTimes(0);
 
     const yesButton = charMaster.root.findByProps({ id: dialogButtonIdYes });
     await act(async () => yesButton.props.onClick());
-    expect(mockExit).toBeCalledTimes(1);
+    expect(mockExit).toHaveBeenCalledTimes(1);
   });
 });

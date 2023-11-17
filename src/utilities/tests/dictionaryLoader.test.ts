@@ -16,7 +16,7 @@ describe("DictionaryLoader", () => {
     it(" ets lang and gets keys", () => {
       const loader = new DictionaryLoader(bcp47);
       expect(loader.lang === bcp47);
-      expect(mockGetKeys).toBeCalledTimes(1);
+      expect(mockGetKeys).toHaveBeenCalledTimes(1);
       expect(mockGetKeys).toBeCalledWith(bcp47);
     });
   });
