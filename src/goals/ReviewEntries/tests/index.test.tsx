@@ -36,9 +36,7 @@ jest.mock("notistack", () => ({
   ...jest.requireActual("notistack"),
   enqueueSnackbar: jest.fn(),
 }));
-jest.mock("uuid", () => ({
-  v4: () => mockUuid(),
-}));
+jest.mock("uuid", () => ({ v4: () => mockUuid() }));
 jest.mock("backend", () => ({
   getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
 }));
