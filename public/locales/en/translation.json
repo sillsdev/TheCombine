@@ -197,6 +197,20 @@
       "manageUser": "Manage User",
       "reverseOrder": "Reverse Order"
     },
+    "speaker": {
+      "label": "Manage speakers",
+      "add": "Add a speaker",
+      "delete": "Delete this speaker",
+      "edit": "Edit speaker's name",
+      "consent": {
+        "play": "Listen to the audio consent for this speaker",
+        "record": "Record audio consent for this speaker",
+        "see": "Look at the image consent for this speaker",
+        "upload": "Upload image consent for this speaker",
+        "remove": "Remove this speaker's consent",
+        "warning": "Warning: the speaker's current consent will be deleted--this cannot be undone."
+      }
+    },
     "import": {
       "header": "Import Data",
       "body": "Imported data will be added to this project. The Combine will make no attempt to deduplicate, overwrite, or sync.",

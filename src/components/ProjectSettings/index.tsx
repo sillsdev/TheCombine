@@ -8,6 +8,7 @@ import {
   Language,
   People,
   PersonAdd,
+  RecordVoiceOver,
   Settings,
   Sms,
 } from "@mui/icons-material";
@@ -50,6 +51,7 @@ import ProjectSchedule from "components/ProjectSettings/ProjectSchedule";
 import ProjectSelect from "components/ProjectSettings/ProjectSelect";
 import ActiveProjectUsers from "components/ProjectUsers/ActiveProjectUsers";
 import AddProjectUsers from "components/ProjectUsers/AddProjectUsers";
+import ProjectSpeakers from "components/ProjectUsers/ProjectSpeakers";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { Path } from "types/path";
@@ -70,6 +72,7 @@ export enum Setting {
   Languages = "SettingLanguages",
   Name = "SettingName",
   Schedule = "SettingSchedule",
+  Speakers = "SettingSpeakers",
   UserAdd = "SettingUserAdd",
   Users = "SettingUsers",
 }
@@ -227,6 +230,15 @@ export default function ProjectSettingsComponent(): ReactElement {
               icon={<PersonAdd data-testid={Setting.UserAdd} />}
               title={t("projectSettings.user.addUser")}
               body={<AddProjectUsers projectId={project.id} />}
+            />
+          )}
+
+          {/* Manage project speakers */}
+          {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+            <BaseSettings
+              icon={<RecordVoiceOver data-testid={Setting.Speakers} />}
+              title={t("projectSettings.speaker.label")}
+              body={<ProjectSpeakers projectId={project.id} />}
             />
           )}
         </Grid>
