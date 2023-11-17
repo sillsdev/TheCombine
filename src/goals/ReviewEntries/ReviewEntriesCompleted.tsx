@@ -1,11 +1,13 @@
 import { ArrowRightAlt } from "@mui/icons-material";
 import { Grid, Typography } from "@mui/material";
-import { ReactElement } from "react";
+import { Fragment, ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
+import { Word } from "api/models";
 import { getFrontierWords, getWord, updateWord } from "backend";
 import { UndoButton } from "components/Buttons";
+import WordCard from "components/WordCard";
 import {
   EntriesEdited,
   EntryEdit,
@@ -47,14 +49,26 @@ async function undoEdit(edit: EntryEdit): Promise<void> {
 }
 
 function EditedEntry(props: { edit: EntryEdit }): ReactElement {
+  const { oldId, newId } = props.edit;
+
+  const [oldWord, setOldWord] = useState<Word | undefined>();
+  const [newWord, setNewWord] = useState<Word | undefined>();
+
+  useEffect(() => {
+    getWord(oldId).then(setOldWord);
+  }, [oldId]);
+  useEffect(() => {
+    getWord(newId).then(setNewWord);
+  }, [newId]);
+
   const handleIsUndoAllowed = (): Promise<boolean> =>
     getFrontierWords().then(
-      (words) => words.findIndex((w) => w.id === props.edit.newId) !== -1
+      (words) => words.findIndex((w) => w.id === newId) !== -1
     );
 
   return (
     <Grid container style={{ flexWrap: "nowrap", overflow: "auto" }}>
-      <Typography>{props.edit.oldId}</Typography>
+      {oldWord ? <WordCard word={oldWord} /> : <Fragment />}
       <Grid key={"arrow"} style={{ margin: theme.spacing(1) }}>
         <ArrowRightAlt
           fontSize="large"
@@ -66,7 +80,7 @@ function EditedEntry(props: { edit: EntryEdit }): ReactElement {
           }}
         />
       </Grid>
-      <Typography>{props.edit.newId}</Typography>
+      {newWord ? <WordCard word={newWord} /> : <Fragment />}
       <UndoButton
         buttonIdEnabled={`edit-undo-${props.edit.newId}`}
         buttonIdCancel="edit-undo-cancel"

@@ -35,19 +35,44 @@ export function quicksort<T>(arr: T[], score: (item: T) => number): T[] {
   return [...quicksort(less, score), pivot, ...quicksort(greater, score)];
 }
 
-export function getNowDateTimeString(): string {
-  const now = new Date(Date.now());
+interface DateTimeSeparators {
+  date?: string;
+  dateTime?: string;
+  time?: string;
+}
+
+export const friendlySep: DateTimeSeparators = {
+  date: "/",
+  dateTime: " ",
+  time: ":",
+};
+
+const pathSep: DateTimeSeparators = {
+  date: "-",
+  dateTime: "_",
+  time: "-",
+};
+
+/** Create a date-time string for the provided utc-string, or now() if not specified.
+ * Use path-friendly separators by default if not specified. */
+export function getDateTimeString(
+  utcString?: string,
+  sep?: DateTimeSeparators
+): string {
+  const date = new Date(utcString ?? Date.now());
   const vals = [
-    now.getFullYear(),
+    date.getFullYear(),
     // Date.getMonth() starts at 0 for January.
-    now.getMonth() + 1,
-    now.getDate(),
-    now.getHours(),
-    now.getMinutes(),
-    now.getSeconds(),
+    date.getMonth() + 1,
+    date.getDate(),
+    date.getHours(),
+    date.getMinutes(),
+    date.getSeconds(),
   ];
   const strs = vals.map((value) => (value < 10 ? `0${value}` : `${value}`));
-  return `${strs.slice(0, 3).join("-")}_${strs.slice(3, 6).join("-")}`;
+  const dateString = strs.slice(0, 3).join(sep?.date ?? pathSep.date);
+  const timeString = strs.slice(3, 6).join(sep?.time ?? pathSep.time);
+  return `${dateString}${sep?.dateTime ?? pathSep.dateTime}${timeString}`;
 }
 
 // A general-purpose edit distance.
