@@ -24,7 +24,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-@babel/helper-module-imports 7.18.6
+@babel/helper-module-imports 7.22.15
 MIT
 MIT License
 
@@ -154,7 +154,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-@babel/types 7.23.0
+@babel/types 7.23.3
 MIT
 MIT License
 
@@ -180,7 +180,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-@date-io/core 2.16.0
+@date-io/core 2.17.0
 MIT
 MIT License
 
@@ -205,7 +205,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@date-io/date-fns 2.16.0
+@date-io/date-fns 2.17.0
 MIT
 MIT License
 
@@ -230,7 +230,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@date-io/dayjs 2.16.0
+@date-io/dayjs 2.17.0
 MIT
 MIT License
 
@@ -255,7 +255,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@date-io/luxon 2.16.1
+@date-io/luxon 2.17.0
 MIT
 MIT License
 
@@ -280,7 +280,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@date-io/moment 2.16.1
+@date-io/moment 2.17.0
 MIT
 MIT License
 
@@ -682,7 +682,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-@floating-ui/react-dom 2.0.2
+@floating-ui/react-dom 2.0.4
 MIT
 MIT License
 
@@ -730,7 +730,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-@hello-pangea/dnd 16.2.0
+@hello-pangea/dnd 16.3.0
 Apache-2.0
 Copyright 2021 Gabriel Santerre
 
@@ -799,7 +799,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-@material-table/core 6.2.11
+@material-table/core 6.3.0
 MIT
 MIT License
 
@@ -849,7 +849,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@microsoft/signalr 6.0.7
+@microsoft/signalr 8.0.0
 MIT
 JavaScript and TypeScript clients for SignalR for ASP.NET Core and Azure SignalR Service
 
@@ -871,9 +871,9 @@ yarn add @microsoft/signalr@next
 
 ## Usage
 
-See the [SignalR Documentation](https://docs.microsoft.com/aspnet/core/signalr) at docs.microsoft.com for documentation on the latest release. [API Reference Documentation](https://docs.microsoft.com/javascript/api/%40aspnet/signalr/?view=signalr-js-latest) is also available on docs.microsoft.com.
+See the [SignalR Documentation](https://learn.microsoft.com/aspnet/core/signalr) at learn.microsoft.com for documentation on the latest release. [API Reference Documentation](https://learn.microsoft.com/javascript/api/%40aspnet/signalr/?view=signalr-js-latest) is also available on learn.microsoft.com.
 
-For documentation on using this client with Azure SignalR Service and Azure Functions, see the [SignalR Service serverless developer guide](https://docs.microsoft.com/azure/azure-signalr/signalr-concept-serverless-development-config).
+For documentation on using this client with Azure SignalR Service and Azure Functions, see the [SignalR Service serverless developer guide](https://learn.microsoft.com/azure/azure-signalr/signalr-concept-serverless-development-config).
 
 ### Browser
 
@@ -938,7 +938,7 @@ connection.start()
 ```
 
 
-@motionone/animation 10.15.1
+@motionone/animation 10.16.3
 MIT
 MIT License
 
@@ -963,7 +963,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@motionone/dom 10.16.2
+@motionone/dom 10.16.4
 MIT
 MIT License
 
@@ -988,7 +988,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@motionone/easing 10.15.1
+@motionone/easing 10.16.3
 MIT
 MIT License
 
@@ -1013,7 +1013,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@motionone/generators 10.15.1
+@motionone/generators 10.16.4
 MIT
 MIT License
 
@@ -1038,7 +1038,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@motionone/svelte 10.16.2
+@motionone/svelte 10.16.4
 MIT
 MIT License
 
@@ -1063,7 +1063,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@motionone/types 10.15.1
+@motionone/types 10.16.3
 MIT
 MIT License
 
@@ -1088,7 +1088,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@motionone/utils 10.15.1
+@motionone/utils 10.16.3
 MIT
 MIT License
 
@@ -1113,7 +1113,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@motionone/vue 10.16.2
+@motionone/vue 10.16.4
 MIT
 MIT License
 
@@ -1138,7 +1138,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/base 5.0.0-beta.22
+@mui/base 5.0.0-beta.24
 MIT
 The MIT License (MIT)
 
@@ -1163,7 +1163,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/core-downloads-tracker 5.14.16
+@mui/core-downloads-tracker 5.14.18
 MIT
 The MIT License (MIT)
 
@@ -1188,7 +1188,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/icons-material 5.14.11
+@mui/icons-material 5.14.18
 MIT
 The MIT License (MIT)
 
@@ -1213,7 +1213,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/material 5.14.16
+@mui/material 5.14.18
 MIT
 The MIT License (MIT)
 
@@ -1238,7 +1238,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/private-theming 5.14.16
+@mui/private-theming 5.14.18
 MIT
 The MIT License (MIT)
 
@@ -1263,7 +1263,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/styled-engine 5.14.16
+@mui/styled-engine 5.14.18
 MIT
 The MIT License (MIT)
 
@@ -1288,7 +1288,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/styles 5.14.16
+@mui/system 5.14.18
 MIT
 The MIT License (MIT)
 
@@ -1313,7 +1313,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/system 5.14.16
+@mui/types 7.2.9
 MIT
 The MIT License (MIT)
 
@@ -1338,7 +1338,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/types 7.2.8
+@mui/utils 5.14.18
 MIT
 The MIT License (MIT)
 
@@ -1363,32 +1363,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/utils 5.14.16
-MIT
-The MIT License (MIT)
-
-Copyright (c) 2014 Call-Em-All
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-
-@mui/x-date-pickers 5.0.17
+@mui/x-date-pickers 5.0.20
 MIT
 MIT License
 
@@ -1437,7 +1412,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-@redux-devtools/extension 3.2.5
+@redux-devtools/extension 3.2.6
 MIT
 The MIT License (MIT)
 
@@ -1462,7 +1437,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@reduxjs/toolkit 1.9.5
+@reduxjs/toolkit 1.9.7
 MIT
 MIT License
 
@@ -1487,7 +1462,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@remix-run/router 1.9.0
+@remix-run/router 1.11.0
 MIT
 MIT License
 
@@ -1514,7 +1489,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@segment/analytics-core 1.3.1
+@segment/analytics-core 1.3.2
 MIT
 The MIT License (MIT)
 
@@ -1538,7 +1513,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-@segment/analytics-next 1.55.0
+@segment/analytics-next 1.60.0
 MIT
 The MIT License (MIT)
 
@@ -1586,7 +1561,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-@segment/facade 3.4.9
+@segment/facade 3.4.10
 null
 (The MIT License)
 
@@ -40397,7 +40372,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-@types/chroma-js 2.4.0
+@types/chroma-js 2.4.3
 MIT
     MIT License
 
@@ -40422,57 +40397,7 @@ MIT
     SOFTWARE
 
 
-@types/hoist-non-react-statics 3.3.1
-MIT
-    MIT License
-
-    Copyright (c) Microsoft Corporation. All rights reserved.
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE
-
-
-@types/parse-json 4.0.0
-MIT
-    MIT License
-
-    Copyright (c) Microsoft Corporation. All rights reserved.
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE
-
-
-@types/prop-types 15.7.9
+@types/hoist-non-react-statics 3.3.5
 MIT
     MIT License
 
@@ -40497,7 +40422,7 @@ MIT
     SOFTWARE
 
 
-@types/react-dom 17.0.17
+@types/parse-json 4.0.2
 MIT
     MIT License
 
@@ -40522,7 +40447,7 @@ MIT
     SOFTWARE
 
 
-@types/react-redux 7.1.24
+@types/prop-types 15.7.10
 MIT
     MIT License
 
@@ -40547,7 +40472,7 @@ MIT
     SOFTWARE
 
 
-@types/react-transition-group 4.4.8
+@types/react-dom 18.2.15
 MIT
     MIT License
 
@@ -40572,7 +40497,7 @@ MIT
     SOFTWARE
 
 
-@types/react 17.0.47
+@types/react-redux 7.1.30
 MIT
     MIT License
 
@@ -40597,7 +40522,57 @@ MIT
     SOFTWARE
 
 
-@types/scheduler 0.16.2
+@types/react-transition-group 4.4.9
+MIT
+    MIT License
+
+    Copyright (c) Microsoft Corporation.
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE
+
+
+@types/react 18.2.37
+MIT
+    MIT License
+
+    Copyright (c) Microsoft Corporation.
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE
+
+
+@types/scheduler 0.16.6
 MIT
     MIT License
 
@@ -40964,7 +40939,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-convert-source-map 1.8.0
+convert-source-map 1.9.0
 MIT
 Copyright 2013 Thorsten Lorenz. 
 All rights reserved.
@@ -40991,7 +40966,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
 
-cosmiconfig 7.0.1
+cosmiconfig 7.1.0
 MIT
 The MIT License (MIT)
 
@@ -41017,7 +40992,7 @@ SOFTWARE.
 
 
 
-cross-fetch 3.1.6
+cross-fetch 4.0.0
 MIT
 The MIT License (MIT)
 
@@ -41095,18 +41070,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-css-vendor 2.0.8
-MIT
-The MIT License (MIT)
-Copyright (c) 2014-present Oleg Slobodskoi
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
 csstype 3.1.2
 MIT
 Copyright (c) 2017-2018 Fredrik Nicol
@@ -41130,7 +41093,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-date-fns 2.29.3
+date-fns 2.30.0
 MIT
 MIT License
 
@@ -41155,7 +41118,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-dayjs 1.11.9
+dayjs 1.11.10
 MIT
 MIT License
 
@@ -41251,7 +41214,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-deepmerge 4.2.2
+deepmerge 4.3.1
 MIT
 The MIT License (MIT)
 
@@ -41422,7 +41385,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-dset 3.1.2
+dset 3.1.3
 MIT
 The MIT License (MIT)
 
@@ -41536,7 +41499,7 @@ SOFTWARE.
 
 
 
-eventsource 1.1.2
+eventsource 2.0.2
 MIT
 The MIT License
 
@@ -41597,91 +41560,217 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-fetch-cookie 0.11.0
+fetch-cookie 2.1.0
 Unlicense
-# fetch-cookie [![npm version](https://badge.fury.io/js/fetch-cookie.svg)](https://badge.fury.io/js/fetch-cookie) [![Build Status](https://travis-ci.org/valeriangalliat/fetch-cookie.svg?branch=master)](https://travis-ci.org/valeriangalliat/fetch-cookie)
+# 🍪 fetch-cookie [![npm version](https://img.shields.io/npm/v/fetch-cookie?style=flat-square)](https://www.npmjs.org/package/fetch-cookie) [![Build status](https://img.shields.io/github/workflow/status/valeriangalliat/fetch-cookie/Test?style=flat-square)](https://github.com/valeriangalliat/fetch-cookie/actions/workflows/test.yml)
 
-> Decorator for a `fetch` function to support automatic cookie storage and population.
+> Decorator for a `fetch` function to support automatic cookie storage
+> and population.
+
+[Migrating from v1](#migrating-from-v1)
 
 ## Description
 
-`fetch-cookie` wraps arround a `fetch` function and **intercepts request options and response
-objects to store received cookies and populate request with the appropriate cookies**.
+fetch-cookie wraps around a `fetch` function and **intercepts request
+options and response objects to store received cookies and populate
+request with the appropriate cookies**.
 
-This library is developed with Node.Js and fetch polyfill libraries such as [node-fetch] in mind, since
-the browser version is supposed to let a way [to include cookies in requests][include].
-Compatibility may not be guaranteed but as long as your library implements the [Fetch Standard] you should be fine.
-In case of incompatibilities, please create a new issue.
+This library is developed with Node.js and `fetch` polyfill libraries such
+as [node-fetch] in mind, since the browser version is supposed to let a
+way [to include cookies in requests][include]. Compatibility may not be
+guaranteed but as long as your library implements the [Fetch standard]
+you should be fine. In case of incompatibilities, please create a new
+issue.
 
-[Fetch Standard]: https://fetch.spec.whatwg.org/
+[Fetch standard]: https://fetch.spec.whatwg.org/
 [node-fetch]: https://www.npmjs.com/package/node-fetch
 [include]: http://updates.html5rocks.com/2015/03/introduction-to-fetch#sending-credentials-with-a-fetch-request
 
-Internally the plugin uses a cookie jar. You can insert your own (details below) but [tough-cookie] is preferred.
+Internally the plugin uses a cookie jar. You can insert your own
+(details below) but [tough-cookie] is preferred.
 
 [tough-cookie]: https://www.npmjs.com/package/tough-cookie
 
 ## Usage
 
-### Basic
+With Node.js 18.3.0 and greater, using the native global `fetch`
+function:
 
 ```js
-const nodeFetch = require('node-fetch')
-const fetch = require('fetch-cookie')(nodeFetch)
+import makeFetchCookie from 'fetch-cookie'
+
+const fetchCookie = makeFetchCookie(fetch)
+```
+
+Or with node-fetch:
+
+```js
+import nodeFetch from 'node-fetch'
+import fetchCookie from 'fetch-cookie'
+
+const fetch = fetchCookie(nodeFetch)
 ```
 
 ### Custom cookie jar
 
-If you want to customize the internal cookie jar instance (for example, with a custom store), you can inject it as a second argument:
+If you want to customize the internal cookie jar instance (for example,
+with a custom store), you can inject it as a second argument:
 
 ```js
-const nodeFetch = require('node-fetch')
-const tough = require('tough-cookie')
-const fetch = require('fetch-cookie')(nodeFetch, new tough.CookieJar())
+import makeFetchCookie from 'fetch-cookie'
+
+const fetchCookie = makeFetchCookie(fetch, new makeFetchCookie.toughCookie.CookieJar())
 ```
 
-This enables you to create multiple `fetch-cookie` instances that use different cookie jars,
-esentially two different HTTP clients with different login sessions on you backend (for example).
+Here, we expose the tough-cookie version that we depend on internally so
+you can just reuse it and don't end up accidentally bundling two
+different versions. That being said you can use any version of
+tough-cookie here, or even any compatible cookie jar.
 
-All calls to `fetch` will store and send back cookies according to the URL.
+This enables you to create multiple fetch-cookie instances that use
+different cookie jars, essentially two different HTTP clients with
+different login sessions on you backend (for example).
 
-> Note: All errors when setting cookies are ignored by default. You can make it to throw errors in cookies by passing a third argument (default is true).
+All calls to `fetch` will store and send back cookies according to the
+URL.
 
-```js
-const nodeFetch = require('node-fetch')
-const tough = require('tough-cookie')
-const fetch = require('fetch-cookie')(nodeFetch, new tough.CookieJar(), false) // default value is true
-// false - doesn't ignore errors, throws when an error occurs in setting cookies and breaks the request and execution
-// true - silently ignores errors and continues to make requests/redirections
-```
-
-If you use a cookie jar that is not tough-cookie, keep in mind that it must implement this interface to be compatible:
+If you use a cookie jar that is not tough-cookie, keep in mind that it
+must implement this interface to be compatible:
 
 ```ts
 interface CookieJar {
-  getCookieString(currentUrl: string, cb: (err: any, cookies: string) => void): void;
-  setCookie(cookieString: string, currentUrl: string, cb: (err: any) => void, opts: { ignoreError:boolean }): void;
+  getCookieString(currentUrl: string): Promise<string>
+  setCookie(cookieString: string, currentUrl: string, opts: { ignoreError: boolean }): Promise
 }
 ```
 
-### Cookies on redirects
+### Custom cookie jar with options
 
-**Details:** By default, cookies are not set correctly in the edge case where a response
-sets cookies and redirects to another URL. A real-life example of this behaviour
-is a login page setting a session cookie and redirecting.
-
-The reason for this limitation is that the generic fetch API does not allow any way to
-hook into redirects. However, the [node-fetch] library does expose its own API which
-we can use.
-
-**TLDR:** Ff cookies during indirection turns out to be a requirement for you,
-and if you are using [node-fetch], then you can use the custom node-fetch decorator
-provided with this library:
+If you don't want a custom store and just want to pass [tough-cookie
+options](https://github.com/salesforce/tough-cookie#cookiejarstore-options),
+e.g. to allow cookies on `localhost`:
 
 ```js
-const nodeFetch = require('node-fetch')
-const fetch = require('fetch-cookie/node-fetch')(nodeFetch)
+import makeFetchCookie from 'fetch-cookie'
+
+const fetchCookie = makeFetchCookie(fetch, new makeFetchCookie.toughCookie.CookieJar(undefined, {
+  allowSpecialUseDomain: true
+}))
 ```
+
+Or with a custom store as well:
+
+```js
+import makeFetchCookie from 'fetch-cookie'
+import FileCookieStore from 'file-cookie-store'
+
+const store = new FileCookieStore('cookies.txt')
+
+const fetchCookie = makeFetchCookie(fetch, new makeFetchCookie.toughCookie.CookieJar(store, {
+  allowSpecialUseDomain: true
+}))
+```
+
+### Ignoring errors
+
+All errors when setting cookies are ignored by default. You can make it
+throw errors in cookies by passing a third argument `ignoreError` (defaulting to `true`).
+
+```js
+import makeFetchCookie from 'fetch-cookie'
+
+const fetchCookie = makeFetchCookie(fetch, new makeFetchCookie.toughCookie.CookieJar(), false)
+```
+
+When set to `false`, fetch-cookie will throw when an error occurs in
+setting cookies and breaks the request and execution.
+
+Otherwise, it silently ignores errors and continues to make
+requests/redirections.
+
+### Max redirects
+
+Because we need to do our own [redirect implementation](#cookies-on-redirects),
+the way to configure the max redirects is not going to be that of your
+chosen `fetch` implementation, but custom to fetch-cookie.
+
+We read a `maxRedirect` parameter for that. The default is 20.
+
+```js
+import makeFetchCookie from 'fetch-cookie'
+
+const fetchCookie = makeFetchCookie(fetch)
+
+await fetchCookie(url, { maxRedirect: 10 })
+```
+
+## Cookies on redirects
+
+In order to handle cookies on redirects, we force the `redirect`
+parameter to `manual`, and handle the redirections internally (according
+to the original `redirect` value) instead of leaving it to the upstream
+`fetch` implementation.
+
+This allows us to hook into the redirect logic in order to store and
+forward cookies accordingly.
+
+This is useful for example when a login page sets a session cookie and
+redirects to another page.
+
+## Migrating from v1
+
+The only breaking change with v2 is that the node-fetch wrapper (that
+was handling redirects only with node-fetch nonstandard APIs) was
+dropped and the redirects are now always handled by the main export.
+
+```js
+// If you were doing
+const fetchCookie = require('fetch-cookie/node-fetch')
+
+// Change it to
+const fetchCookie = require('fetch-cookie')
+
+// Or
+import fetchCookie from 'fetch-cookie'
+```
+
+This also means that if you were *not* using the node-fetch wrapper and
+were happy about cookies *not* being included in redirects, cookies are
+now going to be stored and sent in redirects as well like they would in
+the browser.
+
+## Development
+
+```sh
+# Install dependencies
+npm ci
+
+# Allows to test node-fetch v2 as well as node-fetch v3
+npm --prefix test/node_modules/node-fetch-2 ci
+
+# Allows to test against Undici by removing the blacklisting of `Set-Cookie` headers
+npm run patch-undici
+
+npm run lint
+npm run type-check
+
+# Generates code in `esm` and `cjs` directories
+npm run build
+
+# Run tests (depends on the built code)
+npm test
+
+# Generate type declarations in the `types` directory
+npm run type-declarations
+```
+
+## Credits
+
+* 🥰 All the [contributors](https://github.com/valeriangalliat/fetch-cookie/graphs/contributors)
+  to fetch-cookie!
+* 😍 [node-fetch](https://github.com/node-fetch/node-fetch) for the
+  redirect logic that we carefully mimic (sadly reimplementing this code
+  was the only way to support cookies in redirects).
 
 
 find-root 1.1.0
@@ -41694,7 +41783,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-follow-redirects 1.15.1
+follow-redirects 1.15.3
 MIT
 Copyright 2014–present Olivier Lalonde <olalonde@gmail.com>, James Talmage <james@talmage.io>, Ruben Verborgh
 
@@ -41763,7 +41852,7 @@ THE SOFTWARE.
 
 
 
-goober 2.1.12
+goober 2.1.13
 MIT
 MIT License
 
@@ -42091,39 +42180,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-hyphenate-style-name 1.0.4
-BSD-3-Clause
-Copyright (c) 2015, Espen Hovlandsdal
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-* Redistributions of source code must retain the above copyright notice, this
-  list of conditions and the following disclaimer.
-
-* Redistributions in binary form must reproduce the above copyright notice,
-  this list of conditions and the following disclaimer in the documentation
-  and/or other materials provided with the distribution.
-
-* Neither the name of hyphenate-style-name nor the names of its
-  contributors may be used to endorse or promote products derived from
-  this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
-
-i18next-browser-languagedetector 7.1.0
+i18next-browser-languagedetector 7.2.0
 MIT
 The MIT License (MIT)
 
@@ -42149,7 +42206,7 @@ SOFTWARE.
 
 
 
-i18next-http-backend 2.2.2
+i18next-http-backend 2.4.1
 MIT
 Copyright (c) 2023 i18next
 
@@ -42172,7 +42229,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-i18next 23.4.6
+i18next 23.7.6
 MIT
 The MIT License (MIT)
 
@@ -42222,7 +42279,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-immutable 4.3.0
+immutable 4.3.4
 MIT
 MIT License
 
@@ -42353,29 +42410,6 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-is-in-browser 1.1.3
-MIT
-# Is In Browser?
-
-```
-import isBrowser from 'is-in-browser';
-
-if(isBrowser) {
-    //...
-}
-```
-
-## CommonJS
-
-For those not using Babel / ES6 Modules
-
-```
-var isBrowser = require('is-in-browser').default;
-
-if(isBrowser) { //... }
-```
-
-
 js-base64 3.7.5
 BSD-3-Clause
 Copyright (c) 2014, Dan Kogai
@@ -42484,102 +42518,6 @@ DEALINGS IN THE SOFTWARE.
 
 This library is a fork of 'better-json-errors' by Kat Marchán, extended and
 distributed under the terms of the MIT license above.
-
-
-jss-plugin-camel-case 10.10.0
-MIT
-The MIT License (MIT)
-Copyright (c) 2014-present Oleg Isonen (Slobodskoi) & contributors
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-jss-plugin-default-unit 10.10.0
-MIT
-The MIT License (MIT)
-Copyright (c) 2014-present Oleg Isonen (Slobodskoi) & contributors
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-jss-plugin-global 10.10.0
-MIT
-The MIT License (MIT)
-Copyright (c) 2014-present Oleg Isonen (Slobodskoi) & contributors
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-jss-plugin-nested 10.10.0
-MIT
-The MIT License (MIT)
-Copyright (c) 2014-present Oleg Isonen (Slobodskoi) & contributors
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-jss-plugin-props-sort 10.10.0
-MIT
-The MIT License (MIT)
-Copyright (c) 2014-present Oleg Isonen (Slobodskoi) & contributors
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-jss-plugin-rule-value-function 10.10.0
-MIT
-The MIT License (MIT)
-Copyright (c) 2014-present Oleg Isonen (Slobodskoi) & contributors
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-jss-plugin-vendor-prefixer 10.10.0
-MIT
-The MIT License (MIT)
-Copyright (c) 2014-present Oleg Isonen (Slobodskoi) & contributors
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-jss 10.10.0
-MIT
-The MIT License (MIT)
-Copyright (c) 2014-present Oleg Isonen (Slobodskoi) & contributors
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 lines-and-columns 1.2.4
@@ -42817,7 +42755,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-minimist 1.2.6
+minimist 1.2.8
 MIT
 This software is released under the MIT license:
 
@@ -42839,7 +42777,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-motion 10.16.2
+motion 10.16.4
 MIT
 MIT License
 
@@ -42939,7 +42877,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-nanoid 3.3.6
+nanoid 3.3.7
 MIT
 The MIT License (MIT)
 
@@ -42986,7 +42924,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-node-fetch 2.6.13
+node-fetch 2.7.0
 MIT
 The MIT License (MIT)
 
@@ -43245,7 +43183,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-punycode 2.3.0
+punycode 2.3.1
 MIT
 Copyright Mathias Bynens <https://mathiasbynens.be/>
 
@@ -43348,7 +43286,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-react-dom 17.0.2
+react-dom 18.2.0
 MIT
 MIT License
 
@@ -43373,33 +43311,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-react-double-scrollbar 0.0.15
-MIT
-The MIT License (MIT)
-
-Copyright (c) 2016 Scott McDaniel
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-
-
-react-i18next 13.3.1
+react-i18next 13.4.1
 MIT
 The MIT License (MIT)
 
@@ -43597,7 +43509,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-react-router-dom 6.16.0
+react-router-dom 6.18.0
 MIT
 MIT License
 
@@ -43624,7 +43536,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-react-router 6.16.0
+react-router 6.18.0
 MIT
 MIT License
 
@@ -43710,7 +43622,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-react 17.0.2
+react 18.2.0
 MIT
 MIT License
 
@@ -43973,32 +43885,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-safe-buffer 5.1.2
-MIT
-The MIT License (MIT)
-
-Copyright (c) Feross Aboukhadijeh
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
-
-scheduler 0.20.2
+scheduler 0.23.0
 MIT
 MIT License
 
@@ -44040,6 +43927,31 @@ ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
 IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+
+set-cookie-parser 2.6.0
+MIT
+The MIT License (MIT)
+
+Copyright (c) 2015 Nathan Friedly <nathan@nfriedly.com> (http://nfriedly.com/)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
 
 
 source-map 0.5.7
@@ -44177,31 +44089,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-tiny-invariant 1.2.0
-MIT
-MIT License
-
-Copyright (c) 2019 Alexander Reardon
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-tiny-warning 1.0.3
+tiny-invariant 1.3.1
 MIT
 MIT License
 
@@ -44284,7 +44172,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-tslib 2.5.0
+tslib 2.6.2
 0BSD
 Copyright (c) Microsoft Corporation.
 
@@ -44661,7 +44549,7 @@ TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
 THIS SOFTWARE.
 
 
-zustand 4.3.2
+zustand 4.4.6
 MIT
 MIT License
 
