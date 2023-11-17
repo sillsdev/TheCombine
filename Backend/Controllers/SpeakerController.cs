@@ -238,14 +238,14 @@ namespace BackendFramework.Controllers
             }
 
             // Copy file data to a local file with speakerId-dependent name
-            fileUpload.FilePath = FileStorage.GenerateAudioFilePathForWord(projectId, speakerId);
-            await using (var fs = new IO.FileStream(fileUpload.FilePath, IO.FileMode.Create))
+            var path = FileStorage.GenerateAudioFilePathForWord(projectId, speakerId);
+            await using (var fs = new IO.FileStream(path, IO.FileMode.Create))
             {
                 await file.CopyToAsync(fs);
             }
 
             // Update speaker consent and return result with speaker
-            var fileName = IO.Path.GetFileName(fileUpload.FilePath);
+            var fileName = IO.Path.GetFileName(path);
             speaker.Consent = new() { FileName = fileName, FileType = ConsentType.Audio };
             return await _speakerRepo.Update(speakerId, speaker) switch
             {
