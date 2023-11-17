@@ -14,5 +14,5 @@ it("renders without crashing", () => {
   renderer.act(() => {
     renderer.create(<ProjectScreen />);
   });
-  expect(mockDispatch).toBeCalledTimes(2);
+  expect(mockDispatch).toHaveBeenCalledTimes(2);
 });

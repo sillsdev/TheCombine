@@ -16,7 +16,7 @@ import {
   buttonIdSubmit,
 } from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace";
 import CharacterReplaceDialog from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace/CharacterReplaceDialog";
-import { defaultState } from "goals/CharacterInventory/Redux/CharacterInventoryReducer";
+import { defaultState } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 import { StoreState } from "types";
 
 // Dialog uses portals, which are not supported in react-test-renderer.
@@ -119,11 +119,11 @@ describe("CharacterDetail", () => {
         cancelButton.props.onClick();
         submitButton.props.onClick();
       });
-      expect(mockFindAndReplace).not.toBeCalled();
+      expect(mockFindAndReplace).not.toHaveBeenCalled();
       await act(async () => {
         await confButton.props.onClick();
       });
-      expect(mockFindAndReplace).toBeCalled();
+      expect(mockFindAndReplace).toHaveBeenCalled();
     });
   });
 });

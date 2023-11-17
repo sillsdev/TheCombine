@@ -38,6 +38,6 @@ describe("SortOptions", () => {
     const button = testRenderer.root.findByProps({ id: reverseButtonId });
     expect(button).not.toBeNull();
     button.props.onClick();
-    expect(mockReverse).toBeCalledTimes(1);
+    expect(mockReverse).toHaveBeenCalledTimes(1);
   });
 });

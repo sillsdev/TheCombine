@@ -423,7 +423,7 @@ describe("MergeDupsReducer", () => {
       // Intercept the uuid that will be assigned.
       const nextGuid = getMockUuid(false);
       const testAction = moveSense({
-        ref: testRef,
+        src: testRef,
         destWordId: wordId,
         destOrder: 1,
       });
@@ -451,7 +451,7 @@ describe("MergeDupsReducer", () => {
       // Intercept the uuid that will be assigned.
       const nextGuid = getMockUuid(false);
       const testAction = moveSense({
-        ref: testRef,
+        src: testRef,
         destWordId: destWordId,
         destOrder: 2,
       });
@@ -478,7 +478,7 @@ describe("MergeDupsReducer", () => {
       const destWordId = "word1";
 
       const testAction = moveSense({
-        ref: testRef,
+        src: testRef,
         destWordId: destWordId,
         destOrder: 1,
       });
@@ -505,7 +505,7 @@ describe("MergeDupsReducer", () => {
       const destWordId = "word1";
 
       const testAction = moveSense({
-        ref: testRef,
+        src: testRef,
         destWordId: destWordId,
         destOrder: 1,
       });
@@ -532,7 +532,7 @@ describe("MergeDupsReducer", () => {
       const destWordId = "word2";
 
       const testAction = moveSense({
-        ref: testRef,
+        src: testRef,
         destWordId: destWordId,
         destOrder: 1,
       });
@@ -555,7 +555,7 @@ describe("MergeDupsReducer", () => {
       const mergeSenseId = `${wordId}_senseA`;
       const testRef: MergeTreeReference = { wordId, mergeSenseId, order: 0 };
 
-      const testAction = orderSense({ ref: testRef, order: 1 });
+      const testAction = orderSense({ src: testRef, destOrder: 1 });
 
       const expectedWords = testTreeWords();
       expectedWords[wordId].sensesGuids[mergeSenseId] = [
@@ -571,7 +571,7 @@ describe("MergeDupsReducer", () => {
       const mergeSenseId = `${wordId}_senseA`;
       const testRef: MergeTreeReference = { wordId, mergeSenseId };
 
-      const testAction = orderSense({ ref: testRef, order: 1 });
+      const testAction = orderSense({ src: testRef, destOrder: 1 });
 
       const expectedWords = testTreeWords();
       expectedWords[wordId].sensesGuids = {

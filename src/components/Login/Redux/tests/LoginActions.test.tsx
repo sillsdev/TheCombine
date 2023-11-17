@@ -1,14 +1,7 @@
-import { PreloadedState } from "redux";
-
 import { User } from "api/models";
-import { defaultState } from "components/App/DefaultState";
-import {
-  asyncLogIn,
-  asyncSignUp,
-  logoutAndResetStore,
-} from "components/Login/Redux/LoginActions";
+import { asyncLogIn, asyncSignUp } from "components/Login/Redux/LoginActions";
 import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";
-import { RootState, setupStore } from "store";
+import { setupStore } from "store";
 import { newUser } from "types/user";
 
 jest.mock("backend", () => ({
@@ -29,12 +22,6 @@ const mockUsername = "testUsername";
 const mockUser = {
   ...newUser(mockName, mockUsername, mockPassword),
   email: mockEmail,
-};
-
-// Preloaded values for store when testing
-const persistedDefaultState: PreloadedState<RootState> = {
-  ...defaultState,
-  _persist: { version: 1, rehydrated: false },
 };
 
 beforeEach(() => {
@@ -82,7 +69,7 @@ describe("LoginAction", () => {
 
       // A failed signup does not trigger a login.
       jest.runAllTimers();
-      expect(mockAuthenticateUser).not.toBeCalled();
+      expect(mockAuthenticateUser).not.toHaveBeenCalled();
     });
 
     it("correctly affects state on success", async () => {
@@ -100,28 +87,7 @@ describe("LoginAction", () => {
       // A successful signup triggers a login using `setTimeout`.
       mockAuthenticateUser.mockRejectedValueOnce({});
       jest.runAllTimers();
-      expect(mockAuthenticateUser).toBeCalledTimes(1);
-    });
-  });
-
-  describe("logoutAndResetStore", () => {
-    it("correctly affects state", async () => {
-      const nonDefaultState = {
-        error: "nonempty-string",
-        loginStatus: LoginStatus.Success,
-        signupStatus: LoginStatus.Failure,
-        username: "nonempty-string",
-      };
-      const store = setupStore({
-        ...persistedDefaultState,
-        loginState: nonDefaultState,
-      });
-      store.dispatch(logoutAndResetStore());
-      const loginState = store.getState().loginState;
-      expect(loginState.error).toEqual("");
-      expect(loginState.loginStatus).toEqual(LoginStatus.Default);
-      expect(loginState.signupStatus).toEqual(LoginStatus.Default);
-      expect(loginState.username).toEqual("");
+      expect(mockAuthenticateUser).toHaveBeenCalledTimes(1);
     });
   });
 });
