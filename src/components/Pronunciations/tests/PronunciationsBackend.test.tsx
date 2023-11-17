@@ -11,12 +11,6 @@ import PronunciationsBackend from "components/Pronunciations/PronunciationsBacke
 import { defaultState as pronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import theme from "types/theme";
 
-// Mock the audio components
-jest
-  .spyOn(window.HTMLMediaElement.prototype, "pause")
-  .mockImplementation(() => {});
-jest.mock("components/Pronunciations/Recorder");
-
 // Test variables
 let testRenderer: ReactTestRenderer;
 const mockAudio = ["a.wav", "b.wav"];

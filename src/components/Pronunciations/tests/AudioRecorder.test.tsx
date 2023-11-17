@@ -17,8 +17,6 @@ import {
 import { StoreState } from "types";
 import theme, { themeColors } from "types/theme";
 
-jest.mock("components/Pronunciations/Recorder");
-
 let testRenderer: ReactTestRenderer;
 
 const createMockStore = configureMockStore();

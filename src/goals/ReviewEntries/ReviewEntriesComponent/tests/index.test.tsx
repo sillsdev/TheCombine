@@ -39,8 +39,6 @@ jest.mock("uuid", () => ({ v4: () => mockUuid() }));
 jest.mock("backend", () => ({
   getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
 }));
-// Mock the node module used by AudioRecorder.
-jest.mock("components/Pronunciations/Recorder");
 jest.mock("components/TreeView", () => "div");
 jest.mock("types/hooks", () => ({
   useAppDispatch: () => jest.fn(),

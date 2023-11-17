@@ -11,12 +11,6 @@ import { defaultState as pronunciationsState } from "components/Pronunciations/R
 import PronunciationsCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/PronunciationsCell";
 import theme from "types/theme";
 
-// Mock the audio components
-jest
-  .spyOn(window.HTMLMediaElement.prototype, "pause")
-  .mockImplementation(() => {});
-jest.mock("components/Pronunciations/Recorder");
-
 // Mock the store interactions
 jest.mock(
   "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesActions",
