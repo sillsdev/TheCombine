@@ -1,24 +1,15 @@
-import { Divider, List, ListItem, ListItemText, Theme } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { Divider, ListItem, ListItemText } from "@mui/material";
 import { useState, useEffect, ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { getSemanticDomainCounts } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import LinearProgressWithLabel from "components/Statistics/ProgressBar/LinearProgressBar";
+import StyledList from "components/Statistics/StyledList";
 import { defaultWritingSystem } from "types/writingSystem";
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    width: "100%",
-    maxWidth: "auto",
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
 
 export default function ProgressBarComponent(): ReactElement {
   const { t } = useTranslation();
-  const classes = useStyles();
   const [progressRatio, setProgressRatio] = useState<number>(0);
   const [totalDomainCount, setTotalDomainCount] = useState<number>(0);
   const [totalWordCount, setTotalWordCount] = useState<number>(0);
@@ -48,7 +39,7 @@ export default function ProgressBarComponent(): ReactElement {
   }, []);
 
   return (
-    <List className={classes.root}>
+    <StyledList>
       <ListItem>
         <ListItemText primary={t("statistics.domainProgress")} />
         <LinearProgressWithLabel value={progressRatio} />
@@ -65,6 +56,6 @@ export default function ProgressBarComponent(): ReactElement {
           primary={t("statistics.wordsCollected", { val: totalWordCount })}
         />
       </ListItem>
-    </List>
+    </StyledList>
   );
 }

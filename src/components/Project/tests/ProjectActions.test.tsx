@@ -37,7 +37,7 @@ describe("ProjectActions", () => {
       });
       const id = "new-id";
       await store.dispatch(asyncUpdateCurrentProject({ ...proj, id }));
-      expect(mockUpdateProject).toBeCalledTimes(1);
+      expect(mockUpdateProject).toHaveBeenCalledTimes(1);
       const { project, users } = store.getState().currentProjectState;
       expect(project.id).toEqual(id);
       expect(users).toHaveLength(0);
@@ -51,7 +51,7 @@ describe("ProjectActions", () => {
       });
       const name = "new-name";
       await store.dispatch(asyncUpdateCurrentProject({ ...proj, name }));
-      expect(mockUpdateProject).toBeCalledTimes(1);
+      expect(mockUpdateProject).toHaveBeenCalledTimes(1);
       const { project, users } = store.getState().currentProjectState;
       expect(project.name).toEqual(name);
       expect(users).toHaveLength(1);
@@ -96,7 +96,7 @@ describe("ProjectActions", () => {
       const proj: Project = { ...newProject(), id: mockProjId };
       const store = setupStore();
       store.dispatch(setNewCurrentProject(proj));
-      expect(mockUpdateProject).not.toBeCalled();
+      expect(mockUpdateProject).not.toHaveBeenCalled();
       const { project } = store.getState().currentProjectState;
       expect(project.id).toEqual(mockProjId);
     });
