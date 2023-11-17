@@ -28,6 +28,7 @@ import {
   CancelConfirmDialog,
   EditTextDialog,
   SubmitTextDialog,
+  UploadImageDialog,
 } from "components/Dialogs";
 
 export default function ProjectSpeakers(props: {
@@ -104,16 +105,36 @@ function SpeakerListItem(props: ProjSpeakerProps): ReactElement {
           textId="projectSettings.speaker.consent.record"
         />
       </ListItemIcon>
-      <ListItemIcon onClick={() => {}}>
-        <IconButtonWithTooltip
-          buttonId={`project-speaker-${id}-upload`}
-          icon={<AddPhotoAlternate />}
-          textId="projectSettings.speaker.consent.upload"
-        />
-      </ListItemIcon>
+      <UploadConsentImageIcon {...props} />
       <EditSpeakerNameIcon {...props} />
       <DeleteSpeakerIcon {...props} />
     </ListItem>
+  );
+}
+
+function UploadConsentImageIcon(props: ProjSpeakerProps): ReactElement {
+  const [open, setOpen] = useState(false);
+
+  const handleUploadImage = async (imgFile: File): Promise<void> => {
+    //TODO await (props.speaker.id, name, props.projectId);
+    await props.refresh();
+  };
+
+  return (
+    <ListItemIcon>
+      <IconButtonWithTooltip
+        buttonId={`project-speaker-${props.speaker.id}-upload`}
+        icon={<AddPhotoAlternate />}
+        onClick={() => setOpen(true)}
+        textId="projectSettings.speaker.consent.upload"
+      />
+      <UploadImageDialog
+        close={() => setOpen(false)}
+        open={open}
+        titleId="projectSettings.speaker.consent.upload"
+        uploadImage={handleUploadImage}
+      />
+    </ListItemIcon>
   );
 }
 

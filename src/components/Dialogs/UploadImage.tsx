@@ -1,19 +1,18 @@
 import { Grid, Typography } from "@mui/material";
-import React, { ReactElement, useState } from "react";
+import { FormEvent, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { uploadAvatar } from "backend";
-import { getUserId } from "backend/localStorage";
 import { FileInputButton, LoadingDoneButton } from "components/Buttons";
 
-interface AvatarUploadProps {
+interface ImageUploadProps {
   doneCallback?: () => void;
+  uploadImage: (imgFile: File) => Promise<void>;
 }
 
 /**
- * Allows the current user to select an image and upload as their avatar
+ * Allows the current user to select an image and upload it
  */
-export default function AvatarUpload(props: AvatarUploadProps): ReactElement {
+export default function ImageUpload(props: ImageUploadProps): ReactElement {
   const [file, setFile] = useState<File>();
   const [filename, setFilename] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -27,12 +26,13 @@ export default function AvatarUpload(props: AvatarUploadProps): ReactElement {
     }
   }
 
-  async function upload(e: React.FormEvent<EventTarget>): Promise<void> {
+  async function upload(e: FormEvent<EventTarget>): Promise<void> {
     e.preventDefault();
     e.stopPropagation();
     if (file) {
       setLoading(true);
-      await uploadAvatar(getUserId(), file)
+      await props
+        .uploadImage(file)
         .then(onDone)
         .catch(() => setLoading(false));
     }
@@ -66,7 +66,7 @@ export default function AvatarUpload(props: AvatarUploadProps): ReactElement {
           <LoadingDoneButton
             loading={loading}
             done={done}
-            buttonProps={{ type: "submit", id: "avatar-upload-save" }}
+            buttonProps={{ type: "submit", id: "image-upload-save" }}
           >
             {t("buttons.save")}
           </LoadingDoneButton>

@@ -3,6 +3,7 @@ import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 import DeleteEditTextDialog from "components/Dialogs/DeleteEditTextDialog";
 import EditTextDialog from "components/Dialogs/EditTextDialog";
 import SubmitTextDialog from "components/Dialogs/SubmitTextDialog";
+import UploadImageDialog from "components/Dialogs/UploadImageDialog";
 
 export {
   ButtonConfirmation,
@@ -10,4 +11,5 @@ export {
   DeleteEditTextDialog,
   EditTextDialog,
   SubmitTextDialog,
+  UploadImageDialog,
 };
