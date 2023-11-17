@@ -49,7 +49,7 @@ describe("UserStatistics", () => {
 
   it("useEffect hook was called", async () => {
     //Verify the mock function called
-    expect(mockGetProjectId).toBeCalled();
+    expect(mockGetProjectId).toHaveBeenCalled();
 
     //Verify ListItem for the DomainSenseUserCount object is present
     const newSenDomCountList = testRenderer.root.findAllByType(ListItem);

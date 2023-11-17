@@ -408,8 +408,8 @@ export default function DataEntryTable(
       selectedDup: id
         ? prev.suggestedDups.find((w) => w.id === id)
         : id === ""
-        ? newWord(prev.newVern)
-        : undefined,
+          ? newWord(prev.newVern)
+          : undefined,
     }));
   };
 

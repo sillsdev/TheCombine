@@ -1,5 +1,4 @@
-import { render } from "@testing-library/react";
-import { renderHook } from "@testing-library/react-hooks";
+import { render, renderHook } from "@testing-library/react";
 import { Key } from "ts-key-enum";
 
 import "tests/reactI18nextMock";
