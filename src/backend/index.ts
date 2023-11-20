@@ -8,7 +8,6 @@ import { BASE_PATH } from "api/base";
 import {
   BannerType,
   ChartRootData,
-  ConsentType,
   EmailInviteStatus,
   MergeUndoIds,
   MergeWords,
@@ -144,9 +143,8 @@ export async function deleteAudio(
 }
 
 // Use of the returned url acts as an HttpGet.
-export function getAudioUrl(id: string, fileName: string): string {
-  const projId = LocalStorage.getProjectId();
-  return `${apiBaseURL}/projects/${projId}/words/${id}/audio/download/${fileName}`;
+export function getAudioUrl(wordId: string, fileName: string): string {
+  return `${apiBaseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/download/${fileName}`;
 }
 
 /* AvatarController.cs */
@@ -496,12 +494,9 @@ export async function deleteSpeaker(
 
 /** Remove consent of specified speaker (in current project if no projectId given).
  * Returns id of updated speaker. */
-export async function removeConsent(
-  speakerId: string,
-  projectId?: string
-): Promise<string> {
-  projectId = projectId || LocalStorage.getProjectId();
-  const params = { projectId, speakerId };
+export async function removeConsent(speaker: Speaker): Promise<string> {
+  const projectId = speaker.projectId || LocalStorage.getProjectId();
+  const params = { projectId, speakerId: speaker.id };
   return (await speakerApi.removeConsent(params, defaultOptions())).data;
 }
 
@@ -521,24 +516,24 @@ export async function updateSpeakerName(
  * Returns updated speaker. */
 export async function uploadConsent(
   speaker: Speaker,
-  file: File,
-  fileType: ConsentType
+  file: File
 ): Promise<Speaker> {
   const { id, projectId } = speaker;
   const params = { projectId, speakerId: id, ...fileUpload(file) };
   const headers = { ...authHeader(), "content-type": "application/json" };
-  const response =
-    fileType === ConsentType.Audio
-      ? await speakerApi.uploadConsentAudio(params, { headers })
-      : await speakerApi.uploadConsentImage(params, { headers });
-  return response.data;
+  return (await speakerApi.uploadConsent(params, { headers })).data;
+}
+
+/** Use of the returned url acts as an HttpGet. */
+export function getConsentUrl(speaker: Speaker): string {
+  return `${apiBaseURL}/projects/${speaker.projectId}/speakers/consent/${speaker.id}`;
 }
 
 /** Returns the string to display the image inline in Base64 <img src= */
 export async function getConsentImageSrc(speaker: Speaker): Promise<string> {
   const params = { projectId: speaker.projectId, speakerId: speaker.id };
   const options = { headers: authHeader(), responseType: "arraybuffer" };
-  const resp = await speakerApi.downloadConsentImage(params, options);
+  const resp = await speakerApi.downloadConsent(params, options);
   const image = Base64.btoa(
     new Uint8Array(resp.data).reduce(
       (data, byte) => data + String.fromCharCode(byte),

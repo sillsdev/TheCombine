@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { Consent } from "./consent";
+import { ConsentType } from "./consent-type";
 
 /**
  *
@@ -40,8 +40,8 @@ export interface Speaker {
   name: string;
   /**
    *
-   * @type {Consent}
+   * @type {ConsentType}
    * @memberof Speaker
    */
-  consent: Consent;
+  consent: ConsentType;
 }

@@ -1,7 +1,6 @@
 export * from "./autocomplete-setting";
 export * from "./banner-type";
 export * from "./chart-root-data";
-export * from "./consent";
 export * from "./consent-type";
 export * from "./credentials";
 export * from "./custom-field";

@@ -25,7 +25,6 @@ models/autocomplete-setting.ts
 models/banner-type.ts
 models/chart-root-data.ts
 models/consent-type.ts
-models/consent.ts
 models/credentials.ts
 models/custom-field.ts
 models/dataset.ts

@@ -197,17 +197,17 @@ export const SpeakerApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    downloadConsentImage: async (
+    downloadConsent: async (
       speakerId: string,
       projectId: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'speakerId' is not null or undefined
-      assertParamExists("downloadConsentImage", "speakerId", speakerId);
+      assertParamExists("downloadConsent", "speakerId", speakerId);
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("downloadConsentImage", "projectId", projectId);
+      assertParamExists("downloadConsent", "projectId", projectId);
       const localVarPath =
-        `/v1/projects/{projectId}/speakers/downloadconsentimage/{speakerId}`
+        `/v1/projects/{projectId}/speakers/consent/{speakerId}`
           .replace(`{${"speakerId"}}`, encodeURIComponent(String(speakerId)))
           .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)));
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -349,7 +349,7 @@ export const SpeakerApiAxiosParamCreator = function (
       // verify required parameter 'speakerId' is not null or undefined
       assertParamExists("removeConsent", "speakerId", speakerId);
       const localVarPath =
-        `/v1/projects/{projectId}/speakers/removeconsent/{speakerId}`
+        `/v1/projects/{projectId}/speakers/consent/{speakerId}`
           .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
           .replace(`{${"speakerId"}}`, encodeURIComponent(String(speakerId)));
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -360,7 +360,7 @@ export const SpeakerApiAxiosParamCreator = function (
       }
 
       const localVarRequestOptions = {
-        method: "GET",
+        method: "DELETE",
         ...baseOptions,
         ...options,
       };
@@ -445,7 +445,7 @@ export const SpeakerApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    uploadConsentAudio: async (
+    uploadConsent: async (
       projectId: string,
       speakerId: string,
       file: any,
@@ -454,96 +454,17 @@ export const SpeakerApiAxiosParamCreator = function (
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("uploadConsentAudio", "projectId", projectId);
+      assertParamExists("uploadConsent", "projectId", projectId);
       // verify required parameter 'speakerId' is not null or undefined
-      assertParamExists("uploadConsentAudio", "speakerId", speakerId);
+      assertParamExists("uploadConsent", "speakerId", speakerId);
       // verify required parameter 'file' is not null or undefined
-      assertParamExists("uploadConsentAudio", "file", file);
+      assertParamExists("uploadConsent", "file", file);
       // verify required parameter 'name' is not null or undefined
-      assertParamExists("uploadConsentAudio", "name", name);
+      assertParamExists("uploadConsent", "name", name);
       // verify required parameter 'filePath' is not null or undefined
-      assertParamExists("uploadConsentAudio", "filePath", filePath);
+      assertParamExists("uploadConsent", "filePath", filePath);
       const localVarPath =
-        `/v1/projects/{projectId}/speakers/uploadconsentaudio/{speakerId}`
-          .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
-          .replace(`{${"speakerId"}}`, encodeURIComponent(String(speakerId)));
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "POST",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-      const localVarFormParams = new ((configuration &&
-        configuration.formDataCtor) ||
-        FormData)();
-
-      if (file !== undefined) {
-        localVarFormParams.append("File", file as any);
-      }
-
-      if (name !== undefined) {
-        localVarFormParams.append("Name", name as any);
-      }
-
-      if (filePath !== undefined) {
-        localVarFormParams.append("FilePath", filePath as any);
-      }
-
-      localVarHeaderParameter["Content-Type"] = "multipart/form-data";
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-      localVarRequestOptions.data = localVarFormParams;
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {string} speakerId
-     * @param {any} file
-     * @param {string} name
-     * @param {string} filePath
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    uploadConsentImage: async (
-      projectId: string,
-      speakerId: string,
-      file: any,
-      name: string,
-      filePath: string,
-      options: any = {}
-    ): Promise<RequestArgs> => {
-      // verify required parameter 'projectId' is not null or undefined
-      assertParamExists("uploadConsentImage", "projectId", projectId);
-      // verify required parameter 'speakerId' is not null or undefined
-      assertParamExists("uploadConsentImage", "speakerId", speakerId);
-      // verify required parameter 'file' is not null or undefined
-      assertParamExists("uploadConsentImage", "file", file);
-      // verify required parameter 'name' is not null or undefined
-      assertParamExists("uploadConsentImage", "name", name);
-      // verify required parameter 'filePath' is not null or undefined
-      assertParamExists("uploadConsentImage", "filePath", filePath);
-      const localVarPath =
-        `/v1/projects/{projectId}/speakers/uploadconsentimage/{speakerId}`
+        `/v1/projects/{projectId}/speakers/consent/{speakerId}`
           .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
           .replace(`{${"speakerId"}}`, encodeURIComponent(String(speakerId)));
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -686,19 +607,18 @@ export const SpeakerApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async downloadConsentImage(
+    async downloadConsent(
       speakerId: string,
       projectId: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
     > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.downloadConsentImage(
-          speakerId,
-          projectId,
-          options
-        );
+      const localVarAxiosArgs = await localVarAxiosParamCreator.downloadConsent(
+        speakerId,
+        projectId,
+        options
+      );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -819,7 +739,7 @@ export const SpeakerApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async uploadConsentAudio(
+    async uploadConsent(
       projectId: string,
       speakerId: string,
       file: any,
@@ -829,51 +749,14 @@ export const SpeakerApiFp = function (configuration?: Configuration) {
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Speaker>
     > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.uploadConsentAudio(
-          projectId,
-          speakerId,
-          file,
-          name,
-          filePath,
-          options
-        );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
+      const localVarAxiosArgs = await localVarAxiosParamCreator.uploadConsent(
+        projectId,
+        speakerId,
+        file,
+        name,
+        filePath,
+        options
       );
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {string} speakerId
-     * @param {any} file
-     * @param {string} name
-     * @param {string} filePath
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async uploadConsentImage(
-      projectId: string,
-      speakerId: string,
-      file: any,
-      name: string,
-      filePath: string,
-      options?: any
-    ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Speaker>
-    > {
-      const localVarAxiosArgs =
-        await localVarAxiosParamCreator.uploadConsentImage(
-          projectId,
-          speakerId,
-          file,
-          name,
-          filePath,
-          options
-        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -948,13 +831,13 @@ export const SpeakerApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    downloadConsentImage(
+    downloadConsent(
       speakerId: string,
       projectId: string,
       options?: any
     ): AxiosPromise<any> {
       return localVarFp
-        .downloadConsentImage(speakerId, projectId, options)
+        .downloadConsent(speakerId, projectId, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1031,7 +914,7 @@ export const SpeakerApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    uploadConsentAudio(
+    uploadConsent(
       projectId: string,
       speakerId: string,
       file: any,
@@ -1040,29 +923,7 @@ export const SpeakerApiFactory = function (
       options?: any
     ): AxiosPromise<Speaker> {
       return localVarFp
-        .uploadConsentAudio(projectId, speakerId, file, name, filePath, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @param {string} projectId
-     * @param {string} speakerId
-     * @param {any} file
-     * @param {string} name
-     * @param {string} filePath
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    uploadConsentImage(
-      projectId: string,
-      speakerId: string,
-      file: any,
-      name: string,
-      filePath: string,
-      options?: any
-    ): AxiosPromise<Speaker> {
-      return localVarFp
-        .uploadConsentImage(projectId, speakerId, file, name, filePath, options)
+        .uploadConsent(projectId, speakerId, file, name, filePath, options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -1125,22 +986,22 @@ export interface SpeakerApiDeleteSpeakerRequest {
 }
 
 /**
- * Request parameters for downloadConsentImage operation in SpeakerApi.
+ * Request parameters for downloadConsent operation in SpeakerApi.
  * @export
- * @interface SpeakerApiDownloadConsentImageRequest
+ * @interface SpeakerApiDownloadConsentRequest
  */
-export interface SpeakerApiDownloadConsentImageRequest {
+export interface SpeakerApiDownloadConsentRequest {
   /**
    *
    * @type {string}
-   * @memberof SpeakerApiDownloadConsentImage
+   * @memberof SpeakerApiDownloadConsent
    */
   readonly speakerId: string;
 
   /**
    *
    * @type {string}
-   * @memberof SpeakerApiDownloadConsentImage
+   * @memberof SpeakerApiDownloadConsent
    */
   readonly projectId: string;
 }
@@ -1230,85 +1091,43 @@ export interface SpeakerApiUpdateSpeakerNameRequest {
 }
 
 /**
- * Request parameters for uploadConsentAudio operation in SpeakerApi.
+ * Request parameters for uploadConsent operation in SpeakerApi.
  * @export
- * @interface SpeakerApiUploadConsentAudioRequest
+ * @interface SpeakerApiUploadConsentRequest
  */
-export interface SpeakerApiUploadConsentAudioRequest {
+export interface SpeakerApiUploadConsentRequest {
   /**
    *
    * @type {string}
-   * @memberof SpeakerApiUploadConsentAudio
+   * @memberof SpeakerApiUploadConsent
    */
   readonly projectId: string;
 
   /**
    *
    * @type {string}
-   * @memberof SpeakerApiUploadConsentAudio
+   * @memberof SpeakerApiUploadConsent
    */
   readonly speakerId: string;
 
   /**
    *
    * @type {any}
-   * @memberof SpeakerApiUploadConsentAudio
+   * @memberof SpeakerApiUploadConsent
    */
   readonly file: any;
 
   /**
    *
    * @type {string}
-   * @memberof SpeakerApiUploadConsentAudio
+   * @memberof SpeakerApiUploadConsent
    */
   readonly name: string;
 
   /**
    *
    * @type {string}
-   * @memberof SpeakerApiUploadConsentAudio
-   */
-  readonly filePath: string;
-}
-
-/**
- * Request parameters for uploadConsentImage operation in SpeakerApi.
- * @export
- * @interface SpeakerApiUploadConsentImageRequest
- */
-export interface SpeakerApiUploadConsentImageRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof SpeakerApiUploadConsentImage
-   */
-  readonly projectId: string;
-
-  /**
-   *
-   * @type {string}
-   * @memberof SpeakerApiUploadConsentImage
-   */
-  readonly speakerId: string;
-
-  /**
-   *
-   * @type {any}
-   * @memberof SpeakerApiUploadConsentImage
-   */
-  readonly file: any;
-
-  /**
-   *
-   * @type {string}
-   * @memberof SpeakerApiUploadConsentImage
-   */
-  readonly name: string;
-
-  /**
-   *
-   * @type {string}
-   * @memberof SpeakerApiUploadConsentImage
+   * @memberof SpeakerApiUploadConsent
    */
   readonly filePath: string;
 }
@@ -1378,17 +1197,17 @@ export class SpeakerApi extends BaseAPI {
 
   /**
    *
-   * @param {SpeakerApiDownloadConsentImageRequest} requestParameters Request parameters.
+   * @param {SpeakerApiDownloadConsentRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof SpeakerApi
    */
-  public downloadConsentImage(
-    requestParameters: SpeakerApiDownloadConsentImageRequest,
+  public downloadConsent(
+    requestParameters: SpeakerApiDownloadConsentRequest,
     options?: any
   ) {
     return SpeakerApiFp(this.configuration)
-      .downloadConsentImage(
+      .downloadConsent(
         requestParameters.speakerId,
         requestParameters.projectId,
         options
@@ -1475,40 +1294,17 @@ export class SpeakerApi extends BaseAPI {
 
   /**
    *
-   * @param {SpeakerApiUploadConsentAudioRequest} requestParameters Request parameters.
+   * @param {SpeakerApiUploadConsentRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof SpeakerApi
    */
-  public uploadConsentAudio(
-    requestParameters: SpeakerApiUploadConsentAudioRequest,
+  public uploadConsent(
+    requestParameters: SpeakerApiUploadConsentRequest,
     options?: any
   ) {
     return SpeakerApiFp(this.configuration)
-      .uploadConsentAudio(
-        requestParameters.projectId,
-        requestParameters.speakerId,
-        requestParameters.file,
-        requestParameters.name,
-        requestParameters.filePath,
-        options
-      )
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @param {SpeakerApiUploadConsentImageRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof SpeakerApi
-   */
-  public uploadConsentImage(
-    requestParameters: SpeakerApiUploadConsentImageRequest,
-    options?: any
-  ) {
-    return SpeakerApiFp(this.configuration)
-      .uploadConsentImage(
+      .uploadConsent(
         requestParameters.projectId,
         requestParameters.speakerId,
         requestParameters.file,

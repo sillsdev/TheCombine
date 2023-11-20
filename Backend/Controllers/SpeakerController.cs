@@ -122,7 +122,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Removes consent of the <see cref="Speaker"/> for specified projectId and speakerId </summary>
         /// <returns> Id of updated Speaker </returns>
-        [HttpGet("removeconsent/{speakerId}", Name = "RemoveConsent")]
+        [HttpDelete("consent/{speakerId}", Name = "RemoveConsent")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> RemoveConsent(string projectId, string speakerId)
         {
@@ -141,22 +141,18 @@ namespace BackendFramework.Controllers
             }
 
             // Delete consent file
-            var filePath = speaker.Consent.FileName;
-            if (string.IsNullOrEmpty(filePath))
+            if (speaker.Consent is ConsentType.None)
             {
                 return StatusCode(StatusCodes.Status304NotModified, speakerId);
             }
-            if (speaker.Consent.FileType == ConsentType.Audio)
+            var path = FileStorage.GenerateConsentFilePath(speaker.Id);
+            if (IO.File.Exists(path))
             {
-                filePath = FileStorage.GenerateAudioFilePath(projectId, filePath);
-            }
-            if (IO.File.Exists(filePath))
-            {
-                IO.File.Delete(filePath);
+                IO.File.Delete(path);
             }
 
             // Update speaker and return result with id
-            speaker.Consent = new();
+            speaker.Consent = ConsentType.None;
             return await _speakerRepo.Update(speakerId, speaker) switch
             {
                 ResultOfUpdate.NotFound => NotFound(speakerId),
@@ -195,16 +191,12 @@ namespace BackendFramework.Controllers
             };
         }
 
-        /// <summary>
-        /// Adds an audio consent from <see cref="FileUpload"/>
-        /// locally to ~/.CombineFiles/{ProjectId}/Import/ExtractedLocation/Lift/audio
-        /// and updates the <see cref="Consent"/> of the specified <see cref="Speaker"/>
-        /// </summary>
+        /// <summary> Saves a consent file locally and updates the specified <see cref="Speaker"/> </summary>
         /// <returns> Updated speaker </returns>
-        [HttpPost("uploadconsentaudio/{speakerId}", Name = "UploadConsentAudio")]
+        [HttpPost("consent/{speakerId}", Name = "UploadConsent")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Speaker))]
-        public async Task<IActionResult> UploadConsentAudio(
-            string projectId, string speakerId, [FromForm] FileUpload fileUpload)
+        public async Task<IActionResult> UploadConsent(
+            string projectId, string speakerId, [FromForm] FileUpload upload)
         {
             // Sanitize user input
             try
@@ -231,7 +223,7 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure file is valid
-            var file = fileUpload.File;
+            var file = upload.File;
             if (file is null)
             {
                 return BadRequest("Null File");
@@ -240,79 +232,27 @@ namespace BackendFramework.Controllers
             {
                 return BadRequest("Empty File");
             }
-
-            // Copy file data to a local file with speakerId-dependent name
-            var path = FileStorage.GenerateAudioFilePathForWord(projectId, speakerId);
-            await using (var fs = new IO.FileStream(path, IO.FileMode.Create))
+            if (file.ContentType.Contains("audio"))
             {
-                await file.CopyToAsync(fs);
+                speaker.Consent = ConsentType.Audio;
             }
-
-            // Update speaker consent and return result with speaker
-            var fileName = IO.Path.GetFileName(path);
-            speaker.Consent = new() { FileName = fileName, FileType = ConsentType.Audio };
-            return await _speakerRepo.Update(speakerId, speaker) switch
+            else if (file.ContentType.Contains("image"))
             {
-                ResultOfUpdate.NotFound => NotFound(speaker),
-                _ => Ok(speaker),
-            };
-        }
-
-        /// <summary>
-        /// Adds an image consent from <see cref="FileUpload"/>
-        /// locally to ~/.CombineFiles/{ProjectId}/Avatars
-        /// and updates the <see cref="Consent"/> of the specified <see cref="Speaker"/>
-        /// </summary>
-        /// <returns> Updated speaker </returns>
-        [HttpPost("uploadconsentimage/{speakerId}", Name = "UploadConsentImage")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Speaker))]
-        public async Task<IActionResult> UploadConsentImage(
-            string projectId, string speakerId, [FromForm] FileUpload fileUpload)
-        {
-            // Sanitize user input
-            try
-            {
-                projectId = Sanitization.SanitizeId(projectId);
-                speakerId = Sanitization.SanitizeId(speakerId);
+                speaker.Consent = ConsentType.Image;
             }
-            catch
+            else
             {
-                return new UnsupportedMediaTypeResult();
-            }
-
-            // Check permissions
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
-            {
-                return Forbid();
-            }
-
-            // Ensure the speaker exists
-            var speaker = await _speakerRepo.GetSpeaker(projectId, speakerId);
-            if (speaker is null)
-            {
-                return NotFound(speakerId);
-            }
-
-            // Ensure file is valid
-            var file = fileUpload.File;
-            if (file is null)
-            {
-                return BadRequest("Null File");
-            }
-            if (file.Length == 0)
-            {
-                return BadRequest("Empty File");
+                return BadRequest("File should be audio or image");
             }
 
             // Copy file data to a new local file
-            var path = FileStorage.GenerateAvatarFilePath(speakerId);
+            var path = FileStorage.GenerateConsentFilePath(speakerId);
             await using (var fs = new IO.FileStream(path, IO.FileMode.OpenOrCreate))
             {
                 await file.CopyToAsync(fs);
             }
 
-            // Update speaker consent and return result with speaker
-            speaker.Consent = new() { FileName = path, FileType = ConsentType.Image };
+            // Update and return speaker
             return await _speakerRepo.Update(speakerId, speaker) switch
             {
                 ResultOfUpdate.NotFound => NotFound(speaker),
@@ -321,10 +261,11 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Get speaker's consent </summary>
-        /// <returns> Stream of local image file </returns>
-        [HttpGet("downloadconsentimage/{speakerId}", Name = "DownloadConsentImage")]
+        /// <returns> Stream of local audio/image file </returns>
+        [AllowAnonymous]
+        [HttpGet("consent/{speakerId}", Name = "DownloadConsent")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
-        public IActionResult DownloadConsentImage(string speakerId)
+        public IActionResult DownloadConsent(string speakerId)
         {
             // SECURITY: Omitting authentication so the frontend can use the API endpoint directly as a URL.
             // if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
@@ -333,7 +274,7 @@ namespace BackendFramework.Controllers
             // }
 
             // Ensure file exists
-            var path = FileStorage.GenerateAvatarFilePath(speakerId);
+            var path = FileStorage.GenerateConsentFilePath(speakerId);
             if (!IO.File.Exists(path))
             {
                 return NotFound(speakerId);

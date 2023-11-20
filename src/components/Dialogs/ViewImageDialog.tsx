@@ -1,9 +1,8 @@
 import { Dialog, DialogContent, DialogTitle, Grid } from "@mui/material";
-import { ReactElement, useState } from "react";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { CloseButton, DeleteButtonWithDialog } from "components/Buttons";
-import { CancelConfirmDialog } from "components/Dialogs";
 
 interface ViewImageDialogProps {
   close: () => void;
@@ -18,12 +17,9 @@ interface ViewImageDialogProps {
 export default function ViewImageDialog(
   props: ViewImageDialogProps
 ): ReactElement {
-  const [dialogOpen, setDialogOpen] = useState(false);
-
   const { t } = useTranslation();
 
   const handleDelete = async (): Promise<void> => {
-    setDialogOpen(false);
     if (props.deleteImage) {
       await props.deleteImage();
     }
@@ -40,15 +36,9 @@ export default function ViewImageDialog(
         <img src={props.imgSrc || undefined} />
         <Grid container justifyContent="flex-end">
           <Grid item>
-            <CancelConfirmDialog
-              open={dialogOpen}
-              textId={props.deleteTextId ?? ""}
-              handleCancel={() => setDialogOpen(false)}
-              handleConfirm={handleDelete}
-            />
             <DeleteButtonWithDialog
               buttonId={props.deleteButtonId || "delete-image"}
-              delete={() => setDialogOpen(true)}
+              delete={handleDelete}
               textId={props.deleteTextId ?? ""}
             />
           </Grid>

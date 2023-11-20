@@ -18,6 +18,7 @@
  * @enum {string}
  */
 export enum ConsentType {
+  None = "None",
   Audio = "Audio",
   Image = "Image",
 }
