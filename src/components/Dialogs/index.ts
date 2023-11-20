@@ -5,6 +5,7 @@ import EditTextDialog from "components/Dialogs/EditTextDialog";
 import RecordAudioDialog from "components/Dialogs/RecordAudioDialog";
 import SubmitTextDialog from "components/Dialogs/SubmitTextDialog";
 import UploadImageDialog from "components/Dialogs/UploadImageDialog";
+import ViewImageDialog from "components/Dialogs/ViewImageDialog";
 
 export {
   ButtonConfirmation,
@@ -14,4 +15,5 @@ export {
   RecordAudioDialog,
   SubmitTextDialog,
   UploadImageDialog,
+  ViewImageDialog,
 };

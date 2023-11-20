@@ -293,7 +293,7 @@ namespace BackendFramework.Controllers
                 return NotFound(speakerId);
             }
 
-            // Ensure file is not empty.
+            // Ensure file is valid
             var file = fileUpload.File;
             if (file is null)
             {
@@ -318,6 +318,29 @@ namespace BackendFramework.Controllers
                 ResultOfUpdate.NotFound => NotFound(speaker),
                 _ => Ok(speaker),
             };
+        }
+
+        /// <summary> Get speaker's consent </summary>
+        /// <returns> Stream of local image file </returns>
+        [HttpGet("downloadconsentimage/{speakerId}", Name = "DownloadConsentImage")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
+        public IActionResult DownloadConsentImage(string speakerId)
+        {
+            // SECURITY: Omitting authentication so the frontend can use the API endpoint directly as a URL.
+            // if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            // {
+            //     return Forbid();
+            // }
+
+            // Ensure file exists
+            var path = FileStorage.GenerateAvatarFilePath(speakerId);
+            if (!IO.File.Exists(path))
+            {
+                return NotFound(speakerId);
+            }
+
+            // Return file as stream
+            return File(IO.File.OpenRead(path), "application/octet-stream");
         }
     }
 }

@@ -1,8 +1,8 @@
 import { Add, Delete, RestoreFromTrash } from "@mui/icons-material";
-import { Chip, IconButton, Tooltip } from "@mui/material";
+import { Chip } from "@mui/material";
 import { ReactElement } from "react";
-import { useTranslation } from "react-i18next";
 
+import { IconButtonWithTooltip } from "components/Buttons";
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesComponent/CellColumns";
 import AlignedList from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/AlignedList";
 import { ReviewEntriesSense } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
@@ -12,8 +12,6 @@ interface SenseCellProps extends FieldParameterStandard {
 }
 
 export default function SenseCell(props: SenseCellProps): ReactElement {
-  const { t } = useTranslation();
-
   function addSense(): ReactElement {
     const senses = [...props.rowData.senses, new ReviewEntriesSense()];
     return (
@@ -32,22 +30,16 @@ export default function SenseCell(props: SenseCellProps): ReactElement {
     <AlignedList
       listId={`delete${props.rowData.id}`}
       contents={props.rowData.senses.map((sense) => (
-        <Tooltip
-          title={sense.protected ? t("reviewEntries.deleteDisabled") : ""}
-          placement={document.body.dir === "rtl" ? "left" : "right"}
+        <IconButtonWithTooltip
+          buttonId={`sense-${sense.guid}-delete`}
+          icon={sense.deleted ? <RestoreFromTrash /> : <Delete />}
           key={sense.guid}
-        >
-          <span>
-            <IconButton
-              size="small"
-              onClick={() => props.delete!(sense.guid)}
-              id={`sense-${sense.guid}-delete`}
-              disabled={sense.protected}
-            >
-              {sense.deleted ? <RestoreFromTrash /> : <Delete />}
-            </IconButton>
-          </span>
-        </Tooltip>
+          onClick={
+            sense.protected ? undefined : () => props.delete!(sense.guid)
+          }
+          size="small"
+          textId={sense.protected ? "reviewEntries.deleteDisabled" : undefined}
+        />
       ))}
       bottomCell={addSense()}
     />

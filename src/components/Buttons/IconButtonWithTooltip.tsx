@@ -6,7 +6,7 @@ interface IconButtonWithTooltipProps {
   icon: ReactElement;
   text?: ReactNode;
   textId?: string;
-  small?: boolean;
+  size?: "large" | "medium" | "small";
   onClick?: () => void;
   buttonId: string;
   side?: "bottom" | "left" | "right" | "top";
@@ -25,7 +25,7 @@ export default function IconButtonWithTooltip(
       <span>
         <IconButton
           onClick={props.onClick}
-          size={props.small ? "small" : "medium"}
+          size={props.size || "medium"}
           id={props.buttonId}
           disabled={!props.onClick}
         >

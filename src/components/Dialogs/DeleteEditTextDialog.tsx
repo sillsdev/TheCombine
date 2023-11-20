@@ -97,7 +97,7 @@ export default function DeleteEditTextDialog(
         <Tooltip title={t("buttons.cancel")} placement={"left"}>
           <IconButton
             size="small"
-            aria-label="cancel"
+            aria-label="close"
             onClick={onCancel}
             style={{ position: "absolute", right: 4, top: 4 }}
           >

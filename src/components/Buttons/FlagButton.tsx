@@ -52,7 +52,7 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
         }
         text={text}
         textId={active ? "flags.edit" : "flags.add"}
-        small
+        size="small"
         onClick={
           props.updateFlag ? () => setOpen(true) : active ? () => {} : undefined
         }

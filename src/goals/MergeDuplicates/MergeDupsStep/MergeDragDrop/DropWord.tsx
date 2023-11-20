@@ -90,9 +90,9 @@ export default function DropWord(props: DropWordProps): ReactElement {
               {protectedWithOneChild && (
                 <IconButtonWithTooltip
                   icon={<WarningOutlined />}
-                  textId={"mergeDups.helpText.protectedWord"}
-                  side={"top"}
-                  small
+                  side="top"
+                  size="small"
+                  textId="mergeDups.helpText.protectedWord"
                   buttonId={`word-${props.wordId}-protected`}
                 />
               )}

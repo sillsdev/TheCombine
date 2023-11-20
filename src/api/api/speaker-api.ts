@@ -192,6 +192,55 @@ export const SpeakerApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {string} speakerId
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    downloadConsentImage: async (
+      speakerId: string,
+      projectId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'speakerId' is not null or undefined
+      assertParamExists("downloadConsentImage", "speakerId", speakerId);
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("downloadConsentImage", "projectId", projectId);
+      const localVarPath =
+        `/v1/projects/{projectId}/speakers/downloadconsentimage/{speakerId}`
+          .replace(`{${"speakerId"}}`, encodeURIComponent(String(speakerId)))
+          .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)));
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @param {string} projectId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -632,6 +681,33 @@ export const SpeakerApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {string} speakerId
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async downloadConsentImage(
+      speakerId: string,
+      projectId: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.downloadConsentImage(
+          speakerId,
+          projectId,
+          options
+        );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
      * @param {string} projectId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -867,6 +943,22 @@ export const SpeakerApiFactory = function (
     },
     /**
      *
+     * @param {string} speakerId
+     * @param {string} projectId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    downloadConsentImage(
+      speakerId: string,
+      projectId: string,
+      options?: any
+    ): AxiosPromise<any> {
+      return localVarFp
+        .downloadConsentImage(speakerId, projectId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {string} projectId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1030,6 +1122,27 @@ export interface SpeakerApiDeleteSpeakerRequest {
    * @memberof SpeakerApiDeleteSpeaker
    */
   readonly speakerId: string;
+}
+
+/**
+ * Request parameters for downloadConsentImage operation in SpeakerApi.
+ * @export
+ * @interface SpeakerApiDownloadConsentImageRequest
+ */
+export interface SpeakerApiDownloadConsentImageRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof SpeakerApiDownloadConsentImage
+   */
+  readonly speakerId: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof SpeakerApiDownloadConsentImage
+   */
+  readonly projectId: string;
 }
 
 /**
@@ -1258,6 +1371,26 @@ export class SpeakerApi extends BaseAPI {
       .deleteSpeaker(
         requestParameters.projectId,
         requestParameters.speakerId,
+        options
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {SpeakerApiDownloadConsentImageRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof SpeakerApi
+   */
+  public downloadConsentImage(
+    requestParameters: SpeakerApiDownloadConsentImageRequest,
+    options?: any
+  ) {
+    return SpeakerApiFp(this.configuration)
+      .downloadConsentImage(
+        requestParameters.speakerId,
+        requestParameters.projectId,
         options
       )
       .then((request) => request(this.axios, this.basePath));

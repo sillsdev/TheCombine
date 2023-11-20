@@ -144,8 +144,9 @@ export async function deleteAudio(
 }
 
 // Use of the returned url acts as an HttpGet.
-export function getAudioUrl(wordId: string, fileName: string): string {
-  return `${apiBaseURL}/projects/${LocalStorage.getProjectId()}/words/${wordId}/audio/download/${fileName}`;
+export function getAudioUrl(id: string, fileName: string): string {
+  const projId = LocalStorage.getProjectId();
+  return `${apiBaseURL}/projects/${projId}/words/${id}/audio/download/${fileName}`;
 }
 
 /* AvatarController.cs */
@@ -520,16 +521,31 @@ export async function updateSpeakerName(
  * Returns updated speaker. */
 export async function uploadConsent(
   speaker: Speaker,
-  file: File
+  file: File,
+  fileType: ConsentType
 ): Promise<Speaker> {
-  const { consent, id, projectId } = speaker;
+  const { id, projectId } = speaker;
   const params = { projectId, speakerId: id, ...fileUpload(file) };
   const headers = { ...authHeader(), "content-type": "application/json" };
   const response =
-    consent.fileType === ConsentType.Audio
+    fileType === ConsentType.Audio
       ? await speakerApi.uploadConsentAudio(params, { headers })
       : await speakerApi.uploadConsentImage(params, { headers });
   return response.data;
+}
+
+/** Returns the string to display the image inline in Base64 <img src= */
+export async function getConsentImageSrc(speaker: Speaker): Promise<string> {
+  const params = { projectId: speaker.projectId, speakerId: speaker.id };
+  const options = { headers: authHeader(), responseType: "arraybuffer" };
+  const resp = await speakerApi.downloadConsentImage(params, options);
+  const image = Base64.btoa(
+    new Uint8Array(resp.data).reduce(
+      (data, byte) => data + String.fromCharCode(byte),
+      ""
+    )
+  );
+  return `data:${resp.headers["content-type"].toLowerCase()};base64,${image}`;
 }
 
 /* StatisticsController.cs */

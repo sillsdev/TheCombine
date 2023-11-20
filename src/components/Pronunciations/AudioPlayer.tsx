@@ -22,9 +22,9 @@ import { themeColors } from "types/theme";
 interface PlayerProps {
   deleteAudio: (fileName: string) => void;
   fileName: string;
-  isPlaying?: boolean;
   onClick?: () => void;
   pronunciationUrl: string;
+  warningTextId?: string;
 }
 
 const iconStyle: CSSProperties = { color: themeColors.success };
@@ -141,7 +141,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
       </Menu>
       <ButtonConfirmation
         open={deleteConf}
-        textId="buttons.deletePermanently"
+        textId={props.warningTextId || "buttons.deletePermanently"}
         titleId="pronunciations.deleteRecording"
         onClose={() => setDeleteConf(false)}
         onConfirm={() => props.deleteAudio(props.fileName)}
