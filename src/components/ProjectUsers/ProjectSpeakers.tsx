@@ -81,6 +81,7 @@ function SpeakerListItem(props: ProjSpeakerProps): ReactElement {
         deleteAudio={() => removeConsent(id, projectId)}
         fileName={consent.fileName}
         pronunciationUrl={getAudioUrl(id, consent.fileName)}
+        size={"small"}
         warningTextId="projectSettings.speaker.consent.warning"
       />
     </ListItemIcon>

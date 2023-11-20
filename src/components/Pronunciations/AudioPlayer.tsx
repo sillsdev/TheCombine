@@ -24,6 +24,7 @@ interface PlayerProps {
   fileName: string;
   onClick?: () => void;
   pronunciationUrl: string;
+  size?: "large" | "medium" | "small";
   warningTextId?: string;
 }
 
@@ -106,7 +107,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
           onTouchEnd={enableContextMenu}
           aria-label="play"
           id={`audio-${props.fileName}`}
-          size="large"
+          size={props.size || "large"}
         >
           {isPlaying ? <Stop sx={iconStyle} /> : <PlayArrow sx={iconStyle} />}
         </IconButton>
