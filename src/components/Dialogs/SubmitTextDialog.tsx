@@ -25,9 +25,7 @@ interface EditTextDialogProps {
   textFieldId?: string;
 }
 
-/**
- * Dialog for editing text and confirm or cancel the edit
- */
+/** Dialog for submitting new text */
 export default function SubmitTextDialog(
   props: EditTextDialogProps
 ): ReactElement {
