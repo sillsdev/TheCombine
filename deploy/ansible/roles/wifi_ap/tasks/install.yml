@@ -51,13 +51,22 @@
     mode: 0644
   notify: Restart create_ap
 
-- name: Set /etc/hosts to redirect thecombine to WiFi address
-  template:
-    src: etc_hosts.j2
-    dest: /etc/hosts
+- name: Update localhost name
+  lineinfile:
+    path: /etc/hosts
+    regexp: ^127\.0\.1\.1
+    state: present
+    line: 127.0.0.1 {{ ansible_hostname }}
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
+
+- name: Redirect traffic for The Combine to the AP gateway
+  lineinfile:
+    path: /etc/hosts
+    regexp: ^{{ ap_gateway }}
+    state: present
+    line: "{{ ap_gateway }} {{ ap_hostname }}.{{ ap_domain }} {{ ap_hostname }} rancher.{{ ap_domain }}"
 
 - name: Install hosts lists for access point
   template:

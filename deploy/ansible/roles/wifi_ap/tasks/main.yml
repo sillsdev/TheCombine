@@ -1,10 +1,12 @@
 ---
 - name: Install WiFi Access point
-  include: install.yml
+  include_tasks:
+    file: install.yml
   tags:
     - install
 - meta: flush_handlers
 - name: Set WiFi Access point
-  include: test.yml
+  include_tasks:
+    file: test.yml
   tags:
     - test
