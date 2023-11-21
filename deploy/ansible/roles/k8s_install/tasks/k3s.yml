@@ -27,6 +27,12 @@
   register: k8s_user_home
   changed_when: false
 
+- name: Get user group id for {{ k8s_user }}
+  shell: >
+    getent passwd {{ k8s_user }} | awk -F: '{ print $4 }'
+  register: k8s_user_group_id
+  changed_when: false
+
 - name: Create .kube directories
   file:
     path: "{{ item.home }}/.kube"
@@ -37,7 +43,7 @@
   loop:
     - home: "{{ k8s_user_home.stdout }}"
       owner: "{{ k8s_user }}"
-      group: "{{ k8s_group }}"
+      group: "{{ k8s_user_group_id.stdout }}"
     - home: /root
       owner: root
       group: root

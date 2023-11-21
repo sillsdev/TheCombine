@@ -18,8 +18,7 @@ image_pull_secret: aws-login-credentials
 # k8s namespaces
 app_namespace: thecombine
 
-k8s_user: "{{ ansible_user }}"
-k8s_group: "{{ ansible_group }}"
+k8s_user: "{{ ansible_user_id }}"
 
 #######################################
 # Ingress configuration
