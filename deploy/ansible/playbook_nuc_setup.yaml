@@ -9,7 +9,7 @@
 ##############################################################
 
 - name: Configure hardware for The Combine
-  hosts: all
+  hosts: nuc
   gather_facts: yes
   become: yes
 
