@@ -37,11 +37,11 @@
       import_role:
         name: network_config
 
-    - name: Install Docker Subsystem
-      import_role:
-        name: docker_install
+    # - name: Install Docker Subsystem
+    #   import_role:
+    #     name: docker_install
 
-    - name: Install Kubernetes Tools
+    - name: Install Kubernetes
       import_role:
         name: k8s_install
 
