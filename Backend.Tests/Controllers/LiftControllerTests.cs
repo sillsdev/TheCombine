@@ -545,9 +545,9 @@ namespace Backend.Tests.Controllers
                 var path = Path.Combine(exportedProjDir, "audio", ChangeWebmToWav(audioFile));
                 Assert.That(File.Exists(path), Is.True, $"No file exists at this path: {path}");
             }
-            Assert.That(Directory.Exists(Path.Combine(exportedProjDir, "WritingSystems")), Is.True);
-            Assert.That(File.Exists(Path.Combine(
-                exportedProjDir, "WritingSystems", roundTripObj.Language + ".ldml")), Is.True);
+            var writingSystemsDir = FileStorage.GenerateWritingsSystemsSubdirPath(exportedProjDir);
+            Assert.That(Directory.Exists(writingSystemsDir), Is.True);
+            Assert.That(File.Exists(Path.Combine(writingSystemsDir, roundTripObj.Language + ".ldml")), Is.True);
             Assert.That(File.Exists(Path.Combine(exportedProjDir, sanitizedProjName + ".lift")), Is.True);
             Directory.Delete(exportedDirectory, true);
 
@@ -609,9 +609,9 @@ namespace Backend.Tests.Controllers
                 var path = Path.Combine(exportedProjDir, "audio", ChangeWebmToWav(audioFile));
                 Assert.That(File.Exists(path), Is.True, $"No file exists at this path: {path}");
             }
-            Assert.That(Directory.Exists(Path.Combine(exportedProjDir, "WritingSystems")), Is.True);
-            Assert.That(File.Exists(Path.Combine(
-                exportedProjDir, "WritingSystems", roundTripObj.Language + ".ldml")), Is.True);
+            writingSystemsDir = FileStorage.GenerateWritingsSystemsSubdirPath(exportedProjDir);
+            Assert.That(Directory.Exists(writingSystemsDir), Is.True);
+            Assert.That(File.Exists(Path.Combine(writingSystemsDir, roundTripObj.Language + ".ldml")), Is.True);
             Assert.That(File.Exists(Path.Combine(exportedProjDir, sanitizedProjName + ".lift")), Is.True);
             Directory.Delete(exportedDirectory, true);
 

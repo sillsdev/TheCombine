@@ -200,7 +200,7 @@ namespace BackendFramework.Services
         {
             if (!Directory.GetFiles(dirPath, "*.ldml").Any())
             {
-                dirPath = Path.Combine(dirPath, "WritingSystems");
+                dirPath = FileStorage.GenerateWritingsSystemsSubdirPath(dirPath);
             }
             var wsr = LdmlInFolderWritingSystemRepository.Initialize(dirPath);
 
@@ -324,7 +324,7 @@ namespace BackendFramework.Services
             }
 
             // Export character set to ldml.
-            var ldmlDir = Path.Combine(zipDir, "WritingSystems");
+            var ldmlDir = FileStorage.GenerateWritingsSystemsSubdirPath(zipDir);
             Directory.CreateDirectory(ldmlDir);
             if (!string.IsNullOrWhiteSpace(proj.VernacularWritingSystem.Bcp47))
             {
