@@ -339,6 +339,14 @@
       "toolbar": {
         "search": "Search"
       }
+    },
+    "completed": {
+      "number": "Number of entries edited: "
+    },
+    "undo": {
+      "undo": "Undo Edit",
+      "undoDialog": "Undo this edit?",
+      "undoDisabled": "Undo Unavailable"
     }
   },
   "charInventory": {
@@ -501,5 +509,12 @@
       "Other": "Other",
       "Unspecified": "Unspecified"
     }
+  },
+  "wordCard": {
+    "senseCount": "Senses: {{ val }}",
+    "wordId": "Id: {{ val }}",
+    "wordModified": "Modified: {{ val }}",
+    "domainAdded": "Added: {{ val }}",
+    "user": "By user: {{ val }}"
   }
 }

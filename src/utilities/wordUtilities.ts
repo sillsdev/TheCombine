@@ -1,4 +1,12 @@
-import { Definition, Flag, Gloss, GramCatGroup, Sense, Word } from "api/models";
+import {
+  Definition,
+  Flag,
+  Gloss,
+  GramCatGroup,
+  GrammaticalInfo,
+  Sense,
+  Word,
+} from "api/models";
 import { HEX, colorblindSafePalette } from "types/theme";
 import { newDefinition, newGloss } from "types/word";
 
@@ -55,7 +63,7 @@ export function firstGlossText(sense: Sense): string {
 }
 
 /**
- * Given a word-array, return a string-array with any language code found in
+ * Given a word array, return a string array with any language code found in
  * a definition or gloss of any sense.
  */
 export function getAnalysisLangsFromWords(words: Word[]): string[] {
@@ -75,6 +83,27 @@ function wordReducer(accumulator: string[], word: Word): string[] {
     .flatMap((s) => [...s.definitions, ...s.glosses])
     .map((dg) => dg.language);
   return [...new Set([...accumulator, ...newLangs])];
+}
+
+/** Given a grammatical-info array, return an array with one per GramCatGroup. */
+export function groupGramInfo(
+  infos: GrammaticalInfo[],
+  sep = " ; "
+): GrammaticalInfo[] {
+  const catGroups = [...new Set(infos.map((i) => i.catGroup))].sort();
+
+  /** Concatenate all grammatical categories of a given group */
+  const groupedGramCat = (group: GramCatGroup): string => {
+    const cats = infos
+      .filter((i) => i.catGroup === group)
+      .map((i) => i.grammaticalCategory);
+    return [...new Set(cats)].sort().join(sep);
+  };
+
+  return catGroups.map((c) => ({
+    catGroup: c,
+    grammaticalCategory: groupedGramCat(c),
+  }));
 }
 
 /** Assign a different color to each grammatical category group. */
