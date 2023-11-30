@@ -464,10 +464,11 @@ export async function getSemanticDomainTreeNodeByName(
 /* SpeakerController.cs */
 
 /** Get all speakers (in current project if no projectId given).
- * Returns array of speakers. */
+ * Returns array of speakers, sorted alphabetically by name. */
 export async function getAllSpeakers(projectId?: string): Promise<Speaker[]> {
   const params = { projectId: projectId || LocalStorage.getProjectId() };
-  return (await speakerApi.getProjectSpeakers(params, defaultOptions())).data;
+  const resp = await speakerApi.getProjectSpeakers(params, defaultOptions());
+  return resp.data.sort((a, b) => a.name.localeCompare(b.name));
 }
 
 /** Creates new speaker (in current project if no projectId given).

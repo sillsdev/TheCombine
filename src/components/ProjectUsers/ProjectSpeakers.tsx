@@ -32,9 +32,9 @@ export default function ProjectSpeakers(props: {
   const [projSpeakers, setProjSpeakers] = useState<Speaker[]>([]);
 
   const getProjectSpeakers = useCallback(() => {
-    getAllSpeakers(props.projectId).then((speakers) =>
-      setProjSpeakers(speakers.sort((a, b) => a.name.localeCompare(b.name)))
-    );
+    if (props.projectId) {
+      getAllSpeakers(props.projectId).then(setProjSpeakers);
+    }
   }, [props.projectId]);
 
   useEffect(() => {

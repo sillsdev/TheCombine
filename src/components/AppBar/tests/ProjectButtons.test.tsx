@@ -11,6 +11,7 @@ import ProjectButtons, {
   projButtonId,
   statButtonId,
 } from "components/AppBar/ProjectButtons";
+import { Goal } from "types/goals";
 import { Path } from "types/path";
 import { themeColors } from "types/theme";
 
@@ -34,6 +35,7 @@ let testRenderer: ReactTestRenderer;
 
 const mockStore = configureMockStore()({
   currentProjectState: { project: { name: "" } },
+  goalsState: { currentGoal: new Goal() },
 });
 
 const renderProjectButtons = async (path = Path.Root): Promise<void> => {

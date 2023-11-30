@@ -79,6 +79,9 @@
     "resetDone": "If you have correctly entered your email or username, a password reset link has been sent to your email address.",
     "backToLogin": "Back To Login"
   },
+  "speakerMenu": {
+    "other": "[None of the above]"
+  },
   "userMenu": {
     "siteSettings": "Site Settings",
     "userSettings": "User Settings",
