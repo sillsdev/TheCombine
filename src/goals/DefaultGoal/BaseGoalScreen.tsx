@@ -6,7 +6,7 @@ import PageNotFound from "components/PageNotFound/component";
 import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
 import Loading from "goals/DefaultGoal/Loading";
 import { clearTree } from "goals/MergeDuplicates/Redux/MergeDupsActions";
-import { clearReviewEntriesState } from "goals/ReviewEntries/Redux/ReviewEntriesActions";
+import { resetReviewEntries } from "goals/ReviewEntries/Redux/ReviewEntriesActions";
 import { StoreState } from "types";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 import { useAppDispatch, useAppSelector } from "types/hooks";
@@ -52,7 +52,7 @@ export function BaseGoalScreen(): ReactElement {
   useEffect(() => {
     return function cleanup(): void {
       dispatch(setCurrentGoal());
-      dispatch(clearReviewEntriesState());
+      dispatch(resetReviewEntries());
       dispatch(clearTree());
     };
   }, [dispatch]);

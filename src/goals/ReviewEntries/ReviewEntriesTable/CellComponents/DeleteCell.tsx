@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { deleteFrontierWord as deleteFromBackend } from "backend";
 import { CancelConfirmDialog } from "components/Dialogs";
-import { updateAllWords } from "goals/ReviewEntries/Redux/ReviewEntriesActions";
+import { setAllWords } from "goals/ReviewEntries/Redux/ReviewEntriesActions";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
@@ -28,7 +28,7 @@ export default function DeleteCell(props: DeleteCellProps): ReactElement {
   async function deleteFrontierWord(): Promise<void> {
     await deleteFromBackend(word.id);
     const updatedWords = words.filter((w) => w.id !== word.id);
-    dispatch(updateAllWords(updatedWords));
+    dispatch(setAllWords(updatedWords));
     handleClose();
   }
 

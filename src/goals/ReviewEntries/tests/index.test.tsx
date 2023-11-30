@@ -48,7 +48,7 @@ jest.mock("types/hooks", () => ({
   useAppDispatch: () => jest.fn(),
 }));
 
-const updateAllWordsSpy = jest.spyOn(actions, "updateAllWords");
+const setAllWordsSpy = jest.spyOn(actions, "setAllWords");
 
 // Mock store + axios
 const mockReviewEntryWords = mockWords();
@@ -96,8 +96,8 @@ beforeEach(async () => {
 
 describe("ReviewEntries", () => {
   it("Initializes correctly", () => {
-    expect(updateAllWordsSpy).toHaveBeenCalled();
-    const wordIds = updateAllWordsSpy.mock.calls[0][0].map(
+    expect(setAllWordsSpy).toHaveBeenCalled();
+    const wordIds = setAllWordsSpy.mock.calls[0][0].map(
       (w: ReviewEntriesWord) => w.id
     );
     expect(wordIds).toHaveLength(mockReviewEntryWords.length);
