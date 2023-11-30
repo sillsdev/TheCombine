@@ -70,6 +70,7 @@ export function getDateTimeString(
     date.getSeconds(),
   ];
   const strs = vals.map((value) => (value < 10 ? `0${value}` : `${value}`));
+  // TODO: Consider localization of the date-time formatting.
   const dateString = strs.slice(0, 3).join(sep?.date ?? pathSep.date);
   const timeString = strs.slice(3, 6).join(sep?.time ?? pathSep.time);
   return `${dateString}${sep?.dateTime ?? pathSep.dateTime}${timeString}`;

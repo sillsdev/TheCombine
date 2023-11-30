@@ -11,12 +11,13 @@ import {
   MergeStepData,
   MergesCompleted,
 } from "goals/MergeDuplicates/MergeDupsTypes";
+import { EntriesEdited } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { newUser } from "types/user";
 
 export type GoalData = CharInvData | MergeDupsData;
 // Record<string, never> is the recommended type for an empty object.
 export type GoalStep = CharInvStepData | MergeStepData | Record<string, never>;
-export type GoalChanges = CharInvChanges | MergesCompleted;
+export type GoalChanges = CharInvChanges | EntriesEdited | MergesCompleted;
 
 export interface GoalProps {
   goal?: Goal;

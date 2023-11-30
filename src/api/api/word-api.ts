@@ -444,6 +444,55 @@ export const WordApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
+     * @param {string} wordId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    isInFrontier: async (
+      projectId: string,
+      wordId: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("isInFrontier", "projectId", projectId);
+      // verify required parameter 'wordId' is not null or undefined
+      assertParamExists("isInFrontier", "wordId", wordId);
+      const localVarPath =
+        `/v1/projects/{projectId}/words/isinfrontier/{wordId}`
+          .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
+          .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)));
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {string} dupId
      * @param {Word} word
      * @param {*} [options] Override http request option.
@@ -771,6 +820,32 @@ export const WordApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
+     * @param {string} wordId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async isInFrontier(
+      projectId: string,
+      wordId: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.isInFrontier(
+        projectId,
+        wordId,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {string} dupId
      * @param {Word} word
      * @param {*} [options] Override http request option.
@@ -965,6 +1040,22 @@ export const WordApiFactory = function (
     /**
      *
      * @param {string} projectId
+     * @param {string} wordId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    isInFrontier(
+      projectId: string,
+      wordId: string,
+      options?: any
+    ): AxiosPromise<boolean> {
+      return localVarFp
+        .isInFrontier(projectId, wordId, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {string} dupId
      * @param {Word} word
      * @param {*} [options] Override http request option.
@@ -1146,6 +1237,27 @@ export interface WordApiIsFrontierNonemptyRequest {
    * @memberof WordApiIsFrontierNonempty
    */
   readonly projectId: string;
+}
+
+/**
+ * Request parameters for isInFrontier operation in WordApi.
+ * @export
+ * @interface WordApiIsInFrontierRequest
+ */
+export interface WordApiIsInFrontierRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof WordApiIsInFrontier
+   */
+  readonly projectId: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof WordApiIsInFrontier
+   */
+  readonly wordId: string;
 }
 
 /**
@@ -1345,6 +1457,26 @@ export class WordApi extends BaseAPI {
   ) {
     return WordApiFp(this.configuration)
       .isFrontierNonempty(requestParameters.projectId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {WordApiIsInFrontierRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof WordApi
+   */
+  public isInFrontier(
+    requestParameters: WordApiIsInFrontierRequest,
+    options?: any
+  ) {
+    return WordApiFp(this.configuration)
+      .isInFrontier(
+        requestParameters.projectId,
+        requestParameters.wordId,
+        options
+      )
       .then((request) => request(this.axios, this.basePath));
   }
 

@@ -28,10 +28,10 @@ export default function DomainChip(props: DomainChipProps): ReactElement {
   const hoverText = [];
   if (provenance && created) {
     const val = getDateTimeString(created, friendlySep);
-    hoverText.push(t("wordHistory.domainAdded", { val }));
+    hoverText.push(t("wordCard.domainAdded", { val }));
   }
   if (provenance && username) {
-    hoverText.push(t("wordHistory.user", { val: username }));
+    hoverText.push(t("wordCard.user", { val: username }));
   }
   return <Chip label={labelText} title={hoverText.join("\n")} />;
 }
