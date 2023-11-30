@@ -12,6 +12,8 @@ import { CharInvChangesGoalList } from "goals/CharacterInventory/CharInvComplete
 import { CharInvChanges } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { MergesCount } from "goals/MergeDuplicates/MergeDupsCompleted";
 import { MergesCompleted } from "goals/MergeDuplicates/MergeDupsTypes";
+import { EditsCount } from "goals/ReviewEntries/ReviewEntriesCompleted";
+import { EntriesEdited } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 
 type Orientation = "horizontal" | "vertical";
@@ -120,7 +122,8 @@ function GoalTile(props: GoalTileProps): ReactElement {
           (goal.status === GoalStatus.Completed &&
             goal.goalType !== GoalType.CreateCharInv &&
             goal.goalType !== GoalType.MergeDups &&
-            goal.goalType !== GoalType.ReviewDeferredDups)
+            goal.goalType !== GoalType.ReviewDeferredDups &&
+            goal.goalType !== GoalType.ReviewEntries)
         }
         data-testid="goal-button"
       >
@@ -161,6 +164,8 @@ function getCompletedGoalInfo(goal: Goal): ReactElement {
     case GoalType.MergeDups:
     case GoalType.ReviewDeferredDups:
       return MergesCount(goal.changes as MergesCompleted);
+    case GoalType.ReviewEntries:
+      return EditsCount(goal.changes as EntriesEdited);
     default:
       return <Fragment />;
   }
