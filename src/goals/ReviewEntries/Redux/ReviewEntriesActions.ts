@@ -42,7 +42,7 @@ export function setSortBy(columnId?: ColumnId): PayloadAction {
 
 interface wordUpdate {
   oldId: string;
-  updatedWord: ReviewEntriesWord;
+  updatedWord: Word;
 }
 
 export function updateWord(update: wordUpdate): PayloadAction {
@@ -52,7 +52,7 @@ export function updateWord(update: wordUpdate): PayloadAction {
 // Dispatch Functions
 
 /** Updates a word and the current goal. */
-function asyncUpdateWord(oldId: string, updatedWord: ReviewEntriesWord) {
+function asyncUpdateWord(oldId: string, updatedWord: Word) {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(addEntryEditToGoal({ newId: updatedWord.id, oldId }));
     await dispatch(asyncUpdateGoal());
@@ -154,6 +154,7 @@ export function updateFrontierWord(
     if (typeof editSource === "string") {
       return Promise.reject(editSource);
     }
+    const oldId = editSource.id;
 
     // Set aside audio changes for last.
     const delAudio = oldData.audio.filter(
@@ -164,7 +165,7 @@ export function updateFrontierWord(
     delete editSource.audioNew;
 
     // Get the original word, for updating.
-    const editWord = await backend.getWord(editSource.id);
+    const editWord = await backend.getWord(oldId);
 
     // Update the data.
     editWord.vernacular = editSource.vernacular;
@@ -175,19 +176,18 @@ export function updateFrontierWord(
     editWord.flag = { ...editSource.flag };
 
     // Update the word in the backend, and retrieve the id.
-    editSource.id = (await backend.updateWord(editWord)).id;
+    let newId = (await backend.updateWord(editWord)).id;
 
     // Add/remove audio.
     for (const url of addAudio) {
-      editSource.id = await uploadFileFromUrl(editSource.id, url);
+      newId = await uploadFileFromUrl(newId, url);
     }
     for (const fileName of delAudio) {
-      editSource.id = await backend.deleteAudio(editSource.id, fileName);
+      newId = await backend.deleteAudio(newId, fileName);
     }
-    editSource.audio = (await backend.getWord(editSource.id)).audio;
 
-    // Update the review entries word in the state.
-    await dispatch(asyncUpdateWord(editWord.id, editSource));
+    // Update the word in the state.
+    await dispatch(asyncUpdateWord(oldId, await backend.getWord(newId)));
   };
 }
 
@@ -216,7 +216,7 @@ function asyncRefreshWord(
   return async (dispatch: StoreStateDispatch): Promise<void> => {
     const newWordId = await wordUpdater(oldWordId);
     const word = await backend.getWord(newWordId);
-    await dispatch(asyncUpdateWord(oldWordId, new ReviewEntriesWord(word)));
+    await dispatch(asyncUpdateWord(oldWordId, word));
   };
 }
 
