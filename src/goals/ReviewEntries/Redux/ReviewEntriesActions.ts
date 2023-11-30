@@ -1,6 +1,6 @@
 import { Action, PayloadAction } from "@reduxjs/toolkit";
 
-import { Sense } from "api/models";
+import { Sense, Word } from "api/models";
 import * as backend from "backend";
 import {
   addEntryEditToGoal,
@@ -8,6 +8,7 @@ import {
 } from "components/GoalTimeline/Redux/GoalActions";
 import { uploadFileFromUrl } from "components/Pronunciations/utilities";
 import {
+  deleteWordAction,
   resetReviewEntriesAction,
   setAllWordsAction,
   setSortByAction,
@@ -23,11 +24,15 @@ import { newNote, newSense } from "types/word";
 
 // Action Creation Functions
 
+export function deleteWord(wordId: string): Action {
+  return deleteWordAction(wordId);
+}
+
 export function resetReviewEntries(): Action {
   return resetReviewEntriesAction();
 }
 
-export function setAllWords(words: ReviewEntriesWord[]): PayloadAction {
+export function setAllWords(words: Word[]): PayloadAction {
   return setAllWordsAction(words);
 }
 

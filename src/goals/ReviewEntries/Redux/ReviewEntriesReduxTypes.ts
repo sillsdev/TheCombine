@@ -1,10 +1,8 @@
-import {
-  ColumnId,
-  ReviewEntriesWord,
-} from "goals/ReviewEntries/ReviewEntriesTypes";
+import { Word } from "api/models";
+import { ColumnId } from "goals/ReviewEntries/ReviewEntriesTypes";
 
 export interface ReviewEntriesState {
-  words: ReviewEntriesWord[];
+  words: Word[];
   isRecording: boolean;
   sortBy?: ColumnId;
   wordBeingRecorded?: string;

@@ -7,10 +7,7 @@ import "tests/reactI18nextMock";
 
 import ReviewEntries from "goals/ReviewEntries";
 import * as actions from "goals/ReviewEntries/Redux/ReviewEntriesActions";
-import {
-  ReviewEntriesWord,
-  wordFromReviewEntriesWord,
-} from "goals/ReviewEntries/ReviewEntriesTypes";
+import { wordFromReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";
 import mockWords from "goals/ReviewEntries/tests/WordsMock";
 import { defaultWritingSystem } from "types/writingSystem";
 
@@ -60,7 +57,9 @@ const state = {
       vernacularWritingSystem: defaultWritingSystem,
     },
   },
-  reviewEntriesState: { words: mockReviewEntryWords },
+  reviewEntriesState: {
+    words: mockReviewEntryWords.map(wordFromReviewEntriesWord),
+  },
   treeViewState: {
     open: false,
     currentDomain: { id: "number", name: "domain", subdomains: [] },
@@ -97,9 +96,7 @@ beforeEach(async () => {
 describe("ReviewEntries", () => {
   it("Initializes correctly", () => {
     expect(setAllWordsSpy).toHaveBeenCalled();
-    const wordIds = setAllWordsSpy.mock.calls[0][0].map(
-      (w: ReviewEntriesWord) => w.id
-    );
+    const wordIds = setAllWordsSpy.mock.calls[0][0].map((w) => w.id);
     expect(wordIds).toHaveLength(mockReviewEntryWords.length);
     mockReviewEntryWords.forEach((w) => expect(wordIds).toContain(w.id));
   });

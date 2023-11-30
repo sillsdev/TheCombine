@@ -25,7 +25,7 @@ export default function ReviewEntries(props: ReviewEntriesProps): ReactElement {
   useEffect(() => {
     if (!props.completed) {
       getFrontierWords().then((frontier) => {
-        dispatch(setAllWords(frontier.map((w) => new ReviewEntriesWord(w))));
+        dispatch(setAllWords(frontier));
         setLoaded(true);
       });
     }

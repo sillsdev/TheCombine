@@ -7,6 +7,9 @@ const reviewEntriesSlice = createSlice({
   name: "reviewEntriesState",
   initialState: defaultState,
   reducers: {
+    deleteWordAction: (state, action) => {
+      state.words = state.words.filter((w) => w.id !== action.payload);
+    },
     resetReviewEntriesAction: () => defaultState,
     setAllWordsAction: (state, action) => {
       state.words = action.payload;
@@ -25,6 +28,7 @@ const reviewEntriesSlice = createSlice({
 });
 
 export const {
+  deleteWordAction,
   resetReviewEntriesAction,
   setAllWordsAction,
   setSortByAction,
