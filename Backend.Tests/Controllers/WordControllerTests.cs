@@ -144,6 +144,34 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestIsInFrontier()
+        {
+            var wordNotInFrontier = await _wordRepo.Add(Util.RandomWord(_projId));
+            var falseResult = (ObjectResult)await _wordController.IsInFrontier(_projId, wordNotInFrontier.Id);
+            Assert.That(falseResult.Value, Is.False);
+
+            var wordInFrontier = await _wordRepo.AddFrontier(Util.RandomWord(_projId));
+            var trueResult = (ObjectResult)await _wordController.IsInFrontier(_projId, wordInFrontier.Id);
+            Assert.That(trueResult.Value, Is.True);
+        }
+
+        [Test]
+        public async Task TestIsInFrontierNoPermission()
+        {
+            var wordInFrontier = await _wordRepo.AddFrontier(Util.RandomWord(_projId));
+            _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = await _wordController.IsInFrontier(_projId, wordInFrontier.Id);
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public async Task TestIsInFrontierMissingProject()
+        {
+            var result = await _wordController.IsInFrontier(MissingId, "anything");
+            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+        }
+
+        [Test]
         public async Task TestGetFrontier()
         {
             var inWord1 = await _wordRepo.Create(Util.RandomWord(_projId));

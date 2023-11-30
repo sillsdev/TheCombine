@@ -8,7 +8,7 @@ import pronunciationsReducer from "components/Pronunciations/Redux/Pronunciation
 import treeViewReducer from "components/TreeView/Redux/TreeViewReducer";
 import characterInventoryReducer from "goals/CharacterInventory/Redux/CharacterInventoryReducer";
 import mergeDupStepReducer from "goals/MergeDuplicates/Redux/MergeDupsReducer";
-import { reviewEntriesReducer } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReducer";
+import { reviewEntriesReducer } from "goals/ReviewEntries/Redux/ReviewEntriesReducer";
 import { StoreState } from "types";
 import analyticsReducer from "types/Redux/analytics";
 

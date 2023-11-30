@@ -124,6 +124,23 @@ namespace BackendFramework.Controllers
             return Ok(await _wordRepo.GetFrontier(projectId));
         }
 
+        /// <summary> Checks if Frontier has <see cref="Word"/> in specified <see cref="Project"/>. </summary>
+        [HttpGet("isinfrontier/{wordId}", Name = "IsInFrontier")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        public async Task<IActionResult> IsInFrontier(string projectId, string wordId)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
+            {
+                return Forbid();
+            }
+            var project = await _projRepo.GetProject(projectId);
+            if (project is null)
+            {
+                return NotFound(projectId);
+            }
+            return Ok(await _wordRepo.IsInFrontier(projectId, wordId));
+        }
+
         /// <summary>
         /// Checks if a <see cref="Word"/> is a duplicate--i.e., are its primary text fields
         /// (Vernacular, Gloss text, Definition text) contained in a frontier entry?

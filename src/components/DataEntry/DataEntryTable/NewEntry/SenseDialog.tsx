@@ -15,8 +15,8 @@ import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledM
 import {
   DomainCell,
   PartOfSpeechCell,
-} from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents";
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+} from "goals/ReviewEntries/ReviewEntriesTable/CellComponents";
+import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { firstGlossText } from "utilities/wordUtilities";
 
 interface SenseDialogProps {
