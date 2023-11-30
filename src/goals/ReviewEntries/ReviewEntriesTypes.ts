@@ -59,6 +59,8 @@ export class ReviewEntriesWord {
   flag: Flag;
   protected: boolean;
 
+  /** Construct a ReviewEntriesWord from a Word.
+   * Important: Some things (e.g., note language) aren't preserved! */
   constructor(word?: Word, analysisLang?: string) {
     if (!word) {
       word = newWord();
@@ -84,6 +86,9 @@ export class ReviewEntriesSense {
   deleted: boolean;
   protected: boolean;
 
+  /** Construct a ReviewEntriesSense from a Sense.
+   * Important: Some things aren't preserved!
+   * (E.g., distinct glosses with the same language are combined.) */
   constructor(sense?: Sense, analysisLang?: string) {
     if (!sense) {
       sense = newSense();
@@ -115,7 +120,8 @@ export class ReviewEntriesSense {
 }
 
 /** Reverse map of the ReviewEntriesSense constructor.
- * Important: Not everything is preserved! */
+ * Important: Some things aren't preserved!
+ * (E.g., distinct glosses with the same language may have been combined.) */
 function senseFromReviewEntriesSense(revSense: ReviewEntriesSense): Sense {
   return {
     ...newSense(),
@@ -133,7 +139,7 @@ function senseFromReviewEntriesSense(revSense: ReviewEntriesSense): Sense {
 }
 
 /** Reverse map of the ReviewEntriesWord constructor.
- * Important: Not everything is preserved! */
+ * Important: Some things (e.g., note language) aren't preserved! */
 export function wordFromReviewEntriesWord(revWord: ReviewEntriesWord): Word {
   return {
     ...newWord(revWord.vernacular),
