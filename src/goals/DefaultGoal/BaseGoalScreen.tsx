@@ -6,17 +6,17 @@ import PageNotFound from "components/PageNotFound/component";
 import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
 import Loading from "goals/DefaultGoal/Loading";
 import { clearTree } from "goals/MergeDuplicates/Redux/MergeDupsActions";
-import ReviewDeferredDuplicates from "goals/ReviewDeferredDuplicates";
-import { clearReviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesActions";
+import { clearReviewEntriesState } from "goals/ReviewEntries/Redux/ReviewEntriesActions";
 import { StoreState } from "types";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 
 const CharacterInventory = loadable(() => import("goals/CharacterInventory"));
 const MergeDup = loadable(() => import("goals/MergeDuplicates"));
-const ReviewEntriesComponent = loadable(
-  () => import("goals/ReviewEntries/ReviewEntriesComponent")
+const ReviewDeferredDups = loadable(
+  () => import("goals/ReviewDeferredDuplicates")
 );
+const ReviewEntries = loadable(() => import("goals/ReviewEntries"));
 
 function displayComponent(goal: Goal): ReactElement {
   const isCompleted = goal.status === GoalStatus.Completed;
@@ -26,9 +26,9 @@ function displayComponent(goal: Goal): ReactElement {
     case GoalType.MergeDups:
       return <MergeDup completed={isCompleted} />;
     case GoalType.ReviewDeferredDups:
-      return <ReviewDeferredDuplicates completed={isCompleted} />;
+      return <ReviewDeferredDups completed={isCompleted} />;
     case GoalType.ReviewEntries:
-      return <ReviewEntriesComponent />;
+      return <ReviewEntries completed={isCompleted} />;
     default:
       return <PageNotFound />;
   }

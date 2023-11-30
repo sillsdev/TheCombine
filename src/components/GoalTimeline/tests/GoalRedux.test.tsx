@@ -46,10 +46,10 @@ jest.mock("backend", () => ({
   getUserEditById: (...args: any[]) => mockGetUserEditById(...args),
   updateUser: (user: User) => mockUpdateUser(user),
 }));
-
 jest.mock("browserRouter", () => ({
   navigate: (path: Path) => mockNavigate(path),
 }));
+jest.mock("components/Pronunciations/Recorder");
 
 const mockAddGoalToUserEdit = jest.fn();
 const mockAddStepToGoal = jest.fn();
