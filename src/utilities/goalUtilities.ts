@@ -6,7 +6,7 @@ import {
   MergeDups,
   ReviewDeferredDups,
 } from "goals/MergeDuplicates/MergeDupsTypes";
-import { ReviewEntries } from "goals/ReviewEntries/ReviewEntries";
+import { ReviewEntries } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { SpellCheckGloss } from "goals/SpellCheckGloss/SpellCheckGloss";
 import { ValidateChars } from "goals/ValidateChars/ValidateChars";
 import { ValidateStrWords } from "goals/ValidateStrWords/ValidateStrWords";

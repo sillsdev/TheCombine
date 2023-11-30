@@ -4,6 +4,7 @@ import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import LoadingButton from "components/Buttons/LoadingButton";
 import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
 import PartOfSpeechButton from "components/Buttons/PartOfSpeechButton";
+import UndoButton from "components/Buttons/UndoButton";
 
 export {
   FileInputButton,
@@ -12,4 +13,5 @@ export {
   LoadingButton,
   LoadingDoneButton,
   PartOfSpeechButton,
+  UndoButton,
 };
