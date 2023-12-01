@@ -5,6 +5,7 @@ import {
   SemanticDomainCount,
   SemanticDomainUserCount,
 } from "api/models";
+import { getUserId } from "backend/localStorage";
 import { Bcp47Code } from "types/writingSystem";
 
 export function newSemanticDomain(
@@ -16,14 +17,13 @@ export function newSemanticDomain(
 }
 
 export function newSemanticDomainForMongoDB(
-  mongoId = "",
-  guid = "",
-  name = "",
-  id = "",
-  lang = Bcp47Code.Default as string,
-  userId = ""
+  dom: SemanticDomainTreeNode
 ): SemanticDomain {
-  return { mongoId, guid, name, id, lang, userId };
+  const { mongoId, guid, name, id } = dom;
+  const lang = dom.lang || Bcp47Code.Default;
+  const userId = getUserId();
+  const created = new Date().toISOString();
+  return { mongoId, guid, name, id, lang, userId, created };
 }
 
 export function newSemanticDomainTreeNode(

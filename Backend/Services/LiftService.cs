@@ -4,10 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
 using System.Security;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using BackendFramework.Helper;
@@ -93,14 +91,18 @@ namespace BackendFramework.Services
 
     public class LiftService : ILiftService
     {
+        private readonly ISemanticDomainRepository _semDomRepo;
+
         /// A dictionary shared by all Projects for storing and retrieving paths to exported projects.
         private readonly Dictionary<string, string> _liftExports;
         /// A dictionary shared by all Projects for storing and retrieving paths to in-process imports.
         private readonly Dictionary<string, string> _liftImports;
         private const string InProgress = "IN_PROGRESS";
 
-        public LiftService()
+        public LiftService(ISemanticDomainRepository semDomRepo)
         {
+            _semDomRepo = semDomRepo;
+
             if (!Sldr.IsInitialized)
             {
                 Sldr.Initialize(true);
@@ -154,7 +156,7 @@ namespace BackendFramework.Services
         public bool DeleteExport(string userId)
         {
             var removeSuccessful = _liftExports.Remove(userId, out var filePath);
-            if (removeSuccessful && filePath is not null && filePath != InProgress)
+            if (removeSuccessful && filePath != InProgress && File.Exists(filePath))
             {
                 File.Delete(filePath);
             }
@@ -198,7 +200,7 @@ namespace BackendFramework.Services
         {
             if (!Directory.GetFiles(dirPath, "*.ldml").Any())
             {
-                dirPath = Path.Combine(dirPath, "WritingSystems");
+                dirPath = FileStorage.GenerateWritingsSystemsSubdirPath(dirPath);
             }
             var wsr = LdmlInFolderWritingSystemRepository.Initialize(dirPath);
 
@@ -316,80 +318,13 @@ namespace BackendFramework.Services
             liftWriter.End();
 
             // Export semantic domains to lift-ranges
-            var extractedPathToImport = FileStorage.GenerateImportExtractedLocationDirPath(projectId, false);
-            string? firstImportDir = null;
-            if (Directory.Exists(extractedPathToImport))
+            if (proj.SemanticDomains.Count != 0 || CopyLiftRanges(proj.Id, rangesDest) is null)
             {
-                // TODO: Should an error be raised if this returns null?
-                firstImportDir = Directory.GetDirectories(extractedPathToImport).Select(
-                    Path.GetFileName).ToList().Single();
-            }
-
-            var importLiftDir = firstImportDir ?? "";
-            var rangesSrc = Path.Combine(extractedPathToImport, importLiftDir, $"{importLiftDir}.lift-ranges");
-
-            // If there are no new semantic domains, and the old lift-ranges file is still around, just copy it
-            if (proj.SemanticDomains.Count == 0 && File.Exists(rangesSrc))
-            {
-                File.Copy(rangesSrc, rangesDest, true);
-            }
-            else // Make a new lift-ranges file
-            {
-                await using var liftRangesWriter = XmlWriter.Create(rangesDest, new XmlWriterSettings
-                {
-                    Indent = true,
-                    NewLineOnAttributes = true,
-                    Async = true
-                });
-                await liftRangesWriter.WriteStartDocumentAsync();
-                liftRangesWriter.WriteStartElement("lift-ranges");
-                liftRangesWriter.WriteStartElement("range");
-                liftRangesWriter.WriteAttributeString("id", "semantic-domain-ddp4");
-
-                // Pull from resources file with all English semantic domains
-                var assembly = typeof(LiftService).GetTypeInfo().Assembly;
-                const string semDomListFile = "BackendFramework.Data.sdList.txt";
-                var resource = assembly.GetManifestResourceStream(semDomListFile);
-                if (resource is null)
-                {
-                    throw new ExportException($"Unable to load semantic domain list: {semDomListFile}");
-                }
-
-                string sdList;
-                using (var reader = new StreamReader(resource, Encoding.UTF8))
-                {
-                    sdList = await reader.ReadToEndAsync();
-                }
-
-                var sdLines = sdList.Split(Environment.NewLine);
-                foreach (var line in sdLines)
-                {
-                    if (line != "")
-                    {
-                        var items = line.Split("`");
-                        WriteRangeElement(liftRangesWriter, items[0], items[1], items[2]);
-                    }
-                }
-
-                // Pull from new semantic domains in project
-                foreach (var sd in proj.SemanticDomains)
-                {
-                    var guid = string.IsNullOrEmpty(sd.Guid) || sd.Guid == Guid.Empty.ToString()
-                           ? Guid.NewGuid().ToString()
-                           : sd.Guid;
-                    WriteRangeElement(liftRangesWriter, sd.Id, guid, sd.Name);
-                }
-
-                await liftRangesWriter.WriteEndElementAsync(); //end semantic-domain-ddp4 range
-                await liftRangesWriter.WriteEndElementAsync(); //end lift-ranges
-                await liftRangesWriter.WriteEndDocumentAsync();
-
-                await liftRangesWriter.FlushAsync();
-                liftRangesWriter.Close();
+                await CreateLiftRanges(allWords, proj.SemanticDomains, rangesDest);
             }
 
             // Export character set to ldml.
-            var ldmlDir = Path.Combine(zipDir, "WritingSystems");
+            var ldmlDir = FileStorage.GenerateWritingsSystemsSubdirPath(zipDir);
             Directory.CreateDirectory(ldmlDir);
             if (!string.IsNullOrWhiteSpace(proj.VernacularWritingSystem.Bcp47))
             {
@@ -406,6 +341,75 @@ namespace BackendFramework.Services
             Directory.Delete(tempExportDir, true);
 
             return destinationFileName;
+        }
+
+        /// <summary> Copy imported lift-ranges file, if available </summary>
+        /// <returns> Path of lift-ranges file copied, or null if none </returns>
+        private static string? CopyLiftRanges(string projectId, string rangesDest)
+        {
+            string? rangesSrc = null;
+            var extractedPathToImport = FileStorage.GenerateImportExtractedLocationDirPath(projectId, false);
+            if (Directory.Exists(extractedPathToImport))
+            {
+                rangesSrc = Directory.GetFiles(
+                    extractedPathToImport, "*.lift-ranges", SearchOption.AllDirectories).FirstOrDefault();
+            }
+            if (rangesSrc is not null)
+            {
+                File.Copy(rangesSrc, rangesDest, true);
+            }
+            return rangesSrc;
+        }
+
+        /// <summary> Export semantic domains to lift-ranges </summary>
+        /// <exception cref="ExportException"> If fails to load needed semantic domain list </exception>
+        /// <returns> List of languages found in project sem-doms and included in the lift-ranges file </returns>
+        public async Task<List<string>> CreateLiftRanges(
+            List<Word> projWords, List<SemanticDomain> projDoms, string rangesDest)
+        {
+            await using var liftRangesWriter = XmlWriter.Create(rangesDest, new XmlWriterSettings
+            {
+                Indent = true,
+                NewLineOnAttributes = true,
+                Async = true
+            });
+            await liftRangesWriter.WriteStartDocumentAsync();
+            liftRangesWriter.WriteStartElement("lift-ranges");
+            liftRangesWriter.WriteStartElement("range");
+            liftRangesWriter.WriteAttributeString("id", "semantic-domain-ddp4");
+
+            var wordLangs = projWords
+                .SelectMany(w => w.Senses.SelectMany(s => s.SemanticDomains.Select(d => d.Lang))).Distinct();
+            var exportLangs = new List<string>();
+            foreach (var lang in wordLangs)
+            {
+                var semDoms = await _semDomRepo.GetAllSemanticDomainTreeNodes(lang);
+                if (semDoms is not null && semDoms.Count > 0)
+                {
+                    exportLangs.Add(lang);
+                    foreach (var sd in semDoms)
+                    {
+                        WriteRangeElement(liftRangesWriter, sd.Id, sd.Guid, sd.Name, sd.Lang);
+                    }
+                }
+            }
+
+            // Pull from new semantic domains in project
+            foreach (var sd in projDoms)
+            {
+                var guid = string.IsNullOrEmpty(sd.Guid) || sd.Guid == Guid.Empty.ToString()
+                       ? Guid.NewGuid().ToString()
+                       : sd.Guid;
+                WriteRangeElement(liftRangesWriter, sd.Id, guid, sd.Name, sd.Lang);
+            }
+
+            await liftRangesWriter.WriteEndElementAsync(); //end semantic-domain-ddp4 range
+            await liftRangesWriter.WriteEndElementAsync(); //end lift-ranges
+            await liftRangesWriter.WriteEndDocumentAsync();
+
+            await liftRangesWriter.FlushAsync();
+            liftRangesWriter.Close();
+            return exportLangs;
         }
 
         /// <summary> Adds <see cref="Note"/> of a word to be written out to lift </summary>
@@ -574,21 +578,21 @@ namespace BackendFramework.Services
         }
 
         private static void WriteRangeElement(
-            XmlWriter liftRangesWriter, string id, string guid, string name)
+            XmlWriter liftRangesWriter, string id, string guid, string name, string lang)
         {
             liftRangesWriter.WriteStartElement("range-element");
             liftRangesWriter.WriteAttributeString("id", $"{id} {name}");
             liftRangesWriter.WriteAttributeString("guid", guid);
 
             liftRangesWriter.WriteStartElement("label");
-            liftRangesWriter.WriteAttributeString("lang", "en");
+            liftRangesWriter.WriteAttributeString("lang", lang);
             liftRangesWriter.WriteStartElement("text");
             liftRangesWriter.WriteString(name);
             liftRangesWriter.WriteEndElement(); //end text
             liftRangesWriter.WriteEndElement(); //end label
 
             liftRangesWriter.WriteStartElement("abbrev");
-            liftRangesWriter.WriteAttributeString("lang", "en");
+            liftRangesWriter.WriteAttributeString("lang", lang);
             liftRangesWriter.WriteStartElement("text");
             liftRangesWriter.WriteString(id);
             liftRangesWriter.WriteEndElement(); //end text

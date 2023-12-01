@@ -45,7 +45,7 @@ namespace BackendFramework.Helper
         {
             if (!Directory.GetFiles(dirPath, "*.ldml").Any())
             {
-                dirPath = Path.Combine(dirPath, "WritingSystems");
+                dirPath = FileStorage.GenerateWritingsSystemsSubdirPath(dirPath);
             }
 
             var wsr = LdmlInFolderWritingSystemRepository.Initialize(dirPath);
