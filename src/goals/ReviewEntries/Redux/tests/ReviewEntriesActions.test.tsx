@@ -1,6 +1,3 @@
-import configureMockStore from "redux-mock-store";
-import thunk from "redux-thunk";
-
 import { Sense, Word } from "api/models";
 import {
   getSenseError,
@@ -11,6 +8,7 @@ import {
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
+import { setupStore } from "store";
 import { newSemanticDomain } from "types/semanticDomain";
 import { newFlag, newGloss, newNote, newSense, newWord } from "types/word";
 import { Bcp47Code } from "types/writingSystem";
@@ -22,18 +20,15 @@ function mockGetWordResolve(data: Word): void {
 }
 
 jest.mock("backend", () => ({
+  deleteAudio: () => jest.fn(),
   getWord: (wordId: string) => mockGetWord(wordId),
   updateWord: (word: Word) => mockUpdateWord(word),
-}));
-jest.mock("backend/localStorage", () => ({
-  getProjectId: jest.fn(),
+  uploadAudio: () => jest.fn(),
 }));
 jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({
   addEntryEditToGoal: () => jest.fn(),
   asyncUpdateGoal: () => jest.fn(),
 }));
-
-const mockStore = configureMockStore([thunk])();
 
 // Dummy strings, glosses, and domains.
 const commonGuid = "mockGuid";
@@ -82,7 +77,6 @@ function mockReviewEntriesWord(vernacular = "word"): ReviewEntriesWord {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockStore.clearActions();
 });
 
 describe("ReviewEntriesActions", () => {
@@ -97,9 +91,11 @@ describe("ReviewEntriesActions", () => {
       newRevWord: ReviewEntriesWord,
       oldRevWord: ReviewEntriesWord
     ): Promise<void> {
-      await mockStore.dispatch<any>(updateFrontierWord(newRevWord, oldRevWord));
+      const store = setupStore();
+      await store.dispatch(updateFrontierWord(newRevWord, oldRevWord));
     }
     function checkResultantData(newFrontierWord: Word): void {
+      expect(mockUpdateWord).toHaveBeenCalled();
       expect(mockUpdateWord.mock.calls[0][0]).toEqual(newFrontierWord);
     }
 
