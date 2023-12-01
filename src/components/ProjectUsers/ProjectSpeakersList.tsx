@@ -1,4 +1,4 @@
-import { Add, AddPhotoAlternate, Edit, Image, Mic } from "@mui/icons-material";
+import { Add, Edit } from "@mui/icons-material";
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import { ReactElement, useCallback, useEffect, useState } from "react";
 
@@ -7,26 +7,16 @@ import {
   createSpeaker,
   deleteSpeaker,
   getAllSpeakers,
-  getConsentImageSrc,
-  getConsentUrl,
-  removeConsent,
   updateSpeakerName,
-  uploadConsent,
 } from "backend";
 import {
   DeleteButtonWithDialog,
   IconButtonWithTooltip,
 } from "components/Buttons";
-import {
-  EditTextDialog,
-  RecordAudioDialog,
-  SubmitTextDialog,
-  UploadImageDialog,
-  ViewImageDialog,
-} from "components/Dialogs";
-import AudioPlayer from "components/Pronunciations/AudioPlayer";
+import { EditTextDialog, SubmitTextDialog } from "components/Dialogs";
+import SpeakerConsentListItemIcon from "components/ProjectUsers/SpeakerConsentListItemIcon";
 
-export default function ProjectSpeakers(props: {
+export default function ProjectSpeakersList(props: {
   projectId: string;
 }): ReactElement {
   const [projSpeakers, setProjSpeakers] = useState<Speaker[]>([]);
@@ -66,126 +56,18 @@ interface ProjSpeakerProps {
 }
 
 function SpeakerListItem(props: ProjSpeakerProps): ReactElement {
-  const { consent, id, name } = props.speaker;
-  const consentButtons =
-    consent === ConsentType.Audio ? (
-      <ListItemIcon>
-        <AudioPlayer
-          deleteAudio={() => removeConsent(props.speaker)}
-          fileName={id}
-          pronunciationUrl={getConsentUrl(props.speaker)}
-          size={"small"}
-          warningTextId="projectSettings.speaker.consent.warning"
-        />
-      </ListItemIcon>
-    ) : consent === ConsentType.Image ? (
-      <ViewConsentImageIcon {...props} />
-    ) : (
-      <>
-        <RecordConsentAudioIcon {...props} />
-        <UploadConsentImageIcon {...props} />
-      </>
-    );
-
+  const { refresh, speaker } = props;
   return (
     <ListItem>
-      <DeleteSpeakerIcon {...props} />
-      <EditSpeakerNameIcon {...props} />
-      <ListItemText primary={name} />
-      {consentButtons}
+      <DeleteSpeakerListItemIcon {...props} />
+      <EditSpeakerNameListItemIcon {...props} />
+      <SpeakerConsentListItemIcon refresh={refresh} speaker={speaker} />
+      <ListItemText primary={speaker.name} />
     </ListItem>
   );
 }
 
-function ViewConsentImageIcon(props: ProjSpeakerProps): ReactElement {
-  const [imgSrc, setImgSrc] = useState("");
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    getConsentImageSrc(props.speaker).then(setImgSrc);
-  }, [props.speaker]);
-
-  const handleDeleteImage = async (): Promise<void> => {
-    await removeConsent(props.speaker);
-    setOpen(false);
-    await props.refresh();
-  };
-
-  return (
-    <ListItemIcon>
-      <IconButtonWithTooltip
-        buttonId={`project-speaker-${props.speaker.id}-look`}
-        icon={<Image />}
-        onClick={() => setOpen(true)}
-        textId="projectSettings.speaker.consent.look"
-      />
-      <ViewImageDialog
-        close={() => setOpen(false)}
-        imgSrc={imgSrc}
-        open={open}
-        titleId="projectSettings.speaker.consent.look"
-        deleteImage={handleDeleteImage}
-        deleteTextId="projectSettings.speaker.consent.remove"
-      />
-    </ListItemIcon>
-  );
-}
-
-function RecordConsentAudioIcon(props: ProjSpeakerProps): ReactElement {
-  const [open, setOpen] = useState(false);
-
-  const handleUploadAudio = async (audioFile: File): Promise<void> => {
-    await uploadConsent(props.speaker, audioFile);
-    setOpen(false);
-    await props.refresh();
-  };
-
-  return (
-    <ListItemIcon>
-      <IconButtonWithTooltip
-        buttonId={`project-speaker-${props.speaker.id}-record`}
-        icon={<Mic />}
-        onClick={() => setOpen(true)}
-        textId="projectSettings.speaker.consent.record"
-      />
-      <RecordAudioDialog
-        audioId={props.speaker.id}
-        close={() => setOpen(false)}
-        open={open}
-        titleId="projectSettings.speaker.consent.record"
-        uploadAudio={handleUploadAudio}
-      />
-    </ListItemIcon>
-  );
-}
-
-function UploadConsentImageIcon(props: ProjSpeakerProps): ReactElement {
-  const [open, setOpen] = useState(false);
-
-  const handleUploadImage = async (imageFile: File): Promise<void> => {
-    await uploadConsent(props.speaker, imageFile);
-    await props.refresh();
-  };
-
-  return (
-    <ListItemIcon>
-      <IconButtonWithTooltip
-        buttonId={`project-speaker-${props.speaker.id}-upload`}
-        icon={<AddPhotoAlternate />}
-        onClick={() => setOpen(true)}
-        textId="projectSettings.speaker.consent.upload"
-      />
-      <UploadImageDialog
-        close={() => setOpen(false)}
-        open={open}
-        titleId="projectSettings.speaker.consent.upload"
-        uploadImage={handleUploadImage}
-      />
-    </ListItemIcon>
-  );
-}
-
-function EditSpeakerNameIcon(props: ProjSpeakerProps): ReactElement {
+function EditSpeakerNameListItemIcon(props: ProjSpeakerProps): ReactElement {
   const [open, setOpen] = useState(false);
 
   const handleUpdateText = async (name: string): Promise<void> => {
@@ -215,7 +97,7 @@ function EditSpeakerNameIcon(props: ProjSpeakerProps): ReactElement {
   );
 }
 
-function DeleteSpeakerIcon(props: ProjSpeakerProps): ReactElement {
+function DeleteSpeakerListItemIcon(props: ProjSpeakerProps): ReactElement {
   const handleDelete = async (): Promise<void> => {
     await deleteSpeaker(props.speaker.id, props.projectId);
     await props.refresh();

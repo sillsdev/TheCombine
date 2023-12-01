@@ -209,9 +209,10 @@
       "edit": "Edit speaker's name",
       "consent": {
         "play": "Listen to the audio consent for this speaker",
-        "record": "Record audio consent for this speaker",
+        "add": "Add consent for this speaker",
+        "record": "Record audio consent",
         "look": "Look at the image consent for this speaker",
-        "upload": "Upload image consent for this speaker",
+        "upload": "Upload image consent",
         "remove": "Remove this speaker's consent",
         "warning": "Warning: the speaker's current consent will be deleted--this cannot be undone."
       }

@@ -1,5 +1,5 @@
 import { Tooltip, IconButton } from "@mui/material";
-import { ReactElement, ReactNode } from "react";
+import { MouseEventHandler, ReactElement, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
 interface IconButtonWithTooltipProps {
@@ -7,7 +7,7 @@ interface IconButtonWithTooltipProps {
   text?: ReactNode;
   textId?: string;
   size?: "large" | "medium" | "small";
-  onClick?: () => void;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
   buttonId: string;
   side?: "bottom" | "left" | "right" | "top";
 }

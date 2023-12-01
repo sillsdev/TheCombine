@@ -51,7 +51,7 @@ import ProjectSchedule from "components/ProjectSettings/ProjectSchedule";
 import ProjectSelect from "components/ProjectSettings/ProjectSelect";
 import ActiveProjectUsers from "components/ProjectUsers/ActiveProjectUsers";
 import AddProjectUsers from "components/ProjectUsers/AddProjectUsers";
-import ProjectSpeakers from "components/ProjectUsers/ProjectSpeakers";
+import ProjectSpeakersList from "components/ProjectUsers/ProjectSpeakersList";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { Path } from "types/path";
@@ -238,7 +238,7 @@ export default function ProjectSettingsComponent(): ReactElement {
             <BaseSettings
               icon={<RecordVoiceOver data-testid={Setting.Speakers} />}
               title={t("projectSettings.speaker.label")}
-              body={<ProjectSpeakers projectId={project.id} />}
+              body={<ProjectSpeakersList projectId={project.id} />}
             />
           )}
         </Grid>
