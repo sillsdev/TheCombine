@@ -1,5 +1,5 @@
 # User guide build environment
-FROM python:3.10.13-slim-bookworm AS user_guide_builder
+FROM python:3.12.0-slim-bookworm AS user_guide_builder
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
