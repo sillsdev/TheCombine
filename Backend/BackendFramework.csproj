@@ -10,12 +10,6 @@
     <NoWarn>$(NoWarn);CA1305;CA1816;CA1848;CS1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Data\sdList.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Data\sdList.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="RelaxNG" Version="3.2.3" >
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
