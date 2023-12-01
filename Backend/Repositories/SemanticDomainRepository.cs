@@ -82,8 +82,7 @@ namespace BackendFramework.Repositories
             var domain = await _context.SemanticDomains.FindAsync(filter: filter);
             try
             {
-                return (await domain.ToListAsync());
-
+                return await domain.ToListAsync();
             }
             catch (InvalidOperationException)
             {
