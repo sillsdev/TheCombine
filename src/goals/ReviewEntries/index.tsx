@@ -29,7 +29,7 @@ export default function ReviewEntries(props: ReviewEntriesProps): ReactElement {
         setLoaded(true);
       });
     }
-  }, [dispatch, props]);
+  }, [dispatch, props.completed]);
 
   return props.completed ? (
     <ReviewEntriesCompleted />
