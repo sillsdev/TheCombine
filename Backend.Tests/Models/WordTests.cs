@@ -86,7 +86,7 @@ namespace Backend.Tests.Models
             newWord.Flag = newFlag.Clone();
 
             // Add something to newWord in Audio, EditedBy, History.
-            newWord.Audio.Add(Text);
+            newWord.Audio.Add(new Pronunciation(Text));
             newWord.EditedBy.Add(Text);
             newWord.History.Add(Text);
 
@@ -100,7 +100,7 @@ namespace Backend.Tests.Models
             Assert.That(updatedDom, Is.Not.Null);
             Assert.That(oldWord.Flag.Equals(newFlag), Is.True);
             Assert.That(oldWord.Note.Equals(newNote), Is.True);
-            Assert.That(oldWord.Audio.Contains(Text), Is.True);
+            Assert.That(oldWord.Audio.Contains(new Pronunciation(Text)), Is.True);
             Assert.That(oldWord.EditedBy.Contains(Text), Is.True);
             Assert.That(oldWord.History.Contains(Text), Is.True);
 

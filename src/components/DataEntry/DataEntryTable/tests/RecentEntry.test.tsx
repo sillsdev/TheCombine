@@ -22,7 +22,7 @@ import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import { defaultState as pronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import theme from "types/theme";
-import { simpleWord } from "types/word";
+import { newPronunciation, simpleWord } from "types/word";
 import { newWritingSystem } from "types/writingSystem";
 
 jest.mock("@mui/material/Autocomplete", () => "div");
@@ -80,7 +80,8 @@ describe("ExistingEntry", () => {
     });
 
     it("renders recorder and 3 players", async () => {
-      await renderWithWord({ ...mockWord, audio: ["a.wav", "b.wav", "c.wav"] });
+      const audio = ["a.wav", "b.wav", "c.wav"].map((f) => newPronunciation(f));
+      await renderWithWord({ ...mockWord, audio });
       expect(testHandle.findAllByType(AudioPlayer).length).toEqual(3);
       expect(testHandle.findAllByType(AudioRecorder).length).toEqual(1);
     });

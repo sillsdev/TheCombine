@@ -47,6 +47,7 @@ models/password-reset-request-data.ts
 models/permission.ts
 models/project-role.ts
 models/project.ts
+models/pronunciation.ts
 models/role.ts
 models/semantic-domain-count.ts
 models/semantic-domain-full.ts

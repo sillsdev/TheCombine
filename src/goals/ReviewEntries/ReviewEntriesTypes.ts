@@ -3,6 +3,7 @@ import {
   Flag,
   Gloss,
   GrammaticalInfo,
+  Pronunciation,
   SemanticDomain,
   Sense,
   Status,
@@ -53,8 +54,8 @@ export class ReviewEntriesWord {
   id: string;
   vernacular: string;
   senses: ReviewEntriesSense[];
-  audio: string[];
-  audioNew?: string[];
+  audio: Pronunciation[];
+  audioNew?: Pronunciation[];
   noteText: string;
   flag: Flag;
   protected: boolean;

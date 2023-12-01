@@ -50,6 +50,7 @@ namespace BackendFramework.Services
             }
 
             // Remove duplicates.
+            // TODO: Confirm this works with Audio now List<Pronunciation>
             parent.Audio = parent.Audio.Distinct().ToList();
             parent.History = parent.History.Distinct().ToList();
             return parent;

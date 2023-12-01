@@ -7,12 +7,17 @@ import {
   GramCatGroup,
   GrammaticalInfo,
   Note,
+  Pronunciation,
   SemanticDomain,
   Sense,
   Status,
   Word,
 } from "api/models";
 import { randomIntString } from "utilities/utilities";
+
+export function newPronunciation(fileName = "", speakerId = ""): Pronunciation {
+  return { fileName, speakerId };
+}
 
 export function newDefinition(text = "", language = ""): Definition {
   return { text, language };

@@ -505,11 +505,11 @@ namespace BackendFramework.Services
         /// <summary> Adds pronunciation audio of a word to be written out to lift </summary>
         private static async Task AddAudio(LexEntry entry, Word wordEntry, string path, string projectId)
         {
-            foreach (var audioFile in wordEntry.Audio)
+            foreach (var audio in wordEntry.Audio)
             {
                 var lexPhonetic = new LexPhonetic();
-                var src = FileStorage.GenerateAudioFilePath(projectId, audioFile);
-                var dest = Path.Combine(path, audioFile);
+                var src = FileStorage.GenerateAudioFilePath(projectId, audio.FileName);
+                var dest = Path.Combine(path, audio.FileName);
 
                 if (!File.Exists(src)) continue;
                 if (Path.GetExtension(dest).Equals(".webm", StringComparison.OrdinalIgnoreCase))
@@ -809,7 +809,7 @@ namespace BackendFramework.Services
                         // get path to audio file in lift package at
                         // ~/{projectId}/Import/ExtractedLocation/Lift/audio/{audioFile}.mp3
                         var audioFile = pro.Media.First().Url;
-                        newWord.Audio.Add(audioFile);
+                        newWord.Audio.Add(new Pronunciation(audioFile));
                     }
                 }
 

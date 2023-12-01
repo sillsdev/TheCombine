@@ -518,9 +518,9 @@ namespace Backend.Tests.Controllers
                 {
                     Assert.That(allWords[0].Senses[0].Guid.ToString(), Is.EqualTo(roundTripObj.SenseGuid));
                 }
-                foreach (var audioFile in allWords[0].Audio)
+                foreach (var audio in allWords[0].Audio)
                 {
-                    Assert.That(roundTripObj.AudioFiles, Does.Contain(Path.GetFileName(audioFile)));
+                    Assert.That(roundTripObj.AudioFiles, Does.Contain(Path.GetFileName(audio.FileName)));
                 }
 
             }

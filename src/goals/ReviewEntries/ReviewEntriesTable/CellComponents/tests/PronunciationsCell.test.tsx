@@ -5,11 +5,13 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
+import { Pronunciation } from "api/models";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import { defaultState as pronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import PronunciationsCell from "goals/ReviewEntries/ReviewEntriesTable/CellComponents/PronunciationsCell";
 import theme from "types/theme";
+import { newPronunciation } from "types/word";
 
 // Mock the store interactions
 jest.mock("goals/ReviewEntries/Redux/ReviewEntriesActions", () => ({
@@ -40,17 +42,17 @@ const mockAudioFunctions = {
 // Render the cell component with a store and theme
 let testRenderer: ReactTestRenderer;
 const renderPronunciationsCell = async (
-  pronunciationFiles: string[],
-  pronunciationsNew?: string[]
+  audio: Pronunciation[],
+  audioNew?: Pronunciation[]
 ): Promise<void> => {
   await act(async () => {
     testRenderer = create(
       <ThemeProvider theme={theme}>
         <Provider store={mockStore}>
           <PronunciationsCell
-            audioFunctions={pronunciationsNew ? mockAudioFunctions : undefined}
-            pronunciationFiles={pronunciationFiles}
-            pronunciationsNew={pronunciationsNew}
+            audioFunctions={audioNew ? mockAudioFunctions : undefined}
+            audio={audio}
+            audioNew={audioNew}
             wordId={"mock-id"}
           />
         </Provider>
@@ -66,7 +68,7 @@ beforeEach(() => {
 describe("PronunciationsCell", () => {
   describe("not in edit mode", () => {
     it("renders", async () => {
-      const mockAudio = ["1", "2", "3"];
+      const mockAudio = ["1", "2", "3"].map((f) => newPronunciation(f));
       await renderPronunciationsCell(mockAudio);
       const playButtons = testRenderer.root.findAllByType(AudioPlayer);
       expect(playButtons).toHaveLength(mockAudio.length);
@@ -75,7 +77,7 @@ describe("PronunciationsCell", () => {
     });
 
     it("has player that dispatches action", async () => {
-      await renderPronunciationsCell(["1"]);
+      await renderPronunciationsCell([newPronunciation("1")]);
       await act(async () => {
         testRenderer.root.findByType(AudioPlayer).props.deleteAudio();
       });
@@ -98,8 +100,8 @@ describe("PronunciationsCell", () => {
 
   describe("in edit mode", () => {
     it("renders", async () => {
-      const mockAudioOld = ["1", "2", "3", "4"];
-      const mockAudioNew = ["5", "6"];
+      const mockAudioOld = ["1", "2", "3", "4"].map((f) => newPronunciation(f));
+      const mockAudioNew = ["5", "6"].map((f) => newPronunciation(f));
       await renderPronunciationsCell(mockAudioOld, mockAudioNew);
       const playButtons = testRenderer.root.findAllByType(AudioPlayer);
       expect(playButtons).toHaveLength(
@@ -110,7 +112,10 @@ describe("PronunciationsCell", () => {
     });
 
     it("has players that call prop functions", async () => {
-      await renderPronunciationsCell(["old"], ["new"]);
+      await renderPronunciationsCell(
+        [newPronunciation("old")],
+        [newPronunciation("new")]
+      );
       const playButtons = testRenderer.root.findAllByType(AudioPlayer);
 
       // player for audio present prior to row edit

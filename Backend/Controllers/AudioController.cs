@@ -115,7 +115,7 @@ namespace BackendFramework.Controllers
             {
                 return NotFound(wordId);
             }
-            word.Audio.Add(Path.GetFileName(fileUpload.FilePath));
+            word.Audio.Add(new Pronunciation(Path.GetFileName(fileUpload.FilePath)));
 
             // Update the word with new audio file
             await _wordService.Update(projectId, userId, wordId, word);

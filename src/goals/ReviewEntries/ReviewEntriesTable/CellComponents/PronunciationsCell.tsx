@@ -1,5 +1,6 @@
 import { ReactElement } from "react";
 
+import { Pronunciation } from "api/models";
 import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
 import PronunciationsFrontend from "components/Pronunciations/PronunciationsFrontend";
 import {
@@ -14,8 +15,8 @@ interface PronunciationsCellProps {
     delNewAudio: (url: string) => void;
     delOldAudio: (fileName: string) => void;
   };
-  pronunciationFiles: string[];
-  pronunciationsNew?: string[];
+  audio: Pronunciation[];
+  audioNew?: Pronunciation[];
   wordId: string;
 }
 
@@ -34,20 +35,20 @@ export default function PronunciationsCell(
     <PronunciationsFrontend
       elemBetweenRecordAndPlay={
         <PronunciationsBackend
+          audio={props.audio}
           overrideMemo
           playerOnly
-          pronunciationFiles={props.pronunciationFiles}
           wordId={props.wordId}
           deleteAudio={delOldAudio!}
         />
       }
-      pronunciationFiles={props.pronunciationsNew ?? []}
+      audio={props.audioNew ?? []}
       deleteAudio={delNewAudio!}
       uploadAudio={addNewAudio!}
     />
   ) : (
     <PronunciationsBackend
-      pronunciationFiles={props.pronunciationFiles}
+      audio={props.audio}
       wordId={props.wordId}
       deleteAudio={dispatchDelete}
       uploadAudio={dispatchUpload}

@@ -21,6 +21,7 @@ import {
   ReviewEntriesWord,
   ReviewEntriesWordField,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
+import { newPronunciation } from "types/word";
 import { compareFlags } from "utilities/wordUtilities";
 
 export class ColumnTitle {
@@ -357,10 +358,7 @@ const columns: Column<ReviewEntriesWord>[] = [
     field: ReviewEntriesWordField.Pronunciations,
     filterPlaceholder: "#",
     render: (rowData: ReviewEntriesWord) => (
-      <PronunciationsCell
-        pronunciationFiles={rowData.audio}
-        wordId={rowData.id}
-      />
+      <PronunciationsCell audio={rowData.audio} wordId={rowData.id} />
     ),
     editComponent: (props: FieldParameterStandard) => (
       <PronunciationsCell
@@ -371,7 +369,7 @@ const columns: Column<ReviewEntriesWord>[] = [
                 ...props.rowData,
                 audioNew: [
                   ...(props.rowData.audioNew ?? []),
-                  URL.createObjectURL(file),
+                  newPronunciation(URL.createObjectURL(file)),
                 ],
               });
           },
@@ -379,19 +377,23 @@ const columns: Column<ReviewEntriesWord>[] = [
             props.onRowDataChange &&
               props.onRowDataChange({
                 ...props.rowData,
-                audioNew: props.rowData.audioNew?.filter((u) => u !== url),
+                audioNew: props.rowData.audioNew?.filter(
+                  (a) => a.fileName !== url
+                ),
               });
           },
           delOldAudio: (fileName: string): void => {
             props.onRowDataChange &&
               props.onRowDataChange({
                 ...props.rowData,
-                audio: props.rowData.audio.filter((f) => f !== fileName),
+                audio: props.rowData.audio.filter(
+                  (a) => a.fileName !== fileName
+                ),
               });
           },
         }}
-        pronunciationFiles={props.rowData.audio}
-        pronunciationsNew={props.rowData.audioNew}
+        audio={props.rowData.audio}
+        audioNew={props.rowData.audioNew}
         wordId={props.rowData.id}
       />
     ),

@@ -169,11 +169,11 @@ export function updateFrontierWord(
     editSource.id = (await backend.updateWord(editWord)).id;
 
     // Add/remove audio.
-    for (const url of addAudio) {
-      editSource.id = await uploadFileFromUrl(editSource.id, url);
+    for (const audio of addAudio) {
+      editSource.id = await uploadFileFromUrl(editSource.id, audio.fileName);
     }
-    for (const fileName of delAudio) {
-      editSource.id = await backend.deleteAudio(editSource.id, fileName);
+    for (const audio of delAudio) {
+      editSource.id = await backend.deleteAudio(editSource.id, audio.fileName);
     }
     editSource.audio = (await backend.getWord(editSource.id)).audio;
 

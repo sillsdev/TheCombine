@@ -10,6 +10,7 @@ import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import PronunciationsFrontend from "components/Pronunciations/PronunciationsFrontend";
 import { defaultState as pronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import theme from "types/theme";
+import { newPronunciation } from "types/word";
 
 // Test variables
 let testRenderer: renderer.ReactTestRenderer;
@@ -17,14 +18,14 @@ const mockStore = configureMockStore()({ pronunciationsState });
 
 describe("PronunciationsFrontend", () => {
   it("renders with record button and play buttons", () => {
-    const audio = ["a.wav", "b.wav"];
+    const audio = ["a.wav", "b.wav"].map((f) => newPronunciation(f));
     renderer.act(() => {
       testRenderer = renderer.create(
         <StyledEngineProvider injectFirst>
           <ThemeProvider theme={theme}>
             <Provider store={mockStore}>
               <PronunciationsFrontend
-                pronunciationFiles={audio}
+                audio={audio}
                 deleteAudio={jest.fn()}
                 uploadAudio={jest.fn()}
               />

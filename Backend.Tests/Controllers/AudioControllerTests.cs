@@ -97,13 +97,13 @@ namespace Backend.Tests.Controllers
         public void DeleteAudio()
         {
             // Fill test database
-            var origWord = _wordRepo.Create(Util.RandomWord(_projId)).Result;
-
-            // Add audio file to word
-            origWord.Audio.Add("a.wav");
+            var origWord = Util.RandomWord(_projId);
+            var fileName = "a.wav";
+            origWord.Audio.Add(new Pronunciation(fileName));
+            var wordId = _wordRepo.Create(origWord).Result.Id;
 
             // Test delete function
-            _ = _audioController.DeleteAudioFile(_projId, origWord.Id, "a.wav").Result;
+            _ = _audioController.DeleteAudioFile(_projId, wordId, fileName).Result;
 
             // Original word persists
             Assert.That(_wordRepo.GetAllWords(_projId).Result, Has.Count.EqualTo(2));
@@ -119,7 +119,7 @@ namespace Backend.Tests.Controllers
 
             // Ensure the word with deleted audio is in the frontier
             Assert.That(frontier, Has.Count.EqualTo(1));
-            Assert.That(frontier[0].Id, Is.Not.EqualTo(origWord.Id));
+            Assert.That(frontier[0].Id, Is.Not.EqualTo(wordId));
             Assert.That(frontier[0].Audio, Has.Count.EqualTo(0));
             Assert.That(frontier[0].History, Has.Count.EqualTo(1));
         }

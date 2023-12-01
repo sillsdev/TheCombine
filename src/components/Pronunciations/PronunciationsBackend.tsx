@@ -1,13 +1,14 @@
 import { memo, ReactElement } from "react";
 
+import { Pronunciation } from "api/models";
 import { getAudioUrl } from "backend";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 
 interface PronunciationsBackendProps {
+  audio: Pronunciation[];
   playerOnly?: boolean;
   overrideMemo?: boolean;
-  pronunciationFiles: string[];
   wordId: string;
   deleteAudio: (fileName: string) => void;
   uploadAudio?: (audioFile: File) => void;
@@ -24,16 +25,14 @@ export function PronunciationsBackend(
     console.warn("uploadAudio undefined; playerOnly should be set to true");
   }
 
-  const audioButtons: ReactElement[] = props.pronunciationFiles.map(
-    (fileName) => (
-      <AudioPlayer
-        fileName={fileName}
-        key={fileName}
-        pronunciationUrl={getAudioUrl(props.wordId, fileName)}
-        deleteAudio={props.deleteAudio}
-      />
-    )
-  );
+  const audioButtons: ReactElement[] = props.audio.map((a) => (
+    <AudioPlayer
+      fileName={a.fileName}
+      key={a.fileName}
+      pronunciationUrl={getAudioUrl(props.wordId, a.fileName)}
+      deleteAudio={props.deleteAudio}
+    />
+  ));
 
   return (
     <>
@@ -56,8 +55,7 @@ function propsAreEqual(
   }
   return (
     prev.wordId === next.wordId &&
-    JSON.stringify(prev.pronunciationFiles) ===
-      JSON.stringify(next.pronunciationFiles)
+    JSON.stringify(prev.audio) === JSON.stringify(next.audio)
   );
 }
 

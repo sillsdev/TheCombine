@@ -134,7 +134,7 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
       >
         {!props.disabled && (
           <PronunciationsBackend
-            pronunciationFiles={props.entry.audio}
+            audio={props.entry.audio}
             wordId={props.entry.id}
             deleteAudio={(fileName: string) => {
               props.deleteAudioFromWord(props.entry.id, fileName);

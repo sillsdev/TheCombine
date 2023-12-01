@@ -6,7 +6,7 @@ import { Word } from "api/models";
 import WordCard, { AudioSummary, buttonIdFull } from "components/WordCard";
 import SenseCard from "components/WordCard/SenseCard";
 import SummarySenseCard from "components/WordCard/SummarySenseCard";
-import { newSense, newWord } from "types/word";
+import { newPronunciation, newSense, newWord } from "types/word";
 
 // Mock the audio components
 jest
@@ -18,7 +18,8 @@ jest.mock("components/Pronunciations/Recorder");
 const mockWordId = "mock-id";
 const buttonId = buttonIdFull(mockWordId);
 const mockWord: Word = { ...newWord(), id: mockWordId };
-mockWord.audio.push("song", "speech", "rap", "poem");
+const newAudio = ["song", "rap", "poem"].map((f) => newPronunciation(f));
+mockWord.audio.push(...newAudio);
 mockWord.senses.push(newSense(), newSense());
 
 let cardHandle: ReactTestRenderer;
