@@ -86,6 +86,15 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestHasPermissionNotAuthorized()
+        {
+            _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = await _userRoleController.HasPermission(_projId, Permission.WordEntry);
+            Assert.That(result, Is.InstanceOf<ObjectResult>());
+            Assert.That(((ObjectResult)result).Value, Is.False);
+        }
+
+        [Test]
         public async Task TestGetCurrentPermissions()
         {
             var userRole = await _userRoleRepo.Create(RandomUserRole());
