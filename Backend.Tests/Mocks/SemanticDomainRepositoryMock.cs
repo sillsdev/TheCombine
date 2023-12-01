@@ -8,10 +8,21 @@ namespace Backend.Tests.Mocks
     public class SemanticDomainRepositoryMock : ISemanticDomainRepository
     {
         private object? _responseObj;
+        private List<string>? _validLangs;
 
         public Task<List<SemanticDomainTreeNode>?> GetAllSemanticDomainTreeNodes(string lang)
         {
-            return Task.FromResult((List<SemanticDomainTreeNode>?)_responseObj);
+            if (_validLangs is null)
+            {
+                return Task.FromResult((List<SemanticDomainTreeNode>?)_responseObj);
+            }
+
+            List<SemanticDomainTreeNode>? semDoms = null;
+            if (_validLangs.Contains(lang))
+            {
+                semDoms = new() { new(new SemanticDomain { Lang = lang }) };
+            }
+            return Task.FromResult(semDoms);
         }
 
         public Task<SemanticDomainFull?> GetSemanticDomainFull(string id, string lang)
@@ -32,6 +43,11 @@ namespace Backend.Tests.Mocks
         internal void SetNextResponse(object? response)
         {
             _responseObj = response;
+        }
+
+        internal void SetValidLangs(List<string>? validLangs)
+        {
+            _validLangs = validLangs;
         }
     }
 }
