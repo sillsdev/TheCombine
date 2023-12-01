@@ -291,6 +291,63 @@ export const UserRoleApiAxiosParamCreator = function (
     },
     /**
      *
+     * @param {string} projectId
+     * @param {string} body
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    hasPermission: async (
+      projectId: string,
+      body: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("hasPermission", "projectId", projectId);
+      // verify required parameter 'body' is not null or undefined
+      assertParamExists("hasPermission", "body", body);
+      const localVarPath =
+        `/v1/projects/{projectId}/userroles/permission`.replace(
+          `{${"projectId"}}`,
+          encodeURIComponent(String(projectId))
+        );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        body,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @param {string} userId
      * @param {string} projectId
      * @param {ProjectRole} projectRole
@@ -487,6 +544,32 @@ export const UserRoleApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @param {string} projectId
+     * @param {string} body
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async hasPermission(
+      projectId: string,
+      body: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.hasPermission(
+        projectId,
+        body,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
      * @param {string} userId
      * @param {string} projectId
      * @param {ProjectRole} projectRole
@@ -604,6 +687,22 @@ export const UserRoleApiFactory = function (
     },
     /**
      *
+     * @param {string} projectId
+     * @param {string} body
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    hasPermission(
+      projectId: string,
+      body: string,
+      options?: any
+    ): AxiosPromise<boolean> {
+      return localVarFp
+        .hasPermission(projectId, body, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @param {string} userId
      * @param {string} projectId
      * @param {ProjectRole} projectRole
@@ -705,6 +804,27 @@ export interface UserRoleApiGetProjectUserRolesRequest {
    * @memberof UserRoleApiGetProjectUserRoles
    */
   readonly projectId: string;
+}
+
+/**
+ * Request parameters for hasPermission operation in UserRoleApi.
+ * @export
+ * @interface UserRoleApiHasPermissionRequest
+ */
+export interface UserRoleApiHasPermissionRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof UserRoleApiHasPermission
+   */
+  readonly projectId: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof UserRoleApiHasPermission
+   */
+  readonly body: string;
 }
 
 /**
@@ -827,6 +947,26 @@ export class UserRoleApi extends BaseAPI {
   ) {
     return UserRoleApiFp(this.configuration)
       .getProjectUserRoles(requestParameters.projectId, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {UserRoleApiHasPermissionRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserRoleApi
+   */
+  public hasPermission(
+    requestParameters: UserRoleApiHasPermissionRequest,
+    options?: any
+  ) {
+    return UserRoleApiFp(this.configuration)
+      .hasPermission(
+        requestParameters.projectId,
+        requestParameters.body,
+        options
+      )
       .then((request) => request(this.axios, this.basePath));
   }
 

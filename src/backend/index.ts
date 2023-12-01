@@ -590,6 +590,10 @@ export async function deleteUser(userId: string): Promise<string> {
   return (await userApi.deleteUser({ userId }, defaultOptions())).data;
 }
 
+export async function isSiteAdmin(): Promise<boolean> {
+  return (await userApi.isUserSiteAdmin(defaultOptions())).data;
+}
+
 /* UserEditController.cs */
 
 /** Returns index of added goal, or of updated goal
@@ -654,6 +658,11 @@ export async function getCurrentPermissions(): Promise<Permission[]> {
   const params = { projectId: LocalStorage.getProjectId() };
   return (await userRoleApi.getCurrentPermissions(params, defaultOptions()))
     .data;
+}
+
+export async function hasPermission(perm: Permission): Promise<boolean> {
+  const params = { body: perm, projectId: LocalStorage.getProjectId() };
+  return (await userRoleApi.hasPermission(params, defaultOptions())).data;
 }
 
 export async function addOrUpdateUserRole(
