@@ -196,5 +196,11 @@ namespace BackendFramework.Helper
                 _ => throw new NotImplementedException()
             };
         }
+
+        /// <summary> Generate the path of the WritingSystems subdirectory of a LIFT directory </summary>
+        public static string GenerateWritingsSystemsSubdirPath(string dir)
+        {
+            return Path.Combine(dir, "WritingSystems");
+        }
     }
 }
