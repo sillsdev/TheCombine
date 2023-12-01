@@ -1,14 +1,23 @@
+import { PreloadedState } from "redux";
+
 import { Sense, Word } from "api/models";
+import { defaultState } from "components/App/DefaultState";
 import {
+  deleteWord,
   getSenseError,
   getSenseFromEditSense,
+  resetReviewEntries,
+  setAllWords,
+  setSortBy,
   updateFrontierWord,
+  updateWord,
 } from "goals/ReviewEntries/Redux/ReviewEntriesActions";
 import {
+  ColumnId,
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
-import { setupStore } from "store";
+import { RootState, setupStore } from "store";
 import { newSemanticDomain } from "types/semanticDomain";
 import { newFlag, newGloss, newNote, newSense, newWord } from "types/word";
 import { Bcp47Code } from "types/writingSystem";
@@ -37,6 +46,8 @@ const gloss0Es = newGloss("glossario", Bcp47Code.Es);
 const gloss1 = newGloss("infinite", Bcp47Code.En);
 const domain0 = newSemanticDomain("1", "Universe");
 const domain1 = newSemanticDomain("8.3.3.2.1", "Shadow");
+const colId = ColumnId.Definitions;
+const wordId = "mockId";
 
 // Dummy sense and word creators.
 function sense0(): Sense {
@@ -62,24 +73,122 @@ function mockFrontierWord(vernacular = "word"): Word {
   return {
     ...newWord(vernacular),
     guid: commonGuid,
-    id: "word",
+    id: wordId,
     senses: [sense0()],
   };
 }
 function mockReviewEntriesWord(vernacular = "word"): ReviewEntriesWord {
   return {
     ...new ReviewEntriesWord(),
-    id: "word",
+    id: wordId,
     vernacular,
     senses: [new ReviewEntriesSense(sense0())],
   };
 }
+
+// Preloaded values for store when testing
+const persistedDefaultState: PreloadedState<RootState> = {
+  ...defaultState,
+  _persist: { version: 1, rehydrated: false },
+};
 
 beforeEach(() => {
   jest.clearAllMocks();
 });
 
 describe("ReviewEntriesActions", () => {
+  describe("Action Creation Functions", () => {
+    test("deleteWord", () => {
+      const store = setupStore({
+        ...persistedDefaultState,
+        reviewEntriesState: {
+          sortBy: colId,
+          words: [mockFrontierWord()],
+        },
+      });
+      expect(store.getState().reviewEntriesState.sortBy).toEqual(colId);
+      expect(store.getState().reviewEntriesState.words).toHaveLength(1);
+
+      store.dispatch(deleteWord(wordId));
+      expect(store.getState().reviewEntriesState.sortBy).toEqual(colId);
+      expect(store.getState().reviewEntriesState.words).toHaveLength(0);
+    });
+
+    test("resetReviewEntries", () => {
+      const store = setupStore({
+        ...persistedDefaultState,
+        reviewEntriesState: {
+          sortBy: colId,
+          words: [mockFrontierWord()],
+        },
+      });
+      expect(store.getState().reviewEntriesState.sortBy).toEqual(colId);
+      expect(store.getState().reviewEntriesState.words).toHaveLength(1);
+
+      store.dispatch(resetReviewEntries());
+      expect(store.getState().reviewEntriesState.sortBy).toBeUndefined();
+      expect(store.getState().reviewEntriesState.words).toHaveLength(0);
+    });
+
+    test("setAllWords", () => {
+      const store = setupStore({
+        ...persistedDefaultState,
+        reviewEntriesState: {
+          sortBy: colId,
+          words: [],
+        },
+      });
+      expect(store.getState().reviewEntriesState.sortBy).toEqual(colId);
+      expect(store.getState().reviewEntriesState.words).toHaveLength(0);
+
+      const frontier = [mockFrontierWord("wordA"), mockFrontierWord("wordB")];
+      store.dispatch(setAllWords(frontier));
+      expect(store.getState().reviewEntriesState.sortBy).toEqual(colId);
+      expect(store.getState().reviewEntriesState.words).toHaveLength(
+        frontier.length
+      );
+    });
+
+    test("setSortBy", () => {
+      const store = setupStore(persistedDefaultState);
+      expect(store.getState().reviewEntriesState.sortBy).toBeUndefined();
+
+      store.dispatch(setSortBy(colId));
+      expect(store.getState().reviewEntriesState.sortBy).toEqual(colId);
+
+      store.dispatch(setSortBy());
+      expect(store.getState().reviewEntriesState.sortBy).toBeUndefined();
+    });
+
+    test("updateWord", () => {
+      const frontier: Word[] = [
+        { ...mockFrontierWord(), id: "otherA" },
+        mockFrontierWord(),
+        { ...mockFrontierWord(), id: "otherB" },
+      ];
+      const store = setupStore({
+        ...persistedDefaultState,
+        reviewEntriesState: { sortBy: colId, words: frontier },
+      });
+      expect(store.getState().reviewEntriesState.sortBy).toEqual(colId);
+      expect(store.getState().reviewEntriesState.words).toHaveLength(
+        frontier.length
+      );
+
+      const newVern = "updatedVern";
+      const newId = "updatedId";
+      const updatedWord: Word = { ...mockFrontierWord(newVern), id: newId };
+      store.dispatch(updateWord({ oldId: wordId, updatedWord }));
+
+      const { sortBy, words } = store.getState().reviewEntriesState;
+      expect(sortBy).toEqual(colId);
+      expect(words).toHaveLength(3);
+      expect(words.find((w) => w.id === wordId)).toBeUndefined();
+      const newWord = words.find((w) => w.id === newId);
+      expect(newWord?.vernacular).toEqual(newVern);
+    });
+  });
+
   describe("updateFrontierWord", () => {
     beforeEach(() => {
       mockUpdateWord.mockResolvedValue(newWord());
