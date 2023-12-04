@@ -44,7 +44,7 @@ export default function EmailInvite(props: InviteProps): ReactElement {
 
   useEffect(() => {
     setIsValid(validator.isEmail(email) && email !== "example@gmail.com");
-  }, [email, setIsValid]);
+  }, [email]);
 
   return (
     <Card style={{ width: 450 }}>

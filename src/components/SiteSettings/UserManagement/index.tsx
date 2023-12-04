@@ -34,7 +34,7 @@ export default function UserManagement(): ReactElement {
         console.error(err);
         toast.error(t("siteSettings.populateUsers.toastFailure"));
       });
-  }, [setAllUsers, t]);
+  }, [t]);
 
   useEffect(() => {
     Modal.setAppElement("body");
