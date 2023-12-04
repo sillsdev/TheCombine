@@ -41,26 +41,30 @@ namespace Backend.Tests.Models
 
     public class UserEditStepWrapperTests
     {
-        private const int GoalIndex = 1;
+        private readonly Guid EditGuid = Guid.NewGuid();
         private const string StepString = "step";
         private const int StepIndex = 1;
 
         [Test]
         public void TestEquals()
         {
-            var wrapper = new UserEditStepWrapper(GoalIndex, StepString, StepIndex);
-            Assert.That(wrapper.Equals(new UserEditStepWrapper(GoalIndex, StepString, StepIndex)), Is.True);
-            Assert.That(wrapper.Equals(new UserEditStepWrapper(99, StepString, StepIndex)), Is.False);
-            Assert.That(wrapper.Equals(new UserEditStepWrapper(GoalIndex, "Different step", StepIndex)), Is.False);
-            Assert.That(wrapper.Equals(new UserEditStepWrapper(GoalIndex, StepString, 99)), Is.False);
+            var wrapper = new UserEditStepWrapper(EditGuid, StepString, StepIndex);
+            Assert.That(wrapper.Equals(new UserEditStepWrapper(EditGuid, StepString, StepIndex)), Is.True);
+            Assert.That(wrapper.Equals(new UserEditStepWrapper(Guid.NewGuid(), StepString, StepIndex)), Is.False);
+            Assert.That(wrapper.Equals(new UserEditStepWrapper(EditGuid, "Different step", StepIndex)), Is.False);
+            Assert.That(wrapper.Equals(new UserEditStepWrapper(EditGuid, StepString, 99)), Is.False);
             Assert.That(wrapper.Equals(null), Is.False);
         }
 
         [Test]
         public void TestHashCode()
         {
-            Assert.That(new UserEditStepWrapper(GoalIndex, StepString, StepIndex).GetHashCode(),
-                Is.Not.EqualTo(new UserEditStepWrapper(99, StepString, StepIndex).GetHashCode()));
+            var code = new UserEditStepWrapper(EditGuid, StepString, StepIndex).GetHashCode();
+            Assert.That(code,
+                Is.Not.EqualTo(new UserEditStepWrapper(Guid.NewGuid(), StepString, StepIndex).GetHashCode()));
+            Assert.That(code,
+                Is.Not.EqualTo(new UserEditStepWrapper(EditGuid, "Different step", StepIndex).GetHashCode()));
+            Assert.That(code, Is.Not.EqualTo(new UserEditStepWrapper(EditGuid, StepString, 99).GetHashCode()));
         }
     }
 
