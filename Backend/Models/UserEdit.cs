@@ -74,16 +74,13 @@ namespace BackendFramework.Models
     public class UserEditStepWrapper
     {
         [Required]
-        [BsonElement("editGuid")]
         public Guid EditGuid { get; set; }
 
         [Required]
-        [BsonElement("stepString")]
         public string StepString { get; set; }
 
         /* A null StepIndex implies index equal to the length of the step list--
          * i.e. the step is to be added to the end of the list. */
-        [BsonElement("stepIndex")]
         public int? StepIndex { get; set; }
 
         public UserEditStepWrapper(Guid editGuid, string stepString, int? stepIndex = null)
