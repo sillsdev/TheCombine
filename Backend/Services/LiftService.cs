@@ -46,21 +46,15 @@ namespace BackendFramework.Services
                         continue;
                     }
                     Writer.WriteAttributeString("href", Path.GetFileName(href.Form));
-
-                    // If there's data aside from the href, add as a label
-                    if (forms.Count > 1)
+                    // If there is speaker info, it was added as an "en" MultiText
+                    var label = forms.Find(f => f.WritingSystemId == "en");
+                    if (label is not null)
                     {
                         Writer.WriteStartElement("label");
-                        foreach (var form in phonetic.Forms)
-                        {
-                            if (form.WritingSystemId != "href")
-                            {
-                                Writer.WriteStartElement("form");
-                                Writer.WriteAttributeString("lang", form.WritingSystemId);
-                                Writer.WriteElementString("text", form.Form);
-                                Writer.WriteEndElement();
-                            }
-                        }
+                        Writer.WriteStartElement("form");
+                        Writer.WriteAttributeString("lang", label.WritingSystemId);
+                        Writer.WriteElementString("text", label.Form);
+                        Writer.WriteEndElement();
                         Writer.WriteEndElement();
                     }
 
@@ -554,13 +548,12 @@ namespace BackendFramework.Services
 
                 lexPhonetic.MergeIn(MultiText.Create(new LiftMultiText { { "href", dest } }));
                 // If audio has speaker, include speaker info as a pronunciation label
-                if (!string.IsNullOrEmpty(audio.SpeakerId))
+                if (!audio.Protected && !string.IsNullOrEmpty(audio.SpeakerId))
                 {
                     var speaker = projectSpeakers.Find(s => s.Id == audio.SpeakerId);
                     if (speaker is not null)
                     {
-                        // Use non-real language tags to avoid overwriting existing labels on FLEx import
-                        var text = new LiftMultiText { { "speakerName", speaker.Name }, { "speakerId", speaker.Id } };
+                        var text = new LiftMultiText { { "en", $"Speaker #{speaker.Id}: {speaker.Name}" } };
                         lexPhonetic.MergeIn(MultiText.Create(text));
                     }
                 }
@@ -848,8 +841,10 @@ namespace BackendFramework.Services
                     {
                         // get path to audio file in lift package at
                         // ~/{projectId}/Import/ExtractedLocation/Lift/audio/{audioFile}.mp3
-                        var audioFile = pro.Media.First().Url;
-                        newWord.Audio.Add(new Pronunciation(audioFile));
+                        var media = pro.Media.First();
+                        var hasEnLabel = !string.IsNullOrWhiteSpace(media.Label["en"]?.Text);
+                        var audio = new Pronunciation(media.Url) { Protected = hasEnLabel };
+                        newWord.Audio.Add(audio);
                     }
                 }
 
@@ -942,7 +937,7 @@ namespace BackendFramework.Services
             {
                 var entry = (LiftEntry)pronunciation;
                 var phonetic = new LiftPhonetic();
-                var url = new LiftUrlRef { Url = href };
+                var url = new LiftUrlRef { Url = href, Label = caption };
                 phonetic.Media.Add(url);
                 entry.Pronunciations.Add(phonetic);
             }

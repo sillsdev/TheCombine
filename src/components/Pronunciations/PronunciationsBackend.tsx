@@ -11,7 +11,7 @@ interface PronunciationsBackendProps {
   overrideMemo?: boolean;
   wordId: string;
   deleteAudio: (fileName: string) => void;
-  uploadAudio?: (audioFile: File) => void;
+  uploadAudio?: (audioFile: File, speakerId?: string) => void;
 }
 
 /** Audio recording/playing component for backend audio. */

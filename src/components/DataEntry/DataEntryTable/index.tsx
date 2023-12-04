@@ -208,6 +208,9 @@ export default function DataEntryTable(
       state.currentProjectState.project.analysisWritingSystems[0] ??
       defaultWritingSystem
   );
+  const speakerId = useAppSelector(
+    (state: StoreState) => state.currentProjectState.speaker?.id
+  );
   const suggestVerns = useAppSelector(
     (state: StoreState) =>
       state.currentProjectState.project.autocompleteSetting ===
@@ -374,7 +377,7 @@ export default function DataEntryTable(
   const addNewAudioUrl = (file: File): void => {
     setState((prevState) => {
       const newAudio = [...prevState.newAudio];
-      newAudio.push(newPronunciation(URL.createObjectURL(file)));
+      newAudio.push(newPronunciation(URL.createObjectURL(file), speakerId));
       return { ...prevState, newAudio };
     });
   };

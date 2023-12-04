@@ -264,10 +264,15 @@ namespace BackendFramework.Models
         [Required]
         public string SpeakerId { get; set; }
 
+        /// <summary> For any with "en" label that was present on import, to prevent overwriting. </summary>
+        [Required]
+        public bool Protected { get; set; }
+
         public Pronunciation()
         {
             FileName = "";
             SpeakerId = "";
+            Protected = false;
         }
 
         public Pronunciation(string fileName) : this()
@@ -285,7 +290,8 @@ namespace BackendFramework.Models
             return new Pronunciation
             {
                 FileName = FileName,
-                SpeakerId = SpeakerId
+                SpeakerId = SpeakerId,
+                Protected = Protected
             };
         }
 
@@ -297,12 +303,13 @@ namespace BackendFramework.Models
             }
 
             return FileName.Equals(other.FileName, StringComparison.Ordinal) &&
-                SpeakerId.Equals(other.SpeakerId, StringComparison.Ordinal);
+                SpeakerId.Equals(other.SpeakerId, StringComparison.Ordinal) &&
+                Protected == other.Protected;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(FileName, SpeakerId);
+            return HashCode.Combine(FileName, SpeakerId, Protected);
         }
     }
 

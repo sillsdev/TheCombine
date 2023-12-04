@@ -16,7 +16,7 @@ import {
 import { randomIntString } from "utilities/utilities";
 
 export function newPronunciation(fileName = "", speakerId = ""): Pronunciation {
-  return { fileName, speakerId };
+  return { fileName, speakerId, _protected: false };
 }
 
 export function newDefinition(text = "", language = ""): Definition {

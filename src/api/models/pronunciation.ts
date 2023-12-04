@@ -30,4 +30,10 @@ export interface Pronunciation {
    * @memberof Pronunciation
    */
   speakerId: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof Pronunciation
+   */
+  _protected: boolean;
 }

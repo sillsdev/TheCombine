@@ -165,6 +165,39 @@ namespace Backend.Tests.Models
         }
     }
 
+    public class PronunciationTest
+    {
+        private const string FileName = "file-name.mp3";
+        private const string SpeakerId = "1234567890";
+
+        [Test]
+        public void TestNotEquals()
+        {
+            var pronunciation = new Pronunciation { Protected = false, FileName = FileName, SpeakerId = SpeakerId };
+            Assert.That(pronunciation.Equals(
+                new Pronunciation { Protected = true, FileName = FileName, SpeakerId = SpeakerId }), Is.False);
+            Assert.That(pronunciation.Equals(
+                new Pronunciation { Protected = false, FileName = "other-name", SpeakerId = SpeakerId }), Is.False);
+            Assert.That(pronunciation.Equals(
+                new Pronunciation { Protected = false, FileName = FileName, SpeakerId = "other-id" }), Is.False);
+            Assert.That(pronunciation.Equals(null), Is.False);
+        }
+
+        [Test]
+        public void TestHashCode()
+        {
+            Assert.That(
+                new Pronunciation { FileName = FileName }.GetHashCode(),
+                Is.Not.EqualTo(new Pronunciation { FileName = "other-name" }.GetHashCode()));
+            Assert.That(
+                new Pronunciation { SpeakerId = SpeakerId }.GetHashCode(),
+                Is.Not.EqualTo(new Pronunciation { SpeakerId = "other-id" }.GetHashCode()));
+            Assert.That(
+                new Pronunciation { Protected = true }.GetHashCode(),
+                Is.Not.EqualTo(new Pronunciation { Protected = false }.GetHashCode()));
+        }
+    }
+
     public class NoteTests
     {
         private const string Language = "fr";
