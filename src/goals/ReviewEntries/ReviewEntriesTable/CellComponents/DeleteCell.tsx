@@ -1,6 +1,6 @@
 import { Delete } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import React, { ReactElement, useState } from "react";
+import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { deleteFrontierWord as deleteFromBackend } from "backend";
@@ -9,6 +9,10 @@ import { updateAllWords } from "goals/ReviewEntries/Redux/ReviewEntriesActions";
 import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
+
+export const buttonId = (wordId: string): string => `row-${wordId}-delete`;
+export const buttonIdCancel = "delete-cancel";
+export const buttonIdConfirm = "delete-confirm";
 
 interface DeleteCellProps {
   rowData: ReviewEntriesWord;
@@ -40,7 +44,7 @@ export default function DeleteCell(props: DeleteCellProps): ReactElement {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Tooltip
         title={disabled ? t("reviewEntries.deleteDisabled") : ""}
         placement={document.body.dir === "rtl" ? "right" : "left"}
@@ -48,7 +52,7 @@ export default function DeleteCell(props: DeleteCellProps): ReactElement {
         <span>
           <IconButton
             onClick={handleOpen}
-            id={`row-${props.rowData.id}-delete`}
+            id={buttonId(props.rowData.id)}
             size="large"
             disabled={disabled}
           >
@@ -61,9 +65,9 @@ export default function DeleteCell(props: DeleteCellProps): ReactElement {
         textId={"reviewEntries.deleteWordWarning"}
         handleCancel={handleClose}
         handleConfirm={deleteFrontierWord}
-        buttonIdCancel="row-delete-cancel"
-        buttonIdConfirm="row-delete-confirm"
+        buttonIdCancel={buttonIdCancel}
+        buttonIdConfirm={buttonIdConfirm}
       />
-    </React.Fragment>
+    </>
   );
 }
