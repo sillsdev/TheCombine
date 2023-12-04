@@ -39,7 +39,31 @@ namespace BackendFramework.Services
                 {
                     Writer.WriteStartElement("pronunciation");
                     Writer.WriteStartElement("media");
-                    Writer.WriteAttributeString("href", Path.GetFileName(phonetic.Forms.First().Form));
+                    var forms = new List<LanguageForm>(phonetic.Forms);
+                    var href = forms.Find(f => f.WritingSystemId == "href");
+                    if (href is null)
+                    {
+                        continue;
+                    }
+                    Writer.WriteAttributeString("href", Path.GetFileName(href.Form));
+
+                    // If there's data aside from the href, add as a label
+                    if (forms.Count > 1)
+                    {
+                        Writer.WriteStartElement("label");
+                        foreach (var form in phonetic.Forms)
+                        {
+                            if (form.WritingSystemId != "href")
+                            {
+                                Writer.WriteStartElement("form");
+                                Writer.WriteAttributeString("lang", form.WritingSystemId);
+                                Writer.WriteElementString("text", form.Form);
+                                Writer.WriteEndElement();
+                            }
+                        }
+                        Writer.WriteEndElement();
+                    }
+
                     Writer.WriteEndElement();
                     Writer.WriteEndElement();
                 }
@@ -92,6 +116,7 @@ namespace BackendFramework.Services
     public class LiftService : ILiftService
     {
         private readonly ISemanticDomainRepository _semDomRepo;
+        private readonly ISpeakerRepository _speakerRepo;
 
         /// A dictionary shared by all Projects for storing and retrieving paths to exported projects.
         private readonly Dictionary<string, string> _liftExports;
@@ -99,9 +124,10 @@ namespace BackendFramework.Services
         private readonly Dictionary<string, string> _liftImports;
         private const string InProgress = "IN_PROGRESS";
 
-        public LiftService(ISemanticDomainRepository semDomRepo)
+        public LiftService(ISemanticDomainRepository semDomRepo, ISpeakerRepository speakerRepo)
         {
             _semDomRepo = semDomRepo;
+            _speakerRepo = speakerRepo;
 
             if (!Sldr.IsInitialized)
             {
@@ -270,6 +296,9 @@ namespace BackendFramework.Services
             var activeWords = frontier.Where(
                 x => x.Senses.Any(s => s.Accessibility == Status.Active || s.Accessibility == Status.Protected)).ToList();
 
+            // Get all project speakers for exporting audio.
+            var projSpeakers = await _speakerRepo.GetAllSpeakers(projectId);
+
             // All words in the frontier with any senses are considered current.
             // The Combine does not import senseless entries and the interface is supposed to prevent creating them.
             // So the words found in allWords with no matching guid in activeWords are exported as 'deleted'.
@@ -297,7 +326,7 @@ namespace BackendFramework.Services
                 AddNote(entry, wordEntry);
                 AddVern(entry, wordEntry, proj.VernacularWritingSystem.Bcp47);
                 AddSenses(entry, wordEntry);
-                await AddAudio(entry, wordEntry, audioDir, projectId);
+                await AddAudio(entry, wordEntry.Audio, audioDir, projectId, projSpeakers);
 
                 liftWriter.Add(entry);
             }
@@ -310,7 +339,7 @@ namespace BackendFramework.Services
                 AddNote(entry, wordEntry);
                 AddVern(entry, wordEntry, proj.VernacularWritingSystem.Bcp47);
                 AddSenses(entry, wordEntry);
-                await AddAudio(entry, wordEntry, audioDir, projectId);
+                await AddAudio(entry, wordEntry.Audio, audioDir, projectId, projSpeakers);
 
                 liftWriter.AddDeletedEntry(entry);
             }
@@ -503,9 +532,10 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Adds pronunciation audio of a word to be written out to lift </summary>
-        private static async Task AddAudio(LexEntry entry, Word wordEntry, string path, string projectId)
+        private static async Task AddAudio(LexEntry entry, IList<Pronunciation> pronunciations, string path,
+            string projectId, List<Speaker> projectSpeakers)
         {
-            foreach (var audio in wordEntry.Audio)
+            foreach (var audio in pronunciations)
             {
                 var lexPhonetic = new LexPhonetic();
                 var src = FileStorage.GenerateAudioFilePath(projectId, audio.FileName);
@@ -522,8 +552,18 @@ namespace BackendFramework.Services
                     File.Copy(src, dest, true);
                 }
 
-                var proMultiText = new LiftMultiText { { "href", dest } };
-                lexPhonetic.MergeIn(MultiText.Create(proMultiText));
+                lexPhonetic.MergeIn(MultiText.Create(new LiftMultiText { { "href", dest } }));
+                // If audio has speaker, include speaker info as a pronunciation label
+                if (!string.IsNullOrEmpty(audio.SpeakerId))
+                {
+                    var speaker = projectSpeakers.Find(s => s.Id == audio.SpeakerId);
+                    if (speaker is not null)
+                    {
+                        // Use non-real language tags to avoid overwriting existing labels on FLEx import
+                        var text = new LiftMultiText { { "speakerName", speaker.Name }, { "speakerId", speaker.Id } };
+                        lexPhonetic.MergeIn(MultiText.Create(text));
+                    }
+                }
                 entry.Pronunciations.Add(lexPhonetic);
             }
         }

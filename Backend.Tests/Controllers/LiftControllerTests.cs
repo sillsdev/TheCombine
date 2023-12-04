@@ -23,6 +23,7 @@ namespace Backend.Tests.Controllers
     {
         private IProjectRepository _projRepo = null!;
         private ISemanticDomainRepository _semDomRepo = null!;
+        private ISpeakerRepository _speakerRepo = null!;
         private IWordRepository _wordRepo = null!;
         private ILiftService _liftService = null!;
         private IHubContext<CombineHub> _notifyService = null!;
@@ -54,8 +55,9 @@ namespace Backend.Tests.Controllers
         {
             _projRepo = new ProjectRepositoryMock();
             _semDomRepo = new SemanticDomainRepositoryMock();
+            _speakerRepo = new SpeakerRepositoryMock();
             _wordRepo = new WordRepositoryMock();
-            _liftService = new LiftService(_semDomRepo);
+            _liftService = new LiftService(_semDomRepo, _speakerRepo);
             _notifyService = new HubContextMock();
             _permissionService = new PermissionServiceMock();
             _wordService = new WordService(_wordRepo);
