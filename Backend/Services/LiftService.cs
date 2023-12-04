@@ -842,8 +842,8 @@ namespace BackendFramework.Services
                         // get path to audio file in lift package at
                         // ~/{projectId}/Import/ExtractedLocation/Lift/audio/{audioFile}.mp3
                         var media = pro.Media.First();
-                        var hasEnLabel = !string.IsNullOrWhiteSpace(media.Label["en"]?.Text);
-                        var audio = new Pronunciation(media.Url) { Protected = hasEnLabel };
+                        var hasLabel = media.Label is not null && !string.IsNullOrWhiteSpace(media.Label["en"]?.Text);
+                        var audio = new Pronunciation(media.Url) { Protected = hasLabel };
                         newWord.Audio.Add(audio);
                     }
                 }
