@@ -87,7 +87,7 @@ namespace Backend.Tests.Controllers
             var word = _wordRepo.Create(Util.RandomWord(_projId)).Result;
 
             // `fileUpload` contains the file stream and the name of the file.
-            _ = _audioController.UploadAudioFile(_projId, word.Id, fileUpload).Result;
+            _ = _audioController.UploadAudioFile(_projId, word.Id, "", fileUpload).Result;
 
             var foundWord = _wordRepo.GetWord(_projId, word.Id).Result;
             Assert.That(foundWord?.Audio, Is.Not.Null);
