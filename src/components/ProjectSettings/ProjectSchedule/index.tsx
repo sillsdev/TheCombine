@@ -42,7 +42,7 @@ export default function ProjectSchedule(
     const schedule =
       props.project.workshopSchedule?.map((d) => new Date(d)) ?? [];
     setProjectSchedule(schedule);
-  }, [props.project.workshopSchedule, setProjectSchedule]);
+  }, [props.project.workshopSchedule]);
 
   useEffect(() => {
     // Every time a modal is closed, fetch the updated schedule.

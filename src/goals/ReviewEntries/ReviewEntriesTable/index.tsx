@@ -86,7 +86,7 @@ export default function ReviewEntriesTable(
       }
       return { pageSize: options[i], pageSizeOptions: options };
     });
-  }, [maxRows, setPageState]);
+  }, [maxRows]);
 
   useEffect(() => {
     // onRowsPerPageChange={() => window.scrollTo({ top: 0 })} doesn't work.

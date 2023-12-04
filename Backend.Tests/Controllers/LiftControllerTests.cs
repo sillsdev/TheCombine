@@ -22,6 +22,7 @@ namespace Backend.Tests.Controllers
     public class LiftControllerTests : IDisposable
     {
         private IProjectRepository _projRepo = null!;
+        private ISemanticDomainRepository _semDomRepo = null!;
         private IWordRepository _wordRepo = null!;
         private ILiftService _liftService = null!;
         private IHubContext<CombineHub> _notifyService = null!;
@@ -52,8 +53,9 @@ namespace Backend.Tests.Controllers
         public void Setup()
         {
             _projRepo = new ProjectRepositoryMock();
+            _semDomRepo = new SemanticDomainRepositoryMock();
             _wordRepo = new WordRepositoryMock();
-            _liftService = new LiftService();
+            _liftService = new LiftService(_semDomRepo);
             _notifyService = new HubContextMock();
             _permissionService = new PermissionServiceMock();
             _wordService = new WordService(_wordRepo);
@@ -543,9 +545,9 @@ namespace Backend.Tests.Controllers
                 var path = Path.Combine(exportedProjDir, "audio", ChangeWebmToWav(audioFile));
                 Assert.That(File.Exists(path), Is.True, $"No file exists at this path: {path}");
             }
-            Assert.That(Directory.Exists(Path.Combine(exportedProjDir, "WritingSystems")), Is.True);
-            Assert.That(File.Exists(Path.Combine(
-                exportedProjDir, "WritingSystems", roundTripObj.Language + ".ldml")), Is.True);
+            var writingSystemsDir = FileStorage.GenerateWritingsSystemsSubdirPath(exportedProjDir);
+            Assert.That(Directory.Exists(writingSystemsDir), Is.True);
+            Assert.That(File.Exists(Path.Combine(writingSystemsDir, roundTripObj.Language + ".ldml")), Is.True);
             Assert.That(File.Exists(Path.Combine(exportedProjDir, sanitizedProjName + ".lift")), Is.True);
             Directory.Delete(exportedDirectory, true);
 
@@ -607,9 +609,9 @@ namespace Backend.Tests.Controllers
                 var path = Path.Combine(exportedProjDir, "audio", ChangeWebmToWav(audioFile));
                 Assert.That(File.Exists(path), Is.True, $"No file exists at this path: {path}");
             }
-            Assert.That(Directory.Exists(Path.Combine(exportedProjDir, "WritingSystems")), Is.True);
-            Assert.That(File.Exists(Path.Combine(
-                exportedProjDir, "WritingSystems", roundTripObj.Language + ".ldml")), Is.True);
+            writingSystemsDir = FileStorage.GenerateWritingsSystemsSubdirPath(exportedProjDir);
+            Assert.That(Directory.Exists(writingSystemsDir), Is.True);
+            Assert.That(File.Exists(Path.Combine(writingSystemsDir, roundTripObj.Language + ".ldml")), Is.True);
             Assert.That(File.Exists(Path.Combine(exportedProjDir, sanitizedProjName + ".lift")), Is.True);
             Directory.Delete(exportedDirectory, true);
 
