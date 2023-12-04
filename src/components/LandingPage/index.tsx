@@ -1,5 +1,5 @@
 import { Box, Grid, Hidden, Typography } from "@mui/material";
-import React, { ReactElement, useEffect } from "react";
+import { ReactElement, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -28,7 +28,7 @@ export default function LandingPage(): ReactElement {
     navigate(Path.Root);
   }, [navigate]);
   return (
-    <React.Fragment>
+    <>
       <TopBar />
       <Grid container alignItems="flex-start" justifyContent="space-around">
         <Hidden smDown>
@@ -58,7 +58,7 @@ export default function LandingPage(): ReactElement {
         </Hidden>
       </Grid>
       <BottomBar />
-    </React.Fragment>
+    </>
   );
 }
 
@@ -66,7 +66,7 @@ function Body(): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <React.Fragment>
+    <>
       <div style={{ padding: theme.spacing(3) }}>
         <Typography variant="body2" align="justify">
           {t("landingPage.descriptionP1")}
@@ -100,6 +100,6 @@ function Body(): ReactElement {
           marginTop: theme.spacing(4),
         }}
       />
-    </React.Fragment>
+    </>
   );
 }

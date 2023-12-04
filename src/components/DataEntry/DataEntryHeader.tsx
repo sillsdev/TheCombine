@@ -1,6 +1,6 @@
 import { Help } from "@mui/icons-material";
 import { Switch, Typography } from "@mui/material";
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
@@ -52,12 +52,12 @@ export default function DataEntryHeader(
 
 function Questions(props: { questions: string[] }): ReactElement {
   return (
-    <React.Fragment>
+    <>
       {props.questions.map((question, index) => (
         <Typography id={"q" + index} key={index}>
           {question}
         </Typography>
       ))}
-    </React.Fragment>
+    </>
   );
 }

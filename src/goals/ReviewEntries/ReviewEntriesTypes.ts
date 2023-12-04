@@ -23,6 +23,7 @@ export enum ColumnId {
   Pronunciations,
   Note,
   Flag,
+  Delete,
 }
 
 export class ReviewEntries extends Goal {

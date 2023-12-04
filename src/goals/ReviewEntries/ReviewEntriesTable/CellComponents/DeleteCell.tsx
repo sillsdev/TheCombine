@@ -7,6 +7,10 @@ import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 
+export const buttonId = (wordId: string): string => `row-${wordId}-delete`;
+export const buttonIdCancel = "delete-cancel";
+export const buttonIdConfirm = "delete-confirm";
+
 interface DeleteCellProps {
   rowData: ReviewEntriesWord;
 }

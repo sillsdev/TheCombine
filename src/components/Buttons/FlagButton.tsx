@@ -20,7 +20,7 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
   useEffect(() => {
     setActive(props.flag.active);
     setText(props.flag.active ? props.flag.text : undefined);
-  }, [props.flag, setActive, setText]);
+  }, [props.flag]);
 
   function updateFlag(text: string): void {
     setActive(true);
