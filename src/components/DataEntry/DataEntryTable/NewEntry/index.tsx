@@ -119,7 +119,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     resetNewEntry();
     setVernOpen(false);
     focus(FocusTarget.Vernacular);
-  }, [focus, resetNewEntry, setVernOpen]);
+  }, [focus, resetNewEntry]);
 
   /** Reset when tree opens, except for the first time it is open. */
   useEffect(() => {
