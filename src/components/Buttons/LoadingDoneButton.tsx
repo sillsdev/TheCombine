@@ -1,17 +1,17 @@
 import { Check } from "@mui/icons-material";
 import { Button, CircularProgress } from "@mui/material";
 import { ButtonProps } from "@mui/material/Button";
-import React, { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
 import { themeColors } from "types/theme";
 
 interface LoadingDoneProps {
   buttonProps?: ButtonProps;
-  children?: React.ReactNode;
+  children?: ReactNode;
   disabled?: boolean;
   done?: boolean;
-  doneText?: React.ReactNode | string;
+  doneText?: ReactNode | string;
   loading?: boolean;
 }
 
@@ -36,10 +36,10 @@ export default function LoadingDoneButton(
       }}
     >
       {props.done ? (
-        <React.Fragment>
+        <>
           <Check />
           {props.doneText ?? t("buttons.done")}
-        </React.Fragment>
+        </>
       ) : (
         props.children
       )}

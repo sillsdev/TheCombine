@@ -47,7 +47,7 @@ export default function UserList(props: UserListProps): ReactElement {
       const projUserIds = props.projectUsers.map((u) => u.id);
       setNonProjUsers(users.filter((u) => !projUserIds.includes(u.id)));
     });
-  }, [props.projectUsers, setNonProjUsers]);
+  }, [props.projectUsers]);
 
   useEffect(() => {
     const newUserAvatar: Hash<string> = {};
@@ -57,7 +57,7 @@ export default function UserList(props: UserListProps): ReactElement {
       }
     });
     Promise.all(promises).then(() => setUserAvatar(newUserAvatar));
-  }, [props.projectUsers, setUserAvatar]);
+  }, [props.projectUsers]);
 
   const updateUsers = (text: string): void => {
     setFilterInput(text);

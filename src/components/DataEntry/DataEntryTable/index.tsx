@@ -68,7 +68,7 @@ enum DefunctStatus {
   Retire = "RETIRE",
 }
 
-/*** Add current semantic domain to specified sense within a word. */
+/** Add current semantic domain to specified sense within a word. */
 export function addSemanticDomainToSense(
   semDom: SemanticDomain,
   word: Word,
@@ -83,7 +83,7 @@ export function addSemanticDomainToSense(
   return { ...word, senses };
 }
 
-/*** Focus on a specified object. */
+/** Focus on a specified object. */
 export function focusInput(ref: RefObject<HTMLDivElement>): void {
   if (ref.current) {
     ref.current.focus();
@@ -91,7 +91,7 @@ export function focusInput(ref: RefObject<HTMLDivElement>): void {
   }
 }
 
-/*** Find suggestions for given text from a list of strings. */
+/** Find suggestions for given text from a list of strings. */
 export function getSuggestions(
   text: string,
   all: string[],
@@ -121,13 +121,13 @@ export function getSuggestions(
   return some;
 }
 
-/*** Return a copy of the semantic domain with current UserId and timestamp. */
+/** Return a copy of the semantic domain with current UserId and timestamp. */
 export function makeSemDomCurrent(semDom: SemanticDomain): SemanticDomain {
   const created = new Date().toISOString();
   return { ...semDom, created, userId: getUserId() };
 }
 
-/*** Given a WordAccess and a new gloss, returns a copy of the word
+/** Given a WordAccess and a new gloss, returns a copy of the word
  * with the gloss of the specified sense changed to the new gloss.
  * If that sense has multiple semantic domains, split into two senses:
  * one with the specified domain and the new gloss,
@@ -172,17 +172,7 @@ export function updateEntryGloss(
   return { ...entry.word, senses };
 }
 
-interface DataEntryTableState {
-  // word data
-  allVerns: string[];
-  allWords: Word[];
-  recentWords: WordAccess[];
-  // state management
-  defunctUpdates: Hash<string>;
-  defunctWordIds: Hash<DefunctStatus>;
-  isFetchingFrontier: boolean;
-  senseSwitches: SenseSwitch[];
-  // new entry state
+interface NewEntryState {
   newAudioUrls: string[];
   newGloss: string;
   newNote: string;
@@ -192,7 +182,38 @@ interface DataEntryTableState {
   suggestedDups: Word[];
 }
 
-/*** A data entry table containing recent word entries. */
+const defaultNewEntryState = (): NewEntryState => ({
+  newAudioUrls: [],
+  newGloss: "",
+  newNote: "",
+  newVern: "",
+  selectedDup: undefined,
+  suggestedDups: [],
+  suggestedVerns: [],
+});
+
+interface EntryTableState extends NewEntryState {
+  defunctUpdates: Hash<string>;
+  defunctWordIds: Hash<DefunctStatus>;
+  recentWords: WordAccess[];
+  senseSwitches: SenseSwitch[];
+}
+
+const defaultEntryTableState = (): EntryTableState => ({
+  ...defaultNewEntryState(),
+  defunctUpdates: {},
+  defunctWordIds: {},
+  recentWords: [],
+  senseSwitches: [],
+});
+
+interface DataEntryTableState extends EntryTableState {
+  allVerns: string[];
+  allWords: Word[];
+  isFetchingFrontier: boolean;
+}
+
+/** A data entry table containing recent word entries. */
 export default function DataEntryTable(
   props: DataEntryTableProps
 ): ReactElement {
@@ -214,22 +235,10 @@ export default function DataEntryTable(
   const updateHeight = props.updateHeight;
 
   const [state, setState] = useState<DataEntryTableState>({
-    // word data
     allVerns: [],
     allWords: [],
-    recentWords: [],
-    // state management
-    defunctUpdates: {},
-    defunctWordIds: {},
     isFetchingFrontier: true,
-    senseSwitches: [],
-    // new entry state
-    newAudioUrls: [],
-    newGloss: "",
-    newNote: "",
-    newVern: "",
-    suggestedVerns: [],
-    suggestedDups: [],
+    ...defaultEntryTableState(),
   });
 
   const levDist = useMemo(() => new LevenshteinDistance(), []);
@@ -245,7 +254,7 @@ export default function DataEntryTable(
   // These are preferably non-async function that return void.
   ////////////////////////////////////
 
-  /*** Use this without newId before updating any word on the backend,
+  /** Use this without newId before updating any word on the backend,
    * to make sure that word doesn't get edited by two different functions.
    * Use this with newId to specify the replacement of a defunct word.
    */
@@ -273,7 +282,7 @@ export default function DataEntryTable(
     [state.defunctWordIds]
   );
 
-  /*** Update a recent entry to a different sense of the same word. */
+  /** Update a recent entry to a different sense of the same word. */
   const switchSense = useCallback(
     (oldGuid: string, newGuid: string): void => {
       const entry = state.recentWords.find((w) => w.senseGuid === oldGuid);
@@ -293,7 +302,7 @@ export default function DataEntryTable(
     [state.recentWords]
   );
 
-  /*** Add to recent entries every sense of the word with the current semantic domain. */
+  /** Add to recent entries every sense of the word with the current semantic domain. */
   const addAllSensesToDisplay = useCallback(
     (word: Word): void => {
       const domId = props.semanticDomain.id;
@@ -310,7 +319,7 @@ export default function DataEntryTable(
     [props.semanticDomain.id]
   );
 
-  /*** Add one-sense word to the display of recent entries. */
+  /** Add one-sense word to the display of recent entries. */
   const addToDisplay = (wordAccess: WordAccess, insertIndex?: number): void => {
     setState((prevState) => {
       const recentWords = [...prevState.recentWords];
@@ -323,7 +332,7 @@ export default function DataEntryTable(
     });
   };
 
-  /*** Remove recent entry from specified index. */
+  /** Remove recent entry from specified index. */
   const removeRecentEntry = (index: number): void => {
     setState((prevState) => {
       const recentWords = prevState.recentWords.filter((_w, i) => i !== index);
@@ -331,7 +340,7 @@ export default function DataEntryTable(
     });
   };
 
-  /*** Add a senseSwitch to the queue to be processed when possible. */
+  /** Add a senseSwitch to the queue to be processed when possible. */
   const queueSenseSwitch = (oldGuid: string, newGuid: string): void => {
     if (!oldGuid || !newGuid) {
       return;
@@ -342,7 +351,7 @@ export default function DataEntryTable(
     });
   };
 
-  /*** Replace every displayed instance of a word. */
+  /** Replace every displayed instance of a word. */
   const replaceInDisplay = (oldId: string, word: Word): void => {
     setState((prevState) => {
       const recentWords = prevState.recentWords.map((a) =>
@@ -352,18 +361,12 @@ export default function DataEntryTable(
     });
   };
 
-  /*** Clear all new entry state elements. */
+  /** Clear all new entry state elements. */
   const resetNewEntry = (): void => {
-    setState((prevState) => ({
-      ...prevState,
-      newAudioUrls: [],
-      newGloss: "",
-      newNote: "",
-      newVern: "",
-    }));
+    setState((prevState) => ({ ...prevState, ...defaultNewEntryState() }));
   };
 
-  /*** Add an audio file to newAudioUrls. */
+  /** Add an audio file to newAudioUrls. */
   const addNewAudioUrl = (file: File): void => {
     setState((prevState) => {
       const newAudioUrls = [...prevState.newAudioUrls];
@@ -372,7 +375,7 @@ export default function DataEntryTable(
     });
   };
 
-  /*** Delete a url from newAudioUrls. */
+  /** Delete a url from newAudioUrls. */
   const delNewAudioUrl = (url: string): void => {
     setState((prevState) => {
       const newAudioUrls = prevState.newAudioUrls.filter((u) => u !== url);
@@ -380,28 +383,28 @@ export default function DataEntryTable(
     });
   };
 
-  /*** Set the new entry gloss def. */
+  /** Set the new entry gloss def. */
   const setNewGloss = (gloss: string): void => {
     if (gloss !== state.newGloss) {
       setState((prev) => ({ ...prev, newGloss: gloss }));
     }
   };
 
-  /*** Set the new entry note text. */
+  /** Set the new entry note text. */
   const setNewNote = (note: string): void => {
     if (note !== state.newNote) {
       setState((prev) => ({ ...prev, newNote: note }));
     }
   };
 
-  /*** Set the new entry vernacular. */
+  /** Set the new entry vernacular. */
   const setNewVern = (vern: string): void => {
     if (vern !== state.newVern) {
       setState((prev) => ({ ...prev, newVern: vern }));
     }
   };
 
-  /*** Set or clear the selected vern-duplicate word. */
+  /** Set or clear the selected vern-duplicate word. */
   const setSelectedDup = (id?: string): void => {
     setState((prev) => ({
       ...prev,
@@ -413,25 +416,11 @@ export default function DataEntryTable(
     }));
   };
 
-  /*** Reset things specific to the current data entry session in the current semantic domain. */
+  /** Reset things specific to the current data entry session in the current semantic domain. */
   const resetEverything = (): void => {
     props.openTree();
     props.hideQuestions();
-    setState((prevState) => ({
-      ...prevState,
-      defunctUpdates: {},
-      defunctWordIds: {},
-      recentWords: [],
-      senseSwitches: [],
-      // new entry state:
-      newAudioUrls: [],
-      newGloss: "",
-      newNote: "",
-      newVern: "",
-      selectedDup: undefined,
-      suggestedDups: [],
-      suggestedVerns: [],
-    }));
+    setState((prevState) => ({ ...prevState, ...defaultEntryTableState() }));
   };
 
   ////////////////////////////////////
@@ -439,12 +428,12 @@ export default function DataEntryTable(
   // These cannot be async, so use asyncFunction().then(...) as needed.
   ////////////////////////////////////
 
-  /*** Trigger a parent height update if the number of recent entries changes. */
+  /** Trigger a parent height update if the number of recent entries changes. */
   useEffect(() => {
     updateHeight();
   }, [state.recentWords.length, updateHeight]);
 
-  /*** Manages the senseSwitches queue. */
+  /** Manages the senseSwitches queue. */
   useEffect(() => {
     if (!state.senseSwitches.length) {
       return;
@@ -460,7 +449,7 @@ export default function DataEntryTable(
     switchSense(oldGuid, newGuid);
   }, [switchSense, state.recentWords, state.senseSwitches]);
 
-  /*** Manages fetching the frontier.
+  /** Manages fetching the frontier.
    * This is the ONLY place to update allWords and allVerns
    * or to switch isFetchingFrontier to false. */
   useEffect(() => {
@@ -499,7 +488,7 @@ export default function DataEntryTable(
     }
   }, [state.isFetchingFrontier]);
 
-  /*** If vern-autocomplete is on for the project, make list of all vernaculars. */
+  /** If vern-autocomplete is on for the project, make list of all vernaculars. */
   useEffect(() => {
     setState((prev) => ({
       ...prev,
@@ -509,7 +498,7 @@ export default function DataEntryTable(
     }));
   }, [state.allWords, suggestVerns]);
 
-  /*** Act on the defunctUpdates queue. */
+  /** Act on the defunctUpdates queue. */
   useEffect(() => {
     const ids = Object.keys(state.defunctUpdates);
     if (!ids.length) {
@@ -531,7 +520,7 @@ export default function DataEntryTable(
     }
   }, [state.defunctUpdates, state.recentWords]);
 
-  /*** Update vern suggestions. */
+  /** Update vern suggestions. */
   useEffect(() => {
     if (!suggestVerns) {
       return;
@@ -563,7 +552,7 @@ export default function DataEntryTable(
   // After the update, defunctWord(updatedWord.id).
   ////////////////////////////////////
 
-  /*** Given an array of audio file urls, add them all to specified word. */
+  /** Given an array of audio file urls, add them all to specified word. */
   const addAudiosToBackend = useCallback(
     async (oldId: string, audioURLs: string[]): Promise<string> => {
       if (!audioURLs.length) {
@@ -580,7 +569,7 @@ export default function DataEntryTable(
     [defunctWord]
   );
 
-  /*** Given a single audio file, add to specified word. */
+  /** Given a single audio file, add to specified word. */
   const addAudioFileToWord = useCallback(
     async (oldId: string, audioFile: File): Promise<void> => {
       defunctWord(oldId);
@@ -590,7 +579,7 @@ export default function DataEntryTable(
     [defunctWord]
   );
 
-  /*** Add a word determined to be a duplicate.
+  /** Add a word determined to be a duplicate.
    * Ensures the updated word has representation in the display.
    * Note: Only for use after backend.getDuplicateId().
    */
@@ -612,7 +601,7 @@ export default function DataEntryTable(
     [addAllSensesToDisplay, addAudiosToBackend, defunctWord, state.recentWords]
   );
 
-  /*** Deletes specified audio file from specified word. */
+  /** Deletes specified audio file from specified word. */
   const deleteAudioFromWord = useCallback(
     async (oldId: string, fileName: string): Promise<void> => {
       defunctWord(oldId);
@@ -622,7 +611,7 @@ export default function DataEntryTable(
     [defunctWord]
   );
 
-  /*** Updates word. */
+  /** Updates word. */
   const updateWordInBackend = useCallback(
     async (word: Word): Promise<Word> => {
       defunctWord(word.id);
@@ -637,7 +626,7 @@ export default function DataEntryTable(
   // General async functions.
   /////////////////////////////////
 
-  /*** Add a new word to the project, or update if new word is a duplicate. */
+  /** Add a new word to the project, or update if new word is a duplicate. */
   const addNewWord = useCallback(
     async (
       wordToAdd: Word,
@@ -662,7 +651,7 @@ export default function DataEntryTable(
     [addAudiosToBackend, addDuplicateWord, analysisLang.bcp47]
   );
 
-  /*** Update the word in the backend and the frontend. */
+  /** Update the word in the backend and the frontend. */
   const updateWordBackAndFront = async (
     wordToUpdate: Word,
     senseGuid: string,
@@ -676,7 +665,7 @@ export default function DataEntryTable(
     addToDisplay({ word, senseGuid });
   };
 
-  /*** Reset the entry table. If there is an un-submitted word then submit it. */
+  /** Reset the entry table. If there is an un-submitted word then submit it. */
   const handleExit = async (): Promise<void> => {
     // Check if there is a new word, but user exited without pressing enter.
     if (state.newVern) {
@@ -698,7 +687,7 @@ export default function DataEntryTable(
   // Async functions for handling changes of the NewEntry.
   /////////////////////////////////
 
-  /*** Assemble a word from the new entry state and add it. */
+  /** Assemble a word from the new entry state and add it. */
   const addNewEntry = async (): Promise<void> => {
     const word = newWord(state.newVern);
     const lang = analysisLang.bcp47;
@@ -709,7 +698,7 @@ export default function DataEntryTable(
     await addNewWord(word, state.newAudioUrls);
   };
 
-  /***  Checks if sense already exists with this gloss and semantic domain. */
+  /**  Checks if sense already exists with this gloss and semantic domain. */
   const updateWordWithNewEntry = async (wordId: string): Promise<void> => {
     const oldWord = state.allWords.find((w: Word) => w.id === wordId);
     if (!oldWord) {
@@ -757,7 +746,7 @@ export default function DataEntryTable(
   // Async functions for handling changes of a RecentEntry.
   /////////////////////////////////
 
-  /*** Retract a recent entry. */
+  /** Retract a recent entry. */
   const undoRecentEntry = useCallback(
     async (eIndex: number): Promise<void> => {
       const { word, senseGuid } = state.recentWords[eIndex];
@@ -793,7 +782,7 @@ export default function DataEntryTable(
     ]
   );
 
-  /*** Update the vernacular in a recent entry. */
+  /** Update the vernacular in a recent entry. */
   const updateRecentVern = useCallback(
     async (
       index: number,
@@ -824,7 +813,7 @@ export default function DataEntryTable(
     [addNewWord, state.recentWords, undoRecentEntry, updateWordInBackend]
   );
 
-  /*** Update the gloss def in a recent entry. */
+  /** Update the gloss def in a recent entry. */
   const updateRecentGloss = useCallback(
     async (index: number, def: string): Promise<void> => {
       const oldEntry = state.recentWords[index];
@@ -852,7 +841,7 @@ export default function DataEntryTable(
 
   const handleFocusNewEntry = useCallback(() => focusInput(newVernInput), []);
 
-  /*** Update the note text in a recent entry. */
+  /** Update the note text in a recent entry. */
   const updateRecentNote = useCallback(
     async (index: number, text: string): Promise<void> => {
       const oldWord = state.recentWords[index].word;
