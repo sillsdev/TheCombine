@@ -124,11 +124,12 @@ function defaultOptions(): object {
 
 export async function uploadAudio(
   wordId: string,
-  audioFile: File
+  audioFile: File,
+  speakerId = ""
 ): Promise<string> {
   const projectId = LocalStorage.getProjectId();
   const resp = await audioApi.uploadAudioFile(
-    { projectId, wordId, ...fileUpload(audioFile) },
+    { projectId, speakerId, wordId, ...fileUpload(audioFile) },
     { headers: { ...authHeader(), "content-type": "application/json" } }
   );
   return resp.data;

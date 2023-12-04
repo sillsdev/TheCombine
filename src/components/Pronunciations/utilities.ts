@@ -14,7 +14,8 @@ export function getFileNameForWord(wordId: string): string {
  * Return the id of the updated word. */
 export async function uploadFileFromUrl(
   wordId: string,
-  url: string
+  url: string,
+  speakerId = ""
 ): Promise<string> {
   const audioBlob = await fetch(url).then((result) => result.blob());
   const fileName = getFileNameForWord(wordId);
@@ -22,7 +23,7 @@ export async function uploadFileFromUrl(
     type: audioBlob.type,
     lastModified: Date.now(),
   });
-  const newId = await uploadAudio(wordId, audioFile);
+  const newId = await uploadAudio(wordId, audioFile, speakerId);
   URL.revokeObjectURL(url);
   return newId;
 }

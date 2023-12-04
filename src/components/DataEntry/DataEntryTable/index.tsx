@@ -571,7 +571,7 @@ export default function DataEntryTable(
       defunctWord(oldId);
       let newId = oldId;
       for (const a of audio) {
-        newId = await uploadFileFromUrl(newId, a.fileName);
+        newId = await uploadFileFromUrl(newId, a.fileName, a.speakerId);
       }
       defunctWord(oldId, newId);
       return newId;
@@ -583,10 +583,10 @@ export default function DataEntryTable(
   const addAudioFileToWord = useCallback(
     async (oldId: string, audioFile: File): Promise<void> => {
       defunctWord(oldId);
-      const newId = await backend.uploadAudio(oldId, audioFile);
+      const newId = await backend.uploadAudio(oldId, audioFile, speakerId);
       defunctWord(oldId, newId);
     },
-    [defunctWord]
+    [defunctWord, speakerId]
   );
 
   /** Add a word determined to be a duplicate.

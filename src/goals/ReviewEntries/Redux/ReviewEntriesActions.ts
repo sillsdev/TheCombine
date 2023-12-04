@@ -170,7 +170,11 @@ export function updateFrontierWord(
 
     // Add/remove audio.
     for (const audio of addAudio) {
-      editSource.id = await uploadFileFromUrl(editSource.id, audio.fileName);
+      editSource.id = await uploadFileFromUrl(
+        editSource.id,
+        audio.fileName,
+        audio.speakerId
+      );
     }
     for (const audio of delAudio) {
       editSource.id = await backend.deleteAudio(editSource.id, audio.fileName);
@@ -222,9 +226,10 @@ export function deleteAudio(
 
 export function uploadAudio(
   wordId: string,
-  audioFile: File
+  audioFile: File,
+  speakerId = ""
 ): (dispatch: StoreStateDispatch) => Promise<void> {
   return refreshWord(wordId, (wordId: string) =>
-    backend.uploadAudio(wordId, audioFile)
+    backend.uploadAudio(wordId, audioFile, speakerId)
   );
 }

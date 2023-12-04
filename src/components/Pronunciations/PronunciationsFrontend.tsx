@@ -8,7 +8,7 @@ interface PronunciationFrontendProps {
   audio: Pronunciation[];
   elemBetweenRecordAndPlay?: ReactElement;
   deleteAudio: (fileName: string) => void;
-  uploadAudio: (audioFile: File, speakerId?: string) => void;
+  uploadAudio: (audioFile: File) => void;
   onClick?: () => void;
 }
 

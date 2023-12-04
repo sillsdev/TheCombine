@@ -363,13 +363,13 @@ const columns: Column<ReviewEntriesWord>[] = [
     editComponent: (props: FieldParameterStandard) => (
       <PronunciationsCell
         audioFunctions={{
-          addNewAudio: (file: File): void => {
+          addNewAudio: (file: File, speakerId?: string): void => {
             props.onRowDataChange &&
               props.onRowDataChange({
                 ...props.rowData,
                 audioNew: [
                   ...(props.rowData.audioNew ?? []),
-                  newPronunciation(URL.createObjectURL(file)),
+                  newPronunciation(URL.createObjectURL(file), speakerId),
                 ],
               });
           },

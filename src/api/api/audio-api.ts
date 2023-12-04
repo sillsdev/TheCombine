@@ -156,6 +156,7 @@ export const AudioApiAxiosParamCreator = function (
      *
      * @param {string} projectId
      * @param {string} wordId
+     * @param {string} speakerId
      * @param {any} file
      * @param {string} name
      * @param {string} filePath
@@ -165,6 +166,7 @@ export const AudioApiAxiosParamCreator = function (
     uploadAudioFile: async (
       projectId: string,
       wordId: string,
+      speakerId: string,
       file: any,
       name: string,
       filePath: string,
@@ -174,6 +176,8 @@ export const AudioApiAxiosParamCreator = function (
       assertParamExists("uploadAudioFile", "projectId", projectId);
       // verify required parameter 'wordId' is not null or undefined
       assertParamExists("uploadAudioFile", "wordId", wordId);
+      // verify required parameter 'speakerId' is not null or undefined
+      assertParamExists("uploadAudioFile", "speakerId", speakerId);
       // verify required parameter 'file' is not null or undefined
       assertParamExists("uploadAudioFile", "file", file);
       // verify required parameter 'name' is not null or undefined
@@ -181,9 +185,10 @@ export const AudioApiAxiosParamCreator = function (
       // verify required parameter 'filePath' is not null or undefined
       assertParamExists("uploadAudioFile", "filePath", filePath);
       const localVarPath =
-        `/v1/projects/{projectId}/words/{wordId}/audio/upload`
+        `/v1/projects/{projectId}/words/{wordId}/audio/upload/{speakerId}`
           .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
-          .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)));
+          .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)))
+          .replace(`{${"speakerId"}}`, encodeURIComponent(String(speakerId)));
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -304,6 +309,7 @@ export const AudioApiFp = function (configuration?: Configuration) {
      *
      * @param {string} projectId
      * @param {string} wordId
+     * @param {string} speakerId
      * @param {any} file
      * @param {string} name
      * @param {string} filePath
@@ -313,6 +319,7 @@ export const AudioApiFp = function (configuration?: Configuration) {
     async uploadAudioFile(
       projectId: string,
       wordId: string,
+      speakerId: string,
       file: any,
       name: string,
       filePath: string,
@@ -323,6 +330,7 @@ export const AudioApiFp = function (configuration?: Configuration) {
       const localVarAxiosArgs = await localVarAxiosParamCreator.uploadAudioFile(
         projectId,
         wordId,
+        speakerId,
         file,
         name,
         filePath,
@@ -389,6 +397,7 @@ export const AudioApiFactory = function (
      *
      * @param {string} projectId
      * @param {string} wordId
+     * @param {string} speakerId
      * @param {any} file
      * @param {string} name
      * @param {string} filePath
@@ -398,13 +407,22 @@ export const AudioApiFactory = function (
     uploadAudioFile(
       projectId: string,
       wordId: string,
+      speakerId: string,
       file: any,
       name: string,
       filePath: string,
       options?: any
     ): AxiosPromise<string> {
       return localVarFp
-        .uploadAudioFile(projectId, wordId, file, name, filePath, options)
+        .uploadAudioFile(
+          projectId,
+          wordId,
+          speakerId,
+          file,
+          name,
+          filePath,
+          options
+        )
         .then((request) => request(axios, basePath));
     },
   };
@@ -485,6 +503,13 @@ export interface AudioApiUploadAudioFileRequest {
    * @memberof AudioApiUploadAudioFile
    */
   readonly wordId: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof AudioApiUploadAudioFile
+   */
+  readonly speakerId: string;
 
   /**
    *
@@ -572,6 +597,7 @@ export class AudioApi extends BaseAPI {
       .uploadAudioFile(
         requestParameters.projectId,
         requestParameters.wordId,
+        requestParameters.speakerId,
         requestParameters.file,
         requestParameters.name,
         requestParameters.filePath,
