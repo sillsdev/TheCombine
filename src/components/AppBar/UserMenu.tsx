@@ -12,7 +12,7 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
-import React, { ReactElement, useState } from "react";
+import React, { Fragment, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -89,7 +89,7 @@ export default function UserMenu(props: TabProps): ReactElement {
             </Typography>
           </Hidden>
         ) : (
-          <React.Fragment />
+          <Fragment />
         )}
         {avatar ? (
           <Avatar alt="User avatar" src={avatar} />
