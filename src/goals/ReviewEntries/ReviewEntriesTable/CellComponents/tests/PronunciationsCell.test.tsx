@@ -6,10 +6,12 @@ import configureMockStore from "redux-mock-store";
 import "tests/reactI18nextMock";
 
 import { Pronunciation } from "api/models";
+import { defaultState as currentProjectState } from "components/Project/ProjectReduxTypes";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import { defaultState as pronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import PronunciationsCell from "goals/ReviewEntries/ReviewEntriesTable/CellComponents/PronunciationsCell";
+import { StoreState } from "types";
 import theme from "types/theme";
 import { newPronunciation } from "types/word";
 
@@ -27,7 +29,11 @@ jest.mock("types/hooks", () => {
 const mockDeleteAudio = jest.fn();
 const mockUploadAudio = jest.fn();
 const mockDispatch = jest.fn();
-const mockStore = configureMockStore()({ pronunciationsState });
+const mockState: Partial<StoreState> = {
+  currentProjectState,
+  pronunciationsState,
+};
+const mockStore = configureMockStore()(mockState);
 
 // Mock the functions used for the component in edit mode
 const mockAddNewAudio = jest.fn();

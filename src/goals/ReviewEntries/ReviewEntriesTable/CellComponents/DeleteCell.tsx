@@ -7,9 +7,9 @@ import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 
-export const buttonId = (wordId: string): string => `row-${wordId}-delete`;
-export const buttonIdCancel = "delete-cancel";
-export const buttonIdConfirm = "delete-confirm";
+const buttonId = (wordId: string): string => `row-${wordId}-delete`;
+const buttonIdCancel = "delete-cancel";
+const buttonIdConfirm = "delete-confirm";
 
 interface DeleteCellProps {
   rowData: ReviewEntriesWord;
@@ -32,9 +32,9 @@ export default function DeleteCell(props: DeleteCellProps): ReactElement {
 
   return (
     <DeleteButtonWithDialog
-      buttonId={`row-${props.rowData.id}-delete`}
-      buttonIdCancel="row-delete-cancel"
-      buttonIdConfirm="row-delete-confirm"
+      buttonId={buttonId(props.rowData.id)}
+      buttonIdCancel={buttonIdCancel}
+      buttonIdConfirm={buttonIdConfirm}
       delete={deleteFrontierWord}
       disabled={disabled}
       textId="reviewEntries.deleteWordWarning"
