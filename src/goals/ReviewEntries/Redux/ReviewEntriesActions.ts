@@ -40,12 +40,12 @@ export function setSortBy(columnId?: ColumnId): PayloadAction {
   return setSortByAction(columnId);
 }
 
-interface wordUpdate {
+interface WordUpdate {
   oldId: string;
   updatedWord: Word;
 }
 
-export function updateWord(update: wordUpdate): PayloadAction {
+export function updateWord(update: WordUpdate): PayloadAction {
   return updateWordAction(update);
 }
 
@@ -76,9 +76,9 @@ export function getSenseError(
 }
 
 /** Returns a cleaned array of senses ready to be saved (none with .deleted=true):
- * * If a sense is marked as deleted or is utterly blank, it is removed
- * * If a sense lacks gloss, return error
- * * If the user attempts to delete all senses, return old senses with deleted senses removed */
+ * - If a sense is marked as deleted or is utterly blank, it is removed
+ * - If a sense lacks gloss, return error
+ * - If the user attempts to delete all senses, return old senses with deleted senses removed */
 function cleanSenses(
   senses: ReviewEntriesSense[],
   oldSenses: ReviewEntriesSense[]
@@ -121,9 +121,9 @@ function cleanSenses(
 }
 
 /** Clean the vernacular field of a word:
- * * If all senses are deleted, reject
- * * If there's no vernacular field, add in the vernacular of old field
- * * If neither the word nor oldWord has a vernacular, reject */
+ * - If all senses are deleted, reject
+ * - If there's no vernacular field, add in the vernacular of old field
+ * - If neither the word nor oldWord has a vernacular, reject */
 function cleanWord(
   word: ReviewEntriesWord,
   oldWord: ReviewEntriesWord

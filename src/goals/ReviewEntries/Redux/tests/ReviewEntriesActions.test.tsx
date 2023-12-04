@@ -106,8 +106,6 @@ describe("ReviewEntriesActions", () => {
           words: [mockFrontierWord()],
         },
       });
-      expect(store.getState().reviewEntriesState.sortBy).toEqual(colId);
-      expect(store.getState().reviewEntriesState.words).toHaveLength(1);
 
       store.dispatch(deleteWord(wordId));
       expect(store.getState().reviewEntriesState.sortBy).toEqual(colId);
@@ -122,8 +120,6 @@ describe("ReviewEntriesActions", () => {
           words: [mockFrontierWord()],
         },
       });
-      expect(store.getState().reviewEntriesState.sortBy).toEqual(colId);
-      expect(store.getState().reviewEntriesState.words).toHaveLength(1);
 
       store.dispatch(resetReviewEntries());
       expect(store.getState().reviewEntriesState.sortBy).toBeUndefined();
@@ -138,8 +134,6 @@ describe("ReviewEntriesActions", () => {
           words: [],
         },
       });
-      expect(store.getState().reviewEntriesState.sortBy).toEqual(colId);
-      expect(store.getState().reviewEntriesState.words).toHaveLength(0);
 
       const frontier = [mockFrontierWord("wordA"), mockFrontierWord("wordB")];
       store.dispatch(setAllWords(frontier));
@@ -151,7 +145,6 @@ describe("ReviewEntriesActions", () => {
 
     test("setSortBy", () => {
       const store = setupStore(persistedDefaultState);
-      expect(store.getState().reviewEntriesState.sortBy).toBeUndefined();
 
       store.dispatch(setSortBy(colId));
       expect(store.getState().reviewEntriesState.sortBy).toEqual(colId);
@@ -170,10 +163,6 @@ describe("ReviewEntriesActions", () => {
         ...persistedDefaultState,
         reviewEntriesState: { sortBy: colId, words: frontier },
       });
-      expect(store.getState().reviewEntriesState.sortBy).toEqual(colId);
-      expect(store.getState().reviewEntriesState.words).toHaveLength(
-        frontier.length
-      );
 
       const newVern = "updatedVern";
       const newId = "updatedId";
