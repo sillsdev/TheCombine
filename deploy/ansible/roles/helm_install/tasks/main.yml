@@ -16,8 +16,9 @@
     mode: 0755
 
 - name: "Unpack helm tarball"
-  command: tar -zxvf /tmp/helm-{{ helm_version }}/helm.tar.gz
-  chdir: /opt/helm-{{ helm_version }}
+  command:
+    cmd: "tar -zxvf /opt/helm-{{ helm_version }}/helm.tar.gz"
+    chdir: "/opt/helm-{{ helm_version }}"
   creates: /opt/helm-{{ helm_version }}/linux-arm64/helm
 
 - name: "Link to extracted helm file"
