@@ -11,6 +11,7 @@ import configureMockStore from "redux-mock-store";
 import "tests/reactI18nextMock";
 
 import { Word } from "api/models";
+import { defaultState } from "components/App/DefaultState";
 import {
   EntryNote,
   GlossWithSuggestions,
@@ -20,14 +21,13 @@ import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
 import { EditTextDialog } from "components/Dialogs";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
-import { defaultState as pronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import theme from "types/theme";
 import { newPronunciation, simpleWord } from "types/word";
 import { newWritingSystem } from "types/writingSystem";
 
 jest.mock("@mui/material/Autocomplete", () => "div");
 
-const mockStore = configureMockStore()({ pronunciationsState });
+const mockStore = configureMockStore()(defaultState);
 const mockVern = "Vernacular";
 const mockGloss = "Gloss";
 const mockWord = simpleWord(mockVern, mockGloss);

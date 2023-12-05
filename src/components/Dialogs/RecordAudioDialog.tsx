@@ -9,7 +9,7 @@ interface RecordAudioDialogProps {
   close: () => void;
   open: boolean;
   titleId: string;
-  uploadAudio: (audioFile: File) => Promise<void>;
+  uploadAudio: (file: File) => Promise<void>;
 }
 
 export default function RecordAudioDialog(
@@ -21,7 +21,10 @@ export default function RecordAudioDialog(
     <Dialog onClose={props.close} open={props.open}>
       <DialogTitle>{t(props.titleId)}</DialogTitle>
       <DialogContent>
-        <AudioRecorder id={props.audioId} uploadAudio={props.uploadAudio} />
+        <AudioRecorder
+          id={props.audioId}
+          uploadAudio={(file) => props.uploadAudio(file)}
+        />
       </DialogContent>
     </Dialog>
   );

@@ -5,24 +5,22 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
+import { defaultState } from "components/App/DefaultState";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import RecorderIcon, {
   recordButtonId,
   recordIconId,
 } from "components/Pronunciations/RecorderIcon";
-import {
-  defaultState as pronunciationsState,
-  PronunciationsStatus,
-} from "components/Pronunciations/Redux/PronunciationsReduxTypes";
+import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { StoreState } from "types";
 import theme, { themeColors } from "types/theme";
 
 let testRenderer: ReactTestRenderer;
 
-const createMockStore = configureMockStore();
-const mockStore = createMockStore({ pronunciationsState });
+const mockStore = configureMockStore()(defaultState);
 function mockRecordingState(wordId: string): Partial<StoreState> {
   return {
+    ...defaultState,
     pronunciationsState: {
       fileName: "",
       status: PronunciationsStatus.Recording,
@@ -92,7 +90,7 @@ describe("Pronunciations", () => {
 
   test("style depends on pronunciations state", () => {
     const wordId = "1";
-    const mockStore2 = createMockStore(mockRecordingState(wordId));
+    const mockStore2 = configureMockStore()(mockRecordingState(wordId));
     act(() => {
       testRenderer = create(
         <ThemeProvider theme={theme}>

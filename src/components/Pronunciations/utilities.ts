@@ -19,11 +19,11 @@ export async function uploadFileFromUrl(
 ): Promise<string> {
   const audioBlob = await fetch(url).then((result) => result.blob());
   const fileName = getFileNameForWord(wordId);
-  const audioFile = new File([audioBlob], fileName, {
+  const file = new File([audioBlob], fileName, {
     type: audioBlob.type,
     lastModified: Date.now(),
   });
-  const newId = await uploadAudio(wordId, audioFile, speakerId);
+  const newId = await uploadAudio(wordId, { ...file, speakerId });
   URL.revokeObjectURL(url);
   return newId;
 }

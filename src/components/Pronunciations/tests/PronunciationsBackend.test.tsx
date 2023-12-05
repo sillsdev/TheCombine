@@ -5,17 +5,17 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
+import { defaultState } from "components/App/DefaultState";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
-import { defaultState as pronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import theme from "types/theme";
 import { newPronunciation } from "types/word";
 
 // Test variables
 let testRenderer: ReactTestRenderer;
 const mockAudio = ["a.wav", "b.wav"].map((f) => newPronunciation(f));
-const mockStore = configureMockStore()({ pronunciationsState });
+const mockStore = configureMockStore()(defaultState);
 
 const renderPronunciationsBackend = async (
   withRecord: boolean

@@ -31,6 +31,7 @@ import authHeader from "components/Login/AuthHeaders";
 import { Goal, GoalStep } from "types/goals";
 import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
+import { FileWithSpeakerId } from "types/word";
 import { Bcp47Code } from "types/writingSystem";
 import { convertGoalToEdit } from "utilities/goalUtilities";
 
@@ -124,12 +125,12 @@ function defaultOptions(): object {
 
 export async function uploadAudio(
   wordId: string,
-  audioFile: File,
-  speakerId = ""
+  file: FileWithSpeakerId
 ): Promise<string> {
   const projectId = LocalStorage.getProjectId();
+  const speakerId = file.speakerId ?? "";
   const resp = await audioApi.uploadAudioFile(
-    { projectId, speakerId, wordId, ...fileUpload(audioFile) },
+    { projectId, speakerId, wordId, ...fileUpload(file) },
     { headers: { ...authHeader(), "content-type": "application/json" } }
   );
   return resp.data;

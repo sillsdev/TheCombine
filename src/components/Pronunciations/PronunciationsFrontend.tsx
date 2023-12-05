@@ -3,12 +3,13 @@ import { ReactElement } from "react";
 import { Pronunciation } from "api/models";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
+import { FileWithSpeakerId } from "types/word";
 
 interface PronunciationFrontendProps {
   audio: Pronunciation[];
   elemBetweenRecordAndPlay?: ReactElement;
   deleteAudio: (fileName: string) => void;
-  uploadAudio: (audioFile: File) => void;
+  uploadAudio: (file: FileWithSpeakerId) => void;
   onClick?: () => void;
 }
 

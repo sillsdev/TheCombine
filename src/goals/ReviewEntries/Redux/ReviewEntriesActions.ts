@@ -20,7 +20,7 @@ import {
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { newNote, newSense } from "types/word";
+import { FileWithSpeakerId, newNote, newSense } from "types/word";
 
 // Action Creation Functions
 
@@ -231,10 +231,9 @@ export function deleteAudio(
 
 export function uploadAudio(
   wordId: string,
-  audioFile: File,
-  speakerId = ""
+  file: FileWithSpeakerId
 ): (dispatch: StoreStateDispatch) => Promise<void> {
   return asyncRefreshWord(wordId, (wordId: string) =>
-    backend.uploadAudio(wordId, audioFile, speakerId)
+    backend.uploadAudio(wordId, file)
   );
 }

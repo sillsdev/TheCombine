@@ -6,14 +6,20 @@ import Recorder from "components/Pronunciations/Recorder";
 import RecorderContext from "components/Pronunciations/RecorderContext";
 import RecorderIcon from "components/Pronunciations/RecorderIcon";
 import { getFileNameForWord } from "components/Pronunciations/utilities";
+import { StoreState } from "types";
+import { useAppSelector } from "types/hooks";
+import { FileWithSpeakerId } from "types/word";
 
 interface RecorderProps {
   id: string;
-  uploadAudio: (audioFile: File) => void;
+  uploadAudio: (file: FileWithSpeakerId) => void;
   onClick?: () => void;
 }
 
 export default function AudioRecorder(props: RecorderProps): ReactElement {
+  const speakerId = useAppSelector(
+    (state: StoreState) => state.currentProjectState.speaker?.id
+  );
   const recorder = useContext(RecorderContext);
   const { t } = useTranslation();
 
@@ -35,7 +41,8 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
       lastModified: Date.now(),
       type: Recorder.blobType,
     };
-    props.uploadAudio(new File([blob], fileName, options));
+    const file = new File([blob], fileName, options);
+    props.uploadAudio({ ...file, speakerId });
   }
 
   return (

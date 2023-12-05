@@ -4,6 +4,7 @@ import { Pronunciation } from "api/models";
 import { getAudioUrl } from "backend";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
+import { FileWithSpeakerId } from "types/word";
 
 interface PronunciationsBackendProps {
   audio: Pronunciation[];
@@ -11,7 +12,7 @@ interface PronunciationsBackendProps {
   overrideMemo?: boolean;
   wordId: string;
   deleteAudio: (fileName: string) => void;
-  uploadAudio?: (audioFile: File) => void;
+  uploadAudio?: (file: FileWithSpeakerId) => void;
 }
 
 /** Audio recording/playing component for backend audio. */

@@ -10,7 +10,7 @@ import {
 } from "components/DataEntry/DataEntryTable/EntryCellComponents";
 import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
 import theme from "types/theme";
-import { newGloss } from "types/word";
+import { FileWithSpeakerId, newGloss } from "types/word";
 import { firstGlossText } from "utilities/wordUtilities";
 
 const idAffix = "recent-entry";
@@ -23,7 +23,7 @@ export interface RecentEntryProps {
   updateNote: (index: number, newText: string) => Promise<void>;
   updateVern: (index: number, newVern: string, targetWordId?: string) => void;
   removeEntry: (index: number) => void;
-  addAudioToWord: (wordId: string, audioFile: File) => void;
+  addAudioToWord: (wordId: string, file: FileWithSpeakerId) => void;
   deleteAudioFromWord: (wordId: string, fileName: string) => void;
   focusNewEntry: () => void;
   analysisLang: WritingSystem;
@@ -139,8 +139,8 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
             deleteAudio={(fileName: string) => {
               props.deleteAudioFromWord(props.entry.id, fileName);
             }}
-            uploadAudio={(audioFile: File) => {
-              props.addAudioToWord(props.entry.id, audioFile);
+            uploadAudio={(file: FileWithSpeakerId) => {
+              props.addAudioToWord(props.entry.id, file);
             }}
           />
         )}

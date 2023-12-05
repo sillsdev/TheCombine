@@ -24,6 +24,7 @@ import VernDialog from "components/DataEntry/DataEntryTable/NewEntry/VernDialog"
 import PronunciationsFrontend from "components/Pronunciations/PronunciationsFrontend";
 import { StoreState } from "types";
 import theme from "types/theme";
+import { FileWithSpeakerId } from "types/word";
 
 const idAffix = "new-entry";
 
@@ -46,7 +47,7 @@ interface NewEntryProps {
   resetNewEntry: () => void;
   updateWordWithNewGloss: (wordId: string) => Promise<void>;
   newAudio: Pronunciation[];
-  addNewAudioUrl: (file: File) => void;
+  addNewAudioUrl: (file: FileWithSpeakerId) => void;
   delNewAudioUrl: (url: string) => void;
   newGloss: string;
   setNewGloss: (gloss: string) => void;

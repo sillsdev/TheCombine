@@ -7,12 +7,12 @@ import {
   deleteAudio,
   uploadAudio,
 } from "goals/ReviewEntries/Redux/ReviewEntriesActions";
-import { StoreState } from "types";
-import { useAppDispatch, useAppSelector } from "types/hooks";
+import { useAppDispatch } from "types/hooks";
+import { FileWithSpeakerId } from "types/word";
 
 interface PronunciationsCellProps {
   audioFunctions?: {
-    addNewAudio: (file: File, speakerId?: string) => void;
+    addNewAudio: (file: FileWithSpeakerId) => void;
     delNewAudio: (url: string) => void;
     delOldAudio: (fileName: string) => void;
   };
@@ -25,13 +25,10 @@ export default function PronunciationsCell(
   props: PronunciationsCellProps
 ): ReactElement {
   const dispatch = useAppDispatch();
-  const speakerId = useAppSelector(
-    (state: StoreState) => state.currentProjectState.speaker?.id
-  );
   const dispatchDelete = (fileName: string): Promise<void> =>
     dispatch(deleteAudio(props.wordId, fileName));
-  const dispatchUpload = (audioFile: File): Promise<void> =>
-    dispatch(uploadAudio(props.wordId, audioFile, speakerId));
+  const dispatchUpload = (file: FileWithSpeakerId): Promise<void> =>
+    dispatch(uploadAudio(props.wordId, file));
 
   const { addNewAudio, delNewAudio, delOldAudio } = props.audioFunctions ?? {};
 
@@ -48,7 +45,7 @@ export default function PronunciationsCell(
       }
       audio={props.audioNew ?? []}
       deleteAudio={delNewAudio!}
-      uploadAudio={(file: File) => addNewAudio!(file, speakerId)}
+      uploadAudio={addNewAudio!}
     />
   ) : (
     <PronunciationsBackend

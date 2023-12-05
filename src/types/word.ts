@@ -15,6 +15,10 @@ import {
 } from "api/models";
 import { randomIntString } from "utilities/utilities";
 
+export interface FileWithSpeakerId extends File {
+  speakerId?: string;
+}
+
 export function newPronunciation(fileName = "", speakerId = ""): Pronunciation {
   return { fileName, speakerId, _protected: false };
 }

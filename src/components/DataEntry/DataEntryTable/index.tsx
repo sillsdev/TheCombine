@@ -36,6 +36,7 @@ import { Hash } from "types/hash";
 import { useAppSelector } from "types/hooks";
 import theme from "types/theme";
 import {
+  FileWithSpeakerId,
   newNote,
   newPronunciation,
   newSense,
@@ -229,9 +230,6 @@ export default function DataEntryTable(
       state.currentProjectState.project.analysisWritingSystems[0] ??
       defaultWritingSystem
   );
-  const speakerId = useAppSelector(
-    (state: StoreState) => state.currentProjectState.speaker?.id
-  );
   const suggestVerns = useAppSelector(
     (state: StoreState) =>
       state.currentProjectState.project.autocompleteSetting ===
@@ -377,10 +375,12 @@ export default function DataEntryTable(
   };
 
   /** Add an audio file to newAudioUrls. */
-  const addNewAudioUrl = (file: File): void => {
+  const addNewAudioUrl = (file: FileWithSpeakerId): void => {
     setState((prevState) => {
       const newAudio = [...prevState.newAudio];
-      newAudio.push(newPronunciation(URL.createObjectURL(file), speakerId));
+      newAudio.push(
+        newPronunciation(URL.createObjectURL(file), file.speakerId)
+      );
       return { ...prevState, newAudio };
     });
   };
@@ -581,12 +581,12 @@ export default function DataEntryTable(
 
   /** Given a single audio file, add to specified word. */
   const addAudioFileToWord = useCallback(
-    async (oldId: string, audioFile: File): Promise<void> => {
+    async (oldId: string, file: FileWithSpeakerId): Promise<void> => {
       defunctWord(oldId);
-      const newId = await backend.uploadAudio(oldId, audioFile, speakerId);
+      const newId = await backend.uploadAudio(oldId, file);
       defunctWord(oldId, newId);
     },
-    [defunctWord, speakerId]
+    [defunctWord]
   );
 
   /** Add a word determined to be a duplicate.

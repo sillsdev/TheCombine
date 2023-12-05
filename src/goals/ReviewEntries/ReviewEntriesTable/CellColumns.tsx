@@ -21,7 +21,7 @@ import {
   ReviewEntriesWord,
   ReviewEntriesWordField,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
-import { newPronunciation } from "types/word";
+import { FileWithSpeakerId, newPronunciation } from "types/word";
 import { compareFlags } from "utilities/wordUtilities";
 
 export class ColumnTitle {
@@ -363,13 +363,13 @@ const columns: Column<ReviewEntriesWord>[] = [
     editComponent: (props: FieldParameterStandard) => (
       <PronunciationsCell
         audioFunctions={{
-          addNewAudio: (file: File, speakerId?: string): void => {
+          addNewAudio: (file: FileWithSpeakerId): void => {
             props.onRowDataChange &&
               props.onRowDataChange({
                 ...props.rowData,
                 audioNew: [
                   ...(props.rowData.audioNew ?? []),
-                  newPronunciation(URL.createObjectURL(file), speakerId),
+                  newPronunciation(URL.createObjectURL(file), file.speakerId),
                 ],
               });
           },
