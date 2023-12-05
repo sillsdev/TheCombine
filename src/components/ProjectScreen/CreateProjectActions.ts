@@ -9,7 +9,7 @@ import { newProject } from "types/project";
 
 // Dispatch Functions
 
-/*** Create a project without an import. */
+/** Create a project without an import. */
 export function asyncCreateProject(
   name: string,
   vernacularWritingSystem: WritingSystem,
@@ -31,7 +31,7 @@ export function asyncCreateProject(
   };
 }
 
-/*** Create a project with a pre-uploaded import. */
+/** Create a project with a pre-uploaded import. */
 export function asyncFinishProject(
   name: string,
   vernacularWritingSystem: WritingSystem

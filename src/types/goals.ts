@@ -69,7 +69,6 @@ export enum GoalStatus {
 export class Goal {
   guid: string;
   goalType: GoalType;
-  index: number;
   name: GoalName;
   user: User;
   steps: GoalStep[];
@@ -87,7 +86,6 @@ export class Goal {
   ) {
     this.guid = v4();
     this.goalType = type;
-    this.index = -1;
     this.name = name;
     this.user = newUser();
     this.steps = steps;

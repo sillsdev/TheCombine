@@ -5,7 +5,7 @@ interface TreeTileProps {
   colWidth: number;
   imgSrc: string;
 }
-/*** Creates a section of the tree diagram (one of the branches) set to proper dimensions. */
+/** Creates a section of the tree diagram (one of the branches) set to proper dimensions. */
 export default function TreeTile(props: TreeTileProps): ReactElement {
   return (
     <ImageListItem style={{ transform: "scaleY(-1)" }}>
