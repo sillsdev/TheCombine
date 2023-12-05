@@ -20,6 +20,11 @@ app_namespace: thecombine
 
 k8s_user: sillsdev
 
+################################################
+# Helm Installation
+################################################
+install_helm: false
+
 #######################################
 # Ingress configuration
 ingress_namespace: ingress-nginx

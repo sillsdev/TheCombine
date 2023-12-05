@@ -37,10 +37,6 @@
       import_role:
         name: network_config
 
-    # - name: Install Docker Subsystem
-    #   import_role:
-    #     name: docker_install
-
     - name: Install Kubernetes
       import_role:
         name: k8s_install
@@ -50,6 +46,11 @@
         name: k8s_config
       tags:
         - kubeconfig
+
+    - name: Install Helm
+      import_role:
+        name: helm_install
+      when: install_helm
 
     - name: Setup Support Tool
       import_role:

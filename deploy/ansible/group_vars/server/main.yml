@@ -19,6 +19,11 @@ create_namespaces: []
 # k8s namespaces
 app_namespace: thecombine
 
+################################################
+# Helm Installation
+################################################
+install_helm: false
+
 #######################################
 # Ingress configuration
 ingress_namespace: ingress-nginx
