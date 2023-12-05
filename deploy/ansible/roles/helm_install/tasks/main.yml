@@ -1,37 +1,49 @@
 ---
-- name: "Create working directory"
+- name: Create working directory
   file:
-    path: /opt/helm-{{ helm_version }}
+    path: "{{ helm_download_dir }}"
     state: directory
     owner: root
     group: root
     mode: 0755
 
-- name: "Get Latest Release"
+- name: Ansible user
+  become: false
+  debug:
+    msg: "Ansible User: {{ ansible_user_id }}"
+
+- name: Get Latest Release
   get_url:
-    url: "https://get.helm.sh/helm-{{ helm_version }}-linux-arm64.tar.gz"
-    dest: /opt/helm-{{ helm_version }}/helm.tar.gz
+    # https://get.helm.sh/helm-v3.13.2-linux-amd64.tar.gz
+    url: "https://get.helm.sh/helm-{{ helm_version }}-{{ helm_arch }}.tar.gz"
+    dest: "{{ helm_download_dir }}/helm.tar.gz"
     owner: root
     group: root
     mode: 0755
 
-- name: "Unpack helm tarball"
+- name: Unpack helm tarball
   command:
-    cmd: "tar -zxvf /opt/helm-{{ helm_version }}/helm.tar.gz"
-    chdir: "/opt/helm-{{ helm_version }}"
-  creates: /opt/helm-{{ helm_version }}/linux-arm64/helm
+    cmd: "tar -zxvf {{ helm_download_dir }}/helm.tar.gz"
+    chdir: "{{ helm_download_dir }}"
+    creates: "{{ helm_download_dir }}/{{ helm_arch }}/helm"
 
-- name: "Link to extracted helm file"
+- name: Link to extracted helm file
   file:
-    src: /opt/helm-{{ helm_version }}/linux-arm64/helm
+    src: "{{ helm_download_dir }}/{{ helm_arch }}/helm"
     path: /usr/local/bin/helm
     state: link
     owner: root
     group: root
     mode: 0755
 
-- name: "Add stable charts"
-  command: helm repo install stable https://charts.helm.sh/stable
+#############################################
+# These chart repos get setup for root
+# Add the commands to the general installation
+# script
+- name: Add stable charts
+  command:
+    cmd: helm repo add stable https://charts.helm.sh/stable
 
-- name: "Add bitnami charts"
-  command: helm repo install bitnami https://charts.bitnami.com/bitnami
+- name: Add bitnami charts
+  command:
+    cmd: helm repo add bitnami https://charts.bitnami.com/bitnami
