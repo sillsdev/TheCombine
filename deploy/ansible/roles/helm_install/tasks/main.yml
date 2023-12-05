@@ -1,8 +1,30 @@
 ---
+- name: "Create working directory"
+  file:
+    path: /opt/helm-{{ helm_version }}
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
 - name: "Get Latest Release"
   get_url:
-    url: https://github.com/helm/helm/releases/latest
-    dest: "/usr/local/bin/helm"
+    url: "https://get.helm.sh/helm-{{ helm_version }}-linux-arm64.tar.gz"
+    dest: /opt/helm-{{ helm_version }}/helm.tar.gz
+    owner: root
+    group: root
+    mode: 0755
+
+- name: "Unpack helm tarball"
+  command: tar -zxvf /tmp/helm-{{ helm_version }}/helm.tar.gz
+  chdir: /opt/helm-{{ helm_version }}
+  creates: /opt/helm-{{ helm_version }}/linux-arm64/helm
+
+- name: "Link to extracted helm file"
+  file:
+    src: /opt/helm-{{ helm_version }}/linux-arm64/helm
+    path: /usr/local/bin/helm
+    state: link
     owner: root
     group: root
     mode: 0755
