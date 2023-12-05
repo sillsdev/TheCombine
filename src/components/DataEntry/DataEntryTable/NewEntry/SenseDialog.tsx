@@ -1,9 +1,7 @@
-import { Close } from "@mui/icons-material";
 import {
   Dialog,
   DialogContent,
   Grid,
-  IconButton,
   MenuList,
   Typography,
 } from "@mui/material";
@@ -11,6 +9,7 @@ import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, Sense, Word } from "api/models";
+import { CloseButton } from "components/Buttons";
 import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
 import {
   DomainCell,
@@ -107,12 +106,7 @@ export function SenseList(props: SenseListProps): ReactElement {
   return (
     <>
       {/* Cancel button */}
-      <IconButton
-        onClick={() => props.closeDialog()}
-        style={{ position: "absolute", right: 0, top: 0 }}
-      >
-        <Close />
-      </IconButton>
+      <CloseButton close={props.closeDialog} />
       {/* Header */}
       <Typography variant="h3">{t("addWords.selectSense")}</Typography>
       {/* Sense options */}

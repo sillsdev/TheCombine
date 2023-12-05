@@ -1,9 +1,10 @@
 import { CameraAlt, Person } from "@mui/icons-material";
-import { Avatar, Dialog, DialogContent, DialogTitle } from "@mui/material";
+import { Avatar } from "@mui/material";
 import { ReactElement, useState } from "react";
 
-import { getAvatar } from "backend/localStorage";
-import AvatarUpload from "components/UserSettings/AvatarUpload";
+import { uploadAvatar } from "backend";
+import { getAvatar, getUserId } from "backend/localStorage";
+import { UploadImageDialog } from "components/Dialogs";
 
 const avatarStyle = { height: 60, width: 60 };
 const avatarOverlayStyle = {
@@ -48,12 +49,12 @@ export default function ClickableAvatar(
         </Avatar>
       </div>
 
-      <Dialog onClose={closeDialog} open={avatarDialogOpen}>
-        <DialogTitle>Set user avatar</DialogTitle>
-        <DialogContent>
-          <AvatarUpload doneCallback={closeDialog} />
-        </DialogContent>
-      </Dialog>
+      <UploadImageDialog
+        close={closeDialog}
+        open={avatarDialogOpen}
+        titleId="userSettings.uploadAvatarTitle"
+        uploadImage={(imgFile: File) => uploadAvatar(getUserId(), imgFile)}
+      />
     </>
   );
 }
