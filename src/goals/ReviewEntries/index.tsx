@@ -2,8 +2,8 @@ import { ReactElement, useEffect, useState } from "react";
 
 import { getFrontierWords } from "backend";
 import {
-  sortBy,
-  updateAllWords,
+  setAllWords,
+  setSortBy,
   updateFrontierWord,
 } from "goals/ReviewEntries/Redux/ReviewEntriesActions";
 import ReviewEntriesCompleted from "goals/ReviewEntries/ReviewEntriesCompleted";
@@ -25,11 +25,11 @@ export default function ReviewEntries(props: ReviewEntriesProps): ReactElement {
   useEffect(() => {
     if (!props.completed) {
       getFrontierWords().then((frontier) => {
-        dispatch(updateAllWords(frontier.map((w) => new ReviewEntriesWord(w))));
+        dispatch(setAllWords(frontier));
         setLoaded(true);
       });
     }
-  }, [dispatch, props]);
+  }, [dispatch, props.completed]);
 
   return props.completed ? (
     <ReviewEntriesCompleted />
@@ -38,7 +38,7 @@ export default function ReviewEntries(props: ReviewEntriesProps): ReactElement {
       onRowUpdate={(newData: ReviewEntriesWord, oldData?: ReviewEntriesWord) =>
         dispatch(updateFrontierWord(newData, oldData))
       }
-      onSort={(columnId?: ColumnId) => dispatch(sortBy(columnId))}
+      onSort={(columnId?: ColumnId) => dispatch(setSortBy(columnId))}
     />
   ) : (
     <div />

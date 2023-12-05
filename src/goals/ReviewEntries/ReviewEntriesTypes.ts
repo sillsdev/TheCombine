@@ -64,9 +64,7 @@ export class ReviewEntriesWord {
   /** Construct a ReviewEntriesWord from a Word.
    * Important: Some things (e.g., note language) aren't preserved! */
   constructor(word?: Word, analysisLang?: string) {
-    if (!word) {
-      word = newWord();
-    }
+    word ??= newWord();
     this.id = word.id;
     this.vernacular = word.vernacular;
     this.senses = word.senses.map(
@@ -92,9 +90,7 @@ export class ReviewEntriesSense {
    * Important: Some things aren't preserved!
    * (E.g., distinct glosses with the same language are combined.) */
   constructor(sense?: Sense, analysisLang?: string) {
-    if (!sense) {
-      sense = newSense();
-    }
+    sense ??= newSense();
     this.guid = sense.guid;
     this.definitions = analysisLang
       ? sense.definitions.filter((d) => d.language === analysisLang)
