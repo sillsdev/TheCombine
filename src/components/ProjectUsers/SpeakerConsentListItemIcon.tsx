@@ -17,6 +17,7 @@ import {
   ViewImageDialog,
 } from "components/Dialogs";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
+import { newPronunciation } from "types/word";
 
 interface ConsentIconProps {
   refresh: () => void | Promise<void>;
@@ -67,10 +68,10 @@ function PlayConsentListItemIcon(props: ConsentIconProps): ReactElement {
   return (
     <ListItemIcon>
       <AudioPlayer
+        audio={newPronunciation(props.speaker.id)}
         deleteAudio={handleDeleteAudio}
-        fileName={props.speaker.id}
         pronunciationUrl={getConsentUrl(props.speaker)}
-        size={"small"}
+        size="small"
         warningTextId="projectSettings.speaker.consent.warning"
       />
     </ListItemIcon>

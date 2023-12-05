@@ -9,6 +9,7 @@ interface PronunciationFrontendProps {
   audio: Pronunciation[];
   elemBetweenRecordAndPlay?: ReactElement;
   deleteAudio: (fileName: string) => void;
+  replaceAudio: (audio: Pronunciation) => void;
   uploadAudio: (file: FileWithSpeakerId) => void;
   onClick?: () => void;
 }
@@ -19,10 +20,12 @@ export default function PronunciationsFrontend(
 ): ReactElement {
   const audioButtons: ReactElement[] = props.audio.map((a) => (
     <AudioPlayer
-      fileName={a.fileName}
+      audio={a}
       key={a.fileName}
-      pronunciationUrl={a.fileName}
       deleteAudio={props.deleteAudio}
+      updateAudioSpeaker={(id) =>
+        props.replaceAudio({ ...a, speakerId: id ?? "" })
+      }
       onClick={props.onClick}
     />
   ));

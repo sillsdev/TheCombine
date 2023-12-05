@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import { ReactElement, memo, useState } from "react";
 
-import { Word, WritingSystem } from "api/models";
+import { Pronunciation, Word, WritingSystem } from "api/models";
 import {
   DeleteEntry,
   EntryNote,
@@ -24,7 +24,8 @@ export interface RecentEntryProps {
   updateVern: (index: number, newVern: string, targetWordId?: string) => void;
   removeEntry: (index: number) => void;
   addAudioToWord: (wordId: string, file: FileWithSpeakerId) => void;
-  deleteAudioFromWord: (wordId: string, fileName: string) => void;
+  delAudioFromWord: (wordId: string, fileName: string) => void;
+  repAudioInWord: (wordId: string, audio: Pronunciation) => void;
   focusNewEntry: () => void;
   analysisLang: WritingSystem;
   vernacularLang: WritingSystem;
@@ -136,10 +137,13 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
           <PronunciationsBackend
             audio={props.entry.audio}
             wordId={props.entry.id}
-            deleteAudio={(fileName: string) => {
-              props.deleteAudioFromWord(props.entry.id, fileName);
+            deleteAudio={(fileName) => {
+              props.delAudioFromWord(props.entry.id, fileName);
             }}
-            uploadAudio={(file: FileWithSpeakerId) => {
+            replaceAudio={(audio) =>
+              props.repAudioInWord(props.entry.id, audio)
+            }
+            uploadAudio={(file) => {
               props.addAudioToWord(props.entry.id, file);
             }}
           />

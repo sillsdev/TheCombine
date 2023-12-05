@@ -1,5 +1,14 @@
 import { Delete, PlayArrow, Stop } from "@mui/icons-material";
-import { Fade, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Fade,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tooltip,
+} from "@mui/material";
 import {
   CSSProperties,
   ReactElement,
@@ -9,6 +18,9 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
+import { Pronunciation, Speaker } from "api/models";
+import { getSpeaker } from "backend";
+import { SpeakerMenuList } from "components/AppBar/SpeakerMenu";
 import { ButtonConfirmation } from "components/Dialogs";
 import {
   playing,
@@ -21,10 +33,11 @@ import { themeColors } from "types/theme";
 
 interface PlayerProps {
   deleteAudio: (fileName: string) => void;
-  fileName: string;
+  audio: Pronunciation;
   onClick?: () => void;
-  pronunciationUrl: string;
+  pronunciationUrl?: string;
   size?: "large" | "medium" | "small";
+  updateAudioSpeaker?: (speakerId?: string) => Promise<void> | void;
   warningTextId?: string;
 }
 
@@ -33,13 +46,17 @@ const iconStyle: CSSProperties = { color: themeColors.success };
 export default function AudioPlayer(props: PlayerProps): ReactElement {
   const isPlaying = useAppSelector(
     (state: StoreState) =>
-      state.pronunciationsState.fileName === props.fileName &&
+      state.pronunciationsState.fileName === props.audio.fileName &&
       state.pronunciationsState.status === PronunciationsStatus.Playing
   );
 
-  const [audio] = useState<HTMLAudioElement>(new Audio(props.pronunciationUrl));
+  const [audio] = useState<HTMLAudioElement>(
+    new Audio(props.pronunciationUrl ?? props.audio.fileName)
+  );
   const [anchor, setAnchor] = useState<HTMLElement | undefined>();
   const [deleteConf, setDeleteConf] = useState(false);
+  const [speaker, setSpeaker] = useState<Speaker | undefined>();
+  const [speakerDialog, setSpeakerDialog] = useState(false);
 
   const dispatch = useAppDispatch();
   const dispatchReset = useCallback(
@@ -47,6 +64,12 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
     [dispatch]
   );
   const { t } = useTranslation();
+
+  useEffect(() => {
+    if (props.audio.speakerId) {
+      getSpeaker(props.audio.speakerId).then(setSpeaker);
+    }
+  }, [props.audio.speakerId]);
 
   useEffect(() => {
     if (isPlaying) {
@@ -60,7 +83,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
 
   function togglePlay(): void {
     if (!isPlaying) {
-      dispatch(playing(props.fileName));
+      dispatch(playing(props.audio.fileName));
     } else {
       dispatchReset();
     }
@@ -97,16 +120,36 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
     setAnchor(event.currentTarget);
   }
 
+  let title = t("pronunciations.playTooltip");
+  if (speaker) {
+    title += ` ${t("pronunciations.speaker", { val: speaker.name })}`;
+  }
+  if (props.updateAudioSpeaker && !props.audio._protected) {
+    title += ` ${
+      speaker
+        ? t("pronunciations.speakerChange")
+        : t("pronunciations.speakerAdd")
+    }`;
+  }
+
+  const handleOnSelect = async (speaker?: Speaker): Promise<void> => {
+    if (props.updateAudioSpeaker && !props.audio._protected) {
+      await props.updateAudioSpeaker(speaker?.id);
+    }
+    setSpeakerDialog(false);
+  };
+
   return (
     <>
-      <Tooltip title={t("pronunciations.playTooltip")} placement="top">
+      <Tooltip title={title} placement="top">
         <IconButton
           tabIndex={-1}
           onClick={deleteOrTogglePlay}
+          onAuxClick={() => setSpeakerDialog(true)}
           onTouchStart={handleTouch}
           onTouchEnd={enableContextMenu}
           aria-label="play"
-          id={`audio-${props.fileName}`}
+          id={`audio-${props.audio.fileName}`}
           size={props.size || "large"}
         >
           {isPlaying ? <Stop sx={iconStyle} /> : <PlayArrow sx={iconStyle} />}
@@ -145,10 +188,16 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
         textId={props.warningTextId || "buttons.deletePermanently"}
         titleId="pronunciations.deleteRecording"
         onClose={() => setDeleteConf(false)}
-        onConfirm={() => props.deleteAudio(props.fileName)}
+        onConfirm={() => props.deleteAudio(props.audio.fileName)}
         buttonIdClose="audio-delete-cancel"
         buttonIdConfirm="audio-delete-confirm"
       />
+      <Dialog open={speakerDialog} onClose={() => setSpeakerDialog(false)}>
+        <DialogTitle>{t("pronunciations.speakerSelect")}</DialogTitle>
+        <DialogContent>
+          <SpeakerMenuList onSelect={handleOnSelect} selectedId={speaker?.id} />
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

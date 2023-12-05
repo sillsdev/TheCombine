@@ -38,11 +38,15 @@ const mockStore = configureMockStore()(mockState);
 // Mock the functions used for the component in edit mode
 const mockAddNewAudio = jest.fn();
 const mockDelNewAudio = jest.fn();
+const mockRepNewAudio = jest.fn();
 const mockDelOldAudio = jest.fn();
+const mockRepOldAudio = jest.fn();
 const mockAudioFunctions = {
   addNewAudio: (...args: any[]) => mockAddNewAudio(...args),
   delNewAudio: (...args: any[]) => mockDelNewAudio(...args),
+  repNewAudio: (...args: any[]) => mockRepNewAudio(...args),
   delOldAudio: (...args: any[]) => mockDelOldAudio(...args),
+  repOldAudio: (...args: any[]) => mockRepOldAudio(...args),
 };
 
 // Render the cell component with a store and theme

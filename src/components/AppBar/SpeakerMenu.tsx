@@ -30,6 +30,10 @@ const idAffix = "speaker-menu";
 
 /** Icon with dropdown SpeakerMenu */
 export default function SpeakerMenu(): ReactElement {
+  const dispatch = useAppDispatch();
+  const currentSpeaker = useSelector(
+    (state: StoreState) => state.currentProjectState.speaker
+  );
   const [anchorElement, setAnchorElement] = useState<HTMLElement | undefined>();
 
   function handleClick(event: MouseEvent<HTMLButtonElement>): void {
@@ -67,7 +71,10 @@ export default function SpeakerMenu(): ReactElement {
         open={Boolean(anchorElement)}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
       >
-        <SpeakerMenuList />
+        <SpeakerMenuList
+          onSelect={(speaker) => dispatch(setCurrentSpeaker(speaker))}
+          selectedId={currentSpeaker?.id}
+        />
       </Menu>
     </>
   );
@@ -75,36 +82,34 @@ export default function SpeakerMenu(): ReactElement {
 
 interface SpeakerMenuListProps {
   forwardedRef?: ForwardedRef<any>;
+  onSelect: (speaker?: Speaker) => void;
+  selectedId?: string;
 }
 
 /** SpeakerMenu options */
 export function SpeakerMenuList(props: SpeakerMenuListProps): ReactElement {
-  const dispatch = useAppDispatch();
-  const currentProjId = useSelector(
+  const projectId = useSelector(
     (state: StoreState) => state.currentProjectState.project.id
-  );
-  const currentSpeaker = useSelector(
-    (state: StoreState) => state.currentProjectState.speaker
   );
   const [speakers, setSpeakers] = useState<Speaker[]>([]);
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (currentProjId) {
-      getAllSpeakers(currentProjId).then(setSpeakers);
+    if (projectId) {
+      getAllSpeakers(projectId).then(setSpeakers);
     }
-  }, [currentProjId]);
+  }, [projectId]);
 
   const currentIcon = (
     <Circle fontSize="small" style={{ color: themeColors.recordIdle }} />
   );
 
   const speakerMenuItem = (speaker?: Speaker): ReactElement => {
-    const isCurrent = speaker?.id === currentSpeaker?.id;
+    const isCurrent = speaker?.id === props.selectedId;
     return (
       <MenuItem
         key={speaker?.id}
-        onClick={() => (isCurrent ? {} : dispatch(setCurrentSpeaker(speaker)))}
+        onClick={() => (isCurrent ? {} : props.onSelect(speaker))}
       >
         <ListItemIcon>{isCurrent ? currentIcon : <Icon />}</ListItemIcon>
         <ListItemText>{speaker?.name ?? t("speakerMenu.other")}</ListItemText>

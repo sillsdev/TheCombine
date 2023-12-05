@@ -27,6 +27,7 @@ describe("PronunciationsFrontend", () => {
               <PronunciationsFrontend
                 audio={audio}
                 deleteAudio={jest.fn()}
+                replaceAudio={jest.fn()}
                 uploadAudio={jest.fn()}
               />
             </Provider>

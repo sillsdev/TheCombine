@@ -1,6 +1,6 @@
 import { Action, PayloadAction } from "@reduxjs/toolkit";
 
-import { Sense, Word } from "api/models";
+import { Pronunciation, Sense, Word } from "api/models";
 import * as backend from "backend";
 import {
   addEntryEditToGoal,
@@ -227,6 +227,22 @@ export function deleteAudio(
   return asyncRefreshWord(wordId, (wordId: string) =>
     backend.deleteAudio(wordId, fileName)
   );
+}
+
+export function replaceAudio(
+  wordId: string,
+  pro: Pronunciation
+): (dispatch: StoreStateDispatch) => Promise<void> {
+  return asyncRefreshWord(wordId, async (oldId: string) => {
+    const word = await backend.getWord(oldId);
+    const oldPro = word.audio.find((a) => a.fileName === pro.fileName);
+    let newId = oldId;
+    if (oldPro && oldPro.speakerId !== pro.speakerId && !oldPro._protected) {
+      oldPro.speakerId = pro.speakerId;
+      newId = (await backend.updateWord(word)).id;
+    }
+    return newId;
+  });
 }
 
 export function uploadAudio(

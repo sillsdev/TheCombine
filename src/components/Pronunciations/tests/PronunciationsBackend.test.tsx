@@ -30,6 +30,7 @@ const renderPronunciationsBackend = async (
               playerOnly={!withRecord}
               wordId="mock-id"
               deleteAudio={jest.fn()}
+              replaceAudio={jest.fn()}
               uploadAudio={withRecord ? jest.fn() : undefined}
             />
           </Provider>

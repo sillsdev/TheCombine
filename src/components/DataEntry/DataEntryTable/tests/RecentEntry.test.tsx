@@ -54,7 +54,8 @@ async function renderWithWord(word: Word): Promise<void> {
               updateVern={mockUpdateVern}
               removeEntry={jest.fn()}
               addAudioToWord={jest.fn()}
-              deleteAudioFromWord={jest.fn()}
+              delAudioFromWord={jest.fn()}
+              repAudioInWord={jest.fn()}
               focusNewEntry={jest.fn()}
               analysisLang={newWritingSystem()}
               vernacularLang={newWritingSystem()}

@@ -473,6 +473,16 @@ export async function getAllSpeakers(projectId?: string): Promise<Speaker[]> {
   return resp.data.sort((a, b) => a.name.localeCompare(b.name));
 }
 
+/** Get speaker by speakerId (in current project if no projectId given). */
+export async function getSpeaker(
+  speakerId: string,
+  projectId?: string
+): Promise<Speaker> {
+  projectId = projectId || LocalStorage.getProjectId();
+  const params = { projectId, speakerId };
+  return (await speakerApi.getSpeaker(params, defaultOptions())).data;
+}
+
 /** Creates new speaker (in current project if no projectId given).
  * Returns id of new speaker. */
 export async function createSpeaker(

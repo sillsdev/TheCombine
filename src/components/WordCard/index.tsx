@@ -79,8 +79,9 @@ export default function WordCard(props: WordCardProps): ReactElement {
           <>
             {audio.length > 0 && (
               <PronunciationsBackend
-                audio={audio}
+                audio={audio.map((a) => ({ ...a, _protected: true }))}
                 deleteAudio={() => {}}
+                replaceAudio={() => {}}
                 playerOnly
                 wordId={id}
               />

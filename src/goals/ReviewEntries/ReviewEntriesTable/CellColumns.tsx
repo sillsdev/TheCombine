@@ -2,7 +2,7 @@ import { Column } from "@material-table/core";
 import { Input, Typography } from "@mui/material";
 import { t } from "i18next";
 
-import { SemanticDomain } from "api/models";
+import { Pronunciation, SemanticDomain } from "api/models";
 import {
   DefinitionCell,
   DeleteCell,
@@ -382,6 +382,16 @@ const columns: Column<ReviewEntriesWord>[] = [
                 ),
               });
           },
+          repNewAudio: (pro: Pronunciation): void => {
+            if (props.onRowDataChange && props.rowData.audioNew) {
+              const audioNew = [...props.rowData.audioNew];
+              const oldPro = audioNew.find((a) => a.fileName === pro.fileName);
+              if (oldPro && !oldPro._protected) {
+                oldPro.speakerId = pro.speakerId;
+                props.onRowDataChange({ ...props.rowData, audioNew });
+              }
+            }
+          },
           delOldAudio: (fileName: string): void => {
             props.onRowDataChange &&
               props.onRowDataChange({
@@ -390,6 +400,16 @@ const columns: Column<ReviewEntriesWord>[] = [
                   (a) => a.fileName !== fileName
                 ),
               });
+          },
+          repOldAudio: (pro: Pronunciation): void => {
+            if (props.onRowDataChange && props.rowData.audioNew) {
+              const audio = [...props.rowData.audio];
+              const oldPro = audio.find((a) => a.fileName === pro.fileName);
+              if (oldPro && !oldPro._protected) {
+                oldPro.speakerId = pro.speakerId;
+                props.onRowDataChange({ ...props.rowData, audio });
+              }
+            }
           },
         }}
         audio={props.rowData.audio}

@@ -47,8 +47,9 @@ interface NewEntryProps {
   resetNewEntry: () => void;
   updateWordWithNewGloss: (wordId: string) => Promise<void>;
   newAudio: Pronunciation[];
-  addNewAudioUrl: (file: FileWithSpeakerId) => void;
-  delNewAudioUrl: (url: string) => void;
+  addNewAudio: (file: FileWithSpeakerId) => void;
+  delNewAudio: (url: string) => void;
+  repNewAudio: (audio: Pronunciation) => void;
   newGloss: string;
   setNewGloss: (gloss: string) => void;
   newNote: string;
@@ -75,8 +76,9 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     resetNewEntry,
     updateWordWithNewGloss,
     newAudio,
-    addNewAudioUrl,
-    delNewAudioUrl,
+    addNewAudio,
+    delNewAudio,
+    repNewAudio,
     newGloss,
     setNewGloss,
     newNote,
@@ -293,8 +295,9 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
       <Grid item xs={2} style={gridItemStyle(1)}>
         <PronunciationsFrontend
           audio={newAudio}
-          deleteAudio={delNewAudioUrl}
-          uploadAudio={addNewAudioUrl}
+          deleteAudio={delNewAudio}
+          replaceAudio={repNewAudio}
+          uploadAudio={addNewAudio}
           onClick={() => focus(FocusTarget.Gloss)}
         />
       </Grid>

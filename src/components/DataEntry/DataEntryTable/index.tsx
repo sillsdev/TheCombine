@@ -375,7 +375,7 @@ export default function DataEntryTable(
   };
 
   /** Add an audio file to newAudioUrls. */
-  const addNewAudioUrl = (file: FileWithSpeakerId): void => {
+  const addNewAudio = (file: FileWithSpeakerId): void => {
     setState((prevState) => {
       const newAudio = [...prevState.newAudio];
       newAudio.push(
@@ -386,9 +386,21 @@ export default function DataEntryTable(
   };
 
   /** Delete a url from newAudio. */
-  const delNewAudioUrl = (url: string): void => {
+  const delNewAudio = (url: string): void => {
     setState((prevState) => {
       const newAudio = prevState.newAudio.filter((a) => a.fileName !== url);
+      return { ...prevState, newAudio };
+    });
+  };
+
+  /** Replace the speaker of a newAudio. */
+  const repNewAudio = (pro: Pronunciation): void => {
+    setState((prevState) => {
+      const newAudio = [...prevState.newAudio];
+      const oldPro = newAudio.find((a) => a.fileName === pro.fileName);
+      if (oldPro && !oldPro._protected) {
+        oldPro.speakerId = pro.speakerId;
+      }
       return { ...prevState, newAudio };
     });
   };
@@ -620,6 +632,22 @@ export default function DataEntryTable(
     async (oldId: string, fileName: string): Promise<void> => {
       defunctWord(oldId);
       const newId = await backend.deleteAudio(oldId, fileName);
+      defunctWord(oldId, newId);
+    },
+    [defunctWord]
+  );
+
+  /** Updates speaker of specified audio in specified word. */
+  const replaceAudioInWord = useCallback(
+    async (oldId: string, pro: Pronunciation): Promise<void> => {
+      defunctWord(oldId);
+      const word = await backend.getWord(oldId);
+      const oldPro = word.audio.find((a) => a.fileName === pro.fileName);
+      let newId = oldId;
+      if (oldPro && oldPro.speakerId !== pro.speakerId && !oldPro._protected) {
+        oldPro.speakerId = pro.speakerId;
+        newId = (await backend.updateWord(word)).id;
+      }
       defunctWord(oldId, newId);
     },
     [defunctWord]
@@ -911,7 +939,8 @@ export default function DataEntryTable(
               updateVern={updateRecentVern}
               removeEntry={undoRecentEntry}
               addAudioToWord={addAudioFileToWord}
-              deleteAudioFromWord={deleteAudioFromWord}
+              delAudioFromWord={deleteAudioFromWord}
+              repAudioInWord={replaceAudioInWord}
               focusNewEntry={handleFocusNewEntry}
               analysisLang={analysisLang}
               vernacularLang={vernacularLang}
@@ -931,8 +960,9 @@ export default function DataEntryTable(
             resetNewEntry={resetNewEntry}
             updateWordWithNewGloss={updateWordWithNewEntry}
             newAudio={state.newAudio}
-            addNewAudioUrl={addNewAudioUrl}
-            delNewAudioUrl={delNewAudioUrl}
+            addNewAudio={addNewAudio}
+            delNewAudio={delNewAudio}
+            repNewAudio={repNewAudio}
             newGloss={state.newGloss}
             setNewGloss={setNewGloss}
             newNote={state.newNote}

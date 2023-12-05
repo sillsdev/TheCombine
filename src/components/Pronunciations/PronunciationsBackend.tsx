@@ -12,6 +12,7 @@ interface PronunciationsBackendProps {
   overrideMemo?: boolean;
   wordId: string;
   deleteAudio: (fileName: string) => void;
+  replaceAudio: (audio: Pronunciation) => void;
   uploadAudio?: (file: FileWithSpeakerId) => void;
 }
 
@@ -28,10 +29,13 @@ export function PronunciationsBackend(
 
   const audioButtons: ReactElement[] = props.audio.map((a) => (
     <AudioPlayer
-      fileName={a.fileName}
+      audio={a}
+      deleteAudio={props.deleteAudio}
       key={a.fileName}
       pronunciationUrl={getAudioUrl(props.wordId, a.fileName)}
-      deleteAudio={props.deleteAudio}
+      updateAudioSpeaker={(id) =>
+        props.replaceAudio({ ...a, speakerId: id ?? "" })
+      }
     />
   ));
 
