@@ -9,7 +9,7 @@
 
 - name: "Get Latest Release"
   get_url:
-    url: "https://get.helm.sh/helm-{{ helm_version }}-linux-arm64.tar.gz"
+    url: "https://get.helm.sh/helm-{{ helm_version }}-linux-amd64.tar.gz"
     dest: /opt/helm-{{ helm_version }}/helm.tar.gz
     owner: root
     group: root
@@ -19,11 +19,11 @@
   command:
     cmd: "tar -zxvf /opt/helm-{{ helm_version }}/helm.tar.gz"
     chdir: "/opt/helm-{{ helm_version }}"
-  creates: /opt/helm-{{ helm_version }}/linux-arm64/helm
+  creates: /opt/helm-{{ helm_version }}/linux-amd64/helm
 
 - name: "Link to extracted helm file"
   file:
-    src: /opt/helm-{{ helm_version }}/linux-arm64/helm
+    src: /opt/helm-{{ helm_version }}/linux-amd64/helm
     path: /usr/local/bin/helm
     state: link
     owner: root
