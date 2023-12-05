@@ -2,7 +2,7 @@
 - name: "Get Latest Release"
   get_url:
     url: https://github.com/helm/helm/releases/latest
-    dest: "{{ ansible_user_dir }}/Downloads/helm/"
-    owner: "{{ ansible_user_id }}"
-    group: "{{ ansible_user_gid }}"
+    dest: "/usr/local/bin/helm"
+    owner: root
+    group: root
     mode: 0755
