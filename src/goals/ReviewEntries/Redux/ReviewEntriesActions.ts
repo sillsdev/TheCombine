@@ -6,7 +6,7 @@ import {
   addEntryEditToGoal,
   asyncUpdateGoal,
 } from "components/GoalTimeline/Redux/GoalActions";
-import { uploadFileFromUrl } from "components/Pronunciations/utilities";
+import { uploadFileFromPronunciation } from "components/Pronunciations/utilities";
 import {
   deleteWordAction,
   resetReviewEntriesAction,
@@ -180,7 +180,7 @@ export function updateFrontierWord(
 
     // Add/remove audio.
     for (const audio of addAudio) {
-      newId = await uploadFileFromUrl(newId, audio.fileName, audio.speakerId);
+      newId = await uploadFileFromPronunciation(newId, audio);
     }
     for (const audio of delAudio) {
       newId = await backend.deleteAudio(newId, audio.fileName);

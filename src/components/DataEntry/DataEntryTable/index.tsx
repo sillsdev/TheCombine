@@ -30,7 +30,7 @@ import { getUserId } from "backend/localStorage";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
 import { filterWordsWithSenses } from "components/DataEntry/utilities";
-import { uploadFileFromUrl } from "components/Pronunciations/utilities";
+import { uploadFileFromPronunciation } from "components/Pronunciations/utilities";
 import { StoreState } from "types";
 import { Hash } from "types/hash";
 import { useAppSelector } from "types/hooks";
@@ -571,7 +571,7 @@ export default function DataEntryTable(
       defunctWord(oldId);
       let newId = oldId;
       for (const a of audio) {
-        newId = await uploadFileFromUrl(newId, a.fileName, a.speakerId);
+        newId = await uploadFileFromPronunciation(newId, a);
       }
       defunctWord(oldId, newId);
       return newId;
