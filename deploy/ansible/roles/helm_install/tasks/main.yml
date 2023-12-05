@@ -6,3 +6,9 @@
     owner: root
     group: root
     mode: 0755
+
+- name: "Add stable charts"
+  command: helm repo install stable https://charts.helm.sh/stable
+
+- name: "Add bitnami charts"
+  command: helm repo install bitnami https://charts.bitnami.com/bitnami
