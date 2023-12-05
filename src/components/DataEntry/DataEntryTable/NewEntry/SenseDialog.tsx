@@ -106,7 +106,7 @@ export function SenseList(props: SenseListProps): ReactElement {
   return (
     <>
       {/* Cancel button */}
-      <CloseButton close={props.closeDialog} />
+      <CloseButton close={() => props.closeDialog()} />
       {/* Header */}
       <Typography variant="h3">{t("addWords.selectSense")}</Typography>
       {/* Sense options */}

@@ -107,7 +107,7 @@ export function VernList(props: VernListProps): ReactElement {
   return (
     <>
       {/* Cancel button */}
-      <CloseButton close={props.closeDialog} />
+      <CloseButton close={() => props.closeDialog()} />
       {/* Header */}
       <Typography variant="h3">{t("addWords.selectEntry")}</Typography>
       {/* Entry options */}
