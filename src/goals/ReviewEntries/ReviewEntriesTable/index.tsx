@@ -1,5 +1,6 @@
 import MaterialTable, { OrderByCollection } from "@material-table/core";
 import { Typography } from "@mui/material";
+import { createSelector } from "@reduxjs/toolkit";
 import { enqueueSnackbar } from "notistack";
 import React, { ReactElement, createRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -49,11 +50,13 @@ const tableRef: React.RefObject<any> = createRef();
 export default function ReviewEntriesTable(
   props: ReviewEntriesTableProps
 ): ReactElement {
+  const wordsSelector = createSelector(
+    [(state: StoreState) => state.reviewEntriesState.words],
+    (words) => words.map((w) => new ReviewEntriesWord(w))
+  );
+  const allWords = useSelector(wordsSelector);
   const projId = useSelector(
     (state: StoreState) => state.currentProjectState.project.id
-  );
-  const words = useSelector(
-    (state: StoreState) => state.reviewEntriesState.words
   );
   const showDefinitions = useSelector(
     (state: StoreState) => state.currentProjectState.project.definitionsEnabled
@@ -63,8 +66,8 @@ export default function ReviewEntriesTable(
       state.currentProjectState.project.grammaticalInfoEnabled
   );
   const { t } = useTranslation();
-  const [maxRows, setMaxRows] = useState(words.length);
-  const [pageState, setPageState] = useState(getPageState(words.length));
+  const [maxRows, setMaxRows] = useState(allWords.length);
+  const [pageState, setPageState] = useState(getPageState(allWords.length));
   const [scrollToTop, setScrollToTop] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
@@ -167,7 +170,7 @@ export default function ReviewEntriesTable(
         </Typography>
       }
       columns={activeColumns}
-      data={words}
+      data={allWords}
       onFilterChange={updateMaxRows}
       onOrderCollectionChange={onOrderCollectionChange}
       onRowsPerPageChange={() => setScrollToTop(true)}
