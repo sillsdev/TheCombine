@@ -42,6 +42,7 @@ import {
   newSense,
   newWord,
   simpleWord,
+  updateSpeakerInAudio,
 } from "types/word";
 import { defaultWritingSystem } from "types/writingSystem";
 import SpellCheckerContext from "utilities/spellCheckerContext";
@@ -396,12 +397,8 @@ export default function DataEntryTable(
   /** Replace the speaker of a newAudio. */
   const repNewAudio = (pro: Pronunciation): void => {
     setState((prevState) => {
-      const newAudio = [...prevState.newAudio];
-      const oldPro = newAudio.find((a) => a.fileName === pro.fileName);
-      if (oldPro && !oldPro._protected) {
-        oldPro.speakerId = pro.speakerId;
-      }
-      return { ...prevState, newAudio };
+      const newAudio = updateSpeakerInAudio(prevState.newAudio, pro);
+      return newAudio ? { ...prevState, newAudio } : prevState;
     });
   };
 
@@ -642,12 +639,10 @@ export default function DataEntryTable(
     async (oldId: string, pro: Pronunciation): Promise<void> => {
       defunctWord(oldId);
       const word = await backend.getWord(oldId);
-      const oldPro = word.audio.find((a) => a.fileName === pro.fileName);
-      let newId = oldId;
-      if (oldPro && oldPro.speakerId !== pro.speakerId && !oldPro._protected) {
-        oldPro.speakerId = pro.speakerId;
-        newId = (await backend.updateWord(word)).id;
-      }
+      const audio = updateSpeakerInAudio(word.audio, pro);
+      const newId = audio
+        ? (await backend.updateWord({ ...word, audio })).id
+        : oldId;
       defunctWord(oldId, newId);
     },
     [defunctWord]

@@ -20,7 +20,12 @@ import {
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { FileWithSpeakerId, newNote, newSense } from "types/word";
+import {
+  FileWithSpeakerId,
+  newNote,
+  newSense,
+  updateSpeakerInAudio,
+} from "types/word";
 
 // Action Creation Functions
 
@@ -235,13 +240,8 @@ export function replaceAudio(
 ): (dispatch: StoreStateDispatch) => Promise<void> {
   return asyncRefreshWord(wordId, async (oldId: string) => {
     const word = await backend.getWord(oldId);
-    const oldPro = word.audio.find((a) => a.fileName === pro.fileName);
-    let newId = oldId;
-    if (oldPro && oldPro.speakerId !== pro.speakerId && !oldPro._protected) {
-      oldPro.speakerId = pro.speakerId;
-      newId = (await backend.updateWord(word)).id;
-    }
-    return newId;
+    const audio = updateSpeakerInAudio(word.audio, pro);
+    return audio ? (await backend.updateWord({ ...word, audio })).id : oldId;
   });
 }
 

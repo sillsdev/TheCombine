@@ -23,6 +23,7 @@ export default function RecordAudioDialog(
       <DialogContent>
         <AudioRecorder
           id={props.audioId}
+          noSpeaker
           uploadAudio={(file) => props.uploadAudio(file)}
         />
       </DialogContent>

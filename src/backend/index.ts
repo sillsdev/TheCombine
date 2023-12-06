@@ -129,11 +129,12 @@ export async function uploadAudio(
 ): Promise<string> {
   const projectId = LocalStorage.getProjectId();
   const speakerId = file.speakerId ?? "";
-  const resp = await audioApi.uploadAudioFile(
-    { projectId, speakerId, wordId, ...fileUpload(file) },
-    { headers: { ...authHeader(), "content-type": "application/json" } }
-  );
-  return resp.data;
+  const params = { projectId, wordId, ...fileUpload(file) };
+  const headers = { ...authHeader(), "content-type": "application/json" };
+  const promise = speakerId
+    ? audioApi.uploadAudioFileWithSpeaker({ ...params, speakerId }, { headers })
+    : audioApi.uploadAudioFile(params, { headers });
+  return (await promise).data;
 }
 
 export async function deleteAudio(

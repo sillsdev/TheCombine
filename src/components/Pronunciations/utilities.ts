@@ -1,5 +1,6 @@
 import { Pronunciation } from "api";
 import { uploadAudio } from "backend";
+import { FileWithSpeakerId } from "types/word";
 
 /** Generate a timestamp-based file name for the given `wordId`. */
 export function getFileNameForWord(wordId: string): string {
@@ -23,7 +24,8 @@ export async function uploadFileFromPronunciation(
     type: audioBlob.type,
     lastModified: Date.now(),
   });
-  const newId = await uploadAudio(wordId, { ...file, speakerId });
+  (file as FileWithSpeakerId).speakerId = speakerId;
+  const newId = await uploadAudio(wordId, file);
   URL.revokeObjectURL(fileName);
   return newId;
 }

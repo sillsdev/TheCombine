@@ -156,7 +156,6 @@ export const AudioApiAxiosParamCreator = function (
      *
      * @param {string} projectId
      * @param {string} wordId
-     * @param {string} speakerId
      * @param {any} file
      * @param {string} name
      * @param {string} filePath
@@ -166,7 +165,6 @@ export const AudioApiAxiosParamCreator = function (
     uploadAudioFile: async (
       projectId: string,
       wordId: string,
-      speakerId: string,
       file: any,
       name: string,
       filePath: string,
@@ -176,14 +174,95 @@ export const AudioApiAxiosParamCreator = function (
       assertParamExists("uploadAudioFile", "projectId", projectId);
       // verify required parameter 'wordId' is not null or undefined
       assertParamExists("uploadAudioFile", "wordId", wordId);
-      // verify required parameter 'speakerId' is not null or undefined
-      assertParamExists("uploadAudioFile", "speakerId", speakerId);
       // verify required parameter 'file' is not null or undefined
       assertParamExists("uploadAudioFile", "file", file);
       // verify required parameter 'name' is not null or undefined
       assertParamExists("uploadAudioFile", "name", name);
       // verify required parameter 'filePath' is not null or undefined
       assertParamExists("uploadAudioFile", "filePath", filePath);
+      const localVarPath =
+        `/v1/projects/{projectId}/words/{wordId}/audio/upload`
+          .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
+          .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)));
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+      const localVarFormParams = new ((configuration &&
+        configuration.formDataCtor) ||
+        FormData)();
+
+      if (file !== undefined) {
+        localVarFormParams.append("File", file as any);
+      }
+
+      if (name !== undefined) {
+        localVarFormParams.append("Name", name as any);
+      }
+
+      if (filePath !== undefined) {
+        localVarFormParams.append("FilePath", filePath as any);
+      }
+
+      localVarHeaderParameter["Content-Type"] = "multipart/form-data";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = localVarFormParams;
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} wordId
+     * @param {string} speakerId
+     * @param {any} file
+     * @param {string} name
+     * @param {string} filePath
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    uploadAudioFileWithSpeaker: async (
+      projectId: string,
+      wordId: string,
+      speakerId: string,
+      file: any,
+      name: string,
+      filePath: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("uploadAudioFileWithSpeaker", "projectId", projectId);
+      // verify required parameter 'wordId' is not null or undefined
+      assertParamExists("uploadAudioFileWithSpeaker", "wordId", wordId);
+      // verify required parameter 'speakerId' is not null or undefined
+      assertParamExists("uploadAudioFileWithSpeaker", "speakerId", speakerId);
+      // verify required parameter 'file' is not null or undefined
+      assertParamExists("uploadAudioFileWithSpeaker", "file", file);
+      // verify required parameter 'name' is not null or undefined
+      assertParamExists("uploadAudioFileWithSpeaker", "name", name);
+      // verify required parameter 'filePath' is not null or undefined
+      assertParamExists("uploadAudioFileWithSpeaker", "filePath", filePath);
       const localVarPath =
         `/v1/projects/{projectId}/words/{wordId}/audio/upload/{speakerId}`
           .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
@@ -309,7 +388,6 @@ export const AudioApiFp = function (configuration?: Configuration) {
      *
      * @param {string} projectId
      * @param {string} wordId
-     * @param {string} speakerId
      * @param {any} file
      * @param {string} name
      * @param {string} filePath
@@ -319,7 +397,6 @@ export const AudioApiFp = function (configuration?: Configuration) {
     async uploadAudioFile(
       projectId: string,
       wordId: string,
-      speakerId: string,
       file: any,
       name: string,
       filePath: string,
@@ -330,12 +407,50 @@ export const AudioApiFp = function (configuration?: Configuration) {
       const localVarAxiosArgs = await localVarAxiosParamCreator.uploadAudioFile(
         projectId,
         wordId,
-        speakerId,
         file,
         name,
         filePath,
         options
       );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} wordId
+     * @param {string} speakerId
+     * @param {any} file
+     * @param {string} name
+     * @param {string} filePath
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async uploadAudioFileWithSpeaker(
+      projectId: string,
+      wordId: string,
+      speakerId: string,
+      file: any,
+      name: string,
+      filePath: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.uploadAudioFileWithSpeaker(
+          projectId,
+          wordId,
+          speakerId,
+          file,
+          name,
+          filePath,
+          options
+        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -397,7 +512,6 @@ export const AudioApiFactory = function (
      *
      * @param {string} projectId
      * @param {string} wordId
-     * @param {string} speakerId
      * @param {any} file
      * @param {string} name
      * @param {string} filePath
@@ -407,6 +521,29 @@ export const AudioApiFactory = function (
     uploadAudioFile(
       projectId: string,
       wordId: string,
+      file: any,
+      name: string,
+      filePath: string,
+      options?: any
+    ): AxiosPromise<string> {
+      return localVarFp
+        .uploadAudioFile(projectId, wordId, file, name, filePath, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} wordId
+     * @param {string} speakerId
+     * @param {any} file
+     * @param {string} name
+     * @param {string} filePath
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    uploadAudioFileWithSpeaker(
+      projectId: string,
+      wordId: string,
       speakerId: string,
       file: any,
       name: string,
@@ -414,7 +551,7 @@ export const AudioApiFactory = function (
       options?: any
     ): AxiosPromise<string> {
       return localVarFp
-        .uploadAudioFile(
+        .uploadAudioFileWithSpeaker(
           projectId,
           wordId,
           speakerId,
@@ -506,13 +643,6 @@ export interface AudioApiUploadAudioFileRequest {
 
   /**
    *
-   * @type {string}
-   * @memberof AudioApiUploadAudioFile
-   */
-  readonly speakerId: string;
-
-  /**
-   *
    * @type {any}
    * @memberof AudioApiUploadAudioFile
    */
@@ -529,6 +659,55 @@ export interface AudioApiUploadAudioFileRequest {
    *
    * @type {string}
    * @memberof AudioApiUploadAudioFile
+   */
+  readonly filePath: string;
+}
+
+/**
+ * Request parameters for uploadAudioFileWithSpeaker operation in AudioApi.
+ * @export
+ * @interface AudioApiUploadAudioFileWithSpeakerRequest
+ */
+export interface AudioApiUploadAudioFileWithSpeakerRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof AudioApiUploadAudioFileWithSpeaker
+   */
+  readonly projectId: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof AudioApiUploadAudioFileWithSpeaker
+   */
+  readonly wordId: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof AudioApiUploadAudioFileWithSpeaker
+   */
+  readonly speakerId: string;
+
+  /**
+   *
+   * @type {any}
+   * @memberof AudioApiUploadAudioFileWithSpeaker
+   */
+  readonly file: any;
+
+  /**
+   *
+   * @type {string}
+   * @memberof AudioApiUploadAudioFileWithSpeaker
+   */
+  readonly name: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof AudioApiUploadAudioFileWithSpeaker
    */
   readonly filePath: string;
 }
@@ -595,6 +774,29 @@ export class AudioApi extends BaseAPI {
   ) {
     return AudioApiFp(this.configuration)
       .uploadAudioFile(
+        requestParameters.projectId,
+        requestParameters.wordId,
+        requestParameters.file,
+        requestParameters.name,
+        requestParameters.filePath,
+        options
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {AudioApiUploadAudioFileWithSpeakerRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof AudioApi
+   */
+  public uploadAudioFileWithSpeaker(
+    requestParameters: AudioApiUploadAudioFileWithSpeakerRequest,
+    options?: any
+  ) {
+    return AudioApiFp(this.configuration)
+      .uploadAudioFileWithSpeaker(
         requestParameters.projectId,
         requestParameters.wordId,
         requestParameters.speakerId,

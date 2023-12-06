@@ -13,6 +13,7 @@ import { FileWithSpeakerId } from "types/word";
 interface RecorderProps {
   id: string;
   uploadAudio: (file: FileWithSpeakerId) => void;
+  noSpeaker?: boolean;
   onClick?: () => void;
 }
 
@@ -37,12 +38,14 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
       return;
     }
     const fileName = getFileNameForWord(props.id);
-    const options: FilePropertyBag = {
+    const file = new File([blob], fileName, {
       lastModified: Date.now(),
       type: Recorder.blobType,
-    };
-    const file = new File([blob], fileName, options);
-    props.uploadAudio({ ...file, speakerId });
+    });
+    if (!props.noSpeaker) {
+      (file as FileWithSpeakerId).speakerId = speakerId;
+    }
+    props.uploadAudio(file);
   }
 
   return (

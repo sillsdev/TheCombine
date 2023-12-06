@@ -1,4 +1,4 @@
-import { Delete, PlayArrow, Stop } from "@mui/icons-material";
+import { Delete, PlayArrow, RecordVoiceOver, Stop } from "@mui/icons-material";
 import {
   Dialog,
   DialogContent,
@@ -65,6 +65,8 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
   );
   const { t } = useTranslation();
 
+  const canChangeSpeaker = props.updateAudioSpeaker && !props.audio._protected;
+
   useEffect(() => {
     if (props.audio.speakerId) {
       getSpeaker(props.audio.speakerId).then(setSpeaker);
@@ -100,52 +102,72 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
     }
   }
 
-  function handleClose(): void {
+  function handleMenuOnClose(): void {
     setAnchor(undefined);
     enableContextMenu();
   }
 
-  function disableContextMenu(event: any): void {
+  function preventEventOnce(event: any): void {
     event.preventDefault();
     enableContextMenu();
   }
+
+  function disableContextMenu(): void {
+    document.addEventListener("contextmenu", preventEventOnce, false);
+  }
+
   function enableContextMenu(): void {
-    document.removeEventListener("contextmenu", disableContextMenu, false);
+    document.removeEventListener("contextmenu", preventEventOnce, false);
   }
 
   function handleTouch(event: any): void {
     // Temporarily disable context menu since some browsers
     // interpret a long-press touch as a right-click.
-    document.addEventListener("contextmenu", disableContextMenu, false);
+    disableContextMenu();
     setAnchor(event.currentTarget);
   }
 
-  let title = t("pronunciations.playTooltip");
-  if (speaker) {
-    title += ` ${t("pronunciations.speaker", { val: speaker.name })}`;
+  async function handleOnSelect(speaker?: Speaker): Promise<void> {
+    if (canChangeSpeaker) {
+      await props.updateAudioSpeaker!(speaker?.id);
+    }
+    setSpeakerDialog(false);
   }
-  if (props.updateAudioSpeaker && !props.audio._protected) {
-    title += ` ${
+
+  function handleOnAuxClick(): void {
+    if (canChangeSpeaker) {
+      // Temporarily disable context menu triggered by right-click.
+      disableContextMenu();
+      setSpeakerDialog(true);
+    }
+  }
+
+  const tooltipTexts = [
+    t("pronunciations.playTooltip"),
+    t("pronunciations.deleteTooltip"),
+  ];
+  if (speaker) {
+    tooltipTexts.push(t("pronunciations.speaker", { val: speaker.name }));
+  }
+  if (canChangeSpeaker) {
+    tooltipTexts.push(
       speaker
         ? t("pronunciations.speakerChange")
         : t("pronunciations.speakerAdd")
-    }`;
+    );
   }
 
-  const handleOnSelect = async (speaker?: Speaker): Promise<void> => {
-    if (props.updateAudioSpeaker && !props.audio._protected) {
-      await props.updateAudioSpeaker(speaker?.id);
-    }
-    setSpeakerDialog(false);
-  };
+  const multilineTooltipText = (lines: string[]): ReactElement => (
+    <div style={{ whiteSpace: "pre-line" }}>{lines.join("\n")}</div>
+  );
 
   return (
     <>
-      <Tooltip title={title} placement="top">
+      <Tooltip title={multilineTooltipText(tooltipTexts)} placement="top">
         <IconButton
           tabIndex={-1}
+          onAuxClick={handleOnAuxClick}
           onClick={deleteOrTogglePlay}
-          onAuxClick={() => setSpeakerDialog(true)}
           onTouchStart={handleTouch}
           onTouchEnd={enableContextMenu}
           aria-label="play"
@@ -160,7 +182,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
         id="play-menu"
         anchorEl={anchor}
         open={Boolean(anchor)}
-        onClose={handleClose}
+        onClose={handleMenuOnClose}
         anchorOrigin={{ vertical: "top", horizontal: "left" }}
         transformOrigin={{ vertical: "top", horizontal: "left" }}
       >
@@ -168,16 +190,27 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
           id={isPlaying ? "audio-stop" : "audio-play"}
           onClick={() => {
             togglePlay();
-            handleClose();
+            handleMenuOnClose();
           }}
         >
           {isPlaying ? <Stop sx={iconStyle} /> : <PlayArrow sx={iconStyle} />}
         </MenuItem>
+        {canChangeSpeaker && (
+          <MenuItem
+            id="audio-speaker"
+            onClick={() => {
+              setSpeakerDialog(true);
+              handleMenuOnClose();
+            }}
+          >
+            <RecordVoiceOver />
+          </MenuItem>
+        )}
         <MenuItem
           id="audio-delete"
           onClick={() => {
             setDeleteConf(true);
-            handleClose();
+            handleMenuOnClose();
           }}
         >
           <Delete />

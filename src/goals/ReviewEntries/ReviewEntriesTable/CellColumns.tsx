@@ -21,7 +21,11 @@ import {
   ReviewEntriesWord,
   ReviewEntriesWordField,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
-import { FileWithSpeakerId, newPronunciation } from "types/word";
+import {
+  FileWithSpeakerId,
+  newPronunciation,
+  updateSpeakerInAudio,
+} from "types/word";
 import { compareFlags } from "utilities/wordUtilities";
 
 export class ColumnTitle {
@@ -384,10 +388,11 @@ const columns: Column<ReviewEntriesWord>[] = [
           },
           repNewAudio: (pro: Pronunciation): void => {
             if (props.onRowDataChange && props.rowData.audioNew) {
-              const audioNew = [...props.rowData.audioNew];
-              const oldPro = audioNew.find((a) => a.fileName === pro.fileName);
-              if (oldPro && !oldPro._protected) {
-                oldPro.speakerId = pro.speakerId;
+              const audioNew = updateSpeakerInAudio(
+                props.rowData.audioNew,
+                pro
+              );
+              if (audioNew) {
                 props.onRowDataChange({ ...props.rowData, audioNew });
               }
             }
@@ -402,11 +407,9 @@ const columns: Column<ReviewEntriesWord>[] = [
               });
           },
           repOldAudio: (pro: Pronunciation): void => {
-            if (props.onRowDataChange && props.rowData.audioNew) {
-              const audio = [...props.rowData.audio];
-              const oldPro = audio.find((a) => a.fileName === pro.fileName);
-              if (oldPro && !oldPro._protected) {
-                oldPro.speakerId = pro.speakerId;
+            if (props.onRowDataChange) {
+              const audio = updateSpeakerInAudio(props.rowData.audio, pro);
+              if (audio) {
                 props.onRowDataChange({ ...props.rowData, audio });
               }
             }

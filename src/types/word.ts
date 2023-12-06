@@ -23,6 +23,26 @@ export function newPronunciation(fileName = "", speakerId = ""): Pronunciation {
   return { fileName, speakerId, _protected: false };
 }
 
+/** Returns a copy of the audio array with every entry updated that has:
+ * - ._protected false;
+ * - same .fileName as the update pronunciation; and
+ * - different .speakerId than the update pronunciation.
+ *
+ * Returns undefined if no such entry in the array. */
+export function updateSpeakerInAudio(
+  audio: Pronunciation[],
+  update: Pronunciation
+): Pronunciation[] | undefined {
+  const updatePredicate = (p: Pronunciation): boolean =>
+    !p._protected &&
+    p.fileName === update.fileName &&
+    p.speakerId !== update.speakerId;
+  if (audio.findIndex(updatePredicate) === -1) {
+    return;
+  }
+  return audio.map((a) => (updatePredicate(a) ? update : a));
+}
+
 export function newDefinition(text = "", language = ""): Definition {
   return { text, language };
 }

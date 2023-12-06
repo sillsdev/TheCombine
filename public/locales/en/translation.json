@@ -461,10 +461,11 @@
   },
   "pronunciations": {
     "recordTooltip": "Press and hold to record.",
-    "playTooltip": "Click to play; shift click to delete.",
+    "playTooltip": "Click to play.",
+    "deleteTooltip": "Shift click to delete.",
     "speaker": "Speaker: {{ val }}.",
-    "speakerAdd": "Right-click to add a speaker to this recording.",
-    "speakerChange": "Right-click to change speaker.",
+    "speakerAdd": "Right click to add a speaker.",
+    "speakerChange": "Right click to change speaker.",
     "speakerSelect": "Select speaker of this audio recording",
     "noMicAccess": "Recording error: Could not access a microphone.",
     "deleteRecording": "Delete Recording"
