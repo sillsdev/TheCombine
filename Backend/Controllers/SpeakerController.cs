@@ -273,6 +273,16 @@ namespace BackendFramework.Controllers
             //     return Forbid();
             // }
 
+            // Sanitize user input
+            try
+            {
+                speakerId = Sanitization.SanitizeId(speakerId);
+            }
+            catch
+            {
+                return new UnsupportedMediaTypeResult();
+            }
+
             // Ensure file exists
             var path = FileStorage.GenerateConsentFilePath(speakerId);
             if (!IO.File.Exists(path))
