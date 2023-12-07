@@ -1,0 +1,24 @@
+#! /usr/bin/env bash
+
+#####
+# Install required packages
+sudo apt install -y python3-pip python3-venv
+#####
+# Setup Python virtual environment
+python3 -m venv venv
+source venv/bin/activate
+python -m pip install --upgrade pip pip-tools
+python -m piptools sync requirements.txt
+
+#####
+# Setup Kubernetes environment and WiFi Access Point
+echo "Setting up the software environment and WiFi Access Point"
+echo "used by The Combine.  At the"
+echo ""
+echo "BECOME: "
+echo ""
+echo "prompt, enter your password to allow the script to perform"
+echo "administrative setup tasks."
+
+cd ansible
+ansible-playbook playbook_desktop_setup.yaml -K

@@ -84,6 +84,10 @@ src/resources/dictionaries/*.txt
 deploy/scripts/semantic_domains/json/*.json
 database/semantic_domains/*
 
+# Combine installer
+installer/makeself-*
+installer/combine-installer.run
+
 # Kubernetes Configuration files
 **/site_files/
 **/charts/*.tgz
