@@ -514,17 +514,27 @@ namespace Backend.Tests.Controllers
             // We are currently only testing guids and imported audio on the single-entry data sets.
             if (allWords.Count == 1)
             {
+                var word = allWords[0].Clone();
                 Assert.That(roundTripObj.EntryGuid, Is.Not.EqualTo(""));
-                Assert.That(allWords[0].Guid.ToString(), Is.EqualTo(roundTripObj.EntryGuid));
+                Assert.That(word.Guid.ToString(), Is.EqualTo(roundTripObj.EntryGuid));
                 if (roundTripObj.SenseGuid != "")
                 {
-                    Assert.That(allWords[0].Senses[0].Guid.ToString(), Is.EqualTo(roundTripObj.SenseGuid));
+                    Assert.That(word.Senses[0].Guid.ToString(), Is.EqualTo(roundTripObj.SenseGuid));
                 }
-                foreach (var audio in allWords[0].Audio)
+                foreach (var audio in word.Audio)
                 {
                     Assert.That(roundTripObj.AudioFiles, Does.Contain(Path.GetFileName(audio.FileName)));
                 }
 
+                if (word.Audio.Count == 1)
+                {
+                    // None of the cases have labels on audio, so the audio isn't protected and we can add a speaker.
+                    Assert.That(word.Audio[0].Protected, Is.False);
+                    var speaker = _speakerRepo.Create(new() { Consent = ConsentType.Audio, ProjectId = proj1.Id }).Result;
+                    word.Audio[0].SpeakerId = speaker.Id;
+                    _wordRepo.DeleteAllWords(proj1.Id);
+                    _wordRepo.Create(word);
+                }
             }
 
             // Assert that the first SemanticDomain doesn't have an empty MongoId.
@@ -587,13 +597,21 @@ namespace Backend.Tests.Controllers
             allWords = _wordRepo.GetAllWords(proj2.Id).Result;
             Assert.That(allWords, Has.Count.EqualTo(roundTripObj.NumOfWords));
 
-            // We are currently only testing guids on the single-entry data sets.
+            // We are currently only testing guids and audio on the single-entry data sets.
             if (roundTripObj.EntryGuid != "" && allWords.Count == 1)
             {
-                Assert.That(allWords[0].Guid.ToString(), Is.EqualTo(roundTripObj.EntryGuid));
+                var word = allWords[0];
+
+                Assert.That(word.Guid.ToString(), Is.EqualTo(roundTripObj.EntryGuid));
                 if (roundTripObj.SenseGuid != "")
                 {
-                    Assert.That(allWords[0].Senses[0].Guid.ToString(), Is.EqualTo(roundTripObj.SenseGuid));
+                    Assert.That(word.Senses[0].Guid.ToString(), Is.EqualTo(roundTripObj.SenseGuid));
+                }
+
+                if (word.Audio.Count == 1)
+                {
+                    // The speaker added in Roundtrip Part 1 should have exported as an English label.
+                    Assert.That(word.Audio[0].Protected, Is.True);
                 }
             }
 
