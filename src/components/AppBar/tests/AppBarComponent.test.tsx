@@ -7,22 +7,19 @@ import "tests/reactI18nextMock";
 
 import { defaultState } from "components/App/DefaultState";
 import AppBar from "components/AppBar/AppBarComponent";
-import { newUser } from "types/user";
-
-const mockGetUser = jest.fn();
-const mockUser = newUser();
 
 jest.mock("backend", () => ({
-  getUser: () => mockGetUser(),
+  isSiteAdmin: () => mockIsSiteAdmin(),
 }));
 
+const mockIsSiteAdmin = jest.fn();
 const mockStore = configureMockStore()(defaultState);
 
 function setMockFunctions(): void {
-  mockGetUser.mockResolvedValue(mockUser);
+  mockIsSiteAdmin.mockResolvedValue(false);
 }
 
-beforeAll(() => {
+beforeEach(() => {
   jest.clearAllMocks();
   setMockFunctions();
 });
