@@ -260,9 +260,11 @@ namespace BackendFramework.Services
             var zipDir = Path.Combine(tempExportDir, projNameAsPath);
             Directory.CreateDirectory(zipDir);
 
-            // Add audio dir inside zip dir.
+            // Add audio dir, consent dir inside zip dir.
             var audioDir = Path.Combine(zipDir, "audio");
             Directory.CreateDirectory(audioDir);
+            var consentDir = Path.Combine(zipDir, "consent");
+            Directory.CreateDirectory(consentDir);
             var liftPath = Path.Combine(zipDir, projNameAsPath + ".lift");
 
             // noBOM will work with PrinceXML
@@ -290,7 +292,7 @@ namespace BackendFramework.Services
             var activeWords = frontier.Where(
                 x => x.Senses.Any(s => s.Accessibility == Status.Active || s.Accessibility == Status.Protected)).ToList();
 
-            // Get all project speakers for exporting audio.
+            // Get all project speakers for exporting audio and consents.
             var projSpeakers = await _speakerRepo.GetAllSpeakers(projectId);
 
             // All words in the frontier with any senses are considered current.
@@ -339,6 +341,21 @@ namespace BackendFramework.Services
             }
 
             liftWriter.End();
+
+            // Add consent files to export directory
+            foreach (var speaker in projSpeakers)
+            {
+                if (speaker.Consent != ConsentType.None)
+                {
+                    var src = FileStorage.GenerateConsentFilePath(speaker.Id);
+                    if (File.Exists(src))
+                    {
+                        var dest = Path.Combine(consentDir, speaker.Id);
+                        File.Copy(src, dest, true);
+
+                    }
+                }
+            }
 
             // Export semantic domains to lift-ranges
             if (proj.SemanticDomains.Count != 0 || CopyLiftRanges(proj.Id, rangesDest) is null)
