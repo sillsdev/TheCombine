@@ -76,7 +76,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestAudioImport()
         {
-            const string soundFileName = "sound.mp3";
+            const string soundFileName = "sound.mp3"; // file in Backend.Tests/Assets/
             var filePath = Path.Combine(Util.AssetsDir, soundFileName);
 
             // Open the file to read to controller.

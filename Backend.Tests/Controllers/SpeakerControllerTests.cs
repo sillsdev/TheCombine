@@ -33,7 +33,7 @@ namespace Backend.Tests.Controllers
 
         private const string ProjId = "proj-id";
         private const string Name = "Madam Name";
-        private const string FileName = "sound.mp3"; // file in Backend.Tests/Assets
+        private const string FileName = "sound.mp3"; // file in Backend.Tests/Assets/
         private Speaker _speaker = null!;
         private readonly Stream _stream = File.OpenRead(Path.Combine(Util.AssetsDir, FileName));
         private FormFile _formFile = null!;
@@ -322,56 +322,5 @@ namespace Backend.Tests.Controllers
             var result = _speakerController.DownloadConsent("speakerId");
             Assert.That(result, Is.TypeOf<NotFoundObjectResult>());
         }
-
-        /*[Test]
-        public void TestUploadConsent()
-        {
-            const string soundFileName = "sound.mp3";
-            var filePath = Path.Combine(Util.AssetsDir, soundFileName);
-
-            // Open the file to read to controller.
-            using var stream = File.OpenRead(filePath);
-            var formFile = new FormFile(stream, 0, stream.Length, "name", soundFileName);
-            var fileUpload = new FileUpload { File = formFile, Name = "FileName" };
-
-            var word = _wordRepo.Create(Util.RandomWord(_projId)).Result;
-
-            // `fileUpload` contains the file stream and the name of the file.
-            _ = _speakerController.UploadConsent(ProjId, word.Id, "", fileUpload).Result;
-
-            var foundWord = _wordRepo.GetWord(_projId, word.Id).Result;
-            Assert.That(foundWord?.Speaker, Is.Not.Null);
-        }
-
-        [Test]
-        public void DeleteSpeaker()
-        {
-            // Fill test database
-            var origWord = Util.RandomWord(_projId);
-            var fileName = "a.wav";
-            origWord.Speaker.Add(new Pronunciation(fileName));
-            var wordId = _wordRepo.Create(origWord).Result.Id;
-
-            // Test delete function
-            _ = _speakerController.DeleteSpeakerFile(_projId, wordId, fileName).Result;
-
-            // Original word persists
-            Assert.That(_wordRepo.GetAllWords(_projId).Result, Has.Count.EqualTo(2));
-
-            // Get the new word from the database
-            var frontier = _wordRepo.GetFrontier(_projId).Result;
-
-            // Ensure the new word has no speaker files
-            Assert.That(frontier[0].Speaker, Has.Count.EqualTo(0));
-
-            // Test the frontier
-            Assert.That(_wordRepo.GetFrontier(_projId).Result, Has.Count.EqualTo(1));
-
-            // Ensure the word with deleted speaker is in the frontier
-            Assert.That(frontier, Has.Count.EqualTo(1));
-            Assert.That(frontier[0].Id, Is.Not.EqualTo(wordId));
-            Assert.That(frontier[0].Speaker, Has.Count.EqualTo(0));
-            Assert.That(frontier[0].History, Has.Count.EqualTo(1));
-        }*/
     }
 }

@@ -6,8 +6,8 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace BackendFramework.Models
 {
     /// <summary>
-    /// Helper object that contains a parent word and a number of children which will be merged into it
-    /// along with the userId of who made the merge and at what time
+    /// Project Speaker that can have a consent form and can be associated with Pronunciations.
+    /// The speaker's consent for will have file name equal to .Id of the Speaker.
     /// </summary>
     public class Speaker
     {
