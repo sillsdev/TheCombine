@@ -4,13 +4,9 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import { CancelConfirmDialog } from "components/Dialogs";
+import { DeleteButtonWithDialog } from "components/Buttons";
 import { defaultState as reviewEntriesState } from "goals/ReviewEntries/Redux/ReviewEntriesReduxTypes";
-import DeleteCell, {
-  buttonId,
-  buttonIdCancel,
-  buttonIdConfirm,
-} from "goals/ReviewEntries/ReviewEntriesTable/CellComponents/DeleteCell";
+import DeleteCell from "goals/ReviewEntries/ReviewEntriesTable/CellComponents/DeleteCell";
 import mockWords from "goals/ReviewEntries/tests/WordsMock";
 
 // Dialog uses portals, which are not supported in react-test-renderer.
@@ -23,7 +19,7 @@ jest.mock("@mui/material", () => {
 });
 
 jest.mock("backend", () => ({
-  deleteFrontierWord: () => mockDeleteFrontierWord(),
+  deleteFrontierWord: () => jest.fn(),
 }));
 jest.mock("types/hooks", () => {
   return {
@@ -35,11 +31,8 @@ jest.mock("types/hooks", () => {
   };
 });
 
-const mockDeleteFrontierWord = jest.fn();
-
 const mockStore = configureMockStore()({ reviewEntriesState });
 const mockWord = mockWords()[0];
-const buttonIdDelete = buttonId(mockWord.id);
 
 let cellHandle: ReactTestRenderer;
 
@@ -59,45 +52,7 @@ beforeEach(async () => {
 });
 
 describe("DeleteCell", () => {
-  it("has working dialog buttons", async () => {
-    const dialog = cellHandle.root.findByType(CancelConfirmDialog);
-    const deleteButton = cellHandle.root.findByProps({ id: buttonIdDelete });
-    const cancelButton = cellHandle.root.findByProps({ id: buttonIdCancel });
-    const confButton = cellHandle.root.findByProps({ id: buttonIdConfirm });
-
-    expect(dialog.props.open).toBeFalsy();
-    await act(async () => {
-      deleteButton.props.onClick();
-    });
-    expect(dialog.props.open).toBeTruthy();
-    await act(async () => {
-      cancelButton.props.onClick();
-    });
-    expect(dialog.props.open).toBeFalsy();
-    await act(async () => {
-      deleteButton.props.onClick();
-    });
-    expect(dialog.props.open).toBeTruthy();
-    await act(async () => {
-      await confButton.props.onClick();
-    });
-    expect(dialog.props.open).toBeFalsy();
-  });
-
-  it("only deletes after confirmation", async () => {
-    const deleteButton = cellHandle.root.findByProps({ id: buttonIdDelete });
-    const cancelButton = cellHandle.root.findByProps({ id: buttonIdCancel });
-    const confButton = cellHandle.root.findByProps({ id: buttonIdConfirm });
-
-    await act(async () => {
-      deleteButton.props.onClick();
-      cancelButton.props.onClick();
-      deleteButton.props.onClick();
-    });
-    expect(mockDeleteFrontierWord).not.toBeCalled();
-    await act(async () => {
-      await confButton.props.onClick();
-    });
-    expect(mockDeleteFrontierWord).toBeCalled();
+  it("renders", () => {
+    cellHandle.root.findByType(DeleteButtonWithDialog);
   });
 });
