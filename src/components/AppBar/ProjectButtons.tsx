@@ -6,8 +6,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { Permission } from "api/models";
-import { getCurrentPermissions } from "backend";
-import { getCurrentUser } from "backend/localStorage";
+import { hasPermission } from "backend";
 import {
   TabProps,
   buttonMinHeight,
@@ -28,13 +27,6 @@ const enum projNameLength {
   xl = 51,
 }
 
-export async function getHasStatsPermission(): Promise<boolean> {
-  if (getCurrentUser()?.isAdmin) {
-    return true;
-  }
-  return (await getCurrentPermissions()).includes(Permission.Statistics);
-}
-
 /** A button that redirects to the project settings */
 export default function ProjectButtons(props: TabProps): ReactElement {
   const projectName = useSelector(
@@ -51,7 +43,7 @@ export default function ProjectButtons(props: TabProps): ReactElement {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getHasStatsPermission().then(setHasStatsPermission);
+    hasPermission(Permission.Statistics).then(setHasStatsPermission);
   }, []);
 
   return (
