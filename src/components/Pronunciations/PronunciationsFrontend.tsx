@@ -21,12 +21,12 @@ export default function PronunciationsFrontend(
   const audioButtons: ReactElement[] = props.audio.map((a) => (
     <AudioPlayer
       audio={a}
-      key={a.fileName}
       deleteAudio={props.deleteAudio}
+      key={a.fileName}
+      onClick={props.onClick}
       updateAudioSpeaker={(id) =>
         props.replaceAudio({ ...a, speakerId: id ?? "" })
       }
-      onClick={props.onClick}
     />
   ));
 

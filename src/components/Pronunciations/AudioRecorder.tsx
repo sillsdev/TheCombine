@@ -12,9 +12,9 @@ import { FileWithSpeakerId } from "types/word";
 
 interface RecorderProps {
   id: string;
-  uploadAudio: (file: FileWithSpeakerId) => void;
   noSpeaker?: boolean;
   onClick?: () => void;
+  uploadAudio: (file: FileWithSpeakerId) => void;
 }
 
 export default function AudioRecorder(props: RecorderProps): ReactElement {
