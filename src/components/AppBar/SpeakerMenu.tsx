@@ -7,6 +7,7 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+  Typography,
 } from "@mui/material";
 import {
   ForwardedRef,
@@ -119,9 +120,19 @@ export function SpeakerMenuList(props: SpeakerMenuListProps): ReactElement {
 
   return (
     <div ref={props.forwardedRef}>
-      {speakers.map((s) => speakerMenuItem(s))}
-      <Divider />
-      {speakerMenuItem()}
+      {speakers.length ? (
+        <>
+          {speakers.map((s) => speakerMenuItem(s))}
+          <Divider />
+          {speakerMenuItem()}
+        </>
+      ) : (
+        <MenuItem disabled sx={{ maxWidth: 250 }}>
+          <Typography sx={{ whiteSpace: "pre-line" }}>
+            {t("speakerMenu.none")}
+          </Typography>
+        </MenuItem>
+      )}
     </div>
   );
 }

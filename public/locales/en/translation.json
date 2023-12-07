@@ -80,6 +80,7 @@
     "backToLogin": "Back To Login"
   },
   "speakerMenu": {
+    "none": "No speakers in the project. To attach a speaker to audio recordings, please talk to a project administrator.",
     "other": "[None of the above]"
   },
   "userMenu": {
