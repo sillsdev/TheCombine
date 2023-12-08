@@ -19,6 +19,14 @@ import {
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import { newPronunciation } from "types/word";
 
+export const enum ListItemIconId {
+  AddConsent,
+  PlayAudio,
+  RecordAudio,
+  ShowImage,
+  UploadAudio,
+}
+
 interface ConsentIconProps {
   refresh: () => void | Promise<void>;
   speaker: Speaker;
@@ -39,7 +47,7 @@ export default function SpeakerConsentListItemIcon(
   ) : props.speaker.consent === ConsentType.Image ? (
     <ShowConsentListItemIcon {...props} refresh={unsetAnchorAndRefresh} />
   ) : (
-    <ListItemIcon>
+    <ListItemIcon data-testid={ListItemIconId.AddConsent}>
       <IconButtonWithTooltip
         buttonId={`project-speaker-${props.speaker.id}-add`}
         icon={<Add />}
@@ -66,7 +74,7 @@ function PlayConsentListItemIcon(props: ConsentIconProps): ReactElement {
   };
 
   return (
-    <ListItemIcon>
+    <ListItemIcon data-testid={ListItemIconId.PlayAudio}>
       <AudioPlayer
         audio={{ ...newPronunciation(props.speaker.id), _protected: true }}
         deleteAudio={handleDeleteAudio}
@@ -93,7 +101,7 @@ function ShowConsentListItemIcon(props: ConsentIconProps): ReactElement {
   };
 
   return (
-    <ListItemIcon>
+    <ListItemIcon data-testid={ListItemIconId.ShowImage}>
       <IconButtonWithTooltip
         buttonId={`project-speaker-${props.speaker.id}-look`}
         icon={<Image />}
@@ -125,7 +133,7 @@ function RecordConsentMenuItem(props: ConsentIconProps): ReactElement {
 
   return (
     <MenuItem id={"add-consent-audio"} onClick={() => setOpen(true)}>
-      <ListItemIcon>
+      <ListItemIcon data-testid={ListItemIconId.RecordAudio}>
         <Mic />
       </ListItemIcon>
       <ListItemText>{t("projectSettings.speaker.consent.record")}</ListItemText>
@@ -152,7 +160,7 @@ function UploadConsentMenuItem(props: ConsentIconProps): ReactElement {
 
   return (
     <MenuItem id={"add-consent-image"} onClick={() => setOpen(true)}>
-      <ListItemIcon>
+      <ListItemIcon data-testid={ListItemIconId.UploadAudio}>
         <AddPhotoAlternate />
       </ListItemIcon>
       <ListItemText>{t("projectSettings.speaker.consent.upload")}</ListItemText>
