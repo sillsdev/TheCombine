@@ -20,11 +20,11 @@ export interface FileWithSpeakerId extends File {
 }
 
 export function newPronunciation(fileName = "", speakerId = ""): Pronunciation {
-  return { fileName, speakerId, _protected: false };
+  return { fileName, speakerId, protected: false };
 }
 
 /** Returns a copy of the audio array with every entry updated that has:
- * - ._protected false;
+ * - .protected false;
  * - same .fileName as the update pronunciation; and
  * - different .speakerId than the update pronunciation.
  *
@@ -34,7 +34,7 @@ export function updateSpeakerInAudio(
   update: Pronunciation
 ): Pronunciation[] | undefined {
   const updatePredicate = (p: Pronunciation): boolean =>
-    !p._protected &&
+    !p.protected &&
     p.fileName === update.fileName &&
     p.speakerId !== update.speakerId;
   if (audio.findIndex(updatePredicate) === -1) {

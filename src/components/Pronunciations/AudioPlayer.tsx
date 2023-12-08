@@ -65,7 +65,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
   );
   const { t } = useTranslation();
 
-  const canChangeSpeaker = props.updateAudioSpeaker && !props.audio._protected;
+  const canChangeSpeaker = props.updateAudioSpeaker && !props.audio.protected;
 
   useEffect(() => {
     if (props.audio.speakerId) {

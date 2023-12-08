@@ -35,5 +35,5 @@ export interface Pronunciation {
    * @type {boolean}
    * @memberof Pronunciation
    */
-  _protected: boolean;
+  protected: boolean;
 }

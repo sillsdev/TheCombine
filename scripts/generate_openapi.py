@@ -36,6 +36,7 @@ def main() -> None:
             "--input-spec=http://localhost:5000/openapi/v1/openapi.json",
             f"--output={output_dir}",
             "--generator-name=typescript-axios",
+            "--reserved-words-mappings=protected=protected ",
             "--additional-properties="
             # For usage of withSeparateModelsAndApi, see:
             # https://github.com/OpenAPITools/openapi-generator/issues/5008#issuecomment-613791804
