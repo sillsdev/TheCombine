@@ -35,9 +35,6 @@ export default function PronunciationsCell(
   const dispatchUpload = (file: FileWithSpeakerId): Promise<void> =>
     dispatch(uploadAudio(props.wordId, file));
 
-  const { addNewAudio, delNewAudio, repNewAudio, delOldAudio, repOldAudio } =
-    props.audioFunctions ?? {};
-
   return props.audioFunctions ? (
     <PronunciationsFrontend
       elemBetweenRecordAndPlay={
@@ -46,14 +43,14 @@ export default function PronunciationsCell(
           overrideMemo
           playerOnly
           wordId={props.wordId}
-          deleteAudio={delOldAudio!}
-          replaceAudio={repOldAudio!}
+          deleteAudio={props.audioFunctions.delOldAudio}
+          replaceAudio={props.audioFunctions.repOldAudio}
         />
       }
       audio={props.audioNew ?? []}
-      deleteAudio={delNewAudio!}
-      replaceAudio={repNewAudio!}
-      uploadAudio={addNewAudio!}
+      deleteAudio={props.audioFunctions.delNewAudio}
+      replaceAudio={props.audioFunctions.repNewAudio}
+      uploadAudio={props.audioFunctions.addNewAudio}
     />
   ) : (
     <PronunciationsBackend

@@ -70,6 +70,8 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
   useEffect(() => {
     if (props.audio.speakerId) {
       getSpeaker(props.audio.speakerId).then(setSpeaker);
+    } else {
+      setSpeaker(undefined);
     }
   }, [props.audio.speakerId]);
 
