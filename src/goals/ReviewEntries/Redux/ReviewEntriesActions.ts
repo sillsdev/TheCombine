@@ -161,14 +161,6 @@ export function updateFrontierWord(
     }
     const oldId = editSource.id;
 
-    // Set aside audio changes for last.
-    const delAudio = oldData.audio.filter(
-      (o) => !newData.audio.find((n) => n === o)
-    );
-    const addAudio = [...(newData.audioNew ?? [])];
-    editSource.audio = oldData.audio;
-    delete editSource.audioNew;
-
     // Get the original word, for updating.
     const editWord = await backend.getWord(oldId);
 
@@ -180,10 +172,19 @@ export function updateFrontierWord(
     editWord.note = newNote(editSource.noteText, editWord.note?.language);
     editWord.flag = { ...editSource.flag };
 
+    // Apply any speakerId changes, but save adding/deleting audio for later.
+    editWord.audio = oldData.audio.map(
+      (o) => newData.audio.find((n) => n.fileName === o.fileName) ?? o
+    );
+    const delAudio = oldData.audio.filter(
+      (o) => !newData.audio.find((n) => n.fileName === o.fileName)
+    );
+    const addAudio = [...(newData.audioNew ?? [])];
+
     // Update the word in the backend, and retrieve the id.
     let newId = (await backend.updateWord(editWord)).id;
 
-    // Add/remove audio.
+    // Add/delete audio.
     for (const audio of addAudio) {
       newId = await uploadFileFromPronunciation(newId, audio);
     }
