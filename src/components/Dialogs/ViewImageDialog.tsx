@@ -1,6 +1,5 @@
 import { Dialog, DialogContent, DialogTitle, Grid } from "@mui/material";
 import { ReactElement } from "react";
-import { useTranslation } from "react-i18next";
 
 import { CloseButton, DeleteButtonWithDialog } from "components/Buttons";
 
@@ -11,14 +10,12 @@ interface ViewImageDialogProps {
   deleteTextId?: string;
   imgSrc: string;
   open: boolean;
-  titleId: string;
+  title: string;
 }
 
 export default function ViewImageDialog(
   props: ViewImageDialogProps
 ): ReactElement {
-  const { t } = useTranslation();
-
   const handleDelete = async (): Promise<void> => {
     if (props.deleteImage) {
       await props.deleteImage();
@@ -29,7 +26,7 @@ export default function ViewImageDialog(
   return (
     <Dialog maxWidth={false} onClose={props.close} open={props.open}>
       <DialogTitle>
-        {t(props.titleId)}
+        {props.title}
         <CloseButton close={props.close} />
       </DialogTitle>
       <DialogContent>

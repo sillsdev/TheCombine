@@ -90,6 +90,8 @@ function ShowConsentListItemIcon(props: ConsentIconProps): ReactElement {
   const [imgSrc, setImgSrc] = useState("");
   const [open, setOpen] = useState(false);
 
+  const { t } = useTranslation();
+
   useEffect(() => {
     getConsentImageSrc(props.speaker).then(setImgSrc);
   }, [props.speaker]);
@@ -103,16 +105,18 @@ function ShowConsentListItemIcon(props: ConsentIconProps): ReactElement {
   return (
     <ListItemIcon data-testid={ListItemIconId.ShowImage}>
       <IconButtonWithTooltip
-        buttonId={`project-speaker-${props.speaker.id}-look`}
+        buttonId={`project-speaker-${props.speaker.id}-view`}
         icon={<Image />}
         onClick={() => setOpen(true)}
-        textId="projectSettings.speaker.consent.look"
+        textId="projectSettings.speaker.consent.view"
       />
       <ViewImageDialog
         close={() => setOpen(false)}
         imgSrc={imgSrc}
         open={open}
-        titleId="projectSettings.speaker.consent.look"
+        title={t("projectSettings.speaker.consent.viewTitle", {
+          val: props.speaker.name,
+        })}
         deleteImage={handleDeleteImage}
         deleteTextId="projectSettings.speaker.consent.remove"
       />
@@ -132,11 +136,15 @@ function RecordConsentMenuItem(props: ConsentIconProps): ReactElement {
   };
 
   return (
-    <MenuItem id={"add-consent-audio"} onClick={() => setOpen(true)}>
-      <ListItemIcon data-testid={ListItemIconId.RecordAudio}>
-        <Mic />
-      </ListItemIcon>
-      <ListItemText>{t("projectSettings.speaker.consent.record")}</ListItemText>
+    <>
+      <MenuItem id={"add-consent-audio"} onClick={() => setOpen(true)}>
+        <ListItemIcon data-testid={ListItemIconId.RecordAudio}>
+          <Mic />
+        </ListItemIcon>
+        <ListItemText>
+          {t("projectSettings.speaker.consent.record")}
+        </ListItemText>
+      </MenuItem>
       <RecordAudioDialog
         audioId={props.speaker.id}
         close={() => setOpen(false)}
@@ -144,7 +152,7 @@ function RecordConsentMenuItem(props: ConsentIconProps): ReactElement {
         titleId="projectSettings.speaker.consent.record"
         uploadAudio={handleUploadAudio}
       />
-    </MenuItem>
+    </>
   );
 }
 
@@ -159,17 +167,21 @@ function UploadConsentMenuItem(props: ConsentIconProps): ReactElement {
   };
 
   return (
-    <MenuItem id={"add-consent-image"} onClick={() => setOpen(true)}>
-      <ListItemIcon data-testid={ListItemIconId.UploadAudio}>
-        <AddPhotoAlternate />
-      </ListItemIcon>
-      <ListItemText>{t("projectSettings.speaker.consent.upload")}</ListItemText>
+    <>
+      <MenuItem id={"add-consent-image"} onClick={() => setOpen(true)}>
+        <ListItemIcon data-testid={ListItemIconId.UploadAudio}>
+          <AddPhotoAlternate />
+        </ListItemIcon>
+        <ListItemText>
+          {t("projectSettings.speaker.consent.upload")}
+        </ListItemText>
+      </MenuItem>
       <UploadImageDialog
         close={() => setOpen(false)}
         open={open}
         titleId="projectSettings.speaker.consent.upload"
         uploadImage={handleUploadImage}
       />
-    </MenuItem>
+    </>
   );
 }
