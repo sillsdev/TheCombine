@@ -55,7 +55,7 @@ interface ProjSpeakerProps {
   speaker: Speaker;
 }
 
-function SpeakerListItem(props: ProjSpeakerProps): ReactElement {
+export function SpeakerListItem(props: ProjSpeakerProps): ReactElement {
   const { refresh, speaker } = props;
   return (
     <ListItem>
@@ -126,7 +126,7 @@ interface AddSpeakerProps {
   refresh: () => void | Promise<void>;
 }
 
-function AddSpeakerListItem(props: AddSpeakerProps): ReactElement {
+export function AddSpeakerListItem(props: AddSpeakerProps): ReactElement {
   const [open, setOpen] = useState(false);
 
   const handleSubmitText = async (name: string): Promise<void> => {
