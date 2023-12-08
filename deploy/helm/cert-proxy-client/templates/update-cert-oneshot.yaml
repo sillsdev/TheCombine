@@ -3,6 +3,11 @@ kind: Job
 metadata:
   name: update-cert-oneshot
   namespace: {{ .Release.Namespace }}
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-install, post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   ttlSecondsAfterFinished: 300
   template:
