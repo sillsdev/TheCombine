@@ -5,7 +5,7 @@ import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import { FileWithSpeakerId } from "types/word";
 
-interface PronunciationFrontendProps {
+interface PronunciationsFrontendProps {
   audio: Pronunciation[];
   elemBetweenRecordAndPlay?: ReactElement;
   deleteAudio: (fileName: string) => void;
@@ -16,7 +16,7 @@ interface PronunciationFrontendProps {
 
 /** Audio recording/playing component for audio being recorded and held in the frontend. */
 export default function PronunciationsFrontend(
-  props: PronunciationFrontendProps
+  props: PronunciationsFrontendProps
 ): ReactElement {
   const audioButtons: ReactElement[] = props.audio.map((a) => (
     <AudioPlayer
