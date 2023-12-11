@@ -543,7 +543,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Adds pronunciation audio of a word to be written out to lift </summary>
-        private static async Task AddAudio(LexEntry entry, IList<Pronunciation> pronunciations, string path,
+        private static async Task AddAudio(LexEntry entry, List<Pronunciation> pronunciations, string path,
             string projectId, List<Speaker> projectSpeakers)
         {
             foreach (var audio in pronunciations)

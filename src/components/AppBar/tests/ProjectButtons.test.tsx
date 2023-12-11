@@ -71,7 +71,6 @@ describe("ProjectButtons", () => {
   });
 
   it("has speaker menu only when in Data Entry or Review Entries", async () => {
-    mockHasPermission.mockResolvedValueOnce(true);
     await renderProjectButtons();
     expect(testRenderer.root.findAllByType(SpeakerMenu)).toHaveLength(0);
 
