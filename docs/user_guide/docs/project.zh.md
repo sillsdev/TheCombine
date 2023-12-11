@@ -6,7 +6,7 @@
 
 创建项目时，用户可选项启动一个空项目，或者输入已有的词典数据。
 
-![创建项目 - Tzotzil](../images/projectCreateTzotzil.png){.center}
+![创建项目 - Tzotzil](../images/projectCreateTzotzil.zh.png){.center}
 
 ### 输入已有数据
 

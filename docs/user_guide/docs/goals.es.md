@@ -8,7 +8,7 @@ La tabla Revisar entradas muestra todas las entradas del proyecto seleccionado.
 
 Las columnas son: Edición, Vernáculo, Acepciones, Glosas, Dominios, Pronunciaciones, Nota, Bandera y Borrar.
 
-![Revisar los encabezados de columna de las entradas](../images/reviewEntriesColumns.png)
+![Revisar los encabezados de columna de las entradas](../images/reviewEntriesColumns.es.png)
 
 En la parte superior de una columna con contenido predominantemente textual (Vernáculo, Glosas, Dominios, Nota o
 Bandera), puede ordenar alfabéticamente o filtrar con una búsqueda de texto.
@@ -111,7 +111,7 @@ siguiente conjunto: "Guardar y Continuar" y "Aplazar".
 
 #### Guardar y Continuar
 
-![Fusionar duplicados botón Guardar y Continuar](../images/mergeSaveAndContinue.png)
+![Fusionar duplicados botón Guardar y Continuar](../images/mergeSaveAndContinue.es.png)
 
 El botón azul "Guardar y continuar" hace dos cosas. En primer lugar, guarda todos los cambios realizados (es decir,
 todas las acepciones movidas, fusionadas o eliminadas), actualizando las palabras en la base de datos. En segundo lugar,
@@ -127,7 +127,7 @@ guarda las palabras no falsificadas como no duplicadas.
 
 #### Aplazar
 
-![Fusionar duplicados botón Aplazar](../images/mergeDefer.png)
+![Fusionar duplicados botón Aplazar](../images/mergeDefer.es.png)
 
 El botón gris "Aplazar" restablece cualquier cambio realizado en el conjunto de duplicados potenciales. El conjunto
 aplazado se puede revisar por Revisar duplicados aplazados.
