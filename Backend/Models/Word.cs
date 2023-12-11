@@ -264,7 +264,7 @@ namespace BackendFramework.Models
         [Required]
         public string SpeakerId { get; set; }
 
-        /// <summary> For any with "en" label that was present on import, to prevent overwriting. </summary>
+        /// <summary> For imported audio, to prevent modification or deletion (unless the word is deleted). </summary>
         [Required]
         public bool Protected { get; set; }
 

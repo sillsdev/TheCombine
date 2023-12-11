@@ -32,8 +32,8 @@ import { useAppDispatch, useAppSelector } from "types/hooks";
 import { themeColors } from "types/theme";
 
 interface PlayerProps {
-  deleteAudio: (fileName: string) => void;
   audio: Pronunciation;
+  deleteAudio?: (fileName: string) => void;
   onClick?: () => void;
   pronunciationUrl?: string;
   size?: "large" | "medium" | "small";
@@ -66,6 +66,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
   const { t } = useTranslation();
 
   const canChangeSpeaker = props.updateAudioSpeaker && !props.audio.protected;
+  const canDeleteAudio = props.deleteAudio && !props.audio.protected;
 
   useEffect(() => {
     if (props.audio.speakerId) {
@@ -97,7 +98,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
     if (props.onClick) {
       props.onClick();
     }
-    if (event?.shiftKey) {
+    if (event?.shiftKey && canDeleteAudio) {
       setDeleteConf(true);
     } else {
       togglePlay();
@@ -123,10 +124,12 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
   }
 
   function handleTouch(event: any): void {
-    // Temporarily disable context menu since some browsers
-    // interpret a long-press touch as a right-click.
-    disableContextMenu();
-    setAnchor(event.currentTarget);
+    if (canChangeSpeaker || canDeleteAudio) {
+      // Temporarily disable context menu since some browsers
+      // interpret a long-press touch as a right-click.
+      disableContextMenu();
+      setAnchor(event.currentTarget);
+    }
   }
 
   async function handleOnSelect(speaker?: Speaker): Promise<void> {
@@ -144,10 +147,13 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
     }
   }
 
-  const tooltipTexts = [
-    t("pronunciations.playTooltip"),
-    t("pronunciations.deleteTooltip"),
-  ];
+  const tooltipTexts = [t("pronunciations.playTooltip")];
+  if (canDeleteAudio) {
+    tooltipTexts.push(t("pronunciations.deleteTooltip"));
+  }
+  if (props.audio.protected) {
+    tooltipTexts.push(t("pronunciations.protectedTooltip"));
+  }
   if (speaker) {
     tooltipTexts.push(t("pronunciations.speaker", { val: speaker.name }));
   }
@@ -208,22 +214,24 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
             <RecordVoiceOver />
           </MenuItem>
         )}
-        <MenuItem
-          id="audio-delete"
-          onClick={() => {
-            setDeleteConf(true);
-            handleMenuOnClose();
-          }}
-        >
-          <Delete />
-        </MenuItem>
+        {canDeleteAudio && (
+          <MenuItem
+            id="audio-delete"
+            onClick={() => {
+              setDeleteConf(true);
+              handleMenuOnClose();
+            }}
+          >
+            <Delete />
+          </MenuItem>
+        )}
       </Menu>
       <ButtonConfirmation
         open={deleteConf}
         textId={props.warningTextId || "buttons.deletePermanently"}
         titleId="pronunciations.deleteRecording"
         onClose={() => setDeleteConf(false)}
-        onConfirm={() => props.deleteAudio(props.audio.fileName)}
+        onConfirm={() => props.deleteAudio!(props.audio.fileName)}
         buttonIdClose="audio-delete-cancel"
         buttonIdConfirm="audio-delete-confirm"
       />

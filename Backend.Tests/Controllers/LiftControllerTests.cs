@@ -524,16 +524,7 @@ namespace Backend.Tests.Controllers
                 foreach (var audio in word.Audio)
                 {
                     Assert.That(roundTripObj.AudioFiles, Does.Contain(Path.GetFileName(audio.FileName)));
-                }
-
-                if (word.Audio.Count == 1)
-                {
-                    // None of the cases have labels on audio, so the audio isn't protected and we can add a speaker.
-                    Assert.That(word.Audio[0].Protected, Is.False);
-                    var speaker = _speakerRepo.Create(new() { Consent = ConsentType.Audio, ProjectId = proj1.Id }).Result;
-                    word.Audio[0].SpeakerId = speaker.Id;
-                    _wordRepo.DeleteAllWords(proj1.Id);
-                    _wordRepo.Create(word);
+                    Assert.That(audio.Protected, Is.True);
                 }
             }
 
@@ -606,12 +597,6 @@ namespace Backend.Tests.Controllers
                 if (roundTripObj.SenseGuid != "")
                 {
                     Assert.That(word.Senses[0].Guid.ToString(), Is.EqualTo(roundTripObj.SenseGuid));
-                }
-
-                if (word.Audio.Count == 1)
-                {
-                    // The speaker added in Roundtrip Part 1 should have exported as an English label.
-                    Assert.That(word.Audio[0].Protected, Is.True);
                 }
             }
 

@@ -465,6 +465,7 @@
     "recordTooltip": "Press and hold to record.",
     "playTooltip": "Click to play.",
     "deleteTooltip": "Shift click to delete.",
+    "protectedTooltip": "Imported audio cannot be deleted or modified.",
     "speaker": "Speaker: {{ val }}.",
     "speakerAdd": "Right click to add a speaker.",
     "speakerChange": "Right click to change speaker.",

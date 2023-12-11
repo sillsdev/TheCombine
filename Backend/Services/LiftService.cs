@@ -853,15 +853,10 @@ namespace BackendFramework.Services
                 // Only add audio if the files exist
                 if (Directory.Exists(extractedAudioDir))
                 {
-                    // Add audio
                     foreach (var pro in entry.Pronunciations)
                     {
-                        // get path to audio file in lift package at
-                        // ~/{projectId}/Import/ExtractedLocation/Lift/audio/{audioFile}.mp3
-                        var media = pro.Media.First();
-                        var hasLabel = media.Label is not null && !string.IsNullOrWhiteSpace(media.Label["en"]?.Text);
-                        var audio = new Pronunciation(media.Url) { Protected = hasLabel };
-                        newWord.Audio.Add(audio);
+                        // Add audio with Protected = true to prevent modifying or deleting imported audio
+                        newWord.Audio.Add(new Pronunciation(pro.Media.First().Url) { Protected = true });
                     }
                 }
 

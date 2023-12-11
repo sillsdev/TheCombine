@@ -11,8 +11,8 @@ interface PronunciationsBackendProps {
   playerOnly?: boolean;
   overrideMemo?: boolean;
   wordId: string;
-  deleteAudio: (fileName: string) => void;
-  replaceAudio: (audio: Pronunciation) => void;
+  deleteAudio?: (fileName: string) => void;
+  replaceAudio?: (audio: Pronunciation) => void;
   uploadAudio?: (file: FileWithSpeakerId) => void;
 }
 
@@ -33,8 +33,9 @@ export function PronunciationsBackend(
       deleteAudio={props.deleteAudio}
       key={a.fileName}
       pronunciationUrl={getAudioUrl(props.wordId, a.fileName)}
-      updateAudioSpeaker={(id) =>
-        props.replaceAudio({ ...a, speakerId: id ?? "" })
+      updateAudioSpeaker={
+        props.replaceAudio &&
+        ((id) => props.replaceAudio!({ ...a, speakerId: id ?? "" }))
       }
     />
   ));
