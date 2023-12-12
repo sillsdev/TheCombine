@@ -4,25 +4,25 @@ import { ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
 
 import SidebarDragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/SidebarDragSense";
-import {
-  MergeTreeSense,
-  Sidebar,
-} from "goals/MergeDuplicates/MergeDupsTreeTypes";
+import { MergeTreeSense } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { setSidebar } from "goals/MergeDuplicates/Redux/MergeDupsActions";
-import { useAppDispatch } from "types/hooks";
+import { StoreState } from "types";
+import { useAppDispatch, useAppSelector } from "types/hooks";
 
-interface SidebarDropProps {
-  sidebar: Sidebar;
-  vernacular: string;
-}
-
-export default function SidebarDrop(props: SidebarDropProps): ReactElement {
+export default function SidebarDrop(): ReactElement {
   const dispatch = useAppDispatch();
+  const sidebar = useAppSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.tree.sidebar
+  );
+  const vernacular = useAppSelector((state: StoreState) => {
+    const tree = state.mergeDuplicateGoal.tree;
+    return tree.words[tree.sidebar.wordId]?.vern;
+  });
 
   return (
     <Droppable
-      droppableId={`${props.sidebar.wordId} ${props.sidebar.mergeSenseId}`}
-      key={props.sidebar.mergeSenseId}
+      droppableId={`${sidebar.wordId} ${sidebar.mergeSenseId}`}
+      key={sidebar.mergeSenseId}
     >
       {(providedDroppable): ReactElement => (
         <div
@@ -37,14 +37,9 @@ export default function SidebarDrop(props: SidebarDropProps): ReactElement {
           >
             <ArrowForwardIos />
           </IconButton>
-          <Typography variant="h5">{props.vernacular}</Typography>
-          {props.sidebar.senses.map((sense: MergeTreeSense, index: number) => (
-            <SidebarDragSense
-              key={index}
-              index={index}
-              sidebar={props.sidebar}
-              sense={sense}
-            />
+          <Typography variant="h5">{vernacular}</Typography>
+          {sidebar.senses.map((sense: MergeTreeSense, index: number) => (
+            <SidebarDragSense key={index} index={index} sense={sense} />
           ))}
           {providedDroppable.placeholder}
         </div>
