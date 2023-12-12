@@ -159,35 +159,43 @@ export default function Login(): ReactElement {
             />
 
             {/* User Guide, Sign Up, and Log In buttons */}
-            <Grid container justifyContent="flex-end" spacing={2}>
-              <Grid item xs={4} sm={6}>
+            <Grid container justifyContent="space-between">
+              <Grid item xs={1}>
                 <Button id={LoginId.ButtonUserGuide} onClick={openUserGuide}>
                   <Help />
                 </Button>
               </Grid>
 
-              <Grid item xs={4} sm={3}>
-                <Button
-                  id={LoginId.ButtonSignUp}
-                  onClick={() => router.navigate(Path.Signup)}
-                  variant="outlined"
-                >
-                  {t("login.signUp")}
-                </Button>
-              </Grid>
+              <Grid
+                container
+                item
+                justifyContent="flex-end"
+                spacing={2}
+                xs="auto"
+              >
+                <Grid item>
+                  <Button
+                    id={LoginId.ButtonSignUp}
+                    onClick={() => router.navigate(Path.Signup)}
+                    variant="outlined"
+                  >
+                    {t("login.signUp")}
+                  </Button>
+                </Grid>
 
-              <Grid item xs={4} sm={3}>
-                <LoadingButton
-                  buttonProps={{
-                    color: "primary",
-                    id: LoginId.ButtonLogIn,
-                    type: "submit",
-                  }}
-                  disabled={!isVerified}
-                  loading={status === LoginStatus.InProgress}
-                >
-                  {t("login.login")}
-                </LoadingButton>
+                <Grid item>
+                  <LoadingButton
+                    buttonProps={{
+                      color: "primary",
+                      id: LoginId.ButtonLogIn,
+                      type: "submit",
+                    }}
+                    disabled={!isVerified}
+                    loading={status === LoginStatus.InProgress}
+                  >
+                    {t("login.login")}
+                  </LoadingButton>
+                </Grid>
               </Grid>
             </Grid>
 
