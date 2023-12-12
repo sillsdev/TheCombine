@@ -24,11 +24,11 @@ export const trashId = "trash-drop";
 
 export default function MergeDragDrop(): ReactElement {
   const dispatch = useAppDispatch();
-  const sidebarHasMultipleSenses = useAppSelector(
+  const sidebarOpen = useAppSelector(
     (state: StoreState) =>
       state.mergeDuplicateGoal.tree.sidebar.senses.length > 1
   );
-  const sidebarSensesProtected = useAppSelector((state: StoreState) => {
+  const sidebarProtected = useAppSelector((state: StoreState) => {
     const senses = state.mergeDuplicateGoal.tree.sidebar.senses;
     return senses.length && senses[0].protected;
   });
@@ -95,7 +95,7 @@ export default function MergeDragDrop(): ReactElement {
         const destOrder = res.destination.index;
         if (
           src.order === destOrder ||
-          (destOrder === 0 && src.order !== undefined && sidebarSensesProtected)
+          (destOrder === 0 && src.order !== undefined && sidebarProtected)
         ) {
           // If the sense wasn't moved or was moved within the sidebar above a protected sense, do nothing.
           return;
@@ -111,14 +111,11 @@ export default function MergeDragDrop(): ReactElement {
   }
 
   function renderSidebar(): ReactElement {
-    if (!sidebarHasMultipleSenses) {
-      return <div />;
-    }
-    return (
+    return sidebarOpen ? (
       <Drawer
         anchor="right"
         variant="persistent"
-        open={sidebarHasMultipleSenses}
+        open={sidebarOpen}
         SlideProps={{
           style: {
             height: `calc(100% - ${appBarHeight}px)`,
@@ -128,6 +125,8 @@ export default function MergeDragDrop(): ReactElement {
       >
         <SidebarDrop />
       </Drawer>
+    ) : (
+      <div />
     );
   }
 
