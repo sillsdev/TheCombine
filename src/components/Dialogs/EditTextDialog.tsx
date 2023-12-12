@@ -47,8 +47,8 @@ export default function EditTextDialog(
   }
 
   function onCancel(): void {
-    props.close();
     setText(props.text);
+    props.close();
   }
 
   function escapeClose(
