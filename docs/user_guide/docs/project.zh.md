@@ -38,7 +38,7 @@
 
 ### 基本设置
 
-![基本设置](../images/projectSettings1Basic.png){width=750 .center}
+![基本设置](../images/projectSettings1Basic.zh.png){width=750 .center}
 
 #### 项目名称
 
@@ -58,9 +58,9 @@
 
 ### 项目语言 {#project-languages}
 
-![语言](../images/projectSettings2Langs.png){width=750 .center}
+![语言](../images/projectSettings2Langs.zh.png){width=750 .center}
 
-![项目语言 - Tzotzil](../images/projectLanguagesTzotzil.png){.center}
+![项目语言 - Tzotzil](../images/projectLanguagesTzotzil.zh.png){.center}
 
 创建项目时指定的*土语*是固定的。
 
@@ -74,7 +74,7 @@
 
 ### 项目用户
 
-![用户](../images/projectSettings3Users.png){width=750 .center}
+![用户](../images/projectSettings3Users.zh.png){width=750 .center}
 
 #### 当前用户
 
@@ -111,7 +111,7 @@ _管理员_ 拥有 _编辑_ 的所有权限，还可以修改大多数项目设�
 
 ### 导入/导出
 
-![导入/导出](../images/projectSettings4Port.png){width=750 .center}
+![导入/导出](../images/projectSettings4Port.zh.png){width=750 .center}
 
 #### 导入 {#import}
 
@@ -134,12 +134,12 @@ _管理员_ 拥有 _编辑_ 的所有权限，还可以修改大多数项目设�
 
 ### 工作坊日程 {#workshop-schedule}
 
-![工作坊日程](../images/projectSettings5Sched.png){width=750 .center}
+![工作坊日程](../images/projectSettings5Sched.zh.png){width=750 .center}
 
 只有项目所有人可以使用该功能，以便为快速文字工作坊设定时间。 点击第一个键可选择工作坊日期范围。 点击中间键可添加或移除具
 体日期。 点击最后的键可清除日程表。
 
-![工作坊日程](../images/projectSchedule.png){.center}
+![工作坊日程](../images/projectSchedule.zh.png){.center}
 
 ## 项目统计数据
 
