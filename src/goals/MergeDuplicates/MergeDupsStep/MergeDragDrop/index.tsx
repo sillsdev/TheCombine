@@ -24,19 +24,25 @@ export const trashId = "trash-drop";
 
 export default function MergeDragDrop(): ReactElement {
   const dispatch = useAppDispatch();
-  const mergeState = useAppSelector(
-    (state: StoreState) => state.mergeDuplicateGoal
+  const sidebarHasMultipleSenses = useAppSelector(
+    (state: StoreState) =>
+      state.mergeDuplicateGoal.tree.sidebar.senses.length > 1
   );
+  const sidebarSensesProtected = useAppSelector((state: StoreState) => {
+    const senses = state.mergeDuplicateGoal.tree.sidebar.senses;
+    return senses.length && senses[0].protected;
+  });
+  const words = useAppSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.tree.words
+  );
+
   const [senseToDelete, setSenseToDelete] = useState<string>("");
   const { t } = useTranslation();
-
-  const sidebar = mergeState.tree.sidebar;
-  const treeWords = mergeState.tree.words;
 
   function handleDrop(res: DropResult): void {
     const src: MergeTreeReference = JSON.parse(res.draggableId);
     const srcWordId = res.source.droppableId;
-    const srcWord = treeWords[srcWordId];
+    const srcWord = words[srcWordId];
     if (srcWord?.protected && Object.keys(srcWord.sensesGuids).length === 1) {
       // Case 0: The final sense of a protected word cannot be moved.
       return;
@@ -89,9 +95,7 @@ export default function MergeDragDrop(): ReactElement {
         const destOrder = res.destination.index;
         if (
           src.order === destOrder ||
-          (destOrder === 0 &&
-            src.order !== undefined &&
-            sidebar.senses[0].protected)
+          (destOrder === 0 && src.order !== undefined && sidebarSensesProtected)
         ) {
           // If the sense wasn't moved or was moved within the sidebar above a protected sense, do nothing.
           return;
@@ -107,14 +111,14 @@ export default function MergeDragDrop(): ReactElement {
   }
 
   function renderSidebar(): ReactElement {
-    if (sidebar.senses.length <= 1) {
+    if (!sidebarHasMultipleSenses) {
       return <div />;
     }
     return (
       <Drawer
         anchor="right"
         variant="persistent"
-        open={sidebar.senses.length > 1}
+        open={sidebarHasMultipleSenses}
         SlideProps={{
           style: {
             height: `calc(100% - ${appBarHeight}px)`,
@@ -122,16 +126,13 @@ export default function MergeDragDrop(): ReactElement {
           },
         }}
       >
-        <SidebarDrop
-          sidebar={sidebar}
-          vernacular={treeWords[sidebar.wordId]?.vern}
-        />
+        <SidebarDrop />
       </Drawer>
     );
   }
 
   const newId = v4();
-  const colCount = Object.keys(treeWords).length + 1; // +1 for extra empty word.
+  const colCount = Object.keys(words).length + 1; // +1 for extra empty word.
 
   // This prevents things from moving when a draggable is dragged over the trash.
   const trashPlaceholderStyle: CSSProperties = {
@@ -157,16 +158,16 @@ export default function MergeDragDrop(): ReactElement {
         </Grid>
         <Grid item sm={11} xs={10 /* Allow trash icon more space. */}>
           <ImageList rowHeight="auto" cols={colCount} style={{ width: "90vw" }}>
-            {Object.keys(treeWords).map((key) => (
+            {Object.keys(words).map((key) => (
               <ImageListItem
                 key={key}
                 style={{ height: "70vh", margin: theme.spacing(1) }}
               >
-                <DropWord mergeState={mergeState} wordId={key} />
+                <DropWord wordId={key} />
               </ImageListItem>
             ))}
             <ImageListItem key={newId} style={{ margin: theme.spacing(1) }}>
-              <DropWord mergeState={mergeState} wordId={newId} />
+              <DropWord wordId={newId} />
             </ImageListItem>
             {renderSidebar()}
             <CancelConfirmDialog
