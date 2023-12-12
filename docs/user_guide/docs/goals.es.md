@@ -173,7 +173,7 @@ Hay una ficha para cada carácter unicode que aparece en la forma vernácula de 
 carácter, su valor Unicode "U+", el número de veces que aparece en las formas vernáculas de entrada y su designación
 (por defecto: Indeciso).
 
-![Fichas de personaje del inventario](../images/characterInventoryTiles.png)
+![Fichas de personaje del inventario](../images/characterInventoryTiles.es.png)
 
 ### Gestionar un solo carácter
 
@@ -185,7 +185,7 @@ Haga clic en una ficha de personaje para abrir un panel para ese personaje.
     derecha; el panel estará en la parte superior de éste. Si su ventana es estrecha, los azulejos llenarán todo el lado derecho de la
     ventana; el panel estará en la parte inferior, debajo de todos los azulejos.
 
-![Inventario de personajes panel de personajes](../images/characterInventoryPanel.png){.center}
+![Inventario de personajes panel de personajes](../images/characterInventoryPanel.es.png){.center}
 
 El centro del panel muestra hasta 5 ejemplos de formas vernáculas en las que aparece el carácter, resaltando el carácter
 en cada ocurrencia.

@@ -28,7 +28,7 @@
 该工具会自动查找可能重复的词条(每组最多 5 个词条，每次最多 12 组)。 首先，该工具会找出有相同形式的土语。 接着，它会找出
 类似土语形式或有相同注释(或定义) 的土语。
 
-![合并两个重复的词条](../images/mergeTwo.png)
+![合并两个重复的词条](../images/mergeTwo.zh.png)
 
 每个词条都显示在一列中，并且该词条的每种词义都以卡片的形式展现，这样可方便用户点击并拖动。 用户可对每一个词义采取三种基
 本的处理方式：移除、将其与另一个词义合并，或者删除。
@@ -38,7 +38,7 @@
 当用户点击并按住词义卡时，它会变成绿色。 用户可将词义卡拖放至同一列中的不同位置，以重新排列该词条的各项词义。 或者，也可
 将此卡拖放至不同列，以将该词义移至另一词条。
 
-![Merge Duplicates moving a sense](../images/mergeMove.png)
+![Merge Duplicates moving a sense](../images/mergeMove.zh.png)
 
 如果用户想将含有多种词义的词条拆分为多个词条，可将其中一张词义卡拖至右侧空的附加列中。
 
@@ -46,12 +46,12 @@
 
 如果将一张词义卡拖至另一张词义卡上，另一张词义卡也会变成绿色。
 
-![Merge Duplicates merging a sense](../images/mergeMerge.png)
+![Merge Duplicates merging a sense](../images/mergeMerge.zh.png)
 
 将一张词义卡拖放到另一张词义卡上(当它们同时显为绿色时)，它们的词义就合并。 这会导致在右侧出现一个蓝色侧边栏，显示出哪些
 词义被合并。
 
-![合并重复的词条和合并其词义](../images/mergeSidebar.png)
+![合并重复的词条和合并其词义](../images/mergeSidebar.zh.png)
 
 !!! 重要警告
 
@@ -60,7 +60,7 @@
 用户可将词义卡拖放至侧栏，或者从侧栏拖放至词义卡，来决定哪个词义被合并。 或者在侧栏内，用户可将不同的词义移至顶部(以保留
 其注释)。
 
-![Merge Duplicates moving a sidebar sense](../images/mergeSidebarMove.png)
+![Merge Duplicates moving a sidebar sense](../images/mergeSidebarMove.zh.png)
 
 点击右角括号(>) 可关闭或打开蓝色侧边栏。
 
@@ -68,27 +68,27 @@
 
 要完全删除一个词义，请将其卡片拖至左下角垃圾桶的图标内。 当词义卡变为红色时，松开鼠标。
 
-![合并重复，删除一个词义](../images/mergeDelete.png)
+![合并重复，删除一个词义](../images/mergeDelete.zh.png)
 
 如果用户删除列中仅剩的一条词义，则整个列将消失，并且在保存& 时，整个词条将被删除。
 
-![合并重复的词条，删除词义内容](../images/mergeDeleted.png)
+![合并重复的词条，删除词义内容](../images/mergeDeleted.zh.png)
 
 ### 标记词条
 
 每列的右上角(位于土语形式右侧) 都有一个旗标图标。
 
-![合并重复，标记该词条](../images/mergeFlag.png){.center}
+![合并重复，标记该词条](../images/mergeFlag.zh.png){.center}
 
 用户可点击旗标来标记该词条，以用于将来检查或编辑。 (用户可以在[检阅词条](#review-entries)中对标记的词条进行排序)。 当用
 户标记词条时，可选择添加文本。
 
-![Merge Duplicates adding or editing a flag](../images/mergeEditFlag.png){.center}
+![Merge Duplicates adding or editing a flag](../images/mergeEditFlag.zh.png){.center}
 
 无论是否有任何文本被键入，用户会知晓该词条已被标记，因旗标图标会变为红色。 如果用户添加了文本，可将鼠标悬停在旗标图标上
 方来查看文本。
 
-![Merge Duplicates a flagged entry](../images/mergeFlagged.png){.center}
+![Merge Duplicates a flagged entry](../images/mergeFlagged.zh.png){.center}
 
 点击红色旗标图标来编辑文本，或者移除标记。
 
@@ -148,7 +148,7 @@ _创建字符库存_" 提供了该项目词条土语形式出现的每个符编�
 土语词条中的每个统一编码标准的的字符都有一个图块。 每个图块显示字符、其编码 Unicode "U+" 值，以及它在词条土语形中出现的
 次数并其指定名称(默认：有待决定)。
 
-![字符库字符图标](../images/characterInventoryTiles.png)
+![字符库字符图标](../images/characterInventoryTiles.zh.png)
 
 ### 管理单个字符
 
@@ -158,7 +158,7 @@ _创建字符库存_" 提供了该项目词条土语形式出现的每个符编�
 
     用户可能需要滚动才能看到面板。 如果用户电脑可视窗户足够宽，窗的右边会有空白边距；而面板将位于其顶部。 如果电脑可视窗户狭窄，图块就会一直填充到窗户右侧；该面板将位于底部，即所有图块的下方。
 
-![字符库字符面板](../images/characterInventoryPanel.png){.center}
+![字符库字符面板](../images/characterInventoryPanel.zh.png){.center}
 
 面板中间最多会显示该字符总共出现的5个土语形示例，并突出显示每次出现时的字符。
 
