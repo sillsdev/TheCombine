@@ -1,13 +1,15 @@
-import { Grid } from "@mui/material";
+import { Grid, Hidden } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 
 import ChildrenRow from "components/TreeView/TreeDepiction/ChildrenRow";
 import CurrentRow from "components/TreeView/TreeDepiction/CurrentRow";
-import ParentRow from "components/TreeView/TreeDepiction/ParentRow";
+import DomainTileButton from "components/TreeView/TreeDepiction/DomainTileButton";
 import {
+  Direction,
   TreeDepictionProps,
   getColWidth,
 } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
+import { parent } from "resources/tree";
 import { useWindowSize } from "utilities/useWindowSize";
 
 export default function TreeDepiction(props: TreeDepictionProps): ReactElement {
@@ -23,21 +25,46 @@ export default function TreeDepiction(props: TreeDepictionProps): ReactElement {
   return (
     <>
       {/* Display parent domain, if available. */}
-      <Grid item>
-        {currentDomain.parent && <ParentRow {...props} colWidth={colWidth} />}
-      </Grid>
+      <Hidden smDown>
+        {currentDomain.parent && (
+          <>
+            <Grid item>
+              <DomainTileButton
+                direction={Direction.Up}
+                domain={currentDomain.parent}
+                onClick={props.animate}
+              />
+            </Grid>
+            <Grid item>
+              <img
+                alt={parent}
+                src={parent}
+                style={{ transform: "scaleY(-1)" }}
+                width={colWidth}
+              />
+            </Grid>
+          </>
+        )}
+      </Hidden>
 
       {/* Display current domain and (if available) left and right brothers. */}
       <Grid item>
-        <CurrentRow {...props} />
+        <Hidden smDown>
+          <CurrentRow {...props} />
+        </Hidden>
+        <Hidden smUp>
+          <CurrentRow {...props} small />
+        </Hidden>
       </Grid>
 
       {/* Display subdomains, if available. */}
-      <Grid item>
-        {currentDomain.children.length > 0 && (
-          <ChildrenRow {...props} colWidth={colWidth} />
-        )}
-      </Grid>
+      <Hidden smDown>
+        <Grid item>
+          {currentDomain.children.length > 0 && (
+            <ChildrenRow {...props} colWidth={colWidth} />
+          )}
+        </Grid>
+      </Hidden>
     </>
   );
 }

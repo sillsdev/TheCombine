@@ -5,113 +5,83 @@ Array [
   <div
     className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
   >
-    <ul
-      className="MuiImageList-root MuiImageList-standard css-rvv586-MuiImageList-root"
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      id="Sem"
+      onBlur={[Function]}
+      onClick={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
       style={
         Object {
-          "gap": 0,
-          "gridTemplateColumns": "repeat(1, 1fr)",
+          "bottom": 0,
+          "height": "95%",
+          "left": 0,
+          "margin": "2.5%",
+          "padding": "5px",
+          "width": "95%",
         }
       }
+      tabIndex={0}
+      type="button"
     >
-      <li
-        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
-        style={
-          Object {
-            "breakInside": undefined,
-            "gridColumnEnd": "span 1",
-            "gridRowEnd": "span 1",
-            "height": "auto",
-            "marginBottom": undefined,
-          }
-        }
-      >
-        <button
-          className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
-          disabled={false}
-          id="Sem"
-          onBlur={[Function]}
-          onClick={[Function]}
-          onContextMenu={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
+      <div>
+        <svg
+          aria-hidden={true}
+          className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+          data-testid="KeyboardArrowUpIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+          />
+        </svg>
+        <div
           style={
             Object {
-              "bottom": 0,
-              "height": "95%",
-              "left": 0,
-              "margin": "2.5%",
-              "padding": "5px",
-              "width": "95%",
+              "textTransform": "capitalize",
             }
           }
-          tabIndex={0}
-          type="button"
         >
-          <div>
-            <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-              data-testid="KeyboardArrowUpIcon"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-              />
-            </svg>
-            <div
-              style={
-                Object {
-                  "textTransform": "capitalize",
-                }
-              }
-            >
-              <span
-                className="MuiTypography-root MuiTypography-overline css-b3fch5-MuiTypography-root"
-              />
-              <p
-                className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-              >
-                addWords.domain
-              </p>
-            </div>
-          </div>
           <span
-            className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            className="MuiTypography-root MuiTypography-overline css-b3fch5-MuiTypography-root"
           />
-        </button>
-      </li>
-      <li
-        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
-        style={
-          Object {
-            "breakInside": undefined,
-            "gridColumnEnd": "span 1",
-            "gridRowEnd": "span 1",
-            "height": "auto",
-            "marginBottom": undefined,
-            "transform": "scaleY(-1)",
-          }
+          <p
+            className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            addWords.domain
+          </p>
+        </div>
+      </div>
+      <span
+        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+      />
+    </button>
+  </div>,
+  <div
+    className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
+  >
+    <img
+      alt="parent.svg"
+      src="parent.svg"
+      style={
+        Object {
+          "transform": "scaleY(-1)",
         }
-      >
-        <img
-          alt="parent.svg"
-          className="MuiImageListItem-img"
-          height={60}
-          src="parent.svg"
-          width={45}
-        />
-      </li>
-    </ul>
+      }
+      width={44}
+    />
   </div>,
   <div
     className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
@@ -221,6 +191,7 @@ Array [
         Object {
           "gap": 0,
           "gridTemplateColumns": "repeat(23, 1fr)",
+          "overflow": "visible",
           "width": 1012,
         }
       }
@@ -277,9 +248,7 @@ Array [
         <img
           alt="leftEndcap.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="leftEndcap.svg"
-          width={45}
         />
       </li>
       <li
@@ -298,9 +267,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -319,9 +286,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -340,9 +305,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -361,9 +324,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -382,9 +343,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -403,9 +362,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -424,9 +381,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -445,9 +400,7 @@ Array [
         <img
           alt="intersect.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="intersect.svg"
-          width={45}
         />
       </li>
       <li
@@ -466,9 +419,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -487,9 +438,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -508,9 +457,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -529,9 +476,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -550,9 +495,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -571,9 +514,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -592,9 +533,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -613,9 +552,7 @@ Array [
         <img
           alt="rightEndcap.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="rightEndcap.svg"
-          width={45}
         />
       </li>
       <li
@@ -922,115 +859,85 @@ Array [
   <div
     className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
   >
-    <ul
-      className="MuiImageList-root MuiImageList-standard css-rvv586-MuiImageList-root"
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      id="1"
+      onBlur={[Function]}
+      onClick={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
       style={
         Object {
-          "gap": 0,
-          "gridTemplateColumns": "repeat(1, 1fr)",
+          "bottom": 0,
+          "height": "95%",
+          "left": 0,
+          "margin": "2.5%",
+          "padding": "5px",
+          "width": "95%",
         }
       }
+      tabIndex={0}
+      type="button"
     >
-      <li
-        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
-        style={
-          Object {
-            "breakInside": undefined,
-            "gridColumnEnd": "span 1",
-            "gridRowEnd": "span 1",
-            "height": "auto",
-            "marginBottom": undefined,
-          }
-        }
-      >
-        <button
-          className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
-          disabled={false}
-          id="1"
-          onBlur={[Function]}
-          onClick={[Function]}
-          onContextMenu={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
+      <div>
+        <svg
+          aria-hidden={true}
+          className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+          data-testid="KeyboardArrowUpIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+          />
+        </svg>
+        <div
           style={
             Object {
-              "bottom": 0,
-              "height": "95%",
-              "left": 0,
-              "margin": "2.5%",
-              "padding": "5px",
-              "width": "95%",
+              "textTransform": "capitalize",
             }
           }
-          tabIndex={0}
-          type="button"
         >
-          <div>
-            <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-              data-testid="KeyboardArrowUpIcon"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-              />
-            </svg>
-            <div
-              style={
-                Object {
-                  "textTransform": "capitalize",
-                }
-              }
-            >
-              <span
-                className="MuiTypography-root MuiTypography-overline css-b3fch5-MuiTypography-root"
-              >
-                1
-              </span>
-              <p
-                className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-              >
-                parent
-              </p>
-            </div>
-          </div>
           <span
-            className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-          />
-        </button>
-      </li>
-      <li
-        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
-        style={
-          Object {
-            "breakInside": undefined,
-            "gridColumnEnd": "span 1",
-            "gridRowEnd": "span 1",
-            "height": "auto",
-            "marginBottom": undefined,
-            "transform": "scaleY(-1)",
-          }
+            className="MuiTypography-root MuiTypography-overline css-b3fch5-MuiTypography-root"
+          >
+            1
+          </span>
+          <p
+            className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            parent
+          </p>
+        </div>
+      </div>
+      <span
+        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+      />
+    </button>
+  </div>,
+  <div
+    className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
+  >
+    <img
+      alt="parent.svg"
+      src="parent.svg"
+      style={
+        Object {
+          "transform": "scaleY(-1)",
         }
-      >
-        <img
-          alt="parent.svg"
-          className="MuiImageListItem-img"
-          height={60}
-          src="parent.svg"
-          width={51}
-        />
-      </li>
-    </ul>
+      }
+      width={50}
+    />
   </div>,
   <div
     className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
@@ -1216,6 +1123,7 @@ Array [
         Object {
           "gap": 0,
           "gridTemplateColumns": "repeat(7, 1fr)",
+          "overflow": "visible",
           "width": 350,
         }
       }
@@ -1272,9 +1180,7 @@ Array [
         <img
           alt="pillar.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="pillar.svg"
-          width={51}
         />
       </li>
       <li
@@ -1401,115 +1307,85 @@ Array [
   <div
     className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
   >
-    <ul
-      className="MuiImageList-root MuiImageList-standard css-rvv586-MuiImageList-root"
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      id="1.2"
+      onBlur={[Function]}
+      onClick={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
       style={
         Object {
-          "gap": 0,
-          "gridTemplateColumns": "repeat(1, 1fr)",
+          "bottom": 0,
+          "height": "95%",
+          "left": 0,
+          "margin": "2.5%",
+          "padding": "5px",
+          "width": "95%",
         }
       }
+      tabIndex={0}
+      type="button"
     >
-      <li
-        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
-        style={
-          Object {
-            "breakInside": undefined,
-            "gridColumnEnd": "span 1",
-            "gridRowEnd": "span 1",
-            "height": "auto",
-            "marginBottom": undefined,
-          }
-        }
-      >
-        <button
-          className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
-          disabled={false}
-          id="1.2"
-          onBlur={[Function]}
-          onClick={[Function]}
-          onContextMenu={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
+      <div>
+        <svg
+          aria-hidden={true}
+          className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+          data-testid="KeyboardArrowUpIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+          />
+        </svg>
+        <div
           style={
             Object {
-              "bottom": 0,
-              "height": "95%",
-              "left": 0,
-              "margin": "2.5%",
-              "padding": "5px",
-              "width": "95%",
+              "textTransform": "capitalize",
             }
           }
-          tabIndex={0}
-          type="button"
         >
-          <div>
-            <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-              data-testid="KeyboardArrowUpIcon"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-              />
-            </svg>
-            <div
-              style={
-                Object {
-                  "textTransform": "capitalize",
-                }
-              }
-            >
-              <span
-                className="MuiTypography-root MuiTypography-overline css-b3fch5-MuiTypography-root"
-              >
-                1.2
-              </span>
-              <p
-                className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-              >
-                kid2
-              </p>
-            </div>
-          </div>
           <span
-            className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-          />
-        </button>
-      </li>
-      <li
-        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
-        style={
-          Object {
-            "breakInside": undefined,
-            "gridColumnEnd": "span 1",
-            "gridRowEnd": "span 1",
-            "height": "auto",
-            "marginBottom": undefined,
-            "transform": "scaleY(-1)",
-          }
+            className="MuiTypography-root MuiTypography-overline css-b3fch5-MuiTypography-root"
+          >
+            1.2
+          </span>
+          <p
+            className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            kid2
+          </p>
+        </div>
+      </div>
+      <span
+        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+      />
+    </button>
+  </div>,
+  <div
+    className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
+  >
+    <img
+      alt="parent.svg"
+      src="parent.svg"
+      style={
+        Object {
+          "transform": "scaleY(-1)",
         }
-      >
-        <img
-          alt="parent.svg"
-          className="MuiImageListItem-img"
-          height={60}
-          src="parent.svg"
-          width={51}
-        />
-      </li>
-    </ul>
+      }
+      width={50}
+    />
   </div>,
   <div
     className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
@@ -1619,6 +1495,7 @@ Array [
         Object {
           "gap": 0,
           "gridTemplateColumns": "repeat(7, 1fr)",
+          "overflow": "visible",
           "width": 350,
         }
       }
@@ -1675,9 +1552,7 @@ Array [
         <img
           alt="pillar.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="pillar.svg"
-          width={51}
         />
       </li>
       <li
@@ -1804,115 +1679,85 @@ Array [
   <div
     className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
   >
-    <ul
-      className="MuiImageList-root MuiImageList-standard css-rvv586-MuiImageList-root"
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      id="1"
+      onBlur={[Function]}
+      onClick={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
       style={
         Object {
-          "gap": 0,
-          "gridTemplateColumns": "repeat(1, 1fr)",
+          "bottom": 0,
+          "height": "95%",
+          "left": 0,
+          "margin": "2.5%",
+          "padding": "5px",
+          "width": "95%",
         }
       }
+      tabIndex={0}
+      type="button"
     >
-      <li
-        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
-        style={
-          Object {
-            "breakInside": undefined,
-            "gridColumnEnd": "span 1",
-            "gridRowEnd": "span 1",
-            "height": "auto",
-            "marginBottom": undefined,
-          }
-        }
-      >
-        <button
-          className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
-          disabled={false}
-          id="1"
-          onBlur={[Function]}
-          onClick={[Function]}
-          onContextMenu={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
+      <div>
+        <svg
+          aria-hidden={true}
+          className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+          data-testid="KeyboardArrowUpIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+          />
+        </svg>
+        <div
           style={
             Object {
-              "bottom": 0,
-              "height": "95%",
-              "left": 0,
-              "margin": "2.5%",
-              "padding": "5px",
-              "width": "95%",
+              "textTransform": "capitalize",
             }
           }
-          tabIndex={0}
-          type="button"
         >
-          <div>
-            <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-              data-testid="KeyboardArrowUpIcon"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-              />
-            </svg>
-            <div
-              style={
-                Object {
-                  "textTransform": "capitalize",
-                }
-              }
-            >
-              <span
-                className="MuiTypography-root MuiTypography-overline css-b3fch5-MuiTypography-root"
-              >
-                1
-              </span>
-              <p
-                className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-              >
-                parent
-              </p>
-            </div>
-          </div>
           <span
-            className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-          />
-        </button>
-      </li>
-      <li
-        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
-        style={
-          Object {
-            "breakInside": undefined,
-            "gridColumnEnd": "span 1",
-            "gridRowEnd": "span 1",
-            "height": "auto",
-            "marginBottom": undefined,
-            "transform": "scaleY(-1)",
-          }
+            className="MuiTypography-root MuiTypography-overline css-b3fch5-MuiTypography-root"
+          >
+            1
+          </span>
+          <p
+            className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            parent
+          </p>
+        </div>
+      </div>
+      <span
+        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+      />
+    </button>
+  </div>,
+  <div
+    className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
+  >
+    <img
+      alt="parent.svg"
+      src="parent.svg"
+      style={
+        Object {
+          "transform": "scaleY(-1)",
         }
-      >
-        <img
-          alt="parent.svg"
-          className="MuiImageListItem-img"
-          height={60}
-          src="parent.svg"
-          width={34}
-        />
-      </li>
-    </ul>
+      }
+      width={33}
+    />
   </div>,
   <div
     className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
@@ -2098,6 +1943,7 @@ Array [
         Object {
           "gap": 0,
           "gridTemplateColumns": "repeat(31, 1fr)",
+          "overflow": "visible",
           "width": 1023,
         }
       }
@@ -2154,9 +2000,7 @@ Array [
         <img
           alt="leftEndcap.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="leftEndcap.svg"
-          width={34}
         />
       </li>
       <li
@@ -2175,9 +2019,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={34}
         />
       </li>
       <li
@@ -2196,9 +2038,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={34}
         />
       </li>
       <li
@@ -2217,9 +2057,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={34}
         />
       </li>
       <li
@@ -2238,9 +2076,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={34}
         />
       </li>
       <li
@@ -2259,9 +2095,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={34}
         />
       </li>
       <li
@@ -2280,9 +2114,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={34}
         />
       </li>
       <li
@@ -2301,9 +2133,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={34}
         />
       </li>
       <li
@@ -2322,9 +2152,7 @@ Array [
         <img
           alt="teeUpRight.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="teeUpRight.svg"
-          width={34}
         />
       </li>
       <li
@@ -2343,9 +2171,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={34}
         />
       </li>
       <li
@@ -2364,9 +2190,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={34}
         />
       </li>
       <li
@@ -2385,9 +2209,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={34}
         />
       </li>
       <li
@@ -2406,9 +2228,7 @@ Array [
         <img
           alt="teeDown.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="teeDown.svg"
-          width={34}
         />
       </li>
       <li
@@ -2427,9 +2247,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={34}
         />
       </li>
       <li
@@ -2448,9 +2266,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={34}
         />
       </li>
       <li
@@ -2469,9 +2285,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={34}
         />
       </li>
       <li
@@ -2490,9 +2304,7 @@ Array [
         <img
           alt="teeUpLeft.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="teeUpLeft.svg"
-          width={34}
         />
       </li>
       <li
@@ -2511,9 +2323,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={34}
         />
       </li>
       <li
@@ -2532,9 +2342,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={34}
         />
       </li>
       <li
@@ -2553,9 +2361,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={34}
         />
       </li>
       <li
@@ -2574,9 +2380,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={34}
         />
       </li>
       <li
@@ -2595,9 +2399,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={34}
         />
       </li>
       <li
@@ -2616,9 +2418,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={34}
         />
       </li>
       <li
@@ -2637,9 +2437,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={34}
         />
       </li>
       <li
@@ -2658,9 +2456,7 @@ Array [
         <img
           alt="rightEndcap.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="rightEndcap.svg"
-          width={34}
         />
       </li>
       <li
@@ -3057,115 +2853,85 @@ Array [
   <div
     className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
   >
-    <ul
-      className="MuiImageList-root MuiImageList-standard css-rvv586-MuiImageList-root"
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      id="1.2.1.1"
+      onBlur={[Function]}
+      onClick={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
       style={
         Object {
-          "gap": 0,
-          "gridTemplateColumns": "repeat(1, 1fr)",
+          "bottom": 0,
+          "height": "95%",
+          "left": 0,
+          "margin": "2.5%",
+          "padding": "5px",
+          "width": "95%",
         }
       }
+      tabIndex={0}
+      type="button"
     >
-      <li
-        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
-        style={
-          Object {
-            "breakInside": undefined,
-            "gridColumnEnd": "span 1",
-            "gridRowEnd": "span 1",
-            "height": "auto",
-            "marginBottom": undefined,
-          }
-        }
-      >
-        <button
-          className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
-          disabled={false}
-          id="1.2.1.1"
-          onBlur={[Function]}
-          onClick={[Function]}
-          onContextMenu={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
+      <div>
+        <svg
+          aria-hidden={true}
+          className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+          data-testid="KeyboardArrowUpIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+          />
+        </svg>
+        <div
           style={
             Object {
-              "bottom": 0,
-              "height": "95%",
-              "left": 0,
-              "margin": "2.5%",
-              "padding": "5px",
-              "width": "95%",
+              "textTransform": "capitalize",
             }
           }
-          tabIndex={0}
-          type="button"
         >
-          <div>
-            <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-              data-testid="KeyboardArrowUpIcon"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-              />
-            </svg>
-            <div
-              style={
-                Object {
-                  "textTransform": "capitalize",
-                }
-              }
-            >
-              <span
-                className="MuiTypography-root MuiTypography-overline css-b3fch5-MuiTypography-root"
-              >
-                1.2.1.1
-              </span>
-              <p
-                className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-              >
-                depth=4
-              </p>
-            </div>
-          </div>
           <span
-            className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-          />
-        </button>
-      </li>
-      <li
-        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
-        style={
-          Object {
-            "breakInside": undefined,
-            "gridColumnEnd": "span 1",
-            "gridRowEnd": "span 1",
-            "height": "auto",
-            "marginBottom": undefined,
-            "transform": "scaleY(-1)",
-          }
+            className="MuiTypography-root MuiTypography-overline css-b3fch5-MuiTypography-root"
+          >
+            1.2.1.1
+          </span>
+          <p
+            className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            depth=4
+          </p>
+        </div>
+      </div>
+      <span
+        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+      />
+    </button>
+  </div>,
+  <div
+    className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
+  >
+    <img
+      alt="parent.svg"
+      src="parent.svg"
+      style={
+        Object {
+          "transform": "scaleY(-1)",
         }
-      >
-        <img
-          alt="parent.svg"
-          className="MuiImageListItem-img"
-          height={60}
-          src="parent.svg"
-          width={51}
-        />
-      </li>
-    </ul>
+      }
+      width={50}
+    />
   </div>,
   <div
     className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
@@ -3277,115 +3043,85 @@ Array [
   <div
     className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
   >
-    <ul
-      className="MuiImageList-root MuiImageList-standard css-rvv586-MuiImageList-root"
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
+      disabled={false}
+      id="1"
+      onBlur={[Function]}
+      onClick={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
       style={
         Object {
-          "gap": 0,
-          "gridTemplateColumns": "repeat(1, 1fr)",
+          "bottom": 0,
+          "height": "95%",
+          "left": 0,
+          "margin": "2.5%",
+          "padding": "5px",
+          "width": "95%",
         }
       }
+      tabIndex={0}
+      type="button"
     >
-      <li
-        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
-        style={
-          Object {
-            "breakInside": undefined,
-            "gridColumnEnd": "span 1",
-            "gridRowEnd": "span 1",
-            "height": "auto",
-            "marginBottom": undefined,
-          }
-        }
-      >
-        <button
-          className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
-          disabled={false}
-          id="1"
-          onBlur={[Function]}
-          onClick={[Function]}
-          onContextMenu={[Function]}
-          onDragLeave={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onKeyUp={[Function]}
-          onMouseDown={[Function]}
-          onMouseLeave={[Function]}
-          onMouseUp={[Function]}
-          onTouchEnd={[Function]}
-          onTouchMove={[Function]}
-          onTouchStart={[Function]}
+      <div>
+        <svg
+          aria-hidden={true}
+          className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+          data-testid="KeyboardArrowUpIcon"
+          focusable="false"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"
+          />
+        </svg>
+        <div
           style={
             Object {
-              "bottom": 0,
-              "height": "95%",
-              "left": 0,
-              "margin": "2.5%",
-              "padding": "5px",
-              "width": "95%",
+              "textTransform": "capitalize",
             }
           }
-          tabIndex={0}
-          type="button"
         >
-          <div>
-            <svg
-              aria-hidden={true}
-              className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
-              data-testid="KeyboardArrowUpIcon"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M7.41 15.41 12 10.83l4.59 4.58L18 14l-6-6-6 6z"
-              />
-            </svg>
-            <div
-              style={
-                Object {
-                  "textTransform": "capitalize",
-                }
-              }
-            >
-              <span
-                className="MuiTypography-root MuiTypography-overline css-b3fch5-MuiTypography-root"
-              >
-                1
-              </span>
-              <p
-                className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-              >
-                parent
-              </p>
-            </div>
-          </div>
           <span
-            className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-          />
-        </button>
-      </li>
-      <li
-        className="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
-        style={
-          Object {
-            "breakInside": undefined,
-            "gridColumnEnd": "span 1",
-            "gridRowEnd": "span 1",
-            "height": "auto",
-            "marginBottom": undefined,
-            "transform": "scaleY(-1)",
-          }
+            className="MuiTypography-root MuiTypography-overline css-b3fch5-MuiTypography-root"
+          >
+            1
+          </span>
+          <p
+            className="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          >
+            parent
+          </p>
+        </div>
+      </div>
+      <span
+        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+      />
+    </button>
+  </div>,
+  <div
+    className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
+  >
+    <img
+      alt="parent.svg"
+      src="parent.svg"
+      style={
+        Object {
+          "transform": "scaleY(-1)",
         }
-      >
-        <img
-          alt="parent.svg"
-          className="MuiImageListItem-img"
-          height={60}
-          src="parent.svg"
-          width={45}
-        />
-      </li>
-    </ul>
+      }
+      width={44}
+    />
   </div>,
   <div
     className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
@@ -3647,6 +3383,7 @@ Array [
         Object {
           "gap": 0,
           "gridTemplateColumns": "repeat(23, 1fr)",
+          "overflow": "visible",
           "width": 1012,
         }
       }
@@ -3703,9 +3440,7 @@ Array [
         <img
           alt="leftEndcap.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="leftEndcap.svg"
-          width={45}
         />
       </li>
       <li
@@ -3724,9 +3459,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -3745,9 +3478,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -3766,9 +3497,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -3787,9 +3516,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -3808,9 +3535,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -3829,9 +3554,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -3850,9 +3573,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -3871,9 +3592,7 @@ Array [
         <img
           alt="intersect.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="intersect.svg"
-          width={45}
         />
       </li>
       <li
@@ -3892,9 +3611,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -3913,9 +3630,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -3934,9 +3649,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -3955,9 +3668,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -3976,9 +3687,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -3997,9 +3706,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -4018,9 +3725,7 @@ Array [
         <img
           alt="span.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="span.svg"
-          width={45}
         />
       </li>
       <li
@@ -4039,9 +3744,7 @@ Array [
         <img
           alt="rightEndcap.svg"
           className="MuiImageListItem-img"
-          height={60}
           src="rightEndcap.svg"
-          width={45}
         />
       </li>
       <li
