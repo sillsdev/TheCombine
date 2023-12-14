@@ -122,6 +122,10 @@ deleted senses), updating the words in the database. Second, it saves any unmerg
 
     If one of the words in an intentionally unmerged set is edited (e.g., in Review Entries), then the set may appear again as potential duplicates.
 
+!!! warning "Important"
+
+    Avoid having multiple users merge duplicates in the same project at the same time. If different users simultaneously merge the same set of duplicates, it will results in the creation of new duplicates (even if the users are making the same merge decisions).
+
 #### Defer
 
 ![Merge Duplicates Defer button](images/mergeDefer.png)

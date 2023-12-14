@@ -2,7 +2,7 @@
 
 如何注册、登录并编辑用户账号
 
-![登陆](../images/login.png){.center}
+![登陆](../images/login.zh.png){.center}
 
 ## 注册
 
@@ -28,7 +28,7 @@
 登陆后，沿着 The Combine 的顶部有一个蓝色应用框（App Bar）。 点击应用框右端的头像图标，以打开用户菜单 选“用户设置”就可更
 改账号或简况设置
 
-![用户菜单](../images/userMenu.png){.center}
+![用户菜单](../images/userMenu.zh.png){.center}
 
 用户可添加或更新
 
