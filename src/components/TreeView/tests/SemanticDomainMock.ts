@@ -57,15 +57,6 @@ for (let i = 0; i < 4; i++) {
   nodeMap[id] = { ...subdom, parent: semDomFromTreeNode(firstKid) };
 }
 
-// Give middleKid an odd # of subdomains
-for (let i = 0; i < 3; i++) {
-  const id = middleKid.id + "." + i;
-  const subdom = newSemanticDomainTreeNode(id, `oddData${i}`);
-  subdom.parent = semDomFromTreeNode(middleKid);
-  middleKid.children.push(semDomFromTreeNode(subdom));
-  nodeMap[id] = { ...subdom, parent: parentDom };
-}
-
 // Give lastKid one subdomain with total depth of 5
 let id = mapIds.depth3;
 const domDepth3 = newSemanticDomainTreeNode(id, "depth=3");
