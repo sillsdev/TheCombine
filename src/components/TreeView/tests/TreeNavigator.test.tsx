@@ -19,12 +19,12 @@ const headNode: TreeNavigatorProps = {
   animate: MOCK_ANIMATE,
 };
 // Current domain with a parent, no siblings, three kid
-const parent: TreeNavigatorProps = {
+const parentOfThree: TreeNavigatorProps = {
   currentDomain: domMap[mapIds.parent],
   animate: MOCK_ANIMATE,
 };
-// Current domain with a parent, two siblings, no kids
-const twoBrothers: TreeNavigatorProps = {
+// Current domain with a parent, two siblings, three kids
+const twoBrothersManyKids: TreeNavigatorProps = {
   currentDomain: domMap[mapIds.middleKid],
   animate: MOCK_ANIMATE,
 };
@@ -69,16 +69,18 @@ describe("TreeNavigator", () => {
     });
 
     it("getFirstChild returns first if at least one child", () => {
-      const { current } = renderHook(() => useTreeNavigation(parent)).result;
+      const { current } = renderHook(() =>
+        useTreeNavigation(parentOfThree)
+      ).result;
       expect(current.getFirstChild()).toEqual(
         semDomFromTreeNode(domMap[mapIds.firstKid])
       );
     });
 
     it("returns the expected parent and siblings", () => {
-      // The domain twoBrothers is the middle child of parentDomain.
+      // The domain twoBrothersManyKids is the middle child of parentDomain.
       const { current } = renderHook(() =>
-        useTreeNavigation(twoBrothers)
+        useTreeNavigation(twoBrothersManyKids)
       ).result;
       expect(current.getNextSibling()).toEqual(
         semDomFromTreeNode(domMap[mapIds.lastKid])
@@ -94,7 +96,7 @@ describe("TreeNavigator", () => {
 
   describe("typing arrow key", () => {
     it("left arrow moves to left sibling", () => {
-      render(<TreeNavigator {...twoBrothers} />);
+      render(<TreeNavigator {...twoBrothersManyKids} />);
       simulateKey(Key.ArrowLeft);
       expect(MOCK_ANIMATE).toHaveBeenCalled();
       const expectedDom = semDomFromTreeNode(domMap[mapIds.firstKid]);
@@ -106,7 +108,7 @@ describe("TreeNavigator", () => {
       expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
     });
     it("right arrow moves to right sibling", () => {
-      render(<TreeNavigator {...twoBrothers} />);
+      render(<TreeNavigator {...twoBrothersManyKids} />);
       simulateKey(Key.ArrowRight);
       const expectedDom = semDomFromTreeNode(domMap[mapIds.lastKid]);
       expect(MOCK_ANIMATE).toHaveBeenCalledWith(expectedDom);
@@ -117,16 +119,16 @@ describe("TreeNavigator", () => {
       expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
     });
     it("up arrow moves to parent domain", () => {
-      render(<TreeNavigator {...twoBrothers} />);
+      render(<TreeNavigator {...twoBrothersManyKids} />);
       simulateKey(Key.ArrowUp);
       expect(MOCK_ANIMATE).toHaveBeenCalled();
       const expectedDom = semDomFromTreeNode(domMap[mapIds.parent]);
       expect(MOCK_ANIMATE).toHaveBeenCalledWith(expectedDom);
     });
-    it("down arrow does nothing when multiple kids", () => {
-      render(<TreeNavigator {...twoBrothers} />);
+    it("down arrow moves when multiple kids", () => {
+      render(<TreeNavigator {...twoBrothersManyKids} />);
       simulateKey(Key.ArrowDown);
-      expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
+      expect(MOCK_ANIMATE).toHaveBeenCalledTimes(1);
     });
     it("down arrow moves to only child", () => {
       render(<TreeNavigator {...noBrothersOneKid} />);
