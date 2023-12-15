@@ -29,7 +29,7 @@ spec:
         - name: maintenance
           command: [ "/bin/bash", "-c", "--" ]
           args: [ 'sleep infinity & PID=$! ; trap "kill $PID" INT TERM ; wait' ]
-          image: {{ template "maintenance.containerImage" . }}
+          image: {{ include "maintenance.containerImage" . }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           securityContext:
             runAsUser: 999
