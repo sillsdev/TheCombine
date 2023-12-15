@@ -10,3 +10,10 @@
     {{- printf "%s:%s" .Values.imageName .Values.global.imageTag }}
   {{- end }}
 {{- end }}
+
+{{/* Build string of certificates for ConfigMap data */}}
+{{- define "cert-proxy-server.cert-proxy-list-config-data" -}}
+  {{- range .Values.combineCertProxyList -}}
+    {{- printf "%s@%s " .hostname .bucket -}}
+  {{- end }}
+{{- end }}
