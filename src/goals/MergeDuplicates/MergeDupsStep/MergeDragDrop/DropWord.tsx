@@ -1,5 +1,12 @@
 import { WarningOutlined } from "@mui/icons-material";
-import { Grid, MenuItem, Paper, Select, Typography } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
 import { ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
@@ -49,98 +56,108 @@ export default function DropWord(props: DropWordProps): ReactElement {
     dispatch(setVern({ wordId: props.wordId, vern: verns[0] || "" }));
   }
 
+  const header = treeWord ? (
+    <Select
+      variant="standard"
+      value={treeWord.vern}
+      onChange={(e) =>
+        dispatch(
+          setVern({
+            wordId: props.wordId,
+            vern: e.target.value as string,
+          })
+        )
+      }
+    >
+      {verns.map((vern) => (
+        <MenuItem value={vern} key={props.wordId + vern}>
+          <TypographyWithFont variant="h5" vernacular>
+            {vern}
+          </TypographyWithFont>
+        </MenuItem>
+      ))}
+    </Select>
+  ) : (
+    <div />
+  );
+
+  const action = treeWord ? (
+    <>
+      {protectedWithOneChild && (
+        <IconButtonWithTooltip
+          icon={<WarningOutlined />}
+          side="top"
+          size="small"
+          textId="mergeDups.helpText.protectedWord"
+          buttonId={`word-${props.wordId}-protected`}
+        />
+      )}
+      <FlagButton
+        flag={treeWord.flag}
+        updateFlag={(newFlag: Flag) => {
+          dispatch(flagWord({ wordId: props.wordId, flag: newFlag }));
+        }}
+        buttonId={`word-${props.wordId}-flag`}
+      />
+    </>
+  ) : (
+    <div />
+  );
+
   return (
-    <Paper
+    <Card
       style={{
         backgroundColor: "lightgrey",
         paddingBottom: theme.spacing(1),
       }}
     >
-      <Paper
-        square
+      <CardHeader
+        title={header}
+        action={action}
         style={{
           backgroundColor: treeWord?.protected ? "lightyellow" : "white",
           padding: theme.spacing(1),
           height: 44,
           minWidth: 150,
         }}
-      >
-        {!!treeWord && (
-          <Grid container justifyContent="space-between">
-            <Grid>
-              <Select
-                variant="standard"
-                value={treeWord.vern}
-                onChange={(e) =>
-                  dispatch(
-                    setVern({
-                      wordId: props.wordId,
-                      vern: e.target.value as string,
-                    })
-                  )
-                }
-              >
-                {verns.map((vern) => (
-                  <MenuItem value={vern} key={props.wordId + vern}>
-                    <TypographyWithFont variant="h5" vernacular>
-                      {vern}
-                    </TypographyWithFont>
-                  </MenuItem>
-                ))}
-              </Select>
-            </Grid>
-            <Grid>
-              {protectedWithOneChild && (
-                <IconButtonWithTooltip
-                  icon={<WarningOutlined />}
-                  side="top"
-                  size="small"
-                  textId="mergeDups.helpText.protectedWord"
-                  buttonId={`word-${props.wordId}-protected`}
-                />
-              )}
-              <FlagButton
-                flag={treeWord.flag}
-                updateFlag={(newFlag: Flag) => {
-                  dispatch(flagWord({ wordId: props.wordId, flag: newFlag }));
-                }}
-                buttonId={`word-${props.wordId}-flag`}
-              />
-            </Grid>
-          </Grid>
-        )}
-      </Paper>
-      <Droppable key={props.wordId} droppableId={props.wordId} isCombineEnabled>
-        {(provided): ReactElement => (
-          <div ref={provided.innerRef} {...provided.droppableProps}>
-            <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
-              {!!treeWord &&
-                Object.keys(treeWord.sensesGuids).map((id, index) => {
-                  const senses = treeWord.sensesGuids[id].map(
-                    (g) => data.senses[g]
-                  );
-                  return (
-                    <DragSense
-                      key={id}
-                      index={index}
-                      wordId={props.wordId}
-                      mergeSenseId={id}
-                      senses={senses}
-                      isOnlySenseInProtectedWord={protectedWithOneChild}
-                      isProtectedSense={senses[0].protected}
-                    />
-                  );
-                })}
-              {provided.placeholder}
+      />
+      <CardContent>
+        <Droppable
+          key={props.wordId}
+          droppableId={props.wordId}
+          isCombineEnabled
+        >
+          {(provided): ReactElement => (
+            <div ref={provided.innerRef} {...provided.droppableProps}>
+              <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
+                {!!treeWord &&
+                  Object.keys(treeWord.sensesGuids).map((id, index) => {
+                    const senses = treeWord.sensesGuids[id].map(
+                      (g) => data.senses[g]
+                    );
+                    return (
+                      <DragSense
+                        key={id}
+                        index={index}
+                        wordId={props.wordId}
+                        mergeSenseId={id}
+                        senses={senses}
+                        isOnlySenseInProtectedWord={protectedWithOneChild}
+                        isProtectedSense={senses[0].protected}
+                      />
+                    );
+                  })}
+                {provided.placeholder}
+              </div>
+              <div style={{ padding: 16, textAlign: "center" }}>
+                <Typography variant="subtitle1">
+                  {t("mergeDups.helpText.dragCard")}
+                </Typography>
+              </div>
             </div>
-            <div style={{ padding: 16, textAlign: "center" }}>
-              <Typography variant="subtitle1">
-                {t("mergeDups.helpText.dragCard")}
-              </Typography>
-            </div>
-          </div>
-        )}
-      </Droppable>
-    </Paper>
+          )}
+        </Droppable>
+      </CardContent>
+    </Card>
   );
 }
