@@ -1,8 +1,6 @@
 import { Autocomplete } from "@mui/material";
 import React, { ReactElement, useContext, useEffect } from "react";
 import { Key } from "ts-key-enum";
-import typeahead from "typeahead-standalone";
-import "typeahead-standalone/dist/basic.css";
 
 import { WritingSystem } from "api/models";
 import { LiWithFont, TextFieldWithFont } from "utilities/fontComponents";
@@ -38,78 +36,61 @@ export default function GlossWithSuggestions(
   });
 
   return (
-    <>
-      <Autocomplete
-        id={props.textFieldId}
-        disabled={props.isDisabled}
-        filterOptions={(options: string[]) =>
-          options.length <= maxSuggestions
-            ? options
-            : options.slice(0, maxSuggestions)
+    <Autocomplete
+      id={props.textFieldId}
+      disabled={props.isDisabled}
+      filterOptions={(options: string[]) =>
+        options.length <= maxSuggestions
+          ? options
+          : options.slice(0, maxSuggestions)
+      }
+      // freeSolo allows use of a typed entry not available as a drop-down option
+      freeSolo
+      includeInputInList
+      // option-never-equals-value prevents automatic option highlighting
+      isOptionEqualToValue={() => false}
+      options={spellChecker.getSpellingSuggestions(props.gloss)}
+      value={props.gloss}
+      onBlur={() => {
+        if (props.onBlur) {
+          props.onBlur();
         }
-        // freeSolo allows use of a typed entry not available as a drop-down option
-        freeSolo
-        includeInputInList
-        // option-never-equals-value prevents automatic option highlighting
-        isOptionEqualToValue={() => false}
-        options={spellChecker.getSpellingSuggestions(props.gloss)}
-        value={props.gloss}
-        onBlur={() => {
-          if (props.onBlur) {
-            props.onBlur();
-          }
-        }}
-        onChange={(_e, newValue) => {
-          // onChange is triggered when an option is selected
-          props.updateGlossField(newValue ?? "");
-        }}
-        inputValue={props.gloss}
-        onInputChange={(_e, newInputValue) => {
-          // onInputChange is triggered by typing
-          props.updateGlossField(newInputValue);
-        }}
-        renderInput={(params) => (
-          <TextFieldWithFont
-            {...(params as any)}
-            analysis
-            fullWidth
-            inputRef={props.glossInput}
-            label={props.isNew ? props.analysisLang.name : ""}
-            lang={props.analysisLang.bcp47}
-            variant={(props.isNew ? "outlined" : "standard") as any}
-          />
-        )}
-        renderOption={(liProps, option, { selected }) => (
-          <LiWithFont
-            {...liProps}
-            analysis
-            aria-selected={selected}
-            lang={props.analysisLang.bcp47}
-          >
-            {option}
-          </LiWithFont>
-        )}
-        onKeyPress={(e: React.KeyboardEvent) => {
-          if (e.key === Key.Enter) {
-            props.handleEnter();
-          }
-        }}
-      />
-
-      <div style={{ height: 50 }} />
-      <LookAhead dict={spellChecker.dictLoaded} />
-    </>
+      }}
+      onChange={(_e, newValue) => {
+        // onChange is triggered when an option is selected
+        props.updateGlossField(newValue ?? "");
+      }}
+      inputValue={props.gloss}
+      onInputChange={(_e, newInputValue) => {
+        // onInputChange is triggered by typing
+        props.updateGlossField(newInputValue);
+      }}
+      renderInput={(params) => (
+        <TextFieldWithFont
+          {...(params as any)}
+          analysis
+          fullWidth
+          inputRef={props.glossInput}
+          label={props.isNew ? props.analysisLang.name : ""}
+          lang={props.analysisLang.bcp47}
+          variant={(props.isNew ? "outlined" : "standard") as any}
+        />
+      )}
+      renderOption={(liProps, option, { selected }) => (
+        <LiWithFont
+          {...liProps}
+          analysis
+          aria-selected={selected}
+          lang={props.analysisLang.bcp47}
+        >
+          {option}
+        </LiWithFont>
+      )}
+      onKeyPress={(e: React.KeyboardEvent) => {
+        if (e.key === Key.Enter) {
+          props.handleEnter();
+        }
+      }}
+    />
   );
-}
-
-function LookAhead(props: { dict: string[] }): ReactElement {
-  useEffect(() => {
-    console.info(props.dict);
-    typeahead({
-      input: document.getElementById("test") as HTMLInputElement,
-      source: { local: props.dict },
-    });
-  }, [props.dict, props.dict.length]);
-
-  return <input autoComplete="off" id="test" type="search" />;
 }

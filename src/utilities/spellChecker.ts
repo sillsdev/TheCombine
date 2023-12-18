@@ -11,7 +11,7 @@ interface SplitWord {
 export default class SpellChecker {
   private bcp47: Bcp47Code | undefined;
   private dictLoader: DictionaryLoader | undefined;
-  public dictLoaded: string[] = [];
+  public dictLoaded: { [key: string]: string[] } = {};
   private spell: nspell | undefined;
 
   constructor(lang?: string) {
@@ -33,7 +33,7 @@ export default class SpellChecker {
     await this.dictLoader.loadDictionary().then((dic) => {
       if (dic !== undefined) {
         this.spell = nspell("SET UTF-8", dic);
-        this.dictLoaded.push(...dic.split("\n"));
+        this.addToDictLoaded(dic);
         if (process.env.NODE_ENV === "development") {
           console.log(`Loaded spell-checker: ${bcp47}`);
         }
@@ -49,13 +49,22 @@ export default class SpellChecker {
 
     const part = await this.dictLoader.loadDictPart(word);
     if (part) {
-      this.dictLoaded.push(...part.split("\n"));
+      this.addToDictLoaded(part);
       this.spell.personal(part);
     }
   }
 
   correct(word: string): boolean | undefined {
     return this.spell?.correct(word);
+  }
+
+  addToDictLoaded(entries: string): void {
+    entries.split("\n").map((w) => {
+      if (!(w[0] in this.dictLoaded)) {
+        this.dictLoaded[w[0]] = [];
+      }
+      this.dictLoaded[w[0]].push(w);
+    });
   }
 
   static cleanAndSplit(word: string): SplitWord {
@@ -92,16 +101,12 @@ export default class SpellChecker {
     this.load(final);
 
     let suggestions = this.spell.suggest(final);
-    if (!suggestions.length) {
-      // Extend the current word to get suggestions 1 or 2 characters longer.
-      suggestions = this.spell.suggest(`${final}..`);
-    }
 
-    if (!suggestions.length) {
-      suggestions = this.dictLoaded
+    if (final && !suggestions.length) {
+      suggestions = this.dictLoaded[final[0]]
         .filter(
           (entry) =>
-            entry.length > final.length + 1 &&
+            entry.length > final.length &&
             entry.substring(0, final.length) === final
         )
         .sort();
