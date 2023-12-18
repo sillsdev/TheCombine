@@ -18,7 +18,7 @@ export default function DomainStatistics(
   );
 
   useEffect(() => {
-    const updateStatisticList = async () => {
+    const updateStatisticList = async (): Promise<void> => {
       const counts = await getStatisticsCounts(
         LocalStorage.getProjectId(),
         props.lang
@@ -68,9 +68,9 @@ function TableRow(props: {
   return (
     <ListItem style={{ minWidth: "600px" }}>
       <Grid container wrap="nowrap" justifyContent="space-around">
-        <TableCell key={"id_" + props.dom.id} text={props.dom.id} />
-        <TableCell key={"domain_" + props.dom.id} text={props.dom.name} />
-        <TableCell key={"count_" + props.dom.id} text={props.count} />
+        <TableCell text={props.dom.id} />
+        <TableCell text={props.dom.name} />
+        <TableCell text={props.count} />
       </Grid>
     </ListItem>
   );

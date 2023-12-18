@@ -2,7 +2,7 @@ import * as utilities from "utilities/utilities";
 
 describe("utilities/utilities", () => {
   describe("quicksort", () => {
-    const compareItem = (input: number) => {
+    const compareItem = (input: number): number => {
       return input;
     };
 
@@ -16,11 +16,11 @@ describe("utilities/utilities", () => {
     });
   });
 
-  describe("getNowDateTimeString", () => {
+  describe("getDateTimeString", () => {
     // This tests will fail intermittently if there is a bug with the 0-prepend
     it("returns string of correct length", () => {
       const expectedLength = "YYYY-MM-DD_hh-mm-ss".length;
-      expect(utilities.getNowDateTimeString().length).toBe(expectedLength);
+      expect(utilities.getDateTimeString()).toHaveLength(expectedLength);
     });
   });
 

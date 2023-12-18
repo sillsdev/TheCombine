@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import { animate } from "motion";
-import React, { ReactElement, useEffect } from "react";
+import { ReactElement, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import tractor from "resources/tractor.png";
@@ -19,7 +19,7 @@ export default function Loading(): ReactElement {
   }, []);
 
   return (
-    <React.Fragment>
+    <>
       <Typography variant="h4" style={{ textAlign: "center" }}>
         {t("generic.loadingTitle")}
       </Typography>
@@ -32,6 +32,6 @@ export default function Loading(): ReactElement {
       <Typography variant="h5" style={{ textAlign: "center" }}>
         {t("generic.loadingText")}
       </Typography>
-    </React.Fragment>
+    </>
   );
 }

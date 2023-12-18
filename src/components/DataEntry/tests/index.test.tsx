@@ -8,11 +8,9 @@ import DataEntry, {
   smallScreenThreshold,
   treeViewDialogId,
 } from "components/DataEntry";
-import { openTreeAction } from "components/TreeView/Redux/TreeViewActions";
-import {
-  TreeViewAction,
-  TreeViewState,
-} from "components/TreeView/Redux/TreeViewReduxTypes";
+import { defaultState as currentProjectState } from "components/Project/ProjectReduxTypes";
+import { openTree } from "components/TreeView/Redux/TreeViewActions";
+import { TreeViewState } from "components/TreeView/Redux/TreeViewReduxTypes";
 import { newSemanticDomainTreeNode } from "types/semanticDomain";
 import * as useWindowSize from "utilities/useWindowSize";
 
@@ -38,7 +36,7 @@ jest.mock("types/hooks", () => {
   };
 });
 
-const mockDispatch = jest.fn((action: TreeViewAction) => action);
+const mockDispatch = jest.fn((action: any) => action);
 const mockDomain = newSemanticDomainTreeNode("mockId", "mockName", "mockLang");
 const mockGetSemanticDomainFull = jest.fn();
 const mockStore = createMockStore();
@@ -71,7 +69,7 @@ describe("DataEntry", () => {
 
   it("dispatches to open the tree", async () => {
     await renderDataEntry({ currentDomain: mockDomain });
-    expect(mockDispatch).toHaveBeenCalledWith(openTreeAction());
+    expect(mockDispatch).toHaveBeenCalledWith(openTree());
   });
 
   it("fetches domain", async () => {
@@ -97,7 +95,7 @@ async function renderDataEntry(
   spyOnUseWindowSize(windowWidth);
   await renderer.act(async () => {
     testHandle = renderer.create(
-      <Provider store={mockStore({ treeViewState })}>
+      <Provider store={mockStore({ currentProjectState, treeViewState })}>
         <DataEntry />
       </Provider>
     );

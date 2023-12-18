@@ -1,13 +1,10 @@
 import {
   Divider,
   Grid,
-  List,
   ListItemButton,
   ListItemText,
-  Theme,
   Typography,
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import { ReactElement, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -20,16 +17,9 @@ import {
 import SemanticDomainStatistics from "components/Statistics/DomainStatistics";
 import LineChartComponent from "components/Statistics/LineChartComponent";
 import ProgressBarComponent from "components/Statistics/ProgressBar/ProgressBarComponent";
+import StyledList from "components/Statistics/StyledList";
 import DomainUserStatistics from "components/Statistics/UserStatistics";
 import { defaultWritingSystem } from "types/writingSystem";
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    width: "100%",
-    maxWidth: "auto",
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
 
 // The strings should match the keys for statistics.view in translation.json
 enum viewEnum {
@@ -41,7 +31,6 @@ enum viewEnum {
 
 export default function Statistics(): ReactElement {
   const { t } = useTranslation();
-  const classes = useStyles();
   const [currentProject, setCurrentProject] = useState<Project>();
   const [lang] = useState<string>(defaultWritingSystem.bcp47);
   const [viewName, setViewName] = useState<string>(viewEnum.User);
@@ -50,7 +39,7 @@ export default function Statistics(): ReactElement {
     getProject().then(setCurrentProject);
   }, []);
 
-  function componentToDisplay(view: viewEnum) {
+  function componentToDisplay(view: viewEnum): ReactElement {
     switch (view) {
       case viewEnum.User:
         return <DomainUserStatistics lang={lang} />;
@@ -76,7 +65,7 @@ export default function Statistics(): ReactElement {
     }
   }
 
-  function handleDisplay() {
+  function handleDisplay(): ReactElement[] {
     return [
       <Grid item key={"statistics-title"}>
         <Typography variant="h4" align="center">
@@ -94,9 +83,9 @@ export default function Statistics(): ReactElement {
     ];
   }
 
-  function handleButton() {
+  function handleButton(): ReactElement {
     return (
-      <List className={classes.root}>
+      <StyledList>
         <ListItemButton
           onClick={() => setViewName(viewEnum.User)}
           selected={viewName === viewEnum.User}
@@ -124,7 +113,7 @@ export default function Statistics(): ReactElement {
         >
           <ListItemText primary={t("statistics.view.workshop")} />
         </ListItemButton>
-      </List>
+      </StyledList>
     );
   }
 

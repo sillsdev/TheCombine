@@ -8,6 +8,7 @@ import router from "browserRouter";
 import {
   addCharInvChangesToGoalAction,
   addCompletedMergeToGoalAction,
+  addEntryEditToGoalAction,
   incrementGoalStepAction,
   loadUserEditsAction,
   setCurrentGoalAction,
@@ -17,6 +18,7 @@ import {
 } from "components/GoalTimeline/Redux/GoalReducer";
 import { CharacterChange } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { dispatchMergeStepData } from "goals/MergeDuplicates/Redux/MergeDupsActions";
+import { EntryEdit } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { Goal, GoalStatus, GoalType } from "types/goals";
@@ -29,6 +31,10 @@ export function addCharInvChangesToGoal(
   charChanges: CharacterChange[]
 ): PayloadAction {
   return addCharInvChangesToGoalAction(charChanges);
+}
+
+export function addEntryEditToGoal(entryEdit: EntryEdit): PayloadAction {
+  return addEntryEditToGoalAction(entryEdit);
 }
 
 export function addCompletedMergeToGoal(changes: MergeUndoIds): PayloadAction {
@@ -68,10 +74,10 @@ export function asyncAddGoal(goal: Goal) {
       dispatch(setCurrentGoal(goal));
 
       // Check if this is a new goal.
-      if (goal.index === -1) {
-        const newIndex = await Backend.addGoalToUserEdit(userEditId, goal);
+      if (goal.status !== GoalStatus.Completed) {
+        await Backend.addGoalToUserEdit(userEditId, goal);
         // Load the new goal, but don't await, to allow a loading screen.
-        dispatch(asyncLoadNewGoal({ ...goal, index: newIndex }, userEditId));
+        dispatch(asyncLoadNewGoal(goal, userEditId));
       }
 
       // Serve goal.
@@ -126,9 +132,7 @@ export function asyncLoadExistingUserEdits(
 ) {
   return async (dispatch: StoreStateDispatch) => {
     const userEdit = await Backend.getUserEditById(projectId, userEditId);
-    const history = userEdit.edits.map((e, index) => {
-      return convertEditToGoal(e, index);
-    });
+    const history = userEdit.edits.map(convertEditToGoal);
     dispatch(loadUserEdits(history));
   };
 }
@@ -216,10 +220,10 @@ export async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
   }
 }
 
-async function saveCurrentStep(goal: Goal) {
+async function saveCurrentStep(goal: Goal): Promise<void> {
   const userEditId = getUserEditId();
   if (userEditId) {
     const step = goal.steps[goal.currentStep];
-    await Backend.addStepToGoal(userEditId, goal.index, step, goal.currentStep);
+    await Backend.addStepToGoal(userEditId, goal.guid, step, goal.currentStep);
   }
 }

@@ -9,8 +9,8 @@ import { SemanticDomain, WritingSystem } from "api";
 import { IconButtonWithTooltip } from "components/Buttons";
 import {
   initTreeDomain,
+  setDomainLanguage,
   traverseTree,
-  updateTreeLanguage,
 } from "components/TreeView/Redux/TreeViewActions";
 import { defaultTreeNode } from "components/TreeView/Redux/TreeViewReduxTypes";
 import TreeDepiction from "components/TreeView/TreeDepiction";
@@ -57,7 +57,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
     const newLang =
       getSemDomWritingSystem(semDomWritingSystem)?.bcp47 ?? resolvedLanguage;
     if (newLang && newLang !== semDomLanguage) {
-      dispatch(updateTreeLanguage(newLang));
+      dispatch(setDomainLanguage(newLang));
     }
     dispatch(initTreeDomain(newLang));
   }, [semDomLanguage, semDomWritingSystem, dispatch, resolvedLanguage]);
@@ -66,7 +66,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
     if (!exit) {
       return;
     }
-    const handleEsc = (event: KeyboardEvent) => {
+    const handleEsc = (event: KeyboardEvent): void => {
       if (exit && event.key === Key.Escape) {
         exit();
       }

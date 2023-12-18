@@ -1,29 +1,33 @@
 import { Grid, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { uploadAvatar } from "backend";
 import { getUserId } from "backend/localStorage";
 import { FileInputButton, LoadingDoneButton } from "components/Buttons";
 
+interface AvatarUploadProps {
+  doneCallback?: () => void;
+}
+
 /**
  * Allows the current user to select an image and upload as their avatar
  */
-export default function AvatarUpload(props: { doneCallback?: () => void }) {
+export default function AvatarUpload(props: AvatarUploadProps): ReactElement {
   const [file, setFile] = useState<File>();
   const [filename, setFilename] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
   const [done, setDone] = useState<boolean>(false);
   const { t } = useTranslation();
 
-  function updateFile(file: File) {
+  function updateFile(file: File): void {
     if (file) {
       setFile(file);
       setFilename(file.name);
     }
   }
 
-  async function upload(e: React.FormEvent<EventTarget>) {
+  async function upload(e: React.FormEvent<EventTarget>): Promise<void> {
     e.preventDefault();
     e.stopPropagation();
     if (file) {
@@ -34,7 +38,7 @@ export default function AvatarUpload(props: { doneCallback?: () => void }) {
     }
   }
 
-  async function onDone() {
+  async function onDone(): Promise<void> {
     setDone(true);
     if (props.doneCallback) {
       setTimeout(props.doneCallback, 500);

@@ -1,6 +1,6 @@
 import { Delete } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import React, { useState } from "react";
+import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { CancelConfirmDialog } from "components/Dialogs";
@@ -18,11 +18,11 @@ interface DeleteEntryProps {
 /**
  * A delete button
  */
-export default function DeleteEntry(props: DeleteEntryProps) {
+export default function DeleteEntry(props: DeleteEntryProps): ReactElement {
   const [open, setOpen] = useState<boolean>(false);
   const { t } = useTranslation();
 
-  function handleClick() {
+  function handleClick(): void {
     if (props.confirmId) {
       setOpen(true);
     } else {
@@ -31,7 +31,7 @@ export default function DeleteEntry(props: DeleteEntryProps) {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Tooltip title={t("addWords.deleteRow")} placement="top">
         <IconButton
           tabIndex={-1}
@@ -53,6 +53,6 @@ export default function DeleteEntry(props: DeleteEntryProps) {
         buttonIdCancel="delete-word-cancel"
         buttonIdConfirm="delete-word-confirm"
       />
-    </React.Fragment>
+    </>
   );
 }

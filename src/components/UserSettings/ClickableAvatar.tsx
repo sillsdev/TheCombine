@@ -1,23 +1,20 @@
 import { CameraAlt, Person } from "@mui/icons-material";
-import { Avatar, Dialog, DialogContent, DialogTitle } from "@mui/material";
-import { DefaultTheme, makeStyles, Styles } from "@mui/styles";
+import { Avatar } from "@mui/material";
 import { ReactElement, useState } from "react";
 
-import { getAvatar } from "backend/localStorage";
-import AvatarUpload from "components/UserSettings/AvatarUpload";
+import { uploadAvatar } from "backend";
+import { getAvatar, getUserId } from "backend/localStorage";
+import { UploadImageDialog } from "components/Dialogs";
 
-const clickableAvatarClassProps: Styles<DefaultTheme, {}> = {
-  avatar: { width: 60, height: 60 },
-  avatarOverlay: {
-    transition: "opacity 0.2s",
-    "&:hover": { opacity: 0.9 },
-    position: "absolute",
-    width: 60,
-    height: 60,
-    top: 0,
-    opacity: 0,
-    cursor: "pointer",
-  },
+const avatarStyle = { height: 60, width: 60 };
+const avatarOverlayStyle = {
+  ...avatarStyle,
+  transition: "opacity 0.2s",
+  "&:hover": { opacity: 0.9 },
+  position: "absolute",
+  top: 0,
+  opacity: 0,
+  cursor: "pointer",
 };
 
 interface ClickableAvatarProps {
@@ -30,7 +27,6 @@ export default function ClickableAvatar(
   props: ClickableAvatarProps
 ): ReactElement {
   const [avatarDialogOpen, setAvatarDialogOpen] = useState(false);
-  const classes = makeStyles(clickableAvatarClassProps)();
 
   const closeDialog = (): void => {
     props.setAvatar(getAvatar());
@@ -41,28 +37,24 @@ export default function ClickableAvatar(
     <>
       <div style={{ position: "relative" }}>
         {props.avatar ? (
-          <Avatar
-            className={classes.avatar}
-            alt="User avatar"
-            src={props.avatar}
-          />
+          <Avatar alt="User avatar" src={props.avatar} sx={avatarStyle} />
         ) : (
           <Person style={{ fontSize: 60 }} />
         )}
         <Avatar
-          className={classes.avatarOverlay}
           onClick={() => setAvatarDialogOpen(true)}
+          sx={avatarOverlayStyle}
         >
           <CameraAlt />
         </Avatar>
       </div>
 
-      <Dialog onClose={closeDialog} open={avatarDialogOpen}>
-        <DialogTitle>Set user avatar</DialogTitle>
-        <DialogContent>
-          <AvatarUpload doneCallback={closeDialog} />
-        </DialogContent>
-      </Dialog>
+      <UploadImageDialog
+        close={closeDialog}
+        open={avatarDialogOpen}
+        titleId="userSettings.uploadAvatarTitle"
+        uploadImage={(imgFile: File) => uploadAvatar(getUserId(), imgFile)}
+      />
     </>
   );
 }

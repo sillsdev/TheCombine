@@ -34,7 +34,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserRole>))]
         public async Task<IActionResult> GetProjectUserRoles(string projectId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
             }
@@ -70,12 +70,20 @@ namespace BackendFramework.Controllers
             return Ok(await _userRoleRepo.DeleteAllUserRoles(projectId));
         }
 
+        /// <summary> Returns whether current user has specified permission in current project </summary>
+        [HttpPost("permission", Name = "HasPermission")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        public async Task<IActionResult> HasPermission(string projectId, [FromBody, BindRequired] Permission perm)
+        {
+            return Ok(await _permissionService.HasProjectPermission(HttpContext, perm, projectId));
+        }
+
         /// <summary> Returns <see cref="UserRole"/> with specified id </summary>
         [HttpGet("current", Name = "GetCurrentPermissions")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Permission>))]
         public async Task<IActionResult> GetCurrentPermissions(string projectId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
             }
@@ -119,7 +127,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> CreateUserRole(string projectId, [FromBody, BindRequired] UserRole userRole)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
             {
                 return Forbid();
             }
@@ -147,7 +156,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> DeleteUserRole(string projectId, string userId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
             {
                 return Forbid();
             }
@@ -195,13 +205,14 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UpdateUserRole(
             string userId, [FromBody, BindRequired] ProjectRole projectRole)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
+            var projectId = projectRole.ProjectId;
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
             {
                 return Forbid();
             }
 
             // Prevent upgrading another user to have more permissions than the actor.
-            var projectId = projectRole.ProjectId;
             if (!await _permissionService.ContainsProjectRole(HttpContext, projectRole.Role, projectId))
             {
                 return Forbid();

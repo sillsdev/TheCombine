@@ -6,7 +6,7 @@ import {
   MergeDups,
   ReviewDeferredDups,
 } from "goals/MergeDuplicates/MergeDupsTypes";
-import { ReviewEntries } from "goals/ReviewEntries/ReviewEntries";
+import { ReviewEntries } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { SpellCheckGloss } from "goals/SpellCheckGloss/SpellCheckGloss";
 import { ValidateChars } from "goals/ValidateChars/ValidateChars";
 import { ValidateStrWords } from "goals/ValidateStrWords/ValidateStrWords";
@@ -70,10 +70,9 @@ export function convertGoalToEdit(goal: Goal): Edit {
   return { guid, goalType, stepData, changes };
 }
 
-export function convertEditToGoal(edit: Edit, index?: number): Goal {
+export function convertEditToGoal(edit: Edit): Goal {
   const goal = goalTypeToGoal(edit.goalType);
   goal.guid = edit.guid;
-  goal.index = index ?? -1;
   goal.steps = edit.stepData.map((stepString) => JSON.parse(stepString));
   goal.numSteps = goal.steps.length;
   goal.changes = JSON.parse(edit.changes);

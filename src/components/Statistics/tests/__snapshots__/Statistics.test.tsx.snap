@@ -9,7 +9,7 @@ Array [
       className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-2 css-1o7apob-MuiGrid-root"
     >
       <ul
-        className="MuiList-root MuiList-padding makeStyles-root-1 css-h4y409-MuiList-root"
+        className="MuiList-root MuiList-padding css-10ek7dj-MuiList-root"
       >
         <div
           className="MuiButtonBase-root MuiListItemButton-root MuiListItemButton-gutters Mui-selected MuiListItemButton-root MuiListItemButton-gutters Mui-selected css-1l1zyj1-MuiButtonBase-root-MuiListItemButton-root"
@@ -248,7 +248,7 @@ Array [
       className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-2 css-1o7apob-MuiGrid-root"
     >
       <ul
-        className="MuiList-root MuiList-padding makeStyles-root-2 css-h4y409-MuiList-root"
+        className="MuiList-root MuiList-padding css-10ek7dj-MuiList-root"
       >
         <li
           className="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-1i8meaj-MuiListItem-root"

@@ -130,7 +130,14 @@
   },
   "projectSettings": {
     "project": "项目：",
-    "tab": { "export": "导出", "languages": "语言", "users": "用户" },
+    "tab": {
+      "basic": "基本设置",
+      "export": "导出",
+      "importExport": "导入/导出",
+      "languages": "语言",
+      "schedule": "日程",
+      "users": "用户"
+    },
     "language": {
       "header": "语言",
       "vernacular": "土语",
@@ -234,7 +241,8 @@
   },
   "createStrWordInv": { "title": "创建结构词库" },
   "handleFlags": { "title": "处理警告标志" },
-  "spellCheckGloss": { "title": "拼写检查词汇表" },
+  "reviewDeferredDups": {},
+  "spellCheckGloss": { "title": "拼写检查注释" },
   "validateChars": { "title": "验证字符" },
   "validateStrWords": { "title": "验证结构词" },
   "reviewEntries": {
@@ -334,7 +342,7 @@
       "dups": "把重复项拖动到这里",
       "sense": "把新词义拖动到这里",
       "saveAndContinue": "保存更改并加载一组新单词",
-      "skip": "放弃更改并加载一组新单词",
+      "defer": "放弃更改并加载一组新单词",
       "list": "把这个词拖往右边与其他词合并",
       "noDups": "没有什么可合并的。",
       "delete": "删除词义",
@@ -366,6 +374,7 @@
     "cancel": "取消",
     "clearText": "清除文本",
     "confirm": "确认",
+    "defer": "推迟",
     "delete": "删除",
     "deletePermanently": "确定永久删除吗？",
     "done": "完成",
@@ -379,7 +388,6 @@
     "restore": "还原",
     "save": "保存",
     "saveAndContinue": "保存并继续",
-    "skip": "跳过",
     "undecided": "未定",
     "upload": "上传"
   },

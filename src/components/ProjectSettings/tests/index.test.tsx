@@ -1,8 +1,9 @@
 import "@testing-library/jest-dom";
 import { act, cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import mediaQuery from "css-mediaquery";
+import { match } from "css-mediaquery";
 import { Provider } from "react-redux";
+import { Store } from "redux";
 import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
@@ -39,7 +40,7 @@ jest.mock("types/hooks", () => {
 
 const mockGetCurrentPermissions = jest.fn();
 
-const createMockStore = (hasSchedule = false) => {
+const createMockStore = (hasSchedule = false): Store => {
   const project = randomProject();
   if (hasSchedule) {
     project.workshopSchedule = [new Date().toString()];
@@ -50,7 +51,7 @@ const createMockStore = (hasSchedule = false) => {
   });
 };
 
-const updateProjSettings = async (hasSchedule = false) => {
+const updateProjSettings = async (hasSchedule = false): Promise<void> => {
   await act(async () => {
     // For this update to trigger a permissions refresh, project.id must change.
     // This is accomplished by randomProject() in createMockStore().
@@ -62,7 +63,7 @@ const updateProjSettings = async (hasSchedule = false) => {
   });
 };
 
-const resetMocks = () => {
+const resetMocks = (): void => {
   jest.clearAllMocks();
   mockGetCurrentPermissions.mockResolvedValue([]);
 };
@@ -73,7 +74,7 @@ const createMatchMedia = (
 ): ((query: string) => MediaQueryList) => {
   return (query: string) =>
     ({
-      matches: mediaQuery.match(query, { width }),
+      matches: match(query, { width }),
       addListener: jest.fn(),
       removeListener: jest.fn(),
     }) as any;

@@ -1,20 +1,18 @@
 import { Delete, PlayArrow, Stop } from "@mui/icons-material";
+import { Fade, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import {
-  Fade,
-  IconButton,
-  Menu,
-  MenuItem,
-  Theme,
-  Tooltip,
-} from "@mui/material";
-import { createStyles, makeStyles } from "@mui/styles";
-import { ReactElement, useCallback, useEffect, useState } from "react";
+  CSSProperties,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import { ButtonConfirmation } from "components/Dialogs";
 import {
   playing,
-  reset,
+  resetPronunciations,
 } from "components/Pronunciations/Redux/PronunciationsActions";
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { StoreState } from "types";
@@ -24,31 +22,30 @@ import { themeColors } from "types/theme";
 interface PlayerProps {
   deleteAudio: (fileName: string) => void;
   fileName: string;
-  isPlaying?: boolean;
+  onClick?: () => void;
   pronunciationUrl: string;
+  size?: "large" | "medium" | "small";
+  warningTextId?: string;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    button: { marginRight: theme.spacing(1) },
-    icon: { color: themeColors.success },
-  })
-);
+const iconStyle: CSSProperties = { color: themeColors.success };
 
 export default function AudioPlayer(props: PlayerProps): ReactElement {
   const isPlaying = useAppSelector(
     (state: StoreState) =>
-      state.pronunciationsState.payload === props.fileName &&
-      state.pronunciationsState.type === PronunciationsStatus.Playing
+      state.pronunciationsState.fileName === props.fileName &&
+      state.pronunciationsState.status === PronunciationsStatus.Playing
   );
 
   const [audio] = useState<HTMLAudioElement>(new Audio(props.pronunciationUrl));
   const [anchor, setAnchor] = useState<HTMLElement | undefined>();
   const [deleteConf, setDeleteConf] = useState(false);
 
-  const classes = useStyles();
   const dispatch = useAppDispatch();
-  const dispatchReset = useCallback(() => dispatch(reset()), [dispatch]);
+  const dispatchReset = useCallback(
+    () => dispatch(resetPronunciations()),
+    [dispatch]
+  );
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -70,6 +67,9 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
   }
 
   function deleteOrTogglePlay(event?: any): void {
+    if (props.onClick) {
+      props.onClick();
+    }
     if (event?.shiftKey) {
       setDeleteConf(true);
     } else {
@@ -105,16 +105,11 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
           onClick={deleteOrTogglePlay}
           onTouchStart={handleTouch}
           onTouchEnd={enableContextMenu}
-          className={classes.button}
           aria-label="play"
           id={`audio-${props.fileName}`}
-          size="large"
+          size={props.size || "large"}
         >
-          {isPlaying ? (
-            <Stop className={classes.icon} />
-          ) : (
-            <PlayArrow className={classes.icon} />
-          )}
+          {isPlaying ? <Stop sx={iconStyle} /> : <PlayArrow sx={iconStyle} />}
         </IconButton>
       </Tooltip>
       <Menu
@@ -133,11 +128,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
             handleClose();
           }}
         >
-          {isPlaying ? (
-            <Stop className={classes.icon} />
-          ) : (
-            <PlayArrow className={classes.icon} />
-          )}
+          {isPlaying ? <Stop sx={iconStyle} /> : <PlayArrow sx={iconStyle} />}
         </MenuItem>
         <MenuItem
           id="audio-delete"
@@ -151,7 +142,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
       </Menu>
       <ButtonConfirmation
         open={deleteConf}
-        textId="buttons.deletePermanently"
+        textId={props.warningTextId || "buttons.deletePermanently"}
         titleId="pronunciations.deleteRecording"
         onClose={() => setDeleteConf(false)}
         onConfirm={() => props.deleteAudio(props.fileName)}

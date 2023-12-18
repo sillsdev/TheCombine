@@ -18,7 +18,7 @@ export default function ProjectSelect(
     }
   }, [props.project.name]);
 
-  const handleChange = (e: SelectChangeEvent) => {
+  const handleChange = (e: SelectChangeEvent): void => {
     if (e.target.name === props.project.name) {
       return;
     }
@@ -41,8 +41,8 @@ export default function ProjectSelect(
       sx={{ maxWidth: "100%" }}
       value={props.project.name}
     >
-      {projectList.map((p, i) => (
-        <MenuItem key={i} value={p.name}>
+      {projectList.map((p) => (
+        <MenuItem key={p.id} value={p.name}>
           {p.name}
         </MenuItem>
       ))}

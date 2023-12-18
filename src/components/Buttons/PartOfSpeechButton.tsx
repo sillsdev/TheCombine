@@ -32,13 +32,13 @@ export default function PartOfSpeech(props: PartOfSpeechProps): ReactElement {
     catGroupText
   );
 
-  const CatGroupButton = () => (
+  const CatGroupButton = (): ReactElement => (
     <IconButtonWithTooltip
       buttonId={props.buttonId}
       icon={<Hexagon fontSize="small" sx={{ color }} />}
       onClick={props.onClick}
       side="top"
-      small
+      size="small"
       text={hoverText}
     />
   );

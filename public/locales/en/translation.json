@@ -130,9 +130,9 @@
   },
   "projectExport": {
     "cannotExportEmpty": "Project is empty. You cannot export a project with no words.",
-    "downloadInProgress": "Download in progress",
-    "exportFailed": "Export failed",
-    "exportInProgress": "Export in progress"
+    "downloadInProgress": "Downloading project: {{ val }}",
+    "exportFailed": "Failed to export project {{ val }}. Click to clear this message.",
+    "exportInProgress": "Exporting project: {{ val }}"
   },
   "projectSettings": {
     "project": "Project:",
@@ -320,6 +320,14 @@
       "toolbar": {
         "search": "Search"
       }
+    },
+    "completed": {
+      "number": "Number of entries edited: "
+    },
+    "undo": {
+      "undo": "Undo Edit",
+      "undoDialog": "Undo this edit?",
+      "undoDisabled": "Undo Unavailable"
     }
   },
   "charInventory": {
@@ -482,5 +490,12 @@
       "Other": "Other",
       "Unspecified": "Unspecified"
     }
+  },
+  "wordCard": {
+    "senseCount": "Senses: {{ val }}",
+    "wordId": "Id: {{ val }}",
+    "wordModified": "Modified: {{ val }}",
+    "domainAdded": "Added: {{ val }}",
+    "user": "By user: {{ val }}"
   }
 }

@@ -1,5 +1,5 @@
 import { ListItem } from "@mui/material";
-import renderer from "react-test-renderer";
+import { ReactTestRenderer, act, create } from "react-test-renderer";
 
 import "tests/reactI18nextMock";
 
@@ -10,7 +10,7 @@ import {
   newSemanticDomainTreeNode,
 } from "types/semanticDomain";
 
-let testRenderer: renderer.ReactTestRenderer;
+let testRenderer: ReactTestRenderer;
 
 const mockProjectId = "mockProjectId";
 const mockTreeNode = newSemanticDomainTreeNode();
@@ -30,7 +30,7 @@ jest.mock("backend/localStorage", () => ({
   getProjectId: () => mockGetProjectId(),
 }));
 
-function setMockFunctions() {
+function setMockFunctions(): void {
   mockGetProjectId.mockReturnValue(mockProjectId);
   mockGetStatisticsCounts.mockResolvedValue(mockSemanticDomainCountArray);
 }
@@ -38,8 +38,8 @@ function setMockFunctions() {
 beforeEach(async () => {
   jest.clearAllMocks();
   setMockFunctions();
-  await renderer.act(async () => {
-    testRenderer = renderer.create(<DomainStatistics lang={""} />);
+  await act(async () => {
+    testRenderer = create(<DomainStatistics lang={""} />);
   });
 });
 
@@ -50,7 +50,7 @@ describe("DomainStatistics", () => {
 
   it("useEffect hook was called", async () => {
     //Verify the mock function called
-    expect(mockGetProjectId).toBeCalled();
+    expect(mockGetProjectId).toHaveBeenCalled();
 
     //Verify ListItem for the SemanticDomainCount object is present
     const newSenDomCountList = testRenderer.root.findAllByType(ListItem);

@@ -11,22 +11,25 @@ import {
   flagWord,
   setVern,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
-import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
-import { useAppDispatch } from "types/hooks";
+import { StoreState } from "types";
+import { useAppDispatch, useAppSelector } from "types/hooks";
 import theme from "types/theme";
 import { TypographyWithFont } from "utilities/fontComponents";
 
 interface DropWordProps {
-  mergeState: MergeTreeState;
   wordId: string;
 }
 
 export default function DropWord(props: DropWordProps): ReactElement {
   const dispatch = useAppDispatch();
+  const data = useAppSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.data
+  );
+  const treeWord = useAppSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.tree.words[props.wordId]
+  );
   const { t } = useTranslation();
 
-  const treeWord = props.mergeState.tree.words[props.wordId];
-  const data = props.mergeState.data;
   let protectedWithOneChild = false;
   const verns: string[] = [];
   if (treeWord) {
@@ -43,7 +46,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
 
   // reset vern if not in vern list
   if (treeWord && !verns.includes(treeWord.vern)) {
-    dispatch(setVern(props.wordId, verns[0] || ""));
+    dispatch(setVern({ wordId: props.wordId, vern: verns[0] || "" }));
   }
 
   return (
@@ -69,7 +72,12 @@ export default function DropWord(props: DropWordProps): ReactElement {
                 variant="standard"
                 value={treeWord.vern}
                 onChange={(e) =>
-                  dispatch(setVern(props.wordId, e.target.value as string))
+                  dispatch(
+                    setVern({
+                      wordId: props.wordId,
+                      vern: e.target.value as string,
+                    })
+                  )
                 }
               >
                 {verns.map((vern) => (
@@ -85,16 +93,16 @@ export default function DropWord(props: DropWordProps): ReactElement {
               {protectedWithOneChild && (
                 <IconButtonWithTooltip
                   icon={<WarningOutlined />}
-                  textId={"mergeDups.helpText.protectedWord"}
-                  side={"top"}
-                  small
+                  side="top"
+                  size="small"
+                  textId="mergeDups.helpText.protectedWord"
                   buttonId={`word-${props.wordId}-protected`}
                 />
               )}
               <FlagButton
                 flag={treeWord.flag}
                 updateFlag={(newFlag: Flag) => {
-                  dispatch(flagWord(props.wordId, newFlag));
+                  dispatch(flagWord({ wordId: props.wordId, flag: newFlag }));
                 }}
                 buttonId={`word-${props.wordId}-flag`}
               />

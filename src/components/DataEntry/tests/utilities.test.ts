@@ -1,45 +1,63 @@
-import { Status, Word } from "api/models";
+import { Sense, Status, Word } from "api/models";
 import {
   filterWordsByDomain,
   filterWordsWithSenses,
-  sortDomainWordsByVern,
 } from "components/DataEntry/utilities";
 import { newSemanticDomain } from "types/semanticDomain";
 import { DomainWord, newSense, simpleWord } from "types/word";
 
 const mockWord = simpleWord("vern", "gloss");
+const domainSense = (accessibility: Status, domainId?: string): Sense => {
+  const semanticDomains = [newSemanticDomain(domainId)];
+  return { ...newSense(), accessibility, semanticDomains };
+};
 
 describe("DataEntryComponent", () => {
   describe("filterWordsWithSenses", () => {
     it("returns empty Word Array when given empty Word Array.", () => {
-      const words: Word[] = [];
-      const expectedWords: Word[] = [];
-      expect(filterWordsWithSenses(words)).toEqual(expectedWords);
+      expect(filterWordsWithSenses([])).toEqual([]);
     });
 
     it("removes words with no Active/Protected sense.", () => {
       const words: Word[] = [
-        {
-          ...mockWord,
-          senses: [{ ...newSense(), accessibility: Status.Deleted }],
-        },
-        {
-          ...mockWord,
-          senses: [{ ...newSense(), accessibility: Status.Duplicate }],
-        },
+        { ...mockWord, senses: [domainSense(Status.Deleted)] },
+        { ...mockWord, senses: [domainSense(Status.Duplicate)] },
       ];
       expect(filterWordsWithSenses(words)).toHaveLength(0);
     });
 
     it("keeps words with an Active/Protected sense.", () => {
       const words: Word[] = [
-        mockWord,
-        {
-          ...mockWord,
-          senses: [{ ...newSense(), accessibility: Status.Protected }],
-        },
+        { ...mockWord, senses: [domainSense(Status.Active)] },
+        { ...mockWord, senses: [domainSense(Status.Protected)] },
       ];
       expect(filterWordsWithSenses(words)).toHaveLength(2);
+    });
+
+    it("removes words with inactive sense even in specified domain.", () => {
+      const domId = "domain-id";
+      const words: Word[] = [
+        { ...mockWord, senses: [domainSense(Status.Deleted, domId)] },
+        { ...mockWord, senses: [domainSense(Status.Duplicate, domId)] },
+      ];
+      expect(filterWordsWithSenses(words, domId)).toHaveLength(0);
+    });
+
+    it("removes words with sense in wrong domain.", () => {
+      const words: Word[] = [
+        { ...mockWord, senses: [domainSense(Status.Active, "one wrong")] },
+        { ...mockWord, senses: [domainSense(Status.Protected, "other wrong")] },
+      ];
+      expect(filterWordsWithSenses(words, "right one")).toHaveLength(0);
+    });
+
+    it("keeps words with an Active/Protected sense in specified domain.", () => {
+      const domId = "domain-id";
+      const words: Word[] = [
+        { ...mockWord, senses: [domainSense(Status.Active, domId)] },
+        { ...mockWord, senses: [domainSense(Status.Protected, domId)] },
+      ];
+      expect(filterWordsWithSenses(words, domId)).toHaveLength(2);
     });
   });
 
@@ -81,20 +99,6 @@ describe("DataEntryComponent", () => {
       expect(
         filterWordsByDomain(unfilteredWords, mockDomains[1].id)
       ).toStrictEqual([new DomainWord(expectedWord, senseIndex)]);
-    });
-  });
-
-  describe("sortDomainWordByVern", () => {
-    it("sorts words alphabetically.", () => {
-      const words = [mockWord, mockWord, mockWord].map(
-        (w) => new DomainWord(w)
-      );
-      words[0].vernacular = "Always";
-      words[1].vernacular = "Be";
-      words[2].vernacular = "?character";
-
-      const expectedList: DomainWord[] = [words[2], words[0], words[1]];
-      expect(sortDomainWordsByVern([...words])).toStrictEqual(expectedList);
     });
   });
 });

@@ -70,13 +70,13 @@ export default function GlossWithSuggestions(
         }}
         renderInput={(params) => (
           <TextFieldWithFont
-            {...params}
+            {...(params as any)}
             analysis
             fullWidth
             inputRef={props.glossInput}
             label={props.isNew ? props.analysisLang.name : ""}
             lang={props.analysisLang.bcp47}
-            variant={props.isNew ? "outlined" : "standard"}
+            variant={(props.isNew ? "outlined" : "standard") as any}
           />
         )}
         renderOption={(liProps, option, { selected }) => (
@@ -95,6 +95,7 @@ export default function GlossWithSuggestions(
           }
         }}
       />
+
       <div style={{ height: 50 }} />
       <LookAhead dict={spellChecker.dictLoaded} />
     </>

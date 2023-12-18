@@ -3,7 +3,13 @@ import {
   HubConnectionBuilder,
   HubConnectionState,
 } from "@microsoft/signalr";
-import { Fragment, useCallback, useEffect, useState } from "react";
+import {
+  Fragment,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import { baseURL } from "backend";
 import { getUserId } from "backend/localStorage";
@@ -16,7 +22,7 @@ import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 
 /** A central hub for monitoring export status on SignalR */
-export default function SignalRHub() {
+export default function SignalRHub(): ReactElement {
   const exportState = useAppSelector(
     (state: StoreState) => state.exportProjectState
   );
@@ -28,7 +34,7 @@ export default function SignalRHub() {
   const finishDisconnect = useCallback((): void => {
     setConnection(undefined);
     setDisconnect(false);
-  }, [setConnection, setDisconnect]);
+  }, []);
 
   /** Act on the disconnect state to stop and delete the connection. */
   useEffect(() => {
@@ -51,7 +57,7 @@ export default function SignalRHub() {
       setReconnect(false);
       setConnection(newConnection);
     }
-  }, [disconnect, reconnect, setConnection, setReconnect]);
+  }, [disconnect, reconnect]);
 
   /** Any change in exportState should cause a disconnect.
    * Only ExportStatus.Exporting should open a new connection.
@@ -61,7 +67,7 @@ export default function SignalRHub() {
     if (exportState.status === ExportStatus.Exporting) {
       setReconnect(true);
     }
-  }, [exportState, setDisconnect, setReconnect]);
+  }, [exportState]);
 
   /** Once a connection is opened, start the relevant methods. */
   useEffect(() => {

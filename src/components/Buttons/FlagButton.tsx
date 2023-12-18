@@ -8,7 +8,7 @@ import { themeColors } from "types/theme";
 
 interface FlagButtonProps {
   flag: Flag;
-  buttonId: string;
+  buttonId?: string;
   updateFlag?: (flag: Flag) => void;
 }
 
@@ -20,7 +20,7 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
   useEffect(() => {
     setActive(props.flag.active);
     setText(props.flag.active ? props.flag.text : undefined);
-  }, [props.flag, setActive, setText]);
+  }, [props.flag]);
 
   function updateFlag(text: string): void {
     setActive(true);
@@ -52,11 +52,11 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
         }
         text={text}
         textId={active ? "flags.edit" : "flags.add"}
-        small
+        size="small"
         onClick={
           props.updateFlag ? () => setOpen(true) : active ? () => {} : undefined
         }
-        buttonId={props.buttonId}
+        buttonId={props.buttonId ?? "flag-button"}
         side="top"
       />
       {props.updateFlag && (

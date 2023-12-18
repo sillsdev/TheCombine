@@ -16,7 +16,7 @@ describe("DictionaryLoader", () => {
     it(" ets lang and gets keys", () => {
       const loader = new DictionaryLoader(bcp47);
       expect(loader.lang === bcp47);
-      expect(mockGetKeys).toBeCalledTimes(1);
+      expect(mockGetKeys).toHaveBeenCalledTimes(1);
       expect(mockGetKeys).toBeCalledWith(bcp47);
     });
   });
@@ -42,7 +42,10 @@ describe("DictionaryLoader", () => {
     const mockWord0 = "foo";
     const mockWord1 = "bar";
     const mockKey1 = mockWord1.charCodeAt(0).toString();
-    const mockDict = (_lang: Bcp47Code, key?: string) =>
+    const mockDict = (
+      _lang: Bcp47Code,
+      key?: string
+    ): Promise<string | undefined> =>
       Promise.resolve(
         key === mockKey1 ? mockWord1 : key ? undefined : `1\n${mockWord0}`
       );

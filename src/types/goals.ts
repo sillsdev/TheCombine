@@ -11,11 +11,13 @@ import {
   MergeStepData,
   MergesCompleted,
 } from "goals/MergeDuplicates/MergeDupsTypes";
+import { EntriesEdited } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { newUser } from "types/user";
 
 export type GoalData = CharInvData | MergeDupsData;
-export type GoalStep = CharInvStepData | MergeStepData | {};
-export type GoalChanges = CharInvChanges | MergesCompleted;
+// Record<string, never> is the recommended type for an empty object.
+export type GoalStep = CharInvStepData | MergeStepData | Record<string, never>;
+export type GoalChanges = CharInvChanges | EntriesEdited | MergesCompleted;
 
 export interface GoalProps {
   goal?: Goal;
@@ -67,7 +69,6 @@ export enum GoalStatus {
 export class Goal {
   guid: string;
   goalType: GoalType;
-  index: number;
   name: GoalName;
   user: User;
   steps: GoalStep[];
@@ -85,7 +86,6 @@ export class Goal {
   ) {
     this.guid = v4();
     this.goalType = type;
-    this.index = -1;
     this.name = name;
     this.user = newUser();
     this.steps = steps;

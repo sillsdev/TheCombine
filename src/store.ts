@@ -9,15 +9,11 @@ const persistConfig = { key: "root", storage };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-// To enable the immutability checks for the Redux Reducers,
-// set REACT_APP_IMMUTABLE_CHECK to 1 in .env.development.local
-// (in the project's root folder)
+// In development and test, immutability check enabled for the Redux reducers
 const immutableCheckConfig =
-  process.env.NODE_ENV === "development" &&
-  process.env.REACT_APP_IMMUTABLE_CHECK === "1"
-    ? { warnAfter: 1000 }
-    : false;
+  process.env.NODE_ENV !== "production" ? { warnAfter: 1000 } : false;
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
   return configureStore({
     reducer: persistedReducer,

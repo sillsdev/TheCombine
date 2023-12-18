@@ -1,7 +1,6 @@
 import {
   Dialog,
   DialogContent,
-  Divider,
   Grid,
   MenuList,
   Typography,
@@ -10,13 +9,14 @@ import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, Word } from "api/models";
+import { CloseButton } from "components/Buttons";
 import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
 import {
   DomainCell,
   GlossCell,
   PartOfSpeechCell,
-} from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents";
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+} from "goals/ReviewEntries/ReviewEntriesTable/CellComponents";
+import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";
 
 interface vernDialogProps {
   vernacularWords: Word[];
@@ -50,11 +50,11 @@ export default function VernDialog(props: vernDialogProps): ReactElement {
 
 interface VernListProps {
   vernacularWords: Word[];
-  closeDialog: (wordId: string) => void;
+  closeDialog: (wordId?: string) => void;
   analysisLang?: string;
 }
 
-export function VernList(props: VernListProps) {
+export function VernList(props: VernListProps): ReactElement {
   const { t } = useTranslation();
 
   const hasPartsOfSpeech = !!props.vernacularWords.find((w) =>
@@ -96,11 +96,7 @@ export function VernList(props: VernListProps) {
     );
   };
 
-  const menuItems: ReactElement[] = [];
-  for (const w of props.vernacularWords) {
-    menuItems.push(menuItem(w));
-    menuItems.push(<Divider key={`${w.id}-divider`} />);
-  }
+  const menuItems = props.vernacularWords.map(menuItem);
   menuItems.push(
     <StyledMenuItem key="new-entry" onClick={() => props.closeDialog("")}>
       {t("addWords.newEntryFor")}
@@ -110,7 +106,11 @@ export function VernList(props: VernListProps) {
 
   return (
     <>
+      {/* Cancel button */}
+      <CloseButton close={() => props.closeDialog()} />
+      {/* Header */}
       <Typography variant="h3">{t("addWords.selectEntry")}</Typography>
+      {/* Entry options */}
       <MenuList autoFocusItem>{menuItems}</MenuList>
     </>
   );

@@ -23,7 +23,6 @@ import {
   UserEdit,
   UserRole,
   Word,
-  WordsPerDayPerUserCount,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import router from "browserRouter";
@@ -102,19 +101,20 @@ const semanticDomainApi = new Api.SemanticDomainApi(
   BASE_PATH,
   axiosInstance
 );
+const statisticsApi = new Api.StatisticsApi(config, BASE_PATH, axiosInstance);
 const userApi = new Api.UserApi(config, BASE_PATH, axiosInstance);
 const userEditApi = new Api.UserEditApi(config, BASE_PATH, axiosInstance);
 const userRoleApi = new Api.UserRoleApi(config, BASE_PATH, axiosInstance);
 const wordApi = new Api.WordApi(config, BASE_PATH, axiosInstance);
-const statisticsApi = new Api.StatisticsApi(config, BASE_PATH, axiosInstance);
 
 // Backend controllers receiving a file via a "[FromForm] FileUpload fileUpload" param
 // have the internal fields expanded by openapi-generator as params in our Api.
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function fileUpload(file: File) {
   return { file, filePath: "", name: "" };
 }
 
-function defaultOptions() {
+function defaultOptions(): object {
   return { headers: authHeader() };
 }
 
@@ -459,11 +459,48 @@ export async function getSemanticDomainTreeNodeByName(
   return response.data ?? undefined;
 }
 
-export async function getAllSemanticDomainTreeNodes(
+/* StatisticsController.cs */
+
+export async function getSemanticDomainCounts(
+  projectId: string,
   lang?: string
-): Promise<SemanticDomainTreeNode | undefined> {
-  const response = await semanticDomainApi.getAllSemanticDomainTreeNodes(
-    { lang: lang ? lang : Bcp47Code.Default },
+): Promise<Array<SemanticDomainCount> | undefined> {
+  const response = await statisticsApi.getSemanticDomainCounts(
+    { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
+
+export async function getSemanticDomainUserCount(
+  projectId: string,
+  lang?: string
+): Promise<Array<SemanticDomainUserCount> | undefined> {
+  const response = await statisticsApi.getSemanticDomainUserCounts(
+    { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
+
+export async function getLineChartRootData(
+  projectId: string
+): Promise<ChartRootData | undefined> {
+  const response = await statisticsApi.getLineChartRootData(
+    { projectId: projectId },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
+
+export async function getProgressEstimationLineChartRoot(
+  projectId: string
+): Promise<ChartRootData | undefined> {
+  const response = await statisticsApi.getProgressEstimationLineChartRoot(
+    { projectId: projectId },
     defaultOptions()
   );
   // The backend response for this methods returns null rather than undefined.
@@ -553,14 +590,18 @@ export async function deleteUser(userId: string): Promise<string> {
   return (await userApi.deleteUser({ userId }, defaultOptions())).data;
 }
 
+export async function isSiteAdmin(): Promise<boolean> {
+  return (await userApi.isUserSiteAdmin(defaultOptions())).data;
+}
+
 /* UserEditController.cs */
 
-/** Returns index of added goal, or of updated goal
+/** Returns guid of added goal, or of updated goal
  * if goal with same guid already exists in the UserEdit */
 export async function addGoalToUserEdit(
   userEditId: string,
   goal: Goal
-): Promise<number> {
+): Promise<string> {
   const edit = convertGoalToEdit(goal);
   const resp = await userEditApi.updateUserEditGoal(
     { projectId: LocalStorage.getProjectId(), userEditId, edit },
@@ -572,13 +613,13 @@ export async function addGoalToUserEdit(
 /** Returns index of step within specified goal */
 export async function addStepToGoal(
   userEditId: string,
-  goalIndex: number,
+  editGuid: string,
   step: GoalStep,
   stepIndex?: number // If undefined, step will be added to end.
 ): Promise<number> {
   const projectId = LocalStorage.getProjectId();
   const stepString = JSON.stringify(step);
-  const userEditStepWrapper = { goalIndex, stepString, stepIndex };
+  const userEditStepWrapper = { editGuid, stepString, stepIndex };
   const resp = await userEditApi.updateUserEditStep(
     { projectId, userEditId, userEditStepWrapper },
     defaultOptions()
@@ -606,12 +647,6 @@ export async function getUserEditById(
   ).data;
 }
 
-/** Returns array with every UserEdit for the current project. */
-export async function getAllUserEdits(): Promise<UserEdit[]> {
-  const params = { projectId: LocalStorage.getProjectId() };
-  return (await userEditApi.getProjectUserEdits(params, defaultOptions())).data;
-}
-
 /* UserRoleController.cs */
 
 export async function getUserRoles(projectId?: string): Promise<UserRole[]> {
@@ -623,6 +658,11 @@ export async function getCurrentPermissions(): Promise<Permission[]> {
   const params = { projectId: LocalStorage.getProjectId() };
   return (await userRoleApi.getCurrentPermissions(params, defaultOptions()))
     .data;
+}
+
+export async function hasPermission(perm: Permission): Promise<boolean> {
+  const params = { body: perm, projectId: LocalStorage.getProjectId() };
+  return (await userRoleApi.hasPermission(params, defaultOptions())).data;
 }
 
 export async function addOrUpdateUserRole(
@@ -656,11 +696,6 @@ export async function deleteFrontierWord(wordId: string): Promise<string> {
   return (await wordApi.deleteFrontierWord(params, defaultOptions())).data;
 }
 
-export async function getAllWords(): Promise<Word[]> {
-  const projectId = LocalStorage.getProjectId();
-  return (await wordApi.getProjectWords({ projectId }, defaultOptions())).data;
-}
-
 export async function getDuplicateId(word: Word): Promise<string> {
   const params = { projectId: LocalStorage.getProjectId(), word };
   return (await wordApi.getDuplicateId(params, defaultOptions())).data;
@@ -681,17 +716,20 @@ export async function isFrontierNonempty(projectId?: string): Promise<boolean> {
   return (await wordApi.isFrontierNonempty(params, defaultOptions())).data;
 }
 
+export async function isInFrontier(
+  wordId: string,
+  projectId?: string
+): Promise<boolean> {
+  projectId = projectId || LocalStorage.getProjectId();
+  const params = { projectId, wordId };
+  return (await wordApi.isInFrontier(params, defaultOptions())).data;
+}
+
 export async function updateDuplicate(
   dupId: string,
-  userId: string,
   word: Word
 ): Promise<Word> {
-  const params = {
-    projectId: LocalStorage.getProjectId(),
-    dupId,
-    userId,
-    word,
-  };
+  const params = { projectId: LocalStorage.getProjectId(), dupId, word };
   const resp = await wordApi.updateDuplicate(params, defaultOptions());
   return await getWord(resp.data);
 }
@@ -702,63 +740,4 @@ export async function updateWord(word: Word): Promise<Word> {
     defaultOptions()
   );
   return { ...word, id: resp.data };
-}
-
-/* StatisticsController.cs */
-
-export async function getSemanticDomainCounts(
-  projectId: string,
-  lang?: string
-): Promise<Array<SemanticDomainCount> | undefined> {
-  const response = await statisticsApi.getSemanticDomainCounts(
-    { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
-    defaultOptions()
-  );
-  // The backend response for this methods returns null rather than undefined.
-  return response.data ?? undefined;
-}
-
-export async function getSemanticDomainUserCount(
-  projectId: string,
-  lang?: string
-): Promise<Array<SemanticDomainUserCount> | undefined> {
-  const response = await statisticsApi.getSemanticDomainUserCounts(
-    { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
-    defaultOptions()
-  );
-  // The backend response for this methods returns null rather than undefined.
-  return response.data ?? undefined;
-}
-
-export async function GetWordsPerDayPerUserCounts(
-  projectId: string
-): Promise<Array<WordsPerDayPerUserCount> | undefined> {
-  const response = await statisticsApi.getWordsPerDayPerUserCounts(
-    { projectId: projectId },
-    defaultOptions()
-  );
-  // The backend response for this methods returns null rather than undefined.
-  return response.data ?? undefined;
-}
-
-export async function getLineChartRootData(
-  projectId: string
-): Promise<ChartRootData | undefined> {
-  const response = await statisticsApi.getLineChartRootData(
-    { projectId: projectId },
-    defaultOptions()
-  );
-  // The backend response for this methods returns null rather than undefined.
-  return response.data ?? undefined;
-}
-
-export async function getProgressEstimationLineChartRoot(
-  projectId: string
-): Promise<ChartRootData | undefined> {
-  const response = await statisticsApi.getProgressEstimationLineChartRoot(
-    { projectId: projectId },
-    defaultOptions()
-  );
-  // The backend response for this methods returns null rather than undefined.
-  return response.data ?? undefined;
 }

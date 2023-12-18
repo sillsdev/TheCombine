@@ -2,7 +2,6 @@ import { DeleteForever, VpnKey } from "@mui/icons-material";
 import {
   Avatar,
   Button,
-  ButtonProps,
   Grid,
   Input,
   List,
@@ -49,7 +48,7 @@ export default function UserList(props: UserListProps): ReactElement {
 
   useEffect(() => {
     setSortedUsers([...filteredUsers].sort(compareUsers));
-  }, [compareUsers, filteredUsers, setFilteredUsers]);
+  }, [compareUsers, filteredUsers]);
 
   useEffect(() => {
     const newUserAvatar: Hash<string> = {};
@@ -59,7 +58,7 @@ export default function UserList(props: UserListProps): ReactElement {
       }
     });
     Promise.all(promises).then(() => setUserAvatar(newUserAvatar));
-  }, [props.allUsers, setUserAvatar]);
+  }, [props.allUsers]);
 
   useEffect(() => {
     setFilteredUsers(
@@ -69,7 +68,7 @@ export default function UserList(props: UserListProps): ReactElement {
     );
   }, [filterInput, props.allUsers]);
 
-  const userListButton = (user: User): ButtonProps => {
+  const userListButton = (user: User): ReactElement => {
     const disabled = user.isAdmin || user.id === getUserId();
     return (
       <Button

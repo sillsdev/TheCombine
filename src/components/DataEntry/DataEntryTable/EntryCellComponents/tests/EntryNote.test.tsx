@@ -1,5 +1,10 @@
 import { AddComment, Comment } from "@mui/icons-material";
-import renderer from "react-test-renderer";
+import {
+  ReactTestInstance,
+  ReactTestRenderer,
+  act,
+  create,
+} from "react-test-renderer";
 
 import "tests/reactI18nextMock";
 
@@ -7,12 +12,12 @@ import EntryNote from "components/DataEntry/DataEntryTable/EntryCellComponents/E
 
 const mockText = "Test text";
 
-let testMaster: renderer.ReactTestRenderer;
-let testHandle: renderer.ReactTestInstance;
+let testMaster: ReactTestRenderer;
+let testHandle: ReactTestInstance;
 
-function renderWithText(text: string) {
-  renderer.act(() => {
-    testMaster = renderer.create(
+async function renderWithText(text: string): Promise<void> {
+  await act(async () => {
+    testMaster = create(
       <EntryNote noteText={text} updateNote={jest.fn()} buttonId="" />
     );
   });
@@ -20,14 +25,14 @@ function renderWithText(text: string) {
 }
 
 describe("DeleteEntry", () => {
-  it("renders without note", () => {
-    renderWithText("");
+  it("renders without note", async () => {
+    await renderWithText("");
     expect(testHandle.findAllByType(AddComment).length).toBe(1);
     expect(testHandle.findAllByType(Comment).length).toBe(0);
   });
 
-  it("renders with note", () => {
-    renderWithText(mockText);
+  it("renders with note", async () => {
+    await renderWithText(mockText);
     expect(testHandle.findAllByType(AddComment).length).toBe(0);
     expect(testHandle.findAllByType(Comment).length).toBe(1);
   });

@@ -1,7 +1,6 @@
 import {
   Dialog,
   DialogContent,
-  Divider,
   Grid,
   MenuList,
   Typography,
@@ -10,12 +9,13 @@ import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, Sense, Word } from "api/models";
+import { CloseButton } from "components/Buttons";
 import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
 import {
   DomainCell,
   PartOfSpeechCell,
-} from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents";
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
+} from "goals/ReviewEntries/ReviewEntriesTable/CellComponents";
+import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { firstGlossText } from "utilities/wordUtilities";
 
 interface SenseDialogProps {
@@ -50,11 +50,11 @@ export default function SenseDialog(props: SenseDialogProps): ReactElement {
 
 interface SenseListProps {
   selectedWord: Word;
-  closeDialog: (gloss: string) => void;
+  closeDialog: (gloss?: string) => void;
   analysisLang: string;
 }
 
-export function SenseList(props: SenseListProps) {
+export function SenseList(props: SenseListProps): ReactElement {
   const { t } = useTranslation();
 
   const hasPartsOfSpeech = !!props.selectedWord.senses.find(
@@ -95,11 +95,7 @@ export function SenseList(props: SenseListProps) {
     );
   };
 
-  const menuItems: ReactElement[] = [];
-  for (const s of props.selectedWord.senses) {
-    menuItems.push(menuItem(s));
-    menuItems.push(<Divider key={`${s.guid}-divider`} />);
-  }
+  const menuItems = props.selectedWord.senses.map(menuItem);
   menuItems.push(
     <StyledMenuItem key="new-sense" onClick={() => props.closeDialog("")}>
       {t("addWords.newSenseFor")}
@@ -109,7 +105,11 @@ export function SenseList(props: SenseListProps) {
 
   return (
     <>
+      {/* Cancel button */}
+      <CloseButton close={() => props.closeDialog()} />
+      {/* Header */}
       <Typography variant="h3">{t("addWords.selectSense")}</Typography>
+      {/* Sense options */}
       <MenuList autoFocusItem>{menuItems}</MenuList>
     </>
   );

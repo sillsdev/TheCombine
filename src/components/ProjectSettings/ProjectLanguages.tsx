@@ -115,14 +115,14 @@ export default function ProjectLanguages(
         <IconButtonWithTooltip
           icon={<ArrowUpward fontSize="inherit" />}
           textId="projectSettings.language.makeDefaultAnalysisLanguage"
-          small
+          size="small"
           onClick={() => setNewAnalysisDefault(index)}
           buttonId={`analysis-language-${index}-bump`}
         />
         <IconButtonWithTooltip
           icon={<Delete fontSize="inherit" />}
           textId="projectSettings.language.deleteAnalysisLanguage"
-          small
+          size="small"
           onClick={() => deleteAnalysisWritingSystem(index)}
           buttonId={`analysis-language-${index}-delete`}
         />
@@ -282,8 +282,8 @@ export default function ProjectLanguages(
         ) : (
           <IconButtonWithTooltip
             icon={<BorderColor fontSize="inherit" />}
-            textId={"projectSettings.language.changeName"}
-            small
+            size="small"
+            textId="projectSettings.language.changeName"
             onClick={() => setChangeVernName(true)}
             buttonId={editVernacularNameButtonId}
           />

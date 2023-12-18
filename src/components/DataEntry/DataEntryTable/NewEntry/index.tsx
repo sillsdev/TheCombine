@@ -119,7 +119,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     resetNewEntry();
     setVernOpen(false);
     focus(FocusTarget.Vernacular);
-  }, [focus, resetNewEntry, setVernOpen]);
+  }, [focus, resetNewEntry]);
 
   /** Reset when tree opens, except for the first time it is open. */
   useEffect(() => {
@@ -294,6 +294,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
           pronunciationFiles={newAudioUrls}
           deleteAudio={delNewAudioUrl}
           uploadAudio={addNewAudioUrl}
+          onClick={() => focus(FocusTarget.Gloss)}
         />
       </Grid>
       <Grid item xs={1} style={gridItemStyle(1)}>

@@ -7,7 +7,7 @@ import {
   DialogTitle,
   Grid,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { LoadingButton } from "components/Buttons";
@@ -18,7 +18,7 @@ import CharacterSetHeader from "goals/CharacterInventory/CharInv/CharacterSetHea
 import {
   exit,
   loadCharInvData,
-  resetInState,
+  resetCharInv,
   setSelectedCharacter,
   uploadInventory,
 } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
@@ -38,7 +38,7 @@ const dialogTitleIdCancel = `${idPrefix}-cancel-dialog-title`;
 /**
  * Allows users to define a character inventory for a project
  */
-export default function CharacterInventory() {
+export default function CharacterInventory(): ReactElement {
   const dispatch = useAppDispatch();
 
   const selectedCharacter = useAppSelector(
@@ -54,7 +54,7 @@ export default function CharacterInventory() {
     dispatch(loadCharInvData());
 
     // Call when component unmounts.
-    () => dispatch(resetInState());
+    () => dispatch(resetCharInv());
   }, [dispatch]);
 
   const save = async (): Promise<void> => {

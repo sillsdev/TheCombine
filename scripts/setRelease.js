@@ -1,6 +1,5 @@
-// Create the config.js file in ./public to specify
-// the Runtime Configuration items.
-//
+// Create the release.js file in ./public/scripts/
+// to hold the current version of The Combine.
 
 const spawnSync = require("child_process").spawnSync;
 
