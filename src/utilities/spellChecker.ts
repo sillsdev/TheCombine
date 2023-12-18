@@ -97,6 +97,16 @@ export default class SpellChecker {
       suggestions = this.spell.suggest(`${final}..`);
     }
 
+    if (!suggestions.length) {
+      suggestions = this.dictLoaded
+        .filter(
+          (entry) =>
+            entry.length > final.length + 1 &&
+            entry.substring(0, final.length) === final
+        )
+        .sort();
+    }
+
     if (suggestions.length && allButFinal) {
       suggestions = suggestions.map((w) => allButFinal + w);
     }
