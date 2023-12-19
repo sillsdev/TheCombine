@@ -106,7 +106,7 @@ export default class SpellChecker {
       suggestions = this.dictLoaded[final[0]]
         .filter(
           (entry) =>
-            entry.length > final.length &&
+            entry.length >= final.length &&
             entry.substring(0, final.length) === final
         )
         .sort();
