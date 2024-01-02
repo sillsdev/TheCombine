@@ -35,20 +35,20 @@ def main() -> None:
     codec_opts: CodecOptions[Dict[str, Any]] = CodecOptions(
         uuid_representation=UuidRepresentation.PYTHON_LEGACY
     )
-    
+
     query: Dict[str, Any] = {"audio": {"$ne": []}}
     for collection_name in ["FrontierCollection", "WordsCollection"]:
         updates: Dict[ObjectId, Any] = {}
         curr_collection = db.get_collection(collection_name, codec_options=codec_opts)
         total_docs = curr_collection.count_documents({})
         for word in curr_collection.find(query):
-            newAudio = []
-            for fileName in word["audio"]:
-                if type(fileName) == "string":
-                    newAudio.append({"speakerId": "", "protected": False, "fileName": fileName})
+            new_audio = []
+            for aud in word["audio"]:
+                if isinstance(aud, str):
+                    new_audio.append({"speakerId": "", "protected": False, "fileName": aud})
                 else:
-                    newAudio.append(fileName)
-            word["audio"] = newAudio
+                    new_audio.append(aud)
+            word["audio"] = new_audio
             updates[ObjectId(word["_id"])] = word
         logging.info(f"Updating {len(updates)}/{total_docs} documents in {collection_name}.")
         for obj_id, update in updates.items():
