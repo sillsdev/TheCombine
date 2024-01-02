@@ -18,7 +18,7 @@ cryptography==41.0.7
     # via pyopenssl
 dnspython==2.4.2
     # via pymongo
-google-auth==2.24.0
+google-auth==2.25.2
     # via kubernetes
 humanfriendly==10.0
     # via -r requirements.in
@@ -62,5 +62,5 @@ urllib3==1.26.18
     # via
     #   kubernetes
     #   requests
-websocket-client==1.6.4
+websocket-client==1.7.0
     # via kubernetes
