@@ -258,14 +258,17 @@ namespace BackendFramework.Models
     {
         /// <summary> The audio file name. </summary>
         [Required]
+        [BsonElement("fileName")]
         public string FileName { get; set; }
 
         /// <summary> The speaker id. </summary>
         [Required]
+        [BsonElement("speakerId")]
         public string SpeakerId { get; set; }
 
         /// <summary> For imported audio, to prevent modification or deletion (unless the word is deleted). </summary>
         [Required]
+        [BsonElement("protected")]
         public bool Protected { get; set; }
 
         public Pronunciation()
