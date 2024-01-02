@@ -70,6 +70,14 @@ namespace BackendFramework.Controllers
             return Ok(await _userRoleRepo.DeleteAllUserRoles(projectId));
         }
 
+        /// <summary> Returns whether current user has specified permission in current project </summary>
+        [HttpPost("permission", Name = "HasPermission")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        public async Task<IActionResult> HasPermission(string projectId, [FromBody, BindRequired] Permission perm)
+        {
+            return Ok(await _permissionService.HasProjectPermission(HttpContext, perm, projectId));
+        }
+
         /// <summary> Returns <see cref="UserRole"/> with specified id </summary>
         [HttpGet("current", Name = "GetCurrentPermissions")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Permission>))]

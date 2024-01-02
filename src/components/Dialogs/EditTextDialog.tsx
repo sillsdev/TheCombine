@@ -9,7 +9,7 @@ import {
   InputAdornment,
   TextField,
 } from "@mui/material";
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
@@ -32,8 +32,12 @@ interface EditTextDialogProps {
 export default function EditTextDialog(
   props: EditTextDialogProps
 ): ReactElement {
-  const [text, setText] = useState<string>(props.text);
+  const [text, setText] = useState("");
   const { t } = useTranslation();
+
+  useEffect(() => {
+    setText(props.text);
+  }, [props.text]);
 
   async function onConfirm(): Promise<void> {
     props.close();
@@ -52,7 +56,7 @@ export default function EditTextDialog(
     reason: "backdropClick" | "escapeKeyDown"
   ): void {
     if (reason === "escapeKeyDown") {
-      props.close();
+      onCancel();
     }
   }
 

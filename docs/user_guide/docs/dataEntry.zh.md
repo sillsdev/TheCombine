@@ -43,13 +43,13 @@ The Combine 有一个可选功能，便于输入项目中已经存在的词条�
 菜单，而菜单里列出项目中现存完全相同或类似的土语词条。 如果用户看到正在键入的单词出现在该项目中，可以点击 列出的词条，而
 不必键入该单词的其余部分。 当功能关闭后，词条必须完整地输入；不会推荐任何现有的词条。
 
-![含重复土语形式的新词条](../images/data-entry-dup-vern.png){.center}
+![含重复土语形式的新词条](../images/data-entry-dup-vern.zh.png){.center}
 
 无论您键入的词条是与项目中的现有词条一样，还是选择 The Combine 提供的建议，都会弹出一个提供选项的方框。 (如果自动完成设
 置处于关闭状态，或者输入的土语词条在项目中不存在，则此方框不会弹出)。 在弹出的方框中，用户可以看到所有类似的词条，然后可
 以选择更新其中一个词条或创建一个新词条。
 
-![新词条重复土语的词条](../images/data-entry-dup-vern-select-entry.png){.center}
+![新词条重复土语的词条](../images/data-entry-dup-vern-select-entry.zh.png){.center}
 
 如果用户选择创建新词条，弹出的方框就会消失，这时就可以键入新词条的注释。
 
@@ -59,4 +59,4 @@ The Combine 有一个可选功能，便于输入项目中已经存在的词条�
 
 如果用户选择更新已有的其中一个词条，屏幕就会显示另一个方框 此时用户可选择更新词条的词义，或者将新的词义添加到该词条。
 
-![新词条重复土语的词义。](../images/data-entry-dup-vern-select-sense.png){.center}
+![新词条重复土语的词义。](../images/data-entry-dup-vern-select-sense.zh.png){.center}

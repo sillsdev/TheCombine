@@ -1,40 +1,38 @@
-import {
-  defaultState,
-  ReviewEntriesAction,
-  ReviewEntriesActionTypes,
-  ReviewEntriesState,
-} from "goals/ReviewEntries/Redux/ReviewEntriesReduxTypes";
-import { StoreAction, StoreActionTypes } from "rootActions";
+import { createSlice } from "@reduxjs/toolkit";
 
-export const reviewEntriesReducer = (
-  state: ReviewEntriesState = defaultState, //createStore() calls each reducer with undefined state
-  action: ReviewEntriesAction | StoreAction
-): ReviewEntriesState => {
-  switch (action.type) {
-    case ReviewEntriesActionTypes.SortBy:
-      // Change which column is being sorted by
-      return { ...state, sortBy: action.sortBy };
+import { defaultState } from "goals/ReviewEntries/Redux/ReviewEntriesReduxTypes";
+import { StoreActionTypes } from "rootActions";
 
-    case ReviewEntriesActionTypes.UpdateAllWords:
-      // Update the local words
-      return { ...state, words: action.words };
+const reviewEntriesSlice = createSlice({
+  name: "reviewEntriesState",
+  initialState: defaultState,
+  reducers: {
+    deleteWordAction: (state, action) => {
+      state.words = state.words.filter((w) => w.id !== action.payload);
+    },
+    resetReviewEntriesAction: () => defaultState,
+    setAllWordsAction: (state, action) => {
+      state.words = action.payload;
+    },
+    setSortByAction: (state, action) => {
+      state.sortBy = action.payload;
+    },
+    updateWordAction: (state, action) => {
+      state.words = state.words.map((w) =>
+        w.id === action.payload.oldId ? action.payload.updatedWord : w
+      );
+    },
+  },
+  extraReducers: (builder) =>
+    builder.addCase(StoreActionTypes.RESET, () => defaultState),
+});
 
-    case ReviewEntriesActionTypes.UpdateWord:
-      // Update the word of specified id
-      return {
-        ...state,
-        words: state.words.map((w) =>
-          w.id === action.oldId ? { ...action.updatedWord } : w
-        ),
-      };
+export const {
+  deleteWordAction,
+  resetReviewEntriesAction,
+  setAllWordsAction,
+  setSortByAction,
+  updateWordAction,
+} = reviewEntriesSlice.actions;
 
-    case ReviewEntriesActionTypes.ClearReviewEntriesState:
-      return defaultState;
-
-    case StoreActionTypes.RESET:
-      return defaultState;
-
-    default:
-      return state;
-  }
-};
+export default reviewEntriesSlice.reducer;

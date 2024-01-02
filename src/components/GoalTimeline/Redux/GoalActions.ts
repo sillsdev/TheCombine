@@ -74,10 +74,10 @@ export function asyncAddGoal(goal: Goal) {
       dispatch(setCurrentGoal(goal));
 
       // Check if this is a new goal.
-      if (goal.index === -1) {
-        const newIndex = await Backend.addGoalToUserEdit(userEditId, goal);
+      if (goal.status !== GoalStatus.Completed) {
+        await Backend.addGoalToUserEdit(userEditId, goal);
         // Load the new goal, but don't await, to allow a loading screen.
-        dispatch(asyncLoadNewGoal({ ...goal, index: newIndex }, userEditId));
+        dispatch(asyncLoadNewGoal(goal, userEditId));
       }
 
       // Serve goal.
@@ -132,9 +132,7 @@ export function asyncLoadExistingUserEdits(
 ) {
   return async (dispatch: StoreStateDispatch) => {
     const userEdit = await Backend.getUserEditById(projectId, userEditId);
-    const history = userEdit.edits.map((e, index) => {
-      return convertEditToGoal(e, index);
-    });
+    const history = userEdit.edits.map(convertEditToGoal);
     dispatch(loadUserEdits(history));
   };
 }
@@ -226,6 +224,6 @@ async function saveCurrentStep(goal: Goal): Promise<void> {
   const userEditId = getUserEditId();
   if (userEditId) {
     const step = goal.steps[goal.currentStep];
-    await Backend.addStepToGoal(userEditId, goal.index, step, goal.currentStep);
+    await Backend.addStepToGoal(userEditId, goal.guid, step, goal.currentStep);
   }
 }

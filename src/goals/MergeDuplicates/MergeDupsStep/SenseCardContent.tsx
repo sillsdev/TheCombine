@@ -50,9 +50,9 @@ export default function SenseCardContent(
         {protectedWarning && (
           <IconButtonWithTooltip
             icon={<WarningOutlined />}
-            textId={"mergeDups.helpText.protectedSense"}
-            side={"top"}
-            small
+            side="top"
+            size="small"
+            textId="mergeDups.helpText.protectedSense"
             buttonId={`sense-${props.senses[0].guid}-protected`}
           />
         )}
