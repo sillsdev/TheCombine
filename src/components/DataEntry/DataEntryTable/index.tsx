@@ -178,6 +178,7 @@ interface NewEntryState {
   newNote: string;
   newVern: string;
   selectedDup?: Word;
+  selectedSenseGuid?: string;
   suggestedVerns: string[];
   suggestedDups: Word[];
 }
@@ -188,6 +189,7 @@ const defaultNewEntryState = (): NewEntryState => ({
   newNote: "",
   newVern: "",
   selectedDup: undefined,
+  selectedSenseGuid: undefined,
   suggestedDups: [],
   suggestedVerns: [],
 });
@@ -406,14 +408,42 @@ export default function DataEntryTable(
 
   /** Set or clear the selected vern-duplicate word. */
   const setSelectedDup = (id?: string): void => {
-    setState((prev) => ({
-      ...prev,
-      selectedDup: id
+    setState((prev) => {
+      const selectedDup = id
         ? prev.suggestedDups.find((w) => w.id === id)
         : id === ""
           ? newWord(prev.newVern)
-          : undefined,
-    }));
+          : undefined;
+
+      // If selected duplicate has one empty sense, automatically select it
+      const soloSense =
+        selectedDup?.senses.length === 1 ? selectedDup.senses[0] : undefined;
+      const emptySense =
+        soloSense?.definitions.find((d) => d.text) ||
+        soloSense?.glosses.find((g) => g.def)
+          ? undefined
+          : soloSense;
+
+      return {
+        ...prev,
+        selectedDup,
+        selectedSense: emptySense,
+      };
+    });
+  };
+
+  /** Set or clear the selected duplicate word's sense. */
+  const setSelectedSense = (guid?: string): void => {
+    setState((prev) => {
+      const selectedSense = guid
+        ? prev.selectedDup?.senses.find((s) => s.guid === guid)
+        : undefined;
+      return {
+        ...prev,
+        newGloss: selectedSense ? firstGlossText(selectedSense) : "",
+        selectedSenseGuid: guid,
+      };
+    });
   };
 
   /** Reset things specific to the current data entry session in the current semantic domain. */
@@ -928,7 +958,9 @@ export default function DataEntryTable(
             vernInput={newVernInput}
             // Parent handles vern suggestion state of child:
             selectedDup={state.selectedDup}
+            selectedSenseGuid={state.selectedSenseGuid}
             setSelectedDup={setSelectedDup}
+            setSelectedSense={setSelectedSense}
             suggestedDups={state.suggestedDups}
             suggestedVerns={state.suggestedVerns}
           />

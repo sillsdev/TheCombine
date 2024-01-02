@@ -57,7 +57,9 @@ interface NewEntryProps {
   vernInput: RefObject<HTMLInputElement>;
   // Parent component handles vern suggestion state:
   selectedDup?: Word;
+  selectedSenseGuid?: string;
   setSelectedDup: (id?: string) => void;
+  setSelectedSense: (guid?: string) => void;
   suggestedVerns: string[];
   suggestedDups: Word[];
 }
@@ -85,7 +87,9 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     vernInput,
     // Parent component handles vern suggestion state:
     selectedDup,
+    selectedSenseGuid,
     setSelectedDup,
+    setSelectedSense,
     suggestedVerns,
     suggestedDups,
   } = props;
@@ -132,6 +136,11 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
       setWasTreeClosed(true);
     }
   }, [isTreeOpen, resetState, wasTreeClosed]);
+
+  /** Update whether the Sense dialog should be open. */
+  useEffect(() => {
+    setSenseOpen(!!selectedDup?.id && !selectedSenseGuid);
+  }, [selectedDup, selectedSenseGuid]);
 
   /** When the vern/sense dialogs are closed, focus needs to return to text fields.
    * The following sets a flag (shouldFocus) to be triggered by conditionalFocus(),
@@ -208,17 +217,16 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     setVernOpen(false);
   };
 
-  const handleCloseSenseDialog = (gloss?: string): void => {
-    if (gloss) {
-      setNewGloss(gloss);
-    } else if (gloss === undefined) {
-      // If gloss is undefined, the user exited the dialog without a selection.
+  const handleCloseSenseDialog = (guid?: string): void => {
+    if (guid === undefined) {
+      // If undefined, the user exited the dialog without a selection.
       setSelectedDup();
       setVernOpen(true);
+    } else {
+      // Set the selected dup sense to the one with the specified guid;
+      // an empty string indicates new sense for the selectedDup.
+      setSelectedSense(guid);
     }
-    // else: an empty string indicates new sense for the selectedWord.
-
-    setSenseOpen(false);
   };
 
   return (
