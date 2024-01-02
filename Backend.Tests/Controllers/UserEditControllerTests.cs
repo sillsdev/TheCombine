@@ -217,15 +217,13 @@ namespace Backend.Tests.Controllers
                 await _userEditRepo.Create(RandomUserEdit());
             }
             var origUserEdit = await _userEditRepo.Create(RandomUserEdit());
+            var firstEditGuid = origUserEdit.Edits.First().Guid;
 
             // Generate correct result for comparison.
-            var modUserEdit = origUserEdit.Clone();
             const string stringStep = "This is another step added.";
-            const int modGoalIndex = 0;
-            modUserEdit.Edits[modGoalIndex].StepData.Add(stringStep);
 
             // Create and put wrapper object.
-            var stepWrapperObj = new UserEditStepWrapper(modGoalIndex, stringStep);
+            var stepWrapperObj = new UserEditStepWrapper(firstEditGuid, stringStep);
             await _userEditController.UpdateUserEditStep(_projId, origUserEdit.Id, stepWrapperObj);
 
             // Step count should have increased by 1.
@@ -233,15 +231,14 @@ namespace Backend.Tests.Controllers
 
             var userEdit = await _userEditRepo.GetUserEdit(_projId, origUserEdit.Id);
             Assert.That(userEdit, Is.Not.Null);
-            Assert.That(userEdit!.Edits[modGoalIndex].StepData, Does.Contain(stringStep));
+            Assert.That(userEdit!.Edits.First().StepData, Does.Contain(stringStep));
 
             // Now update a step within the goal.
             const string modStringStep = "This is a replacement step.";
             const int modStepIndex = 1;
-            modUserEdit.Edits[modGoalIndex].StepData[modStepIndex] = modStringStep;
 
             // Create and put wrapper object.
-            stepWrapperObj = new UserEditStepWrapper(modGoalIndex, modStringStep, modStepIndex);
+            stepWrapperObj = new UserEditStepWrapper(firstEditGuid, modStringStep, modStepIndex);
             await _userEditController.UpdateUserEditStep(_projId, origUserEdit.Id, stepWrapperObj);
 
             // Step count should not have further increased.
@@ -249,7 +246,7 @@ namespace Backend.Tests.Controllers
 
             userEdit = await _userEditRepo.GetUserEdit(_projId, origUserEdit.Id);
             Assert.That(userEdit, Is.Not.Null);
-            Assert.That(userEdit!.Edits[modGoalIndex].StepData, Does.Contain(modStringStep));
+            Assert.That(userEdit!.Edits.First().StepData, Does.Contain(modStringStep));
         }
 
         [Test]
@@ -257,7 +254,7 @@ namespace Backend.Tests.Controllers
         {
             _userEditController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var userEdit = await _userEditRepo.Create(RandomUserEdit());
-            var stepWrapper = new UserEditStepWrapper(0, "A new step");
+            var stepWrapper = new UserEditStepWrapper(userEdit.Edits.First().Guid, "A new step");
             var result = await _userEditController.UpdateUserEditStep(_projId, userEdit.Id, stepWrapper);
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
@@ -265,13 +262,18 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task TestUpdateUserEditStepMissingIds()
         {
-            var stepWrapper = new UserEditStepWrapper(0, "A new step");
 
             var userEdit = await _userEditRepo.Create(RandomUserEdit());
+            var stepWrapper = new UserEditStepWrapper(userEdit.Edits.First().Guid, "step");
+
             var noProjResult = await _userEditController.UpdateUserEditStep(MissingId, userEdit.Id, stepWrapper);
             Assert.That(noProjResult, Is.InstanceOf<NotFoundObjectResult>());
 
-            var noEditResult = await _userEditController.UpdateUserEditStep(_projId, MissingId, stepWrapper);
+            var noUserEditResult = await _userEditController.UpdateUserEditStep(_projId, MissingId, stepWrapper);
+            Assert.That(noUserEditResult, Is.InstanceOf<NotFoundObjectResult>());
+
+            var diffGuidWrapper = new UserEditStepWrapper(Guid.NewGuid(), "step");
+            var noEditResult = await _userEditController.UpdateUserEditStep(_projId, userEdit.Id, diffGuidWrapper);
             Assert.That(noEditResult, Is.InstanceOf<NotFoundObjectResult>());
         }
 

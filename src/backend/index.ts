@@ -590,14 +590,18 @@ export async function deleteUser(userId: string): Promise<string> {
   return (await userApi.deleteUser({ userId }, defaultOptions())).data;
 }
 
+export async function isSiteAdmin(): Promise<boolean> {
+  return (await userApi.isUserSiteAdmin(defaultOptions())).data;
+}
+
 /* UserEditController.cs */
 
-/** Returns index of added goal, or of updated goal
+/** Returns guid of added goal, or of updated goal
  * if goal with same guid already exists in the UserEdit */
 export async function addGoalToUserEdit(
   userEditId: string,
   goal: Goal
-): Promise<number> {
+): Promise<string> {
   const edit = convertGoalToEdit(goal);
   const resp = await userEditApi.updateUserEditGoal(
     { projectId: LocalStorage.getProjectId(), userEditId, edit },
@@ -609,13 +613,13 @@ export async function addGoalToUserEdit(
 /** Returns index of step within specified goal */
 export async function addStepToGoal(
   userEditId: string,
-  goalIndex: number,
+  editGuid: string,
   step: GoalStep,
   stepIndex?: number // If undefined, step will be added to end.
 ): Promise<number> {
   const projectId = LocalStorage.getProjectId();
   const stepString = JSON.stringify(step);
-  const userEditStepWrapper = { goalIndex, stepString, stepIndex };
+  const userEditStepWrapper = { editGuid, stepString, stepIndex };
   const resp = await userEditApi.updateUserEditStep(
     { projectId, userEditId, userEditStepWrapper },
     defaultOptions()
@@ -654,6 +658,11 @@ export async function getCurrentPermissions(): Promise<Permission[]> {
   const params = { projectId: LocalStorage.getProjectId() };
   return (await userRoleApi.getCurrentPermissions(params, defaultOptions()))
     .data;
+}
+
+export async function hasPermission(perm: Permission): Promise<boolean> {
+  const params = { body: perm, projectId: LocalStorage.getProjectId() };
+  return (await userRoleApi.hasPermission(params, defaultOptions())).data;
 }
 
 export async function addOrUpdateUserRole(

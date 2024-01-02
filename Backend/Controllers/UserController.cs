@@ -234,6 +234,14 @@ namespace BackendFramework.Controllers
             return NotFound(userId);
         }
 
+        /// <summary> Checks if current user is a site administrator. </summary>
+        [HttpGet("issiteadmin", Name = "IsUserSiteAdmin")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        public async Task<IActionResult> IsUserSiteAdmin()
+        {
+            return Ok(await _permissionService.IsSiteAdmin(HttpContext));
+        }
+
         /// <remarks>
         /// This is used in a [FromBody] serializer, so its attributes cannot be set to readonly.
         /// </remarks>

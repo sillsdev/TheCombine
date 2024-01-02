@@ -2,7 +2,7 @@
 
 网站管理员在用户菜单中还有一个选项：“网站设置”。
 
-![用户菜单 - 管理](../images/userMenuAdmin.png){.center}
+![用户菜单 - 管理](../images/userMenuAdmin.zh.png){.center}
 
 ## 项目管理
 

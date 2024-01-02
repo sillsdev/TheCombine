@@ -7,12 +7,12 @@ import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardConte
 import {
   MergeTreeReference,
   MergeTreeSense,
-  Sidebar,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
+import { StoreState } from "types";
+import { useAppSelector } from "types/hooks";
 import theme from "types/theme";
 
 interface SidebarDragSenseProps {
-  sidebar: Sidebar;
   sense: MergeTreeSense;
   index: number;
 }
@@ -20,16 +20,17 @@ interface SidebarDragSenseProps {
 export default function SidebarDragSense(
   props: SidebarDragSenseProps
 ): ReactElement {
-  const ref: MergeTreeReference = {
-    wordId: props.sidebar.wordId,
-    mergeSenseId: props.sidebar.mergeSenseId,
-    order: props.index,
-  };
+  const draggableId = useAppSelector((state: StoreState) => {
+    const { mergeSenseId, wordId } = state.mergeDuplicateGoal.tree.sidebar;
+    const order = props.index;
+    const ref: MergeTreeReference = { wordId, mergeSenseId, order };
+    return JSON.stringify(ref);
+  });
 
   return (
     <Draggable
       key={props.sense.guid}
-      draggableId={JSON.stringify(ref)}
+      draggableId={draggableId}
       index={props.index}
       isDragDisabled={props.sense.protected}
     >

@@ -449,6 +449,7 @@ const columns: Column<ReviewEntriesWord>[] = [
 
   // Delete Entry column
   {
+    id: ColumnId.Delete,
     title: ColumnTitle.Delete,
     filtering: false,
     sorting: false,

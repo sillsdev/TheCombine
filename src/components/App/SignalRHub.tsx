@@ -34,7 +34,7 @@ export default function SignalRHub(): ReactElement {
   const finishDisconnect = useCallback((): void => {
     setConnection(undefined);
     setDisconnect(false);
-  }, [setConnection, setDisconnect]);
+  }, []);
 
   /** Act on the disconnect state to stop and delete the connection. */
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function SignalRHub(): ReactElement {
       setReconnect(false);
       setConnection(newConnection);
     }
-  }, [disconnect, reconnect, setConnection, setReconnect]);
+  }, [disconnect, reconnect]);
 
   /** Any change in exportState should cause a disconnect.
    * Only ExportStatus.Exporting should open a new connection.
@@ -67,7 +67,7 @@ export default function SignalRHub(): ReactElement {
     if (exportState.status === ExportStatus.Exporting) {
       setReconnect(true);
     }
-  }, [exportState, setDisconnect, setReconnect]);
+  }, [exportState]);
 
   /** Once a connection is opened, start the relevant methods. */
   useEffect(() => {
