@@ -44,7 +44,7 @@ interface NewEntryProps {
   // Parent component handles new entry state:
   addNewEntry: () => Promise<void>;
   resetNewEntry: () => void;
-  updateWordWithNewGloss: (wordId: string) => Promise<void>;
+  updateWordWithNewGloss: () => Promise<void>;
   newAudioUrls: string[];
   addNewAudioUrl: (file: File) => void;
   delNewAudioUrl: (url: string) => void;
@@ -139,7 +139,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
 
   /** Update whether the Sense dialog should be open. */
   useEffect(() => {
-    setSenseOpen(!!selectedDup?.id && !selectedSenseGuid);
+    setSenseOpen(!!selectedDup?.id && selectedSenseGuid === undefined);
   }, [selectedDup, selectedSenseGuid]);
 
   /** When the vern/sense dialogs are closed, focus needs to return to text fields.
@@ -178,7 +178,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
         setVernOpen(true);
       } else if (selectedDup.id) {
         // Case 1b: User has selected an entry to modify
-        await updateWordWithNewGloss(selectedDup.id);
+        await updateWordWithNewGloss();
         resetState();
       } else {
         // Case 1c: User has selected new entry

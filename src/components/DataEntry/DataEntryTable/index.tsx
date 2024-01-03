@@ -34,7 +34,7 @@ import { StoreState } from "types";
 import { Hash } from "types/hash";
 import { useAppSelector } from "types/hooks";
 import theme from "types/theme";
-import { newNote, newSense, newWord, simpleWord } from "types/word";
+import { newGloss, newNote, newSense, newWord, simpleWord } from "types/word";
 import { defaultWritingSystem } from "types/writingSystem";
 import SpellCheckerContext from "utilities/spellCheckerContext";
 import { LevenshteinDistance } from "utilities/utilities";
@@ -695,17 +695,12 @@ export default function DataEntryTable(
 
   /** Reset the entry table. If there is an un-submitted word then submit it. */
   const handleExit = async (): Promise<void> => {
-    // Check if there is a new word, but user exited without pressing enter.
+    // Check if there is a dup selected, but user exited without pressing enter.
     if (state.newVern) {
-      const oldWord = state.allWords.find(
-        (w) => w.vernacular === state.newVern
-      );
-      if (!oldWord) {
-        // Existing word not found, so create a new word.
-        await buildAndAddNewEntry();
+      if (state.selectedDup?.id) {
+        await updateWordWithNewEntry();
       } else {
-        // Found an existing word, so add a sense to it.
-        await updateWordWithNewEntry(oldWord.id);
+        await buildAndAddNewEntry();
       }
     }
     resetEverything();
@@ -731,19 +726,45 @@ export default function DataEntryTable(
     await addNewWord(buildNewEntryNoAudio(), state.newAudioUrls);
   };
 
-  /**  Checks if sense already exists with this gloss and semantic domain. */
-  const updateWordWithNewEntry = async (wordId: string): Promise<void> => {
-    const oldWord = state.allWords.find((w: Word) => w.id === wordId);
-    if (!oldWord) {
+  /** Checks if sense already exists with this gloss and semantic domain. */
+  const updateWordWithNewEntry = async (): Promise<void> => {
+    const oldWord = state.selectedDup;
+    if (!oldWord || !oldWord.id) {
       throw new Error("You are trying to update a nonexistent word");
     }
+
     const semDom = makeSemDomCurrent(props.semanticDomain);
+
+    if (state.selectedSenseGuid) {
+      const oldSense = oldWord.senses.find(
+        (s) => s.guid === state.selectedSenseGuid
+      );
+      if (!oldSense) {
+        throw new Error("You are trying to update a nonexistent sense");
+      }
+
+      // Only update the selected sense if the old gloss is empty or matches the new gloss.
+      if (!oldSense.glosses.length) {
+        oldSense.glosses.push(newGloss());
+      }
+      if (!oldSense.glosses[0].def) {
+        oldSense.glosses[0] = newGloss(state.newGloss, analysisLang.bcp47);
+      }
+      if (oldSense.glosses[0].def === state.newGloss) {
+        await updateWordBackAndFront(
+          addSemanticDomainToSense(semDom, oldWord, state.selectedSenseGuid),
+          state.selectedSenseGuid,
+          state.newAudioUrls
+        );
+        return;
+      }
+    }
 
     // If this gloss matches a sense on the word, update that sense.
     for (const sense of oldWord.senses) {
       if (sense.glosses?.length && sense.glosses[0].def === state.newGloss) {
         if (sense.semanticDomains.find((d) => d.id === semDom.id)) {
-          // User is trying to add a sense that already exists
+          // User is trying to add a sense that already exists.
           enqueueSnackbar(
             t("addWords.senseInWord", {
               val1: oldWord.vernacular,
@@ -751,7 +772,7 @@ export default function DataEntryTable(
             })
           );
           if (state.newAudioUrls.length) {
-            await addAudiosToBackend(wordId, state.newAudioUrls);
+            await addAudiosToBackend(oldWord.id, state.newAudioUrls);
           }
           return;
         } else {
