@@ -116,9 +116,9 @@ namespace BackendFramework.Models
         /// If they are all empty, also require other sense is empty and includes same Semantic Domains.
         /// TODO: Consider if GrammaticalInfo should be a factor.
         /// </summary>
-        public bool IsContainedIn(Sense other)
+        public bool IsContainedIn(Sense other, bool skipSemDomCheck = false)
         {
-            if (IsEmpty())
+            if (!skipSemDomCheck && IsEmpty())
             {
                 var semDomIds = SemanticDomains.Select(dom => dom.Id);
                 var otherSemDomIds = other.SemanticDomains.Select(dom => dom.Id);
@@ -126,8 +126,40 @@ namespace BackendFramework.Models
             }
 
             return
-                Glosses.All(other.Glosses.Contains) &&
-                Definitions.All(other.Definitions.Contains);
+                Glosses.All(g => string.IsNullOrWhiteSpace(g.Def) || other.Glosses.Contains(g)) &&
+                Definitions.All(d => string.IsNullOrWhiteSpace(d.Text) || other.Definitions.Contains(d));
+        }
+
+        /// <summary>
+        /// Update content from other containing sense.
+        /// Warning! The following of the other Sense are ignored: Accessibility, GrammaticalInfo.
+        /// </summary>
+        /// <returns> A bool: true if operation succeeded and word updated. </returns>
+        public bool ExtendSense(Sense other, string userId)
+        {
+            if (!IsContainedIn(other, true))
+            {
+                return false;
+            }
+            Definitions = other.Definitions;
+            Glosses = other.Glosses;
+            AddNewDomains(other, userId);
+            return true;
+        }
+
+        /// <summary> Adds all semantic domains from other Sense. </summary>
+        public int AddNewDomains(Sense other, string userId)
+        {
+            var newDoms = other.SemanticDomains.Where(dom => SemanticDomains.All(d => d.Id != dom.Id)).ToList();
+            newDoms.ForEach(dom =>
+            {
+                if (string.IsNullOrEmpty(dom.UserId))
+                {
+                    dom.UserId = userId;
+                }
+            });
+            SemanticDomains.AddRange(newDoms);
+            return newDoms.Count;
         }
     }
 

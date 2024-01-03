@@ -18,6 +18,7 @@ import {
   SemanticDomainFull,
   SemanticDomainTreeNode,
   SemanticDomainUserCount,
+  Sense,
   SiteBanner,
   User,
   UserEdit,
@@ -731,6 +732,17 @@ export async function updateDuplicate(
 ): Promise<Word> {
   const params = { projectId: LocalStorage.getProjectId(), dupId, word };
   const resp = await wordApi.updateDuplicate(params, defaultOptions());
+  return await getWord(resp.data);
+}
+
+export async function updateSense(
+  wordId: string,
+  senseGuid: string,
+  sense: Sense
+): Promise<Word> {
+  const projectId = LocalStorage.getProjectId();
+  const params = { projectId, wordId, senseGuid, sense };
+  const resp = await wordApi.updateSense(params, defaultOptions());
   return await getWord(resp.data);
 }
 

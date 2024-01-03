@@ -37,6 +37,8 @@ import {
   RequiredError,
 } from "../base";
 // @ts-ignore
+import { Sense } from "../models";
+// @ts-ignore
 import { Word } from "../models";
 /**
  * WordApi - axios parameter creator
@@ -503,6 +505,70 @@ export const WordApiAxiosParamCreator = function (
      *
      * @param {string} projectId
      * @param {string} wordId
+     * @param {string} senseGuid
+     * @param {Sense} sense
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateSense: async (
+      projectId: string,
+      wordId: string,
+      senseGuid: string,
+      sense: Sense,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("updateSense", "projectId", projectId);
+      // verify required parameter 'wordId' is not null or undefined
+      assertParamExists("updateSense", "wordId", wordId);
+      // verify required parameter 'senseGuid' is not null or undefined
+      assertParamExists("updateSense", "senseGuid", senseGuid);
+      // verify required parameter 'sense' is not null or undefined
+      assertParamExists("updateSense", "sense", sense);
+      const localVarPath = `/v1/projects/{projectId}/words/{wordId}/{senseGuid}`
+        .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
+        .replace(`{${"wordId"}}`, encodeURIComponent(String(wordId)))
+        .replace(`{${"senseGuid"}}`, encodeURIComponent(String(senseGuid)));
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        sense,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} wordId
      * @param {Word} word
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -800,6 +866,38 @@ export const WordApiFp = function (configuration?: Configuration) {
      *
      * @param {string} projectId
      * @param {string} wordId
+     * @param {string} senseGuid
+     * @param {Sense} sense
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async updateSense(
+      projectId: string,
+      wordId: string,
+      senseGuid: string,
+      sense: Sense,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.updateSense(
+        projectId,
+        wordId,
+        senseGuid,
+        sense,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} wordId
      * @param {Word} word
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -977,6 +1075,26 @@ export const WordApiFactory = function (
     ): AxiosPromise<string> {
       return localVarFp
         .updateDuplicate(projectId, dupId, word, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
+     * @param {string} wordId
+     * @param {string} senseGuid
+     * @param {Sense} sense
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateSense(
+      projectId: string,
+      wordId: string,
+      senseGuid: string,
+      sense: Sense,
+      options?: any
+    ): AxiosPromise<string> {
+      return localVarFp
+        .updateSense(projectId, wordId, senseGuid, sense, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1176,6 +1294,41 @@ export interface WordApiUpdateDuplicateRequest {
 }
 
 /**
+ * Request parameters for updateSense operation in WordApi.
+ * @export
+ * @interface WordApiUpdateSenseRequest
+ */
+export interface WordApiUpdateSenseRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof WordApiUpdateSense
+   */
+  readonly projectId: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof WordApiUpdateSense
+   */
+  readonly wordId: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof WordApiUpdateSense
+   */
+  readonly senseGuid: string;
+
+  /**
+   *
+   * @type {Sense}
+   * @memberof WordApiUpdateSense
+   */
+  readonly sense: Sense;
+}
+
+/**
  * Request parameters for updateWord operation in WordApi.
  * @export
  * @interface WordApiUpdateWordRequest
@@ -1363,6 +1516,28 @@ export class WordApi extends BaseAPI {
         requestParameters.projectId,
         requestParameters.dupId,
         requestParameters.word,
+        options
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {WordApiUpdateSenseRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof WordApi
+   */
+  public updateSense(
+    requestParameters: WordApiUpdateSenseRequest,
+    options?: any
+  ) {
+    return WordApiFp(this.configuration)
+      .updateSense(
+        requestParameters.projectId,
+        requestParameters.wordId,
+        requestParameters.senseGuid,
+        requestParameters.sense,
         options
       )
       .then((request) => request(this.axios, this.basePath));

@@ -204,7 +204,7 @@ namespace BackendFramework.Models
             return
                 ProjectId == other.ProjectId &&
                 Vernacular == other.Vernacular &&
-                other.Senses.All(s => Senses.Any(s.IsContainedIn));
+                other.Senses.All(sense => Senses.Any(s => sense.IsContainedIn(s)));
         }
 
         /// <summary>
@@ -213,32 +213,23 @@ namespace BackendFramework.Models
         /// Plural, Created, Modified, Accessibility, OtherField.
         /// </summary>
         /// <returns> A bool: true if operation succeeded and word updated. </returns>
-        public bool AppendContainedWordContents(Word other, String userId)
+        public bool AppendContainedWordContents(Word other, string userId)
         {
             // Confirm that the other word is contained
             if (!Contains(other))
             {
                 return false;
             }
+
             var sensesWithAddedSemDoms = Senses.Select(s => s.Clone()).ToList();
             foreach (var otherSense in other.Senses)
             {
-                var containingSense = sensesWithAddedSemDoms.Find(otherSense.IsContainedIn);
+                var containingSense = sensesWithAddedSemDoms.Find(s => otherSense.IsContainedIn(s));
                 if (containingSense is null)
                 {
                     return false;
                 }
-
-                // Get List of items that difference of two sequences update it if userId is NullOrEmpty
-                otherSense.SemanticDomains.Except(containingSense.SemanticDomains).ToList().ForEach((t) =>
-                {
-                    if (string.IsNullOrEmpty(t.UserId))
-                    {
-                        t.UserId = userId;
-                    }
-                });
-                containingSense.SemanticDomains.AddRange(otherSense.SemanticDomains);
-                containingSense.SemanticDomains = containingSense.SemanticDomains.Distinct().ToList();
+                containingSense.AddNewDomains(otherSense, userId);
             }
 
             // Preserve other word's SemanticDomains, Note, Flag, Audio, EditedBy, History
@@ -250,6 +241,17 @@ namespace BackendFramework.Models
             EditedBy = EditedBy.Distinct().ToList();
             History.AddRange(other.History);
             return true;
+        }
+
+        /// <summary>
+        /// Update sense with other containing sense.
+        /// Warning! The following content of the other Sense are ignored: Accessibility, GrammaticalInfo.
+        /// </summary>
+        /// <returns> A bool: true if operation succeeded and word updated. </returns>
+        public bool ExtendSense(Sense other, string senseGuid, string userId)
+        {
+            var senseToUpdate = Senses.Find(s => s.Guid.ToString() == senseGuid);
+            return senseToUpdate is not null && senseToUpdate.ExtendSense(other, userId);
         }
     }
 

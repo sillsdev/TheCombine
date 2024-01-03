@@ -182,7 +182,7 @@ namespace BackendFramework.Controllers
             }
             word.ProjectId = projectId;
 
-            var duplicatedWord = await _wordRepo.GetWord(word.ProjectId, dupId);
+            var duplicatedWord = await _wordRepo.GetWord(projectId, dupId);
             if (duplicatedWord is null)
             {
                 return NotFound(dupId);
@@ -194,9 +194,44 @@ namespace BackendFramework.Controllers
                 return Conflict();
             }
 
-            await _wordService.Update(duplicatedWord.ProjectId, userId, duplicatedWord.Id, duplicatedWord);
+            await _wordService.Update(projectId, userId, dupId, duplicatedWord);
 
             return Ok(duplicatedWord.Id);
+        }
+
+        /// <summary> Combines a sense into specified word sense. </summary>
+        /// <returns> Id of updated word. </returns>
+        [HttpPost("{wordId}/{senseGuid}", Name = "UpdateSense")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        public async Task<IActionResult> UpdateSense(
+            string projectId, string wordId, string senseGuid, [FromBody, BindRequired] Sense sense)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
+            {
+                return Forbid();
+            }
+
+            var proj = await _projRepo.GetProject(projectId);
+            if (proj is null)
+            {
+                return NotFound(projectId);
+            }
+
+            var wordToUpdate = await _wordRepo.GetWord(projectId, wordId);
+            if (wordToUpdate is null)
+            {
+                return NotFound(wordId);
+            }
+
+            var userId = _permissionService.GetUserId(HttpContext);
+            if (!wordToUpdate.ExtendSense(sense, senseGuid, userId))
+            {
+                return Conflict();
+            }
+
+            await _wordService.Update(projectId, userId, wordId, wordToUpdate);
+
+            return Ok(wordToUpdate.Id);
         }
 
         /// <summary> Creates a <see cref="Word"/>. </summary>
