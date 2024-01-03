@@ -13,7 +13,7 @@
 
 - name: Restrict permissions to kubeconfig to owner
   delegate_to: localhost
-  become: no
+  become: false
   file:
     path: "{{ kubecfg }}"
     state: file
@@ -31,7 +31,7 @@
   # (kubectl communicates with the cluster over port 16443 or 6443)
 - name: Replace server IP with DNS name in site_files copy
   delegate_to: localhost
-  become: no
+  become: false
   lineinfile:
     state: present
     path: "{{ kubecfg }}"
@@ -41,7 +41,7 @@
 
 - name: Replace 'default' cluster, user, etc with {{ kubecfgdir }}
   delegate_to: localhost
-  become: no
+  become: false
   replace:
     path: "{{ kubecfg }}"
     regexp: "^(.*)default(.*)$"
@@ -49,7 +49,7 @@
 
 - name: Link ~/.kube/config to {{ kubecfg }}
   delegate_to: localhost
-  become: no
+  become: false
   file:
     state: link
     src: "{{ kubecfg }}"
