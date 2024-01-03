@@ -117,9 +117,9 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Adds/updates a goal to/in a specified <see cref="UserEdit"/> </summary>
-        /// <returns> Index of added/updated edit </returns>
+        /// <returns> Guid of added/updated edit </returns>
         [HttpPost("{userEditId}", Name = "UpdateUserEditGoal")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> UpdateUserEditGoal(
             string projectId, string userEditId, [FromBody, BindRequired] Edit newEdit)
         {
@@ -142,27 +142,19 @@ namespace BackendFramework.Controllers
                 return NotFound($"projectId: {projectId}");
             }
 
-            // Ensure userEdit exists
-            var toBeMod = await _userEditRepo.GetUserEdit(projectId, userEditId);
-            if (toBeMod is null)
+            var (isSuccess, editGuid) = await _userEditService.AddGoalToUserEdit(projectId, userEditId, newEdit);
+
+            if (editGuid is null)
             {
                 return NotFound($"userEditId: {userEditId}");
             }
 
-            var (isSuccess, editIndex) = await _userEditService.AddGoalToUserEdit(projectId, userEditId, newEdit);
-
-            if (editIndex == -1)
-            {
-                return BadRequest("UserEdit found but update failed.");
-            }
-
-            // If the replacement was successful
             if (isSuccess)
             {
-                return Ok(editIndex);
+                return Ok(editGuid);
             }
 
-            return StatusCode(StatusCodes.Status304NotModified, editIndex);
+            return StatusCode(StatusCodes.Status304NotModified, editGuid);
         }
 
         /// <summary> Adds/updates a step to/in specified goal </summary>
@@ -170,7 +162,7 @@ namespace BackendFramework.Controllers
         [HttpPut("{userEditId}", Name = "UpdateUserEditStep")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
         public async Task<IActionResult> UpdateUserEditStep(string projectId, string userEditId,
-            [FromBody, BindRequired] UserEditStepWrapper stepEdit)
+            [FromBody, BindRequired] UserEditStepWrapper stepWrapper)
         {
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.MergeAndReviewEntries, projectId))
@@ -198,13 +190,14 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
-            // Ensure indices exist.
-            if (stepEdit.GoalIndex < 0 || stepEdit.GoalIndex >= document.Edits.Count)
+            // Ensure Edit exist.
+            var edit = document.Edits.FindLast(e => e.Guid == stepWrapper.EditGuid);
+            if (edit is null)
             {
-                return BadRequest("Goal index out of range.");
+                return NotFound(stepWrapper.EditGuid);
             }
-            var maxStepIndex = document.Edits[stepEdit.GoalIndex].StepData.Count;
-            var stepIndex = stepEdit.StepIndex ?? maxStepIndex;
+            var maxStepIndex = edit.StepData.Count;
+            var stepIndex = stepWrapper.StepIndex ?? maxStepIndex;
             if (stepIndex < 0 || stepIndex > maxStepIndex)
             {
                 return BadRequest("Step index out of range.");
@@ -214,12 +207,12 @@ namespace BackendFramework.Controllers
             if (stepIndex == maxStepIndex)
             {
                 await _userEditService.AddStepToGoal(
-                    projectId, userEditId, stepEdit.GoalIndex, stepEdit.StepString);
+                    projectId, userEditId, stepWrapper.EditGuid, stepWrapper.StepString);
             }
             else
             {
                 await _userEditService.UpdateStepInGoal(
-                    projectId, userEditId, stepEdit.GoalIndex, stepEdit.StepString, stepIndex);
+                    projectId, userEditId, stepWrapper.EditGuid, stepWrapper.StepString, stepIndex);
             }
 
             return Ok(stepIndex);

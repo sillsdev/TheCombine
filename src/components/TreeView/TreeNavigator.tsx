@@ -9,7 +9,7 @@ export interface TreeNavigatorProps {
 }
 
 export default function TreeNavigator(props: TreeNavigatorProps): ReactElement {
-  const { getNextSibling, getOnlyChild, getParent, getPrevSibling } =
+  const { getFirstChild, getNextSibling, getParent, getPrevSibling } =
     useTreeNavigation(props);
 
   // Navigate tree via arrow keys.
@@ -23,7 +23,7 @@ export default function TreeNavigator(props: TreeNavigatorProps): ReactElement {
       case Key.ArrowUp:
         return getParent();
       case Key.ArrowDown:
-        return getOnlyChild();
+        return getFirstChild();
     }
   };
 
@@ -43,8 +43,8 @@ export default function TreeNavigator(props: TreeNavigatorProps): ReactElement {
 }
 
 interface TreeNavigation {
+  getFirstChild: () => SemanticDomain | undefined;
   getNextSibling: () => SemanticDomain | undefined;
-  getOnlyChild: () => SemanticDomain | undefined;
   getParent: () => SemanticDomain | undefined;
   getPrevSibling: () => SemanticDomain | undefined;
 }
@@ -53,9 +53,8 @@ interface TreeNavigation {
 export function useTreeNavigation(props: TreeNavigatorProps): TreeNavigation {
   const dom = props.currentDomain;
   return {
+    getFirstChild: () => (dom.children.length ? dom.children[0] : undefined),
     getNextSibling: () => dom.next,
-    getOnlyChild: () =>
-      dom.children.length === 1 ? dom.children[0] : undefined,
     getParent: () => dom.parent,
     getPrevSibling: () => dom.previous,
   };

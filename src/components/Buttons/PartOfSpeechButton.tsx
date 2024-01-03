@@ -38,7 +38,7 @@ export default function PartOfSpeech(props: PartOfSpeechProps): ReactElement {
       icon={<Hexagon fontSize="small" sx={{ color }} />}
       onClick={props.onClick}
       side="top"
-      small
+      size="small"
       text={hoverText}
     />
   );

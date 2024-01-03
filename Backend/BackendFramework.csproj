@@ -17,23 +17,23 @@
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.33.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.33.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="MongoDB.Driver" Version="2.22.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.23.1" />
     <PackageReference Include="MailKit" Version="4.3.0" />
     <PackageReference Include="Xabe.FFmpeg" Version="5.2.6"/>
 
     <!-- SIL Maintained Dependencies. -->
     <PackageReference Include="icu.net" Version="2.9.0" />
     <PackageReference Include="Icu4c.Win.Full.Lib" Version="62.2.1-beta" />
-    <PackageReference Include="SIL.Core" Version="12.0.1" />
-    <PackageReference Include="SIL.Core.Desktop" Version="12.0.1">
+    <PackageReference Include="SIL.Core" Version="13.0.0" />
+    <PackageReference Include="SIL.Core.Desktop" Version="13.0.0">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="SIL.DictionaryServices" Version="12.0.1">
+    <PackageReference Include="SIL.DictionaryServices" Version="13.0.0">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="SIL.Lift" Version="12.0.1">
+    <PackageReference Include="SIL.Lift" Version="13.0.0">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="SIL.WritingSystems" Version="12.0.1" />
+    <PackageReference Include="SIL.WritingSystems" Version="13.0.0" />
   </ItemGroup>
 </Project>

@@ -25,6 +25,8 @@ export interface CharInvData {
   inventory: string[][];
 }
 
+// CharInvStepData's inventory is unused, but is present in the database,
+// so cannot be removed from frontend code without a database update.
 export interface CharInvStepData {
   inventory: string[];
 }

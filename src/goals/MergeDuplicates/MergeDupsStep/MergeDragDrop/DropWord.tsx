@@ -11,22 +11,25 @@ import {
   flagWord,
   setVern,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
-import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
-import { useAppDispatch } from "types/hooks";
+import { StoreState } from "types";
+import { useAppDispatch, useAppSelector } from "types/hooks";
 import theme from "types/theme";
 import { TypographyWithFont } from "utilities/fontComponents";
 
 interface DropWordProps {
-  mergeState: MergeTreeState;
   wordId: string;
 }
 
 export default function DropWord(props: DropWordProps): ReactElement {
   const dispatch = useAppDispatch();
+  const data = useAppSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.data
+  );
+  const treeWord = useAppSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.tree.words[props.wordId]
+  );
   const { t } = useTranslation();
 
-  const treeWord = props.mergeState.tree.words[props.wordId];
-  const data = props.mergeState.data;
   let protectedWithOneChild = false;
   const verns: string[] = [];
   if (treeWord) {
@@ -90,9 +93,9 @@ export default function DropWord(props: DropWordProps): ReactElement {
               {protectedWithOneChild && (
                 <IconButtonWithTooltip
                   icon={<WarningOutlined />}
-                  textId={"mergeDups.helpText.protectedWord"}
-                  side={"top"}
-                  small
+                  side="top"
+                  size="small"
+                  textId="mergeDups.helpText.protectedWord"
                   buttonId={`word-${props.wordId}-protected`}
                 />
               )}

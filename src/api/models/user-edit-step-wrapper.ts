@@ -20,10 +20,10 @@
 export interface UserEditStepWrapper {
   /**
    *
-   * @type {number}
+   * @type {string}
    * @memberof UserEditStepWrapper
    */
-  goalIndex: number;
+  editGuid: string;
   /**
    *
    * @type {string}
