@@ -56,7 +56,7 @@ export function newGrammaticalInfo(): GrammaticalInfo {
   return { catGroup: GramCatGroup.Unspecified, grammaticalCategory: "" };
 }
 
-export function newWord(vernacular = ""): Word {
+export function newWord(vernacular = "", lang?: string): Word {
   return {
     id: "",
     guid: v4(),
@@ -68,7 +68,7 @@ export function newWord(vernacular = ""): Word {
     accessibility: Status.Active,
     history: [],
     projectId: "",
-    note: newNote(),
+    note: newNote(undefined, lang),
     flag: newFlag(),
   };
 }
@@ -89,11 +89,11 @@ export class DomainWord {
   }
 }
 
-export function simpleWord(vern: string, gloss: string): Word {
+export function simpleWord(vern: string, gloss: string, lang?: string): Word {
   return {
-    ...newWord(vern),
+    ...newWord(vern, lang),
     id: randomIntString(),
-    senses: [newSense(gloss)],
+    senses: [newSense(gloss, lang)],
   };
 }
 

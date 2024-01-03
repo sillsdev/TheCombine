@@ -663,8 +663,6 @@ export default function DataEntryTable(
       audioURLs: string[],
       insertIndex?: number
     ): Promise<void> => {
-      wordToAdd.note.language = analysisLang.bcp47;
-
       // Check if word is duplicate to existing word.
       const dupId = await backend.getDuplicateId(wordToAdd);
       if (dupId) {
@@ -678,7 +676,7 @@ export default function DataEntryTable(
       }
       addToDisplay({ word, senseGuid: word.senses[0].guid }, insertIndex);
     },
-    [addAudiosToBackend, addDuplicateWord, analysisLang.bcp47]
+    [addAudiosToBackend, addDuplicateWord]
   );
 
   /** Update the word in the backend and the frontend. */
@@ -704,7 +702,7 @@ export default function DataEntryTable(
       );
       if (!oldWord) {
         // Existing word not found, so create a new word.
-        await addNewEntry();
+        await buildAndAddNewEntry();
       } else {
         // Found an existing word, so add a sense to it.
         await updateWordWithNewEntry(oldWord.id);
@@ -717,15 +715,20 @@ export default function DataEntryTable(
   // Async functions for handling changes of the NewEntry.
   /////////////////////////////////
 
-  /** Assemble a word from the new entry state and add it. */
-  const addNewEntry = async (): Promise<void> => {
-    const word = newWord(state.newVern);
+  /** Build a word from the new entry state (except the audio). */
+  const buildNewEntryNoAudio = (): Word => {
     const lang = analysisLang.bcp47;
+    const word = newWord(state.newVern, lang);
     word.senses.push(
       newSense(state.newGloss, lang, makeSemDomCurrent(props.semanticDomain))
     );
     word.note = newNote(state.newNote, lang);
-    await addNewWord(word, state.newAudioUrls);
+    return word;
+  };
+
+  /** Build a word from the new entry state and add it. */
+  const buildAndAddNewEntry = async (): Promise<void> => {
+    await addNewWord(buildNewEntryNoAudio(), state.newAudioUrls);
   };
 
   /**  Checks if sense already exists with this gloss and semantic domain. */
@@ -834,13 +837,23 @@ export default function DataEntryTable(
         await updateWordInBackend({ ...oldEntry.word, vernacular });
       } else {
         // Retract and replaced with a new entry.
-        const word = simpleWord(vernacular, firstGlossText(oldSense));
+        const word = simpleWord(
+          vernacular,
+          firstGlossText(oldSense),
+          analysisLang.bcp47
+        );
         word.id = "";
         await undoRecentEntry(index);
         await addNewWord(word, [], index);
       }
     },
-    [addNewWord, state.recentWords, undoRecentEntry, updateWordInBackend]
+    [
+      addNewWord,
+      analysisLang.bcp47,
+      state.recentWords,
+      undoRecentEntry,
+      updateWordInBackend,
+    ]
   );
 
   /** Update the gloss def in a recent entry. */
@@ -943,7 +956,7 @@ export default function DataEntryTable(
             analysisLang={analysisLang}
             vernacularLang={vernacularLang}
             // Parent handles new entry state of child:
-            addNewEntry={addNewEntry}
+            addNewEntry={buildAndAddNewEntry}
             resetNewEntry={resetNewEntry}
             updateWordWithNewGloss={updateWordWithNewEntry}
             newAudioUrls={state.newAudioUrls}
