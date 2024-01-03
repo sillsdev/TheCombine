@@ -18,7 +18,6 @@ import {
   SemanticDomainFull,
   SemanticDomainTreeNode,
   SemanticDomainUserCount,
-  Sense,
   SiteBanner,
   User,
   UserEdit,

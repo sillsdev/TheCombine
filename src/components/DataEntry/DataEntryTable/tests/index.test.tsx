@@ -51,6 +51,8 @@ jest.mock("backend", () => ({
 jest.mock("backend/localStorage", () => ({
   getUserId: () => mockUserId,
 }));
+jest.mock("components/DataEntry/DataEntryTable/NewEntry/SenseDialog");
+jest.mock("components/DataEntry/DataEntryTable/NewEntry/VernDialog");
 jest.mock(
   "components/DataEntry/DataEntryTable/RecentEntry",
   () => MockRecentEntry
@@ -70,6 +72,7 @@ function MockRecentEntry(): ReactElement {
 
 const mockWord = (): Word => simpleWord("mockVern", "mockGloss");
 const mockMultiWord = multiSenseWord("vern", ["gloss1", "gloss2"]);
+mockMultiWord.id = "wordId";
 const mockSemDomId = "semDomId";
 const mockTreeNode = newSemanticDomainTreeNode(mockSemDomId);
 const mockSemDom = semDomFromTreeNode(mockTreeNode);
@@ -181,7 +184,7 @@ describe("DataEntryTable", () => {
     it("throws error when word doesn't have sense with specified guid", () => {
       expect(() =>
         addSemanticDomainToSense(newSemanticDomain(), mockWord(), "gibberish")
-      ).toThrowError();
+      ).toThrow();
     });
 
     it("adds a semantic domain to existing sense", () => {
@@ -243,7 +246,7 @@ describe("DataEntryTable", () => {
   describe("updateEntryGloss", () => {
     it("throws error when entry doesn't have sense with specified guid", () => {
       const entry: WordAccess = { word: newWord(), senseGuid: "gibberish" };
-      expect(() => updateEntryGloss(entry, "def", "semDomId")).toThrowError();
+      expect(() => updateEntryGloss(entry, "def", "semDomId")).toThrow();
     });
 
     it("directly updates a sense with no other semantic domains", () => {
@@ -298,8 +301,10 @@ describe("DataEntryTable", () => {
       await renderTable();
       testHandle = testRenderer.root.findByType(NewEntry);
       await act(async () => {
+        await testHandle.props.setNewVern(word.vernacular);
+        await testHandle.props.setSelectedDup(word.id);
         await testHandle.props.setNewGloss(firstGlossText(word.senses[0]));
-        await testHandle.props.updateWordWithNewGloss(word.id);
+        await testHandle.props.updateWordWithNewGloss();
       });
       expect(mockUpdateWord).not.toHaveBeenCalled();
     });
@@ -317,8 +322,10 @@ describe("DataEntryTable", () => {
       testHandle = testRenderer.root.findByType(NewEntry);
       const glossText = firstGlossText(word.senses[senseIndex]);
       await act(async () => {
+        await testHandle.props.setNewVern(word.vernacular);
+        await testHandle.props.setSelectedDup(word.id);
         await testHandle.props.setNewGloss(glossText);
-        await testHandle.props.updateWordWithNewGloss(word.id);
+        await testHandle.props.updateWordWithNewGloss();
       });
       expect(mockUpdateWord).toHaveBeenCalledTimes(1);
 
@@ -335,8 +342,10 @@ describe("DataEntryTable", () => {
       await renderTable();
       testHandle = testRenderer.root.findByType(NewEntry);
       await act(async () => {
+        await testHandle.props.setNewVern(mockMultiWord.vernacular);
+        await testHandle.props.setSelectedDup(mockMultiWord.id);
         await testHandle.props.setNewGloss("differentGloss");
-        await testHandle.props.updateWordWithNewGloss(mockMultiWord.id);
+        await testHandle.props.updateWordWithNewGloss();
       });
       expect(mockUpdateWord).toHaveBeenCalledTimes(1);
     });
