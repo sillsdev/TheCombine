@@ -742,11 +742,28 @@ export default function DataEntryTable(
       if (!oldSense) {
         throw new Error("You are trying to update a nonexistent sense");
       }
-
-      // Only update the selected sense if the old gloss is empty or matches the new gloss.
       if (!oldSense.glosses.length) {
         oldSense.glosses.push(newGloss());
       }
+
+      // If selected sense already has this domain, add audio without updating first.
+      if (
+        oldSense.glosses[0].def === state.newGloss &&
+        oldSense.semanticDomains.find((d) => d.id === semDom.id)
+      ) {
+        enqueueSnackbar(
+          t("addWords.senseInWord", {
+            val1: oldWord.vernacular,
+            val2: state.newGloss,
+          })
+        );
+        if (state.newAudioUrls.length) {
+          await addAudiosToBackend(oldWord.id, state.newAudioUrls);
+        }
+        return;
+      }
+
+      // Only update the selected sense if the old gloss is empty or matches the new gloss.
       if (!oldSense.glosses[0].def) {
         oldSense.glosses[0] = newGloss(state.newGloss, analysisLang.bcp47);
       }
