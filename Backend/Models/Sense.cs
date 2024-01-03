@@ -129,6 +129,21 @@ namespace BackendFramework.Models
                 Glosses.All(other.Glosses.Contains) &&
                 Definitions.All(other.Definitions.Contains);
         }
+
+        /// <summary> Adds all semantic domains from other Sense. </summary>
+        public int AddNewDomains(Sense other, string userId)
+        {
+            var newDoms = other.SemanticDomains.Where(dom => SemanticDomains.All(d => d.Id != dom.Id)).ToList();
+            newDoms.ForEach(dom =>
+            {
+                if (string.IsNullOrEmpty(dom.UserId))
+                {
+                    dom.UserId = userId;
+                }
+            });
+            SemanticDomains.AddRange(newDoms);
+            return newDoms.Count;
+        }
     }
 
     public class Definition
