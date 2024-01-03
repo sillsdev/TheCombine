@@ -78,6 +78,9 @@ export function addSemanticDomainToSense(
   if (!sense) {
     throw new Error("Word has no sense with specified guid");
   }
+  if (sense.semanticDomains.find((s) => s.id == semDom.id)) {
+    return word;
+  }
   sense.semanticDomains.push(makeSemDomCurrent(semDom));
   const senses = word.senses.map((s) => (s.guid === senseGuid ? sense : s));
   return { ...word, senses };
@@ -427,7 +430,7 @@ export default function DataEntryTable(
       return {
         ...prev,
         selectedDup,
-        selectedSense: emptySense,
+        selectedSenseGuid: emptySense?.guid,
       };
     });
   };
