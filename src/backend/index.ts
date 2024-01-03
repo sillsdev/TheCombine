@@ -735,17 +735,6 @@ export async function updateDuplicate(
   return await getWord(resp.data);
 }
 
-export async function updateSense(
-  wordId: string,
-  senseGuid: string,
-  sense: Sense
-): Promise<Word> {
-  const projectId = LocalStorage.getProjectId();
-  const params = { projectId, wordId, senseGuid, sense };
-  const resp = await wordApi.updateSense(params, defaultOptions());
-  return await getWord(resp.data);
-}
-
 export async function updateWord(word: Word): Promise<Word> {
   const resp = await wordApi.updateWord(
     { projectId: LocalStorage.getProjectId(), wordId: word.id, word },
