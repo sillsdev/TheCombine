@@ -2,7 +2,7 @@
 
 Los administradores del sitio disponen de una opción más en el menú de usuario: "Configuración del sitio".
 
-![Menú de usuario - Administrador](../images/userMenuAdmin.png){.center}
+![Menú de usuario - Administrador](../images/userMenuAdmin.es.png){.center}
 
 ## Administración de proyectos
 

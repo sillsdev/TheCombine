@@ -55,7 +55,7 @@ palabra en la lista de sugerencias, en lugar de tener que escribir el resto de l
 desactivada, la palabra vernácula debe escribirse en su totalidad; no se sugerirá ninguna coincidencia potencial
 existente.
 
-![Entrada de datos duplicados de formularios vernáculos](../images/data-entry-dup-vern.png){.center}
+![Entrada de datos duplicados de formularios vernáculos](../images/data-entry-dup-vern.es.png){.center}
 
 Ya sea que escriba una forma que coincide con una entrada existente en el proyecto o seleccione una de las sugerencias
 que ofrece The Combine, aparecerá un cuadro con opciones. (Este cuadro no aparecerá si la configuración de Autocompletar
@@ -63,7 +63,7 @@ está desactivada o si escribe una forma vernáculo que aún no existe en el pro
 mostrarán todas las entradas existentes con esa forma vernácula y puede elegir si actualizar una de esas entradas o
 crear una nueva entrada.
 
-![Entrada de datos entradas vernáculas duplicadas](../images/data-entry-dup-vern-select-entry.png){.center}
+![Entrada de datos entradas vernáculas duplicadas](../images/data-entry-dup-vern-select-entry.es.png){.center}
 
 Si elige crear una nueva entrada, se cerrará el cuadro emergente y entonces podrá escribir la glosa de su nueva entrada.
 
@@ -74,4 +74,4 @@ Si elige crear una nueva entrada, se cerrará el cuadro emergente y entonces pod
 Si por el contrario elige actualizar una de las entradas existentes, aparecerá un segundo cuadro. Aquí puede elegir
 actualizar una acepción existente en la entrada seleccionada o añadir una nueva acepción a esa entrada.
 
-![Entrada de datos duplicadas acepciones vernáculas](../images/data-entry-dup-vern-select-sense.png){.center}
+![Entrada de datos duplicadas acepciones vernáculas](../images/data-entry-dup-vern-select-sense.es.png){.center}

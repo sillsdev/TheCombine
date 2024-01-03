@@ -6,7 +6,7 @@ Un proyecto es para una sola lengua vernácula.
 
 Al crear un proyecto, tiene la opción de empezar con un proyecto vacío o de importar los datos léxicos existentes.
 
-![Crear proyecto - Tzotzil](../images/projectCreateTzotzil.png){.center}
+![Crear proyecto - Tzotzil](../images/projectCreateTzotzil.es.png){.center}
 
 ### Importar los datos existentes
 
@@ -44,7 +44,7 @@ siguientes ajustes están disponibles para los usuarios del proyecto con permiso
 
 ### Configuración básica
 
-![Configuración básico](../images/projectSettings1Basic.png){width=750 .center}
+![Configuración básico](../images/projectSettings1Basic.es.png){width=750 .center}
 
 #### Nombre del Proyecto
 
@@ -70,9 +70,9 @@ que el proyecto se elimine por completo de los servidores.
 
 ### Idiomas del proyecto {#project-languages}
 
-![Idiomas](../images/projectSettings2Langs.png){width=750 .center}
+![Idiomas](../images/projectSettings2Langs.es.png){width=750 .center}
 
-![Idiomas del proyecto - Tzotzil](../images/projectLanguagesTzotzil.png){.center}
+![Idiomas del proyecto - Tzotzil](../images/projectLanguagesTzotzil.es.png){.center}
 
 La _lengua vernácula_ especificada en la creación del proyecto es fija.
 
@@ -89,7 +89,7 @@ dominios semánticos en [Entrada de datos](./dataEntry.md).
 
 ### Usuarios del proyecto
 
-![Usuarios](../images/projectSettings3Users.png){width=750 .center}
+![Usuarios](../images/projectSettings3Users.es.png){width=750 .center}
 
 #### Usuarios actuales
 
@@ -128,7 +128,7 @@ automáticamente al proyecto cuando se hagan una cuenta a través de la invitaci
 
 ### Importar/Exportar
 
-![Importar/Exportar](../images/projectSettings4Port.png){width=750 .center}
+![Importar/Exportar](../images/projectSettings4Port.es.png){width=750 .center}
 
 #### Importar {#import}
 
@@ -152,13 +152,13 @@ El nombre de archivo por defecto es el nombre del proyecto con una marca de tiem
 
 ### Calendario de talleres {#workshop-schedule}
 
-![Calendario de talleres](../images/projectSettings5Sched.png){width=750 .center}
+![Calendario de talleres](../images/projectSettings5Sched.es.png){width=750 .center}
 
 Sólo está disponible para el Propietario del proyecto, lo que permite fijar un calendario para un taller de recopilación
 rápida de palabras. Haga clic en el primer botón para seleccionar un intervalo de fechas para el taller. Pulse el botón
 central para añadir o eliminar fechas concretas. Pulse el último botón para borrar la programación.
 
-![Calendario de talleres](../images/projectSchedule.png){.center}
+![Calendario de talleres](../images/projectSchedule.es.png){.center}
 
 ## Estadísticas del proyecto
 
