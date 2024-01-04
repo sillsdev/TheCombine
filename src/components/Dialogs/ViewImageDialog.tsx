@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, Grid } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, Grid, Icon } from "@mui/material";
 import { ReactElement } from "react";
 
 import { CloseButton, DeleteButtonWithDialog } from "components/Buttons";
@@ -27,6 +27,7 @@ export default function ViewImageDialog(
     <Dialog maxWidth={false} onClose={props.close} open={props.open}>
       <DialogTitle>
         {props.title}
+        <Icon />
         <CloseButton close={props.close} />
       </DialogTitle>
       <DialogContent>
