@@ -106,15 +106,9 @@ export function deferMerge() {
 
 export function mergeAll() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    const mergeTree = getState().mergeDuplicateGoal;
-
-    // Add to blacklist.
-    await backend.blacklistAdd(Object.keys(mergeTree.data.words));
-
-    // Merge words.
     dispatch(getMergeWords());
-
-    const mergeWordsArray = [...getState().mergeDuplicateGoal.mergeWords];
+    const mergeTree = getState().mergeDuplicateGoal;
+    const mergeWordsArray = [...mergeTree.mergeWords];
     dispatch(clearMergeWords());
     if (mergeWordsArray.length) {
       const parentIds = await backend.mergeWords(mergeWordsArray);
@@ -126,6 +120,20 @@ export function mergeAll() {
       const completedMerge = { childIds, parentIds };
       dispatch(addCompletedMergeToGoal(completedMerge));
       await dispatch(asyncUpdateGoal());
+    }
+
+    // Blacklist the set of words with updated ids,
+    // minus any words that received a sense from another word.
+    const mergedIds = mergeWordsArray.map((mw) => mw.parent.id);
+    const unmergedIds = Object.keys(mergeTree.data.words).filter(
+      (id) => !(id in mergedIds)
+    );
+    const soloParentIds = mergeWordsArray
+      .filter((mw) => mw.children.every((sw) => sw.srcWordId === mw.parent.id))
+      .map((mw) => mw.parent.id);
+    const blacklistIds = [...unmergedIds, ...soloParentIds];
+    if (blacklistIds.length > 1) {
+      await backend.blacklistAdd(blacklistIds);
     }
   };
 }
