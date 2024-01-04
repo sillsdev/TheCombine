@@ -8,6 +8,8 @@ interface SplitWord {
   final?: string;
 }
 
+const maxSuggestions = 5;
+
 export default class SpellChecker {
   private bcp47: Bcp47Code | undefined;
   private dictLoader: DictionaryLoader | undefined;
@@ -101,21 +103,30 @@ export default class SpellChecker {
     // Don't await--just load for future use.
     this.load(final);
 
+    // Get spelling suggestions.
     let suggestions = this.spell.suggest(final);
 
-    if (final && !suggestions.length) {
-      suggestions = this.dictLoaded[final[0]]
-        .filter(
-          (entry) =>
-            entry.length >= final.length &&
-            entry.substring(0, final.length) === final
-        )
-        .sort();
+    // Add lookahead suggestions.
+    if (this.dictLoaded[final[0]] && suggestions.length < maxSuggestions) {
+      const lookahead = this.dictLoaded[final[0]].filter(
+        (entry) =>
+          entry.length >= final.length &&
+          entry.substring(0, final.length) === final &&
+          !suggestions.includes(entry)
+      );
+      suggestions.push(...lookahead.sort());
     }
 
+    // Limit to maxSuggestions.
+    if (suggestions.length > maxSuggestions) {
+      suggestions = suggestions.slice(0, maxSuggestions);
+    }
+
+    // Prepend the start of the typed phrase, if any.
     if (suggestions.length && allButFinal) {
       suggestions = suggestions.map((w) => allButFinal + w);
     }
+
     return suggestions;
   }
 }
