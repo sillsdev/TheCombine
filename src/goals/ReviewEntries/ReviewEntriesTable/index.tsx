@@ -48,6 +48,7 @@ const tableRef: React.RefObject<any> = createRef();
 export default function ReviewEntriesTable(
   props: ReviewEntriesTableProps
 ): ReactElement {
+  // https://redux.js.org/usage/deriving-data-selectors#optimizing-selectors-with-memoization
   const wordsSelector = createSelector(
     [(state: StoreState) => state.reviewEntriesState.words],
     (words) => words.map((w) => new ReviewEntriesWord(w))

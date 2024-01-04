@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import { Flag } from "api/models";
 import { FlagButton, IconButtonWithTooltip } from "components/Buttons";
 import DragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DragSense";
+import { MergeTreeWord } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import {
   flagWord,
   setVern,
@@ -31,17 +32,15 @@ export default function DropWord(props: DropWordProps): ReactElement {
   const dataSenses = useAppSelector(
     (state: StoreState) => state.mergeDuplicateGoal.data.senses
   );
-  const protectedWithOneChild = useAppSelector((state: StoreState) => {
-    const treeWord = state.mergeDuplicateGoal.tree.words[props.wordId];
-    return (
-      treeWord?.protected && Object.keys(treeWord.sensesGuids).length === 1
-    );
-  });
-  const sensesGuids = useAppSelector((state: StoreState) => {
-    const treeWord = state.mergeDuplicateGoal.tree.words[props.wordId];
-    return treeWord?.sensesGuids;
-  });
+  // treeWord might be undefined
+  const treeWord = useAppSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.tree.words[props.wordId]
+  );
   const { t } = useTranslation();
+
+  const sensesGuids = treeWord?.sensesGuids ?? {};
+  const protectedWithOneChild =
+    treeWord?.protected && Object.keys(sensesGuids).length === 1;
 
   return (
     <Card
@@ -52,6 +51,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
     >
       <DropWordCardHeader
         protectedWithOneChild={protectedWithOneChild}
+        treeWord={treeWord}
         wordId={props.wordId}
       />
       <CardContent>
@@ -63,21 +63,20 @@ export default function DropWord(props: DropWordProps): ReactElement {
           {(provided): ReactElement => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
               <div style={{ maxHeight: "55vh", overflowY: "auto" }}>
-                {!!sensesGuids &&
-                  Object.keys(sensesGuids).map((id, index) => {
-                    const senses = sensesGuids[id].map((g) => dataSenses[g]);
-                    return (
-                      <DragSense
-                        key={id}
-                        index={index}
-                        wordId={props.wordId}
-                        mergeSenseId={id}
-                        senses={senses}
-                        isOnlySenseInProtectedWord={protectedWithOneChild}
-                        isProtectedSense={senses[0].protected}
-                      />
-                    );
-                  })}
+                {Object.keys(sensesGuids).map((id, index) => {
+                  const senses = sensesGuids[id].map((g) => dataSenses[g]);
+                  return (
+                    <DragSense
+                      key={id}
+                      index={index}
+                      wordId={props.wordId}
+                      mergeSenseId={id}
+                      senses={senses}
+                      isOnlySenseInProtectedWord={protectedWithOneChild}
+                      isProtectedSense={senses[0].protected}
+                    />
+                  );
+                })}
                 {provided.placeholder}
               </div>
               <div style={{ padding: 16, textAlign: "center" }}>
@@ -95,6 +94,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
 
 interface DropWordCardHeaderProps {
   protectedWithOneChild: boolean;
+  treeWord?: MergeTreeWord;
   wordId: string;
 }
 
@@ -102,23 +102,15 @@ export function DropWordCardHeader(
   props: DropWordCardHeaderProps
 ): ReactElement {
   const dispatch = useAppDispatch();
-  const data = useAppSelector(
+  const { senses, words } = useAppSelector(
     (state: StoreState) => state.mergeDuplicateGoal.data
   );
-  const treeWord = useAppSelector(
-    (state: StoreState) => state.mergeDuplicateGoal.tree.words[props.wordId]
-  );
 
-  const verns: string[] = [];
-  if (treeWord) {
-    verns.push(
-      ...new Set(
-        Object.values(treeWord.sensesGuids).flatMap((guids) =>
-          guids.map((g) => data.words[data.senses[g].srcWordId].vernacular)
-        )
-      )
-    );
-  }
+  const treeWord = props.treeWord;
+  const guids = Object.values(treeWord?.sensesGuids ?? {}).flatMap((sg) => sg);
+  const verns = [
+    ...new Set(guids.map((g) => words[senses[g].srcWordId].vernacular)),
+  ];
 
   // reset vern if not in vern list
   if (treeWord && !verns.includes(treeWord.vern)) {
