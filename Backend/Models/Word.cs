@@ -228,7 +228,7 @@ namespace BackendFramework.Models
                 {
                     return false;
                 }
-                containingSense.AddNewDomains(otherSense, userId);
+                containingSense.CopyDomains(otherSense, userId);
             }
 
             // Preserve other word's SemanticDomains, Note, Flag, Audio, EditedBy, History

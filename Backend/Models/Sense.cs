@@ -131,7 +131,7 @@ namespace BackendFramework.Models
         }
 
         /// <summary> Adds all semantic domains from other Sense. </summary>
-        public int AddNewDomains(Sense other, string userId)
+        public void CopyDomains(Sense other, string userId)
         {
             var newDoms = other.SemanticDomains.Where(dom => SemanticDomains.All(d => d.Id != dom.Id)).ToList();
             newDoms.ForEach(dom =>
@@ -142,7 +142,6 @@ namespace BackendFramework.Models
                 }
             });
             SemanticDomains.AddRange(newDoms);
-            return newDoms.Count;
         }
     }
 

@@ -76,7 +76,7 @@ namespace Backend.Tests.Models
         }
 
         [Test]
-        public void TestAddNewDomains()
+        public void TestCopyDomains()
         {
             // Add domains from a new sense, one a duplicate and one new.
             var oldSense = Util.RandomSense();
@@ -90,7 +90,7 @@ namespace Backend.Tests.Models
             newSense.SemanticDomains.Add(newSemDom);
 
             var userId = Util.RandString();
-            oldSense.AddNewDomains(newSense, userId);
+            oldSense.CopyDomains(newSense, userId);
 
             // Ensure the duplicate domain isn't added.
             var oldDom = oldSense.SemanticDomains.FindAll(dom => dom.Id == oldSemDom.Id);
