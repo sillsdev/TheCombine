@@ -15,11 +15,8 @@ const HALF_TILE = (RATIO_TILE_TO_GAP - 1) / 2; // Half of cols-per-tile, rounded
 export default function ChildrenRow(props: TreeRowProps): ReactElement {
   // Creates a tile for the specified tree part
   const treeTile = (treeSrc: string): ReactElement => (
-    <ImageListItem
-      key={treeSrc + Math.random()}
-      style={{ transform: "scaleY(-1)" }}
-    >
-      <img alt={treeSrc} src={treeSrc} />
+    <ImageListItem key={treeSrc + Math.random()}>
+      <img src={treeSrc} style={{ transform: "scaleY(-1)" }} />
     </ImageListItem>
   );
 

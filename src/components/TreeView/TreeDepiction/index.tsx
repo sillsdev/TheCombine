@@ -37,7 +37,6 @@ export default function TreeDepiction(props: TreeDepictionProps): ReactElement {
             </Grid>
             <Grid item>
               <img
-                alt={parent}
                 src={parent}
                 style={{ transform: "scaleY(-1)" }}
                 width={colWidth}

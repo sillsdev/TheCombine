@@ -73,7 +73,6 @@ Array [
     className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
   >
     <img
-      alt="parent.svg"
       src="parent.svg"
       style={
         Object {
@@ -241,14 +240,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="leftEndcap.svg"
           className="MuiImageListItem-img"
           src="leftEndcap.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -260,14 +262,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -279,14 +284,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -298,14 +306,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -317,14 +328,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -336,14 +350,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -355,14 +372,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -374,14 +394,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -393,14 +416,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="intersect.svg"
           className="MuiImageListItem-img"
           src="intersect.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -412,14 +438,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -431,14 +460,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -450,14 +482,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -469,14 +504,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -488,14 +526,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -507,14 +548,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -526,14 +570,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -545,14 +592,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="rightEndcap.svg"
           className="MuiImageListItem-img"
           src="rightEndcap.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -929,7 +979,6 @@ Array [
     className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
   >
     <img
-      alt="parent.svg"
       src="parent.svg"
       style={
         Object {
@@ -1173,14 +1222,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="pillar.svg"
           className="MuiImageListItem-img"
           src="pillar.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -1377,7 +1429,6 @@ Array [
     className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
   >
     <img
-      alt="parent.svg"
       src="parent.svg"
       style={
         Object {
@@ -1545,14 +1596,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="pillar.svg"
           className="MuiImageListItem-img"
           src="pillar.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -1749,7 +1803,6 @@ Array [
     className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
   >
     <img
-      alt="parent.svg"
       src="parent.svg"
       style={
         Object {
@@ -1993,14 +2046,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="leftEndcap.svg"
           className="MuiImageListItem-img"
           src="leftEndcap.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2012,14 +2068,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2031,14 +2090,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2050,14 +2112,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2069,14 +2134,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2088,14 +2156,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2107,14 +2178,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2126,14 +2200,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2145,14 +2222,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="teeUpRight.svg"
           className="MuiImageListItem-img"
           src="teeUpRight.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2164,14 +2244,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2183,14 +2266,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2202,14 +2288,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2221,14 +2310,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="teeDown.svg"
           className="MuiImageListItem-img"
           src="teeDown.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2240,14 +2332,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2259,14 +2354,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2278,14 +2376,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2297,14 +2398,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="teeUpLeft.svg"
           className="MuiImageListItem-img"
           src="teeUpLeft.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2316,14 +2420,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2335,14 +2442,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2354,14 +2464,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2373,14 +2486,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2392,14 +2508,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2411,14 +2530,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2430,14 +2552,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2449,14 +2574,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="rightEndcap.svg"
           className="MuiImageListItem-img"
           src="rightEndcap.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -2923,7 +3051,6 @@ Array [
     className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
   >
     <img
-      alt="parent.svg"
       src="parent.svg"
       style={
         Object {
@@ -3113,7 +3240,6 @@ Array [
     className="MuiGrid-root MuiGrid-item css-13i4rnv-MuiGrid-root"
   >
     <img
-      alt="parent.svg"
       src="parent.svg"
       style={
         Object {
@@ -3433,14 +3559,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="leftEndcap.svg"
           className="MuiImageListItem-img"
           src="leftEndcap.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -3452,14 +3581,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -3471,14 +3603,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -3490,14 +3625,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -3509,14 +3647,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -3528,14 +3669,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -3547,14 +3691,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -3566,14 +3713,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -3585,14 +3735,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="intersect.svg"
           className="MuiImageListItem-img"
           src="intersect.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -3604,14 +3757,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -3623,14 +3779,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -3642,14 +3801,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -3661,14 +3823,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -3680,14 +3845,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -3699,14 +3867,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -3718,14 +3889,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="span.svg"
           className="MuiImageListItem-img"
           src="span.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
@@ -3737,14 +3911,17 @@ Array [
             "gridRowEnd": "span 1",
             "height": "auto",
             "marginBottom": undefined,
-            "transform": "scaleY(-1)",
           }
         }
       >
         <img
-          alt="rightEndcap.svg"
           className="MuiImageListItem-img"
           src="rightEndcap.svg"
+          style={
+            Object {
+              "transform": "scaleY(-1)",
+            }
+          }
         />
       </li>
       <li
