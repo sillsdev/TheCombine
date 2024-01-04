@@ -166,6 +166,14 @@ project name with a timestamp affixed.
 
     A project that has reached hundreds of MB in size may take multiple minutes to export.
 
+!!! note "Note"
+
+    Project settings, project users, and word flags are not exported.
+
+!!! note "Note"
+
+    Speaker consent files are exported, but are not imported into FieldWorks.
+
 ### Workshop Schedule {#workshop-schedule}
 
 ![Workshop Schedule](images/projectSettings5Sched.png){width=750 .center}

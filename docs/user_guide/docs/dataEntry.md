@@ -46,6 +46,10 @@ speaker will be automatically associated with every audio recording until you lo
 The speaker associated with a recording can be seen by hovering over its play icon, the green triangle. To change a
 recording's speaker, right click the green triangle (or press-and-hold on a touch screen).
 
+!!! note "Note"
+
+    Imported audio cannot be deleted or have a speaker added.
+
 ## New Entry with Duplicate Vernacular Form {#new-entry-with-duplicate-vernacular-form}
 
 If you submit a new entry with identical vernacular form and gloss to an existing entry, that entry will be updated

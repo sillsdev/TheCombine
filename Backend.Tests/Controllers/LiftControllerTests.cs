@@ -588,11 +588,10 @@ namespace Backend.Tests.Controllers
             allWords = _wordRepo.GetAllWords(proj2.Id).Result;
             Assert.That(allWords, Has.Count.EqualTo(roundTripObj.NumOfWords));
 
-            // We are currently only testing guids and audio on the single-entry data sets.
+            // We are currently only testing guids on the single-entry data sets.
             if (roundTripObj.EntryGuid != "" && allWords.Count == 1)
             {
                 var word = allWords[0];
-
                 Assert.That(word.Guid.ToString(), Is.EqualTo(roundTripObj.EntryGuid));
                 if (roundTripObj.SenseGuid != "")
                 {
