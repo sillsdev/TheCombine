@@ -170,9 +170,11 @@ project name with a timestamp affixed.
 
     Project settings, project users, and word flags are not exported.
 
-!!! note "Note"
+#### Export pronunciation speakers
 
-    Speaker consent files are exported, but are not imported into FieldWorks.
+When a project is exported from TheCombine and imported into FieldWorks, if a pronunciation has an associated speaker,
+the speaker name and id will be added as a pronunciation label. Consent files will be exported with speaker id used for
+the file name. The consent files can be found in the zipped export, but will not be imported into FieldWorks.
 
 ### Workshop Schedule {#workshop-schedule}
 
