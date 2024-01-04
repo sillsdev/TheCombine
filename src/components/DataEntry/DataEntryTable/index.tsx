@@ -68,7 +68,8 @@ enum DefunctStatus {
   Retire = "RETIRE",
 }
 
-/** Add current semantic domain to specified sense within a word. */
+/** Add current semantic domain to specified sense within a word.
+ * Return the word unchanged if the sense already has the domain. */
 export function addSemanticDomainToSense(
   semDom: SemanticDomain,
   word: Word,
@@ -325,11 +326,23 @@ export default function DataEntryTable(
   );
 
   /** Add one-sense word to the display of recent entries. */
-  const addToDisplay = (wordAccess: WordAccess, insertIndex?: number): void => {
+  const addToDisplay = (wordAccess: WordAccess, insertIndex = -1): void => {
     setState((prevState) => {
       const recentWords = [...prevState.recentWords];
-      if (insertIndex !== undefined && insertIndex < recentWords.length) {
-        recentWords.splice(insertIndex, 0, wordAccess);
+
+      // If wordAccess has senseGuid matching a recent word,
+      // replace it instead of just inserting.
+      let deleteCount = 0;
+      const replaceIndex = recentWords.findIndex(
+        (wa) => wa.senseGuid == wordAccess.senseGuid
+      );
+      if (replaceIndex > -1) {
+        deleteCount = 1;
+        insertIndex = replaceIndex;
+      }
+
+      if (insertIndex > -1 && insertIndex < recentWords.length) {
+        recentWords.splice(insertIndex, deleteCount, wordAccess);
       } else {
         recentWords.push(wordAccess);
       }
@@ -418,7 +431,7 @@ export default function DataEntryTable(
           ? newWord(prev.newVern)
           : undefined;
 
-      // If selected duplicate has one empty sense, automatically select it
+      // If selected duplicate has one empty sense, automatically select it.
       const soloSense =
         selectedDup?.senses.length === 1 ? selectedDup.senses[0] : undefined;
       const emptySense =
@@ -703,7 +716,7 @@ export default function DataEntryTable(
       if (state.selectedDup?.id) {
         await updateWordWithNewEntry();
       } else {
-        await buildAndAddNewEntry();
+        await addNewEntry();
       }
     }
     resetEverything();
@@ -713,23 +726,19 @@ export default function DataEntryTable(
   // Async functions for handling changes of the NewEntry.
   /////////////////////////////////
 
-  /** Build a word from the new entry state (except the audio). */
-  const buildNewEntryNoAudio = (): Word => {
+  /** Build a word from the new entry state and add it. */
+  const addNewEntry = async (): Promise<void> => {
     const lang = analysisLang.bcp47;
     const word = newWord(state.newVern, lang);
     word.senses.push(
       newSense(state.newGloss, lang, makeSemDomCurrent(props.semanticDomain))
     );
     word.note = newNote(state.newNote, lang);
-    return word;
+    await addNewWord(word, state.newAudioUrls);
   };
 
-  /** Build a word from the new entry state and add it. */
-  const buildAndAddNewEntry = async (): Promise<void> => {
-    await addNewWord(buildNewEntryNoAudio(), state.newAudioUrls);
-  };
-
-  /** Checks if sense already exists with this gloss and semantic domain. */
+  /** Update the selected duplicate with the new entry.
+   * (Only considers the first gloss, `.glosses[0]`, of each sense.) */
   const updateWordWithNewEntry = async (): Promise<void> => {
     const oldWord = state.selectedDup;
     if (!oldWord || !oldWord.id) {
@@ -738,6 +747,7 @@ export default function DataEntryTable(
 
     const semDom = makeSemDomCurrent(props.semanticDomain);
 
+    // If a dup sense is selected, update it.
     if (state.selectedSenseGuid) {
       const oldSense = oldWord.senses.find(
         (s) => s.guid === state.selectedSenseGuid
@@ -766,8 +776,8 @@ export default function DataEntryTable(
         return;
       }
 
-      // Only update the selected sense if the old gloss is empty or matches the new gloss.
-      if (!oldSense.glosses[0].def) {
+      // Only update the selected sense if the old gloss is blank or matches the new gloss.
+      if (!oldSense.glosses[0].def.trim()) {
         oldSense.glosses[0] = newGloss(state.newGloss, analysisLang.bcp47);
       }
       if (oldSense.glosses[0].def === state.newGloss) {
@@ -780,7 +790,7 @@ export default function DataEntryTable(
       }
     }
 
-    // If this gloss matches a sense on the word, update that sense.
+    // Otherwise, if new gloss matches a sense, update that sense.
     for (const sense of oldWord.senses) {
       if (sense.glosses?.length && sense.glosses[0].def === state.newGloss) {
         if (sense.semanticDomains.find((d) => d.id === semDom.id)) {
@@ -874,7 +884,7 @@ export default function DataEntryTable(
       }
 
       if (oldSenses.length === 1 && oldSense.semanticDomains.length === 1) {
-        // The word can simply be updated as it stand
+        // The word can simply be updated as it stands.
         await updateWordInBackend({ ...oldEntry.word, vernacular });
       } else {
         // Retract and replaced with a new entry.
@@ -997,7 +1007,7 @@ export default function DataEntryTable(
             analysisLang={analysisLang}
             vernacularLang={vernacularLang}
             // Parent handles new entry state of child:
-            addNewEntry={buildAndAddNewEntry}
+            addNewEntry={addNewEntry}
             resetNewEntry={resetNewEntry}
             updateWordWithNewGloss={updateWordWithNewEntry}
             newAudioUrls={state.newAudioUrls}

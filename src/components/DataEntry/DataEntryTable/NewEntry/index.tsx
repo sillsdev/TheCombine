@@ -209,11 +209,6 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     if (id !== undefined) {
       setSelectedDup(id);
     }
-
-    if (id) {
-      setSenseOpen(true);
-    }
-
     setVernOpen(false);
   };
 
