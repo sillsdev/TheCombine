@@ -45,7 +45,7 @@ def main() -> None:
             new_audio = []
             for aud in word["audio"]:
                 if isinstance(aud, str):
-                    new_audio.append({"speakerId": "", "protected": False, "fileName": aud})
+                    new_audio.append({"speakerId": "", "protected": True, "fileName": aud})
                 else:
                     new_audio.append(aud)
             word["audio"] = new_audio
