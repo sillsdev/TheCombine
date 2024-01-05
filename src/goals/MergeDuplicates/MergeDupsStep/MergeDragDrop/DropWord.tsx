@@ -106,38 +106,44 @@ export function DropWordCardHeader(
     (state: StoreState) => state.mergeDuplicateGoal.data
   );
 
+  const dispatchFlagWord = (flag: Flag): void => {
+    dispatch(flagWord({ wordId: props.wordId, flag }));
+  };
+  const dispatchSetVern = (vern: string): void => {
+    dispatch(setVern({ wordId: props.wordId, vern }));
+  };
+
   const treeWord = props.treeWord;
   const guids = Object.values(treeWord?.sensesGuids ?? {}).flatMap((sg) => sg);
   const verns = [
     ...new Set(guids.map((g) => words[senses[g].srcWordId].vernacular)),
   ];
 
-  // reset vern if not in vern list
+  // Reset vern if not in vern list.
   if (treeWord && !verns.includes(treeWord.vern)) {
-    dispatch(setVern({ wordId: props.wordId, vern: verns[0] || "" }));
+    dispatchSetVern(verns.length ? verns[0] : "");
   }
 
   const headerTitle = treeWord ? (
-    <Select
-      variant="standard"
-      value={treeWord.vern}
-      onChange={(e) =>
-        dispatch(
-          setVern({
-            wordId: props.wordId,
-            vern: e.target.value as string,
-          })
-        )
-      }
-    >
-      {verns.map((vern) => (
-        <MenuItem value={vern} key={props.wordId + vern}>
-          <TypographyWithFont variant="h5" vernacular>
-            {vern}
-          </TypographyWithFont>
-        </MenuItem>
-      ))}
-    </Select>
+    verns.length > 1 && verns.includes(treeWord.vern) ? (
+      <Select
+        onChange={(e) => dispatchSetVern(e.target.value as string)}
+        value={treeWord.vern}
+        variant="standard"
+      >
+        {verns.map((vern) => (
+          <MenuItem key={props.wordId + vern} value={vern}>
+            <TypographyWithFont variant="h5" vernacular>
+              {vern}
+            </TypographyWithFont>
+          </MenuItem>
+        ))}
+      </Select>
+    ) : (
+      <TypographyWithFont variant="h5" vernacular>
+        {treeWord.vern}
+      </TypographyWithFont>
+    )
   ) : (
     <div />
   );
@@ -146,19 +152,17 @@ export function DropWordCardHeader(
     <>
       {props.protectedWithOneChild && (
         <IconButtonWithTooltip
+          buttonId={`word-${props.wordId}-protected`}
           icon={<WarningOutlined />}
           side="top"
           size="small"
           textId="mergeDups.helpText.protectedWord"
-          buttonId={`word-${props.wordId}-protected`}
         />
       )}
       <FlagButton
-        flag={treeWord.flag}
-        updateFlag={(newFlag: Flag) => {
-          dispatch(flagWord({ wordId: props.wordId, flag: newFlag }));
-        }}
         buttonId={`word-${props.wordId}-flag`}
+        flag={treeWord.flag}
+        updateFlag={dispatchFlagWord}
       />
     </>
   ) : (
@@ -171,9 +175,9 @@ export function DropWordCardHeader(
       action={headerAction}
       style={{
         backgroundColor: treeWord?.protected ? "lightyellow" : "white",
-        padding: theme.spacing(1),
         height: 44,
         minWidth: 150,
+        padding: theme.spacing(1),
       }}
     />
   );
