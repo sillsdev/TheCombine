@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using BackendFramework.Models;
 using NUnit.Framework;
 
@@ -67,11 +68,39 @@ namespace Backend.Tests.Models
             var domGlossSense = new Sense { Glosses = glossList, SemanticDomains = domList };
             var defGlossSense = new Sense { Definitions = defList, Glosses = glossList };
             // For empty senses, semantic domains are checked.
-            Assert.That((new Sense()).IsContainedIn(domSense), Is.True);
+            Assert.That(new Sense().IsContainedIn(domSense), Is.True);
             Assert.That(domSense.IsContainedIn(new Sense()), Is.False);
             // For non-empty senses, semantic domains aren't checked.
             Assert.That(domGlossSense.IsContainedIn(defGlossSense), Is.True);
             Assert.That(defGlossSense.IsContainedIn(domGlossSense), Is.False);
+        }
+
+        [Test]
+        public void TestCopyDomains()
+        {
+            // Add domains from a new sense, one a duplicate and one new.
+            var oldSense = Util.RandomSense();
+            var newSense = oldSense.Clone();
+            var oldSemDom = Util.RandomSemanticDomain();
+            var oldSemDomDup = oldSemDom.Clone();
+            oldSemDom.UserId = "id-not-in-dup";
+            oldSense.SemanticDomains.Add(oldSemDom);
+            newSense.SemanticDomains.Add(oldSemDomDup);
+            var newSemDom = Util.RandomSemanticDomain();
+            newSense.SemanticDomains.Add(newSemDom);
+
+            var userId = Util.RandString();
+            oldSense.CopyDomains(newSense, userId);
+
+            // Ensure the duplicate domain isn't added.
+            var oldDom = oldSense.SemanticDomains.FindAll(dom => dom.Id == oldSemDom.Id);
+            Assert.That(oldDom.Count, Is.EqualTo(1));
+            Assert.That(oldDom.First().UserId, Is.Not.EqualTo(userId));
+
+            // Ensure the new domain is added.
+            var newDom = oldSense.SemanticDomains.FindAll(dom => dom.Id == newSemDom.Id);
+            Assert.That(newDom.Count, Is.EqualTo(1));
+            Assert.That(newDom.First().UserId, Is.EqualTo(userId));
         }
     }
 
