@@ -88,7 +88,12 @@ data.senses[S2] = { ...newMergeTreeSense("S2", idA, 1), guid: S2 };
 data.senses[S3] = { ...newMergeTreeSense("S3", idB, 0), guid: S3 };
 data.senses[S4] = { ...newMergeTreeSense("S4", idB, 1), guid: S4 };
 
-beforeEach(jest.clearAllMocks);
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockMergeWords.mockImplementation((mwArray: MergeWords[]) =>
+    mwArray.map((mw) => mw.parent.id + "+")
+  );
+});
 
 describe("MergeDupActions", () => {
   describe("mergeAll", () => {

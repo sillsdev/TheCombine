@@ -110,8 +110,9 @@ export function mergeAll() {
     const mergeTree = getState().mergeDuplicateGoal;
     const mergeWordsArray = [...mergeTree.mergeWords];
     dispatch(clearMergeWords());
+    let parentIds: string[] = [];
     if (mergeWordsArray.length) {
-      const parentIds = await backend.mergeWords(mergeWordsArray);
+      parentIds = await backend.mergeWords(mergeWordsArray);
       const childIds = [
         ...new Set(
           mergeWordsArray.flatMap((m) => m.children).map((s) => s.srcWordId)
@@ -122,16 +123,12 @@ export function mergeAll() {
       await dispatch(asyncUpdateGoal());
     }
 
-    // Blacklist the set of words with updated ids,
-    // minus any words that received a sense from another word.
+    // Blacklist the set of words with updated ids.
     const mergedIds = mergeWordsArray.map((mw) => mw.parent.id);
     const unmergedIds = Object.keys(mergeTree.data.words).filter(
       (id) => !(id in mergedIds)
     );
-    const soloParentIds = mergeWordsArray
-      .filter((mw) => mw.children.every((sw) => sw.srcWordId === mw.parent.id))
-      .map((mw) => mw.parent.id);
-    const blacklistIds = [...unmergedIds, ...soloParentIds];
+    const blacklistIds = [...unmergedIds, ...parentIds];
     if (blacklistIds.length > 1) {
       await backend.blacklistAdd(blacklistIds);
     }
