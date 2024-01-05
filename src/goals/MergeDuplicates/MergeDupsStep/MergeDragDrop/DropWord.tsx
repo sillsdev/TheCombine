@@ -32,7 +32,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
   const dataSenses = useAppSelector(
     (state: StoreState) => state.mergeDuplicateGoal.data.senses
   );
-  // treeWord might be undefined
+  // `treeWord` might be undefined.
   const treeWord = useAppSelector(
     (state: StoreState) => state.mergeDuplicateGoal.tree.words[props.wordId]
   );
