@@ -8,7 +8,6 @@ import {
   TreeRowProps,
   getNumCols,
 } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
-import TreeTile from "components/TreeView/TreeDepiction/TreeTile";
 import * as tree from "resources/tree";
 
 const HALF_TILE = (RATIO_TILE_TO_GAP - 1) / 2; // Half of cols-per-tile, rounded down
@@ -16,11 +15,9 @@ const HALF_TILE = (RATIO_TILE_TO_GAP - 1) / 2; // Half of cols-per-tile, rounded
 export default function ChildrenRow(props: TreeRowProps): ReactElement {
   // Creates a tile for the specified tree part
   const treeTile = (treeSrc: string): ReactElement => (
-    <TreeTile
-      colWidth={props.colWidth}
-      imgSrc={treeSrc}
-      key={treeSrc + Math.random()}
-    />
+    <ImageListItem key={treeSrc + Math.random()}>
+      <img src={treeSrc} style={{ transform: "scaleY(-1)" }} />
+    </ImageListItem>
   );
 
   // Creates a span across multiple columns
@@ -112,7 +109,7 @@ export default function ChildrenRow(props: TreeRowProps): ReactElement {
       cols={numCols}
       gap={0}
       rowHeight={"auto"}
-      style={{ width: numCols * props.colWidth }}
+      style={{ overflow: "visible", width: numCols * props.colWidth }}
     >
       {joistRow()}
       {domainRow()}
