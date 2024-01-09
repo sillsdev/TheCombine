@@ -48,22 +48,23 @@ export const SpeakerApiAxiosParamCreator = function (
   return {
     /**
      *
+     * @param {string} projectId
      * @param {string} name
-     * @param {string} [projectId]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     createSpeaker: async (
+      projectId: string,
       name: string,
-      projectId?: string,
       options: any = {}
     ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("createSpeaker", "projectId", projectId);
       // verify required parameter 'name' is not null or undefined
       assertParamExists("createSpeaker", "name", name);
-      const localVarPath = `/create/{name}`.replace(
-        `{${"name"}}`,
-        encodeURIComponent(String(name))
-      );
+      const localVarPath = `/v1/projects/{projectId}/speakers/create/{name}`
+        .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
+        .replace(`{${"name"}}`, encodeURIComponent(String(name)));
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -78,10 +79,6 @@ export const SpeakerApiAxiosParamCreator = function (
       };
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
-
-      if (projectId !== undefined) {
-        localVarQueryParameter["projectId"] = projectId;
-      }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
       let headersFromBaseOptions =
@@ -526,21 +523,21 @@ export const SpeakerApiFp = function (configuration?: Configuration) {
   return {
     /**
      *
+     * @param {string} projectId
      * @param {string} name
-     * @param {string} [projectId]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async createSpeaker(
+      projectId: string,
       name: string,
-      projectId?: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.createSpeaker(
-        name,
         projectId,
+        name,
         options
       );
       return createRequestFunction(
@@ -780,18 +777,18 @@ export const SpeakerApiFactory = function (
   return {
     /**
      *
+     * @param {string} projectId
      * @param {string} name
-     * @param {string} [projectId]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     createSpeaker(
+      projectId: string,
       name: string,
-      projectId?: string,
       options?: any
     ): AxiosPromise<string> {
       return localVarFp
-        .createSpeaker(name, projectId, options)
+        .createSpeaker(projectId, name, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -940,14 +937,14 @@ export interface SpeakerApiCreateSpeakerRequest {
    * @type {string}
    * @memberof SpeakerApiCreateSpeaker
    */
-  readonly name: string;
+  readonly projectId: string;
 
   /**
    *
    * @type {string}
    * @memberof SpeakerApiCreateSpeaker
    */
-  readonly projectId?: string;
+  readonly name: string;
 }
 
 /**
@@ -1152,8 +1149,8 @@ export class SpeakerApi extends BaseAPI {
   ) {
     return SpeakerApiFp(this.configuration)
       .createSpeaker(
-        requestParameters.name,
         requestParameters.projectId,
+        requestParameters.name,
         options
       )
       .then((request) => request(this.axios, this.basePath));
