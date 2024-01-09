@@ -12,7 +12,24 @@ import {
 export default function CurrentRow(props: TreeDepictionProps): ReactElement {
   const { next, previous } = props.currentDomain;
 
-  return (
+  const currentTile = (
+    <Button
+      color="primary"
+      disabled={!props.currentDomain.parent}
+      fullWidth
+      id="current-domain"
+      onClick={() => props.animate(props.currentDomain)}
+      size="large"
+      style={{ height: "95%" }}
+      variant="contained"
+    >
+      <DomainText domain={props.currentDomain} extraProps={{ minWidth: 200 }} />
+    </Button>
+  );
+
+  return props.small ? (
+    currentTile
+  ) : (
     <ImageList cols={7} gap={20} rowHeight={"auto"}>
       <ImageListItem cols={2}>
         {previous && (
@@ -23,23 +40,7 @@ export default function CurrentRow(props: TreeDepictionProps): ReactElement {
           />
         )}
       </ImageListItem>
-      <ImageListItem cols={3}>
-        <Button
-          color="primary"
-          disabled={!props.currentDomain.parent}
-          fullWidth
-          id="current-domain"
-          onClick={() => props.animate(props.currentDomain)}
-          size="large"
-          style={{ height: "95%" }}
-          variant="contained"
-        >
-          <DomainText
-            domain={props.currentDomain}
-            extraProps={{ minWidth: 200 }}
-          />
-        </Button>
-      </ImageListItem>
+      <ImageListItem cols={3}>{currentTile}</ImageListItem>
       <ImageListItem cols={2}>
         {next && (
           <DomainTileButton

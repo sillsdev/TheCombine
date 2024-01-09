@@ -26,6 +26,7 @@ export enum Direction {
 export interface TreeDepictionProps {
   animate: (domain: SemanticDomain) => Promise<void>;
   currentDomain: SemanticDomainTreeNode;
+  small?: boolean;
 }
 
 export interface TreeRowProps extends TreeDepictionProps {
