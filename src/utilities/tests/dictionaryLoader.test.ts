@@ -13,7 +13,7 @@ const bcp47 = Bcp47Code.Es;
 
 describe("DictionaryLoader", () => {
   describe("constructor", () => {
-    it(" ets lang and gets keys", () => {
+    it("gets lang and gets keys", () => {
       const loader = new DictionaryLoader(bcp47);
       expect(loader.lang === bcp47);
       expect(mockGetKeys).toHaveBeenCalledTimes(1);

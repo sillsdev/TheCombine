@@ -8,9 +8,12 @@ interface SplitWord {
   final?: string;
 }
 
+const maxSuggestions = 5;
+
 export default class SpellChecker {
   private bcp47: Bcp47Code | undefined;
   private dictLoader: DictionaryLoader | undefined;
+  private dictLoaded: { [key: string]: string[] } = {};
   private spell: nspell | undefined;
 
   constructor(lang?: string) {
@@ -29,9 +32,11 @@ export default class SpellChecker {
 
     this.bcp47 = bcp47;
     this.dictLoader = new DictionaryLoader(bcp47);
+    this.dictLoaded = {};
     await this.dictLoader.loadDictionary().then((dic) => {
       if (dic !== undefined) {
         this.spell = nspell("SET UTF-8", dic);
+        this.addToDictLoaded(dic);
         if (process.env.NODE_ENV === "development") {
           console.log(`Loaded spell-checker: ${bcp47}`);
         }
@@ -47,12 +52,22 @@ export default class SpellChecker {
 
     const part = await this.dictLoader.loadDictPart(word);
     if (part) {
+      this.addToDictLoaded(part);
       this.spell.personal(part);
     }
   }
 
   correct(word: string): boolean | undefined {
     return this.spell?.correct(word);
+  }
+
+  addToDictLoaded(entries: string): void {
+    entries.split("\n").map((w) => {
+      if (!(w[0] in this.dictLoaded)) {
+        this.dictLoaded[w[0]] = [];
+      }
+      this.dictLoaded[w[0]].push(w);
+    });
   }
 
   static cleanAndSplit(word: string): SplitWord {
@@ -88,15 +103,30 @@ export default class SpellChecker {
     // Don't await--just load for future use.
     this.load(final);
 
+    // Get spelling suggestions.
     let suggestions = this.spell.suggest(final);
-    if (!suggestions.length) {
-      // Extend the current word to get suggestions 1 or 2 characters longer.
-      suggestions = this.spell.suggest(`${final}..`);
+
+    // Add lookahead suggestions.
+    if (this.dictLoaded[final[0]] && suggestions.length < maxSuggestions) {
+      const lookahead = this.dictLoaded[final[0]].filter(
+        (entry) =>
+          entry.length >= final.length &&
+          entry.substring(0, final.length) === final &&
+          !suggestions.includes(entry)
+      );
+      suggestions.push(...lookahead.sort());
     }
 
+    // Limit to maxSuggestions.
+    if (suggestions.length > maxSuggestions) {
+      suggestions = suggestions.slice(0, maxSuggestions);
+    }
+
+    // Prepend the start of the typed phrase, if any.
     if (suggestions.length && allButFinal) {
       suggestions = suggestions.map((w) => allButFinal + w);
     }
+
     return suggestions;
   }
 }
