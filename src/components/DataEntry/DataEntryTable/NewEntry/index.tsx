@@ -11,7 +11,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-import { Word, WritingSystem } from "api/models";
+import { Pronunciation, Word, WritingSystem } from "api/models";
 import { focusInput } from "components/DataEntry/DataEntryTable";
 import {
   DeleteEntry,
@@ -24,6 +24,7 @@ import VernDialog from "components/DataEntry/DataEntryTable/NewEntry/VernDialog"
 import PronunciationsFrontend from "components/Pronunciations/PronunciationsFrontend";
 import { StoreState } from "types";
 import theme from "types/theme";
+import { FileWithSpeakerId } from "types/word";
 
 const idAffix = "new-entry";
 
@@ -45,9 +46,10 @@ interface NewEntryProps {
   addNewEntry: () => Promise<void>;
   resetNewEntry: () => void;
   updateWordWithNewGloss: (wordId: string) => Promise<void>;
-  newAudioUrls: string[];
-  addNewAudioUrl: (file: File) => void;
-  delNewAudioUrl: (url: string) => void;
+  newAudio: Pronunciation[];
+  addNewAudio: (file: FileWithSpeakerId) => void;
+  delNewAudio: (url: string) => void;
+  repNewAudio: (audio: Pronunciation) => void;
   newGloss: string;
   setNewGloss: (gloss: string) => void;
   newNote: string;
@@ -73,9 +75,10 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     addNewEntry,
     resetNewEntry,
     updateWordWithNewGloss,
-    newAudioUrls,
-    addNewAudioUrl,
-    delNewAudioUrl,
+    newAudio,
+    addNewAudio,
+    delNewAudio,
+    repNewAudio,
     newGloss,
     setNewGloss,
     newNote,
@@ -291,9 +294,10 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
       </Grid>
       <Grid item xs={2} style={gridItemStyle(1)}>
         <PronunciationsFrontend
-          pronunciationFiles={newAudioUrls}
-          deleteAudio={delNewAudioUrl}
-          uploadAudio={addNewAudioUrl}
+          audio={newAudio}
+          deleteAudio={delNewAudio}
+          replaceAudio={repNewAudio}
+          uploadAudio={addNewAudio}
           onClick={() => focus(FocusTarget.Gloss)}
         />
       </Grid>

@@ -5,22 +5,17 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
+import { defaultState } from "components/App/DefaultState";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
-import { defaultState as pronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import theme from "types/theme";
-
-// Mock the audio components
-jest
-  .spyOn(window.HTMLMediaElement.prototype, "pause")
-  .mockImplementation(() => {});
-jest.mock("components/Pronunciations/Recorder");
+import { newPronunciation } from "types/word";
 
 // Test variables
 let testRenderer: ReactTestRenderer;
-const mockAudio = ["a.wav", "b.wav"];
-const mockStore = configureMockStore()({ pronunciationsState });
+const mockAudio = ["a.wav", "b.wav"].map((f) => newPronunciation(f));
+const mockStore = configureMockStore()(defaultState);
 
 const renderPronunciationsBackend = async (
   withRecord: boolean
@@ -31,10 +26,11 @@ const renderPronunciationsBackend = async (
         <ThemeProvider theme={theme}>
           <Provider store={mockStore}>
             <PronunciationsBackend
+              audio={mockAudio}
               playerOnly={!withRecord}
-              pronunciationFiles={mockAudio}
               wordId="mock-id"
               deleteAudio={jest.fn()}
+              replaceAudio={jest.fn()}
               uploadAudio={withRecord ? jest.fn() : undefined}
             />
           </Provider>
