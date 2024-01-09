@@ -76,7 +76,7 @@ function PlayConsentListItemIcon(props: ConsentIconProps): ReactElement {
   return (
     <ListItemIcon data-testid={ListItemIconId.PlayAudio}>
       <AudioPlayer
-        audio={{ ...newPronunciation(props.speaker.id), protected: true }}
+        audio={newPronunciation(props.speaker.id)}
         deleteAudio={handleDeleteAudio}
         pronunciationUrl={getConsentUrl(props.speaker)}
         size="small"
