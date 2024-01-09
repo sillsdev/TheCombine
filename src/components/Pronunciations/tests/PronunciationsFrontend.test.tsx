@@ -5,33 +5,29 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
+import { defaultState } from "components/App/DefaultState";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import PronunciationsFrontend from "components/Pronunciations/PronunciationsFrontend";
-import { defaultState as pronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import theme from "types/theme";
-
-// Mock the audio components
-jest
-  .spyOn(window.HTMLMediaElement.prototype, "pause")
-  .mockImplementation(() => {});
-jest.mock("components/Pronunciations/Recorder");
+import { newPronunciation } from "types/word";
 
 // Test variables
 let testRenderer: renderer.ReactTestRenderer;
-const mockStore = configureMockStore()({ pronunciationsState });
+const mockStore = configureMockStore()(defaultState);
 
 describe("PronunciationsFrontend", () => {
   it("renders with record button and play buttons", () => {
-    const audio = ["a.wav", "b.wav"];
+    const audio = ["a.wav", "b.wav"].map((f) => newPronunciation(f));
     renderer.act(() => {
       testRenderer = renderer.create(
         <StyledEngineProvider injectFirst>
           <ThemeProvider theme={theme}>
             <Provider store={mockStore}>
               <PronunciationsFrontend
-                pronunciationFiles={audio}
+                audio={audio}
                 deleteAudio={jest.fn()}
+                replaceAudio={jest.fn()}
                 uploadAudio={jest.fn()}
               />
             </Provider>

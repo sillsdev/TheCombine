@@ -56,7 +56,6 @@ jest.mock(
   () => MockRecentEntry
 );
 jest.mock("components/Pronunciations/PronunciationsFrontend", () => "div");
-jest.mock("components/Pronunciations/Recorder");
 jest.mock("utilities/utilities");
 
 jest.spyOn(window, "alert").mockImplementation(() => {});

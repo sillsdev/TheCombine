@@ -186,6 +186,10 @@ namespace BackendFramework
 
             // Register concrete types for dependency injection
 
+            // Banner types
+            services.AddTransient<IBannerContext, BannerContext>();
+            services.AddTransient<IBannerRepository, BannerRepository>();
+
             // Email types
             services.AddTransient<IEmailContext, EmailContext>();
             services.AddTransient<IEmailService, EmailService>();
@@ -213,6 +217,17 @@ namespace BackendFramework
             services.AddTransient<IProjectContext, ProjectContext>();
             services.AddTransient<IProjectRepository, ProjectRepository>();
 
+            // Semantic Domain types
+            services.AddSingleton<ISemanticDomainContext, SemanticDomainContext>();
+            services.AddSingleton<ISemanticDomainRepository, SemanticDomainRepository>();
+
+            // Speaker types
+            services.AddTransient<ISpeakerContext, SpeakerContext>();
+            services.AddTransient<ISpeakerRepository, SpeakerRepository>();
+
+            // Statistics types
+            services.AddSingleton<IStatisticsService, StatisticsService>();
+
             // User types
             services.AddTransient<IUserContext, UserContext>();
             services.AddTransient<IUserRepository, UserRepository>();
@@ -230,17 +245,6 @@ namespace BackendFramework
             services.AddTransient<IWordContext, WordContext>();
             services.AddTransient<IWordRepository, WordRepository>();
             services.AddTransient<IWordService, WordService>();
-
-            // Banner types
-            services.AddTransient<IBannerContext, BannerContext>();
-            services.AddTransient<IBannerRepository, BannerRepository>();
-
-            // Semantic Domain types
-            services.AddSingleton<ISemanticDomainContext, SemanticDomainContext>();
-            services.AddSingleton<ISemanticDomainRepository, SemanticDomainRepository>();
-
-            // Statistics types
-            services.AddSingleton<IStatisticsService, StatisticsService>();
         }
 
         /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
