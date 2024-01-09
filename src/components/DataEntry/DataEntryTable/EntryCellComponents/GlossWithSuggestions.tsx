@@ -27,8 +27,6 @@ export default function GlossWithSuggestions(
 ): ReactElement {
   const spellChecker = useContext(SpellCheckerContext);
 
-  const maxSuggestions = 5;
-
   useEffect(() => {
     if (props.onUpdate) {
       props.onUpdate();
@@ -39,11 +37,8 @@ export default function GlossWithSuggestions(
     <Autocomplete
       id={props.textFieldId}
       disabled={props.isDisabled}
-      filterOptions={(options: string[]) =>
-        options.length <= maxSuggestions
-          ? options
-          : options.slice(0, maxSuggestions)
-      }
+      // there's a bug with disappearing options if filterOptions isn't specified
+      filterOptions={(options) => options}
       // freeSolo allows use of a typed entry not available as a drop-down option
       freeSolo
       includeInputInList

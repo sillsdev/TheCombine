@@ -1,11 +1,16 @@
 import SpellChecker from "utilities/spellChecker";
 
 jest.mock("resources/dictionaries", () => ({
-  getDict: () => Promise.resolve(`1\n${mockValidWord}`),
+  getDict: () => Promise.resolve(`2\n${mockValidWordA}\n${mockValidWordBExt}`),
   getKeys: () => [],
 }));
 
-const mockValidWord = "mockWord";
+const invalidWord = "asdfghjkl";
+const mockWord = "mockWord";
+const mockValidWordA = `${mockWord}A`;
+const mockWordB = `${mockWord}B`;
+const mockWordC = `${mockWord}C`;
+const mockValidWordBExt = `${mockWordB}Extended`;
 
 describe("SpellChecker", () => {
   describe("correct", () => {
@@ -13,7 +18,7 @@ describe("SpellChecker", () => {
       const spellChecker = new SpellChecker("en");
       // Give the dictionary half-a-sec to load.
       setTimeout(() => {
-        expect(spellChecker.correct(mockValidWord)).toEqual(true);
+        expect(spellChecker.correct(mockValidWordA)).toEqual(true);
         done();
       }, 500);
     });
@@ -22,7 +27,7 @@ describe("SpellChecker", () => {
       const spellChecker = new SpellChecker("en");
       // Give the dictionary half-a-sec to load.
       setTimeout(() => {
-        expect(spellChecker.correct("abjkdsjf")).toEqual(false);
+        expect(spellChecker.correct(invalidWord)).toEqual(false);
         done();
       }, 500);
     });
@@ -73,13 +78,38 @@ describe("SpellChecker", () => {
   });
 
   describe("getSpellingSuggestions", () => {
-    it("returns suggestions", (done) => {
+    it("returns nothing for gibberish", (done) => {
       const spellChecker = new SpellChecker("en");
       // Give the dictionary half-a-sec to load.
       setTimeout(() => {
-        expect(
-          spellChecker.getSpellingSuggestions(`${mockValidWord}`)
-        ).toHaveLength(1);
+        const suggestions = spellChecker.getSpellingSuggestions(invalidWord);
+        expect(suggestions).toHaveLength(0);
+        done();
+      }, 500);
+    });
+
+    it("returns spelling correction", (done) => {
+      const spellChecker = new SpellChecker("en");
+      // Give the dictionary half-a-sec to load.
+      setTimeout(() => {
+        const suggestions = spellChecker.getSpellingSuggestions(mockWordC);
+        // Returns suggestion with 1 letter different.
+        expect(suggestions).toContain(mockValidWordA);
+        // Don't return lookahead for word 1 letter different.
+        expect(suggestions).not.toContain(mockValidWordBExt);
+        done();
+      }, 500);
+    });
+
+    it("returns spelling correction and lookahead", (done) => {
+      const spellChecker = new SpellChecker("en");
+      // Give the dictionary half-a-sec to load.
+      setTimeout(() => {
+        const suggestions = spellChecker.getSpellingSuggestions(mockWordB);
+        // Returns suggestion with 1 letter different.
+        expect(suggestions).toContain(mockValidWordA);
+        // Returns suggestions with many letters added.
+        expect(suggestions).toContain(mockValidWordBExt);
         done();
       }, 500);
     });
