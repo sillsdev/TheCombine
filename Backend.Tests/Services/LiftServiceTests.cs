@@ -11,6 +11,7 @@ namespace Backend.Tests.Services
     public class LiftServiceTests
     {
         private ISemanticDomainRepository _semDomRepo = null!;
+        private ISpeakerRepository _speakerRepo = null!;
         private ILiftService _liftService = null!;
 
         private const string FileName = "file.lift-ranges";
@@ -21,7 +22,8 @@ namespace Backend.Tests.Services
         public void Setup()
         {
             _semDomRepo = new SemanticDomainRepositoryMock();
-            _liftService = new LiftService(_semDomRepo);
+            _speakerRepo = new SpeakerRepositoryMock();
+            _liftService = new LiftService(_semDomRepo, _speakerRepo);
         }
 
         [Test]

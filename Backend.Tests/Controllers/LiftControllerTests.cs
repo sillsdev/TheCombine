@@ -23,6 +23,7 @@ namespace Backend.Tests.Controllers
     {
         private IProjectRepository _projRepo = null!;
         private ISemanticDomainRepository _semDomRepo = null!;
+        private ISpeakerRepository _speakerRepo = null!;
         private IWordRepository _wordRepo = null!;
         private ILiftService _liftService = null!;
         private IHubContext<CombineHub> _notifyService = null!;
@@ -54,8 +55,9 @@ namespace Backend.Tests.Controllers
         {
             _projRepo = new ProjectRepositoryMock();
             _semDomRepo = new SemanticDomainRepositoryMock();
+            _speakerRepo = new SpeakerRepositoryMock();
             _wordRepo = new WordRepositoryMock();
-            _liftService = new LiftService(_semDomRepo);
+            _liftService = new LiftService(_semDomRepo, _speakerRepo);
             _notifyService = new HubContextMock();
             _permissionService = new PermissionServiceMock();
             _wordService = new WordService(_wordRepo);
@@ -512,17 +514,18 @@ namespace Backend.Tests.Controllers
             // We are currently only testing guids and imported audio on the single-entry data sets.
             if (allWords.Count == 1)
             {
+                var word = allWords[0].Clone();
                 Assert.That(roundTripObj.EntryGuid, Is.Not.EqualTo(""));
-                Assert.That(allWords[0].Guid.ToString(), Is.EqualTo(roundTripObj.EntryGuid));
+                Assert.That(word.Guid.ToString(), Is.EqualTo(roundTripObj.EntryGuid));
                 if (roundTripObj.SenseGuid != "")
                 {
-                    Assert.That(allWords[0].Senses[0].Guid.ToString(), Is.EqualTo(roundTripObj.SenseGuid));
+                    Assert.That(word.Senses[0].Guid.ToString(), Is.EqualTo(roundTripObj.SenseGuid));
                 }
-                foreach (var audioFile in allWords[0].Audio)
+                foreach (var audio in word.Audio)
                 {
-                    Assert.That(roundTripObj.AudioFiles, Does.Contain(Path.GetFileName(audioFile)));
+                    Assert.That(roundTripObj.AudioFiles, Does.Contain(Path.GetFileName(audio.FileName)));
+                    Assert.That(audio.Protected, Is.True);
                 }
-
             }
 
             // Assert that the first SemanticDomain doesn't have an empty MongoId.
@@ -588,10 +591,11 @@ namespace Backend.Tests.Controllers
             // We are currently only testing guids on the single-entry data sets.
             if (roundTripObj.EntryGuid != "" && allWords.Count == 1)
             {
-                Assert.That(allWords[0].Guid.ToString(), Is.EqualTo(roundTripObj.EntryGuid));
+                var word = allWords[0];
+                Assert.That(word.Guid.ToString(), Is.EqualTo(roundTripObj.EntryGuid));
                 if (roundTripObj.SenseGuid != "")
                 {
-                    Assert.That(allWords[0].Senses[0].Guid.ToString(), Is.EqualTo(roundTripObj.SenseGuid));
+                    Assert.That(word.Senses[0].Guid.ToString(), Is.EqualTo(roundTripObj.SenseGuid));
                 }
             }
 

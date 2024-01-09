@@ -50,7 +50,6 @@ namespace BackendFramework.Services
             }
 
             // Remove duplicates.
-            parent.Audio = parent.Audio.Distinct().ToList();
             parent.History = parent.History.Distinct().ToList();
             return parent;
         }

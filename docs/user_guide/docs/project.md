@@ -124,6 +124,24 @@ Either search existing users (shows all users with the search term in their name
 new users by email address (they will be automatically added to the project when they make an account via the
 invitation).
 
+#### Manage Speakers
+
+Speakers are distinct from users. A speaker can be associate with audio recording of words. Use the + icon at the bottom
+of this section to add a speaker. Beside each added speaker are buttons to delete them, edit their name, and add a
+consent for use of their recorded voice. The supported methods for adding consent are to (1) record an audio file or (2)
+upload an image file.
+
+When project users are in Data Entry or Review Entries, a speaker icon will be available in the top bar. Users can click
+that button to see a list of all available speakers and select the current speaker, this speaker will be automatically
+associated with every audio recording made by the user until they log out or select a different speaker.
+
+The speaker associated with a recording can be seen by hovering over its play icon. To change a recording's speaker,
+right click the play icon (or press and hold on a touch screen to bring up a menu).
+
+When the project is exported from The Combine, speaker names (and ids) will be added as a pronunciation labels in the
+LIFT file. All consent files for project speakers will be added to a "consent" subfolder of the export (with speaker ids
+used for the file names).
+
 ### Import/Export
 
 ![Import/Export](images/projectSettings4Port.png){width=750 .center}
@@ -147,6 +165,16 @@ project name with a timestamp affixed.
 !!! warning "Important"
 
     A project that has reached hundreds of MB in size may take multiple minutes to export.
+
+!!! note "Note"
+
+    Project settings, project users, and word flags are not exported.
+
+#### Export pronunciation speakers
+
+When a project is exported from TheCombine and imported into FieldWorks, if a pronunciation has an associated speaker,
+the speaker name and id will be added as a pronunciation label. Consent files will be exported with speaker id used for
+the file name. The consent files can be found in the zipped export, but will not be imported into FieldWorks.
 
 ### Workshop Schedule {#workshop-schedule}
 

@@ -11,7 +11,6 @@ import { newWritingSystem } from "types/writingSystem";
 jest.mock("@mui/material/Autocomplete", () => "div");
 
 jest.mock("components/Pronunciations/PronunciationsFrontend", () => "div");
-jest.mock("components/Pronunciations/Recorder");
 
 const mockStore = configureMockStore()({ treeViewState: { open: false } });
 
@@ -27,9 +26,10 @@ describe("NewEntry", () => {
             addNewEntry={jest.fn()}
             resetNewEntry={jest.fn()}
             updateWordWithNewGloss={jest.fn()}
-            newAudioUrls={[]}
-            addNewAudioUrl={jest.fn()}
-            delNewAudioUrl={jest.fn()}
+            newAudio={[]}
+            addNewAudio={jest.fn()}
+            delNewAudio={jest.fn()}
+            repNewAudio={jest.fn()}
             newGloss={""}
             setNewGloss={jest.fn()}
             newNote={""}

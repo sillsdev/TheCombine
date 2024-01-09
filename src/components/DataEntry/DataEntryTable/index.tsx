@@ -19,6 +19,7 @@ import { v4 } from "uuid";
 import {
   AutocompleteSetting,
   Note,
+  Pronunciation,
   SemanticDomain,
   SemanticDomainTreeNode,
   Sense,
@@ -29,12 +30,21 @@ import { getUserId } from "backend/localStorage";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
 import { filterWordsWithSenses } from "components/DataEntry/utilities";
-import { uploadFileFromUrl } from "components/Pronunciations/utilities";
+import { uploadFileFromPronunciation } from "components/Pronunciations/utilities";
 import { StoreState } from "types";
 import { Hash } from "types/hash";
 import { useAppSelector } from "types/hooks";
 import theme from "types/theme";
-import { newGloss, newNote, newSense, newWord, simpleWord } from "types/word";
+import {
+  FileWithSpeakerId,
+  newGloss,
+  newNote,
+  newPronunciation,
+  newSense,
+  newWord,
+  simpleWord,
+  updateSpeakerInAudio,
+} from "types/word";
 import { defaultWritingSystem } from "types/writingSystem";
 import SpellCheckerContext from "utilities/spellCheckerContext";
 import { LevenshteinDistance } from "utilities/utilities";
@@ -177,7 +187,7 @@ export function updateEntryGloss(
 }
 
 interface NewEntryState {
-  newAudioUrls: string[];
+  newAudio: Pronunciation[];
   newGloss: string;
   newNote: string;
   newVern: string;
@@ -188,7 +198,7 @@ interface NewEntryState {
 }
 
 const defaultNewEntryState = (): NewEntryState => ({
-  newAudioUrls: [],
+  newAudio: [],
   newGloss: "",
   newNote: "",
   newVern: "",
@@ -385,19 +395,29 @@ export default function DataEntryTable(
   };
 
   /** Add an audio file to newAudioUrls. */
-  const addNewAudioUrl = (file: File): void => {
+  const addNewAudio = (file: FileWithSpeakerId): void => {
     setState((prevState) => {
-      const newAudioUrls = [...prevState.newAudioUrls];
-      newAudioUrls.push(URL.createObjectURL(file));
-      return { ...prevState, newAudioUrls };
+      const newAudio = [...prevState.newAudio];
+      newAudio.push(
+        newPronunciation(URL.createObjectURL(file), file.speakerId)
+      );
+      return { ...prevState, newAudio };
     });
   };
 
-  /** Delete a url from newAudioUrls. */
-  const delNewAudioUrl = (url: string): void => {
+  /** Delete a url from newAudio. */
+  const delNewAudio = (url: string): void => {
     setState((prevState) => {
-      const newAudioUrls = prevState.newAudioUrls.filter((u) => u !== url);
-      return { ...prevState, newAudioUrls };
+      const newAudio = prevState.newAudio.filter((a) => a.fileName !== url);
+      return { ...prevState, newAudio };
+    });
+  };
+
+  /** Replace the speaker of a newAudio. */
+  const repNewAudio = (pro: Pronunciation): void => {
+    setState((prevState) => {
+      const newAudio = updateSpeakerInAudio(prevState.newAudio, pro);
+      return newAudio ? { ...prevState, newAudio } : prevState;
     });
   };
 
@@ -600,14 +620,14 @@ export default function DataEntryTable(
 
   /** Given an array of audio file urls, add them all to specified word. */
   const addAudiosToBackend = useCallback(
-    async (oldId: string, audioURLs: string[]): Promise<string> => {
-      if (!audioURLs.length) {
+    async (oldId: string, audio: Pronunciation[]): Promise<string> => {
+      if (!audio.length) {
         return oldId;
       }
       defunctWord(oldId);
       let newId = oldId;
-      for (const audioURL of audioURLs) {
-        newId = await uploadFileFromUrl(newId, audioURL);
+      for (const a of audio) {
+        newId = await uploadFileFromPronunciation(newId, a);
       }
       defunctWord(oldId, newId);
       return newId;
@@ -617,9 +637,9 @@ export default function DataEntryTable(
 
   /** Given a single audio file, add to specified word. */
   const addAudioFileToWord = useCallback(
-    async (oldId: string, audioFile: File): Promise<void> => {
+    async (oldId: string, file: FileWithSpeakerId): Promise<void> => {
       defunctWord(oldId);
-      const newId = await backend.uploadAudio(oldId, audioFile);
+      const newId = await backend.uploadAudio(oldId, file);
       defunctWord(oldId, newId);
     },
     [defunctWord]
@@ -630,7 +650,11 @@ export default function DataEntryTable(
    * Note: Only for use after backend.getDuplicateId().
    */
   const addDuplicateWord = useCallback(
-    async (word: Word, audioURLs: string[], oldId: string): Promise<void> => {
+    async (
+      word: Word,
+      audio: Pronunciation[],
+      oldId: string
+    ): Promise<void> => {
       const isInDisplay =
         state.recentWords.findIndex((w) => w.word.id === oldId) > -1;
 
@@ -638,7 +662,7 @@ export default function DataEntryTable(
       const newWord = await backend.updateDuplicate(oldId, word);
       defunctWord(oldId, newWord.id);
 
-      const newId = await addAudiosToBackend(newWord.id, audioURLs);
+      const newId = await addAudiosToBackend(newWord.id, audio);
 
       if (!isInDisplay) {
         addAllSensesToDisplay(await backend.getWord(newId));
@@ -652,6 +676,20 @@ export default function DataEntryTable(
     async (oldId: string, fileName: string): Promise<void> => {
       defunctWord(oldId);
       const newId = await backend.deleteAudio(oldId, fileName);
+      defunctWord(oldId, newId);
+    },
+    [defunctWord]
+  );
+
+  /** Updates speaker of specified audio in specified word. */
+  const replaceAudioInWord = useCallback(
+    async (oldId: string, pro: Pronunciation): Promise<void> => {
+      defunctWord(oldId);
+      const word = await backend.getWord(oldId);
+      const audio = updateSpeakerInAudio(word.audio, pro);
+      const newId = audio
+        ? (await backend.updateWord({ ...word, audio })).id
+        : oldId;
       defunctWord(oldId, newId);
     },
     [defunctWord]
@@ -676,17 +714,17 @@ export default function DataEntryTable(
   const addNewWord = useCallback(
     async (
       wordToAdd: Word,
-      audioURLs: string[],
+      audio: Pronunciation[],
       insertIndex?: number
     ): Promise<void> => {
       // Check if word is duplicate to existing word.
       const dupId = await backend.getDuplicateId(wordToAdd);
       if (dupId) {
-        return await addDuplicateWord(wordToAdd, audioURLs, dupId);
+        return await addDuplicateWord(wordToAdd, audio, dupId);
       }
 
       let word = await backend.createWord(wordToAdd);
-      const wordId = await addAudiosToBackend(word.id, audioURLs);
+      const wordId = await addAudiosToBackend(word.id, audio);
       if (wordId !== word.id) {
         word = await backend.getWord(wordId);
       }
@@ -699,11 +737,11 @@ export default function DataEntryTable(
   const updateWordBackAndFront = async (
     wordToUpdate: Word,
     senseGuid: string,
-    audioURLs?: string[]
+    audio?: Pronunciation[]
   ): Promise<void> => {
     let word = await updateWordInBackend(wordToUpdate);
-    if (audioURLs?.length) {
-      const wordId = await addAudiosToBackend(word.id, audioURLs);
+    if (audio?.length) {
+      const wordId = await addAudiosToBackend(word.id, audio);
       word = await backend.getWord(wordId);
     }
     addToDisplay({ word, senseGuid });
@@ -734,7 +772,7 @@ export default function DataEntryTable(
       newSense(state.newGloss, lang, makeSemDomCurrent(props.semanticDomain))
     );
     word.note = newNote(state.newNote, lang);
-    await addNewWord(word, state.newAudioUrls);
+    await addNewWord(word, state.newAudio);
   };
 
   /** Update the selected duplicate with the new entry.
@@ -770,8 +808,8 @@ export default function DataEntryTable(
             val2: state.newGloss,
           })
         );
-        if (state.newAudioUrls.length) {
-          await addAudiosToBackend(oldWord.id, state.newAudioUrls);
+        if (state.newAudio.length) {
+          await addAudiosToBackend(oldWord.id, state.newAudio);
         }
         return;
       }
@@ -784,7 +822,7 @@ export default function DataEntryTable(
         await updateWordBackAndFront(
           addSemanticDomainToSense(semDom, oldWord, state.selectedSenseGuid),
           state.selectedSenseGuid,
-          state.newAudioUrls
+          state.newAudio
         );
         return;
       }
@@ -801,15 +839,15 @@ export default function DataEntryTable(
               val2: state.newGloss,
             })
           );
-          if (state.newAudioUrls.length) {
-            await addAudiosToBackend(oldWord.id, state.newAudioUrls);
+          if (state.newAudio.length) {
+            await addAudiosToBackend(oldWord.id, state.newAudio);
           }
           return;
         } else {
           await updateWordBackAndFront(
             addSemanticDomainToSense(semDom, oldWord, sense.guid),
             sense.guid,
-            state.newAudioUrls
+            state.newAudio
           );
           return;
         }
@@ -822,7 +860,7 @@ export default function DataEntryTable(
     const senses = [...oldWord.senses, sense];
     const newWord: Word = { ...oldWord, senses };
 
-    await updateWordBackAndFront(newWord, sense.guid, state.newAudioUrls);
+    await updateWordBackAndFront(newWord, sense.guid, state.newAudio);
     return;
   };
 
@@ -991,7 +1029,8 @@ export default function DataEntryTable(
               updateVern={updateRecentVern}
               removeEntry={undoRecentEntry}
               addAudioToWord={addAudioFileToWord}
-              deleteAudioFromWord={deleteAudioFromWord}
+              delAudioFromWord={deleteAudioFromWord}
+              repAudioInWord={replaceAudioInWord}
               focusNewEntry={handleFocusNewEntry}
               analysisLang={analysisLang}
               vernacularLang={vernacularLang}
@@ -1010,9 +1049,10 @@ export default function DataEntryTable(
             addNewEntry={addNewEntry}
             resetNewEntry={resetNewEntry}
             updateWordWithNewGloss={updateWordWithNewEntry}
-            newAudioUrls={state.newAudioUrls}
-            addNewAudioUrl={addNewAudioUrl}
-            delNewAudioUrl={delNewAudioUrl}
+            newAudio={state.newAudio}
+            addNewAudio={addNewAudio}
+            delNewAudio={delNewAudio}
+            repNewAudio={repNewAudio}
             newGloss={state.newGloss}
             setNewGloss={setNewGloss}
             newNote={state.newNote}
