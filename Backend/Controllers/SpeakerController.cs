@@ -81,7 +81,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Creates a <see cref="Speaker"/> for the specified projectId </summary>
         /// <returns> Id of created Speaker </returns>
-        [HttpGet("/create/{name}", Name = "CreateSpeaker")]
+        [HttpGet("create/{name}", Name = "CreateSpeaker")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> CreateSpeaker(string projectId, string name)
         {
