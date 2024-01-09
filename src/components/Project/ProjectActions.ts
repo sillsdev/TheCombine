@@ -1,11 +1,12 @@
 import { Action, PayloadAction } from "@reduxjs/toolkit";
 
-import { Project, User } from "api/models";
+import { Project, Speaker, User } from "api/models";
 import { getAllProjectUsers, updateProject } from "backend";
 import { setProjectId } from "backend/localStorage";
 import {
   resetAction,
   setProjectAction,
+  setSpeakerAction,
   setUsersAction,
 } from "components/Project/ProjectReducer";
 import { StoreStateDispatch } from "types/Redux/actions";
@@ -21,7 +22,11 @@ export function setCurrentProject(project?: Project): PayloadAction {
   return setProjectAction(project ?? newProject());
 }
 
-export function setCurrentProjectUsers(users?: User[]): PayloadAction {
+export function setCurrentSpeaker(speaker?: Speaker): PayloadAction {
+  return setSpeakerAction(speaker);
+}
+
+export function setCurrentUsers(users?: User[]): PayloadAction {
   return setUsersAction(users ?? []);
 }
 
@@ -29,7 +34,7 @@ export function setCurrentProjectUsers(users?: User[]): PayloadAction {
 
 export function asyncRefreshProjectUsers(projectId: string) {
   return async (dispatch: StoreStateDispatch) => {
-    dispatch(setCurrentProjectUsers(await getAllProjectUsers(projectId)));
+    dispatch(setCurrentUsers(await getAllProjectUsers(projectId)));
   };
 }
 

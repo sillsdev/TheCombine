@@ -12,7 +12,11 @@ const settingsByTab: Record<ProjectSettingsTab, Setting[]> = {
   [ProjectSettingsTab.ImportExport]: [Setting.Export, Setting.Import],
   [ProjectSettingsTab.Languages]: [Setting.Languages],
   [ProjectSettingsTab.Schedule]: [Setting.Schedule],
-  [ProjectSettingsTab.Users]: [Setting.UserAdd, Setting.Users],
+  [ProjectSettingsTab.Users]: [
+    Setting.Speakers,
+    Setting.UserAdd,
+    Setting.Users,
+  ],
 };
 
 /** A dictionary indexed by all the project permissions. For each key permission,
@@ -24,6 +28,7 @@ const settingsByPermission: Record<Permission, Setting[]> = {
     Setting.Autocomplete,
     Setting.Languages,
     Setting.Name,
+    Setting.Speakers,
     Setting.UserAdd,
     Setting.Users,
   ],

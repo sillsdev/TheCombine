@@ -61,13 +61,27 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary>
-        /// Adds a pronunciation <see cref="FileUpload"/> to a <see cref="Word"/> and saves
-        /// locally to ~/.CombineFiles/{ProjectId}/Import/ExtractedLocation/Lift/audio
+        /// Adds a pronunciation <see cref="FileUpload"/> to a specified project word
+        /// and saves locally to ~/.CombineFiles/{ProjectId}/Import/ExtractedLocation/Lift/audio
         /// </summary>
         /// <returns> Id of updated word </returns>
         [HttpPost("upload", Name = "UploadAudioFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> UploadAudioFile(string projectId, string wordId,
+            [FromForm] FileUpload fileUpload)
+        {
+            return await UploadAudioFile(projectId, wordId, "", fileUpload);
+        }
+
+
+        /// <summary>
+        /// Adds a pronunciation <see cref="FileUpload"/> with a specified speaker to a project word
+        /// and saves locally to ~/.CombineFiles/{ProjectId}/Import/ExtractedLocation/Lift/audio
+        /// </summary>
+        /// <returns> Id of updated word </returns>
+        [HttpPost("upload/{speakerId}", Name = "UploadAudioFileWithSpeaker")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        public async Task<IActionResult> UploadAudioFile(string projectId, string wordId, string speakerId,
             [FromForm] FileUpload fileUpload)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
@@ -115,7 +129,8 @@ namespace BackendFramework.Controllers
             {
                 return NotFound(wordId);
             }
-            word.Audio.Add(Path.GetFileName(fileUpload.FilePath));
+            var audio = new Pronunciation(Path.GetFileName(fileUpload.FilePath), speakerId);
+            word.Audio.Add(audio);
 
             // Update the word with new audio file
             await _wordService.Update(projectId, userId, wordId, word);

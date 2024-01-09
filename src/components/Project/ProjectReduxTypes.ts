@@ -1,8 +1,9 @@
-import { Project, User } from "api/models";
+import { Project, Speaker, User } from "api/models";
 import { newProject } from "types/project";
 
 export interface CurrentProjectState {
   project: Project;
+  speaker?: Speaker;
   users: User[];
 }
 

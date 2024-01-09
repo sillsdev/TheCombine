@@ -26,6 +26,7 @@ jest.mock("react-router-dom", () => ({
 
 jest.mock("backend", () => ({
   canUploadLift: () => Promise.resolve(false),
+  getAllSpeakers: () => Promise.resolve([]),
   getAllUsers: () => Promise.resolve([]),
   getCurrentPermissions: () => mockGetCurrentPermissions(),
   getUserRoles: () => Promise.resolve([]),

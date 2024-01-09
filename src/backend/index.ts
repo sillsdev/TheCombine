@@ -19,6 +19,7 @@ import {
   SemanticDomainTreeNode,
   SemanticDomainUserCount,
   SiteBanner,
+  Speaker,
   User,
   UserEdit,
   UserRole,
@@ -30,6 +31,7 @@ import authHeader from "components/Login/AuthHeaders";
 import { Goal, GoalStep } from "types/goals";
 import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
+import { FileWithSpeakerId } from "types/word";
 import { Bcp47Code } from "types/writingSystem";
 import { convertGoalToEdit } from "utilities/goalUtilities";
 
@@ -101,6 +103,7 @@ const semanticDomainApi = new Api.SemanticDomainApi(
   BASE_PATH,
   axiosInstance
 );
+const speakerApi = new Api.SpeakerApi(config, BASE_PATH, axiosInstance);
 const statisticsApi = new Api.StatisticsApi(config, BASE_PATH, axiosInstance);
 const userApi = new Api.UserApi(config, BASE_PATH, axiosInstance);
 const userEditApi = new Api.UserEditApi(config, BASE_PATH, axiosInstance);
@@ -122,14 +125,16 @@ function defaultOptions(): object {
 
 export async function uploadAudio(
   wordId: string,
-  audioFile: File
+  file: FileWithSpeakerId
 ): Promise<string> {
   const projectId = LocalStorage.getProjectId();
-  const resp = await audioApi.uploadAudioFile(
-    { projectId, wordId, ...fileUpload(audioFile) },
-    { headers: { ...authHeader(), "content-type": "application/json" } }
-  );
-  return resp.data;
+  const speakerId = file.speakerId ?? "";
+  const params = { projectId, wordId, ...fileUpload(file) };
+  const headers = { ...authHeader(), "content-type": "application/json" };
+  const promise = speakerId
+    ? audioApi.uploadAudioFileWithSpeaker({ ...params, speakerId }, { headers })
+    : audioApi.uploadAudioFile(params, { headers });
+  return (await promise).data;
 }
 
 export async function deleteAudio(
@@ -457,6 +462,99 @@ export async function getSemanticDomainTreeNodeByName(
   );
   // The backend response for this methods returns null rather than undefined.
   return response.data ?? undefined;
+}
+
+/* SpeakerController.cs */
+
+/** Get all speakers (in current project if no projectId given).
+ * Returns array of speakers, sorted alphabetically by name. */
+export async function getAllSpeakers(projectId?: string): Promise<Speaker[]> {
+  const params = { projectId: projectId || LocalStorage.getProjectId() };
+  const resp = await speakerApi.getProjectSpeakers(params, defaultOptions());
+  return resp.data.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/** Get speaker by speakerId (in current project if no projectId given). */
+export async function getSpeaker(
+  speakerId: string,
+  projectId?: string
+): Promise<Speaker> {
+  projectId = projectId || LocalStorage.getProjectId();
+  const params = { projectId, speakerId };
+  return (await speakerApi.getSpeaker(params, defaultOptions())).data;
+}
+
+/** Creates new speaker (in current project if no projectId given).
+ * Returns id of new speaker. */
+export async function createSpeaker(
+  name: string,
+  projectId?: string
+): Promise<string> {
+  projectId = projectId || LocalStorage.getProjectId();
+  const params = { name, projectId };
+  return (await speakerApi.createSpeaker(params, defaultOptions())).data;
+}
+
+/** Delete specified speaker (in current project if no projectId given).
+ * Returns boolean of success. */
+export async function deleteSpeaker(
+  speakerId: string,
+  projectId?: string
+): Promise<boolean> {
+  projectId = projectId || LocalStorage.getProjectId();
+  const params = { projectId, speakerId };
+  return (await speakerApi.deleteSpeaker(params, defaultOptions())).data;
+}
+
+/** Remove consent of specified speaker (in current project if no projectId given).
+ * Returns id of updated speaker. */
+export async function removeConsent(speaker: Speaker): Promise<string> {
+  const projectId = speaker.projectId || LocalStorage.getProjectId();
+  const params = { projectId, speakerId: speaker.id };
+  return (await speakerApi.removeConsent(params, defaultOptions())).data;
+}
+
+/** Updates name of specified speaker (in current project if no projectId given).
+ * Returns id of updated speaker. */
+export async function updateSpeakerName(
+  speakerId: string,
+  name: string,
+  projectId?: string
+): Promise<string> {
+  projectId = projectId || LocalStorage.getProjectId();
+  const params = { name, projectId, speakerId };
+  return (await speakerApi.updateSpeakerName(params, defaultOptions())).data;
+}
+
+/** Uploads consent for specified speaker; overwrites previous consent.
+ * Returns updated speaker. */
+export async function uploadConsent(
+  speaker: Speaker,
+  file: File
+): Promise<Speaker> {
+  const { id, projectId } = speaker;
+  const params = { projectId, speakerId: id, ...fileUpload(file) };
+  const headers = { ...authHeader(), "content-type": "application/json" };
+  return (await speakerApi.uploadConsent(params, { headers })).data;
+}
+
+/** Use of the returned url acts as an HttpGet. */
+export function getConsentUrl(speaker: Speaker): string {
+  return `${apiBaseURL}/projects/${speaker.projectId}/speakers/consent/${speaker.id}`;
+}
+
+/** Returns the string to display the image inline in Base64 <img src= */
+export async function getConsentImageSrc(speaker: Speaker): Promise<string> {
+  const params = { projectId: speaker.projectId, speakerId: speaker.id };
+  const options = { headers: authHeader(), responseType: "arraybuffer" };
+  const resp = await speakerApi.downloadConsent(params, options);
+  const image = Base64.btoa(
+    new Uint8Array(resp.data).reduce(
+      (data, byte) => data + String.fromCharCode(byte),
+      ""
+    )
+  );
+  return `data:${resp.headers["content-type"].toLowerCase()};base64,${image}`;
 }
 
 /* StatisticsController.cs */

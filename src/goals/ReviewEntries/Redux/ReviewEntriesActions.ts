@@ -1,12 +1,12 @@
 import { Action, PayloadAction } from "@reduxjs/toolkit";
 
-import { Sense, Word } from "api/models";
+import { Pronunciation, Sense, Word } from "api/models";
 import * as backend from "backend";
 import {
   addEntryEditToGoal,
   asyncUpdateGoal,
 } from "components/GoalTimeline/Redux/GoalActions";
-import { uploadFileFromUrl } from "components/Pronunciations/utilities";
+import { uploadFileFromPronunciation } from "components/Pronunciations/utilities";
 import {
   deleteWordAction,
   resetReviewEntriesAction,
@@ -20,7 +20,12 @@ import {
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { StoreStateDispatch } from "types/Redux/actions";
-import { newNote, newSense } from "types/word";
+import {
+  FileWithSpeakerId,
+  newNote,
+  newSense,
+  updateSpeakerInAudio,
+} from "types/word";
 
 // Action Creation Functions
 
@@ -156,14 +161,6 @@ export function updateFrontierWord(
     }
     const oldId = editSource.id;
 
-    // Set aside audio changes for last.
-    const delAudio = oldData.audio.filter(
-      (o) => !newData.audio.find((n) => n === o)
-    );
-    const addAudio = [...(newData.audioNew ?? [])];
-    editSource.audio = oldData.audio;
-    delete editSource.audioNew;
-
     // Get the original word, for updating.
     const editWord = await backend.getWord(oldId);
 
@@ -175,15 +172,24 @@ export function updateFrontierWord(
     editWord.note = newNote(editSource.noteText, editWord.note?.language);
     editWord.flag = { ...editSource.flag };
 
+    // Apply any speakerId changes, but save adding/deleting audio for later.
+    editWord.audio = oldData.audio.map(
+      (o) => newData.audio.find((n) => n.fileName === o.fileName) ?? o
+    );
+    const delAudio = oldData.audio.filter(
+      (o) => !newData.audio.find((n) => n.fileName === o.fileName)
+    );
+    const addAudio = [...(newData.audioNew ?? [])];
+
     // Update the word in the backend, and retrieve the id.
     let newId = (await backend.updateWord(editWord)).id;
 
-    // Add/remove audio.
-    for (const url of addAudio) {
-      newId = await uploadFileFromUrl(newId, url);
+    // Add/delete audio.
+    for (const audio of addAudio) {
+      newId = await uploadFileFromPronunciation(newId, audio);
     }
-    for (const fileName of delAudio) {
-      newId = await backend.deleteAudio(newId, fileName);
+    for (const audio of delAudio) {
+      newId = await backend.deleteAudio(newId, audio.fileName);
     }
 
     // Update the word in the state.
@@ -229,11 +235,22 @@ export function deleteAudio(
   );
 }
 
+export function replaceAudio(
+  wordId: string,
+  pro: Pronunciation
+): (dispatch: StoreStateDispatch) => Promise<void> {
+  return asyncRefreshWord(wordId, async (oldId: string) => {
+    const word = await backend.getWord(oldId);
+    const audio = updateSpeakerInAudio(word.audio, pro);
+    return audio ? (await backend.updateWord({ ...word, audio })).id : oldId;
+  });
+}
+
 export function uploadAudio(
   wordId: string,
-  audioFile: File
+  file: FileWithSpeakerId
 ): (dispatch: StoreStateDispatch) => Promise<void> {
   return asyncRefreshWord(wordId, (wordId: string) =>
-    backend.uploadAudio(wordId, audioFile)
+    backend.uploadAudio(wordId, file)
   );
 }

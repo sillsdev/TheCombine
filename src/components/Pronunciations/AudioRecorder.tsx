@@ -6,14 +6,21 @@ import Recorder from "components/Pronunciations/Recorder";
 import RecorderContext from "components/Pronunciations/RecorderContext";
 import RecorderIcon from "components/Pronunciations/RecorderIcon";
 import { getFileNameForWord } from "components/Pronunciations/utilities";
+import { StoreState } from "types";
+import { useAppSelector } from "types/hooks";
+import { FileWithSpeakerId } from "types/word";
 
 interface RecorderProps {
-  wordId: string;
-  uploadAudio: (audioFile: File) => void;
+  id: string;
+  noSpeaker?: boolean;
   onClick?: () => void;
+  uploadAudio: (file: FileWithSpeakerId) => void;
 }
 
 export default function AudioRecorder(props: RecorderProps): ReactElement {
+  const speakerId = useAppSelector(
+    (state: StoreState) => state.currentProjectState.speaker?.id
+  );
   const recorder = useContext(RecorderContext);
   const { t } = useTranslation();
 
@@ -30,17 +37,20 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
       toast.error(t("pronunciations.noMicAccess"));
       return;
     }
-    const fileName = getFileNameForWord(props.wordId);
-    const options: FilePropertyBag = {
+    const fileName = getFileNameForWord(props.id);
+    const file = new File([blob], fileName, {
       lastModified: Date.now(),
       type: Recorder.blobType,
-    };
-    props.uploadAudio(new File([blob], fileName, options));
+    });
+    if (!props.noSpeaker) {
+      (file as FileWithSpeakerId).speakerId = speakerId;
+    }
+    props.uploadAudio(file);
   }
 
   return (
     <RecorderIcon
-      wordId={props.wordId}
+      id={props.id}
       startRecording={startRecording}
       stopRecording={stopRecording}
     />

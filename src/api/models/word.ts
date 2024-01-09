@@ -14,6 +14,7 @@
 
 import { Flag } from "./flag";
 import { Note } from "./note";
+import { Pronunciation } from "./pronunciation";
 import { Sense } from "./sense";
 import { Status } from "./status";
 
@@ -55,10 +56,10 @@ export interface Word {
   senses: Array<Sense>;
   /**
    *
-   * @type {Array<string>}
+   * @type {Array<Pronunciation>}
    * @memberof Word
    */
-  audio: Array<string>;
+  audio: Array<Pronunciation>;
   /**
    *
    * @type {string}

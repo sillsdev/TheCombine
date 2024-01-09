@@ -16,7 +16,7 @@ export const recordButtonId = "recordingButton";
 export const recordIconId = "recordingIcon";
 
 interface RecorderIconProps {
-  wordId: string;
+  id: string;
   startRecording: () => void;
   stopRecording: () => void;
 }
@@ -25,14 +25,14 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
   const isRecording = useAppSelector(
     (state: StoreState) =>
       state.pronunciationsState.status === PronunciationsStatus.Recording &&
-      state.pronunciationsState.wordId === props.wordId
+      state.pronunciationsState.wordId === props.id
   );
 
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   function toggleIsRecordingToTrue(): void {
-    dispatch(recording(props.wordId));
+    dispatch(recording(props.id));
     props.startRecording();
   }
   function toggleIsRecordingToFalse(): void {
