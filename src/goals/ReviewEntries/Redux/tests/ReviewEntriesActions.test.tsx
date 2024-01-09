@@ -1,16 +1,19 @@
 import { PreloadedState } from "redux";
 
-import { Sense, Word } from "api/models";
+import { Pronunciation, Sense, Word } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import {
+  deleteAudio,
   deleteWord,
   getSenseError,
   getSenseFromEditSense,
+  replaceAudio,
   resetReviewEntries,
   setAllWords,
   setSortBy,
   updateFrontierWord,
   updateWord,
+  uploadAudio,
 } from "goals/ReviewEntries/Redux/ReviewEntriesActions";
 import {
   ColumnId,
@@ -19,20 +22,29 @@ import {
 } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { RootState, setupStore } from "store";
 import { newSemanticDomain } from "types/semanticDomain";
-import { newFlag, newGloss, newNote, newSense, newWord } from "types/word";
+import {
+  newFlag,
+  newGloss,
+  newNote,
+  newPronunciation,
+  newSense,
+  newWord,
+} from "types/word";
 import { Bcp47Code } from "types/writingSystem";
 
+const mockDeleteAudio = jest.fn();
 const mockGetWord = jest.fn();
 const mockUpdateWord = jest.fn();
+const mockUploadAudio = jest.fn();
 function mockGetWordResolve(data: Word): void {
   mockGetWord.mockResolvedValue(JSON.parse(JSON.stringify(data)));
 }
 
 jest.mock("backend", () => ({
-  deleteAudio: () => jest.fn(),
+  deleteAudio: (args: any[]) => mockDeleteAudio(...args),
   getWord: (wordId: string) => mockGetWord(wordId),
   updateWord: (word: Word) => mockUpdateWord(word),
-  uploadAudio: () => jest.fn(),
+  uploadAudio: (args: any[]) => mockUploadAudio(...args),
 }));
 jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({
   addEntryEditToGoal: () => jest.fn(),
@@ -175,6 +187,99 @@ describe("ReviewEntriesActions", () => {
       expect(words.find((w) => w.id === wordId)).toBeUndefined();
       const newWord = words.find((w) => w.id === newId);
       expect(newWord?.vernacular).toEqual(newVern);
+    });
+  });
+
+  describe("asyncRefreshWord", () => {
+    test("deleteAudio", async () => {
+      // Setup state with word with audio
+      const fileName = "audio-file-name";
+      const oldWord: Word = {
+        ...mockFrontierWord(),
+        audio: [newPronunciation(fileName)],
+      };
+      const store = setupStore({
+        ...persistedDefaultState,
+        reviewEntriesState: { sortBy: colId, words: [oldWord] },
+      });
+
+      // Prep replacement word without the audio
+      const newId = "id-after-audio-deleted";
+      const word: Word = { ...oldWord, audio: [], id: newId };
+
+      // Mock backend function that will be called
+      mockDeleteAudio.mockResolvedValueOnce(newId);
+      mockGetWord.mockResolvedValueOnce(word);
+
+      // Dispatch the audio delete
+      await store.dispatch(deleteAudio(wordId, fileName));
+      expect(mockDeleteAudio).toHaveBeenCalledTimes(1);
+
+      // Verify the replacement word in state has the audio removed
+      const words = store.getState().reviewEntriesState.words;
+      expect(words.find((w) => w.id === wordId)).toBeNull;
+      const wordInState = words.find((w) => w.id === newId);
+      expect(wordInState?.audio).toHaveLength(0);
+    });
+
+    test("replaceAudio", async () => {
+      // Setup state with word with audio
+      const oldPro = newPronunciation("audio-file-name");
+      const oldWord: Word = { ...mockFrontierWord(), audio: [oldPro] };
+      const store = setupStore({
+        ...persistedDefaultState,
+        reviewEntriesState: { sortBy: colId, words: [oldWord] },
+      });
+
+      // Prep replacement word with a new speaker on the audio
+      const newId = "id-after-audio-replaced";
+      const speakerId = "id-of-audio-speaker";
+      const pro: Pronunciation = { ...oldPro, speakerId };
+      const word: Word = { ...oldWord, audio: [pro], id: newId };
+
+      // Mock backend function that will be called
+      mockGetWord.mockResolvedValueOnce(oldWord).mockResolvedValueOnce(word);
+      mockUpdateWord.mockResolvedValueOnce(newId);
+
+      // Dispatch the audio replace
+      await store.dispatch(replaceAudio(wordId, pro));
+      expect(mockUpdateWord).toHaveBeenCalledTimes(1);
+
+      // Verify the replacement word in state has the updated speaker id
+      const words = store.getState().reviewEntriesState.words;
+      expect(words.find((w) => w.id === wordId)).toBeNull;
+      const audioInState = words.find((w) => w.id === newId)?.audio;
+      expect(audioInState).toHaveLength(1);
+      expect(audioInState![0].speakerId).toEqual(speakerId);
+    });
+
+    test("uploadAudio", async () => {
+      // Setup state with word without audio
+      const pro = newPronunciation("audio-file-name");
+      const oldWord = mockFrontierWord();
+      const store = setupStore({
+        ...persistedDefaultState,
+        reviewEntriesState: { sortBy: colId, words: [oldWord] },
+      });
+
+      // Prep replacement word with audio added
+      const newId = "id-after-audio-uploaded";
+      const word: Word = { ...oldWord, audio: [pro], id: newId };
+
+      // Mock backend function that will be called
+      mockUploadAudio.mockResolvedValueOnce(newId);
+      mockGetWord.mockResolvedValueOnce(word);
+
+      // Dispatch the audio upload
+      await store.dispatch(uploadAudio(wordId, new File([], pro.fileName)));
+      expect(mockUploadAudio).toHaveBeenCalledTimes(1);
+
+      // Verify the replacement word in state has the audio added
+      const words = store.getState().reviewEntriesState.words;
+      expect(words.find((w) => w.id === wordId)).toBeNull;
+      const audioInState = words.find((w) => w.id === newId)?.audio;
+      expect(audioInState).toHaveLength(1);
+      expect(audioInState![0].fileName).toEqual(pro.fileName);
     });
   });
 

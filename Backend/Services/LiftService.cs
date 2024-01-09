@@ -39,7 +39,25 @@ namespace BackendFramework.Services
                 {
                     Writer.WriteStartElement("pronunciation");
                     Writer.WriteStartElement("media");
-                    Writer.WriteAttributeString("href", Path.GetFileName(phonetic.Forms.First().Form));
+                    var forms = new List<LanguageForm>(phonetic.Forms);
+                    var href = forms.Find(f => f.WritingSystemId == "href");
+                    if (href is null)
+                    {
+                        continue;
+                    }
+                    Writer.WriteAttributeString("href", Path.GetFileName(href.Form));
+                    // If there is speaker info, it was added as an "en" MultiText
+                    var label = forms.Find(f => f.WritingSystemId == "en");
+                    if (label is not null)
+                    {
+                        Writer.WriteStartElement("label");
+                        Writer.WriteStartElement("form");
+                        Writer.WriteAttributeString("lang", label.WritingSystemId);
+                        Writer.WriteElementString("text", label.Form);
+                        Writer.WriteEndElement();
+                        Writer.WriteEndElement();
+                    }
+
                     Writer.WriteEndElement();
                     Writer.WriteEndElement();
                 }
@@ -92,6 +110,7 @@ namespace BackendFramework.Services
     public class LiftService : ILiftService
     {
         private readonly ISemanticDomainRepository _semDomRepo;
+        private readonly ISpeakerRepository _speakerRepo;
 
         /// A dictionary shared by all Projects for storing and retrieving paths to exported projects.
         private readonly Dictionary<string, string> _liftExports;
@@ -99,9 +118,10 @@ namespace BackendFramework.Services
         private readonly Dictionary<string, string> _liftImports;
         private const string InProgress = "IN_PROGRESS";
 
-        public LiftService(ISemanticDomainRepository semDomRepo)
+        public LiftService(ISemanticDomainRepository semDomRepo, ISpeakerRepository speakerRepo)
         {
             _semDomRepo = semDomRepo;
+            _speakerRepo = speakerRepo;
 
             if (!Sldr.IsInitialized)
             {
@@ -240,9 +260,11 @@ namespace BackendFramework.Services
             var zipDir = Path.Combine(tempExportDir, projNameAsPath);
             Directory.CreateDirectory(zipDir);
 
-            // Add audio dir inside zip dir.
+            // Add audio dir, consent dir inside zip dir.
             var audioDir = Path.Combine(zipDir, "audio");
             Directory.CreateDirectory(audioDir);
+            var consentDir = Path.Combine(zipDir, "consent");
+            Directory.CreateDirectory(consentDir);
             var liftPath = Path.Combine(zipDir, projNameAsPath + ".lift");
 
             // noBOM will work with PrinceXML
@@ -269,6 +291,9 @@ namespace BackendFramework.Services
             var frontier = await wordRepo.GetFrontier(projectId);
             var activeWords = frontier.Where(
                 x => x.Senses.Any(s => s.Accessibility == Status.Active || s.Accessibility == Status.Protected)).ToList();
+
+            // Get all project speakers for exporting audio and consents.
+            var projSpeakers = await _speakerRepo.GetAllSpeakers(projectId);
 
             // All words in the frontier with any senses are considered current.
             // The Combine does not import senseless entries and the interface is supposed to prevent creating them.
@@ -297,7 +322,7 @@ namespace BackendFramework.Services
                 AddNote(entry, wordEntry);
                 AddVern(entry, wordEntry, proj.VernacularWritingSystem.Bcp47);
                 AddSenses(entry, wordEntry);
-                await AddAudio(entry, wordEntry, audioDir, projectId);
+                await AddAudio(entry, wordEntry.Audio, audioDir, projectId, projSpeakers);
 
                 liftWriter.Add(entry);
             }
@@ -310,12 +335,27 @@ namespace BackendFramework.Services
                 AddNote(entry, wordEntry);
                 AddVern(entry, wordEntry, proj.VernacularWritingSystem.Bcp47);
                 AddSenses(entry, wordEntry);
-                await AddAudio(entry, wordEntry, audioDir, projectId);
+                await AddAudio(entry, wordEntry.Audio, audioDir, projectId, projSpeakers);
 
                 liftWriter.AddDeletedEntry(entry);
             }
 
             liftWriter.End();
+
+            // Add consent files to export directory
+            foreach (var speaker in projSpeakers)
+            {
+                if (speaker.Consent != ConsentType.None)
+                {
+                    var src = FileStorage.GenerateConsentFilePath(speaker.Id);
+                    if (File.Exists(src))
+                    {
+                        var dest = Path.Combine(consentDir, speaker.Id);
+                        File.Copy(src, dest, true);
+
+                    }
+                }
+            }
 
             // Export semantic domains to lift-ranges
             if (proj.SemanticDomains.Count != 0 || CopyLiftRanges(proj.Id, rangesDest) is null)
@@ -503,13 +543,14 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Adds pronunciation audio of a word to be written out to lift </summary>
-        private static async Task AddAudio(LexEntry entry, Word wordEntry, string path, string projectId)
+        private static async Task AddAudio(LexEntry entry, List<Pronunciation> pronunciations, string path,
+            string projectId, List<Speaker> projectSpeakers)
         {
-            foreach (var audioFile in wordEntry.Audio)
+            foreach (var audio in pronunciations)
             {
                 var lexPhonetic = new LexPhonetic();
-                var src = FileStorage.GenerateAudioFilePath(projectId, audioFile);
-                var dest = Path.Combine(path, audioFile);
+                var src = FileStorage.GenerateAudioFilePath(projectId, audio.FileName);
+                var dest = Path.Combine(path, audio.FileName);
 
                 if (!File.Exists(src)) continue;
                 if (Path.GetExtension(dest).Equals(".webm", StringComparison.OrdinalIgnoreCase))
@@ -522,8 +563,17 @@ namespace BackendFramework.Services
                     File.Copy(src, dest, true);
                 }
 
-                var proMultiText = new LiftMultiText { { "href", dest } };
-                lexPhonetic.MergeIn(MultiText.Create(proMultiText));
+                lexPhonetic.MergeIn(MultiText.Create(new LiftMultiText { { "href", dest } }));
+                // If audio has speaker, include speaker info as a pronunciation label
+                if (!audio.Protected && !string.IsNullOrEmpty(audio.SpeakerId))
+                {
+                    var speaker = projectSpeakers.Find(s => s.Id == audio.SpeakerId);
+                    if (speaker is not null)
+                    {
+                        var text = new LiftMultiText { { "en", $"Speaker #{speaker.Id}: {speaker.Name}" } };
+                        lexPhonetic.MergeIn(MultiText.Create(text));
+                    }
+                }
                 entry.Pronunciations.Add(lexPhonetic);
             }
         }
@@ -803,13 +853,10 @@ namespace BackendFramework.Services
                 // Only add audio if the files exist
                 if (Directory.Exists(extractedAudioDir))
                 {
-                    // Add audio
                     foreach (var pro in entry.Pronunciations)
                     {
-                        // get path to audio file in lift package at
-                        // ~/{projectId}/Import/ExtractedLocation/Lift/audio/{audioFile}.mp3
-                        var audioFile = pro.Media.First().Url;
-                        newWord.Audio.Add(audioFile);
+                        // Add audio with Protected = true to prevent modifying or deleting imported audio
+                        newWord.Audio.Add(new Pronunciation(pro.Media.First().Url) { Protected = true });
                     }
                 }
 
@@ -902,7 +949,7 @@ namespace BackendFramework.Services
             {
                 var entry = (LiftEntry)pronunciation;
                 var phonetic = new LiftPhonetic();
-                var url = new LiftUrlRef { Url = href };
+                var url = new LiftUrlRef { Url = href, Label = caption };
                 phonetic.Media.Add(url);
                 entry.Pronunciations.Add(phonetic);
             }

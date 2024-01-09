@@ -86,7 +86,7 @@ namespace Backend.Tests.Models
             newWord.Flag = newFlag.Clone();
 
             // Add something to newWord in Audio, EditedBy, History.
-            newWord.Audio.Add(Text);
+            newWord.Audio.Add(new Pronunciation(Text));
             newWord.EditedBy.Add(Text);
             newWord.History.Add(Text);
 
@@ -100,9 +100,42 @@ namespace Backend.Tests.Models
             Assert.That(updatedDom, Is.Not.Null);
             Assert.That(oldWord.Flag.Equals(newFlag), Is.True);
             Assert.That(oldWord.Note.Equals(newNote), Is.True);
-            Assert.That(oldWord.Audio.Contains(Text), Is.True);
+            Assert.That(oldWord.Audio.Contains(new Pronunciation(Text)), Is.True);
             Assert.That(oldWord.EditedBy.Contains(Text), Is.True);
             Assert.That(oldWord.History.Contains(Text), Is.True);
+        }
+    }
+
+    public class PronunciationTest
+    {
+        private const string FileName = "file-name.mp3";
+        private const string SpeakerId = "1234567890";
+
+        [Test]
+        public void TestNotEquals()
+        {
+            var pronunciation = new Pronunciation { Protected = false, FileName = FileName, SpeakerId = SpeakerId };
+            Assert.That(pronunciation.Equals(
+                new Pronunciation { Protected = true, FileName = FileName, SpeakerId = SpeakerId }), Is.False);
+            Assert.That(pronunciation.Equals(
+                new Pronunciation { Protected = false, FileName = "other-name", SpeakerId = SpeakerId }), Is.False);
+            Assert.That(pronunciation.Equals(
+                new Pronunciation { Protected = false, FileName = FileName, SpeakerId = "other-id" }), Is.False);
+            Assert.That(pronunciation.Equals(null), Is.False);
+        }
+
+        [Test]
+        public void TestHashCode()
+        {
+            Assert.That(
+                new Pronunciation { FileName = FileName }.GetHashCode(),
+                Is.Not.EqualTo(new Pronunciation { FileName = "other-name" }.GetHashCode()));
+            Assert.That(
+                new Pronunciation { SpeakerId = SpeakerId }.GetHashCode(),
+                Is.Not.EqualTo(new Pronunciation { SpeakerId = "other-id" }.GetHashCode()));
+            Assert.That(
+                new Pronunciation { Protected = true }.GetHashCode(),
+                Is.Not.EqualTo(new Pronunciation { Protected = false }.GetHashCode()));
         }
     }
 

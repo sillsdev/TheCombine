@@ -11,6 +11,7 @@ import configureMockStore from "redux-mock-store";
 import "tests/reactI18nextMock";
 
 import { Word } from "api/models";
+import { defaultState } from "components/App/DefaultState";
 import {
   EntryNote,
   GlossWithSuggestions,
@@ -20,21 +21,13 @@ import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
 import { EditTextDialog } from "components/Dialogs";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
-import { defaultState as pronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import theme from "types/theme";
-import { simpleWord } from "types/word";
+import { newPronunciation, simpleWord } from "types/word";
 import { newWritingSystem } from "types/writingSystem";
 
 jest.mock("@mui/material/Autocomplete", () => "div");
 
-jest.mock("backend");
-jest.mock("components/Pronunciations/Recorder");
-
-jest
-  .spyOn(window.HTMLMediaElement.prototype, "pause")
-  .mockImplementation(() => {});
-
-const mockStore = configureMockStore()({ pronunciationsState });
+const mockStore = configureMockStore()(defaultState);
 const mockVern = "Vernacular";
 const mockGloss = "Gloss";
 const mockWord = simpleWord(mockVern, mockGloss);
@@ -61,7 +54,8 @@ async function renderWithWord(word: Word): Promise<void> {
               updateVern={mockUpdateVern}
               removeEntry={jest.fn()}
               addAudioToWord={jest.fn()}
-              deleteAudioFromWord={jest.fn()}
+              delAudioFromWord={jest.fn()}
+              repAudioInWord={jest.fn()}
               focusNewEntry={jest.fn()}
               analysisLang={newWritingSystem()}
               vernacularLang={newWritingSystem()}
@@ -87,7 +81,8 @@ describe("ExistingEntry", () => {
     });
 
     it("renders recorder and 3 players", async () => {
-      await renderWithWord({ ...mockWord, audio: ["a.wav", "b.wav", "c.wav"] });
+      const audio = ["a.wav", "b.wav", "c.wav"].map((f) => newPronunciation(f));
+      await renderWithWord({ ...mockWord, audio });
       expect(testHandle.findAllByType(AudioPlayer).length).toEqual(3);
       expect(testHandle.findAllByType(AudioRecorder).length).toEqual(1);
     });

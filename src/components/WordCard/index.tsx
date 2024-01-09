@@ -78,12 +78,7 @@ export default function WordCard(props: WordCardProps): ReactElement {
         {full && (
           <>
             {audio.length > 0 && (
-              <PronunciationsBackend
-                deleteAudio={() => {}}
-                playerOnly
-                pronunciationFiles={audio}
-                wordId={id}
-              />
+              <PronunciationsBackend audio={audio} playerOnly wordId={id} />
             )}
             {!!note.text && (
               <div style={{ display: "block" }}>

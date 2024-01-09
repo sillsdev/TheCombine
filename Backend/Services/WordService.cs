@@ -94,15 +94,19 @@ namespace BackendFramework.Services
                 return null;
             }
 
-            var wordIsInFrontier = await _wordRepo.DeleteFrontier(projectId, wordId);
-
-            // We only want to update words that are in the frontier
-            if (!wordIsInFrontier)
+            var audioToRemove = wordWithAudioToDelete.Audio.Find(a => a.FileName == fileName);
+            if (audioToRemove is null)
             {
-                return wordWithAudioToDelete;
+                return null;
             }
 
-            wordWithAudioToDelete.Audio.Remove(fileName);
+            // We only want to update words that are in the frontier
+            if (!await _wordRepo.DeleteFrontier(projectId, wordId))
+            {
+                return null;
+            }
+
+            wordWithAudioToDelete.Audio.Remove(audioToRemove);
             wordWithAudioToDelete.History.Add(wordId);
 
             return await Create(userId, wordWithAudioToDelete);
