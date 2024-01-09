@@ -1,3 +1,4 @@
+import { match } from "css-mediaquery";
 import { ReactTestRenderer, act, create } from "react-test-renderer";
 
 import "tests/reactI18nextMock.ts";
@@ -9,6 +10,23 @@ import testDomainMap, {
 } from "components/TreeView/tests/SemanticDomainMock";
 
 let treeMaster: ReactTestRenderer;
+
+// Modified from mui.com/material-ui/react-use-media-query/#testing
+const createMatchMedia = (
+  width: number
+): ((query: string) => MediaQueryList) => {
+  return (query: string) =>
+    ({
+      matches: match(query, { width }),
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+    }) as any;
+};
+
+beforeAll(async () => {
+  // Required for the <Hidden> elements to show up
+  window.matchMedia = createMatchMedia(window.innerWidth);
+});
 
 describe("Tests AddWords", () => {
   testFromNode("Renders correctly: from parent", testDomainMap[mapIds.parent]);
