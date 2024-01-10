@@ -1,8 +1,6 @@
 import { Button, Grid } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Dayjs } from "dayjs";
 import { enqueueSnackbar } from "notistack";
 import { ReactElement, useState } from "react";
@@ -63,19 +61,20 @@ export default function DateSelector(props: DateSelectorProps): ReactElement {
   }
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <>
       <DatePicker
         label={t("projectSettings.schedule.startDate")}
         value={startDate}
         onChange={(newValue) => setStartDate(newValue)}
-        renderInput={(params) => <TextField {...params} />}
+        //slots={{ day: TextField }}
+        //renderInput={(params) => <TextField {...params} />}
       />
       <span>&nbsp;&nbsp;</span>
       <DatePicker
         label={t("projectSettings.schedule.endDate")}
         value={endDate}
         onChange={(newValue) => setEndDate(newValue)}
-        renderInput={(params) => <TextField {...params} />}
+        //renderInput={(params) => <TextField {...params} />}
       />
       <Grid container justifyContent="flex-end" spacing={2}>
         <Grid item marginTop={1} style={{ width: 100 }}>
@@ -101,6 +100,6 @@ export default function DateSelector(props: DateSelectorProps): ReactElement {
           </LoadingButton>
         </Grid>
       </Grid>
-    </LocalizationProvider>
+    </>
   );
 }

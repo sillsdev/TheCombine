@@ -1,11 +1,5 @@
 import { Button, Grid } from "@mui/material";
-import {
-  CalendarPicker,
-  PickersDay,
-  PickersDayProps,
-} from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateCalendar, PickersDay, PickersDayProps } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
 import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -28,7 +22,7 @@ export default function DateScheduleEdit(
   );
   const { t } = useTranslation();
 
-  // Custom renderer for CalendarPicker
+  // Custom renderer for DateCalendar
   function customDayRenderer(
     day: Dayjs,
     _selectedDays: Array<Dayjs | null>,
@@ -79,12 +73,11 @@ export default function DateScheduleEdit(
   }
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <CalendarPicker
+    <>
+      <DateCalendar
         onChange={handleCalendarChange}
-        date={null}
         disableHighlightToday
-        renderDay={customDayRenderer}
+        //renderDay={customDayRenderer}
       />
       <Grid container justifyContent="flex-end" spacing={2}>
         <Grid item marginTop={1} style={{ width: 100 }}>
@@ -109,6 +102,6 @@ export default function DateScheduleEdit(
           </LoadingButton>
         </Grid>
       </Grid>
-    </LocalizationProvider>
+    </>
   );
 }
