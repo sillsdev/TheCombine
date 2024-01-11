@@ -9,12 +9,17 @@ import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-import { DeleteCell } from "goals/ReviewEntries/ReviewEntriesTable/CellComponents";
+import {
+  DeleteCell,
+  FlagCell,
+  VernacularCell,
+} from "goals/ReviewEntries/ReviewEntriesTable/Cells";
 import {
   ColumnId,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { StoreState } from "types";
+import { compareFlags } from "utilities/wordUtilities";
 
 interface ReviewEntriesTableProps {
   onRowUpdate: (
@@ -50,6 +55,17 @@ export default function ReviewEntriesTable(
   const columns = [
     columnHelper.accessor("vernacular", {
       header: t("reviewEntries.columns.vernacular"),
+      Cell: ({ row }: CellProps) => <VernacularCell rowData={row.original} />,
+    }),
+    columnHelper.accessor((row) => row.senses.length, {
+      header: t("reviewEntries.columns.senses"),
+      id: "senses",
+    }),
+    columnHelper.accessor("flag", {
+      header: t("reviewEntries.columns.flag"),
+      sortingFn: (rowA, rowB) =>
+        compareFlags(rowA.original.flag, rowB.original.flag),
+      Cell: ({ row }: CellProps) => <FlagCell rowData={row.original} />,
     }),
     columnHelper.display({
       header: t("reviewEntries.columns.delete"),
