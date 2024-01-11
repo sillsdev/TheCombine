@@ -13,6 +13,7 @@ import {
   Status,
   Word,
 } from "api/models";
+import { compareDomains } from "types/semanticDomain";
 import { randomIntString } from "utilities/utilities";
 
 export interface FileWithSpeakerId extends File {
@@ -151,4 +152,82 @@ export function testWordList(): Word[] {
     simpleWord("Yes", "Wumbo"),
     simpleWord("Yes", "Mayonnaise"),
   ];
+}
+
+export function compareSenseDomains(a: Sense, b: Sense): number {
+  let compare = 0;
+
+  // Special case: no domains
+  if (!a.semanticDomains.length || !b.semanticDomains.length) {
+    return b.semanticDomains.length - a.semanticDomains.length;
+  }
+
+  // Compare the domains
+  for (
+    let i = 0;
+    compare === 0 &&
+    i < a.semanticDomains.length &&
+    i < b.semanticDomains.length;
+    i++
+  ) {
+    compare = compareDomains(a.semanticDomains[i], b.semanticDomains[i]);
+  }
+
+  return compare;
+}
+
+export function compareWordDomains(a: Word, b: Word): number {
+  let compare = 0;
+
+  // Special case: no senses
+  if (!a.senses.length || !b.senses.length) {
+    return b.senses.length - a.senses.length;
+  }
+
+  // Compare the senses
+  for (
+    let i = 0;
+    compare === 0 && i < a.senses.length && i < b.senses.length;
+    i++
+  ) {
+    compare = compareSenseDomains(a.senses[i], b.senses[i]);
+  }
+
+  return compare;
+}
+
+const SEPARATOR = " ; ";
+function definitionString(s: Sense): string {
+  return s.definitions.map((d) => d.text).join(SEPARATOR);
+}
+function glossString(s: Sense): string {
+  return s.glosses.map((g) => g.def).join(SEPARATOR);
+}
+export function compareWordDefinitions(a: Word, b: Word): number {
+  for (
+    let count = 0;
+    count < a.senses.length && count < b.senses.length;
+    count++
+  ) {
+    const stringA = definitionString(a.senses[count]);
+    const stringB = definitionString(b.senses[count]);
+    if (stringA !== stringB) {
+      return stringA.localeCompare(stringB);
+    }
+  }
+  return a.senses.length - b.senses.length;
+}
+export function compareWordGlosses(a: Word, b: Word): number {
+  for (
+    let count = 0;
+    count < a.senses.length && count < b.senses.length;
+    count++
+  ) {
+    const stringA = glossString(a.senses[count]);
+    const stringB = glossString(b.senses[count]);
+    if (stringA !== stringB) {
+      return stringA.localeCompare(stringB);
+    }
+  }
+  return a.senses.length - b.senses.length;
 }

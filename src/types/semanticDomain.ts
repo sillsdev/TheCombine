@@ -74,3 +74,19 @@ export function treeNodeFromSemDom(
 }
 
 export type TreeNodeMap = Record<string, SemanticDomainTreeNode>;
+
+export function domainIdToArray(id: string): number[] {
+  return id.split(".").map((digit) => parseInt(digit, 10));
+}
+
+export function compareDomains(a: SemanticDomain, b: SemanticDomain): number {
+  const codeA = domainIdToArray(a.id);
+  const codeB = domainIdToArray(b.id);
+  for (let i = 0; i < codeA.length && i < codeB.length; i++) {
+    if (codeA[i] !== codeB[i]) {
+      return codeA[i] - codeB[i];
+    }
+  }
+
+  return codeA.length - codeB.length;
+}
