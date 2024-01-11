@@ -16,8 +16,8 @@ export default function DatePickersLocalizationProvider(props: {
   return (
     <LocalizationProvider
       // If i18n.language changes, user must log and and back in
-      // for the change to take effect in @mui/x-date-pickers components
-      adapterLocale={i18n.language}
+      // for the change to take effect in @mui/x-date-pickers components.
+      adapterLocale={i18n.language || undefined}
       dateAdapter={AdapterDayjs}
     >
       {props.children}
