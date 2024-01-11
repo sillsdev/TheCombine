@@ -1,3 +1,4 @@
+import { Edit } from "@mui/icons-material";
 import {
   createMRTColumnHelper,
   MaterialReactTable,
@@ -50,6 +51,10 @@ export default function ReviewEntriesTable(): ReactElement {
   };
 
   const columns = [
+    columnHelper.display({
+      header: t("reviewEntries.materialTable.body.edit"),
+      Cell: ({}: CellProps) => <Edit />,
+    }),
     columnHelper.accessor("vernacular", {
       header: t("reviewEntries.columns.vernacular"),
       Cell: ({ row }: CellProps) => <VernacularCell rowData={row.original} />,
@@ -59,6 +64,7 @@ export default function ReviewEntriesTable(): ReactElement {
       id: "senses",
     }),
     columnHelper.accessor((row) => row.senses.map((s) => s.definitions), {
+      enableHiding: showDefinitions,
       header: t("reviewEntries.columns.definitions"),
       id: "definitions",
       sortingFn: (rowA, rowB) =>

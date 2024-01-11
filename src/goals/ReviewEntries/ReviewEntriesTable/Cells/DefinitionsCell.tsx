@@ -1,8 +1,6 @@
 import { ReactElement } from "react";
-import { useSelector } from "react-redux";
 
-import { Definition, Word, WritingSystem } from "api/models";
-import { StoreState } from "types";
+import { Word } from "api/models";
 import { TypographyWithFont } from "utilities/fontComponents";
 
 interface DefinitionsCellProps {
@@ -12,59 +10,42 @@ interface DefinitionsCellProps {
 export default function DefinitionsCell(
   props: DefinitionsCellProps
 ): ReactElement {
-  const analysisLang = useSelector(
-    (state: StoreState) =>
-      state.currentProjectState.project.analysisWritingSystems[0]
-  );
+  const defs: ReactElement[] = [];
 
-  return (
-    <>
-      {props.rowData.senses.map((sense, i) => (
-        <>
-          {i ? (
-            <TypographyWithFont analysis display="inline">
-              {" | "}
-            </TypographyWithFont>
-          ) : null}
-          <DefinitionList
-            defaultLang={analysisLang}
-            definitions={sense.definitions}
-            idPrefix={`row-${props.rowData.id}-definition`}
-            key={sense.guid}
-          />
-        </>
-      ))}
-    </>
-  );
-}
+  props.rowData.senses.forEach((sense, index) => {
+    if (index) {
+      defs.push(
+        <TypographyWithFont analysis display="inline" key={sense.guid}>
+          {" | "}
+        </TypographyWithFont>
+      );
+    }
 
-interface DefinitionListProps {
-  defaultLang: WritingSystem;
-  definitions: Definition[];
-  idPrefix: string;
-}
-
-function DefinitionList(props: DefinitionListProps): ReactElement {
-  return (
-    <>
-      {props.definitions.map((d, i) => (
-        <>
-          {i ? (
-            <TypographyWithFont analysis display="inline">
-              {"; "}
-            </TypographyWithFont>
-          ) : null}
+    sense.definitions.forEach((d, i) => {
+      if (i) {
+        defs.push(
           <TypographyWithFont
             analysis
             display="inline"
-            id={`${props.idPrefix}-${i}-text`}
-            key={i}
-            lang={d.language}
+            key={`${sense.guid}-${i}-sep`}
           >
-            {d.text}
+            {"; "}
           </TypographyWithFont>
-        </>
-      ))}
-    </>
-  );
+        );
+      }
+
+      defs.push(
+        <TypographyWithFont
+          analysis
+          display="inline"
+          key={`${sense.guid}-${i}-text`}
+          lang={d.language}
+        >
+          {d.text}
+        </TypographyWithFont>
+      );
+    });
+  });
+
+  return <>{defs}</>;
 }

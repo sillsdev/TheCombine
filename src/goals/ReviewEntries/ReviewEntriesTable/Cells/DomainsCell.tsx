@@ -10,32 +10,37 @@ interface DomainsCellProps {
 
 export default function DomainsCell(props: DomainsCellProps): ReactElement {
   const { t } = useTranslation();
+  const items: ReactElement[] = [];
+
+  props.rowData.senses.forEach((sense, index) => {
+    if (index) {
+      items.push(
+        <Grid item key={`${sense.guid}-sep`}>
+          <Typography>{"|"}</Typography>
+        </Grid>
+      );
+    }
+
+    if (sense.semanticDomains.length) {
+      items.push(
+        ...sense.semanticDomains.map((d) => (
+          <Grid item key={`${sense.guid}-${d.id}-${d.name}`}>
+            <Chip label={`${d.id}: ${d.name}`} />
+          </Grid>
+        ))
+      );
+    } else {
+      items.push(
+        <Grid item key={sense.guid} xs>
+          <Chip label={t("reviewEntries.noDomain")} />
+        </Grid>
+      );
+    }
+  });
 
   return (
     <Grid container direction="row" spacing={1}>
-      {props.rowData.senses.map((sense, i) => (
-        <>
-          {i ? (
-            <Grid item>
-              <Typography>{"|"}</Typography>
-            </Grid>
-          ) : null}
-          {sense.semanticDomains.length ? (
-            sense.semanticDomains.map((dom, domainIndex) => (
-              <Grid item key={`${dom.id}_${dom.name}`}>
-                <Chip
-                  id={`sense-${sense.guid}-domain-${domainIndex}`}
-                  label={`${dom.id}: ${dom.name}`}
-                />
-              </Grid>
-            ))
-          ) : (
-            <Grid item xs>
-              <Chip label={t("reviewEntries.noDomain")} />
-            </Grid>
-          )}
-        </>
-      ))}
+      {items}
     </Grid>
   );
 }

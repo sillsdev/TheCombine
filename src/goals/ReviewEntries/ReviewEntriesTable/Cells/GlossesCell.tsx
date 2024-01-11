@@ -1,8 +1,6 @@
 import { ReactElement } from "react";
-import { useSelector } from "react-redux";
 
-import { Gloss, Word, WritingSystem } from "api/models";
-import { StoreState } from "types";
+import { Word } from "api/models";
 import { TypographyWithFont } from "utilities/fontComponents";
 
 interface GlossesCellProps {
@@ -10,59 +8,42 @@ interface GlossesCellProps {
 }
 
 export default function GlossesCell(props: GlossesCellProps): ReactElement {
-  const analysisLang = useSelector(
-    (state: StoreState) =>
-      state.currentProjectState.project.analysisWritingSystems[0]
-  );
+  const glosses: ReactElement[] = [];
 
-  return (
-    <>
-      {props.rowData.senses.map((sense, i) => (
-        <>
-          {i ? (
-            <TypographyWithFont analysis display="inline">
-              {" | "}
-            </TypographyWithFont>
-          ) : null}
-          <GlossList
-            defaultLang={analysisLang}
-            glosses={sense.glosses}
-            idPrefix={`row-${props.rowData.id}-gloss`}
-            key={sense.guid}
-          />
-        </>
-      ))}
-    </>
-  );
-}
+  props.rowData.senses.forEach((sense, index) => {
+    if (index) {
+      glosses.push(
+        <TypographyWithFont analysis display="inline" key={sense.guid}>
+          {" | "}
+        </TypographyWithFont>
+      );
+    }
 
-interface GlossListProps {
-  defaultLang: WritingSystem;
-  glosses: Gloss[];
-  idPrefix: string;
-}
-
-function GlossList(props: GlossListProps): ReactElement {
-  return (
-    <>
-      {props.glosses.map((g, i) => (
-        <>
-          {i ? (
-            <TypographyWithFont analysis display="inline">
-              {"; "}
-            </TypographyWithFont>
-          ) : null}
+    sense.glosses.forEach((g, i) => {
+      if (i) {
+        glosses.push(
           <TypographyWithFont
             analysis
             display="inline"
-            id={`${props.idPrefix}-${i}-text`}
-            key={i}
-            lang={g.language}
+            key={`${sense.guid}-${i}-sep`}
           >
-            {g.def}
+            {"; "}
           </TypographyWithFont>
-        </>
-      ))}
-    </>
-  );
+        );
+      }
+
+      glosses.push(
+        <TypographyWithFont
+          analysis
+          display="inline"
+          key={`${sense.guid}-${i}-text`}
+          lang={g.language}
+        >
+          {g.def}
+        </TypographyWithFont>
+      );
+    });
+  });
+
+  return <>{glosses}</>;
 }
