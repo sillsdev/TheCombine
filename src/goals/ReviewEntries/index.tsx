@@ -1,17 +1,9 @@
 import { ReactElement, useEffect, useState } from "react";
 
 import { getFrontierWords } from "backend";
-import {
-  setAllWords,
-  setSortBy,
-  updateFrontierWord,
-} from "goals/ReviewEntries/Redux/ReviewEntriesActions";
+import { setAllWords } from "goals/ReviewEntries/Redux/ReviewEntriesActions";
 import ReviewEntriesCompleted from "goals/ReviewEntries/ReviewEntriesCompleted";
 import ReviewEntriesTable from "goals/ReviewEntries/ReviewEntriesTable";
-import {
-  ColumnId,
-  ReviewEntriesWord,
-} from "goals/ReviewEntries/ReviewEntriesTypes";
 import { useAppDispatch } from "types/hooks";
 
 interface ReviewEntriesProps {
@@ -34,12 +26,7 @@ export default function ReviewEntries(props: ReviewEntriesProps): ReactElement {
   return props.completed ? (
     <ReviewEntriesCompleted />
   ) : loaded ? (
-    <ReviewEntriesTable
-      onRowUpdate={(newData: ReviewEntriesWord, oldData?: ReviewEntriesWord) =>
-        dispatch(updateFrontierWord(newData, oldData))
-      }
-      onSort={(columnId?: ColumnId) => dispatch(setSortBy(columnId))}
-    />
+    <ReviewEntriesTable />
   ) : (
     <div />
   );

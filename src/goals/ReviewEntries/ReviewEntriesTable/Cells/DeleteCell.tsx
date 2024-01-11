@@ -1,9 +1,9 @@
 import { ReactElement } from "react";
 
+import { Status, Word } from "api/models";
 import { deleteFrontierWord as deleteFromBackend } from "backend";
 import { DeleteButtonWithDialog } from "components/Buttons";
 import { deleteWord } from "goals/ReviewEntries/Redux/ReviewEntriesActions";
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { useAppDispatch } from "types/hooks";
 
 const buttonId = (wordId: string): string => `row-${wordId}-delete`;
@@ -11,14 +11,16 @@ const buttonIdCancel = "delete-cancel";
 const buttonIdConfirm = "delete-confirm";
 
 interface DeleteCellProps {
-  rowData: ReviewEntriesWord;
+  rowData: Word;
 }
 
 export default function DeleteCell(props: DeleteCellProps): ReactElement {
   const dispatch = useAppDispatch();
 
   const word = props.rowData;
-  const disabled = word.protected || !!word.senses.find((s) => s.protected);
+  const disabled =
+    word.accessibility === Status.Protected ||
+    !!word.senses.find((s) => s.accessibility === Status.Protected);
 
   async function deleteFrontierWord(): Promise<void> {
     await deleteFromBackend(word.id);

@@ -1,4 +1,3 @@
-import { createSelector } from "@reduxjs/toolkit";
 import {
   createMRTColumnHelper,
   MaterialReactTable,
@@ -9,35 +8,19 @@ import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
+import { Word } from "api/models";
 import {
   DeleteCell,
   FlagCell,
   VernacularCell,
 } from "goals/ReviewEntries/ReviewEntriesTable/Cells";
-import {
-  ColumnId,
-  ReviewEntriesWord,
-} from "goals/ReviewEntries/ReviewEntriesTypes";
 import { StoreState } from "types";
 import { compareFlags } from "utilities/wordUtilities";
 
-interface ReviewEntriesTableProps {
-  onRowUpdate: (
-    newData: ReviewEntriesWord,
-    oldData?: ReviewEntriesWord
-  ) => Promise<void>;
-  onSort: (columnId?: ColumnId) => void;
-}
-
-export default function ReviewEntriesTable(
-  props: ReviewEntriesTableProps
-): ReactElement {
-  // https://redux.js.org/usage/deriving-data-selectors#optimizing-selectors-with-memoization
-  const wordsSelector = createSelector(
-    [(state: StoreState) => state.reviewEntriesState.words],
-    (words) => words.map((w) => new ReviewEntriesWord(w))
+export default function ReviewEntriesTable(): ReactElement {
+  const data = useSelector(
+    (state: StoreState) => state.reviewEntriesState.words
   );
-  const allWords = useSelector(wordsSelector);
   /*const showDefinitions = useSelector(
     (state: StoreState) => state.currentProjectState.project.definitionsEnabled
   );
@@ -48,9 +31,9 @@ export default function ReviewEntriesTable(
 
   const { t } = useTranslation();
 
-  const columnHelper = createMRTColumnHelper<ReviewEntriesWord>();
+  const columnHelper = createMRTColumnHelper<Word>();
 
-  type CellProps = { row: MRT_Row<ReviewEntriesWord> };
+  type CellProps = { row: MRT_Row<Word> };
 
   const columns = [
     columnHelper.accessor("vernacular", {
@@ -73,10 +56,7 @@ export default function ReviewEntriesTable(
     }),
   ];
 
-  const table = useMaterialReactTable({
-    columns,
-    data: allWords,
-  });
+  const table = useMaterialReactTable({ columns, data });
 
   return <MaterialReactTable table={table} />;
 }

@@ -1,10 +1,10 @@
 import { ReactElement } from "react";
 
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";
+import { Word } from "api/models";
 import { TypographyWithFont } from "utilities/fontComponents";
 
 interface VernacularCellProps {
-  rowData: ReviewEntriesWord;
+  rowData: Word;
 }
 
 export default function VernacularCell(

@@ -1,10 +1,10 @@
 import { ReactElement } from "react";
 
+import { Word } from "api/models";
 import FlagButton from "components/Buttons/FlagButton";
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";
 
 interface FlagCellProps {
-  rowData: ReviewEntriesWord;
+  rowData: Word;
 }
 
 export default function FlagCell(props: FlagCellProps): ReactElement {
