@@ -1,31 +1,15 @@
 import { Icon } from "@mui/material";
-import { DateCalendar, PickersDay, PickersDayProps } from "@mui/x-date-pickers";
+import { DateCalendar } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { ReactElement } from "react";
+
+import ProjectPickersDay from "components/ProjectSettings/ProjectSchedule/ProjectPickersDay";
 
 interface CalendarViewProps {
   projectSchedule: Date[];
 }
 
 export default function CalendarView(props: CalendarViewProps): ReactElement {
-  // Custom renderer for DateCalendar
-  function customDayRenderer(
-    day: Dayjs,
-    _selectedDays: Array<Dayjs | null>,
-    pickersDayProps: PickersDayProps<Dayjs>
-  ): ReactElement {
-    const date = day.toDate();
-    const selected =
-      props.projectSchedule &&
-      props.projectSchedule.findIndex(
-        (d) =>
-          d.getDate() === date.getDate() &&
-          d.getMonth() === date.getMonth() &&
-          d.getFullYear() === date.getFullYear()
-      ) >= 0;
-    return <PickersDay {...pickersDayProps} selected={selected} />;
-  }
-
   function handleCalendarView(monthToRender?: Dayjs[]): ReactElement[] {
     if (!monthToRender) {
       return [];
@@ -34,15 +18,18 @@ export default function CalendarView(props: CalendarViewProps): ReactElement {
     return monthToRender.map((tempDayjs) => (
       <DateCalendar
         key={tempDayjs.toISOString()}
-        slots={{ leftArrowIcon: Icon, rightArrowIcon: Icon }}
         readOnly
         disabled
         referenceDate={tempDayjs}
         maxDate={tempDayjs}
         minDate={tempDayjs}
-        onChange={() => {}}
         disableHighlightToday
-        //renderDay={customDayRenderer}
+        slots={{
+          day: ProjectPickersDay,
+          leftArrowIcon: Icon,
+          rightArrowIcon: Icon,
+        }}
+        slotProps={{ day: { days: props.projectSchedule } as any }}
       />
     ));
   }

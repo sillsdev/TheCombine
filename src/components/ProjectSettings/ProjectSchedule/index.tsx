@@ -1,7 +1,5 @@
 import { CalendarMonth, DateRange, EventRepeat } from "@mui/icons-material";
 import { Button, Grid, Typography } from "@mui/material";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
@@ -33,6 +31,10 @@ export default function ProjectSchedule(
 
   const { t } = useTranslation();
 
+  useEffect(() => {
+    Modal.setAppElement("body");
+  }, []);
+
   /** Remove all elements from workshopSchedule in project settings */
   async function handleRemoveAll(): Promise<void> {
     await props.updateProject({ ...props.project, workshopSchedule: [] });
@@ -54,7 +56,7 @@ export default function ProjectSchedule(
   }, [fetchSchedule, props.project.id, showEdit, showRemove, showSelector]);
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <>
       <Grid
         container
         direction="column"
@@ -137,7 +139,7 @@ export default function ProjectSchedule(
         <Typography>{t("projectSettings.schedule.removeAll")}</Typography>
 
         <Grid container justifyContent="flex-end" spacing={2}>
-          <Grid item marginTop={1} style={{ width: 100 }}>
+          <Grid item marginTop={1}>
             <Button
               variant="contained"
               onClick={() => setShowRemove(false)}
@@ -146,7 +148,7 @@ export default function ProjectSchedule(
               {t("buttons.cancel")}
             </Button>
           </Grid>
-          <Grid item marginTop={1} style={{ width: 100 }}>
+          <Grid item marginTop={1}>
             <Button
               variant="contained"
               onClick={() => handleRemoveAll()}
@@ -157,6 +159,6 @@ export default function ProjectSchedule(
           </Grid>
         </Grid>
       </Modal>
-    </LocalizationProvider>
+    </>
   );
 }
