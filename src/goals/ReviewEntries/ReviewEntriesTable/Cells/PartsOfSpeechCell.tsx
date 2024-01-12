@@ -26,7 +26,7 @@ export default function PartOfSpeechCell(props: CellProps): ReactElement {
         <PartOfSpeechButton
           buttonId={`${sense.guid}-part-of-speech`}
           gramInfo={sense.grammaticalInfo}
-        />{" "}
+        />
       </Grid>
     );
   });

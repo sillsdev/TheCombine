@@ -5,8 +5,7 @@ import FlagCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/FlagCell";
 import GlossesCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/GlossesCell";
 import NoteCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/NoteCell";
 import PartsOfSpeechCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/PartsOfSpeechCell";
-//import PronunciationsCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/PronunciationsCell";
-//import SenseCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/SenseCell";
+import PronunciationsCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/PronunciationsCell";
 import VernacularCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/VernacularCell";
 
 export {
@@ -17,7 +16,6 @@ export {
   GlossesCell,
   NoteCell,
   PartsOfSpeechCell,
-  //PronunciationsCell,
-  //SenseCell,
+  PronunciationsCell,
   VernacularCell,
 };
