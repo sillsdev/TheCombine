@@ -1,13 +1,9 @@
 import { ReactElement } from "react";
 
-import { Word } from "api/models";
 import FlagButton from "components/Buttons/FlagButton";
+import { CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
 
-interface FlagCellProps {
-  rowData: Word;
-}
-
-export default function FlagCell(props: FlagCellProps): ReactElement {
+export default function FlagCell(props: CellProps): ReactElement {
   return (
     <FlagButton
       flag={props.rowData.flag}

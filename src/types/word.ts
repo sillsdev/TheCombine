@@ -52,6 +52,14 @@ export function newGloss(def = "", language = ""): Gloss {
   return { def, language };
 }
 
+const SEPARATOR = "; ";
+function definitionString(s: Sense): string {
+  return s.definitions.map((d) => d.text.trim()).join(SEPARATOR);
+}
+function glossString(s: Sense): string {
+  return s.glosses.map((g) => g.def.trim()).join(SEPARATOR);
+}
+
 export function newSense(
   gloss?: string,
   lang?: string,
@@ -84,6 +92,23 @@ export function newNote(text = "", language = ""): Note {
 
 export function newGrammaticalInfo(): GrammaticalInfo {
   return { catGroup: GramCatGroup.Unspecified, grammaticalCategory: "" };
+}
+
+export function compareGrammaticalInfo(
+  a: GrammaticalInfo,
+  b: GrammaticalInfo
+): number {
+  if (a.catGroup === b.catGroup) {
+    return a.grammaticalCategory.localeCompare(b.grammaticalCategory);
+  }
+
+  if (a.catGroup === GramCatGroup.Unspecified) {
+    return 1;
+  }
+  if (b.catGroup === GramCatGroup.Unspecified) {
+    return -1;
+  }
+  return a.catGroup.localeCompare(b.catGroup);
 }
 
 export function newWord(vernacular = ""): Word {
@@ -155,21 +180,17 @@ export function testWordList(): Word[] {
 }
 
 export function compareSenseDomains(a: Sense, b: Sense): number {
+  const aLen = a.semanticDomains.length;
+  const bLen = b.semanticDomains.length;
   let compare = 0;
 
   // Special case: no domains
-  if (!a.semanticDomains.length || !b.semanticDomains.length) {
-    return b.semanticDomains.length - a.semanticDomains.length;
+  if (!aLen || !bLen) {
+    return bLen - aLen;
   }
 
   // Compare the domains
-  for (
-    let i = 0;
-    compare === 0 &&
-    i < a.semanticDomains.length &&
-    i < b.semanticDomains.length;
-    i++
-  ) {
+  for (let i = 0; compare === 0 && i < aLen && i < bLen; i++) {
     compare = compareDomains(a.semanticDomains[i], b.semanticDomains[i]);
   }
 
@@ -177,40 +198,26 @@ export function compareSenseDomains(a: Sense, b: Sense): number {
 }
 
 export function compareWordDomains(a: Word, b: Word): number {
-  let compare = 0;
+  const aLen = a.senses.length;
+  const bLen = b.senses.length;
 
-  // Special case: no senses
-  if (!a.senses.length || !b.senses.length) {
-    return b.senses.length - a.senses.length;
+  // Special case: no domains
+  if (!aLen || !bLen) {
+    return bLen - aLen;
   }
 
   // Compare the senses
-  for (
-    let i = 0;
-    compare === 0 && i < a.senses.length && i < b.senses.length;
-    i++
-  ) {
+  let compare = 0;
+  for (let i = 0; compare === 0 && i < aLen && i < bLen; i++) {
     compare = compareSenseDomains(a.senses[i], b.senses[i]);
   }
-
   return compare;
 }
 
-const SEPARATOR = " ; ";
-function definitionString(s: Sense): string {
-  return s.definitions.map((d) => d.text).join(SEPARATOR);
-}
-function glossString(s: Sense): string {
-  return s.glosses.map((g) => g.def).join(SEPARATOR);
-}
 export function compareWordDefinitions(a: Word, b: Word): number {
-  for (
-    let count = 0;
-    count < a.senses.length && count < b.senses.length;
-    count++
-  ) {
-    const stringA = definitionString(a.senses[count]);
-    const stringB = definitionString(b.senses[count]);
+  for (let i = 0; i < a.senses.length && i < b.senses.length; i++) {
+    const stringA = definitionString(a.senses[i]);
+    const stringB = definitionString(b.senses[i]);
     if (stringA !== stringB) {
       return stringA.localeCompare(stringB);
     }
@@ -218,15 +225,24 @@ export function compareWordDefinitions(a: Word, b: Word): number {
   return a.senses.length - b.senses.length;
 }
 export function compareWordGlosses(a: Word, b: Word): number {
-  for (
-    let count = 0;
-    count < a.senses.length && count < b.senses.length;
-    count++
-  ) {
-    const stringA = glossString(a.senses[count]);
-    const stringB = glossString(b.senses[count]);
+  for (let i = 0; i < a.senses.length && i < b.senses.length; i++) {
+    const stringA = glossString(a.senses[i]);
+    const stringB = glossString(b.senses[i]);
     if (stringA !== stringB) {
       return stringA.localeCompare(stringB);
+    }
+  }
+  return a.senses.length - b.senses.length;
+}
+
+export function compareWordGrammaticalInfo(a: Word, b: Word): number {
+  for (let i = 0; i < a.senses.length && i < b.senses.length; i++) {
+    const compare = compareGrammaticalInfo(
+      a.senses[i].grammaticalInfo,
+      b.senses[i].grammaticalInfo
+    );
+    if (compare) {
+      return compare;
     }
   }
   return a.senses.length - b.senses.length;

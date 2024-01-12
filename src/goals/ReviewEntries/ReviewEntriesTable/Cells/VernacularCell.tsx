@@ -1,15 +1,9 @@
 import { ReactElement } from "react";
 
-import { Word } from "api/models";
+import { CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
 import { TypographyWithFont } from "utilities/fontComponents";
 
-interface VernacularCellProps {
-  rowData: Word;
-}
-
-export default function VernacularCell(
-  props: VernacularCellProps
-): ReactElement {
+export default function VernacularCell(props: CellProps): ReactElement {
   return (
     <TypographyWithFont
       id={`row-${props.rowData.id}-vernacular-text`}

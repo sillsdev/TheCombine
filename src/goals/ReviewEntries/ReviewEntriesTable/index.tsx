@@ -18,6 +18,7 @@ import {
   FlagCell,
   GlossesCell,
   NoteCell,
+  PartsOfSpeechCell,
   VernacularCell,
 } from "goals/ReviewEntries/ReviewEntriesTable/Cells";
 import { StoreState } from "types";
@@ -25,6 +26,7 @@ import {
   compareWordDefinitions,
   compareWordDomains,
   compareWordGlosses,
+  compareWordGrammaticalInfo,
 } from "types/word";
 import { compareFlags } from "utilities/wordUtilities";
 
@@ -35,10 +37,10 @@ export default function ReviewEntriesTable(): ReactElement {
   const showDefinitions = useSelector(
     (state: StoreState) => state.currentProjectState.project.definitionsEnabled
   );
-  /*const showGrammaticalInfo = useSelector(
+  const showGrammaticalInfo = useSelector(
     (state: StoreState) =>
       state.currentProjectState.project.grammaticalInfoEnabled
-  );*/
+  );
 
   const { t } = useTranslation();
 
@@ -78,6 +80,16 @@ export default function ReviewEntriesTable(): ReactElement {
         compareWordGlosses(rowA.original, rowB.original),
       Cell: ({ row }: CellProps) => <GlossesCell rowData={row.original} />,
     }),
+    columnHelper.accessor((row) => row.senses.map((s) => s.grammaticalInfo), {
+      enableHiding: showGrammaticalInfo,
+      header: t("reviewEntries.columns.partOfSpeech"),
+      id: "partsOfSpeech",
+      sortingFn: (rowA, rowB) =>
+        compareWordGrammaticalInfo(rowA.original, rowB.original),
+      Cell: ({ row }: CellProps) => (
+        <PartsOfSpeechCell rowData={row.original} />
+      ),
+    }),
     columnHelper.accessor((row) => row.senses.map((s) => s.semanticDomains), {
       header: t("reviewEntries.columns.domains"),
       id: "domains",
@@ -107,7 +119,12 @@ export default function ReviewEntriesTable(): ReactElement {
   const table = useMaterialReactTable({
     columns,
     data,
-    initialState: { columnVisibility: { definitions: showDefinitions } },
+    initialState: {
+      columnVisibility: {
+        definitions: showDefinitions,
+        partsOfSpeech: showGrammaticalInfo,
+      },
+    },
   });
 
   return <MaterialReactTable table={table} />;

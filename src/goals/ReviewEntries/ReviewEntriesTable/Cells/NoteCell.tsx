@@ -1,13 +1,9 @@
 import { ReactElement } from "react";
 
-import { Word } from "api/models";
+import { CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
 import { TypographyWithFont } from "utilities/fontComponents";
 
-interface NoteCellProps {
-  rowData: Word;
-}
-
-export default function NoteCell(props: NoteCellProps): ReactElement {
+export default function NoteCell(props: CellProps): ReactElement {
   return (
     <TypographyWithFont
       analysis

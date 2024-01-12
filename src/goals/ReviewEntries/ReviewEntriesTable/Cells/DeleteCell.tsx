@@ -1,20 +1,17 @@
 import { ReactElement } from "react";
 
-import { Status, Word } from "api/models";
+import { Status } from "api/models";
 import { deleteFrontierWord as deleteFromBackend } from "backend";
 import { DeleteButtonWithDialog } from "components/Buttons";
 import { deleteWord } from "goals/ReviewEntries/Redux/ReviewEntriesActions";
+import { CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
 import { useAppDispatch } from "types/hooks";
 
 const buttonId = (wordId: string): string => `row-${wordId}-delete`;
 const buttonIdCancel = "delete-cancel";
 const buttonIdConfirm = "delete-confirm";
 
-interface DeleteCellProps {
-  rowData: Word;
-}
-
-export default function DeleteCell(props: DeleteCellProps): ReactElement {
+export default function DeleteCell(props: CellProps): ReactElement {
   const dispatch = useAppDispatch();
 
   const word = props.rowData;

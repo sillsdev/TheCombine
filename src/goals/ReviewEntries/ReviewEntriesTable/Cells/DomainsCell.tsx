@@ -2,13 +2,9 @@ import { Chip, Grid, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Word } from "api/models";
+import { CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
 
-interface DomainsCellProps {
-  rowData: Word;
-}
-
-export default function DomainsCell(props: DomainsCellProps): ReactElement {
+export default function DomainsCell(props: CellProps): ReactElement {
   const { t } = useTranslation();
   const items: ReactElement[] = [];
 
