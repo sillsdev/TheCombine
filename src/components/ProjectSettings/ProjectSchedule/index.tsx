@@ -1,5 +1,7 @@
 import { CalendarMonth, DateRange, EventRepeat } from "@mui/icons-material";
 import { Button, Grid, Typography } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
@@ -56,7 +58,7 @@ export default function ProjectSchedule(
   }, [fetchSchedule, props.project.id, showEdit, showRemove, showSelector]);
 
   return (
-    <>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Grid
         container
         direction="column"
@@ -159,6 +161,6 @@ export default function ProjectSchedule(
           </Grid>
         </Grid>
       </Modal>
-    </>
+    </LocalizationProvider>
   );
 }
