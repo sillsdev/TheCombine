@@ -772,6 +772,7 @@ namespace BackendFramework.Services
                 {
                     return;
                 }
+                newWord.Vernacular = vern;
 
                 // This is not a word if there are no senses
                 if (entry.Senses.Count == 0)
