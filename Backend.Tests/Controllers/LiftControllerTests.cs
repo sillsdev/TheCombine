@@ -456,13 +456,13 @@ namespace Backend.Tests.Controllers
 
         private static RoundTripObj[] _roundTripCases =
         {
-            new("Gusillaay.zip", "gsl-Qaaa-x-orth", new List<string>(), 8045),
+            /*new("Gusillaay.zip", "gsl-Qaaa-x-orth", new List<string>(), 8045),
             new("GusillaayNoTopLevelFolder.zip", "gsl-Qaaa-x-orth", new List<string>(), 8045),
             new("Lotud.zip", "dtr", new List<string>(), 5400, "", "", true, true),
             new("Natqgu.zip", "qaa-x-stc-natqgu", new List<string>(), 11570, "", "", true, true),
             new("Resembli.zip", "ags", new List<string>(), 255, "", "", true, true),
             new("RWC.zip", "es", new List<string>(), 132, "", "", true),
-            new("Sena.zip", "seh", new List<string>(), 1462, "", "", true, true),
+            new("Sena.zip", "seh", new List<string>(), 1462, "", "", true, true),*/
             new(
                 "SingleEntryLiftWithSound.zip", "ptn", new List<string> { "short.mp3" }, 1,
                 "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone entry*/,

@@ -7,7 +7,7 @@ namespace BackendFramework.Interfaces
 {
     public interface ILiftService
     {
-        ILiftMerger GetLiftImporterExporter(string projectId, IWordRepository wordRepo);
+        ILiftMerger GetLiftImporterExporter(string projectId, string vernLang, IWordRepository wordRepo);
         Task<bool> LdmlImport(string dirPath, IProjectRepository projRepo, Project project);
         Task<string> LiftExport(string projectId, IWordRepository wordRepo, IProjectRepository projRepo);
         Task<List<string>> CreateLiftRanges(List<Word> projWords, List<SemanticDomain> projDoms, string rangesDest);
