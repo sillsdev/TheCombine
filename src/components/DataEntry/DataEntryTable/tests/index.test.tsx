@@ -51,12 +51,13 @@ jest.mock("backend", () => ({
 jest.mock("backend/localStorage", () => ({
   getUserId: () => mockUserId,
 }));
+jest.mock("components/DataEntry/DataEntryTable/NewEntry/SenseDialog");
+jest.mock("components/DataEntry/DataEntryTable/NewEntry/VernDialog");
 jest.mock(
   "components/DataEntry/DataEntryTable/RecentEntry",
   () => MockRecentEntry
 );
 jest.mock("components/Pronunciations/PronunciationsFrontend", () => "div");
-jest.mock("utilities/utilities");
 
 jest.spyOn(window, "alert").mockImplementation(() => {});
 
@@ -180,7 +181,7 @@ describe("DataEntryTable", () => {
     it("throws error when word doesn't have sense with specified guid", () => {
       expect(() =>
         addSemanticDomainToSense(newSemanticDomain(), mockWord(), "gibberish")
-      ).toThrowError();
+      ).toThrow();
     });
 
     it("adds a semantic domain to existing sense", () => {
@@ -242,7 +243,7 @@ describe("DataEntryTable", () => {
   describe("updateEntryGloss", () => {
     it("throws error when entry doesn't have sense with specified guid", () => {
       const entry: WordAccess = { word: newWord(), senseGuid: "gibberish" };
-      expect(() => updateEntryGloss(entry, "def", "semDomId")).toThrowError();
+      expect(() => updateEntryGloss(entry, "def", "semDomId")).toThrow();
     });
 
     it("directly updates a sense with no other semantic domains", () => {
@@ -288,6 +289,14 @@ describe("DataEntryTable", () => {
       return { ...word, senses };
     };
 
+    it("throws error if no selected dup", async () => {
+      await renderTable();
+      testHandle = testRenderer.root.findByType(NewEntry);
+      await expect(
+        async () => await testHandle.props.updateWordWithNewGloss()
+      ).rejects.toThrow();
+    });
+
     it("doesn't update word in backend if sense is a duplicate", async () => {
       const word = changeSemDoms(mockMultiWord, [
         newSemanticDomain("someSemDomId"),
@@ -297,8 +306,10 @@ describe("DataEntryTable", () => {
       await renderTable();
       testHandle = testRenderer.root.findByType(NewEntry);
       await act(async () => {
+        await testHandle.props.setNewVern(word.vernacular);
+        await testHandle.props.setSelectedDup(word.id);
         await testHandle.props.setNewGloss(firstGlossText(word.senses[0]));
-        await testHandle.props.updateWordWithNewGloss(word.id);
+        await testHandle.props.updateWordWithNewGloss();
       });
       expect(mockUpdateWord).not.toHaveBeenCalled();
     });
@@ -316,8 +327,10 @@ describe("DataEntryTable", () => {
       testHandle = testRenderer.root.findByType(NewEntry);
       const glossText = firstGlossText(word.senses[senseIndex]);
       await act(async () => {
+        await testHandle.props.setNewVern(word.vernacular);
+        await testHandle.props.setSelectedDup(word.id);
         await testHandle.props.setNewGloss(glossText);
-        await testHandle.props.updateWordWithNewGloss(word.id);
+        await testHandle.props.updateWordWithNewGloss();
       });
       expect(mockUpdateWord).toHaveBeenCalledTimes(1);
 
@@ -331,13 +344,93 @@ describe("DataEntryTable", () => {
     });
 
     it("updates word in backend if gloss doesn't exist", async () => {
+      mockGetFrontierWords.mockResolvedValue([mockMultiWord]);
       await renderTable();
       testHandle = testRenderer.root.findByType(NewEntry);
       await act(async () => {
+        await testHandle.props.setNewVern(mockMultiWord.vernacular);
+        await testHandle.props.setSelectedDup(mockMultiWord.id);
         await testHandle.props.setNewGloss("differentGloss");
-        await testHandle.props.updateWordWithNewGloss(mockMultiWord.id);
+        await testHandle.props.updateWordWithNewGloss();
       });
       expect(mockUpdateWord).toHaveBeenCalledTimes(1);
+    });
+
+    describe("with selected sense", () => {
+      it("throws error if selected sense not in dup", async () => {
+        mockGetFrontierWords.mockResolvedValue([mockMultiWord]);
+        await renderTable();
+        testHandle = testRenderer.root.findByType(NewEntry);
+        await act(async () => {
+          await testHandle.props.setNewVern(mockMultiWord.vernacular);
+          await testHandle.props.setSelectedDup(mockMultiWord.id);
+          await testHandle.props.setSelectedSense("non-existent-guid");
+        });
+        await expect(
+          async () => await testHandle.props.updateWordWithNewGloss()
+        ).rejects.toThrow();
+      });
+
+      it("updates word if selected sense has empty gloss", async () => {
+        const word = changeSemDoms(mockMultiWord, [
+          newSemanticDomain("someSemDomId"),
+          newSemanticDomain(mockSemDomId),
+        ]);
+        word.senses[0].glosses[0].def = "";
+        mockGetFrontierWords.mockResolvedValue([word]);
+        await renderTable();
+        testHandle = testRenderer.root.findByType(NewEntry);
+        await act(async () => {
+          await testHandle.props.setNewVern(word.vernacular);
+          await testHandle.props.setSelectedDup(word.id);
+          await testHandle.props.setSelectedSense(word.senses[0].guid);
+          await testHandle.props.setNewGloss("new gloss");
+          await testHandle.props.updateWordWithNewGloss();
+        });
+        expect(mockUpdateWord).toHaveBeenCalledTimes(1);
+      });
+
+      it("doesn't update word if selected sense has domain", async () => {
+        const word = changeSemDoms(mockMultiWord, [
+          newSemanticDomain("someSemDomId"),
+          newSemanticDomain(mockSemDomId),
+        ]);
+        mockGetFrontierWords.mockResolvedValue([word]);
+        await renderTable();
+        testHandle = testRenderer.root.findByType(NewEntry);
+        await act(async () => {
+          await testHandle.props.setNewVern(word.vernacular);
+          await testHandle.props.setSelectedDup(word.id);
+          await testHandle.props.setSelectedSense(word.senses[0].guid);
+          await testHandle.props.setNewGloss(firstGlossText(word.senses[0]));
+          await testHandle.props.updateWordWithNewGloss();
+        });
+        expect(mockUpdateWord).not.toHaveBeenCalled();
+      });
+
+      it("updates word if selected sense has different semantic domain", async () => {
+        const word = changeSemDoms(mockMultiWord, [
+          newSemanticDomain("someSemDomId"),
+          newSemanticDomain("anotherSemDomId"),
+        ]);
+        mockGetFrontierWords.mockResolvedValue([word]);
+        await renderTable();
+
+        testHandle = testRenderer.root.findByType(NewEntry);
+        await act(async () => {
+          await testHandle.props.setNewVern(word.vernacular);
+          await testHandle.props.setSelectedDup(word.id);
+          await testHandle.props.setSelectedSense(word.senses[0].guid);
+          await testHandle.props.setNewGloss(firstGlossText(word.senses[0]));
+          await testHandle.props.updateWordWithNewGloss();
+        });
+        expect(mockUpdateWord).toHaveBeenCalledTimes(1);
+
+        // Confirm the semantic domain was added.
+        const wordUpdated: Word = mockUpdateWord.mock.calls[0][0];
+        const doms = wordUpdated.senses[0].semanticDomains;
+        expect(doms.find((d) => d.id === mockSemDomId)).toBeTruthy();
+      });
     });
   });
 
