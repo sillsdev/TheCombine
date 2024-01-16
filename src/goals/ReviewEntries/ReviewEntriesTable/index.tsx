@@ -14,6 +14,7 @@ import {
   Definition,
   Flag,
   Gloss,
+  GramCatGroup,
   GrammaticalInfo,
   SemanticDomain,
   Word,
@@ -124,18 +125,15 @@ export default function ReviewEntriesTable(): ReactElement {
         <PartsOfSpeechCell rowData={row.original} />
       ),
       enableHiding: showGrammaticalInfo,
-      filterFn: (row, id, filterValue: string) => {
-        const filter = filterValue.trim().toLowerCase();
-        return (
-          row
-            .getValue<GrammaticalInfo[]>(id)
-            .findIndex(
-              (i) =>
-                i.catGroup.toLowerCase().includes(filter) ||
-                i.grammaticalCategory.toLowerCase().includes(filter)
-            ) !== -1
-        );
-      },
+      filterFn: (row, id, filterValue: GramCatGroup) =>
+        row
+          .getValue<GrammaticalInfo[]>(id)
+          .findIndex((i) => i.catGroup === filterValue) !== -1,
+      filterSelectOptions: Object.values(GramCatGroup).map((g) => ({
+        text: t(`grammaticalCategory.group.${g}`),
+        value: g,
+      })),
+      filterVariant: "select",
       header: t("reviewEntries.columns.partOfSpeech"),
       id: "partsOfSpeech",
       sortingFn: (rowA, rowB) =>
@@ -165,7 +163,7 @@ export default function ReviewEntriesTable(): ReactElement {
             return (
               doms.findIndex(
                 (d) =>
-                  d.id.includes(terms[0]) ||
+                  d.id.startsWith(terms[0]) ||
                   d.name.toLowerCase().includes(terms[0])
               ) !== -1
             );
@@ -173,8 +171,7 @@ export default function ReviewEntriesTable(): ReactElement {
             return (
               doms.findIndex(
                 (d) =>
-                  d.id.includes(terms[0]) &&
-                  d.name.toLowerCase().includes(terms[1])
+                  d.id === terms[0] && d.name.toLowerCase().includes(terms[1])
               ) !== -1
             );
           }
