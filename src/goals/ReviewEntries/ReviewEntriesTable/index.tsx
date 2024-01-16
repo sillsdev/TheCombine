@@ -62,6 +62,7 @@ export default function ReviewEntriesTable(): ReactElement {
   };
 
   const columns = [
+    // Edit column
     columnHelper.display({
       Cell: ({}: CellProps) => <Edit />,
       enableColumnActions: false,
@@ -70,17 +71,23 @@ export default function ReviewEntriesTable(): ReactElement {
       header: t("reviewEntries.materialTable.body.edit"),
       size: 1,
     }),
+
+    // Vernacular column
     columnHelper.accessor("vernacular", {
       Cell: ({ row }: CellProps) => <VernacularCell rowData={row.original} />,
       enableHiding: false,
       header: t("reviewEntries.columns.vernacular"),
     }),
+
+    // Senses column
     columnHelper.accessor((row) => row.senses.length, {
       enableFilterMatchHighlighting: false,
       filterFn: "equals",
       header: t("reviewEntries.columns.senses"),
       id: "senses",
     }),
+
+    // Definitions column
     columnHelper.accessor((row) => row.senses.flatMap((s) => s.definitions), {
       Cell: ({ row }: CellProps) => <DefinitionsCell rowData={row.original} />,
       enableHiding: showDefinitions,
@@ -95,6 +102,8 @@ export default function ReviewEntriesTable(): ReactElement {
       sortingFn: (rowA, rowB) =>
         compareWordDefinitions(rowA.original, rowB.original),
     }),
+
+    // Glosses column
     columnHelper.accessor((row) => row.senses.flatMap((s) => s.glosses), {
       Cell: ({ row }: CellProps) => <GlossesCell rowData={row.original} />,
       filterFn: (row, id, filterValue: string) =>
@@ -108,6 +117,8 @@ export default function ReviewEntriesTable(): ReactElement {
       sortingFn: (rowA, rowB) =>
         compareWordGlosses(rowA.original, rowB.original),
     }),
+
+    // Parts of Speech column
     columnHelper.accessor((row) => row.senses.map((s) => s.grammaticalInfo), {
       Cell: ({ row }: CellProps) => (
         <PartsOfSpeechCell rowData={row.original} />
@@ -130,6 +141,8 @@ export default function ReviewEntriesTable(): ReactElement {
       sortingFn: (rowA, rowB) =>
         compareWordGrammaticalInfo(rowA.original, rowB.original),
     }),
+
+    // Domains column
     columnHelper.accessor(
       (row) => row.senses.flatMap((s) => s.semanticDomains),
       {
@@ -172,6 +185,8 @@ export default function ReviewEntriesTable(): ReactElement {
           compareWordDomains(rowA.original, rowB.original),
       }
     ),
+
+    // Pronunciations column
     columnHelper.accessor((row) => row.audio.length, {
       Cell: ({ row }: CellProps) => (
         <PronunciationsCell rowData={row.original} />
@@ -180,11 +195,15 @@ export default function ReviewEntriesTable(): ReactElement {
       header: t("reviewEntries.columns.pronunciations"),
       id: "pronunciations",
     }),
+
+    // Note column
     columnHelper.accessor((row) => row.note.text, {
       Cell: ({ row }: CellProps) => <NoteCell rowData={row.original} />,
       header: t("reviewEntries.columns.note"),
       id: "note",
     }),
+
+    // Flag column
     columnHelper.accessor("flag", {
       Cell: ({ row }: CellProps) => <FlagCell rowData={row.original} />,
       filterFn: (row, id, filterValue: string) =>
@@ -196,6 +215,8 @@ export default function ReviewEntriesTable(): ReactElement {
       sortingFn: (rowA, rowB) =>
         compareFlags(rowA.original.flag, rowB.original.flag),
     }),
+
+    // Delete column
     columnHelper.display({
       Cell: ({ row }: CellProps) => <DeleteCell rowData={row.original} />,
       enableColumnActions: false,
