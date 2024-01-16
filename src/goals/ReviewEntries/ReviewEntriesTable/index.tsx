@@ -10,7 +10,14 @@ import { ReactElement, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-import { Word } from "api/models";
+import {
+  Definition,
+  Flag,
+  Gloss,
+  GrammaticalInfo,
+  SemanticDomain,
+  Word,
+} from "api/models";
 import { topBarHeight } from "components/LandingPage/TopBar";
 import {
   DefinitionsCell,
@@ -74,16 +81,28 @@ export default function ReviewEntriesTable(): ReactElement {
       header: t("reviewEntries.columns.senses"),
       id: "senses",
     }),
-    columnHelper.accessor((row) => row.senses.map((s) => s.definitions), {
+    columnHelper.accessor((row) => row.senses.flatMap((s) => s.definitions), {
       Cell: ({ row }: CellProps) => <DefinitionsCell rowData={row.original} />,
       enableHiding: showDefinitions,
+      filterFn: (row, id, filterValue: string) =>
+        row
+          .getValue<Definition[]>(id)
+          .findIndex((d) =>
+            d.text.toLowerCase().includes(filterValue.trim().toLowerCase())
+          ) !== -1,
       header: t("reviewEntries.columns.definitions"),
       id: "definitions",
       sortingFn: (rowA, rowB) =>
         compareWordDefinitions(rowA.original, rowB.original),
     }),
-    columnHelper.accessor((row) => row.senses.map((s) => s.glosses), {
+    columnHelper.accessor((row) => row.senses.flatMap((s) => s.glosses), {
       Cell: ({ row }: CellProps) => <GlossesCell rowData={row.original} />,
+      filterFn: (row, id, filterValue: string) =>
+        row
+          .getValue<Gloss[]>(id)
+          .findIndex((g) =>
+            g.def.toLowerCase().includes(filterValue.trim().toLowerCase())
+          ) !== -1,
       header: t("reviewEntries.columns.glosses"),
       id: "glosses",
       sortingFn: (rowA, rowB) =>
@@ -94,18 +113,65 @@ export default function ReviewEntriesTable(): ReactElement {
         <PartsOfSpeechCell rowData={row.original} />
       ),
       enableHiding: showGrammaticalInfo,
+      filterFn: (row, id, filterValue: string) => {
+        const filter = filterValue.trim().toLowerCase();
+        return (
+          row
+            .getValue<GrammaticalInfo[]>(id)
+            .findIndex(
+              (i) =>
+                i.catGroup.toLowerCase().includes(filter) ||
+                i.grammaticalCategory.toLowerCase().includes(filter)
+            ) !== -1
+        );
+      },
       header: t("reviewEntries.columns.partOfSpeech"),
       id: "partsOfSpeech",
       sortingFn: (rowA, rowB) =>
         compareWordGrammaticalInfo(rowA.original, rowB.original),
     }),
-    columnHelper.accessor((row) => row.senses.map((s) => s.semanticDomains), {
-      Cell: ({ row }: CellProps) => <DomainsCell rowData={row.original} />,
-      header: t("reviewEntries.columns.domains"),
-      id: "domains",
-      sortingFn: (rowA, rowB) =>
-        compareWordDomains(rowA.original, rowB.original),
-    }),
+    columnHelper.accessor(
+      (row) => row.senses.flatMap((s) => s.semanticDomains),
+      {
+        Cell: ({ row }: CellProps) => <DomainsCell rowData={row.original} />,
+        filterFn: (row, id, filterValue: string) => {
+          /* Search term expected in one of two formats:
+           * 1. id (e.g., "2.1") XOR name (e.g., "bod")
+           * 2. id AND name, colon-separated (e.g., "2.1:ody")
+           *   All the above examples would find entries with "2.1: Body"
+           * IGNORED: capitalization; whitespace around terms; 3+ terms
+           *   e.g. " 2.1:BODY:zx:c  " and "2.1  : Body " are equivalent
+           */
+          const doms = row.getValue<SemanticDomain[]>(id);
+          const terms = filterValue
+            .split(":")
+            .map((t) => t.trim().toLowerCase());
+          if (terms.length === 0) {
+            return true;
+          } else if (terms.length === 1) {
+            return (
+              doms.findIndex(
+                (d) =>
+                  d.id.includes(terms[0]) ||
+                  d.name.toLowerCase().includes(terms[0])
+              ) !== -1
+            );
+          } else {
+            return (
+              doms.findIndex(
+                (d) =>
+                  d.id.includes(terms[0]) &&
+                  d.name.toLowerCase().includes(terms[1])
+              ) !== -1
+            );
+          }
+        },
+        header: t("reviewEntries.columns.domains"),
+        id: "domains",
+        sortingFn: (rowA, rowB) =>
+          compareWordDomains(rowA.original, rowB.original),
+      }
+    ),
     columnHelper.accessor((row) => row.audio.length, {
       Cell: ({ row }: CellProps) => (
         <PronunciationsCell rowData={row.original} />
@@ -121,6 +187,11 @@ export default function ReviewEntriesTable(): ReactElement {
     }),
     columnHelper.accessor("flag", {
       Cell: ({ row }: CellProps) => <FlagCell rowData={row.original} />,
+      filterFn: (row, id, filterValue: string) =>
+        row
+          .getValue<Flag>(id)
+          .text.toLowerCase()
+          .includes(filterValue.trim().toLowerCase()),
       header: t("reviewEntries.columns.flag"),
       sortingFn: (rowA, rowB) =>
         compareFlags(rowA.original.flag, rowB.original.flag),
@@ -142,6 +213,7 @@ export default function ReviewEntriesTable(): ReactElement {
     enableFullScreenToggle: false,
     //enablePagination: false,
     enableRowVirtualization: true,
+    enableGlobalFilter: false,
     enableStickyHeader: true,
     initialState: {
       columnVisibility: {
@@ -156,7 +228,7 @@ export default function ReviewEntriesTable(): ReactElement {
       sx: { height: `calc(100vh - ${topBarHeight}px)` },
     }),
     muiTableProps: () => ({
-      sx: { height: `calc(100vh - 200px)` },
+      sx: { maxHeight: `calc(100vh - 200px)` },
     }),
   });
 
