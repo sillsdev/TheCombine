@@ -37,6 +37,7 @@ import { useAppSelector } from "types/hooks";
 import theme from "types/theme";
 import {
   FileWithSpeakerId,
+  newGloss,
   newNote,
   newPronunciation,
   newSense,
@@ -77,7 +78,8 @@ enum DefunctStatus {
   Retire = "RETIRE",
 }
 
-/** Add current semantic domain to specified sense within a word. */
+/** Add current semantic domain to specified sense within a word.
+ * Return the word unchanged if the sense already has the domain. */
 export function addSemanticDomainToSense(
   semDom: SemanticDomain,
   word: Word,
@@ -86,6 +88,9 @@ export function addSemanticDomainToSense(
   const sense = word.senses.find((s) => s.guid === senseGuid);
   if (!sense) {
     throw new Error("Word has no sense with specified guid");
+  }
+  if (sense.semanticDomains.find((s) => s.id == semDom.id)) {
+    return word;
   }
   sense.semanticDomains.push(makeSemDomCurrent(semDom));
   const senses = word.senses.map((s) => (s.guid === senseGuid ? sense : s));
@@ -187,6 +192,7 @@ interface NewEntryState {
   newNote: string;
   newVern: string;
   selectedDup?: Word;
+  selectedSenseGuid?: string;
   suggestedVerns: string[];
   suggestedDups: Word[];
 }
@@ -197,6 +203,7 @@ const defaultNewEntryState = (): NewEntryState => ({
   newNote: "",
   newVern: "",
   selectedDup: undefined,
+  selectedSenseGuid: undefined,
   suggestedDups: [],
   suggestedVerns: [],
 });
@@ -329,11 +336,23 @@ export default function DataEntryTable(
   );
 
   /** Add one-sense word to the display of recent entries. */
-  const addToDisplay = (wordAccess: WordAccess, insertIndex?: number): void => {
+  const addToDisplay = (wordAccess: WordAccess, insertIndex = -1): void => {
     setState((prevState) => {
       const recentWords = [...prevState.recentWords];
-      if (insertIndex !== undefined && insertIndex < recentWords.length) {
-        recentWords.splice(insertIndex, 0, wordAccess);
+
+      // If wordAccess has senseGuid matching a recent word,
+      // replace it instead of just inserting.
+      let deleteCount = 0;
+      const replaceIndex = recentWords.findIndex(
+        (wa) => wa.senseGuid == wordAccess.senseGuid
+      );
+      if (replaceIndex > -1) {
+        deleteCount = 1;
+        insertIndex = replaceIndex;
+      }
+
+      if (insertIndex > -1 && insertIndex < recentWords.length) {
+        recentWords.splice(insertIndex, deleteCount, wordAccess);
       } else {
         recentWords.push(wordAccess);
       }
@@ -425,14 +444,42 @@ export default function DataEntryTable(
 
   /** Set or clear the selected vern-duplicate word. */
   const setSelectedDup = (id?: string): void => {
-    setState((prev) => ({
-      ...prev,
-      selectedDup: id
+    setState((prev) => {
+      const selectedDup = id
         ? prev.suggestedDups.find((w) => w.id === id)
         : id === ""
           ? newWord(prev.newVern)
-          : undefined,
-    }));
+          : undefined;
+
+      // If selected duplicate has one empty sense, automatically select it.
+      const soloSense =
+        selectedDup?.senses.length === 1 ? selectedDup.senses[0] : undefined;
+      const emptySense =
+        soloSense?.definitions.find((d) => d.text) ||
+        soloSense?.glosses.find((g) => g.def)
+          ? undefined
+          : soloSense;
+
+      return {
+        ...prev,
+        selectedDup,
+        selectedSenseGuid: emptySense?.guid,
+      };
+    });
+  };
+
+  /** Set or clear the selected duplicate word's sense. */
+  const setSelectedSense = (guid?: string): void => {
+    setState((prev) => {
+      const selectedSense = guid
+        ? prev.selectedDup?.senses.find((s) => s.guid === guid)
+        : undefined;
+      return {
+        ...prev,
+        newGloss: selectedSense ? firstGlossText(selectedSense) : "",
+        selectedSenseGuid: guid,
+      };
+    });
   };
 
   /** Reset things specific to the current data entry session in the current semantic domain. */
@@ -670,8 +717,6 @@ export default function DataEntryTable(
       audio: Pronunciation[],
       insertIndex?: number
     ): Promise<void> => {
-      wordToAdd.note.language = analysisLang.bcp47;
-
       // Check if word is duplicate to existing word.
       const dupId = await backend.getDuplicateId(wordToAdd);
       if (dupId) {
@@ -685,7 +730,7 @@ export default function DataEntryTable(
       }
       addToDisplay({ word, senseGuid: word.senses[0].guid }, insertIndex);
     },
-    [addAudiosToBackend, addDuplicateWord, analysisLang.bcp47]
+    [addAudiosToBackend, addDuplicateWord]
   );
 
   /** Update the word in the backend and the frontend. */
@@ -704,17 +749,12 @@ export default function DataEntryTable(
 
   /** Reset the entry table. If there is an un-submitted word then submit it. */
   const handleExit = async (): Promise<void> => {
-    // Check if there is a new word, but user exited without pressing enter.
+    // Check if there is a dup selected, but user exited without pressing enter.
     if (state.newVern) {
-      const oldWord = state.allWords.find(
-        (w) => w.vernacular === state.newVern
-      );
-      if (!oldWord) {
-        // Existing word not found, so create a new word.
-        await addNewEntry();
+      if (state.selectedDup?.id) {
+        await updateWordWithNewEntry();
       } else {
-        // Found an existing word, so add a sense to it.
-        await updateWordWithNewEntry(oldWord.id);
+        await addNewEntry();
       }
     }
     resetEverything();
@@ -724,10 +764,10 @@ export default function DataEntryTable(
   // Async functions for handling changes of the NewEntry.
   /////////////////////////////////
 
-  /** Assemble a word from the new entry state and add it. */
+  /** Build a word from the new entry state and add it. */
   const addNewEntry = async (): Promise<void> => {
-    const word = newWord(state.newVern);
     const lang = analysisLang.bcp47;
+    const word = newWord(state.newVern, lang);
     word.senses.push(
       newSense(state.newGloss, lang, makeSemDomCurrent(props.semanticDomain))
     );
@@ -735,19 +775,64 @@ export default function DataEntryTable(
     await addNewWord(word, state.newAudio);
   };
 
-  /**  Checks if sense already exists with this gloss and semantic domain. */
-  const updateWordWithNewEntry = async (wordId: string): Promise<void> => {
-    const oldWord = state.allWords.find((w: Word) => w.id === wordId);
-    if (!oldWord) {
+  /** Update the selected duplicate with the new entry.
+   * (Only considers the first gloss, `.glosses[0]`, of each sense.) */
+  const updateWordWithNewEntry = async (): Promise<void> => {
+    const oldWord = state.selectedDup;
+    if (!oldWord || !oldWord.id) {
       throw new Error("You are trying to update a nonexistent word");
     }
+
     const semDom = makeSemDomCurrent(props.semanticDomain);
 
-    // If this gloss matches a sense on the word, update that sense.
+    // If a dup sense is selected, update it.
+    if (state.selectedSenseGuid) {
+      const oldSense = oldWord.senses.find(
+        (s) => s.guid === state.selectedSenseGuid
+      );
+      if (!oldSense) {
+        throw new Error("You are trying to update a nonexistent sense");
+      }
+      if (!oldSense.glosses.length) {
+        oldSense.glosses.push(newGloss());
+      }
+
+      // If selected sense already has this domain, add audio without updating first.
+      if (
+        oldSense.glosses[0].def === state.newGloss &&
+        oldSense.semanticDomains.find((d) => d.id === semDom.id)
+      ) {
+        enqueueSnackbar(
+          t("addWords.senseInWord", {
+            val1: oldWord.vernacular,
+            val2: state.newGloss,
+          })
+        );
+        if (state.newAudio.length) {
+          await addAudiosToBackend(oldWord.id, state.newAudio);
+        }
+        return;
+      }
+
+      // Only update the selected sense if the old gloss is blank or matches the new gloss.
+      if (!oldSense.glosses[0].def.trim()) {
+        oldSense.glosses[0] = newGloss(state.newGloss, analysisLang.bcp47);
+      }
+      if (oldSense.glosses[0].def === state.newGloss) {
+        await updateWordBackAndFront(
+          addSemanticDomainToSense(semDom, oldWord, state.selectedSenseGuid),
+          state.selectedSenseGuid,
+          state.newAudio
+        );
+        return;
+      }
+    }
+
+    // Otherwise, if new gloss matches a sense, update that sense.
     for (const sense of oldWord.senses) {
       if (sense.glosses?.length && sense.glosses[0].def === state.newGloss) {
         if (sense.semanticDomains.find((d) => d.id === semDom.id)) {
-          // User is trying to add a sense that already exists
+          // User is trying to add a sense that already exists.
           enqueueSnackbar(
             t("addWords.senseInWord", {
               val1: oldWord.vernacular,
@@ -755,7 +840,7 @@ export default function DataEntryTable(
             })
           );
           if (state.newAudio.length) {
-            await addAudiosToBackend(wordId, state.newAudio);
+            await addAudiosToBackend(oldWord.id, state.newAudio);
           }
           return;
         } else {
@@ -837,17 +922,27 @@ export default function DataEntryTable(
       }
 
       if (oldSenses.length === 1 && oldSense.semanticDomains.length === 1) {
-        // The word can simply be updated as it stand
+        // The word can simply be updated as it stands.
         await updateWordInBackend({ ...oldEntry.word, vernacular });
       } else {
         // Retract and replaced with a new entry.
-        const word = simpleWord(vernacular, firstGlossText(oldSense));
+        const word = simpleWord(
+          vernacular,
+          firstGlossText(oldSense),
+          analysisLang.bcp47
+        );
         word.id = "";
         await undoRecentEntry(index);
         await addNewWord(word, [], index);
       }
     },
-    [addNewWord, state.recentWords, undoRecentEntry, updateWordInBackend]
+    [
+      addNewWord,
+      analysisLang.bcp47,
+      state.recentWords,
+      undoRecentEntry,
+      updateWordInBackend,
+    ]
   );
 
   /** Update the gloss def in a recent entry. */
@@ -967,7 +1062,9 @@ export default function DataEntryTable(
             vernInput={newVernInput}
             // Parent handles vern suggestion state of child:
             selectedDup={state.selectedDup}
+            selectedSenseGuid={state.selectedSenseGuid}
             setSelectedDup={setSelectedDup}
+            setSelectedSense={setSelectedSense}
             suggestedDups={state.suggestedDups}
             suggestedVerns={state.suggestedVerns}
           />
