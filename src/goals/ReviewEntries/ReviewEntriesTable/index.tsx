@@ -6,7 +6,7 @@ import {
   type MRT_Row,
   MRT_Cell,
 } from "material-react-table";
-import { ReactElement, ReactNode } from "react";
+import { ReactElement, ReactNode, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -19,6 +19,7 @@ import {
   SemanticDomain,
   Word,
 } from "api/models";
+import { getFrontierWords } from "backend";
 import { topBarHeight } from "components/LandingPage/TopBar";
 import {
   DefinitionsCell,
@@ -41,9 +42,6 @@ import {
 import { compareFlags } from "utilities/wordUtilities";
 
 export default function ReviewEntriesTable(): ReactElement {
-  const data = useSelector(
-    (state: StoreState) => state.reviewEntriesState.words
-  );
   const showDefinitions = useSelector(
     (state: StoreState) => state.currentProjectState.project.definitionsEnabled
   );
@@ -51,6 +49,23 @@ export default function ReviewEntriesTable(): ReactElement {
     (state: StoreState) =>
       state.currentProjectState.project.grammaticalInfoEnabled
   );
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState<Word[]>([]);
+
+  const deleteWord = (id: string): void => {
+    setData((prev) => prev.filter((w) => w.id !== id));
+  };
+  const replaceWord = (id: string, word: Word): void => {
+    setData((prev) => prev.map((w) => (w.id === id ? word : w)));
+  };
+
+  useEffect(() => {
+    getFrontierWords().then((frontier) => {
+      setData(frontier);
+      setIsLoading(false);
+    });
+  }, []);
 
   const { t } = useTranslation();
 
@@ -186,7 +201,7 @@ export default function ReviewEntriesTable(): ReactElement {
     // Pronunciations column
     columnHelper.accessor((row) => row.audio.length, {
       Cell: ({ row }: CellProps) => (
-        <PronunciationsCell rowData={row.original} />
+        <PronunciationsCell replaceWord={replaceWord} rowData={row.original} />
       ),
       filterFn: "equals",
       header: t("reviewEntries.columns.pronunciations"),
@@ -215,7 +230,9 @@ export default function ReviewEntriesTable(): ReactElement {
 
     // Delete column
     columnHelper.display({
-      Cell: ({ row }: CellProps) => <DeleteCell rowData={row.original} />,
+      Cell: ({ row }: CellProps) => (
+        <DeleteCell deleteWord={deleteWord} rowData={row.original} />
+      ),
       enableColumnActions: false,
       enableHiding: false,
       Header: <div />,
@@ -239,15 +256,12 @@ export default function ReviewEntriesTable(): ReactElement {
         partsOfSpeech: showGrammaticalInfo,
       },
     },
-    muiPaginationProps: {
-      rowsPerPageOptions: [10, 25, 100, 250],
-    },
+    muiPaginationProps: { rowsPerPageOptions: [10, 25, 100, 250] },
     muiTablePaperProps: () => ({
       sx: { height: `calc(100vh - ${topBarHeight}px)` },
     }),
-    muiTableProps: () => ({
-      sx: { maxHeight: `calc(100vh - 200px)` },
-    }),
+    muiTableProps: () => ({ sx: { maxHeight: `calc(100vh - 200px)` } }),
+    state: { isLoading: isLoading },
   });
 
   return <MaterialReactTable table={table} />;
