@@ -31,6 +31,10 @@ export default function ProjectSchedule(
 
   const { t } = useTranslation();
 
+  useEffect(() => {
+    Modal.setAppElement("body");
+  }, []);
+
   /** Remove all elements from workshopSchedule in project settings */
   async function handleRemoveAll(): Promise<void> {
     await props.updateProject({ ...props.project, workshopSchedule: [] });
@@ -135,7 +139,7 @@ export default function ProjectSchedule(
         <Typography>{t("projectSettings.schedule.removeAll")}</Typography>
 
         <Grid container justifyContent="flex-end" spacing={2}>
-          <Grid item marginTop={1} style={{ width: 100 }}>
+          <Grid item marginTop={1}>
             <Button
               variant="contained"
               onClick={() => setShowRemove(false)}
@@ -144,7 +148,7 @@ export default function ProjectSchedule(
               {t("buttons.cancel")}
             </Button>
           </Grid>
-          <Grid item marginTop={1} style={{ width: 100 }}>
+          <Grid item marginTop={1}>
             <Button
               variant="contained"
               onClick={() => handleRemoveAll()}
