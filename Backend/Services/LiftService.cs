@@ -622,9 +622,9 @@ namespace BackendFramework.Services
             return SecurityElement.Escape(sInput);
         }
 
-        public ILiftMerger GetLiftImporterExporter(string projectId, IWordRepository wordRepo)
+        public ILiftMerger GetLiftImporterExporter(string projectId, string vernLang, IWordRepository wordRepo)
         {
-            return new LiftMerger(projectId, wordRepo);
+            return new LiftMerger(projectId, vernLang, wordRepo);
         }
 
         private static void WriteRangeElement(
@@ -664,12 +664,14 @@ namespace BackendFramework.Services
         private sealed class LiftMerger : ILiftMerger
         {
             private readonly string _projectId;
+            private readonly string _vernLang;
             private readonly IWordRepository _wordRepo;
             private readonly List<Word> _importEntries = new();
 
-            public LiftMerger(string projectId, IWordRepository wordRepo)
+            public LiftMerger(string projectId, string vernLang, IWordRepository wordRepo)
             {
                 _projectId = projectId;
+                _vernLang = vernLang;
                 _wordRepo = wordRepo;
             }
 
@@ -750,20 +752,27 @@ namespace BackendFramework.Services
                     newWord.Note = new Note(language, liftString.Text);
                 }
 
-                // Add vernacular
-                // TODO: currently we just add the first listed option, we may want to choose eventually
-                if (!entry.CitationForm.IsEmpty) // Prefer citation form for vernacular
+                // Add vernacular, prioritizing citation form over vernacular form.
+                var vern = entry.CitationForm.FirstOrDefault(x => x.Key == _vernLang).Value?.Text;
+                if (string.IsNullOrWhiteSpace(vern))
                 {
-                    newWord.Vernacular = entry.CitationForm.FirstValue.Value.Text;
+                    vern = entry.LexicalForm.FirstOrDefault(x => x.Key == _vernLang).Value?.Text;
                 }
-                else if (!entry.LexicalForm.IsEmpty) // lexeme form for backup
+                // If not available in the project's vernacular writing system, fall back to the first available one.
+                if (string.IsNullOrWhiteSpace(vern))
                 {
-                    newWord.Vernacular = entry.LexicalForm.FirstValue.Value.Text;
+                    vern = entry.CitationForm.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Value.Text)).Value?.Text;
                 }
-                else // this is not a word if there is no vernacular
+                if (string.IsNullOrWhiteSpace(vern))
+                {
+                    vern = entry.LexicalForm.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Value.Text)).Value?.Text;
+                }
+                // This is not a word if there is no vernacular.
+                if (string.IsNullOrWhiteSpace(vern))
                 {
                     return;
                 }
+                newWord.Vernacular = vern;
 
                 // This is not a word if there are no senses
                 if (entry.Senses.Count == 0)
