@@ -7,9 +7,10 @@ interface ProjectPickersDayProps extends PickersDayProps<Dayjs> {
 }
 
 /** A customized (`@mui/x-date-pickers`) `PickersDay` component.
- * To select multiple dates in the `DateCalendar` component, add the following props:
+ * To select multiple dates in the `DateCalendar` component,
+ * add `ProjectPickersDay` to the `DateCalendar` props as follows:
  *   `slots={{ day: ProjectPickersDay }}`
- *   `slotProps={{ day: { days: <<array of selected dates>> } as any }}` */
+ *   `slotProps={{ day: { days: <array of selected dates> } as any }}` */
 export default function ProjectPickersDay(
   props: ProjectPickersDayProps
 ): ReactElement {
