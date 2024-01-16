@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import { Word } from "api/models";
+import { topBarHeight } from "components/LandingPage/TopBar";
 import {
   DefinitionsCell,
   DeleteCell,
@@ -30,7 +31,6 @@ import {
   compareWordGrammaticalInfo,
 } from "types/word";
 import { compareFlags } from "utilities/wordUtilities";
-import { appBarHeight } from "components/AppBar/AppBarTypes";
 
 export default function ReviewEntriesTable(): ReactElement {
   const data = useSelector(
@@ -129,9 +129,9 @@ export default function ReviewEntriesTable(): ReactElement {
       Cell: ({ row }: CellProps) => <DeleteCell rowData={row.original} />,
       enableColumnActions: false,
       enableHiding: false,
-      header: t("reviewEntries.columns.delete"),
       Header: <div />,
-      size: 1,
+      header: t("reviewEntries.columns.delete"),
+      size: 50,
     }),
   ];
 
@@ -149,9 +149,15 @@ export default function ReviewEntriesTable(): ReactElement {
         partsOfSpeech: showGrammaticalInfo,
       },
     },
-    /*muiTableProps: () => ({
-      style: { height: `calc(50% - ${appBarHeight}px)` },
-    }),*/
+    muiPaginationProps: {
+      rowsPerPageOptions: [10, 25, 100, 250],
+    },
+    muiTablePaperProps: () => ({
+      sx: { height: `calc(100vh - ${topBarHeight}px)` },
+    }),
+    muiTableProps: () => ({
+      sx: { height: `calc(100vh - 200px)` },
+    }),
   });
 
   return <MaterialReactTable table={table} />;
