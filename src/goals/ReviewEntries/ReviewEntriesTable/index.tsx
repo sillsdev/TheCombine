@@ -30,6 +30,7 @@ import {
   compareWordGrammaticalInfo,
 } from "types/word";
 import { compareFlags } from "utilities/wordUtilities";
+import { appBarHeight } from "components/AppBar/AppBarTypes";
 
 export default function ReviewEntriesTable(): ReactElement {
   const data = useSelector(
@@ -72,7 +73,6 @@ export default function ReviewEntriesTable(): ReactElement {
       filterFn: "equals",
       header: t("reviewEntries.columns.senses"),
       id: "senses",
-      size: 160,
     }),
     columnHelper.accessor((row) => row.senses.map((s) => s.definitions), {
       Cell: ({ row }: CellProps) => <DefinitionsCell rowData={row.original} />,
@@ -149,6 +149,9 @@ export default function ReviewEntriesTable(): ReactElement {
         partsOfSpeech: showGrammaticalInfo,
       },
     },
+    /*muiTableProps: () => ({
+      style: { height: `calc(50% - ${appBarHeight}px)` },
+    }),*/
   });
 
   return <MaterialReactTable table={table} />;
