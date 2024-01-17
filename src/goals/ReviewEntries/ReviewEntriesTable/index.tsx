@@ -1,4 +1,3 @@
-import { Edit } from "@mui/icons-material";
 import {
   createMRTColumnHelper,
   MaterialReactTable,
@@ -25,6 +24,7 @@ import {
   DefinitionsCell,
   DeleteCell,
   DomainsCell,
+  EditCell,
   FlagCell,
   GlossesCell,
   NoteCell,
@@ -81,12 +81,14 @@ export default function ReviewEntriesTable(): ReactElement {
   const columns = [
     // Edit column
     columnHelper.display({
-      Cell: ({}: CellProps) => <Edit />,
+      Cell: ({ row }: CellProps) => (
+        <EditCell replaceWord={replaceWord} rowData={row.original} />
+      ),
       enableColumnActions: false,
       enableHiding: false,
       Header: <div />,
       header: t("reviewEntries.materialTable.body.edit"),
-      size: 1,
+      size: 50,
     }),
 
     // Vernacular column
