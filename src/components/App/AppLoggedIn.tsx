@@ -4,6 +4,7 @@ import { Theme, ThemeProvider, createTheme } from "@mui/material/styles";
 import { ReactElement, useEffect, useMemo, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 
+import DatePickersLocalizationProvider from "components/App/DatePickersLocalizationProvider";
 import SignalRHub from "components/App/SignalRHub";
 import AppBar from "components/AppBar/AppBarComponent";
 import PageNotFound from "components/PageNotFound/component";
@@ -72,7 +73,7 @@ export default function AppWithBar(): ReactElement {
       : theme;
 
   return (
-    <>
+    <DatePickersLocalizationProvider>
       <SignalRHub />
       <AppBar />
       <FontContext.Provider value={projFonts}>
@@ -113,6 +114,6 @@ export default function AppWithBar(): ReactElement {
           </Routes>
         </ThemeProvider>
       </FontContext.Provider>
-    </>
+    </DatePickersLocalizationProvider>
   );
 }
