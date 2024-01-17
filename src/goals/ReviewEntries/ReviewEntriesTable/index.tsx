@@ -19,7 +19,7 @@ import {
   SemanticDomain,
   Word,
 } from "api/models";
-import { getFrontierWords } from "backend";
+import { getFrontierWords, getWord } from "backend";
 import { topBarHeight } from "components/LandingPage/TopBar";
 import {
   DefinitionsCell,
@@ -56,8 +56,9 @@ export default function ReviewEntriesTable(): ReactElement {
   const deleteWord = (id: string): void => {
     setData((prev) => prev.filter((w) => w.id !== id));
   };
-  const replaceWord = (id: string, word: Word): void => {
-    setData((prev) => prev.map((w) => (w.id === id ? word : w)));
+  const replaceWord = async (oldId: string, newId: string): Promise<void> => {
+    const word = await getWord(newId);
+    setData((prev) => prev.map((w) => (w.id === oldId ? word : w)));
   };
 
   useEffect(() => {

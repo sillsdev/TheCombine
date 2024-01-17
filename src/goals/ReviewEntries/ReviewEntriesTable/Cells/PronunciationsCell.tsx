@@ -1,33 +1,46 @@
 import { ReactElement } from "react";
 
 import { Pronunciation } from "api/models";
+import { deleteAudio, getWord, updateWord, uploadAudio } from "backend";
 import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
-import {
-  deleteAudio,
-  replaceAudio,
-  uploadAudio,
-} from "goals/ReviewEntries/Redux/ReviewEntriesActions";
 import { CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
-import { useAppDispatch } from "types/hooks";
-import { FileWithSpeakerId } from "types/word";
+import { FileWithSpeakerId, updateSpeakerInAudio } from "types/word";
 
 export default function PronunciationsCell(props: CellProps): ReactElement {
   const wordId = props.rowData.id;
-  const dispatch = useAppDispatch();
-  const dispatchDelete = (fileName: string): Promise<void> =>
-    dispatch(deleteAudio(wordId, fileName));
-  const dispatchReplace = (audio: Pronunciation): Promise<void> =>
-    dispatch(replaceAudio(wordId, audio));
-  const dispatchUpload = (file: FileWithSpeakerId): Promise<void> =>
-    dispatch(uploadAudio(wordId, file));
+
+  const deleteAudioHandle = async (fileName: string): Promise<void> => {
+    const newId = await deleteAudio(wordId, fileName);
+    if (props.replaceWord) {
+      await props.replaceWord(wordId, newId);
+    }
+  };
+
+  const replaceAudioHandle = async (pro: Pronunciation): Promise<void> => {
+    const word = await getWord(wordId);
+    const audio = updateSpeakerInAudio(word.audio, pro);
+    if (audio) {
+      const newId = (await updateWord({ ...word, audio })).id;
+      if (props.replaceWord) {
+        await props.replaceWord(wordId, newId);
+      }
+    }
+  };
+
+  const uploadAudioHandle = async (file: FileWithSpeakerId): Promise<void> => {
+    const newId = await uploadAudio(wordId, file);
+    if (props.replaceWord) {
+      await props.replaceWord(wordId, newId);
+    }
+  };
 
   return (
     <PronunciationsBackend
       audio={props.rowData.audio}
       wordId={wordId}
-      deleteAudio={dispatchDelete}
-      replaceAudio={dispatchReplace}
-      uploadAudio={dispatchUpload}
+      deleteAudio={deleteAudioHandle}
+      replaceAudio={replaceAudioHandle}
+      uploadAudio={uploadAudioHandle}
     />
   );
 }
