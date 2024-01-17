@@ -33,7 +33,7 @@
   when: has_wifi
 
 ###
-# Create a virtual network interface so that microk8s/k3s can run
+# Create a virtual network interface so that k3s can run
 # when no ethernet connection is attached.
 ###
 - name: Create virtual network I/F
