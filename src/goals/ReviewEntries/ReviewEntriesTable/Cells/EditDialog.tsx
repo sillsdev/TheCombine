@@ -40,12 +40,12 @@ import PronunciationsFrontend from "components/Pronunciations/PronunciationsFron
 import { uploadFileFromPronunciation } from "components/Pronunciations/utilities";
 import SenseCard from "components/WordCard/SenseCard";
 import SummarySenseCard from "components/WordCard/SummarySenseCard";
-import { StoreState } from "types";
-import { StoreStateDispatch } from "types/Redux/actions";
+import { type StoreState } from "types";
+import { type StoreStateDispatch } from "types/Redux/actions";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { themeColors } from "types/theme";
 import {
-  FileWithSpeakerId,
+  type FileWithSpeakerId,
   newFlag,
   newNote,
   newPronunciation,
@@ -59,21 +59,6 @@ function asyncUpdateWord(oldId: string, newId: string) {
     dispatch(addEntryEditToGoal({ newId, oldId }));
     await dispatch(asyncUpdateGoal());
   };
-}
-
-/** Return the translation code for our error, or undefined if there is no error */
-export function getSenseError(
-  sense: Sense,
-  checkGlosses = true,
-  checkDomains = false
-): string | undefined {
-  if (checkGlosses && sense.glosses.length === 0) {
-    return "reviewEntries.error.gloss";
-  }
-  if (checkDomains && sense.semanticDomains.length === 0) {
-    return "reviewEntries.error.domain";
-  }
-  return undefined;
 }
 
 /** Return a cleaned array of senses ready to be saved (none with .deleted=true):
@@ -109,9 +94,9 @@ function cleanSenses(newSenses: Sense[]): Sense[] | string {
       continue;
     }
 
-    const error = getSenseError(newSense);
-    if (error) {
-      return error;
+    // Don't allow senses without a gloss.
+    if (!newSense.glosses.length) {
+      return "reviewEntries.error.gloss";
     }
 
     cleanedSenses.push(newSense);
@@ -226,7 +211,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
             (o) => n.fileName === o.fileName && n.speakerId !== o.speakerId
           )
         ),
-      [EditField.Senses]: false,
+      [EditField.Senses]: false, // TODO: compute once senses are editable
       [EditField.Vernacular]:
         newWord.vernacular.trim() !== props.word.vernacular.trim(),
     });
