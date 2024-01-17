@@ -1,4 +1,11 @@
-import { Check, Close, CloseFullscreen, OpenInFull } from "@mui/icons-material";
+import {
+  Check,
+  Close,
+  CloseFullscreen,
+  Flag as FlagFilled,
+  FlagOutlined,
+  OpenInFull,
+} from "@mui/icons-material";
 import {
   Card,
   CardContent,
@@ -10,15 +17,20 @@ import {
   IconButton,
   MenuItem,
   Select,
+  TextField,
   type SelectChangeEvent,
 } from "@mui/material";
-import { ReactElement, useState } from "react";
+import {
+  type CSSProperties,
+  type ReactElement,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import { Flag, Pronunciation, Sense, Status, Word } from "api/models";
+import { type Pronunciation, type Sense, Status, type Word } from "api/models";
 import { deleteAudio, updateWord } from "backend";
-import { FlagButton } from "components/Buttons";
 import {
   addEntryEditToGoal,
   asyncUpdateGoal,
@@ -31,8 +43,10 @@ import SummarySenseCard from "components/WordCard/SummarySenseCard";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { useAppDispatch, useAppSelector } from "types/hooks";
+import { themeColors } from "types/theme";
 import {
   FileWithSpeakerId,
+  newFlag,
   newNote,
   newPronunciation,
   updateSpeakerInAudio,
@@ -126,7 +140,12 @@ function cleanWord(word: Word): Word | string {
   const noteText = word.note.text.trim();
   const note = newNote(noteText, noteText ? word.note.language : "");
 
-  return { ...word, note, senses, vernacular };
+  // Clear flag text if flag not active.
+  const flagActive = word.flag.active;
+  const flag = newFlag(flagActive ? word.flag.text.trim() : undefined);
+  flag.active = flagActive;
+
+  return { ...word, flag, note, senses, vernacular };
 }
 
 /** Update word in the backend */
@@ -147,6 +166,23 @@ export async function updateFrontierWord(
   }
   return newId;
 }
+
+enum EditField {
+  Flag,
+  Note,
+  Pronunciations,
+  Senses,
+  Vernacular,
+}
+
+type EditFieldChanged = Record<EditField, boolean>;
+const defaultEditFieldChanged: EditFieldChanged = {
+  [EditField.Flag]: false,
+  [EditField.Note]: false,
+  [EditField.Pronunciations]: false,
+  [EditField.Senses]: false,
+  [EditField.Vernacular]: false,
+};
 
 interface EditDialogProps {
   cancel: () => void;
@@ -170,6 +206,35 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
   const [newAudio, setNewAudio] = useState<Pronunciation[]>([]);
   const [newWord, setNewWord] = useState(props.word);
   const [showSenses, setShowSenses] = useState(true);
+  const [changes, setChanges] = useState(defaultEditFieldChanged);
+
+  useEffect(() => {
+    setChanges({
+      [EditField.Flag]:
+        newWord.flag.active !== props.word.flag.active ||
+        (newWord.flag.active &&
+          newWord.flag.text.trim() !== props.word.flag.text.trim()),
+      [EditField.Note]:
+        newWord.note.text.trim() !== props.word.note.text.trim() ||
+        (newWord.note.text.trim().length > 0 &&
+          newWord.note.language !== props.word.note.language),
+      [EditField.Pronunciations]:
+        newAudio.length > 0 ||
+        newWord.audio.length !== props.word.audio.length ||
+        !!newWord.audio.find((n) =>
+          props.word.audio.find(
+            (o) => n.fileName === o.fileName && n.speakerId !== o.speakerId
+          )
+        ),
+      [EditField.Senses]: false,
+      [EditField.Vernacular]:
+        newWord.vernacular.trim() !== props.word.vernacular.trim(),
+    });
+  }, [newAudio, newWord, props.word]);
+
+  const bgStyle = (field: EditField): CSSProperties => ({
+    backgroundColor: changes[field] ? "lightyellow" : "lightgray",
+  });
 
   // Functions for handling pronunciations in the edit state.
   const delOldAudio = (fileName: string): void =>
@@ -209,7 +274,33 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
     }));
   };
 
+  // Functions for handling the flag in the edit state.
+  const toggleFlag = (): void => {
+    setNewWord((prev) => ({
+      ...prev,
+      flag: { ...prev.flag, active: !prev.flag.active },
+    }));
+  };
+  const updateFlag = (text: string): void => {
+    setNewWord((prev) => ({
+      ...prev,
+      flag: { active: prev.flag.active || !!text, text },
+    }));
+  };
+
+  /** Clean up the edited word and update it backend and frontend. */
   const saveAndClose = async (): Promise<void> => {
+    // If no changes, just close
+    if (
+      !changes[EditField.Flag] &&
+      !changes[EditField.Note] &&
+      !changes[EditField.Pronunciations] &&
+      !changes[EditField.Senses] &&
+      !changes[EditField.Vernacular]
+    ) {
+      cancelAndClose();
+    }
+
     // Remove empty/deleted senses; confirm nonempty vernacular and senses
     const cleanedWord = cleanWord(newWord);
     if (typeof cleanedWord === "string") {
@@ -234,6 +325,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
     props.cancel();
   };
 
+  /** Undo all edits and close the edit dialog. */
   const cancelAndClose = (): void => {
     setNewAudio([]);
     setNewWord(props.word);
@@ -253,19 +345,24 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
           </Grid>
           <Grid item>
             <IconButton onClick={saveAndClose}>
-              <Check style={{ color: "green" }} />
+              <Check style={{ color: themeColors.success }} />
             </IconButton>
             <IconButton onClick={cancelAndClose}>
-              <Close style={{ color: "red" }} />
+              <Close style={{ color: themeColors.error }} />
             </IconButton>
           </Grid>
         </Grid>
       </DialogTitle>
       <DialogContent>
-        <Grid container direction="column" justifyContent="flex-start">
+        <Grid
+          container
+          direction="column"
+          justifyContent="flex-start"
+          spacing={3}
+        >
           {/* Vernacular */}
           <Grid item>
-            <Card>
+            <Card sx={bgStyle(EditField.Vernacular)}>
               <CardHeader title={t("reviewEntries.columns.vernacular")} />
               <CardContent>
                 <TextFieldWithFont
@@ -285,15 +382,15 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
 
           {/* Senses */}
           <Grid item>
-            <Card>
+            <Card sx={bgStyle(EditField.Senses)}>
               <CardHeader
                 action={
                   newWord.senses.length > 1 && (
                     <IconButton onClick={() => setShowSenses((prev) => !prev)}>
                       {showSenses ? (
-                        <CloseFullscreen style={{ color: "gray" }} />
+                        <CloseFullscreen sx={{ color: "gray" }} />
                       ) : (
-                        <OpenInFull style={{ color: "gray" }} />
+                        <OpenInFull sx={{ color: "gray" }} />
                       )}
                     </IconButton>
                   )
@@ -314,18 +411,18 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
 
           {/* Pronunciations */}
           <Grid item>
-            <Card>
+            <Card sx={bgStyle(EditField.Pronunciations)}>
               <CardHeader title={t("reviewEntries.columns.pronunciations")} />
               <CardContent>
                 <PronunciationsFrontend
                   elemBetweenRecordAndPlay={
                     <PronunciationsBackend
                       audio={newWord.audio}
+                      deleteAudio={delOldAudio}
                       overrideMemo
                       playerOnly
-                      wordId={newWord.id}
-                      deleteAudio={delOldAudio}
                       replaceAudio={repOldAudio}
+                      wordId={newWord.id}
                     />
                   }
                   audio={newAudio}
@@ -339,7 +436,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
 
           {/* Note */}
           <Grid item>
-            <Card>
+            <Card sx={bgStyle(EditField.Note)}>
               <CardHeader title={t("reviewEntries.columns.note")} />
               <CardContent>
                 <Select
@@ -368,15 +465,20 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
 
           {/* Flag */}
           <Grid item>
-            <Card>
+            <Card sx={bgStyle(EditField.Flag)}>
               <CardHeader title={t("reviewEntries.columns.flag")} />
               <CardContent>
-                <FlagButton
-                  flag={newWord.flag}
-                  updateFlag={(flag: Flag) =>
-                    setNewWord((prev) => ({ ...prev, flag }))
-                  }
-                />
+                <IconButton onClick={toggleFlag}>
+                  {newWord.flag.active ? (
+                    <FlagFilled sx={{ color: themeColors.error }} />
+                  ) : (
+                    <FlagOutlined />
+                  )}
+                </IconButton>
+                <TextField
+                  onChange={(e) => updateFlag(e.target.value)}
+                  value={newWord.flag.active ? newWord.flag.text : ""}
+                ></TextField>
               </CardContent>
             </Card>
           </Grid>
