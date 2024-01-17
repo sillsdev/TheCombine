@@ -1,4 +1,3 @@
-import { Fragment } from "react";
 import { Provider } from "react-redux";
 import { act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
@@ -6,20 +5,13 @@ import configureMockStore from "redux-mock-store";
 import "tests/reactI18nextMock";
 
 import ReviewEntries from "goals/ReviewEntries";
-import * as actions from "goals/ReviewEntries/Redux/ReviewEntriesActions";
 import { wordFromReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";
 import mockWords from "goals/ReviewEntries/tests/WordsMock";
 import { defaultWritingSystem } from "types/writingSystem";
 
 const mockGetFrontierWords = jest.fn();
-const mockMaterialTable = jest.fn();
 const mockUuid = jest.fn();
 
-// To deal with the table not wanting to behave in testing.
-jest.mock("@material-table/core", () => ({
-  __esModule: true,
-  default: () => mockMaterialTable(),
-}));
 // Standard dialog mock-out.
 jest.mock("@mui/material", () => {
   const material = jest.requireActual("@mui/material");
@@ -43,8 +35,6 @@ jest.mock("types/hooks", () => ({
   useAppDispatch: () => jest.fn(),
 }));
 
-const setAllWordsSpy = jest.spyOn(actions, "setAllWords");
-
 // Mock store + axios
 const mockReviewEntryWords = mockWords();
 const state = {
@@ -54,9 +44,6 @@ const state = {
       definitionsEnabled: true,
       vernacularWritingSystem: defaultWritingSystem,
     },
-  },
-  reviewEntriesState: {
-    words: mockReviewEntryWords.map(wordFromReviewEntriesWord),
   },
   treeViewState: {
     open: false,
@@ -70,7 +57,6 @@ function setMockFunctions(): void {
   mockGetFrontierWords.mockResolvedValue(
     mockReviewEntryWords.map(wordFromReviewEntriesWord)
   );
-  mockMaterialTable.mockReturnValue(Fragment);
 }
 
 beforeEach(async () => {
@@ -93,9 +79,6 @@ beforeEach(async () => {
 
 describe("ReviewEntries", () => {
   it("Initializes correctly", () => {
-    expect(setAllWordsSpy).toHaveBeenCalled();
-    const wordIds = setAllWordsSpy.mock.calls[0][0].map((w) => w.id);
-    expect(wordIds).toHaveLength(mockReviewEntryWords.length);
-    mockReviewEntryWords.forEach((w) => expect(wordIds).toContain(w.id));
+    expect(mockGetFrontierWords).toHaveBeenCalled();
   });
 });
