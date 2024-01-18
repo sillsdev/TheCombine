@@ -1,3 +1,5 @@
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "@testing-library/jest-dom";
 import { act, cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -26,6 +28,7 @@ jest.mock("react-router-dom", () => ({
 
 jest.mock("backend", () => ({
   canUploadLift: () => Promise.resolve(false),
+  getAllSpeakers: () => Promise.resolve([]),
   getAllUsers: () => Promise.resolve([]),
   getCurrentPermissions: () => mockGetCurrentPermissions(),
   getUserRoles: () => Promise.resolve([]),
@@ -56,9 +59,11 @@ const updateProjSettings = async (hasSchedule = false): Promise<void> => {
     // For this update to trigger a permissions refresh, project.id must change.
     // This is accomplished by randomProject() in createMockStore().
     render(
-      <Provider store={createMockStore(hasSchedule)}>
-        <ProjectSettings />
-      </Provider>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Provider store={createMockStore(hasSchedule)}>
+          <ProjectSettings />
+        </Provider>
+      </LocalizationProvider>
     );
   });
 };
@@ -87,9 +92,11 @@ beforeAll(async () => {
   resetMocks();
   await act(async () => {
     render(
-      <Provider store={createMockStore()}>
-        <ProjectSettings />
-      </Provider>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <Provider store={createMockStore()}>
+          <ProjectSettings />
+        </Provider>
+      </LocalizationProvider>
     );
   });
 });

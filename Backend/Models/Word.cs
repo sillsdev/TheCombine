@@ -39,7 +39,7 @@ namespace BackendFramework.Models
 
         [Required]
         [BsonElement("audio")]
-        public List<string> Audio { get; set; }
+        public List<Pronunciation> Audio { get; set; }
 
         [Required]
         [BsonElement("created")]
@@ -91,7 +91,7 @@ namespace BackendFramework.Models
             OtherField = "";
             ProjectId = "";
             Accessibility = Status.Active;
-            Audio = new List<string>();
+            Audio = new List<Pronunciation>();
             EditedBy = new List<string>();
             History = new List<string>();
             Senses = new List<Sense>();
@@ -112,7 +112,7 @@ namespace BackendFramework.Models
                 OtherField = OtherField,
                 ProjectId = ProjectId,
                 Accessibility = Accessibility,
-                Audio = new List<string>(),
+                Audio = new List<Pronunciation>(),
                 EditedBy = new List<string>(),
                 History = new List<string>(),
                 Senses = new List<Sense>(),
@@ -120,9 +120,9 @@ namespace BackendFramework.Models
                 Flag = Flag.Clone(),
             };
 
-            foreach (var file in Audio)
+            foreach (var audio in Audio)
             {
-                clone.Audio.Add(file);
+                clone.Audio.Add(audio.Clone());
             }
             foreach (var id in EditedBy)
             {
@@ -213,7 +213,7 @@ namespace BackendFramework.Models
         /// Plural, Created, Modified, Accessibility, OtherField.
         /// </summary>
         /// <returns> A bool: true if operation succeeded and word updated. </returns>
-        public bool AppendContainedWordContents(Word other, String userId)
+        public bool AppendContainedWordContents(Word other, string userId)
         {
             // Confirm that the other word is contained
             if (!Contains(other))
@@ -228,17 +228,7 @@ namespace BackendFramework.Models
                 {
                     return false;
                 }
-
-                // Get List of items that difference of two sequences update it if userId is NullOrEmpty
-                otherSense.SemanticDomains.Except(containingSense.SemanticDomains).ToList().ForEach((t) =>
-                {
-                    if (string.IsNullOrEmpty(t.UserId))
-                    {
-                        t.UserId = userId;
-                    }
-                });
-                containingSense.SemanticDomains.AddRange(otherSense.SemanticDomains);
-                containingSense.SemanticDomains = containingSense.SemanticDomains.Distinct().ToList();
+                containingSense.CopyDomains(otherSense, userId);
             }
 
             // Preserve other word's SemanticDomains, Note, Flag, Audio, EditedBy, History
@@ -250,6 +240,69 @@ namespace BackendFramework.Models
             EditedBy = EditedBy.Distinct().ToList();
             History.AddRange(other.History);
             return true;
+        }
+    }
+
+    /// <summary> A pronunciation associated with a Word. </summary>
+    public class Pronunciation
+    {
+        /// <summary> The audio file name. </summary>
+        [Required]
+        [BsonElement("fileName")]
+        public string FileName { get; set; }
+
+        /// <summary> The speaker id. </summary>
+        [Required]
+        [BsonElement("speakerId")]
+        public string SpeakerId { get; set; }
+
+        /// <summary> For imported audio, to prevent modification or deletion (unless the word is deleted). </summary>
+        [Required]
+        [BsonElement("protected")]
+        public bool Protected { get; set; }
+
+        public Pronunciation()
+        {
+            FileName = "";
+            SpeakerId = "";
+            Protected = false;
+        }
+
+        public Pronunciation(string fileName) : this()
+        {
+            FileName = fileName;
+        }
+
+        public Pronunciation(string fileName, string speakerId) : this(fileName)
+        {
+            SpeakerId = speakerId;
+        }
+
+        public Pronunciation Clone()
+        {
+            return new Pronunciation
+            {
+                FileName = FileName,
+                SpeakerId = SpeakerId,
+                Protected = Protected
+            };
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not Pronunciation other || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            return FileName.Equals(other.FileName, StringComparison.Ordinal) &&
+                SpeakerId.Equals(other.SpeakerId, StringComparison.Ordinal) &&
+                Protected == other.Protected;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(FileName, SpeakerId, Protected);
         }
     }
 

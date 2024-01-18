@@ -1,36 +1,39 @@
 import { ReactElement } from "react";
 
+import { Pronunciation } from "api/models";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
+import { FileWithSpeakerId } from "types/word";
 
-interface PronunciationFrontendProps {
-  pronunciationFiles: string[];
+interface PronunciationsFrontendProps {
+  audio: Pronunciation[];
   elemBetweenRecordAndPlay?: ReactElement;
   deleteAudio: (fileName: string) => void;
-  uploadAudio: (audioFile: File) => void;
+  replaceAudio: (audio: Pronunciation) => void;
+  uploadAudio: (file: FileWithSpeakerId) => void;
   onClick?: () => void;
 }
 
 /** Audio recording/playing component for audio being recorded and held in the frontend. */
 export default function PronunciationsFrontend(
-  props: PronunciationFrontendProps
+  props: PronunciationsFrontendProps
 ): ReactElement {
-  const audioButtons: ReactElement[] = props.pronunciationFiles.map(
-    (fileName) => (
-      <AudioPlayer
-        fileName={fileName}
-        key={fileName}
-        pronunciationUrl={fileName}
-        deleteAudio={props.deleteAudio}
-        onClick={props.onClick}
-      />
-    )
-  );
+  const audioButtons: ReactElement[] = props.audio.map((a) => (
+    <AudioPlayer
+      audio={a}
+      deleteAudio={props.deleteAudio}
+      key={a.fileName}
+      onClick={props.onClick}
+      updateAudioSpeaker={(id) =>
+        props.replaceAudio({ ...a, speakerId: id ?? "" })
+      }
+    />
+  ));
 
   return (
     <>
       <AudioRecorder
-        wordId={""}
+        id={""}
         uploadAudio={props.uploadAudio}
         onClick={props.onClick}
       />

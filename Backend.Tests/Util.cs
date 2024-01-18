@@ -53,7 +53,7 @@ namespace Backend.Tests
                 Modified = RandString(),
                 Plural = RandString(),
                 History = new List<string>(),
-                Audio = new List<string>(),
+                Audio = new List<Pronunciation>(),
                 EditedBy = new List<string> { RandString(), RandString() },
                 ProjectId = projId ?? RandString(),
                 Senses = new List<Sense> { RandomSense(), RandomSense(), RandomSense() },

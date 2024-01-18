@@ -2,7 +2,7 @@ import { Column } from "@material-table/core";
 import { Input, Typography } from "@mui/material";
 import { t } from "i18next";
 
-import { SemanticDomain } from "api/models";
+import { Pronunciation, SemanticDomain } from "api/models";
 import {
   DefinitionCell,
   DeleteCell,
@@ -21,6 +21,11 @@ import {
   ReviewEntriesWord,
   ReviewEntriesWordField,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
+import {
+  FileWithSpeakerId,
+  newPronunciation,
+  updateSpeakerInAudio,
+} from "types/word";
 import { compareFlags } from "utilities/wordUtilities";
 
 export class ColumnTitle {
@@ -357,21 +362,18 @@ const columns: Column<ReviewEntriesWord>[] = [
     field: ReviewEntriesWordField.Pronunciations,
     filterPlaceholder: "#",
     render: (rowData: ReviewEntriesWord) => (
-      <PronunciationsCell
-        pronunciationFiles={rowData.audio}
-        wordId={rowData.id}
-      />
+      <PronunciationsCell audio={rowData.audio} wordId={rowData.id} />
     ),
     editComponent: (props: FieldParameterStandard) => (
       <PronunciationsCell
         audioFunctions={{
-          addNewAudio: (file: File): void => {
+          addNewAudio: (file: FileWithSpeakerId): void => {
             props.onRowDataChange &&
               props.onRowDataChange({
                 ...props.rowData,
                 audioNew: [
                   ...(props.rowData.audioNew ?? []),
-                  URL.createObjectURL(file),
+                  newPronunciation(URL.createObjectURL(file), file.speakerId),
                 ],
               });
           },
@@ -379,19 +381,42 @@ const columns: Column<ReviewEntriesWord>[] = [
             props.onRowDataChange &&
               props.onRowDataChange({
                 ...props.rowData,
-                audioNew: props.rowData.audioNew?.filter((u) => u !== url),
+                audioNew: props.rowData.audioNew?.filter(
+                  (a) => a.fileName !== url
+                ),
               });
+          },
+          repNewAudio: (pro: Pronunciation): void => {
+            if (props.onRowDataChange && props.rowData.audioNew) {
+              const audioNew = updateSpeakerInAudio(
+                props.rowData.audioNew,
+                pro
+              );
+              if (audioNew) {
+                props.onRowDataChange({ ...props.rowData, audioNew });
+              }
+            }
           },
           delOldAudio: (fileName: string): void => {
             props.onRowDataChange &&
               props.onRowDataChange({
                 ...props.rowData,
-                audio: props.rowData.audio.filter((f) => f !== fileName),
+                audio: props.rowData.audio.filter(
+                  (a) => a.fileName !== fileName
+                ),
               });
           },
+          repOldAudio: (pro: Pronunciation): void => {
+            if (props.onRowDataChange) {
+              const audio = updateSpeakerInAudio(props.rowData.audio, pro);
+              if (audio) {
+                props.onRowDataChange({ ...props.rowData, audio });
+              }
+            }
+          },
         }}
-        pronunciationFiles={props.rowData.audio}
-        pronunciationsNew={props.rowData.audioNew}
+        audio={props.rowData.audio}
+        audioNew={props.rowData.audioNew}
         wordId={props.rowData.id}
       />
     ),

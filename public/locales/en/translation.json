@@ -79,6 +79,10 @@
     "resetDone": "If you have correctly entered your email or username, a password reset link has been sent to your email address.",
     "backToLogin": "Back To Login"
   },
+  "speakerMenu": {
+    "none": "No speakers in the project. To attach a speaker to audio recordings, please talk to a project administrator.",
+    "other": "[None of the above]"
+  },
   "userMenu": {
     "siteSettings": "Site Settings",
     "userSettings": "User Settings",
@@ -126,7 +130,8 @@
     "phone": "Phone number",
     "uiLanguage": "User-interface language",
     "uiLanguageDefault": "(Default to browser language)",
-    "updateSuccess": "Settings successfully updated."
+    "updateSuccess": "Settings successfully updated.",
+    "uploadAvatarTitle": "Set user avatar"
   },
   "projectExport": {
     "cannotExportEmpty": "Project is empty. You cannot export a project with no words.",
@@ -196,6 +201,23 @@
       "makeOwnerToastFailure": "Failed to transfer project ownership.",
       "manageUser": "Manage User",
       "reverseOrder": "Reverse Order"
+    },
+    "speaker": {
+      "label": "Manage speakers",
+      "add": "Add a speaker",
+      "enterName": "Enter the name of a new speaker",
+      "delete": "Delete this speaker",
+      "edit": "Edit speaker's name",
+      "consent": {
+        "play": "Listen to the audio consent for this speaker",
+        "add": "Add consent for this speaker",
+        "record": "Record audio consent",
+        "view": "View this speaker's image consent",
+        "viewTitle": "Consent for speaker: {{ val }}",
+        "upload": "Upload image consent",
+        "remove": "Remove this speaker's consent",
+        "warning": "Warning: the speaker's current consent will be deleted--this cannot be undone."
+      }
     },
     "import": {
       "header": "Import Data",
@@ -441,7 +463,13 @@
   },
   "pronunciations": {
     "recordTooltip": "Press and hold to record.",
-    "playTooltip": "Click to play; shift click to delete.",
+    "playTooltip": "Click to play.",
+    "deleteTooltip": "Shift click to delete.",
+    "protectedTooltip": "Imported audio cannot be deleted or modified.",
+    "speaker": "Speaker: {{ val }}.",
+    "speakerAdd": "Right click to add a speaker.",
+    "speakerChange": "Right click to change speaker.",
+    "speakerSelect": "Select speaker of this audio recording",
     "noMicAccess": "Recording error: Could not access a microphone.",
     "deleteRecording": "Delete Recording"
   },

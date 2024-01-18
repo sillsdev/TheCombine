@@ -22,7 +22,7 @@ interface SenseDialogProps {
   selectedWord: Word;
   open: boolean;
   // Call handleClose with no input to indicate no selection was made.
-  handleClose: (gloss?: string) => void;
+  handleClose: (guid?: string) => void;
   analysisLang: string;
 }
 
@@ -50,7 +50,7 @@ export default function SenseDialog(props: SenseDialogProps): ReactElement {
 
 interface SenseListProps {
   selectedWord: Word;
-  closeDialog: (gloss?: string) => void;
+  closeDialog: (guid?: string) => void;
   analysisLang: string;
 }
 
@@ -71,7 +71,7 @@ export function SenseList(props: SenseListProps): ReactElement {
       <StyledMenuItem
         id={sense.guid}
         key={sense.guid}
-        onClick={() => props.closeDialog(gloss)}
+        onClick={() => props.closeDialog(sense.guid)}
       >
         <Grid
           container

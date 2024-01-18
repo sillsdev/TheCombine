@@ -4,7 +4,7 @@ eth_if_pattern: "en[a-z][0-9]"
 
 ###############################
 # virtual_if device
-# This is needed when microk8s is running on a target that
+# This is needed when k3s is running on a target that
 # does not have an ethernet connection plugged-in.
 ###############################
 

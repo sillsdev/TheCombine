@@ -32,11 +32,23 @@ are associated with the entry and not individual senses.
 
 To record audio, there is a red circle button. For each recorded audio, there is a green triangle button.
 
-**With a mouse:** Click-and-hold the red circle to record. Click a green triangle to play its audio, or shift-click to
+**With a mouse:** Click-and-hold the red circle to record. Click a green triangle to play its audio, or shift click to
 delete its recording.
 
 **On a touch screen:** Press-and-hold the red circle to record. Tap a green triangle to play its audio, or
-press-and-hold to bring up a menu (with options to play or delete).
+press-and-hold to bring up a menu with options.
+
+#### Add a speaker to audio recordings
+
+Click the speaker icon in the top bar to see a list of all available speakers and select the current speaker. This
+speaker will be automatically associated with every audio recording until you log out or select a different speaker.
+
+The speaker associated with a recording can be seen by hovering over its play icon, the green triangle. To change a
+recording's speaker, right click the green triangle (or press-and-hold on a touch screen).
+
+!!! note "Note"
+
+    Imported audio cannot be deleted or have a speaker added.
 
 ## New Entry with Duplicate Vernacular Form {#new-entry-with-duplicate-vernacular-form}
 
