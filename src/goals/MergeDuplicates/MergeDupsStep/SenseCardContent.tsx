@@ -38,14 +38,14 @@ export default function SenseCardContent(
   const protectedWarning =
     !props.sidebar && props.senses[0].accessibility === Status.Protected;
   const tooltipTexts = [t("mergeDups.helpText.protectedSense")];
-  if (props.senses[0].otherField) {
+  if (props.senses[0]?.otherField) {
     tooltipTexts.push(
       t("mergeDups.helpText.protectedData", {
         val: props.senses[0].otherField,
       })
     );
   }
-  tooltipTexts.push(t("pronunciations.protectedSenseInfo"));
+  tooltipTexts.push(t("mergeDups.helpText.protectedSenseInfo"));
 
   return (
     <CardContent style={{ position: "relative", paddingRight: 40 }}>

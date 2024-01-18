@@ -797,7 +797,7 @@ namespace BackendFramework.Services
                     if (LiftHelper.IsProtected(sense))
                     {
                         newSense.Accessibility = Status.Protected;
-                        newSense.OtherField = string.Join("; ", LiftHelper.GetProtectedReasons(entry));
+                        newSense.OtherField = string.Join("; ", LiftHelper.GetProtectedReasons(sense));
                     }
 
                     // Add definitions

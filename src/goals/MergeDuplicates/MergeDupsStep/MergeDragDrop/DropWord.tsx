@@ -152,14 +152,14 @@ export function DropWordCardHeader(
   );
 
   const tooltipTexts = [t("mergeDups.helpText.protectedWord")];
-  if (words[props.wordId].otherField) {
+  if (words[props.wordId]?.otherField) {
     tooltipTexts.push(
       t("mergeDups.helpText.protectedData", {
         val: words[props.wordId].otherField,
       })
     );
   }
-  tooltipTexts.push(t("pronunciations.protectedWordInfo"));
+  tooltipTexts.push(t("mergeDups.helpText.protectedWordInfo"));
 
   const headerAction = treeWord ? (
     <>
