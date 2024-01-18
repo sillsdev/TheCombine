@@ -1,4 +1,5 @@
-import { CardContent } from "@mui/material";
+import { Add, Delete, Edit, RestoreFromTrash } from "@mui/icons-material";
+import { CardContent, Grid, Icon } from "@mui/material";
 import { type ReactElement, useEffect, useState } from "react";
 //import { useTranslation } from "react-i18next";
 
@@ -9,6 +10,7 @@ import {
   SemanticDomain,
   Status,
 } from "api/models";
+import { IconButtonWithTooltip } from "components/Buttons";
 import SenseCard from "components/WordCard/SenseCard";
 import SummarySenseCard from "components/WordCard/SummarySenseCard";
 //import { type StoreState } from "types";
@@ -79,7 +81,7 @@ interface EditSensesCardContentProps {
   oldSenses: Sense[];
   showSenses: boolean;
   toggleSenseDeleted: (index: number) => void;
-  addOrUpdateSense: (sense: Sense) => void;
+  updateOrAddSense: (sense: Sense) => void;
 }
 
 export default function EditSensesCardContent(
@@ -96,8 +98,8 @@ export default function EditSensesCardContent(
     setChanges(
       props.newSenses.map((sense, index) =>
         index < props.oldSenses.length
-          ? true
-          : isSenseChanged(sense, props.oldSenses[index])
+          ? isSenseChanged(sense, props.oldSenses[index])
+          : true
       )
     );
   }, [props.newSenses, props.oldSenses]);
@@ -107,13 +109,23 @@ export default function EditSensesCardContent(
   return (
     <CardContent>
       {props.showSenses ? (
-        props.newSenses.map((s, i) =>
-          s.accessibility === Status.Deleted ? (
-            <div key={s.guid} />
-          ) : (
-            <SenseCard highlight={changes[i]} key={s.guid} sense={s} />
-          )
-        )
+        <>
+          {props.newSenses.map((s, i) => (
+            <EditSense
+              edited={changes[i]}
+              key={s.guid}
+              sense={s}
+              toggleSenseDeleted={() => props.toggleSenseDeleted(i)}
+              updateSense={props.updateOrAddSense}
+            />
+          ))}
+          <IconButtonWithTooltip
+            buttonId={"sense-add"}
+            icon={<Add />}
+            onClick={() => {}}
+            size="small"
+          />
+        </>
       ) : (
         <SummarySenseCard
           senses={props.newSenses.filter(
@@ -122,5 +134,73 @@ export default function EditSensesCardContent(
         />
       )}
     </CardContent>
+  );
+}
+
+interface EditSenseProps {
+  edited?: boolean;
+  sense: Sense;
+  toggleSenseDeleted: () => void;
+  updateSense: (sense: Sense) => void;
+}
+
+function EditSense(props: EditSenseProps): ReactElement {
+  const sense = props.sense;
+  const deleted = sense.accessibility === Status.Deleted;
+  //const [editing, setEditing] = useState(false);
+
+  return (
+    <Grid container>
+      <Grid item>
+        {deleted ? (
+          <>
+            <IconButtonWithTooltip
+              buttonId={`sense-${sense.guid}-restore`}
+              icon={<RestoreFromTrash />}
+              onClick={props.toggleSenseDeleted}
+              size="small"
+            />
+            <IconButtonWithTooltip
+              buttonId={`sense-spacer`}
+              icon={<Icon />}
+              onClick={undefined}
+              size="small"
+            />
+          </>
+        ) : (
+          <>
+            <IconButtonWithTooltip
+              buttonId={`sense-${sense.guid}-delete`}
+              icon={<Delete />}
+              onClick={
+                sense.accessibility === Status.Protected
+                  ? undefined
+                  : props.toggleSenseDeleted
+              }
+              size="small"
+              textId={
+                sense.accessibility === Status.Protected
+                  ? "reviewEntries.deleteDisabled"
+                  : undefined
+              }
+            />
+            <IconButtonWithTooltip
+              buttonId={`sense-${sense.guid}-edit`}
+              icon={<Edit />}
+              onClick={undefined}
+              size="small"
+            />
+          </>
+        )}
+      </Grid>
+      <Grid item>
+        <SenseCard
+          bgColor={
+            deleted ? "darkgray" : props.edited ? "lightyellow" : undefined
+          }
+          sense={sense}
+        />
+      </Grid>
+    </Grid>
   );
 }

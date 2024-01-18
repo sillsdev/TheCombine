@@ -38,9 +38,7 @@ import {
 import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
 import PronunciationsFrontend from "components/Pronunciations/PronunciationsFrontend";
 import { uploadFileFromPronunciation } from "components/Pronunciations/utilities";
-import SenseCard from "components/WordCard/SenseCard";
-import SummarySenseCard from "components/WordCard/SummarySenseCard";
-import {
+import EditSensesCardContent, {
   trimDefinitions,
   trimGlosses,
 } from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditSensesCardContent";
@@ -225,6 +223,52 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
     backgroundColor: changes[field] ? "lightyellow" : "lightgray",
   });
 
+  // Functions for handling senses is the edit state.
+  const toggleSenseDeleted = (index: number): void => {
+    setNewWord((prev) => {
+      if (index < 0 || index >= prev.senses.length) {
+        console.error("Sense doesn't exist.");
+        return prev;
+      }
+      if (prev.senses[index].accessibility === Status.Protected) {
+        console.error("Sense is protected.");
+        return prev;
+      }
+
+      return {
+        ...prev,
+        senses: prev.senses.map((s, i) =>
+          i === index
+            ? {
+                ...s,
+                accessibility:
+                  s.accessibility === Status.Deleted
+                    ? Status.Active
+                    : Status.Deleted,
+              }
+            : s
+        ),
+      };
+    });
+  };
+  const updateOrAddSense = (sense: Sense): void => {
+    setNewWord((prev) => {
+      const oldSense = prev.senses.find((s) => s.guid === sense.guid);
+
+      if (oldSense && oldSense.accessibility !== sense.accessibility) {
+        console.error("Cannot change a sense status with this method.");
+        return prev;
+      }
+
+      return {
+        ...prev,
+        senses: oldSense
+          ? prev.senses.map((s) => (s.guid === sense.guid ? sense : s))
+          : [...prev.senses, sense],
+      };
+    });
+  };
+
   // Functions for handling pronunciations in the edit state.
   const delOldAudio = (fileName: string): void =>
     setNewWord((prev) => ({
@@ -386,15 +430,13 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
                 }
                 title={t("reviewEntries.columns.senses")}
               />
-              <CardContent>
-                {showSenses ? (
-                  newWord.senses.map((s) => (
-                    <SenseCard key={s.guid} sense={s} />
-                  ))
-                ) : (
-                  <SummarySenseCard senses={newWord.senses} />
-                )}
-              </CardContent>
+              <EditSensesCardContent
+                newSenses={newWord.senses}
+                oldSenses={props.word.senses}
+                showSenses={showSenses}
+                toggleSenseDeleted={toggleSenseDeleted}
+                updateOrAddSense={updateOrAddSense}
+              />
             </Card>
           </Grid>
 

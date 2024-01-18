@@ -7,7 +7,7 @@ import DomainChip from "components/WordCard/DomainChip";
 import SenseCardText from "components/WordCard/SenseCardText";
 
 interface SenseCardProps {
-  highlight?: boolean;
+  bgColor?: string;
   languages?: string[];
   minimal?: boolean;
   provenance?: boolean;
@@ -20,7 +20,7 @@ export default function SenseCard(props: SenseCardProps): ReactElement {
   return (
     <Card
       style={{
-        backgroundColor: props.highlight ? "lightyellow" : "white",
+        backgroundColor: props.bgColor || "white",
         marginBottom: 10,
       }}
     >
