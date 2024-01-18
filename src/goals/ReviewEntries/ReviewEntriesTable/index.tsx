@@ -164,34 +164,20 @@ export default function ReviewEntriesTable(): ReactElement {
       {
         Cell: ({ row }: CellProps) => <DomainsCell rowData={row.original} />,
         filterFn: (row, id, filterValue: string) => {
-          /* Search term expected in one of two formats:
-           * 1. id (e.g., "2.1") XOR name (e.g., "bod")
-           * 2. id AND name, colon-separated (e.g., "2.1:ody")
-           *   All the above examples would find entries with "2.1: Body"
-           * IGNORED: capitalization; whitespace around terms; 3+ terms
-           *   e.g. " 2.1:BODY:zx:c  " and "2.1  : Body " are equivalent
-           */
+          /* Numeric id filter expected (periods between digits are optional).
+           * Test for exact id match if no final period.
+           * Test for initial substring match if final period. */
           const doms = row.getValue<SemanticDomain[]>(id);
-          const terms = filterValue
-            .split(":")
-            .map((t) => t.trim().toLowerCase());
-          if (terms.length === 0) {
+          let filter = filterValue.replace(/[^0-9\.]/g, "");
+          if (!filter) {
             return true;
-          } else if (terms.length === 1) {
-            return (
-              doms.findIndex(
-                (d) =>
-                  d.id.startsWith(terms[0]) ||
-                  d.name.toLowerCase().includes(terms[0])
-              ) !== -1
-            );
+          }
+          const finalPeriod = filter.slice(-1) === ".";
+          filter = filter.replace(/\./g, "").split("").join(".");
+          if (finalPeriod) {
+            return doms.findIndex((d) => d.id.startsWith(filter)) !== -1;
           } else {
-            return (
-              doms.findIndex(
-                (d) =>
-                  d.id === terms[0] && d.name.toLowerCase().includes(terms[1])
-              ) !== -1
-            );
+            return doms.findIndex((d) => d.id === filter) !== -1;
           }
         },
         header: t("reviewEntries.columns.domains"),
