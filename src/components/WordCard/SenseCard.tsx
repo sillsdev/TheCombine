@@ -7,6 +7,7 @@ import DomainChip from "components/WordCard/DomainChip";
 import SenseCardText from "components/WordCard/SenseCardText";
 
 interface SenseCardProps {
+  highlight?: boolean;
   languages?: string[];
   minimal?: boolean;
   provenance?: boolean;
@@ -17,7 +18,12 @@ export default function SenseCard(props: SenseCardProps): ReactElement {
   const { grammaticalInfo, semanticDomains } = props.sense;
 
   return (
-    <Card style={{ backgroundColor: "white", marginBottom: 10 }}>
+    <Card
+      style={{
+        backgroundColor: props.highlight ? "lightyellow" : "white",
+        marginBottom: 10,
+      }}
+    >
       <CardContent style={{ position: "relative" }}>
         {/* Part of speech (if any) */}
         <div style={{ position: "absolute", left: 0, top: 0 }}>

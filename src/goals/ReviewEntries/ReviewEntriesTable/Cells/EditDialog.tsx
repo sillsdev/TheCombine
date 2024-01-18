@@ -40,6 +40,10 @@ import PronunciationsFrontend from "components/Pronunciations/PronunciationsFron
 import { uploadFileFromPronunciation } from "components/Pronunciations/utilities";
 import SenseCard from "components/WordCard/SenseCard";
 import SummarySenseCard from "components/WordCard/SummarySenseCard";
+import {
+  trimDefinitions,
+  trimGlosses,
+} from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditSensesCardContent";
 import { type StoreState } from "types";
 import { type StoreStateDispatch } from "types/Redux/actions";
 import { useAppDispatch, useAppSelector } from "types/hooks";
@@ -75,8 +79,8 @@ function cleanSenses(newSenses: Sense[]): Sense[] | string {
     }
 
     // Remove empty definitions, empty glosses, and duplicate domains.
-    newSense.definitions = newSense.definitions.filter((d) => d.text.length);
-    newSense.glosses = newSense.glosses.filter((g) => g.def.length);
+    newSense.definitions = trimDefinitions(newSense.definitions);
+    newSense.glosses = trimGlosses(newSense.glosses);
     const domainIds = [
       ...new Set(newSense.semanticDomains.map((dom) => dom.id)),
     ];
