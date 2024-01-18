@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 
 import { Flag } from "api/models";
 import { FlagButton, IconButtonWithTooltip } from "components/Buttons";
+import MultilineTooltipTitle from "components/MultilineTooltipTitle";
 import DragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DragSense";
 import { MergeTreeWord } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import {
@@ -106,6 +107,8 @@ export function DropWordCardHeader(
     (state: StoreState) => state.mergeDuplicateGoal.data
   );
 
+  const { t } = useTranslation();
+
   const dispatchFlagWord = (flag: Flag): void => {
     dispatch(flagWord({ wordId: props.wordId, flag }));
   };
@@ -148,6 +151,16 @@ export function DropWordCardHeader(
     <div />
   );
 
+  const tooltipTexts = [t("mergeDups.helpText.protectedWord")];
+  if (words[props.wordId].otherField) {
+    tooltipTexts.push(
+      t("mergeDups.helpText.protectedData", {
+        val: words[props.wordId].otherField,
+      })
+    );
+  }
+  tooltipTexts.push(t("pronunciations.protectedWordInfo"));
+
   const headerAction = treeWord ? (
     <>
       {props.protectedWithOneChild && (
@@ -156,7 +169,7 @@ export function DropWordCardHeader(
           icon={<WarningOutlined />}
           side="top"
           size="small"
-          textId="mergeDups.helpText.protectedWord"
+          text={<MultilineTooltipTitle lines={tooltipTexts} />}
         />
       )}
       <FlagButton

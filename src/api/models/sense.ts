@@ -60,4 +60,10 @@ export interface Sense {
    * @memberof Sense
    */
   semanticDomains: Array<SemanticDomain>;
+  /**
+   *
+   * @type {string}
+   * @memberof Sense
+   */
+  otherField?: string | null;
 }

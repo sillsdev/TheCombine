@@ -742,6 +742,7 @@ namespace BackendFramework.Services
                 if (LiftHelper.IsProtected(entry))
                 {
                     newWord.Accessibility = Status.Protected;
+                    newWord.OtherField = string.Join("; ", LiftHelper.GetProtectedReasons(entry));
                 }
 
                 // Add Note if one exists.
@@ -796,6 +797,7 @@ namespace BackendFramework.Services
                     if (LiftHelper.IsProtected(sense))
                     {
                         newSense.Accessibility = Status.Protected;
+                        newSense.OtherField = string.Join("; ", LiftHelper.GetProtectedReasons(entry));
                     }
 
                     // Add definitions

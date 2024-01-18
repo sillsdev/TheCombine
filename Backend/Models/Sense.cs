@@ -41,6 +41,10 @@ namespace BackendFramework.Models
         [BsonElement("SemanticDomains")]
         public List<SemanticDomain> SemanticDomains { get; set; }
 
+        /// <summary> Not implemented in frontend. </summary>
+        [BsonElement("otherField")]
+        public string OtherField { get; set; }
+
         public Sense()
         {
             // By default generate a new, unique Guid for each new Sense.
@@ -50,6 +54,7 @@ namespace BackendFramework.Models
             Definitions = new List<Definition>();
             Glosses = new List<Gloss>();
             SemanticDomains = new List<SemanticDomain>();
+            OtherField = "";
         }
 
         public Sense Clone()
@@ -62,6 +67,7 @@ namespace BackendFramework.Models
                 Definitions = new List<Definition>(),
                 Glosses = new List<Gloss>(),
                 SemanticDomains = new List<SemanticDomain>(),
+                OtherField = OtherField,
             };
 
             foreach (var definition in Definitions)
@@ -96,12 +102,14 @@ namespace BackendFramework.Models
                 other.Glosses.Count == Glosses.Count &&
                 other.Glosses.All(Glosses.Contains) &&
                 other.SemanticDomains.Count == SemanticDomains.Count &&
-                other.SemanticDomains.All(SemanticDomains.Contains);
+                other.SemanticDomains.All(SemanticDomains.Contains) &&
+                other.OtherField.Equals(OtherField, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Guid, Accessibility, GrammaticalInfo, Definitions, Glosses, SemanticDomains);
+            return HashCode.Combine(
+                Guid, Accessibility, GrammaticalInfo, Definitions, Glosses, SemanticDomains, OtherField);
         }
 
         public bool IsEmpty()

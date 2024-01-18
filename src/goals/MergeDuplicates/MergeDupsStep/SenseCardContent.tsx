@@ -1,9 +1,11 @@
 import { ArrowForwardIos, WarningOutlined } from "@mui/icons-material";
 import { CardContent, Chip, Grid, IconButton } from "@mui/material";
 import { ReactElement } from "react";
+import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, Sense, Status } from "api/models";
 import { IconButtonWithTooltip, PartOfSpeechButton } from "components/Buttons";
+import MultilineTooltipTitle from "components/MultilineTooltipTitle";
 import SenseCardText from "components/WordCard/SenseCardText";
 
 interface SenseCardContentProps {
@@ -20,6 +22,8 @@ interface SenseCardContentProps {
 export default function SenseCardContent(
   props: SenseCardContentProps
 ): ReactElement {
+  const { t } = useTranslation();
+
   const semDoms = [
     ...new Set(
       props.senses.flatMap((s) =>
@@ -27,11 +31,21 @@ export default function SenseCardContent(
       )
     ),
   ];
-  const protectedWarning =
-    !props.sidebar && props.senses[0].accessibility === Status.Protected;
   const gramInfo = props.senses
     .map((s) => s.grammaticalInfo)
     .find((g) => g.catGroup !== GramCatGroup.Unspecified);
+
+  const protectedWarning =
+    !props.sidebar && props.senses[0].accessibility === Status.Protected;
+  const tooltipTexts = [t("mergeDups.helpText.protectedSense")];
+  if (props.senses[0].otherField) {
+    tooltipTexts.push(
+      t("mergeDups.helpText.protectedData", {
+        val: props.senses[0].otherField,
+      })
+    );
+  }
+  tooltipTexts.push(t("pronunciations.protectedSenseInfo"));
 
   return (
     <CardContent style={{ position: "relative", paddingRight: 40 }}>
@@ -52,7 +66,7 @@ export default function SenseCardContent(
             icon={<WarningOutlined />}
             side="top"
             size="small"
-            textId="mergeDups.helpText.protectedSense"
+            text={<MultilineTooltipTitle lines={tooltipTexts} />}
             buttonId={`sense-${props.senses[0].guid}-protected`}
           />
         )}
