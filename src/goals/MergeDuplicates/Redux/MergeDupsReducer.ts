@@ -107,8 +107,8 @@ const mergeDuplicatesSlice = createSlice({
       const nonDeletedSenses = Object.values(state.tree.words).flatMap((w) =>
         Object.values(w.sensesGuids).flatMap((s) => s)
       );
-      const deletedWords = possibleWords.filter(
-        (w) => !w.senses.some((s) => nonDeletedSenses.includes(s.guid))
+      const deletedWords = possibleWords.filter((w) =>
+        w.senses.every((s) => !nonDeletedSenses.includes(s.guid))
       );
       state.mergeWords = deletedWords.map((w) =>
         newMergeWords(w, [{ srcWordId: w.id, getAudio: false }], true)
