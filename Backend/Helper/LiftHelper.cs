@@ -80,10 +80,10 @@ namespace BackendFramework.Helper
             {
                 reasons.Add("etymologies");
             }
-            if (entry.Fields.Count > 0)
+            entry.Fields.ForEach(f =>
             {
-                reasons.Add("fields");
-            }
+                reasons.Add($"{f.Type} field");
+            });
             if (entry.Notes.Count == 1 && !string.IsNullOrEmpty(entry.Notes.First().Type))
             {
                 reasons.Add($"note with type {entry.Notes.First().Type}");
@@ -140,10 +140,10 @@ namespace BackendFramework.Helper
             {
                 reasons.Add("examples");
             }
-            if (sense.Fields.Count > 0)
+            sense.Fields.ForEach(f =>
             {
-                reasons.Add("fields");
-            }
+                reasons.Add($"{f.Type} field");
+            });
             if (sense.GramInfo is not null && sense.GramInfo.Traits.Count > 0)
             {
                 reasons.Add("more than 1 grammatical info trait");
