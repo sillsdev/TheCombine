@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import { Flag } from "api/models";
 import { FlagButton, IconButtonWithTooltip } from "components/Buttons";
 import MultilineTooltipTitle from "components/MultilineTooltipTitle";
+import { AudioSummary } from "components/WordCard";
 import DragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DragSense";
 import { MergeTreeWord } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import {
@@ -172,6 +173,7 @@ export function DropWordCardHeader(
           text={<MultilineTooltipTitle lines={tooltipTexts} />}
         />
       )}
+      <AudioSummary count={treeWord.audioCount} />
       <FlagButton
         buttonId={`word-${props.wordId}-flag`}
         flag={treeWord.flag}

@@ -378,7 +378,7 @@ function createMergeWords(
           });
         }
       });
-      const getAudio = !sList.find((s) => s.accessibility === Status.Separate);
+      const getAudio = sList.every((s) => s.accessibility !== Status.Separate);
       return { srcWordId: sList[0].srcWordId, getAudio };
     }
   );

@@ -132,9 +132,9 @@ export default function WordCard(props: WordCardProps): ReactElement {
 
 export function AudioSummary(props: { count: number }): ReactElement {
   return props.count > 0 ? (
-    <IconButton>
-      <Badge badgeContent={props.count}>
-        <PlayArrow style={{ color: themeColors.success }} />
+    <IconButton disabled>
+      <Badge badgeContent={props.count} sx={{ color: "black" }}>
+        <PlayArrow sx={{ color: themeColors.success }} />
       </Badge>
     </IconButton>
   ) : (
