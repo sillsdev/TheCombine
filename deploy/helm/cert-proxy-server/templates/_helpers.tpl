@@ -13,7 +13,8 @@
 
 {{/* Build string of certificates for ConfigMap data */}}
 {{- define "cert-proxy-server.cert-proxy-list-config-data" -}}
+  {{- $awsCertLoc := .Values.awsS3CertLoc }}
   {{- range .Values.combineCertProxyList -}}
-    {{- printf "%s@%s " .hostname .bucket -}}
+    {{- printf "%s@%s/%s " .hostname .bucket $awsCertLoc -}}
   {{- end }}
 {{- end }}

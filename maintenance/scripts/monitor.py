@@ -80,7 +80,7 @@ class CertMonitor:
         """
         secret_dict: Dict[str, TlsSecret] = {}
         if "CERT_PROXY_CERTIFICATES" in os.environ:
-            for item in os.environ["CERT_PROXY_CERTIFICATES"].replace(".", "-").split():
+            for item in os.environ["CERT_PROXY_CERTIFICATES"].split():
                 secret = TlsSecret(item)
                 secret_dict[secret.name] = secret
         return secret_dict
