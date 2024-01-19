@@ -43,7 +43,7 @@ class TlsSecret:
             secret_dir.mkdir(parents=True, exist_ok=True)
             secret_filename = secret_dir / filename
             secret_filename.write_bytes(data)
-            self.aws.push(secret_filename, f"{secret_dest}")
+            self.aws.push(secret_filename, secret_dest)
 
 
 class CertMonitor:
