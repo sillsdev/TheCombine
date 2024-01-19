@@ -59,7 +59,7 @@ describe("MergeDupsReducer", () => {
       for (const mergeSenseId of Object.keys(words[wordId].sensesGuids)) {
         const guids = words[wordId].sensesGuids[mergeSenseId];
         const order = guids.findIndex((g) => g === guid);
-        if (order !== -1) {
+        if (order > -1) {
           return { wordId, mergeSenseId, order };
         }
       }

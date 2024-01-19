@@ -18,7 +18,7 @@ export default function DeleteCell(props: DeleteCellProps): ReactElement {
   const dispatch = useAppDispatch();
 
   const word = props.rowData;
-  const disabled = word.protected || !!word.senses.find((s) => s.protected);
+  const disabled = word.protected || word.senses.some((s) => s.protected);
 
   async function deleteFrontierWord(): Promise<void> {
     await deleteFromBackend(word.id);
