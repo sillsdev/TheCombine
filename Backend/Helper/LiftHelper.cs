@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using BackendFramework.Models;
 using SIL.Lift.Parsing;
 
 namespace BackendFramework.Helper
@@ -70,32 +71,32 @@ namespace BackendFramework.Helper
         }
 
         /// <summary> Determine what <see cref="LiftEntry"/> data is not handled by The Combine. </summary>
-        public static List<string> GetProtectedReasons(LiftEntry entry)
+        public static List<ProtectReason> GetProtectedReasons(LiftEntry entry)
         {
-            var reasons = new List<string>();
+            var reasons = new List<ProtectReason>();
             if (entry.Annotations.Count > 0)
             {
-                reasons.Add("annotations");
+                reasons.Add(new() { Type = ReasonType.Annotations, Count = entry.Annotations.Count });
             }
             if (entry.Etymologies.Count > 0)
             {
-                reasons.Add("etymologies");
+                reasons.Add(new() { Type = ReasonType.Etymologies, Count = entry.Etymologies.Count });
             }
             entry.Fields.ForEach(f =>
             {
-                reasons.Add($"{f.Type} field");
+                reasons.Add(new() { Type = ReasonType.Field, Value = f.Type });
             });
             if (entry.Notes.Count == 1 && !string.IsNullOrEmpty(entry.Notes.First().Type))
             {
-                reasons.Add($"note with type {entry.Notes.First().Type}");
+                reasons.Add(new() { Type = ReasonType.NoteWithType, Value = entry.Notes.First().Type });
             }
             if (entry.Notes.Count > 1)
             {
-                reasons.Add("more than 1 note");
+                reasons.Add(new() { Type = ReasonType.Notes, Count = entry.Notes.Count });
             }
             if (entry.Relations.Count > 0)
             {
-                reasons.Add("relations");
+                reasons.Add(new() { Type = ReasonType.Relations, Count = entry.Relations.Count });
             }
             entry.Traits.ForEach(t =>
             {
@@ -103,17 +104,17 @@ namespace BackendFramework.Helper
                 {
                     if (!t.Value.Equals("stem", StringComparison.OrdinalIgnoreCase))
                     {
-                        reasons.Add($"morph-type trait \"{t.Value}\" (rather than default \"stem\")");
+                        reasons.Add(new() { Type = ReasonType.TraitMorphType, Value = t.Value });
                     }
                 }
                 else
                 {
-                    reasons.Add($"{t.Name} trait \"{t.Value}\"");
+                    reasons.Add(new() { Type = ReasonType.Trait, Value = t.Name });
                 }
             });
             if (entry.Variants.Count > 0)
             {
-                reasons.Add("variants");
+                reasons.Add(new() { Type = ReasonType.Variants, Count = entry.Variants.Count });
             }
 
             return reasons;
@@ -130,50 +131,50 @@ namespace BackendFramework.Helper
         }
 
         /// <summary> Determine what <see cref="LiftSense"/> data is not handled by The Combine. </summary>
-        public static List<string> GetProtectedReasons(LiftSense sense)
+        public static List<ProtectReason> GetProtectedReasons(LiftSense sense)
         {
-            var reasons = new List<string>();
+            var reasons = new List<ProtectReason>();
             if (sense.Annotations.Count > 0)
             {
-                reasons.Add("annotations");
+                reasons.Add(new() { Type = ReasonType.Annotations, Count = sense.Annotations.Count });
             }
             if (sense.Examples.Count > 0)
             {
-                reasons.Add("examples");
+                reasons.Add(new() { Type = ReasonType.Examples, Count = sense.Examples.Count });
             }
             sense.Fields.ForEach(f =>
             {
-                reasons.Add($"{f.Type} field");
+                reasons.Add(new() { Type = ReasonType.Field, Value = f.Type });
             });
-            if (sense.GramInfo is not null && sense.GramInfo.Traits.Count > 0)
+            sense.GramInfo?.Traits.ForEach(t =>
             {
-                reasons.Add("more than 1 grammatical info trait");
-            }
+                reasons.Add(new() { Type = ReasonType.GramInfoTrait, Value = t.Name });
+            });
             if (sense.Illustrations.Count > 0)
             {
-                reasons.Add("illustrations");
+                reasons.Add(new() { Type = ReasonType.Illustrations, Count = sense.Illustrations.Count });
             }
             if (sense.Notes.Count > 0)
             {
-                reasons.Add("notes");
+                reasons.Add(new() { Type = ReasonType.Notes, Count = sense.Notes.Count });
             }
             if (sense.Relations.Count > 0)
             {
-                reasons.Add("relations");
+                reasons.Add(new() { Type = ReasonType.Relations, Count = sense.Relations.Count });
             }
             if (sense.Reversals.Count > 0)
             {
-                reasons.Add("reversals");
+                reasons.Add(new() { Type = ReasonType.Reversals, Count = sense.Reversals.Count });
             }
             if (sense.Subsenses.Count > 0)
             {
-                reasons.Add("subsenses");
+                reasons.Add(new() { Type = ReasonType.Subsenses, Count = sense.Subsenses.Count });
             }
             sense.Traits.ForEach(t =>
             {
                 if (!t.Name.StartsWith("semantic-domain", StringComparison.OrdinalIgnoreCase))
                 {
-                    reasons.Add($"{t.Name} trait \"{t.Value}\"");
+                    reasons.Add(new() { Type = ReasonType.Trait, Value = t.Name });
                 }
             });
 

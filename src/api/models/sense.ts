@@ -15,6 +15,7 @@
 import { Definition } from "./definition";
 import { Gloss } from "./gloss";
 import { GrammaticalInfo } from "./grammatical-info";
+import { ProtectReason } from "./protect-reason";
 import { SemanticDomain } from "./semantic-domain";
 import { Status } from "./status";
 
@@ -44,6 +45,12 @@ export interface Sense {
   grammaticalInfo: GrammaticalInfo;
   /**
    *
+   * @type {Array<ProtectReason>}
+   * @memberof Sense
+   */
+  protectReasons?: Array<ProtectReason> | null;
+  /**
+   *
    * @type {Array<Definition>}
    * @memberof Sense
    */
@@ -60,10 +67,4 @@ export interface Sense {
    * @memberof Sense
    */
   semanticDomains: Array<SemanticDomain>;
-  /**
-   *
-   * @type {string}
-   * @memberof Sense
-   */
-  otherField?: string | null;
 }

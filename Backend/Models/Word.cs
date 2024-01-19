@@ -54,6 +54,10 @@ namespace BackendFramework.Models
         [BsonRepresentation(BsonType.String)]
         public Status Accessibility { get; set; }
 
+        [BsonElement("protectReasons")]
+        [BsonRepresentation(BsonType.String)]
+        public List<ProtectReason> ProtectReasons { get; set; }
+
         [Required]
         [BsonElement("history")]
         public List<string> History { get; set; }
@@ -91,17 +95,18 @@ namespace BackendFramework.Models
             OtherField = "";
             ProjectId = "";
             Accessibility = Status.Active;
-            Audio = new List<Pronunciation>();
-            EditedBy = new List<string>();
-            History = new List<string>();
-            Senses = new List<Sense>();
-            Note = new Note();
-            Flag = new Flag();
+            ProtectReasons = new();
+            Audio = new();
+            EditedBy = new();
+            History = new();
+            Senses = new();
+            Note = new();
+            Flag = new();
         }
 
         public Word Clone()
         {
-            var clone = new Word
+            return new Word
             {
                 Id = Id,
                 Guid = Guid,
@@ -112,32 +117,14 @@ namespace BackendFramework.Models
                 OtherField = OtherField,
                 ProjectId = ProjectId,
                 Accessibility = Accessibility,
-                Audio = new List<Pronunciation>(),
-                EditedBy = new List<string>(),
-                History = new List<string>(),
-                Senses = new List<Sense>(),
+                ProtectReasons = ProtectReasons.Select(a => a.Clone()).ToList(),
+                Audio = Audio.Select(a => a.Clone()).ToList(),
+                EditedBy = EditedBy.Select(a => a).ToList(),
+                History = History.Select(a => a).ToList(),
+                Senses = Senses.Select(a => a.Clone()).ToList(),
                 Note = Note.Clone(),
                 Flag = Flag.Clone(),
             };
-
-            foreach (var audio in Audio)
-            {
-                clone.Audio.Add(audio.Clone());
-            }
-            foreach (var id in EditedBy)
-            {
-                clone.EditedBy.Add(id);
-            }
-            foreach (var id in History)
-            {
-                clone.History.Add(id);
-            }
-            foreach (var sense in Senses)
-            {
-                clone.Senses.Add(sense.Clone());
-            }
-
-            return clone;
         }
 
         public bool ContentEquals(Word other)
@@ -147,6 +134,9 @@ namespace BackendFramework.Models
                 other.Plural.Equals(Plural, StringComparison.Ordinal) &&
                 other.OtherField.Equals(OtherField, StringComparison.Ordinal) &&
                 other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
+
+                other.ProtectReasons.Count == ProtectReasons.Count &&
+                other.ProtectReasons.All(ProtectReasons.Contains) &&
 
                 other.Audio.Count == Audio.Count &&
                 other.Audio.All(Audio.Contains) &&
@@ -189,6 +179,7 @@ namespace BackendFramework.Models
             hash.Add(Created);
             hash.Add(Modified);
             hash.Add(Accessibility);
+            hash.Add(ProtectReasons);
             hash.Add(History);
             hash.Add(EditedBy);
             hash.Add(OtherField);

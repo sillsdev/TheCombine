@@ -29,6 +29,10 @@ namespace BackendFramework.Models
         [BsonElement("grammaticalInfo")]
         public GrammaticalInfo GrammaticalInfo { get; set; }
 
+        [BsonElement("protectReasons")]
+        [BsonRepresentation(BsonType.String)]
+        public List<ProtectReason> ProtectReasons { get; set; }
+
         [Required]
         [BsonElement("Definitions")]
         public List<Definition> Definitions { get; set; }
@@ -41,49 +45,30 @@ namespace BackendFramework.Models
         [BsonElement("SemanticDomains")]
         public List<SemanticDomain> SemanticDomains { get; set; }
 
-        /// <summary> Not implemented in frontend. </summary>
-        [BsonElement("otherField")]
-        public string OtherField { get; set; }
-
         public Sense()
         {
             // By default generate a new, unique Guid for each new Sense.
             Guid = Guid.NewGuid();
             Accessibility = Status.Active;
-            GrammaticalInfo = new GrammaticalInfo();
-            Definitions = new List<Definition>();
-            Glosses = new List<Gloss>();
-            SemanticDomains = new List<SemanticDomain>();
-            OtherField = "";
+            GrammaticalInfo = new();
+            ProtectReasons = new();
+            Definitions = new();
+            Glosses = new();
+            SemanticDomains = new();
         }
 
         public Sense Clone()
         {
-            var clone = new Sense
+            return new Sense
             {
                 Guid = Guid,
                 Accessibility = Accessibility,
                 GrammaticalInfo = GrammaticalInfo.Clone(),
-                Definitions = new List<Definition>(),
-                Glosses = new List<Gloss>(),
-                SemanticDomains = new List<SemanticDomain>(),
-                OtherField = OtherField,
+                ProtectReasons = ProtectReasons.Select(a => a.Clone()).ToList(),
+                Definitions = Definitions.Select(a => a.Clone()).ToList(),
+                Glosses = Glosses.Select(a => a.Clone()).ToList(),
+                SemanticDomains = SemanticDomains.Select(a => a.Clone()).ToList(),
             };
-
-            foreach (var definition in Definitions)
-            {
-                clone.Definitions.Add(definition.Clone());
-            }
-            foreach (var gloss in Glosses)
-            {
-                clone.Glosses.Add(gloss.Clone());
-            }
-            foreach (var sd in SemanticDomains)
-            {
-                clone.SemanticDomains.Add(sd.Clone());
-            }
-
-            return clone;
         }
 
         public override bool Equals(object? obj)
@@ -97,19 +82,20 @@ namespace BackendFramework.Models
                 other.Guid == Guid &&
                 other.Accessibility == Accessibility &&
                 other.GrammaticalInfo.Equals(GrammaticalInfo) &&
+                other.ProtectReasons.Count == ProtectReasons.Count &&
+                other.ProtectReasons.All(ProtectReasons.Contains) &&
                 other.Definitions.Count == Definitions.Count &&
                 other.Definitions.All(Definitions.Contains) &&
                 other.Glosses.Count == Glosses.Count &&
                 other.Glosses.All(Glosses.Contains) &&
                 other.SemanticDomains.Count == SemanticDomains.Count &&
-                other.SemanticDomains.All(SemanticDomains.Contains) &&
-                other.OtherField.Equals(OtherField, StringComparison.Ordinal);
+                other.SemanticDomains.All(SemanticDomains.Contains);
         }
 
         public override int GetHashCode()
         {
             return HashCode.Combine(
-                Guid, Accessibility, GrammaticalInfo, Definitions, Glosses, SemanticDomains, OtherField);
+                Guid, Accessibility, GrammaticalInfo, ProtectReasons, Definitions, Glosses, SemanticDomains);
         }
 
         public bool IsEmpty()
