@@ -64,7 +64,8 @@ namespace BackendFramework.Helper
             return entry.Annotations.Count > 0 || entry.Etymologies.Count > 0 || entry.Fields.Count > 0 ||
                 (entry.Notes.Count == 1 && !string.IsNullOrEmpty(entry.Notes.First().Type)) ||
                 entry.Notes.Count > 1 || entry.Relations.Count > 0 ||
-                entry.Traits.Any(t => !t.Value.Equals("stem", StringComparison.OrdinalIgnoreCase)) ||
+                entry.Traits.Any(t => !t.Name.Equals("morph-type", StringComparison.OrdinalIgnoreCase)
+                    || !t.Value.Equals("stem", StringComparison.OrdinalIgnoreCase)) ||
                 entry.Variants.Count > 0;
         }
 
