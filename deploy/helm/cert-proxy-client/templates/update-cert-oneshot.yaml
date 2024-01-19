@@ -16,7 +16,7 @@ spec:
     spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
       containers:
-      - image: {{ template "cert-proxy-client.containerImage" . }}
+      - image: {{ include "cert-proxy-client.containerImage" . }}
         imagePullPolicy: {{ .Values.global.imagePullPolicy }}
         name: update-cert-oneshot
         command:
