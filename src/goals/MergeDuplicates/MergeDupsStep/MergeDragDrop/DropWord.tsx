@@ -11,7 +11,7 @@ import { ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 
-import { Flag } from "api/models";
+import { Flag, ProtectReason, ReasonType } from "api/models";
 import { FlagButton, IconButtonWithTooltip } from "components/Buttons";
 import MultilineTooltipTitle from "components/MultilineTooltipTitle";
 import { AudioSummary } from "components/WordCard";
@@ -152,11 +152,39 @@ export function DropWordCardHeader(
     <div />
   );
 
+  const reasonText = (reason: ProtectReason): string => {
+    switch (reason.type) {
+      case ReasonType.Annotations:
+        return t("mergeDups.protectReason.annotations");
+      case ReasonType.Etymologies:
+        return t("mergeDups.protectReason.etymologies");
+      case ReasonType.Field:
+        return t("mergeDups.protectReason.field", { val: reason.value });
+      case ReasonType.NoteWithType:
+        return t("mergeDups.protectReason.noteWithType", { val: reason.value });
+      case ReasonType.Notes:
+        return t("mergeDups.protectReason.notesWord");
+      case ReasonType.Relations:
+        return t("mergeDups.protectReason.relations");
+      case ReasonType.Trait:
+        return reason.value ?? "(unknown trait)";
+      case ReasonType.TraitMorphType:
+        return t("mergeDups.protectReason.traitMorphType", {
+          val: reason.value,
+        });
+      case ReasonType.Variants:
+        return t("mergeDups.protectReason.variants");
+      default:
+        throw new Error();
+    }
+  };
+
   const tooltipTexts = [t("mergeDups.helpText.protectedWord")];
-  if (words[props.wordId]?.otherField) {
+  const reasons = words[props.wordId]?.protectReasons;
+  if (reasons?.length) {
     tooltipTexts.push(
       t("mergeDups.helpText.protectedData", {
-        val: words[props.wordId].otherField,
+        val: reasons.map(reasonText).join("; "),
       })
     );
   }

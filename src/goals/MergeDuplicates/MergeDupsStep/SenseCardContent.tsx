@@ -1,9 +1,15 @@
 import { ArrowForwardIos, WarningOutlined } from "@mui/icons-material";
 import { CardContent, Chip, Grid, IconButton } from "@mui/material";
-import { ReactElement } from "react";
+import { type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
-import { GramCatGroup, Sense, Status } from "api/models";
+import {
+  GramCatGroup,
+  type ProtectReason,
+  ReasonType,
+  type Sense,
+  Status,
+} from "api/models";
 import { IconButtonWithTooltip, PartOfSpeechButton } from "components/Buttons";
 import MultilineTooltipTitle from "components/MultilineTooltipTitle";
 import SenseCardText from "components/WordCard/SenseCardText";
@@ -35,13 +41,43 @@ export default function SenseCardContent(
     .map((s) => s.grammaticalInfo)
     .find((g) => g.catGroup !== GramCatGroup.Unspecified);
 
+  const reasonText = (reason: ProtectReason): string => {
+    switch (reason.type) {
+      case ReasonType.Annotations:
+        return t("mergeDups.protectReason.annotations");
+      case ReasonType.Examples:
+        return t("mergeDups.protectReason.examples");
+      case ReasonType.Field:
+        return t("mergeDups.protectReason.field", { val: reason.value });
+      case ReasonType.GramInfoTrait:
+        return t("mergeDups.protectReason.gramInfoTrait", {
+          val: reason.value,
+        });
+      case ReasonType.Illustrations:
+        return t("mergeDups.protectReason.illustrations");
+      case ReasonType.Notes:
+        return t("mergeDups.protectReason.notesSense");
+      case ReasonType.Relations:
+        return t("mergeDups.protectReason.relations");
+      case ReasonType.Reversals:
+        return t("mergeDups.protectReason.reversals");
+      case ReasonType.Subsenses:
+        return t("mergeDups.protectReason.subsenses");
+      case ReasonType.Trait:
+        return reason.value ?? "(unknown trait)";
+      default:
+        throw new Error();
+    }
+  };
+
   const protectedWarning =
     !props.sidebar && props.senses[0].accessibility === Status.Protected;
   const tooltipTexts = [t("mergeDups.helpText.protectedSense")];
-  if (props.senses[0]?.otherField) {
+  const reasons = props.senses[0]?.protectReasons;
+  if (reasons?.length) {
     tooltipTexts.push(
       t("mergeDups.helpText.protectedData", {
-        val: props.senses[0].otherField,
+        val: reasons.map(reasonText).join("; "),
       })
     );
   }

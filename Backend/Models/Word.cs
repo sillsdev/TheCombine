@@ -55,7 +55,6 @@ namespace BackendFramework.Models
         public Status Accessibility { get; set; }
 
         [BsonElement("protectReasons")]
-        [BsonRepresentation(BsonType.String)]
         public List<ProtectReason> ProtectReasons { get; set; }
 
         [Required]

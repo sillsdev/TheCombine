@@ -109,7 +109,7 @@ namespace BackendFramework.Helper
                 }
                 else
                 {
-                    reasons.Add(new() { Type = ReasonType.Trait, Value = t.Name });
+                    reasons.Add(new() { Type = ReasonType.Trait, Value = $"{t.Name} ({t.Value})" });
                 }
             });
             if (entry.Variants.Count > 0)
@@ -174,7 +174,7 @@ namespace BackendFramework.Helper
             {
                 if (!t.Name.StartsWith("semantic-domain", StringComparison.OrdinalIgnoreCase))
                 {
-                    reasons.Add(new() { Type = ReasonType.Trait, Value = t.Name });
+                    reasons.Add(new() { Type = ReasonType.Trait, Value = $"{t.Name} ({t.Value})" });
                 }
             });
 

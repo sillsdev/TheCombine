@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace BackendFramework.Models
@@ -26,6 +27,7 @@ namespace BackendFramework.Models
     {
         [Required]
         [BsonElement("type")]
+        [BsonRepresentation(BsonType.String)]
         public ReasonType Type { get; set; }
 
         [BsonElement("count")]

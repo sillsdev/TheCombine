@@ -30,7 +30,6 @@ namespace BackendFramework.Models
         public GrammaticalInfo GrammaticalInfo { get; set; }
 
         [BsonElement("protectReasons")]
-        [BsonRepresentation(BsonType.String)]
         public List<ProtectReason> ProtectReasons { get; set; }
 
         [Required]

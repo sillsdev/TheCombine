@@ -417,6 +417,22 @@
       "protectedWordInfo": "To prevent deletion, the final sense of this word cannot be removed.",
       "protectedData": "Protected data: {{ val }}"
     },
+    "protectReason": {
+      "annotations": "annotations",
+      "etymologies": "etymologies",
+      "examples": "examples",
+      "field": "{{ val }} field",
+      "gramInfoTrait": "grammatical info {{ val }}",
+      "illustrations": "illustrations",
+      "noteWithType": "note with type {{ val }}",
+      "notesSense": "notes",
+      "notesWord": "more than 1 note",
+      "relations": "relations",
+      "reversals": "reversals",
+      "subsenses": "subsenses",
+      "traitMorphType": "morph type \"{{ val }}\" (rather than default \"stem\")",
+      "variants": "variants"
+    },
     "completed": {
       "number": "Number of merges completed: "
     },
