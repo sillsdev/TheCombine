@@ -79,15 +79,15 @@ const S1 = senses["S1"].guid;
 const S2 = senses["S2"].guid;
 const S3 = senses["S3"].guid;
 const S4 = senses["S4"].guid;
-const data: MergeData = { words: { WA: wordA, WB: wordB }, senses: {} };
-data.senses[S1] = {
-  ...newMergeTreeSense("S1", idA, 0),
-  guid: S1,
-  protected: true,
+const data: MergeData = {
+  senses: {
+    [S1]: { ...newMergeTreeSense("S1", idA, 0), guid: S1, protected: true },
+    [S2]: { ...newMergeTreeSense("S2", idA, 1), guid: S2 },
+    [S3]: { ...newMergeTreeSense("S3", idB, 0), guid: S3 },
+    [S4]: { ...newMergeTreeSense("S4", idB, 1), guid: S4 },
+  },
+  words: { WA: wordA, WB: wordB },
 };
-data.senses[S2] = { ...newMergeTreeSense("S2", idA, 1), guid: S2 };
-data.senses[S3] = { ...newMergeTreeSense("S3", idB, 0), guid: S3 };
-data.senses[S4] = { ...newMergeTreeSense("S4", idB, 1), guid: S4 };
 
 beforeEach(jest.clearAllMocks);
 
@@ -103,7 +103,7 @@ describe("MergeDupActions", () => {
         mergeDuplicateGoal: {
           data,
           tree,
-          deleted: defaultDeleted,
+          deleted: { ...defaultDeleted },
           mergeWords: [],
         },
       });
@@ -122,7 +122,7 @@ describe("MergeDupActions", () => {
         mergeDuplicateGoal: {
           data,
           tree,
-          deleted: defaultDeleted,
+          deleted: { ...defaultDeleted },
           mergeWords: [],
         },
       });
@@ -132,10 +132,11 @@ describe("MergeDupActions", () => {
       const parentA = wordAnyGuids(vernA, [senses["S1"], senses["S2"]], idA);
       const parentB = wordAnyGuids(vernB, [senses["S4"]], idB);
       const childA = { srcWordId: idA, getAudio: true };
-      const childB = { srcWordId: idB, getAudio: false };
+      const childAB = { srcWordId: idB, getAudio: false };
+      const childBB = { srcWordId: idB, getAudio: true };
       const mockMerges = [
-        newMergeWords(parentA, [childA, childB]),
-        newMergeWords(parentB, [childB]),
+        newMergeWords(parentA, [childA, childAB]),
+        newMergeWords(parentB, [childBB]),
       ];
       for (const mergeWords of mockMerges) {
         expect(mockMergeWords.mock.calls[0][0]).toContainEqual(mergeWords);
@@ -152,7 +153,7 @@ describe("MergeDupActions", () => {
         mergeDuplicateGoal: {
           data,
           tree,
-          deleted: defaultDeleted,
+          deleted: { ...defaultDeleted },
           mergeWords: [],
         },
       });
@@ -166,10 +167,11 @@ describe("MergeDupActions", () => {
       );
       const parentB = wordAnyGuids(vernB, [senses["S4"]], idB);
       const childA = { srcWordId: idA, getAudio: true };
-      const childB = { srcWordId: idB, getAudio: false };
+      const childAB = { srcWordId: idB, getAudio: false };
+      const childBB = { srcWordId: idB, getAudio: true };
       const mockMerges = [
-        newMergeWords(parentA, [childA, childB]),
-        newMergeWords(parentB, [childB]),
+        newMergeWords(parentA, [childA, childAB]),
+        newMergeWords(parentB, [childBB]),
       ];
       for (const mergeWords of mockMerges) {
         expect(mockMergeWords.mock.calls[0][0]).toContainEqual(mergeWords);
@@ -186,7 +188,7 @@ describe("MergeDupActions", () => {
         mergeDuplicateGoal: {
           data,
           tree,
-          deleted: defaultDeleted,
+          deleted: { ...defaultDeleted },
           mergeWords: [],
         },
       });
@@ -255,7 +257,7 @@ describe("MergeDupActions", () => {
         mergeDuplicateGoal: {
           data,
           tree,
-          deleted: defaultDeleted,
+          deleted: { ...defaultDeleted },
           mergeWords: [],
         },
       });
@@ -294,7 +296,7 @@ describe("MergeDupActions", () => {
         mergeDuplicateGoal: {
           data,
           tree,
-          deleted: defaultDeleted,
+          deleted: { ...defaultDeleted },
           mergeWords: [],
         },
       });
