@@ -1,6 +1,25 @@
 #! /usr/bin/env bash
 
 #####
+# Let the user know what to expect
+cat <<.EOM
+Setting up the software environment and WiFi Access Point
+used by The Combine.  You will be prompted for your password twice to allow
+the script to setup system services.  One prompt will look like:
+
+[sudo] password for xxxx:
+
+where xxxx is your user name.
+
+Afterwards, you will see a
+
+BECOME password: 
+
+prompt, enter your password here as well.
+.EOM
+
+
+#####
 # Install required packages
 sudo apt install -y python3-pip python3-venv
 #####
@@ -12,13 +31,19 @@ python -m piptools sync requirements.txt
 
 #####
 # Setup Kubernetes environment and WiFi Access Point
-echo "Setting up the software environment and WiFi Access Point"
-echo "used by The Combine.  At the"
-echo ""
-echo "BECOME: "
-echo ""
-echo "prompt, enter your password to allow the script to perform"
-echo "administrative setup tasks."
-
 cd ansible
 ansible-playbook playbook_desktop_setup.yaml -K
+cd ../scripts
+
+#####
+# Install base helm charts
+helm repo add stable https://charts.helm.sh/stable
+helm repo add bitnami https://charts.bitnami.com/bitnami
+
+#####
+# Setup required cluster services
+./setup_cluster.py
+
+#####
+# Setup The Combine
+./setup_combine.py --tag v1.1.6 --repo public.ecr.aws/thecombine --target desktop
