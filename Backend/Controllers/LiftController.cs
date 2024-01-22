@@ -205,21 +205,22 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
+            var proj = await _projRepo.GetProject(projectId);
+            if (proj is null)
+            {
+                return NotFound(projectId);
+            }
+
             int liftParseResult;
             // Sets the projectId of our parser to add words to that project
-            var liftMerger = _liftService.GetLiftImporterExporter(projectId, _wordRepo);
+            var liftMerger = _liftService.GetLiftImporterExporter(
+                projectId, proj.VernacularWritingSystem.Bcp47, _wordRepo);
             var importedAnalysisWritingSystems = new List<WritingSystem>();
             var doesImportHaveDefinitions = false;
             var doesImportHaveGrammaticalInfo = false;
             try
             {
                 // Add character set to project from ldml file
-                var proj = await _projRepo.GetProject(projectId);
-                if (proj is null)
-                {
-                    return NotFound(projectId);
-                }
-
                 await _liftService.LdmlImport(liftStoragePath, _projRepo, proj);
 
                 var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(liftMerger);

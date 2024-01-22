@@ -1,7 +1,7 @@
 ---
 # Used to setup the certificate for kubectl
 # Can be overridden by specific groups/hosts
-k8s_dns_name: "{{ combine_server_name }}"
+public_dns_name: "{{ combine_server_name }}"
 
 k8s_required_pkgs:
   - apt-transport-https
@@ -14,4 +14,6 @@ k3s_options:
   - 644
   - --disable
   - traefik
+  - --tls-san
+  - "{{ public_dns_name }}"
 k3s_version: "v1.25.14+k3s1"

@@ -34,23 +34,27 @@ namespace BackendFramework.Services
             parent.ProjectId = projectId;
             parent.History = new List<string>();
 
-            // Add child to history.
             foreach (var childSource in mergeWords.Children)
             {
+                // Add child to history.
                 parent.History.Add(childSource.SrcWordId);
+
                 if (childSource.GetAudio)
                 {
-                    var child = await _wordRepo.GetWord(projectId, childSource.SrcWordId);
-                    if (child is null)
+                    // Add child's audio.
+                    var child = await _wordRepo.GetWord(projectId, childSource.SrcWordId)
+                        ?? throw new KeyNotFoundException($"Unable to locate word: ${childSource.SrcWordId}");
+                    child.Audio.ForEach(pro =>
                     {
-                        throw new KeyNotFoundException($"Unable to locate word: ${childSource.SrcWordId}");
-                    }
-                    parent.Audio.AddRange(child.Audio);
+                        if (parent.Audio.All(p => p.FileName != pro.FileName))
+                        {
+                            parent.Audio.Add(pro);
+                        }
+                    });
                 }
             }
 
-            // Remove duplicates.
-            parent.Audio = parent.Audio.Distinct().ToList();
+            // Remove history duplicates.
             parent.History = parent.History.Distinct().ToList();
             return parent;
         }

@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
 import { ReactElement, memo, useState } from "react";
 
-import { Word, WritingSystem } from "api/models";
+import { Pronunciation, Word, WritingSystem } from "api/models";
 import {
   DeleteEntry,
   EntryNote,
@@ -10,7 +10,7 @@ import {
 } from "components/DataEntry/DataEntryTable/EntryCellComponents";
 import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
 import theme from "types/theme";
-import { newGloss } from "types/word";
+import { FileWithSpeakerId, newGloss } from "types/word";
 import { firstGlossText } from "utilities/wordUtilities";
 
 const idAffix = "recent-entry";
@@ -23,8 +23,9 @@ export interface RecentEntryProps {
   updateNote: (index: number, newText: string) => Promise<void>;
   updateVern: (index: number, newVern: string, targetWordId?: string) => void;
   removeEntry: (index: number) => void;
-  addAudioToWord: (wordId: string, audioFile: File) => void;
-  deleteAudioFromWord: (wordId: string, fileName: string) => void;
+  addAudioToWord: (wordId: string, file: FileWithSpeakerId) => void;
+  delAudioFromWord: (wordId: string, fileName: string) => void;
+  repAudioInWord: (wordId: string, audio: Pronunciation) => void;
   focusNewEntry: () => void;
   analysisLang: WritingSystem;
   vernacularLang: WritingSystem;
@@ -134,13 +135,16 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
       >
         {!props.disabled && (
           <PronunciationsBackend
-            pronunciationFiles={props.entry.audio}
+            audio={props.entry.audio}
             wordId={props.entry.id}
-            deleteAudio={(fileName: string) => {
-              props.deleteAudioFromWord(props.entry.id, fileName);
+            deleteAudio={(fileName) => {
+              props.delAudioFromWord(props.entry.id, fileName);
             }}
-            uploadAudio={(audioFile: File) => {
-              props.addAudioToWord(props.entry.id, audioFile);
+            replaceAudio={(audio) =>
+              props.repAudioInWord(props.entry.id, audio)
+            }
+            uploadAudio={(file) => {
+              props.addAudioToWord(props.entry.id, file);
             }}
           />
         )}

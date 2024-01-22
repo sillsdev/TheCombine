@@ -49,6 +49,39 @@ namespace Backend.Tests.Services
         }
 
         [Test]
+        public void TestDeleteAudioBadInputNull()
+        {
+            var fileName = "audio.mp3";
+            var wordInFrontier = _wordRepo.Create(
+                new Word() { Audio = new() { new() { FileName = fileName } }, ProjectId = ProjId }).Result;
+            Assert.That(_wordService.Delete("non-project-id", UserId, wordInFrontier.Id, fileName).Result, Is.Null);
+            Assert.That(_wordService.Delete(ProjId, UserId, "non-word-id", fileName).Result, Is.Null);
+            Assert.That(_wordService.Delete(ProjId, UserId, wordInFrontier.Id, "non-file-name").Result, Is.Null);
+        }
+
+        [Test]
+        public void TestDeleteAudioNotInFrontierNull()
+        {
+            var fileName = "audio.mp3";
+            var wordNotInFrontier = _wordRepo.Add(
+                new() { Audio = new() { new() { FileName = fileName } }, ProjectId = ProjId }).Result;
+            Assert.That(_wordService.Delete(ProjId, UserId, wordNotInFrontier.Id, fileName).Result, Is.Null);
+        }
+
+        [Test]
+        public void TestDeleteAudio()
+        {
+            var fileName = "audio.mp3";
+            var wordInFrontier = _wordRepo.Create(
+                new Word() { Audio = new() { new() { FileName = fileName } }, ProjectId = ProjId }).Result;
+            var result = _wordService.Delete(ProjId, UserId, wordInFrontier.Id, fileName).Result;
+            Assert.That(result!.EditedBy.Last(), Is.EqualTo(UserId));
+            Assert.That(result!.History.Last(), Is.EqualTo(wordInFrontier.Id));
+            Assert.That(_wordRepo.IsInFrontier(ProjId, result.Id).Result, Is.True);
+            Assert.That(_wordRepo.IsInFrontier(ProjId, wordInFrontier.Id).Result, Is.False);
+        }
+
+        [Test]
         public void TestUpdateNotInFrontierFalse()
         {
             Assert.That(_wordService.Update(ProjId, UserId, WordId, new Word()).Result, Is.False);

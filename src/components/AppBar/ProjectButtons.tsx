@@ -13,7 +13,9 @@ import {
   shortenName,
   tabColor,
 } from "components/AppBar/AppBarTypes";
+import SpeakerMenu from "components/AppBar/SpeakerMenu";
 import { StoreState } from "types";
+import { GoalStatus, GoalType } from "types/goals";
 import { Path } from "types/path";
 
 export const projButtonId = "project-settings";
@@ -30,7 +32,13 @@ export default function ProjectButtons(props: TabProps): ReactElement {
   const projectName = useSelector(
     (state: StoreState) => state.currentProjectState.project.name
   );
-  const [hasStatsPermission, setHasStatsPermission] = useState<boolean>(false);
+  const showSpeaker = useSelector(
+    (state: StoreState) =>
+      Path.DataEntry === props.currentTab ||
+      (state.goalsState.currentGoal.goalType === GoalType.ReviewEntries &&
+        state.goalsState.currentGoal.status === GoalStatus.InProgress)
+  );
+  const [hasStatsPermission, setHasStatsPermission] = useState(false);
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -87,6 +95,7 @@ export default function ProjectButtons(props: TabProps): ReactElement {
           </Hidden>
         </Button>
       </Tooltip>
+      {showSpeaker && <SpeakerMenu />}
     </>
   );
 }

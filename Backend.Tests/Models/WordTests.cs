@@ -86,82 +86,56 @@ namespace Backend.Tests.Models
             newWord.Flag = newFlag.Clone();
 
             // Add something to newWord in Audio, EditedBy, History.
-            newWord.Audio.Add(Text);
+            newWord.Audio.Add(new Pronunciation(Text));
             newWord.EditedBy.Add(Text);
             newWord.History.Add(Text);
 
-            // create a userId
-            var userId = Util.RandString();
-            Assert.That(oldWord.AppendContainedWordContents(newWord, userId), Is.True);
+            // Append new content.
+            Assert.That(oldWord.AppendContainedWordContents(newWord, "user-id"), Is.True);
 
+            // Confirm content is appended.
             var updatedSense = oldWord.Senses.Find(s => s.Guid == newSense.Guid);
             Assert.That(updatedSense, Is.Not.Null);
             var updatedDom = updatedSense!.SemanticDomains.Find(dom => dom.Id == newSemDom.Id);
             Assert.That(updatedDom, Is.Not.Null);
             Assert.That(oldWord.Flag.Equals(newFlag), Is.True);
             Assert.That(oldWord.Note.Equals(newNote), Is.True);
-            Assert.That(oldWord.Audio.Contains(Text), Is.True);
+            Assert.That(oldWord.Audio.Contains(new Pronunciation(Text)), Is.True);
             Assert.That(oldWord.EditedBy.Contains(Text), Is.True);
             Assert.That(oldWord.History.Contains(Text), Is.True);
+        }
+    }
 
-            // if userId append successfully
-            Assert.That(updatedDom?.UserId, Is.EqualTo(userId));
+    public class PronunciationTest
+    {
+        private const string FileName = "file-name.mp3";
+        private const string SpeakerId = "1234567890";
 
+        [Test]
+        public void TestNotEquals()
+        {
+            var pronunciation = new Pronunciation { Protected = false, FileName = FileName, SpeakerId = SpeakerId };
+            Assert.That(pronunciation.Equals(
+                new Pronunciation { Protected = true, FileName = FileName, SpeakerId = SpeakerId }), Is.False);
+            Assert.That(pronunciation.Equals(
+                new Pronunciation { Protected = false, FileName = "other-name", SpeakerId = SpeakerId }), Is.False);
+            Assert.That(pronunciation.Equals(
+                new Pronunciation { Protected = false, FileName = FileName, SpeakerId = "other-id" }), Is.False);
+            Assert.That(pronunciation.Equals(null), Is.False);
+        }
 
-            // test2
-            // 1. create newWord2
-            var newWord2 = Util.RandomWord(oldWord.ProjectId);
-            newWord2.Vernacular = oldWord.Vernacular;
-
-            // 2. Make newWord2 have a cloned sense of oldWord, add one more new semantic domain
-            var newSense2 = oldWord.Senses.First().Clone();
-            var newSemDom2 = Util.RandomSemanticDomain();
-            newSense2.SemanticDomains.Add(newSemDom2);
-            newWord2.Senses = new List<Sense> { newSense2 };
-
-            // 3. AppendContainedWordContents with a empty userId
-            Assert.That(oldWord.AppendContainedWordContents(newWord2, ""), Is.True);
-            var updatedSense2 = oldWord.Senses.Find(s => s.Guid == newSense2.Guid);
-            Assert.That(updatedSense2, Is.Not.Null);
-            var updatedDom2 = updatedSense2!.SemanticDomains.Find(dom => dom.Id == newSemDom2.Id);
-            Assert.That(updatedDom2, Is.Not.Null);
-
-            // 4.test userId still be empty after append
-            Assert.That(updatedDom2?.UserId, Is.Empty);
-
-
-            // test3
-            // test Adding multiple items at same time
-            // Make newWord3 have a cloned sense of oldWord,
-            var newWord3 = Util.RandomWord(oldWord.ProjectId);
-            newWord3.Vernacular = oldWord.Vernacular;
-
-            // add three more new semantic domains
-            var newSense3 = oldWord.Senses.First().Clone();
-            var newSemDom3 = Util.RandomSemanticDomain();
-            var newSemDom4 = Util.RandomSemanticDomain();
-            var newSemDom5 = Util.RandomSemanticDomain();
-            newSense3.SemanticDomains.Add(newSemDom3);
-            newSense3.SemanticDomains.Add(newSemDom4);
-            newSense3.SemanticDomains.Add(newSemDom5);
-            newWord3.Senses = new List<Sense> { newSense3 };
-
-            // create a userId2
-            var userId2 = Util.RandString();
-            Assert.That(oldWord.AppendContainedWordContents(newWord3, userId2), Is.True);
-            var updatedSense3 = oldWord.Senses.Find(s => s.Guid == newSense3.Guid);
-            Assert.That(updatedSense3, Is.Not.Null);
-
-            // test all updateDoms have the same userId
-            var updatedDom3 = updatedSense3!.SemanticDomains.Find(dom => dom.Id == newSemDom3.Id);
-            Assert.That(updatedDom3, Is.Not.Null);
-            Assert.That(updatedDom3?.UserId, Is.EqualTo(userId2));
-            var updatedDom4 = updatedSense3!.SemanticDomains.Find(dom => dom.Id == newSemDom4.Id);
-            Assert.That(updatedDom4, Is.Not.Null);
-            Assert.That(updatedDom4?.UserId, Is.EqualTo(userId2));
-            var updatedDom5 = updatedSense3!.SemanticDomains.Find(dom => dom.Id == newSemDom5.Id);
-            Assert.That(updatedDom5, Is.Not.Null);
-            Assert.That(updatedDom5?.UserId, Is.EqualTo(userId2));
+        [Test]
+        public void TestHashCode()
+        {
+            Assert.That(
+                new Pronunciation { FileName = FileName }.GetHashCode(),
+                Is.Not.EqualTo(new Pronunciation { FileName = "other-name" }.GetHashCode()));
+            Assert.That(
+                new Pronunciation { SpeakerId = SpeakerId }.GetHashCode(),
+                Is.Not.EqualTo(new Pronunciation { SpeakerId = "other-id" }.GetHashCode()));
+            Assert.That(
+                new Pronunciation { Protected = true }.GetHashCode(),
+                Is.Not.EqualTo(new Pronunciation { Protected = false }.GetHashCode()));
         }
     }
 

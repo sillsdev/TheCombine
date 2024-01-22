@@ -1,7 +1,8 @@
-import { Dialog, DialogContent, DialogTitle } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, Icon } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
+import { CloseButton } from "components/Buttons";
 import UploadImage from "components/Dialogs/UploadImage";
 
 interface UploadImageDialogProps {
@@ -18,7 +19,11 @@ export default function UploadImageDialog(
 
   return (
     <Dialog onClose={props.close} open={props.open}>
-      <DialogTitle>{t(props.titleId)}</DialogTitle>
+      <DialogTitle>
+        {t(props.titleId)}
+        <Icon />
+        <CloseButton close={props.close} />
+      </DialogTitle>
       <DialogContent>
         <UploadImage
           doneCallback={props.close}

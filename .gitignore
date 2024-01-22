@@ -58,9 +58,6 @@ mongo_database
 # User Guide
 docs/user_guide/site
 
-# Vagrant instances
-.vagrant/
-
 # Python
 .tox
 .mypy_cache

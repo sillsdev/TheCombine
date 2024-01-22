@@ -40,7 +40,7 @@ ingress_namespace: ingress-nginx
 # The server name will direct traffic to the production
 # server since it is used to get the certificates for the
 # NUC.
-k8s_dns_name: "{{ ansible_hostname }}"
+public_dns_name: "{{ ansible_hostname }}"
 
 ################################################
 # Ethernet settings

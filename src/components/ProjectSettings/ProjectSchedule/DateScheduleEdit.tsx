@@ -1,17 +1,12 @@
 import { Button, Grid } from "@mui/material";
-import {
-  CalendarPicker,
-  PickersDay,
-  PickersDayProps,
-} from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { Dayjs } from "dayjs";
+import { DateCalendar } from "@mui/x-date-pickers";
+import dayjs, { Dayjs } from "dayjs";
 import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Project } from "api/models";
 import { LoadingButton } from "components/Buttons";
+import ProjectPickersDay from "components/ProjectSettings/ProjectSchedule/ProjectPickersDay";
 
 interface DateScheduleEditProps {
   close: () => void;
@@ -27,23 +22,6 @@ export default function DateScheduleEdit(
     props.projectSchedule
   );
   const { t } = useTranslation();
-
-  // Custom renderer for CalendarPicker
-  function customDayRenderer(
-    day: Dayjs,
-    _selectedDays: Array<Dayjs | null>,
-    pickersDayProps: PickersDayProps<Dayjs>
-  ): ReactElement {
-    const date = day.toDate();
-    const selected =
-      projectSchedule.findIndex(
-        (d) =>
-          d.getDate() === date.getDate() &&
-          d.getMonth() === date.getMonth() &&
-          d.getFullYear() === date.getFullYear()
-      ) >= 0;
-    return <PickersDay {...pickersDayProps} selected={selected} />;
-  }
 
   async function handleSubmit(): Promise<void> {
     // update the schedule to the project setting
@@ -79,15 +57,20 @@ export default function DateScheduleEdit(
   }
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <CalendarPicker
-        onChange={handleCalendarChange}
-        date={null}
+    <>
+      <DateCalendar
+        defaultValue={
+          props.projectSchedule.length
+            ? dayjs(props.projectSchedule[0])
+            : undefined
+        }
         disableHighlightToday
-        renderDay={customDayRenderer}
+        onChange={handleCalendarChange}
+        slots={{ day: ProjectPickersDay }}
+        slotProps={{ day: { days: projectSchedule } as any }}
       />
       <Grid container justifyContent="flex-end" spacing={2}>
-        <Grid item marginTop={1} style={{ width: 100 }}>
+        <Grid item marginTop={1}>
           <Button
             variant="contained"
             onClick={() => props.close()}
@@ -96,7 +79,7 @@ export default function DateScheduleEdit(
             {t("buttons.cancel")}
           </Button>
         </Grid>
-        <Grid item marginTop={1} style={{ width: 100 }}>
+        <Grid item marginTop={1}>
           <LoadingButton
             buttonProps={{
               id: "DateSelectorSubmitButton",
@@ -109,6 +92,6 @@ export default function DateScheduleEdit(
           </LoadingButton>
         </Grid>
       </Grid>
-    </LocalizationProvider>
+    </>
   );
 }

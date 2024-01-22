@@ -1,16 +1,19 @@
 import { memo, ReactElement } from "react";
 
+import { Pronunciation } from "api/models";
 import { getAudioUrl } from "backend";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
+import { FileWithSpeakerId } from "types/word";
 
 interface PronunciationsBackendProps {
+  audio: Pronunciation[];
   playerOnly?: boolean;
   overrideMemo?: boolean;
-  pronunciationFiles: string[];
   wordId: string;
-  deleteAudio: (fileName: string) => void;
-  uploadAudio?: (audioFile: File) => void;
+  deleteAudio?: (fileName: string) => void;
+  replaceAudio?: (audio: Pronunciation) => void;
+  uploadAudio?: (file: FileWithSpeakerId) => void;
 }
 
 /** Audio recording/playing component for backend audio. */
@@ -24,21 +27,23 @@ export function PronunciationsBackend(
     console.warn("uploadAudio undefined; playerOnly should be set to true");
   }
 
-  const audioButtons: ReactElement[] = props.pronunciationFiles.map(
-    (fileName) => (
-      <AudioPlayer
-        fileName={fileName}
-        key={fileName}
-        pronunciationUrl={getAudioUrl(props.wordId, fileName)}
-        deleteAudio={props.deleteAudio}
-      />
-    )
-  );
+  const audioButtons: ReactElement[] = props.audio.map((a) => (
+    <AudioPlayer
+      audio={a}
+      deleteAudio={props.deleteAudio}
+      key={a.fileName}
+      pronunciationUrl={getAudioUrl(props.wordId, a.fileName)}
+      updateAudioSpeaker={
+        props.replaceAudio &&
+        ((id) => props.replaceAudio!({ ...a, speakerId: id ?? "" }))
+      }
+    />
+  ));
 
   return (
     <>
       {!props.playerOnly && !!props.uploadAudio && (
-        <AudioRecorder wordId={props.wordId} uploadAudio={props.uploadAudio} />
+        <AudioRecorder id={props.wordId} uploadAudio={props.uploadAudio} />
       )}
       {audioButtons}
     </>
@@ -56,8 +61,7 @@ function propsAreEqual(
   }
   return (
     prev.wordId === next.wordId &&
-    JSON.stringify(prev.pronunciationFiles) ===
-      JSON.stringify(next.pronunciationFiles)
+    JSON.stringify(prev.audio) === JSON.stringify(next.audio)
   );
 }
 

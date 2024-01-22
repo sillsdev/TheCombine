@@ -7,12 +7,41 @@ import {
   GramCatGroup,
   GrammaticalInfo,
   Note,
+  Pronunciation,
   SemanticDomain,
   Sense,
   Status,
   Word,
 } from "api/models";
 import { randomIntString } from "utilities/utilities";
+
+export interface FileWithSpeakerId extends File {
+  speakerId?: string;
+}
+
+export function newPronunciation(fileName = "", speakerId = ""): Pronunciation {
+  return { fileName, speakerId, protected: false };
+}
+
+/** Returns a copy of the audio array with every entry updated that has:
+ * - .protected false;
+ * - same .fileName as the update pronunciation; and
+ * - different .speakerId than the update pronunciation.
+ *
+ * Returns undefined if no such entry in the array. */
+export function updateSpeakerInAudio(
+  audio: Pronunciation[],
+  update: Pronunciation
+): Pronunciation[] | undefined {
+  const updatePredicate = (p: Pronunciation): boolean =>
+    !p.protected &&
+    p.fileName === update.fileName &&
+    p.speakerId !== update.speakerId;
+  if (audio.findIndex(updatePredicate) === -1) {
+    return;
+  }
+  return audio.map((a) => (updatePredicate(a) ? update : a));
+}
 
 export function newDefinition(text = "", language = ""): Definition {
   return { text, language };
@@ -56,7 +85,7 @@ export function newGrammaticalInfo(): GrammaticalInfo {
   return { catGroup: GramCatGroup.Unspecified, grammaticalCategory: "" };
 }
 
-export function newWord(vernacular = ""): Word {
+export function newWord(vernacular = "", lang?: string): Word {
   return {
     id: "",
     guid: v4(),
@@ -68,7 +97,7 @@ export function newWord(vernacular = ""): Word {
     accessibility: Status.Active,
     history: [],
     projectId: "",
-    note: newNote(),
+    note: newNote(undefined, lang),
     flag: newFlag(),
   };
 }
@@ -89,11 +118,11 @@ export class DomainWord {
   }
 }
 
-export function simpleWord(vern: string, gloss: string): Word {
+export function simpleWord(vern: string, gloss: string, lang?: string): Word {
   return {
-    ...newWord(vern),
+    ...newWord(vern, lang),
     id: randomIntString(),
-    senses: [newSense(gloss)],
+    senses: [newSense(gloss, lang)],
   };
 }
 
