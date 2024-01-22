@@ -9,6 +9,7 @@ import {
   Word,
 } from "api/models";
 import {
+  convertMergeTreeSenseToSense,
   convertSenseToMergeTreeSense,
   convertWordToMergeTreeWord,
   defaultSidebar,
@@ -292,8 +293,8 @@ function buildSenses(
   const senses: Hash<MergeTreeSense[]> = {};
   for (const senseGuids of Object.values(sensesGuids)) {
     for (const guid of senseGuids) {
-      const senseData = data.senses[guid];
-      const wordId = senseData.srcWordId;
+      // Gather all senses for words that have at least one non-deleted sense.
+      const wordId = data.senses[guid].srcWordId;
 
       if (!senses[wordId]) {
         const dbWord = data.words[wordId];
@@ -338,16 +339,17 @@ function createMergeWords(
   mergeSenses: Hash<MergeTreeSense[]>,
   word: Word
 ): MergeWords | undefined {
+  const mSenses = Object.values(mergeSenses);
   // Don't return empty merges: when the only child is the parent word
   // and has the same number of senses as parent (all Active/Protected)
   // and has the same flag.
-  if (Object.values(mergeSenses).length === 1) {
-    const onlyChild = Object.values(mergeSenses)[0];
+  if (mSenses.length === 1) {
+    const onlyChild = mSenses[0];
     if (
       onlyChild[0].srcWordId === wordId &&
       onlyChild.length === word.senses.length &&
-      !onlyChild.find(
-        (s) => ![Status.Active, Status.Protected].includes(s.accessibility)
+      onlyChild.every((s) =>
+        [Status.Active, Status.Protected].includes(s.accessibility)
       ) &&
       compareFlags(mergeWord.flag, word.flag) === 0
     ) {
@@ -364,24 +366,15 @@ function createMergeWords(
   if (!parent.vernacular) {
     parent.vernacular = mergeWord.vern;
   }
-  const children: MergeSourceWord[] = Object.values(mergeSenses).map(
-    (sList) => {
-      sList.forEach((sense) => {
-        if ([Status.Active, Status.Protected].includes(sense.accessibility)) {
-          parent.senses.push({
-            guid: sense.guid,
-            definitions: sense.definitions,
-            glosses: sense.glosses,
-            semanticDomains: sense.semanticDomains,
-            accessibility: sense.accessibility,
-            grammaticalInfo: sense.grammaticalInfo,
-          });
-        }
-      });
-      const getAudio = sList.every((s) => s.accessibility !== Status.Separate);
-      return { srcWordId: sList[0].srcWordId, getAudio };
-    }
-  );
+  const children: MergeSourceWord[] = mSenses.map((sList) => {
+    sList.forEach((sense) => {
+      if ([Status.Active, Status.Protected].includes(sense.accessibility)) {
+        parent.senses.push(convertMergeTreeSenseToSense(sense));
+      }
+    });
+    const getAudio = sList.every((s) => s.accessibility !== Status.Separate);
+    return { srcWordId: sList[0].srcWordId, getAudio };
+  });
 
   return newMergeWords(parent, children);
 }
@@ -398,20 +391,30 @@ function combineIntoFirstSense(senses: MergeTreeSense[]): void {
   // These were senses dropped into another sense.
   senses.slice(1).forEach((dupSense) => {
     dupSense.accessibility = Status.Duplicate;
-    // Put the duplicate's definitions in the main sense.
+    // Merge the duplicate's definitions into the main sense.
     const sep = ";";
     dupSense.definitions.forEach((def) => {
-      if (def.text.length) {
-        const defIndex = mainSense.definitions.findIndex(
+      const newText = def.text.trim();
+      if (newText) {
+        // Check if definitions array already has entry with the same language.
+        const oldDef = mainSense.definitions.find(
           (d) => d.language === def.language
         );
-        if (defIndex === -1) {
-          mainSense.definitions.push({ ...def });
+        if (!oldDef) {
+          // If not, add this one to the array.
+          mainSense.definitions.push({ ...def, text: newText });
         } else {
-          const oldText = mainSense.definitions[defIndex].text;
-          if (!oldText.split(sep).includes(def.text)) {
-            mainSense.definitions[defIndex].text =
-              `${oldText}${sep}${def.text}`;
+          // If so, check whether this one's text is already present.
+          const oldText = oldDef.text.trim();
+          if (!oldText) {
+            oldDef.text = newText;
+          } else if (
+            !oldText
+              .split(sep)
+              .map((t) => t.trim())
+              .includes(newText)
+          ) {
+            oldDef.text += `${sep} ${newText}`;
           }
         }
       }
@@ -420,7 +423,7 @@ function combineIntoFirstSense(senses: MergeTreeSense[]): void {
     if (mainSense.grammaticalInfo.catGroup === GramCatGroup.Unspecified) {
       mainSense.grammaticalInfo = { ...dupSense.grammaticalInfo };
     }
-    // Put the duplicate's domains in the main sense.
+    // Put the duplicate's domains in the main sense if the id is new.
     dupSense.semanticDomains.forEach((dom) => {
       if (!mainSense.semanticDomains.find((d) => d.id === dom.id)) {
         mainSense.semanticDomains.push({ ...dom });
