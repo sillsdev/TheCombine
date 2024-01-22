@@ -32,6 +32,11 @@ export interface MergeData {
   senses: Hash<MergeTreeSense>;
 }
 
+export const defaultData: MergeData = {
+  words: {},
+  senses: {},
+};
+
 export interface MergeTreeReference {
   wordId: string;
   mergeSenseId: string;
@@ -112,6 +117,21 @@ export const defaultSidebar: Sidebar = {
 export interface MergeTree {
   sidebar: Sidebar;
   words: Hash<MergeTreeWord>;
+  wordAudioCounts: Hash<number>;
 }
 
-export const defaultTree: MergeTree = { sidebar: defaultSidebar, words: {} };
+export const defaultTree: MergeTree = {
+  sidebar: defaultSidebar,
+  words: {},
+  wordAudioCounts: {},
+};
+
+export interface MergeDeleted {
+  senseGuids: string[];
+  words: Word[];
+}
+
+export const defaultDeleted: MergeDeleted = {
+  senseGuids: [],
+  words: [],
+};

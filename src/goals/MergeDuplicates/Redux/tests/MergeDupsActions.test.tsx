@@ -1,6 +1,7 @@
 import { MergeWords, Sense, Status, Word } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import {
+  defaultDeleted,
   defaultTree,
   MergeData,
   MergeTree,
@@ -99,7 +100,12 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree, mergeWords: [] },
+        mergeDuplicateGoal: {
+          data,
+          tree,
+          deleted: defaultDeleted,
+          mergeWords: [],
+        },
       });
       await store.dispatch(mergeAll());
 
@@ -113,7 +119,12 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree, mergeWords: [] },
+        mergeDuplicateGoal: {
+          data,
+          tree,
+          deleted: defaultDeleted,
+          mergeWords: [],
+        },
       });
       await store.dispatch(mergeAll());
 
@@ -138,7 +149,12 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree, mergeWords: [] },
+        mergeDuplicateGoal: {
+          data,
+          tree,
+          deleted: defaultDeleted,
+          mergeWords: [],
+        },
       });
       await store.dispatch(mergeAll());
 
@@ -167,7 +183,12 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree, mergeWords: [] },
+        mergeDuplicateGoal: {
+          data,
+          tree,
+          deleted: defaultDeleted,
+          mergeWords: [],
+        },
       });
       await store.dispatch(mergeAll());
 
@@ -186,7 +207,12 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree, mergeWords: [] },
+        mergeDuplicateGoal: {
+          data,
+          tree,
+          deleted: { senseGuids: [S2], words: [] },
+          mergeWords: [],
+        },
       });
       await store.dispatch(mergeAll());
 
@@ -203,7 +229,12 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree, mergeWords: [] },
+        mergeDuplicateGoal: {
+          data,
+          tree,
+          deleted: { senseGuids: [S3, S4], words: [wordB] },
+          mergeWords: [],
+        },
       });
       await store.dispatch(mergeAll());
 
@@ -221,7 +252,12 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree, mergeWords: [] },
+        mergeDuplicateGoal: {
+          data,
+          tree,
+          deleted: defaultDeleted,
+          mergeWords: [],
+        },
       });
       await store.dispatch(mergeAll());
 
@@ -255,7 +291,12 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree, mergeWords: [] },
+        mergeDuplicateGoal: {
+          data,
+          tree,
+          deleted: defaultDeleted,
+          mergeWords: [],
+        },
       });
       store.dispatch(deferMerge());
       expect(mockGraylistAdd).toHaveBeenCalledTimes(1);

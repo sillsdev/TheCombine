@@ -1,8 +1,12 @@
 import { Flag, MergeWords } from "api/models";
 import {
   MergeData,
+  MergeDeleted,
   MergeTree,
   MergeTreeReference,
+  defaultData,
+  defaultDeleted,
+  defaultTree,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 
 export interface CombineSenseMergePayload {
@@ -18,8 +22,16 @@ export interface FlagWordPayload {
 export interface MergeTreeState {
   data: MergeData;
   tree: MergeTree;
+  deleted: MergeDeleted;
   mergeWords: MergeWords[];
 }
+
+export const defaultState: MergeTreeState = {
+  data: defaultData,
+  tree: defaultTree,
+  deleted: defaultDeleted,
+  mergeWords: [],
+};
 
 export interface MoveSensePayload extends OrderSensePayload {
   destWordId: string;

@@ -17,10 +17,11 @@ import {
   orderSense,
   setData,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
-import mergeDupStepReducer, {
+import mergeDupStepReducer from "goals/MergeDuplicates/Redux/MergeDupsReducer";
+import {
+  MergeTreeState,
   defaultState,
-} from "goals/MergeDuplicates/Redux/MergeDupsReducer";
-import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
+} from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import {
   mergeTwoDefinitionsScenario,
   mergeTwoSensesScenario,
@@ -91,6 +92,7 @@ describe("MergeDupsReducer", () => {
     };
   }
   const mockState: MergeTreeState = {
+    ...defaultState,
     data: {
       words: {},
       senses: {},
@@ -98,8 +100,8 @@ describe("MergeDupsReducer", () => {
     tree: {
       sidebar: defaultSidebar,
       words: testTreeWords(),
+      wordAudioCounts: {},
     },
-    mergeWords: [],
   };
   function checkTreeWords(
     action: Action | PayloadAction,
