@@ -60,7 +60,7 @@ spec:
                   name: {{ .Values.envCertProxy }}
             - name: CERT_PROXY_NAMESPACE
               value: {{ .Release.Namespace }}
-          image: {{ template "cert-proxy-server.containerImage" . }}
+          image: {{ include "cert-proxy-server.containerImage" . }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           name: combine-cert-proxy
           resources: {}
