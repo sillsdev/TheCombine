@@ -1,8 +1,6 @@
 ---
 #################################################
-# Group specific configuration items
-#
-# Group: nuc
+# Host specific configuration items for localhost
 ################################################
 
 ################################################
@@ -23,7 +21,13 @@ k8s_user: "{{ ansible_user_id }}"
 ################################################
 # Helm Installation
 ################################################
-install_helm: true
+install_helm: yes
+
+################################################
+# Support Tool Settings
+################################################
+install_ip_viewer: no
+install_combinectl: yes
 
 #######################################
 # Ingress configuration

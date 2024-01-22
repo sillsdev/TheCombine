@@ -23,7 +23,13 @@ k8s_user: sillsdev
 ################################################
 # Helm Installation
 ################################################
-install_helm: false
+install_helm: no
+
+################################################
+# Support Tool Settings
+################################################
+install_ip_viewer: yes
+install_combinectl: yes
 
 #######################################
 # Ingress configuration

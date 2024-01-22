@@ -1,0 +1,73 @@
+#! /usr/bin/env bash
+
+usage() {
+  cat <<USAGE
+  Manage the Combine services.
+
+  Usage: $0 [options] action
+  
+  Options:
+    -h|--help: Print this message and exit.
+    
+  Actions:
+    start:     Start the combine services.
+    stop:      Stop the combine services.
+    enable:    Configure the combine services to start at boot time.  Implies 'start'.
+    disable:   Configure the combine services to not start at boot time. Implies 'stop'.
+    status:    List the status for the combine services.
+
+  Caveats:
+    For actions other than "status", this script must be run with root privileges.
+
+USAGE
+}
+
+ACTION=""
+STARTUP_ACTION=""
+while [[ $# -gt 0 ]] ; do
+  arg="$1"
+  shift
+
+  case ${arg} in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    disable)
+      ACTION="stop"
+      STARTUP_ACTION=${arg}
+      ;;
+    enable)
+      ACTION="start"
+      STARTUP_ACTION=${arg}
+      ;;
+    start|stop|status)
+      ACTION=${arg}
+      ;;
+    *)
+      echo "Unrecognized argument: ${arg}"
+      usage
+      exit 1
+      ;;
+  esac
+done
+
+if [ "$ACTION" -eq 0 ] ; then
+  usage
+  exit 0
+fi
+
+if [ "$ACTION" != "status" && "$EUID" -ne 0 ] ; then
+  usage
+  exit 0
+fi
+
+systemctl "$ACTION" create_ap
+systemctl "$ACTION" k3s
+if [ "$STARTUP_ACTION" ] ; then
+  systemctl "$STARTUP_ACTION" create_ap
+  systemctl "$STARTUP_ACTION" k3s
+fi
+if [ "$ACTION" != "status" ] ; then
+  systemctl daemon_reload
+fi

@@ -6,6 +6,7 @@
     owner: root
     group: root
     mode: 0755
+  when: install_ip_viewer
 
 - name: Setup service to update display
   template:
@@ -18,3 +19,13 @@
     - display-eth.service
     - display-eth.timer
   notify: start display eth
+  when: install_ip_viewer
+
+- name: Install combinectl tool
+  copy:
+    src: combinectl
+    dest: /usr/local/bin/combinectl
+    owner: root
+    group: root
+    mode: 0755
+  when: install_combinectl
