@@ -101,12 +101,14 @@ export interface MergeTree {
   sidebar: Sidebar;
   words: Hash<MergeTreeWord>;
   wordAudioCounts: Hash<number>;
+  wordAudioMoves: Hash<string[]>;
 }
 
 export const defaultTree: MergeTree = {
   sidebar: defaultSidebar,
   words: {},
   wordAudioCounts: {},
+  wordAudioMoves: {},
 };
 
 export interface MergeDeleted {

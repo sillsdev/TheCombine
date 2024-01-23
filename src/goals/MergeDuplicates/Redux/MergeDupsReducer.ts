@@ -1,13 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { v4 } from "uuid";
 
-import {
-  GramCatGroup,
-  MergeSourceWord,
-  MergeWords,
-  Status,
-  Word,
-} from "api/models";
+import { GramCatGroup, Status, Word } from "api/models";
 import {
   convertSenseToMergeTreeSense,
   convertWordToMergeTreeWord,
@@ -58,6 +52,11 @@ const mergeDuplicatesSlice = createSlice({
           ...destGuids
         );
         state.tree.words = words;
+
+        state.tree.wordAudioMoves = getAudioMoves(
+          state.data.words,
+          state.tree.words
+        );
       }
     },
     deleteSenseAction: (state, action) => {
@@ -97,6 +96,11 @@ const mergeDuplicatesSlice = createSlice({
       ) {
         state.tree.sidebar = defaultSidebar;
       }
+
+      state.tree.wordAudioMoves = getAudioMoves(
+        state.data.words,
+        state.tree.words
+      );
     },
     flagWordAction: (state, action) => {
       state.tree.words[action.payload.wordId].flag = action.payload.flag;
@@ -108,7 +112,6 @@ const mergeDuplicatesSlice = createSlice({
       );
 
       // Then build the rest of the mergeWords.
-      const treeWordIds = Object.keys(state.tree.words);
 
       // Gather all the senses of non-deleted words.
       // (The accessibility of senses will be updated as the mergeWords are built.)
@@ -116,17 +119,10 @@ const mergeDuplicatesSlice = createSlice({
         Object.values(state.data.words),
         state.deleted
       );
-
-      // Determine which words need their audio to move.
-      const moveAudio: Hash<string[]> = {};
-      Object.entries(state.data.words).forEach(([id, word]) => {
-        if (!treeWordIds.includes(id)) {
-          moveAudio[id] = getTreeWordIdsWithWordSenses(state.tree.words, word);
-        }
-      });
+      const allSenses = Object.values(wordTreeSenses).flatMap((a) => a);
 
       // Build one merge word per column.
-      for (const wordId of treeWordIds) {
+      for (const wordId in state.tree.words) {
         // Get from tree the basic info for this column.
         const mergeWord = state.tree.words[wordId];
 
@@ -143,23 +139,29 @@ const mergeDuplicatesSlice = createSlice({
           combineIntoFirstSense(sensesToUpdate);
         });
 
-        // Organize children of this merge.
+        // Get this merge's children ids.
         const redundantIds = mergeSenses.flatMap((senses) =>
           senses.map((s) => s.srcWordId)
         );
         const childrenIds = [...new Set(redundantIds)];
-        const childrenSenses = childrenIds.map((id) => wordTreeSenses[id]);
 
         // Check if nothing to merge.
         const wordToUpdate = state.data.words[wordId];
-        if (isEmptyMerge(wordToUpdate, mergeWord, childrenSenses)) {
+        if (
+          childrenIds.length === 1 &&
+          isEmptyMerge(wordToUpdate, mergeWord, wordTreeSenses[childrenIds[0]])
+        ) {
           continue;
         }
 
         // Create merge words.
-        state.mergeWords.push(
-          createMergeWords(wordToUpdate, mergeWord, childrenSenses, moveAudio)
-        );
+        const getAudioIds = state.tree.wordAudioMoves[wordId] ?? [];
+        const children = childrenIds.map((srcWordId) => ({
+          srcWordId,
+          getAudio: srcWordId === wordId || getAudioIds.includes(srcWordId),
+        }));
+        const parent = createMergeParent(wordToUpdate, mergeWord, allSenses);
+        state.mergeWords.push({ parent, children, deleteOnly: false });
       }
     },
     moveSenseAction: (state, action) => {
@@ -192,6 +194,11 @@ const mergeDuplicatesSlice = createSlice({
         if (!Object.keys(words[srcWordId].sensesGuids).length) {
           delete words[srcWordId];
         }
+
+        state.tree.wordAudioMoves = getAudioMoves(
+          state.data.words,
+          state.tree.words
+        );
       }
     },
     moveDuplicateAction: (state, action) => {
@@ -233,6 +240,11 @@ const mergeDuplicatesSlice = createSlice({
         const newSensesGuids: Hash<string[]> = {};
         sensesPairs.forEach(([key, value]) => (newSensesGuids[key] = value));
         words[destWordId].sensesGuids = newSensesGuids;
+
+        state.tree.wordAudioMoves = getAudioMoves(
+          state.data.words,
+          state.tree.words
+        );
       }
     },
     orderDuplicateAction: (state, action) => {
@@ -253,6 +265,11 @@ const mergeDuplicatesSlice = createSlice({
         sensesGuids[ref.mergeSenseId] = guids;
 
         state.tree.words[ref.wordId].sensesGuids = sensesGuids;
+
+        state.tree.wordAudioMoves = getAudioMoves(
+          state.data.words,
+          state.tree.words
+        );
       }
     },
     orderSenseAction: (state, action) => {
@@ -278,6 +295,11 @@ const mergeDuplicatesSlice = createSlice({
         }
 
         state.tree.words[action.payload.src.wordId] = word;
+
+        state.tree.wordAudioMoves = getAudioMoves(
+          state.data.words,
+          state.tree.words
+        );
       }
     },
     setSidebarAction: (state, action) => {
@@ -314,6 +336,25 @@ const mergeDuplicatesSlice = createSlice({
 });
 
 // Helper Functions
+
+/** Determine which words need their audio to move. */
+function getAudioMoves(
+  dataWords: Hash<Word>,
+  treeWords: Hash<MergeTreeWord>
+): Hash<string[]> {
+  const moveAudio: Hash<string[]> = {};
+  Object.entries(dataWords).forEach(([fromId, word]) => {
+    if (!Object.keys(treeWords).includes(fromId)) {
+      getTreeWordIdsWithWordSenses(treeWords, word).forEach((toId) => {
+        if (!(toId in moveAudio)) {
+          moveAudio[toId] = [];
+        }
+        moveAudio[toId].push(fromId);
+      });
+    }
+  });
+  return moveAudio;
+}
 
 /** Get ids from the given treeWords for all that have senses from the given word. */
 function getTreeWordIdsWithWordSenses(
@@ -388,51 +429,34 @@ function gatherSenses(
 function isEmptyMerge(
   word: Word,
   mergeWord: MergeTreeWord,
-  childrenSenses: MergeTreeSense[][]
+  childSenses: MergeTreeSense[]
 ): boolean {
-  if (childrenSenses.length === 1) {
-    const onlyChild = childrenSenses[0];
-    return (
-      onlyChild[0].srcWordId === word.id &&
-      Object.keys(mergeWord.sensesGuids).length === word.senses.length &&
-      onlyChild.every((s) =>
-        [Status.Active, Status.Protected].includes(s.accessibility)
-      ) &&
-      compareFlags(mergeWord.flag, word.flag) === 0
-    );
-  }
-  return false;
+  return (
+    childSenses[0].srcWordId === word.id &&
+    Object.keys(mergeWord.sensesGuids).length === word.senses.length &&
+    childSenses.every((s) =>
+      [Status.Active, Status.Protected].includes(s.accessibility)
+    ) &&
+    compareFlags(mergeWord.flag, word.flag) === 0
+  );
 }
 
-/** Construct parent and children. */
-function createMergeWords(
+/** Construct parent of a mergeWord */
+function createMergeParent(
   word: Word,
   mergeWord: MergeTreeWord,
-  childrenSenses: MergeTreeSense[][],
-  moveAudio: Hash<string[]>
-): MergeWords {
-  // Create parent without senses.
-  const parent: Word = {
+  allSenses: MergeTreeSense[]
+): Word {
+  // Construct parent.
+  const senses = Object.values(mergeWord.sensesGuids)
+    .map((guids) => guids[0])
+    .map((g) => allSenses.find((s) => s.guid === g)!);
+  return {
     ...word,
-    senses: [],
     flag: mergeWord.flag,
+    senses,
+    vernacular: word.vernacular.trim() || mergeWord.vern.trim(),
   };
-  parent.vernacular ||= mergeWord.vern;
-
-  // Create senses and children.
-  const mergeSenseGuids = Object.values(mergeWord.sensesGuids).map(
-    (guids) => guids[0]
-  );
-  const children: MergeSourceWord[] = childrenSenses.map((cs) => {
-    parent.senses.push(...cs.filter((s) => mergeSenseGuids.includes(s.guid)));
-    const srcWordId = cs[0].srcWordId;
-    const getAudio =
-      srcWordId === word.id ||
-      (srcWordId in moveAudio && moveAudio[srcWordId].includes(word.id));
-    return { srcWordId: cs[0].srcWordId, getAudio };
-  });
-
-  return newMergeWords(parent, children);
 }
 
 /** Given an array of senses to combine:
