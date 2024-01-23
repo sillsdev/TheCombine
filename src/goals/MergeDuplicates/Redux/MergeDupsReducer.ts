@@ -9,7 +9,6 @@ import {
   Word,
 } from "api/models";
 import {
-  convertMergeTreeSenseToSense,
   convertSenseToMergeTreeSense,
   convertWordToMergeTreeWord,
   defaultData,
@@ -109,15 +108,25 @@ const mergeDuplicatesSlice = createSlice({
       );
 
       // Then build the rest of the mergeWords.
-      // For that, gather all the senses of non-deleted words.
-      // The accessibility of senses will be updated as the mergeWords are built.
+      const treeWordIds = Object.keys(state.tree.words);
+
+      // Gather all the senses of non-deleted words.
+      // (The accessibility of senses will be updated as the mergeWords are built.)
       const wordTreeSenses = gatherSenses(
         Object.values(state.data.words),
         state.deleted
       );
 
+      // Determine which words need their audio to move.
+      const moveAudio: Hash<string[]> = {};
+      Object.entries(state.data.words).forEach(([id, word]) => {
+        if (!treeWordIds.includes(id)) {
+          moveAudio[id] = getTreeWordIdsWithWordSenses(state.tree.words, word);
+        }
+      });
+
       // Build one merge word per column.
-      for (const wordId in state.tree.words) {
+      for (const wordId of treeWordIds) {
         // Get from tree the basic info for this column.
         const mergeWord = state.tree.words[wordId];
 
@@ -149,7 +158,7 @@ const mergeDuplicatesSlice = createSlice({
 
         // Create merge words.
         state.mergeWords.push(
-          createMergeWords(wordToUpdate, mergeWord, childrenSenses)
+          createMergeWords(wordToUpdate, mergeWord, childrenSenses, moveAudio)
         );
       }
     },
@@ -306,6 +315,41 @@ const mergeDuplicatesSlice = createSlice({
 
 // Helper Functions
 
+/** Get ids from the given treeWords for all that have senses from the given word. */
+function getTreeWordIdsWithWordSenses(
+  treeWords: Hash<MergeTreeWord>,
+  word: Word
+): string[] {
+  const tws = Object.entries(treeWords);
+  // Find whether any have senses as primary senses.
+  const words = tws.filter((val) =>
+    doesTreeWordHaveWordSense(val[1], word, false)
+  );
+  if (words.length) {
+    return words.map((val) => val[0]);
+  }
+  // Fall back to checking duplicate senses.
+  return tws
+    .filter((val) => doesTreeWordHaveWordSense(val[1], word, true))
+    .map((val) => val[0]);
+}
+
+/** Check if any of the senses in the given treeWord is a sense of the given word. */
+function doesTreeWordHaveWordSense(
+  treeWord: MergeTreeWord,
+  word: Word,
+  allowDuplicate: boolean
+): boolean {
+  const senseGuids = word.senses.map((s) => s.guid);
+  const treeSenses = Object.values(treeWord.sensesGuids);
+  if (allowDuplicate) {
+    return treeSenses.some((guids) =>
+      senseGuids.some((g) => guids.includes(g))
+    );
+  }
+  return treeSenses.some((guids) => senseGuids.includes(guids[0]));
+}
+
 /** Gather all senses for non-deleted words. Return dictionary:
  * - key: word id
  * - value: MergeTreeSense array with Status.Deleted/Status.Separate entries */
@@ -364,7 +408,8 @@ function isEmptyMerge(
 function createMergeWords(
   word: Word,
   mergeWord: MergeTreeWord,
-  childrenSenses: MergeTreeSense[][]
+  childrenSenses: MergeTreeSense[][],
+  moveAudio: Hash<string[]>
 ): MergeWords {
   // Create parent without senses.
   const parent: Word = {
@@ -378,14 +423,13 @@ function createMergeWords(
   const mergeSenseGuids = Object.values(mergeWord.sensesGuids).map(
     (guids) => guids[0]
   );
-  const children: MergeSourceWord[] = childrenSenses.map((sList) => {
-    sList.forEach((sense) => {
-      if (mergeSenseGuids.includes(sense.guid)) {
-        parent.senses.push(convertMergeTreeSenseToSense(sense));
-      }
-    });
-    const getAudio = sList.every((s) => s.accessibility !== Status.Separate);
-    return { srcWordId: sList[0].srcWordId, getAudio };
+  const children: MergeSourceWord[] = childrenSenses.map((cs) => {
+    parent.senses.push(...cs.filter((s) => mergeSenseGuids.includes(s.guid)));
+    const srcWordId = cs[0].srcWordId;
+    const getAudio =
+      srcWordId === word.id ||
+      (srcWordId in moveAudio && moveAudio[srcWordId].includes(word.id));
+    return { srcWordId: cs[0].srcWordId, getAudio };
   });
 
   return newMergeWords(parent, children);

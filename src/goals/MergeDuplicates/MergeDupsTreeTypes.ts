@@ -10,23 +10,6 @@ export interface MergeTreeSense extends Sense {
   protected: boolean;
 }
 
-// Transition interface for stripping fields off before sending to the backend.
-interface MergeSense extends Sense {
-  srcWordId?: string;
-  order?: number;
-  protected?: boolean;
-}
-
-export function convertMergeTreeSenseToSense(
-  mergeTreeSense: MergeTreeSense
-): Sense {
-  const sense: MergeSense = { ...mergeTreeSense };
-  delete sense.order;
-  delete sense.protected;
-  delete sense.srcWordId;
-  return sense;
-}
-
 export interface MergeData {
   words: Hash<Word>;
   senses: Hash<MergeTreeSense>;
