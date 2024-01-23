@@ -3,7 +3,6 @@ import { Action, PayloadAction } from "@reduxjs/toolkit";
 import {
   convertSenseToMergeTreeSense,
   defaultSidebar,
-  defaultTree,
   MergeTreeReference,
   MergeTreeWord,
   newMergeTreeWord,
@@ -18,11 +17,10 @@ import {
   orderSense,
   setData,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
-import mergeDupStepReducer from "goals/MergeDuplicates/Redux/MergeDupsReducer";
-import {
-  MergeTreeState,
+import mergeDupStepReducer, {
   defaultState,
-} from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
+} from "goals/MergeDuplicates/Redux/MergeDupsReducer";
+import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import {
   mergeTwoDefinitionsScenario,
   mergeTwoSensesScenario,
@@ -93,16 +91,15 @@ describe("MergeDupsReducer", () => {
     };
   }
   const mockState: MergeTreeState = {
-    ...defaultState,
     data: {
       words: {},
       senses: {},
     },
     tree: {
-      ...defaultTree,
       sidebar: defaultSidebar,
       words: testTreeWords(),
     },
+    mergeWords: [],
   };
   function checkTreeWords(
     action: Action | PayloadAction,
