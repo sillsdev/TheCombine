@@ -149,7 +149,6 @@ export const mergeTwoWordsScenario: GetMergeWordsScenario = {
         },
         tree: {
           ...defaultTree,
-          sidebar: { senses: [], wordId: "", mergeSenseId: "" },
           words: {
             [wordFoo2.id]: convertWordToMergeTreeWord({
               ...wordFoo2,
@@ -212,7 +211,6 @@ export const mergeTwoSensesScenario: GetMergeWordsScenario = {
         },
         tree: {
           ...defaultTree,
-          sidebar: { senses: [], wordId: "", mergeSenseId: "" },
           words: {
             [wordFoo2.id]: newMergeTreeWord(wordFoo2.vernacular, {
               word2_senseA: [senseBar.guid],
@@ -275,7 +273,6 @@ export const mergeTwoDefinitionsScenario: GetMergeWordsScenario = {
         },
         tree: {
           ...defaultTree,
-          sidebar: { senses: [], wordId: "", mergeSenseId: "" },
           words: {
             [wordFoo2.id]: newMergeTreeWord(wordFoo2.vernacular, {
               word2_senseA: [senseBar.guid],
@@ -283,7 +280,6 @@ export const mergeTwoDefinitionsScenario: GetMergeWordsScenario = {
             }),
           },
         },
-        mergeWords: [],
       },
     };
   },

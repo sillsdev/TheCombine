@@ -105,7 +105,6 @@ const mockTwoWordState = (): MergeTreeState => ({
   },
   tree: {
     ...defaultTree,
-    sidebar: { senses: [], wordId: "", mergeSenseId: "" },
     words: {
       [wordFoo1.id]: newMergeTreeWord(wordFoo1.vernacular, {
         word1_senseA: [senseBah.guid, senseBaj.guid],

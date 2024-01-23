@@ -10,11 +10,14 @@ import {
   defaultData,
   defaultSidebar,
   newMergeTreeWord,
+  defaultTree,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { newMergeWords } from "goals/MergeDuplicates/MergeDupsTypes";
 import {
   type MergeDeleted,
   defaultState,
+  defaultAudio,
+  defaultDeleted,
 } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { StoreActionTypes } from "rootActions";
 import { type Hash } from "types/hash";
@@ -296,18 +299,19 @@ const mergeDuplicatesSlice = createSlice({
         const words: Hash<Word> = {};
         const senses: Hash<MergeTreeSense> = {};
         const wordsTree: Hash<MergeTreeWord> = {};
-        const audioCounts: Hash<number> = {};
+        const counts: Hash<number> = {};
         action.payload.forEach((word: Word) => {
           words[word.id] = JSON.parse(JSON.stringify(word));
           word.senses.forEach((s, order) => {
             senses[s.guid] = convertSenseToMergeTreeSense(s, word.id, order);
           });
           wordsTree[word.id] = convertWordToMergeTreeWord(word);
-          audioCounts[word.id] = word.audio.length;
+          counts[word.id] = word.audio.length;
         });
-        state.tree.words = wordsTree;
-        state.audio.counts = audioCounts;
         state.data = { ...defaultData, senses, words };
+        state.tree = { ...defaultTree, words: wordsTree };
+        state.audio = { ...defaultAudio, counts };
+        state.deleted = { ...defaultDeleted };
         state.mergeWords = [];
       }
     },

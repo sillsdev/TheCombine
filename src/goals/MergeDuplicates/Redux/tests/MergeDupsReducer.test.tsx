@@ -4,7 +4,6 @@ import {
   type MergeTreeReference,
   type MergeTreeWord,
   convertSenseToMergeTreeSense,
-  defaultSidebar,
   defaultTree,
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
@@ -95,7 +94,7 @@ describe("MergeDupsReducer", () => {
   const mockState: MergeTreeState = {
     ...defaultState,
     data: { words: {}, senses: {} },
-    tree: { ...defaultTree, sidebar: defaultSidebar, words: testTreeWords() },
+    tree: { ...defaultTree, words: testTreeWords() },
   };
   function checkTreeWords(
     action: Action | PayloadAction,

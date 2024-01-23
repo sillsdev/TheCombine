@@ -102,7 +102,4 @@ export interface MergeTree {
   words: Hash<MergeTreeWord>;
 }
 
-export const defaultTree: MergeTree = {
-  sidebar: defaultSidebar,
-  words: {},
-};
+export const defaultTree: MergeTree = { sidebar: defaultSidebar, words: {} };

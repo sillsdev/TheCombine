@@ -1,9 +1,9 @@
 import { type MergeWords, Status, type Word } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import {
-  defaultTree,
   type MergeData,
   type MergeTree,
+  defaultTree,
   newMergeTreeSense,
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
@@ -73,13 +73,13 @@ const S2 = senses["S2"].guid;
 const S3 = senses["S3"].guid;
 const S4 = senses["S4"].guid;
 const data: MergeData = {
+  words: { WA: wordA, WB: wordB },
   senses: {
     [S1]: { ...newMergeTreeSense("S1", idA, 0), guid: S1, protected: true },
     [S2]: { ...newMergeTreeSense("S2", idA, 1), guid: S2 },
     [S3]: { ...newMergeTreeSense("S3", idB, 0), guid: S3 },
     [S4]: { ...newMergeTreeSense("S4", idB, 1), guid: S4 },
   },
-  words: { WA: wordA, WB: wordB },
 };
 
 beforeEach(jest.clearAllMocks);
@@ -93,14 +93,9 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: {
-          ...defaultMergeState,
-          data,
-          tree,
-        },
+        mergeDuplicateGoal: { ...defaultMergeState, data, tree },
       });
       await store.dispatch(mergeAll());
-
       expect(mockMergeWords).not.toHaveBeenCalled();
     });
 
@@ -111,11 +106,7 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: {
-          ...defaultMergeState,
-          data,
-          tree,
-        },
+        mergeDuplicateGoal: { ...defaultMergeState, data, tree },
       });
       await store.dispatch(mergeAll());
 
@@ -148,11 +139,7 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: {
-          ...defaultMergeState,
-          data,
-          tree,
-        },
+        mergeDuplicateGoal: { ...defaultMergeState, data, tree },
       });
       await store.dispatch(mergeAll());
 
@@ -185,11 +172,7 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: {
-          ...defaultMergeState,
-          data,
-          tree,
-        },
+        mergeDuplicateGoal: { ...defaultMergeState, data, tree },
       });
       await store.dispatch(mergeAll());
 
@@ -300,11 +283,7 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: {
-          ...defaultMergeState,
-          data,
-          tree,
-        },
+        mergeDuplicateGoal: { ...defaultMergeState, data, tree },
       });
       await store.dispatch(mergeAll());
 
@@ -327,7 +306,6 @@ describe("MergeDupActions", () => {
     it("creates an action to add MergeDups data", () => {
       const goal = new MergeDups();
       goal.steps = [{ words: [...goalDataMock.plannedWords[0]] }];
-
       const store = setupStore();
       store.dispatch(dispatchMergeStepData(goal));
       const setDataAction = setData(goalDataMock.plannedWords[0]);
@@ -343,11 +321,7 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: {
-          ...defaultMergeState,
-          data,
-          tree,
-        },
+        mergeDuplicateGoal: { ...defaultMergeState, data, tree },
       });
       store.dispatch(deferMerge());
       expect(mockGraylistAdd).toHaveBeenCalledTimes(1);
