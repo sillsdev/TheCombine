@@ -1,11 +1,11 @@
 import { IconButton } from "@mui/material";
 import { Provider } from "react-redux";
-import { ReactTestRenderer, act, create } from "react-test-renderer";
+import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import { GramCatGroup, Sense } from "api/models";
+import { GramCatGroup, type Sense } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import MergeDragDrop from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop";
 import DragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DragSense";
@@ -16,7 +16,7 @@ import {
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import {
-  MergeTreeState,
+  type MergeTreeState,
   defaultState as mergeState,
 } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { newSemanticDomain } from "types/semanticDomain";

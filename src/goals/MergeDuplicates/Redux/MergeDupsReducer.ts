@@ -1,21 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { v4 } from "uuid";
 
-import { GramCatGroup, Status, Word } from "api/models";
+import { GramCatGroup, Status, type Word } from "api/models";
 import {
+  type MergeTreeSense,
+  type MergeTreeWord,
   convertSenseToMergeTreeSense,
   convertWordToMergeTreeWord,
   defaultData,
   defaultSidebar,
-  MergeDeleted,
-  MergeTreeSense,
-  MergeTreeWord,
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { newMergeWords } from "goals/MergeDuplicates/MergeDupsTypes";
-import { defaultState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
+import {
+  type MergeDeleted,
+  defaultState,
+} from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { StoreActionTypes } from "rootActions";
-import { Hash } from "types/hash";
+import { type Hash } from "types/hash";
 import { compareFlags } from "utilities/wordUtilities";
 
 const mergeDuplicatesSlice = createSlice({
@@ -53,10 +55,7 @@ const mergeDuplicatesSlice = createSlice({
         );
         state.tree.words = words;
 
-        state.tree.wordAudioMoves = getAudioMoves(
-          state.data.words,
-          state.tree.words
-        );
+        state.audio.moves = getAudioMoves(state.data.words, state.tree.words);
       }
     },
     deleteSenseAction: (state, action) => {
@@ -97,10 +96,7 @@ const mergeDuplicatesSlice = createSlice({
         state.tree.sidebar = defaultSidebar;
       }
 
-      state.tree.wordAudioMoves = getAudioMoves(
-        state.data.words,
-        state.tree.words
-      );
+      state.audio.moves = getAudioMoves(state.data.words, state.tree.words);
     },
     flagWordAction: (state, action) => {
       state.tree.words[action.payload.wordId].flag = action.payload.flag;
@@ -155,7 +151,7 @@ const mergeDuplicatesSlice = createSlice({
         }
 
         // Create merge words.
-        const getAudioIds = state.tree.wordAudioMoves[wordId] ?? [];
+        const getAudioIds = state.audio.moves[wordId] ?? [];
         const children = childrenIds.map((srcWordId) => ({
           srcWordId,
           getAudio: srcWordId === wordId || getAudioIds.includes(srcWordId),
@@ -195,10 +191,7 @@ const mergeDuplicatesSlice = createSlice({
           delete words[srcWordId];
         }
 
-        state.tree.wordAudioMoves = getAudioMoves(
-          state.data.words,
-          state.tree.words
-        );
+        state.audio.moves = getAudioMoves(state.data.words, state.tree.words);
       }
     },
     moveDuplicateAction: (state, action) => {
@@ -241,10 +234,7 @@ const mergeDuplicatesSlice = createSlice({
         sensesPairs.forEach(([key, value]) => (newSensesGuids[key] = value));
         words[destWordId].sensesGuids = newSensesGuids;
 
-        state.tree.wordAudioMoves = getAudioMoves(
-          state.data.words,
-          state.tree.words
-        );
+        state.audio.moves = getAudioMoves(state.data.words, state.tree.words);
       }
     },
     orderDuplicateAction: (state, action) => {
@@ -266,10 +256,7 @@ const mergeDuplicatesSlice = createSlice({
 
         state.tree.words[ref.wordId].sensesGuids = sensesGuids;
 
-        state.tree.wordAudioMoves = getAudioMoves(
-          state.data.words,
-          state.tree.words
-        );
+        state.audio.moves = getAudioMoves(state.data.words, state.tree.words);
       }
     },
     orderSenseAction: (state, action) => {
@@ -296,10 +283,7 @@ const mergeDuplicatesSlice = createSlice({
 
         state.tree.words[action.payload.src.wordId] = word;
 
-        state.tree.wordAudioMoves = getAudioMoves(
-          state.data.words,
-          state.tree.words
-        );
+        state.audio.moves = getAudioMoves(state.data.words, state.tree.words);
       }
     },
     setSidebarAction: (state, action) => {
@@ -322,7 +306,7 @@ const mergeDuplicatesSlice = createSlice({
           audioCounts[word.id] = word.audio.length;
         });
         state.tree.words = wordsTree;
-        state.tree.wordAudioCounts = audioCounts;
+        state.audio.counts = audioCounts;
         state.data = { ...defaultData, senses, words };
         state.mergeWords = [];
       }

@@ -1,7 +1,7 @@
 import { v4 } from "uuid";
 
-import { Flag, Sense, Status, Word } from "api/models";
-import { Hash } from "types/hash";
+import { type Flag, type Sense, Status, type Word } from "api/models";
+import { type Hash } from "types/hash";
 import { newFlag, newSense } from "types/word";
 
 export interface MergeTreeSense extends Sense {
@@ -100,23 +100,9 @@ export const defaultSidebar: Sidebar = {
 export interface MergeTree {
   sidebar: Sidebar;
   words: Hash<MergeTreeWord>;
-  wordAudioCounts: Hash<number>;
-  wordAudioMoves: Hash<string[]>;
 }
 
 export const defaultTree: MergeTree = {
   sidebar: defaultSidebar,
   words: {},
-  wordAudioCounts: {},
-  wordAudioMoves: {},
-};
-
-export interface MergeDeleted {
-  senseGuids: string[];
-  words: Word[];
-}
-
-export const defaultDeleted: MergeDeleted = {
-  senseGuids: [],
-  words: [],
 };

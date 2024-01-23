@@ -1,5 +1,6 @@
-import type { PreloadedState } from "@reduxjs/toolkit";
-import { Definition, SemanticDomain, Word } from "api/models";
+import { type PreloadedState } from "@reduxjs/toolkit";
+
+import { type Definition, type SemanticDomain, type Word } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import {
   convertSenseToMergeTreeSense,
@@ -7,9 +8,9 @@ import {
   defaultTree,
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
-import { MergeDupsData } from "goals/MergeDuplicates/MergeDupsTypes";
+import { type MergeDupsData } from "goals/MergeDuplicates/MergeDupsTypes";
 import { defaultState as mergeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
-import { RootState } from "store";
+import { type RootState } from "store";
 import { newSense, newWord, simpleWord } from "types/word";
 
 const wordsArrayMock = (): Word[] => [
@@ -148,11 +149,7 @@ export const mergeTwoWordsScenario: GetMergeWordsScenario = {
         },
         tree: {
           ...defaultTree,
-          sidebar: {
-            senses: [],
-            wordId: "",
-            mergeSenseId: "",
-          },
+          sidebar: { senses: [], wordId: "", mergeSenseId: "" },
           words: {
             [wordFoo2.id]: convertWordToMergeTreeWord({
               ...wordFoo2,
@@ -215,11 +212,7 @@ export const mergeTwoSensesScenario: GetMergeWordsScenario = {
         },
         tree: {
           ...defaultTree,
-          sidebar: {
-            senses: [],
-            wordId: "",
-            mergeSenseId: "",
-          },
+          sidebar: { senses: [], wordId: "", mergeSenseId: "" },
           words: {
             [wordFoo2.id]: newMergeTreeWord(wordFoo2.vernacular, {
               word2_senseA: [senseBar.guid],
@@ -282,11 +275,7 @@ export const mergeTwoDefinitionsScenario: GetMergeWordsScenario = {
         },
         tree: {
           ...defaultTree,
-          sidebar: {
-            senses: [],
-            wordId: "",
-            mergeSenseId: "",
-          },
+          sidebar: { senses: [], wordId: "", mergeSenseId: "" },
           words: {
             [wordFoo2.id]: newMergeTreeWord(wordFoo2.vernacular, {
               word2_senseA: [senseBar.guid],

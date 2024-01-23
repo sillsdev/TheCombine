@@ -7,20 +7,20 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import { ReactElement } from "react";
+import { type ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 
-import { Flag } from "api/models";
+import { type Flag } from "api/models";
 import { FlagButton, IconButtonWithTooltip } from "components/Buttons";
 import { AudioSummary } from "components/WordCard";
 import DragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DragSense";
-import { MergeTreeWord } from "goals/MergeDuplicates/MergeDupsTreeTypes";
+import { type MergeTreeWord } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import {
   flagWord,
   setVern,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
-import { StoreState } from "types";
+import { type StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import theme from "types/theme";
 import { TypographyWithFont } from "utilities/fontComponents";
@@ -106,8 +106,8 @@ export function DropWordCardHeader(
   const { senses, words } = useAppSelector(
     (state: StoreState) => state.mergeDuplicateGoal.data
   );
-  const { wordAudioCounts, wordAudioMoves } = useAppSelector(
-    (state: StoreState) => state.mergeDuplicateGoal.tree
+  const { counts, moves } = useAppSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.audio
   );
 
   const dispatchFlagWord = (flag: Flag): void => {
@@ -123,8 +123,8 @@ export function DropWordCardHeader(
     ...new Set(guids.map((g) => words[senses[g].srcWordId].vernacular)),
   ];
 
-  const otherIds = wordAudioMoves[props.wordId] ?? [];
-  const otherCount = otherIds.reduce((sum, id) => sum + wordAudioCounts[id], 0);
+  const otherIds = moves[props.wordId] ?? [];
+  const otherCount = otherIds.reduce((sum, id) => sum + counts[id], 0);
   const audioCount = (treeWord?.audioCount ?? 0) + otherCount;
 
   // Reset vern if not in vern list.

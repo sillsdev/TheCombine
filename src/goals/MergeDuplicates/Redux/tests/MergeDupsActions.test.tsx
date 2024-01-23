@@ -1,10 +1,9 @@
-import { MergeWords, Status, Word } from "api/models";
+import { type MergeWords, Status, type Word } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import {
-  defaultDeleted,
   defaultTree,
-  MergeData,
-  MergeTree,
+  type MergeData,
+  type MergeTree,
   newMergeTreeSense,
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
@@ -15,6 +14,10 @@ import {
   mergeAll,
   setData,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
+import {
+  defaultAudio,
+  defaultState as defaultMergeState,
+} from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { goalDataMock } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
 import { setupStore } from "store";
 import { GoalType } from "types/goals";
@@ -91,10 +94,9 @@ describe("MergeDupActions", () => {
       const store = setupStore({
         ...preloadedState,
         mergeDuplicateGoal: {
+          ...defaultMergeState,
           data,
           tree,
-          deleted: { ...defaultDeleted },
-          mergeWords: [],
         },
       });
       await store.dispatch(mergeAll());
@@ -110,10 +112,9 @@ describe("MergeDupActions", () => {
       const store = setupStore({
         ...preloadedState,
         mergeDuplicateGoal: {
+          ...defaultMergeState,
           data,
           tree,
-          deleted: { ...defaultDeleted },
-          mergeWords: [],
         },
       });
       await store.dispatch(mergeAll());
@@ -148,10 +149,9 @@ describe("MergeDupActions", () => {
       const store = setupStore({
         ...preloadedState,
         mergeDuplicateGoal: {
+          ...defaultMergeState,
           data,
           tree,
-          deleted: { ...defaultDeleted },
-          mergeWords: [],
         },
       });
       await store.dispatch(mergeAll());
@@ -186,10 +186,9 @@ describe("MergeDupActions", () => {
       const store = setupStore({
         ...preloadedState,
         mergeDuplicateGoal: {
+          ...defaultMergeState,
           data,
           tree,
-          deleted: { ...defaultDeleted },
-          mergeWords: [],
         },
       });
       await store.dispatch(mergeAll());
@@ -215,10 +214,10 @@ describe("MergeDupActions", () => {
       const store = setupStore({
         ...preloadedState,
         mergeDuplicateGoal: {
+          ...defaultMergeState,
           data,
           tree,
           deleted: { senseGuids: [S2], words: [] },
-          mergeWords: [],
         },
       });
       await store.dispatch(mergeAll());
@@ -243,10 +242,10 @@ describe("MergeDupActions", () => {
       const store = setupStore({
         ...preloadedState,
         mergeDuplicateGoal: {
+          ...defaultMergeState,
           data,
           tree,
           deleted: { senseGuids: [S3, S4], words: [wordB] },
-          mergeWords: [],
         },
       });
       await store.dispatch(mergeAll());
@@ -268,18 +267,14 @@ describe("MergeDupActions", () => {
         ID2: [S4],
         ID3: [S2],
       });
-      const tree: MergeTree = {
-        ...defaultTree,
-        words: { WA },
-        wordAudioMoves: { [idA]: [idB] },
-      };
+      const tree: MergeTree = { ...defaultTree, words: { WA } };
       const store = setupStore({
         ...preloadedState,
         mergeDuplicateGoal: {
+          ...defaultMergeState,
           data,
           tree,
-          deleted: { ...defaultDeleted },
-          mergeWords: [],
+          audio: { ...defaultAudio, moves: { [idA]: [idB] } },
         },
       });
       await store.dispatch(mergeAll());
@@ -306,10 +301,9 @@ describe("MergeDupActions", () => {
       const store = setupStore({
         ...preloadedState,
         mergeDuplicateGoal: {
+          ...defaultMergeState,
           data,
           tree,
-          deleted: { ...defaultDeleted },
-          mergeWords: [],
         },
       });
       await store.dispatch(mergeAll());
@@ -350,10 +344,9 @@ describe("MergeDupActions", () => {
       const store = setupStore({
         ...preloadedState,
         mergeDuplicateGoal: {
+          ...defaultMergeState,
           data,
           tree,
-          deleted: { ...defaultDeleted },
-          mergeWords: [],
         },
       });
       store.dispatch(deferMerge());

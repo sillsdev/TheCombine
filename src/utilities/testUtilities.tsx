@@ -1,13 +1,11 @@
-import { render } from "@testing-library/react";
+import { type PreloadedState } from "@reduxjs/toolkit";
+import { type RenderOptions, render } from "@testing-library/react";
 import { PropsWithChildren, ReactElement } from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
-import type { PreloadedState } from "@reduxjs/toolkit";
-import type { RenderOptions } from "@testing-library/react";
 import { defaultState } from "components/App/DefaultState";
-import { persistor, setupStore } from "store";
-import type { AppStore, RootState } from "store";
+import { type AppStore, type RootState, persistor, setupStore } from "store";
 
 // These test utilities are leveraged from the Redux documentation for Writing Tests:
 // https://redux.js.org/usage/writing-tests
