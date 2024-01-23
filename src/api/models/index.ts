@@ -24,8 +24,6 @@ export * from "./permission";
 export * from "./project";
 export * from "./project-role";
 export * from "./pronunciation";
-export * from "./protect-reason";
-export * from "./reason-type";
 export * from "./role";
 export * from "./semantic-domain";
 export * from "./semantic-domain-count";

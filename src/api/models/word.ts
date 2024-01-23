@@ -15,7 +15,6 @@
 import { Flag } from "./flag";
 import { Note } from "./note";
 import { Pronunciation } from "./pronunciation";
-import { ProtectReason } from "./protect-reason";
 import { Sense } from "./sense";
 import { Status } from "./status";
 
@@ -79,12 +78,6 @@ export interface Word {
    * @memberof Word
    */
   accessibility: Status;
-  /**
-   *
-   * @type {Array<ProtectReason>}
-   * @memberof Word
-   */
-  protectReasons?: Array<ProtectReason> | null;
   /**
    *
    * @type {Array<string>}
