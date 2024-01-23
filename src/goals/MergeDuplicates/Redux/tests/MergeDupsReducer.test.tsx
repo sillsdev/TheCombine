@@ -93,7 +93,6 @@ describe("MergeDupsReducer", () => {
   }
   const mockState: MergeTreeState = {
     ...defaultState,
-    data: { words: {}, senses: {} },
     tree: { ...defaultTree, words: testTreeWords() },
   };
   function checkTreeWords(
