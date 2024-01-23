@@ -1,4 +1,4 @@
-import { type Flag, type MergeWords, type Word } from "api/models";
+import { type Flag, type MergeWords } from "api/models";
 import {
   type MergeData,
   type MergeTree,
@@ -20,21 +20,11 @@ export const defaultAudio: MergeAudio = {
   moves: {},
 };
 
-export interface MergeDeleted {
-  senseGuids: string[];
-  words: Word[];
-}
-
-export const defaultDeleted: MergeDeleted = {
-  senseGuids: [],
-  words: [],
-};
-
 export interface MergeTreeState {
   data: MergeData;
   tree: MergeTree;
   audio: MergeAudio;
-  deleted: MergeDeleted;
+  deletedSenseGuids: string[];
   mergeWords: MergeWords[];
 }
 
@@ -42,7 +32,7 @@ export const defaultState: MergeTreeState = {
   data: defaultData,
   tree: defaultTree,
   audio: defaultAudio,
-  deleted: defaultDeleted,
+  deletedSenseGuids: [],
   mergeWords: [],
 };
 

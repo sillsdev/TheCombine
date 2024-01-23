@@ -200,7 +200,7 @@ describe("MergeDupActions", () => {
           ...defaultMergeState,
           data,
           tree,
-          deleted: { senseGuids: [S2], words: [] },
+          deletedSenseGuids: [S2],
         },
       });
       await store.dispatch(mergeAll());
@@ -228,7 +228,7 @@ describe("MergeDupActions", () => {
           ...defaultMergeState,
           data,
           tree,
-          deleted: { senseGuids: [S3, S4], words: [wordB] },
+          deletedSenseGuids: [S3, S4],
         },
       });
       await store.dispatch(mergeAll());
