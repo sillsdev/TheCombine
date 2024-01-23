@@ -15,6 +15,11 @@ export interface MergeData {
   senses: Hash<MergeTreeSense>;
 }
 
+export const defaultData: MergeData = {
+  words: {},
+  senses: {},
+};
+
 export interface MergeTreeReference {
   wordId: string;
   mergeSenseId: string;
@@ -27,6 +32,7 @@ export interface MergeTreeWord {
   vern: string;
   flag: Flag;
   protected: boolean;
+  audioCount: number;
 }
 
 export function newMergeTreeSense(
@@ -51,6 +57,7 @@ export function newMergeTreeWord(
     sensesGuids: sensesGuids ?? {},
     flag: newFlag(),
     protected: false,
+    audioCount: 0,
   };
 }
 
@@ -74,6 +81,7 @@ export function convertWordToMergeTreeWord(word: Word): MergeTreeWord {
   });
   mergeTreeWord.flag = word.flag;
   mergeTreeWord.protected = word.accessibility === Status.Protected;
+  mergeTreeWord.audioCount = word.audio.length;
   return mergeTreeWord;
 }
 
@@ -92,6 +100,23 @@ export const defaultSidebar: Sidebar = {
 export interface MergeTree {
   sidebar: Sidebar;
   words: Hash<MergeTreeWord>;
+  wordAudioCounts: Hash<number>;
+  wordAudioMoves: Hash<string[]>;
 }
 
-export const defaultTree: MergeTree = { sidebar: defaultSidebar, words: {} };
+export const defaultTree: MergeTree = {
+  sidebar: defaultSidebar,
+  words: {},
+  wordAudioCounts: {},
+  wordAudioMoves: {},
+};
+
+export interface MergeDeleted {
+  senseGuids: string[];
+  words: Word[];
+}
+
+export const defaultDeleted: MergeDeleted = {
+  senseGuids: [],
+  words: [],
+};
