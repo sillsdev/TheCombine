@@ -3,6 +3,7 @@ import { Action, PayloadAction } from "@reduxjs/toolkit";
 import {
   convertSenseToMergeTreeSense,
   defaultSidebar,
+  defaultTree,
   MergeTreeReference,
   MergeTreeWord,
   newMergeTreeWord,
@@ -98,9 +99,9 @@ describe("MergeDupsReducer", () => {
       senses: {},
     },
     tree: {
+      ...defaultTree,
       sidebar: defaultSidebar,
       words: testTreeWords(),
-      wordAudioCounts: {},
     },
   };
   function checkTreeWords(

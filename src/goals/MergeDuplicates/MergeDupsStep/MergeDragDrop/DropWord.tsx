@@ -107,6 +107,9 @@ export function DropWordCardHeader(
   const { senses, words } = useAppSelector(
     (state: StoreState) => state.mergeDuplicateGoal.data
   );
+  const { wordAudioCounts, wordAudioMoves } = useAppSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.tree
+  );
 
   const { t } = useTranslation();
 
@@ -122,6 +125,10 @@ export function DropWordCardHeader(
   const verns = [
     ...new Set(guids.map((g) => words[senses[g].srcWordId].vernacular)),
   ];
+
+  const otherIds = wordAudioMoves[props.wordId] ?? [];
+  const otherCount = otherIds.reduce((sum, id) => sum + wordAudioCounts[id], 0);
+  const audioCount = (treeWord?.audioCount ?? 0) + otherCount;
 
   // Reset vern if not in vern list.
   if (treeWord && !verns.includes(treeWord.vern)) {
@@ -201,7 +208,7 @@ export function DropWordCardHeader(
           text={<MultilineTooltipTitle lines={tooltipTexts} />}
         />
       )}
-      <AudioSummary count={treeWord.audioCount} />
+      <AudioSummary count={audioCount} />
       <FlagButton
         buttonId={`word-${props.wordId}-flag`}
         flag={treeWord.flag}
