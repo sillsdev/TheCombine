@@ -3,33 +3,26 @@ import { v4 } from "uuid";
 
 import {
   GramCatGroup,
-  MergeSourceWord,
-  MergeWords,
+  type MergeSourceWord,
+  type MergeWords,
   Status,
-  Word,
+  type Word,
 } from "api/models";
 import {
+  type MergeData,
+  type MergeTreeSense,
+  type MergeTreeWord,
   convertSenseToMergeTreeSense,
   convertWordToMergeTreeWord,
   defaultSidebar,
   defaultTree,
-  MergeData,
-  MergeTreeSense,
-  MergeTreeWord,
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { newMergeWords } from "goals/MergeDuplicates/MergeDupsTypes";
-import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
+import { defaultState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { StoreActionTypes } from "rootActions";
-import { Hash } from "types/hash";
+import { type Hash } from "types/hash";
 import { compareFlags } from "utilities/wordUtilities";
-
-const defaultData = { words: {}, senses: {} };
-export const defaultState: MergeTreeState = {
-  data: defaultData,
-  tree: defaultTree,
-  mergeWords: [],
-};
 
 const mergeDuplicatesSlice = createSlice({
   name: "mergeDupStepReducer",
@@ -268,8 +261,8 @@ const mergeDuplicatesSlice = createSlice({
           });
           wordsTree[word.id] = convertWordToMergeTreeWord(word);
         });
-        state.tree.words = wordsTree;
         state.data = { senses, words };
+        state.tree = { ...defaultTree, words: wordsTree };
         state.mergeWords = [];
       }
     },
