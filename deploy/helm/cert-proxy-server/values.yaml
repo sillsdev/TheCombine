@@ -43,6 +43,9 @@ awsEcr:
   role: role-ecr-login-cert-proxy
   roleBinding: role-ecr-login-cert-proxy-binding
 
+combineCertProxyList:
+  - hostname: Override
+    bucket: Override
 envCertProxy: env-cert-proxy
 envNginxProxy: env-nginx-proxy
 nginxPages: init-nginx-pages

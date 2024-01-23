@@ -40,4 +40,12 @@ charts:
     global:
       awsS3Location: prod.thecombine.app
       pullSecretName: None
-    combineCertProxyList: nuc1.thecombine.app nuc2.thecombine.app nuc3.thecombine.app local.thecombine.app
+    combineCertProxyList:
+      - hostname: nuc1.thecombine.app
+        bucket: prod.thecombine.app
+      - hostname: nuc2.thecombine.app
+        bucket: prod.thecombine.app
+      - hostname: nuc3.thecombine.app
+        bucket: prod.thecombine.app
+      - hostname: local.thecombine.app
+        bucket: local.thecombine.app

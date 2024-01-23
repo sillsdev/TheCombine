@@ -1,9 +1,9 @@
-{{- range regexSplit "\\s+" .Values.combineCertProxyList -1 }}
+{{- range .Values.combineCertProxyList }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ replace "." "-" . }}
+  name: {{ replace "." "-" .hostname }}
   namespace: {{ $.Release.Namespace }}
   annotations:
 {{- if eq $.Values.ingressClass "nginx" }}
@@ -18,10 +18,10 @@ spec:
   ingressClassName: {{ $.Values.ingressClass }}
   tls:
   - hosts:
-    - {{ . }}
-    secretName: {{ replace "." "-" . }}-tls
+    - {{ .hostname }}
+    secretName: {{ replace "." "-" .hostname }}-tls
   rules:
-  - host: {{ . }}
+  - host: {{ .hostname }}
     http:
       paths:
       - backend:
