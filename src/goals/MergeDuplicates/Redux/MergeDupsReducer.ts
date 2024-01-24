@@ -366,18 +366,11 @@ function createMergeWords(
   }
   const children: MergeSourceWord[] = Object.values(mergeSenses).map(
     (sList) => {
-      sList.forEach((sense) => {
-        if ([Status.Active, Status.Protected].includes(sense.accessibility)) {
-          parent.senses.push({
-            guid: sense.guid,
-            definitions: sense.definitions,
-            glosses: sense.glosses,
-            semanticDomains: sense.semanticDomains,
-            accessibility: sense.accessibility,
-            grammaticalInfo: sense.grammaticalInfo,
-          });
-        }
-      });
+      parent.senses.push(
+        ...sList.filter((s) =>
+          [Status.Active, Status.Protected].includes(s.accessibility)
+        )
+      );
       const getAudio = !sList.find((s) => s.accessibility === Status.Separate);
       return { srcWordId: sList[0].srcWordId, getAudio };
     }
