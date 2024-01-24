@@ -4,12 +4,17 @@ import { CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellType
 import { TypographyWithFont } from "utilities/fontComponents";
 
 export default function GlossesCell(props: CellProps): ReactElement {
+  const MAX_LENGTH = 50;
   const typographies: ReactElement[] = [];
 
   props.rowData.senses.forEach((sense) => {
-    const text = sense.glosses.map((g) => g.def.trim()).join("; ");
+    let text = sense.glosses.map((g) => g.def.trim()).join("; ");
     if (!text) {
       return;
+    }
+
+    if (text.length > MAX_LENGTH) {
+      text = `${text.substring(0, MAX_LENGTH)}[...]`;
     }
 
     // Add a sense separator if this isn't the first.
@@ -35,5 +40,5 @@ export default function GlossesCell(props: CellProps): ReactElement {
     );
   });
 
-  return <>{typographies}</>;
+  return <div>{typographies}</div>;
 }
