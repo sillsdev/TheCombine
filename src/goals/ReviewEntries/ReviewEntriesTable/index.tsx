@@ -1,3 +1,5 @@
+import { Tooltip, Typography } from "@mui/material";
+import { Flag as FlagIcon } from "@mui/icons-material";
 import {
   createMRTColumnHelper,
   MaterialReactTable,
@@ -110,8 +112,10 @@ export default function ReviewEntriesTable(): ReactElement {
     columnHelper.accessor((row) => row.senses.length, {
       enableFilterMatchHighlighting: false,
       filterFn: "equals",
+      Header: <Typography>#</Typography>,
       header: t("reviewEntries.columns.senses"),
       id: "senses",
+      size: 100,
     }),
 
     // Definitions column
@@ -229,7 +233,14 @@ export default function ReviewEntriesTable(): ReactElement {
           .getValue<Flag>(id)
           .text.toLowerCase()
           .includes(filterValue.trim().toLowerCase()),
+      Header: (
+        <FlagIcon
+          fontSize="small"
+          sx={{ color: (t) => t.palette.error.main, maxHeight: 18 }}
+        />
+      ),
       header: t("reviewEntries.columns.flag"),
+      size: 100,
       sortingFn: (rowA, rowB) =>
         compareFlags(rowA.original.flag, rowB.original.flag),
     }),
@@ -250,6 +261,7 @@ export default function ReviewEntriesTable(): ReactElement {
   const table = useMaterialReactTable({
     columns,
     data,
+    enableColumnActions: false,
     //enableColumnResizing: true,
     enableFullScreenToggle: false,
     //enablePagination: false,
@@ -263,6 +275,7 @@ export default function ReviewEntriesTable(): ReactElement {
       },
     },
     muiPaginationProps: { rowsPerPageOptions: [10, 25, 100, 250] },
+    //muiTableHeadCellProps: () => ({ sx: { maxHeight: 100 } }),
     muiTablePaperProps: () => ({
       sx: { height: `calc(100vh - ${topBarHeight}px)` },
     }),
