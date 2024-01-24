@@ -43,7 +43,7 @@ spec:
         combine-component: database
     spec:
       containers:
-        - image: {{ template "database.containerImage" . }}
+        - image: {{ include "database.containerImage" . }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           name: database
           ports:

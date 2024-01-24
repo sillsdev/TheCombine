@@ -45,7 +45,7 @@ spec:
                 secretKeyRef:
                   key: COMBINE_ADMIN_EMAIL
                   name: admin-user-secrets
-          image: {{ template "create-admin-user.containerImage" . }}
+          image: {{ include "create-admin-user.containerImage" . }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           name: create-admin-user
           resources: {}
