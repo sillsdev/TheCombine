@@ -116,6 +116,13 @@ namespace BackendFramework.Controllers
                 return NotFound(speakerId);
             }
 
+            // Delete consent file
+            var path = FileStorage.GetConsentFilePath(speakerId);
+            if (path is not null)
+            {
+                IO.File.Delete(path);
+            }
+
             // Delete speaker and return success
             return Ok(await _speakerRepo.Delete(projectId, speakerId));
         }
