@@ -347,12 +347,19 @@ namespace BackendFramework.Services
             {
                 if (speaker.Consent != ConsentType.None)
                 {
-                    var src = FileStorage.GenerateConsentFilePath(speaker.Id);
-                    if (File.Exists(src))
+                    var src = FileStorage.GetConsentFilePath(speaker.Id);
+                    if (src is not null)
                     {
-                        var dest = Path.Combine(consentDir, speaker.Id);
-                        File.Copy(src, dest, true);
-
+                        var dest = Path.Combine(consentDir, Path.GetFileName(src));
+                        if (Path.GetExtension(dest).Equals(".webm", StringComparison.OrdinalIgnoreCase))
+                        {
+                            dest = Path.ChangeExtension(dest, ".wav");
+                            await FFmpeg.Conversions.New().Start($"-y -i \"{src}\" \"{dest}\"");
+                        }
+                        else
+                        {
+                            File.Copy(src, dest);
+                        }
                     }
                 }
             }
