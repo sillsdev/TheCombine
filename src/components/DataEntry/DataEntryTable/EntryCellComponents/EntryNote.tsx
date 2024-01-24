@@ -1,5 +1,5 @@
 import { AddComment, Comment } from "@mui/icons-material";
-import { ReactElement, useState } from "react";
+import { type ReactElement, useState } from "react";
 
 import { IconButtonWithTooltip } from "components/Buttons";
 import { EditTextDialog } from "components/Dialogs";
@@ -10,9 +10,7 @@ interface EntryNoteProps {
   updateNote?: (newText: string) => void | Promise<void>;
 }
 
-/**
- * A note adding/editing button
- */
+/** A note adding/editing/viewing button */
 export default function EntryNote(props: EntryNoteProps): ReactElement {
   const [noteOpen, setNoteOpen] = useState<boolean>(false);
 
@@ -27,11 +25,11 @@ export default function EntryNote(props: EntryNoteProps): ReactElement {
             <AddComment sx={{ color: (t) => t.palette.grey[700] }} />
           )
         }
-        text={props.noteText}
-        textId="addWords.addNote"
+        onClick={props.updateNote ? () => setNoteOpen(true) : undefined}
         side="top"
         size="small"
-        onClick={props.updateNote ? () => setNoteOpen(true) : undefined}
+        text={props.noteText}
+        textId="addWords.addNote"
       />
       <EditTextDialog
         open={noteOpen}
