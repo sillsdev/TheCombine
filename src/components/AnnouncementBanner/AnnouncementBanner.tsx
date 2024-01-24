@@ -47,7 +47,7 @@ export default function AnnouncementBanner(): ReactElement {
   }
 
   return banner ? (
-    <Toolbar style={{ ...margins, backgroundColor: themeColors.warn }}>
+    <Toolbar style={{ ...margins, backgroundColor: themeColors.warning }}>
       <IconButton onClick={closeBanner} size="large">
         <Cancel />
       </IconButton>
