@@ -1,6 +1,6 @@
 import { type PreloadedState } from "@reduxjs/toolkit";
 import { type RenderOptions, render } from "@testing-library/react";
-import { PropsWithChildren, ReactElement } from "react";
+import { type PropsWithChildren, type ReactElement } from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
