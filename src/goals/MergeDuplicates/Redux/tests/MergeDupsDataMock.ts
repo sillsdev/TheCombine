@@ -1,13 +1,14 @@
-import type { PreloadedState } from "@reduxjs/toolkit";
-import { Definition, SemanticDomain, Word } from "api/models";
+import { type PreloadedState } from "@reduxjs/toolkit";
+
+import { type Definition, type SemanticDomain, type Word } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import {
   convertSenseToMergeTreeSense,
   convertWordToMergeTreeWord,
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
-import { MergeDupsData } from "goals/MergeDuplicates/MergeDupsTypes";
-import { RootState } from "store";
+import { type MergeDupsData } from "goals/MergeDuplicates/MergeDupsTypes";
+import { type RootState } from "store";
 import { newSense, newWord, simpleWord } from "types/word";
 
 const wordsArrayMock = (): Word[] => [
