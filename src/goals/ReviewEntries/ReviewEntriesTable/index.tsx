@@ -15,10 +15,11 @@ import {
   Gloss,
   GramCatGroup,
   GrammaticalInfo,
+  Pronunciation,
   SemanticDomain,
   Word,
 } from "api/models";
-import { getFrontierWords, getWord } from "backend";
+import { getAllSpeakers, getFrontierWords, getWord } from "backend";
 import { topBarHeight } from "components/LandingPage/TopBar";
 import {
   DefinitionsCell,
@@ -32,7 +33,8 @@ import {
   PronunciationsCell,
   VernacularCell,
 } from "goals/ReviewEntries/ReviewEntriesTable/Cells";
-import { StoreState } from "types";
+import { type StoreState } from "types";
+import { type Hash } from "types/hash";
 import {
   compareWordDefinitions,
   compareWordDomains,
@@ -52,6 +54,7 @@ export default function ReviewEntriesTable(): ReactElement {
 
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<Word[]>([]);
+  const [speakers, setSpeakers] = useState<Hash<string>>({});
 
   const deleteWord = (id: string): void => {
     setData((prev) => prev.filter((w) => w.id !== id));
@@ -62,6 +65,11 @@ export default function ReviewEntriesTable(): ReactElement {
   };
 
   useEffect(() => {
+    getAllSpeakers().then((list) =>
+      setSpeakers(
+        Object.fromEntries(list.map((s) => [s.id, s.name.toLocaleLowerCase()]))
+      )
+    );
     getFrontierWords().then((frontier) => {
       setData(frontier);
       setIsLoading(false);
@@ -188,11 +196,20 @@ export default function ReviewEntriesTable(): ReactElement {
     ),
 
     // Pronunciations column
-    columnHelper.accessor((row) => row.audio.length, {
+    columnHelper.accessor((row) => row.audio, {
       Cell: ({ row }: CellProps) => (
         <PronunciationsCell replaceWord={replaceWord} rowData={row.original} />
       ),
-      filterFn: "equals",
+      filterFn: (row, id, filterValue: string) => {
+        /* Match either number of pronunciations or a speaker name. */
+        const audio = row.getValue<Pronunciation[]>(id);
+        const filter = filterValue.trim().toLocaleLowerCase();
+        return (
+          !filter ||
+          audio.length === parseInt(filter) ||
+          audio.some((p) => speakers[p.speakerId]?.includes(filter))
+        );
+      },
       header: t("reviewEntries.columns.pronunciations"),
       id: "pronunciations",
     }),
