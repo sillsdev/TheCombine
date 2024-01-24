@@ -8,7 +8,7 @@ interface IconButtonWithTooltipProps {
   textId?: string;
   size?: "large" | "medium" | "small";
   onClick?: MouseEventHandler<HTMLButtonElement>;
-  buttonId: string;
+  buttonId?: string;
   side?: "bottom" | "left" | "right" | "top";
 }
 

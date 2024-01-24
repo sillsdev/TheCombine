@@ -8,7 +8,7 @@ import { IconButtonWithTooltip } from "components/Buttons";
 import { getGramCatGroupColor } from "utilities/wordUtilities";
 
 interface PartOfSpeechProps {
-  buttonId: string;
+  buttonId?: string;
   gramInfo: GrammaticalInfo;
   onClick?: () => void;
   onlyIcon?: boolean;
