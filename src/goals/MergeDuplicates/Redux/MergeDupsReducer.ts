@@ -403,7 +403,7 @@ function combineIntoFirstSense(senses: MergeTreeSense[]): void {
   senses.slice(1).forEach((dupSense) => {
     dupSense.accessibility = Status.Duplicate;
     // Merge the duplicate's definitions into the main sense.
-    const sep = ";";
+    const sep = "; ";
     dupSense.definitions.forEach((def) => {
       const newText = def.text.trim();
       if (newText) {
@@ -420,7 +420,7 @@ function combineIntoFirstSense(senses: MergeTreeSense[]): void {
           if (!oldText) {
             oldDef.text = newText;
           } else if (!oldText.includes(newText)) {
-            oldDef.text += `${sep} ${newText}`;
+            oldDef.text = `${oldText}${sep}${newText}`;
           }
         }
       }
