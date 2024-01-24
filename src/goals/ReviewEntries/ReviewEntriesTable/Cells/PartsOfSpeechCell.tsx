@@ -1,22 +1,18 @@
 import { Grid } from "@mui/material";
 import { ReactElement } from "react";
 
-import { GramCatGroup, GrammaticalInfo, Sense } from "api/models";
+import { GrammaticalInfo, Sense } from "api/models";
 import { PartOfSpeechButton } from "components/Buttons";
 import { CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
 
 /** Collect all distinct sense.grammaticalInfo values. */
 function gatherGramInfo(senses: Sense[]): GrammaticalInfo[] {
-  return senses.reduce<GrammaticalInfo[]>((a, { grammaticalInfo }) => {
-    const { catGroup, grammaticalCategory } = grammaticalInfo;
-    return grammaticalCategory === GramCatGroup.Unspecified ||
-      a.some(
-        (i) =>
-          i.catGroup === catGroup &&
-          i.grammaticalCategory === grammaticalCategory
-      )
+  return senses.reduce<GrammaticalInfo[]>((a, sense) => {
+    const cg = sense.grammaticalInfo.catGroup;
+    const gc = sense.grammaticalInfo.grammaticalCategory;
+    return a.some((gi) => gi.catGroup === cg && gi.grammaticalCategory === gc)
       ? a
-      : [...a, grammaticalInfo];
+      : [...a, sense.grammaticalInfo];
   }, []);
 }
 
