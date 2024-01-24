@@ -53,7 +53,7 @@ const semDomLanguage: SemanticDomain = {
 
 const definitionBah = { language: "en", text: "defBah" };
 const definitionBag = { language: "en", text: "defBag" };
-const definitionBagBah = { language: "en", text: "defBag;defBah" };
+const definitionBagBah = { language: "en", text: "defBag; defBah" };
 
 const senseBag = {
   ...newSense("bag"),

@@ -386,6 +386,10 @@ function createMergeWords(
   return newMergeWords(parent, children);
 }
 
+/** Given an array of senses to combine:
+ * - change the accessibility of the first one from Separate to Active/Protected,
+ * - change the accessibility of the rest to Duplicate,
+ * - merge select content from duplicates into main sense */
 function combineIntoFirstSense(senses: MergeTreeSense[]): void {
   // Set the first sense to be merged as Active/Protected.
   // This was the top sense when the sidebar was opened.
@@ -398,29 +402,36 @@ function combineIntoFirstSense(senses: MergeTreeSense[]): void {
   // These were senses dropped into another sense.
   senses.slice(1).forEach((dupSense) => {
     dupSense.accessibility = Status.Duplicate;
-    // Put the duplicate's definitions in the main sense.
+    // Merge the duplicate's definitions into the main sense.
     const sep = ";";
     dupSense.definitions.forEach((def) => {
-      if (def.text.length) {
-        const defIndex = mainSense.definitions.findIndex(
+      const newText = def.text.trim();
+      if (newText) {
+        // Check if definitions array already has entry with the same language.
+        const oldDef = mainSense.definitions.find(
           (d) => d.language === def.language
         );
-        if (defIndex === -1) {
-          mainSense.definitions.push({ ...def });
+        if (!oldDef) {
+          // If not, add this one to the array.
+          mainSense.definitions.push({ ...def, text: newText });
         } else {
-          const oldText = mainSense.definitions[defIndex].text;
-          if (!oldText.split(sep).includes(def.text)) {
-            mainSense.definitions[defIndex].text =
-              `${oldText}${sep}${def.text}`;
+          // If so, check whether this one's text is already present.
+          const oldText = oldDef.text.trim();
+          if (!oldText) {
+            oldDef.text = newText;
+          } else if (!oldText.includes(newText)) {
+            oldDef.text += `${sep} ${newText}`;
           }
         }
       }
     });
+
     // Use the duplicate's part of speech if not specified in the main sense.
     if (mainSense.grammaticalInfo.catGroup === GramCatGroup.Unspecified) {
       mainSense.grammaticalInfo = { ...dupSense.grammaticalInfo };
     }
-    // Put the duplicate's domains in the main sense.
+
+    // Put the duplicate's domains in the main sense if the id is new.
     dupSense.semanticDomains.forEach((dom) => {
       if (!mainSense.semanticDomains.find((d) => d.id === dom.id)) {
         mainSense.semanticDomains.push({ ...dom });
