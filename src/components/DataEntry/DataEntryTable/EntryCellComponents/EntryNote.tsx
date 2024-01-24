@@ -1,8 +1,7 @@
 import { AddComment, Comment } from "@mui/icons-material";
-import { IconButton, Tooltip } from "@mui/material";
 import { ReactElement, useState } from "react";
-import { useTranslation } from "react-i18next";
 
+import { IconButtonWithTooltip } from "components/Buttons";
 import { EditTextDialog } from "components/Dialogs";
 
 interface EntryNoteProps {
@@ -16,24 +15,24 @@ interface EntryNoteProps {
  */
 export default function EntryNote(props: EntryNoteProps): ReactElement {
   const [noteOpen, setNoteOpen] = useState<boolean>(false);
-  const { t } = useTranslation();
-
-  const handleClick = (): void => {
-    if (props.updateNote) {
-      setNoteOpen(true);
-    }
-  };
 
   return (
     <>
-      <Tooltip
-        title={props.noteText ? props.noteText : t("addWords.addNote")}
-        placement="top"
-      >
-        <IconButton size="small" onClick={handleClick} id={props.buttonId}>
-          {props.noteText ? <Comment /> : <AddComment />}
-        </IconButton>
-      </Tooltip>
+      <IconButtonWithTooltip
+        buttonId={props.buttonId ?? "entry-note-button"}
+        icon={
+          props.noteText ? (
+            <Comment sx={{ color: (t) => t.palette.grey[700] }} />
+          ) : (
+            <AddComment sx={{ color: (t) => t.palette.grey[700] }} />
+          )
+        }
+        text={props.noteText}
+        textId="addWords.addNote"
+        side="top"
+        size="small"
+        onClick={props.updateNote ? () => setNoteOpen(true) : undefined}
+      />
       <EditTextDialog
         open={noteOpen}
         text={props.noteText}

@@ -53,9 +53,7 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
         text={text}
         textId={active ? "flags.edit" : "flags.add"}
         size="small"
-        onClick={
-          props.updateFlag ? () => setOpen(true) : active ? () => {} : undefined
-        }
+        onClick={props.updateFlag ? () => setOpen(true) : undefined}
         buttonId={props.buttonId ?? "flag-button"}
         side="top"
       />
