@@ -164,7 +164,7 @@ export default function ReviewEntriesTable(): ReactElement {
         value: g,
       })),
       filterVariant: "select",
-      header: t("reviewEntries.columns.partOfSpeech"),
+      header: t("reviewEntries.columns.partsOfSpeech"),
       id: "partsOfSpeech",
       sortingFn: (rowA, rowB) =>
         compareWordGrammaticalInfo(rowA.original, rowB.original),
