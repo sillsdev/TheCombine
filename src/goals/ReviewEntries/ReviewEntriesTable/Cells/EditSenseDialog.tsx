@@ -33,6 +33,7 @@ import {
 } from "api/models";
 import { deleteAudio, updateWord } from "backend";
 import { PartOfSpeechButton } from "components/Buttons";
+import { CancelConfirmDialog } from "components/Dialogs";
 import { uploadFileFromPronunciation } from "components/Pronunciations/utilities";
 import TreeView from "components/TreeView";
 import {
@@ -98,6 +99,7 @@ export default function EditSenseDialog(
   );
 
   const [newSense, setNewSense] = useState(props.sense);
+  const [cancelDialog, setCancelDialog] = useState(false);
   const [changes, setChanges] = useState(defaultEditFieldChanged);
 
   useEffect(() => {
@@ -155,94 +157,116 @@ export default function EditSenseDialog(
     props.close();
   };
 
-  /** Undo all edits and close the edit dialog. */
+  /** Close if no changes, or open dialog to ask to discard changes. */
+  const conditionalCancel = (): void => {
+    if (
+      changes[EditField.Definitions] ||
+      changes[EditField.Glosses] ||
+      changes[EditField.SemanticDomains]
+    ) {
+      setCancelDialog(true);
+    } else {
+      cancelAndClose();
+    }
+  };
+
+  /** Undo all edits and close dialogs. */
   const cancelAndClose = (): void => {
     setNewSense(props.sense);
+    setCancelDialog(false);
     props.close();
   };
 
   const { t } = useTranslation();
 
   return (
-    <Dialog maxWidth={false} open={props.isOpen}>
-      <DialogTitle>
-        <Grid container justifyContent="space-between">
-          <Grid item>{t("reviewEntries.materialTable.body.editSense")}</Grid>
-          <Grid item>
-            <IconButton onClick={saveAndClose}>
-              <Check style={{ color: themeColors.success }} />
-            </IconButton>
-            <IconButton onClick={cancelAndClose}>
-              <Close style={{ color: themeColors.error }} />
-            </IconButton>
+    <>
+      <CancelConfirmDialog
+        handleCancel={() => setCancelDialog(false)}
+        handleConfirm={cancelAndClose}
+        open={cancelDialog}
+        textId="reviewEntries.materialTable.body.discardChanges"
+      />
+      <Dialog maxWidth={false} open={props.isOpen}>
+        <DialogTitle>
+          <Grid container justifyContent="space-between">
+            <Grid item>{t("reviewEntries.materialTable.body.editSense")}</Grid>
+            <Grid item>
+              <IconButton onClick={saveAndClose}>
+                <Check style={{ color: themeColors.success }} />
+              </IconButton>
+              <IconButton onClick={conditionalCancel}>
+                <Close style={{ color: themeColors.error }} />
+              </IconButton>
+            </Grid>
           </Grid>
-        </Grid>
-      </DialogTitle>
-      <DialogContent>
-        <Grid
-          container
-          direction="column"
-          justifyContent="flex-start"
-          spacing={3}
-        >
-          {/* Definitions */}
-          <Grid item>
-            <Card sx={bgStyle(EditField.Definitions)}>
-              <CardHeader title={t("reviewEntries.columns.definitions")} />
-              <CardContent>
-                <DefinitionList
-                  defaultLang={analysisWritingSystems[0]}
-                  definitions={newSense.definitions}
-                  onChange={updateDefinitions}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
+        </DialogTitle>
+        <DialogContent>
+          <Grid
+            container
+            direction="column"
+            justifyContent="flex-start"
+            spacing={3}
+          >
+            {/* Definitions */}
+            <Grid item>
+              <Card sx={bgStyle(EditField.Definitions)}>
+                <CardHeader title={t("reviewEntries.columns.definitions")} />
+                <CardContent>
+                  <DefinitionList
+                    defaultLang={analysisWritingSystems[0]}
+                    definitions={newSense.definitions}
+                    onChange={updateDefinitions}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
 
-          {/* Glosses */}
-          <Grid item>
-            <Card sx={bgStyle(EditField.Glosses)}>
-              <CardHeader title={t("reviewEntries.columns.glosses")} />
-              <CardContent>
-                <GlossList
-                  defaultLang={analysisWritingSystems[0]}
-                  glosses={newSense.glosses}
-                  onChange={updateGlosses}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
+            {/* Glosses */}
+            <Grid item>
+              <Card sx={bgStyle(EditField.Glosses)}>
+                <CardHeader title={t("reviewEntries.columns.glosses")} />
+                <CardContent>
+                  <GlossList
+                    defaultLang={analysisWritingSystems[0]}
+                    glosses={newSense.glosses}
+                    onChange={updateGlosses}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
 
-          {/* Part of Speech */}
-          <Grid item>
-            <Card sx={bgStyle(EditField.GrammaticalInfo)}>
-              <CardHeader title={t("reviewEntries.columns.partOfSpeech")} />
-              <CardContent>
-                {newSense.grammaticalInfo.catGroup ===
-                GramCatGroup.Unspecified ? (
-                  <Typography>None</Typography>
-                ) : (
-                  <PartOfSpeechButton gramInfo={newSense.grammaticalInfo} />
-                )}
-              </CardContent>
-            </Card>
-          </Grid>
+            {/* Part of Speech */}
+            <Grid item>
+              <Card sx={bgStyle(EditField.GrammaticalInfo)}>
+                <CardHeader title={t("reviewEntries.columns.partOfSpeech")} />
+                <CardContent>
+                  {newSense.grammaticalInfo.catGroup ===
+                  GramCatGroup.Unspecified ? (
+                    <Typography>None</Typography>
+                  ) : (
+                    <PartOfSpeechButton gramInfo={newSense.grammaticalInfo} />
+                  )}
+                </CardContent>
+              </Card>
+            </Grid>
 
-          {/* Semantic Domains */}
-          <Grid item>
-            <Card sx={bgStyle(EditField.SemanticDomains)}>
-              <CardHeader title={t("reviewEntries.columns.domains")} />
-              <CardContent>
-                <DomainList
-                  domains={newSense.semanticDomains}
-                  onChange={updateDomains}
-                />
-              </CardContent>
-            </Card>
+            {/* Semantic Domains */}
+            <Grid item>
+              <Card sx={bgStyle(EditField.SemanticDomains)}>
+                <CardHeader title={t("reviewEntries.columns.domains")} />
+                <CardContent>
+                  <DomainList
+                    domains={newSense.semanticDomains}
+                    onChange={updateDomains}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
-        </Grid>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 

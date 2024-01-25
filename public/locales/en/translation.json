@@ -326,6 +326,7 @@
     },
     "materialTable": {
       "body": {
+        "discardChanges": "Discard changes?",
         "edit": "Edit",
         "editSense": "Edit sense",
         "emptyDataSourceMessage": "No entries to display",
