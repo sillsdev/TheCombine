@@ -295,6 +295,7 @@ export default function ReviewEntriesTable(): ReactElement {
         partsOfSpeech: showGrammaticalInfo,
       },
     },
+    //muiFilterTextFieldProps: () => ({ label: " " }),
     muiPaginationProps: { rowsPerPageOptions: [10, 25, 100, 250] },
     //muiTableHeadCellProps: () => ({ sx: { maxHeight: 100 } }),
     muiTablePaperProps: () => ({

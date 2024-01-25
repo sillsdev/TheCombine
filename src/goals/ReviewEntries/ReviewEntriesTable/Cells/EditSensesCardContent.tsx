@@ -171,26 +171,28 @@ function EditSense(props: EditSenseProps): ReactElement {
 
   return (
     <Grid container>
-      <Grid item>
-        <Grid container direction="column">
-          <Grid item>
-            <IconButtonWithTooltip
-              buttonId={`sense-${sense.guid}-bump-up`}
-              icon={props.bumpSenseUp ? <ArrowUpward /> : <Icon />}
-              onClick={props.bumpSenseUp}
-              size="small"
-            />
-          </Grid>
-          <Grid item>
-            <IconButtonWithTooltip
-              buttonId={`sense-${sense.guid}-bump-down`}
-              icon={props.bumpSenseDown ? <ArrowDownward /> : <Icon />}
-              onClick={props.bumpSenseDown}
-              size="small"
-            />
+      {props.bumpSenseDown || props.bumpSenseUp ? (
+        <Grid item>
+          <Grid container direction="column">
+            <Grid item>
+              <IconButtonWithTooltip
+                buttonId={`sense-${sense.guid}-bump-up`}
+                icon={props.bumpSenseUp ? <ArrowUpward /> : <Icon />}
+                onClick={props.bumpSenseUp}
+                size="small"
+              />
+            </Grid>
+            <Grid item>
+              <IconButtonWithTooltip
+                buttonId={`sense-${sense.guid}-bump-down`}
+                icon={props.bumpSenseDown ? <ArrowDownward /> : <Icon />}
+                onClick={props.bumpSenseDown}
+                size="small"
+              />
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      ) : null}
       <Grid item>
         <Grid container direction="column">
           {deleted ? (
