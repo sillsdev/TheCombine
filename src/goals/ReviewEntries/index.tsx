@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { type ReactElement } from "react";
 
 import ReviewEntriesCompleted from "goals/ReviewEntries/ReviewEntriesCompleted";
 import ReviewEntriesTable from "goals/ReviewEntries/ReviewEntriesTable";

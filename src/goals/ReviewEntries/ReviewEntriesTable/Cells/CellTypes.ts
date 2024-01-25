@@ -1,4 +1,4 @@
-import { Word } from "api/models";
+import { type Word } from "api/models";
 
 export interface CellProps {
   delete?: (wordId: string) => void;

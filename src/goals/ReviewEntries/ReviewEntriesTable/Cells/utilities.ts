@@ -1,11 +1,11 @@
 import {
-  Status,
   type Definition,
   type Gloss,
+  GramCatGroup,
   type SemanticDomain,
   type Sense,
-  GramCatGroup,
-  Word,
+  Status,
+  type Word,
 } from "api/models";
 import { newFlag, newNote } from "types/word";
 

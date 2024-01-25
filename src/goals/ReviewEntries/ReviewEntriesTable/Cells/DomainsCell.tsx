@@ -1,8 +1,8 @@
 import { Chip, Grid } from "@mui/material";
-import { ReactElement } from "react";
+import { type ReactElement } from "react";
 
-import { SemanticDomain, Sense } from "api/models";
-import { CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
+import { type SemanticDomain, type Sense } from "api/models";
+import { type CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
 
 /** Collect all distinct sense.semanticDomains entries. */
 function gatherDomains(senses: Sense[]): SemanticDomain[] {

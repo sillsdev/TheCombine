@@ -1,8 +1,8 @@
 import { Edit } from "@mui/icons-material";
-import { ReactElement, useState } from "react";
+import { type ReactElement, useState } from "react";
 
 import { IconButtonWithTooltip } from "components/Buttons";
-import { CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
+import { type CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
 import EditDialog from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditDialog";
 
 const buttonId = (wordId: string): string => `row-${wordId}-edit`;

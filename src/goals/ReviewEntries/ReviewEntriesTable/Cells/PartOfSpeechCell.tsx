@@ -1,9 +1,9 @@
 import { Grid } from "@mui/material";
-import { ReactElement } from "react";
+import { type ReactElement } from "react";
 
-import { GrammaticalInfo, Sense } from "api/models";
+import { type GrammaticalInfo, type Sense } from "api/models";
 import { PartOfSpeechButton } from "components/Buttons";
-import { CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
+import { type CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
 
 /** Collect all distinct sense.grammaticalInfo values. */
 function gatherGramInfo(senses: Sense[]): GrammaticalInfo[] {

@@ -1,10 +1,10 @@
-import { ReactElement } from "react";
+import { type ReactElement } from "react";
 
-import { Pronunciation } from "api/models";
+import { type Pronunciation } from "api/models";
 import { deleteAudio, getWord, updateWord, uploadAudio } from "backend";
 import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
-import { CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
-import { FileWithSpeakerId, updateSpeakerInAudio } from "types/word";
+import { type CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
+import { type FileWithSpeakerId, updateSpeakerInAudio } from "types/word";
 
 export default function PronunciationsCell(props: CellProps): ReactElement {
   const wordId = props.word.id;

@@ -1,4 +1,4 @@
-import { combineReducers, Reducer } from "redux";
+import { type Reducer, combineReducers } from "redux";
 
 import goalsReducer from "components/GoalTimeline/Redux/GoalReducer";
 import loginReducer from "components/Login/Redux/LoginReducer";
@@ -8,7 +8,7 @@ import pronunciationsReducer from "components/Pronunciations/Redux/Pronunciation
 import treeViewReducer from "components/TreeView/Redux/TreeViewReducer";
 import characterInventoryReducer from "goals/CharacterInventory/Redux/CharacterInventoryReducer";
 import mergeDupStepReducer from "goals/MergeDuplicates/Redux/MergeDupsReducer";
-import { StoreState } from "types";
+import { type StoreState } from "types";
 import analyticsReducer from "types/Redux/analytics";
 
 export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({

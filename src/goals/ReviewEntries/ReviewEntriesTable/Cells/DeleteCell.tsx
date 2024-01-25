@@ -1,9 +1,9 @@
-import { ReactElement } from "react";
+import { type ReactElement } from "react";
 
 import { Status } from "api/models";
 import { deleteFrontierWord } from "backend";
 import { DeleteButtonWithDialog } from "components/Buttons";
-import { CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
+import { type CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
 
 const buttonIdCancel = "delete-cancel";
 const buttonIdConfirm = "delete-confirm";

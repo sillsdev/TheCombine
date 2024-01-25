@@ -54,7 +54,7 @@ const mockStore = configureMockStore()(state);
 
 function setMockFunctions(): void {
   jest.clearAllMocks();
-  mockGetFrontierWords.mockResolvedValue([]);
+  mockGetFrontierWords.mockResolvedValue(mockWords);
 }
 
 beforeEach(async () => {
