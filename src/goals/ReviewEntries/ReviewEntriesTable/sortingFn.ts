@@ -1,11 +1,11 @@
 import { type MRT_SortingFn } from "material-react-table";
 
 import {
-  type Word,
-  type SemanticDomain,
-  type GrammaticalInfo,
   GramCatGroup,
+  type GrammaticalInfo,
+  type SemanticDomain,
   type Sense,
+  type Word,
 } from "api/models";
 import { compareFlags } from "utilities/wordUtilities";
 
@@ -69,21 +69,26 @@ function compareSensesDomains(a: Sense[], b: Sense[]): number {
 
 /* Custom `sortingFn` functions for `MaterialReactTable` columns. */
 
+/** Concatenates all sense definition texts for each word, then compares strings. */
 export const sortingFnDefinitions: MRT_SortingFn<Word> = (a, b) =>
   definitionString(a.original.senses).localeCompare(
     definitionString(b.original.senses)
   );
 
+/** Concatenates all sense gloss defs for each word, then compares strings. */
 export const sortingFnGlosses: MRT_SortingFn<Word> = (a, b) =>
   glossesString(a.original.senses).localeCompare(
     glossesString(b.original.senses)
   );
 
+/** Compares grammatical info of `.senses[i]` of the words, starting at `i = 0`. */
 export const sortingFnPartOfSpeech: MRT_SortingFn<Word> = (a, b) =>
   compareSensesGramInfo(a.original.senses, b.original.senses);
 
+/** Compares semantic domains of `.senses[i]` of the words , starting at `i = 0`. */
 export const sortingFnDomains: MRT_SortingFn<Word> = (a, b) =>
   compareSensesDomains(a.original.senses, b.original.senses);
 
+/** Compares flags: `.active = true` before `= false`, then `.text` alphabetically. */
 export const sortingFnFlag: MRT_SortingFn<Word> = (a, b) =>
   compareFlags(a.original.flag, b.original.flag);
