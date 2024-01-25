@@ -5,19 +5,19 @@ import EditCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell";
 import FlagCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/FlagCell";
 import GlossesCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/GlossesCell";
 import NoteCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/NoteCell";
-import PartsOfSpeechCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/PartsOfSpeechCell";
+import PartOfSpeechCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/PartOfSpeechCell";
 import PronunciationsCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/PronunciationsCell";
 import VernacularCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/VernacularCell";
 
 export {
-  DefinitionsCell,
-  DeleteCell,
-  DomainsCell,
-  EditCell,
-  FlagCell,
-  GlossesCell,
-  NoteCell,
-  PartsOfSpeechCell,
-  PronunciationsCell,
-  VernacularCell,
+  DefinitionsCell as Definitions,
+  DeleteCell as Delete,
+  DomainsCell as Domains,
+  EditCell as Edit,
+  FlagCell as Flag,
+  GlossesCell as Glosses,
+  NoteCell as Note,
+  PartOfSpeechCell as PartOfSpeech,
+  PronunciationsCell as Pronunciations,
+  VernacularCell as Vernacular,
 };

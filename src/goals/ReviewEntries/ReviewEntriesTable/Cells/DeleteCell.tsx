@@ -5,26 +5,25 @@ import { deleteFrontierWord } from "backend";
 import { DeleteButtonWithDialog } from "components/Buttons";
 import { CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
 
-const buttonId = (wordId: string): string => `row-${wordId}-delete`;
 const buttonIdCancel = "delete-cancel";
 const buttonIdConfirm = "delete-confirm";
 
 export default function DeleteCell(props: CellProps): ReactElement {
-  const word = props.rowData;
+  const { accessibility, id, senses } = props.word;
   const disabled =
-    word.accessibility === Status.Protected ||
-    !!word.senses.find((s) => s.accessibility === Status.Protected);
+    accessibility === Status.Protected ||
+    senses.some((s) => s.accessibility === Status.Protected);
 
   async function deleteWord(): Promise<void> {
-    await deleteFrontierWord(word.id);
-    if (props.deleteWord) {
-      props.deleteWord(word.id);
+    await deleteFrontierWord(id);
+    if (props.delete) {
+      props.delete(id);
     }
   }
 
   return (
     <DeleteButtonWithDialog
-      buttonId={buttonId(props.rowData.id)}
+      buttonId={`row-${id}-delete`}
       buttonIdCancel={buttonIdCancel}
       buttonIdConfirm={buttonIdConfirm}
       delete={deleteWord}

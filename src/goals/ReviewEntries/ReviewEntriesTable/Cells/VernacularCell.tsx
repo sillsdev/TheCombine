@@ -5,11 +5,8 @@ import { TypographyWithFont } from "utilities/fontComponents";
 
 export default function VernacularCell(props: CellProps): ReactElement {
   return (
-    <TypographyWithFont
-      id={`row-${props.rowData.id}-vernacular-text`}
-      vernacular
-    >
-      {props.rowData.vernacular}
+    <TypographyWithFont id={`row-${props.word.id}-vernacular`} vernacular>
+      {props.word.vernacular}
     </TypographyWithFont>
   );
 }

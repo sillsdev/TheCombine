@@ -9,18 +9,17 @@ const buttonId = (wordId: string): string => `row-${wordId}-edit`;
 
 export default function DeleteCell(props: CellProps): ReactElement {
   const [open, setOpen] = useState(false);
-  const word = props.rowData;
 
   const handleConfirm = async (newId: string): Promise<void> => {
-    if (props.replaceWord) {
-      await props.replaceWord(word.id, newId);
+    if (props.replace) {
+      await props.replace(props.word.id, newId);
     }
   };
 
   return (
     <>
       <IconButtonWithTooltip
-        buttonId={buttonId(props.rowData.id)}
+        buttonId={buttonId(props.word.id)}
         icon={<Edit />}
         onClick={() => setOpen(true)}
         textId={"reviewEntries.materialTable.body.edit"}
@@ -29,7 +28,7 @@ export default function DeleteCell(props: CellProps): ReactElement {
         cancel={() => setOpen(false)}
         confirm={handleConfirm}
         open={open}
-        word={word}
+        word={props.word}
       />
     </>
   );

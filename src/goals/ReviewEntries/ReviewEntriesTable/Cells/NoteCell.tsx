@@ -7,10 +7,10 @@ export default function NoteCell(props: CellProps): ReactElement {
   return (
     <TypographyWithFont
       analysis
-      id={`row-${props.rowData.id}-note`}
-      lang={props.rowData.note.language}
+      id={`row-${props.word.id}-note`}
+      lang={props.word.note.language}
     >
-      {props.rowData.note.text}
+      {props.word.note.text}
     </TypographyWithFont>
   );
 }

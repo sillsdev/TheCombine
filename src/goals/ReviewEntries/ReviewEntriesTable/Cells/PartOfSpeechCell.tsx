@@ -19,7 +19,7 @@ function gatherGramInfo(senses: Sense[]): GrammaticalInfo[] {
 export default function PartOfSpeechCell(props: CellProps): ReactElement {
   return (
     <Grid container direction="row" spacing={2}>
-      {gatherGramInfo(props.rowData.senses).map((gi) => (
+      {gatherGramInfo(props.word.senses).map((gi) => (
         <Grid item key={`${gi.catGroup}-${gi.grammaticalCategory}`}>
           <PartOfSpeechButton gramInfo={gi} />
         </Grid>

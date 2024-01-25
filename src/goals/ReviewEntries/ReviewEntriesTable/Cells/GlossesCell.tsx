@@ -7,8 +7,11 @@ export default function GlossesCell(props: CellProps): ReactElement {
   const MAX_LENGTH = 50;
   const typographies: ReactElement[] = [];
 
-  props.rowData.senses.forEach((sense) => {
-    let text = sense.glosses.map((g) => g.def.trim()).join("; ");
+  props.word.senses.forEach((sense) => {
+    let text = sense.glosses
+      .map((g) => g.def.trim())
+      .filter((t) => t)
+      .join("; ");
     if (!text) {
       return;
     }

@@ -5,9 +5,6 @@ import { CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellType
 
 export default function FlagCell(props: CellProps): ReactElement {
   return (
-    <FlagButton
-      flag={props.rowData.flag}
-      buttonId={`row-${props.rowData.id}-flag`}
-    />
+    <FlagButton flag={props.word.flag} buttonId={`row-${props.word.id}-flag`} />
   );
 }

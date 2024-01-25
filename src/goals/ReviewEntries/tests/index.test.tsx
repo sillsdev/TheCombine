@@ -5,8 +5,7 @@ import configureMockStore from "redux-mock-store";
 import "tests/reactI18nextMock";
 
 import ReviewEntries from "goals/ReviewEntries";
-import { wordFromReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";
-import mockWords from "goals/ReviewEntries/tests/WordsMock";
+import { newWord } from "types/word";
 import { defaultWritingSystem } from "types/writingSystem";
 
 const mockGetFrontierWords = jest.fn();
@@ -37,7 +36,7 @@ jest.mock("types/hooks", () => ({
 }));
 
 // Mock store + axios
-const mockReviewEntryWords = mockWords();
+const mockWords = [newWord()];
 const state = {
   currentProjectState: {
     project: {
@@ -55,15 +54,13 @@ const mockStore = configureMockStore()(state);
 
 function setMockFunctions(): void {
   jest.clearAllMocks();
-  mockGetFrontierWords.mockResolvedValue(
-    mockReviewEntryWords.map(wordFromReviewEntriesWord)
-  );
+  mockGetFrontierWords.mockResolvedValue([]);
 }
 
 beforeEach(async () => {
   // Prep for component creation
   setMockFunctions();
-  for (const word of mockReviewEntryWords) {
+  for (const word of mockWords) {
     for (const sense of word.senses) {
       mockUuid.mockImplementationOnce(() => sense.guid);
     }

@@ -12,11 +12,10 @@ import { GramCatGroup, Word } from "api/models";
 import { CloseButton } from "components/Buttons";
 import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
 import {
-  DomainCell,
-  GlossCell,
-  PartOfSpeechCell,
-} from "goals/ReviewEntries/ReviewEntriesTable/CellComponents";
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";
+  Domains,
+  Glosses,
+  PartOfSpeech,
+} from "goals/ReviewEntries/ReviewEntriesTable/Cells";
 
 interface vernDialogProps {
   vernacularWords: Word[];
@@ -64,7 +63,6 @@ export function VernList(props: VernListProps): ReactElement {
   );
 
   const menuItem = (word: Word): ReactElement => {
-    const entry = new ReviewEntriesWord(word, props.analysisLang);
     return (
       <StyledMenuItem
         id={word.id}
@@ -81,15 +79,15 @@ export function VernList(props: VernListProps): ReactElement {
             <Typography variant="h5">{word.vernacular}</Typography>
           </Grid>
           <Grid item xs="auto">
-            <GlossCell rowData={entry} value={entry.senses} />
+            <Glosses word={word} />
           </Grid>
           {hasPartsOfSpeech && (
             <Grid item xs="auto">
-              <PartOfSpeechCell rowData={entry} />
+              <PartOfSpeech word={word} />
             </Grid>
           )}
           <Grid item xs>
-            <DomainCell rowData={entry} />
+            <Domains word={word} />
           </Grid>
         </Grid>
       </StyledMenuItem>

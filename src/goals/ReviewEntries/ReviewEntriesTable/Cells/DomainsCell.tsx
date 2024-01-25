@@ -19,7 +19,7 @@ function gatherDomains(senses: Sense[]): SemanticDomain[] {
 export default function DomainsCell(props: CellProps): ReactElement {
   return (
     <Grid container direction="row" spacing={1}>
-      {gatherDomains(props.rowData.senses).map((dom) => (
+      {gatherDomains(props.word.senses).map((dom) => (
         <Grid item key={`${dom.id}-${dom.name}`}>
           <Chip label={`${dom.id}: ${dom.name}`} />
         </Grid>

@@ -12,10 +12,9 @@ import { GramCatGroup, Sense, Word } from "api/models";
 import { CloseButton } from "components/Buttons";
 import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
 import {
-  DomainCell,
-  PartOfSpeechCell,
-} from "goals/ReviewEntries/ReviewEntriesTable/CellComponents";
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";
+  Domains,
+  PartOfSpeech,
+} from "goals/ReviewEntries/ReviewEntriesTable/Cells";
 import { firstGlossText } from "utilities/wordUtilities";
 
 interface SenseDialogProps {
@@ -62,10 +61,7 @@ export function SenseList(props: SenseListProps): ReactElement {
   );
 
   const menuItem = (sense: Sense): ReactElement => {
-    const entry = new ReviewEntriesWord(
-      { ...props.selectedWord, senses: [sense] },
-      props.analysisLang
-    );
+    const word: Word = { ...props.selectedWord, senses: [sense] };
     const gloss = firstGlossText(sense);
     return (
       <StyledMenuItem
@@ -84,11 +80,11 @@ export function SenseList(props: SenseListProps): ReactElement {
           </Grid>
           {hasPartsOfSpeech && (
             <Grid item xs="auto">
-              <PartOfSpeechCell rowData={entry} />
+              <PartOfSpeech word={word} />
             </Grid>
           )}
           <Grid item xs>
-            <DomainCell rowData={entry} />
+            <Domains word={word} />
           </Grid>
         </Grid>
       </StyledMenuItem>

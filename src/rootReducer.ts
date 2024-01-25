@@ -8,7 +8,6 @@ import pronunciationsReducer from "components/Pronunciations/Redux/Pronunciation
 import treeViewReducer from "components/TreeView/Redux/TreeViewReducer";
 import characterInventoryReducer from "goals/CharacterInventory/Redux/CharacterInventoryReducer";
 import mergeDupStepReducer from "goals/MergeDuplicates/Redux/MergeDupsReducer";
-import reviewEntriesReducer from "goals/ReviewEntries/Redux/ReviewEntriesReducer";
 import { StoreState } from "types";
 import analyticsReducer from "types/Redux/analytics";
 
@@ -22,7 +21,6 @@ export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
 
   //data entry and review entries goal
   treeViewState: treeViewReducer,
-  reviewEntriesState: reviewEntriesReducer,
   pronunciationsState: pronunciationsReducer,
 
   //goal timeline and current goal

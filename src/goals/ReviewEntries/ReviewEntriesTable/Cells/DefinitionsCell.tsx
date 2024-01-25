@@ -7,8 +7,11 @@ export default function DefinitionsCell(props: CellProps): ReactElement {
   const MAX_LENGTH = 75;
   const typographies: ReactElement[] = [];
 
-  props.rowData.senses.forEach((sense) => {
-    let text = sense.definitions.map((d) => d.text.trim()).join("; ");
+  props.word.senses.forEach((sense) => {
+    let text = sense.definitions
+      .map((d) => d.text.trim())
+      .filter((t) => t)
+      .join("; ");
     if (!text) {
       return;
     }
