@@ -27,6 +27,7 @@ jest.mock("notistack", () => ({
 }));
 jest.mock("uuid", () => ({ v4: () => mockUuid() }));
 jest.mock("backend", () => ({
+  getAllSpeakers: () => Promise.resolve([]),
   getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
 }));
 jest.mock("components/TreeView", () => "div");
