@@ -5,16 +5,14 @@ import {
   MenuList,
   Typography,
 } from "@mui/material";
-import { ReactElement } from "react";
+import { type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
-import { GramCatGroup, Sense, Word } from "api/models";
+import { GramCatGroup, type Sense, type Word } from "api/models";
 import { CloseButton } from "components/Buttons";
 import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
-import {
-  Domains,
-  PartOfSpeech,
-} from "goals/ReviewEntries/ReviewEntriesTable/Cells";
+import DomainsCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/DomainsCell";
+import PartOfSpeechCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/PartOfSpeechCell";
 import { firstGlossText } from "utilities/wordUtilities";
 
 interface SenseDialogProps {
@@ -80,11 +78,11 @@ export function SenseList(props: SenseListProps): ReactElement {
           </Grid>
           {hasPartsOfSpeech && (
             <Grid item xs="auto">
-              <PartOfSpeech word={word} />
+              <PartOfSpeechCell word={word} />
             </Grid>
           )}
           <Grid item xs>
-            <Domains word={word} />
+            <DomainsCell word={word} />
           </Grid>
         </Grid>
       </StyledMenuItem>
