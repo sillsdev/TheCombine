@@ -336,7 +336,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
         open={cancelDialog}
         textId="reviewEntries.materialTable.body.discardChanges"
       />
-      <Dialog fullWidth maxWidth={false} open={props.open}>
+      <Dialog fullWidth maxWidth="lg" open={props.open}>
         <DialogTitle>
           <Grid container justifyContent="space-between">
             <Grid item>

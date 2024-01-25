@@ -187,7 +187,7 @@ export default function EditSenseDialog(
         open={cancelDialog}
         textId="reviewEntries.materialTable.body.discardChanges"
       />
-      <Dialog maxWidth={false} open={props.isOpen}>
+      <Dialog fullWidth maxWidth="sm" open={props.isOpen}>
         <DialogTitle>
           <Grid container justifyContent="space-between">
             <Grid item>{t("reviewEntries.materialTable.body.editSense")}</Grid>
