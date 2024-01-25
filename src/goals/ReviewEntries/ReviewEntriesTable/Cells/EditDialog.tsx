@@ -20,6 +20,7 @@ import {
   TextField,
   type SelectChangeEvent,
 } from "@mui/material";
+import { grey, yellow } from "@mui/material/colors";
 import {
   type CSSProperties,
   type ReactElement,
@@ -39,6 +40,7 @@ import PronunciationsBackend from "components/Pronunciations/PronunciationsBacke
 import PronunciationsFrontend from "components/Pronunciations/PronunciationsFrontend";
 import { uploadFileFromPronunciation } from "components/Pronunciations/utilities";
 import EditSensesCardContent, {
+  isSenseChanged,
   trimDefinitions,
   trimGlosses,
 } from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditSensesCardContent";
@@ -213,17 +215,32 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
             (o) => n.fileName === o.fileName && n.speakerId !== o.speakerId
           )
         ),
-      [EditField.Senses]: false, // TODO: compute once senses are editable
+      [EditField.Senses]:
+        newWord.senses.length !== props.word.senses.length ||
+        newWord.senses.some((s, i) => isSenseChanged(props.word.senses[i], s)),
       [EditField.Vernacular]:
         newWord.vernacular.trim() !== props.word.vernacular.trim(),
     });
   }, [newAudio, newWord, props.word]);
 
   const bgStyle = (field: EditField): CSSProperties => ({
-    backgroundColor: changes[field] ? "lightyellow" : "lightgray",
+    backgroundColor: changes[field] ? yellow[50] : grey[200],
   });
 
   // Functions for handling senses is the edit state.
+  const moveSense = (from: number, to: number): void => {
+    if (from < 0 || to < 0 || from === to) {
+      return;
+    }
+    setNewWord((prev) => {
+      if (from >= prev.senses.length || to >= prev.senses.length) {
+        return prev;
+      }
+      const senses = [...prev.senses];
+      senses.splice(to, 0, senses.splice(from, 1)[0]);
+      return { ...prev, senses };
+    });
+  };
   const toggleSenseDeleted = (index: number): void => {
     setNewWord((prev) => {
       if (index < 0 || index >= prev.senses.length) {
@@ -368,7 +385,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <Dialog fullWidth open={props.open}>
+    <Dialog fullWidth maxWidth={false} open={props.open}>
       <DialogTitle>
         <Grid container justifyContent="space-between">
           <Grid item>
@@ -431,6 +448,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
                 title={t("reviewEntries.columns.senses")}
               />
               <EditSensesCardContent
+                moveSense={moveSense}
                 newSenses={newWord.senses}
                 oldSenses={props.word.senses}
                 showSenses={showSenses}
