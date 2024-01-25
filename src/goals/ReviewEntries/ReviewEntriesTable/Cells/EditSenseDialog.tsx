@@ -1,8 +1,9 @@
-import { Check, Close } from "@mui/icons-material";
+import { Add, Check, Close } from "@mui/icons-material";
 import {
   Card,
   CardContent,
   CardHeader,
+  Chip,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -28,10 +29,12 @@ import {
   type Gloss,
   type WritingSystem,
   type Definition,
+  type SemanticDomain,
 } from "api/models";
 import { deleteAudio, updateWord } from "backend";
 import { PartOfSpeechButton } from "components/Buttons";
 import { uploadFileFromPronunciation } from "components/Pronunciations/utilities";
+import TreeView from "components/TreeView";
 import {
   areDefinitionsSame,
   areDomainsSame,
@@ -40,6 +43,7 @@ import {
 } from "goals/ReviewEntries/ReviewEntriesTable/Cells/utilities";
 import { type StoreState } from "types";
 import { useAppSelector } from "types/hooks";
+import { newSemanticDomainForMongoDB } from "types/semanticDomain";
 import { themeColors } from "types/theme";
 import { newDefinition, newGloss } from "types/word";
 import { TextFieldWithFont } from "utilities/fontComponents";
@@ -66,13 +70,14 @@ export async function updateFrontierWord(
 enum EditField {
   Definitions,
   Glosses,
-  // GrammaticalInfo, // Not editable
+  GrammaticalInfo,
   SemanticDomains,
 }
 
 type EditFieldChanged = Record<EditField, boolean>;
 const defaultEditFieldChanged: EditFieldChanged = {
   [EditField.Definitions]: false,
+  [EditField.GrammaticalInfo]: false,
   [EditField.Glosses]: false,
   [EditField.SemanticDomains]: false,
 };
@@ -97,33 +102,33 @@ export default function EditSenseDialog(
 
   useEffect(() => {
     setChanges({
-      [EditField.Definitions]: areDefinitionsSame(
+      [EditField.Definitions]: !areDefinitionsSame(
         newSense.definitions,
         props.sense.definitions
       ),
-      [EditField.Glosses]: areGlossesSame(
+      [EditField.Glosses]: !areGlossesSame(
         newSense.glosses,
         props.sense.glosses
       ),
-      [EditField.SemanticDomains]: areDomainsSame(
+      [EditField.GrammaticalInfo]: false, // not editable
+      [EditField.SemanticDomains]: !areDomainsSame(
         newSense.semanticDomains,
         props.sense.semanticDomains
       ),
     });
   }, [newSense, props.sense]);
 
-  const bgStyle = (field?: EditField): CSSProperties => ({
-    backgroundColor: field && changes[field] ? yellow[50] : grey[200],
+  const bgStyle = (field: EditField): CSSProperties => ({
+    backgroundColor: changes[field] ? yellow[50] : grey[200],
   });
 
-  // Functions for handling definitions in the state.
+  // Functions for updating the edit sense state.
   const updateDefinitions = (definitions: Definition[]): void =>
     setNewSense((prev) => ({ ...prev, definitions }));
-
-  // Functions for handling glosses in the state.
   const updateGlosses = (glosses: Gloss[]): void =>
     setNewSense((prev) => ({ ...prev, glosses }));
-  // Functions for handling the semantic domains in the state.
+  const updateDomains = (semanticDomains: SemanticDomain[]): void =>
+    setNewSense((prev) => ({ ...prev, semanticDomains }));
 
   /** Clean up the edited word and update it backend and frontend. */
   const saveAndClose = (): void => {
@@ -159,7 +164,7 @@ export default function EditSenseDialog(
   const { t } = useTranslation();
 
   return (
-    <Dialog fullWidth maxWidth={false} open={props.isOpen}>
+    <Dialog maxWidth={false} open={props.isOpen}>
       <DialogTitle>
         <Grid container justifyContent="space-between">
           <Grid item>{t("reviewEntries.materialTable.body.editSense")}</Grid>
@@ -210,7 +215,7 @@ export default function EditSenseDialog(
 
           {/* Part of Speech */}
           <Grid item>
-            <Card sx={bgStyle()}>
+            <Card sx={bgStyle(EditField.GrammaticalInfo)}>
               <CardHeader title={t("reviewEntries.columns.partOfSpeech")} />
               <CardContent>
                 {newSense.grammaticalInfo.catGroup ===
@@ -228,16 +233,9 @@ export default function EditSenseDialog(
             <Card sx={bgStyle(EditField.SemanticDomains)}>
               <CardHeader title={t("reviewEntries.columns.domains")} />
               <CardContent>
-                <TextFieldWithFont
-                  //label={vernLang}
-                  onChange={(e) =>
-                    setNewSense((prev) => ({
-                      ...prev,
-                      vernacular: e.target.value,
-                    }))
-                  }
-                  value={newSense.semanticDomains}
-                  vernacular
+                <DomainList
+                  domains={newSense.semanticDomains}
+                  onChange={updateDomains}
                 />
               </CardContent>
             </Card>
@@ -288,6 +286,7 @@ interface DefinitionTextFieldProps {
 function DefinitionTextField(props: DefinitionTextFieldProps): ReactElement {
   return (
     <TextFieldWithFont
+      fullWidth
       id={props.textFieldId}
       label={props.definition.language}
       lang={props.definition.language}
@@ -344,6 +343,7 @@ interface GlossTextFieldProps {
 function GlossTextField(props: GlossTextFieldProps): ReactElement {
   return (
     <TextFieldWithFont
+      fullWidth
       id={props.textFieldId}
       error={!props.gloss.def.trim()}
       label={props.gloss.language}
@@ -356,5 +356,75 @@ function GlossTextField(props: GlossTextFieldProps): ReactElement {
       value={props.gloss.def}
       variant="outlined"
     />
+  );
+}
+
+interface DomainListProps {
+  domains: SemanticDomain[];
+  onChange: (domains: SemanticDomain[]) => void;
+}
+
+function DomainList(props: DomainListProps): ReactElement {
+  const selectedDom = useAppSelector(
+    (state: StoreState) => state.treeViewState.currentDomain
+  );
+  const [addingDom, setAddingDom] = useState<boolean>(false);
+  const { t } = useTranslation();
+
+  function addDomain(): void {
+    setAddingDom(false);
+    if (!selectedDom) {
+      throw new Error("Cannot add domain without the selectedDomain property.");
+    }
+    if (selectedDom.mongoId == "") {
+      throw new Error("SelectedSemanticDomainTreeNode have no mongoId.");
+    }
+    if (props.domains.some((d) => d.id === selectedDom.id)) {
+      toast.error(t("reviewEntries.duplicateDomain", { val: selectedDom.id }));
+      return;
+    }
+    props.onChange([
+      ...props.domains,
+      newSemanticDomainForMongoDB(selectedDom),
+    ]);
+  }
+
+  function deleteDomain(domId: string): void {
+    props.onChange(props.domains.filter((d) => d.id !== domId));
+  }
+
+  return (
+    <>
+      <Grid container direction="row" spacing={2}>
+        {props.domains.length > 0 ? (
+          props.domains.map((domain, index) => (
+            <Grid item key={`${domain.id}_${domain.name}`}>
+              <Chip
+                id={`domain-${index}`}
+                label={`${domain.id}: ${domain.name}`}
+                onDelete={() => deleteDomain(domain.id)}
+              />
+            </Grid>
+          ))
+        ) : (
+          <Grid item xs>
+            <Chip color="secondary" label={t("reviewEntries.noDomain")} />
+          </Grid>
+        )}
+        <IconButton
+          id="domain-add"
+          onClick={() => setAddingDom(true)}
+          size="large"
+        >
+          <Add />
+        </IconButton>
+      </Grid>
+      <Dialog fullScreen open={addingDom}>
+        <TreeView
+          exit={() => setAddingDom(false)}
+          returnControlToCaller={addDomain}
+        />
+      </Dialog>
+    </>
   );
 }
