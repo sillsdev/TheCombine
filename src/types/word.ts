@@ -215,24 +215,14 @@ export function compareWordDomains(a: Word, b: Word): number {
 }
 
 export function compareWordDefinitions(a: Word, b: Word): number {
-  for (let i = 0; i < a.senses.length && i < b.senses.length; i++) {
-    const stringA = definitionString(a.senses[i]);
-    const stringB = definitionString(b.senses[i]);
-    if (stringA !== stringB) {
-      return stringA.localeCompare(stringB);
-    }
-  }
-  return a.senses.length - b.senses.length;
+  const stringsA = a.senses.map(definitionString).filter((s) => s);
+  const stringsB = b.senses.map(definitionString).filter((s) => s);
+  return stringsA.join(SEPARATOR).localeCompare(stringsB.join(SEPARATOR));
 }
 export function compareWordGlosses(a: Word, b: Word): number {
-  for (let i = 0; i < a.senses.length && i < b.senses.length; i++) {
-    const stringA = glossString(a.senses[i]);
-    const stringB = glossString(b.senses[i]);
-    if (stringA !== stringB) {
-      return stringA.localeCompare(stringB);
-    }
-  }
-  return a.senses.length - b.senses.length;
+  const stringsA = a.senses.map(glossString).filter((s) => s);
+  const stringsB = b.senses.map(glossString).filter((s) => s);
+  return stringsA.join(SEPARATOR).localeCompare(stringsB.join(SEPARATOR));
 }
 
 export function compareWordGrammaticalInfo(a: Word, b: Word): number {

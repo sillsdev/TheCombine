@@ -106,51 +106,53 @@ export default function ReviewEntriesTable(): ReactElement {
       Cell: ({ row }: CellProps) => <VernacularCell rowData={row.original} />,
       enableHiding: false,
       header: t("reviewEntries.columns.vernacular"),
+      sortDescFirst: false,
     }),
 
     // Senses column
-    columnHelper.accessor((row) => row.senses.length, {
+    columnHelper.accessor((w) => w.senses.length, {
       enableFilterMatchHighlighting: false,
       filterFn: "equals",
       Header: <Typography>#</Typography>,
       header: t("reviewEntries.columns.senses"),
       id: "senses",
       size: 100,
+      sortDescFirst: false,
     }),
 
     // Definitions column
-    columnHelper.accessor((row) => row.senses.flatMap((s) => s.definitions), {
+    columnHelper.accessor((w) => w.senses.flatMap((s) => s.definitions), {
       Cell: ({ row }: CellProps) => <DefinitionsCell rowData={row.original} />,
       enableHiding: showDefinitions,
-      filterFn: (row, id, filterValue: string) =>
-        row
-          .getValue<Definition[]>(id)
-          .findIndex((d) =>
-            d.text.toLowerCase().includes(filterValue.trim().toLowerCase())
-          ) !== -1,
+      filterFn: (row, id, filterValue: string) => {
+        const definitions = row.getValue<Definition[]>(id);
+        const filter = filterValue.trim().toLowerCase();
+        return definitions.some((d) => d.text.toLowerCase().includes(filter));
+      },
       header: t("reviewEntries.columns.definitions"),
       id: "definitions",
+      sortDescFirst: false,
       sortingFn: (rowA, rowB) =>
         compareWordDefinitions(rowA.original, rowB.original),
     }),
 
     // Glosses column
-    columnHelper.accessor((row) => row.senses.flatMap((s) => s.glosses), {
+    columnHelper.accessor((w) => w.senses.flatMap((s) => s.glosses), {
       Cell: ({ row }: CellProps) => <GlossesCell rowData={row.original} />,
-      filterFn: (row, id, filterValue: string) =>
-        row
-          .getValue<Gloss[]>(id)
-          .findIndex((g) =>
-            g.def.toLowerCase().includes(filterValue.trim().toLowerCase())
-          ) !== -1,
+      filterFn: (row, id, filterValue: string) => {
+        const glosses = row.getValue<Gloss[]>(id);
+        const filter = filterValue.trim().toLowerCase();
+        return glosses.some((g) => g.def.toLowerCase().includes(filter));
+      },
       header: t("reviewEntries.columns.glosses"),
       id: "glosses",
+      sortDescFirst: false,
       sortingFn: (rowA, rowB) =>
         compareWordGlosses(rowA.original, rowB.original),
     }),
 
     // Parts of Speech column
-    columnHelper.accessor((row) => row.senses.map((s) => s.grammaticalInfo), {
+    columnHelper.accessor((w) => w.senses.map((s) => s.grammaticalInfo), {
       Cell: ({ row }: CellProps) => (
         <PartsOfSpeechCell rowData={row.original} />
       ),
@@ -158,7 +160,7 @@ export default function ReviewEntriesTable(): ReactElement {
       filterFn: (row, id, filterValue: GramCatGroup) =>
         row
           .getValue<GrammaticalInfo[]>(id)
-          .findIndex((i) => i.catGroup === filterValue) !== -1,
+          .some((gi) => gi.catGroup === filterValue),
       filterSelectOptions: Object.values(GramCatGroup).map((g) => ({
         text: t(`grammaticalCategory.group.${g}`),
         value: g,
@@ -166,73 +168,91 @@ export default function ReviewEntriesTable(): ReactElement {
       filterVariant: "select",
       header: t("reviewEntries.columns.partsOfSpeech"),
       id: "partsOfSpeech",
+      sortDescFirst: false,
       sortingFn: (rowA, rowB) =>
         compareWordGrammaticalInfo(rowA.original, rowB.original),
     }),
 
     // Domains column
-    columnHelper.accessor(
-      (row) => row.senses.flatMap((s) => s.semanticDomains),
-      {
-        Cell: ({ row }: CellProps) => <DomainsCell rowData={row.original} />,
-        filterFn: (row, id, filterValue: string) => {
-          /* Numeric id filter expected (periods between digits are optional).
-           * Test for exact id match if no final period.
-           * Test for initial substring match if final period. */
-          const doms = row.getValue<SemanticDomain[]>(id);
-          let filter = filterValue.replace(/[^0-9\.]/g, "");
-          if (!filter) {
-            return true;
-          }
-          const finalPeriod = filter.slice(-1) === ".";
-          filter = filter.replace(/\./g, "").split("").join(".");
-          if (finalPeriod) {
-            return doms.findIndex((d) => d.id.startsWith(filter)) !== -1;
-          } else {
-            return doms.findIndex((d) => d.id === filter) !== -1;
-          }
-        },
-        header: t("reviewEntries.columns.domains"),
-        id: "domains",
-        sortingFn: (rowA, rowB) =>
-          compareWordDomains(rowA.original, rowB.original),
-      }
-    ),
+    columnHelper.accessor((w) => w.senses.flatMap((s) => s.semanticDomains), {
+      Cell: ({ row }: CellProps) => <DomainsCell rowData={row.original} />,
+      filterFn: (row, id, filterValue: string) => {
+        /* Numeric id filter expected (periods between digits are optional).
+         * Test for exact id match if no final period.
+         * Test for initial substring match if final period. */
+        const doms = row.getValue<SemanticDomain[]>(id);
+        if (!doms.length) {
+          // A filter has been typed and there are no domains
+          return false;
+        }
+        if (!filterValue.trim()) {
+          // The typed filter is whitespace
+          return true;
+        }
+        let filter = filterValue.replace(/[^0-9\.]/g, "");
+        if (!filter) {
+          // The typed filter has no digits or periods
+          return false;
+        }
+        // Check if the filter ends with a period rather than a digit
+        const finalPeriod = filter.slice(-1) === ".";
+        // Remove all periods and put periods between digits
+        filter = filter.replace(/\./g, "").split("").join(".");
+        if (finalPeriod) {
+          // There is a period after the final digit (or no digits)
+          return doms.some((d) => d.id.startsWith(filter));
+        } else {
+          // There is not a period after the final digit
+          return doms.some((d) => d.id === filter);
+        }
+      },
+      header: t("reviewEntries.columns.domains"),
+      id: "domains",
+      sortDescFirst: false,
+      sortingFn: (rowA, rowB) =>
+        compareWordDomains(rowA.original, rowB.original),
+    }),
 
     // Pronunciations column
-    columnHelper.accessor((row) => row.audio, {
+    columnHelper.accessor((w) => w.audio, {
       Cell: ({ row }: CellProps) => (
         <PronunciationsCell replaceWord={replaceWord} rowData={row.original} />
       ),
       filterFn: (row, id, filterValue: string) => {
-        /* Match either number of pronunciations or a speaker name. */
+        /* Match either number of pronunciations or a speaker name.
+         * (Whitespace will match all audio, even without a speaker.) */
         const audio = row.getValue<Pronunciation[]>(id);
         const filter = filterValue.trim().toLocaleLowerCase();
         return (
-          !filter ||
           audio.length === parseInt(filter) ||
-          audio.some((p) => speakers[p.speakerId]?.includes(filter))
+          audio.some((p) => !filter || speakers[p.speakerId]?.includes(filter))
         );
       },
       header: t("reviewEntries.columns.pronunciations"),
       id: "pronunciations",
+      sortDescFirst: false,
     }),
 
     // Note column
-    columnHelper.accessor((row) => row.note.text, {
+    columnHelper.accessor((w) => w.note.text, {
       Cell: ({ row }: CellProps) => <NoteCell rowData={row.original} />,
       header: t("reviewEntries.columns.note"),
       id: "note",
+      sortDescFirst: false,
     }),
 
     // Flag column
     columnHelper.accessor("flag", {
       Cell: ({ row }: CellProps) => <FlagCell rowData={row.original} />,
-      filterFn: (row, id, filterValue: string) =>
-        row
-          .getValue<Flag>(id)
-          .text.toLowerCase()
-          .includes(filterValue.trim().toLowerCase()),
+      filterFn: (row, id, filterValue: string) => {
+        const flag = row.getValue<Flag>(id);
+        if (!flag.active) {
+          // A filter has been typed and the word isn't flagged
+          return false;
+        }
+        const filter = filterValue.trim().toLowerCase();
+        return flag.text.toLowerCase().includes(filter);
+      },
       Header: (
         <FlagIcon
           fontSize="small"
@@ -241,6 +261,7 @@ export default function ReviewEntriesTable(): ReactElement {
       ),
       header: t("reviewEntries.columns.flag"),
       size: 100,
+      sortDescFirst: false,
       sortingFn: (rowA, rowB) =>
         compareFlags(rowA.original.flag, rowB.original.flag),
     }),
