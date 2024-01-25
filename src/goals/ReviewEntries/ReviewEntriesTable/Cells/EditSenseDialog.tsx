@@ -27,7 +27,7 @@ import {
   GramCatGroup,
   type Gloss,
   type WritingSystem,
-  // type Definition,
+  type Definition,
 } from "api/models";
 import { deleteAudio, updateWord } from "backend";
 import { PartOfSpeechButton } from "components/Buttons";
@@ -41,7 +41,7 @@ import {
 import { type StoreState } from "types";
 import { useAppSelector } from "types/hooks";
 import { themeColors } from "types/theme";
-import { newGloss } from "types/word";
+import { newDefinition, newGloss } from "types/word";
 import { TextFieldWithFont } from "utilities/fontComponents";
 
 /** Update word in the backend */
@@ -117,8 +117,8 @@ export default function EditSenseDialog(
   });
 
   // Functions for handling definitions in the state.
-  /*const updateDefinitions = (definitions: Definition[]): void =>
-  setNewSense((prev) => ({ ...prev, definitions }));*/
+  const updateDefinitions = (definitions: Definition[]): void =>
+    setNewSense((prev) => ({ ...prev, definitions }));
 
   // Functions for handling glosses in the state.
   const updateGlosses = (glosses: Gloss[]): void =>
@@ -185,16 +185,10 @@ export default function EditSenseDialog(
             <Card sx={bgStyle(EditField.Definitions)}>
               <CardHeader title={t("reviewEntries.columns.definitions")} />
               <CardContent>
-                <TextFieldWithFont
-                  //label={vernLang}
-                  onChange={(e) =>
-                    setNewSense((prev) => ({
-                      ...prev,
-                      vernacular: e.target.value,
-                    }))
-                  }
-                  value={newSense.definitions}
-                  vernacular
+                <DefinitionList
+                  defaultLang={analysisWritingSystems[0]}
+                  definitions={newSense.definitions}
+                  onChange={updateDefinitions}
                 />
               </CardContent>
             </Card>
@@ -254,6 +248,62 @@ export default function EditSenseDialog(
   );
 }
 
+interface DefinitionListProps {
+  defaultLang: WritingSystem;
+  definitions: Definition[];
+  onChange: (definitions: Definition[]) => void;
+}
+
+function DefinitionList(props: DefinitionListProps): ReactElement {
+  const definitions = props.definitions.find(
+    (d) => d.language === props.defaultLang.bcp47
+  )
+    ? props.definitions
+    : [...props.definitions, newDefinition("", props.defaultLang.bcp47)];
+
+  return (
+    <>
+      {definitions.map((d, i) => (
+        <DefinitionTextField
+          definition={d}
+          key={i}
+          onChange={(definition: Definition) => {
+            const updated = [...definitions];
+            updated.splice(i, 1, definition);
+            props.onChange(updated);
+          }}
+          textFieldId={`definition-${i}`}
+        />
+      ))}
+    </>
+  );
+}
+
+interface DefinitionTextFieldProps {
+  definition: Definition;
+  textFieldId: string;
+  onChange: (definition: Definition) => void;
+}
+
+function DefinitionTextField(props: DefinitionTextFieldProps): ReactElement {
+  return (
+    <TextFieldWithFont
+      id={props.textFieldId}
+      label={props.definition.language}
+      lang={props.definition.language}
+      margin="dense"
+      multiline
+      onChange={(event) =>
+        props.onChange(
+          newDefinition(event.target.value, props.definition.language)
+        )
+      }
+      value={props.definition.text}
+      variant="outlined"
+    />
+  );
+}
+
 interface GlossListProps {
   defaultLang: WritingSystem;
   glosses: Gloss[];
@@ -270,41 +320,41 @@ function GlossList(props: GlossListProps): ReactElement {
   return (
     <>
       {glosses.map((g, i) => (
-        <GlossField
+        <GlossTextField
           gloss={g}
           key={i}
           onChange={(gloss: Gloss) => {
-            const updatedGlosses = [...glosses];
-            updatedGlosses.splice(i, 1, gloss);
-            props.onChange(updatedGlosses);
+            const updated = [...glosses];
+            updated.splice(i, 1, gloss);
+            props.onChange(updated);
           }}
-          textFieldId={`${i}-text`}
+          textFieldId={`gloss-${i}`}
         />
       ))}
     </>
   );
 }
 
-interface GlossFieldProps {
+interface GlossTextFieldProps {
   gloss: Gloss;
   textFieldId: string;
   onChange: (gloss: Gloss) => void;
 }
 
-function GlossField(props: GlossFieldProps): ReactElement {
+function GlossTextField(props: GlossTextFieldProps): ReactElement {
   return (
     <TextFieldWithFont
       id={props.textFieldId}
-      label={`${props.gloss.language}:`}
+      error={!props.gloss.def.trim()}
+      label={props.gloss.language}
       lang={props.gloss.language}
-      variant="outlined"
       margin="dense"
       multiline
-      value={props.gloss.def}
-      error={props.gloss.def.length === 0}
       onChange={(event) =>
         props.onChange(newGloss(event.target.value, props.gloss.language))
       }
+      value={props.gloss.def}
+      variant="outlined"
     />
   );
 }
