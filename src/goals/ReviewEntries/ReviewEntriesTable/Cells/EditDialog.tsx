@@ -39,19 +39,17 @@ import {
 import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
 import PronunciationsFrontend from "components/Pronunciations/PronunciationsFrontend";
 import { uploadFileFromPronunciation } from "components/Pronunciations/utilities";
-import EditSensesCardContent, {
+import EditSensesCardContent from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditSensesCardContent";
+import {
+  cleanWord,
   isSenseChanged,
-  trimDefinitions,
-  trimGlosses,
-} from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditSensesCardContent";
+} from "goals/ReviewEntries/ReviewEntriesTable/Cells/utilities";
 import { type StoreState } from "types";
 import { type StoreStateDispatch } from "types/Redux/actions";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { themeColors } from "types/theme";
 import {
   type FileWithSpeakerId,
-  newFlag,
-  newNote,
   newPronunciation,
   updateSpeakerInAudio,
 } from "types/word";
@@ -63,78 +61,6 @@ function asyncUpdateWord(oldId: string, newId: string) {
     dispatch(addEntryEditToGoal({ newId, oldId }));
     await dispatch(asyncUpdateGoal());
   };
-}
-
-/** Return a cleaned array of senses ready to be saved (none with .deleted=true):
- * - If a sense is marked as deleted or is utterly blank, it is removed
- * - If a sense lacks gloss, return error
- * - If the user attempts to delete all senses, return old senses with deleted senses removed */
-function cleanSenses(newSenses: Sense[]): Sense[] | string {
-  const cleanedSenses: Sense[] = [];
-
-  for (const newSense of newSenses) {
-    // Skip deleted senses.
-    if (newSense.accessibility === Status.Deleted) {
-      continue;
-    }
-
-    // Remove empty definitions, empty glosses, and duplicate domains.
-    newSense.definitions = trimDefinitions(newSense.definitions);
-    newSense.glosses = trimGlosses(newSense.glosses);
-    const domainIds = [
-      ...new Set(newSense.semanticDomains.map((dom) => dom.id)),
-    ];
-    domainIds.sort();
-    newSense.semanticDomains = domainIds.map(
-      (id) => newSense.semanticDomains.find((dom) => dom.id === id)!
-    );
-
-    // Skip empty senses.
-    if (
-      newSense.definitions.length === 0 &&
-      newSense.glosses.length === 0 &&
-      newSense.semanticDomains.length === 0
-    ) {
-      continue;
-    }
-
-    // Don't allow senses without a gloss.
-    if (!newSense.glosses.length) {
-      return "reviewEntries.error.gloss";
-    }
-
-    cleanedSenses.push(newSense);
-  }
-
-  return cleanedSenses;
-}
-
-/** Clean a word. Return error string id if:
- * - the vernacular field is empty
- * - all senses are empty/deleted */
-function cleanWord(word: Word): Word | string {
-  // Make sure vernacular isn't empty.
-  const vernacular = word.vernacular.trim();
-  if (!vernacular.length) {
-    return "reviewEntries.error.vernacular";
-  }
-
-  // Clean senses and check for problems.
-  const senses = cleanSenses(word.senses);
-  if (typeof senses === "string") {
-    return senses;
-  }
-
-  // Clear note language if text empty.
-  const noteText = word.note.text.trim();
-  const note = newNote(noteText, noteText ? word.note.language : "");
-
-  // Clear flag text if flag not active.
-  const flagActive = word.flag.active;
-  const flag = newFlag(flagActive ? word.flag.text.trim() : undefined);
-  flag.active = flagActive;
-
-  return { ...word, flag, note, senses, vernacular };
 }
 
 /** Update word in the backend */

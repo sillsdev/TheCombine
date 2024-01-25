@@ -319,7 +319,7 @@
       "flag": "Flag",
       "glosses": "Glosses",
       "note": "Note",
-      "partsOfSpeech": "Parts of Speech",
+      "partOfSpeech": "Part of Speech",
       "pronunciations": "Pronunciations",
       "senses": "Senses",
       "vernacular": "Vernacular"
@@ -327,6 +327,7 @@
     "materialTable": {
       "body": {
         "edit": "Edit",
+        "editSense": "Edit sense",
         "emptyDataSourceMessage": "No entries to display",
         "filter": "Filter"
       },

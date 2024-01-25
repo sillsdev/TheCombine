@@ -151,7 +151,7 @@ export default function ReviewEntriesTable(): ReactElement {
         compareWordGlosses(rowA.original, rowB.original),
     }),
 
-    // Parts of Speech column
+    // Part of Speech column
     columnHelper.accessor((w) => w.senses.map((s) => s.grammaticalInfo), {
       Cell: ({ row }: CellProps) => (
         <PartsOfSpeechCell rowData={row.original} />
@@ -166,8 +166,8 @@ export default function ReviewEntriesTable(): ReactElement {
         value: g,
       })),
       filterVariant: "select",
-      header: t("reviewEntries.columns.partsOfSpeech"),
-      id: "partsOfSpeech",
+      header: t("reviewEntries.columns.partOfSpeech"),
+      id: "partOfSpeech",
       sortDescFirst: false,
       sortingFn: (rowA, rowB) =>
         compareWordGrammaticalInfo(rowA.original, rowB.original),
@@ -292,7 +292,7 @@ export default function ReviewEntriesTable(): ReactElement {
     initialState: {
       columnVisibility: {
         definitions: showDefinitions,
-        partsOfSpeech: showGrammaticalInfo,
+        partOfSpeech: showGrammaticalInfo,
       },
     },
     //muiFilterTextFieldProps: () => ({ label: " " }),
