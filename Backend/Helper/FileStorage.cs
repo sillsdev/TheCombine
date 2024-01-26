@@ -110,7 +110,7 @@ namespace BackendFramework.Helper
         public static string? GetConsentFilePath(string speakerId)
         {
             var searchPattern = $"*{Sanitization.SanitizeId(speakerId)}*";
-            return Directory.GetFiles(GenerateFilePath(ConsentDir, ""), searchPattern).FirstOrDefault();
+            return Directory.GetFiles(GenerateDirPath(ConsentDir, true), searchPattern).FirstOrDefault();
         }
 
         /// <summary>
