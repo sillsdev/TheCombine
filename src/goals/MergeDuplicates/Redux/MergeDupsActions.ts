@@ -104,15 +104,27 @@ export function deferMerge() {
   };
 }
 
+/** Dispatch function to construct all merges from the current merge tree.
+ * Each word with all senses deleted results in a `MergeWord` with `deleteOnly: true`.
+ * Each word column with no changes is ignored.
+ * Each word column with any changes results in a `MergeWord` with `deleteOnly: false`.
+ * The resulting `MergeWord` array is sent to the backend for merging.
+ * Also, the merges are added as changes to the current goal.
+ * Also, the new set of ids (for merge parents and unchanged words) is blacklisted. */
 export function mergeAll() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+    // Get MergeWord array from the state.
     dispatch(getMergeWords());
     const mergeTree = getState().mergeDuplicateGoal;
     const mergeWordsArray = [...mergeTree.mergeWords];
     dispatch(clearMergeWords());
+
     let parentIds: string[] = [];
     if (mergeWordsArray.length) {
+      // Send merges to the backend.
       parentIds = await backend.mergeWords(mergeWordsArray);
+
+      // Add merges as changes to the goal.
       const childIds = [
         ...new Set(
           mergeWordsArray.flatMap((m) => m.children).map((s) => s.srcWordId)
