@@ -263,7 +263,7 @@ namespace BackendFramework.Controllers
             }
 
             // Copy file data to a new local file
-            var path = IO.Path.ChangeExtension(FileStorage.GenerateConsentFilePath(speakerId), extension);
+            var path = FileStorage.GenerateConsentFilePath(speakerId, extension);
             await using (var fs = new IO.FileStream(path, IO.FileMode.OpenOrCreate))
             {
                 await file.CopyToAsync(fs);

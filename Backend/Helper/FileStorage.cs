@@ -97,9 +97,10 @@ namespace BackendFramework.Helper
         /// Generate the path to where Consent audio/images are stored.
         /// </summary>
         /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
-        public static string GenerateConsentFilePath(string speakerId)
+        public static string GenerateConsentFilePath(string speakerId, string? extension = null)
         {
-            return GenerateFilePath(ConsentDir, Sanitization.SanitizeId(speakerId));
+            var fileName = Path.ChangeExtension(Sanitization.SanitizeId(speakerId), extension);
+            return GenerateFilePath(ConsentDir, fileName);
         }
 
         /// <summary>
