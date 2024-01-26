@@ -109,9 +109,8 @@ namespace BackendFramework.Helper
         /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
         public static string? GetConsentFilePath(string speakerId)
         {
-            speakerId = Sanitization.SanitizeId(speakerId);
-            var files = Directory.GetFiles(GenerateFilePath(ConsentDir, "")).ToList();
-            return files.Find(path => Path.GetFileNameWithoutExtension(path) == speakerId);
+            var searchPattern = $"*{Sanitization.SanitizeId(speakerId)}*";
+            return Directory.GetFiles(GenerateFilePath(ConsentDir, ""), searchPattern).FirstOrDefault();
         }
 
         /// <summary>
