@@ -184,7 +184,7 @@ describe("ReviewEntriesActions", () => {
       const { sortBy, words } = store.getState().reviewEntriesState;
       expect(sortBy).toEqual(colId);
       expect(words).toHaveLength(3);
-      expect(words.some((w) => w.id === wordId)).toBeFalsy();
+      expect(words.find((w) => w.id === wordId)).toBeUndefined();
       const newWord = words.find((w) => w.id === newId);
       expect(newWord?.vernacular).toEqual(newVern);
     });
@@ -217,7 +217,7 @@ describe("ReviewEntriesActions", () => {
 
       // Verify the replacement word in state has the audio removed
       const words = store.getState().reviewEntriesState.words;
-      expect(words.some((w) => w.id === wordId)).toBeFalsy;
+      expect(words.find((w) => w.id === wordId)).toBeNull;
       const wordInState = words.find((w) => w.id === newId);
       expect(wordInState?.audio).toHaveLength(0);
     });
@@ -247,7 +247,7 @@ describe("ReviewEntriesActions", () => {
 
       // Verify the replacement word in state has the updated speaker id
       const words = store.getState().reviewEntriesState.words;
-      expect(words.some((w) => w.id === wordId)).toBeFalsy;
+      expect(words.find((w) => w.id === wordId)).toBeNull;
       const audioInState = words.find((w) => w.id === newId)?.audio;
       expect(audioInState).toHaveLength(1);
       expect(audioInState![0].speakerId).toEqual(speakerId);
@@ -276,7 +276,7 @@ describe("ReviewEntriesActions", () => {
 
       // Verify the replacement word in state has the audio added
       const words = store.getState().reviewEntriesState.words;
-      expect(words.some((w) => w.id === wordId)).toBeFalsy;
+      expect(words.find((w) => w.id === wordId)).toBeNull;
       const audioInState = words.find((w) => w.id === newId)?.audio;
       expect(audioInState).toHaveLength(1);
       expect(audioInState![0].fileName).toEqual(pro.fileName);

@@ -133,7 +133,7 @@ function cleanWord(
   word: ReviewEntriesWord,
   oldWord: ReviewEntriesWord
 ): ReviewEntriesWord | string {
-  if (word.senses.every((s) => s.deleted)) {
+  if (!word.senses.find((s) => !s.deleted)) {
     return "reviewEntries.error.senses";
   }
   const vernacular = word.vernacular.length
@@ -176,8 +176,8 @@ export function updateFrontierWord(
     editWord.audio = oldData.audio.map(
       (o) => newData.audio.find((n) => n.fileName === o.fileName) ?? o
     );
-    const delAudio = oldData.audio.filter((o) =>
-      newData.audio.every((n) => n.fileName !== o.fileName)
+    const delAudio = oldData.audio.filter(
+      (o) => !newData.audio.find((n) => n.fileName === o.fileName)
     );
     const addAudio = [...(newData.audioNew ?? [])];
 
@@ -203,7 +203,8 @@ export function getSenseFromEditSense(
   oldSenses: Sense[]
 ): Sense {
   // If we match an old sense, copy it over.
-  const sense = oldSenses.find((s) => s.guid === editSense.guid) ?? newSense();
+  const oldSense = oldSenses.find((s) => s.guid === editSense.guid);
+  const sense = oldSense ?? newSense();
 
   // Use the cleaned definitions, glosses, and domains.
   sense.definitions = [...editSense.definitions];

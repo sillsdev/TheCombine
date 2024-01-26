@@ -67,7 +67,7 @@ function GlossList(props: GlossListProps): ReactElement {
   const { t } = useTranslation();
 
   if (!props.editable) {
-    if (props.glosses.every((g) => !g.def)) {
+    if (!props.glosses.find((g) => g.def)) {
       return <Typography>{t("reviewEntries.noGloss")}</Typography>;
     }
     return (
@@ -83,7 +83,7 @@ function GlossList(props: GlossListProps): ReactElement {
     );
   }
 
-  const glosses = props.glosses.some(
+  const glosses = props.glosses.find(
     (g) => g.language === props.defaultLang.bcp47
   )
     ? props.glosses

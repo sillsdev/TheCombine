@@ -72,7 +72,7 @@ function DefinitionList(props: DefinitionListProps): ReactElement {
   const { t } = useTranslation();
 
   if (!props.editable) {
-    if (props.definitions.every((d) => !d.text)) {
+    if (!props.definitions.find((d) => d.text)) {
       return <Typography>{t("reviewEntries.noDefinition")}</Typography>;
     }
     return (
@@ -88,7 +88,7 @@ function DefinitionList(props: DefinitionListProps): ReactElement {
     );
   }
 
-  const definitions = props.definitions.some(
+  const definitions = props.definitions.find(
     (d) => d.language === props.defaultLang.bcp47
   )
     ? props.definitions

@@ -54,7 +54,7 @@ export default function DomainCell(props: DomainCellProps): ReactElement {
       if (selectedDomain.mongoId == "") {
         throw new Error("SelectedSemanticDomainTreeNode have no mongoId.");
       }
-      if (senseToChange.domains.some((d) => d.id === selectedDomain.id)) {
+      if (senseToChange.domains.find((d) => d.id === selectedDomain.id)) {
         toast.error(
           t("reviewEntries.duplicateDomain", { val: selectedDomain.id })
         );
