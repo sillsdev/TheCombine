@@ -61,7 +61,7 @@ export default function SenseCardContent(
       case ReasonType.Relations:
         return t("mergeDups.protectReason.relations");
       case ReasonType.Reversals:
-        return t("mergeDups.protectReason.reversals", { val: reason.value });
+        return t("mergeDups.protectReason.reversal", { val: reason.value });
       case ReasonType.Subsenses:
         return t("mergeDups.protectReason.subsenses");
       case ReasonType.Trait:
