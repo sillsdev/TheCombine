@@ -47,22 +47,19 @@ export default function EditSensesCardContent(
       {props.showSenses ? (
         <>
           {props.newSenses.map((s, i) => (
-            <>
-              <EditSense
-                bumpSenseDown={
-                  i < props.newSenses.length - 1
-                    ? () => props.moveSense(i, i + 1)
-                    : undefined
-                }
-                bumpSenseUp={i ? () => props.moveSense(i, i - 1) : undefined}
-                edited={changes[i]}
-                key={s.guid}
-                sense={s}
-                toggleSenseDeleted={() => props.toggleSenseDeleted(i)}
-                updateSense={props.updateOrAddSense}
-              />
-              <Divider sx={{ mb: 1 }} />
-            </>
+            <EditSense
+              bumpSenseDown={
+                i < props.newSenses.length - 1
+                  ? () => props.moveSense(i, i + 1)
+                  : undefined
+              }
+              bumpSenseUp={i ? () => props.moveSense(i, i - 1) : undefined}
+              edited={changes[i]}
+              key={s.guid}
+              sense={s}
+              toggleSenseDeleted={() => props.toggleSenseDeleted(i)}
+              updateSense={props.updateOrAddSense}
+            />
           ))}
           <IconButtonWithTooltip
             buttonId={"sense-add"}
@@ -97,83 +94,88 @@ function EditSense(props: EditSenseProps): ReactElement {
   const [editing, setEditing] = useState(false);
 
   return (
-    <Grid container>
-      {props.bumpSenseDown || props.bumpSenseUp ? (
-        <Grid item>
-          <Grid container direction="column">
-            <Grid item>
-              <IconButtonWithTooltip
-                buttonId={`sense-${sense.guid}-bump-up`}
-                icon={props.bumpSenseUp ? <ArrowUpward /> : <Icon />}
-                onClick={props.bumpSenseUp}
-                size="small"
-              />
-            </Grid>
-            <Grid item>
-              <IconButtonWithTooltip
-                buttonId={`sense-${sense.guid}-bump-down`}
-                icon={props.bumpSenseDown ? <ArrowDownward /> : <Icon />}
-                onClick={props.bumpSenseDown}
-                size="small"
-              />
+    <>
+      <Grid container>
+        {props.bumpSenseDown || props.bumpSenseUp ? (
+          <Grid item>
+            <Grid container direction="column">
+              <Grid item>
+                <IconButtonWithTooltip
+                  buttonId={`sense-${sense.guid}-bump-up`}
+                  icon={props.bumpSenseUp ? <ArrowUpward /> : <Icon />}
+                  onClick={props.bumpSenseUp}
+                  size="small"
+                />
+              </Grid>
+              <Grid item>
+                <IconButtonWithTooltip
+                  buttonId={`sense-${sense.guid}-bump-down`}
+                  icon={props.bumpSenseDown ? <ArrowDownward /> : <Icon />}
+                  onClick={props.bumpSenseDown}
+                  size="small"
+                />
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      ) : null}
-      <Grid item>
-        <Grid container direction="column">
-          {deleted ? (
-            <Grid item>
-              <IconButtonWithTooltip
-                buttonId={`sense-${sense.guid}-restore`}
-                icon={<RestoreFromTrash />}
-                onClick={props.toggleSenseDeleted}
-                size="small"
-              />
-            </Grid>
-          ) : (
-            <>
+        ) : null}
+        <Grid item>
+          <Grid container direction="column">
+            {deleted ? (
               <Grid item>
                 <IconButtonWithTooltip
-                  buttonId={`sense-${sense.guid}-delete`}
-                  icon={<Delete />}
-                  onClick={
-                    sense.accessibility === Status.Protected
-                      ? undefined
-                      : props.toggleSenseDeleted
-                  }
-                  size="small"
-                  textId={
-                    sense.accessibility === Status.Protected
-                      ? "reviewEntries.deleteDisabled"
-                      : undefined
-                  }
-                />
-              </Grid>
-              <Grid item>
-                <IconButtonWithTooltip
-                  buttonId={`sense-${sense.guid}-edit`}
-                  icon={<Edit />}
-                  onClick={() => setEditing(true)}
+                  buttonId={`sense-${sense.guid}-restore`}
+                  icon={<RestoreFromTrash />}
+                  onClick={props.toggleSenseDeleted}
                   size="small"
                 />
               </Grid>
-            </>
-          )}
+            ) : (
+              <>
+                <Grid item>
+                  <IconButtonWithTooltip
+                    buttonId={`sense-${sense.guid}-delete`}
+                    icon={<Delete />}
+                    onClick={
+                      sense.accessibility === Status.Protected
+                        ? undefined
+                        : props.toggleSenseDeleted
+                    }
+                    size="small"
+                    textId={
+                      sense.accessibility === Status.Protected
+                        ? "reviewEntries.deleteDisabled"
+                        : undefined
+                    }
+                  />
+                </Grid>
+                <Grid item>
+                  <IconButtonWithTooltip
+                    buttonId={`sense-${sense.guid}-edit`}
+                    icon={<Edit />}
+                    onClick={() => setEditing(true)}
+                    size="small"
+                  />
+                </Grid>
+              </>
+            )}
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid item sx={{ maxWidth: `calc(100% - 80px)` }}>
-        <SenseCard
-          bgColor={deleted ? grey[500] : props.edited ? yellow[100] : undefined}
+        <Grid item sx={{ maxWidth: `calc(100% - 80px)` }}>
+          <SenseCard
+            bgColor={
+              deleted ? grey[500] : props.edited ? yellow[100] : undefined
+            }
+            sense={sense}
+          />
+        </Grid>
+        <EditSenseDialog
+          close={() => setEditing(false)}
+          isOpen={editing}
+          save={props.updateSense}
           sense={sense}
         />
       </Grid>
-      <EditSenseDialog
-        close={() => setEditing(false)}
-        isOpen={editing}
-        save={props.updateSense}
-        sense={sense}
-      />
-    </Grid>
+      <Divider sx={{ mb: 1 }} />
+    </>
   );
 }
