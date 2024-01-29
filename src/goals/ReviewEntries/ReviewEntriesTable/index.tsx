@@ -71,7 +71,7 @@ export default function ReviewEntriesTable(): ReactElement {
       ),
       enableColumnActions: false,
       enableHiding: false,
-      Header: <div />,
+      Header: "",
       header: t("reviewEntries.materialTable.body.edit"),
       size: 50,
     }),
@@ -163,7 +163,7 @@ export default function ReviewEntriesTable(): ReactElement {
       Header: (
         <FlagIcon
           fontSize="small"
-          sx={{ color: (t) => t.palette.error.main, maxHeight: 18 }}
+          sx={{ color: (t) => t.palette.error.main }}
         />
       ),
       header: t("reviewEntries.columns.flag"),
@@ -178,7 +178,7 @@ export default function ReviewEntriesTable(): ReactElement {
       ),
       enableColumnActions: false,
       enableHiding: false,
-      Header: <div />,
+      Header: "",
       header: t("reviewEntries.columns.delete"),
       size: 50,
     }),
