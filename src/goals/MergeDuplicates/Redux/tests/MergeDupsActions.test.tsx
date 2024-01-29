@@ -80,13 +80,12 @@ const S3 = senses["S3"].guid;
 const S4 = senses["S4"].guid;
 const data: MergeData = { words: { WA: wordA, WB: wordB }, senses: {} };
 data.senses[S1] = {
-  ...newMergeTreeSense("S1", idA, 0),
-  guid: S1,
+  ...newMergeTreeSense("S1", idA, 0, S1),
   protected: true,
 };
-data.senses[S2] = { ...newMergeTreeSense("S2", idA, 1), guid: S2 };
-data.senses[S3] = { ...newMergeTreeSense("S3", idB, 0), guid: S3 };
-data.senses[S4] = { ...newMergeTreeSense("S4", idB, 1), guid: S4 };
+data.senses[S2] = newMergeTreeSense("S2", idA, 1, S2);
+data.senses[S3] = newMergeTreeSense("S3", idB, 0, S3);
+data.senses[S4] = newMergeTreeSense("S4", idB, 1, S4);
 
 beforeEach(jest.clearAllMocks);
 

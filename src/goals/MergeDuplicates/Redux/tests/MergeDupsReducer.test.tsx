@@ -609,7 +609,7 @@ describe("MergeDupsReducer", () => {
         );
         // check that this sense is somewhere in the tree
         expect(
-          getRefByGuid(treeSense.guid, treeState.tree.words)
+          getRefByGuid(treeSense.sense.guid, treeState.tree.words)
         ).toBeDefined();
       }
     }
