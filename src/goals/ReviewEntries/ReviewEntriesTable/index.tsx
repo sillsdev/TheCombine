@@ -187,6 +187,7 @@ export default function ReviewEntriesTable(): ReactElement {
   const table = useMaterialReactTable({
     columns,
     data,
+    columnFilterDisplayMode: "popover",
     enableColumnActions: false,
     //enableColumnResizing: true,
     enableFullScreenToggle: false,

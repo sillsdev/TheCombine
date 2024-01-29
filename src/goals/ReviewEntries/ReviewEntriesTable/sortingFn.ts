@@ -7,6 +7,7 @@ import {
   type Sense,
   type Word,
 } from "api/models";
+import { gatherDomains } from "goals/ReviewEntries/ReviewEntriesTable/Cells/DomainsCell";
 import { compareFlags } from "utilities/wordUtilities";
 
 /* Text-joining functions for definitions and glosses. */
@@ -41,7 +42,7 @@ function compareSensesGramInfo(a: Sense[], b: Sense[]): number {
   return compare || a.length - b.length;
 }
 
-/* Comparison functions for semantic domains. */
+/* Comparison function for semantic domains. */
 function compareDomains(a: SemanticDomain[], b: SemanticDomain[]): number {
   // Special case: no domains
   if (!a.length || !b.length) {
@@ -52,19 +53,7 @@ function compareDomains(a: SemanticDomain[], b: SemanticDomain[]): number {
   for (let i = 0; compare === 0 && i < a.length && i < b.length; i++) {
     compare = a[i].id.localeCompare(b[i].id);
   }
-  return compare;
-}
-function compareSensesDomains(a: Sense[], b: Sense[]): number {
-  // Special case: no domains
-  if (!a.length || !b.length) {
-    return b.length - a.length;
-  }
-  // Compare the senses
-  let compare = 0;
-  for (let i = 0; compare === 0 && i < a.length && i < b.length; i++) {
-    compare = compareDomains(a[i].semanticDomains, b[i].semanticDomains);
-  }
-  return compare;
+  return compare || a.length - b.length;
 }
 
 /* Custom `sortingFn` functions for `MaterialReactTable` columns. */
@@ -85,9 +74,12 @@ export const sortingFnGlosses: MRT_SortingFn<Word> = (a, b) =>
 export const sortingFnPartOfSpeech: MRT_SortingFn<Word> = (a, b) =>
   compareSensesGramInfo(a.original.senses, b.original.senses);
 
-/** Compares semantic domains of `.senses[i]` of the words , starting at `i = 0`. */
+/** Compares semantic domains with the lowest id of all the senses of each word. */
 export const sortingFnDomains: MRT_SortingFn<Word> = (a, b) =>
-  compareSensesDomains(a.original.senses, b.original.senses);
+  compareDomains(
+    gatherDomains(a.original.senses),
+    gatherDomains(b.original.senses)
+  );
 
 /** Compares flags: `.active = true` before `= false`, then `.text` alphabetically. */
 export const sortingFnFlag: MRT_SortingFn<Word> = (a, b) =>

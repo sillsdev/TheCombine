@@ -5,7 +5,7 @@ import { type SemanticDomain, type Sense } from "api/models";
 import { type CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
 
 /** Collect all distinct sense.semanticDomains entries. */
-function gatherDomains(senses: Sense[]): SemanticDomain[] {
+export function gatherDomains(senses: Sense[]): SemanticDomain[] {
   return senses
     .flatMap((s) => s.semanticDomains)
     .reduce<SemanticDomain[]>((a, dom) => {
@@ -13,7 +13,8 @@ function gatherDomains(senses: Sense[]): SemanticDomain[] {
       return !id || a.some((d) => d.id === id && d.name === name)
         ? a
         : [...a, dom];
-    }, []);
+    }, [])
+    .sort((a, b) => a.id.localeCompare(b.id));
 }
 
 export default function DomainsCell(props: CellProps): ReactElement {
