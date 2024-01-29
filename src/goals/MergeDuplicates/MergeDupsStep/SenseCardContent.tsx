@@ -42,6 +42,7 @@ export default function SenseCardContent(
     .find((g) => g.catGroup !== GramCatGroup.Unspecified);
 
   const reasonText = (reason: ProtectReason): string => {
+    // Backend/Helper/LiftHelper.cs > GetProtectedReasons(LiftSense sense)
     switch (reason.type) {
       case ReasonType.Annotations:
         return t("mergeDups.protectReason.annotations");
@@ -60,11 +61,37 @@ export default function SenseCardContent(
       case ReasonType.Relations:
         return t("mergeDups.protectReason.relations");
       case ReasonType.Reversals:
-        return t("mergeDups.protectReason.reversals");
+        return t("mergeDups.protectReason.reversals", { val: reason.value });
       case ReasonType.Subsenses:
         return t("mergeDups.protectReason.subsenses");
       case ReasonType.Trait:
         return reason.value ?? "(unknown trait)";
+      case ReasonType.TraitAnthroCode:
+        return t("mergeDups.protectReason.traitAnthroCode", {
+          val: reason.value,
+        });
+      case ReasonType.TraitDomainType:
+        return t("mergeDups.protectReason.traitDomainType", {
+          val: reason.value,
+        });
+      case ReasonType.TraitDoNotPublishIn:
+        return t("mergeDups.protectReason.traitDoNotPublishIn", {
+          val: reason.value,
+        });
+      case ReasonType.TraitPublishIn:
+        return t("mergeDups.protectReason.traitPublishIn", {
+          val: reason.value,
+        });
+      case ReasonType.TraitSenseType:
+        return t("mergeDups.protectReason.traitSenseType", {
+          val: reason.value,
+        });
+      case ReasonType.TraitStatus:
+        return t("mergeDups.protectReason.traitStatus", { val: reason.value });
+      case ReasonType.TraitUsageType:
+        return t("mergeDups.protectReason.traitUsageType", {
+          val: reason.value,
+        });
       default:
         throw new Error();
     }

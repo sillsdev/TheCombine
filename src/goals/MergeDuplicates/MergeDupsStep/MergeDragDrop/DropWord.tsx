@@ -152,6 +152,7 @@ export function DropWordCardHeader(
   );
 
   const reasonText = (reason: ProtectReason): string => {
+    // Backend/Helper/LiftHelper.cs > GetProtectedReasons(LiftEntry entry)
     switch (reason.type) {
       case ReasonType.Annotations:
         return t("mergeDups.protectReason.annotations");
@@ -167,8 +168,34 @@ export function DropWordCardHeader(
         return t("mergeDups.protectReason.relations");
       case ReasonType.Trait:
         return reason.value ?? "(unknown trait)";
+      case ReasonType.TraitDialectLabels:
+        return t("mergeDups.protectReason.traitDialectLabels", {
+          val: reason.value,
+        });
+      case ReasonType.TraitDoNotPublishIn:
+        return t("mergeDups.protectReason.traitDoNotPublishIn", {
+          val: reason.value,
+        });
+      case ReasonType.TraitDoNotUseForParsing:
+        return t("mergeDups.protectReason.traitDoNotUseForParsing", {
+          val: reason.value,
+        });
+      case ReasonType.TraitEntryType:
+        return t("mergeDups.protectReason.traitEntryType", {
+          val: reason.value,
+        });
+      case ReasonType.TraitExcludeAsHeadword:
+        return t("mergeDups.protectReason.traitExcludeAsHeadword");
+      case ReasonType.TraitMinorEntryCondition:
+        return t("mergeDups.protectReason.traitMinorEntryCondition", {
+          val: reason.value,
+        });
       case ReasonType.TraitMorphType:
         return t("mergeDups.protectReason.traitMorphType", {
+          val: reason.value,
+        });
+      case ReasonType.TraitPublishIn:
+        return t("mergeDups.protectReason.traitPublishIn", {
           val: reason.value,
         });
       case ReasonType.Variants:

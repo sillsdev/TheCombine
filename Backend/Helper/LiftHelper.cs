@@ -65,7 +65,7 @@ namespace BackendFramework.Helper
             return entry.Annotations.Count > 0 || entry.Etymologies.Count > 0 || entry.Fields.Count > 0 ||
                 (entry.Notes.Count == 1 && !string.IsNullOrEmpty(entry.Notes.First().Type)) ||
                 entry.Notes.Count > 1 || entry.Relations.Count > 0 ||
-                entry.Traits.Any(t => !t.Name.Equals("morph-type", StringComparison.OrdinalIgnoreCase)
+                entry.Traits.Any(t => !t.Name.Replace("-", "").Equals("morphtype", StringComparison.OrdinalIgnoreCase)
                     || !t.Value.Equals("stem", StringComparison.OrdinalIgnoreCase)) ||
                 entry.Variants.Count > 0;
         }
@@ -100,16 +100,40 @@ namespace BackendFramework.Helper
             }
             entry.Traits.ForEach(t =>
             {
-                if (t.Name.Equals("morph-type", StringComparison.OrdinalIgnoreCase))
+                // FieldWorks/Src/LexText/LexTextControls/LiftMerger.cs > ProcessEntryTraits()
+                // FieldWorks/Src/LexText/LexTextControls/LiftExporter.cs > RangeNames
+                switch (t.Name.Replace("-", "").ToLowerInvariant())
                 {
-                    if (!t.Value.Equals("stem", StringComparison.OrdinalIgnoreCase))
-                    {
-                        reasons.Add(new() { Type = ReasonType.TraitMorphType, Value = t.Value });
-                    }
-                }
-                else
-                {
-                    reasons.Add(new() { Type = ReasonType.Trait, Value = $"{t.Name} ({t.Value})" });
+                    case "dialectlabels":
+                        reasons.Add(new() { Type = ReasonType.TraitDialectLabels, Value = t.Value });
+                        break;
+                    case "donotpublishin":
+                        reasons.Add(new() { Type = ReasonType.TraitDoNotPublishIn, Value = t.Value });
+                        break;
+                    case "donotuseforparsing":
+                        reasons.Add(new() { Type = ReasonType.TraitDoNotUseForParsing, Value = t.Value });
+                        break;
+                    case "entrytype":
+                        reasons.Add(new() { Type = ReasonType.TraitEntryType, Value = t.Value });
+                        break;
+                    case "excludeasheadword":
+                        reasons.Add(new() { Type = ReasonType.TraitExcludeAsHeadword });
+                        break;
+                    case "minorentrycondition":
+                        reasons.Add(new() { Type = ReasonType.TraitMinorEntryCondition, Value = t.Value });
+                        break;
+                    case "morphtype":
+                        if (!t.Value.Equals("stem", StringComparison.OrdinalIgnoreCase))
+                        {
+                            reasons.Add(new() { Type = ReasonType.TraitMorphType, Value = t.Value });
+                        }
+                        break;
+                    case "publishin":
+                        reasons.Add(new() { Type = ReasonType.TraitPublishIn, Value = t.Value });
+                        break;
+                    default:
+                        reasons.Add(new() { Type = ReasonType.Trait, Value = $"{t.Name} \"{t.Value}\"" });
+                        break;
                 }
             });
             if (entry.Variants.Count > 0)
@@ -127,7 +151,8 @@ namespace BackendFramework.Helper
                 sense.GramInfo is not null && sense.GramInfo.Traits.Count > 0 ||
                 sense.Illustrations.Count > 0 || sense.Notes.Count > 0 || sense.Relations.Count > 0 ||
                 sense.Reversals.Count > 0 || sense.Subsenses.Count > 0 ||
-                sense.Traits.Any(t => !t.Name.StartsWith("semantic-domain", StringComparison.OrdinalIgnoreCase));
+                sense.Traits.Any(
+                    t => !t.Name.Replace("-", "").StartsWith("semanticdomain", StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary> Determine what <see cref="LiftSense"/> data is not handled by The Combine. </summary>
@@ -162,22 +187,49 @@ namespace BackendFramework.Helper
             {
                 reasons.Add(new() { Type = ReasonType.Relations, Count = sense.Relations.Count });
             }
-            if (sense.Reversals.Count > 0)
+            sense.Reversals.ForEach(r =>
             {
-                reasons.Add(new() { Type = ReasonType.Reversals, Count = sense.Reversals.Count });
-            }
+                reasons.Add(new() { Type = ReasonType.Reversals, Value = r.Type });
+            });
             if (sense.Subsenses.Count > 0)
             {
                 reasons.Add(new() { Type = ReasonType.Subsenses, Count = sense.Subsenses.Count });
             }
             sense.Traits.ForEach(t =>
             {
-                if (!t.Name.StartsWith("semantic-domain", StringComparison.OrdinalIgnoreCase))
+                // FieldWorks/Src/LexText/LexTextControls/LiftMerger.cs > ProcessSenseTraits()
+                // FieldWorks/Src/LexText/LexTextControls/LiftExporter.cs > RangeNames
+                switch (t.Name.Replace("-", "").ToLowerInvariant())
                 {
-                    reasons.Add(new() { Type = ReasonType.Trait, Value = $"{t.Name} ({t.Value})" });
+                    case "anthrocode":
+                        reasons.Add(new() { Type = ReasonType.TraitAnthroCode, Value = t.Value });
+                        break;
+                    case "domaintype":
+                        reasons.Add(new() { Type = ReasonType.TraitDomainType, Value = t.Value });
+                        break;
+                    case "donotpublishin":
+                        reasons.Add(new() { Type = ReasonType.TraitDoNotPublishIn, Value = t.Value });
+                        break;
+                    case "publishin":
+                        reasons.Add(new() { Type = ReasonType.TraitPublishIn, Value = t.Value });
+                        break;
+                    case "semanticdomain":
+                    case "semanticdomainddp4":
+                        break;
+                    case "sensetype":
+                        reasons.Add(new() { Type = ReasonType.TraitSenseType, Value = t.Value });
+                        break;
+                    case "status":
+                        reasons.Add(new() { Type = ReasonType.TraitStatus, Value = t.Value });
+                        break;
+                    case "usagetype":
+                        reasons.Add(new() { Type = ReasonType.TraitUsageType, Value = t.Value });
+                        break;
+                    default:
+                        reasons.Add(new() { Type = ReasonType.Trait, Value = $"{t.Name} ({t.Value})" });
+                        break;
                 }
             });
-
             return reasons;
         }
     }
