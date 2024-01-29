@@ -100,8 +100,8 @@ namespace BackendFramework.Helper
             }
             entry.Traits.ForEach(t =>
             {
-                // FieldWorks/Src/LexText/LexTextControls/LiftMerger.cs > ProcessEntryTraits()
-                // FieldWorks/Src/LexText/LexTextControls/LiftExporter.cs > RangeNames
+                // FieldWorks > Src/LexText/LexTextControls/LiftMerger.cs > ProcessEntryTraits()
+                // FieldWorks > Src/LexText/LexTextControls/LiftExporter.cs > RangeNames
                 switch (t.Name.Replace("-", "").ToLowerInvariant())
                 {
                     case "dialectlabels":
@@ -197,8 +197,8 @@ namespace BackendFramework.Helper
             }
             sense.Traits.ForEach(t =>
             {
-                // FieldWorks/Src/LexText/LexTextControls/LiftMerger.cs > ProcessSenseTraits()
-                // FieldWorks/Src/LexText/LexTextControls/LiftExporter.cs > RangeNames
+                // FieldWorks > Src/LexText/LexTextControls/LiftMerger.cs > ProcessSenseTraits()
+                // FieldWorks > Src/LexText/LexTextControls/LiftExporter.cs > RangeNames
                 switch (t.Name.Replace("-", "").ToLowerInvariant())
                 {
                     case "anthrocode":
