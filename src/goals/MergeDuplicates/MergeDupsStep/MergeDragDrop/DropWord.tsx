@@ -71,7 +71,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
                       index={index}
                       wordId={props.wordId}
                       mergeSenseId={id}
-                      senses={senses}
+                      mergeSenses={senses}
                       isOnlySenseInProtectedWord={protectedWithOneChild}
                       isProtectedSense={senses[0].protected}
                     />
