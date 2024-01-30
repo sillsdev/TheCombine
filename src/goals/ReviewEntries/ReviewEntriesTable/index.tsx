@@ -26,7 +26,7 @@ import { type Hash } from "types/hash";
 // Constants for custom column/header sizing.
 const BaselineColumnSize = 180;
 const HeaderActionsWidth = 60; // Assumes initial state density "compact"
-const IconColumnSize = 55; // Baseline for a column with a single icon as row content
+const IconColumnSize = 50; // Baseline for a column with a single icon as row content
 const IconHeaderHeight = 22; // Height for a small icon as Header
 const IconHeaderPaddingTop = "2px"; // Vertical offset for a small icon as Header
 const IconHeaderWidth = 20; // Width for a small icon as Header
@@ -193,7 +193,7 @@ export default function ReviewEntriesTable(): ReactElement {
     }),
 
     // Note column
-    columnHelper.accessor((w) => w.note.text, {
+    columnHelper.accessor((w) => w.note.text || undefined, {
       Cell: ({ row }: CellProps) => <Cell.Note word={row.original} />,
       header: t("reviewEntries.columns.note"),
       id: "note",
