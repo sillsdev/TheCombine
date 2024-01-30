@@ -30,13 +30,14 @@ function wordAnyGuids(vern: string, senses: Sense[], id: string): Word {
   };
 }
 
+const mockBlacklistAdd = jest.fn();
 const mockGraylistAdd = jest.fn();
 const mockMergeWords = jest.fn();
 
 jest.mock("backend", () => ({
-  blacklistAdd: jest.fn(),
+  blacklistAdd: (ids: string[]) => mockBlacklistAdd(ids),
   getWord: jest.fn(),
-  graylistAdd: () => mockGraylistAdd(),
+  graylistAdd: (ids: string[]) => mockGraylistAdd(ids),
   mergeWords: (mergeWordsArray: MergeWords[]) =>
     mockMergeWords(mergeWordsArray),
 }));
@@ -89,7 +90,12 @@ const data: MergeData = {
   },
 };
 
-beforeEach(jest.clearAllMocks);
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockMergeWords.mockImplementation((mwArray: MergeWords[]) =>
+    mwArray.filter((mw) => !mw.deleteOnly).map((mw) => mw.parent.id + "+")
+  );
+});
 
 describe("MergeDupActions", () => {
   describe("mergeAll", () => {
@@ -105,6 +111,12 @@ describe("MergeDupActions", () => {
       await store.dispatch(mergeAll());
 
       expect(mockMergeWords).not.toHaveBeenCalled();
+
+      expect(mockBlacklistAdd).toHaveBeenCalledTimes(1);
+      const blacklist = mockBlacklistAdd.mock.calls[0][0];
+      expect(blacklist).toHaveLength(2);
+      expect(blacklist).toContain(idA);
+      expect(blacklist).toContain(idB);
     });
 
     // Merge sense 3 from B as duplicate into sense 1 from A
@@ -130,6 +142,12 @@ describe("MergeDupActions", () => {
       for (const mergeWords of mockMerges) {
         expect(mockMergeWords.mock.calls[0][0]).toContainEqual(mergeWords);
       }
+
+      expect(mockBlacklistAdd).toHaveBeenCalledTimes(1);
+      const blacklist = mockBlacklistAdd.mock.calls[0][0];
+      expect(blacklist).toHaveLength(2);
+      expect(blacklist).not.toContain(idA);
+      expect(blacklist).not.toContain(idB);
     });
 
     // Move sense 3 from B to A
@@ -159,6 +177,12 @@ describe("MergeDupActions", () => {
       for (const mergeWords of mockMerges) {
         expect(mockMergeWords.mock.calls[0][0]).toContainEqual(mergeWords);
       }
+
+      expect(mockBlacklistAdd).toHaveBeenCalledTimes(1);
+      const blacklist = mockBlacklistAdd.mock.calls[0][0];
+      expect(blacklist).toHaveLength(2);
+      expect(blacklist).not.toContain(idA);
+      expect(blacklist).not.toContain(idB);
     });
 
     // Merge sense 1 and 2 in A as duplicates
@@ -178,6 +202,12 @@ describe("MergeDupActions", () => {
       const child = { srcWordId: idA, getAudio: true };
       const mockMerge = newMergeWords(parent, [child]);
       expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
+
+      expect(mockBlacklistAdd).toHaveBeenCalledTimes(1);
+      const blacklist = mockBlacklistAdd.mock.calls[0][0];
+      expect(blacklist).toHaveLength(2);
+      expect(blacklist).not.toContain(idA);
+      expect(blacklist).toContain(idB);
     });
 
     // Delete sense 2 from A
@@ -196,6 +226,12 @@ describe("MergeDupActions", () => {
       const child = { srcWordId: idA, getAudio: true };
       const mockMerge = newMergeWords(parent, [child]);
       expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
+
+      expect(mockBlacklistAdd).toHaveBeenCalledTimes(1);
+      const blacklist = mockBlacklistAdd.mock.calls[0][0];
+      expect(blacklist).toHaveLength(2);
+      expect(blacklist).not.toContain(idA);
+      expect(blacklist).toContain(idB);
     });
 
     // Delete both senses from B
@@ -212,6 +248,9 @@ describe("MergeDupActions", () => {
       const child = { srcWordId: idB, getAudio: false };
       const mockMerge = newMergeWords(wordB, [child], true);
       expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
+
+      // No blacklist entry added for only 1 resulting word.
+      expect(mockBlacklistAdd).not.toHaveBeenCalled();
     });
 
     // Performs a merge when a word is flagged
@@ -233,6 +272,12 @@ describe("MergeDupActions", () => {
       const child = { srcWordId: idA, getAudio: true };
       const mockMerge = newMergeWords(parent, [child]);
       expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
+
+      expect(mockBlacklistAdd).toHaveBeenCalledTimes(1);
+      const blacklist = mockBlacklistAdd.mock.calls[0][0];
+      expect(blacklist).toHaveLength(2);
+      expect(blacklist).not.toContain(idA);
+      expect(blacklist).toContain(idB);
     });
   });
 
