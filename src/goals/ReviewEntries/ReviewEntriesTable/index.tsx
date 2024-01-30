@@ -1,4 +1,5 @@
 import {
+  AllInclusive,
   FiberManualRecord,
   Flag as FlagIcon,
   PlayArrow,
@@ -16,6 +17,7 @@ import { useSelector } from "react-redux";
 
 import { GramCatGroup, type GrammaticalInfo, type Word } from "api/models";
 import { getAllSpeakers, getFrontierWords, getWord } from "backend";
+import { IconButtonWithTooltip } from "components/Buttons";
 import { topBarHeight } from "components/LandingPage/TopBar";
 import * as Cell from "goals/ReviewEntries/ReviewEntriesTable/Cells";
 import * as ff from "goals/ReviewEntries/ReviewEntriesTable/filterFn";
@@ -43,6 +45,7 @@ export default function ReviewEntriesTable(): ReactElement {
 
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<Word[]>([]);
+  const [enablePagination, setEnablePagination] = useState(true);
   const [speakers, setSpeakers] = useState<Hash<string>>({});
 
   const deleteWord = (id: string): void => {
@@ -77,7 +80,6 @@ export default function ReviewEntriesTable(): ReactElement {
       Cell: ({ row }: CellProps) => (
         <Cell.Edit replace={replaceWord} word={row.original} />
       ),
-      enableColumnActions: false,
       enableColumnOrdering: false,
       enableHiding: false,
       Header: "",
@@ -230,7 +232,6 @@ export default function ReviewEntriesTable(): ReactElement {
       Cell: ({ row }: CellProps) => (
         <Cell.Delete delete={deleteWord} word={row.original} />
       ),
-      enableColumnActions: false,
       enableColumnOrdering: false,
       enableHiding: false,
       Header: "",
@@ -249,9 +250,9 @@ export default function ReviewEntriesTable(): ReactElement {
     //enableColumnResizing: true,
     enableDensityToggle: false,
     enableFullScreenToggle: false,
-    //enablePagination: false,
-    enableRowVirtualization: true,
     enableGlobalFilter: false,
+    enablePagination: enablePagination,
+    enableRowVirtualization: true,
     enableStickyHeader: true,
     initialState: {
       columnVisibility: {
@@ -264,8 +265,24 @@ export default function ReviewEntriesTable(): ReactElement {
     // Override whiteSpace: "nowrap" from having density: "compact"
     muiTableBodyCellProps: { sx: { whiteSpace: "normal" } },
     // Keep the table from going below the bottom of the page
+    muiTableContainerProps: {
+      sx: { maxHeight: `calc(100vh - ${topBarHeight}px)` },
+    },
     muiTablePaperProps: { sx: { height: `calc(100vh - ${topBarHeight}px)` } },
     muiTableProps: { sx: { maxHeight: `calc(100vh - 200px)` } },
+    renderTopToolbarCustomActions: () => (
+      <IconButtonWithTooltip
+        onClick={() => setEnablePagination((prev) => !prev)}
+        icon={
+          <AllInclusive
+            sx={{
+              color: (t) =>
+                enablePagination ? t.palette.grey[600] : t.palette.grey[900],
+            }}
+          />
+        }
+      />
+    ),
     sortDescFirst: false,
     state: { isLoading: isLoading },
   });
