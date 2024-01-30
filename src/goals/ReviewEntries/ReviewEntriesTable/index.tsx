@@ -5,9 +5,8 @@ import {
 } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 import {
-  MaterialReactTable,
   type MRT_Row,
-  //type MRT_Cell,
+  MaterialReactTable,
   createMRTColumnHelper,
   useMaterialReactTable,
 } from "material-react-table";
@@ -23,6 +22,15 @@ import * as ff from "goals/ReviewEntries/ReviewEntriesTable/filterFn";
 import * as sf from "goals/ReviewEntries/ReviewEntriesTable/sortingFn";
 import { type StoreState } from "types";
 import { type Hash } from "types/hash";
+
+// Constants for custom column/header sizing.
+const BaselineColumnSize = 180;
+const HeaderActionsWidth = 60; // Assumes initial state density "compact"
+const IconColumnSize = 55; // Baseline for a column with a single icon as row content
+const IconHeaderHeight = 22; // Height for a small icon as Header
+const IconHeaderPaddingTop = "2px"; // Vertical offset for a small icon as Header
+const IconHeaderWidth = 20; // Width for a small icon as Header
+const SensesHeaderWidth = 15; // Width for # as Header
 
 export default function ReviewEntriesTable(): ReactElement {
   const showDefinitions = useSelector(
@@ -61,11 +69,7 @@ export default function ReviewEntriesTable(): ReactElement {
 
   const columnHelper = createMRTColumnHelper<Word>();
 
-  type CellProps = {
-    //cell: MRT_Cell<Word, any>;
-    row: MRT_Row<Word>;
-    //renderedCellValue: ReactNode;
-  };
+  type CellProps = { row: MRT_Row<Word> };
 
   const columns = [
     // Edit column
@@ -74,17 +78,20 @@ export default function ReviewEntriesTable(): ReactElement {
         <Cell.Edit replace={replaceWord} word={row.original} />
       ),
       enableColumnActions: false,
+      enableColumnOrdering: false,
       enableHiding: false,
       Header: "",
       header: t("reviewEntries.materialTable.body.edit"),
-      size: 50,
+      size: IconColumnSize,
     }),
 
     // Vernacular column
     columnHelper.accessor("vernacular", {
       Cell: ({ row }: CellProps) => <Cell.Vernacular word={row.original} />,
+      enableColumnOrdering: false,
       enableHiding: false,
       header: t("reviewEntries.columns.vernacular"),
+      size: BaselineColumnSize - 40,
     }),
 
     // Senses column
@@ -96,10 +103,13 @@ export default function ReviewEntriesTable(): ReactElement {
       id: "senses",
       muiTableHeadCellProps: {
         sx: {
-          "& .Mui-TableHeadCell-Content-Wrapper": { minWidth: 16, width: 16 },
+          "& .Mui-TableHeadCell-Content-Wrapper": {
+            minWidth: SensesHeaderWidth,
+            width: SensesHeaderWidth,
+          },
         },
       },
-      size: 100,
+      size: SensesHeaderWidth + HeaderActionsWidth,
     }),
 
     // Definitions column
@@ -109,6 +119,7 @@ export default function ReviewEntriesTable(): ReactElement {
       filterFn: ff.filterFnDefinitions,
       header: t("reviewEntries.columns.definitions"),
       id: "definitions",
+      size: BaselineColumnSize + 20,
       sortingFn: sf.sortingFnDefinitions,
     }),
 
@@ -171,13 +182,14 @@ export default function ReviewEntriesTable(): ReactElement {
       muiTableHeadCellProps: {
         sx: {
           "& .Mui-TableHeadCell-Content-Wrapper": {
-            height: 22,
-            minWidth: 40,
-            paddingTop: "2px",
-            width: 40,
+            height: IconHeaderHeight,
+            minWidth: 2 * IconHeaderWidth,
+            paddingTop: IconHeaderPaddingTop,
+            width: 2 * IconHeaderWidth,
           },
         },
       },
+      size: 3 * IconColumnSize,
     }),
 
     // Note column
@@ -201,14 +213,14 @@ export default function ReviewEntriesTable(): ReactElement {
       muiTableHeadCellProps: {
         sx: {
           "& .Mui-TableHeadCell-Content-Wrapper": {
-            height: 22,
-            minWidth: 20,
-            paddingTop: "2px",
-            width: 20,
+            height: IconHeaderHeight,
+            minWidth: IconHeaderWidth,
+            paddingTop: IconHeaderPaddingTop,
+            width: IconHeaderWidth,
           },
         },
       },
-      size: 100,
+      size: IconHeaderWidth + HeaderActionsWidth,
       sortingFn: sf.sortingFnFlag,
     }),
 
@@ -218,10 +230,11 @@ export default function ReviewEntriesTable(): ReactElement {
         <Cell.Delete delete={deleteWord} word={row.original} />
       ),
       enableColumnActions: false,
+      enableColumnOrdering: false,
       enableHiding: false,
       Header: "",
       header: t("reviewEntries.columns.delete"),
-      size: 50,
+      size: IconColumnSize,
     }),
   ];
 
@@ -230,7 +243,10 @@ export default function ReviewEntriesTable(): ReactElement {
     data,
     columnFilterDisplayMode: "popover",
     enableColumnActions: false,
+    enableColumnDragging: false,
+    enableColumnOrdering: true,
     //enableColumnResizing: true,
+    enableDensityToggle: false,
     enableFullScreenToggle: false,
     //enablePagination: false,
     enableRowVirtualization: true,
@@ -241,14 +257,14 @@ export default function ReviewEntriesTable(): ReactElement {
         definitions: showDefinitions,
         partOfSpeech: showGrammaticalInfo,
       },
+      density: "compact",
     },
-    //muiFilterTextFieldProps: () => ({ label: " " }),
     muiPaginationProps: { rowsPerPageOptions: [10, 25, 100, 250] },
-    //muiTableHeadCellProps: () => ({ sx: { maxHeight: 100 } }),
-    muiTablePaperProps: () => ({
-      sx: { height: `calc(100vh - ${topBarHeight}px)` },
-    }),
-    muiTableProps: () => ({ sx: { maxHeight: `calc(100vh - 200px)` } }),
+    // Override whiteSpace: "nowrap" from having density: "compact"
+    muiTableBodyCellProps: { sx: { whiteSpace: "normal" } },
+    // Keep the table from going below the bottom of the page
+    muiTablePaperProps: { sx: { height: `calc(100vh - ${topBarHeight}px)` } },
+    muiTableProps: { sx: { maxHeight: `calc(100vh - 200px)` } },
     sortDescFirst: false,
     state: { isLoading: isLoading },
   });

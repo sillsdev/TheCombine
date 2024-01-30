@@ -35,12 +35,15 @@ export default function PronunciationsCell(props: CellProps): ReactElement {
   };
 
   return (
-    <PronunciationsBackend
-      audio={props.word.audio}
-      wordId={wordId}
-      deleteAudio={deleteAudioHandle}
-      replaceAudio={replaceAudioHandle}
-      uploadAudio={uploadAudioHandle}
-    />
+    // The div container allows the audio icons to wrap in the table cell.
+    <div>
+      <PronunciationsBackend
+        audio={props.word.audio}
+        wordId={wordId}
+        deleteAudio={deleteAudioHandle}
+        replaceAudio={replaceAudioHandle}
+        uploadAudio={uploadAudioHandle}
+      />
+    </div>
   );
 }
