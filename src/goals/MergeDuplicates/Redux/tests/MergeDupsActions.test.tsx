@@ -82,10 +82,10 @@ const S4 = senses["S4"].guid;
 const data: MergeData = {
   words: { WA: wordA, WB: wordB },
   senses: {
-    [S1]: { ...newMergeTreeSense("S1", idA, 0), guid: S1, protected: true },
-    [S2]: { ...newMergeTreeSense("S2", idA, 1), guid: S2 },
-    [S3]: { ...newMergeTreeSense("S3", idB, 0), guid: S3 },
-    [S4]: { ...newMergeTreeSense("S4", idB, 1), guid: S4 },
+    [S1]: { ...newMergeTreeSense("S1", idA, 0, S1), protected: true },
+    [S2]: newMergeTreeSense("S2", idA, 1, S2),
+    [S3]: newMergeTreeSense("S3", idB, 0, S3),
+    [S4]: newMergeTreeSense("S4", idB, 1, S4),
   },
 };
 

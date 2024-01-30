@@ -295,13 +295,15 @@ function buildSenses(
         senses[wordId] = [];
         for (const sense of dbWord.senses) {
           senses[wordId].push({
-            ...sense,
-            srcWordId: wordId,
             order: senses[wordId].length,
-            accessibility: nonDeletedSenses.includes(sense.guid)
-              ? Status.Separate
-              : Status.Deleted,
             protected: sense.accessibility === Status.Protected,
+            srcWordId: wordId,
+            sense: {
+              ...sense,
+              accessibility: nonDeletedSenses.includes(sense.guid)
+                ? Status.Separate
+                : Status.Deleted,
+            },
           });
         }
       }
@@ -340,7 +342,8 @@ function createMergeWords(
       onlyChild[0].srcWordId === wordId &&
       onlyChild.length === word.senses.length &&
       !onlyChild.find(
-        (s) => ![Status.Active, Status.Protected].includes(s.accessibility)
+        (ms) =>
+          ![Status.Active, Status.Protected].includes(ms.sense.accessibility)
       ) &&
       compareFlags(mergeWord.flag, word.flag) === 0
     ) {
@@ -358,21 +361,20 @@ function createMergeWords(
     parent.vernacular = mergeWord.vern;
   }
   const children: MergeSourceWord[] = Object.values(mergeSenses).map(
-    (sList) => {
-      sList.forEach((sense) => {
-        if ([Status.Active, Status.Protected].includes(sense.accessibility)) {
-          parent.senses.push({
-            guid: sense.guid,
-            definitions: sense.definitions,
-            glosses: sense.glosses,
-            semanticDomains: sense.semanticDomains,
-            accessibility: sense.accessibility,
-            grammaticalInfo: sense.grammaticalInfo,
-          });
+    (msList) => {
+      msList.forEach((mergeSense) => {
+        if (
+          [Status.Active, Status.Protected].includes(
+            mergeSense.sense.accessibility
+          )
+        ) {
+          parent.senses.push(mergeSense.sense);
         }
       });
-      const getAudio = !sList.find((s) => s.accessibility === Status.Separate);
-      return { srcWordId: sList[0].srcWordId, getAudio };
+      const getAudio = !msList.find(
+        (ms) => ms.sense.accessibility === Status.Separate
+      );
+      return { srcWordId: msList[0].srcWordId, getAudio };
     }
   );
 
@@ -383,17 +385,18 @@ function createMergeWords(
  * - change the accessibility of the first one from Separate to Active/Protected,
  * - change the accessibility of the rest to Duplicate,
  * - merge select content from duplicates into main sense */
-function combineIntoFirstSense(senses: MergeTreeSense[]): void {
+function combineIntoFirstSense(mergeSenses: MergeTreeSense[]): void {
   // Set the first sense to be merged as Active/Protected.
   // This was the top sense when the sidebar was opened.
-  const mainSense = senses[0];
-  mainSense.accessibility = mainSense.protected
+  const mainSense = mergeSenses[0].sense;
+  mainSense.accessibility = mergeSenses[0].protected
     ? Status.Protected
     : Status.Active;
 
   // Merge the rest as duplicates.
   // These were senses dropped into another sense.
-  senses.slice(1).forEach((dupSense) => {
+  mergeSenses.slice(1).forEach((mergeDupSense) => {
+    const dupSense = mergeDupSense.sense;
     dupSense.accessibility = Status.Duplicate;
     // Merge the duplicate's definitions into the main sense.
     const sep = "; ";
