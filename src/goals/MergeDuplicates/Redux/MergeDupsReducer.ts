@@ -370,7 +370,7 @@ function createMergeWords(
         }
       });
       const getAudio = msList.every(
-        (ms) => ms.accessibility !== Status.Separate
+        (ms) => ms.sense.accessibility !== Status.Separate
       );
       return { srcWordId: msList[0].srcWordId, getAudio };
     }
