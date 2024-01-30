@@ -1,4 +1,8 @@
-import { Flag as FlagIcon } from "@mui/icons-material";
+import {
+  FiberManualRecord,
+  Flag as FlagIcon,
+  PlayArrow,
+} from "@mui/icons-material";
 import { Typography } from "@mui/material";
 import {
   MaterialReactTable,
@@ -90,6 +94,11 @@ export default function ReviewEntriesTable(): ReactElement {
       Header: <Typography>#</Typography>,
       header: t("reviewEntries.columns.senses"),
       id: "senses",
+      muiTableHeadCellProps: {
+        sx: {
+          "& .Mui-TableHeadCell-Content-Wrapper": { minWidth: 16, width: 16 },
+        },
+      },
       size: 100,
     }),
 
@@ -145,8 +154,30 @@ export default function ReviewEntriesTable(): ReactElement {
         <Cell.Pronunciations replace={replaceWord} word={row.original} />
       ),
       filterFn: ff.filterFnPronunciations(speakers),
+      Header: (
+        <>
+          <FiberManualRecord
+            fontSize="small"
+            sx={{ color: (t) => t.palette.error.main }}
+          />
+          <PlayArrow
+            fontSize="small"
+            sx={{ color: (t) => t.palette.success.main }}
+          />
+        </>
+      ),
       header: t("reviewEntries.columns.pronunciations"),
       id: "pronunciations",
+      muiTableHeadCellProps: {
+        sx: {
+          "& .Mui-TableHeadCell-Content-Wrapper": {
+            height: 22,
+            minWidth: 40,
+            paddingTop: "2px",
+            width: 40,
+          },
+        },
+      },
     }),
 
     // Note column
@@ -167,6 +198,16 @@ export default function ReviewEntriesTable(): ReactElement {
         />
       ),
       header: t("reviewEntries.columns.flag"),
+      muiTableHeadCellProps: {
+        sx: {
+          "& .Mui-TableHeadCell-Content-Wrapper": {
+            height: 22,
+            minWidth: 20,
+            paddingTop: "2px",
+            width: 20,
+          },
+        },
+      },
       size: 100,
       sortingFn: sf.sortingFnFlag,
     }),
