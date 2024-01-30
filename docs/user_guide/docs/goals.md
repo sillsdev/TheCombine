@@ -112,7 +112,7 @@ next set: "Save & Continue" and "Defer".
 ![Merge Duplicates Save and Continue button](images/mergeSaveAndContinue.png)
 
 The blue "Save and Continue" button does two things. First, it saves all changes made (i.e., all moved, merged, or
-deleted senses), updating the words in the database. Second, it saves any unmerged words as non-duplicates.
+deleted senses), updating the words in the database. Second, it saves the resulting set of words as non-duplicates.
 
 !!! tip "Tip"
 

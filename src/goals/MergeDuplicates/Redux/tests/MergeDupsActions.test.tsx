@@ -1,4 +1,4 @@
-import { type MergeWords, Status, type Word } from "api/models";
+import { type MergeWords, type Sense, Status, type Word } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import {
   type MergeData,
@@ -7,7 +7,7 @@ import {
   newMergeTreeSense,
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
-import { MergeDups } from "goals/MergeDuplicates/MergeDupsTypes";
+import { MergeDups, newMergeWords } from "goals/MergeDuplicates/MergeDupsTypes";
 import {
   deferMerge,
   dispatchMergeStepData,
@@ -21,15 +21,26 @@ import {
 import { goalDataMock } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
 import { setupStore } from "store";
 import { GoalType } from "types/goals";
-import { multiSenseWord, newFlag } from "types/word";
+import { multiSenseWord, newFlag, newWord } from "types/word";
 
+// Used when the guids don't matter.
+function wordAnyGuids(vern: string, senses: Sense[], id: string): Word {
+  return {
+    ...newWord(vern),
+    senses: senses.map((s) => ({ ...s, guid: expect.any(String) })),
+    id,
+    guid: expect.any(String),
+  };
+}
+
+const mockBlacklistAdd = jest.fn();
 const mockGraylistAdd = jest.fn();
 const mockMergeWords = jest.fn();
 
 jest.mock("backend", () => ({
-  blacklistAdd: jest.fn(),
+  blacklistAdd: (ids: string[]) => mockBlacklistAdd(ids),
   getWord: jest.fn(),
-  graylistAdd: () => mockGraylistAdd(),
+  graylistAdd: (ids: string[]) => mockGraylistAdd(ids),
   mergeWords: (mergeWordsArray: MergeWords[]) =>
     mockMergeWords(mergeWordsArray),
 }));
@@ -75,14 +86,19 @@ const S4 = senses["S4"].guid;
 const data: MergeData = {
   words: { WA: wordA, WB: wordB },
   senses: {
-    [S1]: { ...newMergeTreeSense("S1", idA, 0), guid: S1, protected: true },
-    [S2]: { ...newMergeTreeSense("S2", idA, 1), guid: S2 },
-    [S3]: { ...newMergeTreeSense("S3", idB, 0), guid: S3 },
-    [S4]: { ...newMergeTreeSense("S4", idB, 1), guid: S4 },
+    [S1]: { ...newMergeTreeSense("S1", idA, 0, S1), protected: true },
+    [S2]: newMergeTreeSense("S2", idA, 1, S2),
+    [S3]: newMergeTreeSense("S3", idB, 0, S3),
+    [S4]: newMergeTreeSense("S4", idB, 1, S4),
   },
 };
 
-beforeEach(jest.clearAllMocks);
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockMergeWords.mockImplementation((mwArray: MergeWords[]) =>
+    mwArray.filter((mw) => !mw.deleteOnly).map((mw) => mw.parent.id + "+")
+  );
+});
 
 describe("MergeDupActions", () => {
   describe("mergeAll", () => {
@@ -96,7 +112,14 @@ describe("MergeDupActions", () => {
         mergeDuplicateGoal: { ...defaultMergeState, data, tree },
       });
       await store.dispatch(mergeAll());
+
       expect(mockMergeWords).not.toHaveBeenCalled();
+
+      expect(mockBlacklistAdd).toHaveBeenCalledTimes(1);
+      const blacklist = mockBlacklistAdd.mock.calls[0][0];
+      expect(blacklist).toHaveLength(2);
+      expect(blacklist).toContain(idA);
+      expect(blacklist).toContain(idB);
     });
 
     // Merge sense 3 from B as duplicate into sense 1 from A
@@ -111,25 +134,24 @@ describe("MergeDupActions", () => {
       await store.dispatch(mergeAll());
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
-      const mockMerges: MergeWords[] = mockMergeWords.mock.calls[0][0];
-      expect(mockMerges).toHaveLength(2);
-
-      const mergeWordA = mockMerges.find((m) => m.parent.id === idA)!;
-      expect(mergeWordA.deleteOnly).toBeFalsy();
-      const parentA = mergeWordA.parent;
-      expect(parentA.vernacular).toEqual(vernA);
-      expect(parentA.senses.map((s) => s.guid)).toEqual([S1, S2]);
+      const parentA = wordAnyGuids(vernA, [senses["S1"], senses["S2"]], idA);
+      const parentB = wordAnyGuids(vernB, [senses["S4"]], idB);
       const childA = { srcWordId: idA, getAudio: true };
       const childAB = { srcWordId: idB, getAudio: false };
-      expect(mergeWordA.children).toEqual([childA, childAB]);
-
-      const mergeWordB = mockMerges.find((m) => m.parent.id === idB)!;
-      expect(mergeWordB.deleteOnly).toBeFalsy();
-      const parentB = mergeWordB.parent;
-      expect(parentB.vernacular).toEqual(vernB);
-      expect(parentB.senses.map((s) => s.guid)).toEqual([S4]);
       const childBB = { srcWordId: idB, getAudio: true };
-      expect(mergeWordB.children).toEqual([childBB]);
+      const mockMerges = [
+        newMergeWords(parentA, [childA, childAB]),
+        newMergeWords(parentB, [childBB]),
+      ];
+      for (const mergeWords of mockMerges) {
+        expect(mockMergeWords.mock.calls[0][0]).toContainEqual(mergeWords);
+      }
+
+      expect(mockBlacklistAdd).toHaveBeenCalledTimes(1);
+      const blacklist = mockBlacklistAdd.mock.calls[0][0];
+      expect(blacklist).toHaveLength(2);
+      expect(blacklist).not.toContain(idA);
+      expect(blacklist).not.toContain(idB);
     });
 
     // Move sense 3 from B to A
@@ -144,25 +166,28 @@ describe("MergeDupActions", () => {
       await store.dispatch(mergeAll());
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
-      const mockMerges: MergeWords[] = mockMergeWords.mock.calls[0][0];
-      expect(mockMerges).toHaveLength(2);
-
-      const mergeWordA = mockMerges.find((m) => m.parent.id === idA)!;
-      expect(mergeWordA.deleteOnly).toBeFalsy();
-      const parentA = mergeWordA.parent;
-      expect(parentA.vernacular).toEqual(vernA);
-      expect(parentA.senses.map((s) => s.guid)).toEqual([S1, S2, S3]);
+      const parentA = wordAnyGuids(
+        vernA,
+        [senses["S1"], senses["S2"], senses["S3"]],
+        idA
+      );
+      const parentB = wordAnyGuids(vernB, [senses["S4"]], idB);
       const childA = { srcWordId: idA, getAudio: true };
       const childAB = { srcWordId: idB, getAudio: false };
-      expect(mergeWordA.children).toEqual([childA, childAB]);
-
-      const mergeWordB = mockMerges.find((m) => m.parent.id === idB)!;
-      expect(mergeWordB.deleteOnly).toBeFalsy();
-      const parentB = mergeWordB.parent;
-      expect(parentB.vernacular).toEqual(vernB);
-      expect(parentB.senses.map((s) => s.guid)).toEqual([S4]);
       const childBB = { srcWordId: idB, getAudio: true };
-      expect(mergeWordB.children).toEqual([childBB]);
+      const mockMerges = [
+        newMergeWords(parentA, [childA, childAB]),
+        newMergeWords(parentB, [childBB]),
+      ];
+      for (const mergeWords of mockMerges) {
+        expect(mockMergeWords.mock.calls[0][0]).toContainEqual(mergeWords);
+      }
+
+      expect(mockBlacklistAdd).toHaveBeenCalledTimes(1);
+      const blacklist = mockBlacklistAdd.mock.calls[0][0];
+      expect(blacklist).toHaveLength(2);
+      expect(blacklist).not.toContain(idA);
+      expect(blacklist).not.toContain(idB);
     });
 
     // Merge sense 1 and 2 in A as duplicates
@@ -177,16 +202,17 @@ describe("MergeDupActions", () => {
       await store.dispatch(mergeAll());
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
-      const mockMerges: MergeWords[] = mockMergeWords.mock.calls[0][0];
-      expect(mockMerges).toHaveLength(1);
 
-      expect(mockMerges[0].deleteOnly).toBeFalsy();
-      const parentA = mockMerges[0].parent;
-      expect(parentA.id).toEqual(idA);
-      expect(parentA.vernacular).toEqual(vernA);
-      expect(parentA.senses.map((s) => s.guid)).toEqual([S1]);
-      const childA = { srcWordId: idA, getAudio: true };
-      expect(mockMerges[0].children).toEqual([childA]);
+      const parent = wordAnyGuids(vernA, [senses["S1"]], idA);
+      const child = { srcWordId: idA, getAudio: true };
+      const mockMerge = newMergeWords(parent, [child]);
+      expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
+
+      expect(mockBlacklistAdd).toHaveBeenCalledTimes(1);
+      const blacklist = mockBlacklistAdd.mock.calls[0][0];
+      expect(blacklist).toHaveLength(2);
+      expect(blacklist).not.toContain(idA);
+      expect(blacklist).toContain(idB);
     });
 
     // Delete sense 2 from A
@@ -206,16 +232,16 @@ describe("MergeDupActions", () => {
       await store.dispatch(mergeAll());
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
-      const mockMerges: MergeWords[] = mockMergeWords.mock.calls[0][0];
-      expect(mockMerges).toHaveLength(1);
+      const parent = wordAnyGuids(vernA, [senses["S1"]], idA);
+      const child = { srcWordId: idA, getAudio: true };
+      const mockMerge = newMergeWords(parent, [child]);
+      expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
 
-      expect(mockMerges[0].deleteOnly).toBeFalsy();
-      const parentA = mockMerges[0].parent;
-      expect(parentA.id).toEqual(idA);
-      expect(parentA.vernacular).toEqual(vernA);
-      expect(parentA.senses.map((s) => s.guid)).toEqual([S1]);
-      const childA = { srcWordId: idA, getAudio: true };
-      expect(mockMerges[0].children).toEqual([childA]);
+      expect(mockBlacklistAdd).toHaveBeenCalledTimes(1);
+      const blacklist = mockBlacklistAdd.mock.calls[0][0];
+      expect(blacklist).toHaveLength(2);
+      expect(blacklist).not.toContain(idA);
+      expect(blacklist).toContain(idB);
     });
 
     // Delete both senses from B
@@ -234,17 +260,16 @@ describe("MergeDupActions", () => {
       await store.dispatch(mergeAll());
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
-      const mockMerges: MergeWords[] = mockMergeWords.mock.calls[0][0];
-      expect(mockMerges).toHaveLength(1);
+      const child = { srcWordId: idB, getAudio: false };
+      const mockMerge = newMergeWords(wordB, [child], true);
+      expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
 
-      expect(mockMerges[0].deleteOnly).toBeTruthy();
-      expect(mockMerges[0].parent.id).toEqual(idB);
-      const childB = { srcWordId: idB, getAudio: false };
-      expect(mockMerges[0].children).toEqual([childB]);
+      // No blacklist entry added for only 1 resulting word.
+      expect(mockBlacklistAdd).not.toHaveBeenCalled();
     });
 
     // Move all senses from B to A
-    it("move all senses to other words", async () => {
+    it("moves all senses to other word", async () => {
       const WA = newMergeTreeWord(vernA, {
         ID1: [S1, S3],
         ID2: [S4],
@@ -263,16 +288,18 @@ describe("MergeDupActions", () => {
       await store.dispatch(mergeAll());
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
-      const mockMerges: MergeWords[] = mockMergeWords.mock.calls[0][0];
-      expect(mockMerges).toHaveLength(1);
-
-      const parentA = mockMerges[0].parent;
-      expect(parentA.id).toEqual(idA);
-      expect(parentA.vernacular).toEqual(vernA);
-      expect(parentA.senses.map((s) => s.guid)).toEqual([S1, S4, S2]);
+      const parentA = wordAnyGuids(
+        vernA,
+        [senses["S1"], senses["S4"], senses["S2"]],
+        idA
+      );
       const childA = { srcWordId: idA, getAudio: true };
       const childB = { srcWordId: idB, getAudio: true };
-      expect(mockMerges[0].children).toEqual([childA, childB]);
+      const mockMerge = newMergeWords(parentA, [childA, childB]);
+      expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
+
+      // No blacklist entry added for only 1 resulting word.
+      expect(mockBlacklistAdd).not.toHaveBeenCalled();
     });
 
     // Performs a merge when a word is flagged
@@ -288,17 +315,18 @@ describe("MergeDupActions", () => {
       await store.dispatch(mergeAll());
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
-      const mockMerges: MergeWords[] = mockMergeWords.mock.calls[0][0];
-      expect(mockMerges).toHaveLength(1);
 
-      expect(mockMerges[0].deleteOnly).toBeFalsy();
-      const parentA = mockMerges[0].parent;
-      expect(parentA.id).toEqual(idA);
-      expect(parentA.vernacular).toEqual(vernA);
-      expect(parentA.flag).toEqual(WA.flag);
-      expect(parentA.senses.map((s) => s.guid)).toEqual([S1, S2]);
-      const childA = { srcWordId: idA, getAudio: true };
-      expect(mockMerges[0].children).toEqual([childA]);
+      const parent = wordAnyGuids(vernA, [senses["S1"], senses["S2"]], idA);
+      parent.flag = WA.flag;
+      const child = { srcWordId: idA, getAudio: true };
+      const mockMerge = newMergeWords(parent, [child]);
+      expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
+
+      expect(mockBlacklistAdd).toHaveBeenCalledTimes(1);
+      const blacklist = mockBlacklistAdd.mock.calls[0][0];
+      expect(blacklist).toHaveLength(2);
+      expect(blacklist).not.toContain(idA);
+      expect(blacklist).toContain(idB);
     });
   });
 

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { v4 } from "uuid";
 
-import { GramCatGroup, Status, type Word } from "api/models";
+import { GramCatGroup, type Sense, Status, type Word } from "api/models";
 import {
   type MergeTreeSense,
   type MergeTreeWord,
@@ -9,8 +9,8 @@ import {
   convertWordToMergeTreeWord,
   defaultData,
   defaultSidebar,
-  newMergeTreeWord,
   defaultTree,
+  newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { newMergeWords } from "goals/MergeDuplicates/MergeDupsTypes";
 import {
@@ -114,7 +114,9 @@ const mergeDuplicatesSlice = createSlice({
       const wordTreeSenses = Object.fromEntries(
         dataWords.map((w) => [w.id, gatherSenses(w, state.deletedSenseGuids)])
       );
-      const allSenses = Object.values(wordTreeSenses).flatMap((a) => a);
+      const allSenses = Object.values(wordTreeSenses).flatMap((mergeSenses) =>
+        mergeSenses.map((ms) => ms.sense)
+      );
 
       // Build one merge word per column.
       for (const wordId in state.tree.words) {
@@ -381,13 +383,15 @@ function gatherSenses(
   deletedSenseGuids: string[]
 ): MergeTreeSense[] {
   return word.senses.map((sense, index) => ({
-    ...sense,
-    accessibility: deletedSenseGuids.includes(sense.guid)
-      ? Status.Deleted
-      : Status.Separate,
     order: index,
     protected: sense.accessibility === Status.Protected,
     srcWordId: word.id,
+    sense: {
+      ...sense,
+      accessibility: deletedSenseGuids.includes(sense.guid)
+        ? Status.Deleted
+        : Status.Separate,
+    },
   }));
 }
 
@@ -404,8 +408,8 @@ function isEmptyMerge(
   return (
     childSenses[0].srcWordId === word.id &&
     Object.keys(mergeWord.sensesGuids).length === word.senses.length &&
-    childSenses.every((s) =>
-      [Status.Active, Status.Protected].includes(s.accessibility)
+    childSenses.every((ms) =>
+      [Status.Active, Status.Protected].includes(ms.sense.accessibility)
     ) &&
     compareFlags(mergeWord.flag, word.flag) === 0
   );
@@ -415,7 +419,7 @@ function isEmptyMerge(
 function createMergeParent(
   word: Word,
   mergeWord: MergeTreeWord,
-  allSenses: MergeTreeSense[]
+  allSenses: Sense[]
 ): Word {
   // Construct parent.
   const senses = Object.values(mergeWord.sensesGuids)
@@ -433,17 +437,18 @@ function createMergeParent(
  * - change the accessibility of the first one from Separate to Active/Protected,
  * - change the accessibility of the rest to Duplicate,
  * - merge select content from duplicates into main sense */
-function combineIntoFirstSense(senses: MergeTreeSense[]): void {
+function combineIntoFirstSense(mergeSenses: MergeTreeSense[]): void {
   // Set the first sense to be merged as Active/Protected.
   // This was the top sense when the sidebar was opened.
-  const mainSense = senses[0];
-  mainSense.accessibility = mainSense.protected
+  const mainSense = mergeSenses[0].sense;
+  mainSense.accessibility = mergeSenses[0].protected
     ? Status.Protected
     : Status.Active;
 
   // Merge the rest as duplicates.
   // These were senses dropped into another sense.
-  senses.slice(1).forEach((dupSense) => {
+  mergeSenses.slice(1).forEach((mergeDupSense) => {
+    const dupSense = mergeDupSense.sense;
     dupSense.accessibility = Status.Duplicate;
     // Merge the duplicate's definitions into the main sense.
     const sep = "; ";

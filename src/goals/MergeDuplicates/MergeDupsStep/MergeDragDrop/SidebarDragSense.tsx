@@ -13,7 +13,7 @@ import { useAppSelector } from "types/hooks";
 import theme from "types/theme";
 
 interface SidebarDragSenseProps {
-  sense: MergeTreeSense;
+  mergeSense: MergeTreeSense;
   index: number;
 }
 
@@ -29,10 +29,10 @@ export default function SidebarDragSense(
 
   return (
     <Draggable
-      key={props.sense.guid}
+      key={props.mergeSense.sense.guid}
       draggableId={draggableId}
       index={props.index}
-      isDragDisabled={props.sense.protected}
+      isDragDisabled={props.mergeSense.protected}
     >
       {(provided, snapshot): ReactElement => (
         <div
@@ -54,14 +54,14 @@ export default function SidebarDragSense(
                   ? "red"
                   : snapshot.isDragging
                     ? "lightgreen"
-                    : props.sense.protected
+                    : props.mergeSense.protected
                       ? "lightyellow"
                       : props.index === 0
                         ? "white"
                         : "lightgrey",
             }}
           >
-            <SenseCardContent senses={[props.sense]} sidebar />
+            <SenseCardContent senses={[props.mergeSense.sense]} sidebar />
           </Card>
         </div>
       )}
