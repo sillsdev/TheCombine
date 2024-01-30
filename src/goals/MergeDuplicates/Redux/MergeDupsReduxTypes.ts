@@ -1,9 +1,27 @@
-import { Flag, MergeWords } from "api/models";
+import { type Flag, type MergeWords } from "api/models";
 import {
-  MergeData,
-  MergeTree,
-  MergeTreeReference,
+  type MergeData,
+  type MergeTree,
+  type MergeTreeReference,
+  defaultData,
+  defaultTree,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
+
+// Redux state
+
+export interface MergeTreeState {
+  data: MergeData;
+  tree: MergeTree;
+  mergeWords: MergeWords[];
+}
+
+export const defaultState: MergeTreeState = {
+  data: defaultData,
+  tree: defaultTree,
+  mergeWords: [],
+};
+
+// Action payloads
 
 export interface CombineSenseMergePayload {
   src: MergeTreeReference;
@@ -13,12 +31,6 @@ export interface CombineSenseMergePayload {
 export interface FlagWordPayload {
   wordId: string;
   flag: Flag;
-}
-
-export interface MergeTreeState {
-  data: MergeData;
-  tree: MergeTree;
-  mergeWords: MergeWords[];
 }
 
 export interface MoveSensePayload extends OrderSensePayload {
