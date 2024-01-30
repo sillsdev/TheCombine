@@ -369,7 +369,9 @@ function createMergeWords(
           parent.senses.push(mergeSense.sense);
         }
       });
-      const getAudio = msList.every((ms) => ms.accessibility !== Status.Separate);
+      const getAudio = msList.every(
+        (ms) => ms.accessibility !== Status.Separate
+      );
       return { srcWordId: msList[0].srcWordId, getAudio };
     }
   );
