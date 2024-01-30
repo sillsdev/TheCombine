@@ -34,7 +34,7 @@ spec:
           imagePullPolicy: IfNotPresent
       containers:
         - name: backend
-          image: {{ template "backend.containerImage" . }}
+          image: {{ include "backend.containerImage" . }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           env:
             - name: COMBINE_JWT_SECRET_KEY

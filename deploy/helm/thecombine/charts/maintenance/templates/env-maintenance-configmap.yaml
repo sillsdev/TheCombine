@@ -14,7 +14,7 @@ data:
   # for this host from the list of backups.  This is done as an environment variable
   # to provide flexibility for future clean schemes while minimizing the need to
   # rebuild the container image.
-  backup_filter: {{ template "maintenance.backupNameFilter" . }}
+  backup_filter: {{ include "maintenance.backupNameFilter" . }}
   wait_time: {{ .Values.waitTime | quote }}
   max_backups: {{ .Values.maxBackups | quote }}
   font_dir: {{ .Values.fontsDir | quote }}

@@ -1,4 +1,4 @@
 ---
 # Used to setup the certificate for kubectl
 # Can be overridden by specific groups/hosts
-k8s_dns_name: "{{ combine_server_name }}"
+public_dns_name: "{{ combine_server_name }}"

@@ -6,7 +6,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 data:
   AWS_S3_BUCKET: {{ print "s3://" .Values.global.awsS3Location "/" .Values.awsS3CertLoc | quote }}
-  CERT_SECRET: {{ template "cert-proxy-client.certSecretName" . }}
+  CERT_SECRET: {{ include "cert-proxy-client.certSecretName" . }}
   CERT_NAMESPACE: {{ .Release.Namespace  }}
   CERT_RENEW_BEFORE: "{{ .Values.certRenewBefore }}"
   TEST_URL: "https://aws.amazon.com"

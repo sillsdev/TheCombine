@@ -38,8 +38,8 @@ export default function SidebarDrop(): ReactElement {
             <ArrowForwardIos />
           </IconButton>
           <Typography variant="h5">{vernacular}</Typography>
-          {sidebar.senses.map((sense: MergeTreeSense, index: number) => (
-            <SidebarDragSense key={index} index={index} sense={sense} />
+          {sidebar.mergeSenses.map((ms: MergeTreeSense, i: number) => (
+            <SidebarDragSense key={ms.sense.guid} index={i} mergeSense={ms} />
           ))}
           {providedDroppable.placeholder}
         </div>

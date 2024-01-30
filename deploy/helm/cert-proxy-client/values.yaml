@@ -19,9 +19,10 @@ global:
   awsDefaultRegion: "Override"
   awsAccessKeyId: "Override"
   awsSecretAccessKey: "Override"
-  imageTag: "latest"
+  imagePullPolicy: "IfNotPresent"
   # Define the image registry to use (may be blank for local images)
   imageRegistry: awsEcr
+  imageTag: "latest"
   # Default AWS S3 location
   awsS3Location: "thecombine.app"
 
