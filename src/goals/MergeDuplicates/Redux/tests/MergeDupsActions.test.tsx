@@ -1,9 +1,9 @@
-import { MergeWords, Sense, Status, Word } from "api/models";
+import { type MergeWords, type Sense, Status, type Word } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import {
+  type MergeData,
+  type MergeTree,
   defaultTree,
-  MergeData,
-  MergeTree,
   newMergeTreeSense,
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
@@ -14,6 +14,7 @@ import {
   mergeAll,
   setData,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
+import { defaultState as defaultMergeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { goalDataMock } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
 import { setupStore } from "store";
 import { GoalType } from "types/goals";
@@ -29,13 +30,14 @@ function wordAnyGuids(vern: string, senses: Sense[], id: string): Word {
   };
 }
 
+const mockBlacklistAdd = jest.fn();
 const mockGraylistAdd = jest.fn();
 const mockMergeWords = jest.fn();
 
 jest.mock("backend", () => ({
-  blacklistAdd: jest.fn(),
+  blacklistAdd: (ids: string[]) => mockBlacklistAdd(ids),
   getWord: jest.fn(),
-  graylistAdd: () => mockGraylistAdd(),
+  graylistAdd: (ids: string[]) => mockGraylistAdd(ids),
   mergeWords: (mergeWordsArray: MergeWords[]) =>
     mockMergeWords(mergeWordsArray),
 }));
@@ -78,17 +80,22 @@ const S1 = senses["S1"].guid;
 const S2 = senses["S2"].guid;
 const S3 = senses["S3"].guid;
 const S4 = senses["S4"].guid;
-const data: MergeData = { words: { WA: wordA, WB: wordB }, senses: {} };
-data.senses[S1] = {
-  ...newMergeTreeSense("S1", idA, 0),
-  guid: S1,
-  protected: true,
+const data: MergeData = {
+  words: { WA: wordA, WB: wordB },
+  senses: {
+    [S1]: { ...newMergeTreeSense("S1", idA, 0, S1), protected: true },
+    [S2]: newMergeTreeSense("S2", idA, 1, S2),
+    [S3]: newMergeTreeSense("S3", idB, 0, S3),
+    [S4]: newMergeTreeSense("S4", idB, 1, S4),
+  },
 };
-data.senses[S2] = { ...newMergeTreeSense("S2", idA, 1), guid: S2 };
-data.senses[S3] = { ...newMergeTreeSense("S3", idB, 0), guid: S3 };
-data.senses[S4] = { ...newMergeTreeSense("S4", idB, 1), guid: S4 };
 
-beforeEach(jest.clearAllMocks);
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockMergeWords.mockImplementation((mwArray: MergeWords[]) =>
+    mwArray.filter((mw) => !mw.deleteOnly).map((mw) => mw.parent.id + "+")
+  );
+});
 
 describe("MergeDupActions", () => {
   describe("mergeAll", () => {
@@ -99,11 +106,17 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree, mergeWords: [] },
+        mergeDuplicateGoal: { ...defaultMergeState, data, tree },
       });
       await store.dispatch(mergeAll());
 
       expect(mockMergeWords).not.toHaveBeenCalled();
+
+      expect(mockBlacklistAdd).toHaveBeenCalledTimes(1);
+      const blacklist = mockBlacklistAdd.mock.calls[0][0];
+      expect(blacklist).toHaveLength(2);
+      expect(blacklist).toContain(idA);
+      expect(blacklist).toContain(idB);
     });
 
     // Merge sense 3 from B as duplicate into sense 1 from A
@@ -113,7 +126,7 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree, mergeWords: [] },
+        mergeDuplicateGoal: { ...defaultMergeState, data, tree },
       });
       await store.dispatch(mergeAll());
 
@@ -129,6 +142,12 @@ describe("MergeDupActions", () => {
       for (const mergeWords of mockMerges) {
         expect(mockMergeWords.mock.calls[0][0]).toContainEqual(mergeWords);
       }
+
+      expect(mockBlacklistAdd).toHaveBeenCalledTimes(1);
+      const blacklist = mockBlacklistAdd.mock.calls[0][0];
+      expect(blacklist).toHaveLength(2);
+      expect(blacklist).not.toContain(idA);
+      expect(blacklist).not.toContain(idB);
     });
 
     // Move sense 3 from B to A
@@ -138,7 +157,7 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree, mergeWords: [] },
+        mergeDuplicateGoal: { ...defaultMergeState, data, tree },
       });
       await store.dispatch(mergeAll());
 
@@ -158,6 +177,12 @@ describe("MergeDupActions", () => {
       for (const mergeWords of mockMerges) {
         expect(mockMergeWords.mock.calls[0][0]).toContainEqual(mergeWords);
       }
+
+      expect(mockBlacklistAdd).toHaveBeenCalledTimes(1);
+      const blacklist = mockBlacklistAdd.mock.calls[0][0];
+      expect(blacklist).toHaveLength(2);
+      expect(blacklist).not.toContain(idA);
+      expect(blacklist).not.toContain(idB);
     });
 
     // Merge sense 1 and 2 in A as duplicates
@@ -167,7 +192,7 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree, mergeWords: [] },
+        mergeDuplicateGoal: { ...defaultMergeState, data, tree },
       });
       await store.dispatch(mergeAll());
 
@@ -177,6 +202,12 @@ describe("MergeDupActions", () => {
       const child = { srcWordId: idA, getAudio: true };
       const mockMerge = newMergeWords(parent, [child]);
       expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
+
+      expect(mockBlacklistAdd).toHaveBeenCalledTimes(1);
+      const blacklist = mockBlacklistAdd.mock.calls[0][0];
+      expect(blacklist).toHaveLength(2);
+      expect(blacklist).not.toContain(idA);
+      expect(blacklist).toContain(idB);
     });
 
     // Delete sense 2 from A
@@ -186,7 +217,7 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree, mergeWords: [] },
+        mergeDuplicateGoal: { ...defaultMergeState, data, tree },
       });
       await store.dispatch(mergeAll());
 
@@ -195,6 +226,12 @@ describe("MergeDupActions", () => {
       const child = { srcWordId: idA, getAudio: true };
       const mockMerge = newMergeWords(parent, [child]);
       expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
+
+      expect(mockBlacklistAdd).toHaveBeenCalledTimes(1);
+      const blacklist = mockBlacklistAdd.mock.calls[0][0];
+      expect(blacklist).toHaveLength(2);
+      expect(blacklist).not.toContain(idA);
+      expect(blacklist).toContain(idB);
     });
 
     // Delete both senses from B
@@ -203,7 +240,7 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree, mergeWords: [] },
+        mergeDuplicateGoal: { ...defaultMergeState, data, tree },
       });
       await store.dispatch(mergeAll());
 
@@ -211,6 +248,9 @@ describe("MergeDupActions", () => {
       const child = { srcWordId: idB, getAudio: false };
       const mockMerge = newMergeWords(wordB, [child], true);
       expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
+
+      // No blacklist entry added for only 1 resulting word.
+      expect(mockBlacklistAdd).not.toHaveBeenCalled();
     });
 
     // Performs a merge when a word is flagged
@@ -221,7 +261,7 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree, mergeWords: [] },
+        mergeDuplicateGoal: { ...defaultMergeState, data, tree },
       });
       await store.dispatch(mergeAll());
 
@@ -232,6 +272,12 @@ describe("MergeDupActions", () => {
       const child = { srcWordId: idA, getAudio: true };
       const mockMerge = newMergeWords(parent, [child]);
       expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
+
+      expect(mockBlacklistAdd).toHaveBeenCalledTimes(1);
+      const blacklist = mockBlacklistAdd.mock.calls[0][0];
+      expect(blacklist).toHaveLength(2);
+      expect(blacklist).not.toContain(idA);
+      expect(blacklist).toContain(idB);
     });
   });
 
@@ -239,7 +285,6 @@ describe("MergeDupActions", () => {
     it("creates an action to add MergeDups data", () => {
       const goal = new MergeDups();
       goal.steps = [{ words: [...goalDataMock.plannedWords[0]] }];
-
       const store = setupStore();
       store.dispatch(dispatchMergeStepData(goal));
       const setDataAction = setData(goalDataMock.plannedWords[0]);
@@ -255,7 +300,7 @@ describe("MergeDupActions", () => {
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
         ...preloadedState,
-        mergeDuplicateGoal: { data, tree, mergeWords: [] },
+        mergeDuplicateGoal: { ...defaultMergeState, data, tree },
       });
       store.dispatch(deferMerge());
       expect(mockGraylistAdd).toHaveBeenCalledTimes(1);
