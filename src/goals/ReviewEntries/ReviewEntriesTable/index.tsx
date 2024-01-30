@@ -197,6 +197,7 @@ export default function ReviewEntriesTable(): ReactElement {
       Cell: ({ row }: CellProps) => <Cell.Note word={row.original} />,
       header: t("reviewEntries.columns.note"),
       id: "note",
+      size: BaselineColumnSize - 40,
     }),
 
     // Flag column

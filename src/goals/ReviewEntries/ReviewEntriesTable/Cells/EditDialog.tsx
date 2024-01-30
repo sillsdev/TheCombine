@@ -328,6 +328,19 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
 
   const { t } = useTranslation();
 
+  const noteLangSelect = (
+    <Select
+      onChange={(e: SelectChangeEvent) => updateNoteLang(e.target.value)}
+      value={newWord.note.language || analysisWritingSystems[0].bcp47}
+    >
+      {analysisWritingSystems.map((ws) => (
+        <MenuItem key={ws.bcp47} value={ws.bcp47}>
+          {ws.name ? `${ws.bcp47} : ${ws.name}` : ws.bcp47}
+        </MenuItem>
+      ))}
+    </Select>
+  );
+
   return (
     <>
       <CancelConfirmDialog
@@ -439,25 +452,16 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
             {/* Note */}
             <Grid item>
               <Card sx={bgStyle(EditField.Note)}>
-                <CardHeader title={t("reviewEntries.columns.note")} />
+                <CardHeader
+                  action={noteLangSelect}
+                  title={t("reviewEntries.columns.note")}
+                />
                 <CardContent>
-                  <Select
-                    onChange={(e: SelectChangeEvent) =>
-                      updateNoteLang(e.target.value)
-                    }
-                    value={
-                      newWord.note.language || analysisWritingSystems[0].bcp47
-                    }
-                  >
-                    {analysisWritingSystems.map((ws) => (
-                      <MenuItem key={ws.bcp47} value={ws.bcp47}>
-                        {ws.name ? `${ws.bcp47} : ${ws.name}` : ws.bcp47}
-                      </MenuItem>
-                    ))}
-                  </Select>
                   <TextFieldWithFont
                     analysis
+                    fullWidth
                     lang={newWord.note.language}
+                    multiline
                     onChange={(e) => updateNoteText(e.target.value)}
                     value={newWord.note.text}
                   />
