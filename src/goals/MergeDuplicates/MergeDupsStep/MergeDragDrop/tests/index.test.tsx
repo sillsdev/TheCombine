@@ -12,6 +12,7 @@ import DragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DragSen
 import DropWord from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DropWord";
 import {
   convertSenseToMergeTreeSense,
+  defaultSidebar,
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
@@ -99,7 +100,7 @@ const mockTwoWordState = (): MergeTreeState => ({
     words: { [wordFoo1.id]: wordFoo1, [wordFoo2.id]: wordFoo2 },
   },
   tree: {
-    sidebar: { senses: [], wordId: "", mergeSenseId: "" },
+    sidebar: defaultSidebar,
     words: {
       [wordFoo1.id]: newMergeTreeWord(wordFoo1.vernacular, {
         word1_senseA: [senseBah.guid, senseBaj.guid],

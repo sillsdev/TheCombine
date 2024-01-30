@@ -5,6 +5,7 @@ import { defaultState } from "components/App/DefaultState";
 import {
   convertSenseToMergeTreeSense,
   convertWordToMergeTreeWord,
+  defaultSidebar,
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { type MergeDupsData } from "goals/MergeDuplicates/MergeDupsTypes";
@@ -145,11 +146,7 @@ export const mergeTwoWordsScenario: GetMergeWordsScenario = {
           },
         },
         tree: {
-          sidebar: {
-            senses: [],
-            wordId: "",
-            mergeSenseId: "",
-          },
+          sidebar: defaultSidebar,
           words: {
             [wordFoo2.id]: convertWordToMergeTreeWord({
               ...wordFoo2,
@@ -211,11 +208,7 @@ export const mergeTwoSensesScenario: GetMergeWordsScenario = {
           },
         },
         tree: {
-          sidebar: {
-            senses: [],
-            wordId: "",
-            mergeSenseId: "",
-          },
+          sidebar: defaultSidebar,
           words: {
             [wordFoo2.id]: newMergeTreeWord(wordFoo2.vernacular, {
               word2_senseA: [senseBar.guid],
@@ -277,11 +270,7 @@ export const mergeTwoDefinitionsScenario: GetMergeWordsScenario = {
           },
         },
         tree: {
-          sidebar: {
-            senses: [],
-            wordId: "",
-            mergeSenseId: "",
-          },
+          sidebar: defaultSidebar,
           words: {
             [wordFoo2.id]: newMergeTreeWord(wordFoo2.vernacular, {
               word2_senseA: [senseBar.guid],
