@@ -5,7 +5,7 @@ import { defaultState as exportProjectState } from "components/ProjectExport/Red
 import { defaultState as pronunciationsState } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { defaultState as treeViewState } from "components/TreeView/Redux/TreeViewReduxTypes";
 import { defaultState as characterInventoryState } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
-import { defaultState as mergeDuplicateGoal } from "goals/MergeDuplicates/Redux/MergeDupsReducer";
+import { defaultState as mergeDuplicateGoal } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { defaultState as analyticsState } from "types/Redux/analyticsReduxTypes";
 
 export const defaultState = {

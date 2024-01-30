@@ -14,7 +14,7 @@ interface DragSenseProps {
   index: number;
   wordId: string;
   mergeSenseId: string;
-  senses: MergeTreeSense[];
+  mergeSenses: MergeTreeSense[];
   isOnlySenseInProtectedWord: boolean;
   isProtectedSense: boolean;
 }
@@ -47,12 +47,12 @@ export default function DragSense(props: DragSenseProps): ReactElement {
   const isInSidebar =
     sidebar.wordId === props.wordId &&
     sidebar.mergeSenseId === props.mergeSenseId &&
-    sidebar.senses.length > 1;
+    sidebar.mergeSenses.length > 1;
 
   const updateSidebar = useCallback(() => {
     dispatch(
       setSidebar({
-        senses: props.senses,
+        mergeSenses: props.mergeSenses,
         wordId: props.wordId,
         mergeSenseId: props.mergeSenseId,
       })
@@ -68,19 +68,19 @@ export default function DragSense(props: DragSenseProps): ReactElement {
   };
 
   useEffect(() => {
-    if (props.senses.length !== duplicateCount) {
-      if (props.senses.length > duplicateCount) {
+    if (props.mergeSenses.length !== duplicateCount) {
+      if (props.mergeSenses.length > duplicateCount) {
         updateSidebar();
       }
-      setDuplicateCount(props.senses.length);
+      setDuplicateCount(props.mergeSenses.length);
     }
-  }, [props.senses.length, duplicateCount, updateSidebar]);
+  }, [props.mergeSenses.length, duplicateCount, updateSidebar]);
 
   if (
     isInSidebar &&
     !arraysEqual(
-      sidebar.senses.map((s) => s.guid),
-      props.senses.map((s) => s.guid)
+      sidebar.mergeSenses.map((m) => m.sense.guid),
+      props.mergeSenses.map((m) => m.sense.guid)
     )
   ) {
     updateSidebar();
@@ -125,7 +125,7 @@ export default function DragSense(props: DragSenseProps): ReactElement {
           }}
         >
           <SenseCardContent
-            senses={props.senses}
+            senses={props.mergeSenses.map((s) => s.sense)}
             languages={analysisLangs}
             toggleFunction={toggleSidebar}
           />

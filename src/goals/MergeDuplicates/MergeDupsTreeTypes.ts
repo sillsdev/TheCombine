@@ -1,19 +1,22 @@
 import { v4 } from "uuid";
 
-import { Flag, Sense, Status, Word } from "api/models";
-import { Hash } from "types/hash";
+import { type Flag, type Sense, Status, type Word } from "api/models";
+import { type Hash } from "types/hash";
 import { newFlag, newSense } from "types/word";
 
-export interface MergeTreeSense extends Sense {
-  srcWordId: string;
+export interface MergeTreeSense {
   order: number;
   protected: boolean;
+  srcWordId: string;
+  sense: Sense;
 }
 
 export interface MergeData {
   words: Hash<Word>;
   senses: Hash<MergeTreeSense>;
 }
+
+export const defaultData: MergeData = { words: {}, senses: {} };
 
 export interface MergeTreeReference {
   wordId: string;
@@ -30,15 +33,16 @@ export interface MergeTreeWord {
 }
 
 export function newMergeTreeSense(
-  gloss = "",
-  srcWordId = "",
-  order = 0
+  gloss: string,
+  srcWordId: string,
+  order: number,
+  guid?: string
 ): MergeTreeSense {
   return {
-    ...newSense(gloss),
-    srcWordId,
     order,
     protected: false,
+    srcWordId,
+    sense: guid ? { ...newSense(gloss), guid } : newSense(gloss),
   };
 }
 
@@ -60,10 +64,10 @@ export function convertSenseToMergeTreeSense(
   order = 0
 ): MergeTreeSense {
   return {
-    ...sense,
-    srcWordId,
     order,
     protected: sense?.accessibility === Status.Protected,
+    srcWordId,
+    sense,
   };
 }
 
@@ -78,13 +82,13 @@ export function convertWordToMergeTreeWord(word: Word): MergeTreeWord {
 }
 
 export interface Sidebar {
-  senses: MergeTreeSense[];
+  mergeSenses: MergeTreeSense[];
   wordId: string;
   mergeSenseId: string;
 }
 
 export const defaultSidebar: Sidebar = {
-  senses: [],
+  mergeSenses: [],
   wordId: "",
   mergeSenseId: "",
 };
