@@ -1,10 +1,10 @@
-import { Action, PayloadAction } from "@reduxjs/toolkit";
+import { type Action, type PayloadAction } from "@reduxjs/toolkit";
 
 import {
+  type MergeTreeReference,
+  type MergeTreeWord,
   convertSenseToMergeTreeSense,
-  defaultSidebar,
-  MergeTreeReference,
-  MergeTreeWord,
+  defaultTree,
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import {
@@ -17,18 +17,19 @@ import {
   orderSense,
   setData,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
-import mergeDupStepReducer, {
+import mergeDupStepReducer from "goals/MergeDuplicates/Redux/MergeDupsReducer";
+import {
+  type MergeTreeState,
   defaultState,
-} from "goals/MergeDuplicates/Redux/MergeDupsReducer";
-import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
+} from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import {
   mergeTwoDefinitionsScenario,
   mergeTwoSensesScenario,
   mergeTwoWordsScenario,
 } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
-import { StoreAction, StoreActionTypes } from "rootActions";
+import { type StoreAction, StoreActionTypes } from "rootActions";
 import { setupStore } from "store";
-import { Hash } from "types/hash";
+import { type Hash } from "types/hash";
 import { newFlag, testWordList } from "types/word";
 
 jest.mock("uuid");
@@ -91,15 +92,8 @@ describe("MergeDupsReducer", () => {
     };
   }
   const mockState: MergeTreeState = {
-    data: {
-      words: {},
-      senses: {},
-    },
-    tree: {
-      sidebar: defaultSidebar,
-      words: testTreeWords(),
-    },
-    mergeWords: [],
+    ...defaultState,
+    tree: { ...defaultTree, words: testTreeWords() },
   };
   function checkTreeWords(
     action: Action | PayloadAction,

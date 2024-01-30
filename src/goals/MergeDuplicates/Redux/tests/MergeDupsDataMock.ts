@@ -5,10 +5,11 @@ import { defaultState } from "components/App/DefaultState";
 import {
   convertSenseToMergeTreeSense,
   convertWordToMergeTreeWord,
-  defaultSidebar,
+  defaultTree,
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { type MergeDupsData } from "goals/MergeDuplicates/MergeDupsTypes";
+import { defaultState as mergeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { type RootState } from "store";
 import { newSense, newWord, simpleWord } from "types/word";
 
@@ -122,6 +123,7 @@ export const mergeTwoWordsScenario: GetMergeWordsScenario = {
     return {
       ...persistedDefaultState,
       mergeDuplicateGoal: {
+        ...mergeState,
         data: {
           senses: {
             [senseBah.guid]: convertSenseToMergeTreeSense(
@@ -146,7 +148,7 @@ export const mergeTwoWordsScenario: GetMergeWordsScenario = {
           },
         },
         tree: {
-          sidebar: defaultSidebar,
+          ...defaultTree,
           words: {
             [wordFoo2.id]: convertWordToMergeTreeWord({
               ...wordFoo2,
@@ -154,7 +156,6 @@ export const mergeTwoWordsScenario: GetMergeWordsScenario = {
             }),
           },
         },
-        mergeWords: [],
       },
     };
   },
@@ -184,6 +185,7 @@ export const mergeTwoSensesScenario: GetMergeWordsScenario = {
     return {
       ...persistedDefaultState,
       mergeDuplicateGoal: {
+        ...mergeState,
         data: {
           senses: {
             [senseBah.guid]: convertSenseToMergeTreeSense(
@@ -208,7 +210,7 @@ export const mergeTwoSensesScenario: GetMergeWordsScenario = {
           },
         },
         tree: {
-          sidebar: defaultSidebar,
+          ...defaultTree,
           words: {
             [wordFoo2.id]: newMergeTreeWord(wordFoo2.vernacular, {
               word2_senseA: [senseBar.guid],
@@ -216,7 +218,6 @@ export const mergeTwoSensesScenario: GetMergeWordsScenario = {
             }),
           },
         },
-        mergeWords: [],
       },
     };
   },
@@ -246,6 +247,7 @@ export const mergeTwoDefinitionsScenario: GetMergeWordsScenario = {
     return {
       ...persistedDefaultState,
       mergeDuplicateGoal: {
+        ...mergeState,
         data: {
           senses: {
             [senseBah.guid]: convertSenseToMergeTreeSense(
@@ -270,7 +272,7 @@ export const mergeTwoDefinitionsScenario: GetMergeWordsScenario = {
           },
         },
         tree: {
-          sidebar: defaultSidebar,
+          ...defaultTree,
           words: {
             [wordFoo2.id]: newMergeTreeWord(wordFoo2.vernacular, {
               word2_senseA: [senseBar.guid],
@@ -278,7 +280,6 @@ export const mergeTwoDefinitionsScenario: GetMergeWordsScenario = {
             }),
           },
         },
-        mergeWords: [],
       },
     };
   },
