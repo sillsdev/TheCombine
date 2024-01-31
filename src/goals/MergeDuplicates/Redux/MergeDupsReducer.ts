@@ -348,7 +348,9 @@ function getAudioMoves(
 ): Hash<string[]> {
   const moveAudio: Hash<string[]> = {};
   Object.entries(dataWords).forEach(([fromId, word]) => {
+    // Identify the words that are absent from the merge tree.
     if (!Object.keys(treeWords).includes(fromId)) {
+      // Determine which other words have senses from the absent word.
       getTreeWordIdsWithWordSenses(treeWords, word).forEach((toId) => {
         if (!(toId in moveAudio)) {
           moveAudio[toId] = [];
