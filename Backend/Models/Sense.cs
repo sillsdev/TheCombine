@@ -46,38 +46,23 @@ namespace BackendFramework.Models
             // By default generate a new, unique Guid for each new Sense.
             Guid = Guid.NewGuid();
             Accessibility = Status.Active;
-            GrammaticalInfo = new GrammaticalInfo();
-            Definitions = new List<Definition>();
-            Glosses = new List<Gloss>();
-            SemanticDomains = new List<SemanticDomain>();
+            GrammaticalInfo = new();
+            Definitions = new();
+            Glosses = new();
+            SemanticDomains = new();
         }
 
         public Sense Clone()
         {
-            var clone = new Sense
+            return new()
             {
                 Guid = Guid,
                 Accessibility = Accessibility,
                 GrammaticalInfo = GrammaticalInfo.Clone(),
-                Definitions = new List<Definition>(),
-                Glosses = new List<Gloss>(),
-                SemanticDomains = new List<SemanticDomain>(),
+                Definitions = Definitions.Select(d => d.Clone()).ToList(),
+                Glosses = Glosses.Select(g => g.Clone()).ToList(),
+                SemanticDomains = SemanticDomains.Select(sd => sd.Clone()).ToList(),
             };
-
-            foreach (var definition in Definitions)
-            {
-                clone.Definitions.Add(definition.Clone());
-            }
-            foreach (var gloss in Glosses)
-            {
-                clone.Glosses.Add(gloss.Clone());
-            }
-            foreach (var sd in SemanticDomains)
-            {
-                clone.SemanticDomains.Add(sd.Clone());
-            }
-
-            return clone;
         }
 
         public override bool Equals(object? obj)

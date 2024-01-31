@@ -91,17 +91,17 @@ namespace BackendFramework.Models
             OtherField = "";
             ProjectId = "";
             Accessibility = Status.Active;
-            Audio = new List<Pronunciation>();
-            EditedBy = new List<string>();
-            History = new List<string>();
-            Senses = new List<Sense>();
-            Note = new Note();
-            Flag = new Flag();
+            Audio = new();
+            EditedBy = new();
+            History = new();
+            Senses = new();
+            Note = new();
+            Flag = new();
         }
 
         public Word Clone()
         {
-            var clone = new Word
+            return new()
             {
                 Id = Id,
                 Guid = Guid,
@@ -112,32 +112,13 @@ namespace BackendFramework.Models
                 OtherField = OtherField,
                 ProjectId = ProjectId,
                 Accessibility = Accessibility,
-                Audio = new List<Pronunciation>(),
-                EditedBy = new List<string>(),
-                History = new List<string>(),
-                Senses = new List<Sense>(),
+                Audio = Audio.Select(p => p.Clone()).ToList(),
+                EditedBy = EditedBy.Select(id => id).ToList(),
+                History = History.Select(id => id).ToList(),
+                Senses = Senses.Select(s => s.Clone()).ToList(),
                 Note = Note.Clone(),
                 Flag = Flag.Clone(),
             };
-
-            foreach (var audio in Audio)
-            {
-                clone.Audio.Add(audio.Clone());
-            }
-            foreach (var id in EditedBy)
-            {
-                clone.EditedBy.Add(id);
-            }
-            foreach (var id in History)
-            {
-                clone.History.Add(id);
-            }
-            foreach (var sense in Senses)
-            {
-                clone.Senses.Add(sense.Clone());
-            }
-
-            return clone;
         }
 
         public bool ContentEquals(Word other)
