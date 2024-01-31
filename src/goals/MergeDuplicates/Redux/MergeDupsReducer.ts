@@ -429,7 +429,7 @@ function createMergeParent(
     ...word,
     flag: mergeWord.flag,
     senses,
-    vernacular: word.vernacular.trim() || mergeWord.vern.trim(),
+    vernacular: mergeWord.vern.trim() || word.vernacular.trim(),
   };
 }
 
