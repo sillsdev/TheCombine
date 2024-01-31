@@ -1,4 +1,4 @@
-import { type Flag, type MergeWords } from "api/models";
+import { MergeSourceWord, type Flag, type MergeWords } from "api/models";
 import {
   type MergeData,
   type MergeTree,
@@ -26,6 +26,13 @@ export const defaultAudio: MergeAudio = {
   counts: {},
   moves: {},
 };
+
+export function newMergeSourceWord(
+  srcWordId: string,
+  getAudio = false
+): MergeSourceWord {
+  return { srcWordId, getAudio };
+}
 
 export interface MergeTreeState {
   data: MergeData;

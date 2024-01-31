@@ -17,6 +17,7 @@ import {
 import {
   defaultAudio,
   defaultState as defaultMergeState,
+  newMergeSourceWord,
 } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { goalDataMock } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
 import { setupStore } from "store";
@@ -136,12 +137,11 @@ describe("MergeDupActions", () => {
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
       const parentA = wordAnyGuids(vernA, [senses["S1"], senses["S2"]], idA);
       const parentB = wordAnyGuids(vernB, [senses["S4"]], idB);
-      const childA = { srcWordId: idA, getAudio: true };
-      const childAB = { srcWordId: idB, getAudio: false };
-      const childBB = { srcWordId: idB, getAudio: true };
+      const childA = newMergeSourceWord(idA);
+      const childB = newMergeSourceWord(idB);
       const mockMerges = [
-        newMergeWords(parentA, [childA, childAB]),
-        newMergeWords(parentB, [childBB]),
+        newMergeWords(parentA, [childA, childB]),
+        newMergeWords(parentB, [childB]),
       ];
       for (const mergeWords of mockMerges) {
         expect(mockMergeWords.mock.calls[0][0]).toContainEqual(mergeWords);
@@ -172,12 +172,11 @@ describe("MergeDupActions", () => {
         idA
       );
       const parentB = wordAnyGuids(vernB, [senses["S4"]], idB);
-      const childA = { srcWordId: idA, getAudio: true };
-      const childAB = { srcWordId: idB, getAudio: false };
-      const childBB = { srcWordId: idB, getAudio: true };
+      const childA = newMergeSourceWord(idA);
+      const childB = newMergeSourceWord(idB);
       const mockMerges = [
-        newMergeWords(parentA, [childA, childAB]),
-        newMergeWords(parentB, [childBB]),
+        newMergeWords(parentA, [childA, childB]),
+        newMergeWords(parentB, [childB]),
       ];
       for (const mergeWords of mockMerges) {
         expect(mockMergeWords.mock.calls[0][0]).toContainEqual(mergeWords);
@@ -204,7 +203,7 @@ describe("MergeDupActions", () => {
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
 
       const parent = wordAnyGuids(vernA, [senses["S1"]], idA);
-      const child = { srcWordId: idA, getAudio: true };
+      const child = newMergeSourceWord(idA);
       const mockMerge = newMergeWords(parent, [child]);
       expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
 
@@ -232,7 +231,7 @@ describe("MergeDupActions", () => {
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
       const parent = wordAnyGuids(vernA, [senses["S1"]], idA);
-      const child = { srcWordId: idA, getAudio: true };
+      const child = newMergeSourceWord(idA);
       const mockMerge = newMergeWords(parent, [child]);
       expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
 
@@ -258,7 +257,7 @@ describe("MergeDupActions", () => {
       await store.dispatch(mergeAll());
 
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
-      const child = { srcWordId: idB, getAudio: false };
+      const child = newMergeSourceWord(idB);
       const mockMerge = newMergeWords(wordB, [child], true);
       expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
 
@@ -291,8 +290,8 @@ describe("MergeDupActions", () => {
         [senses["S1"], senses["S2"], senses["S4"]],
         idA
       );
-      const childA = { srcWordId: idA, getAudio: true };
-      const childB = { srcWordId: idB, getAudio: true };
+      const childA = newMergeSourceWord(idA);
+      const childB = newMergeSourceWord(idB, true);
       const mockMerge = newMergeWords(parentA, [childA, childB]);
       expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
 
@@ -316,7 +315,7 @@ describe("MergeDupActions", () => {
 
       const parent = wordAnyGuids(vernA, [senses["S1"], senses["S2"]], idA);
       parent.flag = WA.flag;
-      const child = { srcWordId: idA, getAudio: true };
+      const child = newMergeSourceWord(idA);
       const mockMerge = newMergeWords(parent, [child]);
       expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
 
