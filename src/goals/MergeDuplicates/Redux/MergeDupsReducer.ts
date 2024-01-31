@@ -393,7 +393,7 @@ function doesTreeWordHaveWordSense(
   return treeSenses.some((guids) => senseGuids.includes(guids[0]));
 }
 
-/** Determine if merge is empty:
+/** Determine if a one-child merge is empty:
  * - when the only child is the parent word
  * - the merge has the same number of senses as the parent
  * - all senses are Active/Protected
