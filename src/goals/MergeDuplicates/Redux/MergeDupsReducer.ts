@@ -62,18 +62,18 @@ const mergeDuplicatesSlice = createSlice({
     deleteSenseAction: (state, action) => {
       const srcRef = action.payload;
       const srcWordId = srcRef.wordId;
-      const words = state.tree.words;
+      const { deletedSenseGuids, words } = state.tree;
 
       const sensesGuids = words[srcWordId].sensesGuids;
       const sGuids = sensesGuids[srcRef.mergeSenseId];
       if (srcRef.order !== undefined) {
-        state.deletedSenseGuids.push(sGuids[srcRef.order]);
+        deletedSenseGuids.push(sGuids[srcRef.order]);
         sGuids.splice(srcRef.order, 1);
         if (!sGuids.length) {
           delete sensesGuids[srcRef.mergeSenseId];
         }
       } else {
-        state.deletedSenseGuids.push(...sGuids);
+        deletedSenseGuids.push(...sGuids);
         delete sensesGuids[srcRef.mergeSenseId];
       }
       if (!Object.keys(words[srcWordId].sensesGuids).length) {
@@ -99,10 +99,11 @@ const mergeDuplicatesSlice = createSlice({
     },
     getMergeWordsAction: (state) => {
       const dataWords = Object.values(state.data.words);
+      const deletedSenseGuids = state.tree.deletedSenseGuids;
 
       // First handle words with all senses deleted.
       const deletedWords = dataWords.filter((w) =>
-        w.senses.every((s) => state.deletedSenseGuids.includes(s.guid))
+        w.senses.every((s) => deletedSenseGuids.includes(s.guid))
       );
       state.mergeWords = deletedWords.map((w) =>
         newMergeWords(w, [{ srcWordId: w.id, getAudio: false }], true)
@@ -112,7 +113,7 @@ const mergeDuplicatesSlice = createSlice({
 
       // Gather all senses (accessibility will be updated as mergeWords are built).
       const wordTreeSenses = Object.fromEntries(
-        dataWords.map((w) => [w.id, gatherSenses(w, state.deletedSenseGuids)])
+        dataWords.map((w) => [w.id, gatherSenses(w, deletedSenseGuids)])
       );
       const allSenses = Object.values(wordTreeSenses).flatMap((mergeSenses) =>
         mergeSenses.map((ms) => ms.sense)
@@ -309,7 +310,6 @@ const mergeDuplicatesSlice = createSlice({
         state.data = { ...defaultData, senses, words };
         state.tree = { ...defaultTree, words: wordsTree };
         state.audio = { ...defaultAudio, counts };
-        state.deletedSenseGuids = [];
         state.mergeWords = [];
       }
     },

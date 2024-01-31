@@ -31,7 +31,6 @@ export interface MergeTreeState {
   data: MergeData;
   tree: MergeTree;
   audio: MergeAudio;
-  deletedSenseGuids: string[];
   mergeWords: MergeWords[];
 }
 
@@ -39,7 +38,6 @@ export const defaultState: MergeTreeState = {
   data: defaultData,
   tree: defaultTree,
   audio: defaultAudio,
-  deletedSenseGuids: [],
   mergeWords: [],
 };
 
