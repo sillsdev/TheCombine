@@ -121,7 +121,7 @@ namespace BackendFramework.Models
                 AnalysisWritingSystems = AnalysisWritingSystems.Select(ws => ws.Clone()).ToList(),
                 SemanticDomains = SemanticDomains.Select(sd => sd.Clone()).ToList(),
                 ValidCharacters = ValidCharacters.Select(vc => vc).ToList(),
-                RejectedCharacters = ValidCharacters.Select(rc => rc).ToList(),
+                RejectedCharacters = RejectedCharacters.Select(rc => rc).ToList(),
                 CustomFields = CustomFields.Select(cf => cf.Clone()).ToList(),
                 WordFields = WordFields.Select(wf => wf).ToList(),
                 PartsOfSpeech = PartsOfSpeech.Select(ps => ps).ToList(),
