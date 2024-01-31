@@ -323,6 +323,24 @@ const mergeDuplicatesSlice = createSlice({
 
 // Helper Functions
 
+/** Generate MergeTreeSense array with Deleted/Separate accessibility. */
+function gatherSenses(
+  word: Word,
+  deletedSenseGuids: string[]
+): MergeTreeSense[] {
+  return word.senses.map((sense, index) => ({
+    order: index,
+    protected: sense.accessibility === Status.Protected,
+    srcWordId: word.id,
+    sense: {
+      ...sense,
+      accessibility: deletedSenseGuids.includes(sense.guid)
+        ? Status.Deleted
+        : Status.Separate,
+    },
+  }));
+}
+
 /** Determine which words need their audio to move. */
 function getAudioMoves(
   dataWords: Hash<Word>,
@@ -375,24 +393,6 @@ function doesTreeWordHaveWordSense(
     );
   }
   return treeSenses.some((guids) => senseGuids.includes(guids[0]));
-}
-
-/** Generate MergeTreeSense array with Deleted/Separate accessibility. */
-function gatherSenses(
-  word: Word,
-  deletedSenseGuids: string[]
-): MergeTreeSense[] {
-  return word.senses.map((sense, index) => ({
-    order: index,
-    protected: sense.accessibility === Status.Protected,
-    srcWordId: word.id,
-    sense: {
-      ...sense,
-      accessibility: deletedSenseGuids.includes(sense.guid)
-        ? Status.Deleted
-        : Status.Separate,
-    },
-  }));
 }
 
 /** Determine if merge is empty:
