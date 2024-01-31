@@ -29,9 +29,6 @@ namespace BackendFramework.Models
         [BsonElement("grammaticalInfo")]
         public GrammaticalInfo GrammaticalInfo { get; set; }
 
-        [BsonElement("protectReasons")]
-        public List<ProtectReason> ProtectReasons { get; set; }
-
         [Required]
         [BsonElement("Definitions")]
         public List<Definition> Definitions { get; set; }
@@ -39,6 +36,9 @@ namespace BackendFramework.Models
         [Required]
         [BsonElement("Glosses")]
         public List<Gloss> Glosses { get; set; }
+
+        [BsonElement("protectReasons")]
+        public List<ProtectReason> ProtectReasons { get; set; }
 
         [Required]
         [BsonElement("SemanticDomains")]
@@ -49,25 +49,44 @@ namespace BackendFramework.Models
             // By default generate a new, unique Guid for each new Sense.
             Guid = Guid.NewGuid();
             Accessibility = Status.Active;
-            GrammaticalInfo = new();
-            ProtectReasons = new();
-            Definitions = new();
-            Glosses = new();
-            SemanticDomains = new();
+            GrammaticalInfo = new GrammaticalInfo();
+            Definitions = new List<Definition>();
+            Glosses = new List<Gloss>();
+            ProtectReasons = new List<ProtectReason>();
+            SemanticDomains = new List<SemanticDomain>();
         }
 
         public Sense Clone()
         {
-            return new Sense
+            var clone = new Sense
             {
                 Guid = Guid,
                 Accessibility = Accessibility,
                 GrammaticalInfo = GrammaticalInfo.Clone(),
-                ProtectReasons = ProtectReasons.Select(a => a.Clone()).ToList(),
-                Definitions = Definitions.Select(a => a.Clone()).ToList(),
-                Glosses = Glosses.Select(a => a.Clone()).ToList(),
-                SemanticDomains = SemanticDomains.Select(a => a.Clone()).ToList(),
+                Definitions = new List<Definition>(),
+                Glosses = new List<Gloss>(),
+                ProtectReasons = new List<ProtectReason>(),
+                SemanticDomains = new List<SemanticDomain>(),
             };
+
+            foreach (var definition in Definitions)
+            {
+                clone.Definitions.Add(definition.Clone());
+            }
+            foreach (var gloss in Glosses)
+            {
+                clone.Glosses.Add(gloss.Clone());
+            }
+            foreach (var reason in ProtectReasons)
+            {
+                clone.ProtectReasons.Add(reason.Clone());
+            }
+            foreach (var sd in SemanticDomains)
+            {
+                clone.SemanticDomains.Add(sd.Clone());
+            }
+
+            return clone;
         }
 
         public override bool Equals(object? obj)
@@ -81,12 +100,12 @@ namespace BackendFramework.Models
                 other.Guid == Guid &&
                 other.Accessibility == Accessibility &&
                 other.GrammaticalInfo.Equals(GrammaticalInfo) &&
-                other.ProtectReasons.Count == ProtectReasons.Count &&
-                other.ProtectReasons.All(ProtectReasons.Contains) &&
                 other.Definitions.Count == Definitions.Count &&
                 other.Definitions.All(Definitions.Contains) &&
                 other.Glosses.Count == Glosses.Count &&
                 other.Glosses.All(Glosses.Contains) &&
+                other.ProtectReasons.Count == ProtectReasons.Count &&
+                other.ProtectReasons.All(ProtectReasons.Contains) &&
                 other.SemanticDomains.Count == SemanticDomains.Count &&
                 other.SemanticDomains.All(SemanticDomains.Contains);
         }
@@ -94,7 +113,7 @@ namespace BackendFramework.Models
         public override int GetHashCode()
         {
             return HashCode.Combine(
-                Guid, Accessibility, GrammaticalInfo, ProtectReasons, Definitions, Glosses, SemanticDomains);
+                Guid, Accessibility, GrammaticalInfo, Definitions, Glosses, ProtectReasons, SemanticDomains);
         }
 
         public bool IsEmpty()

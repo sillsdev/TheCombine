@@ -94,18 +94,18 @@ namespace BackendFramework.Models
             OtherField = "";
             ProjectId = "";
             Accessibility = Status.Active;
-            ProtectReasons = new();
-            Audio = new();
-            EditedBy = new();
-            History = new();
-            Senses = new();
-            Note = new();
-            Flag = new();
+            Audio = new List<Pronunciation>();
+            EditedBy = new List<string>();
+            History = new List<string>();
+            ProtectReasons = new List<ProtectReason>();
+            Senses = new List<Sense>();
+            Note = new Note();
+            Flag = new Flag();
         }
 
         public Word Clone()
         {
-            return new Word
+            var clone = new Word
             {
                 Id = Id,
                 Guid = Guid,
@@ -116,14 +116,37 @@ namespace BackendFramework.Models
                 OtherField = OtherField,
                 ProjectId = ProjectId,
                 Accessibility = Accessibility,
-                ProtectReasons = ProtectReasons.Select(a => a.Clone()).ToList(),
-                Audio = Audio.Select(a => a.Clone()).ToList(),
-                EditedBy = EditedBy.Select(a => a).ToList(),
-                History = History.Select(a => a).ToList(),
-                Senses = Senses.Select(a => a.Clone()).ToList(),
+                Audio = new List<Pronunciation>(),
+                EditedBy = new List<string>(),
+                History = new List<string>(),
+                ProtectReasons = new List<ProtectReason>(),
+                Senses = new List<Sense>(),
                 Note = Note.Clone(),
                 Flag = Flag.Clone(),
             };
+
+            foreach (var audio in Audio)
+            {
+                clone.Audio.Add(audio.Clone());
+            }
+            foreach (var id in EditedBy)
+            {
+                clone.EditedBy.Add(id);
+            }
+            foreach (var id in History)
+            {
+                clone.History.Add(id);
+            }
+            foreach (var reason in ProtectReasons)
+            {
+                clone.ProtectReasons.Add(reason.Clone());
+            }
+            foreach (var sense in Senses)
+            {
+                clone.Senses.Add(sense.Clone());
+            }
+
+            return clone;
         }
 
         public bool ContentEquals(Word other)
@@ -134,11 +157,11 @@ namespace BackendFramework.Models
                 other.OtherField.Equals(OtherField, StringComparison.Ordinal) &&
                 other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
 
-                other.ProtectReasons.Count == ProtectReasons.Count &&
-                other.ProtectReasons.All(ProtectReasons.Contains) &&
-
                 other.Audio.Count == Audio.Count &&
                 other.Audio.All(Audio.Contains) &&
+
+                other.ProtectReasons.Count == ProtectReasons.Count &&
+                other.ProtectReasons.All(ProtectReasons.Contains) &&
 
                 other.Senses.Count == Senses.Count &&
                 other.Senses.All(Senses.Contains) &&
