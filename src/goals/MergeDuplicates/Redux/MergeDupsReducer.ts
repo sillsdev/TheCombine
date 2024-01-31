@@ -257,8 +257,6 @@ const mergeDuplicatesSlice = createSlice({
         sensesGuids[ref.mergeSenseId] = guids;
 
         state.tree.words[ref.wordId].sensesGuids = sensesGuids;
-
-        state.audio.moves = getAudioMoves(state.data.words, state.tree.words);
       }
     },
     orderSenseAction: (state, action) => {
@@ -284,8 +282,6 @@ const mergeDuplicatesSlice = createSlice({
         }
 
         state.tree.words[action.payload.src.wordId] = word;
-
-        state.audio.moves = getAudioMoves(state.data.words, state.tree.words);
       }
     },
     setSidebarAction: (state, action) => {
