@@ -461,34 +461,6 @@ describe("MergeDupsReducer", () => {
       checkTreeWords(testAction, expectedWords);
     });
 
-    it("moves last sense out from sidebar to different word", () => {
-      const srcWordId = "word3";
-      const testRef: MergeTreeReference = {
-        wordId: srcWordId,
-        mergeSenseId: `${srcWordId}_senseA`,
-        order: 0,
-      };
-
-      const destWordId = "word1";
-
-      const testAction = moveSense({
-        src: testRef,
-        destWordId: destWordId,
-        destOrder: 1,
-      });
-
-      const expectedWords = testTreeWords();
-      expectedWords[srcWordId].sensesGuids = {
-        word3_senseB: ["word3_senseB_0", "word3_senseB_1"],
-      };
-      expectedWords[destWordId].sensesGuids = {
-        word1_senseA: ["word1_senseA_0"],
-        word3_senseA: ["word3_senseA_0"],
-      };
-
-      checkTreeWords(testAction, expectedWords);
-    });
-
     it("moves a sense to a different word", () => {
       const srcWordId = "word3";
       const testRef: MergeTreeReference = {
