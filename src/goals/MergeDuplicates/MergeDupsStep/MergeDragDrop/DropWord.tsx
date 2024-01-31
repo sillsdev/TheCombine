@@ -123,6 +123,7 @@ export function DropWordCardHeader(
     ...new Set(guids.map((g) => words[senses[g].srcWordId].vernacular)),
   ];
 
+  // Compute how many audio pronunciations the word will have post-merge.
   const otherIds = moves[props.wordId] ?? [];
   const otherCount = otherIds.reduce((sum, id) => sum + counts[id], 0);
   const audioCount = (treeWord?.audioCount ?? 0) + otherCount;

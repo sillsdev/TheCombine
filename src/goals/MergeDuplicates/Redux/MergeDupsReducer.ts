@@ -14,8 +14,8 @@ import {
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { newMergeWords } from "goals/MergeDuplicates/MergeDupsTypes";
 import {
-  defaultState,
   defaultAudio,
+  defaultState,
 } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { StoreActionTypes } from "rootActions";
 import { type Hash } from "types/hash";

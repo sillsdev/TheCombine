@@ -154,9 +154,9 @@ describe("MergeDupActions", () => {
       expect(blacklist).not.toContain(idB);
     });
 
-    // Move sense 3 from B to A
+    // Move sense 3 from B to middle sense in A
     it("moves sense between words", async () => {
-      const WA = newMergeTreeWord(vernA, { ID1: [S1], ID2: [S2], ID3: [S3] });
+      const WA = newMergeTreeWord(vernA, { ID1: [S1], ID2: [S3], ID3: [S2] });
       const WB = newMergeTreeWord(vernB, { ID1: [S4] });
       const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
       const store = setupStore({
@@ -168,7 +168,7 @@ describe("MergeDupActions", () => {
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
       const parentA = wordAnyGuids(
         vernA,
-        [senses["S1"], senses["S2"], senses["S3"]],
+        [senses["S1"], senses["S3"], senses["S2"]],
         idA
       );
       const parentB = wordAnyGuids(vernB, [senses["S4"]], idB);
@@ -270,8 +270,8 @@ describe("MergeDupActions", () => {
     it("moves all senses to other word", async () => {
       const WA = newMergeTreeWord(vernA, {
         ID1: [S1, S3],
-        ID2: [S4],
-        ID3: [S2],
+        ID2: [S2],
+        ID3: [S4],
       });
       const tree: MergeTree = { ...defaultTree, words: { WA } };
       const store = setupStore({
@@ -288,7 +288,7 @@ describe("MergeDupActions", () => {
       expect(mockMergeWords).toHaveBeenCalledTimes(1);
       const parentA = wordAnyGuids(
         vernA,
-        [senses["S1"], senses["S4"], senses["S2"]],
+        [senses["S1"], senses["S2"], senses["S4"]],
         idA
       );
       const childA = { srcWordId: idA, getAudio: true };
