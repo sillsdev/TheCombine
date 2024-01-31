@@ -28,9 +28,11 @@ const mergeDuplicatesSlice = createSlice({
     clearMergeWordsAction: (state) => {
       state.mergeWords = [];
     },
+
     clearTreeAction: () => {
       return defaultState;
     },
+
     combineSenseAction: (state, action) => {
       const srcRef = action.payload.src;
       const destRef = action.payload.dest;
@@ -59,6 +61,7 @@ const mergeDuplicatesSlice = createSlice({
         state.audio.moves = getAudioMoves(state.data.words, state.tree.words);
       }
     },
+
     deleteSenseAction: (state, action) => {
       const srcRef = action.payload;
       const srcWordId = srcRef.wordId;
@@ -94,9 +97,11 @@ const mergeDuplicatesSlice = createSlice({
 
       state.audio.moves = getAudioMoves(state.data.words, state.tree.words);
     },
+
     flagWordAction: (state, action) => {
       state.tree.words[action.payload.wordId].flag = action.payload.flag;
     },
+
     getMergeWordsAction: (state) => {
       const dataWords = Object.values(state.data.words);
       const deletedSenseGuids = state.tree.deletedSenseGuids;
@@ -162,6 +167,7 @@ const mergeDuplicatesSlice = createSlice({
         state.mergeWords.push({ parent, children, deleteOnly: false });
       }
     },
+
     moveSenseAction: (state, action) => {
       const srcWordId = action.payload.src.wordId;
       const destWordId = action.payload.destWordId;
@@ -196,6 +202,7 @@ const mergeDuplicatesSlice = createSlice({
         state.audio.moves = getAudioMoves(state.data.words, state.tree.words);
       }
     },
+
     moveDuplicateAction: (state, action) => {
       const srcRef = action.payload.src;
       // Verify that the ref.order field is defined
@@ -239,6 +246,7 @@ const mergeDuplicatesSlice = createSlice({
         state.audio.moves = getAudioMoves(state.data.words, state.tree.words);
       }
     },
+
     orderDuplicateAction: (state, action) => {
       const ref = action.payload.src;
 
@@ -259,6 +267,7 @@ const mergeDuplicatesSlice = createSlice({
         state.tree.words[ref.wordId].sensesGuids = sensesGuids;
       }
     },
+
     orderSenseAction: (state, action) => {
       const word = state.tree.words[action.payload.src.wordId];
 
@@ -284,9 +293,11 @@ const mergeDuplicatesSlice = createSlice({
         state.tree.words[action.payload.src.wordId] = word;
       }
     },
+
     setSidebarAction: (state, action) => {
       state.tree.sidebar = action.payload;
     },
+
     setDataAction: (state, action) => {
       if (action.payload.length === 0) {
         state = defaultState;
@@ -309,6 +320,7 @@ const mergeDuplicatesSlice = createSlice({
         state.mergeWords = [];
       }
     },
+
     setVernacularAction: (state, action) => {
       state.tree.words[action.payload.wordId].vern = action.payload.vern;
     },
