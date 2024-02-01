@@ -139,7 +139,7 @@ namespace Backend.Tests.Helper
             };
             sense.Definition.Add("key2", "contentA");
             sense.Gloss.Add("key3", "contentC");
-            // The only entry trait not protected is semantic domain.
+            // The only sense trait not protected is semantic domain.
             sense.Traits.Add(new() { Name = TraitNames.SemanticDomain, Value = "1" });
             sense.Traits.Add(new() { Name = TraitNames.SemanticDomainDdp4, Value = "1.1" });
             sense.Traits.First().Annotations.Add(new() { Name = "name", Value = "value" });
