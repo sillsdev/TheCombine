@@ -51,7 +51,7 @@ pyasn1-modules==0.3.0
     # via google-auth
 pycparser==2.21
     # via cffi
-pyopenssl==23.3.0
+pyopenssl==24.0.0
     # via -r requirements.in
 python-dateutil==2.8.2
     # via kubernetes
