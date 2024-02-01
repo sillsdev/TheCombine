@@ -18,6 +18,25 @@ namespace BackendFramework.Helper
 
     }
 
+    public static class TraitNames
+    {
+        public const string AnthroCode = "anthrocode";
+        public const string DialectLabels = "dialectlabels";
+        public const string DomainType = "domaintype";
+        public const string DoNotPublishIn = "donotpublishin";
+        public const string DoNotUseForParsing = "donotuseforparsing";
+        public const string EntryType = "entrytype";
+        public const string ExcludeAsHeadWord = "excludeasheadword";
+        public const string MinorEntryCondition = "minorentrycondition";
+        public const string MorphType = "morphtype";
+        public const string PublishIn = "publishin";
+        public const string SemanticDomain = "semanticdomain";
+        public const string SemanticDomainDdp4 = "semanticdomainddp4";
+        public const string SenseType = "sensetype";
+        public const string Status = "status";
+        public const string UsageType = "usagetype";
+    }
+
     public static class LiftHelper
     {
         public static string GetLiftRootFromExtractedZip(string dirPath)
@@ -65,8 +84,8 @@ namespace BackendFramework.Helper
             return entry.Annotations.Count > 0 || entry.Etymologies.Count > 0 || entry.Fields.Count > 0 ||
                 (entry.Notes.Count == 1 && !string.IsNullOrEmpty(entry.Notes.First().Type)) ||
                 entry.Notes.Count > 1 || entry.Relations.Count > 0 ||
-                entry.Traits.Any(t => !t.Name.Replace("-", "").Equals("morphtype", StringComparison.OrdinalIgnoreCase)
-                    || !t.Value.Equals("stem", StringComparison.OrdinalIgnoreCase)) ||
+                entry.Traits.Any(t => !t.Value.Equals("stem", StringComparison.OrdinalIgnoreCase) ||
+                    !t.Name.Replace("-", "").Equals(TraitNames.MorphType, StringComparison.OrdinalIgnoreCase)) ||
                 entry.Variants.Count > 0;
         }
 
@@ -104,31 +123,31 @@ namespace BackendFramework.Helper
                 // FieldWorks > Src/LexText/LexTextControls/LiftExporter.cs > RangeNames
                 switch (t.Name.Replace("-", "").ToLowerInvariant())
                 {
-                    case "dialectlabels":
+                    case TraitNames.DialectLabels:
                         reasons.Add(new() { Type = ReasonType.TraitDialectLabels, Value = t.Value });
                         break;
-                    case "donotpublishin":
+                    case TraitNames.DoNotPublishIn:
                         reasons.Add(new() { Type = ReasonType.TraitDoNotPublishIn, Value = t.Value });
                         break;
-                    case "donotuseforparsing":
+                    case TraitNames.DoNotUseForParsing:
                         reasons.Add(new() { Type = ReasonType.TraitDoNotUseForParsing, Value = t.Value });
                         break;
-                    case "entrytype":
+                    case TraitNames.EntryType:
                         reasons.Add(new() { Type = ReasonType.TraitEntryType, Value = t.Value });
                         break;
-                    case "excludeasheadword":
+                    case TraitNames.ExcludeAsHeadWord:
                         reasons.Add(new() { Type = ReasonType.TraitExcludeAsHeadword });
                         break;
-                    case "minorentrycondition":
+                    case TraitNames.MinorEntryCondition:
                         reasons.Add(new() { Type = ReasonType.TraitMinorEntryCondition, Value = t.Value });
                         break;
-                    case "morphtype":
+                    case TraitNames.MorphType:
                         if (!t.Value.Equals("stem", StringComparison.OrdinalIgnoreCase))
                         {
                             reasons.Add(new() { Type = ReasonType.TraitMorphType, Value = t.Value });
                         }
                         break;
-                    case "publishin":
+                    case TraitNames.PublishIn:
                         reasons.Add(new() { Type = ReasonType.TraitPublishIn, Value = t.Value });
                         break;
                     default:
@@ -201,28 +220,28 @@ namespace BackendFramework.Helper
                 // FieldWorks > Src/LexText/LexTextControls/LiftExporter.cs > RangeNames
                 switch (t.Name.Replace("-", "").ToLowerInvariant())
                 {
-                    case "anthrocode":
+                    case TraitNames.AnthroCode:
                         reasons.Add(new() { Type = ReasonType.TraitAnthroCode, Value = t.Value });
                         break;
-                    case "domaintype":
+                    case TraitNames.DomainType:
                         reasons.Add(new() { Type = ReasonType.TraitDomainType, Value = t.Value });
                         break;
-                    case "donotpublishin":
+                    case TraitNames.DoNotPublishIn:
                         reasons.Add(new() { Type = ReasonType.TraitDoNotPublishIn, Value = t.Value });
                         break;
-                    case "publishin":
+                    case TraitNames.PublishIn:
                         reasons.Add(new() { Type = ReasonType.TraitPublishIn, Value = t.Value });
                         break;
-                    case "semanticdomain":
-                    case "semanticdomainddp4":
+                    case TraitNames.SemanticDomain:
+                    case TraitNames.SemanticDomainDdp4:
                         break;
-                    case "sensetype":
+                    case TraitNames.SenseType:
                         reasons.Add(new() { Type = ReasonType.TraitSenseType, Value = t.Value });
                         break;
-                    case "status":
+                    case TraitNames.Status:
                         reasons.Add(new() { Type = ReasonType.TraitStatus, Value = t.Value });
                         break;
-                    case "usagetype":
+                    case TraitNames.UsageType:
                         reasons.Add(new() { Type = ReasonType.TraitUsageType, Value = t.Value });
                         break;
                     default:
