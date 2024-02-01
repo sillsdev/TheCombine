@@ -252,6 +252,34 @@ describe("MergeDupActions", () => {
       // No blacklist entry added for only 1 resulting word.
       expect(mockBlacklistAdd).not.toHaveBeenCalled();
     });
+    // Move all senses from B to A
+    it("moves all senses to other word", async () => {
+      const WA = newMergeTreeWord(vernA, {
+        ID1: [S1, S3],
+        ID2: [S2],
+        ID3: [S4],
+      });
+      const tree: MergeTree = { ...defaultTree, words: { WA } };
+      const store = setupStore({
+        ...preloadedState,
+        mergeDuplicateGoal: { ...defaultMergeState, data, tree },
+      });
+      await store.dispatch(mergeAll());
+
+      expect(mockMergeWords).toHaveBeenCalledTimes(1);
+      const parentA = wordAnyGuids(
+        vernA,
+        [senses["S1"], senses["S2"], senses["S4"]],
+        idA
+      );
+      const childA = { srcWordId: idA, getAudio: true };
+      const childB = { srcWordId: idB, getAudio: true };
+      const mockMerge = newMergeWords(parentA, [childA, childB]);
+      expect(mockMergeWords).toHaveBeenCalledWith([mockMerge]);
+
+      // No blacklist entry added for only 1 resulting word.
+      expect(mockBlacklistAdd).not.toHaveBeenCalled();
+    });
 
     // Performs a merge when a word is flagged
     it("adds a flag to a word", async () => {
