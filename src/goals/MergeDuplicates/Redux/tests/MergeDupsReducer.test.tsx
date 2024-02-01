@@ -307,7 +307,7 @@ describe("MergeDupsReducer", () => {
 
       const expectedWords = testTreeWords();
       // Sidebar sense _0 removed so _1 remains.
-      expectedWords[wordId].sensesGuids[mergeSenseId] = [`${mergeSenseId}_1`];
+      expectedWords[wordId].sensesGuids[mergeSenseId] = ["word2_senseA_1"];
 
       checkTree(testAction, expectedWords, true);
     });
@@ -513,7 +513,7 @@ describe("MergeDupsReducer", () => {
       delete expectedWords[srcWordId];
       expectedWords[destWordId].sensesGuids = {
         word2_senseA: ["word2_senseA_0", "word2_senseA_1"],
-        [mergeSenseId]: [`${mergeSenseId}_0`],
+        [mergeSenseId]: ["word1_senseA_0"],
       };
 
       checkTree(testAction, expectedWords);
