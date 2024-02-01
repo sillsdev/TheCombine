@@ -57,6 +57,10 @@ const mergeDuplicatesSlice = createSlice({
         } else {
           // A sense from the sidebar dropped into another sense.
           destGuids.push(srcGuids.splice(srcRef.order, 1)[0]);
+          if (srcGuids.length === 1) {
+            // If only one sense left in the sidebar, reset the sidebar.
+            state.tree.sidebar = defaultSidebar;
+          }
         }
 
         words[destRef.wordId].sensesGuids[destRef.mergeSenseId].push(
@@ -88,6 +92,10 @@ const mergeDuplicatesSlice = createSlice({
       } else {
         // A sense deleted from the sidebar.
         srcGuids.splice(srcRef.order, 1);
+        if (srcGuids.length === 1) {
+          // If only one sense left in the sidebar, reset the sidebar.
+          state.tree.sidebar = defaultSidebar;
+        }
       }
     },
 
@@ -172,6 +180,10 @@ const mergeDuplicatesSlice = createSlice({
 
         // Get guid of sense being restored from the sidebar.
         const guid = srcGuids.splice(srcRef.order, 1)[0];
+        if (srcGuids.length === 1) {
+          // If only one sense left in the sidebar, reset the sidebar.
+          state.tree.sidebar = defaultSidebar;
+        }
 
         // Check if dropping the sense into a new word.
         if (words[destWordId] === undefined) {
