@@ -40,7 +40,7 @@ pycparser==2.21
     # via cffi
 pymongo==4.6.1
     # via -r requirements.in
-pyopenssl==23.3.0
+pyopenssl==24.0.0
     # via -r requirements.in
 python-dateutil==2.8.2
     # via kubernetes
