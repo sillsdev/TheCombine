@@ -18,6 +18,7 @@ import {
   defaultTree,
   newMergeTreeWord,
   MergeTreeReference,
+  Sidebar,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { newMergeWords } from "goals/MergeDuplicates/MergeDupsTypes";
 import { defaultState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
@@ -245,7 +246,9 @@ const mergeDuplicatesSlice = createSlice({
     },
 
     setSidebarAction: (state, action) => {
-      state.tree.sidebar = action.payload;
+      const sidebar: Sidebar = action.payload;
+      state.tree.sidebar =
+        sidebar.mergeSenses.length > 1 ? sidebar : defaultSidebar;
     },
 
     setDataAction: (state, action) => {
