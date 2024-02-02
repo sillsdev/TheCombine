@@ -38,8 +38,8 @@ jest.mock("uuid");
 const mockUuid = require("uuid") as { v4: jest.Mock };
 
 let uuidIndex = 0;
-/** `increment = false` (default `true`)
- * gives the next uuid to be assigned by our mocked v4. */
+/** When `increment` (default `true`) is set to `false`,
+ * returns the next uuid to be assigned by our mocked `v4`. */
 function getMockUuid(increment = true): string {
   const uuid = `mockUuid${uuidIndex}`;
   if (increment) {
