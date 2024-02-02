@@ -6,6 +6,7 @@ import {
 } from "@mui/icons-material";
 import { Typography } from "@mui/material";
 import {
+  type MRT_Localization,
   type MRT_Row,
   MaterialReactTable,
   createMRTColumnHelper,
@@ -13,7 +14,6 @@ import {
 } from "material-react-table";
 import { type ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 
 import { GramCatGroup, type GrammaticalInfo, type Word } from "api/models";
 import { getAllSpeakers, getFrontierWords, getWord } from "backend";
@@ -24,6 +24,33 @@ import * as ff from "goals/ReviewEntries/ReviewEntriesTable/filterFn";
 import * as sf from "goals/ReviewEntries/ReviewEntriesTable/sortingFn";
 import { type StoreState } from "types";
 import { type Hash } from "types/hash";
+import { useAppSelector } from "types/hooks";
+
+/** Import `material-react-table` localization for given `lang`.
+ * (See https://www.material-react-table.com/docs/guides/localization.) */
+async function getLocalization(
+  lang?: string
+): Promise<MRT_Localization | undefined> {
+  switch (lang) {
+    case "ar":
+      return (await import("material-react-table/locales/ar"))
+        .MRT_Localization_AR;
+    case "es":
+      return (await import("material-react-table/locales/es"))
+        .MRT_Localization_ES;
+    case "fr":
+      return (await import("material-react-table/locales/fr"))
+        .MRT_Localization_FR;
+    case "pt":
+      return (await import("material-react-table/locales/pt"))
+        .MRT_Localization_PT;
+    case "zh":
+      return (await import("material-react-table/locales/zh-Hans"))
+        .MRT_Localization_ZH_HANS;
+    default:
+      return;
+  }
+}
 
 // Constants for custom column/header sizing.
 const BaselineColumnSize = 180;
@@ -34,27 +61,25 @@ const IconHeaderPaddingTop = "2px"; // Vertical offset for a small icon as Heade
 const IconHeaderWidth = 20; // Width for a small icon as Header
 const SensesHeaderWidth = 15; // Width for # as Header
 
+/** Table for reviewing all entries, built with `material-react-table`. */
 export default function ReviewEntriesTable(): ReactElement {
-  const showDefinitions = useSelector(
+  const showDefinitions = useAppSelector(
     (state: StoreState) => state.currentProjectState.project.definitionsEnabled
   );
-  const showGrammaticalInfo = useSelector(
+  const showGrammaticalInfo = useAppSelector(
     (state: StoreState) =>
       state.currentProjectState.project.grammaticalInfoEnabled
   );
 
-  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<Word[]>([]);
   const [enablePagination, setEnablePagination] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [localization, setLocalization] = useState<
+    MRT_Localization | undefined
+  >();
   const [speakers, setSpeakers] = useState<Hash<string>>({});
 
-  const deleteWord = (id: string): void => {
-    setData((prev) => prev.filter((w) => w.id !== id));
-  };
-  const replaceWord = async (oldId: string, newId: string): Promise<void> => {
-    const word = await getWord(newId);
-    setData((prev) => prev.map((w) => (w.id === oldId ? word : w)));
-  };
+  const { i18n, t } = useTranslation();
 
   useEffect(() => {
     getAllSpeakers().then((list) =>
@@ -68,7 +93,17 @@ export default function ReviewEntriesTable(): ReactElement {
     });
   }, []);
 
-  const { t } = useTranslation();
+  useEffect(() => {
+    getLocalization(i18n.resolvedLanguage).then(setLocalization);
+  }, [i18n.resolvedLanguage]);
+
+  const deleteWord = (id: string): void => {
+    setData((prev) => prev.filter((w) => w.id !== id));
+  };
+  const replaceWord = async (oldId: string, newId: string): Promise<void> => {
+    const newWord = await getWord(newId);
+    setData((prev) => prev.map((w) => (w.id === oldId ? newWord : w)));
+  };
 
   const columnHelper = createMRTColumnHelper<Word>();
 
@@ -250,7 +285,7 @@ export default function ReviewEntriesTable(): ReactElement {
     enableDensityToggle: false,
     enableFullScreenToggle: false,
     enableGlobalFilter: false,
-    enablePagination: enablePagination,
+    enablePagination,
     enableRowVirtualization: true,
     initialState: {
       columnVisibility: {
@@ -259,6 +294,7 @@ export default function ReviewEntriesTable(): ReactElement {
       },
       density: "compact",
     },
+    localization,
     muiPaginationProps: { rowsPerPageOptions: [10, 100, 1000] },
     // Override whiteSpace: "nowrap" from having density: "compact"
     muiTableBodyCellProps: { sx: { whiteSpace: "normal" } },
@@ -283,7 +319,7 @@ export default function ReviewEntriesTable(): ReactElement {
       />
     ),
     sortDescFirst: false,
-    state: { isLoading: isLoading },
+    state: { isLoading },
   });
 
   return <MaterialReactTable table={table} />;

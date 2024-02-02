@@ -9,7 +9,6 @@ import {
 import { CardContent, Divider, Grid, Icon } from "@mui/material";
 import { grey, yellow } from "@mui/material/colors";
 import { type ReactElement, useEffect, useState } from "react";
-//import { useTranslation } from "react-i18next";
 
 import { type Sense, Status } from "api/models";
 import { IconButtonWithTooltip } from "components/Buttons";
