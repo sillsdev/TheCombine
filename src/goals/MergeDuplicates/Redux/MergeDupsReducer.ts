@@ -247,6 +247,7 @@ const mergeDuplicatesSlice = createSlice({
 
     setSidebarAction: (state, action) => {
       const sidebar: Sidebar = action.payload;
+      // Only open sidebar with multiple senses.
       state.tree.sidebar =
         sidebar.mergeSenses.length > 1 ? sidebar : defaultSidebar;
     },
