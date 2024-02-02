@@ -142,6 +142,7 @@ const mergeDuplicatesSlice = createSlice({
       const destWordId = action.payload.destWordId;
       const srcRef: MergeTreeReference = action.payload.src;
       const srcWordId = srcRef.wordId;
+      // Verify that this is a valid movement of a word sense.
       if (srcRef.order === undefined && srcWordId !== destWordId) {
         const mergeSenseId = srcRef.mergeSenseId;
 
