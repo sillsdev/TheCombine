@@ -136,7 +136,7 @@ export default function ReviewEntriesTable(): ReactElement {
       enableFilterMatchHighlighting: false,
       filterFn: "equals",
       Header: <Typography>#</Typography>,
-      header: t("reviewEntries.columns.senses"),
+      header: t("reviewEntries.columns.sensesCount"),
       id: "senses",
       muiTableHeadCellProps: {
         sx: {

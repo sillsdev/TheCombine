@@ -324,6 +324,7 @@
       "partOfSpeech": "Part of Speech",
       "pronunciations": "Pronunciations",
       "senses": "Senses",
+      "sensesCount": "Number of Senses",
       "vernacular": "Vernacular"
     },
     "materialTable": {
