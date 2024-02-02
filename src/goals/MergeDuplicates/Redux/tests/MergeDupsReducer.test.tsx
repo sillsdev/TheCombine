@@ -98,7 +98,11 @@ describe("MergeDupsReducer", () => {
     ...defaultState,
     tree: {
       ...defaultTree,
-      sidebar: { ...defaultSidebar, wordId: "word2_senseA" },
+      sidebar: {
+        ...defaultSidebar,
+        mergeSenseId: "word2_senseA",
+        wordId: "word2",
+      },
       words: testTreeWords(),
     },
   };
@@ -116,7 +120,7 @@ describe("MergeDupsReducer", () => {
   }
 
   describe("combineSense", () => {
-    it("combine sense from 2-sense sidebar into other sense", () => {
+    it("combine sense from 2-sense sidebar into other sense; closes sidebar", () => {
       const srcWordId = "word2";
       const srcSenseId = `${srcWordId}_senseA`;
       const srcRef: MergeTreeReference = {
@@ -187,6 +191,7 @@ describe("MergeDupsReducer", () => {
       const testAction = combineSense({ src: srcRef, dest: destRef });
 
       const expectedWords = testTreeWords();
+      // The word now has a single combined sense instead of two senses.
       expectedWords[wordId].sensesGuids = {
         [destSenseId]: [
           `${destSenseId}_0`,
@@ -199,7 +204,7 @@ describe("MergeDupsReducer", () => {
       checkTree(testAction, expectedWords);
     });
 
-    it("combine sense into other sense in different word", () => {
+    it("combine sense into other sense in other word", () => {
       const srcWordId = "word3";
       const srcSenseId = `${srcWordId}_senseA`;
       const srcRef: MergeTreeReference = {
@@ -228,7 +233,7 @@ describe("MergeDupsReducer", () => {
       checkTree(testAction, expectedWords);
     });
 
-    it("combine last sense into other sense in different word", () => {
+    it("combines last sense into other sense in other word", () => {
       const srcWordId = "word1";
       const srcSenseId = `${srcWordId}_senseA`;
       const srcRef: MergeTreeReference = {
@@ -295,10 +300,11 @@ describe("MergeDupsReducer", () => {
       const expectedWords = testTreeWords();
       delete expectedWords[wordId];
 
-      checkTree(testAction, expectedWords);
+      // Also closes sidebar, since deleted sense was open in the sidebar.
+      checkTree(testAction, expectedWords, true);
     });
 
-    it("deletes a senses from 2-sense sidebar", () => {
+    it("deletes sense from 2-sense sidebar; closes sidebar", () => {
       const wordId = "word2";
       const mergeSenseId = `${wordId}_senseA`;
       const testRef: MergeTreeReference = { wordId, mergeSenseId, order: 0 };
@@ -312,7 +318,7 @@ describe("MergeDupsReducer", () => {
       checkTree(testAction, expectedWords, true);
     });
 
-    it("deletes a senses from 3-sense sidebar", () => {
+    it("deletes sense from 3-sense sidebar", () => {
       const wordId = "word3";
       const mergeSenseId = `${wordId}_senseB`;
       const testRef: MergeTreeReference = { wordId, mergeSenseId, order: 2 };
@@ -344,7 +350,7 @@ describe("MergeDupsReducer", () => {
   });
 
   describe("getMergeWords", () => {
-    it("sense moved from one word to another", () => {
+    it("moves sense from one word to another", () => {
       const store = setupStore(mergeTwoWordsScenario.initialState());
       store.dispatch(getMergeWords());
       const mergeArray = store.getState().mergeDuplicateGoal.mergeWords;
@@ -361,7 +367,7 @@ describe("MergeDupsReducer", () => {
       expect(defs).toEqual(expectedResult[0].defs);
     });
 
-    it("sense from one word combined with sense in another", () => {
+    it("combines sense from one word with sense in another", () => {
       const store = setupStore(mergeTwoSensesScenario.initialState());
       store.dispatch(getMergeWords());
       const mergeArray = store.getState().mergeDuplicateGoal.mergeWords;
@@ -378,7 +384,7 @@ describe("MergeDupsReducer", () => {
       expect(defs).toEqual(expectedResult[0].defs);
     });
 
-    it("combine senses with definitions", () => {
+    it("combines senses with definitions", () => {
       const store = setupStore(mergeTwoDefinitionsScenario.initialState());
       store.dispatch(getMergeWords());
       const mergeArray = store.getState().mergeDuplicateGoal.mergeWords;
@@ -397,7 +403,7 @@ describe("MergeDupsReducer", () => {
   });
 
   describe("moveSense", () => {
-    it("moves a sense out from 2-sense sidebar to start of same word", () => {
+    it("moves sense from 2-sense sidebar to start of same word; closes sidebar", () => {
       const wordId = "word2";
       const mergeSenseId = `${wordId}_senseA`;
       const testRef: MergeTreeReference = { wordId, mergeSenseId, order: 0 };
@@ -423,7 +429,7 @@ describe("MergeDupsReducer", () => {
       checkTree(testAction, expectedWords, true);
     });
 
-    it("moves a sense out from 2-sense sidebar to end of different word", () => {
+    it("moves sense from 2-sense sidebar to end of other word; closes sidebar", () => {
       const srcWordId = "word2";
       const mergeSenseId = `${srcWordId}_senseA`;
       const testRef: MergeTreeReference = {
@@ -449,7 +455,7 @@ describe("MergeDupsReducer", () => {
       checkTree(testAction, expectedWords, true);
     });
 
-    it("moves a sense out from 3-sense sidebar to new word", () => {
+    it("moves sense from 3-sense sidebar to new word", () => {
       const srcWordId = "word3";
       const mergeSenseId = `${srcWordId}_senseB`;
       const testRef: MergeTreeReference = {
@@ -479,7 +485,7 @@ describe("MergeDupsReducer", () => {
       checkTree(testAction, expectedWords);
     });
 
-    it("moves a sense to end of a different word", () => {
+    it("moves sense to end of other word", () => {
       const srcWordId = "word3";
       const mergeSenseId = `${srcWordId}_senseB`;
       const testRef: MergeTreeReference = { wordId: srcWordId, mergeSenseId };
@@ -501,7 +507,7 @@ describe("MergeDupsReducer", () => {
       checkTree(testAction, expectedWords);
     });
 
-    it("moves last sense to start of a different word", () => {
+    it("moves last sense to start of other word", () => {
       const srcWordId = "word1";
       const mergeSenseId = `${srcWordId}_senseA`;
       const testRef: MergeTreeReference = { wordId: srcWordId, mergeSenseId };
@@ -523,7 +529,7 @@ describe("MergeDupsReducer", () => {
   });
 
   describe("orderSense", () => {
-    it("order sidebar sense", () => {
+    it("orders sidebar sense", () => {
       const wordId = "word2";
       const mergeSenseId = `${wordId}_senseA`;
       const testRef: MergeTreeReference = { wordId, mergeSenseId, order: 0 };
@@ -539,7 +545,7 @@ describe("MergeDupsReducer", () => {
       checkTree(testAction, expectedWords);
     });
 
-    it("order word sense", () => {
+    it("orders word sense", () => {
       const wordId = "word3";
       const mergeSenseId = `${wordId}_senseA`;
       const testRef: MergeTreeReference = { wordId, mergeSenseId };
