@@ -4,27 +4,19 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import ReviewEntries from "goals/ReviewEntries";
+import { CurrentProjectState } from "components/Project/ProjectReduxTypes";
+import ReviewEntriesTable from "goals/ReviewEntries/ReviewEntriesTable";
+import { newProject } from "types/project";
 import { newWord } from "types/word";
 import { defaultWritingSystem } from "types/writingSystem";
 
 const mockGetFrontierWords = jest.fn();
 const mockUuid = jest.fn();
+global.scrollTo = jest.fn();
 
-// Standard dialog mock-out.
-jest.mock("@mui/material", () => {
-  const material = jest.requireActual("@mui/material");
-  return {
-    ...material,
-    Dialog: material.Container,
-  };
-});
-
-jest.mock("notistack", () => ({
-  ...jest.requireActual("notistack"),
-  enqueueSnackbar: jest.fn(),
-}));
+jest.mock("@mui/material/Grow"); // For `columnFilterDisplayMode: "popover",`
 jest.mock("uuid", () => ({ v4: () => mockUuid() }));
+
 jest.mock("backend", () => ({
   getAllSpeakers: () => Promise.resolve([]),
   getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
@@ -32,25 +24,22 @@ jest.mock("backend", () => ({
 jest.mock("components/TreeView", () => "div");
 jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({}));
 jest.mock("types/hooks", () => ({
+  ...jest.requireActual("types/hooks"),
   useAppDispatch: () => jest.fn(),
 }));
 
 // Mock store + axios
 const mockWords = [newWord()];
-const state = {
-  currentProjectState: {
-    project: {
-      analysisWritingSystems: [defaultWritingSystem],
-      definitionsEnabled: true,
-      vernacularWritingSystem: defaultWritingSystem,
-    },
-  },
-  treeViewState: {
-    open: false,
-    currentDomain: { id: "number", name: "domain", subdomains: [] },
+const currentProjectState: Partial<CurrentProjectState> = {
+  project: {
+    ...newProject(),
+    analysisWritingSystems: [defaultWritingSystem],
+    definitionsEnabled: true,
+    grammaticalInfoEnabled: true,
+    vernacularWritingSystem: defaultWritingSystem,
   },
 };
-const mockStore = configureMockStore()(state);
+const mockStore = configureMockStore()({ currentProjectState });
 
 function setMockFunctions(): void {
   jest.clearAllMocks();
@@ -69,13 +58,13 @@ beforeEach(async () => {
   await act(async () => {
     create(
       <Provider store={mockStore}>
-        <ReviewEntries completed={false} />
+        <ReviewEntriesTable />
       </Provider>
     );
   });
 });
 
-describe("ReviewEntries", () => {
+describe("ReviewEntriesTable", () => {
   it("Initializes correctly", () => {
     expect(mockGetFrontierWords).toHaveBeenCalled();
   });
