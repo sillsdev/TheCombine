@@ -102,6 +102,8 @@ export default function EditSenseDialog(
   const [cancelDialog, setCancelDialog] = useState(false);
   const [changes, setChanges] = useState(defaultEditFieldChanged);
 
+  const { t } = useTranslation();
+
   useEffect(() => {
     setChanges({
       [EditField.Definitions]: !areDefinitionsSame(
@@ -146,7 +148,7 @@ export default function EditSenseDialog(
     // Confirm nonempty senses
     const cleanedSense = cleanSense(newSense);
     if (!cleanedSense || typeof cleanedSense === "string") {
-      toast.error(cleanedSense);
+      toast.error(t(cleanedSense ?? ""));
       return;
     }
 
@@ -176,8 +178,6 @@ export default function EditSenseDialog(
     setCancelDialog(false);
     props.close();
   };
-
-  const { t } = useTranslation();
 
   return (
     <>

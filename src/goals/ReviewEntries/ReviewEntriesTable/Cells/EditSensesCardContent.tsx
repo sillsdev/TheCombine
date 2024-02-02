@@ -16,6 +16,7 @@ import SenseCard from "components/WordCard/SenseCard";
 import SummarySenseCard from "components/WordCard/SummarySenseCard";
 import EditSenseDialog from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditSenseDialog";
 import { isSenseChanged } from "goals/ReviewEntries/ReviewEntriesTable/Cells/utilities";
+import { newSense } from "types/word";
 
 interface EditSensesCardContentProps {
   moveSense: (from: number, to: number) => void;
@@ -29,6 +30,7 @@ interface EditSensesCardContentProps {
 export default function EditSensesCardContent(
   props: EditSensesCardContentProps
 ): ReactElement {
+  const [addSense, setAddSense] = useState(false);
   const [changes, setChanges] = useState<boolean[]>([]);
 
   useEffect(() => {
@@ -63,8 +65,14 @@ export default function EditSensesCardContent(
           <IconButtonWithTooltip
             buttonId={"sense-add"}
             icon={<Add />}
-            onClick={() => {}}
+            onClick={() => setAddSense(true)}
             size="small"
+          />
+          <EditSenseDialog
+            close={() => setAddSense(false)}
+            isOpen={addSense}
+            save={props.updateOrAddSense}
+            sense={newSense()}
           />
         </>
       ) : (
