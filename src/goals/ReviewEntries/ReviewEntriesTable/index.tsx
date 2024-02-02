@@ -247,13 +247,11 @@ export default function ReviewEntriesTable(): ReactElement {
     enableColumnActions: false,
     enableColumnDragging: false,
     enableColumnOrdering: true,
-    //enableColumnResizing: true,
     enableDensityToggle: false,
     enableFullScreenToggle: false,
     enableGlobalFilter: false,
     enablePagination: enablePagination,
     enableRowVirtualization: true,
-    enableStickyHeader: true,
     initialState: {
       columnVisibility: {
         definitions: showDefinitions,
@@ -261,25 +259,26 @@ export default function ReviewEntriesTable(): ReactElement {
       },
       density: "compact",
     },
-    muiPaginationProps: { rowsPerPageOptions: [10, 25, 100, 250] },
+    muiPaginationProps: { rowsPerPageOptions: [10, 100, 1000] },
     // Override whiteSpace: "nowrap" from having density: "compact"
     muiTableBodyCellProps: { sx: { whiteSpace: "normal" } },
     // Keep the table from going below the bottom of the page
     muiTableContainerProps: {
-      sx: { maxHeight: `calc(100vh - ${topBarHeight}px)` },
+      sx: { maxHeight: `calc(100vh - ${enablePagination ? 180 : 130}px)` },
     },
     muiTablePaperProps: { sx: { height: `calc(100vh - ${topBarHeight}px)` } },
-    muiTableProps: { sx: { maxHeight: `calc(100vh - 200px)` } },
     renderTopToolbarCustomActions: () => (
       <IconButtonWithTooltip
         onClick={() => setEnablePagination((prev) => !prev)}
         icon={
           <AllInclusive
-            sx={{
-              color: (t) =>
-                enablePagination ? t.palette.grey[600] : t.palette.grey[900],
-            }}
+            sx={{ color: (t) => t.palette.grey[enablePagination ? 600 : 900] }}
           />
+        }
+        textId={
+          enablePagination
+            ? "reviewEntries.enableInfiniteScroll"
+            : "reviewEntries.disableInfiniteScroll"
         }
       />
     ),

@@ -306,6 +306,8 @@
     "noNote": "No note",
     "deleteWordWarning": "This word will be permanently deleted!",
     "deleteDisabled": "This was imported with data that The Combine doesn't handle, so it may not be deleted.",
+    "disableInfiniteScroll": "Disable infinite scrolling",
+    "enableInfiniteScroll": "Enable infinite scrolling",
     "error": {
       "gloss": "Glosses cannot be left blank",
       "domain": "Domains cannot be left blank",
