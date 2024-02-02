@@ -103,7 +103,6 @@ const defaultEditFieldChanged: EditFieldChanged = {
 interface EditDialogProps {
   cancel: () => void;
   confirm: (newId: string) => Promise<void>;
-  open: boolean;
   word: Word;
 }
 
@@ -349,7 +348,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
         open={cancelDialog}
         textId="reviewEntries.materialTable.body.discardChanges"
       />
-      <Dialog fullWidth maxWidth="lg" open={props.open}>
+      <Dialog fullWidth maxWidth="lg" open>
         <DialogTitle>
           <Grid container justifyContent="space-between">
             <Grid item>

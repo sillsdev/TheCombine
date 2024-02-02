@@ -24,12 +24,17 @@ export default function DeleteCell(props: CellProps): ReactElement {
         onClick={() => setOpen(true)}
         textId={"reviewEntries.materialTable.body.edit"}
       />
-      <EditDialog
-        cancel={() => setOpen(false)}
-        confirm={handleConfirm}
-        open={open}
-        word={props.word}
-      />
+      {
+        /* Only render EditDialog when `open` is `true`
+         * to ensure that its `word` prop is not stale from a previous edit. */
+        open && (
+          <EditDialog
+            cancel={() => setOpen(false)}
+            confirm={handleConfirm}
+            word={props.word}
+          />
+        )
+      }
     </>
   );
 }
