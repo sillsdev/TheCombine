@@ -95,7 +95,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          files: ${{ GITHUB_WORKSPACE }}/coverage.cobertura.xml
+          files: ./coverage.cobertura.xml
           flags: backend
           name: Backend
           verbose: true
