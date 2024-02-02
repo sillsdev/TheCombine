@@ -22,6 +22,7 @@ import { Pronunciation, Speaker } from "api/models";
 import { getSpeaker } from "backend";
 import { SpeakerMenuList } from "components/AppBar/SpeakerMenu";
 import { ButtonConfirmation } from "components/Dialogs";
+import MultilineTooltipTitle from "components/MultilineTooltipTitle";
 import {
   playing,
   resetPronunciations,
@@ -165,13 +166,12 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
     );
   }
 
-  const multilineTooltipText = (lines: string[]): ReactElement => (
-    <div style={{ whiteSpace: "pre-line" }}>{lines.join("\n")}</div>
-  );
-
   return (
     <>
-      <Tooltip title={multilineTooltipText(tooltipTexts)} placement="top">
+      <Tooltip
+        title={<MultilineTooltipTitle lines={tooltipTexts} />}
+        placement="top"
+      >
         <IconButton
           tabIndex={-1}
           onAuxClick={handleOnAuxClick}
