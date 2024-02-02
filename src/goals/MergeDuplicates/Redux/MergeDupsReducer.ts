@@ -141,9 +141,8 @@ const mergeDuplicatesSlice = createSlice({
     moveSenseAction: (state, action) => {
       const destWordId = action.payload.destWordId;
       const srcRef: MergeTreeReference = action.payload.src;
-      const srcOrder = srcRef.order;
       const srcWordId = srcRef.wordId;
-      if (srcOrder === undefined && srcWordId !== destWordId) {
+      if (srcRef.order === undefined && srcWordId !== destWordId) {
         const mergeSenseId = srcRef.mergeSenseId;
 
         const words = state.tree.words;
