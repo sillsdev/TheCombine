@@ -74,8 +74,13 @@ export function isSenseChanged(oldSense: Sense, newSense: Sense): boolean {
 
 /** Return a cleaned sense ready to be saved:
  * - If a sense is marked as deleted or is utterly blank, return undefined
- * - If a sense lacks gloss, return error string */
-export function cleanSense(newSense: Sense): Sense | string | undefined {
+ * - If a sense lacks gloss, return error string
+ *
+ * (If `exemptProtected = true`, protected senses are allowed to be without gloss.) */
+export function cleanSense(
+  newSense: Sense,
+  exemptProtected = false
+): Sense | string | undefined {
   // Ignore deleted senses.
   if (newSense.accessibility === Status.Deleted) {
     return;
@@ -89,6 +94,11 @@ export function cleanSense(newSense: Sense): Sense | string | undefined {
   newSense.semanticDomains = domainIds.map(
     (id) => newSense.semanticDomains.find((dom) => dom.id === id)!
   );
+
+  // Bypass the following checks on protected senses.
+  if (exemptProtected && newSense.accessibility === Status.Protected) {
+    return newSense;
+  }
 
   // Skip empty senses.
   if (
@@ -108,13 +118,22 @@ export function cleanSense(newSense: Sense): Sense | string | undefined {
   return newSense;
 }
 
-/** Return a cleaned array of senses ready to be saved:
- * - If a sense is marked as deleted or is utterly blank, it is removed
- * - If a sense lacks gloss, return error */
-function cleanSenses(newSenses: Sense[]): Sense[] | string {
-  const cleanedSenses: Sense[] = [];
-  for (const newSense of newSenses) {
-    const cleanedSense = cleanSense(newSense);
+/** Clean a word. Return error string id if:
+ * - the vernacular field is empty
+ * - all senses are empty/deleted
+ *
+ * (If `exemptProtected = true`, protected senses are allowed to be empty.) */
+export function cleanWord(word: Word, exemptProtected = false): Word | string {
+  // Make sure vernacular isn't empty.
+  const vernacular = word.vernacular.trim();
+  if (!vernacular.length) {
+    return "reviewEntries.error.vernacular";
+  }
+
+  // Clean senses and check for problems.
+  const senses: Sense[] = [];
+  for (const sense of word.senses) {
+    const cleanedSense = cleanSense(sense, exemptProtected);
     // Skip deleted or empty senses.
     if (!cleanedSense) {
       continue;
@@ -123,25 +142,7 @@ function cleanSenses(newSenses: Sense[]): Sense[] | string {
     if (typeof cleanedSense === "string") {
       return cleanedSense;
     }
-    cleanedSenses.push(newSense);
-  }
-  return cleanedSenses;
-}
-
-/** Clean a word. Return error string id if:
- * - the vernacular field is empty
- * - all senses are empty/deleted */
-export function cleanWord(word: Word): Word | string {
-  // Make sure vernacular isn't empty.
-  const vernacular = word.vernacular.trim();
-  if (!vernacular.length) {
-    return "reviewEntries.error.vernacular";
-  }
-
-  // Clean senses and check for problems.
-  const senses = cleanSenses(word.senses);
-  if (typeof senses === "string") {
-    return senses;
+    senses.push(sense);
   }
   if (!senses.length) {
     return "reviewEntries.error.senses";
