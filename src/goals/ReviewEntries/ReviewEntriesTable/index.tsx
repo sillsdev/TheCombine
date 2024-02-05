@@ -4,13 +4,14 @@ import {
   Flag as FlagIcon,
   PlayArrow,
 } from "@mui/icons-material";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import {
   type MRT_Localization,
   type MRT_Row,
   MaterialReactTable,
   createMRTColumnHelper,
   useMaterialReactTable,
+  MRT_ShowHideColumnsButton,
 } from "material-react-table";
 import { type ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -303,20 +304,26 @@ export default function ReviewEntriesTable(): ReactElement {
       sx: { maxHeight: `calc(100vh - ${enablePagination ? 180 : 130}px)` },
     },
     muiTablePaperProps: { sx: { height: `calc(100vh - ${topBarHeight}px)` } },
-    renderTopToolbarCustomActions: () => (
-      <IconButtonWithTooltip
-        onClick={() => setEnablePagination((prev) => !prev)}
-        icon={
-          <AllInclusive
-            sx={{ color: (t) => t.palette.grey[enablePagination ? 600 : 900] }}
-          />
-        }
-        textId={
-          enablePagination
-            ? "reviewEntries.enableInfiniteScroll"
-            : "reviewEntries.disableInfiniteScroll"
-        }
-      />
+    renderToolbarInternalActions: ({ table }) => (
+      <Box>
+        <MRT_ShowHideColumnsButton table={table} />
+        <IconButtonWithTooltip
+          icon={
+            <AllInclusive
+              sx={{
+                color: (t) => t.palette.grey[enablePagination ? 600 : 900],
+              }}
+            />
+          }
+          onClick={() => setEnablePagination((prev) => !prev)}
+          side="bottom"
+          textId={
+            enablePagination
+              ? "reviewEntries.enableInfiniteScroll"
+              : "reviewEntries.disableInfiniteScroll"
+          }
+        />
+      </Box>
     ),
     sortDescFirst: false,
     state: { isLoading },
