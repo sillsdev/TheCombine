@@ -298,16 +298,17 @@
   "reviewEntries": {
     "title": "Review Entries",
     "sense": "Sense",
-    "noVernacular": "No vernacular input!",
-    "noDefinition": "No definitions input",
-    "noGloss": "No glosses input",
+    "editSense": "Edit sense",
+    "discardChanges": "Discard changes?",
     "noDomain": "No domain selected",
     "duplicateDomain": "This sense already has domain {{ val }}.",
-    "noNote": "No note",
     "deleteWordWarning": "This word will be permanently deleted!",
     "deleteDisabled": "This was imported with data that The Combine doesn't handle, so it may not be deleted.",
     "disableInfiniteScroll": "Disable infinite scrolling",
     "enableInfiniteScroll": "Enable infinite scrolling",
+    "allEntries": "All",
+    "scrollToBottom": "Scroll to bottom",
+    "scrollToTop": "Scroll to top",
     "error": {
       "gloss": "Glosses cannot be left blank",
       "domain": "Domains cannot be left blank",
@@ -318,6 +319,7 @@
       "definitions": "Definitions",
       "delete": "Delete",
       "domains": "Domains",
+      "edit": "Edit",
       "flag": "Flag",
       "glosses": "Glosses",
       "note": "Note",
@@ -326,27 +328,6 @@
       "senses": "Senses",
       "sensesCount": "Number of Senses",
       "vernacular": "Vernacular"
-    },
-    "materialTable": {
-      "body": {
-        "discardChanges": "Discard changes?",
-        "edit": "Edit",
-        "editSense": "Edit sense",
-        "emptyDataSourceMessage": "No entries to display",
-        "filter": "Filter"
-      },
-      "pagination": {
-        "labelDisplayedRows": "{from}-{to} of {count}",
-        "labelRows": "rows",
-        "labelRowsPerPage": "Rows per page:",
-        "first": "First Page",
-        "last": "Last Page",
-        "next": "Next Page",
-        "previous": "Previous Page"
-      },
-      "toolbar": {
-        "search": "Search"
-      }
     },
     "completed": {
       "number": "Number of entries edited: "

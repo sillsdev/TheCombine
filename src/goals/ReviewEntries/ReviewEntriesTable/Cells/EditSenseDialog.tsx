@@ -185,12 +185,12 @@ export default function EditSenseDialog(
         handleCancel={() => setCancelDialog(false)}
         handleConfirm={cancelAndClose}
         open={cancelDialog}
-        textId="reviewEntries.materialTable.body.discardChanges"
+        textId="reviewEntries.discardChanges"
       />
       <Dialog fullWidth maxWidth="sm" open={props.isOpen}>
         <DialogTitle>
           <Grid container justifyContent="space-between">
-            <Grid item>{t("reviewEntries.materialTable.body.editSense")}</Grid>
+            <Grid item>{t("reviewEntries.editSense")}</Grid>
             <Grid item>
               <IconButton onClick={saveAndClose}>
                 <Check style={{ color: themeColors.success }} />

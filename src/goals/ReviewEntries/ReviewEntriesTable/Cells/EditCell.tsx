@@ -22,7 +22,7 @@ export default function DeleteCell(props: CellProps): ReactElement {
         buttonId={buttonId(props.word.id)}
         icon={<Edit />}
         onClick={() => setOpen(true)}
-        textId={"reviewEntries.materialTable.body.edit"}
+        textId={"reviewEntries.columns.edit"}
       />
       {
         /* Only render EditDialog when `open` is `true`

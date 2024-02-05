@@ -346,13 +346,13 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
         handleCancel={() => setCancelDialog(false)}
         handleConfirm={cancelAndClose}
         open={cancelDialog}
-        textId="reviewEntries.materialTable.body.discardChanges"
+        textId="reviewEntries.discardChanges"
       />
       <Dialog fullWidth maxWidth="lg" open>
         <DialogTitle>
           <Grid container justifyContent="space-between">
             <Grid item>
-              {t("reviewEntries.materialTable.body.edit")}
+              {t("reviewEntries.columns.edit")}
               {" : "}
               {props.word.vernacular}
             </Grid>

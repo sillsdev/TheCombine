@@ -2,18 +2,23 @@ import {
   AllInclusive,
   FiberManualRecord,
   Flag as FlagIcon,
+  KeyboardDoubleArrowDown,
+  KeyboardDoubleArrowUp,
   PlayArrow,
 } from "@mui/icons-material";
 import { Box, Typography } from "@mui/material";
 import {
+  MaterialReactTable,
   type MRT_Localization,
   type MRT_Row,
-  MaterialReactTable,
+  type MRT_PaginationState,
+  type MRT_RowVirtualizer,
+  MRT_ShowHideColumnsButton,
+  //type MRT_TablePagination,
   createMRTColumnHelper,
   useMaterialReactTable,
-  MRT_ShowHideColumnsButton,
 } from "material-react-table";
-import { type ReactElement, useEffect, useState } from "react";
+import { type ReactElement, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, type GrammaticalInfo, type Word } from "api/models";
@@ -62,6 +67,18 @@ const IconHeaderPaddingTop = "2px"; // Vertical offset for a small icon as Heade
 const IconHeaderWidth = 20; // Width for a small icon as Header
 const SensesHeaderWidth = 15; // Width for # as Header
 
+// Constants for pagination state.
+const rowsPerPage = [10, 100, 1000];
+const infScrollVal = 1111; // Larger than the options to minimize visual artifacts.
+const initPaginationState: MRT_PaginationState = {
+  pageIndex: 0,
+  pageSize: rowsPerPage[0],
+};
+interface RowsPerPageOption {
+  label: string;
+  value: number;
+}
+
 /** Table for reviewing all entries, built with `material-react-table`. */
 export default function ReviewEntriesTable(): ReactElement {
   const showDefinitions = useAppSelector(
@@ -72,12 +89,15 @@ export default function ReviewEntriesTable(): ReactElement {
       state.currentProjectState.project.grammaticalInfoEnabled
   );
 
+  const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
+
   const [data, setData] = useState<Word[]>([]);
   const [enablePagination, setEnablePagination] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [localization, setLocalization] = useState<
     MRT_Localization | undefined
   >();
+  const [pagination, setPagination] = useState(initPaginationState);
   const [speakers, setSpeakers] = useState<Hash<string>>({});
 
   const { i18n, t } = useTranslation();
@@ -98,6 +118,10 @@ export default function ReviewEntriesTable(): ReactElement {
     getLocalization(i18n.resolvedLanguage).then(setLocalization);
   }, [i18n.resolvedLanguage]);
 
+  useEffect(() => {
+    setEnablePagination(pagination.pageSize !== infScrollVal);
+  }, [pagination.pageSize]);
+
   const deleteWord = (id: string): void => {
     setData((prev) => prev.filter((w) => w.id !== id));
   };
@@ -105,6 +129,63 @@ export default function ReviewEntriesTable(): ReactElement {
     const newWord = await getWord(newId);
     setData((prev) => prev.map((w) => (w.id === oldId ? newWord : w)));
   };
+
+  const rowsPerPageOptions: RowsPerPageOption[] = [
+    ...rowsPerPage.map((value) => ({ label: `${value}`, value })),
+    { label: t("reviewEntries.allEntries"), value: infScrollVal },
+  ];
+  const toggleInfiniteScrolling = (): void => {
+    setPagination(
+      enablePagination
+        ? { pageIndex: 0, pageSize: infScrollVal }
+        : initPaginationState
+    );
+  };
+  const InfiniteScrollButton = (
+    <IconButtonWithTooltip
+      icon={
+        <AllInclusive
+          sx={{
+            color: (t) => t.palette.grey[enablePagination ? 600 : 800],
+          }}
+        />
+      }
+      onClick={toggleInfiniteScrolling}
+      side="bottom"
+      textId={
+        enablePagination
+          ? "reviewEntries.enableInfiniteScroll"
+          : "reviewEntries.disableInfiniteScroll"
+      }
+    />
+  );
+
+  const scrollToBottom = (): void => {
+    rowVirtualizerInstanceRef.current?.scrollToIndex(data.length - 1);
+  };
+  const scrollToTop = (): void => {
+    rowVirtualizerInstanceRef.current?.scrollToIndex(0);
+  };
+  const ScrollToBottomButton = (
+    <IconButtonWithTooltip
+      icon={
+        <KeyboardDoubleArrowDown sx={{ color: (t) => t.palette.grey[800] }} />
+      }
+      onClick={scrollToBottom}
+      side="bottom"
+      textId={"reviewEntries.scrollToBottom"}
+    />
+  );
+  const ScrollToTopButton = (
+    <IconButtonWithTooltip
+      icon={
+        <KeyboardDoubleArrowUp sx={{ color: (t) => t.palette.grey[800] }} />
+      }
+      onClick={scrollToTop}
+      side="bottom"
+      textId={"reviewEntries.scrollToTop"}
+    />
+  );
 
   const columnHelper = createMRTColumnHelper<Word>();
 
@@ -119,7 +200,7 @@ export default function ReviewEntriesTable(): ReactElement {
       enableColumnOrdering: false,
       enableHiding: false,
       Header: "",
-      header: t("reviewEntries.materialTable.body.edit"),
+      header: t("reviewEntries.columns.edit"),
       size: IconColumnSize,
     }),
 
@@ -296,7 +377,7 @@ export default function ReviewEntriesTable(): ReactElement {
       density: "compact",
     },
     localization,
-    muiPaginationProps: { rowsPerPageOptions: [10, 100, 1000] },
+    muiPaginationProps: { rowsPerPageOptions },
     // Override whiteSpace: "nowrap" from having density: "compact"
     muiTableBodyCellProps: { sx: { whiteSpace: "normal" } },
     // Keep the table from going below the bottom of the page
@@ -304,29 +385,26 @@ export default function ReviewEntriesTable(): ReactElement {
       sx: { maxHeight: `calc(100vh - ${enablePagination ? 180 : 130}px)` },
     },
     muiTablePaperProps: { sx: { height: `calc(100vh - ${topBarHeight}px)` } },
+    onPaginationChange: (updater) => {
+      setPagination(updater);
+      scrollToTop();
+    },
+    /*renderBottomToolbar: ({ table }) => (
+      <Box>
+        <MRT_TablePagination table={table} />
+      </Box>
+    ),*/
     renderToolbarInternalActions: ({ table }) => (
       <Box>
         <MRT_ShowHideColumnsButton table={table} />
-        <IconButtonWithTooltip
-          icon={
-            <AllInclusive
-              sx={{
-                color: (t) => t.palette.grey[enablePagination ? 600 : 900],
-              }}
-            />
-          }
-          onClick={() => setEnablePagination((prev) => !prev)}
-          side="bottom"
-          textId={
-            enablePagination
-              ? "reviewEntries.enableInfiniteScroll"
-              : "reviewEntries.disableInfiniteScroll"
-          }
-        />
+        {InfiniteScrollButton}
+        {ScrollToTopButton}
+        {ScrollToBottomButton}
       </Box>
     ),
+    rowVirtualizerInstanceRef,
     sortDescFirst: false,
-    state: { isLoading },
+    state: { isLoading, pagination },
   });
 
   return <MaterialReactTable table={table} />;
