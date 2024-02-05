@@ -67,7 +67,7 @@ jobs:
 
   upload_coverage:
     permissions:
-      actions: read # for github/codeql-action/init to get workflow details
+      actions: write # for github/codeql-action/init to get workflow details
       contents: write # for Upload coverage report to create commit
       security-events: write # for github/codeql-action/autobuild to send a status report
     needs: test_build
