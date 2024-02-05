@@ -5,3 +5,6 @@ ignore:
   - "src/types"
   - "**/*Mock.ts"
   - "**/*Types.ts"
+
+codecov:
+  token: secret:v2::qHJPU2YjipcYQn6P/dU7p7v4mW52ACZ2V9EPToE7vGXmv+cdyfcMpme5Oa6VXmv/5WXswJDn4ZcOnJAz49lXqPNcebHQiIaJwioXdSvFpr8=
