@@ -1,47 +1,46 @@
-import { errorToast } from "components/Toast/SwalToast";
-
-const RecordRTC = require("recordrtc");
+import RecordRTC from "recordrtc";
 
 export default class Recorder {
-  private recordRTC: any;
+  private toast: (text: string) => void;
+  private recordRTC?: RecordRTC;
 
-  constructor() {
+  static blobType: RecordRTC.Options["type"] = "audio";
+
+  constructor(toast?: (text: string) => void) {
+    this.toast = toast ?? ((text: string) => alert(text));
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then((audioStream) => this.onMicrophoneAvailable(audioStream))
-      .catch(Recorder.onError);
+      .catch((err) => this.onError(err));
   }
 
-  startRecording() {
-    if (this.recordRTC) {
-      this.recordRTC.reset();
-      this.recordRTC.startRecording();
-    }
+  startRecording(): void {
+    this.recordRTC?.reset();
+    this.recordRTC?.startRecording();
   }
 
-  stopRecording(): Promise<string> {
-    return new Promise((resolve) => {
-      this.recordRTC.stopRecording(resolve);
+  stopRecording(): Promise<Blob | undefined> {
+    return new Promise<Blob | undefined>((resolve) => {
+      const rec = this.recordRTC;
+      if (rec) {
+        rec.stopRecording(() => resolve(rec.getBlob()));
+      } else {
+        resolve(undefined);
+      }
     });
   }
 
-  getBlob(): Blob {
-    return this.recordRTC.getBlob();
-  }
-
-  private onMicrophoneAvailable(audioStream: MediaStream) {
-    this.recordRTC = new RecordRTC(audioStream, {
+  private onMicrophoneAvailable(audioStream: MediaStream): void {
+    const options: RecordRTC.Options = {
       disableLogs: true, // Comment out or switch to false for dev
-      type: "audio",
       mimeType: "audio/webm;codecs=pcm",
-    });
+      type: Recorder.blobType,
+    };
+    this.recordRTC = new RecordRTC(audioStream, options);
   }
 
-  private static onError(err: Error) {
+  private onError(err: Error): void {
     console.error(err);
-    errorToast.fire({
-      title: "Audio Recorder",
-      text: "Error getting audio stream!",
-    });
+    this.toast("Error getting audio stream!");
   }
 }

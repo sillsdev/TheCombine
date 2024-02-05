@@ -1,38 +1,34 @@
 import { combineReducers, Reducer } from "redux";
 
-import { goalReducer } from "components/GoalTimeline/Redux/GoalReducer";
-import { loginReducer } from "components/Login/Redux/LoginReducer";
-import { passwordResetReducer } from "components/PasswordReset/Redux/ResetReducer";
-import { projectReducer } from "components/Project/ProjectReducer";
-import { exportProjectReducer } from "components/ProjectExport/Redux/ExportProjectReducer";
-import { createProjectReducer } from "components/ProjectScreen/CreateProject/Redux/CreateProjectReducer";
-import { pronunciationsReducer } from "components/Pronunciations/Redux/PronunciationsReducer";
-import { treeViewReducer } from "components/TreeView/TreeViewReducer";
-import { characterInventoryReducer } from "goals/CharInventoryCreation/Redux/CharacterInventoryReducer";
-import { mergeDupStepReducer } from "goals/MergeDupGoal/Redux/MergeDupReducer";
-import { reviewEntriesReducer } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesReducer";
+import goalsReducer from "components/GoalTimeline/Redux/GoalReducer";
+import loginReducer from "components/Login/Redux/LoginReducer";
+import projectReducer from "components/Project/ProjectReducer";
+import exportProjectReducer from "components/ProjectExport/Redux/ExportProjectReducer";
+import pronunciationsReducer from "components/Pronunciations/Redux/PronunciationsReducer";
+import treeViewReducer from "components/TreeView/Redux/TreeViewReducer";
+import characterInventoryReducer from "goals/CharacterInventory/Redux/CharacterInventoryReducer";
+import mergeDupStepReducer from "goals/MergeDuplicates/Redux/MergeDupsReducer";
+import reviewEntriesReducer from "goals/ReviewEntries/Redux/ReviewEntriesReducer";
 import { StoreState } from "types";
-import { analyticsReducer } from "types/Redux/analytics";
+import analyticsReducer from "types/Redux/analytics";
 
 export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
-  //login
+  //login and signup
   loginState: loginReducer,
-  passwordResetState: passwordResetReducer,
 
   //project
-  createProjectState: createProjectReducer,
   currentProjectState: projectReducer,
   exportProjectState: exportProjectReducer,
 
-  //data entry and review entries
+  //data entry and review entries goal
   treeViewState: treeViewReducer,
   reviewEntriesState: reviewEntriesReducer,
   pronunciationsState: pronunciationsReducer,
 
   //goal timeline and current goal
-  goalsState: goalReducer,
+  goalsState: goalsReducer,
 
-  //merge duplicates goal
+  //merge duplicates goal and review deferred duplicates goal
   mergeDuplicateGoal: mergeDupStepReducer,
 
   //character inventory goal

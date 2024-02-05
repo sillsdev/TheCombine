@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using SIL.WritingSystems;
 
 namespace BackendFramework.Models
 {
@@ -29,6 +30,10 @@ namespace BackendFramework.Models
         [Required]
         [BsonElement("definitionsEnabled")]
         public bool DefinitionsEnabled { get; set; }
+
+        [Required]
+        [BsonElement("grammaticalInfoEnabled")]
+        public bool GrammaticalInfoEnabled { get; set; }
 
         [Required]
         [BsonElement("autocompleteSetting")]
@@ -75,6 +80,9 @@ namespace BackendFramework.Models
         [BsonElement("inviteToken")]
         public List<EmailInvite> InviteTokens { get; set; }
 
+        [BsonElement("workshopSchedule")]
+        public List<DateTime> WorkshopSchedule { get; set; }
+
         public Project()
         {
             Id = "";
@@ -82,6 +90,7 @@ namespace BackendFramework.Models
             IsActive = true;
             LiftImported = false;
             DefinitionsEnabled = false;
+            GrammaticalInfoEnabled = false;
             AutocompleteSetting = AutocompleteSetting.On;
             SemDomWritingSystem = new WritingSystem();
             VernacularWritingSystem = new WritingSystem();
@@ -93,17 +102,19 @@ namespace BackendFramework.Models
             WordFields = new List<string>();
             PartsOfSpeech = new List<string>();
             InviteTokens = new List<EmailInvite>();
+            WorkshopSchedule = new List<DateTime>();
         }
 
         public Project Clone()
         {
             var clone = new Project
             {
-                Id = (string)Id.Clone(),
-                Name = (string)Name.Clone(),
+                Id = Id,
+                Name = Name,
                 IsActive = IsActive,
                 LiftImported = LiftImported,
                 DefinitionsEnabled = DefinitionsEnabled,
+                GrammaticalInfoEnabled = GrammaticalInfoEnabled,
                 AutocompleteSetting = AutocompleteSetting,
                 SemDomWritingSystem = SemDomWritingSystem.Clone(),
                 VernacularWritingSystem = VernacularWritingSystem.Clone(),
@@ -114,7 +125,8 @@ namespace BackendFramework.Models
                 CustomFields = new List<CustomField>(),
                 WordFields = new List<string>(),
                 PartsOfSpeech = new List<string>(),
-                InviteTokens = new List<EmailInvite>()
+                InviteTokens = new List<EmailInvite>(),
+                WorkshopSchedule = new List<DateTime>(),
             };
 
             foreach (var aw in AnalysisWritingSystems)
@@ -127,11 +139,11 @@ namespace BackendFramework.Models
             }
             foreach (var cs in ValidCharacters)
             {
-                clone.ValidCharacters.Add((string)cs.Clone());
+                clone.ValidCharacters.Add(cs);
             }
             foreach (var cs in RejectedCharacters)
             {
-                clone.RejectedCharacters.Add((string)cs.Clone());
+                clone.RejectedCharacters.Add(cs);
             }
             foreach (var cf in CustomFields)
             {
@@ -139,15 +151,19 @@ namespace BackendFramework.Models
             }
             foreach (var wf in WordFields)
             {
-                clone.WordFields.Add((string)wf.Clone());
+                clone.WordFields.Add(wf);
             }
             foreach (var pos in PartsOfSpeech)
             {
-                clone.PartsOfSpeech.Add((string)pos.Clone());
+                clone.PartsOfSpeech.Add(pos);
             }
             foreach (var it in InviteTokens)
             {
                 clone.InviteTokens.Add(it.Clone());
+            }
+            foreach (var dt in WorkshopSchedule)
+            {
+                clone.WorkshopSchedule.Add(dt);
             }
 
             return clone;
@@ -156,10 +172,11 @@ namespace BackendFramework.Models
         public bool ContentEquals(Project other)
         {
             return
-                other.Name.Equals(Name) &&
-                other.IsActive.Equals(IsActive) &&
-                other.LiftImported.Equals(LiftImported) &&
-                other.DefinitionsEnabled.Equals(DefinitionsEnabled) &&
+                other.Name.Equals(Name, StringComparison.Ordinal) &&
+                other.IsActive == IsActive &&
+                other.LiftImported == LiftImported &&
+                other.DefinitionsEnabled == DefinitionsEnabled &&
+                other.GrammaticalInfoEnabled == GrammaticalInfoEnabled &&
                 other.AutocompleteSetting.Equals(AutocompleteSetting) &&
                 other.SemDomWritingSystem.Equals(SemDomWritingSystem) &&
                 other.VernacularWritingSystem.Equals(VernacularWritingSystem) &&
@@ -186,7 +203,10 @@ namespace BackendFramework.Models
                 other.PartsOfSpeech.All(PartsOfSpeech.Contains) &&
 
                 other.InviteTokens.Count == InviteTokens.Count &&
-                other.InviteTokens.All(InviteTokens.Contains);
+                other.InviteTokens.All(InviteTokens.Contains) &&
+
+                other.WorkshopSchedule.Count == WorkshopSchedule.Count &&
+                other.WorkshopSchedule.All(WorkshopSchedule.Contains);
         }
 
         public override bool Equals(object? obj)
@@ -196,7 +216,7 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return other.Id.Equals(Id) && ContentEquals(other);
+            return other.Id.Equals(Id, StringComparison.Ordinal) && ContentEquals(other);
         }
 
         public override int GetHashCode()
@@ -206,6 +226,7 @@ namespace BackendFramework.Models
             hash.Add(Name);
             hash.Add(LiftImported);
             hash.Add(DefinitionsEnabled);
+            hash.Add(GrammaticalInfoEnabled);
             hash.Add(IsActive);
             hash.Add(AutocompleteSetting);
             hash.Add(SemDomWritingSystem);
@@ -218,6 +239,7 @@ namespace BackendFramework.Models
             hash.Add(WordFields);
             hash.Add(PartsOfSpeech);
             hash.Add(InviteTokens);
+            hash.Add(WorkshopSchedule);
             return hash.ToHashCode();
         }
     }
@@ -239,8 +261,8 @@ namespace BackendFramework.Models
         {
             return new CustomField
             {
-                Name = (string)Name.Clone(),
-                Type = (string)Type.Clone()
+                Name = Name,
+                Type = Type
             };
         }
 
@@ -251,7 +273,8 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Name == customField.Name && Type == customField.Type;
+            return Name.Equals(customField.Name, StringComparison.Ordinal) &&
+                Type.Equals(customField.Type, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()
@@ -263,27 +286,42 @@ namespace BackendFramework.Models
     public class WritingSystem
     {
         [Required]
-        public string Name { get; set; }
-        [Required]
         public string Bcp47 { get; set; }
         [Required]
+        public string Name { get; set; }
+        [Required]
         public string Font { get; set; }
+        public bool? Rtl { get; set; }
 
         public WritingSystem()
         {
-            Name = "";
             Bcp47 = "";
+            Name = "";
             Font = "";
+        }
+
+        public WritingSystem(string bcp47 = "", string name = "", string font = "", bool? rtl = null)
+        {
+            Bcp47 = bcp47;
+            Name = name;
+            Font = font;
+            Rtl = rtl;
+        }
+
+        public WritingSystem(WritingSystemDefinition wsd)
+        {
+            Bcp47 = wsd.LanguageTag;
+            Name = wsd.Language?.Name ?? "";
+            Font = wsd.DefaultFont?.Name ?? "";
+            if (wsd.RightToLeftScript)
+            {
+                Rtl = true;
+            }
         }
 
         public WritingSystem Clone()
         {
-            return new WritingSystem
-            {
-                Name = (string)Name.Clone(),
-                Bcp47 = (string)Bcp47.Clone(),
-                Font = (string)Font.Clone()
-            };
+            return new(Bcp47, Name, Font, Rtl);
         }
 
         public override bool Equals(object? obj)
@@ -293,17 +331,25 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Name == ws.Name && Bcp47 == ws.Bcp47 && Font == ws.Font;
+            return Bcp47.Equals(ws.Bcp47, StringComparison.Ordinal) &&
+                Name.Equals(ws.Name, StringComparison.Ordinal) &&
+                Font.Equals(ws.Font, StringComparison.Ordinal) &&
+                Rtl == ws.Rtl;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Bcp47, Font);
+            return HashCode.Combine(Bcp47, Name, Font, Rtl ?? false);
         }
 
         public override string ToString()
         {
-            return $"<name: {Name}, bcp47: {Bcp47}, font: {Font}>";
+            var outString = $"name: {Name}, bcp47: {Bcp47}, font: {Font}";
+            if (Rtl ?? false)
+            {
+                outString += $", rtl: True";
+            }
+            return $"<{outString}>";
         }
     }
 

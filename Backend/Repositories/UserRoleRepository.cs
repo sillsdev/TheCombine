@@ -9,7 +9,7 @@ using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
 {
-    /// <summary> Atomic database functions for <see cref="UserRole"/>s </summary>
+    /// <summary> Atomic database functions for <see cref="UserRole"/>s. </summary>
     [ExcludeFromCodeCoverage]
     public class UserRoleRepository : IUserRoleRepository
     {
@@ -77,8 +77,7 @@ namespace BackendFramework.Repositories
         public async Task<ResultOfUpdate> Update(string userRoleId, UserRole userRole)
         {
             var filter = Builders<UserRole>.Filter.Eq(x => x.Id, userRoleId);
-            var updateDef = Builders<UserRole>.Update.Set(
-                x => x.Permissions, userRole.Permissions);
+            var updateDef = Builders<UserRole>.Update.Set(x => x.Role, userRole.Role);
             var updateResult = await _userRoleDatabase.UserRoles.UpdateOneAsync(filter, updateDef);
 
             if (!updateResult.IsAcknowledged)

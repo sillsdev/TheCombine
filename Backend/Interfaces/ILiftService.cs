@@ -7,20 +7,27 @@ namespace BackendFramework.Interfaces
 {
     public interface ILiftService
     {
-        ILiftMerger GetLiftImporterExporter(string projectId, IWordRepository wordRepo);
-        void LdmlImport(string filePath, string langTag, IProjectRepository projRepo, Project project);
+        ILiftMerger GetLiftImporterExporter(string projectId, string vernLang, IWordRepository wordRepo);
+        Task<bool> LdmlImport(string dirPath, IProjectRepository projRepo, Project project);
         Task<string> LiftExport(string projectId, IWordRepository wordRepo, IProjectRepository projRepo);
+        Task<List<string>> CreateLiftRanges(List<Word> projWords, List<SemanticDomain> projDoms, string rangesDest);
 
         // Methods to store, retrieve, and delete an export string in a common dictionary.
-        void StoreExport(string key, string filePath);
-        string? RetrieveExport(string key);
-        bool DeleteExport(string key);
-        void SetExportInProgress(string key, bool isInProgress);
-        bool IsExportInProgress(string key);
+        void StoreExport(string userId, string filePath);
+        string? RetrieveExport(string userId);
+        bool DeleteExport(string userId);
+        void SetExportInProgress(string userId, bool isInProgress);
+        bool IsExportInProgress(string userId);
+        void StoreImport(string userId, string filePath);
+        string? RetrieveImport(string userId);
+        bool DeleteImport(string userId);
     }
 
     public interface ILiftMerger : ILexiconMerger<LiftObject, LiftEntry, LiftSense, LiftExample>
     {
+        bool DoesImportHaveDefinitions();
+        bool DoesImportHaveGrammaticalInfo();
+        List<WritingSystem> GetImportAnalysisWritingSystems();
         Task<List<Word>> SaveImportEntries();
     }
 }

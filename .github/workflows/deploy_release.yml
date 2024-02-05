@@ -17,12 +17,37 @@ jobs:
     outputs:
       image_tag: ${{ steps.build_combine.outputs.image_tag }}
     steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
-        uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
         with:
-          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
-
-      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+          egress-policy: block
+          allowed-endpoints: >
+            *.actions.githubusercontent.com:443
+            *.data.mcr.microsoft.com:443
+            api.ecr-public.us-east-1.amazonaws.com:443
+            api.github.com:443
+            api.nuget.org:443
+            archive.ubuntu.com:80
+            auth.docker.io:443
+            dc.services.visualstudio.com:443
+            deb.debian.org:80
+            docker.io:443
+            dotnetcli.azureedge.net:443
+            files.pythonhosted.org:443
+            github.com:443
+            mcr.microsoft.com:443
+            production.cloudflare.docker.com:443
+            public.ecr.aws:443
+            pypi.org:443
+            registry-1.docker.io:443
+            registry.npmjs.org:443
+            security.debian.org:80
+            security.ubuntu.com:80
+            storage.googleapis.com:443
+            sts.us-east-1.amazonaws.com:443
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Build The Combine
         id: build_combine
         uses: ./.github/actions/combine-build
@@ -41,22 +66,24 @@ jobs:
     needs: build
     runs-on: [self-hosted, thecombine]
     steps:
-      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           fetch-depth: 0
-      - name: Deploy The Combine Update
+      - name: Deploy The Combine Update to QA
         uses: ./.github/actions/combine-deploy-update
         with:
           image_registry: public.ecr.aws
           image_registry_alias: "/thecombine"
           image_tag: ${{ needs.build.outputs.image_tag }}
           kube_context: ${{ secrets.LTOPS_K8S_STAGING_CONTEXT }}
+          kubectl_version: ${{ vars.KUBECTL_VERSION }}
           update_cert_proxy: false
-      - name: Deploy The Combine Update
+      - name: Deploy The Combine Update to Production
         uses: ./.github/actions/combine-deploy-update
         with:
           image_registry: public.ecr.aws
           image_registry_alias: "/thecombine"
           image_tag: ${{ needs.build.outputs.image_tag }}
           kube_context: ${{ secrets.LTOPS_K8S_PRODUCTION_CONTEXT }}
+          kubectl_version: ${{ vars.KUBECTL_VERSION }}
           update_cert_proxy: true

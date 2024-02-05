@@ -1,78 +1,75 @@
-import {
-  Autocomplete,
-  AutocompleteCloseReason,
-  TextField,
-} from "@mui/material";
-import React from "react";
+import { Autocomplete, AutocompleteCloseReason } from "@mui/material";
+import React, { ReactElement, useEffect } from "react";
 import { Key } from "ts-key-enum";
 
-import { WritingSystem } from "api";
+import { WritingSystem } from "api/models";
+import { LiWithFont, TextFieldWithFont } from "utilities/fontComponents";
 
 interface VernWithSuggestionsProps {
   isNew?: boolean;
   isDisabled?: boolean;
   vernacular: string;
-  vernInput?: React.RefObject<HTMLDivElement>;
+  vernInput?: React.RefObject<HTMLInputElement>;
   updateVernField: (newValue: string, openDialog?: boolean) => void;
   onBlur: () => void;
-  onClose?: (e: React.ChangeEvent<{}>, reason: AutocompleteCloseReason) => void;
+  onClose?: (e: React.SyntheticEvent, reason: AutocompleteCloseReason) => void;
   suggestedVerns?: string[];
-  handleEnterAndTab: (e: React.KeyboardEvent) => void;
+  handleEnter: () => void;
   vernacularLang: WritingSystem;
   textFieldId: string;
-  onComponentDidUpdate?: () => void;
+  onUpdate?: () => void;
 }
 
 /**
  * An editable vernacular field for new words, that suggests words already in database.
  */
-export default class VernWithSuggestions extends React.Component<VernWithSuggestionsProps> {
-  componentDidUpdate() {
-    if (this.props.onComponentDidUpdate) {
-      this.props.onComponentDidUpdate();
+export default function VernWithSuggestions(
+  props: VernWithSuggestionsProps
+): ReactElement {
+  useEffect(() => {
+    if (props.onUpdate) {
+      props.onUpdate();
     }
-  }
+  });
 
-  render() {
-    return (
-      <React.Fragment>
-        <Autocomplete
-          id={this.props.textFieldId}
-          disabled={this.props.isDisabled}
-          // freeSolo allows use of a typed entry not available as a drop-down option
-          freeSolo
-          value={this.props.vernacular}
-          options={this.props.suggestedVerns ? this.props.suggestedVerns : []}
-          onBlur={this.props.onBlur}
-          onChange={(_e, value) => {
-            // onChange is triggered when an option is selected
-            if (!value) {
-              value = "";
-            }
-            this.props.updateVernField(value, true);
-          }}
-          onInputChange={(_event, value) => {
-            // onInputChange is triggered by typing
-            this.props.updateVernField(value);
-          }}
-          onKeyPress={(e: React.KeyboardEvent) => {
-            if (e.key === Key.Enter || e.key === Key.Tab) {
-              e.preventDefault();
-              this.props.handleEnterAndTab(e);
-            }
-          }}
-          onClose={this.props.onClose}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              fullWidth
-              inputRef={this.props.vernInput}
-              label={this.props.isNew ? this.props.vernacularLang.name : ""}
-              variant={this.props.isNew ? "outlined" : "standard"}
-            />
-          )}
+  return (
+    <Autocomplete
+      id={props.textFieldId}
+      disabled={props.isDisabled}
+      // freeSolo allows use of a typed entry not available as a drop-down option
+      freeSolo
+      value={props.vernacular}
+      options={props.suggestedVerns ?? []}
+      onBlur={props.onBlur}
+      onChange={(_e, value) => {
+        // onChange is triggered when an option is selected
+        props.updateVernField(value ?? "", true);
+      }}
+      onInputChange={(_e, value) => {
+        // onInputChange is triggered by typing
+        props.updateVernField(value);
+      }}
+      onKeyPress={(e: React.KeyboardEvent) => {
+        if (e.key === Key.Enter) {
+          props.handleEnter();
+        }
+      }}
+      onClose={props.onClose}
+      renderInput={(params) => (
+        <TextFieldWithFont
+          {...(params as any)}
+          fullWidth
+          inputRef={props.vernInput}
+          label={props.isNew ? props.vernacularLang.name : ""}
+          variant={(props.isNew ? "outlined" : "standard") as any}
+          vernacular
         />
-      </React.Fragment>
-    );
-  }
+      )}
+      renderOption={(liProps, option, { selected }) => (
+        <LiWithFont {...liProps} aria-selected={selected} vernacular>
+          {option}
+        </LiWithFont>
+      )}
+    />
+  );
 }

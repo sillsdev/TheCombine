@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -15,35 +14,30 @@ namespace BackendFramework.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
-        /// <summary> Integer representation of <see cref="Permission"/> </summary>
-        [Required]
-        [BsonElement("permissions")]
-        public List<Permission> Permissions { get; set; }
-
         [Required]
         [BsonElement("projectId")]
         public string ProjectId { get; set; }
+
+        [Required]
+        [BsonElement("role")]
+        [BsonRepresentation(BsonType.String)]
+        public Role Role { get; set; }
 
         public UserRole()
         {
             Id = "";
             ProjectId = "";
-            Permissions = new List<Permission>();
+            Role = Role.None;
         }
 
         public UserRole Clone()
         {
             var clone = new UserRole
             {
-                Id = (string)Id.Clone(),
-                ProjectId = (string)ProjectId.Clone(),
-                Permissions = new List<Permission>()
+                Id = Id,
+                ProjectId = ProjectId,
+                Role = Role,
             };
-
-            foreach (var permission in Permissions)
-            {
-                clone.Permissions.Add(permission);
-            }
 
             return clone;
         }
@@ -51,9 +45,8 @@ namespace BackendFramework.Models
         public bool ContentEquals(UserRole other)
         {
             return
-                other.ProjectId.Equals(ProjectId) &&
-                other.Permissions.Count == Permissions.Count &&
-                other.Permissions.All(Permissions.Contains);
+                other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
+                other.Role == Role;
         }
 
         public override bool Equals(object? obj)
@@ -63,32 +56,130 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return other.Id.Equals(Id) && ContentEquals(other);
+            return other.Id.Equals(Id, StringComparison.Ordinal) && ContentEquals(other);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, ProjectId, Permissions);
+            return HashCode.Combine(Id, ProjectId, Role);
         }
     }
 
-    public enum Permission
+    /// <remarks> This is used in a [FromBody] serializer, so its attributes cannot be set to readonly. </remarks>
+    public class ProjectRole
     {
-        /// <summary> Project Owner by default should be given to the user who created the project </summary>
-        Owner = 6,
 
-        /// <summary> Project Admin, can edit project settings and add and remove users, change userRoles </summary>
-        DeleteEditSettingsAndUsers = 5,
+        [Required]
+        [BsonElement("projectId")]
+        public string ProjectId { get; set; }
 
-        /// <summary> Can import and export lift </summary>
-        ImportExport = 4,
+        [Required]
+        [BsonElement("role")]
+        public Role Role { get; set; }
 
-        /// <summary> Can merge words and change the char set </summary>
-        MergeAndReviewEntries = 3,
+        public ProjectRole()
+        {
+            ProjectId = "";
+            Role = Role.None;
+        }
 
-        // Permission value 2 is currently unused. It is not defined so that it does not propagate through OpenAPI.
+        public ProjectRole Clone()
+        {
 
-        /// <summary> Can enter words </summary>
-        WordEntry = 1
+            return new ProjectRole
+            {
+                ProjectId = ProjectId,
+                Role = Role,
+            };
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not ProjectRole other || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            return other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) && other.Role == Role;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(ProjectId, Role);
+        }
+
+        public static List<Permission> RolePermissions(Role role)
+        {
+            return role switch
+            {
+                // Project Owner by default should be given to the user who created the project.
+                // Owner role can be transferred, but there should never be more than one per project.
+                Role.Owner => new List<Permission> {
+                    Permission.Archive, Permission.Import, Permission.Statistics,
+                    Permission.CharacterInventory, Permission.DeleteEditSettingsAndUsers,
+                    Permission.Export, Permission.MergeAndReviewEntries,
+                    Permission.WordEntry
+                },
+
+                // Administrator can do Data Entry, all Data Cleanup, and most project settings.
+                Role.Administrator => new List<Permission> {
+                    Permission.CharacterInventory, Permission.DeleteEditSettingsAndUsers,
+                    Permission.Export, Permission.MergeAndReviewEntries,
+                    Permission.WordEntry
+                },
+
+                // Editor can do Data Entry and basic Data Cleanup.
+                Role.Editor => new List<Permission> {
+                    Permission.Export, Permission.MergeAndReviewEntries,
+                    Permission.WordEntry
+                },
+
+                // Harvester can do Data Entry but no Data Cleanup.
+                Role.Harvester => new List<Permission> {
+                    Permission.WordEntry
+                },
+
+                _ => new List<Permission>(),
+            };
+        }
+    }
+
+    public enum Role
+    {
+        Owner,
+        Administrator,
+        Editor,
+        Harvester,
+        None,
+    }
+
+#pragma warning disable CA1711
+    // Ignoring CA1711, which requires identifiers ending in Permission to implement System.Security.IPermission.
+    public enum Permission
+#pragma warning restore CA1711
+    {
+        /// <summary> Can archive the project so it's no longer available. This is an owner-only permission. </summary>
+        Archive,
+
+        /// <summary> Can update character inventory. Can also use find-and-replace, which is DANGEROUS! </summary>
+        CharacterInventory,
+
+        /// <summary> Can import data into the project. This can only be done once and cannot be undone. </summary>
+        Import,
+
+        /// <summary> Can see project statistics and update the workshop schedule. </summary>
+        Statistics,
+
+        /// <summary> Can edit project settings and add and remove users, change userRoles. </summary>
+        DeleteEditSettingsAndUsers,
+
+        /// <summary> Can export the project to lift. </summary>
+        Export,
+
+        /// <summary> Can merge and review words. </summary>
+        MergeAndReviewEntries,
+
+        /// <summary> Can enter words. </summary>
+        WordEntry
     }
 }

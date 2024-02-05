@@ -1,4 +1,5 @@
 import { Grid, LinearProgress, Paper, Typography } from "@mui/material";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -8,7 +9,7 @@ import { GoalType } from "types/goals";
 /**
  * Displays how much progress has been made in a goal
  */
-export default function DisplayProgress() {
+export default function DisplayProgress(): ReactElement | null {
   /* We cannot use a single selector for state.goalsState.currentGoal and define everything on that;
  currentStep needs its own targeted selector for it to re-render as the user progresses. */
   const currentStep = useSelector(
@@ -24,19 +25,16 @@ export default function DisplayProgress() {
 
   const percentComplete = (currentStep / numSteps) * 100;
   const stepTranslateId =
-    goalType === GoalType.MergeDups
-      ? "goal.progress.stepMerge"
-      : "goal.progress.step";
+    goalType === GoalType.MergeDups || goalType === GoalType.ReviewDeferredDups
+      ? "goal.progressMerge"
+      : "goal.progress";
 
   return numSteps > 1 ? (
     <Paper key={currentStep}>
       <Grid container direction="column">
         <Grid item xs>
           <Typography variant={"h4"}>
-            {t(stepTranslateId)}
-            {` ${currentStep + 1} `}
-            {t("goal.progress.of")}
-            {` ${numSteps}`}
+            {t(stepTranslateId, { val1: currentStep + 1, val2: numSteps })}
           </Typography>
         </Grid>
         <Grid item xs>

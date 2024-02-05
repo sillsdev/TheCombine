@@ -68,7 +68,7 @@ namespace BackendFramework
                 return contents;
             }
 
-            _logger.LogError($"Environment variable: `{name}` is not defined. {error}");
+            _logger.LogError("Environment variable: {Name} is not defined. {Error}", name, error);
             return defaultValue;
         }
 
@@ -109,8 +109,8 @@ namespace BackendFramework
             const int minKeyLength = 128 / 8;
             if (secretKey is null || secretKey.Length < minKeyLength)
             {
-                _logger.LogError($"Must set {secretKeyEnvName} environment variable " +
-                                 $"to string of length {minKeyLength} or longer.");
+                _logger.LogError("Must set {EnvName} environment variable to string of length {MinLength} or longer.",
+                    secretKeyEnvName, minKeyLength);
                 throw new EnvironmentNotConfiguredException();
             }
 
@@ -186,6 +186,10 @@ namespace BackendFramework
 
             // Register concrete types for dependency injection
 
+            // Banner types
+            services.AddTransient<IBannerContext, BannerContext>();
+            services.AddTransient<IBannerRepository, BannerRepository>();
+
             // Email types
             services.AddTransient<IEmailContext, EmailContext>();
             services.AddTransient<IEmailService, EmailService>();
@@ -197,7 +201,9 @@ namespace BackendFramework
 
             // Merge types
             services.AddTransient<IMergeBlacklistContext, MergeBlacklistContext>();
+            services.AddTransient<IMergeGraylistContext, MergeGraylistContext>();
             services.AddTransient<IMergeBlacklistRepository, MergeBlacklistRepository>();
+            services.AddTransient<IMergeGraylistRepository, MergeGraylistRepository>();
             services.AddTransient<IMergeService, MergeService>();
 
             // Password Reset types
@@ -210,6 +216,17 @@ namespace BackendFramework
             // Project types
             services.AddTransient<IProjectContext, ProjectContext>();
             services.AddTransient<IProjectRepository, ProjectRepository>();
+
+            // Semantic Domain types
+            services.AddSingleton<ISemanticDomainContext, SemanticDomainContext>();
+            services.AddSingleton<ISemanticDomainRepository, SemanticDomainRepository>();
+
+            // Speaker types
+            services.AddTransient<ISpeakerContext, SpeakerContext>();
+            services.AddTransient<ISpeakerRepository, SpeakerRepository>();
+
+            // Statistics types
+            services.AddSingleton<IStatisticsService, StatisticsService>();
 
             // User types
             services.AddTransient<IUserContext, UserContext>();
@@ -228,17 +245,6 @@ namespace BackendFramework
             services.AddTransient<IWordContext, WordContext>();
             services.AddTransient<IWordRepository, WordRepository>();
             services.AddTransient<IWordService, WordService>();
-
-            // Banner types
-            services.AddTransient<IBannerContext, BannerContext>();
-            services.AddTransient<IBannerRepository, BannerRepository>();
-
-            // Semantic Domain types
-            services.AddSingleton<ISemanticDomainContext, SemanticDomainContext>();
-            services.AddSingleton<ISemanticDomainRepository, SemanticDomainRepository>();
-
-            // Statistics types
-            services.AddSingleton<IStatisticsService, StatisticsService>();
         }
 
         /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -286,7 +292,7 @@ namespace BackendFramework
                 c.RoutePrefix = openApiRoutePrefix;
             });
 
-            // If an admin user has been created via the commandline, treat that as a single action and shut the
+            // If an admin user has been created via the command line, treat that as a single action and shut the
             // server down so the calling script knows it's been completed successfully or unsuccessfully.
             var userRepo = app.ApplicationServices.GetService<IUserRepository>();
             if (userRepo is not null && CreateAdminUser(userRepo))
@@ -339,30 +345,30 @@ namespace BackendFramework
             var existingUser = userRepo.GetAllUsers().Result.Find(x => x.Username == username);
             if (existingUser is not null)
             {
-                _logger.LogInformation($"User {username} already exists. Updating password and granting " +
-                                       "admin permissions.");
+                _logger.LogInformation(
+                    "User {User} already exists. Updating password and granting admin permissions.", username);
                 if (userRepo.ChangePassword(existingUser.Id, password).Result == ResultOfUpdate.NotFound)
                 {
-                    _logger.LogError($"Failed to find user {username}.");
+                    _logger.LogError("Failed to find user {User}.", username);
                     throw new AdminUserCreationException();
                 }
 
                 existingUser.IsAdmin = true;
                 if (userRepo.Update(existingUser.Id, existingUser, true).Result == ResultOfUpdate.NotFound)
                 {
-                    _logger.LogError($"Failed to find user {username}.");
+                    _logger.LogError("Failed to find user {User}.", username);
                     throw new AdminUserCreationException();
                 }
 
                 return true;
             }
 
-            _logger.LogInformation($"Creating admin user: {username} ({adminEmail})");
+            _logger.LogInformation("Creating admin user: {User} ({Email}).", username, adminEmail);
             var user = new User { Username = username, Password = password, Email = adminEmail, IsAdmin = true };
             var returnedUser = userRepo.Create(user).Result;
             if (returnedUser is null)
             {
-                _logger.LogError($"Failed to create admin user {username}, {adminEmail}.");
+                _logger.LogError("Failed to create admin user {User} ({Email}).", username, adminEmail);
                 throw new AdminUserCreationException();
             }
 

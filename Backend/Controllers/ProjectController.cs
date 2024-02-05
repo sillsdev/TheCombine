@@ -47,7 +47,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<User>))]
         public async Task<IActionResult> GetAllProjectUsers(string projectId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
             {
                 return Forbid();
             }
@@ -76,7 +77,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Project))]
         public async Task<IActionResult> GetProject(string projectId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
             }
@@ -103,7 +104,7 @@ namespace BackendFramework.Controllers
 
             // Get user.
             var currentUserId = _permissionService.GetUserId(HttpContext);
-            var currentUser = await _userRepo.GetUser(currentUserId);
+            var currentUser = await _userRepo.GetUser(currentUserId, false);
             if (currentUser is null)
             {
                 return NotFound(currentUserId);
@@ -112,15 +113,8 @@ namespace BackendFramework.Controllers
             // Give Project owner privileges to user who creates a Project.
             var userRole = new UserRole
             {
-                Permissions = new List<Permission>
-                {
-                    Permission.Owner,
-                    Permission.DeleteEditSettingsAndUsers,
-                    Permission.ImportExport,
-                    Permission.MergeAndReviewEntries,
-                    Permission.WordEntry
-                },
-                ProjectId = project.Id
+                ProjectId = project.Id,
+                Role = Role.Owner
             };
             userRole = await _userRoleRepo.Create(userRole);
 
@@ -146,7 +140,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> UpdateProject(string projectId, [FromBody, BindRequired] Project project)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.DeleteEditSettingsAndUsers))
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
             {
                 return Forbid();
             }
@@ -165,7 +160,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Project))]
         public async Task<IActionResult> PutChars(string projectId, [FromBody, BindRequired] Project project)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndReviewEntries))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.CharacterInventory, projectId))
             {
                 return Forbid();
             }
@@ -188,13 +183,17 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteProject(string projectId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Owner))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Archive, projectId))
             {
                 return Forbid();
             }
 
             // Sanitize user input.
-            if (!Sanitization.SanitizeId(projectId))
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+            }
+            catch
             {
                 return new UnsupportedMediaTypeResult();
             }

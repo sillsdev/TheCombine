@@ -13,7 +13,20 @@ charts:
       enabled: false
     global:
       awsS3Location: prod.thecombine.app
+      combineSmtpUsername: ""
+      imagePullPolicy: IfNotPresent
       pullSecretName: None
+    frontend:
+      configOffline: true
+      configEmailEnabled: false
+    maintenance:
+      localLangList:
+        - "ar"
+        - "en"
+        - "es"
+        - "fr"
+        - "pt"
+        - "zh"
 
     cert-proxy-client:
       enabled: true

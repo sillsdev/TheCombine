@@ -14,6 +14,8 @@
 
 import { Flag } from "./flag";
 import { Note } from "./note";
+import { Pronunciation } from "./pronunciation";
+import { ProtectReason } from "./protect-reason";
 import { Sense } from "./sense";
 import { Status } from "./status";
 
@@ -55,10 +57,10 @@ export interface Word {
   senses: Array<Sense>;
   /**
    *
-   * @type {Array<string>}
+   * @type {Array<Pronunciation>}
    * @memberof Word
    */
-  audio: Array<string>;
+  audio: Array<Pronunciation>;
   /**
    *
    * @type {string}
@@ -79,16 +81,16 @@ export interface Word {
   accessibility: Status;
   /**
    *
+   * @type {Array<ProtectReason>}
+   * @memberof Word
+   */
+  protectReasons?: Array<ProtectReason> | null;
+  /**
+   *
    * @type {Array<string>}
    * @memberof Word
    */
   history: Array<string>;
-  /**
-   *
-   * @type {string}
-   * @memberof Word
-   */
-  partOfSpeech?: string | null;
   /**
    *
    * @type {Array<string>}

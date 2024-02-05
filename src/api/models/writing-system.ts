@@ -23,17 +23,23 @@ export interface WritingSystem {
    * @type {string}
    * @memberof WritingSystem
    */
-  name: string;
-  /**
-   *
-   * @type {string}
-   * @memberof WritingSystem
-   */
   bcp47: string;
   /**
    *
    * @type {string}
    * @memberof WritingSystem
    */
+  name: string;
+  /**
+   *
+   * @type {string}
+   * @memberof WritingSystem
+   */
   font: string;
+  /**
+   *
+   * @type {boolean}
+   * @memberof WritingSystem
+   */
+  rtl?: boolean | null;
 }

@@ -1,14 +1,14 @@
 import { Tooltip, IconButton } from "@mui/material";
-import { ReactElement } from "react";
+import { MouseEventHandler, ReactElement, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
 interface IconButtonWithTooltipProps {
   icon: ReactElement;
-  text?: string;
+  text?: ReactNode;
   textId?: string;
-  small?: boolean;
-  onClick?: () => void;
-  buttonId?: string;
+  size?: "large" | "medium" | "small";
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  buttonId: string;
   side?: "bottom" | "left" | "right" | "top";
 }
 
@@ -25,7 +25,7 @@ export default function IconButtonWithTooltip(
       <span>
         <IconButton
           onClick={props.onClick}
-          size={props.small ? "small" : "medium"}
+          size={props.size || "medium"}
           id={props.buttonId}
           disabled={!props.onClick}
         >

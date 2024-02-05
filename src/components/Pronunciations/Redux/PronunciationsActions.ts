@@ -1,22 +1,21 @@
+import { Action, PayloadAction } from "@reduxjs/toolkit";
+
 import {
-  PronunciationsAction,
-  PronunciationsStatus,
-} from "components/Pronunciations/Redux/PronunciationsReduxTypes";
+  resetAction,
+  setPlayingAction,
+  setRecordingAction,
+} from "components/Pronunciations/Redux/PronunciationsReducer";
 
-export function playing(payload: string): PronunciationsAction {
-  return {
-    type: PronunciationsStatus.Playing,
-    payload,
-  };
+// Action Creation Functions
+
+export function playing(fileName: string): PayloadAction {
+  return setPlayingAction(fileName);
 }
 
-export function recording(payload: string): PronunciationsAction {
-  return {
-    type: PronunciationsStatus.Recording,
-    payload,
-  };
+export function recording(wordId: string): PayloadAction {
+  return setRecordingAction(wordId);
 }
 
-export function reset(): PronunciationsAction {
-  return { type: PronunciationsStatus.Default };
+export function resetPronunciations(): Action {
+  return resetAction();
 }

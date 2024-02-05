@@ -39,8 +39,13 @@ namespace BackendFramework.Controllers
             // }
 
             // Sanitize user input
-            if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId) ||
-                !Sanitization.SanitizeFileName(fileName))
+            try
+            {
+                fileName = Sanitization.SanitizeFileName(fileName);
+                projectId = Sanitization.SanitizeId(projectId);
+                wordId = Sanitization.SanitizeId(wordId);
+            }
+            catch
             {
                 return new UnsupportedMediaTypeResult();
             }
@@ -56,8 +61,8 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary>
-        /// Adds a pronunciation <see cref="FileUpload"/> to a <see cref="Word"/> and saves
-        /// locally to ~/.CombineFiles/{ProjectId}/Import/ExtractedLocation/Lift/audio
+        /// Adds a pronunciation <see cref="FileUpload"/> to a specified project word
+        /// and saves locally to ~/.CombineFiles/{ProjectId}/Import/ExtractedLocation/Lift/audio
         /// </summary>
         /// <returns> Id of updated word </returns>
         [HttpPost("upload", Name = "UploadAudioFile")]
@@ -65,13 +70,33 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UploadAudioFile(string projectId, string wordId,
             [FromForm] FileUpload fileUpload)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            return await UploadAudioFile(projectId, wordId, "", fileUpload);
+        }
+
+
+        /// <summary>
+        /// Adds a pronunciation <see cref="FileUpload"/> with a specified speaker to a project word
+        /// and saves locally to ~/.CombineFiles/{ProjectId}/Import/ExtractedLocation/Lift/audio
+        /// </summary>
+        /// <returns> Id of updated word </returns>
+        [HttpPost("upload/{speakerId}", Name = "UploadAudioFileWithSpeaker")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        public async Task<IActionResult> UploadAudioFile(string projectId, string wordId, string speakerId,
+            [FromForm] FileUpload fileUpload)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
             }
+            var userId = _permissionService.GetUserId(HttpContext);
 
             // sanitize user input
-            if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId))
+            try
+            {
+                projectId = Sanitization.SanitizeId(projectId);
+                wordId = Sanitization.SanitizeId(wordId);
+            }
+            catch
             {
                 return new UnsupportedMediaTypeResult();
             }
@@ -104,10 +129,11 @@ namespace BackendFramework.Controllers
             {
                 return NotFound(wordId);
             }
-            word.Audio.Add(Path.GetFileName(fileUpload.FilePath));
+            var audio = new Pronunciation(Path.GetFileName(fileUpload.FilePath), speakerId);
+            word.Audio.Add(audio);
 
             // Update the word with new audio file
-            await _wordService.Update(projectId, wordId, word);
+            await _wordService.Update(projectId, userId, wordId, word);
 
             return Ok(word.Id);
         }
@@ -117,18 +143,25 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> DeleteAudioFile(string projectId, string wordId, string fileName)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
             }
+            var userId = _permissionService.GetUserId(HttpContext);
 
             // sanitize user input
-            if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId))
+            try
+            {
+                fileName = Sanitization.SanitizeFileName(fileName);
+                projectId = Sanitization.SanitizeId(projectId);
+                wordId = Sanitization.SanitizeId(wordId);
+            }
+            catch
             {
                 return new UnsupportedMediaTypeResult();
             }
 
-            var newWord = await _wordService.Delete(projectId, wordId, fileName);
+            var newWord = await _wordService.Delete(projectId, userId, wordId, fileName);
             if (newWord is not null)
             {
                 return Ok(newWord.Id);

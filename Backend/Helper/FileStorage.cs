@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Runtime.Serialization;
 
 namespace BackendFramework.Helper
 {
@@ -12,6 +13,7 @@ namespace BackendFramework.Helper
     {
         private const string CombineFilesDir = ".CombineFiles";
         private const string AvatarsDir = "Avatars";
+        private const string ConsentDir = "Consent";
         private static readonly string ImportExtractedLocation = Path.Combine("Import", "ExtractedLocation");
         private static readonly string LiftImportSuffix = Path.Combine(ImportExtractedLocation, "Lift");
         private static readonly string AudioPathSuffix = Path.Combine(LiftImportSuffix, "audio");
@@ -19,16 +21,18 @@ namespace BackendFramework.Helper
         public enum FileType
         {
             Audio,
-            Avatar
+            Avatar,
         }
 
         /// <summary> Indicates that an error occurred locating the current user's home directory. </summary>
         [Serializable]
-        public class HomeFolderNotFoundException : Exception { }
+        public class HomeFolderNotFoundException : Exception
+        {
+            public HomeFolderNotFoundException() { }
 
-        /// <summary> Indicates an invalid input id. </summary>
-        [Serializable]
-        public class InvalidIdException : Exception { }
+            protected HomeFolderNotFoundException(SerializationInfo info, StreamingContext context)
+                : base(info, context) { }
+        }
 
         /// <summary>
         /// Generate a path to the file name of an audio file for the Project based on the Word ID.
@@ -36,10 +40,9 @@ namespace BackendFramework.Helper
         /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
         public static string GenerateAudioFilePathForWord(string projectId, string wordId)
         {
-            if (!Sanitization.SanitizeId(projectId) || !Sanitization.SanitizeId(wordId))
-            {
-                throw new InvalidIdException();
-            }
+            projectId = Sanitization.SanitizeId(projectId);
+            wordId = Sanitization.SanitizeId(wordId);
+
             return GenerateProjectFilePath(projectId, AudioPathSuffix, wordId, FileType.Audio);
         }
 
@@ -49,11 +52,7 @@ namespace BackendFramework.Helper
         /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
         public static string GenerateAudioFilePath(string projectId, string fileName)
         {
-            if (!Sanitization.SanitizeId(projectId))
-            {
-                throw new InvalidIdException();
-            }
-            return GenerateProjectFilePath(projectId, AudioPathSuffix, fileName);
+            return GenerateProjectFilePath(Sanitization.SanitizeId(projectId), AudioPathSuffix, fileName);
         }
 
         /// <summary>
@@ -62,11 +61,7 @@ namespace BackendFramework.Helper
         /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
         public static string GenerateAudioFileDirPath(string projectId, bool createDir = true)
         {
-            if (!Sanitization.SanitizeId(projectId))
-            {
-                throw new InvalidIdException();
-            }
-            return GenerateProjectDirPath(projectId, AudioPathSuffix, createDir);
+            return GenerateProjectDirPath(Sanitization.SanitizeId(projectId), AudioPathSuffix, createDir);
         }
 
         /// <summary>
@@ -76,11 +71,7 @@ namespace BackendFramework.Helper
         /// <remarks> This function is not expected to be used often. </remarks>
         public static string GenerateImportExtractedLocationDirPath(string projectId, bool createDir = true)
         {
-            if (!Sanitization.SanitizeId(projectId))
-            {
-                throw new InvalidIdException();
-            }
-            return GenerateProjectDirPath(projectId, ImportExtractedLocation, createDir);
+            return GenerateProjectDirPath(Sanitization.SanitizeId(projectId), ImportExtractedLocation, createDir);
         }
 
         /// <summary>
@@ -89,11 +80,7 @@ namespace BackendFramework.Helper
         /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
         public static string GenerateLiftImportDirPath(string projectId, bool createDir = true)
         {
-            if (!Sanitization.SanitizeId(projectId))
-            {
-                throw new InvalidIdException();
-            }
-            return GenerateProjectDirPath(projectId, LiftImportSuffix, createDir);
+            return GenerateProjectDirPath(Sanitization.SanitizeId(projectId), LiftImportSuffix, createDir);
         }
 
         /// <summary>
@@ -102,11 +89,16 @@ namespace BackendFramework.Helper
         /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
         public static string GenerateAvatarFilePath(string userId)
         {
-            if (!Sanitization.SanitizeId(userId))
-            {
-                throw new InvalidIdException();
-            }
-            return GenerateFilePath(AvatarsDir, userId, FileType.Avatar);
+            return GenerateFilePath(AvatarsDir, Sanitization.SanitizeId(userId), FileType.Avatar);
+        }
+
+        /// <summary>
+        /// Generate the path to where Consent audio/images are stored.
+        /// </summary>
+        /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
+        public static string GenerateConsentFilePath(string speakerId)
+        {
+            return GenerateFilePath(ConsentDir, Sanitization.SanitizeId(speakerId));
         }
 
         /// <summary>
@@ -115,11 +107,7 @@ namespace BackendFramework.Helper
         /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
         public static string GetProjectDir(string projectId)
         {
-            if (!Sanitization.SanitizeId(projectId))
-            {
-                throw new InvalidIdException();
-            }
-            return GenerateProjectDirPath(projectId, "", false);
+            return GenerateProjectDirPath(Sanitization.SanitizeId(projectId), "", false);
         }
 
         /// <summary> Get the path to the home directory of the current user. </summary>
@@ -182,8 +170,7 @@ namespace BackendFramework.Helper
 
         private static string GenerateFilePath(string suffixPath, string fileName)
         {
-            var dirPath = GenerateDirPath(suffixPath, true);
-            return Path.Combine(dirPath, fileName);
+            return Path.Combine(GenerateDirPath(suffixPath, true), fileName);
         }
 
         private static string GenerateFilePath(string suffixPath, string fileNameSuffix, FileType type)
@@ -208,6 +195,12 @@ namespace BackendFramework.Helper
                 FileType.Avatar => ".jpg",
                 _ => throw new NotImplementedException()
             };
+        }
+
+        /// <summary> Generate the path of the WritingSystems subdirectory of a LIFT directory </summary>
+        public static string GenerateWritingsSystemsSubdirPath(string dir)
+        {
+            return Path.Combine(dir, "WritingSystems");
         }
     }
 }

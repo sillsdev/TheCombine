@@ -1,43 +1,52 @@
-import { Grid, Typography } from "@mui/material";
-import React from "react";
+import { Grid } from "@mui/material";
+import { CSSProperties, ReactElement } from "react";
 
-interface ImmutableExistingDataProps {
-  vernacular: string;
-  gloss: string;
+import { Gloss } from "api/models";
+import { TypographyWithFont } from "utilities/fontComponents";
+
+/** Style with a top dotted line if the index isn't 0. */
+function TopStyle(index: number, style?: "solid" | "dotted"): CSSProperties {
+  return index ? { borderTopStyle: style ?? "solid", borderTopWidth: 1 } : {};
 }
 
-/**
- * Displays a word users cannot edit any more
- */
-export class ImmutableExistingData extends React.Component<ImmutableExistingDataProps> {
-  render() {
-    return (
-      <Grid container wrap="nowrap" justifyContent="space-around">
-        <Grid
-          item
-          xs={5}
-          key={"vernacular_" + this.props.vernacular}
-          style={{
-            borderBottomStyle: "dotted",
-            borderBottomWidth: 1,
-            position: "relative",
-          }}
-        >
-          <Typography variant="body1">{this.props.vernacular}</Typography>
-        </Grid>
-        <Grid
-          item
-          xs={5}
-          key={"gloss_" + this.props.gloss}
-          style={{
-            borderBottomStyle: "dotted",
-            borderBottomWidth: 1,
-            position: "relative",
-          }}
-        >
-          <Typography variant="body1">{this.props.gloss}</Typography>
-        </Grid>
+interface ImmutableExistingDataProps {
+  glosses: Gloss[];
+  index: number;
+  vernacular: string;
+}
+
+/** Displays a word-sense that the user cannot edit. */
+export default function ImmutableExistingData(
+  props: ImmutableExistingDataProps
+): ReactElement {
+  return (
+    <Grid container wrap="nowrap" justifyContent="space-around">
+      <Grid
+        item
+        style={{ ...TopStyle(props.index), position: "relative" }}
+        xs={5}
+      >
+        <TypographyWithFont variant="body1" vernacular>
+          {props.vernacular}
+        </TypographyWithFont>
       </Grid>
-    );
-  }
+      <Grid
+        item
+        style={{ ...TopStyle(props.index), position: "relative" }}
+        xs={5}
+      >
+        {props.glosses.map((g, i) => (
+          <TypographyWithFont
+            analysis
+            key={i}
+            lang={g.language}
+            style={TopStyle(i, "dotted")}
+            variant="body1"
+          >
+            {g.def}
+          </TypographyWithFont>
+        ))}
+      </Grid>
+    </Grid>
+  );
 }

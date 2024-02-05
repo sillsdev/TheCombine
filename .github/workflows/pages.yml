@@ -14,8 +14,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
-        uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
         with:
           disable-sudo: true
           egress-policy: block
@@ -23,10 +25,10 @@ jobs:
             files.pythonhosted.org:443
             github.com:443
             pypi.org:443
-      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
-      - uses: actions/setup-python@d27e3f3d7c64b4bbf8e4abfb9b63b83e846e0435 # v4.5.0
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5.0.0
         with:
-          python-version: 3.9
+          python-version: 3.11
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip

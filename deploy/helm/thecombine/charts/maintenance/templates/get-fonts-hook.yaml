@@ -1,0 +1,55 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "install-fonts"
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-install, post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    metadata:
+      creationTimestamp: null
+      name: "{{ .Release.Name }}"
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      containers:
+      - image: sillsdev/aws-kubectl:0.3.0
+        imagePullPolicy: Always
+        name: "install-fonts"
+        command:
+          - kubectl
+        args:
+          - -n
+          - thecombine
+          - exec
+          - deployment/maintenance
+          - --
+          - /usr/bin/python3
+          - /home/user/.local/bin/get_fonts.py
+{{- if .Values.localLangList }}
+          - --langs
+          {{- range $lang := .Values.localLangList }}
+          - {{ $lang | quote }}
+          {{- end }}
+{{- end }}
+        resources: {}
+        securityContext:
+          capabilities: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: Default
+      restartPolicy: Never
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30

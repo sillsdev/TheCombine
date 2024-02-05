@@ -1,45 +1,54 @@
-import { Project, User } from "api/models";
-import { getAllUsersInCurrentProject, updateProject } from "backend";
+import { Action, PayloadAction } from "@reduxjs/toolkit";
+
+import { Project, Speaker, User } from "api/models";
+import { getAllProjectUsers, updateProject } from "backend";
 import { setProjectId } from "backend/localStorage";
 import {
-  ProjectAction,
-  ProjectActionType,
-} from "components/Project/ProjectReduxTypes";
+  resetAction,
+  setProjectAction,
+  setSpeakerAction,
+  setUsersAction,
+} from "components/Project/ProjectReducer";
 import { StoreStateDispatch } from "types/Redux/actions";
+import { newProject } from "types/project";
 
-export function setCurrentProject(payload?: Project): ProjectAction {
-  return {
-    type: ProjectActionType.SET_CURRENT_PROJECT,
-    payload,
+// Action Creation Functions
+
+export function resetCurrentProject(): Action {
+  return resetAction();
+}
+
+export function setCurrentProject(project?: Project): PayloadAction {
+  return setProjectAction(project ?? newProject());
+}
+
+export function setCurrentSpeaker(speaker?: Speaker): PayloadAction {
+  return setSpeakerAction(speaker);
+}
+
+export function setCurrentUsers(users?: User[]): PayloadAction {
+  return setUsersAction(users ?? []);
+}
+
+// Dispatch Functions
+
+export function asyncRefreshProjectUsers(projectId: string) {
+  return async (dispatch: StoreStateDispatch) => {
+    dispatch(setCurrentUsers(await getAllProjectUsers(projectId)));
   };
 }
 
-function setCurrentProjectUsers(payload?: User[]): ProjectAction {
-  return {
-    type: ProjectActionType.SET_CURRENT_PROJECT_USERS,
-    payload,
+export function asyncUpdateCurrentProject(project: Project) {
+  return async (dispatch: StoreStateDispatch) => {
+    await updateProject(project);
+    dispatch(setCurrentProject(project));
   };
 }
 
 export function clearCurrentProject() {
   return (dispatch: StoreStateDispatch) => {
     setProjectId();
-    dispatch(setCurrentProject());
-    dispatch(setCurrentProjectUsers());
-  };
-}
-
-export async function saveChangesToProject(
-  project: Project,
-  dispatch: StoreStateDispatch
-) {
-  dispatch(setCurrentProject(project));
-  await updateProject(project);
-}
-
-export function asyncRefreshCurrentProjectUsers() {
-  return async (dispatch: StoreStateDispatch) => {
-    dispatch(setCurrentProjectUsers(await getAllUsersInCurrentProject()));
+    dispatch(resetCurrentProject());
   };
 }
 

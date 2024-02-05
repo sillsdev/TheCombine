@@ -12,6 +12,8 @@
  * Do not edit the class manually.
  */
 
+import { Role } from "./role";
+
 /**
  *
  * @export
@@ -30,6 +32,12 @@ export interface EmailInvite {
    * @memberof EmailInvite
    */
   token: string;
+  /**
+   *
+   * @type {Role}
+   * @memberof EmailInvite
+   */
+  role: Role;
   /**
    *
    * @type {string}

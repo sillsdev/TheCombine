@@ -1,5 +1,5 @@
-# User guide build environment using Python 3.11.1.
-FROM python@sha256:7efc1ae7e6e9c5263d87845cb00f6ab7f6b27670cae29c9d93fa7910d6ab12c0 AS user_guide_builder
+# User guide build environment
+FROM python:3.10.13-slim-bookworm AS user_guide_builder
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -16,7 +16,7 @@ COPY docs/user_guide docs/user_guide
 RUN tox -e user-guide
 
 # Frontend build environment.
-FROM node:18.16-bullseye-slim AS frontend_builder
+FROM node:18.19.0-bookworm-slim AS frontend_builder
 WORKDIR /app
 
 # Install app dependencies.
@@ -28,15 +28,17 @@ COPY . ./
 RUN npm run build
 
 # Production environment.
-FROM nginx:1.23
+FROM nginx:1.25
 
 WORKDIR /app
 
-ENV USER_GUIDE_HOST_DIR /usr/share/nginx/user_guide
-ENV FRONTEND_HOST_DIR /usr/share/nginx/html
+ENV HOST_DIR /usr/share/nginx
+ENV USER_GUIDE_HOST_DIR ${HOST_DIR}/user_guide
+ENV FRONTEND_HOST_DIR ${HOST_DIR}/html
 
 RUN mkdir /etc/nginx/templates
 RUN mkdir /etc/nginx/page_templates
+RUN mkdir ${HOST_DIR}/fonts
 RUN mkdir ${FRONTEND_HOST_DIR}/scripts
 RUN mkdir ${FRONTEND_HOST_DIR}/url_moved
 

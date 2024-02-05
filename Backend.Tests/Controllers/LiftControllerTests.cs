@@ -19,15 +19,31 @@ using static System.Linq.Enumerable;
 
 namespace Backend.Tests.Controllers
 {
-    public class LiftControllerTests
+    public class LiftControllerTests : IDisposable
     {
         private IProjectRepository _projRepo = null!;
+        private ISemanticDomainRepository _semDomRepo = null!;
+        private ISpeakerRepository _speakerRepo = null!;
         private IWordRepository _wordRepo = null!;
         private ILiftService _liftService = null!;
         private IHubContext<CombineHub> _notifyService = null!;
         private IPermissionService _permissionService = null!;
         private IWordService _wordService = null!;
         private LiftController _liftController = null!;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _liftController?.Dispose();
+            }
+        }
 
         private ILogger<LiftController> _logger = null!;
         private string _projId = null!;
@@ -38,8 +54,10 @@ namespace Backend.Tests.Controllers
         public void Setup()
         {
             _projRepo = new ProjectRepositoryMock();
+            _semDomRepo = new SemanticDomainRepositoryMock();
+            _speakerRepo = new SpeakerRepositoryMock();
             _wordRepo = new WordRepositoryMock();
-            _liftService = new LiftService();
+            _liftService = new LiftService(_semDomRepo, _speakerRepo);
             _notifyService = new HubContextMock();
             _permissionService = new PermissionServiceMock();
             _wordService = new WordService(_wordRepo);
@@ -126,9 +144,9 @@ namespace Backend.Tests.Controllers
             return name;
         }
 
-        private static FileUpload InitFile(Stream fstream, string filename)
+        private static FileUpload InitFile(Stream stream, string filename)
         {
-            var formFile = new FormFile(fstream, 0, fstream.Length, "name", filename);
+            var formFile = new FormFile(stream, 0, stream.Length, "name", filename);
             var fileUpload = new FileUpload { File = formFile, Name = "FileName" };
 
             return fileUpload;
@@ -143,6 +161,16 @@ namespace Backend.Tests.Controllers
             return extractionPath;
         }
 
+        /// <summary> Return the given file name with its .webm extension (if it has one) changed to .wav. </summary>
+        private static string ChangeWebmToWav(string fileName)
+        {
+            if (Path.GetExtension(fileName).Equals(".webm", StringComparison.OrdinalIgnoreCase))
+            {
+                return Path.ChangeExtension(fileName, ".wav");
+            }
+            return fileName;
+        }
+
         public class RoundTripObj
         {
             public string Filename { get; }
@@ -151,10 +179,13 @@ namespace Backend.Tests.Controllers
             public int NumOfWords { get; }
             public string EntryGuid { get; }
             public string SenseGuid { get; }
+            public bool HasGramInfo { get; }
+            public bool HasDefs { get; }
 
             public RoundTripObj(
                 string filename, string language, List<string> audio,
-                int numOfWords, string entryGuid = "", string senseGuid = "")
+                int numOfWords, string entryGuid = "", string senseGuid = "",
+                bool hasGramInfo = false, bool hasDefs = false)
             {
                 Filename = filename;
                 Language = language;
@@ -162,6 +193,8 @@ namespace Backend.Tests.Controllers
                 NumOfWords = numOfWords;
                 EntryGuid = entryGuid;
                 SenseGuid = senseGuid;
+                HasGramInfo = hasGramInfo;
+                HasDefs = hasDefs;
             }
         }
 
@@ -197,6 +230,99 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestUploadLiftFileNoPermission()
+        {
+            _liftController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _liftController.UploadLiftFile(_projId, new FileUpload()).Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestUploadLiftFileInvalidProjectId()
+        {
+            var result = _liftController.UploadLiftFile("../hack", new FileUpload()).Result;
+            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
+        }
+
+        [Test]
+        public void TestUploadLiftFileAlreadyImported()
+        {
+            var projId = _projRepo.Create(new Project { Name = "already has import", LiftImported = true }).Result!.Id;
+            var result = _liftController.UploadLiftFile(projId, new FileUpload()).Result;
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+            Assert.That(((BadRequestObjectResult)result).Value, Contains.Substring("LIFT"));
+        }
+
+        [Test]
+        public void TestUploadLiftFileBadFile()
+        {
+            var result = _liftController.UploadLiftFile(_projId, new FileUpload()).Result;
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+            Assert.That(((BadRequestObjectResult)result).Value, Is.InstanceOf<string>());
+        }
+
+        [Test]
+        public void TestUploadLiftFileAndGetWritingSystems()
+        {
+            var fileName = "Natqgu.zip";
+            var pathToZip = Path.Combine(Util.AssetsDir, fileName);
+
+            Assert.That(_liftService.RetrieveImport(UserId), Is.Null);
+
+            // Upload the zip file.
+            // Generate api parameter with file stream.
+            using (var fileStream = File.OpenRead(pathToZip))
+            {
+                var fileUpload = InitFile(fileStream, fileName);
+                var result = _liftController.UploadLiftFileAndGetWritingSystems(fileUpload, UserId).Result;
+                Assert.That(result, Is.TypeOf<OkObjectResult>());
+                var writingSystems = (result as OkObjectResult)!.Value as List<WritingSystem>;
+                Assert.That(writingSystems, Has.Count.Not.Zero);
+            }
+
+            Assert.That(_liftService.RetrieveImport(UserId), Is.Not.Null);
+            _liftService.DeleteImport(UserId);
+        }
+
+        [Test]
+        public void TestFinishUploadLiftFileNothingToFinish()
+        {
+            var proj = Util.RandomProject();
+            proj = _projRepo.Create(proj).Result;
+
+            // No extracted import dir stored for user.
+            Assert.That(_liftService.RetrieveImport(UserId), Is.Null);
+            var result = _liftController.FinishUploadLiftFile(proj!.Id, UserId).Result;
+            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+
+            // Empty extracted import dir stored for user.
+            _liftService.StoreImport(UserId, "  ");
+            result = _liftController.FinishUploadLiftFile(proj!.Id, UserId).Result;
+            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+
+            // Nonsense extracted import dir stored for user.
+            _liftService.StoreImport(UserId, "not-a-real-path");
+            result = _liftController.FinishUploadLiftFile(proj!.Id, UserId).Result;
+            Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
+            Assert.That(_liftService.RetrieveImport(UserId), Is.Null);
+        }
+
+        [Test]
+        public void TestFinishUploadLiftFileNoPermission()
+        {
+            _liftController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _liftController.FinishUploadLiftFile(_projId).Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestFinishUploadLiftFileInvalidProjectId()
+        {
+            var result = _liftController.FinishUploadLiftFile("../hack", UserId).Result;
+            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
+        }
+
+        [Test]
         public async Task TestModifiedTimeExportsToLift()
         {
             var word = Util.RandomWord(_projId);
@@ -206,16 +332,87 @@ namespace Backend.Tests.Controllers
 
             await _liftController.CreateLiftExportThenSignal(_projId, UserId);
             var liftContents = await DownloadAndReadLift(_liftController, _projId);
-            Assert.That(liftContents, Contains.Substring("dateCreated=\"1000-01-01T00:00:00Z\""));
-            Assert.That(liftContents, Contains.Substring("dateModified=\"2000-01-01T00:00:00Z\""));
+            Assert.That(liftContents, Does.Contain("dateCreated=\"1000-01-01T00:00:00Z\""));
+            Assert.That(liftContents, Does.Contain("dateModified=\"2000-01-01T00:00:00Z\""));
+        }
+
+        [Test]
+        public void TestExportLiftFileNoPermission()
+        {
+            _liftController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _liftController.ExportLiftFile(_projId).Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestExportLiftFileInvalidProjectId()
+        {
+            var result = _liftController.ExportLiftFile("../hack").Result;
+            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
+        }
+
+        [Test]
+        public void TestExportLiftFileNoProject()
+        {
+            var result = _liftController.ExportLiftFile("non-existent-project").Result;
+            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+        }
+
+        [Test]
+        public void TestExportLiftFileNoWordsInProject()
+        {
+            var result = _liftController.ExportLiftFile(_projId).Result;
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
         }
 
         [Test]
         public void TestExportInvalidProjectId()
         {
             const string invalidProjectId = "INVALID_ID";
-            Assert.ThrowsAsync<MissingProjectException>(
-                async () => await _liftController.CreateLiftExportThenSignal(invalidProjectId, UserId));
+            Assert.That(
+                async () => await _liftController.CreateLiftExportThenSignal(invalidProjectId, UserId),
+                Throws.TypeOf<MissingProjectException>());
+        }
+
+        [Test]
+        public void TestDownloadLiftFileNoPermission()
+        {
+            _liftController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _liftController.DownloadLiftFile(_projId).Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestCanUploadLiftNoPermission()
+        {
+            _liftController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _liftController.CanUploadLift(_projId).Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void TestCanUploadLiftInvalidProjectId()
+        {
+            var result = _liftController.CanUploadLift("../hack").Result;
+            Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
+        }
+
+        [Test]
+        public void TestCanUploadLiftFalse()
+        {
+            var projId = _projRepo.Create(new Project { Name = "has import", LiftImported = true }).Result!.Id;
+            var result = _liftController.CanUploadLift(projId).Result;
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(((OkObjectResult)result).Value, Is.False);
+        }
+
+        [Test]
+        public void TestCanUploadLiftTrue()
+        {
+            var projId = _projRepo.Create(new Project { Name = "has no import", LiftImported = false }).Result!.Id;
+            var result = _liftController.CanUploadLift(projId).Result;
+            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(((OkObjectResult)result).Value, Is.True);
         }
 
         /// <summary>
@@ -238,41 +435,46 @@ namespace Backend.Tests.Controllers
             word.Id = "";
             word.Vernacular = "updated";
 
-            await _wordService.Update(_projId, wordToUpdate.Id, word);
-            await _wordService.DeleteFrontierWord(_projId, wordToDelete.Id);
+            await _wordService.Update(_projId, UserId, wordToUpdate.Id, word);
+            await _wordService.DeleteFrontierWord(_projId, UserId, wordToDelete.Id);
 
             await _liftController.CreateLiftExportThenSignal(_projId, UserId);
             var text = await DownloadAndReadLift(_liftController, _projId);
             // TODO: Add SIL or other XML assertion library and verify with xpath that the correct entries are
             //      kept vs deleted
             // Make sure we exported 2 live and one dead entry
-            Assert.That(Regex.Matches(text, "<entry").Count, Is.EqualTo(3));
+            Assert.That(Regex.Matches(text, "<entry"), Has.Count.EqualTo(3));
             // There is only one deleted word
-            Assert.That(text.IndexOf("dateDeleted"), Is.EqualTo(text.LastIndexOf("dateDeleted")));
+            Assert.That(text.IndexOf("dateDeleted", StringComparison.Ordinal),
+                Is.EqualTo(text.LastIndexOf("dateDeleted", StringComparison.Ordinal)));
 
             // Delete the export
-            await _liftController.DeleteLiftFile(UserId);
+            _liftController.DeleteLiftFile(UserId);
             var notFoundResult = await _liftController.DownloadLiftFile(_projId, UserId);
-            Assert.That(notFoundResult is NotFoundObjectResult);
+            Assert.That(notFoundResult, Is.TypeOf<NotFoundObjectResult>());
         }
 
         private static RoundTripObj[] _roundTripCases =
         {
             new("Gusillaay.zip", "gsl-Qaaa-x-orth", new List<string>(), 8045),
             new("GusillaayNoTopLevelFolder.zip", "gsl-Qaaa-x-orth", new List<string>(), 8045),
-            new("Lotud.zip", "dtr", new List<string>(), 5400),
-            new("Natqgu.zip", "qaa-x-stc-natqgu", new List<string>(), 11570),
-            new("Resembli.zip", "ags", new List<string>(), 255),
-            new("RWC.zip", "es", new List<string>(), 132),
-            new("Sena.zip", "seh", new List<string>(), 1462),
+            new("Lotud.zip", "dtr", new List<string>(), 5400, "", "", true, true),
+            new("Natqgu.zip", "qaa-x-stc-natqgu", new List<string>(), 11570, "", "", true, true),
+            new("Resembli.zip", "ags", new List<string>(), 255, "", "", true, true),
+            new("RWC.zip", "es", new List<string>(), 132, "", "", true),
+            new("Sena.zip", "seh", new List<string>(), 1462, "", "", true, true),
             new(
                 "SingleEntryLiftWithSound.zip", "ptn", new List<string> { "short.mp3" }, 1,
                 "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone entry*/,
-                "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/),
+                "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/, true),
             new(
                 "SingleEntryLiftWithTwoSound.zip", "ptn", new List<string> { "short.mp3", "short1.mp3" }, 1,
                 "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone entry*/,
-                "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/)
+                "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/, true),
+            new(
+                "SingleEntryLiftWithWebmSound.zip", "ptn", new List<string> { "short.webm" }, 1,
+                "50398a34-276a-415c-b29e-3186b0f08d8b" /*guid of the lone entry*/,
+                "e44420dd-a867-4d71-a43f-e472fd3a8f82" /*id of its first sense*/, true)
         };
 
         [TestCaseSource(nameof(_roundTripCases))]
@@ -280,7 +482,7 @@ namespace Backend.Tests.Controllers
         {
             // This test assumes you have the starting .zip (Filename) included in your project files.
             var pathToStartZip = Path.Combine(Util.AssetsDir, roundTripObj.Filename);
-            Assert.IsTrue(File.Exists(pathToStartZip));
+            Assert.That(File.Exists(pathToStartZip), Is.True);
 
             // Roundtrip Part 1
 
@@ -290,42 +492,46 @@ namespace Backend.Tests.Controllers
             proj1 = _projRepo.Create(proj1).Result;
 
             // Upload the zip file.
-            // Generate api parameter with filestream.
-            using (var stream = File.OpenRead(pathToStartZip))
+            // Generate api parameter with file stream.
+            using (var fileStream = File.OpenRead(pathToStartZip))
             {
-                var fileUpload = InitFile(stream, roundTripObj.Filename);
+                var fileUpload = InitFile(fileStream, roundTripObj.Filename);
 
                 // Make api call.
                 var result = _liftController.UploadLiftFile(proj1!.Id, fileUpload).Result;
-                Assert.That(result is OkObjectResult);
+                Assert.That(result, Is.TypeOf<OkObjectResult>());
             }
 
             proj1 = _projRepo.GetProject(proj1.Id).Result;
-            if (proj1 is null)
-            {
-                Assert.Fail();
-                return;
-            }
-
-            Assert.That(proj1.LiftImported);
+            Assert.That(proj1, Is.Not.Null);
+            Assert.That(proj1!.LiftImported, Is.True);
+            Assert.That(proj1.DefinitionsEnabled, Is.EqualTo(roundTripObj.HasDefs));
+            Assert.That(proj1.GrammaticalInfoEnabled, Is.EqualTo(roundTripObj.HasGramInfo));
 
             var allWords = _wordRepo.GetAllWords(proj1.Id).Result;
-            Assert.AreEqual(allWords.Count, roundTripObj.NumOfWords);
+            Assert.That(allWords.Count, Is.EqualTo(roundTripObj.NumOfWords));
 
-            // We are currently only testing guids on the single-entry data sets.
-            if (roundTripObj.EntryGuid != "" && allWords.Count == 1)
+            // We are currently only testing guids and imported audio on the single-entry data sets.
+            if (allWords.Count == 1)
             {
-                Assert.AreEqual(allWords[0].Guid.ToString(), roundTripObj.EntryGuid);
+                var word = allWords[0].Clone();
+                Assert.That(roundTripObj.EntryGuid, Is.Not.EqualTo(""));
+                Assert.That(word.Guid.ToString(), Is.EqualTo(roundTripObj.EntryGuid));
                 if (roundTripObj.SenseGuid != "")
                 {
-                    Assert.AreEqual(allWords[0].Senses[0].Guid.ToString(), roundTripObj.SenseGuid);
+                    Assert.That(word.Senses[0].Guid.ToString(), Is.EqualTo(roundTripObj.SenseGuid));
+                }
+                foreach (var audio in word.Audio)
+                {
+                    Assert.That(roundTripObj.AudioFiles, Does.Contain(Path.GetFileName(audio.FileName)));
+                    Assert.That(audio.Protected, Is.True);
                 }
             }
 
             // Assert that the first SemanticDomain doesn't have an empty MongoId.
             if (allWords[0].Senses.Count > 0 && allWords[0].Senses[0].SemanticDomains.Count > 0)
             {
-                Assert.IsNotEmpty(allWords[0].Senses[0].SemanticDomains[0].MongoId);
+                Assert.That(allWords[0].Senses[0].SemanticDomains[0].MongoId, Is.Not.Empty);
             }
 
             // Export.
@@ -333,18 +539,19 @@ namespace Backend.Tests.Controllers
             var exportedDirectory = FileOperations.ExtractZipFile(exportedFilePath, null);
 
             // Assert the file was created with desired hierarchy.
-            Assert.That(Directory.Exists(exportedDirectory));
+            Assert.That(Directory.Exists(exportedDirectory), Is.True);
             var sanitizedProjName = Sanitization.MakeFriendlyForPath(proj1.Name, "Lift");
             var exportedProjDir = Path.Combine(exportedDirectory, sanitizedProjName);
-            Assert.That(Directory.Exists(Path.Combine(exportedProjDir, "audio")));
+            Assert.That(Directory.Exists(Path.Combine(exportedProjDir, "audio")), Is.True);
             foreach (var audioFile in roundTripObj.AudioFiles)
             {
-                Assert.That(File.Exists(Path.Combine(exportedProjDir, "audio", audioFile)));
+                var path = Path.Combine(exportedProjDir, "audio", ChangeWebmToWav(audioFile));
+                Assert.That(File.Exists(path), Is.True, $"No file exists at this path: {path}");
             }
-            Assert.That(Directory.Exists(Path.Combine(exportedProjDir, "WritingSystems")));
-            Assert.That(File.Exists(Path.Combine(
-                exportedProjDir, "WritingSystems", roundTripObj.Language + ".ldml")));
-            Assert.That(File.Exists(Path.Combine(exportedProjDir, sanitizedProjName + ".lift")));
+            var writingSystemsDir = FileStorage.GenerateWritingsSystemsSubdirPath(exportedProjDir);
+            Assert.That(Directory.Exists(writingSystemsDir), Is.True);
+            Assert.That(File.Exists(Path.Combine(writingSystemsDir, roundTripObj.Language + ".ldml")), Is.True);
+            Assert.That(File.Exists(Path.Combine(exportedProjDir, sanitizedProjName + ".lift")), Is.True);
             Directory.Delete(exportedDirectory, true);
 
             // Clean up.
@@ -358,35 +565,37 @@ namespace Backend.Tests.Controllers
             proj2 = _projRepo.Create(proj2).Result;
 
             // Upload the exported words again.
-            // Generate api parameter with filestream.
-            using (var fstream = File.OpenRead(exportedFilePath))
+            // Generate api parameter with file stream.
+            using (var fileStream = File.OpenRead(exportedFilePath))
             {
-                var fileUpload = InitFile(fstream, roundTripObj.Filename);
+                var fileUpload = InitFile(fileStream, roundTripObj.Filename);
 
                 // Make api call.
                 var result2 = _liftController.UploadLiftFile(proj2!.Id, fileUpload).Result;
-                Assert.That(result2 is OkObjectResult);
+                Assert.That(result2, Is.TypeOf<OkObjectResult>());
             }
 
             proj2 = _projRepo.GetProject(proj2.Id).Result;
-            if (proj2 is null)
-            {
-                Assert.Fail();
-                return;
-            }
+            Assert.That(proj2, Is.Not.Null);
 
             // Clean up zip file.
             File.Delete(exportedFilePath);
 
+            // Ensure that the definitions and grammatical info weren't all lost.
+            Assert.That(proj2!.DefinitionsEnabled, Is.EqualTo(roundTripObj.HasDefs));
+            Assert.That(proj2.GrammaticalInfoEnabled, Is.EqualTo(roundTripObj.HasGramInfo));
+
             allWords = _wordRepo.GetAllWords(proj2.Id).Result;
             Assert.That(allWords, Has.Count.EqualTo(roundTripObj.NumOfWords));
+
             // We are currently only testing guids on the single-entry data sets.
             if (roundTripObj.EntryGuid != "" && allWords.Count == 1)
             {
-                Assert.AreEqual(allWords[0].Guid.ToString(), roundTripObj.EntryGuid);
+                var word = allWords[0];
+                Assert.That(word.Guid.ToString(), Is.EqualTo(roundTripObj.EntryGuid));
                 if (roundTripObj.SenseGuid != "")
                 {
-                    Assert.AreEqual(allWords[0].Senses[0].Guid.ToString(), roundTripObj.SenseGuid);
+                    Assert.That(word.Senses[0].Guid.ToString(), Is.EqualTo(roundTripObj.SenseGuid));
                 }
             }
 
@@ -395,20 +604,19 @@ namespace Backend.Tests.Controllers
             exportedDirectory = FileOperations.ExtractZipFile(exportedFilePath, null);
 
             // Assert the file was created with desired hierarchy.
-            Assert.That(Directory.Exists(exportedDirectory));
+            Assert.That(Directory.Exists(exportedDirectory), Is.True);
             sanitizedProjName = Sanitization.MakeFriendlyForPath(proj2.Name, "Lift");
             exportedProjDir = Path.Combine(exportedDirectory, sanitizedProjName);
-            Assert.That(Directory.Exists(Path.Combine(exportedProjDir, "audio")));
+            Assert.That(Directory.Exists(Path.Combine(exportedProjDir, "audio")), Is.True);
             foreach (var audioFile in roundTripObj.AudioFiles)
             {
-                var path = Path.Combine(exportedProjDir, "audio", audioFile);
-                Assert.That(File.Exists(path),
-                    $"The file {audioFile} can not be found at this path: {path}");
+                var path = Path.Combine(exportedProjDir, "audio", ChangeWebmToWav(audioFile));
+                Assert.That(File.Exists(path), Is.True, $"No file exists at this path: {path}");
             }
-            Assert.That(Directory.Exists(Path.Combine(exportedProjDir, "WritingSystems")));
-            Assert.That(File.Exists(Path.Combine(
-                exportedProjDir, "WritingSystems", roundTripObj.Language + ".ldml")));
-            Assert.That(File.Exists(Path.Combine(exportedProjDir, sanitizedProjName + ".lift")));
+            writingSystemsDir = FileStorage.GenerateWritingsSystemsSubdirPath(exportedProjDir);
+            Assert.That(Directory.Exists(writingSystemsDir), Is.True);
+            Assert.That(File.Exists(Path.Combine(writingSystemsDir, roundTripObj.Language + ".ldml")), Is.True);
+            Assert.That(File.Exists(Path.Combine(exportedProjDir, sanitizedProjName + ".lift")), Is.True);
             Directory.Delete(exportedDirectory, true);
 
             // Clean up.

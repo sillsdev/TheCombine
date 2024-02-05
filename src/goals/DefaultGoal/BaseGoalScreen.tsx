@@ -1,33 +1,34 @@
 import loadable from "@loadable/component";
-import React, { ReactElement, useEffect } from "react";
+import { ReactElement, useEffect } from "react";
 
 import { setCurrentGoal } from "components/GoalTimeline/Redux/GoalActions";
 import PageNotFound from "components/PageNotFound/component";
 import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
 import Loading from "goals/DefaultGoal/Loading";
-import { clearTree } from "goals/MergeDupGoal/Redux/MergeDupActions";
-import { clearReviewEntriesState } from "goals/ReviewEntries/ReviewEntriesComponent/Redux/ReviewEntriesActions";
+import { clearTree } from "goals/MergeDuplicates/Redux/MergeDupsActions";
+import { resetReviewEntries } from "goals/ReviewEntries/Redux/ReviewEntriesActions";
 import { StoreState } from "types";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 
-const CharInv = loadable(
-  () => import("goals/CreateCharInv/CharInvComponent/CharInv")
+const CharacterInventory = loadable(() => import("goals/CharacterInventory"));
+const MergeDup = loadable(() => import("goals/MergeDuplicates"));
+const ReviewDeferredDups = loadable(
+  () => import("goals/ReviewDeferredDuplicates")
 );
-const MergeDup = loadable(() => import("goals/MergeDupGoal/MergeDupComponent"));
-const ReviewEntriesComponent = loadable(
-  () => import("goals/ReviewEntries/ReviewEntriesComponent")
-);
+const ReviewEntries = loadable(() => import("goals/ReviewEntries"));
 
 function displayComponent(goal: Goal): ReactElement {
   const isCompleted = goal.status === GoalStatus.Completed;
   switch (goal.goalType) {
     case GoalType.CreateCharInv:
-      return <CharInv completed={isCompleted} />;
+      return <CharacterInventory completed={isCompleted} />;
     case GoalType.MergeDups:
       return <MergeDup completed={isCompleted} />;
+    case GoalType.ReviewDeferredDups:
+      return <ReviewDeferredDups completed={isCompleted} />;
     case GoalType.ReviewEntries:
-      return <ReviewEntriesComponent />;
+      return <ReviewEntries completed={isCompleted} />;
     default:
       return <PageNotFound />;
   }
@@ -51,15 +52,15 @@ export function BaseGoalScreen(): ReactElement {
   useEffect(() => {
     return function cleanup(): void {
       dispatch(setCurrentGoal());
-      dispatch(clearReviewEntriesState());
+      dispatch(resetReviewEntries());
       dispatch(clearTree());
     };
   }, [dispatch]);
 
   return (
-    <React.Fragment>
+    <>
       {goal.status !== GoalStatus.Completed && <DisplayProgress />}
       {displayComponent(goal)}
-    </React.Fragment>
+    </>
   );
 }

@@ -1,50 +1,60 @@
 import { Cancel } from "@mui/icons-material";
 import { Box, IconButton, Toolbar, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router";
+import {
+  CSSProperties,
+  Fragment,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import { BannerType } from "api/models";
 import { getBannerText } from "backend";
 import { getClosedBanner, setClosedBanner } from "backend/localStorage";
-import { Path } from "browserHistory";
 import { topBarHeight } from "components/LandingPage/TopBar";
+import { StoreState } from "types";
+import { useAppSelector } from "types/hooks";
+import { Path } from "types/path";
 import theme, { themeColors } from "types/theme";
 
-export default function AnnouncementBanner() {
+export default function AnnouncementBanner(): ReactElement {
   const [banner, setBanner] = useState<string>("");
+  const [margins, setMargins] = useState<CSSProperties>({});
 
   // Adjust the margins depending on whether there is an AppBar.
-  const loc = useLocation().pathname;
-  const isBelowAppBar = loc === Path.Root || loc.startsWith(Path.ProjScreen);
-  const margins = isBelowAppBar
-    ? { marginTop: topBarHeight, marginBottom: -topBarHeight }
-    : {};
+  const loc = useAppSelector(
+    (state: StoreState) => state.analyticsState.currentPage
+  );
+
+  const calculateMargins = useCallback((): CSSProperties => {
+    return loc === Path.Root || loc.startsWith(Path.AppRoot)
+      ? { marginTop: topBarHeight, marginBottom: -topBarHeight }
+      : {};
+  }, [loc]);
 
   // Check for announcement banner on (re)load or navigation to a new page.
   useEffect(() => {
+    setMargins(calculateMargins());
     getBannerText(BannerType.Announcement).then((text) => {
-      if (text !== banner && (!text || text !== getClosedBanner())) {
-        setBanner(text);
-      }
-    }); // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loc]);
+      setBanner(text !== getClosedBanner() ? text : "");
+    });
+  }, [loc, calculateMargins]);
 
-  function closeBanner() {
+  function closeBanner(): void {
     setClosedBanner(banner);
     setBanner("");
   }
 
-  return (
-    <React.Fragment>
-      {!!banner && (
-        <Toolbar style={{ ...margins, backgroundColor: themeColors.warn }}>
-          <IconButton onClick={closeBanner} size="large">
-            <Cancel />
-          </IconButton>
-          <Box sx={{ width: theme.spacing(2) }} />
-          <Typography>{banner}</Typography>
-        </Toolbar>
-      )}
-    </React.Fragment>
+  return banner ? (
+    <Toolbar style={{ ...margins, backgroundColor: themeColors.warn }}>
+      <IconButton onClick={closeBanner} size="large">
+        <Cancel />
+      </IconButton>
+      <Box sx={{ width: theme.spacing(2) }} />
+      <Typography>{banner}</Typography>
+    </Toolbar>
+  ) : (
+    <Fragment />
   );
 }

@@ -1,222 +1,237 @@
-import { CameraAlt, Email, Person, Phone } from "@mui/icons-material";
+import { Email, Phone } from "@mui/icons-material";
 import {
-  Avatar,
   Button,
   Card,
   CardContent,
-  Dialog,
-  DialogContent,
-  DialogTitle,
   Grid,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { useSnackbar } from "notistack";
-import React, { ReactElement, useState } from "react";
+import { enqueueSnackbar } from "notistack";
+import { FormEvent, Fragment, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { User } from "api/models";
 import { isEmailTaken, updateUser } from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
-import AvatarUpload from "components/UserSettings/AvatarUpload";
+import ClickableAvatar from "components/UserSettings/ClickableAvatar";
+import { updateLangFromUser } from "i18n";
 import theme from "types/theme";
-import { newUser } from "types/user";
+import { uiWritingSystems } from "types/writingSystem";
 
-const idAffix = "user-settings";
+// Chrome silently converts non-ASCII characters in a Textfield of type="email".
+// Use punycode.toUnicode() to convert them from punycode back to Unicode.
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const punycode = require("punycode/");
 
-function AvatarDialog(props: { open: boolean; onClose?: () => void }) {
-  return (
-    <Dialog onClose={props.onClose} open={props.open}>
-      <DialogTitle>Set user avatar</DialogTitle>
-      <DialogContent>
-        <AvatarUpload doneCallback={props.onClose} />
-      </DialogContent>
-    </Dialog>
+export enum UserSettingsIds {
+  ButtonSubmit = "user-settings-submit",
+  FieldEmail = "user-settings-email",
+  FieldName = "user-settings-name",
+  FieldPhone = "user-settings-phone",
+  FieldUsername = "user-settings-username",
+  SelectUiLang = "user-settings-ui-lang",
+}
+
+export default function UserSettingsGetUser(): ReactElement {
+  const [potentialUser, setPotentialUser] = useState(getCurrentUser());
+
+  return potentialUser ? (
+    <UserSettings user={potentialUser} setUser={setPotentialUser} />
+  ) : (
+    <Fragment />
   );
 }
 
-/** An avatar with a camera icon when hovered */
-function ClickableAvatar(props: { avatar?: string; onClick: () => void }) {
-  const classes = makeStyles({
-    avatar: {
-      width: 60,
-      height: 60,
-    },
-    avatarOverlay: {
-      transition: "opacity 0.2s",
-      "&:hover": {
-        opacity: 0.9,
-      },
-      position: "absolute",
-      width: 60,
-      height: 60,
-      top: 0,
-      opacity: 0,
-      cursor: "pointer",
-    },
-  })();
+export function UserSettings(props: {
+  user: User;
+  setUser: (user?: User) => void;
+}): ReactElement {
+  const [name, setName] = useState(props.user.name);
+  const [phone, setPhone] = useState(props.user.phone);
+  const [email, setEmail] = useState(props.user.email);
+  const [uiLang, setUiLang] = useState(props.user.uiLang ?? "");
+  const [emailTaken, setEmailTaken] = useState(false);
+  const [avatar, setAvatar] = useState(getAvatar());
 
-  return (
-    <div style={{ position: "relative" }}>
-      {props.avatar ? (
-        <Avatar
-          className={classes.avatar}
-          alt="User avatar"
-          src={props.avatar}
-        />
-      ) : (
-        <Person style={{ fontSize: 60 }} />
-      )}
-      <Avatar className={classes.avatarOverlay} onClick={props.onClick}>
-        <CameraAlt />
-      </Avatar>
-    </div>
-  );
-}
-
-export default function UserSettings(): ReactElement {
   const { t } = useTranslation();
-  const potentialUser = getCurrentUser();
-  const userCurr = potentialUser ?? newUser();
-  const [user, SetUser] = useState<User>(userCurr);
-  const [name, setName] = useState<string>(userCurr.name);
-  const [phone, setPhone] = useState<string>(userCurr.phone);
-  const [email, setEmail] = useState<string>(userCurr.email);
-  const [emailTaken, setEmailTaken] = useState<boolean>(false);
-  const [avatar, setAvatar] = useState<string>(getAvatar());
-  const [avatarDialogOpen, setAvatarDialogOpen] = useState<boolean>(false);
-  const { enqueueSnackbar } = useSnackbar();
 
   async function isEmailOkay(): Promise<boolean> {
-    const emailUnchanged = email.toLowerCase() === user.email.toLowerCase();
-    if (emailUnchanged) {
-      return true;
-    }
-    return !(await isEmailTaken(email));
+    const unicodeEmail = punycode.toUnicode(email.toLowerCase());
+    const unchanged = unicodeEmail === props.user.email.toLowerCase();
+    return unchanged || !(await isEmailTaken(unicodeEmail));
   }
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const disabled =
+    name === props.user.name &&
+    phone === props.user.phone &&
+    punycode.toUnicode(email) === props.user.email &&
+    uiLang === (props.user.uiLang ?? "");
+
+  async function onSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
     if (await isEmailOkay()) {
       await updateUser({
-        ...user,
-        name: name,
-        phone: phone,
-        email: email,
+        ...props.user,
+        name,
+        phone,
+        email: punycode.toUnicode(email),
+        uiLang,
+        hasAvatar: !!avatar,
       });
+      updateLangFromUser();
       enqueueSnackbar(t("userSettings.updateSuccess"));
+      props.setUser(getCurrentUser());
     } else {
       setEmailTaken(true);
     }
   }
 
   return (
-    <React.Fragment>
-      <Grid container justifyContent="center">
-        <Card style={{ width: 450 }}>
-          <form onSubmit={(e) => onSubmit(e)}>
-            <CardContent>
-              <Grid item container spacing={6}>
-                <Grid item container spacing={2} alignItems="center">
+    <Grid container justifyContent="center">
+      <Card style={{ width: 450 }}>
+        <form onSubmit={(e) => onSubmit(e)}>
+          <CardContent>
+            <Grid item container spacing={6}>
+              <Grid item container spacing={2} alignItems="center">
+                <Grid item>
+                  <ClickableAvatar avatar={avatar} setAvatar={setAvatar} />
+                </Grid>
+                <Grid item xs>
+                  <TextField
+                    id={UserSettingsIds.FieldName}
+                    fullWidth
+                    variant="outlined"
+                    value={name}
+                    label={t("login.name")}
+                    onChange={(e) => setName(e.target.value)}
+                    inputProps={{
+                      "data-testid": UserSettingsIds.FieldName,
+                      maxLength: 100,
+                    }}
+                    style={{ margin: theme.spacing(1), marginLeft: 0 }}
+                  />
+                  <Typography
+                    data-testid={UserSettingsIds.FieldUsername}
+                    id={UserSettingsIds.FieldUsername}
+                    style={{ color: "grey" }}
+                    variant="subtitle2"
+                  >
+                    {t("login.username")}
+                    {": "}
+                    {props.user.username}
+                  </Typography>
+                </Grid>
+              </Grid>
+
+              <Grid item container spacing={2}>
+                <Grid item>
+                  <Typography variant="h6">
+                    {t("userSettings.contact")}
+                  </Typography>
+                </Grid>
+
+                <Grid item container spacing={1} alignItems="center">
                   <Grid item>
-                    <ClickableAvatar
-                      avatar={avatar}
-                      onClick={() => setAvatarDialogOpen(true)}
-                    />
+                    <Phone />
                   </Grid>
                   <Grid item xs>
                     <TextField
-                      id={`${idAffix}-name`}
+                      id={UserSettingsIds.FieldPhone}
+                      inputProps={{
+                        "data-testid": UserSettingsIds.FieldPhone,
+                      }}
                       fullWidth
                       variant="outlined"
-                      value={name}
-                      label={t("login.name")}
-                      onChange={(e) => setName(e.target.value)}
-                      inputProps={{ maxLength: 100 }}
-                      style={{
-                        margin: theme.spacing(1),
-                        marginLeft: 0,
-                      }}
+                      value={phone}
+                      label={t("userSettings.phone")}
+                      onChange={(e) => setPhone(e.target.value)}
+                      type="tel"
                     />
-                    <Typography variant="subtitle2" style={{ color: "grey" }}>
-                      {t("login.username")}
-                      {": "}
-                      {user.username}
-                    </Typography>
                   </Grid>
                 </Grid>
 
-                <Grid item container spacing={2}>
+                <Grid item container spacing={1} alignItems="center">
                   <Grid item>
-                    <Typography variant="h6">Contact</Typography>
+                    <Email />
                   </Grid>
-
-                  <Grid item container spacing={1} alignItems="center">
-                    <Grid item>
-                      <Phone />
-                    </Grid>
-                    <Grid item xs>
-                      <TextField
-                        id={`${idAffix}-phone`}
-                        fullWidth
-                        variant="outlined"
-                        value={phone}
-                        label="Phone"
-                        onChange={(e) => setPhone(e.target.value)}
-                        type="tel"
-                      />
-                    </Grid>
+                  <Grid item xs>
+                    <TextField
+                      id={UserSettingsIds.FieldEmail}
+                      inputProps={{
+                        "data-testid": UserSettingsIds.FieldEmail,
+                      }}
+                      required
+                      fullWidth
+                      variant="outlined"
+                      value={email}
+                      label={t("login.email")}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        setEmailTaken(false);
+                      }}
+                      error={emailTaken}
+                      helperText={
+                        emailTaken ? t("login.emailTaken") : undefined
+                      }
+                      type="email"
+                    />
                   </Grid>
-
-                  <Grid item container spacing={1} alignItems="center">
-                    <Grid item>
-                      <Email />
-                    </Grid>
-                    <Grid item xs>
-                      <TextField
-                        id={`${idAffix}-email`}
-                        required
-                        fullWidth
-                        variant="outlined"
-                        value={email}
-                        label={t("login.email")}
-                        onChange={(e) => {
-                          setEmail(e.target.value);
-                          setEmailTaken(false);
-                        }}
-                        error={emailTaken}
-                        helperText={
-                          emailTaken ? t("login.emailTaken") : undefined
-                        }
-                        type="email"
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
-
-                <Grid item container justifyContent="flex-end">
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    id={`${idAffix}-save`}
-                  >
-                    {t("buttons.save")}
-                  </Button>
                 </Grid>
               </Grid>
-            </CardContent>
-          </form>
-        </Card>
-      </Grid>
 
-      <AvatarDialog
-        open={avatarDialogOpen}
-        onClose={() => {
-          setAvatar(getAvatar());
-          setAvatarDialogOpen(false);
-        }}
-      />
-    </React.Fragment>
+              <Grid item container spacing={2}>
+                <Grid item xs={12}>
+                  <Typography variant="h6">
+                    {t("userSettings.uiLanguage")}
+                  </Typography>
+                </Grid>
+
+                <Grid item>
+                  <Select
+                    variant="standard"
+                    data-testid={UserSettingsIds.SelectUiLang}
+                    id={UserSettingsIds.SelectUiLang}
+                    value={uiLang}
+                    onChange={(e) => setUiLang(e.target.value ?? "")}
+                    /* Use `displayEmpty` and a conditional `renderValue` function to force
+                     * something to appear when the menu is closed and its value is "" */
+                    displayEmpty
+                    renderValue={
+                      uiLang
+                        ? undefined
+                        : () => t("userSettings.uiLanguageDefault")
+                    }
+                  >
+                    <MenuItem value={""}>
+                      {t("userSettings.uiLanguageDefault")}
+                    </MenuItem>
+                    {uiWritingSystems.map((ws) => (
+                      <MenuItem key={ws.bcp47} value={ws.bcp47}>
+                        {`${ws.bcp47} (${ws.name})`}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Grid>
+              </Grid>
+
+              <Grid item container justifyContent="flex-end">
+                <Button
+                  data-testid={UserSettingsIds.ButtonSubmit}
+                  disabled={disabled}
+                  id={UserSettingsIds.ButtonSubmit}
+                  type="submit"
+                  variant="contained"
+                >
+                  {t("buttons.save")}
+                </Button>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </form>
+      </Card>
+    </Grid>
   );
 }

@@ -56,6 +56,12 @@ export interface Project {
   definitionsEnabled: boolean;
   /**
    *
+   * @type {boolean}
+   * @memberof Project
+   */
+  grammaticalInfoEnabled: boolean;
+  /**
+   *
    * @type {AutocompleteSetting}
    * @memberof Project
    */
@@ -120,4 +126,10 @@ export interface Project {
    * @memberof Project
    */
   inviteTokens: Array<EmailInvite>;
+  /**
+   *
+   * @type {Array<string>}
+   * @memberof Project
+   */
+  workshopSchedule?: Array<string> | null;
 }

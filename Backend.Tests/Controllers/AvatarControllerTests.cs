@@ -11,12 +11,25 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class AvatarControllerTests
+    public class AvatarControllerTests : IDisposable
     {
         private IUserRepository _userRepo = null!;
         private PermissionServiceMock _permissionService = null!;
         private AvatarController _avatarController = null!;
-        private UserController _userController = null!;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _avatarController?.Dispose();
+            }
+        }
 
         private User _jwtAuthenticatedUser = null!;
 
@@ -30,21 +43,14 @@ namespace Backend.Tests.Controllers
                 // Mock the Http Context because this isn't an actual call controller
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
             };
-            _userController = new UserController(
-                _userRepo, _permissionService, new EmailServiceMock(), new PasswordResetServiceMock())
-            {
-                ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
-            };
 
             _jwtAuthenticatedUser = new User { Username = "user", Password = "pass" };
             _userRepo.Create(_jwtAuthenticatedUser);
-            _jwtAuthenticatedUser = _permissionService.Authenticate(
-                _jwtAuthenticatedUser.Username, _jwtAuthenticatedUser.Password).Result ?? throw new Exception();
+            _jwtAuthenticatedUser = _permissionService.Authenticate(_jwtAuthenticatedUser.Username,
+                _jwtAuthenticatedUser.Password).Result ?? throw new UserAuthenticationException();
         }
 
-        /// <summary>
-        /// Delete the image file stored on disk for a particular user.
-        /// </summary>
+        /// <summary> Delete the image file stored on disk for a particular user. </summary>
         /// <remarks>
         /// Note, this somewhat breaks the encapsulation of the AvatarController. If support is added for deleting
         /// Avatars in the future, that should be used and this function removed.
@@ -67,10 +73,8 @@ namespace Backend.Tests.Controllers
 
             _ = _avatarController.UploadAvatar(_jwtAuthenticatedUser.Id, fileUpload).Result;
 
-            var action = _userController.GetUser(_jwtAuthenticatedUser.Id).Result;
-
-            var foundUser = (User)((ObjectResult)action).Value!;
-            Assert.IsNotNull(foundUser.Avatar);
+            var foundUser = _userRepo.GetUser(_jwtAuthenticatedUser.Id).Result;
+            Assert.That(foundUser?.Avatar, Is.Not.Null);
 
             // Clean up.
             DeleteAvatarFile(_jwtAuthenticatedUser.Id);

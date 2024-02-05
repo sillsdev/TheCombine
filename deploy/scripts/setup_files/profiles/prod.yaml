@@ -23,8 +23,14 @@ charts:
       backupSchedule: "15 03 * * *"
       # Maximum number of backups to keep on AWS S3 service
       maxBackups: "3"
+      #######################################
+      # Update font schedule
+      # Run every Sunday at 02:15 UTC
+      updateFontsSchedule: "15 02 * * 0"
     global:
       awsS3Location: prod.thecombine.app
+      fontStorageAccessMode: ReadWriteMany
+      imagePullPolicy: Always
       pullSecretName: None
     certManager:
       enabled: false
@@ -34,4 +40,12 @@ charts:
     global:
       awsS3Location: prod.thecombine.app
       pullSecretName: None
-    combineCertProxyList: nuc1.thecombine.app nuc2.thecombine.app nuc3.thecombine.app
+    combineCertProxyList:
+      - hostname: nuc1.thecombine.app
+        bucket: prod.thecombine.app
+      - hostname: nuc2.thecombine.app
+        bucket: prod.thecombine.app
+      - hostname: nuc3.thecombine.app
+        bucket: prod.thecombine.app
+      - hostname: local.thecombine.app
+        bucket: local.thecombine.app

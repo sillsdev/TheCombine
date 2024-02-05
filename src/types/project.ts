@@ -1,6 +1,6 @@
-import { AutocompleteSetting, Project } from "api/models";
+import { AutocompleteSetting, ConsentType, Project, Speaker } from "api/models";
 import { newWritingSystem } from "types/writingSystem";
-import { randomIntString } from "utilities";
+import { randomIntString } from "utilities/utilities";
 
 export function newProject(name = ""): Project {
   return {
@@ -9,6 +9,7 @@ export function newProject(name = ""): Project {
     isActive: true,
     liftImported: false,
     definitionsEnabled: false,
+    grammaticalInfoEnabled: false,
     semanticDomains: [],
     semDomWritingSystem: newWritingSystem(),
     vernacularWritingSystem: newWritingSystem(),
@@ -26,4 +27,13 @@ export function randomProject(): Project {
   project.id = randomIntString();
   project.isActive = Math.random() < 0.5;
   return project;
+}
+
+export function randomSpeaker(): Speaker {
+  return {
+    id: randomIntString(),
+    projectId: randomIntString(),
+    name: randomIntString(),
+    consent: ConsentType.None,
+  };
 }

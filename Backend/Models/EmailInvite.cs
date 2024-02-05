@@ -12,6 +12,8 @@ namespace BackendFramework.Models
         [Required]
         public string Token { get; set; }
         [Required]
+        public Role Role { get; set; }
+        [Required]
         public DateTime ExpireTime { get; set; }
 
         private static readonly RandomNumberGenerator Rng = RandomNumberGenerator.Create();
@@ -21,11 +23,13 @@ namespace BackendFramework.Models
         {
             Email = "";
             Token = "";
+            Role = Role.None;
         }
 
         public EmailInvite(int daysUntilExpires)
         {
             Email = "";
+            Role = Role.None;
             ExpireTime = DateTime.Now.AddDays(daysUntilExpires);
 
             var byteToken = new byte[TokenSize];
@@ -33,17 +37,19 @@ namespace BackendFramework.Models
             Token = WebEncoders.Base64UrlEncode(byteToken);
         }
 
-        public EmailInvite(int daysUntilExpires, string email) : this(daysUntilExpires)
+        public EmailInvite(int daysUntilExpires, string email, Role role) : this(daysUntilExpires)
         {
             Email = email;
+            Role = role;
         }
 
         public EmailInvite Clone()
         {
             return new EmailInvite
             {
-                Email = (string)Email.Clone(),
-                Token = (string)Token.Clone(),
+                Email = Email,
+                Role = Role,
+                Token = Token,
                 ExpireTime = ExpireTime
             };
         }
@@ -55,14 +61,15 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return Email == emailInvite.Email
-                   && Token == emailInvite.Token
-                   && ExpireTime == emailInvite.ExpireTime;
+            return Email.Equals(emailInvite.Email, StringComparison.Ordinal) &&
+                   Token.Equals(emailInvite.Token, StringComparison.Ordinal) &&
+                   Role == emailInvite.Role &&
+                   ExpireTime == emailInvite.ExpireTime;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Email, Token, ExpireTime);
+            return HashCode.Combine(Email, Token, Role, ExpireTime);
         }
     }
 }

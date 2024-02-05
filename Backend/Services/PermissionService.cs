@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Runtime.Serialization;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
@@ -21,6 +23,7 @@ namespace BackendFramework.Services
 
         // TODO: This appears intrinsic to mongodb implementation and is brittle.
         private const int ProjIdLength = 24;
+        private const string ProjPath = "projects/";
 
         public PermissionService(IUserRepository userRepo, IUserRoleRepository userRoleRepo)
         {
@@ -83,14 +86,27 @@ namespace BackendFramework.Services
             return user.IsAdmin;
         }
 
-        /// <remarks>
-        /// This method magically looks up the Project ID by inspecting the route.
-        /// It is not suitable for any routes that do not contain ...projects/PROJECT_ID... in the route.
-        /// </remarks>
-        public async Task<bool> HasProjectPermission(HttpContext request, Permission permission)
+        public async Task<bool> HasProjectPermission(HttpContext request, Permission permission, string projectId)
         {
-            var userId = GetUserId(request);
-            var user = await _userRepo.GetUser(userId);
+            var user = await _userRepo.GetUser(GetUserId(request));
+            if (user is null)
+            {
+                return false;
+            }
+
+            // Site administrators implicitly possess all permissions.
+            if (user.IsAdmin)
+            {
+                return true;
+            }
+
+            return GetProjectPermissions(request).Any(
+                p => p.ProjectId == projectId && p.Permissions.Contains(permission));
+        }
+
+        public async Task<bool> ContainsProjectRole(HttpContext request, Role role, string projectId)
+        {
+            var user = await _userRepo.GetUser(GetUserId(request));
             if (user is null)
             {
                 return false;
@@ -102,37 +118,17 @@ namespace BackendFramework.Services
                 return true;
             }
 
-            // Retrieve project ID from HTTP request
-            // TODO: This method of retrieving the project ID is brittle, should use regex or some other method.
-            const string projectPath = "projects/";
-            var indexOfProjId = request.Request.Path.ToString().LastIndexOf(projectPath) + projectPath.Length;
-            if (indexOfProjId + ProjIdLength > request.Request.Path.ToString().Length)
-            {
-                // If there is no project ID, do not allow changes
-                return false;
-            }
-
-            var projectId = request.Request.Path.ToString().Substring(indexOfProjId, ProjIdLength);
-            return HasProjectPermission(request, permission, projectId);
-        }
-
-        public bool HasProjectPermission(HttpContext request, Permission permission, string projectId)
-        {
             // Retrieve JWT token from HTTP request and convert to object
             var projectPermissionsList = GetProjectPermissions(request);
 
-            // Assert that the user has permission for this function
-            foreach (var projectPermissions in projectPermissionsList)
+            // Assert that the user has all permissions in the specified role
+            foreach (var projPermissions in projectPermissionsList)
             {
-                if (projectPermissions.ProjectId != projectId)
+                if (projPermissions.ProjectId != projectId)
                 {
                     continue;
                 }
-
-                if (projectPermissions.Permissions.Contains(permission))
-                {
-                    return true;
-                }
+                return ProjectRole.RolePermissions(role).All(p => projPermissions.Permissions.Contains(p));
             }
             return false;
         }
@@ -150,14 +146,14 @@ namespace BackendFramework.Services
         }
 
         /// <summary>Retrieve the User ID from the JWT in a request. </summary>
-        /// <exception cref="InvalidJwtTokenError"> Throws when null userId extracted from token. </exception>
+        /// <exception cref="InvalidJwtTokenException"> Throws when null userId extracted from token. </exception>
         public string GetUserId(HttpContext request)
         {
             var jsonToken = GetJwt(request);
             var userId = ((JwtSecurityToken)jsonToken).Payload["UserId"].ToString();
             if (userId is null)
             {
-                throw new InvalidJwtTokenError();
+                throw new InvalidJwtTokenException();
             }
 
             return userId;
@@ -168,7 +164,7 @@ namespace BackendFramework.Services
         public async Task<User?> Authenticate(string username, string password)
         {
             // Fetch the stored user.
-            var user = await _userRepo.GetUserByUsername(username);
+            var user = await _userRepo.GetUserByUsername(username, false);
 
             // Return null if user with specified username not found.
             if (user is null)
@@ -202,7 +198,8 @@ namespace BackendFramework.Services
                     return null;
                 }
 
-                var validEntry = new ProjectPermissions(projectRoleKey, userRole.Permissions);
+                var permissions = ProjectRole.RolePermissions(userRole.Role);
+                var validEntry = new ProjectPermissions(projectRoleKey, permissions);
                 projectPermissionMap.Add(validEntry);
             }
 
@@ -236,13 +233,16 @@ namespace BackendFramework.Services
         }
 
         [Serializable]
-        public class InvalidJwtTokenError : Exception
+        public class InvalidJwtTokenException : Exception
         {
-            public InvalidJwtTokenError() { }
+            public InvalidJwtTokenException() { }
 
-            public InvalidJwtTokenError(string message) : base(message) { }
+            public InvalidJwtTokenException(string msg) : base(msg) { }
 
-            public InvalidJwtTokenError(string message, Exception innerException) : base(message, innerException) { }
+            public InvalidJwtTokenException(string msg, Exception innerException) : base(msg, innerException) { }
+
+            protected InvalidJwtTokenException(SerializationInfo info, StreamingContext context)
+                : base(info, context) { }
         }
     }
 

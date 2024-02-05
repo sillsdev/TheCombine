@@ -10,14 +10,14 @@ namespace Backend.Tests.Mocks
 {
     public class MergeBlacklistRepositoryMock : IMergeBlacklistRepository
     {
-        private readonly List<MergeBlacklistEntry> _mergeBlacklist;
+        private readonly List<MergeWordSet> _mergeBlacklist;
 
         public MergeBlacklistRepositoryMock()
         {
-            _mergeBlacklist = new List<MergeBlacklistEntry>();
+            _mergeBlacklist = new List<MergeWordSet>();
         }
 
-        public Task<List<MergeBlacklistEntry>> GetAll(string projectId, string? userId = null)
+        public Task<List<MergeWordSet>> GetAllSets(string projectId, string? userId = null)
         {
             var cloneList = _mergeBlacklist.Select(e => e.Clone()).ToList();
             var enumerable = userId is null ?
@@ -26,27 +26,27 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(enumerable.ToList());
         }
 
-        public Task<MergeBlacklistEntry?> Get(string projectId, string entryId)
+        public Task<MergeWordSet?> GetSet(string projectId, string entryId)
         {
             try
             {
                 var foundMergeBlacklist = _mergeBlacklist.Single(entry => entry.Id == entryId);
-                return Task.FromResult<MergeBlacklistEntry?>(foundMergeBlacklist.Clone());
+                return Task.FromResult<MergeWordSet?>(foundMergeBlacklist.Clone());
             }
             catch (InvalidOperationException)
             {
-                return Task.FromResult<MergeBlacklistEntry?>(null);
+                return Task.FromResult<MergeWordSet?>(null);
             }
         }
 
-        public Task<MergeBlacklistEntry> Create(MergeBlacklistEntry entry)
+        public Task<MergeWordSet> Create(MergeWordSet wordSetEntry)
         {
-            entry.Id = Guid.NewGuid().ToString();
-            _mergeBlacklist.Add(entry.Clone());
-            return Task.FromResult(entry.Clone());
+            wordSetEntry.Id = Guid.NewGuid().ToString();
+            _mergeBlacklist.Add(wordSetEntry.Clone());
+            return Task.FromResult(wordSetEntry.Clone());
         }
 
-        public Task<bool> DeleteAll(string projectId)
+        public Task<bool> DeleteAllSets(string projectId)
         {
             _mergeBlacklist.Clear();
             return Task.FromResult(true);
@@ -58,16 +58,17 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_mergeBlacklist.Remove(foundMergeBlacklist));
         }
 
-        public Task<ResultOfUpdate> Update(MergeBlacklistEntry entry)
+        public Task<ResultOfUpdate> Update(MergeWordSet wordSetEntry)
         {
-            var foundEntry = _mergeBlacklist.Single(e => e.ProjectId == entry.ProjectId && e.Id == entry.Id);
+            var foundEntry = _mergeBlacklist.Single(
+                e => e.ProjectId == wordSetEntry.ProjectId && e.Id == wordSetEntry.Id);
             var success = _mergeBlacklist.Remove(foundEntry);
             if (!success)
             {
                 return Task.FromResult(ResultOfUpdate.NotFound);
             }
 
-            _mergeBlacklist.Add(entry.Clone());
+            _mergeBlacklist.Add(wordSetEntry.Clone());
             return Task.FromResult(ResultOfUpdate.Updated);
         }
     }

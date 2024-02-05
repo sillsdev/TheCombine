@@ -1,89 +1,99 @@
-import { Button } from "@mui/material";
-import React, { ReactElement, useState } from "react";
+import { PlaylistAdd, Rule } from "@mui/icons-material";
+import { Button, Hidden, Tooltip, Typography } from "@mui/material";
+import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
-import { Permission } from "api";
-import * as backend from "backend";
-import * as LocalStorage from "backend/localStorage";
-import history, { Path } from "browserHistory";
-import { openTreeAction } from "components/TreeView/TreeViewActions";
-import { useAppDispatch } from "types/hooks";
-import { tabColor } from "types/theme";
+import { Permission } from "api/models";
+import { getCurrentPermissions } from "backend";
+import {
+  TabProps,
+  appBarHeight,
+  buttonMinHeight,
+  tabColor,
+} from "components/AppBar/AppBarTypes";
+import { StoreState } from "types";
+import { useAppSelector } from "types/hooks";
+import { Path } from "types/path";
+import { useWindowSize } from "utilities/useWindowSize";
 
-interface NavigationButtonsProps {
-  currentTab: Path;
-}
+export const dataEntryButtonId = "data-entry";
+export const dataCleanupButtonId = "data-cleanup";
 
-export async function getIsAdminOrOwner(): Promise<boolean> {
-  const user = LocalStorage.getCurrentUser();
-  if (user?.isAdmin) {
-    return true;
-  } else {
-    const projectId = LocalStorage.getProjectId();
-    const userRoleID = user?.projectRoles[projectId];
-    if (userRoleID) {
-      return backend.getUserRole(userRoleID).then((role) => {
-        return role.permissions.includes(Permission.Owner);
-      });
-    }
-  }
-  return false;
-}
+const navButtonMaxWidthProportion = 0.2;
 
-/** A button that redirects to the home page */
-export default function NavigationButtons(
-  props: NavigationButtonsProps
-): ReactElement {
-  const dispatch = useAppDispatch();
-  const { t } = useTranslation();
-  const [isAdminOrOwner, setIsAdminOrOwner] = useState<boolean>(false);
+/** Buttons for navigating to Data Entry and Data Cleanup */
+export default function NavigationButtons(props: TabProps): ReactElement {
+  const projectId = useAppSelector(
+    (state: StoreState) => state.currentProjectState.project.id
+  );
+  const [hasGoalPermission, setHasGoalPermission] = useState(false);
 
-  getIsAdminOrOwner().then(setIsAdminOrOwner);
+  useEffect(() => {
+    getCurrentPermissions().then((perms) => {
+      setHasGoalPermission(
+        perms.includes(Permission.CharacterInventory) ||
+          perms.includes(Permission.MergeAndReviewEntries)
+      );
+    });
+  }, [projectId]);
 
   return (
-    <React.Fragment>
-      <Button
-        id="data-entry"
-        onClick={() => {
-          dispatch(openTreeAction());
-          history.push(Path.DataEntry);
-        }}
-        color="inherit"
-        style={{
-          width: "min-content",
-          background: tabColor(props.currentTab, Path.DataEntry),
-        }}
-      >
-        {t("appBar.dataEntry")}
-      </Button>
-      <Button
-        id="goals"
-        onClick={() => {
-          history.push(Path.Goals);
-        }}
-        color="inherit"
-        style={{
-          width: "min-content",
-          background: tabColor(props.currentTab, Path.Goals),
-        }}
-      >
-        {t("appBar.dataCleanup")}
-      </Button>
-      {isAdminOrOwner && (
-        <Button
-          id="statistics"
-          onClick={() => {
-            history.push(Path.Statistics);
-          }}
-          color="inherit"
-          style={{
-            width: "min-content",
-            background: tabColor(props.currentTab, Path.Statistics),
-          }}
-        >
-          {t("appBar.statistics")}
-        </Button>
+    <>
+      <NavButton
+        buttonId={dataEntryButtonId}
+        currentTab={props.currentTab}
+        icon={<PlaylistAdd />}
+        targetPath={Path.DataEntry}
+        textId="appBar.dataEntry"
+      />
+      {hasGoalPermission && (
+        <NavButton
+          buttonId={dataCleanupButtonId}
+          currentTab={props.currentTab}
+          icon={<Rule />}
+          targetPath={Path.Goals}
+          textId="appBar.dataCleanup"
+        />
       )}
-    </React.Fragment>
+    </>
+  );
+}
+
+interface NavButtonProps extends TabProps {
+  buttonId: string;
+  icon: ReactElement;
+  targetPath: Path;
+  textId: string;
+}
+
+function NavButton(props: NavButtonProps): ReactElement {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { windowWidth } = useWindowSize();
+
+  return (
+    <Button
+      id={props.buttonId}
+      onClick={() => navigate(props.targetPath)}
+      color="inherit"
+      style={{
+        background: tabColor(props.currentTab, props.targetPath),
+        marginLeft: 2,
+        marginRight: 2,
+        maxHeight: appBarHeight,
+        maxWidth: navButtonMaxWidthProportion * windowWidth,
+        minHeight: buttonMinHeight,
+        minWidth: 0,
+        width: "fit-content",
+      }}
+    >
+      <Tooltip title={t(props.textId)}>{props.icon}</Tooltip>
+      <Hidden smDown>
+        <Typography style={{ marginLeft: 5, marginRight: 5 }}>
+          {t(props.textId)}
+        </Typography>
+      </Hidden>
+    </Button>
   );
 }

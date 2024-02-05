@@ -1,10 +1,9 @@
-import { render, screen } from "@testing-library/react";
-import { act, renderHook } from "@testing-library/react-hooks";
+import { act, render, renderHook, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { Key } from "ts-key-enum";
 
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
 import { SemanticDomainTreeNode } from "api";
 import * as backend from "backend";
@@ -14,11 +13,11 @@ import TreeSearch, {
   TreeSearchProps,
   useTreeSearch,
 } from "components/TreeView/TreeSearch";
-import domMap, { mapIds } from "components/TreeView/tests/MockSemanticDomain";
+import domMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
 import { newSemanticDomainTreeNode } from "types/semanticDomain";
 
 // Handles
-const MOCK_ANIMATE = jest.fn((domain: SemanticDomainTreeNode) => {
+const MOCK_ANIMATE = jest.fn(() => {
   console.log("MockAnimateCalled");
   return Promise.resolve();
 });
@@ -31,7 +30,11 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-function setupSpies(domain: SemanticDomainTreeNode | undefined) {
+function getSearchInput(): HTMLInputElement {
+  return screen.getByTestId(testId);
+}
+
+function setupSpies(domain: SemanticDomainTreeNode | undefined): void {
   jest.spyOn(backend, "getSemanticDomainTreeNode").mockResolvedValue(domain);
   jest
     .spyOn(backend, "getSemanticDomainTreeNodeByName")
@@ -40,7 +43,7 @@ function setupSpies(domain: SemanticDomainTreeNode | undefined) {
 
 describe("TreeSearch", () => {
   describe("searchAndSelectDomain", () => {
-    async function simulateTypeAndEnter(input: string) {
+    async function simulateTypeAndEnter(input: string): Promise<void> {
       // Simulate the user typing a string
       const simulatedInput = {
         target: { value: input },
@@ -71,7 +74,6 @@ describe("TreeSearch", () => {
       const node = domMap[mapIds.firstKid];
       setupSpies(node);
       await simulateTypeAndEnter(node.id);
-      expect(MOCK_ANIMATE).toHaveBeenCalled();
       expect(MOCK_ANIMATE).toHaveBeenCalledWith(node);
     });
 
@@ -111,39 +113,20 @@ describe("TreeSearch", () => {
   describe("Integration tests, verify component uses hooks to achieve desired UX", () => {
     it("typing non-matching domain search data does not clear input, or attempt to navigate", async () => {
       render(<TreeSearch {...testProps} />);
-      expect((screen.getByTestId(testId) as HTMLInputElement).value).toEqual(
-        ""
-      );
-      await act(
-        async () =>
-          await userEvent.type(
-            screen.getByTestId(testId),
-            "flibbertigibbet{enter}"
-          )
-      );
-      expect((screen.getByTestId(testId) as HTMLInputElement).value).toEqual(
-        "flibbertigibbet"
-      );
+      expect(getSearchInput().value).toEqual("");
+      const searchText = "flibbertigibbet";
+      await userEvent.type(getSearchInput(), `${searchText}{enter}`);
+      expect(getSearchInput().value).toEqual(searchText);
       // verify that no attempt to switch domains happened
       expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
     });
 
     it("typing valid domain number navigates and clears input", async () => {
       render(<TreeSearch {...testProps} />);
-      expect((screen.getByTestId(testId) as HTMLInputElement).value).toEqual(
-        ""
-      );
+      expect(getSearchInput().value).toEqual("");
       setupSpies(domMap[mapIds.lastKid]);
-      await act(
-        async () =>
-          await userEvent.type(
-            screen.getByTestId(testId),
-            `${mapIds.lastKid}{enter}`
-          )
-      );
-      expect((screen.getByTestId(testId) as HTMLInputElement).value).toEqual(
-        ""
-      );
+      await userEvent.type(getSearchInput(), `${mapIds.lastKid}{enter}`);
+      expect(getSearchInput().value).toEqual("");
       // verify that we would switch to the domain requested
       expect(MOCK_ANIMATE).toHaveBeenCalledWith(domMap[mapIds.lastKid]);
     });

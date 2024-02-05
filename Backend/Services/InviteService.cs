@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+using System;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -25,9 +26,9 @@ namespace BackendFramework.Services
             _permissionService = permissionService;
         }
 
-        public async Task<string> CreateLinkWithToken(Project project, string emailAddress)
+        public async Task<string> CreateLinkWithToken(Project project, Role role, string emailAddress)
         {
-            var token = new EmailInvite(2, emailAddress);
+            var token = new EmailInvite(2, emailAddress, role);
             project.InviteTokens.Add(token);
             await _projRepo.Update(project.Id, project);
             return $"/invite/{project.Id}/{token.Token}?email={emailAddress}";
@@ -53,17 +54,14 @@ namespace BackendFramework.Services
 
         public async Task<bool> RemoveTokenAndCreateUserRole(Project project, User user, EmailInvite emailInvite)
         {
+            if (emailInvite.Role == Role.Owner)
+            {
+                throw new InviteException("Email invites cannot make project Owners!");
+            }
+
             try
             {
-                var userRole = new UserRole
-                {
-                    Permissions = new List<Permission>
-                {
-                    Permission.MergeAndReviewEntries,
-                    Permission.WordEntry
-                },
-                    ProjectId = project.Id
-                };
+                var userRole = new UserRole { ProjectId = project.Id, Role = emailInvite.Role };
                 userRole = await _userRoleRepo.Create(userRole);
 
                 // Generate the userRoles and update the user
@@ -73,23 +71,31 @@ namespace BackendFramework.Services
                 var updatedUser = await _permissionService.MakeJwt(user);
                 if (updatedUser is null)
                 {
-                    throw new PermissionService.InvalidJwtTokenError(
-                        "Unable to generate JWT.");
+                    throw new PermissionService.InvalidJwtTokenException("Unable to generate JWT.");
                 }
 
                 await _userRepo.Update(updatedUser.Id, updatedUser);
 
                 // Removes token and updates user
-
                 project.InviteTokens.Remove(emailInvite);
                 await _projRepo.Update(project.Id, project);
 
                 return true;
             }
-            catch (PermissionService.InvalidJwtTokenError)
+            catch (PermissionService.InvalidJwtTokenException)
             {
                 return false;
             }
+        }
+
+        [Serializable]
+        public class InviteException : Exception
+        {
+            public InviteException() { }
+
+            public InviteException(string msg) : base(msg) { }
+
+            protected InviteException(SerializationInfo info, StreamingContext context) : base(info, context) { }
         }
     }
 }

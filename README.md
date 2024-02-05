@@ -1,28 +1,39 @@
 # The Combine
 
 [![Frontend Actions Status][github-actions-frontend-badge]][github-actions]
-[![Frontend Coverage][frontend-codecov-badge]][codecov]
+[![Frontend Coverage][frontend-codecov-badge]][codecov-frontend]
+
 [![Backend Actions Status][github-actions-backend-badge]][github-actions]
-[![Backend Coverage][backend-codecov-badge]][codecov]
-[![Python Actions Status][github-actions-python-badge]][github-actions]
+[![Backend Coverage][backend-codecov-badge]][codecov-backend]
+
 [![CodeQL Actions Status][github-actions-codeql-badge]][github-actions]
+[![Python Actions Status][github-actions-python-badge]][github-actions]
 [![OSSF Scorecard][github-actions-ossf-badge]][github-actions]
 
 [![GitHub release][github-release-badge]][github-version] [![GitHub version][github-version-badge]][github-version]
-![Localization][localization-badge] [![GitHub][github-license-badge]][github-license]
-[![GitHub contributors][github-contribs-badge]][github-contribs]
+[![GitHub][github-license-badge]][github-license] [![GitHub contributors][github-contribs-badge]][github-contribs]
+
+[![User Interface][localization-ui-badge]][localization-crowdin-combine]
+[![Semantic Domains][localization-sd-badge]][localization-crowdin-flex]
+[![User Guide][localization-ug-badge]][localization-crowdin-combine]
 
 [github-actions-frontend-badge]: https://github.com/sillsdev/TheCombine/workflows/frontend/badge.svg
 [frontend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=frontend
-[codecov]: https://codecov.io/gh/sillsdev/TheCombine
+[codecov-frontend]: https://app.codecov.io/gh/sillsdev/TheCombine/tree/master/src
+[codecov-backend]: https://app.codecov.io/gh/sillsdev/TheCombine/tree/master/Backend
 [github-actions-backend-badge]: https://github.com/sillsdev/TheCombine/workflows/backend/badge.svg
 [backend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=backend
 [github-actions-python-badge]: https://github.com/sillsdev/TheCombine/workflows/python/badge.svg
 [github-actions-codeql-badge]: https://github.com/sillsdev/TheCombine/workflows/CodeQL/badge.svg
 [github-actions-ossf-badge]:
   https://github.com/sillsdev/TheCombine/workflows/Scorecards%20supply-chain%20security/badge.svg
+[localization-ui-badge]: https://img.shields.io/badge/User%20Interface-Ar%20En%20Es%20Fr%20Pt%20Zh-blue
 [github-actions]: https://github.com/sillsdev/TheCombine/actions
-[localization-badge]: https://img.shields.io/badge/localization-En%20Es%20Fr-blue
+[localization-sd-badge]:
+  https://img.shields.io/badge/Semantic%20Domains-Ar%20En%20Es%20Fr%20Hi%20Ml%20My%20Pt%20Ru%20Sw%20Zh-blue
+[localization-ug-badge]: https://img.shields.io/badge/User%20Guide-En%20Es%20Zh-blue
+[localization-crowdin-combine]: https://crowdin.com/project/the-combine
+[localization-crowdin-flex]: https://crowdin.com/project/fieldworks
 [github-version-badge]: https://img.shields.io/github/package-json/v/sillsdev/TheCombine
 [github-release-badge]: https://img.shields.io/github/v/release/sillsdev/TheCombine
 [github-version]: https://github.com/sillsdev/TheCombine/releases
@@ -49,14 +60,14 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    3. [Running the Automated Tests](#running-the-automated-tests)
    4. [Import Semantic Domains](#import-semantic-domains)
    5. [Generate License Reports](#generate-license-reports)
-   6. [Set Project Version](#set-project-version)
-   7. [Inspect Database](#inspect-database)
+   6. [Inspect Database](#inspect-database)
+   7. [Add or Update Dictionary Files](#add-or-update-dictionary-files)
    8. [Cleanup Local Repository](#cleanup-local-repository)
 3. [Setup Local Kubernetes Cluster](#setup-local-kubernetes-cluster)
    1. [Install Rancher Desktop](#install-rancher-desktop)
    2. [Install Docker Desktop](#install-docker-desktop)
    3. [Install Kubernetes Tools](#install-kubernetes-tools)
-4. [Setup The Combine](#setup-the-combine)
+4. [Setup _The Combine_](#setup-the-combine)
    1. [Install Required Charts](#install-required-charts)
    2. [Build _The Combine_ Containers](#build-the-combine-containers)
    3. [Setup Environment Variables](#setup-environment-variables)
@@ -91,25 +102,37 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
      appropriate Node.js version.
 4. [.NET Core SDK 6.0](https://dotnet.microsoft.com/download/dotnet/6.0)
    - On Ubuntu, follow these [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu).
-5. [MongoDB 6.0](https://docs.mongodb.com/manual/administration/install-community/) and add /bin to PATH Environment
-   Variable
+5. [MongoDB](https://mongodb.com/docs/manual/administration/install-community/) provides instructions on how to install
+   the current release of MongoDB.
+
    - On Windows, if using [Chocolatey][chocolatey]: `choco install mongodb`
-6. [VS Code](https://code.visualstudio.com/download) and the following extensions:
-   - C# (`ms-dotnettools.csharp`)
-   - Prettier - Code formatter (`esbenp.prettier-vscode`)
+
+   After installation:
+
+   - Add mongo's `/bin` directory to your PATH environment variable.
+   - Disable automatically start of the `mongod` service on your development host.
+   - If `mongosh` is not a recognized command, you may have to separately install the
+     [MongoDB Shell](https://www.mongodb.com/try/download/shell) and add its `/bin` to your PATH.
+   - If `mongoimport` is not a recognized command, you may have to separately install the
+     [MongoDB Database Tools](https://www.mongodb.com/try/download/database-tools) and add its `/bin` to your PATH.
+
+6. [VS Code](https://code.visualstudio.com/download).
+   - When you open this repo folder in VS Code, it should recommend the extensions used in this project (see
+     `.vscode/extensions.json`).
 7. [Python](#python): The Python section of this document has instructions for installing _Python 3_ on each of the
    supported platforms and how to setup your virtual environment.
-8. [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.1.250801`
-9. [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
-   `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
-10. [dotnet-project-licenses](https://github.com/tomchavakis/nuget-license)
+8. [FFmpeg](https://www.ffmpeg.org/download.html) and add its `/bin` to your PATH.
+9. [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.1.250801`
+10. [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
+    `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
+11. [dotnet-project-licenses](https://github.com/tomchavakis/nuget-license)
     `dotnet tool update --global dotnet-project-licenses`
 
 ### Prepare the Environment
 
-1. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string **containing at least 16 characters**, such as
-   _This is a secret key_. Set it in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the
-   _System_ app (Windows).
+1. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string **containing at least 32 characters**, such as
+   _This is a secret key that is longer_. Set it in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac
+   10.15+), or the _System_ app (Windows).
 2. If you want the email services to work you will need to set the following environment variables. These values must be
    kept secret, so ask your email administrator to supply them.
 
@@ -136,8 +159,9 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 
 ### Python
 
-_Python 3_ is required to run the scripts that are used to initialize and maintain the cluster. Note that the commands
-for setting up the virtual environment must be run from the top-level directory for _The Combine_ source tree.
+_Python_ (3.10 recommended) is required to run the scripts that are used to initialize and maintain the cluster. Note
+that the commands for setting up the virtual environment must be run from the top-level directory for _The Combine_
+source tree.
 
 #### Windows Python Installation
 
@@ -378,8 +402,8 @@ Auto-format frontend code in the `src` folder.
 
 ### Import Semantic Domains
 
-Imports Semantic Domains from the XML files in `./deploy/scripts/semantic_domains/xml`. Run from within a Python virtual
-environment.
+To import Semantic Domains from the XML files in `./deploy/scripts/semantic_domains/xml`. Run from within a Python
+virtual environment.
 
 1. Generate the files for import into the Mongo database:
 
@@ -427,26 +451,49 @@ npm run license-report-frontend
 
 > Note: This should be performed each time production dependencies are changed.
 
-### Set Project Version
-
-To update the version of the project:
-
-1. Edit package.json `"version"` to a [semantic versioning](https://docs.npmjs.com/about-semantic-versioning) compatible
-   string (e.g. `"0.1.1-alpha.0"`).
-2. Run `npm install` to automatically update `package-lock.json`.
-
-To retrieve the current version of the project from the terminal:
-
-```bash
-npm run --silent version
-```
-
 ### Inspect Database
 
 To browse the database locally during development, open MongoDB Compass Community.
 
 1. Under New Connection, enter `mongodb://localhost:27017`
 2. Under Databases, select CombineDatabase
+
+### Add or Update Dictionary Files
+
+The dictionary files for spell-check functionality in _The Combine_ are split into parts to allow lazy-loading, for the
+sake of devices with limited bandwidth. There are scripts for generating these files in `src/resources/dictionaries/`;
+files in this directory should _not_ be manually edited.
+
+The bash script `scripts/fetch_wordlists.sh` is used to fetch dictionary files for a given language (e.g., `es`) from
+the [LibreOffice dictionaries](https://cgit.freedesktop.org/libreoffice/dictionaries/) and convert them to raw wordlists
+(e.g., `src/resources/dictionaries/es.txt`). Execute the script with no arguments for its usage details. Any language
+not currently supported can be manually added as a case in this script.
+
+```bash
+./scripts/fetch_wordlist.sh
+```
+
+The python script `scripts/split_dictionary.py` takes a wordlist textfile (e.g., `src/resources/dictionaries/es.txt`),
+splits it into multiple TypeScript files (e.g., into `src/resources/dictionaries/es/` with index file
+`.../es/index.ts`), and updates `src/resources/dictionaries/index.ts` accordingly. Run the script within a Python
+virtual environment, with `-h`/`--help` to see its usage details.
+
+```bash
+python scripts/split_dictionary.py --help
+```
+
+For some languages, the wordlist is too large for practical use. Generally try to keep the folder for each language
+under 2.5 MB, to avoid such errors as
+`FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory` in the Kubernetes build. For smaller
+folder sizes, default maximum word-lengths are automatically imposed for some languages: (`ar`, `es`, `fr`, `pt`, `ru`).
+Use `-m`/`--max` to override the defaults, with `-m -1` to force no limit.
+
+Adjust the `-t`/`--threshold` and `-T`/`--Threshold` parameters to split a wordlist into more, smaller files; e.g.:
+
+- `python scripts/split_dictionary.py -l hi -t 1000`
+- `python scripts/split_dictionary.py -l sw -t 1500`
+
+The top of each language's `index.ts` file states which values of `-m`, `-t`, and `-T` were used for that language.
 
 ### Cleanup Local Repository
 
@@ -492,7 +539,7 @@ When _Rancher Desktop_ is first run, you will be prompted to select a few initia
 1. Verify that _Enable Kubernetes_ is checked.
 2. Select the Kubernetes version marked as _stable, latest_.
 3. Select your container runtime, either _containerd_ or _dockerd (moby)_:
-   - _containerd_ matches what is used on the NUC and uses the `k3s` Kubernetes engint. It requires that you run the
+   - _containerd_ matches what is used on the NUC and uses the `k3s` Kubernetes engine. It requires that you run the
      `build.py` script with the `--nerdctl` option.
    - _dockerd_ uses the `k3d` (`k3s` in docker).
 4. Select _Automatic_ or _Manual_ path setup.
@@ -540,11 +587,11 @@ If the following tools were not installed with either _Rancher Desktop_ or _Dock
 links:
 
 1. [kubectl](https://kubernetes.io/docs/tasks/tools/)
-   - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernete-cli`
+   - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernetes-cli`
 2. [helm](https://helm.sh/docs/intro/install/)
-   - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernete-helm`
+   - On Windows, if using [Chocolatey][chocolatey]: `choco install kubernetes-helm`
 
-## Setup The Combine
+## Setup _The Combine_
 
 This section describes how to build and deploy _The Combine_ to your Kubernetes cluster. Unless specified otherwise, all
 of the commands below are run from _The Combine's_ project directory and are run in an activated Python virtual
@@ -571,13 +618,21 @@ Build _The Combine_ containers by running the build script in an activated Pytho
 _TheCombine_'s project directory. (See the [Python](#python) section to create the virtual environment.)
 
 ```bash
-python deploy/scripts/build.py [--nerdctl]
+python deploy/scripts/build.py
 ```
 
 Notes:
 
-- Use the `--nerdctl` option if you are using _Rancher Desktop_ with the `containerd` for the container runtime. If you
-  are using _Docker Desktop_ or _Rancher Desktop_ with the `dockerd` container runtime, omit this option.
+- If you are using _Rancher Desktop_ with `containerd` for the container runtime, set the following environment variable
+  in your user profile:
+
+  ```bash
+  export CONTAINER_CLI="nerdctl"
+  ```
+
+  If you are using _Docker Desktop_ or _Rancher Desktop_ with the `dockerd` container runtime, clear this variable or
+  set its value to `docker`.
+
 - Run with the `--help` option to see all available options.
 - If you see errors like:
 
@@ -663,20 +718,6 @@ maintenance-7f4b5b89b8-rhgk9   1/1     Running   0          10m
 
 ### Connecting to Your Cluster
 
-#### Network Hosts Configuration
-
-The cluster's ingress controller uses the hostname `thecombine.local` to _The Combine_. To direct traffic for this host
-to the ingress controller, add:
-
-```textfile
-127.0.0.1  thecombine.local
-```
-
-to your network hosts file:
-
-- Windows: `%windir%\System32\drivers\etc\hosts`
-- Linux/macOS: `/etc/hosts`
-
 #### Setup Port Forwarding
 
 _Rancher Desktop only!_
@@ -692,9 +733,8 @@ Note that the port forwarding is not persistent; you need to set it up whenever 
 
 #### Connecting to _The Combine_
 
-Once your host configuration has been setup, you can connect to _The Combine_ by entering the URL
-`https://thecombine.local` in the address bar of your web browser. (`https://thecombine.local:<portnumber>` for _Rancher
-Desktop_)
+You can connect to _The Combine_ by entering the URL `https://thecombine.localhost` in the address bar of your web
+browser. (`https://thecombine.localhost:<portnumber>` for _Rancher Desktop_)
 
 Notes:
 
@@ -875,12 +915,11 @@ Run:
 kubectl exec -it deployment/maintenance -- add_user_to_proj.py --project <PROJECT_NAME> --user <USER>
 ```
 
-Notes:
+For additional options, run:
 
-1. The `--project` and `--user` options may be shortened to `--p` and `--u` respectively.
-2. The user is added to the project with normal project member permissions (`MergeAndReviewEntries`, and `WordEntry`).
-   Add the `--admin` option to add the user with project administrator permissions (`DeleteEditSettingsAndUsers`,
-   `ImportExport`, `MergeAndReviewEntries`, and `WordEntry`)
+```bash
+kubectl exec -it deployment/maintenance -- add_user_to_proj.py --help`
+```
 
 #### Backup _TheCombine_
 

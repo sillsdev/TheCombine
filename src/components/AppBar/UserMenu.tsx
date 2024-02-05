@@ -1,43 +1,50 @@
 import {
   ExitToApp,
-  Help,
+  Info,
   Person,
   SettingsApplications,
 } from "@mui/icons-material";
-import { Avatar, Button, Hidden, Menu, MenuItem } from "@mui/material";
-import React, { ReactElement, useState } from "react";
+import {
+  Avatar,
+  Button,
+  Hidden,
+  Menu,
+  MenuItem,
+  Typography,
+} from "@mui/material";
+import React, { Fragment, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
-import { getUser } from "backend";
+import { isSiteAdmin } from "backend";
 import * as LocalStorage from "backend/localStorage";
-import history, { openUserGuide, Path } from "browserHistory";
+import {
+  buttonMinHeight,
+  shortenName,
+  tabColor,
+  TabProps,
+} from "components/AppBar/AppBarTypes";
 import { clearCurrentProject } from "components/Project/ProjectActions";
 import { useAppDispatch } from "types/hooks";
+import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
-import theme, { tabColor } from "types/theme";
+import { openUserGuide } from "utilities/pathUtilities";
 
 const idAffix = "user-menu";
 
-export async function getIsAdmin(): Promise<boolean> {
-  const userId = LocalStorage.getUserId();
-  const user = await getUser(userId);
-  if (user) {
-    return user.isAdmin;
-  }
-  return false;
-}
-
-interface UserMenuProps {
-  currentTab: Path;
+const enum usernameLength {
+  lg = 12,
+  xl = 24,
 }
 
 /**
  * Avatar in AppBar with dropdown UserMenu
  */
-export default function UserMenu(props: UserMenuProps): ReactElement {
+export default function UserMenu(props: TabProps): ReactElement {
   const [anchorElement, setAnchorElement] = useState<HTMLElement | undefined>();
   const avatar = LocalStorage.getAvatar();
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const username = LocalStorage.getCurrentUser()?.username;
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>): void {
     setAnchorElement(event.currentTarget);
@@ -47,47 +54,54 @@ export default function UserMenu(props: UserMenuProps): ReactElement {
     setAnchorElement(undefined);
   }
 
-  getIsAdmin().then(setIsAdmin);
+  isSiteAdmin().then(setIsAdmin);
 
   return (
-    <React.Fragment>
+    <>
       <Button
         aria-controls="user-menu"
         aria-haspopup="true"
-        onClick={handleClick}
         color="secondary"
-        style={{ background: tabColor(props.currentTab, Path.UserSettings) }}
         id={`avatar-${idAffix}`}
+        onClick={handleClick}
+        style={{
+          background: tabColor(props.currentTab, Path.UserSettings),
+          minHeight: buttonMinHeight,
+          minWidth: 0,
+          padding: 0,
+        }}
       >
-        <Hidden mdDown>{LocalStorage.getCurrentUser()?.username}</Hidden>
+        {username ? (
+          <Hidden lgDown>
+            <Typography style={{ marginLeft: 5, marginRight: 5 }}>
+              <Hidden xlDown>{shortenName(username, usernameLength.xl)}</Hidden>
+              <Hidden xlUp lgDown>
+                {shortenName(username, usernameLength.lg)}
+              </Hidden>
+            </Typography>
+          </Hidden>
+        ) : (
+          <Fragment />
+        )}
         {avatar ? (
-          <Avatar alt="User avatar" src={avatar} style={{ marginLeft: 5 }} />
+          <Avatar alt="User avatar" src={avatar} />
         ) : (
           <Person style={{ fontSize: 40 }} />
         )}
       </Button>
       <Menu
-        id={idAffix}
         anchorEl={anchorElement}
-        open={Boolean(anchorElement)}
-        onClose={handleClose}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        id={idAffix}
+        onClose={handleClose}
+        open={Boolean(anchorElement)}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
       >
-        <WrappedUserMenuList isAdmin={isAdmin} onSelect={handleClose} />
+        <UserMenuList isAdmin={isAdmin} onSelect={handleClose} />
       </Menu>
-    </React.Fragment>
+    </>
   );
 }
-
-// <Menu> automatically applies a ref to its first child for anchoring. The
-// following prevents a console warning: "Function components cannot be given refs.
-// Attempts to access this ref will fail. Did you mean to use React.forwardRef()?"
-const WrappedUserMenuList = React.forwardRef(
-  (props: React.ComponentProps<typeof UserMenuList>, ref) => (
-    <UserMenuList {...props} forwardedRef={ref} />
-  )
-);
 
 interface UserMenuListProps {
   isAdmin: boolean;
@@ -102,6 +116,11 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
   const combineAppRelease = RuntimeConfig.getInstance().appRelease();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const iconStyle: React.CSSProperties =
+    document.body.dir == "rtl" ? { marginLeft: 6 } : { marginRight: 6 };
+
   return (
     <div ref={props.forwardedRef}>
       {/* Only show Site Settings link to Admin users. */}
@@ -110,11 +129,11 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
           id={`${idAffix}-admin`}
           onClick={() => {
             dispatch(clearCurrentProject());
-            history.push(Path.SiteSettings);
+            navigate(Path.SiteSettings);
             props.onSelect();
           }}
         >
-          <SettingsApplications style={{ marginRight: theme.spacing(1) }} />
+          <SettingsApplications style={iconStyle} />
           {t("userMenu.siteSettings")}
         </MenuItem>
       )}
@@ -122,11 +141,11 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
       <MenuItem
         id={`${idAffix}-user`}
         onClick={() => {
-          history.push(Path.UserSettings);
+          navigate(Path.UserSettings);
           props.onSelect();
         }}
       >
-        <Person style={{ marginRight: theme.spacing(1) }} />
+        <Person style={iconStyle} />
         {t("userMenu.userSettings")}
       </MenuItem>
 
@@ -137,24 +156,24 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
           props.onSelect();
         }}
       >
-        <Help style={{ marginRight: theme.spacing(1) }} />
+        <Info style={iconStyle} />
         {t("userMenu.userGuide")}
       </MenuItem>
 
       <MenuItem
         id={`${idAffix}-logout`}
         onClick={() => {
-          history.push(Path.Login);
+          navigate(Path.Login);
           props.onSelect();
         }}
       >
-        <ExitToApp style={{ marginRight: theme.spacing(1) }} />
+        <ExitToApp style={iconStyle} />
         {t("userMenu.logout")}
       </MenuItem>
 
       <MenuItem
-        id={`${idAffix}-version`}
         disabled
+        id={`${idAffix}-version`}
         style={{ justifyContent: "center" }}
       >
         {combineAppRelease}

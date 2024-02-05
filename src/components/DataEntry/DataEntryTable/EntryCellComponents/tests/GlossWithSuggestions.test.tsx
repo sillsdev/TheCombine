@@ -1,52 +1,62 @@
 import React from "react";
 import renderer from "react-test-renderer";
 
-import { WritingSystem } from "api/models";
-import LocalizedGlossWithSuggestions from "components/DataEntry/DataEntryTable/EntryCellComponents/GlossWithSuggestions";
+import GlossWithSuggestions from "components/DataEntry/DataEntryTable/EntryCellComponents/GlossWithSuggestions";
+import { newWritingSystem } from "types/writingSystem";
 
-describe("Tests GlossWithSuggestions", () => {
-  it("renders without crashing", () => {
+// A work-around for this console error: https://github.com/mui/material-ui/issues/28687#issuecomment-1513741911
+jest.mock("@mui/base/node/useAutocomplete/useAutocomplete", () => ({
+  useAutocomplete: () => ({
+    getInputLabelProps: jest.fn(),
+    getInputProps: () => ({ onMouseDown: jest.fn() }),
+    getListboxProps: () => ({ ref: {} }),
+    getRootProps: jest.fn(),
+  }),
+}));
+
+describe("GlossWithSuggestions", () => {
+  it("renders with gloss", () => {
     renderer.act(() => {
       renderer.create(
-        <LocalizedGlossWithSuggestions
-          gloss={""}
-          glossInput={React.createRef<HTMLDivElement>()}
+        <GlossWithSuggestions
+          gloss={"gloss"}
+          glossInput={React.createRef<HTMLInputElement>()}
           updateGlossField={jest.fn()}
-          handleEnterAndTab={jest.fn()}
-          analysisLang={{} as WritingSystem}
-          textFieldId={""}
+          handleEnter={jest.fn()}
+          analysisLang={newWritingSystem()}
+          textFieldId={"test-gloss"}
         />
       );
     });
   });
 
-  it("renders new without crashing", () => {
+  it("renders new", () => {
     renderer.act(() => {
       renderer.create(
-        <LocalizedGlossWithSuggestions
+        <GlossWithSuggestions
           isNew
           gloss={""}
-          glossInput={React.createRef<HTMLDivElement>()}
+          glossInput={React.createRef<HTMLInputElement>()}
           updateGlossField={jest.fn()}
-          handleEnterAndTab={jest.fn()}
-          analysisLang={{} as WritingSystem}
-          textFieldId={""}
+          handleEnter={jest.fn()}
+          analysisLang={newWritingSystem()}
+          textFieldId={"test-gloss-new"}
         />
       );
     });
   });
 
-  it("renders disabled without crashing", () => {
+  it("renders disabled", () => {
     renderer.act(() => {
       renderer.create(
-        <LocalizedGlossWithSuggestions
+        <GlossWithSuggestions
           isDisabled
           gloss={""}
-          glossInput={React.createRef<HTMLDivElement>()}
+          glossInput={React.createRef<HTMLInputElement>()}
           updateGlossField={jest.fn()}
-          handleEnterAndTab={jest.fn()}
-          analysisLang={{} as WritingSystem}
-          textFieldId={""}
+          handleEnter={jest.fn()}
+          analysisLang={newWritingSystem()}
+          textFieldId={"test-gloss-disabled"}
         />
       );
     });

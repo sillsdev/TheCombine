@@ -1,6 +1,6 @@
 /* Adapted from https://react.i18next.com/misc/testing
  * (In most cases, this isn't needed.
- * Instead you can use tests/mockReactI18next.ts to mock out i18n completely.)
+ * Instead you can use tests/reactI18nextMock.ts to mock out i18n completely.)
  * For a simple i18next wrapper, add the following to a test file:
  * * import { I18nextProvider } from "react-i18next";
  * * import i18n from "tests/i18nMock";

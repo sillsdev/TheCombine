@@ -51,10 +51,9 @@ namespace Backend.Tests
                 Created = RandString(),
                 Vernacular = RandString(),
                 Modified = RandString(),
-                PartOfSpeech = RandString(),
                 Plural = RandString(),
                 History = new List<string>(),
-                Audio = new List<string>(),
+                Audio = new List<Pronunciation>(),
                 EditedBy = new List<string> { RandString(), RandString() },
                 ProjectId = projId ?? RandString(),
                 Senses = new List<Sense> { RandomSense(), RandomSense(), RandomSense() },
@@ -67,6 +66,7 @@ namespace Backend.Tests
             return new Sense
             {
                 Accessibility = Status.Active,
+                GrammaticalInfo = new GrammaticalInfo(RandString()),
                 Glosses = new List<Gloss> { RandomGloss(), RandomGloss(), RandomGloss() },
                 SemanticDomains = new List<SemanticDomain>
                 {
@@ -132,12 +132,7 @@ namespace Backend.Tests
 
         public static WritingSystem RandomWritingSystem()
         {
-            return new WritingSystem
-            {
-                Name = RandString(),
-                Bcp47 = RandString(),
-                Font = RandString()
-            };
+            return new(RandString(), RandString(), RandString());
         }
     }
 }

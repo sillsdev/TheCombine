@@ -4,7 +4,9 @@
 
   // List of extensions which should be recommended for users of this workspace.
   "recommendations": [
+    "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
+    "ms-azuretools.vscode-docker",
     "ms-dotnettools.csharp",
     "redhat.vscode-yaml",
     "streetsidesoftware.code-spell-checker"

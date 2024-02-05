@@ -23,11 +23,11 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(_projects.Select(project => project.Clone()).ToList());
         }
 
-        public Task<Project?> GetProject(string id)
+        public Task<Project?> GetProject(string projectId)
         {
             try
             {
-                var foundProjects = _projects.Single(project => project.Id == id);
+                var foundProjects = _projects.Single(project => project.Id == projectId);
                 return Task.FromResult<Project?>(foundProjects.Clone());
             }
             catch (InvalidOperationException)
@@ -59,13 +59,13 @@ namespace Backend.Tests.Mocks
         /// <summary>
         /// Delete a project and any associated files stored on disk.
         /// </summary>
-        public Task<bool> Delete(string id)
+        public Task<bool> Delete(string projectId)
         {
-            var foundProject = _projects.Single(project => project.Id == id);
+            var foundProject = _projects.Single(project => project.Id == projectId);
             var success = _projects.Remove(foundProject);
 
             // Clean up any files stored on disk for this project.
-            var projectFilePath = FileStorage.GetProjectDir(id);
+            var projectFilePath = FileStorage.GetProjectDir(projectId);
             if (Directory.Exists(projectFilePath))
             {
                 Directory.Delete(projectFilePath, true);
@@ -73,9 +73,9 @@ namespace Backend.Tests.Mocks
             return Task.FromResult(success);
         }
 
-        public Task<ResultOfUpdate> Update(string id, Project project)
+        public Task<ResultOfUpdate> Update(string projectId, Project project)
         {
-            var foundProject = _projects.Single(u => u.Id == id);
+            var foundProject = _projects.Single(u => u.Id == projectId);
             var success = _projects.Remove(foundProject);
             if (!success)
             {
@@ -95,7 +95,8 @@ namespace Backend.Tests.Mocks
 
         public Task<bool> CanImportLift(string projectId)
         {
-            return Task.FromResult(true);
+            var project = _projects.Find(p => p.Id == projectId);
+            return Task.FromResult(project?.LiftImported != true);
         }
     }
 }

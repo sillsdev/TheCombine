@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+﻿using System;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
@@ -8,11 +8,25 @@ using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
 {
-    public class BannerControllerTests
+    public class BannerControllerTests : IDisposable
     {
         private IBannerRepository _bannerRepo = null!;
         private IPermissionService _permissionService = null!;
         private BannerController _bannerController = null!;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _bannerController?.Dispose();
+            }
+        }
 
         private const BannerType Type = BannerType.Login;
         private const string Text = "Login Banner Text";
@@ -29,10 +43,10 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUpdateBanner()
         {
-            var result = (bool)((ObjectResult)_bannerController.UpdateBanner(_siteBanner).Result).Value!;
-            Assert.IsTrue(result);
-            var banner = (SiteBanner)((ObjectResult)_bannerController.GetBanner(Type).Result).Value!;
-            Assert.AreEqual(banner, _siteBanner);
+            var updateResult = (ObjectResult)_bannerController.UpdateBanner(_siteBanner).Result;
+            Assert.That(updateResult.Value, Is.True);
+            var bannerResult = (ObjectResult)_bannerController.GetBanner(Type).Result;
+            Assert.That(bannerResult.Value, Is.EqualTo(_siteBanner));
         }
 
         [Test]
@@ -40,17 +54,17 @@ namespace Backend.Tests.Controllers
         {
             _bannerController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = _bannerController.UpdateBanner(_siteBanner).Result;
-            Assert.IsInstanceOf<ForbidResult>(result);
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 
         [Test]
         public void TestGetBannerNoPermission()
         {
-            var result = (bool)((ObjectResult)_bannerController.UpdateBanner(_siteBanner).Result).Value!;
-            Assert.IsTrue(result);
+            var updateResult = (ObjectResult)_bannerController.UpdateBanner(_siteBanner).Result;
+            Assert.That(updateResult.Value, Is.True);
             _bannerController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-            var banner = (SiteBanner)((ObjectResult)_bannerController.GetBanner(Type).Result).Value!;
-            Assert.AreEqual(banner, _siteBanner);
+            var bannerResult = (ObjectResult)_bannerController.GetBanner(Type).Result;
+            Assert.That(bannerResult.Value, Is.EqualTo(_siteBanner));
         }
     }
 }

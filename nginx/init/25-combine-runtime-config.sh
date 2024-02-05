@@ -48,11 +48,11 @@ OUTFILE=${FRONTEND_HOST_DIR}/scripts/config.js
 # JavaScript object that is generated.
 declare -A env_map
 env_map=(
-  ["CONFIG_BASE_URL"]="baseUrl"
   ["CONFIG_USE_CONNECTION_URL"]="useConnectionBaseUrlForApi"
   ["CONFIG_CAPTCHA_REQD"]="captchaRequired"
   ["CONFIG_CAPTCHA_SITE_KEY"]="captchaSiteKey"
   ["CONFIG_ANALYTICS_WRITE_KEY"]="analyticsWriteKey"
+  ["CONFIG_OFFLINE"]="offline"
   ["CONFIG_EMAIL_ENABLED"]="emailServicesEnabled"
   ["CONFIG_SHOW_CERT_EXPIRATION"]="showCertExpiration"
 )

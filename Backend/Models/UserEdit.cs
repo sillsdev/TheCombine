@@ -34,8 +34,8 @@ namespace BackendFramework.Models
         {
             var clone = new UserEdit
             {
-                Id = (string)Id.Clone(),
-                ProjectId = (string)ProjectId.Clone(),
+                Id = Id,
+                ProjectId = ProjectId,
                 Edits = new List<Edit>()
             };
 
@@ -50,7 +50,7 @@ namespace BackendFramework.Models
         public bool ContentEquals(UserEdit other)
         {
             return
-                other.ProjectId.Equals(ProjectId) &&
+                other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
                 other.Edits.Count == Edits.Count &&
                 other.Edits.All(Edits.Contains);
         }
@@ -62,7 +62,7 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return other.Id.Equals(Id) && ContentEquals(other);
+            return other.Id.Equals(Id, StringComparison.Ordinal) && ContentEquals(other);
         }
 
         public override int GetHashCode()
@@ -74,21 +74,18 @@ namespace BackendFramework.Models
     public class UserEditStepWrapper
     {
         [Required]
-        [BsonElement("goalIndex")]
-        public int GoalIndex { get; set; }
+        public Guid EditGuid { get; set; }
 
         [Required]
-        [BsonElement("stepString")]
         public string StepString { get; set; }
 
         /* A null StepIndex implies index equal to the length of the step list--
          * i.e. the step is to be added to the end of the list. */
-        [BsonElement("stepIndex")]
         public int? StepIndex { get; set; }
 
-        public UserEditStepWrapper(int goalIndex, string stepString, int? stepIndex = null)
+        public UserEditStepWrapper(Guid editGuid, string stepString, int? stepIndex = null)
         {
-            GoalIndex = goalIndex;
+            EditGuid = editGuid;
             StepString = stepString;
             StepIndex = stepIndex;
         }
@@ -100,13 +97,14 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return other.GoalIndex.Equals(GoalIndex)
-                && other.StepString.Equals(StepString) && other.StepIndex.Equals(StepIndex);
+            return other.EditGuid == EditGuid &&
+                other.StepString.Equals(StepString, StringComparison.Ordinal) &&
+                other.StepIndex == StepIndex;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(GoalIndex, StepString, StepIndex);
+            return HashCode.Combine(EditGuid, StepString, StepIndex);
         }
     }
 
@@ -114,9 +112,11 @@ namespace BackendFramework.Models
     {
         [Required]
         [BsonElement("guid")]
+#pragma warning disable CA1720
         public Guid Guid { get; set; }
+#pragma warning restore CA1720
 
-        /// <summary> Integer representation of enum <see cref="Models.GoalType"/> </summary>
+        /// <summary> Integer representation of enum GoalType in src/types/goals.ts </summary>
         [Required]
         [BsonElement("goalType")]
         public int GoalType { get; set; }
@@ -144,12 +144,12 @@ namespace BackendFramework.Models
                 Guid = Guid,
                 GoalType = GoalType,
                 StepData = new List<string>(),
-                Changes = (string)Changes.Clone()
+                Changes = Changes
             };
 
-            foreach (var stepData in StepData)
+            foreach (var step in StepData)
             {
-                clone.StepData.Add((string)stepData.Clone());
+                clone.StepData.Add(step);
             }
 
             return clone;
@@ -162,26 +162,16 @@ namespace BackendFramework.Models
                 return false;
             }
 
-            return other.Guid.Equals(Guid) && other.GoalType.Equals(GoalType) &&
+            return other.Guid.Equals(Guid) &&
+                other.GoalType.Equals(GoalType) &&
                 other.StepData.Count == StepData.Count &&
-                other.StepData.All(StepData.Contains) && other.Changes.Equals(Changes);
+                other.StepData.All(StepData.Contains) &&
+                other.Changes.Equals(Changes, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()
         {
             return HashCode.Combine(Guid, GoalType, StepData, Changes);
         }
-    }
-
-    public enum GoalType
-    {
-        CreateCharInv,
-        ValidateChars,
-        CreateStrWordInv,
-        ValidateStrWords,
-        MergeDups,
-        SpellcheckGloss,
-        ViewFind,
-        HandleFlags
     }
 }

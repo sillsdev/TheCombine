@@ -13,54 +13,58 @@ namespace Backend.Tests.Models
         public void TestEquals()
         {
             var edit = new UserEdit { ProjectId = ProjectId };
-            Assert.That(edit.Equals(new UserEdit { ProjectId = ProjectId }));
+            Assert.That(edit.Equals(new UserEdit { ProjectId = ProjectId }), Is.True);
         }
 
         [Test]
         public void TestNotEquals()
         {
             var edit = new UserEdit { ProjectId = ProjectId };
-            Assert.IsFalse(edit.Equals(new UserEdit { ProjectId = "Different Id" }));
+            Assert.That(edit.Equals(new UserEdit { ProjectId = "Different Id" }), Is.False);
         }
 
         [Test]
         public void TestEqualsNull()
         {
             var edit = new UserEdit { ProjectId = ProjectId };
-            Assert.IsFalse(edit.Equals(null));
+            Assert.That(edit.Equals(null), Is.False);
         }
 
         [Test]
         public void TestHashCode()
         {
-            Assert.AreNotEqual(
+            Assert.That(
                 new UserEdit { ProjectId = ProjectId }.GetHashCode(),
-                new UserEdit { ProjectId = "Different Id" }.GetHashCode());
+                Is.Not.EqualTo(new UserEdit { ProjectId = "Different Id" }.GetHashCode()));
         }
     }
 
     public class UserEditStepWrapperTests
     {
-        private const int GoalIndex = 1;
+        private readonly Guid EditGuid = Guid.NewGuid();
         private const string StepString = "step";
         private const int StepIndex = 1;
 
         [Test]
         public void TestEquals()
         {
-            var wrapper = new UserEditStepWrapper(GoalIndex, StepString, StepIndex);
-            Assert.That(wrapper.Equals(new UserEditStepWrapper(GoalIndex, StepString, StepIndex)));
-            Assert.IsFalse(wrapper.Equals(new UserEditStepWrapper(99, StepString, StepIndex)));
-            Assert.IsFalse(wrapper.Equals(new UserEditStepWrapper(GoalIndex, "Different step", StepIndex)));
-            Assert.IsFalse(wrapper.Equals(new UserEditStepWrapper(GoalIndex, StepString, 99)));
-            Assert.IsFalse(wrapper.Equals(null));
+            var wrapper = new UserEditStepWrapper(EditGuid, StepString, StepIndex);
+            Assert.That(wrapper.Equals(new UserEditStepWrapper(EditGuid, StepString, StepIndex)), Is.True);
+            Assert.That(wrapper.Equals(new UserEditStepWrapper(Guid.NewGuid(), StepString, StepIndex)), Is.False);
+            Assert.That(wrapper.Equals(new UserEditStepWrapper(EditGuid, "Different step", StepIndex)), Is.False);
+            Assert.That(wrapper.Equals(new UserEditStepWrapper(EditGuid, StepString, 99)), Is.False);
+            Assert.That(wrapper.Equals(null), Is.False);
         }
 
         [Test]
         public void TestHashCode()
         {
-            Assert.AreNotEqual(new UserEditStepWrapper(GoalIndex, StepString, StepIndex).GetHashCode(),
-                new UserEditStepWrapper(99, StepString, StepIndex).GetHashCode());
+            var code = new UserEditStepWrapper(EditGuid, StepString, StepIndex).GetHashCode();
+            Assert.That(code,
+                Is.Not.EqualTo(new UserEditStepWrapper(Guid.NewGuid(), StepString, StepIndex).GetHashCode()));
+            Assert.That(code,
+                Is.Not.EqualTo(new UserEditStepWrapper(EditGuid, "Different step", StepIndex).GetHashCode()));
+            Assert.That(code, Is.Not.EqualTo(new UserEditStepWrapper(EditGuid, StepString, 99).GetHashCode()));
         }
     }
 
@@ -75,15 +79,15 @@ namespace Backend.Tests.Models
         public void TestEquals()
         {
             var edit = new Edit { Guid = _guid };
-            Assert.That(edit.Equals(new Edit { Guid = _guid }));
+            Assert.That(edit.Equals(new Edit { Guid = _guid }), Is.True);
             edit.GoalType = GoalType;
-            Assert.That(edit.Equals(new Edit { Guid = _guid, GoalType = GoalType }));
+            Assert.That(edit.Equals(new Edit { Guid = _guid, GoalType = GoalType }), Is.True);
             edit.StepData = _stepData;
             Assert.That(edit.Equals(
-                new Edit { GoalType = GoalType, Guid = _guid, StepData = _stepData }));
+                new Edit { GoalType = GoalType, Guid = _guid, StepData = _stepData }), Is.True);
             edit.Changes = Changes;
             Assert.That(edit.Equals(
-                new Edit { GoalType = GoalType, Guid = _guid, StepData = _stepData, Changes = Changes }));
+                new Edit { GoalType = GoalType, Guid = _guid, StepData = _stepData, Changes = Changes }), Is.True);
 
         }
 
@@ -91,21 +95,21 @@ namespace Backend.Tests.Models
         public void TestEqualsNull()
         {
             var edit = new Edit();
-            Assert.IsFalse(edit.Equals(null));
+            Assert.That(edit.Equals(null), Is.False);
             edit = new Edit { GoalType = GoalType };
-            Assert.IsFalse(edit.Equals(null));
+            Assert.That(edit.Equals(null), Is.False);
             edit = new Edit { StepData = _stepData };
-            Assert.IsFalse(edit.Equals(null));
+            Assert.That(edit.Equals(null), Is.False);
             edit = new Edit { Changes = Changes };
-            Assert.IsFalse(edit.Equals(null));
+            Assert.That(edit.Equals(null), Is.False);
         }
 
         [Test]
         public void TestHashCode()
         {
-            Assert.AreNotEqual(
+            Assert.That(
                 new Edit { Guid = _guid, GoalType = GoalType }.GetHashCode(),
-                new Edit { Guid = _guid, GoalType = 5 }.GetHashCode());
+                Is.Not.EqualTo(new Edit { Guid = _guid, GoalType = 5 }.GetHashCode()));
         }
     }
 }

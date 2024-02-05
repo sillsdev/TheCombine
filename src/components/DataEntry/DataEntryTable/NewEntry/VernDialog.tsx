@@ -1,36 +1,41 @@
 import {
   Dialog,
   DialogContent,
-  MenuItem,
+  Grid,
   MenuList,
   Typography,
 } from "@mui/material";
-import { withStyles } from "@mui/styles";
-import React from "react";
+import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Word } from "api/models";
-import DomainCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/DomainCell";
-import GlossCell from "goals/ReviewEntries/ReviewEntriesComponent/CellComponents/GlossCell";
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesComponent/ReviewEntriesTypes";
-import theme from "types/theme";
+import { GramCatGroup, Word } from "api/models";
+import { CloseButton } from "components/Buttons";
+import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
+import {
+  DomainCell,
+  GlossCell,
+  PartOfSpeechCell,
+} from "goals/ReviewEntries/ReviewEntriesTable/CellComponents";
+import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";
 
 interface vernDialogProps {
   vernacularWords: Word[];
   open: boolean;
+  // Call handleClose with no input to indicate no selection was made.
   handleClose: (selectedWordId?: string) => void;
   analysisLang?: string;
 }
 
-export default function VernDialog(props: vernDialogProps) {
+export default function VernDialog(props: vernDialogProps): ReactElement {
   return (
     <Dialog
-      open={props.open}
+      maxWidth={false}
       onClose={(_, reason) => {
         if (reason !== "backdropClick") {
           props.handleClose();
         }
       }}
+      open={props.open}
     >
       <DialogContent>
         <VernList
@@ -45,55 +50,68 @@ export default function VernDialog(props: vernDialogProps) {
 
 interface VernListProps {
   vernacularWords: Word[];
-  closeDialog: (selectedWordId: string) => void;
+  closeDialog: (wordId?: string) => void;
   analysisLang?: string;
 }
 
-// Copied from customized menus at https://material-ui.com/components/menus/
-export const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    "&:focus": {
-      backgroundColor: theme.palette.primary.main,
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: theme.palette.common.white,
-      },
-    },
-  },
-}))(MenuItem);
-
-export function VernList(props: VernListProps) {
+export function VernList(props: VernListProps): ReactElement {
   const { t } = useTranslation();
 
-  return (
-    <React.Fragment>
-      <Typography variant="h3">{t("addWords.selectEntry")}</Typography>
-      <MenuList autoFocusItem>
-        {props.vernacularWords.map((word) => (
-          <StyledMenuItem
-            onClick={() => props.closeDialog(word.id)}
-            key={word.id}
-            id={word.id}
-          >
-            {<h4 style={{ margin: theme.spacing(2) }}>{word.vernacular}</h4>}
-            <div style={{ margin: theme.spacing(4) }}>
-              <GlossCell
-                value={new ReviewEntriesWord(word, props.analysisLang).senses}
-                rowData={new ReviewEntriesWord(word, props.analysisLang)}
-              />
-            </div>
-            <div style={{ margin: theme.spacing(4) }}>
-              <DomainCell
-                rowData={new ReviewEntriesWord(word, props.analysisLang)}
-              />
-            </div>
-          </StyledMenuItem>
-        ))}
+  const hasPartsOfSpeech = !!props.vernacularWords.find((w) =>
+    w.senses.find(
+      (s) => s.grammaticalInfo.catGroup !== GramCatGroup.Unspecified
+    )
+  );
 
-        <StyledMenuItem onClick={() => props.closeDialog("")}>
-          {t("addWords.newEntryFor")}
-          {props.vernacularWords[0].vernacular}
-        </StyledMenuItem>
-      </MenuList>
-    </React.Fragment>
+  const menuItem = (word: Word): ReactElement => {
+    const entry = new ReviewEntriesWord(word, props.analysisLang);
+    return (
+      <StyledMenuItem
+        id={word.id}
+        key={word.id}
+        onClick={() => props.closeDialog(word.id)}
+      >
+        <Grid
+          container
+          justifyContent="space-between"
+          alignItems="center"
+          spacing={5}
+        >
+          <Grid item xs="auto">
+            <Typography variant="h5">{word.vernacular}</Typography>
+          </Grid>
+          <Grid item xs="auto">
+            <GlossCell rowData={entry} value={entry.senses} />
+          </Grid>
+          {hasPartsOfSpeech && (
+            <Grid item xs="auto">
+              <PartOfSpeechCell rowData={entry} />
+            </Grid>
+          )}
+          <Grid item xs>
+            <DomainCell rowData={entry} />
+          </Grid>
+        </Grid>
+      </StyledMenuItem>
+    );
+  };
+
+  const menuItems = props.vernacularWords.map(menuItem);
+  menuItems.push(
+    <StyledMenuItem key="new-entry" onClick={() => props.closeDialog("")}>
+      {t("addWords.newEntryFor")}
+      {props.vernacularWords[0].vernacular}
+    </StyledMenuItem>
+  );
+
+  return (
+    <>
+      {/* Cancel button */}
+      <CloseButton close={() => props.closeDialog()} />
+      {/* Header */}
+      <Typography variant="h3">{t("addWords.selectEntry")}</Typography>
+      {/* Entry options */}
+      <MenuList autoFocusItem>{menuItems}</MenuList>
+    </>
   );
 }

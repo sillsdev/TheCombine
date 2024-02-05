@@ -27,7 +27,7 @@ namespace BackendFramework.Helper
         /// each with multiple <see cref="Word"/>s having a common Vernacular.
         /// </summary>
         public async Task<List<List<Word>>> GetIdenticalVernWords(
-            List<Word> collection, Func<List<string>, Task<bool>> isInBlacklist)
+            List<Word> collection, Func<List<string>, Task<bool>> isUnavailableSet)
         {
             var wordLists = new List<List<Word>> { Capacity = _maxLists };
             while (collection.Count > 0 && wordLists.Count < _maxLists)
@@ -40,10 +40,10 @@ namespace BackendFramework.Helper
                     continue;
                 }
 
-                // Check if set is in blacklist.
+                // Check if set is in blacklist or graylist.
                 var ids = new List<string> { word.Id };
                 ids.AddRange(similarWords.Select(w => w.Id));
-                if (await isInBlacklist(ids))
+                if (await isUnavailableSet(ids))
                 {
                     continue;
                 }
@@ -62,7 +62,7 @@ namespace BackendFramework.Helper
         /// the outer list is ordered by similarity of the first two items in each inner List.
         /// </returns>
         public async Task<List<List<Word>>> GetSimilarWords(
-            List<Word> collection, Func<List<string>, Task<bool>> isInBlacklist)
+            List<Word> collection, Func<List<string>, Task<bool>> isUnavailableSet)
         {
             double currentMax = _maxScore;
             var wordLists = new List<Tuple<double, List<Word>>> { Capacity = _maxLists + 1 };
@@ -81,10 +81,10 @@ namespace BackendFramework.Helper
                     continue;
                 }
 
-                // Check if set is in blacklist.
+                // Check if set is in blacklist or graylist.
                 var ids = new List<string> { word.Id };
                 ids.AddRange(similarWords.Select(w => w.Item2.Id));
-                if (await isInBlacklist(ids))
+                if (await isUnavailableSet(ids))
                 {
                     continue;
                 }
@@ -130,7 +130,7 @@ namespace BackendFramework.Helper
             var identicalWords = new List<Word> { Capacity = _maxInList - 1 };
             foreach (var other in collection)
             {
-                if (word.Vernacular == other.Vernacular)
+                if (word.Vernacular == other.Vernacular && HaveCommonGramCatGroup(word, other))
                 {
                     identicalWords.Add(other);
                     if (identicalWords.Count == _maxInList - 1)
@@ -194,20 +194,34 @@ namespace BackendFramework.Helper
         /// <param name="wordA"> The first of two Words to compare. </param>
         /// <param name="wordB"> The second of two Words to compare. </param>
         /// <param name="checkGlossThreshold">
-        /// A double (optional): If the Words' vernaculars have a score between this threshold and the _maxScore,
-        /// and if the Words share a common definition/gloss, then we override the score with this threshold.</param>
+        /// A double (default 1.0): If the Words' vernaculars have a score between this threshold and the _maxScore,
+        /// and if the Words share a common definition/gloss, then we override the score with this threshold.
+        /// </param>
+        /// <param name="gramCatPenalty">
+        /// A double (default 1.5): A penalty added to the score if the words have different GramCatGroups.
+        /// </param>
         /// <returns> A double: the adjusted distance between the words. </returns>
-        public double GetWordScore(Word wordA, Word wordB, double? checkGlossThreshold = 1.0)
+        public double GetWordScore(
+            Word wordA, Word wordB, double checkGlossThreshold = 1.0, double gramCatPenalty = 1.5)
         {
             var vernScore = GetScaledDistance(wordA.Vernacular, wordB.Vernacular);
-            if (checkGlossThreshold is null || vernScore <= checkGlossThreshold || vernScore > _maxScore)
+
+            if (!HaveCommonGramCatGroup(wordA, wordB))
+            {
+                checkGlossThreshold += gramCatPenalty;
+                vernScore += gramCatPenalty;
+            }
+
+            if (vernScore <= checkGlossThreshold || vernScore > _maxScore)
             {
                 return vernScore;
             }
+
             if (HaveIdenticalDefinition(wordA, wordB) || HaveIdenticalGloss(wordA, wordB))
             {
                 return (double)checkGlossThreshold;
             }
+
             return vernScore;
         }
 
@@ -275,6 +289,27 @@ namespace BackendFramework.Helper
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Check if two <see cref="Word"/>s have a common grammatical category group,
+        /// or if the grammatical category group is unspecified in every sense of one of the words.
+        /// </summary>
+        public static bool HaveCommonGramCatGroup(Word wordA, Word wordB)
+        {
+            var catGroupsA = wordA.Senses.Select(s => s.GrammaticalInfo.CatGroup).Distinct().ToList();
+            if (catGroupsA.Count == 1 && catGroupsA.Contains(GramCatGroup.Unspecified))
+            {
+                return true;
+            }
+
+            var catGroupsB = wordB.Senses.Select(s => s.GrammaticalInfo.CatGroup).Distinct().ToList();
+            if (catGroupsB.Count == 1 && catGroupsB.Contains(GramCatGroup.Unspecified))
+            {
+                return true;
+            }
+
+            return catGroupsA.Any(cg => cg != GramCatGroup.Unspecified && catGroupsB.Contains(cg));
         }
 
         /// <summary>

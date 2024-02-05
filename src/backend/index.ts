@@ -1,36 +1,39 @@
 import axios, { AxiosError } from "axios";
 import { StatusCodes } from "http-status-codes";
 import { Base64 } from "js-base64";
+import { enqueueSnackbar } from "notistack";
 
 import * as Api from "api";
 import { BASE_PATH } from "api/base";
 import {
   BannerType,
+  ChartRootData,
   EmailInviteStatus,
   MergeUndoIds,
   MergeWords,
   Permission,
   Project,
+  Role,
+  SemanticDomainCount,
   SemanticDomainFull,
   SemanticDomainTreeNode,
-  SemanticDomainCount,
+  SemanticDomainUserCount,
   SiteBanner,
+  Speaker,
   User,
   UserEdit,
   UserRole,
   Word,
-  SemanticDomainUserCount,
-  WordsPerDayPerUserCount,
-  ChartRootData,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
-import history, { Path } from "browserHistory";
+import router from "browserRouter";
 import authHeader from "components/Login/AuthHeaders";
-import { errorToast } from "components/Toast/SwalToast";
-import { convertGoalToEdit } from "types/goalUtilities";
 import { Goal, GoalStep } from "types/goals";
+import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
+import { FileWithSpeakerId } from "types/word";
 import { Bcp47Code } from "types/writingSystem";
+import { convertGoalToEdit } from "utilities/goalUtilities";
 
 export const baseURL = `${RuntimeConfig.getInstance().baseUrl()}`;
 const apiBaseURL = `${baseURL}/v1`;
@@ -54,7 +57,7 @@ axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
   if (response) {
     const status = response.status;
     if (status === StatusCodes.UNAUTHORIZED) {
-      history.push(Path.Login);
+      router.navigate(Path.Login);
     }
 
     // Check for fatal errors (4xx-5xx).
@@ -73,17 +76,15 @@ axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
         return Promise.reject(err);
       }
 
-      errorToast.fire({
-        title: `${status} ${response.statusText}`,
-        text: `${response.data}\n${err.config.url}`,
-      });
+      console.error(err);
+      enqueueSnackbar(`${status} ${response.statusText}\n${err.config.url}`);
     }
   } else {
     // Handle if backend is not reachable.
-    errorToast.fire({
-      title: `${err.message}`,
-      text: `Unable to connect to server. Check your network settings.\n${url}`,
-    });
+    console.error(err);
+    enqueueSnackbar(
+      `Unable to connect to server. Check your network settings.\n${url}`
+    );
   }
 
   return Promise.reject(err);
@@ -102,19 +103,21 @@ const semanticDomainApi = new Api.SemanticDomainApi(
   BASE_PATH,
   axiosInstance
 );
+const speakerApi = new Api.SpeakerApi(config, BASE_PATH, axiosInstance);
+const statisticsApi = new Api.StatisticsApi(config, BASE_PATH, axiosInstance);
 const userApi = new Api.UserApi(config, BASE_PATH, axiosInstance);
 const userEditApi = new Api.UserEditApi(config, BASE_PATH, axiosInstance);
 const userRoleApi = new Api.UserRoleApi(config, BASE_PATH, axiosInstance);
 const wordApi = new Api.WordApi(config, BASE_PATH, axiosInstance);
-const statisticsApi = new Api.StatisticsApi(config, BASE_PATH, axiosInstance);
 
 // Backend controllers receiving a file via a "[FromForm] FileUpload fileUpload" param
 // have the internal fields expanded by openapi-generator as params in our Api.
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function fileUpload(file: File) {
   return { file, filePath: "", name: "" };
 }
 
-function defaultOptions() {
+function defaultOptions(): object {
   return { headers: authHeader() };
 }
 
@@ -122,14 +125,16 @@ function defaultOptions() {
 
 export async function uploadAudio(
   wordId: string,
-  audioFile: File
+  file: FileWithSpeakerId
 ): Promise<string> {
   const projectId = LocalStorage.getProjectId();
-  const resp = await audioApi.uploadAudioFile(
-    { projectId, wordId, ...fileUpload(audioFile) },
-    { headers: { ...authHeader(), "content-type": "application/json" } }
-  );
-  return resp.data;
+  const speakerId = file.speakerId ?? "";
+  const params = { projectId, wordId, ...fileUpload(file) };
+  const headers = { ...authHeader(), "content-type": "application/json" };
+  const promise = speakerId
+    ? audioApi.uploadAudioFileWithSpeaker({ ...params, speakerId }, { headers })
+    : audioApi.uploadAudioFile(params, { headers });
+  return (await promise).data;
 }
 
 export async function deleteAudio(
@@ -201,12 +206,13 @@ export async function updateBanner(siteBanner: SiteBanner): Promise<boolean> {
 
 export async function emailInviteToProject(
   projectId: string,
+  role: Role,
   emailAddress: string,
   message: string
 ): Promise<string> {
   const domain = window.location.origin;
   const resp = await inviteApi.emailInviteToProject(
-    { emailInviteData: { emailAddress, message, projectId, domain } },
+    { emailInviteData: { emailAddress, message, projectId, role, domain } },
     defaultOptions()
   );
   return resp.data;
@@ -222,6 +228,24 @@ export async function validateLink(
 
 /* LiftController.cs */
 
+/** Upload a LIFT file during project creation to get vernacular ws options. */
+export async function uploadLiftAndGetWritingSystems(
+  liftFile: File
+): Promise<Api.WritingSystem[]> {
+  const resp = await liftApi.uploadLiftFileAndGetWritingSystems(
+    { projectId: "nonempty", ...fileUpload(liftFile) },
+    { headers: { ...authHeader(), "Content-Type": "multipart/form-data" } }
+  );
+  return resp.data;
+}
+
+/** Add data from a LIFT file that was uploaded earlier in the project's creation. */
+export async function finishUploadLift(projectId: string): Promise<number> {
+  const options = { headers: authHeader() };
+  return (await liftApi.finishUploadLiftFile({ projectId }, options)).data;
+}
+
+/** Upload a LIFT file and add its data to the specified project. */
 export async function uploadLift(
   projectId: string,
   liftFile: File
@@ -252,12 +276,15 @@ export async function downloadLift(projectId: string): Promise<string> {
   );
 }
 
-/** After downloading a LIFT file, clear it from the backend. */
-export async function deleteLift(projectId?: string): Promise<void> {
-  projectId = projectId ? projectId : LocalStorage.getProjectId();
-  await liftApi.deleteLiftFile({ projectId }, defaultOptions());
+/** After downloading a LIFT file, clear it from the backend.
+ * The backend deletes by user, not by project,
+ * but a nonempty projectId in the url is still required.
+ */
+export async function deleteLift(): Promise<void> {
+  await liftApi.deleteLiftFile({ projectId: "nonempty" }, defaultOptions());
 }
 
+/** Check if the current project doesn't already have uploaded data. */
 export async function canUploadLift(): Promise<boolean> {
   const projectId = LocalStorage.getProjectId();
   return (await liftApi.canUploadLift({ projectId }, defaultOptions())).data;
@@ -271,6 +298,7 @@ export async function mergeWords(mergeWords: MergeWords[]): Promise<string[]> {
   return (await mergeApi.mergeWords(params, defaultOptions())).data;
 }
 
+/** Restores words that were previously merged and deletes the merge result. */
 export async function undoMerge(wordIds: MergeUndoIds): Promise<boolean> {
   const params = {
     projectId: LocalStorage.getProjectId(),
@@ -282,6 +310,14 @@ export async function undoMerge(wordIds: MergeUndoIds): Promise<boolean> {
 /** Adds a list of wordIds to current project's merge blacklist. */
 export async function blacklistAdd(wordIds: string[]): Promise<void> {
   await mergeApi.blacklistAdd(
+    { projectId: LocalStorage.getProjectId(), requestBody: wordIds },
+    defaultOptions()
+  );
+}
+
+/** Adds a list of wordIds to current project's merge graylist */
+export async function graylistAdd(wordIds: string[]): Promise<void> {
+  await mergeApi.graylistAdd(
     { projectId: LocalStorage.getProjectId(), requestBody: wordIds },
     defaultOptions()
   );
@@ -301,14 +337,25 @@ export async function getDuplicates(
   return resp.data;
 }
 
+/** Get list of deferred potential duplicates from graylist for merging. */
+export async function getGraylistEntries(maxLists: number): Promise<Word[][]> {
+  const projectId = LocalStorage.getProjectId();
+  const userId = LocalStorage.getUserId();
+  const resp = await mergeApi.getGraylistEntries(
+    { projectId, maxLists, userId },
+    defaultOptions()
+  );
+  return resp.data;
+}
+
 /* ProjectController.cs */
 
 export async function getAllProjects(): Promise<Project[]> {
   return (await projectApi.getAllProjects(defaultOptions())).data;
 }
 
-export async function getAllUsersInCurrentProject(): Promise<User[]> {
-  const params = { projectId: LocalStorage.getProjectId() };
+export async function getAllProjectUsers(projectId?: string): Promise<User[]> {
+  const params = { projectId: projectId ?? LocalStorage.getProjectId() };
   return (await projectApi.getAllProjectUsers(params, defaultOptions())).data;
 }
 
@@ -335,10 +382,7 @@ export async function getAllActiveProjectsByUser(
       /** If there was an error, the project probably was manually deleted
        from the database or is ill-formatted. */
       console.error(err);
-      await errorToast.fire({
-        title: "Error Fetching Project",
-        text: `Unable to fetch Project: ${projectId}`,
-      });
+      enqueueSnackbar(`Unable to fetch Project: ${projectId}`);
     }
   }
   return projects;
@@ -420,11 +464,141 @@ export async function getSemanticDomainTreeNodeByName(
   return response.data ?? undefined;
 }
 
-export async function getAllSemanticDomainTreeNodes(
+/* SpeakerController.cs */
+
+/** Get all speakers (in current project if no projectId given).
+ * Returns array of speakers, sorted alphabetically by name. */
+export async function getAllSpeakers(projectId?: string): Promise<Speaker[]> {
+  const params = { projectId: projectId || LocalStorage.getProjectId() };
+  const resp = await speakerApi.getProjectSpeakers(params, defaultOptions());
+  return resp.data.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/** Get speaker by speakerId (in current project if no projectId given). */
+export async function getSpeaker(
+  speakerId: string,
+  projectId?: string
+): Promise<Speaker> {
+  projectId = projectId || LocalStorage.getProjectId();
+  const params = { projectId, speakerId };
+  return (await speakerApi.getSpeaker(params, defaultOptions())).data;
+}
+
+/** Creates new speaker (in current project if no projectId given).
+ * Returns id of new speaker. */
+export async function createSpeaker(
+  name: string,
+  projectId?: string
+): Promise<string> {
+  projectId = projectId || LocalStorage.getProjectId();
+  const params = { name, projectId };
+  return (await speakerApi.createSpeaker(params, defaultOptions())).data;
+}
+
+/** Delete specified speaker (in current project if no projectId given).
+ * Returns boolean of success. */
+export async function deleteSpeaker(
+  speakerId: string,
+  projectId?: string
+): Promise<boolean> {
+  projectId = projectId || LocalStorage.getProjectId();
+  const params = { projectId, speakerId };
+  return (await speakerApi.deleteSpeaker(params, defaultOptions())).data;
+}
+
+/** Remove consent of specified speaker (in current project if no projectId given).
+ * Returns id of updated speaker. */
+export async function removeConsent(speaker: Speaker): Promise<string> {
+  const projectId = speaker.projectId || LocalStorage.getProjectId();
+  const params = { projectId, speakerId: speaker.id };
+  return (await speakerApi.removeConsent(params, defaultOptions())).data;
+}
+
+/** Updates name of specified speaker (in current project if no projectId given).
+ * Returns id of updated speaker. */
+export async function updateSpeakerName(
+  speakerId: string,
+  name: string,
+  projectId?: string
+): Promise<string> {
+  projectId = projectId || LocalStorage.getProjectId();
+  const params = { name, projectId, speakerId };
+  return (await speakerApi.updateSpeakerName(params, defaultOptions())).data;
+}
+
+/** Uploads consent for specified speaker; overwrites previous consent.
+ * Returns updated speaker. */
+export async function uploadConsent(
+  speaker: Speaker,
+  file: File
+): Promise<Speaker> {
+  const { id, projectId } = speaker;
+  const params = { projectId, speakerId: id, ...fileUpload(file) };
+  const headers = { ...authHeader(), "content-type": "application/json" };
+  return (await speakerApi.uploadConsent(params, { headers })).data;
+}
+
+/** Use of the returned url acts as an HttpGet. */
+export function getConsentUrl(speaker: Speaker): string {
+  return `${apiBaseURL}/projects/${speaker.projectId}/speakers/consent/${speaker.id}`;
+}
+
+/** Returns the string to display the image inline in Base64 <img src= */
+export async function getConsentImageSrc(speaker: Speaker): Promise<string> {
+  const params = { projectId: speaker.projectId, speakerId: speaker.id };
+  const options = { headers: authHeader(), responseType: "arraybuffer" };
+  const resp = await speakerApi.downloadConsent(params, options);
+  const image = Base64.btoa(
+    new Uint8Array(resp.data).reduce(
+      (data, byte) => data + String.fromCharCode(byte),
+      ""
+    )
+  );
+  return `data:${resp.headers["content-type"].toLowerCase()};base64,${image}`;
+}
+
+/* StatisticsController.cs */
+
+export async function getSemanticDomainCounts(
+  projectId: string,
   lang?: string
-): Promise<SemanticDomainTreeNode | undefined> {
-  const response = await semanticDomainApi.getAllSemanticDomainTreeNodes(
-    { lang: lang ? lang : Bcp47Code.Default },
+): Promise<Array<SemanticDomainCount> | undefined> {
+  const response = await statisticsApi.getSemanticDomainCounts(
+    { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
+
+export async function getSemanticDomainUserCount(
+  projectId: string,
+  lang?: string
+): Promise<Array<SemanticDomainUserCount> | undefined> {
+  const response = await statisticsApi.getSemanticDomainUserCounts(
+    { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
+
+export async function getLineChartRootData(
+  projectId: string
+): Promise<ChartRootData | undefined> {
+  const response = await statisticsApi.getLineChartRootData(
+    { projectId: projectId },
+    defaultOptions()
+  );
+  // The backend response for this methods returns null rather than undefined.
+  return response.data ?? undefined;
+}
+
+export async function getProgressEstimationLineChartRoot(
+  projectId: string
+): Promise<ChartRootData | undefined> {
+  const response = await statisticsApi.getProgressEstimationLineChartRoot(
+    { projectId: projectId },
     defaultOptions()
   );
   // The backend response for this methods returns null rather than undefined.
@@ -445,6 +619,10 @@ export async function resetPasswordRequest(
     .catch(() => false);
 }
 
+export async function validateResetToken(token: string): Promise<boolean> {
+  return (await userApi.validateResetToken({ token })).data;
+}
+
 export async function resetPassword(
   token: string,
   newPassword: string
@@ -461,14 +639,9 @@ export async function addUser(user: User): Promise<User> {
   return { ...user, id: resp.data };
 }
 
-/** Returns true if the username is in use already. */
-export async function isUsernameTaken(username: string): Promise<boolean> {
-  return (await userApi.checkUsername({ username })).data;
-}
-
 /** Returns true if the email address is in use already. */
 export async function isEmailTaken(email: string): Promise<boolean> {
-  return (await userApi.checkEmail({ email })).data;
+  return (await userApi.isEmailUnavailable({ email })).data;
 }
 
 export async function authenticateUser(
@@ -515,14 +688,18 @@ export async function deleteUser(userId: string): Promise<string> {
   return (await userApi.deleteUser({ userId }, defaultOptions())).data;
 }
 
+export async function isSiteAdmin(): Promise<boolean> {
+  return (await userApi.isUserSiteAdmin(defaultOptions())).data;
+}
+
 /* UserEditController.cs */
 
-/** Returns index of added goal, or of updated goal
+/** Returns guid of added goal, or of updated goal
  * if goal with same guid already exists in the UserEdit */
 export async function addGoalToUserEdit(
   userEditId: string,
   goal: Goal
-): Promise<number> {
+): Promise<string> {
   const edit = convertGoalToEdit(goal);
   const resp = await userEditApi.updateUserEditGoal(
     { projectId: LocalStorage.getProjectId(), userEditId, edit },
@@ -534,13 +711,13 @@ export async function addGoalToUserEdit(
 /** Returns index of step within specified goal */
 export async function addStepToGoal(
   userEditId: string,
-  goalIndex: number,
+  editGuid: string,
   step: GoalStep,
   stepIndex?: number // If undefined, step will be added to end.
 ): Promise<number> {
   const projectId = LocalStorage.getProjectId();
   const stepString = JSON.stringify(step);
-  const userEditStepWrapper = { goalIndex, stepString, stepIndex };
+  const userEditStepWrapper = { editGuid, stepString, stepIndex };
   const resp = await userEditApi.updateUserEditStep(
     { projectId, userEditId, userEditStepWrapper },
     defaultOptions()
@@ -568,42 +745,39 @@ export async function getUserEditById(
   ).data;
 }
 
-/** Returns array with every UserEdit for the current project. */
-export async function getAllUserEdits(): Promise<UserEdit[]> {
-  const params = { projectId: LocalStorage.getProjectId() };
-  return (await userEditApi.getProjectUserEdits(params, defaultOptions())).data;
-}
-
 /* UserRoleController.cs */
 
-export async function getUserRoles(): Promise<UserRole[]> {
-  const params = { projectId: LocalStorage.getProjectId() };
+export async function getUserRoles(projectId?: string): Promise<UserRole[]> {
+  const params = { projectId: projectId ?? LocalStorage.getProjectId() };
   return (await userRoleApi.getProjectUserRoles(params, defaultOptions())).data;
 }
 
-export async function getUserRole(userRoleId: string): Promise<UserRole> {
-  const params = { projectId: LocalStorage.getProjectId(), userRoleId };
-  return (await userRoleApi.getUserRole(params, defaultOptions())).data;
-}
-
-export async function addOrUpdateUserRole(
-  permission: Permission[],
-  userId: string
-): Promise<string> {
-  const params = { projectId: LocalStorage.getProjectId(), userId, permission };
-  return (await userRoleApi.updateUserRolePermissions(params, defaultOptions()))
+export async function getCurrentPermissions(): Promise<Permission[]> {
+  const params = { projectId: LocalStorage.getProjectId() };
+  return (await userRoleApi.getCurrentPermissions(params, defaultOptions()))
     .data;
 }
 
+export async function hasPermission(perm: Permission): Promise<boolean> {
+  const params = { body: perm, projectId: LocalStorage.getProjectId() };
+  return (await userRoleApi.hasPermission(params, defaultOptions())).data;
+}
+
+export async function addOrUpdateUserRole(
+  projectId: string,
+  role: Role,
+  userId: string
+): Promise<string> {
+  const projectRole = { projectId, role };
+  const params = { projectId, projectRole, userId };
+  return (await userRoleApi.updateUserRole(params, defaultOptions())).data;
+}
+
 export async function removeUserRole(
-  permission: Permission[],
+  projectId: string,
   userId: string
 ): Promise<void> {
-  const params = {
-    projectId: LocalStorage.getProjectId(),
-    userId,
-    permission,
-  };
+  const params = { projectId, userId };
   await userRoleApi.deleteUserRole(params, defaultOptions());
 }
 
@@ -618,11 +792,6 @@ export async function createWord(word: Word): Promise<Word> {
 export async function deleteFrontierWord(wordId: string): Promise<string> {
   const params = { projectId: LocalStorage.getProjectId(), wordId };
   return (await wordApi.deleteFrontierWord(params, defaultOptions())).data;
-}
-
-export async function getAllWords(): Promise<Word[]> {
-  const projectId = LocalStorage.getProjectId();
-  return (await wordApi.getProjectWords({ projectId }, defaultOptions())).data;
 }
 
 export async function getDuplicateId(word: Word): Promise<string> {
@@ -645,17 +814,20 @@ export async function isFrontierNonempty(projectId?: string): Promise<boolean> {
   return (await wordApi.isFrontierNonempty(params, defaultOptions())).data;
 }
 
+export async function isInFrontier(
+  wordId: string,
+  projectId?: string
+): Promise<boolean> {
+  projectId = projectId || LocalStorage.getProjectId();
+  const params = { projectId, wordId };
+  return (await wordApi.isInFrontier(params, defaultOptions())).data;
+}
+
 export async function updateDuplicate(
   dupId: string,
-  userId: string,
   word: Word
 ): Promise<Word> {
-  const params = {
-    projectId: LocalStorage.getProjectId(),
-    dupId,
-    userId,
-    word,
-  };
+  const params = { projectId: LocalStorage.getProjectId(), dupId, word };
   const resp = await wordApi.updateDuplicate(params, defaultOptions());
   return await getWord(resp.data);
 }
@@ -666,50 +838,4 @@ export async function updateWord(word: Word): Promise<Word> {
     defaultOptions()
   );
   return { ...word, id: resp.data };
-}
-
-export async function getSemanticDomainCounts(
-  projectId: string,
-  lang?: string
-): Promise<Array<SemanticDomainCount> | undefined> {
-  const response = await statisticsApi.getSemanticDomainCounts(
-    { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
-    defaultOptions()
-  );
-  // The backend response for this methods returns null rather than undefined.
-  return response.data ?? undefined;
-}
-
-export async function getSemanticDomainUserCount(
-  projectId: string,
-  lang?: string
-): Promise<Array<SemanticDomainUserCount> | undefined> {
-  const response = await statisticsApi.getSemanticDomainUserCounts(
-    { projectId: projectId, lang: lang ? lang : Bcp47Code.Default },
-    defaultOptions()
-  );
-  // The backend response for this methods returns null rather than undefined.
-  return response.data ?? undefined;
-}
-
-export async function GetWordsPerDayPerUserCounts(
-  projectId: string
-): Promise<Array<WordsPerDayPerUserCount> | undefined> {
-  const response = await statisticsApi.getWordsPerDayPerUserCounts(
-    { projectId: projectId },
-    defaultOptions()
-  );
-  // The backend response for this methods returns null rather than undefined.
-  return response.data ?? undefined;
-}
-
-export async function getLineChartRootData(
-  projectId: string
-): Promise<ChartRootData | undefined> {
-  const response = await statisticsApi.getLineChartRootData(
-    { projectId: projectId },
-    defaultOptions()
-  );
-  // The backend response for this methods returns null rather than undefined.
-  return response.data ?? undefined;
 }

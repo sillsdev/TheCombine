@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -8,6 +9,8 @@ using System.Collections.Generic;
 
 namespace BackendFramework.Repositories
 {
+    /// <summary> Atomic database functions for the SemanticDomainTree and SemanticDomains collections. </summary>
+    [ExcludeFromCodeCoverage]
     public class SemanticDomainRepository : ISemanticDomainRepository
     {
         private ISemanticDomainContext _context;
@@ -79,8 +82,7 @@ namespace BackendFramework.Repositories
             var domain = await _context.SemanticDomains.FindAsync(filter: filter);
             try
             {
-                return (await domain.ToListAsync());
-
+                return await domain.ToListAsync();
             }
             catch (InvalidOperationException)
             {

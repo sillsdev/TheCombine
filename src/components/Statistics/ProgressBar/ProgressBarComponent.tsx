@@ -1,77 +1,61 @@
-import {
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  Theme,
-  Typography,
-} from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { useState, useEffect } from "react";
+import { Divider, ListItem, ListItemText } from "@mui/material";
+import { useState, useEffect, ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
-import LinearProgressWithLabel from "./LinearProgressBar";
 import { getSemanticDomainCounts } from "backend";
 import * as LocalStorage from "backend/localStorage";
+import LinearProgressWithLabel from "components/Statistics/ProgressBar/LinearProgressBar";
+import StyledList from "components/Statistics/StyledList";
 import { defaultWritingSystem } from "types/writingSystem";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    width: "100%",
-    maxWidth: "auto",
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
-
-export default function ProgressBarComponent() {
+export default function ProgressBarComponent(): ReactElement {
   const { t } = useTranslation();
-  const classes = useStyles();
   const [progressRatio, setProgressRatio] = useState<number>(0);
   const [totalDomainCount, setTotalDomainCount] = useState<number>(0);
   const [totalWordCount, setTotalWordCount] = useState<number>(0);
 
   useEffect(() => {
-    const updateProgress = async () => {
-      const statisticsList = await getSemanticDomainCounts(
+    const updateProgress = async (): Promise<void> => {
+      const statList = await getSemanticDomainCounts(
         LocalStorage.getProjectId(),
         defaultWritingSystem.bcp47
       );
-      var domainCount = 0;
-      var wordCount = 0;
-      statisticsList?.forEach((element) => {
-        if (element.count > 0) {
-          domainCount++;
-          wordCount += element.count;
-        }
-      });
+      let domainCount = 0;
+      let wordCount = 0;
+      if (statList?.length) {
+        statList.forEach((s) => {
+          if (s.count) {
+            domainCount++;
+            wordCount += s.count;
+          }
+        });
+        setProgressRatio(Math.ceil((domainCount * 100) / statList.length));
+      }
       setTotalDomainCount(domainCount);
       setTotalWordCount(wordCount);
-      statisticsList
-        ? setProgressRatio(
-            Math.ceil((domainCount * 100) / statisticsList!.length)
-          )
-        : null;
     };
 
     updateProgress();
   }, []);
 
   return (
-    <List className={classes.root}>
+    <StyledList>
       <ListItem>
         <ListItemText primary={t("statistics.domainProgress")} />
         <LinearProgressWithLabel value={progressRatio} />
       </ListItem>
       <Divider />
       <ListItem>
-        <ListItemText primary={t("statistics.domainsCollected")} />
-        <Typography>{totalDomainCount}</Typography>
+        <ListItemText
+          primary={t("statistics.domainsCollected", { val: totalDomainCount })}
+        />
       </ListItem>
       <Divider />
       <ListItem>
-        <ListItemText primary={t("statistics.wordsCollected")} />
-        <Typography>{totalWordCount}</Typography>
+        <ListItemText
+          primary={t("statistics.wordsCollected", { val: totalWordCount })}
+        />
       </ListItem>
-    </List>
+    </StyledList>
   );
 }

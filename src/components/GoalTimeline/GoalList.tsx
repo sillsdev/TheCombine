@@ -5,16 +5,18 @@ import {
   ImageListItem,
   Typography,
 } from "@mui/material";
-import { CSSProperties, ReactElement, useState } from "react";
+import { CSSProperties, Fragment, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { CharInvChangesGoalList } from "goals/CreateCharInv/CharInvComponent/CharInvCompleted";
-import { CreateCharInvChanges } from "goals/CreateCharInv/CreateCharInvTypes";
-import { MergesCount } from "goals/MergeDupGoal/MergeDupComponent/MergeDupsCompleted";
-import { MergesCompleted } from "goals/MergeDupGoal/MergeDupsTypes";
+import { CharInvChangesGoalList } from "goals/CharacterInventory/CharInvCompleted";
+import { CharInvChanges } from "goals/CharacterInventory/CharacterInventoryTypes";
+import { MergesCount } from "goals/MergeDuplicates/MergeDupsCompleted";
+import { MergesCompleted } from "goals/MergeDuplicates/MergeDupsTypes";
+import { EditsCount } from "goals/ReviewEntries/ReviewEntriesCompleted";
+import { EntriesEdited } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 
-export type Orientation = "horizontal" | "vertical";
+type Orientation = "horizontal" | "vertical";
 
 function gridStyle(
   orientation: Orientation,
@@ -55,6 +57,9 @@ export default function GoalList(props: GoalListProps): ReactElement {
   const [scrollVisible, setScrollVisible] = useState<boolean | undefined>();
   const tileSize = props.size / 3 - 1.25;
 
+  const id = (g: Goal): string =>
+    props.completed ? `completed-goal-${g.guid}` : `new-goal-${g.name}`;
+
   return (
     <ImageList
       style={gridStyle(props.orientation, props.size, scrollVisible)}
@@ -62,20 +67,24 @@ export default function GoalList(props: GoalListProps): ReactElement {
       onMouseOver={() => setScrollVisible(props.scrollable)}
       onMouseLeave={() => setScrollVisible(false)}
     >
-      {props.data.length > 0
-        ? props.data.map((g, i) => {
-            const buttonProps = {
-              id: props.completed
-                ? `completed-goal-${i}`
-                : `new-goal-${g.name}`,
-              onClick: () => props.handleChange(g),
-            };
-            return makeGoalTile(tileSize, props.orientation, g, buttonProps);
-          })
-        : makeGoalTile(tileSize, props.orientation)}
+      {props.data.length > 0 ? (
+        props.data.map((g) => (
+          <GoalTile
+            buttonProps={{ id: id(g), onClick: () => props.handleChange(g) }}
+            goal={g}
+            key={g.guid || g.name}
+            orientation={props.orientation}
+            size={tileSize}
+          />
+        ))
+      ) : (
+        <GoalTile size={tileSize} orientation={props.orientation} />
+      )}
       <div
         ref={(element: HTMLDivElement) => {
-          if (props.scrollToEnd && element) element.scrollIntoView(true);
+          if (props.scrollToEnd && element) {
+            element.scrollIntoView(true);
+          }
         }}
       />
     </ImageList>
@@ -85,40 +94,38 @@ export default function GoalList(props: GoalListProps): ReactElement {
 function buttonStyle(orientation: Orientation, size: number): CSSProperties {
   switch (orientation) {
     case "horizontal":
-      return {
-        height: "95%",
-        padding: "1vw",
-        width: size + "vw",
-      };
+      return { height: "95%", padding: "1vw", width: size + "vw" };
     case "vertical":
-      return {
-        height: "95%",
-        padding: "1vw",
-        width: "100%",
-      };
+      return { height: "95%", padding: "1vw", width: "100%" };
   }
 }
 
-export function makeGoalTile(
-  size: number,
-  orientation: Orientation,
-  goal?: Goal,
-  buttonProps?: ButtonProps
-): ReactElement {
+interface GoalTileProps {
+  buttonProps?: ButtonProps;
+  goal?: Goal;
+  orientation: Orientation;
+  size: number;
+}
+
+function GoalTile(props: GoalTileProps): ReactElement {
+  const goal = props.goal;
   return (
-    <ImageListItem key={goal?.guid + orientation} cols={1}>
+    <ImageListItem cols={1}>
       <Button
-        {...buttonProps}
+        {...props.buttonProps}
         color="primary"
         variant={goal ? "outlined" : "contained"}
-        style={buttonStyle(orientation, size)}
+        style={buttonStyle(props.orientation, props.size)}
         disabled={
           /* Hide completed, except goalTypes for which the completed view is implemented. */
           !goal ||
           (goal.status === GoalStatus.Completed &&
             goal.goalType !== GoalType.CreateCharInv &&
-            goal.goalType !== GoalType.MergeDups)
+            goal.goalType !== GoalType.MergeDups &&
+            goal.goalType !== GoalType.ReviewDeferredDups &&
+            goal.goalType !== GoalType.ReviewEntries)
         }
+        data-testid="goal-button"
       >
         <GoalInfo goal={goal} />
       </Button>
@@ -129,6 +136,7 @@ export function makeGoalTile(
 interface GoalInfoProps {
   goal?: Goal;
 }
+
 function GoalInfo(props: GoalInfoProps): ReactElement {
   const { t } = useTranslation();
 
@@ -138,26 +146,27 @@ function GoalInfo(props: GoalInfoProps): ReactElement {
   }
 
   if (goal.status === GoalStatus.Completed) {
-    let goalInfo: ReactElement | null;
-    switch (goal.goalType) {
-      case GoalType.CreateCharInv:
-        goalInfo = CharInvChangesGoalList(goal.changes as CreateCharInvChanges);
-        break;
-      case GoalType.MergeDups:
-        goalInfo = MergesCount(goal.changes as MergesCompleted);
-        break;
-      case GoalType.ReviewEntries:
-      default:
-        goalInfo = null;
-        break;
-    }
     return (
       <Typography variant="h6">
         {t(goal.name + ".title")}
-        {goalInfo}
+        {getCompletedGoalInfo(goal)}
       </Typography>
     );
   }
 
   return <Typography variant="h4">{t(goal.name + ".title")}</Typography>;
+}
+
+function getCompletedGoalInfo(goal: Goal): ReactElement {
+  switch (goal.goalType) {
+    case GoalType.CreateCharInv:
+      return CharInvChangesGoalList(goal.changes as CharInvChanges);
+    case GoalType.MergeDups:
+    case GoalType.ReviewDeferredDups:
+      return MergesCount(goal.changes as MergesCompleted);
+    case GoalType.ReviewEntries:
+      return EditsCount(goal.changes as EntriesEdited);
+    default:
+      return <Fragment />;
+  }
 }

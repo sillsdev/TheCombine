@@ -36,8 +36,12 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> EmailInviteToProject([FromBody, BindRequired] EmailInviteData data)
         {
             var projectId = data.ProjectId;
-            if (!_permissionService.HasProjectPermission(
+            if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
+            {
+                return Forbid();
+            }
+            if (!await _permissionService.ContainsProjectRole(HttpContext, data.Role, projectId))
             {
                 return Forbid();
             }
@@ -48,7 +52,7 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
-            var linkWithIdentifier = await _inviteService.CreateLinkWithToken(project, data.EmailAddress);
+            var linkWithIdentifier = await _inviteService.CreateLinkWithToken(project, data.Role, data.EmailAddress);
             await _inviteService.EmailLink(data.EmailAddress, data.Message, linkWithIdentifier, data.Domain, project);
             return Ok(linkWithIdentifier);
         }
@@ -69,79 +73,86 @@ namespace BackendFramework.Controllers
             var tokenObj = new EmailInvite();
             foreach (var tok in project.InviteTokens)
             {
-                if (tok.Token == token && DateTime.Now < tok.ExpireTime)
+                if (tok.Token == token)
                 {
-                    isTokenValid = true;
                     tokenObj = tok;
+                    if (DateTime.Now < tok.ExpireTime)
+                    {
+                        isTokenValid = true;
+                    }
                     break;
                 }
             }
 
             var users = await _userRepo.GetAllUsers();
             var currentUser = new User();
-            var isUserRegistered = false;
+            var isUserRegisteredAndNotInProject = false;
             foreach (var user in users)
             {
                 if (user.Email == tokenObj.Email)
                 {
                     currentUser = user;
-                    isUserRegistered = true;
+                    if (!user.ProjectRoles.ContainsKey(projectId))
+                    {
+                        isUserRegisteredAndNotInProject = true;
+                    }
                     break;
                 }
             }
 
-            var status = new EmailInviteStatus(isTokenValid, isUserRegistered);
-            if (isTokenValid && !isUserRegistered)
+            var status = new EmailInviteStatus(isTokenValid, isUserRegisteredAndNotInProject);
+            if (!isTokenValid || !isUserRegisteredAndNotInProject)
             {
                 return Ok(status);
             }
-            if (isTokenValid && isUserRegistered
-                                  && !currentUser.ProjectRoles.ContainsKey(projectId)
-                                  && await _inviteService.RemoveTokenAndCreateUserRole(project, currentUser, tokenObj))
+            if (await _inviteService.RemoveTokenAndCreateUserRole(project, currentUser, tokenObj))
             {
                 return Ok(status);
             }
-            return Ok(new EmailInviteStatus(false, false));
+            return Ok(new EmailInviteStatus(false, true));
         }
+    }
 
-        /// <remarks>
-        /// This is used in a [FromBody] serializer, so its attributes cannot be set to readonly.
-        /// </remarks>
-        public class EmailInviteData
+    /// <remarks>
+    /// This is used in a [FromBody] serializer, so its attributes cannot be set to readonly.
+    /// </remarks>
+    public class EmailInviteData
+    {
+        [Required]
+        public string EmailAddress { get; set; }
+        [Required]
+        public string Message { get; set; }
+        [Required]
+        public string ProjectId { get; set; }
+        [Required]
+        public Role Role { get; set; }
+        [Required]
+        public string Domain { get; set; }
+
+        public EmailInviteData()
         {
-            [Required]
-            public string EmailAddress { get; set; }
-            [Required]
-            public string Message { get; set; }
-            [Required]
-            public string ProjectId { get; set; }
-            [Required]
-            public string Domain { get; set; }
-
-            public EmailInviteData()
-            {
-                EmailAddress = "";
-                Message = "";
-                ProjectId = "";
-                Domain = "";
-            }
+            EmailAddress = "";
+            Message = "";
+            ProjectId = "";
+            Role = Role.Harvester;
+            Domain = "";
         }
+    }
 
-        /// <remarks>
-        /// This is used in an OpenAPI return value serializer, so its attributes must be defined as properties.
-        /// </remarks>
-        public class EmailInviteStatus
+    /// <remarks>
+    /// This is used in an OpenAPI return value serializer, so its attributes must be defined as properties.
+    /// </remarks>
+    public class EmailInviteStatus
+    {
+        [Required]
+        public bool IsTokenValid { get; set; }
+        [Required]
+        public bool IsUserValid { get; set; }
+
+        public EmailInviteStatus(bool isTokenValid, bool isUserRegistered)
         {
-            [Required]
-            public bool IsTokenValid { get; set; }
-            [Required]
-            public bool IsUserRegistered { get; set; }
-
-            public EmailInviteStatus(bool isTokenValid, bool isUserRegistered)
-            {
-                IsTokenValid = isTokenValid;
-                IsUserRegistered = isUserRegistered;
-            }
+            IsTokenValid = isTokenValid;
+            IsUserValid = isUserRegistered;
         }
     }
 }

@@ -1,26 +1,26 @@
 import { Provider } from "react-redux";
-import renderer from "react-test-renderer";
+import { act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
 import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
-import { MergeDups } from "goals/MergeDupGoal/MergeDups";
+import { MergeDups } from "goals/MergeDuplicates/MergeDupsTypes";
 import { Goal } from "types/goals";
 
 const createMockStore = configureMockStore([thunk]);
 let mockStore = createMockStore();
-function createMockStoreWithGoal(goal: Goal) {
+function createMockStoreWithGoal(goal: Goal): void {
   const mockStoreState = { goalsState: { currentGoal: goal } };
   mockStore = createMockStore(mockStoreState);
 }
 
 describe("DisplayProgress", () => {
-  it("Renders with default goal without crashing", () => {
+  it("Renders with default goal without crashing", async () => {
     createMockStoreWithGoal(new Goal());
-    renderer.act(() => {
-      renderer.create(
+    await act(async () => {
+      create(
         <Provider store={mockStore}>
           <DisplayProgress />
         </Provider>
@@ -28,10 +28,10 @@ describe("DisplayProgress", () => {
     });
   });
 
-  it("Renders with multi-step goal without crashing", () => {
+  it("Renders with multi-step goal without crashing", async () => {
     createMockStoreWithGoal(new MergeDups());
-    renderer.act(() => {
-      renderer.create(
+    await act(async () => {
+      create(
         <Provider store={mockStore}>
           <DisplayProgress />
         </Provider>

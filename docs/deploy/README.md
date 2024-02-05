@@ -165,7 +165,7 @@ To install the OS on a new target machine, such as, a new NUC, follow these step
       | Your Server Name | nuc1, nuc2, or nuc3               |
       | Pick a username  | sillsdev                          |
 
-      You may choose any name, username that you like. If you use a different servername than one of the three listed,
+      You may choose any name, username that you like. If you use a different server name than one of the three listed,
       you will need to provide alternate configuration files. See the
       [Creating your own Configurations](#creating-your-own-configurations) section. This is not recommended when
       running the installation from a Docker image.
@@ -374,6 +374,10 @@ Where:
 - `<release>` is the GitHub tag for the release that should be installed.
 
   Note that:
+
+  - When the `./setup_combine.py` script is used to install _The Combine_ on a NUC, it will install the fonts required
+    for Arabic, English, French, Portuguese, and Spanish. If additional fonts will be required, call the
+    `setup_combine.py` commands with the `--langs` option. Use the `--help` option to see the argument syntax.
 
   - Starting with version 0.7.25, the tag will start with a ‘v’, even if the release does not (we are transitioning to
     the format where release versions start with a ‘v’).

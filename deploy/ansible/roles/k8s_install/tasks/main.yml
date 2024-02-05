@@ -10,13 +10,15 @@
   when: k8s_engine != "none"
 
 - name: Download the Google Cloud public signing key
-  get_url:
-    dest: /usr/share/keyrings/kubernetes-archive-keyring.gpg
-    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+  shell:
+    cmd: >
+      curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg
+      | gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
+    creates: /etc/apt/keyrings/kubernetes-archive-keyring.gpg
 
 - name: Add repository
   apt_repository:
-    repo: "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main"
+    repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main"
     filename: kubernetes
 
 - name: Install kubectl

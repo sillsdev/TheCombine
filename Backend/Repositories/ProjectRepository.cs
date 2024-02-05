@@ -9,7 +9,7 @@ using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
 {
-    /// <summary> Atomic database functions for <see cref="Project"/>s </summary>
+    /// <summary> Atomic database functions for <see cref="Project"/>s. </summary>
     [ExcludeFromCodeCoverage]
     public class ProjectRepository : IProjectRepository
     {
@@ -97,17 +97,19 @@ namespace BackendFramework.Repositories
                 .Set(x => x.IsActive, project.IsActive)
                 .Set(x => x.LiftImported, project.LiftImported)
                 .Set(x => x.DefinitionsEnabled, project.DefinitionsEnabled)
-                .Set(x => x.SemanticDomains, project.SemanticDomains)
+                .Set(x => x.GrammaticalInfoEnabled, project.GrammaticalInfoEnabled)
+                .Set(x => x.AutocompleteSetting, project.AutocompleteSetting)
                 .Set(x => x.SemDomWritingSystem, project.SemDomWritingSystem)
                 .Set(x => x.VernacularWritingSystem, project.VernacularWritingSystem)
                 .Set(x => x.AnalysisWritingSystems, project.AnalysisWritingSystems)
+                .Set(x => x.SemanticDomains, project.SemanticDomains)
                 .Set(x => x.ValidCharacters, project.ValidCharacters)
                 .Set(x => x.RejectedCharacters, project.RejectedCharacters)
                 .Set(x => x.CustomFields, project.CustomFields)
                 .Set(x => x.WordFields, project.WordFields)
                 .Set(x => x.PartsOfSpeech, project.PartsOfSpeech)
-                .Set(x => x.AutocompleteSetting, project.AutocompleteSetting)
-                .Set(x => x.InviteTokens, project.InviteTokens);
+                .Set(x => x.InviteTokens, project.InviteTokens)
+                .Set(x => x.WorkshopSchedule, project.WorkshopSchedule);
 
             var updateResult = await _projectDatabase.Projects.UpdateOneAsync(filter, updateDef);
 

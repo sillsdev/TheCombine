@@ -37,7 +37,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserEdit>))]
         public async Task<IActionResult> GetProjectUserEdits(string projectId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
             }
@@ -58,7 +58,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserEdit))]
         public async Task<IActionResult> GetUserEdit(string projectId, string userEditId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
             }
@@ -84,7 +84,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
         public async Task<IActionResult> CreateUserEdit(string projectId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.MergeAndReviewEntries))
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
                 return Forbid();
             }
@@ -94,7 +95,7 @@ namespace BackendFramework.Controllers
             await _userEditRepo.Create(userEdit);
             // Update current user
             var currentUserId = _permissionService.GetUserId(HttpContext);
-            var currentUser = await _userRepo.GetUser(currentUserId);
+            var currentUser = await _userRepo.GetUser(currentUserId, false);
             if (currentUser is null)
             {
                 return NotFound(currentUserId);
@@ -116,13 +117,14 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Adds/updates a goal to/in a specified <see cref="UserEdit"/> </summary>
-        /// <returns> Index of added/updated edit </returns>
+        /// <returns> Guid of added/updated edit </returns>
         [HttpPost("{userEditId}", Name = "UpdateUserEditGoal")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> UpdateUserEditGoal(
             string projectId, string userEditId, [FromBody, BindRequired] Edit newEdit)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
                 return Forbid();
             }
@@ -137,25 +139,22 @@ namespace BackendFramework.Controllers
             var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
-                return NotFound(projectId);
+                return NotFound($"projectId: {projectId}");
             }
 
-            // Ensure userEdit exists
-            var toBeMod = await _userEditRepo.GetUserEdit(projectId, userEditId);
-            if (toBeMod is null)
+            var (isSuccess, editGuid) = await _userEditService.AddGoalToUserEdit(projectId, userEditId, newEdit);
+
+            if (editGuid is null)
             {
-                return NotFound(userEditId);
+                return NotFound($"userEditId: {userEditId}");
             }
 
-            var (isSuccess, editIndex) = await _userEditService.AddGoalToUserEdit(projectId, userEditId, newEdit);
-
-            // If the replacement was successful
             if (isSuccess)
             {
-                return Ok(editIndex);
+                return Ok(editGuid);
             }
 
-            return NotFound(editIndex.ToString());
+            return StatusCode(StatusCodes.Status304NotModified, editGuid);
         }
 
         /// <summary> Adds/updates a step to/in specified goal </summary>
@@ -163,9 +162,10 @@ namespace BackendFramework.Controllers
         [HttpPut("{userEditId}", Name = "UpdateUserEditStep")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
         public async Task<IActionResult> UpdateUserEditStep(string projectId, string userEditId,
-            [FromBody, BindRequired] UserEditStepWrapper stepEdit)
+            [FromBody, BindRequired] UserEditStepWrapper stepWrapper)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry))
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.MergeAndReviewEntries, projectId))
             {
                 return Forbid();
             }
@@ -190,13 +190,14 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
-            // Ensure indices exist.
-            if (stepEdit.GoalIndex < 0 || stepEdit.GoalIndex >= document.Edits.Count)
+            // Ensure Edit exist.
+            var edit = document.Edits.FindLast(e => e.Guid == stepWrapper.EditGuid);
+            if (edit is null)
             {
-                return BadRequest("Goal index out of range.");
+                return NotFound(stepWrapper.EditGuid);
             }
-            var maxStepIndex = document.Edits[stepEdit.GoalIndex].StepData.Count;
-            var stepIndex = stepEdit.StepIndex ?? maxStepIndex;
+            var maxStepIndex = edit.StepData.Count;
+            var stepIndex = stepWrapper.StepIndex ?? maxStepIndex;
             if (stepIndex < 0 || stepIndex > maxStepIndex)
             {
                 return BadRequest("Step index out of range.");
@@ -206,12 +207,12 @@ namespace BackendFramework.Controllers
             if (stepIndex == maxStepIndex)
             {
                 await _userEditService.AddStepToGoal(
-                    projectId, userEditId, stepEdit.GoalIndex, stepEdit.StepString);
+                    projectId, userEditId, stepWrapper.EditGuid, stepWrapper.StepString);
             }
             else
             {
                 await _userEditService.UpdateStepInGoal(
-                    projectId, userEditId, stepEdit.GoalIndex, stepEdit.StepString, stepIndex);
+                    projectId, userEditId, stepWrapper.EditGuid, stepWrapper.StepString, stepIndex);
             }
 
             return Ok(stepIndex);
@@ -222,7 +223,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteUserEdit(string projectId, string userEditId)
         {
-            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Owner))
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
             {
                 return Forbid();
             }

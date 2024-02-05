@@ -1,10 +1,7 @@
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
-import renderer, {
-  ReactTestInstance,
-  ReactTestRenderer,
-} from "react-test-renderer";
+import { ReactTestRenderer, act, create } from "react-test-renderer";
 
-import "tests/mockReactI18next";
+import "tests/reactI18nextMock";
 
 import Statistics from "components/Statistics/Statistics";
 import { newProject } from "types/project";
@@ -30,7 +27,7 @@ jest.mock("backend/localStorage", () => ({
   getProjectId: () => mockGetProjectId(),
 }));
 
-function setMockFunctions() {
+function setMockFunctions(): void {
   mockGetProjectId.mockReturnValue(mockProjectId);
   mockGetProject.mockResolvedValue(mockProject);
 }
@@ -38,8 +35,8 @@ function setMockFunctions() {
 beforeEach(async () => {
   jest.clearAllMocks();
   setMockFunctions();
-  await renderer.act(async () => {
-    testRenderer = renderer.create(
+  await act(async () => {
+    testRenderer = create(
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <Statistics />{" "}
@@ -55,7 +52,7 @@ describe("Statistics", () => {
   });
   it("useEffect hook was called", async () => {
     //Verify the mock function called
-    expect(mockGetProject).toBeCalled();
-    expect(mockGetProjectId).toBeCalled();
+    expect(mockGetProject).toHaveBeenCalled();
+    expect(mockGetProjectId).toHaveBeenCalled();
   });
 });

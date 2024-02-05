@@ -1,29 +1,56 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace BackendFramework.Helper
 {
+    /// <summary> Indicates an invalid input file name. </summary>
+    [Serializable]
+    public class InvalidFileNameException : Exception
+    {
+        public InvalidFileNameException() : base() { }
+
+        protected InvalidFileNameException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+    }
+
+    /// <summary> Indicates an invalid input id. </summary>
+    [Serializable]
+    public class InvalidIdException : Exception
+    {
+        public InvalidIdException() { }
+
+        protected InvalidIdException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+    }
+
     public static class Sanitization
     {
         /// <summary>
         /// Validate that an ID field sent from a user does not contain any illegal characters.
-        ///
         /// This is especially important if, for example, user input ultimately is used in the creation of a path to
         /// disk.
         /// </summary>
-        public static bool SanitizeId(string id)
+        /// <returns> The input string, if it is already sanitized. </returns>
+        /// <exception cref="InvalidIdException"> Throws with string isn't sanitized. </exception>
+        public static string SanitizeId(string id)
         {
-            return id.All(c => char.IsLetterOrDigit(c) || c == '-');
+            if (id.All(c => char.IsLetterOrDigit(c) || c == '-'))
+            {
+                return id;
+            }
+            throw new InvalidIdException();
         }
 
         /// <summary>
         /// Validate that a file name does not have any illegal characters (such as / or \) which could manipulate
         /// the path of files that are stored or retrieved.
         /// </summary>
-        public static bool SanitizeFileName(string fileName)
+        /// <returns> The input string, if it is already sanitized. </returns>
+        /// <exception cref="InvalidFileNameException"> Throws when string isn't sanitized. </exception>
+        public static string SanitizeFileName(string fileName)
         {
             // For list of invalid characters per OS, see https://stackoverflow.com/a/31976060.
             var validCharacters = new List<char>
@@ -36,19 +63,23 @@ namespace BackendFramework.Helper
                 ')',
                 ' '
             }.ToImmutableList();
-            return fileName.All(c => char.IsLetterOrDigit(c) || validCharacters.Contains(c));
+            if (fileName.All(c => char.IsLetterOrDigit(c) || validCharacters.Contains(c)))
+            {
+                return fileName;
+            }
+            throw new InvalidFileNameException();
         }
 
         /// <summary>
         /// Convert a string (e.g., a project name), into one friendly to use in a path.
         /// Uses alphanumeric and '-' '_' ',' '(' ')'.
-        /// Returns converted string, unless length 0, then returns fallback.
         /// </summary>
+        /// <returns> Converted string, unless length 0, then returns fallback. </returns>
         public static string MakeFriendlyForPath(string name, string fallback = "")
         {
             // Method modified from https://stackoverflow.com/a/780800
             var normalizedName = name.Normalize(NormalizationForm.FormD);
-            var stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder(capacity: normalizedName.Length);
 
             foreach (var c in normalizedName)
             {

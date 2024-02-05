@@ -9,8 +9,8 @@
 //  $ npm run test-backend:coverage
 //  $ npm run gen-backend-coverage-report
 import { spawnSync } from "child_process";
-import * as path from "path";
 import * as fs from "fs";
+import * as path from "path";
 
 const coverageInfoFile = path.join(".", "Backend.Tests", "coverage.info");
 const coverageTargetDir = path.join(".", "coverage-backend");

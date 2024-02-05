@@ -1,20 +1,31 @@
-import { Delete, PlayArrow, Stop } from "@mui/icons-material";
+import { Delete, PlayArrow, RecordVoiceOver, Stop } from "@mui/icons-material";
 import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
   Fade,
   IconButton,
   Menu,
   MenuItem,
-  Theme,
   Tooltip,
 } from "@mui/material";
-import { createStyles, makeStyles } from "@mui/styles";
-import React, { useEffect, useState } from "react";
+import {
+  CSSProperties,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
-import ButtonConfirmation from "components/Buttons/ButtonConfirmation";
+import { Pronunciation, Speaker } from "api/models";
+import { getSpeaker } from "backend";
+import { SpeakerMenuList } from "components/AppBar/SpeakerMenu";
+import { ButtonConfirmation } from "components/Dialogs";
+import MultilineTooltipTitle from "components/MultilineTooltipTitle";
 import {
   playing,
-  reset,
+  resetPronunciations,
 } from "components/Pronunciations/Redux/PronunciationsActions";
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { StoreState } from "types";
@@ -22,127 +33,156 @@ import { useAppDispatch, useAppSelector } from "types/hooks";
 import { themeColors } from "types/theme";
 
 interface PlayerProps {
-  pronunciationUrl: string;
-  wordId: string;
-  fileName: string;
-  deleteAudio?: (wordId: string, fileName: string) => void;
-  isPlaying?: boolean;
+  audio: Pronunciation;
+  deleteAudio?: (fileName: string) => void;
+  onClick?: () => void;
+  pronunciationUrl?: string;
+  size?: "large" | "medium" | "small";
+  updateAudioSpeaker?: (speakerId?: string) => Promise<void> | void;
+  warningTextId?: string;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    button: {
-      marginRight: theme.spacing(1),
-    },
-    icon: {
-      color: themeColors.success,
-    },
-  })
-);
+const iconStyle: CSSProperties = { color: themeColors.success };
 
-export default function AudioPlayer(props: PlayerProps) {
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const pronunciationsState = useAppSelector(
-    (state: StoreState) => state.pronunciationsState
+export default function AudioPlayer(props: PlayerProps): ReactElement {
+  const isPlaying = useAppSelector(
+    (state: StoreState) =>
+      state.pronunciationsState.fileName === props.audio.fileName &&
+      state.pronunciationsState.status === PronunciationsStatus.Playing
   );
-  const dispatch = useAppDispatch();
-  const [audio] = useState<HTMLAudioElement>(new Audio(props.pronunciationUrl));
+
+  const [audio] = useState<HTMLAudioElement>(
+    new Audio(props.pronunciationUrl ?? props.audio.fileName)
+  );
   const [anchor, setAnchor] = useState<HTMLElement | undefined>();
-  const [deleteConf, setDeleteConf] = useState<boolean>(false);
-  const classes = useStyles();
+  const [deleteConf, setDeleteConf] = useState(false);
+  const [speaker, setSpeaker] = useState<Speaker | undefined>();
+  const [speakerDialog, setSpeakerDialog] = useState(false);
+
+  const dispatch = useAppDispatch();
+  const dispatchReset = useCallback(
+    () => dispatch(resetPronunciations()),
+    [dispatch]
+  );
   const { t } = useTranslation();
 
+  const canChangeSpeaker = props.updateAudioSpeaker && !props.audio.protected;
+  const canDeleteAudio = props.deleteAudio && !props.audio.protected;
+
   useEffect(() => {
-    if (
-      pronunciationsState.type !== PronunciationsStatus.Playing ||
-      pronunciationsState.payload !== props.fileName
-    ) {
-      if (isPlaying) {
-        stop();
-      }
+    if (props.audio.speakerId) {
+      getSpeaker(props.audio.speakerId).then(setSpeaker);
     } else {
-      play();
+      setSpeaker(undefined);
     }
-    // We want pronunciationsState alone on the dependency list.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pronunciationsState]);
+  }, [props.audio.speakerId]);
 
-  const dispatchReset = () => dispatch(reset());
-
-  function deleteAudio() {
-    if (props.deleteAudio) {
-      props.deleteAudio(props.wordId, props.fileName);
+  useEffect(() => {
+    if (isPlaying) {
+      audio.addEventListener("ended", dispatchReset);
+      audio.play().catch(dispatchReset);
+    } else {
+      audio.pause();
+      audio.currentTime = 0;
     }
-  }
+  }, [audio, dispatchReset, isPlaying]);
 
-  function stop() {
-    setIsPlaying(false);
-    audio.pause();
-    audio.currentTime = 0;
-  }
-
-  function play() {
-    audio.addEventListener("ended", dispatchReset);
-    audio
-      .play()
-      .then(() => setIsPlaying(true))
-      .catch(dispatchReset);
-  }
-
-  function togglePlay() {
+  function togglePlay(): void {
     if (!isPlaying) {
-      dispatch(playing(props.fileName));
+      dispatch(playing(props.audio.fileName));
     } else {
       dispatchReset();
     }
   }
 
-  function deleteOrTogglePlay(event?: any) {
-    if (event?.shiftKey) {
+  function deleteOrTogglePlay(event?: any): void {
+    if (props.onClick) {
+      props.onClick();
+    }
+    if (event?.shiftKey && canDeleteAudio) {
       setDeleteConf(true);
     } else {
       togglePlay();
     }
   }
 
-  function handleClose() {
+  function handleMenuOnClose(): void {
     setAnchor(undefined);
     enableContextMenu();
   }
 
-  function disableContextMenu(event: any) {
+  function preventEventOnce(event: any): void {
     event.preventDefault();
     enableContextMenu();
   }
-  function enableContextMenu() {
-    document.removeEventListener("contextmenu", disableContextMenu, false);
+
+  function disableContextMenu(): void {
+    document.addEventListener("contextmenu", preventEventOnce, false);
   }
 
-  function handleTouch(event: any) {
-    // Temporarily disable context menu since some browsers
-    // interpret a long-press touch as a right-click.
-    document.addEventListener("contextmenu", disableContextMenu, false);
-    setAnchor(event.currentTarget);
+  function enableContextMenu(): void {
+    document.removeEventListener("contextmenu", preventEventOnce, false);
+  }
+
+  function handleTouch(event: any): void {
+    if (canChangeSpeaker || canDeleteAudio) {
+      // Temporarily disable context menu since some browsers
+      // interpret a long-press touch as a right-click.
+      disableContextMenu();
+      setAnchor(event.currentTarget);
+    }
+  }
+
+  async function handleOnSelect(speaker?: Speaker): Promise<void> {
+    if (canChangeSpeaker) {
+      await props.updateAudioSpeaker!(speaker?.id);
+    }
+    setSpeakerDialog(false);
+  }
+
+  function handleOnAuxClick(): void {
+    if (canChangeSpeaker) {
+      // Temporarily disable context menu triggered by right-click.
+      disableContextMenu();
+      setSpeakerDialog(true);
+    }
+  }
+
+  const tooltipTexts = [t("pronunciations.playTooltip")];
+  if (canDeleteAudio) {
+    tooltipTexts.push(t("pronunciations.deleteTooltip"));
+  }
+  if (props.audio.protected) {
+    tooltipTexts.push(t("pronunciations.protectedTooltip"));
+  }
+  if (speaker) {
+    tooltipTexts.push(t("pronunciations.speaker", { val: speaker.name }));
+  }
+  if (canChangeSpeaker) {
+    tooltipTexts.push(
+      speaker
+        ? t("pronunciations.speakerChange")
+        : t("pronunciations.speakerAdd")
+    );
   }
 
   return (
-    <React.Fragment>
-      <Tooltip title={t("pronunciations.playTooltip")} placement="top">
+    <>
+      <Tooltip
+        title={<MultilineTooltipTitle lines={tooltipTexts} />}
+        placement="top"
+      >
         <IconButton
           tabIndex={-1}
+          onAuxClick={handleOnAuxClick}
           onClick={deleteOrTogglePlay}
           onTouchStart={handleTouch}
           onTouchEnd={enableContextMenu}
-          className={classes.button}
           aria-label="play"
-          id={`audio-${props.fileName}`}
-          size="large"
+          id={`audio-${props.audio.fileName}`}
+          size={props.size || "large"}
         >
-          {isPlaying ? (
-            <Stop className={classes.icon} />
-          ) : (
-            <PlayArrow className={classes.icon} />
-          )}
+          {isPlaying ? <Stop sx={iconStyle} /> : <PlayArrow sx={iconStyle} />}
         </IconButton>
       </Tooltip>
       <Menu
@@ -150,48 +190,57 @@ export default function AudioPlayer(props: PlayerProps) {
         id="play-menu"
         anchorEl={anchor}
         open={Boolean(anchor)}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "left",
-        }}
+        onClose={handleMenuOnClose}
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "left" }}
       >
         <MenuItem
           id={isPlaying ? "audio-stop" : "audio-play"}
           onClick={() => {
             togglePlay();
-            handleClose();
+            handleMenuOnClose();
           }}
         >
-          {isPlaying ? (
-            <Stop className={classes.icon} />
-          ) : (
-            <PlayArrow className={classes.icon} />
-          )}
+          {isPlaying ? <Stop sx={iconStyle} /> : <PlayArrow sx={iconStyle} />}
         </MenuItem>
-        <MenuItem
-          id="audio-delete"
-          onClick={() => {
-            setDeleteConf(true);
-            handleClose();
-          }}
-        >
-          <Delete />
-        </MenuItem>
+        {canChangeSpeaker && (
+          <MenuItem
+            id="audio-speaker"
+            onClick={() => {
+              setSpeakerDialog(true);
+              handleMenuOnClose();
+            }}
+          >
+            <RecordVoiceOver />
+          </MenuItem>
+        )}
+        {canDeleteAudio && (
+          <MenuItem
+            id="audio-delete"
+            onClick={() => {
+              setDeleteConf(true);
+              handleMenuOnClose();
+            }}
+          >
+            <Delete />
+          </MenuItem>
+        )}
       </Menu>
       <ButtonConfirmation
         open={deleteConf}
-        textId="buttons.deletePermanently"
+        textId={props.warningTextId || "buttons.deletePermanently"}
         titleId="pronunciations.deleteRecording"
         onClose={() => setDeleteConf(false)}
-        onConfirm={deleteAudio}
+        onConfirm={() => props.deleteAudio!(props.audio.fileName)}
         buttonIdClose="audio-delete-cancel"
         buttonIdConfirm="audio-delete-confirm"
       />
-    </React.Fragment>
+      <Dialog open={speakerDialog} onClose={() => setSpeakerDialog(false)}>
+        <DialogTitle>{t("pronunciations.speakerSelect")}</DialogTitle>
+        <DialogContent>
+          <SpeakerMenuList onSelect={handleOnSelect} selectedId={speaker?.id} />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

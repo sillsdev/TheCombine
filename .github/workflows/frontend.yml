@@ -10,14 +10,79 @@ permissions: # added using https://github.com/step-security/secure-workflows
   contents: read
 
 jobs:
-  lint_test_build:
+  lint_build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [18]
     steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
-        uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            *.actions.githubusercontent.com:443
+            api.github.com:443
+            github.com:443
+            registry.npmjs.org:443
+      - name: Checkout repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@b39b52d1213e96004bfcb1c61a8a6fa8ab84f3e8 # v4.0.1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run fmt-frontend-check
+      - run: npm run lint
+      - run: npm run build
+
+  test_coverage:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18]
+    steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
+      - name: Harden Runner
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            *.actions.githubusercontent.com:443
+            api.github.com:443
+            github.com:443
+            registry.npmjs.org:443
+      - name: Checkout repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@b39b52d1213e96004bfcb1c61a8a6fa8ab84f3e8 # v4.0.1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run test-frontend:coverage
+        env:
+          CI: true
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@c7d193f32edcb7bfad88892161225aeda64e9392 # v4.0.0
+        with:
+          if-no-files-found: error
+          name: coverage
+          path: coverage/cobertura-coverage.xml
+          retention-days: 7
+
+  upload_coverage:
+    needs: test_coverage
+    runs-on: ubuntu-latest
+    steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
+      - name: Harden Runner
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
         with:
           disable-sudo: true
           egress-policy: block
@@ -25,43 +90,35 @@ jobs:
             api.github.com:443
             codecov.io:443
             github.com:443
-            registry.npmjs.org:443
             storage.googleapis.com:443
             uploader.codecov.io:443
-      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
+      - name: Checkout repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Download coverage artifact
+        uses: actions/download-artifact@6b208ae046db98c579e8a3aa621ab581ff575935 # v4.1.1
         with:
-          node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - run: npm run fmt-frontend-check
-      - run: npm run lint
-
-      # Coverage.
-      - run: npm run test-frontend:coverage
-        env:
-          CI: true
+          name: coverage
       - name: Upload coverage report
-        uses: codecov/codecov-action@40a12dcee2df644d47232dde008099a3e9e4f865 # v3.1.2
+        uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         with:
-          files: coverage/clover.xml
+          fail_ci_if_error: true
+          files: cobertura-coverage.xml
           flags: frontend
           name: Frontend
-          fail_ci_if_error: true
-
-      # Release build.
-      - run: npm run build
 
   docker_build:
     runs-on: ubuntu-latest
     if: ${{ github.event.type }} == "PullRequest"
     steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
-        uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
         with:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
+            *.actions.githubusercontent.com:443
             auth.docker.io:443
             files.pythonhosted.org:443
             github.com:443
@@ -69,7 +126,7 @@ jobs:
             pypi.org:443
             registry-1.docker.io:443
             registry.npmjs.org:443
-      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           fetch-depth: 0
       - name: Build frontend

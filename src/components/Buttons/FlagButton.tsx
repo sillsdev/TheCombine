@@ -1,15 +1,15 @@
 import { Flag as FlagFilled, FlagOutlined } from "@mui/icons-material";
-import React, { ReactElement, useEffect, useState } from "react";
+import { Fragment, ReactElement, useEffect, useState } from "react";
 
 import { Flag } from "api/models";
-import DeleteEditTextDialog from "components/Buttons/DeleteEditTextDialog";
-import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
+import { IconButtonWithTooltip } from "components/Buttons";
+import { DeleteEditTextDialog } from "components/Dialogs";
 import { themeColors } from "types/theme";
 
 interface FlagButtonProps {
   flag: Flag;
-  updateFlag?: (flag: Flag) => void;
   buttonId?: string;
+  updateFlag?: (flag: Flag) => void;
 }
 
 export default function FlagButton(props: FlagButtonProps): ReactElement {
@@ -20,7 +20,7 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
   useEffect(() => {
     setActive(props.flag.active);
     setText(props.flag.active ? props.flag.text : undefined);
-  }, [props.flag, setActive, setText]);
+  }, [props.flag]);
 
   function updateFlag(text: string): void {
     setActive(true);
@@ -39,7 +39,7 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
   }
 
   return (
-    <React.Fragment>
+    <>
       <IconButtonWithTooltip
         icon={
           active ? (
@@ -47,19 +47,19 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
           ) : props.updateFlag ? (
             <FlagOutlined />
           ) : (
-            <div />
+            <Fragment />
           )
         }
         text={text}
         textId={active ? "flags.edit" : "flags.add"}
-        small
+        size="small"
         onClick={
           props.updateFlag ? () => setOpen(true) : active ? () => {} : undefined
         }
-        buttonId={props.buttonId}
+        buttonId={props.buttonId ?? "flag-button"}
         side="top"
       />
-      {props.updateFlag ? (
+      {props.updateFlag && (
         <DeleteEditTextDialog
           open={open}
           text={props.flag.text}
@@ -72,7 +72,7 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
           buttonTextIdDelete="flags.remove"
           buttonTextIdSave="flags.save"
         />
-      ) : null}
-    </React.Fragment>
+      )}
+    </>
   );
 }

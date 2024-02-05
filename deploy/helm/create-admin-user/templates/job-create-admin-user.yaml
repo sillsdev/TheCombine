@@ -3,6 +3,11 @@ kind: Job
 metadata:
   name: create-admin-user
   namespace: {{ .Release.Namespace }}
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-install, post-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   ttlSecondsAfterFinished: 300
   template:
@@ -40,8 +45,8 @@ spec:
                 secretKeyRef:
                   key: COMBINE_ADMIN_EMAIL
                   name: admin-user-secrets
-          image: {{ template "create-admin-user.containerImage" . }}
-          imagePullPolicy: {{ template "create-admin-user.imagePullPolicy" . }}
+          image: {{ include "create-admin-user.containerImage" . }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           name: create-admin-user
           resources: {}
           volumeMounts:

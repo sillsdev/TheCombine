@@ -1,80 +1,91 @@
-import { Autocomplete, TextField } from "@mui/material";
-import React from "react";
+import { Autocomplete } from "@mui/material";
+import React, { ReactElement, useContext, useEffect } from "react";
 import { Key } from "ts-key-enum";
 
-import { WritingSystem } from "api";
-import SpellChecker from "components/DataEntry/spellChecker";
+import { WritingSystem } from "api/models";
+import { LiWithFont, TextFieldWithFont } from "utilities/fontComponents";
+import SpellCheckerContext from "utilities/spellCheckerContext";
 
 interface GlossWithSuggestionsProps {
   isNew?: boolean;
   isDisabled?: boolean;
   gloss: string;
-  glossInput?: React.RefObject<HTMLDivElement>;
+  glossInput?: React.RefObject<HTMLInputElement>;
   updateGlossField: (newValue: string) => void;
-  handleEnterAndTab: (e: React.KeyboardEvent) => void;
+  handleEnter: () => void;
   onBlur?: () => void;
   analysisLang: WritingSystem;
   textFieldId: string;
-  onComponentDidUpdate?: () => void;
+  onUpdate?: () => void;
 }
 
 /**
  * An editable gloss field that suggests spellings when current word isn't recognized.
  */
-export default class GlossWithSuggestions extends React.Component<GlossWithSuggestionsProps> {
-  readonly maxSuggestions = 5;
-  spellChecker = new SpellChecker(this.props.analysisLang.bcp47);
+export default function GlossWithSuggestions(
+  props: GlossWithSuggestionsProps
+): ReactElement {
+  const spellChecker = useContext(SpellCheckerContext);
 
-  componentDidUpdate(prevProps: GlossWithSuggestionsProps) {
-    if (this.props.onComponentDidUpdate) {
-      this.props.onComponentDidUpdate();
+  useEffect(() => {
+    if (props.onUpdate) {
+      props.onUpdate();
     }
-    if (prevProps.analysisLang.bcp47 !== this.props.analysisLang.bcp47) {
-      this.spellChecker = new SpellChecker(this.props.analysisLang.bcp47);
-    }
-  }
+  });
 
-  render() {
-    return (
-      <Autocomplete
-        id={this.props.textFieldId}
-        disabled={this.props.isDisabled}
-        filterOptions={(options: unknown[]) =>
-          options.length <= this.maxSuggestions
-            ? options
-            : options.slice(0, this.maxSuggestions)
+  return (
+    <Autocomplete
+      id={props.textFieldId}
+      disabled={props.isDisabled}
+      // there's a bug with disappearing options if filterOptions isn't specified
+      filterOptions={(options) => options}
+      // freeSolo allows use of a typed entry not available as a drop-down option
+      freeSolo
+      includeInputInList
+      // option-never-equals-value prevents automatic option highlighting
+      isOptionEqualToValue={() => false}
+      options={spellChecker.getSpellingSuggestions(props.gloss)}
+      value={props.gloss}
+      onBlur={() => {
+        if (props.onBlur) {
+          props.onBlur();
         }
-        // freeSolo allows use of a typed entry not available as a drop-down option
-        freeSolo
-        options={this.spellChecker.getSpellingSuggestions(this.props.gloss)}
-        value={this.props.gloss}
-        onBlur={() => {
-          if (this.props.onBlur) this.props.onBlur();
-        }}
-        onChange={(e, newValue) => {
-          const newText = newValue ? (newValue as string) : "";
-          this.props.updateGlossField(newText);
-        }}
-        inputValue={this.props.gloss}
-        onInputChange={(e, newInputValue) => {
-          this.props.updateGlossField(newInputValue);
-        }}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            fullWidth
-            inputRef={this.props.glossInput}
-            label={this.props.isNew ? this.props.analysisLang.name : ""}
-            variant={this.props.isNew ? "outlined" : "standard"}
-          />
-        )}
-        onKeyPress={(e: React.KeyboardEvent) => {
-          if (e.key === Key.Enter || e.key === Key.Tab) {
-            e.preventDefault();
-            this.props.handleEnterAndTab(e);
-          }
-        }}
-      />
-    );
-  }
+      }}
+      onChange={(_e, newValue) => {
+        // onChange is triggered when an option is selected
+        props.updateGlossField(newValue ?? "");
+      }}
+      inputValue={props.gloss}
+      onInputChange={(_e, newInputValue) => {
+        // onInputChange is triggered by typing
+        props.updateGlossField(newInputValue);
+      }}
+      renderInput={(params) => (
+        <TextFieldWithFont
+          {...(params as any)}
+          analysis
+          fullWidth
+          inputRef={props.glossInput}
+          label={props.isNew ? props.analysisLang.name : ""}
+          lang={props.analysisLang.bcp47}
+          variant={(props.isNew ? "outlined" : "standard") as any}
+        />
+      )}
+      renderOption={(liProps, option, { selected }) => (
+        <LiWithFont
+          {...liProps}
+          analysis
+          aria-selected={selected}
+          lang={props.analysisLang.bcp47}
+        >
+          {option}
+        </LiWithFont>
+      )}
+      onKeyPress={(e: React.KeyboardEvent) => {
+        if (e.key === Key.Enter) {
+          props.handleEnter();
+        }
+      }}
+    />
+  );
 }

@@ -9,7 +9,7 @@ using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
 {
-    /// <summary> Atomic database functions for <see cref="MergeBlacklistEntry"/>s. </summary>
+    /// <summary> Atomic database functions for <see cref="MergeWordSet"/>s. </summary>
     [ExcludeFromCodeCoverage]
     public class MergeBlacklistRepository : IMergeBlacklistRepository
     {
@@ -20,8 +20,8 @@ namespace BackendFramework.Repositories
             _mergeBlacklistDatabase = collectionSettings;
         }
 
-        /// <summary> Finds all <see cref="MergeBlacklistEntry"/>s for specified <see cref="Project"/>. </summary>
-        public async Task<List<MergeBlacklistEntry>> GetAll(string projectId, string? userId = null)
+        /// <summary> Finds all <see cref="MergeWordSet"/>s for specified <see cref="Project"/>. </summary>
+        public async Task<List<MergeWordSet>> GetAllSets(string projectId, string? userId = null)
         {
             var listFind = userId is null ?
                 _mergeBlacklistDatabase.MergeBlacklist.Find(e => e.ProjectId == projectId) :
@@ -29,18 +29,18 @@ namespace BackendFramework.Repositories
             return await listFind.ToListAsync();
         }
 
-        /// <summary> Removes all <see cref="MergeBlacklistEntry"/>s for specified <see cref="Project"/>. </summary>
+        /// <summary> Removes all <see cref="MergeWordSet"/>s for specified <see cref="Project"/>. </summary>
         /// <returns> A bool: success of operation. </returns>
-        public async Task<bool> DeleteAll(string projectId)
+        public async Task<bool> DeleteAllSets(string projectId)
         {
             var deleted = await _mergeBlacklistDatabase.MergeBlacklist.DeleteManyAsync(u => u.ProjectId == projectId);
             return deleted.DeletedCount != 0;
         }
 
-        /// <summary> Finds specified <see cref="MergeBlacklistEntry"/> for specified <see cref="Project"/>. </summary>
-        public async Task<MergeBlacklistEntry?> Get(string projectId, string entryId)
+        /// <summary> Finds specified <see cref="MergeWordSet"/> for specified <see cref="Project"/>. </summary>
+        public async Task<MergeWordSet?> GetSet(string projectId, string entryId)
         {
-            var filterDef = new FilterDefinitionBuilder<MergeBlacklistEntry>();
+            var filterDef = new FilterDefinitionBuilder<MergeWordSet>();
             var filter = filterDef.And(
                 filterDef.Eq(x => x.ProjectId, projectId),
                 filterDef.Eq(x => x.Id, entryId));
@@ -56,19 +56,19 @@ namespace BackendFramework.Repositories
             }
         }
 
-        /// <summary> Adds a <see cref="MergeBlacklistEntry"/>. </summary>
-        /// <returns> The MergeBlacklistEntry created. </returns>
-        public async Task<MergeBlacklistEntry> Create(MergeBlacklistEntry blacklistEntry)
+        /// <summary> Adds a <see cref="MergeWordSet"/>. </summary>
+        /// <returns> The MergeWordSet created. </returns>
+        public async Task<MergeWordSet> Create(MergeWordSet wordSetEntry)
         {
-            await _mergeBlacklistDatabase.MergeBlacklist.InsertOneAsync(blacklistEntry);
-            return blacklistEntry;
+            await _mergeBlacklistDatabase.MergeBlacklist.InsertOneAsync(wordSetEntry);
+            return wordSetEntry;
         }
 
-        /// <summary> Removes specified <see cref="MergeBlacklistEntry"/> for specified <see cref="Project"/>. </summary>
+        /// <summary> Removes specified <see cref="MergeWordSet"/> for specified <see cref="Project"/>. </summary>
         /// <returns> A bool: success of operation. </returns>
         public async Task<bool> Delete(string projectId, string entryId)
         {
-            var filterDef = new FilterDefinitionBuilder<MergeBlacklistEntry>();
+            var filterDef = new FilterDefinitionBuilder<MergeWordSet>();
             var filter = filterDef.And(
                 filterDef.Eq(x => x.ProjectId, projectId),
                 filterDef.Eq(x => x.Id, entryId));
@@ -76,15 +76,15 @@ namespace BackendFramework.Repositories
             return deleted.DeletedCount > 0;
         }
 
-        /// <summary> Updates specified <see cref="MergeBlacklistEntry"/>. </summary>
+        /// <summary> Updates specified <see cref="MergeWordSet"/>. </summary>
         /// <returns> A <see cref="ResultOfUpdate"/> enum: success of operation. </returns>
-        public async Task<ResultOfUpdate> Update(MergeBlacklistEntry blacklistEntry)
+        public async Task<ResultOfUpdate> Update(MergeWordSet wordSetEntry)
         {
-            var filter = Builders<MergeBlacklistEntry>.Filter.Eq(x => x.Id, blacklistEntry.Id);
-            var updateDef = Builders<MergeBlacklistEntry>.Update
-                .Set(x => x.ProjectId, blacklistEntry.ProjectId)
-                .Set(x => x.UserId, blacklistEntry.UserId)
-                .Set(x => x.WordIds, blacklistEntry.WordIds);
+            var filter = Builders<MergeWordSet>.Filter.Eq(x => x.Id, wordSetEntry.Id);
+            var updateDef = Builders<MergeWordSet>.Update
+                .Set(x => x.ProjectId, wordSetEntry.ProjectId)
+                .Set(x => x.UserId, wordSetEntry.UserId)
+                .Set(x => x.WordIds, wordSetEntry.WordIds);
 
             var updateResult = await _mergeBlacklistDatabase.MergeBlacklist.UpdateOneAsync(filter, updateDef);
             if (!updateResult.IsAcknowledged)

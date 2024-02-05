@@ -18,14 +18,14 @@ namespace Backend.Tests.Models
         public void TestEquals()
         {
             var word = new Word { Guid = _commonGuid, Vernacular = Vernacular };
-            Assert.That(word.Equals(new Word { Guid = _commonGuid, Vernacular = Vernacular }));
+            Assert.That(word.Equals(new Word { Guid = _commonGuid, Vernacular = Vernacular }), Is.True);
         }
 
         [Test]
         public void TestEqualsNull()
         {
             var word = new Word { Vernacular = Vernacular };
-            Assert.IsFalse(word.Equals(null));
+            Assert.That(word.Equals(null), Is.False);
         }
 
         [Test]
@@ -33,23 +33,23 @@ namespace Backend.Tests.Models
         {
             var word = new Word { Guid = _commonGuid, Note = new Note { Language = Vernacular, Text = Text } };
             Assert.That(word.Equals(
-                new Word { Guid = _commonGuid, Note = new Note { Language = Vernacular, Text = Text } }));
+                new Word { Guid = _commonGuid, Note = new Note { Language = Vernacular, Text = Text } }), Is.True);
         }
 
         [Test]
         public void TestNotEqualsNote()
         {
             var word = new Word { Guid = _commonGuid, Note = new Note { Language = Vernacular, Text = "Bad Text" } };
-            Assert.IsFalse(word.Equals(
-                new Word { Guid = _commonGuid, Note = new Note { Language = Vernacular, Text = Text } }));
+            Assert.That(word.Equals(
+                new Word { Guid = _commonGuid, Note = new Note { Language = Vernacular, Text = Text } }), Is.False);
         }
 
         [Test]
         public void TestHashCode()
         {
-            Assert.AreNotEqual(
+            Assert.That(
                 new Word { Guid = _commonGuid, Vernacular = "1" }.GetHashCode(),
-                new Word { Guid = _commonGuid, Vernacular = "2" }.GetHashCode());
+                Is.Not.EqualTo(new Word { Guid = _commonGuid, Vernacular = "2" }.GetHashCode()));
         }
 
         [Test]
@@ -58,9 +58,9 @@ namespace Backend.Tests.Models
             var word = Util.RandomWord();
             var diffWord = word.Clone();
             diffWord.Senses.RemoveAt(1);
-            Assert.IsTrue(word.Contains(diffWord));
+            Assert.That(word.Contains(diffWord), Is.True);
             diffWord.Vernacular = "different";
-            Assert.IsFalse(word.Contains(diffWord));
+            Assert.That(word.Contains(diffWord), Is.False);
         }
 
         [Test]
@@ -86,82 +86,56 @@ namespace Backend.Tests.Models
             newWord.Flag = newFlag.Clone();
 
             // Add something to newWord in Audio, EditedBy, History.
-            newWord.Audio.Add(Text);
+            newWord.Audio.Add(new Pronunciation(Text));
             newWord.EditedBy.Add(Text);
             newWord.History.Add(Text);
 
-            // create a userId
-            var userId = Util.RandString();
-            Assert.That(oldWord.AppendContainedWordContents(newWord, userId));
+            // Append new content.
+            Assert.That(oldWord.AppendContainedWordContents(newWord, "user-id"), Is.True);
 
+            // Confirm content is appended.
             var updatedSense = oldWord.Senses.Find(s => s.Guid == newSense.Guid);
             Assert.That(updatedSense, Is.Not.Null);
             var updatedDom = updatedSense!.SemanticDomains.Find(dom => dom.Id == newSemDom.Id);
             Assert.That(updatedDom, Is.Not.Null);
-            Assert.That(oldWord.Flag.Equals(newFlag));
-            Assert.That(oldWord.Note.Equals(newNote));
-            Assert.That(oldWord.Audio.Contains(Text));
-            Assert.That(oldWord.EditedBy.Contains(Text));
-            Assert.That(oldWord.History.Contains(Text));
+            Assert.That(oldWord.Flag.Equals(newFlag), Is.True);
+            Assert.That(oldWord.Note.Equals(newNote), Is.True);
+            Assert.That(oldWord.Audio.Contains(new Pronunciation(Text)), Is.True);
+            Assert.That(oldWord.EditedBy.Contains(Text), Is.True);
+            Assert.That(oldWord.History.Contains(Text), Is.True);
+        }
+    }
 
-            // if userId append successfully
-            Assert.That(updatedDom?.UserId, Is.EqualTo(userId));
+    public class PronunciationTest
+    {
+        private const string FileName = "file-name.mp3";
+        private const string SpeakerId = "1234567890";
 
+        [Test]
+        public void TestNotEquals()
+        {
+            var pronunciation = new Pronunciation { Protected = false, FileName = FileName, SpeakerId = SpeakerId };
+            Assert.That(pronunciation.Equals(
+                new Pronunciation { Protected = true, FileName = FileName, SpeakerId = SpeakerId }), Is.False);
+            Assert.That(pronunciation.Equals(
+                new Pronunciation { Protected = false, FileName = "other-name", SpeakerId = SpeakerId }), Is.False);
+            Assert.That(pronunciation.Equals(
+                new Pronunciation { Protected = false, FileName = FileName, SpeakerId = "other-id" }), Is.False);
+            Assert.That(pronunciation.Equals(null), Is.False);
+        }
 
-            // test2
-            // 1. create newWord2
-            var newWord2 = Util.RandomWord(oldWord.ProjectId);
-            newWord2.Vernacular = oldWord.Vernacular;
-
-            // 2. Make newWord2 have a cloned sense of oldWord, add one more new semantic domain
-            var newSense2 = oldWord.Senses.First().Clone();
-            var newSemDom2 = Util.RandomSemanticDomain();
-            newSense2.SemanticDomains.Add(newSemDom2);
-            newWord2.Senses = new List<Sense> { newSense2 };
-
-            // 3. AppendContainedWordContents with a empty userId
-            Assert.That(oldWord.AppendContainedWordContents(newWord2, ""));
-            var updatedSense2 = oldWord.Senses.Find(s => s.Guid == newSense2.Guid);
-            Assert.That(updatedSense2, Is.Not.Null);
-            var updatedDom2 = updatedSense2!.SemanticDomains.Find(dom => dom.Id == newSemDom2.Id);
-            Assert.That(updatedDom2, Is.Not.Null);
-
-            // 4.test userId still be empty after append
-            Assert.That(updatedDom2?.UserId, Is.Empty);
-
-
-            // test3
-            // test Adding multiple items at same time
-            // Make newWord3 have a cloned sense of oldWord,
-            var newWord3 = Util.RandomWord(oldWord.ProjectId);
-            newWord3.Vernacular = oldWord.Vernacular;
-
-            // add three more new semantic domains
-            var newSense3 = oldWord.Senses.First().Clone();
-            var newSemDom3 = Util.RandomSemanticDomain();
-            var newSemDom4 = Util.RandomSemanticDomain();
-            var newSemDom5 = Util.RandomSemanticDomain();
-            newSense3.SemanticDomains.Add(newSemDom3);
-            newSense3.SemanticDomains.Add(newSemDom4);
-            newSense3.SemanticDomains.Add(newSemDom5);
-            newWord3.Senses = new List<Sense> { newSense3 };
-
-            // create a userId2
-            var userId2 = Util.RandString();
-            Assert.That(oldWord.AppendContainedWordContents(newWord3, userId2));
-            var updatedSense3 = oldWord.Senses.Find(s => s.Guid == newSense3.Guid);
-            Assert.That(updatedSense3, Is.Not.Null);
-
-            // test all updateDoms have the same userId
-            var updatedDom3 = updatedSense3!.SemanticDomains.Find(dom => dom.Id == newSemDom3.Id);
-            Assert.That(updatedDom3, Is.Not.Null);
-            Assert.That(updatedDom3?.UserId, Is.EqualTo(userId2));
-            var updatedDom4 = updatedSense3!.SemanticDomains.Find(dom => dom.Id == newSemDom4.Id);
-            Assert.That(updatedDom4, Is.Not.Null);
-            Assert.That(updatedDom4?.UserId, Is.EqualTo(userId2));
-            var updatedDom5 = updatedSense3!.SemanticDomains.Find(dom => dom.Id == newSemDom5.Id);
-            Assert.That(updatedDom5, Is.Not.Null);
-            Assert.That(updatedDom5?.UserId, Is.EqualTo(userId2));
+        [Test]
+        public void TestHashCode()
+        {
+            Assert.That(
+                new Pronunciation { FileName = FileName }.GetHashCode(),
+                Is.Not.EqualTo(new Pronunciation { FileName = "other-name" }.GetHashCode()));
+            Assert.That(
+                new Pronunciation { SpeakerId = SpeakerId }.GetHashCode(),
+                Is.Not.EqualTo(new Pronunciation { SpeakerId = "other-id" }.GetHashCode()));
+            Assert.That(
+                new Pronunciation { Protected = true }.GetHashCode(),
+                Is.Not.EqualTo(new Pronunciation { Protected = false }.GetHashCode()));
         }
     }
 
@@ -174,37 +148,37 @@ namespace Backend.Tests.Models
         public void TestEquals()
         {
             var note = new Note { Language = Language };
-            Assert.That(note.Equals(new Note { Language = Language }));
+            Assert.That(note.Equals(new Note { Language = Language }), Is.True);
         }
 
         [Test]
         public void TestEqualsNull()
         {
             var note = new Note { Language = Language };
-            Assert.IsFalse(note.Equals(null));
+            Assert.That(note.Equals(null), Is.False);
         }
 
         [Test]
         public void TestNotEquals()
         {
             var note = new Note { Language = Language, Text = Text };
-            Assert.IsFalse(note.Equals(new Note { Language = "Different language", Text = Text }));
+            Assert.That(note.Equals(new Note { Language = "Different language", Text = Text }), Is.False);
         }
 
         [Test]
         public void TestHashCode()
         {
-            Assert.AreNotEqual(
+            Assert.That(
                 new Note { Text = "1" }.GetHashCode(),
-                new Note { Text = "2" }.GetHashCode());
+                Is.Not.EqualTo(new Note { Text = "2" }.GetHashCode()));
         }
 
         [Test]
         public void TestIsBlank()
         {
-            Assert.That(new Note { Text = "  " }.IsBlank());
-            Assert.That(new Note { Language = Language }.IsBlank());
-            Assert.IsFalse(new Note { Text = Text }.IsBlank());
+            Assert.That(new Note { Text = "  " }.IsBlank(), Is.True);
+            Assert.That(new Note { Language = Language }.IsBlank(), Is.True);
+            Assert.That(new Note { Text = Text }.IsBlank(), Is.False);
         }
 
         [Test]
@@ -215,12 +189,12 @@ namespace Backend.Tests.Models
             var blankNote = new Note();
             var newNote = note.Clone();
             blankNote.Append(newNote);
-            Assert.That(blankNote.Equals(note));
+            Assert.That(blankNote.Equals(note), Is.True);
 
             blankNote = new Note();
             var oldNote = note.Clone();
             oldNote.Append(blankNote);
-            Assert.That(oldNote.Equals(note));
+            Assert.That(oldNote.Equals(note), Is.True);
         }
 
         [Test]
@@ -230,7 +204,7 @@ namespace Backend.Tests.Models
             var oldNote = note.Clone();
             var newNote = note.Clone();
             oldNote.Append(newNote);
-            Assert.That(oldNote.Equals(note));
+            Assert.That(oldNote.Equals(note), Is.True);
         }
 
         [Test]
@@ -244,7 +218,7 @@ namespace Backend.Tests.Models
             oldNote.Append(newNote);
             var expectedNote = note.Clone();
             expectedNote.Text += $"; {newText}";
-            Assert.That(oldNote.Equals(expectedNote));
+            Assert.That(oldNote.Equals(expectedNote), Is.True);
         }
 
         [Test]
@@ -258,116 +232,7 @@ namespace Backend.Tests.Models
             oldNote.Append(newNote);
             var expectedNote = note.Clone();
             expectedNote.Text += $"; [{newLanguage}] {newNote.Text}";
-            Assert.That(oldNote.Equals(expectedNote));
-        }
-    }
-
-    public class SenseTests
-    {
-        private const Status Accessibility = Status.Duplicate;
-
-        /// <summary> Words create a unique Guid by default. Use a common GUID to ensure equality in tests. </summary>
-        private readonly Guid _commonGuid = Guid.NewGuid();
-
-        [Test]
-        public void TestEquals()
-        {
-            var sense = new Sense { Guid = _commonGuid, Accessibility = Accessibility };
-            Assert.That(sense.Equals(new Sense { Guid = _commonGuid, Accessibility = Accessibility }));
-        }
-
-        [Test]
-        public void TestEqualsNull()
-        {
-            var sense = new Sense { Accessibility = Accessibility };
-            Assert.IsFalse(sense.Equals(null));
-        }
-
-        [Test]
-        public void TestClone()
-        {
-            var sense = new Sense { Accessibility = Status.Deleted };
-            Assert.AreEqual(sense, sense.Clone());
-        }
-
-        [Test]
-        public void TestHashCode()
-        {
-            Assert.AreNotEqual(
-                new Sense { Guid = _commonGuid, Accessibility = Status.Active }.GetHashCode(),
-                new Sense { Guid = _commonGuid, Accessibility = Status.Deleted }.GetHashCode());
-        }
-
-        [Test]
-        public void TestIsEmpty()
-        {
-            var emptyDef = new Definition { Language = "l1" };
-            var fullDef = new Definition { Language = "l2", Text = "something" };
-            var emptyGloss = new Gloss { Language = "l3" };
-            var fullGloss = new Gloss { Language = "l4", Def = "anything" };
-            Assert.IsFalse(new Sense { Glosses = new List<Gloss> { emptyGloss, fullGloss } }.IsEmpty());
-            Assert.IsFalse(new Sense { Definitions = new List<Definition> { fullDef, emptyDef } }.IsEmpty());
-            Assert.IsTrue(new Sense
-            {
-                Definitions = new List<Definition> { emptyDef },
-                Glosses = new List<Gloss> { emptyGloss }
-            }.IsEmpty());
-        }
-
-        [Test]
-        public void TestIsContainedIn()
-        {
-            var domList = new List<SemanticDomain> { new SemanticDomain { Id = "id" } };
-            var glossList = new List<Gloss> { new Gloss { Def = "def" } };
-            var defList = new List<Definition> { new Definition { Text = "text" } };
-            var domSense = new Sense { SemanticDomains = domList };
-            var domGlossSense = new Sense { Glosses = glossList, SemanticDomains = domList };
-            var defGlossSense = new Sense { Definitions = defList, Glosses = glossList };
-            // For empty senses, semantic domains are checked.
-            Assert.IsTrue((new Sense()).IsContainedIn(domSense));
-            Assert.IsFalse(domSense.IsContainedIn(new Sense()));
-            // For non-empty senses, semantic domains aren't checked.
-            Assert.IsTrue(domGlossSense.IsContainedIn(defGlossSense));
-            Assert.IsFalse(defGlossSense.IsContainedIn(domGlossSense));
-        }
-    }
-
-    public class DefinitionTests
-    {
-        private const string Language = "fr";
-        private const string Text = "Test definition text";
-
-        [Test]
-        public void TestEquals()
-        {
-            var definition = new Definition { Language = Language, Text = Text };
-            Assert.That(definition.Equals(new Definition { Language = Language, Text = Text }));
-        }
-
-        [Test]
-        public void TestNotEquals()
-        {
-            var definition = new Definition { Language = Language, Text = Text };
-            Assert.IsFalse(definition.Equals(new Definition { Language = Language, Text = "Different text" }));
-            Assert.IsFalse(definition.Equals(new Definition { Language = "Different language", Text = Text }));
-        }
-
-        [Test]
-        public void TestEqualsNull()
-        {
-            var definition = new Definition { Language = Language, Text = Text };
-            Assert.IsFalse(definition.Equals(null));
-        }
-
-        [Test]
-        public void TestHashCode()
-        {
-            Assert.AreNotEqual(
-                new Definition { Language = Language, Text = Text }.GetHashCode(),
-                new Definition { Language = "Different Language", Text = Text }.GetHashCode());
-            Assert.AreNotEqual(
-                new Definition { Language = Language, Text = Text }.GetHashCode(),
-                new Definition { Language = Language, Text = "Different text" }.GetHashCode());
+            Assert.That(oldNote.Equals(expectedNote), Is.True);
         }
     }
 
@@ -380,33 +245,33 @@ namespace Backend.Tests.Models
         public void TestEquals()
         {
             var flag = new Flag { Active = true, Text = Text };
-            Assert.That(flag.Equals(new Flag { Active = true, Text = Text }));
+            Assert.That(flag.Equals(new Flag { Active = true, Text = Text }), Is.True);
         }
 
         [Test]
         public void TestEqualsNull()
         {
             var flag = new Flag { Active = true };
-            Assert.IsFalse(flag.Equals(null));
+            Assert.That(flag.Equals(null), Is.False);
         }
 
         [Test]
         public void TestNotEquals()
         {
             var flag = new Flag { Active = true, Text = Text };
-            Assert.IsFalse(flag.Equals(new Flag { Active = false, Text = Text }));
-            Assert.IsFalse(flag.Equals(new Flag { Active = true, Text = Text2 }));
+            Assert.That(flag.Equals(new Flag { Active = false, Text = Text }), Is.False);
+            Assert.That(flag.Equals(new Flag { Active = true, Text = Text2 }), Is.False);
         }
 
         [Test]
         public void TestHashCode()
         {
-            Assert.AreNotEqual(
+            Assert.That(
                 new Flag { Text = Text }.GetHashCode(),
-                new Flag { Text = Text2 }.GetHashCode());
-            Assert.AreNotEqual(
+                Is.Not.EqualTo(new Flag { Text = Text2 }.GetHashCode()));
+            Assert.That(
                 new Flag { Active = true }.GetHashCode(),
-                new Flag { Active = false }.GetHashCode());
+                Is.Not.EqualTo(new Flag { Active = false }.GetHashCode()));
         }
 
         [Test]
@@ -418,12 +283,12 @@ namespace Backend.Tests.Models
             var oldFlag = flag.Clone();
             var newFlag = blankFlag.Clone();
             oldFlag.Append(newFlag);
-            Assert.That(oldFlag.Equals(flag));
+            Assert.That(oldFlag.Equals(flag), Is.True);
 
             oldFlag = blankFlag.Clone();
             newFlag = flag.Clone();
             oldFlag.Append(newFlag);
-            Assert.That(oldFlag.Equals(flag));
+            Assert.That(oldFlag.Equals(flag), Is.True);
         }
 
         [Test]
@@ -435,12 +300,12 @@ namespace Backend.Tests.Models
             var oldFlag = activeFlag.Clone();
             var newFlag = inactiveFlag.Clone();
             oldFlag.Append(newFlag);
-            Assert.That(oldFlag.Equals(activeFlag));
+            Assert.That(oldFlag.Equals(activeFlag), Is.True);
 
             oldFlag = inactiveFlag.Clone();
             newFlag = activeFlag.Clone();
             oldFlag.Append(newFlag);
-            Assert.That(oldFlag.Equals(activeFlag));
+            Assert.That(oldFlag.Equals(activeFlag), Is.True);
         }
 
         [Test]
@@ -450,7 +315,7 @@ namespace Backend.Tests.Models
             var oldFlag = flag.Clone();
             var newFlag = flag.Clone();
             oldFlag.Append(newFlag);
-            Assert.That(oldFlag.Equals(flag));
+            Assert.That(oldFlag.Equals(flag), Is.True);
         }
 
         [Test]
@@ -462,36 +327,7 @@ namespace Backend.Tests.Models
             oldFlag.Append(newFlag);
             var expectedFlag = flag.Clone();
             expectedFlag.Text += $"; {Text2}";
-            Assert.That(oldFlag.Equals(expectedFlag));
-        }
-    }
-
-    public class GlossTests
-    {
-        private const string Language = "fr";
-        private const string Def = "def";
-
-        [Test]
-        public void TestEquals()
-        {
-            var gloss = new Gloss { Language = Language, Def = Def };
-            Assert.That(gloss.Equals(new Gloss { Language = Language, Def = Def }));
-        }
-
-        [Test]
-        public void TestEqualsNull()
-        {
-            var gloss = new Gloss { Language = Language, Def = Def };
-            Assert.IsFalse(gloss.Equals(null));
-        }
-
-        [Test]
-        public void TestHashCode()
-        {
-            Assert.AreNotEqual(
-                new Gloss { Language = "1" }.GetHashCode(),
-                new Gloss { Language = "2" }.GetHashCode()
-            );
+            Assert.That(oldFlag.Equals(expectedFlag), Is.True);
         }
     }
 }

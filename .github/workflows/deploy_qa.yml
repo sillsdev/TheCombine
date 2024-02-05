@@ -18,15 +18,18 @@ jobs:
     outputs:
       image_tag: ${{ steps.build_combine.outputs.image_tag }}
     steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
-        uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
         with:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
+            *.actions.githubusercontent.com:443
+            *.data.mcr.microsoft.com:443
             ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com
             api.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
-            sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
             api.github.com:443
             api.nuget.org:443
             archive.ubuntu.com:80
@@ -38,16 +41,17 @@ jobs:
             dotnetcli.azureedge.net:443
             files.pythonhosted.org:443
             github.com:443
-            pipelines.actions.githubusercontent.com:443
+            mcr.microsoft.com:443
             production.cloudflare.docker.com:443
             pypi.org:443
-            registry.npmjs.org:443
             registry-1.docker.io:443
+            registry.npmjs.org:443
             security.debian.org:80
             security.ubuntu.com:80
             storage.googleapis.com:443
+            sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
             uploader.codecov.io:443
-      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           fetch-depth: 0
       - name: Build The Combine
@@ -66,18 +70,21 @@ jobs:
       RM_PATTERN_2: \d+\.\d+\.\d+-[a-z]+\.\d+-master\.\d+
     runs-on: ubuntu-latest
     steps:
+      # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
+      # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
-        uses: step-security/harden-runner@03bee3930647ebbf994244c21ddbc0d4933aab4f # v2.3.0
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
         with:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
+            *.actions.githubusercontent.com:443
             api.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
             github.com:443
             sts.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
-      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1-node16
+        uses: aws-actions/configure-aws-credentials@010d0da01d0b5a38af31e9c3470dbfdabdecca3a # v4.0.1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -90,11 +97,12 @@ jobs:
     if: ${{ github.ref_name == 'master' }}
     runs-on: [self-hosted, thecombine]
     steps:
-      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Deploy The Combine Update
         uses: ./.github/actions/combine-deploy-update
         with:
           image_registry: ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com
           image_tag: ${{ needs.build.outputs.image_tag }}
           kube_context: ${{ secrets.LTOPS_K8S_STAGING_CONTEXT }}
+          kubectl_version: ${{ vars.KUBECTL_VERSION }}
           update_cert_proxy: false

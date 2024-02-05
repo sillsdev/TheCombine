@@ -1,200 +1,183 @@
+import "@testing-library/jest-dom";
+import {
+  act,
+  cleanup,
+  render,
+  RenderOptions,
+  screen,
+} from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { ReactElement } from "react";
 import { Provider } from "react-redux";
-import { RouteComponentProps } from "react-router-dom";
-import renderer, { ReactTestRenderer } from "react-test-renderer";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import configureMockStore from "redux-mock-store";
 
-import "tests/mockReactI18next";
-
-import { resetFail } from "components/PasswordReset/Redux/ResetActions";
-import { RequestState } from "components/PasswordReset/Redux/ResetReduxTypes";
+import "tests/reactI18nextMock";
 import PasswordReset, {
-  MatchParams,
-} from "components/PasswordReset/ResetPage/component";
+  PasswordResetTestIds,
+} from "components/PasswordReset/ResetPage";
+import { Path } from "types/path";
 
-var testRenderer: ReactTestRenderer;
+const mockPasswordReset = jest.fn();
+const mockValidateResetToken = jest.fn();
+
+jest.mock("backend", () => ({
+  resetPassword: (...args: any[]) => mockPasswordReset(...args),
+  validateResetToken: (...args: any[]) => mockValidateResetToken(...args),
+}));
+
 // This test relies on nothing in the store so mock an empty store
-const mockStore = configureMockStore([])({});
+const mockStore = configureMockStore()();
 
-const mockRouteComponentProps: RouteComponentProps<MatchParams> = {
-  location: {} as any,
-  history: {} as any,
-  match: { params: { token: "" } } as any,
+const setupMocks = (): void => {
+  mockValidateResetToken.mockResolvedValue(true);
 };
 
 beforeEach(() => {
-  renderer.act(() => {
-    testRenderer = renderer.create(
-      <Provider store={mockStore}>
-        <PasswordReset
-          resetState={0}
-          passwordReset={jest.fn()}
-          {...mockRouteComponentProps}
-        />
-      </Provider>
-    );
-  });
+  jest.clearAllMocks();
+  setupMocks();
 });
 
+afterEach(cleanup);
+
+const ResetPageProviders = ({
+  children,
+}: {
+  children: React.ReactNode;
+}): ReactElement => {
+  return (
+    <Provider store={mockStore}>
+      <MemoryRouter initialEntries={[`${Path.PwReset}/testPasswordReset`]}>
+        <Routes>
+          <Route path={`${Path.PwReset}/:token`} element={children} />
+        </Routes>
+      </MemoryRouter>
+    </Provider>
+  );
+};
+
+const customRender = async (
+  ui: ReactElement,
+  options?: Omit<RenderOptions, "wrapper">
+): Promise<void> => {
+  await act(async () => {
+    render(ui, { wrapper: ResetPageProviders, ...options });
+  });
+};
+
 describe("PasswordReset", () => {
-  it("renders without errors", (done) => {
-    jest.clearAllMocks();
+  it("renders with password length error", async () => {
+    const user = userEvent.setup();
+    await customRender(<PasswordReset />);
 
-    // get page
-    var resetPages = testRenderer.root.findAllByType(PasswordReset);
-    expect(resetPages.length).toBe(1);
-    var resetPage = resetPages[0];
-
-    // set state
-    resetPage.instance.setState(
-      {
-        token: "",
-        password: "password",
-        passwordConfirm: "password",
-        sentAttempt: false,
-        passwordFitsRequirements: true,
-        isPasswordConfirmed: true,
-      },
-      () => {
-        // check no errors show up
-        var lengthErrors = testRenderer.root.findAllByProps({
-          id: "login.passwordRequirements",
-        }).length;
-        var confirmErrors = testRenderer.root.findAllByProps({
-          id: "login.confirmPasswordError",
-        }).length;
-        var submitButton = testRenderer.root.findByProps({
-          id: "password-reset-submit",
-        });
-        var resetFailErrors = testRenderer.root.findAllByProps({
-          id: "passwordReset.resetFail",
-        }).length;
-
-        expect(resetFailErrors).toBe(0);
-        expect(lengthErrors).toBe(0);
-        expect(confirmErrors).toBe(0);
-        expect(submitButton.props.disabled).toBe(false);
-        done();
-      }
+    const shortPassword = "foo";
+    const passwdField = screen.getByTestId(PasswordResetTestIds.Password);
+    const passwdConfirm = screen.getByTestId(
+      PasswordResetTestIds.ConfirmPassword
     );
+
+    await user.type(passwdField, shortPassword);
+    await user.type(passwdConfirm, shortPassword);
+
+    const reqErrors = screen.queryAllByTestId(
+      PasswordResetTestIds.PasswordReqError
+    );
+    const confirmErrors = screen.queryAllByTestId(
+      PasswordResetTestIds.PasswordMatchError
+    );
+    const submitButton = screen.getByTestId(PasswordResetTestIds.SubmitButton);
+
+    expect(reqErrors.length).toBeGreaterThan(0);
+    expect(confirmErrors.length).toBe(0);
+    expect(submitButton.closest("button")).toBeDisabled();
   });
 
-  it("renders with length error", (done) => {
-    jest.clearAllMocks();
+  it("renders with password match error", async () => {
+    const user = userEvent.setup();
+    await customRender(<PasswordReset />);
 
-    // get page
-    var resetPages = testRenderer.root.findAllByType(PasswordReset);
-    expect(resetPages.length).toBe(1);
-    var resetPage = resetPages[0];
-
-    // set state
-    resetPage.instance.setState(
-      {
-        token: "",
-        password: "pass",
-        passwordConfirm: "pass",
-        sentAttempt: false,
-        passwordFitsRequirements: false,
-        isPasswordConfirmed: true,
-      },
-      () => {
-        // check errors show up
-        var lengthErrors = testRenderer.root.findAllByProps({
-          id: "login.passwordRequirements",
-        }).length;
-        var confirmErrors = testRenderer.root.findAllByProps({
-          id: "login.confirmPasswordError",
-        }).length;
-        var submitButton = testRenderer.root.findByProps({
-          id: "password-reset-submit",
-        });
-
-        expect(lengthErrors).toBeGreaterThan(0);
-        expect(confirmErrors).toBe(0);
-        expect(submitButton.props.disabled).toBe(true);
-        done();
-      }
+    const passwordEntry = "password";
+    const confirmEntry = "passward";
+    const passwdField = screen.getByTestId(PasswordResetTestIds.Password);
+    const passwdConfirm = screen.getByTestId(
+      PasswordResetTestIds.ConfirmPassword
     );
+
+    await user.type(passwdField, passwordEntry);
+    await user.type(passwdConfirm, confirmEntry);
+
+    const reqErrors = screen.queryAllByTestId(
+      PasswordResetTestIds.PasswordReqError
+    );
+    const confirmErrors = screen.queryAllByTestId(
+      PasswordResetTestIds.PasswordMatchError
+    );
+    const submitButton = screen.getByTestId(PasswordResetTestIds.SubmitButton);
+
+    expect(reqErrors.length).toBe(0);
+    expect(confirmErrors.length).toBeGreaterThan(0);
+    expect(submitButton.closest("button")).toBeDisabled();
   });
 
-  it("renders with password match error", (done) => {
-    jest.clearAllMocks();
+  it("renders with no password errors", async () => {
+    const user = userEvent.setup();
+    await customRender(<PasswordReset />);
 
-    // get page
-    var resetPages = testRenderer.root.findAllByType(PasswordReset);
-    expect(resetPages.length).toBe(1);
-    var resetPage = resetPages[0];
-
-    // set state
-    resetPage.instance.setState(
-      {
-        token: "",
-        password: "password",
-        passwordConfirm: "passward",
-        sentAttempt: false,
-        passwordFitsRequirements: true,
-        isPasswordConfirmed: false,
-      },
-      () => {
-        // check errors show up
-        var lengthErrors = testRenderer.root.findAllByProps({
-          id: "login.passwordRequirements",
-        }).length;
-        var confirmErrors = testRenderer.root.findAllByProps({
-          id: "login.confirmPasswordError",
-        }).length;
-        var submitButton = testRenderer.root.findByProps({
-          id: "password-reset-submit",
-        });
-
-        expect(lengthErrors).toBe(0);
-        expect(confirmErrors).toBeGreaterThan(0);
-        expect(submitButton.props.disabled).toBe(true);
-        done();
-      }
+    const passwordEntry = "password";
+    const confirmEntry = "password";
+    const passwdField = screen.getByTestId(PasswordResetTestIds.Password);
+    const passwdConfirm = screen.getByTestId(
+      PasswordResetTestIds.ConfirmPassword
     );
+
+    await user.type(passwdField, passwordEntry);
+    await user.type(passwdConfirm, confirmEntry);
+
+    const reqErrors = screen.queryAllByTestId(
+      PasswordResetTestIds.PasswordReqError
+    );
+    const confirmErrors = screen.queryAllByTestId(
+      PasswordResetTestIds.PasswordMatchError
+    );
+    const submitButton = screen.getByTestId(PasswordResetTestIds.SubmitButton);
+
+    expect(reqErrors.length).toBe(0);
+    expect(confirmErrors.length).toBe(0);
+    expect(submitButton.closest("button")).toBeEnabled();
   });
 
-  it("renders with expire error", (done) => {
+  it("renders with expire error", async () => {
     // rerender the component with the resetFailure prop set.
-    // IDK a better way to update props in the test renderer
-    renderer.act(() => {
-      testRenderer = renderer.create(
-        <Provider store={mockStore}>
-          <PasswordReset
-            resetState={RequestState.Fail}
-            passwordReset={jest.fn()}
-            {...mockRouteComponentProps}
-          />
-        </Provider>
-      );
-    });
+    const user = userEvent.setup();
+    await customRender(<PasswordReset />);
 
-    jest.clearAllMocks();
-
-    // get page
-    var resetPages = testRenderer.root.findAllByType(PasswordReset);
-    expect(resetPages.length).toBe(1);
-    var resetPage = resetPages[0];
-    mockStore.dispatch(resetFail());
-
-    // set state
-    resetPage.instance.setState(
-      {
-        token: "",
-        password: "password",
-        passwordConfirm: "password",
-        sentAttempt: true,
-        passwordFitsRequirements: true,
-        isPasswordConfirmed: true,
-      },
-      () => {
-        // check errors show up
-        var resetFailErrors = testRenderer.root.findAllByProps({
-          id: "passwordReset.resetFail",
-        }).length;
-        expect(resetFailErrors).toBeGreaterThan(0);
-        done();
-      }
+    const passwordEntry = "password";
+    const confirmEntry = "password";
+    const passwdField = screen.getByTestId(PasswordResetTestIds.Password);
+    const passwdConfirm = screen.getByTestId(
+      PasswordResetTestIds.ConfirmPassword
     );
+
+    await user.type(passwdField, passwordEntry);
+    await user.type(passwdConfirm, confirmEntry);
+
+    const submitButton = screen.getByTestId(PasswordResetTestIds.SubmitButton);
+    mockPasswordReset.mockResolvedValueOnce(false);
+    await user.click(submitButton);
+
+    const resetErrors = screen.queryAllByTestId(
+      PasswordResetTestIds.PasswordResetFail
+    );
+    expect(resetErrors.length).toBeGreaterThan(0);
+  });
+
+  it("renders the InvalidLink component if token not valid", async () => {
+    mockValidateResetToken.mockResolvedValueOnce(false);
+    await customRender(<PasswordReset />);
+    for (const id of Object.values(PasswordResetTestIds)) {
+      expect(screen.queryAllByTestId(id)).toHaveLength(0);
+    }
+    // The textId will show up as text because t() is mocked to return its input.
+    expect(screen.queryAllByText("passwordReset.invalidURL")).toBeTruthy;
   });
 });

@@ -1,5 +1,6 @@
 ﻿using System;
 using BackendFramework.Helper;
+using static BackendFramework.Helper.FileStorage;
 using NUnit.Framework;
 
 namespace Backend.Tests.Helper
@@ -9,9 +10,9 @@ namespace Backend.Tests.Helper
         [Test]
         public void TestFileTypeExtension()
         {
-            Assert.AreEqual(FileStorage.FileTypeExtension(FileStorage.FileType.Audio), ".webm");
-            Assert.AreEqual(FileStorage.FileTypeExtension(FileStorage.FileType.Avatar), ".jpg");
-            Assert.Throws<NotImplementedException>(() => { FileStorage.FileTypeExtension((FileStorage.FileType)99); });
+            Assert.That(FileTypeExtension(FileType.Audio), Is.EqualTo(".webm"));
+            Assert.That(FileTypeExtension(FileType.Avatar), Is.EqualTo(".jpg"));
+            Assert.That(() => FileTypeExtension((FileType)99), Throws.TypeOf<NotImplementedException>());
         }
 
         [Test]
@@ -19,22 +20,14 @@ namespace Backend.Tests.Helper
         {
             const string invalidId = "@";
             const string validId = "a";
-            Assert.Throws<FileStorage.InvalidIdException>(
-                () => FileStorage.GenerateAudioFilePathForWord(invalidId, validId));
-            Assert.Throws<FileStorage.InvalidIdException>(
-                () => FileStorage.GenerateAudioFilePathForWord(validId, invalidId));
-            Assert.Throws<FileStorage.InvalidIdException>(
-                () => FileStorage.GenerateAudioFilePath(invalidId, "file.mp3"));
-            Assert.Throws<FileStorage.InvalidIdException>(
-                () => FileStorage.GenerateAudioFileDirPath(invalidId));
-            Assert.Throws<FileStorage.InvalidIdException>(
-                () => FileStorage.GenerateImportExtractedLocationDirPath(invalidId));
-            Assert.Throws<FileStorage.InvalidIdException>(
-                () => FileStorage.GenerateLiftImportDirPath(invalidId));
-            Assert.Throws<FileStorage.InvalidIdException>(
-                () => FileStorage.GenerateAvatarFilePath(invalidId));
-            Assert.Throws<FileStorage.InvalidIdException>(
-                () => FileStorage.GetProjectDir(invalidId));
+            Assert.That(() => GenerateAudioFilePathForWord(invalidId, validId), Throws.TypeOf<InvalidIdException>());
+            Assert.That(() => GenerateAudioFilePathForWord(validId, invalidId), Throws.TypeOf<InvalidIdException>());
+            Assert.That(() => GenerateAudioFilePath(invalidId, "file.mp3"), Throws.TypeOf<InvalidIdException>());
+            Assert.That(() => GenerateAudioFileDirPath(invalidId), Throws.TypeOf<InvalidIdException>());
+            Assert.That(() => GenerateImportExtractedLocationDirPath(invalidId), Throws.TypeOf<InvalidIdException>());
+            Assert.That(() => GenerateLiftImportDirPath(invalidId), Throws.TypeOf<InvalidIdException>());
+            Assert.That(() => GenerateAvatarFilePath(invalidId), Throws.TypeOf<InvalidIdException>());
+            Assert.That(() => GetProjectDir(invalidId), Throws.TypeOf<InvalidIdException>());
         }
     }
 }

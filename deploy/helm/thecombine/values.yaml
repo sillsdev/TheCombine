@@ -11,25 +11,33 @@
 
 global:
   serverName: localhost
-  pullSecretName: aws-login-credentials
-  awsS3Access: aws-s3-credentials
-  # Update strategy should be "Recreate" or "Rolling Update"
-  updateStrategy: Recreate
-  adminUsername: "Override"
-  adminPassword: "Override"
-  adminEmail: "Override"
+  # AWS Credentials
   awsAccount: "Override"
   awsDefaultRegion: "Override"
   awsAccessKeyId: "Override"
   awsSecretAccessKey: "Override"
+  # AWS S3 access
+  awsS3Access: aws-s3-credentials
+  awsS3Location: "thecombine.app"
+  # Combine variables
+  adminUsername: "Override"
+  adminPassword: "Override"
+  adminEmail: "Override"
   combineJwtSecretKey: "Override"
   combineSmtpUsername: "Override"
   combineSmtpPassword: "Override"
-  imageTag: "latest"
+  offline: false
+  # Local Storage for fonts
+  fontStorageAccessMode: "ReadWriteOnce"
+  fontStorageSize: 1Gi
+  # Values for pulling container image from image registry
+  imagePullPolicy: "Override"
   # Define the image registry to use (may be blank for local images)
   imageRegistry: awsEcr
-  # Default AWS S3 location
-  awsS3Location: "thecombine.app"
+  imageTag: "latest"
+  pullSecretName: aws-login-credentials
+  # Update strategy should be "Recreate" or "Rolling Update"
+  updateStrategy: Recreate
 
 aws-login:
   enabled: true
@@ -52,5 +60,6 @@ maintenance:
   backupSchedule: ""
   # Maximum number of backups to keep on AWS S3 service
   maxBackups: "3"
+  updateFontsSchedule: ""
 
 ingressClass: nginx

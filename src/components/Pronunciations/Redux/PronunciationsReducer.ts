@@ -1,31 +1,32 @@
+import { createSlice } from "@reduxjs/toolkit";
+
 import {
   defaultState,
-  PronunciationsAction,
   PronunciationsStatus,
-  PronunciationsState,
 } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
-import { StoreAction, StoreActionTypes } from "rootActions";
+import { StoreActionTypes } from "rootActions";
 
-export const pronunciationsReducer = (
-  state: PronunciationsState = defaultState,
-  action: StoreAction | PronunciationsAction
-): PronunciationsState => {
-  switch (action.type) {
-    case PronunciationsStatus.Playing:
-      return {
-        ...defaultState,
-        ...action,
-      };
-    case PronunciationsStatus.Recording:
-      return {
-        ...defaultState,
-        ...action,
-      };
-    case PronunciationsStatus.Default:
-      return defaultState;
-    case StoreActionTypes.RESET:
-      return defaultState;
-    default:
-      return state;
-  }
-};
+const pronunciationsSlice = createSlice({
+  name: "pronunciationsState",
+  initialState: defaultState,
+  reducers: {
+    resetAction: () => defaultState,
+    setPlayingAction: (state, action) => {
+      state.fileName = action.payload;
+      state.status = PronunciationsStatus.Playing;
+      state.wordId = "";
+    },
+    setRecordingAction: (state, action) => {
+      state.fileName = "";
+      state.status = PronunciationsStatus.Recording;
+      state.wordId = action.payload;
+    },
+  },
+  extraReducers: (builder) =>
+    builder.addCase(StoreActionTypes.RESET, () => defaultState),
+});
+
+export const { resetAction, setPlayingAction, setRecordingAction } =
+  pronunciationsSlice.actions;
+
+export default pronunciationsSlice.reducer;

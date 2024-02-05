@@ -4,8 +4,6 @@
 
 The purpose of this script is to get a developer back to a clean baseline in
 the event their repository state does not match other developers or CI.
-
-Requirements: Python 3.8+
 """
 
 from pathlib import Path

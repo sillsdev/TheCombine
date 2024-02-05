@@ -9,7 +9,7 @@ using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
 {
-    /// <summary> Atomic database functions for <see cref="User"/>s </summary>
+    /// <summary> Atomic database functions for <see cref="User"/>s. </summary>
     [ExcludeFromCodeCoverage]
     public class UserRepository : IUserRepository
     {
@@ -115,20 +115,42 @@ namespace BackendFramework.Repositories
 
         /// <summary> Gets userid for specified email </summary>
         /// <returns> A string with the userid, or null if not found </returns>
-        public async Task<User?> GetUserByEmail(string email)
+        public async Task<User?> GetUserByEmail(string email, bool sanitize = true)
         {
-            var user = await _userDatabase.Users.FindAsync(x =>
-                x.Email.ToLowerInvariant() == email.ToLowerInvariant());
-            return user.FirstOrDefault();
+            var user = (await _userDatabase.Users.FindAsync(
+                x => x.Email.ToLowerInvariant() == email.ToLowerInvariant())).FirstOrDefault();
+            if (sanitize && user is not null)
+            {
+                user.Sanitize();
+            }
+            return user;
+        }
+
+        /// <summary> Gets userid for specified email/username </summary>
+        /// <returns> A string with the userid, or null if not found </returns>
+        public async Task<User?> GetUserByEmailOrUsername(string emailOrUsername, bool sanitize = true)
+        {
+            var lower = emailOrUsername.ToLowerInvariant();
+            var user = (await _userDatabase.Users.FindAsync(
+                u => u.Username.ToLowerInvariant() == lower || u.Email.ToLowerInvariant() == lower)).FirstOrDefault();
+            if (sanitize && user is not null)
+            {
+                user.Sanitize();
+            }
+            return user;
         }
 
         /// <summary> Gets userid for specified username </summary>
         /// <returns> A string with the userid, or null if not found </returns>
-        public async Task<User?> GetUserByUsername(string username)
+        public async Task<User?> GetUserByUsername(string username, bool sanitize = true)
         {
-            var user = await _userDatabase.Users.FindAsync(x =>
-                x.Username.ToLowerInvariant() == username.ToLowerInvariant());
-            return user.FirstOrDefault();
+            var user = (await _userDatabase.Users.FindAsync(
+                x => x.Username.ToLowerInvariant() == username.ToLowerInvariant())).FirstOrDefault();
+            if (sanitize && user is not null)
+            {
+                user.Sanitize();
+            }
+            return user;
         }
 
         /// <summary> Updates <see cref="User"/> with specified userId </summary>
@@ -136,17 +158,19 @@ namespace BackendFramework.Repositories
         public async Task<ResultOfUpdate> Update(string userId, User user, bool updateIsAdmin = false)
         {
             // Confirm user exists.
-            var oldUser = await GetUser(userId);
+            var oldUser = await GetUser(userId, false);
             if (oldUser is null)
             {
                 return ResultOfUpdate.NotFound;
             }
 
-            // Confirm that email and username aren't empty and aren't taken by another user.
+            // Confirm that email and username aren't empty.
             if (string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Username))
             {
                 return ResultOfUpdate.Failed;
             }
+
+            // Confirm that email and username aren't taken by another user.
             if (user.Email.ToLowerInvariant() != oldUser.Email.ToLowerInvariant()
                 && await GetUserByEmail(user.Email) is not null)
             {
