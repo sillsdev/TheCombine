@@ -297,6 +297,7 @@
   },
   "reviewEntries": {
     "title": "Review Entries",
+    "allEntriesPerPageOption": "All",
     "sense": "Sense",
     "editSense": "Edit sense",
     "discardChanges": "Discard changes?",
@@ -304,9 +305,6 @@
     "duplicateDomain": "This sense already has domain {{ val }}.",
     "deleteWordWarning": "This word will be permanently deleted!",
     "deleteDisabled": "This was imported with data that The Combine doesn't handle, so it may not be deleted.",
-    "disableInfiniteScroll": "Disable infinite scrolling",
-    "enableInfiniteScroll": "Enable infinite scrolling",
-    "allEntries": "All",
     "scrollToBottom": "Scroll to bottom",
     "scrollToTop": "Scroll to top",
     "error": {

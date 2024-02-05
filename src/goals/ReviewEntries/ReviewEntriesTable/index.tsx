@@ -1,5 +1,4 @@
 import {
-  AllInclusive,
   FiberManualRecord,
   Flag as FlagIcon,
   KeyboardDoubleArrowDown,
@@ -14,7 +13,6 @@ import {
   type MRT_PaginationState,
   type MRT_RowVirtualizer,
   MRT_ShowHideColumnsButton,
-  //type MRT_TablePagination,
   createMRTColumnHelper,
   useMaterialReactTable,
 } from "material-react-table";
@@ -69,7 +67,6 @@ const SensesHeaderWidth = 15; // Width for # as Header
 
 // Constants for pagination state.
 const rowsPerPage = [10, 100, 1000];
-const infScrollVal = 1111; // Larger than the options to minimize visual artifacts.
 const initPaginationState: MRT_PaginationState = {
   pageIndex: 0,
   pageSize: rowsPerPage[0],
@@ -92,7 +89,7 @@ export default function ReviewEntriesTable(): ReactElement {
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
 
   const [data, setData] = useState<Word[]>([]);
-  const [enablePagination, setEnablePagination] = useState(true);
+  const [enablePagination, setEnablePagination] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [localization, setLocalization] = useState<
     MRT_Localization | undefined
@@ -110,6 +107,7 @@ export default function ReviewEntriesTable(): ReactElement {
     );
     getFrontierWords().then((frontier) => {
       setData(frontier);
+      setEnablePagination(frontier.length > rowsPerPage[0]);
       setIsLoading(false);
     });
   }, []);
@@ -117,10 +115,6 @@ export default function ReviewEntriesTable(): ReactElement {
   useEffect(() => {
     getLocalization(i18n.resolvedLanguage).then(setLocalization);
   }, [i18n.resolvedLanguage]);
-
-  useEffect(() => {
-    setEnablePagination(pagination.pageSize !== infScrollVal);
-  }, [pagination.pageSize]);
 
   const deleteWord = (id: string): void => {
     setData((prev) => prev.filter((w) => w.id !== id));
@@ -130,41 +124,25 @@ export default function ReviewEntriesTable(): ReactElement {
     setData((prev) => prev.map((w) => (w.id === oldId ? newWord : w)));
   };
 
-  const rowsPerPageOptions: RowsPerPageOption[] = [
-    ...rowsPerPage.map((value) => ({ label: `${value}`, value })),
-    { label: t("reviewEntries.allEntries"), value: infScrollVal },
-  ];
-  const toggleInfiniteScrolling = (): void => {
-    setPagination(
-      enablePagination
-        ? { pageIndex: 0, pageSize: infScrollVal }
-        : initPaginationState
-    );
-  };
-  const InfiniteScrollButton = (
-    <IconButtonWithTooltip
-      icon={
-        <AllInclusive
-          sx={{
-            color: (t) => t.palette.grey[enablePagination ? 600 : 800],
-          }}
-        />
-      }
-      onClick={toggleInfiniteScrolling}
-      side="bottom"
-      textId={
-        enablePagination
-          ? "reviewEntries.enableInfiniteScroll"
-          : "reviewEntries.disableInfiniteScroll"
-      }
-    />
-  );
+  const rowsPerPageOptions: RowsPerPageOption[] = rowsPerPage
+    .filter((value, i) => i === 0 || value < data.length)
+    .map((value) => ({ label: `${value}`, value }));
+  if (enablePagination) {
+    rowsPerPageOptions.push({
+      label: t("reviewEntries.allEntriesPerPageOption"),
+      value: data.length,
+    });
+  }
 
   const scrollToBottom = (): void => {
-    rowVirtualizerInstanceRef.current?.scrollToIndex(data.length - 1);
+    if (data.length) {
+      rowVirtualizerInstanceRef.current?.scrollToIndex(data.length - 1);
+    }
   };
   const scrollToTop = (): void => {
-    rowVirtualizerInstanceRef.current?.scrollToIndex(0);
+    if (data.length) {
+      rowVirtualizerInstanceRef.current?.scrollToIndex(0);
+    }
   };
   const ScrollToBottomButton = (
     <IconButtonWithTooltip
@@ -389,17 +367,11 @@ export default function ReviewEntriesTable(): ReactElement {
       setPagination(updater);
       scrollToTop();
     },
-    /*renderBottomToolbar: ({ table }) => (
-      <Box>
-        <MRT_TablePagination table={table} />
-      </Box>
-    ),*/
     renderToolbarInternalActions: ({ table }) => (
       <Box>
+        {enablePagination && ScrollToTopButton}
+        {enablePagination && ScrollToBottomButton}
         <MRT_ShowHideColumnsButton table={table} />
-        {InfiniteScrollButton}
-        {ScrollToTopButton}
-        {ScrollToBottomButton}
       </Box>
     ),
     rowVirtualizerInstanceRef,
