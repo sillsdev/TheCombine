@@ -37,6 +37,9 @@ namespace BackendFramework.Models
         [BsonElement("Glosses")]
         public List<Gloss> Glosses { get; set; }
 
+        [BsonElement("protectReasons")]
+        public List<ProtectReason> ProtectReasons { get; set; }
+
         [Required]
         [BsonElement("SemanticDomains")]
         public List<SemanticDomain> SemanticDomains { get; set; }
@@ -49,6 +52,7 @@ namespace BackendFramework.Models
             GrammaticalInfo = new GrammaticalInfo();
             Definitions = new List<Definition>();
             Glosses = new List<Gloss>();
+            ProtectReasons = new List<ProtectReason>();
             SemanticDomains = new List<SemanticDomain>();
         }
 
@@ -61,6 +65,7 @@ namespace BackendFramework.Models
                 GrammaticalInfo = GrammaticalInfo.Clone(),
                 Definitions = new List<Definition>(),
                 Glosses = new List<Gloss>(),
+                ProtectReasons = new List<ProtectReason>(),
                 SemanticDomains = new List<SemanticDomain>(),
             };
 
@@ -71,6 +76,10 @@ namespace BackendFramework.Models
             foreach (var gloss in Glosses)
             {
                 clone.Glosses.Add(gloss.Clone());
+            }
+            foreach (var reason in ProtectReasons)
+            {
+                clone.ProtectReasons.Add(reason.Clone());
             }
             foreach (var sd in SemanticDomains)
             {
@@ -95,13 +104,16 @@ namespace BackendFramework.Models
                 other.Definitions.All(Definitions.Contains) &&
                 other.Glosses.Count == Glosses.Count &&
                 other.Glosses.All(Glosses.Contains) &&
+                other.ProtectReasons.Count == ProtectReasons.Count &&
+                other.ProtectReasons.All(ProtectReasons.Contains) &&
                 other.SemanticDomains.Count == SemanticDomains.Count &&
                 other.SemanticDomains.All(SemanticDomains.Contains);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Guid, Accessibility, GrammaticalInfo, Definitions, Glosses, SemanticDomains);
+            return HashCode.Combine(
+                Guid, Accessibility, GrammaticalInfo, Definitions, Glosses, ProtectReasons, SemanticDomains);
         }
 
         public bool IsEmpty()
