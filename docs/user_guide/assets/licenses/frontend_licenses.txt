@@ -128,7 +128,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-@babel/runtime 7.23.5
+@babel/runtime 7.23.9
 MIT
 MIT License
 
@@ -1188,7 +1188,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/icons-material 5.14.19
+@mui/icons-material 5.15.7
 MIT
 The MIT License (MIT)
 
@@ -40572,7 +40572,7 @@ MIT
     SOFTWARE
 
 
-@types/react 18.2.46
+@types/react 18.2.51
 MIT
     MIT License
 
@@ -43336,11 +43336,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-react-i18next 13.5.0
+react-i18next 14.0.1
 MIT
 The MIT License (MIT)
 
-Copyright (c) 2023 i18next
+Copyright (c) 2024 i18next
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
