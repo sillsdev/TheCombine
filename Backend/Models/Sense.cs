@@ -37,6 +37,9 @@ namespace BackendFramework.Models
         [BsonElement("Glosses")]
         public List<Gloss> Glosses { get; set; }
 
+        [BsonElement("protectReasons")]
+        public List<ProtectReason> ProtectReasons { get; set; }
+
         [Required]
         [BsonElement("SemanticDomains")]
         public List<SemanticDomain> SemanticDomains { get; set; }
@@ -49,6 +52,7 @@ namespace BackendFramework.Models
             GrammaticalInfo = new();
             Definitions = new();
             Glosses = new();
+            ProtectReasons = new();
             SemanticDomains = new();
         }
 
@@ -61,6 +65,7 @@ namespace BackendFramework.Models
                 GrammaticalInfo = GrammaticalInfo.Clone(),
                 Definitions = Definitions.Select(d => d.Clone()).ToList(),
                 Glosses = Glosses.Select(g => g.Clone()).ToList(),
+                ProtectReasons = ProtectReasons.Select(pr => pr.Clone()).ToList(),
                 SemanticDomains = SemanticDomains.Select(sd => sd.Clone()).ToList(),
             };
         }
@@ -80,13 +85,16 @@ namespace BackendFramework.Models
                 other.Definitions.All(Definitions.Contains) &&
                 other.Glosses.Count == Glosses.Count &&
                 other.Glosses.All(Glosses.Contains) &&
+                other.ProtectReasons.Count == ProtectReasons.Count &&
+                other.ProtectReasons.All(ProtectReasons.Contains) &&
                 other.SemanticDomains.Count == SemanticDomains.Count &&
                 other.SemanticDomains.All(SemanticDomains.Contains);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Guid, Accessibility, GrammaticalInfo, Definitions, Glosses, SemanticDomains);
+            return HashCode.Combine(
+                Guid, Accessibility, GrammaticalInfo, Definitions, Glosses, ProtectReasons, SemanticDomains);
         }
 
         public bool IsEmpty()

@@ -54,6 +54,9 @@ namespace BackendFramework.Models
         [BsonRepresentation(BsonType.String)]
         public Status Accessibility { get; set; }
 
+        [BsonElement("protectReasons")]
+        public List<ProtectReason> ProtectReasons { get; set; }
+
         [Required]
         [BsonElement("history")]
         public List<string> History { get; set; }
@@ -94,6 +97,7 @@ namespace BackendFramework.Models
             Audio = new();
             EditedBy = new();
             History = new();
+            ProtectReasons = new();
             Senses = new();
             Note = new();
             Flag = new();
@@ -115,6 +119,7 @@ namespace BackendFramework.Models
                 Audio = Audio.Select(p => p.Clone()).ToList(),
                 EditedBy = EditedBy.Select(id => id).ToList(),
                 History = History.Select(id => id).ToList(),
+                ProtectReasons = ProtectReasons.Select(pr => pr.Clone()).ToList(),
                 Senses = Senses.Select(s => s.Clone()).ToList(),
                 Note = Note.Clone(),
                 Flag = Flag.Clone(),
@@ -131,6 +136,9 @@ namespace BackendFramework.Models
 
                 other.Audio.Count == Audio.Count &&
                 other.Audio.All(Audio.Contains) &&
+
+                other.ProtectReasons.Count == ProtectReasons.Count &&
+                other.ProtectReasons.All(ProtectReasons.Contains) &&
 
                 other.Senses.Count == Senses.Count &&
                 other.Senses.All(Senses.Contains) &&
@@ -170,6 +178,7 @@ namespace BackendFramework.Models
             hash.Add(Created);
             hash.Add(Modified);
             hash.Add(Accessibility);
+            hash.Add(ProtectReasons);
             hash.Add(History);
             hash.Add(EditedBy);
             hash.Add(OtherField);
