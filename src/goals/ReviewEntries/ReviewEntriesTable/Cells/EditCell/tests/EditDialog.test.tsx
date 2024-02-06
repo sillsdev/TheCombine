@@ -27,7 +27,7 @@ jest.mock("backend", () => ({
 }));
 jest.mock("components/Pronunciations/AudioRecorder");
 jest.mock(
-  "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditSensesCardContent"
+  "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditSenseDialog"
 );
 jest.mock("types/hooks", () => ({
   ...jest.requireActual("types/hooks"),
