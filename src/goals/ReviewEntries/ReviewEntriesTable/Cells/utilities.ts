@@ -104,7 +104,7 @@ export function cleanSense(
   if (
     newSense.definitions.length === 0 &&
     newSense.glosses.length === 0 &&
-    newSense.grammaticalInfo.catGroup !== GramCatGroup.Unspecified &&
+    newSense.grammaticalInfo.catGroup === GramCatGroup.Unspecified &&
     newSense.semanticDomains.length === 0
   ) {
     return;
