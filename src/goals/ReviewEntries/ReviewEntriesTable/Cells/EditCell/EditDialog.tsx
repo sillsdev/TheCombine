@@ -88,6 +88,9 @@ export enum EditDialogId {
   ButtonCancelDialogCancel = "edit-dialog-cancel-dialog-cancel-button",
   ButtonCancelDialogConfirm = "edit-dialog-cancel-dialog-confirm-button",
   ButtonSave = "edit-dialog-save-button",
+  TextFieldFlag = "edit-dialog-flag-textfield",
+  TextFieldNote = "edit-dialog-note-textfield",
+  TextFieldVernacular = "edit-dialog-vernacular-textfield",
 }
 
 enum EditField {
@@ -108,7 +111,7 @@ const defaultEditFieldChanged: EditFieldChanged = {
 };
 
 interface EditDialogProps {
-  cancel: () => void;
+  close: () => void;
   confirm: (newId: string) => Promise<void>;
   word: Word;
 }
@@ -301,7 +304,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
     await props.confirm(newId);
 
     // Close
-    props.cancel();
+    props.close();
   };
 
   /** Open dialog to ask to discard changes, or close if no changes. */
@@ -318,7 +321,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
     setNewAudio([]);
     setNewWord(props.word);
     setCancelDialog(false);
-    props.cancel();
+    props.close();
   };
 
   const { t } = useTranslation();
@@ -380,6 +383,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
                 <CardHeader title={t("reviewEntries.columns.vernacular")} />
                 <CardContent>
                   <TextFieldWithFont
+                    id={EditDialogId.TextFieldVernacular}
                     label={vernLang}
                     onChange={(e) =>
                       setNewWord((prev) => ({
@@ -460,6 +464,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
                   <TextFieldWithFont
                     analysis
                     fullWidth
+                    id={EditDialogId.TextFieldNote}
                     lang={newWord.note.language}
                     multiline
                     onChange={(e) => updateNoteText(e.target.value)}
@@ -482,6 +487,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
                     )}
                   </IconButton>
                   <TextField
+                    id={EditDialogId.TextFieldFlag}
                     onChange={(e) => updateFlag(e.target.value)}
                     value={newWord.flag.active ? newWord.flag.text : ""}
                   ></TextField>

@@ -29,7 +29,7 @@ export default function DeleteCell(props: CellProps): ReactElement {
          * to ensure that its `word` prop is not stale from a previous edit. */
         open && (
           <EditDialog
-            cancel={() => setOpen(false)}
+            close={() => setOpen(false)}
             confirm={handleConfirm}
             word={props.word}
           />
