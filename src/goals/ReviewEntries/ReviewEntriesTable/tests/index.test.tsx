@@ -1,3 +1,4 @@
+import { TableSortLabel } from "@mui/material";
 import { MRT_TableHeadCell } from "material-react-table";
 import { Provider } from "react-redux";
 import { type ReactTestRenderer, act, create } from "react-test-renderer";
@@ -28,6 +29,7 @@ jest.mock("types/hooks", () => ({
   useAppDispatch: () => jest.fn(),
 }));
 
+const mockClickEvent = { stopPropagation: jest.fn() };
 const mockState = (
   definitionsEnabled = false,
   grammaticalInfoEnabled = false
@@ -79,6 +81,34 @@ describe("ReviewEntriesTable", () => {
   it("fetches frontier when it initializes", async () => {
     await renderReviewEntriesTable();
     expect(mockGetFrontierWords).toHaveBeenCalled();
+  });
+
+  describe("table sort", () => {
+    beforeEach(async () => {
+      await renderReviewEntriesTable(true, true);
+    });
+
+    test("table sort buttons for all columns", async () => {
+      const sortButtons = renderer.root.findAllByType(TableSortLabel);
+      expect(sortButtons).toHaveLength(9);
+      for (const button of sortButtons) {
+        expect(button.props.direction).toBeUndefined;
+        await act(async () => {
+          button.props.onClick(mockClickEvent);
+        });
+        expect(button.props.direction).toEqual("asc");
+        await act(async () => {
+          button.props.onClick(mockClickEvent);
+        });
+        expect(button.props.direction).toEqual("desc");
+        await act(async () => {
+          button.props.onClick(mockClickEvent);
+        });
+        expect(button.props.direction).toBeUndefined;
+      }
+    });
+
+    // TODO: Add tests to verify the custom `sortingFn`s.
   });
 
   describe("definitionsEnabled & grammaticalInfoEnabled", () => {
