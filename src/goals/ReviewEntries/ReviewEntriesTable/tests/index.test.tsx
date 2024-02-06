@@ -12,7 +12,6 @@ import { defaultWritingSystem } from "types/writingSystem";
 
 const mockGetFrontierWords = jest.fn();
 const mockUuid = jest.fn();
-global.scrollTo = jest.fn();
 
 jest.mock("@mui/material/Grow"); // For `columnFilterDisplayMode: "popover",`
 jest.mock("uuid", () => ({ v4: () => mockUuid() }));
@@ -21,7 +20,6 @@ jest.mock("backend", () => ({
   getAllSpeakers: () => Promise.resolve([]),
   getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
 }));
-jest.mock("components/TreeView", () => "div");
 jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({}));
 jest.mock("types/hooks", () => ({
   ...jest.requireActual("types/hooks"),
@@ -65,7 +63,7 @@ beforeEach(async () => {
 });
 
 describe("ReviewEntriesTable", () => {
-  it("Initializes correctly", () => {
+  it("fetches frontier when it initializes", () => {
     expect(mockGetFrontierWords).toHaveBeenCalled();
   });
 });

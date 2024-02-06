@@ -83,6 +83,13 @@ export async function updateFrontierWord(
   return newId;
 }
 
+export enum EditDialogId {
+  ButtonCancel = "edit-dialog-cancel-button",
+  ButtonCancelDialogCancel = "edit-dialog-cancel-dialog-cancel-button",
+  ButtonCancelDialogConfirm = "edit-dialog-cancel-dialog-confirm-button",
+  ButtonSave = "edit-dialog-save-button",
+}
+
 enum EditField {
   Flag,
   Note,
@@ -268,14 +275,9 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
   /** Clean up the edited word and update it backend and frontend. */
   const saveAndClose = async (): Promise<void> => {
     // If no changes, just close
-    if (
-      !changes[EditField.Flag] &&
-      !changes[EditField.Note] &&
-      !changes[EditField.Pronunciations] &&
-      !changes[EditField.Senses] &&
-      !changes[EditField.Vernacular]
-    ) {
+    if (Object.values(changes).every((change) => !change)) {
       cancelAndClose();
+      return;
     }
 
     // Remove empty/deleted senses; confirm nonempty vernacular and senses
@@ -302,15 +304,9 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
     props.cancel();
   };
 
-  /** Close if no changes, or open dialog to ask to discard changes. */
+  /** Open dialog to ask to discard changes, or close if no changes. */
   const conditionalCancel = (): void => {
-    if (
-      changes[EditField.Flag] ||
-      changes[EditField.Note] ||
-      changes[EditField.Pronunciations] ||
-      changes[EditField.Senses] ||
-      changes[EditField.Vernacular]
-    ) {
+    if (Object.values(changes).some((change) => change)) {
       setCancelDialog(true);
     } else {
       cancelAndClose();
@@ -343,6 +339,8 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
   return (
     <>
       <CancelConfirmDialog
+        buttonIdCancel={EditDialogId.ButtonCancelDialogCancel}
+        buttonIdConfirm={EditDialogId.ButtonCancelDialogConfirm}
         handleCancel={() => setCancelDialog(false)}
         handleConfirm={cancelAndClose}
         open={cancelDialog}
@@ -357,10 +355,13 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
               {props.word.vernacular}
             </Grid>
             <Grid item>
-              <IconButton onClick={saveAndClose}>
+              <IconButton id={EditDialogId.ButtonSave} onClick={saveAndClose}>
                 <Check style={{ color: themeColors.success }} />
               </IconButton>
-              <IconButton onClick={conditionalCancel}>
+              <IconButton
+                id={EditDialogId.ButtonCancel}
+                onClick={conditionalCancel}
+              >
                 <Close style={{ color: themeColors.error }} />
               </IconButton>
             </Grid>

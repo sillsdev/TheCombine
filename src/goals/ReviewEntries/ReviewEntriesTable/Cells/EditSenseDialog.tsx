@@ -137,11 +137,7 @@ export default function EditSenseDialog(
   /** Clean up the edited word and update it backend and frontend. */
   const saveAndClose = (): void => {
     // If no changes, just close
-    if (
-      !changes[EditField.Definitions] &&
-      !changes[EditField.Glosses] &&
-      !changes[EditField.SemanticDomains]
-    ) {
+    if (Object.values(changes).every((change) => !change)) {
       cancelAndClose();
     }
 
@@ -159,13 +155,9 @@ export default function EditSenseDialog(
     props.close();
   };
 
-  /** Close if no changes, or open dialog to ask to discard changes. */
+  /** Open dialog to ask to discard changes, or close if no changes. */
   const conditionalCancel = (): void => {
-    if (
-      changes[EditField.Definitions] ||
-      changes[EditField.Glosses] ||
-      changes[EditField.SemanticDomains]
-    ) {
+    if (Object.values(changes).some((change) => change)) {
       setCancelDialog(true);
     } else {
       cancelAndClose();
