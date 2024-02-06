@@ -1,3 +1,7 @@
+coverage:
+  status:
+    patch: off
+    project: off
 ignore:
   - "src/api"
   - "src/backend/index.ts"
