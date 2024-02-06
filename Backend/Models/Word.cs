@@ -54,6 +54,9 @@ namespace BackendFramework.Models
         [BsonRepresentation(BsonType.String)]
         public Status Accessibility { get; set; }
 
+        [BsonElement("protectReasons")]
+        public List<ProtectReason> ProtectReasons { get; set; }
+
         [Required]
         [BsonElement("history")]
         public List<string> History { get; set; }
@@ -94,6 +97,7 @@ namespace BackendFramework.Models
             Audio = new List<Pronunciation>();
             EditedBy = new List<string>();
             History = new List<string>();
+            ProtectReasons = new List<ProtectReason>();
             Senses = new List<Sense>();
             Note = new Note();
             Flag = new Flag();
@@ -115,6 +119,7 @@ namespace BackendFramework.Models
                 Audio = new List<Pronunciation>(),
                 EditedBy = new List<string>(),
                 History = new List<string>(),
+                ProtectReasons = new List<ProtectReason>(),
                 Senses = new List<Sense>(),
                 Note = Note.Clone(),
                 Flag = Flag.Clone(),
@@ -131,6 +136,10 @@ namespace BackendFramework.Models
             foreach (var id in History)
             {
                 clone.History.Add(id);
+            }
+            foreach (var reason in ProtectReasons)
+            {
+                clone.ProtectReasons.Add(reason.Clone());
             }
             foreach (var sense in Senses)
             {
@@ -150,6 +159,9 @@ namespace BackendFramework.Models
 
                 other.Audio.Count == Audio.Count &&
                 other.Audio.All(Audio.Contains) &&
+
+                other.ProtectReasons.Count == ProtectReasons.Count &&
+                other.ProtectReasons.All(ProtectReasons.Contains) &&
 
                 other.Senses.Count == Senses.Count &&
                 other.Senses.All(Senses.Contains) &&
@@ -189,6 +201,7 @@ namespace BackendFramework.Models
             hash.Add(Created);
             hash.Add(Modified);
             hash.Add(Accessibility);
+            hash.Add(ProtectReasons);
             hash.Add(History);
             hash.Add(EditedBy);
             hash.Add(OtherField);
