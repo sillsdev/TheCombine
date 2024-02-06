@@ -10,15 +10,15 @@ import {
 } from "api/models";
 import {
   type MergeData,
+  type MergeTreeReference,
   type MergeTreeSense,
   type MergeTreeWord,
+  type Sidebar,
   convertSenseToMergeTreeSense,
   convertWordToMergeTreeWord,
   defaultSidebar,
   defaultTree,
   newMergeTreeWord,
-  MergeTreeReference,
-  Sidebar,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { newMergeWords } from "goals/MergeDuplicates/MergeDupsTypes";
 import { defaultState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
