@@ -136,9 +136,11 @@ export function mergeAll() {
     }
 
     // Blacklist the set of words with updated ids.
-    const mergedIds = mergeWordsArray.map((mw) => mw.parent.id);
+    const mergedIds = new Set(
+      mergeWordsArray.flatMap((mw) => mw.children.map((c) => c.srcWordId))
+    );
     const unmergedIds = Object.keys(mergeTree.data.words).filter(
-      (id) => !mergedIds.includes(id)
+      (id) => !mergedIds.has(id)
     );
     const blacklistIds = [...unmergedIds, ...parentIds];
     if (blacklistIds.length > 1) {
