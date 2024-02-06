@@ -11,8 +11,9 @@ import { ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 
-import { Flag } from "api/models";
+import { Flag, ProtectReason, ReasonType } from "api/models";
 import { FlagButton, IconButtonWithTooltip } from "components/Buttons";
+import MultilineTooltipTitle from "components/MultilineTooltipTitle";
 import DragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DragSense";
 import { MergeTreeWord } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import {
@@ -106,6 +107,8 @@ export function DropWordCardHeader(
     (state: StoreState) => state.mergeDuplicateGoal.data
   );
 
+  const { t } = useTranslation();
+
   const dispatchFlagWord = (flag: Flag): void => {
     dispatch(flagWord({ wordId: props.wordId, flag }));
   };
@@ -148,6 +151,71 @@ export function DropWordCardHeader(
     <div />
   );
 
+  const reasonText = (reason: ProtectReason): string => {
+    // Backend/Helper/LiftHelper.cs > GetProtectedReasons(LiftEntry entry)
+    switch (reason.type) {
+      case ReasonType.Annotations:
+        return t("mergeDups.protectReason.annotations");
+      case ReasonType.Etymologies:
+        return t("mergeDups.protectReason.etymologies");
+      case ReasonType.Field:
+        return t("mergeDups.protectReason.field", { val: reason.value });
+      case ReasonType.NoteWithType:
+        return t("mergeDups.protectReason.noteWithType", { val: reason.value });
+      case ReasonType.Notes:
+        return t("mergeDups.protectReason.notesWord");
+      case ReasonType.Relations:
+        return t("mergeDups.protectReason.relations");
+      case ReasonType.Trait:
+        return reason.value ?? "(unknown trait)";
+      case ReasonType.TraitDialectLabels:
+        return t("mergeDups.protectReason.traitDialectLabels", {
+          val: reason.value,
+        });
+      case ReasonType.TraitDoNotPublishIn:
+        return t("mergeDups.protectReason.traitDoNotPublishIn", {
+          val: reason.value,
+        });
+      case ReasonType.TraitDoNotUseForParsing:
+        return t("mergeDups.protectReason.traitDoNotUseForParsing", {
+          val: reason.value,
+        });
+      case ReasonType.TraitEntryType:
+        return t("mergeDups.protectReason.traitEntryType", {
+          val: reason.value,
+        });
+      case ReasonType.TraitExcludeAsHeadword:
+        return t("mergeDups.protectReason.traitExcludeAsHeadword");
+      case ReasonType.TraitMinorEntryCondition:
+        return t("mergeDups.protectReason.traitMinorEntryCondition", {
+          val: reason.value,
+        });
+      case ReasonType.TraitMorphType:
+        return t("mergeDups.protectReason.traitMorphType", {
+          val: reason.value,
+        });
+      case ReasonType.TraitPublishIn:
+        return t("mergeDups.protectReason.traitPublishIn", {
+          val: reason.value,
+        });
+      case ReasonType.Variants:
+        return t("mergeDups.protectReason.variants");
+      default:
+        throw new Error();
+    }
+  };
+
+  const tooltipTexts = [t("mergeDups.helpText.protectedWord")];
+  const reasons = words[props.wordId]?.protectReasons;
+  if (reasons?.length) {
+    tooltipTexts.push(
+      t("mergeDups.helpText.protectedData", {
+        val: reasons.map(reasonText).join("; "),
+      })
+    );
+  }
+  tooltipTexts.push(t("mergeDups.helpText.protectedWordInfo"));
+
   const headerAction = treeWord ? (
     <>
       {props.protectedWithOneChild && (
@@ -156,7 +224,7 @@ export function DropWordCardHeader(
           icon={<WarningOutlined />}
           side="top"
           size="small"
-          textId="mergeDups.helpText.protectedWord"
+          text={<MultilineTooltipTitle lines={tooltipTexts} />}
         />
       )}
       <FlagButton
