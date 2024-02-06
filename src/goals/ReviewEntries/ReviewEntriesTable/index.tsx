@@ -1,18 +1,15 @@
 import {
   FiberManualRecord,
   Flag as FlagIcon,
-  KeyboardDoubleArrowDown,
-  KeyboardDoubleArrowUp,
   PlayArrow,
 } from "@mui/icons-material";
-import { Box, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import {
   MaterialReactTable,
   type MRT_Localization,
-  type MRT_Row,
   type MRT_PaginationState,
+  type MRT_Row,
   type MRT_RowVirtualizer,
-  MRT_ShowHideColumnsButton,
   createMRTColumnHelper,
   useMaterialReactTable,
 } from "material-react-table";
@@ -21,7 +18,6 @@ import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, type GrammaticalInfo, type Word } from "api/models";
 import { getAllSpeakers, getFrontierWords, getWord } from "backend";
-import { IconButtonWithTooltip } from "components/Buttons";
 import { topBarHeight } from "components/LandingPage/TopBar";
 import * as Cell from "goals/ReviewEntries/ReviewEntriesTable/Cells";
 import * as ff from "goals/ReviewEntries/ReviewEntriesTable/filterFn";
@@ -66,7 +62,7 @@ const IconHeaderWidth = 20; // Width for a small icon as Header
 const SensesHeaderWidth = 15; // Width for # as Header
 
 // Constants for pagination state.
-const rowsPerPage = [10, 100, 1000];
+const rowsPerPage = [10, 100];
 const initPaginationState: MRT_PaginationState = {
   pageIndex: 0,
   pageSize: rowsPerPage[0],
@@ -123,6 +119,11 @@ export default function ReviewEntriesTable(): ReactElement {
     const newWord = await getWord(newId);
     setData((prev) => prev.map((w) => (w.id === oldId ? newWord : w)));
   };
+  const scrollToTop = (): void => {
+    if (data.length) {
+      rowVirtualizerInstanceRef.current?.scrollToIndex(0);
+    }
+  };
 
   const rowsPerPageOptions: RowsPerPageOption[] = rowsPerPage
     .filter((value, i) => i === 0 || value < data.length)
@@ -133,37 +134,6 @@ export default function ReviewEntriesTable(): ReactElement {
       value: data.length,
     });
   }
-
-  const scrollToBottom = (): void => {
-    if (data.length) {
-      rowVirtualizerInstanceRef.current?.scrollToIndex(data.length - 1);
-    }
-  };
-  const scrollToTop = (): void => {
-    if (data.length) {
-      rowVirtualizerInstanceRef.current?.scrollToIndex(0);
-    }
-  };
-  const ScrollToBottomButton = (
-    <IconButtonWithTooltip
-      icon={
-        <KeyboardDoubleArrowDown sx={{ color: (t) => t.palette.grey[800] }} />
-      }
-      onClick={scrollToBottom}
-      side="bottom"
-      textId={"reviewEntries.scrollToBottom"}
-    />
-  );
-  const ScrollToTopButton = (
-    <IconButtonWithTooltip
-      icon={
-        <KeyboardDoubleArrowUp sx={{ color: (t) => t.palette.grey[800] }} />
-      }
-      onClick={scrollToTop}
-      side="bottom"
-      textId={"reviewEntries.scrollToTop"}
-    />
-  );
 
   const columnHelper = createMRTColumnHelper<Word>();
 
@@ -367,13 +337,6 @@ export default function ReviewEntriesTable(): ReactElement {
       setPagination(updater);
       scrollToTop();
     },
-    renderToolbarInternalActions: ({ table }) => (
-      <Box>
-        {enablePagination && ScrollToTopButton}
-        {enablePagination && ScrollToBottomButton}
-        <MRT_ShowHideColumnsButton table={table} />
-      </Box>
-    ),
     rowVirtualizerInstanceRef,
     sortDescFirst: false,
     state: { isLoading, pagination },
