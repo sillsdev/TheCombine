@@ -3,7 +3,7 @@ import { type ReactElement, useState } from "react";
 
 import { IconButtonWithTooltip } from "components/Buttons";
 import { type CellProps } from "goals/ReviewEntries/ReviewEntriesTable/Cells/CellTypes";
-import EditDialog from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditDialog";
+import EditDialog from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditDialog";
 
 const buttonId = (wordId: string): string => `row-${wordId}-edit`;
 

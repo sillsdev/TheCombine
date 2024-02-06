@@ -40,11 +40,11 @@ import {
 import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
 import PronunciationsFrontend from "components/Pronunciations/PronunciationsFrontend";
 import { uploadFileFromPronunciation } from "components/Pronunciations/utilities";
-import EditSensesCardContent from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditSensesCardContent";
+import EditSensesCardContent from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditSensesCardContent";
 import {
   cleanWord,
   isSenseChanged,
-} from "goals/ReviewEntries/ReviewEntriesTable/Cells/utilities";
+} from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/utilities";
 import { type StoreState } from "types";
 import { type StoreStateDispatch } from "types/Redux/actions";
 import { useAppDispatch, useAppSelector } from "types/hooks";

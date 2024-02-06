@@ -41,7 +41,7 @@ import {
   areDomainsSame,
   areGlossesSame,
   cleanSense,
-} from "goals/ReviewEntries/ReviewEntriesTable/Cells/utilities";
+} from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/utilities";
 import { type StoreState } from "types";
 import { useAppSelector } from "types/hooks";
 import { newSemanticDomainForMongoDB } from "types/semanticDomain";

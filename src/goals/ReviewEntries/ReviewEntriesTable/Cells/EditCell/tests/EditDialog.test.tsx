@@ -8,7 +8,7 @@ import { type Word } from "api/models";
 import { type CurrentProjectState } from "components/Project/ProjectReduxTypes";
 import EditDialog, {
   EditDialogId,
-} from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditDialog";
+} from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditDialog";
 import { newProject } from "types/project";
 import { newSense, newWord } from "types/word";
 import { defaultWritingSystem } from "types/writingSystem";

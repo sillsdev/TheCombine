@@ -6,7 +6,7 @@ import {
   cleanSense,
   cleanWord,
   isSenseChanged,
-} from "goals/ReviewEntries/ReviewEntriesTable/Cells/utilities";
+} from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/utilities";
 import { newSemanticDomain } from "types/semanticDomain";
 import {
   newDefinition,

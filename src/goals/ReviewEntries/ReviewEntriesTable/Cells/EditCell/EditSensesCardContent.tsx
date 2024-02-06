@@ -14,8 +14,8 @@ import { type Sense, Status } from "api/models";
 import { IconButtonWithTooltip } from "components/Buttons";
 import SenseCard from "components/WordCard/SenseCard";
 import SummarySenseCard from "components/WordCard/SummarySenseCard";
-import EditSenseDialog from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditSenseDialog";
-import { isSenseChanged } from "goals/ReviewEntries/ReviewEntriesTable/Cells/utilities";
+import EditSenseDialog from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditSenseDialog";
+import { isSenseChanged } from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/utilities";
 import { newSense } from "types/word";
 
 interface EditSensesCardContentProps {
