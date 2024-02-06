@@ -22,19 +22,15 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 import {
-  type Pronunciation,
-  type Sense,
-  type Word,
-  GramCatGroup,
-  type Gloss,
-  type WritingSystem,
   type Definition,
+  type Gloss,
+  GramCatGroup,
   type SemanticDomain,
+  type Sense,
+  type WritingSystem,
 } from "api/models";
-import { deleteAudio, updateWord } from "backend";
 import { PartOfSpeechButton } from "components/Buttons";
 import { CancelConfirmDialog } from "components/Dialogs";
-import { uploadFileFromPronunciation } from "components/Pronunciations/utilities";
 import TreeView from "components/TreeView";
 import {
   areDefinitionsSame,
@@ -45,42 +41,34 @@ import {
 import { type StoreState } from "types";
 import { useAppSelector } from "types/hooks";
 import { newSemanticDomainForMongoDB } from "types/semanticDomain";
-import { themeColors } from "types/theme";
 import { newDefinition, newGloss } from "types/word";
 import { TextFieldWithFont } from "utilities/fontComponents";
 
-/** Update word in the backend */
-export async function updateFrontierWord(
-  newSense: Word,
-  newAudio: Pronunciation[],
-  oldAudio: Pronunciation[]
-): Promise<string> {
-  let newId = newSense.id;
-  for (const o of oldAudio) {
-    if (!newSense.audio.find((n) => n.fileName === o.fileName)) {
-      newId = await deleteAudio(newId, o.fileName);
-    }
-  }
-  newId = (await updateWord({ ...newSense, id: newId })).id;
-  for (const pro of newAudio) {
-    newId = await uploadFileFromPronunciation(newId, pro);
-  }
-  return newId;
+export enum EditSenseDialogId {
+  ButtonCancel = "edit-sense-dialog-cancel-button",
+  ButtonCancelDialogCancel = "edit-sense-dialog-cancel-dialog-cancel-button",
+  ButtonCancelDialogConfirm = "edit-sense-dialog-cancel-dialog-confirm-button",
+  ButtonPartOfSpeech = "edit-sense-dialog-part-of-speech-button",
+  ButtonSave = "edit-sense-dialog-save-button",
+  ButtonSemDomAdd = "edit-sense-add-semantic-domain-button",
+  ButtonSemDomDeletePrefix = "edit-sense-delete-semantic-domain-button-",
+  TextFieldDefinitionPrefix = "edit-sense-definition-textfield-",
+  TextFieldGlossPrefix = "edit-sense-gloss-textfield-",
 }
 
-enum EditField {
+export enum EditSenseField {
   Definitions,
   Glosses,
   GrammaticalInfo,
   SemanticDomains,
 }
 
-type EditFieldChanged = Record<EditField, boolean>;
-const defaultEditFieldChanged: EditFieldChanged = {
-  [EditField.Definitions]: false,
-  [EditField.GrammaticalInfo]: false,
-  [EditField.Glosses]: false,
-  [EditField.SemanticDomains]: false,
+type EditSenseFieldChanged = Record<EditSenseField, boolean>;
+const defaultEditSenseFieldChanged: EditSenseFieldChanged = {
+  [EditSenseField.Definitions]: false,
+  [EditSenseField.GrammaticalInfo]: false,
+  [EditSenseField.Glosses]: false,
+  [EditSenseField.SemanticDomains]: false,
 };
 
 interface EditSenseDialogProps {
@@ -97,32 +85,39 @@ export default function EditSenseDialog(
     (state: StoreState) =>
       state.currentProjectState.project.analysisWritingSystems
   );
+  const showDefinitions = useAppSelector(
+    (state: StoreState) => state.currentProjectState.project.definitionsEnabled
+  );
+  const showGrammaticalInfo = useAppSelector(
+    (state: StoreState) =>
+      state.currentProjectState.project.grammaticalInfoEnabled
+  );
 
   const [newSense, setNewSense] = useState(props.sense);
   const [cancelDialog, setCancelDialog] = useState(false);
-  const [changes, setChanges] = useState(defaultEditFieldChanged);
+  const [changes, setChanges] = useState(defaultEditSenseFieldChanged);
 
   const { t } = useTranslation();
 
   useEffect(() => {
     setChanges({
-      [EditField.Definitions]: !areDefinitionsSame(
+      [EditSenseField.Definitions]: !areDefinitionsSame(
         newSense.definitions,
         props.sense.definitions
       ),
-      [EditField.Glosses]: !areGlossesSame(
+      [EditSenseField.Glosses]: !areGlossesSame(
         newSense.glosses,
         props.sense.glosses
       ),
-      [EditField.GrammaticalInfo]: false, // not editable
-      [EditField.SemanticDomains]: !areDomainsSame(
+      [EditSenseField.GrammaticalInfo]: false, // not editable
+      [EditSenseField.SemanticDomains]: !areDomainsSame(
         newSense.semanticDomains,
         props.sense.semanticDomains
       ),
     });
   }, [newSense, props.sense]);
 
-  const bgStyle = (field: EditField): CSSProperties => ({
+  const bgStyle = (field: EditSenseField): CSSProperties => ({
     backgroundColor: changes[field] ? yellow[50] : grey[200],
   });
 
@@ -134,11 +129,12 @@ export default function EditSenseDialog(
   const updateDomains = (semanticDomains: SemanticDomain[]): void =>
     setNewSense((prev) => ({ ...prev, semanticDomains }));
 
-  /** Clean up the edited word and update it backend and frontend. */
+  /** Clean up the edited senses and update the parent state. */
   const saveAndClose = (): void => {
     // If no changes, just close
     if (Object.values(changes).every((change) => !change)) {
       cancelAndClose();
+      return;
     }
 
     // Confirm nonempty senses
@@ -174,6 +170,8 @@ export default function EditSenseDialog(
   return (
     <>
       <CancelConfirmDialog
+        buttonIdCancel={EditSenseDialogId.ButtonCancelDialogCancel}
+        buttonIdConfirm={EditSenseDialogId.ButtonCancelDialogConfirm}
         handleCancel={() => setCancelDialog(false)}
         handleConfirm={cancelAndClose}
         open={cancelDialog}
@@ -184,11 +182,17 @@ export default function EditSenseDialog(
           <Grid container justifyContent="space-between">
             <Grid item>{t("reviewEntries.editSense")}</Grid>
             <Grid item>
-              <IconButton onClick={saveAndClose}>
-                <Check style={{ color: themeColors.success }} />
+              <IconButton
+                id={EditSenseDialogId.ButtonSave}
+                onClick={saveAndClose}
+              >
+                <Check sx={{ color: (t) => t.palette.success.main }} />
               </IconButton>
-              <IconButton onClick={conditionalCancel}>
-                <Close style={{ color: themeColors.error }} />
+              <IconButton
+                id={EditSenseDialogId.ButtonCancel}
+                onClick={conditionalCancel}
+              >
+                <Close sx={{ color: (t) => t.palette.error.main }} />
               </IconButton>
             </Grid>
           </Grid>
@@ -201,54 +205,71 @@ export default function EditSenseDialog(
             spacing={3}
           >
             {/* Definitions */}
-            <Grid item>
-              <Card sx={bgStyle(EditField.Definitions)}>
-                <CardHeader title={t("reviewEntries.columns.definitions")} />
-                <CardContent>
-                  <DefinitionList
-                    defaultLang={analysisWritingSystems[0]}
-                    definitions={newSense.definitions}
-                    onChange={updateDefinitions}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
+            {showDefinitions && (
+              <Grid item>
+                <Card sx={bgStyle(EditSenseField.Definitions)}>
+                  <CardHeader title={t("reviewEntries.columns.definitions")} />
+                  <CardContent>
+                    <DefinitionList
+                      defaultLang={analysisWritingSystems[0]}
+                      definitions={newSense.definitions}
+                      onChange={updateDefinitions}
+                      textFieldIdPrefix={
+                        EditSenseDialogId.TextFieldDefinitionPrefix
+                      }
+                    />
+                  </CardContent>
+                </Card>
+              </Grid>
+            )}
 
             {/* Glosses */}
             <Grid item>
-              <Card sx={bgStyle(EditField.Glosses)}>
+              <Card sx={bgStyle(EditSenseField.Glosses)}>
                 <CardHeader title={t("reviewEntries.columns.glosses")} />
                 <CardContent>
                   <GlossList
                     defaultLang={analysisWritingSystems[0]}
                     glosses={newSense.glosses}
                     onChange={updateGlosses}
+                    textFieldIdPrefix={EditSenseDialogId.TextFieldGlossPrefix}
                   />
                 </CardContent>
               </Card>
             </Grid>
 
             {/* Part of Speech */}
-            <Grid item>
-              <Card sx={bgStyle(EditField.GrammaticalInfo)}>
-                <CardHeader title={t("reviewEntries.columns.partOfSpeech")} />
-                <CardContent>
-                  {newSense.grammaticalInfo.catGroup ===
-                  GramCatGroup.Unspecified ? (
-                    <Typography>None</Typography>
-                  ) : (
-                    <PartOfSpeechButton gramInfo={newSense.grammaticalInfo} />
-                  )}
-                </CardContent>
-              </Card>
-            </Grid>
+            {showGrammaticalInfo && (
+              <Grid item>
+                <Card sx={bgStyle(EditSenseField.GrammaticalInfo)}>
+                  <CardHeader title={t("reviewEntries.columns.partOfSpeech")} />
+                  <CardContent>
+                    {newSense.grammaticalInfo.catGroup ===
+                    GramCatGroup.Unspecified ? (
+                      <Typography>
+                        {t("grammaticalCategory.Unspecified")}
+                      </Typography>
+                    ) : (
+                      <PartOfSpeechButton
+                        buttonId={EditSenseDialogId.ButtonPartOfSpeech}
+                        gramInfo={newSense.grammaticalInfo}
+                      />
+                    )}
+                  </CardContent>
+                </Card>
+              </Grid>
+            )}
 
             {/* Semantic Domains */}
             <Grid item>
-              <Card sx={bgStyle(EditField.SemanticDomains)}>
+              <Card sx={bgStyle(EditSenseField.SemanticDomains)}>
                 <CardHeader title={t("reviewEntries.columns.domains")} />
                 <CardContent>
                   <DomainList
+                    buttonIdAdd={EditSenseDialogId.ButtonSemDomAdd}
+                    buttonIdPrefixDelete={
+                      EditSenseDialogId.ButtonSemDomDeletePrefix
+                    }
                     domains={newSense.semanticDomains}
                     onChange={updateDomains}
                   />
@@ -266,6 +287,7 @@ interface DefinitionListProps {
   defaultLang: WritingSystem;
   definitions: Definition[];
   onChange: (definitions: Definition[]) => void;
+  textFieldIdPrefix: string;
 }
 
 function DefinitionList(props: DefinitionListProps): ReactElement {
@@ -286,7 +308,7 @@ function DefinitionList(props: DefinitionListProps): ReactElement {
             updated.splice(i, 1, definition);
             props.onChange(updated);
           }}
-          textFieldId={`definition-${i}`}
+          textFieldId={`${props.textFieldIdPrefix}${i}`}
         />
       ))}
     </>
@@ -323,6 +345,7 @@ interface GlossListProps {
   defaultLang: WritingSystem;
   glosses: Gloss[];
   onChange: (glosses: Gloss[]) => void;
+  textFieldIdPrefix: string;
 }
 
 function GlossList(props: GlossListProps): ReactElement {
@@ -343,7 +366,7 @@ function GlossList(props: GlossListProps): ReactElement {
             updated.splice(i, 1, gloss);
             props.onChange(updated);
           }}
-          textFieldId={`gloss-${i}`}
+          textFieldId={`${props.textFieldIdPrefix}${i}`}
         />
       ))}
     </>
@@ -376,6 +399,8 @@ function GlossTextField(props: GlossTextFieldProps): ReactElement {
 }
 
 interface DomainListProps {
+  buttonIdAdd: string;
+  buttonIdPrefixDelete: string;
   domains: SemanticDomain[];
   onChange: (domains: SemanticDomain[]) => void;
 }
@@ -416,7 +441,7 @@ function DomainList(props: DomainListProps): ReactElement {
           props.domains.map((domain, index) => (
             <Grid item key={`${domain.id}_${domain.name}`}>
               <Chip
-                id={`domain-${index}`}
+                id={`${props.buttonIdPrefixDelete}${index}`}
                 label={`${domain.id}: ${domain.name}`}
                 onDelete={() => deleteDomain(domain.id)}
               />
@@ -428,7 +453,7 @@ function DomainList(props: DomainListProps): ReactElement {
           </Grid>
         )}
         <IconButton
-          id="domain-add"
+          id={props.buttonIdAdd}
           onClick={() => setAddingDom(true)}
           size="large"
         >
