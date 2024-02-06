@@ -16,7 +16,6 @@ import { EntryNote } from "components/DataEntry/DataEntryTable/EntryCellComponen
 import { PronunciationsBackend } from "components/Pronunciations/PronunciationsBackend";
 import SenseCard from "components/WordCard/SenseCard";
 import SummarySenseCard from "components/WordCard/SummarySenseCard";
-import { themeColors } from "types/theme";
 import { TypographyWithFont } from "utilities/fontComponents";
 import { friendlySep, getDateTimeString } from "utilities/utilities";
 
@@ -44,8 +43,10 @@ export default function WordCard(props: WordCardProps): ReactElement {
   }, [editedBy, provenance]);
 
   return (
-    <Card style={{ backgroundColor: "lightgray", minWidth: "200px" }}>
-      <CardContent style={{ position: "relative" }}>
+    <Card
+      sx={{ backgroundColor: (t) => t.palette.grey[300], minWidth: "200px" }}
+    >
+      <CardContent sx={{ position: "relative" }}>
         {/* Vernacular */}
         <TypographyWithFont variant="h5" vernacular>
           {word.vernacular}
@@ -65,9 +66,9 @@ export default function WordCard(props: WordCardProps): ReactElement {
             buttonId={buttonIdFull(word.id)}
             icon={
               full ? (
-                <CloseFullscreen style={{ color: "black" }} />
+                <CloseFullscreen sx={{ color: (t) => t.palette.grey[900] }} />
               ) : (
-                <OpenInFull style={{ color: "gray" }} />
+                <OpenInFull sx={{ color: (t) => t.palette.grey[600] }} />
               )
             }
             onClick={() => setFull(!full)}
@@ -132,9 +133,12 @@ export default function WordCard(props: WordCardProps): ReactElement {
 
 export function AudioSummary(props: { count: number }): ReactElement {
   return props.count > 0 ? (
-    <IconButton>
-      <Badge badgeContent={props.count}>
-        <PlayArrow style={{ color: themeColors.success }} />
+    <IconButton disabled>
+      <Badge
+        badgeContent={props.count}
+        sx={{ color: (t) => t.palette.common.black }}
+      >
+        <PlayArrow sx={{ color: (t) => t.palette.success.main }} />
       </Badge>
     </IconButton>
   ) : (

@@ -1,10 +1,9 @@
 import { Flag as FlagFilled, FlagOutlined } from "@mui/icons-material";
-import { Fragment, ReactElement, useEffect, useState } from "react";
+import { Fragment, type ReactElement, useEffect, useState } from "react";
 
-import { Flag } from "api/models";
+import { type Flag } from "api/models";
 import { IconButtonWithTooltip } from "components/Buttons";
 import { DeleteEditTextDialog } from "components/Dialogs";
-import { themeColors } from "types/theme";
 
 interface FlagButtonProps {
   flag: Flag;
@@ -12,6 +11,7 @@ interface FlagButtonProps {
   updateFlag?: (flag: Flag) => void;
 }
 
+/** A flag adding/editing/viewing button */
 export default function FlagButton(props: FlagButtonProps): ReactElement {
   const [open, setOpen] = useState<boolean>(false);
   const [active, setActive] = useState<boolean>();
@@ -43,7 +43,7 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
       <IconButtonWithTooltip
         icon={
           active ? (
-            <FlagFilled style={{ color: themeColors.error }} />
+            <FlagFilled sx={{ color: (t) => t.palette.error.main }} />
           ) : props.updateFlag ? (
             <FlagOutlined />
           ) : (
@@ -53,9 +53,7 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
         text={text}
         textId={active ? "flags.edit" : "flags.add"}
         size="small"
-        onClick={
-          props.updateFlag ? () => setOpen(true) : active ? () => {} : undefined
-        }
+        onClick={props.updateFlag ? () => setOpen(true) : undefined}
         buttonId={props.buttonId ?? "flag-button"}
         side="top"
       />
