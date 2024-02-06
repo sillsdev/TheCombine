@@ -11,9 +11,9 @@ export type HEX = `#${string}`;
 export const themeColors: { [key: string]: HEX } = {
   primary: blue[600],
   secondary: grey[200],
-  error: red[600],
-  warn: orange[300],
-  success: green[600],
+  error: red[600], // also audio Record icons
+  warning: orange[300],
+  success: green[600], // also audio Play icons
   highlight: yellow[200],
   lightShade: blue[700], // AppBarTypes.ts
   darkShade: blue[900], // AppBarTypes.ts
@@ -26,6 +26,8 @@ const palette: PaletteOptions = {
   primary: { main: themeColors.primary },
   secondary: { main: themeColors.secondary },
   error: { main: themeColors.error },
+  warning: { main: themeColors.warning },
+  success: { main: themeColors.success },
   background: { default: themeColors.secondary },
   contrastThreshold: 3,
   tonalOffset: 0.2,
