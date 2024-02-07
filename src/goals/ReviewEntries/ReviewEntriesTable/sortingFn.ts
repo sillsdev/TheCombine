@@ -44,7 +44,7 @@ function compareSensesGramInfo(a: Sense[], b: Sense[]): number {
 
 /* Comparison function for semantic domains. */
 function compareDomains(a: SemanticDomain[], b: SemanticDomain[]): number {
-  // Special case: no domains
+  // Special case: no domains sorted to last
   if (!a.length || !b.length) {
     return b.length - a.length;
   }

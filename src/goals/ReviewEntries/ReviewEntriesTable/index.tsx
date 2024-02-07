@@ -316,7 +316,7 @@ export default function ReviewEntriesTable(): ReactElement {
     enableFullScreenToggle: false,
     enableGlobalFilter: false,
     enablePagination,
-    enableRowVirtualization: true,
+    enableRowVirtualization: enablePagination,
     initialState: {
       columnVisibility: {
         definitions: showDefinitions,

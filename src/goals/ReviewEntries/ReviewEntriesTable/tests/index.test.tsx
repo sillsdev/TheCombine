@@ -1,46 +1,37 @@
 import { TableSortLabel } from "@mui/material";
-import { MRT_TableHeadCell } from "material-react-table";
+import { MRT_TableBodyRow, MRT_TableHeadCell } from "material-react-table";
 import { Provider } from "react-redux";
 import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import { type Word } from "api/models";
 import { defaultState } from "components/Project/ProjectReduxTypes";
 import ReviewEntriesTable from "goals/ReviewEntries/ReviewEntriesTable";
+import VernacularCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/VernacularCell";
+import {
+  mockWords,
+  sortOrder,
+} from "goals/ReviewEntries/ReviewEntriesTable/tests/WordsMock";
 import { type StoreState } from "types";
-import { newSense, newWord } from "types/word";
 
 jest.mock("@mui/material/Grow"); // For `columnFilterDisplayMode: "popover",`
-jest.mock("uuid");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const mockUuid = require("uuid") as { v4: jest.Mock };
-
-let uuidIndex = 0;
-// getMockUuid(false) gives the next uuid to be assigned by our mocked v4.
-function getMockUuid(increment = true): string {
-  const uuid = `mockUuid${uuidIndex}`;
-  if (increment) {
-    uuidIndex++;
-  }
-  return uuid;
-}
 
 jest.mock("backend", () => ({
-  getAllSpeakers: () => Promise.resolve([]),
+  getAllSpeakers: (projectId: string) => mockGetAllSpeakers(projectId),
   getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
-  getWord: () => jest.fn(),
+  getWord: (wordId: string) => mockGetWord(wordId),
 }));
-jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({}));
-jest.mock("goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditDialog");
+jest.mock("goals/ReviewEntries/ReviewEntriesTable/Cells/PronunciationsCell");
 jest.mock("types/hooks", () => ({
   ...jest.requireActual("types/hooks"),
   useAppDispatch: () => jest.fn(),
 }));
 
 const mockClickEvent = { stopPropagation: jest.fn() };
+const mockGetAllSpeakers = jest.fn();
 const mockGetFrontierWords = jest.fn();
+const mockGetWord = jest.fn();
 const mockState = (
   definitionsEnabled = false,
   grammaticalInfoEnabled = false
@@ -54,23 +45,6 @@ const mockState = (
     },
   },
 });
-const mockWords = (): Word[] => [
-  { ...newWord("Alfa"), senses: [newSense("Echo")] },
-  { ...newWord("Delta"), senses: [newSense("Foxtrot")] },
-  { ...newWord("Bravo"), senses: [newSense("Hotel")] },
-  { ...newWord("Charlie"), senses: [newSense("Golf")] },
-];
-/*const sortOrder = [
-  [0, 2, 3, 1], // Vernacular
-  [0, 1, 2, 3], // Senses
-  [0, 1, 2, 3], // Definitions
-  [0, 1, 3, 2], // Glosses
-  [0, 1, 2, 3], // PartOfSpeech
-  [0, 1, 2, 3], // Domains
-  [0, 1, 2, 3], // Pronunciations
-  [0, 1, 2, 3], // Note
-  [0, 1, 2, 3], // Flag
-];*/
 
 let renderer: ReactTestRenderer;
 
@@ -92,7 +66,7 @@ const renderReviewEntriesTable = async (
 
 function setMockFunctions(): void {
   jest.clearAllMocks();
-  mockUuid.v4.mockImplementation(getMockUuid);
+  mockGetAllSpeakers.mockResolvedValue([]);
   mockGetFrontierWords.mockResolvedValue(mockWords());
 }
 
@@ -101,9 +75,10 @@ beforeEach(() => {
 });
 
 describe("ReviewEntriesTable", () => {
-  it("fetches frontier when it initializes", async () => {
+  test("initial render fetches frontier and loads data", async () => {
     await renderReviewEntriesTable();
     expect(mockGetFrontierWords).toHaveBeenCalled();
+    expect(renderer.root.findAllByType(MRT_TableBodyRow)).toHaveLength(4);
   });
 
   describe("table sort", () => {
@@ -111,27 +86,52 @@ describe("ReviewEntriesTable", () => {
       await renderReviewEntriesTable(true, true);
     });
 
-    test("table sort buttons for all columns", async () => {
-      const sortButtons = renderer.root.findAllByType(TableSortLabel);
-      expect(sortButtons).toHaveLength(9);
-      for (const button of sortButtons) {
+    const checkRowOrder = (col: number, dir: "asc" | "desc"): void => {
+      const rowIds = renderer.root
+        .findAllByType(VernacularCell)
+        .map((cell) => cell.props.word.id);
+      const order = [...sortOrder[col]];
+      if (dir === "desc") {
+        order.reverse();
+      }
+      order.forEach((id, index) => {
+        expect(rowIds[index]).toEqual(`${id}`);
+      });
+    };
+
+    /** The accessor columns in default order. */
+    const cols = [
+      "Vernacular",
+      "Senses",
+      "Definitions",
+      "Glosses",
+      "PartOfSpeech",
+      "Domains",
+      "Pronunciations",
+      "Note",
+      "Flag",
+    ];
+
+    cols.forEach((col, i) => {
+      test(`sorting by ${col} column`, async () => {
+        const button = renderer.root.findAllByType(TableSortLabel)[i];
         expect(button.props.direction).toBeUndefined;
         await act(async () => {
           button.props.onClick(mockClickEvent);
         });
         expect(button.props.direction).toEqual("asc");
+        checkRowOrder(i, "asc");
         await act(async () => {
           button.props.onClick(mockClickEvent);
         });
         expect(button.props.direction).toEqual("desc");
+        checkRowOrder(i, "desc");
         await act(async () => {
           button.props.onClick(mockClickEvent);
         });
         expect(button.props.direction).toBeUndefined;
-      }
+      });
     });
-
-    // TODO: Add tests to verify the custom `sortingFn`s.
   });
 
   describe("definitionsEnabled & grammaticalInfoEnabled", () => {
