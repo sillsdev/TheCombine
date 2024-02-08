@@ -22,7 +22,7 @@ jest.mock("backend", () => ({
   getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
   getWord: (wordId: string) => mockGetWord(wordId),
 }));
-jest.mock("goals/ReviewEntries/ReviewEntriesTable/Cells/PronunciationsCell");
+jest.mock("components/Pronunciations/PronunciationsBackend");
 jest.mock("types/hooks", () => ({
   ...jest.requireActual("types/hooks"),
   useAppDispatch: () => jest.fn(),

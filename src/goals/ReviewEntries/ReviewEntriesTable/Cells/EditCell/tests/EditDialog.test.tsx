@@ -5,13 +5,14 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import { type Word } from "api/models";
+import { GramCatGroup, Status, type Word } from "api/models";
 import { type CurrentProjectState } from "components/Project/ProjectReduxTypes";
 import EditDialog, {
   EditDialogId,
 } from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditDialog";
 import { newProject } from "types/project";
-import { newSense, newWord } from "types/word";
+import { newSemanticDomain } from "types/semanticDomain";
+import { newDefinition, newSense, newWord } from "types/word";
 import { defaultWritingSystem } from "types/writingSystem";
 
 // Container uses Portal, not supported in react-test-renderer
@@ -31,12 +32,13 @@ jest.mock(
 );
 jest.mock("types/hooks", () => ({
   ...jest.requireActual("types/hooks"),
-  useAppDispatch: () => jest.fn(),
+  useAppDispatch: () => mockDispatch,
 }));
 
 const mockClose = jest.fn();
 const mockConfirm = jest.fn();
 const mockDeleteAudio = jest.fn();
+const mockDispatch = jest.fn();
 const mockUpdateWord = jest.fn();
 
 const mockTextFieldEvent = (
@@ -45,7 +47,24 @@ const mockTextFieldEvent = (
   ({ target: { value } }) as any;
 const mockWord = (): Word => ({
   ...newWord("vernacular"),
-  senses: [newSense("gloss")],
+  senses: [
+    {
+      ...newSense("gloss 1"),
+      definitions: [newDefinition("def A", "aa"), newDefinition("def B", "bb")],
+    },
+    {
+      ...newSense("gloss 2"),
+      semanticDomains: [newSemanticDomain("2.2", "two-point-two")],
+    },
+    { ...newSense("gloss 3"), accessibility: Status.Protected },
+    {
+      ...newSense("gloss 3"),
+      grammaticalInfo: {
+        catGroup: GramCatGroup.Verb,
+        grammaticalCategory: "vt",
+      },
+    },
+  ],
 });
 
 const currentProjectState: Partial<CurrentProjectState> = {
@@ -92,6 +111,7 @@ describe("EditDialog", () => {
     expect(mockClose).toHaveBeenCalledTimes(1);
     expect(mockConfirm).not.toHaveBeenCalled();
     expect(mockUpdateWord).not.toHaveBeenCalled();
+    expect(mockDispatch).not.toHaveBeenCalled();
   });
 
   it("cancel button opens dialog if changes", async () => {
@@ -122,6 +142,7 @@ describe("EditDialog", () => {
     expect(mockClose).not.toHaveBeenCalled();
     expect(mockConfirm).not.toHaveBeenCalled();
     expect(mockUpdateWord).not.toHaveBeenCalled();
+    expect(mockDispatch).not.toHaveBeenCalled();
 
     // Click the cancel button and confirm the cancel
     await act(async () => {
@@ -138,6 +159,7 @@ describe("EditDialog", () => {
     expect(mockClose).toHaveBeenCalledTimes(1);
     expect(mockConfirm).not.toHaveBeenCalled();
     expect(mockUpdateWord).not.toHaveBeenCalled();
+    expect(mockDispatch).not.toHaveBeenCalled();
   });
 
   it("save button closes if no changes", async () => {
@@ -153,6 +175,7 @@ describe("EditDialog", () => {
     expect(mockClose).toHaveBeenCalledTimes(1);
     expect(mockConfirm).not.toHaveBeenCalled();
     expect(mockUpdateWord).not.toHaveBeenCalled();
+    expect(mockDispatch).not.toHaveBeenCalled();
   });
 
   it("save button saves changes and closes", async () => {
@@ -173,11 +196,12 @@ describe("EditDialog", () => {
       saveButton.props.onClick();
     });
 
-    // Ensure save and close occurred
+    // Ensure save and close occurred, with dispatch up update goal
     expect(mockClose).toHaveBeenCalledTimes(1);
     expect(mockConfirm).toHaveBeenCalledTimes(1);
     expect(mockUpdateWord).toHaveBeenCalledTimes(1);
     const updatedWord: Word = mockUpdateWord.mock.calls[0][0];
     expect(updatedWord.flag.text).toEqual(newFlagText);
+    expect(mockDispatch).toHaveBeenCalled();
   });
 });
