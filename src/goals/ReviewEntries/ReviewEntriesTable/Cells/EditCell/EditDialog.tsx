@@ -88,6 +88,7 @@ export enum EditDialogId {
   ButtonCancelDialogCancel = "edit-dialog-cancel-dialog-cancel-button",
   ButtonCancelDialogConfirm = "edit-dialog-cancel-dialog-confirm-button",
   ButtonSave = "edit-dialog-save-button",
+  ButtonSensesViewToggle = "edit-dialog-senses-view-toggle-button",
   TextFieldFlag = "edit-dialog-flag-textfield",
   TextFieldNote = "edit-dialog-note-textfield",
   TextFieldVernacular = "edit-dialog-vernacular-textfield",
@@ -405,6 +406,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
                   action={
                     newWord.senses.length > 1 && (
                       <IconButton
+                        id={EditDialogId.ButtonSensesViewToggle}
                         onClick={() => setShowSenses((prev) => !prev)}
                       >
                         {showSenses ? (
