@@ -247,7 +247,7 @@ export default function EditSenseDialog(
                     {newSense.grammaticalInfo.catGroup ===
                     GramCatGroup.Unspecified ? (
                       <Typography>
-                        {t("grammaticalCategory.Unspecified")}
+                        {t("grammaticalCategory.group.Unspecified")}
                       </Typography>
                     ) : (
                       <PartOfSpeechButton
