@@ -9,13 +9,7 @@ import {
   MenuItem,
   Tooltip,
 } from "@mui/material";
-import {
-  CSSProperties,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Pronunciation, Speaker } from "api/models";
@@ -30,19 +24,17 @@ import {
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
-import { themeColors } from "types/theme";
 
 interface PlayerProps {
   audio: Pronunciation;
   deleteAudio?: (fileName: string) => void;
+  disabled?: boolean;
   onClick?: () => void;
   pronunciationUrl?: string;
   size?: "large" | "medium" | "small";
   updateAudioSpeaker?: (speakerId?: string) => Promise<void> | void;
   warningTextId?: string;
 }
-
-const iconStyle: CSSProperties = { color: themeColors.success };
 
 export default function AudioPlayer(props: PlayerProps): ReactElement {
   const isPlaying = useAppSelector(
@@ -166,6 +158,22 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
     );
   }
 
+  const icon = isPlaying ? (
+    <Stop
+      sx={{
+        color: (t) =>
+          props.disabled ? t.palette.grey[400] : t.palette.success.main,
+      }}
+    />
+  ) : (
+    <PlayArrow
+      sx={{
+        color: (t) =>
+          props.disabled ? t.palette.grey[400] : t.palette.success.main,
+      }}
+    />
+  );
+
   return (
     <>
       <Tooltip
@@ -179,10 +187,11 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
           onTouchStart={handleTouch}
           onTouchEnd={enableContextMenu}
           aria-label="play"
+          disabled={props.disabled}
           id={`audio-${props.audio.fileName}`}
           size={props.size || "large"}
         >
-          {isPlaying ? <Stop sx={iconStyle} /> : <PlayArrow sx={iconStyle} />}
+          {icon}
         </IconButton>
       </Tooltip>
       <Menu
@@ -201,7 +210,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
             handleMenuOnClose();
           }}
         >
-          {isPlaying ? <Stop sx={iconStyle} /> : <PlayArrow sx={iconStyle} />}
+          {icon}
         </MenuItem>
         {canChangeSpeaker && (
           <MenuItem
