@@ -59,7 +59,17 @@ combine_stop () {
 }
 
 combine_status () {
-  kubectl -n thecombine get deployments
+  if systemctl is-active --quiet create_ap ; then
+    echo "WiFi hotspot is UP."
+  else
+    echo "WiFi hotspot is DOWN."
+  fi
+  if systemctl is-active --quiet k3s ; then
+    echo "The Combine  is UP."
+    kubectl -n thecombine get deployments
+  else
+    echo "The Combine is DOWN."
+  fi
 }
 
 combine_cert () {
