@@ -27,7 +27,6 @@
       - gnupg
       - lsb-release
     state: present
-  notify: reboot target
 
 - name: Create keyring directory
   file:
@@ -50,6 +49,5 @@
 
 - name: Install Docker Packages
   apt:
-    name: "{{ docker_packages }}"
+    name: "{{ container_packages }}"
     update_cache: yes
-  notify: reboot target

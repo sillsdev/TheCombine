@@ -37,6 +37,10 @@
       import_role:
         name: network_config
 
+    - name: Install Container Engine
+      import_role:
+        name: container_engine
+
     - name: Install Kubernetes
       import_role:
         name: k8s_install

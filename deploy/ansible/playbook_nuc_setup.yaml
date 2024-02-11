@@ -37,9 +37,9 @@
       import_role:
         name: network_config
 
-    - name: Install Docker Subsystem
+    - name: Install Container Engine
       import_role:
-        name: docker_install
+        name: container_engine
 
     - name: Install Kubernetes Tools
       import_role:
