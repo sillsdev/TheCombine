@@ -1,20 +1,24 @@
 import { IconButton } from "@mui/material";
 import { Provider } from "react-redux";
-import { ReactTestRenderer, act, create } from "react-test-renderer";
+import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
-import { GramCatGroup, Sense } from "api/models";
+import { GramCatGroup, type Sense } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import MergeDragDrop from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop";
 import DragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DragSense";
 import DropWord from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DropWord";
 import {
   convertSenseToMergeTreeSense,
+  defaultTree,
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
-import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
+import {
+  type MergeTreeState,
+  defaultState as mergeState,
+} from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { newSemanticDomain } from "types/semanticDomain";
 import {
   newDefinition,
@@ -89,6 +93,7 @@ const wordFoo2 = {
 //     vern: foo
 //     senses: bar, baz
 const mockTwoWordState = (): MergeTreeState => ({
+  ...mergeState,
   data: {
     senses: {
       [senseBah.guid]: convertSenseToMergeTreeSense(senseBah, wordFoo1.id, 0),
@@ -99,7 +104,7 @@ const mockTwoWordState = (): MergeTreeState => ({
     words: { [wordFoo1.id]: wordFoo1, [wordFoo2.id]: wordFoo2 },
   },
   tree: {
-    sidebar: { senses: [], wordId: "", mergeSenseId: "" },
+    ...defaultTree,
     words: {
       [wordFoo1.id]: newMergeTreeWord(wordFoo1.vernacular, {
         word1_senseA: [senseBah.guid, senseBaj.guid],
@@ -110,7 +115,6 @@ const mockTwoWordState = (): MergeTreeState => ({
       }),
     },
   },
-  mergeWords: [],
 });
 
 const renderMergeDragDrop = async (
