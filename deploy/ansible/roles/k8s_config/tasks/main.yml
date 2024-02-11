@@ -37,7 +37,7 @@
     path: "{{ kubecfg }}"
     regexp: '^(\s+server: https:\/\/)[.0-9]+:(1?6443)'
     backrefs: yes
-    line: '\1{{ public_dns_name }}:\2'
+    line: '\1{{ k8s_dns_name }}:\2'
 
 - name: Replace 'default' cluster, user, etc with {{ kubecfgdir }}
   delegate_to: localhost
