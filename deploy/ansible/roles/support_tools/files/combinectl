@@ -1,73 +1,111 @@
 #! /usr/bin/env bash
 
-usage() {
-  cat <<USAGE
-  Manage the Combine services.
+usage () {
+  cat << .EOM
+  Usage:
+    $0 COMMAND [parameters]
 
-  Usage: $0 [options] action
-  
-  Options:
-    -h|--help: Print this message and exit.
-    
-  Actions:
-    start:     Start the combine services.
-    stop:      Stop the combine services.
-    enable:    Configure the combine services to start at boot time.  Implies 'start'.
-    disable:   Configure the combine services to not start at boot time. Implies 'stop'.
-    status:    List the status for the combine services.
+    Commands:
+      help:     Print this usage message.
+      start:    Start the combine services.
+      stop:     Stop the combine services.
+      auto:     Configure the combine services to start at boot time.
+                Does not imply 'start'.
+      noauto:   Configure the combine services to not start at boot time.
+                Does not imply 'stop'.
+      status:   List the status for the combine services.
+      cert:     Print the expiration date for the web certificate.
+      update release_number:
+                Update the version of The Combine to the "release_number"
+                specified.  You can see the number of the latest release
+                at https://github.com/sillsdev/TheCombine/releases.
 
-  Caveats:
-    For actions other than "status", this script must be run with root privileges.
+                Note that not all releases can be updated this way.  If
+                The Combine fails to run properly, download and run the
+                updated install package.
 
-USAGE
+    If the command is omitted or unrecognized, this usage message is
+    printed.
+.EOM
 }
 
-ACTION=""
-STARTUP_ACTION=""
-while [[ $# -gt 0 ]] ; do
-  arg="$1"
-  shift
+combine_enable () {
+  echo "Setting The Combine to start at boot."
+  sudo systemctl enable create_ap
+  sudo systemctl enable k3s
+}
 
-  case ${arg} in
-    -h|--help)
-      usage
-      exit 0
-      ;;
-    disable)
-      ACTION="stop"
-      STARTUP_ACTION=${arg}
-      ;;
-    enable)
-      ACTION="start"
-      STARTUP_ACTION=${arg}
-      ;;
-    start|stop|status)
-      ACTION=${arg}
-      ;;
-    *)
-      echo "Unrecognized argument: ${arg}"
-      usage
-      exit 1
-      ;;
-  esac
-done
+combine_disable () {
+  echo "Setting The Combine to not start at boot."
+  sudo systemctl disable create_ap
+  sudo systemctl disable k3s
+}
 
-if [ "$ACTION" -eq 0 ] ; then
+combine_start () {
+  echo "Starting The Combine."
+  sudo systemctl start create_ap
+  sudo systemctl restart systemd-resolved
+  sudo systemctl restart systemd-networkd
+  sudo systemctl start k3s
+}
+
+combine_stop () {
+  echo "Stopping The Combine."
+  sudo systemctl stop k3s
+  sudo systemctl stop create_ap
+  sudo ip link set vip down
+  sudo systemctl restart systemd-resolved
+  sudo systemctl restart systemd-networkd
+}
+
+combine_status () {
+  kubectl -n thecombine get deployments
+}
+
+combine_cert () {
+  SECRET_NAME=`kubectl -n thecombine get secrets --field-selector type=kubernetes.io/tls -o name`
+  CERT_DATA=`kubectl -n thecombine get $SECRET_NAME -o "jsonpath={.data['tls\.crt']}"`
+  echo $CERT_DATA | base64 -d | openssl x509 -enddate -noout| sed -e "s/^notAfter=/Web certificate expires at /"
+}
+
+combine_update () {
+  echo "Updating The Combine to $1"
+  IMAGE_TAG=$1
+  while [[ ! $IMAGE_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+ ]] ; do
+    echo "$IMAGE_TAG doesn't look like a valid version."
+    read -p "Enter a new release number, for example, v1.2.0: " IMAGE_TAG
+  done
+  kubectl -n thecombine set image deployment/database database="public.ecr.aws/thecombine/combine_database:$IMAGE_TAG"
+  kubectl -n thecombine set image deployment/backend backend="public.ecr.aws/thecombine/combine_backend:$IMAGE_TAG"
+  kubectl -n thecombine set image deployment/frontend frontend="public.ecr.aws/thecombine/combine_frontend:$IMAGE_TAG"
+  kubectl -n thecombine set image deployment/maintenance maintenance="public.ecr.aws/thecombine/combine_maint:$IMAGE_TAG"
+}
+
+export KUBECONFIG=${HOME}/.kube/config
+
+if [[ $# -eq 0 ]] ;  then
   usage
   exit 0
 fi
 
-if [ "$ACTION" != "status" && "$EUID" -ne 0 ] ; then
-  usage
-  exit 0
-fi
-
-systemctl "$ACTION" create_ap
-systemctl "$ACTION" k3s
-if [ "$STARTUP_ACTION" ] ; then
-  systemctl "$STARTUP_ACTION" create_ap
-  systemctl "$STARTUP_ACTION" k3s
-fi
-if [ "$ACTION" != "status" ] ; then
-  systemctl daemon_reload
-fi
+case "$1" in
+  help)
+    usage;;
+  auto)
+    combine_enable;;
+  noauto)
+    combine_disable;;
+  start)
+    combine_start;;
+  stop)
+    combine_stop;;
+  stat*)
+    combine_status;;
+  cert*)
+    combine_cert;;
+  update)
+    combine_update $2;;
+  *)
+    echo -e "Unrecognized command: \"$1\".\n"
+    usage;;
+esac
