@@ -1,5 +1,43 @@
 #! /usr/bin/env bash
 
+function get-password () {
+  PASS1="foo"
+  PASS2="bar"
+  while [ "$PASS1" != "$PASS2" ] ; do
+    read -s -p "$1"$'\n' PASS1
+    read -s -p "Confirm password:"$'\n' PASS2
+  done
+  echo "$PASS1"
+}
+
+function set-combine-env () {
+  CONFIG_DIR=${HOME}/.config/combine
+  echo "CONFIG_DIR == ${CONFIG_DIR}"
+  if [ ! -d "${CONFIG_DIR}" ] ; then
+    echo "Creating ${CONFIG_DIR}"
+    mkdir -p ${CONFIG_DIR}
+  fi
+  if [ ! -f "${CONFIG_DIR}/env" ] ; then
+    # Collect values from user
+    COMBINE_JWT_SECRET_KEY=`LC_ALL=C tr -dc 'A-Za-z0-9*\-_@!' </dev/urandom | head -c 64; echo`
+    read -p "Enter name for the site admin account: " COMBINE_ADMIN_USERNAME
+    COMBINE_ADMIN_PASSWORD=$(get-password "Enter a password for the ${COMBINE_ADMIN_USERNAME} account:")
+    read -p "Enter AWS_ACCESS_KEY_ID: " AWS_ACCESS_KEY_ID
+    read -p "Enter AWS_SECRET_ACCESS_KEY: " AWS_SECRET_ACCESS_KEY
+    # write collected values and static values to config file
+    cat <<.EOF > ${CONFIG_DIR}/env
+    export COMBINE_JWT_SECRET_KEY="${COMBINE_JWT_SECRET_KEY}"
+    export COMBINE_ADMIN_PASSWORD="${COMBINE_ADMIN_PASSWORD}"
+    export COMBINE_ADMIN_USERNAME="${COMBINE_ADMIN_USERNAME}"
+    export AWS_DEFAULT_REGION="us-east-1"
+    export AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}"
+    export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
+    export COMBINE_SMTP_USERNAME="nobody"
+.EOF
+  fi
+  source ${CONFIG_DIR}/env
+}
+
 #####
 # Let the user know what to expect
 cat <<.EOM
@@ -20,10 +58,13 @@ prompt, enter your password here as well.
 
 
 #####
+# Mark our place
+INSTALL_DIR=`pwd`
 # Install required packages
 sudo apt install -y python3-pip python3-venv
+
 #####
-# Setup Python virtual environment
+# Setup Python to run ansible
 python3 -m venv venv
 source venv/bin/activate
 python -m pip install --upgrade pip pip-tools
@@ -31,9 +72,49 @@ python -m piptools sync requirements.txt
 
 #####
 # Setup Kubernetes environment and WiFi Access Point
-cd ansible
+cd ${INSTALL_DIR}/ansible
 ansible-playbook playbook_desktop_setup.yaml -K
-cd ../scripts
+
+if [ -f /var/run/reboot-required ]; then
+  cat <<.EOM
+  ***** Restart required *****
+
+  Rerun $0 after the system has been restarted.
+
+.EOM
+  read -p "Restart now? (Y/n) " RESTART
+  if [[ "$RESTART" =~ ^[yY] ]] ; then
+    sudo reboot
+  fi
+  exit 0
+fi
+
+#####
+# Setup kubectl configuration file
+K3S_CONFIG_FILE=${HOME}/.kube/config
+if [ ! -e ${K3S_CONFIG_FILE} ] ; then
+  echo >2 "Kubernetes (k3s) configuration file is missing."
+  exit 1
+fi
+export KUBECONFIG=${K3S_CONFIG_FILE}
+
+set-combine-env
+
+#####
+# Save install scripts to allow upgrades
+COMBINE_DIR=${HOME}/.combine
+mkdir -p ${COMBINE_DIR}
+echo "Copying files from ${INSTALL_DIR}"
+cp ${INSTALL_DIR}/requirements.* ${COMBINE_DIR}
+cp -r ${INSTALL_DIR}/scripts ${COMBINE_DIR}
+cp -r ${INSTALL_DIR}/helm ${COMBINE_DIR}
+
+#####
+# Copy Python virtual environment for install and upgrades
+deactivate
+cd ${COMBINE_DIR}
+cp -r ${INSTALL_DIR}/venv ${COMBINE_DIR}
+source venv/bin/activate
 
 #####
 # Install base helm charts
@@ -42,6 +123,7 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 
 #####
 # Setup required cluster services
+cd ${COMBINE_DIR}/scripts
 ./setup_cluster.py
 
 #####
