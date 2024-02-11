@@ -38,7 +38,7 @@ ingress_namespace: ingress-nginx
 # The server name will direct traffic to the production
 # server since it is used to get the certificates for the
 # NUC.
-k8s_dns_name: "{{ ansible_hostname }}"
+k8s_dns_name: "local"
 
 ################################################
 # Ethernet settings
@@ -53,7 +53,7 @@ ap_domain: thecombine.app
 ap_ssid: "{{ansible_hostname}}_ap"
 ap_passphrase: "Combine2020"
 ap_gateway: "10.10.10.1"
-ap_hostname: "{{ansible_hostname}}"
+ap_hostname: "local"
 
 ################################################
 # hardware monitoring settings
