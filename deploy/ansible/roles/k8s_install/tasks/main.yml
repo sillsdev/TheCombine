@@ -9,17 +9,32 @@
     file: "{{ k8s_engine }}.yml"
   when: k8s_engine != "none"
 
-- name: Download the Google Cloud public signing key
+- name: Create keyring directory if necessary
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Download the Kubernetes public signing key
   shell:
     cmd: >
-      curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg
-      | gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
-    creates: /etc/apt/keyrings/kubernetes-archive-keyring.gpg
+      curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key
+      | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+- name: Set signing key permissions
+  file:
+    name: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    mode: 0644
+    state: file
 
 - name: Add repository
   apt_repository:
-    repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main"
+    repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /"
     filename: kubernetes
+    mode: 0644
 
 - name: Install kubectl
   apt:
