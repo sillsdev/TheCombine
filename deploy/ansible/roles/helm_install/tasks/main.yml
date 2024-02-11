@@ -7,11 +7,6 @@
     group: root
     mode: 0755
 
-- name: Ansible user
-  become: false
-  debug:
-    msg: "Ansible User: {{ ansible_user_id }}"
-
 - name: Get Latest Release
   get_url:
     # https://get.helm.sh/helm-v3.13.2-linux-amd64.tar.gz
@@ -35,15 +30,3 @@
     owner: root
     group: root
     mode: 0755
-
-#############################################
-# These chart repos get setup for root
-# Add the commands to the general installation
-# script
-- name: Add stable charts
-  command:
-    cmd: helm repo add stable https://charts.helm.sh/stable
-
-- name: Add bitnami charts
-  command:
-    cmd: helm repo add bitnami https://charts.bitnami.com/bitnami
