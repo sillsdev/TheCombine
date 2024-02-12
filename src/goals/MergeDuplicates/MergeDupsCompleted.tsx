@@ -100,7 +100,7 @@ export function doWordsIncludeMerges(
   // The undo operation will fail if any of the children are in the frontier.
   return (
     merge.parentIds.every((id) => wordIds.includes(id)) &&
-    !merge.childIds.some((id) => wordIds.includes(id))
+    merge.childIds.every((id) => !wordIds.includes(id))
   );
 }
 
