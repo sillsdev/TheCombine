@@ -16,14 +16,12 @@ export default function ProjectPickersDay(
 ): ReactElement {
   const { days, ...pickersDayProps } = props;
   const date = pickersDayProps.day.toDate();
-  const selected = days
-    ? days.findIndex(
-        (d) =>
-          d.getDate() === date.getDate() &&
-          d.getMonth() === date.getMonth() &&
-          d.getFullYear() === date.getFullYear()
-      ) > -1
-    : false;
+  const selected = days?.some(
+    (d) =>
+      d.getDate() === date.getDate() &&
+      d.getMonth() === date.getMonth() &&
+      d.getFullYear() === date.getFullYear()
+  );
 
   return <PickersDay {...pickersDayProps} selected={selected} />;
 }

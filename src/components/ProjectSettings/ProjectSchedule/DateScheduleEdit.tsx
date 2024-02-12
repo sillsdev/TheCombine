@@ -47,7 +47,7 @@ export default function DateScheduleEdit(
           d.getMonth() === date.getMonth() &&
           d.getDate() === date.getDate()
       );
-      if (index >= 0) {
+      if (index > -1) {
         schedule.splice(index, 1);
       } else {
         schedule.push(date);

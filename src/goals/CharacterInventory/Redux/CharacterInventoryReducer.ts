@@ -16,7 +16,7 @@ const characterInventorySlice = createSlice({
       }
 
       const index = state.validCharacters.findIndex((c) => c == action.payload);
-      if (index !== -1) {
+      if (index > -1) {
         state.validCharacters.splice(index, 1);
       }
 
@@ -39,7 +39,7 @@ const characterInventorySlice = createSlice({
       const index = state.rejectedCharacters.findIndex(
         (c) => c == action.payload
       );
-      if (index !== -1) {
+      if (index > -1) {
         state.rejectedCharacters.splice(index, 1);
       }
 

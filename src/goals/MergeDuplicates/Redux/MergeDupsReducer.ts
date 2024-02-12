@@ -111,9 +111,8 @@ const mergeDuplicatesSlice = createSlice({
       const nonDeletedSenses = Object.values(state.tree.words).flatMap((w) =>
         Object.values(w.sensesGuids).flatMap((s) => s)
       );
-      const deletedWords = possibleWords.filter(
-        (w) =>
-          !w.senses.map((s) => s.guid).find((g) => nonDeletedSenses.includes(g))
+      const deletedWords = possibleWords.filter((w) =>
+        w.senses.every((s) => !nonDeletedSenses.includes(s.guid))
       );
       state.mergeWords = deletedWords.map((w) =>
         newMergeWords(w, [{ srcWordId: w.id, getAudio: false }], true)
@@ -230,7 +229,7 @@ const mergeDuplicatesSlice = createSlice({
       const newOrder = action.payload.destOrder;
 
       // Ensure the move is valid.
-      if (oldOrder !== -1 && newOrder !== undefined && oldOrder !== newOrder) {
+      if (oldOrder > -1 && newOrder !== undefined && oldOrder !== newOrder) {
         // Move the sense pair to its new place.
         const pair = sensePairs.splice(oldOrder, 1)[0];
         sensePairs.splice(newOrder, 0, pair);
@@ -347,9 +346,8 @@ function createMergeWords(
     if (
       onlyChild[0].srcWordId === wordId &&
       onlyChild.length === word.senses.length &&
-      !onlyChild.find(
-        (ms) =>
-          ![Status.Active, Status.Protected].includes(ms.sense.accessibility)
+      onlyChild.every((ms) =>
+        [Status.Active, Status.Protected].includes(ms.sense.accessibility)
       ) &&
       compareFlags(mergeWord.flag, word.flag) === 0
     ) {
@@ -377,8 +375,8 @@ function createMergeWords(
           parent.senses.push(mergeSense.sense);
         }
       });
-      const getAudio = !msList.find(
-        (ms) => ms.sense.accessibility === Status.Separate
+      const getAudio = msList.every(
+        (ms) => ms.sense.accessibility !== Status.Separate
       );
       return { srcWordId: msList[0].srcWordId, getAudio };
     }
@@ -435,7 +433,7 @@ function combineIntoFirstSense(mergeSenses: MergeTreeSense[]): void {
 
     // Put the duplicate's domains in the main sense if the id is new.
     dupSense.semanticDomains.forEach((dom) => {
-      if (!mainSense.semanticDomains.find((d) => d.id === dom.id)) {
+      if (mainSense.semanticDomains.every((d) => d.id !== dom.id)) {
         mainSense.semanticDomains.push({ ...dom });
       }
     });

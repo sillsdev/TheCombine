@@ -57,8 +57,8 @@ interface VernListProps {
 export function VernList(props: VernListProps): ReactElement {
   const { t } = useTranslation();
 
-  const hasPartsOfSpeech = !!props.vernacularWords.find((w) =>
-    w.senses.find(
+  const hasPartsOfSpeech = props.vernacularWords.some((w) =>
+    w.senses.some(
       (s) => s.grammaticalInfo.catGroup !== GramCatGroup.Unspecified
     )
   );
