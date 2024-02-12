@@ -429,7 +429,7 @@ describe("DataEntryTable", () => {
         // Confirm the semantic domain was added.
         const wordUpdated: Word = mockUpdateWord.mock.calls[0][0];
         const doms = wordUpdated.senses[0].semanticDomains;
-        expect(doms.find((d) => d.id === mockSemDomId)).toBeTruthy();
+        expect(doms.some((d) => d.id === mockSemDomId)).toBeTruthy();
       });
     });
   });
