@@ -1,5 +1,6 @@
-import { TableSortLabel } from "@mui/material";
+import { Input, TableSortLabel } from "@mui/material";
 import { MRT_TableBodyRow, MRT_TableHeadCell } from "material-react-table";
+import { type ChangeEvent } from "react";
 import { Provider } from "react-redux";
 import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
@@ -15,7 +16,10 @@ import {
 } from "goals/ReviewEntries/ReviewEntriesTable/tests/WordsMock";
 import { type StoreState } from "types";
 
-jest.mock("@mui/material/Grow"); // For `columnFilterDisplayMode: "popover",`
+// With `columnFilterDisplayMode: "popover",`, it is necessary to mock out `Grow`.
+// To access filter `TextField`s, replace `Grow`, `Modal` with `div`.
+jest.mock("@mui/material/Grow", () => "div");
+jest.mock("@mui/material/Modal", () => "div");
 
 jest.mock("backend", () => ({
   getAllSpeakers: (projectId: string) => mockGetAllSpeakers(projectId),
@@ -44,6 +48,9 @@ const mockState = (
       grammaticalInfoEnabled,
     },
   },
+});
+const mockTypeEvent = (value: string): Partial<ChangeEvent<any>> => ({
+  target: { value },
 });
 
 let renderer: ReactTestRenderer;
@@ -79,6 +86,25 @@ describe("ReviewEntriesTable", () => {
     await renderReviewEntriesTable();
     expect(mockGetFrontierWords).toHaveBeenCalled();
     expect(renderer.root.findAllByType(MRT_TableBodyRow)).toHaveLength(4);
+  });
+
+  describe("table filter", () => {
+    beforeEach(async () => {
+      await renderReviewEntriesTable(true, true);
+    });
+
+    test("filter", async () => {
+      const textFields = renderer.root.findAllByType(Input);
+      // All column filter `TextField`s available because `Grow`, `Modal` mocked with `div`
+      expect(textFields).toHaveLength(9);
+
+      // Test vernacular filtering
+      expect(renderer.root.findAllByType(MRT_TableBodyRow)).toHaveLength(4);
+      await act(async () => {
+        textFields[0].props.onChange(mockTypeEvent("Alfa"));
+      });
+      expect(renderer.root.findAllByType(MRT_TableBodyRow)).toHaveLength(1);
+    });
   });
 
   describe("table sort", () => {
