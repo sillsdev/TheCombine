@@ -89,7 +89,7 @@ export function addSemanticDomainToSense(
   if (!sense) {
     throw new Error("Word has no sense with specified guid");
   }
-  if (sense.semanticDomains.find((s) => s.id == semDom.id)) {
+  if (sense.semanticDomains.some((s) => s.id == semDom.id)) {
     return word;
   }
   sense.semanticDomains.push(makeSemDomCurrent(semDom));
@@ -302,7 +302,7 @@ export default function DataEntryTable(
   const switchSense = useCallback(
     (oldGuid: string, newGuid: string): void => {
       const entry = state.recentWords.find((w) => w.senseGuid === oldGuid);
-      if (!entry || !entry.word.senses.find((s) => s.guid === newGuid)) {
+      if (!entry || entry.word.senses.every((s) => s.guid !== newGuid)) {
         return;
       }
       setState((prevState) => {
@@ -325,7 +325,7 @@ export default function DataEntryTable(
       setState((prevState) => {
         const recentWords = [...prevState.recentWords];
         word.senses.forEach((s) => {
-          if (s.semanticDomains.find((dom) => dom.id === domId)) {
+          if (s.semanticDomains.some((dom) => dom.id === domId)) {
             recentWords.push({ word, senseGuid: s.guid });
           }
         });
@@ -455,8 +455,8 @@ export default function DataEntryTable(
       const soloSense =
         selectedDup?.senses.length === 1 ? selectedDup.senses[0] : undefined;
       const emptySense =
-        soloSense?.definitions.find((d) => d.text) ||
-        soloSense?.glosses.find((g) => g.def)
+        soloSense?.definitions.some((d) => d.text) ||
+        soloSense?.glosses.some((g) => g.def)
           ? undefined
           : soloSense;
 
@@ -509,7 +509,7 @@ export default function DataEntryTable(
     if (!oldEntry) {
       return;
     }
-    if (!oldEntry.word.senses.find((s) => s.guid === newGuid)) {
+    if (oldEntry.word.senses.every((s) => s.guid !== newGuid)) {
       return;
     }
     switchSense(oldGuid, newGuid);
@@ -530,7 +530,7 @@ export default function DataEntryTable(
             // and only keep Retire ids if they are still in the display.
             if (
               prevState.defunctWordIds[id] === DefunctStatus.Recent ||
-              prevState.recentWords.find((w) => w.word.id === id)
+              prevState.recentWords.some((w) => w.word.id === id)
             ) {
               defunctWordIds[id] = DefunctStatus.Retire;
             }
@@ -571,7 +571,7 @@ export default function DataEntryTable(
       return;
     }
     const oldId = ids.find((id) =>
-      state.recentWords.find((w) => w.word.id === id)
+      state.recentWords.some((w) => w.word.id === id)
     );
     if (oldId) {
       // Do an update if there's one to be done.
@@ -655,8 +655,7 @@ export default function DataEntryTable(
       audio: Pronunciation[],
       oldId: string
     ): Promise<void> => {
-      const isInDisplay =
-        state.recentWords.findIndex((w) => w.word.id === oldId) > -1;
+      const isInDisplay = state.recentWords.some((w) => w.word.id === oldId);
 
       defunctWord(oldId);
       const newWord = await backend.updateDuplicate(oldId, word);
@@ -800,7 +799,7 @@ export default function DataEntryTable(
       // If selected sense already has this domain, add audio without updating first.
       if (
         oldSense.glosses[0].def === state.newGloss &&
-        oldSense.semanticDomains.find((d) => d.id === semDom.id)
+        oldSense.semanticDomains.some((d) => d.id === semDom.id)
       ) {
         enqueueSnackbar(
           t("addWords.senseInWord", {
@@ -831,7 +830,7 @@ export default function DataEntryTable(
     // Otherwise, if new gloss matches a sense, update that sense.
     for (const sense of oldWord.senses) {
       if (sense.glosses?.length && sense.glosses[0].def === state.newGloss) {
-        if (sense.semanticDomains.find((d) => d.id === semDom.id)) {
+        if (sense.semanticDomains.some((d) => d.id === semDom.id)) {
           // User is trying to add a sense that already exists.
           enqueueSnackbar(
             t("addWords.senseInWord", {
@@ -955,8 +954,8 @@ export default function DataEntryTable(
 
       // If a sense with a new guid was added, it needs to replace the old sense in the display.
       if (newWord.senses.length > oldEntry.word.senses.length) {
-        const newSense = newWord.senses.find(
-          (sense) => !oldEntry.word.senses.find((s) => s.guid === sense.guid)
+        const newSense = newWord.senses.find((sense) =>
+          oldEntry.word.senses.every((s) => s.guid !== sense.guid)
         );
         if (newSense) {
           queueSenseSwitch(oldEntry.senseGuid, newSense.guid);

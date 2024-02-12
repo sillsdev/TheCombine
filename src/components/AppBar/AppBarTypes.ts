@@ -9,7 +9,7 @@ export interface TabProps {
 }
 
 export function tabColor(currentTab: Path, tabName: Path): string {
-  return currentTab.indexOf(tabName) !== -1
+  return currentTab.indexOf(tabName) > -1
     ? themeColors.darkShade
     : themeColors.lightShade;
 }

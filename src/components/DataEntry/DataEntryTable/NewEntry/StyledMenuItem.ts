@@ -12,6 +12,7 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
       color: theme.palette.common.white,
     },
   },
+  overflow: "clip",
 }));
 
 export default StyledMenuItem;
