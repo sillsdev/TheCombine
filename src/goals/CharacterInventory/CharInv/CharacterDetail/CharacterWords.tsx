@@ -44,7 +44,7 @@ function getWordsContainingChar(
 ): string[] {
   const wordsWithChar: string[] = [];
   for (const word of words) {
-    if (word.indexOf(character) !== -1 && !wordsWithChar.includes(word)) {
+    if (word.indexOf(character) > -1 && !wordsWithChar.includes(word)) {
       wordsWithChar.push(word);
       if (wordsWithChar.length === maxCount) {
         break;

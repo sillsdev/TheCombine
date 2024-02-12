@@ -72,7 +72,7 @@ function tabHasSomeSetting(
   tab: ProjectSettingsTab,
   settings: Setting[]
 ): boolean {
-  return settingsByTab[tab].findIndex((s) => settings.includes(s)) !== -1;
+  return settingsByTab[tab].some((s) => settings.includes(s));
 }
 
 /** Given a project permission `perm` and a boolean `hasSchedule` (indicating whether any
