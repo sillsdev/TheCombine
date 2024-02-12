@@ -9,7 +9,14 @@ import {
   MenuItem,
   Tooltip,
 } from "@mui/material";
-import { ReactElement, useCallback, useEffect, useState } from "react";
+import {
+  MouseEvent,
+  ReactElement,
+  TouchEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import { Pronunciation, Speaker } from "api/models";
@@ -116,12 +123,14 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
     document.removeEventListener("contextmenu", preventEventOnce, false);
   }
 
-  function handleTouch(event: any): void {
+  /** If audio can be deleted or speaker changed, a touchscreen press should open an
+   * options menu instead of the context menu. */
+  function handleTouch(e: TouchEvent<HTMLButtonElement>): void {
     if (canChangeSpeaker || canDeleteAudio) {
       // Temporarily disable context menu since some browsers
       // interpret a long-press touch as a right-click.
       disableContextMenu();
-      setAnchor(event.currentTarget);
+      setAnchor(e.currentTarget);
     }
   }
 
@@ -132,11 +141,19 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
     setSpeakerDialog(false);
   }
 
+  /** If speaker can be changed, a right click should open the speaker menu instead of
+   * the context menu. */
   function handleOnAuxClick(): void {
     if (canChangeSpeaker) {
-      // Temporarily disable context menu triggered by right-click.
       disableContextMenu();
       setSpeakerDialog(true);
+    }
+  }
+
+  /** Catch a multi-finger mousepad tap as a right click. */
+  function handleOnMouseDown(e: MouseEvent<HTMLButtonElement>): void {
+    if (e.buttons > 1) {
+      handleOnAuxClick();
     }
   }
 
@@ -184,6 +201,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
           tabIndex={-1}
           onAuxClick={handleOnAuxClick}
           onClick={deleteOrTogglePlay}
+          onMouseDown={handleOnMouseDown}
           onTouchStart={handleTouch}
           onTouchEnd={enableContextMenu}
           aria-label="play"
