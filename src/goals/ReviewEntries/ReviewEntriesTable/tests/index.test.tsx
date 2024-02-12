@@ -65,7 +65,7 @@ const renderReviewEntriesTable = async (
   await act(async () => {
     renderer = create(
       <Provider store={mockStore}>
-        <ReviewEntriesTable />
+        <ReviewEntriesTable disableVirtualization />
       </Provider>
     );
   });

@@ -73,7 +73,9 @@ interface RowsPerPageOption {
 }
 
 /** Table for reviewing all entries, built with `material-react-table`. */
-export default function ReviewEntriesTable(): ReactElement {
+export default function ReviewEntriesTable(props: {
+  disableVirtualization?: boolean;
+}): ReactElement {
   const showDefinitions = useAppSelector(
     (state: StoreState) => state.currentProjectState.project.definitionsEnabled
   );
@@ -316,7 +318,7 @@ export default function ReviewEntriesTable(): ReactElement {
     enableFullScreenToggle: false,
     enableGlobalFilter: false,
     enablePagination,
-    enableRowVirtualization: enablePagination,
+    enableRowVirtualization: !props.disableVirtualization,
     initialState: {
       columnVisibility: {
         definitions: showDefinitions,
