@@ -42,10 +42,10 @@ it("renders with projects in alphabetical order", async () => {
   });
   const items = testRenderer.root.findAllByType(ListItemButton);
   expect(items).toHaveLength(unordered.length);
-  expect(hasText(items[0], unordered[0])).toBeFalsy;
-  expect(hasText(items[1], unordered[1])).toBeFalsy;
-  expect(hasText(items[2], unordered[2])).toBeFalsy;
-  expect(hasText(items[0], unordered[2])).toBeTruthy;
-  expect(hasText(items[1], unordered[0])).toBeTruthy;
-  expect(hasText(items[2], unordered[1])).toBeTruthy;
+  expect(hasText(items[0], unordered[0])).toBeFalsy();
+  expect(hasText(items[1], unordered[1])).toBeFalsy();
+  expect(hasText(items[2], unordered[2])).toBeFalsy();
+  expect(hasText(items[0], unordered[2])).toBeTruthy();
+  expect(hasText(items[1], unordered[0])).toBeTruthy();
+  expect(hasText(items[2], unordered[1])).toBeTruthy();
 });
