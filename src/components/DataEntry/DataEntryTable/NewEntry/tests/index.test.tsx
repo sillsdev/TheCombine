@@ -21,7 +21,7 @@ jest.mock(
 
 jest.mock("components/Pronunciations/PronunciationsFrontend", () => "div");
 
-// Bypass the Autocomplete and render its internal input with the props of both
+/** Bypass the Autocomplete and render its internal input with the props of both. */
 const mockAutocomplete = (props: {
   renderInput: (params: any) => ReactElement;
 }): ReactElement => {
@@ -136,7 +136,7 @@ describe("NewEntry", () => {
       renderer.root.findByType(GlossWithSuggestions).props.handleEnter();
     });
     expect(mockAddNewEntry).toHaveBeenCalledTimes(1);
-    expect(mockResetNewEntry).toHaveBeenCalledTimes(0);
+    expect(mockResetNewEntry).not.toHaveBeenCalled();
 
     // Run the timers and confirm a reset
     await act(async () => {
@@ -163,14 +163,14 @@ describe("NewEntry", () => {
       gloss.props.handleEnter();
     });
     expect(mockAddNewEntry).toHaveBeenCalledTimes(1);
-    expect(mockResetNewEntry).toHaveBeenCalledTimes(0);
+    expect(mockResetNewEntry).not.toHaveBeenCalled();
 
     // Attempt a second submission before the first one completes
     await act(async () => {
       gloss.props.handleEnter();
     });
     expect(mockAddNewEntry).toHaveBeenCalledTimes(1);
-    expect(mockResetNewEntry).toHaveBeenCalledTimes(0);
+    expect(mockResetNewEntry).not.toHaveBeenCalled();
 
     // Run the timers and confirm no second submission
     await act(async () => {
