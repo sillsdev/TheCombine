@@ -26,7 +26,13 @@ import { StoreState } from "types";
 import theme from "types/theme";
 import { FileWithSpeakerId } from "types/word";
 
-const idAffix = "new-entry";
+export enum NewEntryId {
+  ButtonDelete = "new-entry-delete-button",
+  ButtonNote = "new-entry-note-button",
+  GridNewEntry = "new-entry",
+  TextFieldGloss = "new-entry-gloss-textfield",
+  TextFieldVern = "new-entry-vernacular-textfield",
+}
 
 export enum FocusTarget {
   Gloss,
@@ -235,7 +241,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
   };
 
   return (
-    <Grid container id={idAffix} alignItems="center">
+    <Grid alignItems="center" container id={NewEntryId.GridNewEntry}>
       <Grid container item xs={4} style={gridItemStyle(2)}>
         <Grid item xs={12}>
           <VernWithSuggestions
@@ -259,7 +265,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
             // If enter pressed from the vern field, check whether gloss is empty
             handleEnter={() => handleEnter(true)}
             vernacularLang={vernacularLang}
-            textFieldId={`${idAffix}-vernacular`}
+            textFieldId={NewEntryId.TextFieldVern}
             onUpdate={() => conditionalFocus(FocusTarget.Vernacular)}
           />
           <VernDialog
@@ -288,7 +294,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
           // If enter pressed from the gloss field, don't check whether gloss is empty
           handleEnter={() => handleEnter(false)}
           analysisLang={analysisLang}
-          textFieldId={`${idAffix}-gloss`}
+          textFieldId={NewEntryId.TextFieldGloss}
           onUpdate={() => conditionalFocus(FocusTarget.Gloss)}
         />
       </Grid>
@@ -296,9 +302,9 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
         {!selectedDup?.id && (
           // note is not available if user selected to modify an exiting entry
           <EntryNote
+            buttonId={NewEntryId.ButtonNote}
             noteText={newNote}
             updateNote={setNewNote}
-            buttonId="note-entry-new"
           />
         )}
       </Grid>
@@ -313,8 +319,8 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
       </Grid>
       <Grid item xs={1} style={gridItemStyle(1)}>
         <DeleteEntry
+          buttonId={NewEntryId.ButtonDelete}
           removeEntry={() => resetState()}
-          buttonId={`${idAffix}-delete`}
         />
       </Grid>
       <EnterGrid />
