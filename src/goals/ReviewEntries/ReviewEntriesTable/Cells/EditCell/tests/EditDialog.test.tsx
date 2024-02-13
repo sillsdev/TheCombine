@@ -1,3 +1,4 @@
+import { Delete, RestoreFromTrash } from "@mui/icons-material";
 import { type ChangeEvent } from "react";
 import { Provider } from "react-redux";
 import { type ReactTestRenderer, act, create } from "react-test-renderer";
@@ -11,6 +12,9 @@ import SummarySenseCard from "components/WordCard/SummarySenseCard";
 import EditDialog, {
   EditDialogId,
 } from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditDialog";
+import EditSensesCardContent, {
+  EditSense,
+} from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditSensesCardContent";
 import { newProject } from "types/project";
 import { newSemanticDomain } from "types/semanticDomain";
 import { newDefinition, newSense, newWord } from "types/word";
@@ -208,23 +212,57 @@ describe("EditDialog", () => {
     });
   });
 
-  test("sense view toggle", async () => {
-    // Not summary view by default
-    expect(renderer.root.findAllByType(SummarySenseCard)).toHaveLength(0);
+  describe("senses", () => {
+    test("sense view toggle", async () => {
+      // Not summary view by default
+      expect(renderer.root.findAllByType(SummarySenseCard)).toHaveLength(0);
 
-    // Click to turn on summary view
-    const button = renderer.root.findByProps({
-      id: EditDialogId.ButtonSensesViewToggle,
-    });
-    await act(async () => {
-      button.props.onClick();
-    });
-    expect(renderer.root.findAllByType(SummarySenseCard)).toHaveLength(1);
+      // Click to turn on summary view
+      const button = renderer.root.findByProps({
+        id: EditDialogId.ButtonSensesViewToggle,
+      });
+      await act(async () => {
+        button.props.onClick();
+      });
+      expect(renderer.root.findAllByType(SummarySenseCard)).toHaveLength(1);
 
-    // Click again to turn off summary view
-    await act(async () => {
-      button.props.onClick();
+      // Click again to turn off summary view
+      await act(async () => {
+        button.props.onClick();
+      });
+      expect(renderer.root.findAllByType(SummarySenseCard)).toHaveLength(0);
     });
-    expect(renderer.root.findAllByType(SummarySenseCard)).toHaveLength(0);
+
+    test("add a sense", async () => {
+      expect(renderer.root.findAllByType(EditSense)).toHaveLength(4);
+      const senses = renderer.root.findByType(EditSensesCardContent);
+      await act(async () => {
+        senses.props.updateOrAddSense(newSense("new gloss"));
+      });
+      expect(renderer.root.findAllByType(EditSense)).toHaveLength(5);
+    });
+
+    test("delete/restore a sense", async () => {
+      expect(renderer.root.findAllByType(EditSense)).toHaveLength(4);
+      expect(renderer.root.findAllByType(Delete)).toHaveLength(4);
+      expect(renderer.root.findAllByType(RestoreFromTrash)).toHaveLength(0);
+      const senses = renderer.root.findByType(EditSensesCardContent);
+
+      // Delete the first sense
+      await act(async () => {
+        senses.props.toggleSenseDeleted(0);
+      });
+      expect(renderer.root.findAllByType(EditSense)).toHaveLength(4);
+      expect(renderer.root.findAllByType(Delete)).toHaveLength(3);
+      expect(renderer.root.findAllByType(RestoreFromTrash)).toHaveLength(1);
+
+      // Restore the first sense
+      await act(async () => {
+        senses.props.toggleSenseDeleted(0);
+      });
+      expect(renderer.root.findAllByType(EditSense)).toHaveLength(4);
+      expect(renderer.root.findAllByType(Delete)).toHaveLength(4);
+      expect(renderer.root.findAllByType(RestoreFromTrash)).toHaveLength(0);
+    });
   });
 });

@@ -18,6 +18,15 @@ import EditSenseDialog from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCe
 import { isSenseChanged } from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/utilities";
 import { newSense } from "types/word";
 
+enum EditSensesId {
+  ButtonSenseAdd = "add-sense-button",
+  ButtonSenseBumpDownPrefix = "bump-up-sense-button-",
+  ButtonSenseBumpUpPrefix = "bump-down-sense-button-",
+  ButtonSenseDeletePrefix = "delete-sense-button-",
+  ButtonSenseEditPrefix = "edit-sense-button-",
+  ButtonSenseRestorePrefix = "restore-sense-button-",
+}
+
 interface EditSensesCardContentProps {
   moveSense: (from: number, to: number) => void;
   newSenses: Sense[];
@@ -63,7 +72,7 @@ export default function EditSensesCardContent(
             />
           ))}
           <IconButtonWithTooltip
-            buttonId={"sense-add"}
+            buttonId={EditSensesId.ButtonSenseAdd}
             icon={<Add />}
             onClick={() => setAddSense(true)}
             size="small"
@@ -95,7 +104,7 @@ interface EditSenseProps {
   updateSense: (sense: Sense) => void;
 }
 
-function EditSense(props: EditSenseProps): ReactElement {
+export function EditSense(props: EditSenseProps): ReactElement {
   const sense = props.sense;
   const deleted = sense.accessibility === Status.Deleted;
   const [editing, setEditing] = useState(false);
@@ -108,7 +117,7 @@ function EditSense(props: EditSenseProps): ReactElement {
             <Grid container direction="column">
               <Grid item>
                 <IconButtonWithTooltip
-                  buttonId={`sense-${sense.guid}-bump-up`}
+                  buttonId={`${EditSensesId.ButtonSenseBumpUpPrefix}${sense.guid}`}
                   icon={props.bumpSenseUp ? <ArrowUpward /> : <Icon />}
                   onClick={props.bumpSenseUp}
                   size="small"
@@ -116,7 +125,7 @@ function EditSense(props: EditSenseProps): ReactElement {
               </Grid>
               <Grid item>
                 <IconButtonWithTooltip
-                  buttonId={`sense-${sense.guid}-bump-down`}
+                  buttonId={`${EditSensesId.ButtonSenseBumpDownPrefix}${sense.guid}`}
                   icon={props.bumpSenseDown ? <ArrowDownward /> : <Icon />}
                   onClick={props.bumpSenseDown}
                   size="small"
@@ -130,7 +139,7 @@ function EditSense(props: EditSenseProps): ReactElement {
             {deleted ? (
               <Grid item>
                 <IconButtonWithTooltip
-                  buttonId={`sense-${sense.guid}-restore`}
+                  buttonId={`${EditSensesId.ButtonSenseRestorePrefix}${sense.guid}`}
                   icon={<RestoreFromTrash />}
                   onClick={props.toggleSenseDeleted}
                   size="small"
@@ -140,7 +149,7 @@ function EditSense(props: EditSenseProps): ReactElement {
               <>
                 <Grid item>
                   <IconButtonWithTooltip
-                    buttonId={`sense-${sense.guid}-delete`}
+                    buttonId={`${EditSensesId.ButtonSenseDeletePrefix}${sense.guid}`}
                     icon={<Delete />}
                     onClick={
                       sense.accessibility === Status.Protected
@@ -157,7 +166,7 @@ function EditSense(props: EditSenseProps): ReactElement {
                 </Grid>
                 <Grid item>
                   <IconButtonWithTooltip
-                    buttonId={`sense-${sense.guid}-edit`}
+                    buttonId={`${EditSensesId.ButtonSenseEditPrefix}${sense.guid}`}
                     icon={<Edit />}
                     onClick={() => setEditing(true)}
                     size="small"
