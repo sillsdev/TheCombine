@@ -37,7 +37,7 @@ export function updateSpeakerInAudio(
     !p.protected &&
     p.fileName === update.fileName &&
     p.speakerId !== update.speakerId;
-  if (audio.findIndex(updatePredicate) === -1) {
+  if (!audio.some(updatePredicate)) {
     return;
   }
   return audio.map((a) => (updatePredicate(a) ? update : a));
