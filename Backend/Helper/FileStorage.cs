@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 
 namespace BackendFramework.Helper
@@ -96,9 +97,20 @@ namespace BackendFramework.Helper
         /// Generate the path to where Consent audio/images are stored.
         /// </summary>
         /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
-        public static string GenerateConsentFilePath(string speakerId)
+        public static string GenerateConsentFilePath(string speakerId, string? extension = null)
         {
-            return GenerateFilePath(ConsentDir, Sanitization.SanitizeId(speakerId));
+            var fileName = Path.ChangeExtension(Sanitization.SanitizeId(speakerId), extension);
+            return GenerateFilePath(ConsentDir, fileName);
+        }
+
+        /// <summary>
+        /// Get the path of a Consent audio/images, or null if it doesn't exist.
+        /// </summary>
+        /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
+        public static string? GetConsentFilePath(string speakerId)
+        {
+            var searchPattern = $"*{Sanitization.SanitizeId(speakerId)}*";
+            return Directory.GetFiles(GenerateDirPath(ConsentDir, true), searchPattern).FirstOrDefault();
         }
 
         /// <summary>

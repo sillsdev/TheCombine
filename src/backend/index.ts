@@ -65,14 +65,8 @@ axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
       status >= StatusCodes.BAD_REQUEST &&
       status <= StatusCodes.NETWORK_AUTHENTICATION_REQUIRED
     ) {
-      // Suppress error pop-ups for URLs the frontend already explicitly
-      // handles.
-      if (
-        url !== undefined &&
-        whiteListedErrorUrls.some((whiteListedUrl) =>
-          url.endsWith(whiteListedUrl)
-        )
-      ) {
+      // Suppress error pop-ups for URLs the frontend already explicitly handles.
+      if (url && whiteListedErrorUrls.some((u) => url.endsWith(u))) {
         return Promise.reject(err);
       }
 

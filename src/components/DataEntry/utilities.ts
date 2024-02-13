@@ -5,7 +5,7 @@ import { DomainWord } from "types/word";
  * (and in the specified domain if domainId is provided). */
 function isActiveInDomain(sense: Sense, domainId?: string): boolean {
   return (
-    (!domainId || !!sense.semanticDomains.find((d) => d.id === domainId)) &&
+    (!domainId || sense.semanticDomains.some((d) => d.id === domainId)) &&
     // The undefined is for Statuses created before .accessibility was required.
     [Status.Active, Status.Protected, undefined].includes(sense.accessibility)
   );
@@ -18,7 +18,7 @@ export function filterWordsWithSenses(
   domainId?: string
 ): Word[] {
   return words.filter((w) =>
-    w.senses.find((s) => isActiveInDomain(s, domainId))
+    w.senses.some((s) => isActiveInDomain(s, domainId))
   );
 }
 

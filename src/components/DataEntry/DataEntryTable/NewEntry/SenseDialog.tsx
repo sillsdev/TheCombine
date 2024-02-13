@@ -54,7 +54,7 @@ interface SenseListProps {
 export function SenseList(props: SenseListProps): ReactElement {
   const { t } = useTranslation();
 
-  const hasPartsOfSpeech = !!props.selectedWord.senses.find(
+  const hasPartsOfSpeech = props.selectedWord.senses.some(
     (s) => s.grammaticalInfo.catGroup !== GramCatGroup.Unspecified
   );
 
