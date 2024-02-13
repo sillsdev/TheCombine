@@ -1,4 +1,4 @@
-import { MergeSourceWord, type Flag, type MergeWords } from "api/models";
+import { type Flag, MergeSourceWord, type MergeWords } from "api/models";
 import {
   type MergeData,
   type MergeTree,
