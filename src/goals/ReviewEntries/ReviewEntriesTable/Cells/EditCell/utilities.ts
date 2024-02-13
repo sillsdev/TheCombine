@@ -30,7 +30,7 @@ export function areDefinitionsSame(a: Definition[], b: Definition[]): boolean {
   return (
     a.length === b.length &&
     a.every((ad) =>
-      b.find((bd) => ad.language === bd.language && ad.text === bd.text)
+      b.some((bd) => ad.language === bd.language && ad.text === bd.text)
     )
   );
 }
@@ -42,7 +42,7 @@ export function areGlossesSame(a: Gloss[], b: Gloss[]): boolean {
   return (
     a.length === b.length &&
     a.every((ag) =>
-      b.find((bg) => ag.language === bg.language && ag.def === bg.def)
+      b.some((bg) => ag.language === bg.language && ag.def === bg.def)
     )
   );
 }
@@ -53,8 +53,8 @@ export function areDomainsSame(
   b: SemanticDomain[]
 ): boolean {
   return (
-    a.every((ad) => b.find((bd) => ad.id === bd.id)) &&
-    b.every((bd) => a.find((ad) => ad.id === bd.id))
+    a.every((ad) => b.some((bd) => ad.id === bd.id)) &&
+    b.every((bd) => a.some((ad) => ad.id === bd.id))
   );
 }
 

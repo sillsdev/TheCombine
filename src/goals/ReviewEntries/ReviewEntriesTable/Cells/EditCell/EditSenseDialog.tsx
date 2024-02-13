@@ -291,7 +291,7 @@ interface DefinitionListProps {
 }
 
 function DefinitionList(props: DefinitionListProps): ReactElement {
-  const definitions = props.definitions.find(
+  const definitions = props.definitions.some(
     (d) => d.language === props.defaultLang.bcp47
   )
     ? props.definitions
@@ -349,7 +349,7 @@ interface GlossListProps {
 }
 
 function GlossList(props: GlossListProps): ReactElement {
-  const glosses = props.glosses.find(
+  const glosses = props.glosses.some(
     (g) => g.language === props.defaultLang.bcp47
   )
     ? props.glosses

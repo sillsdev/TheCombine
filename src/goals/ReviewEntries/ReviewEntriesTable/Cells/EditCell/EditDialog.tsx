@@ -72,7 +72,7 @@ export async function updateFrontierWord(
 ): Promise<string> {
   let newId = newWord.id;
   for (const o of oldAudio) {
-    if (!newWord.audio.find((n) => n.fileName === o.fileName)) {
+    if (!newWord.audio.some((n) => n.fileName === o.fileName)) {
       newId = await deleteAudio(newId, o.fileName);
     }
   }
@@ -148,8 +148,8 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
       [EditField.Pronunciations]:
         newAudio.length > 0 ||
         newWord.audio.length !== props.word.audio.length ||
-        !!newWord.audio.find((n) =>
-          props.word.audio.find(
+        newWord.audio.some((n) =>
+          props.word.audio.some(
             (o) => n.fileName === o.fileName && n.speakerId !== o.speakerId
           )
         ),
