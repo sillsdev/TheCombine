@@ -59,6 +59,11 @@ combine_stop () {
 }
 
 combine_status () {
+  if systemctl is-enabled --quiet create_ap && systemctl is-enabled --quiet k3s ; then
+    echo "The Combine starts automatically at boot time."
+  else
+    echo "The Combine does not start automatically."
+  fi
   if systemctl is-active --quiet create_ap ; then
     echo "WiFi hotspot is UP."
   else
