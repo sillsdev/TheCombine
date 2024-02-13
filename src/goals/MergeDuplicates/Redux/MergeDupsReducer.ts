@@ -269,7 +269,7 @@ const mergeDuplicatesSlice = createSlice({
       const newOrder = action.payload.destOrder;
 
       // Ensure the move is valid.
-      if (oldOrder !== -1 && newOrder !== undefined && oldOrder !== newOrder) {
+      if (oldOrder > -1 && newOrder !== undefined && oldOrder !== newOrder) {
         // Move the sense pair to its new place.
         const pair = sensePairs.splice(oldOrder, 1)[0];
         sensePairs.splice(newOrder, 0, pair);

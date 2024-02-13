@@ -30,7 +30,7 @@ export default function ProjectSelect(
 
   // This prevents an out-of-range Select error while useEffect is underway.
   const projectList = [...projList];
-  if (!projectList.find((p) => p.name === props.project.name)) {
+  if (projectList.every((p) => p.name !== props.project.name)) {
     projectList.push(props.project);
   }
   projectList.sort((a: Project, b: Project) => a.name.localeCompare(b.name));
