@@ -103,6 +103,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
 
   const [senseOpen, setSenseOpen] = useState(false);
   const [shouldFocus, setShouldFocus] = useState<FocusTarget | undefined>();
+  const [submitting, setSubmitting] = useState(false);
   const [vernOpen, setVernOpen] = useState(false);
   const [wasTreeClosed, setWasTreeClosed] = useState(false);
 
@@ -124,6 +125,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
 
   const resetState = useCallback((): void => {
     resetNewEntry();
+    setSubmitting(false);
     setVernOpen(false);
     focus(FocusTarget.Vernacular);
   }, [focus, resetNewEntry]);
@@ -169,6 +171,11 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
   };
 
   const addNewEntryAndReset = async (): Promise<void> => {
+    // Prevent double-submission
+    if (submitting) {
+      return;
+    }
+    setSubmitting(true);
     await addNewEntry();
     resetState();
   };
