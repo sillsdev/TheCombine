@@ -21,7 +21,6 @@ import {
   createMergeChildren,
   createMergeParent,
   gatherWordSenses,
-  getAudioMoves,
   getDeletedMergeWords,
   isEmptyMerge,
 } from "goals/MergeDuplicates/Redux/reducerUtilities";
@@ -64,8 +63,6 @@ const mergeDuplicatesSlice = createSlice({
           ...destGuids
         );
         state.tree.words = words;
-
-        state.audio.moves = getAudioMoves(state.data.words, state.tree.words);
       }
     },
 
@@ -87,6 +84,7 @@ const mergeDuplicatesSlice = createSlice({
         delete sensesGuids[srcRef.mergeSenseId];
       }
       if (!Object.keys(words[srcWordId].sensesGuids).length) {
+        delete state.audio.moves[srcWordId];
         delete words[srcWordId];
       }
 
@@ -101,8 +99,6 @@ const mergeDuplicatesSlice = createSlice({
       ) {
         state.tree.sidebar = defaultSidebar;
       }
-
-      state.audio.moves = getAudioMoves(state.data.words, state.tree.words);
     },
 
     flagWordAction: (state, action) => {
@@ -186,10 +182,19 @@ const mergeDuplicatesSlice = createSlice({
         // Cleanup the srcWord.
         delete words[srcWordId].sensesGuids[mergeSenseId];
         if (!Object.keys(words[srcWordId].sensesGuids).length) {
+          // If this was the word's last sense, move the audio...
+          const moves = state.audio.moves;
+          if (!Object.keys(moves).includes(destWordId)) {
+            moves[destWordId] = [];
+          }
+          moves[destWordId].push(srcWordId);
+          if (Object.keys(moves).includes(srcWordId)) {
+            moves[destWordId].push(...moves[srcWordId]);
+            delete moves[srcWordId];
+          }
+          // ...and delete the word from the tree
           delete words[srcWordId];
         }
-
-        state.audio.moves = getAudioMoves(state.data.words, state.tree.words);
       }
     },
 
@@ -232,8 +237,6 @@ const mergeDuplicatesSlice = createSlice({
         const newSensesGuids: Hash<string[]> = {};
         sensesPairs.forEach(([key, value]) => (newSensesGuids[key] = value));
         words[destWordId].sensesGuids = newSensesGuids;
-
-        state.audio.moves = getAudioMoves(state.data.words, state.tree.words);
       }
     },
 

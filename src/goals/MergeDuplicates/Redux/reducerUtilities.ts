@@ -44,27 +44,6 @@ function gatherSenses(
   }));
 }
 
-/** Determine which words need their audio to move. */
-export function getAudioMoves(
-  dataWords: Hash<Word>,
-  treeWords: Hash<MergeTreeWord>
-): Hash<string[]> {
-  const moveAudio: Hash<string[]> = {};
-  Object.entries(dataWords).forEach(([fromId, word]) => {
-    // Identify the words that are absent from the merge tree.
-    if (!Object.keys(treeWords).includes(fromId)) {
-      // Determine which other words have senses from the absent word.
-      getTreeWordIdsWithWordSenses(treeWords, word).forEach((toId) => {
-        if (!(toId in moveAudio)) {
-          moveAudio[toId] = [];
-        }
-        moveAudio[toId].push(fromId);
-      });
-    }
-  });
-  return moveAudio;
-}
-
 /** Create a MergeWords array for the words which had all senses deleted. */
 export function getDeletedMergeWords(
   words: Word[],
@@ -73,41 +52,6 @@ export function getDeletedMergeWords(
   return words
     .filter((w) => w.senses.every((s) => deletedSenseGuids.includes(s.guid)))
     .map((w) => newMergeWords(w, [{ srcWordId: w.id, getAudio: false }], true));
-}
-
-/** Get ids from the given treeWords for all that have senses from the given word. */
-function getTreeWordIdsWithWordSenses(
-  treeWords: Hash<MergeTreeWord>,
-  word: Word
-): string[] {
-  const tws = Object.entries(treeWords);
-  // Find whether any have senses as primary senses.
-  const words = tws.filter((val) =>
-    doesTreeWordHaveWordSense(val[1], word, false)
-  );
-  if (words.length) {
-    return words.map((val) => val[0]);
-  }
-  // Fall back to checking duplicate senses.
-  return tws
-    .filter((val) => doesTreeWordHaveWordSense(val[1], word, true))
-    .map((val) => val[0]);
-}
-
-/** Check if any of the senses in the given treeWord is a sense of the given word. */
-function doesTreeWordHaveWordSense(
-  treeWord: MergeTreeWord,
-  word: Word,
-  allowDuplicate: boolean
-): boolean {
-  const senseGuids = word.senses.map((s) => s.guid);
-  const treeSenses = Object.values(treeWord.sensesGuids);
-  if (allowDuplicate) {
-    return treeSenses.some((guids) =>
-      senseGuids.some((g) => guids.includes(g))
-    );
-  }
-  return treeSenses.some((guids) => senseGuids.includes(guids[0]));
 }
 
 /** Determine if a merge is empty:
