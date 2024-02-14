@@ -114,16 +114,23 @@ export default function ReviewEntriesTable(props: {
     getLocalization(i18n.resolvedLanguage).then(setLocalization);
   }, [i18n.resolvedLanguage]);
 
+  /** Removes word with given `id` from the state. */
   const deleteWord = (id: string): void => {
     setData((prev) => prev.filter((w) => w.id !== id));
   };
+
+  /** Replaces word (`.id === oldId`) in the state
+   * with word (`.id === newId`) fetched from the backend. */
   const replaceWord = async (oldId: string, newId: string): Promise<void> => {
     const newWord = await getWord(newId);
     setData((prev) => prev.map((w) => (w.id === oldId ? newWord : w)));
   };
+
+  /** Checks if there are any entries and, if so, scrolls to the top of the current page. */
   const scrollToTop = (): void => {
-    if (data.length) {
-      rowVirtualizerInstanceRef.current?.scrollToIndex(0);
+    const virtualizer = rowVirtualizerInstanceRef.current;
+    if (virtualizer?.getTotalSize()) {
+      virtualizer.scrollToIndex(0);
     }
   };
 
