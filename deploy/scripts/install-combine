@@ -36,25 +36,23 @@ set-combine-env () {
 #####
 # Mark our place
 INSTALL_DIR=`pwd`
-
+mkdir -p ${HOME}/.combine
+COMBINE_DIR=${HOME}/.combine
 print-instructions () {
 #####
 # Let the user know what to expect
-  cat <<.EOM
-Setting up the software environment and WiFi Access Point
-used by The Combine.  You will be prompted for your password twice to allow
-the script to setup system services.  One prompt will look like:
-
-[sudo] password for xxxx:
-
-where xxxx is your user name.
-
-Afterwards, you will see a
-
-BECOME password: 
-
-prompt, enter your password here as well.
-.EOM
+  echo "\n
+Setting up the software environment and WiFi Access Point\n
+used by The Combine.  You will be prompted for your password twice to allow\n
+the script to setup system services.  One prompt will look like:\n
+\n
+   [sudo] password for ${USER}:\n
+\n
+Afterwards, you will see a\n
+\n
+   BECOME password: \n
+\n
+prompt, enter your password here as well."
 }
 
 install-kubernetes () {
@@ -100,6 +98,15 @@ set-k3s-env () {
   export KUBECONFIG=${K3S_CONFIG_FILE}
 }
 
+copy-install-scripts () {
+  cp -r ${INSTALL_DIR}/helm ${COMBINE_DIR}
+  cp -r ${INSTALL_DIR}/scripts ${COMBINE_DIR}
+  cp -r ${INSTALL_DIR}/venv ${COMBINE_DIR}
+  pushd ${COMBINE_DIR}/venv/bin > /dev/null
+  sed -i "s|${INSTALL_DIR}|${COMBINE_DIR}|g" *
+  popd > /dev/null
+}
+
 install-required-charts () {
   set-k3s-env
   #####
@@ -109,26 +116,28 @@ install-required-charts () {
 
   #####
   # Setup required cluster services
-  cd ${INSTALL_DIR}/scripts
+  cd ${COMBINE_DIR}
+  . venv/bin/activate
+  cd ${COMBINE_DIR}/scripts
   ./setup_cluster.py
+  deactivate
 }
 
 install-the-combine () {
   #####
   # Setup The Combine
-  cd ${INSTALL_DIR}/scripts
+  cd ${COMBINE_DIR}
+  . venv/bin/activate
+  cd ${COMBINE_DIR}/scripts
   set-combine-env
   set-k3s-env
   ./setup_combine.py --tag v1.1.6 --repo public.ecr.aws/thecombine --target desktop
+  deactivate
 }
 
 # Create directory for configuration files 
 CONFIG_DIR=${HOME}/.config/combine
-echo "CONFIG_DIR == ${CONFIG_DIR}"
-if [ ! -d "${CONFIG_DIR}" ] ; then
-  echo "Creating ${CONFIG_DIR}"
-  mkdir -p ${CONFIG_DIR}
-fi
+mkdir -p ${CONFIG_DIR}
 
 # See if we need to continue from a previous install
 STATE_FILE=${HOME}/.config/combine/install-state
@@ -175,7 +184,7 @@ done
 while [ "$STATE" != "Done" ] ; do
   case $STATE in
     pre-reqs)
-      echo `print-instructions`
+      echo -e `print-instructions`
       install-kubernetes
       copy-install-scripts
       STATE=Base_charts
