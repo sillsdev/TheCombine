@@ -2,23 +2,22 @@ import { type PreloadedState } from "@reduxjs/toolkit";
 import { type RenderOptions, render } from "@testing-library/react";
 import { type PropsWithChildren, type ReactElement } from "react";
 import { Provider } from "react-redux";
+import { type ReactTestInstance } from "react-test-renderer";
 import { PersistGate } from "redux-persist/integration/react";
 
 import { defaultState } from "components/App/DefaultState";
 import { type AppStore, type RootState, persistor, setupStore } from "store";
 
-// These test utilities are leveraged from the Redux documentation for Writing Tests:
-// https://redux.js.org/usage/writing-tests
-// Specifically, see the section on "Integration Testing Connected Components
-// and Redux Logic"
-
-// This type interface extends the default options for render from RTL, as well
-// as allows the user to specify other things such as initialState, store.
+/** This extends the default options for `render` from `@testing-library/react`,
+ * allowing the user to specify other things such as `initialState`, `store`. */
 interface ExtendedRenderOptions extends Omit<RenderOptions, "queries"> {
   preloadedState?: PreloadedState<RootState>;
   store?: AppStore;
 }
 
+/** This test utility is leveraged from the Redux documentation for Writing Tests:
+ * https://redux.js.org/usage/writing-tests. Specifically, see the section on
+ * "Integration Testing Connected Components and Redux Logic" */
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function renderWithProviders(
   ui: ReactElement,
@@ -42,4 +41,16 @@ export function renderWithProviders(
 
   // Return an object with the store and all of RTL's query functions
   return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
+}
+
+/** Checks if any node in the given `react-test-renderer` instance has the given text. */
+export function testInstanceHasText(
+  instance: ReactTestInstance,
+  text: string
+): boolean {
+  return (
+    instance.findAll(
+      (node) => node.children.length === 1 && node.children[0] === text
+    ).length > 0
+  );
 }
