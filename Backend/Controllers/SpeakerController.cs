@@ -116,6 +116,13 @@ namespace BackendFramework.Controllers
                 return NotFound(speakerId);
             }
 
+            // Delete consent file
+            var path = FileStorage.GetConsentFilePath(speakerId);
+            if (path is not null)
+            {
+                IO.File.Delete(path);
+            }
+
             // Delete speaker and return success
             return Ok(await _speakerRepo.Delete(projectId, speakerId));
         }
@@ -145,8 +152,8 @@ namespace BackendFramework.Controllers
             {
                 return StatusCode(StatusCodes.Status304NotModified, speakerId);
             }
-            var path = FileStorage.GenerateConsentFilePath(speaker.Id);
-            if (IO.File.Exists(path))
+            var path = FileStorage.GetConsentFilePath(speaker.Id);
+            if (path is not null)
             {
                 IO.File.Delete(path);
             }
@@ -232,9 +239,12 @@ namespace BackendFramework.Controllers
             {
                 return BadRequest("Empty File");
             }
+
+            var extension = IO.Path.GetExtension(file.FileName) ?? "";
             if (file.ContentType.Contains("audio"))
             {
                 speaker.Consent = ConsentType.Audio;
+                extension = ".webm";
             }
             else if (file.ContentType.Contains("image"))
             {
@@ -245,8 +255,15 @@ namespace BackendFramework.Controllers
                 return BadRequest("File should be audio or image");
             }
 
+            // Delete old consent file
+            var old = FileStorage.GetConsentFilePath(speaker.Id);
+            if (old is not null)
+            {
+                IO.File.Delete(old);
+            }
+
             // Copy file data to a new local file
-            var path = FileStorage.GenerateConsentFilePath(speakerId);
+            var path = FileStorage.GenerateConsentFilePath(speakerId, extension);
             await using (var fs = new IO.FileStream(path, IO.FileMode.OpenOrCreate))
             {
                 await file.CopyToAsync(fs);
@@ -284,8 +301,8 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure file exists
-            var path = FileStorage.GenerateConsentFilePath(speakerId);
-            if (!IO.File.Exists(path))
+            var path = FileStorage.GetConsentFilePath(speakerId);
+            if (path is null)
             {
                 return NotFound(speakerId);
             }
