@@ -1,27 +1,22 @@
 #! /usr/bin/env bash
 
-function get-password () {
+get-password () {
   PASS1="foo"
   PASS2="bar"
   while [ "$PASS1" != "$PASS2" ] ; do
-    read -s -p "$1"$'\n' PASS1
-    read -s -p "Confirm password:"$'\n' PASS2
+    read -s -p "$1 " PASS1
+    read -s -p $'\n'"Confirm password: " PASS2
   done
   echo "$PASS1"
 }
 
-function set-combine-env () {
-  CONFIG_DIR=${HOME}/.config/combine
-  echo "CONFIG_DIR == ${CONFIG_DIR}"
-  if [ ! -d "${CONFIG_DIR}" ] ; then
-    echo "Creating ${CONFIG_DIR}"
-    mkdir -p ${CONFIG_DIR}
-  fi
+set-combine-env () {
   if [ ! -f "${CONFIG_DIR}/env" ] ; then
     # Collect values from user
     COMBINE_JWT_SECRET_KEY=`LC_ALL=C tr -dc 'A-Za-z0-9*\-_@!' </dev/urandom | head -c 64; echo`
     read -p "Enter name for the site admin account: " COMBINE_ADMIN_USERNAME
     COMBINE_ADMIN_PASSWORD=$(get-password "Enter a password for the ${COMBINE_ADMIN_USERNAME} account:")
+    echo -e "\n"
     read -p "Enter AWS_ACCESS_KEY_ID: " AWS_ACCESS_KEY_ID
     read -p "Enter AWS_SECRET_ACCESS_KEY: " AWS_SECRET_ACCESS_KEY
     # write collected values and static values to config file
@@ -39,8 +34,13 @@ function set-combine-env () {
 }
 
 #####
+# Mark our place
+INSTALL_DIR=`pwd`
+
+print-instructions () {
+#####
 # Let the user know what to expect
-cat <<.EOM
+  cat <<.EOM
 Setting up the software environment and WiFi Access Point
 used by The Combine.  You will be prompted for your password twice to allow
 the script to setup system services.  One prompt will look like:
@@ -55,77 +55,147 @@ BECOME password:
 
 prompt, enter your password here as well.
 .EOM
+}
 
+install-kubernetes () {
+  cd $INSTALL_DIR
+  # Install required packages
+  sudo apt install -y python3-pip python3-venv
 
-#####
-# Mark our place
-INSTALL_DIR=`pwd`
-# Install required packages
-sudo apt install -y python3-pip python3-venv
+  #####
+  # Setup Python to run ansible
+  python3 -m venv venv
+  source venv/bin/activate
+  python -m pip install --upgrade pip pip-tools
+  python -m piptools sync requirements.txt
 
-#####
-# Setup Python to run ansible
-python3 -m venv venv
-source venv/bin/activate
-python -m pip install --upgrade pip pip-tools
-python -m piptools sync requirements.txt
+  #####
+  # Setup Kubernetes environment and WiFi Access Point
+  cd ${INSTALL_DIR}/ansible
+  ansible-playbook playbook_desktop_setup.yaml -K
+}
 
-#####
-# Setup Kubernetes environment and WiFi Access Point
-cd ${INSTALL_DIR}/ansible
-ansible-playbook playbook_desktop_setup.yaml -K
-
-if [ -f /var/run/reboot-required ]; then
+restart-install () {
   cat <<.EOM
-  ***** Restart required *****
+***** Restart required *****
 
-  Rerun $0 after the system has been restarted.
+Rerun $0 after the system has been restarted.
 
 .EOM
   read -p "Restart now? (Y/n) " RESTART
-  if [[ "$RESTART" =~ ^[yY] ]] ; then
+  if [[ -z $RESTART || $RESTART =~ ^[yY].* ]] ; then
     sudo reboot
   fi
   exit 0
+}
+
+set-k3s-env () {
+  #####
+  # Setup kubectl configuration file
+  K3S_CONFIG_FILE=${HOME}/.kube/config
+  if [ ! -e ${K3S_CONFIG_FILE} ] ; then
+    echo >2 "Kubernetes (k3s) configuration file is missing."
+    exit 1
+  fi
+  export KUBECONFIG=${K3S_CONFIG_FILE}
+}
+
+install-required-charts () {
+  set-k3s-env
+  #####
+  # Install base helm charts
+  helm repo add stable https://charts.helm.sh/stable
+  helm repo add bitnami https://charts.bitnami.com/bitnami
+
+  #####
+  # Setup required cluster services
+  cd ${INSTALL_DIR}/scripts
+  ./setup_cluster.py
+}
+
+install-the-combine () {
+  #####
+  # Setup The Combine
+  cd ${INSTALL_DIR}/scripts
+  set-combine-env
+  set-k3s-env
+  ./setup_combine.py --tag v1.1.6 --repo public.ecr.aws/thecombine --target desktop
+}
+
+# Create directory for configuration files 
+CONFIG_DIR=${HOME}/.config/combine
+echo "CONFIG_DIR == ${CONFIG_DIR}"
+if [ ! -d "${CONFIG_DIR}" ] ; then
+  echo "Creating ${CONFIG_DIR}"
+  mkdir -p ${CONFIG_DIR}
 fi
 
-#####
-# Setup kubectl configuration file
-K3S_CONFIG_FILE=${HOME}/.kube/config
-if [ ! -e ${K3S_CONFIG_FILE} ] ; then
-  echo >2 "Kubernetes (k3s) configuration file is missing."
-  exit 1
+# See if we need to continue from a previous install
+STATE_FILE=${HOME}/.config/combine/install-state
+if [ -f ${STATE_FILE} ] ; then
+  STATE=`cat ${STATE_FILE}`
+else
+  STATE=pre-reqs
 fi
-export KUBECONFIG=${K3S_CONFIG_FILE}
 
-set-combine-env
+# Parse arguments to customize installation
+while (( "$#" )) ; do
+  OPT=$1
+  case $OPT in
+    --version|-v)
+      if [[ $# > 1 ]] ; then
+        $COMBINE_VERSION=$2
+        shift
+      fi
+      ;;
+    --update|-u)
+      if [[ $# > 1 ]] ; then
+        $COMBINE_VERSION=$2
+        shift
+        STATE=Combine
+      fi
+      ;;
+    --clean)
+      STATE=pre-reqs
+      if [ -f ${CONFIG_DIR}/env ] ; then
+        rm ${CONFIG_DIR}/env
+      fi
+      ;;
+    --restart)
+      STATE=pre-reqs
+      ;;
+    *)
+      echo "Unrecognized option: $OPT" >2
+      ;;
+  esac
+  shift
+done
 
-#####
-# Save install scripts to allow upgrades
-COMBINE_DIR=${HOME}/.combine
-mkdir -p ${COMBINE_DIR}
-echo "Copying files from ${INSTALL_DIR}"
-cp ${INSTALL_DIR}/requirements.* ${COMBINE_DIR}
-cp -r ${INSTALL_DIR}/scripts ${COMBINE_DIR}
-cp -r ${INSTALL_DIR}/helm ${COMBINE_DIR}
-
-#####
-# Copy Python virtual environment for install and upgrades
-deactivate
-cd ${COMBINE_DIR}
-cp -r ${INSTALL_DIR}/venv ${COMBINE_DIR}
-source venv/bin/activate
-
-#####
-# Install base helm charts
-helm repo add stable https://charts.helm.sh/stable
-helm repo add bitnami https://charts.bitnami.com/bitnami
-
-#####
-# Setup required cluster services
-cd ${COMBINE_DIR}/scripts
-./setup_cluster.py
-
-#####
-# Setup The Combine
-./setup_combine.py --tag v1.1.6 --repo public.ecr.aws/thecombine --target desktop
+# Step through the installation stages
+while [ "$STATE" != "Done" ] ; do
+  case $STATE in
+    pre-reqs)
+      echo `print-instructions`
+      install-kubernetes
+      copy-install-scripts
+      STATE=Base_charts
+      echo -n ${STATE} > ${STATE_FILE}
+      restart-install
+      ;;
+    Base_charts)
+      install-required-charts
+      STATE=Combine
+      echo -n ${STATE} > ${STATE_FILE}
+      ;;
+    Combine)
+      install-the-combine
+      STATE="Done"
+      rm ${STATE_FILE}
+      ;;
+    *)
+      echo "Unrecognized STATE: ${STATE}"
+      rm ${STATE_FILE}
+      exit 1
+      ;;
+  esac
+done
