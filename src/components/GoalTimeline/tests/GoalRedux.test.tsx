@@ -33,7 +33,7 @@ import { GoalStatus, GoalType } from "types/goals";
 import { Path } from "types/path";
 import { newUser } from "types/user";
 import * as goalUtilities from "utilities/goalUtilities";
-import { renderWithProviders } from "utilities/testUtilities";
+import { renderWithProviders } from "utilities/testingLibraryUtilities";
 
 jest.mock("backend", () => ({
   addGoalToUserEdit: (...args: any[]) => mockAddGoalToUserEdit(...args),

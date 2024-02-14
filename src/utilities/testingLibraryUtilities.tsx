@@ -2,7 +2,6 @@ import { type PreloadedState } from "@reduxjs/toolkit";
 import { type RenderOptions, render } from "@testing-library/react";
 import { type PropsWithChildren, type ReactElement } from "react";
 import { Provider } from "react-redux";
-import { type ReactTestInstance } from "react-test-renderer";
 import { PersistGate } from "redux-persist/integration/react";
 
 import { defaultState } from "components/App/DefaultState";
@@ -41,16 +40,4 @@ export function renderWithProviders(
 
   // Return an object with the store and all of RTL's query functions
   return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
-}
-
-/** Checks if any node in the given `react-test-renderer` instance has the given text. */
-export function testInstanceHasText(
-  instance: ReactTestInstance,
-  text: string
-): boolean {
-  return (
-    instance.findAll(
-      (node) => node.children.length === 1 && node.children[0] === text
-    ).length > 0
-  );
 }
