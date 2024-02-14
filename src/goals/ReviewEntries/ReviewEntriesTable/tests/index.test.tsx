@@ -4,8 +4,6 @@ import { Provider } from "react-redux";
 import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import { defaultState } from "components/Project/ProjectReduxTypes";
 import ReviewEntriesTable from "goals/ReviewEntries/ReviewEntriesTable";
 import VernacularCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/VernacularCell";
@@ -19,6 +17,19 @@ import { type StoreState } from "types";
 // To access filter `TextField`s, replace both `Grow`, `Modal` with `div`.
 // However, using a `TextField`'s `.props.onChange()` doesn't activate a filter.
 jest.mock("@mui/material/Grow", () => "div");
+
+// Intercept i18n to set the resolvedLanguage for localization testing.
+jest.mock("react-i18next", () => ({
+  ...jest.requireActual("react-i18next"),
+  useTranslation: () => mockUseTranslation(),
+}));
+const mockUseTranslation = jest.fn();
+const setMockUseTranslation = (resolvedLanguage: string): void => {
+  mockUseTranslation.mockReturnValue({
+    i18n: { resolvedLanguage },
+    t: (str: string) => str,
+  });
+};
 
 jest.mock("backend", () => ({
   getAllSpeakers: (projectId: string) => mockGetAllSpeakers(projectId),
@@ -53,8 +64,10 @@ let renderer: ReactTestRenderer;
 
 const renderReviewEntriesTable = async (
   definitionsEnabled = false,
-  grammaticalInfoEnabled = false
+  grammaticalInfoEnabled = false,
+  i18nLang = ""
 ): Promise<void> => {
+  setMockUseTranslation(i18nLang);
   const mockStore = configureMockStore()(
     mockState(definitionsEnabled, grammaticalInfoEnabled)
   );
@@ -89,6 +102,7 @@ describe("ReviewEntriesTable", () => {
       await renderReviewEntriesTable(true, true);
     });
 
+    /** Checks if the WordsMock.tsx words have been sorted by the given column. */
     const checkRowOrder = (col: number, dir: "asc" | "desc"): void => {
       const rowIds = renderer.root
         .findAllByType(VernacularCell)
@@ -157,6 +171,32 @@ describe("ReviewEntriesTable", () => {
         .map((col) => col.props.header.id);
       expect(colIds).not.toContain(definitionsId);
       expect(colIds).toContain(partOfSpeechId);
+    });
+  });
+
+  describe("localization", () => {
+    /** A hover-text phrase from MRT's localization. */
+    const localizedText = {
+      ar: "إظهار / إخفاء الأعمدة",
+      en: "Show/Hide columns",
+      es: "Mostrar/ocultar columnas",
+      fr: "Afficher/Masquer les colonnes",
+      pt: "Mostrar/Ocultar colunas",
+      zh: "显示/隐藏 列",
+    };
+
+    test("defaults to en", async () => {
+      await renderReviewEntriesTable();
+      // Throws error if no component found with specified `title` prop
+      renderer.root.findByProps({ title: localizedText["en"] });
+    });
+
+    Object.entries(localizedText).forEach(([lang, text]) => {
+      test(lang, async () => {
+        await renderReviewEntriesTable(false, false, lang);
+        // Throws error if no component found with specified `title` prop
+        renderer.root.findByProps({ title: text });
+      });
     });
   });
 });
