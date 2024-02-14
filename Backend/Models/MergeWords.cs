@@ -22,8 +22,8 @@ namespace BackendFramework.Models
 
         public MergeWords()
         {
-            Parent = new Word();
-            Children = new List<MergeSourceWord>();
+            Parent = new();
+            Children = new();
             DeleteOnly = false;
         }
     }
@@ -59,8 +59,8 @@ namespace BackendFramework.Models
 
         public MergeUndoIds()
         {
-            ParentIds = new List<string>();
-            ChildIds = new List<string>();
+            ParentIds = new();
+            ChildIds = new();
         }
 
         public MergeUndoIds(List<string> parentIds, List<string> childIds)
@@ -71,23 +71,11 @@ namespace BackendFramework.Models
 
         public MergeUndoIds Clone()
         {
-            var clone = new MergeUndoIds
+            return new()
             {
-                ParentIds = new List<string>(),
-                ChildIds = new List<string>()
+                ParentIds = ParentIds.Select(id => id).ToList(),
+                ChildIds = ChildIds.Select(id => id).ToList()
             };
-
-            foreach (var id in ParentIds)
-            {
-                clone.ParentIds.Add(id);
-            }
-
-            foreach (var id in ChildIds)
-            {
-                clone.ChildIds.Add(id);
-            }
-
-            return clone;
         }
 
         public bool ContentEquals(MergeUndoIds other)

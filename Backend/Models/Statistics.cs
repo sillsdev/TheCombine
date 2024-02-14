@@ -27,7 +27,7 @@ namespace BackendFramework.Models
         {
             Id = "";
             Username = "";
-            DomainSet = new HashSet<string>();
+            DomainSet = new();
             DomainCount = 0;
             WordCount = 0;
         }
@@ -90,8 +90,8 @@ namespace BackendFramework.Models
 
         public ChartRootData()
         {
-            Dates = new List<string>();
-            Datasets = new List<Dataset>();
+            Dates = new();
+            Datasets = new();
         }
     }
 
@@ -107,7 +107,7 @@ namespace BackendFramework.Models
         public Dataset(string userName, int data)
         {
             UserName = userName;
-            Data = new List<int>() { data };
+            Data = new() { data };
         }
     }
 
