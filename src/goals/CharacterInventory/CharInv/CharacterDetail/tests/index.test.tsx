@@ -1,10 +1,5 @@
 import { Provider } from "react-redux";
-import {
-  ReactTestInstance,
-  ReactTestRenderer,
-  act,
-  create,
-} from "react-test-renderer";
+import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
@@ -17,7 +12,8 @@ import {
 } from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace";
 import CharacterReplaceDialog from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace/CharacterReplaceDialog";
 import { defaultState } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
-import { StoreState } from "types";
+import { type StoreState } from "types";
+import { testInstanceHasText } from "utilities/testRendererUtilities";
 
 // Dialog uses portals, which are not supported in react-test-renderer.
 jest.mock("@mui/material", () => {
@@ -66,13 +62,6 @@ async function renderCharacterDetail(): Promise<void> {
   });
 }
 
-const hasText = (item: ReactTestInstance, text: string): boolean => {
-  const found = item.findAll(
-    (node) => node.children.length === 1 && node.children[0] === text
-  );
-  return found.length !== 0;
-};
-
 beforeEach(async () => {
   jest.resetAllMocks();
   await renderCharacterDetail();
@@ -80,7 +69,7 @@ beforeEach(async () => {
 
 describe("CharacterDetail", () => {
   it("renders with example word", () => {
-    expect(hasText(charMaster.root, mockPrefix)).toBeTruthy();
+    expect(testInstanceHasText(charMaster.root, mockPrefix)).toBeTruthy();
   });
 
   describe("FindAndReplace", () => {

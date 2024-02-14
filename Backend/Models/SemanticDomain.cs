@@ -94,7 +94,7 @@ namespace BackendFramework.Models
             Name = "";
             Id = "";
             Description = "";
-            Questions = new List<string>();
+            Questions = new();
             Lang = "";
         }
 
@@ -102,13 +102,7 @@ namespace BackendFramework.Models
         {
             var clone = (SemanticDomainFull)base.Clone();
             clone.Description = Description;
-            clone.Questions = new List<string>();
-
-            foreach (var question in Questions)
-            {
-                clone.Questions.Add(question);
-            }
-
+            clone.Questions = Questions.Select(q => q).ToList();
             return clone;
         }
 
@@ -173,7 +167,7 @@ namespace BackendFramework.Models
             Lang = sd.Lang;
             Name = sd.Name;
             Id = sd.Id;
-            Children = new List<SemanticDomain>();
+            Children = new();
         }
     }
 }

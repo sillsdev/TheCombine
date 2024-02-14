@@ -96,13 +96,13 @@ namespace BackendFramework.Models
             UILang = "";
             Token = "";
             IsAdmin = false;
-            WorkedProjects = new Dictionary<string, string>();
-            ProjectRoles = new Dictionary<string, string>();
+            WorkedProjects = new();
+            ProjectRoles = new();
         }
 
         public User Clone()
         {
-            var clone = new User
+            return new()
             {
                 Id = Id,
                 Avatar = Avatar,
@@ -117,21 +117,9 @@ namespace BackendFramework.Models
                 UILang = UILang,
                 Token = Token,
                 IsAdmin = IsAdmin,
-                WorkedProjects = new Dictionary<string, string>(),
-                ProjectRoles = new Dictionary<string, string>()
+                WorkedProjects = WorkedProjects.ToDictionary(kv => kv.Key, kv => kv.Value),
+                ProjectRoles = ProjectRoles.ToDictionary(kv => kv.Key, kv => kv.Value),
             };
-
-            foreach (var projId in WorkedProjects.Keys)
-            {
-                clone.WorkedProjects.Add(projId, WorkedProjects[projId]);
-            }
-
-            foreach (var projId in ProjectRoles.Keys)
-            {
-                clone.ProjectRoles.Add(projId, ProjectRoles[projId]);
-            }
-
-            return clone;
         }
 
         public bool ContentEquals(User other)

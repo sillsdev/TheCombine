@@ -27,24 +27,17 @@ namespace BackendFramework.Models
         {
             Id = "";
             ProjectId = "";
-            Edits = new List<Edit>();
+            Edits = new();
         }
 
         public UserEdit Clone()
         {
-            var clone = new UserEdit
+            return new()
             {
                 Id = Id,
                 ProjectId = ProjectId,
-                Edits = new List<Edit>()
+                Edits = Edits.Select(e => e.Clone()).ToList()
             };
-
-            foreach (var edit in Edits)
-            {
-                clone.Edits.Add(edit.Clone());
-            }
-
-            return clone;
         }
 
         public bool ContentEquals(UserEdit other)
@@ -133,26 +126,19 @@ namespace BackendFramework.Models
         {
             Guid = Guid.NewGuid();
             GoalType = 0;
-            StepData = new List<string>();
+            StepData = new();
             Changes = "{}";
         }
 
         public Edit Clone()
         {
-            var clone = new Edit
+            return new()
             {
                 Guid = Guid,
                 GoalType = GoalType,
-                StepData = new List<string>(),
+                StepData = StepData.Select(sd => sd).ToList(),
                 Changes = Changes
             };
-
-            foreach (var step in StepData)
-            {
-                clone.StepData.Add(step);
-            }
-
-            return clone;
         }
 
         public override bool Equals(object? obj)
