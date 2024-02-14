@@ -13,6 +13,8 @@ import {
 import { IconButtonWithTooltip, PartOfSpeechButton } from "components/Buttons";
 import MultilineTooltipTitle from "components/MultilineTooltipTitle";
 import SenseCardText from "components/WordCard/SenseCardText";
+import { type StoreState } from "types";
+import { useAppSelector } from "types/hooks";
 
 interface SenseCardContentProps {
   senses: Sense[];
@@ -28,12 +30,23 @@ interface SenseCardContentProps {
 export default function SenseCardContent(
   props: SenseCardContentProps
 ): ReactElement {
+  const semDomNames = useAppSelector(
+    (state: StoreState) => state.currentProjectState.semanticDomains
+  );
   const { t } = useTranslation();
+
+  const getName = (id: string): string | undefined => {
+    if (semDomNames) {
+      return semDomNames[id];
+    }
+  };
 
   const semDoms = [
     ...new Set(
       props.senses.flatMap((s) =>
-        s.semanticDomains.map((dom) => `${dom.id}: ${dom.name}`)
+        s.semanticDomains.map(
+          (dom) => `${dom.id}: ${getName(dom.id) ?? dom.name}`
+        )
       )
     ),
   ];

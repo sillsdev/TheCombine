@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -17,6 +19,19 @@ namespace BackendFramework.Controllers
         public SemanticDomainController(ISemanticDomainRepository semDomRepo)
         {
             _semDomRepo = semDomRepo;
+        }
+
+        /// <summary>
+        /// Returns a dictionary mapping domain ids to names in the specified language (fallback: "en").
+        /// </summary>
+        [HttpGet("allDomainNames", Name = "GetAllSemanticDomainNames")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Dictionary<string, string>))]
+        public async Task<IActionResult> GetAllSemanticDomainNames(string lang)
+        {
+            var semDoms = await _semDomRepo.GetAllSemanticDomainTreeNodes(lang)
+                ?? await _semDomRepo.GetAllSemanticDomainTreeNodes("en")
+                ?? new();
+            return Ok(semDoms.ToDictionary(x => x.Id, x => x.Name));
         }
 
         /// <summary> Returns <see cref="SemanticDomainFull"/> with specified id and in specified language </summary>

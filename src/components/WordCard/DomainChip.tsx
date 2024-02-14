@@ -1,9 +1,11 @@
 import { Chip } from "@mui/material";
-import { ReactElement, useEffect, useState } from "react";
+import { type ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { SemanticDomain } from "api/models";
+import { type SemanticDomain } from "api/models";
 import { getUser } from "backend";
+import { type StoreState } from "types";
+import { useAppSelector } from "types/hooks";
 import { friendlySep, getDateTimeString } from "utilities/utilities";
 
 interface DomainChipProps {
@@ -15,6 +17,10 @@ export default function DomainChip(props: DomainChipProps): ReactElement {
   const { provenance } = props;
   const { created, name, id, userId } = props.domain;
 
+  const semDomName = useAppSelector((state: StoreState) => {
+    const semDoms = state.currentProjectState.semanticDomains;
+    return semDoms ? semDoms[id] ?? name : name;
+  });
   const [username, setUsername] = useState("");
   const { t } = useTranslation();
 
@@ -24,7 +30,7 @@ export default function DomainChip(props: DomainChipProps): ReactElement {
     }
   }, [provenance, userId]);
 
-  const labelText = `${id}: ${name}`;
+  const labelText = `${id}: ${semDomName}`;
   const hoverText = [];
   if (provenance && created) {
     const val = getDateTimeString(created, friendlySep);
