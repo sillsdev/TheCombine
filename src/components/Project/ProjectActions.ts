@@ -58,10 +58,10 @@ export function asyncRefreshProjectUsers(projectId: string) {
 export function asyncUpdateCurrentProject(project: Project) {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     await updateProject(project);
-    dispatch(setCurrentProject(project));
     const oldLang =
       getState().currentProjectState.project.semDomWritingSystem.bcp47;
     const newLang = project.semDomWritingSystem.bcp47;
+    dispatch(setCurrentProject(project));
     if (oldLang !== newLang) {
       await dispatch(asyncLoadSemanticDomains(newLang));
     }

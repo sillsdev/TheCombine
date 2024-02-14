@@ -426,12 +426,11 @@ export async function projectDuplicateCheck(
 export async function getAllSemanticDomainNames(
   lang = ""
 ): Promise<Hash<string>> {
-  return (
-    await semanticDomainApi.getAllSemanticDomainNames(
-      { lang },
-      defaultOptions()
-    )
-  ).data;
+  const resp = await semanticDomainApi.getAllSemanticDomainNames(
+    { lang },
+    defaultOptions()
+  );
+  return resp.data;
 }
 
 export async function getSemanticDomainFull(
