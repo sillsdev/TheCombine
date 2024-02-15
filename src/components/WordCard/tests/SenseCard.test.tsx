@@ -13,7 +13,6 @@ import { type StoreState } from "types";
 import { Hash } from "types/hash";
 import { newSemanticDomain } from "types/semanticDomain";
 import { newSense } from "types/word";
-import { Chip } from "@mui/material";
 
 const mockSemDomNames: Hash<string> = { ["1"]: "I", ["2"]: "II" };
 const mockState = (): Partial<StoreState> => ({
