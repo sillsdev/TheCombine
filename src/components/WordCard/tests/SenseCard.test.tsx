@@ -60,10 +60,10 @@ describe("SenseCard", () => {
     await renderSenseCard(sense);
     expect(renderer.root.findAllByType(DomainChip)).toHaveLength(2);
 
-    // Ensure 0's name was used since it's id isn't in-state
+    // Ensure 0's name is used since its id is not in-state
     renderer.root.findByProps({ label: `0: ${name0}` });
 
-    // Ensure 1's name was replace by what's in-state
+    // Ensure 1's name is replace by the in-state name
     const label1no = `1: ${name1}`;
     expect(() => renderer.root.findByProps({ label: label1no })).toThrow();
     const label1yes = `1: ${mockSemDomNames["1"]}`;
