@@ -52,7 +52,7 @@ export default function DateSelector(props: DateSelectorProps): ReactElement {
       return;
     }
     // update the schedule to the project setting
-    await props.setProject({
+    await props.updateProject({
       ...props.project,
       workshopSchedule: getDatesBetween(startDate?.toDate(), endDate?.toDate()),
     });
