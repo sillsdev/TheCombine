@@ -2,8 +2,7 @@ import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 
 import { Project } from "api/models";
-import { getAllActiveProjectsByUser } from "backend";
-import { getUserId } from "backend/localStorage";
+import { getAllActiveProjects } from "backend";
 import { ProjectSettingPropsWithSet } from "components/ProjectSettings/ProjectSettingsTypes";
 
 export default function ProjectSelect(
@@ -12,10 +11,9 @@ export default function ProjectSelect(
   const [projList, setProjList] = useState<Project[]>([]);
 
   useEffect(() => {
-    const userId = getUserId();
-    if (userId) {
-      getAllActiveProjectsByUser(userId).then(setProjList);
-    }
+    getAllActiveProjects()
+      .then(setProjList)
+      .catch((err) => console.error(err));
   }, [props.project.name]);
 
   const handleChange = (e: SelectChangeEvent): void => {

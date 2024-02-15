@@ -362,10 +362,15 @@ export async function createProject(project: Project): Promise<Project> {
   return resp.data.project;
 }
 
-export async function getAllActiveProjectsByUser(
-  userId: string
+export async function getAllActiveProjects(
+  userId?: string
 ): Promise<Project[]> {
-  const projectIds = Object.keys((await getUser(userId)).projectRoles);
+  userId ||= LocalStorage.getUserId();
+  const user = await getUser(userId);
+  if (user.id === LocalStorage.getUserId()) {
+    LocalStorage.setCurrentUser(user);
+  }
+  const projectIds = Object.keys(user.projectRoles);
   const projects: Project[] = [];
   for (const projectId of projectIds) {
     try {
