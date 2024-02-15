@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
@@ -37,6 +38,25 @@ namespace Backend.Tests.Controllers
         {
             _semDomRepository = new SemanticDomainRepositoryMock();
             _semDomController = new SemanticDomainController(_semDomRepository);
+        }
+
+        [Test]
+        public void GetAllSemanticDomainNamesFound()
+        {
+            ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(
+                new List<SemanticDomainTreeNode> { new(_semDom) });
+            var names = (Dictionary<string, string>?)(
+                (ObjectResult)_semDomController.GetAllSemanticDomainNames(Lang).Result).Value;
+            Assert.That(names, Has.Count.EqualTo(1));
+            Assert.That(names?[Id], Is.EqualTo(Name));
+        }
+
+        [Test]
+        public void GetAllSemanticDomainNamesNotFound()
+        {
+            var names = (Dictionary<string, string>?)(
+                (ObjectResult)_semDomController.GetAllSemanticDomainNames(Lang).Result).Value;
+            Assert.That(names?.Count, Is.EqualTo(0));
         }
 
         [Test]
