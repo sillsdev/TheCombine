@@ -7,6 +7,7 @@ import {
   GramCatGroup,
   type ProtectReason,
   ReasonType,
+  type SemanticDomain,
   type Sense,
   Status,
 } from "api/models";
@@ -23,10 +24,10 @@ interface SenseCardContentProps {
   toggleFunction?: () => void;
 }
 
-// Only show first sense's glosses/definitions; in merging, others deleted as duplicates.
-// Show first part of speech, if any.
-// Show semantic domains from all senses.
-// In merging, user can select a different one by reordering in the sidebar.
+/** Only show first sense's glosses, definitions, and part of speech.
+ * In merging, others deleted as duplicates;
+ * user can select a different first sense by reordering in the sidebar.
+ * Show semantic domains from all senses. */
 export default function SenseCardContent(
   props: SenseCardContentProps
 ): ReactElement {
@@ -35,18 +36,16 @@ export default function SenseCardContent(
   );
   const { t } = useTranslation();
 
-  const getName = (id: string): string | undefined => {
-    if (semDomNames) {
-      return semDomNames[id];
-    }
+  /** Get the domain name in the project's sem dom language;
+   * if not available, fall back to the given domain's name.  */
+  const getName = (dom: SemanticDomain): string | undefined => {
+    return semDomNames ? semDomNames[dom.id] ?? dom.name : dom.name;
   };
 
   const semDoms = [
     ...new Set(
       props.senses.flatMap((s) =>
-        s.semanticDomains.map(
-          (dom) => `${dom.id}: ${getName(dom.id) ?? dom.name}`
-        )
+        s.semanticDomains.map((dom) => `${dom.id}: ${getName(dom)}`)
       )
     ),
   ];

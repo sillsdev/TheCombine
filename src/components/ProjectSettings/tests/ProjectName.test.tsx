@@ -1,5 +1,5 @@
 import { Button, TextField } from "@mui/material";
-import { type ReactTestRenderer, act, create } from "react-test-renderer";
+import renderer from "react-test-renderer";
 
 import "tests/reactI18nextMock";
 
@@ -16,11 +16,11 @@ const mockSetProject = jest.fn();
 
 const mockProject = randomProject();
 
-let testRenderer: ReactTestRenderer;
+let testRenderer: renderer.ReactTestRenderer;
 
 const renderName = async (): Promise<void> => {
-  await act(async () => {
-    testRenderer = create(
+  await renderer.act(async () => {
+    testRenderer = renderer.create(
       <ProjectName project={mockProject} setProject={mockSetProject} />
     );
   });
@@ -33,10 +33,10 @@ describe("ProjectName", () => {
     const saveButton = testRenderer.root.findByType(Button);
     const name = "new-project-name";
     mockSetProject.mockResolvedValueOnce({});
-    await act(async () =>
+    await renderer.act(async () =>
       textField.props.onChange({ target: { value: name } })
     );
-    await act(async () => saveButton.props.onClick());
+    await renderer.act(async () => saveButton.props.onClick());
     expect(mockSetProject).toHaveBeenCalledWith({ ...mockProject, name });
   });
 
@@ -44,12 +44,12 @@ describe("ProjectName", () => {
     await renderName();
     const textField = testRenderer.root.findByType(TextField);
     const saveButton = testRenderer.root.findByType(Button);
-    await act(async () =>
+    await renderer.act(async () =>
       textField.props.onChange({ target: { value: "new-name" } })
     );
     mockSetProject.mockRejectedValueOnce({});
     expect(mockToastError).not.toHaveBeenCalled();
-    await act(async () => saveButton.props.onClick());
+    await renderer.act(async () => saveButton.props.onClick());
     expect(mockToastError).toHaveBeenCalledTimes(1);
   });
 });

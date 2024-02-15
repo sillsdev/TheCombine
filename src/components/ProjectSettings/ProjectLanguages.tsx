@@ -18,14 +18,14 @@ import {
   Typography,
 } from "@mui/material";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
-import { Fragment, ReactElement, useEffect, useState } from "react";
+import { Fragment, type ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import { WritingSystem } from "api/models";
+import { type WritingSystem } from "api/models";
 import { getFrontierWords } from "backend";
 import { IconButtonWithTooltip } from "components/Buttons";
-import { ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
+import { type ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 import theme from "types/theme";
 import { newWritingSystem, semDomWritingSystems } from "types/writingSystem";
 import { getAnalysisLangsFromWords } from "utilities/wordUtilities";

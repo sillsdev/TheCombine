@@ -1,10 +1,10 @@
 import { Grid, Typography } from "@mui/material";
-import { ReactElement, useState } from "react";
+import { type ReactElement, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 
 import { getProject, uploadLift } from "backend";
 import { FileInputButton, LoadingDoneButton } from "components/Buttons";
-import { ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
+import { type ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 
 enum UploadState {
   Awaiting,
