@@ -25,7 +25,7 @@ import { toast } from "react-toastify";
 import { WritingSystem } from "api/models";
 import { getFrontierWords } from "backend";
 import { IconButtonWithTooltip } from "components/Buttons";
-import { ProjectSettingPropsWithUpdate } from "components/ProjectSettings/ProjectSettingsTypes";
+import { ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 import theme from "types/theme";
 import { newWritingSystem, semDomWritingSystems } from "types/writingSystem";
 import { getAnalysisLangsFromWords } from "utilities/wordUtilities";
@@ -40,7 +40,7 @@ const getProjAnalysisLangsButtonId = "analysis-language-get";
 const semDomLangSelectId = "semantic-domains-language";
 
 export default function ProjectLanguages(
-  props: ProjectSettingPropsWithUpdate
+  props: ProjectSettingProps
 ): ReactElement {
   const [add, setAdd] = useState(false);
   const [changeVernName, setChangeVernName] = useState(false);
@@ -68,7 +68,7 @@ export default function ProjectLanguages(
     const newDefault = analysisWritingSystems.splice(index, 1)[0];
     analysisWritingSystems.splice(0, 0, newDefault);
     await props
-      .updateProject({ ...props.project, analysisWritingSystems })
+      .setProject({ ...props.project, analysisWritingSystems })
       .then(() => resetState())
       .catch((err) => {
         console.error(err);
@@ -82,7 +82,7 @@ export default function ProjectLanguages(
     const analysisWritingSystems = [...props.project.analysisWritingSystems];
     analysisWritingSystems.splice(index, 1);
     await props
-      .updateProject({ ...props.project, analysisWritingSystems })
+      .setProject({ ...props.project, analysisWritingSystems })
       .then(() => resetState())
       .catch((err) => {
         console.error(err);
@@ -98,7 +98,7 @@ export default function ProjectLanguages(
     const analysisWritingSystems = [...props.project.analysisWritingSystems];
     analysisWritingSystems.push(newLang);
     await props
-      .updateProject({ ...props.project, analysisWritingSystems })
+      .setProject({ ...props.project, analysisWritingSystems })
       .then(() => resetState())
       .catch((err) => {
         console.error(err);
@@ -141,7 +141,7 @@ export default function ProjectLanguages(
       semDomWritingSystems.find((ws) => ws.bcp47 === lang) ??
       newWritingSystem();
     await props
-      .updateProject({ ...props.project, semDomWritingSystem })
+      .setProject({ ...props.project, semDomWritingSystem })
       .then(() => resetState())
       .catch((err) => {
         console.error(err);
@@ -170,7 +170,7 @@ export default function ProjectLanguages(
       name: newVernName,
     };
     await props
-      .updateProject({ ...props.project, vernacularWritingSystem })
+      .setProject({ ...props.project, vernacularWritingSystem })
       .then(() => resetState())
       .catch((err) => {
         console.error(err);

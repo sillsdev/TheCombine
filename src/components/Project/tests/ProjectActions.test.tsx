@@ -1,23 +1,25 @@
-import { PreloadedState } from "redux";
+import { type PreloadedState } from "redux";
 
-import { Project, Speaker } from "api/models";
+import { type Project, type Speaker } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import {
   asyncRefreshProjectUsers,
+  asyncSetNewCurrentProject,
   asyncUpdateCurrentProject,
   clearCurrentProject,
-  setNewCurrentProject,
 } from "components/Project/ProjectActions";
-import { RootState, setupStore } from "store";
+import { type RootState, setupStore } from "store";
 import { newProject } from "types/project";
 import { newUser } from "types/user";
 
 jest.mock("backend", () => ({
-  getAllProjectUsers: (...args: any[]) => mockGetAllProjectUsers(...args),
-  updateProject: (...args: any[]) => mockUpdateProject(...args),
+  getAllProjectUsers: (projId?: string) => mockGetAllProjectUsers(projId),
+  getAllSemanticDomainNames: (lang?: string) => mockGetAllSemDomNames(lang),
+  updateProject: (proj: Project) => mockUpdateProject(proj),
 }));
 
 const mockGetAllProjectUsers = jest.fn();
+const mockGetAllSemDomNames = jest.fn();
 const mockUpdateProject = jest.fn();
 const mockProjId = "project-id";
 
@@ -26,6 +28,10 @@ const persistedDefaultState: PreloadedState<RootState> = {
   ...defaultState,
   _persist: { version: 1, rehydrated: false },
 };
+
+beforeEach(() => {
+  jest.resetAllMocks();
+});
 
 describe("ProjectActions", () => {
   describe("asyncUpdateCurrentProject", () => {
@@ -65,6 +71,31 @@ describe("ProjectActions", () => {
       expect(project.name).toEqual(name);
       expect(speaker).not.toBeUndefined();
       expect(users).toHaveLength(1);
+    });
+
+    it("fetches semantic domain names when semDomWritingSystem changes", async () => {
+      const proj: Project = { ...newProject(), id: mockProjId };
+      const store = setupStore({
+        ...persistedDefaultState,
+        currentProjectState: {
+          project: proj,
+          speaker: {} as Speaker,
+          users: [newUser()],
+        },
+      });
+
+      await store.dispatch(asyncUpdateCurrentProject({ ...proj, id: "newId" }));
+      expect(mockUpdateProject).toHaveBeenCalledTimes(1);
+      expect(mockGetAllSemDomNames).not.toHaveBeenCalled();
+
+      const lang = "es";
+      const semDomWritingSystem = { ...proj.semDomWritingSystem, bcp47: lang };
+      await store.dispatch(
+        asyncUpdateCurrentProject({ ...proj, semDomWritingSystem })
+      );
+      expect(mockUpdateProject).toHaveBeenCalledTimes(2);
+      expect(mockGetAllSemDomNames).toHaveBeenCalledTimes(1);
+      expect(mockGetAllSemDomNames).toHaveBeenCalledWith(lang);
     });
   });
 
@@ -108,14 +139,23 @@ describe("ProjectActions", () => {
     });
   });
 
-  describe("setNewCurrentProject", () => {
-    it("correctly affects state and doesn't update the backend", () => {
+  describe("asyncSetNewCurrentProject", () => {
+    it("correctly affects state and doesn't update the backend", async () => {
       const proj: Project = { ...newProject(), id: mockProjId };
       const store = setupStore();
-      store.dispatch(setNewCurrentProject(proj));
+      await store.dispatch(asyncSetNewCurrentProject(proj));
       expect(mockUpdateProject).not.toHaveBeenCalled();
       const { project } = store.getState().currentProjectState;
       expect(project.id).toEqual(mockProjId);
+    });
+
+    it("fetches semantic domain names", async () => {
+      const proj: Project = { ...newProject(), id: "some-id" };
+      proj.semDomWritingSystem.bcp47 = "fr";
+      const store = setupStore();
+      expect(mockGetAllSemDomNames).not.toHaveBeenCalled();
+      await store.dispatch(asyncSetNewCurrentProject(proj));
+      expect(mockGetAllSemDomNames).toHaveBeenCalledTimes(1);
     });
   });
 });

@@ -26,7 +26,7 @@ export default function DateScheduleEdit(
   async function handleSubmit(): Promise<void> {
     // update the schedule to the project setting
     const updatedSchedule = projectSchedule.map((date) => date.toISOString());
-    await props.updateProject({
+    await props.setProject({
       ...props.project,
       workshopSchedule: updatedSchedule,
     });

@@ -4,7 +4,7 @@ import { Trans, useTranslation } from "react-i18next";
 
 import { getProject, uploadLift } from "backend";
 import { FileInputButton, LoadingDoneButton } from "components/Buttons";
-import { ProjectSettingPropsWithSet } from "components/ProjectSettings/ProjectSettingsTypes";
+import { ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 
 enum UploadState {
   Awaiting,
@@ -16,7 +16,7 @@ const selectFileButtonId = "project-import-select-file";
 export const uploadFileButtonId = "project-import-upload-file";
 
 export default function ProjectImport(
-  props: ProjectSettingPropsWithSet
+  props: ProjectSettingProps
 ): ReactElement {
   const [liftFile, setLiftFile] = useState<File | undefined>();
   const [uploadState, setUploadState] = useState(UploadState.Awaiting);

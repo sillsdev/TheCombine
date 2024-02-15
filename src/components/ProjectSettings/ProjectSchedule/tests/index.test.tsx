@@ -1,5 +1,5 @@
 import { Button, IconButton } from "@mui/material";
-import renderer from "react-test-renderer";
+import { type ReactTestRenderer, act, create } from "react-test-renderer";
 
 import "tests/reactI18nextMock";
 
@@ -7,9 +7,9 @@ import { Project } from "api/models";
 import ProjectSchedule from "components/ProjectSettings/ProjectSchedule";
 import { newProject } from "types/project";
 
-const mockUpdateProject = jest.fn();
+const mockSetProject = jest.fn();
 
-let projectMaster: renderer.ReactTestRenderer;
+let projectMaster: ReactTestRenderer;
 
 function mockProject(sched?: string[]): Project {
   return { ...newProject(), workshopSchedule: sched ?? [] };
@@ -19,13 +19,13 @@ const renderProjSched = async (
   project = mockProject(),
   readOnly = false
 ): Promise<void> => {
-  mockUpdateProject.mockResolvedValue(undefined);
-  await renderer.act(async () => {
-    projectMaster = renderer.create(
+  mockSetProject.mockResolvedValue(undefined);
+  await act(async () => {
+    projectMaster = create(
       <ProjectSchedule
         project={project}
         readOnly={readOnly}
-        updateProject={mockUpdateProject}
+        setProject={mockSetProject}
       />
     );
   });

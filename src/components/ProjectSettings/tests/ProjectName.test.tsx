@@ -1,5 +1,5 @@
 import { Button, TextField } from "@mui/material";
-import renderer from "react-test-renderer";
+import { type ReactTestRenderer, act, create } from "react-test-renderer";
 
 import "tests/reactI18nextMock";
 
@@ -12,16 +12,16 @@ jest.mock("react-toastify", () => ({
 
 const mockToastError = jest.fn();
 
-const mockUpdateProject = jest.fn();
+const mockSetProject = jest.fn();
 
 const mockProject = randomProject();
 
-let testRenderer: renderer.ReactTestRenderer;
+let testRenderer: ReactTestRenderer;
 
 const renderName = async (): Promise<void> => {
-  await renderer.act(async () => {
-    testRenderer = renderer.create(
-      <ProjectName project={mockProject} updateProject={mockUpdateProject} />
+  await act(async () => {
+    testRenderer = create(
+      <ProjectName project={mockProject} setProject={mockSetProject} />
     );
   });
 };
@@ -32,24 +32,24 @@ describe("ProjectName", () => {
     const textField = testRenderer.root.findByType(TextField);
     const saveButton = testRenderer.root.findByType(Button);
     const name = "new-project-name";
-    mockUpdateProject.mockResolvedValueOnce({});
-    await renderer.act(async () =>
+    mockSetProject.mockResolvedValueOnce({});
+    await act(async () =>
       textField.props.onChange({ target: { value: name } })
     );
-    await renderer.act(async () => saveButton.props.onClick());
-    expect(mockUpdateProject).toBeCalledWith({ ...mockProject, name });
+    await act(async () => saveButton.props.onClick());
+    expect(mockSetProject).toHaveBeenCalledWith({ ...mockProject, name });
   });
 
   it("toasts on error", async () => {
     await renderName();
     const textField = testRenderer.root.findByType(TextField);
     const saveButton = testRenderer.root.findByType(Button);
-    await renderer.act(async () =>
+    await act(async () =>
       textField.props.onChange({ target: { value: "new-name" } })
     );
-    mockUpdateProject.mockRejectedValueOnce({});
+    mockSetProject.mockRejectedValueOnce({});
     expect(mockToastError).not.toHaveBeenCalled();
-    await renderer.act(async () => saveButton.props.onClick());
+    await act(async () => saveButton.props.onClick());
     expect(mockToastError).toHaveBeenCalledTimes(1);
   });
 });

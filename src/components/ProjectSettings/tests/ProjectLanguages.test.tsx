@@ -4,7 +4,7 @@ import renderer from "react-test-renderer";
 
 import "tests/reactI18nextMock";
 
-import { Project, WritingSystem } from "api/models";
+import { type Project, type WritingSystem } from "api/models";
 import ProjectLanguages, {
   editVernacularNameButtonId,
   editVernacularNameFieldId,
@@ -17,7 +17,7 @@ const mockAnalysisWritingSystems = [
   newWritingSystem("a", "a"),
   newWritingSystem("b", "b"),
 ];
-const mockUpdateProject = jest.fn();
+const mockSetProject = jest.fn();
 
 let projectMaster: renderer.ReactTestRenderer;
 let pickerHandle: renderer.ReactTestInstance;
@@ -31,13 +31,13 @@ const renderProjLangs = async (
   project: Project,
   readOnly = false
 ): Promise<void> => {
-  mockUpdateProject.mockResolvedValue(undefined);
+  mockSetProject.mockResolvedValue(undefined);
   await renderer.act(async () => {
     projectMaster = renderer.create(
       <ProjectLanguages
         project={project}
         readOnly={readOnly}
-        updateProject={mockUpdateProject}
+        setProject={mockSetProject}
       />
     );
   });
@@ -81,7 +81,7 @@ describe("ProjectLanguages", () => {
         .props.onClick();
     });
     expect(
-      mockUpdateProject.mock.calls[0][0].vernacularWritingSystem.name
+      mockSetProject.mock.calls[0][0].vernacularWritingSystem.name
     ).toEqual(newName);
   });
 
@@ -103,7 +103,7 @@ describe("ProjectLanguages", () => {
         .findByProps({ id: "analysis-language-new-confirm" })
         .props.onClick();
     });
-    expect(mockUpdateProject).toBeCalledWith(
+    expect(mockSetProject).toHaveBeenCalledWith(
       mockProject([...mockAnalysisWritingSystems, newLang])
     );
   });

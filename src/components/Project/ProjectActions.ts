@@ -55,6 +55,19 @@ export function asyncRefreshProjectUsers(projectId: string) {
   };
 }
 
+export function asyncSetNewCurrentProject(project?: Project) {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+    setProjectId(project?.id);
+    const oldLang =
+      getState().currentProjectState.project.semDomWritingSystem.bcp47;
+    const newLang = project?.semDomWritingSystem.bcp47;
+    dispatch(setCurrentProject(project));
+    if (oldLang !== newLang) {
+      await dispatch(asyncLoadSemanticDomains(newLang));
+    }
+  };
+}
+
 export function asyncUpdateCurrentProject(project: Project) {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     await updateProject(project);
@@ -72,18 +85,5 @@ export function clearCurrentProject() {
   return (dispatch: StoreStateDispatch) => {
     setProjectId();
     dispatch(resetCurrentProject());
-  };
-}
-
-export function setNewCurrentProject(project?: Project) {
-  return (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    setProjectId(project?.id);
-    dispatch(setCurrentProject(project));
-    const oldLang =
-      getState().currentProjectState.project.semDomWritingSystem.bcp47;
-    const newLang = project?.semDomWritingSystem.bcp47;
-    if (oldLang !== newLang) {
-      dispatch(asyncLoadSemanticDomains(newLang));
-    }
   };
 }

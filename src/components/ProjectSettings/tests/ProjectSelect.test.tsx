@@ -1,5 +1,5 @@
 import { Select } from "@mui/material";
-import { ReactTestRenderer, act, create } from "react-test-renderer";
+import { type ReactTestRenderer, act, create } from "react-test-renderer";
 
 import ProjectSelect from "components/ProjectSettings/ProjectSelect";
 import { newProject, randomProject } from "types/project";
