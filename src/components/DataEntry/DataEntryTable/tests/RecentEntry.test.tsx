@@ -102,7 +102,7 @@ describe("ExistingEntry", () => {
       await updateVernAndBlur(mockVern);
       expect(mockUpdateVern).toHaveBeenCalledTimes(0);
       await updateVernAndBlur(mockText);
-      expect(mockUpdateVern).toBeCalledWith(0, mockText);
+      expect(mockUpdateVern).toHaveBeenCalledWith(0, mockText);
     });
   });
 
@@ -120,7 +120,7 @@ describe("ExistingEntry", () => {
       await updateGlossAndBlur(mockGloss);
       expect(mockUpdateGloss).toHaveBeenCalledTimes(0);
       await updateGlossAndBlur(mockText);
-      expect(mockUpdateGloss).toBeCalledWith(0, mockText);
+      expect(mockUpdateGloss).toHaveBeenCalledWith(0, mockText);
     });
   });
 
@@ -131,7 +131,7 @@ describe("ExistingEntry", () => {
       await act(async () => {
         testHandle.props.updateText(mockText);
       });
-      expect(mockUpdateNote).toBeCalledWith(0, mockText);
+      expect(mockUpdateNote).toHaveBeenCalledWith(0, mockText);
     });
   });
 });
