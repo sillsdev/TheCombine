@@ -11,9 +11,7 @@ export default function ProjectSelect(
   const [projList, setProjList] = useState<Project[]>([]);
 
   useEffect(() => {
-    getAllActiveProjects()
-      .then(setProjList)
-      .catch((err) => console.error(err));
+    getAllActiveProjects().then(setProjList);
   }, [props.project.name]);
 
   const handleChange = (e: SelectChangeEvent): void => {
@@ -27,10 +25,8 @@ export default function ProjectSelect(
   };
 
   // This prevents an out-of-range Select error while useEffect is underway.
-  const projectList = [...projList];
-  if (projectList.every((p) => p.name !== props.project.name)) {
-    projectList.push(props.project);
-  }
+  const hasProj = projList.some((p) => p.name === props.project.name);
+  const projectList = hasProj ? [...projList] : [...projList, props.project];
   projectList.sort((a: Project, b: Project) => a.name.localeCompare(b.name));
 
   return (

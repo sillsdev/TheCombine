@@ -24,11 +24,9 @@ export default function ChooseProject(): ReactElement {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getAllActiveProjects()
-      .then((projects) => {
-        setProjectList(projects.sort((a, b) => a.name.localeCompare(b.name)));
-      })
-      .catch((err) => console.error(err));
+    getAllActiveProjects().then((projects) => {
+      setProjectList(projects.sort((a, b) => a.name.localeCompare(b.name)));
+    });
   }, []);
 
   const selectProject = (project: Project): void => {
