@@ -47,6 +47,7 @@ combine_start () {
   sudo systemctl restart systemd-resolved
   sudo systemctl restart systemd-networkd
   sudo systemctl start k3s
+  sudo ip link set ${WIFI_IF} up
 }
 
 combine_stop () {
@@ -96,6 +97,7 @@ combine_update () {
   kubectl -n thecombine set image deployment/maintenance maintenance="public.ecr.aws/thecombine/combine_maint:$IMAGE_TAG"
 }
 
+WIFI_IF={{ wifi_interfaces[0] }}
 export KUBECONFIG=${HOME}/.kube/config
 
 if [[ $# -eq 0 ]] ;  then
