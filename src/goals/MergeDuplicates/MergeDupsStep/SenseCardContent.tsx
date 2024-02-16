@@ -1,5 +1,5 @@
 import { ArrowForwardIos, WarningOutlined } from "@mui/icons-material";
-import { CardContent, Chip, Grid, IconButton } from "@mui/material";
+import { CardContent, IconButton } from "@mui/material";
 import { type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -7,15 +7,13 @@ import {
   GramCatGroup,
   type ProtectReason,
   ReasonType,
-  type SemanticDomain,
   type Sense,
   Status,
 } from "api/models";
 import { IconButtonWithTooltip, PartOfSpeechButton } from "components/Buttons";
 import MultilineTooltipTitle from "components/MultilineTooltipTitle";
+import DomainChipsGrid from "components/WordCard/DomainChipsGrid";
 import SenseCardText from "components/WordCard/SenseCardText";
-import { type StoreState } from "types";
-import { useAppSelector } from "types/hooks";
 
 interface SenseCardContentProps {
   senses: Sense[];
@@ -31,27 +29,15 @@ interface SenseCardContentProps {
 export default function SenseCardContent(
   props: SenseCardContentProps
 ): ReactElement {
-  const semDomNames = useAppSelector(
-    (state: StoreState) => state.currentProjectState.semanticDomains
-  );
   const { t } = useTranslation();
 
-  /** Get the domain name in the project's sem dom language;
-   * if not available, fall back to the given domain's name.  */
-  const getName = (dom: SemanticDomain): string | undefined => {
-    return semDomNames ? semDomNames[dom.id] ?? dom.name : dom.name;
-  };
-
-  const semDoms = [
-    ...new Set(
-      props.senses.flatMap((s) =>
-        s.semanticDomains.map((dom) => `${dom.id}: ${getName(dom)}`)
-      )
-    ),
-  ];
   const gramInfo = props.senses
     .map((s) => s.grammaticalInfo)
     .find((g) => g.catGroup !== GramCatGroup.Unspecified);
+
+  const semDoms = props.senses
+    .flatMap((s) => s.semanticDomains)
+    .sort((a, b) => a.id.localeCompare(b.id));
 
   const reasonText = (reason: ProtectReason): string => {
     // Backend/Helper/LiftHelper.cs > GetProtectedReasons(LiftSense sense)
@@ -168,13 +154,7 @@ export default function SenseCardContent(
       {/* List glosses and (if any) definitions. */}
       <SenseCardText languages={props.languages} sense={props.senses[0]} />
       {/* List semantic domains. */}
-      <Grid container spacing={2}>
-        {semDoms.map((dom) => (
-          <Grid item key={dom}>
-            <Chip label={dom} />
-          </Grid>
-        ))}
-      </Grid>
+      <DomainChipsGrid semDoms={semDoms} />
     </CardContent>
   );
 }

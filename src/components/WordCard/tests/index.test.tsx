@@ -14,6 +14,7 @@ jest
   .mockImplementation(() => {});
 jest.mock("components/Pronunciations/AudioPlayer", () => "div");
 jest.mock("components/Pronunciations/Recorder");
+jest.mock("components/WordCard/DomainChipsGrid", () => "div");
 
 const mockWordId = "mock-id";
 const buttonId = buttonIdFull(mockWordId);
