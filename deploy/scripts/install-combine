@@ -12,8 +12,9 @@ get-password () {
 
 set-combine-env () {
   if [ ! -f "${CONFIG_DIR}/env" ] ; then
-    # Collect values from user
+    # Generate JWT Secret Key
     COMBINE_JWT_SECRET_KEY=`LC_ALL=C tr -dc 'A-Za-z0-9*\-_@!' </dev/urandom | head -c 64; echo`
+    # Collect values from user
     read -p "Enter name for the site admin account: " COMBINE_ADMIN_USERNAME
     COMBINE_ADMIN_PASSWORD=$(get-password "Enter a password for the ${COMBINE_ADMIN_USERNAME} account:")
     echo -e "\n"
@@ -29,33 +30,12 @@ set-combine-env () {
     export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
     export COMBINE_SMTP_USERNAME="nobody"
 .EOF
+    chmod 600 ${CONFIG_DIR}/env
   fi
   source ${CONFIG_DIR}/env
 }
 
-#####
-# Mark our place
-INSTALL_DIR=`pwd`
-mkdir -p ${HOME}/.combine
-COMBINE_DIR=${HOME}/.combine
-print-instructions () {
-#####
-# Let the user know what to expect
-  echo "\n
-Setting up the software environment and WiFi Access Point\n
-used by The Combine.  You will be prompted for your password twice to allow\n
-the script to setup system services.  One prompt will look like:\n
-\n
-   [sudo] password for ${USER}:\n
-\n
-Afterwards, you will see a\n
-\n
-   BECOME password: \n
-\n
-prompt, enter your password here as well."
-}
-
-install-kubernetes () {
+python-venv () {
   cd $INSTALL_DIR
   # Install required packages
   sudo apt install -y python3-pip python3-venv
@@ -66,25 +46,14 @@ install-kubernetes () {
   source venv/bin/activate
   python -m pip install --upgrade pip pip-tools
   python -m piptools sync requirements.txt
+}
 
+install-kubernetes () {
   #####
   # Setup Kubernetes environment and WiFi Access Point
   cd ${INSTALL_DIR}/ansible
+
   ansible-playbook playbook_desktop_setup.yaml -K
-}
-
-restart-install () {
-  cat <<.EOM
-***** Restart required *****
-
-Rerun $0 after the system has been restarted.
-
-.EOM
-  read -p "Restart now? (Y/n) " RESTART
-  if [[ -z $RESTART || $RESTART =~ ^[yY].* ]] ; then
-    sudo reboot
-  fi
-  exit 0
 }
 
 set-k3s-env () {
@@ -102,9 +71,8 @@ copy-install-scripts () {
   cp -r ${INSTALL_DIR}/helm ${COMBINE_DIR}
   cp -r ${INSTALL_DIR}/scripts ${COMBINE_DIR}
   cp -r ${INSTALL_DIR}/venv ${COMBINE_DIR}
-  pushd ${COMBINE_DIR}/venv/bin > /dev/null
-  sed -i "s|${INSTALL_DIR}|${COMBINE_DIR}|g" *
-  popd > /dev/null
+  # Update the Python virtual environment to use its new location
+  sed -i "s|${INSTALL_DIR}|${COMBINE_DIR}|g" ${COMBINE_DIR}/venv/bin/*
 }
 
 install-required-charts () {
@@ -135,12 +103,31 @@ install-the-combine () {
   deactivate
 }
 
+create-dest-directory () {
+  if [ -d ${COMBINE_DIR} ] ; then
+    echo "The installation directory already exists. ($COMBINE_DIR)"
+    read -p "Overwrite? (Y/n)" CONTINUE
+    if [[ -z $CONTINUE || "$CONTINUE" =~ ^[Yy] ]] ; then
+      rm -rf $COMBINE_DIR/*
+    else
+      exit 1
+    fi
+  else
+    mkdir -p ${COMBINE_DIR}
+  fi
+}
+
+#####
+# Setup initial variables
+INSTALL_DIR=`pwd`
+COMBINE_DIR=${HOME}/.thecombine
+
 # Create directory for configuration files 
 CONFIG_DIR=${HOME}/.config/combine
 mkdir -p ${CONFIG_DIR}
 
 # See if we need to continue from a previous install
-STATE_FILE=${HOME}/.config/combine/install-state
+STATE_FILE=${CONFIG_DIR}/install-state
 if [ -f ${STATE_FILE} ] ; then
   STATE=`cat ${STATE_FILE}`
 else
@@ -184,12 +171,32 @@ done
 while [ "$STATE" != "Done" ] ; do
   case $STATE in
     pre-reqs)
-      echo -e `print-instructions`
+      create-dest-directory
+      python-venv
+      #####
+      # Let the user know what to expect
+      echo -e "\nThe next step sets up the software environment and WiFi Access Point"
+      echo -e "for The Combine.  You will be prompted for your password with the prompt:\n"
+      echo -e "   BECOME password: \n"
       install-kubernetes
       copy-install-scripts
+      STATE=Restart
+      echo -n ${STATE} > ${STATE_FILE}
+      ;;
+    Restart)
       STATE=Base_charts
       echo -n ${STATE} > ${STATE_FILE}
-      restart-install
+      if [ -f /var/run/reboot-required ] ; then
+        echo -e "***** Restart required *****\n"
+        echo -e "Rerun combine-installer.run after the system has been restarted.\n"
+        read -p "Restart now? (Y/n) " RESTART
+        if [[ -z $RESTART || $RESTART =~ ^[yY].* ]] ; then
+          sudo reboot
+        else
+          STATE=Done
+          echo -n ${STATE} > ${STATE_FILE}
+        fi
+      fi
       ;;
     Base_charts)
       install-required-charts
