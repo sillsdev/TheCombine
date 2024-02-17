@@ -21,7 +21,7 @@ usage () {
                 at https://github.com/sillsdev/TheCombine/releases.
 
                 Note that not all releases can be updated this way.  If
-                The Combine fails to run properly, download and run the
+                The Combine does not run properly, download and run the
                 updated install package.
 
     If the command is omitted or unrecognized, this usage message is
