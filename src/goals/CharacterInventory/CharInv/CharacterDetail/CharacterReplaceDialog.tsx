@@ -6,7 +6,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { ReactElement, useState } from "react";
+import { type ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { LoadingButton } from "components/Buttons";

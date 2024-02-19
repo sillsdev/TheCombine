@@ -1,7 +1,7 @@
-import { Action, PayloadAction } from "@reduxjs/toolkit";
+import { type Action, type PayloadAction } from "@reduxjs/toolkit";
 
-import { Project } from "api/models";
-import { getFrontierWords } from "backend";
+import { type Project } from "api/models";
+import { getFrontierWords, updateWord } from "backend";
 import router from "browserRouter";
 import {
   addCharInvChangesToGoal,
@@ -9,9 +9,9 @@ import {
 } from "components/GoalTimeline/Redux/GoalActions";
 import { asyncUpdateCurrentProject } from "components/Project/ProjectActions";
 import {
+  type CharInvChanges,
+  type CharacterChange,
   CharacterStatus,
-  CharacterChange,
-  CharInvChanges,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
 import {
   addRejectedCharacterAction,
@@ -24,13 +24,13 @@ import {
   setValidCharactersAction,
 } from "goals/CharacterInventory/Redux/CharacterInventoryReducer";
 import {
-  CharacterInventoryState,
-  CharacterSetEntry,
+  type CharacterInventoryState,
+  type CharacterSetEntry,
   getCharacterStatus,
 } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
-import { StoreState } from "types";
-import { StoreStateDispatch } from "types/Redux/actions";
-import { Hash } from "types/hash";
+import { type StoreState } from "types";
+import { type StoreStateDispatch } from "types/Redux/actions";
+import { type Hash } from "types/hash";
 import { Path } from "types/path";
 
 // Action Creation Functions
@@ -169,6 +169,28 @@ export function addWordChanges(wordChanges: Hash<string>) {
       ]);
     }
     dispatch(addCharInvChangesToGoal({ charChanges, wordChanges }));
+  };
+}
+
+export function findAndReplace(findValue: string, replaceValue: string) {
+  return async (dispatch: StoreStateDispatch) => {
+    const changedWords = (await getFrontierWords()).filter((w) =>
+      w.vernacular.includes(findValue)
+    );
+    if (changedWords.length) {
+      const findRegExp = new RegExp(
+        findValue.replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&"),
+        "g"
+      );
+      const wordChanges: Hash<string> = {};
+      for (const word of changedWords) {
+        word.vernacular = word.vernacular.replace(findRegExp, replaceValue);
+        wordChanges[word.id] = (await updateWord(word)).id;
+      }
+      await dispatch(addWordChanges(wordChanges));
+      await dispatch(fetchWords());
+      await dispatch(getAllCharacters());
+    }
   };
 }
 

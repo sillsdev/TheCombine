@@ -5,12 +5,12 @@ import configureMockStore from "redux-mock-store";
 import "tests/reactI18nextMock";
 
 import CharacterDetail from "goals/CharacterInventory/CharInv/CharacterDetail";
+import CharacterReplaceDialog from "goals/CharacterInventory/CharInv/CharacterDetail/CharacterReplaceDialog";
 import {
   buttonIdCancel,
   buttonIdConfirm,
   buttonIdSubmit,
 } from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace";
-import CharacterReplaceDialog from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace/CharacterReplaceDialog";
 import { defaultState } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 import { type StoreState } from "types";
 import { testInstanceHasText } from "utilities/testRendererUtilities";
@@ -24,12 +24,9 @@ jest.mock("@mui/material", () => {
   };
 });
 
-jest.mock(
-  "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace/FindAndReplaceActions",
-  () => ({
-    findAndReplace: () => mockFindAndReplace(),
-  })
-);
+jest.mock("goals/CharacterInventory/Redux/CharacterInventoryActions", () => ({
+  findAndReplace: () => mockFindAndReplace(),
+}));
 jest.mock("types/hooks", () => {
   return {
     ...jest.requireActual("types/hooks"),

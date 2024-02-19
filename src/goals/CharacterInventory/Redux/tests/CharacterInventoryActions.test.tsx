@@ -1,13 +1,15 @@
-import { Action, PreloadedState } from "redux";
+import { type Action, type PreloadedState } from "redux";
 
-import { Project } from "api/models";
+import { type Project, type Word } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import {
+  type CharInvChanges,
+  type CharacterChange,
   CharacterStatus,
-  CharacterChange,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
 import {
   fetchWords,
+  findAndReplace,
   getAllCharacters,
   getCharChanges,
   loadCharInvData,
@@ -15,22 +17,23 @@ import {
   uploadInventory,
 } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
 import {
+  type CharacterInventoryState,
+  type CharacterSetEntry,
   defaultState as defaultCharInvState,
-  CharacterInventoryState,
-  CharacterSetEntry,
 } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
-import { RootState, setupStore } from "store";
+import { type RootState, setupStore } from "store";
 import { newProject } from "types/project";
 import { newWord } from "types/word";
 
 jest.mock("backend", () => ({
   getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
+  updateWord: (word: Word) => mockUpdateWord(word),
 }));
 jest.mock("browserRouter");
 jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({
-  asyncUpdateGoal: (...args: any[]) => mockAsyncUpdateGoal(...args),
-  addCharInvChangesToGoal: (...args: any[]) =>
-    mockAddCharInvChangesToGoal(...args),
+  asyncUpdateGoal: () => mockAsyncUpdateGoal(),
+  addCharInvChangesToGoal: (changes: CharInvChanges) =>
+    mockAddCharInvChangesToGoal(changes),
 }));
 jest.mock("components/Project/ProjectActions", () => ({
   asyncUpdateCurrentProject: (...args: any[]) =>
@@ -41,6 +44,17 @@ const mockAddCharInvChangesToGoal = jest.fn();
 const mockAsyncUpdateCurrentProject = jest.fn();
 const mockAsyncUpdateGoal = jest.fn();
 const mockGetFrontierWords = jest.fn();
+const mockUpdateWord = jest.fn();
+
+const bumpId = (id: string): string => `${id}++`;
+const mockAction: Action = { type: null };
+const setMockFunctions = (): void => {
+  mockAddCharInvChangesToGoal.mockReturnValue(mockAction);
+  mockAsyncUpdateCurrentProject.mockReturnValue(mockAction);
+  mockAsyncUpdateGoal.mockReturnValue(mockAction);
+  // Set mockGetFrontierWords specifically for each tests.
+  mockUpdateWord.mockImplementation((w: Word) => ({ ...w, id: bumpId(w.id) }));
+};
 
 // Preloaded values for store when testing
 const persistedDefaultState: PreloadedState<RootState> = {
@@ -50,6 +64,7 @@ const persistedDefaultState: PreloadedState<RootState> = {
 
 beforeEach(() => {
   jest.resetAllMocks();
+  setMockFunctions();
 });
 
 describe("CharacterInventoryActions", () => {
@@ -121,12 +136,6 @@ describe("CharacterInventoryActions", () => {
           validCharacters,
         },
       });
-
-      // Mock the dispatch functions called by uploadInventory.
-      const mockAction: Action = { type: null };
-      mockAddCharInvChangesToGoal.mockReturnValue(mockAction);
-      mockAsyncUpdateCurrentProject.mockReturnValue(mockAction);
-      mockAsyncUpdateGoal.mockReturnValue(mockAction);
 
       await store.dispatch(uploadInventory());
       expect(mockAddCharInvChangesToGoal).toHaveBeenCalledTimes(1);
@@ -209,6 +218,36 @@ describe("CharacterInventoryActions", () => {
       validCharacters.forEach((c) =>
         expect(state.validCharacters).toContain(c)
       );
+    });
+  });
+
+  describe("findAndReplace", () => {
+    it("does nothing if no words changed", async () => {
+      const store = setupStore();
+      mockGetFrontierWords.mockResolvedValue([]);
+
+      await store.dispatch(findAndReplace("A", "a"));
+      expect(mockGetFrontierWords).toHaveBeenCalledTimes(1);
+      expect(mockUpdateWord).not.toHaveBeenCalled();
+      expect(mockAddCharInvChangesToGoal).not.toHaveBeenCalled();
+    });
+
+    it("acts when words changed", async () => {
+      const store = setupStore();
+      const word: Word = { ...newWord("Abc"), id: "mock-id" };
+      mockGetFrontierWords.mockResolvedValue([word]);
+
+      await store.dispatch(findAndReplace("A", "a"));
+      expect(mockGetFrontierWords).toHaveBeenCalledTimes(2);
+      expect(mockUpdateWord).toHaveBeenCalledTimes(1);
+      expect(mockAddCharInvChangesToGoal).toHaveBeenCalledTimes(1);
+      expect(mockAddCharInvChangesToGoal).toHaveBeenCalledWith({
+        charChanges: [],
+        wordChanges: { [word.id]: bumpId(word.id) },
+      });
+      expect(store.getState().characterInventoryState.allWords).toEqual([
+        "abc",
+      ]);
     });
   });
 

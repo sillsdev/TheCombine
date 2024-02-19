@@ -1,10 +1,10 @@
 import { Button, Typography } from "@mui/material";
-import { ReactElement, useEffect, useState } from "react";
+import { type ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import CharacterReplaceDialog from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace/CharacterReplaceDialog";
-import { findAndReplace } from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace/FindAndReplaceActions";
+import CharacterReplaceDialog from "goals/CharacterInventory/CharInv/CharacterDetail/CharacterReplaceDialog";
+import { findAndReplace } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
 import { useAppDispatch } from "types/hooks";
 import { TextFieldWithFont } from "utilities/fontComponents";
 
