@@ -15,7 +15,17 @@ set-combine-env () {
     # Generate JWT Secret Key
     COMBINE_JWT_SECRET_KEY=`LC_ALL=C tr -dc 'A-Za-z0-9*\-_@!' </dev/urandom | head -c 64; echo`
     # Collect values from user
+    cat << .EOM
+
+     The installation process will setup an initial user as a site
+     administrator.  This you can select a username that you will use
+     for your normal word collection work.  The default username is admin.
+
+.EOM
     read -p "Enter name for the site admin account: " COMBINE_ADMIN_USERNAME
+    if [ -z "${COMBINE_ADMIN_USERNAME}" ] ; then
+      COMBINE_ADMIN_USERNAME=admin
+    fi
     COMBINE_ADMIN_PASSWORD=$(get-password "Enter a password for the ${COMBINE_ADMIN_USERNAME} account:")
     echo -e "\n"
     read -p "Enter AWS_ACCESS_KEY_ID: " AWS_ACCESS_KEY_ID
@@ -35,7 +45,7 @@ set-combine-env () {
   source ${CONFIG_DIR}/env
 }
 
-python-venv () {
+create-python-venv () {
   cd $INSTALL_DIR
   # Install required packages
   sudo apt install -y python3-pip python3-venv
@@ -49,6 +59,16 @@ python-venv () {
 }
 
 install-kubernetes () {
+  #####
+  # Let the user know what to expect
+  cat << .EOM
+
+  The next step sets up the software environment and WiFi Access Point
+  for The Combine.  You will be prompted for your password with the prompt:
+
+     BECOME password:
+     
+.EOM
   #####
   # Setup Kubernetes environment and WiFi Access Point
   cd ${INSTALL_DIR}/ansible
@@ -68,11 +88,31 @@ set-k3s-env () {
 }
 
 copy-install-scripts () {
-  cp -r ${INSTALL_DIR}/helm ${COMBINE_DIR}
-  cp -r ${INSTALL_DIR}/scripts ${COMBINE_DIR}
+  # Copy the Python virtual environment
   cp -r ${INSTALL_DIR}/venv ${COMBINE_DIR}
   # Update the Python virtual environment to use its new location
-  sed -i "s|${INSTALL_DIR}|${COMBINE_DIR}|g" ${COMBINE_DIR}/venv/bin/*
+  find ${COMBINE_DIR}/venv/bin -type f -exec sed -i "s|${INSTALL_DIR}|${COMBINE_DIR}|g" {} \;
+  # Copy the Helm charts
+  cp -r ${INSTALL_DIR}/helm ${COMBINE_DIR}
+  # Copy the Python scripts - only copy the scripts required for installation/updating
+  # The Combine
+  script_files=("scripts/app_release.py"\
+                "scripts/aws_env.py"\
+                "scripts/combine_charts.py"\
+                "scripts/enum_types.py"\
+                "scripts/kube_env.py"\
+                "scripts/setup_cluster.py"\
+                "scripts/setup_combine.py"\
+                "scripts/setup_files/cluster_config.yaml"\
+                "scripts/setup_files/combine_config.yaml"\
+                "scripts/setup_files/profiles/nuc.yaml"\
+                "scripts/utils.py")
+  for script_file in "${script_files[@]}" ; do
+    # create the destination directory if necessary
+    mkdir -p `dirname ${COMBINE_DIR}/$script_file`
+    # copy the script file
+    cp ${INSTALL_DIR}/${script_file} ${COMBINE_DIR}/${script_file}
+  done
 }
 
 install-required-charts () {
@@ -99,8 +139,15 @@ install-the-combine () {
   cd ${COMBINE_DIR}/scripts
   set-combine-env
   set-k3s-env
-  ./setup_combine.py --tag v1.1.6 --repo public.ecr.aws/thecombine --target desktop
+  ./setup_combine.py --tag ${COMBINE_VERSION} --repo public.ecr.aws/thecombine --target desktop
   deactivate
+}
+
+shutdown-the-combine () {
+  # Shut down the combine services and set them to not start at boot time
+  combinectl stop
+  combinectl noauto 2> /dev/null
+  combinectl status
 }
 
 create-dest-directory () {
@@ -120,8 +167,8 @@ create-dest-directory () {
 #####
 # Setup initial variables
 INSTALL_DIR=`pwd`
-COMBINE_DIR=${HOME}/.thecombine
-
+COMBINE_DIR=${HOME}/thecombine
+COMBINE_VERSION="${COMBINE_VERSION:-v1.2.0}"
 # Create directory for configuration files 
 CONFIG_DIR=${HOME}/.config/combine
 mkdir -p ${CONFIG_DIR}
@@ -131,7 +178,7 @@ STATE_FILE=${CONFIG_DIR}/install-state
 if [ -f ${STATE_FILE} ] ; then
   STATE=`cat ${STATE_FILE}`
 else
-  STATE=pre-reqs
+  STATE=Pre-reqs
 fi
 
 # Parse arguments to customize installation
@@ -148,17 +195,20 @@ while (( "$#" )) ; do
       if [[ $# > 1 ]] ; then
         $COMBINE_VERSION=$2
         shift
-        STATE=Combine
+        STATE=Install-combine
       fi
+      rm ${STATE_FILE}
       ;;
     --clean)
-      STATE=pre-reqs
+      STATE=Pre-reqs
+      rm ${STATE_FILE}
       if [ -f ${CONFIG_DIR}/env ] ; then
         rm ${CONFIG_DIR}/env
       fi
       ;;
     --restart)
-      STATE=pre-reqs
+      STATE=Pre-reqs
+      rm ${STATE_FILE}
       ;;
     *)
       echo "Unrecognized option: $OPT" >2
@@ -170,21 +220,16 @@ done
 # Step through the installation stages
 while [ "$STATE" != "Done" ] ; do
   case $STATE in
-    pre-reqs)
+    Pre-reqs)
       create-dest-directory
-      python-venv
-      #####
-      # Let the user know what to expect
-      echo -e "\nThe next step sets up the software environment and WiFi Access Point"
-      echo -e "for The Combine.  You will be prompted for your password with the prompt:\n"
-      echo -e "   BECOME password: \n"
+      create-python-venv
       install-kubernetes
       copy-install-scripts
       STATE=Restart
       echo -n ${STATE} > ${STATE_FILE}
       ;;
     Restart)
-      STATE=Base_charts
+      STATE=Base-charts
       echo -n ${STATE} > ${STATE_FILE}
       if [ -f /var/run/reboot-required ] ; then
         echo -e "***** Restart required *****\n"
@@ -198,13 +243,18 @@ while [ "$STATE" != "Done" ] ; do
         fi
       fi
       ;;
-    Base_charts)
+    Base-charts)
       install-required-charts
-      STATE=Combine
+      STATE=Install-combine
       echo -n ${STATE} > ${STATE_FILE}
       ;;
-    Combine)
+    Install-combine)
       install-the-combine
+      STATE=Shutdown-combine
+      echo -n ${STATE} > ${STATE_FILE}
+      ;;
+    Shutdown-combine)
+      shutdown-the-combine
       STATE="Done"
       rm ${STATE_FILE}
       ;;
