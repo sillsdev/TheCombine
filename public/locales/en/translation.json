@@ -367,8 +367,10 @@
       "no": "no"
     },
     "changes": {
-      "noChanges": "No changes made in this goal.",
-      "more": "more"
+      "noCharChanges": "No changes made to character inventory.",
+      "more": "more",
+      "noWordChanges": "No words changed by find-and-replace.",
+      "wordChanges": "Words changed by find-and-replace:"
     }
   },
   "mergeDups": {
