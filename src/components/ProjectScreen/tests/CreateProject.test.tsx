@@ -23,6 +23,8 @@ jest.mock("backend", () => ({
   projectDuplicateCheck: () => mockProjectDuplicateCheck(),
   uploadLiftAndGetWritingSystems: () => mockUploadLiftAndGetWritingSystems(),
 }));
+// Mock "i18n", else `thrown: "Error: Error: connect ECONNREFUSED ::1:80 [...]`
+jest.mock("i18n", () => ({ language: "" }));
 
 const mockProjectDuplicateCheck = jest.fn();
 const mockUploadLiftAndGetWritingSystems = jest.fn();
@@ -42,7 +44,6 @@ const mockSubmitEvent = (): Partial<React.FormEvent<HTMLFormElement>> => ({
 
 let projectMaster: ReactTestRenderer;
 let projectHandle: ReactTestInstance;
-4;
 
 beforeAll(async () => {
   await act(async () => {

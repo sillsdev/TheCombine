@@ -19,6 +19,7 @@ jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({
   asyncAddGoal: (goal: Goal) => mockChooseGoal(goal),
   asyncGetUserEdits: () => jest.fn(),
 }));
+jest.mock("components/Project/ProjectActions", () => ({}));
 jest.mock("components/Pronunciations/Recorder");
 jest.mock("types/hooks", () => {
   return {

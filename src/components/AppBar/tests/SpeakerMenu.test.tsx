@@ -15,6 +15,7 @@ import { randomSpeaker } from "types/project";
 jest.mock("backend", () => ({
   getAllSpeakers: () => mockGetAllSpeakers(),
 }));
+jest.mock("components/Project/ProjectActions", () => ({}));
 
 const mockProjId = "mock-project-id";
 const mockGetAllSpeakers = jest.fn();

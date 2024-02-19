@@ -34,6 +34,8 @@ jest.mock("backend", () => ({
   getUserRoles: () => Promise.resolve([]),
 }));
 jest.mock("components/Project/ProjectActions");
+// Mock "i18n", else `thrown: "Error: Error: connect ECONNREFUSED ::1:80 [...]`
+jest.mock("i18n", () => ({ language: "" }));
 jest.mock("types/hooks", () => {
   return {
     ...jest.requireActual("types/hooks"),
