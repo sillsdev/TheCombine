@@ -151,7 +151,7 @@
       "analysis": "Analysis",
       "analysisLanguage": "Analysis Language",
       "semanticDomains": "Semantic Domains",
-      "semanticDomainsDefault": "(Default to browser language)",
+      "semanticDomainsDefault": "(Default to user interface language)",
       "languages": "Project Languages",
       "bcp47": "BCP 47 Code",
       "name": "Name",

@@ -14,6 +14,7 @@ import {
   setSpeakerAction,
   setUsersAction,
 } from "components/Project/ProjectReducer";
+import i18n from "i18n";
 import { type StoreState } from "types";
 import { type StoreStateDispatch } from "types/Redux/actions";
 import { type Hash } from "types/hash";
@@ -43,9 +44,17 @@ export function setCurrentUsers(users?: User[]): PayloadAction {
 
 // Dispatch Functions
 
+/** If the project's sem dom language is set to (Default to user interface language) and
+ * the UI language changes, the user must leave the project and re-enter for that change
+ * to take effect on the semantic domains (a page refresh is not sufficient). */
 export function asyncLoadSemanticDomains(lang?: string) {
-  return async (dispatch: StoreStateDispatch) => {
-    dispatch(setCurrentSemDoms(await getAllSemanticDomainNames(lang)));
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+    const langParts = (lang || i18n.language).split("-");
+    const langRoot = langParts.length ? langParts[0] : "";
+    const { project, semanticDomains } = getState().currentProjectState;
+    if (!semanticDomains || project.semDomWritingSystem.bcp47 !== langRoot) {
+      dispatch(setCurrentSemDoms(await getAllSemanticDomainNames(langRoot)));
+    }
   };
 }
 
@@ -55,29 +64,23 @@ export function asyncRefreshProjectUsers(projectId: string) {
   };
 }
 
-export function asyncSetNewCurrentProject(project?: Project) {
-  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    setProjectId(project?.id);
-    const oldLang =
-      getState().currentProjectState.project.semDomWritingSystem.bcp47;
-    const newLang = project?.semDomWritingSystem.bcp47;
-    dispatch(setCurrentProject(project));
-    if (oldLang !== newLang) {
-      await dispatch(asyncLoadSemanticDomains(newLang));
-    }
+export function asyncSetNewCurrentProject(proj?: Project) {
+  return async (dispatch: StoreStateDispatch) => {
+    // Update semantic domains before setting the project.
+    await dispatch(asyncLoadSemanticDomains(proj?.semDomWritingSystem.bcp47));
+
+    setProjectId(proj?.id);
+    dispatch(setCurrentProject(proj));
   };
 }
 
-export function asyncUpdateCurrentProject(project: Project) {
-  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    await updateProject(project);
-    const oldLang =
-      getState().currentProjectState.project.semDomWritingSystem.bcp47;
-    const newLang = project.semDomWritingSystem.bcp47;
-    dispatch(setCurrentProject(project));
-    if (oldLang !== newLang) {
-      await dispatch(asyncLoadSemanticDomains(newLang));
-    }
+export function asyncUpdateCurrentProject(proj: Project) {
+  return async (dispatch: StoreStateDispatch) => {
+    // Update semantic domains before setting the project.
+    await dispatch(asyncLoadSemanticDomains(proj.semDomWritingSystem.bcp47));
+
+    await updateProject(proj);
+    dispatch(setCurrentProject(proj));
   };
 }
 
