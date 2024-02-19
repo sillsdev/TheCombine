@@ -157,7 +157,7 @@ export function loadCharInvData() {
   };
 }
 
-export function addWordChanges(wordChanges: Hash<string>) {
+function addWordChanges(wordChanges: Hash<string>) {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const changes = getState().goalsState.currentGoal.changes as CharInvChanges;
     const charChanges = changes?.charChanges ?? [];
@@ -169,6 +169,7 @@ export function addWordChanges(wordChanges: Hash<string>) {
       ]);
     }
     dispatch(addCharInvChangesToGoal({ charChanges, wordChanges }));
+    await dispatch(asyncUpdateGoal());
   };
 }
 

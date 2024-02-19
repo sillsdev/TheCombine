@@ -19,7 +19,6 @@ import {
 import {
   type CharacterInventoryState,
   type CharacterSetEntry,
-  defaultState as defaultCharInvState,
 } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 import { type RootState, setupStore } from "store";
 import { newProject } from "types/project";
@@ -230,6 +229,7 @@ describe("CharacterInventoryActions", () => {
       expect(mockGetFrontierWords).toHaveBeenCalledTimes(1);
       expect(mockUpdateWord).not.toHaveBeenCalled();
       expect(mockAddCharInvChangesToGoal).not.toHaveBeenCalled();
+      expect(mockAsyncUpdateGoal).not.toHaveBeenCalled();
     });
 
     it("acts when words changed", async () => {
@@ -241,13 +241,32 @@ describe("CharacterInventoryActions", () => {
       expect(mockGetFrontierWords).toHaveBeenCalledTimes(2);
       expect(mockUpdateWord).toHaveBeenCalledTimes(1);
       expect(mockAddCharInvChangesToGoal).toHaveBeenCalledTimes(1);
-      expect(mockAddCharInvChangesToGoal).toHaveBeenCalledWith({
-        charChanges: [],
-        wordChanges: { [word.id]: bumpId(word.id) },
-      });
+      expect(mockAsyncUpdateGoal).toHaveBeenCalledTimes(1);
       expect(store.getState().characterInventoryState.allWords).toEqual([
         "abc",
       ]);
+    });
+
+    it("appends word changes", async () => {
+      const store = setupStore({
+        ...persistedDefaultState,
+        goalsState: {
+          ...persistedDefaultState.goalsState,
+          currentGoal: {
+            ...persistedDefaultState.goalsState.currentGoal,
+            changes: { charChanges: [], wordChanges: { ["old"]: "new" } },
+          },
+        },
+      });
+      const word: Word = { ...newWord("Abc"), id: "mock-id" };
+      mockGetFrontierWords.mockResolvedValue([word]);
+
+      await store.dispatch(findAndReplace("A", "a"));
+      expect(mockAddCharInvChangesToGoal).toHaveBeenCalledTimes(1);
+      expect(mockAddCharInvChangesToGoal).toHaveBeenCalledWith({
+        charChanges: [],
+        wordChanges: { ["old"]: "new", [word.id]: bumpId(word.id) },
+      });
     });
   });
 
@@ -267,7 +286,7 @@ describe("CharacterInventoryActions", () => {
         rejectedCharacters: [rejAcc, rejRej, rejUnd],
       };
       const charInvState: CharacterInventoryState = {
-        ...defaultCharInvState,
+        ...persistedDefaultState.characterInventoryState,
         validCharacters: [accAcc, rejAcc, undAcc],
         rejectedCharacters: [accRej, rejRej, undRej],
       };

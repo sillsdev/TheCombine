@@ -1,5 +1,5 @@
 import { Goal, GoalName, GoalType } from "types/goals";
-import { Hash } from "types/hash";
+import { type Hash } from "types/hash";
 
 export class CreateCharInv extends Goal {
   constructor(
