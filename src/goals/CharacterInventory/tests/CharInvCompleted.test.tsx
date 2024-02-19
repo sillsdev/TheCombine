@@ -1,5 +1,10 @@
 import { Provider } from "react-redux";
-import { type ReactTestRenderer, act, create } from "react-test-renderer";
+import {
+  type ReactTestInstance,
+  type ReactTestRenderer,
+  act,
+  create,
+} from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { defaultState } from "components/GoalTimeline/DefaultState";
@@ -7,6 +12,7 @@ import WordCard from "components/WordCard";
 import CharInvCompleted, {
   CharChange,
   CharInvChangesGoalList,
+  CharInvCompletedId,
 } from "goals/CharacterInventory/CharInvCompleted";
 import {
   type CharInvChanges,
@@ -44,6 +50,7 @@ const mockState = (changes?: CharInvChanges): Partial<StoreState> => ({
 });
 
 let renderer: ReactTestRenderer;
+let root: ReactTestInstance;
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -60,6 +67,7 @@ describe("CharInvCompleted", () => {
         </Provider>
       );
     });
+    root = renderer.root;
   };
 
   it("renders all char inv changes", async () => {
@@ -67,10 +75,16 @@ describe("CharInvCompleted", () => {
       charChanges: mockCharChanges,
       wordChanges: {},
     });
-    expect(renderer.root.findAllByType(CharChange)).toHaveLength(
-      mockCharChanges.length
-    );
-    expect(renderer.root.findAllByType(WordCard)).toHaveLength(0);
+    expect(root.findAllByType(CharChange)).toHaveLength(mockCharChanges.length);
+    expect(root.findAllByType(WordCard)).toHaveLength(0);
+
+    expect(() =>
+      root.findByProps({ id: CharInvCompletedId.TypographyNoCharChanges })
+    ).toThrow();
+    root.findByProps({ id: CharInvCompletedId.TypographyNoWordChanges });
+    expect(() =>
+      root.findByProps({ id: CharInvCompletedId.TypographyWordChanges })
+    ).toThrow();
   });
 
   it("renders all words changed", async () => {
@@ -78,40 +92,70 @@ describe("CharInvCompleted", () => {
       charChanges: [],
       wordChanges: mockWordChanges,
     });
-    expect(renderer.root.findAllByType(CharChange)).toHaveLength(0);
+    expect(root.findAllByType(CharChange)).toHaveLength(0);
     expect(renderer.root.findAllByType(WordCard)).toHaveLength(
       mockWordKeys.length
     );
+
+    root.findByProps({ id: CharInvCompletedId.TypographyNoCharChanges });
+    expect(() =>
+      root.findByProps({ id: CharInvCompletedId.TypographyNoWordChanges })
+    ).toThrow();
+    root.findByProps({ id: CharInvCompletedId.TypographyWordChanges });
   });
 });
 
 describe("CharInvChangesGoalList", () => {
-  const renderGoalList = async (changes?: CharInvChanges): Promise<void> => {
+  const renderCharInvChangesGoalList = async (
+    changes?: CharInvChanges
+  ): Promise<void> => {
     await act(async () => {
       renderer = create(
         CharInvChangesGoalList(changes ?? defaultCharInvChanges)
       );
     });
+    root = renderer.root;
   };
 
   it("renders up to 3 char changes", async () => {
     const changes = (count: number): CharInvChanges => ({
+      ...defaultCharInvChanges,
       charChanges: mockCharChanges.slice(0, count),
-      wordChanges: mockWordChanges,
     });
-
-    await renderGoalList(changes(0));
-    expect(renderer.root.findAllByType(CharChange)).toHaveLength(0);
-
-    await renderGoalList(changes(1));
-    expect(renderer.root.findAllByType(CharChange)).toHaveLength(1);
-
-    await renderGoalList(changes(3));
-    expect(renderer.root.findAllByType(CharChange)).toHaveLength(3);
+    await renderCharInvChangesGoalList(changes(0));
+    expect(root.findAllByType(CharChange)).toHaveLength(0);
+    await renderCharInvChangesGoalList(changes(1));
+    expect(root.findAllByType(CharChange)).toHaveLength(1);
+    await renderCharInvChangesGoalList(changes(3));
+    expect(root.findAllByType(CharChange)).toHaveLength(3);
   });
 
-  it("won't render more than 3 char changes", async () => {
-    await renderGoalList({ charChanges: mockCharChanges, wordChanges: {} });
-    expect(renderer.root.findAllByType(CharChange)).toHaveLength(2);
+  it("doesn't render more than 3 char changes", async () => {
+    await renderCharInvChangesGoalList({
+      ...defaultCharInvChanges,
+      charChanges: mockCharChanges,
+    });
+    expect(root.findAllByType(CharChange)).toHaveLength(2);
+  });
+
+  it("doesn't show word changes when there are none", async () => {
+    await renderCharInvChangesGoalList(defaultCharInvChanges);
+    expect(() =>
+      root.findByProps({ id: CharInvCompletedId.TypographyNoWordChanges })
+    ).toThrow();
+    expect(() =>
+      root.findByProps({ id: CharInvCompletedId.TypographyWordChanges })
+    ).toThrow();
+  });
+
+  it("shows word changes when there are some", async () => {
+    await renderCharInvChangesGoalList({
+      ...defaultCharInvChanges,
+      wordChanges: mockWordChanges,
+    });
+    expect(() =>
+      root.findByProps({ id: CharInvCompletedId.TypographyNoWordChanges })
+    ).toThrow();
+    root.findByProps({ id: CharInvCompletedId.TypographyWordChanges });
   });
 });

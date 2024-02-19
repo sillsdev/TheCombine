@@ -14,6 +14,12 @@ import {
 import { type StoreState } from "types";
 import { useAppSelector } from "types/hooks";
 
+export enum CharInvCompletedId {
+  TypographyNoCharChanges = "no-char-changes-typography",
+  TypographyNoWordChanges = "no-word-changes-typography",
+  TypographyWordChanges = "word-changes-typography",
+}
+
 export default function CharInvCompleted(): ReactElement {
   const changes = useAppSelector(
     (state: StoreState) =>
@@ -31,12 +37,16 @@ export default function CharInvCompleted(): ReactElement {
       {changes.charChanges?.length ? (
         changes.charChanges.map((c) => <CharChange change={c} key={c[0]} />)
       ) : (
-        <Typography>{t("charInventory.changes.noCharChanges")}</Typography>
+        <Typography id={CharInvCompletedId.TypographyNoCharChanges}>
+          {t("charInventory.changes.noCharChanges")}
+        </Typography>
       )}
       <br />
       {entryChanges.length ? (
         <>
-          <Typography>{t("charInventory.changes.wordChanges")}</Typography>
+          <Typography id={CharInvCompletedId.TypographyWordChanges}>
+            {t("charInventory.changes.wordChanges")}
+          </Typography>
           <List>
             {entryChanges.map(([oldId, newId]) => (
               <WordChangeListItem key={newId} oldId={oldId} newId={newId} />
@@ -44,7 +54,9 @@ export default function CharInvCompleted(): ReactElement {
           </List>
         </>
       ) : (
-        <Typography>{t("charInventory.changes.noWordChanges")}</Typography>
+        <Typography id={CharInvCompletedId.TypographyNoWordChanges}>
+          {t("charInventory.changes.noWordChanges")}
+        </Typography>
       )}
     </>
   );
@@ -54,19 +66,20 @@ export function CharInvChangesGoalList(changes: CharInvChanges): ReactElement {
   const { t } = useTranslation();
   const changeLimit = 3;
 
-  const wordsChanged = Object.keys(changes.wordChanges ?? {}).length;
-  const wordChangesTypography = wordsChanged ? (
-    <Typography>{`${t(
-      "charInventory.changes.wordChanges"
-    )} ${wordsChanged}`}</Typography>
-  ) : (
-    <Typography>{t("charInventory.changes.noWordChanges")}</Typography>
-  );
+  const wordCount = Object.keys(changes.wordChanges ?? {}).length;
+  const wordString = `${t("charInventory.changes.wordChanges")} ${wordCount}`;
+  const wordChangesTypography = wordCount ? (
+    <Typography id={CharInvCompletedId.TypographyWordChanges}>
+      {wordString}
+    </Typography>
+  ) : null;
 
   if (!changes.charChanges?.length) {
     return (
       <>
-        <Typography>{t("charInventory.changes.noCharChanges")}</Typography>
+        <Typography id={CharInvCompletedId.TypographyNoCharChanges}>
+          {t("charInventory.changes.noCharChanges")}
+        </Typography>
         {wordChangesTypography}
       </>
     );
