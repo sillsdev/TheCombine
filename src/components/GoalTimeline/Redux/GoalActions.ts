@@ -16,7 +16,7 @@ import {
   setGoalStatusAction,
   updateStepFromDataAction,
 } from "components/GoalTimeline/Redux/GoalReducer";
-import { CharacterChange } from "goals/CharacterInventory/CharacterInventoryTypes";
+import { CharInvChanges } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { dispatchMergeStepData } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { EntryEdit } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { StoreState } from "types";
@@ -28,9 +28,9 @@ import { convertEditToGoal, maxNumSteps } from "utilities/goalUtilities";
 // Action Creation Functions
 
 export function addCharInvChangesToGoal(
-  charChanges: CharacterChange[]
+  changes: CharInvChanges
 ): PayloadAction {
-  return addCharInvChangesToGoalAction(charChanges);
+  return addCharInvChangesToGoalAction(changes);
 }
 
 export function addEntryEditToGoal(entryEdit: EntryEdit): PayloadAction {

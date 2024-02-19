@@ -1,4 +1,5 @@
 import { Goal, GoalName, GoalType } from "types/goals";
+import { Hash } from "types/hash";
 
 export class CreateCharInv extends Goal {
   constructor(
@@ -19,6 +20,7 @@ export type CharacterChange = [string, CharacterStatus, CharacterStatus];
 
 export interface CharInvChanges {
   charChanges: CharacterChange[];
+  wordChanges: Hash<string>;
 }
 
 export interface CharInvData {

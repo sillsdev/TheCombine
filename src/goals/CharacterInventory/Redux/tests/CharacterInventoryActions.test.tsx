@@ -9,7 +9,7 @@ import {
 import {
   fetchWords,
   getAllCharacters,
-  getChanges,
+  getCharChanges,
   loadCharInvData,
   setCharacterStatus,
   uploadInventory,
@@ -130,9 +130,9 @@ describe("CharacterInventoryActions", () => {
 
       await store.dispatch(uploadInventory());
       expect(mockAddCharInvChangesToGoal).toHaveBeenCalledTimes(1);
-      expect(mockAddCharInvChangesToGoal.mock.calls[0][0]).toHaveLength(
-        rejectedCharacters.length + validCharacters.length
-      );
+      expect(
+        mockAddCharInvChangesToGoal.mock.calls[0][0].charChanges
+      ).toHaveLength(rejectedCharacters.length + validCharacters.length);
       expect(mockAsyncUpdateCurrentProject).toHaveBeenCalledTimes(1);
       const proj: Project = mockAsyncUpdateCurrentProject.mock.calls[0][0];
       expect(proj.rejectedCharacters).toHaveLength(rejectedCharacters.length);
@@ -212,7 +212,7 @@ describe("CharacterInventoryActions", () => {
     });
   });
 
-  describe("getChanges", () => {
+  describe("getCharChanges", () => {
     it("returns correct changes", () => {
       const accAcc = "accepted";
       const accRej = "accepted->rejected";
@@ -240,9 +240,9 @@ describe("CharacterInventoryActions", () => {
         [undAcc, CharacterStatus.Undecided, CharacterStatus.Accepted],
         [undRej, CharacterStatus.Undecided, CharacterStatus.Rejected],
       ];
-      const changes = getChanges(oldProj, charInvState);
-      expect(changes.length).toEqual(expectedChanges.length);
-      expectedChanges.forEach((ch) => expect(changes).toContainEqual(ch));
+      const charChanges = getCharChanges(oldProj, charInvState);
+      expect(charChanges.length).toEqual(expectedChanges.length);
+      expectedChanges.forEach((ch) => expect(charChanges).toContainEqual(ch));
     });
   });
 });

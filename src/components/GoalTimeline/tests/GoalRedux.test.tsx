@@ -15,7 +15,6 @@ import {
   setCurrentGoal,
 } from "components/GoalTimeline/Redux/GoalActions";
 import {
-  CharacterChange,
   CharacterStatus,
   CharInvChanges,
   CharInvData,
@@ -83,9 +82,10 @@ const mockCompletedMerge: MergeUndoIds = {
   parentIds: ["1", "2"],
   childIds: ["3", "4"],
 };
-const mockCharInvChanges: CharacterChange[] = [
-  ["'", CharacterStatus.Undecided, CharacterStatus.Accepted],
-];
+const mockCharInvChanges: CharInvChanges = {
+  charChanges: [["'", CharacterStatus.Undecided, CharacterStatus.Accepted]],
+  wordChanges: { ["id-a"]: "id-b" },
+};
 
 const mockEdit = (): Edit => ({
   changes: JSON.stringify(mockCompletedMerge),
@@ -296,9 +296,8 @@ describe("asyncUpdateGoal", () => {
       await store.dispatch(asyncAddGoal(goal));
       store.dispatch(addCharInvChangesToGoal(mockCharInvChanges));
     });
-    const changes = store.getState().goalsState.currentGoal
-      .changes as CharInvChanges;
-    expect(changes!.charChanges).toBe(mockCharInvChanges);
+    const changes = store.getState().goalsState.currentGoal.changes;
+    expect(changes).toBe(mockCharInvChanges);
     // dispatch asyncUpdateGoal()
     await act(async () => {
       await store.dispatch(asyncUpdateGoal());

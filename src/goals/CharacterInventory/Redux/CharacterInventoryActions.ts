@@ -11,6 +11,7 @@ import { asyncUpdateCurrentProject } from "components/Project/ProjectActions";
 import {
   CharacterStatus,
   CharacterChange,
+  CharInvChanges,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
 import {
   addRejectedCharacterAction,
@@ -29,6 +30,7 @@ import {
 } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
+import { Hash } from "types/hash";
 import { Path } from "types/path";
 
 // Action Creation Functions
@@ -102,8 +104,8 @@ export function uploadInventory() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const charInvState = getState().characterInventoryState;
     const project = getState().currentProjectState.project;
-    const changes = getChanges(project, charInvState);
-    if (!changes.length) {
+    const charChanges = getCharChanges(project, charInvState);
+    if (!charChanges.length) {
       exit();
       return;
     }
@@ -114,7 +116,8 @@ export function uploadInventory() {
         validCharacters: charInvState.validCharacters,
       })
     );
-    dispatch(addCharInvChangesToGoal(changes));
+    const changes = getState().goalsState.currentGoal.changes as CharInvChanges;
+    dispatch(addCharInvChangesToGoal({ ...changes, charChanges }));
     await dispatch(asyncUpdateGoal());
     exit();
   };
@@ -154,6 +157,21 @@ export function loadCharInvData() {
   };
 }
 
+export function addWordChanges(wordChanges: Hash<string>) {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+    const changes = getState().goalsState.currentGoal.changes as CharInvChanges;
+    const charChanges = changes?.charChanges ?? [];
+    const prevEntries = changes ? Object.entries(changes.wordChanges) : [];
+    if (prevEntries.length) {
+      wordChanges = Object.fromEntries([
+        ...prevEntries,
+        ...Object.entries(wordChanges),
+      ]);
+    }
+    dispatch(addCharInvChangesToGoal({ charChanges, wordChanges }));
+  };
+}
+
 // Helper Functions
 
 export function exit(): void {
@@ -175,7 +193,7 @@ function countOccurrences(char: string, words: string[]): number {
   return count;
 }
 
-export function getChanges(
+export function getCharChanges(
   project: Project,
   charInvState: CharacterInventoryState
 ): CharacterChange[] {
