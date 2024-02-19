@@ -23,6 +23,11 @@ export interface CharInvChanges {
   wordChanges: Hash<string>;
 }
 
+export const defaultCharInvChanges: CharInvChanges = {
+  charChanges: [],
+  wordChanges: {},
+};
+
 export interface CharInvData {
   inventory: string[][];
 }

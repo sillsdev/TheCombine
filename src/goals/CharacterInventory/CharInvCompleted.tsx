@@ -79,7 +79,7 @@ export function CharInvChangesGoalList(changes: CharInvChanges): ReactElement {
           <CharChange change={c} key={c[0]} />
         ))}
         <Typography>
-          {`+${changes.charChanges.length - 3} `}
+          {`+${changes.charChanges.length - (changeLimit - 1)} `}
           {t("charInventory.changes.more")}
         </Typography>
         {wordChangesTypography}
@@ -97,7 +97,7 @@ export function CharInvChangesGoalList(changes: CharInvChanges): ReactElement {
   );
 }
 
-function CharChange(props: { change: CharacterChange }): ReactElement {
+export function CharChange(props: { change: CharacterChange }): ReactElement {
   return (
     <>
       <Typography display="inline">{`${props.change[0]}: `}</Typography>
@@ -125,9 +125,7 @@ function WordChangeListItem(props: {
 
   return (
     <ListItem>
-      {oldVern && newWord ? (
-        <WordCard word={{ ...newWord, vernacular }} />
-      ) : null}
+      {newWord ? <WordCard word={{ ...newWord, vernacular }} /> : null}
     </ListItem>
   );
 }

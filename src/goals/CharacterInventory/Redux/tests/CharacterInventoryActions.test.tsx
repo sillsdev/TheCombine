@@ -6,6 +6,7 @@ import {
   type CharInvChanges,
   type CharacterChange,
   CharacterStatus,
+  defaultCharInvChanges,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
 import {
   fetchWords,
@@ -254,7 +255,10 @@ describe("CharacterInventoryActions", () => {
           ...persistedDefaultState.goalsState,
           currentGoal: {
             ...persistedDefaultState.goalsState.currentGoal,
-            changes: { charChanges: [], wordChanges: { ["old"]: "new" } },
+            changes: {
+              ...defaultCharInvChanges,
+              wordChanges: { ["old"]: "new" },
+            },
           },
         },
       });
@@ -264,7 +268,7 @@ describe("CharacterInventoryActions", () => {
       await store.dispatch(findAndReplace("A", "a"));
       expect(mockAddCharInvChangesToGoal).toHaveBeenCalledTimes(1);
       expect(mockAddCharInvChangesToGoal).toHaveBeenCalledWith({
-        charChanges: [],
+        ...defaultCharInvChanges,
         wordChanges: { ["old"]: "new", [word.id]: bumpId(word.id) },
       });
     });
