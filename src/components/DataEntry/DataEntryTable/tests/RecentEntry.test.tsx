@@ -8,8 +8,6 @@ import {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import { Word } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import {

@@ -12,7 +12,6 @@ import { Provider } from "react-redux";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
 import PasswordReset, {
   PasswordResetTestIds,
 } from "components/PasswordReset/ResetPage";

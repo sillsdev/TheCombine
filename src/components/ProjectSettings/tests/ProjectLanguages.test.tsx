@@ -2,8 +2,6 @@ import { Button, IconButton, Select } from "@mui/material";
 import { LanguagePicker } from "mui-language-picker";
 import renderer from "react-test-renderer";
 
-import "tests/reactI18nextMock";
-
 import { Project, WritingSystem } from "api/models";
 import ProjectLanguages, {
   editVernacularNameButtonId,
