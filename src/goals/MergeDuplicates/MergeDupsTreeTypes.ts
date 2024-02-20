@@ -1,8 +1,14 @@
 import { v4 } from "uuid";
 
-import { type Flag, type Sense, Status, type Word } from "api/models";
+import {
+  type Flag,
+  type Note,
+  type Sense,
+  Status,
+  type Word,
+} from "api/models";
 import { type Hash } from "types/hash";
-import { newFlag, newSense } from "types/word";
+import { newFlag, newNote, newSense } from "types/word";
 
 export interface MergeTreeSense {
   order: number;
@@ -29,6 +35,7 @@ export interface MergeTreeWord {
   sensesGuids: Hash<string[]>;
   vern: string;
   flag: Flag;
+  note: Note;
   protected: boolean;
 }
 
@@ -54,6 +61,7 @@ export function newMergeTreeWord(
     vern,
     sensesGuids: sensesGuids ?? {},
     flag: newFlag(),
+    note: newNote(),
     protected: false,
   };
 }
@@ -76,7 +84,8 @@ export function convertWordToMergeTreeWord(word: Word): MergeTreeWord {
   word.senses.forEach((sense) => {
     mergeTreeWord.sensesGuids[v4()] = [sense.guid];
   });
-  mergeTreeWord.flag = word.flag;
+  mergeTreeWord.flag = { ...word.flag };
+  mergeTreeWord.note = { ...word.note };
   mergeTreeWord.protected = word.accessibility === Status.Protected;
   return mergeTreeWord;
 }

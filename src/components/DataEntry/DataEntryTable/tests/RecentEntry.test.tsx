@@ -12,8 +12,8 @@ import "tests/reactI18nextMock";
 
 import { Word } from "api/models";
 import { defaultState } from "components/App/DefaultState";
+import NoteButton from "components/Buttons/NoteButton";
 import {
-  EntryNote,
   GlossWithSuggestions,
   VernWithSuggestions,
 } from "components/DataEntry/DataEntryTable/EntryCellComponents";
@@ -127,7 +127,7 @@ describe("ExistingEntry", () => {
   describe("note", () => {
     it("updates text", async () => {
       await renderWithWord(mockWord);
-      testHandle = testHandle.findByType(EntryNote).findByType(EditTextDialog);
+      testHandle = testHandle.findByType(NoteButton).findByType(EditTextDialog);
       await act(async () => {
         testHandle.props.updateText(mockText);
       });

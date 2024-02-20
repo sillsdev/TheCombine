@@ -12,10 +12,10 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 import { Pronunciation, Word, WritingSystem } from "api/models";
+import NoteButton from "components/Buttons/NoteButton";
 import { focusInput } from "components/DataEntry/DataEntryTable";
 import {
   DeleteEntry,
-  EntryNote,
   GlossWithSuggestions,
   VernWithSuggestions,
 } from "components/DataEntry/DataEntryTable/EntryCellComponents";
@@ -301,7 +301,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
       <Grid item xs={1} style={gridItemStyle(1)}>
         {!selectedDup?.id && (
           // note is not available if user selected to modify an exiting entry
-          <EntryNote
+          <NoteButton
             buttonId={NewEntryId.ButtonNote}
             noteText={newNote}
             updateNote={setNewNote}

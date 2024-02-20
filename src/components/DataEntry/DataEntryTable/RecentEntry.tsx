@@ -2,9 +2,9 @@ import { Grid } from "@mui/material";
 import { ReactElement, memo, useState } from "react";
 
 import { Pronunciation, Word, WritingSystem } from "api/models";
+import NoteButton from "components/Buttons/NoteButton";
 import {
   DeleteEntry,
-  EntryNote,
   GlossWithSuggestions,
   VernWithSuggestions,
 } from "components/DataEntry/DataEntryTable/EntryCellComponents";
@@ -117,7 +117,7 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
         }}
       >
         {!props.disabled && (
-          <EntryNote
+          <NoteButton
             noteText={props.entry.note.text}
             updateNote={handleUpdateNote}
             buttonId={`${idAffix}-${props.rowIndex}-note`}

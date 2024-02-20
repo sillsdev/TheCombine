@@ -1,14 +1,14 @@
 import { AddComment, Comment } from "@mui/icons-material";
 import {
-  ReactTestInstance,
-  ReactTestRenderer,
+  type ReactTestInstance,
+  type ReactTestRenderer,
   act,
   create,
 } from "react-test-renderer";
 
 import "tests/reactI18nextMock";
 
-import EntryNote from "components/DataEntry/DataEntryTable/EntryCellComponents/EntryNote";
+import NoteButton from "components/Buttons/NoteButton";
 
 const mockText = "Test text";
 
@@ -18,7 +18,7 @@ let testHandle: ReactTestInstance;
 async function renderWithText(text: string): Promise<void> {
   await act(async () => {
     testMaster = create(
-      <EntryNote noteText={text} updateNote={jest.fn()} buttonId="" />
+      <NoteButton noteText={text} updateNote={jest.fn()} buttonId="" />
     );
   });
   testHandle = testMaster.root;
