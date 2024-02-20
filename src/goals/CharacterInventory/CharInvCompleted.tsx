@@ -20,6 +20,10 @@ export enum CharInvCompletedId {
   TypographyWordChanges = "word-changes-typography",
 }
 
+/** Component to display the full details of changes made during one session of the
+ * Create Character Inventory goal. This includes:
+ * - Changes to inventory status of a character (accepted vs. rejected vs. undecided);
+ * - Words changed with the find-and-replace tool. */
 export default function CharInvCompleted(): ReactElement {
   const changes = useAppSelector(
     (state: StoreState) =>
@@ -62,6 +66,10 @@ export default function CharInvCompleted(): ReactElement {
   );
 }
 
+/** Component for the goal history timeline, to display a summary of changes made during
+ * one session of the Create Character Inventory goal. This includes:
+ * - Changes to inventory status of a character (up to 3);
+ * - Number of words changed with the find-and-replace tool (only if more than 0). */
 export function CharInvChangesGoalList(changes: CharInvChanges): ReactElement {
   const { t } = useTranslation();
   const changeLimit = 3;
@@ -110,6 +118,7 @@ export function CharInvChangesGoalList(changes: CharInvChanges): ReactElement {
   );
 }
 
+/** Component to display in one line the inventory status change of a character. */
 export function CharChange(props: { change: CharacterChange }): ReactElement {
   return (
     <>
@@ -122,6 +131,7 @@ export function CharChange(props: { change: CharacterChange }): ReactElement {
   );
 }
 
+/** Component to show a word update that only involved a change in vernacular form. */
 function WordChangeListItem(props: {
   newId: string;
   oldId: string;

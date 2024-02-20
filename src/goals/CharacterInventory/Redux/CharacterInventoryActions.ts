@@ -71,6 +71,8 @@ export function setValidCharacters(chars: string[]): PayloadAction {
 
 // Dispatch Functions
 
+/** Returns a dispatch function to: update the in-state `.validCharacters` and
+ * `.rejectedCharacters` according to the given character and status. */
 export function setCharacterStatus(character: string, status: CharacterStatus) {
   return (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     switch (status) {
@@ -99,7 +101,7 @@ export function setCharacterStatus(character: string, status: CharacterStatus) {
   };
 }
 
-/** Sends the in-state character inventory to the server. */
+/** Returns a dispatch function to: send the in-state char inventory to the server. */
 export function uploadInventory() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const charInvState = getState().characterInventoryState;
@@ -123,6 +125,8 @@ export function uploadInventory() {
   };
 }
 
+/** Returns a dispatch function to: fetch the current project's frontier and, from those
+ * words, update the array of all vernacular forms in-state. */
 export function fetchWords() {
   return async (dispatch: StoreStateDispatch) => {
     const words = await getFrontierWords();
@@ -130,6 +134,9 @@ export function fetchWords() {
   };
 }
 
+/** Returns a dispatch function to: gather all characters (and number of occurrences)
+ * in the in-state `allWords` array and extract the inventory status of each character
+ * from the current project's `.validCharacters` and `.rejectedCharacters`. */
 export function getAllCharacters() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const allWords = getState().characterInventoryState.allWords;
@@ -146,6 +153,8 @@ export function getAllCharacters() {
   };
 }
 
+/** Returns a dispatch function to: load all character inventory data for the current
+ * project (drawing from the in-state project and its frontier in the database.) */
 export function loadCharInvData() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const project = getState().currentProjectState.project;
@@ -157,6 +166,8 @@ export function loadCharInvData() {
   };
 }
 
+/** Returns a dispatch function to: in both frontend and backend, add to the current
+ * goal's changes the dictionary of words updated with the find-and-replace tool. */
 function addWordChanges(wordChanges: Hash<string>) {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const changes = getState().goalsState.currentGoal.changes as CharInvChanges;
@@ -173,6 +184,11 @@ function addWordChanges(wordChanges: Hash<string>) {
   };
 }
 
+/** Returns a dispatch function to: update every word in the current project's frontier
+ * that has the given `findValue` in its vernacular form. Then:
+ * - Add those word changes to the current goal's changes;
+ * - Update the in-state `allWords` array;
+ * - Update the in-state character inventory. */
 export function findAndReplace(findValue: string, replaceValue: string) {
   return async (dispatch: StoreStateDispatch) => {
     const changedWords = (await getFrontierWords()).filter((w) =>
@@ -197,10 +213,13 @@ export function findAndReplace(findValue: string, replaceValue: string) {
 
 // Helper Functions
 
+/** Navigate to the Data Cleanup page. */
 export function exit(): void {
   router.navigate(Path.Goals);
 }
 
+/** Count the number of occurrences of the given `char` in the given array of strings.
+ * Gives a console error if `char` is not length 1. */
 function countOccurrences(char: string, words: string[]): number {
   if (char.length !== 1) {
     console.error(`countOccurrences expects length 1 char, but got: ${char}`);
@@ -216,6 +235,8 @@ function countOccurrences(char: string, words: string[]): number {
   return count;
 }
 
+/** Compare the `.validCharacters` and `.rejectedCharacters` between the given project
+ * and the given state to identify all characters with a change of inventory status. */
 export function getCharChanges(
   project: Project,
   charInvState: CharacterInventoryState
@@ -237,7 +258,8 @@ export function getCharChanges(
   return changes;
 }
 
-// Returns undefined if CharacterStatus unchanged.
+/** Return the given character's change of inventory status, or undefined if
+ * its CharacterStatus is unchanged. */
 function getChange(
   c: string,
   oldAcc: string[],

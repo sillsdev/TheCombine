@@ -19,6 +19,8 @@ interface FindAndReplaceProps {
   initialFindValue: string;
 }
 
+/** Component for replacing one character (every occurrence of it in the vernacular form
+ * of a word in the project) with another character. */
 export default function FindAndReplace(
   props: FindAndReplaceProps
 ): ReactElement {
