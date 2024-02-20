@@ -335,7 +335,7 @@
     "undo": {
       "undo": "Undo Edit",
       "undoDialog": "Undo this edit?",
-      "undoDisabled": "Undo Unavailable"
+      "undoDisabled": "Undo unavailable"
     }
   },
   "charInventory": {
@@ -371,6 +371,12 @@
       "more": "more",
       "noWordChanges": "No words changed by find-and-replace.",
       "wordChanges": "Words changed by find-and-replace:"
+    },
+    "undo": {
+      "undo": "Undo find-and-replace",
+      "undoDialog": "Undo words changes by find-and-replace?",
+      "undoDisabled": "Undo unavailable",
+      "undoWords": "Undo available for {{ val1 }} of the {{ val2 }} changed words."
     }
   },
   "mergeDups": {
@@ -427,7 +433,7 @@
     "undo": {
       "undo": "Undo Merge",
       "undoDialog": "Undo this merge?",
-      "undoDisabled": "Undo Unavailable"
+      "undoDisabled": "Undo unavailable"
     }
   },
   "flags": {

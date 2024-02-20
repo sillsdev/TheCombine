@@ -812,9 +812,18 @@ export async function isInFrontier(
   wordId: string,
   projectId?: string
 ): Promise<boolean> {
-  projectId = projectId || LocalStorage.getProjectId();
+  projectId ||= LocalStorage.getProjectId();
   const params = { projectId, wordId };
   return (await wordApi.isInFrontier(params, defaultOptions())).data;
+}
+
+export async function areInFrontier(
+  wordIds: string[],
+  projectId?: string
+): Promise<string[]> {
+  projectId ||= LocalStorage.getProjectId();
+  const params = { projectId, requestBody: wordIds };
+  return (await wordApi.areInFrontier(params, defaultOptions())).data;
 }
 
 export async function updateDuplicate(

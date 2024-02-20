@@ -20,12 +20,12 @@ export type CharacterChange = [string, CharacterStatus, CharacterStatus];
 
 export interface CharInvChanges {
   charChanges: CharacterChange[];
-  wordChanges: Hash<string>;
+  wordChanges: Hash<string>[];
 }
 
 export const defaultCharInvChanges: CharInvChanges = {
   charChanges: [],
-  wordChanges: {},
+  wordChanges: [],
 };
 
 export interface CharInvData {

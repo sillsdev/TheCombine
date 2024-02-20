@@ -12,6 +12,7 @@ import {
   type CharInvChanges,
   type CharacterChange,
   CharacterStatus,
+  defaultCharInvChanges,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
 import {
   addRejectedCharacterAction,
@@ -170,16 +171,12 @@ export function loadCharInvData() {
  * goal's changes the dictionary of words updated with the find-and-replace tool. */
 function addWordChanges(wordChanges: Hash<string>) {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    const changes = getState().goalsState.currentGoal.changes as CharInvChanges;
-    const charChanges = changes?.charChanges ?? [];
-    const prevEntries = changes ? Object.entries(changes.wordChanges) : [];
-    if (prevEntries.length) {
-      wordChanges = Object.fromEntries([
-        ...prevEntries,
-        ...Object.entries(wordChanges),
-      ]);
-    }
-    dispatch(addCharInvChangesToGoal({ charChanges, wordChanges }));
+    const changes: CharInvChanges = {
+      ...defaultCharInvChanges,
+      ...getState().goalsState.currentGoal.changes,
+    };
+    changes.wordChanges = [...changes.wordChanges, wordChanges];
+    dispatch(addCharInvChangesToGoal(changes));
     await dispatch(asyncUpdateGoal());
   };
 }

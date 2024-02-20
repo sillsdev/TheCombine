@@ -25,7 +25,9 @@ import { type Hash } from "types/hash";
 import { newWord as mockWord } from "types/word";
 
 jest.mock("backend", () => ({
+  areInFrontier: (ids: string[]) => Promise.resolve(ids),
   getWord: () => Promise.resolve(mockWord()),
+  updateWord: () => jest.fn(),
 }));
 
 const mockCharChanges: CharacterChange[] = [
@@ -72,8 +74,8 @@ describe("CharInvCompleted", () => {
 
   it("renders all char inv changes", async () => {
     await renderCharInvCompleted({
+      ...defaultCharInvChanges,
       charChanges: mockCharChanges,
-      wordChanges: {},
     });
     expect(root.findAllByType(CharChange)).toHaveLength(mockCharChanges.length);
     expect(root.findAllByType(WordCard)).toHaveLength(0);
@@ -89,8 +91,8 @@ describe("CharInvCompleted", () => {
 
   it("renders all words changed", async () => {
     await renderCharInvCompleted({
-      charChanges: [],
-      wordChanges: mockWordChanges,
+      ...defaultCharInvChanges,
+      wordChanges: [mockWordChanges],
     });
     expect(root.findAllByType(CharChange)).toHaveLength(0);
     expect(renderer.root.findAllByType(WordCard)).toHaveLength(
@@ -151,7 +153,7 @@ describe("CharInvChangesGoalList", () => {
   it("shows word changes when there are some", async () => {
     await renderCharInvChangesGoalList({
       ...defaultCharInvChanges,
-      wordChanges: mockWordChanges,
+      wordChanges: [mockWordChanges],
     });
     expect(() =>
       root.findByProps({ id: CharInvCompletedId.TypographyNoWordChanges })

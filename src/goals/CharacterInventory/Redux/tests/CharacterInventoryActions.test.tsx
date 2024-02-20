@@ -249,6 +249,7 @@ describe("CharacterInventoryActions", () => {
     });
 
     it("appends word changes", async () => {
+      const prevWordChanges = { ["old"]: "new" };
       const store = setupStore({
         ...persistedDefaultState,
         goalsState: {
@@ -257,7 +258,7 @@ describe("CharacterInventoryActions", () => {
             ...persistedDefaultState.goalsState.currentGoal,
             changes: {
               ...defaultCharInvChanges,
-              wordChanges: { ["old"]: "new" },
+              wordChanges: [prevWordChanges],
             },
           },
         },
@@ -269,7 +270,7 @@ describe("CharacterInventoryActions", () => {
       expect(mockAddCharInvChangesToGoal).toHaveBeenCalledTimes(1);
       expect(mockAddCharInvChangesToGoal).toHaveBeenCalledWith({
         ...defaultCharInvChanges,
-        wordChanges: { ["old"]: "new", [word.id]: bumpId(word.id) },
+        wordChanges: [prevWordChanges, { [word.id]: bumpId(word.id) }],
       });
     });
   });
