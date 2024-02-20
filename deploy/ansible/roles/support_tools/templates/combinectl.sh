@@ -47,14 +47,13 @@ combine_start () {
   sudo systemctl restart systemd-resolved
   sudo systemctl restart systemd-networkd
   sudo systemctl start k3s
-  sudo ip link set ${WIFI_IF} up
+#  sudo ip link set ${WIFI_IF} up
 }
 
 combine_stop () {
   echo "Stopping The Combine."
   sudo systemctl stop k3s
   sudo systemctl stop create_ap
-  sudo ip link set vip down
   sudo systemctl restart systemd-resolved
   sudo systemctl restart systemd-networkd
 }
@@ -66,15 +65,15 @@ combine_status () {
     echo "The Combine does not start automatically."
   fi
   if systemctl is-active --quiet create_ap ; then
-    echo "WiFi hotspot is UP."
+    echo "WiFi hotspot is Running."
   else
-    echo "WiFi hotspot is DOWN."
+    echo "WiFi hotspot is Stopped."
   fi
   if systemctl is-active --quiet k3s ; then
-    echo "The Combine  is UP."
+    echo "The Combine  is Running."
     kubectl -n thecombine get deployments
   else
-    echo "The Combine is DOWN."
+    echo "The Combine is Stopped."
   fi
 }
 
