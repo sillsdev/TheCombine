@@ -766,11 +766,10 @@ export default function DataEntryTable(
   /** Build a word from the new entry state and add it. */
   const addNewEntry = async (): Promise<void> => {
     const lang = analysisLang.bcp47;
-    const word = newWord(state.newVern, lang);
-    word.senses.push(
-      newSense(state.newGloss, lang, makeSemDomCurrent(props.semanticDomain))
-    );
-    word.note = newNote(state.newNote, lang);
+    const word = newWord(state.newVern.trim(), lang);
+    const semDom = makeSemDomCurrent(props.semanticDomain);
+    word.senses.push(newSense(state.newGloss.trim(), lang, semDom));
+    word.note = newNote(state.newNote.trim(), lang);
     await addNewWord(word, state.newAudio);
   };
 
@@ -783,6 +782,7 @@ export default function DataEntryTable(
     }
 
     const semDom = makeSemDomCurrent(props.semanticDomain);
+    const gloss = state.newGloss.trim();
 
     // If a dup sense is selected, update it.
     if (state.selectedSenseGuid) {
@@ -798,14 +798,11 @@ export default function DataEntryTable(
 
       // If selected sense already has this domain, add audio without updating first.
       if (
-        oldSense.glosses[0].def === state.newGloss &&
+        oldSense.glosses[0].def === gloss &&
         oldSense.semanticDomains.some((d) => d.id === semDom.id)
       ) {
         enqueueSnackbar(
-          t("addWords.senseInWord", {
-            val1: oldWord.vernacular,
-            val2: state.newGloss,
-          })
+          t("addWords.senseInWord", { val1: oldWord.vernacular, val2: gloss })
         );
         if (state.newAudio.length) {
           await addAudiosToBackend(oldWord.id, state.newAudio);
@@ -815,9 +812,9 @@ export default function DataEntryTable(
 
       // Only update the selected sense if the old gloss is blank or matches the new gloss.
       if (!oldSense.glosses[0].def.trim()) {
-        oldSense.glosses[0] = newGloss(state.newGloss, analysisLang.bcp47);
+        oldSense.glosses[0] = newGloss(gloss, analysisLang.bcp47);
       }
-      if (oldSense.glosses[0].def === state.newGloss) {
+      if (oldSense.glosses[0].def === gloss) {
         await updateWordBackAndFront(
           addSemanticDomainToSense(semDom, oldWord, state.selectedSenseGuid),
           state.selectedSenseGuid,
@@ -829,14 +826,11 @@ export default function DataEntryTable(
 
     // Otherwise, if new gloss matches a sense, update that sense.
     for (const sense of oldWord.senses) {
-      if (sense.glosses?.length && sense.glosses[0].def === state.newGloss) {
+      if (sense.glosses?.length && sense.glosses[0].def === gloss) {
         if (sense.semanticDomains.some((d) => d.id === semDom.id)) {
           // User is trying to add a sense that already exists.
           enqueueSnackbar(
-            t("addWords.senseInWord", {
-              val1: oldWord.vernacular,
-              val2: state.newGloss,
-            })
+            t("addWords.senseInWord", { val1: oldWord.vernacular, val2: gloss })
           );
           if (state.newAudio.length) {
             await addAudiosToBackend(oldWord.id, state.newAudio);
@@ -855,7 +849,7 @@ export default function DataEntryTable(
 
     // The gloss is new for this word, so add a new sense.
     defunctWord(oldWord.id);
-    const sense = newSense(state.newGloss, analysisLang.bcp47, semDom);
+    const sense = newSense(gloss, analysisLang.bcp47, semDom);
     const senses = [...oldWord.senses, sense];
     const newWord: Word = { ...oldWord, senses };
 
@@ -920,6 +914,7 @@ export default function DataEntryTable(
         throw new Error("Entry does not have specified sense.");
       }
 
+      vernacular = vernacular.trim();
       if (oldSenses.length === 1 && oldSense.semanticDomains.length === 1) {
         // The word can simply be updated as it stands.
         await updateWordInBackend({ ...oldEntry.word, vernacular });
@@ -949,6 +944,7 @@ export default function DataEntryTable(
     async (index: number, def: string): Promise<void> => {
       const oldEntry = state.recentWords[index];
       defunctWord(oldEntry.word.id);
+      def = def.trim();
       const newWord = updateEntryGloss(oldEntry, def, props.semanticDomain.id);
       await updateWordInBackend(newWord);
 
@@ -976,6 +972,7 @@ export default function DataEntryTable(
   const updateRecentNote = useCallback(
     async (index: number, text: string): Promise<void> => {
       const oldWord = state.recentWords[index].word;
+      text = text.trim();
       if (text !== oldWord.note.text) {
         const note: Note = { ...oldWord.note, text };
         await updateWordInBackend({ ...oldWord, note });
