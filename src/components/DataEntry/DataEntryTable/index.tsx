@@ -781,8 +781,8 @@ export default function DataEntryTable(
       throw new Error("You are trying to update a nonexistent word");
     }
 
-    const semDom = makeSemDomCurrent(props.semanticDomain);
     const gloss = state.newGloss.trim();
+    const semDom = makeSemDomCurrent(props.semanticDomain);
 
     // If a dup sense is selected, update it.
     if (state.selectedSenseGuid) {
