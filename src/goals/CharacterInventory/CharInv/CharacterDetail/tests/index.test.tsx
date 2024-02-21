@@ -4,8 +4,8 @@ import configureMockStore from "redux-mock-store";
 
 import "tests/reactI18nextMock";
 
+import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 import CharacterDetail from "goals/CharacterInventory/CharInv/CharacterDetail";
-import CharacterReplaceDialog from "goals/CharacterInventory/CharInv/CharacterDetail/CharacterReplaceDialog";
 import {
   buttonIdCancel,
   buttonIdConfirm,
@@ -71,7 +71,7 @@ describe("CharacterDetail", () => {
 
   describe("FindAndReplace", () => {
     it("has working dialog", async () => {
-      const dialog = charMaster.root.findByType(CharacterReplaceDialog);
+      const dialog = charMaster.root.findByType(CancelConfirmDialog);
       const submitButton = charMaster.root.findByProps({ id: buttonIdSubmit });
       const cancelButton = charMaster.root.findByProps({ id: buttonIdCancel });
       const confButton = charMaster.root.findByProps({ id: buttonIdConfirm });
