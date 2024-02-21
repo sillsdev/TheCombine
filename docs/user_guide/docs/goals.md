@@ -19,7 +19,7 @@ Due to the nature of Rapid Word Collection, [Data Entry](dataEntry.md) in The Co
 definitions or parts of speech. However, if the project has imported data in which definitions or parts of speech were
 already present, additional columns will be available in the Review Entries table.
 
-#### Sorting and filtering
+#### Sorting and Filtering
 
 There are icons at the top of each column to
 ![Review Entries column filter icon](images/reviewEntriesColumnFilter.png){width=20} filter and
