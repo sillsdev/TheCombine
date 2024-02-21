@@ -37,7 +37,7 @@ colorama==0.4.6
     #   -r dev-requirements.in
     #   mkdocs-material
     #   tox
-cryptography==42.0.2
+cryptography==42.0.4
     # via
     #   pyopenssl
     #   types-pyopenssl
