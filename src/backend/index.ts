@@ -29,6 +29,7 @@ import * as LocalStorage from "backend/localStorage";
 import router from "browserRouter";
 import authHeader from "components/Login/AuthHeaders";
 import { Goal, GoalStep } from "types/goals";
+import { Hash } from "types/hash";
 import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
 import { FileWithSpeakerId } from "types/word";
@@ -777,6 +778,15 @@ export async function removeUserRole(
 
 /* WordController.cs */
 
+export async function areInFrontier(
+  wordIds: string[],
+  projectId?: string
+): Promise<string[]> {
+  projectId ||= LocalStorage.getProjectId();
+  const params = { projectId, requestBody: wordIds };
+  return (await wordApi.areInFrontier(params, defaultOptions())).data;
+}
+
 export async function createWord(word: Word): Promise<Word> {
   const params = { projectId: LocalStorage.getProjectId(), word };
   word.id = (await wordApi.createWord(params, defaultOptions())).data;
@@ -817,13 +827,13 @@ export async function isInFrontier(
   return (await wordApi.isInFrontier(params, defaultOptions())).data;
 }
 
-export async function areInFrontier(
-  wordIds: string[],
-  projectId?: string
-): Promise<string[]> {
-  projectId ||= LocalStorage.getProjectId();
-  const params = { projectId, requestBody: wordIds };
-  return (await wordApi.areInFrontier(params, defaultOptions())).data;
+/** Revert word updates given in dictionary of word ids:
+ * - key: id of word to revert to;
+ * - value: id of word in frontier. */
+export async function revertWords(ids: Hash<string>): Promise<Hash<string>> {
+  const params = { projectId: LocalStorage.getProjectId(), requestBody: ids };
+  const resp = await wordApi.revertWords(params, defaultOptions());
+  return resp.data;
 }
 
 export async function updateDuplicate(

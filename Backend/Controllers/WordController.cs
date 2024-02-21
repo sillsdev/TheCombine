@@ -150,8 +150,7 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
-            var project = await _projRepo.GetProject(projectId);
-            if (project is null)
+            if ((await _projRepo.GetProject(projectId)) is null)
             {
                 return NotFound(projectId);
             }
@@ -272,6 +271,37 @@ namespace BackendFramework.Controllers
             var userId = _permissionService.GetUserId(HttpContext);
             await _wordService.Update(projectId, userId, wordId, word);
             return Ok(word.Id);
+        }
+
+        /// <summary> Revert words from an dictionary of word ids (key: to revert to; value: from frontier). </summary>
+        /// <returns> Id dictionary of all words successfully updated (key: was in frontier; value: new id). </returns>
+        [HttpPost("revertwords", Name = "RevertWords")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Dictionary<string, string>))]
+        public async Task<IActionResult> RevertWords(
+            string projectId, [FromBody, BindRequired] Dictionary<string, string> wordIds)
+        {
+            if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
+            {
+                return Forbid();
+            }
+            if ((await _projRepo.GetProject(projectId)) is null)
+            {
+                return NotFound(projectId);
+            }
+
+            var updates = new Dictionary<string, string>();
+            var userId = _permissionService.GetUserId(HttpContext);
+            foreach (var kv in wordIds)
+            {
+                var idToRevert = kv.Value;
+                var word = await _wordRepo.GetWord(projectId, kv.Key);
+                if (word is not null && await _wordRepo.IsInFrontier(projectId, idToRevert))
+                {
+                    await _wordService.Update(projectId, userId, idToRevert, word);
+                    updates[idToRevert] = word.Id;
+                }
+            }
+            return Ok(updates);
         }
     }
 }

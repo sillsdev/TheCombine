@@ -4,14 +4,14 @@ import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { type Word } from "api/models";
-import { areInFrontier, getWord, updateWord } from "backend";
+import { areInFrontier, getWord, revertWords } from "backend";
 import UndoButton from "components/Buttons/UndoButton";
 import WordCard from "components/WordCard";
 import CharacterStatusText from "goals/CharacterInventory/CharInv/CharacterList/CharacterStatusText";
 import {
-  defaultCharInvChanges,
   type CharInvChanges,
   type CharacterChange,
+  defaultCharInvChanges,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { type StoreState } from "types";
 import { type Hash } from "types/hash";
@@ -158,14 +158,7 @@ function WordChanges(props: { wordChanges: Hash<string> }): ReactElement {
 
   /** Reverts all changes for which the new word is still in the project frontier. */
   const undo = async (): Promise<void> => {
-    await Promise.all(
-      entries.map(async ([oldId, newId]) => {
-        if (inFrontier.includes(newId)) {
-          const oldWord = await getWord(oldId);
-          await updateWord({ ...oldWord, id: newId });
-        }
-      })
-    );
+    await revertWords(props.wordChanges);
   };
 
   return (

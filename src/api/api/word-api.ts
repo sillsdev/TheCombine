@@ -500,6 +500,62 @@ export const WordApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
+     * @param {{ [key: string]: string; }} requestBody
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    revertWords: async (
+      projectId: string,
+      requestBody: { [key: string]: string },
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'projectId' is not null or undefined
+      assertParamExists("revertWords", "projectId", projectId);
+      // verify required parameter 'requestBody' is not null or undefined
+      assertParamExists("revertWords", "requestBody", requestBody);
+      const localVarPath = `/v1/projects/{projectId}/words/revertwords`.replace(
+        `{${"projectId"}}`,
+        encodeURIComponent(String(projectId))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "POST",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        requestBody,
+        localVarRequestOptions,
+        configuration
+      );
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {string} dupId
      * @param {Word} word
      * @param {*} [options] Override http request option.
@@ -853,6 +909,35 @@ export const WordApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
+     * @param {{ [key: string]: string; }} requestBody
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async revertWords(
+      projectId: string,
+      requestBody: { [key: string]: string },
+      options?: any
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<{ [key: string]: string }>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.revertWords(
+        projectId,
+        requestBody,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {string} dupId
      * @param {Word} word
      * @param {*} [options] Override http request option.
@@ -1063,6 +1148,22 @@ export const WordApiFactory = function (
     /**
      *
      * @param {string} projectId
+     * @param {{ [key: string]: string; }} requestBody
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    revertWords(
+      projectId: string,
+      requestBody: { [key: string]: string },
+      options?: any
+    ): AxiosPromise<{ [key: string]: string }> {
+      return localVarFp
+        .revertWords(projectId, requestBody, options)
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
+     * @param {string} projectId
      * @param {string} dupId
      * @param {Word} word
      * @param {*} [options] Override http request option.
@@ -1265,6 +1366,27 @@ export interface WordApiIsInFrontierRequest {
    * @memberof WordApiIsInFrontier
    */
   readonly wordId: string;
+}
+
+/**
+ * Request parameters for revertWords operation in WordApi.
+ * @export
+ * @interface WordApiRevertWordsRequest
+ */
+export interface WordApiRevertWordsRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof WordApiRevertWords
+   */
+  readonly projectId: string;
+
+  /**
+   *
+   * @type {{ [key: string]: string; }}
+   * @memberof WordApiRevertWords
+   */
+  readonly requestBody: { [key: string]: string };
 }
 
 /**
@@ -1482,6 +1604,26 @@ export class WordApi extends BaseAPI {
       .isInFrontier(
         requestParameters.projectId,
         requestParameters.wordId,
+        options
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {WordApiRevertWordsRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof WordApi
+   */
+  public revertWords(
+    requestParameters: WordApiRevertWordsRequest,
+    options?: any
+  ) {
+    return WordApiFp(this.configuration)
+      .revertWords(
+        requestParameters.projectId,
+        requestParameters.requestBody,
         options
       )
       .then((request) => request(this.axios, this.basePath));
