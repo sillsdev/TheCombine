@@ -11,14 +11,14 @@ interface LoadingProps {
   loading?: boolean;
 }
 
-/** A button that shows a spinning wheel when `loading = true`.
- * Default button props: `color: "primary", variant: "contained"`. */
+/**
+ * A button that shows a spinning wheel when loading=true
+ */
 export default function LoadingButton(props: LoadingProps): ReactElement {
   return (
     <Button
-      color="primary"
-      disabled={props.disabled || props.loading}
       variant="contained"
+      disabled={props.disabled || props.loading}
       {...props.buttonProps}
     >
       {props.children}
