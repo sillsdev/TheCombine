@@ -132,7 +132,7 @@ describe("ReviewEntriesTable", () => {
     cols.forEach((col, i) => {
       test(`sorting by ${col} column`, async () => {
         const button = renderer.root.findAllByType(TableSortLabel)[i];
-        expect(button.props.direction).toBeUndefined;
+        expect(button.props.direction).toBeUndefined();
         await act(async () => {
           button.props.onClick(mockClickEvent);
         });
@@ -146,7 +146,7 @@ describe("ReviewEntriesTable", () => {
         await act(async () => {
           button.props.onClick(mockClickEvent);
         });
-        expect(button.props.direction).toBeUndefined;
+        expect(button.props.direction).toBeUndefined();
       });
     });
   });

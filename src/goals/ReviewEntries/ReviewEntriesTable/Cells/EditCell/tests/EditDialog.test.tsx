@@ -63,7 +63,7 @@ const mockWord = (): Word => ({
     },
     { ...newSense("gloss 3"), accessibility: Status.Protected },
     {
-      ...newSense("gloss 3"),
+      ...newSense("gloss 4"),
       grammaticalInfo: {
         catGroup: GramCatGroup.Verb,
         grammaticalCategory: "vt",

@@ -173,7 +173,7 @@ describe("cleanSense", () => {
   it("returns undefined for deleted sense", () => {
     const sense = newSense("gloss");
     sense.accessibility = Status.Deleted;
-    expect(cleanSense(sense)).toBeUndefined;
+    expect(cleanSense(sense)).toBeUndefined();
   });
 
   it("removes empty definitions", () => {
@@ -209,7 +209,7 @@ describe("cleanSense", () => {
     const sense = newSense();
     sense.guid = "guid-does-not-matter";
     sense.accessibility = Status.Protected;
-    expect(cleanSense(sense)).toBeUndefined;
+    expect(cleanSense(sense)).toBeUndefined();
     expect(typeof cleanSense(sense, true)).toEqual("object");
   });
 

@@ -179,6 +179,11 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
       return { ...prev, senses };
     });
   };
+  const toggleDeleted = (s: Sense): Sense => ({
+    ...s,
+    accessibility:
+      s.accessibility === Status.Deleted ? Status.Active : Status.Deleted,
+  });
   const toggleSenseDeleted = (index: number): void => {
     setNewWord((prev) => {
       if (index < 0 || index >= prev.senses.length) {
@@ -192,17 +197,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
 
       return {
         ...prev,
-        senses: prev.senses.map((s, i) =>
-          i === index
-            ? {
-                ...s,
-                accessibility:
-                  s.accessibility === Status.Deleted
-                    ? Status.Active
-                    : Status.Deleted,
-              }
-            : s
-        ),
+        senses: prev.senses.map((s, i) => (i === index ? toggleDeleted(s) : s)),
       };
     });
   };

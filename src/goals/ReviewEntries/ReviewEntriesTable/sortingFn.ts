@@ -11,20 +11,24 @@ import { gatherDomains } from "goals/ReviewEntries/ReviewEntriesTable/Cells/Doma
 import { compareFlags } from "utilities/wordUtilities";
 
 /* Text-joining functions for definitions and glosses. */
+
 function joinNonEmpties(texts: string[]): string {
   return texts
     .map((t) => t.trim())
     .filter((t) => t)
     .join("; ");
 }
+
 function definitionString(s: Sense[]): string {
   return joinNonEmpties(s.flatMap((s) => s.definitions.map((d) => d.text)));
 }
+
 function glossesString(s: Sense[]): string {
   return joinNonEmpties(s.flatMap((s) => s.glosses.map((g) => g.def)));
 }
 
 /* Comparison functions for grammatical info. */
+
 function compareGramInfo(a: GrammaticalInfo, b: GrammaticalInfo): number {
   return a.catGroup === b.catGroup
     ? a.grammaticalCategory.localeCompare(b.grammaticalCategory)
@@ -34,6 +38,7 @@ function compareGramInfo(a: GrammaticalInfo, b: GrammaticalInfo): number {
         ? -1
         : a.catGroup.localeCompare(b.catGroup);
 }
+
 function compareSensesGramInfo(a: Sense[], b: Sense[]): number {
   let compare = 0;
   for (let i = 0; compare === 0 && i < a.length && i < b.length; i++) {
@@ -42,7 +47,8 @@ function compareSensesGramInfo(a: Sense[], b: Sense[]): number {
   return compare || a.length - b.length;
 }
 
-/* Comparison function for semantic domains. */
+/* Comparison functions for semantic domains. */
+
 function compareDomains(a: SemanticDomain[], b: SemanticDomain[]): number {
   // Special case: no domains sorted to last
   if (!a.length || !b.length) {
