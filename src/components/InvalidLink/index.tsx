@@ -26,7 +26,7 @@ export default function InvalidLink(props: InvalidLinkProps): ReactElement {
           {/* User Guide, Sign Up, and Log In buttons */}
           <Grid container justifyContent="flex-end" spacing={2}>
             <Grid item xs={4} sm={6}>
-              <Button id={`${idAffix}-guide`} onClick={openUserGuide}>
+              <Button id={`${idAffix}-guide`} onClick={() => openUserGuide()}>
                 <Help />
               </Button>
             </Grid>

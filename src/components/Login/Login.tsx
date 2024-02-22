@@ -161,7 +161,10 @@ export default function Login(): ReactElement {
             {/* User Guide, Sign Up, and Log In buttons */}
             <Grid container justifyContent="space-between">
               <Grid item xs={1}>
-                <Button id={LoginId.ButtonUserGuide} onClick={openUserGuide}>
+                <Button
+                  id={LoginId.ButtonUserGuide}
+                  onClick={() => openUserGuide()}
+                >
                   <Help />
                 </Button>
               </Grid>
