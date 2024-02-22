@@ -1,4 +1,4 @@
-import { ArrowForwardIos, Help, HelpOutline } from "@mui/icons-material";
+import { ArrowForwardIos, HelpOutline } from "@mui/icons-material";
 import { Button, Grid, IconButton, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
