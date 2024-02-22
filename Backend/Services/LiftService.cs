@@ -410,8 +410,7 @@ namespace BackendFramework.Services
             return rangesSrc;
         }
 
-        /// <summary> Export English semantic domains to lift-ranges along with any custom domains </summary>
-        /// <returns> bool of success </returns>
+        /// <summary> Export English semantic domains (along with any custom domains) to lift-ranges. </summary>
         public async Task CreateLiftRanges(List<SemanticDomain> projDoms, string rangesDest)
         {
             await using var liftRangesWriter = XmlWriter.Create(rangesDest, new XmlWriterSettings

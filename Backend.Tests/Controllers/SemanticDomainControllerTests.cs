@@ -43,20 +43,18 @@ namespace Backend.Tests.Controllers
         [Test]
         public void GetAllSemanticDomainNamesFound()
         {
-            ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(
-                new List<SemanticDomainTreeNode> { new(_semDom) });
-            var names = (Dictionary<string, string>?)(
-                (ObjectResult)_semDomController.GetAllSemanticDomainNames(Lang).Result).Value;
+            var treeNodes = new List<SemanticDomainTreeNode> { new(_semDom) };
+            ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(treeNodes);
+            var names = ((OkObjectResult)_semDomController.GetAllSemanticDomainNames(Lang).Result).Value;
             Assert.That(names, Has.Count.EqualTo(1));
-            Assert.That(names?[Id], Is.EqualTo(Name));
+            Assert.That(((Dictionary<string, string>)names!)[Id], Is.EqualTo(Name));
         }
 
         [Test]
         public void GetAllSemanticDomainNamesNotFound()
         {
-            var names = (Dictionary<string, string>?)(
-                (ObjectResult)_semDomController.GetAllSemanticDomainNames(Lang).Result).Value;
-            Assert.That(names?.Count, Is.EqualTo(0));
+            var names = ((OkObjectResult)_semDomController.GetAllSemanticDomainNames(Lang).Result).Value;
+            Assert.That(names, Has.Count.EqualTo(0));
         }
 
         [Test]
