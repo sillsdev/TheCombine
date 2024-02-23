@@ -27,7 +27,7 @@
       - gnupg
       - lsb-release
     state: present
-  
+
 - name: Create keyring directory
   file:
     path: /etc/apt/keyrings
@@ -51,7 +51,7 @@
   apt:
     name: "{{ container_packages }}"
     update_cache: yes
-    
+
 - name: Check if reboot is required
   stat:
     path: /var/run/reboot-required
@@ -61,4 +61,4 @@
   reboot:
   when:
     - reboot_required.stat.exists
-    - ansible_connection != "local
+    - ansible_connection != "local"
