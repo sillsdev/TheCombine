@@ -54,7 +54,7 @@ describe("SpeakerMenuList", () => {
   it("has one disabled menu item if no speakers", async () => {
     await renderMenuList();
     const menuItem = testRenderer.root.findByType(MenuItem);
-    expect(menuItem).toBeDisabled;
+    expect(menuItem.props.disabled).toBeTruthy();
   });
 
   it("has divider and one more menu item than speakers", async () => {
