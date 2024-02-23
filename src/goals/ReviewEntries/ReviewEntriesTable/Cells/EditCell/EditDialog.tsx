@@ -282,8 +282,8 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
     // Remove empty/deleted senses; confirm nonempty vernacular and senses
     const cleanedWord = cleanWord(newWord, true);
     if (typeof cleanedWord === "string") {
-      toast.error(cleanedWord);
-      return Promise.reject(cleanedWord);
+      toast.error(t(cleanedWord));
+      return Promise.reject(t(cleanedWord));
     }
 
     // Update in backend
