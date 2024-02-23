@@ -1,0 +1,182 @@
+[/]
+default='6a0f96db-55fc-473c-ab3c-5221b410ed13'
+list=['27799efc-28cb-4d10-8b08-7aed7c4e154c', '1c5fcfe9-9dc4-47e4-b018-e7f70ad963cc', 'a4897f17-21ed-48c2-8244-0942611119d3', 'e5a751ab-9476-4fd4-bc99-075e21340016', '02ad3004-c8f0-403e-bc30-df4f115fdfd9', '615564e2-bab4-44ce-94f5-c9d3b9d5dc43', '811b5a85-5b34-46de-8df0-a66f78d2481b', 'c68267a0-137c-46d9-ab69-f832ef972f93', '6a0f96db-55fc-473c-ab3c-5221b410ed13', 'abab88dc-1c66-4410-a83d-f302b3ffa455']
+
+[:02ad3004-c8f0-403e-bc30-df4f115fdfd9]
+background-color='#000000000000'
+bold-color='#ffffffffffff'
+bold-color-same-as-fg=true
+cursor-background-color='#ffffffffffff'
+cursor-colors-set=true
+cursor-foreground-color='#000000000000'
+font='Monospace 14'
+foreground-color='#ffffffffffff'
+palette=['#000000000000', '#ffff55555555', '#5555ffff5555', '#ffffffff5555', '#55555555ffff', '#ffff5555ffff', '#5555ffffffff', '#bbbbbbbbbbbb', '#555555555555', '#ffff55555555', '#5555ffff5555', '#ffffffff5555', '#55555555ffff', '#ffff5555ffff', '#5555ffffffff', '#ffffffffffff']
+use-system-font=false
+use-theme-colors=false
+use-theme-transparency=false
+visible-name='Dark Pastel - 14 pt'
+
+[:08eb7f48-be7d-4a97-b297-cf899b1d9902]
+use-theme-colors=false
+visible-name='Tango Dark'
+
+[:1c5fcfe9-9dc4-47e4-b018-e7f70ad963cc]
+allow-bold=true
+background-color='#000000000000'
+bold-color='#ffffffffffff'
+bold-color-same-as-fg=true
+cursor-background-color='#ffffffffffff'
+cursor-colors-set=true
+cursor-foreground-color='#000000000000'
+default-size-columns=120
+font='Monospace 14'
+foreground-color='#ffffffffffff'
+palette=['#000000000000', '#ffff55555555', '#5555ffff5555', '#ffffffff5555', '#55555555ffff', '#ffff5555ffff', '#5555ffffffff', '#bbbbbbbbbbbb', '#555555555555', '#ffff55555555', '#5555ffff5555', '#ffffffff5555', '#55555555ffff', '#ffff5555ffff', '#5555ffffffff', '#ffffffffffff']
+use-system-font=true
+use-theme-background=false
+use-theme-colors=false
+use-theme-transparency=false
+visible-name='Dark Pastel - wide'
+
+[:27480fc5-447a-426a-a2e3-40763d8ea62d]
+background-color='rgb(253,246,227)'
+foreground-color='rgb(101,123,131)'
+use-theme-colors=false
+visible-name='Solarized light'
+
+[:27799efc-28cb-4d10-8b08-7aed7c4e154c]
+palette=['rgb(23,20,33)', 'rgb(192,28,40)', 'rgb(38,162,105)', 'rgb(189,182,43)', 'rgb(54,123,209)', 'rgb(163,71,186)', 'rgb(42,161,179)', 'rgb(208,207,204)', 'rgb(94,92,100)', 'rgb(246,97,81)', 'rgb(51,209,122)', 'rgb(233,173,12)', 'rgb(42,123,222)', 'rgb(192,97,203)', 'rgb(51,199,222)', 'rgb(255,255,255)']
+use-theme-colors=true
+use-theme-transparency=false
+visible-name='System'
+
+[:615564e2-bab4-44ce-94f5-c9d3b9d5dc43]
+allow-bold=true
+background-color='#222223232424'
+bold-color='#BABABABABABA'
+bold-color-same-as-fg=true
+cursor-background-color='#BABABABABABA'
+cursor-colors-set=true
+cursor-foreground-color='#222223232424'
+default-size-columns=120
+font='Monospace 14'
+foreground-color='#BABABABABABA'
+palette=['#000000000000', '#E8E834341C1C', '#6868C2C25656', '#F2F2D4D42C2C', '#1C1C9898E8E8', '#8E8E6969C9C9', '#1C1C9898E8E8', '#BABABABABABA', '#000000000000', '#E0E05A5A4F4F', '#7777B8B86969', '#EFEFD6D64B4B', '#38387C7CD3D3', '#95957B7BBEBE', '#3D3D9797E2E2', '#BABABABABABA']
+use-system-font=true
+use-theme-background=false
+use-theme-colors=false
+use-theme-transparency=false
+visible-name='Darkside'
+
+[:6a0f96db-55fc-473c-ab3c-5221b410ed13]
+allow-bold=true
+background-color='#29292D2D3E3E'
+bold-color='#BFBFC7C7D5D5'
+bold-color-same-as-fg=true
+cursor-background-color='#BFBFC7C7D5D5'
+cursor-colors-set=true
+cursor-foreground-color='#29292D2D3E3E'
+default-size-columns=120
+font='Monospace 14'
+foreground-color='#BFBFC7C7D5D5'
+palette=['#29292D2D3E3E', '#F0F071717878', '#6262DEDE8484', '#FFFFCBCB6B6B', '#7575A1A1FFFF', '#F5F58080FFFF', '#6060BABAECEC', '#ABABB2B2BFBF', '#95959D9DCBCB', '#F0F071717878', '#C3C3E8E88D8D', '#FFFF55557272', '#8282AAAAFFFF', '#FFFFCBCB6B6B', '#67676E6E9595', '#FFFFFEFEFEFE']
+use-system-font=true
+use-theme-background=false
+use-theme-colors=false
+use-theme-transparency=false
+visible-name='Gogh'
+
+[:7abf49bb-24e2-4e7a-809a-e685c36c4e67]
+background-color='rgb(0,43,54)'
+foreground-color='rgb(131,148,150)'
+use-theme-colors=false
+visible-name='Solarized dark'
+
+[:811b5a85-5b34-46de-8df0-a66f78d2481b]
+allow-bold=true
+background-color='#282828282828'
+bold-color='#EBEBDBDBB2B2'
+bold-color-same-as-fg=true
+cursor-background-color='#EBEBDBDBB2B2'
+cursor-colors-set=true
+cursor-foreground-color='#282828282828'
+default-size-columns=120
+font='Monospace 14'
+foreground-color='#EBEBDBDBB2B2'
+palette=['#282828282828', '#CCCC24241D1D', '#989897971A1A', '#D7D799992121', '#454585858888', '#B1B162628686', '#68689D9D6A6A', '#A8A899998484', '#929283837474', '#FBFB49493434', '#B8B8BBBB2626', '#FAFABDBD2F2F', '#8383A5A59898', '#D3D386869B9B', '#8E8EC0C07C7C', '#EBEBDBDBB2B2']
+use-system-font=true
+use-theme-background=false
+use-theme-colors=false
+use-theme-transparency=false
+visible-name='Gruvbox Dark'
+
+[:8f96488e-af2a-4614-843d-e3e22a70a1fe]
+background-color='rgb(238,238,236)'
+foreground-color='rgb(46,52,54)'
+use-theme-colors=false
+visible-name='Tango light'
+
+[:a4897f17-21ed-48c2-8244-0942611119d3]
+allow-bold=true
+background-color='#222222222222'
+bold-color='#d0d0d0d0d0d0'
+bold-color-same-as-fg=true
+cursor-background-color='#d0d0d0d0d0d0'
+cursor-colors-set=true
+cursor-foreground-color='#222222222222'
+foreground-color='rgb(240,240,240)'
+palette=['#151515151515', '#a5a53c3c2323', '#7b7b92924646', '#d3d3a0a04d4d', '#6c6c9999bbbb', '#9f9f4e4e8585', '#7d7dd6d6cfcf', '#d0d0d0d0d0d0', '#505050505050', '#a5a53c3c2323', '#7b7b92924646', '#d3d3a0a04d4d', '#54547c7c9999', '#9f9f4e4e8585', '#7d7dd6d6cfcf', '#f5f5f5f5f5f5']
+use-theme-background=false
+use-theme-colors=false
+use-theme-transparency=false
+visible-name='Afterglow'
+
+[:abab88dc-1c66-4410-a83d-f302b3ffa455]
+background-color='rgb(31,34,47)'
+bold-color='#BFBFC7C7D5D5'
+bold-color-same-as-fg=true
+cursor-background-color='#BFBFC7C7D5D5'
+cursor-colors-set=true
+cursor-foreground-color='#29292D2D3E3E'
+default-size-columns=120
+font='Monospace 14'
+foreground-color='#BFBFC7C7D5D5'
+palette=['#29292D2D3E3E', '#F0F071717878', '#6262DEDE8484', '#FFFFCBCB6B6B', '#7575A1A1FFFF', '#F5F58080FFFF', '#6060BABAECEC', '#ABABB2B2BFBF', '#95959D9DCBCB', '#F0F071717878', '#C3C3E8E88D8D', '#FFFF55557272', '#8282AAAAFFFF', '#FFFFCBCB6B6B', '#67676E6E9595', '#FFFFFEFEFEFE']
+use-system-font=true
+use-theme-colors=false
+use-theme-transparency=false
+visible-name='Gogh but a bit darker'
+
+[:c68267a0-137c-46d9-ab69-f832ef972f93]
+allow-bold=true
+background-color='#282828282828'
+bold-color='#D4D4BEBE9898'
+bold-color-same-as-fg=true
+cursor-background-color='#D4D4BEBE9898'
+cursor-colors-set=true
+cursor-foreground-color='#282828282828'
+default-size-columns=120
+font='Monospace 14'
+foreground-color='#D4D4BEBE9898'
+palette=['#3C3C38383636', '#EAEA69696262', '#A9A9B6B66565', '#D8D8A6A65757', '#7D7DAEAEA3A3', '#D3D386869B9B', '#8989B4B48282', '#D4D4BEBE9898', '#3C3C38383636', '#EAEA69696262', '#A9A9B6B66565', '#D8D8A6A65757', '#7D7DAEAEA3A3', '#D3D386869B9B', '#8989B4B48282', '#D4D4BEBE9898']
+use-system-font=true
+use-theme-background=false
+use-theme-colors=false
+use-theme-transparency=false
+visible-name='Gruvbox Material'
+
+[:e5a751ab-9476-4fd4-bc99-075e21340016]
+allow-bold=true
+background-color='#FFFFFFFFFFFF'
+bold-color='#4D4D4D4D4C4C'
+bold-color-same-as-fg=true
+cursor-background-color='#4C4C4C4C4C4C'
+cursor-colors-set=true
+cursor-foreground-color='#FFFFFFFFFFFF'
+foreground-color='#4D4D4D4D4C4C'
+palette=['#000000000000', '#C8C828282828', '#71718C8C0000', '#EAEAB7B70000', '#41417171AEAE', '#89895959A8A8', '#3E3E99999F9F', '#FFFFFEFEFEFE', '#000000000000', '#C8C828282828', '#70708B8B0000', '#E9E9B6B60000', '#41417070AEAE', '#89895858A7A7', '#3D3D99999F9F', '#FFFFFEFEFEFE']
+use-theme-background=false
+use-theme-colors=false
+use-theme-transparency=false
+visible-name='Tomorrow'
