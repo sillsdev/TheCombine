@@ -24,14 +24,14 @@ async function renderWithText(text: string): Promise<void> {
   testHandle = testMaster.root;
 }
 
-describe("DeleteEntry", () => {
-  it("renders without note", async () => {
+describe("NoteButton", () => {
+  it("renders without text", async () => {
     await renderWithText("");
     expect(testHandle.findAllByType(AddComment).length).toBe(1);
     expect(testHandle.findAllByType(Comment).length).toBe(0);
   });
 
-  it("renders with note", async () => {
+  it("renders with text", async () => {
     await renderWithText(mockText);
     expect(testHandle.findAllByType(AddComment).length).toBe(0);
     expect(testHandle.findAllByType(Comment).length).toBe(1);

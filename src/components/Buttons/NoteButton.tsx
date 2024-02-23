@@ -5,8 +5,9 @@ import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import EditTextDialog from "components/Dialogs/EditTextDialog";
 
 interface NoteButtonProps {
-  noteText: string;
   buttonId?: string;
+  disabled?: boolean;
+  noteText: string;
   updateNote?: (newText: string) => void | Promise<void>;
 }
 
@@ -18,11 +19,16 @@ export default function NoteButton(props: NoteButtonProps): ReactElement {
     <>
       <IconButtonWithTooltip
         buttonId={props.buttonId ?? "entry-note-button"}
+        disabled={props.disabled}
         icon={
           props.noteText ? (
-            <Comment sx={{ color: (t) => t.palette.grey[700] }} />
+            <Comment
+              sx={{ color: (t) => t.palette.grey[props.disabled ? 400 : 700] }}
+            />
           ) : (
-            <AddComment sx={{ color: (t) => t.palette.grey[700] }} />
+            <AddComment
+              sx={{ color: (t) => t.palette.grey[props.disabled ? 400 : 700] }}
+            />
           )
         }
         onClick={props.updateNote ? () => setNoteOpen(true) : undefined}

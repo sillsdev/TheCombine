@@ -85,7 +85,7 @@ describe("Pronunciations", () => {
       );
     });
     const icon = testRenderer.root.findByProps({ id: recordIconId });
-    expect(icon.props.sx.color).toEqual(themeColors.recordIdle);
+    expect(icon.props.sx.color({})).toEqual(themeColors.recordIdle);
   });
 
   test("style depends on pronunciations state", () => {
@@ -103,6 +103,6 @@ describe("Pronunciations", () => {
       );
     });
     const icon = testRenderer.root.findByProps({ id: recordIconId });
-    expect(icon.props.sx.color).toEqual(themeColors.recordActive);
+    expect(icon.props.sx.color({})).toEqual(themeColors.recordActive);
   });
 });
