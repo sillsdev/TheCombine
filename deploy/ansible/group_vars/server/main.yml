@@ -6,6 +6,14 @@
 ################################################
 
 ################################################
+# Configure Network Service
+#  systemd-networkd is normally used in server installations, where the network environment is fairly static.
+#  network-manager is normally used in desktop installations. It is easier to use in environments where network
+#    requirements can change frequently.
+################################################
+network_service: systemd-networkd
+
+################################################
 # Configure Kubernetes cluster
 ################################################
 
