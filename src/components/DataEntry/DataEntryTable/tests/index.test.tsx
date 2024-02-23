@@ -152,7 +152,6 @@ describe("DataEntryTable", () => {
     it("creates word when new entry has vernacular", async () => {
       expect(mockCreateWord).not.toHaveBeenCalled();
       testHandle = testRenderer.root.findByType(NewEntry);
-      expect(testHandle).not.toBeNull;
       // Set newVern but not newGloss.
       await act(async () => testHandle.props.setNewVern("hasVern"));
       testHandle = testRenderer.root.findByProps({ id: exitButtonId });
@@ -162,7 +161,6 @@ describe("DataEntryTable", () => {
 
     it("doesn't create word when new entry has no vernacular", async () => {
       testHandle = testRenderer.root.findByType(NewEntry);
-      expect(testHandle).not.toBeNull;
       // Set newGloss but not newVern.
       await act(async () => testHandle.props.setNewGloss("hasGloss"));
       testHandle = testRenderer.root.findByProps({ id: exitButtonId });
@@ -232,8 +230,8 @@ describe("DataEntryTable", () => {
 
   describe("makeSemDomCurrent", () => {
     it("adds timestamp and the current user", () => {
-      expect(mockSemDom.created).toBeUndefined;
-      expect(mockSemDom.userId).toBeUndefined;
+      expect(mockSemDom.created).toBeUndefined();
+      expect(mockSemDom.userId).toBeUndefined();
 
       const currentDom = makeSemDomCurrent(mockSemDom);
       expect(currentDom.created).not.toBeUndefined();
