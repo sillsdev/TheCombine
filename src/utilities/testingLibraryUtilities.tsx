@@ -7,18 +7,16 @@ import { PersistGate } from "redux-persist/integration/react";
 import { defaultState } from "components/App/DefaultState";
 import { type AppStore, type RootState, persistor, setupStore } from "store";
 
-// These test utilities are leveraged from the Redux documentation for Writing Tests:
-// https://redux.js.org/usage/writing-tests
-// Specifically, see the section on "Integration Testing Connected Components
-// and Redux Logic"
-
-// This type interface extends the default options for render from RTL, as well
-// as allows the user to specify other things such as initialState, store.
+/** This extends the default options for `render` from `@testing-library/react`,
+ * allowing the user to specify other things such as `initialState`, `store`. */
 interface ExtendedRenderOptions extends Omit<RenderOptions, "queries"> {
   preloadedState?: PreloadedState<RootState>;
   store?: AppStore;
 }
 
+/** This test utility is leveraged from the Redux documentation for Writing Tests:
+ * https://redux.js.org/usage/writing-tests. Specifically, see the section on
+ * "Integration Testing Connected Components and Redux Logic" */
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function renderWithProviders(
   ui: ReactElement,
