@@ -39,6 +39,7 @@
     backrefs: yes
     line: '\1{{ k8s_dns_name }}:\2'
   when: ansible_connection != "local"
+  notify: update profile
 
 - name: Replace 'default' cluster, user, etc with {{ kubecfgdir }}
   delegate_to: localhost

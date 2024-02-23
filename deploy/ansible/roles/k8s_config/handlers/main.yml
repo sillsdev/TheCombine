@@ -1,0 +1,8 @@
+---
+- name: update profile
+  lineinfile:
+    state: present
+    path: "{{ k8s_user_home }}/.profile"
+    line: "export KUBECONFIG={{ lookup('env', 'HOME') }}/.kube/config"
+    mode: 0600
+  when: ansible_connection == "local"
