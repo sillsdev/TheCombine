@@ -154,11 +154,10 @@ export default function ReviewEntriesTable(props: {
       Cell: ({ row }: CellProps) => (
         <Cell.Edit replace={replaceWord} word={row.original} />
       ),
-      enableColumnOrdering: false,
-      enableHiding: false,
       Header: "",
       header: t("reviewEntries.columns.edit"),
       size: IconColumnSize,
+      visibleInShowHideMenu: false,
     }),
 
     // Vernacular column
@@ -191,12 +190,12 @@ export default function ReviewEntriesTable(props: {
     // Definitions column
     columnHelper.accessor((w) => w.senses.flatMap((s) => s.definitions), {
       Cell: ({ row }: CellProps) => <Cell.Definitions word={row.original} />,
-      enableHiding: showDefinitions,
       filterFn: ff.filterFnDefinitions,
       header: t("reviewEntries.columns.definitions"),
       id: "definitions",
       size: BaselineColumnSize + 20,
       sortingFn: sf.sortingFnDefinitions,
+      visibleInShowHideMenu: showDefinitions,
     }),
 
     // Glosses column
@@ -211,7 +210,6 @@ export default function ReviewEntriesTable(props: {
     // Part of Speech column
     columnHelper.accessor((w) => w.senses.map((s) => s.grammaticalInfo), {
       Cell: ({ row }: CellProps) => <Cell.PartOfSpeech word={row.original} />,
-      enableHiding: showGrammaticalInfo,
       filterFn: (row, id, filterValue: GramCatGroup) =>
         row
           .getValue<GrammaticalInfo[]>(id)
@@ -224,6 +222,7 @@ export default function ReviewEntriesTable(props: {
       header: t("reviewEntries.columns.partOfSpeech"),
       id: "partOfSpeech",
       sortingFn: sf.sortingFnPartOfSpeech,
+      visibleInShowHideMenu: showGrammaticalInfo,
     }),
 
     // Domains column
@@ -306,11 +305,10 @@ export default function ReviewEntriesTable(props: {
       Cell: ({ row }: CellProps) => (
         <Cell.Delete delete={deleteWord} word={row.original} />
       ),
-      enableColumnOrdering: false,
-      enableHiding: false,
       Header: "",
       header: t("reviewEntries.columns.delete"),
       size: IconColumnSize,
+      visibleInShowHideMenu: false,
     }),
   ];
 
