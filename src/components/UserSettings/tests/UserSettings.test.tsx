@@ -30,6 +30,12 @@ jest.mock("backend/localStorage", () => ({
   getAvatar: (...args: any[]) => mockGetAvatar(...args),
   getCurrentUser: (...args: any[]) => mockGetCurrentUser(...args),
 }));
+jest.mock("components/Project/ProjectActions", () => ({
+  asyncLoadSemanticDomains: jest.fn(),
+}));
+jest.mock("types/hooks", () => ({
+  useAppDispatch: () => jest.fn(),
+}));
 
 // Mock "i18n", else `thrown: "Error: Error: connect ECONNREFUSED ::1:80 [...]`
 jest.mock("i18n", () => ({

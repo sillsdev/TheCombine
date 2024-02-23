@@ -44,17 +44,12 @@ export function setCurrentUsers(users?: User[]): PayloadAction {
 
 // Dispatch Functions
 
-/** If the project's sem dom language is set to (Default to user interface language) and
- * the UI language changes, the user must leave the project and re-enter for that change
- * to take effect on the semantic domains (a page refresh is not sufficient). */
-export function asyncLoadSemanticDomains(lang?: string) {
+export function asyncLoadSemanticDomains() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    const langParts = (lang || i18n.language).split("-");
-    const langRoot = langParts.length ? langParts[0] : "";
-    const { project, semanticDomains } = getState().currentProjectState;
-    if (!semanticDomains || project.semDomWritingSystem.bcp47 !== langRoot) {
-      dispatch(setCurrentSemDoms(await getAllSemanticDomainNames(langRoot)));
-    }
+    const projLang =
+      getState().currentProjectState.project.semDomWritingSystem.bcp47;
+    const lang = (projLang || i18n.language).split("-")[0];
+    dispatch(setCurrentSemDoms(await getAllSemanticDomainNames(lang)));
   };
 }
 
@@ -66,21 +61,21 @@ export function asyncRefreshProjectUsers(projectId: string) {
 
 export function asyncSetNewCurrentProject(proj?: Project) {
   return async (dispatch: StoreStateDispatch) => {
-    // Update semantic domains before setting the project.
-    await dispatch(asyncLoadSemanticDomains(proj?.semDomWritingSystem.bcp47));
-
     setProjectId(proj?.id);
     dispatch(setCurrentProject(proj));
+    await dispatch(asyncLoadSemanticDomains());
   };
 }
 
 export function asyncUpdateCurrentProject(proj: Project) {
-  return async (dispatch: StoreStateDispatch) => {
-    // Update semantic domains before setting the project.
-    await dispatch(asyncLoadSemanticDomains(proj.semDomWritingSystem.bcp47));
-
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+    const prevLang =
+      getState().currentProjectState.project.semDomWritingSystem.bcp47;
     await updateProject(proj);
     dispatch(setCurrentProject(proj));
+    if (prevLang !== proj.semDomWritingSystem.bcp47) {
+      await dispatch(asyncLoadSemanticDomains());
+    }
   };
 }
 

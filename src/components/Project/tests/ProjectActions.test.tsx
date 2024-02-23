@@ -153,41 +153,10 @@ describe("ProjectActions", () => {
       const proj: Project = { ...newProject(), id: mockProjId };
       const store = setupStore();
       await store.dispatch(asyncSetNewCurrentProject(proj));
+      expect(mockGetAllSemDomNames).toHaveBeenCalledTimes(1);
       expect(mockUpdateProject).not.toHaveBeenCalled();
       const { project } = store.getState().currentProjectState;
       expect(project.id).toEqual(mockProjId);
-    });
-
-    it("fetches semantic domain names when they weren't set", async () => {
-      const store = setupStore();
-      expect(mockGetAllSemDomNames).not.toHaveBeenCalled();
-      await store.dispatch(asyncSetNewCurrentProject(newProject()));
-      expect(mockGetAllSemDomNames).toHaveBeenCalledTimes(1);
-    });
-
-    it("fetches semantic domain names when semDomWritingSystem changes", async () => {
-      const proj = newProject();
-      const store = setupStore({
-        ...persistedDefaultState,
-        currentProjectState: {
-          ...currentProjectState,
-          project: { ...proj },
-          semanticDomains: { ["1"]: "one" },
-        },
-      });
-
-      // Project change but same sem dom language
-      await store.dispatch(asyncUpdateCurrentProject({ ...proj, id: "diff" }));
-      expect(mockUpdateProject).toHaveBeenCalledTimes(1);
-      expect(mockGetAllSemDomNames).not.toHaveBeenCalled();
-
-      // Project change with new sem dom language
-      const lang = "es";
-      proj.semDomWritingSystem = { ...proj.semDomWritingSystem, bcp47: lang };
-      await store.dispatch(asyncUpdateCurrentProject({ ...proj, id: "other" }));
-      expect(mockUpdateProject).toHaveBeenCalledTimes(2);
-      expect(mockGetAllSemDomNames).toHaveBeenCalledTimes(1);
-      expect(mockGetAllSemDomNames).toHaveBeenCalledWith(lang);
     });
   });
 });

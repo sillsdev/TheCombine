@@ -39,10 +39,10 @@ function setDir(): void {
   document.body.dir = i18n.dir();
 }
 
-export function updateLangFromUser(): void {
+export async function updateLangFromUser(): Promise<void> {
   const uiLang = getCurrentUser()?.uiLang;
   if (uiLang && uiLang !== i18n.resolvedLanguage) {
-    i18n.changeLanguage(uiLang, setDir);
+    await i18n.changeLanguage(uiLang, setDir);
   }
 }
 
