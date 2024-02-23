@@ -13,6 +13,7 @@ import "tests/reactI18nextMock";
 import { Word } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import {
+  DeleteEntry,
   EntryNote,
   GlossWithSuggestions,
   VernWithSuggestions,
@@ -21,6 +22,7 @@ import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
 import { EditTextDialog } from "components/Dialogs";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
+import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
 import theme from "types/theme";
 import { newPronunciation, simpleWord } from "types/word";
 import { newWritingSystem } from "types/writingSystem";
@@ -89,6 +91,34 @@ describe("ExistingEntry", () => {
   });
 
   describe("vernacular", () => {
+    it("disables buttons if changing", async () => {
+      await renderWithWord(mockWord);
+      const vern = testHandle.findByType(VernWithSuggestions);
+      const note = testHandle.findByType(EntryNote);
+      const audio = testHandle.findByType(PronunciationsBackend);
+      const del = testHandle.findByType(DeleteEntry);
+
+      expect(note.props.disabled).toBeFalsy();
+      expect(audio.props.disabled).toBeFalsy();
+      expect(del.props.disabled).toBeFalsy();
+
+      async function updateVern(text: string): Promise<void> {
+        await act(async () => {
+          await vern.props.updateVernField(text);
+        });
+      }
+
+      await updateVern(mockText);
+      expect(note.props.disabled).toBeTruthy();
+      expect(audio.props.disabled).toBeTruthy();
+      expect(del.props.disabled).toBeTruthy();
+
+      await updateVern(mockVern);
+      expect(note.props.disabled).toBeFalsy();
+      expect(audio.props.disabled).toBeFalsy();
+      expect(del.props.disabled).toBeFalsy();
+    });
+
     it("updates if changed", async () => {
       await renderWithWord(mockWord);
       testHandle = testHandle.findByType(VernWithSuggestions);
@@ -107,6 +137,34 @@ describe("ExistingEntry", () => {
   });
 
   describe("gloss", () => {
+    it("disables buttons if changing", async () => {
+      await renderWithWord(mockWord);
+      const gloss = testHandle.findByType(GlossWithSuggestions);
+      const note = testHandle.findByType(EntryNote);
+      const audio = testHandle.findByType(PronunciationsBackend);
+      const del = testHandle.findByType(DeleteEntry);
+
+      expect(note.props.disabled).toBeFalsy();
+      expect(audio.props.disabled).toBeFalsy();
+      expect(del.props.disabled).toBeFalsy();
+
+      async function updateGloss(text: string): Promise<void> {
+        await act(async () => {
+          await gloss.props.updateGlossField(text);
+        });
+      }
+
+      await updateGloss(mockText);
+      expect(note.props.disabled).toBeTruthy();
+      expect(audio.props.disabled).toBeTruthy();
+      expect(del.props.disabled).toBeTruthy();
+
+      await updateGloss(mockGloss);
+      expect(note.props.disabled).toBeFalsy();
+      expect(audio.props.disabled).toBeFalsy();
+      expect(del.props.disabled).toBeFalsy();
+    });
+
     it("updates if changed", async () => {
       await renderWithWord(mockWord);
       testHandle = testHandle.findByType(GlossWithSuggestions);

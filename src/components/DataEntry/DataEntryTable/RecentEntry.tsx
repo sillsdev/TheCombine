@@ -40,8 +40,18 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
   if (sense.glosses.length < 1) {
     sense.glosses.push(newGloss("", props.analysisLang.bcp47));
   }
+  const [editing, setEditing] = useState(false);
   const [gloss, setGloss] = useState(firstGlossText(sense));
   const [vernacular, setVernacular] = useState(props.entry.vernacular);
+
+  const updateGlossField = (gloss: string): void => {
+    setEditing(gloss !== firstGlossText(sense));
+    setGloss(gloss);
+  };
+  const updateVernField = (vern: string): void => {
+    setEditing(vern !== props.entry.vernacular);
+    setVernacular(vern);
+  };
 
   function conditionallyUpdateGloss(): void {
     if (firstGlossText(sense) !== gloss) {
@@ -77,7 +87,7 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
         <VernWithSuggestions
           vernacular={vernacular}
           isDisabled={props.disabled || props.entry.senses.length > 1}
-          updateVernField={setVernacular}
+          updateVernField={updateVernField}
           onBlur={() => conditionallyUpdateVern()}
           handleEnter={() => {
             vernacular && props.focusNewEntry();
@@ -98,7 +108,7 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
         <GlossWithSuggestions
           gloss={gloss}
           isDisabled={props.disabled}
-          updateGlossField={setGloss}
+          updateGlossField={updateGlossField}
           onBlur={() => conditionallyUpdateGloss()}
           handleEnter={() => {
             gloss && props.focusNewEntry();
@@ -116,13 +126,12 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
           position: "relative",
         }}
       >
-        {!props.disabled && (
-          <EntryNote
-            noteText={props.entry.note.text}
-            updateNote={handleUpdateNote}
-            buttonId={`${idAffix}-${props.rowIndex}-note`}
-          />
-        )}
+        <EntryNote
+          disabled={editing || props.disabled}
+          noteText={props.entry.note.text}
+          updateNote={handleUpdateNote}
+          buttonId={`${idAffix}-${props.rowIndex}-note`}
+        />
       </Grid>
       <Grid
         item
@@ -133,21 +142,18 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
           position: "relative",
         }}
       >
-        {!props.disabled && (
-          <PronunciationsBackend
-            audio={props.entry.audio}
-            wordId={props.entry.id}
-            deleteAudio={(fileName) => {
-              props.delAudioFromWord(props.entry.id, fileName);
-            }}
-            replaceAudio={(audio) =>
-              props.repAudioInWord(props.entry.id, audio)
-            }
-            uploadAudio={(file) => {
-              props.addAudioToWord(props.entry.id, file);
-            }}
-          />
-        )}
+        <PronunciationsBackend
+          audio={props.entry.audio}
+          disabled={editing || props.disabled}
+          wordId={props.entry.id}
+          deleteAudio={(fileName) => {
+            props.delAudioFromWord(props.entry.id, fileName);
+          }}
+          replaceAudio={(audio) => props.repAudioInWord(props.entry.id, audio)}
+          uploadAudio={(file) => {
+            props.addAudioToWord(props.entry.id, file);
+          }}
+        />
       </Grid>
       <Grid
         item
@@ -158,14 +164,13 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
           position: "relative",
         }}
       >
-        {!props.disabled && (
-          <DeleteEntry
-            removeEntry={handleRemoveEntry}
-            buttonId={`${idAffix}-${props.rowIndex}-delete`}
-            confirmId={"addWords.deleteRowWarning"}
-            wordId={props.entry.id}
-          />
-        )}
+        <DeleteEntry
+          removeEntry={handleRemoveEntry}
+          buttonId={`${idAffix}-${props.rowIndex}-delete`}
+          confirmId={"addWords.deleteRowWarning"}
+          disabled={editing || props.disabled}
+          wordId={props.entry.id}
+        />
       </Grid>
     </Grid>
   );
