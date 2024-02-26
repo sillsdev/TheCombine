@@ -45,6 +45,12 @@ export interface Sense {
   grammaticalInfo: GrammaticalInfo;
   /**
    *
+   * @type {Array<ProtectReason>}
+   * @memberof Sense
+   */
+  protectReasons?: Array<ProtectReason> | null;
+  /**
+   *
    * @type {Array<Definition>}
    * @memberof Sense
    */
@@ -55,12 +61,6 @@ export interface Sense {
    * @memberof Sense
    */
   glosses: Array<Gloss>;
-  /**
-   *
-   * @type {Array<ProtectReason>}
-   * @memberof Sense
-   */
-  protectReasons?: Array<ProtectReason> | null;
   /**
    *
    * @type {Array<SemanticDomain>}
