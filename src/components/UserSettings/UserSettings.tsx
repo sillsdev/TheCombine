@@ -86,9 +86,10 @@ export function UserSettings(props: {
         hasAvatar: !!avatar,
       });
 
-      // Update the ui language in i18n, then update the sem dom language in state
-      await updateLangFromUser();
-      await dispatch(asyncLoadSemanticDomains());
+      // Update the i18n language and in-state semantic domains as needed.
+      if (await updateLangFromUser()) {
+        await dispatch(asyncLoadSemanticDomains());
+      }
 
       enqueueSnackbar(t("userSettings.updateSuccess"));
       props.setUser(getCurrentUser());

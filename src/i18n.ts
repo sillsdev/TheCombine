@@ -39,11 +39,16 @@ function setDir(): void {
   document.body.dir = i18n.dir();
 }
 
-export async function updateLangFromUser(): Promise<void> {
+/** Updates `i18n`'s resolved language to the user-specified ui language (if different).
+ *
+ * Returns `boolean` of whether the resolved language was updated. */
+export async function updateLangFromUser(): Promise<boolean> {
   const uiLang = getCurrentUser()?.uiLang;
   if (uiLang && uiLang !== i18n.resolvedLanguage) {
     await i18n.changeLanguage(uiLang, setDir);
+    return true;
   }
+  return false;
 }
 
 export default i18n;
