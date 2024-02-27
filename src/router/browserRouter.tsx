@@ -1,8 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import { store } from "store";
-import { changePage } from "types/Redux/analytics";
-import { appRoutes } from "types/appRoutes";
+import { store } from "Redux/store";
+import { changePage } from "analytics/Redux";
+import { appRoutes } from "router/appRoutes";
 import { Path } from "types/path";
 
 const router = createBrowserRouter(appRoutes);

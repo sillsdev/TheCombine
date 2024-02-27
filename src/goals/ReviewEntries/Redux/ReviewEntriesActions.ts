@@ -1,5 +1,6 @@
 import { Action, PayloadAction } from "@reduxjs/toolkit";
 
+import { StoreStateDispatch } from "Redux/rootReduxTypes";
 import { Pronunciation, Sense, Word } from "api/models";
 import * as backend from "backend";
 import {
@@ -19,7 +20,6 @@ import {
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
-import { StoreStateDispatch } from "types/Redux/actions";
 import {
   FileWithSpeakerId,
   newNote,

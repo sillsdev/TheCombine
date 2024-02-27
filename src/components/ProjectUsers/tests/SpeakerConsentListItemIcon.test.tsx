@@ -4,7 +4,7 @@ import { act, cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ReactElement } from "react";
 
-import "tests/reactI18nextMock";
+import "localization/mocks/reactI18nextMock";
 
 import { ConsentType, Speaker } from "api/models";
 import SpeakerConsentListItemIcon, {

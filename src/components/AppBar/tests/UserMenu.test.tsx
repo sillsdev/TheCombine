@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 import { act, create, ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
+import "localization/mocks/reactI18nextMock";
 
 import UserMenu, { UserMenuList } from "components/AppBar/UserMenu";
 import { Path } from "types/path";

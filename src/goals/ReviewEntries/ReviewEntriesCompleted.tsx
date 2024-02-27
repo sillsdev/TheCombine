@@ -4,6 +4,7 @@ import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import { Word } from "api/models";
 import { getWord, isInFrontier, updateWord } from "backend";
 import { UndoButton } from "components/Buttons";
@@ -12,7 +13,6 @@ import {
   EntriesEdited,
   EntryEdit,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
-import { StoreState } from "types";
 import theme from "types/theme";
 
 export default function ReviewEntriesCompleted(): ReactElement {

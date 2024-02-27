@@ -23,15 +23,6 @@ export interface GoalProps {
   goal?: Goal;
 }
 
-// The representation of goals in the redux store
-export interface GoalsState {
-  allGoalTypes: GoalType[];
-  currentGoal: Goal;
-  goalTypeSuggestions: GoalType[];
-  history: Goal[];
-  previousGoalType: GoalType;
-}
-
 // The enum value is a permanent id for UserEdits and should not be changed.
 export enum GoalType {
   Default = -1,

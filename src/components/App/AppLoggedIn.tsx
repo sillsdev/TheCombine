@@ -4,6 +4,7 @@ import { Theme, ThemeProvider, createTheme } from "@mui/material/styles";
 import { ReactElement, useEffect, useMemo, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import DatePickersLocalizationProvider from "components/App/DatePickersLocalizationProvider";
 import SignalRHub from "components/App/SignalRHub";
 import AppBar from "components/AppBar/AppBarComponent";
@@ -14,8 +15,7 @@ import SiteSettings from "components/SiteSettings";
 import Statistics from "components/Statistics/Statistics";
 import UserSettings from "components/UserSettings/UserSettings";
 import NextGoalScreen from "goals/DefaultGoal/NextGoalScreen";
-import { updateLangFromUser } from "i18n";
-import { StoreState } from "types";
+import { updateLangFromUser } from "localization/i18n";
 import { useAppSelector } from "types/hooks";
 import { Path } from "types/path";
 import FontContext, { ProjectFonts } from "utilities/fontContext";

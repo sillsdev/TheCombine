@@ -8,13 +8,13 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import { getCurrentPermissions, getGraylistEntries } from "backend";
 import GoalList from "components/GoalTimeline/GoalList";
 import {
   asyncAddGoal,
   asyncGetUserEdits,
 } from "components/GoalTimeline/Redux/GoalActions";
-import { StoreState } from "types";
 import { Goal, GoalType } from "types/goals";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { requiredPermission, goalTypeToGoal } from "utilities/goalUtilities";

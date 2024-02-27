@@ -1,5 +1,7 @@
-import { combineReducers, Reducer } from "redux";
+import { Reducer, combineReducers } from "redux";
 
+import { type StoreState } from "Redux/rootReduxTypes";
+import analyticsReducer from "analytics/Redux";
 import goalsReducer from "components/GoalTimeline/Redux/GoalReducer";
 import loginReducer from "components/Login/Redux/LoginReducer";
 import projectReducer from "components/Project/ProjectReducer";
@@ -9,8 +11,6 @@ import treeViewReducer from "components/TreeView/Redux/TreeViewReducer";
 import characterInventoryReducer from "goals/CharacterInventory/Redux/CharacterInventoryReducer";
 import mergeDupStepReducer from "goals/MergeDuplicates/Redux/MergeDupsReducer";
 import reviewEntriesReducer from "goals/ReviewEntries/Redux/ReviewEntriesReducer";
-import { StoreState } from "types";
-import analyticsReducer from "types/Redux/analytics";
 
 export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
   //login and signup

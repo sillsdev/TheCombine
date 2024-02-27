@@ -2,7 +2,7 @@ import { Provider } from "react-redux";
 import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
+import "localization/mocks/reactI18nextMock";
 
 import CharacterDetail from "goals/CharacterInventory/CharInv/CharacterDetail";
 import {
@@ -12,7 +12,7 @@ import {
 } from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace";
 import CharacterReplaceDialog from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace/CharacterReplaceDialog";
 import { defaultState } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
-import { type StoreState } from "types";
+import { type StoreState } from "Redux/rootReduxTypes";
 import { testInstanceHasText } from "utilities/testRendererUtilities";
 
 // Dialog uses portals, which are not supported in react-test-renderer.

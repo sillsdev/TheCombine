@@ -1,4 +1,4 @@
-import { Pronunciation } from "api";
+import { Pronunciation } from "api/models";
 import { uploadAudio } from "backend";
 import { FileWithSpeakerId } from "types/word";
 

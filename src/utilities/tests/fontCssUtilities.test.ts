@@ -1,4 +1,4 @@
-import { Project } from "api";
+import { Project } from "api/models";
 import { newWritingSystem } from "types/writingSystem";
 import { fetchCss, getCss, getProjCss } from "utilities/fontCssUtilities";
 

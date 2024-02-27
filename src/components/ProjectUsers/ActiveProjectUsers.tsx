@@ -17,6 +17,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import { Role, User } from "api/models";
 import { avatarSrc, getUserRoles } from "backend";
 import { getCurrentUser } from "backend/localStorage";
@@ -25,7 +26,6 @@ import SortOptions, {
   UserOrder,
   getUserCompare,
 } from "components/ProjectUsers/SortOptions";
-import { StoreState } from "types";
 import { Hash } from "types/hash";
 import { useAppSelector } from "types/hooks";
 import theme from "types/theme";

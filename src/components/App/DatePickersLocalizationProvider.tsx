@@ -8,7 +8,7 @@ import "dayjs/locale/pt";
 import "dayjs/locale/zh";
 import { ReactElement, ReactNode } from "react";
 
-import i18n from "i18n";
+import i18n from "localization/i18n";
 
 export default function DatePickersLocalizationProvider(props: {
   children: ReactNode;

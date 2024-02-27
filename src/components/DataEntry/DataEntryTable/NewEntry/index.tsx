@@ -11,6 +11,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import { Pronunciation, Word, WritingSystem } from "api/models";
 import { focusInput } from "components/DataEntry/DataEntryTable";
 import {
@@ -22,7 +23,6 @@ import {
 import SenseDialog from "components/DataEntry/DataEntryTable/NewEntry/SenseDialog";
 import VernDialog from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
 import PronunciationsFrontend from "components/Pronunciations/PronunciationsFrontend";
-import { StoreState } from "types";
 import theme from "types/theme";
 import { FileWithSpeakerId } from "types/word";
 

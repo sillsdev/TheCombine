@@ -4,9 +4,9 @@ import { act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import "tests/reactI18nextMock";
+import "localization/mocks/reactI18nextMock";
 
-import { defaultState } from "components/App/DefaultState";
+import { defaultState } from "Redux/rootReduxTypes";
 import App from "components/App/component";
 
 jest.mock(

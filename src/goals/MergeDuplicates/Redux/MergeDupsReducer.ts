@@ -22,7 +22,7 @@ import {
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { newMergeWords } from "goals/MergeDuplicates/MergeDupsTypes";
 import { defaultState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
-import { StoreActionTypes } from "rootActions";
+import { StoreActionTypes } from "Redux/rootActions";
 import { type Hash } from "types/hash";
 import { compareFlags } from "utilities/wordUtilities";
 

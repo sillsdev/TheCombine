@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import { Permission } from "api/models";
 import { hasPermission } from "backend";
 import {
@@ -14,7 +15,6 @@ import {
   tabColor,
 } from "components/AppBar/AppBarTypes";
 import SpeakerMenu from "components/AppBar/SpeakerMenu";
-import { StoreState } from "types";
 import { GoalStatus, GoalType } from "types/goals";
 import { Path } from "types/path";
 

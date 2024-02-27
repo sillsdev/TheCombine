@@ -1,5 +1,6 @@
 import { Action, PayloadAction } from "@reduxjs/toolkit";
 
+import { StoreStateDispatch } from "Redux/rootReduxTypes";
 import { deleteLift, downloadLift, exportLift } from "backend";
 import {
   downloadingAction,
@@ -7,8 +8,7 @@ import {
   failureAction,
   resetExportAction,
   successAction,
-} from "components/ProjectExport/Redux//ExportProjectReducer";
-import { StoreStateDispatch } from "types/Redux/actions";
+} from "components/ProjectExport/Redux/ExportProjectReducer";
 
 // Action Creation Functions
 

@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
+import "localization/mocks/reactI18nextMock";
 
 import { Word } from "api/models";
 import { SenseList } from "components/DataEntry/DataEntryTable/NewEntry/SenseDialog";

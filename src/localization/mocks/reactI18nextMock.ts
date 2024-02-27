@@ -1,5 +1,5 @@
-/* Use `import "tests/reactI18nextMock.ts";` in a test file to mock i18next.
- * (For testing components with `Trans`, see tests/i18nMock.ts instead.)
+/* Use `import "localization/mocks/reactI18nextMock.ts";` in a test file to mock i18next.
+ * (For testing components with `Trans`, see localization/mocks/i18nMock.ts instead.)
  * This import should be placed before the other internal imports.
  * It must come before any file that imports `react-i18next`. */
 

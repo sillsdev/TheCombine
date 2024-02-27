@@ -6,13 +6,13 @@ import React, { ReactElement, createRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import columns from "goals/ReviewEntries/ReviewEntriesTable/CellColumns";
 import tableIcons from "goals/ReviewEntries/ReviewEntriesTable/icons";
 import {
   ColumnId,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
-import { StoreState } from "types";
 
 interface ReviewEntriesTableProps {
   onRowUpdate: (

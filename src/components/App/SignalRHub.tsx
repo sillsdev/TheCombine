@@ -11,6 +11,7 @@ import {
   useState,
 } from "react";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import { baseURL } from "backend";
 import { getUserId } from "backend/localStorage";
 import {
@@ -18,7 +19,6 @@ import {
   success,
 } from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
-import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 
 /** A central hub for monitoring export status on SignalR */

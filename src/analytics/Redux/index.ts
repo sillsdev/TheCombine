@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-import { StoreActionTypes } from "rootActions";
-import { defaultState } from "types/Redux/analyticsReduxTypes";
+import { StoreActionTypes } from "Redux/rootActions";
+import { defaultState } from "analytics/Redux/analyticsReduxTypes";
 
 const analyticsSlice = createSlice({
   name: "analyticsState",

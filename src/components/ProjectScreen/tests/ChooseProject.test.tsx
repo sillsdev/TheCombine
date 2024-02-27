@@ -1,7 +1,7 @@
 import { ListItemButton } from "@mui/material";
 import renderer from "react-test-renderer";
 
-import "tests/reactI18nextMock";
+import "localization/mocks/reactI18nextMock";
 
 import { type Project } from "api/models";
 import ChooseProject from "components/ProjectScreen/ChooseProject";

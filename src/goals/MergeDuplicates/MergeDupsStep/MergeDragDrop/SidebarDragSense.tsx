@@ -8,7 +8,7 @@ import {
   MergeTreeReference,
   MergeTreeSense,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
-import { StoreState } from "types";
+import { StoreState } from "Redux/rootReduxTypes";
 import { useAppSelector } from "types/hooks";
 import theme from "types/theme";
 

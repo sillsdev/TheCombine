@@ -3,11 +3,11 @@ import { enqueueSnackbar } from "notistack";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import { isFrontierNonempty } from "backend";
 import { LoadingButton } from "components/Buttons";
 import { asyncExportProject } from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
-import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 
 interface ExportButtonProps {

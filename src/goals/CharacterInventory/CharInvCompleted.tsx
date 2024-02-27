@@ -4,12 +4,12 @@ import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import CharacterStatusText from "goals/CharacterInventory/CharInv/CharacterList/CharacterStatusText";
 import {
   CharacterChange,
   CharInvChanges,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
-import { StoreState } from "types";
 
 export default function CharInvCompleted(): ReactElement {
   const changes = useSelector(

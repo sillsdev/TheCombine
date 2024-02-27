@@ -3,12 +3,12 @@ import { IconButton, Tooltip } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import {
   recording,
   resetPronunciations,
 } from "components/Pronunciations/Redux/PronunciationsActions";
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
-import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { themeColors } from "types/theme";
 

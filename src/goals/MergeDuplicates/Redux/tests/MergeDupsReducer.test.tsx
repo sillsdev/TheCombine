@@ -1,5 +1,7 @@
 import { type Action, type PayloadAction } from "@reduxjs/toolkit";
 
+import { type StoreAction, StoreActionTypes } from "Redux/rootActions";
+import { setupStore } from "Redux/store";
 import {
   type MergeTreeReference,
   type MergeTreeWord,
@@ -28,8 +30,6 @@ import {
   mergeTwoSensesScenario,
   mergeTwoWordsScenario,
 } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
-import { type StoreAction, StoreActionTypes } from "rootActions";
-import { setupStore } from "store";
 import { type Hash } from "types/hash";
 import { newFlag, testWordList } from "types/word";
 

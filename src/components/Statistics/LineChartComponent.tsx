@@ -13,7 +13,7 @@ import { ReactElement, useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { useTranslation } from "react-i18next";
 
-import { ChartRootData } from "api";
+import { ChartRootData } from "api/models";
 
 ChartJS.defaults.font.size = 18;
 ChartJS.register(

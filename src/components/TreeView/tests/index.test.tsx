@@ -4,7 +4,7 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import { Key } from "ts-key-enum";
 
-import "tests/reactI18nextMock";
+import "localization/mocks/reactI18nextMock";
 
 import TreeView, { exitButtonId, topButtonId } from "components/TreeView";
 import { defaultState as treeViewState } from "components/TreeView/Redux/TreeViewReduxTypes";

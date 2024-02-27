@@ -1,12 +1,12 @@
 import { PreloadedState } from "redux";
 
-import { defaultState } from "components/App/DefaultState";
+import { defaultState } from "Redux/rootReduxTypes";
+import { RootState, setupStore } from "Redux/store";
 import {
   initTreeDomain,
   setDomainLanguage,
   traverseTree,
 } from "components/TreeView/Redux/TreeViewActions";
-import { RootState, setupStore } from "store";
 import {
   newSemanticDomain,
   newSemanticDomainTreeNode,

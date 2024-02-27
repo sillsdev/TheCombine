@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import { SemanticDomain } from "api/models";
 import Overlay from "components/Overlay";
 import TreeView from "components/TreeView";
@@ -16,7 +17,6 @@ import {
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
-import { StoreState } from "types";
 import { newSemanticDomainForMongoDB } from "types/semanticDomain";
 import { themeColors } from "types/theme";
 

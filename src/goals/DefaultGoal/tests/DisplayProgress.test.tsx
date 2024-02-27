@@ -3,7 +3,7 @@ import { act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-import "tests/reactI18nextMock";
+import "localization/mocks/reactI18nextMock";
 
 import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
 import { MergeDups } from "goals/MergeDuplicates/MergeDupsTypes";

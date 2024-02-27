@@ -17,7 +17,7 @@ import { User } from "api/models";
 import { isEmailTaken, updateUser } from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
 import ClickableAvatar from "components/UserSettings/ClickableAvatar";
-import { updateLangFromUser } from "i18n";
+import { updateLangFromUser } from "localization/i18n";
 import theme from "types/theme";
 import { uiWritingSystems } from "types/writingSystem";
 

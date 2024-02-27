@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+import { StoreActionTypes } from "Redux/rootActions";
 import { defaultState } from "components/TreeView/Redux/TreeViewReduxTypes";
-import { StoreActionTypes } from "rootActions";
 
 const treeViewSlice = createSlice({
   name: "treeViewState",

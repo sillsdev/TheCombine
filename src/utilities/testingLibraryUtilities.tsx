@@ -4,8 +4,13 @@ import { type PropsWithChildren, type ReactElement } from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
-import { defaultState } from "components/App/DefaultState";
-import { type AppStore, type RootState, persistor, setupStore } from "store";
+import { defaultState } from "Redux/rootReduxTypes";
+import {
+  type AppStore,
+  type RootState,
+  persistor,
+  setupStore,
+} from "Redux/store";
 
 /** This extends the default options for `render` from `@testing-library/react`,
  * allowing the user to specify other things such as `initialState`, `store`. */

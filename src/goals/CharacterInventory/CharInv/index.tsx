@@ -22,7 +22,7 @@ import {
   setSelectedCharacter,
   uploadInventory,
 } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
-import { StoreState } from "types";
+import { StoreState } from "Redux/rootReduxTypes";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import theme from "types/theme";
 

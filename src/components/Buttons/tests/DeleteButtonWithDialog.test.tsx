@@ -1,6 +1,6 @@
 import { ReactTestRenderer, act, create } from "react-test-renderer";
 
-import "tests/reactI18nextMock";
+import "localization/mocks/reactI18nextMock";
 
 import DeleteButtonWithDialog from "components/Buttons/DeleteButtonWithDialog";
 import { CancelConfirmDialog } from "components/Dialogs";

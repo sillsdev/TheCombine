@@ -1,8 +1,8 @@
 import { Action, PayloadAction } from "@reduxjs/toolkit";
 
+import { StoreState, StoreStateDispatch } from "Redux/rootReduxTypes";
 import { Project } from "api/models";
 import { getFrontierWords } from "backend";
-import router from "browserRouter";
 import {
   addCharInvChangesToGoal,
   asyncUpdateGoal,
@@ -27,8 +27,7 @@ import {
   CharacterSetEntry,
   getCharacterStatus,
 } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
-import { StoreState } from "types";
-import { StoreStateDispatch } from "types/Redux/actions";
+import router from "router/browserRouter";
 import { Path } from "types/path";
 
 // Action Creation Functions

@@ -1,5 +1,6 @@
+import { defaultState } from "Redux/rootReduxTypes";
+import { setupStore } from "Redux/store";
 import { type MergeWords, type Sense, Status, type Word } from "api/models";
-import { defaultState } from "components/App/DefaultState";
 import {
   type MergeData,
   type MergeTree,
@@ -16,7 +17,6 @@ import {
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { defaultState as defaultMergeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { goalDataMock } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
-import { setupStore } from "store";
 import { GoalType } from "types/goals";
 import { multiSenseWord, newFlag, newWord } from "types/word";
 

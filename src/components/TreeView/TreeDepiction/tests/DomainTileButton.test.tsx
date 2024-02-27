@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import { ReactTestRenderer, act, create } from "react-test-renderer";
 
-import "tests/reactI18nextMock";
+import "localization/mocks/reactI18nextMock";
 
 import DomainTileButton from "components/TreeView/TreeDepiction/DomainTileButton";
 import { Direction } from "components/TreeView/TreeDepiction/TreeDepictionTypes";

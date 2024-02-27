@@ -19,11 +19,11 @@ import {
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-import { Speaker } from "api";
+import { StoreState } from "Redux/rootReduxTypes";
+import { Speaker } from "api/models";
 import { getAllSpeakers } from "backend";
 import { buttonMinHeight } from "components/AppBar/AppBarTypes";
 import { setCurrentSpeaker } from "components/Project/ProjectActions";
-import { StoreState } from "types";
 import { useAppDispatch } from "types/hooks";
 import { themeColors } from "types/theme";
 

@@ -1,6 +1,6 @@
 import renderer from "react-test-renderer";
 
-import "tests/reactI18nextMock";
+import "localization/mocks/reactI18nextMock";
 
 import PartOfSpeechCell from "goals/ReviewEntries/ReviewEntriesTable/CellComponents/PartOfSpeechCell";
 import mockWords from "goals/ReviewEntries/tests/WordsMock";

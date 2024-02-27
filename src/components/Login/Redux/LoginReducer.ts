@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+import { StoreActionTypes } from "Redux/rootActions";
 import {
   LoginStatus,
   defaultState,
 } from "components/Login/Redux/LoginReduxTypes";
-import { StoreActionTypes } from "rootActions";
 
 const loginSlice = createSlice({
   name: "loginState",

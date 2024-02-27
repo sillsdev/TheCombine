@@ -1,13 +1,13 @@
 import { PreloadedState } from "redux";
 
-import { defaultState } from "components/App/DefaultState";
+import { defaultState } from "Redux/rootReduxTypes";
+import { RootState, setupStore } from "Redux/store";
 import {
   asyncDownloadExport,
   asyncExportProject,
   asyncResetExport,
 } from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
-import { RootState, setupStore } from "store";
 
 jest.mock("backend", () => ({
   deleteLift: jest.fn,

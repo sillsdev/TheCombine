@@ -3,12 +3,15 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import createMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
+import "localization/mocks/reactI18nextMock";
 
 import { Permission } from "api/models";
 import GoalTimeline, { createSuggestionData } from "components/GoalTimeline";
-import { defaultState } from "components/GoalTimeline/DefaultState";
-import { Goal, GoalType, GoalsState } from "types/goals";
+import {
+  GoalsState,
+  defaultState,
+} from "components/GoalTimeline/Redux/GoalReduxTypes";
+import { Goal, GoalType } from "types/goals";
 import { goalTypeToGoal } from "utilities/goalUtilities";
 
 jest.mock("backend", () => ({

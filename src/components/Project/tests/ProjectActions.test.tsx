@@ -1,14 +1,14 @@
 import { PreloadedState } from "redux";
 
+import { defaultState } from "Redux/rootReduxTypes";
+import { RootState, setupStore } from "Redux/store";
 import { Project, Speaker } from "api/models";
-import { defaultState } from "components/App/DefaultState";
 import {
   asyncRefreshProjectUsers,
   asyncUpdateCurrentProject,
   clearCurrentProject,
   setNewCurrentProject,
 } from "components/Project/ProjectActions";
-import { RootState, setupStore } from "store";
 import { newProject } from "types/project";
 import { newUser } from "types/user";
 

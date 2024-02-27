@@ -8,10 +8,10 @@ import {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
+import "localization/mocks/reactI18nextMock";
 
+import { defaultState } from "Redux/rootReduxTypes";
 import { Gloss, SemanticDomain, Sense, Word } from "api/models";
-import { defaultState } from "components/App/DefaultState";
 import DataEntryTable, {
   WordAccess,
   addSemanticDomainToSense,

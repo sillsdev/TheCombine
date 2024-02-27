@@ -10,13 +10,13 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import { getProjectName } from "backend";
 import {
   asyncDownloadExport,
   asyncResetExport,
 } from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
-import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { themeColors } from "types/theme";
 import { getDateTimeString } from "utilities/utilities";

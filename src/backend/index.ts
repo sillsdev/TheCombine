@@ -26,8 +26,8 @@ import {
   Word,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
-import router from "browserRouter";
 import authHeader from "components/Login/AuthHeaders";
+import router from "router/browserRouter";
 import { Goal, GoalStep } from "types/goals";
 import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";

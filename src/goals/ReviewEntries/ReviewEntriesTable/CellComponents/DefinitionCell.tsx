@@ -9,7 +9,7 @@ import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesTable/C
 import AlignedList, {
   SPACER,
 } from "goals/ReviewEntries/ReviewEntriesTable/CellComponents/AlignedList";
-import { StoreState } from "types";
+import { StoreState } from "Redux/rootReduxTypes";
 import { newDefinition } from "types/word";
 import {
   TextFieldWithFont,

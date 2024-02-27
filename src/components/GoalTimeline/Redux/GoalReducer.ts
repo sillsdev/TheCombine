@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { defaultState } from "components/GoalTimeline/DefaultState";
+import { StoreActionTypes } from "Redux/rootActions";
+import { defaultState } from "components/GoalTimeline/Redux/GoalReduxTypes";
 import {
   MergeDupsData,
   MergesCompleted,
@@ -9,7 +10,6 @@ import {
   EntriesEdited,
   EntryEdit,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
-import { StoreActionTypes } from "rootActions";
 import { GoalType } from "types/goals";
 
 const goalSlice = createSlice({

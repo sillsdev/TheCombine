@@ -4,9 +4,9 @@ import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
-import "i18n";
+import { persistor, store } from "Redux/store";
+import "localization/i18n";
 import App from "components/App/component";
-import { persistor, store } from "store";
 import theme from "types/theme";
 
 const container = document.getElementById("root");

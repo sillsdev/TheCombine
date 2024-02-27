@@ -1,7 +1,7 @@
 import { Button, IconButton } from "@mui/material";
 import renderer from "react-test-renderer";
 
-import "tests/reactI18nextMock";
+import "localization/mocks/reactI18nextMock";
 
 import { Project } from "api/models";
 import ProjectSchedule from "components/ProjectSettings/ProjectSchedule";

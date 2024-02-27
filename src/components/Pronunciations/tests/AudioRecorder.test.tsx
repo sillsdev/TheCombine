@@ -3,16 +3,15 @@ import { Provider } from "react-redux";
 import { ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
+import "localization/mocks/reactI18nextMock";
 
-import { defaultState } from "components/App/DefaultState";
+import { StoreState, defaultState } from "Redux/rootReduxTypes";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import RecorderIcon, {
   recordButtonId,
   recordIconId,
 } from "components/Pronunciations/RecorderIcon";
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
-import { StoreState } from "types";
 import theme, { themeColors } from "types/theme";
 
 let testRenderer: ReactTestRenderer;

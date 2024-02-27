@@ -1,5 +1,6 @@
 import { Action, PayloadAction } from "@reduxjs/toolkit";
 
+import { StoreStateDispatch } from "Redux/rootReduxTypes";
 import { Project, Speaker, User } from "api/models";
 import { getAllProjectUsers, updateProject } from "backend";
 import { setProjectId } from "backend/localStorage";
@@ -9,7 +10,6 @@ import {
   setSpeakerAction,
   setUsersAction,
 } from "components/Project/ProjectReducer";
-import { StoreStateDispatch } from "types/Redux/actions";
 import { newProject } from "types/project";
 
 // Action Creation Functions

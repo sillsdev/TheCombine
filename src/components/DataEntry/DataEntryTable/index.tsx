@@ -16,6 +16,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { v4 } from "uuid";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import {
   AutocompleteSetting,
   Note,
@@ -31,7 +32,6 @@ import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
 import { filterWordsWithSenses } from "components/DataEntry/utilities";
 import { uploadFileFromPronunciation } from "components/Pronunciations/utilities";
-import { StoreState } from "types";
 import { Hash } from "types/hash";
 import { useAppSelector } from "types/hooks";
 import theme from "types/theme";

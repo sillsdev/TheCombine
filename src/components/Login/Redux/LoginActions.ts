@@ -2,8 +2,8 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import Hex from "crypto-js/enc-hex";
 import sha256 from "crypto-js/sha256";
 
+import { StoreStateDispatch } from "Redux/rootReduxTypes";
 import * as backend from "backend";
-import router from "browserRouter";
 import {
   setLoginAttemptAction,
   setLoginFailureAction,
@@ -12,7 +12,7 @@ import {
   setSignupFailureAction,
   setSignupSuccessAction,
 } from "components/Login/Redux/LoginReducer";
-import { StoreStateDispatch } from "types/Redux/actions";
+import router from "router/browserRouter";
 import { Path } from "types/path";
 import { newUser } from "types/user";
 

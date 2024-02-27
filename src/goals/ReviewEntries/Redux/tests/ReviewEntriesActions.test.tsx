@@ -1,7 +1,8 @@
 import { PreloadedState } from "redux";
 
+import { defaultState } from "Redux/rootReduxTypes";
+import { RootState, setupStore } from "Redux/store";
 import { Pronunciation, Sense, Word } from "api/models";
-import { defaultState } from "components/App/DefaultState";
 import {
   deleteAudio,
   deleteWord,
@@ -20,7 +21,6 @@ import {
   ReviewEntriesSense,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
-import { RootState, setupStore } from "store";
 import { newSemanticDomain } from "types/semanticDomain";
 import {
   newFlag,

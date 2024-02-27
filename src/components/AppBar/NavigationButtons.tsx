@@ -4,6 +4,7 @@ import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import { Permission } from "api/models";
 import { getCurrentPermissions } from "backend";
 import {
@@ -12,7 +13,6 @@ import {
   buttonMinHeight,
   tabColor,
 } from "components/AppBar/AppBarTypes";
-import { StoreState } from "types";
 import { useAppSelector } from "types/hooks";
 import { Path } from "types/path";
 import { useWindowSize } from "utilities/useWindowSize";

@@ -1,4 +1,4 @@
-import { Project } from "api";
+import { Project } from "api/models";
 import { Hash } from "types/hash";
 import { RuntimeConfig } from "types/runtimeConfig";
 

@@ -3,9 +3,9 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 import { Key } from "ts-key-enum";
 
-import "tests/reactI18nextMock";
+import "localization/mocks/reactI18nextMock";
 
-import { SemanticDomainTreeNode } from "api";
+import { SemanticDomainTreeNode } from "api/models";
 import * as backend from "backend";
 import TreeSearch, {
   insertDecimalPoints,

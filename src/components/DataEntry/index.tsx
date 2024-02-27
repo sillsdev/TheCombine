@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import { getFrontierWords, getSemanticDomainFull } from "backend";
 import AppBar from "components/AppBar/AppBarComponent";
 import DataEntryHeader from "components/DataEntry/DataEntryHeader";
@@ -16,7 +17,6 @@ import ExistingDataTable from "components/DataEntry/ExistingDataTable";
 import { filterWordsByDomain } from "components/DataEntry/utilities";
 import TreeView from "components/TreeView";
 import { closeTree, openTree } from "components/TreeView/Redux/TreeViewActions";
-import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { newSemanticDomain } from "types/semanticDomain";
 import theme from "types/theme";

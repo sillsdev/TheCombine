@@ -1,6 +1,6 @@
 import renderer from "react-test-renderer";
 
-import "tests/reactI18nextMock";
+import "localization/mocks/reactI18nextMock";
 
 import NoteCell from "goals/ReviewEntries/ReviewEntriesTable/CellComponents/NoteCell";
 import mockWords from "goals/ReviewEntries/tests/WordsMock";

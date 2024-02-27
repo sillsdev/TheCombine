@@ -1,7 +1,8 @@
 import { Action, PreloadedState } from "redux";
 
+import { defaultState } from "Redux/rootReduxTypes";
+import { RootState, setupStore } from "Redux/store";
 import { Project } from "api/models";
-import { defaultState } from "components/App/DefaultState";
 import {
   CharacterStatus,
   CharacterChange,
@@ -19,7 +20,6 @@ import {
   CharacterInventoryState,
   CharacterSetEntry,
 } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
-import { RootState, setupStore } from "store";
 import { newProject } from "types/project";
 import { newWord } from "types/word";
 

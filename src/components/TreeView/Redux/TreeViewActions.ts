@@ -1,5 +1,6 @@
 import { Action, PayloadAction } from "@reduxjs/toolkit";
 
+import { StoreState, StoreStateDispatch } from "Redux/rootReduxTypes";
 import { SemanticDomain, SemanticDomainTreeNode } from "api/models";
 import { getSemanticDomainTreeNode } from "backend";
 import {
@@ -8,8 +9,6 @@ import {
   setDomainLanguageAction,
   setTreeOpenAction,
 } from "components/TreeView/Redux/TreeViewReducer";
-import { StoreState } from "types";
-import { StoreStateDispatch } from "types/Redux/actions";
 
 // Action Creation Functions
 

@@ -1,6 +1,6 @@
 import renderer from "react-test-renderer";
 
-import "tests/reactI18nextMock.ts";
+import "localization/mocks/reactI18nextMock";
 
 import { LoadingDoneButton } from "components/Buttons";
 import EmailInvite from "components/ProjectUsers/EmailInvite";

@@ -1,7 +1,7 @@
 import { Fragment, ReactElement, useEffect } from "react";
 import { Key } from "ts-key-enum";
 
-import { SemanticDomain, SemanticDomainTreeNode } from "api";
+import { SemanticDomain, SemanticDomainTreeNode } from "api/models";
 
 export interface TreeNavigatorProps {
   currentDomain: SemanticDomainTreeNode;

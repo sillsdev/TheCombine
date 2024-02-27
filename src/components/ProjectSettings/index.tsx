@@ -33,6 +33,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import { Permission, Project } from "api/models";
 import { canUploadLift, getCurrentPermissions } from "backend";
 import BaseSettings from "components/BaseSettings";
@@ -52,7 +53,6 @@ import ProjectSelect from "components/ProjectSettings/ProjectSelect";
 import ActiveProjectUsers from "components/ProjectUsers/ActiveProjectUsers";
 import AddProjectUsers from "components/ProjectUsers/AddProjectUsers";
 import ProjectSpeakersList from "components/ProjectUsers/ProjectSpeakersList";
-import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { Path } from "types/path";
 

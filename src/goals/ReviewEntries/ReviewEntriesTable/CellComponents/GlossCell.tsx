@@ -3,13 +3,13 @@ import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import { Gloss, WritingSystem } from "api/models";
 import Overlay from "components/Overlay";
 import { FieldParameterStandard } from "goals/ReviewEntries/ReviewEntriesTable/CellColumns";
 import AlignedList, {
   SPACER,
 } from "goals/ReviewEntries/ReviewEntriesTable/CellComponents/AlignedList";
-import { StoreState } from "types";
 import { newGloss } from "types/word";
 import {
   TextFieldWithFont,

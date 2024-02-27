@@ -9,11 +9,11 @@ import {
   useState,
 } from "react";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import { BannerType } from "api/models";
 import { getBannerText } from "backend";
 import { getClosedBanner, setClosedBanner } from "backend/localStorage";
 import { topBarHeight } from "components/LandingPage/TopBar";
-import { StoreState } from "types";
 import { useAppSelector } from "types/hooks";
 import { Path } from "types/path";
 import theme, { themeColors } from "types/theme";

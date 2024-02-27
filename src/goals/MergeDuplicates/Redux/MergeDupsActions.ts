@@ -1,5 +1,6 @@
 import { Action, PayloadAction } from "@reduxjs/toolkit";
 
+import { StoreState, StoreStateDispatch } from "Redux/rootReduxTypes";
 import { Word } from "api/models";
 import * as backend from "backend";
 import {
@@ -38,8 +39,6 @@ import {
   OrderSensePayload,
   SetVernacularPayload,
 } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
-import { StoreState } from "types";
-import { StoreStateDispatch } from "types/Redux/actions";
 
 // Action Creation Functions
 

@@ -1,7 +1,8 @@
 import { type PreloadedState } from "@reduxjs/toolkit";
 
+import { defaultState } from "Redux/rootReduxTypes";
+import { type RootState } from "Redux/store";
 import { type Definition, type SemanticDomain, type Word } from "api/models";
-import { defaultState } from "components/App/DefaultState";
 import {
   convertSenseToMergeTreeSense,
   convertWordToMergeTreeWord,
@@ -10,7 +11,6 @@ import {
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { type MergeDupsData } from "goals/MergeDuplicates/MergeDupsTypes";
 import { defaultState as mergeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
-import { type RootState } from "store";
 import { newSense, newWord, simpleWord } from "types/word";
 
 const wordsArrayMock = (): Word[] => [

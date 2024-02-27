@@ -1,7 +1,7 @@
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
 import { ReactTestRenderer, act, create } from "react-test-renderer";
 
-import "tests/reactI18nextMock";
+import "localization/mocks/reactI18nextMock";
 
 import Statistics from "components/Statistics/Statistics";
 import { newProject } from "types/project";

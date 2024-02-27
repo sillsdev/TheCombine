@@ -1,4 +1,4 @@
-import "tests/reactI18nextMock";
+import "localization/mocks/reactI18nextMock";
 
 import { GramCatGroup, GrammaticalInfo } from "api/models";
 import columns, {
