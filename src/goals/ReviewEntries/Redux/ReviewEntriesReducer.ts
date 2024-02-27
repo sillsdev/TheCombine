@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { defaultState } from "goals/ReviewEntries/Redux/ReviewEntriesReduxTypes";
 import { StoreActionTypes } from "Redux/rootActions";
+import { defaultState } from "goals/ReviewEntries/Redux/ReviewEntriesReduxTypes";
 
 const reviewEntriesSlice = createSlice({
   name: "reviewEntriesState",

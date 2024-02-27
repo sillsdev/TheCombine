@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { v4 } from "uuid";
 
+import { StoreActionTypes } from "Redux/rootActions";
 import {
   GramCatGroup,
   type MergeSourceWord,
@@ -22,7 +23,6 @@ import {
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { newMergeWords } from "goals/MergeDuplicates/MergeDupsTypes";
 import { defaultState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
-import { StoreActionTypes } from "Redux/rootActions";
 import { type Hash } from "types/hash";
 import { compareFlags } from "utilities/wordUtilities";
 
