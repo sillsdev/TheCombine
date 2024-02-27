@@ -3,11 +3,11 @@ import { Button, Collapse, Grid } from "@mui/material";
 import { ReactElement, ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import {
   setRejectedCharacters,
   setValidCharacters,
 } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
-import { StoreState } from "Redux/rootReduxTypes";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import theme from "types/theme";
 import { TextFieldWithFont } from "utilities/fontComponents";

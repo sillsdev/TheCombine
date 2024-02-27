@@ -3,10 +3,10 @@ import { FormControl, Grid, InputLabel, MenuItem, Select } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import CharacterCard from "goals/CharacterInventory/CharInv/CharacterList/CharacterCard";
 import { setSelectedCharacter } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
 import { CharacterSetEntry } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
-import { StoreState } from "Redux/rootReduxTypes";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 
 enum SortOrder {

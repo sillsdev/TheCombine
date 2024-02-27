@@ -2,13 +2,13 @@ import { Card } from "@mui/material";
 import { ReactElement } from "react";
 import { Draggable } from "react-beautiful-dnd";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import { trashId } from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop";
 import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardContent";
 import {
   MergeTreeReference,
   MergeTreeSense,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
-import { StoreState } from "Redux/rootReduxTypes";
 import { useAppSelector } from "types/hooks";
 import theme from "types/theme";
 

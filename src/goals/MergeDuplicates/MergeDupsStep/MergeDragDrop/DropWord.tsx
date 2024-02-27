@@ -11,6 +11,7 @@ import { ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import { Flag, ProtectReason, ReasonType } from "api/models";
 import { FlagButton, IconButtonWithTooltip } from "components/Buttons";
 import MultilineTooltipTitle from "components/MultilineTooltipTitle";
@@ -20,7 +21,6 @@ import {
   flagWord,
   setVern,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
-import { StoreState } from "Redux/rootReduxTypes";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import theme from "types/theme";
 import { TypographyWithFont } from "utilities/fontComponents";

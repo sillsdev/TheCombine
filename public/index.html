@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -7,90 +7,17 @@
     <meta name="theme-color" content="#000000" />
     <script src="./scripts/release.js"></script>
     <script src="./scripts/config.js"></script>
-    <!-- Add segment.com analytics as described (https://segment.com/docs/connections/sources/catalog/libraries/website/javascript/quickstart/#step-2-copy-the-segment-snippet) 
-    with modifications to read writeKey from window.runtimeConfig if it exists. -->
-    <script>
-      !(function () {
-        var writeKey;
-        if (
-          window.hasOwnProperty("runtimeConfig") &&
-          window.runtimeConfig.hasOwnProperty("analyticsWriteKey")
-        ) {
-          writeKey = window.runtimeConfig.analyticsWriteKey;
-        } else {
-          writeKey = "%REACT_APP_ANALYTICS_WRITE_KEY%";
-        }
-        var analytics = (window.analytics = window.analytics || []);
-        if (!analytics.initialize)
-          if (analytics.invoked)
-            window.console &&
-              console.error &&
-              console.error("Segment snippet included twice.");
-          else {
-            analytics.invoked = !0;
-            analytics.methods = [
-              "trackSubmit",
-              "trackClick",
-              "trackLink",
-              "trackForm",
-              "pageview",
-              "identify",
-              "reset",
-              "group",
-              "track",
-              "ready",
-              "alias",
-              "debug",
-              "page",
-              "once",
-              "off",
-              "on",
-              "addSourceMiddleware",
-              "addIntegrationMiddleware",
-              "setAnonymousId",
-              "addDestinationMiddleware",
-            ];
-            analytics.factory = function (e) {
-              return function () {
-                var t = Array.prototype.slice.call(arguments);
-                t.unshift(e);
-                analytics.push(t);
-                return analytics;
-              };
-            };
-            for (var e = 0; e < analytics.methods.length; e++) {
-              var key = analytics.methods[e];
-              analytics[key] = analytics.factory(key);
-            }
-            analytics.load = function (key, e) {
-              var t = document.createElement("script");
-              t.type = "text/javascript";
-              t.async = !0;
-              t.src =
-                "https://cdn.segment.com/analytics.js/v1/" +
-                key +
-                "/analytics.min.js";
-              var n = document.getElementsByTagName("script")[0];
-              n.parentNode.insertBefore(t, n);
-              analytics._loadOptions = e;
-            };
-            analytics._writeKey = writeKey;
-            analytics.SNIPPET_VERSION = "4.15.2";
-            analytics.load(writeKey);
-            analytics.page();
-          }
-      })();
-    </script>
+    <script src="./scripts/analytics.js"></script>
     <link rel="manifest" href="./manifest.json" />
     <title>The Combine</title>
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Noto+Sans&family=Open+Sans&display=swap"
     />
+    <script src="../src/index.tsx" type="module"></script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <script src="../src/index.tsx" type="module"></script>
   </body>
 </html>

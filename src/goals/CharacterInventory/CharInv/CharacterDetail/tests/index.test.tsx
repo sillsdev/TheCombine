@@ -4,6 +4,7 @@ import configureMockStore from "redux-mock-store";
 
 import "localization/mocks/reactI18nextMock";
 
+import { type StoreState } from "Redux/rootReduxTypes";
 import CharacterDetail from "goals/CharacterInventory/CharInv/CharacterDetail";
 import {
   buttonIdCancel,
@@ -12,7 +13,6 @@ import {
 } from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace";
 import CharacterReplaceDialog from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace/CharacterReplaceDialog";
 import { defaultState } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
-import { type StoreState } from "Redux/rootReduxTypes";
 import { testInstanceHasText } from "utilities/testRendererUtilities";
 
 // Dialog uses portals, which are not supported in react-test-renderer.

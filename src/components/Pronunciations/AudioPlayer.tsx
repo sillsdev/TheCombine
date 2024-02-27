@@ -19,6 +19,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import { Pronunciation, Speaker } from "api/models";
 import { getSpeaker } from "backend";
 import { SpeakerMenuList } from "components/AppBar/SpeakerMenu";
@@ -29,7 +30,6 @@ import {
   resetPronunciations,
 } from "components/Pronunciations/Redux/PronunciationsActions";
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
-import { StoreState } from "Redux/rootReduxTypes";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 
 interface PlayerProps {

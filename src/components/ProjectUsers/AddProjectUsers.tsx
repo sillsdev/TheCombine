@@ -4,12 +4,12 @@ import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 import { toast } from "react-toastify";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import { Role, User } from "api/models";
 import * as backend from "backend";
 import { asyncRefreshProjectUsers } from "components/Project/ProjectActions";
 import EmailInvite from "components/ProjectUsers/EmailInvite";
 import UserList from "components/ProjectUsers/UserList";
-import { StoreState } from "Redux/rootReduxTypes";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { RuntimeConfig } from "types/runtimeConfig";
 

@@ -2,7 +2,11 @@
   "name": "thecombine",
   "version": "1.0.0",
   "license": "MIT",
+  "engines": {
+    "node": "18"
+  },
   "private": true,
+  "source": "src/index.tsx",
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "backend": "dotnet watch --project Backend/BackendFramework.csproj",
@@ -14,7 +18,8 @@
     "fmt-backend-check": "dotnet-format --check && dotnet-format --check Backend.Tests",
     "fmt-frontend": "      prettier --write \"./{.github,.vscode,certmgr,deploy,docs,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
     "fmt-frontend-check": "prettier --check \"./{.github,.vscode,certmgr,deploy,docs,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
-    "frontend": "npm run set-release && npx parcel public/index.html",
+    "frontend": "     npm run set-release && npx parcel public/index.html",
+    "frontend:lazy": "npm run set-release && npx parcel public/index.html --lazy",
     "gen-backend-coverage-report": "tsc scripts/genBackendCoverageReport.ts && node scripts/genBackendCoverageReport.js",
     "license-report-backend": " dotnet-project-licenses --include-transitive --input ./Backend/BackendFramework.csproj --output --outfile docs/user_guide/assets/licenses/backend_licenses.txt",
     "license-summary-backend": "dotnet-project-licenses --include-transitive --input ./Backend/BackendFramework.csproj",
@@ -29,7 +34,7 @@
     "test": "npm run test-backend && npm run test-frontend",
     "test-backend": "         dotnet test Backend.Tests/Backend.Tests.csproj",
     "test-backend:coverage": "dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:Threshold=77",
-    "test-frontend": "         jest               test",
+    "test-frontend": "         jest",
     "test-frontend:coverage": "jest               test --coverage --watchAll=false",
     "test-frontend:debug": "   jest --inspect-brk test --runInBand --no-cache",
     "wordlist": "hunspell-reader words"
@@ -82,7 +87,11 @@
     "validator": "^13.11.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.23.9",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/preset-env": "^7.23.9",
+    "@babel/preset-react": "^7.23.3",
+    "@babel/preset-typescript": "^7.23.3",
     "@parcel/packager-raw-url": "^2.11.0",
     "@parcel/transformer-webmanifest": "^2.11.0",
     "@testing-library/jest-dom": "^6.1.4",
@@ -106,6 +115,7 @@
     "@types/validator": "^13.11.1",
     "@typescript-eslint/eslint-plugin": "^6.7.2",
     "@typescript-eslint/parser": "^6.20.0",
+    "babel-jest": "^29.7.0",
     "css-mediaquery": "^0.1.2",
     "eslint": "^8.51.0",
     "eslint-import-resolver-typescript": "^3.6.0",
@@ -132,6 +142,13 @@
       "lcov",
       "text",
       "text-summary"
+    ],
+    "roots": [
+      "src"
+    ],
+    "modulePaths": [
+      "<rootDir>",
+      "src"
     ],
     "transformIgnorePatterns": [
       "/node_modules/(!${axios})"
@@ -160,8 +177,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "volta": {
-    "node": "18.15.0"
   }
 }

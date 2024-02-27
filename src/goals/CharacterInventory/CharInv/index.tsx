@@ -10,6 +10,7 @@ import {
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import { LoadingButton } from "components/Buttons";
 import CharacterDetail from "goals/CharacterInventory/CharInv/CharacterDetail";
 import CharacterEntry from "goals/CharacterInventory/CharInv/CharacterEntry";
@@ -22,7 +23,6 @@ import {
   setSelectedCharacter,
   uploadInventory,
 } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
-import { StoreState } from "Redux/rootReduxTypes";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import theme from "types/theme";
 

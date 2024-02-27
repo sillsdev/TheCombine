@@ -5,6 +5,7 @@ import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import { v4 } from "uuid";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import { appBarHeight } from "components/AppBar/AppBarTypes";
 import { CancelConfirmDialog } from "components/Dialogs";
 import DropWord from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DropWord";
@@ -16,7 +17,6 @@ import {
   moveSense,
   orderSense,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
-import { StoreState } from "Redux/rootReduxTypes";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import theme from "types/theme";
 

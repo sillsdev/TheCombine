@@ -3,10 +3,10 @@ import { IconButton, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import SidebarDragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/SidebarDragSense";
 import { MergeTreeSense } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { setSidebar } from "goals/MergeDuplicates/Redux/MergeDupsActions";
-import { StoreState } from "Redux/rootReduxTypes";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 
 export default function SidebarDrop(): ReactElement {

@@ -2,11 +2,11 @@ import { ReactElement, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
+import { StoreState } from "Redux/rootReduxTypes";
 import Recorder from "components/Pronunciations/Recorder";
 import RecorderContext from "components/Pronunciations/RecorderContext";
 import RecorderIcon from "components/Pronunciations/RecorderIcon";
 import { getFileNameForWord } from "components/Pronunciations/utilities";
-import { StoreState } from "Redux/rootReduxTypes";
 import { useAppSelector } from "types/hooks";
 import { FileWithSpeakerId } from "types/word";
 
