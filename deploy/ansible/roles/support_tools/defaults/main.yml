@@ -5,4 +5,4 @@ eth_update_program: /usr/local/bin/display-eth-addr
 install_ip_viewer: no
 install_combinectl: no
 
-wifi_interfaces: "{{ ansible_facts.interfaces | select('search', '^wlp[0-9][a-z][0-9]') }}"
+wifi_interfaces: "{{ ansible_facts.interfaces | select('search', '^wl[op][0-9]+[a-z][a-z0-9]+') }}"
