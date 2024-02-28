@@ -12,4 +12,3 @@
   service:
     name: sysstat
     state: restarted
-
