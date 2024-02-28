@@ -1,26 +1,58 @@
 ---
 ##################################
-# Update the netplan configuration files
-# for the ethernet interface to mark it
-# as optional
+# Install network-manager if
+# necessary and setup dummy
+# ethernet connection for
+# air gap operation.
 ##################################
 
-- name: List netplan ethernet configuration files
-  shell: grep -l "{{ eth_if_pattern }}" /etc/netplan/*.yaml
-  when: eth_optional
-  register: net_config
-  changed_when: false
-  failed_when: false
+- name: Install network-manager
+  apt:
+    name: network-manager
 
-- name: Set Ethernet I/F as optional
-  lineinfile:
-    path: "{{ item }}"
-    state: present
-    insertafter: "^    {{ eth_if_pattern }}"
-    line: "      optional: true"
-  when: eth_optional
-  loop: "{{ net_config.stdout_lines }}"
+# - name: List non-network-manager config files
+#   find:
+#     paths: "/etc/netplan/"
+#     patterns: "00-installed.*\\.yaml"
+#     use_regex: yes
+#   register: netplan_files
+
+# - name: List existing netplan files
+#   debug:
+#     var: netplan_files
+
+# - name: Remove non-network-manager config files
+#   file:
+#     path: "{{ item.path }}"
+#     state: absent
+#   loop: "{{ netplan_files.files }}"
+
+- name: Set network-manager as renderer
+  copy:
+    src: 01-network-manager-all.yaml
+    dest: /etc/netplan/01-network-manager-all.yaml
+    owner: root
+    group: root
+    mode: 0600
   notify: Apply netplan
+
+- meta: flush_handlers
+
+###
+# Create a virtual network interface so that k3s can run
+# when no ethernet connection is attached.
+###
+- name: Create virtual IP connection
+  community.general.nmcli:
+    conn_name: "dummy-{{ virtual_if }}"
+    ifname: "{{ virtual_if }}"
+    autoconnect: yes
+    ip4: 172.16.1.23/16
+    gw4: 172.16.1.23
+    method4: "manual"
+    method6: "link-local"
+    state: "present"
+    type: "dummy"
 
 - name: Configure resolv.conf to use {{ ap_gateway }} as DNS nameserver
   template:
@@ -31,20 +63,3 @@
     mode: 0644
   notify: Restart resolved
   when: has_wifi
-
-###
-# Create a virtual network interface so that k3s can run
-# when no ethernet connection is attached.
-###
-- name: Create virtual network I/F
-  template:
-    src: "{{ item }}.j2"
-    dest: /etc/systemd/network/{{ virtual_if }}.{{ item }}
-    owner: root
-    group: root
-    mode: 0644
-  with_items:
-    - netdev
-    - network
-  when: k8s_engine != "none"
-  notify: Restart networkd
