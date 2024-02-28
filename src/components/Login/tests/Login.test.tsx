@@ -22,7 +22,7 @@ jest.mock(
 jest.mock("backend", () => ({
   getBannerText: () => Promise.resolve(""),
 }));
-jest.mock("browserRouter");
+jest.mock("router/browserRouter");
 jest.mock("components/Login/Redux/LoginActions", () => ({
   asyncLogIn: (...args: any[]) => mockAsyncLogIn(...args),
 }));

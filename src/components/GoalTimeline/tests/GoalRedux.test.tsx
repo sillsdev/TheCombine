@@ -47,7 +47,7 @@ jest.mock("backend", () => ({
   getUserEditById: (...args: any[]) => mockGetUserEditById(...args),
   updateUser: (user: User) => mockUpdateUser(user),
 }));
-jest.mock("browserRouter", () => ({
+jest.mock("router/browserRouter", () => ({
   navigate: (path: Path) => mockNavigate(path),
 }));
 jest.mock("components/Pronunciations/Recorder");

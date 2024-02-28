@@ -26,7 +26,7 @@ import { newWord } from "types/word";
 jest.mock("backend", () => ({
   getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
 }));
-jest.mock("browserRouter");
+jest.mock("router/browserRouter");
 jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({
   asyncUpdateGoal: (...args: any[]) => mockAsyncUpdateGoal(...args),
   addCharInvChangesToGoal: (...args: any[]) =>
