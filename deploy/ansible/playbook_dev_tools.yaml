@@ -36,10 +36,6 @@
         mode: 0440
       when: developer != 'none'
 
-    - name: Print ansible_user
-      debug:
-        msg: "ansible_user: {{ ansible_facts.ansible_user }}"
-
     - name: Get home directory for {{ developer }}
       shell: >
         getent passwd {{ developer }} | awk -F: '{ print $6 }'

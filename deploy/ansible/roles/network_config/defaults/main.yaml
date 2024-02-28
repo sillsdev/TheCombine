@@ -2,14 +2,6 @@
 eth_optional: no
 eth_if_pattern: "en[a-z][0-9]"
 
-################################################
-# Configure Network Service
-#  systemd-networkd is normally used in server installations, where the network environment is fairly static.
-#  network-manager is normally used in desktop installations. It is easier to use in environments where network
-#    requirements can change frequently.
-################################################
-network_service: systemd-networkd
-
 ###############################
 # virtual_if device
 # This is needed when k3s is running on a target that
