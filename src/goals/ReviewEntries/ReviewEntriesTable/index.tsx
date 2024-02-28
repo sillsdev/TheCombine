@@ -1,8 +1,14 @@
-import MaterialTable, { OrderByCollection } from "@material-table/core";
+import MaterialTable, { type OrderByCollection } from "@material-table/core";
 import { Typography } from "@mui/material";
 import { createSelector } from "@reduxjs/toolkit";
 import { enqueueSnackbar } from "notistack";
-import React, { ReactElement, createRef, useEffect, useState } from "react";
+import {
+  type ReactElement,
+  type RefObject,
+  createRef,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
@@ -12,7 +18,7 @@ import {
   ColumnId,
   ReviewEntriesWord,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
-import { StoreState } from "types";
+import { type StoreState } from "types";
 
 interface ReviewEntriesTableProps {
   onRowUpdate: (
@@ -43,7 +49,7 @@ function getPageState(wordCount: number): PageState {
 
 // Constants
 const ROWS_PER_PAGE = [10, 50, 200];
-const tableRef: React.RefObject<any> = createRef();
+const tableRef: RefObject<any> = createRef();
 
 export default function ReviewEntriesTable(
   props: ReviewEntriesTableProps

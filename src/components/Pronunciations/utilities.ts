@@ -1,6 +1,6 @@
-import { Pronunciation } from "api";
+import { type Pronunciation } from "api/models";
 import { uploadAudio } from "backend";
-import { FileWithSpeakerId } from "types/word";
+import { type FileWithSpeakerId } from "types/word";
 
 /** Generate a timestamp-based file name for the given `wordId`. */
 export function getFileNameForWord(wordId: string): string {

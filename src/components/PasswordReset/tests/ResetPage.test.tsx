@@ -1,13 +1,13 @@
 import "@testing-library/jest-dom";
 import {
+  type RenderOptions,
   act,
   cleanup,
   render,
-  RenderOptions,
   screen,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ReactElement } from "react";
+import { type ReactElement, type ReactNode } from "react";
 import { Provider } from "react-redux";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import configureMockStore from "redux-mock-store";
@@ -43,7 +43,7 @@ afterEach(cleanup);
 const ResetPageProviders = ({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }): ReactElement => {
   return (
     <Provider store={mockStore}>

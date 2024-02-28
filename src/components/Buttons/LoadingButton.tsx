@@ -1,12 +1,12 @@
 import { Button, CircularProgress } from "@mui/material";
-import { ButtonProps } from "@mui/material/Button";
-import React, { ReactElement } from "react";
+import { type ButtonProps } from "@mui/material/Button";
+import { type ReactElement, type ReactNode } from "react";
 
 import { themeColors } from "types/theme";
 
 interface LoadingProps {
   buttonProps?: ButtonProps & { "data-testid"?: string };
-  children?: React.ReactNode;
+  children?: ReactNode;
   disabled?: boolean;
   loading?: boolean;
 }

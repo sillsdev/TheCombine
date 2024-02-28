@@ -1,16 +1,16 @@
 import { act, render, renderHook, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import React from "react";
+import { type ChangeEvent, type KeyboardEvent } from "react";
 import { Key } from "ts-key-enum";
 
 import "tests/reactI18nextMock";
 
-import { SemanticDomainTreeNode } from "api";
+import { type SemanticDomainTreeNode } from "api/models";
 import * as backend from "backend";
 import TreeSearch, {
+  type TreeSearchProps,
   insertDecimalPoints,
   testId,
-  TreeSearchProps,
   useTreeSearch,
 } from "components/TreeView/TreeSearch";
 import domMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
@@ -47,11 +47,11 @@ describe("TreeSearch", () => {
       // Simulate the user typing a string
       const simulatedInput = {
         target: { value: input },
-      } as React.ChangeEvent<HTMLTextAreaElement>;
+      } as ChangeEvent<HTMLTextAreaElement>;
 
       const keyboardTarget = new EventTarget();
       // Simulate the user typing the enter key
-      const simulatedEnterKey: Partial<React.KeyboardEvent> = {
+      const simulatedEnterKey: Partial<KeyboardEvent> = {
         bubbles: true,
         key: Key.Enter,
         preventDefault: jest.fn(),
@@ -64,9 +64,7 @@ describe("TreeSearch", () => {
       const { result } = renderHook(() => useTreeSearch(testProps));
       act(() => result.current.handleChange(simulatedInput));
       await act(async () =>
-        result.current.searchAndSelectDomain(
-          simulatedEnterKey as React.KeyboardEvent
-        )
+        result.current.searchAndSelectDomain(simulatedEnterKey as KeyboardEvent)
       );
     }
 

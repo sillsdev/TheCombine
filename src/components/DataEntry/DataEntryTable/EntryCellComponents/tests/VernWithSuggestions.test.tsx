@@ -1,4 +1,4 @@
-import React from "react";
+import { createRef } from "react";
 import renderer from "react-test-renderer";
 
 import VernWithSuggestions from "components/DataEntry/DataEntryTable/EntryCellComponents/VernWithSuggestions";
@@ -20,7 +20,7 @@ describe("VernWithSuggestions", () => {
       renderer.create(
         <VernWithSuggestions
           vernacular={"vern"}
-          vernInput={React.createRef<HTMLInputElement>()}
+          vernInput={createRef<HTMLInputElement>()}
           updateVernField={jest.fn()}
           handleEnter={jest.fn()}
           onBlur={jest.fn()}
@@ -37,7 +37,7 @@ describe("VernWithSuggestions", () => {
         <VernWithSuggestions
           isNew
           vernacular={""}
-          vernInput={React.createRef<HTMLInputElement>()}
+          vernInput={createRef<HTMLInputElement>()}
           updateVernField={jest.fn()}
           handleEnter={jest.fn()}
           onBlur={jest.fn()}
@@ -54,7 +54,7 @@ describe("VernWithSuggestions", () => {
         <VernWithSuggestions
           isDisabled
           vernacular={""}
-          vernInput={React.createRef<HTMLInputElement>()}
+          vernInput={createRef<HTMLInputElement>()}
           updateVernField={jest.fn()}
           handleEnter={jest.fn()}
           onBlur={jest.fn()}

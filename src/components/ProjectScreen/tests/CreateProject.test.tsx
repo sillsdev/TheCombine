@@ -1,8 +1,9 @@
 import { LanguagePicker } from "mui-language-picker";
+import { type FormEvent } from "react";
 import { Provider } from "react-redux";
 import {
-  ReactTestInstance,
-  ReactTestRenderer,
+  type ReactTestInstance,
+  type ReactTestRenderer,
   act,
   create,
 } from "react-test-renderer";
@@ -36,13 +37,12 @@ const mockChangeEvent = (
 ): { target: Partial<EventTarget & HTMLSelectElement> } => ({
   target: { value },
 });
-const mockSubmitEvent = (): Partial<React.FormEvent<HTMLFormElement>> => ({
+const mockSubmitEvent = (): Partial<FormEvent<HTMLFormElement>> => ({
   preventDefault: jest.fn(),
 });
 
 let projectMaster: ReactTestRenderer;
 let projectHandle: ReactTestInstance;
-4;
 
 beforeAll(async () => {
   await act(async () => {
