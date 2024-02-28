@@ -20,12 +20,12 @@ import { useTranslation } from "react-i18next";
 
 import { BannerType } from "api/models";
 import { getBannerText } from "backend";
-import router from "browserRouter";
 import { LoadingButton } from "components/Buttons";
 import Captcha from "components/Login/Captcha";
 import { asyncLogIn } from "components/Login/Redux/LoginActions";
 import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";
 import { reset } from "rootActions";
+import router from "router/browserRouter";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { Path } from "types/path";

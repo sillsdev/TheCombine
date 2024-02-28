@@ -2,7 +2,6 @@ import { Action, PayloadAction } from "@reduxjs/toolkit";
 
 import { Project } from "api/models";
 import { getFrontierWords } from "backend";
-import router from "browserRouter";
 import {
   addCharInvChangesToGoal,
   asyncUpdateGoal,
@@ -27,6 +26,7 @@ import {
   CharacterSetEntry,
   getCharacterStatus,
 } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
+import router from "router/browserRouter";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { Path } from "types/path";

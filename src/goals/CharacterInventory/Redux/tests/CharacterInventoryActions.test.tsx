@@ -26,7 +26,6 @@ import { newWord } from "types/word";
 jest.mock("backend", () => ({
   getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
 }));
-jest.mock("browserRouter");
 jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({
   asyncUpdateGoal: (...args: any[]) => mockAsyncUpdateGoal(...args),
   addCharInvChangesToGoal: (...args: any[]) =>
@@ -36,6 +35,7 @@ jest.mock("components/Project/ProjectActions", () => ({
   asyncUpdateCurrentProject: (...args: any[]) =>
     mockAsyncUpdateCurrentProject(...args),
 }));
+jest.mock("router/browserRouter");
 
 const mockAddCharInvChangesToGoal = jest.fn();
 const mockAsyncUpdateCurrentProject = jest.fn();
