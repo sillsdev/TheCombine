@@ -143,6 +143,40 @@ install-the-combine () {
   deactivate
 }
 
+#! /usr/bin/env bash
+
+get-deployment-status () {
+    deployment=$1
+    results=$2
+
+    #  echo "Results: ${results}" >&2
+    status=$(echo ${results} | grep "${deployment}" | sed "s/^.*\([0-9]\)\/1.*/\1/")
+    echo ${status}
+}
+
+wait-for-combine () {
+    # Wait for all combine deployments to be up
+    while true ; do
+        combine_status=`kubectl -n thecombine get deployments`
+        # assert the The Combine is up; if any components are not up,
+        # set it to false
+        combine_up=true
+        for deployment in frontend backend database maintenance ; do
+            deployment_status=$(get-deployment-status "${deployment}" "${combine_status}")
+            if [ "$deployment_status" == "0" ] ; then
+                combine_up=false
+                break
+            fi
+        done
+        if [ ${combine_up} != true ] ; then
+            sleep 5
+        else
+            echo "The Combine is UP!"
+            break
+        fi
+    done
+}
+
 shutdown-the-combine () {
   # Shut down the combine services and set them to not start at boot time
   combinectl stop
@@ -231,6 +265,8 @@ while [ "$STATE" != "Done" ] ; do
     Restart)
       STATE=Base-charts
       echo -n ${STATE} > ${STATE_FILE}
+      ### TEMPORARY - for debugging
+      STATE=Done
       if [ -f /var/run/reboot-required ] ; then
         echo -e "***** Restart required *****\n"
         echo -e "Rerun combine-installer.run after the system has been restarted.\n"
@@ -239,7 +275,6 @@ while [ "$STATE" != "Done" ] ; do
           sudo reboot
         else
           STATE=Done
-          echo -n ${STATE} > ${STATE_FILE}
         fi
       fi
       ;;
@@ -250,7 +285,17 @@ while [ "$STATE" != "Done" ] ; do
       ;;
     Install-combine)
       install-the-combine
-      STATE=Shutdown-combine
+      # STATE=Wait-for-combine
+      # echo -n ${STATE} > ${STATE_FILE}
+      STATE="Done"
+      rm ${STATE_FILE}
+      ;;
+    Wait-for-combine)
+      # Wait until all the combine deployments are up
+      echo "Waiting for The Combine to start up.  This may take some time depending on your"
+      echo "Internet connection.  Press Ctrl-C to interrupt."
+      wait-for-combine
+      STATE="Shutdown-combine"
       echo -n ${STATE} > ${STATE_FILE}
       ;;
     Shutdown-combine)
