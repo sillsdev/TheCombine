@@ -178,6 +178,6 @@ describe("PasswordReset", () => {
       expect(screen.queryAllByTestId(id)).toHaveLength(0);
     }
     // The textId will show up as text because t() is mocked to return its input.
-    expect(screen.queryAllByText("passwordReset.invalidURL")).toBeTruthy;
+    expect(screen.queryAllByText("passwordReset.invalidURL")).toBeTruthy();
   });
 });

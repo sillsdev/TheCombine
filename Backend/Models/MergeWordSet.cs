@@ -27,23 +27,18 @@ namespace BackendFramework.Models
             Id = "";
             ProjectId = "";
             UserId = "";
-            WordIds = new List<string>();
+            WordIds = new();
         }
 
         public MergeWordSet Clone()
         {
-            var clone = new MergeWordSet
+            return new()
             {
                 Id = Id,
                 ProjectId = ProjectId,
                 UserId = UserId,
-                WordIds = new List<string>()
+                WordIds = WordIds.Select(id => id).ToList()
             };
-            foreach (var id in WordIds)
-            {
-                clone.WordIds.Add(id);
-            }
-            return clone;
         }
 
         public bool ContentEquals(MergeWordSet other)
