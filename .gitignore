@@ -16,8 +16,10 @@ build
 docker-compose.yml
 .env.*
 .env*.local
+.parcel-cache
 nginx/scripts
 /backups
+/dist
 /restore
 script_conf.json
 backup_conf.json
@@ -29,7 +31,6 @@ public/scripts/config.js
 .eslintcache
 Session.vim
 scripts/*.js
-!scripts/build.js
 !scripts/printVersion.js
 !scripts/setRelease.js
 !scripts/start.js
