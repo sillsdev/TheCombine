@@ -24,11 +24,11 @@
 - name: Verify that there is a single WiFi interface
   assert:
     that: wifi_interfaces|length == 1
-    success_msg: "Setup WiFi Interface: {{ wifi_interfaces[0] }}"
+    success_msg: "Setup WiFi Interface: {{ wifi_interfaces }}"
     fail_msg: |
       Only a single WiFi interface is supported.
       Found the following interfaces:
-      {{ wifi_interfaces }}
+      {{ ansible_facts.interfaces }}
 
 - name: Install combinectl tool
   template:
