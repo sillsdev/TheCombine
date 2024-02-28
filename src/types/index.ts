@@ -1,3 +1,4 @@
+import { GoalsState } from "components/GoalTimeline/Redux/GoalReduxTypes";
 import { LoginState } from "components/Login/Redux/LoginReduxTypes";
 import { CurrentProjectState } from "components/Project/ProjectReduxTypes";
 import { ExportProjectState } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
@@ -7,7 +8,6 @@ import { CharacterInventoryState } from "goals/CharacterInventory/Redux/Characte
 import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { ReviewEntriesState } from "goals/ReviewEntries/Redux/ReviewEntriesReduxTypes";
 import { AnalyticsState } from "types/Redux/analyticsReduxTypes";
-import { GoalsState } from "types/goals";
 
 //root store structure
 export interface StoreState {

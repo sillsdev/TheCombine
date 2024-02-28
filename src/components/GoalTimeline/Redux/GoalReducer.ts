@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { defaultState } from "components/GoalTimeline/DefaultState";
+import { defaultState } from "components/GoalTimeline/Redux/GoalReduxTypes";
 import {
   MergeDupsData,
   MergesCompleted,

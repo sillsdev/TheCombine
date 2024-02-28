@@ -1,4 +1,4 @@
-import { defaultState as goalTimelineState } from "components/GoalTimeline/DefaultState";
+import { defaultState as goalsState } from "components/GoalTimeline/Redux/GoalReduxTypes";
 import { defaultState as loginState } from "components/Login/Redux/LoginReduxTypes";
 import { defaultState as currentProjectState } from "components/Project/ProjectReduxTypes";
 import { defaultState as exportProjectState } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
@@ -23,7 +23,7 @@ export const defaultState = {
   pronunciationsState: { ...pronunciationsState },
 
   //goal timeline and current goal
-  goalsState: { ...goalTimelineState },
+  goalsState: { ...goalsState },
 
   //merge duplicates goal and review deferred duplicates goal
   mergeDuplicateGoal: { ...mergeDuplicateGoal },
