@@ -4,13 +4,12 @@ module.exports = {
     jest: true,
   },
   extends: [
-    "react-app",
     "plugin:react/recommended",
     "plugin:react/jsx-runtime",
     "plugin:react-hooks/recommended",
     "plugin:import/recommended",
   ],
-  ignorePatterns: ["*.dic.js"],
+  ignorePatterns: ["*.dic.js", "react-app-env.d.ts"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaFeatures: { jsx: true },
@@ -51,7 +50,6 @@ module.exports = {
     {
       files: ["*.ts", "*.tsx"],
       extends: [
-        "react-app",
         "plugin:@typescript-eslint/recommended",
         "plugin:import/typescript",
       ],

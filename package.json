@@ -15,7 +15,7 @@
     "fmt-backend-check": "dotnet-format --check && dotnet-format --check Backend.Tests",
     "fmt-frontend": "      prettier --write \"./{.github,.vscode,certmgr,deploy,docs,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
     "fmt-frontend-check": "prettier --check \"./{.github,.vscode,certmgr,deploy,docs,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
-    "frontend": "     npm run set-release && npx parcel public/index.html",
+    "frontend": "npm run set-release && npx parcel public/index.html",
     "gen-backend-coverage-report": "tsc scripts/genBackendCoverageReport.ts && node scripts/genBackendCoverageReport.js",
     "license-report-backend": " dotnet-project-licenses --include-transitive --input ./Backend/BackendFramework.csproj --output --outfile docs/user_guide/assets/licenses/backend_licenses.txt",
     "license-summary-backend": "dotnet-project-licenses --include-transitive --input ./Backend/BackendFramework.csproj",
