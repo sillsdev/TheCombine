@@ -48,14 +48,18 @@
       owner: root
       group: root
 
-- name: Set link .kube/config to /etc/rancher/k3s/k3s.yaml
-  file:
-    src: /etc/rancher/k3s/k3s.yaml
-    path: "{{ item }}/.kube/config"
-    state: link
+- name: Copy /etc/rancher/k3s/k3s.yaml to .kube/config
+  shell: |
+    cp /etc/rancher/k3s/k3s.yaml {{ item.home }}/.kube/config
+    chown {{ item.owner }}:{{ item.group }} {{ item.home }}/.kube/config
+    chmod 600 {{ item.home }}/.kube/config
   loop:
-    - "{{ k8s_user_home.stdout }}"
-    - /root
+    - home: "{{ k8s_user_home.stdout }}"
+      owner: "{{ k8s_user }}"
+      group: "{{ k8s_user_group_id.stdout }}"
+    - home: /root
+      owner: root
+      group: root
 
 - name: List contexts
   command: kubectl --kubeconfig=/etc/rancher/k3s/k3s.yaml config get-contexts

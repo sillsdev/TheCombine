@@ -39,3 +39,8 @@
 - name: Install kubectl
   apt:
     name: kubectl
+
+- name: Setup remote access to cluster
+  include_tasks:
+    file: k8s_remote_access.yml
+  when: ansible_connection != "local"
