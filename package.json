@@ -196,7 +196,7 @@
       "/node_modules/(!${axios})"
     ],
     "modulePaths": [
-      "/Users/dror/sil/TheCombine/src"
+      "<rootDir>/src"
     ],
     "moduleNameMapper": {
       "^react-native$": "react-native-web",
