@@ -9,9 +9,6 @@
 /coverage*
 /Backend.Tests/coverage*
 
-# Production
-build
-
 # Generated files for development use
 docker-compose.yml
 .env.*

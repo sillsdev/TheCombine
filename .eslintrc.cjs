@@ -4,6 +4,7 @@ module.exports = {
     jest: true,
   },
   extends: [
+    "react-app",
     "plugin:react/recommended",
     "plugin:react/jsx-runtime",
     "plugin:react-hooks/recommended",
@@ -50,6 +51,7 @@ module.exports = {
     {
       files: ["*.ts", "*.tsx"],
       extends: [
+        "react-app",
         "plugin:@typescript-eslint/recommended",
         "plugin:import/typescript",
       ],

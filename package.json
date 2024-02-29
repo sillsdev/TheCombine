@@ -5,18 +5,17 @@
   "private": true,
   "source": "src/index.tsx",
   "scripts": {
-    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "analyze": "source-map-explorer dist/*.js --no-border-checks",
     "backend": "dotnet watch --project Backend/BackendFramework.csproj",
     "build": "parcel build",
     "database": "mongod --dbpath=./mongo_database",
     "drop-database": "tsc scripts/dropDB.ts && node scripts/dropDB.js",
-    "find-circular-deps": "madge -c src/index.tsx",
+    "find-circular-deps": "madge -c src",
     "fmt-backend": "      dotnet-format         && dotnet-format         Backend.Tests",
     "fmt-backend-check": "dotnet-format --check && dotnet-format --check Backend.Tests",
     "fmt-frontend": "      prettier --write \"./{.github,.vscode,certmgr,deploy,docs,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
     "fmt-frontend-check": "prettier --check \"./{.github,.vscode,certmgr,deploy,docs,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
     "frontend": "     npm run set-release && npx parcel public/index.html",
-    "frontend:lazy": "npm run set-release && npx parcel public/index.html --lazy",
     "gen-backend-coverage-report": "tsc scripts/genBackendCoverageReport.ts && node scripts/genBackendCoverageReport.js",
     "license-report-backend": " dotnet-project-licenses --include-transitive --input ./Backend/BackendFramework.csproj --output --outfile docs/user_guide/assets/licenses/backend_licenses.txt",
     "license-summary-backend": "dotnet-project-licenses --include-transitive --input ./Backend/BackendFramework.csproj",
@@ -32,8 +31,8 @@
     "test-backend": "         dotnet test Backend.Tests/Backend.Tests.csproj",
     "test-backend:coverage": "dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:Threshold=77",
     "test-frontend": "         node               scripts/test.js",
-    "test-frontend:coverage": "node               scripts/test.js --coverage --watchAll=false",
-    "test-frontend:debug": "   node --inspect-brk scripts/test.js --runInBand --no-cache",
+    "test-frontend:coverage": "node               scripts/test.js --no-cache --coverage --watchAll=false",
+    "test-frontend:debug": "   node --inspect-brk scripts/test.js --no-cache --runInBand",
     "wordlist": "hunspell-reader words"
   },
   "dependencies": {
@@ -154,8 +153,7 @@
       "<rootDir>/src/setupTests.js"
     ],
     "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
-      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
+      "<rootDir>/src/**/*.test.{js,jsx,ts,tsx}"
     ],
     "testEnvironment": "jsdom",
     "transform": {
@@ -223,8 +221,5 @@
     "presets": [
       "react-app"
     ]
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   }
 }
