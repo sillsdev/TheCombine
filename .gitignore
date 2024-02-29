@@ -33,7 +33,6 @@ Session.vim
 scripts/*.js
 !scripts/printVersion.js
 !scripts/setRelease.js
-!scripts/start.js
 !scripts/test.js
 
 npm-debug.log*
