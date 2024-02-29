@@ -73,7 +73,7 @@ install-kubernetes () {
   # Setup Kubernetes environment and WiFi Access Point
   cd ${INSTALL_DIR}/ansible
 
-  ansible-playbook playbook_desktop_setup.yaml -K
+  ansible-playbook playbook_desktop_setup.yaml -K -e k8s_user=`whoami`
 }
 
 set-k3s-env () {
@@ -81,7 +81,7 @@ set-k3s-env () {
   # Setup kubectl configuration file
   K3S_CONFIG_FILE=${HOME}/.kube/config
   if [ ! -e ${K3S_CONFIG_FILE} ] ; then
-    echo >2 "Kubernetes (k3s) configuration file is missing."
+    echo "Kubernetes (k3s) configuration file is missing." >&2
     exit 1
   fi
   export KUBECONFIG=${K3S_CONFIG_FILE}
@@ -245,7 +245,7 @@ while (( "$#" )) ; do
       rm ${STATE_FILE}
       ;;
     *)
-      echo "Unrecognized option: $OPT" >2
+      echo "Unrecognized option: $OPT" >&2
       ;;
   esac
   shift
@@ -265,8 +265,6 @@ while [ "$STATE" != "Done" ] ; do
     Restart)
       STATE=Base-charts
       echo -n ${STATE} > ${STATE_FILE}
-      ### TEMPORARY - for debugging
-      STATE=Done
       if [ -f /var/run/reboot-required ] ; then
         echo -e "***** Restart required *****\n"
         echo -e "Rerun combine-installer.run after the system has been restarted.\n"
