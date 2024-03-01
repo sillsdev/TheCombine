@@ -19,5 +19,12 @@
     "target": "es5"
   },
   "exclude": ["*.dic.js"],
-  "include": [".eslintrc.cjs", "config", "public", "src", "scripts"]
+  "include": [
+    ".eslintrc.cjs",
+    "config",
+    "public",
+    "src",
+    "scripts",
+    "*.config.js"
+  ]
 }
