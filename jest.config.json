@@ -8,13 +8,12 @@
   "preset": "ts-jest",
   "transform": {
     "^.+\\.jsx?$": "<rootDir>/config/jest/babelTransform.js",
-    "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
     "^(?!.*\\.(cjs|js|jsx|mjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
   },
   "transformIgnorePatterns": ["/node_modules/(!${axios})"],
   "modulePaths": ["<rootDir>/src"],
   "moduleNameMapper": {
-    "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+    "^.+\\.css$": "identity-obj-proxy"
   },
   "moduleFileExtensions": ["js", "ts", "tsx", "json", "jsx", "node"],
   "watchPlugins": [
