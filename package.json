@@ -160,7 +160,7 @@
     "testEnvironment": "jsdom",
     "preset": "ts-jest",
     "transform": {
-      "^.+\\.jsx?$": "babel-jest",
+      "^.+\\.jsx?$": "<rootDir>/config/jest/babelTransform.js",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
       "^(?!.*\\.(cjs|js|jsx|mjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
