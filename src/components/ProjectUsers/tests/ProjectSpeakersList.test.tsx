@@ -42,6 +42,6 @@ describe("ProjectSpeakersList", () => {
     expect(testRenderer.root.findAllByType(SpeakerListItem)).toHaveLength(
       mockSpeakers.length
     );
-    expect(testRenderer.root.findByType(AddSpeakerListItem)).toBeTruthy;
+    expect(testRenderer.root.findByType(AddSpeakerListItem)).toBeTruthy();
   });
 });

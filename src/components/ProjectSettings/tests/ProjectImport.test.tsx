@@ -25,7 +25,7 @@ const renderImport = async (): Promise<void> => {
 describe("ProjectImport", () => {
   it("upload button disabled when no file selected", async () => {
     await renderImport();
-    expect(uploadButton.props.disabled).toBeTruthy;
+    expect(uploadButton.props.disabled).toBeTruthy();
   });
 
   it("upload button enabled when file selected", async () => {
@@ -33,6 +33,6 @@ describe("ProjectImport", () => {
     const selectButton = testRenderer.root.findByType(FileInputButton);
     const mockFile = { name: "name-of-a.file" } as File;
     await renderer.act(async () => selectButton.props.updateFile(mockFile));
-    expect(uploadButton.props.disabled).toBeFalsy;
+    expect(uploadButton.props.disabled).toBeFalsy();
   });
 });

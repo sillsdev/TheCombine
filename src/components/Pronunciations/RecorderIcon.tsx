@@ -16,6 +16,7 @@ export const recordButtonId = "recordingButton";
 export const recordIconId = "recordingIcon";
 
 interface RecorderIconProps {
+  disabled?: boolean;
   id: string;
   startRecording: () => void;
   stopRecording: () => void;
@@ -61,6 +62,7 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
     <Tooltip title={t("pronunciations.recordTooltip")} placement="top">
       <IconButton
         aria-label="record"
+        disabled={props.disabled}
         id={recordButtonId}
         onPointerDown={toggleIsRecordingToTrue}
         onPointerUp={toggleIsRecordingToFalse}
@@ -72,9 +74,12 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
         <FiberManualRecord
           id={recordIconId}
           sx={{
-            color: isRecording
-              ? themeColors.recordActive
-              : themeColors.recordIdle,
+            color: (t) =>
+              props.disabled
+                ? t.palette.grey[400]
+                : isRecording
+                  ? themeColors.recordActive
+                  : themeColors.recordIdle,
           }}
         />
       </IconButton>

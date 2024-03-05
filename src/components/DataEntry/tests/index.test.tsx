@@ -56,13 +56,13 @@ describe("DataEntry", () => {
   it("displays TreeView when state says the tree is open", async () => {
     await renderDataEntry({ currentDomain: mockDomain, open: true });
     const dialog = testHandle.root.findByProps({ id: treeViewDialogId });
-    expect(dialog.props.open).toBeTruthy;
+    expect(dialog.props.open).toBeTruthy();
   });
 
   it("doesn't displays TreeView when state says the tree is closed", async () => {
     await renderDataEntry({ currentDomain: mockDomain, open: false });
     const dialog = testHandle.root.findByProps({ id: treeViewDialogId });
-    expect(dialog.props.open).toBeFalsy;
+    expect(dialog.props.open).toBeFalsy();
   });
 
   it("dispatches to open the tree", async () => {
