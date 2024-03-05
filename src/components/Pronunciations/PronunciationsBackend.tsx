@@ -8,6 +8,7 @@ import { FileWithSpeakerId } from "types/word";
 
 interface PronunciationsBackendProps {
   audio: Pronunciation[];
+  disabled?: boolean;
   playerOnly?: boolean;
   overrideMemo?: boolean;
   wordId: string;
@@ -31,6 +32,7 @@ export function PronunciationsBackend(
     <AudioPlayer
       audio={a}
       deleteAudio={props.deleteAudio}
+      disabled={props.disabled}
       key={a.fileName}
       pronunciationUrl={getAudioUrl(props.wordId, a.fileName)}
       updateAudioSpeaker={
@@ -43,7 +45,11 @@ export function PronunciationsBackend(
   return (
     <>
       {!props.playerOnly && !!props.uploadAudio && (
-        <AudioRecorder id={props.wordId} uploadAudio={props.uploadAudio} />
+        <AudioRecorder
+          disabled={props.disabled}
+          id={props.wordId}
+          uploadAudio={props.uploadAudio}
+        />
       )}
       {audioButtons}
     </>
@@ -60,6 +66,7 @@ function propsAreEqual(
     return false;
   }
   return (
+    prev.disabled === next.disabled &&
     prev.wordId === next.wordId &&
     JSON.stringify(prev.audio) === JSON.stringify(next.audio)
   );
