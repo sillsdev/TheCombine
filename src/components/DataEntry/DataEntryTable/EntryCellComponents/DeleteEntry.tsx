@@ -12,6 +12,7 @@ interface DeleteEntryProps {
   // if no confirmId is specified, then there is no popup
   // and deletion will happen when the button is pressed
   confirmId?: string;
+  disabled?: boolean;
   wordId?: string;
 }
 
@@ -34,6 +35,7 @@ export default function DeleteEntry(props: DeleteEntryProps): ReactElement {
     <>
       <Tooltip title={t("addWords.deleteRow")} placement="top">
         <IconButton
+          disabled={props.disabled}
           tabIndex={-1}
           size="small"
           onClick={handleClick}

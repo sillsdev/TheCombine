@@ -3,6 +3,7 @@ import { MouseEventHandler, ReactElement, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
 interface IconButtonWithTooltipProps {
+  disabled?: boolean;
   icon: ReactElement;
   text?: ReactNode;
   textId?: string;
@@ -27,7 +28,7 @@ export default function IconButtonWithTooltip(
           onClick={props.onClick}
           size={props.size || "medium"}
           id={props.buttonId}
-          disabled={!props.onClick}
+          disabled={props.disabled || !props.onClick}
         >
           {props.icon}
         </IconButton>

@@ -36,7 +36,6 @@ describe("SortOptions", () => {
     const mockReverse = jest.fn();
     renderSortOptions({ onReverseClick: mockReverse });
     const button = testRenderer.root.findByProps({ id: reverseButtonId });
-    expect(button).not.toBeNull();
     button.props.onClick();
     expect(mockReverse).toHaveBeenCalledTimes(1);
   });

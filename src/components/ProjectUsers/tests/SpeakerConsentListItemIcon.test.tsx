@@ -66,9 +66,9 @@ describe("SpeakerConsentListItemIcon", () => {
         ...mockSpeaker,
         consent: ConsentType.None,
       });
-      expect(screen.queryByTestId(ListItemIconId.AddConsent)).not.toBeNull;
-      expect(screen.queryByTestId(ListItemIconId.PlayAudio)).toBeNull;
-      expect(screen.queryByTestId(ListItemIconId.ShowImage)).toBeNull;
+      expect(screen.queryByTestId(ListItemIconId.AddConsent)).not.toBeNull();
+      expect(screen.queryByTestId(ListItemIconId.PlayAudio)).toBeNull();
+      expect(screen.queryByTestId(ListItemIconId.ShowImage)).toBeNull();
     });
 
     it("opens menu when clicked", async () => {
@@ -77,14 +77,14 @@ describe("SpeakerConsentListItemIcon", () => {
         ...mockSpeaker,
         consent: ConsentType.None,
       });
-      expect(screen.queryByRole("menu")).toBeNull;
-      expect(screen.queryByTestId(ListItemIconId.RecordAudio)).toBeNull;
-      expect(screen.queryByTestId(ListItemIconId.UploadAudio)).toBeNull;
+      expect(screen.queryByRole("menu")).toBeNull();
+      expect(screen.queryByTestId(ListItemIconId.RecordAudio)).toBeNull();
+      expect(screen.queryByTestId(ListItemIconId.UploadAudio)).toBeNull();
 
       await agent.click(screen.getByRole("button"));
-      expect(screen.queryByRole("menu")).not.toBeNull;
-      expect(screen.queryByTestId(ListItemIconId.RecordAudio)).not.toBeNull;
-      expect(screen.queryByTestId(ListItemIconId.UploadAudio)).not.toBeNull;
+      expect(screen.queryByRole("menu")).not.toBeNull();
+      expect(screen.queryByTestId(ListItemIconId.RecordAudio)).not.toBeNull();
+      expect(screen.queryByTestId(ListItemIconId.UploadAudio)).not.toBeNull();
     });
   });
 
@@ -94,9 +94,9 @@ describe("SpeakerConsentListItemIcon", () => {
         ...mockSpeaker,
         consent: ConsentType.Audio,
       });
-      expect(screen.queryByTestId(ListItemIconId.AddConsent)).toBeNull;
-      expect(screen.queryByTestId(ListItemIconId.PlayAudio)).not.toBeNull;
-      expect(screen.queryByTestId(ListItemIconId.ShowImage)).toBeNull;
+      expect(screen.queryByTestId(ListItemIconId.AddConsent)).toBeNull();
+      expect(screen.queryByTestId(ListItemIconId.PlayAudio)).not.toBeNull();
+      expect(screen.queryByTestId(ListItemIconId.ShowImage)).toBeNull();
     });
   });
 
@@ -106,9 +106,9 @@ describe("SpeakerConsentListItemIcon", () => {
         ...mockSpeaker,
         consent: ConsentType.Image,
       });
-      expect(screen.queryByTestId(ListItemIconId.AddConsent)).toBeNull;
-      expect(screen.queryByTestId(ListItemIconId.PlayAudio)).toBeNull;
-      expect(screen.queryByTestId(ListItemIconId.ShowImage)).not.toBeNull;
+      expect(screen.queryByTestId(ListItemIconId.AddConsent)).toBeNull();
+      expect(screen.queryByTestId(ListItemIconId.PlayAudio)).toBeNull();
+      expect(screen.queryByTestId(ListItemIconId.ShowImage)).not.toBeNull();
     });
 
     it("opens dialog when clicked", async () => {
@@ -117,10 +117,10 @@ describe("SpeakerConsentListItemIcon", () => {
         ...mockSpeaker,
         consent: ConsentType.Image,
       });
-      expect(screen.queryAllByRole("dialog")).toBeNull;
+      expect(screen.queryByRole("dialog")).toBeNull();
 
       await agent.click(screen.getByRole("button"));
-      expect(screen.queryAllByRole("dialog")).not.toBeNull;
+      expect(screen.queryByRole("dialog")).not.toBeNull();
     });
   });
 });

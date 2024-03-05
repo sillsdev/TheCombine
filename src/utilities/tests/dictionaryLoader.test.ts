@@ -57,8 +57,8 @@ describe("DictionaryLoader", () => {
 
     it("loads nothing for empty or non-existent key", async () => {
       const loader = new DictionaryLoader(bcp47);
-      expect(await loader.loadDictPart("")).toBeUndefined;
-      expect(await loader.loadDictPart("not-a-key")).toBeUndefined;
+      expect(await loader.loadDictPart("")).toBeUndefined();
+      expect(await loader.loadDictPart("not-a-key")).toBeUndefined();
     });
 
     it("doesn't load the same part more than once", async () => {

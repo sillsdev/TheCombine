@@ -27,7 +27,7 @@ const mockStore = configureMockStore()({
 
 let testRenderer: renderer.ReactTestRenderer;
 let entryButton: ReactTestInstance;
-let cleanButton: ReactTestInstance;
+let cleanButton: ReactTestInstance | null;
 
 const renderNavButtons = async (
   path: Path,
@@ -57,9 +57,7 @@ const renderNavButtonsWithPermission = async (
   const cleanupButtons = testRenderer.root.findAllByProps({
     id: dataCleanupButtonId,
   });
-  if (cleanupButtons.length) {
-    cleanButton = cleanupButtons[0];
-  }
+  cleanButton = cleanupButtons.length ? cleanupButtons[0] : null;
 };
 
 beforeEach(() => {
@@ -74,9 +72,9 @@ describe("NavigationButtons", () => {
         perm === Permission.CharacterInventory ||
         perm === Permission.MergeAndReviewEntries
       ) {
-        expect(cleanButton).toBeTruthy;
+        expect(cleanButton).toBeTruthy();
       } else {
-        expect(cleanButton).toBeUndefined;
+        expect(cleanButton).toBeNull();
       }
     }
   });
