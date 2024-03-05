@@ -17,7 +17,7 @@
     "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/scripts/testConfig/babelTransform.js",
     "^(?!.*\\.(cjs|css|js|json|jsx|mjs|ts|tsx)$)": "<rootDir>/scripts/testConfig/fileTransform.js"
   },
-  "transformIgnorePatterns": ["/node_modules/(!${axios})"],
+  "transformIgnorePatterns": ["/node_modules/(!(axios))"],
   "modulePaths": ["<rootDir>/src"],
   "moduleNameMapper": {
     "^.+\\.css$": "identity-obj-proxy"
