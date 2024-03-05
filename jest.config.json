@@ -13,10 +13,9 @@
   "setupFilesAfterEnv": ["<rootDir>/src/setupTests.js"],
   "testMatch": ["<rootDir>/src/**/*.test.{js,jsx,ts,tsx}"],
   "testEnvironment": "jsdom",
-  "preset": "ts-jest",
   "transform": {
-    "^.+\\.jsx?$": "<rootDir>/scripts/testConfig/babelTransform.js",
-    "^(?!.*\\.(cjs|js|jsx|mjs|ts|tsx|css|json)$)": "<rootDir>/scripts/testConfig/fileTransform.js"
+    "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/scripts/testConfig/babelTransform.js",
+    "^(?!.*\\.(cjs|css|js|json|jsx|mjs|ts|tsx)$)": "<rootDir>/scripts/testConfig/fileTransform.js"
   },
   "transformIgnorePatterns": ["/node_modules/(!${axios})"],
   "modulePaths": ["<rootDir>/src"],
