@@ -11,7 +11,7 @@ if (!NODE_ENV) {
 }
 
 // Make sure any symlinks in the project folder are resolved:
-// https://github.com/facebook/create-react-app/issues/637
+// https://github.com/facebook/create-react-app/pull/648
 const appDirectory = fs.realpathSync(process.cwd());
 const dotenv = path.resolve(appDirectory, ".env");
 

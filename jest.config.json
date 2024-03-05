@@ -15,8 +15,8 @@
   "testEnvironment": "jsdom",
   "preset": "ts-jest",
   "transform": {
-    "^.+\\.jsx?$": "<rootDir>/config/jest/babelTransform.js",
-    "^(?!.*\\.(cjs|js|jsx|mjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+    "^.+\\.jsx?$": "<rootDir>/scripts/testConfig/babelTransform.js",
+    "^(?!.*\\.(cjs|js|jsx|mjs|ts|tsx|css|json)$)": "<rootDir>/scripts/testConfig/fileTransform.js"
   },
   "transformIgnorePatterns": ["/node_modules/(!${axios})"],
   "modulePaths": ["<rootDir>/src"],
