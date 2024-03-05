@@ -23,7 +23,7 @@ if (
   argv.indexOf("--watchAll") === -1 &&
   argv.indexOf("--watchAll=false") === -1
 ) {
-  argv.push("--watchAll");
+  argv.push("--watch");
 }
 
 jest.run(argv);
