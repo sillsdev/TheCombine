@@ -50,7 +50,9 @@
     ip4: 172.16.1.23/16
     gw4: 172.16.1.23
     method4: "manual"
+    route_metric4: 999
     method6: "link-local"
+    route_metric6: 999
     state: "present"
     type: "dummy"
 
