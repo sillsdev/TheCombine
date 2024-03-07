@@ -19,6 +19,7 @@ For each chart, the configuration file lists:
 The script also adds value definitions from a profile specific configuration file if it exists.
 """
 import argparse
+import logging
 import os
 from pathlib import Path
 import sys
@@ -143,8 +144,8 @@ def create_secrets(
             else:
                 missing_env_vars.append(item["env_var"])
     if len(missing_env_vars) > 0:
-        print("The following environment variables are not defined:")
-        print(", ".join(missing_env_vars))
+        logging.debug("The following environment variables are not defined:")
+        logging.debug(", ".join(missing_env_vars))
         if not env_vars_req:
             return secrets_written
         sys.exit(ExitStatus.FAILURE.value)
@@ -170,7 +171,7 @@ def get_target(config: Dict[str, Any]) -> str:
     try:
         return input("Enter the target name (Ctrl-C to cancel):")
     except KeyboardInterrupt:
-        print("Exiting.")
+        logging.INFO("Exiting.")
         sys.exit(ExitStatus.FAILURE.value)
 
 
@@ -222,6 +223,16 @@ def add_profile_values(
 
 def main() -> None:
     args = parse_args()
+
+    # Setup the logging level.  The command output will be printed on stdout/stderr
+    # independent of the logging facility
+    if args.debug:
+        log_level = logging.DEBUG
+    elif args.quiet:
+        log_level = logging.WARNING
+    else:
+        log_level = logging.INFO
+    logging.basicConfig(format="%(levelname)s:%(message)s", level=log_level)
 
     # Lookup the cluster configuration
     with open(args.config) as file:
