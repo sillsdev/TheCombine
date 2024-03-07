@@ -1,4 +1,0 @@
----
-- name: reboot target
-  reboot:
-  when: ansible_connection != "local"

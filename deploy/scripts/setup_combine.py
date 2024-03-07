@@ -171,7 +171,7 @@ def get_target(config: Dict[str, Any]) -> str:
     try:
         return input("Enter the target name (Ctrl-C to cancel):")
     except KeyboardInterrupt:
-        logging.INFO("Exiting.")
+        logging.info("Exiting.")
         sys.exit(ExitStatus.FAILURE.value)
 
 

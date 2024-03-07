@@ -10,23 +10,6 @@
   apt:
     name: network-manager
 
-# - name: List non-network-manager config files
-#   find:
-#     paths: "/etc/netplan/"
-#     patterns: "00-installed.*\\.yaml"
-#     use_regex: yes
-#   register: netplan_files
-
-# - name: List existing netplan files
-#   debug:
-#     var: netplan_files
-
-# - name: Remove non-network-manager config files
-#   file:
-#     path: "{{ item.path }}"
-#     state: absent
-#   loop: "{{ netplan_files.files }}"
-
 - name: Set network-manager as renderer
   copy:
     src: 01-network-manager-all.yaml

@@ -1,4 +1,9 @@
 ---
+#
+# Setup a kubeconfig file on the host machine so that users can
+# connect to the target system when the host is not the target
+# system.
+#
 - name: Save {{ k8s_user_home.stdout }}/.kube/config on host
   fetch:
     src: "{{ k8s_user_home.stdout }}/.kube/config"
