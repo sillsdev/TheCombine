@@ -9,14 +9,10 @@ usage () {
       help:     Print this usage message.
       start:    Start the combine services.
       stop:     Stop the combine services.
-      auto:     Configure the combine services to start at boot time.
-                Does not imply 'start'.
-      noauto:   Configure the combine services to not start at boot time.
-                Does not imply 'stop'.
       status:   List the status for the combine services.
       cert:     Print the expiration date for the web certificate.
-      update release_number:
-                Update the version of The Combine to the "release_number"
+      update release-number:
+                Update the version of The Combine to the "release-number"
                 specified.  You can see the number of the latest release
                 at https://github.com/sillsdev/TheCombine/releases.
 
@@ -29,41 +25,51 @@ usage () {
 .EOM
 }
 
-combine_enable () {
-  echo "Setting The Combine to start at boot."
-  sudo systemctl enable create_ap
-  sudo systemctl enable k3s
-}
-
-combine_disable () {
-  echo "Setting The Combine to not start at boot."
-  sudo systemctl disable create_ap
-  sudo systemctl disable k3s
-}
-
-combine_start () {
-  echo "Starting The Combine."
-  sudo systemctl start create_ap
-  sudo systemctl restart systemd-resolved
-  sudo systemctl restart systemd-networkd
-  sudo systemctl start k3s
-#  sudo ip link set ${WIFI_IF} up
-}
-
-combine_stop () {
-  echo "Stopping The Combine."
-  sudo systemctl stop k3s
-  sudo systemctl stop create_ap
-  sudo systemctl restart systemd-resolved
-  sudo systemctl restart systemd-networkd
-}
-
-combine_status () {
-  if systemctl is-enabled --quiet create_ap && systemctl is-enabled --quiet k3s ; then
-    echo "The Combine starts automatically at boot time."
-  else
-    echo "The Combine does not start automatically."
+save-wifi-connection () {
+  # get the name of the WiFi Connection
+  WIFI_CONN=`nmcli d show "$WIFI_IF" | grep "^GENERAL.CONNECTION" | sed "s|^GENERAL.CONNECTION:  *||"`
+  # save it so we can restore it later
+  echo "$WIFI_CONN" > ${COMBINE_CONFIG}/wifi_connection.txt
+  if [ "$WIFI_CONN" != "--" ] ; then
+    nmcli c down "$WIFI_CONN"
   fi
+}
+
+restore-wifi-connection () {
+  if [ -f "${COMBINE_CONFIG}/wifi_connection.txt" ] ; then
+    WIFI_CONN=`cat ${COMBINE_CONFIG}/wifi_connection.txt`
+    echo "Restoring connection $WIFI_CONN"
+    if [ "$WIFI_CONN" != "--" ] ; then
+      nmcli c up "$WIFI_CONN"
+    fi
+  fi
+}
+
+combine-start () {
+  echo "Starting The Combine."
+  if ! systemctl is-active --quiet create_ap ; then
+    save-wifi-connection
+    sudo systemctl start create_ap
+    sudo systemctl restart systemd-resolved
+  fi
+  if ! systemctl is-active --quiet k3s ; then
+    sudo systemctl start k3s
+  fi
+}
+
+combine-stop () {
+  echo "Stopping The Combine."
+  if systemctl is-active --quiet k3s ; then
+    sudo systemctl stop k3s
+  fi
+  if systemctl is-active --quiet create_ap ; then
+    sudo systemctl stop create_ap
+    restore-wifi-connection
+    sudo systemctl restart systemd-resolved
+  fi
+}
+
+combine-status () {
   if systemctl is-active --quiet create_ap ; then
     echo "WiFi hotspot is Running."
   else
@@ -77,13 +83,13 @@ combine_status () {
   fi
 }
 
-combine_cert () {
+combine-cert () {
   SECRET_NAME=`kubectl -n thecombine get secrets --field-selector type=kubernetes.io/tls -o name`
   CERT_DATA=`kubectl -n thecombine get $SECRET_NAME -o "jsonpath={.data['tls\.crt']}"`
   echo $CERT_DATA | base64 -d | openssl x509 -enddate -noout| sed -e "s/^notAfter=/Web certificate expires at /"
 }
 
-combine_update () {
+combine-update () {
   echo "Updating The Combine to $1"
   IMAGE_TAG=$1
   while [[ ! $IMAGE_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+ ]] ; do
@@ -98,6 +104,7 @@ combine_update () {
 
 WIFI_IF={{ wifi_interfaces[0] }}
 export KUBECONFIG=${HOME}/.kube/config
+COMBINE_CONFIG=${HOME}/.config/combine
 
 if [[ $# -eq 0 ]] ;  then
   usage
@@ -107,20 +114,16 @@ fi
 case "$1" in
   help)
     usage;;
-  auto)
-    combine_enable;;
-  noauto)
-    combine_disable;;
   start)
-    combine_start;;
+    combine-start;;
   stop)
-    combine_stop;;
+    combine-stop;;
   stat*)
-    combine_status;;
+    combine-status;;
   cert*)
-    combine_cert;;
+    combine-cert;;
   update)
-    combine_update $2;;
+    combine-update $2;;
   *)
     echo -e "Unrecognized command: \"$1\".\n"
     usage;;
