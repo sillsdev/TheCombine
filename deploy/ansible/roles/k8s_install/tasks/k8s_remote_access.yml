@@ -1,10 +1,4 @@
 ---
-- name: Get home directory for {{ k8s_user }}
-  shell: >
-    getent passwd {{ k8s_user }} | awk -F: '{ print $6 }'
-  register: k8s_user_home
-  changed_when: false
-
 - name: Save {{ k8s_user_home.stdout }}/.kube/config on host
   fetch:
     src: "{{ k8s_user_home.stdout }}/.kube/config"
@@ -38,7 +32,6 @@
         regexp: '^(\s+server: https:\/\/)[.0-9]+:(1?6443)'
         backrefs: yes
         line: '\1{{ k8s_dns_name }}:\2'
-      notify: update profile
 
     - name: Replace 'default' cluster, user, etc with {{ kubecfgdir }}
       replace:
@@ -47,8 +40,6 @@
         replace: '\1{{ kubecfgdir }}\2'
 
     - name: Link ~/.kube/config to {{ kubecfg }}
-      delegate_to: localhost
-      become: false
       file:
         state: link
         src: "{{ kubecfg }}"

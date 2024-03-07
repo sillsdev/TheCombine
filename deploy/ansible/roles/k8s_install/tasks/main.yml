@@ -40,6 +40,20 @@
   apt:
     name: kubectl
 
+- name: Get home directory for {{ k8s_user }}
+  shell: >
+    getent passwd {{ k8s_user }} | awk -F: '{ print $6 }'
+  register: k8s_user_home
+  changed_when: false
+
+- name: update profile
+  lineinfile:
+    state: present
+    path: "{{ k8s_user_home.stdout }}/.profile"
+    line: "export KUBECONFIG=${HOME}/.kube/config"
+    mode: 0600
+  when: ansible_connection == "local"
+
 - name: Setup remote access to cluster
   include_tasks:
     file: k8s_remote_access.yml
