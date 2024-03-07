@@ -85,6 +85,11 @@ set-k3s-env () {
     exit 1
   fi
   export KUBECONFIG=${K3S_CONFIG_FILE}
+  #####
+  # Start k3s if it is not running
+  if ! systemctl is-active --quiet k3s ; then
+    sudo systemctl start k3s
+  fi
 }
 
 copy-install-scripts () {
@@ -146,41 +151,39 @@ install-the-combine () {
 #! /usr/bin/env bash
 
 get-deployment-status () {
-    deployment=$1
-    results=$2
+  deployment=$1
+  results=$2
 
-    #  echo "Results: ${results}" >&2
-    status=$(echo ${results} | grep "${deployment}" | sed "s/^.*\([0-9]\)\/1.*/\1/")
-    echo ${status}
+  #  echo "Results: ${results}" >&2
+  status=$(echo ${results} | grep "${deployment}" | sed "s/^.*\([0-9]\)\/1.*/\1/")
+  echo ${status}
 }
 
 wait-for-combine () {
-    # Wait for all combine deployments to be up
-    while true ; do
-        combine_status=`kubectl -n thecombine get deployments`
-        # assert the The Combine is up; if any components are not up,
-        # set it to false
-        combine_up=true
-        for deployment in frontend backend database maintenance ; do
-            deployment_status=$(get-deployment-status "${deployment}" "${combine_status}")
-            if [ "$deployment_status" == "0" ] ; then
-                combine_up=false
-                break
-            fi
-        done
-        if [ ${combine_up} != true ] ; then
-            sleep 5
-        else
-            echo "The Combine is UP!"
-            break
-        fi
+  # Wait for all combine deployments to be up
+  while true ; do
+    combine_status=`kubectl -n thecombine get deployments`
+    # assert the The Combine is up; if any components are not up,
+    # set it to false
+    combine_up=true
+    for deployment in frontend backend database maintenance ; do
+      deployment_status=$(get-deployment-status "${deployment}" "${combine_status}")
+      if [ "$deployment_status" == "0" ] ; then
+        combine_up=false
+        break
+      fi
     done
+    if [ ${combine_up} != true ] ; then
+      sleep 5
+    else
+      break
+    fi
+  done
 }
 
 shutdown-the-combine () {
   # Shut down the combine services and set them to not start at boot time
   combinectl stop
-  combinectl noauto 2> /dev/null
   combinectl status
 }
 
@@ -195,6 +198,15 @@ create-dest-directory () {
     fi
   else
     mkdir -p ${COMBINE_DIR}
+  fi
+}
+
+next-state () {
+  STATE=$1
+  if [[ "${STATE}" == "Done" && -f "${STATE_FILE}" ]] ; then
+    rm ${STATE_FILE}
+  else
+    echo -n ${STATE} > ${STATE_FILE}
   fi
 }
 
@@ -219,30 +231,28 @@ fi
 while (( "$#" )) ; do
   OPT=$1
   case $OPT in
-    --version|-v)
-      if [[ $# > 1 ]] ; then
-        $COMBINE_VERSION=$2
-        shift
-      fi
-      ;;
-    --update|-u)
-      if [[ $# > 1 ]] ; then
-        $COMBINE_VERSION=$2
-        shift
-        STATE=Install-combine
-      fi
-      rm ${STATE_FILE}
-      ;;
-    --clean)
-      STATE=Pre-reqs
-      rm ${STATE_FILE}
+    clean)
+      next-state "Pre-reqs"
       if [ -f ${CONFIG_DIR}/env ] ; then
         rm ${CONFIG_DIR}/env
       fi
       ;;
-    --restart)
-      STATE=Pre-reqs
-      rm ${STATE_FILE}
+    restart)
+      next-state "Pre-reqs"
+      ;;
+    uninstall)
+      next-state "Uninstall-combine"
+      ;;
+    update|u)
+      next-state "Install-combine"
+      ;;
+    v*)
+      if [[ $OPT =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9-]+\.[0-9]+)?$ ]] ; then
+        COMBINE_VERSION="$OPT"
+      else
+        echo "Invalid version number, $OPT"
+        exit 1
+      fi
       ;;
     *)
       echo "Unrecognized option: $OPT" >&2
@@ -259,12 +269,10 @@ while [ "$STATE" != "Done" ] ; do
       create-python-venv
       install-kubernetes
       copy-install-scripts
-      STATE=Restart
-      echo -n ${STATE} > ${STATE_FILE}
+      next-state "Restart"
       ;;
     Restart)
-      STATE=Base-charts
-      echo -n ${STATE} > ${STATE_FILE}
+      next-state "Base-charts"
       if [ -f /var/run/reboot-required ] ; then
         echo -e "***** Restart required *****\n"
         echo -e "Rerun combine-installer.run after the system has been restarted.\n"
@@ -272,34 +280,35 @@ while [ "$STATE" != "Done" ] ; do
         if [[ -z $RESTART || $RESTART =~ ^[yY].* ]] ; then
           sudo reboot
         else
+          # We don't call next-state because we don't want the $STATE_FILE
+          # removed - we want the install script to resume with the recorded
+          # state.
           STATE=Done
         fi
       fi
       ;;
     Base-charts)
       install-required-charts
-      STATE=Install-combine
-      echo -n ${STATE} > ${STATE_FILE}
+      next-state "Install-combine"
       ;;
     Install-combine)
       install-the-combine
-      # STATE=Wait-for-combine
-      # echo -n ${STATE} > ${STATE_FILE}
-      STATE="Done"
-      rm ${STATE_FILE}
+      next-state "Wait-for-combine"
       ;;
     Wait-for-combine)
       # Wait until all the combine deployments are up
       echo "Waiting for The Combine to start up.  This may take some time depending on your"
       echo "Internet connection.  Press Ctrl-C to interrupt."
       wait-for-combine
-      STATE="Shutdown-combine"
-      echo -n ${STATE} > ${STATE_FILE}
+      next-state "Shutdown-combine"
       ;;
     Shutdown-combine)
       shutdown-the-combine
-      STATE="Done"
-      rm ${STATE_FILE}
+      next-state "Done"
+      ;;
+    Uninstall-combine)
+      ${INSTALL_DIR}/scripts/uninstall-combine
+      next-state "Done"
       ;;
     *)
       echo "Unrecognized STATE: ${STATE}"

@@ -82,8 +82,8 @@ deploy/scripts/semantic_domains/json/*.json
 database/semantic_domains/*
 
 # Combine installer
-installer/makeself-*
 installer/combine-installer.run
+installer/makeself-*
 
 # Kubernetes Configuration files
 **/site_files/

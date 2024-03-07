@@ -1,0 +1,53 @@
+#! /usr/bin/env bash
+
+delete-files () {
+  for file in "$@" ; do
+    if [[ -f "$file" ]] ; then
+      echo "Removing $file"
+      sudo rm -rf $file >/dev/null 2>&1
+    fi
+  done
+}
+
+kill-service () {
+  # Stops and disables the specified service
+  if systemctl is-active $1 ; then
+    echo "Stopping service $1"
+    sudo systemctl stop $1 2>&1 >/dev/null
+  fi
+  if systemctl is-enabled $1 ; then
+    echo "Disabline service $1"
+    sudo systemctl disable $1
+  fi
+}
+
+# Stop & disable combine services
+echo "Stopping combine services"
+kill-service k3s
+kill-service create_ap
+
+# Delete $HOME/thecombine; $HOME/.config/combine
+delete-files ${HOME}/thecombine ${HOME}/.config/combine
+
+# Remove support tool
+
+kill-service display-eth.service
+kill-service display-eth.timer
+delete-files /lib/systemd/system/display-eth.service /lib/systemd/system/display-eth.timer
+
+# Remove combine management tool
+delete-files /usr/local/bin/combinectl
+
+
+# Uninstall k3s
+if [[ -x /usr/local/bin/k3s-uninstall.sh ]] ; then
+  /usr/local/bin/k3s-uninstall.sh
+fi
+
+# Remove network configurations
+if nmcli c show dummy-vip >/dev/null 2>&1 ; then
+  nmcli c delete dummy-vip
+fi
+
+# delete create_ap files
+delete-files /etc/create_ap /usr/lib/systemd/system/create_ap.service
