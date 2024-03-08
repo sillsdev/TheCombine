@@ -7,10 +7,7 @@ import "tests/reactI18nextMock";
 
 import { Permission } from "api/models";
 import GoalTimeline, { createSuggestionData } from "components/GoalTimeline";
-import {
-  type GoalsState,
-  defaultState,
-} from "components/GoalTimeline/Redux/GoalReduxTypes";
+import { type GoalsState, defaultState } from "goals/Redux/GoalReduxTypes";
 import { Goal, GoalType } from "types/goals";
 import { goalTypeToGoal } from "utilities/goalUtilities";
 
@@ -18,11 +15,11 @@ jest.mock("backend", () => ({
   getCurrentPermissions: () => mockGetCurrentPermissions(),
   getGraylistEntries: (maxLists: number) => mockGetGraylistEntries(maxLists),
 }));
-jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({
+jest.mock("components/Pronunciations/Recorder");
+jest.mock("goals/Redux/GoalActions", () => ({
   asyncAddGoal: (goal: Goal) => mockChooseGoal(goal),
   asyncGetUserEdits: () => jest.fn(),
 }));
-jest.mock("components/Pronunciations/Recorder");
 jest.mock("types/hooks", () => {
   return {
     ...jest.requireActual("types/hooks"),

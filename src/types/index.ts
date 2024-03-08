@@ -1,4 +1,3 @@
-import { GoalsState } from "components/GoalTimeline/Redux/GoalReduxTypes";
 import { LoginState } from "components/Login/Redux/LoginReduxTypes";
 import { CurrentProjectState } from "components/Project/ProjectReduxTypes";
 import { ExportProjectState } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
@@ -6,6 +5,7 @@ import { PronunciationsState } from "components/Pronunciations/Redux/Pronunciati
 import { TreeViewState } from "components/TreeView/Redux/TreeViewReduxTypes";
 import { CharacterInventoryState } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
+import { GoalsState } from "goals/Redux/GoalReduxTypes";
 import { ReviewEntriesState } from "goals/ReviewEntries/Redux/ReviewEntriesReduxTypes";
 import { AnalyticsState } from "types/Redux/analyticsReduxTypes";
 
