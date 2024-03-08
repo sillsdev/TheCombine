@@ -88,9 +88,9 @@ const submitAndCheckError = async (id?: SignupId): Promise<void> => {
 
   // Expect signUp only when no field expected to error.
   if (id === undefined) {
-    expect(mockAsyncSignUp).toBeCalled();
+    expect(mockAsyncSignUp).toHaveBeenCalled();
   } else {
-    expect(mockAsyncSignUp).not.toBeCalled();
+    expect(mockAsyncSignUp).not.toHaveBeenCalled();
   }
 };
 
