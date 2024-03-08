@@ -1,8 +1,8 @@
 import { type WritingSystem } from "api/models";
 import { createProject, finishUploadLift, getProject } from "backend";
 import router from "browserRouter";
-import { asyncCreateUserEdits } from "components/GoalTimeline/Redux/GoalActions";
 import { asyncSetNewCurrentProject } from "components/Project/ProjectActions";
+import { asyncCreateUserEdits } from "goals/Redux/GoalActions";
 import { type StoreStateDispatch } from "types/Redux/actions";
 import { Path } from "types/path";
 import { newProject } from "types/project";
