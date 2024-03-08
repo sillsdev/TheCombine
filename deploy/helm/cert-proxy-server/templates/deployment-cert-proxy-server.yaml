@@ -61,9 +61,14 @@ spec:
             - name: CERT_PROXY_NAMESPACE
               value: {{ .Release.Namespace }}
           image: {{ include "cert-proxy-server.containerImage" . }}
-          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          imagePullPolicy: Always
           name: combine-cert-proxy
-          resources: {}
+          resources:
+            requests:
+              cpu:  2m
+              memory: 100M
+            limits:
+              memory: 150M
       restartPolicy: Always
 {{- if ne .Values.global.pullSecretName "None" }}
       imagePullSecrets:
