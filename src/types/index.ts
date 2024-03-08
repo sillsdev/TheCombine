@@ -5,8 +5,8 @@ import { PronunciationsState } from "components/Pronunciations/Redux/Pronunciati
 import { TreeViewState } from "components/TreeView/Redux/TreeViewReduxTypes";
 import { CharacterInventoryState } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
+import { GoalsState } from "goals/Redux/GoalReduxTypes";
 import { AnalyticsState } from "types/Redux/analyticsReduxTypes";
-import { GoalsState } from "types/goals";
 
 //root store structure
 export interface StoreState {

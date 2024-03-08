@@ -1,11 +1,11 @@
 import loadable from "@loadable/component";
 import { ReactElement, useEffect } from "react";
 
-import { setCurrentGoal } from "components/GoalTimeline/Redux/GoalActions";
 import PageNotFound from "components/PageNotFound/component";
 import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
 import Loading from "goals/DefaultGoal/Loading";
 import { clearTree } from "goals/MergeDuplicates/Redux/MergeDupsActions";
+import { setCurrentGoal } from "goals/Redux/GoalActions";
 import { StoreState } from "types";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 import { useAppDispatch, useAppSelector } from "types/hooks";
