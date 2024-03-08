@@ -3,10 +3,6 @@ import { type Action, type PayloadAction } from "@reduxjs/toolkit";
 import { type Project } from "api/models";
 import { getFrontierWords, updateWord } from "backend";
 import router from "browserRouter";
-import {
-  addCharInvChangesToGoal,
-  asyncUpdateGoal,
-} from "components/GoalTimeline/Redux/GoalActions";
 import { asyncUpdateCurrentProject } from "components/Project/ProjectActions";
 import {
   type CharacterChange,
@@ -27,6 +23,10 @@ import {
   type CharacterSetEntry,
   getCharacterStatus,
 } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
+import {
+  addCharInvChangesToGoal,
+  asyncUpdateGoal,
+} from "goals/Redux/GoalActions";
 import { type StoreState } from "types";
 import { type StoreStateDispatch } from "types/Redux/actions";
 import { Path } from "types/path";

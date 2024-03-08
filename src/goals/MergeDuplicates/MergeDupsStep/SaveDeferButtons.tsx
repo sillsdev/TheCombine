@@ -3,12 +3,12 @@ import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { LoadingButton } from "components/Buttons";
-import { asyncAdvanceStep } from "components/GoalTimeline/Redux/GoalActions";
 import {
   deferMerge,
   mergeAll,
   setSidebar,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
+import { asyncAdvanceStep } from "goals/Redux/GoalActions";
 import { useAppDispatch } from "types/hooks";
 import theme from "types/theme";
 
