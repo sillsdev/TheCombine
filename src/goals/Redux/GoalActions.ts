@@ -4,6 +4,8 @@ import { MergeUndoIds, Word } from "api/models";
 import * as Backend from "backend";
 import { getDuplicates, getGraylistEntries } from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
+import { CharacterChange } from "goals/CharacterInventory/CharacterInventoryTypes";
+import { dispatchMergeStepData } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import {
   addCharInvChangesToGoalAction,
   addCompletedMergeToGoalAction,
@@ -14,9 +16,7 @@ import {
   setGoalDataAction,
   setGoalStatusAction,
   updateStepFromDataAction,
-} from "components/GoalTimeline/Redux/GoalReducer";
-import { CharacterChange } from "goals/CharacterInventory/CharacterInventoryTypes";
-import { dispatchMergeStepData } from "goals/MergeDuplicates/Redux/MergeDupsActions";
+} from "goals/Redux/GoalReducer";
 import { EntryEdit } from "goals/ReviewEntries/ReviewEntriesTypes";
 import router from "router/browserRouter";
 import { StoreState } from "types";
