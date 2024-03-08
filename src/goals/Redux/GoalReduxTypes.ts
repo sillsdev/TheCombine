@@ -1,4 +1,13 @@
-import { Goal, GoalsState, GoalType } from "types/goals";
+import { Goal, GoalType } from "types/goals";
+
+// The representation of goals in the redux store
+export interface GoalsState {
+  allGoalTypes: GoalType[];
+  currentGoal: Goal;
+  goalTypeSuggestions: GoalType[];
+  history: Goal[];
+  previousGoalType: GoalType;
+}
 
 // GoalType.ReviewDeferredDups is also implemented,
 // but is conditionally available
@@ -15,12 +24,3 @@ export const defaultState: GoalsState = {
   history: [],
   previousGoalType: GoalType.Default,
 };
-
-export function emptyGoalState(): GoalsState {
-  return {
-    ...defaultState,
-    allGoalTypes: [],
-    currentGoal: { ...new Goal(), guid: expect.any(String) },
-    goalTypeSuggestions: [],
-  };
-}
