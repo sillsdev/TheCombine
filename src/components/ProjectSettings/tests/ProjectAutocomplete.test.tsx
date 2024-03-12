@@ -27,12 +27,12 @@ describe("ProjectAutocomplete", () => {
     await renderAutocomplete();
     const selectChange = testRenderer.root.findByType(Select).props.onChange;
     await renderer.act(async () => selectChange({ target: { value: "Off" } }));
-    expect(mockUpdateProject).toBeCalledWith({
+    expect(mockUpdateProject).toHaveBeenCalledWith({
       ...mockProject,
       autocompleteSetting: AutocompleteSetting.Off,
     });
     await renderer.act(async () => selectChange({ target: { value: "On" } }));
-    expect(mockUpdateProject).toBeCalledWith({
+    expect(mockUpdateProject).toHaveBeenCalledWith({
       ...mockProject,
       autocompleteSetting: AutocompleteSetting.On,
     });

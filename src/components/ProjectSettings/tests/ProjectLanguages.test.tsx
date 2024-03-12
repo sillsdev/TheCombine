@@ -101,7 +101,7 @@ describe("ProjectLanguages", () => {
         .findByProps({ id: "analysis-language-new-confirm" })
         .props.onClick();
     });
-    expect(mockUpdateProject).toBeCalledWith(
+    expect(mockUpdateProject).toHaveBeenCalledWith(
       mockProject([...mockAnalysisWritingSystems, newLang])
     );
   });

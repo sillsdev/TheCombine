@@ -35,7 +35,7 @@ describe("ProjectName", () => {
       textField.props.onChange({ target: { value: name } })
     );
     await renderer.act(async () => saveButton.props.onClick());
-    expect(mockUpdateProject).toBeCalledWith({ ...mockProject, name });
+    expect(mockUpdateProject).toHaveBeenCalledWith({ ...mockProject, name });
   });
 
   it("toasts on error", async () => {
