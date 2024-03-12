@@ -92,22 +92,22 @@ namespace BackendFramework.Models
             DefinitionsEnabled = false;
             GrammaticalInfoEnabled = false;
             AutocompleteSetting = AutocompleteSetting.On;
-            SemDomWritingSystem = new WritingSystem();
-            VernacularWritingSystem = new WritingSystem();
-            AnalysisWritingSystems = new List<WritingSystem>();
-            SemanticDomains = new List<SemanticDomain>();
-            ValidCharacters = new List<string>();
-            RejectedCharacters = new List<string>();
-            CustomFields = new List<CustomField>();
-            WordFields = new List<string>();
-            PartsOfSpeech = new List<string>();
-            InviteTokens = new List<EmailInvite>();
-            WorkshopSchedule = new List<DateTime>();
+            SemDomWritingSystem = new();
+            VernacularWritingSystem = new();
+            AnalysisWritingSystems = new();
+            SemanticDomains = new();
+            ValidCharacters = new();
+            RejectedCharacters = new();
+            CustomFields = new();
+            WordFields = new();
+            PartsOfSpeech = new();
+            InviteTokens = new();
+            WorkshopSchedule = new();
         }
 
         public Project Clone()
         {
-            var clone = new Project
+            return new()
             {
                 Id = Id,
                 Name = Name,
@@ -118,55 +118,16 @@ namespace BackendFramework.Models
                 AutocompleteSetting = AutocompleteSetting,
                 SemDomWritingSystem = SemDomWritingSystem.Clone(),
                 VernacularWritingSystem = VernacularWritingSystem.Clone(),
-                AnalysisWritingSystems = new List<WritingSystem>(),
-                SemanticDomains = new List<SemanticDomain>(),
-                ValidCharacters = new List<string>(),
-                RejectedCharacters = new List<string>(),
-                CustomFields = new List<CustomField>(),
-                WordFields = new List<string>(),
-                PartsOfSpeech = new List<string>(),
-                InviteTokens = new List<EmailInvite>(),
-                WorkshopSchedule = new List<DateTime>(),
+                AnalysisWritingSystems = AnalysisWritingSystems.Select(ws => ws.Clone()).ToList(),
+                SemanticDomains = SemanticDomains.Select(sd => sd.Clone()).ToList(),
+                ValidCharacters = ValidCharacters.Select(vc => vc).ToList(),
+                RejectedCharacters = RejectedCharacters.Select(rc => rc).ToList(),
+                CustomFields = CustomFields.Select(cf => cf.Clone()).ToList(),
+                WordFields = WordFields.Select(wf => wf).ToList(),
+                PartsOfSpeech = PartsOfSpeech.Select(ps => ps).ToList(),
+                InviteTokens = InviteTokens.Select(it => it.Clone()).ToList(),
+                WorkshopSchedule = WorkshopSchedule.Select(dt => dt).ToList(),
             };
-
-            foreach (var aw in AnalysisWritingSystems)
-            {
-                clone.AnalysisWritingSystems.Add(aw.Clone());
-            }
-            foreach (var sd in SemanticDomains)
-            {
-                clone.SemanticDomains.Add(sd.Clone());
-            }
-            foreach (var cs in ValidCharacters)
-            {
-                clone.ValidCharacters.Add(cs);
-            }
-            foreach (var cs in RejectedCharacters)
-            {
-                clone.RejectedCharacters.Add(cs);
-            }
-            foreach (var cf in CustomFields)
-            {
-                clone.CustomFields.Add(cf.Clone());
-            }
-            foreach (var wf in WordFields)
-            {
-                clone.WordFields.Add(wf);
-            }
-            foreach (var pos in PartsOfSpeech)
-            {
-                clone.PartsOfSpeech.Add(pos);
-            }
-            foreach (var it in InviteTokens)
-            {
-                clone.InviteTokens.Add(it.Clone());
-            }
-            foreach (var dt in WorkshopSchedule)
-            {
-                clone.WorkshopSchedule.Add(dt);
-            }
-
-            return clone;
         }
 
         public bool ContentEquals(Project other)
@@ -362,8 +323,8 @@ namespace BackendFramework.Models
 
         public UserCreatedProject()
         {
-            Project = new Project();
-            User = new User();
+            Project = new();
+            User = new();
         }
     }
 

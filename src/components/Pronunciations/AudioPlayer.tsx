@@ -10,8 +10,9 @@ import {
   Tooltip,
 } from "@mui/material";
 import {
-  CSSProperties,
+  MouseEvent,
   ReactElement,
+  TouchEvent,
   useCallback,
   useEffect,
   useState,
@@ -22,6 +23,7 @@ import { Pronunciation, Speaker } from "api/models";
 import { getSpeaker } from "backend";
 import { SpeakerMenuList } from "components/AppBar/SpeakerMenu";
 import { ButtonConfirmation } from "components/Dialogs";
+import MultilineTooltipTitle from "components/MultilineTooltipTitle";
 import {
   playing,
   resetPronunciations,
@@ -29,19 +31,17 @@ import {
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
-import { themeColors } from "types/theme";
 
 interface PlayerProps {
   audio: Pronunciation;
   deleteAudio?: (fileName: string) => void;
+  disabled?: boolean;
   onClick?: () => void;
   pronunciationUrl?: string;
   size?: "large" | "medium" | "small";
   updateAudioSpeaker?: (speakerId?: string) => Promise<void> | void;
   warningTextId?: string;
 }
-
-const iconStyle: CSSProperties = { color: themeColors.success };
 
 export default function AudioPlayer(props: PlayerProps): ReactElement {
   const isPlaying = useAppSelector(
@@ -123,12 +123,14 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
     document.removeEventListener("contextmenu", preventEventOnce, false);
   }
 
-  function handleTouch(event: any): void {
+  /** If audio can be deleted or speaker changed, a touchscreen press should open an
+   * options menu instead of the context menu. */
+  function handleTouch(e: TouchEvent<HTMLButtonElement>): void {
     if (canChangeSpeaker || canDeleteAudio) {
       // Temporarily disable context menu since some browsers
       // interpret a long-press touch as a right-click.
       disableContextMenu();
-      setAnchor(event.currentTarget);
+      setAnchor(e.currentTarget);
     }
   }
 
@@ -139,11 +141,19 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
     setSpeakerDialog(false);
   }
 
+  /** If speaker can be changed, a right click should open the speaker menu instead of
+   * the context menu. */
   function handleOnAuxClick(): void {
     if (canChangeSpeaker) {
-      // Temporarily disable context menu triggered by right-click.
       disableContextMenu();
       setSpeakerDialog(true);
+    }
+  }
+
+  /** Catch a multi-finger mousepad tap as a right click. */
+  function handleOnMouseDown(e: MouseEvent<HTMLButtonElement>): void {
+    if (e.buttons > 1) {
+      handleOnAuxClick();
     }
   }
 
@@ -165,24 +175,41 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
     );
   }
 
-  const multilineTooltipText = (lines: string[]): ReactElement => (
-    <div style={{ whiteSpace: "pre-line" }}>{lines.join("\n")}</div>
+  const icon = isPlaying ? (
+    <Stop
+      sx={{
+        color: (t) =>
+          props.disabled ? t.palette.grey[400] : t.palette.success.main,
+      }}
+    />
+  ) : (
+    <PlayArrow
+      sx={{
+        color: (t) =>
+          props.disabled ? t.palette.grey[400] : t.palette.success.main,
+      }}
+    />
   );
 
   return (
     <>
-      <Tooltip title={multilineTooltipText(tooltipTexts)} placement="top">
+      <Tooltip
+        title={<MultilineTooltipTitle lines={tooltipTexts} />}
+        placement="top"
+      >
         <IconButton
           tabIndex={-1}
           onAuxClick={handleOnAuxClick}
           onClick={deleteOrTogglePlay}
+          onMouseDown={handleOnMouseDown}
           onTouchStart={handleTouch}
           onTouchEnd={enableContextMenu}
           aria-label="play"
+          disabled={props.disabled}
           id={`audio-${props.audio.fileName}`}
           size={props.size || "large"}
         >
-          {isPlaying ? <Stop sx={iconStyle} /> : <PlayArrow sx={iconStyle} />}
+          {icon}
         </IconButton>
       </Tooltip>
       <Menu
@@ -201,7 +228,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
             handleMenuOnClose();
           }}
         >
-          {isPlaying ? <Stop sx={iconStyle} /> : <PlayArrow sx={iconStyle} />}
+          {icon}
         </MenuItem>
         {canChangeSpeaker && (
           <MenuItem

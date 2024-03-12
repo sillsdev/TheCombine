@@ -38,7 +38,7 @@ jest.mock("backend", () => ({
   getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
 }));
 jest.mock("components/TreeView", () => "div");
-jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({}));
+jest.mock("goals/Redux/GoalActions", () => ({}));
 jest.mock("types/hooks", () => ({
   useAppDispatch: () => jest.fn(),
 }));

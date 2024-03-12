@@ -29,11 +29,9 @@
     "addNote": "Add a note",
     "domain": "Domain",
     "domainTitle": "Domain: {{ val1 }} ({{ val2 }})",
-    "gloss": "Gloss",
     "glosses": "Glosses",
     "pressEnter": "Press enter to save word",
-    "vernacular": "Vernacular",
-    "wordInDatabase": "This word is already in the database"
+    "vernacular": "Vernacular"
   },
   "appBar": {
     "dataEntry": "Data Entry",
@@ -61,12 +59,10 @@
     "usernameRequirements": "Username must be 3 characters or longer.",
     "usernameTaken": "Username not available.",
     "emailTaken": "Email address not available.",
-    "loggingIn": "Logging in...",
     "required": "Required",
     "confirmPassword": "Confirm Password",
     "confirmPasswordError": "Passwords do not match.",
-    "email": "Email",
-    "emailError": "Please enter a valid email."
+    "email": "Email"
   },
   "passwordReset": {
     "invalidURL": "Password Reset link is invalid.",
@@ -150,7 +146,6 @@
       "users": "Users"
     },
     "language": {
-      "header": "Language",
       "vernacular": "Vernacular",
       "vernacularLanguage": "Vernacular Language",
       "analysis": "Analysis",
@@ -209,7 +204,6 @@
       "delete": "Delete this speaker",
       "edit": "Edit speaker's name",
       "consent": {
-        "play": "Listen to the audio consent for this speaker",
         "add": "Add consent for this speaker",
         "record": "Record audio consent",
         "view": "View this speaker's image consent",
@@ -223,7 +217,6 @@
       "header": "Import Data",
       "body": "Imported data will be added to this project. The Combine will make no attempt to deduplicate, overwrite, or sync.",
       "chooseFile": "Choose File",
-      "done": "Done!",
       "notAllowed": "You have already imported a Lift file to this project."
     },
     "archive": {
@@ -249,10 +242,6 @@
       "on": "On",
       "hint": "In Data Entry, suggest existing Vernaculars similar to the Vernacular being typed."
     },
-    "definitions": {
-      "label": "Display Definitions",
-      "hint": "In Review Entries, show a Definitions column; in Merge Duplicates, show the Definition below the Gloss."
-    },
     "invite": {
       "inviteByEmailLabel": "Invite by Email",
       "userExists": "This user is already registered.",
@@ -260,14 +249,12 @@
       "searchPlaceholder": "Search...",
       "searchTitle": "Find Users",
       "emailLabel": "Email",
-      "messageLabel": "Message",
       "toastSuccess": "User added to the project.",
       "toastFail": "Failed to add user to the project."
     }
   },
   "goal": {
     "selector": {
-      "selectOption": "Select this goal",
       "past": "You've completed:",
       "present": "Our recommendation:",
       "other": "Other options:",
@@ -297,7 +284,6 @@
   },
   "reviewEntries": {
     "title": "Review Entries",
-    "sense": "Sense",
     "noVernacular": "No vernacular input!",
     "noDefinition": "No definitions input",
     "noGloss": "No glosses input",
@@ -362,30 +348,17 @@
     "characterSet": {
       "title": "Vernacular Character Set:",
       "help": "Define the characters that are valid for this language",
-      "addButton": "Add Chars",
-      "addButtonTitle": "Add the characters in the box to the character set",
-      "deleteButton": "Delete Selected",
-      "deleteButtonTitle": "Remove the selected characters from the character set",
       "acceptedCharacters": "Accepted Characters",
       "rejectedCharacters": "Rejected Characters",
-      "noCharacters": "No characters yet! Type characters into the box below to get started.",
-      "required": "Add characters by entering them in this box",
       "advanced": "Advanced",
       "occurrences": "{{ val }} occurrences",
       "find": "Find",
-      "replace": "Replace",
       "replaceWith": "Replace with",
       "replaceAll": "Replace all occurrences of: {{ val }}",
       "replaceAllWith": "Replace with: {{ val }}",
       "findAndReplace": "Find & Replace",
       "findAndReplaceError": "Error processing: find ( {{ val1 }} ), replace ( {{  val2 }} )",
       "apply": "apply"
-    },
-    "sampleWords": {
-      "title": "Sample Words",
-      "description": "Here are some words that don't fit your current character set:",
-      "ignore": "Ignore this word for now",
-      "add": "Add characters in this word to the set"
     },
     "dialog": {
       "title": "Unsaved changes",
@@ -402,17 +375,44 @@
     "title": "Merge Duplicates",
     "helpText": {
       "dragCard": "Drag a card here to merge",
-      "root": "Drag words here to start merging them",
-      "dups": "Drag duplicate words here",
-      "sense": "Drag new sense here",
       "saveAndContinue": "Save changes and load a new set of words",
       "defer": "Discard changes and load a new set of words",
-      "list": "Drag this word to the right to start merging it with other words",
       "noDups": "Nothing to merge.",
       "delete": "Delete sense",
       "deleteDialog": "Delete this sense?",
-      "protectedSense": "This sense was imported with data that The Combine doesn't handle, so it cannot be deleted or dropped into another sense. You may still move this sense to another word or drop other senses into this one to merge them.",
-      "protectedWord": "This word was imported with data that The Combine doesn't handle, so to prevent deletion, its final sense cannot be removed."
+      "protectedSense": "This sense was imported with data that The Combine doesn't handle.",
+      "protectedSenseInfo": "This sense cannot be deleted or dropped into another sense. You may still move it to another word or drop other senses into this one to merge them.",
+      "protectedWord": "This word was imported with data that The Combine doesn't handle.",
+      "protectedWordInfo": "To prevent deletion, the final sense of this word cannot be removed.",
+      "protectedData": "Protected data: {{ val }}"
+    },
+    "protectReason": {
+      "annotations": "annotations",
+      "etymologies": "etymologies",
+      "examples": "examples",
+      "field": "\"{{ val }}\" field",
+      "gramInfoTrait": "grammatical info \"{{ val }}\"",
+      "illustrations": "illustrations",
+      "noteWithType": "note with type \"{{ val }}\"",
+      "notesSense": "notes",
+      "notesWord": "more than 1 note",
+      "relations": "relations",
+      "reversal": "\"{{ val }}\" reversal",
+      "subsenses": "subsenses",
+      "traitAnthroCode": "anthro code \"{{ val }}\"",
+      "traitDialectLabels": "dialect labels \"{{ val }}\"",
+      "traitDomainType": "domain type \"{{ val }}\"",
+      "traitDoNotPublishIn": "do not publish in \"{{ val }}\"",
+      "traitDoNotUseForParsing": "do not use for parsing \"{{ val }}\"",
+      "traitEntryType": "entry type \"{{ val }}\"",
+      "traitExcludeAsHeadword": "exclude as headword",
+      "traitMinorEntryCondition": "minor entry condition \"{{ val }}\"",
+      "traitMorphType": "morph type \"{{ val }}\" (rather than default \"stem\")",
+      "traitPublishIn": "publish in \"{{ val }}\"",
+      "traitSenseType": "sense type \"{{ val }}\"",
+      "traitStatus": "status \"{{ val }}\"",
+      "traitUsageType": "usage type \"{{ val }}\"",
+      "variants": "variants"
     },
     "completed": {
       "number": "Number of merges completed: "
@@ -432,8 +432,7 @@
     "add": "Add flag",
     "edit": "Edit flag",
     "remove": "Remove flag",
-    "save": "Save flag",
-    "text": "Text: "
+    "save": "Save flag"
   },
   "buttons": {
     "accept": "Accept",

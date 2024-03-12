@@ -6,15 +6,6 @@ import { Edit, MergeUndoIds, Permission, User, UserEdit } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import GoalTimeline from "components/GoalTimeline";
 import {
-  addCharInvChangesToGoal,
-  addCompletedMergeToGoal,
-  asyncAddGoal,
-  asyncAdvanceStep,
-  asyncGetUserEdits,
-  asyncUpdateGoal,
-  setCurrentGoal,
-} from "components/GoalTimeline/Redux/GoalActions";
-import {
   CharacterChange,
   CharacterStatus,
   CharInvChanges,
@@ -28,12 +19,21 @@ import {
   ReviewDeferredDups,
 } from "goals/MergeDuplicates/MergeDupsTypes";
 import { goalDataMock } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
+import {
+  addCharInvChangesToGoal,
+  addCompletedMergeToGoal,
+  asyncAddGoal,
+  asyncAdvanceStep,
+  asyncGetUserEdits,
+  asyncUpdateGoal,
+  setCurrentGoal,
+} from "goals/Redux/GoalActions";
 import { setupStore } from "store";
 import { GoalStatus, GoalType } from "types/goals";
 import { Path } from "types/path";
 import { newUser } from "types/user";
 import * as goalUtilities from "utilities/goalUtilities";
-import { renderWithProviders } from "utilities/testUtilities";
+import { renderWithProviders } from "utilities/testingLibraryUtilities";
 
 jest.mock("backend", () => ({
   addGoalToUserEdit: (...args: any[]) => mockAddGoalToUserEdit(...args),

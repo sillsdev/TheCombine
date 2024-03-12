@@ -13,27 +13,27 @@
     <PackageReference Include="RelaxNG" Version="3.2.3" >
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.25" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.34.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.34.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.27" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.35.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.35.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="MongoDB.Driver" Version="2.23.1" />
+    <PackageReference Include="MongoDB.Driver" Version="2.24.0" />
     <PackageReference Include="MailKit" Version="4.3.0" />
     <PackageReference Include="Xabe.FFmpeg" Version="5.2.6"/>
 
     <!-- SIL Maintained Dependencies. -->
     <PackageReference Include="icu.net" Version="2.9.0" />
     <PackageReference Include="Icu4c.Win.Full.Lib" Version="62.2.1-beta" />
-    <PackageReference Include="SIL.Core" Version="13.0.0" />
-    <PackageReference Include="SIL.Core.Desktop" Version="13.0.0">
+    <PackageReference Include="SIL.Core" Version="13.0.1" />
+    <PackageReference Include="SIL.Core.Desktop" Version="13.0.1">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="SIL.DictionaryServices" Version="13.0.0">
+    <PackageReference Include="SIL.DictionaryServices" Version="13.0.1">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="SIL.Lift" Version="13.0.0">
+    <PackageReference Include="SIL.Lift" Version="13.0.1">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="SIL.WritingSystems" Version="13.0.0" />
+    <PackageReference Include="SIL.WritingSystems" Version="13.0.1" />
   </ItemGroup>
 </Project>
