@@ -99,7 +99,9 @@ jobs:
         with:
           name: coverage
       - name: Upload coverage report
-        uses: codecov/codecov-action:latest
+        uses: codecov/codecov-action@54bcd8715eee62d40e33596ef5e8f0f48dbbccab # v4.1.0
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           fail_ci_if_error: true
           files: cobertura-coverage.xml
