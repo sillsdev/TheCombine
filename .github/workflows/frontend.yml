@@ -107,6 +107,7 @@ jobs:
           files: cobertura-coverage.xml
           flags: frontend
           name: Frontend
+          verbose: true
 
   docker_build:
     runs-on: ubuntu-latest

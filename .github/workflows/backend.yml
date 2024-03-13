@@ -97,6 +97,7 @@ jobs:
           files: coverage.cobertura.xml
           flags: backend
           name: Backend
+          verbose: true
 
   CodeQL_build:
     permissions:
