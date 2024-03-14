@@ -181,12 +181,6 @@ wait-for-combine () {
   done
 }
 
-shutdown-the-combine () {
-  # Shut down the combine services and set them to not start at boot time
-  combinectl stop
-  combinectl status
-}
-
 create-dest-directory () {
   if [ -d ${COMBINE_DIR} ] ; then
     echo "The installation directory already exists. ($COMBINE_DIR)"
@@ -297,13 +291,20 @@ while [ "$STATE" != "Done" ] ; do
       ;;
     Wait-for-combine)
       # Wait until all the combine deployments are up
-      echo "Waiting for The Combine to start up.  This may take some time depending on your"
-      echo "Internet connection.  Press Ctrl-C to interrupt."
+      echo "Waiting for The Combine components to download."
+      echo "This may take some time depending on your Internet connection."
+      echo "Press Ctrl-C to interrupt."
       wait-for-combine
       next-state "Shutdown-combine"
       ;;
     Shutdown-combine)
-      shutdown-the-combine
+      # Shut down the combine services
+      combinectl stop
+      # Disable combine services from starting at boot time
+      sudo systemctl disable create_ap
+      sudo systemctl disable k3s
+      # Print the current status
+      combinectl status
       next-state "Done"
       ;;
     Uninstall-combine)
