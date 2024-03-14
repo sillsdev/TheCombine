@@ -19,6 +19,17 @@ usage () {
                 Note that not all releases can be updated this way.  If
                 The Combine does not run properly, download and run the
                 updated install package.
+      wifi [wifi-passphrase]:
+                If no parameters are provieded, display the wifi
+                passphrase.  If a new passphase is provided, the
+                wifi passphrase is updated to the new phrase.  If
+                The Combine is running, it needs to be restarted.
+                Notes:
+                  In general, it is best to enclose your pass phrase
+                  in quotation marks (").
+                  Use
+                    combinectl wifi ""
+                  to clear the required passphrase.
 
     If the command is omitted or unrecognized, this usage message is
     printed.
@@ -38,8 +49,8 @@ save-wifi-connection () {
 restore-wifi-connection () {
   if [ -f "${COMBINE_CONFIG}/wifi_connection.txt" ] ; then
     WIFI_CONN=`cat ${COMBINE_CONFIG}/wifi_connection.txt`
-    echo "Restoring connection $WIFI_CONN"
     if [ "$WIFI_CONN" != "--" ] ; then
+      echo "Restoring connection $WIFI_CONN"
       nmcli c up "$WIFI_CONN"
     fi
   fi
@@ -102,7 +113,25 @@ combine-update () {
   kubectl -n thecombine set image deployment/maintenance maintenance="public.ecr.aws/thecombine/combine_maint:$IMAGE_TAG"
 }
 
+combine-wifi-list-password () {
+  WIFI_PASSWD=`grep PASSPHRASE ${WIFI_CONFIG} | sed "s/PASSPHRASE=//g"`
+  echo "WiFi Password is \"${WIFI_PASSWD}\""
+}
+
+combine-wifi-set-password () {
+  if [[ ${#1} -ge 8 ]] ; then
+    sudo sed -i "s/PASSPHRASE=.*/PASSPHRASE=$1/" ${WIFI_CONFIG}
+    combine-wifi-list-password
+  elif [[ -z $1 ]] ; then
+    sudo sed -i "s/PASSPHRASE=.*/PASSPHRASE=/" ${WIFI_CONFIG}
+    combine-wifi-list-password
+  else
+    echo "Wifi password must be at least 8 characters long."
+  fi
+}
+
 WIFI_IF={{ wifi_interfaces[0] }}
+WIFI_CONFIG=/etc/create_ap/create_ap.conf
 export KUBECONFIG=${HOME}/.kube/config
 COMBINE_CONFIG=${HOME}/.config/combine
 
@@ -124,6 +153,13 @@ case "$1" in
     combine-cert;;
   update)
     combine-update $2;;
+  wifi)
+    if [[ $# -eq 1 ]] ; then
+      combine-wifi-list-password
+    else
+      combine-wifi-set-password $2
+    fi
+    ;;
   *)
     echo -e "Unrecognized command: \"$1\".\n"
     usage;;
