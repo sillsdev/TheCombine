@@ -74,7 +74,7 @@ describe("DataEntry", () => {
 
   it("fetches domain", async () => {
     await renderDataEntry({ currentDomain: mockDomain });
-    expect(mockGetSemanticDomainFull).toBeCalledWith(
+    expect(mockGetSemanticDomainFull).toHaveBeenCalledWith(
       mockDomain.id,
       mockDomain.lang
     );

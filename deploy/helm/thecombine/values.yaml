@@ -39,6 +39,8 @@ global:
   # Update strategy should be "Recreate" or "Rolling Update"
   updateStrategy: Recreate
 
+  includeResourceLimits: false
+
 aws-login:
   enabled: true
 
