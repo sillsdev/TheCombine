@@ -46,7 +46,7 @@ fi
 
 # Remove network configurations
 if nmcli c show dummy-vip >/dev/null 2>&1 ; then
-  nmcli c delete dummy-vip
+  sudo nmcli c delete dummy-vip
 fi
 
 # delete create_ap files
