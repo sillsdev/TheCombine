@@ -84,6 +84,7 @@ database/semantic_domains/*
 # Combine installer
 installer/combine-installer.run
 installer/makeself-*
+installer/README.pdf
 
 # Kubernetes Configuration files
 **/site_files/
