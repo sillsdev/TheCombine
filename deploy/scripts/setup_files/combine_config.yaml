@@ -19,10 +19,9 @@ targets:
         global:
           serverName: thecombine.localhost
   desktop:
-    profile: nuc
+    profile: desktop
     env_vars_required: false
     override:
-      # override values for 'thecombine' chart
       thecombine:
         global:
           serverName: local.thecombine.app
