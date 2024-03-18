@@ -22,19 +22,11 @@ set-combine-env () {
      for your normal word collection work.  The default username is admin.
 
 .EOM
-    read -p "Enter name for the site admin account: " COMBINE_ADMIN_USERNAME
-    if [ -z "${COMBINE_ADMIN_USERNAME}" ] ; then
-      COMBINE_ADMIN_USERNAME=admin
-    fi
-    COMBINE_ADMIN_PASSWORD=$(get-password "Enter a password for the ${COMBINE_ADMIN_USERNAME} account:")
-    echo -e "\n"
     read -p "Enter AWS_ACCESS_KEY_ID: " AWS_ACCESS_KEY_ID
     read -p "Enter AWS_SECRET_ACCESS_KEY: " AWS_SECRET_ACCESS_KEY
     # write collected values and static values to config file
     cat <<.EOF > ${CONFIG_DIR}/env
     export COMBINE_JWT_SECRET_KEY="${COMBINE_JWT_SECRET_KEY}"
-    export COMBINE_ADMIN_PASSWORD="${COMBINE_ADMIN_PASSWORD}"
-    export COMBINE_ADMIN_USERNAME="${COMBINE_ADMIN_USERNAME}"
     export AWS_DEFAULT_REGION="us-east-1"
     export AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}"
     export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
@@ -110,7 +102,7 @@ copy-install-scripts () {
                 "scripts/setup_combine.py"\
                 "scripts/setup_files/cluster_config.yaml"\
                 "scripts/setup_files/combine_config.yaml"\
-                "scripts/setup_files/profiles/nuc.yaml"\
+                "scripts/setup_files/profiles/desktop.yaml"\
                 "scripts/utils.py")
   for script_file in "${script_files[@]}" ; do
     # create the destination directory if necessary
@@ -208,7 +200,6 @@ next-state () {
 # Setup initial variables
 INSTALL_DIR=`pwd`
 COMBINE_DIR=${HOME}/thecombine
-COMBINE_VERSION="${COMBINE_VERSION:-v1.2.0}"
 # Create directory for configuration files 
 CONFIG_DIR=${HOME}/.config/combine
 mkdir -p ${CONFIG_DIR}
@@ -254,6 +245,12 @@ while (( "$#" )) ; do
   esac
   shift
 done
+
+# Check that we have a COMBINE_VERSION
+if [ -z "${COMBINE_VERSION}" ] ; then
+  echo "Combine version is not specified."
+  exit 1
+fi
 
 # Step through the installation stages
 while [ "$STATE" != "Done" ] ; do
