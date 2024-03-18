@@ -3,7 +3,7 @@
 usage () {
   cat << .EOM
   Usage:
-    $0 COMMAND [parameters]
+    combinectl COMMAND [parameters]
 
     Commands:
       help:     Print this usage message.
@@ -22,18 +22,23 @@ usage () {
       wifi [wifi-passphrase]:
                 If no parameters are provieded, display the wifi
                 passphrase.  If a new passphase is provided, the
-                wifi passphrase is updated to the new phrase.  If
-                The Combine is running, it needs to be restarted.
-                Notes:
-                  In general, it is best to enclose your pass phrase
-                  in quotation marks (").
-                  Use
-                    combinectl wifi ""
-                  to clear the required passphrase.
+                wifi passphrase is updated to the new phrase.
+                If your passphrase has spaces or special characters,
+                it is best to enclose your pass phrase in quotation marks ("").
 
     If the command is omitted or unrecognized, this usage message is
     printed.
 .EOM
+}
+
+get-wifi-if () {
+  IFS=$'\n' WIFI_DEVICES=( $(nmcli d | grep "^wl") )
+  if [[ {{ '${#WIFI_DEVICES[@]}' }} -gt 0 ]] ; then
+    IFS=' ' read -r -a IFNAME <<< "${WIFI_DEVICES[0]}"
+    echo "${IFNAME[0]}"
+  else
+    echo ""
+  fi
 }
 
 save-wifi-connection () {
@@ -42,7 +47,7 @@ save-wifi-connection () {
   # save it so we can restore it later
   echo "$WIFI_CONN" > ${COMBINE_CONFIG}/wifi_connection.txt
   if [ "$WIFI_CONN" != "--" ] ; then
-    nmcli c down "$WIFI_CONN"
+    sudo nmcli c down "$WIFI_CONN"
   fi
 }
 
@@ -50,8 +55,8 @@ restore-wifi-connection () {
   if [ -f "${COMBINE_CONFIG}/wifi_connection.txt" ] ; then
     WIFI_CONN=`cat ${COMBINE_CONFIG}/wifi_connection.txt`
     if [ "$WIFI_CONN" != "--" ] ; then
-      echo "Restoring connection $WIFI_CONN"
-      nmcli c up "$WIFI_CONN"
+      echo "Restoring connection ${WIFI_CONN}"
+      sudo nmcli c up "${WIFI_CONN}"
     fi
   fi
 }
@@ -119,18 +124,20 @@ combine-wifi-list-password () {
 }
 
 combine-wifi-set-password () {
-  if [[ ${#1} -ge 8 ]] ; then
+  # Check that the passphrase is at least 8 characters long
+  if [[ {{ '${#1}' }} -ge 8 ]] ; then
     sudo sed -i "s/PASSPHRASE=.*/PASSPHRASE=$1/" ${WIFI_CONFIG}
-    combine-wifi-list-password
-  elif [[ -z $1 ]] ; then
-    sudo sed -i "s/PASSPHRASE=.*/PASSPHRASE=/" ${WIFI_CONFIG}
+    if systemctl is-active --quiet create_ap ; then
+      sudo systemctl restart create_ap
+      sudo systemctl restart systemd-resolved
+    fi
     combine-wifi-list-password
   else
     echo "Wifi password must be at least 8 characters long."
   fi
 }
 
-WIFI_IF={{ wifi_interfaces[0] }}
+WIFI_IF=$(get-wifi-if)
 WIFI_CONFIG=/etc/create_ap/create_ap.conf
 export KUBECONFIG=${HOME}/.kube/config
 COMBINE_CONFIG=${HOME}/.config/combine
