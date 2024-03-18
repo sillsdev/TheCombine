@@ -515,9 +515,7 @@ of development setup errors. Run from within a Python virtual environment.
 python scripts/cleanup_local_repo.py
 ```
 
-### Generate Installer Script for The Combine
-
-_Linux Only_
+### Generate Installer Script for The Combine (_Linux Only_)
 
 To generate the installer script, run the following commands starting in the project top level directory:
 
