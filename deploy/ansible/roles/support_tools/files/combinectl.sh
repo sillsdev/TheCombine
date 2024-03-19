@@ -31,6 +31,9 @@ usage () {
 .EOM
 }
 
+# Get the name of the first wifi interface.  In general,
+# this script assumes that there is a single WiFi interface
+# installed.
 get-wifi-if () {
   IFS=$'\n' WIFI_DEVICES=( $(nmcli d | grep "^wl") )
   if [[ ${#WIFI_DEVICES[@]} -gt 0 ]] ; then
@@ -41,16 +44,7 @@ get-wifi-if () {
   fi
 }
 
-save-wifi-connection () {
-  # get the name of the WiFi Connection
-  WIFI_CONN=`nmcli d show "$WIFI_IF" | grep "^GENERAL.CONNECTION" | sed "s|^GENERAL.CONNECTION:  *||"`
-  # save it so we can restore it later
-  echo "$WIFI_CONN" > ${COMBINE_CONFIG}/wifi_connection.txt
-  if [ "$WIFI_CONN" != "--" ] ; then
-    sudo nmcli c down "$WIFI_CONN"
-  fi
-}
-
+# Restart a WiFi connection that was saved previously
 restore-wifi-connection () {
   if [ -f "${COMBINE_CONFIG}/wifi_connection.txt" ] ; then
     WIFI_CONN=`cat ${COMBINE_CONFIG}/wifi_connection.txt`
@@ -61,6 +55,25 @@ restore-wifi-connection () {
   fi
 }
 
+# Save the current WiFi connection and then shut it down
+save-wifi-connection () {
+  # get the name of the WiFi Connection
+  WIFI_CONN=`nmcli d show "$WIFI_IF" | grep "^GENERAL.CONNECTION" | sed "s|^GENERAL.CONNECTION:  *||"`
+  # save it so we can restore it later
+  echo "$WIFI_CONN" > ${COMBINE_CONFIG}/wifi_connection.txt
+  if [ "$WIFI_CONN" != "--" ] ; then
+    sudo nmcli c down "$WIFI_CONN"
+  fi
+}
+
+# Print the expiration date of the TLS Certificate
+combine-cert () {
+  SECRET_NAME=`kubectl -n thecombine get secrets --field-selector type=kubernetes.io/tls -o name`
+  CERT_DATA=`kubectl -n thecombine get $SECRET_NAME -o "jsonpath={.data['tls\.crt']}"`
+  echo $CERT_DATA | base64 -d | openssl x509 -enddate -noout| sed -e "s/^notAfter=/Web certificate expires at /"
+}
+
+# Start The Combine services
 combine-start () {
   echo "Starting The Combine."
   if ! systemctl is-active --quiet create_ap ; then
@@ -73,6 +86,8 @@ combine-start () {
   fi
 }
 
+# Stop The Combine services and restore the WiFI
+# connection if needed.
 combine-stop () {
   echo "Stopping The Combine."
   if systemctl is-active --quiet k3s ; then
@@ -85,6 +100,9 @@ combine-stop () {
   fi
 }
 
+# Print the status of The Combine services.  If the combine is
+# "up" then also print that status of the deployments in
+# "thecombine" namespace.
 combine-status () {
   if systemctl is-active --quiet create_ap ; then
     echo "WiFi hotspot is Running."
@@ -99,12 +117,9 @@ combine-status () {
   fi
 }
 
-combine-cert () {
-  SECRET_NAME=`kubectl -n thecombine get secrets --field-selector type=kubernetes.io/tls -o name`
-  CERT_DATA=`kubectl -n thecombine get $SECRET_NAME -o "jsonpath={.data['tls\.crt']}"`
-  echo $CERT_DATA | base64 -d | openssl x509 -enddate -noout| sed -e "s/^notAfter=/Web certificate expires at /"
-}
-
+# Update the image used in each of the deployments in The Combine.  This
+# is akin to our current update process for Production and QA servers.  It
+# does *not* update any configuration files or secrets.
 combine-update () {
   echo "Updating The Combine to $1"
   IMAGE_TAG=$1
@@ -118,11 +133,13 @@ combine-update () {
   kubectl -n thecombine set image deployment/maintenance maintenance="public.ecr.aws/thecombine/combine_maint:$IMAGE_TAG"
 }
 
+# Print the current password for the WiFi Access point
 combine-wifi-list-password () {
   WIFI_PASSWD=`grep PASSPHRASE ${WIFI_CONFIG} | sed "s/PASSPHRASE=//g"`
   echo "WiFi Password is \"${WIFI_PASSWD}\""
 }
 
+# Set the password for the WiFi Access point
 combine-wifi-set-password () {
   # Check that the passphrase is at least 8 characters long
   if [[ ${#1} -ge 8 ]] ; then
@@ -137,6 +154,7 @@ combine-wifi-set-password () {
   fi
 }
 
+# Main script entrypoint
 WIFI_IF=$(get-wifi-if)
 WIFI_CONFIG=/etc/create_ap/create_ap.conf
 export KUBECONFIG=${HOME}/.kube/config
