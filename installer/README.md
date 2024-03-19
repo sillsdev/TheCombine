@@ -32,7 +32,14 @@ _The Combine_ can be installed on a PC that meets the following requirements:
 
 3. Download the installation script from
    [https://s3.amazonaws.com/software.thecombine.app/combine-installer.run](https://s3.amazonaws.com/software.thecombine.app/combine-installer.run)
-4. Open a terminal window (Ctrl-Alt-T) and run the script:
+4. Open a terminal window (Ctrl-Alt-T) and make the script executable:
+
+   ```console
+   cd [path where installer was downloaded]
+   chmod +x combine-installer.run
+   ```
+
+5. Run the script:
 
    ```console
    cd [path where installer was downloaded]
