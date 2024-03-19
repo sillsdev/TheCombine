@@ -521,11 +521,12 @@ To generate the installer script, run the following commands starting in the pro
 
 ```console
 cd installer
-./make-combine-installer.sh
+./make-combine-installer.sh combine-release-number
 ```
 
-To update the PDF copy of the README.md that accompanies the installer, run the following from the `installer`
-directory:
+where `combine-release-number` is the Combine release to be installed, e.g. `v1.2.0`.
+
+To update the PDF copy of the installer README.md file, run the following from the `installer` directory:
 
 ```console
 pandoc --pdf-engine=weasyprint README.md -o README.pdf
