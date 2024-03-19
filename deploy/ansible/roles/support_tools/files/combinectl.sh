@@ -33,7 +33,7 @@ usage () {
 
 get-wifi-if () {
   IFS=$'\n' WIFI_DEVICES=( $(nmcli d | grep "^wl") )
-  if [[ {{ '${#WIFI_DEVICES[@]}' }} -gt 0 ]] ; then
+  if [[ ${#WIFI_DEVICES[@]} -gt 0 ]] ; then
     IFS=' ' read -r -a IFNAME <<< "${WIFI_DEVICES[0]}"
     echo "${IFNAME[0]}"
   else
@@ -125,7 +125,7 @@ combine-wifi-list-password () {
 
 combine-wifi-set-password () {
   # Check that the passphrase is at least 8 characters long
-  if [[ {{ '${#1}' }} -ge 8 ]] ; then
+  if [[ ${#1} -ge 8 ]] ; then
     sudo sed -i "s/PASSPHRASE=.*/PASSPHRASE=$1/" ${WIFI_CONFIG}
     if systemctl is-active --quiet create_ap ; then
       sudo systemctl restart create_ap

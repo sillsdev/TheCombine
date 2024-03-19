@@ -31,7 +31,7 @@
       {{ ansible_facts.interfaces }}
 
 - name: Install combinectl tool
-  template:
+  copy:
     src: combinectl.sh
     dest: /usr/local/bin/combinectl
     owner: root
