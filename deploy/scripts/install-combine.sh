@@ -83,35 +83,6 @@ set-k3s-env () {
   fi
 }
 
-# Copy the installation scripts to a combine directory.
-copy-install-scripts () {
-  # Copy the Python virtual environment
-  cp -r ${INSTALL_DIR}/venv ${COMBINE_DIR}
-  # Update the Python virtual environment to use its new location
-  find ${COMBINE_DIR}/venv/bin -type f -exec sed -i "s|${INSTALL_DIR}|${COMBINE_DIR}|g" {} \;
-  # Copy the Helm charts
-  cp -r ${INSTALL_DIR}/helm ${COMBINE_DIR}
-  # Copy the Python scripts - only copy the scripts required for installation/updating
-  # The Combine
-  script_files=("scripts/app_release.py"\
-                "scripts/aws_env.py"\
-                "scripts/combine_charts.py"\
-                "scripts/enum_types.py"\
-                "scripts/kube_env.py"\
-                "scripts/setup_cluster.py"\
-                "scripts/setup_combine.py"\
-                "scripts/setup_files/cluster_config.yaml"\
-                "scripts/setup_files/combine_config.yaml"\
-                "scripts/setup_files/profiles/desktop.yaml"\
-                "scripts/utils.py")
-  for script_file in "${script_files[@]}" ; do
-    # create the destination directory if necessary
-    mkdir -p `dirname ${COMBINE_DIR}/$script_file`
-    # copy the script file
-    cp ${INSTALL_DIR}/${script_file} ${COMBINE_DIR}/${script_file}
-  done
-}
-
 # Install the public charts used by The Combine, specifically, cert-manager
 # and nginx-ingress-controller
 install-required-charts () {
@@ -123,9 +94,9 @@ install-required-charts () {
 
   #####
   # Setup required cluster services
-  cd ${COMBINE_DIR}
+  cd ${INSTALL_DIR}
   . venv/bin/activate
-  cd ${COMBINE_DIR}/scripts
+  cd ${INSTALL_DIR}/scripts
   ./setup_cluster.py
   deactivate
 }
@@ -134,9 +105,9 @@ install-required-charts () {
 install-the-combine () {
   #####
   # Setup The Combine
-  cd ${COMBINE_DIR}
+  cd ${INSTALL_DIR}
   . venv/bin/activate
-  cd ${COMBINE_DIR}/scripts
+  cd ${INSTALL_DIR}/scripts
   set-combine-env
   set-k3s-env
   ./setup_combine.py --tag ${COMBINE_VERSION} --repo public.ecr.aws/thecombine --target desktop
@@ -166,21 +137,6 @@ wait-for-combine () {
   done
 }
 
-# Create directory for the combine scripts
-create-dest-directory () {
-  if [ -d ${COMBINE_DIR} ] ; then
-    echo "The installation directory already exists. ($COMBINE_DIR)"
-    read -p "Overwrite? (Y/n)" CONTINUE
-    if [[ -z $CONTINUE || "$CONTINUE" =~ ^[Yy] ]] ; then
-      rm -rf $COMBINE_DIR/*
-    else
-      exit 1
-    fi
-  else
-    mkdir -p ${COMBINE_DIR}
-  fi
-}
-
 # Set the next value for STATE and record it in
 # the STATE_FILE
 next-state () {
@@ -195,7 +151,6 @@ next-state () {
 #####
 # Setup initial variables
 INSTALL_DIR=`pwd`
-COMBINE_DIR=${HOME}/thecombine
 # Create directory for configuration files 
 CONFIG_DIR=${HOME}/.config/combine
 mkdir -p ${CONFIG_DIR}
@@ -252,10 +207,8 @@ fi
 while [ "$STATE" != "Done" ] ; do
   case $STATE in
     Pre-reqs)
-      create-dest-directory
       create-python-venv
       install-kubernetes
-      copy-install-scripts
       next-state "Restart"
       ;;
     Restart)
