@@ -1,15 +1,8 @@
 #! /usr/bin/env bash
 
-get-password () {
-  PASS1="foo"
-  PASS2="bar"
-  while [ "$PASS1" != "$PASS2" ] ; do
-    read -s -p "$1 " PASS1
-    read -s -p $'\n'"Confirm password: " PASS2
-  done
-  echo "$PASS1"
-}
-
+# Set the environment variables that are required by The Combine.
+# In addition, the values are stored in a file so that they do not
+# need to be re-entered on subsequent installations.
 set-combine-env () {
   if [ ! -f "${CONFIG_DIR}/env" ] ; then
     # Generate JWT Secret Key
@@ -37,6 +30,8 @@ set-combine-env () {
   source ${CONFIG_DIR}/env
 }
 
+# Create the virtual environment needed by the Python installation
+# scripts
 create-python-venv () {
   cd $INSTALL_DIR
   # Install required packages
@@ -50,8 +45,9 @@ create-python-venv () {
   python -m piptools sync requirements.txt
 }
 
+# Install Kubernetes engine and other supporting
+# software
 install-kubernetes () {
-  #####
   # Let the user know what to expect
   cat << .EOM
 
@@ -68,6 +64,9 @@ install-kubernetes () {
   ansible-playbook playbook_desktop_setup.yaml -K -e k8s_user=`whoami`
 }
 
+# Set the KUBECONFIG environment variable so that the cluster can
+# be reached by the installation scripts.  It also starts the k3s
+# service if it is not already running.
 set-k3s-env () {
   #####
   # Setup kubectl configuration file
@@ -84,6 +83,7 @@ set-k3s-env () {
   fi
 }
 
+# Copy the installation scripts to a combine directory.
 copy-install-scripts () {
   # Copy the Python virtual environment
   cp -r ${INSTALL_DIR}/venv ${COMBINE_DIR}
@@ -112,6 +112,8 @@ copy-install-scripts () {
   done
 }
 
+# Install the public charts used by The Combine, specifically, cert-manager
+# and nginx-ingress-controller
 install-required-charts () {
   set-k3s-env
   #####
@@ -128,6 +130,7 @@ install-required-charts () {
   deactivate
 }
 
+# Install The Combine
 install-the-combine () {
   #####
   # Setup The Combine
@@ -140,17 +143,7 @@ install-the-combine () {
   deactivate
 }
 
-#! /usr/bin/env bash
-
-get-deployment-status () {
-  deployment=$1
-  results=$2
-
-  #  echo "Results: ${results}" >&2
-  status=$(echo ${results} | grep "${deployment}" | sed "s/^.*\([0-9]\)\/1.*/\1/")
-  echo ${status}
-}
-
+# Wait until all the combine deployments are "Running"
 wait-for-combine () {
   # Wait for all combine deployments to be up
   while true ; do
@@ -159,7 +152,7 @@ wait-for-combine () {
     # set it to false
     combine_up=true
     for deployment in frontend backend database maintenance ; do
-      deployment_status=$(get-deployment-status "${deployment}" "${combine_status}")
+      deployment_status=$(echo ${combine_status} | grep "${deployment}" | sed "s/^.*\([0-9]\)\/1.*/\1/")
       if [ "$deployment_status" == "0" ] ; then
         combine_up=false
         break
@@ -173,6 +166,7 @@ wait-for-combine () {
   done
 }
 
+# Create directory for the combine scripts
 create-dest-directory () {
   if [ -d ${COMBINE_DIR} ] ; then
     echo "The installation directory already exists. ($COMBINE_DIR)"
@@ -187,6 +181,8 @@ create-dest-directory () {
   fi
 }
 
+# Set the next value for STATE and record it in
+# the STATE_FILE
 next-state () {
   STATE=$1
   if [[ "${STATE}" == "Done" && -f "${STATE_FILE}" ]] ; then
