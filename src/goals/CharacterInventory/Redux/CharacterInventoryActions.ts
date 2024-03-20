@@ -172,7 +172,10 @@ export function findAndReplace(findValue: string, replaceValue: string) {
     const changedWords = (await getFrontierWords()).filter((w) =>
       w.vernacular.includes(findValue)
     );
+
+    // Use regular expressions to replace all findValue occurrences.
     const findRegExp = new RegExp(
+      // Escape all special characters in findValue.
       findValue.replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&"),
       "g"
     );
@@ -180,6 +183,7 @@ export function findAndReplace(findValue: string, replaceValue: string) {
       word.vernacular = word.vernacular.replace(findRegExp, replaceValue);
       await updateWord(word);
     }
+
     await dispatch(fetchWords());
     await dispatch(getAllCharacters());
   };
