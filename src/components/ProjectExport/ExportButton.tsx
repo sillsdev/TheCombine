@@ -45,7 +45,6 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
       buttonProps={{
         ...props.buttonProps,
         onClick: exportProj,
-        color: "primary",
         id: `project-${props.projectId}-export`,
       }}
     >
