@@ -79,7 +79,14 @@ spec:
                   name: env-backend-secrets
           ports:
             - containerPort: 5000
-          resources: {}
+          resources:
+            requests:
+              cpu: 5m
+              memory: 960Mi
+{{- if .Values.global.includeResourceLimits }}
+            limits:
+              memory: 4Gi
+{{- end }}
           volumeMounts:
             - mountPath: /home/app/.CombineFiles
               name: backend-data
