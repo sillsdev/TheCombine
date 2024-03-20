@@ -1,7 +1,6 @@
 import "@testing-library/jest-dom";
 import { act, cleanup } from "@testing-library/react";
 
-import "tests/reactI18nextMock";
 import { Edit, MergeUndoIds, Permission, User, UserEdit } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import GoalTimeline from "components/GoalTimeline";
