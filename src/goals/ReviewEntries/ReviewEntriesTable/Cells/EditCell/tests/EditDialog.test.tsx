@@ -4,8 +4,6 @@ import { Provider } from "react-redux";
 import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import { GramCatGroup, Status, type Word } from "api/models";
 import { type CurrentProjectState } from "components/Project/ProjectReduxTypes";
 import SummarySenseCard from "components/WordCard/SummarySenseCard";
