@@ -6,6 +6,8 @@ global:
   # Update strategy should be "Recreate" or "Rolling Update"
   updateStrategy: Recreate
   pullSecretName: "None"
+  # Values for pulling container image from image registry
+  imagePullPolicy: "Override"
   imageTag: "latest"
   # Define the image registry to use (may be blank for local images)
   imageRegistry: ""
