@@ -2,8 +2,6 @@ import { Provider } from "react-redux";
 import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import { GramCatGroup, type Sense } from "api";
 import { PartOfSpeechButton } from "components/Buttons";
 import { defaultState } from "components/Project/ProjectReduxTypes";
