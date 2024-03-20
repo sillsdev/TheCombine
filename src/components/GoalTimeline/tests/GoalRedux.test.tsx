@@ -1,19 +1,9 @@
 import "@testing-library/jest-dom";
 import { act, cleanup } from "@testing-library/react";
 
-import "tests/reactI18nextMock";
 import { Edit, MergeUndoIds, Permission, User, UserEdit } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import GoalTimeline from "components/GoalTimeline";
-import {
-  addCharInvChangesToGoal,
-  addCompletedMergeToGoal,
-  asyncAddGoal,
-  asyncAdvanceStep,
-  asyncGetUserEdits,
-  asyncUpdateGoal,
-  setCurrentGoal,
-} from "components/GoalTimeline/Redux/GoalActions";
 import {
   CharacterChange,
   CharacterStatus,
@@ -28,6 +18,15 @@ import {
   ReviewDeferredDups,
 } from "goals/MergeDuplicates/MergeDupsTypes";
 import { goalDataMock } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
+import {
+  addCharInvChangesToGoal,
+  addCompletedMergeToGoal,
+  asyncAddGoal,
+  asyncAdvanceStep,
+  asyncGetUserEdits,
+  asyncUpdateGoal,
+  setCurrentGoal,
+} from "goals/Redux/GoalActions";
 import { setupStore } from "store";
 import { GoalStatus, GoalType } from "types/goals";
 import { Path } from "types/path";

@@ -2,11 +2,11 @@ import loadable from "@loadable/component";
 import { type ReactElement, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { setCurrentGoal } from "components/GoalTimeline/Redux/GoalActions";
 import PageNotFound from "components/PageNotFound/component";
 import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
 import Loading from "goals/DefaultGoal/Loading";
 import { clearTree } from "goals/MergeDuplicates/Redux/MergeDupsActions";
+import { setCurrentGoal } from "goals/Redux/GoalActions";
 import { resetReviewEntries } from "goals/ReviewEntries/Redux/ReviewEntriesActions";
 import { type StoreState } from "types";
 import { Goal, GoalStatus, GoalType } from "types/goals";

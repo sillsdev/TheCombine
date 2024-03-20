@@ -2,8 +2,6 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import createMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import DataEntry, {
   smallScreenThreshold,
   treeViewDialogId,
@@ -74,7 +72,7 @@ describe("DataEntry", () => {
 
   it("fetches domain", async () => {
     await renderDataEntry({ currentDomain: mockDomain });
-    expect(mockGetSemanticDomainFull).toBeCalledWith(
+    expect(mockGetSemanticDomainFull).toHaveBeenCalledWith(
       mockDomain.id,
       mockDomain.lang
     );

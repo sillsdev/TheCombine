@@ -1,8 +1,6 @@
 import { Input, ListItem } from "@mui/material";
 import renderer from "react-test-renderer";
 
-import "tests/reactI18nextMock.ts";
-
 import { User } from "api/models";
 import UserList from "components/ProjectUsers/UserList";
 import { newUser } from "types/user";
