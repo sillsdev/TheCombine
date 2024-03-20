@@ -12,7 +12,7 @@ babel==2.14.0
     # via mkdocs-material
 beautifulsoup4==4.12.3
     # via mkdocs-htmlproofer-plugin
-black==24.2.0
+black==24.3.0
     # via -r dev-requirements.in
 cachetools==5.3.3
     # via
