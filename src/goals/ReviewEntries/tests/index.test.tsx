@@ -3,8 +3,6 @@ import { Provider } from "react-redux";
 import { act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import ReviewEntries from "goals/ReviewEntries";
 import * as actions from "goals/ReviewEntries/Redux/ReviewEntriesActions";
 import { wordFromReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";

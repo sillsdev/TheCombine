@@ -1,7 +1,6 @@
-/* Use `import "tests/reactI18nextMock.ts";` in a test file to mock i18next.
+/* Use `import "tests/reactI18nextMock.ts";` in `setupTests.js` to mock i18next globally.
  * (For testing components with `Trans`, see tests/i18nMock.ts instead.)
- * This import should be placed before the other internal imports.
- * It must come before any file that imports `react-i18next`. */
+ * This import should occur before other internal imports that use `react-i18next`. */
 
 jest.mock("react-i18next", () => ({
   initReactI18next: {
