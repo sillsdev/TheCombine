@@ -7,8 +7,6 @@ import {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import Login, { LoginId } from "components/Login/Login";
 import { defaultState as loginState } from "components/Login/Redux/LoginReduxTypes";
 
