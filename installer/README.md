@@ -13,11 +13,14 @@ This README describes how to install _The Combine_ Rapid Word Collection tool on
 
 _The Combine_ can be installed on a PC that meets the following requirements:
 
-- Debian-based Linux Operating system, such as _Ubuntu_ or _Wasta Linux_;
+- Debian-based Linux Operating system
 - 6 GB of memory;
 - WiFi interface that supports creating a WiFi Hotspot;
 - a wired-ethernet connection to the Internet
 - User account that can run as `root` with `sudo`.
+
+The installation script has been tested on _Ubuntu 22.04_ and _Wasta
+Linux 22.04_.
 
 ### Install _The Combine_
 
