@@ -3,10 +3,6 @@ import { Action, PayloadAction } from "@reduxjs/toolkit";
 import { Word } from "api/models";
 import * as backend from "backend";
 import {
-  addCompletedMergeToGoal,
-  asyncUpdateGoal,
-} from "components/GoalTimeline/Redux/GoalActions";
-import {
   defaultSidebar,
   MergeTreeReference,
   Sidebar,
@@ -38,6 +34,10 @@ import {
   OrderSensePayload,
   SetVernacularPayload,
 } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
+import {
+  addCompletedMergeToGoal,
+  asyncUpdateGoal,
+} from "goals/Redux/GoalActions";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 

@@ -1,5 +1,3 @@
-import "tests/reactI18nextMock";
-
 import { GramCatGroup, GrammaticalInfo } from "api/models";
 import columns, {
   ColumnTitle,

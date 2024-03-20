@@ -6,8 +6,6 @@ import {
   create,
 } from "react-test-renderer";
 
-import "tests/reactI18nextMock";
-
 import NoteButton from "components/Buttons/NoteButton";
 
 const mockText = "Test text";
