@@ -8,8 +8,6 @@ import {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import { defaultState as loginState } from "components/Login/Redux/LoginReduxTypes";
 import Signup, { SignupId } from "components/Login/Signup";
 
@@ -88,9 +86,9 @@ const submitAndCheckError = async (id?: SignupId): Promise<void> => {
 
   // Expect signUp only when no field expected to error.
   if (id === undefined) {
-    expect(mockAsyncSignUp).toBeCalled();
+    expect(mockAsyncSignUp).toHaveBeenCalled();
   } else {
-    expect(mockAsyncSignUp).not.toBeCalled();
+    expect(mockAsyncSignUp).not.toHaveBeenCalled();
   }
 };
 
