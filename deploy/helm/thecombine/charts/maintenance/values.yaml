@@ -19,6 +19,8 @@ global:
   awsSecretAccessKey: "Override"
   pullSecretName: "None"
   awsS3Access: aws-s3-credentials
+  # Values for pulling container image from image registry
+  imagePullPolicy: "Override"
   imageTag: "latest"
   # Define the image registry to use (may be blank for local images)
   imageRegistry: ""
