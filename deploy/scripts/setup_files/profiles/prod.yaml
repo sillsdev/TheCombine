@@ -32,6 +32,7 @@ charts:
       fontStorageAccessMode: ReadWriteMany
       imagePullPolicy: Always
       pullSecretName: None
+      includeResourceLimits: true
     certManager:
       enabled: false
   cert-proxy-server:

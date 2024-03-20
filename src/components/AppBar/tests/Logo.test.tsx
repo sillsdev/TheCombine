@@ -24,6 +24,6 @@ beforeAll(() => {
 describe("Logo", () => {
   it("navigates to Project Screen on click", () => {
     testRenderer.root.findByType(Button).props.onClick();
-    expect(mockNavigate).toBeCalledWith(Path.ProjScreen);
+    expect(mockNavigate).toHaveBeenCalledWith(Path.ProjScreen);
   });
 });

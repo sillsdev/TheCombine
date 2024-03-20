@@ -3,8 +3,6 @@ import { act, create } from "react-test-renderer";
 import { Store } from "redux";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import { defaultState as treeViewState } from "components/TreeView/Redux/TreeViewReduxTypes";
 import DomainCell from "goals/ReviewEntries/ReviewEntriesTable/CellComponents/DomainCell";
 import { ColumnId } from "goals/ReviewEntries/ReviewEntriesTypes";

@@ -127,12 +127,7 @@ export default function DeleteEditTextDialog(
         </Button>
         <LoadingButton
           loading={loading}
-          buttonProps={{
-            onClick: onSave,
-            color: "primary",
-            variant: "contained",
-            id: props.buttonIdSave,
-          }}
+          buttonProps={{ id: props.buttonIdSave, onClick: onSave }}
         >
           {t(props.buttonTextIdSave ?? "buttons.save")}
         </LoadingButton>

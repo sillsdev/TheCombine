@@ -3,8 +3,6 @@ import { Provider } from "react-redux";
 import { ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import { Permission } from "api/models";
 import ProjectButtons, {
   projButtonId,

@@ -84,8 +84,6 @@ export default function DateScheduleEdit(
             buttonProps={{
               id: "DateSelectorSubmitButton",
               onClick: handleSubmit,
-              variant: "contained",
-              color: "primary",
             }}
           >
             {t("buttons.confirm")}

@@ -3,8 +3,6 @@ import { Provider } from "react-redux";
 import { act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import ReviewEntries from "goals/ReviewEntries";
 import * as actions from "goals/ReviewEntries/Redux/ReviewEntriesActions";
 import { wordFromReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";
@@ -38,7 +36,7 @@ jest.mock("backend", () => ({
   getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
 }));
 jest.mock("components/TreeView", () => "div");
-jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({}));
+jest.mock("goals/Redux/GoalActions", () => ({}));
 jest.mock("types/hooks", () => ({
   useAppDispatch: () => jest.fn(),
 }));

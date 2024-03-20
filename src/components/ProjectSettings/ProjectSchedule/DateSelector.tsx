@@ -88,8 +88,6 @@ export default function DateSelector(props: DateSelectorProps): ReactElement {
             buttonProps={{
               id: "DateSelectorSubmitButton",
               onClick: () => handleSubmit(),
-              variant: "contained",
-              color: "primary",
             }}
           >
             {t("buttons.confirm")}

@@ -72,7 +72,7 @@ describe("TreeViewActions", () => {
         treeViewState: nonDefaultState,
       });
       await store.dispatch(initTreeDomain(mockLang));
-      expect(mockGetSemDomTreeNode).toBeCalledWith(mockId, mockLang);
+      expect(mockGetSemDomTreeNode).toHaveBeenCalledWith(mockId, mockLang);
     });
   });
 });

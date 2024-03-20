@@ -17,6 +17,7 @@ charts:
     global:
       imageRegistry: ""
       imagePullPolicy: Never
+      includeResourceLimits: false
       awsS3Location: dev.thecombine.app
 
     ingressClass: nginx

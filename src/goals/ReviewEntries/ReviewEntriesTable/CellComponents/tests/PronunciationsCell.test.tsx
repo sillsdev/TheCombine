@@ -3,8 +3,6 @@ import { Provider } from "react-redux";
 import { ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import { Pronunciation } from "api/models";
 import { defaultState as currentProjectState } from "components/Project/ProjectReduxTypes";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";

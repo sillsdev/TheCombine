@@ -1,17 +1,17 @@
 import { v4 } from "uuid";
 
-import { User } from "api/models";
+import { type User } from "api/models";
 import {
-  CharInvChanges,
-  CharInvData,
-  CharInvStepData,
+  type CharInvChanges,
+  type CharInvData,
+  type CharInvStepData,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
 import {
-  MergeDupsData,
-  MergeStepData,
-  MergesCompleted,
+  type MergeDupsData,
+  type MergeStepData,
+  type MergesCompleted,
 } from "goals/MergeDuplicates/MergeDupsTypes";
-import { EntriesEdited } from "goals/ReviewEntries/ReviewEntriesTypes";
+import { type EntriesEdited } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { newUser } from "types/user";
 
 export type GoalData = CharInvData | MergeDupsData;
@@ -21,15 +21,6 @@ export type GoalChanges = CharInvChanges | EntriesEdited | MergesCompleted;
 
 export interface GoalProps {
   goal?: Goal;
-}
-
-// The representation of goals in the redux store
-export interface GoalsState {
-  allGoalTypes: GoalType[];
-  currentGoal: Goal;
-  goalTypeSuggestions: GoalType[];
-  history: Goal[];
-  previousGoalType: GoalType;
 }
 
 // The enum value is a permanent id for UserEdits and should not be changed.

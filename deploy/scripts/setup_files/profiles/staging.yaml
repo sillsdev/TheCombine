@@ -15,6 +15,7 @@ charts:
       awsS3Location: prod.thecombine.app
       fontStorageAccessMode: ReadWriteMany
       imagePullPolicy: Always
+      includeResourceLimits: true
     tlsSecretName: thecombine-app-tls
     certManager:
       enabled: false

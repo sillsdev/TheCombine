@@ -3,8 +3,6 @@ import { MemoryRouter } from "react-router-dom";
 import { act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import { defaultState } from "components/App/DefaultState";
 import AppBar from "components/AppBar/AppBarComponent";
 

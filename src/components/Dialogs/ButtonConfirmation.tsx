@@ -61,12 +61,7 @@ export default function ButtonConfirmation(
         </Button>
         <LoadingButton
           loading={loading}
-          buttonProps={{
-            onClick: onConfirm,
-            color: "primary",
-            variant: "contained",
-            id: props.buttonIdConfirm,
-          }}
+          buttonProps={{ id: props.buttonIdConfirm, onClick: onConfirm }}
         >
           {t("buttons.confirm")}
         </LoadingButton>

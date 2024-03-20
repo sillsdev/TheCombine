@@ -1,8 +1,6 @@
 import { Select } from "@mui/material";
 import renderer from "react-test-renderer";
 
-import "tests/reactI18nextMock";
-
 import { AutocompleteSetting } from "api/models";
 import ProjectAutocomplete from "components/ProjectSettings/ProjectAutocomplete";
 import { randomProject } from "types/project";
@@ -29,12 +27,12 @@ describe("ProjectAutocomplete", () => {
     await renderAutocomplete();
     const selectChange = testRenderer.root.findByType(Select).props.onChange;
     await renderer.act(async () => selectChange({ target: { value: "Off" } }));
-    expect(mockUpdateProject).toBeCalledWith({
+    expect(mockUpdateProject).toHaveBeenCalledWith({
       ...mockProject,
       autocompleteSetting: AutocompleteSetting.Off,
     });
     await renderer.act(async () => selectChange({ target: { value: "On" } }));
-    expect(mockUpdateProject).toBeCalledWith({
+    expect(mockUpdateProject).toHaveBeenCalledWith({
       ...mockProject,
       autocompleteSetting: AutocompleteSetting.On,
     });

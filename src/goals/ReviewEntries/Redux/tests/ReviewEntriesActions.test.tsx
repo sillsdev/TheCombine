@@ -46,7 +46,7 @@ jest.mock("backend", () => ({
   updateWord: (word: Word) => mockUpdateWord(word),
   uploadAudio: (args: any[]) => mockUploadAudio(...args),
 }));
-jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({
+jest.mock("goals/Redux/GoalActions", () => ({
   addEntryEditToGoal: () => jest.fn(),
   asyncUpdateGoal: () => jest.fn(),
 }));

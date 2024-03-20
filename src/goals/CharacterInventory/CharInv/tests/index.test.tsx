@@ -2,8 +2,6 @@ import { Provider } from "react-redux";
 import { ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import CharInv, {
   buttonIdCancel,
   buttonIdSave,

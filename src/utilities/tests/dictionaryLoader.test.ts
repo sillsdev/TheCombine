@@ -17,7 +17,7 @@ describe("DictionaryLoader", () => {
       const loader = new DictionaryLoader(bcp47);
       expect(loader.lang === bcp47);
       expect(mockGetKeys).toHaveBeenCalledTimes(1);
-      expect(mockGetKeys).toBeCalledWith(bcp47);
+      expect(mockGetKeys).toHaveBeenCalledWith(bcp47);
     });
   });
 

@@ -30,7 +30,12 @@ spec:
               - deployment/maintenance
               - --
               - combine-backup-job.sh
-            resources: {}
+            resources:
+              requests:
+                cpu:  200m
+                memory: 150M
+              limits:
+                memory: 150M
             securityContext:
               capabilities: {}
             terminationMessagePath: /dev/termination-log

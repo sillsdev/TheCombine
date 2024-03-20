@@ -3,8 +3,6 @@ import { Provider } from "react-redux";
 import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import {
   GlossWithSuggestions,
   VernWithSuggestions,

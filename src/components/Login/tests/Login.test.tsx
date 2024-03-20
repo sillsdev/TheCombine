@@ -7,8 +7,6 @@ import {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import Login, { LoginId } from "components/Login/Login";
 import { defaultState as loginState } from "components/Login/Redux/LoginReduxTypes";
 
@@ -68,7 +66,7 @@ describe("Login", () => {
       });
       expect(fieldPass.props.error).toBeFalsy();
       expect(fieldUser.props.error).toBeTruthy();
-      expect(mockAsyncLogIn).not.toBeCalled();
+      expect(mockAsyncLogIn).not.toHaveBeenCalled();
     });
 
     it("errors when no password", async () => {
@@ -82,7 +80,7 @@ describe("Login", () => {
       });
       expect(fieldPass.props.error).toBeTruthy();
       expect(fieldUser.props.error).toBeFalsy();
-      expect(mockAsyncLogIn).not.toBeCalled();
+      expect(mockAsyncLogIn).not.toHaveBeenCalled();
     });
 
     it("submits when username and password", async () => {
@@ -97,7 +95,7 @@ describe("Login", () => {
       });
       expect(fieldPass.props.error).toBeFalsy();
       expect(fieldUser.props.error).toBeFalsy();
-      expect(mockAsyncLogIn).toBeCalled();
+      expect(mockAsyncLogIn).toHaveBeenCalled();
     });
   });
 });

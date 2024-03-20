@@ -74,7 +74,14 @@ spec:
           ports:
             - containerPort: 80
             - containerPort: 443
-          resources: {}
+          resources:
+            requests:
+              cpu:  1m
+              memory: 15M
+{{- if .Values.global.includeResourceLimits }}
+            limits:
+              memory: 40M
+{{- end }}
           volumeMounts:
             - mountPath: /usr/share/nginx/fonts
               name: font-data

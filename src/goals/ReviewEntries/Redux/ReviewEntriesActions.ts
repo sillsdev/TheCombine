@@ -2,11 +2,8 @@ import { Action, PayloadAction } from "@reduxjs/toolkit";
 
 import { Pronunciation, Sense, Word } from "api/models";
 import * as backend from "backend";
-import {
-  addEntryEditToGoal,
-  asyncUpdateGoal,
-} from "components/GoalTimeline/Redux/GoalActions";
 import { uploadFileFromPronunciation } from "components/Pronunciations/utilities";
+import { addEntryEditToGoal, asyncUpdateGoal } from "goals/Redux/GoalActions";
 import {
   deleteWordAction,
   resetReviewEntriesAction,

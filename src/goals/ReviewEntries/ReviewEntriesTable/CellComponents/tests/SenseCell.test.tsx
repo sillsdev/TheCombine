@@ -1,7 +1,5 @@
 import renderer from "react-test-renderer";
 
-import "tests/reactI18nextMock";
-
 import SenseCell from "goals/ReviewEntries/ReviewEntriesTable/CellComponents/SenseCell";
 import mockWords from "goals/ReviewEntries/tests/WordsMock";
 

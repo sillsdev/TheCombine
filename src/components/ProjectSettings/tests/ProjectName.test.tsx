@@ -1,8 +1,6 @@
 import { Button, TextField } from "@mui/material";
 import renderer from "react-test-renderer";
 
-import "tests/reactI18nextMock";
-
 import ProjectName from "components/ProjectSettings/ProjectName";
 import { randomProject } from "types/project";
 
@@ -37,7 +35,7 @@ describe("ProjectName", () => {
       textField.props.onChange({ target: { value: name } })
     );
     await renderer.act(async () => saveButton.props.onClick());
-    expect(mockUpdateProject).toBeCalledWith({ ...mockProject, name });
+    expect(mockUpdateProject).toHaveBeenCalledWith({ ...mockProject, name });
   });
 
   it("toasts on error", async () => {

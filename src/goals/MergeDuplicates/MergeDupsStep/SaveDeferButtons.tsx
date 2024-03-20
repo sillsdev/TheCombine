@@ -3,12 +3,12 @@ import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { LoadingButton } from "components/Buttons";
-import { asyncAdvanceStep } from "components/GoalTimeline/Redux/GoalActions";
 import {
   deferMerge,
   mergeAll,
   setSidebar,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
+import { asyncAdvanceStep } from "goals/Redux/GoalActions";
 import { useAppDispatch } from "types/hooks";
 import theme from "types/theme";
 
@@ -44,8 +44,6 @@ export default function SaveDeferButtons(): ReactElement {
         <LoadingButton
           loading={isSaving}
           buttonProps={{
-            color: "primary",
-            variant: "contained",
             style: { marginRight: theme.spacing(3) },
             onClick: saveContinue,
             title: t("mergeDups.helpText.saveAndContinue"),
@@ -58,7 +56,6 @@ export default function SaveDeferButtons(): ReactElement {
           loading={isDeferring}
           buttonProps={{
             color: "secondary",
-            variant: "contained",
             style: { marginRight: theme.spacing(3) },
             onClick: defer,
             title: t("mergeDups.helpText.defer"),
