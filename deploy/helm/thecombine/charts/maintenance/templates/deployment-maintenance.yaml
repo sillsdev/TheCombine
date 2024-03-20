@@ -103,7 +103,14 @@ spec:
                 configMapKeyRef:
                   key: local_font_url
                   name: env-maintenance
-          resources: {}
+          resources:
+            requests:
+              cpu:  200m
+              memory: 1200Mi
+{{- if .Values.global.includeResourceLimits }}
+            limits:
+              memory: 4Gi
+{{- end }}
           volumeMounts:
             - mountPath: {{ .Values.fontsDir }}
               name: font-data
