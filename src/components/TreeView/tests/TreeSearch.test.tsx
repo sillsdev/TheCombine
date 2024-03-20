@@ -3,8 +3,6 @@ import userEvent from "@testing-library/user-event";
 import { type ChangeEvent, type KeyboardEvent } from "react";
 import { Key } from "ts-key-enum";
 
-import "tests/reactI18nextMock";
-
 import { type SemanticDomainTreeNode } from "api/models";
 import * as backend from "backend";
 import TreeSearch, {

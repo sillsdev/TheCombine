@@ -9,8 +9,6 @@ import {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import { FileInputButton } from "components/Buttons";
 import CreateProject, {
   buttonIdSubmit,

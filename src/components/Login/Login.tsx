@@ -185,11 +185,7 @@ export default function Login(): ReactElement {
 
                 <Grid item>
                   <LoadingButton
-                    buttonProps={{
-                      color: "primary",
-                      id: LoginId.ButtonLogIn,
-                      type: "submit",
-                    }}
+                    buttonProps={{ id: LoginId.ButtonLogIn, type: "submit" }}
                     disabled={!isVerified}
                     loading={status === LoginStatus.InProgress}
                   >
