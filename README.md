@@ -63,6 +63,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    6. [Inspect Database](#inspect-database)
    7. [Add or Update Dictionary Files](#add-or-update-dictionary-files)
    8. [Cleanup Local Repository](#cleanup-local-repository)
+   9. [Generate Installer Script for The Combine](#generate-installer-script-for-the-combine-linux-only)
 3. [Setup Local Kubernetes Cluster](#setup-local-kubernetes-cluster)
    1. [Install Rancher Desktop](#install-rancher-desktop)
    2. [Install Docker Desktop](#install-docker-desktop)
@@ -127,16 +128,17 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
     `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
 11. [dotnet-project-licenses](https://github.com/tomchavakis/nuget-license)
     `dotnet tool update --global dotnet-project-licenses`
-12. Tools for generating the self installer [Linux Only]:
+12. Tools for generating the self installer [Linux only]:
 
     - [makeself](https://makeself.io/) - a tool to make self-extracting archives in Unix
-    - [pandoc](https://pandoc.org/installing.html#linux) - a tool to convert Markdown documents to PDF. In addition to
-      `pandoc`, the `weasyprint` PDF engine is required. These may be installed on Debian-based distributions by
-      running:
+    - [pandoc](https://pandoc.org/installing.html#linux) - a tool to convert Markdown documents to PDF.
+    - `weasyprint` a PDF engine for `pandoc`.
 
-      ```console
-      sudo apt install -y pandoc weasyprint
-      ```
+    These can be installed on Debian-based distributions by running:
+
+    ```console
+    sudo apt install -y makeself pandoc weasyprint
+    ```
 
 ### Prepare the Environment
 
@@ -515,7 +517,7 @@ of development setup errors. Run from within a Python virtual environment.
 python scripts/cleanup_local_repo.py
 ```
 
-### Generate Installer Script for The Combine (_Linux Only_)
+### Generate Installer Script for The Combine (_Linux only_)
 
 To generate the installer script, run the following commands starting in the project top level directory:
 

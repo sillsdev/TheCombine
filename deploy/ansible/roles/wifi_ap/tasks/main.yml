@@ -5,8 +5,7 @@
   tags:
     - install
 - meta: flush_handlers
-# - name: Test WiFi Access point
-#   include_tasks:
-#     file: test.yml
-#   tags:
-#     - test
+- name: Test WiFi Access point
+  include_tasks:
+    file: test.yml
+  when: test_wifi

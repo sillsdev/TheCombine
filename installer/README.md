@@ -9,7 +9,7 @@ This README describes how to install _The Combine_ Rapid Word Collection tool on
 3. [Running _The Combine_](#running-the-combine)
 4. [Advanced Installation Options](#advanced-installation-options)
 
-### System Requirements
+## System Requirements
 
 _The Combine_ can be installed on a PC that meets the following requirements:
 
@@ -19,10 +19,9 @@ _The Combine_ can be installed on a PC that meets the following requirements:
 - a wired-ethernet connection to the Internet
 - User account that can run as `root` with `sudo`.
 
-The installation script has been tested on _Ubuntu 22.04_ and _Wasta
-Linux 22.04_.
+The installation script has been tested on _Ubuntu 22.04_ and _Wasta Linux 22.04_.
 
-### Install _The Combine_
+## Install _The Combine_
 
 1. Plug in the wired ethernet connection to the Internet.
 2. Update all of the existing software packages through your OS's _Software Updater_ application or by running:

@@ -1,10 +1,10 @@
 ---
 ##############################################################
-# Playbook: playbook_kube_install.yml
+# Playbook: playbook_desktop_install.yml
 #
-# playbook_kube_install.yml installs the packages and
+# playbook_desktop_install.yml installs the packages and
 # configuration files that are required to run TheCombine
-# as Docker containers managed by a Kubernetes cluster.
+# as containers managed by a Kubernetes cluster on localhost.
 #
 ##############################################################
 
@@ -15,7 +15,6 @@
 
   vars_files:
     - "vars/config_common.yml"
-    - "vars/packages.yml"
 
   tasks:
     - name: Update packages

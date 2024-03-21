@@ -22,6 +22,7 @@ targets:
     profile: desktop
     env_vars_required: false
     override:
+      # override values for 'thecombine' chart
       thecombine:
         global:
           serverName: local.thecombine.app

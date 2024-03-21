@@ -1,16 +1,13 @@
 ---
 ##############################################################
-# Role: docker_install
+# Role: container_engine
 #
-# Install the Docker Engine, Docker Compose and all their
-# pre-requisite packages.
+# Install the container engine and pre-requisite packages.
 #
-# The Docker Engine is installed by adding the repo from
+# The container engine is installed by adding the repo from
 # docker.com to our apt sources and installing the relevant
-# package.
+# packages.
 #
-# Docker Compose is installed by downloading the ZIP package
-# from GitHub and extracting it to /usr/local/bin
 ##############################################################
 - name: Update apt cache.
   apt:

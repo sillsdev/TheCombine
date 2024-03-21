@@ -54,7 +54,7 @@ ap_ssid: "thecombine_ap"
 ap_passphrase: "Combine2020"
 ap_gateway: "10.10.10.1"
 ap_hostname: "local"
-
+test_wifi: false
 ################################################
 # hardware monitoring settings
 ################################################
