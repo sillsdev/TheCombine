@@ -173,7 +173,7 @@ export default function CancelConfirmDialogCollection(
     <>
       <CancelConfirmDialog
         open={removeUserDialogOpen}
-        textId="projectSettings.userManagement.removeUserWarning"
+        text="projectSettings.userManagement.removeUserWarning"
         handleCancel={() => setRemoveUser(false)}
         handleConfirm={() => removeUser(props.userId)}
         buttonIdCancel={`${idRemoveUser}-cancel`}
@@ -181,7 +181,7 @@ export default function CancelConfirmDialogCollection(
       />
       <CancelConfirmDialog
         open={makeHarvesterDialogOpen}
-        textId="projectSettings.userManagement.makeHarvesterWarning"
+        text="projectSettings.userManagement.makeHarvesterWarning"
         handleCancel={() => setMakeHarvester(false)}
         handleConfirm={() => makeHarvester(props.userId)}
         buttonIdCancel={`${idHarvester}-cancel`}
@@ -189,7 +189,7 @@ export default function CancelConfirmDialogCollection(
       />
       <CancelConfirmDialog
         open={makeEditorDialogOpen}
-        textId="projectSettings.userManagement.makeEditorWarning"
+        text="projectSettings.userManagement.makeEditorWarning"
         handleCancel={() => setMakeEditor(false)}
         handleConfirm={() => makeEditor(props.userId)}
         buttonIdCancel={`${idEditor}-cancel`}
@@ -197,7 +197,7 @@ export default function CancelConfirmDialogCollection(
       />
       <CancelConfirmDialog
         open={makeAdminDialogOpen}
-        textId="projectSettings.userManagement.makeAdminWarning"
+        text="projectSettings.userManagement.makeAdminWarning"
         handleCancel={() => setMakeAdmin(false)}
         handleConfirm={() => makeAdmin(props.userId)}
         buttonIdCancel={`${idAdmin}-cancel`}
@@ -205,7 +205,7 @@ export default function CancelConfirmDialogCollection(
       />
       <CancelConfirmDialog
         open={makeOwnerDialogOpen}
-        textId="projectSettings.userManagement.makeOwnerWarning"
+        text="projectSettings.userManagement.makeOwnerWarning"
         handleCancel={() => setMakeOwner(false)}
         handleConfirm={() => makeOwner(props.userId)}
         buttonIdCancel={`${idOwner}-cancel`}
