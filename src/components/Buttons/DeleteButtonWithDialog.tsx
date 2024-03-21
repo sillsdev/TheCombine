@@ -38,7 +38,7 @@ export default function DeleteButtonWithDialog(
         handleCancel={() => setOpen(false)}
         handleConfirm={handleConfirm}
         open={open}
-        textId={props.textId}
+        text={props.textId}
       />
     </>
   );
