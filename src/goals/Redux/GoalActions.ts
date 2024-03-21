@@ -5,6 +5,8 @@ import * as Backend from "backend";
 import { getDuplicates, getGraylistEntries } from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
 import router from "browserRouter";
+import { CharInvChanges } from "goals/CharacterInventory/CharacterInventoryTypes";
+import { dispatchMergeStepData } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import {
   addCharInvChangesToGoalAction,
   addCompletedMergeToGoalAction,
@@ -15,9 +17,7 @@ import {
   setGoalDataAction,
   setGoalStatusAction,
   updateStepFromDataAction,
-} from "components/GoalTimeline/Redux/GoalReducer";
-import { CharInvChanges } from "goals/CharacterInventory/CharacterInventoryTypes";
-import { dispatchMergeStepData } from "goals/MergeDuplicates/Redux/MergeDupsActions";
+} from "goals/Redux/GoalReducer";
 import { EntryEdit } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";

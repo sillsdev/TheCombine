@@ -1,7 +1,5 @@
 import renderer from "react-test-renderer";
 
-import "tests/reactI18nextMock.ts";
-
 import SortOptions, {
   SortOptionsProps,
   reverseButtonId,
@@ -36,7 +34,6 @@ describe("SortOptions", () => {
     const mockReverse = jest.fn();
     renderSortOptions({ onReverseClick: mockReverse });
     const button = testRenderer.root.findByProps({ id: reverseButtonId });
-    expect(button).not.toBeNull();
     button.props.onClick();
     expect(mockReverse).toHaveBeenCalledTimes(1);
   });

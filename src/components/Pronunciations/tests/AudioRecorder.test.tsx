@@ -3,8 +3,6 @@ import { Provider } from "react-redux";
 import { ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import { defaultState } from "components/App/DefaultState";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import RecorderIcon, {
@@ -85,7 +83,7 @@ describe("Pronunciations", () => {
       );
     });
     const icon = testRenderer.root.findByProps({ id: recordIconId });
-    expect(icon.props.sx.color).toEqual(themeColors.recordIdle);
+    expect(icon.props.sx.color({})).toEqual(themeColors.recordIdle);
   });
 
   test("style depends on pronunciations state", () => {
@@ -103,6 +101,6 @@ describe("Pronunciations", () => {
       );
     });
     const icon = testRenderer.root.findByProps({ id: recordIconId });
-    expect(icon.props.sx.color).toEqual(themeColors.recordActive);
+    expect(icon.props.sx.color({})).toEqual(themeColors.recordActive);
   });
 });

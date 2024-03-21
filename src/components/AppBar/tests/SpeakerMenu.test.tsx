@@ -4,8 +4,6 @@ import { Provider } from "react-redux";
 import { act, create, ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import { Speaker } from "api/models";
 import SpeakerMenu, { SpeakerMenuList } from "components/AppBar/SpeakerMenu";
 import { defaultState } from "components/Project/ProjectReduxTypes";
@@ -54,7 +52,7 @@ describe("SpeakerMenuList", () => {
   it("has one disabled menu item if no speakers", async () => {
     await renderMenuList();
     const menuItem = testRenderer.root.findByType(MenuItem);
-    expect(menuItem).toBeDisabled;
+    expect(menuItem.props.disabled).toBeTruthy();
   });
 
   it("has divider and one more menu item than speakers", async () => {

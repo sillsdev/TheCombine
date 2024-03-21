@@ -171,7 +171,7 @@ export default function MergeDragDrop(): ReactElement {
             {renderSidebar()}
             <CancelConfirmDialog
               open={!!senseToDelete}
-              textId="mergeDups.helpText.deleteDialog"
+              text="mergeDups.helpText.deleteDialog"
               handleCancel={() => setSenseToDelete("")}
               handleConfirm={performDelete}
             />

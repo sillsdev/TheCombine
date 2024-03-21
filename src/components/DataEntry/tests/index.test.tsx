@@ -2,8 +2,6 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import createMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import DataEntry, {
   smallScreenThreshold,
   treeViewDialogId,
@@ -58,13 +56,13 @@ describe("DataEntry", () => {
   it("displays TreeView when state says the tree is open", async () => {
     await renderDataEntry({ currentDomain: mockDomain, open: true });
     const dialog = testHandle.root.findByProps({ id: treeViewDialogId });
-    expect(dialog.props.open).toBeTruthy;
+    expect(dialog.props.open).toBeTruthy();
   });
 
   it("doesn't displays TreeView when state says the tree is closed", async () => {
     await renderDataEntry({ currentDomain: mockDomain, open: false });
     const dialog = testHandle.root.findByProps({ id: treeViewDialogId });
-    expect(dialog.props.open).toBeFalsy;
+    expect(dialog.props.open).toBeFalsy();
   });
 
   it("dispatches to open the tree", async () => {
@@ -74,7 +72,7 @@ describe("DataEntry", () => {
 
   it("fetches domain", async () => {
     await renderDataEntry({ currentDomain: mockDomain });
-    expect(mockGetSemanticDomainFull).toBeCalledWith(
+    expect(mockGetSemanticDomainFull).toHaveBeenCalledWith(
       mockDomain.id,
       mockDomain.lang
     );

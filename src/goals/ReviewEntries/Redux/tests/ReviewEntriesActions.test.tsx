@@ -46,7 +46,7 @@ jest.mock("backend", () => ({
   updateWord: (word: Word) => mockUpdateWord(word),
   uploadAudio: (args: any[]) => mockUploadAudio(...args),
 }));
-jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({
+jest.mock("goals/Redux/GoalActions", () => ({
   addEntryEditToGoal: () => jest.fn(),
   asyncUpdateGoal: () => jest.fn(),
 }));
@@ -217,7 +217,7 @@ describe("ReviewEntriesActions", () => {
 
       // Verify the replacement word in state has the audio removed
       const words = store.getState().reviewEntriesState.words;
-      expect(words.find((w) => w.id === wordId)).toBeNull;
+      expect(words.find((w) => w.id === wordId)).toBeUndefined();
       const wordInState = words.find((w) => w.id === newId);
       expect(wordInState?.audio).toHaveLength(0);
     });
@@ -247,7 +247,7 @@ describe("ReviewEntriesActions", () => {
 
       // Verify the replacement word in state has the updated speaker id
       const words = store.getState().reviewEntriesState.words;
-      expect(words.find((w) => w.id === wordId)).toBeNull;
+      expect(words.find((w) => w.id === wordId)).toBeUndefined();
       const audioInState = words.find((w) => w.id === newId)?.audio;
       expect(audioInState).toHaveLength(1);
       expect(audioInState![0].speakerId).toEqual(speakerId);
@@ -276,7 +276,7 @@ describe("ReviewEntriesActions", () => {
 
       // Verify the replacement word in state has the audio added
       const words = store.getState().reviewEntriesState.words;
-      expect(words.find((w) => w.id === wordId)).toBeNull;
+      expect(words.find((w) => w.id === wordId)).toBeUndefined();
       const audioInState = words.find((w) => w.id === newId)?.audio;
       expect(audioInState).toHaveLength(1);
       expect(audioInState![0].fileName).toEqual(pro.fileName);

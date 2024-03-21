@@ -12,7 +12,6 @@ import { Provider } from "react-redux";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
 import PasswordReset, {
   PasswordResetTestIds,
 } from "components/PasswordReset/ResetPage";
@@ -178,6 +177,6 @@ describe("PasswordReset", () => {
       expect(screen.queryAllByTestId(id)).toHaveLength(0);
     }
     // The textId will show up as text because t() is mocked to return its input.
-    expect(screen.queryAllByText("passwordReset.invalidURL")).toBeTruthy;
+    expect(screen.queryAllByText("passwordReset.invalidURL")).toBeTruthy();
   });
 });

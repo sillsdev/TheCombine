@@ -2,8 +2,6 @@ import { Provider } from "react-redux";
 import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 import CharacterDetail from "goals/CharacterInventory/CharInv/CharacterDetail";
 import {

@@ -7,7 +7,6 @@ import {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { defaultState } from "components/GoalTimeline/DefaultState";
 import WordCard from "components/WordCard";
 import CharInvCompleted, {
   CharChange,
@@ -20,6 +19,7 @@ import {
   CharacterStatus,
   defaultCharInvChanges,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
+import { defaultState } from "goals/Redux/GoalReduxTypes";
 import { type StoreState } from "types";
 import { type Hash } from "types/hash";
 import { newWord as mockWord } from "types/word";

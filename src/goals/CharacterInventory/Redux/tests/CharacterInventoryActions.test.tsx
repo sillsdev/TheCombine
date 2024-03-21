@@ -30,14 +30,14 @@ jest.mock("backend", () => ({
   updateWord: (word: Word) => mockUpdateWord(word),
 }));
 jest.mock("browserRouter");
-jest.mock("components/GoalTimeline/Redux/GoalActions", () => ({
-  asyncUpdateGoal: () => mockAsyncUpdateGoal(),
-  addCharInvChangesToGoal: (changes: CharInvChanges) =>
-    mockAddCharInvChangesToGoal(changes),
-}));
 jest.mock("components/Project/ProjectActions", () => ({
   asyncUpdateCurrentProject: (...args: any[]) =>
     mockAsyncUpdateCurrentProject(...args),
+}));
+jest.mock("goals/Redux/GoalActions", () => ({
+  asyncUpdateGoal: () => mockAsyncUpdateGoal(),
+  addCharInvChangesToGoal: (changes: CharInvChanges) =>
+    mockAddCharInvChangesToGoal(changes),
 }));
 
 const mockAddCharInvChangesToGoal = jest.fn();
