@@ -1,10 +1,10 @@
 import { Button, Typography } from "@mui/material";
-import { ReactElement, useEffect, useState } from "react";
+import { type ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import CharacterReplaceDialog from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace/CharacterReplaceDialog";
-import { findAndReplace } from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace/FindAndReplaceActions";
+import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
+import { findAndReplace } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
 import { useAppDispatch } from "types/hooks";
 import { TextFieldWithFont } from "utilities/fontComponents";
 
@@ -19,6 +19,8 @@ interface FindAndReplaceProps {
   initialFindValue: string;
 }
 
+/** Component for replacing one character (every occurrence of it in the vernacular form
+ * of a word in the project) with another character. */
 export default function FindAndReplace(
   props: FindAndReplaceProps
 ): ReactElement {
@@ -45,6 +47,14 @@ export default function FindAndReplace(
     );
     setWarningDialogOpen(false);
   };
+
+  const dialogText = (
+    <>
+      {t("charInventory.characterSet.replaceAll", { val: findValue })}
+      <br />
+      {t("charInventory.characterSet.replaceAllWith", { val: replaceValue })}
+    </>
+  );
 
   return (
     <>
@@ -80,14 +90,13 @@ export default function FindAndReplace(
       >
         {t("charInventory.characterSet.apply")}
       </Button>
-      <CharacterReplaceDialog
+      <CancelConfirmDialog
         open={warningDialogOpen}
-        dialogFindValue={findValue}
-        dialogReplaceValue={replaceValue}
+        text={dialogText}
         handleCancel={() => setWarningDialogOpen(false)}
         handleConfirm={dispatchFindAndReplace}
-        idCancel={buttonIdCancel}
-        idConfirm={buttonIdConfirm}
+        buttonIdCancel={buttonIdCancel}
+        buttonIdConfirm={buttonIdConfirm}
       />
     </>
   );
