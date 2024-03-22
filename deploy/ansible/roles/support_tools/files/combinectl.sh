@@ -20,7 +20,7 @@ usage () {
                 The Combine does not run properly, download and run the
                 updated install package.
       wifi [wifi-passphrase]:
-                If no parameters are provieded, display the wifi
+                If no parameters are provided, display the wifi
                 passphrase.  If a new passphase is provided, the
                 wifi passphrase is updated to the new phrase.
                 If your passphrase has spaces or special characters,

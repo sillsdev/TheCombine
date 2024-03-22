@@ -128,7 +128,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
     `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
 11. [dotnet-project-licenses](https://github.com/tomchavakis/nuget-license)
     `dotnet tool update --global dotnet-project-licenses`
-12. Tools for generating the self installer [Linux only]:
+12. Tools for generating the self installer (Linux only):
 
     - [makeself](https://makeself.io/) - a tool to make self-extracting archives in Unix
     - [pandoc](https://pandoc.org/installing.html#linux) - a tool to convert Markdown documents to PDF.
@@ -517,7 +517,7 @@ of development setup errors. Run from within a Python virtual environment.
 python scripts/cleanup_local_repo.py
 ```
 
-### Generate Installer Script for The Combine (_Linux only_)
+### Generate Installer Script for The Combine (Linux only)
 
 To generate the installer script, run the following commands starting in the project top level directory:
 

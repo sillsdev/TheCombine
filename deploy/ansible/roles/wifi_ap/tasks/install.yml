@@ -64,7 +64,7 @@
 - name: Redirect traffic for The Combine to the AP gateway
   lineinfile:
     path: /etc/hosts
-    regexp: ^{{ ap_gateway }}
+    regexp: ^{{ ap_gateway.replace(".", "\\.") }}
     state: present
     line: "{{ ap_gateway }} {{ ap_hostname }}.{{ ap_domain }} {{ ap_hostname }} rancher.{{ ap_domain }}"
 

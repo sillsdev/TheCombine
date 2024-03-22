@@ -15,7 +15,6 @@ if [ -e "$TTY_DEV" ] ; then
     if [[ $ETH_IP == "" && $ETH_STATUS == "" ]] ; then
         # set red background
         echo -en \\xfe\\xd0\\xff\\x1f\\x1f  > ${TTY_DEV}
-        #     1234567890123456
         echo "  NO ETHERNET" > ${TTY_DEV}
         echo -n "   CONNECTED" > ${TTY_DEV}
     else
