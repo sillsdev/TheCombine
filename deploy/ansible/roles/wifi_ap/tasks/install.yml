@@ -54,9 +54,9 @@
 - name: Update localhost name
   lineinfile:
     path: /etc/hosts
-    regexp: ^127\.0\.1\.1
+    regexp: ^127\.0\.0\.1
     state: present
-    line: 127.0.0.1 {{ ansible_hostname }}
+    line: 127.0.0.1 localhost {{ ansible_hostname }}
     owner: root
     group: root
     mode: "0644"
@@ -64,9 +64,9 @@
 - name: Redirect traffic for The Combine to the AP gateway
   lineinfile:
     path: /etc/hosts
-    regexp: ^{{ ap_gateway.replace(".", "\\.") }}
+    regexp: ^{{ ap_gateway.replace(".", "\.") }}
     state: present
-    line: "{{ ap_gateway }} {{ ap_hostname }}.{{ ap_domain }} {{ ap_hostname }} rancher.{{ ap_domain }}"
+    line: "{{ ap_gateway }} {{ ap_hostname }}.{{ ap_domain }} {{ ap_hostname }}"
 
 - name: Install hosts lists for access point
   template:
