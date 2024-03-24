@@ -24,7 +24,8 @@ The installation script has been tested on _Ubuntu 22.04_ and _Wasta Linux 22.04
 ## Install _The Combine_
 
 1. Plug in the wired ethernet connection to the Internet.
-2. Update all of the existing software packages through your OS's _Software Updater_ application or by running:
+2. Make sure WiFi is "on"; it does not need to be connected to a network.
+3. Update all of the existing software packages through your OS's _Software Updater_ application or by running:
 
    ```bash
    sudo apt update && sudo apt upgrade -y
@@ -32,16 +33,16 @@ The installation script has been tested on _Ubuntu 22.04_ and _Wasta Linux 22.04
 
    This step is optional but will make the installation process go more smoothly. Restart the PC if requested.
 
-3. Download the installation script from
+4. Download the installation script from
    [https://s3.amazonaws.com/software.thecombine.app/combine-installer.run](https://s3.amazonaws.com/software.thecombine.app/combine-installer.run)
-4. Open a terminal window (Ctrl-Alt-T) and make the script executable:
+5. Open a terminal window (Ctrl-Alt-T) and make the script executable:
 
    ```console
    cd [path where installer was downloaded]
    chmod +x combine-installer.run
    ```
 
-5. Run the script:
+6. Run the script:
 
    ```console
    cd [path where installer was downloaded]

@@ -46,8 +46,8 @@ get-wifi-if () {
 
 # Restart a WiFi connection that was saved previously
 restore-wifi-connection () {
-  if [ -f "${COMBINE_CONFIG}/wifi_connection.txt" ] ; then
-    WIFI_CONN=`cat ${COMBINE_CONFIG}/wifi_connection.txt`
+  if [ -f "${CACHED_WIFI_CONN}" ] ; then
+    WIFI_CONN=`cat ${CACHED_WIFI_CONN}`
     if [ "$WIFI_CONN" != "--" ] ; then
       echo "Restoring connection ${WIFI_CONN}"
       sudo nmcli c up "${WIFI_CONN}"
@@ -60,7 +60,7 @@ save-wifi-connection () {
   # get the name of the WiFi Connection
   WIFI_CONN=`nmcli d show "$WIFI_IF" | grep "^GENERAL.CONNECTION" | sed "s|^GENERAL.CONNECTION:  *||"`
   # save it so we can restore it later
-  echo "$WIFI_CONN" > ${COMBINE_CONFIG}/wifi_connection.txt
+  echo "$WIFI_CONN" > ${CACHED_WIFI_CONN}
   if [ "$WIFI_CONN" != "--" ] ; then
     sudo nmcli c down "$WIFI_CONN"
   fi
@@ -159,7 +159,12 @@ WIFI_IF=$(get-wifi-if)
 WIFI_CONFIG=/etc/create_ap/create_ap.conf
 export KUBECONFIG=${HOME}/.kube/config
 COMBINE_CONFIG=${HOME}/.config/combine
+CACHED_WIFI_CONN=${COMBINE_CONFIG}/wifi-connection.txt
 
+# Make sure config directory exists
+mkdir -p "${COMBINE_CONFIG}"
+
+# Print usage is command is missing
 if [[ $# -eq 0 ]] ;  then
   usage
   exit 0
