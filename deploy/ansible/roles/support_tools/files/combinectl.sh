@@ -164,7 +164,7 @@ CACHED_WIFI_CONN=${COMBINE_CONFIG}/wifi-connection.txt
 # Make sure config directory exists
 mkdir -p "${COMBINE_CONFIG}"
 
-# Print usage is command is missing
+# Print usage if command is missing
 if [[ $# -eq 0 ]] ;  then
   usage
   exit 0
