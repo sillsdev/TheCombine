@@ -1,0 +1,40 @@
+---
+- name: Install program to write wired ethernet address
+  copy:
+    src: display-eth-addr.sh
+    dest: "{{ eth_update_program }}"
+    owner: root
+    group: root
+    mode: 0755
+  when: install_ip_viewer
+
+- name: Setup service to update display
+  template:
+    src: "{{ item }}.j2"
+    dest: /usr/lib/systemd/system/{{ item }}
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - display-eth.service
+    - display-eth.timer
+  notify: start display eth
+  when: install_ip_viewer
+
+- name: Verify that there is a single WiFi interface
+  assert:
+    that: wifi_interfaces|length == 1
+    success_msg: "Setup WiFi Interface: {{ wifi_interfaces }}"
+    fail_msg: |
+      Only a single WiFi interface is supported.
+      Found the following interfaces:
+      {{ ansible_facts.interfaces }}
+
+- name: Install combinectl tool
+  copy:
+    src: combinectl.sh
+    dest: /usr/local/bin/combinectl
+    owner: root
+    group: root
+    mode: 0755
+  when: install_combinectl

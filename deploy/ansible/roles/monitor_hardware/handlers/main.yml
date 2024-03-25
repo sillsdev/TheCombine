@@ -6,6 +6,7 @@
 
 - name: restart target
   reboot:
+  when: ansible_connection != "local"
 
 - name: restart sysstat service
   service:

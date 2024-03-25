@@ -24,14 +24,6 @@ spec:
       labels:
         combine-component: backend
     spec:
-      initContainers:
-        - name: chwonit
-          image: busybox:stable
-          command: ["sh","-c","chown -R 999:999 /myvol"]
-          volumeMounts:
-          - name: backend-data
-            mountPath: /myvol/combine-files
-          imagePullPolicy: IfNotPresent
       containers:
         - name: backend
           image: {{ include "backend.containerImage" . }}
