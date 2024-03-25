@@ -1,16 +1,13 @@
 ---
 ##############################################################
-# Role: docker_install
+# Role: container_engine
 #
-# Install the Docker Engine, Docker Compose and all their
-# pre-requisite packages.
+# Install the container engine and pre-requisite packages.
 #
-# The Docker Engine is installed by adding the repo from
+# The container engine is installed by adding the repo from
 # docker.com to our apt sources and installing the relevant
-# package.
+# packages.
 #
-# Docker Compose is installed by downloading the ZIP package
-# from GitHub and extracting it to /usr/local/bin
 ##############################################################
 - name: Update apt cache.
   apt:
@@ -27,7 +24,6 @@
       - gnupg
       - lsb-release
     state: present
-  notify: reboot target
 
 - name: Create keyring directory
   file:
@@ -50,6 +46,16 @@
 
 - name: Install Docker Packages
   apt:
-    name: "{{ docker_packages }}"
+    name: "{{ container_packages }}"
     update_cache: yes
-  notify: reboot target
+
+- name: Check if reboot is required
+  stat:
+    path: /var/run/reboot-required
+  register: reboot_required
+
+- name: Reboot
+  reboot:
+  when:
+    - reboot_required.stat.exists
+    - ansible_connection != "local"

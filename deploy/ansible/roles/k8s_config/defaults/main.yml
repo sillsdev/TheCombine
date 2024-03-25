@@ -1,4 +1,0 @@
----
-# Used to setup the certificate for kubectl
-# Can be overridden by specific groups/hosts
-public_dns_name: "{{ combine_server_name }}"
