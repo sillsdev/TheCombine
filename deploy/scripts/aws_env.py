@@ -15,7 +15,6 @@ def aws_version() -> Optional[int]:
     try:
         result = run_cmd(["aws", "--version"], check_results=False, chomp=True)
     except FileNotFoundError:
-        print("AWS CLI version 2 is not installed.")
         return None
     else:
         if result.returncode == 0:

@@ -1,8 +1,6 @@
 ---
 #################################################
-# Group specific configuration items
-#
-# Group: nuc
+# Host specific configuration items for localhost
 ################################################
 
 ################################################
@@ -18,17 +16,17 @@ image_pull_secret: aws-login-credentials
 # k8s namespaces
 app_namespace: thecombine
 
-k8s_user: sillsdev
+k8s_user: "{{ ansible_user_id }}"
 
 ################################################
 # Helm Installation
 ################################################
-install_helm: no
+install_helm: yes
 
 ################################################
 # Support Tool Settings
 ################################################
-install_ip_viewer: yes
+install_ip_viewer: no
 install_combinectl: yes
 
 #######################################
@@ -40,7 +38,7 @@ ingress_namespace: ingress-nginx
 # The server name will direct traffic to the production
 # server since it is used to get the certificates for the
 # NUC.
-k8s_dns_name: "{{ ansible_hostname }}"
+k8s_dns_name: "local"
 
 ################################################
 # Ethernet settings
@@ -52,13 +50,13 @@ eth_optional: yes
 ################################################
 has_wifi: yes
 ap_domain: thecombine.app
-ap_ssid: "{{ansible_hostname}}_ap"
+ap_ssid: "thecombine_ap"
 ap_passphrase: "Combine2020"
 ap_gateway: "10.10.10.1"
-ap_hostname: "{{ansible_hostname}}"
-
+ap_hostname: "local"
+test_wifi: false
 ################################################
 # hardware monitoring settings
 ################################################
-include_hw_monitoring: yes
+include_hw_monitoring: no
 history_days: 60

@@ -1,0 +1,9 @@
+[Unit]
+Description=Timer to trigger display-eth.service
+
+[Timer]
+OnUnitActiveSec={{ eth_update_period }}
+OnBootSec={{ eth_update_period }}
+
+[Install]
+WantedBy=timers.target
