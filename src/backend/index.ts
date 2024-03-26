@@ -29,6 +29,7 @@ import * as LocalStorage from "backend/localStorage";
 import router from "browserRouter";
 import authHeader from "components/Login/AuthHeaders";
 import { Goal, GoalStep } from "types/goals";
+import { Hash } from "types/hash";
 import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
 import { FileWithSpeakerId } from "types/word";
@@ -421,6 +422,16 @@ export async function projectDuplicateCheck(
 }
 
 /* SemanticDomainController.cs */
+
+export async function getAllSemanticDomainNames(
+  lang = ""
+): Promise<Hash<string>> {
+  const resp = await semanticDomainApi.getAllSemanticDomainNames(
+    { lang },
+    defaultOptions()
+  );
+  return resp.data;
+}
 
 export async function getSemanticDomainFull(
   id: string,

@@ -13,6 +13,7 @@ import { StoreState } from "types";
 import theme from "types/theme";
 import { newPronunciation } from "types/word";
 
+jest.mock("components/Project/ProjectActions", () => ({}));
 // Mock the store interactions
 jest.mock("goals/ReviewEntries/Redux/ReviewEntriesActions", () => ({
   deleteAudio: (...args: any[]) => mockDeleteAudio(...args),

@@ -6,10 +6,10 @@
 ################################################
 - name: Install k3s
   shell:
-    cmd: curl -sfL https://get.k3s.io | sh -s - {{ k3s_options | join(' ') }}
+    cmd: curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="{{ k3s_version }}" sh -s - {{ k3s_options | join(' ') }}
     creates: /usr/local/bin/k3s
 
-# Change KillMode from "process" to "mixed" to eliminate 90 wait for k3s containers
+# Change KillMode from "process" to "mixed" to eliminate 90s wait for k3s containers
 # to exit.  This limits the ability to upgrade k3s in-place without stopping the
 # current containers but that is not needed for the NUC use case.
 - name: Patch k3s service
@@ -27,6 +27,12 @@
   register: k8s_user_home
   changed_when: false
 
+- name: Get user group id for {{ k8s_user }}
+  shell: >
+    getent passwd {{ k8s_user }} | awk -F: '{ print $4 }'
+  register: k8s_user_group_id
+  changed_when: false
+
 - name: Create .kube directories
   file:
     path: "{{ item.home }}/.kube"
@@ -37,19 +43,23 @@
   loop:
     - home: "{{ k8s_user_home.stdout }}"
       owner: "{{ k8s_user }}"
-      group: "{{ k8s_group }}"
+      group: "{{ k8s_user_group_id.stdout }}"
     - home: /root
       owner: root
       group: root
 
-- name: Set link .kube/config to /etc/rancher/k3s/k3s.yaml
-  file:
-    src: /etc/rancher/k3s/k3s.yaml
-    path: "{{ item }}/.kube/config"
-    state: link
+- name: Copy /etc/rancher/k3s/k3s.yaml to .kube/config
+  shell: |
+    cp /etc/rancher/k3s/k3s.yaml {{ item.home }}/.kube/config
+    chown {{ item.owner }}:{{ item.group }} {{ item.home }}/.kube/config
+    chmod 600 {{ item.home }}/.kube/config
   loop:
-    - "{{ k8s_user_home.stdout }}"
-    - /root
+    - home: "{{ k8s_user_home.stdout }}"
+      owner: "{{ k8s_user }}"
+      group: "{{ k8s_user_group_id.stdout }}"
+    - home: /root
+      owner: root
+      group: root
 
 - name: List contexts
   command: kubectl --kubeconfig=/etc/rancher/k3s/k3s.yaml config get-contexts
