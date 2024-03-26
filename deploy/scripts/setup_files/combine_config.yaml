@@ -18,6 +18,14 @@ targets:
       thecombine:
         global:
           serverName: thecombine.localhost
+  desktop:
+    profile: desktop
+    env_vars_required: false
+    override:
+      # override values for 'thecombine' chart
+      thecombine:
+        global:
+          serverName: local.thecombine.app
   nuc1:
     profile: nuc
     env_vars_required: false
@@ -97,6 +105,9 @@ targets:
 
 profiles:
   dev: # Profile for local development machines
+    charts:
+      - thecombine
+  desktop: # Profile for installing The Combine on Ubuntu Desktop (or derivative).
     charts:
       - thecombine
   nuc: # Profile for a NUC or a machine whose TLS certificate will be created by another
