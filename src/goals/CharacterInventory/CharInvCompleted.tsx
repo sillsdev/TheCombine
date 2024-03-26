@@ -189,7 +189,10 @@ function WordChanges(props: {
     <>
       <Divider />
       <Typography id={CharInvCompletedId.TypographyWordChanges}>
-        {t("charInventory.changes.wordChanges")}
+        {t("charInventory.changes.wordChangesWithStrings", {
+          val1: props.wordChanges.find,
+          val2: props.wordChanges.replace,
+        })}
       </Typography>
       <Grid container rowSpacing={2} spacing={2}>
         {entries.slice(0, wordLimit).map(([oldId, newId]) => (
