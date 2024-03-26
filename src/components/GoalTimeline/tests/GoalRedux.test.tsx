@@ -48,6 +48,7 @@ jest.mock("backend", () => ({
 jest.mock("browserRouter", () => ({
   navigate: (path: Path) => mockNavigate(path),
 }));
+jest.mock("components/Project/ProjectActions", () => ({}));
 jest.mock("components/Pronunciations/Recorder");
 
 const mockAddGoalToUserEdit = jest.fn();

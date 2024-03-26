@@ -5,7 +5,7 @@ import { Project } from "api/models";
 import ProjectSchedule from "components/ProjectSettings/ProjectSchedule";
 import { newProject } from "types/project";
 
-const mockUpdateProject = jest.fn();
+const mockSetProject = jest.fn();
 
 let projectMaster: renderer.ReactTestRenderer;
 
@@ -17,13 +17,13 @@ const renderProjSched = async (
   project = mockProject(),
   readOnly = false
 ): Promise<void> => {
-  mockUpdateProject.mockResolvedValue(undefined);
+  mockSetProject.mockResolvedValue(undefined);
   await renderer.act(async () => {
     projectMaster = renderer.create(
       <ProjectSchedule
         project={project}
         readOnly={readOnly}
-        updateProject={mockUpdateProject}
+        setProject={mockSetProject}
       />
     );
   });
