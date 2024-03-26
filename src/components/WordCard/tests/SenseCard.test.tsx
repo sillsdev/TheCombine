@@ -34,11 +34,11 @@ beforeEach(() => {
 });
 
 describe("SenseCard", () => {
-  it("has an icon for non-Unspecified part of speech", async () => {
-    await renderSenseCard();
+  it("has an icon for part of speech (if not GramCatGroup.Unspecified)", async () => {
+    const sense = newSense("gloss");
+    await renderSenseCard(sense);
     expect(() => renderer.root.findByType(PartOfSpeechButton)).toThrow();
 
-    const sense = newSense("gloss");
     sense.grammaticalInfo = {
       catGroup: GramCatGroup.Noun,
       grammaticalCategory: "n",
