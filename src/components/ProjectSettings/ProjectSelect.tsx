@@ -1,12 +1,12 @@
 import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import { ReactElement, useEffect, useState } from "react";
+import { type ReactElement, useEffect, useState } from "react";
 
-import { Project } from "api/models";
+import { type Project } from "api/models";
 import { getAllActiveProjects } from "backend";
-import { ProjectSettingPropsWithSet } from "components/ProjectSettings/ProjectSettingsTypes";
+import { type ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 
 export default function ProjectSelect(
-  props: ProjectSettingPropsWithSet
+  props: ProjectSettingProps
 ): ReactElement {
   const [projList, setProjList] = useState<Project[]>([]);
 

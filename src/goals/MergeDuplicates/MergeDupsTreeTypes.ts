@@ -94,8 +94,13 @@ export const defaultSidebar: Sidebar = {
 };
 
 export interface MergeTree {
+  deletedSenseGuids: string[];
   sidebar: Sidebar;
   words: Hash<MergeTreeWord>;
 }
 
-export const defaultTree: MergeTree = { sidebar: defaultSidebar, words: {} };
+export const defaultTree: MergeTree = {
+  deletedSenseGuids: [],
+  sidebar: defaultSidebar,
+  words: {},
+};

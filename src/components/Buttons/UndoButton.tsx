@@ -42,7 +42,7 @@ export default function UndoButton(props: UndoButtonProps): ReactElement {
           </Button>
           <CancelConfirmDialog
             open={undoDialogOpen}
-            textId={props.textIdDialog}
+            text={props.textIdDialog}
             handleCancel={() => setUndoDialogOpen(false)}
             handleConfirm={() =>
               props.undo().then(() => setUndoDialogOpen(false))

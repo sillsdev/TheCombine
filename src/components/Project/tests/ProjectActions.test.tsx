@@ -1,23 +1,28 @@
-import { PreloadedState } from "redux";
+import { type PreloadedState } from "redux";
 
-import { Project, Speaker } from "api/models";
+import { type Project, type Speaker } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import {
   asyncRefreshProjectUsers,
+  asyncSetNewCurrentProject,
   asyncUpdateCurrentProject,
   clearCurrentProject,
-  setNewCurrentProject,
 } from "components/Project/ProjectActions";
-import { RootState, setupStore } from "store";
+import { defaultState as currentProjectState } from "components/Project/ProjectReduxTypes";
+import { type RootState, setupStore } from "store";
 import { newProject } from "types/project";
 import { newUser } from "types/user";
 
 jest.mock("backend", () => ({
-  getAllProjectUsers: (...args: any[]) => mockGetAllProjectUsers(...args),
-  updateProject: (...args: any[]) => mockUpdateProject(...args),
+  getAllProjectUsers: (projId?: string) => mockGetAllProjectUsers(projId),
+  getAllSemanticDomainNames: (lang?: string) => mockGetAllSemDomNames(lang),
+  updateProject: (proj: Project) => mockUpdateProject(proj),
 }));
+// Mock "i18n", else `thrown: "Error: Error: connect ECONNREFUSED ::1:80 [...]`
+jest.mock("i18n", () => ({ language: "" }));
 
 const mockGetAllProjectUsers = jest.fn();
+const mockGetAllSemDomNames = jest.fn();
 const mockUpdateProject = jest.fn();
 const mockProjId = "project-id";
 
@@ -27,6 +32,10 @@ const persistedDefaultState: PreloadedState<RootState> = {
   _persist: { version: 1, rehydrated: false },
 };
 
+beforeEach(() => {
+  jest.resetAllMocks();
+});
+
 describe("ProjectActions", () => {
   describe("asyncUpdateCurrentProject", () => {
     it("updates the backend and correctly affects state for different id", async () => {
@@ -34,6 +43,7 @@ describe("ProjectActions", () => {
       const store = setupStore({
         ...persistedDefaultState,
         currentProjectState: {
+          ...currentProjectState,
           project: proj,
           speaker: {} as Speaker,
           users: [newUser()],
@@ -53,6 +63,7 @@ describe("ProjectActions", () => {
       const store = setupStore({
         ...persistedDefaultState,
         currentProjectState: {
+          ...currentProjectState,
           project: proj,
           speaker: {} as Speaker,
           users: [newUser()],
@@ -66,53 +77,83 @@ describe("ProjectActions", () => {
       expect(speaker).not.toBeUndefined();
       expect(users).toHaveLength(1);
     });
-  });
 
-  describe("asyncRefreshProjectUsers", () => {
-    it("correctly affects state", async () => {
+    it("fetches semantic domain names when semDomWritingSystem changes", async () => {
       const proj: Project = { ...newProject(), id: mockProjId };
       const store = setupStore({
         ...persistedDefaultState,
         currentProjectState: {
-          project: proj,
+          ...currentProjectState,
+          project: { ...proj },
+          semanticDomains: { ["1"]: "one" },
+        },
+      });
+
+      // Project update but same sem dom language
+      proj.liftImported = !proj.liftImported;
+      await store.dispatch(asyncUpdateCurrentProject({ ...proj }));
+      expect(mockUpdateProject).toHaveBeenCalledTimes(1);
+      expect(mockGetAllSemDomNames).not.toHaveBeenCalled();
+
+      // Project update with different sem dom language
+      const lang = "es";
+      proj.semDomWritingSystem = { ...proj.semDomWritingSystem, bcp47: lang };
+      await store.dispatch(asyncUpdateCurrentProject({ ...proj }));
+      expect(mockUpdateProject).toHaveBeenCalledTimes(2);
+      expect(mockGetAllSemDomNames).toHaveBeenCalledTimes(1);
+      expect(mockGetAllSemDomNames).toHaveBeenCalledWith(lang);
+    });
+  });
+
+  describe("asyncRefreshProjectUsers", () => {
+    it("correctly affects state", async () => {
+      const store = setupStore({
+        ...persistedDefaultState,
+        currentProjectState: {
+          ...currentProjectState,
+          project: { ...newProject(), id: mockProjId },
+          semanticDomains: { ["1"]: "one" },
           speaker: {} as Speaker,
-          users: [],
         },
       });
       const mockUsers = [newUser(), newUser(), newUser()];
       mockGetAllProjectUsers.mockResolvedValueOnce(mockUsers);
       await store.dispatch(asyncRefreshProjectUsers("mockProjId"));
-      const { project, speaker, users } = store.getState().currentProjectState;
-      expect(project.id).toEqual(mockProjId);
-      expect(speaker).not.toBeUndefined();
-      expect(users).toHaveLength(mockUsers.length);
+      const projState = store.getState().currentProjectState;
+      expect(projState.project.id).toEqual(mockProjId);
+      expect(projState.semanticDomains).not.toBeUndefined();
+      expect(projState.speaker).not.toBeUndefined();
+      expect(projState.users).toHaveLength(mockUsers.length);
     });
   });
 
   describe("clearCurrentProject", () => {
     it("correctly affects state", () => {
-      const nonDefaultState = {
-        project: { ...newProject(), id: "nonempty-string" },
-        speaker: {} as Speaker,
-        users: [newUser()],
-      };
       const store = setupStore({
         ...persistedDefaultState,
-        currentProjectState: nonDefaultState,
+        currentProjectState: {
+          ...currentProjectState,
+          project: { ...newProject(), id: mockProjId },
+          semanticDomains: { ["1"]: "one" },
+          speaker: {} as Speaker,
+          users: [newUser()],
+        },
       });
       store.dispatch(clearCurrentProject());
-      const { project, speaker, users } = store.getState().currentProjectState;
-      expect(project.id).toEqual("");
-      expect(speaker).toBeUndefined();
-      expect(users).toHaveLength(0);
+      const projState = store.getState().currentProjectState;
+      expect(projState.project.id).toEqual("");
+      expect(projState.semanticDomains).toBeUndefined();
+      expect(projState.speaker).toBeUndefined();
+      expect(projState.users).toHaveLength(0);
     });
   });
 
-  describe("setNewCurrentProject", () => {
-    it("correctly affects state and doesn't update the backend", () => {
+  describe("asyncSetNewCurrentProject", () => {
+    it("correctly affects state and doesn't update the backend", async () => {
       const proj: Project = { ...newProject(), id: mockProjId };
       const store = setupStore();
-      store.dispatch(setNewCurrentProject(proj));
+      await store.dispatch(asyncSetNewCurrentProject(proj));
+      expect(mockGetAllSemDomNames).toHaveBeenCalledTimes(1);
       expect(mockUpdateProject).not.toHaveBeenCalled();
       const { project } = store.getState().currentProjectState;
       expect(project.id).toEqual(mockProjId);

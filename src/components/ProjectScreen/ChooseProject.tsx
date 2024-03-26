@@ -5,13 +5,13 @@ import {
   ListItemButton,
   Typography,
 } from "@mui/material";
-import { ReactElement, useEffect, useState } from "react";
+import { type ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { Project } from "api/models";
+import { type Project } from "api/models";
 import { getAllActiveProjects } from "backend";
-import { setNewCurrentProject } from "components/Project/ProjectActions";
+import { asyncSetNewCurrentProject } from "components/Project/ProjectActions";
 import { useAppDispatch } from "types/hooks";
 import { Path } from "types/path";
 
@@ -29,8 +29,8 @@ export default function ChooseProject(): ReactElement {
     });
   }, []);
 
-  const selectProject = (project: Project): void => {
-    dispatch(setNewCurrentProject(project));
+  const selectProject = async (project: Project): Promise<void> => {
+    await dispatch(asyncSetNewCurrentProject(project));
     navigate(Path.DataEntry);
   };
 

@@ -1,0 +1,61 @@
+---
+##############################################################
+# Role: container_engine
+#
+# Install the container engine and pre-requisite packages.
+#
+# The container engine is installed by adding the repo from
+# docker.com to our apt sources and installing the relevant
+# packages.
+#
+##############################################################
+- name: Update apt cache.
+  apt:
+    update_cache: true
+    cache_valid_time: 600
+  changed_when: false
+
+- name: Install pre-requisite packages
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+    state: present
+
+- name: Create keyring directory
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Install Docker apt key
+  shell:
+    cmd: "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg"
+    creates: /etc/apt/keyrings/docker.gpg
+
+- name: Add Docker repository
+  apt_repository:
+    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    state: present
+    filename: docker
+
+- name: Install Docker Packages
+  apt:
+    name: "{{ container_packages }}"
+    update_cache: yes
+
+- name: Check if reboot is required
+  stat:
+    path: /var/run/reboot-required
+  register: reboot_required
+
+- name: Reboot
+  reboot:
+  when:
+    - reboot_required.stat.exists
+    - ansible_connection != "local"

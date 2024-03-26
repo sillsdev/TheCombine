@@ -16,6 +16,7 @@ import {
   type Sidebar,
   convertSenseToMergeTreeSense,
   convertWordToMergeTreeWord,
+  defaultData,
   defaultSidebar,
   defaultTree,
   newMergeTreeWord,
@@ -74,12 +75,13 @@ const mergeDuplicatesSlice = createSlice({
     deleteSenseAction: (state, action) => {
       const srcRef: MergeTreeReference = action.payload;
       const srcWordId = srcRef.wordId;
-      const words = state.tree.words;
+      const { deletedSenseGuids, words } = state.tree;
 
       const sensesGuids = words[srcWordId].sensesGuids;
       const srcGuids = sensesGuids[srcRef.mergeSenseId];
       if (srcRef.order === undefined || srcGuids.length === 1) {
         // A sense deleted from a word.
+        deletedSenseGuids.push(...srcGuids);
         delete sensesGuids[srcRef.mergeSenseId];
         if (!Object.keys(sensesGuids).length) {
           delete words[srcWordId];
@@ -92,6 +94,7 @@ const mergeDuplicatesSlice = createSlice({
         }
       } else {
         // A sense deleted from the sidebar.
+        deletedSenseGuids.push(srcGuids[srcRef.order]);
         srcGuids.splice(srcRef.order, 1);
         if (srcGuids.length < 2) {
           // If not multiple senses in the sidebar, reset the sidebar.
@@ -107,12 +110,9 @@ const mergeDuplicatesSlice = createSlice({
     getMergeWordsAction: (state) => {
       // Handle words with all senses deleted.
       const possibleWords = Object.values(state.data.words);
-      // List of all non-deleted senses.
-      const nonDeletedSenses = Object.values(state.tree.words).flatMap((w) =>
-        Object.values(w.sensesGuids).flatMap((s) => s)
-      );
+      const deletedSenseGuids = state.tree.deletedSenseGuids;
       const deletedWords = possibleWords.filter((w) =>
-        w.senses.every((s) => !nonDeletedSenses.includes(s.guid))
+        w.senses.every((s) => deletedSenseGuids.includes(s.guid))
       );
       state.mergeWords = deletedWords.map((w) =>
         newMergeWords(w, [{ srcWordId: w.id, getAudio: false }], true)
@@ -123,7 +123,7 @@ const mergeDuplicatesSlice = createSlice({
         const mergeSenses = buildSenses(
           mergeWord.sensesGuids,
           state.data,
-          nonDeletedSenses
+          deletedSenseGuids
         );
         const mergeWords = createMergeWords(
           wordId,
@@ -265,7 +265,7 @@ const mergeDuplicatesSlice = createSlice({
           });
           wordsTree[word.id] = convertWordToMergeTreeWord(word);
         });
-        state.data = { senses, words };
+        state.data = { ...defaultData, senses, words };
         state.tree = { ...defaultTree, words: wordsTree };
         state.mergeWords = [];
       }
@@ -285,7 +285,7 @@ const mergeDuplicatesSlice = createSlice({
 function buildSenses(
   sensesGuids: Hash<string[]>,
   data: MergeData,
-  nonDeletedSenses: string[]
+  deletedSenseGuids: string[]
 ): Hash<MergeTreeSense[]> {
   const senses: Hash<MergeTreeSense[]> = {};
   for (const senseGuids of Object.values(sensesGuids)) {
@@ -305,9 +305,9 @@ function buildSenses(
             srcWordId: wordId,
             sense: {
               ...sense,
-              accessibility: nonDeletedSenses.includes(sense.guid)
-                ? Status.Separate
-                : Status.Deleted,
+              accessibility: deletedSenseGuids.includes(sense.guid)
+                ? Status.Deleted
+                : Status.Separate,
             },
           });
         }

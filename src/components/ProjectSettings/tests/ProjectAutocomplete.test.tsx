@@ -5,7 +5,7 @@ import { AutocompleteSetting } from "api/models";
 import ProjectAutocomplete from "components/ProjectSettings/ProjectAutocomplete";
 import { randomProject } from "types/project";
 
-const mockUpdateProject = jest.fn();
+const mockSetProject = jest.fn();
 
 const mockProject = randomProject();
 
@@ -14,10 +14,7 @@ let testRenderer: renderer.ReactTestRenderer;
 const renderAutocomplete = async (): Promise<void> => {
   await renderer.act(async () => {
     testRenderer = renderer.create(
-      <ProjectAutocomplete
-        project={mockProject}
-        updateProject={mockUpdateProject}
-      />
+      <ProjectAutocomplete project={mockProject} setProject={mockSetProject} />
     );
   });
 };
@@ -27,12 +24,12 @@ describe("ProjectAutocomplete", () => {
     await renderAutocomplete();
     const selectChange = testRenderer.root.findByType(Select).props.onChange;
     await renderer.act(async () => selectChange({ target: { value: "Off" } }));
-    expect(mockUpdateProject).toHaveBeenCalledWith({
+    expect(mockSetProject).toHaveBeenCalledWith({
       ...mockProject,
       autocompleteSetting: AutocompleteSetting.Off,
     });
     await renderer.act(async () => selectChange({ target: { value: "On" } }));
-    expect(mockUpdateProject).toHaveBeenCalledWith({
+    expect(mockSetProject).toHaveBeenCalledWith({
       ...mockProject,
       autocompleteSetting: AutocompleteSetting.On,
     });
