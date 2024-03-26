@@ -17,11 +17,11 @@ import {
   type CharInvChanges,
   type CharacterChange,
   CharacterStatus,
+  type FindAndReplaceChange,
   defaultCharInvChanges,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { defaultState } from "goals/Redux/GoalReduxTypes";
 import { type StoreState } from "types";
-import { type Hash } from "types/hash";
 import { newWord as mockWord } from "types/word";
 
 jest.mock("backend", () => ({
@@ -39,10 +39,14 @@ const mockCharChanges: CharacterChange[] = [
   ["f", CharacterStatus.Undecided, CharacterStatus.Rejected],
 ];
 const mockWordKeys = ["oldA", "oldB", "oldC"];
-const mockWordChanges: Hash<string> = {
-  [mockWordKeys[0]]: "newA",
-  [mockWordKeys[1]]: "newB",
-  [mockWordKeys[2]]: "newC",
+const mockWordChanges: FindAndReplaceChange = {
+  find: "Q",
+  replace: "q",
+  words: {
+    [mockWordKeys[0]]: "newA",
+    [mockWordKeys[1]]: "newB",
+    [mockWordKeys[2]]: "newC",
+  },
 };
 const mockState = (changes?: CharInvChanges): Partial<StoreState> => ({
   goalsState: {

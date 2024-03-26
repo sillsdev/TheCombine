@@ -6,6 +6,7 @@ import {
   type CharInvChanges,
   type CharacterChange,
   CharacterStatus,
+  type FindAndReplaceChange,
   defaultCharInvChanges,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
 import {
@@ -249,7 +250,11 @@ describe("CharacterInventoryActions", () => {
     });
 
     it("appends word changes", async () => {
-      const prevWordChanges = { ["old"]: "new" };
+      const prevWordChanges: FindAndReplaceChange = {
+        find: "Q",
+        replace: "q",
+        words: { ["old"]: "new" },
+      };
       const store = setupStore({
         ...persistedDefaultState,
         goalsState: {
@@ -268,9 +273,14 @@ describe("CharacterInventoryActions", () => {
 
       await store.dispatch(findAndReplace("A", "a"));
       expect(mockAddCharInvChangesToGoal).toHaveBeenCalledTimes(1);
+      const newWordChanges: FindAndReplaceChange = {
+        find: "A",
+        replace: "a",
+        words: { [word.id]: bumpId(word.id) },
+      };
       expect(mockAddCharInvChangesToGoal).toHaveBeenCalledWith({
         ...defaultCharInvChanges,
-        wordChanges: [prevWordChanges, { [word.id]: bumpId(word.id) }],
+        wordChanges: [prevWordChanges, newWordChanges],
       });
     });
   });

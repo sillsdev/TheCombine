@@ -83,7 +83,7 @@ const mockCompletedMerge: MergeUndoIds = {
 };
 const mockCharInvChanges: CharInvChanges = {
   charChanges: [["'", CharacterStatus.Undecided, CharacterStatus.Accepted]],
-  wordChanges: [{ ["id-a"]: "id-b" }],
+  wordChanges: [{ find: "Q", replace: "q", words: { ["id-a"]: "id-b" } }],
 };
 
 const mockEdit = (): Edit => ({

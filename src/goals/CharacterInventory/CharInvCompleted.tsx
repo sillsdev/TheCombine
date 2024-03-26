@@ -71,7 +71,7 @@ function WordChangesTypography(
 ): ReactElement | undefined {
   const { t } = useTranslation();
 
-  const changes = wordChanges.filter((wc) => wc.words.length);
+  const changes = wordChanges.filter((wc) => Object.keys(wc.words).length);
   if (!changes.length) {
     return;
   }
@@ -86,7 +86,7 @@ function WordChangesTypography(
 
   return (
     <Typography id={CharInvCompletedId.TypographyWordChanges}>
-      `${description} ${wordCount}`
+      {`${description} ${wordCount}`}
     </Typography>
   );
 }
