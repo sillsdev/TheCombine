@@ -64,6 +64,33 @@ export default function CharInvCompleted(): ReactElement {
   );
 }
 
+/** Typography summarizing find-and-replace word changes for goal history
+ * (or undefined if no words changed). */
+function WordChangesTypography(
+  wordChanges: FindAndReplaceChange[]
+): ReactElement | undefined {
+  const { t } = useTranslation();
+
+  const changes = wordChanges.filter((wc) => wc.words.length);
+  if (!changes.length) {
+    return;
+  }
+  const wordCount = changes.flatMap((wc) => Object.keys(wc.words)).length;
+  const description =
+    changes.length === 1
+      ? t("charInventory.changes.wordChangesWithStrings", {
+          val1: changes[0].find,
+          val2: changes[0].replace,
+        })
+      : t("charInventory.changes.wordChanges");
+
+  return (
+    <Typography id={CharInvCompletedId.TypographyWordChanges}>
+      `${description} ${wordCount}`
+    </Typography>
+  );
+}
+
 /** Component for the goal history timeline, to display a summary of changes made during
  * one session of the Create Character Inventory goal. This includes:
  * - Changes to inventory status of a character (up to 3);
@@ -72,15 +99,9 @@ export function CharInvChangesGoalList(changes: CharInvChanges): ReactElement {
   const { t } = useTranslation();
   const changeLimit = 3;
 
-  const wordCount = (changes.wordChanges ?? []).flatMap((wc) =>
-    Object.keys(wc.words)
-  ).length;
-  const wordString = `${t("charInventory.changes.wordChanges")} ${wordCount}`;
-  const wordChangesTypography = wordCount ? (
-    <Typography id={CharInvCompletedId.TypographyWordChanges}>
-      {wordString}
-    </Typography>
-  ) : null;
+  const wordChangesTypography = WordChangesTypography(
+    changes.wordChanges ?? []
+  );
 
   if (!changes.charChanges?.length) {
     return (

@@ -370,7 +370,8 @@
       "noCharChanges": "No changes made to character inventory.",
       "more": "more",
       "noWordChanges": "No words changed by find-and-replace.",
-      "wordChanges": "Words changed by find-and-replace:"
+      "wordChanges": "Words changed by find-and-replace:",
+      "wordChangesWithStrings": "Words changed by find-and-replace ({{ val1 }} → {{ val2 }}):"
     },
     "undo": {
       "undo": "Undo find-and-replace",
