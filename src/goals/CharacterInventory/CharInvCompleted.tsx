@@ -11,10 +11,10 @@ import CharacterStatusText from "goals/CharacterInventory/CharInv/CharacterList/
 import {
   type CharInvChanges,
   type CharacterChange,
+  type FindAndReplaceChange,
   defaultCharInvChanges,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { type StoreState } from "types";
-import { type Hash } from "types/hash";
 import { useAppSelector } from "types/hooks";
 
 export enum CharInvCompletedId {
@@ -73,7 +73,7 @@ export function CharInvChangesGoalList(changes: CharInvChanges): ReactElement {
   const changeLimit = 3;
 
   const wordCount = (changes.wordChanges ?? []).flatMap((wc) =>
-    Object.keys(wc)
+    Object.keys(wc.words)
   ).length;
   const wordString = `${t("charInventory.changes.wordChanges")} ${wordCount}`;
   const wordChangesTypography = wordCount ? (
@@ -84,12 +84,13 @@ export function CharInvChangesGoalList(changes: CharInvChanges): ReactElement {
 
   if (!changes.charChanges?.length) {
     return (
-      <>
-        <Typography id={CharInvCompletedId.TypographyNoCharChanges}>
-          {t("charInventory.changes.noCharChanges")}
-        </Typography>
-        {wordChangesTypography}
-      </>
+      wordChangesTypography ?? (
+        <>
+          <Typography id={CharInvCompletedId.TypographyNoCharChanges}>
+            {t("charInventory.changes.noCharChanges")}
+          </Typography>
+        </>
+      )
     );
   }
   if (changes.charChanges.length > changeLimit) {
@@ -133,9 +134,11 @@ export function CharChange(props: { change: CharacterChange }): ReactElement {
 
 /** Component to display words (max 5) changed by a single find-and-replace, with a
  * button to undo (if at least one word is still in the project frontier). */
-function WordChanges(props: { wordChanges: Hash<string> }): ReactElement {
+function WordChanges(props: {
+  wordChanges: FindAndReplaceChange;
+}): ReactElement {
   const [inFrontier, setInFrontier] = useState<string[]>([]);
-  const [entries] = useState(Object.entries(props.wordChanges));
+  const [entries] = useState(Object.entries(props.wordChanges.words));
   const { t } = useTranslation();
   const wordLimit = 5;
 
@@ -151,14 +154,14 @@ function WordChanges(props: { wordChanges: Hash<string> }): ReactElement {
   /** Fetches which of the new words are still in the project frontier;
    * returns true if there are any. */
   const isUndoAllowed = useCallback(async (): Promise<boolean> => {
-    const ids = await areInFrontier(Object.values(props.wordChanges));
+    const ids = await areInFrontier(Object.values(props.wordChanges.words));
     setInFrontier(ids);
     return ids.length > 0;
-  }, [props.wordChanges]);
+  }, [props.wordChanges.words]);
 
   /** Reverts all changes for which the new word is still in the project frontier. */
   const undo = async (): Promise<void> => {
-    await revertWords(props.wordChanges);
+    await revertWords(props.wordChanges.words);
   };
 
   return (

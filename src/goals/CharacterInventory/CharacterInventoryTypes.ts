@@ -18,9 +18,15 @@ export enum CharacterStatus {
 
 export type CharacterChange = [string, CharacterStatus, CharacterStatus];
 
+export interface FindAndReplaceChange {
+  find: string;
+  replace: string;
+  words: Hash<string>;
+}
+
 export interface CharInvChanges {
   charChanges: CharacterChange[];
-  wordChanges: Hash<string>[];
+  wordChanges: FindAndReplaceChange[];
 }
 
 export const defaultCharInvChanges: CharInvChanges = {

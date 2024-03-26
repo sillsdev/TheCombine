@@ -8,6 +8,7 @@ import {
   type CharInvChanges,
   type CharacterChange,
   CharacterStatus,
+  type FindAndReplaceChange,
   defaultCharInvChanges,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
 import {
@@ -169,7 +170,7 @@ export function loadCharInvData() {
 
 /** Returns a dispatch function to: in both frontend and backend, add to the current
  * goal's changes the dictionary of words updated with the find-and-replace tool. */
-function addWordChanges(wordChanges: Hash<string>) {
+function addWordChanges(wordChanges: FindAndReplaceChange) {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const changes: CharInvChanges = {
       ...defaultCharInvChanges,
@@ -182,26 +183,26 @@ function addWordChanges(wordChanges: Hash<string>) {
 }
 
 /** Returns a dispatch function to: update every word in the current project's frontier
- * that has the given `findValue` in its vernacular form. Then:
+ * that has the given `find` in its vernacular form. Then:
  * - Add those word changes to the current goal's changes;
  * - Update the in-state `allWords` array;
  * - Update the in-state character inventory. */
-export function findAndReplace(findValue: string, replaceValue: string) {
+export function findAndReplace(find: string, replace: string) {
   return async (dispatch: StoreStateDispatch) => {
     const changedWords = (await getFrontierWords()).filter((w) =>
-      w.vernacular.includes(findValue)
+      w.vernacular.includes(find)
     );
     if (changedWords.length) {
       const findRegExp = new RegExp(
-        findValue.replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&"),
+        find.replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&"),
         "g"
       );
-      const wordChanges: Hash<string> = {};
+      const words: Hash<string> = {};
       for (const word of changedWords) {
-        word.vernacular = word.vernacular.replace(findRegExp, replaceValue);
-        wordChanges[word.id] = (await updateWord(word)).id;
+        word.vernacular = word.vernacular.replace(findRegExp, replace);
+        words[word.id] = (await updateWord(word)).id;
       }
-      await dispatch(addWordChanges(wordChanges));
+      await dispatch(addWordChanges({ find, replace, words }));
       await dispatch(fetchWords());
       await dispatch(getAllCharacters());
     }
