@@ -29,6 +29,8 @@ jest.mock("backend", () => ({
   getWord: () => Promise.resolve(mockWord()),
   updateWord: () => jest.fn(),
 }));
+// Mock "i18n", else `thrown: "Error: Error: connect ECONNREFUSED ::1:80 [...]`
+jest.mock("i18n", () => ({}));
 
 const mockCharChanges: CharacterChange[] = [
   ["a", CharacterStatus.Accepted, CharacterStatus.Rejected],
@@ -142,7 +144,7 @@ describe("CharInvChangesGoalList", () => {
       ...defaultCharInvChanges,
       charChanges: mockCharChanges,
     });
-    // When more than 3 changes, show 2 changes and a "+_ more" line
+    // When more than 3 changes, show 2 changes and a "+_ more" line.
     expect(root.findAllByType(CharChange)).toHaveLength(2);
   });
 
