@@ -13,6 +13,7 @@ jest.mock("backend", () => ({
   getAllUsers: (...args: any[]) => mockGetAllUsers(...args),
   getBannerText: (...args: any[]) => mockGetBannerText(...args),
 }));
+jest.mock("components/Project/ProjectActions", () => ({}));
 
 const setupMocks = (): void => {
   mockGetAllProjects.mockResolvedValue([]);

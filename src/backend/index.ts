@@ -423,6 +423,16 @@ export async function projectDuplicateCheck(
 
 /* SemanticDomainController.cs */
 
+export async function getAllSemanticDomainNames(
+  lang = ""
+): Promise<Hash<string>> {
+  const resp = await semanticDomainApi.getAllSemanticDomainNames(
+    { lang },
+    defaultOptions()
+  );
+  return resp.data;
+}
+
 export async function getSemanticDomainFull(
   id: string,
   lang?: string
