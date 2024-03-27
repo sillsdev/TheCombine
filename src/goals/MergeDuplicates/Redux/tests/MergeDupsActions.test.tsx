@@ -214,7 +214,11 @@ describe("MergeDupActions", () => {
     it("delete one sense from word with multiple senses", async () => {
       const WA = newMergeTreeWord(vernA, { ID1: [S1] });
       const WB = newMergeTreeWord(vernB, { ID1: [S3], ID2: [S4] });
-      const tree: MergeTree = { ...defaultTree, words: { WA, WB } };
+      const tree: MergeTree = {
+        ...defaultTree,
+        deletedSenseGuids: [S2],
+        words: { WA, WB },
+      };
       const store = setupStore({
         ...preloadedState,
         mergeDuplicateGoal: { ...defaultMergeState, data, tree },
@@ -237,7 +241,11 @@ describe("MergeDupActions", () => {
     // Delete both senses from B
     it("delete all senses from a word", async () => {
       const WA = newMergeTreeWord(vernA, { ID1: [S1], ID2: [S2] });
-      const tree: MergeTree = { ...defaultTree, words: { WA } };
+      const tree: MergeTree = {
+        ...defaultTree,
+        deletedSenseGuids: [S3, S4],
+        words: { WA },
+      };
       const store = setupStore({
         ...preloadedState,
         mergeDuplicateGoal: { ...defaultMergeState, data, tree },

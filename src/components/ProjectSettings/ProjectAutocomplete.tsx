@@ -1,20 +1,20 @@
 import { HelpOutline } from "@mui/icons-material";
 import { Grid, MenuItem, Select, Tooltip } from "@mui/material";
-import { ReactElement } from "react";
+import { type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { AutocompleteSetting } from "api/models";
-import { ProjectSettingPropsWithUpdate } from "components/ProjectSettings/ProjectSettingsTypes";
+import { type ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 
 export default function ProjectAutocomplete(
-  props: ProjectSettingPropsWithUpdate
+  props: ProjectSettingProps
 ): ReactElement {
   const { t } = useTranslation();
 
   const updateAutocompleteSetting = async (
     autocompleteSetting: AutocompleteSetting
   ): Promise<void> => {
-    props.updateProject({ ...props.project, autocompleteSetting });
+    await props.setProject({ ...props.project, autocompleteSetting });
   };
 
   return (

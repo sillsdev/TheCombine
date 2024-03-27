@@ -300,6 +300,8 @@ namespace BackendFramework.Services
             // So the words found in allWords with no matching guid in activeWords are exported as 'deleted'.
             var deletedWords = allWords.Where(
                 x => activeWords.All(w => w.Guid != x.Guid)).DistinctBy(w => w.Guid).ToList();
+            var semDomNames = (await _semDomRepo.GetAllSemanticDomainTreeNodes("en") ?? new())
+                .ToDictionary(x => x.Id, x => x.Name);
             foreach (var wordEntry in activeWords)
             {
                 var id = MakeSafeXmlAttribute(wordEntry.Vernacular) + "_" + wordEntry.Guid;
@@ -321,7 +323,7 @@ namespace BackendFramework.Services
 
                 AddNote(entry, wordEntry);
                 AddVern(entry, wordEntry, proj.VernacularWritingSystem.Bcp47);
-                AddSenses(entry, wordEntry);
+                AddSenses(entry, wordEntry, semDomNames);
                 await AddAudio(entry, wordEntry.Audio, audioDir, projectId, projSpeakers);
 
                 liftWriter.Add(entry);
@@ -334,7 +336,7 @@ namespace BackendFramework.Services
 
                 AddNote(entry, wordEntry);
                 AddVern(entry, wordEntry, proj.VernacularWritingSystem.Bcp47);
-                AddSenses(entry, wordEntry);
+                AddSenses(entry, wordEntry, semDomNames);
                 await AddAudio(entry, wordEntry.Audio, audioDir, projectId, projSpeakers);
 
                 liftWriter.AddDeletedEntry(entry);
@@ -367,7 +369,7 @@ namespace BackendFramework.Services
             // Export semantic domains to lift-ranges
             if (proj.SemanticDomains.Count != 0 || CopyLiftRanges(proj.Id, rangesDest) is null)
             {
-                await CreateLiftRanges(allWords, proj.SemanticDomains, rangesDest);
+                await CreateLiftRanges(proj.SemanticDomains, rangesDest);
             }
 
             // Export character set to ldml.
@@ -408,11 +410,8 @@ namespace BackendFramework.Services
             return rangesSrc;
         }
 
-        /// <summary> Export semantic domains to lift-ranges </summary>
-        /// <exception cref="ExportException"> If fails to load needed semantic domain list </exception>
-        /// <returns> List of languages found in project sem-doms and included in the lift-ranges file </returns>
-        public async Task<List<string>> CreateLiftRanges(
-            List<Word> projWords, List<SemanticDomain> projDoms, string rangesDest)
+        /// <summary> Export English semantic domains (along with any custom domains) to lift-ranges. </summary>
+        public async Task CreateLiftRanges(List<SemanticDomain> projDoms, string rangesDest)
         {
             await using var liftRangesWriter = XmlWriter.Create(rangesDest, new XmlWriterSettings
             {
@@ -425,21 +424,8 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteStartElement("range");
             liftRangesWriter.WriteAttributeString("id", "semantic-domain-ddp4");
 
-            var wordLangs = projWords
-                .SelectMany(w => w.Senses.SelectMany(s => s.SemanticDomains.Select(d => d.Lang))).Distinct();
-            var exportLangs = new List<string>();
-            foreach (var lang in wordLangs)
-            {
-                var semDoms = await _semDomRepo.GetAllSemanticDomainTreeNodes(lang);
-                if (semDoms is not null && semDoms.Count > 0)
-                {
-                    exportLangs.Add(lang);
-                    foreach (var sd in semDoms)
-                    {
-                        WriteRangeElement(liftRangesWriter, sd.Id, sd.Guid, sd.Name, sd.Lang);
-                    }
-                }
-            }
+            (await _semDomRepo.GetAllSemanticDomainTreeNodes("en"))?
+                .ForEach(sd => { WriteRangeElement(liftRangesWriter, sd.Id, sd.Guid, sd.Name, sd.Lang); });
 
             // Pull from new semantic domains in project
             foreach (var sd in projDoms)
@@ -456,7 +442,6 @@ namespace BackendFramework.Services
 
             await liftRangesWriter.FlushAsync();
             liftRangesWriter.Close();
-            return exportLangs;
         }
 
         /// <summary> Adds <see cref="Note"/> of a word to be written out to lift </summary>
@@ -486,7 +471,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Adds each <see cref="Sense"/> of a word to be written out to lift </summary>
-        private static void AddSenses(LexEntry entry, Word wordEntry)
+        private static void AddSenses(LexEntry entry, Word wordEntry, Dictionary<string, string> semDomNames)
         {
             var activeSenses = wordEntry.Senses.Where(
                 s => s.Accessibility == Status.Active || s.Accessibility == Status.Protected).ToList();
@@ -540,7 +525,8 @@ namespace BackendFramework.Services
                 foreach (var semDom in currentSense.SemanticDomains)
                 {
                     var orc = new OptionRefCollection();
-                    orc.Add(semDom.Id + " " + semDom.Name);
+                    semDomNames.TryGetValue(semDom.Id, out string? name);
+                    orc.Add(semDom.Id + " " + name ?? semDom.Name);
                     lexSense.Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>(
                         LexSense.WellKnownProperties.SemanticDomainDdp4, orc));
                 }
@@ -656,16 +642,6 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteEndElement(); //end label
 
             liftRangesWriter.WriteEndElement(); //end range element
-        }
-
-        [Serializable]
-        public class ExportException : Exception
-        {
-            public ExportException() { }
-
-            public ExportException(string msg) : base(msg) { }
-
-            protected ExportException(SerializationInfo info, StreamingContext context) : base(info, context) { }
         }
 
         private sealed class LiftMerger : ILiftMerger

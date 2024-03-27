@@ -46,7 +46,9 @@ export default function AppWithBar(): ReactElement {
 
   const [styleOverrides, setStyleOverrides] = useState<string>();
 
-  useEffect(updateLangFromUser, []);
+  useEffect(() => {
+    updateLangFromUser();
+  }, []);
 
   useEffect(() => {
     if (proj.id) {

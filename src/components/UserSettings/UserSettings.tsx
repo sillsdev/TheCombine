@@ -16,8 +16,10 @@ import { useTranslation } from "react-i18next";
 import { User } from "api/models";
 import { isEmailTaken, updateUser } from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
+import { asyncLoadSemanticDomains } from "components/Project/ProjectActions";
 import ClickableAvatar from "components/UserSettings/ClickableAvatar";
 import { updateLangFromUser } from "i18n";
+import { useAppDispatch } from "types/hooks";
 import theme from "types/theme";
 import { uiWritingSystems } from "types/writingSystem";
 
@@ -49,6 +51,8 @@ export function UserSettings(props: {
   user: User;
   setUser: (user?: User) => void;
 }): ReactElement {
+  const dispatch = useAppDispatch();
+
   const [name, setName] = useState(props.user.name);
   const [phone, setPhone] = useState(props.user.phone);
   const [email, setEmail] = useState(props.user.email);
@@ -81,7 +85,12 @@ export function UserSettings(props: {
         uiLang,
         hasAvatar: !!avatar,
       });
-      updateLangFromUser();
+
+      // Update the i18n language and in-state semantic domains as needed.
+      if (await updateLangFromUser()) {
+        await dispatch(asyncLoadSemanticDomains());
+      }
+
       enqueueSnackbar(t("userSettings.updateSuccess"));
       props.setUser(getCurrentUser());
     } else {
