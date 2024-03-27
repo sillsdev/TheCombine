@@ -37,6 +37,7 @@ jest.mock("backend", () => ({
   getWord: (wordId: string) => mockGetWord(wordId),
 }));
 jest.mock("components/Pronunciations/PronunciationsBackend");
+jest.mock("i18n", () => ({}));
 jest.mock("types/hooks", () => ({
   ...jest.requireActual("types/hooks"),
   useAppDispatch: () => jest.fn(),
