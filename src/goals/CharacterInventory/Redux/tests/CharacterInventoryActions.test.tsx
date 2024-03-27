@@ -225,7 +225,8 @@ describe("CharacterInventoryActions", () => {
   describe("findAndReplace", () => {
     it("does nothing if no words changed", async () => {
       const store = setupStore();
-      mockGetFrontierWords.mockResolvedValue([]);
+      const word: Word = { ...newWord("bcd"), id: "mock-id" };
+      mockGetFrontierWords.mockResolvedValue([word]);
 
       await store.dispatch(findAndReplace("A", "a"));
       expect(mockGetFrontierWords).toHaveBeenCalledTimes(1);

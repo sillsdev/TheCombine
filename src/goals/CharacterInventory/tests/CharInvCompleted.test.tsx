@@ -137,10 +137,12 @@ describe("CharInvChangesGoalList", () => {
   });
 
   it("doesn't render more than 3 char changes", async () => {
+    expect(mockCharChanges.length).toBeGreaterThan(3);
     await renderCharInvChangesGoalList({
       ...defaultCharInvChanges,
       charChanges: mockCharChanges,
     });
+    // When more than 3 changes, show 2 changes and a "+_ more" line
     expect(root.findAllByType(CharChange)).toHaveLength(2);
   });
 

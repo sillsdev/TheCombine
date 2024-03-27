@@ -56,7 +56,7 @@ export default function CharInvCompleted(): ReactElement {
         <>
           <Divider />
           <Typography id={CharInvCompletedId.TypographyNoWordChanges}>
-            {t("charInventory.changes.noWordChanges")}
+            {t("charInventory.changes.noWordChangesFindReplace")}
           </Typography>
         </>
       )}
