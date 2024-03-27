@@ -16,13 +16,15 @@ import { Goal, GoalStatus } from "types/goals";
 import { Path } from "types/path";
 import { themeColors } from "types/theme";
 
+jest.mock("react-router-dom", () => ({
+  useNavigate: jest.fn(),
+}));
+
 jest.mock("backend", () => ({
   hasPermission: (perm: Permission) => mockHasPermission(perm),
   isSiteAdmin: () => mockIsSiteAdmin(),
 }));
-jest.mock("react-router-dom", () => ({
-  useNavigate: jest.fn(),
-}));
+jest.mock("components/Project/ProjectActions", () => ({}));
 
 const mockHasPermission = jest.fn();
 const mockIsSiteAdmin = jest.fn();

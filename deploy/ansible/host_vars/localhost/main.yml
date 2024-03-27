@@ -1,0 +1,62 @@
+---
+#################################################
+# Host specific configuration items for localhost
+################################################
+
+################################################
+# Configure Kubernetes cluster
+################################################
+
+# Specify which Kubernetes engine to install -
+# one of k3s or none.
+k8s_engine: k3s
+
+image_pull_secret: aws-login-credentials
+
+# k8s namespaces
+app_namespace: thecombine
+
+k8s_user: "{{ ansible_user_id }}"
+
+################################################
+# Helm Installation
+################################################
+install_helm: yes
+
+################################################
+# Support Tool Settings
+################################################
+install_ip_viewer: no
+install_combinectl: yes
+
+#######################################
+# Ingress configuration
+ingress_namespace: ingress-nginx
+
+# For the NUCs we want to use the ansible host name
+# since that is how we can connect on the local network
+# The server name will direct traffic to the production
+# server since it is used to get the certificates for the
+# NUC.
+k8s_dns_name: "local"
+
+################################################
+# Ethernet settings
+################################################
+eth_optional: yes
+
+################################################
+# WiFi access point settings
+################################################
+has_wifi: yes
+ap_domain: thecombine.app
+ap_ssid: "thecombine_ap"
+ap_passphrase: "Combine2020"
+ap_gateway: "10.10.10.1"
+ap_hostname: "local"
+test_wifi: false
+################################################
+# hardware monitoring settings
+################################################
+include_hw_monitoring: no
+history_days: 60

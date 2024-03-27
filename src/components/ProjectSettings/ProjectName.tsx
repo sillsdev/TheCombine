@@ -1,13 +1,11 @@
 import { Button, Grid, TextField } from "@mui/material";
-import { ReactElement, useEffect, useState } from "react";
+import { type ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import { ProjectSettingPropsWithUpdate } from "components/ProjectSettings/ProjectSettingsTypes";
+import { type ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 
-export default function ProjectName(
-  props: ProjectSettingPropsWithUpdate
-): ReactElement {
+export default function ProjectName(props: ProjectSettingProps): ReactElement {
   const [projName, setProjName] = useState("");
   const { t } = useTranslation();
 
@@ -17,11 +15,9 @@ export default function ProjectName(
 
   const updateProjectName = async (): Promise<void> => {
     if (projName !== props.project.name) {
-      await props
-        .updateProject({ ...props.project, name: projName })
-        .catch(() => {
-          toast.error(t("projectSettings.nameUpdateFailed"));
-        });
+      await props.setProject({ ...props.project, name: projName }).catch(() => {
+        toast.error(t("projectSettings.nameUpdateFailed"));
+      });
     }
   };
 

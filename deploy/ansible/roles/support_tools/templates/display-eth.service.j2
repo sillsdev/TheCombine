@@ -1,0 +1,10 @@
+[Unit]
+Description=Display ethernet address on external device
+Wants=display-eth-addr.timer
+
+[Service]
+Type=oneshot
+ExecStart={{ eth_update_program }}
+
+[Install]
+WantedBy=multi-user.target
