@@ -175,7 +175,7 @@ export default function EditSenseDialog(
         handleCancel={() => setCancelDialog(false)}
         handleConfirm={cancelAndClose}
         open={cancelDialog}
-        textId="reviewEntries.discardChanges"
+        text="reviewEntries.discardChanges"
       />
       <Dialog fullWidth maxWidth="sm" open={props.isOpen}>
         <DialogTitle>

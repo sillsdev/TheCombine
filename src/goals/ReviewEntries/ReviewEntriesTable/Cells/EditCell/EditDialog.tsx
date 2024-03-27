@@ -340,7 +340,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
         handleCancel={() => setCancelDialog(false)}
         handleConfirm={cancelAndClose}
         open={cancelDialog}
-        textId="reviewEntries.discardChanges"
+        text="reviewEntries.discardChanges"
       />
       <Dialog fullWidth maxWidth="lg" open>
         <DialogTitle>
