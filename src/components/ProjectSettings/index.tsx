@@ -38,8 +38,8 @@ import { canUploadLift, getCurrentPermissions } from "backend";
 import BaseSettings from "components/BaseSettings";
 import {
   asyncRefreshProjectUsers,
+  asyncSetNewCurrentProject,
   asyncUpdateCurrentProject,
-  setNewCurrentProject,
 } from "components/Project/ProjectActions";
 import ExportButton from "components/ProjectExport/ExportButton";
 import ProjectArchive from "components/ProjectSettings/ProjectArchive";
@@ -111,8 +111,8 @@ export default function ProjectSettingsComponent(): ReactElement {
     }, 2000);
   };
 
-  const setProject = useCallback(
-    (proj: Project) => dispatch(setNewCurrentProject(proj)),
+  const setNewProject = useCallback(
+    async (proj: Project) => await dispatch(asyncSetNewCurrentProject(proj)),
     [dispatch]
   );
 
@@ -127,7 +127,7 @@ export default function ProjectSettingsComponent(): ReactElement {
       <Typography display="inline" sx={{ p: 1 }}>
         {t("projectSettings.project")}
       </Typography>
-      <ProjectSelect project={project} setProject={setProject} />
+      <ProjectSelect project={project} setProject={setNewProject} />
 
       <Divider sx={{ my: 1 }} />
 
@@ -157,7 +157,7 @@ export default function ProjectSettingsComponent(): ReactElement {
               icon={<Edit data-testid={Setting.Name} />}
               title={t("projectSettings.name")}
               body={
-                <ProjectName project={project} updateProject={updateProject} />
+                <ProjectName project={project} setProject={updateProject} />
               }
             />
           )}
@@ -170,7 +170,7 @@ export default function ProjectSettingsComponent(): ReactElement {
               body={
                 <ProjectAutocomplete
                   project={project}
-                  updateProject={updateProject}
+                  setProject={updateProject}
                 />
               }
             />
@@ -206,7 +206,7 @@ export default function ProjectSettingsComponent(): ReactElement {
                 readOnly={
                   !permissions.includes(Permission.DeleteEditSettingsAndUsers)
                 }
-                updateProject={updateProject}
+                setProject={updateProject}
               />
             }
           />
@@ -253,7 +253,7 @@ export default function ProjectSettingsComponent(): ReactElement {
               title={t("projectSettings.import.header")}
               body={
                 imports ? (
-                  <ProjectImport project={project} setProject={setProject} />
+                  <ProjectImport project={project} setProject={setNewProject} />
                 ) : (
                   <Typography variant="body2">
                     {t("projectSettings.import.notAllowed")}
@@ -284,7 +284,7 @@ export default function ProjectSettingsComponent(): ReactElement {
               <ProjectSchedule
                 project={project}
                 readOnly={!permissions.includes(Permission.Statistics)}
-                updateProject={updateProject}
+                setProject={updateProject}
               />
             }
           />

@@ -1,9 +1,9 @@
-import { WritingSystem } from "api/models";
+import { type WritingSystem } from "api/models";
 import { createProject, finishUploadLift, getProject } from "backend";
 import router from "browserRouter";
-import { setNewCurrentProject } from "components/Project/ProjectActions";
+import { asyncSetNewCurrentProject } from "components/Project/ProjectActions";
 import { asyncCreateUserEdits } from "goals/Redux/GoalActions";
-import { StoreStateDispatch } from "types/Redux/actions";
+import { type StoreStateDispatch } from "types/Redux/actions";
 import { Path } from "types/path";
 import { newProject } from "types/project";
 
@@ -21,7 +21,7 @@ export function asyncCreateProject(
     project.analysisWritingSystems = analysisWritingSystems;
 
     const createdProject = await createProject(project);
-    dispatch(setNewCurrentProject(createdProject));
+    await dispatch(asyncSetNewCurrentProject(createdProject));
 
     // Manually pause so they have a chance to see the success message.
     setTimeout(() => {
@@ -43,7 +43,7 @@ export function asyncFinishProject(
     const projId = (await createProject(project)).id;
     await finishUploadLift(projId);
     const createdProject = await getProject(projId);
-    dispatch(setNewCurrentProject(createdProject));
+    await dispatch(asyncSetNewCurrentProject(createdProject));
 
     // Manually pause so they have a chance to see the success message.
     setTimeout(() => {

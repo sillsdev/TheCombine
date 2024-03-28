@@ -15,6 +15,9 @@ const projectSlice = createSlice({
       }
       state.project = action.payload;
     },
+    setSemanticDomainsAction: (state, action) => {
+      state.semanticDomains = action.payload;
+    },
     setSpeakerAction: (state, action) => {
       state.speaker = action.payload;
     },
@@ -29,6 +32,7 @@ const projectSlice = createSlice({
 export const {
   resetAction,
   setProjectAction,
+  setSemanticDomainsAction,
   setSpeakerAction,
   setUsersAction,
 } = projectSlice.actions;
