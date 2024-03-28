@@ -30,7 +30,6 @@ jest.mock("backend", () => ({
   getFrontierWords: (...args: any[]) => mockGetFrontierWords(...args),
   updateWord: (word: Word) => mockUpdateWord(word),
 }));
-jest.mock("browserRouter");
 jest.mock("components/Project/ProjectActions", () => ({
   asyncUpdateCurrentProject: (...args: any[]) =>
     mockAsyncUpdateCurrentProject(...args),
@@ -40,6 +39,7 @@ jest.mock("goals/Redux/GoalActions", () => ({
   addCharInvChangesToGoal: (changes: CharInvChanges) =>
     mockAddCharInvChangesToGoal(changes),
 }));
+jest.mock("router/browserRouter");
 
 const mockAddCharInvChangesToGoal = jest.fn();
 const mockAsyncUpdateCurrentProject = jest.fn();

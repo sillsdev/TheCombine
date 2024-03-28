@@ -16,12 +16,12 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
-import router from "browserRouter";
 import { LoadingDoneButton } from "components/Buttons";
 import Captcha from "components/Login/Captcha";
 import { asyncSignUp } from "components/Login/Redux/LoginActions";
 import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";
 import { reset } from "rootActions";
+import router from "router/browserRouter";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { Path } from "types/path";
