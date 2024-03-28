@@ -1,15 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { v4 } from "uuid";
 
+import { type Word } from "api/models";
 import {
-  GramCatGroup,
-  type MergeSourceWord,
-  type MergeWords,
-  Status,
-  type Word,
-} from "api/models";
-import {
-  type MergeData,
   type MergeTreeReference,
   type MergeTreeSense,
   type MergeTreeWord,
@@ -21,11 +14,20 @@ import {
   defaultTree,
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
-import { newMergeWords } from "goals/MergeDuplicates/MergeDupsTypes";
-import { defaultState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
+import {
+  defaultAudio,
+  defaultState,
+} from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
+import {
+  combineIntoFirstSense,
+  createMergeChildren,
+  createMergeParent,
+  gatherWordSenses,
+  getDeletedMergeWords,
+  isEmptyMerge,
+} from "goals/MergeDuplicates/Redux/reducerUtilities";
 import { StoreActionTypes } from "rootActions";
 import { type Hash } from "types/hash";
-import { compareFlags } from "utilities/wordUtilities";
 
 const mergeDuplicatesSlice = createSlice({
   name: "mergeDupStepReducer",
@@ -84,6 +86,7 @@ const mergeDuplicatesSlice = createSlice({
         deletedSenseGuids.push(...srcGuids);
         delete sensesGuids[srcRef.mergeSenseId];
         if (!Object.keys(sensesGuids).length) {
+          delete state.audio.moves[srcWordId];
           delete words[srcWordId];
         }
 
@@ -108,32 +111,51 @@ const mergeDuplicatesSlice = createSlice({
     },
 
     getMergeWordsAction: (state) => {
-      // Handle words with all senses deleted.
-      const possibleWords = Object.values(state.data.words);
+      const dataWords = Object.values(state.data.words);
       const deletedSenseGuids = state.tree.deletedSenseGuids;
-      const deletedWords = possibleWords.filter((w) =>
-        w.senses.every((s) => deletedSenseGuids.includes(s.guid))
-      );
-      state.mergeWords = deletedWords.map((w) =>
-        newMergeWords(w, [{ srcWordId: w.id, getAudio: false }], true)
+
+      // First handle words with all senses deleted.
+      state.mergeWords = getDeletedMergeWords(dataWords, deletedSenseGuids);
+
+      // Then build the rest of the mergeWords.
+
+      // Gather all senses (accessibility will be updated as mergeWords are built).
+      const wordTreeSenses = gatherWordSenses(dataWords, deletedSenseGuids);
+      const allSenses = Object.values(wordTreeSenses).flatMap((mergeSenses) =>
+        mergeSenses.map((ms) => ms.sense)
       );
 
+      // Build one merge word per column.
       for (const wordId in state.tree.words) {
+        // Get from tree the basic info for this column.
         const mergeWord = state.tree.words[wordId];
-        const mergeSenses = buildSenses(
-          mergeWord.sensesGuids,
-          state.data,
-          deletedSenseGuids
+
+        // Get from data all senses in this column.
+        const mergeSenses = Object.values(mergeWord.sensesGuids).map((guids) =>
+          guids.map((g) => state.data.senses[g])
         );
-        const mergeWords = createMergeWords(
-          wordId,
-          mergeWord,
-          mergeSenses,
-          state.data.words[wordId]
-        );
-        if (mergeWords) {
-          state.mergeWords.push(mergeWords);
+
+        // Update those senses in the set of all senses.
+        mergeSenses.forEach((senses) => {
+          const sensesToUpdate = senses.map(
+            (s) => wordTreeSenses[s.srcWordId][s.order]
+          );
+          combineIntoFirstSense(sensesToUpdate);
+        });
+
+        // Check if nothing to merge.
+        const wordToUpdate = state.data.words[wordId];
+        if (isEmptyMerge(wordToUpdate, mergeWord)) {
+          continue;
         }
+
+        // Create merge words.
+        const children = createMergeChildren(
+          mergeSenses,
+          state.audio.moves[wordId]
+        );
+        const parent = createMergeParent(wordToUpdate, mergeWord, allSenses);
+        state.mergeWords.push({ parent, children, deleteOnly: false });
       }
     },
 
@@ -165,6 +187,17 @@ const mergeDuplicatesSlice = createSlice({
         // Cleanup the srcWord.
         delete words[srcWordId].sensesGuids[mergeSenseId];
         if (!Object.keys(words[srcWordId].sensesGuids).length) {
+          // If this was the word's last sense, move the audio...
+          const moves = state.audio.moves;
+          if (!Object.keys(moves).includes(destWordId)) {
+            moves[destWordId] = [];
+          }
+          moves[destWordId].push(srcWordId);
+          if (Object.keys(moves).includes(srcWordId)) {
+            moves[destWordId].push(...moves[srcWordId]);
+            delete moves[srcWordId];
+          }
+          // ...and delete the word from the tree
           delete words[srcWordId];
         }
       }
@@ -258,15 +291,18 @@ const mergeDuplicatesSlice = createSlice({
         const words: Hash<Word> = {};
         const senses: Hash<MergeTreeSense> = {};
         const wordsTree: Hash<MergeTreeWord> = {};
+        const counts: Hash<number> = {};
         action.payload.forEach((word: Word) => {
           words[word.id] = JSON.parse(JSON.stringify(word));
           word.senses.forEach((s, order) => {
             senses[s.guid] = convertSenseToMergeTreeSense(s, word.id, order);
           });
           wordsTree[word.id] = convertWordToMergeTreeWord(word);
+          counts[word.id] = word.audio.length;
         });
         state.data = { ...defaultData, senses, words };
         state.tree = { ...defaultTree, words: wordsTree };
+        state.audio = { ...defaultAudio, counts };
         state.mergeWords = [];
       }
     },
@@ -278,167 +314,6 @@ const mergeDuplicatesSlice = createSlice({
   extraReducers: (builder) =>
     builder.addCase(StoreActionTypes.RESET, () => defaultState),
 });
-
-// Helper Functions
-
-/** Create hash of senses keyed by id of src word. */
-function buildSenses(
-  sensesGuids: Hash<string[]>,
-  data: MergeData,
-  deletedSenseGuids: string[]
-): Hash<MergeTreeSense[]> {
-  const senses: Hash<MergeTreeSense[]> = {};
-  for (const senseGuids of Object.values(sensesGuids)) {
-    for (const guid of senseGuids) {
-      const senseData = data.senses[guid];
-      const wordId = senseData.srcWordId;
-
-      if (!senses[wordId]) {
-        const dbWord = data.words[wordId];
-
-        // Add each sense into senses as separate or deleted.
-        senses[wordId] = [];
-        for (const sense of dbWord.senses) {
-          senses[wordId].push({
-            order: senses[wordId].length,
-            protected: sense.accessibility === Status.Protected,
-            srcWordId: wordId,
-            sense: {
-              ...sense,
-              accessibility: deletedSenseGuids.includes(sense.guid)
-                ? Status.Deleted
-                : Status.Separate,
-            },
-          });
-        }
-      }
-    }
-  }
-
-  // Set sense and duplicate senses.
-  Object.values(sensesGuids).forEach((guids) => {
-    const sensesToCombine = guids
-      .map((g) => data.senses[g])
-      .map((s) => senses[s.srcWordId][s.order]);
-    combineIntoFirstSense(sensesToCombine);
-  });
-
-  // Clean order of senses in each src word to reflect backend order.
-  Object.values(senses).forEach((wordSenses) => {
-    wordSenses = wordSenses.sort((a, b) => a.order - b.order);
-    senses[wordSenses[0].srcWordId] = wordSenses;
-  });
-
-  return senses;
-}
-
-function createMergeWords(
-  wordId: string,
-  mergeWord: MergeTreeWord,
-  mergeSenses: Hash<MergeTreeSense[]>,
-  word: Word
-): MergeWords | undefined {
-  // Don't return empty merges: when the only child is the parent word
-  // and has the same number of senses as parent (all Active/Protected)
-  // and has the same flag.
-  if (Object.values(mergeSenses).length === 1) {
-    const onlyChild = Object.values(mergeSenses)[0];
-    if (
-      onlyChild[0].srcWordId === wordId &&
-      onlyChild.length === word.senses.length &&
-      onlyChild.every((ms) =>
-        [Status.Active, Status.Protected].includes(ms.sense.accessibility)
-      ) &&
-      compareFlags(mergeWord.flag, word.flag) === 0
-    ) {
-      return;
-    }
-  }
-
-  // Construct parent and children.
-  const parent: Word = {
-    ...word,
-    senses: [],
-    flag: mergeWord.flag,
-  };
-  if (!parent.vernacular) {
-    parent.vernacular = mergeWord.vern;
-  }
-  const children: MergeSourceWord[] = Object.values(mergeSenses).map(
-    (msList) => {
-      msList.forEach((mergeSense) => {
-        if (
-          [Status.Active, Status.Protected].includes(
-            mergeSense.sense.accessibility
-          )
-        ) {
-          parent.senses.push(mergeSense.sense);
-        }
-      });
-      const getAudio = msList.every(
-        (ms) => ms.sense.accessibility !== Status.Separate
-      );
-      return { srcWordId: msList[0].srcWordId, getAudio };
-    }
-  );
-
-  return newMergeWords(parent, children);
-}
-
-/** Given an array of senses to combine:
- * - change the accessibility of the first one from Separate to Active/Protected,
- * - change the accessibility of the rest to Duplicate,
- * - merge select content from duplicates into main sense */
-function combineIntoFirstSense(mergeSenses: MergeTreeSense[]): void {
-  // Set the first sense to be merged as Active/Protected.
-  // This was the top sense when the sidebar was opened.
-  const mainSense = mergeSenses[0].sense;
-  mainSense.accessibility = mergeSenses[0].protected
-    ? Status.Protected
-    : Status.Active;
-
-  // Merge the rest as duplicates.
-  // These were senses dropped into another sense.
-  mergeSenses.slice(1).forEach((mergeDupSense) => {
-    const dupSense = mergeDupSense.sense;
-    dupSense.accessibility = Status.Duplicate;
-    // Merge the duplicate's definitions into the main sense.
-    const sep = "; ";
-    dupSense.definitions.forEach((def) => {
-      const newText = def.text.trim();
-      if (newText) {
-        // Check if definitions array already has entry with the same language.
-        const oldDef = mainSense.definitions.find(
-          (d) => d.language === def.language
-        );
-        if (!oldDef) {
-          // If not, add this one to the array.
-          mainSense.definitions.push({ ...def, text: newText });
-        } else {
-          // If so, check whether this one's text is already present.
-          const oldText = oldDef.text.trim();
-          if (!oldText) {
-            oldDef.text = newText;
-          } else if (!oldText.includes(newText)) {
-            oldDef.text = `${oldText}${sep}${newText}`;
-          }
-        }
-      }
-    });
-
-    // Use the duplicate's part of speech if not specified in the main sense.
-    if (mainSense.grammaticalInfo.catGroup === GramCatGroup.Unspecified) {
-      mainSense.grammaticalInfo = { ...dupSense.grammaticalInfo };
-    }
-
-    // Put the duplicate's domains in the main sense if the id is new.
-    dupSense.semanticDomains.forEach((dom) => {
-      if (mainSense.semanticDomains.every((d) => d.id !== dom.id)) {
-        mainSense.semanticDomains.push({ ...dom });
-      }
-    });
-  });
-}
 
 export const {
   clearMergeWordsAction,
