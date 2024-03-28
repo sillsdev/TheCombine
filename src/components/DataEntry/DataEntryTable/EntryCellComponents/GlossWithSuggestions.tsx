@@ -1,8 +1,14 @@
 import { Autocomplete } from "@mui/material";
-import React, { ReactElement, useContext, useEffect } from "react";
+import {
+  type KeyboardEvent,
+  type ReactElement,
+  type RefObject,
+  useContext,
+  useEffect,
+} from "react";
 import { Key } from "ts-key-enum";
 
-import { WritingSystem } from "api/models";
+import { type WritingSystem } from "api/models";
 import { LiWithFont, TextFieldWithFont } from "utilities/fontComponents";
 import SpellCheckerContext from "utilities/spellCheckerContext";
 
@@ -10,7 +16,7 @@ interface GlossWithSuggestionsProps {
   isNew?: boolean;
   isDisabled?: boolean;
   gloss: string;
-  glossInput?: React.RefObject<HTMLInputElement>;
+  glossInput?: RefObject<HTMLInputElement>;
   updateGlossField: (newValue: string) => void;
   handleEnter: () => void;
   onBlur?: () => void;
@@ -81,7 +87,7 @@ export default function GlossWithSuggestions(
           {option}
         </LiWithFont>
       )}
-      onKeyPress={(e: React.KeyboardEvent) => {
+      onKeyPress={(e: KeyboardEvent) => {
         if (e.key === Key.Enter) {
           props.handleEnter();
         }

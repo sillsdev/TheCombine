@@ -1,6 +1,12 @@
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Button, Card, Grid, TextField, Typography } from "@mui/material";
-import React, { ReactElement, useCallback, useEffect, useState } from "react";
+import {
+  type FormEvent,
+  type ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -49,12 +55,12 @@ export default function PasswordReset(): ReactElement {
     validateLink();
   });
 
-  const backToLogin = (e: React.FormEvent<HTMLElement>): void => {
+  const backToLogin = (e: FormEvent<HTMLElement>): void => {
     e.preventDefault();
     navigate(Path.Login);
   };
 
-  const onSubmit = async (e: React.FormEvent<HTMLElement>): Promise<void> => {
+  const onSubmit = async (e: FormEvent<HTMLElement>): Promise<void> => {
     if (token) {
       setRequestState(RequestState.Attempt);
       await asyncReset(token, password);

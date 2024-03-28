@@ -9,7 +9,12 @@ import {
   InputAdornment,
   TextField,
 } from "@mui/material";
-import React, { ReactElement, useEffect, useState } from "react";
+import {
+  type KeyboardEvent,
+  type ReactElement,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
@@ -60,7 +65,7 @@ export default function EditTextDialog(
     }
   }
 
-  function confirmIfEnter(event: React.KeyboardEvent<any>): void {
+  function confirmIfEnter(event: KeyboardEvent<any>): void {
     if (event.key === Key.Enter) {
       onConfirm();
     }

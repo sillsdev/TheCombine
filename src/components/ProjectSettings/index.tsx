@@ -23,8 +23,9 @@ import {
   Typography,
 } from "@mui/material";
 import {
-  ReactElement,
-  SyntheticEvent,
+  type ReactElement,
+  type ReactNode,
+  type SyntheticEvent,
   useCallback,
   useEffect,
   useState,
@@ -33,7 +34,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import { Permission, Project } from "api/models";
+import { Permission, type Project } from "api/models";
 import { canUploadLift, getCurrentPermissions } from "backend";
 import BaseSettings from "components/BaseSettings";
 import {
@@ -52,7 +53,7 @@ import ProjectSelect from "components/ProjectSettings/ProjectSelect";
 import ActiveProjectUsers from "components/ProjectUsers/ActiveProjectUsers";
 import AddProjectUsers from "components/ProjectUsers/AddProjectUsers";
 import ProjectSpeakersList from "components/ProjectUsers/ProjectSpeakersList";
-import { StoreState } from "types";
+import { type StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { Path } from "types/path";
 
@@ -422,7 +423,7 @@ function TabLabel(props: TabLabelProps): ReactElement {
 }
 
 interface TabPanelProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
   index: ProjectSettingsTab;
   value: ProjectSettingsTab;
 }

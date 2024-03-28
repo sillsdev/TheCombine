@@ -9,11 +9,11 @@ import {
   PointElement,
 } from "chart.js";
 import distinctColors from "distinct-colors";
-import { ReactElement, useEffect, useState } from "react";
+import { type ReactElement, useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { useTranslation } from "react-i18next";
 
-import { ChartRootData } from "api";
+import { type ChartRootData } from "api/models";
 
 ChartJS.defaults.font.size = 18;
 ChartJS.register(

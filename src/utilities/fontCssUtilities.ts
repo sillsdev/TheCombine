@@ -1,5 +1,5 @@
-import { Project } from "api";
-import { Hash } from "types/hash";
+import { type Project } from "api/models";
+import { type Hash } from "types/hash";
 import { RuntimeConfig } from "types/runtimeConfig";
 
 const fontDir = "/fonts";

@@ -1,18 +1,24 @@
 import { Autocomplete, AutocompleteCloseReason } from "@mui/material";
-import React, { ReactElement, useEffect } from "react";
+import {
+  type KeyboardEvent,
+  type ReactElement,
+  type RefObject,
+  type SyntheticEvent,
+  useEffect,
+} from "react";
 import { Key } from "ts-key-enum";
 
-import { WritingSystem } from "api/models";
+import { type WritingSystem } from "api/models";
 import { LiWithFont, TextFieldWithFont } from "utilities/fontComponents";
 
 interface VernWithSuggestionsProps {
   isNew?: boolean;
   isDisabled?: boolean;
   vernacular: string;
-  vernInput?: React.RefObject<HTMLInputElement>;
+  vernInput?: RefObject<HTMLInputElement>;
   updateVernField: (newValue: string, openDialog?: boolean) => void;
   onBlur: () => void;
-  onClose?: (e: React.SyntheticEvent, reason: AutocompleteCloseReason) => void;
+  onClose?: (e: SyntheticEvent, reason: AutocompleteCloseReason) => void;
   suggestedVerns?: string[];
   handleEnter: () => void;
   vernacularLang: WritingSystem;
@@ -49,7 +55,7 @@ export default function VernWithSuggestions(
         // onInputChange is triggered by typing
         props.updateVernField(value);
       }}
-      onKeyPress={(e: React.KeyboardEvent) => {
+      onKeyPress={(e: KeyboardEvent) => {
         if (e.key === Key.Enter) {
           props.handleEnter();
         }

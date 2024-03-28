@@ -19,10 +19,12 @@ Key Sections:
 - [Formatting](#formatting)
 - [Quotes](#quotes) (single vs. double)
 - [Use semicolons](#semicolons)
-- [Annotate Arrays as `Type[]`](#array)
-- [`type` vs `interface`](#type-vs-interface)
+- [Arrays (annotate as `Type[]`)](#arrays)
+- [`type` vs. `interface`](#type-vs-interface)
 - [One-line `if` statements](#one-line-if-statements)
 - [`import`s](#imports)
+  - [Absolute vs. relative paths](#absolute-vs-relative-paths)
+  - [Specificity preferred](#specificity-preferred)
 - [`KeyboardEvent`s](#keyboardevents)
 - [Components](#components)
 - [Function return type](#function-return-type)
@@ -59,17 +61,17 @@ function barFunc() {}
 **Bad**
 
 ```tsx
-const component: React.FC = () => {
+function component(): ReactElement {
   return <subComponent />;
-};
+}
 ```
 
 **Good**
 
 ```tsx
-const Component: React.FC = () => {
+function Component(): ReactElement {
   return <SubComponent />;
-};
+}
 ```
 
 ### Class
@@ -235,7 +237,7 @@ interface Foo {}
 
 > Reason: `*Types.ts` files are ignored by our CodeCov settings.
 
-## Null vs. Undefined
+## `null` vs. `undefined`
 
 - Prefer not to use either for explicit unavailability
 
@@ -352,14 +354,14 @@ Use [Prettier](https://prettier.io/) to format TypeScript code as described in t
 > [google/angular](https://github.com/angular/angular/), [facebook/react](https://github.com/facebook/react),
 > [Microsoft/TypeScript](https://github.com/Microsoft/TypeScript/).
 
-## Array
+## Arrays
 
 - Annotate arrays as `foos:Foo[]` instead of `foos:Array<Foo>`.
 
 > Reasons: Its easier to read. Its used by the TypeScript team. Makes easier to know something is an array as the mind
 > is trained to detect `[]`.
 
-## type vs. interface
+## `type` vs. `interface`
 
 - Use `type` when you _might_ need a union or intersection:
 
@@ -406,28 +408,55 @@ if (isEmpty)
 > Reason: Avoiding braces can cause developers to miss bugs, such as Apple's infamous
 > [goto-fail bug](https://nakedsecurity.sophos.com/2014/02/24/anatomy-of-a-goto-fail-apples-ssl-bug-explained-plus-an-unofficial-patch/)
 
-## imports
+## `import`s
+
+### Absolute vs. relative paths
 
 - Use absolute `import` statements everywhere for consistency.
 
 **Good**
 
 ```ts
+import { type Project } from "api/models";
 import { getAllProjects } from "backend";
-import { Project } from "types/project";
 ```
 
 **Bad**
 
 ```ts
+import { type Project } from "../../../../api/models";
 import { getAllProjects } from "../../../../backend";
-import { Project } from "../../../../types/project";
 ```
 
 > Reason: Provides consistency for imports across all files and shortens imports of commonly used top level modules.
 > Developers don't have to count `../` to know where a module is, they can simply start from the root of `src/`.
 
-## KeyboardEvents
+### Specificity preferred
+
+- Generally import the specific things needed (e.g., not `React` when `{ type ReactElement }` will do), and from a more
+  specific target (e.g., `from "api/models"` rather than `from "api"`):
+
+**Good**
+
+```ts
+import { type ReactElement } from "react";
+
+import { type Project } from "api/models";
+
+function Component(props: { project: Project }): ReactElement {}
+```
+
+**Bad**
+
+```ts
+import React from "react";
+
+import { type Project } from "api";
+
+function Component(props: { project: Project }): React.ReactElement {}
+```
+
+## `KeyboardEvent`s
 
 - Use `ts-key-enum` when comparing to `React.KeyboardEvent`s.
 

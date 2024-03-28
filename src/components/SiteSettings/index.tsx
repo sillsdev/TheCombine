@@ -1,6 +1,11 @@
 import { Announcement, List, People } from "@mui/icons-material";
 import { Box, Grid, Tab, Tabs, Typography } from "@mui/material";
-import { ReactElement, SyntheticEvent, useState } from "react";
+import {
+  type ReactElement,
+  type ReactNode,
+  type SyntheticEvent,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import Banners from "components/SiteSettings/Banners";
@@ -74,7 +79,7 @@ export default function SiteSettings(): ReactElement {
 }
 
 interface TabPanelProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
   index: SiteSettingsTab;
   value: SiteSettingsTab;
 }
