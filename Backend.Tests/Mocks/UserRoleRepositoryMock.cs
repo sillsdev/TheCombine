@@ -27,7 +27,8 @@ namespace Backend.Tests.Mocks
         {
             try
             {
-                var foundUserRole = _userRoles.Single(userRole => userRole.Id == userRoleId);
+                var foundUserRole = _userRoles.Single(
+                    userRole => userRole.ProjectId == projectId && userRole.Id == userRoleId);
                 return Task.FromResult<UserRole?>(foundUserRole.Clone());
             }
             catch (InvalidOperationException)
