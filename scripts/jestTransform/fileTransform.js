@@ -6,7 +6,7 @@ const path = require("path");
 // https://jestjs.io/docs/webpack
 
 module.exports = {
-  process(src, filename) {
+  process(_src, filename) {
     const assetFilename = JSON.stringify(path.basename(filename));
     return `module.exports = ${assetFilename};`;
   },

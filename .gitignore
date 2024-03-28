@@ -30,7 +30,7 @@ Session.vim
 scripts/*.js
 !scripts/printVersion.js
 !scripts/setRelease.js
-!scripts/test.js
+!scripts/jestTest.js
 
 npm-debug.log*
 yarn-debug.log*

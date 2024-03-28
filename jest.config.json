@@ -21,8 +21,8 @@
   "testEnvironment": "jsdom",
   "testMatch": ["<rootDir>/src/**/*.test.{js,jsx,ts,tsx}"],
   "transform": {
-    "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/scripts/testConfig/babelTransform.js",
-    "^(?!.*\\.(cjs|css|js|json|jsx|mjs|ts|tsx)$)": "<rootDir>/scripts/testConfig/fileTransform.js"
+    "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/scripts/jestTransform/babelTransform.js",
+    "^(?!.*\\.(cjs|css|js|json|jsx|mjs|ts|tsx)$)": "<rootDir>/scripts/jestTransform/fileTransform.js"
   },
   "transformIgnorePatterns": ["/node_modules/(!(axios))"],
   "watchPlugins": [
