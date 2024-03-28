@@ -128,6 +128,15 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestCreateNameTaken()
+        {
+            var oldCount = _speakerRepo.GetAllSpeakers(ProjId).Result.Count;
+            var result = _speakerController.CreateSpeaker(ProjId, Name).Result;
+            Assert.That(((ObjectResult)result).StatusCode, Is.EqualTo(StatusCodes.Status304NotModified));
+            Assert.That(_speakerRepo.GetAllSpeakers(ProjId).Result, Has.Count.EqualTo(oldCount));
+        }
+
+        [Test]
         public void TestCreateSpeaker()
         {
             const string NewName = "Miss Novel";
@@ -212,9 +221,13 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestUpdateSpeakerNameSameName()
+        public void TestUpdateSpeakerNameNameTaken()
         {
             var result = _speakerController.UpdateSpeakerName(ProjId, _speaker.Id, Name).Result;
+            Assert.That(((ObjectResult)result).StatusCode, Is.EqualTo(StatusCodes.Status304NotModified));
+
+            var idOfNewSpeaker = ((ObjectResult)_speakerController.CreateSpeaker(ProjId, "Ms. Other").Result).Value as string;
+            result = _speakerController.UpdateSpeakerName(ProjId, idOfNewSpeaker!, Name).Result;
             Assert.That(((ObjectResult)result).StatusCode, Is.EqualTo(StatusCodes.Status304NotModified));
         }
 
