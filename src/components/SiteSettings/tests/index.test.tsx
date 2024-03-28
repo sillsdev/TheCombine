@@ -2,8 +2,6 @@ import "@testing-library/jest-dom";
 import { act, cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import "tests/reactI18nextMock";
-
 import SiteSettings, { SiteSettingsTab } from "components/SiteSettings";
 
 const mockGetAllProjects = jest.fn();
@@ -15,6 +13,7 @@ jest.mock("backend", () => ({
   getAllUsers: (...args: any[]) => mockGetAllUsers(...args),
   getBannerText: (...args: any[]) => mockGetBannerText(...args),
 }));
+jest.mock("components/Project/ProjectActions", () => ({}));
 
 const setupMocks = (): void => {
   mockGetAllProjects.mockResolvedValue([]);

@@ -3,8 +3,6 @@ import { Provider } from "react-redux";
 import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import {
   GlossWithSuggestions,
   VernWithSuggestions,
@@ -19,6 +17,7 @@ jest.mock(
   () => (props: any) => mockAutocomplete(props)
 );
 
+jest.mock("components/Project/ProjectActions", () => ({}));
 jest.mock("components/Pronunciations/PronunciationsFrontend", () => "div");
 
 /** Bypass the Autocomplete and render its internal input with the props of both. */

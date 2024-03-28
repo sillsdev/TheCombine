@@ -8,8 +8,6 @@ import { Provider } from "react-redux";
 import { Store } from "redux";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import { Permission } from "api/models";
 import { defaultState as exportProjectState } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import ProjectSettings, {
@@ -34,6 +32,8 @@ jest.mock("backend", () => ({
   getUserRoles: () => Promise.resolve([]),
 }));
 jest.mock("components/Project/ProjectActions");
+// Mock "i18n", else `thrown: "Error: Error: connect ECONNREFUSED ::1:80 [...]`
+jest.mock("i18n", () => ({ language: "" }));
 jest.mock("types/hooks", () => {
   return {
     ...jest.requireActual("types/hooks"),

@@ -4,8 +4,6 @@ import { Provider } from "react-redux";
 import { act, create, ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import { Speaker } from "api/models";
 import SpeakerMenu, { SpeakerMenuList } from "components/AppBar/SpeakerMenu";
 import { defaultState } from "components/Project/ProjectReduxTypes";
@@ -15,6 +13,7 @@ import { randomSpeaker } from "types/project";
 jest.mock("backend", () => ({
   getAllSpeakers: () => mockGetAllSpeakers(),
 }));
+jest.mock("components/Project/ProjectActions", () => ({}));
 
 const mockProjId = "mock-project-id";
 const mockGetAllSpeakers = jest.fn();

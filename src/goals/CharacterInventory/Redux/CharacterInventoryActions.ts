@@ -1,16 +1,15 @@
-import { Action, PayloadAction } from "@reduxjs/toolkit";
+import { type Action, type PayloadAction } from "@reduxjs/toolkit";
 
-import { Project } from "api/models";
-import { getFrontierWords } from "backend";
+import { type Project } from "api/models";
+import { getFrontierWords, updateWord } from "backend";
 import router from "browserRouter";
-import {
-  addCharInvChangesToGoal,
-  asyncUpdateGoal,
-} from "components/GoalTimeline/Redux/GoalActions";
 import { asyncUpdateCurrentProject } from "components/Project/ProjectActions";
 import {
+  type CharInvChanges,
+  type CharacterChange,
   CharacterStatus,
-  CharacterChange,
+  type FindAndReplaceChange,
+  defaultCharInvChanges,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
 import {
   addRejectedCharacterAction,
@@ -23,12 +22,17 @@ import {
   setValidCharactersAction,
 } from "goals/CharacterInventory/Redux/CharacterInventoryReducer";
 import {
-  CharacterInventoryState,
-  CharacterSetEntry,
+  type CharacterInventoryState,
+  type CharacterSetEntry,
   getCharacterStatus,
 } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
-import { StoreState } from "types";
-import { StoreStateDispatch } from "types/Redux/actions";
+import {
+  addCharInvChangesToGoal,
+  asyncUpdateGoal,
+} from "goals/Redux/GoalActions";
+import { type StoreState } from "types";
+import { type StoreStateDispatch } from "types/Redux/actions";
+import { type Hash } from "types/hash";
 import { Path } from "types/path";
 
 // Action Creation Functions
@@ -69,6 +73,8 @@ export function setValidCharacters(chars: string[]): PayloadAction {
 
 // Dispatch Functions
 
+/** Returns a dispatch function to: update the in-state `.validCharacters` and
+ * `.rejectedCharacters` according to the given character and status. */
 export function setCharacterStatus(character: string, status: CharacterStatus) {
   return (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     switch (status) {
@@ -97,13 +103,13 @@ export function setCharacterStatus(character: string, status: CharacterStatus) {
   };
 }
 
-/** Sends the in-state character inventory to the server. */
+/** Returns a dispatch function to: send the in-state char inventory to the server. */
 export function uploadInventory() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const charInvState = getState().characterInventoryState;
     const project = getState().currentProjectState.project;
-    const changes = getChanges(project, charInvState);
-    if (!changes.length) {
+    const charChanges = getCharChanges(project, charInvState);
+    if (!charChanges.length) {
       exit();
       return;
     }
@@ -114,12 +120,15 @@ export function uploadInventory() {
         validCharacters: charInvState.validCharacters,
       })
     );
-    dispatch(addCharInvChangesToGoal(changes));
+    const changes = getState().goalsState.currentGoal.changes as CharInvChanges;
+    dispatch(addCharInvChangesToGoal({ ...changes, charChanges }));
     await dispatch(asyncUpdateGoal());
     exit();
   };
 }
 
+/** Returns a dispatch function to: fetch the current project's frontier and, from those
+ * words, update the array of all vernacular forms in-state. */
 export function fetchWords() {
   return async (dispatch: StoreStateDispatch) => {
     const words = await getFrontierWords();
@@ -127,6 +136,9 @@ export function fetchWords() {
   };
 }
 
+/** Returns a dispatch function to: gather all characters (and number of occurrences)
+ * in the in-state `allWords` array and extract the inventory status of each character
+ * from the current project's `.validCharacters` and `.rejectedCharacters`. */
 export function getAllCharacters() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const allWords = getState().characterInventoryState.allWords;
@@ -143,6 +155,8 @@ export function getAllCharacters() {
   };
 }
 
+/** Returns a dispatch function to: load all character inventory data for the current
+ * project (drawing from the in-state project and its frontier in the database.) */
 export function loadCharInvData() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const project = getState().currentProjectState.project;
@@ -154,12 +168,56 @@ export function loadCharInvData() {
   };
 }
 
+/** Returns a dispatch function to: in both frontend and backend, add to the current
+ * goal's changes the dictionary of words updated with the find-and-replace tool. */
+function addWordChanges(wordChanges: FindAndReplaceChange) {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+    const changes: CharInvChanges = {
+      ...defaultCharInvChanges,
+      ...getState().goalsState.currentGoal.changes,
+    };
+    changes.wordChanges = [...changes.wordChanges, wordChanges];
+    dispatch(addCharInvChangesToGoal(changes));
+    await dispatch(asyncUpdateGoal());
+  };
+}
+
+/** Returns a dispatch function to: update every word in the current project's frontier
+ * that has the given `find` in its vernacular form. Then:
+ * - Add those word changes to the current goal's changes;
+ * - Update the in-state `allWords` array;
+ * - Update the in-state character inventory. */
+export function findAndReplace(find: string, replace: string) {
+  return async (dispatch: StoreStateDispatch) => {
+    const changedWords = (await getFrontierWords()).filter((w) =>
+      w.vernacular.includes(find)
+    );
+    if (changedWords.length) {
+      const findRegExp = new RegExp(
+        find.replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&"),
+        "g"
+      );
+      const words: Hash<string> = {};
+      for (const word of changedWords) {
+        word.vernacular = word.vernacular.replace(findRegExp, replace);
+        words[word.id] = (await updateWord(word)).id;
+      }
+      await dispatch(addWordChanges({ find, replace, words }));
+      await dispatch(fetchWords());
+      await dispatch(getAllCharacters());
+    }
+  };
+}
+
 // Helper Functions
 
+/** Navigate to the Data Cleanup page. */
 export function exit(): void {
   router.navigate(Path.Goals);
 }
 
+/** Count the number of occurrences of the given `char` in the given array of strings.
+ * Gives a console error if `char` is not length 1. */
 function countOccurrences(char: string, words: string[]): number {
   if (char.length !== 1) {
     console.error(`countOccurrences expects length 1 char, but got: ${char}`);
@@ -175,7 +233,9 @@ function countOccurrences(char: string, words: string[]): number {
   return count;
 }
 
-export function getChanges(
+/** Compare the `.validCharacters` and `.rejectedCharacters` between the given project
+ * and the given state to identify all characters with a change of inventory status. */
+export function getCharChanges(
   project: Project,
   charInvState: CharacterInventoryState
 ): CharacterChange[] {
@@ -196,7 +256,8 @@ export function getChanges(
   return changes;
 }
 
-// Returns undefined if CharacterStatus unchanged.
+/** Return the given character's change of inventory status, or undefined if
+ * its CharacterStatus is unchanged. */
 function getChange(
   c: string,
   oldAcc: string[],

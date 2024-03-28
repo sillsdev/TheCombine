@@ -105,8 +105,8 @@ namespace BackendFramework
             const string secretKeyEnvName = "COMBINE_JWT_SECRET_KEY";
             var secretKey = Environment.GetEnvironmentVariable(secretKeyEnvName);
 
-            // The JWT key size must be at least 128 bits long.
-            const int minKeyLength = 128 / 8;
+            // The JWT key size must be at least 256 bits long.
+            const int minKeyLength = 256 / 8;
             if (secretKey is null || secretKey.Length < minKeyLength)
             {
                 _logger.LogError("Must set {EnvName} environment variable to string of length {MinLength} or longer.",

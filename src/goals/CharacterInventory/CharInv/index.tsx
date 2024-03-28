@@ -95,7 +95,6 @@ export default function CharacterInventory(): ReactElement {
               loading={saveInProgress}
               buttonProps={{
                 id: buttonIdSave,
-                color: "primary",
                 onClick: () => save(),
                 style: { margin: theme.spacing(1) },
               }}
@@ -103,6 +102,7 @@ export default function CharacterInventory(): ReactElement {
               {t("buttons.save")}
             </LoadingButton>
             <Button
+              color="secondary"
               id={buttonIdCancel}
               variant="contained"
               onClick={() => setCancelDialogOpen(true)}

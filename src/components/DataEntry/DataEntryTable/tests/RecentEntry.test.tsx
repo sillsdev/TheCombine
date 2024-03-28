@@ -8,8 +8,6 @@ import {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import { Word } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import {
@@ -28,6 +26,8 @@ import { newPronunciation, simpleWord } from "types/word";
 import { newWritingSystem } from "types/writingSystem";
 
 jest.mock("@mui/material/Autocomplete", () => "div");
+
+jest.mock("components/Project/ProjectActions", () => ({}));
 
 const mockStore = configureMockStore()(defaultState);
 const mockVern = "Vernacular";
