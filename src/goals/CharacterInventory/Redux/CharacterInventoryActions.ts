@@ -4,8 +4,11 @@ import { type Project } from "api/models";
 import { getFrontierWords, updateWord } from "backend";
 import { asyncUpdateCurrentProject } from "components/Project/ProjectActions";
 import {
+  type CharInvChanges,
   type CharacterChange,
   CharacterStatus,
+  type FindAndReplaceChange,
+  defaultCharInvChanges,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
 import {
   addRejectedCharacterAction,
@@ -29,6 +32,7 @@ import {
 import router from "router/browserRouter";
 import { type StoreState } from "types";
 import { type StoreStateDispatch } from "types/Redux/actions";
+import { type Hash } from "types/hash";
 import { Path } from "types/path";
 
 // Action Creation Functions
@@ -104,8 +108,8 @@ export function uploadInventory() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const charInvState = getState().characterInventoryState;
     const project = getState().currentProjectState.project;
-    const changes = getChanges(project, charInvState);
-    if (!changes.length) {
+    const charChanges = getCharChanges(project, charInvState);
+    if (!charChanges.length) {
       exit();
       return;
     }
@@ -116,7 +120,8 @@ export function uploadInventory() {
         validCharacters: charInvState.validCharacters,
       })
     );
-    dispatch(addCharInvChangesToGoal(changes));
+    const changes = getState().goalsState.currentGoal.changes as CharInvChanges;
+    dispatch(addCharInvChangesToGoal({ ...changes, charChanges }));
     await dispatch(asyncUpdateGoal());
     exit();
   };
@@ -163,29 +168,44 @@ export function loadCharInvData() {
   };
 }
 
+/** Returns a dispatch function to: in both frontend and backend, add to the current
+ * goal's changes the dictionary of words updated with the find-and-replace tool. */
+function addWordChanges(wordChanges: FindAndReplaceChange) {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+    const changes: CharInvChanges = {
+      ...defaultCharInvChanges,
+      ...getState().goalsState.currentGoal.changes,
+    };
+    changes.wordChanges = [...changes.wordChanges, wordChanges];
+    dispatch(addCharInvChangesToGoal(changes));
+    await dispatch(asyncUpdateGoal());
+  };
+}
+
 /** Returns a dispatch function to: update every word in the current project's frontier
- * that has the given `findValue` in its vernacular form. Then:
+ * that has the given `find` in its vernacular form. Then:
+ * - Add those word changes to the current goal's changes;
  * - Update the in-state `allWords` array;
  * - Update the in-state character inventory. */
-export function findAndReplace(findValue: string, replaceValue: string) {
+export function findAndReplace(find: string, replace: string) {
   return async (dispatch: StoreStateDispatch) => {
     const changedWords = (await getFrontierWords()).filter((w) =>
-      w.vernacular.includes(findValue)
+      w.vernacular.includes(find)
     );
-
-    // Use regular expressions to replace all findValue occurrences.
-    const findRegExp = new RegExp(
-      // Escape all special characters in findValue.
-      findValue.replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&"),
-      "g"
-    );
-    for (const word of changedWords) {
-      word.vernacular = word.vernacular.replace(findRegExp, replaceValue);
-      await updateWord(word);
+    if (changedWords.length) {
+      const findRegExp = new RegExp(
+        find.replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&"),
+        "g"
+      );
+      const words: Hash<string> = {};
+      for (const word of changedWords) {
+        word.vernacular = word.vernacular.replace(findRegExp, replace);
+        words[word.id] = (await updateWord(word)).id;
+      }
+      await dispatch(addWordChanges({ find, replace, words }));
+      await dispatch(fetchWords());
+      await dispatch(getAllCharacters());
     }
-
-    await dispatch(fetchWords());
-    await dispatch(getAllCharacters());
   };
 }
 
@@ -215,7 +235,7 @@ function countOccurrences(char: string, words: string[]): number {
 
 /** Compare the `.validCharacters` and `.rejectedCharacters` between the given project
  * and the given state to identify all characters with a change of inventory status. */
-export function getChanges(
+export function getCharChanges(
   project: Project,
   charInvState: CharacterInventoryState
 ): CharacterChange[] {
