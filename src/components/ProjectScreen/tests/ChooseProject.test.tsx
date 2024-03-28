@@ -8,10 +8,7 @@ import { testInstanceHasText } from "utilities/testRendererUtilities";
 import { randomIntString } from "utilities/utilities";
 
 jest.mock("backend", () => ({
-  getAllActiveProjectsByUser: () => mockGetProjects(),
-}));
-jest.mock("backend/localStorage", () => ({
-  getUserId: () => "mockId",
+  getAllActiveProjects: () => mockGetProjects(),
 }));
 jest.mock("types/hooks");
 jest.mock("react-router-dom", () => ({

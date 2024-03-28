@@ -5,13 +5,10 @@ import ProjectSelect from "components/ProjectSettings/ProjectSelect";
 import { newProject, randomProject } from "types/project";
 
 jest.mock("backend", () => ({
-  getAllActiveProjectsByUser: () => mockGetAllActiveProjectsByUser(),
-}));
-jest.mock("backend/localStorage", () => ({
-  getUserId: () => "nonempty-string",
+  getAllActiveProjects: () => mockGetAllActiveProjects(),
 }));
 
-const mockGetAllActiveProjectsByUser = jest.fn();
+const mockGetAllActiveProjects = jest.fn();
 
 const mockProjects = [randomProject(), randomProject(), randomProject()];
 
@@ -27,7 +24,7 @@ const renderSwitch = async (proj = newProject()): Promise<void> => {
 
 describe("ProjectSelect", () => {
   it("has the correct number of options and the current project selected", async () => {
-    mockGetAllActiveProjectsByUser.mockResolvedValueOnce(mockProjects);
+    mockGetAllActiveProjects.mockResolvedValueOnce(mockProjects);
     await renderSwitch(mockProjects[1]);
     const select = selectMaster.root.findByType(Select);
     expect(select.props.children).toHaveLength(mockProjects.length);
