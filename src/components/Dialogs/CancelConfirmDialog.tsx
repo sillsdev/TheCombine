@@ -32,6 +32,7 @@ export default function CancelConfirmDialog(
   const onConfirm = async (): Promise<void> => {
     setLoading(true);
     await props.handleConfirm();
+    setLoading(false);
   };
 
   return (
