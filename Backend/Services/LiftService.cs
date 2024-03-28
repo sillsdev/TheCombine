@@ -541,14 +541,32 @@ namespace BackendFramework.Services
         {
             foreach (var audio in pronunciations)
             {
-                var lexPhonetic = new LexPhonetic();
                 var src = FileStorage.GenerateAudioFilePath(projectId, audio.FileName);
-                var dest = Path.Combine(path, audio.FileName);
-
-                if (!File.Exists(src)) continue;
-                if (Path.GetExtension(dest).Equals(".webm", StringComparison.OrdinalIgnoreCase))
+                if (!File.Exists(src))
                 {
-                    dest = Path.ChangeExtension(dest, ".wav");
+                    continue;
+                };
+
+                var speaker = projectSpeakers.Find(s => s.Id == audio.SpeakerId);
+                // If audio has speaker, use speaker name as file name
+                var safeName = speaker is not null ? Sanitization.MakeFriendlyForPath(speaker.Name) : "";
+                var fileName = safeName == "" ? Path.GetFileNameWithoutExtension(audio.FileName) : safeName;
+
+                var fileExt = Path.GetExtension(audio.FileName);
+                var convertToWav = fileExt.Equals(".webm", StringComparison.OrdinalIgnoreCase);
+                fileExt = convertToWav ? ".wav" : fileExt;
+                var dest = Path.ChangeExtension(Path.Combine(path, fileName), fileExt);
+
+                // Prevent collisions resulting from name sanitization
+                var duplicate = 0;
+                while (File.Exists(dest))
+                {
+                    duplicate++;
+                    dest = Path.ChangeExtension(Path.Combine(path, $"{fileName}{duplicate}"), fileExt);
+                }
+
+                if (convertToWav)
+                {
                     await FFmpeg.Conversions.New().Start($"-y -i \"{src}\" \"{dest}\"");
                 }
                 else
@@ -556,16 +574,13 @@ namespace BackendFramework.Services
                     File.Copy(src, dest, true);
                 }
 
+                var lexPhonetic = new LexPhonetic();
                 lexPhonetic.MergeIn(MultiText.Create(new LiftMultiText { { "href", dest } }));
-                // If audio has speaker, include speaker info as a pronunciation label
-                if (!audio.Protected && !string.IsNullOrEmpty(audio.SpeakerId))
+                // If audio has speaker, include speaker name as a pronunciation label
+                if (speaker is not null)
                 {
-                    var speaker = projectSpeakers.Find(s => s.Id == audio.SpeakerId);
-                    if (speaker is not null)
-                    {
-                        var text = new LiftMultiText { { "en", $"Speaker #{speaker.Id}: {speaker.Name}" } };
-                        lexPhonetic.MergeIn(MultiText.Create(text));
-                    }
+                    var text = new LiftMultiText { { "en", $"Speaker: {speaker.Name}" } };
+                    lexPhonetic.MergeIn(MultiText.Create(text));
                 }
                 entry.Pronunciations.Add(lexPhonetic);
             }
