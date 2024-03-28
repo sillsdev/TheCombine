@@ -22,10 +22,10 @@ function getWindowOrigin(): string {
 
 /** Open the user guide in a new tab.
  * Leads to a 404 in development.
- */
-export function openUserGuide(): void {
+ * Optional `page` could be, e.g., "account.html#log-in". */
+export function openUserGuide(page = ""): void {
   const origin = getWindowOrigin();
-  window.open(`${origin}/docs/`);
+  window.open(`${origin}/docs/${page}`);
 }
 
 /**
