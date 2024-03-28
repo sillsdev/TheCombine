@@ -11,8 +11,11 @@ import { useTranslation } from "react-i18next";
 
 import { Word } from "api/models";
 import { getUser } from "backend";
-import { FlagButton, IconButtonWithTooltip } from "components/Buttons";
-import { EntryNote } from "components/DataEntry/DataEntryTable/EntryCellComponents";
+import {
+  FlagButton,
+  IconButtonWithTooltip,
+  NoteButton,
+} from "components/Buttons";
 import { PronunciationsBackend } from "components/Pronunciations/PronunciationsBackend";
 import SenseCard from "components/WordCard/SenseCard";
 import SummarySenseCard from "components/WordCard/SummarySenseCard";
@@ -57,7 +60,7 @@ export default function WordCard(props: WordCardProps): ReactElement {
           {!full && (
             <>
               <AudioSummary count={audio.length} />
-              {!!note.text && <EntryNote noteText={note.text} />}
+              {!!note.text && <NoteButton noteText={note.text} />}
               {flag.active && <FlagButton flag={flag} />}
             </>
           )}
@@ -83,7 +86,7 @@ export default function WordCard(props: WordCardProps): ReactElement {
             )}
             {!!note.text && (
               <div style={{ display: "block" }}>
-                <EntryNote noteText={note.text} />
+                <NoteButton noteText={note.text} />
                 <Typography display="inline">{note.text}</Typography>
               </div>
             )}
