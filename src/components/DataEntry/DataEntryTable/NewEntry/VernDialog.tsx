@@ -5,18 +5,15 @@ import {
   MenuList,
   Typography,
 } from "@mui/material";
-import { ReactElement } from "react";
+import { type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
-import { GramCatGroup, Word } from "api/models";
+import { GramCatGroup, type Word } from "api/models";
 import { CloseButton } from "components/Buttons";
 import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
-import {
-  DomainCell,
-  GlossCell,
-  PartOfSpeechCell,
-} from "goals/ReviewEntries/ReviewEntriesTable/CellComponents";
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";
+import DomainsCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/DomainsCell";
+import GlossesCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/GlossesCell";
+import PartOfSpeechCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/PartOfSpeechCell";
 
 interface vernDialogProps {
   vernacularWords: Word[];
@@ -64,7 +61,6 @@ export function VernList(props: VernListProps): ReactElement {
   );
 
   const menuItem = (word: Word): ReactElement => {
-    const entry = new ReviewEntriesWord(word, props.analysisLang);
     return (
       <StyledMenuItem
         id={word.id}
@@ -81,15 +77,15 @@ export function VernList(props: VernListProps): ReactElement {
             <Typography variant="h5">{word.vernacular}</Typography>
           </Grid>
           <Grid item xs="auto">
-            <GlossCell rowData={entry} value={entry.senses} />
+            <GlossesCell word={word} />
           </Grid>
           {hasPartsOfSpeech && (
             <Grid item xs="auto">
-              <PartOfSpeechCell rowData={entry} />
+              <PartOfSpeechCell word={word} />
             </Grid>
           )}
           <Grid item xs>
-            <DomainCell rowData={entry} />
+            <DomainsCell word={word} />
           </Grid>
         </Grid>
       </StyledMenuItem>

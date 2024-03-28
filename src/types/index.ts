@@ -6,7 +6,6 @@ import { TreeViewState } from "components/TreeView/Redux/TreeViewReduxTypes";
 import { CharacterInventoryState } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 import { MergeTreeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { GoalsState } from "goals/Redux/GoalReduxTypes";
-import { ReviewEntriesState } from "goals/ReviewEntries/Redux/ReviewEntriesReduxTypes";
 import { AnalyticsState } from "types/Redux/analyticsReduxTypes";
 
 //root store structure
@@ -20,7 +19,6 @@ export interface StoreState {
 
   //data entry and review entries
   treeViewState: TreeViewState;
-  reviewEntriesState: ReviewEntriesState;
   pronunciationsState: PronunciationsState;
 
   //goal timeline and current goal

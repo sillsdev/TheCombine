@@ -5,17 +5,14 @@ import {
   MenuList,
   Typography,
 } from "@mui/material";
-import { ReactElement } from "react";
+import { type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
-import { GramCatGroup, Sense, Word } from "api/models";
+import { GramCatGroup, type Sense, type Word } from "api/models";
 import { CloseButton } from "components/Buttons";
 import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
-import {
-  DomainCell,
-  PartOfSpeechCell,
-} from "goals/ReviewEntries/ReviewEntriesTable/CellComponents";
-import { ReviewEntriesWord } from "goals/ReviewEntries/ReviewEntriesTypes";
+import DomainsCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/DomainsCell";
+import PartOfSpeechCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/PartOfSpeechCell";
 import { firstGlossText } from "utilities/wordUtilities";
 
 interface SenseDialogProps {
@@ -62,10 +59,7 @@ export function SenseList(props: SenseListProps): ReactElement {
   );
 
   const menuItem = (sense: Sense): ReactElement => {
-    const entry = new ReviewEntriesWord(
-      { ...props.selectedWord, senses: [sense] },
-      props.analysisLang
-    );
+    const word: Word = { ...props.selectedWord, senses: [sense] };
     const gloss = firstGlossText(sense);
     return (
       <StyledMenuItem
@@ -84,11 +78,11 @@ export function SenseList(props: SenseListProps): ReactElement {
           </Grid>
           {hasPartsOfSpeech && (
             <Grid item xs="auto">
-              <PartOfSpeechCell rowData={entry} />
+              <PartOfSpeechCell word={word} />
             </Grid>
           )}
           <Grid item xs>
-            <DomainCell rowData={entry} />
+            <DomainsCell word={word} />
           </Grid>
         </Grid>
       </StyledMenuItem>
