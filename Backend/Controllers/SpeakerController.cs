@@ -92,6 +92,13 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
+            // Trim whitespace
+            name = name.Trim();
+            if (string.IsNullOrEmpty(name))
+            {
+                return BadRequest(name);
+            }
+
             // Ensure the name isn't taken
             if (await _speakerRepo.IsSpeakerNameInProject(projectId, name))
             {
@@ -185,6 +192,13 @@ namespace BackendFramework.Controllers
                 HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
             {
                 return Forbid();
+            }
+
+            // Trim whitespace
+            name = name.Trim();
+            if (string.IsNullOrEmpty(name))
+            {
+                return BadRequest(name);
             }
 
             // Ensure the speaker exists
