@@ -1,5 +1,6 @@
 import loadable from "@loadable/component";
-import { ReactElement, useEffect } from "react";
+import { type ReactElement, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import PageNotFound from "components/PageNotFound/component";
 import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
@@ -7,9 +8,10 @@ import Loading from "goals/DefaultGoal/Loading";
 import { clearTree } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { setCurrentGoal } from "goals/Redux/GoalActions";
 import { resetReviewEntries } from "goals/ReviewEntries/Redux/ReviewEntriesActions";
-import { StoreState } from "types";
+import { type StoreState } from "types";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 import { useAppDispatch, useAppSelector } from "types/hooks";
+import { Path } from "types/path";
 
 const CharacterInventory = loadable(() => import("goals/CharacterInventory"));
 const MergeDup = loadable(() => import("goals/MergeDuplicates"));
@@ -35,10 +37,19 @@ function displayComponent(goal: Goal): ReactElement {
 }
 
 export default function LoadingGoalScreen(): ReactElement {
-  const goalStatus = useAppSelector(
-    (state: StoreState) => state.goalsState.currentGoal.status
+  const { goalType, status } = useAppSelector(
+    (state: StoreState) => state.goalsState.currentGoal
   );
-  return goalStatus === GoalStatus.Loading ? <Loading /> : <BaseGoalScreen />;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Prevent getting stuck on loading screen when user clicks the back button.
+    if (goalType === GoalType.Default) {
+      navigate(Path.Goals);
+    }
+  }, [goalType, navigate]);
+
+  return status === GoalStatus.Loading ? <Loading /> : <BaseGoalScreen />;
 }
 
 /**
