@@ -92,6 +92,19 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
+            // Trim whitespace
+            name = name.Trim();
+            if (string.IsNullOrEmpty(name))
+            {
+                return BadRequest(name);
+            }
+
+            // Ensure the name isn't taken
+            if (await _speakerRepo.IsSpeakerNameInProject(projectId, name))
+            {
+                return StatusCode(StatusCodes.Status304NotModified, $"Name taken: {name}");
+            }
+
             // Create speaker and return id
             var speaker = new Speaker { Name = name, ProjectId = projectId };
             return Ok((await _speakerRepo.Create(speaker)).Id);
@@ -181,11 +194,24 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
+            // Trim whitespace
+            name = name.Trim();
+            if (string.IsNullOrEmpty(name))
+            {
+                return BadRequest(name);
+            }
+
             // Ensure the speaker exists
             var speaker = await _speakerRepo.GetSpeaker(projectId, speakerId);
             if (speaker is null)
             {
                 return NotFound(speakerId);
+            }
+
+            // Ensure the new name isn't taken
+            if (await _speakerRepo.IsSpeakerNameInProject(projectId, name))
+            {
+                return StatusCode(StatusCodes.Status304NotModified, $"Name taken: {name}");
             }
 
             // Update name and return result with id

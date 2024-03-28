@@ -88,12 +88,12 @@ namespace BackendFramework.Helper
                     case UnicodeCategory.LowercaseLetter:
                     case UnicodeCategory.UppercaseLetter:
                     case UnicodeCategory.DecimalDigitNumber:
+                    case UnicodeCategory.OtherLetter:
                         stringBuilder.Append(c);
                         break;
                     case UnicodeCategory.DashPunctuation:
                     case UnicodeCategory.CurrencySymbol:
                     case UnicodeCategory.MathSymbol:
-                    case UnicodeCategory.OtherLetter:
                     case UnicodeCategory.OtherSymbol:
                         stringBuilder.Append('-');
                         break;
