@@ -72,7 +72,7 @@ namespace BackendFramework.Helper
 
         /// <summary>
         /// Convert a string (e.g., a project name), into one friendly to use in a path.
-        /// Uses alphanumeric and '-' '_' ',' '(' ')'.
+        /// Uses international alphanumeric and '-' '_' ',' '(' ')'.
         /// </summary>
         /// <returns> Converted string, unless length 0, then returns fallback. </returns>
         public static string MakeFriendlyForPath(string name, string fallback = "")
@@ -87,8 +87,8 @@ namespace BackendFramework.Helper
                 {
                     case UnicodeCategory.LowercaseLetter:
                     case UnicodeCategory.UppercaseLetter:
-                    case UnicodeCategory.DecimalDigitNumber:
                     case UnicodeCategory.OtherLetter:
+                    case UnicodeCategory.DecimalDigitNumber:
                         stringBuilder.Append(c);
                         break;
                     case UnicodeCategory.DashPunctuation:
