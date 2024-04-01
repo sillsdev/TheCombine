@@ -139,7 +139,7 @@ namespace Backend.Tests.Controllers
         {
             var oldCount = _speakerRepo.GetAllSpeakers(ProjId).Result.Count;
             var result = _speakerController.CreateSpeaker(ProjId, $"\n{Name} ").Result;
-            Assert.That(((ObjectResult)result).StatusCode, Is.EqualTo(StatusCodes.Status304NotModified));
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
             Assert.That(_speakerRepo.GetAllSpeakers(ProjId).Result, Has.Count.EqualTo(oldCount));
         }
 
@@ -228,14 +228,21 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public void TestUpdateSpeakerNameEmptyName()
+        {
+            var result = _speakerController.UpdateSpeakerName(ProjId, _speaker.Id, " \n\t").Result;
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+        }
+
+        [Test]
         public void TestUpdateSpeakerNameNameTaken()
         {
             var result = _speakerController.UpdateSpeakerName(ProjId, _speaker.Id, $" {Name}\t").Result;
-            Assert.That(((ObjectResult)result).StatusCode, Is.EqualTo(StatusCodes.Status304NotModified));
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
 
             var idOfNewSpeaker = ((ObjectResult)_speakerController.CreateSpeaker(ProjId, "Ms. Other").Result).Value as string;
             result = _speakerController.UpdateSpeakerName(ProjId, idOfNewSpeaker!, $"\t{Name}\n").Result;
-            Assert.That(((ObjectResult)result).StatusCode, Is.EqualTo(StatusCodes.Status304NotModified));
+            Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
         }
 
         [Test]

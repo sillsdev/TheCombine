@@ -1,6 +1,8 @@
 import { Add, Edit } from "@mui/icons-material";
 import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import { ReactElement, useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 import { ConsentType, Speaker } from "api/models";
 import {
@@ -70,9 +72,18 @@ export function SpeakerListItem(props: ProjSpeakerProps): ReactElement {
 function EditSpeakerNameListItemIcon(props: ProjSpeakerProps): ReactElement {
   const [open, setOpen] = useState(false);
 
+  const { t } = useTranslation();
+
   const handleUpdateText = async (name: string): Promise<void> => {
-    await updateSpeakerName(props.speaker.id, name, props.projectId);
-    await props.refresh();
+    name = name.trim();
+    if (!name) {
+      return Promise.reject(t("projectSettings.speaker.nameEmpty"));
+    }
+    await updateSpeakerName(props.speaker.id, name, props.projectId)
+      .then(async () => {
+        await props.refresh();
+      })
+      .catch((err) => toast.error(t(err.response?.data ?? err.message)));
   };
 
   return (
@@ -129,9 +140,18 @@ interface AddSpeakerProps {
 export function AddSpeakerListItem(props: AddSpeakerProps): ReactElement {
   const [open, setOpen] = useState(false);
 
+  const { t } = useTranslation();
+
   const handleSubmitText = async (name: string): Promise<void> => {
-    await createSpeaker(name, props.projectId);
-    await props.refresh();
+    name = name.trim();
+    if (!name) {
+      return Promise.reject(t("projectSettings.speaker.nameEmpty"));
+    }
+    await createSpeaker(name, props.projectId)
+      .then(async () => {
+        await props.refresh();
+      })
+      .catch((err) => toast.error(t(err.response?.data ?? err.message)));
   };
 
   return (
