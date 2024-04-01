@@ -191,6 +191,7 @@ namespace BackendFramework.Controllers
             {
                 return Forbid();
             }
+
             // Ensure the speaker exists
             var speaker = await _speakerRepo.GetSpeaker(projectId, speakerId);
             if (speaker is null)
