@@ -363,12 +363,12 @@ export async function createProject(project: Project): Promise<Project> {
   return resp.data.project;
 }
 
-export async function getAllActiveProjectsByUser(
-  userId: string
+export async function getAllActiveProjects(
+  userId?: string
 ): Promise<Project[]> {
-  const projectIds = Object.keys((await getUser(userId)).projectRoles);
+  const user = await getUser(userId || LocalStorage.getUserId());
   const projects: Project[] = [];
-  for (const projectId of projectIds) {
+  for (const projectId of Object.keys(user.projectRoles)) {
     try {
       await getProject(projectId).then(
         (project) => project.isActive && projects.push(project)
