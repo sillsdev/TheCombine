@@ -564,7 +564,7 @@ namespace BackendFramework.Services
                     continue;
                 };
 
-                var dest = Path.Combine(path, Path.GetFileName(audio.FileName));
+                var dest = Path.Combine(path, audio.FileName);
                 if (Path.GetExtension(dest).Equals(".webm", StringComparison.OrdinalIgnoreCase))
                 {
                     dest = Path.ChangeExtension(dest, ".wav");
