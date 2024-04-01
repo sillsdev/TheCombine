@@ -104,11 +104,12 @@ namespace Backend.Tests.Helper
         private static List<List<string>> _namesUnfriendlyFriendly = new()
         {
             new List<string> { "A1phaNum3ricN0Change", "A1phaNum3ricN0Change" },
+            new List<string> { "こんにちは", "こんにちは" },
             new List<string> { "RémöveOrRèpláceÄccênts", "RemoveOrReplaceAccents" },
+            new List<string> { "алтайча", "алтаича"},
             new List<string> { "math+and=currency$to<dash", "math-and-currency-to-dash" },
             new List<string> { "make spaces underscores", "make_spaces_underscores" },
             new List<string> { "(){}[]", "()()()" },
-            new List<string> { "こんにちは", "-----" },
             new List<string> { "⁇⸘¡", ",,," }
         };
         [TestCaseSource(nameof(_namesUnfriendlyFriendly))]
