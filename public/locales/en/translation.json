@@ -335,7 +335,7 @@
     "undo": {
       "undo": "Undo Edit",
       "undoDialog": "Undo this edit?",
-      "undoDisabled": "Undo Unavailable"
+      "undoDisabled": "Undo unavailable"
     }
   },
   "charInventory": {
@@ -367,8 +367,17 @@
       "no": "no"
     },
     "changes": {
-      "noChanges": "No changes made in this goal.",
-      "more": "more"
+      "noCharChanges": "No changes made to character inventory.",
+      "more": "more",
+      "noWordChangesFindReplace": "No words changed by find-and-replace.",
+      "wordChanges": "Words changed:",
+      "wordChangesWithStrings": "Words changed ({{ val1 }} → {{ val2 }}):"
+    },
+    "undo": {
+      "undo": "Undo find-and-replace",
+      "undoDialog": "Undo words changes by find-and-replace?",
+      "undoDisabled": "Undo unavailable",
+      "undoWords": "Undo available for {{ val1 }} of the {{ val2 }} changed words."
     }
   },
   "mergeDups": {
@@ -425,7 +434,7 @@
     "undo": {
       "undo": "Undo Merge",
       "undoDialog": "Undo this merge?",
-      "undoDisabled": "Undo Unavailable"
+      "undoDisabled": "Undo unavailable"
     }
   },
   "flags": {
