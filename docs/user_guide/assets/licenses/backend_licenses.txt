@@ -8,11 +8,11 @@ license Type:Apache-2.0
 
 ####################################################################################################
 Package:BouncyCastle.Cryptography
-Version:2.2.1
+Version:2.3.0
 project URL:https://www.bouncycastle.org/csharp/
 Description:BouncyCastle.NET is a popular cryptography library for .NET
-licenseUrl:https://www.nuget.org/packages/BouncyCastle.Cryptography/2.2.1/License
-license Type:LICENSE.md
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
 
 ####################################################################################################
 Package:DnsClient
@@ -58,7 +58,7 @@ license Type:LICENSE.md
 
 ####################################################################################################
 Package:MailKit
-Version:4.3.0
+Version:4.4.0
 project URL:http://www.mimekit.net/
 Description:MailKit is an Open Source cross-platform .NET mail-client library that is based on MimeKit and optimized for mobile devices.
 
@@ -97,11 +97,11 @@ license Type:
 
 ####################################################################################################
 Package:Microsoft.AspNetCore.Authentication.JwtBearer
-Version:6.0.27
+Version:7.0.3
 project URL:https://asp.net/
 Description:ASP.NET Core middleware that enables an application to receive an OpenID Connect bearer token.
 
-This package was built from the source code at https://github.com/dotnet/aspnetcore/tree/417d650029c720dbd2138bcafbb78e2e4ff31bff
+This package was built from the source code at https://github.com/dotnet/aspnetcore/tree/febee99db845fd8766a13bdb391a07c3ee90b4ba
 licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
 
@@ -767,8 +767,8 @@ license Type:MIT
 
 ####################################################################################################
 Package:MimeKit
-Version:4.3.0
-project URL:http://www.mimekit.net/
+Version:4.4.0
+project URL:https://www.mimekit.net/
 Description:MimeKit is an Open Source library for creating and parsing MIME, S/MIME and PGP messages on desktop and mobile platforms. It also supports parsing of Unix mbox files.
 
       Unlike any other .NET MIME parser, MimeKit's parser does not need to parse string input nor does it use a TextReader. Instead, it parses raw byte streams, thus allowing it to better support undeclared 8bit text in headers as well as message bodies. It also means that MimeKit's parser is significantly faster than other .NET MIME parsers.
@@ -1599,7 +1599,7 @@ license Type:MS-EULA
 
 ####################################################################################################
 Package:System.Formats.Asn1
-Version:7.0.0
+Version:8.0.0
 project URL:https://dot.net/
 Description:Provides classes that can read and write the ASN.1 BER, CER, and DER data formats.
 
@@ -3059,7 +3059,7 @@ license Type:MS-EULA
 
 ####################################################################################################
 Package:System.Security.Cryptography.Pkcs
-Version:7.0.3
+Version:8.0.0
 project URL:https://dot.net/
 Description:Provides support for PKCS and CMS algorithms.
 
@@ -3247,7 +3247,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:System.Text.Encoding.CodePages
-Version:7.0.0
+Version:8.0.0
 project URL:https://dot.net/
 Description:Provides support for code-page based encodings, including Windows-1252, Shift-JIS, and GB2312.
 
