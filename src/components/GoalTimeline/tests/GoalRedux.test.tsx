@@ -5,10 +5,9 @@ import { Edit, MergeUndoIds, Permission, User, UserEdit } from "api/models";
 import * as LocalStorage from "backend/localStorage";
 import GoalTimeline from "components/GoalTimeline";
 import {
-  CharacterChange,
-  CharacterStatus,
   CharInvChanges,
   CharInvData,
+  CharacterStatus,
   CreateCharInv,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
 import {
@@ -48,6 +47,7 @@ jest.mock("backend", () => ({
 jest.mock("browserRouter", () => ({
   navigate: (path: Path) => mockNavigate(path),
 }));
+jest.mock("components/Project/ProjectActions", () => ({}));
 jest.mock("components/Pronunciations/Recorder");
 
 const mockAddGoalToUserEdit = jest.fn();
@@ -82,9 +82,10 @@ const mockCompletedMerge: MergeUndoIds = {
   parentIds: ["1", "2"],
   childIds: ["3", "4"],
 };
-const mockCharInvChanges: CharacterChange[] = [
-  ["'", CharacterStatus.Undecided, CharacterStatus.Accepted],
-];
+const mockCharInvChanges: CharInvChanges = {
+  charChanges: [["'", CharacterStatus.Undecided, CharacterStatus.Accepted]],
+  wordChanges: [{ find: "Q", replace: "q", words: { ["id-a"]: "id-b" } }],
+};
 
 const mockEdit = (): Edit => ({
   changes: JSON.stringify(mockCompletedMerge),
@@ -295,9 +296,8 @@ describe("asyncUpdateGoal", () => {
       await store.dispatch(asyncAddGoal(goal));
       store.dispatch(addCharInvChangesToGoal(mockCharInvChanges));
     });
-    const changes = store.getState().goalsState.currentGoal
-      .changes as CharInvChanges;
-    expect(changes!.charChanges).toBe(mockCharInvChanges);
+    const changes = store.getState().goalsState.currentGoal.changes;
+    expect(changes).toBe(mockCharInvChanges);
     // dispatch asyncUpdateGoal()
     await act(async () => {
       await store.dispatch(asyncUpdateGoal());

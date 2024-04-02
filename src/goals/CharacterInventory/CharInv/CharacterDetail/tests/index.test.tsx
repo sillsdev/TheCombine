@@ -22,6 +22,7 @@ jest.mock("@mui/material", () => {
   };
 });
 
+jest.mock("components/Project/ProjectActions", () => ({}));
 jest.mock("goals/CharacterInventory/Redux/CharacterInventoryActions", () => ({
   findAndReplace: () => mockFindAndReplace(),
 }));

@@ -13,6 +13,7 @@ jest.mock("backend/localStorage", () => ({
   getAvatar: jest.fn(),
   getCurrentUser: jest.fn(),
 }));
+jest.mock("components/Project/ProjectActions", () => ({}));
 jest.mock("react-router-dom", () => ({
   useNavigate: jest.fn(),
 }));

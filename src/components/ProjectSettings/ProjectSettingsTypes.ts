@@ -1,12 +1,7 @@
-import { Project } from "api/models";
+import { type Project } from "api/models";
 
-export interface ProjectSettingPropsWithSet {
-  project: Project;
-  setProject: (project: Project) => void;
-}
-
-export interface ProjectSettingPropsWithUpdate {
+export interface ProjectSettingProps {
   project: Project;
   readOnly?: boolean;
-  updateProject: (project: Project) => Promise<void>;
+  setProject: (project: Project) => Promise<void>;
 }
