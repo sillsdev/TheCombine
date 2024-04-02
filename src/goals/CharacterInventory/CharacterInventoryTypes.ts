@@ -1,4 +1,5 @@
 import { Goal, GoalName, GoalType } from "types/goals";
+import { type Hash } from "types/hash";
 
 export class CreateCharInv extends Goal {
   constructor(
@@ -17,9 +18,21 @@ export enum CharacterStatus {
 
 export type CharacterChange = [string, CharacterStatus, CharacterStatus];
 
+export interface FindAndReplaceChange {
+  find: string;
+  replace: string;
+  words: Hash<string>;
+}
+
 export interface CharInvChanges {
   charChanges: CharacterChange[];
+  wordChanges: FindAndReplaceChange[];
 }
+
+export const defaultCharInvChanges: CharInvChanges = {
+  charChanges: [],
+  wordChanges: [],
+};
 
 export interface CharInvData {
   inventory: string[][];
