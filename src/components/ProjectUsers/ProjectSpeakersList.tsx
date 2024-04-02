@@ -18,6 +18,20 @@ import {
 import { EditTextDialog, SubmitTextDialog } from "components/Dialogs";
 import SpeakerConsentListItemIcon from "components/ProjectUsers/SpeakerConsentListItemIcon";
 
+export enum ProjectSpeakersId {
+  ButtonAdd = "speaker-add-button",
+  ButtonAddCancel = "speaker-add-cancel-button",
+  ButtonAddConfirm = "speaker-add-confirm-button",
+  ButtonDeleteCancel = "speaker-delete-cancel-button",
+  ButtonDeleteConfirm = "speaker-delete-confirm-button",
+  ButtonDeletePrefix = "speaker-delete-button-",
+  ButtonEditCancel = "speaker-edit-cancel-button",
+  ButtonEditConfirm = "speaker-edit-confirm-button",
+  ButtonEditPrefix = "speaker-edit-button-",
+  TextFieldAdd = "speaker-add-textfield",
+  TextFieldEdit = "speaker-edit-textfield",
+}
+
 export default function ProjectSpeakersList(props: {
   projectId: string;
 }): ReactElement {
@@ -79,6 +93,10 @@ function EditSpeakerNameListItemIcon(props: ProjSpeakerProps): ReactElement {
     if (!name) {
       return Promise.reject(t("projectSettings.speaker.nameEmpty"));
     }
+    if (name === props.speaker.name) {
+      return;
+    }
+
     await updateSpeakerName(props.speaker.id, name, props.projectId)
       .then(async () => {
         await props.refresh();
@@ -89,21 +107,23 @@ function EditSpeakerNameListItemIcon(props: ProjSpeakerProps): ReactElement {
   return (
     <ListItemIcon>
       <IconButtonWithTooltip
-        buttonId={`project-speaker-${props.speaker.id}-edit`}
+        buttonId={`${ProjectSpeakersId.ButtonEditPrefix}${props.speaker.id}`}
         icon={<Edit />}
         onClick={() => setOpen(true)}
         textId="projectSettings.speaker.edit"
       />
-      <EditTextDialog
-        buttonIdCancel="project-speakers-edit-cancel"
-        buttonIdConfirm="project-speakers-edit-confirm"
-        close={() => setOpen(false)}
-        open={open}
-        text={props.speaker.name}
-        textFieldId="project-speakers-edit-name"
-        titleId="projectSettings.speaker.edit"
-        updateText={handleUpdateText}
-      />
+      {open && (
+        <EditTextDialog
+          buttonIdCancel={ProjectSpeakersId.ButtonEditCancel}
+          buttonIdConfirm={ProjectSpeakersId.ButtonEditConfirm}
+          close={() => setOpen(false)}
+          open={open}
+          text={props.speaker.name}
+          textFieldId={ProjectSpeakersId.TextFieldEdit}
+          titleId="projectSettings.speaker.edit"
+          updateText={handleUpdateText}
+        />
+      )}
     </ListItemIcon>
   );
 }
@@ -117,9 +137,9 @@ function DeleteSpeakerListItemIcon(props: ProjSpeakerProps): ReactElement {
   return (
     <ListItemIcon>
       <DeleteButtonWithDialog
-        buttonId={`project-speaker-${props.speaker.id}-delete`}
-        buttonIdCancel="project-speakers-delete-cancel"
-        buttonIdConfirm="project-speakers-delete-confirm"
+        buttonId={`${ProjectSpeakersId.ButtonDeletePrefix}${props.speaker.id}`}
+        buttonIdCancel={ProjectSpeakersId.ButtonDeleteCancel}
+        buttonIdConfirm={ProjectSpeakersId.ButtonDeleteConfirm}
         delete={handleDelete}
         textId={
           props.speaker.consent === ConsentType.None
@@ -158,19 +178,19 @@ export function AddSpeakerListItem(props: AddSpeakerProps): ReactElement {
     <ListItem>
       <ListItemIcon>
         <IconButtonWithTooltip
-          buttonId="project-speakers-add"
+          buttonId={ProjectSpeakersId.ButtonAdd}
           icon={<Add />}
           onClick={() => setOpen(true)}
           textId="projectSettings.speaker.add"
         />
       </ListItemIcon>
       <SubmitTextDialog
-        buttonIdCancel="project-speakers-add-cancel"
-        buttonIdConfirm="project-speakers-add-confirm"
+        buttonIdCancel={ProjectSpeakersId.ButtonAddCancel}
+        buttonIdConfirm={ProjectSpeakersId.ButtonAddConfirm}
         close={() => setOpen(false)}
         open={open}
         submitText={handleSubmitText}
-        textFieldId="project-speakers-add-name"
+        textFieldId={ProjectSpeakersId.TextFieldAdd}
         titleId="projectSettings.speaker.enterName"
       />
     </ListItem>
