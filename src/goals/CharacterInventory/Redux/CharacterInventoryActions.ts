@@ -2,7 +2,6 @@ import { type Action, type PayloadAction } from "@reduxjs/toolkit";
 
 import { type Project } from "api/models";
 import { getFrontierWords, updateWord } from "backend";
-import router from "browserRouter";
 import { asyncUpdateCurrentProject } from "components/Project/ProjectActions";
 import {
   type CharInvChanges,
@@ -30,6 +29,7 @@ import {
   addCharInvChangesToGoal,
   asyncUpdateGoal,
 } from "goals/Redux/GoalActions";
+import router from "router/browserRouter";
 import { type StoreState } from "types";
 import { type StoreStateDispatch } from "types/Redux/actions";
 import { type Hash } from "types/hash";
