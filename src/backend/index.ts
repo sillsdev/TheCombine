@@ -26,8 +26,8 @@ import {
   Word,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
-import router from "browserRouter";
 import authHeader from "components/Login/AuthHeaders";
+import router from "router/browserRouter";
 import { Goal, GoalStep } from "types/goals";
 import { Hash } from "types/hash";
 import { Path } from "types/path";
@@ -363,12 +363,12 @@ export async function createProject(project: Project): Promise<Project> {
   return resp.data.project;
 }
 
-export async function getAllActiveProjectsByUser(
-  userId: string
+export async function getAllActiveProjects(
+  userId?: string
 ): Promise<Project[]> {
-  const projectIds = Object.keys((await getUser(userId)).projectRoles);
+  const user = await getUser(userId || LocalStorage.getUserId());
   const projects: Project[] = [];
-  for (const projectId of projectIds) {
+  for (const projectId of Object.keys(user.projectRoles)) {
     try {
       await getProject(projectId).then(
         (project) => project.isActive && projects.push(project)
