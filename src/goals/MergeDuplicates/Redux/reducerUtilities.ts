@@ -1,10 +1,10 @@
 import {
   GramCatGroup,
+  type MergeSourceWord,
+  type MergeWords,
   type Sense,
   Status,
   type Word,
-  MergeWords,
-  MergeSourceWord,
 } from "api/models";
 import {
   type MergeTreeSense,
@@ -151,7 +151,7 @@ export function combineIntoFirstSense(mergeSenses: MergeTreeSense[]): void {
 
     // Put the duplicate's domains in the main sense if the id is new.
     dupSense.semanticDomains.forEach((dom) => {
-      if (!mainSense.semanticDomains.find((d) => d.id === dom.id)) {
+      if (mainSense.semanticDomains.every((d) => d.id !== dom.id)) {
         mainSense.semanticDomains.push({ ...dom });
       }
     });
