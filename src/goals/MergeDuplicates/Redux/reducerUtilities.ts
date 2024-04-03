@@ -14,6 +14,8 @@ import { newMergeWords } from "goals/MergeDuplicates/MergeDupsTypes";
 import { type Hash } from "types/hash";
 import { compareFlags } from "utilities/wordUtilities";
 
+// A collection of helper/utility functions only for use in the MergeDupsReducer.
+
 /** Create hash of senses keyed by id of src word. */
 export function buildSenses(
   sensesGuids: Hash<string[]>,
