@@ -14,6 +14,8 @@ import { newMergeWords } from "goals/MergeDuplicates/MergeDupsTypes";
 import { type Hash } from "types/hash";
 import { compareFlags } from "utilities/wordUtilities";
 
+// A collection of helper/utility functions only for use in the MergeDupsReducer.
+
 /** Generate dictionary of MergeTreeSense arrays:
  * - key: word id
  * - value: all merge senses of the word, with Deleted/Separate accessibility */
