@@ -3,7 +3,6 @@ import Hex from "crypto-js/enc-hex";
 import sha256 from "crypto-js/sha256";
 
 import * as backend from "backend";
-import router from "browserRouter";
 import {
   setLoginAttemptAction,
   setLoginFailureAction,
@@ -12,6 +11,7 @@ import {
   setSignupFailureAction,
   setSignupSuccessAction,
 } from "components/Login/Redux/LoginReducer";
+import router from "router/browserRouter";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { Path } from "types/path";
 import { newUser } from "types/user";
