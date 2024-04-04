@@ -4,8 +4,7 @@ import { MergeUndoIds, Word } from "api/models";
 import * as Backend from "backend";
 import { getDuplicates, getGraylistEntries } from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
-import router from "browserRouter";
-import { CharacterChange } from "goals/CharacterInventory/CharacterInventoryTypes";
+import { CharInvChanges } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { dispatchMergeStepData } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import {
   addCharInvChangesToGoalAction,
@@ -19,6 +18,7 @@ import {
   updateStepFromDataAction,
 } from "goals/Redux/GoalReducer";
 import { EntryEdit } from "goals/ReviewEntries/ReviewEntriesTypes";
+import router from "router/browserRouter";
 import { StoreState } from "types";
 import { StoreStateDispatch } from "types/Redux/actions";
 import { Goal, GoalStatus, GoalType } from "types/goals";
@@ -28,9 +28,9 @@ import { convertEditToGoal, maxNumSteps } from "utilities/goalUtilities";
 // Action Creation Functions
 
 export function addCharInvChangesToGoal(
-  charChanges: CharacterChange[]
+  changes: CharInvChanges
 ): PayloadAction {
-  return addCharInvChangesToGoalAction(charChanges);
+  return addCharInvChangesToGoalAction(changes);
 }
 
 export function addEntryEditToGoal(entryEdit: EntryEdit): PayloadAction {

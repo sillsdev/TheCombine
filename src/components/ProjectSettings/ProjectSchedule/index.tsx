@@ -1,6 +1,6 @@
 import { CalendarMonth, DateRange, EventRepeat } from "@mui/icons-material";
 import { Button, Grid, Typography } from "@mui/material";
-import { ReactElement, useCallback, useEffect, useState } from "react";
+import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
 
@@ -8,7 +8,7 @@ import { IconButtonWithTooltip } from "components/Buttons";
 import CalendarView from "components/ProjectSettings/ProjectSchedule/CalendarView";
 import DateScheduleEdit from "components/ProjectSettings/ProjectSchedule/DateScheduleEdit";
 import DateSelector from "components/ProjectSettings/ProjectSchedule/DateSelector";
-import { ProjectSettingPropsWithUpdate } from "components/ProjectSettings/ProjectSettingsTypes";
+import { type ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 
 const customStyles = {
   content: {
@@ -22,7 +22,7 @@ const customStyles = {
 };
 
 export default function ProjectSchedule(
-  props: ProjectSettingPropsWithUpdate
+  props: ProjectSettingProps
 ): ReactElement {
   const [projectSchedule, setProjectSchedule] = useState<Date[]>([]);
   const [showEdit, setShowEdit] = useState(false);
@@ -37,7 +37,7 @@ export default function ProjectSchedule(
 
   /** Remove all elements from workshopSchedule in project settings */
   async function handleRemoveAll(): Promise<void> {
-    await props.updateProject({ ...props.project, workshopSchedule: [] });
+    await props.setProject({ ...props.project, workshopSchedule: [] });
     setProjectSchedule([]);
     setShowRemove(false);
   }
@@ -114,7 +114,7 @@ export default function ProjectSchedule(
         <DateSelector
           close={() => setShowSelector(false)}
           project={props.project}
-          updateProject={props.updateProject}
+          updateProject={props.setProject}
         />
       </Modal>
       <Modal
@@ -127,7 +127,7 @@ export default function ProjectSchedule(
           close={() => setShowEdit(false)}
           project={props.project}
           projectSchedule={projectSchedule}
-          updateProject={props.updateProject}
+          updateProject={props.setProject}
         />
       </Modal>
       <Modal

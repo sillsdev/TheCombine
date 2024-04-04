@@ -17,6 +17,7 @@ jest.mock(
   () => (props: any) => mockAutocomplete(props)
 );
 
+jest.mock("components/Project/ProjectActions", () => ({}));
 jest.mock("components/Pronunciations/PronunciationsFrontend", () => "div");
 
 /** Bypass the Autocomplete and render its internal input with the props of both. */

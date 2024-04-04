@@ -14,6 +14,7 @@ jest.mock("backend", () => ({
   downloadLift: (...args: any[]) => mockDownloadList(...args),
   exportLift: (...args: any[]) => mockExportLift(...args),
 }));
+jest.mock("components/Project/ProjectActions", () => ({}));
 
 const mockDownloadList = jest.fn();
 const mockExportLift = jest.fn();

@@ -55,6 +55,7 @@ jest.mock(
   "components/DataEntry/DataEntryTable/RecentEntry",
   () => MockRecentEntry
 );
+jest.mock("components/Project/ProjectActions", () => ({}));
 jest.mock("components/Pronunciations/PronunciationsFrontend", () => "div");
 
 jest.spyOn(window, "alert").mockImplementation(() => {});
