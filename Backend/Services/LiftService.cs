@@ -363,14 +363,23 @@ namespace BackendFramework.Services
                 var fileExt = Path.GetExtension(src);
                 var convertToWav = fileExt.Equals(".webm", StringComparison.OrdinalIgnoreCase);
                 fileExt = convertToWav ? ".wav" : fileExt;
-                var dest = Path.ChangeExtension(Path.Combine(consentDir, fileName), fileExt);
+                var dest = Path.Combine(consentDir, fileName);
+                // On Linux, `Path.ChangeExtension` adds an unwanted final . if `extension` is null/empty.
+                if (!string.IsNullOrEmpty(fileExt))
+                {
+                    dest = Path.ChangeExtension(dest, fileExt);
+                }
 
                 // Prevent collisions resulting from name sanitization
                 var duplicate = 0;
                 while (File.Exists(dest))
                 {
                     duplicate++;
-                    dest = Path.ChangeExtension(Path.Combine(consentDir, $"{fileName}{duplicate}"), fileExt);
+                    dest = Path.Combine(consentDir, $"{fileName}{duplicate}");
+                    if (!string.IsNullOrEmpty(fileExt))
+                    {
+                        dest = Path.ChangeExtension(dest, fileExt);
+                    }
                 }
 
                 if (convertToWav)

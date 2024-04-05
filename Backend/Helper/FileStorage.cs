@@ -99,7 +99,12 @@ namespace BackendFramework.Helper
         /// <exception cref="InvalidIdException"> Throws when id invalid. </exception>
         public static string GenerateConsentFilePath(string speakerId, string? extension = null)
         {
-            var fileName = Path.ChangeExtension(Sanitization.SanitizeId(speakerId), extension);
+            var fileName = Sanitization.SanitizeId(speakerId);
+            // On Linux, `Path.ChangeExtension` adds an unwanted final . if `extension` is null/empty.
+            if (!string.IsNullOrEmpty(extension))
+            {
+                fileName = Path.ChangeExtension(fileName, extension);
+            }
             return GenerateFilePath(ConsentDir, fileName);
         }
 
