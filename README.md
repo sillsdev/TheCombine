@@ -101,8 +101,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    - On Ubuntu, follow
      [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions) using the
      appropriate Node.js version.
-4. [.NET Core SDK 6.0](https://dotnet.microsoft.com/download/dotnet/6.0)
-   - On Ubuntu, follow these [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu).
+4. [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 5. [MongoDB](https://mongodb.com/docs/manual/administration/install-community/) provides instructions on how to install
    the current release of MongoDB.
 
