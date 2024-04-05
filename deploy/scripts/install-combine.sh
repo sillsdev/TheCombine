@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
+set -euo pipefail
 
 # Set the environment variables that are required by The Combine.
 # In addition, the values are stored in a file so that they do not
@@ -8,13 +9,6 @@ set-combine-env () {
     # Generate JWT Secret Key
     COMBINE_JWT_SECRET_KEY=`LC_ALL=C tr -dc 'A-Za-z0-9*\-_@!' </dev/urandom | head -c 64; echo`
     # Collect values from user
-    cat << .EOM
-
-     The installation process will setup an initial user as a site
-     administrator.  This you can select a username that you will use
-     for your normal word collection work.  The default username is admin.
-
-.EOM
     read -p "Enter AWS_ACCESS_KEY_ID: " AWS_ACCESS_KEY_ID
     read -p "Enter AWS_SECRET_ACCESS_KEY: " AWS_SECRET_ACCESS_KEY
     # write collected values and static values to config file
@@ -203,11 +197,11 @@ if [ -z "${COMBINE_VERSION}" ] ; then
   exit 1
 fi
 
+create-python-venv
 # Step through the installation stages
 while [ "$STATE" != "Done" ] ; do
   case $STATE in
     Pre-reqs)
-      create-python-venv
       install-kubernetes
       next-state "Restart"
       ;;
