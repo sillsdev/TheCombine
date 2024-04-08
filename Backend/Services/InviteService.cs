@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -68,11 +67,8 @@ namespace BackendFramework.Services
                 user.ProjectRoles.Add(project.Id, userRole.Id);
                 await _userRepo.Update(user.Id, user);
                 // Generate the JWT based on those new userRoles
-                var updatedUser = await _permissionService.MakeJwt(user);
-                if (updatedUser is null)
-                {
-                    throw new PermissionService.InvalidJwtTokenException("Unable to generate JWT.");
-                }
+                var updatedUser = await _permissionService.MakeJwt(user)
+                    ?? throw new PermissionService.InvalidJwtTokenException("Unable to generate JWT.");
 
                 await _userRepo.Update(updatedUser.Id, updatedUser);
 
