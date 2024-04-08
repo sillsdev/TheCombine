@@ -156,12 +156,8 @@ namespace Backend.Tests.Mocks
         }
     }
 
-    [Serializable]
     public class UserAuthenticationException : Exception
     {
         public UserAuthenticationException() { }
-
-        protected UserAuthenticationException(SerializationInfo info, StreamingContext context)
-            : base(info, context) { }
     }
 }

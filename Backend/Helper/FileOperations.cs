@@ -9,14 +9,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace BackendFramework.Helper
 {
-    [Serializable]
     public class InvalidFileException : Exception
     {
         public InvalidFileException(string message) : base(message) { }
-
-        protected InvalidFileException(SerializationInfo info, StreamingContext context)
-            : base(info, context) { }
-
     }
 
     /// <summary>

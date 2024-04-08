@@ -102,11 +102,8 @@ namespace Backend.Tests.Mocks
         }
     }
 
-    [Serializable]
     public class UserCreationException : Exception
     {
         public UserCreationException() { }
-
-        protected UserCreationException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

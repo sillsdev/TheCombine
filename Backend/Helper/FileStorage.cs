@@ -26,13 +26,9 @@ namespace BackendFramework.Helper
         }
 
         /// <summary> Indicates that an error occurred locating the current user's home directory. </summary>
-        [Serializable]
         public class HomeFolderNotFoundException : Exception
         {
             public HomeFolderNotFoundException() { }
-
-            protected HomeFolderNotFoundException(SerializationInfo info, StreamingContext context)
-                : base(info, context) { }
         }
 
         /// <summary>

@@ -98,13 +98,9 @@ namespace BackendFramework.Services
 #pragma warning restore CA1816, CA2215
     }
 
-    [Serializable]
     public class MissingProjectException : Exception
     {
         public MissingProjectException(string message) : base(message) { }
-
-        protected MissingProjectException(SerializationInfo info, StreamingContext context)
-            : base(info, context) { }
     }
 
     public class LiftService : ILiftService

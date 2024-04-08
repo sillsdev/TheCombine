@@ -8,14 +8,9 @@ using SIL.Lift.Parsing;
 
 namespace BackendFramework.Helper
 {
-    [Serializable]
     public class InvalidLiftFileException : InvalidFileException
     {
         public InvalidLiftFileException(string message) : base("Malformed LIFT file: " + message) { }
-
-        protected InvalidLiftFileException(SerializationInfo info, StreamingContext context)
-            : base(info, context) { }
-
     }
 
     public static class TraitNames

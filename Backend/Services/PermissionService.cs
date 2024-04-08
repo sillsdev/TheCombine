@@ -232,7 +232,6 @@ namespace BackendFramework.Services
             return user;
         }
 
-        [Serializable]
         public class InvalidJwtTokenException : Exception
         {
             public InvalidJwtTokenException() { }
@@ -240,9 +239,6 @@ namespace BackendFramework.Services
             public InvalidJwtTokenException(string msg) : base(msg) { }
 
             public InvalidJwtTokenException(string msg, Exception innerException) : base(msg, innerException) { }
-
-            protected InvalidJwtTokenException(SerializationInfo info, StreamingContext context)
-                : base(info, context) { }
         }
     }
 

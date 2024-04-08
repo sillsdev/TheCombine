@@ -340,15 +340,11 @@ namespace BackendFramework.Services
             return wordLists;
         }
 
-        [Serializable]
         public class InvalidMergeWordSetException : Exception
         {
             public InvalidMergeWordSetException() { }
 
             public InvalidMergeWordSetException(string message) : base(message) { }
-
-            protected InvalidMergeWordSetException(SerializationInfo info, StreamingContext context)
-                : base(info, context) { }
         }
     }
 }

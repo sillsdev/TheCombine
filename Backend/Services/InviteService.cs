@@ -88,14 +88,11 @@ namespace BackendFramework.Services
             }
         }
 
-        [Serializable]
         public class InviteException : Exception
         {
             public InviteException() { }
 
             public InviteException(string msg) : base(msg) { }
-
-            protected InviteException(SerializationInfo info, StreamingContext context) : base(info, context) { }
         }
     }
 }
