@@ -4,7 +4,7 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    internal class PasswordResetServiceMock : IPasswordResetService
+    internal sealed class PasswordResetServiceMock : IPasswordResetService
     {
         public Task<PasswordReset> CreatePasswordReset(string email)
         {

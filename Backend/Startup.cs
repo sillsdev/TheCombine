@@ -148,8 +148,10 @@ namespace BackendFramework
                 options =>
                 {
                     var connectionStringKey = IsInContainer() ? "ContainerConnectionString" : "ConnectionString";
-                    options.ConnectionString = Configuration[$"MongoDB:{connectionStringKey}"];
-                    options.CombineDatabase = Configuration["MongoDB:CombineDatabase"];
+                    options.ConnectionString = Configuration[$"MongoDB:{connectionStringKey}"]
+                        ?? throw new EnvironmentNotConfiguredException();
+                    options.CombineDatabase = Configuration["MongoDB:CombineDatabase"]
+                        ?? throw new EnvironmentNotConfiguredException();
 
                     const string emailServiceFailureMessage = "Email services will not work.";
                     options.SmtpServer = CheckedEnvironmentVariable(

@@ -6,7 +6,7 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    public class BannerRepositoryMock : IBannerRepository
+    internal sealed class BannerRepositoryMock : IBannerRepository
     {
         private Dictionary<BannerType, Banner> _banners;
 

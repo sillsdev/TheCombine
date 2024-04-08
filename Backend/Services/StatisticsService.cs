@@ -200,12 +200,11 @@ namespace BackendFramework.Services
             {
                 LineChartData.Dates.Add(workshopSchedule[i]);
                 var day = workshopSchedule[i];
+                totalCountDictionary.TryGetValue(day, out today);
                 if (LineChartData.Datasets.Count == 0)
                 {
-                    runningTotal = totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0;
-                    today = yesterday = runningTotal;
-                    LineChartData.Datasets.Add(new Dataset(
-                        "Daily Total", totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0));
+                    runningTotal = yesterday = today;
+                    LineChartData.Datasets.Add(new Dataset("Daily Total", today));
                     LineChartData.Datasets.Add(new Dataset("Average", averageValue));
                     LineChartData.Datasets.Add(new Dataset("Running Total", runningTotal));
                     LineChartData.Datasets.Add(new Dataset("Projection", projection));
@@ -216,7 +215,6 @@ namespace BackendFramework.Services
                     // not generate data after the current date for "Daily Total", "Average" and "Running Total"
                     if (ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now) <= 0)
                     {
-                        today = totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0;
                         runningTotal += today;
                         LineChartData.Datasets.Find(element => element.UserName == "Daily Total")?.Data.Add(today);
                         LineChartData.Datasets.Find(element => element.UserName == "Average")?.Data.Add(averageValue);
@@ -330,9 +328,8 @@ namespace BackendFramework.Services
                         }
 
                         // update DomainCount
-                        if (!domainUserValue.DomainSet.Contains(domainName))
+                        if (domainUserValue.DomainSet.Add(domainName))
                         {
-                            domainUserValue.DomainSet.Add(domainName);
                             domainUserValue.DomainCount++;
                         }
                         // update WordCount

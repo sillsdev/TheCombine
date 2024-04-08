@@ -9,7 +9,7 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    public class ProjectRepositoryMock : IProjectRepository
+    internal sealed class ProjectRepositoryMock : IProjectRepository
     {
         private readonly List<Project> _projects;
 

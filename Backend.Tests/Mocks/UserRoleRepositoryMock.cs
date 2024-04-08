@@ -8,7 +8,7 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    public class UserRoleRepositoryMock : IUserRoleRepository
+    internal sealed class UserRoleRepositoryMock : IUserRoleRepository
     {
         private readonly List<UserRole> _userRoles;
 
