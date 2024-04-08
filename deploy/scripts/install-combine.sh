@@ -1,5 +1,5 @@
 #! /usr/bin/env bash
-set -euo pipefail
+set -eo pipefail
 
 # Set the environment variables that are required by The Combine.
 # In addition, the values are stored in a file so that they do not
