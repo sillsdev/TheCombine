@@ -27,6 +27,8 @@ import { newWritingSystem } from "types/writingSystem";
 
 jest.mock("@mui/material/Autocomplete", () => "div");
 
+jest.mock("components/Project/ProjectActions", () => ({}));
+
 const mockStore = configureMockStore()(defaultState);
 const mockVern = "Vernacular";
 const mockGloss = "Gloss";

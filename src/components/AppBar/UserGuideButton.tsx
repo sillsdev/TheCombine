@@ -15,7 +15,7 @@ export default function UserGuideButton(): ReactElement {
       <Button
         color="inherit"
         id="app-bar-guide"
-        onClick={openUserGuide}
+        onClick={() => openUserGuide()}
         style={{
           background: themeColors.lightShade,
           margin: 5,

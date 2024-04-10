@@ -19,7 +19,17 @@ image_pull_secret: aws-login-credentials
 app_namespace: thecombine
 
 k8s_user: sillsdev
-k8s_group: sillsdev
+
+################################################
+# Helm Installation
+################################################
+install_helm: no
+
+################################################
+# Support Tool Settings
+################################################
+install_ip_viewer: yes
+install_combinectl: yes
 
 #######################################
 # Ingress configuration
@@ -30,7 +40,7 @@ ingress_namespace: ingress-nginx
 # The server name will direct traffic to the production
 # server since it is used to get the certificates for the
 # NUC.
-public_dns_name: "{{ ansible_hostname }}"
+k8s_dns_name: "{{ ansible_hostname }}"
 
 ################################################
 # Ethernet settings

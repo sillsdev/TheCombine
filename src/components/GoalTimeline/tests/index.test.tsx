@@ -18,6 +18,7 @@ jest.mock("goals/Redux/GoalActions", () => ({
   asyncAddGoal: (goal: Goal) => mockChooseGoal(goal),
   asyncGetUserEdits: () => jest.fn(),
 }));
+jest.mock("components/Project/ProjectActions", () => ({}));
 jest.mock("types/hooks", () => {
   return {
     ...jest.requireActual("types/hooks"),

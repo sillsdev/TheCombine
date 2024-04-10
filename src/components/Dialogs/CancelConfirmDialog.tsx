@@ -13,7 +13,7 @@ import LoadingButton from "components/Buttons/LoadingButton";
 
 interface CancelConfirmDialogProps {
   open: boolean;
-  textId: string;
+  text: string | ReactElement;
   handleCancel: () => void;
   handleConfirm: () => Promise<void> | void;
   buttonIdCancel?: string;
@@ -32,6 +32,7 @@ export default function CancelConfirmDialog(
   const onConfirm = async (): Promise<void> => {
     setLoading(true);
     await props.handleConfirm();
+    setLoading(false);
   };
 
   return (
@@ -46,7 +47,7 @@ export default function CancelConfirmDialog(
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          {t(props.textId)}
+          {typeof props.text === "string" ? t(props.text) : props.text}
         </DialogContentText>
       </DialogContent>
       <DialogActions>

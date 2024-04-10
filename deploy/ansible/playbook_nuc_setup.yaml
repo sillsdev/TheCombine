@@ -1,0 +1,50 @@
+---
+##############################################################
+# Playbook: playbook_nuc_setup.yml
+#
+# playbook_nuc_setup.yml installs the packages and
+# configuration files that are required to run TheCombine
+# as Docker containers managed by a Kubernetes cluster on
+# a target PC, such as an Intel NUC.
+#
+##############################################################
+
+- name: Configure hardware for The Combine
+  hosts: nuc
+  gather_facts: yes
+  become: yes
+
+  vars_files:
+    - "vars/config_common.yml"
+
+  tasks:
+    - name: Update packages
+      apt:
+        update_cache: yes
+        upgrade: "yes"
+
+    - name: Setup WiFi Access Point
+      import_role:
+        name: wifi_ap
+      when: has_wifi
+
+    - name: Enable hardware monitoring
+      import_role:
+        name: monitor_hardware
+      when: include_hw_monitoring
+
+    - name: Configure Network Interfaces
+      import_role:
+        name: network_config
+
+    - name: Install Container Engine
+      import_role:
+        name: container_engine
+
+    - name: Install Kubernetes Tools
+      import_role:
+        name: k8s_install
+
+    - name: Setup Support Tool
+      import_role:
+        name: support_tools

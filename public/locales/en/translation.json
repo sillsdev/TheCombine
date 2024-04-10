@@ -151,7 +151,7 @@
       "analysis": "Analysis",
       "analysisLanguage": "Analysis Language",
       "semanticDomains": "Semantic Domains",
-      "semanticDomainsDefault": "(Default to browser language)",
+      "semanticDomainsDefault": "(Default to user-interface language)",
       "languages": "Project Languages",
       "bcp47": "BCP 47 Code",
       "name": "Name",
@@ -284,17 +284,15 @@
   },
   "reviewEntries": {
     "title": "Review Entries",
-    "noVernacular": "No vernacular input!",
-    "noDefinition": "No definitions input",
-    "noGloss": "No glosses input",
+    "allEntriesPerPageOption": "All",
+    "editSense": "Edit sense",
+    "discardChanges": "Discard changes?",
     "noDomain": "No domain selected",
     "duplicateDomain": "This sense already has domain {{ val }}.",
-    "noNote": "No note",
     "deleteWordWarning": "This word will be permanently deleted!",
     "deleteDisabled": "This was imported with data that The Combine doesn't handle, so it may not be deleted.",
     "error": {
       "gloss": "Glosses cannot be left blank",
-      "domain": "Domains cannot be left blank",
       "senses": "Cannot save an entry with no senses",
       "vernacular": "Vernacular cannot be left blank"
     },
@@ -302,32 +300,15 @@
       "definitions": "Definitions",
       "delete": "Delete",
       "domains": "Domains",
+      "edit": "Edit",
       "flag": "Flag",
       "glosses": "Glosses",
       "note": "Note",
       "partOfSpeech": "Part of Speech",
       "pronunciations": "Pronunciations",
       "senses": "Senses",
+      "sensesCount": "Number of Senses",
       "vernacular": "Vernacular"
-    },
-    "materialTable": {
-      "body": {
-        "edit": "Edit",
-        "emptyDataSourceMessage": "No entries to display",
-        "filter": "Filter"
-      },
-      "pagination": {
-        "labelDisplayedRows": "{from}-{to} of {count}",
-        "labelRows": "rows",
-        "labelRowsPerPage": "Rows per page:",
-        "first": "First Page",
-        "last": "Last Page",
-        "next": "Next Page",
-        "previous": "Previous Page"
-      },
-      "toolbar": {
-        "search": "Search"
-      }
     },
     "completed": {
       "number": "Number of entries edited: "
@@ -335,7 +316,7 @@
     "undo": {
       "undo": "Undo Edit",
       "undoDialog": "Undo this edit?",
-      "undoDisabled": "Undo Unavailable"
+      "undoDisabled": "Undo unavailable"
     }
   },
   "charInventory": {
@@ -367,8 +348,17 @@
       "no": "no"
     },
     "changes": {
-      "noChanges": "No changes made in this goal.",
-      "more": "more"
+      "noCharChanges": "No changes made to character inventory.",
+      "more": "more",
+      "noWordChangesFindReplace": "No words changed by find-and-replace.",
+      "wordChanges": "Words changed:",
+      "wordChangesWithStrings": "Words changed ({{ val1 }} → {{ val2 }}):"
+    },
+    "undo": {
+      "undo": "Undo find-and-replace",
+      "undoDialog": "Undo words changes by find-and-replace?",
+      "undoDisabled": "Undo unavailable",
+      "undoWords": "Undo available for {{ val1 }} of the {{ val2 }} changed words."
     }
   },
   "mergeDups": {
@@ -425,7 +415,7 @@
     "undo": {
       "undo": "Undo Merge",
       "undoDialog": "Undo this merge?",
-      "undoDisabled": "Undo Unavailable"
+      "undoDisabled": "Undo unavailable"
     }
   },
   "flags": {

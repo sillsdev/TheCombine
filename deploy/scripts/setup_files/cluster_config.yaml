@@ -40,10 +40,10 @@ rancher-ui:
     name: rancher
     reference: rancher-stable/rancher
     namespace: cattle-system
-    version: 2.6.5
+    version: 2.7.6
     wait: true
     override:
-      hostname: rancher.local
+      hostname: rancher.thecombine.app
       bootstrapPassword: admin
       ingress:
         extraAnnotations:
