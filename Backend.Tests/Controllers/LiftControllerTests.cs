@@ -627,7 +627,7 @@ namespace Backend.Tests.Controllers
             }
         }
 
-        private class MockLogger : ILogger<LiftController>
+        private sealed class MockLogger : ILogger<LiftController>
         {
             public IDisposable BeginScope<TState>(TState state)
             {
