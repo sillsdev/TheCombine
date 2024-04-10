@@ -4,29 +4,47 @@
 
 The Review Entries table shows all of the entries in the selected project.
 
-### Sorting and Filtering Columns
+### Columns
 
-The columns are: Edit, Vernacular, Senses, Glosses, Domains, Pronunciations, Note, Flag, and Delete.
+The columns are: Edit (no header), Vernacular, Number of Senses (#), Glosses, Domains, Pronunciations
+(![Review Entries pronunciations column header](images/reviewEntriesColumnPronunciations.png){width=28}), Note, Flag
+(![Review Entries flag column header](images/reviewEntriesColumnFlag.png){width=16}), and Delete (no header).
 
 ![Review Entries column headers](images/reviewEntriesColumns.png)
 
-At the top of a column with predominantly text content (Vernacular, Glosses, Domains, Note, or Flag), you can sort
-alphabetically or filter with a text search.
-
-At the top of either the Senses or Pronunciations column, you can sort or filter by the number of senses or recordings
-that entries have.
+To show/hide columns or rearrange their order, click on the
+![Review Entries columns edit icon](images/reviewEntriesColumnsEdit.png){width=25} icon in the top corner.
 
 Due to the nature of Rapid Word Collection, [Data Entry](dataEntry.md) in The Combine does not support the addition of
 definitions or parts of speech. However, if the project has imported data in which definitions or parts of speech were
-already present, additional columns will automatically be added to the Review Entries table.
+already present, additional columns will be available in the Review Entries table.
+
+#### Sorting and Filtering
+
+There are icons at the top of each column to
+![Review Entries column filter icon](images/reviewEntriesColumnFilter.png){width=20} filter and
+![Review Entries column sort icon](images/reviewEntriesColumnSort.png){width=20} sort the data.
+
+In a column with predominantly text content (Vernacular, Glosses, Note, or Flag), you can sort alphabetically or filter
+with a text search.
+
+In the Number of Senses column or Pronunciations column, you can sort or filter by the number of senses or recordings
+that entries have. In the Pronunciations column, you can also filter by speaker name.
+
+In the Domains column, sorting is numerical by each entry's least domain id. To filter by domain, type a domain id with
+or without periods. For example, "8111" and "8.1.1.1" both show all entries with a sense in domain 8.1.1.1. To also
+include subdomains, add a final period to your filter. For example, "8111." includes domains "8.1.1.1", "8.1.1.1.1", and
+"8.1.1.1.2". Filter with just a period (".") to show all entries with any semantic domain.
 
 ### Editing Entry Rows
 
-You can record, play, or delete an entry's audio recordings by using the icons in the Pronunciations column. You can
-delete an entire entry by using the icon in the Delete column.
+You can record, play, or delete an entry's audio recordings by using the icons in the Pronunciations column.
 
-To edit an entry's vernacular form, senses (including glosses and domains), note, or flag, click the icon in the Edit
-column.
+To edit any other part of an entry, click the ![Review Entries row edit icon](images/reviewEntriesRowEdit.png){width=20}
+edit icon in the initial column.
+
+You can delete an entire entry by clicking the
+![Review Entries row delete icon](images/reviewEntriesRowDelete.png){width=20} delete icon in the final column.
 
 ## Merge Duplicates {#merge-duplicates}
 
