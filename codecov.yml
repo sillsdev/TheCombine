@@ -1,7 +1,11 @@
 coverage:
   status:
-    patch: off
-    project: off
+    project:
+      default:
+        informational: true
+    patch:
+      default:
+        informational: true
 ignore:
   - "src/api"
   - "src/backend/index.ts"
