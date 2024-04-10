@@ -72,7 +72,7 @@ namespace BackendFramework.Services
             }
 
             var allUsers = await _userRepo.GetAllUsers();
-            var projectUsers = allUsers.FindAll(user => user.ProjectRoles.TryGetValue(projectId, out var _roleId));
+            var projectUsers = allUsers.FindAll(user => user.ProjectRoles.ContainsKey(projectId));
 
             // only count for current valid users of the project
             foreach (User u in projectUsers)
@@ -300,7 +300,7 @@ namespace BackendFramework.Services
 
             // Get all users of the project
             var allUsers = await _userRepo.GetAllUsers();
-            var projectUsers = allUsers.FindAll(user => user.ProjectRoles.TryGetValue(projectId, out var _roleId));
+            var projectUsers = allUsers.FindAll(user => user.ProjectRoles.ContainsKey(projectId));
 
             // build a SemanticDomainUserCount object hashMap with userId as the key 
             foreach (User u in projectUsers)
