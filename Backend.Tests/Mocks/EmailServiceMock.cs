@@ -4,7 +4,7 @@ using MimeKit;
 
 namespace Backend.Tests.Mocks
 {
-    internal class EmailServiceMock : IEmailService
+    sealed internal class EmailServiceMock : IEmailService
     {
         public Task<bool> SendEmail(MimeMessage msg)
         {
