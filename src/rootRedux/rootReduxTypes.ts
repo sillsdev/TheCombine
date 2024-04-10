@@ -80,7 +80,7 @@ export interface ActionWithPayload<T> extends Action {
   payload: T;
 }
 
-// https://redux.js.org/recipes/usage-with-typescript#usage-with-redux-thunk
+// https://redux.js.org/usage/usage-with-typescript#type-checking-redux-thunks
 // suggests a custom general type for ThunkAction,
 // so in like fashion, here's one for ThunkDispatch:
 export type StoreStateDispatch = ThunkDispatch<StoreState, any, Action>;
