@@ -44,9 +44,9 @@ RUN mkdir $APP_HOME && \
   chown -R app:app $HOME
 WORKDIR $APP_HOME
 
-# Copy in the build application.
+# Copy in the application.
 COPY --chown=app:app launch.sh ./
-COPY --chown=app:app --from=builder /app/build ./
+COPY --chown=app:app --from=builder /app/dist ./
 
 # Change to the app user.
 USER app
