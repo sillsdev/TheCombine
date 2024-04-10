@@ -7,14 +7,16 @@ import { GramCatGroup, GrammaticalInfo } from "api/models";
 import { IconButtonWithTooltip } from "components/Buttons";
 import { getGramCatGroupColor } from "utilities/wordUtilities";
 
-interface PartOfSpeechProps {
-  buttonId: string;
+interface PartOfSpeechButtonProps {
+  buttonId?: string;
   gramInfo: GrammaticalInfo;
   onClick?: () => void;
   onlyIcon?: boolean;
 }
 
-export default function PartOfSpeech(props: PartOfSpeechProps): ReactElement {
+export default function PartOfSpeechButton(
+  props: PartOfSpeechButtonProps
+): ReactElement {
   const { t } = useTranslation();
   const { catGroup, grammaticalCategory } = props.gramInfo;
   if (catGroup === GramCatGroup.Unspecified && !props.onClick) {
