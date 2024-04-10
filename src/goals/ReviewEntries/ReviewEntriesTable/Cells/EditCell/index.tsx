@@ -7,7 +7,7 @@ import EditDialog from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/Ed
 
 const buttonId = (wordId: string): string => `row-${wordId}-edit`;
 
-export default function DeleteCell(props: CellProps): ReactElement {
+export default function EditCell(props: CellProps): ReactElement {
   const [open, setOpen] = useState(false);
 
   const handleConfirm = async (newId: string): Promise<void> => {
