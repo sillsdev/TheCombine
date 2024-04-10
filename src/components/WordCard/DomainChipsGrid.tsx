@@ -3,8 +3,7 @@ import { type ReactElement } from "react";
 
 import { type SemanticDomain } from "api/models";
 import DomainChip from "components/WordCard/DomainChip";
-import { type StoreState } from "types";
-import { useAppSelector } from "types/hooks";
+import { type StoreState, useAppSelector } from "rootRedux/hooks";
 
 interface DomainChipsGridProps {
   semDoms: SemanticDomain[];

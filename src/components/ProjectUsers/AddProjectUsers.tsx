@@ -9,8 +9,11 @@ import * as backend from "backend";
 import { asyncRefreshProjectUsers } from "components/Project/ProjectActions";
 import EmailInvite from "components/ProjectUsers/EmailInvite";
 import UserList from "components/ProjectUsers/UserList";
-import { StoreState } from "types";
-import { useAppDispatch, useAppSelector } from "types/hooks";
+import {
+  type StoreState,
+  useAppDispatch,
+  useAppSelector,
+} from "rootRedux/hooks";
 import { RuntimeConfig } from "types/runtimeConfig";
 
 const customStyles = {

@@ -28,8 +28,8 @@ import {
   mergeTwoSensesScenario,
   mergeTwoWordsScenario,
 } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
-import { type StoreAction, StoreActionTypes } from "rootActions";
-import { setupStore } from "store";
+import { type StoreAction, StoreActionTypes } from "rootRedux/rootActions";
+import { setupStore } from "rootRedux/store";
 import { type Hash } from "types/hash";
 import { newFlag, testWordList } from "types/word";
 

@@ -8,7 +8,7 @@ import { defaultState } from "components/App/DefaultState";
 import EditSenseDialog, {
   EditSenseDialogId,
 } from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditSenseDialog";
-import { type StoreState } from "types";
+import { type StoreState } from "rootRedux/rootReduxTypes";
 import { newSense } from "types/word";
 
 // Container uses Portal, not supported in react-test-renderer
@@ -19,8 +19,8 @@ jest.mock("@mui/material/Dialog", () =>
 jest.mock("@mui/material/TextField", () => "div");
 
 jest.mock("components/TreeView", () => "div");
-jest.mock("types/hooks", () => ({
-  ...jest.requireActual("types/hooks"),
+jest.mock("rootRedux/hooks", () => ({
+  ...jest.requireActual("rootRedux/hooks"),
   useAppDispatch: () => jest.fn(),
 }));
 

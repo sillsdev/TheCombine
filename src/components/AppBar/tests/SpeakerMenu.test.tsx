@@ -7,7 +7,7 @@ import configureMockStore from "redux-mock-store";
 import { Speaker } from "api/models";
 import SpeakerMenu, { SpeakerMenuList } from "components/AppBar/SpeakerMenu";
 import { defaultState } from "components/Project/ProjectReduxTypes";
-import { StoreState } from "types";
+import { type StoreState } from "rootRedux/rootReduxTypes";
 import { randomSpeaker } from "types/project";
 
 jest.mock("backend", () => ({

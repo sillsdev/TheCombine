@@ -52,8 +52,11 @@ import ProjectSelect from "components/ProjectSettings/ProjectSelect";
 import ActiveProjectUsers from "components/ProjectUsers/ActiveProjectUsers";
 import AddProjectUsers from "components/ProjectUsers/AddProjectUsers";
 import ProjectSpeakersList from "components/ProjectUsers/ProjectSpeakersList";
-import { StoreState } from "types";
-import { useAppDispatch, useAppSelector } from "types/hooks";
+import {
+  type StoreState,
+  useAppDispatch,
+  useAppSelector,
+} from "rootRedux/hooks";
 import { Path } from "types/path";
 
 export enum ProjectSettingsTab {

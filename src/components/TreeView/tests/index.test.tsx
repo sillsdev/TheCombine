@@ -20,10 +20,9 @@ jest.mock("@mui/material", () => {
   };
 });
 
-jest.mock("types/hooks", () => {
-  const realHooks = jest.requireActual("types/hooks");
+jest.mock("rootRedux/hooks", () => {
   return {
-    ...realHooks,
+    ...jest.requireActual("rootRedux/hooks"),
     useAppDispatch: () => jest.fn(),
   };
 });

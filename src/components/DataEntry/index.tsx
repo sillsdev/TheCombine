@@ -16,8 +16,11 @@ import ExistingDataTable from "components/DataEntry/ExistingDataTable";
 import { filterWordsByDomain } from "components/DataEntry/utilities";
 import TreeView from "components/TreeView";
 import { closeTree, openTree } from "components/TreeView/Redux/TreeViewActions";
-import { StoreState } from "types";
-import { useAppDispatch, useAppSelector } from "types/hooks";
+import {
+  type StoreState,
+  useAppDispatch,
+  useAppSelector,
+} from "rootRedux/hooks";
 import { newSemanticDomain } from "types/semanticDomain";
 import theme from "types/theme";
 import { DomainWord } from "types/word";

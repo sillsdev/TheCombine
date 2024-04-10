@@ -20,7 +20,7 @@ import {
   buildSenses,
   createMergeWords,
 } from "goals/MergeDuplicates/Redux/reducerUtilities";
-import { StoreActionTypes } from "rootActions";
+import { StoreActionTypes } from "rootRedux/rootActions";
 import { type Hash } from "types/hash";
 
 const mergeDuplicatesSlice = createSlice({

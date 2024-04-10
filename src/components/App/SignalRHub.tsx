@@ -18,8 +18,11 @@ import {
   success,
 } from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
-import { StoreState } from "types";
-import { useAppDispatch, useAppSelector } from "types/hooks";
+import {
+  type StoreState,
+  useAppDispatch,
+  useAppSelector,
+} from "rootRedux/hooks";
 
 /** A central hub for monitoring export status on SignalR */
 export default function SignalRHub(): ReactElement {

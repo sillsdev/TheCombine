@@ -10,7 +10,7 @@ import {
   buttonIdSubmit,
 } from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace";
 import { defaultState } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
-import { type StoreState } from "types";
+import { type StoreState } from "rootRedux/rootReduxTypes";
 import { testInstanceHasText } from "utilities/testRendererUtilities";
 
 // Dialog uses portals, which are not supported in react-test-renderer.
@@ -26,9 +26,9 @@ jest.mock("components/Project/ProjectActions", () => ({}));
 jest.mock("goals/CharacterInventory/Redux/CharacterInventoryActions", () => ({
   findAndReplace: () => mockFindAndReplace(),
 }));
-jest.mock("types/hooks", () => {
+jest.mock("rootRedux/hooks", () => {
   return {
-    ...jest.requireActual("types/hooks"),
+    ...jest.requireActual("rootRedux/hooks"),
     useAppDispatch: () => (args: any) => Promise.resolve(args),
   };
 });

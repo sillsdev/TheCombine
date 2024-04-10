@@ -8,8 +8,11 @@ import {
   resetPronunciations,
 } from "components/Pronunciations/Redux/PronunciationsActions";
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
-import { StoreState } from "types";
-import { useAppDispatch, useAppSelector } from "types/hooks";
+import {
+  type StoreState,
+  useAppDispatch,
+  useAppSelector,
+} from "rootRedux/hooks";
 import { themeColors } from "types/theme";
 
 export const recordButtonId = "recordingButton";

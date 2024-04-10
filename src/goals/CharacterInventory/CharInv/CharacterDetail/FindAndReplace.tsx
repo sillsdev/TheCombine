@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 import { findAndReplace } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
-import { useAppDispatch } from "types/hooks";
+import { useAppDispatch } from "rootRedux/hooks";
 import { TextFieldWithFont } from "utilities/fontComponents";
 
 const idPrefix = "find-and-replace";

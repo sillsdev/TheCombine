@@ -38,8 +38,7 @@ import {
   areGlossesSame,
   cleanSense,
 } from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/utilities";
-import { type StoreState } from "types";
-import { useAppSelector } from "types/hooks";
+import { type StoreState, useAppSelector } from "rootRedux/hooks";
 import { newSemanticDomainForMongoDB } from "types/semanticDomain";
 import { newDefinition, newGloss } from "types/word";
 import { TextFieldWithFont } from "utilities/fontComponents";

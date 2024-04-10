@@ -8,7 +8,7 @@ import treeViewReducer from "components/TreeView/Redux/TreeViewReducer";
 import characterInventoryReducer from "goals/CharacterInventory/Redux/CharacterInventoryReducer";
 import mergeDupStepReducer from "goals/MergeDuplicates/Redux/MergeDupsReducer";
 import goalsReducer from "goals/Redux/GoalReducer";
-import { type StoreState } from "types";
+import { type StoreState } from "rootRedux/rootReduxTypes";
 import analyticsReducer from "types/Redux/analytics";
 
 export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({

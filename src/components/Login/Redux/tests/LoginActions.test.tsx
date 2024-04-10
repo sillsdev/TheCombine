@@ -1,7 +1,7 @@
 import { User } from "api/models";
 import { asyncLogIn, asyncSignUp } from "components/Login/Redux/LoginActions";
 import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";
-import { setupStore } from "store";
+import { setupStore } from "rootRedux/store";
 import { newUser } from "types/user";
 
 jest.mock("backend", () => ({

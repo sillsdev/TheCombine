@@ -16,7 +16,7 @@ import {
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { defaultState as defaultMergeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { goalDataMock } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
-import { setupStore } from "store";
+import { setupStore } from "rootRedux/store";
 import { GoalType } from "types/goals";
 import { multiSenseWord, newFlag, newWord } from "types/word";
 

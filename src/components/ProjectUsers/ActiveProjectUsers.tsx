@@ -25,9 +25,8 @@ import SortOptions, {
   UserOrder,
   getUserCompare,
 } from "components/ProjectUsers/SortOptions";
-import { StoreState } from "types";
-import { Hash } from "types/hash";
-import { useAppSelector } from "types/hooks";
+import { type StoreState, useAppSelector } from "rootRedux/hooks";
+import { type Hash } from "types/hash";
 import theme from "types/theme";
 
 export default function ActiveProjectUsers(props: {
