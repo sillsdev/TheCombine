@@ -25,7 +25,8 @@ import SortOptions, {
   UserOrder,
   getUserCompare,
 } from "components/ProjectUsers/SortOptions";
-import { type StoreState, useAppSelector } from "rootRedux/hooks";
+import { useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/rootReduxTypes";
 import { type Hash } from "types/hash";
 import theme from "types/theme";
 

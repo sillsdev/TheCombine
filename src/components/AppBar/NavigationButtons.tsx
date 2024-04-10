@@ -12,7 +12,8 @@ import {
   buttonMinHeight,
   tabColor,
 } from "components/AppBar/AppBarTypes";
-import { type StoreState, useAppSelector } from "rootRedux/hooks";
+import { useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/rootReduxTypes";
 import { Path } from "types/path";
 import { useWindowSize } from "utilities/useWindowSize";
 

@@ -31,7 +31,8 @@ import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
 import { filterWordsWithSenses } from "components/DataEntry/utilities";
 import { uploadFileFromPronunciation } from "components/Pronunciations/utilities";
-import { type StoreState, useAppSelector } from "rootRedux/hooks";
+import { useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/rootReduxTypes";
 import { type Hash } from "types/hash";
 import theme from "types/theme";
 import {

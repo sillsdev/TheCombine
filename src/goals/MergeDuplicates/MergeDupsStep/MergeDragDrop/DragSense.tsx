@@ -6,11 +6,8 @@ import { trashId } from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop";
 import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardContent";
 import { MergeTreeSense } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { setSidebar } from "goals/MergeDuplicates/Redux/MergeDupsActions";
-import {
-  type StoreState,
-  useAppDispatch,
-  useAppSelector,
-} from "rootRedux/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/rootReduxTypes";
 import theme from "types/theme";
 
 interface DragSenseProps {

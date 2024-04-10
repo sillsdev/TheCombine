@@ -14,7 +14,8 @@ import {
   type FindAndReplaceChange,
   defaultCharInvChanges,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
-import { type StoreState, useAppSelector } from "rootRedux/hooks";
+import { useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/rootReduxTypes";
 
 export enum CharInvCompletedId {
   TypographyNoCharChanges = "no-char-changes-typography",

@@ -20,11 +20,8 @@ import {
   flagWord,
   setVern,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
-import {
-  type StoreState,
-  useAppDispatch,
-  useAppSelector,
-} from "rootRedux/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/rootReduxTypes";
 import theme from "types/theme";
 import { TypographyWithFont } from "utilities/fontComponents";
 

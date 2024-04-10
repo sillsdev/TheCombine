@@ -16,11 +16,8 @@ import {
   asyncResetExport,
 } from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
-import {
-  type StoreState,
-  useAppDispatch,
-  useAppSelector,
-} from "rootRedux/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/rootReduxTypes";
 import { themeColors } from "types/theme";
 import { getDateTimeString } from "utilities/utilities";
 

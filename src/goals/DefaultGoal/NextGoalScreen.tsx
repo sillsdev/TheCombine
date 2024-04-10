@@ -4,11 +4,8 @@ import { useNavigate } from "react-router-dom";
 import PageNotFound from "components/PageNotFound/component";
 import MergeDupsContinueDialog from "goals/MergeDuplicates/MergeDupsContinueDialog";
 import { asyncAddGoal } from "goals/Redux/GoalActions";
-import {
-  type StoreState,
-  useAppDispatch,
-  useAppSelector,
-} from "rootRedux/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/rootReduxTypes";
 import { GoalType } from "types/goals";
 import { Path } from "types/path";
 import { goalTypeToGoal } from "utilities/goalUtilities";

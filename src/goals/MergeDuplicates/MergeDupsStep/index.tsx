@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 
 import MergeDragDrop from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop";
 import SaveDeferButtons from "goals/MergeDuplicates/MergeDupsStep/SaveDeferButtons";
-import { type StoreState, useAppSelector } from "rootRedux/hooks";
+import { useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/rootReduxTypes";
 import theme from "types/theme";
 
 export default function MergeDupsStep(): ReactElement {

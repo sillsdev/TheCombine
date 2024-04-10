@@ -42,12 +42,11 @@ import {
   cleanWord,
   isSenseChanged,
 } from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/utilities";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import {
   type StoreState,
-  useAppDispatch,
-  useAppSelector,
-} from "rootRedux/hooks";
-import { type StoreStateDispatch } from "rootRedux/rootReduxTypes";
+  type StoreStateDispatch,
+} from "rootRedux/rootReduxTypes";
 import { themeColors } from "types/theme";
 import {
   type FileWithSpeakerId,

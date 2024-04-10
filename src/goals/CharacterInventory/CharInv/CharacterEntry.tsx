@@ -7,11 +7,8 @@ import {
   setRejectedCharacters,
   setValidCharacters,
 } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
-import {
-  type StoreState,
-  useAppDispatch,
-  useAppSelector,
-} from "rootRedux/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/rootReduxTypes";
 import theme from "types/theme";
 import { TextFieldWithFont } from "utilities/fontComponents";
 

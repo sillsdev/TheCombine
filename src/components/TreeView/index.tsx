@@ -16,11 +16,8 @@ import { defaultTreeNode } from "components/TreeView/Redux/TreeViewReduxTypes";
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeNavigator from "components/TreeView/TreeNavigator";
 import TreeSearch from "components/TreeView/TreeSearch";
-import {
-  type StoreState,
-  useAppDispatch,
-  useAppSelector,
-} from "rootRedux/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/rootReduxTypes";
 import { newSemanticDomain } from "types/semanticDomain";
 import { semDomWritingSystems } from "types/writingSystem";
 

@@ -24,12 +24,9 @@ import { LoadingButton } from "components/Buttons";
 import Captcha from "components/Login/Captcha";
 import { asyncLogIn } from "components/Login/Redux/LoginActions";
 import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";
-import {
-  type StoreState,
-  useAppDispatch,
-  useAppSelector,
-} from "rootRedux/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { reset } from "rootRedux/rootActions";
+import { type StoreState } from "rootRedux/rootReduxTypes";
 import router from "router/browserRouter";
 import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";

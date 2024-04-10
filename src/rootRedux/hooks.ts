@@ -6,9 +6,6 @@ import {
 
 import { type AppDispatch, type RootState } from "rootRedux/store";
 
-// For use with useAppSelector
-export { type StoreState } from "rootRedux/rootReduxTypes";
-
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 // `useAppDispatch` and `useAppSelector` apply the additional types for TypeScript
 // that are introduced by added middleware, such as `thunk`

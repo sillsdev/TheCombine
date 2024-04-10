@@ -6,11 +6,8 @@ import { useTranslation } from "react-i18next";
 import CharacterCard from "goals/CharacterInventory/CharInv/CharacterList/CharacterCard";
 import { setSelectedCharacter } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
 import { CharacterSetEntry } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
-import {
-  type StoreState,
-  useAppDispatch,
-  useAppSelector,
-} from "rootRedux/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/rootReduxTypes";
 
 enum SortOrder {
   CharacterAscending,

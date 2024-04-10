@@ -22,11 +22,8 @@ import {
   setSelectedCharacter,
   uploadInventory,
 } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
-import {
-  type StoreState,
-  useAppDispatch,
-  useAppSelector,
-} from "rootRedux/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/rootReduxTypes";
 import theme from "types/theme";
 
 const idPrefix = "character-inventory";
