@@ -33,7 +33,7 @@ namespace BackendFramework.Services
         protected override void InsertPronunciationIfNeeded(
             LexEntry entry, List<string> propertiesAlreadyOutput)
         {
-            if (entry.Pronunciations.FirstOrDefault() is not null && entry.Pronunciations.First().Forms.Any())
+            if (entry.Pronunciations.Count != 0 && entry.Pronunciations.First().Forms.Length != 0)
             {
                 foreach (var phonetic in entry.Pronunciations)
                 {
@@ -218,7 +218,7 @@ namespace BackendFramework.Services
         /// <returns> A bool indicating whether a character set was added to the project. </returns>
         public async Task<bool> LdmlImport(string dirPath, IProjectRepository projRepo, Project project)
         {
-            if (!Directory.GetFiles(dirPath, "*.ldml").Any())
+            if (Directory.GetFiles(dirPath, "*.ldml").Length == 0)
             {
                 dirPath = FileStorage.GenerateWritingsSystemsSubdirPath(dirPath);
             }
