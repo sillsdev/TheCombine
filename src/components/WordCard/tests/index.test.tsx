@@ -1,7 +1,5 @@
 import { ReactTestRenderer, act, create } from "react-test-renderer";
 
-import "tests/reactI18nextMock";
-
 import { Word } from "api/models";
 import WordCard, { AudioSummary, buttonIdFull } from "components/WordCard";
 import SenseCard from "components/WordCard/SenseCard";
@@ -14,6 +12,7 @@ jest
   .mockImplementation(() => {});
 jest.mock("components/Pronunciations/AudioPlayer", () => "div");
 jest.mock("components/Pronunciations/Recorder");
+jest.mock("components/WordCard/DomainChipsGrid", () => "div");
 
 const mockWordId = "mock-id";
 const buttonId = buttonIdFull(mockWordId);

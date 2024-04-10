@@ -1,8 +1,6 @@
 import { ListItemButton } from "@mui/material";
 import renderer from "react-test-renderer";
 
-import "tests/reactI18nextMock";
-
 import { type Project } from "api/models";
 import ChooseProject from "components/ProjectScreen/ChooseProject";
 import { newProject } from "types/project";
@@ -10,10 +8,7 @@ import { testInstanceHasText } from "utilities/testRendererUtilities";
 import { randomIntString } from "utilities/utilities";
 
 jest.mock("backend", () => ({
-  getAllActiveProjectsByUser: () => mockGetProjects(),
-}));
-jest.mock("backend/localStorage", () => ({
-  getUserId: () => "mockId",
+  getAllActiveProjects: () => mockGetProjects(),
 }));
 jest.mock("types/hooks");
 jest.mock("react-router-dom", () => ({

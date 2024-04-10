@@ -2,8 +2,6 @@ import "@testing-library/jest-dom";
 import { act, cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import "tests/reactI18nextMock";
-
 import { User } from "api/models";
 import UserSettingsGetUser, {
   UserSettings,
@@ -29,6 +27,12 @@ jest.mock("backend", () => ({
 jest.mock("backend/localStorage", () => ({
   getAvatar: (...args: any[]) => mockGetAvatar(...args),
   getCurrentUser: (...args: any[]) => mockGetCurrentUser(...args),
+}));
+jest.mock("components/Project/ProjectActions", () => ({
+  asyncLoadSemanticDomains: jest.fn(),
+}));
+jest.mock("types/hooks", () => ({
+  useAppDispatch: () => jest.fn(),
 }));
 
 // Mock "i18n", else `thrown: "Error: Error: connect ECONNREFUSED ::1:80 [...]`

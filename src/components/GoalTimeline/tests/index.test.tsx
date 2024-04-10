@@ -3,8 +3,6 @@ import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import createMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import { Permission } from "api/models";
 import GoalTimeline, { createSuggestionData } from "components/GoalTimeline";
 import { type GoalsState, defaultState } from "goals/Redux/GoalReduxTypes";
@@ -20,6 +18,7 @@ jest.mock("goals/Redux/GoalActions", () => ({
   asyncAddGoal: (goal: Goal) => mockChooseGoal(goal),
   asyncGetUserEdits: () => jest.fn(),
 }));
+jest.mock("components/Project/ProjectActions", () => ({}));
 jest.mock("types/hooks", () => {
   return {
     ...jest.requireActual("types/hooks"),

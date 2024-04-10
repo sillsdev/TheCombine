@@ -6,14 +6,16 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { ReactElement } from "react";
+import { type ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+import LoadingButton from "components/Buttons/LoadingButton";
 
 interface CancelConfirmDialogProps {
   open: boolean;
-  textId: string;
+  text: string | ReactElement;
   handleCancel: () => void;
-  handleConfirm: () => void;
+  handleConfirm: () => Promise<void> | void;
   buttonIdCancel?: string;
   buttonIdConfirm?: string;
 }
@@ -24,7 +26,14 @@ interface CancelConfirmDialogProps {
 export default function CancelConfirmDialog(
   props: CancelConfirmDialogProps
 ): ReactElement {
+  const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
+
+  const onConfirm = async (): Promise<void> => {
+    setLoading(true);
+    await props.handleConfirm();
+    setLoading(false);
+  };
 
   return (
     <Dialog
@@ -38,26 +47,25 @@ export default function CancelConfirmDialog(
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          {t(props.textId)}
+          {typeof props.text === "string" ? t(props.text) : props.text}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button
+          color="primary"
+          disabled={loading}
+          id={props.buttonIdCancel}
           onClick={props.handleCancel}
           variant="outlined"
-          color="primary"
-          id={props.buttonIdCancel}
         >
           {t("buttons.cancel")}
         </Button>
-        <Button
-          onClick={props.handleConfirm}
-          variant="contained"
-          color="primary"
-          id={props.buttonIdConfirm}
+        <LoadingButton
+          buttonProps={{ id: props.buttonIdConfirm, onClick: onConfirm }}
+          loading={loading}
         >
           {t("buttons.confirm")}
-        </Button>
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   );

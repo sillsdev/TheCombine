@@ -26,9 +26,10 @@ import {
   Word,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
-import router from "browserRouter";
 import authHeader from "components/Login/AuthHeaders";
+import router from "router/browserRouter";
 import { Goal, GoalStep } from "types/goals";
+import { Hash } from "types/hash";
 import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
 import { FileWithSpeakerId } from "types/word";
@@ -362,12 +363,12 @@ export async function createProject(project: Project): Promise<Project> {
   return resp.data.project;
 }
 
-export async function getAllActiveProjectsByUser(
-  userId: string
+export async function getAllActiveProjects(
+  userId?: string
 ): Promise<Project[]> {
-  const projectIds = Object.keys((await getUser(userId)).projectRoles);
+  const user = await getUser(userId || LocalStorage.getUserId());
   const projects: Project[] = [];
-  for (const projectId of projectIds) {
+  for (const projectId of Object.keys(user.projectRoles)) {
     try {
       await getProject(projectId).then(
         (project) => project.isActive && projects.push(project)
@@ -421,6 +422,16 @@ export async function projectDuplicateCheck(
 }
 
 /* SemanticDomainController.cs */
+
+export async function getAllSemanticDomainNames(
+  lang = ""
+): Promise<Hash<string>> {
+  const resp = await semanticDomainApi.getAllSemanticDomainNames(
+    { lang },
+    defaultOptions()
+  );
+  return resp.data;
+}
 
 export async function getSemanticDomainFull(
   id: string,
@@ -777,6 +788,15 @@ export async function removeUserRole(
 
 /* WordController.cs */
 
+export async function areInFrontier(
+  wordIds: string[],
+  projectId?: string
+): Promise<string[]> {
+  projectId ||= LocalStorage.getProjectId();
+  const params = { projectId, requestBody: wordIds };
+  return (await wordApi.areInFrontier(params, defaultOptions())).data;
+}
+
 export async function createWord(word: Word): Promise<Word> {
   const params = { projectId: LocalStorage.getProjectId(), word };
   word.id = (await wordApi.createWord(params, defaultOptions())).data;
@@ -812,9 +832,18 @@ export async function isInFrontier(
   wordId: string,
   projectId?: string
 ): Promise<boolean> {
-  projectId = projectId || LocalStorage.getProjectId();
+  projectId ||= LocalStorage.getProjectId();
   const params = { projectId, wordId };
   return (await wordApi.isInFrontier(params, defaultOptions())).data;
+}
+
+/** Revert word updates given in dictionary of word ids:
+ * - key: id of word to revert to;
+ * - value: id of word in frontier. */
+export async function revertWords(ids: Hash<string>): Promise<Hash<string>> {
+  const params = { projectId: LocalStorage.getProjectId(), requestBody: ids };
+  const resp = await wordApi.revertWords(params, defaultOptions());
+  return resp.data;
 }
 
 export async function updateDuplicate(

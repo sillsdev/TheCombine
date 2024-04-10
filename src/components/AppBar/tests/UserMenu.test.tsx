@@ -3,8 +3,6 @@ import { Provider } from "react-redux";
 import { act, create, ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import UserMenu, { UserMenuList } from "components/AppBar/UserMenu";
 import { Path } from "types/path";
 
@@ -15,6 +13,7 @@ jest.mock("backend/localStorage", () => ({
   getAvatar: jest.fn(),
   getCurrentUser: jest.fn(),
 }));
+jest.mock("components/Project/ProjectActions", () => ({}));
 jest.mock("react-router-dom", () => ({
   useNavigate: jest.fn(),
 }));

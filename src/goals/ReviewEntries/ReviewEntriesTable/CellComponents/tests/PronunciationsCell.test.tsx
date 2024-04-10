@@ -3,8 +3,6 @@ import { Provider } from "react-redux";
 import { ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import { Pronunciation } from "api/models";
 import { defaultState as currentProjectState } from "components/Project/ProjectReduxTypes";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
@@ -15,6 +13,7 @@ import { StoreState } from "types";
 import theme from "types/theme";
 import { newPronunciation } from "types/word";
 
+jest.mock("components/Project/ProjectActions", () => ({}));
 // Mock the store interactions
 jest.mock("goals/ReviewEntries/Redux/ReviewEntriesActions", () => ({
   deleteAudio: (...args: any[]) => mockDeleteAudio(...args),

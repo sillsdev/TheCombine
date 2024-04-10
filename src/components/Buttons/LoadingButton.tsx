@@ -1,24 +1,24 @@
 import { Button, CircularProgress } from "@mui/material";
-import { ButtonProps } from "@mui/material/Button";
-import React, { ReactElement } from "react";
+import { type ButtonProps } from "@mui/material/Button";
+import { type ReactElement, type ReactNode } from "react";
 
 import { themeColors } from "types/theme";
 
 interface LoadingProps {
   buttonProps?: ButtonProps & { "data-testid"?: string };
-  children?: React.ReactNode;
+  children?: ReactNode;
   disabled?: boolean;
   loading?: boolean;
 }
 
-/**
- * A button that shows a spinning wheel when loading=true
- */
+/** A button that shows a spinning wheel when `loading = true`.
+ * Default button props: `color: "primary", variant: "contained"`. */
 export default function LoadingButton(props: LoadingProps): ReactElement {
   return (
     <Button
-      variant="contained"
+      color="primary"
       disabled={props.disabled || props.loading}
+      variant="contained"
       {...props.buttonProps}
     >
       {props.children}

@@ -8,8 +8,6 @@ import {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import { Gloss, SemanticDomain, Sense, Word } from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import DataEntryTable, {
@@ -57,6 +55,7 @@ jest.mock(
   "components/DataEntry/DataEntryTable/RecentEntry",
   () => MockRecentEntry
 );
+jest.mock("components/Project/ProjectActions", () => ({}));
 jest.mock("components/Pronunciations/PronunciationsFrontend", () => "div");
 
 jest.spyOn(window, "alert").mockImplementation(() => {});

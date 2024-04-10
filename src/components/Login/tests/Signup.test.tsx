@@ -8,8 +8,6 @@ import {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
 import { defaultState as loginState } from "components/Login/Redux/LoginReduxTypes";
 import Signup, { SignupId } from "components/Login/Signup";
 
@@ -23,10 +21,10 @@ jest.mock(
 jest.mock("backend", () => ({
   getBannerText: () => Promise.resolve(""),
 }));
-jest.mock("browserRouter");
 jest.mock("components/Login/Redux/LoginActions", () => ({
   asyncSignUp: (...args: any[]) => mockAsyncSignUp(...args),
 }));
+jest.mock("router/browserRouter");
 jest.mock("types/hooks", () => {
   return {
     ...jest.requireActual("types/hooks"),

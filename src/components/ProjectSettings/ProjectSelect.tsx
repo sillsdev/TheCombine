@@ -1,21 +1,17 @@
 import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import { ReactElement, useEffect, useState } from "react";
+import { type ReactElement, useEffect, useState } from "react";
 
-import { Project } from "api/models";
-import { getAllActiveProjectsByUser } from "backend";
-import { getUserId } from "backend/localStorage";
-import { ProjectSettingPropsWithSet } from "components/ProjectSettings/ProjectSettingsTypes";
+import { type Project } from "api/models";
+import { getAllActiveProjects } from "backend";
+import { type ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 
 export default function ProjectSelect(
-  props: ProjectSettingPropsWithSet
+  props: ProjectSettingProps
 ): ReactElement {
   const [projList, setProjList] = useState<Project[]>([]);
 
   useEffect(() => {
-    const userId = getUserId();
-    if (userId) {
-      getAllActiveProjectsByUser(userId).then(setProjList);
-    }
+    getAllActiveProjects().then(setProjList);
   }, [props.project.name]);
 
   const handleChange = (e: SelectChangeEvent): void => {
@@ -29,10 +25,8 @@ export default function ProjectSelect(
   };
 
   // This prevents an out-of-range Select error while useEffect is underway.
-  const projectList = [...projList];
-  if (projectList.every((p) => p.name !== props.project.name)) {
-    projectList.push(props.project);
-  }
+  const hasProj = projList.some((p) => p.name === props.project.name);
+  const projectList = hasProj ? [...projList] : [...projList, props.project];
   projectList.sort((a: Project, b: Project) => a.name.localeCompare(b.name));
 
   return (

@@ -1,8 +1,6 @@
 import { render, renderHook } from "@testing-library/react";
 import { Key } from "ts-key-enum";
 
-import "tests/reactI18nextMock";
-
 import TreeNavigator, {
   TreeNavigatorProps,
   useTreeNavigation,

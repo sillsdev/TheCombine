@@ -5,14 +5,13 @@ import {
   ListItemButton,
   Typography,
 } from "@mui/material";
-import { ReactElement, useEffect, useState } from "react";
+import { type ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { Project } from "api/models";
-import { getAllActiveProjectsByUser } from "backend";
-import { getUserId } from "backend/localStorage";
-import { setNewCurrentProject } from "components/Project/ProjectActions";
+import { type Project } from "api/models";
+import { getAllActiveProjects } from "backend";
+import { asyncSetNewCurrentProject } from "components/Project/ProjectActions";
 import { useAppDispatch } from "types/hooks";
 import { Path } from "types/path";
 
@@ -25,17 +24,13 @@ export default function ChooseProject(): ReactElement {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userId = getUserId();
-    if (userId) {
-      getAllActiveProjectsByUser(userId).then((projects) => {
-        projects.sort((a: Project, b: Project) => a.name.localeCompare(b.name));
-        setProjectList(projects);
-      });
-    }
+    getAllActiveProjects().then((projects) => {
+      setProjectList(projects.sort((a, b) => a.name.localeCompare(b.name)));
+    });
   }, []);
 
-  const selectProject = (project: Project): void => {
-    dispatch(setNewCurrentProject(project));
+  const selectProject = async (project: Project): Promise<void> => {
+    await dispatch(asyncSetNewCurrentProject(project));
     navigate(Path.DataEntry);
   };
 

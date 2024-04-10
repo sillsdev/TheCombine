@@ -50,6 +50,34 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestAreInFrontier()
+        {
+            var wordNotInFrontier = await _wordRepo.Add(Util.RandomWord(_projId));
+            var emptyResult = await _wordController.AreInFrontier(_projId, new() { wordNotInFrontier.Id, "non-id" });
+            Assert.That(((ObjectResult)emptyResult).Value, Is.Empty);
+
+            var wordInFrontier = await _wordRepo.AddFrontier(Util.RandomWord(_projId));
+            var nonemptyResult = await _wordController.AreInFrontier(_projId, new() { wordInFrontier.Id, "non-id" });
+            Assert.That(((OkObjectResult)nonemptyResult).Value, Is.EqualTo(new List<string> { wordInFrontier.Id }));
+        }
+
+        [Test]
+        public async Task TestAreInFrontierNoPermission()
+        {
+            var wordInFrontier = await _wordRepo.AddFrontier(Util.RandomWord(_projId));
+            _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = await _wordController.AreInFrontier(_projId, new() { wordInFrontier.Id });
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public async Task TestAreInFrontierMissingProject()
+        {
+            var result = await _wordController.AreInFrontier(MissingId, new());
+            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+        }
+
+        [Test]
         public async Task TestDeleteFrontierWord()
         {
             var wordToDelete = await _wordRepo.Create(Util.RandomWord(_projId));
@@ -263,6 +291,49 @@ namespace Backend.Tests.Controllers
         {
             var word = Util.RandomWord(_projId);
             var result = await _wordController.GetDuplicateId(MissingId, word);
+            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+        }
+
+        [Test]
+        public async Task TestRevertWords()
+        {
+            var frontierWord0 = await _wordRepo.Create(Util.RandomWord(_projId));
+            var frontierWord1 = await _wordRepo.AddFrontier(Util.RandomWord(_projId));
+            var nonFrontierWord0 = await _wordRepo.Add(Util.RandomWord(_projId));
+            var nonFrontierWord1 = await _wordRepo.Add(Util.RandomWord(_projId));
+            var nonFrontierWord2 = await _wordRepo.Add(Util.RandomWord(_projId));
+
+            var result = await _wordController.RevertWords(_projId, new()
+            {
+                ["non-id"] = frontierWord1.Id, // Cannot revert with key not a word
+                [nonFrontierWord1.Id] = nonFrontierWord2.Id, // Cannot revert with value not in frontier
+                [nonFrontierWord0.Id] = frontierWord0.Id, // Can revert
+            });
+            var reverted = (Dictionary<string, string>)((OkObjectResult)result).Value!;
+            Assert.That(reverted, Has.Count.EqualTo(1));
+            var frontierIds = (await _wordRepo.GetFrontier(_projId)).Select(w => w.Id).ToList();
+            Assert.That(frontierIds, Has.Count.EqualTo(2));
+            Assert.That(frontierIds, Does.Contain(frontierWord1.Id));
+            Assert.That(frontierIds, Does.Contain(reverted[frontierWord0.Id]));
+        }
+
+        [Test]
+        public async Task TestRevertWordsNoPermission()
+        {
+            _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
+            var oldWord = await _wordRepo.Add(Util.RandomWord(_projId));
+            var newWord = await _wordRepo.Create(Util.RandomWord(_projId));
+            var result = await _wordController.RevertWords(_projId, new() { [oldWord.Id] = newWord.Id });
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public async Task TestRevertWordsMissingProject()
+        {
+            var oldWord = await _wordRepo.Add(Util.RandomWord(_projId));
+            var newWord = await _wordRepo.Create(Util.RandomWord(_projId));
+            var result = await _wordController.RevertWords(MissingId, new() { [oldWord.Id] = newWord.Id });
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
         }
 

@@ -1,0 +1,35 @@
+---
+################################################
+# Profile specific configuration items
+#
+# Profile: nuc
+################################################
+
+charts:
+  thecombine:
+    # Disable AWS Login - only run released images from
+    # public.ecr.aws/thecombine
+    aws-login:
+      enabled: false
+    global:
+      awsS3Location: local.thecombine.app
+      combineSmtpUsername: ""
+      imagePullPolicy: IfNotPresent
+      pullSecretName: None
+    frontend:
+      configOffline: true
+      configEmailEnabled: false
+    maintenance:
+      localLangList:
+        - "ar"
+        - "en"
+        - "es"
+        - "fr"
+        - "pt"
+        - "zh"
+
+    cert-proxy-client:
+      enabled: true
+      schedule: "*/5 * * * *"
+    certManager:
+      enabled: false

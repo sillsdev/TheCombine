@@ -1,7 +1,5 @@
 import renderer from "react-test-renderer";
 
-import "tests/reactI18nextMock.ts";
-
 import SortOptions, {
   SortOptionsProps,
   reverseButtonId,

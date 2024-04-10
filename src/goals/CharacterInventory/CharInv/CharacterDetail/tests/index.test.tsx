@@ -2,15 +2,13 @@ import { Provider } from "react-redux";
 import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import "tests/reactI18nextMock";
-
+import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
 import CharacterDetail from "goals/CharacterInventory/CharInv/CharacterDetail";
 import {
   buttonIdCancel,
   buttonIdConfirm,
   buttonIdSubmit,
 } from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace";
-import CharacterReplaceDialog from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace/CharacterReplaceDialog";
 import { defaultState } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 import { type StoreState } from "types";
 import { testInstanceHasText } from "utilities/testRendererUtilities";
@@ -24,12 +22,10 @@ jest.mock("@mui/material", () => {
   };
 });
 
-jest.mock(
-  "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace/FindAndReplaceActions",
-  () => ({
-    findAndReplace: () => mockFindAndReplace(),
-  })
-);
+jest.mock("components/Project/ProjectActions", () => ({}));
+jest.mock("goals/CharacterInventory/Redux/CharacterInventoryActions", () => ({
+  findAndReplace: () => mockFindAndReplace(),
+}));
 jest.mock("types/hooks", () => {
   return {
     ...jest.requireActual("types/hooks"),
@@ -74,7 +70,7 @@ describe("CharacterDetail", () => {
 
   describe("FindAndReplace", () => {
     it("has working dialog", async () => {
-      const dialog = charMaster.root.findByType(CharacterReplaceDialog);
+      const dialog = charMaster.root.findByType(CancelConfirmDialog);
       const submitButton = charMaster.root.findByProps({ id: buttonIdSubmit });
       const cancelButton = charMaster.root.findByProps({ id: buttonIdCancel });
       const confButton = charMaster.root.findByProps({ id: buttonIdConfirm });
