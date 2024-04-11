@@ -60,7 +60,7 @@ export default function WordCard(props: WordCardProps): ReactElement {
       {!full && (
         <>
           <AudioSummary count={audio.length} />
-          {!!note.text && <EntryNote noteText={note.text} />}
+          {!!note.text && <NoteButton noteText={note.text} />}
           {flag.active && <FlagButton flag={flag} />}
         </>
       )}
