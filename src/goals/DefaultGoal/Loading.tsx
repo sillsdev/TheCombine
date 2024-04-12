@@ -1,11 +1,19 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, Dialog, IconButton, Typography } from "@mui/material";
 import { animate } from "motion";
-import { type CSSProperties, type ReactElement, useEffect } from "react";
+import {
+  type CSSProperties,
+  type ReactElement,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import harvest from "resources/HTW1-harvest-Ethiopia.jpg";
 import thresh from "resources/HTW2-thresh-Bangladesh.jpg";
 import winnow from "resources/HTW3-winnow-India.jpg";
+import by from "resources/cc-icons/by.svg";
+import cc from "resources/cc-icons/cc.svg";
+import sa from "resources/cc-icons/sa.svg";
 
 enum LoadingImageAlt {
   Harvest = "Harvesting in Ethiopia",
@@ -24,10 +32,10 @@ export default function Loading(): ReactElement {
   const { t } = useTranslation();
   return (
     <Box
-      flexDirection="column"
-      display="flex"
-      justifyContent="center"
       alignItems="center"
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
     >
       <Typography variant="h4">{t("generic.loadingTitle")}</Typography>
       <ImageSlider />
@@ -52,12 +60,12 @@ const y2 = [1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1];
 // 3rd image starts in lower-right and slides third
 const x3 = [1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1];
 const y3 = [1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1];
-// Attribution button starts in upper-right and goes CCW every step
-const xA = [1, -1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1];
-const yA = [-1, -1, 1, 1, -1, -1, 1, 1, -1, -1, 1, 1, -1];
 
 /** An image slider that use 3-images in a loading screen */
 function ImageSlider(props: ImageSliderProps): ReactElement {
+  const [imgAttributionDialogOpen, setImgAttributionDialogOpen] =
+    useState(false);
+
   const maxSize = Math.min(
     0.8 * window.innerHeight,
     0.8 * window.innerWidth,
@@ -88,6 +96,28 @@ function ImageSlider(props: ImageSliderProps): ReactElement {
 
   return (
     <div style={{ height: double, position: "relative", width: double }}>
+      <div style={{ position: "absolute", left: half - 30, top: half - 35 }}>
+        <ImageAttributionsButton
+          onClick={() => setImgAttributionDialogOpen(true)}
+        />
+      </div>
+      <div style={{ position: "absolute", right: half - 30, top: half - 35 }}>
+        <ImageAttributionsButton
+          onClick={() => setImgAttributionDialogOpen(true)}
+        />
+      </div>
+      <div style={{ position: "absolute", left: half - 30, bottom: half - 35 }}>
+        <ImageAttributionsButton
+          onClick={() => setImgAttributionDialogOpen(true)}
+        />
+      </div>
+      <div
+        style={{ position: "absolute", right: half - 30, bottom: half - 35 }}
+      >
+        <ImageAttributionsButton
+          onClick={() => setImgAttributionDialogOpen(true)}
+        />
+      </div>
       <img
         alt={LoadingImageAlt.Harvest}
         id={LoadingImageId.Harvest}
@@ -106,14 +136,110 @@ function ImageSlider(props: ImageSliderProps): ReactElement {
         src={winnow}
         style={{ ...imageStyle, left: half, top: half }}
       />
+      <Dialog
+        open={imgAttributionDialogOpen}
+        onClose={() => setImgAttributionDialogOpen(false)}
+      >
+        <ImageAttribution
+          name="Ethiopia Farmers Harvest Teff"
+          nameHref="https://commons.wikimedia.org/wiki/File:Ethiopia-farmers-harvest-teff.jpg"
+          by="Esayas Ayele"
+          license="CC BY-SA 4.0"
+          licenseHref="https://creativecommons.org/licenses/by-sa/4.0/"
+          cropped
+        />
+        <ImageAttribution
+          name="Farmers Threshing Rice Crops"
+          nameHref="https://www.pexels.com/photo/farmers-threshing-rice-crops-9487554/"
+          by="Imam Hossain"
+          byHref="https://www.pexels.com/@imam-hossain-95404804/"
+          license="Pexels license"
+          licenseHref="https://www.pexels.com/license/"
+          cropped
+        />
+        <ImageAttribution
+          name="Woman Holding a Winnowing Basket with Grains"
+          nameHref="https://www.pexels.com/photo/woman-holding-a-winnowing-basket-with-grains-11398292/"
+          by="Mehmet Turgut Kirkgoz"
+          byHref="https://www.pexels.com/@tkirkgoz/"
+          license="Pexels license"
+          licenseHref="https://www.pexels.com/license/"
+          cropped
+        />
+      </Dialog>
     </div>
   );
 }
 
-function ImageAttributionsButton(): ReactElement {
+interface ImageAttributionProps {
+  name: string;
+  nameHref?: string;
+  by: string;
+  byHref?: string;
+  license: string;
+  licenseHref?: string;
+  cropped?: boolean;
+}
+
+/** Typography with attribution info and links for an image */
+function ImageAttribution(props: ImageAttributionProps): ReactElement {
+  const nameLink = props.nameHref ? (
+    <a href={props.nameHref} rel="noreferrer" target="_blank">
+      {props.name}
+    </a>
+  ) : (
+    props.name
+  );
+  const byLink = props.byHref ? (
+    <a href={props.byHref} rel="noreferrer" target="_blank">
+      {props.by}
+    </a>
+  ) : (
+    props.by
+  );
+  const licenseLink = props.licenseHref ? (
+    <a href={props.licenseHref} rel="noreferrer" target="_blank">
+      {props.license}
+    </a>
+  ) : (
+    props.license
+  );
   return (
-    <>
-      <IconButton aria-label="show image attribution"></IconButton>
-    </>
+    <Typography>
+      {'"'}
+      {nameLink}
+      {'" by '}
+      {byLink}
+      {props.cropped ? ", cropped" : ""}
+      {", "}
+      {licenseLink}
+    </Typography>
+  );
+}
+
+/** Icon button for image attributions */
+function ImageAttributionsButton(props: { onClick: () => void }): ReactElement {
+  return (
+    <IconButton aria-label="show image attribution" onClick={props.onClick}>
+      <ImageAttributionsIcon />
+    </IconButton>
+  );
+}
+
+/** Custom cc-by-sa icon */
+function ImageAttributionsIcon(): ReactElement {
+  return (
+    <Box
+      alignItems="center"
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+    >
+      <img alt="CreativeCommons" src={cc} style={{ width: 40 }} />
+      <div style={{ marginTop: -4 }}>
+        <img alt="Attribution" src={by} style={{ width: 30 }} />
+        <img alt="ShareAlike" src={sa} style={{ width: 30 }} />
+      </div>
+    </Box>
   );
 }
