@@ -1,13 +1,27 @@
-import CloseButton from "components/Buttons/CloseButton";
-import DeleteButtonWithDialog from "components/Buttons/DeleteButtonWithDialog";
-import FileInputButton from "components/Buttons/FileInputButton";
-import FlagButton from "components/Buttons/FlagButton";
-import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
-import LoadingButton from "components/Buttons/LoadingButton";
-import LoadingDoneButton from "components/Buttons/LoadingDoneButton";
-import NoteButton from "components/Buttons/NoteButton";
-import PartOfSpeechButton from "components/Buttons/PartOfSpeechButton";
-import UndoButton from "components/Buttons/UndoButton";
+import loadable from "@loadable/component";
+
+const CloseButton = loadable(() => import("components/Buttons/CloseButton"));
+const DeleteButtonWithDialog = loadable(
+  () => import("components/Buttons/DeleteButtonWithDialog")
+);
+const FileInputButton = loadable(
+  () => import("components/Buttons/FileInputButton")
+);
+const FlagButton = loadable(() => import("components/Buttons/FlagButton"));
+const IconButtonWithTooltip = loadable(
+  () => import("components/Buttons/IconButtonWithTooltip")
+);
+const LoadingButton = loadable(
+  () => import("components/Buttons/LoadingButton")
+);
+const LoadingDoneButton = loadable(
+  () => import("components/Buttons/LoadingDoneButton")
+);
+const NoteButton = loadable(() => import("components/Buttons/NoteButton"));
+const PartOfSpeechButton = loadable(
+  () => import("components/Buttons/PartOfSpeechButton")
+);
+const UndoButton = loadable(() => import("components/Buttons/UndoButton"));
 
 export {
   CloseButton,
