@@ -3,6 +3,7 @@ import {
   Badge,
   Card,
   CardContent,
+  CardHeader,
   IconButton,
   Typography,
 } from "@mui/material";
@@ -42,39 +43,45 @@ export default function WordCard(props: WordCardProps): ReactElement {
     }
   }, [editedBy, provenance]);
 
+  /* Vernacular */
+  const title = (
+    <TypographyWithFont variant="h5" vernacular>
+      {word.vernacular}
+    </TypographyWithFont>
+  );
+
+  /* Icons/buttons beside vernacular */
+  const action = (
+    <>
+      {/* Condensed audio, note, flag */}
+      {!full && (
+        <>
+          <AudioSummary count={audio.length} />
+          {!!note.text && <EntryNote noteText={note.text} />}
+          {flag.active && <FlagButton flag={flag} />}
+        </>
+      )}
+      {/* Button for expand/condense */}
+      <IconButtonWithTooltip
+        buttonId={buttonIdFull(word.id)}
+        icon={
+          full ? (
+            <CloseFullscreen sx={{ color: (t) => t.palette.grey[900] }} />
+          ) : (
+            <OpenInFull sx={{ color: (t) => t.palette.grey[600] }} />
+          )
+        }
+        onClick={() => setFull(!full)}
+      />
+    </>
+  );
+
   return (
     <Card
       sx={{ backgroundColor: (t) => t.palette.grey[300], minWidth: "200px" }}
     >
-      <CardContent sx={{ position: "relative" }}>
-        {/* Vernacular */}
-        <TypographyWithFont variant="h5" vernacular>
-          {word.vernacular}
-        </TypographyWithFont>
-
-        <div style={{ position: "absolute", right: 0, top: 0 }}>
-          {/* Condensed audio, note, flag */}
-          {!full && (
-            <>
-              <AudioSummary count={audio.length} />
-              {!!note.text && <EntryNote noteText={note.text} />}
-              {flag.active && <FlagButton flag={flag} />}
-            </>
-          )}
-          {/* Button for expand/condense */}
-          <IconButtonWithTooltip
-            buttonId={buttonIdFull(word.id)}
-            icon={
-              full ? (
-                <CloseFullscreen sx={{ color: (t) => t.palette.grey[900] }} />
-              ) : (
-                <OpenInFull sx={{ color: (t) => t.palette.grey[600] }} />
-              )
-            }
-            onClick={() => setFull(!full)}
-          />
-        </div>
-
+      <CardHeader action={action} title={title} />
+      <CardContent>
         {/* Expanded audio, note, flag */}
         {full && (
           <>
