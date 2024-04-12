@@ -2,7 +2,7 @@ import { AddComment, Comment } from "@mui/icons-material";
 import { type ReactElement, useState } from "react";
 
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
-import EditTextDialog from "components/Dialogs/EditTextDialog";
+import { EditTextDialog } from "components/Dialogs";
 
 interface NoteButtonProps {
   buttonId?: string;

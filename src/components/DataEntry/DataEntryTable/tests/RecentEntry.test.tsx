@@ -10,7 +10,7 @@ import configureMockStore from "redux-mock-store";
 
 import { Word } from "api/models";
 import { defaultState } from "components/App/DefaultState";
-import NoteButton from "components/Buttons/NoteButton";
+import { NoteButton } from "components/Buttons";
 import {
   DeleteEntry,
   GlossWithSuggestions,

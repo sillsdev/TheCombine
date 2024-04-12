@@ -2,7 +2,7 @@ import { Grid } from "@mui/material";
 import { ReactElement, memo, useState } from "react";
 
 import { Pronunciation, Word, WritingSystem } from "api/models";
-import NoteButton from "components/Buttons/NoteButton";
+import { NoteButton } from "components/Buttons";
 import {
   DeleteEntry,
   GlossWithSuggestions,
