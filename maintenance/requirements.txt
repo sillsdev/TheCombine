@@ -22,7 +22,7 @@ google-auth==2.29.0
     # via kubernetes
 humanfriendly==10.0
     # via -r requirements.in
-idna==3.6
+idna==3.7
     # via requests
 kubernetes==29.0.0
     # via -r requirements.in
