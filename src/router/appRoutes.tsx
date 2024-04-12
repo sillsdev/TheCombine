@@ -11,6 +11,7 @@ import PasswordReset from "components/PasswordReset/ResetPage";
 import RequireAuth from "components/RequireAuth";
 import { Path } from "types/path";
 import { routerPath } from "utilities/pathUtilities";
+import Loading from "goals/DefaultGoal/Loading";
 
 const AppWithBar = loadable(() => import("components/App/AppLoggedIn"));
 
@@ -48,6 +49,7 @@ export const appRoutes: RouteObject[] = [
     path: `${Path.ProjInvite}/:project/:token`,
     element: <ProjectInvite />,
   },
+  { path: `loading`, element: <Loading /> },
   {
     path: "*",
     element: <PageNotFound />,
