@@ -73,7 +73,7 @@ google-auth==2.29.0
     # via kubernetes
 humanfriendly==10.0
     # via -r dev-requirements.in
-idna==3.6
+idna==3.7
     # via requests
 isort==5.13.2
     # via -r dev-requirements.in
