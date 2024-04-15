@@ -1,10 +1,10 @@
 import { AddComment, Comment } from "@mui/icons-material";
 import { type ReactElement, useState } from "react";
 
-import { IconButtonWithTooltip } from "components/Buttons";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import { EditTextDialog } from "components/Dialogs";
 
-interface EntryNoteProps {
+interface NoteButtonProps {
   buttonId?: string;
   disabled?: boolean;
   noteText: string;
@@ -12,7 +12,7 @@ interface EntryNoteProps {
 }
 
 /** A note adding/editing/viewing button */
-export default function EntryNote(props: EntryNoteProps): ReactElement {
+export default function NoteButton(props: NoteButtonProps): ReactElement {
   const [noteOpen, setNoteOpen] = useState<boolean>(false);
 
   return (
