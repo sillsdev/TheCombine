@@ -1,29 +1,11 @@
-import loadable from "@loadable/component";
-
-const ButtonConfirmation = loadable(
-  () => import("components/Dialogs/ButtonConfirmation")
-);
-const CancelConfirmDialog = loadable(
-  () => import("components/Dialogs/CancelConfirmDialog")
-);
-const DeleteEditTextDialog = loadable(
-  () => import("components/Dialogs/DeleteEditTextDialog")
-);
-const EditTextDialog = loadable(
-  () => import("components/Dialogs/EditTextDialog")
-);
-const RecordAudioDialog = loadable(
-  () => import("components/Dialogs/RecordAudioDialog")
-);
-const SubmitTextDialog = loadable(
-  () => import("components/Dialogs/SubmitTextDialog")
-);
-const UploadImageDialog = loadable(
-  () => import("components/Dialogs/UploadImageDialog")
-);
-const ViewImageDialog = loadable(
-  () => import("components/Dialogs/ViewImageDialog")
-);
+import ButtonConfirmation from "components/Dialogs/ButtonConfirmation";
+import CancelConfirmDialog from "components/Dialogs/CancelConfirmDialog";
+import DeleteEditTextDialog from "components/Dialogs/DeleteEditTextDialog";
+import EditTextDialog from "components/Dialogs/EditTextDialog";
+import RecordAudioDialog from "components/Dialogs/RecordAudioDialog";
+import SubmitTextDialog from "components/Dialogs/SubmitTextDialog";
+import UploadImageDialog from "components/Dialogs/UploadImageDialog";
+import ViewImageDialog from "components/Dialogs/ViewImageDialog";
 
 export {
   ButtonConfirmation,
