@@ -6,7 +6,6 @@ import { defaultState as treeViewState } from "components/TreeView/Redux/TreeVie
 import { defaultState as characterInventoryState } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 import { defaultState as mergeDuplicateGoal } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { defaultState as goalsState } from "goals/Redux/GoalReduxTypes";
-import { defaultState as reviewEntriesState } from "goals/ReviewEntries/Redux/ReviewEntriesReduxTypes";
 import { defaultState as analyticsState } from "types/Redux/analyticsReduxTypes";
 
 export const defaultState = {
@@ -19,7 +18,6 @@ export const defaultState = {
 
   //data entry and review entries goal
   treeViewState: { ...treeViewState },
-  reviewEntriesState: { ...reviewEntriesState },
   pronunciationsState: { ...pronunciationsState },
 
   //goal timeline and current goal

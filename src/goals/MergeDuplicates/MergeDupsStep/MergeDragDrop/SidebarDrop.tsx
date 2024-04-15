@@ -1,5 +1,5 @@
-import { ArrowForwardIos } from "@mui/icons-material";
-import { IconButton, Typography } from "@mui/material";
+import { ArrowForwardIos, HelpOutline } from "@mui/icons-material";
+import { Grid, IconButton, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
 
@@ -8,6 +8,7 @@ import { MergeTreeSense } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { setSidebar } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
+import { openUserGuide } from "utilities/pathUtilities";
 
 export default function SidebarDrop(): ReactElement {
   const dispatch = useAppDispatch();
@@ -30,13 +31,20 @@ export default function SidebarDrop(): ReactElement {
           {...providedDroppable.droppableProps}
           style={{ backgroundColor: "lightblue", height: "100%", padding: 20 }}
         >
-          <IconButton
-            onClick={() => dispatch(setSidebar())}
-            id="sidebar-close"
-            size="large"
-          >
-            <ArrowForwardIos />
-          </IconButton>
+          <Grid container justifyContent="space-between">
+            <IconButton
+              id="sidebar-close"
+              onClick={() => dispatch(setSidebar())}
+            >
+              <ArrowForwardIos />
+            </IconButton>
+            <IconButton
+              id="sidebar-help"
+              onClick={() => openUserGuide("goals.html#merge-a-sense")}
+            >
+              <HelpOutline />
+            </IconButton>
+          </Grid>
           <Typography variant="h5">{vernacular}</Typography>
           {sidebar.mergeSenses.map((ms: MergeTreeSense, i: number) => (
             <SidebarDragSense key={ms.sense.guid} index={i} mergeSense={ms} />

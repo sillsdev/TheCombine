@@ -12,7 +12,11 @@ import { Droppable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 
 import { type Flag, type ProtectReason, ReasonType } from "api/models";
-import { FlagButton, IconButtonWithTooltip } from "components/Buttons";
+import {
+  FlagButton,
+  IconButtonWithTooltip,
+  NoteButton,
+} from "components/Buttons";
 import MultilineTooltipTitle from "components/MultilineTooltipTitle";
 import { AudioSummary } from "components/WordCard";
 import DragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DragSense";
@@ -237,6 +241,7 @@ export function DropWordCardHeader(
         />
       )}
       <AudioSummary count={audioCount} />
+      {treeWord.note.text ? <NoteButton noteText={treeWord.note.text} /> : null}
       <FlagButton
         buttonId={`word-${props.wordId}-flag`}
         flag={treeWord.flag}

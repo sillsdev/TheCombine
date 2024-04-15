@@ -7,7 +7,6 @@ import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
 import Loading from "goals/DefaultGoal/Loading";
 import { clearTree } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { setCurrentGoal } from "goals/Redux/GoalActions";
-import { resetReviewEntries } from "goals/ReviewEntries/Redux/ReviewEntriesActions";
 import { type StoreState } from "types";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 import { useAppDispatch, useAppSelector } from "types/hooks";
@@ -63,7 +62,6 @@ export function BaseGoalScreen(): ReactElement {
   useEffect(() => {
     return function cleanup(): void {
       dispatch(setCurrentGoal());
-      dispatch(resetReviewEntries());
       dispatch(clearTree());
     };
   }, [dispatch]);
