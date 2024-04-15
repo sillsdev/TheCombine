@@ -1,6 +1,7 @@
 import loadable from "@loadable/component";
 import { RouteObject } from "react-router-dom";
 
+import HarvestThreshWinnow from "components/HarvestThreshWinnow";
 import LandingPage from "components/LandingPage";
 import Login from "components/Login/Login";
 import ProjectInvite from "components/Login/ProjectInvite";
@@ -11,7 +12,6 @@ import PasswordReset from "components/PasswordReset/ResetPage";
 import RequireAuth from "components/RequireAuth";
 import { Path } from "types/path";
 import { routerPath } from "utilities/pathUtilities";
-import Loading from "goals/DefaultGoal/Loading";
 
 const AppWithBar = loadable(() => import("components/App/AppLoggedIn"));
 
@@ -49,7 +49,7 @@ export const appRoutes: RouteObject[] = [
     path: `${Path.ProjInvite}/:project/:token`,
     element: <ProjectInvite />,
   },
-  { path: `loading`, element: <Loading /> },
+  { path: `loading`, element: <HarvestThreshWinnow /> },
   {
     path: "*",
     element: <PageNotFound />,
