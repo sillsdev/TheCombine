@@ -79,6 +79,21 @@ namespace BackendFramework.Controllers
             return Ok(speaker);
         }
 
+        /// <summary> Checks if given speaker name is valid for the project with given id. </summary>
+        /// <returns> null if valid; a BadRequestObjectResult if invalid. </returns>
+        private async Task<IActionResult?> CheckSpeakerName(string projectId, string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return BadRequest("projectSettings.speaker.nameEmpty");
+            }
+            if (await _speakerRepo.IsSpeakerNameInProject(projectId, name))
+            {
+                return BadRequest("projectSettings.speaker.nameTaken");
+            }
+            return null;
+        }
+
         /// <summary> Creates a <see cref="Speaker"/> for the specified projectId </summary>
         /// <returns> Id of created Speaker </returns>
         [HttpGet("create/{name}", Name = "CreateSpeaker")]
@@ -94,13 +109,10 @@ namespace BackendFramework.Controllers
 
             // Ensure the new name is valid
             name = name.Trim();
-            if (string.IsNullOrEmpty(name))
+            var nameError = await CheckSpeakerName(projectId, name);
+            if (nameError is not null)
             {
-                return BadRequest("projectSettings.speaker.nameEmpty");
-            }
-            if (await _speakerRepo.IsSpeakerNameInProject(projectId, name))
-            {
-                return BadRequest("projectSettings.speaker.nameTaken");
+                return nameError;
             }
 
             // Create speaker and return id
@@ -201,13 +213,10 @@ namespace BackendFramework.Controllers
 
             // Ensure the new name is valid
             name = name.Trim();
-            if (string.IsNullOrEmpty(name))
+            var nameError = await CheckSpeakerName(projectId, name);
+            if (nameError is not null)
             {
-                return BadRequest("projectSettings.speaker.nameEmpty");
-            }
-            if (await _speakerRepo.IsSpeakerNameInProject(projectId, name))
-            {
-                return BadRequest("projectSettings.speaker.nameTaken");
+                return nameError;
             }
 
             // Update name and return result with id
