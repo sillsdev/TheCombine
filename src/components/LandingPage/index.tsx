@@ -3,13 +3,14 @@ import { ReactElement, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import HarvestThreshWinnow from "components/HarvestThreshWinnow";
 import BottomBar, { bottomBarHeight } from "components/LandingPage/BottomBar";
 import LandingButtons, {
   horizontalButtonsHeight,
   SignUpButton,
+  verticalButtonsWidth,
 } from "components/LandingPage/LandingButtons";
 import TopBar, { topBarHeight } from "components/LandingPage/TopBar";
-import tractor from "resources/tractor.png";
 import { Path } from "types/path";
 import theme from "types/theme";
 
@@ -37,7 +38,7 @@ export default function LandingPage(): ReactElement {
               <Body />
             </Box>
           </Grid>
-          <Grid item sm={3} md={2} xl={1}>
+          <Grid item width={verticalButtonsWidth}>
             <LandingButtons />
           </Grid>
         </Hidden>
@@ -66,8 +67,15 @@ function Body(): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <>
-      <div style={{ padding: theme.spacing(3) }}>
+    <Box
+      alignItems="center"
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      rowGap={theme.spacing(4)}
+      style={{ padding: theme.spacing(3) }}
+    >
+      <div>
         <Typography variant="body2" align="justify">
           {t("landingPage.descriptionP1")}
           {<br />}
@@ -81,25 +89,15 @@ function Body(): ReactElement {
         <Typography
           variant="h6"
           align="justify"
-          style={{
-            paddingTop: theme.spacing(2),
-            paddingBottom: theme.spacing(1),
-          }}
+          style={{ paddingTop: theme.spacing(2) }}
         >
           {t("landingPage.descriptionP4")}
         </Typography>
-        <SignUpButton buttonIdPrefix="landing-body" />
       </div>
-      <img
-        src={tractor}
-        alt="Tractor"
-        style={{
-          width: "70%",
-          maxWidth: 700,
-          margin: "0% 15%",
-          marginTop: theme.spacing(4),
-        }}
+      <SignUpButton buttonIdPrefix="landing-body" />
+      <HarvestThreshWinnow
+        maxSize={Math.min(400, (window.innerWidth - verticalButtonsWidth) / 4)}
       />
-    </>
+    </Box>
   );
 }

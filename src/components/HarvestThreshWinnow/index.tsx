@@ -1,7 +1,5 @@
-import { Box, Typography } from "@mui/material";
-import { animate } from "motion";
+import { type AnimationOptionsWithOverrides, animate } from "motion";
 import { type CSSProperties, type ReactElement, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 
 import ImageAttributions, {
   ImageMetadata,
@@ -10,16 +8,18 @@ import harvest from "resources/HTW1-harvest-Ethiopia.jpg";
 import thresh from "resources/HTW2-thresh-Bangladesh.jpg";
 import winnow from "resources/HTW3-winnow-India.jpg";
 
-enum LoadingImageAlt {
+enum ImageAlt {
+  License = "CC BY-SA 4.0 license",
   Harvest = "Harvesting in Ethiopia",
-  Thresh = "Threshing in Bangledesh",
+  Thresh = "Threshing in Bangladesh",
   Winnow = "Winnowing in India",
 }
 
-enum LoadingImageId {
-  Harvest = "loading-harvest",
-  Thresh = "loading-thresh",
-  Winnow = "loading-winnow",
+enum ImageId {
+  License = "image-license",
+  Harvest = "harvest-image",
+  Thresh = "thresh-image",
+  Winnow = "winnow-image",
 }
 
 const harvestMetadata: ImageMetadata = {
@@ -54,112 +54,132 @@ const winnowMetadata: ImageMetadata = {
   cropped: true,
 };
 
-/** A custom harvest-thresh-winnow image */
-export default function HarvestThreshWinnow(): ReactElement {
-  const { t } = useTranslation();
-  return (
-    <Box
-      alignItems="center"
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-    >
-      <Typography variant="h4">{t("generic.loadingTitle")}</Typography>
-      <ImageSlider />
-      <Typography variant="h5">{t("generic.loadingText")}</Typography>
-    </Box>
-  );
-}
-
-interface ImageSliderProps {
+interface HarvestThreshWinnowProps {
+  fadeOutSeparate?: boolean;
+  loading?: boolean;
   maxSize?: number;
-  minSize?: number;
 }
 
-// Give x/y positions of the 3 images (12 entries and a 13th matching the first)
-// x: -1 is left, 1 is right; y: -1 is upper, 1 is lower
-// 1st image starts in upper-left and slides first
-const x1 = [-1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1];
-const y1 = [-1, -1, -1, -1, 1, 1, 1, 1, 1, 1, -1, -1, -1];
-// 2nd image stars in lower-left and slides second
-const x2 = [-1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, -1, -1];
-const y2 = [1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1];
-// 3rd image starts in lower-right and slides third
-const x3 = [1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1];
-const y3 = [1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1];
+// Opacity of the 3 images for fading in separately then out together
+const opacityA1 = [0, 0.5, 1, 1, 1, 1, 1, 1, 0, 0];
+const opacityA2 = [0, 0, 0, 0.5, 1, 1, 1, 1, 0, 0];
+const opacityA3 = [0, 0, 0, 0, 0, 0.5, 1, 1, 0, 0];
 
-/** An image slider that use 3-images in a loading screen */
-function ImageSlider(props: ImageSliderProps): ReactElement {
-  const maxSize = Math.min(
-    0.8 * window.innerHeight,
-    0.8 * window.innerWidth,
+// Opacity of the 3 images for fading in separately then out separately
+const opacityB1 = [0, 1, 1, 1, 0, 0, 0];
+const opacityB2 = [0, 0, 1, 1, 1, 0, 0];
+const opacityB3 = [0, 0, 0, 1, 1, 1, 0];
+
+// Opacity of the 3 images for fading in and out separately
+const opacityC1 = [0, 0.5, 1, 1, 0.5, 0, 0, 0, 0, 0, 0, 0, 0];
+const opacityC2 = [0, 0, 0, 0, 0.5, 1, 1, 0.5, 0, 0, 0, 0, 0];
+const opacityC3 = [0, 0, 0, 0, 0, 0, 0, 0.5, 1, 1, 0.5, 0, 0];
+
+/** A custom harvest-thresh-winnow image */
+export default function HarvestThreshWinnow(
+  props: HarvestThreshWinnowProps
+): ReactElement {
+  const size = Math.min(
+    0.75 * window.innerHeight,
+    0.25 * window.innerWidth,
     props.maxSize || 1000
   );
-  const double = Math.max(maxSize, props.minSize || 100);
-  const half = double / 4;
 
   useEffect(() => {
-    animate(
-      `#${LoadingImageId.Harvest}`,
-      { x: x1.map((v) => v * half), y: y1.map((v) => v * half) },
-      { duration: 18, easing: "linear", repeat: Infinity }
-    );
-    animate(
-      `#${LoadingImageId.Thresh}`,
-      { x: x2.map((v) => v * half), y: y2.map((v) => v * half) },
-      { duration: 18, easing: "linear", repeat: Infinity }
-    );
-    animate(
-      `#${LoadingImageId.Winnow}`,
-      { x: x3.map((v) => v * half), y: y3.map((v) => v * half) },
-      { duration: 18, easing: "linear", repeat: Infinity }
-    );
-  }, [half]);
+    const options: AnimationOptionsWithOverrides = {
+      duration: 7,
+      easing: "linear",
+      repeat: Infinity,
+    };
+    if (props.loading) {
+      animate(
+        `#${ImageId.License}`,
+        { opacity: props.fadeOutSeparate ? opacityC1 : opacityB1 },
+        options
+      );
+      animate(
+        `#${ImageId.Harvest}`,
+        { opacity: props.fadeOutSeparate ? opacityC1 : opacityB1 },
+        options
+      );
+      animate(
+        `#${ImageId.Thresh}`,
+        { opacity: props.fadeOutSeparate ? opacityC2 : opacityB2 },
+        options
+      );
+      animate(
+        `#${ImageId.Winnow}`,
+        { opacity: props.fadeOutSeparate ? opacityC3 : opacityB3 },
+        options
+      );
+    }
+  }, [props.fadeOutSeparate, props.loading]);
 
-  const imageStyle: CSSProperties = { position: "absolute", width: 2 * half };
+  const imageStyle: CSSProperties = {
+    border: "1px solid black",
+    borderRadius: size,
+    position: "relative",
+    width: size,
+  };
+
+  const whiteCircleStyle: CSSProperties = {
+    backgroundColor: "white",
+    border: "1px solid white",
+    borderRadius: size,
+    height: size,
+    position: "absolute",
+    width: size,
+  };
+
+  const overlap = 0.23;
 
   return (
-    <div style={{ height: double, position: "relative", width: double }}>
-      <div style={{ position: "absolute", left: half - 30, top: half - 35 }}>
-        <ImageAttributions
-          images={[harvestMetadata, threshMetadata, winnowMetadata]}
+    <div style={{ height: size, position: "relative", margin: 10 }}>
+      {/*props.fadeOutSeparate || (
+        <div
+          style={{
+            ...whiteCircleStyle,
+            right: (1 - overlap) * size,
+            zIndex: -1,
+          }}
         />
-      </div>
-      <div style={{ position: "absolute", right: half - 30, top: half - 35 }}>
-        <ImageAttributions
-          images={[harvestMetadata, threshMetadata, winnowMetadata]}
+      )}
+      {props.fadeOutSeparate || (
+        <div
+          style={{ ...whiteCircleStyle, right: overlap * size, zIndex: 1 }}
         />
-      </div>
-      <div style={{ position: "absolute", left: half - 30, bottom: half - 35 }}>
-        <ImageAttributions
-          images={[harvestMetadata, threshMetadata, winnowMetadata]}
-        />
-      </div>
+      )*/}
+      <img
+        alt={ImageAlt.Harvest}
+        id={ImageId.Harvest}
+        src={harvest}
+        style={{ ...imageStyle, left: overlap * size, zIndex: -2 }}
+      />
+      <img
+        alt={ImageAlt.Thresh}
+        id={ImageId.Thresh}
+        src={thresh}
+        style={{ ...imageStyle }}
+      />
+      <img
+        alt={ImageAlt.Winnow}
+        id={ImageId.Winnow}
+        src={winnow}
+        style={{ ...imageStyle, right: overlap * size, zIndex: 2 }}
+      />
       <div
-        style={{ position: "absolute", right: half - 30, bottom: half - 35 }}
+        id={ImageId.License}
+        style={{
+          bottom: -10, // The -10 offsets the button padding
+          left: 0.2 * size - 10,
+          position: "absolute",
+        }}
       >
         <ImageAttributions
           images={[harvestMetadata, threshMetadata, winnowMetadata]}
+          width={0.15 * size}
         />
       </div>
-      <img
-        alt={LoadingImageAlt.Harvest}
-        id={LoadingImageId.Harvest}
-        src={harvest}
-        style={{ ...imageStyle, left: half, top: half }}
-      />
-      <img
-        alt={LoadingImageAlt.Thresh}
-        id={LoadingImageId.Thresh}
-        src={thresh}
-        style={{ ...imageStyle, left: half, bottom: half }}
-      />
-      <img
-        alt={LoadingImageAlt.Winnow}
-        id={LoadingImageId.Winnow}
-        src={winnow}
-        style={{ ...imageStyle, left: half, top: half }}
-      />
     </div>
   );
 }

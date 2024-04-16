@@ -17,7 +17,7 @@ export const horizontalButtonsHeight =
 const horizontalButtonsWidth = 3 * buttonWidth + parseInt(theme.spacing(7));
 
 const verticalButtonsHeight = 3 * buttonHeight + parseInt(theme.spacing(7));
-const verticalButtonsWidth = buttonWidth + parseInt(theme.spacing(2));
+export const verticalButtonsWidth = buttonWidth + parseInt(theme.spacing(2));
 
 interface LandingButtonsProps {
   top?: boolean;

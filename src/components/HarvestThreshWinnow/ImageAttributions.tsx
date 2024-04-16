@@ -15,10 +15,15 @@ export interface ImageMetadata {
   cropped?: boolean;
 }
 
-/** Icon button for image attributions */
-export default function ImageAttributionsButton(props: {
+interface ImageAttributionsButtonProps {
   images: ImageMetadata[];
-}): ReactElement {
+  width?: number;
+}
+
+/** Icon button for image attributions */
+export default function ImageAttributionsButton(
+  props: ImageAttributionsButtonProps
+): ReactElement {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -26,7 +31,7 @@ export default function ImageAttributionsButton(props: {
         aria-label="show image attribution"
         onClick={() => setOpen(true)}
       >
-        <CCBYSAIcon />
+        <CCBYSAIcon width={props.width} />
       </IconButton>
       <Dialog open={open} onClose={() => setOpen(false)}>
         {props.images.map((image, index) => (
@@ -38,7 +43,8 @@ export default function ImageAttributionsButton(props: {
 }
 
 /** Custom cc-by-sa icon */
-function CCBYSAIcon(): ReactElement {
+function CCBYSAIcon(props: { width?: number }): ReactElement {
+  const baseWidth = (props.width || 60) / 2;
   return (
     <Box
       alignItems="center"
@@ -46,11 +52,11 @@ function CCBYSAIcon(): ReactElement {
       flexDirection="column"
       justifyContent="center"
     >
-      <img alt="CreativeCommons" src={cc} style={{ width: 40 }} />
-      <div style={{ marginTop: -4 }}>
-        <img alt="Attribution" src={by} style={{ width: 30 }} />
-        <img alt="ShareAlike" src={sa} style={{ width: 30 }} />
-      </div>
+      <img alt="CreativeCommons" src={cc} style={{ width: 1.2 * baseWidth }} />
+      <Box display="flex" sx={{ marginTop: -0.014 * baseWidth }}>
+        <img alt="Attribution" src={by} style={{ width: baseWidth }} />
+        <img alt="ShareAlike" src={sa} style={{ width: baseWidth }} />
+      </Box>
     </Box>
   );
 }
@@ -80,7 +86,7 @@ function ImageAttribution(props: ImageMetadata): ReactElement {
   );
   return (
     <Typography>
-      {'"'}
+      {'• "'}
       {nameLink}
       {'" by '}
       {byLink}
