@@ -347,22 +347,39 @@ namespace BackendFramework.Services
             // Add consent files to export directory
             foreach (var speaker in projSpeakers)
             {
-                if (speaker.Consent != ConsentType.None)
+                if (speaker.Consent == ConsentType.None)
                 {
-                    var src = FileStorage.GetConsentFilePath(speaker.Id);
-                    if (src is not null)
-                    {
-                        var dest = Path.Combine(consentDir, Path.GetFileName(src));
-                        if (Path.GetExtension(dest).Equals(".webm", StringComparison.OrdinalIgnoreCase))
-                        {
-                            dest = Path.ChangeExtension(dest, ".wav");
-                            await FFmpeg.Conversions.New().Start($"-y -i \"{src}\" \"{dest}\"");
-                        }
-                        else
-                        {
-                            File.Copy(src, dest);
-                        }
-                    }
+                    continue;
+                }
+
+                var src = FileStorage.GetConsentFilePath(speaker.Id);
+                if (src is null || !File.Exists(src))
+                {
+                    continue;
+                };
+
+                var safeName = Sanitization.MakeFriendlyForPath(speaker.Name);
+                var fileName = safeName == "" ? Path.GetFileNameWithoutExtension(src) : safeName;
+                var fileExt = Path.GetExtension(src);
+                var convertToWav = fileExt.Equals(".webm", StringComparison.OrdinalIgnoreCase);
+                fileExt = convertToWav ? ".wav" : fileExt;
+                var dest = FileOperations.ChangeExtension(Path.Combine(consentDir, fileName), fileExt);
+
+                // Prevent collisions resulting from name sanitization
+                var duplicate = 0;
+                while (File.Exists(dest))
+                {
+                    duplicate++;
+                    dest = FileOperations.ChangeExtension(Path.Combine(consentDir, $"{fileName}{duplicate}"), fileExt);
+                }
+
+                if (convertToWav)
+                {
+                    await FFmpeg.Conversions.New().Start($"-y -i \"{src}\" \"{dest}\"");
+                }
+                else
+                {
+                    File.Copy(src, dest);
                 }
             }
 
@@ -541,11 +558,13 @@ namespace BackendFramework.Services
         {
             foreach (var audio in pronunciations)
             {
-                var lexPhonetic = new LexPhonetic();
                 var src = FileStorage.GenerateAudioFilePath(projectId, audio.FileName);
-                var dest = Path.Combine(path, audio.FileName);
+                if (!File.Exists(src))
+                {
+                    continue;
+                };
 
-                if (!File.Exists(src)) continue;
+                var dest = Path.Combine(path, audio.FileName);
                 if (Path.GetExtension(dest).Equals(".webm", StringComparison.OrdinalIgnoreCase))
                 {
                     dest = Path.ChangeExtension(dest, ".wav");
@@ -556,16 +575,14 @@ namespace BackendFramework.Services
                     File.Copy(src, dest, true);
                 }
 
+                var lexPhonetic = new LexPhonetic();
                 lexPhonetic.MergeIn(MultiText.Create(new LiftMultiText { { "href", dest } }));
-                // If audio has speaker, include speaker info as a pronunciation label
-                if (!audio.Protected && !string.IsNullOrEmpty(audio.SpeakerId))
+                // If audio has speaker, include speaker name as a pronunciation label
+                var speaker = projectSpeakers.Find(s => s.Id == audio.SpeakerId);
+                if (speaker is not null)
                 {
-                    var speaker = projectSpeakers.Find(s => s.Id == audio.SpeakerId);
-                    if (speaker is not null)
-                    {
-                        var text = new LiftMultiText { { "en", $"Speaker #{speaker.Id}: {speaker.Name}" } };
-                        lexPhonetic.MergeIn(MultiText.Create(text));
-                    }
+                    var text = new LiftMultiText { { "en", $"Speaker: {speaker.Name}" } };
+                    lexPhonetic.MergeIn(MultiText.Create(text));
                 }
                 entry.Pronunciations.Add(lexPhonetic);
             }

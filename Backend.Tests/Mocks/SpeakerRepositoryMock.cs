@@ -77,5 +77,10 @@ namespace Backend.Tests.Mocks
             _speakers.Add(speaker.Clone());
             return Task.FromResult(ResultOfUpdate.Updated);
         }
+
+        public Task<bool> IsSpeakerNameInProject(string projectId, string name)
+        {
+            return Task.FromResult(_speakers.Any(s => s.ProjectId == projectId && s.Name == name));
+        }
     }
 }
