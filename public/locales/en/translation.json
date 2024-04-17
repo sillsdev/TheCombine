@@ -201,6 +201,8 @@
       "label": "Manage speakers",
       "add": "Add a speaker",
       "enterName": "Enter the name of a new speaker",
+      "nameEmpty": "Speaker name is empty",
+      "nameTaken": "Speaker name is already taken in this project",
       "delete": "Delete this speaker",
       "edit": "Edit speaker's name",
       "consent": {
@@ -284,17 +286,15 @@
   },
   "reviewEntries": {
     "title": "Review Entries",
-    "noVernacular": "No vernacular input!",
-    "noDefinition": "No definitions input",
-    "noGloss": "No glosses input",
+    "allEntriesPerPageOption": "All",
+    "editSense": "Edit sense",
+    "discardChanges": "Discard changes?",
     "noDomain": "No domain selected",
     "duplicateDomain": "This sense already has domain {{ val }}.",
-    "noNote": "No note",
     "deleteWordWarning": "This word will be permanently deleted!",
     "deleteDisabled": "This was imported with data that The Combine doesn't handle, so it may not be deleted.",
     "error": {
       "gloss": "Glosses cannot be left blank",
-      "domain": "Domains cannot be left blank",
       "senses": "Cannot save an entry with no senses",
       "vernacular": "Vernacular cannot be left blank"
     },
@@ -302,32 +302,15 @@
       "definitions": "Definitions",
       "delete": "Delete",
       "domains": "Domains",
+      "edit": "Edit",
       "flag": "Flag",
       "glosses": "Glosses",
       "note": "Note",
       "partOfSpeech": "Part of Speech",
       "pronunciations": "Pronunciations",
       "senses": "Senses",
+      "sensesCount": "Number of Senses",
       "vernacular": "Vernacular"
-    },
-    "materialTable": {
-      "body": {
-        "edit": "Edit",
-        "emptyDataSourceMessage": "No entries to display",
-        "filter": "Filter"
-      },
-      "pagination": {
-        "labelDisplayedRows": "{from}-{to} of {count}",
-        "labelRows": "rows",
-        "labelRowsPerPage": "Rows per page:",
-        "first": "First Page",
-        "last": "Last Page",
-        "next": "Next Page",
-        "previous": "Previous Page"
-      },
-      "toolbar": {
-        "search": "Search"
-      }
     },
     "completed": {
       "number": "Number of entries edited: "

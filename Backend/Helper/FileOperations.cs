@@ -118,5 +118,15 @@ namespace BackendFramework.Helper
             }
             return files;
         }
+
+        /// <summary> Like Path.ChangeExtension, but doesn't add a . for empty-string extension. </summary>
+        public static string ChangeExtension(string path, string? extension)
+        {
+            if (extension == "")
+            {
+                extension = null;
+            }
+            return Path.ChangeExtension(path, extension);
+        }
     }
 }
