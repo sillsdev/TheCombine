@@ -101,10 +101,10 @@ namespace Backend.Tests.Services
         {
             var user = new User();
             var httpContext = CreateHttpContextWithUser(user);
-            var userRole = _userRoleRepo.Create(new UserRole { ProjectId = ProjId, Role = Role.None }).Result;
+            var userRole = _userRoleRepo.Create(new UserRole { ProjectId = ProjId, Role = Role.Harvester }).Result;
             user.ProjectRoles[ProjId] = userRole.Id;
             _ = _userRepo.Update(user.Id, user).Result;
-            Assert.That(_permService.HasProjectPermission(httpContext, Permission.WordEntry, ProjId).Result, Is.False);
+            Assert.That(_permService.HasProjectPermission(httpContext, Permission.Import, ProjId).Result, Is.False);
         }
 
         [Test]
@@ -129,7 +129,7 @@ namespace Backend.Tests.Services
         public void ContainsProjectRoleTestNoProjectRole()
         {
             var httpContext = CreateHttpContextWithUser(new User());
-            Assert.That(_permService.ContainsProjectRole(httpContext, Role.None, ProjId).Result, Is.False);
+            Assert.That(_permService.ContainsProjectRole(httpContext, Role.Harvester, ProjId).Result, Is.False);
         }
 
         [Test]
@@ -137,10 +137,10 @@ namespace Backend.Tests.Services
         {
             var user = new User();
             var httpContext = CreateHttpContextWithUser(user);
-            var userRole = _userRoleRepo.Create(new UserRole { ProjectId = ProjId, Role = Role.None }).Result;
+            var userRole = _userRoleRepo.Create(new UserRole { ProjectId = ProjId, Role = Role.Harvester }).Result;
             user.ProjectRoles[ProjId] = userRole.Id;
             _ = _userRepo.Update(user.Id, user).Result;
-            Assert.That(_permService.ContainsProjectRole(httpContext, Role.Harvester, ProjId).Result, Is.False);
+            Assert.That(_permService.ContainsProjectRole(httpContext, Role.Editor, ProjId).Result, Is.False);
         }
 
         [Test]
