@@ -18,7 +18,7 @@ import { compareFlags } from "utilities/wordUtilities";
 
 /** Generate dictionary of MergeTreeSense arrays:
  * - key: word id
- * - value: all merge senses of the word, with Deleted/Duplicate accessibility */
+ * - value: all merge senses of the word */
 export function gatherWordSenses(
   words: Word[],
   deletedSenseGuids: string[]
@@ -28,8 +28,7 @@ export function gatherWordSenses(
   );
 }
 
-/** Generate MergeTreeSense array with Deleted/Duplicate accessibility.
- * Later, the first sense of each sense-set will be changed to Active/Protected. */
+/** Generate MergeTreeSense array with deleted senses set to Status.Deleted. */
 function gatherSenses(
   word: Word,
   deletedSenseGuids: string[]
@@ -42,7 +41,7 @@ function gatherSenses(
       ...sense,
       accessibility: deletedSenseGuids.includes(sense.guid)
         ? Status.Deleted
-        : Status.Duplicate,
+        : sense.accessibility,
     },
   }));
 }
@@ -107,20 +106,18 @@ export function createMergeParent(
 }
 
 /** Given an array of senses to combine:
- * - change the accessibility of the first one from Duplicate to Active/Protected,
+ * - identify the first/top sense as the main one to keep;
+ * - change the accessibility of the rest to Status.Duplicate;
  * - merge select content from the rest into main sense */
 export function combineIntoFirstSense(mergeSenses: MergeTreeSense[]): void {
-  // Set the first sense to be merged as Active/Protected.
-  // This was the top sense when the sidebar was opened.
+  // Set the main sense to the first sense (the top one when the sidebar was opened).
   const mainSense = mergeSenses[0].sense;
-  mainSense.accessibility = mergeSenses[0].protected
-    ? Status.Protected
-    : Status.Active;
 
   // Merge the rest as duplicates.
   // These were senses dropped into another sense.
   mergeSenses.slice(1).forEach((mergeDupSense) => {
     const dupSense = mergeDupSense.sense;
+    dupSense.accessibility = Status.Duplicate;
     // Merge the duplicate's definitions into the main sense.
     const sep = "; ";
     dupSense.definitions.forEach((def) => {
