@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -106,6 +107,12 @@ namespace BackendFramework.Models
         public override int GetHashCode()
         {
             return HashCode.Combine(ProjectId, Role);
+        }
+
+        public static bool RoleContainsRole(Role roleA, Role roleB)
+        {
+            var permsA = RolePermissions(roleA);
+            return RolePermissions(roleB).All(perm => permsA.Contains(perm));
         }
 
         public static List<Permission> RolePermissions(Role role)
