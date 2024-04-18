@@ -18,7 +18,7 @@ import { compareFlags } from "utilities/wordUtilities";
 
 /** Generate dictionary of MergeTreeSense arrays:
  * - key: word id
- * - value: all merge senses of the word, with Deleted/Separate accessibility */
+ * - value: all merge senses of the word, with Deleted/Duplicate accessibility */
 export function gatherWordSenses(
   words: Word[],
   deletedSenseGuids: string[]
@@ -28,7 +28,8 @@ export function gatherWordSenses(
   );
 }
 
-/** Generate MergeTreeSense array with Deleted/Separate accessibility. */
+/** Generate MergeTreeSense array with Deleted/Duplicate accessibility.
+ * Later, the first sense of each sense-set will be changed to Active/Protected. */
 function gatherSenses(
   word: Word,
   deletedSenseGuids: string[]
@@ -41,7 +42,7 @@ function gatherSenses(
       ...sense,
       accessibility: deletedSenseGuids.includes(sense.guid)
         ? Status.Deleted
-        : Status.Separate,
+        : Status.Duplicate,
     },
   }));
 }
@@ -106,9 +107,8 @@ export function createMergeParent(
 }
 
 /** Given an array of senses to combine:
- * - change the accessibility of the first one from Separate to Active/Protected,
- * - change the accessibility of the rest to Duplicate,
- * - merge select content from duplicates into main sense */
+ * - change the accessibility of the first one from Duplicate to Active/Protected,
+ * - merge select content from the rest into main sense */
 export function combineIntoFirstSense(mergeSenses: MergeTreeSense[]): void {
   // Set the first sense to be merged as Active/Protected.
   // This was the top sense when the sidebar was opened.
@@ -121,7 +121,6 @@ export function combineIntoFirstSense(mergeSenses: MergeTreeSense[]): void {
   // These were senses dropped into another sense.
   mergeSenses.slice(1).forEach((mergeDupSense) => {
     const dupSense = mergeDupSense.sense;
-    dupSense.accessibility = Status.Duplicate;
     // Merge the duplicate's definitions into the main sense.
     const sep = "; ";
     dupSense.definitions.forEach((def) => {
