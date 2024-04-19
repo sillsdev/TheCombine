@@ -87,32 +87,19 @@ export default function HarvestThreshWinnow(
   );
 
   useEffect(() => {
+    const opacity = fadeOutSeparate
+      ? [opacityA1, opacityA1, opacityA2, opacityA3]
+      : [opacityB1, opacityB1, opacityB2, opacityB3];
     const options: AnimationOptionsWithOverrides = {
       duration: 7,
       easing: "linear",
       repeat: Infinity,
     };
     if (props.loading) {
-      animate(
-        `#${ImageId.License}`,
-        { opacity: fadeOutSeparate ? opacityB1 : opacityA1 },
-        options
-      );
-      animate(
-        `#${ImageId.Harvest}`,
-        { opacity: fadeOutSeparate ? opacityB1 : opacityA1 },
-        options
-      );
-      animate(
-        `#${ImageId.Thresh}`,
-        { opacity: fadeOutSeparate ? opacityB2 : opacityA2 },
-        options
-      );
-      animate(
-        `#${ImageId.Winnow}`,
-        { opacity: fadeOutSeparate ? opacityB3 : opacityA3 },
-        options
-      );
+      animate(`#${ImageId.License}`, { opacity: opacity[0] }, options);
+      animate(`#${ImageId.Harvest}`, { opacity: opacity[1] }, options);
+      animate(`#${ImageId.Thresh}`, { opacity: opacity[2] }, options);
+      animate(`#${ImageId.Winnow}`, { opacity: opacity[3] }, options);
     }
   }, [fadeOutSeparate, props.loading]);
 
