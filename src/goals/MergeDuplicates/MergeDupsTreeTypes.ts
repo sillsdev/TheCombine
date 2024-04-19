@@ -37,6 +37,7 @@ export interface MergeTreeWord {
   flag: Flag;
   note: Note;
   protected: boolean;
+  audioCount: number;
 }
 
 export function newMergeTreeSense(
@@ -63,6 +64,7 @@ export function newMergeTreeWord(
     flag: newFlag(),
     note: newNote(),
     protected: false,
+    audioCount: 0,
   };
 }
 
@@ -87,6 +89,7 @@ export function convertWordToMergeTreeWord(word: Word): MergeTreeWord {
   mergeTreeWord.flag = { ...word.flag };
   mergeTreeWord.note = { ...word.note };
   mergeTreeWord.protected = word.accessibility === Status.Protected;
+  mergeTreeWord.audioCount = word.audio.length;
   return mergeTreeWord;
 }
 
