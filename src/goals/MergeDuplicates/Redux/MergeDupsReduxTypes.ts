@@ -27,13 +27,6 @@ export const defaultAudio: MergeAudio = {
   moves: {},
 };
 
-export function newMergeSourceWord(
-  srcWordId: string,
-  getAudio = false
-): MergeSourceWord {
-  return { srcWordId, getAudio };
-}
-
 export interface MergeTreeState {
   data: MergeData;
   tree: MergeTree;

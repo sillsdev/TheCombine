@@ -1,4 +1,10 @@
-import { type MergeWords, type Sense, Status, type Word } from "api/models";
+import {
+  type MergeSourceWord,
+  type MergeWords,
+  type Sense,
+  Status,
+  type Word,
+} from "api/models";
 import { defaultState } from "components/App/DefaultState";
 import {
   type MergeData,
@@ -17,7 +23,6 @@ import {
 import {
   defaultAudio,
   defaultState as defaultMergeState,
-  newMergeSourceWord,
 } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { goalDataMock } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
 import { setupStore } from "store";
@@ -45,6 +50,13 @@ jest.mock("backend", () => ({
   mergeWords: (mergeWordsArray: MergeWords[]) =>
     mockMergeWords(mergeWordsArray),
 }));
+
+function newMergeSourceWord(
+  srcWordId: string,
+  getAudio = false
+): MergeSourceWord {
+  return { srcWordId, getAudio };
+}
 
 const mockGoal = new MergeDups();
 mockGoal.data = goalDataMock;
