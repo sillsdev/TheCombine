@@ -32,8 +32,9 @@ import { PronunciationsStatus } from "components/Pronunciations/Redux/Pronunciat
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 
-/** Number of ms for a touchscreen press to be considered a long-press. */
-const LongPressDelay = 500;
+/** Number of ms for a touchscreen press to be considered a long-press.
+ * 600 ms is too short: it can still register as a click. */
+const LongPressDelay = 700;
 
 interface PlayerProps {
   audio: Pronunciation;
