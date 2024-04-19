@@ -80,12 +80,6 @@ export default function HarvestThreshWinnow(
 ): ReactElement {
   const [fadeOutSeparate, setFadeOutSeparate] = useState(false);
 
-  const size = Math.min(
-    0.75 * window.innerHeight,
-    0.25 * window.innerWidth,
-    props.maxSize || 1000
-  );
-
   useEffect(() => {
     if (props.loading) {
       const opacity = fadeOutSeparate
@@ -102,6 +96,12 @@ export default function HarvestThreshWinnow(
       animate(`#${ImageId.Winnow}`, { opacity: opacity[3] }, options);
     }
   }, [fadeOutSeparate, props.loading]);
+
+  const size = Math.min(
+    0.75 * window.innerHeight,
+    0.25 * window.innerWidth,
+    props.maxSize || 1000
+  );
 
   const imageStyle: CSSProperties = {
     border: "1px solid black",
