@@ -16,24 +16,23 @@ export default function useLongPress<T = Element>(
   onLongPress: (e: TouchEvent<T>) => void,
   delay = 1000
 ): UseLongPressReturn<T> {
-  const [event, setEvent] = useState<TouchEvent<T> | undefined>();
+  const [touchEvent, setTouchEvent] = useState<TouchEvent<T> | undefined>();
 
   useEffect(() => {
-    const timerId = event
-      ? setTimeout(() => onLongPress(event), delay)
+    const timerId = touchEvent
+      ? setTimeout(() => onLongPress(touchEvent), delay)
       : undefined;
-    console.info(`timerId: ${timerId}`);
     return () => {
       clearTimeout(timerId);
     };
-  }, [delay, event, onLongPress]);
-
-  const onTouchStart = useCallback((e: TouchEvent<T>) => {
-    setEvent(e);
-  }, []);
+  }, [delay, onLongPress, touchEvent]);
 
   const onTouchEnd = useCallback(() => {
-    setEvent(undefined);
+    setTouchEvent(undefined);
+  }, []);
+
+  const onTouchStart = useCallback((event: TouchEvent<T>) => {
+    setTouchEvent(event);
   }, []);
 
   return { onTouchEnd, onTouchStart };
