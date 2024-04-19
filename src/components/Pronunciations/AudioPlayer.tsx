@@ -31,6 +31,7 @@ import {
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
+import useLongPress from "utilities/useLongPress";
 
 interface PlayerProps {
   audio: Pronunciation;
@@ -125,14 +126,17 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
 
   /** If audio can be deleted or speaker changed, a touchscreen press should open an
    * options menu instead of the context menu. */
-  function handleTouch(e: TouchEvent<HTMLButtonElement>): void {
+  function handleTouch(e?: TouchEvent<HTMLButtonElement>): void {
+    console.info(e);
     if (canChangeSpeaker || canDeleteAudio) {
       // Temporarily disable context menu since some browsers
       // interpret a long-press touch as a right-click.
       disableContextMenu();
-      setAnchor(e.currentTarget);
+      setAnchor(e?.currentTarget);
     }
   }
+
+  const { onTouchStart, onTouchEnd } = useLongPress(handleTouch);
 
   async function handleOnSelect(speaker?: Speaker): Promise<void> {
     if (canChangeSpeaker) {
@@ -143,7 +147,8 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
 
   /** If speaker can be changed, a right click should open the speaker menu instead of
    * the context menu. */
-  function handleOnAuxClick(): void {
+  function handleOnAuxClick(e?: MouseEvent<HTMLButtonElement>): void {
+    console.info(e);
     if (canChangeSpeaker) {
       disableContextMenu();
       setSpeakerDialog(true);
@@ -152,8 +157,10 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
 
   /** Catch a multi-finger mousepad tap as a right click. */
   function handleOnMouseDown(e: MouseEvent<HTMLButtonElement>): void {
+    console.info(e);
+    //e.stopPropagation();
     if (e.buttons > 1) {
-      handleOnAuxClick();
+      handleOnAuxClick(e);
     }
   }
 
@@ -202,8 +209,16 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
           onAuxClick={handleOnAuxClick}
           onClick={deleteOrTogglePlay}
           onMouseDown={handleOnMouseDown}
-          onTouchStart={handleTouch}
-          onTouchEnd={enableContextMenu}
+          onTouchStart={
+            handleTouch /*(e) => {
+            console.info(e);
+            onTouchStart(e);
+          }*/
+          }
+          onTouchEnd={(e) => {
+            onTouchEnd(e);
+            enableContextMenu();
+          }}
           aria-label="play"
           disabled={props.disabled}
           id={`audio-${props.audio.fileName}`}
@@ -223,7 +238,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
       >
         <MenuItem
           id={isPlaying ? "audio-stop" : "audio-play"}
-          onClick={() => {
+          onMouseDown={() => {
             togglePlay();
             handleMenuOnClose();
           }}
@@ -233,7 +248,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
         {canChangeSpeaker && (
           <MenuItem
             id="audio-speaker"
-            onClick={() => {
+            onMouseDown={() => {
               setSpeakerDialog(true);
               handleMenuOnClose();
             }}
@@ -244,9 +259,13 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
         {canDeleteAudio && (
           <MenuItem
             id="audio-delete"
-            onClick={() => {
+            onTouchStart={(e: any) => {
+              console.warn(e);
               setDeleteConf(true);
               handleMenuOnClose();
+            }}
+            onMouseDown={(e: any) => {
+              console.warn(e);
             }}
           >
             <Delete />
