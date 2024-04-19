@@ -16,7 +16,7 @@ export default function Loading(): ReactElement {
       rowGap={3}
     >
       <Typography variant="h4">{t("generic.loadingTitle")}</Typography>
-      <HarvestThreshWinnow fadeOutSeparate loading />
+      <HarvestThreshWinnow loading />
       <Typography variant="h5">{t("generic.loadingText")}</Typography>
     </Box>
   );

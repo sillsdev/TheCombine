@@ -96,7 +96,7 @@ function Body(): ReactElement {
       </div>
       <SignUpButton buttonIdPrefix="landing-body" />
       <HarvestThreshWinnow
-        maxSize={Math.min(400, (window.innerWidth - verticalButtonsWidth) / 4)}
+        maxSize={Math.min(400, (window.innerWidth - verticalButtonsWidth) / 5)}
       />
     </Box>
   );

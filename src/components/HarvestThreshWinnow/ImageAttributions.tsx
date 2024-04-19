@@ -20,7 +20,7 @@ interface ImageAttributionsButtonProps {
   width?: number;
 }
 
-/** Icon button for image attributions */
+/** Icon button for image attributions (assumes CC BY-SA) */
 export default function ImageAttributionsButton(
   props: ImageAttributionsButtonProps
 ): ReactElement {

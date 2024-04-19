@@ -1,5 +1,10 @@
 import { type AnimationOptionsWithOverrides, animate } from "motion";
-import { type CSSProperties, type ReactElement, useEffect } from "react";
+import {
+  type CSSProperties,
+  type ReactElement,
+  useEffect,
+  useState,
+} from "react";
 
 import ImageAttributions, {
   ImageMetadata,
@@ -55,30 +60,26 @@ const winnowMetadata: ImageMetadata = {
 };
 
 interface HarvestThreshWinnowProps {
-  fadeOutSeparate?: boolean;
   loading?: boolean;
   maxSize?: number;
 }
 
-// Opacity of the 3 images for fading in separately then out together
-const opacityA1 = [0, 0.5, 1, 1, 1, 1, 1, 1, 0, 0];
-const opacityA2 = [0, 0, 0, 0.5, 1, 1, 1, 1, 0, 0];
-const opacityA3 = [0, 0, 0, 0, 0, 0.5, 1, 1, 0, 0];
-
 // Opacity of the 3 images for fading in separately then out separately
-const opacityB1 = [0, 1, 1, 1, 0, 0, 0];
-const opacityB2 = [0, 0, 1, 1, 1, 0, 0];
-const opacityB3 = [0, 0, 0, 1, 1, 1, 0];
+const opacityA1 = [0, 1, 1, 1, 0, 0, 0];
+const opacityA2 = [0, 0, 1, 1, 1, 0, 0];
+const opacityA3 = [0, 0, 0, 1, 1, 1, 0];
 
 // Opacity of the 3 images for fading in and out separately
-const opacityC1 = [0, 0.5, 1, 1, 0.5, 0, 0, 0, 0, 0, 0, 0, 0];
-const opacityC2 = [0, 0, 0, 0, 0.5, 1, 1, 0.5, 0, 0, 0, 0, 0];
-const opacityC3 = [0, 0, 0, 0, 0, 0, 0, 0.5, 1, 1, 0.5, 0, 0];
+const opacityB1 = [0, 0.5, 1, 1, 0.5, 0, 0, 0, 0, 0, 0, 0, 0];
+const opacityB2 = [0, 0, 0, 0, 0.5, 1, 1, 0.5, 0, 0, 0, 0, 0];
+const opacityB3 = [0, 0, 0, 0, 0, 0, 0, 0.5, 1, 1, 0.5, 0, 0];
 
 /** A custom harvest-thresh-winnow image */
 export default function HarvestThreshWinnow(
   props: HarvestThreshWinnowProps
 ): ReactElement {
+  const [fadeOutSeparate, setFadeOutSeparate] = useState(false);
+
   const size = Math.min(
     0.75 * window.innerHeight,
     0.25 * window.innerWidth,
@@ -94,26 +95,26 @@ export default function HarvestThreshWinnow(
     if (props.loading) {
       animate(
         `#${ImageId.License}`,
-        { opacity: props.fadeOutSeparate ? opacityC1 : opacityB1 },
+        { opacity: fadeOutSeparate ? opacityB1 : opacityA1 },
         options
       );
       animate(
         `#${ImageId.Harvest}`,
-        { opacity: props.fadeOutSeparate ? opacityC1 : opacityB1 },
+        { opacity: fadeOutSeparate ? opacityB1 : opacityA1 },
         options
       );
       animate(
         `#${ImageId.Thresh}`,
-        { opacity: props.fadeOutSeparate ? opacityC2 : opacityB2 },
+        { opacity: fadeOutSeparate ? opacityB2 : opacityA2 },
         options
       );
       animate(
         `#${ImageId.Winnow}`,
-        { opacity: props.fadeOutSeparate ? opacityC3 : opacityB3 },
+        { opacity: fadeOutSeparate ? opacityB3 : opacityA3 },
         options
       );
     }
-  }, [props.fadeOutSeparate, props.loading]);
+  }, [fadeOutSeparate, props.loading]);
 
   const imageStyle: CSSProperties = {
     border: "1px solid black",
@@ -122,33 +123,10 @@ export default function HarvestThreshWinnow(
     width: size,
   };
 
-  const whiteCircleStyle: CSSProperties = {
-    backgroundColor: "white",
-    border: "1px solid white",
-    borderRadius: size,
-    height: size,
-    position: "absolute",
-    width: size,
-  };
-
   const overlap = 0.23;
 
   return (
     <div style={{ height: size, position: "relative", margin: 10 }}>
-      {/*props.fadeOutSeparate || (
-        <div
-          style={{
-            ...whiteCircleStyle,
-            right: (1 - overlap) * size,
-            zIndex: -1,
-          }}
-        />
-      )}
-      {props.fadeOutSeparate || (
-        <div
-          style={{ ...whiteCircleStyle, right: overlap * size, zIndex: 1 }}
-        />
-      )*/}
       <img
         alt={ImageAlt.Harvest}
         id={ImageId.Harvest}
@@ -164,13 +142,15 @@ export default function HarvestThreshWinnow(
       <img
         alt={ImageAlt.Winnow}
         id={ImageId.Winnow}
+        onClick={() => setFadeOutSeparate(!fadeOutSeparate)}
         src={winnow}
         style={{ ...imageStyle, right: overlap * size, zIndex: 2 }}
       />
       <div
         id={ImageId.License}
         style={{
-          bottom: -10, // The -10 offsets the button padding
+          // Use -10 to offset the button padding
+          bottom: -10,
           left: 0.2 * size - 10,
           position: "absolute",
         }}
