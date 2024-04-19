@@ -39,6 +39,7 @@ jest.mock("backend", () => ({}));
 jest.mock("goals/MergeDuplicates/Redux/MergeDupsActions", () => ({
   setSidebar: (...args: any[]) => mockSetSidebar(...args),
 }));
+jest.mock("i18n", () => ({}));
 jest.mock("rootRedux/hooks", () => {
   return {
     ...jest.requireActual("rootRedux/hooks"),

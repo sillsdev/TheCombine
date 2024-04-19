@@ -22,5 +22,4 @@ export enum Status {
   Deleted = "Deleted",
   Duplicate = "Duplicate",
   Protected = "Protected",
-  Separate = "Separate",
 }

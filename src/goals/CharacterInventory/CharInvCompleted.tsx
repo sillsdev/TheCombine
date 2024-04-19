@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { type Word } from "api/models";
 import { areInFrontier, getWord, revertWords } from "backend";
-import UndoButton from "components/Buttons/UndoButton";
+import { UndoButton } from "components/Buttons";
 import WordCard from "components/WordCard";
 import CharacterStatusText from "goals/CharacterInventory/CharInv/CharacterList/CharacterStatusText";
 import {
