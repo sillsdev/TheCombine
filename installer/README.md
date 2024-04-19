@@ -130,11 +130,12 @@ web browsers used to enter and cleanup the data. Having a secure connection prev
 to override their security settings.
 
 _The Combine_ refreshes its certificate when it is connected to the Internet via a wired Ethernet connection. A
-certificate will be valid for a time between 60 and 90 days. You can use `combinectl` to view when your current
-certificate will expire, for example:
+certificate will be valid for a time between 60 and 90 days. You can use the command `combinectl cert` to view when your
+current certificate will expire, for example:
 
 ```console
-
+$combinectl cert
+Web certificate expires at Jul  8 08:54:11 2024 GMT
 ```
 
 ## Advanced Installation Options
@@ -155,6 +156,6 @@ To run `combine-installer.run` with options, the option list must be started wit
 
 | Command                                    | Effect                                                       |
 | ------------------------------------------ | ------------------------------------------------------------ |
-| `./combine-installer.run -- v1.16.0`       | Install version `v1.16.0` of _The Combine_.                  |
-| `./combine-installer.run -- update v2.1.0` | Update an existing Combine installation to version `v2.1.0`  |
+| `./combine-installer.run -- v1.1.6`        | Install version `v1.1.6` of _The Combine_.                   |
+| `./combine-installer.run -- update v1.2.1` | Update an existing Combine installation to version `v1.2.1`  |
 | `./combine-installer.run -- restart`       | Restart the current installation process from the beginning. |
