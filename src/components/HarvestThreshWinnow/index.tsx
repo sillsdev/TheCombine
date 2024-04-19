@@ -131,7 +131,7 @@ export default function HarvestThreshWinnow(
         alt={ImageAlt.Harvest}
         id={ImageId.Harvest}
         src={harvest}
-        style={{ ...imageStyle, left: overlap * size, zIndex: -2 }}
+        style={{ ...imageStyle, left: overlap * size }}
       />
       <img
         alt={ImageAlt.Thresh}
@@ -144,7 +144,7 @@ export default function HarvestThreshWinnow(
         id={ImageId.Winnow}
         onClick={() => setFadeOutSeparate(!fadeOutSeparate)}
         src={winnow}
-        style={{ ...imageStyle, right: overlap * size, zIndex: 2 }}
+        style={{ ...imageStyle, right: overlap * size }}
       />
       <div
         id={ImageId.License}
