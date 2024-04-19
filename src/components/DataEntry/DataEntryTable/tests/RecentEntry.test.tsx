@@ -10,9 +10,9 @@ import configureMockStore from "redux-mock-store";
 
 import { Word } from "api/models";
 import { defaultState } from "components/App/DefaultState";
+import { NoteButton } from "components/Buttons";
 import {
   DeleteEntry,
-  EntryNote,
   GlossWithSuggestions,
   VernWithSuggestions,
 } from "components/DataEntry/DataEntryTable/EntryCellComponents";
@@ -94,7 +94,7 @@ describe("ExistingEntry", () => {
     it("disables buttons if changing", async () => {
       await renderWithWord(mockWord);
       const vern = testHandle.findByType(VernWithSuggestions);
-      const note = testHandle.findByType(EntryNote);
+      const note = testHandle.findByType(NoteButton);
       const audio = testHandle.findByType(PronunciationsBackend);
       const del = testHandle.findByType(DeleteEntry);
 
@@ -140,7 +140,7 @@ describe("ExistingEntry", () => {
     it("disables buttons if changing", async () => {
       await renderWithWord(mockWord);
       const gloss = testHandle.findByType(GlossWithSuggestions);
-      const note = testHandle.findByType(EntryNote);
+      const note = testHandle.findByType(NoteButton);
       const audio = testHandle.findByType(PronunciationsBackend);
       const del = testHandle.findByType(DeleteEntry);
 
@@ -185,7 +185,7 @@ describe("ExistingEntry", () => {
   describe("note", () => {
     it("updates text", async () => {
       await renderWithWord(mockWord);
-      testHandle = testHandle.findByType(EntryNote).findByType(EditTextDialog);
+      testHandle = testHandle.findByType(NoteButton).findByType(EditTextDialog);
       await act(async () => {
         testHandle.props.updateText(mockText);
       });
