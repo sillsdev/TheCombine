@@ -2,7 +2,7 @@ import { Provider } from "react-redux";
 import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { GramCatGroup, type Sense } from "api";
+import { GramCatGroup, type Sense } from "api/models";
 import { PartOfSpeechButton } from "components/Buttons";
 import { defaultState } from "components/Project/ProjectReduxTypes";
 import DomainChip from "components/WordCard/DomainChip";
