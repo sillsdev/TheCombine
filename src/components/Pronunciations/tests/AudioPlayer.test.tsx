@@ -89,18 +89,18 @@ describe("Pronunciations", () => {
     // Provide deleteAudio prop so that menu is available
     renderAudioPlayer(true);
 
-    const playMenu = testRenderer.root.findByProps({ id: playMenuId });
-    expect(playMenu.props.open).toBeFalsy();
-
     // Use a mock timer to control the length of the press
     jest.useFakeTimers();
 
     const playButton = testRenderer.root.findByProps({ id: mockId });
+    const playMenu = testRenderer.root.findByProps({ id: playMenuId });
+
+    // Start a press and advance the timer just shy of the long-press time
+    expect(playMenu.props.open).toBeFalsy();
     act(() => {
       playButton.props.onTouchStart(mockTouchEvent);
     });
-
-    // Advance the timer just shy of the long-press time
+    expect(playMenu.props.open).toBeFalsy();
     act(() => {
       jest.advanceTimersByTime(longPressDelay - 1);
     });
@@ -111,6 +111,43 @@ describe("Pronunciations", () => {
       jest.advanceTimersByTime(2);
     });
     expect(playMenu.props.open).toBeTruthy();
+
+    // Make sure the menu stays open and no play is dispatched
+    act(() => {
+      playButton.props.onTouchEnd();
+      jest.runAllTimers();
+    });
+    expect(playMenu.props.open).toBeTruthy();
     expect(mockDispatch).not.toHaveBeenCalled();
+  });
+
+  it("doesn't open the menu on short-press", () => {
+    // Provide deleteAudio prop so that menu is available
+    renderAudioPlayer(true);
+
+    // Use a mock timer to control the length of the press
+    jest.useFakeTimers();
+
+    const playButton = testRenderer.root.findByProps({ id: mockId });
+    const playMenu = testRenderer.root.findByProps({ id: playMenuId });
+
+    // Press the button and advance the timer, but end press before the long-press time
+    expect(playMenu.props.open).toBeFalsy();
+    act(() => {
+      playButton.props.onTouchStart(mockTouchEvent);
+    });
+    expect(playMenu.props.open).toBeFalsy();
+    act(() => {
+      jest.advanceTimersByTime(longPressDelay - 1);
+    });
+    expect(playMenu.props.open).toBeFalsy();
+    act(() => {
+      playButton.props.onTouchEnd();
+    });
+    expect(playMenu.props.open).toBeFalsy();
+    act(() => {
+      jest.advanceTimersByTime(2);
+    });
+    expect(playMenu.props.open).toBeFalsy();
   });
 });
