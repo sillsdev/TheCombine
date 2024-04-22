@@ -1,0 +1,116 @@
+import { type TouchEvent } from "react";
+import { Provider } from "react-redux";
+import { type ReactTestRenderer, act, create } from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
+
+import { defaultState } from "components/App/DefaultState";
+import AudioPlayer, {
+  longPressDelay,
+  playButtonId,
+  playMenuId,
+} from "components/Pronunciations/AudioPlayer";
+import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
+import { type StoreState } from "types";
+import { newPronunciation } from "types/word";
+
+// Mock out Menu to avoid issues with setting its anchor.
+jest.mock("@mui/material", () => {
+  return {
+    ...jest.requireActual("@mui/material"),
+    Menu: (props: any) => <div {...props} />,
+  };
+});
+
+jest.mock("backend", () => ({
+  getSpeaker: () => mockGetSpeaker(),
+}));
+jest.mock("types/hooks", () => {
+  return {
+    ...jest.requireActual("types/hooks"),
+    useAppDispatch: () => mockDispatch,
+  };
+});
+
+const mockCanDeleteAudio = jest.fn();
+const mockDispatch = jest.fn((action: any) => action);
+const mockGetSpeaker = jest.fn();
+
+let testRenderer: ReactTestRenderer;
+
+const mockFileName = "speech.mp3";
+const mockId = playButtonId(mockFileName);
+const mockPronunciation = newPronunciation(mockFileName);
+const mockStore = configureMockStore()(mockPlayingState());
+const mockTouchEvent: Partial<TouchEvent<HTMLButtonElement>> = {
+  currentTarget: {} as HTMLButtonElement,
+};
+
+function mockPlayingState(fileName = ""): Partial<StoreState> {
+  return {
+    ...defaultState,
+    pronunciationsState: {
+      fileName,
+      status: PronunciationsStatus.Inactive,
+      wordId: "",
+    },
+  };
+}
+
+function renderAudioPlayer(canDelete = false): void {
+  act(() => {
+    testRenderer = create(
+      <Provider store={mockStore}>
+        <AudioPlayer
+          audio={mockPronunciation}
+          deleteAudio={canDelete ? mockCanDeleteAudio : undefined}
+        />
+      </Provider>
+    );
+  });
+}
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  jest.clearAllTimers();
+});
+
+describe("Pronunciations", () => {
+  it("dispatches on play", () => {
+    renderAudioPlayer();
+    expect(mockDispatch).not.toHaveBeenCalled();
+    const playButton = testRenderer.root.findByProps({ id: mockId });
+    act(() => {
+      playButton.props.onClick();
+    });
+    expect(mockDispatch).toHaveBeenCalledTimes(1);
+  });
+
+  it("opens the menu on long-press", () => {
+    // Provide deleteAudio prop so that menu is available
+    renderAudioPlayer(true);
+
+    const playMenu = testRenderer.root.findByProps({ id: playMenuId });
+    expect(playMenu.props.open).toBeFalsy();
+
+    // Use a mock timer to control the length of the press
+    jest.useFakeTimers();
+
+    const playButton = testRenderer.root.findByProps({ id: mockId });
+    act(() => {
+      playButton.props.onTouchStart(mockTouchEvent);
+    });
+
+    // Advance the timer just shy of the long-press time
+    act(() => {
+      jest.advanceTimersByTime(longPressDelay - 1);
+    });
+    expect(playMenu.props.open).toBeFalsy();
+
+    // Advance the timer just past the long-press time
+    act(() => {
+      jest.advanceTimersByTime(2);
+    });
+    expect(playMenu.props.open).toBeTruthy();
+    expect(mockDispatch).not.toHaveBeenCalled();
+  });
+});

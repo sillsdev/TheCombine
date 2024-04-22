@@ -34,7 +34,10 @@ import { useAppDispatch, useAppSelector } from "types/hooks";
 
 /** Number of ms for a touchscreen press to be considered a long-press.
  * 600 ms is too short: it can still register as a click. */
-const LongPressDelay = 700;
+export const longPressDelay = 700;
+
+export const playButtonId = (fileName: string): string => `audio-${fileName}`;
+export const playMenuId = "play-menu";
 
 interface PlayerProps {
   audio: Pronunciation;
@@ -97,7 +100,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
   // https://stackoverflow.com/questions/48048957/add-a-long-press-event-in-react
   useEffect(() => {
     const timerId = longPressTarget
-      ? setTimeout(() => setAnchor(longPressTarget), LongPressDelay)
+      ? setTimeout(() => setAnchor(longPressTarget), longPressDelay)
       : undefined;
     return () => {
       clearTimeout(timerId);
@@ -231,7 +234,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
           onTouchEnd={handleTouchEnd}
           aria-label="play"
           disabled={props.disabled}
-          id={`audio-${props.audio.fileName}`}
+          id={playButtonId(props.audio.fileName)}
           size={props.size || "large"}
         >
           {icon}
@@ -239,7 +242,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
       </Tooltip>
       <Menu
         TransitionComponent={Fade}
-        id="play-menu"
+        id={playMenuId}
         anchorEl={anchor}
         open={Boolean(anchor)}
         onClose={handleMenuOnClose}
