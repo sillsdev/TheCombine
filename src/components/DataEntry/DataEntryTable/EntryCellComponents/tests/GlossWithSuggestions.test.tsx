@@ -1,4 +1,4 @@
-import React from "react";
+import { createRef } from "react";
 import renderer from "react-test-renderer";
 
 import GlossWithSuggestions from "components/DataEntry/DataEntryTable/EntryCellComponents/GlossWithSuggestions";
@@ -20,7 +20,7 @@ describe("GlossWithSuggestions", () => {
       renderer.create(
         <GlossWithSuggestions
           gloss={"gloss"}
-          glossInput={React.createRef<HTMLInputElement>()}
+          glossInput={createRef<HTMLInputElement>()}
           updateGlossField={jest.fn()}
           handleEnter={jest.fn()}
           analysisLang={newWritingSystem()}
@@ -36,7 +36,7 @@ describe("GlossWithSuggestions", () => {
         <GlossWithSuggestions
           isNew
           gloss={""}
-          glossInput={React.createRef<HTMLInputElement>()}
+          glossInput={createRef<HTMLInputElement>()}
           updateGlossField={jest.fn()}
           handleEnter={jest.fn()}
           analysisLang={newWritingSystem()}
@@ -52,7 +52,7 @@ describe("GlossWithSuggestions", () => {
         <GlossWithSuggestions
           isDisabled
           gloss={""}
-          glossInput={React.createRef<HTMLInputElement>()}
+          glossInput={createRef<HTMLInputElement>()}
           updateGlossField={jest.fn()}
           handleEnter={jest.fn()}
           analysisLang={newWritingSystem()}

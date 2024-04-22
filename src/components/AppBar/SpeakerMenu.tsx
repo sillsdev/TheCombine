@@ -10,16 +10,16 @@ import {
   Typography,
 } from "@mui/material";
 import {
-  ForwardedRef,
-  MouseEvent,
-  ReactElement,
+  type ForwardedRef,
+  type MouseEvent,
+  type ReactElement,
   useEffect,
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-import { Speaker } from "api";
+import { type Speaker } from "api/models";
 import { getAllSpeakers } from "backend";
 import { buttonMinHeight } from "components/AppBar/AppBarTypes";
 import { setCurrentSpeaker } from "components/Project/ProjectActions";

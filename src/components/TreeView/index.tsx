@@ -1,11 +1,11 @@
 import { Close, KeyboardDoubleArrowUp } from "@mui/icons-material";
 import { Grid, Zoom } from "@mui/material";
 import { animate } from "motion";
-import { ReactElement, useCallback, useEffect, useState } from "react";
+import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
-import { SemanticDomain, WritingSystem } from "api";
+import { type SemanticDomain, type WritingSystem } from "api/models";
 import { IconButtonWithTooltip } from "components/Buttons";
 import {
   initTreeDomain,
