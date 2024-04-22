@@ -1,8 +1,8 @@
 import { Provider } from "react-redux";
-import renderer, { ReactTestInstance } from "react-test-renderer";
+import renderer, { type ReactTestInstance } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { Permission } from "api";
+import { Permission } from "api/models";
 import NavigationButtons, {
   dataCleanupButtonId,
   dataEntryButtonId,

@@ -1,11 +1,11 @@
 import { Close, KeyboardDoubleArrowUp } from "@mui/icons-material";
 import { Grid, Zoom } from "@mui/material";
 import { animate } from "motion";
-import { ReactElement, useCallback, useEffect, useState } from "react";
+import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
-import { SemanticDomain, WritingSystem } from "api";
+import { type SemanticDomain, type WritingSystem } from "api/models";
 import { IconButtonWithTooltip } from "components/Buttons";
 import {
   initTreeDomain,
@@ -16,7 +16,7 @@ import { defaultTreeNode } from "components/TreeView/Redux/TreeViewReduxTypes";
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeNavigator from "components/TreeView/TreeNavigator";
 import TreeSearch from "components/TreeView/TreeSearch";
-import { StoreState } from "types";
+import { type StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { newSemanticDomain } from "types/semanticDomain";
 import { semDomWritingSystems } from "types/writingSystem";
