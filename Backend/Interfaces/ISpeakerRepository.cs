@@ -13,5 +13,6 @@ namespace BackendFramework.Interfaces
         Task<bool> Delete(string projectId, string speakerId);
         Task<bool> DeleteAllSpeakers(string projectId);
         Task<ResultOfUpdate> Update(string speakerId, Speaker speaker);
+        Task<bool> IsSpeakerNameInProject(string projectId, string name);
     }
 }

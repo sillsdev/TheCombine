@@ -1,12 +1,17 @@
 import {
   TextField,
-  TextFieldProps,
+  type TextFieldProps,
   Typography,
-  TypographyProps,
+  type TypographyProps,
 } from "@mui/material";
-import { ReactElement, useContext } from "react";
+import {
+  type DetailedHTMLProps,
+  type LiHTMLAttributes,
+  type ReactElement,
+  useContext,
+} from "react";
 
-import FontContext, { WithFontProps } from "utilities/fontContext";
+import FontContext, { type WithFontProps } from "utilities/fontContext";
 
 /* Various MUI components for use within a FontContext
  * to add the appropriate font to that component. */
@@ -65,8 +70,8 @@ export function TypographyWithFont(
   );
 }
 
-type LiWithFontProps = React.DetailedHTMLProps<
-  React.LiHTMLAttributes<HTMLLIElement>,
+type LiWithFontProps = DetailedHTMLProps<
+  LiHTMLAttributes<HTMLLIElement>,
   HTMLLIElement
 > &
   WithFontProps;

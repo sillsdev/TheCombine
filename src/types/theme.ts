@@ -1,9 +1,10 @@
 import { blue, green, grey, orange, red, yellow } from "@mui/material/colors";
 import {
+  type PaletteOptions,
   createTheme,
   responsiveFontSizes,
-  PaletteOptions,
 } from "@mui/material/styles";
+import { type CSSProperties } from "react";
 
 export type HEX = `#${string}`;
 
@@ -33,7 +34,7 @@ const palette: PaletteOptions = {
   tonalOffset: 0.2,
 };
 
-const fontFamily: React.CSSProperties["fontFamily"] = [
+const fontFamily: CSSProperties["fontFamily"] = [
   "'Noto Sans'",
   "'Open Sans'",
   "Roboto",

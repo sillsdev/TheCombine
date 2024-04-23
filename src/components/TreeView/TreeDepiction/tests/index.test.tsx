@@ -1,7 +1,7 @@
 import { match } from "css-mediaquery";
-import { ReactTestRenderer, act, create } from "react-test-renderer";
+import { type ReactTestRenderer, act, create } from "react-test-renderer";
 
-import { SemanticDomainTreeNode } from "api";
+import { SemanticDomainTreeNode } from "api/models";
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import testDomainMap, {
   mapIds,
