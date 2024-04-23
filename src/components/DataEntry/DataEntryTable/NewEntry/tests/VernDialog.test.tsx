@@ -28,8 +28,8 @@ const mockStore = configureMockStore()(mockState);
 describe("VernDialog", () => {
   it("handles empty list", () => {
     createVernDialogInstance([], true);
-    const menuItems = testRenderer.root.findAllByType(VernList);
-    expect(menuItems).toHaveLength(0);
+    const vernList = testRenderer.root.findAllByType(VernList);
+    expect(vernList).toHaveLength(0);
   });
 });
 
