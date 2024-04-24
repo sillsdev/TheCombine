@@ -1,4 +1,3 @@
-import { match } from "css-mediaquery";
 import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
@@ -9,6 +8,7 @@ import TreeView, { exitButtonId, topButtonId } from "components/TreeView";
 import { defaultState as treeViewState } from "components/TreeView/Redux/TreeViewReduxTypes";
 import mockMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
 import { newWritingSystem } from "types/writingSystem";
+import { setMatchMedia } from "utilities/testRendererUtilities";
 
 let treeMaster: renderer.ReactTestRenderer;
 
@@ -38,13 +38,6 @@ const mockStore = configureMockStore([thunk])({
 
 const findById = (id: string): renderer.ReactTestInstance =>
   treeMaster.root.findByProps({ id });
-
-// Modified from mui.com/material-ui/react-use-media-query/#testing
-// For <Hidden> elements to show up: window.matchMedia = createMatchMedia(...)
-const matchMedia = (width: number): ((query: string) => MediaQueryList) => {
-  return (query: string) =>
-    ({ matches: match(query, { width }), addListener: jest.fn() }) as any;
-};
 
 const muiSM = 600;
 
@@ -87,7 +80,7 @@ describe("TreeView", () => {
 
 async function renderTree(exit?: () => void, width?: number): Promise<void> {
   // Required for <Hidden> elements to show up
-  window.matchMedia = matchMedia(width ?? window.innerWidth);
+  setMatchMedia(width);
 
   await renderer.act(async () => {
     treeMaster = renderer.create(
