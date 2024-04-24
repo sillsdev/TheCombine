@@ -59,7 +59,11 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
   }
 
   return (
-    <Tooltip title={t("pronunciations.recordTooltip")} placement="top">
+    <Tooltip
+      disableTouchListener // Distracting when already recording with a long-press.
+      placement="top"
+      title={t("pronunciations.recordTooltip")}
+    >
       <IconButton
         aria-label="record"
         disabled={props.disabled}
