@@ -1,4 +1,4 @@
-import { Box, Grid, Hidden, Typography } from "@mui/material";
+import { Box, Grid, Hidden, Stack, Typography } from "@mui/material";
 import { ReactElement, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -30,22 +30,22 @@ export default function LandingPage(): ReactElement {
   return (
     <>
       <TopBar />
-      <Grid container alignItems="flex-start" justifyContent="space-around">
+      <Grid container>
         <Hidden smDown>
-          <Grid item sm md xl>
+          <Grid item sm>
             <Box style={{ maxHeight: heightBetweenBars, overflow: "auto" }}>
               <Body />
             </Box>
           </Grid>
-          <Grid item sm={3} md={2} xl={1}>
+          <Grid item sm="auto">
             <LandingButtons />
           </Grid>
         </Hidden>
         <Hidden smUp>
-          <Grid item xs>
+          <Grid item xs={12}>
             <LandingButtons top />
           </Grid>
-          <Grid item xs>
+          <Grid item xs={12}>
             <Box
               style={{
                 maxHeight: heightBetweenBars - horizontalButtonsHeight,
@@ -66,7 +66,7 @@ function Body(): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <>
+    <Stack alignItems="center">
       <div style={{ padding: theme.spacing(3) }}>
         <Typography variant="body2" align="justify">
           {t("landingPage.descriptionP1")}
@@ -81,15 +81,12 @@ function Body(): ReactElement {
         <Typography
           variant="h6"
           align="justify"
-          style={{
-            paddingTop: theme.spacing(2),
-            paddingBottom: theme.spacing(1),
-          }}
+          style={{ paddingTop: theme.spacing(2) }}
         >
           {t("landingPage.descriptionP4")}
         </Typography>
-        <SignUpButton buttonIdPrefix="landing-body" />
       </div>
+      <SignUpButton buttonIdPrefix="landing-body" />
       <img
         src={tractor}
         alt="Tractor"
@@ -100,6 +97,6 @@ function Body(): ReactElement {
           marginTop: theme.spacing(4),
         }}
       />
-    </>
+    </Stack>
   );
 }
