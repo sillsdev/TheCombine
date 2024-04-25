@@ -32,6 +32,13 @@ import { PronunciationsStatus } from "components/Pronunciations/Redux/Pronunciat
 import { StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 
+/** Number of ms for a touchscreen press to be considered a long-press.
+ * 600 ms is too short: it can still register as a click. */
+export const longPressDelay = 700;
+
+export const playButtonId = (fileName: string): string => `audio-${fileName}`;
+export const playMenuId = "play-menu";
+
 interface PlayerProps {
   audio: Pronunciation;
   deleteAudio?: (fileName: string) => void;
@@ -55,6 +62,9 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
   );
   const [anchor, setAnchor] = useState<HTMLElement | undefined>();
   const [deleteConf, setDeleteConf] = useState(false);
+  const [longPressTarget, setLongPressTarget] = useState<
+    (EventTarget & HTMLButtonElement) | undefined
+  >();
   const [speaker, setSpeaker] = useState<Speaker | undefined>();
   const [speakerDialog, setSpeakerDialog] = useState(false);
 
@@ -85,6 +95,17 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
       audio.currentTime = 0;
     }
   }, [audio, dispatchReset, isPlaying]);
+
+  // When pressed, set a timer for a long-press.
+  // https://stackoverflow.com/questions/48048957/add-a-long-press-event-in-react
+  useEffect(() => {
+    const timerId = longPressTarget
+      ? setTimeout(() => setAnchor(longPressTarget), longPressDelay)
+      : undefined;
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [longPressTarget]);
 
   function togglePlay(): void {
     if (!isPlaying) {
@@ -125,13 +146,19 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
 
   /** If audio can be deleted or speaker changed, a touchscreen press should open an
    * options menu instead of the context menu. */
-  function handleTouch(e: TouchEvent<HTMLButtonElement>): void {
+  function handleTouchStart(e: TouchEvent<HTMLButtonElement>): void {
     if (canChangeSpeaker || canDeleteAudio) {
       // Temporarily disable context menu since some browsers
       // interpret a long-press touch as a right-click.
       disableContextMenu();
-      setAnchor(e.currentTarget);
+      setLongPressTarget(e.currentTarget);
     }
+  }
+
+  /** When a touch ends, restore the context menu and cancel the long-press timer. */
+  function handleTouchEnd(): void {
+    enableContextMenu();
+    setLongPressTarget(undefined);
   }
 
   async function handleOnSelect(speaker?: Speaker): Promise<void> {
@@ -194,6 +221,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
   return (
     <>
       <Tooltip
+        disableTouchListener // Conflicts with our long-press menu.
         title={<MultilineTooltipTitle lines={tooltipTexts} />}
         placement="top"
       >
@@ -202,11 +230,11 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
           onAuxClick={handleOnAuxClick}
           onClick={deleteOrTogglePlay}
           onMouseDown={handleOnMouseDown}
-          onTouchStart={handleTouch}
-          onTouchEnd={enableContextMenu}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
           aria-label="play"
           disabled={props.disabled}
-          id={`audio-${props.audio.fileName}`}
+          id={playButtonId(props.audio.fileName)}
           size={props.size || "large"}
         >
           {icon}
@@ -214,7 +242,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
       </Tooltip>
       <Menu
         TransitionComponent={Fade}
-        id="play-menu"
+        id={playMenuId}
         anchorEl={anchor}
         open={Boolean(anchor)}
         onClose={handleMenuOnClose}
