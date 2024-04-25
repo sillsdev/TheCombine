@@ -33,12 +33,10 @@ WORKDIR ${HOME}
 
 ENV PATH ${PATH}:${SCRIPT_DIR}
 
-RUN mkdir -p ${SCRIPT_DIR}/font_lists
-
 COPY --chown=user:user requirements.txt .
 
 RUN pip3 install -r requirements.txt
 
 COPY --chown=user:user scripts/*.py ${SCRIPT_DIR}
 COPY --chown=user:user scripts/*.sh ${SCRIPT_DIR}
-COPY --chown=user:user scripts/font_lists/* ${SCRIPT_DIR}/font_lists
+COPY --chown=user:user scripts/*.txt ${SCRIPT_DIR}

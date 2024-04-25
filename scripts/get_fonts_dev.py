@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
-"""Runs maintenance/scripts/get_fonts.py with dev arguments for -f and -o"""
+"""
+Runs maintenance/scripts/get_fonts.py with dev arguments for -f and -o.
+Run this script with -U/--update whenever the MLP version is updated.
+"""
 
 import argparse
 from pathlib import Path

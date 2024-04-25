@@ -20,7 +20,6 @@ import requests
 scripts_dir = Path(__file__).resolve().parent
 file_name_fallback = "fallback.json"
 mlp_font_list = scripts_dir / "mui_language_picker_fonts.txt"
-mlp_fonts_known_unavailable = []
 url_font_families_info = "https://github.com/silnrsi/fonts/raw/main/families.json"
 url_lang_tags_list = "https://ldml.api.sil.org/en?query=langtags"
 url_script_font_table = (
@@ -125,10 +124,10 @@ def extract_lang_subtags(langs: List[str]) -> List[str]:
     return lang_list
 
 
-def fetch_scripts_for_langs(langs: List[str], scripts: List[str] = None) -> List[str]:
+def fetch_scripts_for_langs(langs: List[str]) -> List[str]:
     """Given a list of langtags, look up and return all script tags used with the languages."""
     langs = [lang.lower() for lang in langs]
-    scripts = scripts if scripts else []
+    scripts = []
     logging.debug(f"Downloading lang-tag list from {url_lang_tags_list}")
     req = requests.get(url_lang_tags_list)
     for line in req.iter_lines():
@@ -147,7 +146,7 @@ def fetch_scripts_for_langs(langs: List[str], scripts: List[str] = None) -> List
 
 def fetch_fonts_for_scripts(scripts: List[str]) -> List[str]:
     """Given a list of script tags, look up the default fonts used with those scripts."""
-    scripts = [script.capitalize() for script in scripts]
+    scripts = list({script.capitalize() for script in scripts})
 
     # Always have the Mui-Language-Picker default/safe fonts.
     fonts = ["Annapurna SIL", "Charis SIL", "Noto Sans TC", "Scheherazade New"]
@@ -211,13 +210,16 @@ def main() -> None:
         fonts = [f.strip() for f in mlp_fonts_list.readlines()]
 
     if offline:
+        scripts: List[str] = []
         if args.langs:
-            logging.info(f"Language tags: {', '.join(args.langs)}")
-            scripts = fetch_scripts_for_langs(args.langs, args.scripts)
-        else:
-            scripts = args.scripts
+            logging.info(f"Specified languages: {', '.join(args.langs)}")
+            scripts = fetch_scripts_for_langs(args.langs)
+            logging.info(f"Scripts for specified languages: {', '.join(scripts)}")
 
-        logging.info(f"Scripts: {', '.join(scripts)}")
+        if args.scripts:
+            logging.info(f"Specified scripts: {', '.join(args.scripts)}")
+            scripts.extend(args.scripts)
+
         script_fonts = fetch_fonts_for_scripts(scripts)
         logging.info(
             f"Fonts (default and those for specified languages/scripts): {', '.join(script_fonts)}"
@@ -266,9 +268,7 @@ def main() -> None:
 
         # Check if font was determined available.
         if font_id == "" or font_id not in families.keys():
-            if font in mlp_fonts_known_unavailable:
-                logging.debug(f'Font "{font}" not available (but we knew that already)')
-            elif offline:
+            if offline:
                 logging.warning(f'Font "{font}" not available for download')
             else:
                 logging.warning(f'Font "{font}" css info not available')
