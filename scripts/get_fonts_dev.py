@@ -5,10 +5,16 @@
 import argparse
 from pathlib import Path
 import platform
+import re
 import subprocess
 
 project_dir = Path(__file__).resolve().parent.parent
 dev_output_dir = project_dir / "public" / "fonts"
+maintenance_scripts_dir = project_dir / "maintenance" / "scripts"
+mlp_font_list = maintenance_scripts_dir / "mui_language_picker_fonts.txt"
+mlp_font_families = (
+    project_dir / "node_modules" / "mui-language-picker" / "dist" / "data" / "scriptFontIndex.js"
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -27,6 +33,13 @@ def parse_args() -> argparse.Namespace:
         help="List of language tags for which fonts should be downloaded.",
     )
     parser.add_argument(
+        "--scripts",
+        "-s",
+        nargs="*",
+        metavar="SCRIPT",
+        help="List of script tags for which fonts should be downloaded.",
+    )
+    parser.add_argument(
         "--url",
         "-u",
         dest="local_font_url",
@@ -34,6 +47,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--output", "-o", default=dev_output_dir, help="Output directory for font data."
+    )
+    parser.add_argument(
+        "--update",
+        "-U",
+        action="store_true",
+        help="Updates the list of fonts from mui-language-picker. (Must have run `npm i`)",
     )
     parser.add_argument(
         "--verbose",
@@ -49,11 +68,21 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
 
+    if args.update:
+        family_pattern = re.compile(r'\\"family\\"\:\\"([^\\]+)\\"')  # \:\\\\"(1)\\\\"')
+        with open(mlp_font_families, "r") as families_file:
+            matches = re.findall(family_pattern, families_file.read())
+        matches = [match + "\n" for match in set(matches)]
+        print(len(matches))
+        matches.sort()
+        with open(mlp_font_list, "w") as fonts_file:
+            fonts_file.writelines(matches)
+
     args.output.mkdir(mode=0o755, parents=True, exist_ok=True)
 
     command = [
         "python",
-        project_dir / "maintenance" / "scripts" / "get_fonts.py",
+        maintenance_scripts_dir / "get_fonts.py",
         "-o",
         args.output,
     ]
@@ -65,6 +94,9 @@ def main() -> None:
     if args.langs:
         command.append("-l")
         command.extend(args.langs)
+    if args.scripts:
+        command.append("-s")
+        command.extend(args.scripts)
     if args.verbose:
         command.append("-v")
     subprocess.run(command, shell=(platform.system() == "Windows"), check=True, text=True)

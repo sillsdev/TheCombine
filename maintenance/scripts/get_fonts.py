@@ -19,10 +19,8 @@ import requests
 
 scripts_dir = Path(__file__).resolve().parent
 file_name_fallback = "fallback.json"
-font_lists_dir = scripts_dir / "font_lists"
-mlp_font_list = font_lists_dir / "mui_language_picker_fonts.txt"
-mlp_font_map = font_lists_dir / "mui_language_picker_font_map.json"
-mlp_fonts_known_unavailable = ["NotoSansLeke", "NotoSansShuishu", "SimSun"]
+mlp_font_list = scripts_dir / "mui_language_picker_fonts.txt"
+mlp_fonts_known_unavailable = []
 url_font_families_info = "https://github.com/silnrsi/fonts/raw/main/families.json"
 url_lang_tags_list = "https://ldml.api.sil.org/en?query=langtags"
 url_script_font_table = (
@@ -47,6 +45,13 @@ def parse_args() -> argparse.Namespace:
         nargs="*",
         metavar="LANG",
         help="List of language tags for which fonts should be downloaded.",
+    )
+    parser.add_argument(
+        "--scripts",
+        "-s",
+        nargs="*",
+        metavar="SCRIPT",
+        help="List of script tags for which fonts should be downloaded.",
     )
     parser.add_argument(
         "--url",
@@ -120,10 +125,10 @@ def extract_lang_subtags(langs: List[str]) -> List[str]:
     return lang_list
 
 
-def fetch_scripts_for_langs(langs: List[str]) -> List[str]:
+def fetch_scripts_for_langs(langs: List[str], scripts: List[str] = None) -> List[str]:
     """Given a list of langtags, look up and return all script tags used with the languages."""
     langs = [lang.lower() for lang in langs]
-    scripts = []
+    scripts = scripts if scripts else []
     logging.debug(f"Downloading lang-tag list from {url_lang_tags_list}")
     req = requests.get(url_lang_tags_list)
     for line in req.iter_lines():
@@ -144,8 +149,8 @@ def fetch_fonts_for_scripts(scripts: List[str]) -> List[str]:
     """Given a list of script tags, look up the default fonts used with those scripts."""
     scripts = [script.capitalize() for script in scripts]
 
-    # Always have the Mui-Language-Picker default/safe fonts (except proprietary "SimSun").
-    fonts = ["AnnapurnaSIL", "CharisSIL", "DoulosSIL", "NotoSans", "ScheherazadeNew"]
+    # Always have the Mui-Language-Picker default/safe fonts.
+    fonts = ["Annapurna SIL", "Charis SIL", "Noto Sans TC", "Scheherazade New"]
 
     logging.debug(f"Downloading script font table from {url_script_font_table}")
     req = requests.get(url_script_font_table)
@@ -174,7 +179,7 @@ def fetch_fonts_for_scripts(scripts: List[str]) -> List[str]:
         if len(row) == 0 or row[0] not in scripts:
             continue
         for i in font_indices:
-            font = row[i].replace(" ", "")
+            font = row[i]
             if font != "" and font not in fonts:
                 fonts.append(font)
 
@@ -200,19 +205,22 @@ def main() -> None:
         logging.error(f"Invalid output directory: '{args.output}'")
         exit(1)
 
+    offline: bool = args.langs or args.scripts
+
     with open(mlp_font_list, "r") as mlp_fonts_list:
-        # MLP use of spaces in fonts is inconsistent, so remove all spaces for simplicity.
-        fonts = [f.strip().replace(" ", "") for f in mlp_fonts_list.readlines()]
+        fonts = [f.strip() for f in mlp_fonts_list.readlines()]
 
-    if args.langs:
-        logging.info(f"Language tags: {', '.join(args.langs)}")
+    if offline:
+        if args.langs:
+            logging.info(f"Language tags: {', '.join(args.langs)}")
+            scripts = fetch_scripts_for_langs(args.langs, args.scripts)
+        else:
+            scripts = args.scripts
 
-        scripts = fetch_scripts_for_langs(args.langs)
-        logging.info(f"Scripts used for specified language tags: {', '.join(scripts)}")
-
+        logging.info(f"Scripts: {', '.join(scripts)}")
         script_fonts = fetch_fonts_for_scripts(scripts)
         logging.info(
-            f"Default fonts and fonts used for specified language tags: {', '.join(script_fonts)}"
+            f"Fonts (default and those for specified languages/scripts): {', '.join(script_fonts)}"
         )
 
     if args.clean:
@@ -227,28 +235,19 @@ def main() -> None:
 
     families = fetch_font_families_info()
 
-    with open(mlp_font_map, "r") as mlp_map_file:
-        mlp_map: dict[str, str] = json.load(mlp_map_file)
-        # Assumes no two keys map to the same value.
-        mlp_map_rev = {val: key for key, val in mlp_map.items()}
-
     # Fonts for which the frontend will get css files from Google's font API.
     google_fallback: dict[str, str] = {}
 
     for font in fonts:
         logging.debug(f"Font: {font}")
-        font_id: str = font.lower()
-        if font in mlp_map.keys():
-            font_id = mlp_map[font].lower()
+        font_id: str = font.replace(" ", "").lower()
 
         # Get font family info from font families info, using fallback font if necessary.
         while font_id != "" and font_id in families.keys():
             font_info = families[font_id]
             family: str = font_info["family"]
             from_google = (
-                (not args.langs)
-                and "source" in font_info.keys()
-                and font_info["source"] == "Google"
+                (not offline) and "source" in font_info.keys() and font_info["source"] == "Google"
             )
             if check_font_info(font_info) or from_google:
                 # Font available.
@@ -261,18 +260,18 @@ def main() -> None:
                 font_id = ""
 
         # When downloading, only download fonts used for scripts of the specified languages.
-        if args.langs and family.replace(" ", "") not in script_fonts:
-            logging.debug(f"Skipping font {font} as irrelevant for specified languages.")
+        if offline and family not in script_fonts:
+            logging.debug(f'Skipping font "{font}" as irrelevant for specified languages/scripts.')
             continue
 
         # Check if font was determined available.
         if font_id == "" or font_id not in families.keys():
             if font in mlp_fonts_known_unavailable:
-                logging.debug(f"Font {font} not available (but we knew that already)")
-            elif args.langs:
-                logging.warning(f"Font {font} not available for download")
+                logging.debug(f'Font "{font}" not available (but we knew that already)')
+            elif offline:
+                logging.warning(f'Font "{font}" not available for download')
             else:
-                logging.warning(f"Font {font} css info not available")
+                logging.warning(f'Font "{font}" css info not available')
             continue
 
         # When not downloading, prefer fetching css info from Google when available.
@@ -305,7 +304,7 @@ def main() -> None:
             logging.warning(f"{file_name}: No 'flourl' or 'url' for this file")
             continue
 
-        if args.langs:
+        if offline:
             # With the https://fonts.languagetechnology.org "flourl" urls,
             # urllib.request.urlretrieve() is denied (403), but requests.get() works.
             req = requests.get(src)
@@ -326,17 +325,7 @@ def main() -> None:
         with open(css_file_path, "w") as css_file:
             css_file.writelines(css_lines)
 
-        # If the font corresponds to a different MPL font name,
-        # create a css file for that font name too.
-        if font in mlp_map_rev.keys():
-            font = mlp_map_rev[font]
-            css_lines[2] = f"  font-family: '{font}';\n"
-            css_file_path = args.output / f"{font}.css"
-            logging.debug(f"Writing {css_file_path}")
-            with open(css_file_path, "w") as css_file:
-                css_file.writelines(css_lines)
-
-    if not args.langs:
+    if not offline:
         fallback_lines = ['{\n  "google": {\n']
         for key, val in google_fallback.items():
             fallback_lines.append(f'    "{key}": "{val}",\n')
