@@ -68,6 +68,7 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
         aria-label="record"
         disabled={props.disabled}
         id={recordButtonId}
+        onBlur={toggleIsRecordingToFalse}
         onPointerDown={toggleIsRecordingToTrue}
         onPointerUp={toggleIsRecordingToFalse}
         onTouchEnd={handleTouchEnd}
