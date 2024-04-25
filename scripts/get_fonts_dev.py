@@ -55,7 +55,7 @@ def parse_args() -> argparse.Namespace:
         "--update",
         "-U",
         action="store_true",
-        help="Updates the list of fonts from mui-language-picker. (Must have run `npm i`)",
+        help="Updates the list of fonts from mui-language-picker. (Must have run `npm i`.)",
     )
     parser.add_argument(
         "--verbose",
@@ -72,14 +72,14 @@ def main() -> None:
     args = parse_args()
 
     if args.update:
-        family_pattern = re.compile(r'\\"family\\"\:\\"([^\\]+)\\"')  # \:\\\\"(1)\\\\"')
+        # Font families are in the file as: \"family\":\"Font Family Name\"
+        family_pattern = re.compile(r'\\"family\\"\:\\"([^\\]+)\\"')
         with open(mlp_font_families, "r") as families_file:
             matches = re.findall(family_pattern, families_file.read())
-        matches = [match + "\n" for match in set(matches)]
-        print(len(matches))
-        matches.sort()
+        font_lines = [match + "\n" for match in set(matches)]
+        font_lines.sort()
         with open(mlp_font_list, "w") as fonts_file:
-            fonts_file.writelines(matches)
+            fonts_file.writelines(font_lines)
 
     args.output.mkdir(mode=0o755, parents=True, exist_ok=True)
 
