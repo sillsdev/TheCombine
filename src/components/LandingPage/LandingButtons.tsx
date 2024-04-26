@@ -47,7 +47,7 @@ export default function LandingButtons(
           buttonId={`${idAffix}-login`}
         />
         <LandingButton
-          onClick={openUserGuide}
+          onClick={() => openUserGuide()}
           textId="userMenu.userGuide"
           buttonId={`${idAffix}-guide`}
         />
