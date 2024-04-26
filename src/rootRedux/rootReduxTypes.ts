@@ -38,7 +38,7 @@ import {
   defaultState as analyticsState,
 } from "types/Redux/analyticsReduxTypes";
 
-//root store structure
+/** Redux store structure */
 export interface StoreState {
   //login
   loginState: LoginState;
@@ -64,6 +64,7 @@ export interface StoreState {
   analyticsState: AnalyticsState;
 }
 
+/** Default values for the Redux store */
 export const defaultState: StoreState = {
   loginState: { ...loginState },
   currentProjectState: { ...currentProjectState },
