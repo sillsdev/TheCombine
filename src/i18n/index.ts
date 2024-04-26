@@ -20,8 +20,7 @@ i18n
   .use(initReactI18next)
   .init<HttpBackendOptions>(
     {
-      backend: {},
-      debug: true, // Uncomment to troubleshoot
+      //debug: true, // Uncomment to troubleshoot
       returnNull: false,
       // ignoring localStorage and cookies for the detection order lets the user change languages
       // more easily (just switch in the browser and reload, instead of clearing all site data)
