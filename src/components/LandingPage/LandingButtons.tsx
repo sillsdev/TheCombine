@@ -40,7 +40,7 @@ export default function LandingButtons(
         />
         <LandingButton
           onClick={() => openUserGuide()}
-          textId={"userMenu.userGuide"}
+          textId="userMenu.userGuide"
           buttonId={`${idAffix}-guide`}
           icon={props.top ? <Info /> : undefined}
         />

@@ -15,10 +15,10 @@ export default function TopBar(): ReactElement {
       <AppBar position="fixed">
         <Toolbar>
           <Stack
-            justifyContent="space-between"
-            spacing={2}
             alignItems="center"
             direction="row"
+            justifyContent="space-between"
+            spacing={2}
             style={{ width: "100%" }}
           >
             <img src={logo} height="50" alt="Logo" />
