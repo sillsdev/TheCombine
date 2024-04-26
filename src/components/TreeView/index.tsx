@@ -112,14 +112,13 @@ export default function TreeView(props: TreeViewProps): ReactElement {
       {/* Domain search */}
       <TreeNavigator currentDomain={currentDomain} animate={animateHandler} />
       <Grid container justifyContent="space-between">
-        <Hidden smDown>
-          {/* Empty grid item to balance the return-to-top and exit buttons */}
-          <Grid item style={{ minWidth: exit ? 80 : 40 }} />
-        </Hidden>
-        <Hidden smUp>
-          {/* Empty grid item to balance the exit button */}
-          <Grid item style={{ minWidth: exit ? 40 : 0 }} />
-        </Hidden>
+        <Grid item>
+          {/* Empty grid item to balance the buttons */}
+          <Hidden smDown>
+            <div style={{ display: "inline-block", width: 40 }} />
+          </Hidden>
+          {exit && <div style={{ display: "inline-block", width: 40 }} />}
+        </Grid>
         <Grid item>
           <TreeSearch currentDomain={currentDomain} animate={animateHandler} />
         </Grid>
