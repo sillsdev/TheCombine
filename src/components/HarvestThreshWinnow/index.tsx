@@ -49,9 +49,9 @@ const threshMetadata: ImageMetadata = {
 };
 
 const winnowMetadata: ImageMetadata = {
-  name: "Woman Holding a Winnowing Basket with Grains",
+  name: "A Woman with a Winnowing Basket",
   nameHref:
-    "https://www.pexels.com/photo/woman-holding-a-winnowing-basket-with-grains-11398292/",
+    "https://www.pexels.com/photo/a-woman-with-a-winnowing-basket-19401189/",
   by: "Mehmet Turgut Kirkgoz",
   byHref: "https://www.pexels.com/@tkirkgoz/",
   license: "Pexels license",
