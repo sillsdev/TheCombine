@@ -9,7 +9,6 @@ import PageNotFound from "components/PageNotFound/component";
 import PasswordRequest from "components/PasswordReset/Request";
 import PasswordReset from "components/PasswordReset/ResetPage";
 import RequireAuth from "components/RequireAuth";
-import Loading from "goals/DefaultGoal/Loading";
 import { Path } from "types/path";
 import { routerPath } from "utilities/pathUtilities";
 
@@ -49,7 +48,6 @@ export const appRoutes: RouteObject[] = [
     path: `${Path.ProjInvite}/:project/:token`,
     element: <ProjectInvite />,
   },
-  { path: `loading`, element: <Loading /> },
   {
     path: "*",
     element: <PageNotFound />,
