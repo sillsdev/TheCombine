@@ -139,6 +139,7 @@
     "project": "Project:",
     "tab": {
       "basic": "Basic Settings",
+      "domains": "Custom Semantic Domains",
       "export": "Export",
       "importExport": "Import/Export",
       "languages": "Languages",
@@ -253,6 +254,9 @@
       "emailLabel": "Email",
       "toastSuccess": "User added to the project.",
       "toastFail": "Failed to add user to the project."
+    },
+    "domains": {
+      "label": "Custom Semantic Domains"
     }
   },
   "goal": {

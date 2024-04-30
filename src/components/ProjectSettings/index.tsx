@@ -11,6 +11,7 @@ import {
   RecordVoiceOver,
   Settings,
   Sms,
+  Web,
 } from "@mui/icons-material";
 import {
   Box,
@@ -45,6 +46,7 @@ import {
 import ExportButton from "components/ProjectExport/ExportButton";
 import ProjectArchive from "components/ProjectSettings/ProjectArchive";
 import ProjectAutocomplete from "components/ProjectSettings/ProjectAutocomplete";
+import ProjectDomains from "components/ProjectSettings/ProjectDomains";
 import ProjectImport from "components/ProjectSettings/ProjectImport";
 import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
 import ProjectName from "components/ProjectSettings/ProjectName";
@@ -63,11 +65,13 @@ export enum ProjectSettingsTab {
   Users = "TabUsers",
   ImportExport = "TabImportExport",
   Schedule = "TabSchedule",
+  Domains = "TabDomains",
 }
 
 export enum Setting {
   Archive = "SettingArchive",
   Autocomplete = "SettingAutocomplete",
+  Domains = "SettingDomains",
   Export = "SettingExport",
   Import = "SettingImport",
   Languages = "SettingLanguages",
@@ -291,6 +295,19 @@ export default function ProjectSettingsComponent(): ReactElement {
           />
         </Grid>
       </TabPanel>
+
+      <TabPanel value={tab} index={ProjectSettingsTab.Domains}>
+        <Grid container spacing={6}>
+          {/* Custom semantic domains */}
+          <BaseSettings
+            icon={<Web data-testid={Setting.Domains} />}
+            title={t("projectSettings.domains.label")}
+            body={
+              <ProjectDomains project={project} setProject={updateProject} />
+            }
+          />
+        </Grid>
+      </TabPanel>
     </>
   );
 }
@@ -397,6 +414,22 @@ function SettingsTabs(props: SettingsTabsProps): ReactElement {
             }
             sx={{ minWidth: 0 }}
             value={ProjectSettingsTab.Schedule}
+          />
+        )}
+
+        {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+          <Tab
+            data-testid={ProjectSettingsTab.Domains}
+            id={ProjectSettingsTab.Domains.toString()}
+            label={
+              <TabLabel
+                hideLabel={hideLabels}
+                icon={<Web />}
+                textId={"projectSettings.tab.domains"}
+              />
+            }
+            sx={{ minWidth: 0 }}
+            value={ProjectSettingsTab.Domains}
           />
         )}
       </Tabs>
