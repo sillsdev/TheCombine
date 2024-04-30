@@ -112,21 +112,33 @@ namespace BackendFramework.Models
         [BsonElement("questions")]
         public List<string> Questions { get; set; }
 
-        public SemanticDomainFull()
+        public SemanticDomainFull() : base()
         {
-            Name = "";
-            Id = "";
             Description = "";
             Questions = new();
-            Lang = "";
+        }
+
+        public SemanticDomainFull(SemanticDomain semDom)
+        {
+            MongoId = semDom.MongoId;
+            Guid = semDom.Guid;
+            Name = semDom.Name;
+            Id = semDom.Id;
+            Lang = semDom.Lang;
+            UserId = semDom.UserId;
+            Created = semDom.Created;
+
+            Description = "";
+            Questions = new();
         }
 
         public new SemanticDomainFull Clone()
         {
-            var clone = (SemanticDomainFull)base.Clone();
-            clone.Description = Description;
-            clone.Questions = Questions.Select(q => q).ToList();
-            return clone;
+            return new(base.Clone())
+            {
+                Description = Description,
+                Questions = Questions.Select(q => q).ToList()
+            };
         }
 
         public override bool Equals(object? obj)

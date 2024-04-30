@@ -55,7 +55,7 @@ namespace BackendFramework.Models
         /// <summary> Custom, project-specific semantic domains. </summary>
         [Required]
         [BsonElement("semanticDomains")]
-        public List<SemanticDomain> SemanticDomains { get; set; }
+        public List<SemanticDomainFull> SemanticDomains { get; set; }
 
         [Required]
         [BsonElement("validCharacters")]

@@ -10,7 +10,7 @@ namespace BackendFramework.Interfaces
         ILiftMerger GetLiftImporterExporter(string projectId, string vernLang, IWordRepository wordRepo);
         Task<bool> LdmlImport(string dirPath, IProjectRepository projRepo, Project project);
         Task<string> LiftExport(string projectId, IWordRepository wordRepo, IProjectRepository projRepo);
-        Task CreateLiftRanges(List<SemanticDomain> projDoms, string rangesDest);
+        Task CreateLiftRanges(List<SemanticDomainFull> projDoms, string rangesDest);
 
         // Methods to store, retrieve, and delete an export string in a common dictionary.
         void StoreExport(string userId, string filePath);
@@ -27,7 +27,7 @@ namespace BackendFramework.Interfaces
     {
         bool DoesImportHaveDefinitions();
         bool DoesImportHaveGrammaticalInfo();
-        List<SemanticDomain> GetCustomSemanticDomains();
+        List<SemanticDomainFull> GetCustomSemanticDomains();
         List<WritingSystem> GetImportAnalysisWritingSystems();
         Task<List<Word>> SaveImportEntries();
     }

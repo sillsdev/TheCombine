@@ -428,7 +428,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Export English semantic domains (along with any custom domains) to lift-ranges. </summary>
-        public async Task CreateLiftRanges(List<SemanticDomain> projDoms, string rangesDest)
+        public async Task CreateLiftRanges(List<SemanticDomainFull> projDoms, string rangesDest)
         {
             await using var liftRangesWriter = XmlWriter.Create(rangesDest, new XmlWriterSettings
             {
@@ -664,7 +664,7 @@ namespace BackendFramework.Services
         private sealed class LiftMerger : ILiftMerger
         {
             private readonly string _projectId;
-            private readonly List<SemanticDomain> _semDoms;
+            private readonly List<SemanticDomainFull> _semDoms;
             private readonly string _vernLang;
             private readonly IWordRepository _wordRepo;
             private readonly List<Word> _importEntries = new();
@@ -698,7 +698,7 @@ namespace BackendFramework.Services
             }
 
             /// <summary> Get custom semantic domains found in the lift ranges. </summary>
-            public List<SemanticDomain> GetCustomSemanticDomains()
+            public List<SemanticDomainFull> GetCustomSemanticDomains()
             {
                 return _semDoms;
             }
@@ -1005,14 +1005,21 @@ namespace BackendFramework.Services
             public void ProcessRangeElement(string range, string id, string guid, string parent,
                 LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml)
             {
-                if (range == "semantic-domain-ddp4" && abbrev.Count > 0 && label.Count > 0)
+                if (range == "semantic-domain-ddp4" && abbrev.Count > 0)
                 {
-                    var semDomId = abbrev.First().Value.Text;
-                    if (SemanticDomain.IsValidId(semDomId, true) && semDomId.Last() == '0')
+                    var domainId = abbrev.First().Value.Text;
+                    if (SemanticDomain.IsValidId(domainId, true) && domainId.Last() == '0')
                     {
-                        var nameLabel = label.First();
-                        _semDoms.Add(
-                            new() { Guid = guid, Id = semDomId, Lang = nameLabel.Key, Name = nameLabel.Value.Text });
+                        foreach (var nameLabel in label)
+                        {
+                            _semDoms.Add(new()
+                            {
+                                Guid = guid,
+                                Id = domainId,
+                                Lang = nameLabel.Key,
+                                Name = nameLabel.Value.Text
+                            });
+                        }
                     }
                 }
             }
