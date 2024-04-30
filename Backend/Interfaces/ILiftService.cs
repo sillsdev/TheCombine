@@ -27,6 +27,7 @@ namespace BackendFramework.Interfaces
     {
         bool DoesImportHaveDefinitions();
         bool DoesImportHaveGrammaticalInfo();
+        List<SemanticDomain> GetCustomSemanticDomains();
         List<WritingSystem> GetImportAnalysisWritingSystems();
         Task<List<Word>> SaveImportEntries();
     }

@@ -78,6 +78,29 @@ namespace BackendFramework.Models
         {
             return HashCode.Combine(Name, Id, Lang, Guid, UserId, Created);
         }
+
+        /// <summary>
+        /// Check if given id string is a valid id: single non-0 digits divided by periods.
+        /// If allowCustom is set to true, allow the final digit to be 0.
+        /// </summary>
+        public static bool IsValidId(string id, bool allowCustom = false)
+        {
+            // Ensure the id is composed of digits and periods
+            if (!id.All(c => char.IsDigit(c) || c == '.'))
+            {
+                return false;
+            }
+
+            // Check that each number between periods is a single non-zero digit
+            var parts = id.Split(".");
+            var allSingleDigit = parts.All(d => d.Length == 1);
+            if (allowCustom)
+            {
+                // Custom domains may have 0 as the final digit
+                parts = parts.Take(parts.Length - 1).ToArray();
+            }
+            return allSingleDigit && parts.All(d => d != "0");
+        }
     }
 
     public class SemanticDomainFull : SemanticDomain

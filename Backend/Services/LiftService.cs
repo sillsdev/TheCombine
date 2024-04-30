@@ -383,7 +383,7 @@ namespace BackendFramework.Services
                 }
             }
 
-            // Export semantic domains to lift-ranges
+            // Export custom semantic domains to lift-ranges
             if (proj.SemanticDomains.Count != 0 || CopyLiftRanges(proj.Id, rangesDest) is null)
             {
                 await CreateLiftRanges(proj.SemanticDomains, rangesDest);
@@ -664,6 +664,7 @@ namespace BackendFramework.Services
         private sealed class LiftMerger : ILiftMerger
         {
             private readonly string _projectId;
+            private readonly List<SemanticDomain> _semDoms;
             private readonly string _vernLang;
             private readonly IWordRepository _wordRepo;
             private readonly List<Word> _importEntries = new();
@@ -671,6 +672,7 @@ namespace BackendFramework.Services
             public LiftMerger(string projectId, string vernLang, IWordRepository wordRepo)
             {
                 _projectId = projectId;
+                _semDoms = new();
                 _vernLang = vernLang;
                 _wordRepo = wordRepo;
             }
@@ -693,6 +695,12 @@ namespace BackendFramework.Services
                 return _importEntries.Any(w => w.Senses.Any(
                     s => s.GrammaticalInfo is not null &&
                     s.GrammaticalInfo.CatGroup != GramCatGroup.Unspecified));
+            }
+
+            /// <summary> Get custom semantic domains found in the lift ranges. </summary>
+            public List<SemanticDomain> GetCustomSemanticDomains()
+            {
+                return _semDoms;
             }
 
             /// <summary>
@@ -993,16 +1001,20 @@ namespace BackendFramework.Services
                 }
             }
 
-            /// <summary> Adds in each semantic domain to a list </summary>
+            /// <summary> Adds in custom semantic domains </summary>
             public void ProcessRangeElement(string range, string id, string guid, string parent,
                 LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml)
             {
-                /*uncomment this if you want to import semantic domains from a lift-ranges file*/
-                //if (range == "semantic-domain-ddp4")
-                //{
-                //    _sdList.Add(new SemanticDomain {
-                //        Name = label.ElementAt(0).Value.Text, Id = abbrev.First().Value.Text });
-                //}
+                if (range == "semantic-domain-ddp4" && abbrev.Count > 0 && label.Count > 0)
+                {
+                    var semDomId = abbrev.First().Value.Text;
+                    if (SemanticDomain.IsValidId(semDomId, true) && semDomId.Last() == '0')
+                    {
+                        var nameLabel = label.First();
+                        _semDoms.Add(
+                            new() { Guid = guid, Id = semDomId, Lang = nameLabel.Key, Name = nameLabel.Value.Text });
+                    }
+                }
             }
 
             // The following are unused and are not implemented, but may still be called by the Lexicon Merger

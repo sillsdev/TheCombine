@@ -52,6 +52,7 @@ namespace BackendFramework.Models
         [BsonElement("analysisWritingSystems")]
         public List<WritingSystem> AnalysisWritingSystems { get; set; }
 
+        /// <summary> Custom, project-specific semantic domains. </summary>
         [Required]
         [BsonElement("semanticDomains")]
         public List<SemanticDomain> SemanticDomains { get; set; }
