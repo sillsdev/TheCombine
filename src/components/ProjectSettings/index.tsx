@@ -1,4 +1,5 @@
 import {
+  AccountTree,
   Archive,
   CalendarMonth,
   CloudUpload,
@@ -11,7 +12,6 @@ import {
   RecordVoiceOver,
   Settings,
   Sms,
-  Web,
 } from "@mui/icons-material";
 import {
   Box,
@@ -300,7 +300,7 @@ export default function ProjectSettingsComponent(): ReactElement {
         <Grid container spacing={6}>
           {/* Custom semantic domains */}
           <BaseSettings
-            icon={<Web data-testid={Setting.Domains} />}
+            icon={<AccountTree data-testid={Setting.Domains} />}
             title={t("projectSettings.domains.label")}
             body={
               <ProjectDomains project={project} setProject={updateProject} />
@@ -424,7 +424,7 @@ function SettingsTabs(props: SettingsTabsProps): ReactElement {
             label={
               <TabLabel
                 hideLabel={hideLabels}
-                icon={<Web />}
+                icon={<AccountTree />}
                 textId={"projectSettings.tab.domains"}
               />
             }

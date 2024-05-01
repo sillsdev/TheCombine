@@ -139,7 +139,7 @@
     "project": "Project:",
     "tab": {
       "basic": "Basic Settings",
-      "domains": "Custom Semantic Domains",
+      "domains": "Semantic Domains",
       "export": "Export",
       "importExport": "Import/Export",
       "languages": "Languages",
@@ -256,7 +256,12 @@
       "toastFail": "Failed to add user to the project."
     },
     "domains": {
-      "label": "Custom Semantic Domains"
+      "label": "Custom Semantic Domains",
+      "add": "Add a custom subdomain",
+      "parent": "Parent domain: ",
+      "language": "Subdomain language: ",
+      "selectLanguage": "(Select language)",
+      "name": "Subdomain name: "
     }
   },
   "goal": {

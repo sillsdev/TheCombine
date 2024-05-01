@@ -32,7 +32,7 @@ export const topButtonId = "tree-view-top";
 
 export interface TreeViewProps {
   exit?: () => void;
-  returnControlToCaller: () => void | Promise<void>;
+  returnControlToCaller: (domain?: SemanticDomain) => void | Promise<void>;
 }
 
 export default function TreeView(props: TreeViewProps): ReactElement {
@@ -86,7 +86,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
       if (dom.id !== id) {
         await dispatch(traverseTree(dom));
       } else if (dom.id !== defaultTreeNode.id) {
-        await returnControlToCaller();
+        await returnControlToCaller(dom);
       } else {
         setVisible(true);
       }
