@@ -113,7 +113,7 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.3.0",
     "eslint-plugin-unused-imports": "^3.1.0",
-    "hunspell-reader": "^7.0.0",
+    "hunspell-reader": "^8.7.0",
     "jest-canvas-mock": "^2.5.2",
     "license-checker-rseidelsohn": "^4.3.0",
     "madge": "^6.1.0",
