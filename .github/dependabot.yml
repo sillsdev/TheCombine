@@ -4,75 +4,75 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
+      time: "02:00"
+      timezone: "US/Eastern"
 
   - package-ecosystem: "nuget"
     directory: "/Backend.Tests"
     schedule:
       interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
+      time: "02:00"
+      timezone: "US/Eastern"
 
   - package-ecosystem: "nuget"
     directory: "/Backend"
     schedule:
       interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
+      time: "02:00"
+      timezone: "US/Eastern"
 
   - package-ecosystem: "docker"
     directory: "/Backend"
     schedule:
       interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
+      time: "02:00"
+      timezone: "US/Eastern"
 
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
+      time: "02:00"
+      timezone: "US/Eastern"
 
   - package-ecosystem: "docker"
     directory: "/database"
     schedule:
       interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
+      time: "02:00"
+      timezone: "US/Eastern"
 
   - package-ecosystem: "docker"
     directory: "/deploy"
     schedule:
       interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
+      time: "02:00"
+      timezone: "US/Eastern"
 
   - package-ecosystem: "pip"
     directory: "/deploy"
     schedule:
       interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
+      time: "02:00"
+      timezone: "US/Eastern"
 
   - package-ecosystem: "docker"
     directory: "/maintenance"
     schedule:
       interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
+      time: "02:00"
+      timezone: "US/Eastern"
 
   - package-ecosystem: "pip"
     directory: "/maintenance"
     schedule:
       interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
+      time: "02:00"
+      timezone: "US/Eastern"
 
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
+      time: "02:00"
+      timezone: "US/Eastern"
