@@ -30,8 +30,8 @@ const imageMetadata: ImageMetadata[] = [
 ];
 
 interface HarvestThreshWinnowProps {
+  height?: number;
   loading?: boolean;
-  maxSize?: number;
 }
 
 // Opacity of the 3 images, each fading in then fading out while the next fades in.
@@ -57,28 +57,28 @@ export default function HarvestThreshWinnow(
     }
   }, [props.loading]);
 
-  const size = Math.min(
+  const imageSize = Math.min(
     0.75 * window.innerHeight,
     0.25 * window.innerWidth,
-    props.maxSize || 1000
+    props.height || 1000
   );
 
   const imageStyle: CSSProperties = {
     border: "1px solid black",
-    borderRadius: size,
+    borderRadius: imageSize,
+    height: imageSize,
     position: "relative",
-    width: size,
   };
 
   const overlap = 0.23;
 
   return (
-    <div style={{ height: size, position: "relative", margin: 10 }}>
+    <div style={{ height: imageSize, position: "relative", margin: 10 }}>
       <img
         alt={ImageAlt.Harvest}
         id={ImageId.Harvest}
         src={harvest}
-        style={{ ...imageStyle, left: overlap * size }}
+        style={{ ...imageStyle, left: overlap * imageSize }}
       />
       <img
         alt={ImageAlt.Thresh}
@@ -90,18 +90,18 @@ export default function HarvestThreshWinnow(
         alt={ImageAlt.Winnow}
         id={ImageId.Winnow}
         src={winnow}
-        style={{ ...imageStyle, right: overlap * size }}
+        style={{ ...imageStyle, right: overlap * imageSize }}
       />
       <div
         id={ImageId.License}
         style={{
           // Use -10 to offset the button padding
           bottom: -10,
-          left: 0.2 * size - 10,
+          left: 0.2 * imageSize - 10,
           position: "absolute",
         }}
       >
-        <ImageAttributions images={imageMetadata} width={0.15 * size} />
+        <ImageAttributions images={imageMetadata} width={0.15 * imageSize} />
       </div>
     </div>
   );

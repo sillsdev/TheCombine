@@ -16,6 +16,7 @@ const iconButtonWidth = buttonWidth / 4;
 const gap = parseInt(theme.spacing(1));
 export const horizontalButtonsHeight = buttonHeight + gap;
 const horizontalButtonsWidth = 2 * buttonWidth + iconButtonWidth + 2 * gap;
+export const verticalButtonsWidth = buttonWidth + 2 * gap;
 
 interface LandingButtonsProps {
   top?: boolean;

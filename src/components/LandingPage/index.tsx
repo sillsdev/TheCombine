@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 import HarvestThreshWinnow from "components/HarvestThreshWinnow";
 import BottomBar, { bottomBarHeight } from "components/LandingPage/BottomBar";
 import LandingButtons, {
-  horizontalButtonsHeight,
   SignUpButton,
+  horizontalButtonsHeight,
   verticalButtonsWidth,
 } from "components/LandingPage/LandingButtons";
 import TopBar, { topBarHeight } from "components/LandingPage/TopBar";
@@ -67,8 +67,8 @@ function Body(): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <Stack alignItems="center">
-      <div style={{ padding: theme.spacing(3) }}>
+    <Stack alignItems="center" spacing={3}>
+      <Box sx={{ p: theme.spacing(3), paddingBottom: 0 }}>
         <Typography variant="body2" align="justify">
           {t("landingPage.descriptionP1")}
           {<br />}
@@ -79,18 +79,18 @@ function Body(): ReactElement {
           {t("landingPage.descriptionP3")}
           {<br />}
         </Typography>
-        <Typography
-          variant="h6"
-          align="justify"
-          style={{ paddingTop: theme.spacing(2) }}
-        >
+        <Typography sx={{ paddingTop: theme.spacing(3) }} variant="h6">
           {t("landingPage.descriptionP4")}
         </Typography>
-      </div>
-      <SignUpButton buttonIdPrefix="landing-body" />
-      <HarvestThreshWinnow
-        maxSize={Math.min(400, (window.innerWidth - verticalButtonsWidth) / 5)}
-      />
+      </Box>
+      <Box>
+        <SignUpButton buttonIdPrefix="landing-body" />
+      </Box>
+      <Box>
+        <HarvestThreshWinnow
+          height={Math.min(400, (window.innerWidth - verticalButtonsWidth) / 5)}
+        />
+      </Box>
     </Stack>
   );
 }
