@@ -3,13 +3,14 @@ import { ReactElement, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
+import HarvestThreshWinnow from "components/HarvestThreshWinnow";
 import BottomBar, { bottomBarHeight } from "components/LandingPage/BottomBar";
 import LandingButtons, {
   horizontalButtonsHeight,
   SignUpButton,
+  verticalButtonsWidth,
 } from "components/LandingPage/LandingButtons";
 import TopBar, { topBarHeight } from "components/LandingPage/TopBar";
-import tractor from "resources/tractor.png";
 import { Path } from "types/path";
 import theme from "types/theme";
 
@@ -87,15 +88,8 @@ function Body(): ReactElement {
         </Typography>
       </div>
       <SignUpButton buttonIdPrefix="landing-body" />
-      <img
-        src={tractor}
-        alt="Tractor"
-        style={{
-          width: "70%",
-          maxWidth: 700,
-          margin: "0% 15%",
-          marginTop: theme.spacing(4),
-        }}
+      <HarvestThreshWinnow
+        maxSize={Math.min(400, (window.innerWidth - verticalButtonsWidth) / 5)}
       />
     </Stack>
   );
