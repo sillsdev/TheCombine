@@ -35,9 +35,9 @@ interface HarvestThreshWinnowProps {
 }
 
 // Opacity of the 3 images, each fading in then fading out while the next fades in.
-const opacity1 = [0, 0.5, 1, 1, 0.5, 0, 0, 0, 0, 0, 0, 0, 0];
-const opacity2 = [0, 0, 0, 0, 0.5, 1, 1, 0.5, 0, 0, 0, 0, 0];
-const opacity3 = [0, 0, 0, 0, 0, 0, 0, 0.5, 1, 1, 0.5, 0, 0];
+const opacityKeyframes1 = [0, 0.5, 1, 1, 0.5, 0, 0, 0, 0, 0, 0, 0, 0];
+const opacityKeyframes2 = [0, 0, 0, 0, 0.5, 1, 1, 0.5, 0, 0, 0, 0, 0];
+const opacityKeyframes3 = [0, 0, 0, 0, 0, 0, 0, 0.5, 1, 1, 0.5, 0, 0];
 
 /** A custom harvest-thresh-winnow image */
 export default function HarvestThreshWinnow(
@@ -45,16 +45,15 @@ export default function HarvestThreshWinnow(
 ): ReactElement {
   useEffect(() => {
     if (props.loading) {
-      const opacity = [opacity1, opacity1, opacity2, opacity3];
       const options: AnimationOptionsWithOverrides = {
         duration: 7,
         easing: "linear",
         repeat: Infinity,
       };
-      animate(`#${ImageId.License}`, { opacity: opacity[0] }, options);
-      animate(`#${ImageId.Harvest}`, { opacity: opacity[1] }, options);
-      animate(`#${ImageId.Thresh}`, { opacity: opacity[2] }, options);
-      animate(`#${ImageId.Winnow}`, { opacity: opacity[3] }, options);
+      animate(`#${ImageId.License}`, { opacity: opacityKeyframes1 }, options);
+      animate(`#${ImageId.Harvest}`, { opacity: opacityKeyframes1 }, options);
+      animate(`#${ImageId.Thresh}`, { opacity: opacityKeyframes2 }, options);
+      animate(`#${ImageId.Winnow}`, { opacity: opacityKeyframes3 }, options);
     }
   }, [props.loading]);
 

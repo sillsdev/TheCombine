@@ -1,9 +1,7 @@
-import { Box, Dialog, IconButton, Typography } from "@mui/material";
+import { Dialog, IconButton, Typography } from "@mui/material";
 import { type ReactElement, useState } from "react";
 
-import by from "resources/cc-icons/by.svg";
-import cc from "resources/cc-icons/cc.svg";
-import sa from "resources/cc-icons/sa.svg";
+import ccIcon from "resources/cc-by-sa.png";
 
 export interface ImageMetadata {
   name: string;
@@ -31,7 +29,11 @@ export default function ImageAttributionsButton(
         aria-label="show image attribution"
         onClick={() => setOpen(true)}
       >
-        <CCBYSAIcon width={props.width} />
+        <img
+          alt="CreativeCommons-Attribution-ShareAlike"
+          src={ccIcon}
+          style={{ width: props.width || 60 }}
+        />
       </IconButton>
       <Dialog open={open} onClose={() => setOpen(false)}>
         {props.images.map((image, index) => (
@@ -39,25 +41,6 @@ export default function ImageAttributionsButton(
         ))}
       </Dialog>
     </>
-  );
-}
-
-/** Custom cc-by-sa icon */
-function CCBYSAIcon(props: { width?: number }): ReactElement {
-  const baseWidth = (props.width || 60) / 2;
-  return (
-    <Box
-      alignItems="center"
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-    >
-      <img alt="CreativeCommons" src={cc} style={{ width: 1.2 * baseWidth }} />
-      <Box display="flex" sx={{ marginTop: -0.014 * baseWidth }}>
-        <img alt="Attribution" src={by} style={{ width: baseWidth }} />
-        <img alt="ShareAlike" src={sa} style={{ width: baseWidth }} />
-      </Box>
-    </Box>
   );
 }
 
