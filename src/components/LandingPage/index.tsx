@@ -1,4 +1,4 @@
-import { Box, Grid, Hidden, Typography } from "@mui/material";
+import { Box, Grid, Hidden, Stack, Typography } from "@mui/material";
 import { ReactElement, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 import HarvestThreshWinnow from "components/HarvestThreshWinnow";
 import BottomBar, { bottomBarHeight } from "components/LandingPage/BottomBar";
 import LandingButtons, {
-  horizontalButtonsHeight,
   SignUpButton,
+  horizontalButtonsHeight,
   verticalButtonsWidth,
 } from "components/LandingPage/LandingButtons";
 import TopBar, { topBarHeight } from "components/LandingPage/TopBar";
@@ -31,22 +31,22 @@ export default function LandingPage(): ReactElement {
   return (
     <>
       <TopBar />
-      <Grid container alignItems="flex-start" justifyContent="space-around">
+      <Grid container>
         <Hidden smDown>
-          <Grid item sm md xl>
+          <Grid item sm>
             <Box style={{ maxHeight: heightBetweenBars, overflow: "auto" }}>
               <Body />
             </Box>
           </Grid>
-          <Grid item width={verticalButtonsWidth}>
+          <Grid item sm="auto">
             <LandingButtons />
           </Grid>
         </Hidden>
         <Hidden smUp>
-          <Grid item xs>
+          <Grid item xs={12}>
             <LandingButtons top />
           </Grid>
-          <Grid item xs>
+          <Grid item xs={12}>
             <Box
               style={{
                 maxHeight: heightBetweenBars - horizontalButtonsHeight,
@@ -67,15 +67,8 @@ function Body(): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <Box
-      alignItems="center"
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-      rowGap={theme.spacing(4)}
-      style={{ padding: theme.spacing(3) }}
-    >
-      <div>
+    <Stack alignItems="center" spacing={3}>
+      <Box sx={{ p: theme.spacing(3), paddingBottom: 0 }}>
         <Typography variant="body2" align="justify">
           {t("landingPage.descriptionP1")}
           {<br />}
@@ -86,18 +79,18 @@ function Body(): ReactElement {
           {t("landingPage.descriptionP3")}
           {<br />}
         </Typography>
-        <Typography
-          variant="h6"
-          align="justify"
-          style={{ paddingTop: theme.spacing(2) }}
-        >
+        <Typography sx={{ paddingTop: theme.spacing(3) }} variant="h6">
           {t("landingPage.descriptionP4")}
         </Typography>
-      </div>
-      <SignUpButton buttonIdPrefix="landing-body" />
-      <HarvestThreshWinnow
-        maxSize={Math.min(400, (window.innerWidth - verticalButtonsWidth) / 5)}
-      />
-    </Box>
+      </Box>
+      <Box>
+        <SignUpButton buttonIdPrefix="landing-body" />
+      </Box>
+      <Box>
+        <HarvestThreshWinnow
+          height={Math.min(400, (window.innerWidth - verticalButtonsWidth) / 5)}
+        />
+      </Box>
+    </Stack>
   );
 }
