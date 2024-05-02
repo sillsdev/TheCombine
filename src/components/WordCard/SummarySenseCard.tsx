@@ -4,9 +4,12 @@ import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, Sense } from "api/models";
 import { PartOfSpeechButton } from "components/Buttons";
+import SenseTextSummary from "components/WordCard/SensesTextSummary";
 import { groupGramInfo } from "utilities/wordUtilities";
 
 interface SummarySenseCardProps {
+  backgroundColor?: string;
+  includeGlosses?: boolean;
   senses: Sense[];
 }
 
@@ -26,7 +29,12 @@ export default function SummarySenseCard(
   const domIds = [...new Set(semDoms.map((d) => d.id))].sort();
 
   return (
-    <Card style={{ backgroundColor: "white", marginBottom: 10 }}>
+    <Card
+      style={{
+        backgroundColor: props.backgroundColor || "white",
+        marginBottom: 10,
+      }}
+    >
       <CardContent style={{ position: "relative" }}>
         {/* Parts of speech */}
         {groupedGramInfo.map((info) => (
@@ -42,6 +50,14 @@ export default function SummarySenseCard(
         <Typography display="block" variant="h5">
           {t("wordCard.senseCount", { val: props.senses.length })}
         </Typography>
+
+        {/* Glosses */}
+        {props.includeGlosses && (
+          <SenseTextSummary
+            definitionsOrGlosses="glosses"
+            senses={props.senses}
+          />
+        )}
 
         {/* Semantic domain numbers */}
         <Grid container spacing={1}>
