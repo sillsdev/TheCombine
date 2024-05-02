@@ -204,12 +204,12 @@ def main() -> None:
         logging.error(f"Invalid output directory: '{args.output}'")
         exit(1)
 
-    offline: bool = args.langs or args.scripts
+    is_for_offline: bool = args.langs or args.scripts
 
     with open(mlp_font_list, "r") as mlp_fonts_list:
         fonts = [f.strip() for f in mlp_fonts_list.readlines()]
 
-    if offline:
+    if is_for_offline:
         scripts: List[str] = []
         if args.langs:
             logging.info(f"Specified languages: {', '.join(args.langs)}")
@@ -248,10 +248,9 @@ def main() -> None:
         while font_id != "" and font_id in families.keys():
             font_info = families[font_id]
             family: str = font_info["family"]
-            from_google = (
-                (not offline) and "source" in font_info.keys() and font_info["source"] == "Google"
-            )
-            if check_font_info(font_info) or from_google:
+            source_is_google = "source" in font_info.keys() and font_info["source"] == "Google"
+            get_from_google = source_is_google and not is_for_offline
+            if check_font_info(font_info) or get_from_google:
                 # Font available.
                 break
             if "fallback" in font_info.keys():
@@ -262,20 +261,20 @@ def main() -> None:
                 font_id = ""
 
         # When downloading, only download fonts used for scripts of the specified languages.
-        if offline and family not in script_fonts:
+        if is_for_offline and family not in script_fonts:
             logging.debug(f'Skipping font "{font}" as irrelevant for specified languages/scripts.')
             continue
 
         # Check if font was determined available.
         if font_id == "" or font_id not in families.keys():
-            if offline:
+            if is_for_offline:
                 logging.warning(f'Font "{font}" not available for download')
             else:
                 logging.warning(f'Font "{font}" css info not available')
             continue
 
         # When not downloading, prefer fetching css info from Google when available.
-        if from_google:
+        if get_from_google:
             google_fallback[font] = family
             logging.debug(f"Using Google fallback for {font}: {google_fallback[font]}")
             continue
@@ -304,7 +303,7 @@ def main() -> None:
             logging.warning(f"{file_name}: No 'flourl' or 'url' for this file")
             continue
 
-        if offline:
+        if is_for_offline:
             # With the https://fonts.languagetechnology.org "flourl" urls,
             # urllib.request.urlretrieve() is denied (403), but requests.get() works.
             req = requests.get(src)
@@ -325,7 +324,7 @@ def main() -> None:
         with open(css_file_path, "w") as css_file:
             css_file.writelines(css_lines)
 
-    if not offline:
+    if not is_for_offline:
         fallback_lines = ['{\n  "google": {\n']
         for key, val in google_fallback.items():
             fallback_lines.append(f'    "{key}": "{val}",\n')

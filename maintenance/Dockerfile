@@ -39,4 +39,4 @@ RUN pip3 install -r requirements.txt
 
 COPY --chown=user:user scripts/*.py ${SCRIPT_DIR}
 COPY --chown=user:user scripts/*.sh ${SCRIPT_DIR}
-COPY --chown=user:user scripts/*.txt ${SCRIPT_DIR}
+COPY --chown=user:user scripts/mui_language_picker_fonts.txt ${SCRIPT_DIR}

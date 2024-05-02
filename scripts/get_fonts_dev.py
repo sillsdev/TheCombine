@@ -2,7 +2,7 @@
 
 """
 Runs maintenance/scripts/get_fonts.py with dev arguments for -f and -o.
-Run this script with -U/--update whenever the MLP version is updated.
+Run this script with -U/--update whenever the mui-language-picker version is updated.
 """
 
 import argparse
