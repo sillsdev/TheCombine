@@ -1,7 +1,7 @@
 {
   "generic": {
     "404Title": "404 您访问的页面不存在",
-    "404Text": "点击 The Combine 返回主页面。",
+    "404Text": "点击人员返回主页面。",
     "loadingTitle": "正在加载...",
     "loadingText": "The Combine 正在处理您的数据，请稍后。"
   },
@@ -29,11 +29,9 @@
     "addNote": "添加备注",
     "domain": "语义域",
     "domainTitle": "语义域: {{ val1 }} ({{ val2 }})",
-    "gloss": "注释",
     "glosses": "词注释",
     "pressEnter": "按回车键保存单词",
-    "vernacular": "土语",
-    "wordInDatabase": "这个词已经在数据库中"
+    "vernacular": "土语"
   },
   "appBar": {
     "dataEntry": "输入数据",
@@ -59,12 +57,10 @@
     "usernameRequirements": "用户名必须是3个字符或以上。",
     "usernameTaken": "用户名不可用。",
     "emailTaken": "电子邮件地址不可用。",
-    "loggingIn": "正在登录...",
     "required": "必填",
     "confirmPassword": "确认密码",
     "confirmPasswordError": "密码不匹配！",
-    "email": "电子邮件",
-    "emailError": "请输入有效的电子邮件"
+    "email": "电子邮件"
   },
   "passwordReset": {
     "invalidURL": "密码重置链接无效。",
@@ -77,6 +73,7 @@
     "resetDone": "如果您正确输入了电子邮件或用户名，您的电子邮件地址将收到密码重置链接。",
     "backToLogin": "返回登录"
   },
+  "speakerMenu": {},
   "userMenu": {
     "siteSettings": "网站设置",
     "userSettings": "用户设置",
@@ -123,10 +120,7 @@
     "updateSuccess": "设置已更新。"
   },
   "projectExport": {
-    "cannotExportEmpty": "项目为空。您不能导出没有单词的项目。",
-    "downloadInProgress": "正在下载......",
-    "exportFailed": "导出失败",
-    "exportInProgress": "正在导出"
+    "cannotExportEmpty": "项目为空。您不能导出没有单词的项目。"
   },
   "projectSettings": {
     "project": "项目：",
@@ -139,13 +133,12 @@
       "users": "用户"
     },
     "language": {
-      "header": "语言",
       "vernacular": "土语",
       "vernacularLanguage": "土语语言",
       "analysis": "分析",
       "analysisLanguage": "分析语言",
       "semanticDomains": "语义域",
-      "semanticDomainsDefault": "(把浏览器语言设置为默认)",
+      "semanticDomainsDefault": "(把用户界面语言设置为默认)",
       "languages": "项目语言",
       "bcp47": "BCP 47 代码",
       "name": "名称",
@@ -186,11 +179,11 @@
       "manageUser": "管理用户帐户",
       "reverseOrder": "倒序"
     },
+    "speaker": { "consent": {} },
     "import": {
       "header": "导入数据",
       "body": "导入的数据将被添加到此项目。The Combine 不会尝试删除重复、覆盖或同步。",
       "chooseFile": "选择文件",
-      "done": "完成!",
       "notAllowed": "您已经把 Lift 文件导入到这个项目中。"
     },
     "archive": { "archive": "存档项目", "archiveToastSuccess": "项目已存档！" },
@@ -211,10 +204,6 @@
       "on": "开启",
       "hint": "在数据输入中，程序将建议与正在输入的土语词条相似的现有词条。"
     },
-    "definitions": {
-      "label": "显示定义",
-      "hint": "在检查词条中，显示定义列；在合并重复项中，在注释下面显示定义。"
-    },
     "invite": {
       "inviteByEmailLabel": "通过电子邮件邀请",
       "userExists": "此用户已注册！",
@@ -222,14 +211,12 @@
       "searchPlaceholder": "搜索...",
       "searchTitle": "查找用户",
       "emailLabel": "电子邮件",
-      "messageLabel": "留言内容",
       "toastSuccess": "用户添加到项目中",
       "toastFail": "无法将用户添加到项目"
     }
   },
   "goal": {
     "selector": {
-      "selectOption": "选择此目标",
       "past": "您已经完成了：",
       "present": "我们的建议是：",
       "other": "其他选项：",
@@ -247,17 +234,11 @@
   "validateStrWords": { "title": "验证结构词" },
   "reviewEntries": {
     "title": "检查词条",
-    "sense": "词义",
-    "noVernacular": "没有土语输入！",
-    "noDefinition": "此定义为空",
-    "noGloss": "没有词注释输入",
     "noDomain": "未选择语义域",
-    "noNote": "没有备注",
     "deleteWordWarning": "该词会被永久删除！",
     "deleteDisabled": "这词项是跟 The Combine 不处理的数据导入的，所以它不能被删除。",
     "error": {
       "gloss": "词注释的字段不能留空",
-      "domain": "语义域不能留空",
       "senses": "无法保存无词义的词条",
       "vernacular": "土语字段不能留空"
     },
@@ -273,23 +254,8 @@
       "senses": "词义",
       "vernacular": "土语"
     },
-    "materialTable": {
-      "body": {
-        "edit": "编辑",
-        "emptyDataSourceMessage": "没有可显示的条目",
-        "filter": "筛选器"
-      },
-      "pagination": {
-        "labelDisplayedRows": "{{count}} 项的第{{from}}-{{to}} 项",
-        "labelRows": "行",
-        "labelRowsPerPage": "每页行数:",
-        "first": "第一页",
-        "last": "最后一页",
-        "next": "下一页",
-        "previous": "上一页"
-      },
-      "toolbar": { "search": "搜寻" }
-    }
+    "completed": {},
+    "undo": { "undoDisabled": "撤销不可用" }
   },
   "charInventory": {
     "title": "创建字符库存",
@@ -301,18 +267,11 @@
     "characterSet": {
       "title": "土语字符集",
       "help": "定义该语言的有效字符",
-      "addButton": "添加字符",
-      "addButtonTitle": "把框中的字符添加到字符集中",
-      "deleteButton": "删除所选的",
-      "deleteButtonTitle": "从字符集中删除所选的字符",
       "acceptedCharacters": "已审核的字符",
       "rejectedCharacters": "已拒绝的字符",
-      "noCharacters": "还没有字符！请在下面的框中输入字符以开始。",
-      "required": "为了添加字符，在这框中输入字符",
       "advanced": "高级",
       "occurrences": "出现{{ val }}次数",
       "find": "查找",
-      "replace": "替换",
       "replaceWith": "替换为",
       "replaceAll": "替换所有出现的: {{ val }}",
       "replaceAllWith": "替换为 {{ val }}",
@@ -320,36 +279,30 @@
       "findAndReplaceError": "处理错误：查找 ( {{ val1 }} )，替换 ( {{  val2 }})",
       "apply": "实施"
     },
-    "sampleWords": {
-      "title": "例词",
-      "description": "以下是一些不适合您当前字符库存的单词：",
-      "ignore": "先别管这个词",
-      "add": "把出现在这词中的字符添加到库存中"
-    },
     "dialog": {
       "title": "未保存的更改",
       "content": "放弃对字符集的更改？",
       "yes": "是",
       "no": "否"
     },
-    "changes": { "noChanges": "在此目标中未进行更改。", "more": "更多" }
+    "changes": { "more": "更多" },
+    "undo": { "undoDisabled": "撤销不可用" }
   },
   "mergeDups": {
     "title": "合并重复项",
     "helpText": {
       "dragCard": "将卡片拖到此处进行合并。",
-      "root": "把词拖到这里与这词合并",
-      "dups": "把重复项拖动到这里",
-      "sense": "把新词义拖动到这里",
       "saveAndContinue": "保存更改并加载一组新单词",
       "defer": "放弃更改并加载一组新单词",
-      "list": "把这个词拖往右边与其他词合并",
       "noDups": "没有什么可合并的。",
       "delete": "删除词义",
       "deleteDialog": "是否删除该词义？",
-      "protectedSense": "这个词义是跟 The Combine 不处理的数据一起导入的，所以它不能被删除或者拖放入另一个词义中。您仍然可以移动这个词义，或者把其他词义拖放入这个词义中来合并它们。",
-      "protectedWord": "这个词是跟 The Combine 不处理的数据一起导入的，所以为了防止删除，它的最终词义不能被删除。"
+      "protectedSense": "这个词义是跟 The Combine 不处理的数据一起导入的。",
+      "protectedSenseInfo": "这个词义它不能被删除或者拖放入另一个词义中。您仍然可以移动这个词义，或者把其他词义拖放入这个词义中来合并它们。",
+      "protectedWord": "这个词是跟 The Combine 不处理的数据一起导入的。",
+      "protectedWordInfo": "为了防止删除，它的最终词义不能被删除。"
     },
+    "protectReason": {},
     "completed": { "number": "已完成的合并次数： " },
     "continueDialog": { "title": "是否继续合并？", "yes": "是", "no": "否" },
     "undo": {
@@ -362,8 +315,7 @@
     "add": "添加标志",
     "edit": "编辑标志",
     "remove": "移除标志",
-    "save": "保存标志",
-    "text": "文本: "
+    "save": "保存标志"
   },
   "buttons": {
     "accept": "审核",
@@ -393,7 +345,8 @@
   },
   "pronunciations": {
     "recordTooltip": "长按红色按钮，进行录制",
-    "playTooltip": "单击来播放，按 上档 （Shift） 并单击来删除。",
+    "playTooltip": "单击来播放。",
+    "deleteTooltip": "按 上档 （Shift） 并单击来删除。",
     "noMicAccess": "录制错误：无法使用话筒。",
     "deleteRecording": "删除录音"
   },
@@ -439,5 +392,6 @@
       "Other": "其它",
       "Unspecified": "没有指定"
     }
-  }
+  },
+  "wordCard": {}
 }
