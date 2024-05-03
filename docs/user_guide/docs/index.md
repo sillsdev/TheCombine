@@ -1,8 +1,8 @@
 # Overview
 
 The Combine is a tool for supporting
-[Rapid Word Collection](https://www.sil.org/dictionaries-lexicography/rapid-word-collection-methodology) (RWC) workshops
-and post-workshop data cleanup.
+[Rapid Word Collection](https://www.sil.org/enterprise-news/rapid-word-collection-updated-approach-dictionary-creation)
+(RWC) workshops and post-workshop data cleanup.
 
 ## Getting Started
 
