@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, Sense } from "api/models";
 import { PartOfSpeechButton } from "components/Buttons";
-import SenseTextSummary from "components/WordCard/SensesTextSummary";
+import SensesTextSummary from "components/WordCard/SensesTextSummary";
 import { groupGramInfo } from "utilities/wordUtilities";
 
 interface SummarySenseCardProps {
@@ -53,7 +53,7 @@ export default function SummarySenseCard(
 
         {/* Glosses */}
         {props.includeGlosses && (
-          <SenseTextSummary
+          <SensesTextSummary
             definitionsOrGlosses="glosses"
             senses={props.senses}
           />
