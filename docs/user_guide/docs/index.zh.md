@@ -1,8 +1,8 @@
 # 概览
 
 The Combine 是一个支持
-[快速字词收集](https://www.sil.org/dictionaries-lexicography/rapid-word-collection-methodology)(RWC) 工作坊和后工作坊数
-据清理的工具。
+[快速字词收集](https://www.sil.org/enterprise-news/rapid-word-collection-updated-approach-dictionary-creation) (RWC) 工
+作坊和后工作坊数据清理的工具。
 
 ## 开始
 
