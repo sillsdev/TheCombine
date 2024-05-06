@@ -34,7 +34,7 @@ export async function fetchCss(
   let cssUrl = "";
   switch (source) {
     case "local":
-      cssUrl = `${fontDir}/${font.replace(" ", "")}.css`;
+      cssUrl = `${fontDir}/${font.replaceAll(" ", "")}.css`;
       break;
     case "google":
       cssUrl = `https://fonts.googleapis.com/css?dispay=swap&family=${font}`;
