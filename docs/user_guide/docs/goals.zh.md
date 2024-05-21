@@ -4,24 +4,47 @@
 
 检查词条表显示出一个项目内所有的词条。
 
-### 排序和筛选列
+### Columns
 
-这些列包括：编辑，土语，词义，注释，领域，发音，笔记，标记，和删除。
+The columns are: Edit (no header), Vernacular, Number of Senses (#), Glosses, Domains, Pronunciations
+(![Review Entries pronunciations column header](../images/reviewEntriesColumnPronunciations.png){width=28}), Note, Flag
+(![Review Entries flag column header](../images/reviewEntriesColumnFlag.png){width=16}), and Delete (no header).
 
 ![审查词条列标题](../images/reviewEntriesColumns.zh.png)
 
-主要是文字内容(土语，注释，领域，笔记，或标记) 的列的顶部，用户可根据字母顺序分类，或者采用文本搜素的方式进行筛选
-
-在词义和发音列的顶部，用户可根据词条的词义数量或录音数量进行分类或筛选。
+To show/hide columns or rearrange their order, click on the
+![Review Entries columns edit icon](../images/reviewEntriesColumnsEdit.png){width=25} icon in the top corner.
 
 由于快速字词收集（Rapid Word Collection）自身带有的特性，The Combine 中的 [词条输入](dataEntry.md) 不支持添加定义或词性
-的功能。 但是，如果该项目已输入的数据中已有定义或词类，审查词条表中会自动添加额外的列来表达该信息。
+的功能。 However, if the project has imported data in which definitions or parts of speech were already present,
+additional columns will be available in the Review Entries table.
+
+#### Sorting and Filtering
+
+There are icons at the top of each column to
+![Review Entries column filter icon](../images/reviewEntriesColumnFilter.png){width=20} filter and
+![Review Entries column sort icon](../images/reviewEntriesColumnSort.png){width=20} sort the data.
+
+In a column with predominantly text content (Vernacular, Glosses, Note, or Flag), you can sort alphabetically or filter
+with a text search.
+
+In the Number of Senses column or Pronunciations column, you can sort or filter by the number of senses or recordings
+that entries have. In the Pronunciations column, you can also filter by speaker name.
+
+In the Domains column, sorting is numerical by each entry's least domain id. To filter by domain, type a domain id with
+or without periods. For example, "8111" and "8.1.1.1" both show all entries with a sense in domain 8.1.1.1. To also
+include subdomains, add a final period to your filter. For example, "8111." includes domains "8.1.1.1", "8.1.1.1.1", and
+"8.1.1.1.2". Filter with just a period (".") to show all entries with any semantic domain.
 
 ### 编辑词条行
 
-用户可以使用“发音”列中的图标来录制、播放或删除词条的录音。 用户可以使用删除列中的图标删除整个词条。
+用户可以使用“发音”列中的图标来录制、播放或删除词条的录音。
 
-要编辑词条的语形、词义(含注释和领域)、笔记、标记时，只需点击编辑列的图标。
+To edit any other part of an entry, click the
+![Review Entries row edit icon](../images/reviewEntriesRowEdit.png){width=20} edit icon in the initial column.
+
+You can delete an entire entry by clicking the
+![Review Entries row delete icon](../images/reviewEntriesRowDelete.png){width=20} delete icon in the final column.
 
 ## 合并重复项 {#merge-duplicates}
 
@@ -53,7 +76,7 @@
 
 ![合并重复的词条和合并其词义](../images/mergeSidebar.zh.png)
 
-!!! 重要警告
+!!! warning "重要警告"
 
     当多种词义被合并时，所有语义域得以保留，但“只有侧边栏顶部的词义”保留其注释(和定义)。
 
@@ -101,15 +124,19 @@
 ![合并重复保存并继续按钮](../images/mergeSaveAndContinue.zh.png)
 
 蓝色的“保存与继续”键有两个功能。 第一，它将所有更改都保存下来(例如，所有已被移除、合并或被删除的词义)，并更新数据库中的
-词。 第二，它将任何未合并的词保存为非重复词。
+词。 Second, it saves the resulting set of words as non-duplicates.
 
-!!! 提示
+!!! tip "提示"
 
     可能的重复是真的重复吗？ 用户只需点击 保存& 继续, 即可告诉 The Combine 不再显示该组的资料。
 
-!!! 笔记
+!!! note "笔记"
 
     如果有意不合并词组中有一个被修改(例如，在检阅条目)，则该组词会再次显示为可能重复词。
+
+!!! warning "重要警告"
+
+    Avoid having multiple users merge duplicates in the same project at the same time. If different users simultaneously merge the same set of duplicates, it will results in the creation of new duplicates (even if the users are making the same merge decisions).
 
 #### 推迟
 
@@ -154,7 +181,7 @@ _创建字符库存_" 提供了该项目词条土语形式出现的每个符编�
 
 点击一个字符图块可打开该字符的面板。
 
-!!! 提示
+!!! tip "提示"
 
     用户可能需要滚动才能看到面板。 如果用户电脑可视窗户足够宽，窗的右边会有空白边距；而面板将位于其顶部。 如果电脑可视窗户狭窄，图块就会一直填充到窗户右侧；该面板将位于底部，即所有图块的下方。
 
@@ -168,6 +195,6 @@ _创建字符库存_" 提供了该项目词条土语形式出现的每个符编�
 面板底部是“查找和替换”工具。 如果该字符在*每次*时都应替换成其他字符，只需在“替换为”框中键入替换字符或字符串，然后点击“应
 用”键即可。
 
-!!! 重要警告
+!!! warning "重要警告"
 
     “查找和替换 ”操作更改的是词条，而不是字符库。 **它无法被撤销！**
