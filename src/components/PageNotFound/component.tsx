@@ -1,9 +1,9 @@
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import tractor from "resources/tractor.png";
+import HarvestThreshWinnow from "components/HarvestThreshWinnow";
 import { Path } from "types/path";
 
 /**
@@ -15,21 +15,18 @@ export default function PageNotFound(): ReactElement {
   const navigate = useNavigate();
 
   return (
-    <>
-      <Typography variant="h4" style={{ textAlign: "center" }}>
-        {t("generic.404Title")}
-      </Typography>
-      <img
-        src={tractor}
-        alt="Tractor"
-        style={{ width: "50%", margin: "0% 25%" }}
-        onClick={() => {
-          navigate(Path.ProjScreen);
-        }}
-      />
-      <Typography variant="h5" style={{ textAlign: "center" }}>
-        {t("generic.404Text")}
-      </Typography>
-    </>
+    <Box
+      alignItems="center"
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      rowGap={3}
+    >
+      <Typography variant="h4">{t("generic.404Title")}</Typography>
+      <div onClick={() => navigate(Path.ProjScreen)}>
+        <HarvestThreshWinnow />
+      </div>
+      <Typography variant="h5">{t("generic.404Text")}</Typography>
+    </Box>
   );
 }
