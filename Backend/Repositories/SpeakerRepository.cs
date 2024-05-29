@@ -37,8 +37,7 @@ namespace BackendFramework.Repositories
         public async Task<Speaker?> GetSpeaker(string projectId, string speakerId)
         {
             var filterDef = new FilterDefinitionBuilder<Speaker>();
-            var filter = filterDef.And(filterDef.Eq(
-                x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, speakerId));
+            var filter = filterDef.And(filterDef.Eq(x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, speakerId));
 
             var speakerList = await _speakerDatabase.Speakers.FindAsync(filter);
             try
@@ -64,9 +63,7 @@ namespace BackendFramework.Repositories
         public async Task<bool> Delete(string projectId, string speakerId)
         {
             var filterDef = new FilterDefinitionBuilder<Speaker>();
-            var filter = filterDef.And(
-                filterDef.Eq(x => x.ProjectId, projectId),
-                filterDef.Eq(x => x.Id, speakerId));
+            var filter = filterDef.And(filterDef.Eq(x => x.ProjectId, projectId), filterDef.Eq(x => x.Id, speakerId));
 
             return (await _speakerDatabase.Speakers.DeleteOneAsync(filter)).DeletedCount > 0;
         }
@@ -87,6 +84,14 @@ namespace BackendFramework.Repositories
                 : updateResult.ModifiedCount > 0
                     ? ResultOfUpdate.Updated
                     : ResultOfUpdate.NoChange;
+        }
+
+        /// <summary> Check if <see cref="Speaker"/> with specified name is already in project </summary>
+        public async Task<bool> IsSpeakerNameInProject(string projectId, string name)
+        {
+            var filterDef = new FilterDefinitionBuilder<Speaker>();
+            var filter = filterDef.And(filterDef.Eq(x => x.ProjectId, projectId), filterDef.Eq(x => x.Name, name));
+            return await _speakerDatabase.Speakers.CountDocumentsAsync(filter) > 0;
         }
     }
 }

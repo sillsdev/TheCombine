@@ -25,11 +25,19 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
   const recorder = useContext(RecorderContext);
   const { t } = useTranslation();
 
-  function startRecording(): void {
+  async function startRecording(): Promise<void> {
+    // Prevent starting a recording before a previous one is finished.
+    await stopRecording();
+
     recorder.startRecording();
   }
 
   async function stopRecording(): Promise<void> {
+    // Prevent triggering this function if no recording is active.
+    if (!recorder.isRecording()) {
+      return;
+    }
+
     if (props.onClick) {
       props.onClick();
     }

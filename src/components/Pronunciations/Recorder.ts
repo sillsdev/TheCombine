@@ -14,6 +14,10 @@ export default class Recorder {
       .catch((err) => this.onError(err));
   }
 
+  isRecording(): boolean {
+    return this.recordRTC?.getState() === "recording";
+  }
+
   startRecording(): void {
     this.recordRTC?.reset();
     this.recordRTC?.startRecording();

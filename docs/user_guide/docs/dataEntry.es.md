@@ -37,7 +37,21 @@ Para grabar audio, hay un botón circular rojo. Para cada audio grabado, hay un 
 su audio, o pulse Mayúsculas y haga clic para borrar su grabación.
 
 **En una pantalla táctil:** Mantenga pulsado el círculo rojo para grabar. Pulse un triángulo verde para reproducir su
-audio, o manténgalo pulsado para abrir un menú (con opciones para reproducir o eliminar).
+audio, o manténgalo pulsado para abrir un menú con opciones.
+
+#### Añadir un locutor a las grabaciones de audio
+
+Haga clic en el icono del locutor en la barra superior para ver una lista de todos los locutores disponibles y
+seleccione el locutor actual. Este locutor se asociará automáticamente a cada grabación de audio hasta que cierre la
+sesión o seleccione un locutor diferente.
+
+El locutor asociado a una grabación puede verse pasando el ratón por encima de su icono de reproducción, el triángulo
+verde. Para cambiar el locutor de una grabación, haga clic con el botón derecho del ratón en el triángulo verde (o
+mantén pulsado en una pantalla táctil).
+
+!!! note "Nota"
+
+    El audio importado no se puede borrar ni se le puede añadir un locutor.
 
 ## Nueva entrada con forma vernácula duplicada {#new-entry-with-duplicate-vernacular-form}
 

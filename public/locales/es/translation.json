@@ -1,7 +1,7 @@
 {
   "generic": {
     "404Title": "404: Página no encontrada",
-    "404Text": "Haga clic en The Combine para volver al inicio.",
+    "404Text": "Haga clic en la gente para volver al inicio.",
     "loadingTitle": "Cargando...",
     "loadingText": "Por favor, espere mientras The Combine procesa sus datos."
   },
@@ -29,11 +29,9 @@
     "addNote": "Agregar una nota",
     "domain": "Dominio",
     "domainTitle": "Dominio: {{ val1 }} ({{ val2 }})",
-    "gloss": "Glosa",
     "glosses": "Glosas",
     "pressEnter": "Presione Enter para guardar la palabra",
-    "vernacular": "Vernáculo",
-    "wordInDatabase": "Esta palabra ya está en la base de datos"
+    "vernacular": "Vernáculo"
   },
   "appBar": {
     "dataEntry": "Entrada de datos",
@@ -61,12 +59,10 @@
     "usernameRequirements": "El nombre de usuario debe tener 3 caracteres o más.",
     "usernameTaken": "Nombre de usuario no disponible.",
     "emailTaken": "Correo electrónico no disponible.",
-    "loggingIn": "Iniciando sesión...",
     "required": "Requerido",
     "confirmPassword": "Confirmar contraseña",
     "confirmPasswordError": "Las contraseñas no coinciden.",
-    "email": "Correo electrónico",
-    "emailError": "Por favor, ingrese un correo electrónico válida."
+    "email": "Correo electrónico"
   },
   "passwordReset": {
     "invalidURL": "El enlace para restablecer la contraseña no es válido.",
@@ -78,6 +74,10 @@
     "resetFail": "Error al restablecer la contraseña",
     "resetDone": "Si ha introducido correctamente su dirección de correo electrónico o su nombre de usuario, se le habrá enviado un enlace para restablecer la contraseña.",
     "backToLogin": "Volver al inicio de sesión"
+  },
+  "speakerMenu": {
+    "none": "No hay locutores en el proyecto. Para adjuntar un locutor a las grabaciones de audio, habla con un administrador del proyecto.",
+    "other": "[Ninguna de los anteriores]"
   },
   "userMenu": {
     "siteSettings": "Configuración del sitio",
@@ -124,13 +124,14 @@
     "phone": "Número de teléfono",
     "uiLanguage": "Idioma de la interfaz de usuario",
     "uiLanguageDefault": "(Por defecto, el idioma del navegador)",
-    "updateSuccess": "Configuración actualizada correctamente."
+    "updateSuccess": "Configuración actualizada correctamente.",
+    "uploadAvatarTitle": "Establecer avatar de usuario"
   },
   "projectExport": {
     "cannotExportEmpty": "El proyecto está vacío. No se puede exportar un proyecto sin palabras.",
-    "downloadInProgress": "Descarga en proceso",
-    "exportFailed": "Error al exportar",
-    "exportInProgress": "Exportación en curso"
+    "downloadInProgress": "Descargando proyecto: {{ val }}",
+    "exportFailed": "Error al exportar el proyecto {{ val }}. Haga clic para borrar este mensaje.",
+    "exportInProgress": "Exportando proyecto: {{ val }}"
   },
   "projectSettings": {
     "project": "Proyecto:",
@@ -143,13 +144,12 @@
       "users": "Usuarios"
     },
     "language": {
-      "header": "Idioma",
       "vernacular": "Vernáculo",
       "vernacularLanguage": "Idioma vernáculo",
       "analysis": "Análisis",
       "analysisLanguage": "Idioma de análisis",
       "semanticDomains": "Dominios semánticos",
-      "semanticDomainsDefault": "(Por defecto, el idioma del navegador)",
+      "semanticDomainsDefault": "(Por defecto, el idioma de la interfaz de usuario)",
       "languages": "Idiomas del proyecto",
       "bcp47": "Código BCP 47",
       "name": "Nombre",
@@ -195,11 +195,28 @@
       "manageUser": "Administrar usuario",
       "reverseOrder": "Orden inverso"
     },
+    "speaker": {
+      "label": "Administrar locutores",
+      "add": "Añadir un locutor",
+      "enterName": "Introduzca el nombre de un nuevo locutor",
+      "nameEmpty": "El nombre del locutor está vacío",
+      "nameTaken": "El nombre del locutor ya está en uso en este proyecto",
+      "delete": "Borrar este locutor",
+      "edit": "Editar el nombre del locutor",
+      "consent": {
+        "add": "Añadir consentimiento para este locutor",
+        "record": "Grabar el consentimiento de audio",
+        "view": "Ver el consentimiento de imagen de este locutor",
+        "viewTitle": "Consentimiento para el locutor: {{ val }}",
+        "upload": "Subir consentimiento de la imagen",
+        "remove": "Eliminar el consentimiento de este locutor",
+        "warning": "Advertencia: se borrará el consentimiento actual del locutor; esto no se puede deshacer."
+      }
+    },
     "import": {
       "header": "Importar datos",
       "body": "Los datos importados se añadirán a este proyecto. The Combine no hará ningún intento de deduplicar, sobrescribir o sincronizar.",
       "chooseFile": "Elegir archivo",
-      "done": "¡Hecho!",
       "notAllowed": "Ya ha importado un archivo Lift a este proyecto."
     },
     "archive": {
@@ -223,10 +240,6 @@
       "on": "Encendido",
       "hint": "En la entrada de datos, sugiera las lenguas vernáculas existentes similares a la lengua vernácula que se está escribiendo."
     },
-    "definitions": {
-      "label": "Mostrar definiciones",
-      "hint": "En Revisar Entradas, mostrar una columna de Definiciones; en Combinar Duplicados, mostrar la Definición debajo de la Glosa."
-    },
     "invite": {
       "inviteByEmailLabel": "Invitar por correo electrónico",
       "userExists": "Este usuario ya está registrado.",
@@ -234,14 +247,12 @@
       "searchPlaceholder": "Buscar...",
       "searchTitle": "Buscar usuarios",
       "emailLabel": "Correo electrónico",
-      "messageLabel": "Mensaje",
       "toastSuccess": "Usuario agregado al proyecto.",
       "toastFail": "Error al agregar usuario al proyecto."
     }
   },
   "goal": {
     "selector": {
-      "selectOption": "Selecciona este objectivo",
       "past": "Se completó:",
       "present": "Nuestra recomendación:",
       "other": "Otras opciones:",
@@ -259,18 +270,15 @@
   "validateStrWords": { "title": "Validar los caracteres estructurales" },
   "reviewEntries": {
     "title": "Revisar entradas",
-    "sense": "Acepción",
-    "noVernacular": "¡No hay entrada vernácula!",
-    "noDefinition": "No hay definiciones",
-    "noGloss": "No hay entrada de glosas",
+    "allEntriesPerPageOption": "Todos",
+    "editSense": "Editar acepción",
+    "discardChanges": "Descartar los cambios?",
     "noDomain": "Ningún dominio seleccionado",
     "duplicateDomain": "Esta acepción ya tiene el dominio {{ val }}.",
-    "noNote": "Sin nota",
     "deleteWordWarning": "¡Esta palabra se eliminará permanentemente!",
     "deleteDisabled": "Se importó con datos que The Combine no maneja, por lo que no se puede eliminar.",
     "error": {
       "gloss": "Las glosas no pueden dejarse en blanco",
-      "domain": "Los dominios no pueden dejarse en blanco",
       "senses": "No se puede guardar una entrada sin acepciones",
       "vernacular": "El vernáculo no puede dejarse en blanco"
     },
@@ -278,30 +286,21 @@
       "definitions": "Definiciones",
       "delete": "Eliminar",
       "domains": "Dominios",
+      "edit": "Editar",
       "flag": "Bandera",
       "glosses": "Glosas",
       "note": "Nota",
       "partOfSpeech": "Parte de la oración",
       "pronunciations": "Pronunciaciones",
       "senses": "Acepciones",
+      "sensesCount": "Número de acepciones",
       "vernacular": "Vernáculo"
     },
-    "materialTable": {
-      "body": {
-        "edit": "Editar",
-        "emptyDataSourceMessage": "No hay entradas para mostrar",
-        "filter": "Filtro"
-      },
-      "pagination": {
-        "labelDisplayedRows": "{from}-{to} de {count}",
-        "labelRows": "filas",
-        "labelRowsPerPage": "Filas por página:",
-        "first": "Primera página",
-        "last": "Última página",
-        "next": "Página siguiente",
-        "previous": "Página anterior"
-      },
-      "toolbar": { "search": "Buscar" }
+    "completed": { "number": "Número de entradas editadas: " },
+    "undo": {
+      "undo": "Deshacer edición",
+      "undoDialog": "¿Deshacer esta edición?",
+      "undoDisabled": "Deshacer no disponible"
     }
   },
   "charInventory": {
@@ -314,30 +313,17 @@
     "characterSet": {
       "title": "Conjunto de caracteres vernáculos:",
       "help": "Define los caracteres que son válidos para este idioma",
-      "addButton": "Agregar caracteres",
-      "addButtonTitle": "Agregar los caracteres del cuadro al conjunto de caracteres",
-      "deleteButton": "Eliminar seleccionados",
-      "deleteButtonTitle": "Eliminar los caracteres seleccionados del conjunto de caracteres",
       "acceptedCharacters": "Caracteres aceptados",
       "rejectedCharacters": "Caracteres rechazados",
-      "noCharacters": "¡Todavía no hay caracteres! Escriba caracteres en el cuadro de abajo para empezar.",
-      "required": "Agrega caracteres ingresándolos en este cuadro",
       "advanced": "Avanzado",
       "occurrences": "{{ val }} ocurrencias",
       "find": "Buscar",
-      "replace": "Reemplazar",
       "replaceWith": "Reemplazar con",
       "replaceAll": "Reemplazar todas las ocurrencias de: {{ val }}",
       "replaceAllWith": "Reemplazar con: {{ val }}",
       "findAndReplace": "Buscar y Reemplazar",
       "findAndReplaceError": "Error al procesar: encontrar ( {{ val1 }} ), reemplazar ( {{  val2 }})",
       "apply": "aplicar"
-    },
-    "sampleWords": {
-      "title": "Palabras de muestra",
-      "description": "Aquí hay algunas palabras que no se ajustan a su conjunto de caracteres actual:",
-      "ignore": "Ignorar esta palabra por ahora",
-      "add": "Agregar los caracteres de esta palabra al conjunto"
     },
     "dialog": {
       "title": "Cambios no guardados",
@@ -346,25 +332,61 @@
       "no": "no"
     },
     "changes": {
-      "noChanges": "No se han realizado cambios en este objetivo.",
-      "more": "más"
+      "noCharChanges": "No se han realizado cambios en el inventario de caracteres.",
+      "more": "más",
+      "noWordChangesFindReplace": "No hay palabras cambiadas por buscar y reemblazar.",
+      "wordChanges": "Palabras cambiadas:",
+      "wordChangesWithStrings": "Palabras cambiadas ({{ val1 }} → {{ val2 }}):"
+    },
+    "undo": {
+      "undo": "Deshacer buscar y reemblazar",
+      "undoDialog": "¿Deshacer cambios de palabras mediante buscar y reemplazar?",
+      "undoDisabled": "Deshacer no disponible",
+      "undoWords": "Deshacer disponible para {{ val1 }} de las {{ val2 }} palabras modificadas."
     }
   },
   "mergeDups": {
     "title": "Combinar duplicados",
     "helpText": {
       "dragCard": "Arrastre una tarjeta aquí para combinarla",
-      "root": "Arrastra las palabras aquí para comenzar a combinarlas",
-      "dups": "Arrastra las palabras duplicadas aquí",
-      "sense": "Arrastra una nueva acepción aquí",
       "saveAndContinue": "Guardar los cambios y cargar un nuevo conjunto de palabras",
       "defer": "Descartar los cambios y cargar un nuevo conjunto de palabras",
-      "list": "Arrastre esta palabra hacia la derecha para comenzar a combinarla con otras palabras",
       "noDups": "No hay nada que combinar.",
       "delete": "Borrar la acepción",
       "deleteDialog": "¿Borrar esta acepción?",
-      "protectedSense": "Esta acepción fue importado con datos que The Combine no maneja, por lo que no puede ser borrado o añadido a otra acepción. Puede mover esta acepción a otra palabra o añadir otras acepciones a éste para combinarlos.",
-      "protectedWord": "Esta palabra se importó con datos que The Combine no maneja, por lo que para evitar que se borre, no se puede eliminar su acepción final."
+      "protectedSense": "Esta acepción fue importado con datos que The Combine no maneja.",
+      "protectedSenseInfo": "Esta acepción no puede ser borrado o añadido a otra acepción. Puede moverla a otra palabra o añadir otras acepciones a éste para combinarlos.",
+      "protectedWord": "Esta palabra se importó con datos que The Combine no maneja.",
+      "protectedWordInfo": "Para evitar que se borre, no se puede eliminar la acepción final de esa palabra.",
+      "protectedData": "Datos protegidos: {{ val }}"
+    },
+    "protectReason": {
+      "annotations": "anotaciones",
+      "etymologies": "etimologías",
+      "examples": "ejemplos",
+      "field": "Campo \"{{ val }}\"",
+      "gramInfoTrait": "información gramatical \"{{ val }}\"",
+      "illustrations": "ilustraciones",
+      "noteWithType": "nota con tipo \"{{ val }}\"",
+      "notesSense": "notas",
+      "notesWord": "más de 1 nota",
+      "relations": "relaciones",
+      "reversal": "Reverso de \"{{ val }}\"",
+      "subsenses": "subacepciones",
+      "traitAnthroCode": "código de antro \"{{ val }}\"",
+      "traitDialectLabels": "etiquetas de dialecto \"{{ val }}\"",
+      "traitDomainType": "tipo de dominio \"{{ val }}\"",
+      "traitDoNotPublishIn": "no publicar en \"{{ val }}\"",
+      "traitDoNotUseForParsing": "no utilizar para el análisis \"{{ val }}\"",
+      "traitEntryType": "tipo de entrada \"{{ val }}\"",
+      "traitExcludeAsHeadword": "excluir como palabra clave",
+      "traitMinorEntryCondition": "condición de entrada menor \"{{ val }}\"",
+      "traitMorphType": "tipo morph \"{{ val }}\" (en lugar de \"stem\" predeterminado)",
+      "traitPublishIn": "publicar en \"{{ val }}\"",
+      "traitSenseType": "tipo de acepción \"{{ val }}\"",
+      "traitStatus": "estado \"{{ val }}\"",
+      "traitUsageType": "tipo de uso \"{{ val }}\"",
+      "variants": "variantes"
     },
     "completed": { "number": "Número de combinaciones realizadas: " },
     "continueDialog": {
@@ -382,8 +404,7 @@
     "add": "Añadir bandera",
     "edit": "Editar bandera",
     "remove": "Eliminar bandera",
-    "save": "Guardar bandera",
-    "text": "Texto: "
+    "save": "Guardar bandera"
   },
   "buttons": {
     "accept": "Aceptar",
@@ -413,7 +434,13 @@
   },
   "pronunciations": {
     "recordTooltip": "Mantenga presionado para grabar.",
-    "playTooltip": "Haz clic para reproducir; presiona Shift más clic para eliminar.",
+    "playTooltip": "Haz clic para reproducir.",
+    "deleteTooltip": "Presiona Shift más clic para eliminar.",
+    "protectedTooltip": "El audio importado no se puede borrar ni modificar.",
+    "speaker": "Locutor: {{ val }}.",
+    "speakerAdd": "Clic derecho para añadir un locutor.",
+    "speakerChange": "Clic derecho para cambiar de locutor.",
+    "speakerSelect": "Seleccionar locutor de esta grabación de audio",
     "noMicAccess": "Error de grabación: No se pudo acceder a un micrófono.",
     "deleteRecording": "Eliminar grabación"
   },
@@ -459,5 +486,12 @@
       "Other": "Otra",
       "Unspecified": "No especificado"
     }
+  },
+  "wordCard": {
+    "senseCount": "Acepciones: {{ val }}",
+    "wordId": "Id: {{ val }}",
+    "wordModified": "Modificado: {{ val }}",
+    "domainAdded": "Añadido: {{ val }}",
+    "user": "Por usuario: {{ val }}"
   }
 }

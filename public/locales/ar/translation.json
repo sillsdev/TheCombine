@@ -1,7 +1,7 @@
 {
   "generic": {
     "404Title": "404: لم يتم العثور على الصفحة",
-    "404Text": "انقر على الجرار للعودة إلى المنزل.",
+    "404Text": "انقر على الناس للعودة إلى المنزل.",
     "loadingTitle": "جارٍ التحميل...",
     "loadingText": "الرجاء الانتظار بينما يقوم The Combine بتجهيز بياناتك."
   },
@@ -29,11 +29,9 @@
     "addNote": "إضافة ملاحظة",
     "domain": "النطاق",
     "domainTitle": "النطاق: {{ val1 }} ({{ val2 }})",
-    "gloss": "تعليق",
-    "glosses": "اللمعان",
+    "glosses": "تعليقات",
     "pressEnter": "اضغط على إدخال لحفظ الكلمة",
-    "vernacular": "العامية",
-    "wordInDatabase": "هذه الكلمة موجودة بالفعل في قاعدة البيانات"
+    "vernacular": "العامية"
   },
   "appBar": {
     "dataEntry": "ادخال بيانات",
@@ -56,16 +54,12 @@
     "signUpNew": "إنشاء حساب مستخدم جديد",
     "signUpSuccess": "تم إنشاء المستخدم",
     "signUpFailed": "فشل تسجيل المستخدم",
-    "usernameInvalid": "اسم المستخدم هذا قصير جداً أو مأخوذ مسبقاً.",
     "usernameRequirements": "اسم المستخدم يجب أن يكون 3 أحرف أو أكثر.",
     "emailTaken": "يوجد بالفعل مستخدم بهذا البريد الإلكتروني.",
-    "networkError": "خطأ بالشبكه",
-    "loggingIn": "جاري تسجيل الدخول...",
     "required": "مطلوبة",
     "confirmPassword": "تأكيد كلمة المرور",
     "confirmPasswordError": "لا تتطابق كلمات المرور.",
-    "email": "البريد الألكتروني",
-    "emailError": "الرجاء إدخال بريد إلكتروني صالح."
+    "email": "البريد الألكتروني"
   },
   "passwordReset": {
     "emailOrUsername": "البريد الإلكتروني أو اسم المستخدم",
@@ -76,6 +70,7 @@
     "resetFail": "خطأ في إعادة تعيين كلمة المرور",
     "backToLogin": "العودة إلى تسجيل الدخول"
   },
+  "speakerMenu": {},
   "userMenu": {
     "siteSettings": "إعدادات الموقع",
     "userSettings": "اعدادات المستخدم",
@@ -96,7 +91,6 @@
   },
   "selectProject": { "title": "حدد المشروع" },
   "siteSettings": {
-    "projectList": "مشاريع",
     "archiveProjectText": "لن يكون هذا المشروع متاحا لأي مستخدم.",
     "restoreProjectText": "ربما كان لدى شخص ما سبب جيد لأرشفة هذا المشروع. هل أنت متأكد من أنك تريد استعادته؟",
     "deleteUser": {
@@ -119,21 +113,18 @@
     "updateSuccess": "تم تحديث الإعدادات بنجاح."
   },
   "projectExport": {
-    "cannotExportEmpty": "المشروع فارغ. لا يمكنك تصدير مشروع بدون كلمات.",
-    "downloadInProgress": "جاري التنزيل",
-    "exportFailed": "فشل التصدير",
-    "exportInProgress": "جار التصدير"
+    "cannotExportEmpty": "المشروع فارغ. لا يمكنك تصدير مشروع بدون كلمات."
   },
   "projectSettings": {
+    "tab": { "export": "تصدير", "languages": "اللغات" },
     "language": {
-      "header": "اللغة",
       "vernacular": "العامية",
       "vernacularLanguage": "اللغة الإغريقية",
       "analysis": "التحليل",
       "analysisLanguage": "لغة التحليل",
       "semanticDomains": "المجالات الدلالية",
-      "semanticDomainsDefault": "(تفضيل لغة المتصفح الافتراضية)",
-      "languages": "اللغات",
+      "semanticDomainsDefault": "(تفضيل لغة واجهة المستخدم الافتراضية)",
+      "languages": "اللغات المشروع",
       "bcp47": "BCP 47 Code",
       "name": "الاسم",
       "font": "خط",
@@ -164,11 +155,11 @@
       "manageUser": "إدارة المستخدم",
       "reverseOrder": "ترتيب عكسي"
     },
+    "speaker": { "consent": {} },
     "import": {
       "header": "استيراد البيانات",
       "body": "ستضاف البيانات المستوردة إلى هذا المشروع. لن يقوم The Combine بأي محاولة لإلغاء التكرار أو الكتابة فوق أو المزامنة.",
       "chooseFile": "اختر ملف",
-      "done": "تم!",
       "notAllowed": "لقد قمت بالفعل باستيراد ملف LIFT إلى هذا المشروع."
     },
     "archive": {
@@ -192,10 +183,6 @@
       "on": "على",
       "hint": "عند إدخال البيانات، اقترح أن تكتب اللهجات العامية الحالية بطريقة مشابهة للغة العامية."
     },
-    "definitions": {
-      "label": "عرض التعاريف",
-      "hint": "في مراجعة الإدخالات، بَيَّنَ عمود التعريفات؛ في دمج التكرارات، اعرض التعريف الموجود أسفل اللمعان."
-    },
     "invite": {
       "inviteByEmailLabel": "دعوة بواسطة البريد الإلكتروني",
       "userExists": "هذا المستخدم مسجل مسبقاً.",
@@ -203,14 +190,12 @@
       "searchPlaceholder": "بحث...",
       "searchTitle": "البحث عن المستخدمين",
       "emailLabel": "البريد الألكتروني",
-      "messageLabel": "رسالة",
       "toastSuccess": "تمت إضافة المستخدم إلى المشروع.",
       "toastFail": "فشل في إضافة مستخدم إلى المشروع."
     }
   },
   "goal": {
     "selector": {
-      "selectOption": "حدد هذا الهدف",
       "past": "لقد أتممت:",
       "present": "توصياتنا:",
       "other": "خيارات أخرى:",
@@ -222,22 +207,17 @@
   },
   "createStrWordInv": { "title": "إنشاء قائمة جرد الكلمات الهيكلية" },
   "handleFlags": { "title": "التعامل مع الأعلام" },
-  "spellCheckGloss": { "title": "معجم التدقيق الإملائي" },
+  "reviewDeferredDups": {},
+  "spellCheckGloss": { "title": "تعليق التدقيق الإملائي" },
   "validateChars": { "title": "التحقق من صحة الأحرف" },
   "validateStrWords": {},
   "reviewEntries": {
     "title": "مراجعة المدخلات",
-    "sense": "معنى",
-    "noVernacular": "لا يوجد مدخلات عامية!",
-    "noDefinition": "لا يوجد إدخال تعاريف",
-    "noGloss": "لا إدخال لمعان",
     "noDomain": "لم يتم تحديد مجال",
-    "noNote": "لا توجد ملاحظة",
     "deleteWordWarning": "سيتم حذف هذه الكلمة بشكل دائم!",
     "deleteDisabled": "تم استيراد هذا مع بيانات لا يتعامل معها The Combine، لذلك قد لا يجوز حذفه.",
     "error": {
-      "gloss": "لا يمكن ترك اللمعان فارغة",
-      "domain": "لا يمكن ترك المجالات فارغة",
+      "gloss": "لا يمكن ترك التعليق فارغة",
       "senses": "لا يمكن حفظ إدخال بدون حواس",
       "vernacular": "لا يمكن ترك اللغة العامية فارغة"
     },
@@ -246,30 +226,15 @@
       "delete": "حذف",
       "domains": "النطاقات",
       "flag": "عَلَم",
-      "glosses": "اللمعان",
+      "glosses": "تعليقات",
       "note": "ملاحظة",
       "partOfSpeech": "جزء من الكلام",
       "pronunciations": "النطق",
       "senses": "المعاني",
       "vernacular": "العامية"
     },
-    "materialTable": {
-      "body": {
-        "edit": "تعديل",
-        "emptyDataSourceMessage": "لا توجد إدخالات لعرضها",
-        "filter": "فلتر"
-      },
-      "pagination": {
-        "labelDisplayedRows": "{from}-{to} من أصل {count}",
-        "labelRows": "صفوف",
-        "labelRowsPerPage": "صفوف بالصفحة:",
-        "first": "الصفحة الأولى",
-        "last": "آخر صفحة",
-        "next": "الصفحة التالية",
-        "previous": "الصّفحة السابقة"
-      },
-      "toolbar": { "search": "بحث" }
-    }
+    "completed": {},
+    "undo": { "undoDisabled": "التراجع غير متوفر" }
   },
   "charInventory": {
     "title": "إنشاء جرد الشخصية",
@@ -281,30 +246,17 @@
     "characterSet": {
       "title": "مجموعة أحرف اللغة العامية:",
       "help": "حدد الأحرف الصالحة لهذه اللغة",
-      "addButton": "إضافة حروف",
-      "addButtonTitle": "إضافة الأحرف في المربع إلى مجموعة الأحرف",
-      "deleteButton": "احذف المختار",
-      "deleteButtonTitle": "إزالة الأحرف المحددة من مجموعة الأحرف",
       "acceptedCharacters": "الأحرف المقبولة",
       "rejectedCharacters": "الشخصيات المرفوضة",
-      "noCharacters": "لا توجد أحرف بعد! اكتب الأحرف في المربع أدناه للبدء.",
-      "required": "إضافة أحرف عن طريق إدخالها في هذا المربع",
       "advanced": "إعدادات متقدمة",
       "occurrences": "{{ val }} مرات الحدوث",
       "find": "البحث",
-      "replace": "استبدال",
       "replaceWith": "استبدال بـ",
       "replaceAll": "استبدال جميع الحوادث: {{ val }}",
       "replaceAllWith": "استبدل بـ: {{ val }}",
       "findAndReplace": "بحث و استبدال&",
-      "findAndReplaceError": "خطأ في المعالجة: العثور على ( {{ val1 }} )، استبدال ( {{  val2 }})",
+      "findAndReplaceError": "خطأ في المعالجة: العثور على ( {{ val1 }} )، استبدال ( {{  val2 }} )",
       "apply": "تطبيق"
-    },
-    "sampleWords": {
-      "title": "كلمات بسيطة",
-      "description": "فيما يلي بعض الكلمات التي لا تتناسب مع مجموعة الأحرف الحالية:",
-      "ignore": "تجاهل هذه الكلمة الآن",
-      "add": "إضافة أحرف في هذه الكلمة إلى المجموعة"
     },
     "dialog": {
       "title": "التغييرات غير محفوظة",
@@ -312,27 +264,24 @@
       "yes": "نعم",
       "no": "لا"
     },
-    "changes": {
-      "noChanges": "لم يتم إجراء أي تغييرات هذه المرة.",
-      "more": "أكثر"
-    }
+    "changes": { "more": "أكثر" },
+    "undo": { "undoDisabled": "التراجع غير متوفر" }
   },
   "mergeDups": {
     "title": "دمج التكرارات",
     "helpText": {
       "dragCard": "اسحب بطاقة هنا للدمج",
-      "root": "اسحب الكلمات هنا لبدء دمجها",
-      "dups": "اسحب الكلمات المكررة هنا",
-      "sense": "اسحب حس جديد هنا",
       "saveAndContinue": "حفظ التغييرات وتحميل مجموعة جديدة من الكلمات",
-      "skip": "تجاهل التغييرات وتحميل مجموعة جديدة من الكلمات",
-      "list": "اسحب هذه الكلمة إلى اليمين لبدء دمجها مع كلمات أخرى",
+      "defer": "تجاهل التغييرات وتحميل مجموعة جديدة من الكلمات",
       "noDups": "لا يوجد شيء للدمج.",
       "delete": "حذف المعنى",
       "deleteDialog": "هل تريد حذف هذا المعنى ؟",
-      "protectedSense": "هذا المعنى تم استيراده مع بيانات لا يتعامل معها The Combine، لذلك لا يمكن حذفها أو إيداع بمعنى آخر. يمكنك نقل هذا المعنى إلى كلمة أخرى أو إيداع معاني أخرى لدمجها.",
-      "protectedWord": "تم استيراد هذه الكلمة مع بيانات لا يتعامل معها The Combine، لذلك لمنع الحذف، لا يمكن إزالة معناها النهائي."
+      "protectedSense": "هذا المعنى تم استيراده مع بيانات لا يتعامل معها The Combine.",
+      "protectedSenseInfo": "هذا المعنى لا يمكن حذفها أو إيداع بمعنى آخر. يمكنك نقل هذا المعنى إلى كلمة أخرى أو إيداع معاني أخرى لدمجها.",
+      "protectedWord": "تم استيراد هذه الكلمة مع بيانات لا يتعامل معها The Combine.",
+      "protectedWordInfo": "لمنع الحذف، لا يمكن إزالة معناها النهائي."
     },
+    "protectReason": {},
     "completed": { "number": "عدد عمليات الدمج المكتملة: " },
     "continueDialog": { "title": "مواصلة الدمج؟", "yes": "نعم", "no": "لا" },
     "undo": {
@@ -345,8 +294,7 @@
     "add": "إضافة علامة",
     "edit": "تعديل العلامة",
     "remove": "إزالة العلامة",
-    "save": "تسجيل العلامة",
-    "text": "النص: "
+    "save": "تسجيل العلامة"
   },
   "buttons": {
     "accept": "يقبل",
@@ -370,13 +318,13 @@
     "restore": "إستعادة",
     "save": "حفظ",
     "saveAndContinue": "احفظ واستمر",
-    "skip": "تخطي",
     "undecided": "غير مقرّر",
     "upload": "رفع"
   },
   "pronunciations": {
     "recordTooltip": "اضغط مع الاستمرار لتسجيل.",
-    "playTooltip": "اضغط للعب ، انقر فوق التحول للحذف.",
+    "playTooltip": "اضغط للعب.",
+    "deleteTooltip": "انقر فوق التحول للحذف.",
     "noMicAccess": "خطأ في التسجيل: تعذر الوصول إلى الميكروفون.",
     "deleteRecording": "حذف التسجيل"
   },
@@ -422,5 +370,6 @@
       "Other": "آخر",
       "Unspecified": "غير محدد"
     }
-  }
+  },
+  "wordCard": {}
 }

@@ -66,7 +66,7 @@
 
 与项目有关的*分析语言*可能会有很多种，但只有列表中最上面的一种可以输入新词条。
 
-!!! 笔记
+!!! note "笔记"
 
     如果项目有多种语言的注释，则那些语言必须被添加至此处，这样所有注释就可以显示在[数据清理](goals.md). 点击放大镜图标，就能看到呈现在项目中的所有语言代码。
 
@@ -99,7 +99,7 @@ _收集者_ 可以进行 [词条输入](./dataEntry.md) ，但不能进行 [数�
 
 _管理员_ 拥有 _编辑_ 的所有权限，还可以修改大多数项目设置和 用户。
 
-!!! 重要警告
+!!! warning "重要警告"
 
     每个项目只有一个所有者。 如果您将另一个用户成为项目所有者，您将自动从项目所有者变为
     管理员，而且您将无法再存档项目或为其他用户设置/删除管理员。
@@ -109,17 +109,35 @@ _管理员_ 拥有 _编辑_ 的所有权限，还可以修改大多数项目设�
 可搜素已有的用户(用搜素词显示所有用户的姓名、用户名，或电子邮件地址), 也可以电子邮件的方式邀请新用户(他们在通过邀请创建
 帐户后将自动添加到项目中).
 
+#### Manage Speakers
+
+Speakers are distinct from users. A speaker can be associate with audio recording of words. Use the + icon at the bottom
+of this section to add a speaker. Beside each added speaker are buttons to delete them, edit their name, and add a
+consent for use of their recorded voice. The supported methods for adding consent are to (1) record an audio file or (2)
+upload an image file.
+
+When project users are in Data Entry or Review Entries, a speaker icon will be available in the top bar. Users can click
+that button to see a list of all available speakers and select the current speaker, this speaker will be automatically
+associated with every audio recording made by the user until they log out or select a different speaker.
+
+The speaker associated with a recording can be seen by hovering over its play icon. To change a recording's speaker,
+right click the play icon (or press and hold on a touch screen to bring up a menu).
+
+When the project is exported from The Combine, speaker names (and ids) will be added as a pronunciation labels in the
+LIFT file. All consent files for project speakers will be added to a "consent" subfolder of the export (with speaker ids
+used for the file names).
+
 ### 导入/导出
 
 ![导入/导出](../images/projectSettings4Port.zh.png){width=750 .center}
 
 #### 导入 {#import}
 
-!!! 笔记
+!!! note "笔记"
 
     目前，可导入的 LIFT 文件不可超过 100MB。
 
-!!! 笔记
+!!! note "笔记"
 
     目前，每个项目只能导入一个 LIFT 文件。
 
@@ -128,9 +146,19 @@ _管理员_ 拥有 _编辑_ 的所有权限，还可以修改大多数项目设�
 单击 "导出 "按钮后，在数据准备下载时，用户可以到网站的其他部分浏览。 当导出内容可供下载时，应用程序栏中会出现一个下载图
 标。 默认文件名是项目名称加上下载时间。
 
-!!! 重要警告
+!!! warning "重要警告"
 
     导出一个数百 MB 大小的项目文件可能需要好几分钟时间。
+
+!!! note "笔记"
+
+    Project settings, project users, and word flags are not exported.
+
+#### Export pronunciation speakers
+
+When a project is exported from TheCombine and imported into FieldWorks, if a pronunciation has an associated speaker,
+the speaker name and id will be added as a pronunciation label. Consent files will be exported with speaker id used for
+the file name. The consent files can be found in the zipped export, but will not be imported into FieldWorks.
 
 ### 工作坊日程 {#workshop-schedule}
 

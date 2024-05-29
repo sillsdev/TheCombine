@@ -5,7 +5,7 @@ import {
   MenuList,
   Typography,
 } from "@mui/material";
-import { type ReactElement } from "react";
+import { Fragment, type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, type Word } from "api/models";
@@ -24,6 +24,10 @@ interface vernDialogProps {
 }
 
 export default function VernDialog(props: vernDialogProps): ReactElement {
+  if (!props.vernacularWords.length) {
+    return <Fragment />;
+  }
+
   return (
     <Dialog
       maxWidth={false}
@@ -36,6 +40,7 @@ export default function VernDialog(props: vernDialogProps): ReactElement {
     >
       <DialogContent>
         <VernList
+          vernacular={props.vernacularWords[0].vernacular}
           vernacularWords={props.vernacularWords}
           closeDialog={props.handleClose}
           analysisLang={props.analysisLang}
@@ -46,6 +51,7 @@ export default function VernDialog(props: vernDialogProps): ReactElement {
 }
 
 interface VernListProps {
+  vernacular: string;
   vernacularWords: Word[];
   closeDialog: (wordId?: string) => void;
   analysisLang?: string;
@@ -96,7 +102,7 @@ export function VernList(props: VernListProps): ReactElement {
   menuItems.push(
     <StyledMenuItem key="new-entry" onClick={() => props.closeDialog("")}>
       {t("addWords.newEntryFor")}
-      {props.vernacularWords[0].vernacular}
+      {props.vernacular}
     </StyledMenuItem>
   );
 

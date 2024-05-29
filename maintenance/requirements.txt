@@ -22,7 +22,7 @@ google-auth==2.29.0
     # via kubernetes
 humanfriendly==10.0
     # via -r requirements.in
-idna==3.6
+idna==3.7
     # via requests
 kubernetes==29.0.0
     # via -r requirements.in
@@ -38,7 +38,7 @@ pyasn1-modules==0.4.0
     # via google-auth
 pycparser==2.22
     # via cffi
-pymongo==4.6.3
+pymongo==4.7.1
     # via -r requirements.in
 pyopenssl==24.1.0
     # via -r requirements.in
@@ -62,5 +62,5 @@ urllib3==2.2.1
     # via
     #   kubernetes
     #   requests
-websocket-client==1.7.0
+websocket-client==1.8.0
     # via kubernetes

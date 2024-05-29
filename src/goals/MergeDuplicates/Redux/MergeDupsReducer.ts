@@ -14,11 +14,17 @@ import {
   defaultTree,
   newMergeTreeWord,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
-import { newMergeWords } from "goals/MergeDuplicates/MergeDupsTypes";
-import { defaultState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import {
-  buildSenses,
-  createMergeWords,
+  defaultAudio,
+  defaultState,
+} from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
+import {
+  combineIntoFirstSense,
+  createMergeChildren,
+  createMergeParent,
+  gatherWordSenses,
+  getDeletedMergeWords,
+  isEmptyMerge,
 } from "goals/MergeDuplicates/Redux/reducerUtilities";
 import { StoreActionTypes } from "rootActions";
 import { type Hash } from "types/hash";
@@ -80,6 +86,7 @@ const mergeDuplicatesSlice = createSlice({
         deletedSenseGuids.push(...srcGuids);
         delete sensesGuids[srcRef.mergeSenseId];
         if (!Object.keys(sensesGuids).length) {
+          delete state.audio.moves[srcWordId];
           delete words[srcWordId];
         }
 
@@ -104,32 +111,51 @@ const mergeDuplicatesSlice = createSlice({
     },
 
     getMergeWordsAction: (state) => {
-      // Handle words with all senses deleted.
-      const possibleWords = Object.values(state.data.words);
+      const dataWords = Object.values(state.data.words);
       const deletedSenseGuids = state.tree.deletedSenseGuids;
-      const deletedWords = possibleWords.filter((w) =>
-        w.senses.every((s) => deletedSenseGuids.includes(s.guid))
-      );
-      state.mergeWords = deletedWords.map((w) =>
-        newMergeWords(w, [{ srcWordId: w.id, getAudio: false }], true)
+
+      // First handle words with all senses deleted.
+      state.mergeWords = getDeletedMergeWords(dataWords, deletedSenseGuids);
+
+      // Then build the rest of the mergeWords.
+
+      // Gather all senses (accessibility will be updated as mergeWords are built).
+      const wordTreeSenses = gatherWordSenses(dataWords, deletedSenseGuids);
+      const allSenses = Object.values(wordTreeSenses).flatMap((mergeSenses) =>
+        mergeSenses.map((ms) => ms.sense)
       );
 
+      // Build one merge word per column.
       for (const wordId in state.tree.words) {
+        // Get from tree the basic info for this column.
         const mergeWord = state.tree.words[wordId];
-        const mergeSenses = buildSenses(
-          mergeWord.sensesGuids,
-          state.data,
-          deletedSenseGuids
+
+        // Get from data all senses in this column.
+        const mergeSenses = Object.values(mergeWord.sensesGuids).map((guids) =>
+          guids.map((g) => state.data.senses[g])
         );
-        const mergeWords = createMergeWords(
-          wordId,
-          mergeWord,
-          mergeSenses,
-          state.data.words[wordId]
-        );
-        if (mergeWords) {
-          state.mergeWords.push(mergeWords);
+
+        // Update those senses in the set of all senses.
+        mergeSenses.forEach((senses) => {
+          const sensesToUpdate = senses.map(
+            (s) => wordTreeSenses[s.srcWordId][s.order]
+          );
+          combineIntoFirstSense(sensesToUpdate);
+        });
+
+        // Check if nothing to merge.
+        const wordToUpdate = state.data.words[wordId];
+        if (isEmptyMerge(wordToUpdate, mergeWord)) {
+          continue;
         }
+
+        // Create merge words.
+        const children = createMergeChildren(
+          mergeSenses,
+          state.audio.moves[wordId]
+        );
+        const parent = createMergeParent(wordToUpdate, mergeWord, allSenses);
+        state.mergeWords.push({ parent, children, deleteOnly: false });
       }
     },
 
@@ -161,6 +187,17 @@ const mergeDuplicatesSlice = createSlice({
         // Cleanup the srcWord.
         delete words[srcWordId].sensesGuids[mergeSenseId];
         if (!Object.keys(words[srcWordId].sensesGuids).length) {
+          // If this was the word's last sense, move the audio...
+          const moves = state.audio.moves;
+          if (!Object.keys(moves).includes(destWordId)) {
+            moves[destWordId] = [];
+          }
+          moves[destWordId].push(srcWordId);
+          if (Object.keys(moves).includes(srcWordId)) {
+            moves[destWordId].push(...moves[srcWordId]);
+            delete moves[srcWordId];
+          }
+          // ...and delete the word from the tree
           delete words[srcWordId];
         }
       }
@@ -254,15 +291,18 @@ const mergeDuplicatesSlice = createSlice({
         const words: Hash<Word> = {};
         const senses: Hash<MergeTreeSense> = {};
         const wordsTree: Hash<MergeTreeWord> = {};
+        const counts: Hash<number> = {};
         action.payload.forEach((word: Word) => {
           words[word.id] = JSON.parse(JSON.stringify(word));
           word.senses.forEach((s, order) => {
             senses[s.guid] = convertSenseToMergeTreeSense(s, word.id, order);
           });
           wordsTree[word.id] = convertWordToMergeTreeWord(word);
+          counts[word.id] = word.audio.length;
         });
         state.data = { ...defaultData, senses, words };
         state.tree = { ...defaultTree, words: wordsTree };
+        state.audio = { ...defaultAudio, counts };
         state.mergeWords = [];
       }
     },

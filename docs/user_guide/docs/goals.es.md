@@ -4,29 +4,48 @@
 
 La tabla Revisar entradas muestra todas las entradas del proyecto seleccionado.
 
-### Ordenar y filtrar columnas
+### Columnas
 
-Las columnas son: Edición, Vernáculo, Acepciones, Glosas, Dominios, Pronunciaciones, Nota, Bandera y Borrar.
+Las columnas son: Editar (sin encabezado), Vernáculo, Número de acepciones (#), Glosas, Dominios, Pronunciaciones
+(![Review Entries pronunciations column header](../images/reviewEntriesColumnPronunciations.png){width=28}), Nota,
+Bandera (![Review Entries flag column header](../images/reviewEntriesColumnFlag.png){width=16}), y Eliminar (sin
+encabezado).
 
 ![Revisar los encabezados de columna de las entradas](../images/reviewEntriesColumns.es.png)
 
-En la parte superior de una columna con contenido predominantemente textual (Vernáculo, Glosas, Dominios, Nota o
-Bandera), puede ordenar alfabéticamente o filtrar con una búsqueda de texto.
-
-En la parte superior de la columna Acepciones o la columna Pronunciaciones, puede ordenar o filtrar por el número de
-acepciones o pronunciaciones que tienen las entradas.
+To show/hide columns or rearrange their order, click on the
+![Review Entries columns edit icon](../images/reviewEntriesColumnsEdit.png){width=25} icon in the top corner.
 
 Debido a la naturaleza de la recopilación rápida de palabras, la [entrada de datos](dataEntry.md) en The Combine no
-permite añadir definiciones o partes de la oración. Sin embargo, si el proyecto tiene datos importados en los que hay
-definiciones o partes de discurso, se añadirán automáticamente columnas adicionales a la tabla Entradas de revisión.
+permite añadir definiciones o partes de la oración. However, if the project has imported data in which definitions or
+parts of speech were already present, additional columns will be available in the Review Entries table.
+
+#### Ordenar y filtrar
+
+There are icons at the top of each column to
+![Review Entries column filter icon](../images/reviewEntriesColumnFilter.png){width=20} filter and
+![Review Entries column sort icon](../images/reviewEntriesColumnSort.png){width=20} sort the data.
+
+In a column with predominantly text content (Vernacular, Glosses, Note, or Flag), you can sort alphabetically or filter
+with a text search.
+
+In the Number of Senses column or Pronunciations column, you can sort or filter by the number of senses or recordings
+that entries have. In the Pronunciations column, you can also filter by speaker name.
+
+In the Domains column, sorting is numerical by each entry's least domain id. To filter by domain, type a domain id with
+or without periods. For example, "8111" and "8.1.1.1" both show all entries with a sense in domain 8.1.1.1. To also
+include subdomains, add a final period to your filter. For example, "8111." includes domains "8.1.1.1", "8.1.1.1.1", and
+"8.1.1.1.2". Filter with just a period (".") to show all entries with any semantic domain.
 
 ### Edición de filas de entrada
 
 Puede grabar, reproducir o borrar las grabaciones de audio de una entrada con los iconos de la columna Pronunciaciones.
-Puede eliminar una entrada completa con el icono de la columna Suprimir.
 
-Para editar la forma vernácula, los acepciones (incluidas las glosas y los dominios), la nota o la bandera de una
-entrada, haga clic en el icono de la columna Editar.
+To edit any other part of an entry, click the
+![Review Entries row edit icon](../images/reviewEntriesRowEdit.png){width=20} edit icon in the initial column.
+
+You can delete an entire entry by clicking the
+![Review Entries row delete icon](../images/reviewEntriesRowDelete.png){width=20} delete icon in the final column.
 
 ## Combinar duplicados {#merge-duplicates}
 
@@ -114,8 +133,8 @@ siguiente conjunto: "Guardar y Continuar" y "Aplazar".
 ![Fusionar duplicados botón Guardar y Continuar](../images/mergeSaveAndContinue.es.png)
 
 El botón azul "Guardar y continuar" hace dos cosas. En primer lugar, guarda todos los cambios realizados (es decir,
-todas las acepciones movidas, fusionadas o eliminadas), actualizando las palabras en la base de datos. En segundo lugar,
-guarda las palabras no falsificadas como no duplicadas.
+todas las acepciones movidas, fusionadas o eliminadas), actualizando las palabras en la base de datos. Second, it saves
+the resulting set of words as non-duplicates.
 
 !!! tip "Consejo"
 
@@ -124,6 +143,10 @@ guarda las palabras no falsificadas como no duplicadas.
 !!! note "Nota"
 
     Si una de las palabras de un conjunto no fusionado intencionadamente se edita (por ejemplo, en las entradas de revisión), el conjunto puede volver a aparecer como duplicados potenciales.
+
+!!! warning "Importante"
+
+    Avoid having multiple users merge duplicates in the same project at the same time. If different users simultaneously merge the same set of duplicates, it will results in the creation of new duplicates (even if the users are making the same merge decisions).
 
 #### Aplazar
 

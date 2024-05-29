@@ -1,4 +1,4 @@
-import { AppBar, Button, Grid, Toolbar, Typography } from "@mui/material";
+import { AppBar, Button, Stack, Toolbar, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -15,38 +15,33 @@ export default function BottomBar(): ReactElement {
     <div style={{ marginTop: bottomBarHeight }}>
       <AppBar
         position="fixed"
-        style={{
-          top: "auto",
-          bottom: 0,
-        }}
+        style={{ bottom: 0, maxHeight: bottomBarHeight, top: "auto" }}
       >
         <Toolbar variant="dense">
-          <Grid
-            container
-            justifyContent="space-between"
-            spacing={2}
+          <Stack
             alignItems="center"
+            direction="row"
+            justifyContent="space-between"
+            spacing={1}
+            style={{ width: "100%" }}
           >
-            <Grid item>
-              <Typography variant="caption">{combineAppRelease}</Typography>
-            </Grid>
-            <Grid item>
-              <Button
-                size="small"
-                color="inherit"
-                onClick={() =>
-                  window.open(
-                    "https://software.sil.org/language-software-privacy-policy/"
-                  )
-                }
-                id="privacy-policy"
-              >
-                <Typography variant="caption">
-                  {t("landingPage.privacyPolicy")}
-                </Typography>
-              </Button>
-            </Grid>
-          </Grid>
+            <Typography variant="caption">{combineAppRelease}</Typography>
+            <Button
+              size="small"
+              color="inherit"
+              onClick={() =>
+                window.open(
+                  "https://software.sil.org/language-software-privacy-policy/"
+                )
+              }
+              id="privacy-policy"
+              style={{ margin: 0 }}
+            >
+              <Typography variant="caption">
+                {t("landingPage.privacyPolicy")}
+              </Typography>
+            </Button>
+          </Stack>
         </Toolbar>
       </AppBar>
     </div>

@@ -1,7 +1,7 @@
 {
   "generic": {
     "404Title": "Erreur 404 - Page non trouvée",
-    "404Text": "Cliquez sur la moissonneuse-batteuse pour revenir à la maison.",
+    "404Text": "Cliquez sur les personnes pour revenir à la maison.",
     "loadingTitle": "Chargement...",
     "loadingText": "Veuillez patienter pendant que The Combine traite vos données."
   },
@@ -22,22 +22,21 @@
     "selectSense": "Choisissez un sens",
     "newEntryFor": "Nouvelle entrée pour : ",
     "newSenseFor": "Nouveau sens pour : ",
-    "senseInWord": "Le mot a déjà ce sens dans ce champ sémantique: {{ val1 }}, {{ val2 }}",
+    "senseInWord": "Le mot a déjà ce sens dans ce champ sémantique : {{ val1 }}, {{ val2 }}",
     "deleteRow": "Effacer cette ligne",
     "deleteRowWarning": "Cette ligne sera supprimée définitivement !",
     "addNote": "Ajouter une remarque",
     "domain": "Domaine",
     "domainTitle": "Champ : {{ val1 }} ({{ val2 }})",
-    "gloss": "Glose",
     "glosses": "Gloses",
     "pressEnter": "Appuyez sur Entrée pour enregistrer le mot",
-    "vernacular": "Vernaculaire",
-    "wordInDatabase": "Ce mot est déjà dans la base de données"
+    "vernacular": "Vernaculaire"
   },
   "appBar": {
     "dataEntry": "Saisie",
     "dataCleanup": "Nettoyage des données",
-    "statistics": "Données statistiques"
+    "statistics": "Données statistiques",
+    "projectSettings": "Paramètres du projet"
   },
   "invite": {},
   "login": {
@@ -54,16 +53,13 @@
     "signUpNew": "Inscrire un nouvel utilisateur",
     "signUpSuccess": "Utilisateur créé avec succès",
     "signUpFailed": "Échec de l'inscription",
-    "usernameInvalid": "Ce nom d'utilisateur est trop court ou est déjà utilisé.",
     "usernameRequirements": "Le nom d'utilisateur doit contenir 3 caractères ou plus.",
-    "emailTaken": "Un utilisateur avec cet email existe déjà.",
-    "networkError": "Erreur réseau",
-    "loggingIn": "Se connecter...",
+    "usernameTaken": "Nom d'utilisateur non disponible.",
+    "emailTaken": "Email non disponible.",
     "required": "Requis",
     "confirmPassword": "Confirmer le mot de passe",
     "confirmPasswordError": "Les mots de passe ne correspondent pas.",
-    "email": "Email",
-    "emailError": "Veuillez entrer un email valide."
+    "email": "Email"
   },
   "passwordReset": {
     "emailOrUsername": "Email ou nom d'utilisateur",
@@ -74,6 +70,7 @@
     "resetFail": "Erreur de réinitialisation du mot de passe",
     "backToLogin": "Retour au login"
   },
+  "speakerMenu": {},
   "userMenu": {
     "siteSettings": "Paramètres du site",
     "userSettings": "Réglages utilisateur",
@@ -93,9 +90,10 @@
     "projectList": "Projets",
     "archiveProjectText": "Ce projet ne sera accessible à aucun utilisateur.",
     "restoreProjectText": "Quelqu'un avait probablement une bonne raison d'archiver ce projet. Voulez-vous vraiment le restaurer ?",
+    "userList": "Utilisateurs",
     "deleteUser": {
       "confirm": "Confirmer la suppression d'un utilisateur de la base de données The Combine.",
-      "toastSuccess": "Utilisateur supprimé avec succès.",
+      "toastSuccess": "Utilisateur supprimé avec succès de The Combine.",
       "toastFailure": "Échec de la suppression de l'utilisateur de The Combine."
     },
     "populateUsers": {
@@ -114,21 +112,22 @@
     "updateSuccess": "Les paramètres ont été mis à jour avec succès."
   },
   "projectExport": {
-    "cannotExportEmpty": "Le projet est vide. On ne peut pas exporter un projet sans mots.",
-    "downloadInProgress": "Téléchargement en cours",
-    "exportFailed": "\t\nL'exportation a échoué",
-    "exportInProgress": "Exportation en cours"
+    "cannotExportEmpty": "Le projet est vide. On ne peut pas exporter un projet sans mots."
   },
   "projectSettings": {
+    "project": "Projet :",
+    "tab": {
+      "export": "Exporter",
+      "languages": "Langues",
+      "users": "Utilisateurs"
+    },
     "language": {
-      "header": "Langue",
       "vernacular": "Vernaculaire",
       "vernacularLanguage": "Langue vernaculaire",
       "analysis": "Analyse",
       "analysisLanguage": "Langue d'analyse",
       "semanticDomains": "Champs sémantiques",
-      "semanticDomainsDefault": "(Utiliser la langue du navigateur)",
-      "languages": "Langues",
+      "languages": "Langues du projet",
       "bcp47": "Code BCP 47",
       "name": "Nom",
       "font": "Police",
@@ -158,11 +157,11 @@
       "manageUser": "Gérer l'utilisateur",
       "reverseOrder": "Ordre inverse"
     },
+    "speaker": { "consent": {} },
     "import": {
       "header": "Importer des données",
       "body": "Les données importées seront ajoutées à ce projet. The Combine ne tentera pas de dédupliquer, d'écraser ou de synchroniser les données.",
       "chooseFile": "Choisir un fichier",
-      "done": "Achevé!",
       "notAllowed": "Vous avez déjà importé un fichier LIFT dans ce projet."
     },
     "archive": {
@@ -186,10 +185,6 @@
       "on": "Allumé",
       "hint": "En mode « Saisie », proposer des mots vernaculaires existants qui se ressemblent au mot que l'on est en train de saisir."
     },
-    "definitions": {
-      "label": "Afficher les définitions",
-      "hint": "En mode « Examiner les Entrées », afficher une colonne pour Définitions ; en mode « Fusionner les Doublons », afficher la Définition sous la Glose."
-    },
     "invite": {
       "inviteByEmailLabel": "Inviter par email",
       "userExists": "Cet utilisateur est déjà enregistré.",
@@ -197,14 +192,12 @@
       "searchPlaceholder": "Chercher...",
       "searchTitle": "Rechercher utilisateurs",
       "emailLabel": "Email",
-      "messageLabel": "Message",
       "toastSuccess": "Utilisateur ajouté au projet.",
       "toastFail": "Échec de l'ajout de l'utilisateur au projet."
     }
   },
   "goal": {
     "selector": {
-      "selectOption": "Sélectionnez cet objectif",
       "past": "Vous avez terminé :",
       "present": "Notre recommandation :",
       "other": "Autres options :",
@@ -216,22 +209,17 @@
   },
   "createStrWordInv": { "title": "Créer un inventaire des mots grammaticaux" },
   "handleFlags": { "title": "Gérer les drapeaux" },
-  "spellCheckGloss": { "title": "Vérifier l'orthographe du glossaire" },
+  "reviewDeferredDups": {},
+  "spellCheckGloss": { "title": "Vérifier l'orthographe de glose" },
   "validateChars": { "title": "Valider les caractères" },
-  "validateStrWords": { "title": "Valider les caractères structurels" },
+  "validateStrWords": { "title": "Valider les mots grammaticaux" },
   "reviewEntries": {
     "title": "Examiner les entrées",
-    "sense": "Sens",
-    "noVernacular": "Pas d'entrée vernaculaire !",
-    "noDefinition": "Aucune entrée de définition",
-    "noGloss": "Pas d'entrée de gloses",
     "noDomain": "Aucun champ sémantique sélectionné",
-    "noNote": "Pas de note",
     "deleteWordWarning": "Ce mot sera définitivement supprimé !",
     "deleteDisabled": "Ceci a été importé avec des données que The Combine ne traite pas ; il ne peut donc pas être supprimé.",
     "error": {
       "gloss": "Les gloses ne peuvent pas être laissés vides",
-      "domain": "Les domaines ne peuvent pas être laissés vides",
       "senses": "Ne pas enregistrer entrée sans sens",
       "vernacular": "Le vernaculaire ne peut pas être laissé vide"
     },
@@ -246,23 +234,8 @@
       "senses": "Sens",
       "vernacular": "Vernaculaire"
     },
-    "materialTable": {
-      "body": {
-        "edit": "Modifier",
-        "emptyDataSourceMessage": "Aucune entrée à afficher",
-        "filter": "Filtrer"
-      },
-      "pagination": {
-        "labelDisplayedRows": "{from}-{to} de {count}",
-        "labelRows": "rangées",
-        "labelRowsPerPage": "Rangées par page :",
-        "first": "Première page",
-        "last": "Dernière page",
-        "next": "Page Suivante",
-        "previous": "Page Précédente"
-      },
-      "toolbar": { "search": "Rechercher" }
-    }
+    "completed": {},
+    "undo": { "undoDisabled": "Annuler indisponible" }
   },
   "charInventory": {
     "title": "Créer un inventaire de caractères",
@@ -274,28 +247,16 @@
     "characterSet": {
       "title": "Jeu de caractères vernaculaires :",
       "help": "Définir les caractères valides pour cette langue",
-      "addButton": "Ajouter des caractères",
-      "addButtonTitle": "Ajouter les caractères de la boîte au jeu de caractères",
-      "deleteButton": "Supprimer Sélectionné",
-      "deleteButtonTitle": "Supprimer les caractères sélectionnés du jeu de caractères",
       "acceptedCharacters": "Caractères approuvés",
       "rejectedCharacters": "Caractères rejetés",
-      "noCharacters": "Aucun caractère existe. Tapez les caractères dans la case ci-dessous pour commencer.",
-      "required": "Ajouter des caractères en les saisissant dans cette case",
       "advanced": "Avancé",
       "occurrences": "{{ val }} occurrences",
       "find": "Rechercher",
-      "replace": "Remplacer",
       "replaceWith": "Remplacé par",
-      "replaceAll": "Remplacer toute instance de: {{ val }}",
+      "replaceAll": "Remplacer toute instance de : {{ val }}",
+      "replaceAllWith": "Remplacer par : {{ val }}",
       "findAndReplace": "Rechercher et Remplacer",
       "apply": "appliquer"
-    },
-    "sampleWords": {
-      "title": "Exemples de mots",
-      "description": "Voici quelques mots qui ne correspondent pas à votre jeu de caractères actuel :",
-      "ignore": "Ignorer ce mot pour l'instant",
-      "add": "Ajouter les caractères dans ce mot au jeu"
     },
     "dialog": {
       "title": "Modifications non sauvegardées",
@@ -303,27 +264,24 @@
       "yes": "oui",
       "no": "non"
     },
-    "changes": {
-      "noChanges": "Aucune modification apportée à cet objectif.",
-      "more": "plus"
-    }
+    "changes": { "more": "plus" },
+    "undo": { "undoDisabled": "Annuler indisponible" }
   },
   "mergeDups": {
     "title": "Fusionner les doublons",
     "helpText": {
       "dragCard": "Tirer une carte ici pour la fusionner",
-      "root": "Faites glisser les mots ici pour commencer à les fusionner",
-      "dups": "Faites glisser les mots en double ici",
-      "sense": "Faites glisser un nouveau sens ici",
       "saveAndContinue": "Sauvegarder les modifications et charger un nouvel ensemble de mots",
-      "skip": "Rejeter les modifications et charger un nouvel ensemble de mots",
-      "list": "Faites glisser ce mot vers la droite pour commencer à le fusionner avec d'autres mots",
+      "defer": "Rejeter les modifications et charger un nouvel ensemble de mots",
       "noDups": "Rien à fusionner.",
       "delete": "Supprimer le sens",
       "deleteDialog": "Supprimer ce sens ?",
-      "protectedSense": "Ce sens a été importé avec des données que The Combine ne gère pas, il ne peut donc pas être supprimé ou déposé dans un autre sens. Vous pouvez toujours déplacer ce sens vers un autre mot ou déposer d'autres sens dans celui-ci pour les fusionner.",
-      "protectedWord": "Ce mot a été importé avec des données que The Combine ne traite pas. Pour éviter qu'il ne soit supprimé, son sens final ne peut être supprimé."
+      "protectedSense": "Ce sens a été importé avec des données que The Combine ne gère pas.",
+      "protectedSenseInfo": "Ce sens ne peut donc pas être supprimé ou déposé dans un autre sens. Vous pouvez toujours déplacer ce sens vers un autre mot ou déposer d'autres sens dans celui-ci pour les fusionner.",
+      "protectedWord": "Ce mot a été importé avec des données que The Combine ne traite pas.",
+      "protectedWordInfo": "Pour éviter qu'il ne soit supprimé, le sens final de ce mot ne peut être supprimé."
     },
+    "protectReason": {},
     "completed": { "number": "Nombre de fusions réalisées : " },
     "continueDialog": {
       "title": "Poursuivre la fusion ?",
@@ -333,15 +291,14 @@
     "undo": {
       "undo": "Annuler la fusion",
       "undoDialog": "Annuler cette fusion ?",
-      "undoDisabled": "Annuler Indisponible"
+      "undoDisabled": "Annuler indisponible"
     }
   },
   "flags": {
     "add": "Ajouter une balise",
     "edit": "Editer la balise",
     "remove": "Retirer la balise",
-    "save": "Enregistrer la balise",
-    "text": "Texte : "
+    "save": "Enregistrer la balise"
   },
   "buttons": {
     "accept": "Accepter",
@@ -358,20 +315,20 @@
     "exit": "Quitter",
     "export": "Exporter",
     "invite": "Inviter",
-    "proceedWithCaution": "Procédez avec prudence!",
+    "proceedWithCaution": "Procédez avec prudence !",
     "reject": "Rejeter",
     "rejected": "Rejeté",
     "reset": "Remise à zéro",
     "restore": "Restaurer",
     "save": "Enregistrer",
     "saveAndContinue": "Enregistrer & continuez",
-    "skip": "Sauter",
     "undecided": "Incertain",
     "upload": "Télécharger"
   },
   "pronunciations": {
     "recordTooltip": "Maintenez le bouton enfoncée pour enregistrer.",
-    "playTooltip": "Appuyez sur pour lire, Maj + clic pour effacer.",
+    "playTooltip": "Appuyez sur pour lire.",
+    "deleteTooltip": "Maj + clic pour effacer.",
     "noMicAccess": "Erreur d'enregistrement : Impossible d'accéder à un microphone.",
     "deleteRecording": "Effacer enregistrement"
   },
@@ -413,5 +370,6 @@
       "ProForm": "Proforme",
       "Verb": "Verbe"
     }
-  }
+  },
+  "wordCard": {}
 }

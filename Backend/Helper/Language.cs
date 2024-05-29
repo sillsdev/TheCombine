@@ -43,7 +43,7 @@ namespace BackendFramework.Helper
         /// </summary>
         public static List<WritingSystem> GetWritingSystems(string dirPath)
         {
-            if (!Directory.GetFiles(dirPath, "*.ldml").Any())
+            if (Directory.GetFiles(dirPath, "*.ldml").Length == 0)
             {
                 dirPath = FileStorage.GenerateWritingsSystemsSubdirPath(dirPath);
             }

@@ -11,10 +11,16 @@ import {
   Typography,
 } from "@mui/material";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
-import React, { Fragment, ReactElement, useState } from "react";
+import {
+  type ChangeEvent,
+  type FormEvent,
+  Fragment,
+  type ReactElement,
+  useState,
+} from "react";
 import { Trans, useTranslation } from "react-i18next";
 
-import { WritingSystem } from "api/models";
+import { type WritingSystem } from "api/models";
 import { projectDuplicateCheck, uploadLiftAndGetWritingSystems } from "backend";
 import { FileInputButton, LoadingDoneButton } from "components/Buttons";
 import {
@@ -90,9 +96,7 @@ export default function CreateProject(): ReactElement {
   };
 
   const updateName = (
-    e: React.ChangeEvent<
-      HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
-    >
+    e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement>
   ): void => {
     const name = e.target.value;
     setName(name);
@@ -153,9 +157,7 @@ export default function CreateProject(): ReactElement {
     );
   };
 
-  const createProject = async (
-    e: React.FormEvent<EventTarget>
-  ): Promise<void> => {
+  const createProject = async (e: FormEvent<EventTarget>): Promise<void> => {
     e.preventDefault();
     if (success) {
       return;

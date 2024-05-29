@@ -300,7 +300,6 @@ namespace BackendFramework.Models
         Active,
         Deleted,
         Duplicate,
-        Protected,
-        Separate
+        Protected
     }
 }

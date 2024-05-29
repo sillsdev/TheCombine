@@ -32,7 +32,7 @@ namespace BackendFramework.Services
             List<SemanticDomainTreeNode>? domainTreeNodeList = await _domainRepo.GetAllSemanticDomainTreeNodes(lang);
             List<Word> wordList = await _wordRepo.GetFrontier(projectId);
 
-            if (domainTreeNodeList is null || !domainTreeNodeList.Any() || !wordList.Any())
+            if (domainTreeNodeList is null || domainTreeNodeList.Count == 0 || wordList.Count == 0)
             {
                 return new List<SemanticDomainCount>();
             }
@@ -66,7 +66,7 @@ namespace BackendFramework.Services
                 new Dictionary<string, WordsPerDayPerUserCount>();
             Dictionary<string, string> userNameIdDictionary = new Dictionary<string, string>();
 
-            if (!wordList.Any())
+            if (wordList.Count == 0)
             {
                 return new List<WordsPerDayPerUserCount>();
             }
@@ -136,7 +136,7 @@ namespace BackendFramework.Services
             Dictionary<string, int> totalCountDictionary = new Dictionary<string, int>();
 
             // If no schedule yet or wordList is empty, return empty ChartRootData
-            if (!schedule.Any() || !wordList.Any())
+            if (schedule.Count == 0 || wordList.Count == 0)
             {
                 return LineChartData;
             }
@@ -177,7 +177,7 @@ namespace BackendFramework.Services
             }
 
             // If no semantic domain has Created, return empty ChartRootData
-            if (!totalCountDictionary.Any())
+            if (totalCountDictionary.Count == 0)
             {
                 return LineChartData;
             }
@@ -261,7 +261,7 @@ namespace BackendFramework.Services
             ChartRootData LineChartData = new ChartRootData();
             List<WordsPerDayPerUserCount> list = await GetWordsPerDayPerUserCounts(projectId);
             // if the list is null or empty return new ChartRootData to generate a empty Chart
-            if (list is null || !list.Any())
+            if (list is null || list.Count == 0)
             {
                 return LineChartData;
             }

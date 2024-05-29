@@ -1,7 +1,7 @@
 import { ListItem } from "@mui/material";
-import { ReactTestRenderer, act, create } from "react-test-renderer";
+import { type ReactTestRenderer, act, create } from "react-test-renderer";
 
-import { SemanticDomainCount } from "api";
+import { SemanticDomainCount } from "api/models";
 import DomainStatistics from "components/Statistics/DomainStatistics";
 import {
   newSemanticDomainCount,
