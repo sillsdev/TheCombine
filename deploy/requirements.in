@@ -1,5 +1,8 @@
 ansible
 
+# combinectl GUI
+PySide6
+
 # Templating/Docker.
 Jinja2
 jinja2-base64-filters

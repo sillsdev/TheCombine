@@ -32,6 +32,9 @@ kubernetes
 pyopenssl
 pymongo
 
+# combinectl gui
+PySide6
+
 # Kubernetes Installation.
 pyyaml
 

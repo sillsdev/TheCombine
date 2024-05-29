@@ -50,7 +50,7 @@ restore-wifi-connection () {
     WIFI_CONN=`cat ${CACHED_WIFI_CONN}`
     if [ "$WIFI_CONN" != "--" ] ; then
       echo "Restoring connection ${WIFI_CONN}"
-      sudo nmcli c up "${WIFI_CONN}"
+      pkexec nmcli c up "${WIFI_CONN}"
     fi
   fi
 }
@@ -62,7 +62,7 @@ save-wifi-connection () {
   # save it so we can restore it later
   echo "$WIFI_CONN" > ${CACHED_WIFI_CONN}
   if [ "$WIFI_CONN" != "--" ] ; then
-    sudo nmcli c down "$WIFI_CONN"
+    pkexec nmcli c down "$WIFI_CONN"
   fi
 }
 
@@ -78,11 +78,11 @@ combine-start () {
   echo "Starting The Combine."
   if ! systemctl is-active --quiet create_ap ; then
     save-wifi-connection
-    sudo systemctl start create_ap
-    sudo systemctl restart systemd-resolved
+    pkexec systemctl start create_ap
+    pkexec systemctl restart systemd-resolved
   fi
   if ! systemctl is-active --quiet k3s ; then
-    sudo systemctl start k3s
+    pkexec systemctl start k3s
   fi
 }
 
@@ -91,12 +91,12 @@ combine-start () {
 combine-stop () {
   echo "Stopping The Combine."
   if systemctl is-active --quiet k3s ; then
-    sudo systemctl stop k3s
+    pkexec systemctl stop k3s
   fi
   if systemctl is-active --quiet create_ap ; then
-    sudo systemctl stop create_ap
+    pkexec systemctl stop create_ap
     restore-wifi-connection
-    sudo systemctl restart systemd-resolved
+    pkexec systemctl restart systemd-resolved
   fi
 }
 
@@ -143,10 +143,10 @@ combine-wifi-list-password () {
 combine-wifi-set-password () {
   # Check that the passphrase is at least 8 characters long
   if [[ ${#1} -ge 8 ]] ; then
-    sudo sed -i "s/PASSPHRASE=.*/PASSPHRASE=$1/" ${WIFI_CONFIG}
+    pkexec sed -i "s/PASSPHRASE=.*/PASSPHRASE=$1/" ${WIFI_CONFIG}
     if systemctl is-active --quiet create_ap ; then
-      sudo systemctl restart create_ap
-      sudo systemctl restart systemd-resolved
+      pkexec systemctl restart create_ap
+      pkexec systemctl restart systemd-resolved
     fi
     combine-wifi-list-password
   else
