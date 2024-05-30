@@ -2,8 +2,8 @@
 Description=Timer to trigger display-eth.service
 
 [Timer]
-OnUnitActiveSec={{ eth_update_period }}
-OnBootSec={{ eth_update_period }}
+OnUnitActiveSec={{ enddate_update_period }}
+OnBootSec={{ enddate_update_period }}
 
 [Install]
 WantedBy=timers.target

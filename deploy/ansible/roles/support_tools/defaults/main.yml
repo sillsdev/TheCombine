@@ -1,8 +1,9 @@
 ---
-eth_update_period: 5s
-eth_update_program: /usr/local/bin/display-eth-addr
+enddate_update_period: 5s
+enddate_update_dir: /usr/local/bin
+enddate_update_program: display-cert-enddate.sh
 
-install_ip_viewer: no
+install_enddate_viewer: no
 install_combinectl: no
 
 wifi_interfaces: "{{ ansible_facts.interfaces | select('search', '^wl[op][0-9]+[a-z][a-z0-9]+') }}"

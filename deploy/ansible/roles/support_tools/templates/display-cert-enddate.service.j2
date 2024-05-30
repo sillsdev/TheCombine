@@ -4,7 +4,7 @@ Wants=display-eth-addr.timer
 
 [Service]
 Type=oneshot
-ExecStart={{ eth_update_program }}
+ExecStart="{{ enddate_update_dir }}/{{ enddate_update_program }}"
 
 [Install]
 WantedBy=multi-user.target

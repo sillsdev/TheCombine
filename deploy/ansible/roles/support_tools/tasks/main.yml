@@ -1,12 +1,12 @@
 ---
 - name: Install program to write wired ethernet address
   copy:
-    src: display-eth-addr.sh
-    dest: "{{ eth_update_program }}"
+    src: "{{ enddate_update_program }}"
+    dest: /usr/local/bin/{{ enddate_update_program }}
     owner: root
     group: root
     mode: 0755
-  when: install_ip_viewer
+  when: install_enddate_viewer
 
 - name: Setup service to update display
   template:
@@ -16,10 +16,10 @@
     group: root
     mode: 0644
   with_items:
-    - display-eth.service
-    - display-eth.timer
-  notify: start display eth
-  when: install_ip_viewer
+    - display-cert-enddate.service
+    - display-cert-enddate.timer
+  notify: start display enddate
+  when: install_enddate_viewer
 
 - name: Verify that there is a single WiFi interface
   assert:

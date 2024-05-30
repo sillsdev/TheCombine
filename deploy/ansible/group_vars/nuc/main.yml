@@ -28,7 +28,7 @@ install_helm: no
 ################################################
 # Support Tool Settings
 ################################################
-install_ip_viewer: yes
+install_enddate_viewer: yes
 install_combinectl: yes
 
 #######################################
