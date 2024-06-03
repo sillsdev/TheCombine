@@ -19,7 +19,7 @@ jobs:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
       # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
-        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        uses: step-security/harden-runner@f086349bfa2bd1361f7909c78558e816508cdc10 # v2.8.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -72,7 +72,7 @@ jobs:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
       # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
-        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        uses: step-security/harden-runner@f086349bfa2bd1361f7909c78558e816508cdc10 # v2.8.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -109,7 +109,7 @@ jobs:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
       # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
-        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        uses: step-security/harden-runner@f086349bfa2bd1361f7909c78558e816508cdc10 # v2.8.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -153,7 +153,7 @@ jobs:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
       # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
-        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
+        uses: step-security/harden-runner@f086349bfa2bd1361f7909c78558e816508cdc10 # v2.8.0
         with:
           disable-sudo: true
           disable-file-monitoring: true
