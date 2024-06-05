@@ -9,10 +9,6 @@ import SignalRHub from "components/App/SignalRHub";
 import AppBar from "components/AppBar/AppBarComponent";
 import PageNotFound from "components/PageNotFound/component";
 import ProjectScreen from "components/ProjectScreen";
-import ProjectSettings from "components/ProjectSettings";
-import SiteSettings from "components/SiteSettings";
-import Statistics from "components/Statistics/Statistics";
-import UserSettings from "components/UserSettings/UserSettings";
 import NextGoalScreen from "goals/DefaultGoal/NextGoalScreen";
 import { updateLangFromUser } from "i18n";
 import { StoreState } from "types";
@@ -27,6 +23,12 @@ const BaseGoalScreen = loadable(
 );
 const DataEntry = loadable(() => import("components/DataEntry"));
 const GoalTimeline = loadable(() => import("components/GoalTimeline"));
+const ProjectSettings = loadable(() => import("components/ProjectSettings"));
+const Statistics = loadable(() => import("components/Statistics/Statistics"));
+const SiteSettings = loadable(() => import("components/SiteSettings"));
+const UserSettings = loadable(
+  () => import("components/UserSettings/UserSettings")
+);
 
 export default function AppWithBar(): ReactElement {
   const proj = useAppSelector(
