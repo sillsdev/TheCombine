@@ -1,9 +1,14 @@
 import { Grid, TextField } from "@mui/material";
-import React, { ReactElement, useState } from "react";
+import {
+  type ChangeEvent,
+  type KeyboardEvent,
+  type ReactElement,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
-import { SemanticDomainTreeNode } from "api";
+import { type SemanticDomainTreeNode } from "api/models";
 import {
   getSemanticDomainTreeNode,
   getSemanticDomainTreeNodeByName,
@@ -21,7 +26,7 @@ export default function TreeSearch(props: TreeSearchProps): ReactElement {
   const { input, handleChange, searchAndSelectDomain, searchError, setInput } =
     useTreeSearch(props);
 
-  const handleOnKeyUp = (event: React.KeyboardEvent): void => {
+  const handleOnKeyUp = (event: KeyboardEvent): void => {
     event.bubbles = false;
     if (event.key === Key.Enter) {
       // Use onKeyUp so that this fires after onChange, to facilitate
@@ -73,8 +78,8 @@ export function insertDecimalPoints(value: string): string {
 
 interface TreeSearchState {
   input: string;
-  handleChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  searchAndSelectDomain: (event: React.KeyboardEvent) => void;
+  handleChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
+  searchAndSelectDomain: (event: KeyboardEvent) => void;
   searchError: boolean;
   setInput: (text: string) => void;
 }
@@ -96,7 +101,7 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
    * for a new domain. */
   function animateSuccessfulSearch(
     domain: SemanticDomainTreeNode,
-    event: React.KeyboardEvent
+    event: KeyboardEvent
   ): void {
     props.animate(domain);
     setInput("");
@@ -105,9 +110,7 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
   }
 
   // Dispatch the search for a specified domain, and switches to it if it exists
-  async function searchAndSelectDomain(
-    event: React.KeyboardEvent
-  ): Promise<void> {
+  async function searchAndSelectDomain(event: KeyboardEvent): Promise<void> {
     // Search for domain
     let domain: SemanticDomainTreeNode | undefined;
     if (!isNaN(parseInt(input))) {
@@ -125,7 +128,7 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
   }
 
   // Change the input on typing
-  function handleChange(event: React.ChangeEvent<HTMLTextAreaElement>): void {
+  function handleChange(event: ChangeEvent<HTMLTextAreaElement>): void {
     setInput(insertDecimalPoints(event.target.value));
     // Reset the error dialogue when input is changes to avoid showing an error
     // when a valid domain is entered, but Enter hasn't been pushed yet.
@@ -142,7 +145,7 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
 }
 
 // Prevents keystrokes from reaching parent components; must be called onKeyDown
-function stopPropagation(event: React.KeyboardEvent): void {
+function stopPropagation(event: KeyboardEvent): void {
   if (event.stopPropagation) {
     event.stopPropagation();
   }
