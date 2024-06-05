@@ -1,11 +1,11 @@
 import { Close, KeyboardDoubleArrowUp } from "@mui/icons-material";
-import { Grid, Zoom } from "@mui/material";
+import { Grid, Hidden, Zoom } from "@mui/material";
 import { animate } from "motion";
-import { ReactElement, useCallback, useEffect, useState } from "react";
+import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
-import { SemanticDomain, WritingSystem } from "api";
+import { type SemanticDomain, type WritingSystem } from "api/models";
 import { IconButtonWithTooltip } from "components/Buttons";
 import {
   initTreeDomain,
@@ -16,7 +16,7 @@ import { defaultTreeNode } from "components/TreeView/Redux/TreeViewReduxTypes";
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeNavigator from "components/TreeView/TreeNavigator";
 import TreeSearch from "components/TreeView/TreeSearch";
-import { StoreState } from "types";
+import { type StoreState } from "types";
 import { useAppDispatch, useAppSelector } from "types/hooks";
 import { newSemanticDomain } from "types/semanticDomain";
 import { semDomWritingSystems } from "types/writingSystem";
@@ -112,17 +112,25 @@ export default function TreeView(props: TreeViewProps): ReactElement {
       {/* Domain search */}
       <TreeNavigator currentDomain={currentDomain} animate={animateHandler} />
       <Grid container justifyContent="space-between">
-        <Grid item style={{ minWidth: exit ? 80 : 40 }} />
+        <Grid item>
+          {/* Empty grid item to balance the buttons */}
+          <Hidden smDown>
+            <div style={{ display: "inline-block", width: 40 }} />
+          </Hidden>
+          {exit && <div style={{ display: "inline-block", width: 40 }} />}
+        </Grid>
         <Grid item>
           <TreeSearch currentDomain={currentDomain} animate={animateHandler} />
         </Grid>
         <Grid item>
-          <IconButtonWithTooltip
-            icon={<KeyboardDoubleArrowUp />}
-            textId={"treeView.returnToTop"}
-            onClick={onClickTop}
-            buttonId={topButtonId}
-          />
+          <Hidden smDown>
+            <IconButtonWithTooltip
+              icon={<KeyboardDoubleArrowUp />}
+              textId={"treeView.returnToTop"}
+              onClick={onClickTop}
+              buttonId={topButtonId}
+            />
+          </Hidden>
           {exit && (
             <IconButtonWithTooltip
               icon={<Close />}

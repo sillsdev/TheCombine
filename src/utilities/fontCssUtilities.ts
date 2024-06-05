@@ -1,5 +1,5 @@
-import { Project } from "api";
-import { Hash } from "types/hash";
+import { type Project } from "api/models";
+import { type Hash } from "types/hash";
 import { RuntimeConfig } from "types/runtimeConfig";
 
 const fontDir = "/fonts";
@@ -34,7 +34,7 @@ export async function fetchCss(
   let cssUrl = "";
   switch (source) {
     case "local":
-      cssUrl = `${fontDir}/${font.replace(" ", "")}.css`;
+      cssUrl = `${fontDir}/${font.replaceAll(" ", "")}.css`;
       break;
     case "google":
       cssUrl = `https://fonts.googleapis.com/css?dispay=swap&family=${font}`;
