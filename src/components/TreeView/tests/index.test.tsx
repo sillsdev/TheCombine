@@ -8,6 +8,7 @@ import TreeView, { exitButtonId, topButtonId } from "components/TreeView";
 import { defaultState as treeViewState } from "components/TreeView/Redux/TreeViewReduxTypes";
 import mockMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
 import { newWritingSystem } from "types/writingSystem";
+import { setMatchMedia } from "utilities/testRendererUtilities";
 
 let treeMaster: renderer.ReactTestRenderer;
 
@@ -37,10 +38,21 @@ const mockStore = configureMockStore([thunk])({
 const findById = (id: string): renderer.ReactTestInstance =>
   treeMaster.root.findByProps({ id });
 
+const muiSM = 600;
+
 describe("TreeView", () => {
-  it("renders with top button and no exit button by default", async () => {
-    await renderTree();
+  it("renders without top button in xs windows", async () => {
+    await renderTree(undefined, muiSM - 1);
+    expect(() => findById(topButtonId)).toThrow();
+  });
+
+  it("renders with top button in sm+ windows", async () => {
+    await renderTree(undefined, muiSM);
     expect(() => findById(topButtonId)).not.toThrow();
+  });
+
+  it("renders with no exit button by default", async () => {
+    await renderTree();
     expect(() => findById(exitButtonId)).toThrow();
   });
 
@@ -65,7 +77,10 @@ describe("TreeView", () => {
   });
 });
 
-async function renderTree(exit?: () => void): Promise<void> {
+async function renderTree(exit?: () => void, width?: number): Promise<void> {
+  // Required for <Hidden> elements to show up
+  setMatchMedia(width);
+
   await renderer.act(async () => {
     treeMaster = renderer.create(
       <Provider store={mockStore}>
