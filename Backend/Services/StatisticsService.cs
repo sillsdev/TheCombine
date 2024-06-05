@@ -91,28 +91,23 @@ namespace BackendFramework.Services
                         {
                             var dateKey = ParseDateTimePermissivelyWithException(sd.Created)
                                 .ToISO8601TimeFormatDateOnlyString();
-                            if (!shortTimeDictionary.ContainsKey(dateKey))
+                            if (!shortTimeDictionary.TryGetValue(dateKey, out var chartNode))
                             {
-                                var tempBarChartNode = new WordsPerDayPerUserCount(sd.Created);
-                                foreach (User u in projectUsers)
+                                chartNode = new WordsPerDayPerUserCount(sd.Created);
+                                foreach (var u in projectUsers)
                                 {
-                                    tempBarChartNode.UserNameCountDictionary.Add(u.Username, 0);
+                                    chartNode.UserNameCountDictionary.Add(u.Username, 0);
                                 }
-                                shortTimeDictionary.Add(dateKey, tempBarChartNode);
+                                shortTimeDictionary.Add(dateKey, chartNode);
                             }
 
-                            var chartNode = shortTimeDictionary[dateKey];
                             var username = userNameIdDictionary.GetValueOrDefault(sd.UserId, "?");
                             // A semantic domain shouldn't usually have `.Created` without a valid `.UserId`;
                             // this case is a safe-guard to allow a project owner to see statistics even if there's an
                             // error in the user reckoning (e.g., if a user is removed from the project mid-workshop).
-                            if (!chartNode.UserNameCountDictionary.ContainsKey(username))
+                            if (!chartNode.UserNameCountDictionary.TryAdd(username, 1))
                             {
-                                chartNode.UserNameCountDictionary.Add(username, 1);
-                            }
-                            else
-                            {
-                                chartNode.UserNameCountDictionary[username] += 1;
+                                chartNode.UserNameCountDictionary[username]++;
                             }
                         }
                     }
@@ -163,13 +158,9 @@ namespace BackendFramework.Services
                             {
                                 continue;
                             }
-                            else if (totalCountDictionary.ContainsKey(dateString))
+                            else if (!totalCountDictionary.TryAdd(dateString, 1))
                             {
                                 totalCountDictionary[dateString]++;
-                            }
-                            else
-                            {
-                                totalCountDictionary.Add(dateString, 1);
                             }
                         }
                     }
@@ -211,12 +202,11 @@ namespace BackendFramework.Services
             {
                 LineChartData.Dates.Add(workshopSchedule[i]);
                 var day = workshopSchedule[i];
+                totalCountDictionary.TryGetValue(day, out today);
                 if (LineChartData.Datasets.Count == 0)
                 {
-                    runningTotal = totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0;
-                    today = yesterday = runningTotal;
-                    LineChartData.Datasets.Add(new Dataset(
-                        "Daily Total", (totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0)));
+                    runningTotal = yesterday = today;
+                    LineChartData.Datasets.Add(new Dataset("Daily Total", today));
                     LineChartData.Datasets.Add(new Dataset("Average", averageValue));
                     LineChartData.Datasets.Add(new Dataset("Running Total", runningTotal));
                     LineChartData.Datasets.Add(new Dataset("Projection", projection));
@@ -227,7 +217,6 @@ namespace BackendFramework.Services
                     // not generate data after the current date for "Daily Total", "Average" and "Running Total"
                     if (ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now) <= 0)
                     {
-                        today = totalCountDictionary.ContainsKey(day) ? totalCountDictionary[day] : 0;
                         runningTotal += today;
                         LineChartData.Datasets.Find(element => element.UserName == "Daily Total")?.Data.Add(today);
                         LineChartData.Datasets.Find(element => element.UserName == "Average")?.Data.Add(averageValue);
@@ -332,18 +321,17 @@ namespace BackendFramework.Services
                     {
                         var userId = sd.UserId;
                         var domainName = sd.Name;
-                        var domainUserValue = new SemanticDomainUserCount();
+
                         // if the SemanticDomain have a userId and exist in HashMap
-                        domainUserValue = (userId is not null && resUserMap.ContainsKey(userId)
-                            // if true, new SemanticDomain model
-                            ? domainUserValue = resUserMap[userId]
-                            // if false, assign to unknownUser
-                            : domainUserValue = resUserMap[unknownId]);
+                        SemanticDomainUserCount? domainUserValue;
+                        if (userId is null || !resUserMap.TryGetValue(userId, out domainUserValue))
+                        {
+                            domainUserValue = resUserMap[unknownId];
+                        }
 
                         // update DomainCount
-                        if (!domainUserValue.DomainSet.Contains(domainName))
+                        if (domainUserValue.DomainSet.Add(domainName))
                         {
-                            domainUserValue.DomainSet.Add(domainName);
                             domainUserValue.DomainCount++;
                         }
                         // update WordCount
