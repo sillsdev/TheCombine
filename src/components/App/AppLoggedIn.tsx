@@ -24,8 +24,8 @@ const BaseGoalScreen = loadable(
 const DataEntry = loadable(() => import("components/DataEntry"));
 const GoalTimeline = loadable(() => import("components/GoalTimeline"));
 const ProjectSettings = loadable(() => import("components/ProjectSettings"));
-const Statistics = loadable(() => import("components/Statistics/Statistics"));
 const SiteSettings = loadable(() => import("components/SiteSettings"));
+const Statistics = loadable(() => import("components/Statistics/Statistics"));
 const UserSettings = loadable(
   () => import("components/UserSettings/UserSettings")
 );
