@@ -83,7 +83,7 @@ export default function WordCard(props: WordCardProps): ReactElement {
     <Card
       sx={{ backgroundColor: (t) => t.palette.grey[300], minWidth: "200px" }}
     >
-      <CardHeader action={action} title={title} />
+      <CardHeader action={action} sx={{ paddingBottom: 0 }} title={title} />
       <CardContent>
         {/* Expanded audio, note, flag */}
         {full && (

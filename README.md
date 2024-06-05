@@ -96,7 +96,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    ```
 
 2. [Chocolatey][chocolatey]: (Windows only) a Windows package manager.
-3. [Node.js 18 (LTS)](https://nodejs.org/en/download/)
+3. [Node.js 20 (LTS)](https://nodejs.org/en/download/)
    - On Windows, if using [Chocolatey][chocolatey]: `choco install nodejs-lts`
    - On Ubuntu, follow
      [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions) using the
@@ -871,7 +871,7 @@ NAME                NAMESPACE       REVISION    UPDATED                         
 cert-manager        cert-manager    3           2022-02-28 11:27:12.141797222 -0500 EST deployed    cert-manager-v1.7.1     v1.7.1
 ingress-controller  ingress-nginx   3           2022-02-28 11:27:15.729203306 -0500 EST deployed    ingress-nginx-4.0.17    1.1.1
 rancher             cattle-system   1           2022-03-11 12:46:06.962438027 -0500 EST deployed    rancher-2.6.3           v2.6.3
-thecombine          thecombine      2           2022-03-11 11:41:38.304404635 -0500 EST deployed    thecombine-0.7.14       1.0.0
+thecombine          thecombine      2           2022-03-11 11:41:38.304404635 -0500 EST deployed    thecombine-0.7.14       2.0.0
 ```
 
 Using the chart name and namespace, you can then delete the chart:
