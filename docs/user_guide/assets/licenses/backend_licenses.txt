@@ -8,7 +8,7 @@ license Type:Apache-2.0
 
 ####################################################################################################
 Package:BouncyCastle.Cryptography
-Version:2.3.0
+Version:2.3.1
 project URL:https://www.bouncycastle.org/csharp/
 Description:BouncyCastle.NET is a popular cryptography library for .NET
 licenseUrl:https://licenses.nuget.org/MIT
@@ -58,7 +58,7 @@ license Type:LICENSE.md
 
 ####################################################################################################
 Package:MailKit
-Version:4.4.0
+Version:4.6.0
 project URL:http://www.mimekit.net/
 Description:MailKit is an Open Source cross-platform .NET mail-client library that is based on MimeKit and optimized for mobile devices.
 
@@ -97,11 +97,11 @@ license Type:
 
 ####################################################################################################
 Package:Microsoft.AspNetCore.Authentication.JwtBearer
-Version:7.0.3
+Version:6.0.28
 project URL:https://asp.net/
 Description:ASP.NET Core middleware that enables an application to receive an OpenID Connect bearer token.
 
-This package was built from the source code at https://github.com/dotnet/aspnetcore/tree/febee99db845fd8766a13bdb391a07c3ee90b4ba
+This package was built from the source code at https://github.com/dotnet/aspnetcore/tree/3b519aa7d1a1b66e1d329d694f814e1d8228dc8c
 licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
 
@@ -718,11 +718,11 @@ license Type:MS-EULA
 
 ####################################################################################################
 Package:Microsoft.OpenApi
-Version:1.2.3
+Version:1.6.14
 project URL:https://github.com/Microsoft/OpenAPI.NET
 Description:.NET models with JSON and YAML writers for OpenAPI specification
-licenseUrl:https://raw.githubusercontent.com/Microsoft/OpenAPI.NET/master/LICENSE
-license Type:
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
 
 ####################################################################################################
 Package:Microsoft.Win32.Primitives
@@ -767,7 +767,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:MimeKit
-Version:4.4.0
+Version:4.6.0
 project URL:https://www.mimekit.net/
 Description:MimeKit is an Open Source library for creating and parsing MIME, S/MIME and PGP messages on desktop and mobile platforms. It also supports parsing of Unix mbox files.
 
@@ -785,26 +785,26 @@ license Type:MIT
 
 ####################################################################################################
 Package:MongoDB.Bson
-Version:2.24.0
+Version:2.25.0
 project URL:https://www.mongodb.com/docs/drivers/csharp/
 Description:MongoDB's Official Bson Library.
-licenseUrl:https://www.nuget.org/packages/MongoDB.Bson/2.24.0/License
+licenseUrl:https://www.nuget.org/packages/MongoDB.Bson/2.25.0/License
 license Type:LICENSE.md
 
 ####################################################################################################
 Package:MongoDB.Driver
-Version:2.24.0
+Version:2.25.0
 project URL:https://www.mongodb.com/docs/drivers/csharp/
 Description:Official .NET driver for MongoDB.
-licenseUrl:https://www.nuget.org/packages/MongoDB.Driver/2.24.0/License
+licenseUrl:https://www.nuget.org/packages/MongoDB.Driver/2.25.0/License
 license Type:LICENSE.md
 
 ####################################################################################################
 Package:MongoDB.Driver.Core
-Version:2.24.0
+Version:2.25.0
 project URL:https://www.mongodb.com/docs/drivers/csharp/
 Description:Core Component of the Official MongoDB .NET Driver.
-licenseUrl:https://www.nuget.org/packages/MongoDB.Driver.Core/2.24.0/License
+licenseUrl:https://www.nuget.org/packages/MongoDB.Driver.Core/2.25.0/License
 license Type:LICENSE.md
 
 ####################################################################################################
@@ -957,6 +957,14 @@ license Type:
 
 ####################################################################################################
 Package:SIL.Core
+Version:14.1.1
+project URL:https://github.com/sillsdev/libpalaso
+Description:SIL.Core provides general utilities for language software. It is the base library for all Palaso libraries.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:SIL.Core
 Version:13.0.1
 project URL:https://github.com/sillsdev/libpalaso
 Description:SIL.Core provides general utilities for language software. It is the base library for all Palaso libraries.
@@ -964,8 +972,32 @@ licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
 
 ####################################################################################################
+Package:SIL.Core
+Version:14.0.0
+project URL:https://github.com/sillsdev/libpalaso
+Description:SIL.Core provides general utilities for language software. It is the base library for all Palaso libraries.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:SIL.Core.Desktop
+Version:14.1.1
+project URL:https://github.com/sillsdev/libpalaso
+Description:SIL.Core.Desktop provides general UI related utilities for language software.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
 Package:SIL.Core.Desktop
 Version:13.0.1
+project URL:https://github.com/sillsdev/libpalaso
+Description:SIL.Core.Desktop provides general UI related utilities for language software.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:SIL.Core.Desktop
+Version:14.0.0
 project URL:https://github.com/sillsdev/libpalaso
 Description:SIL.Core.Desktop provides general UI related utilities for language software.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -988,8 +1020,32 @@ licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
 
 ####################################################################################################
+Package:SIL.Lift
+Version:14.0.0
+project URL:https://github.com/sillsdev/libpalaso
+Description:SIL.Lift contains classes for reading and writing Lexicon Interchange FormaT (LIFT) data. This assembly currently supports LIFT 0.13.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
 Package:SIL.WritingSystems
 Version:13.0.1
+project URL:https://github.com/sillsdev/libpalaso
+Description:SIL.WritingSystems contains classes for managing and persisting writing systems using the Locale Data Markup Language (LDML) format. This library also contains classes for processing IETF (BCP-47) language tags and accessing the SIL Locale Data Repository (SLDR).
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:SIL.WritingSystems
+Version:14.0.0
+project URL:https://github.com/sillsdev/libpalaso
+Description:SIL.WritingSystems contains classes for managing and persisting writing systems using the Locale Data Markup Language (LDML) format. This library also contains classes for processing IETF (BCP-47) language tags and accessing the SIL Locale Data Repository (SLDR).
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:SIL.WritingSystems
+Version:14.1.1
 project URL:https://github.com/sillsdev/libpalaso
 Description:SIL.WritingSystems contains classes for managing and persisting writing systems using the Locale Data Markup Language (LDML) format. This library also contains classes for processing IETF (BCP-47) language tags and accessing the SIL Locale Data Repository (SLDR).
 licenseUrl:https://licenses.nuget.org/MIT
@@ -1018,7 +1074,7 @@ license Type:
 
 ####################################################################################################
 Package:Swashbuckle.AspNetCore
-Version:6.5.0
+Version:6.6.2
 project URL:https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Description:Swagger tools for documenting APIs built on ASP.NET Core
 licenseUrl:https://licenses.nuget.org/MIT
@@ -1026,7 +1082,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:Swashbuckle.AspNetCore.Swagger
-Version:6.5.0
+Version:6.6.2
 project URL:https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Description:Middleware to expose Swagger JSON endpoints from APIs built on ASP.NET Core
 licenseUrl:https://licenses.nuget.org/MIT
@@ -1034,7 +1090,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:Swashbuckle.AspNetCore.SwaggerGen
-Version:6.5.0
+Version:6.6.2
 project URL:https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Description:Swagger Generator for APIs built on ASP.NET Core
 licenseUrl:https://licenses.nuget.org/MIT
@@ -1042,7 +1098,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:Swashbuckle.AspNetCore.SwaggerUI
-Version:6.5.0
+Version:6.6.2
 project URL:https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Description:Middleware to expose an embedded version of the swagger-ui from an ASP.NET Core application
 licenseUrl:https://licenses.nuget.org/MIT

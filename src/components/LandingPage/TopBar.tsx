@@ -1,4 +1,4 @@
-import { AppBar, Grid, Hidden, Toolbar, Typography } from "@mui/material";
+import { AppBar, Hidden, Stack, Toolbar, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -14,23 +14,21 @@ export default function TopBar(): ReactElement {
     <div className="NavigationBar" style={{ marginBottom: topBarHeight }}>
       <AppBar position="fixed">
         <Toolbar>
-          <Grid
-            container
+          <Stack
+            alignItems="center"
+            direction="row"
             justifyContent="space-between"
             spacing={2}
-            alignItems="center"
+            style={{ width: "100%" }}
           >
-            <Grid item>
-              <img src={logo} height="50" alt="Logo" />
-            </Grid>
-            <Hidden smDown>
-              <Grid item>
-                <Typography variant="h5">
-                  {t("landingPage.subtitle")}
-                </Typography>
-              </Grid>
+            <img src={logo} height="50" alt="Logo" />
+            <Hidden smDown mdUp>
+              <Typography variant="h6">{t("landingPage.subtitle")}</Typography>
             </Hidden>
-          </Grid>
+            <Hidden mdDown>
+              <Typography variant="h5">{t("landingPage.subtitle")}</Typography>
+            </Hidden>
+          </Stack>
         </Toolbar>
       </AppBar>
     </div>

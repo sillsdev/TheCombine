@@ -4,7 +4,7 @@
 
 浏览或查询感兴趣的领域。
 
-!!! 提示
+!!! tip "提示"
 
     为快速查询某个域名，The Combine 会在用户键入一连串连续数字时自动插入“.”符号。 例如，“1234‘就会自动变为“1.2.3.4”。 如果键入任何非数字的字符，此现象则不会发生。
 
@@ -30,7 +30,19 @@
 
 **用鼠标** 点击并按住红色圆圈开始录制。 点击绿色三角键播放音频，或按住 移位键并单击以删除其录音。
 
-**用触屏** 点击并按住红色圆圈开始录制。 轻触绿色三角键播放其音频，或者下压并按住，以拉出菜单栏(带播放或删除选项)。
+**用触屏** 点击并按住红色圆圈开始录制。 轻触绿色三角键播放其音频，或者下压并按住，以拉出菜单栏带选项。
+
+#### Add a speaker to audio recordings
+
+Click the speaker icon in the top bar to see a list of all available speakers and select the current speaker. This
+speaker will be automatically associated with every audio recording until you log out or select a different speaker.
+
+The speaker associated with a recording can be seen by hovering over its play icon, the green triangle. To change a
+recording's speaker, right click the green triangle (or press-and-hold on a touch screen).
+
+!!! note "笔记"
+
+    Imported audio cannot be deleted or have a speaker added.
 
 ## 含重复土语形式的新词条 {#new-entry-with-duplicate-vernacular-form}
 
@@ -53,7 +65,7 @@ The Combine 有一个可选功能，便于输入项目中已经存在的词条�
 
 如果用户选择创建新词条，弹出的方框就会消失，这时就可以键入新词条的注释。
 
-!!! 笔记
+!!! note "笔记"
 
     尽管用户选择创建新词条，如果键入的注释与土语中另一条完全相同的词条一样，新词条就不会被创建，而是该词条会被更新。
 

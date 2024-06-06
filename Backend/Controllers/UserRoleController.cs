@@ -108,11 +108,11 @@ namespace BackendFramework.Controllers
                 return NotFound($"user: {userId}");
             }
 
-            if (!user.ProjectRoles.ContainsKey(projectId))
+            if (!user.ProjectRoles.TryGetValue(projectId, out var roleId))
             {
                 return Ok(new List<Permission>());
             }
-            var userRole = await _userRoleRepo.GetUserRole(projectId, user.ProjectRoles[projectId]);
+            var userRole = await _userRoleRepo.GetUserRole(projectId, roleId);
             if (userRole is null)
             {
                 return Ok(new List<Permission>());
@@ -231,12 +231,7 @@ namespace BackendFramework.Controllers
                 return NotFound(userId);
             }
 
-            string userRoleId;
-            if (changeUser.ProjectRoles.ContainsKey(projectId))
-            {
-                userRoleId = changeUser.ProjectRoles[projectId];
-            }
-            else
+            if (!changeUser.ProjectRoles.TryGetValue(projectId, out var userRoleId))
             {
                 // Generate the userRole
                 var usersRole = new UserRole { ProjectId = projectId };
