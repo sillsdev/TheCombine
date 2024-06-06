@@ -46,7 +46,7 @@ siguientes ajustes están disponibles para los usuarios del proyecto con permiso
 
 ![Configuración básico](../images/projectSettings1Basic.es.png){width=750 .center}
 
-#### Nombre del Proyecto
+#### Nombre del proyecto
 
 Se recomienda un nombre distintivo y descriptivo. El nombre del proyecto forma parte del nombre del archivo cuando usted
 [exporte](#export) su proyecto.
@@ -126,6 +126,24 @@ Buscar usuarios existentes (muestra todos los usuarios con el término de búsqu
 dirección de correo electrónico), o invitar a nuevos usuarios por dirección de correo electrónico (se añadirán
 automáticamente al proyecto cuando se hagan una cuenta a través de la invitación).
 
+#### Administrar locutores
+
+Speakers are distinct from users. A speaker can be associate with audio recording of words. Use the + icon at the bottom
+of this section to add a speaker. Beside each added speaker are buttons to delete them, edit their name, and add a
+consent for use of their recorded voice. The supported methods for adding consent are to (1) record an audio file or (2)
+upload an image file.
+
+When project users are in Data Entry or Review Entries, a speaker icon will be available in the top bar. Users can click
+that button to see a list of all available speakers and select the current speaker, this speaker will be automatically
+associated with every audio recording made by the user until they log out or select a different speaker.
+
+The speaker associated with a recording can be seen by hovering over its play icon. To change a recording's speaker,
+right click the play icon (or press and hold on a touch screen to bring up a menu).
+
+When the project is exported from The Combine, speaker names (and ids) will be added as a pronunciation labels in the
+LIFT file. All consent files for project speakers will be added to a "consent" subfolder of the export (with speaker ids
+used for the file names).
+
 ### Importar/Exportar
 
 ![Importar/Exportar](../images/projectSettings4Port.es.png){width=750 .center}
@@ -149,6 +167,16 @@ El nombre de archivo por defecto es el nombre del proyecto con una marca de tiem
 !!! warning "Importante"
 
     Un proyecto que haya alcanzado cientos de MB de tamaño puede tardar varios minutos en exportarse.
+
+!!! note "Nota"
+
+    Project settings, project users, and word flags are not exported.
+
+#### Exportar locutores de las pronunciaciones
+
+When a project is exported from TheCombine and imported into FieldWorks, if a pronunciation has an associated speaker,
+the speaker name and id will be added as a pronunciation label. Consent files will be exported with speaker id used for
+the file name. The consent files can be found in the zipped export, but will not be imported into FieldWorks.
 
 ### Calendario de talleres {#workshop-schedule}
 
