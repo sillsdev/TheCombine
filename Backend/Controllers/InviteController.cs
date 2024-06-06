@@ -92,7 +92,7 @@ namespace BackendFramework.Controllers
                 if (user.Email == tokenObj.Email)
                 {
                     currentUser = user;
-                    if (!user.ProjectRoles.TryGetValue(projectId, out var _roleId))
+                    if (!user.ProjectRoles.ContainsKey(projectId))
                     {
                         isUserRegisteredAndNotInProject = true;
                     }

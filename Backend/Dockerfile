@@ -34,9 +34,8 @@ RUN apt-get update \
 RUN mkdir -p $HOME
 
 # Create an app user so the program doesn't run as root.
-RUN groupmod --gid 999 app && \
-  usermod --uid 999 --gid app --home $HOME --shell /sbin/nologin \
-      --comment "Docker image user" app
+RUN groupadd -r app && \
+  useradd -r -g app -d $HOME -s /sbin/nologin -c "Docker image user" app
 
 ## Set up application install directory.
 RUN mkdir $APP_HOME && \

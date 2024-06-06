@@ -28,28 +28,28 @@ namespace BackendFramework.Services
         /// </summary>
         public async Task<List<SemanticDomainCount>> GetSemanticDomainCounts(string projectId, string lang)
         {
-            var hashMap = new Dictionary<string, int>();
-            var domainTreeNodeList = await _domainRepo.GetAllSemanticDomainTreeNodes(lang);
-            var wordList = await _wordRepo.GetFrontier(projectId);
+            Dictionary<string, int> hashMap = new Dictionary<string, int>();
+            List<SemanticDomainTreeNode>? domainTreeNodeList = await _domainRepo.GetAllSemanticDomainTreeNodes(lang);
+            List<Word> wordList = await _wordRepo.GetFrontier(projectId);
 
             if (domainTreeNodeList is null || domainTreeNodeList.Count == 0 || wordList.Count == 0)
             {
                 return new List<SemanticDomainCount>();
             }
 
-            foreach (var word in wordList)
+            foreach (Word word in wordList)
             {
-                foreach (var sense in word.Senses)
+                foreach (Sense sense in word.Senses)
                 {
-                    foreach (var sd in sense.SemanticDomains)
+                    foreach (SemanticDomain sd in sense.SemanticDomains)
                     {
                         hashMap[sd.Id] = hashMap.GetValueOrDefault(sd.Id, 0) + 1;
                     }
                 }
             }
 
-            var resList = new List<SemanticDomainCount>();
-            foreach (var domainTreeNode in domainTreeNodeList)
+            List<SemanticDomainCount> resList = new List<SemanticDomainCount>();
+            foreach (SemanticDomainTreeNode domainTreeNode in domainTreeNodeList)
             {
                 resList.Add(new SemanticDomainCount(domainTreeNode, hashMap.GetValueOrDefault(domainTreeNode.Id, 0)));
             }
@@ -61,9 +61,10 @@ namespace BackendFramework.Services
         /// </summary>
         public async Task<List<WordsPerDayPerUserCount>> GetWordsPerDayPerUserCounts(string projectId)
         {
-            var wordList = await _wordRepo.GetFrontier(projectId);
-            var shortTimeDictionary = new Dictionary<string, WordsPerDayPerUserCount>();
-            var userNameIdDictionary = new Dictionary<string, string>();
+            List<Word> wordList = await _wordRepo.GetFrontier(projectId);
+            Dictionary<string, WordsPerDayPerUserCount> shortTimeDictionary =
+                new Dictionary<string, WordsPerDayPerUserCount>();
+            Dictionary<string, string> userNameIdDictionary = new Dictionary<string, string>();
 
             if (wordList.Count == 0)
             {
@@ -71,19 +72,19 @@ namespace BackendFramework.Services
             }
 
             var allUsers = await _userRepo.GetAllUsers();
-            var projectUsers = allUsers.FindAll(user => user.ProjectRoles.TryGetValue(projectId, out var _roleId));
+            var projectUsers = allUsers.FindAll(user => user.ProjectRoles.ContainsKey(projectId));
 
             // only count for current valid users of the project
-            foreach (var u in projectUsers)
+            foreach (User u in projectUsers)
             {
                 userNameIdDictionary.Add(u.Id, u.Username);
             }
 
-            foreach (var word in wordList)
+            foreach (Word word in wordList)
             {
-                foreach (var sense in word.Senses)
+                foreach (Sense sense in word.Senses)
                 {
-                    foreach (var sd in sense.SemanticDomains)
+                    foreach (SemanticDomain sd in sense.SemanticDomains)
                     {
                         // The created timestamp may not exist for some model
                         if (!string.IsNullOrEmpty(sd.Created))
@@ -112,9 +113,10 @@ namespace BackendFramework.Services
                     }
                 }
             }
-            var resList = shortTimeDictionary.Values.ToList();
             // sort by date order
-            return resList.OrderBy(t => t.DateTime.ToISO8601TimeFormatDateOnlyString()).ToList();
+            var resList = shortTimeDictionary.Values.ToList()
+                .OrderBy(t => t.DateTime.ToISO8601TimeFormatDateOnlyString()).ToList();
+            return resList;
         }
 
         /// <summary>
@@ -123,10 +125,10 @@ namespace BackendFramework.Services
         /// </summary>
         public async Task<ChartRootData> GetProgressEstimationLineChartRoot(string projectId, List<DateTime> schedule)
         {
-            var LineChartData = new ChartRootData();
-            var wordList = await _wordRepo.GetFrontier(projectId);
-            var workshopSchedule = new List<string>();
-            var totalCountDictionary = new Dictionary<string, int>();
+            ChartRootData LineChartData = new ChartRootData();
+            List<Word> wordList = await _wordRepo.GetFrontier(projectId);
+            List<string> workshopSchedule = new List<string>();
+            Dictionary<string, int> totalCountDictionary = new Dictionary<string, int>();
 
             // If no schedule yet or wordList is empty, return empty ChartRootData
             if (schedule.Count == 0 || wordList.Count == 0)
@@ -135,22 +137,22 @@ namespace BackendFramework.Services
             }
 
             // Build workshop schedule hashSet 
-            foreach (var dt in schedule)
+            foreach (DateTime dt in schedule)
             {
                 workshopSchedule.Add(dt.ToISO8601TimeFormatDateOnlyString());
             }
 
             // Build daily count Dictionary 
-            foreach (var word in wordList)
+            foreach (Word word in wordList)
             {
-                foreach (var sense in word.Senses)
+                foreach (Sense sense in word.Senses)
                 {
-                    foreach (var sd in sense.SemanticDomains)
+                    foreach (SemanticDomain sd in sense.SemanticDomains)
                     {
 
                         if (!string.IsNullOrEmpty(sd.Created))
                         {
-                            var dateString = ParseDateTimePermissivelyWithException(sd.Created)
+                            string dateString = ParseDateTimePermissivelyWithException(sd.Created)
                                 .ToISO8601TimeFormatDateOnlyString();
                             if (!workshopSchedule.Contains(dateString))
                             {
@@ -186,7 +188,7 @@ namespace BackendFramework.Services
             // If pastDays is two or more and at least one of those days had no word added
             else if (pastDays > 1)
             {
-                averageValue = totalCountList.Sum() / (pastDays - 1);
+                averageValue = (totalCountList.Sum()) / (pastDays - 1);
             }
             // no need to remove the lowest data if there's only one past day
             else
@@ -196,7 +198,7 @@ namespace BackendFramework.Services
 
             int burst = 0, burstProjection = 0, projection = min, runningTotal = 0, today = 0, yesterday = 0;
             // generate ChartRootData for frontend
-            for (var i = 0; i < workshopSchedule.Count; i++)
+            for (int i = 0; i < workshopSchedule.Count; i++)
             {
                 LineChartData.Dates.Add(workshopSchedule[i]);
                 var day = workshopSchedule[i];
@@ -229,7 +231,7 @@ namespace BackendFramework.Services
                     else
                     {
                         LineChartData.Datasets.Find(
-                            element => element.UserName == "Burst Projection")?.Data.Add(burstProjection);
+                            element => element.UserName == "Burst Projection")?.Data.Add((burstProjection));
                         burstProjection += burst;
                     }
                     LineChartData.Datasets.Find(element => element.UserName == "Projection")?.Data.Add(projection);
@@ -245,8 +247,8 @@ namespace BackendFramework.Services
         /// </summary>
         public async Task<ChartRootData> GetLineChartRootData(string projectId)
         {
-            var LineChartData = new ChartRootData();
-            var list = await GetWordsPerDayPerUserCounts(projectId);
+            ChartRootData LineChartData = new ChartRootData();
+            List<WordsPerDayPerUserCount> list = await GetWordsPerDayPerUserCounts(projectId);
             // if the list is null or empty return new ChartRootData to generate a empty Chart
             if (list is null || list.Count == 0)
             {
@@ -254,7 +256,7 @@ namespace BackendFramework.Services
             }
 
             // update the ChartRootData based on the order of the WordsPerDayPerUserCount from the list
-            foreach (var temp in list)
+            foreach (WordsPerDayPerUserCount temp in list)
             {
                 LineChartData.Dates.Add(temp.DateTime.ToISO8601TimeFormatDateOnlyString());
                 // first traversal, generate a new Dataset
@@ -293,15 +295,15 @@ namespace BackendFramework.Services
         /// <returns> A List of SemanticDomainUserCount <see cref="SemanticDomainUserCount"/> </returns>
         public async Task<List<SemanticDomainUserCount>> GetSemanticDomainUserCounts(string projectId)
         {
-            var wordList = await _wordRepo.GetFrontier(projectId);
-            var resUserMap = new Dictionary<string, SemanticDomainUserCount>();
+            List<Word> wordList = await _wordRepo.GetFrontier(projectId);
+            Dictionary<string, SemanticDomainUserCount> resUserMap = new Dictionary<string, SemanticDomainUserCount>();
 
             // Get all users of the project
             var allUsers = await _userRepo.GetAllUsers();
-            var projectUsers = allUsers.FindAll(user => user.ProjectRoles.TryGetValue(projectId, out var _roleId));
+            var projectUsers = allUsers.FindAll(user => user.ProjectRoles.ContainsKey(projectId));
 
             // build a SemanticDomainUserCount object hashMap with userId as the key 
-            foreach (var u in projectUsers)
+            foreach (User u in projectUsers)
             {
                 resUserMap.Add(u.Id, new SemanticDomainUserCount(u.Id, u.Username));
             }
@@ -311,11 +313,11 @@ namespace BackendFramework.Services
             var unknownName = "unknownUser";
             resUserMap.Add(unknownId, new SemanticDomainUserCount(unknownId, unknownName));
 
-            foreach (var word in wordList)
+            foreach (Word word in wordList)
             {
-                foreach (var sense in word.Senses)
+                foreach (Sense sense in word.Senses)
                 {
-                    foreach (var sd in sense.SemanticDomains)
+                    foreach (SemanticDomain sd in sense.SemanticDomains)
                     {
                         var userId = sd.UserId;
                         var domainName = sd.Name;
