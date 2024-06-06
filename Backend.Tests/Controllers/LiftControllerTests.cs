@@ -454,6 +454,63 @@ namespace Backend.Tests.Controllers
             Assert.That(notFoundResult, Is.TypeOf<NotFoundObjectResult>());
         }
 
+        [Test]
+        public async Task TestExportConsentFileWithSpeakerName()
+        {
+            // Add word so there's something to export
+            await _wordRepo.Create(Util.RandomWord(_projId));
+
+            // Add speakers to project with names that will collide when sanitized
+            await _speakerRepo.Create(new Speaker { Name = "No consent!", ProjectId = _projId });
+
+            var nameNoExt = "Underscored_name";
+            var speakerNoExt = await _speakerRepo.Create(
+                new Speaker { Name = nameNoExt, ProjectId = _projId, Consent = ConsentType.Image });
+            var speakerNoExt1 = await _speakerRepo.Create(
+                new Speaker { Name = "Underscored name", ProjectId = _projId, Consent = ConsentType.Image });
+            var speakerNoExt2 = await _speakerRepo.Create(
+                new Speaker { Name = "Underscored_náme", ProjectId = _projId, Consent = ConsentType.Image });
+
+            var nameExts = "Imagination";
+            var speakerExts = await _speakerRepo.Create(
+                new Speaker { Name = nameExts, ProjectId = _projId, Consent = ConsentType.Image });
+            var speakerExts1 = await _speakerRepo.Create(
+                new Speaker { Name = "Imágination", ProjectId = _projId, Consent = ConsentType.Image });
+
+            // Create mock consent files tied to speaker ids
+            var pathNoExt = FileStorage.GenerateConsentFilePath(speakerNoExt.Id);
+            var pathNoExt1 = FileStorage.GenerateConsentFilePath(speakerNoExt1.Id);
+            var pathNoExt2 = FileStorage.GenerateConsentFilePath(speakerNoExt2.Id);
+            var expectedFileNames = new List<string> { nameNoExt, $"{nameNoExt}1", $"{nameNoExt}2" };
+
+            var ext = ".png";
+            var pathExt = FileStorage.GenerateConsentFilePath(speakerExts.Id, ext);
+            var pathExt1 = FileStorage.GenerateConsentFilePath(speakerExts1.Id, ext);
+            expectedFileNames.AddRange(new List<string> { $"{nameExts}{ext}", $"{nameExts}1{ext}" });
+
+            var mockFiles = new List<string> { pathNoExt, pathNoExt1, pathNoExt2, pathExt, pathExt1 };
+            mockFiles.ForEach(path => File.Create(path).Dispose());
+
+            // Export the project
+            var exportedFilePath = await _liftController.CreateLiftExport(_projId);
+            var exportedDirectory = FileOperations.ExtractZipFile(exportedFilePath, null);
+            var exportedProjDir = Directory.GetDirectories(exportedDirectory).First();
+
+            // Verify all consent files were copied over with speaker names
+            var consentFiles = Directory.GetFiles(Path.Combine(exportedProjDir, "consent"));
+            var consentFileNames = consentFiles.Select(path => Path.GetFileName(path)).ToList();
+            Assert.That(consentFileNames, Has.Count.EqualTo(expectedFileNames.Count));
+            foreach (var file in expectedFileNames)
+            {
+                Assert.That(consentFileNames.Contains(file));
+            };
+
+            // Delete everything
+            mockFiles.ForEach(path => File.Delete(path));
+            File.Delete(exportedFilePath);
+            Directory.Delete(exportedDirectory, true);
+        }
+
         private static RoundTripObj[] _roundTripCases =
         {
             new("Gusillaay.zip", "gsl-Qaaa-x-orth", new List<string>(), 8045),
@@ -627,7 +684,7 @@ namespace Backend.Tests.Controllers
             }
         }
 
-        private class MockLogger : ILogger<LiftController>
+        private sealed class MockLogger : ILogger<LiftController>
         {
             public IDisposable BeginScope<TState>(TState state)
             {

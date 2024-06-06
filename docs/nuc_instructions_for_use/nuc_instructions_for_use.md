@@ -14,8 +14,8 @@ NUC. ![alt text](images/00_PowerOn.jpg "Connect Power to NUC")
 ### Turn on Power
 
 Press the Power On button on the top (or front on some models) of the NUC. The light in the power button will turn blue
-as the device starts up. Start up will be complete in approximately 30 seconds and you will be ready to connect to _The
-Combine_ (next step). ![alt text](images/01_PowerOn.jpg "Power Up the NUC")
+as the device starts up. Start up will be complete in a couple minutes and you will be ready to connect to _The Combine_
+(next step). ![alt text](images/01_PowerOn.jpg "Power Up the NUC")
 
 Note that while the NUC is running, the yellow "disk activity light" will flash. This is normal.
 
