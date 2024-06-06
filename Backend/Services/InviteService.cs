@@ -84,7 +84,7 @@ namespace BackendFramework.Services
             }
         }
 
-        public class InviteException : Exception
+        public sealed class InviteException : Exception
         {
             public InviteException() { }
 

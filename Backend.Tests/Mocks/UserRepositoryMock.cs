@@ -101,7 +101,7 @@ namespace Backend.Tests.Mocks
         }
     }
 
-    internal class UserCreationException : Exception
+    internal sealed class UserCreationException : Exception
     {
         public UserCreationException() { }
     }

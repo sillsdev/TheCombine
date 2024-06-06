@@ -97,7 +97,7 @@ namespace BackendFramework.Services
 #pragma warning restore CA1816, CA2215
     }
 
-    public class MissingProjectException : Exception
+    public sealed class MissingProjectException : Exception
     {
         public MissingProjectException(string message) : base(message) { }
     }

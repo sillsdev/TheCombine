@@ -155,7 +155,7 @@ namespace Backend.Tests.Mocks
         }
     }
 
-    internal class UserAuthenticationException : Exception
+    internal sealed class UserAuthenticationException : Exception
     {
         public UserAuthenticationException() { }
     }

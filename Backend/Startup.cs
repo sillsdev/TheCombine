@@ -57,7 +57,7 @@ namespace BackendFramework
             }
         }
 
-        private class EnvironmentNotConfiguredException : Exception { }
+        private sealed class EnvironmentNotConfiguredException : Exception { }
 
         private string? CheckedEnvironmentVariable(string name, string? defaultValue, string error = "")
         {
@@ -77,7 +77,7 @@ namespace BackendFramework
             return Environment.GetEnvironmentVariable("COMBINE_IS_IN_CONTAINER") is not null;
         }
 
-        private class AdminUserCreationException : Exception { }
+        private sealed class AdminUserCreationException : Exception { }
 
         /// <summary> This method gets called by the runtime. Use this method to add services for dependency injection.
         /// </summary>

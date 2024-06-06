@@ -25,7 +25,7 @@ namespace BackendFramework.Helper
         }
 
         /// <summary> Indicates that an error occurred locating the current user's home directory. </summary>
-        public class HomeFolderNotFoundException : Exception
+        public sealed class HomeFolderNotFoundException : Exception
         {
             public HomeFolderNotFoundException() { }
         }

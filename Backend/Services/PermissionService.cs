@@ -197,7 +197,7 @@ namespace BackendFramework.Services
             return user;
         }
 
-        public class InvalidJwtTokenException : Exception
+        public sealed class InvalidJwtTokenException : Exception
         {
             public InvalidJwtTokenException() { }
 

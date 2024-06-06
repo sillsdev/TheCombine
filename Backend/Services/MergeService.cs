@@ -339,7 +339,7 @@ namespace BackendFramework.Services
             return wordLists;
         }
 
-        public class InvalidMergeWordSetException : Exception
+        public sealed class InvalidMergeWordSetException : Exception
         {
             public InvalidMergeWordSetException() { }
 

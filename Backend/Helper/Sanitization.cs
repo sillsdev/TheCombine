@@ -8,13 +8,13 @@ using System.Text;
 namespace BackendFramework.Helper
 {
     /// <summary> Indicates an invalid input file name. </summary>
-    public class InvalidFileNameException : Exception
+    public sealed class InvalidFileNameException : Exception
     {
         public InvalidFileNameException() : base() { }
     }
 
     /// <summary> Indicates an invalid input id. </summary>
-    public class InvalidIdException : Exception
+    public sealed class InvalidIdException : Exception
     {
         public InvalidIdException() { }
     }
