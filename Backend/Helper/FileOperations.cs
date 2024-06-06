@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace BackendFramework.Helper
 {
-    public sealed class InvalidFileException : Exception
+    public class InvalidFileException : Exception
     {
         public InvalidFileException(string message) : base(message) { }
     }
