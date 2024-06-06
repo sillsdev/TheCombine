@@ -5,7 +5,7 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    internal sealed class SemanticDomainRepositoryMock : ISemanticDomainRepository
+    sealed internal class SemanticDomainRepositoryMock : ISemanticDomainRepository
     {
         private object? _responseObj;
 

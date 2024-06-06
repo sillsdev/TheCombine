@@ -12,17 +12,24 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
-import React, { Fragment, ReactElement, useState } from "react";
+import {
+  type CSSProperties,
+  type ForwardedRef,
+  Fragment,
+  type MouseEvent,
+  type ReactElement,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { isSiteAdmin } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import {
+  type TabProps,
   buttonMinHeight,
   shortenName,
   tabColor,
-  TabProps,
 } from "components/AppBar/AppBarTypes";
 import { clearCurrentProject } from "components/Project/ProjectActions";
 import { useAppDispatch } from "types/hooks";
@@ -46,7 +53,7 @@ export default function UserMenu(props: TabProps): ReactElement {
   const [isAdmin, setIsAdmin] = useState(false);
   const username = LocalStorage.getCurrentUser()?.username;
 
-  function handleClick(event: React.MouseEvent<HTMLButtonElement>): void {
+  function handleClick(event: MouseEvent<HTMLButtonElement>): void {
     setAnchorElement(event.currentTarget);
   }
 
@@ -106,7 +113,7 @@ export default function UserMenu(props: TabProps): ReactElement {
 interface UserMenuListProps {
   isAdmin: boolean;
   onSelect: () => void;
-  forwardedRef?: React.ForwardedRef<any>;
+  forwardedRef?: ForwardedRef<any>;
 }
 
 /**
@@ -118,7 +125,7 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const iconStyle: React.CSSProperties =
+  const iconStyle: CSSProperties =
     document.body.dir == "rtl" ? { marginLeft: 6 } : { marginRight: 6 };
 
   return (

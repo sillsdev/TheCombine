@@ -154,6 +154,7 @@ export default function ReviewEntriesTable(props: {
       Cell: ({ row }: CellProps) => (
         <Cell.Edit replace={replaceWord} word={row.original} />
       ),
+      enableHiding: false,
       Header: "",
       header: t("reviewEntries.columns.edit"),
       size: IconColumnSize,
@@ -305,6 +306,7 @@ export default function ReviewEntriesTable(props: {
       Cell: ({ row }: CellProps) => (
         <Cell.Delete delete={deleteWord} word={row.original} />
       ),
+      enableHiding: false,
       Header: "",
       header: t("reviewEntries.columns.delete"),
       size: IconColumnSize,

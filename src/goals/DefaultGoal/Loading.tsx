@@ -1,37 +1,23 @@
-import { Typography } from "@mui/material";
-import { animate } from "motion";
-import { ReactElement, useEffect } from "react";
+import { Box, Typography } from "@mui/material";
+import { type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
-import tractor from "resources/tractor.png";
+import HarvestThreshWinnow from "components/HarvestThreshWinnow";
 
 /** A custom loading page */
 export default function Loading(): ReactElement {
   const { t } = useTranslation();
-
-  useEffect(() => {
-    const half = window.innerWidth * 0.75;
-    animate(
-      "#loading-tractor",
-      { transform: [`translateX(${half}px)`, `translateX(-${half}px)`] },
-      { duration: 10, repeat: Infinity, easing: "linear" }
-    );
-  }, []);
-
   return (
-    <>
-      <Typography variant="h4" style={{ textAlign: "center" }}>
-        {t("generic.loadingTitle")}
-      </Typography>
-      <img
-        src={tractor}
-        alt="Tractor"
-        id="loading-tractor"
-        style={{ width: "50%", margin: "0% 25%" }}
-      />
-      <Typography variant="h5" style={{ textAlign: "center" }}>
-        {t("generic.loadingText")}
-      </Typography>
-    </>
+    <Box
+      alignItems="center"
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      rowGap={3}
+    >
+      <Typography variant="h4">{t("generic.loadingTitle")}</Typography>
+      <HarvestThreshWinnow loading />
+      <Typography variant="h5">{t("generic.loadingText")}</Typography>
+    </Box>
   );
 }

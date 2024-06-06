@@ -1,4 +1,5 @@
-import { Button, Card, Grid, Typography } from "@mui/material";
+import { Info } from "@mui/icons-material";
+import { Button, Card, Stack, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -9,15 +10,13 @@ import { openUserGuide } from "utilities/pathUtilities";
 
 const idAffix = "landing";
 
-const buttonHeight = 50;
-const buttonWidth = 145;
-
-export const horizontalButtonsHeight =
-  buttonHeight + parseInt(theme.spacing(2));
-const horizontalButtonsWidth = 3 * buttonWidth + parseInt(theme.spacing(7));
-
-const verticalButtonsHeight = 3 * buttonHeight + parseInt(theme.spacing(7));
-const verticalButtonsWidth = buttonWidth + parseInt(theme.spacing(2));
+const buttonHeight = 56;
+const buttonWidth = 144;
+const iconButtonWidth = buttonWidth / 4;
+const gap = parseInt(theme.spacing(1));
+export const horizontalButtonsHeight = buttonHeight + gap;
+const horizontalButtonsWidth = 2 * buttonWidth + iconButtonWidth + 2 * gap;
+export const verticalButtonsWidth = buttonWidth + 2 * gap;
 
 interface LandingButtonsProps {
   top?: boolean;
@@ -28,17 +27,11 @@ export default function LandingButtons(
 ): ReactElement {
   const navigate = useNavigate();
   return (
-    <Card
-      style={{
-        height: props.top ? horizontalButtonsHeight : verticalButtonsHeight,
-        width: props.top ? horizontalButtonsWidth : verticalButtonsWidth,
-      }}
-    >
-      <Grid
-        container
+    <Card style={{ padding: gap, maxWidth: horizontalButtonsWidth }}>
+      <Stack
+        direction={props.top ? "row" : "column"}
         justifyContent="space-around"
-        alignItems="center"
-        style={{ height: "100%" }}
+        spacing={1}
       >
         <SignUpButton />
         <LandingButton
@@ -47,11 +40,12 @@ export default function LandingButtons(
           buttonId={`${idAffix}-login`}
         />
         <LandingButton
-          onClick={openUserGuide}
+          onClick={() => openUserGuide()}
           textId="userMenu.userGuide"
           buttonId={`${idAffix}-guide`}
+          icon={props.top ? <Info /> : undefined}
         />
-      </Grid>
+      </Stack>
     </Card>
   );
 }
@@ -77,21 +71,27 @@ interface LandingButtonProps {
   textId: string;
   buttonId: string;
   filled?: boolean;
+  icon?: ReactElement;
 }
+
+/** Button for the Landing Page. (Prop `icon` overrides `textId`.) */
 function LandingButton(props: LandingButtonProps): ReactElement {
   const { t } = useTranslation();
 
   return (
-    <Grid item style={{ textAlign: "center" }}>
-      <Button
-        variant={props.filled ? "contained" : "outlined"}
-        color="primary"
-        onClick={props.onClick}
-        style={{ height: buttonHeight, width: buttonWidth }}
-        id={props.buttonId}
-      >
+    <Button
+      variant={props.filled ? "contained" : "outlined"}
+      color="primary"
+      onClick={props.onClick}
+      style={{
+        height: buttonHeight,
+        width: props.icon ? iconButtonWidth : buttonWidth,
+      }}
+      id={props.buttonId}
+    >
+      {props.icon || (
         <Typography variant="subtitle1">{t(props.textId)}</Typography>
-      </Button>
-    </Grid>
+      )}
+    </Button>
   );
 }

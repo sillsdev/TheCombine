@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Backend.Tests.Mocks
 {
-    internal sealed class PermissionServiceMock : IPermissionService
+    sealed internal class PermissionServiceMock : IPermissionService
     {
         private readonly IUserRepository _userRepo;
         private const string NoHttpContextAvailable = "NO_HTTP_CONTEXT_AVAILABLE";
@@ -155,7 +155,7 @@ namespace Backend.Tests.Mocks
         }
     }
 
-    public class UserAuthenticationException : Exception
+    internal class UserAuthenticationException : Exception
     {
         public UserAuthenticationException() { }
     }
