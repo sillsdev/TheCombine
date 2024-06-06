@@ -1,8 +1,11 @@
 import RecordRTC from "recordrtc";
 
+import { getFileNameForWord } from "components/Pronunciations/utilities";
+
 export default class Recorder {
   private toast: (text: string) => void;
   private recordRTC?: RecordRTC;
+  private id?: string;
 
   static blobType: RecordRTC.Options["type"] = "audio";
 
@@ -14,21 +17,36 @@ export default class Recorder {
       .catch((err) => this.onError(err));
   }
 
-  isRecording(): boolean {
-    return this.recordRTC?.getState() === "recording";
+  /** Checks if the recorder state is `"recording"`.
+   * If so, returns the `id` used with `startRecording()`.
+   * If not, returns `undefined`. */
+  isRecording(): string | undefined {
+    return this.recordRTC?.getState() === "recording"
+      ? this.id ?? ""
+      : undefined;
   }
 
-  startRecording(): void {
+  startRecording(id: string): void {
     this.recordRTC?.reset();
+    this.id = id;
     this.recordRTC?.startRecording();
   }
 
-  stopRecording(): Promise<Blob | undefined> {
-    return new Promise<Blob | undefined>((resolve) => {
+  stopRecording(): Promise<File | undefined> {
+    return new Promise<File | undefined>((resolve) => {
       const rec = this.recordRTC;
       if (rec) {
-        rec.stopRecording(() => resolve(rec.getBlob()));
+        rec.stopRecording(() => {
+          const fileName = getFileNameForWord(this.id ?? "");
+          const file = new File([rec.getBlob()], fileName, {
+            lastModified: Date.now(),
+            type: Recorder.blobType,
+          });
+          this.id = undefined;
+          resolve(file);
+        });
       } else {
+        this.id = undefined;
         resolve(undefined);
       }
     });
