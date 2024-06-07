@@ -317,6 +317,7 @@ export default function ReviewEntriesTable(props: {
   const table = useMaterialReactTable({
     columns,
     data,
+    autoResetPageIndex: false,
     columnFilterDisplayMode: "popover",
     enableColumnActions: false,
     enableColumnDragging: false,
