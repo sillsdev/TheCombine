@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
+// using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
@@ -13,6 +16,8 @@ namespace BackendFramework.Repositories
     [ExcludeFromCodeCoverage]
     public class WordRepository : IWordRepository
     {
+
+        public static readonly ActivitySource MyActivitySource = new("OtelWords");
         private readonly IWordContext _wordDatabase;
 
         public WordRepository(IWordContext collectionSettings)
@@ -105,10 +110,16 @@ namespace BackendFramework.Repositories
         /// <returns> The word created </returns>
         public async Task<Word> Create(Word word)
         {
+
+            using var activity = BackendActivitySource.Get().StartActivity();
+
+
             PopulateBlankWordTimes(word);
             await _wordDatabase.Words.InsertOneAsync(word);
             await AddFrontier(word);
+            activity?.AddTag("otel status report", "OTEL for creating a word");
             return word;
+
         }
 
         /// <summary> Adds a list of <see cref="Word"/>s to the WordsCollection and Frontier </summary>
