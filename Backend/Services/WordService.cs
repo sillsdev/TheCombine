@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 
 namespace BackendFramework.Services
 {
@@ -35,6 +36,10 @@ namespace BackendFramework.Services
         /// <returns> The created word </returns>
         public async Task<Word> Create(string userId, Word word)
         {
+            using var activity = BackendActivitySource.Get().StartActivity();
+
+            activity?.AddTag("otel status report in service", "OTEL for creating a word in service");
+
             return await _wordRepo.Create(PrepEditedData(userId, word));
         }
 
