@@ -1,3 +1,5 @@
+import { v4 } from "uuid";
+
 import {
   SemanticDomain,
   SemanticDomainFull,
@@ -13,7 +15,7 @@ export function newSemanticDomain(
   name = "",
   lang = Bcp47Code.Default as string
 ): SemanticDomainFull {
-  return { id, name, guid: "", questions: [], description: "", lang };
+  return { id, name, guid: v4(), questions: [], description: "", lang };
 }
 
 export function newSemanticDomainForMongoDB(
@@ -39,7 +41,7 @@ export function newSemanticDomainTreeNode(
     id,
     name,
     lang,
-    guid: "",
+    guid: v4(),
   };
 }
 
