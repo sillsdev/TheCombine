@@ -1,5 +1,8 @@
 import { Add, Check, Close } from "@mui/icons-material";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Chip,
   Dialog,
@@ -52,6 +55,7 @@ export default function ProjectDomains(
 ): ReactElement {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [domains, setDomains] = useState<GroupedDomains>({});
+  const [langOptions, setLangOptions] = useState<WritingSystem[]>([]);
   const [projectWritingSystems, setProjectWritingSystems] = useState<
     WritingSystem[]
   >([]);
@@ -69,6 +73,21 @@ export default function ProjectDomains(
     props.project.vernacularWritingSystem,
     props.project.analysisWritingSystems,
   ]);
+
+  useEffect(() => {
+    const langs = [...semDomWritingSystems];
+    for (const ws of projectWritingSystems) {
+      if (!ws.bcp47) {
+        continue;
+      }
+      const bcp47 = ws.bcp47.split("-")[0];
+      if (!langs.some((ws) => ws.bcp47 === bcp47)) {
+        langs.push({ ...ws, bcp47 });
+      }
+    }
+    langs.sort((a, b) => a.bcp47.localeCompare(b.bcp47));
+    setLangOptions(langs);
+  }, [projectWritingSystems]);
 
   const addDomain = (domain?: SemanticDomainFull): boolean => {
     if (!domain) {
@@ -92,7 +111,12 @@ export default function ProjectDomains(
       {Object.keys(domains)
         .sort()
         .map((id) => (
-          <CustomDomain domain={domains[id]} id={id} key={id} />
+          <CustomDomain
+            domain={domains[id]}
+            id={id}
+            key={id}
+            langOptions={langOptions}
+          />
         ))}
       <Box>
         <IconButtonWithTooltip
@@ -101,6 +125,7 @@ export default function ProjectDomains(
           textId="projectSettings.domains.add"
         />
         <AddDomainDialog
+          langOptions={langOptions}
           onSubmit={addDomain}
           open={addDialogOpen}
           projectWritingSystems={projectWritingSystems}
@@ -113,17 +138,85 @@ export default function ProjectDomains(
 interface CustomDomainProps {
   domain: GroupedDomain;
   id: string;
+  langOptions: WritingSystem[];
 }
 
 function CustomDomain(props: CustomDomainProps): ReactElement {
+  const [activeLangs] = useState(Object.keys(props.domain));
+  const [selectedLang, setSelectedLang] = useState(
+    activeLangs.length ? activeLangs[0] : undefined
+  );
+
+  const { t } = useTranslation();
+
+  const domain =
+    selectedLang && activeLangs.includes(selectedLang)
+      ? props.domain[selectedLang]
+      : undefined;
+
   return (
-    <>
-      <Typography>{props.id}</Typography>
-    </>
+    <Accordion>
+      <AccordionSummary>
+        <Typography>
+          {props.id}
+          {" : "}
+          {Object.values(props.domain)
+            .map((d) => d.name)
+            .join(" | ")}
+        </Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Stack spacing={1}>
+          <Box>
+            <Select
+              variant="standard"
+              value={selectedLang}
+              onChange={(e) => setSelectedLang(e.target.value)}
+              /* Use `displayEmpty` and a conditional `renderValue` function to force
+               * something to appear when the menu is closed and its value is "" */
+              displayEmpty
+              renderValue={
+                selectedLang
+                  ? undefined
+                  : () => t("projectSettings.domains.selectLanguage")
+              }
+            >
+              {props.langOptions.map((ws) => (
+                <MenuItem
+                  color={
+                    activeLangs.includes(ws.bcp47) ? "primary" : "secondary"
+                  }
+                  key={ws.bcp47}
+                  value={ws.bcp47}
+                >
+                  {`${ws.bcp47} (${ws.name})`}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+
+          {domain ? (
+            <Box>
+              <Typography display="inline">
+                {t("projectSettings.domains.name")}
+              </Typography>
+              <TextFieldWithFont
+                analysis
+                disabled
+                lang={selectedLang}
+                //onChange={(e) => setName(e.target.value)}
+                value={domain.name}
+              />
+            </Box>
+          ) : null}
+        </Stack>
+      </AccordionDetails>
+    </Accordion>
   );
 }
 
 interface AddDomainDialogProps {
+  langOptions: WritingSystem[];
   onSubmit: (domain?: SemanticDomainFull) => boolean;
   open: boolean;
   projectWritingSystems: WritingSystem[];
@@ -132,26 +225,10 @@ interface AddDomainDialogProps {
 function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
   const [addingDom, setAddingDom] = useState(false);
   const [lang, setLang] = useState("");
-  const [langOptions, setLangOptions] = useState<WritingSystem[]>([]);
   const [name, setName] = useState("");
   const [parent, setParent] = useState<SemanticDomain | undefined>();
 
   const { t } = useTranslation();
-
-  useEffect(() => {
-    const langs = [...semDomWritingSystems];
-    for (const ws of props.projectWritingSystems) {
-      if (!ws.bcp47) {
-        continue;
-      }
-      const bcp47 = ws.bcp47.split("-")[0];
-      if (!langs.some((ws) => ws.bcp47 === bcp47)) {
-        langs.push({ ...ws, bcp47 });
-      }
-    }
-    langs.sort((a, b) => a.bcp47.localeCompare(b.bcp47));
-    setLangOptions(langs);
-  }, [props.projectWritingSystems]);
 
   const addParent = (domain?: SemanticDomain): void => {
     setAddingDom(false);
@@ -178,6 +255,8 @@ function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
     const domain = newSemanticDomain(id, name.trim(), lang);
     if (!props.onSubmit(domain)) {
       toast.error("The selected parent domain already has a custom subdomain.");
+    } else {
+      cancel();
     }
   };
 
@@ -193,7 +272,7 @@ function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
         lang ? undefined : () => t("projectSettings.domains.selectLanguage")
       }
     >
-      {langOptions.map((ws) => (
+      {props.langOptions.map((ws) => (
         <MenuItem key={ws.bcp47} value={ws.bcp47}>
           {`${ws.bcp47} (${ws.name})`}
         </MenuItem>
