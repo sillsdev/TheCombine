@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 
 import { archiveProject, restoreProject } from "backend";
 import { ButtonConfirmation } from "components/Dialogs";
-import { themeColors } from "types/theme";
 
 interface ProjectArchiveProps extends ButtonProps {
   archive?: boolean;
@@ -40,7 +39,7 @@ export default function ProjectArchive(
         color={props.warn ? "secondary" : "primary"}
         onClick={() => setOpen(true)}
         id={`proj-${props.projectId}-${props.archive ? "archive" : "restore"}`}
-        style={props.warn ? { color: themeColors.error } : {}}
+        sx={props.warn ? { color: (t) => t.palette.error.main } : {}}
       >
         {t(props.archive ? "buttons.archive" : "buttons.restore")}
       </Button>
