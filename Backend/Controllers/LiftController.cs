@@ -266,7 +266,7 @@ namespace BackendFramework.Controllers
             // Add new custom domains to the project
             liftMerger.GetCustomSemanticDomains().ForEach(customDom =>
             {
-                if (!project.SemanticDomains.Any(dom => dom.Id == customDom.Id && dom.Lang != customDom.Lang))
+                if (!project.SemanticDomains.Any(dom => dom.Id == customDom.Id && dom.Lang == customDom.Lang))
                 {
                     project.SemanticDomains.Add(customDom);
                 }
