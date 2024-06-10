@@ -72,6 +72,10 @@ export function initTreeDomain(lang = "") {
 
 // Custom domain helper functions
 
+/** Given an id and lang of a semantic domain and an array of custom domains,
+ * returns the specified SemanticDomainTreeNode from the database, with additions:
+ * - A first child, if it has a custom subdomain in the specified lang;
+ * - A previous sibling, if its parent has a custom subdomain in the specified lang. */
 async function getAugmentedTreeNode(
   id: string,
   lang: string,
@@ -92,6 +96,11 @@ async function getAugmentedTreeNode(
   }
 }
 
+/** Given the id of a custom domain and an array of custom domains,
+ * return a SemanticDomainTreeNode for the desired custom domain.
+ * Returned node includes parent and first sibling pulled from the standard domains.
+ * (Note: Assumes that the array of domains has already been filtered down to the
+ * desired semantic domain language.) */
 async function createCustomTreeNode(
   id: string,
   customDoms: SemanticDomainFull[]
