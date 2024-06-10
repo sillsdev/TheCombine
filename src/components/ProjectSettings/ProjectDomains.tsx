@@ -1,17 +1,17 @@
-import { Add, Check, Close } from "@mui/icons-material";
+import { Add, Check, Close, Delete } from "@mui/icons-material";
 import {
   Accordion,
+  AccordionActions,
   AccordionDetails,
   AccordionSummary,
   Box,
+  Button,
   Chip,
   Dialog,
   DialogContent,
   DialogTitle,
   Grid,
   IconButton,
-  MenuItem,
-  Select,
   Stack,
   Typography,
 } from "@mui/material";
@@ -19,75 +19,43 @@ import { type ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import {
-  WritingSystem,
-  type SemanticDomain,
-  type SemanticDomainFull,
-} from "api";
+import { type SemanticDomain, type SemanticDomainFull } from "api";
 import { IconButtonWithTooltip } from "components/Buttons";
+import { CancelConfirmDialog } from "components/Dialogs";
 import { type ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 import TreeView from "components/TreeView";
+import i18n from "i18n";
 import { newSemanticDomain } from "types/semanticDomain";
-import { semDomWritingSystems } from "types/writingSystem";
 import { TextFieldWithFont } from "utilities/fontComponents";
 
-interface GroupedDomain {
-  [language: string]: SemanticDomainFull;
-}
-
-interface GroupedDomains {
-  [id: string]: GroupedDomain;
-}
-
-function groupDomains(domains: SemanticDomainFull[]): GroupedDomains {
-  const groups: GroupedDomains = {};
-  domains.forEach((d) => {
-    if (!(d.id in groups)) {
-      groups[d.id] = {};
-    }
-    groups[d.id][d.lang] = d;
-  });
-  return groups;
-}
+const trimDomain = (domain: SemanticDomainFull): SemanticDomainFull => ({
+  ...domain,
+  description: domain.description.trim(),
+  name: domain.name.trim(),
+  questions: domain.questions.map((q) => q.trim()).filter((q) => q),
+});
 
 export default function ProjectDomains(
   props: ProjectSettingProps
 ): ReactElement {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
-  const [domains, setDomains] = useState<GroupedDomains>({});
-  const [langOptions, setLangOptions] = useState<WritingSystem[]>([]);
-  const [projectWritingSystems, setProjectWritingSystems] = useState<
-    WritingSystem[]
-  >([]);
+  const [domains, setDomains] = useState<SemanticDomainFull[]>([]);
+  const [lang, setLang] = useState("");
 
   useEffect(() => {
-    setDomains(groupDomains(props.project.semanticDomains));
-  }, [props.project.semanticDomains]);
+    console.info(i18n.language);
+    setLang(
+      props.project.semDomWritingSystem.bcp47 || i18n.language.split("-")[0]
+    );
+  }, [props.project.semDomWritingSystem.bcp47]);
 
   useEffect(() => {
-    setProjectWritingSystems([
-      props.project.vernacularWritingSystem,
-      ...props.project.analysisWritingSystems,
-    ]);
-  }, [
-    props.project.vernacularWritingSystem,
-    props.project.analysisWritingSystems,
-  ]);
-
-  useEffect(() => {
-    const langs = [...semDomWritingSystems];
-    for (const ws of projectWritingSystems) {
-      if (!ws.bcp47) {
-        continue;
-      }
-      const bcp47 = ws.bcp47.split("-")[0];
-      if (!langs.some((ws) => ws.bcp47 === bcp47)) {
-        langs.push({ ...ws, bcp47 });
-      }
-    }
-    langs.sort((a, b) => a.bcp47.localeCompare(b.bcp47));
-    setLangOptions(langs);
-  }, [projectWritingSystems]);
+    setDomains(
+      props.project.semanticDomains
+        .filter((d) => d.lang === lang)
+        .sort((a, b) => a.id.localeCompare(b.id))
+    );
+  }, [lang, props.project.semanticDomains]);
 
   const addDomain = (domain?: SemanticDomainFull): boolean => {
     if (!domain) {
@@ -95,7 +63,7 @@ export default function ProjectDomains(
       return true;
     }
 
-    if (domain.id in domains) {
+    if (domains.some((d) => d.id === domain.id && d.lang === domain.lang)) {
       return false;
     }
 
@@ -106,18 +74,20 @@ export default function ProjectDomains(
     return true;
   };
 
+  const updateDomains = (
+    updateFunction: (doms: SemanticDomainFull[]) => SemanticDomainFull[]
+  ): void => {
+    props.setProject({
+      ...props.project,
+      semanticDomains: updateFunction(props.project.semanticDomains),
+    });
+  };
+
   return (
     <Stack spacing={1}>
-      {Object.keys(domains)
-        .sort()
-        .map((id) => (
-          <CustomDomain
-            domain={domains[id]}
-            id={id}
-            key={id}
-            langOptions={langOptions}
-          />
-        ))}
+      {domains.map((d) => (
+        <CustomDomain domain={d} key={d.id} updateDomains={updateDomains} />
+      ))}
       <Box>
         <IconButtonWithTooltip
           icon={<Add />}
@@ -125,10 +95,9 @@ export default function ProjectDomains(
           textId="projectSettings.domains.add"
         />
         <AddDomainDialog
-          langOptions={langOptions}
+          lang={lang}
           onSubmit={addDomain}
           open={addDialogOpen}
-          projectWritingSystems={projectWritingSystems}
         />
       </Box>
     </Stack>
@@ -136,78 +105,137 @@ export default function ProjectDomains(
 }
 
 interface CustomDomainProps {
-  domain: GroupedDomain;
-  id: string;
-  langOptions: WritingSystem[];
+  domain: SemanticDomainFull;
+  updateDomains: (
+    updateFunction: (doms: SemanticDomainFull[]) => SemanticDomainFull[]
+  ) => void;
 }
 
 function CustomDomain(props: CustomDomainProps): ReactElement {
-  const [activeLangs] = useState(Object.keys(props.domain));
-  const [selectedLang, setSelectedLang] = useState(
-    activeLangs.length ? activeLangs[0] : undefined
-  );
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [domain, setDomain] = useState(props.domain);
 
   const { t } = useTranslation();
 
-  const domain =
-    selectedLang && activeLangs.includes(selectedLang)
-      ? props.domain[selectedLang]
-      : undefined;
+  useEffect(() => {
+    setDomain(trimDomain(props.domain));
+  }, [props.domain]);
+
+  const deleteDomain = (): void =>
+    props.updateDomains((doms) =>
+      doms.filter(
+        (d) => !(d.id === props.domain.id && d.lang === props.domain.lang)
+      )
+    );
+
+  const updateDomain = (domain: SemanticDomainFull): void =>
+    props.updateDomains((doms) =>
+      doms.map((d) =>
+        d.id === domain.id && d.lang === domain.lang ? domain : d
+      )
+    );
+
+  const updateName = (name: string): void => {
+    setDomain((prev) => ({ ...prev, name }));
+  };
+  const updateDescription = (description: string): void => {
+    setDomain((prev) => ({ ...prev, description }));
+  };
+  const addQuestion = (): void => {
+    setDomain((prev) => ({ ...prev, questions: [...prev.questions, ""] }));
+  };
+  const updateQuestion = (index: number, question: string): void => {
+    setDomain((prev) => ({
+      ...prev,
+      questions: prev.questions.map((q, i) => (i === index ? question : q)),
+    }));
+  };
+
+  const isDomainChanged = (): boolean => {
+    const dom = trimDomain(domain);
+    const old = trimDomain(props.domain);
+    return !(
+      dom.name === old.name &&
+      dom.description === old.description &&
+      dom.questions.length === old.questions.length &&
+      dom.questions.every((q, i) => q === old.questions[i])
+    );
+  };
+
+  const saveChanges = (): void => {
+    const dom = trimDomain(domain);
+    if (!(dom.name || dom.description || dom.questions.length)) {
+      deleteDomain();
+    } else {
+      updateDomain(dom);
+    }
+  };
 
   return (
     <Accordion>
       <AccordionSummary>
-        <Typography>
-          {props.id}
+        <Typography sx={{ width: "calc(100% - 40px)" }}>
+          {props.domain.id}
           {" : "}
-          {Object.values(props.domain)
-            .map((d) => d.name)
-            .join(" | ")}
+          {props.domain.name}
         </Typography>
+        <IconButtonWithTooltip
+          icon={<Delete />}
+          onClick={() => setDeleteDialogOpen(true)}
+          size="small"
+        />
+        <CancelConfirmDialog
+          handleCancel={() => setDeleteDialogOpen(false)}
+          handleConfirm={() => deleteDomain()}
+          open={deleteDialogOpen}
+          text={"Are you sure you want to delete this custom domain?"}
+        />
       </AccordionSummary>
       <AccordionDetails>
         <Stack spacing={1}>
           <Box>
-            <Select
-              variant="standard"
-              value={selectedLang}
-              onChange={(e) => setSelectedLang(e.target.value)}
-              /* Use `displayEmpty` and a conditional `renderValue` function to force
-               * something to appear when the menu is closed and its value is "" */
-              displayEmpty
-              renderValue={
-                selectedLang
-                  ? undefined
-                  : () => t("projectSettings.domains.selectLanguage")
-              }
-            >
-              {props.langOptions.map((ws) => (
-                <MenuItem
-                  color={
-                    activeLangs.includes(ws.bcp47) ? "primary" : "secondary"
-                  }
-                  key={ws.bcp47}
-                  value={ws.bcp47}
-                >
-                  {`${ws.bcp47} (${ws.name})`}
-                </MenuItem>
-              ))}
-            </Select>
+            <Typography display="inline">
+              {t("projectSettings.domains.name")}
+            </Typography>
+            <TextFieldWithFont
+              analysis
+              lang={props.domain.lang}
+              onChange={(e) => updateName(e.target.value)}
+              value={domain.name}
+            />
           </Box>
-
-          {domain ? (
-            <Box>
-              <Typography display="inline">
-                {t("projectSettings.domains.name")}
-              </Typography>
+          <Box>
+            <Typography display="inline">
+              {t("projectSettings.domains.description")}
+            </Typography>
+            <TextFieldWithFont
+              analysis
+              lang={props.domain.lang}
+              multiline
+              onChange={(e) => updateDescription(e.target.value)}
+              value={domain.description}
+            />
+          </Box>
+          <Box>
+            <Typography>{t("projectSettings.domains.questions")}</Typography>
+            {domain.questions.map((q, i) => (
               <TextFieldWithFont
                 analysis
-                disabled
-                lang={selectedLang}
-                //onChange={(e) => setName(e.target.value)}
-                value={domain.name}
+                key={i}
+                lang={props.domain.lang}
+                multiline
+                onChange={(e) => updateQuestion(i, e.target.value)}
+                sx={{ display: "block" }}
+                value={q}
               />
-            </Box>
+            ))}
+            <IconButtonWithTooltip
+              icon={<Add />}
+              onClick={() => addQuestion()}
+            />
+          </Box>
+          {isDomainChanged() ? (
+            <Button onClick={() => saveChanges()}>{t("buttons.save")}</Button>
           ) : null}
         </Stack>
       </AccordionDetails>
@@ -216,15 +244,13 @@ function CustomDomain(props: CustomDomainProps): ReactElement {
 }
 
 interface AddDomainDialogProps {
-  langOptions: WritingSystem[];
+  lang: string;
   onSubmit: (domain?: SemanticDomainFull) => boolean;
   open: boolean;
-  projectWritingSystems: WritingSystem[];
 }
 
 function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
   const [addingDom, setAddingDom] = useState(false);
-  const [lang, setLang] = useState("");
   const [name, setName] = useState("");
   const [parent, setParent] = useState<SemanticDomain | undefined>();
 
@@ -233,14 +259,10 @@ function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
   const addParent = (domain?: SemanticDomain): void => {
     setAddingDom(false);
     setParent(domain);
-    if (domain) {
-      setLang(domain.lang);
-    }
   };
 
   const cancel = (): void => {
     props.onSubmit();
-    setLang("");
     setName("");
     setParent(undefined);
   };
@@ -252,33 +274,13 @@ function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
     }
 
     const id = parent ? `${parent.id}.0` : "0";
-    const domain = newSemanticDomain(id, name.trim(), lang);
+    const domain = newSemanticDomain(id, name.trim(), props.lang);
     if (!props.onSubmit(domain)) {
       toast.error("The selected parent domain already has a custom subdomain.");
     } else {
       cancel();
     }
   };
-
-  const langSelect = (): ReactElement => (
-    <Select
-      variant="standard"
-      value={lang}
-      onChange={(e) => setLang(e.target.value)}
-      /* Use `displayEmpty` and a conditional `renderValue` function to force
-       * something to appear when the menu is closed and its value is "" */
-      displayEmpty
-      renderValue={
-        lang ? undefined : () => t("projectSettings.domains.selectLanguage")
-      }
-    >
-      {props.langOptions.map((ws) => (
-        <MenuItem key={ws.bcp47} value={ws.bcp47}>
-          {`${ws.bcp47} (${ws.name})`}
-        </MenuItem>
-      ))}
-    </Select>
-  );
 
   return (
     <Dialog open={props.open}>
@@ -321,17 +323,11 @@ function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
           </Box>
           <Box>
             <Typography display="inline">
-              {t("projectSettings.domains.language")}
-            </Typography>
-            {langSelect()}
-          </Box>
-          <Box>
-            <Typography display="inline">
               {t("projectSettings.domains.name")}
             </Typography>
             <TextFieldWithFont
               analysis
-              lang={lang}
+              lang={props.lang}
               onChange={(e) => setName(e.target.value)}
               value={name}
             />

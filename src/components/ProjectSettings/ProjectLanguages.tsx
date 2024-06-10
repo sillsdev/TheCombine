@@ -136,21 +136,6 @@ export default function ProjectLanguages(
     setLangsInProj(langCodes.join(", "));
   };
 
-  const setSemDomWritingSystem = async (lang: string): Promise<void> => {
-    const semDomWritingSystem =
-      semDomWritingSystems.find((ws) => ws.bcp47 === lang) ??
-      newWritingSystem();
-    await props
-      .setProject({ ...props.project, semDomWritingSystem })
-      .then(() => resetState())
-      .catch((err) => {
-        console.error(err);
-        toast.error(
-          t("projectSettings.language.updateSemDomWritingSystemFailed")
-        );
-      });
-  };
-
   const resetState = (): void => {
     setAdd(false);
     setLangsInProj("");
@@ -245,34 +230,6 @@ export default function ProjectLanguages(
     </Grid>
   );
 
-  const semDomLangSelect = (): ReactElement => (
-    <Select
-      variant="standard"
-      id={semDomLangSelectId}
-      value={props.project.semDomWritingSystem.bcp47}
-      onChange={(event: SelectChangeEvent<string>) =>
-        setSemDomWritingSystem(event.target.value as string)
-      }
-      /* Use `displayEmpty` and a conditional `renderValue` function to force
-       * something to appear when the menu is closed and its value is "" */
-      displayEmpty
-      renderValue={
-        props.project.semDomWritingSystem.bcp47
-          ? undefined
-          : () => t("projectSettings.language.semanticDomainsDefault")
-      }
-    >
-      <MenuItem value={""}>
-        {t("projectSettings.language.semanticDomainsDefault")}
-      </MenuItem>
-      {semDomWritingSystems.map((ws) => (
-        <MenuItem key={ws.bcp47} value={ws.bcp47}>
-          {`${ws.bcp47} (${ws.name})`}
-        </MenuItem>
-      ))}
-    </Select>
-  );
-
   const vernacularLanguageDisplay = (): ReactElement => (
     <ImmutableWritingSystem
       ws={props.project.vernacularWritingSystem}
@@ -347,20 +304,7 @@ export default function ProjectLanguages(
         (add ? addAnalysisLangPicker() : addAnalysisLangButtons())}
 
       {/* Semantic domains language */}
-      <Typography style={{ marginTop: theme.spacing(1) }} variant="h6">
-        {t("projectSettings.language.semanticDomains")}
-      </Typography>
-      {props.readOnly ? (
-        props.project.semDomWritingSystem.bcp47 ? (
-          <ImmutableWritingSystem ws={props.project.semDomWritingSystem} />
-        ) : (
-          <Typography>
-            {t("projectSettings.language.semanticDomainsDefault")}
-          </Typography>
-        )
-      ) : (
-        semDomLangSelect()
-      )}
+      <SemanticDomainLanguage {...props} />
     </>
   );
 }
@@ -400,5 +344,68 @@ function ImmutableWritingSystem(
       </Grid>
       <Grid item>{props.buttons}</Grid>
     </Grid>
+  );
+}
+
+export function SemanticDomainLanguage(
+  props: ProjectSettingProps
+): ReactElement {
+  const { t } = useTranslation();
+
+  const setSemDomWritingSystem = async (lang: string): Promise<void> => {
+    const semDomWritingSystem =
+      semDomWritingSystems.find((ws) => ws.bcp47 === lang) ??
+      newWritingSystem();
+    await props
+      .setProject({ ...props.project, semDomWritingSystem })
+      .catch((err) => {
+        console.error(err);
+        toast.error(
+          t("projectSettings.language.updateSemDomWritingSystemFailed")
+        );
+      });
+  };
+
+  return (
+    <>
+      <Typography style={{ marginTop: theme.spacing(1) }} variant="h6">
+        {t("projectSettings.language.semanticDomains")}
+      </Typography>
+      {props.readOnly ? (
+        props.project.semDomWritingSystem.bcp47 ? (
+          <ImmutableWritingSystem ws={props.project.semDomWritingSystem} />
+        ) : (
+          <Typography>
+            {t("projectSettings.language.semanticDomainsDefault")}
+          </Typography>
+        )
+      ) : (
+        <Select
+          variant="standard"
+          id={semDomLangSelectId}
+          value={props.project.semDomWritingSystem.bcp47}
+          onChange={(event: SelectChangeEvent<string>) =>
+            setSemDomWritingSystem(event.target.value as string)
+          }
+          /* Use `displayEmpty` and a conditional `renderValue` function to force
+           * something to appear when the menu is closed and its value is "" */
+          displayEmpty
+          renderValue={
+            props.project.semDomWritingSystem.bcp47
+              ? undefined
+              : () => t("projectSettings.language.semanticDomainsDefault")
+          }
+        >
+          <MenuItem value={""}>
+            {t("projectSettings.language.semanticDomainsDefault")}
+          </MenuItem>
+          {semDomWritingSystems.map((ws) => (
+            <MenuItem key={ws.bcp47} value={ws.bcp47}>
+              {`${ws.bcp47} (${ws.name})`}
+            </MenuItem>
+          ))}
+        </Select>
+      )}
+    </>
   );
 }

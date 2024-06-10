@@ -48,7 +48,9 @@ import ProjectArchive from "components/ProjectSettings/ProjectArchive";
 import ProjectAutocomplete from "components/ProjectSettings/ProjectAutocomplete";
 import ProjectDomains from "components/ProjectSettings/ProjectDomains";
 import ProjectImport from "components/ProjectSettings/ProjectImport";
-import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
+import ProjectLanguages, {
+  SemanticDomainLanguage,
+} from "components/ProjectSettings/ProjectLanguages";
 import ProjectName from "components/ProjectSettings/ProjectName";
 import ProjectSchedule from "components/ProjectSettings/ProjectSchedule";
 import ProjectSelect from "components/ProjectSettings/ProjectSelect";
@@ -298,6 +300,16 @@ export default function ProjectSettingsComponent(): ReactElement {
 
       <TabPanel value={tab} index={ProjectSettingsTab.Domains}>
         <Grid container spacing={6}>
+          <BaseSettings
+            icon={<Language />}
+            title={t("projectSettings.domains.semDomLanguage")}
+            body={
+              <SemanticDomainLanguage
+                project={project}
+                setProject={updateProject}
+              />
+            }
+          />
           {/* Custom semantic domains */}
           <BaseSettings
             icon={<AccountTree data-testid={Setting.Domains} />}

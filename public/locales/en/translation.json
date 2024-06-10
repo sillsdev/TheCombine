@@ -256,12 +256,13 @@
       "toastFail": "Failed to add user to the project."
     },
     "domains": {
+      "semDomLanguage": "Semantic Domains Language",
       "label": "Custom Semantic Domains",
       "add": "Add a custom subdomain",
       "parent": "Parent domain: ",
-      "language": "Subdomain language: ",
-      "selectLanguage": "(Select language)",
-      "name": "Subdomain name: "
+      "name": "Subdomain name: ",
+      "description": "Description: ",
+      "questions": "Questions: "
     }
   },
   "goal": {
