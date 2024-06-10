@@ -73,7 +73,8 @@ export enum ProjectSettingsTab {
 export enum Setting {
   Archive = "SettingArchive",
   Autocomplete = "SettingAutocomplete",
-  Domains = "SettingDomains",
+  DomainsCustom = "SettingDomainsCustom",
+  DomainsLanguage = "SettingsDomainsLanguage",
   Export = "SettingExport",
   Import = "SettingImport",
   Languages = "SettingLanguages",
@@ -300,8 +301,9 @@ export default function ProjectSettingsComponent(): ReactElement {
 
       <TabPanel value={tab} index={ProjectSettingsTab.Domains}>
         <Grid container spacing={6}>
+          {/* Semantic domains language */}
           <BaseSettings
-            icon={<Language />}
+            icon={<Language data-testid={Setting.DomainsLanguage} />}
             title={t("projectSettings.domains.semDomLanguage")}
             body={
               <SemanticDomainLanguage
@@ -310,9 +312,10 @@ export default function ProjectSettingsComponent(): ReactElement {
               />
             }
           />
+
           {/* Custom semantic domains */}
           <BaseSettings
-            icon={<AccountTree data-testid={Setting.Domains} />}
+            icon={<AccountTree data-testid={Setting.DomainsCustom} />}
             title={t("projectSettings.domains.label")}
             body={
               <ProjectDomains project={project} setProject={updateProject} />
