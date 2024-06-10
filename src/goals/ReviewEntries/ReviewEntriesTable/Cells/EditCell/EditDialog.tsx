@@ -45,6 +45,7 @@ import {
 import { type StoreState } from "types";
 import { type StoreStateDispatch } from "types/Redux/actions";
 import { useAppDispatch, useAppSelector } from "types/hooks";
+import { themeColors } from "types/theme";
 import {
   type FileWithSpeakerId,
   newPronunciation,
@@ -351,13 +352,13 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
             </Grid>
             <Grid item>
               <IconButton id={EditDialogId.ButtonSave} onClick={saveAndClose}>
-                <Check sx={{ color: (t) => t.palette.success.main }} />
+                <Check style={{ color: themeColors.success }} />
               </IconButton>
               <IconButton
                 id={EditDialogId.ButtonCancel}
                 onClick={conditionalCancel}
               >
-                <Close sx={{ color: (t) => t.palette.error.main }} />
+                <Close style={{ color: themeColors.error }} />
               </IconButton>
             </Grid>
           </Grid>
@@ -474,7 +475,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
                 <CardContent>
                   <IconButton onClick={toggleFlag}>
                     {newWord.flag.active ? (
-                      <FlagFilled sx={{ color: (t) => t.palette.error.main }} />
+                      <FlagFilled sx={{ color: themeColors.error }} />
                     ) : (
                       <FlagOutlined />
                     )}
