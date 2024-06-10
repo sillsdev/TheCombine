@@ -42,7 +42,6 @@ export default function ProjectDomains(
   const [lang, setLang] = useState("");
 
   useEffect(() => {
-    console.info(i18n.language);
     setLang(
       props.project.semDomWritingSystem.bcp47 || i18n.language.split("-")[0]
     );
