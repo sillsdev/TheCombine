@@ -262,7 +262,13 @@
       "parent": "Parent domain: ",
       "name": "Subdomain name: ",
       "description": "Description: ",
-      "questions": "Questions: "
+      "questions": "Questions: ",
+      "deleteConfirm": "Are you sure you want to delete this custom domain?",
+      "addError": {
+        "name": "Please enter a name for the custom domain.",
+        "customParent": "The parent domain cannot be a custom subdomain. Please choose a different parent domain.",
+        "takenParent": "The selected parent domain already has a custom subdomain."
+      }
     }
   },
   "goal": {

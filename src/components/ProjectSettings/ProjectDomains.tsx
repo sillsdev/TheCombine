@@ -186,7 +186,7 @@ function CustomDomain(props: CustomDomainProps): ReactElement {
           handleCancel={() => setDeleteDialogOpen(false)}
           handleConfirm={() => deleteDomain()}
           open={deleteDialogOpen}
-          text={"Are you sure you want to delete this custom domain?"}
+          text={t("projectSettings.domains.deleteConfirm")}
         />
       </AccordionSummary>
       <AccordionDetails>
@@ -267,14 +267,19 @@ function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
 
   const submit = (): void => {
     if (!name.trim()) {
-      toast.error("Please enter a name for the custom domain.");
+      toast.error(t("projectSettings.domains.addError.name"));
+      return;
+    }
+
+    if (parent?.id[parent?.id.length - 1] === "0") {
+      toast.error(t("projectSettings.domains.addError.customParent"));
       return;
     }
 
     const id = parent ? `${parent.id}.0` : "0";
     const domain = newSemanticDomain(id, name.trim(), props.lang);
     if (!props.onSubmit(domain)) {
-      toast.error("The selected parent domain already has a custom subdomain.");
+      toast.error(t("projectSettings.domains.addError.takenParent"));
     } else {
       cancel();
     }

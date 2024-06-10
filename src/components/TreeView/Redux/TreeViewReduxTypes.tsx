@@ -7,7 +7,9 @@ export interface TreeViewState {
   open: boolean;
 }
 
-export const defaultTreeNode = newSemanticDomainTreeNode("Sem");
+export const rootId = "Sem";
+
+export const defaultTreeNode = newSemanticDomainTreeNode(rootId);
 
 export const defaultState: TreeViewState = {
   language: "",

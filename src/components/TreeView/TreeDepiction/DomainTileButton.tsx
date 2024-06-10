@@ -9,9 +9,8 @@ import { CSSProperties, ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { SemanticDomain } from "api/models";
+import { rootId } from "components/TreeView/Redux/TreeViewReduxTypes";
 import { Direction } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
-
-const RootId = "Sem";
 
 interface DomainTextProps {
   domain: SemanticDomain;
@@ -23,10 +22,10 @@ export function DomainText(props: DomainTextProps): ReactElement {
   return (
     <div style={{ ...props.extraProps, textTransform: "capitalize" }}>
       <Typography variant={"overline"}>
-        {props.domain.id !== RootId ? props.domain.id : ""}
+        {props.domain.id !== rootId ? props.domain.id : ""}
       </Typography>
       <Typography variant={"body1"}>
-        {props.domain.id !== RootId ? props.domain.name : t("addWords.domain")}
+        {props.domain.id !== rootId ? props.domain.name : t("addWords.domain")}
       </Typography>
     </div>
   );

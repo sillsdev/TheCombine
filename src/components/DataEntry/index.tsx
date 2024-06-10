@@ -47,6 +47,10 @@ export default function DataEntry(): ReactElement {
   const { currentDomain, open } = useAppSelector(
     (state: StoreState) => state.treeViewState
   );
+  const customDomains = useAppSelector(
+    (state: StoreState) => state.currentProjectState.project.semanticDomains
+  );
+
   const { id, lang, name } = currentDomain;
 
   /* This ref is for a container of both the <DataEntryHeader> and <DataEntryTable>,
@@ -80,12 +84,19 @@ export default function DataEntry(): ReactElement {
 
   // When domain changes, fetch full domain details.
   useEffect(() => {
-    getSemanticDomainFull(id, lang).then((fullDomain) => {
-      if (fullDomain) {
-        setDomain(fullDomain);
-      }
-    });
-  }, [id, lang]);
+    const customDomain = customDomains.find(
+      (d) => d.id === id && d.lang === lang
+    );
+    if (customDomain) {
+      setDomain(customDomain);
+    } else {
+      getSemanticDomainFull(id, lang).then((fullDomain) => {
+        if (fullDomain) {
+          setDomain(fullDomain);
+        }
+      });
+    }
+  }, [customDomains, id, lang]);
 
   // Recalculate height if something changed that might affect it.
   useEffect(() => {
