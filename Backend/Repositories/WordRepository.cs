@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+// using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
@@ -16,9 +16,9 @@ namespace BackendFramework.Repositories
     [ExcludeFromCodeCoverage]
     public class WordRepository : IWordRepository
     {
-
-        public static readonly ActivitySource MyActivitySource = new("OtelWords");
         private readonly IWordContext _wordDatabase;
+
+        private const string otelTagName = "otel.report.wordrepo";
 
         public WordRepository(IWordContext collectionSettings)
         {
@@ -55,12 +55,18 @@ namespace BackendFramework.Repositories
         /// <summary> Finds all <see cref="Word"/>s with specified projectId </summary>
         public async Task<List<Word>> GetAllWords(string projectId)
         {
+            using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "getting all words");
+
             return await _wordDatabase.Words.Find(GetAllProjectWordsFilter(projectId)).ToListAsync();
         }
 
         /// <summary> Finds <see cref="Word"/> with specified wordId and projectId </summary>
         public async Task<Word?> GetWord(string projectId, string wordId)
         {
+            using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "getting a word");
+
             var wordList = await _wordDatabase.Words.FindAsync(GetProjectWordFilter(projectId, wordId));
             try
             {
@@ -112,12 +118,12 @@ namespace BackendFramework.Repositories
         {
 
             using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "creating a word in WordsCollection and Frontier");
 
 
             PopulateBlankWordTimes(word);
             await _wordDatabase.Words.InsertOneAsync(word);
             await AddFrontier(word);
-            activity?.AddTag("otel status report", "OTEL for creating a word");
             return word;
 
         }
@@ -152,6 +158,10 @@ namespace BackendFramework.Repositories
         /// <returns> The word created </returns>
         public async Task<Word> Add(Word word)
         {
+
+            using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "adding a word to WordsCollection");
+
             PopulateBlankWordTimes(word);
             await _wordDatabase.Words.InsertOneAsync(word);
             return word;
@@ -173,6 +183,10 @@ namespace BackendFramework.Repositories
         /// <summary> Finds all <see cref="Word"/>s in the Frontier for specified <see cref="Project"/> </summary>
         public async Task<List<Word>> GetFrontier(string projectId)
         {
+
+            using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "getting all Frontier words");
+
             return await _wordDatabase.Frontier.Find(GetAllProjectWordsFilter(projectId)).ToListAsync();
         }
 
@@ -187,6 +201,10 @@ namespace BackendFramework.Repositories
         /// <returns> The word created </returns>
         public async Task<Word> AddFrontier(Word word)
         {
+
+            using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "adding a word to Frontier");
+
             await _wordDatabase.Frontier.InsertOneAsync(word);
             return word;
         }
@@ -204,6 +222,9 @@ namespace BackendFramework.Repositories
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteFrontier(string projectId, string wordId)
         {
+            using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "deleting a word from Frontier");
+
             var deleted = await _wordDatabase.Frontier.DeleteOneAsync(GetProjectWordFilter(projectId, wordId));
             return deleted.DeletedCount > 0;
         }
@@ -212,6 +233,9 @@ namespace BackendFramework.Repositories
         /// <returns> Number of words deleted </returns>
         public async Task<long> DeleteFrontier(string projectId, List<string> wordIds)
         {
+            using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "deleting words from Frontier");
+
             var deleted = await _wordDatabase.Frontier.DeleteManyAsync(GetProjectWordsFilter(projectId, wordIds));
             return deleted.DeletedCount;
         }
