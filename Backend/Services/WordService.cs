@@ -48,6 +48,9 @@ namespace BackendFramework.Services
         /// <returns> The created word </returns>
         public async Task<List<Word>> Create(string userId, List<Word> words)
         {
+            using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "creating words");
+
             return await _wordRepo.Create(words.Select(w => PrepEditedData(userId, w)).ToList());
         }
 
@@ -62,6 +65,10 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> Delete(string projectId, string userId, string wordId)
         {
+            // note: review tag description
+            using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "deleting a word");
+
             var wordIsInFrontier = await _wordRepo.DeleteFrontier(projectId, wordId);
 
             // We only want to add the deleted word if the word started in the frontier.
@@ -94,6 +101,9 @@ namespace BackendFramework.Services
         /// <returns> New word </returns>
         public async Task<Word?> Delete(string projectId, string userId, string wordId, string fileName)
         {
+            using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "deleting an audio");
+
             var wordWithAudioToDelete = await _wordRepo.GetWord(projectId, wordId);
             if (wordWithAudioToDelete is null)
             {
@@ -122,6 +132,10 @@ namespace BackendFramework.Services
         /// <returns> A string: id of new word </returns>
         public async Task<string?> DeleteFrontierWord(string projectId, string userId, string wordId)
         {
+            // note: review tag description
+            using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "deleting a word from Frontier");
+
             var wordIsInFrontier = await _wordRepo.DeleteFrontier(projectId, wordId);
             if (!wordIsInFrontier)
             {
@@ -145,6 +159,9 @@ namespace BackendFramework.Services
         /// <returns> A bool: true if successful, false if any don't exist or are already in the Frontier. </returns>
         public async Task<bool> RestoreFrontierWords(string projectId, List<string> wordIds)
         {
+            using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "restoring words to Frontier");
+
             var words = new List<Word>();
             foreach (var id in wordIds)
             {
@@ -163,6 +180,9 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> Update(string projectId, string userId, string wordId, Word word)
         {
+            using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "updating a word in Frontier");
+
             var wordIsInFrontier = await _wordRepo.DeleteFrontier(projectId, wordId);
 
             // We only want to update words that are in the frontier
@@ -183,6 +203,9 @@ namespace BackendFramework.Services
         /// <returns> The id string of the existing word, or null if none. </returns>
         public async Task<string?> FindContainingWord(Word word)
         {
+            using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "checking for duplicates of a word");
+
             var wordsWithVern = await _wordRepo.GetFrontierWithVernacular(word.ProjectId, word.Vernacular);
             var duplicatedWord = wordsWithVern.Find(w => w.Contains(word));
             return duplicatedWord?.Id;
