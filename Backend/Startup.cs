@@ -5,7 +5,7 @@ using BackendFramework.Contexts;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
-// using BackendFramework.Otel;
+using BackendFramework.Otel;
 using BackendFramework.Repositories;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -251,10 +251,7 @@ namespace BackendFramework
             services.AddTransient<IWordService, WordService>();
 
             // OpenTelemetry
-            // services.AddOpenTelemetryInstrumentation();
-
-
-
+            services.AddOpenTelemetryInstrumentation();
 
         }
 

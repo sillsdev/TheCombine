@@ -12,6 +12,8 @@ namespace BackendFramework.Services
     {
         private readonly IWordRepository _wordRepo;
 
+        private const string otelTagName = "otel.report.service";
+
         public WordService(IWordRepository wordRepo)
         {
             _wordRepo = wordRepo;
@@ -37,8 +39,7 @@ namespace BackendFramework.Services
         public async Task<Word> Create(string userId, Word word)
         {
             using var activity = BackendActivitySource.Get().StartActivity();
-
-            activity?.AddTag("otel status report in service", "OTEL for creating a word in service");
+            activity?.AddTag(otelTagName, "creating a word");
 
             return await _wordRepo.Create(PrepEditedData(userId, word));
         }
