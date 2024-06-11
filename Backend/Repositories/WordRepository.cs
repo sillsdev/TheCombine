@@ -83,6 +83,9 @@ namespace BackendFramework.Repositories
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> DeleteAllWords(string projectId)
         {
+            using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "deleting all words from WordsCollection and Frontier");
+
             var filterDef = new FilterDefinitionBuilder<Word>();
             var filter = filterDef.Eq(x => x.ProjectId, projectId);
 
@@ -137,6 +140,9 @@ namespace BackendFramework.Repositories
         /// <returns> The words created </returns>
         public async Task<List<Word>> Create(List<Word> words)
         {
+            using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "creating words in WordsCollection and Frontier");
+
             if (words.Count == 0)
             {
                 return words;
@@ -158,7 +164,6 @@ namespace BackendFramework.Repositories
         /// <returns> The word created </returns>
         public async Task<Word> Add(Word word)
         {
-
             using var activity = BackendActivitySource.Get().StartActivity();
             activity?.AddTag(otelTagName, "adding a word to WordsCollection");
 
@@ -170,6 +175,9 @@ namespace BackendFramework.Repositories
         /// <summary> Checks if Frontier is nonempty for specified <see cref="Project"/> </summary>
         public async Task<bool> IsFrontierNonempty(string projectId)
         {
+            using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "checking if Frontier is nonempty");
+
             var word = await _wordDatabase.Frontier.Find(GetAllProjectWordsFilter(projectId)).FirstOrDefaultAsync();
             return word is not null;
         }
@@ -177,6 +185,9 @@ namespace BackendFramework.Repositories
         /// <summary> Checks if specified word is in Frontier for specified <see cref="Project"/> </summary>
         public async Task<bool> IsInFrontier(string projectId, string wordId)
         {
+            using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "checking if Frontier contains a word");
+
             return (await _wordDatabase.Frontier.CountDocumentsAsync(GetProjectWordFilter(projectId, wordId))) > 0;
         }
 
@@ -193,6 +204,9 @@ namespace BackendFramework.Repositories
         /// <summary> Finds all <see cref="Word"/>s in Frontier of specified project with specified vern </summary>
         public async Task<List<Word>> GetFrontierWithVernacular(string projectId, string vernacular)
         {
+            using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "getting all words from Frontier with vern");
+
             return await _wordDatabase.Frontier.Find(GetAllProjectWordsFilter(projectId, vernacular)).ToListAsync();
         }
 
@@ -201,7 +215,6 @@ namespace BackendFramework.Repositories
         /// <returns> The word created </returns>
         public async Task<Word> AddFrontier(Word word)
         {
-
             using var activity = BackendActivitySource.Get().StartActivity();
             activity?.AddTag(otelTagName, "adding a word to Frontier");
 
@@ -214,6 +227,9 @@ namespace BackendFramework.Repositories
         /// <returns> The words created </returns>
         public async Task<List<Word>> AddFrontier(List<Word> words)
         {
+            using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "adding words to Frontier");
+
             await _wordDatabase.Frontier.InsertManyAsync(words);
             return words;
         }
