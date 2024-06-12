@@ -42,9 +42,8 @@ import {
   cleanWord,
   isSenseChanged,
 } from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/utilities";
-import { type StoreState } from "types";
-import { type StoreStateDispatch } from "types/Redux/actions";
-import { useAppDispatch, useAppSelector } from "types/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { type StoreState, type StoreStateDispatch } from "rootRedux/types";
 import { themeColors } from "types/theme";
 import {
   type FileWithSpeakerId,

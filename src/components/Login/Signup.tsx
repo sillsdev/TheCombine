@@ -20,10 +20,10 @@ import { LoadingDoneButton } from "components/Buttons";
 import Captcha from "components/Login/Captcha";
 import { asyncSignUp } from "components/Login/Redux/LoginActions";
 import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";
-import { reset } from "rootActions";
+import { reset } from "rootRedux/actions";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/types";
 import router from "router/browserRouter";
-import { StoreState } from "types";
-import { useAppDispatch, useAppSelector } from "types/hooks";
 import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
 import {

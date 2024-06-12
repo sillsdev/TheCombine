@@ -8,7 +8,7 @@ import {
   resetExportAction,
   successAction,
 } from "components/ProjectExport/Redux//ExportProjectReducer";
-import { StoreStateDispatch } from "types/Redux/actions";
+import { StoreStateDispatch } from "rootRedux/types";
 
 // Action Creation Functions
 
