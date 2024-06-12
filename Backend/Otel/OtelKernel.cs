@@ -1,9 +1,12 @@
 
 // using System.Reflection.PortableExecutable;
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using OpenTelemetry.Metrics;
+
 // using OpenTelemetry.Logs;
 // using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -20,11 +23,12 @@ public static class OtelKernel
     public const string ServiceName = "Backend-Otel";
     public static void AddOpenTelemetryInstrumentation(this IServiceCollection services)
     {
-
-        // include version in case we will have multiple versions 
+        var appResourceBuilder = ResourceBuilder.CreateDefault().AddService(ServiceName);
+        // todo: include version 
         services.AddOpenTelemetry().WithTracing(tracerProviderBuilder => tracerProviderBuilder
-                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(ServiceName))
+                    .SetResourceBuilder(appResourceBuilder)
                     .AddSource(ServiceName)
+                    // .AddProcessor<UserEnricher>()
                     .AddAspNetCoreInstrumentation(options =>
                     {
                         options.RecordException = true;
@@ -93,12 +97,21 @@ public static class OtelKernel
                     .AddConsoleExporter()
                     .AddOtlpExporter()
                     );
+
+        var meter = new Meter(ServiceName);
+        var counter = meter.CreateUpDownCounter<int>("word-count");
+        services.AddOpenTelemetry().WithMetrics(metricProviderBuilder => metricProviderBuilder
+            .SetResourceBuilder(appResourceBuilder)
+            .AddMeter(meter.Name)
+            .AddConsoleExporter()
+            .AddOtlpExporter()
+            );
     }
 
     private static void EnrichWithUser(this Activity activity, HttpContext httpContext)
     {
         var claimsPrincipal = httpContext.User;
-        // var userId = claimsPrincipal?.FindFirstValue();
+        // var userId = claimsPrincipal?.FindFirstValue("sub");
         var userId = claimsPrincipal;
         if (userId != null)
         {
@@ -113,11 +126,5 @@ public static class OtelKernel
         {
             activity.SetTag("http.abort", true);
         }
-
     }
-
-
-
-
-
 }
