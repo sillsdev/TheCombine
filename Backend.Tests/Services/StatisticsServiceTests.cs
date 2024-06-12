@@ -18,9 +18,9 @@ namespace Backend.Tests.Services
 
         private const string ProjId = "StatsServiceTestProjId";
         private const string SemDomId = "StatsServiceTestSemDomId";
-        private readonly List<SemanticDomainTreeNode> TreeNodes = new List<SemanticDomainTreeNode>
+        private readonly List<DBSemanticDomainTreeNode> TreeNodes = new()
         {
-            new SemanticDomainTreeNode( new SemanticDomain { Id = SemDomId })
+            new( new DBSemanticDomain { Id = SemDomId })
         };
 
         private static Sense getSenseWithDomain(string semDomId = SemDomId)
@@ -69,7 +69,7 @@ namespace Backend.Tests.Services
         public void GetSemanticDomainCountsTestEmptyDomainList()
         {
             // Add to the database a word and an empty list of semantic domains
-            ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(new List<SemanticDomainTreeNode>());
+            ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(new List<DBSemanticDomainTreeNode>());
             _wordRepo.AddFrontier(getWordWithDomain());
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;

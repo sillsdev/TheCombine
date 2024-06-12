@@ -9,24 +9,24 @@ namespace Backend.Tests.Mocks
     {
         private object? _responseObj;
 
-        public Task<List<SemanticDomainTreeNode>?> GetAllSemanticDomainTreeNodes(string lang)
+        public Task<List<DBSemanticDomainTreeNode>?> GetAllSemanticDomainTreeNodes(string lang)
         {
-            return Task.FromResult((List<SemanticDomainTreeNode>?)_responseObj);
+            return Task.FromResult((List<DBSemanticDomainTreeNode>?)_responseObj);
         }
 
-        public Task<SemanticDomainFull?> GetSemanticDomainFull(string id, string lang)
+        public Task<DBSemanticDomainFull?> GetSemanticDomainFull(string id, string lang)
         {
-            return Task.FromResult((SemanticDomainFull?)_responseObj);
+            return Task.FromResult((DBSemanticDomainFull?)_responseObj);
         }
 
-        public Task<SemanticDomainTreeNode?> GetSemanticDomainTreeNode(string id, string lang)
+        public Task<DBSemanticDomainTreeNode?> GetSemanticDomainTreeNode(string id, string lang)
         {
-            return Task.FromResult((SemanticDomainTreeNode?)_responseObj);
+            return Task.FromResult((DBSemanticDomainTreeNode?)_responseObj);
         }
 
-        public Task<SemanticDomainTreeNode?> GetSemanticDomainTreeNodeByName(string name, string lang)
+        public Task<DBSemanticDomainTreeNode?> GetSemanticDomainTreeNodeByName(string name, string lang)
         {
-            return Task.FromResult((SemanticDomainTreeNode?)_responseObj);
+            return Task.FromResult((DBSemanticDomainTreeNode?)_responseObj);
         }
 
         internal void SetNextResponse(object? response)

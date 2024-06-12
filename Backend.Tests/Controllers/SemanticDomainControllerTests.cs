@@ -31,7 +31,7 @@ namespace Backend.Tests.Controllers
         private const string Id = "1";
         private const string Lang = "en";
         private const string Name = "Universe";
-        private readonly SemanticDomainFull _semDom = new() { Id = Id, Lang = Lang, Name = Name };
+        private readonly DBSemanticDomain _semDom = new() { Id = Id, Lang = Lang, Name = Name };
 
         [SetUp]
         public void Setup()
@@ -43,7 +43,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void GetAllSemanticDomainNamesFound()
         {
-            var treeNodes = new List<SemanticDomainTreeNode> { new(_semDom) };
+            var treeNodes = new List<DBSemanticDomainTreeNode> { new(_semDom) };
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(treeNodes);
             var names = ((OkObjectResult)_semDomController.GetAllSemanticDomainNames(Lang).Result).Value;
             Assert.That(names, Has.Count.EqualTo(1));
@@ -60,7 +60,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void GetSemanticDomainFullDomainFound()
         {
-            ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(_semDom);
+            ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(new DBSemanticDomainFull(_semDom));
             var domain = (SemanticDomainFull?)(
                 (ObjectResult)_semDomController.GetSemanticDomainFull(Id, Lang).Result).Value;
             Assert.That(domain?.Id, Is.EqualTo(Id));
@@ -80,7 +80,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void GetSemanticDomainTreeNodeDomainFound()
         {
-            var treeNode = new SemanticDomainTreeNode(_semDom);
+            var treeNode = new DBSemanticDomainTreeNode(_semDom);
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(treeNode);
             var domain = (SemanticDomainTreeNode?)(
                 (ObjectResult)_semDomController.GetSemanticDomainTreeNode(Id, Lang).Result).Value;
@@ -101,7 +101,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void GetSemanticDomainTreeNodeByNameDomainFound()
         {
-            var treeNode = new SemanticDomainTreeNode(_semDom);
+            var treeNode = new DBSemanticDomainTreeNode(_semDom);
             ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(treeNode);
             var domain = (SemanticDomainTreeNode?)(
                 (ObjectResult)_semDomController.GetSemanticDomainTreeNodeByName(Name, Lang).Result).Value;
