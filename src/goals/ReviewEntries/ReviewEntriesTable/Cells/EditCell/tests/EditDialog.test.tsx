@@ -34,8 +34,8 @@ jest.mock(
   "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditSenseDialog"
 );
 jest.mock("i18n", () => ({}));
-jest.mock("types/hooks", () => ({
-  ...jest.requireActual("types/hooks"),
+jest.mock("rootRedux/hooks", () => ({
+  ...jest.requireActual("rootRedux/hooks"),
   useAppDispatch: () => mockDispatch,
 }));
 

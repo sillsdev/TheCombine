@@ -11,9 +11,9 @@ import { useTranslation } from "react-i18next";
 import { getCurrentPermissions, getGraylistEntries } from "backend";
 import GoalList from "components/GoalTimeline/GoalList";
 import { asyncAddGoal, asyncGetUserEdits } from "goals/Redux/GoalActions";
-import { StoreState } from "types";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/types";
 import { Goal, GoalType } from "types/goals";
-import { useAppDispatch, useAppSelector } from "types/hooks";
 import { requiredPermission, goalTypeToGoal } from "utilities/goalUtilities";
 import { useWindowSize } from "utilities/useWindowSize";
 
