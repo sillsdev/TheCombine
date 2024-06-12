@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 
 import RecorderContext from "components/Pronunciations/RecorderContext";
 import RecorderIcon from "components/Pronunciations/RecorderIcon";
-import { getFileNameForWord } from "components/Pronunciations/utilities";
 import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { FileWithSpeakerId } from "types/word";
