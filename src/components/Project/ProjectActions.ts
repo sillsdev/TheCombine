@@ -15,10 +15,7 @@ import {
   setUsersAction,
 } from "components/Project/ProjectReducer";
 import i18n from "i18n";
-import {
-  type StoreState,
-  type StoreStateDispatch,
-} from "rootRedux/rootReduxTypes";
+import { type StoreState, type StoreStateDispatch } from "rootRedux/types";
 import { type Hash } from "types/hash";
 import { newProject } from "types/project";
 

@@ -9,7 +9,7 @@ import { getFrontierWords, getWord, undoMerge } from "backend";
 import { FlagButton, UndoButton } from "components/Buttons";
 import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardContent";
 import { MergesCompleted } from "goals/MergeDuplicates/MergeDupsTypes";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 import theme from "types/theme";
 import { newFlag } from "types/word";
 import { TypographyWithFont } from "utilities/fontComponents";

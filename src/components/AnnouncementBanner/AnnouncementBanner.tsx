@@ -14,7 +14,7 @@ import { getBannerText } from "backend";
 import { getClosedBanner, setClosedBanner } from "backend/localStorage";
 import { topBarHeight } from "components/LandingPage/TopBar";
 import { useAppSelector } from "rootRedux/hooks";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 import { Path } from "types/path";
 import theme, { themeColors } from "types/theme";
 

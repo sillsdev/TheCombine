@@ -17,7 +17,7 @@ import { filterWordsByDomain } from "components/DataEntry/utilities";
 import TreeView from "components/TreeView";
 import { closeTree, openTree } from "components/TreeView/Redux/TreeViewActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 import { newSemanticDomain } from "types/semanticDomain";
 import theme from "types/theme";
 import { DomainWord } from "types/word";

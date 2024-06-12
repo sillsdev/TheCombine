@@ -28,7 +28,7 @@ import {
   mergeTwoSensesScenario,
   mergeTwoWordsScenario,
 } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
-import { type StoreAction, StoreActionTypes } from "rootRedux/rootActions";
+import { type StoreAction, StoreActionTypes } from "rootRedux/actions";
 import { setupStore } from "rootRedux/store";
 import { type Hash } from "types/hash";
 import { newFlag, testWordList } from "types/word";

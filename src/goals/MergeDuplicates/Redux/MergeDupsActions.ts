@@ -38,10 +38,7 @@ import {
   addCompletedMergeToGoal,
   asyncUpdateGoal,
 } from "goals/Redux/GoalActions";
-import {
-  type StoreState,
-  type StoreStateDispatch,
-} from "rootRedux/rootReduxTypes";
+import { type StoreState, type StoreStateDispatch } from "rootRedux/types";
 
 // Action Creation Functions
 

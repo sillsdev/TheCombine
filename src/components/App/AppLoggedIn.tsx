@@ -16,7 +16,7 @@ import UserSettings from "components/UserSettings/UserSettings";
 import NextGoalScreen from "goals/DefaultGoal/NextGoalScreen";
 import { updateLangFromUser } from "i18n";
 import { useAppSelector } from "rootRedux/hooks";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 import { Path } from "types/path";
 import FontContext, { ProjectFonts } from "utilities/fontContext";
 import { getProjCss } from "utilities/fontCssUtilities";

@@ -15,7 +15,7 @@ import {
   defaultCharInvChanges,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { useAppSelector } from "rootRedux/hooks";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 
 export enum CharInvCompletedId {
   TypographyNoCharChanges = "no-char-changes-typography",

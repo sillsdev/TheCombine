@@ -5,7 +5,7 @@ import PageNotFound from "components/PageNotFound/component";
 import MergeDupsContinueDialog from "goals/MergeDuplicates/MergeDupsContinueDialog";
 import { asyncAddGoal } from "goals/Redux/GoalActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 import { GoalType } from "types/goals";
 import { Path } from "types/path";
 import { goalTypeToGoal } from "utilities/goalUtilities";

@@ -8,7 +8,7 @@ import Loading from "goals/DefaultGoal/Loading";
 import { clearTree } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { setCurrentGoal } from "goals/Redux/GoalActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 import { Path } from "types/path";
 

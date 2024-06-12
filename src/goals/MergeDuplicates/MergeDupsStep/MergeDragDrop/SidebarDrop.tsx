@@ -7,7 +7,7 @@ import SidebarDragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/
 import { MergeTreeSense } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { setSidebar } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 import { openUserGuide } from "utilities/pathUtilities";
 
 export default function SidebarDrop(): ReactElement {

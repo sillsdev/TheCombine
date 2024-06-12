@@ -29,10 +29,7 @@ import {
   addCharInvChangesToGoal,
   asyncUpdateGoal,
 } from "goals/Redux/GoalActions";
-import {
-  type StoreState,
-  type StoreStateDispatch,
-} from "rootRedux/rootReduxTypes";
+import { type StoreState, type StoreStateDispatch } from "rootRedux/types";
 import router from "router/browserRouter";
 import { type Hash } from "types/hash";
 import { Path } from "types/path";

@@ -8,7 +8,7 @@ import { defaultState } from "components/App/DefaultState";
 import EditSenseDialog, {
   EditSenseDialogId,
 } from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditSenseDialog";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 import { newSense } from "types/word";
 
 // Container uses Portal, not supported in react-test-renderer

@@ -12,7 +12,7 @@ import {
   EntriesEdited,
   EntryEdit,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 import theme from "types/theme";
 
 export default function ReviewEntriesCompleted(): ReactElement {

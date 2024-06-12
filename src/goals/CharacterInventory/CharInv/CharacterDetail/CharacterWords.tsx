@@ -3,7 +3,7 @@ import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 import { themeColors } from "types/theme";
 import { TypographyWithFont } from "utilities/fontComponents";
 

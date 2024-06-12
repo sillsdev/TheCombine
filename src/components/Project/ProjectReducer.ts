@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { defaultState } from "components/Project/ProjectReduxTypes";
-import { StoreActionTypes } from "rootRedux/rootActions";
+import { StoreActionTypes } from "rootRedux/actions";
 
 const projectSlice = createSlice({
   name: "currentProjectState",

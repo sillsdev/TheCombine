@@ -7,7 +7,7 @@ import CharacterCard from "goals/CharacterInventory/CharInv/CharacterList/Charac
 import { setSelectedCharacter } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
 import { CharacterSetEntry } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 
 enum SortOrder {
   CharacterAscending,

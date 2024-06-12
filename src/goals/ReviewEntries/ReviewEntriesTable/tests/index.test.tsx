@@ -11,7 +11,7 @@ import {
   mockWords,
   sortOrder,
 } from "goals/ReviewEntries/ReviewEntriesTable/tests/WordsMock";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 
 // With `columnFilterDisplayMode: "popover",`, it is necessary to mock out `Grow`.
 // To access filter `TextField`s, replace both `Grow`, `Modal` with `div`.

@@ -4,7 +4,7 @@ import {
   getCharacterStatus,
   defaultState,
 } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
-import { StoreActionTypes } from "rootRedux/rootActions";
+import { StoreActionTypes } from "rootRedux/actions";
 
 const characterInventorySlice = createSlice({
   name: "characterInventoryState",

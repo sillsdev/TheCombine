@@ -9,7 +9,7 @@ import {
   EntriesEdited,
   EntryEdit,
 } from "goals/ReviewEntries/ReviewEntriesTypes";
-import { StoreActionTypes } from "rootRedux/rootActions";
+import { StoreActionTypes } from "rootRedux/actions";
 import { GoalType } from "types/goals";
 
 const goalSlice = createSlice({

@@ -10,7 +10,7 @@ import {
   buttonIdSubmit,
 } from "goals/CharacterInventory/CharInv/CharacterDetail/FindAndReplace";
 import { defaultState } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 import { testInstanceHasText } from "utilities/testRendererUtilities";
 
 // Dialog uses portals, which are not supported in react-test-renderer.

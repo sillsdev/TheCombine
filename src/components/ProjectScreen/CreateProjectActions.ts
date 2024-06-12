@@ -2,7 +2,7 @@ import { type WritingSystem } from "api/models";
 import { createProject, finishUploadLift, getProject } from "backend";
 import { asyncSetNewCurrentProject } from "components/Project/ProjectActions";
 import { asyncCreateUserEdits } from "goals/Redux/GoalActions";
-import { type StoreStateDispatch } from "rootRedux/rootReduxTypes";
+import { type StoreStateDispatch } from "rootRedux/types";
 import router from "router/browserRouter";
 import { Path } from "types/path";
 import { newProject } from "types/project";

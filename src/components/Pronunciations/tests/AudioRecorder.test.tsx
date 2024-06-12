@@ -10,7 +10,7 @@ import RecorderIcon, {
   recordIconId,
 } from "components/Pronunciations/RecorderIcon";
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 import theme, { themeColors } from "types/theme";
 
 let testRenderer: ReactTestRenderer;

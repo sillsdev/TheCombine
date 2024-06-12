@@ -18,10 +18,7 @@ import {
   updateStepFromDataAction,
 } from "goals/Redux/GoalReducer";
 import { EntryEdit } from "goals/ReviewEntries/ReviewEntriesTypes";
-import {
-  type StoreState,
-  type StoreStateDispatch,
-} from "rootRedux/rootReduxTypes";
+import { type StoreState, type StoreStateDispatch } from "rootRedux/types";
 import router from "router/browserRouter";
 import { Goal, GoalStatus, GoalType } from "types/goals";
 import { Path } from "types/path";

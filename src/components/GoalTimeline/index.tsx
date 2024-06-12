@@ -12,7 +12,7 @@ import { getCurrentPermissions, getGraylistEntries } from "backend";
 import GoalList from "components/GoalTimeline/GoalList";
 import { asyncAddGoal, asyncGetUserEdits } from "goals/Redux/GoalActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 import { Goal, GoalType } from "types/goals";
 import { requiredPermission, goalTypeToGoal } from "utilities/goalUtilities";
 import { useWindowSize } from "utilities/useWindowSize";

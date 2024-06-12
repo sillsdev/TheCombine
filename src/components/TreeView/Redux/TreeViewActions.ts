@@ -8,10 +8,7 @@ import {
   setDomainLanguageAction,
   setTreeOpenAction,
 } from "components/TreeView/Redux/TreeViewReducer";
-import {
-  type StoreState,
-  type StoreStateDispatch,
-} from "rootRedux/rootReduxTypes";
+import { type StoreState, type StoreStateDispatch } from "rootRedux/types";
 
 // Action Creation Functions
 

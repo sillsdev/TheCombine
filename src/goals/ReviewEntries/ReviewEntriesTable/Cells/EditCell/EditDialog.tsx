@@ -43,10 +43,7 @@ import {
   isSenseChanged,
 } from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/utilities";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
-import {
-  type StoreState,
-  type StoreStateDispatch,
-} from "rootRedux/rootReduxTypes";
+import { type StoreState, type StoreStateDispatch } from "rootRedux/types";
 import { themeColors } from "types/theme";
 import {
   type FileWithSpeakerId,

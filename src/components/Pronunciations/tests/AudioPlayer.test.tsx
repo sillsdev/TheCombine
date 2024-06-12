@@ -10,7 +10,7 @@ import AudioPlayer, {
   playMenuId,
 } from "components/Pronunciations/AudioPlayer";
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 import { newPronunciation } from "types/word";
 
 // Mock out Menu to avoid issues with setting its anchor.

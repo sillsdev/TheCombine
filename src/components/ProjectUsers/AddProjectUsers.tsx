@@ -10,7 +10,7 @@ import { asyncRefreshProjectUsers } from "components/Project/ProjectActions";
 import EmailInvite from "components/ProjectUsers/EmailInvite";
 import UserList from "components/ProjectUsers/UserList";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 import { RuntimeConfig } from "types/runtimeConfig";
 
 const customStyles = {

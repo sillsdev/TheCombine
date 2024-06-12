@@ -7,7 +7,7 @@ import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardConte
 import { MergeTreeSense } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { setSidebar } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 import theme from "types/theme";
 
 interface DragSenseProps {

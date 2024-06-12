@@ -24,7 +24,7 @@ import { getAllSpeakers } from "backend";
 import { buttonMinHeight } from "components/AppBar/AppBarTypes";
 import { setCurrentSpeaker } from "components/Project/ProjectActions";
 import { useAppDispatch } from "rootRedux/hooks";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 import { themeColors } from "types/theme";
 
 const idAffix = "speaker-menu";

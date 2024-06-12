@@ -22,7 +22,7 @@ import {
 import SenseDialog from "components/DataEntry/DataEntryTable/NewEntry/SenseDialog";
 import VernDialog from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
 import PronunciationsFrontend from "components/Pronunciations/PronunciationsFrontend";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 import theme from "types/theme";
 import { FileWithSpeakerId } from "types/word";
 

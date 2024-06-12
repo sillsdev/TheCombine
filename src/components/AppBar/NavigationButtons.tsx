@@ -13,7 +13,7 @@ import {
   tabColor,
 } from "components/AppBar/AppBarTypes";
 import { useAppSelector } from "rootRedux/hooks";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 import { Path } from "types/path";
 import { useWindowSize } from "utilities/useWindowSize";
 

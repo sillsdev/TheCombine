@@ -39,7 +39,7 @@ import {
   cleanSense,
 } from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/utilities";
 import { useAppSelector } from "rootRedux/hooks";
-import { type StoreState } from "rootRedux/rootReduxTypes";
+import { type StoreState } from "rootRedux/types";
 import { newSemanticDomainForMongoDB } from "types/semanticDomain";
 import { newDefinition, newGloss } from "types/word";
 import { TextFieldWithFont } from "utilities/fontComponents";

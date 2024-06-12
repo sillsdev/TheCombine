@@ -4,7 +4,7 @@ import {
   defaultState,
   ExportStatus,
 } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
-import { StoreActionTypes } from "rootRedux/rootActions";
+import { StoreActionTypes } from "rootRedux/actions";
 
 const exportProjectSlice = createSlice({
   name: "exportProjectState",
