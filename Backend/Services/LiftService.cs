@@ -145,11 +145,8 @@ namespace BackendFramework.Services
         /// <summary> Query whether user has an in-progress export. </summary>
         public bool IsExportInProgress(string userId)
         {
-            if (!_liftExports.ContainsKey(userId))
-            {
-                return false;
-            }
-            return _liftExports[userId] == InProgress;
+            _liftExports.TryGetValue(userId, out var exportPath);
+            return exportPath == InProgress;
         }
 
         /// <summary> Store filePath for a user's Lift export. </summary>
@@ -163,12 +160,8 @@ namespace BackendFramework.Services
         /// <returns> Path to the Lift file on disk. </returns>
         public string? RetrieveExport(string userId)
         {
-            if (!_liftExports.ContainsKey(userId) || _liftExports[userId] == InProgress)
-            {
-                return null;
-            }
-
-            return _liftExports[userId];
+            _liftExports.TryGetValue(userId, out var exportPath);
+            return exportPath == InProgress ? null : exportPath;
         }
 
         /// <summary> Delete a stored Lift export path and its file on disk. </summary>
@@ -194,12 +187,8 @@ namespace BackendFramework.Services
         /// <returns> Path to the Lift file on disk. </returns>
         public string? RetrieveImport(string userId)
         {
-            if (!_liftImports.ContainsKey(userId))
-            {
-                return null;
-            }
-
-            return _liftImports[userId];
+            _liftImports.TryGetValue(userId, out var importPath);
+            return importPath;
         }
 
         /// <summary> Delete a stored Lift import path and its file on disk. </summary>
@@ -499,11 +488,11 @@ namespace BackendFramework.Services
                 var defDict = new Dictionary<string, string>();
                 foreach (var def in currentSense.Definitions)
                 {
-                    if (defDict.ContainsKey(def.Language))
+                    if (defDict.TryGetValue(def.Language, out var defText))
                     {
                         // This is an unexpected situation but rather than crashing or losing data we
                         // will just append extra definitions for the language with a separator.
-                        defDict[def.Language] = $"{defDict[def.Language]}{sep}{def.Text}";
+                        defDict[def.Language] = $"{defText}{sep}{def.Text}";
                     }
                     else
                     {
@@ -513,11 +502,11 @@ namespace BackendFramework.Services
                 var glossDict = new Dictionary<string, string>();
                 foreach (var gloss in currentSense.Glosses)
                 {
-                    if (glossDict.ContainsKey(gloss.Language))
+                    if (glossDict.TryGetValue(gloss.Language, out var glossDef))
                     {
                         // This is an unexpected situation but rather than crashing or losing data we
                         // will just append extra definitions for the language with a separator.
-                        glossDict[gloss.Language] = $"{glossDict[gloss.Language]}{sep}{gloss.Def}";
+                        glossDict[gloss.Language] = $"{glossDef}{sep}{gloss.Def}";
                     }
                     else
                     {
