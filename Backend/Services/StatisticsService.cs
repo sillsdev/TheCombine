@@ -29,7 +29,7 @@ namespace BackendFramework.Services
         public async Task<List<SemanticDomainCount>> GetSemanticDomainCounts(string projectId, string lang)
         {
             Dictionary<string, int> hashMap = new Dictionary<string, int>();
-            List<SemanticDomainTreeNode>? domainTreeNodeList = await _domainRepo.GetAllSemanticDomainTreeNodes(lang);
+            List<DBSemanticDomainTreeNode>? domainTreeNodeList = await _domainRepo.GetAllSemanticDomainTreeNodes(lang);
             List<Word> wordList = await _wordRepo.GetFrontier(projectId);
 
             if (domainTreeNodeList is null || domainTreeNodeList.Count == 0 || wordList.Count == 0)

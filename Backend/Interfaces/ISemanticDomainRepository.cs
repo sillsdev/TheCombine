@@ -6,9 +6,9 @@ namespace BackendFramework.Interfaces
 {
     public interface ISemanticDomainRepository
     {
-        Task<SemanticDomainFull?> GetSemanticDomainFull(string id, string lang);
-        Task<SemanticDomainTreeNode?> GetSemanticDomainTreeNode(string id, string lang);
-        Task<SemanticDomainTreeNode?> GetSemanticDomainTreeNodeByName(string name, string lang);
-        Task<List<SemanticDomainTreeNode>?> GetAllSemanticDomainTreeNodes(string lang);
+        Task<DBSemanticDomainFull?> GetSemanticDomainFull(string id, string lang);
+        Task<DBSemanticDomainTreeNode?> GetSemanticDomainTreeNode(string id, string lang);
+        Task<DBSemanticDomainTreeNode?> GetSemanticDomainTreeNodeByName(string name, string lang);
+        Task<List<DBSemanticDomainTreeNode>?> GetAllSemanticDomainTreeNodes(string lang);
     }
 }

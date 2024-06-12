@@ -10,11 +10,6 @@ namespace BackendFramework.Models
 {
     public class SemanticDomain
     {
-        [BsonId]
-        [BsonElement("_id")]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string MongoId { get; set; }
-        [Required]
         [BsonElement("guid")]
 #pragma warning disable CA1720
         public string Guid { get; set; }
@@ -37,7 +32,6 @@ namespace BackendFramework.Models
 
         public SemanticDomain()
         {
-            MongoId = "";
             Guid = System.Guid.Empty.ToString();
             Name = "";
             Id = "";
@@ -50,8 +44,6 @@ namespace BackendFramework.Models
         {
             return new SemanticDomain
             {
-                // If this clone is ever used in production, the MongoId may need to be excluded.
-                MongoId = MongoId,
                 Guid = Guid,
                 Name = Name,
                 Id = Id,
@@ -103,6 +95,19 @@ namespace BackendFramework.Models
         }
     }
 
+    public class DBSemanticDomain : SemanticDomain
+    {
+        [BsonId]
+        [BsonElement("_id")]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string MongoId { get; set; }
+
+        public DBSemanticDomain() : base()
+        {
+            MongoId = "";
+        }
+    }
+
     public class SemanticDomainFull : SemanticDomain
     {
         [Required]
@@ -120,7 +125,6 @@ namespace BackendFramework.Models
 
         public SemanticDomainFull(SemanticDomain semDom)
         {
-            MongoId = semDom.MongoId;
             Guid = semDom.Guid;
             Name = semDom.Name;
             Id = semDom.Id;
@@ -161,16 +165,29 @@ namespace BackendFramework.Models
         }
     }
 
-    /// <remarks>
-    /// This is used in an OpenAPI return value serializer, so its attributes must be defined as properties.
-    /// </remarks>
-    public class SemanticDomainTreeNode
+    public class DBSemanticDomainFull : SemanticDomainFull
     {
         [BsonId]
         [BsonElement("_id")]
         [BsonRepresentation(BsonType.ObjectId)]
         public string MongoId { get; set; }
 
+        public DBSemanticDomainFull() : base()
+        {
+            MongoId = "";
+        }
+
+        public DBSemanticDomainFull(DBSemanticDomain semDom) : base(semDom)
+        {
+            MongoId = semDom.MongoId;
+        }
+    }
+
+    /// <remarks>
+    /// This is used in an OpenAPI return value serializer, so its attributes must be defined as properties.
+    /// </remarks>
+    public class SemanticDomainTreeNode
+    {
         [Required]
         [BsonElement("lang")]
         public string Lang { get; set; }
@@ -198,11 +215,23 @@ namespace BackendFramework.Models
         public SemanticDomainTreeNode(SemanticDomain sd)
         {
             Guid = sd.Guid;
-            MongoId = sd.MongoId;
             Lang = sd.Lang;
             Name = sd.Name;
             Id = sd.Id;
             Children = new();
+        }
+    }
+
+    public class DBSemanticDomainTreeNode : SemanticDomainTreeNode
+    {
+        [BsonId]
+        [BsonElement("_id")]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string MongoId { get; set; }
+
+        public DBSemanticDomainTreeNode(DBSemanticDomain sd) : base(sd)
+        {
+            MongoId = sd.MongoId;
         }
     }
 }

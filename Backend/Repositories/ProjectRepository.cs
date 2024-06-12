@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -103,12 +102,7 @@ namespace BackendFramework.Repositories
                 .Set(x => x.SemDomWritingSystem, project.SemDomWritingSystem)
                 .Set(x => x.VernacularWritingSystem, project.VernacularWritingSystem)
                 .Set(x => x.AnalysisWritingSystems, project.AnalysisWritingSystems)
-                .Set(x => x.SemanticDomains, project.SemanticDomains.Select(dom => new SemanticDomainFull(dom)
-                {
-                    MongoId = "000000000000000000000000",
-                    Description = dom.Description,
-                    Questions = dom.Questions
-                }))
+                .Set(x => x.SemanticDomains, project.SemanticDomains)
                 .Set(x => x.ValidCharacters, project.ValidCharacters)
                 .Set(x => x.RejectedCharacters, project.RejectedCharacters)
                 .Set(x => x.CustomFields, project.CustomFields)

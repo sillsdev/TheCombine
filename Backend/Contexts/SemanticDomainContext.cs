@@ -17,7 +17,7 @@ namespace BackendFramework.Contexts
             _db = client.GetDatabase(options.Value.CombineDatabase);
         }
 
-        public IMongoCollection<SemanticDomainTreeNode> SemanticDomains => _db.GetCollection<SemanticDomainTreeNode>("SemanticDomainTree");
-        public IMongoCollection<SemanticDomainFull> FullSemanticDomains => _db.GetCollection<SemanticDomainFull>("SemanticDomains");
+        public IMongoCollection<DBSemanticDomainTreeNode> SemanticDomains => _db.GetCollection<DBSemanticDomainTreeNode>("SemanticDomainTree");
+        public IMongoCollection<DBSemanticDomainFull> FullSemanticDomains => _db.GetCollection<DBSemanticDomainFull>("SemanticDomains");
     }
 }
