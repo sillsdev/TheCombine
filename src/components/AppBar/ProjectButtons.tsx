@@ -14,7 +14,7 @@ import {
   tabColor,
 } from "components/AppBar/AppBarTypes";
 import SpeakerMenu from "components/AppBar/SpeakerMenu";
-import { StoreState } from "types";
+import { type StoreState } from "rootRedux/types";
 import { GoalStatus, GoalType } from "types/goals";
 import { Path } from "types/path";
 

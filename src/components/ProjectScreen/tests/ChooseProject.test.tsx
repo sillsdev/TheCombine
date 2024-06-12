@@ -10,7 +10,7 @@ import { randomIntString } from "utilities/utilities";
 jest.mock("backend", () => ({
   getAllActiveProjects: () => mockGetProjects(),
 }));
-jest.mock("types/hooks");
+jest.mock("rootRedux/hooks");
 jest.mock("react-router-dom", () => ({
   useNavigate: jest.fn(),
 }));
