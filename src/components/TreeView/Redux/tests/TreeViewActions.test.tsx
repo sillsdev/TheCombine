@@ -6,7 +6,7 @@ import {
   setDomainLanguage,
   traverseTree,
 } from "components/TreeView/Redux/TreeViewActions";
-import { RootState, setupStore } from "store";
+import { RootState, setupStore } from "rootRedux/store";
 import {
   newSemanticDomain,
   newSemanticDomainTreeNode,

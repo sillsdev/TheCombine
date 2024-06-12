@@ -8,7 +8,7 @@ import { Role } from "api/models";
 import { addOrUpdateUserRole, removeUserRole } from "backend";
 import { CancelConfirmDialog } from "components/Dialogs";
 import { asyncRefreshProjectUsers } from "components/Project/ProjectActions";
-import { useAppDispatch } from "types/hooks";
+import { useAppDispatch } from "rootRedux/hooks";
 
 const idAffix = "user-options";
 const idRemoveUser = `${idAffix}-remove`;

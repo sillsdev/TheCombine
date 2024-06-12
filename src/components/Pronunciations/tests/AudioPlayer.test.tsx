@@ -10,7 +10,7 @@ import AudioPlayer, {
   playMenuId,
 } from "components/Pronunciations/AudioPlayer";
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
-import { type StoreState } from "types";
+import { type StoreState } from "rootRedux/types";
 import { newPronunciation } from "types/word";
 
 // Mock out Menu to avoid issues with setting its anchor.
@@ -24,9 +24,9 @@ jest.mock("@mui/material", () => {
 jest.mock("backend", () => ({
   getSpeaker: () => mockGetSpeaker(),
 }));
-jest.mock("types/hooks", () => {
+jest.mock("rootRedux/hooks", () => {
   return {
-    ...jest.requireActual("types/hooks"),
+    ...jest.requireActual("rootRedux/hooks"),
     useAppDispatch: () => mockDispatch,
   };
 });

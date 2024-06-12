@@ -7,9 +7,9 @@ import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
 import Loading from "goals/DefaultGoal/Loading";
 import { clearTree } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { setCurrentGoal } from "goals/Redux/GoalActions";
-import { type StoreState } from "types";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/types";
 import { Goal, GoalStatus, GoalType } from "types/goals";
-import { useAppDispatch, useAppSelector } from "types/hooks";
 import { Path } from "types/path";
 
 const CharacterInventory = loadable(() => import("goals/CharacterInventory"));

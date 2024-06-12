@@ -7,7 +7,7 @@ import {
   asyncResetExport,
 } from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
-import { RootState, setupStore } from "store";
+import { RootState, setupStore } from "rootRedux/store";
 
 jest.mock("backend", () => ({
   deleteLift: jest.fn,

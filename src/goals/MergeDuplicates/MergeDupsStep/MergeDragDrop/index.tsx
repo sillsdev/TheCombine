@@ -16,8 +16,8 @@ import {
   moveSense,
   orderSense,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
-import { StoreState } from "types";
-import { useAppDispatch, useAppSelector } from "types/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/types";
 import theme from "types/theme";
 
 export const trashId = "trash-drop";

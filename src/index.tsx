@@ -6,7 +6,7 @@ import { PersistGate } from "redux-persist/integration/react";
 
 import "i18n";
 import App from "components/App/component";
-import { persistor, store } from "store";
+import { persistor, store } from "rootRedux/store";
 import theme from "types/theme";
 
 const container = document.getElementById("root");
