@@ -8,8 +8,8 @@ import {
   MergeTreeReference,
   MergeTreeSense,
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
-import { StoreState } from "types";
-import { useAppSelector } from "types/hooks";
+import { useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/types";
 import theme from "types/theme";
 
 interface SidebarDragSenseProps {

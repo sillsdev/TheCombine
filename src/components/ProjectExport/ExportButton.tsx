@@ -7,8 +7,8 @@ import { isFrontierNonempty } from "backend";
 import { LoadingButton } from "components/Buttons";
 import { asyncExportProject } from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
-import { StoreState } from "types";
-import { useAppDispatch, useAppSelector } from "types/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/types";
 
 interface ExportButtonProps {
   projectId: string;

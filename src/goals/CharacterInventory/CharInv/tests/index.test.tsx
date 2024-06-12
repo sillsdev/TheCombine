@@ -29,9 +29,9 @@ jest.mock("goals/CharacterInventory/Redux/CharacterInventoryActions", () => ({
   setSelectedCharacter: () => mockSetSelectedCharacter(),
   uploadInventory: () => mockUploadInventory(),
 }));
-jest.mock("types/hooks", () => {
+jest.mock("rootRedux/hooks", () => {
   return {
-    ...jest.requireActual("types/hooks"),
+    ...jest.requireActual("rootRedux/hooks"),
     useAppDispatch: () => jest.fn(),
   };
 });

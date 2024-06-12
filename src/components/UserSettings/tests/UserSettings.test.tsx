@@ -31,7 +31,7 @@ jest.mock("backend/localStorage", () => ({
 jest.mock("components/Project/ProjectActions", () => ({
   asyncLoadSemanticDomains: jest.fn(),
 }));
-jest.mock("types/hooks", () => ({
+jest.mock("rootRedux/hooks", () => ({
   useAppDispatch: () => jest.fn(),
 }));
 

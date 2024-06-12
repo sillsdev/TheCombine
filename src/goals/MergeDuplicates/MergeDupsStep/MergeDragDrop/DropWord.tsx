@@ -25,8 +25,8 @@ import {
   flagWord,
   setVern,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
-import { type StoreState } from "types";
-import { useAppDispatch, useAppSelector } from "types/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/types";
 import theme from "types/theme";
 import { TypographyWithFont } from "utilities/fontComponents";
 

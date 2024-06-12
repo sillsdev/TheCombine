@@ -35,9 +35,9 @@ jest.mock("backend", () => ({
 jest.mock("components/Project/ProjectActions");
 // Mock "i18n", else `thrown: "Error: Error: connect ECONNREFUSED ::1:80 [...]`
 jest.mock("i18n", () => ({ language: "" }));
-jest.mock("types/hooks", () => {
+jest.mock("rootRedux/hooks", () => {
   return {
-    ...jest.requireActual("types/hooks"),
+    ...jest.requireActual("rootRedux/hooks"),
     useAppDispatch: () => jest.fn(),
   };
 });
