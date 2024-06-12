@@ -30,14 +30,16 @@ import theme from "types/theme";
 import { newWritingSystem, semDomWritingSystems } from "types/writingSystem";
 import { getAnalysisLangsFromWords } from "utilities/wordUtilities";
 
-const addAnalysisLangButtonId = "analysis-language-new";
-const addAnalysisLangCleanButtonId = "analysis-language-new-clear";
-const addAnalysisLangConfirmButtonId = "analysis-language-new-confirm";
-export const editVernacularNameButtonId = "vernacular-language-edit";
-export const editVernacularNameFieldId = "vernacular-language-name";
-export const editVernacularNameSaveButtonId = "vernacular-language-save";
-const getProjAnalysisLangsButtonId = "analysis-language-get";
-const semDomLangSelectId = "semantic-domains-language";
+export enum ProjectLanguagesId {
+  ButtonAddAnalysisLang = "analysis-language-new",
+  ButtonAddAnalysisLangClear = "analysis-language-new-clear",
+  ButtonAddAnalysisLangConfirm = "analysis-language-new-confirm",
+  ButtonEditVernacularName = "vernacular-language-edit",
+  ButtonEditVernacularNameSave = "vernacular-language-save",
+  ButtonGetProjAnalysisLangs = "analysis-language-get",
+  FieldEditVernacularName = "vernacular-language-name",
+  SelectSemDomLang = "semantic-domains-language",
+}
 
 export default function ProjectLanguages(
   props: ProjectSettingProps
@@ -171,13 +173,13 @@ export default function ProjectLanguages(
         icon={<Add />}
         textId="projectSettings.language.addAnalysisLanguage"
         onClick={() => setAdd(true)}
-        buttonId={addAnalysisLangButtonId}
+        buttonId={ProjectLanguagesId.ButtonAddAnalysisLang}
       />
       <IconButtonWithTooltip
         icon={<Search />}
         textId="projectSettings.language.getGlossLanguages"
         onClick={() => getActiveAnalysisLangs()}
-        buttonId={getProjAnalysisLangsButtonId}
+        buttonId={ProjectLanguagesId.ButtonGetProjAnalysisLangs}
       />
       {langsInProj}
     </>
@@ -212,7 +214,7 @@ export default function ProjectLanguages(
         <IconButton
           disabled={!isNewLang}
           onClick={() => addAnalysisWritingSystem()}
-          id={addAnalysisLangConfirmButtonId}
+          id={ProjectLanguagesId.ButtonAddAnalysisLangConfirm}
           size="large"
         >
           <Done />
@@ -221,7 +223,7 @@ export default function ProjectLanguages(
       <Grid item>
         <IconButton
           onClick={() => resetState()}
-          id={addAnalysisLangCleanButtonId}
+          id={ProjectLanguagesId.ButtonAddAnalysisLangClear}
           size="large"
         >
           <Clear />
@@ -242,7 +244,7 @@ export default function ProjectLanguages(
             size="small"
             textId="projectSettings.language.changeName"
             onClick={() => setChangeVernName(true)}
-            buttonId={editVernacularNameButtonId}
+            buttonId={ProjectLanguagesId.ButtonEditVernacularName}
           />
         )
       }
@@ -254,7 +256,7 @@ export default function ProjectLanguages(
       <Grid item xs={12}>
         <TextField
           variant="standard"
-          id={editVernacularNameFieldId}
+          id={ProjectLanguagesId.FieldEditVernacularName}
           value={newVernName}
           onChange={(e) => setNewVernName(e.target.value)}
           onBlur={() => {
@@ -268,7 +270,7 @@ export default function ProjectLanguages(
         <Button
           variant="contained"
           color="primary"
-          id={editVernacularNameSaveButtonId}
+          id={ProjectLanguagesId.ButtonEditVernacularNameSave}
           onClick={() => updateVernacularName()}
           onMouseDown={(e) => e.preventDefault()}
         >
@@ -382,7 +384,7 @@ export function SemanticDomainLanguage(
       ) : (
         <Select
           variant="standard"
-          id={semDomLangSelectId}
+          id={ProjectLanguagesId.SelectSemDomLang}
           value={props.project.semDomWritingSystem.bcp47}
           onChange={(event: SelectChangeEvent<string>) =>
             setSemDomWritingSystem(event.target.value as string)

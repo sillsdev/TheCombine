@@ -27,6 +27,14 @@ import i18n from "i18n";
 import { newSemanticDomain } from "types/semanticDomain";
 import { TextFieldWithFont } from "utilities/fontComponents";
 
+export enum ProjectDomainsId {
+  ButtonDomainAdd = "custom-domain-add",
+  ButtonDomainAddDialogCancel = "custom-domain-add-cancel",
+  ButtonDomainAddDialogConfirm = "custom-domain-add-confirm",
+  ButtonDomainAddDialogParentAdd = "custom-domain-add-parent-add",
+  FieldDomainAddDialogName = "custom-domain-add-name",
+}
+
 const trimDomain = (domain: SemanticDomainFull): SemanticDomainFull => ({
   ...domain,
   description: domain.description.trim(),
@@ -89,6 +97,7 @@ export default function ProjectDomains(
       <Box>
         <IconButtonWithTooltip
           icon={<Add />}
+          buttonId={ProjectDomainsId.ButtonDomainAdd}
           onClick={() => setAddDialogOpen(true)}
           textId="projectSettings.domains.add"
         />
@@ -291,10 +300,16 @@ function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
         <Grid container justifyContent="space-between">
           <Grid item>{t("projectSettings.domains.add")}</Grid>
           <Grid item>
-            <IconButton onClick={() => submit()}>
+            <IconButton
+              id={ProjectDomainsId.ButtonDomainAddDialogConfirm}
+              onClick={() => submit()}
+            >
               <Check sx={{ color: (t) => t.palette.success.main }} />
             </IconButton>
-            <IconButton onClick={() => cancel()}>
+            <IconButton
+              id={ProjectDomainsId.ButtonDomainAddDialogCancel}
+              onClick={() => cancel()}
+            >
               <Close sx={{ color: (t) => t.palette.error.main }} />
             </IconButton>
           </Grid>
@@ -313,7 +328,10 @@ function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
                 onDelete={() => setParent(undefined)}
               />
             ) : (
-              <IconButton onClick={() => setAddingDom(true)}>
+              <IconButton
+                id={ProjectDomainsId.ButtonDomainAddDialogParentAdd}
+                onClick={() => setAddingDom(true)}
+              >
                 <Add />
               </IconButton>
             )}
@@ -330,6 +348,7 @@ function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
             </Typography>
             <TextFieldWithFont
               analysis
+              id={ProjectDomainsId.FieldDomainAddDialogName}
               lang={props.lang}
               onChange={(e) => setName(e.target.value)}
               value={name}
