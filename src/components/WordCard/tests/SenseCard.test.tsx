@@ -7,7 +7,7 @@ import { PartOfSpeechButton } from "components/Buttons";
 import { defaultState } from "components/Project/ProjectReduxTypes";
 import DomainChip from "components/WordCard/DomainChip";
 import SenseCard from "components/WordCard/SenseCard";
-import { type StoreState } from "types";
+import { type StoreState } from "rootRedux/types";
 import { Hash } from "types/hash";
 import { newSemanticDomain } from "types/semanticDomain";
 import { newSense } from "types/word";

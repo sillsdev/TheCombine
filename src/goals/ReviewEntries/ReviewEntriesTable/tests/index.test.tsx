@@ -11,7 +11,7 @@ import {
   mockWords,
   sortOrder,
 } from "goals/ReviewEntries/ReviewEntriesTable/tests/WordsMock";
-import { type StoreState } from "types";
+import { type StoreState } from "rootRedux/types";
 
 // With `columnFilterDisplayMode: "popover",`, it is necessary to mock out `Grow`.
 // To access filter `TextField`s, replace both `Grow`, `Modal` with `div`.
@@ -38,8 +38,8 @@ jest.mock("backend", () => ({
 }));
 jest.mock("components/Pronunciations/PronunciationsBackend");
 jest.mock("i18n", () => ({}));
-jest.mock("types/hooks", () => ({
-  ...jest.requireActual("types/hooks"),
+jest.mock("rootRedux/hooks", () => ({
+  ...jest.requireActual("rootRedux/hooks"),
   useAppDispatch: () => jest.fn(),
 }));
 

@@ -22,7 +22,7 @@ import {
   type CharacterInventoryState,
   type CharacterSetEntry,
 } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
-import { type RootState, setupStore } from "store";
+import { type RootState, setupStore } from "rootRedux/store";
 import { newProject } from "types/project";
 import { newWord } from "types/word";
 

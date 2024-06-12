@@ -29,9 +29,8 @@ import {
   addCharInvChangesToGoal,
   asyncUpdateGoal,
 } from "goals/Redux/GoalActions";
+import { type StoreState, type StoreStateDispatch } from "rootRedux/types";
 import router from "router/browserRouter";
-import { type StoreState } from "types";
-import { type StoreStateDispatch } from "types/Redux/actions";
 import { type Hash } from "types/hash";
 import { Path } from "types/path";
 
