@@ -5,7 +5,7 @@ import { clearCurrentProject } from "components/Project/ProjectActions";
 import ChooseProject from "components/ProjectScreen/ChooseProject";
 import CreateProject from "components/ProjectScreen/CreateProject";
 import { resetTree } from "components/TreeView/Redux/TreeViewActions";
-import { useAppDispatch } from "types/hooks";
+import { useAppDispatch } from "rootRedux/hooks";
 
 /** Where users create a project or choose an existing one */
 export default function ProjectScreen(): ReactElement {

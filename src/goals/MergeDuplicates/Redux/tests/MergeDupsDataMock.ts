@@ -10,7 +10,7 @@ import {
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { type MergeDupsData } from "goals/MergeDuplicates/MergeDupsTypes";
 import { defaultState as mergeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
-import { type RootState } from "store";
+import { type RootState } from "rootRedux/store";
 import { newSense, newWord, simpleWord } from "types/word";
 
 const wordsArrayMock = (): Word[] => [

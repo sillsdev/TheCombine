@@ -13,8 +13,7 @@ import {
   setTreeOpenAction,
 } from "components/TreeView/Redux/TreeViewReducer";
 import { rootId } from "components/TreeView/Redux/TreeViewReduxTypes";
-import { StoreState } from "types";
-import { StoreStateDispatch } from "types/Redux/actions";
+import { type StoreState, type StoreStateDispatch } from "rootRedux/types";
 import { treeNodeFromSemDom } from "types/semanticDomain";
 
 // Action Creation Functions

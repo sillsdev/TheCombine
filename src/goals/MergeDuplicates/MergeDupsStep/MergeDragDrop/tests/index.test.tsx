@@ -39,11 +39,10 @@ jest.mock("backend", () => ({}));
 jest.mock("goals/MergeDuplicates/Redux/MergeDupsActions", () => ({
   setSidebar: (...args: any[]) => mockSetSidebar(...args),
 }));
-// Mock "i18n", else `Error: connect ECONNREFUSED ::1:80`
 jest.mock("i18n", () => ({}));
-jest.mock("types/hooks", () => {
+jest.mock("rootRedux/hooks", () => {
   return {
-    ...jest.requireActual("types/hooks"),
+    ...jest.requireActual("rootRedux/hooks"),
     useAppDispatch: () => jest.fn(),
   };
 });
