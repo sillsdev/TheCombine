@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 
+import { store } from "rootRedux/store";
 import { appRoutes } from "router/appRoutes";
-import { store } from "store";
 import { changePage } from "types/Redux/analytics";
 import { Path } from "types/path";
 
