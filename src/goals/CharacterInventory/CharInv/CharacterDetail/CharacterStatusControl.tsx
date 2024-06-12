@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { CharacterStatus } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { setCharacterStatus } from "goals/CharacterInventory/Redux/CharacterInventoryActions";
-import { useAppDispatch } from "types/hooks";
+import { useAppDispatch } from "rootRedux/hooks";
 
 interface CharacterStatusControlProps {
   character: string;

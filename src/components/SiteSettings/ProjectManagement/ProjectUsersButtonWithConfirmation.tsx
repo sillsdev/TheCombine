@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import { asyncRefreshProjectUsers } from "components/Project/ProjectActions";
 import ActiveProjectUsers from "components/ProjectUsers/ActiveProjectUsers";
 import AddProjectUsers from "components/ProjectUsers/AddProjectUsers";
-import { useAppDispatch } from "types/hooks";
+import { useAppDispatch } from "rootRedux/hooks";
 import theme from "types/theme";
 
 interface ProjectUsersButtonWithConfirmationProps {

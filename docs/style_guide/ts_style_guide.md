@@ -540,8 +540,8 @@ function Component(props: { name: string }) {
 **Good**
 
 ```ts
-import { StoreState } from "types";
-import { useAppDispatch, useAppSelector } from "types/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/types";
 
 function Component(): ReactElement {
   const dispatch = useAppDispatch();

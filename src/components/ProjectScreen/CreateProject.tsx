@@ -27,7 +27,7 @@ import {
   asyncCreateProject,
   asyncFinishProject,
 } from "components/ProjectScreen/CreateProjectActions";
-import { useAppDispatch } from "types/hooks";
+import { useAppDispatch } from "rootRedux/hooks";
 import theme from "types/theme";
 import { newWritingSystem } from "types/writingSystem";
 

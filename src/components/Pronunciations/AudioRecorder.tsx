@@ -6,8 +6,8 @@ import Recorder from "components/Pronunciations/Recorder";
 import RecorderContext from "components/Pronunciations/RecorderContext";
 import RecorderIcon from "components/Pronunciations/RecorderIcon";
 import { getFileNameForWord } from "components/Pronunciations/utilities";
-import { StoreState } from "types";
-import { useAppSelector } from "types/hooks";
+import { useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/types";
 import { FileWithSpeakerId } from "types/word";
 
 interface RecorderProps {

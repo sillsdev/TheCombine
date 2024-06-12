@@ -4,7 +4,7 @@ import {
   defaultState,
   PronunciationsStatus,
 } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
-import { StoreActionTypes } from "rootActions";
+import { StoreActionTypes } from "rootRedux/actions";
 
 const pronunciationsSlice = createSlice({
   name: "pronunciationsState",

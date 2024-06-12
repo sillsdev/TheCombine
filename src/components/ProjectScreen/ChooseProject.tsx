@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { type Project } from "api/models";
 import { getAllActiveProjects } from "backend";
 import { asyncSetNewCurrentProject } from "components/Project/ProjectActions";
-import { useAppDispatch } from "types/hooks";
+import { useAppDispatch } from "rootRedux/hooks";
 import { Path } from "types/path";
 
 export default function ChooseProject(): ReactElement {
