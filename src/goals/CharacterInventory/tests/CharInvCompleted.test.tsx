@@ -21,7 +21,7 @@ import {
   defaultCharInvChanges,
 } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { defaultState } from "goals/Redux/GoalReduxTypes";
-import { type StoreState } from "types";
+import { type StoreState } from "rootRedux/types";
 import { newWord as mockWord } from "types/word";
 
 jest.mock("backend", () => ({

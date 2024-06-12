@@ -19,7 +19,7 @@ import { getAvatar, getCurrentUser } from "backend/localStorage";
 import { asyncLoadSemanticDomains } from "components/Project/ProjectActions";
 import ClickableAvatar from "components/UserSettings/ClickableAvatar";
 import { updateLangFromUser } from "i18n";
-import { useAppDispatch } from "types/hooks";
+import { useAppDispatch } from "rootRedux/hooks";
 import theme from "types/theme";
 import { uiWritingSystems } from "types/writingSystem";
 

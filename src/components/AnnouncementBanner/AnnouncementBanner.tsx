@@ -13,8 +13,8 @@ import { BannerType } from "api/models";
 import { getBannerText } from "backend";
 import { getClosedBanner, setClosedBanner } from "backend/localStorage";
 import { topBarHeight } from "components/LandingPage/TopBar";
-import { StoreState } from "types";
-import { useAppSelector } from "types/hooks";
+import { useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/types";
 import { Path } from "types/path";
 import theme from "types/theme";
 

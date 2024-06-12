@@ -26,7 +26,7 @@ import {
   asyncUpdateGoal,
   setCurrentGoal,
 } from "goals/Redux/GoalActions";
-import { setupStore } from "store";
+import { setupStore } from "rootRedux/store";
 import { GoalStatus, GoalType } from "types/goals";
 import { Path } from "types/path";
 import { newUser } from "types/user";
