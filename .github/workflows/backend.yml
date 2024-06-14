@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        dotnet: ["6.0.x"]
+        dotnet: ["8.0.x"]
     steps:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
       # configuring harden-runner and identifying allowed endpoints.
@@ -114,7 +114,6 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
-            *.actions.githubusercontent.com:443
             aka.ms:443
             api.github.com:443
             api.nuget.org:443
@@ -122,6 +121,7 @@ jobs:
             dotnetcli.azureedge.net:443
             github.com:443
             objects.githubusercontent.com:443
+            ts-crl.ws.symantec.com:80
 
       - name: Checkout repository
         uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
@@ -130,7 +130,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3 # v4.0.0
         with:
-          dotnet-version: "6.0.x"
+          dotnet-version: "8.0.x"
       - name: Initialize CodeQL
         uses: github/codeql-action/init@d39d31e687223d841ef683f52467bd88e9b21c14 # v3.25.3
         with:
@@ -159,8 +159,8 @@ jobs:
           disable-file-monitoring: true
           egress-policy: block
           allowed-endpoints: >
-            *.actions.githubusercontent.com:443
             *.data.mcr.microsoft.com:443
+            *.symcb.com:80
             api.nuget.org:443
             archive.ubuntu.com:80
             dc.services.visualstudio.com:443
@@ -168,6 +168,7 @@ jobs:
             github.com:443
             mcr.microsoft.com:443
             security.ubuntu.com:80
+            ts-crl.ws.symantec.com:80
       # For subfolders, currently a full checkout is required.
       # See: https://github.com/marketplace/actions/build-and-push-docker-images#path-context
       - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6

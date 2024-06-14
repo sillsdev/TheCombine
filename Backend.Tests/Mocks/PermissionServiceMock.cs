@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
@@ -156,12 +155,8 @@ namespace Backend.Tests.Mocks
         }
     }
 
-    [Serializable]
-    internal class UserAuthenticationException : Exception
+    internal sealed class UserAuthenticationException : Exception
     {
         public UserAuthenticationException() { }
-
-        protected UserAuthenticationException(SerializationInfo info, StreamingContext context)
-            : base(info, context) { }
     }
 }

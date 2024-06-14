@@ -2,14 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BackendFramework.Interfaces;
 using BackendFramework.Models;
 
 namespace BackendFramework.Helper
 {
     public class DuplicateFinder
     {
-        private readonly IEditDistance _editDist;
+        private readonly LevenshteinDistance _editDist;
         private readonly int _maxInList;
         private readonly int _maxLists;
         private readonly int _maxScore;
