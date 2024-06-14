@@ -10,6 +10,8 @@ import {
 import { getUserId } from "backend/localStorage";
 import { Bcp47Code } from "types/writingSystem";
 
+export const rootId = "Sem";
+
 export function newSemanticDomain(
   id = "",
   name = "",

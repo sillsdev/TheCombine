@@ -40,6 +40,9 @@ export default function TreeView(props: TreeViewProps): ReactElement {
   const currentDomain = useAppSelector(
     (state: StoreState) => state.treeViewState.currentDomain
   );
+  const customDomains = useAppSelector(
+    (state: StoreState) => state.currentProjectState.project.semanticDomains
+  );
   const semDomLanguage = useAppSelector(
     (state: StoreState) => state.treeViewState.language
   );
@@ -120,7 +123,11 @@ export default function TreeView(props: TreeViewProps): ReactElement {
           {exit && <div style={{ display: "inline-block", width: 40 }} />}
         </Grid>
         <Grid item>
-          <TreeSearch currentDomain={currentDomain} animate={animateHandler} />
+          <TreeSearch
+            animate={animateHandler}
+            currentDomain={currentDomain}
+            customDomains={customDomains}
+          />
         </Grid>
         <Grid item>
           <Hidden smDown>

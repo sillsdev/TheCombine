@@ -9,8 +9,8 @@ import { CSSProperties, ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { SemanticDomain } from "api/models";
-import { rootId } from "components/TreeView/Redux/TreeViewReduxTypes";
 import { Direction } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
+import { rootId } from "types/semanticDomain";
 
 interface DomainTextProps {
   domain: SemanticDomain;

@@ -1,20 +1,14 @@
 import { Action, PayloadAction } from "@reduxjs/toolkit";
 
-import {
-  SemanticDomain,
-  SemanticDomainFull,
-  SemanticDomainTreeNode,
-} from "api/models";
-import { getSemanticDomainTreeNode } from "backend";
+import { type SemanticDomain, type SemanticDomainTreeNode } from "api/models";
 import {
   resetTreeAction,
   setCurrentDomainAction,
   setDomainLanguageAction,
   setTreeOpenAction,
 } from "components/TreeView/Redux/TreeViewReducer";
-import { rootId } from "components/TreeView/Redux/TreeViewReduxTypes";
+import { getAugmentedTreeNode } from "components/TreeView/utilities";
 import { type StoreState, type StoreStateDispatch } from "rootRedux/types";
-import { treeNodeFromSemDom } from "types/semanticDomain";
 
 // Action Creation Functions
 
@@ -46,14 +40,8 @@ export function traverseTree(domain: SemanticDomain) {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const { id, lang } = domain;
     if (id) {
-      const customDoms =
-        getState().currentProjectState.project.semanticDomains.filter(
-          (d) => d.lang === lang
-        );
-      const domain =
-        id[id.length - 1] === "0"
-          ? await createCustomTreeNode(id, customDoms)
-          : await getAugmentedTreeNode(id, lang, customDoms);
+      const customDoms = getState().currentProjectState.project.semanticDomains;
+      const domain = await getAugmentedTreeNode(id, lang, customDoms);
       if (domain) {
         dispatch(setCurrentDomain(domain));
       }
@@ -67,48 +55,4 @@ export function initTreeDomain(lang = "") {
       traverseTree({ ...getState().treeViewState.currentDomain, lang })
     );
   };
-}
-
-// Custom domain helper functions
-
-/** Given an id and lang of a semantic domain and an array of custom domains,
- * returns the specified SemanticDomainTreeNode from the database, with additions:
- * - A first child, if it has a custom subdomain in the specified lang;
- * - A previous sibling, if its parent has a custom subdomain in the specified lang. */
-async function getAugmentedTreeNode(
-  id: string,
-  lang: string,
-  customDoms: SemanticDomainFull[]
-): Promise<SemanticDomainTreeNode | undefined> {
-  const dom = await getSemanticDomainTreeNode(id, lang);
-  if (dom) {
-    const childId = id === rootId ? "0" : `${id}.0`;
-    const customChild = customDoms.find((d) => d.id === childId);
-    if (customChild) {
-      dom.children = [customChild, ...dom.children];
-    }
-    if (id[id.length - 1] === "1") {
-      const previousId = `${id.substring(0, id.length - 1)}0`;
-      dom.previous = customDoms.find((d) => d.id === previousId);
-    }
-    return dom;
-  }
-}
-
-/** Given the id of a custom domain and an array of custom domains,
- * return a SemanticDomainTreeNode for the desired custom domain.
- * Returned node includes parent and first sibling pulled from the standard domains.
- * (Note: Assumes that the array of domains has already been filtered down to the
- * desired semantic domain language.) */
-async function createCustomTreeNode(
-  id: string,
-  customDoms: SemanticDomainFull[]
-): Promise<SemanticDomainTreeNode | undefined> {
-  const customDom = customDoms.find((d) => d.id === id);
-  if (customDom) {
-    const parentId = id.length > 1 ? id.substring(0, id.length - 2) : rootId;
-    const parent = await getSemanticDomainTreeNode(parentId, customDom.lang);
-    const next = parent?.children.length ? parent.children[0] : undefined;
-    return { ...treeNodeFromSemDom(customDom), parent, next };
-  }
 }
