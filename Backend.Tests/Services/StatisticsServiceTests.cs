@@ -20,7 +20,7 @@ namespace Backend.Tests.Services
         private const string SemDomId = "StatsServiceTestSemDomId";
         private readonly List<SemanticDomainTreeNode> TreeNodes = new()
         {
-            new( new SemanticDomain { Id = SemDomId })
+            new(new SemanticDomain { Id = SemDomId })
         };
 
         private static Sense getSenseWithDomain(string semDomId = SemDomId)

@@ -15,6 +15,7 @@ namespace BackendFramework.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string? MongoId { get; set; }
 
+        [Required]
         [BsonElement("guid")]
 #pragma warning disable CA1720
         public string Guid { get; set; }
@@ -52,6 +53,8 @@ namespace BackendFramework.Models
         {
             return new SemanticDomain
             {
+                // If this clone is ever used in production, the MongoId may need to be excluded.
+                MongoId = MongoId,
                 Guid = Guid,
                 Name = Name,
                 Id = Id,
