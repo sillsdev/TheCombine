@@ -19,9 +19,9 @@ namespace BackendFramework.Repositories
             _context = context;
         }
 
-        public async Task<DBSemanticDomainTreeNode?> GetSemanticDomainTreeNode(string id, string lang)
+        public async Task<SemanticDomainTreeNode?> GetSemanticDomainTreeNode(string id, string lang)
         {
-            var filterDef = new FilterDefinitionBuilder<DBSemanticDomainTreeNode>();
+            var filterDef = new FilterDefinitionBuilder<SemanticDomainTreeNode>();
             var filter = filterDef.And(
                 filterDef.Eq(x => x.Id, id),
                 filterDef.Eq(x => x.Lang, lang));
@@ -37,9 +37,9 @@ namespace BackendFramework.Repositories
             }
         }
 
-        public async Task<DBSemanticDomainTreeNode?> GetSemanticDomainTreeNodeByName(string name, string lang)
+        public async Task<SemanticDomainTreeNode?> GetSemanticDomainTreeNodeByName(string name, string lang)
         {
-            var filterDef = new FilterDefinitionBuilder<DBSemanticDomainTreeNode>();
+            var filterDef = new FilterDefinitionBuilder<SemanticDomainTreeNode>();
             var filter = filterDef.And(
                 filterDef.Regex(x => x.Name, new BsonRegularExpression("/^" + name + "$/i")),
                 filterDef.Eq(x => x.Lang, lang));
@@ -54,9 +54,9 @@ namespace BackendFramework.Repositories
             }
         }
 
-        public async Task<DBSemanticDomainFull?> GetSemanticDomainFull(string id, string lang)
+        public async Task<SemanticDomainFull?> GetSemanticDomainFull(string id, string lang)
         {
-            var filterDef = new FilterDefinitionBuilder<DBSemanticDomainFull>();
+            var filterDef = new FilterDefinitionBuilder<SemanticDomainFull>();
             var filter = filterDef.And(
                 filterDef.Eq(x => x.Id, id),
                 filterDef.Eq(x => x.Lang, lang));
@@ -73,9 +73,9 @@ namespace BackendFramework.Repositories
 
 
         // Get a list of all SemanticDomainTreeNodes in specified language except the root node
-        public async Task<List<DBSemanticDomainTreeNode>?> GetAllSemanticDomainTreeNodes(string lang)
+        public async Task<List<SemanticDomainTreeNode>?> GetAllSemanticDomainTreeNodes(string lang)
         {
-            var filterDef = new FilterDefinitionBuilder<DBSemanticDomainTreeNode>();
+            var filterDef = new FilterDefinitionBuilder<SemanticDomainTreeNode>();
             var filter = filterDef.And(
                 filterDef.Where(x => x.Id != "Sem"),
                 filterDef.Eq(x => x.Lang, lang));

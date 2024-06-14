@@ -825,7 +825,7 @@ namespace BackendFramework.Services
                         // Splits on the space between the number and name of the semantic domain
                         var splitSemDom = semanticDomainString.Split(" ", 2);
                         newSense.SemanticDomains.Add(
-                            new DBSemanticDomain
+                            new SemanticDomain
                             {
                                 Id = splitSemDom[0],
                                 MongoId = ObjectId.GenerateNewId().ToString(),

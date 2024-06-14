@@ -5,7 +5,7 @@ namespace BackendFramework.Interfaces
 {
     public interface ISemanticDomainContext
     {
-        IMongoCollection<DBSemanticDomainTreeNode> SemanticDomains { get; }
-        IMongoCollection<DBSemanticDomainFull> FullSemanticDomains { get; }
+        IMongoCollection<SemanticDomainTreeNode> SemanticDomains { get; }
+        IMongoCollection<SemanticDomainFull> FullSemanticDomains { get; }
     }
 }
