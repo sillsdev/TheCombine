@@ -434,7 +434,7 @@ namespace BackendFramework.Services
                 var guid = string.IsNullOrEmpty(sd.Guid) || sd.Guid == Guid.Empty.ToString()
                        ? Guid.NewGuid().ToString()
                        : sd.Guid;
-                WriteRangeElement(liftRangesWriter, sd.Id, guid, sd.Name, sd.Lang);
+                WriteRangeElement(liftRangesWriter, sd.Id, guid, sd.Name, sd.Lang, sd.Description);
             }
 
             await liftRangesWriter.WriteEndElementAsync(); //end semantic-domain-ddp4 range
@@ -622,7 +622,7 @@ namespace BackendFramework.Services
         }
 
         private static void WriteRangeElement(
-            XmlWriter liftRangesWriter, string id, string guid, string name, string lang)
+            XmlWriter liftRangesWriter, string id, string guid, string name, string lang, string description = "")
         {
             liftRangesWriter.WriteStartElement("range-element");
             liftRangesWriter.WriteAttributeString("id", $"{id} {name}");
@@ -645,6 +645,18 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteEndElement(); //end text
             liftRangesWriter.WriteEndElement(); //end form
             liftRangesWriter.WriteEndElement(); //end abbrev
+
+            if (!string.IsNullOrEmpty(description))
+            {
+                liftRangesWriter.WriteStartElement("description");
+                liftRangesWriter.WriteStartElement("form");
+                liftRangesWriter.WriteAttributeString("lang", lang);
+                liftRangesWriter.WriteStartElement("text");
+                liftRangesWriter.WriteString(description);
+                liftRangesWriter.WriteEndElement(); //end text
+                liftRangesWriter.WriteEndElement(); //end form
+                liftRangesWriter.WriteEndElement(); //end description
+            }
 
             liftRangesWriter.WriteEndElement(); //end range element
         }
@@ -999,12 +1011,14 @@ namespace BackendFramework.Services
                     {
                         foreach (var nameLabel in label)
                         {
+                            description.TryGetValue(nameLabel.Key, out var descriptionText);
                             _semDoms.Add(new()
                             {
                                 Guid = guid,
                                 Id = domainId,
                                 Lang = nameLabel.Key,
-                                Name = nameLabel.Value.Text
+                                Name = nameLabel.Value.Text,
+                                Description = descriptionText?.Text ?? "",
                             });
                         }
                     }
