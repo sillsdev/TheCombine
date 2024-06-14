@@ -629,18 +629,22 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteAttributeString("guid", guid);
 
             liftRangesWriter.WriteStartElement("label");
+            liftRangesWriter.WriteStartElement("form");
             liftRangesWriter.WriteAttributeString("lang", lang);
             liftRangesWriter.WriteStartElement("text");
             liftRangesWriter.WriteString(name);
             liftRangesWriter.WriteEndElement(); //end text
+            liftRangesWriter.WriteEndElement(); //end form
             liftRangesWriter.WriteEndElement(); //end label
 
             liftRangesWriter.WriteStartElement("abbrev");
+            liftRangesWriter.WriteStartElement("form");
             liftRangesWriter.WriteAttributeString("lang", lang);
             liftRangesWriter.WriteStartElement("text");
             liftRangesWriter.WriteString(id);
             liftRangesWriter.WriteEndElement(); //end text
-            liftRangesWriter.WriteEndElement(); //end label
+            liftRangesWriter.WriteEndElement(); //end form
+            liftRangesWriter.WriteEndElement(); //end abbrev
 
             liftRangesWriter.WriteEndElement(); //end range element
         }
