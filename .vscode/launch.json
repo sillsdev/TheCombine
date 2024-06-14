@@ -24,7 +24,7 @@
       "request": "launch",
       "preLaunchTask": "build",
       // If you have changed target frameworks, make sure to update the program path.
-      "program": "${workspaceFolder}/Backend/bin/Debug/net6.0/BackendFramework.dll",
+      "program": "${workspaceFolder}/Backend/bin/Debug/net8.0/BackendFramework.dll",
       "args": [],
       "cwd": "${workspaceFolder}/Backend",
       "stopAtEntry": false,

@@ -1,11 +1,11 @@
-import { Grid } from "@mui/material";
+import { Hidden, Stack } from "@mui/material";
 import { ReactElement, useEffect } from "react";
 
 import { clearCurrentProject } from "components/Project/ProjectActions";
 import ChooseProject from "components/ProjectScreen/ChooseProject";
 import CreateProject from "components/ProjectScreen/CreateProject";
 import { resetTree } from "components/TreeView/Redux/TreeViewActions";
-import { useAppDispatch } from "types/hooks";
+import { useAppDispatch } from "rootRedux/hooks";
 
 /** Where users create a project or choose an existing one */
 export default function ProjectScreen(): ReactElement {
@@ -17,15 +17,19 @@ export default function ProjectScreen(): ReactElement {
   }, [dispatch]);
 
   return (
-    <Grid container justifyContent="center" spacing={2}>
-      <Grid item xs={12} sm={6}>
-        <Grid container justifyContent="flex-end">
+    <>
+      <Hidden smUp>
+        <Stack alignItems="center" spacing={2}>
           <ChooseProject />
-        </Grid>
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <CreateProject />
-      </Grid>
-    </Grid>
+          <CreateProject />
+        </Stack>
+      </Hidden>
+      <Hidden smDown>
+        <Stack direction="row" justifyContent="center" spacing={2}>
+          <ChooseProject />
+          <CreateProject />
+        </Stack>
+      </Hidden>
+    </>
   );
 }

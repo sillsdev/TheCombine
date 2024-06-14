@@ -11,8 +11,8 @@ import {
   setSignupFailureAction,
   setSignupSuccessAction,
 } from "components/Login/Redux/LoginReducer";
+import { type StoreStateDispatch } from "rootRedux/types";
 import router from "router/browserRouter";
-import { StoreStateDispatch } from "types/Redux/actions";
 import { Path } from "types/path";
 import { newUser } from "types/user";
 
