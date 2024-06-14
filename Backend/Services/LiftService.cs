@@ -652,7 +652,7 @@ namespace BackendFramework.Services
         private sealed class LiftMerger : ILiftMerger
         {
             private readonly string _projectId;
-            private readonly List<SemanticDomainFull> _semDoms;
+            private readonly List<SemanticDomainFull> _semDoms = new();
             private readonly string _vernLang;
             private readonly IWordRepository _wordRepo;
             private readonly List<Word> _importEntries = new();
@@ -660,7 +660,6 @@ namespace BackendFramework.Services
             public LiftMerger(string projectId, string vernLang, IWordRepository wordRepo)
             {
                 _projectId = projectId;
-                _semDoms = new();
                 _vernLang = vernLang;
                 _wordRepo = wordRepo;
             }
