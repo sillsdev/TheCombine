@@ -58,7 +58,7 @@ six==1.16.0
     # via
     #   kubernetes
     #   python-dateutil
-urllib3==2.2.1
+urllib3==2.2.2
     # via
     #   kubernetes
     #   requests
