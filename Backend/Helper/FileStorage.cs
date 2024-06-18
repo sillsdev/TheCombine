@@ -2,7 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 
 namespace BackendFramework.Helper
 {
@@ -26,13 +25,9 @@ namespace BackendFramework.Helper
         }
 
         /// <summary> Indicates that an error occurred locating the current user's home directory. </summary>
-        [Serializable]
-        public class HomeFolderNotFoundException : Exception
+        public sealed class HomeFolderNotFoundException : Exception
         {
             public HomeFolderNotFoundException() { }
-
-            protected HomeFolderNotFoundException(SerializationInfo info, StreamingContext context)
-                : base(info, context) { }
         }
 
         /// <summary>
