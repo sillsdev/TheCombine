@@ -434,7 +434,7 @@ namespace BackendFramework.Services
                 var guid = string.IsNullOrEmpty(sd.Guid) || sd.Guid == Guid.Empty.ToString()
                        ? Guid.NewGuid().ToString()
                        : sd.Guid;
-                WriteRangeElement(liftRangesWriter, sd.Id, guid, sd.Name, sd.Lang, sd.Description);
+                WriteRangeElement(liftRangesWriter, sd.Id, guid, sd.Name, sd.Lang, sd.Description, sd.Parent);
             }
 
             await liftRangesWriter.WriteEndElementAsync(); //end semantic-domain-ddp4 range
@@ -621,12 +621,16 @@ namespace BackendFramework.Services
             return new LiftMerger(projectId, vernLang, wordRepo);
         }
 
-        private static void WriteRangeElement(
-            XmlWriter liftRangesWriter, string id, string guid, string name, string lang, string description = "")
+        private static void WriteRangeElement(XmlWriter liftRangesWriter,
+            string id, string guid, string name, string lang, string description = "", SemanticDomain? parent = null)
         {
             liftRangesWriter.WriteStartElement("range-element");
             liftRangesWriter.WriteAttributeString("id", $"{id} {name}");
             liftRangesWriter.WriteAttributeString("guid", guid);
+            if (parent is not null)
+            {
+                liftRangesWriter.WriteAttributeString("parent", $"{parent.Id} {parent.Name}");
+            }
 
             liftRangesWriter.WriteStartElement("label");
             liftRangesWriter.WriteStartElement("form");
@@ -1019,10 +1023,26 @@ namespace BackendFramework.Services
                                 Lang = nameLabel.Key,
                                 Name = nameLabel.Value.Text,
                                 Description = descriptionText?.Text ?? "",
+                                Parent = MakeDomainFromString(parent)
                             });
                         }
                     }
                 }
+            }
+
+            // Helper function to parse a $"{id} {name}" string into a semantic domain.
+            private static SemanticDomain? MakeDomainFromString(string? idNameString)
+            {
+                if (string.IsNullOrEmpty(idNameString))
+                {
+                    return null;
+                }
+
+                var id = idNameString.Split(" ")[0];
+                var name = id.Length == idNameString.Length
+                    ? ""
+                    : idNameString[(id.Length + 1)..^0];
+                return new SemanticDomain { Id = id, Name = name };
             }
 
             // The following are unused and are not implemented, but may still be called by the Lexicon Merger

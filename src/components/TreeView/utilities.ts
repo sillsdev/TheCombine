@@ -26,9 +26,10 @@ export async function getAugmentedTreeNode(
     return dom;
   }
 
-  dom = isNaN(parseInt(idOrName))
-    ? await getSemanticDomainTreeNodeByName(idOrName, lang)
-    : await getSemanticDomainTreeNode(idOrName, lang);
+  dom =
+    isNaN(parseInt(idOrName)) && idOrName !== rootId
+      ? await getSemanticDomainTreeNodeByName(idOrName, lang)
+      : await getSemanticDomainTreeNode(idOrName, lang);
   if (dom) {
     const id = dom.id;
     const childId = id === rootId ? "0" : `${id}.0`;
@@ -59,7 +60,10 @@ async function createCustomTreeNode(
 
   if (customDom) {
     const id = customDom.id;
-    const parentId = id.length > 1 ? id.substring(0, id.length - 2) : rootId;
+    const parentId =
+      customDom.parent?.id || id.length > 1
+        ? id.substring(0, id.length - 2)
+        : rootId;
     const parent = await getSemanticDomainTreeNode(parentId, customDom.lang);
     const next = parent?.children.length ? parent.children[0] : undefined;
     return { ...treeNodeFromSemDom(customDom), parent, next };
