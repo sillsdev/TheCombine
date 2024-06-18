@@ -1,4 +1,4 @@
-import { Action, PayloadAction } from "@reduxjs/toolkit";
+import { type Action, type PayloadAction } from "@reduxjs/toolkit";
 
 import { type SemanticDomain, type SemanticDomainTreeNode } from "api/models";
 import {
