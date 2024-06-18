@@ -41,9 +41,9 @@ export function traverseTree(domain: SemanticDomain) {
     const { id, lang } = domain;
     if (id) {
       const customDoms = getState().currentProjectState.project.semanticDomains;
-      const domain = await getAugmentedTreeNode(id, lang, customDoms);
-      if (domain) {
-        dispatch(setCurrentDomain(domain));
+      const dom = await getAugmentedTreeNode(id, lang, customDoms);
+      if (dom) {
+        dispatch(setCurrentDomain(dom));
       }
     }
   };
