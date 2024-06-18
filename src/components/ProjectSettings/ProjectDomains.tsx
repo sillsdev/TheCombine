@@ -42,6 +42,7 @@ const trimDomain = (domain: SemanticDomainFull): SemanticDomainFull => ({
   questions: domain.questions.map((q) => q.trim()).filter((q) => q),
 });
 
+/** A project settings component for managing custom semantic domains. */
 export default function ProjectDomains(
   props: ProjectSettingProps
 ): ReactElement {
@@ -63,6 +64,10 @@ export default function ProjectDomains(
     );
   }, [lang, props.project.semanticDomains]);
 
+  /** Add the specified custom domain to the current project:
+   * if `undefined`, close the dialog without adding anything, then return `true`;
+   * if custom domain already exists with the same id and lang, return `false`;
+   * otherwise, update the project with the new domain, then return `true`. */
   const addDomain = (domain?: SemanticDomainFull): boolean => {
     if (!domain) {
       setAddDialogOpen(false);
@@ -80,6 +85,7 @@ export default function ProjectDomains(
     return true;
   };
 
+  /** Update the current project with the new list of custom domains. */
   const updateDomains = (
     updateFunction: (doms: SemanticDomainFull[]) => SemanticDomainFull[]
   ): void => {
@@ -118,6 +124,7 @@ interface CustomDomainProps {
   ) => void;
 }
 
+/** Component for managing a single custom domain of a project. */
 function CustomDomain(props: CustomDomainProps): ReactElement {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [domain, setDomain] = useState(props.domain);
@@ -128,6 +135,7 @@ function CustomDomain(props: CustomDomainProps): ReactElement {
     setDomain(trimDomain(props.domain));
   }, [props.domain]);
 
+  /** Delete the custom domain from the project. */
   const deleteDomain = (): void =>
     props.updateDomains((doms) =>
       doms.filter(
@@ -135,6 +143,7 @@ function CustomDomain(props: CustomDomainProps): ReactElement {
       )
     );
 
+  /** Update the custom domain in the project. */
   const updateDomain = (domain: SemanticDomainFull): void =>
     props.updateDomains((doms) =>
       doms.map((d) =>
@@ -158,6 +167,8 @@ function CustomDomain(props: CustomDomainProps): ReactElement {
     }));
   };
 
+  /** Check if the current domain in the component's state
+   * is substatively different from the project domain passed in via the props. */
   const isDomainChanged = (): boolean => {
     const dom = trimDomain(domain);
     const old = trimDomain(props.domain);
@@ -169,6 +180,7 @@ function CustomDomain(props: CustomDomainProps): ReactElement {
     );
   };
 
+  /** Save the changes to the custom domain, or delete it if all content was removed. */
   const saveChanges = (): void => {
     const dom = trimDomain(domain);
     if (!(dom.name || dom.description || dom.questions.length)) {
@@ -256,6 +268,7 @@ interface AddDomainDialogProps {
   open: boolean;
 }
 
+/** Dialog component for adding a new custom domain to the current project. */
 function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
   const [addingDom, setAddingDom] = useState(false);
   const [name, setName] = useState("");
