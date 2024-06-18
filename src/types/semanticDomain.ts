@@ -67,7 +67,7 @@ export function semDomFromTreeNode(
   node: SemanticDomainTreeNode
 ): SemanticDomainFull {
   const dom = newSemanticDomain(node.id, node.name, node.lang);
-  return { ...dom, guid: node.guid, parent: node.parent };
+  return { ...dom, guid: node.guid };
 }
 
 export function treeNodeFromSemDom(
