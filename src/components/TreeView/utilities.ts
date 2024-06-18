@@ -11,8 +11,8 @@ import { rootId, treeNodeFromSemDom } from "types/semanticDomain";
 // Custom domain helper functions
 
 /** Given an id/name and lang of a semantic domain and an array of custom domains,
- * returns the specified SemanticDomainTreeNode, either:
- * - If a custom domain, with parent and next added from database;
+ * returns the corresponding SemanticDomainTreeNode, either:
+ * - If a custom domain, with parent and next sibling added from database;
  * - Otherwise, from the database, with any custom first child or previous sibling added. */
 export async function getAugmentedTreeNode(
   idOrName: string,
@@ -47,7 +47,7 @@ export async function getAugmentedTreeNode(
 /** Given the id of a custom domain and an array of custom domains,
  * return a SemanticDomainTreeNode for the desired custom domain.
  * Returned node includes parent and first sibling pulled from the standard domains.
- * (Note: Assumes that the array of domains has already been filtered down to the
+ * (Note: Assumes that the array of custom domains has already been filtered down to the
  * desired semantic domain language.) */
 async function createCustomTreeNode(
   idOrName: string,
