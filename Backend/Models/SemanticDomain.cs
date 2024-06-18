@@ -88,8 +88,8 @@ namespace BackendFramework.Models
         /// </summary>
         public static bool IsValidId(string id, bool allowCustom = false)
         {
-            // Ensure the id is composed of digits and periods
-            if (!id.All(c => char.IsDigit(c) || c == '.'))
+            // Ensure the id is nonempty and composed of digits and periods
+            if (string.IsNullOrEmpty(id) || !id.All(c => char.IsDigit(c) || c == '.'))
             {
                 return false;
             }
