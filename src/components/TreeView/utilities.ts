@@ -27,8 +27,8 @@ export async function getAugmentedTreeNode(
   }
 
   dom = isNaN(parseInt(idOrName))
-    ? await getSemanticDomainTreeNode(idOrName, lang)
-    : await getSemanticDomainTreeNodeByName(idOrName, lang);
+    ? await getSemanticDomainTreeNodeByName(idOrName, lang)
+    : await getSemanticDomainTreeNode(idOrName, lang);
   if (dom) {
     const id = dom.id;
     const childId = id === rootId ? "0" : `${id}.0`;
