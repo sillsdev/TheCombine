@@ -425,8 +425,9 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteStartElement("range");
             liftRangesWriter.WriteAttributeString("id", "semantic-domain-ddp4");
 
-            (await _semDomRepo.GetAllSemanticDomainTreeNodes("en"))?
-                .ForEach(sd => { WriteRangeElement(liftRangesWriter, sd.Id, sd.Guid, sd.Name, sd.Lang); });
+            var englishDomains = await _semDomRepo.GetAllSemanticDomainTreeNodes("en") ?? new();
+
+            englishDomains.ForEach(sd => { WriteRangeElement(liftRangesWriter, sd.Id, sd.Guid, sd.Name, sd.Lang); });
 
             // Pull from new semantic domains in project
             foreach (var sd in projDoms)
@@ -434,8 +435,10 @@ namespace BackendFramework.Services
                 var guid = string.IsNullOrEmpty(sd.Guid) || sd.Guid == Guid.Empty.ToString()
                        ? Guid.NewGuid().ToString()
                        : sd.Guid;
+
+                var parent = $"{sd.ParentId} {englishDomains.Find(d => d.Id == sd.ParentId)?.Name}".Trim();
                 WriteRangeElement(
-                    liftRangesWriter, sd.Id, guid, sd.Name, sd.Lang, sd.Description, sd.Questions, sd.Parent);
+                    liftRangesWriter, sd.Id, guid, sd.Name, sd.Lang, sd.Description, parent, sd.Questions);
             }
 
             await liftRangesWriter.WriteEndElementAsync(); //end semantic-domain-ddp4 range
@@ -623,14 +626,14 @@ namespace BackendFramework.Services
         }
 
         private static void WriteRangeElement(XmlWriter liftRangesWriter, string id, string guid, string name,
-            string lang, string description = "", List<string>? questions = null, SemanticDomain? parent = null)
+            string lang, string description = "", string parent = "", List<string>? questions = null)
         {
             liftRangesWriter.WriteStartElement("range-element"); // start range element
             liftRangesWriter.WriteAttributeString("id", $"{id} {name}"); // add id to element
             liftRangesWriter.WriteAttributeString("guid", guid); // add guid to element
-            if (parent is not null)
+            if (!string.IsNullOrEmpty(parent))
             {
-                liftRangesWriter.WriteAttributeString("parent", $"{parent.Id} {parent.Name}"); // add parent to element
+                liftRangesWriter.WriteAttributeString("parent", $"{parent}"); // add parent to element
             }
 
             WriteFormElement(liftRangesWriter, "label", lang, name); // write label
@@ -1022,7 +1025,7 @@ namespace BackendFramework.Services
                                 Lang = nameLabel.Key,
                                 Name = nameLabel.Value.Text,
                                 Description = descriptionText?.Text ?? "",
-                                Parent = MakeDomainFromString(parent)
+                                ParentId = string.IsNullOrEmpty(parent) ? "" : parent.Split(" ")[0]
                             });
                         }
                     }

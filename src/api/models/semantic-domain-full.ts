@@ -12,8 +12,6 @@
  * Do not edit the class manually.
  */
 
-import { SemanticDomain } from "./semantic-domain";
-
 /**
  *
  * @export
@@ -70,14 +68,14 @@ export interface SemanticDomainFull {
   description: string;
   /**
    *
+   * @type {string}
+   * @memberof SemanticDomainFull
+   */
+  parentId: string;
+  /**
+   *
    * @type {Array<string>}
    * @memberof SemanticDomainFull
    */
   questions: Array<string>;
-  /**
-   *
-   * @type {SemanticDomain}
-   * @memberof SemanticDomainFull
-   */
-  parent?: SemanticDomain;
 }

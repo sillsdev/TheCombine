@@ -300,7 +300,7 @@ function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
 
     const id = parent ? `${parent.id}.0` : "0";
     const domain = newSemanticDomain(id, name.trim(), props.lang);
-    domain.parent = parent;
+    domain.parentId = parent?.id ?? "";
     if (!props.onSubmit(domain)) {
       toast.error(t("projectSettings.domains.addError.takenParent"));
     } else {

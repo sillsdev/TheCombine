@@ -17,7 +17,15 @@ export function newSemanticDomain(
   name = "",
   lang = Bcp47Code.Default as string
 ): SemanticDomainFull {
-  return { id, name, guid: v4(), questions: [], description: "", lang };
+  return {
+    guid: v4(),
+    id,
+    name,
+    lang,
+    description: "",
+    parentId: "",
+    questions: [],
+  };
 }
 
 export function newSemanticDomainForMongoDB(

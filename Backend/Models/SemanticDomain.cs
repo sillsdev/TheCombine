@@ -113,15 +113,17 @@ namespace BackendFramework.Models
         public string Description { get; set; }
 
         [Required]
+        [BsonElement("parentId")]
+        public string ParentId { get; set; }
+
+        [Required]
         [BsonElement("questions")]
         public List<string> Questions { get; set; }
-
-        [BsonElement("parent")]
-        public SemanticDomain? Parent { get; set; }
 
         public SemanticDomainFull() : base()
         {
             Description = "";
+            ParentId = "";
             Questions = new();
         }
 
@@ -136,6 +138,7 @@ namespace BackendFramework.Models
             Created = semDom.Created;
 
             Description = "";
+            ParentId = "";
             Questions = new();
         }
 
@@ -144,8 +147,8 @@ namespace BackendFramework.Models
             return new(base.Clone())
             {
                 Description = Description,
-                Questions = Questions.Select(q => q).ToList(),
-                Parent = Parent?.Clone(),
+                ParentId = ParentId,
+                Questions = Questions.Select(q => q).ToList()
             };
         }
 
@@ -159,14 +162,14 @@ namespace BackendFramework.Models
             return
                 base.Equals(other) &&
                 Description.Equals(other.Description, StringComparison.Ordinal) &&
+                ParentId.Equals(other.ParentId, StringComparison.Ordinal) &&
                 Questions.Count == other.Questions.Count &&
-                Questions.All(other.Questions.Contains) &&
-                ((Parent is null && other.Parent is null) || (Parent is not null && Parent.Equals(other.Parent)));
+                Questions.All(other.Questions.Contains);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Id, Description, Questions, Parent);
+            return HashCode.Combine(Name, Id, Description, ParentId, Questions);
         }
     }
 
