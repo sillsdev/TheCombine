@@ -117,13 +117,13 @@ namespace Backend.Tests
             const int numSemanticDomains = 3;
             foreach (var i in Range(1, numSemanticDomains))
             {
-                project.SemanticDomains.Add(new SemanticDomainFull(RandomSemanticDomain($"{i}")));
+                project.SemanticDomains.Add(new(RandomSemanticDomain($"{i}")));
                 foreach (var j in Range(1, numSemanticDomains))
                 {
-                    project.SemanticDomains.Add(new SemanticDomainFull(RandomSemanticDomain($"{i}.{j}")));
+                    project.SemanticDomains.Add(new(RandomSemanticDomain($"{i}.{j}")));
                     foreach (var k in Range(1, numSemanticDomains))
                     {
-                        project.SemanticDomains.Add(new SemanticDomainFull(RandomSemanticDomain($"{i}.{j}.{k}")));
+                        project.SemanticDomains.Add(new(RandomSemanticDomain($"{i}.{j}.{k}")));
                     }
                 }
             }
