@@ -133,12 +133,15 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
   - If using [homebrew](https://brew.sh/): `brew install ffmpeg`
   - If manually installing from the FFmpeg website, install both `ffmpeg` and `ffprobe`
 
-9. [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.1.250801`
-10. [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
+9. icu4c libraries: (Mac only) follow the instruction
+   [here](https://github.com/sillsdev/icu-dotnet?tab=readme-ov-file#macos) using MacPorts to install the libraries. (On
+   Mac 10.14-, use `.profile` instead of `.zprofile`.)
+10. [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.1.250801`
+11. [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
     `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
-11. [dotnet-project-licenses](https://github.com/tomchavakis/nuget-license)
+12. [dotnet-project-licenses](https://github.com/tomchavakis/nuget-license)
     `dotnet tool update --global dotnet-project-licenses`
-12. Tools for generating the self installer (Linux only):
+13. Tools for generating the self installer (Linux only):
 
     - [makeself](https://makeself.io/) - a tool to make self-extracting archives in Unix
     - [pandoc](https://pandoc.org/installing.html#linux) - a tool to convert Markdown documents to PDF.
