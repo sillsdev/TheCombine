@@ -434,7 +434,8 @@ namespace BackendFramework.Services
                 var guid = string.IsNullOrEmpty(sd.Guid) || sd.Guid == Guid.Empty.ToString()
                        ? Guid.NewGuid().ToString()
                        : sd.Guid;
-                WriteRangeElement(liftRangesWriter, sd.Id, guid, sd.Name, sd.Lang, sd.Description, sd.Parent);
+                WriteRangeElement(
+                    liftRangesWriter, sd.Id, guid, sd.Name, sd.Lang, sd.Description, sd.Questions, sd.Parent);
             }
 
             await liftRangesWriter.WriteEndElementAsync(); //end semantic-domain-ddp4 range
@@ -621,48 +622,46 @@ namespace BackendFramework.Services
             return new LiftMerger(projectId, vernLang, wordRepo);
         }
 
-        private static void WriteRangeElement(XmlWriter liftRangesWriter,
-            string id, string guid, string name, string lang, string description = "", SemanticDomain? parent = null)
+        private static void WriteRangeElement(XmlWriter liftRangesWriter, string id, string guid, string name,
+            string lang, string description = "", List<string>? questions = null, SemanticDomain? parent = null)
         {
-            liftRangesWriter.WriteStartElement("range-element");
-            liftRangesWriter.WriteAttributeString("id", $"{id} {name}");
-            liftRangesWriter.WriteAttributeString("guid", guid);
+            liftRangesWriter.WriteStartElement("range-element"); // start range element
+            liftRangesWriter.WriteAttributeString("id", $"{id} {name}"); // add id to element
+            liftRangesWriter.WriteAttributeString("guid", guid); // add guid to element
             if (parent is not null)
             {
-                liftRangesWriter.WriteAttributeString("parent", $"{parent.Id} {parent.Name}");
+                liftRangesWriter.WriteAttributeString("parent", $"{parent.Id} {parent.Name}"); // add parent to element
             }
 
-            liftRangesWriter.WriteStartElement("label");
-            liftRangesWriter.WriteStartElement("form");
-            liftRangesWriter.WriteAttributeString("lang", lang);
-            liftRangesWriter.WriteStartElement("text");
-            liftRangesWriter.WriteString(name);
-            liftRangesWriter.WriteEndElement(); //end text
-            liftRangesWriter.WriteEndElement(); //end form
-            liftRangesWriter.WriteEndElement(); //end label
-
-            liftRangesWriter.WriteStartElement("abbrev");
-            liftRangesWriter.WriteStartElement("form");
-            liftRangesWriter.WriteAttributeString("lang", lang);
-            liftRangesWriter.WriteStartElement("text");
-            liftRangesWriter.WriteString(id);
-            liftRangesWriter.WriteEndElement(); //end text
-            liftRangesWriter.WriteEndElement(); //end form
-            liftRangesWriter.WriteEndElement(); //end abbrev
-
+            WriteFormElement(liftRangesWriter, "label", lang, name); // write label
+            WriteFormElement(liftRangesWriter, "abbrev", lang, id); // write abbrev/id
             if (!string.IsNullOrEmpty(description))
             {
-                liftRangesWriter.WriteStartElement("description");
-                liftRangesWriter.WriteStartElement("form");
-                liftRangesWriter.WriteAttributeString("lang", lang);
-                liftRangesWriter.WriteStartElement("text");
-                liftRangesWriter.WriteString(description);
-                liftRangesWriter.WriteEndElement(); //end text
-                liftRangesWriter.WriteEndElement(); //end form
-                liftRangesWriter.WriteEndElement(); //end description
+                WriteFormElement(liftRangesWriter, "description", lang, description); // write description
+            }
+            if (questions is not null && questions.Count > 0)
+            {
+                liftRangesWriter.WriteStartElement("questions"); // start questions
+                foreach (var question in questions)
+                {
+                    WriteFormElement(liftRangesWriter, "question", lang, question); // write question
+                }
+                liftRangesWriter.WriteEndElement(); // end questions
             }
 
-            liftRangesWriter.WriteEndElement(); //end range element
+            liftRangesWriter.WriteEndElement(); // end range element
+        }
+
+        private static void WriteFormElement(XmlWriter liftRangesWriter, string element, string language, string text)
+        {
+            liftRangesWriter.WriteStartElement(element); // start element
+            liftRangesWriter.WriteStartElement("form"); // start form
+            liftRangesWriter.WriteAttributeString("lang", language); // add language to form
+            liftRangesWriter.WriteStartElement("text"); // start text
+            liftRangesWriter.WriteString(text); // write text
+            liftRangesWriter.WriteEndElement(); // end text
+            liftRangesWriter.WriteEndElement(); // end form
+            liftRangesWriter.WriteEndElement(); // end element
         }
 
         private sealed class LiftMerger : ILiftMerger
