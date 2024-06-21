@@ -2,20 +2,24 @@ import { Accordion } from "@mui/material";
 import renderer from "react-test-renderer";
 
 import {
-  SemanticDomainFull,
   type Project,
+  type SemanticDomainFull,
   type WritingSystem,
 } from "api/models";
 import ProjectDomains, {
+  AddDomainDialog,
   ProjectDomainsId,
 } from "components/ProjectSettings/ProjectDomains";
 import { newProject } from "types/project";
 import { newSemanticDomain } from "types/semanticDomain";
 import { newWritingSystem } from "types/writingSystem";
 
-// Textfield with multiline not supported in react-test-renderer
+// Dialog uses portals, which are not supported in react-test-renderer.
+jest.mock("@mui/material/Dialog", () => "div");
+// Textfield with multiline not supported in react-test-renderer.
 jest.mock("@mui/material/TextField", () => "div");
 
+jest.mock("components/TreeView", () => "div");
 jest.mock("i18n", () => ({ language: "en-US" }));
 
 const mockSetProject = jest.fn();
@@ -45,9 +49,26 @@ const renderProjLangs = async (project: Project): Promise<void> => {
 describe("ProjectDomains", () => {
   it("has a button for adding a custom semantic domain", async () => {
     await renderProjLangs(mockProject());
-    expect(() =>
-      projectMaster.root.findByProps({ id: ProjectDomainsId.ButtonDomainAdd })
-    ).not.toThrow();
+    const addDialog = projectMaster.root.findByType(AddDomainDialog);
+    expect(addDialog.props.open).toBeFalsy();
+
+    // Open the dialog to add a new domain
+    const addButton = projectMaster.root.findByProps({
+      id: ProjectDomainsId.ButtonDomainAdd,
+    });
+    await renderer.act(async () => {
+      addButton.props.onClick();
+    });
+    expect(addDialog.props.open).toBeTruthy();
+
+    // Close the dialog
+    const cancelButton = projectMaster.root.findByProps({
+      id: ProjectDomainsId.ButtonDomainAddDialogCancel,
+    });
+    await renderer.act(async () => {
+      cancelButton.props.onClick();
+    });
+    expect(addDialog.props.open).toBeFalsy();
   });
 
   it("only renders custom domains for the current semantic domain language", async () => {

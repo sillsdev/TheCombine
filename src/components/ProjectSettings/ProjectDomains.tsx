@@ -168,7 +168,7 @@ function CustomDomain(props: CustomDomainProps): ReactElement {
   };
 
   /** Check if the current domain in the component's state
-   * is substatively different from the project domain passed in via the props. */
+   * is substantively different from the project domain passed in via the props. */
   const isDomainChanged = (): boolean => {
     const dom = trimDomain(domain);
     const old = trimDomain(props.domain);
@@ -269,7 +269,7 @@ interface AddDomainDialogProps {
 }
 
 /** Dialog component for adding a new custom domain to the current project. */
-function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
+export function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
   const [addingDom, setAddingDom] = useState(false);
   const [name, setName] = useState("");
   const [parent, setParent] = useState<SemanticDomain | undefined>();
