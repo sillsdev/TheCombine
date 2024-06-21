@@ -35,7 +35,7 @@ export enum ProjectDomainsId {
   FieldDomainAddDialogName = "custom-domain-add-name",
 }
 
-const trimDomain = (domain: SemanticDomainFull): SemanticDomainFull => ({
+export const trimDomain = (domain: SemanticDomainFull): SemanticDomainFull => ({
   ...domain,
   description: domain.description.trim(),
   name: domain.name.trim(),

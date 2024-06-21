@@ -9,6 +9,7 @@ import {
 import ProjectDomains, {
   AddDomainDialog,
   ProjectDomainsId,
+  trimDomain,
 } from "components/ProjectSettings/ProjectDomains";
 import { newProject } from "types/project";
 import { newSemanticDomain } from "types/semanticDomain";
@@ -84,5 +85,21 @@ describe("ProjectDomains", () => {
       mockProject(newWritingSystem(semDomLang), customDoms)
     );
     expect(projectMaster.root.findAllByType(Accordion)).toHaveLength(3);
+  });
+});
+
+describe("trimDomains", () => {
+  it("trims description, name, and questions and removes empty questions", () => {
+    const description = "Description of a custom semantic domain";
+    const name = "Custom Domain Name";
+    const question = "What words does this domain make you think of?";
+    const untrimmedDom = newSemanticDomain("3.14159", `\t${name} `);
+    untrimmedDom.description = `  ${description}\n`;
+    untrimmedDom.questions.push("", ` \n ${question}\t\t`, " \t ", "");
+    const trimmedDom = trimDomain(untrimmedDom);
+    expect(trimmedDom.description).toEqual(description);
+    expect(trimmedDom.name).toEqual(name);
+    expect(trimmedDom.questions).toHaveLength(1);
+    expect(trimmedDom.questions[0]).toEqual(question);
   });
 });
