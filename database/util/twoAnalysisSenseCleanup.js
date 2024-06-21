@@ -1,73 +1,22 @@
 [
   {
-    // Match documents in the specified project that have senses with "en" or "tpi" gloss languages
+    // Match documents in the specified project that have 2 senses, one with a lone "en"-language gloss and the other with a lone "tpi"-language gloss
     $match: {
       projectId: "654a790a79341a70ce2e6627",
+      senses: { $size: 2 },
+      "senses.0.Glosses": { $size: 1 },
+      "senses.1.Glosses": { $size: 1 },
       "senses.Glosses.Language": {
-        $in: ["en", "tpi"],
-      },
-    },
-  },
-  {
-    // Preserve the original document for later stages to use
-    $addFields: {
-      originalDocument: "$$ROOT",
-    },
-  },
-  {
-    // Add a field to count the number of senses in each document
-    $addFields: {
-      senseCount: {
-        $size: "$senses",
-      },
-    },
-  },
-  {
-    // Filter documents to only those with exactly two senses
-    $match: {
-      senseCount: 2,
-    },
-  },
-  {
-    // Project necessary fields, and calculate size of glosses and extract first gloss language per sense
-    $project: {
-      senses: 1,
-      originalDocument: 1,
-      glossesPerSense: {
-        $map: {
-          input: "$senses",
-          as: "sense",
-          in: {
-            $size: "$$sense.Glosses",
-          },
-        },
-      },
-      glossLangPerSense: {
-        $map: {
-          input: "$senses",
-          as: "sense",
-          in: {
-            $arrayElemAt: [
-              "$$sense.Glosses.Language",
-              0,
-            ],
-          },
-        },
-      },
-    },
-  },
-  {
-    // Match to ensure each sense has exactly one gloss and the required languages are present
-    $match: {
-      glossesPerSense: [1, 1],
-      glossLangPerSense: {
         $all: ["en", "tpi"],
       },
     },
   },
   {
-    // Identify and extract 'to' and 'from' senses for merging based on gloss languages
     $addFields: {
+      // Preserve the original document for later stages to use
+      originalDocument: "$$ROOT",
+
+      // Identify and extract 'to' and 'from' senses for merging based on gloss languages
       toSense: {
         $arrayElemAt: [
           {
@@ -77,10 +26,7 @@
               cond: {
                 $eq: [
                   {
-                    $arrayElemAt: [
-                      "$$sense.Glosses.Language",
-                      0,
-                    ],
+                    $arrayElemAt: ["$$sense.Glosses.Language", 0],
                   },
                   "en",
                 ],
@@ -99,10 +45,7 @@
               cond: {
                 $eq: [
                   {
-                    $arrayElemAt: [
-                      "$$sense.Glosses.Language",
-                      0,
-                    ],
+                    $arrayElemAt: ["$$sense.Glosses.Language", 0],
                   },
                   "tpi",
                 ],
@@ -112,15 +55,10 @@
           0,
         ],
       },
-    },
-  },
-  {
-    // Add fields to extract semantic domain GUIDs from both 'to' and 'from' senses
-    $addFields: {
-      toSemDomGuids:
-        "$toSense.SemanticDomains.guid",
-      fromSemDomGuids:
-        "$fromSense.SemanticDomains.guid",
+
+      // Add fields to extract semantic domain GUIDs from both 'to' and 'from' senses
+      toSemDomGuids: "$toSense.SemanticDomains.guid",
+      fromSemDomGuids: "$fromSense.SemanticDomains.guid",
     },
   },
   {
@@ -129,20 +67,26 @@
       $expr: {
         $or: [
           {
-            $setIsSubset: [
-              "$toSemDomGuids",
-              "$fromSemDomGuids",
-            ],
+            $setIsSubset: ["$toSemDomGuids", "$fromSemDomGuids"],
           },
           {
-            $eq: [
-              {
-                $size: "$toSemDomGuids",
-              },
-              0,
-            ],
+            $setIsSubset: ["$fromSemDomGuids", "$toSemDomGuids"],
           },
         ],
+      },
+    },
+  },
+  {
+    // Add fields to extract semantic domain GUIDs from both 'to' and 'from' senses
+    $addFields: {
+      semDoms: {
+        $cond: {
+          if: {
+            $gte: [{ $size: "$toSemDomGuids" }, { $size: "$fromSemDomGuids" }],
+          },
+          then: "$toSense.SemanticDomains",
+          else: "$fromSense.SemanticDomains",
+        },
       },
     },
   },
@@ -154,11 +98,9 @@
           "$toSense",
           {
             Glosses: {
-              $concatArrays: [
-                "$toSense.Glosses",
-                "$fromSense.Glosses",
-              ],
+              $concatArrays: ["$toSense.Glosses", "$fromSense.Glosses"],
             },
+            SemanticDomains: "$semDoms",
           },
         ],
       },
@@ -167,9 +109,7 @@
   {
     // Update the original document's senses with the merged senses
     $addFields: {
-      "originalDocument.senses": [
-        "$mergedSenses",
-      ],
+      "originalDocument.senses": ["$mergedSenses"],
     },
   },
   {
@@ -187,4 +127,4 @@
       whenNotMatched: "discard",
     },
   },
-]
+];
