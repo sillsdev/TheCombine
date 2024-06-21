@@ -660,9 +660,7 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteStartElement(element); // start element
             liftRangesWriter.WriteStartElement("form"); // start form
             liftRangesWriter.WriteAttributeString("lang", language); // add language to form
-            liftRangesWriter.WriteStartElement("text"); // start text
-            liftRangesWriter.WriteString(text); // write text
-            liftRangesWriter.WriteEndElement(); // end text
+            liftRangesWriter.WriteElementString("text", text); // write text
             liftRangesWriter.WriteEndElement(); // end form
             liftRangesWriter.WriteEndElement(); // end element
         }
