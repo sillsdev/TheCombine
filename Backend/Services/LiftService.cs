@@ -437,8 +437,7 @@ namespace BackendFramework.Services
                        : sd.Guid;
 
                 var parent = $"{sd.ParentId} {englishDomains.Find(d => d.Id == sd.ParentId)?.Name}".Trim();
-                WriteRangeElement(
-                    liftRangesWriter, sd.Id, guid, sd.Name, sd.Lang, sd.Description, parent, sd.Questions);
+                WriteRangeElement(liftRangesWriter, sd.Id, guid, sd.Name, sd.Lang, sd.Description, parent);
             }
 
             await liftRangesWriter.WriteEndElementAsync(); //end semantic-domain-ddp4 range
@@ -625,8 +624,8 @@ namespace BackendFramework.Services
             return new LiftMerger(projectId, vernLang, wordRepo);
         }
 
-        private static void WriteRangeElement(XmlWriter liftRangesWriter, string id, string guid, string name,
-            string lang, string description = "", string parent = "", List<string>? questions = null)
+        private static void WriteRangeElement(XmlWriter liftRangesWriter,
+            string id, string guid, string name, string lang, string description = "", string parent = "")
         {
             liftRangesWriter.WriteStartElement("range-element"); // start range element
             liftRangesWriter.WriteAttributeString("id", $"{id} {name}"); // add id to element
@@ -641,15 +640,6 @@ namespace BackendFramework.Services
             if (!string.IsNullOrEmpty(description))
             {
                 WriteFormElement(liftRangesWriter, "description", lang, description); // write description
-            }
-            if (questions is not null && questions.Count > 0)
-            {
-                liftRangesWriter.WriteStartElement("questions"); // start questions
-                foreach (var question in questions)
-                {
-                    WriteFormElement(liftRangesWriter, "question", lang, question); // write question
-                }
-                liftRangesWriter.WriteEndElement(); // end questions
             }
 
             liftRangesWriter.WriteEndElement(); // end range element
