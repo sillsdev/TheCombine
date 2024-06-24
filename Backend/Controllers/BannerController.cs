@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
@@ -41,24 +42,39 @@ namespace BackendFramework.Controllers
 
                 activity?.AddTag(otelTagName, "in the banner!");
 
-                var ipAddress = HttpContext.GetServerVariable("HTTP_X_FORWARDED_FOR") ?? HttpContext.Connection.RemoteIpAddress?.ToString();
-                var ipAddressWithoutPort = ipAddress?.Split(':')[0];
-
-                var route = $"http://ip-api.com/json/{ipAddressWithoutPort}";
-
-                var httpClient = new HttpClient();
-                var response = await httpClient.GetFromJsonAsync<LocationApi>(route);
-
-                var location = new
+                if (HttpContext is { } context)
                 {
-                    Country = response?.country,
-                    Region = response?.regionName,
-                    City = response?.city,
-                };
+                    try
+                    {
+                        var ipAddress = context.GetServerVariable("HTTP_X_FORWARDED_FOR") ?? HttpContext.Connection.RemoteIpAddress?.ToString();
+                        var ipAddressWithoutPort = ipAddress?.Split(':')[0];
 
-                activity?.AddTag("country", location.Country);
-                activity?.AddTag("region", location.Region);
-                activity?.AddTag("city", location.City);
+                        var route = $"http://ip-api.com/json/{ipAddressWithoutPort}";
+
+                        var httpClient = new HttpClient();
+                        var response = await httpClient.GetFromJsonAsync<LocationApi>(route);
+
+                        var location = new
+                        {
+                            Country = response?.country,
+                            Region = response?.regionName,
+                            City = response?.city,
+                        };
+
+                        activity?.AddTag("country", location.Country);
+                        activity?.AddTag("region", location.Region);
+                        activity?.AddTag("city", location.City);
+                    }
+                    catch (Exception e)
+                    {
+                        return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+                    }
+
+
+
+
+                }
+
 
             }
 
