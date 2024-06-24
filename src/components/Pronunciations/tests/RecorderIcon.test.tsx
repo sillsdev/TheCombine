@@ -35,7 +35,7 @@ const mockWordId = "1234567890";
 const mockStartRecording = jest.fn();
 const mockStopRecording = jest.fn();
 
-const renderRecorderIcon = async (wordId = ""): Promise<undefined> => {
+const renderRecorderIcon = async (wordId = ""): Promise<void> => {
   await act(async () => {
     testRenderer = create(
       <StyledEngineProvider injectFirst>
