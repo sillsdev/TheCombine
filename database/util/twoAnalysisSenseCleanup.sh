@@ -48,7 +48,7 @@ while [[ $# -gt 0 ]] ; do
       LANGA=$1
       shift
       if [[ "${LANGA}" =~ [^A-Za-z\-] ]]; then
-        echo "The -l/--lang argument must be alphabetic (dashes allowed)"
+        echo "The -A/--langA argument must be alphabetic (dashes allowed)"
         exit 1
       fi
       ;;
@@ -56,7 +56,7 @@ while [[ $# -gt 0 ]] ; do
       LANGB=$1
       shift
       if [[ "${LANGB}" =~ [^A-Za-z\-] ]]; then
-        echo "The -l/--lang argument must be alphabetic (dashes allowed)"
+        echo "The -B/--langB argument must be alphabetic (dashes allowed)"
         exit 1
       fi
       ;;
