@@ -18,9 +18,9 @@
     },
   },
   {
-    // Identify and extract 'to' and 'from' senses for merging based on gloss languages
+    // Identify and extract two senses (A and B) for merging based on gloss languages
     $addFields: {
-      toSense: {
+      senseA: {
         $arrayElemAt: [
           {
             $filter: {
@@ -39,7 +39,7 @@
           0,
         ],
       },
-      fromSense: {
+      senseB: {
         $arrayElemAt: [
           {
             $filter: {
@@ -61,51 +61,57 @@
     },
   },
   {
-    // Add fields to extract semantic domain GUIDs from both 'to' and 'from' senses
+    // Add fields to extract semantic domain GUIDs from both senses
     $addFields: {
-      toSemDomGuids: "$toSense.SemanticDomains.guid",
-      fromSemDomGuids: "$fromSense.SemanticDomains.guid",
+      semDomGuidsA: "$senseA.SemanticDomains.guid",
+      semDomGuidsB: "$senseB.SemanticDomains.guid",
     },
   },
   {
-    // Match documents where the semantic domains of 'to' sense are a subset of 'from' sense or vice-versa
+    // Match documents where the semantic domains of one sense are a subset of the other
     $match: {
       $expr: {
         $or: [
           {
-            $setIsSubset: ["$toSemDomGuids", "$fromSemDomGuids"],
+            $setIsSubset: ["$semDomGuidsA", "$semDomGuidsB"],
           },
           {
-            $setIsSubset: ["$fromSemDomGuids", "$toSemDomGuids"],
+            $setIsSubset: ["$semDomGuidsB", "$semDomGuidsA"],
           },
         ],
       },
     },
   },
   {
-    // Update the original document's senses with a merge of the "to" and "from" senses
-    // Note: The part of speech / grammatical category of the "from" sense is lost
+    // Update the original document's senses with a merge of the two senses
+    // Note: The part of speech / grammatical category of the B sense is lost
     $addFields: {
       "originalDocument.senses": {
         $mergeObjects: [
-          "$toSense",
+          "$senseA",
           {
             Definitions: {
-              $concatArrays: ["$toSense.Definitions", "$fromSense.Definitions"],
+              $concatArrays: ["$senseA.Definitions", "$senseB.Definitions"],
             },
             Glosses: {
-              $concatArrays: ["$toSense.Glosses", "$fromSense.Glosses"],
+              $concatArrays: ["$senseA.Glosses", "$senseB.Glosses"],
+            },
+            protectReasons: {
+              $concatArrays: [
+                "$senseA.protectReasons",
+                "$senseB.protectReasons",
+              ],
             },
             SemanticDomains: {
               $cond: {
                 if: {
                   $gte: [
-                    { $size: "$toSemDomGuids" },
-                    { $size: "$fromSemDomGuids" },
+                    { $size: "$semDomGuidsA" },
+                    { $size: "$semDomGuidsB" },
                   ],
                 },
-                then: "$toSense.SemanticDomains",
-                else: "$fromSense.SemanticDomains",
+                then: "$senseA.SemanticDomains",
+                else: "$senseB.SemanticDomains",
               },
             },
           },
@@ -121,6 +127,7 @@
   },
   {
     // Merge the updated document back into the 'words' collection, updating where matched and discarding unmatched
+    // Note: Need to run this again into the "FrontierCollection".
     $merge: {
       into: "WordsCollection",
       on: "_id",
