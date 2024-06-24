@@ -84,11 +84,15 @@
   },
   {
     // Update the original document's senses with a merge of the "to" and "from" senses
+    // Note: The part of speech / grammatical category of the "from" sense is lost
     $addFields: {
       "originalDocument.senses": {
         $mergeObjects: [
           "$toSense",
           {
+            Definitions: {
+              $concatArrays: ["$toSense.Definitions", "$fromSense.Definitions"],
+            },
             Glosses: {
               $concatArrays: ["$toSense.Glosses", "$fromSense.Glosses"],
             },
