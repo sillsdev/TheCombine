@@ -8,6 +8,7 @@ export enum Bcp47Code {
   Es = "es", // Spanish
   Fr = "fr", // French
   Hi = "hi", // Hindi
+  Id = "id", // Indonesian
   Ml = "ml", // Malayalam
   My = "my", // Burmese
   Pt = "pt", // Portuguese
@@ -22,6 +23,7 @@ const writingSystem = {
   [Bcp47Code.Es]: newWritingSystem(Bcp47Code.Es, "Español"), // Spanish
   [Bcp47Code.Fr]: newWritingSystem(Bcp47Code.Fr, "Français"), // French
   [Bcp47Code.Hi]: newWritingSystem(Bcp47Code.Hi, "हिन्दी"), // Hindi
+  [Bcp47Code.Id]: newWritingSystem(Bcp47Code.Id, "Bahasa Indonesia"), // Indonesian
   [Bcp47Code.Ml]: newWritingSystem(Bcp47Code.Ml, "മലയാളം"), // Malayalam
   [Bcp47Code.My]: newWritingSystem(Bcp47Code.My, "မြန်မာစာ"), // Burmese
   [Bcp47Code.Pt]: newWritingSystem(Bcp47Code.Pt, "Português"), // Portuguese
@@ -49,6 +51,7 @@ export const semDomWritingSystems = [
   writingSystem[Bcp47Code.Es],
   writingSystem[Bcp47Code.Fr],
   writingSystem[Bcp47Code.Hi],
+  writingSystem[Bcp47Code.Id],
   writingSystem[Bcp47Code.Ml],
   writingSystem[Bcp47Code.My],
   writingSystem[Bcp47Code.Pt],
