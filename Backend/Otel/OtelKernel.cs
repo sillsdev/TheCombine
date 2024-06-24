@@ -1,18 +1,11 @@
-
-// using System.Reflection.PortableExecutable;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry.Metrics;
-
-// using OpenTelemetry.Logs;
-// using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-// using SIL.WritingSystems;
-// using OpenTelemetry.Exporter;
 
 
 namespace BackendFramework.Otel;
@@ -28,7 +21,6 @@ public static class OtelKernel
         services.AddOpenTelemetry().WithTracing(tracerProviderBuilder => tracerProviderBuilder
                     .SetResourceBuilder(appResourceBuilder)
                     .AddSource(ServiceName)
-                    // .AddProcessor<UserEnricher>()
                     .AddAspNetCoreInstrumentation(options =>
                     {
                         options.RecordException = true;
