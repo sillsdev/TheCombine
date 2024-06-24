@@ -61,9 +61,8 @@ async function createCustomTreeNode(
   if (customDom) {
     const id = customDom.id;
     const parentId =
-      customDom.parentId || id.length > 1
-        ? id.substring(0, id.length - 2)
-        : rootId;
+      customDom.parentId ||
+      (id.length > 1 ? id.substring(0, id.length - 2) : rootId);
     const parent = await getSemanticDomainTreeNode(parentId, customDom.lang);
     const next = parent?.children.length ? parent.children[0] : undefined;
     return { ...treeNodeFromSemDom(customDom), parent, next };
