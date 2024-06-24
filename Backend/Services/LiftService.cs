@@ -1020,21 +1020,6 @@ namespace BackendFramework.Services
                 }
             }
 
-            // Helper function to parse a $"{id} {name}" string into a semantic domain.
-            private static SemanticDomain? MakeDomainFromString(string? idNameString)
-            {
-                if (string.IsNullOrEmpty(idNameString))
-                {
-                    return null;
-                }
-
-                var id = idNameString.Split(" ")[0];
-                var name = id.Length == idNameString.Length
-                    ? ""
-                    : idNameString[(id.Length + 1)..^0];
-                return new SemanticDomain { Id = id, Name = name };
-            }
-
             // The following are unused and are not implemented, but may still be called by the Lexicon Merger
             // They may be useful later if we need to add more complex attributes to words in The Combine
             [ExcludeFromCodeCoverage]
