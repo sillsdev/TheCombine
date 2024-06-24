@@ -446,16 +446,19 @@ namespace BackendFramework.Models
         [Required]
         public IFormFile? File { get; set; }
         [Required]
-        public string Name { get; set; }
-        [Required]
         public string FilePath { get; set; }
+        [Required]
+        public string Filename { get; set; }
+        [Required]
+        public string Name { get; set; }
 
         /// <summary> Models by ASP.NET Core POSTs must have a constructor with zero arguments. </summary>
         public FileUpload()
         {
             File = null;
-            Name = "";
             FilePath = "";
+            Filename = "";
+            Name = "";
         }
     }
 }

@@ -94,6 +94,7 @@ export const AvatarApiAxiosParamCreator = function (
      * @param {string} userId
      * @param {any} file
      * @param {string} name
+     * @param {string} filename
      * @param {string} filePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -102,6 +103,7 @@ export const AvatarApiAxiosParamCreator = function (
       userId: string,
       file: any,
       name: string,
+      filename: string,
       filePath: string,
       options: any = {}
     ): Promise<RequestArgs> => {
@@ -111,6 +113,8 @@ export const AvatarApiAxiosParamCreator = function (
       assertParamExists("uploadAvatar", "file", file);
       // verify required parameter 'name' is not null or undefined
       assertParamExists("uploadAvatar", "name", name);
+      // verify required parameter 'filename' is not null or undefined
+      assertParamExists("uploadAvatar", "filename", filename);
       // verify required parameter 'filePath' is not null or undefined
       assertParamExists("uploadAvatar", "filePath", filePath);
       const localVarPath = `/v1/users/{userId}/avatar/upload`.replace(
@@ -141,6 +145,10 @@ export const AvatarApiAxiosParamCreator = function (
 
       if (name !== undefined) {
         localVarFormParams.append("Name", name as any);
+      }
+
+      if (filename !== undefined) {
+        localVarFormParams.append("Filename", filename as any);
       }
 
       if (filePath !== undefined) {
@@ -202,6 +210,7 @@ export const AvatarApiFp = function (configuration?: Configuration) {
      * @param {string} userId
      * @param {any} file
      * @param {string} name
+     * @param {string} filename
      * @param {string} filePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -210,6 +219,7 @@ export const AvatarApiFp = function (configuration?: Configuration) {
       userId: string,
       file: any,
       name: string,
+      filename: string,
       filePath: string,
       options?: any
     ): Promise<
@@ -219,6 +229,7 @@ export const AvatarApiFp = function (configuration?: Configuration) {
         userId,
         file,
         name,
+        filename,
         filePath,
         options
       );
@@ -259,6 +270,7 @@ export const AvatarApiFactory = function (
      * @param {string} userId
      * @param {any} file
      * @param {string} name
+     * @param {string} filename
      * @param {string} filePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -267,11 +279,12 @@ export const AvatarApiFactory = function (
       userId: string,
       file: any,
       name: string,
+      filename: string,
       filePath: string,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
-        .uploadAvatar(userId, file, name, filePath, options)
+        .uploadAvatar(userId, file, name, filename, filePath, options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -323,6 +336,13 @@ export interface AvatarApiUploadAvatarRequest {
    * @type {string}
    * @memberof AvatarApiUploadAvatar
    */
+  readonly filename: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof AvatarApiUploadAvatar
+   */
   readonly filePath: string;
 }
 
@@ -365,6 +385,7 @@ export class AvatarApi extends BaseAPI {
         requestParameters.userId,
         requestParameters.file,
         requestParameters.name,
+        requestParameters.filename,
         requestParameters.filePath,
         options
       )

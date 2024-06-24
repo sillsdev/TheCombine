@@ -113,7 +113,7 @@ const wordApi = new Api.WordApi(config, BASE_PATH, axiosInstance);
 // have the internal fields expanded by openapi-generator as params in our Api.
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function fileUpload(file: File) {
-  return { file, filePath: "", name: "" };
+  return { file, filePath: "", filename: "", name: "" };
 }
 
 function defaultOptions(): object {

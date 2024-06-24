@@ -276,6 +276,7 @@ export const LiftApiAxiosParamCreator = function (
      * @param {string} projectId
      * @param {any} file
      * @param {string} name
+     * @param {string} filename
      * @param {string} filePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -284,6 +285,7 @@ export const LiftApiAxiosParamCreator = function (
       projectId: string,
       file: any,
       name: string,
+      filename: string,
       filePath: string,
       options: any = {}
     ): Promise<RequestArgs> => {
@@ -293,6 +295,8 @@ export const LiftApiAxiosParamCreator = function (
       assertParamExists("uploadLiftFile", "file", file);
       // verify required parameter 'name' is not null or undefined
       assertParamExists("uploadLiftFile", "name", name);
+      // verify required parameter 'filename' is not null or undefined
+      assertParamExists("uploadLiftFile", "filename", filename);
       // verify required parameter 'filePath' is not null or undefined
       assertParamExists("uploadLiftFile", "filePath", filePath);
       const localVarPath = `/v1/projects/{projectId}/lift/upload`.replace(
@@ -325,6 +329,10 @@ export const LiftApiAxiosParamCreator = function (
         localVarFormParams.append("Name", name as any);
       }
 
+      if (filename !== undefined) {
+        localVarFormParams.append("Filename", filename as any);
+      }
+
       if (filePath !== undefined) {
         localVarFormParams.append("FilePath", filePath as any);
       }
@@ -351,6 +359,7 @@ export const LiftApiAxiosParamCreator = function (
      * @param {string} projectId
      * @param {any} file
      * @param {string} name
+     * @param {string} filename
      * @param {string} filePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -359,6 +368,7 @@ export const LiftApiAxiosParamCreator = function (
       projectId: string,
       file: any,
       name: string,
+      filename: string,
       filePath: string,
       options: any = {}
     ): Promise<RequestArgs> => {
@@ -372,6 +382,12 @@ export const LiftApiAxiosParamCreator = function (
       assertParamExists("uploadLiftFileAndGetWritingSystems", "file", file);
       // verify required parameter 'name' is not null or undefined
       assertParamExists("uploadLiftFileAndGetWritingSystems", "name", name);
+      // verify required parameter 'filename' is not null or undefined
+      assertParamExists(
+        "uploadLiftFileAndGetWritingSystems",
+        "filename",
+        filename
+      );
       // verify required parameter 'filePath' is not null or undefined
       assertParamExists(
         "uploadLiftFileAndGetWritingSystems",
@@ -407,6 +423,10 @@ export const LiftApiAxiosParamCreator = function (
 
       if (name !== undefined) {
         localVarFormParams.append("Name", name as any);
+      }
+
+      if (filename !== undefined) {
+        localVarFormParams.append("Filename", filename as any);
       }
 
       if (filePath !== undefined) {
@@ -559,6 +579,7 @@ export const LiftApiFp = function (configuration?: Configuration) {
      * @param {string} projectId
      * @param {any} file
      * @param {string} name
+     * @param {string} filename
      * @param {string} filePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -567,6 +588,7 @@ export const LiftApiFp = function (configuration?: Configuration) {
       projectId: string,
       file: any,
       name: string,
+      filename: string,
       filePath: string,
       options?: any
     ): Promise<
@@ -576,6 +598,7 @@ export const LiftApiFp = function (configuration?: Configuration) {
         projectId,
         file,
         name,
+        filename,
         filePath,
         options
       );
@@ -591,6 +614,7 @@ export const LiftApiFp = function (configuration?: Configuration) {
      * @param {string} projectId
      * @param {any} file
      * @param {string} name
+     * @param {string} filename
      * @param {string} filePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -599,6 +623,7 @@ export const LiftApiFp = function (configuration?: Configuration) {
       projectId: string,
       file: any,
       name: string,
+      filename: string,
       filePath: string,
       options?: any
     ): Promise<
@@ -612,6 +637,7 @@ export const LiftApiFp = function (configuration?: Configuration) {
           projectId,
           file,
           name,
+          filename,
           filePath,
           options
         );
@@ -699,6 +725,7 @@ export const LiftApiFactory = function (
      * @param {string} projectId
      * @param {any} file
      * @param {string} name
+     * @param {string} filename
      * @param {string} filePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -707,11 +734,12 @@ export const LiftApiFactory = function (
       projectId: string,
       file: any,
       name: string,
+      filename: string,
       filePath: string,
       options?: any
     ): AxiosPromise<number> {
       return localVarFp
-        .uploadLiftFile(projectId, file, name, filePath, options)
+        .uploadLiftFile(projectId, file, name, filename, filePath, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -719,6 +747,7 @@ export const LiftApiFactory = function (
      * @param {string} projectId
      * @param {any} file
      * @param {string} name
+     * @param {string} filename
      * @param {string} filePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -727,6 +756,7 @@ export const LiftApiFactory = function (
       projectId: string,
       file: any,
       name: string,
+      filename: string,
       filePath: string,
       options?: any
     ): AxiosPromise<Array<WritingSystem>> {
@@ -735,6 +765,7 @@ export const LiftApiFactory = function (
           projectId,
           file,
           name,
+          filename,
           filePath,
           options
         )
@@ -845,6 +876,13 @@ export interface LiftApiUploadLiftFileRequest {
    * @type {string}
    * @memberof LiftApiUploadLiftFile
    */
+  readonly filename: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof LiftApiUploadLiftFile
+   */
   readonly filePath: string;
 }
 
@@ -874,6 +912,13 @@ export interface LiftApiUploadLiftFileAndGetWritingSystemsRequest {
    * @memberof LiftApiUploadLiftFileAndGetWritingSystems
    */
   readonly name: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof LiftApiUploadLiftFileAndGetWritingSystems
+   */
+  readonly filename: string;
 
   /**
    *
@@ -986,6 +1031,7 @@ export class LiftApi extends BaseAPI {
         requestParameters.projectId,
         requestParameters.file,
         requestParameters.name,
+        requestParameters.filename,
         requestParameters.filePath,
         options
       )
@@ -1008,6 +1054,7 @@ export class LiftApi extends BaseAPI {
         requestParameters.projectId,
         requestParameters.file,
         requestParameters.name,
+        requestParameters.filename,
         requestParameters.filePath,
         options
       )

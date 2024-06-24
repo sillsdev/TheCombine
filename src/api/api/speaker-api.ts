@@ -438,6 +438,7 @@ export const SpeakerApiAxiosParamCreator = function (
      * @param {string} speakerId
      * @param {any} file
      * @param {string} name
+     * @param {string} filename
      * @param {string} filePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -447,6 +448,7 @@ export const SpeakerApiAxiosParamCreator = function (
       speakerId: string,
       file: any,
       name: string,
+      filename: string,
       filePath: string,
       options: any = {}
     ): Promise<RequestArgs> => {
@@ -458,6 +460,8 @@ export const SpeakerApiAxiosParamCreator = function (
       assertParamExists("uploadConsent", "file", file);
       // verify required parameter 'name' is not null or undefined
       assertParamExists("uploadConsent", "name", name);
+      // verify required parameter 'filename' is not null or undefined
+      assertParamExists("uploadConsent", "filename", filename);
       // verify required parameter 'filePath' is not null or undefined
       assertParamExists("uploadConsent", "filePath", filePath);
       const localVarPath =
@@ -488,6 +492,10 @@ export const SpeakerApiAxiosParamCreator = function (
 
       if (name !== undefined) {
         localVarFormParams.append("Name", name as any);
+      }
+
+      if (filename !== undefined) {
+        localVarFormParams.append("Filename", filename as any);
       }
 
       if (filePath !== undefined) {
@@ -732,6 +740,7 @@ export const SpeakerApiFp = function (configuration?: Configuration) {
      * @param {string} speakerId
      * @param {any} file
      * @param {string} name
+     * @param {string} filename
      * @param {string} filePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -741,6 +750,7 @@ export const SpeakerApiFp = function (configuration?: Configuration) {
       speakerId: string,
       file: any,
       name: string,
+      filename: string,
       filePath: string,
       options?: any
     ): Promise<
@@ -751,6 +761,7 @@ export const SpeakerApiFp = function (configuration?: Configuration) {
         speakerId,
         file,
         name,
+        filename,
         filePath,
         options
       );
@@ -907,6 +918,7 @@ export const SpeakerApiFactory = function (
      * @param {string} speakerId
      * @param {any} file
      * @param {string} name
+     * @param {string} filename
      * @param {string} filePath
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -916,11 +928,20 @@ export const SpeakerApiFactory = function (
       speakerId: string,
       file: any,
       name: string,
+      filename: string,
       filePath: string,
       options?: any
     ): AxiosPromise<Speaker> {
       return localVarFp
-        .uploadConsent(projectId, speakerId, file, name, filePath, options)
+        .uploadConsent(
+          projectId,
+          speakerId,
+          file,
+          name,
+          filename,
+          filePath,
+          options
+        )
         .then((request) => request(axios, basePath));
     },
   };
@@ -1126,6 +1147,13 @@ export interface SpeakerApiUploadConsentRequest {
    * @type {string}
    * @memberof SpeakerApiUploadConsent
    */
+  readonly filename: string;
+
+  /**
+   *
+   * @type {string}
+   * @memberof SpeakerApiUploadConsent
+   */
   readonly filePath: string;
 }
 
@@ -1306,6 +1334,7 @@ export class SpeakerApi extends BaseAPI {
         requestParameters.speakerId,
         requestParameters.file,
         requestParameters.name,
+        requestParameters.filename,
         requestParameters.filePath,
         options
       )
