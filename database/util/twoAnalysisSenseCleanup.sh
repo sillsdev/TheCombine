@@ -9,7 +9,9 @@ set -e
 usage() {
   cat <<USAGE
   Usage: $0 [options]
-    Fetch dictionary files for specified language and convert to a wordlist
+    Find all words with exactly two senses, each with exactly one gloss in one of two given languages.
+    Merge those two senses into a single sense with two glosses, one in each language.
+    Note: If the sense with gloss in language B has a grammatical category, it will be lost in the merge.
   Options:
     -h, --help:
           print this message
@@ -23,6 +25,9 @@ usage() {
           print commands instead of executing them
     -v, --verbose:
           print each line of code before it is executed
+
+  Caveat:
+    This script assumes that the backups have been created by the combine-backup
 USAGE
 }
 
@@ -81,6 +86,27 @@ while [[ $# -gt 0 ]] ; do
       ;;
   esac
 done
+
+if [[ -z "${LANGA}" ]]; then
+  echo "The -A/--langA argument is require"
+  echo "Run this script with -h/--help for usage"
+  exit 1
+fi
+if [[ -z "${LANGB}" ]]; then
+  echo "The -B/--langB argument is require"
+  echo "Run this script with -h/--help for usage"
+  exit 1
+fi
+if [[ "${LANGA}" == "${LANGB}" ]]; then
+  echo "The -A/--langA and -B/--langB arguments must be different"
+  echo "Run this script with -h/--help for usage"
+  exit 1
+fi
+if [[ -z "${PROJ}" ]]; then
+  echo "The -p/--proj argument is require"
+  echo "Run this script with -h/--help for usage"
+  exit 1
+fi
 
 match1="{\$match:{projectId:\"$PROJ\",senses:{\$size:2},\"senses.0.Glosses\":{\$size:1},\"senses.1.Glosses\":{\$size:1},\"senses.Glosses.Language\":{\$all:[\"$LANGA\",\"$LANGB\"],},},},"
 addFields1="{\$addFields:{originalDocument:\"\$\$ROOT\",},},"
