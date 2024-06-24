@@ -18,9 +18,9 @@
     },
   },
   {
-    // Identify and extract two senses (A and B) for merging based on gloss languages
+    // Identify and extract two senses ("to" and "from") for merging based on gloss languages
     $addFields: {
-      senseA: {
+      toSense: {
         $arrayElemAt: [
           {
             $filter: {
@@ -39,7 +39,7 @@
           0,
         ],
       },
-      senseB: {
+      fromSense: {
         $arrayElemAt: [
           {
             $filter: {
@@ -63,8 +63,8 @@
   {
     // Add fields to extract semantic domain GUIDs from both senses
     $addFields: {
-      semDomGuidsA: "$senseA.SemanticDomains.guid",
-      semDomGuidsB: "$senseB.SemanticDomains.guid",
+      toSemDomGuids: "$toSense.SemanticDomains.guid",
+      fromSemDomGuids: "$fromSense.SemanticDomains.guid",
     },
   },
   {
@@ -73,10 +73,10 @@
       $expr: {
         $or: [
           {
-            $setIsSubset: ["$semDomGuidsA", "$semDomGuidsB"],
+            $setIsSubset: ["$toSemDomGuids", "$fromSemDomGuids"],
           },
           {
-            $setIsSubset: ["$semDomGuidsB", "$semDomGuidsA"],
+            $setIsSubset: ["$fromSemDomGuids", "$toSemDomGuids"],
           },
         ],
       },
@@ -84,34 +84,34 @@
   },
   {
     // Update the original document's senses with a merge of the two senses
-    // Note: The part of speech / grammatical category of the B sense is lost
+    // Note: The part of speech / grammatical category of the "from" sense is lost
     $addFields: {
       "originalDocument.senses": {
         $mergeObjects: [
-          "$senseA",
+          "$toSense",
           {
             Definitions: {
-              $concatArrays: ["$senseA.Definitions", "$senseB.Definitions"],
+              $concatArrays: ["$toSense.Definitions", "$fromSense.Definitions"],
             },
             Glosses: {
-              $concatArrays: ["$senseA.Glosses", "$senseB.Glosses"],
+              $concatArrays: ["$toSense.Glosses", "$fromSense.Glosses"],
             },
             protectReasons: {
               $concatArrays: [
-                "$senseA.protectReasons",
-                "$senseB.protectReasons",
+                "$toSense.protectReasons",
+                "$fromSense.protectReasons",
               ],
             },
             SemanticDomains: {
               $cond: {
                 if: {
                   $gte: [
-                    { $size: "$semDomGuidsA" },
-                    { $size: "$semDomGuidsB" },
+                    { $size: "$toSemDomGuids" },
+                    { $size: "$fromSemDomGuids" },
                   ],
                 },
-                then: "$senseA.SemanticDomains",
-                else: "$senseB.SemanticDomains",
+                then: "$toSense.SemanticDomains",
+                else: "$fromSense.SemanticDomains",
               },
             },
           },
