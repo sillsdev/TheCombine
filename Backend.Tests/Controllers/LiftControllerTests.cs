@@ -686,7 +686,9 @@ namespace Backend.Tests.Controllers
 
         private sealed class MockLogger : ILogger<LiftController>
         {
+#pragma warning disable CS8633
             public IDisposable BeginScope<TState>(TState state)
+#pragma warning restore CS8633
             {
                 throw new NotImplementedException();
             }
