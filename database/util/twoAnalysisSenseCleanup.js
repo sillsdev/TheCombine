@@ -12,11 +12,14 @@
     },
   },
   {
+    // Preserve the original document for later stages to use
     $addFields: {
-      // Preserve the original document for later stages to use
       originalDocument: "$$ROOT",
-
-      // Identify and extract 'to' and 'from' senses for merging based on gloss languages
+    },
+  },
+  {
+    // Identify and extract 'to' and 'from' senses for merging based on gloss languages
+    $addFields: {
       toSense: {
         $arrayElemAt: [
           {
@@ -55,14 +58,17 @@
           0,
         ],
       },
-
-      // Add fields to extract semantic domain GUIDs from both 'to' and 'from' senses
+    },
+  },
+  {
+    // Add fields to extract semantic domain GUIDs from both 'to' and 'from' senses
+    $addFields: {
       toSemDomGuids: "$toSense.SemanticDomains.guid",
       fromSemDomGuids: "$fromSense.SemanticDomains.guid",
     },
   },
   {
-    // Match documents where the semantic domains of 'to' sense are a subset of 'from' sense or 'to' sense has no semantic domains
+    // Match documents where the semantic domains of 'to' sense are a subset of 'from' sense or vice-versa
     $match: {
       $expr: {
         $or: [
@@ -77,39 +83,30 @@
     },
   },
   {
-    // Add fields to extract semantic domain GUIDs from both 'to' and 'from' senses
+    // Update the original document's senses with a merge of the "to" and "from" senses
     $addFields: {
-      semDoms: {
-        $cond: {
-          if: {
-            $gte: [{ $size: "$toSemDomGuids" }, { $size: "$fromSemDomGuids" }],
-          },
-          then: "$toSense.SemanticDomains",
-          else: "$fromSense.SemanticDomains",
-        },
-      },
-    },
-  },
-  {
-    // Merge the senses into one by combining glosses
-    $addFields: {
-      mergedSenses: {
+      "originalDocument.senses": {
         $mergeObjects: [
           "$toSense",
           {
             Glosses: {
               $concatArrays: ["$toSense.Glosses", "$fromSense.Glosses"],
             },
-            SemanticDomains: "$semDoms",
+            SemanticDomains: {
+              $cond: {
+                if: {
+                  $gte: [
+                    { $size: "$toSemDomGuids" },
+                    { $size: "$fromSemDomGuids" },
+                  ],
+                },
+                then: "$toSense.SemanticDomains",
+                else: "$fromSense.SemanticDomains",
+              },
+            },
           },
         ],
       },
-    },
-  },
-  {
-    // Update the original document's senses with the merged senses
-    $addFields: {
-      "originalDocument.senses": ["$mergedSenses"],
     },
   },
   {
