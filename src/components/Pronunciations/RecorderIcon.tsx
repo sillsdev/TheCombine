@@ -30,7 +30,7 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
   const recordingId = useAppSelector(
     (state: StoreState) => state.pronunciationsState.wordId
   );
-  const isRecordingThis = isRecording && recordButtonId === props.id;
+  const isRecordingThis = isRecording && recordingId === props.id;
 
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
