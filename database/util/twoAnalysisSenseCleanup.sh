@@ -92,8 +92,8 @@ match2="{\$match:{\$expr:{\$or:[{\$setIsSubset:[\"\$semDomGuidsA\",\"\$semDomGui
 fieldD="Definitions:{\$concatArrays:[\"\$senseA.Definitions\",\"\$senseB.Definitions\"],},"
 fieldG="Glosses:{\$concatArrays:[\"\$senseA.Glosses\",\"\$senseB.Glosses\"],},"
 fieldP="protectReasons:{\$concatArrays:[\"\$senseA.protectReasons\",\"\$senseB.protectReasons\",],},"
-fieldS="SemanticDomains:{\$cond:{if:{\$gte:[{\$size:\"\$semDomGuidsA\"},{\$size:\"\$semDomGuidsB\"},],},then:\"\$senseA.SemanticDomains\",else:\"\$senseB.SemanticDomains\",},"
-addFields4="{\$addFields:{\"originalDocument.senses\":{\$mergeObjects:[\"\$senseA\",{$fieldD$fieldG$fieldP$fieldS},},],},},},"
+fieldS="SemanticDomains:{\$cond:{if:{\$gte:[{\$size:\"\$semDomGuidsA\"},{\$size:\"\$semDomGuidsB\"},],},then:\"\$senseA.SemanticDomains\",else:\"\$senseB.SemanticDomains\",},},"
+addFields4="{\$addFields:{\"originalDocument.senses\":{\$mergeObjects:[\"\$senseA\",{$fieldD$fieldG$fieldP$fieldS},],},},},"
 replaceRoot="{\$replaceRoot:{newRoot:\"\$originalDocument\",},},"
 pipeline=$match1$addFields1$addFields2$addFields3$match2$addFields4$replaceRoot
 
