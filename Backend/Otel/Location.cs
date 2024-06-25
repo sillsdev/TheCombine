@@ -1,4 +1,4 @@
-namespace BackendFramework.Models;
+namespace BackendFramework.Otel;
 
 public class LocationApi
 {

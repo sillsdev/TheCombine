@@ -1,10 +1,10 @@
-// using System;
+using System;
 using System.Diagnostics;
 // using System.Diagnostics.Metrics;
-// using System.Net.Http;
-// using System.Net.Http.Json;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Security.Claims;
-// using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry.Metrics;
@@ -19,7 +19,7 @@ namespace BackendFramework.Otel
     {
 
         public const string ServiceName = "Backend-Otel";
-        public static void AddOpenTelemetryInstrumentation(this IServiceCollection services)
+        public static async void AddOpenTelemetryInstrumentation(this IServiceCollection services)
         {
             var appResourceBuilder = ResourceBuilder.CreateDefault().AddService(ServiceName);
             // todo: include version 
@@ -105,7 +105,47 @@ namespace BackendFramework.Otel
             //     .AddConsoleExporter()
             //     .AddOtlpExporter()
             // );
+
+            services.AddHttpContextAccessor();
+            await RecordLocationAsync(new HttpContextAccessor());
         }
+
+        private static async Task RecordLocationAsync(IHttpContextAccessor contextAccessor)
+        {
+            using (var activity = BackendActivitySource.Get().StartActivity())
+            {
+                activity?.AddTag("where", "in kernel");
+                if (contextAccessor.HttpContext is { } context)
+                {
+                    try
+                    {
+                        var ipAddress = context.GetServerVariable("HTTP_X_FORWARDED_FOR") ?? context.Connection.RemoteIpAddress?.ToString();
+                        var ipAddressWithoutPort = ipAddress?.Split(':')[0];
+
+                        var route = $"http://ip-api.com/json/{ipAddressWithoutPort}";
+
+                        var httpClient = new HttpClient();
+                        var response = await httpClient.GetFromJsonAsync<LocationApi>(route);
+
+                        var location = new
+                        {
+                            Country = response?.country,
+                            Region = response?.regionName,
+                            City = response?.city,
+                        };
+
+                        activity?.AddTag("country", location.Country);
+                        activity?.AddTag("region", location.Region);
+                        activity?.AddTag("city", location.City);
+                    }
+                    catch (Exception e)
+                    {
+                        activity?.SetTag("Location Exception", e.Message);
+                    }
+                }
+            }
+        }
+
 
         private static void EnrichWithUser(this Activity activity, HttpContext httpContext)
         {
