@@ -56,7 +56,7 @@ namespace BackendFramework.Helper
         }
 
         /// <summary> Extract a zip file to a unique temporary directory. </summary>
-        /// <param name="file"> An FormFile zip file. </param>
+        /// <param name="file"> An IFormFile zip file. </param>
         /// <returns> The path to the extracted contents. </returns>
         public static async Task<string> ExtractZipFile(IFormFile? file)
         {
