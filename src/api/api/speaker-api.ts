@@ -436,34 +436,20 @@ export const SpeakerApiAxiosParamCreator = function (
      *
      * @param {string} projectId
      * @param {string} speakerId
-     * @param {any} file
-     * @param {string} name
-     * @param {string} filename
-     * @param {string} filePath
+     * @param {any} [file]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     uploadConsent: async (
       projectId: string,
       speakerId: string,
-      file: any,
-      name: string,
-      filename: string,
-      filePath: string,
+      file?: any,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("uploadConsent", "projectId", projectId);
       // verify required parameter 'speakerId' is not null or undefined
       assertParamExists("uploadConsent", "speakerId", speakerId);
-      // verify required parameter 'file' is not null or undefined
-      assertParamExists("uploadConsent", "file", file);
-      // verify required parameter 'name' is not null or undefined
-      assertParamExists("uploadConsent", "name", name);
-      // verify required parameter 'filename' is not null or undefined
-      assertParamExists("uploadConsent", "filename", filename);
-      // verify required parameter 'filePath' is not null or undefined
-      assertParamExists("uploadConsent", "filePath", filePath);
       const localVarPath =
         `/v1/projects/{projectId}/speakers/consent/{speakerId}`
           .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
@@ -487,19 +473,7 @@ export const SpeakerApiAxiosParamCreator = function (
         FormData)();
 
       if (file !== undefined) {
-        localVarFormParams.append("File", file as any);
-      }
-
-      if (name !== undefined) {
-        localVarFormParams.append("Name", name as any);
-      }
-
-      if (filename !== undefined) {
-        localVarFormParams.append("Filename", filename as any);
-      }
-
-      if (filePath !== undefined) {
-        localVarFormParams.append("FilePath", filePath as any);
+        localVarFormParams.append("file", file as any);
       }
 
       localVarHeaderParameter["Content-Type"] = "multipart/form-data";
@@ -738,20 +712,14 @@ export const SpeakerApiFp = function (configuration?: Configuration) {
      *
      * @param {string} projectId
      * @param {string} speakerId
-     * @param {any} file
-     * @param {string} name
-     * @param {string} filename
-     * @param {string} filePath
+     * @param {any} [file]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async uploadConsent(
       projectId: string,
       speakerId: string,
-      file: any,
-      name: string,
-      filename: string,
-      filePath: string,
+      file?: any,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Speaker>
@@ -760,9 +728,6 @@ export const SpeakerApiFp = function (configuration?: Configuration) {
         projectId,
         speakerId,
         file,
-        name,
-        filename,
-        filePath,
         options
       );
       return createRequestFunction(
@@ -916,32 +881,18 @@ export const SpeakerApiFactory = function (
      *
      * @param {string} projectId
      * @param {string} speakerId
-     * @param {any} file
-     * @param {string} name
-     * @param {string} filename
-     * @param {string} filePath
+     * @param {any} [file]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     uploadConsent(
       projectId: string,
       speakerId: string,
-      file: any,
-      name: string,
-      filename: string,
-      filePath: string,
+      file?: any,
       options?: any
     ): AxiosPromise<Speaker> {
       return localVarFp
-        .uploadConsent(
-          projectId,
-          speakerId,
-          file,
-          name,
-          filename,
-          filePath,
-          options
-        )
+        .uploadConsent(projectId, speakerId, file, options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -1133,28 +1084,7 @@ export interface SpeakerApiUploadConsentRequest {
    * @type {any}
    * @memberof SpeakerApiUploadConsent
    */
-  readonly file: any;
-
-  /**
-   *
-   * @type {string}
-   * @memberof SpeakerApiUploadConsent
-   */
-  readonly name: string;
-
-  /**
-   *
-   * @type {string}
-   * @memberof SpeakerApiUploadConsent
-   */
-  readonly filename: string;
-
-  /**
-   *
-   * @type {string}
-   * @memberof SpeakerApiUploadConsent
-   */
-  readonly filePath: string;
+  readonly file?: any;
 }
 
 /**
@@ -1333,9 +1263,6 @@ export class SpeakerApi extends BaseAPI {
         requestParameters.projectId,
         requestParameters.speakerId,
         requestParameters.file,
-        requestParameters.name,
-        requestParameters.filename,
-        requestParameters.filePath,
         options
       )
       .then((request) => request(this.axios, this.basePath));

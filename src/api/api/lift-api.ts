@@ -274,31 +274,17 @@ export const LiftApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
-     * @param {any} file
-     * @param {string} name
-     * @param {string} filename
-     * @param {string} filePath
+     * @param {any} [file]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     uploadLiftFile: async (
       projectId: string,
-      file: any,
-      name: string,
-      filename: string,
-      filePath: string,
+      file?: any,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("uploadLiftFile", "projectId", projectId);
-      // verify required parameter 'file' is not null or undefined
-      assertParamExists("uploadLiftFile", "file", file);
-      // verify required parameter 'name' is not null or undefined
-      assertParamExists("uploadLiftFile", "name", name);
-      // verify required parameter 'filename' is not null or undefined
-      assertParamExists("uploadLiftFile", "filename", filename);
-      // verify required parameter 'filePath' is not null or undefined
-      assertParamExists("uploadLiftFile", "filePath", filePath);
       const localVarPath = `/v1/projects/{projectId}/lift/upload`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
@@ -322,19 +308,7 @@ export const LiftApiAxiosParamCreator = function (
         FormData)();
 
       if (file !== undefined) {
-        localVarFormParams.append("File", file as any);
-      }
-
-      if (name !== undefined) {
-        localVarFormParams.append("Name", name as any);
-      }
-
-      if (filename !== undefined) {
-        localVarFormParams.append("Filename", filename as any);
-      }
-
-      if (filePath !== undefined) {
-        localVarFormParams.append("FilePath", filePath as any);
+        localVarFormParams.append("file", file as any);
       }
 
       localVarHeaderParameter["Content-Type"] = "multipart/form-data";
@@ -357,19 +331,13 @@ export const LiftApiAxiosParamCreator = function (
     /**
      *
      * @param {string} projectId
-     * @param {any} file
-     * @param {string} name
-     * @param {string} filename
-     * @param {string} filePath
+     * @param {any} [file]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     uploadLiftFileAndGetWritingSystems: async (
       projectId: string,
-      file: any,
-      name: string,
-      filename: string,
-      filePath: string,
+      file?: any,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
@@ -377,22 +345,6 @@ export const LiftApiAxiosParamCreator = function (
         "uploadLiftFileAndGetWritingSystems",
         "projectId",
         projectId
-      );
-      // verify required parameter 'file' is not null or undefined
-      assertParamExists("uploadLiftFileAndGetWritingSystems", "file", file);
-      // verify required parameter 'name' is not null or undefined
-      assertParamExists("uploadLiftFileAndGetWritingSystems", "name", name);
-      // verify required parameter 'filename' is not null or undefined
-      assertParamExists(
-        "uploadLiftFileAndGetWritingSystems",
-        "filename",
-        filename
-      );
-      // verify required parameter 'filePath' is not null or undefined
-      assertParamExists(
-        "uploadLiftFileAndGetWritingSystems",
-        "filePath",
-        filePath
       );
       const localVarPath =
         `/v1/projects/{projectId}/lift/uploadandgetwritingsystems`.replace(
@@ -418,19 +370,7 @@ export const LiftApiAxiosParamCreator = function (
         FormData)();
 
       if (file !== undefined) {
-        localVarFormParams.append("File", file as any);
-      }
-
-      if (name !== undefined) {
-        localVarFormParams.append("Name", name as any);
-      }
-
-      if (filename !== undefined) {
-        localVarFormParams.append("Filename", filename as any);
-      }
-
-      if (filePath !== undefined) {
-        localVarFormParams.append("FilePath", filePath as any);
+        localVarFormParams.append("file", file as any);
       }
 
       localVarHeaderParameter["Content-Type"] = "multipart/form-data";
@@ -577,19 +517,13 @@ export const LiftApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
-     * @param {any} file
-     * @param {string} name
-     * @param {string} filename
-     * @param {string} filePath
+     * @param {any} [file]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async uploadLiftFile(
       projectId: string,
-      file: any,
-      name: string,
-      filename: string,
-      filePath: string,
+      file?: any,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<number>
@@ -597,9 +531,6 @@ export const LiftApiFp = function (configuration?: Configuration) {
       const localVarAxiosArgs = await localVarAxiosParamCreator.uploadLiftFile(
         projectId,
         file,
-        name,
-        filename,
-        filePath,
         options
       );
       return createRequestFunction(
@@ -612,19 +543,13 @@ export const LiftApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} projectId
-     * @param {any} file
-     * @param {string} name
-     * @param {string} filename
-     * @param {string} filePath
+     * @param {any} [file]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async uploadLiftFileAndGetWritingSystems(
       projectId: string,
-      file: any,
-      name: string,
-      filename: string,
-      filePath: string,
+      file?: any,
       options?: any
     ): Promise<
       (
@@ -636,9 +561,6 @@ export const LiftApiFp = function (configuration?: Configuration) {
         await localVarAxiosParamCreator.uploadLiftFileAndGetWritingSystems(
           projectId,
           file,
-          name,
-          filename,
-          filePath,
           options
         );
       return createRequestFunction(
@@ -723,52 +645,33 @@ export const LiftApiFactory = function (
     /**
      *
      * @param {string} projectId
-     * @param {any} file
-     * @param {string} name
-     * @param {string} filename
-     * @param {string} filePath
+     * @param {any} [file]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     uploadLiftFile(
       projectId: string,
-      file: any,
-      name: string,
-      filename: string,
-      filePath: string,
+      file?: any,
       options?: any
     ): AxiosPromise<number> {
       return localVarFp
-        .uploadLiftFile(projectId, file, name, filename, filePath, options)
+        .uploadLiftFile(projectId, file, options)
         .then((request) => request(axios, basePath));
     },
     /**
      *
      * @param {string} projectId
-     * @param {any} file
-     * @param {string} name
-     * @param {string} filename
-     * @param {string} filePath
+     * @param {any} [file]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     uploadLiftFileAndGetWritingSystems(
       projectId: string,
-      file: any,
-      name: string,
-      filename: string,
-      filePath: string,
+      file?: any,
       options?: any
     ): AxiosPromise<Array<WritingSystem>> {
       return localVarFp
-        .uploadLiftFileAndGetWritingSystems(
-          projectId,
-          file,
-          name,
-          filename,
-          filePath,
-          options
-        )
+        .uploadLiftFileAndGetWritingSystems(projectId, file, options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -862,28 +765,7 @@ export interface LiftApiUploadLiftFileRequest {
    * @type {any}
    * @memberof LiftApiUploadLiftFile
    */
-  readonly file: any;
-
-  /**
-   *
-   * @type {string}
-   * @memberof LiftApiUploadLiftFile
-   */
-  readonly name: string;
-
-  /**
-   *
-   * @type {string}
-   * @memberof LiftApiUploadLiftFile
-   */
-  readonly filename: string;
-
-  /**
-   *
-   * @type {string}
-   * @memberof LiftApiUploadLiftFile
-   */
-  readonly filePath: string;
+  readonly file?: any;
 }
 
 /**
@@ -904,28 +786,7 @@ export interface LiftApiUploadLiftFileAndGetWritingSystemsRequest {
    * @type {any}
    * @memberof LiftApiUploadLiftFileAndGetWritingSystems
    */
-  readonly file: any;
-
-  /**
-   *
-   * @type {string}
-   * @memberof LiftApiUploadLiftFileAndGetWritingSystems
-   */
-  readonly name: string;
-
-  /**
-   *
-   * @type {string}
-   * @memberof LiftApiUploadLiftFileAndGetWritingSystems
-   */
-  readonly filename: string;
-
-  /**
-   *
-   * @type {string}
-   * @memberof LiftApiUploadLiftFileAndGetWritingSystems
-   */
-  readonly filePath: string;
+  readonly file?: any;
 }
 
 /**
@@ -1030,9 +891,6 @@ export class LiftApi extends BaseAPI {
       .uploadLiftFile(
         requestParameters.projectId,
         requestParameters.file,
-        requestParameters.name,
-        requestParameters.filename,
-        requestParameters.filePath,
         options
       )
       .then((request) => request(this.axios, this.basePath));
@@ -1053,9 +911,6 @@ export class LiftApi extends BaseAPI {
       .uploadLiftFileAndGetWritingSystems(
         requestParameters.projectId,
         requestParameters.file,
-        requestParameters.name,
-        requestParameters.filename,
-        requestParameters.filePath,
         options
       )
       .then((request) => request(this.axios, this.basePath));

@@ -92,31 +92,17 @@ export const AvatarApiAxiosParamCreator = function (
     /**
      *
      * @param {string} userId
-     * @param {any} file
-     * @param {string} name
-     * @param {string} filename
-     * @param {string} filePath
+     * @param {any} [file]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     uploadAvatar: async (
       userId: string,
-      file: any,
-      name: string,
-      filename: string,
-      filePath: string,
+      file?: any,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'userId' is not null or undefined
       assertParamExists("uploadAvatar", "userId", userId);
-      // verify required parameter 'file' is not null or undefined
-      assertParamExists("uploadAvatar", "file", file);
-      // verify required parameter 'name' is not null or undefined
-      assertParamExists("uploadAvatar", "name", name);
-      // verify required parameter 'filename' is not null or undefined
-      assertParamExists("uploadAvatar", "filename", filename);
-      // verify required parameter 'filePath' is not null or undefined
-      assertParamExists("uploadAvatar", "filePath", filePath);
       const localVarPath = `/v1/users/{userId}/avatar/upload`.replace(
         `{${"userId"}}`,
         encodeURIComponent(String(userId))
@@ -140,19 +126,7 @@ export const AvatarApiAxiosParamCreator = function (
         FormData)();
 
       if (file !== undefined) {
-        localVarFormParams.append("File", file as any);
-      }
-
-      if (name !== undefined) {
-        localVarFormParams.append("Name", name as any);
-      }
-
-      if (filename !== undefined) {
-        localVarFormParams.append("Filename", filename as any);
-      }
-
-      if (filePath !== undefined) {
-        localVarFormParams.append("FilePath", filePath as any);
+        localVarFormParams.append("file", file as any);
       }
 
       localVarHeaderParameter["Content-Type"] = "multipart/form-data";
@@ -208,19 +182,13 @@ export const AvatarApiFp = function (configuration?: Configuration) {
     /**
      *
      * @param {string} userId
-     * @param {any} file
-     * @param {string} name
-     * @param {string} filename
-     * @param {string} filePath
+     * @param {any} [file]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async uploadAvatar(
       userId: string,
-      file: any,
-      name: string,
-      filename: string,
-      filePath: string,
+      file?: any,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -228,9 +196,6 @@ export const AvatarApiFp = function (configuration?: Configuration) {
       const localVarAxiosArgs = await localVarAxiosParamCreator.uploadAvatar(
         userId,
         file,
-        name,
-        filename,
-        filePath,
         options
       );
       return createRequestFunction(
@@ -268,23 +233,17 @@ export const AvatarApiFactory = function (
     /**
      *
      * @param {string} userId
-     * @param {any} file
-     * @param {string} name
-     * @param {string} filename
-     * @param {string} filePath
+     * @param {any} [file]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     uploadAvatar(
       userId: string,
-      file: any,
-      name: string,
-      filename: string,
-      filePath: string,
+      file?: any,
       options?: any
     ): AxiosPromise<void> {
       return localVarFp
-        .uploadAvatar(userId, file, name, filename, filePath, options)
+        .uploadAvatar(userId, file, options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -322,28 +281,7 @@ export interface AvatarApiUploadAvatarRequest {
    * @type {any}
    * @memberof AvatarApiUploadAvatar
    */
-  readonly file: any;
-
-  /**
-   *
-   * @type {string}
-   * @memberof AvatarApiUploadAvatar
-   */
-  readonly name: string;
-
-  /**
-   *
-   * @type {string}
-   * @memberof AvatarApiUploadAvatar
-   */
-  readonly filename: string;
-
-  /**
-   *
-   * @type {string}
-   * @memberof AvatarApiUploadAvatar
-   */
-  readonly filePath: string;
+  readonly file?: any;
 }
 
 /**
@@ -381,14 +319,7 @@ export class AvatarApi extends BaseAPI {
     options?: any
   ) {
     return AvatarApiFp(this.configuration)
-      .uploadAvatar(
-        requestParameters.userId,
-        requestParameters.file,
-        requestParameters.name,
-        requestParameters.filename,
-        requestParameters.filePath,
-        options
-      )
+      .uploadAvatar(requestParameters.userId, requestParameters.file, options)
       .then((request) => request(this.axios, this.basePath));
   }
 }
