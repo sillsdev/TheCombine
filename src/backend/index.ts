@@ -113,19 +113,26 @@ function defaultOptions(): object {
   return { headers: authHeader() };
 }
 
+function fileUploadOptions(): object {
+  return {
+    headers: { ...authHeader(), "content-type": "multipart/form-data" },
+  };
+}
+
 /* AudioController.cs */
 
 export async function uploadAudio(
   wordId: string,
   file: FileWithSpeakerId
 ): Promise<string> {
+  console.info(file);
   const projectId = LocalStorage.getProjectId();
   const speakerId = file.speakerId ?? "";
   const params = { projectId, wordId, file };
-  const headers = { ...authHeader(), "content-type": "application/json" };
+  const options = fileUploadOptions();
   const promise = speakerId
-    ? audioApi.uploadAudioFileWithSpeaker({ ...params, speakerId }, { headers })
-    : audioApi.uploadAudioFile(params, { headers });
+    ? audioApi.uploadAudioFileWithSpeaker({ ...params, speakerId }, options)
+    : audioApi.uploadAudioFile(params, options);
   return (await promise).data;
 }
 
@@ -145,8 +152,7 @@ export function getAudioUrl(wordId: string, fileName: string): string {
 /* AvatarController.cs */
 
 export async function uploadAvatar(userId: string, file: File): Promise<void> {
-  const headers = { ...authHeader(), "content-type": "application/json" };
-  await avatarApi.uploadAvatar({ userId, file }, { headers });
+  await avatarApi.uploadAvatar({ userId, file }, fileUploadOptions());
   if (userId === LocalStorage.getUserId()) {
     LocalStorage.setAvatar(await avatarSrc(userId));
   }
@@ -223,7 +229,7 @@ export async function uploadLiftAndGetWritingSystems(
 ): Promise<Api.WritingSystem[]> {
   const resp = await liftApi.uploadLiftFileAndGetWritingSystems(
     { projectId: "nonempty", file },
-    { headers: { ...authHeader(), "Content-Type": "multipart/form-data" } }
+    fileUploadOptions()
   );
   return resp.data;
 }
@@ -241,7 +247,7 @@ export async function uploadLift(
 ): Promise<number> {
   const resp = await liftApi.uploadLiftFile(
     { projectId, file },
-    { headers: { ...authHeader(), "Content-Type": "multipart/form-data" } }
+    fileUploadOptions()
   );
   return resp.data;
 }
@@ -533,8 +539,7 @@ export async function uploadConsent(
 ): Promise<Speaker> {
   const { id, projectId } = speaker;
   const params = { projectId, speakerId: id, file };
-  const headers = { ...authHeader(), "content-type": "application/json" };
-  return (await speakerApi.uploadConsent(params, { headers })).data;
+  return (await speakerApi.uploadConsent(params, fileUploadOptions())).data;
 }
 
 /** Use of the returned url acts as an HttpGet. */
