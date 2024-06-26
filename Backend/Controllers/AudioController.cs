@@ -61,28 +61,27 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary>
-        /// Adds a pronunciation <see cref="FileUpload"/> to a specified project word
+        /// Adds a pronunciation <see cref="FormFile"/> to a specified project word
         /// and saves locally to ~/.CombineFiles/{ProjectId}/Import/ExtractedLocation/Lift/audio
         /// </summary>
         /// <returns> Id of updated word </returns>
         [HttpPost("upload", Name = "UploadAudioFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        public async Task<IActionResult> UploadAudioFile(string projectId, string wordId,
-            [FromForm] FileUpload fileUpload)
+        public async Task<IActionResult> UploadAudioFile(string projectId, string wordId, IFormFile? file)
         {
-            return await UploadAudioFile(projectId, wordId, "", fileUpload);
+            return await UploadAudioFile(projectId, wordId, "", file);
         }
 
 
         /// <summary>
-        /// Adds a pronunciation <see cref="FileUpload"/> with a specified speaker to a project word
+        /// Adds a pronunciation <see cref="FormFile"/> with a specified speaker to a project word
         /// and saves locally to ~/.CombineFiles/{ProjectId}/Import/ExtractedLocation/Lift/audio
         /// </summary>
         /// <returns> Id of updated word </returns>
         [HttpPost("upload/{speakerId}", Name = "UploadAudioFileWithSpeaker")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        public async Task<IActionResult> UploadAudioFile(string projectId, string wordId, string speakerId,
-            [FromForm] FileUpload fileUpload)
+        public async Task<IActionResult> UploadAudioFile(
+            string projectId, string wordId, string speakerId, IFormFile? file)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
@@ -101,7 +100,6 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
-            var file = fileUpload.File;
             if (file is null)
             {
                 return BadRequest("Null File");
@@ -115,10 +113,10 @@ namespace BackendFramework.Controllers
 
             // This path should be unique even though it is only based on the Word ID because currently, a new
             // Word is created each time an audio file is uploaded.
-            fileUpload.FilePath = FileStorage.GenerateAudioFilePathForWord(projectId, wordId);
+            var filePath = FileStorage.GenerateAudioFilePathForWord(projectId, wordId);
 
             // Copy the file data to a new local file
-            await using (var fs = new FileStream(fileUpload.FilePath, FileMode.Create))
+            await using (var fs = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(fs);
             }
@@ -129,7 +127,7 @@ namespace BackendFramework.Controllers
             {
                 return NotFound(wordId);
             }
-            var audio = new Pronunciation(Path.GetFileName(fileUpload.FilePath), speakerId);
+            var audio = new Pronunciation(Path.GetFileName(filePath), speakerId);
             word.Audio.Add(audio);
 
             // Update the word with new audio file

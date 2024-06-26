@@ -36,8 +36,7 @@ namespace Backend.Tests.Controllers
         private const string FileName = "sound.mp3"; // file in Backend.Tests/Assets/
         private Speaker _speaker = null!;
         private readonly Stream _stream = File.OpenRead(Path.Combine(Util.AssetsDir, FileName));
-        private FormFile _formFile = null!;
-        private FileUpload _fileUpload = null!;
+        private FormFile _file = null!;
 
         [SetUp]
         public void Setup()
@@ -48,12 +47,11 @@ namespace Backend.Tests.Controllers
 
             _speaker = _speakerRepo.Create(new Speaker { Name = Name, ProjectId = ProjId }).Result;
 
-            _formFile = new FormFile(_stream, 0, _stream.Length, "name", FileName)
+            _file = new FormFile(_stream, 0, _stream.Length, "name", FileName)
             {
                 Headers = new HeaderDictionary(),
                 ContentType = "audio"
             };
-            _fileUpload = new FileUpload { File = _formFile, Name = FileName };
         }
 
         [Test]
@@ -258,10 +256,10 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUploadConsentInvalidArguments()
         {
-            var result = _speakerController.UploadConsent("invalid/projectId", _speaker.Id, _fileUpload).Result;
+            var result = _speakerController.UploadConsent("invalid/projectId", _speaker.Id, _file).Result;
             Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
 
-            result = _speakerController.UploadConsent(ProjId, "invalid/speakerId", _fileUpload).Result;
+            result = _speakerController.UploadConsent(ProjId, "invalid/speakerId", _file).Result;
             Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
         }
 
@@ -269,21 +267,21 @@ namespace Backend.Tests.Controllers
         public void TestUploadConsentUnauthorized()
         {
             _speakerController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-            var result = _speakerController.UploadConsent(ProjId, _speaker.Id, _fileUpload).Result;
+            var result = _speakerController.UploadConsent(ProjId, _speaker.Id, _file).Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 
         [Test]
         public void TestUploadConsentNoSpeaker()
         {
-            var result = _speakerController.UploadConsent(ProjId, "other", _fileUpload).Result;
+            var result = _speakerController.UploadConsent(ProjId, "other", _file).Result;
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
         }
 
         [Test]
         public void TestUploadConsentNullFile()
         {
-            var result = _speakerController.UploadConsent(ProjId, _speaker.Id, new()).Result;
+            var result = _speakerController.UploadConsent(ProjId, _speaker.Id, null).Result;
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
         }
 
@@ -291,31 +289,28 @@ namespace Backend.Tests.Controllers
         public void TestUploadConsentEmptyFile()
         {
             // Use 0 for the third argument
-            _formFile = new FormFile(_stream, 0, 0, "name", FileName)
+            _file = new FormFile(_stream, 0, 0, "name", FileName)
             {
                 Headers = new HeaderDictionary(),
                 ContentType = "audio"
             };
-            _fileUpload = new FileUpload { File = _formFile, Name = FileName };
-            var result = _speakerController.UploadConsent(ProjId, _speaker.Id, _fileUpload).Result;
+            var result = _speakerController.UploadConsent(ProjId, _speaker.Id, _file).Result;
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
         }
 
         [Test]
         public void TestUploadConsentInvalidContentType()
         {
-            _formFile.ContentType = "neither audi0 nor 1mage";
-            _fileUpload = new FileUpload { File = _formFile, Name = FileName };
-            var result = _speakerController.UploadConsent(ProjId, _speaker.Id, _fileUpload).Result;
+            _file.ContentType = "neither audi0 nor 1mage";
+            var result = _speakerController.UploadConsent(ProjId, _speaker.Id, _file).Result;
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
         }
 
         [Test]
         public void TestUploadConsentAddAudioConsent()
         {
-            _formFile.ContentType = "audio/something";
-            _fileUpload = new FileUpload { File = _formFile, Name = FileName };
-            var result = _speakerController.UploadConsent(ProjId, _speaker.Id, _fileUpload).Result;
+            _file.ContentType = "audio/something";
+            var result = _speakerController.UploadConsent(ProjId, _speaker.Id, _file).Result;
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
             var value = (Speaker)((ObjectResult)result).Value!;
             Assert.That(value.Consent, Is.EqualTo(ConsentType.Audio));
@@ -326,9 +321,8 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUploadConsentAddImageConsent()
         {
-            _formFile.ContentType = "image/anything";
-            _fileUpload = new FileUpload { File = _formFile, Name = FileName };
-            var result = _speakerController.UploadConsent(ProjId, _speaker.Id, _fileUpload).Result;
+            _file.ContentType = "image/anything";
+            var result = _speakerController.UploadConsent(ProjId, _speaker.Id, _file).Result;
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
             var value = (Speaker)((ObjectResult)result).Value!;
             Assert.That(value.Consent, Is.EqualTo(ConsentType.Image));
