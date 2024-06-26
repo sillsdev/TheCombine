@@ -156,30 +156,20 @@ export const AudioApiAxiosParamCreator = function (
      *
      * @param {string} projectId
      * @param {string} wordId
-     * @param {any} file
-     * @param {string} name
-     * @param {string} filePath
+     * @param {any} [file]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     uploadAudioFile: async (
       projectId: string,
       wordId: string,
-      file: any,
-      name: string,
-      filePath: string,
+      file?: any,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("uploadAudioFile", "projectId", projectId);
       // verify required parameter 'wordId' is not null or undefined
       assertParamExists("uploadAudioFile", "wordId", wordId);
-      // verify required parameter 'file' is not null or undefined
-      assertParamExists("uploadAudioFile", "file", file);
-      // verify required parameter 'name' is not null or undefined
-      assertParamExists("uploadAudioFile", "name", name);
-      // verify required parameter 'filePath' is not null or undefined
-      assertParamExists("uploadAudioFile", "filePath", filePath);
       const localVarPath =
         `/v1/projects/{projectId}/words/{wordId}/audio/upload`
           .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
@@ -203,15 +193,7 @@ export const AudioApiAxiosParamCreator = function (
         FormData)();
 
       if (file !== undefined) {
-        localVarFormParams.append("File", file as any);
-      }
-
-      if (name !== undefined) {
-        localVarFormParams.append("Name", name as any);
-      }
-
-      if (filePath !== undefined) {
-        localVarFormParams.append("FilePath", filePath as any);
+        localVarFormParams.append("file", file as any);
       }
 
       localVarHeaderParameter["Content-Type"] = "multipart/form-data";
@@ -236,9 +218,7 @@ export const AudioApiAxiosParamCreator = function (
      * @param {string} projectId
      * @param {string} wordId
      * @param {string} speakerId
-     * @param {any} file
-     * @param {string} name
-     * @param {string} filePath
+     * @param {any} [file]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -246,9 +226,7 @@ export const AudioApiAxiosParamCreator = function (
       projectId: string,
       wordId: string,
       speakerId: string,
-      file: any,
-      name: string,
-      filePath: string,
+      file?: any,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
@@ -257,12 +235,6 @@ export const AudioApiAxiosParamCreator = function (
       assertParamExists("uploadAudioFileWithSpeaker", "wordId", wordId);
       // verify required parameter 'speakerId' is not null or undefined
       assertParamExists("uploadAudioFileWithSpeaker", "speakerId", speakerId);
-      // verify required parameter 'file' is not null or undefined
-      assertParamExists("uploadAudioFileWithSpeaker", "file", file);
-      // verify required parameter 'name' is not null or undefined
-      assertParamExists("uploadAudioFileWithSpeaker", "name", name);
-      // verify required parameter 'filePath' is not null or undefined
-      assertParamExists("uploadAudioFileWithSpeaker", "filePath", filePath);
       const localVarPath =
         `/v1/projects/{projectId}/words/{wordId}/audio/upload/{speakerId}`
           .replace(`{${"projectId"}}`, encodeURIComponent(String(projectId)))
@@ -287,15 +259,7 @@ export const AudioApiAxiosParamCreator = function (
         FormData)();
 
       if (file !== undefined) {
-        localVarFormParams.append("File", file as any);
-      }
-
-      if (name !== undefined) {
-        localVarFormParams.append("Name", name as any);
-      }
-
-      if (filePath !== undefined) {
-        localVarFormParams.append("FilePath", filePath as any);
+        localVarFormParams.append("file", file as any);
       }
 
       localVarHeaderParameter["Content-Type"] = "multipart/form-data";
@@ -388,18 +352,14 @@ export const AudioApiFp = function (configuration?: Configuration) {
      *
      * @param {string} projectId
      * @param {string} wordId
-     * @param {any} file
-     * @param {string} name
-     * @param {string} filePath
+     * @param {any} [file]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async uploadAudioFile(
       projectId: string,
       wordId: string,
-      file: any,
-      name: string,
-      filePath: string,
+      file?: any,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
@@ -408,8 +368,6 @@ export const AudioApiFp = function (configuration?: Configuration) {
         projectId,
         wordId,
         file,
-        name,
-        filePath,
         options
       );
       return createRequestFunction(
@@ -424,9 +382,7 @@ export const AudioApiFp = function (configuration?: Configuration) {
      * @param {string} projectId
      * @param {string} wordId
      * @param {string} speakerId
-     * @param {any} file
-     * @param {string} name
-     * @param {string} filePath
+     * @param {any} [file]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -434,9 +390,7 @@ export const AudioApiFp = function (configuration?: Configuration) {
       projectId: string,
       wordId: string,
       speakerId: string,
-      file: any,
-      name: string,
-      filePath: string,
+      file?: any,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
@@ -447,8 +401,6 @@ export const AudioApiFp = function (configuration?: Configuration) {
           wordId,
           speakerId,
           file,
-          name,
-          filePath,
           options
         );
       return createRequestFunction(
@@ -512,22 +464,18 @@ export const AudioApiFactory = function (
      *
      * @param {string} projectId
      * @param {string} wordId
-     * @param {any} file
-     * @param {string} name
-     * @param {string} filePath
+     * @param {any} [file]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     uploadAudioFile(
       projectId: string,
       wordId: string,
-      file: any,
-      name: string,
-      filePath: string,
+      file?: any,
       options?: any
     ): AxiosPromise<string> {
       return localVarFp
-        .uploadAudioFile(projectId, wordId, file, name, filePath, options)
+        .uploadAudioFile(projectId, wordId, file, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -535,9 +483,7 @@ export const AudioApiFactory = function (
      * @param {string} projectId
      * @param {string} wordId
      * @param {string} speakerId
-     * @param {any} file
-     * @param {string} name
-     * @param {string} filePath
+     * @param {any} [file]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -545,21 +491,11 @@ export const AudioApiFactory = function (
       projectId: string,
       wordId: string,
       speakerId: string,
-      file: any,
-      name: string,
-      filePath: string,
+      file?: any,
       options?: any
     ): AxiosPromise<string> {
       return localVarFp
-        .uploadAudioFileWithSpeaker(
-          projectId,
-          wordId,
-          speakerId,
-          file,
-          name,
-          filePath,
-          options
-        )
+        .uploadAudioFileWithSpeaker(projectId, wordId, speakerId, file, options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -646,21 +582,7 @@ export interface AudioApiUploadAudioFileRequest {
    * @type {any}
    * @memberof AudioApiUploadAudioFile
    */
-  readonly file: any;
-
-  /**
-   *
-   * @type {string}
-   * @memberof AudioApiUploadAudioFile
-   */
-  readonly name: string;
-
-  /**
-   *
-   * @type {string}
-   * @memberof AudioApiUploadAudioFile
-   */
-  readonly filePath: string;
+  readonly file?: any;
 }
 
 /**
@@ -695,21 +617,7 @@ export interface AudioApiUploadAudioFileWithSpeakerRequest {
    * @type {any}
    * @memberof AudioApiUploadAudioFileWithSpeaker
    */
-  readonly file: any;
-
-  /**
-   *
-   * @type {string}
-   * @memberof AudioApiUploadAudioFileWithSpeaker
-   */
-  readonly name: string;
-
-  /**
-   *
-   * @type {string}
-   * @memberof AudioApiUploadAudioFileWithSpeaker
-   */
-  readonly filePath: string;
+  readonly file?: any;
 }
 
 /**
@@ -777,8 +685,6 @@ export class AudioApi extends BaseAPI {
         requestParameters.projectId,
         requestParameters.wordId,
         requestParameters.file,
-        requestParameters.name,
-        requestParameters.filePath,
         options
       )
       .then((request) => request(this.axios, this.basePath));
@@ -801,8 +707,6 @@ export class AudioApi extends BaseAPI {
         requestParameters.wordId,
         requestParameters.speakerId,
         requestParameters.file,
-        requestParameters.name,
-        requestParameters.filePath,
         options
       )
       .then((request) => request(this.axios, this.basePath));
