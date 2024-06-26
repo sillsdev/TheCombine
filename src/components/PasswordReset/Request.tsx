@@ -84,6 +84,7 @@ export default function ResetRequest(): ReactElement {
                 <LoadingDoneButton
                   buttonProps={{
                     color: "primary",
+                    "data-testid": PasswordRequestIds.ButtonSubmit,
                     id: PasswordRequestIds.ButtonSubmit,
                     onClick: () => onSubmit,
                     variant: "contained",

@@ -1,6 +1,7 @@
 import "@testing-library/jest-dom";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { act } from "react";
 
 import SiteSettings, { SiteSettingsTab } from "components/SiteSettings";
 
@@ -52,15 +53,21 @@ describe("SiteSettings", () => {
     await renderSiteSettings();
 
     // Banners tab
-    await agent.click(screen.getByTestId(SiteSettingsTab.Banners));
+    await act(async () => {
+      await agent.click(screen.getByTestId(SiteSettingsTab.Banners));
+    });
     isPanelVisible(SiteSettingsTab.Banners);
 
     // Projects tab
-    await agent.click(screen.getByTestId(SiteSettingsTab.Projects));
+    await act(async () => {
+      await agent.click(screen.getByTestId(SiteSettingsTab.Projects));
+    });
     isPanelVisible(SiteSettingsTab.Projects);
 
     // Users tab
-    await agent.click(screen.getByTestId(SiteSettingsTab.Users));
+    await act(async () => {
+      await agent.click(screen.getByTestId(SiteSettingsTab.Users));
+    });
     isPanelVisible(SiteSettingsTab.Users);
   });
 });
