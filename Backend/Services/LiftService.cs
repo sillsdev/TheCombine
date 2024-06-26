@@ -1001,6 +1001,10 @@ namespace BackendFramework.Services
                 if (range == "semantic-domain-ddp4" && abbrev.Count > 0)
                 {
                     var domainId = abbrev.First().Value.Text;
+
+                    // If we allow custom subdomains with id not ending in "0",
+                    // we'll need to change the `domainId.Last() == '0'` check
+                    // to verifying that the id doesn't conflict with the standard domains.
                     if (SemanticDomain.IsValidId(domainId, true) && domainId.Last() == '0')
                     {
                         foreach (var nameLabel in label)

@@ -32,6 +32,9 @@ export async function getAugmentedTreeNode(
       : await getSemanticDomainTreeNode(idOrName, lang);
   if (dom) {
     const id = dom.id;
+    // If we allow custom domains with id not ending in "0",
+    // these child/previous definitions will have to be replaced
+    // with more general children/previous/next calculations.
     const childId = id === rootId ? "0" : `${id}.0`;
     const customChild = customDoms.find((d) => d.id === childId);
     if (customChild) {
@@ -64,6 +67,8 @@ async function createCustomTreeNode(
       customDom.parentId ||
       (id.length > 1 ? id.substring(0, id.length - 2) : rootId);
     const parent = await getSemanticDomainTreeNode(parentId, customDom.lang);
+    // If we allow custom domains with id not ending in "0",
+    // this `next` will have to be replaced with general `previous`/`next` calculations.
     const next = parent?.children.length ? parent.children[0] : undefined;
     return { ...treeNodeFromSemDom(customDom), parent, next };
   }

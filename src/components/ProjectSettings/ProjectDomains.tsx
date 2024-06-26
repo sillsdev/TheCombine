@@ -293,6 +293,8 @@ export function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
       return;
     }
 
+    // If we allow custom subdomains with id not ending in "0",
+    // we'll need to change this to check against the list of custom domains.
     if (parent?.id[parent?.id.length - 1] === "0") {
       toast.error(t("projectSettings.domains.addError.customParent"));
       return;
