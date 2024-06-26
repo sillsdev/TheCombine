@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 ###############################################################
 # Script to merge senses from two different analysis languages
@@ -6,8 +6,9 @@
 
 set -e
 
-usage() {
+usage () {
   cat <<USAGE
+
   Usage: $0 [options]
     Find all words with exactly two senses, each with exactly one gloss in one of two given languages.
     Merge those two senses into a single sense with two glosses, one in each language.
@@ -25,9 +26,6 @@ usage() {
           print commands instead of executing them
     -v, --verbose:
           print each line of code before it is executed
-
-  Caveat:
-    This script assumes that the backups have been created by the combine-backup
 USAGE
 }
 
@@ -68,8 +66,8 @@ while [[ $# -gt 0 ]] ; do
     -p|--proj)
       PROJ=$1
       shift
-      if [[ "${PROJ}" =~ [^0-9a-f] ]]; then
-        echo "The -p/--proj argument must be a hexidecimal id"
+      if [[ "${PROJ}" =~ [^0-9a-f] || ${#PROJ} != 24 ]]; then
+        echo "The -p/--proj argument must be a 24-character hexidecimal id"
         exit 1
       fi
       ;;
@@ -88,23 +86,23 @@ while [[ $# -gt 0 ]] ; do
 done
 
 if [[ -z "${LANGA}" ]]; then
-  echo "The -A/--langA argument is require"
-  echo "Run this script with -h/--help for usage"
+  echo "The -A/--langA argument is required"
+  usage
   exit 1
 fi
 if [[ -z "${LANGB}" ]]; then
-  echo "The -B/--langB argument is require"
-  echo "Run this script with -h/--help for usage"
+  echo "The -B/--langB argument is required"
+  usage
   exit 1
 fi
 if [[ "${LANGA}" == "${LANGB}" ]]; then
   echo "The -A/--langA and -B/--langB arguments must be different"
-  echo "Run this script with -h/--help for usage"
+  usage
   exit 1
 fi
 if [[ -z "${PROJ}" ]]; then
-  echo "The -p/--proj argument is require"
-  echo "Run this script with -h/--help for usage"
+  echo "The -p/--proj argument is required"
+  usage
   exit 1
 fi
 

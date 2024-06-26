@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 ######################################################
 # Script to add translated User Guide files
@@ -7,7 +7,7 @@
 
 set -e
 
-usage() {
+usage () {
   cat <<USAGE
   Usage: $0 [options]
     Add translated User Guide files downloaded from Crowdin.

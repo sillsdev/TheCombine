@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 ######################################################
 # Script to fetch dictionary files from
@@ -8,7 +8,7 @@
 
 set -e
 
-usage() {
+usage () {
   cat <<USAGE
   Usage: $0 [options]
     Fetch dictionary files for specified language and convert to a wordlist
