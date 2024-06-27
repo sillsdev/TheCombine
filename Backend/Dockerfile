@@ -26,15 +26,15 @@ ENV APP_FILES=${HOME}/.CombineFiles
 # Install system dependencies.
 RUN apt-get update \
   && apt-get install -y \
-  # icu.net dependency: libdl.so
-  libc6-dev ffmpeg \
+  ffmpeg \
   && rm -rf /var/lib/apt/lists/*
 
 # Create the home directory for the new app user.
 RUN mkdir -p $HOME
 
-# Modify the existing app user to prevent login.
-RUN usermod -s /sbin/nologin -c "Docker image user" app
+# Setup app user and group to known UID/GID; no login.
+RUN groupmod --gid 999 app
+RUN usermod  -u 999 -g app -s /sbin/nologin -c "Docker image user" app
 
 ## Set up application install directory.
 RUN mkdir $APP_HOME && \
