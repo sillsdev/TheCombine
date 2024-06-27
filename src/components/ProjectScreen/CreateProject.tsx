@@ -59,7 +59,8 @@ export default function CreateProject(): ReactElement {
   useEffect(() => {
     // Turn on the empty name error if the name is empty and another field isn't empty.
     const empty =
-      !name.trim() && (!!languageData || vernLang.bcp47 !== undBcp47);
+      !name.trim() &&
+      (!!languageData || (!!vernLang.bcp47 && vernLang.bcp47 !== undBcp47));
     setError((prev) => (empty === prev.empty ? prev : { ...prev, empty }));
   }, [languageData, name, vernLang.bcp47]);
 
