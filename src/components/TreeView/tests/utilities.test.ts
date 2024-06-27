@@ -23,7 +23,7 @@ describe("getAugmentedTreeNode", () => {
     expect(mockGetSemanticDomainTreeNodeByName).not.toHaveBeenCalled();
   });
 
-  it("fetches alphabetic queries by id", async () => {
+  it("fetches alphabetic queries by name", async () => {
     await getAugmentedTreeNode("topic", "fr", []);
 
     expect(mockGetSemanticDomainTreeNode).not.toHaveBeenCalled();
