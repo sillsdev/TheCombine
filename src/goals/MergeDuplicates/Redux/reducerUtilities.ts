@@ -173,8 +173,9 @@ export function combineIntoFirstSense(mergeSenses: MergeTreeSense[]): void {
       mainSense.grammaticalInfo.catGroup === dupSense.grammaticalInfo.catGroup
     ) {
       const oldCat = mainSense.grammaticalInfo.grammaticalCategory.trim();
+      const oldCats = oldCat.split(sep).map((cat) => cat.trim());
       const newCat = dupSense.grammaticalInfo.grammaticalCategory.trim();
-      if (newCat && !oldCat.includes(newCat)) {
+      if (newCat && !oldCats.includes(newCat)) {
         mainSense.grammaticalInfo.grammaticalCategory = `${oldCat}${sep}${newCat}`;
       }
     }
