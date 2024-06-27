@@ -60,18 +60,6 @@ beforeEach(() => {
 });
 
 describe("CreateProject", () => {
-  it("errors on empty name", async () => {
-    const nameField = projectHandle.findByProps({ id: fieldIdName });
-    expect(nameField.props.error).toBeFalsy();
-
-    await act(async () => {
-      projectHandle
-        .findByProps({ id: formId })
-        .props.onSubmit(mockSubmitEvent());
-    });
-    expect(nameField.props.error).toBeTruthy();
-  });
-
   it("errors on taken name", async () => {
     const nameField = projectHandle.findByProps({ id: fieldIdName });
     await act(async () => {
@@ -88,9 +76,15 @@ describe("CreateProject", () => {
     expect(nameField.props.error).toBeTruthy();
   });
 
-  it("disables submit button when no vern lang bcp code", async () => {
+  it("disables submit button when empty name or empty vern lang bcp code", async () => {
+    const nameField = projectHandle.findByProps({ id: fieldIdName });
     const button = projectHandle.findByProps({ id: buttonIdSubmit });
+
+    await act(async () => {
+      nameField.props.onChange(mockChangeEvent("non-empty-value"));
+    });
     expect(button.props.disabled).toBeTruthy();
+
     const langPickers = projectHandle.findAllByType(LanguagePicker);
     expect(langPickers).toHaveLength(2);
 
@@ -98,6 +92,11 @@ describe("CreateProject", () => {
       langPickers[0].props.setCode("non-empty");
     });
     expect(button.props.disabled).toBeFalsy();
+
+    await act(async () => {
+      nameField.props.onChange(mockChangeEvent("   "));
+    });
+    expect(button.props.disabled).toBeTruthy();
   });
 
   it("disables analysis language pickers when file selected", async () => {
