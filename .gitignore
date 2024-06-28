@@ -15,6 +15,7 @@ build
 # Generated files for development use
 docker-compose.yml
 .env.*
+!.env.development
 .env*.local
 nginx/scripts
 /backups

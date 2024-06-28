@@ -3,27 +3,20 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 
 namespace BackendFramework.Helper
 {
     /// <summary> Indicates an invalid input file name. </summary>
-    [Serializable]
-    public class InvalidFileNameException : Exception
+    public sealed class InvalidFileNameException : Exception
     {
         public InvalidFileNameException() : base() { }
-
-        protected InvalidFileNameException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 
     /// <summary> Indicates an invalid input id. </summary>
-    [Serializable]
-    public class InvalidIdException : Exception
+    public sealed class InvalidIdException : Exception
     {
         public InvalidIdException() { }
-
-        protected InvalidIdException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 
     public static class Sanitization

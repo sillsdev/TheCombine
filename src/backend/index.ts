@@ -109,15 +109,14 @@ const userEditApi = new Api.UserEditApi(config, BASE_PATH, axiosInstance);
 const userRoleApi = new Api.UserRoleApi(config, BASE_PATH, axiosInstance);
 const wordApi = new Api.WordApi(config, BASE_PATH, axiosInstance);
 
-// Backend controllers receiving a file via a "[FromForm] FileUpload fileUpload" param
-// have the internal fields expanded by openapi-generator as params in our Api.
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function fileUpload(file: File) {
-  return { file, filePath: "", name: "" };
-}
-
 function defaultOptions(): object {
   return { headers: authHeader() };
+}
+
+function fileUploadOptions(): object {
+  return {
+    headers: { ...authHeader(), "content-type": "multipart/form-data" },
+  };
 }
 
 /* AudioController.cs */
@@ -126,13 +125,14 @@ export async function uploadAudio(
   wordId: string,
   file: FileWithSpeakerId
 ): Promise<string> {
+  console.info(file);
   const projectId = LocalStorage.getProjectId();
   const speakerId = file.speakerId ?? "";
-  const params = { projectId, wordId, ...fileUpload(file) };
-  const headers = { ...authHeader(), "content-type": "application/json" };
+  const params = { projectId, wordId, file };
+  const options = fileUploadOptions();
   const promise = speakerId
-    ? audioApi.uploadAudioFileWithSpeaker({ ...params, speakerId }, { headers })
-    : audioApi.uploadAudioFile(params, { headers });
+    ? audioApi.uploadAudioFileWithSpeaker({ ...params, speakerId }, options)
+    : audioApi.uploadAudioFile(params, options);
   return (await promise).data;
 }
 
@@ -151,12 +151,8 @@ export function getAudioUrl(wordId: string, fileName: string): string {
 
 /* AvatarController.cs */
 
-export async function uploadAvatar(
-  userId: string,
-  imgFile: File
-): Promise<void> {
-  const headers = { ...authHeader(), "content-type": "application/json" };
-  await avatarApi.uploadAvatar({ userId, ...fileUpload(imgFile) }, { headers });
+export async function uploadAvatar(userId: string, file: File): Promise<void> {
+  await avatarApi.uploadAvatar({ userId, file }, fileUploadOptions());
   if (userId === LocalStorage.getUserId()) {
     LocalStorage.setAvatar(await avatarSrc(userId));
   }
@@ -229,11 +225,11 @@ export async function validateLink(
 
 /** Upload a LIFT file during project creation to get vernacular ws options. */
 export async function uploadLiftAndGetWritingSystems(
-  liftFile: File
+  file: File
 ): Promise<Api.WritingSystem[]> {
   const resp = await liftApi.uploadLiftFileAndGetWritingSystems(
-    { projectId: "nonempty", ...fileUpload(liftFile) },
-    { headers: { ...authHeader(), "Content-Type": "multipart/form-data" } }
+    { projectId: "nonempty", file },
+    fileUploadOptions()
   );
   return resp.data;
 }
@@ -247,11 +243,11 @@ export async function finishUploadLift(projectId: string): Promise<number> {
 /** Upload a LIFT file and add its data to the specified project. */
 export async function uploadLift(
   projectId: string,
-  liftFile: File
+  file: File
 ): Promise<number> {
   const resp = await liftApi.uploadLiftFile(
-    { projectId, ...fileUpload(liftFile) },
-    { headers: { ...authHeader(), "Content-Type": "multipart/form-data" } }
+    { projectId, file },
+    fileUploadOptions()
   );
   return resp.data;
 }
@@ -542,9 +538,8 @@ export async function uploadConsent(
   file: File
 ): Promise<Speaker> {
   const { id, projectId } = speaker;
-  const params = { projectId, speakerId: id, ...fileUpload(file) };
-  const headers = { ...authHeader(), "content-type": "application/json" };
-  return (await speakerApi.uploadConsent(params, { headers })).data;
+  const params = { projectId, speakerId: id, file };
+  return (await speakerApi.uploadConsent(params, fileUploadOptions())).data;
 }
 
 /** Use of the returned url acts as an HttpGet. */

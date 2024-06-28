@@ -31,6 +31,10 @@ namespace Backend.Tests.Controllers
         private IWordService _wordService = null!;
         private LiftController _liftController = null!;
 
+        private const string FileName = "SingleEntryLiftWithSound.zip"; // file in Backend.Tests/Assets/
+        private readonly Stream _stream = File.OpenRead(Path.Combine(Util.AssetsDir, FileName));
+        private FormFile _file = null!;
+
         public void Dispose()
         {
             Dispose(true);
@@ -66,6 +70,7 @@ namespace Backend.Tests.Controllers
 
             _logger = new MockLogger();
             _projId = _projRepo.Create(new Project { Name = ProjName }).Result!.Id;
+            _file = new FormFile(_stream, 0, _stream.Length, "Name", FileName);
         }
 
         [TearDown]
@@ -144,12 +149,9 @@ namespace Backend.Tests.Controllers
             return name;
         }
 
-        private static FileUpload InitFile(Stream stream, string filename)
+        private static FormFile InitFile(Stream stream, string filename)
         {
-            var formFile = new FormFile(stream, 0, stream.Length, "name", filename);
-            var fileUpload = new FileUpload { File = formFile, Name = "FileName" };
-
-            return fileUpload;
+            return new(stream, 0, stream.Length, "name", filename);
         }
 
         /// <summary> Extract the binary contents of a zip file to a temporary directory. </summary>
@@ -233,14 +235,14 @@ namespace Backend.Tests.Controllers
         public void TestUploadLiftFileNoPermission()
         {
             _liftController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-            var result = _liftController.UploadLiftFile(_projId, new FileUpload()).Result;
+            var result = _liftController.UploadLiftFile(_projId, _file).Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 
         [Test]
         public void TestUploadLiftFileInvalidProjectId()
         {
-            var result = _liftController.UploadLiftFile("../hack", new FileUpload()).Result;
+            var result = _liftController.UploadLiftFile("../hack", _file).Result;
             Assert.That(result, Is.InstanceOf<UnsupportedMediaTypeResult>());
         }
 
@@ -248,7 +250,7 @@ namespace Backend.Tests.Controllers
         public void TestUploadLiftFileAlreadyImported()
         {
             var projId = _projRepo.Create(new Project { Name = "already has import", LiftImported = true }).Result!.Id;
-            var result = _liftController.UploadLiftFile(projId, new FileUpload()).Result;
+            var result = _liftController.UploadLiftFile(projId, _file).Result;
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
             Assert.That(((BadRequestObjectResult)result).Value, Contains.Substring("LIFT"));
         }
@@ -256,7 +258,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestUploadLiftFileBadFile()
         {
-            var result = _liftController.UploadLiftFile(_projId, new FileUpload()).Result;
+            var result = _liftController.UploadLiftFile(_projId, null).Result;
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
             Assert.That(((BadRequestObjectResult)result).Value, Is.InstanceOf<string>());
         }
@@ -686,7 +688,9 @@ namespace Backend.Tests.Controllers
 
         private sealed class MockLogger : ILogger<LiftController>
         {
+#pragma warning disable CS8633
             public IDisposable BeginScope<TState>(TState state)
+#pragma warning restore CS8633
             {
                 throw new NotImplementedException();
             }
