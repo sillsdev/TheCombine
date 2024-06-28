@@ -1,7 +1,5 @@
-import Box from "@mui/material/Box";
-import LinearProgress from "@mui/material/LinearProgress";
-import Typography from "@mui/material/Typography";
-import { ReactElement } from "react";
+import { Box, LinearProgress, Typography } from "@mui/material";
+import { type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 interface ProgressBarProps {
