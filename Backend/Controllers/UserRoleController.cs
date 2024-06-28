@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -147,6 +148,13 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
+            // Prevent a second project owner
+            if (userRole.Role == Role.Owner
+                && (await _userRoleRepo.GetAllUserRoles(projectId)).Any((role) => role.Role == Role.Owner))
+            {
+                return Forbid("This project already has an owner");
+            }
+
             await _userRoleRepo.Create(userRole);
             return Ok(userRole.Id);
         }
@@ -183,6 +191,12 @@ namespace BackendFramework.Controllers
                 return NotFound(userRoleId);
             }
 
+            // Prevent deleting the project owner.
+            if (userRole.Role == Role.Owner)
+            {
+                return Forbid("Cannot use this function to remove the project owner's role");
+            }
+
             // Prevent deleting role of another user who has more permissions than the actor.
             if (!await _permissionService.ContainsProjectRole(HttpContext, userRole.Role, projectId))
             {
@@ -212,6 +226,11 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
+            // Prevent making a new project owner.
+            if (projectRole.Role == Role.Owner)
+            {
+                return Forbid("Cannot use this function to give a user the project owner role");
+            }
             // Prevent upgrading another user to have more permissions than the actor.
             if (!await _permissionService.ContainsProjectRole(HttpContext, projectRole.Role, projectId))
             {
@@ -248,6 +267,11 @@ namespace BackendFramework.Controllers
                 return NotFound(userRoleId);
             }
 
+            // Prevent downgrading the project owner.
+            if (userRole.Role == Role.Owner)
+            {
+                return Forbid("Cannot use this function to change the project owner's role");
+            }
             // Prevent downgrading another user who has more permissions than the actor.
             if (!await _permissionService.ContainsProjectRole(HttpContext, userRole.Role, projectId))
             {
