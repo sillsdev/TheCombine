@@ -57,8 +57,7 @@ namespace BackendFramework
             }
         }
 
-        [Serializable]
-        private class EnvironmentNotConfiguredException : Exception { }
+        private sealed class EnvironmentNotConfiguredException : Exception { }
 
         private string? CheckedEnvironmentVariable(string name, string? defaultValue, string error = "")
         {
@@ -78,8 +77,7 @@ namespace BackendFramework
             return Environment.GetEnvironmentVariable("COMBINE_IS_IN_CONTAINER") is not null;
         }
 
-        [Serializable]
-        private class AdminUserCreationException : Exception { }
+        private sealed class AdminUserCreationException : Exception { }
 
         /// <summary> This method gets called by the runtime. Use this method to add services for dependency injection.
         /// </summary>
@@ -150,8 +148,10 @@ namespace BackendFramework
                 options =>
                 {
                     var connectionStringKey = IsInContainer() ? "ContainerConnectionString" : "ConnectionString";
-                    options.ConnectionString = Configuration[$"MongoDB:{connectionStringKey}"];
-                    options.CombineDatabase = Configuration["MongoDB:CombineDatabase"];
+                    options.ConnectionString = Configuration[$"MongoDB:{connectionStringKey}"]
+                        ?? throw new EnvironmentNotConfiguredException();
+                    options.CombineDatabase = Configuration["MongoDB:CombineDatabase"]
+                        ?? throw new EnvironmentNotConfiguredException();
 
                     const string emailServiceFailureMessage = "Email services will not work.";
                     options.SmtpServer = CheckedEnvironmentVariable(

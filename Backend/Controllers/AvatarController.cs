@@ -53,14 +53,13 @@ namespace BackendFramework.Controllers
         /// <returns> Path to local avatar file </returns>
         [HttpPost("upload", Name = "UploadAvatar")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> UploadAvatar(string userId, [FromForm] FileUpload fileUpload)
+        public async Task<IActionResult> UploadAvatar(string userId, IFormFile? file)
         {
             if (!_permissionService.IsUserIdAuthorized(HttpContext, userId))
             {
                 return Forbid();
             }
 
-            var file = fileUpload.File;
             if (file is null)
             {
                 return BadRequest("Null File");
@@ -80,16 +79,16 @@ namespace BackendFramework.Controllers
             }
 
             // Generate path to store avatar file.
-            fileUpload.FilePath = FileStorage.GenerateAvatarFilePath(userId);
+            var filePath = FileStorage.GenerateAvatarFilePath(userId);
 
             // Copy file data to a new local file.
-            await using (var fs = new FileStream(fileUpload.FilePath, FileMode.OpenOrCreate))
+            await using (var fs = new FileStream(filePath, FileMode.OpenOrCreate))
             {
                 await file.CopyToAsync(fs);
             }
 
             // Update the user's avatar file.
-            user.Avatar = fileUpload.FilePath;
+            user.Avatar = filePath;
             user.HasAvatar = true;
             _ = await _userRepo.Update(userId, user);
 

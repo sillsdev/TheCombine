@@ -12,6 +12,7 @@
 # Generated files for development use
 docker-compose.yml
 .env.*
+!.env.development
 .env*.local
 .parcel-cache
 nginx/scripts
