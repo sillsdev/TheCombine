@@ -4,8 +4,6 @@ import { ButtonProps } from "@mui/material/Button";
 import { ReactElement, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
-import { themeColors } from "types/theme";
-
 interface LoadingDoneProps {
   buttonProps?: ButtonProps;
   children?: ReactNode;
@@ -29,8 +27,8 @@ export default function LoadingDoneButton(
       variant="contained"
       {...props.buttonProps}
       disabled={props.disabled || props.loading}
-      style={{
-        backgroundColor: props.done ? themeColors.success : undefined,
+      sx={{
+        backgroundColor: props.done ? (t) => t.palette.success.main : undefined,
         color: props.done ? "white" : undefined,
         ...props.buttonProps?.style,
       }}
@@ -46,8 +44,8 @@ export default function LoadingDoneButton(
       {props.loading && !props.done && (
         <CircularProgress
           size={24}
-          style={{
-            color: themeColors.success,
+          sx={{
+            color: (t) => t.palette.success.main,
             position: "absolute",
             top: "50%",
             left: "50%",

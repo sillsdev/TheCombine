@@ -2,8 +2,6 @@ import { Button, CircularProgress } from "@mui/material";
 import { type ButtonProps } from "@mui/material/Button";
 import { type ReactElement, type ReactNode } from "react";
 
-import { themeColors } from "types/theme";
-
 interface LoadingProps {
   buttonProps?: ButtonProps & { "data-testid"?: string };
   children?: ReactNode;
@@ -25,8 +23,8 @@ export default function LoadingButton(props: LoadingProps): ReactElement {
       {props.loading && (
         <CircularProgress
           size={24}
-          style={{
-            color: themeColors.success,
+          sx={{
+            color: (t) => t.palette.success.main,
             position: "absolute",
             top: "50%",
             left: "50%",
