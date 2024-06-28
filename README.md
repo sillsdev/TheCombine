@@ -95,17 +95,15 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    git clone https://github.com/sillsdev/TheCombine.git
    ```
 
-2. [Chocolatey][chocolatey]: (Windows only) a Windows package manager.
+2. [Chocolatey][chocolatey] (Windows only): a Windows package manager.
 3. [Node.js 20 (LTS)](https://nodejs.org/en/download/)
+
    - On Windows, if using [Chocolatey][chocolatey]: `choco install nodejs-lts`
    - On Ubuntu, follow
      [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions) using the
      appropriate Node.js version.
+
 4. [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-
-   - On Ubuntu 20.02 or earlier, follow
-     [these instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu).
-
 5. [MongoDB](https://mongodb.com/docs/manual/administration/install-community/) provides instructions on how to install
    the current release of MongoDB.
 
@@ -126,6 +124,11 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 7. [Python](#python): The Python section of this document has instructions for installing _Python 3_ on each of the
    supported platforms and how to setup your virtual environment.
 8. [FFmpeg](https://www.ffmpeg.org/download.html) and add its `/bin` to your PATH.
+
+   - On Mac:
+     - If using [homebrew](https://formulae.brew.sh/formula/ffmpeg): `brew install ffmpeg`
+     - If manually installing from the FFmpeg website, install both `ffmpeg` and `ffprobe`
+
 9. [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.1.250801`
 10. [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
     `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
