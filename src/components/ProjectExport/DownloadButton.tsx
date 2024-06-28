@@ -18,6 +18,7 @@ import {
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
+import { themeColors } from "types/theme";
 import { getDateTimeString } from "utilities/utilities";
 
 function makeExportName(projectName: string): string {
@@ -111,6 +112,14 @@ export default function DownloadButton(
     }
   }
 
+  function iconColor(): `#${string}` {
+    return exportState.status === ExportStatus.Failure
+      ? themeColors.error
+      : props.colorSecondary
+        ? themeColors.secondary
+        : themeColors.primary;
+  }
+
   function iconFunction(): () => void {
     switch (exportState.status) {
       case ExportStatus.Failure:
@@ -127,14 +136,7 @@ export default function DownloadButton(
           <IconButton
             tabIndex={-1}
             onClick={iconFunction()}
-            sx={{
-              color:
-                exportState.status === ExportStatus.Failure
-                  ? (t) => t.palette.error.main
-                  : props.colorSecondary
-                    ? (t) => t.palette.secondary.main
-                    : (t) => t.palette.primary.main,
-            }}
+            style={{ color: iconColor() }}
             size="large"
           >
             {icon()}
