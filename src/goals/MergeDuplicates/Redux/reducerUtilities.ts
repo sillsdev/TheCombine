@@ -112,14 +112,15 @@ export function createMergeParent(
 export function combineIntoFirstSense(mergeSenses: MergeTreeSense[]): void {
   // Set the main sense to the first sense (the top one when the sidebar was opened).
   const mainSense = mergeSenses[0].sense;
+  const sep = "; ";
 
   // Merge the rest as duplicates.
   // These were senses dropped into another sense.
   mergeSenses.slice(1).forEach((mergeDupSense) => {
     const dupSense = mergeDupSense.sense;
     dupSense.accessibility = Status.Duplicate;
+
     // Merge the duplicate's definitions into the main sense.
-    const sep = "; ";
     dupSense.definitions.forEach((def) => {
       const newText = def.text.trim();
       if (newText) {
@@ -142,9 +143,41 @@ export function combineIntoFirstSense(mergeSenses: MergeTreeSense[]): void {
       }
     });
 
+    // Merge the duplicate's glosses into the main sense.
+    dupSense.glosses.forEach((gloss) => {
+      const newDef = gloss.def.trim();
+      if (newDef) {
+        // Check if glosses array already has entry with the same language.
+        const oldGloss = mainSense.glosses.find(
+          (g) => g.language === gloss.language
+        );
+        if (!oldGloss) {
+          // If not, add this one to the array.
+          mainSense.glosses.push({ ...gloss, def: newDef });
+        } else {
+          // If so, check whether this one's text is already present.
+          const oldDef = oldGloss.def.trim();
+          if (!oldDef) {
+            oldGloss.def = newDef;
+          } else if (!oldDef.includes(newDef)) {
+            oldGloss.def = `${oldDef}${sep}${newDef}`;
+          }
+        }
+      }
+    });
+
     // Use the duplicate's part of speech if not specified in the main sense.
     if (mainSense.grammaticalInfo.catGroup === GramCatGroup.Unspecified) {
       mainSense.grammaticalInfo = { ...dupSense.grammaticalInfo };
+    } else if (
+      mainSense.grammaticalInfo.catGroup === dupSense.grammaticalInfo.catGroup
+    ) {
+      const oldCat = mainSense.grammaticalInfo.grammaticalCategory.trim();
+      const oldCats = oldCat.split(sep).map((cat) => cat.trim());
+      const newCat = dupSense.grammaticalInfo.grammaticalCategory.trim();
+      if (newCat && !oldCats.includes(newCat)) {
+        mainSense.grammaticalInfo.grammaticalCategory = `${oldCat}${sep}${newCat}`;
+      }
     }
 
     // Put the duplicate's domains in the main sense if the id is new.
