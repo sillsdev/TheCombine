@@ -417,6 +417,9 @@
     "undo": {
       "undo": "Undo Merge",
       "undoDialog": "Undo this merge?",
+      "deleted": "Deleted:",
+      "undoDelete": "Undo Deletion",
+      "undoDeleteDialog": "Undo this deletion?",
       "undoDisabled": "Undo unavailable"
     }
   },
