@@ -1,8 +1,9 @@
-import { type SxProps, type Theme, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { CharacterStatus } from "goals/CharacterInventory/CharacterInventoryTypes";
+import { themeColors } from "types/theme";
 
 interface CharacterStatusTextProps {
   status: CharacterStatus;
@@ -19,7 +20,7 @@ export default function CharacterStatusText(
       variant="body2"
       color="textSecondary"
       component="p"
-      sx={CharacterStatusSx(props.status)}
+      style={CharacterStatusStyle(props.status)}
       display={props.inline ? "inline" : "initial"}
     >
       {t(`buttons.${props.status}`)}
@@ -27,13 +28,13 @@ export default function CharacterStatusText(
   );
 }
 
-function CharacterStatusSx(status: CharacterStatus): SxProps<Theme> {
+function CharacterStatusStyle(status: CharacterStatus): { color: string } {
   switch (status) {
     case CharacterStatus.Accepted:
-      return { color: (t) => t.palette.success.main };
+      return { color: themeColors.success };
     case CharacterStatus.Rejected:
-      return { color: (t) => t.palette.error.main };
+      return { color: themeColors.error };
     case CharacterStatus.Undecided:
-      return { color: (t) => t.palette.primary.main };
+      return { color: themeColors.primary };
   }
 }

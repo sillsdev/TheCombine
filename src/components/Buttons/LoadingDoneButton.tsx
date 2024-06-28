@@ -4,8 +4,10 @@ import { ButtonProps } from "@mui/material/Button";
 import { ReactElement, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
-interface LoadingDoneProps {
-  buttonProps?: ButtonProps;
+import { themeColors } from "types/theme";
+
+interface LoadingDoneButtonProps {
+  buttonProps?: ButtonProps & { "data-testid"?: string };
   children?: ReactNode;
   disabled?: boolean;
   done?: boolean;
@@ -17,7 +19,7 @@ interface LoadingDoneProps {
  * A button that shows a spinning wheel when loading and "done" when done
  */
 export default function LoadingDoneButton(
-  props: LoadingDoneProps
+  props: LoadingDoneButtonProps
 ): ReactElement {
   const { t } = useTranslation();
 
@@ -27,8 +29,8 @@ export default function LoadingDoneButton(
       variant="contained"
       {...props.buttonProps}
       disabled={props.disabled || props.loading}
-      sx={{
-        backgroundColor: props.done ? (t) => t.palette.success.main : undefined,
+      style={{
+        backgroundColor: props.done ? themeColors.success : undefined,
         color: props.done ? "white" : undefined,
         ...props.buttonProps?.style,
       }}
@@ -44,8 +46,8 @@ export default function LoadingDoneButton(
       {props.loading && !props.done && (
         <CircularProgress
           size={24}
-          sx={{
-            color: (t) => t.palette.success.main,
+          style={{
+            color: themeColors.success,
             position: "absolute",
             top: "50%",
             left: "50%",
