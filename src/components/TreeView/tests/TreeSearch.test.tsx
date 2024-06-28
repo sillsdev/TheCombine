@@ -1,6 +1,6 @@
-import { act, render, renderHook, screen } from "@testing-library/react";
+import { render, renderHook, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { type ChangeEvent, type KeyboardEvent } from "react";
+import { type ChangeEvent, type KeyboardEvent, act } from "react";
 import { Key } from "ts-key-enum";
 
 import { SemanticDomainTreeNode } from "api/models";
@@ -111,7 +111,9 @@ describe("TreeSearch", () => {
       render(<TreeSearch {...testProps} />);
       expect(getSearchInput().value).toEqual("");
       const searchText = "flibbertigibbet";
-      await userEvent.type(getSearchInput(), `${searchText}{enter}`);
+      await act(async () => {
+        await userEvent.type(getSearchInput(), `${searchText}{enter}`);
+      });
       expect(getSearchInput().value).toEqual(searchText);
       // verify that no attempt to switch domains happened
       expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
@@ -121,7 +123,9 @@ describe("TreeSearch", () => {
       render(<TreeSearch {...testProps} />);
       expect(getSearchInput().value).toEqual("");
       setupSpies(domMap[mapIds.lastKid]);
-      await userEvent.type(getSearchInput(), `${mapIds.lastKid}{enter}`);
+      await act(async () => {
+        await userEvent.type(getSearchInput(), `${mapIds.lastKid}{enter}`);
+      });
       expect(getSearchInput().value).toEqual("");
       // verify that we would switch to the domain requested
       expect(MOCK_ANIMATE).toHaveBeenCalledWith(domMap[mapIds.lastKid]);
