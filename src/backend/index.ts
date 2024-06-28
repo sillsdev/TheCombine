@@ -785,6 +785,15 @@ export async function removeUserRole(
   await userRoleApi.deleteUserRole(params, defaultOptions());
 }
 
+export async function setProjectOwner(
+  projectId: string,
+  oldUserId: string,
+  newUserId: string
+): Promise<void> {
+  const params = { projectId, oldUserId, newUserId };
+  await userRoleApi.setOwner(params, defaultOptions());
+}
+
 /* WordController.cs */
 
 export async function areInFrontier(
