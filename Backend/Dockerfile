@@ -34,7 +34,10 @@ RUN mkdir -p $HOME
 
 # Setup app user and group to known UID/GID; no login.
 RUN groupmod --gid 999 app
-RUN usermod  -u 999 -g app -s /sbin/nologin -c "Docker image user" app
+RUN usermod  --uid 999 --gid app \
+      --shell /sbin/nologin \
+      --comment "Docker image user" \
+      app
 
 ## Set up application install directory.
 RUN mkdir $APP_HOME && \
