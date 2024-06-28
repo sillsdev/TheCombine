@@ -16,7 +16,7 @@ import { topBarHeight } from "components/LandingPage/TopBar";
 import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { Path } from "types/path";
-import theme from "types/theme";
+import theme, { themeColors } from "types/theme";
 
 export default function AnnouncementBanner(): ReactElement {
   const [banner, setBanner] = useState<string>("");
@@ -47,9 +47,7 @@ export default function AnnouncementBanner(): ReactElement {
   }
 
   return banner ? (
-    <Toolbar
-      sx={{ ...margins, backgroundColor: (t) => t.palette.warning.main }}
-    >
+    <Toolbar style={{ ...margins, backgroundColor: themeColors.warning }}>
       <IconButton onClick={closeBanner} size="large">
         <Cancel />
       </IconButton>
