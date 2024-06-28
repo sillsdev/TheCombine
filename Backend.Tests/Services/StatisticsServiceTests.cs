@@ -18,30 +18,26 @@ namespace Backend.Tests.Services
 
         private const string ProjId = "StatsServiceTestProjId";
         private const string SemDomId = "StatsServiceTestSemDomId";
-        private readonly List<SemanticDomainTreeNode> TreeNodes = new List<SemanticDomainTreeNode>
-        {
-            new SemanticDomainTreeNode( new SemanticDomain { Id = SemDomId })
-        };
+        private readonly List<DateTime> NonEmptySchedule = new() { DateTime.Now };
+        private readonly List<SemanticDomainTreeNode> TreeNodes = new() { new(new SemanticDomain { Id = SemDomId }) };
 
-        private static Sense getSenseWithDomain(string semDomId = SemDomId)
+        private static Sense GetSenseWithDomain(string semDomId = SemDomId)
         {
-            var semDom = new SemanticDomain { Id = semDomId };
-            return new Sense { SemanticDomains = new List<SemanticDomain> { semDom } };
+            return new() { SemanticDomains = new() { new() { Id = semDomId } } };
         }
-        private static User getUserWithProjId(string projId = ProjId)
+        private static User GetUserWithProjId(string projId = ProjId)
         {
             var user = new User { Id = Util.RandString(10), Username = Util.RandString(10) };
             user.ProjectRoles[projId] = Util.RandString(10);
             return user;
         }
-        private static Word getWordWithDomain(string semDomId = SemDomId)
+        private static Word GetWordWithDomain(string semDomId = SemDomId)
         {
-            var senses = new List<Sense> { getSenseWithDomain(semDomId) };
-            return new Word
+            return new()
             {
                 Id = Util.RandString(10),
                 ProjectId = ProjId,
-                Senses = senses,
+                Senses = new() { GetSenseWithDomain(semDomId) },
                 Vernacular = Util.RandString(10)
             };
         }
@@ -59,7 +55,7 @@ namespace Backend.Tests.Services
         public void GetSemanticDomainCountsTestNullDomainList()
         {
             // Add a word to the database and leave the semantic domain list null
-            _wordRepo.AddFrontier(getWordWithDomain());
+            _wordRepo.AddFrontier(GetWordWithDomain());
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Is.Empty);
@@ -70,7 +66,7 @@ namespace Backend.Tests.Services
         {
             // Add to the database a word and an empty list of semantic domains
             ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(new List<SemanticDomainTreeNode>());
-            _wordRepo.AddFrontier(getWordWithDomain());
+            _wordRepo.AddFrontier(GetWordWithDomain());
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Is.Empty);
@@ -91,7 +87,7 @@ namespace Backend.Tests.Services
         {
             // Add to the database a semantic domain and a word with a different semantic domain
             ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(TreeNodes);
-            _wordRepo.AddFrontier(getWordWithDomain("different-id"));
+            _wordRepo.AddFrontier(GetWordWithDomain("different-id"));
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Has.Count.EqualTo(1));
@@ -103,7 +99,7 @@ namespace Backend.Tests.Services
         {
             // Add to the database a semantic domain and a word with the same semantic domain
             ((SemanticDomainRepositoryMock)_domainRepo).SetNextResponse(TreeNodes);
-            _wordRepo.AddFrontier(getWordWithDomain());
+            _wordRepo.AddFrontier(GetWordWithDomain());
 
             var result = _statsService.GetSemanticDomainCounts(ProjId, "").Result;
             Assert.That(result, Has.Count.EqualTo(1));
@@ -120,9 +116,7 @@ namespace Backend.Tests.Services
         [Test]
         public void GetProgressEstimationLineChartRootTestEmptyFrontier()
         {
-            var nonEmptySchedule = new List<DateTime> { DateTime.Now };
-
-            var result = _statsService.GetProgressEstimationLineChartRoot(ProjId, nonEmptySchedule).Result;
+            var result = _statsService.GetProgressEstimationLineChartRoot(ProjId, NonEmptySchedule).Result;
             Assert.That(result.Dates, Is.Empty);
             Assert.That(result.Datasets, Is.Empty);
         }
@@ -130,9 +124,9 @@ namespace Backend.Tests.Services
         [Test]
         public void GetProgressEstimationLineChartRootTestEmptySchedule()
         {
-            _wordRepo.AddFrontier(getWordWithDomain());
+            _wordRepo.AddFrontier(GetWordWithDomain());
 
-            var result = _statsService.GetProgressEstimationLineChartRoot(ProjId, new List<DateTime>()).Result;
+            var result = _statsService.GetProgressEstimationLineChartRoot(ProjId, new()).Result;
             Assert.That(result.Dates, Is.Empty);
             Assert.That(result.Datasets, Is.Empty);
         }
@@ -140,10 +134,9 @@ namespace Backend.Tests.Services
         [Test]
         public void GetProgressEstimationLineChartRootTestNoSemanticDomainDates()
         {
-            _wordRepo.AddFrontier(getWordWithDomain());
-            var nonEmptySchedule = new List<DateTime> { DateTime.Now };
+            _wordRepo.AddFrontier(GetWordWithDomain());
 
-            var result = _statsService.GetProgressEstimationLineChartRoot(ProjId, nonEmptySchedule).Result;
+            var result = _statsService.GetProgressEstimationLineChartRoot(ProjId, NonEmptySchedule).Result;
             Assert.That(result.Dates, Is.Empty);
             Assert.That(result.Datasets, Is.Empty);
         }
@@ -151,13 +144,12 @@ namespace Backend.Tests.Services
         [Test]
         public void GetProgressEstimationLineChartRootTestSchedule()
         {
-            var word = getWordWithDomain();
+            var word = GetWordWithDomain();
             word.Senses[0].SemanticDomains[0].Created = DateTime.Now.ToString();
             _wordRepo.AddFrontier(word);
-            var nonEmptySchedule = new List<DateTime> { DateTime.Now };
 
-            var result = _statsService.GetProgressEstimationLineChartRoot(ProjId, nonEmptySchedule).Result;
-            Assert.That(result.Dates, Has.Count.EqualTo(nonEmptySchedule.Count));
+            var result = _statsService.GetProgressEstimationLineChartRoot(ProjId, NonEmptySchedule).Result;
+            Assert.That(result.Dates, Has.Count.EqualTo(NonEmptySchedule.Count));
         }
 
         [Test]
@@ -172,9 +164,9 @@ namespace Backend.Tests.Services
         public void GetSemanticDomainUserCountsTestUsers()
         {
             var userCount = 4;
-            foreach (var i in System.Linq.Enumerable.Range(0, userCount))
+            foreach (var i in Enumerable.Range(0, userCount))
             {
-                _userRepo.Create(getUserWithProjId());
+                _userRepo.Create(GetUserWithProjId());
             }
 
             var result = _statsService.GetSemanticDomainUserCounts(ProjId).Result;
@@ -185,11 +177,11 @@ namespace Backend.Tests.Services
         [Test]
         public void GetSemanticDomainUserCountsTestDomMatchesUser()
         {
-            var user = _userRepo.Create(getUserWithProjId()).Result!;
+            var user = _userRepo.Create(GetUserWithProjId()).Result!;
             var wordCount = 4;
-            foreach (var i in System.Linq.Enumerable.Range(0, wordCount))
+            foreach (var i in Enumerable.Range(0, wordCount))
             {
-                var word = getWordWithDomain();
+                var word = GetWordWithDomain();
                 word.Senses[0].SemanticDomains[0].UserId = user.Id;
                 _wordRepo.AddFrontier(word);
             }
