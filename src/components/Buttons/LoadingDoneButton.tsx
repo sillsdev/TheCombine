@@ -6,8 +6,8 @@ import { useTranslation } from "react-i18next";
 
 import { themeColors } from "types/theme";
 
-interface LoadingDoneProps {
-  buttonProps?: ButtonProps;
+interface LoadingDoneButtonProps {
+  buttonProps?: ButtonProps & { "data-testid"?: string };
   children?: ReactNode;
   disabled?: boolean;
   done?: boolean;
@@ -19,7 +19,7 @@ interface LoadingDoneProps {
  * A button that shows a spinning wheel when loading and "done" when done
  */
 export default function LoadingDoneButton(
-  props: LoadingDoneProps
+  props: LoadingDoneButtonProps
 ): ReactElement {
   const { t } = useTranslation();
 
