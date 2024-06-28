@@ -57,7 +57,6 @@ namespace BackendFramework.Repositories
             return ResultOfUpdate.Updated;
         }
 
-        [Serializable]
-        private class BannerNotFound : Exception { }
+        private sealed class BannerNotFound : Exception { }
     }
 }

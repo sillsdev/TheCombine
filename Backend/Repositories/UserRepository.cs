@@ -118,7 +118,7 @@ namespace BackendFramework.Repositories
         public async Task<User?> GetUserByEmail(string email, bool sanitize = true)
         {
             var user = (await _userDatabase.Users.FindAsync(
-                x => x.Email.ToLowerInvariant() == email.ToLowerInvariant())).FirstOrDefault();
+                x => x.Email.Equals(email, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
             if (sanitize && user is not null)
             {
                 user.Sanitize();
@@ -131,8 +131,9 @@ namespace BackendFramework.Repositories
         public async Task<User?> GetUserByEmailOrUsername(string emailOrUsername, bool sanitize = true)
         {
             var lower = emailOrUsername.ToLowerInvariant();
-            var user = (await _userDatabase.Users.FindAsync(
-                u => u.Username.ToLowerInvariant() == lower || u.Email.ToLowerInvariant() == lower)).FirstOrDefault();
+            var user = (await _userDatabase.Users.FindAsync(u =>
+                u.Username.Equals(emailOrUsername, StringComparison.OrdinalIgnoreCase) ||
+                u.Email.Equals(emailOrUsername, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
             if (sanitize && user is not null)
             {
                 user.Sanitize();
@@ -145,7 +146,7 @@ namespace BackendFramework.Repositories
         public async Task<User?> GetUserByUsername(string username, bool sanitize = true)
         {
             var user = (await _userDatabase.Users.FindAsync(
-                x => x.Username.ToLowerInvariant() == username.ToLowerInvariant())).FirstOrDefault();
+                x => x.Username.Equals(username, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
             if (sanitize && user is not null)
             {
                 user.Sanitize();
@@ -171,12 +172,12 @@ namespace BackendFramework.Repositories
             }
 
             // Confirm that email and username aren't taken by another user.
-            if (user.Email.ToLowerInvariant() != oldUser.Email.ToLowerInvariant()
+            if (!user.Email.Equals(oldUser.Email, StringComparison.OrdinalIgnoreCase)
                 && await GetUserByEmail(user.Email) is not null)
             {
                 return ResultOfUpdate.Failed;
             }
-            if (user.Username.ToLowerInvariant() != oldUser.Username.ToLowerInvariant()
+            if (!user.Username.Equals(oldUser.Username, StringComparison.OrdinalIgnoreCase)
                 && await GetUserByUsername(user.Username) is not null)
             {
                 return ResultOfUpdate.Failed;
