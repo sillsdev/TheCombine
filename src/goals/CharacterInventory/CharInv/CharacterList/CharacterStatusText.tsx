@@ -1,5 +1,5 @@
-import Typography from "@mui/material/Typography";
-import { ReactElement } from "react";
+import { Typography } from "@mui/material";
+import { type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { CharacterStatus } from "goals/CharacterInventory/CharacterInventoryTypes";
