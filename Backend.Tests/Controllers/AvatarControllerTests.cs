@@ -64,14 +64,12 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestAvatarImport()
         {
-            const string fileName = "combine.png";
+            const string fileName = "combine.png";  // file in Backend.Tests/Assets/
             var filePath = Path.Combine(Util.AssetsDir, fileName);
             using var stream = File.OpenRead(filePath);
+            var file = new FormFile(stream, 0, stream.Length, "dave", fileName);
 
-            var formFile = new FormFile(stream, 0, stream.Length, "dave", fileName);
-            var fileUpload = new FileUpload { File = formFile, Name = "FileName" };
-
-            _ = _avatarController.UploadAvatar(_jwtAuthenticatedUser.Id, fileUpload).Result;
+            _ = _avatarController.UploadAvatar(_jwtAuthenticatedUser.Id, file).Result;
 
             var foundUser = _userRepo.GetUser(_jwtAuthenticatedUser.Id).Result;
             Assert.That(foundUser?.Avatar, Is.Not.Null);

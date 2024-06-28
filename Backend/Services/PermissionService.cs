@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.Runtime.Serialization;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -198,17 +197,13 @@ namespace BackendFramework.Services
             return user;
         }
 
-        [Serializable]
-        public class InvalidJwtTokenException : Exception
+        public sealed class InvalidJwtTokenException : Exception
         {
             public InvalidJwtTokenException() { }
 
             public InvalidJwtTokenException(string msg) : base(msg) { }
 
             public InvalidJwtTokenException(string msg, Exception innerException) : base(msg, innerException) { }
-
-            protected InvalidJwtTokenException(SerializationInfo info, StreamingContext context)
-                : base(info, context) { }
         }
     }
 }
