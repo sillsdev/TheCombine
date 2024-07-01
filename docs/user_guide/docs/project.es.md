@@ -161,8 +161,7 @@ used for the file names).
 #### Exportar {#export}
 
 Tras pulsar el botón Exportar, puede navegar por otras partes del sitio web mientras se preparan los datos para la
-descargar. Aparecerá un icono de descarga en la barra de aplicaciones cuando la exportación esté lista para su descarga.
-El nombre de archivo por defecto es el nombre del proyecto con una marca de tiempo añadida.
+descargar. When the data is gathered, the download will begin automatically. El nombre de archivo es el id del proyecto.
 
 !!! warning "Importante"
 

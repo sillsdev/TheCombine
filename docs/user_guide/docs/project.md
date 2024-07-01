@@ -159,8 +159,7 @@ used for the file names).
 #### Export {#export}
 
 After clicking the Export button, you can navigate to other parts of the website while the data is being prepared for
-download. A download icon will appear in the App Bar when the export is ready for download. The default filename is the
-project name with a timestamp affixed.
+download. When the data is gathered, the download will begin automatically. The filename is the project id.
 
 !!! warning "Important"
 
