@@ -81,9 +81,10 @@ que aparezca una barra lateral azul aparezca a la derecha, mostrando cuales acep
 
 ![Fusionar duplicados acepciones fusionadas](../images/mergeSidebar.es.png)
 
-!!! warning "Importante"
+!!! note "Nota"
 
-    Cuando se fusionan varias acepciones, se conservan todos los dominios semánticos, pero **sólo la acepción superior de la barra lateral** conserva sus glosas (y definiciones).
+    When multiple senses are merged, all glosses, definitions, and semantic domains are preserved. However, if senses
+    have different grammatical info, only the first part of speech is preserved.
 
 Puede arrastrar y soltar tarjetas de acepción hacia o desde la barra lateral para cambiar las acepciones que se están
 fusionando. O dentro de la barra lateral, puede desplazar una acepción diferente a la parte superior (para conservar sus

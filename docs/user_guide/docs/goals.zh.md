@@ -78,9 +78,10 @@ You can delete an entire entry by clicking the
 
 ![合并重复的词条和合并其词义](../images/mergeSidebar.zh.png)
 
-!!! warning "重要警告"
+!!! note "笔记"
 
-    当多种词义被合并时，所有语义域得以保留，但“只有侧边栏顶部的词义”保留其注释(和定义)。
+    When multiple senses are merged, all glosses, definitions, and semantic domains are preserved. However, if senses
+    have different grammatical info, only the first part of speech is preserved.
 
 用户可将词义卡拖放至侧栏，或者从侧栏拖放至词义卡，来决定哪个词义被合并。 或者在侧栏内，用户可将不同的词义移至顶部(以保留
 其注释)。

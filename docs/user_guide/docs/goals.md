@@ -80,9 +80,10 @@ to appear on the right, showing which senses are being merged.
 
 ![Merge Duplicates senses merged](images/mergeSidebar.png)
 
-!!! warning "Important"
+!!! note "Note"
 
-    When multiple senses are merged, all semantic domains are preserved, but **only the top sense in the sidebar** has its glosses (and definitions) preserved.
+    When multiple senses are merged, all glosses, definitions, and semantic domains are preserved. However, if senses
+    have different grammatical info, only the first part of speech is preserved.
 
 You can drag-and-drop sense cards to or from the sidebar to change which senses are being merged. Or within the sidebar,
 you can move a different sense to the top (to preserve its glosses).
