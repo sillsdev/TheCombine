@@ -68,6 +68,12 @@ export interface SemanticDomainFull {
   description: string;
   /**
    *
+   * @type {string}
+   * @memberof SemanticDomainFull
+   */
+  parentId: string;
+  /**
+   *
    * @type {Array<string>}
    * @memberof SemanticDomainFull
    */

@@ -1,5 +1,5 @@
 import { SemanticDomainTreeNode } from "api/models";
-import { newSemanticDomainTreeNode } from "types/semanticDomain";
+import { newSemanticDomainTreeNode, rootId } from "types/semanticDomain";
 
 export interface TreeViewState {
   currentDomain: SemanticDomainTreeNode;
@@ -7,7 +7,7 @@ export interface TreeViewState {
   open: boolean;
 }
 
-export const defaultTreeNode = newSemanticDomainTreeNode("Sem");
+export const defaultTreeNode = newSemanticDomainTreeNode(rootId);
 
 export const defaultState: TreeViewState = {
   language: "",

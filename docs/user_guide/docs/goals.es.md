@@ -39,7 +39,8 @@ include subdomains, add a final period to your filter. For example, "8111." incl
 
 ### Edición de filas de entrada
 
-Puede grabar, reproducir o borrar las grabaciones de audio de una entrada con los iconos de la columna Pronunciaciones.
+Puede grabar, reproducir o borrar las grabaciones de audio de una entrada con los iconos de la columna Pronunciaciones
+(![Review Entries pronunciations column header](images/reviewEntriesColumnPronunciations.png){width=28}).
 
 To edit any other part of an entry, click the
 ![Review Entries row edit icon](../images/reviewEntriesRowEdit.png){width=20} edit icon in the initial column.
@@ -79,10 +80,6 @@ Soltar una carta de acepción sobre otra carta de acepción (cuando ambas están
 que aparezca una barra lateral azul aparezca a la derecha, mostrando cuales acepciones se están fusionando.
 
 ![Fusionar duplicados acepciones fusionadas](../images/mergeSidebar.es.png)
-
-!!! warning "Importante"
-
-    Cuando se fusionan varias acepciones, se conservan todos los dominios semánticos, pero **sólo la acepción superior de la barra lateral** conserva sus glosas (y definiciones).
 
 Puede arrastrar y soltar tarjetas de acepción hacia o desde la barra lateral para cambiar las acepciones que se están
 fusionando. O dentro de la barra lateral, puede desplazar una acepción diferente a la parte superior (para conservar sus
@@ -170,6 +167,12 @@ la siguiente manera:
 
 ![Fusionar duplicados acepción con definiciones y parte de la oración](../images/mergeSenseDefinitionsPartOfSpeech.png){.center}
 
+!!! note "Nota"
+
+A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same
+general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different
+general categories, only the first one is preserved.
+
 #### Entradas y acepciones protegidas
 
 Si una entrada o acepción importada contiene datos no admitidos en The Combine (por ejemplo, etimologías o inversiones
@@ -224,4 +227,4 @@ APLICAR.
 
 !!! warning "Importante"
 
-    La operación de buscar y reemplazar realiza cambios en las entradas, no en el inventario de personajes. No **se puede deshacer**
+    La operación de buscar y reemplazar realiza cambios en las entradas, no en el inventario de personajes.

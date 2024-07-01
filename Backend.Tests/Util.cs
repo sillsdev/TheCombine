@@ -110,20 +110,20 @@ namespace Backend.Tests
             {
                 Name = RandString(),
                 VernacularWritingSystem = RandomWritingSystem(),
-                AnalysisWritingSystems = new List<WritingSystem> { RandomWritingSystem() },
-                SemanticDomains = new List<SemanticDomain>()
+                AnalysisWritingSystems = new() { RandomWritingSystem() },
+                SemanticDomains = new()
             };
 
             const int numSemanticDomains = 3;
             foreach (var i in Range(1, numSemanticDomains))
             {
-                project.SemanticDomains.Add(RandomSemanticDomain($"{i}"));
+                project.SemanticDomains.Add(new(RandomSemanticDomain($"{i}")));
                 foreach (var j in Range(1, numSemanticDomains))
                 {
-                    project.SemanticDomains.Add(RandomSemanticDomain($"{i}.{j}"));
+                    project.SemanticDomains.Add(new(RandomSemanticDomain($"{i}.{j}")));
                     foreach (var k in Range(1, numSemanticDomains))
                     {
-                        project.SemanticDomains.Add(RandomSemanticDomain($"{i}.{j}.{k}"));
+                        project.SemanticDomains.Add(new(RandomSemanticDomain($"{i}.{j}.{k}")));
                     }
                 }
             }
