@@ -38,7 +38,9 @@ include subdomains, add a final period to your filter. For example, "8111." incl
 
 ### 编辑词条行
 
-用户可以使用“发音”列中的图标来录制、播放或删除词条的录音。
+用户可以使用“发音
+”（![Review Entries pronunciations column header](images/reviewEntriesColumnPronunciations.png){width=28}）列中的图标来
+录制、播放或删除词条的录音。
 
 To edit any other part of an entry, click the
 ![Review Entries row edit icon](../images/reviewEntriesRowEdit.png){width=20} edit icon in the initial column.

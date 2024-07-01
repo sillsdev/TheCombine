@@ -39,7 +39,8 @@ include subdomains, add a final period to your filter. For example, "8111." incl
 
 ### Edición de filas de entrada
 
-Puede grabar, reproducir o borrar las grabaciones de audio de una entrada con los iconos de la columna Pronunciaciones.
+Puede grabar, reproducir o borrar las grabaciones de audio de una entrada con los iconos de la columna Pronunciaciones
+(![Review Entries pronunciations column header](images/reviewEntriesColumnPronunciations.png){width=28}).
 
 To edit any other part of an entry, click the
 ![Review Entries row edit icon](../images/reviewEntriesRowEdit.png){width=20} edit icon in the initial column.

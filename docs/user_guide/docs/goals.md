@@ -38,7 +38,8 @@ include subdomains, add a final period to your filter. For example, "8111." incl
 
 ### Editing Entry Rows
 
-You can record, play, or delete an entry's audio recordings by using the icons in the Pronunciations column.
+You can record, play, or delete an entry's audio recordings by using the icons in the Pronunciations
+(![Review Entries pronunciations column header](images/reviewEntriesColumnPronunciations.png){width=28}) column.
 
 To edit any other part of an entry, click the ![Review Entries row edit icon](images/reviewEntriesRowEdit.png){width=20}
 edit icon in the initial column.
