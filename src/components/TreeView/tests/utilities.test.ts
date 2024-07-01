@@ -4,15 +4,27 @@ import { newSemanticDomain, treeNodeFromSemDom } from "types/semanticDomain";
 jest.mock("backend", () => ({
   getSemanticDomainTreeNode: (id: string, lang?: string) =>
     mockGetSemanticDomainTreeNode(id, lang),
-  getSemanticDomainTreeNodeByName: (id: string, lang?: string) =>
-    mockGetSemanticDomainTreeNodeByName(id, lang),
+  getSemanticDomainTreeNodeByName: (name: string, lang?: string) =>
+    mockGetSemanticDomainTreeNodeByName(name, lang),
 }));
 
 const mockGetSemanticDomainTreeNode = jest.fn();
 const mockGetSemanticDomainTreeNodeByName = jest.fn();
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  jest.resetAllMocks();
+  mockGetSemanticDomainTreeNode.mockImplementation(
+    (id: string, lang?: string) =>
+      Promise.resolve(
+        treeNodeFromSemDom(newSemanticDomain(id, "Domain Name", lang))
+      )
+  );
+  mockGetSemanticDomainTreeNodeByName.mockImplementation(
+    (name: string, lang?: string) =>
+      Promise.resolve(
+        treeNodeFromSemDom(newSemanticDomain("9.9.9.9.9", name, lang))
+      )
+  );
 });
 
 describe("getAugmentedTreeNode", () => {
@@ -40,25 +52,31 @@ describe("getAugmentedTreeNode", () => {
     const augmented = await getAugmentedTreeNode(dom.id, dom.lang, [kid, sib]);
 
     expect(augmented?.previous?.id).toEqual(sib.id);
+    expect(augmented?.previous?.name).toEqual(sib.name);
     expect(augmented?.children[0].id).toEqual(kid.id);
+    expect(augmented?.children[0].name).toEqual(kid.name);
   });
 
   it("ignores custom domains of different language", async () => {
-    const customDom = newSemanticDomain("2.6.0", "custom", "red-fish");
+    const customDom = newSemanticDomain("2.6.0", "custom", "red-fish-lang");
+    mockGetSemanticDomainTreeNode.mockResolvedValueOnce(undefined);
     expect(
-      await getAugmentedTreeNode(customDom.id, "blue-fish", [customDom])
+      await getAugmentedTreeNode(customDom.id, "blue-fish-lang", [customDom])
     ).toBeUndefined();
   });
 
-  it("tries to get parent of custom domain", async () => {
+  it("gets parent of custom domain", async () => {
     const customDom = newSemanticDomain("2.4.6.8.0", "custom", "ar");
-    expect(
-      await getAugmentedTreeNode(customDom.id, customDom.lang, [customDom])
-    ).not.toBeUndefined();
+    const augmentedDom = await getAugmentedTreeNode(
+      customDom.id,
+      customDom.lang,
+      [customDom]
+    );
 
-    expect(mockGetSemanticDomainTreeNode).toHaveBeenCalledTimes(1);
-    const mockCall = mockGetSemanticDomainTreeNode.mock.calls[0];
-    expect(mockCall).toEqual(["2.4.6.8", customDom.lang]);
-    expect(mockGetSemanticDomainTreeNodeByName).not.toHaveBeenCalled();
+    expect(augmentedDom?.id).toEqual(customDom.id);
+    expect(augmentedDom?.name).toEqual(customDom.name);
+    expect(augmentedDom?.children).toHaveLength(0);
+    expect(augmentedDom?.parent?.id).toEqual("2.4.6.8");
+    expect(augmentedDom?.parent?.lang).toEqual(customDom.lang);
   });
 });
