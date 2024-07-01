@@ -181,9 +181,9 @@ not be imported into FieldWorks.
 
 ![Calendario de talleres](../images/projectSettings5Sched.es.png){width=750 .center}
 
-Sólo está disponible para el Propietario del proyecto, lo que permite fijar un calendario para un taller de recopilación
-rápida de palabras. Haga clic en el primer botón para seleccionar un intervalo de fechas para el taller. Pulse el botón
-central para añadir o eliminar fechas concretas. Pulse el último botón para borrar la programación.
+Sólo está disponible para editar para el Propietario del proyecto, lo que permite fijar un calendario para un taller de
+recopilación rápida de palabras. Haga clic en el primer botón para seleccionar un intervalo de fechas para el taller.
+Pulse el botón central para añadir o eliminar fechas concretas. Pulse el último botón para borrar la programación.
 
 ![Calendario de talleres](../images/projectSchedule.es.png){.center}
 
