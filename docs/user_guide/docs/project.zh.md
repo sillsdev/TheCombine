@@ -157,8 +157,8 @@ used for the file names).
 #### Export pronunciation speakers
 
 When a project is exported from TheCombine and imported into FieldWorks, if a pronunciation has an associated speaker,
-the speaker name and id will be added as a pronunciation label. Consent files will be exported with speaker id used for
-the file name. The consent files can be found in the zipped export, but will not be imported into FieldWorks.
+the speaker name and id will be added as a pronunciation label. The consent files can be found in the zipped export, but
+will not be imported into FieldWorks.
 
 ### 工作坊日程 {#workshop-schedule}
 
