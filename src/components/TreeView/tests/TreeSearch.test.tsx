@@ -20,8 +20,9 @@ const MOCK_ANIMATE = jest.fn(() => {
   return Promise.resolve();
 });
 const testProps: TreeSearchProps = {
-  currentDomain: newSemanticDomainTreeNode(),
   animate: MOCK_ANIMATE,
+  currentDomain: newSemanticDomainTreeNode(),
+  customDomains: [],
 };
 
 beforeEach(() => {

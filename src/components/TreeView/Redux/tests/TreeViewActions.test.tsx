@@ -14,14 +14,17 @@ import {
 
 jest.mock("backend", () => ({
   getSemanticDomainTreeNode: (...args: any[]) => mockGetSemDomTreeNode(...args),
+  getSemanticDomainTreeNodeByName: (...args: any[]) =>
+    mockGetSemDomTreeNodeByName(...args),
 }));
 
 const mockGetSemDomTreeNode = jest.fn();
+const mockGetSemDomTreeNodeByName = jest.fn();
 
 // Mock the track and identify methods of segment analytics.
 global.analytics = { identify: jest.fn(), track: jest.fn() } as any;
 
-const mockId = "id";
+const mockId = "1.2.3";
 const mockLang = "lang";
 
 // Preloaded values for store when testing
