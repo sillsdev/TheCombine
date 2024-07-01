@@ -191,9 +191,9 @@ def save_domain(
 
 def get_sem_doms(node: ElementTree.Element, parent: SemDomTreeMap, prev: SemDomMap) -> SemDomMap:
     """
-    Recursively parse domains and sub-domains.
+    Recursively parse domains and subdomains.
 
-    The domains and sub-domains that are extracted by get_sem_doms are placed into two global
+    The domains and subdomains that are extracted by get_sem_doms are placed into two global
     structures:
     1. domain_nodes is a list of SemanticDomainFull elements that contain the full information
        about the domain.

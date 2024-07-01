@@ -152,7 +152,7 @@ automatically. The filename is the project id.
 
 !!! note "笔记"
 
-    Project settings, project users, and word flags are not exported.
+    Project settings, project users, word flags, and custom semantic domain questions are not exported.
 
 #### Export pronunciation speakers
 
@@ -193,3 +193,7 @@ not be imported into FieldWorks.
 ### 工作坊进度
 
 线型图显示了 [工作坊日程](#workshop-schedule)多天所累积的词以及对余下时间的预测。
+
+## Semantic Domains
+
+Details about custom semantic domains are coming soon.

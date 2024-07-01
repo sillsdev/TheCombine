@@ -167,7 +167,7 @@ download. When the data is gathered, the download will begin automatically. The 
 
 !!! note "Note"
 
-    Project settings, project users, and word flags are not exported.
+    Project settings, project users, word flags, and custom semantic domain questions are not exported.
 
 #### Export pronunciation speakers
 
@@ -212,3 +212,7 @@ Line graphs showing words collected during the days specified in the [Workshop S
 
 Line graphs showing cumulative words collected across the days of the [Workshop Schedule](#workshop-schedule), as well
 as projections for remainder of the workshop.
+
+## Semantic Domains
+
+Details about custom semantic domains are coming soon.
