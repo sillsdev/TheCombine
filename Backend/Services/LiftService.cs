@@ -658,7 +658,7 @@ namespace BackendFramework.Services
         private sealed class LiftMerger : ILiftMerger
         {
             private readonly string _projectId;
-            private readonly List<SemanticDomainFull> _semDoms = new();
+            private readonly List<SemanticDomainFull> _customSemDoms = new();
             private readonly string _vernLang;
             private readonly IWordRepository _wordRepo;
             private readonly List<Word> _importEntries = new();
@@ -693,7 +693,7 @@ namespace BackendFramework.Services
             /// <summary> Get custom semantic domains found in the lift ranges. </summary>
             public List<SemanticDomainFull> GetCustomSemanticDomains()
             {
-                return _semDoms;
+                return _customSemDoms;
             }
 
             /// <summary>
@@ -1010,7 +1010,7 @@ namespace BackendFramework.Services
                         foreach (var nameLabel in label)
                         {
                             description.TryGetValue(nameLabel.Key, out var descriptionText);
-                            _semDoms.Add(new()
+                            _customSemDoms.Add(new()
                             {
                                 Guid = guid,
                                 Id = domainId,
