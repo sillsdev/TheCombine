@@ -220,4 +220,4 @@ something else, type the replacement character or string in the "Replace with" b
 
 !!! warning "Important"
 
-    The find-and-replace operation makes changes to entries, not to the character inventory. It **cannot be undone!**
+    The find-and-replace operation makes changes to entries, not to the character inventory.

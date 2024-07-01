@@ -227,4 +227,4 @@ APLICAR.
 
 !!! warning "Importante"
 
-    La operación de buscar y reemplazar realiza cambios en las entradas, no en el inventario de personajes. No **se puede deshacer**
+    La operación de buscar y reemplazar realiza cambios en las entradas, no en el inventario de personajes.
