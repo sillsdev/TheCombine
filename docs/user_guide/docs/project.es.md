@@ -161,8 +161,7 @@ used for the file names).
 #### Exportar {#export}
 
 Tras pulsar el botón Exportar, puede navegar por otras partes del sitio web mientras se preparan los datos para la
-descargar. Aparecerá un icono de descarga en la barra de aplicaciones cuando la exportación esté lista para su descarga.
-El nombre de archivo por defecto es el nombre del proyecto con una marca de tiempo añadida.
+descargar. When the data is gathered, the download will begin automatically. El nombre de archivo es el id del proyecto.
 
 !!! warning "Importante"
 
@@ -175,16 +174,16 @@ El nombre de archivo por defecto es el nombre del proyecto con una marca de tiem
 #### Exportar locutores de las pronunciaciones
 
 When a project is exported from TheCombine and imported into FieldWorks, if a pronunciation has an associated speaker,
-the speaker name and id will be added as a pronunciation label. Consent files will be exported with speaker id used for
-the file name. The consent files can be found in the zipped export, but will not be imported into FieldWorks.
+the speaker name will be added as a pronunciation label. The consent files can be found in the zipped export, but will
+not be imported into FieldWorks.
 
 ### Calendario de talleres {#workshop-schedule}
 
 ![Calendario de talleres](../images/projectSettings5Sched.es.png){width=750 .center}
 
-Sólo está disponible para el Propietario del proyecto, lo que permite fijar un calendario para un taller de recopilación
-rápida de palabras. Haga clic en el primer botón para seleccionar un intervalo de fechas para el taller. Pulse el botón
-central para añadir o eliminar fechas concretas. Pulse el último botón para borrar la programación.
+Sólo está disponible para editar para el Propietario del proyecto, lo que permite fijar un calendario para un taller de
+recopilación rápida de palabras. Haga clic en el primer botón para seleccionar un intervalo de fechas para el taller.
+Pulse el botón central para añadir o eliminar fechas concretas. Pulse el último botón para borrar la programación.
 
 ![Calendario de talleres](../images/projectSchedule.es.png){.center}
 
