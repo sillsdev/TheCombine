@@ -38,7 +38,9 @@ include subdomains, add a final period to your filter. For example, "8111." incl
 
 ### 编辑词条行
 
-用户可以使用“发音”列中的图标来录制、播放或删除词条的录音。
+用户可以使用“发音
+”（![Review Entries pronunciations column header](images/reviewEntriesColumnPronunciations.png){width=28}）列中的图标来
+录制、播放或删除词条的录音。
 
 To edit any other part of an entry, click the
 ![Review Entries row edit icon](../images/reviewEntriesRowEdit.png){width=20} edit icon in the initial column.
@@ -75,10 +77,6 @@ You can delete an entire entry by clicking the
 词义被合并。
 
 ![合并重复的词条和合并其词义](../images/mergeSidebar.zh.png)
-
-!!! warning "重要警告"
-
-    当多种词义被合并时，所有语义域得以保留，但“只有侧边栏顶部的词义”保留其注释(和定义)。
 
 用户可将词义卡拖放至侧栏，或者从侧栏拖放至词义卡，来决定哪个词义被合并。 或者在侧栏内，用户可将不同的词义移至顶部(以保留
 其注释)。
@@ -156,6 +154,12 @@ You can delete an entire entry by clicking the
 
 ![将重复词义与定义和语性合并](../images/mergeSenseDefinitionsPartOfSpeech.png){.center}
 
+!!! note "笔记"
+
+A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same
+general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different
+general categories, only the first one is preserved.
+
 #### 受保护的词条与词义
 
 如果导入的词条或词义项包含 The Combine 不支持的资料(例如词源或词义反转)，它将被保护以防止删除。 受保护的词义卡会有一个黄
@@ -197,4 +201,4 @@ _创建字符库存_" 提供了该项目词条土语形式出现的每个符编�
 
 !!! warning "重要警告"
 
-    “查找和替换 ”操作更改的是词条，而不是字符库。 **它无法被撤销！**
+    “查找和替换 ”操作更改的是词条，而不是字符库。
