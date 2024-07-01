@@ -367,7 +367,7 @@ namespace BackendFramework.Services
                 }
             }
 
-            // Export semantic domains to lift-ranges
+            // Export custom semantic domains to lift-ranges
             if (proj.SemanticDomains.Count != 0 || CopyLiftRanges(proj.Id, rangesDest) is null)
             {
                 await CreateLiftRanges(proj.SemanticDomains, rangesDest);
@@ -412,7 +412,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Export English semantic domains (along with any custom domains) to lift-ranges. </summary>
-        public async Task CreateLiftRanges(List<SemanticDomain> projDoms, string rangesDest)
+        public async Task CreateLiftRanges(List<SemanticDomainFull> projDoms, string rangesDest)
         {
             await using var liftRangesWriter = XmlWriter.Create(rangesDest, new XmlWriterSettings
             {
@@ -425,8 +425,9 @@ namespace BackendFramework.Services
             liftRangesWriter.WriteStartElement("range");
             liftRangesWriter.WriteAttributeString("id", "semantic-domain-ddp4");
 
-            (await _semDomRepo.GetAllSemanticDomainTreeNodes("en"))?
-                .ForEach(sd => { WriteRangeElement(liftRangesWriter, sd.Id, sd.Guid, sd.Name, sd.Lang); });
+            var englishDomains = await _semDomRepo.GetAllSemanticDomainTreeNodes("en") ?? new();
+
+            englishDomains.ForEach(sd => { WriteRangeElement(liftRangesWriter, sd.Id, sd.Guid, sd.Name, sd.Lang); });
 
             // Pull from new semantic domains in project
             foreach (var sd in projDoms)
@@ -434,7 +435,9 @@ namespace BackendFramework.Services
                 var guid = string.IsNullOrEmpty(sd.Guid) || sd.Guid == Guid.Empty.ToString()
                        ? Guid.NewGuid().ToString()
                        : sd.Guid;
-                WriteRangeElement(liftRangesWriter, sd.Id, guid, sd.Name, sd.Lang);
+
+                var parent = $"{sd.ParentId} {englishDomains.Find(d => d.Id == sd.ParentId)?.Name}".Trim();
+                WriteRangeElement(liftRangesWriter, sd.Id, guid, sd.Name, sd.Lang, sd.Description, parent);
             }
 
             await liftRangesWriter.WriteEndElementAsync(); //end semantic-domain-ddp4 range
@@ -527,7 +530,7 @@ namespace BackendFramework.Services
                 {
                     var orc = new OptionRefCollection();
                     semDomNames.TryGetValue(semDom.Id, out string? name);
-                    orc.Add(semDom.Id + " " + name ?? semDom.Name);
+                    orc.Add(semDom.Id + " " + (name ?? semDom.Name));
                     lexSense.Properties.Add(new KeyValuePair<string, IPalasoDataObjectProperty>(
                         LexSense.WellKnownProperties.SemanticDomainDdp4, orc));
                 }
@@ -621,33 +624,41 @@ namespace BackendFramework.Services
             return new LiftMerger(projectId, vernLang, wordRepo);
         }
 
-        private static void WriteRangeElement(
-            XmlWriter liftRangesWriter, string id, string guid, string name, string lang)
+        private static void WriteRangeElement(XmlWriter liftRangesWriter,
+            string id, string guid, string name, string lang, string description = "", string parent = "")
         {
-            liftRangesWriter.WriteStartElement("range-element");
-            liftRangesWriter.WriteAttributeString("id", $"{id} {name}");
-            liftRangesWriter.WriteAttributeString("guid", guid);
+            liftRangesWriter.WriteStartElement("range-element"); // start range element
+            liftRangesWriter.WriteAttributeString("id", $"{id} {name}"); // add id to element
+            liftRangesWriter.WriteAttributeString("guid", guid); // add guid to element
+            if (!string.IsNullOrEmpty(parent))
+            {
+                liftRangesWriter.WriteAttributeString("parent", $"{parent}"); // add parent to element
+            }
 
-            liftRangesWriter.WriteStartElement("label");
-            liftRangesWriter.WriteAttributeString("lang", lang);
-            liftRangesWriter.WriteStartElement("text");
-            liftRangesWriter.WriteString(name);
-            liftRangesWriter.WriteEndElement(); //end text
-            liftRangesWriter.WriteEndElement(); //end label
+            WriteFormElement(liftRangesWriter, "label", lang, name); // write label
+            WriteFormElement(liftRangesWriter, "abbrev", lang, id); // write abbrev/id
+            if (!string.IsNullOrEmpty(description))
+            {
+                WriteFormElement(liftRangesWriter, "description", lang, description); // write description
+            }
 
-            liftRangesWriter.WriteStartElement("abbrev");
-            liftRangesWriter.WriteAttributeString("lang", lang);
-            liftRangesWriter.WriteStartElement("text");
-            liftRangesWriter.WriteString(id);
-            liftRangesWriter.WriteEndElement(); //end text
-            liftRangesWriter.WriteEndElement(); //end label
+            liftRangesWriter.WriteEndElement(); // end range element
+        }
 
-            liftRangesWriter.WriteEndElement(); //end range element
+        private static void WriteFormElement(XmlWriter liftRangesWriter, string element, string language, string text)
+        {
+            liftRangesWriter.WriteStartElement(element); // start element
+            liftRangesWriter.WriteStartElement("form"); // start form
+            liftRangesWriter.WriteAttributeString("lang", language); // add language to form
+            liftRangesWriter.WriteElementString("text", text); // write text
+            liftRangesWriter.WriteEndElement(); // end form
+            liftRangesWriter.WriteEndElement(); // end element
         }
 
         private sealed class LiftMerger : ILiftMerger
         {
             private readonly string _projectId;
+            private readonly List<SemanticDomainFull> _customSemDoms = new();
             private readonly string _vernLang;
             private readonly IWordRepository _wordRepo;
             private readonly List<Word> _importEntries = new();
@@ -677,6 +688,12 @@ namespace BackendFramework.Services
                 return _importEntries.Any(w => w.Senses.Any(
                     s => s.GrammaticalInfo is not null &&
                     s.GrammaticalInfo.CatGroup != GramCatGroup.Unspecified));
+            }
+
+            /// <summary> Get custom semantic domains found in the lift ranges. </summary>
+            public List<SemanticDomainFull> GetCustomSemanticDomains()
+            {
+                return _customSemDoms;
             }
 
             /// <summary>
@@ -977,16 +994,34 @@ namespace BackendFramework.Services
                 }
             }
 
-            /// <summary> Adds in each semantic domain to a list </summary>
+            /// <summary> Adds in custom semantic domains </summary>
             public void ProcessRangeElement(string range, string id, string guid, string parent,
                 LiftMultiText description, LiftMultiText label, LiftMultiText abbrev, string rawXml)
             {
-                /*uncomment this if you want to import semantic domains from a lift-ranges file*/
-                //if (range == "semantic-domain-ddp4")
-                //{
-                //    _sdList.Add(new SemanticDomain {
-                //        Name = label.ElementAt(0).Value.Text, Id = abbrev.First().Value.Text });
-                //}
+                if (range == "semantic-domain-ddp4" && abbrev.Count > 0)
+                {
+                    var domainId = abbrev.First().Value.Text;
+
+                    // If we allow custom subdomains with id not ending in "0",
+                    // we'll need to change the `domainId.Last() == '0'` check
+                    // to verifying that the id doesn't conflict with the standard domains.
+                    if (SemanticDomain.IsValidId(domainId, true) && domainId.Last() == '0')
+                    {
+                        foreach (var nameLabel in label)
+                        {
+                            description.TryGetValue(nameLabel.Key, out var descriptionText);
+                            _customSemDoms.Add(new()
+                            {
+                                Guid = guid,
+                                Id = domainId,
+                                Lang = nameLabel.Key,
+                                Name = nameLabel.Value.Text,
+                                Description = descriptionText?.Text ?? "",
+                                ParentId = string.IsNullOrEmpty(parent) ? "" : parent.Split(" ")[0]
+                            });
+                        }
+                    }
+                }
             }
 
             // The following are unused and are not implemented, but may still be called by the Lexicon Merger

@@ -56,11 +56,11 @@ namespace Backend.Tests.Models
             Assert.That(project.Equals(project2), Is.False);
 
             project2 = project.Clone();
-            project2.AnalysisWritingSystems.Add(new WritingSystem());
+            project2.AnalysisWritingSystems.Add(new());
             Assert.That(project.Equals(project2), Is.False);
 
             project2 = project.Clone();
-            project2.SemanticDomains.Add(new SemanticDomain());
+            project2.SemanticDomains.Add(new());
             Assert.That(project.Equals(project2), Is.False);
 
             project2 = project.Clone();
@@ -74,7 +74,7 @@ namespace Backend.Tests.Models
             Assert.That(project.Equals(project2), Is.False);
 
             project2 = project.Clone();
-            project2.CustomFields.Add(new CustomField());
+            project2.CustomFields.Add(new());
             Assert.That(project.Equals(project2), Is.False);
 
             project2 = project.Clone();
@@ -99,16 +99,27 @@ namespace Backend.Tests.Models
         [Test]
         public void TestClone()
         {
-            var system = new WritingSystem("en", "WritingSystemName", "calibri");
-            var project = new Project { Name = "ProjectName", VernacularWritingSystem = system };
-            var domain = new SemanticDomain { Name = "SemanticDomainName", Id = "1" };
-            project.SemanticDomains.Add(domain);
-
-            var customField = new CustomField { Name = "CustomFieldName", Type = "type" };
-            project.CustomFields.Add(customField);
-
-            var emailInvite = new EmailInvite(10, "user@combine.org", Role.Harvester);
-            project.InviteTokens.Add(emailInvite);
+            var project = new Project
+            {
+                Id = "ProjectId",
+                Name = "ProjectName",
+                IsActive = true,
+                LiftImported = true,
+                DefinitionsEnabled = true,
+                GrammaticalInfoEnabled = true,
+                AutocompleteSetting = AutocompleteSetting.On,
+                SemDomWritingSystem = new("fr", "Français"),
+                VernacularWritingSystem = new("en", "English", "Calibri"),
+                AnalysisWritingSystems = new() { new("es", "Español") },
+                SemanticDomains = new() { new() { Name = "SemanticDomainName", Id = "1" } },
+                ValidCharacters = new() { "a", "b", "c" },
+                RejectedCharacters = new() { "X", "Y", "Z" },
+                CustomFields = new() { new() { Name = "CustomFieldName", Type = "type" } },
+                WordFields = new() { "some field string" },
+                PartsOfSpeech = new() { "noun", "verb" },
+                InviteTokens = new() { new(10, "user@combine.org", Role.Harvester) },
+                WorkshopSchedule = new() { new(2222, 2, 22), },
+            };
 
             var project2 = project.Clone();
             Assert.That(project, Is.EqualTo(project2));

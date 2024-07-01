@@ -32,13 +32,16 @@ export const topButtonId = "tree-view-top";
 
 export interface TreeViewProps {
   exit?: () => void;
-  returnControlToCaller: () => void | Promise<void>;
+  returnControlToCaller: (domain?: SemanticDomain) => void | Promise<void>;
 }
 
 export default function TreeView(props: TreeViewProps): ReactElement {
   const { exit, returnControlToCaller } = props;
   const currentDomain = useAppSelector(
     (state: StoreState) => state.treeViewState.currentDomain
+  );
+  const customDomains = useAppSelector(
+    (state: StoreState) => state.currentProjectState.project.semanticDomains
   );
   const semDomLanguage = useAppSelector(
     (state: StoreState) => state.treeViewState.language
@@ -86,7 +89,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
       if (dom.id !== id) {
         await dispatch(traverseTree(dom));
       } else if (dom.id !== defaultTreeNode.id) {
-        await returnControlToCaller();
+        await returnControlToCaller(dom);
       } else {
         setVisible(true);
       }
@@ -120,7 +123,11 @@ export default function TreeView(props: TreeViewProps): ReactElement {
           {exit && <div style={{ display: "inline-block", width: 40 }} />}
         </Grid>
         <Grid item>
-          <TreeSearch currentDomain={currentDomain} animate={animateHandler} />
+          <TreeSearch
+            animate={animateHandler}
+            currentDomain={currentDomain}
+            customDomains={customDomains}
+          />
         </Grid>
         <Grid item>
           <Hidden smDown>

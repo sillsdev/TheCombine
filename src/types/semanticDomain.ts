@@ -1,3 +1,5 @@
+import { v4 } from "uuid";
+
 import {
   SemanticDomain,
   SemanticDomainFull,
@@ -8,12 +10,22 @@ import {
 import { getUserId } from "backend/localStorage";
 import { Bcp47Code } from "types/writingSystem";
 
+export const rootId = "Sem";
+
 export function newSemanticDomain(
   id = "",
   name = "",
   lang = Bcp47Code.Default as string
 ): SemanticDomainFull {
-  return { id, name, guid: "", questions: [], description: "", lang };
+  return {
+    guid: v4(),
+    id,
+    name,
+    lang,
+    description: "",
+    parentId: "",
+    questions: [],
+  };
 }
 
 export function newSemanticDomainForMongoDB(
@@ -39,7 +51,7 @@ export function newSemanticDomainTreeNode(
     id,
     name,
     lang,
-    guid: "",
+    guid: v4(),
   };
 }
 
