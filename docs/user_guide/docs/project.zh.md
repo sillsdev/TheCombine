@@ -143,8 +143,8 @@ used for the file names).
 
 #### 导出 {#export}
 
-单击 "导出 "按钮后，在数据准备下载时，用户可以到网站的其他部分浏览。 当导出内容可供下载时，应用程序栏中会出现一个下载图
-标。 默认文件名是项目名称加上下载时间。
+单击 "导出 "按钮后，在数据准备下载时，用户可以到网站的其他部分浏览。 When the data is gathered, the download will begin
+automatically. The filename is the project id.
 
 !!! warning "重要警告"
 
@@ -157,8 +157,8 @@ used for the file names).
 #### Export pronunciation speakers
 
 When a project is exported from TheCombine and imported into FieldWorks, if a pronunciation has an associated speaker,
-the speaker name and id will be added as a pronunciation label. Consent files will be exported with speaker id used for
-the file name. The consent files can be found in the zipped export, but will not be imported into FieldWorks.
+the speaker name will be added as a pronunciation label. The consent files can be found in the zipped export, but will
+not be imported into FieldWorks.
 
 ### 工作坊日程 {#workshop-schedule}
 

@@ -159,8 +159,7 @@ used for the file names).
 #### Export {#export}
 
 After clicking the Export button, you can navigate to other parts of the website while the data is being prepared for
-download. A download icon will appear in the App Bar when the export is ready for download. The default filename is the
-project name with a timestamp affixed.
+download. When the data is gathered, the download will begin automatically. The filename is the project id.
 
 !!! warning "Important"
 
@@ -173,16 +172,16 @@ project name with a timestamp affixed.
 #### Export pronunciation speakers
 
 When a project is exported from TheCombine and imported into FieldWorks, if a pronunciation has an associated speaker,
-the speaker name and id will be added as a pronunciation label. Consent files will be exported with speaker id used for
-the file name. The consent files can be found in the zipped export, but will not be imported into FieldWorks.
+the speaker name will be added as a pronunciation label. The consent files can be found in the zipped export, but will
+not be imported into FieldWorks.
 
 ### Workshop Schedule {#workshop-schedule}
 
 ![Workshop Schedule](images/projectSettings5Sched.png){width=750 .center}
 
-This is only available to the project Owner, allowing a schedule to be set for a Rapid Word Collection workshop. Click
-the first button to select a date range for the workshop. Click the middle button to add or remove specific dates. Click
-the last button to clear the schedule.
+This is only available for editing by the project Owner, allowing a schedule to be set for a Rapid Word Collection
+workshop. Click the first button to select a date range for the workshop. Click the middle button to add or remove
+specific dates. Click the last button to clear the schedule.
 
 ![Workshop Schedule](images/projectSchedule.png){.center}
 
