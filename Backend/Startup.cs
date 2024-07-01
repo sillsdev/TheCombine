@@ -251,7 +251,10 @@ namespace BackendFramework
             services.AddTransient<IWordService, WordService>();
 
             // OpenTelemetry
-            services.AddOpenTelemetryInstrumentation();
+            services.AddMemoryCache();
+            services.AddHttpContextAccessor();
+            services.AddSingleton<OtelKernel>();
+            // services.AddOpenTelemetryInstrumentation();
 
         }
 

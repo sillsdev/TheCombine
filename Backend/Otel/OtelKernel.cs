@@ -1,25 +1,35 @@
-using System;
+// using System;
 using System.Diagnostics;
-// using System.Diagnostics.Metrics;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Security.Claims;
+using System.Diagnostics.Metrics;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+
+
+// using System.Diagnostics.Metrics;
+// using System.Net.Http;
+// using System.Net.Http.Json;
+// using System.Security.Claims;
+// using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
-
 namespace BackendFramework.Otel
 {
 
-    public static class OtelKernel
+    public class OtelKernel
     {
 
         public const string ServiceName = "Backend-Otel";
-        public static async void AddOpenTelemetryInstrumentation(this IServiceCollection services)
+        private readonly LocationCache _locationCache;
+
+        public OtelKernel(LocationCache locationCache, IServiceCollection serviceCollection)
+        {
+            _locationCache = locationCache;
+            AddOpenTelemetryInstrumentation(serviceCollection);
+        }
+
+        public void AddOpenTelemetryInstrumentation(IServiceCollection services)
         {
             var appResourceBuilder = ResourceBuilder.CreateDefault().AddService(ServiceName);
             // todo: include version 
@@ -40,7 +50,7 @@ namespace BackendFramework.Otel
                         {
                             activity.SetTag("inbound.http.request.body.size", "no content");
                         }
-                        activity.EnrichWithUser(request.HttpContext);
+                        // activity.EnrichWithUser(request.HttpContext);
                     };
                     options.EnrichWithHttpResponse = (activity, response) =>
                     {
@@ -53,7 +63,7 @@ namespace BackendFramework.Otel
                         {
                             activity.SetTag("inbound.http.response.body.size", "no content");
                         }
-                        activity.EnrichWithUser(response.HttpContext);
+                        // activity.EnrichWithUser(response.HttpContext);
                     };
                 })
                 .AddHttpClientInstrumentation(options =>
@@ -80,6 +90,8 @@ namespace BackendFramework.Otel
                         {
                             activity.SetTag("outbound.http.response.body.size", "no content");
                         }
+
+                        // await GetLocationInfo(activity);
                     };
                     options.EnrichWithHttpResponseMessage = (activity, response) =>
                     {
@@ -106,65 +118,49 @@ namespace BackendFramework.Otel
             //     .AddOtlpExporter()
             // );
 
-            services.AddHttpContextAccessor();
-            await RecordLocationAsync(new HttpContextAccessor());
+            // services.AddHttpContextAccessor();
+            // await RecordLocationAsync(new HttpContextAccessor());
+            var meter = new Meter(ServiceName);
+
         }
 
-        private static async Task RecordLocationAsync(IHttpContextAccessor contextAccessor)
+        private async Task GetLocationInfo(Activity activity)
         {
-            using (var activity = BackendActivitySource.Get().StartActivity())
+            var response = await _locationCache.GetLocation();
+
+            var location = new
             {
-                activity?.AddTag("where", "in kernel");
-                if (contextAccessor.HttpContext is { } context)
-                {
-                    try
-                    {
-                        var ipAddress = context.GetServerVariable("HTTP_X_FORWARDED_FOR") ?? context.Connection.RemoteIpAddress?.ToString();
-                        var ipAddressWithoutPort = ipAddress?.Split(':')[0];
+                Country = response?.country,
+                Region = response?.regionName,
+                City = response?.city,
+            };
 
-                        var route = $"http://ip-api.com/json/{ipAddressWithoutPort}";
 
-                        var httpClient = new HttpClient();
-                        var response = await httpClient.GetFromJsonAsync<LocationApi>(route);
+            activity?.AddTag("country", location.Country);
+            activity?.AddTag("region", location.Region);
+            activity?.AddTag("city", location.City);
 
-                        var location = new
-                        {
-                            Country = response?.country,
-                            Region = response?.regionName,
-                            City = response?.city,
-                        };
-
-                        activity?.AddTag("country", location.Country);
-                        activity?.AddTag("region", location.Region);
-                        activity?.AddTag("city", location.City);
-                    }
-                    catch (Exception e)
-                    {
-                        activity?.SetTag("Location Exception", e.Message);
-                    }
-                }
-            }
         }
 
 
-        private static void EnrichWithUser(this Activity activity, HttpContext httpContext)
-        {
-            var claimsPrincipal = httpContext.User;
-            // var userId = claimsPrincipal?.FindFirstValue("sub");
-            var userId = claimsPrincipal;
-            if (userId != null)
-            {
-                activity.SetTag("app.user.id", userId);
-            }
-            var userRole = claimsPrincipal?.FindFirstValue("role");
-            if (userRole != null)
-            {
-                activity.SetTag("app.user.role", userRole);
-            }
-            if (httpContext.RequestAborted.IsCancellationRequested)
-            {
-                activity.SetTag("http.abort", true);
-            }
-        }
+        // private void EnrichWithUser(this Activity activity, HttpContext httpContext)
+        // {
+        //     var claimsPrincipal = httpContext.User;
+        //     // var userId = claimsPrincipal?.FindFirstValue("sub");
+        //     var userId = claimsPrincipal;
+        //     if (userId != null)
+        //     {
+        //         activity.SetTag("app.user.id", userId);
+        //     }
+        //     var userRole = claimsPrincipal?.FindFirstValue("role");
+        //     if (userRole != null)
+        //     {
+        //         activity.SetTag("app.user.role", userRole);
+        //     }
+        //     if (httpContext.RequestAborted.IsCancellationRequested)
+        //     {
+        //         activity.SetTag("http.abort", true);
+        //     }
+        // }
     }
 }

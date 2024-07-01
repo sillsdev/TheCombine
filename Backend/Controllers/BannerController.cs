@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace BackendFramework.Controllers
 {
@@ -21,12 +22,15 @@ namespace BackendFramework.Controllers
         private readonly IBannerRepository _bannerRepo;
         private readonly IPermissionService _permissionService;
 
+        private readonly IMemoryCache _memoryCache;
+
         private const string otelTagName = "otel.report.controller";
 
-        public BannerController(IBannerRepository bannerRepo, IPermissionService permissionService)
+        public BannerController(IBannerRepository bannerRepo, IPermissionService permissionService, IMemoryCache memoryCache)
         {
             _bannerRepo = bannerRepo;
             _permissionService = permissionService;
+            _memoryCache = memoryCache;
         }
 
         /// <summary> Returns the <see cref="Banner"/> for the specified <see cref="BannerType"/>. </summary>
@@ -42,39 +46,50 @@ namespace BackendFramework.Controllers
 
                 activity?.AddTag(otelTagName, "in the banner!");
 
-                if (HttpContext is { } context)
-                {
-                    try
+                var check = _memoryCache.TryGetValue("cachedLocation", out LocationApi? existingLoc);
+                activity?.SetTag("loc val...", check);
+
+                LocationApi? response = await _memoryCache.GetOrCreateAsync(
+                    "cachedLocation",
+                    async (cacheEntry) =>
                     {
-                        var ipAddress = context.GetServerVariable("HTTP_X_FORWARDED_FOR") ?? HttpContext.Connection.RemoteIpAddress?.ToString();
-                        var ipAddressWithoutPort = ipAddress?.Split(':')[0];
+                        activity?.SetTag("found in cache?", "no");
 
-                        var route = $"http://ip-api.com/json/{ipAddressWithoutPort}";
-
-                        var httpClient = new HttpClient();
-                        var response = await httpClient.GetFromJsonAsync<LocationApi>(route);
-
-                        var location = new
+                        if (HttpContext is { } context)
                         {
-                            Country = response?.country,
-                            Region = response?.regionName,
-                            City = response?.city,
-                        };
+                            try
+                            {
+                                string? ipAddress = context.GetServerVariable("HTTP_X_FORWARDED_FOR") ?? HttpContext.Connection.RemoteIpAddress?.ToString();
+                                var ipAddressWithoutPort = ipAddress?.Split(':')[0];
 
-                        activity?.AddTag("country", location.Country);
-                        activity?.AddTag("region", location.Region);
-                        activity?.AddTag("city", location.City);
-                    }
-                    catch (Exception e)
-                    {
-                        return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-                    }
+                                var route = $"http://ip-api.com/json/{ipAddressWithoutPort}";
+
+                                var httpClient = new HttpClient();
+                                var response = await httpClient.GetFromJsonAsync<LocationApi>(route);
+
+                                return response;
+
+                            }
+                            catch (Exception e)
+                            {
+                                // todo figure out what to put in catch 
+                                activity?.SetTag("Location Exception", e.Message);
+                            }
+                        }
+                        return null;
+                    });
+
+                var location = new
+                {
+                    Country = response?.country,
+                    Region = response?.regionName,
+                    City = response?.city,
+                };
 
 
-
-
-                }
-
+                activity?.AddTag("country", location.Country);
+                activity?.AddTag("region", location.Region);
+                activity?.AddTag("city", location.City);
 
             }
 
