@@ -170,7 +170,7 @@ El nombre de archivo por defecto es el nombre del proyecto con una marca de tiem
 
 !!! note "Nota"
 
-    Project settings, project users, and word flags are not exported.
+    Project settings, project users, word flags, and custom semantic domain questions are not exported.
 
 #### Exportar locutores de las pronunciaciones
 
@@ -216,3 +216,7 @@ Gráficos lineales que muestran las palabras recogidas durante los días especif
 
 Gráficos lineales que muestran las palabras acumuladas a lo largo de los días del
 [Calendario de talleres](#workshop-schedule), así como las previsiones para el resto del taller.
+
+## Semantic Domains
+
+Details about custom semantic domains are coming soon.
