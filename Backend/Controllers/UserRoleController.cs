@@ -289,13 +289,13 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary>
-        /// Sets a new owner for <see cref="Project"/> with specified projectId and removes the previous owner.
-        /// Can only be used by the project owner or a site admin
+        /// Change project owner from user with first specified id to user with second specified id.
+        /// Can only be used by the project owner or a site admin.
         /// </summary>
         /// <returns> Id of updated UserRole </returns>
-        [HttpGet("setowner/{oldUserId}/{newUserId}", Name = "SetOwner")]
+        [HttpGet("changeowner/{oldUserId}/{newUserId}", Name = "ChangeOwner")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        public async Task<IActionResult> SetOwner(string projectId, string oldUserId, string newUserId)
+        public async Task<IActionResult> ChangeOwner(string projectId, string oldUserId, string newUserId)
         {
             // Ensure the actor has sufficient permission to change project owner
             if (!await _permissionService.ContainsProjectRole(HttpContext, Role.Owner, projectId))
@@ -360,6 +360,7 @@ namespace BackendFramework.Controllers
                 {
                     return NotFound(newRoleId);
                 }
+                newUsersRole.Role = Role.Owner;
                 newResult = await _userRoleRepo.Update(newRoleId, newUsersRole);
             }
             if (newResult != ResultOfUpdate.Updated)
