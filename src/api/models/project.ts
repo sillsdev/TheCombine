@@ -15,7 +15,7 @@
 import { AutocompleteSetting } from "./autocomplete-setting";
 import { CustomField } from "./custom-field";
 import { EmailInvite } from "./email-invite";
-import { SemanticDomain } from "./semantic-domain";
+import { SemanticDomainFull } from "./semantic-domain-full";
 import { WritingSystem } from "./writing-system";
 
 /**
@@ -86,10 +86,10 @@ export interface Project {
   analysisWritingSystems: Array<WritingSystem>;
   /**
    *
-   * @type {Array<SemanticDomain>}
+   * @type {Array<SemanticDomainFull>}
    * @memberof Project
    */
-  semanticDomains: Array<SemanticDomain>;
+  semanticDomains: Array<SemanticDomainFull>;
   /**
    *
    * @type {Array<string>}

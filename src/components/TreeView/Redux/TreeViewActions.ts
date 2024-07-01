@@ -1,13 +1,13 @@
-import { Action, PayloadAction } from "@reduxjs/toolkit";
+import { type Action, type PayloadAction } from "@reduxjs/toolkit";
 
-import { SemanticDomain, SemanticDomainTreeNode } from "api/models";
-import { getSemanticDomainTreeNode } from "backend";
+import { type SemanticDomain, type SemanticDomainTreeNode } from "api/models";
 import {
   resetTreeAction,
   setCurrentDomainAction,
   setDomainLanguageAction,
   setTreeOpenAction,
 } from "components/TreeView/Redux/TreeViewReducer";
+import { getAugmentedTreeNode } from "components/TreeView/utilities";
 import { type StoreState, type StoreStateDispatch } from "rootRedux/types";
 
 // Action Creation Functions
@@ -37,9 +37,11 @@ export function setDomainLanguage(language: string): PayloadAction {
 // Dispatch Functions
 
 export function traverseTree(domain: SemanticDomain) {
-  return async (dispatch: StoreStateDispatch) => {
-    if (domain.id) {
-      const dom = await getSemanticDomainTreeNode(domain.id, domain.lang);
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+    const { id, lang } = domain;
+    if (id) {
+      const customDoms = getState().currentProjectState.project.semanticDomains;
+      const dom = await getAugmentedTreeNode(id, lang, customDoms);
       if (dom) {
         dispatch(setCurrentDomain(dom));
       }

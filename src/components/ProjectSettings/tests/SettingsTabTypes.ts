@@ -17,6 +17,10 @@ const settingsByTab: Record<ProjectSettingsTab, Setting[]> = {
     Setting.UserAdd,
     Setting.Users,
   ],
+  [ProjectSettingsTab.Domains]: [
+    Setting.DomainsLanguage,
+    Setting.DomainsCustom,
+  ],
 };
 
 /** A dictionary indexed by all the project permissions. For each key permission,
@@ -26,6 +30,8 @@ const settingsByPermission: Record<Permission, Setting[]> = {
   [Permission.CharacterInventory]: [],
   [Permission.DeleteEditSettingsAndUsers]: [
     Setting.Autocomplete,
+    Setting.DomainsLanguage,
+    Setting.DomainsCustom,
     Setting.Languages,
     Setting.Name,
     Setting.Speakers,

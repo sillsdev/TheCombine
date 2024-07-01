@@ -30,14 +30,16 @@ import theme from "types/theme";
 import { newWritingSystem, semDomWritingSystems } from "types/writingSystem";
 import { getAnalysisLangsFromWords } from "utilities/wordUtilities";
 
-const addAnalysisLangButtonId = "analysis-language-new";
-const addAnalysisLangCleanButtonId = "analysis-language-new-clear";
-const addAnalysisLangConfirmButtonId = "analysis-language-new-confirm";
-export const editVernacularNameButtonId = "vernacular-language-edit";
-export const editVernacularNameFieldId = "vernacular-language-name";
-export const editVernacularNameSaveButtonId = "vernacular-language-save";
-const getProjAnalysisLangsButtonId = "analysis-language-get";
-const semDomLangSelectId = "semantic-domains-language";
+export enum ProjectLanguagesId {
+  ButtonAddAnalysisLang = "analysis-language-new",
+  ButtonAddAnalysisLangClear = "analysis-language-new-clear",
+  ButtonAddAnalysisLangConfirm = "analysis-language-new-confirm",
+  ButtonEditVernacularName = "vernacular-language-edit",
+  ButtonEditVernacularNameSave = "vernacular-language-save",
+  ButtonGetProjAnalysisLangs = "analysis-language-get",
+  FieldEditVernacularName = "vernacular-language-name",
+  SelectSemDomLang = "semantic-domains-language",
+}
 
 export default function ProjectLanguages(
   props: ProjectSettingProps
@@ -136,21 +138,6 @@ export default function ProjectLanguages(
     setLangsInProj(langCodes.join(", "));
   };
 
-  const setSemDomWritingSystem = async (lang: string): Promise<void> => {
-    const semDomWritingSystem =
-      semDomWritingSystems.find((ws) => ws.bcp47 === lang) ??
-      newWritingSystem();
-    await props
-      .setProject({ ...props.project, semDomWritingSystem })
-      .then(() => resetState())
-      .catch((err) => {
-        console.error(err);
-        toast.error(
-          t("projectSettings.language.updateSemDomWritingSystemFailed")
-        );
-      });
-  };
-
   const resetState = (): void => {
     setAdd(false);
     setLangsInProj("");
@@ -186,13 +173,13 @@ export default function ProjectLanguages(
         icon={<Add />}
         textId="projectSettings.language.addAnalysisLanguage"
         onClick={() => setAdd(true)}
-        buttonId={addAnalysisLangButtonId}
+        buttonId={ProjectLanguagesId.ButtonAddAnalysisLang}
       />
       <IconButtonWithTooltip
         icon={<Search />}
         textId="projectSettings.language.getGlossLanguages"
         onClick={() => getActiveAnalysisLangs()}
-        buttonId={getProjAnalysisLangsButtonId}
+        buttonId={ProjectLanguagesId.ButtonGetProjAnalysisLangs}
       />
       {langsInProj}
     </>
@@ -227,7 +214,7 @@ export default function ProjectLanguages(
         <IconButton
           disabled={!isNewLang}
           onClick={() => addAnalysisWritingSystem()}
-          id={addAnalysisLangConfirmButtonId}
+          id={ProjectLanguagesId.ButtonAddAnalysisLangConfirm}
           size="large"
         >
           <Done />
@@ -236,41 +223,13 @@ export default function ProjectLanguages(
       <Grid item>
         <IconButton
           onClick={() => resetState()}
-          id={addAnalysisLangCleanButtonId}
+          id={ProjectLanguagesId.ButtonAddAnalysisLangClear}
           size="large"
         >
           <Clear />
         </IconButton>
       </Grid>
     </Grid>
-  );
-
-  const semDomLangSelect = (): ReactElement => (
-    <Select
-      variant="standard"
-      id={semDomLangSelectId}
-      value={props.project.semDomWritingSystem.bcp47}
-      onChange={(event: SelectChangeEvent<string>) =>
-        setSemDomWritingSystem(event.target.value as string)
-      }
-      /* Use `displayEmpty` and a conditional `renderValue` function to force
-       * something to appear when the menu is closed and its value is "" */
-      displayEmpty
-      renderValue={
-        props.project.semDomWritingSystem.bcp47
-          ? undefined
-          : () => t("projectSettings.language.semanticDomainsDefault")
-      }
-    >
-      <MenuItem value={""}>
-        {t("projectSettings.language.semanticDomainsDefault")}
-      </MenuItem>
-      {semDomWritingSystems.map((ws) => (
-        <MenuItem key={ws.bcp47} value={ws.bcp47}>
-          {`${ws.bcp47} (${ws.name})`}
-        </MenuItem>
-      ))}
-    </Select>
   );
 
   const vernacularLanguageDisplay = (): ReactElement => (
@@ -285,7 +244,7 @@ export default function ProjectLanguages(
             size="small"
             textId="projectSettings.language.changeName"
             onClick={() => setChangeVernName(true)}
-            buttonId={editVernacularNameButtonId}
+            buttonId={ProjectLanguagesId.ButtonEditVernacularName}
           />
         )
       }
@@ -297,7 +256,7 @@ export default function ProjectLanguages(
       <Grid item xs={12}>
         <TextField
           variant="standard"
-          id={editVernacularNameFieldId}
+          id={ProjectLanguagesId.FieldEditVernacularName}
           value={newVernName}
           onChange={(e) => setNewVernName(e.target.value)}
           onBlur={() => {
@@ -311,7 +270,7 @@ export default function ProjectLanguages(
         <Button
           variant="contained"
           color="primary"
-          id={editVernacularNameSaveButtonId}
+          id={ProjectLanguagesId.ButtonEditVernacularNameSave}
           onClick={() => updateVernacularName()}
           onMouseDown={(e) => e.preventDefault()}
         >
@@ -347,20 +306,7 @@ export default function ProjectLanguages(
         (add ? addAnalysisLangPicker() : addAnalysisLangButtons())}
 
       {/* Semantic domains language */}
-      <Typography style={{ marginTop: theme.spacing(1) }} variant="h6">
-        {t("projectSettings.language.semanticDomains")}
-      </Typography>
-      {props.readOnly ? (
-        props.project.semDomWritingSystem.bcp47 ? (
-          <ImmutableWritingSystem ws={props.project.semDomWritingSystem} />
-        ) : (
-          <Typography>
-            {t("projectSettings.language.semanticDomainsDefault")}
-          </Typography>
-        )
-      ) : (
-        semDomLangSelect()
-      )}
+      <SemanticDomainLanguage {...props} />
     </>
   );
 }
@@ -400,5 +346,68 @@ function ImmutableWritingSystem(
       </Grid>
       <Grid item>{props.buttons}</Grid>
     </Grid>
+  );
+}
+
+export function SemanticDomainLanguage(
+  props: ProjectSettingProps
+): ReactElement {
+  const { t } = useTranslation();
+
+  const setSemDomWritingSystem = async (lang: string): Promise<void> => {
+    const semDomWritingSystem =
+      semDomWritingSystems.find((ws) => ws.bcp47 === lang) ??
+      newWritingSystem();
+    await props
+      .setProject({ ...props.project, semDomWritingSystem })
+      .catch((err) => {
+        console.error(err);
+        toast.error(
+          t("projectSettings.language.updateSemDomWritingSystemFailed")
+        );
+      });
+  };
+
+  return (
+    <>
+      <Typography style={{ marginTop: theme.spacing(1) }} variant="h6">
+        {t("projectSettings.language.semanticDomains")}
+      </Typography>
+      {props.readOnly ? (
+        props.project.semDomWritingSystem.bcp47 ? (
+          <ImmutableWritingSystem ws={props.project.semDomWritingSystem} />
+        ) : (
+          <Typography>
+            {t("projectSettings.language.semanticDomainsDefault")}
+          </Typography>
+        )
+      ) : (
+        <Select
+          variant="standard"
+          id={ProjectLanguagesId.SelectSemDomLang}
+          value={props.project.semDomWritingSystem.bcp47}
+          onChange={(event: SelectChangeEvent<string>) =>
+            setSemDomWritingSystem(event.target.value as string)
+          }
+          /* Use `displayEmpty` and a conditional `renderValue` function to force
+           * something to appear when the menu is closed and its value is "" */
+          displayEmpty
+          renderValue={
+            props.project.semDomWritingSystem.bcp47
+              ? undefined
+              : () => t("projectSettings.language.semanticDomainsDefault")
+          }
+        >
+          <MenuItem value={""}>
+            {t("projectSettings.language.semanticDomainsDefault")}
+          </MenuItem>
+          {semDomWritingSystems.map((ws) => (
+            <MenuItem key={ws.bcp47} value={ws.bcp47}>
+              {`${ws.bcp47} (${ws.name})`}
+            </MenuItem>
+          ))}
+        </Select>
+      )}
+    </>
   );
 }
