@@ -78,11 +78,6 @@ You can delete an entire entry by clicking the
 
 ![合并重复的词条和合并其词义](../images/mergeSidebar.zh.png)
 
-!!! note "笔记"
-
-    When multiple senses are merged, all glosses, definitions, and semantic domains are preserved. However, if senses
-    have different grammatical info, only the first part of speech is preserved.
-
 用户可将词义卡拖放至侧栏，或者从侧栏拖放至词义卡，来决定哪个词义被合并。 或者在侧栏内，用户可将不同的词义移至顶部(以保留
 其注释)。
 
@@ -158,6 +153,12 @@ You can delete an entire entry by clicking the
   如，专有名词或及物动词)。
 
 ![将重复词义与定义和语性合并](../images/mergeSenseDefinitionsPartOfSpeech.png){.center}
+
+!!! note "笔记"
+
+A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same
+general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different
+general categories, only the first one is preserved.
 
 #### 受保护的词条与词义
 

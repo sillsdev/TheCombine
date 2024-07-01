@@ -80,11 +80,6 @@ to appear on the right, showing which senses are being merged.
 
 ![Merge Duplicates senses merged](images/mergeSidebar.png)
 
-!!! note "Note"
-
-    When multiple senses are merged, all glosses, definitions, and semantic domains are preserved. However, if senses
-    have different grammatical info, only the first part of speech is preserved.
-
 You can drag-and-drop sense cards to or from the sidebar to change which senses are being merged. Or within the sidebar,
 you can move a different sense to the top (to preserve its glosses).
 
@@ -166,6 +161,12 @@ information will appear in the Merge Duplicate sense cards as follows:
   proper noun or transitive verb).
 
 ![Merge Duplicates sense with definitions and part of speech](images/mergeSenseDefinitionsPartOfSpeech.png){.center}
+
+!!! note "Note"
+
+A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same
+general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different
+general categories, only the first one is preserved.
 
 #### Protected Entries and Senses
 

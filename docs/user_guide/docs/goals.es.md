@@ -81,11 +81,6 @@ que aparezca una barra lateral azul aparezca a la derecha, mostrando cuales acep
 
 ![Fusionar duplicados acepciones fusionadas](../images/mergeSidebar.es.png)
 
-!!! note "Nota"
-
-    When multiple senses are merged, all glosses, definitions, and semantic domains are preserved. However, if senses
-    have different grammatical info, only the first part of speech is preserved.
-
 Puede arrastrar y soltar tarjetas de acepción hacia o desde la barra lateral para cambiar las acepciones que se están
 fusionando. O dentro de la barra lateral, puede desplazar una acepción diferente a la parte superior (para conservar sus
 glosas).
@@ -171,6 +166,12 @@ la siguiente manera:
   categoría gramatical específica (p. ej., nombre propio o verbo transitivo).
 
 ![Fusionar duplicados acepción con definiciones y parte de la oración](../images/mergeSenseDefinitionsPartOfSpeech.png){.center}
+
+!!! note "Nota"
+
+A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same
+general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different
+general categories, only the first one is preserved.
 
 #### Entradas y acepciones protegidas
 
