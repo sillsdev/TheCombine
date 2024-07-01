@@ -31,7 +31,7 @@ namespace Backend.Tests.Controllers
         private const string Id = "1";
         private const string Lang = "en";
         private const string Name = "Universe";
-        private readonly SemanticDomainFull _semDom = new() { Id = Id, Lang = Lang, Name = Name };
+        private readonly SemanticDomain _semDom = new() { Id = Id, Lang = Lang, Name = Name };
 
         [SetUp]
         public void Setup()
@@ -60,7 +60,7 @@ namespace Backend.Tests.Controllers
         [Test]
         public void GetSemanticDomainFullDomainFound()
         {
-            ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(_semDom);
+            ((SemanticDomainRepositoryMock)_semDomRepository).SetNextResponse(new SemanticDomainFull(_semDom));
             var domain = (SemanticDomainFull?)(
                 (ObjectResult)_semDomController.GetSemanticDomainFull(Id, Lang).Result).Value;
             Assert.That(domain?.Id, Is.EqualTo(Id));

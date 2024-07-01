@@ -267,6 +267,15 @@ namespace BackendFramework.Controllers
             project.DefinitionsEnabled = doesImportHaveDefinitions;
             project.GrammaticalInfoEnabled = doesImportHaveGrammaticalInfo;
 
+            // Add new custom domains to the project
+            liftMerger.GetCustomSemanticDomains().ForEach(customDom =>
+            {
+                if (!project.SemanticDomains.Any(dom => dom.Id == customDom.Id && dom.Lang == customDom.Lang))
+                {
+                    project.SemanticDomains.Add(customDom);
+                }
+            });
+
             // Store that we have imported LIFT data already for this project
             // to signal the frontend not to attempt to import again in this project.
             project.LiftImported = true;
