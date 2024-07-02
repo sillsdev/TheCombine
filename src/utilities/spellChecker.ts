@@ -34,11 +34,16 @@ export default class SpellChecker {
     this.dictLoader = new DictionaryLoader(bcp47);
     this.dictLoaded = {};
     await this.dictLoader.loadDictionary().then((dic) => {
-      if (dic !== undefined) {
+      if (dic) {
         this.spell = nspell("SET UTF-8", dic);
         this.addToDictLoaded(dic);
         if (process.env.NODE_ENV === "development") {
           console.log(`Loaded spell-checker: ${bcp47}`);
+        }
+      } else {
+        this.spell = undefined;
+        if (process.env.NODE_ENV === "development") {
+          console.log(`No dictionary available: ${bcp47}`);
         }
       }
     });
