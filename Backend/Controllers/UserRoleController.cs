@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -147,6 +148,13 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
+            // Prevent a second project owner
+            if (userRole.Role == Role.Owner
+                && (await _userRoleRepo.GetAllUserRoles(projectId)).Any((role) => role.Role == Role.Owner))
+            {
+                return Forbid("This project already has an owner");
+            }
+
             await _userRoleRepo.Create(userRole);
             return Ok(userRole.Id);
         }
@@ -183,6 +191,12 @@ namespace BackendFramework.Controllers
                 return NotFound(userRoleId);
             }
 
+            // Prevent deleting the project owner.
+            if (userRole.Role == Role.Owner)
+            {
+                return Forbid("Cannot use this function to remove the project owner's role");
+            }
+
             // Prevent deleting role of another user who has more permissions than the actor.
             if (!await _permissionService.ContainsProjectRole(HttpContext, userRole.Role, projectId))
             {
@@ -212,6 +226,11 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
+            // Prevent making a new project owner.
+            if (projectRole.Role == Role.Owner)
+            {
+                return Forbid("Cannot use this function to give a user the project owner role");
+            }
             // Prevent upgrading another user to have more permissions than the actor.
             if (!await _permissionService.ContainsProjectRole(HttpContext, projectRole.Role, projectId))
             {
@@ -248,6 +267,11 @@ namespace BackendFramework.Controllers
                 return NotFound(userRoleId);
             }
 
+            // Prevent downgrading the project owner.
+            if (userRole.Role == Role.Owner)
+            {
+                return Forbid("Cannot use this function to change the project owner's role");
+            }
             // Prevent downgrading another user who has more permissions than the actor.
             if (!await _permissionService.ContainsProjectRole(HttpContext, userRole.Role, projectId))
             {
@@ -261,6 +285,96 @@ namespace BackendFramework.Controllers
                 ResultOfUpdate.NotFound => NotFound(userRoleId),
                 ResultOfUpdate.Updated => Ok(userRoleId),
                 _ => StatusCode(StatusCodes.Status304NotModified, userRoleId)
+            };
+        }
+
+        /// <summary>
+        /// Change project owner from user with first specified id to user with second specified id.
+        /// Can only be used by the project owner or a site admin.
+        /// </summary>
+        /// <returns> Id of updated UserRole </returns>
+        [HttpGet("changeowner/{oldUserId}/{newUserId}", Name = "ChangeOwner")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        public async Task<IActionResult> ChangeOwner(string projectId, string oldUserId, string newUserId)
+        {
+            // Ensure the actor has sufficient permission to change project owner
+            if (!await _permissionService.ContainsProjectRole(HttpContext, Role.Owner, projectId))
+            {
+                return Forbid();
+            }
+
+            // Ensure that the old and new owners' ids are different
+            if (oldUserId.Equals(newUserId, System.StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest($"the user ids for the old and new owners should be different");
+            }
+
+            // Ensure the project exists
+            var proj = await _projRepo.GetProject(projectId);
+            if (proj is null)
+            {
+                return NotFound(projectId);
+            }
+
+            // Fetch the users
+            var oldOwner = await _userRepo.GetUser(oldUserId, false);
+            if (oldOwner is null)
+            {
+                return NotFound(oldUserId);
+            }
+            var newOwner = await _userRepo.GetUser(newUserId, false);
+            if (newOwner is null)
+            {
+                return NotFound(newUserId);
+            }
+
+            // Ensure that the user from whom ownership is being moved is the owner
+            if (!oldOwner.ProjectRoles.TryGetValue(projectId, out var oldRoleId))
+            {
+                return BadRequest($"{oldUserId} is not a project user");
+            }
+            var oldUserRole = await _userRoleRepo.GetUserRole(projectId, oldRoleId);
+            if (oldUserRole is null || oldUserRole.Role != Role.Owner)
+            {
+                return BadRequest($"{oldUserId} is not the project owner");
+            }
+
+            // Add or update the role of the new owner
+            ResultOfUpdate newResult;
+            if (!newOwner.ProjectRoles.TryGetValue(projectId, out var newRoleId))
+            {
+                // Generate the userRole
+                var newUsersRole = new UserRole { ProjectId = projectId, Role = Role.Owner };
+                newUsersRole = await _userRoleRepo.Create(newUsersRole);
+                newRoleId = newUsersRole.Id;
+
+                // Update the user
+                newOwner.ProjectRoles.Add(projectId, newRoleId);
+                newResult = await _userRepo.Update(newOwner.Id, newOwner);
+            }
+            else
+            {
+                // Update the user role
+                var newUsersRole = await _userRoleRepo.GetUserRole(projectId, newRoleId);
+                if (newUsersRole is null)
+                {
+                    return NotFound(newRoleId);
+                }
+                newUsersRole.Role = Role.Owner;
+                newResult = await _userRoleRepo.Update(newRoleId, newUsersRole);
+            }
+            if (newResult != ResultOfUpdate.Updated)
+            {
+                return StatusCode(StatusCodes.Status304NotModified, newRoleId);
+            };
+
+            // Change the old owner to a project admin
+            oldUserRole.Role = Role.Administrator;
+            var oldResult = await _userRoleRepo.Update(oldRoleId, oldUserRole);
+            return oldResult switch
+            {
+                ResultOfUpdate.Updated => Ok(oldUserRole),
+                _ => StatusCode(StatusCodes.Status304NotModified, oldUserRole)
             };
         }
     }
