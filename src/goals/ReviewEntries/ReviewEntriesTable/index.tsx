@@ -84,6 +84,7 @@ export default function ReviewEntriesTable(props: {
       state.currentProjectState.project.grammaticalInfoEnabled
   );
 
+  const autoResetPageIndexRef = useRef(true);
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
 
   const [data, setData] = useState<Word[]>([]);
@@ -96,6 +97,11 @@ export default function ReviewEntriesTable(props: {
   const [speakers, setSpeakers] = useState<Hash<string>>({});
 
   const { i18n, t } = useTranslation();
+
+  useEffect(() => {
+    // https://tanstack.com/table/latest/docs/faq#how-do-i-stop-my-table-state-from-automatically-resetting-when-my-data-changes
+    autoResetPageIndexRef.current = true;
+  });
 
   useEffect(() => {
     getAllSpeakers().then((list) =>
@@ -116,14 +122,22 @@ export default function ReviewEntriesTable(props: {
 
   /** Removes word with given `id` from the state. */
   const deleteWord = (id: string): void => {
-    setData((prev) => prev.filter((w) => w.id !== id));
+    setData((prev) => {
+      // Prevent table from jumping back to first page
+      autoResetPageIndexRef.current = false;
+      return prev.filter((w) => w.id !== id);
+    });
   };
 
   /** Replaces word (`.id === oldId`) in the state
    * with word (`.id === newId`) fetched from the backend. */
   const replaceWord = async (oldId: string, newId: string): Promise<void> => {
     const newWord = await getWord(newId);
-    setData((prev) => prev.map((w) => (w.id === oldId ? newWord : w)));
+    setData((prev) => {
+      // Prevent table from jumping back to first page
+      autoResetPageIndexRef.current = false;
+      return prev.map((w) => (w.id === oldId ? newWord : w));
+    });
   };
 
   /** Checks if there are any entries and, if so, scrolls to the top of the current page. */
@@ -317,7 +331,7 @@ export default function ReviewEntriesTable(props: {
   const table = useMaterialReactTable({
     columns,
     data,
-    autoResetPageIndex: false,
+    autoResetPageIndex: autoResetPageIndexRef.current,
     columnFilterDisplayMode: "popover",
     enableColumnActions: false,
     enableColumnDragging: false,
