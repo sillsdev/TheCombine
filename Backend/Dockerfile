@@ -1,5 +1,5 @@
 # Docker multi-stage build
-FROM mcr.microsoft.com/dotnet/sdk:8.0.301-jammy-amd64 AS builder
+FROM mcr.microsoft.com/dotnet/sdk:8.0.302-1-jammy-amd64 AS builder
 WORKDIR /app
 
 # Copy csproj and restore (fetch dependencies) as distinct layers.
