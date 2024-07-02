@@ -44,7 +44,8 @@ const mockSubmitEvent = (): Partial<FormEvent<HTMLFormElement>> => ({
 let projectMaster: ReactTestRenderer;
 let projectHandle: ReactTestInstance;
 
-beforeAll(async () => {
+beforeEach(async () => {
+  jest.resetAllMocks();
   await act(async () => {
     projectMaster = create(
       <Provider store={mockStore}>
@@ -55,27 +56,13 @@ beforeAll(async () => {
   projectHandle = projectMaster.root;
 });
 
-beforeEach(() => {
-  jest.resetAllMocks();
-});
-
 describe("CreateProject", () => {
-  it("errors on empty name", async () => {
-    const nameField = projectHandle.findByProps({ id: fieldIdName });
-    expect(nameField.props.error).toBeFalsy();
-
-    await act(async () => {
-      projectHandle
-        .findByProps({ id: formId })
-        .props.onSubmit(mockSubmitEvent());
-    });
-    expect(nameField.props.error).toBeTruthy();
-  });
-
   it("errors on taken name", async () => {
     const nameField = projectHandle.findByProps({ id: fieldIdName });
+    const langPickers = projectHandle.findAllByType(LanguagePicker);
     await act(async () => {
-      nameField.props.onChange(mockChangeEvent("non-empty-value"));
+      nameField.props.onChange(mockChangeEvent("non-empty-name"));
+      langPickers[0].props.setCode("non-empty-code");
     });
     expect(nameField.props.error).toBeFalsy();
 
@@ -88,9 +75,20 @@ describe("CreateProject", () => {
     expect(nameField.props.error).toBeTruthy();
   });
 
-  it("disables submit button when no vern lang bcp code", async () => {
+  it("disables submit button when empty name or empty vern lang bcp code", async () => {
+    const nameField = projectHandle.findByProps({ id: fieldIdName });
     const button = projectHandle.findByProps({ id: buttonIdSubmit });
+
+    // Start with empty name and vern language: button disabled.
     expect(button.props.disabled).toBeTruthy();
+
+    // Add name but still no vern language: button still disabled.
+    await act(async () => {
+      nameField.props.onChange(mockChangeEvent("non-empty-value"));
+    });
+    expect(button.props.disabled).toBeTruthy();
+
+    // Also add a vern language: button enabled.
     const langPickers = projectHandle.findAllByType(LanguagePicker);
     expect(langPickers).toHaveLength(2);
 
@@ -98,6 +96,12 @@ describe("CreateProject", () => {
       langPickers[0].props.setCode("non-empty");
     });
     expect(button.props.disabled).toBeFalsy();
+
+    // Change name to whitespace: button disabled again.
+    await act(async () => {
+      nameField.props.onChange(mockChangeEvent("   "));
+    });
+    expect(button.props.disabled).toBeTruthy();
   });
 
   it("disables analysis language pickers when file selected", async () => {
