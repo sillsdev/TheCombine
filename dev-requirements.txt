@@ -230,7 +230,7 @@ typing-extensions==4.12.1
     # via
     #   black
     #   mypy
-urllib3==2.2.1
+urllib3==2.2.2
     # via
     #   kubernetes
     #   requests
