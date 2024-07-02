@@ -3,19 +3,19 @@
   "version": "2.0.0",
   "license": "MIT",
   "private": true,
+  "source": "src/index.tsx",
   "scripts": {
-    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "analyze": "source-map-explorer dist/*.js --no-border-checks",
     "backend": "dotnet watch --project Backend/BackendFramework.csproj",
-    "build": "react-scripts build",
+    "build": "parcel build",
     "database": "mongod --dbpath=./mongo_database",
     "drop-database": "tsc scripts/dropDB.ts && node scripts/dropDB.js",
-    "eject": "react-scripts eject",
-    "find-circular-deps": "madge -c src/index.tsx",
+    "find-circular-deps": "madge -c src",
     "fmt-backend": "      dotnet-format         && dotnet-format         Backend.Tests",
     "fmt-backend-check": "dotnet-format --check && dotnet-format --check Backend.Tests",
     "fmt-frontend": "      prettier --write \"./{.github,.vscode,certmgr,deploy,docs,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
     "fmt-frontend-check": "prettier --check \"./{.github,.vscode,certmgr,deploy,docs,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
-    "frontend": "npm run set-release && react-scripts start",
+    "frontend": "npm run set-release && npx parcel public/index.html",
     "gen-backend-coverage-report": "tsc scripts/genBackendCoverageReport.ts && node scripts/genBackendCoverageReport.js",
     "license-report-backend": " dotnet-project-licenses --include-transitive --input ./Backend/BackendFramework.csproj --output --outfile docs/user_guide/assets/licenses/backend_licenses.txt",
     "license-summary-backend": "dotnet-project-licenses --include-transitive --input ./Backend/BackendFramework.csproj",
@@ -30,10 +30,9 @@
     "test": "npm run test-backend && npm run test-frontend",
     "test-backend": "         dotnet test Backend.Tests/Backend.Tests.csproj",
     "test-backend:coverage": "dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:Threshold=77",
-    "test-frontend": "         react-scripts               test",
-    "test-frontend:coverage": "react-scripts               test --coverage --watchAll=false",
-    "test-frontend:debug": "   react-scripts --inspect-brk test --runInBand --no-cache",
-    "test:ci": "dotnet test Backend.Tests/Backend.Tests.csproj && CI=true react-scripts test --ci --all --testResultsProcessor jest-teamcity-reporter",
+    "test-frontend": "         node               scripts/jestTest.js",
+    "test-frontend:coverage": "node               scripts/jestTest.js --coverage --watchAll=false",
+    "test-frontend:debug": "   node --inspect-brk scripts/jestTest.js --runInBand --no-cache",
     "wordlist": "hunspell-reader words"
   },
   "dependencies": {
@@ -84,13 +83,17 @@
     "validator": "^13.11.0"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@testing-library/jest-dom": "^6.1.4",
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "@babel/preset-react": "^7.23.3",
+    "@babel/preset-typescript": "^7.23.3",
+    "@parcel/packager-raw-url": "^2.12.0",
+    "@parcel/transformer-webmanifest": "^2.12.0",
+    "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^14.1.2",
     "@testing-library/user-event": "^14.5.2",
     "@types/crypto-js": "^4.1.3",
     "@types/css-mediaquery": "^0.1.2",
-    "@types/jest": "^29.5.5",
     "@types/loadable__component": "^5.13.8",
     "@types/node": "^20.10.6",
     "@types/nspell": "^2.1.5",
@@ -106,7 +109,10 @@
     "@types/validator": "^13.11.1",
     "@typescript-eslint/eslint-plugin": "^7.1.0",
     "@typescript-eslint/parser": "^7.8.0",
+    "babel-jest": "^27.4.2",
     "css-mediaquery": "^0.1.2",
+    "dotenv": "^10.0.0",
+    "dotenv-expand": "^5.1.0",
     "eslint": "^8.51.0",
     "eslint-import-resolver-typescript": "^3.6.0",
     "eslint-plugin-import": "^2.29.0",
@@ -114,27 +120,23 @@
     "eslint-plugin-react-hooks": "^4.3.0",
     "eslint-plugin-unused-imports": "^3.1.0",
     "hunspell-reader": "^8.7.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.4.3",
     "jest-canvas-mock": "^2.5.2",
+    "jest-resolve": "^27.4.2",
+    "jest-watch-typeahead": "^1.0.0",
     "license-checker-rseidelsohn": "^4.3.0",
     "madge": "^6.1.0",
     "npm-run-all": "^4.1.5",
+    "parcel": "^2.11.0",
+    "parcel-reporter-static-files-copy": "^1.5.3",
     "prettier": "^3.0.3",
-    "react-scripts": "^5.0.1",
+    "process": "^0.11.10",
+    "react-app-polyfill": "^3.0.0",
     "react-test-renderer": "^18.2.0",
     "redux-mock-store": "^1.5.4",
     "source-map-explorer": "^2.5.3",
     "typescript": "^4.9.5"
-  },
-  "jest": {
-    "coverageReporters": [
-      "cobertura",
-      "lcov",
-      "text",
-      "text-summary"
-    ],
-    "transformIgnorePatterns": [
-      "/node_modules/(!${axios})"
-    ]
   },
   "prettier": {
     "overrides": [
@@ -159,6 +161,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "staticFiles": {
+    "staticOutPath": "locales",
+    "staticPath": "public/locales"
   },
   "volta": {
     "node": "20.14.0"
