@@ -1,6 +1,32 @@
+import { act, create } from "react-test-renderer";
+
 import { MergeUndoIds, Word } from "api/models";
-import { doWordsIncludeMerges } from "goals/MergeDuplicates/MergeDupsCompleted";
+import {
+  MergeChange,
+  doWordsIncludeMerges,
+} from "goals/MergeDuplicates/MergeDupsCompleted";
 import { newWord } from "types/word";
+
+jest.mock("backend", () => ({
+  getFrontierWords: () => Promise.resolve([]),
+  getWord: () => Promise.resolve(undefined),
+}));
+
+describe("MergeChange", () => {
+  const renderMergeChange = async (change: MergeUndoIds): Promise<void> => {
+    await act(async () => {
+      create(<MergeChange change={change} />);
+    });
+  };
+
+  it("renders merge (with parents)", () => {
+    renderMergeChange({ childIds: ["c1", "c2"], parentIds: ["p1, p2"] });
+  });
+
+  it("renders deletion (no parents)", () => {
+    renderMergeChange({ childIds: ["c1", "c2"], parentIds: [] });
+  });
+});
 
 describe("doWordsIncludeMerges", () => {
   it("should return false if words doesn't contain all of the parentIds in merge", () => {
