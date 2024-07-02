@@ -23,7 +23,9 @@
       "launchUrl": "v1/",
       "environmentVariables": {
         "Key": "Value",
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "OTEL_EXPORTER_OTLP_PROTOCOL": "grpc",
+        "OTEL_EXPORTER_OTLP_ENDPOINT": "http://localhost:4317"
       },
       "applicationUrl": "http://localhost:5000",
       "hotReloadProfile": "aspnetcore"
