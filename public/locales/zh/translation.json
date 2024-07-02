@@ -126,6 +126,7 @@
     "project": "项目：",
     "tab": {
       "basic": "基本设置",
+      "domains": "语义域",
       "export": "导出",
       "importExport": "导入/导出",
       "languages": "语言",

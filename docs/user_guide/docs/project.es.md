@@ -42,9 +42,11 @@ y/o el nombre del proyecto en el centro de la barra de aplicaciones, en la parte
 en el icono de engranaje o en el nombre del proyecto, aparece Proyecto Ajustes para gestionar el proyecto. Los
 siguientes ajustes están disponibles para los usuarios del proyecto con permisos suficientes.
 
+![Configuración](../images/projectSettings123456.png)
+
 ### Configuración básica
 
-![Configuración básico](../images/projectSettings1Basic.es.png){width=750 .center}
+![Configuración básico](../images/projectSettings1Basic.es.png)
 
 #### Nombre del proyecto
 
@@ -70,7 +72,7 @@ que el proyecto se elimine por completo de los servidores.
 
 ### Idiomas del proyecto {#project-languages}
 
-![Idiomas](../images/projectSettings2Langs.es.png){width=750 .center}
+![Idiomas](../images/projectSettings2Langs.es.png)
 
 ![Idiomas del proyecto - Tzotzil](../images/projectLanguagesTzotzil.es.png){.center}
 
@@ -89,7 +91,7 @@ dominios semánticos en [Entrada de datos](./dataEntry.md).
 
 ### Usuarios del proyecto
 
-![Usuarios](../images/projectSettings3Users.es.png){width=750 .center}
+![Usuarios](../images/projectSettings3Users.es.png)
 
 #### Usuarios actuales
 
@@ -146,7 +148,7 @@ used for the file names).
 
 ### Importar/Exportar
 
-![Importar/Exportar](../images/projectSettings4Port.es.png){width=750 .center}
+![Importar/Exportar](../images/projectSettings4Port.es.png)
 
 #### Importar {#import}
 
@@ -177,15 +179,43 @@ When a project is exported from TheCombine and imported into FieldWorks, if a pr
 the speaker name will be added as a pronunciation label. The consent files can be found in the zipped export, but will
 not be imported into FieldWorks.
 
-### Calendario de talleres {#workshop-schedule}
+### Calendario {#schedule}
 
-![Calendario de talleres](../images/projectSettings5Sched.es.png){width=750 .center}
+![Calendario](../images/projectSettings5Sched.es.png)
 
 Sólo está disponible para editar para el Propietario del proyecto, lo que permite fijar un calendario para un taller de
 recopilación rápida de palabras. Haga clic en el primer botón para seleccionar un intervalo de fechas para el taller.
 Pulse el botón central para añadir o eliminar fechas concretas. Pulse el último botón para borrar la programación.
 
 ![Calendario de talleres](../images/projectSchedule.es.png){.center}
+
+### Dominios semánticos {#semantic-domains}
+
+![Dominios semánticos](../images/projectSettings6Doms.es.png)
+
+In this settings tab, you can change the semantic domain language and manage custom semantic domains.
+
+El _idioma de los_ dominios semánticos controla el idioma en el que se muestran los títulos y descripciones de los
+dominios semánticos en [Entrada de datos](./dataEntry.md).
+
+The _custom semantic domains_ supported at this time are the established domains with `.0` added to the end of the id.
+For example, domain _4.2.6.2: Sports_ has two standard subdomains, _4.2.6.2.1: Football, Soccer_ and _4.2.6.2.2:
+Basketball_. If another sport is dominant among the people group gathering their language, it can be added as domain
+_4.2.6.2.0_.
+
+For each custom domain, you can add a name, description, and questions to help with word collection in that domain.
+
+!!! note "Nota"
+
+    Custom semantic domains are included in the project export and can be imported into FieldWorks. However, the
+    questions are not included.
+
+Custom semantic domains will appear in the domain tree for the project, but will not be visible to other projects.
+
+!!! note "Nota"
+
+    Custom semantic domains are language-specific. If you add a custom domain in one language then change the semantic
+    domains language, that domain will not be visible unless you change back to its language.
 
 ## Estadísticas del proyecto
 
@@ -208,14 +238,10 @@ Una tabla con el número de palabras de cada dominio semántico.
 
 ### Palabras por día
 
-Gráficos lineales que muestran las palabras recogidas durante los días especificados en el
-[Calendario de talleres](#workshop-schedule).
+Gráficos lineales que muestran las palabras recogidas durante los días especificados en el [Calendario](#schedule) de
+talleres.
 
 ### Progresos del taller
 
-Gráficos lineales que muestran las palabras acumuladas a lo largo de los días del
-[Calendario de talleres](#workshop-schedule), así como las previsiones para el resto del taller.
-
-## Semantic Domains
-
-Details about custom semantic domains are coming soon.
+Gráficos lineales que muestran las palabras acumuladas a lo largo de los días del [Calendario](#schedule) de talleres,
+así como las previsiones para el resto del taller.
