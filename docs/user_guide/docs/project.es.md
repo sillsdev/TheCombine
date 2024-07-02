@@ -198,10 +198,10 @@ In this settings tab, you can change the semantic domain language and manage cus
 El _idioma de los_ dominios semánticos controla el idioma en el que se muestran los títulos y descripciones de los
 dominios semánticos en [Entrada de datos](./dataEntry.md).
 
-The _custom semantic domains_ supported at this time are the established domains with `.0` added to the end of the id.
-For example, domain _4.2.6.2: Sports_ has two standard subdomains, _4.2.6.2.1: Football, Soccer_ and _4.2.6.2.2:
-Basketball_. If another sport is dominant among the people group gathering their language, it can be added as domain
-_4.2.6.2.0_.
+The _custom semantic domains_ supported at this time are the [established domains](https://semdom.org/) with `.0` added
+to the end of the id. For example, domain _4.2.6.2: Sports_ has two standard subdomains, _4.2.6.2.1: Football, Soccer_
+and _4.2.6.2.2: Basketball_. If another sport is dominant among the people group gathering their language, it can be
+added as domain _4.2.6.2.0_.
 
 For each custom domain, you can add a name, description, and questions to help with word collection in that domain.
 
