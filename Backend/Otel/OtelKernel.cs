@@ -1,15 +1,14 @@
-// using System;
+
+using System;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
-using System.Threading.Tasks;
-
-
-// using System.Diagnostics.Metrics;
-// using System.Net.Http;
-// using System.Net.Http.Json;
-// using System.Security.Claims;
-// using Microsoft.AspNetCore.Http;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -17,25 +16,26 @@ using OpenTelemetry.Trace;
 namespace BackendFramework.Otel
 {
 
-    public class OtelKernel
+    public static class OtelKernel
     {
 
         public const string ServiceName = "Backend-Otel";
-        private readonly LocationCache _locationCache;
+        // private readonly LocationCache _locationCache;
 
-        public OtelKernel(LocationCache locationCache, IServiceCollection serviceCollection)
-        {
-            _locationCache = locationCache;
-            AddOpenTelemetryInstrumentation(serviceCollection);
-        }
+        // public OtelKernel(LocationCache locationCache, IServiceCollection serviceCollection)
+        // {
+        //     _locationCache = locationCache;
+        //     AddOpenTelemetryInstrumentation(serviceCollection);
+        // }
 
-        public void AddOpenTelemetryInstrumentation(IServiceCollection services)
+        public static void AddOpenTelemetryInstrumentation(this IServiceCollection services)
         {
             var appResourceBuilder = ResourceBuilder.CreateDefault().AddService(ServiceName);
             // todo: include version 
             services.AddOpenTelemetry().WithTracing(tracerProviderBuilder => tracerProviderBuilder
                 .SetResourceBuilder(appResourceBuilder)
                 .AddSource(ServiceName)
+                .AddProcessor<LocationEnricher>()
                 .AddAspNetCoreInstrumentation(options =>
                 {
                     options.RecordException = true;
@@ -50,7 +50,7 @@ namespace BackendFramework.Otel
                         {
                             activity.SetTag("inbound.http.request.body.size", "no content");
                         }
-                        // activity.EnrichWithUser(request.HttpContext);
+                        activity.EnrichWithUser(request.HttpContext);
                     };
                     options.EnrichWithHttpResponse = (activity, response) =>
                     {
@@ -63,7 +63,7 @@ namespace BackendFramework.Otel
                         {
                             activity.SetTag("inbound.http.response.body.size", "no content");
                         }
-                        // activity.EnrichWithUser(response.HttpContext);
+                        activity.EnrichWithUser(response.HttpContext);
                     };
                 })
                 .AddHttpClientInstrumentation(options =>
@@ -91,7 +91,7 @@ namespace BackendFramework.Otel
                             activity.SetTag("outbound.http.response.body.size", "no content");
                         }
 
-                        // await GetLocationInfo(activity);
+                        // await GetLocation(activity);
                     };
                     options.EnrichWithHttpResponseMessage = (activity, response) =>
                     {
@@ -118,49 +118,83 @@ namespace BackendFramework.Otel
             //     .AddOtlpExporter()
             // );
 
-            // services.AddHttpContextAccessor();
-            // await RecordLocationAsync(new HttpContextAccessor());
             var meter = new Meter(ServiceName);
 
         }
 
-        private async Task GetLocationInfo(Activity activity)
+        private static void EnrichWithUser(this Activity activity, HttpContext httpContext)
         {
-            var response = await _locationCache.GetLocation();
-
-            var location = new
+            var claimsPrincipal = httpContext.User;
+            // var userId = claimsPrincipal?.FindFirstValue("sub");
+            var userId = claimsPrincipal;
+            if (userId != null)
             {
-                Country = response?.country,
-                Region = response?.regionName,
-                City = response?.city,
-            };
-
-
-            activity?.AddTag("country", location.Country);
-            activity?.AddTag("region", location.Region);
-            activity?.AddTag("city", location.City);
-
+                activity.SetTag("app.user.id", userId);
+            }
+            var userRole = claimsPrincipal?.FindFirstValue("role");
+            if (userRole != null)
+            {
+                activity.SetTag("app.user.role", userRole);
+            }
+            if (httpContext.RequestAborted.IsCancellationRequested)
+            {
+                activity.SetTag("http.abort", true);
+            }
         }
 
 
-        // private void EnrichWithUser(this Activity activity, HttpContext httpContext)
-        // {
-        //     var claimsPrincipal = httpContext.User;
-        //     // var userId = claimsPrincipal?.FindFirstValue("sub");
-        //     var userId = claimsPrincipal;
-        //     if (userId != null)
-        //     {
-        //         activity.SetTag("app.user.id", userId);
-        //     }
-        //     var userRole = claimsPrincipal?.FindFirstValue("role");
-        //     if (userRole != null)
-        //     {
-        //         activity.SetTag("app.user.role", userRole);
-        //     }
-        //     if (httpContext.RequestAborted.IsCancellationRequested)
-        //     {
-        //         activity.SetTag("http.abort", true);
-        //     }
-        // }
+        private class LocationEnricher(IHttpContextAccessor contextAccessor, IMemoryCache memoryCache) : BaseProcessor<Activity>
+        {
+            public override async void OnStart(Activity data)
+            {
+                data?.SetTag("inonstart", "here!");
+                if (contextAccessor.HttpContext is { } context)
+                {
+                    var ipAddress = context.GetServerVariable("HTTP_X_FORWARDED_FOR") ?? context.Connection.RemoteIpAddress?.ToString();
+                    var ipAddressWithoutPort = ipAddress?.Split(':')[0];
+
+                    LocationApi? response = await memoryCache.GetOrCreateAsync(
+                    "location_" + ipAddressWithoutPort,
+                    async (cacheEntry) =>
+                    {
+                        data?.SetTag("found in cache?", "no");
+
+                        try
+                        {
+                            var route = $"http://ip-api.com/json/{ipAddressWithoutPort}";
+                            var httpClient = new HttpClient();
+                            var response = await httpClient.GetFromJsonAsync<LocationApi>(route);
+
+                            return response;
+                            // return new LocationApi { };
+
+                        }
+                        catch (Exception e)
+                        {
+                            // todo figure out what to put in catch 
+                            data?.SetTag("Location Exception", e.Message);
+                            Console.WriteLine("Attempted to get location but exception");
+                        }
+
+
+                        // return new LocationApi { };
+                        return null;
+                    });
+
+                    var location = new
+                    {
+                        Country = response?.country,
+                        Region = response?.regionName,
+                        City = response?.city,
+                    };
+
+                    data?.AddTag("country", location.Country);
+                    data?.AddTag("region", location.Region);
+                    data?.AddTag("city", location.City);
+                }
+            }
+        }
     }
+
 }
+

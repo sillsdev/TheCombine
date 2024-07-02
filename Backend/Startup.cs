@@ -253,8 +253,9 @@ namespace BackendFramework
             // OpenTelemetry
             services.AddMemoryCache();
             services.AddHttpContextAccessor();
-            services.AddSingleton<OtelKernel>();
-            // services.AddOpenTelemetryInstrumentation();
+            // services.AddSingleton<OtelKernel>();
+            // services.AddHybridCache();
+            services.AddOpenTelemetryInstrumentation();
 
         }
 
