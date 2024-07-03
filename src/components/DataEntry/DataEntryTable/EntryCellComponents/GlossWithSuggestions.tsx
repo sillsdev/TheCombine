@@ -77,16 +77,19 @@ export default function GlossWithSuggestions(
           variant={(props.isNew ? "outlined" : "standard") as any}
         />
       )}
-      renderOption={(liProps, option, { selected }) => (
-        <LiWithFont
-          {...liProps}
-          analysis
-          aria-selected={selected}
-          lang={props.analysisLang.bcp47}
-        >
-          {option}
-        </LiWithFont>
-      )}
+      renderOption={(liProps, option, { selected }) => {
+        const words = option.split(" ");
+        return (
+          <LiWithFont
+            {...liProps}
+            analysis
+            aria-selected={selected}
+            lang={props.analysisLang.bcp47}
+          >
+            {words.length > 1 ? `... ${words[words.length - 1]}` : option}
+          </LiWithFont>
+        );
+      }}
       onKeyPress={(e: KeyboardEvent) => {
         if (e.key === Key.Enter) {
           props.handleEnter();
