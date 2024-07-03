@@ -21,11 +21,11 @@ dnspython==2.6.1
 google-auth==2.29.0
     # via kubernetes
 humanfriendly==10.0
-    # via -r requirements.in
+    # via -r maintenance/requirements.in
 idna==3.7
     # via requests
 kubernetes==29.0.0
-    # via -r requirements.in
+    # via -r maintenance/requirements.in
 oauthlib==3.2.2
     # via
     #   kubernetes
@@ -41,7 +41,7 @@ pycparser==2.22
 pymongo==4.7.3
     # via -r requirements.in
 pyopenssl==24.1.0
-    # via -r requirements.in
+    # via -r maintenance/requirements.in
 python-dateutil==2.9.0.post0
     # via kubernetes
 pyyaml==6.0.1
