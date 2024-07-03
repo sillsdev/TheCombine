@@ -1,14 +1,14 @@
 # The Combine
 
-[![Frontend Actions Status][github-actions-frontend-badge]][github-actions]
+[![Frontend Actions Status][github-actions-frontend-badge]][github-actions-frontend]
 [![Frontend Coverage][frontend-codecov-badge]][codecov-frontend]
 
-[![Backend Actions Status][github-actions-backend-badge]][github-actions]
+[![Backend Actions Status][github-actions-backend-badge]][github-actions-backend]
 [![Backend Coverage][backend-codecov-badge]][codecov-backend]
 
-[![CodeQL Actions Status][github-actions-codeql-badge]][github-actions]
-[![Python Actions Status][github-actions-python-badge]][github-actions]
-[![OSSF Scorecard][github-actions-ossf-badge]][github-actions]
+[![CodeQL Actions Status][github-actions-codeql-badge]][github-actions-codeql]
+[![Python Actions Status][github-actions-python-badge]][github-actions-python]
+[![OSSF Scorecard][ossf-scorecard-badge]][ossf-scorecard]
 
 [![GitHub release][github-release-badge]][github-version] [![GitHub version][github-version-badge]][github-version]
 [![GitHub][github-license-badge]][github-license] [![GitHub contributors][github-contribs-badge]][github-contribs]
@@ -25,10 +25,13 @@
 [backend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=backend
 [github-actions-python-badge]: https://github.com/sillsdev/TheCombine/workflows/python/badge.svg
 [github-actions-codeql-badge]: https://github.com/sillsdev/TheCombine/workflows/CodeQL/badge.svg
-[github-actions-ossf-badge]:
-  https://github.com/sillsdev/TheCombine/workflows/Scorecards%20supply-chain%20security/badge.svg
+[ossf-scorecard-badge]: https://api.scorecard.dev/projects/github.com/sillsdev/TheCombine/badge
 [localization-ui-badge]: https://img.shields.io/badge/User%20Interface-Ar%20En%20Es%20Fr%20Pt%20Zh-blue
-[github-actions]: https://github.com/sillsdev/TheCombine/actions
+[github-actions-frontend]: https://github.com/sillsdev/TheCombine/actions/workflows/frontend.yml
+[github-actions-backend]: https://github.com/sillsdev/TheCombine/actions/workflows/backend.yml
+[github-actions-codeql]: https://github.com/sillsdev/TheCombine/actions/workflows/codeql.yml
+[github-actions-python]: https://github.com/sillsdev/TheCombine/actions/workflows/python.yml
+[ossf-scorecard]: https://scorecard.dev/viewer/?uri=github.com/sillsdev/TheCombine
 [localization-sd-badge]:
   https://img.shields.io/badge/Semantic%20Domains-Ar%20En%20Es%20Fr%20Hi%20Id%20Ml%20My%20Pt%20Ru%20Sw%20Zh-blue
 [localization-ug-badge]: https://img.shields.io/badge/User%20Guide-En%20Es%20Zh-blue
