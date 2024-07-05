@@ -17,7 +17,7 @@ export default function BaseSettings(props: BaseSettingsProps): ReactElement {
   return (
     <Accordion defaultExpanded>
       <AccordionSummary>
-        <Grid item container spacing={2} style={{ flexWrap: "nowrap" }}>
+        <Grid container spacing={2} style={{ flexWrap: "nowrap" }}>
           <Grid item style={{ marginTop: 4, color: "grey" }}>
             {props.icon}
           </Grid>
