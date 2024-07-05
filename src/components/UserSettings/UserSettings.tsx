@@ -13,7 +13,7 @@ import { enqueueSnackbar } from "notistack";
 import { FormEvent, Fragment, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { User } from "api/models";
+import { AutocompleteSetting, User } from "api/models";
 import { isEmailTaken, updateUser } from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
 import { asyncLoadSemanticDomains } from "components/Project/ProjectActions";
@@ -34,6 +34,7 @@ export enum UserSettingsIds {
   FieldName = "user-settings-name",
   FieldPhone = "user-settings-phone",
   FieldUsername = "user-settings-username",
+  SelectGlossSuggestion = "user-settings-gloss-suggestion",
   SelectUiLang = "user-settings-ui-lang",
 }
 
@@ -57,6 +58,9 @@ export function UserSettings(props: {
   const [phone, setPhone] = useState(props.user.phone);
   const [email, setEmail] = useState(props.user.email);
   const [uiLang, setUiLang] = useState(props.user.uiLang ?? "");
+  const [glossSuggestion, setGlossSuggestion] = useState(
+    props.user.glossSuggestion
+  );
   const [emailTaken, setEmailTaken] = useState(false);
   const [avatar, setAvatar] = useState(getAvatar());
 
@@ -72,7 +76,8 @@ export function UserSettings(props: {
     name === props.user.name &&
     phone === props.user.phone &&
     punycode.toUnicode(email) === props.user.email &&
-    uiLang === (props.user.uiLang ?? "");
+    uiLang === (props.user.uiLang ?? "") &&
+    glossSuggestion === props.user.glossSuggestion;
 
   async function onSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
@@ -83,6 +88,7 @@ export function UserSettings(props: {
         phone,
         email: punycode.toUnicode(email),
         uiLang,
+        glossSuggestion,
         hasAvatar: !!avatar,
       });
 
@@ -222,6 +228,33 @@ export function UserSettings(props: {
                         {`${ws.bcp47} (${ws.name})`}
                       </MenuItem>
                     ))}
+                  </Select>
+                </Grid>
+              </Grid>
+
+              <Grid item container spacing={2}>
+                <Grid item xs={12}>
+                  <Typography variant="h6">
+                    {t("userSettings.glossSuggestion")}
+                  </Typography>
+                </Grid>
+
+                <Grid item>
+                  <Select
+                    data-testid={UserSettingsIds.SelectGlossSuggestion}
+                    id={UserSettingsIds.SelectGlossSuggestion}
+                    onChange={(e) =>
+                      setGlossSuggestion(e.target.value as AutocompleteSetting)
+                    }
+                    value={glossSuggestion}
+                    variant="standard"
+                  >
+                    <MenuItem value={AutocompleteSetting.Off}>
+                      {t("projectSettings.autocomplete.off")}
+                    </MenuItem>
+                    <MenuItem value={AutocompleteSetting.On}>
+                      {t("projectSettings.autocomplete.on")}
+                    </MenuItem>
                   </Select>
                 </Grid>
               </Grid>
