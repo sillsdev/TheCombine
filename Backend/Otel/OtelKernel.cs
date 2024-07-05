@@ -1,12 +1,13 @@
 
-using System;
+// using System;
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
-using System.Net.Http;
-using System.Net.Http.Json;
+// using System.Net.Http;
+// using System.Net.Http.Json;
 using System.Security.Claims;
+// using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Memory;
+// using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
@@ -102,9 +103,9 @@ namespace BackendFramework.Otel
                         }
                     };
                 })
-                    // .AddSource("MongoDB.Driver.Core.Extensions.DiagnosticSources")
-                    .AddConsoleExporter()
-                    .AddOtlpExporter()
+                // .AddSource("MongoDB.Driver.Core.Extensions.DiagnosticSources")
+                .AddConsoleExporter()
+                .AddOtlpExporter()
             );
 
             // var meter = new Meter(ServiceName);
@@ -142,58 +143,50 @@ namespace BackendFramework.Otel
             }
         }
 
-
-        private class LocationEnricher(IHttpContextAccessor contextAccessor, IMemoryCache memoryCache) : BaseProcessor<Activity>
+        private class LocationEnricher(LocationProvider locationProvider) : BaseProcessor<Activity>
         {
+            private bool firstTime = true;
             public override async void OnStart(Activity data)
             {
-                data?.SetTag("inonstart", "here!");
-                if (contextAccessor.HttpContext is { } context)
+                if (firstTime == true)
                 {
-                    var ipAddress = context.GetServerVariable("HTTP_X_FORWARDED_FOR") ?? context.Connection.RemoteIpAddress?.ToString();
-                    var ipAddressWithoutPort = ipAddress?.Split(':')[0];
+                    firstTime = false;
 
-                    LocationApi? response = await memoryCache.GetOrCreateAsync(
-                    "location_" + ipAddressWithoutPort,
-                    async (cacheEntry) =>
-                    {
-                        data?.SetTag("found in cache?", "no");
+                    LocationApi? response = await locationProvider.GetLocation();
 
-                        try
-                        {
-                            var route = $"http://ip-api.com/json/{ipAddressWithoutPort}";
-                            var httpClient = new HttpClient();
-                            var response = await httpClient.GetFromJsonAsync<LocationApi>(route);
+                    // var location = new
+                    // {
+                    //     Country = response?.country,
+                    //     Region = response?.regionName,
+                    //     City = response?.city,
+                    // };
 
-                            return response;
-                            // return new LocationApi { };
+                    // data?.SetTag("inonstart", "here!");
 
-                        }
-                        catch (Exception e)
-                        {
-                            // todo figure out what to put in catch 
-                            data?.SetTag("Location Exception", e.Message);
-                            Console.WriteLine("Attempted to get location but exception");
-                        }
-
-
-                        // return new LocationApi { };
-                        return null;
-                    });
-
-                    var location = new
-                    {
-                        Country = response?.country,
-                        Region = response?.regionName,
-                        City = response?.city,
-                    };
-
-                    data?.AddTag("country", location.Country);
-                    data?.AddTag("region", location.Region);
-                    data?.AddTag("city", location.City);
+                    // data?.AddTag("country", location.Country);
+                    // data?.AddTag("region", location.Region);
+                    // data?.AddTag("city", location.City);
                 }
+
             }
+
+            // private static void Record(Activity data, LocationApi response)
+            // {
+            //     var location = new
+            //     {
+            //         Country = response?.country,
+            //         Region = response?.regionName,
+            //         City = response?.city,
+            //     };
+
+            //     data?.AddTag("country", location.Country);
+            //     data?.AddTag("region", location.Region);
+            //     data?.AddTag("city", location.City);
+
+            // }
         }
+
+
     }
 
 }
