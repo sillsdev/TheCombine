@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.Caching.Memory;
+// using Microsoft.Extensions.Caching.Memory;
 
 namespace BackendFramework.Controllers
 {
@@ -24,15 +24,14 @@ namespace BackendFramework.Controllers
         private readonly IBannerRepository _bannerRepo;
         private readonly IPermissionService _permissionService;
 
-        private readonly IMemoryCache _memoryCache;
+        // private readonly IMemoryCache _memoryCache;
 
         private const string otelTagName = "otel.report.controller";
 
-        public BannerController(IBannerRepository bannerRepo, IPermissionService permissionService, IMemoryCache memoryCache)
+        public BannerController(IBannerRepository bannerRepo, IPermissionService permissionService)
         {
             _bannerRepo = bannerRepo;
             _permissionService = permissionService;
-            _memoryCache = memoryCache;
         }
 
         /// <summary> Returns the <see cref="Banner"/> for the specified <see cref="BannerType"/>. </summary>
