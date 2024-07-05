@@ -54,6 +54,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
       2. [Linux Python Installation](#linux-python-installation)
       3. [macOS Python Installation](#macos-python-installation)
       4. [Python Packages](#python-packages)
+   4. [Load Semantic Domains](#load-semantic-domains)
 2. [Available Scripts](#available-scripts)
    1. [Running in Development](#running-in-development)
    2. [Using OpenAPI](#using-openapi)
@@ -270,6 +271,10 @@ To upgrade the pinned dependencies for the Maintenance container:
 cd maintenance
 python -m piptools compile --upgrade requirements.in
 ```
+
+### Load Semantic Domains
+
+Data Entry will not work in The Combine unless the semantic domains have been loaded into the database. Follow the instuctions in [Import Semantic Domains](#import-semantic-domains) below to import the domains from at least one of the semantic domains XML files (which each contain domain data in English and one other language.)
 
 ## Available Scripts
 
