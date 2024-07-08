@@ -114,20 +114,8 @@ export default function ActiveProjectUsers(props: {
         : `${user.name} (${user.username})`;
 
     return (
-      <ListItem
-        key={user.id}
-        secondaryAction={
-          <>
-            <Chip
-              label={t(`projectSettings.roles.${`${userRole}`.toLowerCase()}`)}
-              size="small"
-            />
-            {manageUser}
-          </>
-        }
-      >
+      <ListItem key={user.id}>
         <ListItemAvatar>
-          {" "}
           <Avatar
             alt="User Avatar"
             src={userAvatar[user.id]}
@@ -135,6 +123,11 @@ export default function ActiveProjectUsers(props: {
           />
         </ListItemAvatar>
         <ListItemText primary={displayString} />
+        <Chip
+          label={t(`projectSettings.roles.${`${userRole}`.toLowerCase()}`)}
+          size="small"
+        />
+        {manageUser}
       </ListItem>
     );
   };

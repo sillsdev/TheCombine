@@ -1,5 +1,5 @@
 import { CalendarMonth, DateRange, EventRepeat } from "@mui/icons-material";
-import { Button, Grid, Stack, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "react-modal";
@@ -56,31 +56,53 @@ export default function ProjectSchedule(
   }, [fetchSchedule, props.project.id, showEdit, showRemove, showSelector]);
 
   return (
-    <Stack spacing={1}>
-      {!props.readOnly && (
-        <Stack direction="row" justifyContent="space-evenly">
-          <IconButtonWithTooltip
-            icon={<CalendarMonth />}
-            textId="projectSettings.schedule.setDays"
-            onClick={() => setShowSelector(true)}
-            buttonId={"Project-Schedule-setDays"}
-          />
-          <IconButtonWithTooltip
-            icon={<DateRange />}
-            textId="projectSettings.schedule.editDays"
-            onClick={() => setShowEdit(true)}
-            buttonId={"Project-Schedule-editDays"}
-          />
-          <IconButtonWithTooltip
-            icon={<EventRepeat />}
-            textId="projectSettings.schedule.removeDays"
-            onClick={() => setShowRemove(true)}
-            buttonId={"Project-Schedule-removeDays"}
-          />
-        </Stack>
-      )}
-      <Grid container>
-        <CalendarView projectSchedule={projectSchedule} />
+    <>
+      <Grid
+        container
+        direction="column"
+        justifyContent="flex-start"
+        alignItems="center"
+        spacing={1}
+      >
+        {!props.readOnly && (
+          <Grid
+            item
+            container
+            direction="row"
+            justifyContent="space-evenly"
+            alignItems="center"
+            xs={12}
+          >
+            <IconButtonWithTooltip
+              icon={<CalendarMonth />}
+              textId="projectSettings.schedule.setDays"
+              onClick={() => setShowSelector(true)}
+              buttonId={"Project-Schedule-setDays"}
+            />
+            <IconButtonWithTooltip
+              icon={<DateRange />}
+              textId="projectSettings.schedule.editDays"
+              onClick={() => setShowEdit(true)}
+              buttonId={"Project-Schedule-editDays"}
+            />
+            <IconButtonWithTooltip
+              icon={<EventRepeat />}
+              textId="projectSettings.schedule.removeDays"
+              onClick={() => setShowRemove(true)}
+              buttonId={"Project-Schedule-removeDays"}
+            />
+          </Grid>
+        )}
+        <Grid
+          item
+          container
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          xs={12}
+        >
+          <CalendarView projectSchedule={projectSchedule} />
+        </Grid>
       </Grid>
 
       <Modal
@@ -137,6 +159,6 @@ export default function ProjectSchedule(
           </Grid>
         </Grid>
       </Modal>
-    </Stack>
+    </>
   );
 }
