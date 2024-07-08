@@ -30,7 +30,7 @@
 [localization-ui-badge]: https://img.shields.io/badge/User%20Interface-Ar%20En%20Es%20Fr%20Pt%20Zh-blue
 [github-actions]: https://github.com/sillsdev/TheCombine/actions
 [localization-sd-badge]:
-  https://img.shields.io/badge/Semantic%20Domains-Ar%20En%20Es%20Fr%20Hi%20Ml%20My%20Pt%20Ru%20Sw%20Zh-blue
+  https://img.shields.io/badge/Semantic%20Domains-Ar%20En%20Es%20Fr%20Hi%20Id%20Ml%20My%20Pt%20Ru%20Sw%20Zh-blue
 [localization-ug-badge]: https://img.shields.io/badge/User%20Guide-En%20Es%20Zh-blue
 [localization-crowdin-combine]: https://crowdin.com/project/the-combine
 [localization-crowdin-flex]: https://crowdin.com/project/fieldworks
@@ -54,6 +54,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
       2. [Linux Python Installation](#linux-python-installation)
       3. [macOS Python Installation](#macos-python-installation)
       4. [Python Packages](#python-packages)
+   4. [Load Semantic Domains](#load-semantic-domains)
 2. [Available Scripts](#available-scripts)
    1. [Running in Development](#running-in-development)
    2. [Using OpenAPI](#using-openapi)
@@ -270,6 +271,10 @@ To upgrade the pinned dependencies for the Maintenance container:
 cd maintenance
 python -m piptools compile --upgrade requirements.in
 ```
+
+### Load Semantic Domains
+
+Data Entry will not work in The Combine unless the semantic domains have been loaded into the database. Follow the instuctions in [Import Semantic Domains](#import-semantic-domains) below to import the domains from at least one of the semantic domains XML files (which each contain domain data in English and one other language.)
 
 ## Available Scripts
 
