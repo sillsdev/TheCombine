@@ -79,9 +79,9 @@ export default function ProjectSchedule(
           />
         </Stack>
       )}
-      <Stack direction="row">
+      <Grid container>
         <CalendarView projectSchedule={projectSchedule} />
-      </Stack>
+      </Grid>
 
       <Modal
         isOpen={showSelector}

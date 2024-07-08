@@ -158,7 +158,7 @@ export default function ProjectSettingsComponent(): ReactElement {
       </Hidden>
 
       <TabPanel value={tab} index={ProjectSettingsTab.Basic}>
-        <Stack spacing={6}>
+        <Stack spacing={4}>
           {/* Project name */}
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
             <BaseSettings
@@ -203,7 +203,7 @@ export default function ProjectSettingsComponent(): ReactElement {
       </TabPanel>
 
       <TabPanel value={tab} index={ProjectSettingsTab.Languages}>
-        <Stack spacing={6}>
+        <Stack spacing={4}>
           {/*Project languages*/}
           <BaseSettings
             icon={<Language data-testid={Setting.Languages} />}
@@ -222,7 +222,7 @@ export default function ProjectSettingsComponent(): ReactElement {
       </TabPanel>
 
       <TabPanel value={tab} index={ProjectSettingsTab.Users}>
-        <Stack spacing={6}>
+        <Stack spacing={4}>
           {/* See current users in project */}
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
             <BaseSettings
@@ -253,7 +253,7 @@ export default function ProjectSettingsComponent(): ReactElement {
       </TabPanel>
 
       <TabPanel value={tab} index={ProjectSettingsTab.ImportExport}>
-        <Stack spacing={6}>
+        <Stack spacing={4}>
           {/* Import Lift file */}
           {permissions.includes(Permission.Import) && (
             <BaseSettings
@@ -283,7 +283,7 @@ export default function ProjectSettingsComponent(): ReactElement {
       </TabPanel>
 
       <TabPanel value={tab} index={ProjectSettingsTab.Schedule}>
-        <Stack spacing={6}>
+        <Stack spacing={4}>
           {/* Workshop schedule */}
           <BaseSettings
             icon={<CalendarMonth data-testid={Setting.Schedule} />}
@@ -300,7 +300,7 @@ export default function ProjectSettingsComponent(): ReactElement {
       </TabPanel>
 
       <TabPanel value={tab} index={ProjectSettingsTab.Domains}>
-        <Stack spacing={6}>
+        <Stack spacing={4}>
           {/* Semantic domains language */}
           <BaseSettings
             icon={<Language data-testid={Setting.DomainsLanguage} />}

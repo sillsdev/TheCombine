@@ -1,3 +1,4 @@
+import { ExpandMore } from "@mui/icons-material";
 import {
   Accordion,
   AccordionDetails,
@@ -15,8 +16,8 @@ interface BaseSettingsProps {
 
 export default function BaseSettings(props: BaseSettingsProps): ReactElement {
   return (
-    <Accordion defaultExpanded>
-      <AccordionSummary>
+    <Accordion defaultExpanded disableGutters sx={{ maxWidth: "1100px" }}>
+      <AccordionSummary expandIcon={<ExpandMore />}>
         <Grid container spacing={2} style={{ flexWrap: "nowrap" }}>
           <Grid item style={{ marginTop: 4, color: "grey" }}>
             {props.icon}
