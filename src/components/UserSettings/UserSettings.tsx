@@ -1,4 +1,4 @@
-import { Email, Phone } from "@mui/icons-material";
+import { Email, HelpOutline, Phone } from "@mui/icons-material";
 import {
   Button,
   Card,
@@ -7,6 +7,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
@@ -256,6 +257,15 @@ export function UserSettings(props: {
                       {t("projectSettings.autocomplete.on")}
                     </MenuItem>
                   </Select>
+                </Grid>
+
+                <Grid item>
+                  <Tooltip
+                    title={t("userSettings.glossSuggestionHint")}
+                    placement={document.body.dir === "rtl" ? "left" : "right"}
+                  >
+                    <HelpOutline fontSize="small" />
+                  </Tooltip>
                 </Grid>
               </Grid>
 
