@@ -20,7 +20,7 @@ export default class Recorder {
   /** Checks if the recorder state is `"recording"`.
    * If so, returns the `id` used with `startRecording()`.
    * If not, returns `undefined`. */
-  isRecording(): string | undefined {
+  getRecordingId(): string | undefined {
     return this.recordRTC?.getState() === "recording"
       ? this.id ?? ""
       : undefined;

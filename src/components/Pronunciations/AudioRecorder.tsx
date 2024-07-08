@@ -24,8 +24,8 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
   const { t } = useTranslation();
 
   async function startRecording(): Promise<void> {
-    const isRecordingId = recorder.isRecording();
-    if (isRecordingId && isRecordingId !== props.id) {
+    const recordingId = recorder.getRecordingId();
+    if (recordingId && recordingId !== props.id) {
       // Prevent interfering with an active recording on a different entry.
       return;
     }
@@ -38,7 +38,7 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
 
   async function stopRecording(): Promise<string | undefined> {
     // Prevent triggering this function if no recording is active.
-    if (recorder.isRecording() === undefined) {
+    if (recorder.getRecordingId() === undefined) {
       return;
     }
 
