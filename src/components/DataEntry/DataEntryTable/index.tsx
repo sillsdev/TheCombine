@@ -150,7 +150,8 @@ export function makeSemDomCurrent(semDom: SemanticDomain): SemanticDomain {
 export function updateEntryGloss(
   entry: WordAccess,
   def: string,
-  semDomId: string
+  semDomId: string,
+  analysisLang: string
 ): Word {
   const sense = entry.word.senses.find((s) => s.guid === entry.senseGuid);
   if (!sense) {
@@ -158,7 +159,13 @@ export function updateEntryGloss(
   }
 
   const newSense: Sense = { ...sense };
-  newSense.glosses = [{ ...sense.glosses[0], def }];
+  let glossIndex = sense.glosses.findIndex((g) => g.language === analysisLang);
+  if (glossIndex === -1) {
+    glossIndex = 0;
+  }
+  newSense.glosses = sense.glosses.map((g, i) =>
+    i === glossIndex ? { ...g, def } : { ...g }
+  );
   const oldSense: Sense = { ...sense };
 
   // Move only the current semantic domain to the new sense.
@@ -476,7 +483,9 @@ export default function DataEntryTable(
         : undefined;
       return {
         ...prev,
-        newGloss: selectedSense ? firstGlossText(selectedSense) : "",
+        newGloss: selectedSense
+          ? firstGlossText(selectedSense, analysisLang.bcp47)
+          : "",
         selectedSenseGuid: guid,
       };
     });
@@ -774,7 +783,8 @@ export default function DataEntryTable(
   };
 
   /** Update the selected duplicate with the new entry.
-   * (Only considers the first gloss, `.glosses[0]`, of each sense.) */
+   * (Considers the gloss in the current analysis language if present,
+   * and otherwise the first gloss.) */
   const updateWordWithNewEntry = async (): Promise<void> => {
     const oldWord = state.selectedDup;
     if (!oldWord || !oldWord.id) {
@@ -796,9 +806,16 @@ export default function DataEntryTable(
         oldSense.glosses.push(newGloss());
       }
 
+      let glossIndex = oldSense.glosses.findIndex(
+        (g) => g.language === analysisLang.bcp47
+      );
+      if (glossIndex === -1) {
+        glossIndex = 0;
+      }
+
       // If selected sense already has this domain, add audio without updating first.
       if (
-        oldSense.glosses[0].def === gloss &&
+        oldSense.glosses[glossIndex].def === gloss &&
         oldSense.semanticDomains.some((d) => d.id === semDom.id)
       ) {
         enqueueSnackbar(
@@ -810,11 +827,11 @@ export default function DataEntryTable(
         return;
       }
 
-      // Only update the selected sense if the old gloss is blank or matches the new gloss.
-      if (!oldSense.glosses[0].def.trim()) {
-        oldSense.glosses[0] = newGloss(gloss, analysisLang.bcp47);
+      // Only update the sense if the old gloss is blank or matches the new gloss.
+      if (!oldSense.glosses[glossIndex].def.trim()) {
+        oldSense.glosses[glossIndex] = newGloss(gloss, analysisLang.bcp47);
       }
-      if (oldSense.glosses[0].def === gloss) {
+      if (oldSense.glosses[glossIndex].def === gloss) {
         await updateWordBackAndFront(
           addSemanticDomainToSense(semDom, oldWord, state.selectedSenseGuid),
           state.selectedSenseGuid,
@@ -826,7 +843,7 @@ export default function DataEntryTable(
 
     // Otherwise, if new gloss matches a sense, update that sense.
     for (const sense of oldWord.senses) {
-      if (sense.glosses?.length && sense.glosses[0].def === gloss) {
+      if (sense.glosses?.some((g) => g.def === gloss)) {
         if (sense.semanticDomains.some((d) => d.id === semDom.id)) {
           // User is trying to add a sense that already exists.
           enqueueSnackbar(
@@ -922,7 +939,7 @@ export default function DataEntryTable(
         // Retract and replaced with a new entry.
         const word = simpleWord(
           vernacular,
-          firstGlossText(oldSense),
+          firstGlossText(oldSense, analysisLang.bcp47),
           analysisLang.bcp47
         );
         word.id = "";
@@ -945,7 +962,12 @@ export default function DataEntryTable(
       const oldEntry = state.recentWords[index];
       defunctWord(oldEntry.word.id);
       def = def.trim();
-      const newWord = updateEntryGloss(oldEntry, def, props.semanticDomain.id);
+      const newWord = updateEntryGloss(
+        oldEntry,
+        def,
+        props.semanticDomain.id,
+        analysisLang.bcp47
+      );
       await updateWordInBackend(newWord);
 
       // If a sense with a new guid was added, it needs to replace the old sense in the display.
@@ -959,6 +981,7 @@ export default function DataEntryTable(
       }
     },
     [
+      analysisLang.bcp47,
       defunctWord,
       props.semanticDomain.id,
       state.recentWords,
