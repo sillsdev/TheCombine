@@ -783,15 +783,15 @@ export default function DataEntryTable(
   };
 
   /** Update the selected duplicate with the new entry.
-   * (Considers the gloss in the current analysis language if present,
-   * and otherwise the first gloss.) */
+   * (Considers the gloss in the current analysis language.) */
   const updateWordWithNewEntry = async (): Promise<void> => {
     const oldWord = state.selectedDup;
-    if (!oldWord || !oldWord.id) {
+    if (!oldWord?.id) {
       throw new Error("You are trying to update a nonexistent word");
     }
 
     const gloss = state.newGloss.trim();
+    const lang = analysisLang.bcp47;
     const semDom = makeSemDomCurrent(props.semanticDomain);
 
     // If a dup sense is selected, update it.
@@ -806,16 +806,9 @@ export default function DataEntryTable(
         oldSense.glosses.push(newGloss());
       }
 
-      let glossIndex = oldSense.glosses.findIndex(
-        (g) => g.language === analysisLang.bcp47
-      );
-      if (glossIndex === -1) {
-        glossIndex = 0;
-      }
-
-      // If selected sense already has this domain, add audio without updating first.
+      // If sense already has this gloss and domain, add audio without updating first.
       if (
-        oldSense.glosses[glossIndex].def === gloss &&
+        oldSense.glosses.some((g) => g.def === gloss && g.language === lang) &&
         oldSense.semanticDomains.some((d) => d.id === semDom.id)
       ) {
         enqueueSnackbar(
@@ -827,9 +820,13 @@ export default function DataEntryTable(
         return;
       }
 
-      // Only update the sense if the old gloss is blank or matches the new gloss.
-      if (!oldSense.glosses[glossIndex].def.trim()) {
-        oldSense.glosses[glossIndex] = newGloss(gloss, analysisLang.bcp47);
+      // Only update the sense if the old gloss is missing or matches the new gloss.
+      let glossIndex = oldSense.glosses.findIndex((g) => g.language === lang);
+      if (glossIndex === -1) {
+        oldSense.glosses.push(newGloss(gloss, lang));
+        glossIndex = oldSense.glosses.length - 1;
+      } else if (!oldSense.glosses[glossIndex].def.trim()) {
+        oldSense.glosses[glossIndex].def = gloss;
       }
       if (oldSense.glosses[glossIndex].def === gloss) {
         await updateWordBackAndFront(
@@ -843,7 +840,7 @@ export default function DataEntryTable(
 
     // Otherwise, if new gloss matches a sense, update that sense.
     for (const sense of oldWord.senses) {
-      if (sense.glosses?.some((g) => g.def === gloss)) {
+      if (sense.glosses?.some((g) => g.def === gloss && g.language === lang)) {
         if (sense.semanticDomains.some((d) => d.id === semDom.id)) {
           // User is trying to add a sense that already exists.
           enqueueSnackbar(
@@ -866,7 +863,7 @@ export default function DataEntryTable(
 
     // The gloss is new for this word, so add a new sense.
     defunctWord(oldWord.id);
-    const sense = newSense(gloss, analysisLang.bcp47, semDom);
+    const sense = newSense(gloss, lang, semDom);
     const senses = [...oldWord.senses, sense];
     const newWord: Word = { ...oldWord, senses };
 
