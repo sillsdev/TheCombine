@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - stepsecurity_remediation_1720535992
 
 permissions:
   contents: read
