@@ -16,6 +16,3 @@ k3s_options:
   - traefik
   - --tls-san
   - "{{ k8s_dns_name }}"
-
-k3s_version: "v1.25.14+k3s1"
-kubectl_version: "v1.29"

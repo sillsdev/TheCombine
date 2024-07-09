@@ -1,6 +1,15 @@
 #! /usr/bin/env bash
 set -eo pipefail
 
+# Warning and Error reporting functions
+warning () {
+  echo "WARNING: $1" >&2  
+}
+error () {
+  echo "ERROR: $1" >&2  
+  exit 1
+}
+
 # Set the environment variables that are required by The Combine.
 # In addition, the values are stored in a file so that they do not
 # need to be re-entered on subsequent installations.
@@ -27,16 +36,25 @@ set-combine-env () {
 # Create the virtual environment needed by the Python installation
 # scripts
 create-python-venv () {
-  cd $INSTALL_DIR
+  cd $DEPLOY_DIR
   # Install required packages
   sudo apt install -y python3-pip python3-venv
 
   #####
-  # Setup Python to run ansible
-  python3 -m venv venv
-  source venv/bin/activate
-  python -m pip install --upgrade pip pip-tools
-  python -m piptools sync requirements.txt
+  # Setup Python virtual environment
+  echo "Setting up venv in ${DEPLOY_DIR}"
+  if [ -f "./venv.tar.gz" ] ; then
+    tar xzf ./venv.tar.gz
+    sed -i "s|%%VENV_DIR%%|${DEPLOY_DIR}/venv|g" ${DEPLOY_DIR}/venv/bin/*
+    source venv/bin/activate
+  else
+    python3 -m venv venv
+    source venv/bin/activate
+    echo "Install pip and pip-tools"
+    python -m pip install --upgrade pip pip-tools
+    echo "Install dependencies"
+    python -m piptools sync requirements.txt
+  fi
 }
 
 # Install Kubernetes engine and other supporting
@@ -53,9 +71,14 @@ install-kubernetes () {
 .EOM
   #####
   # Setup Kubernetes environment and WiFi Access Point
-  cd ${INSTALL_DIR}/ansible
+  cd ${DEPLOY_DIR}/ansible
 
-  ansible-playbook playbook_desktop_setup.yaml -K -e k8s_user=`whoami`
+  if [ -d "${DEPLOY_DIR}/airgap-images" ] ; then
+    AIRGAP_INSTALL="true"
+  else
+    AIRGAP_INSTALL="false"
+  fi
+  ansible-playbook playbook_desktop_setup.yaml -K -e k8s_user=`whoami` -e install_airgap_images=${AIRGAP_INSTALL}
 }
 
 # Set the KUBECONFIG environment variable so that the cluster can
@@ -66,8 +89,7 @@ set-k3s-env () {
   # Setup kubectl configuration file
   K3S_CONFIG_FILE=${HOME}/.kube/config
   if [ ! -e ${K3S_CONFIG_FILE} ] ; then
-    echo "Kubernetes (k3s) configuration file is missing." >&2
-    exit 1
+    error "Kubernetes (k3s) configuration file is missing."
   fi
   export KUBECONFIG=${K3S_CONFIG_FILE}
   #####
@@ -79,7 +101,7 @@ set-k3s-env () {
 
 # Install the public charts used by The Combine, specifically, cert-manager
 # and nginx-ingress-controller
-install-required-charts () {
+install-base-charts () {
   set-k3s-env
   #####
   # Install base helm charts
@@ -88,10 +110,19 @@ install-required-charts () {
 
   #####
   # Setup required cluster services
-  cd ${INSTALL_DIR}
+  cd ${DEPLOY_DIR}
   . venv/bin/activate
-  cd ${INSTALL_DIR}/scripts
-  ./setup_cluster.py
+  cd ${DEPLOY_DIR}/scripts
+  if [ -z "${HELM_TIMEOUT}" ] ; then
+    SETUP_OPTS=""
+  else
+    SETUP_OPTS="--timeout ${HELM_TIMEOUT}"
+  fi
+  if [ -d "${DEPLOY_DIR}/airgap-charts" ] ; then
+    ./setup_cluster.py ${SETUP_OPTS} --chart-dir ${DEPLOY_DIR}/airgap-charts
+  else
+      ./setup_cluster.py ${SETUP_OPTS}
+  fi
   deactivate
 }
 
@@ -99,12 +130,12 @@ install-required-charts () {
 install-the-combine () {
   #####
   # Setup The Combine
-  cd ${INSTALL_DIR}
+  cd ${DEPLOY_DIR}
   . venv/bin/activate
-  cd ${INSTALL_DIR}/scripts
+  cd ${DEPLOY_DIR}/scripts
   set-combine-env
   set-k3s-env
-  ./setup_combine.py --tag ${COMBINE_VERSION} --repo public.ecr.aws/thecombine --target desktop
+  ./setup_combine.py --tag ${COMBINE_VERSION} --repo public.ecr.aws/thecombine --target desktop ${SETUP_OPTS} --debug
   deactivate
 }
 
@@ -142,12 +173,28 @@ next-state () {
   fi
 }
 
+# Verify that the required network devices have been setup
+# for Kubernetes cluster
+wait-for-k8s-interfaces () {
+  date
+  echo "Waiting for k8s interfaces"
+  while ! ip link show flannel.1 > /dev/null 2>&1 ; do
+    sleep 1
+  done
+  while ! ip link show cni0  > /dev/null 2>&1 ; do
+    sleep 1
+  done
+  echo "Interfaces ready"
+  date
+}
+
 #####
 # Setup initial variables
-INSTALL_DIR=`pwd`
+DEPLOY_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )
 # Create directory for configuration files 
 CONFIG_DIR=${HOME}/.config/combine
 mkdir -p ${CONFIG_DIR}
+SINGLE_STEP=0
 
 # See if we need to continue from a previous install
 STATE_FILE=${CONFIG_DIR}/install-state
@@ -170,6 +217,17 @@ while (( "$#" )) ; do
     restart)
       next-state "Pre-reqs"
       ;;
+    single-step)
+      SINGLE_STEP=1
+      ;;
+    start-at)
+      next-state $2
+      shift
+      ;;
+    timeout)
+      HELM_TIMEOUT=$2
+      shift
+      ;;
     uninstall)
       next-state "Uninstall-combine"
       ;;
@@ -180,12 +238,11 @@ while (( "$#" )) ; do
       if [[ $OPT =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9-]+\.[0-9]+)?$ ]] ; then
         COMBINE_VERSION="$OPT"
       else
-        echo "Invalid version number, $OPT"
-        exit 1
+        error "Invalid version number, $OPT"
       fi
       ;;
     *)
-      echo "Unrecognized option: $OPT" >&2
+      warning "Unrecognized option: $OPT"
       ;;
   esac
   shift
@@ -193,8 +250,7 @@ done
 
 # Check that we have a COMBINE_VERSION
 if [ -z "${COMBINE_VERSION}" ] ; then
-  echo "Combine version is not specified."
-  exit 1
+  error "Combine version is not specified."
 fi
 
 create-python-venv
@@ -203,6 +259,7 @@ while [ "$STATE" != "Done" ] ; do
   case $STATE in
     Pre-reqs)
       install-kubernetes
+      wait-for-k8s-interfaces
       next-state "Restart"
       ;;
     Restart)
@@ -220,14 +277,23 @@ while [ "$STATE" != "Done" ] ; do
           STATE=Done
         fi
       fi
+      if [ "$SINGLE_STEP" == "1" ] ; then
+        STATE=Done
+      fi
       ;;
     Base-charts)
-      install-required-charts
+      install-base-charts
       next-state "Install-combine"
+      if [ "$SINGLE_STEP" == "1" ] ; then
+        STATE=Done
+      fi
       ;;
     Install-combine)
       install-the-combine
       next-state "Wait-for-combine"
+      if [ "$SINGLE_STEP" == "1" ] ; then
+        STATE=Done
+      fi
       ;;
     Wait-for-combine)
       # Wait until all the combine deployments are up
@@ -248,13 +314,12 @@ while [ "$STATE" != "Done" ] ; do
       next-state "Done"
       ;;
     Uninstall-combine)
-      ${INSTALL_DIR}/scripts/uninstall-combine
+      ${DEPLOY_DIR}/scripts/uninstall-combine
       next-state "Done"
       ;;
     *)
-      echo "Unrecognized STATE: ${STATE}"
       rm ${STATE_FILE}
-      exit 1
+      error "Unrecognized STATE: ${STATE}"
       ;;
   esac
 done

@@ -144,13 +144,14 @@ To run `combine-installer.run` with options, the option list must be started wit
 
 `combine-installer.run` supports the following options:
 
-| option         | description                                                                                                                                                              |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| clean          | Remove the previously saved environment (AWS Access Key, admin user info) before performing the installation.                                                            |
-| restart        | Run the installation from the beginning; do not resume a previous installation.                                                                                          |
-| uninstall      | Remove software installed by this script.                                                                                                                                |
-| update         | Update _The Combine_ to the version number provided. This skips installing the support software that was installed previously.                                           |
-| version-number | Specify a version to install instead of the current version. A version number will have the form `vn.n.n` where `n` represents an integer value, for example, `v1.20.0`. |
+| option          | description                                                                                                                                                                                                      |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| clean           | Remove the previously saved environment (AWS Access Key, admin user info) before performing the installation.                                                                                                    |
+| restart         | Run the installation from the beginning; do not resume a previous installation.                                                                                                                                  |
+| timeout TIMEOUT | Use a different timeout when installing. The default timeout is 5 minutes. With slow internet connections, it is helpful to extend the timeout. See <https://pkg.go.dev/time#ParseDuration> for timeout formats. |
+| uninstall       | Remove software installed by this script.                                                                                                                                                                        |
+| update          | Update _The Combine_ to the version number provided. This skips installing the support software that was installed previously.                                                                                   |
+| version-number  | Specify a version to install instead of the current version. A version number will have the form `vn.n.n` where `n` represents an integer value, for example, `v1.20.0`.                                         |
 
 ### Examples
 
