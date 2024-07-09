@@ -10,7 +10,7 @@ ansible-core==2.17.1
     # via ansible
 cachetools==5.3.3
     # via google-auth
-certifi==2024.6.2
+certifi==2024.7.4
     # via
     #   kubernetes
     #   requests
@@ -22,13 +22,13 @@ cryptography==42.0.8
     # via
     #   ansible-core
     #   pyopenssl
-google-auth==2.30.0
+google-auth==2.32.0
     # via kubernetes
 idna==3.7
     # via requests
 jinja2==3.1.4
     # via
-    #   -r deploy/requirements.in
+    #   -r requirements.in
     #   ansible-core
     #   jinja2-base64-filters
 jinja2-base64-filters==0.1.4
@@ -52,12 +52,12 @@ pyasn1-modules==0.4.0
 pycparser==2.22
     # via cffi
 pyopenssl==24.1.0
-    # via -r deploy/requirements.in
+    # via -r requirements.in
 python-dateutil==2.9.0.post0
     # via kubernetes
 pyyaml==6.0.1
     # via
-    #   -r deploy/requirements.in
+    #   -r requirements.in
     #   ansible-core
     #   kubernetes
 requests==2.32.3
