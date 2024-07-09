@@ -13,18 +13,22 @@ namespace BackendFramework.Models
         [BsonId]
         [BsonElement("_id")]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string MongoId { get; set; }
+        public string? MongoId { get; set; }
+
         [Required]
         [BsonElement("guid")]
 #pragma warning disable CA1720
         public string Guid { get; set; }
 #pragma warning restore CA1720
+
         [Required]
         [BsonElement("name")]
         public string Name { get; set; }
+
         [Required]
         [BsonElement("id")]
         public string Id { get; set; }
+
         [Required]
         [BsonElement("lang")]
         public string Lang { get; set; }
@@ -37,7 +41,6 @@ namespace BackendFramework.Models
 
         public SemanticDomain()
         {
-            MongoId = "";
             Guid = System.Guid.Empty.ToString();
             Name = "";
             Id = "";
@@ -78,6 +81,29 @@ namespace BackendFramework.Models
         {
             return HashCode.Combine(Name, Id, Lang, Guid, UserId, Created);
         }
+
+        /// <summary>
+        /// Check if given id string is a valid id: single non-0 digits divided by periods.
+        /// If allowCustom is set to true, allow the final digit to be 0.
+        /// </summary>
+        public static bool IsValidId(string id, bool allowCustom = false)
+        {
+            // Ensure the id is nonempty and composed of digits and periods
+            if (string.IsNullOrEmpty(id) || !id.All(c => char.IsDigit(c) || c == '.'))
+            {
+                return false;
+            }
+
+            // Check that each number between periods is a single non-zero digit
+            var parts = id.Split(".");
+            var allSingleDigit = parts.All(d => d.Length == 1);
+            if (allowCustom)
+            {
+                // Custom domains may have 0 as the final digit
+                parts = parts.Take(parts.Length - 1).ToArray();
+            }
+            return allSingleDigit && parts.All(d => d != "0");
+        }
     }
 
     public class SemanticDomainFull : SemanticDomain
@@ -85,25 +111,45 @@ namespace BackendFramework.Models
         [Required]
         [BsonElement("description")]
         public string Description { get; set; }
+
+        [Required]
+        [BsonElement("parentId")]
+        public string ParentId { get; set; }
+
         [Required]
         [BsonElement("questions")]
         public List<string> Questions { get; set; }
 
-        public SemanticDomainFull()
+        public SemanticDomainFull() : base()
         {
-            Name = "";
-            Id = "";
             Description = "";
+            ParentId = "";
             Questions = new();
-            Lang = "";
+        }
+
+        public SemanticDomainFull(SemanticDomain semDom)
+        {
+            MongoId = semDom.MongoId;
+            Guid = semDom.Guid;
+            Name = semDom.Name;
+            Id = semDom.Id;
+            Lang = semDom.Lang;
+            UserId = semDom.UserId;
+            Created = semDom.Created;
+
+            Description = "";
+            ParentId = "";
+            Questions = new();
         }
 
         public new SemanticDomainFull Clone()
         {
-            var clone = (SemanticDomainFull)base.Clone();
-            clone.Description = Description;
-            clone.Questions = Questions.Select(q => q).ToList();
-            return clone;
+            return new(base.Clone())
+            {
+                Description = Description,
+                ParentId = ParentId,
+                Questions = Questions.Select(q => q).ToList()
+            };
         }
 
         public override bool Equals(object? obj)
@@ -116,13 +162,14 @@ namespace BackendFramework.Models
             return
                 base.Equals(other) &&
                 Description.Equals(other.Description, StringComparison.Ordinal) &&
+                ParentId.Equals(other.ParentId, StringComparison.Ordinal) &&
                 Questions.Count == other.Questions.Count &&
                 Questions.All(other.Questions.Contains);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, Id, Description, Questions);
+            return HashCode.Combine(Name, Id, Description, ParentId, Questions);
         }
     }
 
@@ -134,36 +181,43 @@ namespace BackendFramework.Models
         [BsonId]
         [BsonElement("_id")]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string MongoId { get; set; }
+        public string? MongoId { get; set; }
 
         [Required]
         [BsonElement("lang")]
         public string Lang { get; set; }
+
         [Required]
         [BsonElement("guid")]
 #pragma warning disable CA1720
         public string Guid { get; set; }
 #pragma warning restore CA1720
+
         [Required]
         [BsonElement("name")]
         public string Name { get; set; }
+
         [Required]
         [BsonElement("id")]
         public string Id { get; set; }
+
         [BsonElement("prev")]
         public SemanticDomain? Previous { get; set; }
+
         [BsonElement("next")]
         public SemanticDomain? Next { get; set; }
+
         [BsonElement("parent")]
         public SemanticDomain? Parent { get; set; }
+
         [Required]
         [BsonElement("children")]
         public List<SemanticDomain> Children { get; set; }
 
         public SemanticDomainTreeNode(SemanticDomain sd)
         {
-            Guid = sd.Guid;
             MongoId = sd.MongoId;
+            Guid = sd.Guid;
             Lang = sd.Lang;
             Name = sd.Name;
             Id = sd.Id;

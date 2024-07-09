@@ -1,5 +1,5 @@
 import { Close, KeyboardDoubleArrowUp } from "@mui/icons-material";
-import { Grid, Zoom } from "@mui/material";
+import { Grid, Hidden, Zoom } from "@mui/material";
 import { animate } from "motion";
 import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -16,8 +16,8 @@ import { defaultTreeNode } from "components/TreeView/Redux/TreeViewReduxTypes";
 import TreeDepiction from "components/TreeView/TreeDepiction";
 import TreeNavigator from "components/TreeView/TreeNavigator";
 import TreeSearch from "components/TreeView/TreeSearch";
-import { type StoreState } from "types";
-import { useAppDispatch, useAppSelector } from "types/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/types";
 import { newSemanticDomain } from "types/semanticDomain";
 import { semDomWritingSystems } from "types/writingSystem";
 
@@ -32,13 +32,16 @@ export const topButtonId = "tree-view-top";
 
 export interface TreeViewProps {
   exit?: () => void;
-  returnControlToCaller: () => void | Promise<void>;
+  returnControlToCaller: (domain?: SemanticDomain) => void | Promise<void>;
 }
 
 export default function TreeView(props: TreeViewProps): ReactElement {
   const { exit, returnControlToCaller } = props;
   const currentDomain = useAppSelector(
     (state: StoreState) => state.treeViewState.currentDomain
+  );
+  const customDomains = useAppSelector(
+    (state: StoreState) => state.currentProjectState.project.semanticDomains
   );
   const semDomLanguage = useAppSelector(
     (state: StoreState) => state.treeViewState.language
@@ -86,7 +89,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
       if (dom.id !== id) {
         await dispatch(traverseTree(dom));
       } else if (dom.id !== defaultTreeNode.id) {
-        await returnControlToCaller();
+        await returnControlToCaller(dom);
       } else {
         setVisible(true);
       }
@@ -112,17 +115,29 @@ export default function TreeView(props: TreeViewProps): ReactElement {
       {/* Domain search */}
       <TreeNavigator currentDomain={currentDomain} animate={animateHandler} />
       <Grid container justifyContent="space-between">
-        <Grid item style={{ minWidth: exit ? 80 : 40 }} />
         <Grid item>
-          <TreeSearch currentDomain={currentDomain} animate={animateHandler} />
+          {/* Empty grid item to balance the buttons */}
+          <Hidden smDown>
+            <div style={{ display: "inline-block", width: 40 }} />
+          </Hidden>
+          {exit && <div style={{ display: "inline-block", width: 40 }} />}
         </Grid>
         <Grid item>
-          <IconButtonWithTooltip
-            icon={<KeyboardDoubleArrowUp />}
-            textId={"treeView.returnToTop"}
-            onClick={onClickTop}
-            buttonId={topButtonId}
+          <TreeSearch
+            animate={animateHandler}
+            currentDomain={currentDomain}
+            customDomains={customDomains}
           />
+        </Grid>
+        <Grid item>
+          <Hidden smDown>
+            <IconButtonWithTooltip
+              icon={<KeyboardDoubleArrowUp />}
+              textId={"treeView.returnToTop"}
+              onClick={onClickTop}
+              buttonId={topButtonId}
+            />
+          </Hidden>
           {exit && (
             <IconButtonWithTooltip
               icon={<Close />}

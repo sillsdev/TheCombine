@@ -11,6 +11,7 @@ jest.mock("@mui/base/node/useAutocomplete/useAutocomplete", () => ({
     getInputProps: () => ({ onMouseDown: jest.fn() }),
     getListboxProps: () => ({ ref: {} }),
     getRootProps: jest.fn(),
+    groupedOptions: [],
   }),
 }));
 

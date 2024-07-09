@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -9,7 +8,7 @@ using BackendFramework.Models;
 
 namespace Backend.Tests.Mocks
 {
-    public class UserRepositoryMock : IUserRepository
+    sealed internal class UserRepositoryMock : IUserRepository
     {
         private readonly List<User> _users;
 
@@ -58,21 +57,21 @@ namespace Backend.Tests.Mocks
 
         public Task<User?> GetUserByEmail(string email, bool sanitize = true)
         {
-            var user = _users.Find(u => u.Email.ToLowerInvariant() == email.ToLowerInvariant());
+            var user = _users.Find(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
             return Task.FromResult(user);
         }
 
         public Task<User?> GetUserByEmailOrUsername(string emailOrUsername, bool sanitize = true)
         {
             var user = _users.Find(u =>
-                u.Email.ToLowerInvariant() == emailOrUsername.ToLowerInvariant() ||
-                u.Username.ToLowerInvariant() == emailOrUsername.ToLowerInvariant());
+                u.Email.Equals(emailOrUsername, StringComparison.OrdinalIgnoreCase) ||
+                u.Username.Equals(emailOrUsername, StringComparison.OrdinalIgnoreCase));
             return Task.FromResult(user);
         }
 
         public Task<User?> GetUserByUsername(string username, bool sanitize = true)
         {
-            var user = _users.Find(u => u.Username.ToLowerInvariant() == username.ToLowerInvariant());
+            var user = _users.Find(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
             return Task.FromResult(user);
         }
 
@@ -102,11 +101,8 @@ namespace Backend.Tests.Mocks
         }
     }
 
-    [Serializable]
-    public class UserCreationException : Exception
+    internal sealed class UserCreationException : Exception
     {
         public UserCreationException() { }
-
-        protected UserCreationException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

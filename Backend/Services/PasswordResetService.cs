@@ -45,7 +45,7 @@ namespace BackendFramework.Services
                 return false;
             }
             var user = (await _userRepo.GetAllUsers()).Single(u =>
-                u.Email.ToLowerInvariant() == request.Email.ToLowerInvariant());
+                u.Email.Equals(request.Email, StringComparison.OrdinalIgnoreCase));
             await _userRepo.ChangePassword(user.Id, password);
             await ExpirePasswordReset(request.Email);
             return true;

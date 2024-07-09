@@ -9,7 +9,7 @@ import {
   clearCurrentProject,
 } from "components/Project/ProjectActions";
 import { defaultState as currentProjectState } from "components/Project/ProjectReduxTypes";
-import { type RootState, setupStore } from "store";
+import { type RootState, setupStore } from "rootRedux/store";
 import { newProject } from "types/project";
 import { newUser } from "types/user";
 

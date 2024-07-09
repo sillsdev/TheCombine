@@ -38,7 +38,8 @@ include subdomains, add a final period to your filter. For example, "8111." incl
 
 ### Editing Entry Rows
 
-You can record, play, or delete an entry's audio recordings by using the icons in the Pronunciations column.
+You can record, play, or delete an entry's audio recordings by using the icons in the Pronunciations
+(![Review Entries pronunciations column header](images/reviewEntriesColumnPronunciations.png){width=28}) column.
 
 To edit any other part of an entry, click the ![Review Entries row edit icon](images/reviewEntriesRowEdit.png){width=20}
 edit icon in the initial column.
@@ -78,10 +79,6 @@ Dropping a sense card onto another sense card (when they are both green) merges 
 to appear on the right, showing which senses are being merged.
 
 ![Merge Duplicates senses merged](images/mergeSidebar.png)
-
-!!! warning "Important"
-
-    When multiple senses are merged, all semantic domains are preserved, but **only the top sense in the sidebar** has its glosses (and definitions) preserved.
 
 You can drag-and-drop sense cards to or from the sidebar to change which senses are being merged. Or within the sidebar,
 you can move a different sense to the top (to preserve its glosses).
@@ -165,6 +162,12 @@ information will appear in the Merge Duplicate sense cards as follows:
 
 ![Merge Duplicates sense with definitions and part of speech](images/mergeSenseDefinitionsPartOfSpeech.png){.center}
 
+!!! note "Note"
+
+A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same
+general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different
+general categories, only the first one is preserved.
+
 #### Protected Entries and Senses
 
 If an imported entry or sense contains data not supported in The Combine (e.g., etymologies or sense reversals), it is
@@ -217,4 +220,4 @@ something else, type the replacement character or string in the "Replace with" b
 
 !!! warning "Important"
 
-    The find-and-replace operation makes changes to entries, not to the character inventory. It **cannot be undone!**
+    The find-and-replace operation makes changes to entries, not to the character inventory.

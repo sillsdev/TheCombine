@@ -20,10 +20,10 @@ import { LoadingDoneButton } from "components/Buttons";
 import Captcha from "components/Login/Captcha";
 import { asyncSignUp } from "components/Login/Redux/LoginActions";
 import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";
-import { reset } from "rootActions";
+import { reset } from "rootRedux/actions";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/types";
 import router from "router/browserRouter";
-import { StoreState } from "types";
-import { useAppDispatch, useAppSelector } from "types/hooks";
 import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
 import {
@@ -102,14 +102,24 @@ export default function Signup(props: SignupProps): ReactElement {
     dispatch(reset());
   }, [dispatch]);
 
-  const errorField = (field: SignupField): void => {
-    setFieldError((prev) => ({ ...prev, [field]: true }));
+  const errorField = (field: SignupField, error: boolean): void => {
+    setFieldError((prev) => ({ ...prev, [field]: error }));
   };
 
   const checkUsername = (): void => {
-    if (!meetsUsernameRequirements(fieldText[SignupField.Username])) {
-      errorField(SignupField.Username);
-    }
+    const username = fieldText[SignupField.Username].trim();
+    errorField(SignupField.Username, !meetsUsernameRequirements(username));
+  };
+
+  const checkPassword1 = (): void => {
+    const password1 = fieldText[SignupField.Password1].trim();
+    errorField(SignupField.Password1, !meetsPasswordRequirements(password1));
+  };
+
+  const checkPassword2 = (): void => {
+    const password1 = fieldText[SignupField.Password1].trim();
+    const password2 = fieldText[SignupField.Password2].trim();
+    errorField(SignupField.Password2, password1 !== password2);
   };
 
   const updateField = (
@@ -213,6 +223,7 @@ export default function Signup(props: SignupProps): ReactElement {
               helperText={t("login.passwordRequirements")}
               id={SignupId.FieldPassword1}
               label={t("login.password")}
+              onBlur={() => checkPassword1()}
               onChange={(e) => updateField(e, SignupField.Password1)}
               type="password"
               value={fieldText[SignupField.Password1]}
@@ -230,6 +241,7 @@ export default function Signup(props: SignupProps): ReactElement {
               }
               id={SignupId.FieldPassword2}
               label={t("login.confirmPassword")}
+              onBlur={() => checkPassword2()}
               onChange={(e) => updateField(e, SignupField.Password2)}
               type="password"
               value={fieldText[SignupField.Password2]}

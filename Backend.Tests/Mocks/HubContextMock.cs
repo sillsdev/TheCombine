@@ -9,14 +9,14 @@ namespace Backend.Tests.Mocks
     /// <summary>
     /// A *very* sparse, mostly unimplemented Mock of SignalR HubContext.
     /// </summary>
-    public class HubContextMock : IHubContext<CombineHub>
+    sealed internal class HubContextMock : IHubContext<CombineHub>
     {
         public IHubClients Clients => new HubClientsMock();
 
         public IGroupManager Groups => throw new System.NotImplementedException();
     }
 
-    public class HubClientsMock : IHubClients
+    sealed internal class HubClientsMock : IHubClients
     {
         public IClientProxy AllExcept(IReadOnlyList<string> excludedConnectionIds)
         {
@@ -61,7 +61,7 @@ namespace Backend.Tests.Mocks
         public IClientProxy All => new ClientProxyMock();
     }
 
-    public class ClientProxyMock : IClientProxy
+    sealed internal class ClientProxyMock : IClientProxy
     {
         // Disable this warning as this mock simply needs to return an empty Task, not await anything.
 #pragma warning disable 1998

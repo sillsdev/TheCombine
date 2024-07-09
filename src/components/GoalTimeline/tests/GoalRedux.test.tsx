@@ -1,5 +1,6 @@
 import "@testing-library/jest-dom";
-import { act, cleanup } from "@testing-library/react";
+import { cleanup } from "@testing-library/react";
+import { act } from "react";
 
 import { Edit, MergeUndoIds, Permission, User, UserEdit } from "api/models";
 import * as LocalStorage from "backend/localStorage";
@@ -26,7 +27,7 @@ import {
   asyncUpdateGoal,
   setCurrentGoal,
 } from "goals/Redux/GoalActions";
-import { setupStore } from "store";
+import { setupStore } from "rootRedux/store";
 import { GoalStatus, GoalType } from "types/goals";
 import { Path } from "types/path";
 import { newUser } from "types/user";

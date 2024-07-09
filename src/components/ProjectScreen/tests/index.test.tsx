@@ -4,7 +4,7 @@ import ProjectScreen from "components/ProjectScreen";
 
 jest.mock("components/ProjectScreen/ChooseProject", () => "div");
 jest.mock("components/ProjectScreen/CreateProject", () => "div");
-jest.mock("types/hooks", () => ({
+jest.mock("rootRedux/hooks", () => ({
   useAppDispatch: () => () => mockDispatch(),
 }));
 

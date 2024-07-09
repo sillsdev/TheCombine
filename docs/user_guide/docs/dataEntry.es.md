@@ -37,14 +37,28 @@ Para grabar audio, hay un botón circular rojo. Para cada audio grabado, hay un 
 su audio, o pulse Mayúsculas y haga clic para borrar su grabación.
 
 **En una pantalla táctil:** Mantenga pulsado el círculo rojo para grabar. Pulse un triángulo verde para reproducir su
-audio, o manténgalo pulsado para abrir un menú (con opciones para reproducir o eliminar).
+audio, o manténgalo pulsado para abrir un menú con opciones.
+
+#### Añadir un locutor a las grabaciones de audio
+
+Haga clic en el icono del locutor en la barra superior para ver una lista de todos los locutores disponibles y
+seleccione el locutor actual. Este locutor se asociará automáticamente a cada grabación de audio hasta que cierre la
+sesión o seleccione un locutor diferente.
+
+El locutor asociado a una grabación puede verse pasando el ratón por encima de su icono de reproducción, el triángulo
+verde. Para cambiar el locutor de una grabación, haga clic con el botón derecho del ratón en el triángulo verde (o
+mantén pulsado en una pantalla táctil).
+
+!!! note "Nota"
+
+    El audio importado no se puede borrar ni se le puede añadir un locutor.
 
 ## Nueva entrada con forma vernácula duplicada {#new-entry-with-duplicate-vernacular-form}
 
 Si presenta una nueva entrada con idéntica forma vernácula y glosa a una entrada existente, se actualizará dicha entrada
-en lugar de crearse una nueva entrada. Por ejemplo, si presenta [Vernáculo: finger; Glosa: dedo] en el dominio 2.1.3.1
-(Brazo) y de nuevo en el dominio 2.1.3.3 (Dedo, dedo del pie), el resultado será una única entrada para "finger" con un
-única acepción que tiene glosa "dedo" y dos dominios.
+en lugar de crearse una nueva entrada. Por ejemplo, si presenta [Vernáculo: finger; Glosa: dedo] en el dominio 2.1.3.1 (Brazo)
+y de nuevo en el dominio 2.1.3.3 (Dedo, dedo del pie), el resultado será una única entrada para "finger" con un única acepción
+que tiene glosa "dedo" y dos dominios.
 
 The Combine dispone de una función opcional de facilitar la introducción de palabras que ya existen en el proyecto pero
 que se recogen de nuevo en nuevo dominio semántico. Esta función puede activarse o desactivarse en

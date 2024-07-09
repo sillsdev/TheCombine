@@ -22,9 +22,9 @@ import { topBarHeight } from "components/LandingPage/TopBar";
 import * as Cell from "goals/ReviewEntries/ReviewEntriesTable/Cells";
 import * as ff from "goals/ReviewEntries/ReviewEntriesTable/filterFn";
 import * as sf from "goals/ReviewEntries/ReviewEntriesTable/sortingFn";
-import { type StoreState } from "types";
+import { useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/types";
 import { type Hash } from "types/hash";
-import { useAppSelector } from "types/hooks";
 
 /** Import `material-react-table` localization for given `lang`.
  * (See https://www.material-react-table.com/docs/guides/localization.) */
@@ -154,6 +154,7 @@ export default function ReviewEntriesTable(props: {
       Cell: ({ row }: CellProps) => (
         <Cell.Edit replace={replaceWord} word={row.original} />
       ),
+      enableHiding: false,
       Header: "",
       header: t("reviewEntries.columns.edit"),
       size: IconColumnSize,
@@ -305,6 +306,7 @@ export default function ReviewEntriesTable(props: {
       Cell: ({ row }: CellProps) => (
         <Cell.Delete delete={deleteWord} word={row.original} />
       ),
+      enableHiding: false,
       Header: "",
       header: t("reviewEntries.columns.delete"),
       size: IconColumnSize,
@@ -315,6 +317,7 @@ export default function ReviewEntriesTable(props: {
   const table = useMaterialReactTable({
     columns,
     data,
+    autoResetPageIndex: false,
     columnFilterDisplayMode: "popover",
     enableColumnActions: false,
     enableColumnDragging: false,

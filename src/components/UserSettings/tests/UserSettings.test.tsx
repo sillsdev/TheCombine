@@ -1,6 +1,7 @@
 import "@testing-library/jest-dom";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { act } from "react";
 
 import { User } from "api/models";
 import UserSettingsGetUser, {
@@ -31,7 +32,7 @@ jest.mock("backend/localStorage", () => ({
 jest.mock("components/Project/ProjectActions", () => ({
   asyncLoadSemanticDomains: jest.fn(),
 }));
-jest.mock("types/hooks", () => ({
+jest.mock("rootRedux/hooks", () => ({
   useAppDispatch: () => jest.fn(),
 }));
 
@@ -97,9 +98,13 @@ describe("UserSettings", () => {
     const typeAndCheckEnabled = async (id: UserSettingsIds): Promise<void> => {
       expect(submitButton).toBeDisabled();
       const field = screen.getByTestId(id);
-      await agent.type(field, "?");
+      await act(async () => {
+        await agent.type(field, "?");
+      });
       expect(submitButton).toBeEnabled();
-      await agent.type(field, "{backspace}");
+      await act(async () => {
+        await agent.type(field, "{backspace}");
+      });
     };
 
     await typeAndCheckEnabled(UserSettingsIds.FieldEmail);
@@ -116,9 +121,13 @@ describe("UserSettings", () => {
 
     const typeAndCheckEnabled = async (id: UserSettingsIds): Promise<void> => {
       expect(submitButton).toBeDisabled();
-      await agent.type(screen.getByTestId(id), stringToType);
+      await act(async () => {
+        await agent.type(screen.getByTestId(id), stringToType);
+      });
       expect(submitButton).toBeEnabled();
-      await agent.click(submitButton);
+      await act(async () => {
+        await agent.click(submitButton);
+      });
       expect(submitButton).toBeDisabled();
     };
 
@@ -139,9 +148,13 @@ describe("UserSettings", () => {
     const agent = userEvent.setup();
     await renderUserSettings();
 
-    await agent.type(screen.getByTestId(UserSettingsIds.FieldName), "a");
+    await act(async () => {
+      await agent.type(screen.getByTestId(UserSettingsIds.FieldName), "a");
+    });
     expect(mockUpdateUser).toHaveBeenCalledTimes(0);
-    await agent.click(screen.getByTestId(UserSettingsIds.ButtonSubmit));
+    await act(async () => {
+      await agent.click(screen.getByTestId(UserSettingsIds.ButtonSubmit));
+    });
     expect(mockUpdateUser).toHaveBeenCalledTimes(1);
   });
 
@@ -149,9 +162,13 @@ describe("UserSettings", () => {
     const agent = userEvent.setup();
     await renderUserSettings(mockUser());
 
-    await agent.type(screen.getByTestId(UserSettingsIds.FieldEmail), "a");
+    await act(async () => {
+      await agent.type(screen.getByTestId(UserSettingsIds.FieldEmail), "a");
+    });
     mockIsEmailTaken.mockResolvedValueOnce(true);
-    await agent.click(screen.getByTestId(UserSettingsIds.ButtonSubmit));
+    await act(async () => {
+      await agent.click(screen.getByTestId(UserSettingsIds.ButtonSubmit));
+    });
     expect(mockUpdateUser).toHaveBeenCalledTimes(0);
   });
 });

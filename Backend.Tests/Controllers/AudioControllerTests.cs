@@ -37,7 +37,7 @@ namespace Backend.Tests.Controllers
         private string _wordId = null!;
         private const string FileName = "sound.mp3"; // file in Backend.Tests/Assets/
         private readonly Stream _stream = File.OpenRead(Path.Combine(Util.AssetsDir, FileName));
-        private FileUpload _fileUpload = null!;
+        private FormFile _file = null!;
 
         [SetUp]
         public void Setup()
@@ -51,44 +51,43 @@ namespace Backend.Tests.Controllers
             _projId = _projRepo.Create(new Project { Name = "AudioControllerTests" }).Result!.Id;
             _wordId = _wordRepo.Create(Util.RandomWord(_projId)).Result.Id;
 
-            var formFile = new FormFile(_stream, 0, _stream.Length, "Name", FileName);
-            _fileUpload = new FileUpload { File = formFile, Name = "FileName" };
+            _file = new FormFile(_stream, 0, _stream.Length, "Name", FileName);
         }
 
         [Test]
         public void TestUploadAudioFileUnauthorized()
         {
             _audioController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-            var result = _audioController.UploadAudioFile(_projId, _wordId, _fileUpload).Result;
+            var result = _audioController.UploadAudioFile(_projId, _wordId, _file).Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
 
-            result = _audioController.UploadAudioFile(_projId, _wordId, "", _fileUpload).Result;
+            result = _audioController.UploadAudioFile(_projId, _wordId, "", _file).Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 
         [Test]
         public void TestUploadAudioFileInvalidArguments()
         {
-            var result = _audioController.UploadAudioFile("invalid/projId", _wordId, _fileUpload).Result;
+            var result = _audioController.UploadAudioFile("invalid/projId", _wordId, _file).Result;
             Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
 
-            result = _audioController.UploadAudioFile(_projId, "invalid/wordId", _fileUpload).Result;
+            result = _audioController.UploadAudioFile(_projId, "invalid/wordId", _file).Result;
             Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
 
-            result = _audioController.UploadAudioFile("invalid/projId", _wordId, "speakerId", _fileUpload).Result;
+            result = _audioController.UploadAudioFile("invalid/projId", _wordId, "speakerId", _file).Result;
             Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
 
-            result = _audioController.UploadAudioFile(_projId, "invalid/wordId", "speakerId", _fileUpload).Result;
+            result = _audioController.UploadAudioFile(_projId, "invalid/wordId", "speakerId", _file).Result;
             Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
         }
 
         [Test]
         public void TestUploadConsentNullFile()
         {
-            var result = _audioController.UploadAudioFile(_projId, _wordId, new()).Result;
+            var result = _audioController.UploadAudioFile(_projId, _wordId, null).Result;
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
 
-            result = _audioController.UploadAudioFile(_projId, _wordId, "speakerId", new()).Result;
+            result = _audioController.UploadAudioFile(_projId, _wordId, "speakerId", null).Result;
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
         }
 
@@ -96,20 +95,18 @@ namespace Backend.Tests.Controllers
         public void TestUploadConsentEmptyFile()
         {
             // Use 0 for the third argument
-            var formFile = new FormFile(_stream, 0, 0, "Name", FileName);
-            _fileUpload = new FileUpload { File = formFile, Name = FileName };
+            _file = new FormFile(_stream, 0, 0, "Name", FileName);
 
-            var result = _audioController.UploadAudioFile(_projId, _wordId, _fileUpload).Result;
+            var result = _audioController.UploadAudioFile(_projId, _wordId, _file).Result;
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-            result = _audioController.UploadAudioFile(_projId, _wordId, "speakerId", _fileUpload).Result;
+            result = _audioController.UploadAudioFile(_projId, _wordId, "speakerId", _file).Result;
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
         }
 
         [Test]
         public void TestUploadAudioFile()
         {
-            // `_fileUpload` contains the file stream and the name of the file.
-            _ = _audioController.UploadAudioFile(_projId, _wordId, "speakerId", _fileUpload).Result;
+            _ = _audioController.UploadAudioFile(_projId, _wordId, "speakerId", _file).Result;
 
             var foundWord = _wordRepo.GetWord(_projId, _wordId).Result;
             Assert.That(foundWord?.Audio, Is.Not.Null);

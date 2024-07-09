@@ -1,13 +1,12 @@
 import "@testing-library/jest-dom";
 import {
   type RenderOptions,
-  act,
   cleanup,
   render,
   screen,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { type ReactElement, type ReactNode } from "react";
+import { type ReactElement, type ReactNode, act } from "react";
 import { Provider } from "react-redux";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import configureMockStore from "redux-mock-store";
@@ -75,8 +74,10 @@ describe("PasswordReset", () => {
       PasswordResetTestIds.ConfirmPassword
     );
 
-    await user.type(passwdField, shortPassword);
-    await user.type(passwdConfirm, shortPassword);
+    await act(async () => {
+      await user.type(passwdField, shortPassword);
+      await user.type(passwdConfirm, shortPassword);
+    });
 
     const reqErrors = screen.queryAllByTestId(
       PasswordResetTestIds.PasswordReqError
@@ -102,8 +103,10 @@ describe("PasswordReset", () => {
       PasswordResetTestIds.ConfirmPassword
     );
 
-    await user.type(passwdField, passwordEntry);
-    await user.type(passwdConfirm, confirmEntry);
+    await act(async () => {
+      await user.type(passwdField, passwordEntry);
+      await user.type(passwdConfirm, confirmEntry);
+    });
 
     const reqErrors = screen.queryAllByTestId(
       PasswordResetTestIds.PasswordReqError
@@ -129,8 +132,10 @@ describe("PasswordReset", () => {
       PasswordResetTestIds.ConfirmPassword
     );
 
-    await user.type(passwdField, passwordEntry);
-    await user.type(passwdConfirm, confirmEntry);
+    await act(async () => {
+      await user.type(passwdField, passwordEntry);
+      await user.type(passwdConfirm, confirmEntry);
+    });
 
     const reqErrors = screen.queryAllByTestId(
       PasswordResetTestIds.PasswordReqError
@@ -157,12 +162,16 @@ describe("PasswordReset", () => {
       PasswordResetTestIds.ConfirmPassword
     );
 
-    await user.type(passwdField, passwordEntry);
-    await user.type(passwdConfirm, confirmEntry);
+    await act(async () => {
+      await user.type(passwdField, passwordEntry);
+      await user.type(passwdConfirm, confirmEntry);
+    });
 
     const submitButton = screen.getByTestId(PasswordResetTestIds.SubmitButton);
     mockPasswordReset.mockResolvedValueOnce(false);
-    await user.click(submitButton);
+    await act(async () => {
+      await user.click(submitButton);
+    });
 
     const resetErrors = screen.queryAllByTestId(
       PasswordResetTestIds.PasswordResetFail

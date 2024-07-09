@@ -8,8 +8,8 @@ import {
   resetPronunciations,
 } from "components/Pronunciations/Redux/PronunciationsActions";
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
-import { StoreState } from "types";
-import { useAppDispatch, useAppSelector } from "types/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/types";
 import { themeColors } from "types/theme";
 
 export const recordButtonId = "recordingButton";
@@ -25,20 +25,37 @@ interface RecorderIconProps {
 export default function RecorderIcon(props: RecorderIconProps): ReactElement {
   const isRecording = useAppSelector(
     (state: StoreState) =>
-      state.pronunciationsState.status === PronunciationsStatus.Recording &&
-      state.pronunciationsState.wordId === props.id
+      state.pronunciationsState.status === PronunciationsStatus.Recording
   );
+  const recordingId = useAppSelector(
+    (state: StoreState) => state.pronunciationsState.wordId
+  );
+  const isRecordingThis = isRecording && recordingId === props.id;
 
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   function toggleIsRecordingToTrue(): void {
-    dispatch(recording(props.id));
-    props.startRecording();
+    if (!isRecording) {
+      // Only start a recording if there's not another on in progress.
+      dispatch(recording(props.id));
+      props.startRecording();
+    } else {
+      // This triggers if user clicks-and-holds on one entry's record icon,
+      // drags the mouse outside that icon before releasing,
+      // then clicks-and-holds a different entry's record icon.
+      if (recordingId !== props.id) {
+        console.error(
+          "Tried to record for an entry before finishing a recording on another entry."
+        );
+      }
+    }
   }
   function toggleIsRecordingToFalse(): void {
-    props.stopRecording();
-    dispatch(resetPronunciations());
+    if (isRecordingThis) {
+      props.stopRecording();
+      dispatch(resetPronunciations());
+    }
   }
 
   function handleTouchStart(): void {
@@ -82,7 +99,7 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
             color: (t) =>
               props.disabled
                 ? t.palette.grey[400]
-                : isRecording
+                : isRecordingThis
                   ? themeColors.recordActive
                   : themeColors.recordIdle,
           }}

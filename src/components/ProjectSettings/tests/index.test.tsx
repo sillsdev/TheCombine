@@ -1,9 +1,10 @@
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "@testing-library/jest-dom";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { match } from "css-mediaquery";
+import { act } from "react";
 import { Provider } from "react-redux";
 import { Store } from "redux";
 import configureMockStore from "redux-mock-store";
@@ -35,9 +36,9 @@ jest.mock("backend", () => ({
 jest.mock("components/Project/ProjectActions");
 // Mock "i18n", else `thrown: "Error: Error: connect ECONNREFUSED ::1:80 [...]`
 jest.mock("i18n", () => ({ language: "" }));
-jest.mock("types/hooks", () => {
+jest.mock("rootRedux/hooks", () => {
   return {
-    ...jest.requireActual("types/hooks"),
+    ...jest.requireActual("rootRedux/hooks"),
     useAppDispatch: () => jest.fn(),
   };
 });
@@ -127,7 +128,9 @@ describe("ProjectSettings", () => {
     const tabs = Object.values(ProjectSettingsTab);
     expect(screen.queryAllByRole("tab")).toHaveLength(tabs.length);
     for (const tab of tabs) {
-      await agent.click(screen.getByTestId(tab));
+      await act(async () => {
+        await agent.click(screen.getByTestId(tab));
+      });
       isPanelVisible(tab);
     }
   });
@@ -142,7 +145,9 @@ describe("ProjectSettings", () => {
         const tabs = whichTabs(perm, hasSchedule);
         expect(screen.queryAllByRole("tab")).toHaveLength(tabs.length);
         for (const tab of tabs) {
-          await agent.click(screen.getByTestId(tab));
+          await act(async () => {
+            await agent.click(screen.getByTestId(tab));
+          });
           whichSettings(perm, hasSchedule, tab).forEach((s) =>
             screen.getByTestId(s)
           );
@@ -161,7 +166,9 @@ describe("ProjectSettings", () => {
         const tabs = whichTabs(perm, hasSchedule);
         expect(screen.queryAllByRole("tab")).toHaveLength(tabs.length);
         for (const tab of tabs) {
-          await agent.click(screen.getByTestId(tab));
+          await act(async () => {
+            await agent.click(screen.getByTestId(tab));
+          });
           whichSettings(perm, hasSchedule, tab).forEach((s) =>
             screen.getByTestId(s)
           );

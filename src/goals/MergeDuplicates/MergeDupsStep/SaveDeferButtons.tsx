@@ -9,7 +9,7 @@ import {
   setSidebar,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { asyncAdvanceStep } from "goals/Redux/GoalActions";
-import { useAppDispatch } from "types/hooks";
+import { useAppDispatch } from "rootRedux/hooks";
 import theme from "types/theme";
 
 export default function SaveDeferButtons(): ReactElement {

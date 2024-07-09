@@ -27,9 +27,9 @@ jest.mock("backend", () => ({
 jest.mock("components/AppBar/AppBarComponent", () => "div");
 jest.mock("components/DataEntry/DataEntryTable", () => "div");
 jest.mock("components/TreeView", () => "div");
-jest.mock("types/hooks", () => {
+jest.mock("rootRedux/hooks", () => {
   return {
-    ...jest.requireActual("types/hooks"),
+    ...jest.requireActual("rootRedux/hooks"),
     useAppDispatch: () => mockDispatch,
   };
 });

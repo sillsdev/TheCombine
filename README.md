@@ -30,7 +30,7 @@
 [localization-ui-badge]: https://img.shields.io/badge/User%20Interface-Ar%20En%20Es%20Fr%20Pt%20Zh-blue
 [github-actions]: https://github.com/sillsdev/TheCombine/actions
 [localization-sd-badge]:
-  https://img.shields.io/badge/Semantic%20Domains-Ar%20En%20Es%20Fr%20Hi%20Ml%20My%20Pt%20Ru%20Sw%20Zh-blue
+  https://img.shields.io/badge/Semantic%20Domains-Ar%20En%20Es%20Fr%20Hi%20Id%20Ml%20My%20Pt%20Ru%20Sw%20Zh-blue
 [localization-ug-badge]: https://img.shields.io/badge/User%20Guide-En%20Es%20Zh-blue
 [localization-crowdin-combine]: https://crowdin.com/project/the-combine
 [localization-crowdin-flex]: https://crowdin.com/project/fieldworks
@@ -54,6 +54,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
       2. [Linux Python Installation](#linux-python-installation)
       3. [macOS Python Installation](#macos-python-installation)
       4. [Python Packages](#python-packages)
+   4. [Load Semantic Domains](#load-semantic-domains)
 2. [Available Scripts](#available-scripts)
    1. [Running in Development](#running-in-development)
    2. [Using OpenAPI](#using-openapi)
@@ -95,14 +96,15 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    git clone https://github.com/sillsdev/TheCombine.git
    ```
 
-2. [Chocolatey][chocolatey]: (Windows only) a Windows package manager.
-3. [Node.js 18 (LTS)](https://nodejs.org/en/download/)
+2. [Chocolatey][chocolatey] (Windows only): a Windows package manager.
+3. [Node.js 20 (LTS)](https://nodejs.org/en/download/)
+
    - On Windows, if using [Chocolatey][chocolatey]: `choco install nodejs-lts`
    - On Ubuntu, follow
      [this guide](https://github.com/nodesource/distributions/blob/master/README.md#installation-instructions) using the
      appropriate Node.js version.
-4. [.NET Core SDK 6.0](https://dotnet.microsoft.com/download/dotnet/6.0)
-   - On Ubuntu, follow these [instructions](https://docs.microsoft.com/en-us/dotnet/core/install/linux-ubuntu).
+
+4. [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 5. [MongoDB](https://mongodb.com/docs/manual/administration/install-community/) provides instructions on how to install
    the current release of MongoDB.
 
@@ -123,6 +125,11 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 7. [Python](#python): The Python section of this document has instructions for installing _Python 3_ on each of the
    supported platforms and how to setup your virtual environment.
 8. [FFmpeg](https://www.ffmpeg.org/download.html) and add its `/bin` to your PATH.
+
+   - On Mac:
+     - If using [homebrew](https://formulae.brew.sh/formula/ffmpeg): `brew install ffmpeg`
+     - If manually installing from the FFmpeg website, install both `ffmpeg` and `ffprobe`
+
 9. [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.1.250801`
 10. [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
     `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
@@ -264,6 +271,10 @@ To upgrade the pinned dependencies for the Maintenance container:
 cd maintenance
 python -m piptools compile --upgrade requirements.in
 ```
+
+### Load Semantic Domains
+
+Data Entry will not work in The Combine unless the semantic domains have been loaded into the database. Follow the instuctions in [Import Semantic Domains](#import-semantic-domains) below to import the domains from at least one of the semantic domains XML files (which each contain domain data in English and one other language.)
 
 ## Available Scripts
 
@@ -871,7 +882,7 @@ NAME                NAMESPACE       REVISION    UPDATED                         
 cert-manager        cert-manager    3           2022-02-28 11:27:12.141797222 -0500 EST deployed    cert-manager-v1.7.1     v1.7.1
 ingress-controller  ingress-nginx   3           2022-02-28 11:27:15.729203306 -0500 EST deployed    ingress-nginx-4.0.17    1.1.1
 rancher             cattle-system   1           2022-03-11 12:46:06.962438027 -0500 EST deployed    rancher-2.6.3           v2.6.3
-thecombine          thecombine      2           2022-03-11 11:41:38.304404635 -0500 EST deployed    thecombine-0.7.14       1.0.0
+thecombine          thecombine      2           2022-03-11 11:41:38.304404635 -0500 EST deployed    thecombine-0.7.14       2.0.0
 ```
 
 Using the chart name and namespace, you can then delete the chart:

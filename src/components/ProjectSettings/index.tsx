@@ -1,4 +1,5 @@
 import {
+  AccountTree,
   Archive,
   CalendarMonth,
   CloudUpload,
@@ -45,16 +46,19 @@ import {
 import ExportButton from "components/ProjectExport/ExportButton";
 import ProjectArchive from "components/ProjectSettings/ProjectArchive";
 import ProjectAutocomplete from "components/ProjectSettings/ProjectAutocomplete";
+import ProjectDomains from "components/ProjectSettings/ProjectDomains";
 import ProjectImport from "components/ProjectSettings/ProjectImport";
-import ProjectLanguages from "components/ProjectSettings/ProjectLanguages";
+import ProjectLanguages, {
+  SemanticDomainLanguage,
+} from "components/ProjectSettings/ProjectLanguages";
 import ProjectName from "components/ProjectSettings/ProjectName";
 import ProjectSchedule from "components/ProjectSettings/ProjectSchedule";
 import ProjectSelect from "components/ProjectSettings/ProjectSelect";
 import ActiveProjectUsers from "components/ProjectUsers/ActiveProjectUsers";
 import AddProjectUsers from "components/ProjectUsers/AddProjectUsers";
 import ProjectSpeakersList from "components/ProjectUsers/ProjectSpeakersList";
-import { type StoreState } from "types";
-import { useAppDispatch, useAppSelector } from "types/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { type StoreState } from "rootRedux/types";
 import { Path } from "types/path";
 
 export enum ProjectSettingsTab {
@@ -63,11 +67,14 @@ export enum ProjectSettingsTab {
   Users = "TabUsers",
   ImportExport = "TabImportExport",
   Schedule = "TabSchedule",
+  Domains = "TabDomains",
 }
 
 export enum Setting {
   Archive = "SettingArchive",
   Autocomplete = "SettingAutocomplete",
+  DomainsCustom = "SettingDomainsCustom",
+  DomainsLanguage = "SettingsDomainsLanguage",
   Export = "SettingExport",
   Import = "SettingImport",
   Languages = "SettingLanguages",
@@ -291,6 +298,31 @@ export default function ProjectSettingsComponent(): ReactElement {
           />
         </Grid>
       </TabPanel>
+
+      <TabPanel value={tab} index={ProjectSettingsTab.Domains}>
+        <Grid container spacing={6}>
+          {/* Semantic domains language */}
+          <BaseSettings
+            icon={<Language data-testid={Setting.DomainsLanguage} />}
+            title={t("projectSettings.domains.semDomLanguage")}
+            body={
+              <SemanticDomainLanguage
+                project={project}
+                setProject={updateProject}
+              />
+            }
+          />
+
+          {/* Custom semantic domains */}
+          <BaseSettings
+            icon={<AccountTree data-testid={Setting.DomainsCustom} />}
+            title={t("projectSettings.domains.label")}
+            body={
+              <ProjectDomains project={project} setProject={updateProject} />
+            }
+          />
+        </Grid>
+      </TabPanel>
     </>
   );
 }
@@ -397,6 +429,22 @@ function SettingsTabs(props: SettingsTabsProps): ReactElement {
             }
             sx={{ minWidth: 0 }}
             value={ProjectSettingsTab.Schedule}
+          />
+        )}
+
+        {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+          <Tab
+            data-testid={ProjectSettingsTab.Domains}
+            id={ProjectSettingsTab.Domains.toString()}
+            label={
+              <TabLabel
+                hideLabel={hideLabels}
+                icon={<AccountTree />}
+                textId={"projectSettings.tab.domains"}
+              />
+            }
+            sx={{ minWidth: 0 }}
+            value={ProjectSettingsTab.Domains}
           />
         )}
       </Tabs>

@@ -36,9 +36,11 @@
 一旦创建或选择了一个项目，它就变成活动项目。用户可在 The Combine 顶部应用框的中间位置看到一个齿轮图标或该项目名。 点击齿
 轮图标或项目名，拉出“项目设置”以管理该项目。 具有足够权限的项目用户可以使用以下设置。
 
+![设置](../images/projectSettings123456.png)
+
 ### 基本设置
 
-![基本设置](../images/projectSettings1Basic.zh.png){width=750 .center}
+![基本设置](../images/projectSettings1Basic.zh.png)
 
 #### 项目名称
 
@@ -58,7 +60,7 @@
 
 ### 项目语言 {#project-languages}
 
-![语言](../images/projectSettings2Langs.zh.png){width=750 .center}
+![语言](../images/projectSettings2Langs.zh.png)
 
 ![项目语言 - Tzotzil](../images/projectLanguagesTzotzil.zh.png){.center}
 
@@ -66,7 +68,7 @@
 
 与项目有关的*分析语言*可能会有很多种，但只有列表中最上面的一种可以输入新词条。
 
-!!! 笔记
+!!! note "笔记"
 
     如果项目有多种语言的注释，则那些语言必须被添加至此处，这样所有注释就可以显示在[数据清理](goals.md). 点击放大镜图标，就能看到呈现在项目中的所有语言代码。
 
@@ -74,7 +76,7 @@
 
 ### 项目用户
 
-![用户](../images/projectSettings3Users.zh.png){width=750 .center}
+![用户](../images/projectSettings3Users.zh.png)
 
 #### 当前用户
 
@@ -99,7 +101,7 @@ _收集者_ 可以进行 [词条输入](./dataEntry.md) ，但不能进行 [数�
 
 _管理员_ 拥有 _编辑_ 的所有权限，还可以修改大多数项目设置和 用户。
 
-!!! 重要警告
+!!! warning "重要警告"
 
     每个项目只有一个所有者。 如果您将另一个用户成为项目所有者，您将自动从项目所有者变为
     管理员，而且您将无法再存档项目或为其他用户设置/删除管理员。
@@ -109,37 +111,92 @@ _管理员_ 拥有 _编辑_ 的所有权限，还可以修改大多数项目设�
 可搜素已有的用户(用搜素词显示所有用户的姓名、用户名，或电子邮件地址), 也可以电子邮件的方式邀请新用户(他们在通过邀请创建
 帐户后将自动添加到项目中).
 
+#### Manage Speakers
+
+Speakers are distinct from users. A speaker can be associate with audio recording of words. Use the + icon at the bottom
+of this section to add a speaker. Beside each added speaker are buttons to delete them, edit their name, and add a
+consent for use of their recorded voice. The supported methods for adding consent are to (1) record an audio file or (2)
+upload an image file.
+
+When project users are in Data Entry or Review Entries, a speaker icon will be available in the top bar. Users can click
+that button to see a list of all available speakers and select the current speaker, this speaker will be automatically
+associated with every audio recording made by the user until they log out or select a different speaker.
+
+The speaker associated with a recording can be seen by hovering over its play icon. To change a recording's speaker,
+right click the play icon (or press and hold on a touch screen to bring up a menu).
+
+When the project is exported from The Combine, speaker names (and ids) will be added as a pronunciation labels in the
+LIFT file. All consent files for project speakers will be added to a "consent" subfolder of the export (with speaker ids
+used for the file names).
+
 ### 导入/导出
 
-![导入/导出](../images/projectSettings4Port.zh.png){width=750 .center}
+![导入/导出](../images/projectSettings4Port.zh.png)
 
 #### 导入 {#import}
 
-!!! 笔记
+!!! note "笔记"
 
     目前，可导入的 LIFT 文件不可超过 100MB。
 
-!!! 笔记
+!!! note "笔记"
 
     目前，每个项目只能导入一个 LIFT 文件。
 
 #### 导出 {#export}
 
-单击 "导出 "按钮后，在数据准备下载时，用户可以到网站的其他部分浏览。 当导出内容可供下载时，应用程序栏中会出现一个下载图
-标。 默认文件名是项目名称加上下载时间。
+单击 "导出 "按钮后，在数据准备下载时，用户可以到网站的其他部分浏览。 When the data is gathered, the download will begin
+automatically. The filename is the project id.
 
-!!! 重要警告
+!!! warning "重要警告"
 
     导出一个数百 MB 大小的项目文件可能需要好几分钟时间。
 
-### 工作坊日程 {#workshop-schedule}
+!!! note "笔记"
 
-![工作坊日程](../images/projectSettings5Sched.zh.png){width=750 .center}
+    Project settings, project users, word flags, and custom semantic domain questions are not exported.
+
+#### Export pronunciation speakers
+
+When a project is exported from TheCombine and imported into FieldWorks, if a pronunciation has an associated speaker,
+the speaker name will be added as a pronunciation label. The consent files can be found in the zipped export, but will
+not be imported into FieldWorks.
+
+### 日程 {#schedule}
+
+![日程](../images/projectSettings5Sched.zh.png)
 
 只有项目所有人可以使用该功能，以便为快速文字工作坊设定时间。 点击第一个键可选择工作坊日期范围。 点击中间键可添加或移除具
 体日期。 点击最后的键可清除日程表。
 
 ![工作坊日程](../images/projectSchedule.zh.png){.center}
+
+### 语义域 {#semantic-domains}
+
+![语义域](../images/projectSettings6Doms.zh.png)
+
+In this settings tab, you can change the semantic domain language and manage custom semantic domains.
+
+*语义领域语言*决定[词条输入](./dataEntry.md)中表达语义领域标题和描述的语言。
+
+The _custom semantic domains_ supported at this time are the [established domains](https://semdom.org/) with `.0` added
+to the end of the id. For example, domain _4.2.6.2: Sports_ has two standard subdomains, _4.2.6.2.1: Football, Soccer_
+and _4.2.6.2.2: Basketball_. If another sport is dominant among the people group gathering their language, it can be
+added as domain _4.2.6.2.0_.
+
+For each custom domain, you can add a name, description, and questions to help with word collection in that domain.
+
+!!! note "笔记"
+
+    Custom semantic domains are included in the project export and can be imported into FieldWorks. However, the
+    questions are not included.
+
+Custom semantic domains will appear in the domain tree for the project, but will not be visible to other projects.
+
+!!! note "笔记"
+
+    Custom semantic domains are language-specific. If you add a custom domain in one language then change the semantic
+    domains language, that domain will not be visible unless you change back to its language.
 
 ## 项目统计数据
 
@@ -160,8 +217,8 @@ _管理员_ 拥有 _编辑_ 的所有权限，还可以修改大多数项目设�
 
 ### 每天字数
 
-线形图显示在 [工作坊时间表](#workshop-schedule)中指定的日子里收集到的词语。
+线形图显示在工作坊[日程](#schedule)中指定的日子里收集到的词语。
 
 ### 工作坊进度
 
-线型图显示了 [工作坊日程](#workshop-schedule)多天所累积的词以及对余下时间的预测。
+线型图显示了工作坊[日程](#schedule)多天所累积的词以及对余下时间的预测。
