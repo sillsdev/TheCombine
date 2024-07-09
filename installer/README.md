@@ -27,11 +27,36 @@ The installation script has been tested on _Ubuntu 22.04_ and _Wasta Linux 22.04
 2. Make sure WiFi is "on"; it does not need to be connected to a network.
 3. Update all of the existing software packages through your OS's _Software Updater_ application or by running:
 
-   ```bash
+   ```console
    sudo apt update && sudo apt upgrade -y
    ```
 
-   This step is optional but will make the installation process go more smoothly. Restart the PC if requested.
+   This step is optional but will make the installation process go more smoothly. Restart the PC.
+
+   _Note for Wasta Linux users_
+
+   _Wasta Linux_ includes Skype in its list of available software. Skype no longer supports installing it on Linux from
+   an `apt` software repository. As a result, when the installation script, or a user, updates the list of available
+   software, the process fails. To address this issue, you can either:
+
+   1. Remove the file directly:
+
+      ```console
+      sudo rm /etc/apt/sources.list.d/skype-stable.list
+      sudo apt update
+      ```
+
+      or
+
+   2. Deselect _Skype_ in the Software Updater settings
+
+      1. Open the _Software Settings_ application
+      2. Click the _Other Software_ tab
+      3. Uncheck the entry for Skype (`https://repo.skype.com/deb stable`)
+      4. Click the "Close" button
+      5. Click the "Reload" button in the dialog window that is displayed
+
+   Skype is available on _Wasta Linux_ or _Ubuntu_ as a Snap package.
 
 4. Download the installation script from
    [https://s3.amazonaws.com/software.thecombine.app/combine-installer.run](https://s3.amazonaws.com/software.thecombine.app/combine-installer.run)
