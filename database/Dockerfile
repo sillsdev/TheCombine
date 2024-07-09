@@ -1,4 +1,4 @@
-FROM mongo:7.0.12-jammy
+FROM mongo:7.0.12-jammy@sha256:afa36bca12295b5f9dae68a493c706113922bdab520e901bd5d6c9d7247a1d8d
 
 WORKDIR /
 

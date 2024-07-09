@@ -1,5 +1,5 @@
 # Docker multi-stage build
-FROM mcr.microsoft.com/dotnet/sdk:8.0.302-1-jammy-amd64 AS builder
+FROM mcr.microsoft.com/dotnet/sdk:8.0.302-1-jammy-amd64@sha256:9e23010bf3e1e837e0421f2f0cae3778f9c8fb4afaef331cc26ac15969494020 AS builder
 WORKDIR /app
 
 # Copy csproj and restore (fetch dependencies) as distinct layers.
@@ -11,7 +11,7 @@ COPY . ./
 RUN dotnet publish -c Release -o build
 
 # Build runtime image.
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.6-jammy-amd64
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.6-jammy-amd64@sha256:508870ea8c866710365cef2ba45c25caa172463756e8d7a94733ba49501a6a23
 
 ENV ASPNETCORE_URLS=http://+:5000
 ENV COMBINE_IS_IN_CONTAINER=1
