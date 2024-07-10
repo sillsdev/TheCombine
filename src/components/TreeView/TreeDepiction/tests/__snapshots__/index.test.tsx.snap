@@ -32,7 +32,7 @@ Array [
           "width": "95%",
         }
       }
-      tabIndex={0}
+      tabIndex={-1}
       type="button"
     >
       <div>
@@ -680,7 +680,7 @@ Array [
               "width": "95%",
             }
           }
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <div>
@@ -770,7 +770,7 @@ Array [
               "width": "95%",
             }
           }
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <div>
@@ -860,7 +860,7 @@ Array [
               "width": "95%",
             }
           }
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <div>
@@ -936,7 +936,7 @@ Array [
           "width": "95%",
         }
       }
-      tabIndex={0}
+      tabIndex={-1}
       type="button"
     >
       <div>
@@ -1039,7 +1039,7 @@ Array [
               "width": "95%",
             }
           }
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <div
@@ -1310,7 +1310,7 @@ Array [
               "width": "95%",
             }
           }
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <div>
@@ -1386,7 +1386,7 @@ Array [
           "width": "95%",
         }
       }
-      tabIndex={0}
+      tabIndex={-1}
       type="button"
     >
       <div>
@@ -1684,7 +1684,7 @@ Array [
               "width": "95%",
             }
           }
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <div>
@@ -1760,7 +1760,7 @@ Array [
           "width": "95%",
         }
       }
-      tabIndex={0}
+      tabIndex={-1}
       type="button"
     >
       <div>
@@ -1936,7 +1936,7 @@ Array [
               "width": "95%",
             }
           }
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <div
@@ -2662,7 +2662,7 @@ Array [
               "width": "95%",
             }
           }
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <div>
@@ -2752,7 +2752,7 @@ Array [
               "width": "95%",
             }
           }
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <div>
@@ -2842,7 +2842,7 @@ Array [
               "width": "95%",
             }
           }
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <div>
@@ -2932,7 +2932,7 @@ Array [
               "width": "95%",
             }
           }
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <div>
@@ -3008,7 +3008,7 @@ Array [
           "width": "95%",
         }
       }
-      tabIndex={0}
+      tabIndex={-1}
       type="button"
     >
       <div>
@@ -3197,7 +3197,7 @@ Array [
           "width": "95%",
         }
       }
-      tabIndex={0}
+      tabIndex={-1}
       type="button"
     >
       <div>
@@ -3300,7 +3300,7 @@ Array [
               "width": "95%",
             }
           }
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <div
@@ -3449,7 +3449,7 @@ Array [
               "width": "95%",
             }
           }
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <div
@@ -3999,7 +3999,7 @@ Array [
               "width": "95%",
             }
           }
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <div>
@@ -4089,7 +4089,7 @@ Array [
               "width": "95%",
             }
           }
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <div>
@@ -4179,7 +4179,7 @@ Array [
               "width": "95%",
             }
           }
-          tabIndex={0}
+          tabIndex={-1}
           type="button"
         >
           <div>
