@@ -6,10 +6,6 @@
 [![Backend Actions Status][github-actions-backend-badge]][github-actions-backend]
 [![Backend Coverage][backend-codecov-badge]][codecov-backend]
 
-[![CodeQL Actions Status][github-actions-codeql-badge]][github-actions-codeql]
-[![Python Actions Status][github-actions-python-badge]][github-actions-python]
-[![OSSF Scorecard][ossf-scorecard-badge]][ossf-scorecard]
-
 [![GitHub release][github-release-badge]][github-version] [![GitHub version][github-version-badge]][github-version]
 [![GitHub][github-license-badge]][github-license] [![GitHub contributors][github-contribs-badge]][github-contribs]
 
@@ -23,15 +19,9 @@
 [codecov-backend]: https://app.codecov.io/gh/sillsdev/TheCombine/tree/master/Backend
 [github-actions-backend-badge]: https://github.com/sillsdev/TheCombine/workflows/backend/badge.svg
 [backend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=backend
-[github-actions-python-badge]: https://github.com/sillsdev/TheCombine/workflows/python/badge.svg
-[github-actions-codeql-badge]: https://github.com/sillsdev/TheCombine/workflows/CodeQL/badge.svg
-[ossf-scorecard-badge]: https://api.scorecard.dev/projects/github.com/sillsdev/TheCombine/badge
 [localization-ui-badge]: https://img.shields.io/badge/User%20Interface-Ar%20En%20Es%20Fr%20Pt%20Zh-blue
 [github-actions-frontend]: https://github.com/sillsdev/TheCombine/actions/workflows/frontend.yml
 [github-actions-backend]: https://github.com/sillsdev/TheCombine/actions/workflows/backend.yml
-[github-actions-codeql]: https://github.com/sillsdev/TheCombine/actions/workflows/codeql.yml
-[github-actions-python]: https://github.com/sillsdev/TheCombine/actions/workflows/python.yml
-[ossf-scorecard]: https://scorecard.dev/viewer/?uri=github.com/sillsdev/TheCombine
 [localization-sd-badge]:
   https://img.shields.io/badge/Semantic%20Domains-Ar%20En%20Es%20Fr%20Hi%20Id%20Ml%20My%20Pt%20Ru%20Sw%20Zh-blue
 [localization-ug-badge]: https://img.shields.io/badge/User%20Guide-En%20Es%20Zh-blue
@@ -277,7 +267,9 @@ python -m piptools compile --upgrade requirements.in
 
 ### Load Semantic Domains
 
-Data Entry will not work in The Combine unless the semantic domains have been loaded into the database. Follow the instuctions in [Import Semantic Domains](#import-semantic-domains) below to import the domains from at least one of the semantic domains XML files (which each contain domain data in English and one other language.)
+Data Entry will not work in The Combine unless the semantic domains have been loaded into the database. Follow the
+instuctions in [Import Semantic Domains](#import-semantic-domains) below to import the domains from at least one of the
+semantic domains XML files (which each contain domain data in English and one other language.)
 
 ## Available Scripts
 
