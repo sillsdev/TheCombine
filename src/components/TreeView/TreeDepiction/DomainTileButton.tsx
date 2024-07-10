@@ -105,6 +105,7 @@ export default function DomainTileButton(
         margin: "2.5%",
         padding: "5px",
       }}
+      tabIndex={-1}
       variant={"outlined"}
     >
       <DomainTile {...props} />
