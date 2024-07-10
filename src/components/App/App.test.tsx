@@ -1,3 +1,4 @@
+import { ThemeProvider } from "@mui/material/styles";
 import "jest-canvas-mock";
 import { Provider } from "react-redux";
 import { act, create } from "react-test-renderer";
@@ -6,6 +7,7 @@ import thunk from "redux-thunk";
 
 import { defaultState } from "components/App/DefaultState";
 import App from "components/App/component";
+import theme from "types/theme";
 
 jest.mock(
   "@matt-block/react-recaptcha-v2",
@@ -28,9 +30,11 @@ describe("App", () => {
   it("renders without crashing", async () => {
     await act(async () => {
       create(
-        <Provider store={mockStore}>
-          <App />
-        </Provider>
+        <ThemeProvider theme={theme}>
+          <Provider store={mockStore}>
+            <App />
+          </Provider>
+        </ThemeProvider>
       );
     });
   });
