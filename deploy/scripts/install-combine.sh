@@ -74,11 +74,10 @@ install-kubernetes () {
   cd ${DEPLOY_DIR}/ansible
 
   if [ -d "${DEPLOY_DIR}/airgap-images" ] ; then
-    AIRGAP_INSTALL="true"
+    ansible-playbook playbook_desktop_setup.yaml -K -e k8s_user=`whoami` -e install_airgap_images=true
   else
-    AIRGAP_INSTALL="false"
+    ansible-playbook playbook_desktop_setup.yaml -K -e k8s_user=`whoami`
   fi
-  ansible-playbook playbook_desktop_setup.yaml -K -e k8s_user=`whoami` -e install_airgap_images=${AIRGAP_INSTALL}
 }
 
 # Set the KUBECONFIG environment variable so that the cluster can
@@ -266,7 +265,7 @@ while [ "$STATE" != "Done" ] ; do
       next-state "Base-charts"
       if [ -f /var/run/reboot-required ] ; then
         echo -e "***** Restart required *****\n"
-        echo -e "Rerun combine-installer.run after the system has been restarted.\n"
+        echo -e "Rerun combine installer after the system has been restarted.\n"
         read -p "Restart now? (Y/n) " RESTART
         if [[ -z $RESTART || $RESTART =~ ^[yY].* ]] ; then
           sudo reboot
