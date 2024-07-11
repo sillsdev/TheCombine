@@ -21,8 +21,8 @@ cert-manager:
     name: cert-manager
     reference: jetstack/cert-manager
     namespace: cert-manager
-    version: v1.15.0
-    wait: false
+    version: v1.15.1
+    wait: true
     override:
       crds.enabled: true
 
