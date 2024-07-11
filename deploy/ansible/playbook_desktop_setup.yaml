@@ -40,6 +40,11 @@
       import_role:
         name: k8s_install
 
+    - name: Install Helm
+      import_role:
+        name: helm_install
+      when: not install_airgap_images
+
     - name: Setup Support Tool
       import_role:
         name: support_tools
