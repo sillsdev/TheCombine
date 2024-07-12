@@ -198,19 +198,26 @@ In this settings tab, you can change the semantic domain language and manage cus
 El _idioma de los_ dominios semánticos controla el idioma en el que se muestran los títulos y descripciones de los
 dominios semánticos en [Entrada de datos](./dataEntry.md).
 
-The _custom semantic domains_ supported at this time are the [established domains](https://semdom.org/) with `.0` added
-to the end of the id. For example, domain _4.2.6.2: Sports_ has two standard subdomains, _4.2.6.2.1: Football, Soccer_
-and _4.2.6.2.2: Basketball_. If another sport is dominant among the people group gathering their language, it can be
-added as domain _4.2.6.2.0_.
+At this time, The Combine only supports _custom semantic domains_ that extend the
+[established domains](https://semdom.org/). For each established domain, one custom subdomain can be created, which will
+have `.0` added to the end of the domain id. For example, domain _6.2.1.1: Growing Grain_ has three standard subdomains,
+for Rice, Wheat, and Maize. If another grain, such as Barley, is dominant among the people group gathering their
+language, it can be added as domain _6.2.1.1.0_.
 
-For each custom domain, you can add a name, description, and questions to help with word collection in that domain.
+![Add Custom Domain](../images/projectSettingsDomsCustomAdd.png){.center}
+
+For each custom domain, you can add a description and questions to help with word collection in that domain.
+
+![Edit Custom Domain](../images/projectSettingsDomsCustomEdit.png){.center}
 
 !!! note "Nota"
 
     Custom semantic domains are included in the project export and can be imported into FieldWorks. However, the
     questions are not included.
 
-Custom semantic domains will appear in the domain tree for the project, but will not be visible to other projects.
+Custom semantic domains will be available to all project users doing Data Entry.
+
+![See Custom Domain](../images/projectSettingsDomsCustomSee.png){.center}
 
 !!! note "Nota"
 
