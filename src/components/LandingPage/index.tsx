@@ -28,7 +28,7 @@ const heightBetweenBars =
   parseInt(theme.spacing(1));
 
 export default function LandingPage(): ReactElement {
-  const isSmUp = useMediaQuery<Theme>((t) => t.breakpoints.up("sm"));
+  const isXs = useMediaQuery<Theme>((t) => t.breakpoints.only("xs"));
   const navigate = useNavigate();
   useEffect(() => {
     // If there is an AnnouncementBanner and somebody enters the URL for
@@ -39,35 +39,21 @@ export default function LandingPage(): ReactElement {
   return (
     <>
       <TopBar />
-      <Grid container>
-        {isSmUp ? (
-          <>
-            <Grid item sm>
-              <Box style={{ maxHeight: heightBetweenBars, overflow: "auto" }}>
-                <Body />
-              </Box>
-            </Grid>
-            <Grid item sm="auto">
-              <LandingButtons />
-            </Grid>
-          </>
-        ) : (
-          <>
-            <Grid item xs={12}>
-              <LandingButtons top />
-            </Grid>
-            <Grid item xs={12}>
-              <Box
-                style={{
-                  maxHeight: heightBetweenBars - horizontalButtonsHeight,
-                  overflow: "auto",
-                }}
-              >
-                <Body />
-              </Box>
-            </Grid>
-          </>
-        )}
+      <Grid container direction={isXs ? "column" : "row-reverse"}>
+        <Grid item xs="auto">
+          <LandingButtons top={isXs} />
+        </Grid>
+        <Grid item xs>
+          <Box
+            style={{
+              maxHeight:
+                heightBetweenBars - (isXs ? horizontalButtonsHeight : 0),
+              overflow: "auto",
+            }}
+          >
+            <Body />
+          </Box>
+        </Grid>
       </Grid>
       <BottomBar />
     </>
