@@ -63,6 +63,14 @@ export default class Recorder {
 
   private onError(err: Error): void {
     console.error(err);
-    this.toast("Error getting audio stream!");
+    navigator.permissions
+      .query({ name: "microphone" as PermissionName })
+      .then((result) => {
+        this.toast(
+          result.state === "granted"
+            ? "Error getting audio stream!"
+            : "No microphone access."
+        );
+      });
   }
 }
