@@ -30,12 +30,17 @@ const heightBetweenBars =
 export default function LandingPage(): ReactElement {
   const isXs = useMediaQuery<Theme>((t) => t.breakpoints.only("xs"));
   const navigate = useNavigate();
+
   useEffect(() => {
     // If there is an AnnouncementBanner and somebody enters the URL for
     // the LandingPage when displaying page without an AppBar, this
     // prevents banner misalignment.
     navigate(Path.Root);
   }, [navigate]);
+
+  const maxBodyHeight =
+    heightBetweenBars - (isXs ? horizontalButtonsHeight : 0);
+
   return (
     <>
       <TopBar />
@@ -44,13 +49,7 @@ export default function LandingPage(): ReactElement {
           <LandingButtons top={isXs} />
         </Grid>
         <Grid item xs>
-          <Box
-            style={{
-              maxHeight:
-                heightBetweenBars - (isXs ? horizontalButtonsHeight : 0),
-              overflow: "auto",
-            }}
-          >
+          <Box style={{ maxHeight: maxBodyHeight, overflow: "auto" }}>
             <Body />
           </Box>
         </Grid>
