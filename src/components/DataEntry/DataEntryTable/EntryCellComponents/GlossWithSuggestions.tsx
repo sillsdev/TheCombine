@@ -78,7 +78,11 @@ export default function GlossWithSuggestions(
         />
       )}
       renderOption={(liProps, option, { selected }) => {
-        const words = option.split(" ");
+        // Split by non-letter/-mark/-number characters, as done in spellChecker.ts
+        const words = option.split(/[^\p{L}\p{M}\p{N}]/u);
+        // Find the last non-letter/-mark/-number character
+        // It won't be after the last word--all those were trimmed by the spell checker
+        const sep = option.match(/[^\p{L}\p{M}\p{N}]/gu)?.pop();
         return (
           <LiWithFont
             {...liProps}
@@ -86,7 +90,7 @@ export default function GlossWithSuggestions(
             aria-selected={selected}
             lang={props.analysisLang.bcp47}
           >
-            {words.length > 1 ? `... ${words[words.length - 1]}` : option}
+            {words.length > 1 ? `...${sep}${words[words.length - 1]}` : option}
           </LiWithFont>
         );
       }}
