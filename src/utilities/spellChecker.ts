@@ -90,6 +90,18 @@ export default class SpellChecker {
     return { allButFinal, final };
   }
 
+  /** If the given string, split by separator (non-letter/-mark/-number) characters,
+   * is multiple words, replace all but the last word with ellipses (...).
+   * (Assumes all end-of-string separator characters have been removed,
+   * which is the case for suggestions from this SpellChecker.) */
+  public static replaceAllButLastWordWithEllipses(word: string): string {
+    // Split by non-letter/-mark/-number characters
+    const words = word.split(/[^\p{L}\p{M}\p{N}]/u).filter((w) => w);
+    // Find the last non-letter/-mark/-number character
+    const finalSep = word.match(/[^\p{L}\p{M}\p{N}]/gu)?.pop();
+    return words.length > 1 ? `...${finalSep}${words[words.length - 1]}` : word;
+  }
+
   // If the word string is multiple words, separate and
   // find spelling suggestions for the last word.
   getSpellingSuggestions(word: string): string[] {
