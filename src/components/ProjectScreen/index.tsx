@@ -18,13 +18,13 @@ export default function ProjectScreen(): ReactElement {
     dispatch(resetTree());
   }, [dispatch]);
 
-  return isXs ? (
-    <Stack alignItems="center" spacing={2}>
-      <ChooseProject />
-      <CreateProject />
-    </Stack>
-  ) : (
-    <Stack direction="row" justifyContent="center" spacing={2}>
+  return (
+    <Stack
+      {...(isXs
+        ? { alignItems: "center" }
+        : { direction: "row", justifyContent: "center" })}
+      spacing={2}
+    >
       <ChooseProject />
       <CreateProject />
     </Stack>
