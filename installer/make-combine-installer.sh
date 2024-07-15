@@ -42,7 +42,7 @@ fi
 cd ../deploy
 
 if [[ $NET_INSTALL == 0 ]] ; then
-  if [ ! -d venv ] ; then
+  if [ ! -f venv/bin/activate ] ; then
     # virtual environment does not exist - create it
     python3 -m venv venv
   fi
