@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { act } from "react";
 
 import MockBypassLoadableButton from "components/Buttons/LoadingDoneButton";
+import MockTurnstile from "components/Login/tests/MockTurnstile";
 import ResetRequest, {
   PasswordRequestIds,
 } from "components/PasswordReset/Request";
@@ -18,6 +19,7 @@ jest.mock("backend", () => ({
 jest.mock("components/Buttons", () => ({
   LoadingDoneButton: MockBypassLoadableButton,
 }));
+jest.mock("components/Login/Turnstile", () => MockTurnstile);
 
 const mockResetPasswordRequest = jest.fn();
 

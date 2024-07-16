@@ -11,19 +11,13 @@ import configureMockStore from "redux-mock-store";
 import { defaultState as loginState } from "components/Login/Redux/LoginReduxTypes";
 import Signup, { SignupId } from "components/Login/Signup";
 
-jest.mock(
-  "@matt-block/react-recaptcha-v2",
-  () =>
-    function MockRecaptcha() {
-      return <div id="mockRecaptcha">Recaptcha</div>;
-    }
-);
 jest.mock("backend", () => ({
   getBannerText: () => Promise.resolve(""),
 }));
 jest.mock("components/Login/Redux/LoginActions", () => ({
   asyncSignUp: (...args: any[]) => mockAsyncSignUp(...args),
 }));
+jest.mock("components/Login/Turnstile", () => "div");
 jest.mock("router/browserRouter");
 jest.mock("rootRedux/hooks", () => {
   return {

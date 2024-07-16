@@ -75,6 +75,9 @@
     "resetDone": "If you have correctly entered your email or username, a password reset link has been sent to your email address.",
     "backToLogin": "Back To Login"
   },
+  "turnstile": {
+    "error": "Cloudflare Turnstile verification failed or expired. Please refresh the page to try again."
+  },
   "speakerMenu": {
     "none": "No speakers in the project. To attach a speaker to audio recordings, please talk to a project administrator.",
     "other": "[None of the above]"

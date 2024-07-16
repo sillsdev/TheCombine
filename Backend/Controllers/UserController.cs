@@ -42,11 +42,12 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> ValidateTurnstile(string token)
         {
             var secret = Environment.GetEnvironmentVariable("TURNSTILE_SECRET_KEY");
-            var httpContent = new FormUrlEncodedContent(new KeyValuePair<string, string>[]{
-               new ("response", token),
-               //new ("secret", secret ?? "1x0000000000000000000000000000000AA"), // pass
-               new ("secret", secret ?? "2x0000000000000000000000000000000AA"), // fail
-               //new ("secret", secret ?? "3x0000000000000000000000000000000AA"), // token spent
+            var httpContent = new FormUrlEncodedContent(new Dictionary<string, string>{
+               {"response", token},
+               // https://developers.cloudflare.com/turnstile/troubleshooting/testing/
+               {"secret", secret ?? "1x0000000000000000000000000000000AA"}, // pass
+               //{"secret", secret ?? "2x0000000000000000000000000000000AA"}, // fail
+               //{"secret", secret ?? "3x0000000000000000000000000000000AA"}, // token spent
             });
             using var result = await new HttpClient().PostAsync(TurnstileVerifyUrl, httpContent);
             var contentString = await result.Content.ReadAsStringAsync();
