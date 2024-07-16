@@ -10,7 +10,7 @@
     "database": "mongod --dbpath=./mongo_database",
     "drop-database": "tsc scripts/dropDB.ts && node scripts/dropDB.js",
     "eject": "react-scripts eject",
-    "find-circular-deps": "madge -c src/index.tsx",
+    "find-circular-deps": "npx -y madge -c src/index.tsx",
     "fmt-backend": "      dotnet-format         && dotnet-format         Backend.Tests",
     "fmt-backend-check": "dotnet-format --check && dotnet-format --check Backend.Tests",
     "fmt-frontend": "      prettier --write \"./{.github,.vscode,certmgr,deploy,docs,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
@@ -34,7 +34,7 @@
     "test-frontend:coverage": "react-scripts               test --coverage --watchAll=false",
     "test-frontend:debug": "   react-scripts --inspect-brk test --runInBand --no-cache",
     "test:ci": "dotnet test Backend.Tests/Backend.Tests.csproj && CI=true react-scripts test --ci --all --testResultsProcessor jest-teamcity-reporter",
-    "wordlist": "hunspell-reader words"
+    "wordlist": "npx -y hunspell-reader words"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -113,10 +113,8 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.3.0",
     "eslint-plugin-unused-imports": "^3.1.0",
-    "hunspell-reader": "^8.7.0",
     "jest-canvas-mock": "^2.5.2",
     "license-checker-rseidelsohn": "^4.3.0",
-    "madge": "^6.1.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.0.3",
     "react-scripts": "^5.0.1",
