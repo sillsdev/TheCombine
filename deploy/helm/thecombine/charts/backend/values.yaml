@@ -21,6 +21,7 @@ global:
   combineJwtSecretKey: "Override"
   combineSmtpUsername: "Override"
   combineSmtpPassword: "Override"
+  combineTurnstileSecretKey: "Override"
   # Values for pulling container image from image registry
   imagePullPolicy: "Override"
   imageTag: "latest"

@@ -156,6 +156,8 @@ charts:
         env_var: COMBINE_SMTP_USERNAME
       - config_item: combineSmtpPassword
         env_var: COMBINE_SMTP_PASSWORD
+      - config_item: combineTurnstileSecretKey
+        env_var: COMBINE_TURNSTILE_SECRET_KEY
   create-admin-user:
     namespace: thecombine
     install_langs: false

@@ -9,11 +9,13 @@ set-combine-env () {
     # Generate JWT Secret Key
     COMBINE_JWT_SECRET_KEY=`LC_ALL=C tr -dc 'A-Za-z0-9*\-_@!' </dev/urandom | head -c 64; echo`
     # Collect values from user
+    read -p "Enter COMBINE_TURNSTILE_SECRET_KEY: " COMBINE_TURNSTILE_SECRET_KEY
     read -p "Enter AWS_ACCESS_KEY_ID: " AWS_ACCESS_KEY_ID
     read -p "Enter AWS_SECRET_ACCESS_KEY: " AWS_SECRET_ACCESS_KEY
     # write collected values and static values to config file
     cat <<.EOF > ${CONFIG_DIR}/env
     export COMBINE_JWT_SECRET_KEY="${COMBINE_JWT_SECRET_KEY}"
+    export COMBINE_TURNSTILE_SECRET_KEY="${COMBINE_TURNSTILE_SECRET_KEY}"
     export AWS_DEFAULT_REGION="us-east-1"
     export AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}"
     export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
