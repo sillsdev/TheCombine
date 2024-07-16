@@ -13,3 +13,6 @@ jest
   .spyOn(window.HTMLMediaElement.prototype, "pause")
   .mockImplementation(() => {});
 jest.mock("components/Pronunciations/Recorder");
+
+// Mock the browser router to short circuit a circular dependency
+jest.mock("router/browserRouter", () => ({ navigate: jest.fn() }));
