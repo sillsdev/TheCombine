@@ -17,7 +17,6 @@ jest.mock("components/Login/Redux/LoginActions", () => ({
   asyncLogIn: (...args: any[]) => mockAsyncLogIn(...args),
 }));
 jest.mock("components/Login/Turnstile", () => "div");
-jest.mock("router/browserRouter");
 jest.mock("rootRedux/hooks", () => {
   return {
     ...jest.requireActual("rootRedux/hooks"),
