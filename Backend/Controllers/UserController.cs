@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Net.Http;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -22,6 +24,8 @@ namespace BackendFramework.Controllers
         private readonly IPasswordResetService _passwordResetService;
         private readonly IPermissionService _permissionService;
 
+        private const string TurnstileVerifyUrl = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+
         public UserController(IUserRepository userRepo, IPermissionService permissionService,
             IEmailService emailService, IPasswordResetService passwordResetService)
         {
@@ -30,6 +34,26 @@ namespace BackendFramework.Controllers
             _passwordResetService = passwordResetService;
             _permissionService = permissionService;
         }
+
+        /// <summary> Validates a Cloudflare Turnstile token </summary>
+        [AllowAnonymous]
+        [HttpGet("turnstile/{token}", Name = "ValidateTurnstile")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> ValidateTurnstile(string token)
+        {
+            var secret = Environment.GetEnvironmentVariable("TURNSTILE_SECRET_KEY");
+            var httpContent = new FormUrlEncodedContent(new KeyValuePair<string, string>[]{
+               new ("response", token),
+               //new ("secret", secret ?? "1x0000000000000000000000000000000AA"), // pass
+               new ("secret", secret ?? "2x0000000000000000000000000000000AA"), // fail
+               //new ("secret", secret ?? "3x0000000000000000000000000000000AA"), // token spent
+            });
+            using var result = await new HttpClient().PostAsync(TurnstileVerifyUrl, httpContent);
+            var contentString = await result.Content.ReadAsStringAsync();
+            Console.WriteLine($"content: {contentString}");
+            return contentString.Contains("\"success\":true") ? Ok() : BadRequest();
+        }
+
 
         /// <summary> Sends a password reset request </summary>
         [AllowAnonymous]

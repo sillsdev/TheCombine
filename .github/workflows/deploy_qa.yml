@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - turnstile
 
 permissions:
   contents: read
@@ -94,7 +95,7 @@ jobs:
   deploy_update:
     needs: build
     # Only push to the QA server when built on the master branch
-    if: ${{ github.ref_name == 'master' }}
+    #if: ${{ github.ref_name == 'master' }}
     runs-on: [self-hosted, thecombine]
     steps:
       - name: Harden Runner

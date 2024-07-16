@@ -45,6 +45,7 @@ const config = new Api.Configuration(config_parameters);
  * and the blanket error pop ups should be suppressed.*/
 const whiteListedErrorUrls = [
   "users/authenticate",
+  "users/turnstile",
   "/speakers/create/",
   "/speakers/update/",
 ];
@@ -610,6 +611,13 @@ export async function getProgressEstimationLineChartRoot(
 }
 
 /* UserController.cs */
+
+export async function validateTurnstile(token: string): Promise<boolean> {
+  return await userApi
+    .validateTurnstile({ token })
+    .then(() => true)
+    .catch(() => false);
+}
 
 export async function resetPasswordRequest(
   emailOrUsername: string

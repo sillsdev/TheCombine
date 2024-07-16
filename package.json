@@ -40,6 +40,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@loadable/component": "^5.16.3",
+    "@marsidev/react-turnstile": "^0.7.2",
     "@matt-block/react-recaptcha-v2": "^2.0.1",
     "@microsoft/signalr": "^8.0.0",
     "@mui/icons-material": "^5.15.7",

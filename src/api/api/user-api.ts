@@ -606,6 +606,51 @@ export const UserApiAxiosParamCreator = function (
         options: localVarRequestOptions,
       };
     },
+    /**
+     *
+     * @param {string} token
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    validateTurnstile: async (
+      token: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'token' is not null or undefined
+      assertParamExists("validateTurnstile", "token", token);
+      const localVarPath = `/v1/users/turnstile/{token}`.replace(
+        `{${"token"}}`,
+        encodeURIComponent(String(token))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
   };
 };
 
@@ -884,6 +929,27 @@ export const UserApiFp = function (configuration?: Configuration) {
         configuration
       );
     },
+    /**
+     *
+     * @param {string} token
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async validateTurnstile(
+      token: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.validateTurnstile(token, options);
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
   };
 };
 
@@ -1039,6 +1105,17 @@ export const UserApiFactory = function (
         .validateResetToken(token, options)
         .then((request) => request(axios, basePath));
     },
+    /**
+     *
+     * @param {string} token
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    validateTurnstile(token: string, options?: any): AxiosPromise<void> {
+      return localVarFp
+        .validateTurnstile(token, options)
+        .then((request) => request(axios, basePath));
+    },
   };
 };
 
@@ -1185,6 +1262,20 @@ export interface UserApiValidateResetTokenRequest {
    *
    * @type {string}
    * @memberof UserApiValidateResetToken
+   */
+  readonly token: string;
+}
+
+/**
+ * Request parameters for validateTurnstile operation in UserApi.
+ * @export
+ * @interface UserApiValidateTurnstileRequest
+ */
+export interface UserApiValidateTurnstileRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof UserApiValidateTurnstile
    */
   readonly token: string;
 }
@@ -1374,6 +1465,22 @@ export class UserApi extends BaseAPI {
   ) {
     return UserApiFp(this.configuration)
       .validateResetToken(requestParameters.token, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {UserApiValidateTurnstileRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public validateTurnstile(
+    requestParameters: UserApiValidateTurnstileRequest,
+    options?: any
+  ) {
+    return UserApiFp(this.configuration)
+      .validateTurnstile(requestParameters.token, options)
       .then((request) => request(this.axios, this.basePath));
   }
 }

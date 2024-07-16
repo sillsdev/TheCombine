@@ -21,9 +21,9 @@ import { useTranslation } from "react-i18next";
 import { BannerType } from "api/models";
 import { getBannerText } from "backend";
 import { LoadingButton } from "components/Buttons";
-import Captcha from "components/Login/Captcha";
 import { asyncLogIn } from "components/Login/Redux/LoginActions";
 import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";
+import Turnstile from "components/Login/Turnstile";
 import { reset } from "rootRedux/actions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
@@ -153,10 +153,7 @@ export default function Login(): ReactElement {
               </Typography>
             )}
 
-            <Captcha
-              onExpire={() => setIsVerified(false)}
-              onSuccess={() => setIsVerified(true)}
-            />
+            <Turnstile setSuccess={setIsVerified} />
 
             {/* User Guide, Sign Up, and Log In buttons */}
             <Grid container justifyContent="space-between">

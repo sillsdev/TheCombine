@@ -5,7 +5,9 @@ import { useNavigate } from "react-router-dom";
 
 import { resetPasswordRequest } from "backend";
 import { LoadingDoneButton } from "components/Buttons";
+import Turnstile from "components/Login/Turnstile";
 import { Path } from "types/path";
+import { RuntimeConfig } from "types/runtimeConfig";
 
 export enum PasswordRequestIds {
   ButtonLogin = "password-request-login",
@@ -18,6 +20,9 @@ export default function ResetRequest(): ReactElement {
   const [isDone, setIsDone] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isVerified, setIsVerified] = useState(
+    !RuntimeConfig.getInstance().captchaRequired()
+  );
 
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -81,6 +86,9 @@ export default function ResetRequest(): ReactElement {
                 />
               </Grid>
               <Grid item>
+                <Turnstile setSuccess={setIsVerified} />
+              </Grid>
+              <Grid item>
                 <LoadingDoneButton
                   buttonProps={{
                     color: "primary",
@@ -89,7 +97,7 @@ export default function ResetRequest(): ReactElement {
                     onClick: () => onSubmit,
                     variant: "contained",
                   }}
-                  disabled={!emailOrUsername}
+                  disabled={!emailOrUsername || !isVerified}
                   loading={isLoading}
                 >
                   {t("passwordReset.submit")}
