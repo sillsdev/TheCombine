@@ -11,3 +11,4 @@ data:
   COMBINE_SMTP_FROM: {{ .Values.combineSmtpFrom | quote }}
   COMBINE_SMTP_PORT: {{ .Values.combineSmtpPort | quote }}
   COMBINE_SMTP_SERVER: {{ .Values.combineSmtpServer | quote }}
+  TURNSTILE_VERIFY_URL: {{ .Values.turnstileVerifyUrl | quote }}

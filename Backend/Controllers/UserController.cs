@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Net.Http;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -23,16 +21,16 @@ namespace BackendFramework.Controllers
         private readonly IEmailService _emailService;
         private readonly IPasswordResetService _passwordResetService;
         private readonly IPermissionService _permissionService;
-
-        private const string TurnstileVerifyUrl = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+        private readonly ITurnstileService _turnstileService;
 
         public UserController(IUserRepository userRepo, IPermissionService permissionService,
-            IEmailService emailService, IPasswordResetService passwordResetService)
+            IEmailService emailService, IPasswordResetService passwordResetService, ITurnstileService turnstileService)
         {
             _userRepo = userRepo;
             _emailService = emailService;
             _passwordResetService = passwordResetService;
             _permissionService = permissionService;
+            _turnstileService = turnstileService;
         }
 
         /// <summary> Validates a Cloudflare Turnstile token </summary>
@@ -41,20 +39,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> ValidateTurnstile(string token)
         {
-            var secret = Environment.GetEnvironmentVariable("TURNSTILE_SECRET_KEY");
-            var httpContent = new FormUrlEncodedContent(new Dictionary<string, string>{
-               {"response", token},
-               // https://developers.cloudflare.com/turnstile/troubleshooting/testing/
-               {"secret", secret ?? "1x0000000000000000000000000000000AA"}, // pass
-               //{"secret", secret ?? "2x0000000000000000000000000000000AA"}, // fail
-               //{"secret", secret ?? "3x0000000000000000000000000000000AA"}, // token spent
-            });
-            using var result = await new HttpClient().PostAsync(TurnstileVerifyUrl, httpContent);
-            var contentString = await result.Content.ReadAsStringAsync();
-            Console.WriteLine($"content: {contentString}");
-            return contentString.Contains("\"success\":true") ? Ok() : BadRequest();
+            return await _turnstileService.VerifyToken(token) ? Ok() : BadRequest();
         }
-
 
         /// <summary> Sends a password reset request </summary>
         [AllowAnonymous]

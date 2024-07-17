@@ -69,11 +69,16 @@ spec:
                 secretKeyRef:
                   key: COMBINE_SMTP_USERNAME
                   name: env-backend-secrets
-            - name: COMBINE_TURNSTILE_SECRET_KEY
+            - name: TURNSTILE_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  key: COMBINE_TURNSTILE_SECRET_KEY
+                  key: TURNSTILE_SECRET_KEY
                   name: env-backend-secrets
+            - name: TURNSTILE_VERIFY_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: TURNSTILE_VERIFY_URL
+                  name: env-backend
           ports:
             - containerPort: 5000
           resources:

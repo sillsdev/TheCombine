@@ -26,7 +26,6 @@ global:
   combineJwtSecretKey: "Override"
   combineSmtpUsername: "Override"
   combineSmtpPassword: "Override"
-  combineTurnstileSecretKey: "Override"
   offline: false
   # Local Storage for fonts
   fontStorageAccessMode: "ReadWriteOnce"
@@ -39,6 +38,8 @@ global:
   pullSecretName: aws-login-credentials
   # Update strategy should be "Recreate" or "Rolling Update"
   updateStrategy: Recreate
+  # Cloudflare Turnstile verification
+  turnstileSecretKey: "Override"
 
   includeResourceLimits: false
 

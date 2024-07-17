@@ -48,6 +48,8 @@ namespace BackendFramework
             public string? SmtpAddress { get; set; }
             public string? SmtpFrom { get; set; }
             public int PassResetExpireTime { get; set; }
+            public string? TurnstileSecretKey { get; set; }
+            public string? TurnstileVerifyUrl { get; set; }
 
             public Settings()
             {
@@ -179,12 +181,20 @@ namespace BackendFramework
                         null,
                         emailServiceFailureMessage);
 
-                    // Should we add a COMBINE_TURNSTILE_SECRET_KEY check?
-
                     options.PassResetExpireTime = int.Parse(CheckedEnvironmentVariable(
                         "COMBINE_PASSWORD_RESET_EXPIRE_TIME",
                         Settings.DefaultPasswordResetExpireTime.ToString(),
                         $"Using default value: {Settings.DefaultPasswordResetExpireTime}")!);
+
+                    const string turnstileFailureMessage = "Turnstile verification will not be available.";
+                    options.TurnstileSecretKey = CheckedEnvironmentVariable(
+                        "TURNSTILE_SECRET_KEY",
+                        null,
+                        turnstileFailureMessage);
+                    options.TurnstileVerifyUrl = CheckedEnvironmentVariable(
+                        "TURNSTILE_VERIFY_URL",
+                        null,
+                        turnstileFailureMessage);
                 });
 
             // Register concrete types for dependency injection
@@ -230,6 +240,10 @@ namespace BackendFramework
 
             // Statistics types
             services.AddSingleton<IStatisticsService, StatisticsService>();
+
+            // Turnstile types
+            services.AddTransient<ITurnstileContext, TurnstileContext>();
+            services.AddTransient<ITurnstileService, TurnstileService>();
 
             // User types
             services.AddTransient<IUserContext, UserContext>();
