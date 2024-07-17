@@ -178,6 +178,9 @@ namespace BackendFramework
                         "COMBINE_SMTP_FROM",
                         null,
                         emailServiceFailureMessage);
+
+                    // Should we add a COMBINE_TURNSTILE_SECRET_KEY check?
+
                     options.PassResetExpireTime = int.Parse(CheckedEnvironmentVariable(
                         "COMBINE_PASSWORD_RESET_EXPIRE_TIME",
                         Settings.DefaultPasswordResetExpireTime.ToString(),

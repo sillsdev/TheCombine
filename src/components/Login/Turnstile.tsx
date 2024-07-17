@@ -17,14 +17,14 @@ export default function Turnstile(props: TurnstileProps): ReactElement {
   const { t } = useTranslation();
 
   const siteKey =
-    process.env.NODE_ENV === "development"
-      ? //https://developers.cloudflare.com/turnstile/troubleshooting/testing/
-        //"1x00000000000000000000AA" // visible pass
-        //"2x00000000000000000000AB" // visible fail
-        //"1x00000000000000000000BB" // invisible pass
-        //"2x00000000000000000000BB" // invisible fail
-        "3x00000000000000000000FF" // force interactive challenge
-      : "0x4AAAAAAAe9zmM2ysXGSJk1"; // the true site key for deployment
+    process.env.NODE_ENV === "production"
+      ? "0x4AAAAAAAe9zmM2ysXGSJk1" // the true site key for deployment
+      : // https://developers.cloudflare.com/turnstile/troubleshooting/testing/
+        //"1x00000000000000000000AA"; // visible pass
+        //"2x00000000000000000000AB"; // visible fail
+        //"1x00000000000000000000BB"; // invisible pass
+        //"2x00000000000000000000BB"; // invisible fail
+        "3x00000000000000000000FF"; // force interactive challenge
 
   const fail = (): void => {
     props.setSuccess(false);
@@ -33,16 +33,15 @@ export default function Turnstile(props: TurnstileProps): ReactElement {
   const succeed = (): void => {
     props.setSuccess(true);
   };
+  const validate = (token: string): void => {
+    validateTurnstile(token).then((isValid) => (isValid ? succeed() : fail()));
+  };
 
   return RuntimeConfig.getInstance().captchaRequired() ? (
     <MarsiTurnstile
-      onError={() => fail()}
-      onExpire={() => fail()}
-      onSuccess={(token: string) => {
-        validateTurnstile(token).then((success) =>
-          success ? succeed() : fail()
-        );
-      }}
+      onError={fail}
+      onExpire={fail}
+      onSuccess={validate}
       options={{ language: i18n.resolvedLanguage, theme: "light" }}
       siteKey={siteKey}
     />
