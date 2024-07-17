@@ -19,4 +19,5 @@ Object.defineProperty(navigator, "permissions", {
 jest
   .spyOn(window.HTMLMediaElement.prototype, "pause")
   .mockImplementation(() => {});
-jest.mock("components/Pronunciations/Recorder");
+//jest.mock("components/Pronunciations/Recorder");
+jest.mock("components/Pronunciations/RecorderContext", () => ({}));
