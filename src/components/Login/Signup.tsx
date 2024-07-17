@@ -88,7 +88,7 @@ export default function Signup(props: SignupProps): ReactElement {
   const [fieldError, setFieldError] = useState<SignupError>(defaultSignupError);
   const [fieldText, setFieldText] = useState<SignupText>(defaultSignupText);
   const [isVerified, setIsVerified] = useState(
-    !RuntimeConfig.getInstance().captchaRequired()
+    !RuntimeConfig.getInstance().turnstileRequired()
   );
 
   const { t } = useTranslation();

@@ -52,7 +52,7 @@ export default function Login(): ReactElement {
 
   const [banner, setBanner] = useState("");
   const [isVerified, setIsVerified] = useState(
-    !RuntimeConfig.getInstance().captchaRequired()
+    !RuntimeConfig.getInstance().turnstileRequired()
   );
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);

@@ -56,8 +56,7 @@ certManager:
 frontend:
   configShowCertExpiration: false
   configAnalyticsWriteKey: ""
-  configCaptchaRequired: false
-  configCaptchaSiteKey: "None"
+  configTurnstileRequired: false
 
 # Maintenance configuration items
 maintenance:

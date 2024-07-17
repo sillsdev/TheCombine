@@ -37,7 +37,7 @@ export default function Turnstile(props: TurnstileProps): ReactElement {
     validateTurnstile(token).then((isValid) => (isValid ? succeed() : fail()));
   };
 
-  return RuntimeConfig.getInstance().captchaRequired() ? (
+  return RuntimeConfig.getInstance().turnstileRequired() ? (
     <MarsiTurnstile
       onError={fail}
       onExpire={fail}

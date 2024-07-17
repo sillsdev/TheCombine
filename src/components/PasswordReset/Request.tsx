@@ -21,7 +21,7 @@ export default function ResetRequest(): ReactElement {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isVerified, setIsVerified] = useState(
-    !RuntimeConfig.getInstance().captchaRequired()
+    !RuntimeConfig.getInstance().turnstileRequired()
   );
 
   const { t } = useTranslation();

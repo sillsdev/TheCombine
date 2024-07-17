@@ -18,8 +18,7 @@ imageName: combine_frontend
 
 # The additional domain list is a space-separated string list of domains
 combineAddlDomainList: ""
-configCaptchaRequired: "false"
-configCaptchaSiteKey: "None - from frontend chart"
+configTurnstileRequired: "false"
 configOffline: "false"
 configEmailEnabled: "true"
 configShowCertExpiration: "false"

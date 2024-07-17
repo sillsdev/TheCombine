@@ -11,8 +11,7 @@ charts:
       enabled: false
 
     frontend:
-      configCaptchaRequired: "true"
-      configCaptchaSiteKey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3"
+      configTurnstileRequired: "true"
 
     global:
       imageRegistry: ""
