@@ -3,13 +3,13 @@ import RecordRTC from "recordrtc";
 import { getFileNameForWord } from "components/Pronunciations/utilities";
 
 export default class Recorder {
-  private toast: (text: string) => void;
+  private toast: (textId: string) => void;
   private recordRTC?: RecordRTC;
   private id?: string;
 
   static blobType: RecordRTC.Options["type"] = "audio";
 
-  constructor(toast?: (text: string) => void) {
+  constructor(toast?: (textId: string) => void) {
     this.toast = toast ?? ((text: string) => alert(text));
     navigator.mediaDevices
       .getUserMedia({ audio: true })
@@ -68,8 +68,8 @@ export default class Recorder {
       .then((result) => {
         this.toast(
           result.state === "granted"
-            ? "Error getting audio stream!"
-            : "No microphone access."
+            ? "pronunciations.audioStreamError"
+            : "pronunciations.noMicAccess"
         );
       });
   }

@@ -479,7 +479,9 @@
     "speakerChange": "Right click to change speaker.",
     "speakerSelect": "Select speaker of this audio recording",
     "recordingError": "Recording error",
-    "deleteRecording": "Delete Recording"
+    "deleteRecording": "Delete Recording",
+    "audioStreamError": "Error getting audio stream!",
+    "noMicAccess": "No microphone access. Audio recording disabled."
   },
   "statistics": {
     "title": "Data Statistics: {{ val }}",
