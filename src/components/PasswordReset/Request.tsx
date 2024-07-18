@@ -7,7 +7,6 @@ import { resetPasswordRequest } from "backend";
 import { LoadingDoneButton } from "components/Buttons";
 import Turnstile from "components/Login/Turnstile";
 import { Path } from "types/path";
-import { RuntimeConfig } from "types/runtimeConfig";
 
 export enum PasswordRequestIds {
   ButtonLogin = "password-request-login",
@@ -20,9 +19,7 @@ export default function ResetRequest(): ReactElement {
   const [isDone, setIsDone] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isVerified, setIsVerified] = useState(
-    !RuntimeConfig.getInstance().turnstileRequired()
-  );
+  const [isVerified, setIsVerified] = useState(false);
 
   const { t } = useTranslation();
   const navigate = useNavigate();

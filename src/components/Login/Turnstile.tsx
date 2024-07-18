@@ -1,5 +1,5 @@
 import { Turnstile as MarsiTurnstile } from "@marsidev/react-turnstile";
-import { Fragment, type ReactElement } from "react";
+import { Fragment, type ReactElement, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
@@ -14,7 +14,13 @@ export interface TurnstileProps {
 
 /** Component wrapper for Cloudflare Turnstile (CAPTCHA replacement). */
 export default function Turnstile(props: TurnstileProps): ReactElement {
+  const setSuccess = props.setSuccess;
+  const isRequired = useRef(RuntimeConfig.getInstance().turnstileRequired());
   const { t } = useTranslation();
+
+  useEffect(() => {
+    setSuccess(isRequired.current ? false : true);
+  }, [isRequired, setSuccess]);
 
   const siteKey =
     process.env.NODE_ENV === "production"
@@ -27,17 +33,17 @@ export default function Turnstile(props: TurnstileProps): ReactElement {
         "3x00000000000000000000FF"; // force interactive challenge
 
   const fail = (): void => {
-    props.setSuccess(false);
+    setSuccess(false);
     toast.error(t("turnstile.error"));
   };
   const succeed = (): void => {
-    props.setSuccess(true);
+    setSuccess(true);
   };
   const validate = (token: string): void => {
     validateTurnstile(token).then((isValid) => (isValid ? succeed() : fail()));
   };
 
-  return RuntimeConfig.getInstance().turnstileRequired() ? (
+  return isRequired.current ? (
     <MarsiTurnstile
       onError={fail}
       onExpire={fail}

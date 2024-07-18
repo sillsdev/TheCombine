@@ -51,9 +51,7 @@ export default function Login(): ReactElement {
   );
 
   const [banner, setBanner] = useState("");
-  const [isVerified, setIsVerified] = useState(
-    !RuntimeConfig.getInstance().turnstileRequired()
-  );
+  const [isVerified, setIsVerified] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [username, setUsername] = useState("");

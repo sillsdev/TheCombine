@@ -25,7 +25,6 @@ import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import router from "router/browserRouter";
 import { Path } from "types/path";
-import { RuntimeConfig } from "types/runtimeConfig";
 import {
   meetsPasswordRequirements,
   meetsUsernameRequirements,
@@ -87,9 +86,7 @@ export default function Signup(props: SignupProps): ReactElement {
 
   const [fieldError, setFieldError] = useState<SignupError>(defaultSignupError);
   const [fieldText, setFieldText] = useState<SignupText>(defaultSignupText);
-  const [isVerified, setIsVerified] = useState(
-    !RuntimeConfig.getInstance().turnstileRequired()
-  );
+  const [isVerified, setIsVerified] = useState(false);
 
   const { t } = useTranslation();
 

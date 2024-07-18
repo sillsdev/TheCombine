@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
@@ -31,7 +30,6 @@ namespace BackendFramework.Services
             });
             using var result = await new HttpClient().PostAsync(verifyUrl, httpContent);
             var contentString = await result.Content.ReadAsStringAsync();
-            Console.WriteLine($"content: {contentString}");
             return contentString.Contains("\"success\":true");
         }
     }
