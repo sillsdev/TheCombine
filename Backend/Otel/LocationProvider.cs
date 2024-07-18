@@ -11,6 +11,7 @@ namespace BackendFramework.Otel
 {
     public class LocationProvider
     {
+        public const string locationGetterUri = "http://ip-api.com/json/";
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IMemoryCache _memoryCache;
         private readonly IHttpClientFactory _httpClientFactory;
@@ -23,6 +24,8 @@ namespace BackendFramework.Otel
         }
         public async Task<LocationApi?> GetLocation()
         {
+            // note: adding any activity tags in this function will cause overflow
+            // because function called on each activity in OtelKernel
             if (_contextAccessor.HttpContext is { } context)
             {
                 var ipAddress = context.GetServerVariable("HTTP_X_FORWARDED_FOR") ?? context.Connection.RemoteIpAddress?.ToString();
@@ -32,32 +35,23 @@ namespace BackendFramework.Otel
                 "location_" + ipAddressWithoutPort,
                 async (cacheEntry) =>
                 {
-                    // data?.SetTag("found in cache?", "no");
                     cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
-
                     try
                     {
-                        var route = $"http://ip-api.com/json/{ipAddressWithoutPort}";
+                        var route = locationGetterUri + $"{ipAddressWithoutPort}";
                         var httpClient = _httpClientFactory.CreateClient();
                         var response = await httpClient.GetFromJsonAsync<LocationApi>(route);
 
                         return response;
-                        // return new LocationApi { };
 
                     }
                     catch (Exception)
                     {
-                        // todo figure out what to put in catch 
-                        // data?.SetTag("Location Exception", e.Message);
+                        // todo consider what to have in catch 
                         Console.WriteLine("Attempted to get location but exception");
-                        return null;
+                        throw;
                     }
-
-
-                    // return new LocationApi { };
-                    // return null;
                 });
-
                 return location;
             }
             return null;
