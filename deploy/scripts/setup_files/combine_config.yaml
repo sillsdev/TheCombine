@@ -81,6 +81,7 @@ targets:
           serverName: qa-kube.thecombine.app
         frontend:
           configTurnstileRequired: "true"
+          configTurnstileSiteKey: "0x4AAAAAAAe9zmM2ysXGSJk1"
   prod:
     profile: prod
     env_vars_required: true
@@ -91,6 +92,7 @@ targets:
           serverName: thecombine.app
         frontend:
           configTurnstileRequired: "true"
+          configTurnstileSiteKey: "0x4AAAAAAAe9zmM2ysXGSJk1"
 
 # Set of profiles
 # Each key of 'profiles' defines one of the profiles used by the set of targets.

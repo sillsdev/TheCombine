@@ -57,6 +57,7 @@ frontend:
   configShowCertExpiration: false
   configAnalyticsWriteKey: ""
   configTurnstileRequired: false
+  configTurnstileSiteKey: "None"
 
 # Maintenance configuration items
 maintenance:

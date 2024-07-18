@@ -24,13 +24,9 @@ export default function Turnstile(props: TurnstileProps): ReactElement {
 
   const siteKey =
     process.env.NODE_ENV === "production"
-      ? "0x4AAAAAAAe9zmM2ysXGSJk1" // the true site key for deployment
+      ? RuntimeConfig.getInstance().turnstileSiteKey()
       : // https://developers.cloudflare.com/turnstile/troubleshooting/testing/
-        //"1x00000000000000000000AA"; // visible pass
-        //"2x00000000000000000000AB"; // visible fail
-        //"1x00000000000000000000BB"; // invisible pass
-        //"2x00000000000000000000BB"; // invisible fail
-        "3x00000000000000000000FF"; // force interactive challenge
+        "1x00000000000000000000AA"; // visible pass
 
   const fail = (): void => {
     setSuccess(false);

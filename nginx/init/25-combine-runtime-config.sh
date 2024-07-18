@@ -50,6 +50,7 @@ declare -A env_map
 env_map=(
   ["CONFIG_USE_CONNECTION_URL"]="useConnectionBaseUrlForApi"
   ["CONFIG_TURNSTILE_REQUIRED"]="turnstileRequired"
+  ["CONFIG_TURNSTILE_SITE_KEY"]="turnstileSiteKey"
   ["CONFIG_ANALYTICS_WRITE_KEY"]="analyticsWriteKey"
   ["CONFIG_OFFLINE"]="offline"
   ["CONFIG_EMAIL_ENABLED"]="emailServicesEnabled"

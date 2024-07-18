@@ -142,9 +142,9 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 
 ### Prepare the Environment
 
-1. If you want the email services to work you will need to set the following environment variables. These values must be
-   kept secret, so ask your email administrator to supply them. Set them in your `.profile` (Linux or Mac 10.14-), your
-   `.zprofile` (Mac 10.15+), or the _System_ app (Windows).
+1. _(Optional)_ If you want the email services to work you will need to set the following environment variables. These
+   values must be kept secret, so ask your email administrator to supply them. Set them in your `.profile` (Linux or Mac
+   10.14-), your `.zprofile` (Mac 10.15+), or the _System_ app (Windows).
 
    - `COMBINE_SMTP_SERVER`
    - `COMBINE_SMTP_PORT`
@@ -685,7 +685,12 @@ Notes:
 
 ### Setup Environment Variables
 
-_Note: This is optional for Development Environments._
+Before installing _The Combine_ in Kubernetes, you need to set the following environment variables:
+`COMBINE_JWT_SECRET_KEY`, `TURNSTILE_SECRET_KEY`. For development environments, you can use the values defined in
+`Backend/Properties/launchSettings.json`. Set them in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac
+10.15+), or the _System_ app (Windows).
+
+_Note: The following is optional for Development Environments._
 
 In addition to the environment variables defined in [Prepare the Environment](#prepare-the-environment), you may setup
 the following environment variables:
@@ -695,15 +700,13 @@ the following environment variables:
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
 
-These variables will allow the Combine to:
+These variables will allow _The Combine_ to:
 
 - pull released and QA software images from AWS Elastic Container Registry (ECR);
 - create backups and push them to AWS S3 storage; and
 - restore _The Combine's_ database and backend files from a backup stored in AWS S3 storage.
 
-The Combine application will function in a local cluster without these variables set.
-
-These can be set in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the _System_ app (Windows).
+The Combine application will function in a local cluster without these `AWS_` variables set.
 
 ### Install/Update _The Combine_
 

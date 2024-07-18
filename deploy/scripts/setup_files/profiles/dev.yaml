@@ -12,6 +12,8 @@ charts:
 
     frontend:
       configTurnstileRequired: "true"
+      # https://developers.cloudflare.com/turnstile/troubleshooting/testing/
+      configTurnstileSiteKey: "1x00000000000000000000AA" # visible pass
 
     global:
       imageRegistry: ""

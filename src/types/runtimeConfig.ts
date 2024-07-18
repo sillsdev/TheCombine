@@ -1,6 +1,7 @@
 interface RuntimeConfigItems {
   baseUrl: string;
   turnstileRequired: boolean;
+  turnstileSiteKey: string;
   offline: boolean;
   emailServicesEnabled: boolean;
   showCertExpiration: boolean;
@@ -16,6 +17,7 @@ declare global {
 const defaultConfig: RuntimeConfigItems = {
   baseUrl: "http://localhost:5000",
   turnstileRequired: true,
+  turnstileSiteKey: "0x4AAAAAAAe9zmM2ysXGSJk1",
   offline: false,
   emailServicesEnabled: true,
   showCertExpiration: true,
@@ -59,6 +61,13 @@ export class RuntimeConfig {
       return window.runtimeConfig.turnstileRequired;
     }
     return defaultConfig.turnstileRequired;
+  }
+
+  public turnstileSiteKey(): string {
+    if (window.runtimeConfig.hasOwnProperty("turnstileSiteKey")) {
+      return window.runtimeConfig.turnstileSiteKey;
+    }
+    return defaultConfig.turnstileSiteKey;
   }
 
   public emailServicesEnabled(): boolean {

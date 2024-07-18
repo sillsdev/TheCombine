@@ -39,6 +39,11 @@ spec:
                 configMapKeyRef:
                   key: CONFIG_TURNSTILE_REQUIRED
                   name: env-frontend
+            - name: CONFIG_TURNSTILE_SITE_KEY
+              valueFrom:
+                configMapKeyRef:
+                  key: CONFIG_TURNSTILE_SITE_KEY
+                  name: env-frontend
             - name: CONFIG_USE_CONNECTION_URL
               valueFrom:
                 configMapKeyRef:
