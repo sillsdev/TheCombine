@@ -19,7 +19,7 @@ export default function Turnstile(props: TurnstileProps): ReactElement {
   const { t } = useTranslation();
 
   useEffect(() => {
-    setSuccess(isRequired.current ? false : true);
+    setSuccess(!isRequired.current);
   }, [isRequired, setSuccess]);
 
   const siteKey =
