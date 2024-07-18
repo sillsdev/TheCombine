@@ -58,6 +58,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    7. [Add or Update Dictionary Files](#add-or-update-dictionary-files)
    8. [Cleanup Local Repository](#cleanup-local-repository)
    9. [Generate Installer Script for The Combine](#generate-installer-script-for-the-combine-linux-only)
+   10. [Generate Tutorial Video Subtitles](#generate-tutorial-video-subtitles)
 3. [Setup Local Kubernetes Cluster](#setup-local-kubernetes-cluster)
    1. [Install Rancher Desktop](#install-rancher-desktop)
    2. [Install Docker Desktop](#install-docker-desktop)
@@ -538,6 +539,16 @@ To update the PDF copy of the installer README.md file, run the following from t
 
 ```console
 pandoc --pdf-engine=weasyprint README.md -o README.pdf
+```
+
+## Generate Tutorial Video Subtitles
+
+Tutorial video transcripts are housed in `docs/tutorial_subtitles`, together with timestamps aligning transcripts with
+the corresponding videos and any transcript translations downloaded from Crowdin. To generate subtitle files (and
+optionally attach them to a video file), run from within a Python virtual environment:
+
+```bash
+python scripts/subtitle_tutorial_video.py -s <subtitles_subfolder_name> [-i <input_video_path> -o <output_video_path] [-v]
 ```
 
 ## Setup Local Kubernetes Cluster

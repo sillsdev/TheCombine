@@ -1,0 +1,24 @@
+Let’s see how to move lexical data from a project in The Combine to a project in FieldWorks.
+To begin, log in at thecombine.app and open your project.
+Go to project settings by clicking on the gear icon in the top bar.
+Click the “Import/Export” tab.
+In the “Export Project” section, click the “Export” button.
+While your export is loading, the “Export” button will be disabled and have a spinning green circle.
+There is also a loading icon with circling arrows in the top bar to indicate that the export is in progress.
+If your project has hundreds of audio recordings, it may take a few minutes to prepare the export.
+You can navigate to other pages in The Combine without interrupting the export, but do not close the window or log out!
+When the export completes, it will automatically download as a ZIP file to your web browser’s default Downloads location.
+To see where the export was downloaded, click on the Downloads icon in the browser, move your cursor to the most recent download, and click on the “Show in Folder” folder icon.
+Now we can import that downloaded ZIP file into FieldWorks.
+Open FieldWorks Language Explorer and open the project you want to import your data into.
+If you are creating a new FLEx project, specify the same vernacular language as your project in The Combine.
+When the project is open, click on the “File” menu, move your cursor to “Import…” near the bottom, and click on “Lexicon from The Combine…”.
+In the “Import/Merge from The Combine” dialog that appears, click the “Browse…” button.
+Another dialog appears with a file explorer.
+Navigate to the downloads folder where the exported ZIP file is located. Select the ZIP file and click the “Open” button.
+Back at the “Import/Merge” dialog, click the “OK” button.
+When FieldWorks finishes the import, a summary page opens in your web browser.
+Congratulations, you’ve imported your data from The Combine into Fieldworks!
+If you need to update the vernacular or analysis writing systems of your FLEx project, the options are available at the bottom of the “Format” menu.
+I hope this video helps you use your data from The Combine.
+Have a wonderful day!
