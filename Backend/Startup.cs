@@ -39,6 +39,9 @@ namespace BackendFramework
         {
             public const int DefaultPasswordResetExpireTime = 15;
 
+            public bool CaptchaEnabled { get; set; }
+            public string? CaptchaSecretKey { get; set; }
+            public string? CaptchaVerifyUrl { get; set; }
             public string ConnectionString { get; set; }
             public string CombineDatabase { get; set; }
             public bool EmailEnabled { get; set; }
@@ -49,17 +52,14 @@ namespace BackendFramework
             public string? SmtpAddress { get; set; }
             public string? SmtpFrom { get; set; }
             public int PassResetExpireTime { get; set; }
-            public bool CaptchaEnabled { get; set; }
-            public string? CaptchaSecretKey { get; set; }
-            public string? CaptchaVerifyUrl { get; set; }
 
             public Settings()
             {
+                CaptchaEnabled = true;
                 ConnectionString = "";
                 CombineDatabase = "";
                 EmailEnabled = false;
                 PassResetExpireTime = DefaultPasswordResetExpireTime;
-                CaptchaEnabled = true;
             }
         }
 
