@@ -78,11 +78,7 @@ targets:
       # override values for 'thecombine' chart
       thecombine:
         global:
-          captchaRequired: true
-          emailEnabled: true
           serverName: qa-kube.thecombine.app
-        frontend:
-          configCaptchaSiteKey: "0x4AAAAAAAe9zmM2ysXGSJk1" # Turnstile site key
   prod:
     profile: prod
     env_vars_required: true
@@ -90,11 +86,7 @@ targets:
       # override values for 'thecombine' chart
       thecombine:
         global:
-          captchaRequired: true
-          emailEnabled: true
           serverName: thecombine.app
-        frontend:
-          configCaptchaSiteKey: "0x4AAAAAAAe9zmM2ysXGSJk1" # Turnstile site key
 
 # Set of profiles
 # Each key of 'profiles' defines one of the profiles used by the set of targets.
@@ -152,14 +144,14 @@ charts:
         env_var: AWS_ACCESS_KEY_ID
       - config_item: awsSecretAccessKey
         env_var: AWS_SECRET_ACCESS_KEY
+      - config_item: captchaSecretKey
+        env_var: COMBINE_CAPTCHA_SECRET_KEY
       - config_item: combineJwtSecretKey
         env_var: COMBINE_JWT_SECRET_KEY
       - config_item: combineSmtpUsername
         env_var: COMBINE_SMTP_USERNAME
       - config_item: combineSmtpPassword
         env_var: COMBINE_SMTP_PASSWORD
-      - config_item: captchaSecretKey
-        env_var: COMBINE_CAPTCHA_SECRET_KEY
   create-admin-user:
     namespace: thecombine
     install_langs: false

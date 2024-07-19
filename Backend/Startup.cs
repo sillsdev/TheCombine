@@ -65,7 +65,7 @@ namespace BackendFramework
 
         private sealed class EnvironmentNotConfiguredException : Exception { }
 
-        private string? CheckedEnvironmentVariable(string name, string? defaultValue, string error = "")
+        private string? CheckedEnvironmentVariable(string name, string? defaultValue, string error = "", bool info = false)
         {
             var contents = Environment.GetEnvironmentVariable(name);
             if (contents is not null)
@@ -73,7 +73,14 @@ namespace BackendFramework
                 return contents;
             }
 
-            _logger.LogError("Environment variable: {Name} is not defined. {Error}", name, error);
+            if (info)
+            {
+                _logger.LogInformation("Environment variable: {Name} is not defined. {Error}", name, error);
+            }
+            else
+            {
+                _logger.LogError("Environment variable: {Name} is not defined. {Error}", name, error);
+            }
             return defaultValue;
         }
 
@@ -159,11 +166,28 @@ namespace BackendFramework
                     options.CombineDatabase = Configuration["MongoDB:CombineDatabase"]
                         ?? throw new EnvironmentNotConfiguredException();
 
+                    options.CaptchaEnabled = bool.Parse(CheckedEnvironmentVariable(
+                        "COMBINE_CAPTCHA_REQUIRED",
+                        bool.TrueString, // "True"
+                        "CAPTCHA should be explicitly required or not required.")!);
+                    if (options.CaptchaEnabled)
+                    {
+                        options.CaptchaSecretKey = CheckedEnvironmentVariable(
+                            "COMBINE_CAPTCHA_SECRET_KEY",
+                            null,
+                            "CAPTCHA secret key required.");
+                        options.CaptchaVerifyUrl = CheckedEnvironmentVariable(
+                            "COMBINE_CAPTCHA_VERIFY_URL",
+                            null,
+                            "CAPTCHA verification URL required.");
+                    }
+
                     const string emailServiceFailureMessage = "Email services will not work.";
                     options.EmailEnabled = bool.Parse(CheckedEnvironmentVariable(
                         "COMBINE_EMAIL_ENABLED",
                         bool.FalseString, // "False"
-                        emailServiceFailureMessage)!);
+                        emailServiceFailureMessage,
+                        true)!);
                     if (options.EmailEnabled)
                     {
                         options.SmtpServer = CheckedEnvironmentVariable(
@@ -196,23 +220,6 @@ namespace BackendFramework
                         "COMBINE_PASSWORD_RESET_EXPIRE_TIME",
                         Settings.DefaultPasswordResetExpireTime.ToString(),
                         $"Using default value: {Settings.DefaultPasswordResetExpireTime}")!);
-
-
-                    options.CaptchaEnabled = bool.Parse(CheckedEnvironmentVariable(
-                        "COMBINE_CAPTCHA_REQUIRED",
-                        bool.TrueString, // "True"
-                        "CAPTCHA should be explicitly enabled or disabled.")!);
-                    if (options.CaptchaEnabled)
-                    {
-                        options.CaptchaSecretKey = CheckedEnvironmentVariable(
-                            "COMBINE_CAPTCHA_SECRET_KEY",
-                            null,
-                            "CAPTCHA secret key required.");
-                        options.CaptchaVerifyUrl = CheckedEnvironmentVariable(
-                            "COMBINE_CAPTCHA_VERIFY_URL",
-                            null,
-                            "CAPTCHA verification URL required.");
-                    }
                 });
 
             // Register concrete types for dependency injection

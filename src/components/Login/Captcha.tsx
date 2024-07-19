@@ -27,7 +27,7 @@ export default function Captcha(props: CaptchaProps): ReactElement {
       ? RuntimeConfig.getInstance().captchaSiteKey()
       : // https://developers.cloudflare.com/turnstile/troubleshooting/testing/
         // has dummy site keys for development and testing; options are
-        // invisible pass and fail, visible pass and fail, and forced interaction
+        // invisible pass, invisible fail, visible pass, visible fail, forced interaction
         "1x00000000000000000000AA"; // visible pass
 
   const fail = (): void => {

@@ -285,13 +285,13 @@ The setup scripts require the following environment variables to be set:
 - AWS_DEFAULT_REGION
 - AWS_ACCESS_KEY_ID
 - AWS_SECRET_ACCESS_KEY
+- COMBINE_CAPTCHA_SECRET_KEY
 - COMBINE_JWT_SECRET_KEY
 - COMBINE_SMTP_USERNAME
 - COMBINE_SMTP_PASSWORD
 - COMBINE_ADMIN_USERNAME
 - COMBINE_ADMIN_PASSWORD
 - COMBINE_ADMIN_EMAIL
-- COMBINE_CAPTCHA_SECRET_KEY
 
 You may also set the KUBECONFIG environment variable to the location of the `kubectl` configuration file. This is not
 necessary if the configuration file is at `${HOME}/.kube/config`.

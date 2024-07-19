@@ -5,20 +5,20 @@ metadata:
   name: env-backend
   namespace: {{ .Release.Namespace }}
 data:
+{{- if .Values.global.captchaRequired }}
+  COMBINE_CAPTCHA_REQUIRED: "True"
+{{- else }}
+  COMBINE_CAPTCHA_REQUIRED: "False"
+{{- end }}
+  COMBINE_CAPTCHA_VERIFY_URL: {{ .Values.captchaVerifyUrl | quote }}
+{{- if .Values.global.emailEnabled }}
+  COMBINE_EMAIL_ENABLED: "True"
+{{- else }}
+  COMBINE_EMAIL_ENABLED: "False"
+{{- end }}
   COMBINE_PASSWORD_RESET_EXPIRE_TIME:
     {{ .Values.combinePasswordResetTime | quote }}
-  {{- if .Values.global.emailEnabled }}
-  COMBINE_EMAIL_ENABLED: "True"
-  {{- else }}
-  COMBINE_EMAIL_ENABLED: "False"
-  {{- end }}
   COMBINE_SMTP_ADDRESS: {{ .Values.combineSmtpAddress | quote }}
   COMBINE_SMTP_FROM: {{ .Values.combineSmtpFrom | quote }}
   COMBINE_SMTP_PORT: {{ .Values.combineSmtpPort | quote }}
   COMBINE_SMTP_SERVER: {{ .Values.combineSmtpServer | quote }}
-  {{- if .Values.global.captchRequired }}
-  COMBINE_CAPTCHA_REQUIRED: "True"
-  {{- else }}
-  COMBINE_CAPTCHA_REQUIRED: "False"
-  {{- end }}
-  COMBINE_CAPTCHA_VERIFY_URL: {{ .Values.captchaVerifyUrl | quote }}

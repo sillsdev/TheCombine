@@ -19,17 +19,11 @@ global:
   awsDefaultRegion: "Override"
   pullSecretName: "None"
   combineJwtSecretKey: "Override"
-  emailEnabled: true
-  combineSmtpUsername: "Override"
-  combineSmtpPassword: "Override"
   # Values for pulling container image from image registry
   imagePullPolicy: "Override"
   imageTag: "latest"
   # Define the image registry to use (may be blank for local images)
   imageRegistry: ""
-  # CAPTCHA verification
-  captchaRequired: true
-  captchaSecretKey: "Override"
 
 persistentVolumeSize: 32Gi
 combinePasswordResetTime: 15

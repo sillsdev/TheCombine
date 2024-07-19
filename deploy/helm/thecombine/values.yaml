@@ -23,7 +23,10 @@ global:
   adminUsername: "Override"
   adminPassword: "Override"
   adminEmail: "Override"
+  captchaRequired: false
+  captchaSecretKey: "Override"
   combineJwtSecretKey: "Override"
+  emailEnabled: false
   combineSmtpUsername: "Override"
   combineSmtpPassword: "Override"
   # Local Storage for fonts
@@ -37,9 +40,6 @@ global:
   pullSecretName: aws-login-credentials
   # Update strategy should be "Recreate" or "Rolling Update"
   updateStrategy: Recreate
-  # CAPTCHA verification
-  captchaRequired: false
-  captchaSecretKey: "Override"
 
   includeResourceLimits: false
 
@@ -56,7 +56,7 @@ certManager:
 frontend:
   configShowCertExpiration: false
   configAnalyticsWriteKey: ""
-  configCaptchaSiteKey: "None"
+  configCaptchaSiteKey: ""
 
 # Maintenance configuration items
 maintenance:

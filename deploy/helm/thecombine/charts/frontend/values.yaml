@@ -3,7 +3,6 @@
 # Declare variables to be passed into your templates.
 
 global:
-  combineSmtpUsername: "Override"
   serverName: localhost
   pullSecretName: aws-login-credentials
   # Update strategy should be "Recreate" or "Rolling Update"
@@ -13,16 +12,12 @@ global:
   imageTag: "latest"
   # Define the image registry to use (may be blank for local images)
   imageRegistry: ""
-  # Email services
-  emailEnabled: "true"
-  # CAPTCHA verification
-  captchaRequired: "false"
 
 imageName: combine_frontend
 
 # The additional domain list is a space-separated string list of domains
 combineAddlDomainList: ""
-configCaptchaSiteKey: "None - from frontend chart"
+configCaptchaSiteKey: "None - defined in profiles"
 configOffline: "false"
 configShowCertExpiration: "false"
 configAnalyticsWriteKey: ""
