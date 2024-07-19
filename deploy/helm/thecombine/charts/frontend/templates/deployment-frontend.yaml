@@ -34,15 +34,15 @@ spec:
                 configMapKeyRef:
                   key: CERT_ADDL_DOMAINS
                   name: env-frontend
-            - name: CONFIG_TURNSTILE_REQUIRED
+            - name: CONFIG_CAPTCHA_REQUIRED
               valueFrom:
                 configMapKeyRef:
-                  key: CONFIG_TURNSTILE_REQUIRED
+                  key: CONFIG_CAPTCHA_REQUIRED
                   name: env-frontend
-            - name: CONFIG_TURNSTILE_SITE_KEY
+            - name: CONFIG_CAPTCHA_SITE_KEY
               valueFrom:
                 configMapKeyRef:
-                  key: CONFIG_TURNSTILE_SITE_KEY
+                  key: CONFIG_CAPTCHA_SITE_KEY
                   name: env-frontend
             - name: CONFIG_USE_CONNECTION_URL
               valueFrom:

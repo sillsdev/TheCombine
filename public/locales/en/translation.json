@@ -75,7 +75,7 @@
     "resetDone": "If you have correctly entered your email or username, a password reset link has been sent to your email address.",
     "backToLogin": "Back To Login"
   },
-  "turnstile": {
+  "captcha": {
     "error": "Page verification failed or expired. Please refresh the page."
   },
   "speakerMenu": {

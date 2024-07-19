@@ -11,9 +11,11 @@ charts:
       enabled: false
 
     frontend:
-      configTurnstileRequired: "true"
+      configCaptchaRequired: "true"
       # https://developers.cloudflare.com/turnstile/troubleshooting/testing/
-      configTurnstileSiteKey: "1x00000000000000000000AA" # visible pass
+      # has dummy secret keys for development and testing; options are
+      # invisible pass and fail, visible pass and fail, and forced interaction
+      configCaptchaSiteKey: "1x00000000000000000000AA" # visible pass
 
     global:
       imageRegistry: ""

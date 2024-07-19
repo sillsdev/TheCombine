@@ -39,6 +39,11 @@ spec:
                 configMapKeyRef:
                   key: COMBINE_PASSWORD_RESET_EXPIRE_TIME
                   name: env-backend
+            - name: COMBINE_EMAIL_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: COMBINE_EMAIL_ENABLED
+                  name: env-backend
             - name: COMBINE_SMTP_ADDRESS
               valueFrom:
                 configMapKeyRef:
@@ -69,6 +74,11 @@ spec:
                 secretKeyRef:
                   key: COMBINE_SMTP_USERNAME
                   name: env-backend-secrets
+            - name: TURNSTILE_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: TURNSTILE_ENABLED
+                  name: env-backend
             - name: TURNSTILE_SECRET_KEY
               valueFrom:
                 secretKeyRef:

@@ -1,21 +1,21 @@
-import { Turnstile as MarsiTurnstile } from "@marsidev/react-turnstile";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { Fragment, type ReactElement, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import { validateTurnstile } from "backend";
+import { validateCaptcha } from "backend";
 import i18n from "i18n";
 import { RuntimeConfig } from "types/runtimeConfig";
 
-export interface TurnstileProps {
-  /** Parent function to call when Turnstile succeeds or fails. */
+export interface CaptchaProps {
+  /** Parent function to call when CAPTCHA succeeds or fails. */
   setSuccess: (success: boolean) => void;
 }
 
 /** Component wrapper for Cloudflare Turnstile (CAPTCHA replacement). */
-export default function Turnstile(props: TurnstileProps): ReactElement {
+export default function Captcha(props: CaptchaProps): ReactElement {
   const setSuccess = props.setSuccess;
-  const isRequired = useRef(RuntimeConfig.getInstance().turnstileRequired());
+  const isRequired = useRef(RuntimeConfig.getInstance().captchaRequired());
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -24,23 +24,25 @@ export default function Turnstile(props: TurnstileProps): ReactElement {
 
   const siteKey =
     process.env.NODE_ENV === "production"
-      ? RuntimeConfig.getInstance().turnstileSiteKey()
+      ? RuntimeConfig.getInstance().captchaSiteKey()
       : // https://developers.cloudflare.com/turnstile/troubleshooting/testing/
+        // has dummy site keys for development and testing; options are
+        // invisible pass and fail, visible pass and fail, and forced interaction
         "1x00000000000000000000AA"; // visible pass
 
   const fail = (): void => {
     setSuccess(false);
-    toast.error(t("turnstile.error"));
+    toast.error(t("captcha.error"));
   };
   const succeed = (): void => {
     setSuccess(true);
   };
   const validate = (token: string): void => {
-    validateTurnstile(token).then((isValid) => (isValid ? succeed() : fail()));
+    validateCaptcha(token).then((isValid) => (isValid ? succeed() : fail()));
   };
 
   return isRequired.current ? (
-    <MarsiTurnstile
+    <Turnstile
       onError={fail}
       onExpire={fail}
       onSuccess={validate}

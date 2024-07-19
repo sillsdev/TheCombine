@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
@@ -18,6 +19,11 @@ namespace BackendFramework.Services
 
         public async Task<bool> VerifyToken(string token)
         {
+            if (!_turnstileContext.TurnstileEnabled)
+            {
+                throw new TurnstileNotEnabledException();
+            }
+
             var secret = _turnstileContext.TurnstileSecretKey;
             var verifyUrl = _turnstileContext.TurnstileVerifyUrl;
             if (string.IsNullOrEmpty(secret) || string.IsNullOrEmpty(verifyUrl))
@@ -32,5 +38,7 @@ namespace BackendFramework.Services
             var contentString = await result.Content.ReadAsStringAsync();
             return contentString.Contains("\"success\":true");
         }
+
+        private sealed class TurnstileNotEnabledException : Exception { }
     }
 }

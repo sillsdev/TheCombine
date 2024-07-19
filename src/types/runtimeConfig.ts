@@ -1,7 +1,7 @@
 interface RuntimeConfigItems {
   baseUrl: string;
-  turnstileRequired: boolean;
-  turnstileSiteKey: string;
+  captchaRequired: boolean;
+  captchaSiteKey: string;
   offline: boolean;
   emailServicesEnabled: boolean;
   showCertExpiration: boolean;
@@ -16,8 +16,8 @@ declare global {
 
 const defaultConfig: RuntimeConfigItems = {
   baseUrl: "http://localhost:5000",
-  turnstileRequired: true,
-  turnstileSiteKey: "0x4AAAAAAAe9zmM2ysXGSJk1",
+  captchaRequired: true,
+  captchaSiteKey: "0x4AAAAAAAe9zmM2ysXGSJk1",
   offline: false,
   emailServicesEnabled: true,
   showCertExpiration: true,
@@ -56,18 +56,18 @@ export class RuntimeConfig {
     return "v0.0.0-default.0";
   }
 
-  public turnstileRequired(): boolean {
-    if (window.runtimeConfig.hasOwnProperty("turnstileRequired")) {
-      return window.runtimeConfig.turnstileRequired;
+  public captchaRequired(): boolean {
+    if (window.runtimeConfig.hasOwnProperty("captchaRequired")) {
+      return window.runtimeConfig.captchaRequired;
     }
-    return defaultConfig.turnstileRequired;
+    return defaultConfig.captchaRequired;
   }
 
-  public turnstileSiteKey(): string {
-    if (window.runtimeConfig.hasOwnProperty("turnstileSiteKey")) {
-      return window.runtimeConfig.turnstileSiteKey;
+  public captchaSiteKey(): string {
+    if (window.runtimeConfig.hasOwnProperty("captchaSiteKey")) {
+      return window.runtimeConfig.captchaSiteKey;
     }
-    return defaultConfig.turnstileSiteKey;
+    return defaultConfig.captchaSiteKey;
   }
 
   public emailServicesEnabled(): boolean {

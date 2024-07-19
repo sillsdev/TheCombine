@@ -7,8 +7,10 @@ metadata:
 data:
   COMBINE_PASSWORD_RESET_EXPIRE_TIME:
     {{ .Values.combinePasswordResetTime | quote }}
+  COMBINE_EMAIL_ENABLED: {{ .Values.combineEmailEnabled | quote }}
   COMBINE_SMTP_ADDRESS: {{ .Values.combineSmtpAddress | quote }}
   COMBINE_SMTP_FROM: {{ .Values.combineSmtpFrom | quote }}
   COMBINE_SMTP_PORT: {{ .Values.combineSmtpPort | quote }}
   COMBINE_SMTP_SERVER: {{ .Values.combineSmtpServer | quote }}
+  TURNSTILE_ENABLED: {{ .Values.turnstileEnabled | quote }}
   TURNSTILE_VERIFY_URL: {{ .Values.turnstileVerifyUrl | quote }}

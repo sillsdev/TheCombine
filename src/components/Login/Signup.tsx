@@ -17,9 +17,9 @@ import {
 import { useTranslation } from "react-i18next";
 
 import { LoadingDoneButton } from "components/Buttons";
+import Captcha from "components/Login/Captcha";
 import { asyncSignUp } from "components/Login/Redux/LoginActions";
 import { LoginStatus } from "components/Login/Redux/LoginReduxTypes";
-import Turnstile from "components/Login/Turnstile";
 import { reset } from "rootRedux/actions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
@@ -254,7 +254,7 @@ export default function Signup(props: SignupProps): ReactElement {
               </Typography>
             )}
 
-            <Turnstile setSuccess={setIsVerified} />
+            <Captcha setSuccess={setIsVerified} />
 
             {/* Sign Up and Log In buttons */}
             <Grid container justifyContent="flex-end" spacing={2}>

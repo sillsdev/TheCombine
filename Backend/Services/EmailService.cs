@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using BackendFramework.Interfaces;
 using System.Threading.Tasks;
 using MimeKit;
+using System;
 
 namespace BackendFramework.Services
 {
@@ -17,6 +18,11 @@ namespace BackendFramework.Services
 
         public async Task<bool> SendEmail(MimeMessage message)
         {
+            if (!_emailContext.EmailEnabled)
+            {
+                throw new EmailNotEnabledException();
+            }
+
             using var client = new MailKit.Net.Smtp.SmtpClient();
 
             await client.ConnectAsync(_emailContext.SmtpServer, _emailContext.SmtpPort);
@@ -33,5 +39,7 @@ namespace BackendFramework.Services
             await client.DisconnectAsync(true);
             return true;
         }
+
+        private sealed class EmailNotEnabledException : Exception { }
     }
 }

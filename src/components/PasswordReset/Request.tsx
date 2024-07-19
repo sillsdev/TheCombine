@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { resetPasswordRequest } from "backend";
 import { LoadingDoneButton } from "components/Buttons";
-import Turnstile from "components/Login/Turnstile";
+import Captcha from "components/Login/Captcha";
 import { Path } from "types/path";
 
 export enum PasswordRequestIds {
@@ -83,7 +83,7 @@ export default function ResetRequest(): ReactElement {
                 />
               </Grid>
               <Grid item>
-                <Turnstile setSuccess={setIsVerified} />
+                <Captcha setSuccess={setIsVerified} />
               </Grid>
               <Grid item>
                 <LoadingDoneButton

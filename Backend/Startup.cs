@@ -41,6 +41,7 @@ namespace BackendFramework
 
             public string ConnectionString { get; set; }
             public string CombineDatabase { get; set; }
+            public bool EmailEnabled { get; set; }
             public string? SmtpServer { get; set; }
             public int? SmtpPort { get; set; }
             public string? SmtpUsername { get; set; }
@@ -48,6 +49,7 @@ namespace BackendFramework
             public string? SmtpAddress { get; set; }
             public string? SmtpFrom { get; set; }
             public int PassResetExpireTime { get; set; }
+            public bool TurnstileEnabled { get; set; }
             public string? TurnstileSecretKey { get; set; }
             public string? TurnstileVerifyUrl { get; set; }
 
@@ -55,7 +57,9 @@ namespace BackendFramework
             {
                 ConnectionString = "";
                 CombineDatabase = "";
+                EmailEnabled = false;
                 PassResetExpireTime = DefaultPasswordResetExpireTime;
+                TurnstileEnabled = true;
             }
         }
 
@@ -156,45 +160,59 @@ namespace BackendFramework
                         ?? throw new EnvironmentNotConfiguredException();
 
                     const string emailServiceFailureMessage = "Email services will not work.";
-                    options.SmtpServer = CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_SERVER",
-                        null,
-                        emailServiceFailureMessage);
-                    options.SmtpPort = int.Parse(CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_PORT",
-                        IEmailContext.InvalidPort.ToString(),
+                    options.EmailEnabled = bool.Parse(CheckedEnvironmentVariable(
+                        "COMBINE_EMAIL_ENABLED",
+                        bool.FalseString, // "False"
                         emailServiceFailureMessage)!);
-                    options.SmtpUsername = CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_USERNAME",
-                        null,
-                        emailServiceFailureMessage);
-                    options.SmtpPassword = CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_PASSWORD",
-                        null,
-                        emailServiceFailureMessage);
-                    options.SmtpAddress = CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_ADDRESS",
-                        null,
-                        emailServiceFailureMessage);
-                    options.SmtpFrom = CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_FROM",
-                        null,
-                        emailServiceFailureMessage);
+                    if (options.EmailEnabled)
+                    {
+                        options.SmtpServer = CheckedEnvironmentVariable(
+                            "COMBINE_SMTP_SERVER",
+                            null,
+                            emailServiceFailureMessage);
+                        options.SmtpPort = int.Parse(CheckedEnvironmentVariable(
+                            "COMBINE_SMTP_PORT",
+                            IEmailContext.InvalidPort.ToString(),
+                            emailServiceFailureMessage)!);
+                        options.SmtpUsername = CheckedEnvironmentVariable(
+                            "COMBINE_SMTP_USERNAME",
+                            null,
+                            emailServiceFailureMessage);
+                        options.SmtpPassword = CheckedEnvironmentVariable(
+                            "COMBINE_SMTP_PASSWORD",
+                            null,
+                            emailServiceFailureMessage);
+                        options.SmtpAddress = CheckedEnvironmentVariable(
+                            "COMBINE_SMTP_ADDRESS",
+                            null,
+                            emailServiceFailureMessage);
+                        options.SmtpFrom = CheckedEnvironmentVariable(
+                            "COMBINE_SMTP_FROM",
+                            null,
+                            emailServiceFailureMessage);
+                    }
 
                     options.PassResetExpireTime = int.Parse(CheckedEnvironmentVariable(
                         "COMBINE_PASSWORD_RESET_EXPIRE_TIME",
                         Settings.DefaultPasswordResetExpireTime.ToString(),
                         $"Using default value: {Settings.DefaultPasswordResetExpireTime}")!);
 
-                    const string turnstileFailureMessage = "Turnstile verification will not be available.";
-                    options.TurnstileSecretKey = CheckedEnvironmentVariable(
-                        "TURNSTILE_SECRET_KEY",
-                        null,
-                        turnstileFailureMessage);
-                    options.TurnstileVerifyUrl = CheckedEnvironmentVariable(
-                        "TURNSTILE_VERIFY_URL",
-                        null,
-                        turnstileFailureMessage);
+
+                    options.TurnstileEnabled = bool.Parse(CheckedEnvironmentVariable(
+                        "TURNSTILE_ENABLED",
+                        bool.TrueString, // "True"
+                        "Turnstile should be explicitly enabled or disabled.")!);
+                    if (options.TurnstileEnabled)
+                    {
+                        options.TurnstileSecretKey = CheckedEnvironmentVariable(
+                            "TURNSTILE_SECRET_KEY",
+                            null,
+                            "Turnstile secret key required.");
+                        options.TurnstileVerifyUrl = CheckedEnvironmentVariable(
+                            "TURNSTILE_VERIFY_URL",
+                            null,
+                            "Turnstile verification URL required.");
+                    }
                 });
 
             // Register concrete types for dependency injection

@@ -13,7 +13,7 @@ charts:
       enabled: false
     global:
       awsS3Location: local.thecombine.app
-      combineSmtpUsername: ""
+      combineEmailEnabled: "False"
       imagePullPolicy: IfNotPresent
       pullSecretName: None
     frontend:

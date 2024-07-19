@@ -612,7 +612,7 @@ export async function getProgressEstimationLineChartRoot(
 
 /* UserController.cs */
 
-export async function validateTurnstile(token: string): Promise<boolean> {
+export async function validateCaptcha(token: string): Promise<boolean> {
   return await userApi
     .validateTurnstile({ token })
     .then(() => true)

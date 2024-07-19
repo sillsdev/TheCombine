@@ -14,10 +14,10 @@ import Signup, { SignupId } from "components/Login/Signup";
 jest.mock("backend", () => ({
   getBannerText: () => Promise.resolve(""),
 }));
+jest.mock("components/Login/Captcha", () => "div");
 jest.mock("components/Login/Redux/LoginActions", () => ({
   asyncSignUp: (...args: any[]) => mockAsyncSignUp(...args),
 }));
-jest.mock("components/Login/Turnstile", () => "div");
 jest.mock("rootRedux/hooks", () => {
   return {
     ...jest.requireActual("rootRedux/hooks"),
