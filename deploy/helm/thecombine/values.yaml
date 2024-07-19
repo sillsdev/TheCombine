@@ -26,7 +26,6 @@ global:
   combineJwtSecretKey: "Override"
   combineSmtpUsername: "Override"
   combineSmtpPassword: "Override"
-  offline: false
   # Local Storage for fonts
   fontStorageAccessMode: "ReadWriteOnce"
   fontStorageSize: 1Gi

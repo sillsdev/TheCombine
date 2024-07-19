@@ -291,7 +291,7 @@ The setup scripts require the following environment variables to be set:
 - COMBINE_ADMIN_USERNAME
 - COMBINE_ADMIN_PASSWORD
 - COMBINE_ADMIN_EMAIL
-- TURNSTILE_SECRET_KEY
+- COMBINE_CAPTCHA_SECRET_KEY
 
 You may also set the KUBECONFIG environment variable to the location of the `kubectl` configuration file. This is not
 necessary if the configuration file is at `${HOME}/.kube/config`.

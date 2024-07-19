@@ -1,8 +1,8 @@
-using System.Diagnostics.CodeAnalysis;
-using BackendFramework.Interfaces;
-using System.Threading.Tasks;
-using MimeKit;
 using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+using BackendFramework.Interfaces;
+using MimeKit;
 
 namespace BackendFramework.Services
 {

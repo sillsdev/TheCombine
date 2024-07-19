@@ -21,7 +21,7 @@ namespace BackendFramework.Services
         {
             if (!_captchaContext.CaptchaEnabled)
             {
-                throw new TurnstileNotEnabledException();
+                throw new CaptchaNotEnabledException();
             }
 
             var secret = _captchaContext.CaptchaSecretKey;
@@ -39,6 +39,6 @@ namespace BackendFramework.Services
             return contentString.Contains("\"success\":true");
         }
 
-        private sealed class TurnstileNotEnabledException : Exception { }
+        private sealed class CaptchaNotEnabledException : Exception { }
     }
 }

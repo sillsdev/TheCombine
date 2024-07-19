@@ -16,7 +16,7 @@ global:
   # Email services
   emailEnabled: "true"
   # CAPTCHA verification
-  captchaRequired: "true"
+  captchaRequired: "false"
 
 imageName: combine_frontend
 

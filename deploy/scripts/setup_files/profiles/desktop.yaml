@@ -13,8 +13,8 @@ charts:
       enabled: false
     global:
       awsS3Location: local.thecombine.app
-      emailEnabled: false
       captchaRequired: false
+      emailEnabled: false
       imagePullPolicy: IfNotPresent
       pullSecretName: None
     frontend:

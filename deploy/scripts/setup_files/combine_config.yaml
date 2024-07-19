@@ -78,9 +78,9 @@ targets:
       # override values for 'thecombine' chart
       thecombine:
         global:
-          serverName: qa-kube.thecombine.app
-          emailEnabled: true
           captchaRequired: true
+          emailEnabled: true
+          serverName: qa-kube.thecombine.app
         frontend:
           configCaptchaSiteKey: "0x4AAAAAAAe9zmM2ysXGSJk1" # Turnstile site key
   prod:
@@ -90,9 +90,9 @@ targets:
       # override values for 'thecombine' chart
       thecombine:
         global:
-          serverName: thecombine.app
-          emailEnabled: true
           captchaRequired: true
+          emailEnabled: true
+          serverName: thecombine.app
         frontend:
           configCaptchaSiteKey: "0x4AAAAAAAe9zmM2ysXGSJk1" # Turnstile site key
 
@@ -159,7 +159,7 @@ charts:
       - config_item: combineSmtpPassword
         env_var: COMBINE_SMTP_PASSWORD
       - config_item: captchaSecretKey
-        env_var: CAPTCHA_SECRET_KEY
+        env_var: COMBINE_CAPTCHA_SECRET_KEY
   create-admin-user:
     namespace: thecombine
     install_langs: false

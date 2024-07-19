@@ -12,7 +12,7 @@ export interface CaptchaProps {
   setSuccess: (success: boolean) => void;
 }
 
-/** Component wrapper for Cloudflare Turnstile (CAPTCHA replacement). */
+/** Component wrapper for CAPTCHA implementation. */
 export default function Captcha(props: CaptchaProps): ReactElement {
   const setSuccess = props.setSuccess;
   const isRequired = useRef(RuntimeConfig.getInstance().captchaRequired());
