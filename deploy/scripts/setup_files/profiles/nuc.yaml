@@ -13,12 +13,12 @@ charts:
       enabled: false
     global:
       awsS3Location: prod.thecombine.app
-      combineEmailEnabled: "False"
+      captchaRequired: false
+      emailEnabled: false
       imagePullPolicy: IfNotPresent
       pullSecretName: None
     frontend:
       configOffline: true
-      configEmailEnabled: false
     maintenance:
       localLangList:
         - "ar"

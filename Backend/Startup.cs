@@ -49,9 +49,9 @@ namespace BackendFramework
             public string? SmtpAddress { get; set; }
             public string? SmtpFrom { get; set; }
             public int PassResetExpireTime { get; set; }
-            public bool TurnstileEnabled { get; set; }
-            public string? TurnstileSecretKey { get; set; }
-            public string? TurnstileVerifyUrl { get; set; }
+            public bool CaptchaEnabled { get; set; }
+            public string? CaptchaSecretKey { get; set; }
+            public string? CaptchaVerifyUrl { get; set; }
 
             public Settings()
             {
@@ -59,7 +59,7 @@ namespace BackendFramework
                 CombineDatabase = "";
                 EmailEnabled = false;
                 PassResetExpireTime = DefaultPasswordResetExpireTime;
-                TurnstileEnabled = true;
+                CaptchaEnabled = true;
             }
         }
 
@@ -198,20 +198,20 @@ namespace BackendFramework
                         $"Using default value: {Settings.DefaultPasswordResetExpireTime}")!);
 
 
-                    options.TurnstileEnabled = bool.Parse(CheckedEnvironmentVariable(
-                        "TURNSTILE_ENABLED",
+                    options.CaptchaEnabled = bool.Parse(CheckedEnvironmentVariable(
+                        "COMBINE_CAPTCHA_REQUIRED",
                         bool.TrueString, // "True"
-                        "Turnstile should be explicitly enabled or disabled.")!);
-                    if (options.TurnstileEnabled)
+                        "CAPTCHA should be explicitly enabled or disabled.")!);
+                    if (options.CaptchaEnabled)
                     {
-                        options.TurnstileSecretKey = CheckedEnvironmentVariable(
-                            "TURNSTILE_SECRET_KEY",
+                        options.CaptchaSecretKey = CheckedEnvironmentVariable(
+                            "COMBINE_CAPTCHA_SECRET_KEY",
                             null,
-                            "Turnstile secret key required.");
-                        options.TurnstileVerifyUrl = CheckedEnvironmentVariable(
-                            "TURNSTILE_VERIFY_URL",
+                            "CAPTCHA secret key required.");
+                        options.CaptchaVerifyUrl = CheckedEnvironmentVariable(
+                            "COMBINE_CAPTCHA_VERIFY_URL",
                             null,
-                            "Turnstile verification URL required.");
+                            "CAPTCHA verification URL required.");
                     }
                 });
 
@@ -220,6 +220,10 @@ namespace BackendFramework
             // Banner types
             services.AddTransient<IBannerContext, BannerContext>();
             services.AddTransient<IBannerRepository, BannerRepository>();
+
+            // CAPTCHA types
+            services.AddTransient<ICaptchaContext, CaptchaContext>();
+            services.AddTransient<ICaptchaService, CaptchaService>();
 
             // Email types
             services.AddTransient<IEmailContext, EmailContext>();
@@ -258,10 +262,6 @@ namespace BackendFramework
 
             // Statistics types
             services.AddSingleton<IStatisticsService, StatisticsService>();
-
-            // Turnstile types
-            services.AddTransient<ITurnstileContext, TurnstileContext>();
-            services.AddTransient<ITurnstileService, TurnstileService>();
 
             // User types
             services.AddTransient<IUserContext, UserContext>();

@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 namespace BackendFramework.Interfaces
 {
-    public interface ITurnstileService
+    public interface ICaptchaService
     {
         Task<bool> VerifyToken(string token);
     }

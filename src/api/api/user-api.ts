@@ -612,13 +612,13 @@ export const UserApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    validateTurnstile: async (
+    verifyCaptchaToken: async (
       token: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'token' is not null or undefined
-      assertParamExists("validateTurnstile", "token", token);
-      const localVarPath = `/v1/users/turnstile/{token}`.replace(
+      assertParamExists("verifyCaptchaToken", "token", token);
+      const localVarPath = `/v1/users/captcha/{token}`.replace(
         `{${"token"}}`,
         encodeURIComponent(String(token))
       );
@@ -935,14 +935,14 @@ export const UserApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async validateTurnstile(
+    async verifyCaptchaToken(
       token: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.validateTurnstile(token, options);
+        await localVarAxiosParamCreator.verifyCaptchaToken(token, options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -1111,9 +1111,9 @@ export const UserApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    validateTurnstile(token: string, options?: any): AxiosPromise<void> {
+    verifyCaptchaToken(token: string, options?: any): AxiosPromise<void> {
       return localVarFp
-        .validateTurnstile(token, options)
+        .verifyCaptchaToken(token, options)
         .then((request) => request(axios, basePath));
     },
   };
@@ -1267,15 +1267,15 @@ export interface UserApiValidateResetTokenRequest {
 }
 
 /**
- * Request parameters for validateTurnstile operation in UserApi.
+ * Request parameters for verifyCaptchaToken operation in UserApi.
  * @export
- * @interface UserApiValidateTurnstileRequest
+ * @interface UserApiVerifyCaptchaTokenRequest
  */
-export interface UserApiValidateTurnstileRequest {
+export interface UserApiVerifyCaptchaTokenRequest {
   /**
    *
    * @type {string}
-   * @memberof UserApiValidateTurnstile
+   * @memberof UserApiVerifyCaptchaToken
    */
   readonly token: string;
 }
@@ -1470,17 +1470,17 @@ export class UserApi extends BaseAPI {
 
   /**
    *
-   * @param {UserApiValidateTurnstileRequest} requestParameters Request parameters.
+   * @param {UserApiVerifyCaptchaTokenRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UserApi
    */
-  public validateTurnstile(
-    requestParameters: UserApiValidateTurnstileRequest,
+  public verifyCaptchaToken(
+    requestParameters: UserApiVerifyCaptchaTokenRequest,
     options?: any
   ) {
     return UserApiFp(this.configuration)
-      .validateTurnstile(requestParameters.token, options)
+      .verifyCaptchaToken(requestParameters.token, options)
       .then((request) => request(this.axios, this.basePath));
   }
 }

@@ -7,10 +7,18 @@ metadata:
 data:
   COMBINE_PASSWORD_RESET_EXPIRE_TIME:
     {{ .Values.combinePasswordResetTime | quote }}
-  COMBINE_EMAIL_ENABLED: {{ .Values.combineEmailEnabled | quote }}
+  {{- if .Values.global.emailEnabled }}
+  COMBINE_EMAIL_ENABLED: "True"
+  {{- else }}
+  COMBINE_EMAIL_ENABLED: "False"
+  {{- end }}
   COMBINE_SMTP_ADDRESS: {{ .Values.combineSmtpAddress | quote }}
   COMBINE_SMTP_FROM: {{ .Values.combineSmtpFrom | quote }}
   COMBINE_SMTP_PORT: {{ .Values.combineSmtpPort | quote }}
   COMBINE_SMTP_SERVER: {{ .Values.combineSmtpServer | quote }}
-  TURNSTILE_ENABLED: {{ .Values.turnstileEnabled | quote }}
-  TURNSTILE_VERIFY_URL: {{ .Values.turnstileVerifyUrl | quote }}
+  {{- if .Values.global.captchRequired }}
+  COMBINE_CAPTCHA_REQUIRED: "True"
+  {{- else }}
+  COMBINE_CAPTCHA_REQUIRED: "False"
+  {{- end }}
+  COMBINE_CAPTCHA_VERIFY_URL: {{ .Values.captchaVerifyUrl | quote }}

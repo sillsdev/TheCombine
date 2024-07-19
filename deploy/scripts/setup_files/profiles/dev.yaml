@@ -11,7 +11,6 @@ charts:
       enabled: false
 
     frontend:
-      configCaptchaRequired: "true"
       # https://developers.cloudflare.com/turnstile/troubleshooting/testing/
       # has dummy secret keys for development and testing; options are
       # invisible pass and fail, visible pass and fail, and forced interaction
@@ -22,6 +21,7 @@ charts:
       imagePullPolicy: Never
       includeResourceLimits: false
       awsS3Location: dev.thecombine.app
+      captchaRequired: true
 
     ingressClass: nginx
     imagePullPolicy: Never

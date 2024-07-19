@@ -45,7 +45,7 @@ const config = new Api.Configuration(config_parameters);
  * and the blanket error pop ups should be suppressed.*/
 const whiteListedErrorUrls = [
   "users/authenticate",
-  "users/turnstile",
+  "users/captcha",
   "/speakers/create/",
   "/speakers/update/",
 ];
@@ -612,9 +612,9 @@ export async function getProgressEstimationLineChartRoot(
 
 /* UserController.cs */
 
-export async function validateCaptcha(token: string): Promise<boolean> {
+export async function verifyCaptchaToken(token: string): Promise<boolean> {
   return await userApi
-    .validateTurnstile({ token })
+    .verifyCaptchaToken({ token })
     .then(() => true)
     .catch(() => false);
 }

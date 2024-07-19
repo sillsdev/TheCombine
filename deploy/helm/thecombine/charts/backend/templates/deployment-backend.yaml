@@ -74,20 +74,20 @@ spec:
                 secretKeyRef:
                   key: COMBINE_SMTP_USERNAME
                   name: env-backend-secrets
-            - name: TURNSTILE_ENABLED
+            - name: COMBINE_CAPTCHA_REQUIRED
               valueFrom:
                 configMapKeyRef:
-                  key: TURNSTILE_ENABLED
+                  key: COMBINE_CAPTCHA_REQUIRED
                   name: env-backend
-            - name: TURNSTILE_SECRET_KEY
+            - name: COMBINE_CAPTCHA_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  key: TURNSTILE_SECRET_KEY
+                  key: COMBINE_CAPTCHA_SECRET_KEY
                   name: env-backend-secrets
-            - name: TURNSTILE_VERIFY_URL
+            - name: COMBINE_CAPTCHA_VERIFY_URL
               valueFrom:
                 configMapKeyRef:
-                  key: TURNSTILE_VERIFY_URL
+                  key: COMBINE_CAPTCHA_VERIFY_URL
                   name: env-backend
           ports:
             - containerPort: 5000

@@ -13,14 +13,16 @@ global:
   imageTag: "latest"
   # Define the image registry to use (may be blank for local images)
   imageRegistry: ""
+  # Email services
+  emailEnabled: "true"
+  # CAPTCHA verification
+  captchaRequired: "true"
 
 imageName: combine_frontend
 
 # The additional domain list is a space-separated string list of domains
 combineAddlDomainList: ""
-configCaptchaRequired: "false"
 configCaptchaSiteKey: "None - from frontend chart"
 configOffline: "false"
-configEmailEnabled: "true"
 configShowCertExpiration: "false"
 configAnalyticsWriteKey: ""

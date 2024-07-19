@@ -3,7 +3,7 @@ import { Fragment, type ReactElement, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import { validateCaptcha } from "backend";
+import { verifyCaptchaToken } from "backend";
 import i18n from "i18n";
 import { RuntimeConfig } from "types/runtimeConfig";
 
@@ -37,15 +37,17 @@ export default function Captcha(props: CaptchaProps): ReactElement {
   const succeed = (): void => {
     setSuccess(true);
   };
-  const validate = (token: string): void => {
-    validateCaptcha(token).then((isValid) => (isValid ? succeed() : fail()));
+  const verify = (token: string): void => {
+    verifyCaptchaToken(token).then((isVerified) =>
+      isVerified ? succeed() : fail()
+    );
   };
 
   return isRequired.current ? (
     <Turnstile
       onError={fail}
       onExpire={fail}
-      onSuccess={validate}
+      onSuccess={verify}
       options={{ language: i18n.resolvedLanguage, theme: "light" }}
       siteKey={siteKey}
     />

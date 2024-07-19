@@ -8,24 +8,24 @@ using BackendFramework.Interfaces;
 namespace BackendFramework.Services
 {
     [ExcludeFromCodeCoverage]
-    public class TurnstileService : ITurnstileService
+    public class CaptchaService : ICaptchaService
     {
-        private readonly ITurnstileContext _turnstileContext;
+        private readonly ICaptchaContext _captchaContext;
 
-        public TurnstileService(ITurnstileContext turnstileContext)
+        public CaptchaService(ICaptchaContext captchaContext)
         {
-            _turnstileContext = turnstileContext;
+            _captchaContext = captchaContext;
         }
 
         public async Task<bool> VerifyToken(string token)
         {
-            if (!_turnstileContext.TurnstileEnabled)
+            if (!_captchaContext.CaptchaEnabled)
             {
                 throw new TurnstileNotEnabledException();
             }
 
-            var secret = _turnstileContext.TurnstileSecretKey;
-            var verifyUrl = _turnstileContext.TurnstileVerifyUrl;
+            var secret = _captchaContext.CaptchaSecretKey;
+            var verifyUrl = _captchaContext.CaptchaVerifyUrl;
             if (string.IsNullOrEmpty(secret) || string.IsNullOrEmpty(verifyUrl))
             {
                 return false;
