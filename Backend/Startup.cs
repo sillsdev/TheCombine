@@ -168,7 +168,7 @@ namespace BackendFramework
 
                     options.CaptchaEnabled = bool.Parse(CheckedEnvironmentVariable(
                         "COMBINE_CAPTCHA_REQUIRED",
-                        bool.TrueString, // "True"
+                        bool.TrueString,
                         "CAPTCHA should be explicitly required or not required.")!);
                     if (options.CaptchaEnabled)
                     {
@@ -185,7 +185,7 @@ namespace BackendFramework
                     const string emailServiceFailureMessage = "Email services will not work.";
                     options.EmailEnabled = bool.Parse(CheckedEnvironmentVariable(
                         "COMBINE_EMAIL_ENABLED",
-                        bool.FalseString, // "False"
+                        bool.FalseString,
                         emailServiceFailureMessage,
                         true)!);
                     if (options.EmailEnabled)

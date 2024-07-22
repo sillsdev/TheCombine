@@ -15,7 +15,7 @@
       "launchUrl": "v1",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "COMBINE_CAPTCHA_REQUIRED": "True",
+        "COMBINE_CAPTCHA_REQUIRED": "true",
         "COMBINE_CAPTCHA_SECRET_KEY": "1x0000000000000000000000000000000AA",
         "COMBINE_CAPTCHA_VERIFY_URL": "https://challenges.cloudflare.com/turnstile/v0/siteverify",
         "COMBINE_JWT_SECRET_KEY": "0123456789abcdefghijklmnopqrstuvwxyz"
@@ -28,7 +28,7 @@
       "environmentVariables": {
         "Key": "Value",
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "COMBINE_CAPTCHA_REQUIRED": "True",
+        "COMBINE_CAPTCHA_REQUIRED": "true",
         "COMBINE_CAPTCHA_SECRET_KEY": "1x0000000000000000000000000000000AA",
         "COMBINE_CAPTCHA_VERIFY_URL": "https://challenges.cloudflare.com/turnstile/v0/siteverify",
         "COMBINE_JWT_SECRET_KEY": "0123456789abcdefghijklmnopqrstuvwxyz"

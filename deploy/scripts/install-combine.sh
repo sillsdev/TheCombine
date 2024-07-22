@@ -13,12 +13,10 @@ set-combine-env () {
     read -p "Enter AWS_SECRET_ACCESS_KEY: " AWS_SECRET_ACCESS_KEY
     # write collected values and static values to config file
     cat <<.EOF > ${CONFIG_DIR}/env
+    export COMBINE_JWT_SECRET_KEY="${COMBINE_JWT_SECRET_KEY}"
     export AWS_DEFAULT_REGION="us-east-1"
     export AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}"
     export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
-    export COMBINE_CAPTCHA_REQUIRED="False"
-    export COMBINE_EMAIL_ENABLED="False"
-    export COMBINE_JWT_SECRET_KEY="${COMBINE_JWT_SECRET_KEY}"
 .EOF
     chmod 600 ${CONFIG_DIR}/env
   fi
