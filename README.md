@@ -146,7 +146,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    SMTP values must be kept secret, so ask your email administrator to supply them. Set them in your `.profile` (Linux
    or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the _System_ app (Windows).
 
-   - `COMBINE_EMAIL_ENABLED=True`
+   - `COMBINE_EMAIL_ENABLED=true`
    - `COMBINE_SMTP_SERVER`
    - `COMBINE_SMTP_PORT`
    - `COMBINE_SMTP_USERNAME`
