@@ -246,7 +246,7 @@ describe("DataEntryTable", () => {
   describe("updateEntryGloss", () => {
     it("throws error when entry doesn't have sense with specified guid", () => {
       const entry: WordAccess = { word: newWord(), senseGuid: "gibberish" };
-      expect(() => updateEntryGloss(entry, "def", "semDomId", "")).toThrow();
+      expect(() => updateEntryGloss(entry, "def", "semDomId", "en")).toThrow();
     });
 
     it("directly updates a sense with no other semantic domains", () => {
@@ -260,9 +260,9 @@ describe("DataEntryTable", () => {
       const expectedWord: Word = { ...entry.word };
       expectedWord.senses[senseIndex] = { ...sense, glosses: [expectedGloss] };
 
-      expect(updateEntryGloss(entry, def, mockSemDom.id, "")).toEqual(
-        expectedWord
-      );
+      expect(
+        updateEntryGloss(entry, def, mockSemDom.id, sense.glosses[0].language)
+      ).toEqual(expectedWord);
     });
 
     it("updates gloss of specified language", () => {
@@ -301,9 +301,9 @@ describe("DataEntryTable", () => {
       newSense.semanticDomains = [mockSemDom];
       const expectedWord: Word = { ...word, senses: [oldSense, newSense] };
 
-      expect(updateEntryGloss(entry, def, mockSemDom.id, "")).toEqual(
-        expectedWord
-      );
+      expect(
+        updateEntryGloss(entry, def, mockSemDom.id, sense.glosses[0].language)
+      ).toEqual(expectedWord);
     });
   });
 

@@ -161,6 +161,8 @@ export function updateEntryGloss(
   const newSense: Sense = { ...sense };
   let glossIndex = sense.glosses.findIndex((g) => g.language === analysisLang);
   if (glossIndex === -1) {
+    // It there's no gloss in the current analysis language, then it's the first gloss
+    // that was shown in the RecentEntry that's now being updated.
     glossIndex = 0;
   }
   newSense.glosses = sense.glosses.map((g, i) =>
