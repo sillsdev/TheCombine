@@ -2,9 +2,7 @@ name: "Deploy Update to QA Server"
 
 on:
   push:
-    branches:
-      - master
-      #- turnstile
+    branches: [master, turnstile]
 
 permissions:
   contents: read
