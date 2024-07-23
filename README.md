@@ -143,8 +143,8 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 ### Prepare the Environment
 
 1. _(Optional)_ If you want the email services to work you will need to set the following environment variables. These
-   SMTP values must be kept secret, so ask your email administrator to supply them. Set them in your `.profile` (Linux
-   or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the _System_ app (Windows).
+   `COMBINE_SMTP_` values must be kept secret, so ask your email administrator to supply them. Set them in your
+   `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the _System_ app (Windows).
 
    - `COMBINE_EMAIL_ENABLED=true`
    - `COMBINE_SMTP_SERVER`
@@ -687,9 +687,9 @@ Notes:
 ### Setup Environment Variables
 
 Before installing _The Combine_ in Kubernetes, you need to set the following environment variables:
-`COMBINE_CAPTCHA_REQUIRED`, `COMBINE_CAPTCHA_SECRET_KEY`, `COMBINE_JWT_SECRET_KEY`. For development environments, you
-can use the values defined in `Backend/Properties/launchSettings.json`. Set them in your `.profile` (Linux or Mac
-10.14-), your `.zprofile` (Mac 10.15+), or the _System_ app (Windows).
+`COMBINE_CAPTCHA_SECRET_KEY`, `COMBINE_JWT_SECRET_KEY`. For development environments, you can use the values defined in
+`Backend/Properties/launchSettings.json`. Set them in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac
+10.15+), or the _System_ app (Windows).
 
 _Note: The following is optional for Development Environments._
 
