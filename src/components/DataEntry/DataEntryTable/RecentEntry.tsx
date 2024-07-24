@@ -41,11 +41,13 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
     sense.glosses.push(newGloss("", props.analysisLang.bcp47));
   }
   const [editing, setEditing] = useState(false);
-  const [gloss, setGloss] = useState(firstGlossText(sense));
+  const [gloss, setGloss] = useState(
+    firstGlossText(sense, props.analysisLang.bcp47)
+  );
   const [vernacular, setVernacular] = useState(props.entry.vernacular);
 
   const updateGlossField = (gloss: string): void => {
-    setEditing(gloss !== firstGlossText(sense));
+    setEditing(gloss !== firstGlossText(sense, props.analysisLang.bcp47));
     setGloss(gloss);
   };
   const updateVernField = (vern: string): void => {
@@ -54,7 +56,7 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
   };
 
   function conditionallyUpdateGloss(): void {
-    if (firstGlossText(sense) !== gloss) {
+    if (firstGlossText(sense, props.analysisLang.bcp47) !== gloss) {
       props.updateGloss(props.rowIndex, gloss);
     }
   }
