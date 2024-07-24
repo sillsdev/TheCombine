@@ -14,7 +14,7 @@ global:
   # Define the image registry to use (may be blank for local images)
   imageRegistry: ""
   imageTag: "latest"
-  pullSecretName: aws-login-credentials
+  pullSecretName: "None"
 
   includeResourceLimits: false
 
