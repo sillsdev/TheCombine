@@ -26,9 +26,9 @@ global:
   captchaRequired: false
   captchaSecretKey: "Override"
   combineJwtSecretKey: "Override"
-  emailEnabled: false
   combineSmtpUsername: "Override"
   combineSmtpPassword: "Override"
+  emailEnabled: false
   # Local Storage for fonts
   fontStorageAccessMode: "ReadWriteOnce"
   fontStorageSize: 1Gi
@@ -52,11 +52,6 @@ cert-proxy-client:
 certManager:
   enabled: false
   certIssuer: letsencrypt-prod
-
-frontend:
-  configShowCertExpiration: false
-  configAnalyticsWriteKey: ""
-  configCaptchaSiteKey: ""
 
 # Maintenance configuration items
 maintenance:
