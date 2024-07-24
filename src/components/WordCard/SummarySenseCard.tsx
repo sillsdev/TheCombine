@@ -9,7 +9,6 @@ import { groupGramInfo } from "utilities/wordUtilities";
 
 interface SummarySenseCardProps {
   backgroundColor?: string;
-  includeGlosses?: boolean;
   senses: Sense[];
 }
 
@@ -52,12 +51,10 @@ export default function SummarySenseCard(
         </Typography>
 
         {/* Glosses */}
-        {props.includeGlosses && (
-          <SensesTextSummary
-            definitionsOrGlosses="glosses"
-            senses={props.senses}
-          />
-        )}
+        <SensesTextSummary
+          definitionsOrGlosses="glosses"
+          senses={props.senses}
+        />
 
         {/* Semantic domain numbers */}
         <Grid container spacing={1}>

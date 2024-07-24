@@ -117,7 +117,7 @@ export default function WordCard(props: WordCardProps): ReactElement {
             />
           ))
         ) : (
-          <SummarySenseCard includeGlosses senses={senses} />
+          <SummarySenseCard senses={senses} />
         )}
 
         {/* Timestamps */}

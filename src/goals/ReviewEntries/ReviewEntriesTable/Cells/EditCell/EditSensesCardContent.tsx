@@ -89,7 +89,6 @@ export default function EditSensesCardContent(
           backgroundColor={
             changes.some((change) => change) ? yellow[100] : undefined
           }
-          includeGlosses
           senses={props.newSenses.filter(
             (s) => s.accessibility !== Status.Deleted
           )}
