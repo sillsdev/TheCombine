@@ -42328,7 +42328,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-i18next-browser-languagedetector 7.2.1
+i18next-browser-languagedetector 8.0.0
 MIT
 The MIT License (MIT)
 
