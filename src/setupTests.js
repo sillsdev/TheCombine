@@ -1,6 +1,6 @@
 import "tests/reactI18nextMock";
 
-// Force tests to fail on console.error and console.warn.
+// Force tests to fail on console.error and console.warn
 global.console.error = (message) => {
   throw message;
 };
@@ -20,3 +20,6 @@ jest
   .spyOn(window.HTMLMediaElement.prototype, "pause")
   .mockImplementation(() => {});
 jest.mock("components/Pronunciations/RecorderContext", () => ({}));
+
+// Mock the router to short circuit a circular dependency
+jest.mock("router/browserRouter", () => ({ navigate: jest.fn() }));
