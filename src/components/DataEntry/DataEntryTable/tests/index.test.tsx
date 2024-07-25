@@ -27,7 +27,13 @@ import {
   semDomFromTreeNode,
 } from "types/semanticDomain";
 import { newUser } from "types/user";
-import { multiSenseWord, newSense, newWord, simpleWord } from "types/word";
+import {
+  multiSenseWord,
+  newGloss,
+  newSense,
+  newWord,
+  simpleWord,
+} from "types/word";
 import { Bcp47Code } from "types/writingSystem";
 import { firstGlossText } from "utilities/wordUtilities";
 
@@ -243,7 +249,7 @@ describe("DataEntryTable", () => {
   describe("updateEntryGloss", () => {
     it("throws error when entry doesn't have sense with specified guid", () => {
       const entry: WordAccess = { word: newWord(), senseGuid: "gibberish" };
-      expect(() => updateEntryGloss(entry, "def", "semDomId")).toThrow();
+      expect(() => updateEntryGloss(entry, "def", "semDomId", "en")).toThrow();
     });
 
     it("directly updates a sense with no other semantic domains", () => {
@@ -257,7 +263,30 @@ describe("DataEntryTable", () => {
       const expectedWord: Word = { ...entry.word };
       expectedWord.senses[senseIndex] = { ...sense, glosses: [expectedGloss] };
 
-      expect(updateEntryGloss(entry, def, mockSemDom.id)).toEqual(expectedWord);
+      expect(
+        updateEntryGloss(entry, def, mockSemDom.id, sense.glosses[0].language)
+      ).toEqual(expectedWord);
+    });
+
+    it("updates gloss of specified language", () => {
+      const senseIndex = 1;
+      const sense: Sense = { ...mockMultiWord.senses[senseIndex] };
+      const targetGloss = newGloss("target language", "tl");
+      sense.glosses = [...sense.glosses, targetGloss];
+      sense.semanticDomains = [mockSemDom];
+      const entry: WordAccess = { word: mockMultiWord, senseGuid: sense.guid };
+      const def = "newGlossDef";
+
+      const expectedGloss: Gloss = { ...targetGloss, def };
+      const expectedWord: Word = { ...entry.word };
+      expectedWord.senses[senseIndex] = {
+        ...sense,
+        glosses: [sense.glosses[0], expectedGloss],
+      };
+
+      expect(
+        updateEntryGloss(entry, def, mockSemDom.id, targetGloss.language)
+      ).toEqual(expectedWord);
     });
 
     it("splits a sense with multiple semantic domains", () => {
@@ -275,7 +304,9 @@ describe("DataEntryTable", () => {
       newSense.semanticDomains = [mockSemDom];
       const expectedWord: Word = { ...word, senses: [oldSense, newSense] };
 
-      expect(updateEntryGloss(entry, def, mockSemDom.id)).toEqual(expectedWord);
+      expect(
+        updateEntryGloss(entry, def, mockSemDom.id, sense.glosses[0].language)
+      ).toEqual(expectedWord);
     });
   });
 

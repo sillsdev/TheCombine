@@ -1,14 +1,10 @@
 # The Combine
 
-[![Frontend Actions Status][github-actions-frontend-badge]][github-actions]
+[![Frontend Actions Status][github-actions-frontend-badge]][github-actions-frontend]
 [![Frontend Coverage][frontend-codecov-badge]][codecov-frontend]
 
-[![Backend Actions Status][github-actions-backend-badge]][github-actions]
+[![Backend Actions Status][github-actions-backend-badge]][github-actions-backend]
 [![Backend Coverage][backend-codecov-badge]][codecov-backend]
-
-[![CodeQL Actions Status][github-actions-codeql-badge]][github-actions]
-[![Python Actions Status][github-actions-python-badge]][github-actions]
-[![OSSF Scorecard][github-actions-ossf-badge]][github-actions]
 
 [![GitHub release][github-release-badge]][github-version] [![GitHub version][github-version-badge]][github-version]
 [![GitHub][github-license-badge]][github-license] [![GitHub contributors][github-contribs-badge]][github-contribs]
@@ -23,12 +19,9 @@
 [codecov-backend]: https://app.codecov.io/gh/sillsdev/TheCombine/tree/master/Backend
 [github-actions-backend-badge]: https://github.com/sillsdev/TheCombine/workflows/backend/badge.svg
 [backend-codecov-badge]: https://codecov.io/gh/sillsdev/TheCombine/branch/master/graph/badge.svg?flag=backend
-[github-actions-python-badge]: https://github.com/sillsdev/TheCombine/workflows/python/badge.svg
-[github-actions-codeql-badge]: https://github.com/sillsdev/TheCombine/workflows/CodeQL/badge.svg
-[github-actions-ossf-badge]:
-  https://github.com/sillsdev/TheCombine/workflows/Scorecards%20supply-chain%20security/badge.svg
 [localization-ui-badge]: https://img.shields.io/badge/User%20Interface-Ar%20En%20Es%20Fr%20Pt%20Zh-blue
-[github-actions]: https://github.com/sillsdev/TheCombine/actions
+[github-actions-frontend]: https://github.com/sillsdev/TheCombine/actions/workflows/frontend.yml
+[github-actions-backend]: https://github.com/sillsdev/TheCombine/actions/workflows/backend.yml
 [localization-sd-badge]:
   https://img.shields.io/badge/Semantic%20Domains-Ar%20En%20Es%20Fr%20Hi%20Id%20Ml%20My%20Pt%20Ru%20Sw%20Zh-blue
 [localization-ug-badge]: https://img.shields.io/badge/User%20Guide-En%20Es%20Zh-blue
@@ -149,12 +142,11 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 
 ### Prepare the Environment
 
-1. Set the environment variable `COMBINE_JWT_SECRET_KEY` to a string **containing at least 32 characters**, such as
-   _This is a secret key that is longer_. Set it in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac
-   10.15+), or the _System_ app (Windows).
-2. If you want the email services to work you will need to set the following environment variables. These values must be
-   kept secret, so ask your email administrator to supply them.
+1. _(Optional)_ If you want the email services to work you will need to set the following environment variables. These
+   `COMBINE_SMTP_` values must be kept secret, so ask your email administrator to supply them. Set them in your
+   `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the _System_ app (Windows).
 
+   - `COMBINE_EMAIL_ENABLED=true`
    - `COMBINE_SMTP_SERVER`
    - `COMBINE_SMTP_PORT`
    - `COMBINE_SMTP_USERNAME`
@@ -162,16 +154,16 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    - `COMBINE_SMTP_ADDRESS`
    - `COMBINE_SMTP_FROM`
 
-3. _(Optional)_ To opt in to segment.com analytics to test the analytics during development:
+2. _(Optional)_ To opt in to segment.com analytics to test the analytics during development:
 
    ```bash
    # For Windows, use `copy`.
    cp .env.local.template .env.local
    ```
 
-4. Run `npm start` from the project directory to install dependencies and start the project.
+3. Run `npm start` from the project directory to install dependencies and start the project.
 
-5. Consult our [C#](docs/style_guide/c_sharp_style_guide.md) and [TypeScript](docs/style_guide/ts_style_guide.md) style
+4. Consult our [C#](docs/style_guide/c_sharp_style_guide.md) and [TypeScript](docs/style_guide/ts_style_guide.md) style
    guides for best coding practices in this project.
 
 [chocolatey]: https://chocolatey.org/
@@ -274,7 +266,9 @@ python -m piptools compile --upgrade requirements.in
 
 ### Load Semantic Domains
 
-Data Entry will not work in The Combine unless the semantic domains have been loaded into the database. Follow the instuctions in [Import Semantic Domains](#import-semantic-domains) below to import the domains from at least one of the semantic domains XML files (which each contain domain data in English and one other language.)
+Data Entry will not work in The Combine unless the semantic domains have been loaded into the database. Follow the
+instuctions in [Import Semantic Domains](#import-semantic-domains) below to import the domains from at least one of the
+semantic domains XML files (which each contain domain data in English and one other language.)
 
 ## Available Scripts
 
@@ -692,7 +686,12 @@ Notes:
 
 ### Setup Environment Variables
 
-_Note: This is optional for Development Environments._
+Before installing _The Combine_ in Kubernetes, you need to set the following environment variables:
+`COMBINE_CAPTCHA_SECRET_KEY`, `COMBINE_JWT_SECRET_KEY`. For development environments, you can use the values defined in
+`Backend/Properties/launchSettings.json`. Set them in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac
+10.15+), or the _System_ app (Windows).
+
+_Note: The following is optional for Development Environments._
 
 In addition to the environment variables defined in [Prepare the Environment](#prepare-the-environment), you may setup
 the following environment variables:
@@ -702,15 +701,13 @@ the following environment variables:
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
 
-These variables will allow the Combine to:
+These variables will allow _The Combine_ to:
 
 - pull released and QA software images from AWS Elastic Container Registry (ECR);
 - create backups and push them to AWS S3 storage; and
 - restore _The Combine's_ database and backend files from a backup stored in AWS S3 storage.
 
-The Combine application will function in a local cluster without these variables set.
-
-These can be set in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the _System_ app (Windows).
+The Combine application will function in a local cluster without these `AWS_` variables set.
 
 ### Install/Update _The Combine_
 

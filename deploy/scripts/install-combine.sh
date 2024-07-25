@@ -17,7 +17,6 @@ set-combine-env () {
     export AWS_DEFAULT_REGION="us-east-1"
     export AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID}"
     export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY}"
-    export COMBINE_SMTP_USERNAME="nobody"
 .EOF
     chmod 600 ${CONFIG_DIR}/env
   fi

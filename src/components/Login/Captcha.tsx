@@ -1,27 +1,56 @@
-import ReCaptcha from "@matt-block/react-recaptcha-v2";
-import { Fragment, ReactElement } from "react";
+import { Turnstile } from "@marsidev/react-turnstile";
+import { Fragment, type ReactElement, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
+import { verifyCaptchaToken } from "backend";
+import i18n from "i18n";
 import { RuntimeConfig } from "types/runtimeConfig";
 
-interface CaptchaProps {
-  onExpire: () => void;
-  onSuccess: () => void;
+export interface CaptchaProps {
+  /** Parent function to call when CAPTCHA succeeds or fails. */
+  setSuccess: (success: boolean) => void;
 }
 
+/** Component wrapper for CAPTCHA implementation. */
 export default function Captcha(props: CaptchaProps): ReactElement {
-  return RuntimeConfig.getInstance().captchaRequired() ? (
-    <div className="form-group" style={{ margin: "5px" }}>
-      <ReCaptcha
-        onError={() =>
-          console.error("Something went wrong; check your connection.")
-        }
-        onExpire={props.onExpire}
-        onSuccess={props.onSuccess}
-        siteKey={RuntimeConfig.getInstance().captchaSiteKey()}
-        size="normal"
-        theme="light"
-      />
-    </div>
+  const setSuccess = props.setSuccess;
+  const isRequired = useRef(RuntimeConfig.getInstance().captchaRequired());
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    setSuccess(!isRequired.current);
+  }, [isRequired, setSuccess]);
+
+  const siteKey =
+    process.env.NODE_ENV === "production"
+      ? RuntimeConfig.getInstance().captchaSiteKey()
+      : // https://developers.cloudflare.com/turnstile/troubleshooting/testing/
+        // has dummy site keys for development and testing; options are
+        // invisible pass, invisible fail, visible pass, visible fail, forced interaction
+        "1x00000000000000000000AA"; // visible pass
+
+  const fail = (): void => {
+    setSuccess(false);
+    toast.error(t("captcha.error"));
+  };
+  const succeed = (): void => {
+    setSuccess(true);
+  };
+  const verify = (token: string): void => {
+    verifyCaptchaToken(token).then((isVerified) =>
+      isVerified ? succeed() : fail()
+    );
+  };
+
+  return isRequired.current ? (
+    <Turnstile
+      onError={fail}
+      onExpire={fail}
+      onSuccess={verify}
+      options={{ language: i18n.resolvedLanguage, theme: "light" }}
+      siteKey={siteKey}
+    />
   ) : (
     <Fragment />
   );
