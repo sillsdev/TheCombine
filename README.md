@@ -637,7 +637,7 @@ environment. (See the [Python](#python) section to create the virtual environmen
 Install the required charts by running:
 
 ```bash
-python deploy/scripts/setup_cluster.py
+python deploy/scripts/setup_cluster.py --type development
 ```
 
 `deploy/scripts/setup_cluster.py` assumes that the `kubectl` configuration file is setup to manage the desired

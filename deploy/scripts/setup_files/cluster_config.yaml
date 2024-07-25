@@ -1,6 +1,8 @@
 # Define the charts that need to be installed for each cluster type
 clusters:
   standard:
+    - nginx-ingress-controller
+  development:
     - cert-manager
     - nginx-ingress-controller
   rancher:
@@ -21,10 +23,10 @@ cert-manager:
     name: cert-manager
     reference: jetstack/cert-manager
     namespace: cert-manager
-    version: v1.15.1
+    version: v1.12.3
     wait: true
     override:
-      crds.enabled: true
+      installCRDs: true
 
 nginx-ingress-controller:
   repo:
