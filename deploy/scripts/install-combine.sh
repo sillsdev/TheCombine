@@ -120,7 +120,7 @@ install-base-charts () {
   if [ -d "${DEPLOY_DIR}/airgap-charts" ] ; then
     ./setup_cluster.py ${SETUP_OPTS} --chart-dir ${DEPLOY_DIR}/airgap-charts
   else
-      ./setup_cluster.py ${SETUP_OPTS}
+    ./setup_cluster.py ${SETUP_OPTS}
   fi
   deactivate
 }
