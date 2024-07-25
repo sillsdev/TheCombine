@@ -13,8 +13,9 @@ charts:
       enabled: false
     # Frontend configuration items:
     frontend:
-      configShowCertExpiration: false
       configAnalyticsWriteKey: "j9EeK4oURluRSIKbaXCBKBxGCnT2WahB"
+      configCaptchaSiteKey: "0x4AAAAAAAe9zmM2ysXGSJk1" # Turnstile site key
+      configShowCertExpiration: false
     # Maintenance configuration items
     maintenance:
       #######################################
@@ -29,6 +30,8 @@ charts:
       updateFontsSchedule: "15 02 * * 0"
     global:
       awsS3Location: prod.thecombine.app
+      captchaRequired: true
+      emailEnabled: true
       fontStorageAccessMode: ReadWriteMany
       imagePullPolicy: Always
       pullSecretName: None
