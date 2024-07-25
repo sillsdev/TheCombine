@@ -18,17 +18,28 @@ namespace BackendFramework.Controllers
     public class UserController : Controller
     {
         private readonly IUserRepository _userRepo;
+        private readonly ICaptchaService _captchaService;
         private readonly IEmailService _emailService;
         private readonly IPasswordResetService _passwordResetService;
         private readonly IPermissionService _permissionService;
 
         public UserController(IUserRepository userRepo, IPermissionService permissionService,
-            IEmailService emailService, IPasswordResetService passwordResetService)
+            ICaptchaService captchaService, IEmailService emailService, IPasswordResetService passwordResetService)
         {
             _userRepo = userRepo;
+            _captchaService = captchaService;
             _emailService = emailService;
             _passwordResetService = passwordResetService;
             _permissionService = permissionService;
+        }
+
+        /// <summary> Verifies a CAPTCHA token </summary>
+        [AllowAnonymous]
+        [HttpGet("captcha/{token}", Name = "VerifyCaptchaToken")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> VerifyCaptchaToken(string token)
+        {
+            return await _captchaService.VerifyToken(token) ? Ok() : BadRequest();
         }
 
         /// <summary> Sends a password reset request </summary>

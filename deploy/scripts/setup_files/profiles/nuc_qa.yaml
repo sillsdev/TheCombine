@@ -2,7 +2,7 @@
 ################################################
 # Profile specific configuration items
 #
-# Profile: nuc
+# Profile: nuc_qa
 ################################################
 
 charts:
@@ -11,11 +11,11 @@ charts:
       enabled: true
     global:
       awsS3Location: prod.thecombine.app
-      combineSmtpUsername: ""
+      captchaRequired: false
+      emailEnabled: false
       imagePullPolicy: Always
     frontend:
       configOffline: true
-      configEmailEnabled: false
     maintenance:
       localLangList:
         - "ar"
