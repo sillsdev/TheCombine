@@ -16,6 +16,7 @@ import {
   type FormEvent,
   Fragment,
   type ReactElement,
+  useEffect,
   useState,
 } from "react";
 import { Trans, useTranslation } from "react-i18next";
@@ -54,6 +55,14 @@ export default function CreateProject(): ReactElement {
   const [vernLang, setVernLang] = useState(newWritingSystem(undBcp47));
   const [vernLangIsOther, setVernLangIsOther] = useState(false);
   const [vernLangOptions, setVernLangOptions] = useState<WritingSystem[]>([]);
+
+  useEffect(() => {
+    // Turn on the empty name error if the name is empty and another field isn't empty.
+    const empty =
+      !name.trim() &&
+      (!!languageData || (!!vernLang.bcp47 && vernLang.bcp47 !== undBcp47));
+    setError((prev) => (empty === prev.empty ? prev : { ...prev, empty }));
+  }, [languageData, name, vernLang.bcp47]);
 
   const { t } = useTranslation();
 
@@ -98,9 +107,10 @@ export default function CreateProject(): ReactElement {
   const updateName = (
     e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement>
   ): void => {
-    const name = e.target.value;
-    setName(name);
-    setError({ empty: !name, nameTaken: false });
+    setName(e.target.value);
+
+    // Turn off the nameTaken error when name is changed.
+    setError((prev) => (prev.nameTaken ? { ...prev, nameTaken: false } : prev));
   };
 
   const updateLanguageData = async (langData?: File): Promise<void> => {
@@ -159,15 +169,17 @@ export default function CreateProject(): ReactElement {
 
   const createProject = async (e: FormEvent<EventTarget>): Promise<void> => {
     e.preventDefault();
-    if (success) {
-      return;
-    }
     const trimmedName = name.trim();
-    if (!trimmedName) {
-      setError({ empty: true, nameTaken: false });
+    if (
+      success ||
+      !trimmedName ||
+      !vernLang.bcp47 ||
+      vernLang.bcp47 === undBcp47
+    ) {
+      // Backstop for cases when this function shouldn't have run in the first place.
       return;
     }
-    if (await projectDuplicateCheck(name)) {
+    if (await projectDuplicateCheck(trimmedName)) {
       setError({ empty: false, nameTaken: true });
       return;
     }
@@ -175,13 +187,13 @@ export default function CreateProject(): ReactElement {
     setLoading(true);
 
     if (languageData) {
-      await dispatch(asyncFinishProject(name, vernLang)).then(() =>
+      await dispatch(asyncFinishProject(trimmedName, vernLang)).then(() =>
         setSuccess(true)
       );
     } else {
-      await dispatch(asyncCreateProject(name, vernLang, [analysisLang])).then(
-        () => setSuccess(true)
-      );
+      await dispatch(
+        asyncCreateProject(trimmedName, vernLang, [analysisLang])
+      ).then(() => setSuccess(true));
     }
   };
 
@@ -294,7 +306,9 @@ export default function CreateProject(): ReactElement {
           >
             <LoadingDoneButton
               buttonProps={{ color: "primary", id: buttonIdSubmit }}
-              disabled={!vernLang.bcp47 || vernLang.bcp47 === undBcp47}
+              disabled={
+                !name.trim() || !vernLang.bcp47 || vernLang.bcp47 === undBcp47
+              }
               done={success}
               doneText={t("createProject.success")}
               loading={loading}

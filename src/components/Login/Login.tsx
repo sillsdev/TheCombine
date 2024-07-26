@@ -51,9 +51,7 @@ export default function Login(): ReactElement {
   );
 
   const [banner, setBanner] = useState("");
-  const [isVerified, setIsVerified] = useState(
-    !RuntimeConfig.getInstance().captchaRequired()
-  );
+  const [isVerified, setIsVerified] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [username, setUsername] = useState("");
@@ -153,10 +151,7 @@ export default function Login(): ReactElement {
               </Typography>
             )}
 
-            <Captcha
-              onExpire={() => setIsVerified(false)}
-              onSuccess={() => setIsVerified(true)}
-            />
+            <Captcha setSuccess={setIsVerified} />
 
             {/* User Guide, Sign Up, and Log In buttons */}
             <Grid container justifyContent="space-between">

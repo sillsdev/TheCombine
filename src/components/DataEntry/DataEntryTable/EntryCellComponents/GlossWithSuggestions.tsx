@@ -10,6 +10,7 @@ import { Key } from "ts-key-enum";
 
 import { type WritingSystem } from "api/models";
 import { LiWithFont, TextFieldWithFont } from "utilities/fontComponents";
+import SpellChecker from "utilities/spellChecker";
 import SpellCheckerContext from "utilities/spellCheckerContext";
 
 interface GlossWithSuggestionsProps {
@@ -84,7 +85,7 @@ export default function GlossWithSuggestions(
           aria-selected={selected}
           lang={props.analysisLang.bcp47}
         >
-          {option}
+          {SpellChecker.replaceAllButLastWordWithEllipses(option)}
         </LiWithFont>
       )}
       onKeyPress={(e: KeyboardEvent) => {
