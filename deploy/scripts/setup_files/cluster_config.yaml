@@ -7,7 +7,7 @@ clusters:
     - nginx-ingress-controller
   rancher:
     - rancher-ui
-  cert-mgr:
+  cert-manager:
     - cert-manager
   ingress:
     - nginx-ingress-controller

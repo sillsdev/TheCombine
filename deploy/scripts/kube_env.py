@@ -76,7 +76,7 @@ class KubernetesEnvironment:
 
 
 def add_helm_opts(parser: argparse.ArgumentParser) -> None:
-    """Add commandline arguments for Helm."""
+    """Add command line arguments for Helm."""
     parser.add_argument(
         "--dry-run",
         action="store_true",

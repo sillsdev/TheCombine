@@ -50,7 +50,7 @@ if [[ $NET_INSTALL == 0 ]] ; then
   python -m pip install --upgrade pip pip-tools
   python -m piptools sync requirements.txt
 
-  # Package the so that the Combine can be installed "offline"
+  # Package the Combine for "offline" installation
   TEMP_DIR=/tmp/images-$$
   pushd scripts
   ./package_images.py ${COMBINE_VERSION} ${TEMP_DIR}
@@ -66,7 +66,7 @@ if [[ $NET_INSTALL == 0 ]] ; then
   tar czf ${TEMP_DIR}/venv.tar.gz venv
   rm -rf venv
 else
-  # Package the so that the Combine can be installed over the network
+  # Package the Combine for network installation
   INSTALLER_NAME="combine-net-installer.run"
 fi
 

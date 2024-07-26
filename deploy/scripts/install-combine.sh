@@ -175,16 +175,13 @@ next-state () {
 # Verify that the required network devices have been setup
 # for Kubernetes cluster
 wait-for-k8s-interfaces () {
-  date
   echo "Waiting for k8s interfaces"
-  while ! ip link show flannel.1 > /dev/null 2>&1 ; do
-    sleep 1
-  done
-  while ! ip link show cni0  > /dev/null 2>&1 ; do
-    sleep 1
+  for interface in $@ ; do
+    while ! ip link show $interface > /dev/null 2>&1 ; do
+      sleep 1
+    done
   done
   echo "Interfaces ready"
-  date
 }
 
 #####
@@ -258,7 +255,7 @@ while [ "$STATE" != "Done" ] ; do
   case $STATE in
     Pre-reqs)
       install-kubernetes
-      wait-for-k8s-interfaces
+      wait-for-k8s-interfaces flannel.1 cni0
       next-state "Restart"
       ;;
     Restart)

@@ -22,7 +22,6 @@ import yaml
 scripts_dir = Path(__file__).resolve().parent
 ansible_dir = scripts_dir.parent / "ansible"
 helm_dir = scripts_dir.parent / "helm"
-config_dir = scripts_dir / "setup_files" / "combine_config.yaml"
 
 
 def parse_args() -> argparse.Namespace:
@@ -173,8 +172,8 @@ def main() -> None:
     # Clear the AWS variables so that they don't end up in the installer
     os.environ["AWS_ACCESS_KEY_ID"] = ""
     os.environ["AWS_SECRET_ACCESS_KEY"] = ""
-    os.environ["AWS_SECRET_ACCESS_KEY"] = ""
-    os.environ["AWS_SECRET_ACCESS_KEY"] = ""
+    os.environ["AWS_ACCOUNT"] = ""
+    os.environ["AWS_DEFAULT_REGION"] = ""
 
     # Update helm repos
     package_k3s(image_dir)
