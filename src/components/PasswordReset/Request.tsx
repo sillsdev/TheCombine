@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { resetPasswordRequest } from "backend";
 import { LoadingDoneButton } from "components/Buttons";
+import Captcha from "components/Login/Captcha";
 import { Path } from "types/path";
 
 export enum PasswordRequestIds {
@@ -18,6 +19,7 @@ export default function ResetRequest(): ReactElement {
   const [isDone, setIsDone] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
 
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -81,6 +83,9 @@ export default function ResetRequest(): ReactElement {
                 />
               </Grid>
               <Grid item>
+                <Captcha setSuccess={setIsVerified} />
+              </Grid>
+              <Grid item>
                 <LoadingDoneButton
                   buttonProps={{
                     color: "primary",
@@ -89,7 +94,7 @@ export default function ResetRequest(): ReactElement {
                     onClick: () => onSubmit,
                     variant: "contained",
                   }}
-                  disabled={!emailOrUsername}
+                  disabled={!emailOrUsername || !isVerified}
                   loading={isLoading}
                 >
                   {t("passwordReset.submit")}
