@@ -25,8 +25,8 @@ function mockRecordingState(wordId: string): Partial<StoreState> {
 }
 
 describe("AudioRecorder", () => {
-  test("default icon style is idle", () => {
-    act(() => {
+  test("default icon style is idle", async () => {
+    await act(async () => {
       testRenderer = create(
         <ThemeProvider theme={theme}>
           <StyledEngineProvider>
@@ -41,10 +41,10 @@ describe("AudioRecorder", () => {
     expect(icon.props.sx.color({})).toEqual(themeColors.recordIdle);
   });
 
-  test("icon style depends on pronunciations state", () => {
+  test("icon style depends on pronunciations state", async () => {
     const wordId = "1";
     const mockStore2 = configureMockStore()(mockRecordingState(wordId));
-    act(() => {
+    await act(async () => {
       testRenderer = create(
         <ThemeProvider theme={theme}>
           <StyledEngineProvider>

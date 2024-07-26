@@ -47,7 +47,7 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
     }
     const file = await recorder.stopRecording();
     if (!file) {
-      toast.error(t("pronunciations.noMicAccess"));
+      toast.error(t("pronunciations.recordingError"));
       return;
     }
     if (!props.noSpeaker) {
