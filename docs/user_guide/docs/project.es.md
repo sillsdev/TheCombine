@@ -201,8 +201,8 @@ dominios semánticos en [Entrada de datos](./dataEntry.md).
 At this time, The Combine only supports _custom semantic domains_ that extend the
 [established domains](https://semdom.org/). For each established domain, one custom subdomain can be created, which will
 have `.0` added to the end of the domain id. For example, domain _6.2.1.1: Growing Grain_ has three standard subdomains,
-for Rice, Wheat, and Maize. If another grain, such as Barley, is dominant among the people group gathering their
-language, it can be added as domain _6.2.1.1.0_.
+for Rice, Wheat, and Maize. If another grain, such as Barley, is dominant among the people group gathering words, it can
+be added as domain _6.2.1.1.0_.
 
 ![Add Custom Domain](../images/projectSettingsDomsCustomAdd.png){.center}
 
