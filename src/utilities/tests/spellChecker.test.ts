@@ -161,7 +161,7 @@ describe("SpellChecker", () => {
       }, 500);
     });
   });
-  
+
   describe("replaceAllButLastWordWithEllipses", () => {
     it("handles empty string", () => {
       expect(SpellChecker.replaceAllButLastWordWithEllipses("")).toEqual("");
