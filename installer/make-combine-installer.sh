@@ -35,8 +35,7 @@ while (( "$#" )) ; do
 done
 
 if [ -z "${COMBINE_VERSION}" ] ; then
-  echo "COMBINE_VERSION is not set."
-  exit 1
+  error "COMBINE_VERSION is not set."
 fi
 # setup Python virtual environment
 cd ../deploy
