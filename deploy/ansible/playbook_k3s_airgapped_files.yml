@@ -1,8 +1,8 @@
 ---
 ##############################################################
-# Playbook: playbook_k3s_airgap.yml
+# Playbook: playbook_k3s_airgapped_files.yml
 #
-# playbook_k3s_airgap.yml downloads and packages the
+# playbook_k3s_airgapped_files.yml downloads and packages the
 # files necessary to install k3s on an airgapped system.  This
 # includes:
 #  - the k3s airgap images

@@ -16,11 +16,6 @@ app_namespace: thecombine
 k8s_user: "{{ ansible_user_id }}"
 
 ################################################
-# Helm Installation
-################################################
-install_helm: yes
-
-################################################
 # Support Tool Settings
 ################################################
 install_ip_viewer: no

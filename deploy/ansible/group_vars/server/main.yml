@@ -17,11 +17,6 @@ create_namespaces: []
 app_namespace: thecombine
 
 ################################################
-# Helm Installation
-################################################
-install_helm: no
-
-################################################
 # Support Tool Settings
 ################################################
 install_ip_viewer: no

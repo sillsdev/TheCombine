@@ -16,7 +16,7 @@
     dest: "{{ airgap_image_dir }}/{{ item }}"
     owner: root
     group: root
-    mode: 644
+    mode: 0644
   loop:
     - k3s-airgap-images-amd64.tar.zst
     - middleware-airgap-images-amd64.tar.zst
@@ -56,4 +56,4 @@
     state: link
     owner: root
     group: root
-    mode: 0x755
+    mode: 0755
