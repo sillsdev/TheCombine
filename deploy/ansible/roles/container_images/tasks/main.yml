@@ -47,7 +47,7 @@
 
 - name: Unpack helm
   shell:
-    cmd: tar xzvf {{ source_image_dir }}/helm.tar.gz -C /opt/helm/{{ helm_version }}
+    cmd: tar xzvf "{{ source_image_dir }}/helm.tar.gz" -C /opt/helm/{{ helm_version }}
 
 - name: Create link to helm binary
   file:

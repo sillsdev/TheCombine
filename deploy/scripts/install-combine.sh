@@ -3,10 +3,10 @@ set -eo pipefail
 
 # Warning and Error reporting functions
 warning () {
-  echo "WARNING: $1" >&2  
+  echo "WARNING: $1" >&2
 }
 error () {
-  echo "ERROR: $1" >&2  
+  echo "ERROR: $1" >&2
   exit 1
 }
 
