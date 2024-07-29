@@ -18,7 +18,7 @@ Another dialog appears with a file explorer.
 Navigate to the downloads folder where the exported ZIP file is located. Select the ZIP file and click the “Open” button.
 Back at the “Import/Merge” dialog, click the “OK” button.
 When FieldWorks finishes the import, a summary page opens in your web browser.
-Congratulations, you’ve imported your data from The Combine into Fieldworks!
+Congratulations, you’ve imported your data from The Combine into FieldWorks!
 If you need to update the vernacular or analysis writing systems of your FLEx project, the options are available at the bottom of the “Format” menu.
 I hope this video helps you use your data from The Combine.
 Have a wonderful day!
