@@ -7,7 +7,7 @@ While your export is loading, the “Export” button will be disabled and have 
 There is also a loading icon with circling arrows in the top bar to indicate that the export is in progress.
 If your project has hundreds of audio recordings, it may take a few minutes to prepare the export.
 You can navigate to other pages in The Combine without interrupting the export, but do not close the window or log out!
-When the export completes, it will automatically download as a ZIP file to your web browser’s default Downloads location.
+When the export completes, it will be automatically downloaded as a ZIP file to your web browser’s default Downloads location.
 To see where the export was downloaded, click on the Downloads icon in the browser, move your cursor to the most recent download, and click on the “Show in Folder” folder icon.
 Now we can import that downloaded ZIP file into FieldWorks.
 Open FieldWorks Language Explorer and open the project you want to import your data into.

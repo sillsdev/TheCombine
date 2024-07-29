@@ -20,13 +20,14 @@ First I’ll type a name for the project, in my case: Naskapi.
 Notice there are fields below where we can specify the Vernacular Language and an Analysis Language for the project.
 This is not necessary when we are importing data because project languages will automatically be gathered from the data.
 To upload existing data, click the “Browse” button.
-This brings up a file explorer dialog for you to select the exported LIFT data.
-I’m navigating to Desktop where I exported my data, selecting the Naskapi ZIP file, and clicking the “Open” button.
+This brings up a file explorer dialog for you to select the LIFT data that was exported from FLEx.
+I’m navigating to Desktop, where I exported my data, selecting the Naskapi ZIP file, and clicking the “Open” button.
 See that The Combine has the text “File selected: Naskapi.zip”.
 Great!
 Under “Vernacular Language” there is now a drop-down menu.
 Use it to select which of the languages in the data is to be the Vernacular Language.
-The Combine only supports data entry for one vernacular language, which cannot be changed after project creation.
+The Combine only supports data entry for one vernacular language.
+The vernacular language cannot be changed after the project has been created.
 If you need to gather or organize lexical data for a different language, simply create another project.
 Note that you cannot specify an analysis language.
 This is because all analysis languages present in the ZIP file are automatically added, and you can add and remove analysis languages in the project at any time.
@@ -36,7 +37,7 @@ To access this in the future you can click on the gear icon in the top bar.
 Note that here in the “Languages” tab, we can see the Vernacular Language as well as review and change the Analysis Languages.
 Let’s click on the “Import/Export” tab.
 This is where you can import lexical data into an existing project.
-That option is disabled now because we already imported data into this project.
+That option is disabled now because we have already imported data into this project.
 Only one import is allowed for a project in The Combine.
 This is also where we can export data from The Combine to import into FieldWorks, but that is a topic for another video.
 I hope this video helps you get started with The Combine.

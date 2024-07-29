@@ -16,7 +16,7 @@ These are definitely different words—homographs that we do not want to merge.
 Click the “Save & Continue” button at the bottom to confirm that they are distinct words.
 This pair will not show up again in the “Merge Duplicates”, nor in the list of deferred sets.
 Now we’ve seen what the “Save & Continue” and “Defer” buttons do.
-One important note: if a user later changes any of the words in a set of potential duplicates, then that set can show up again in the Merge Duplicates tool.
+One important note: if a user later changes any of the words in a set of potential duplicates, then that set can show up again in the “Merge Duplicates” tool.
 For example, if you click “Save & Continue” for a set of words that are not duplicates, and then later add a semantic domain to a sense of one of the words, that set may come up again as potential duplicates.
 Or if you click “Defer” for a set, and then another user adds an audio recording for one of the words, then that set will show up again in “Merge Duplicates”, rather than among the deferred sets.
 Let’s move on.
@@ -32,7 +32,7 @@ You cannot edit the text in the “Merge Duplicates” tool.
 However, you can click on the flag icon to add a flag and mention what needs to be fixed.
 Note that for the flag to be saved, you must click “Save & Continue”.
 We can leave the merging at any time by clicking on the “Data Cleanup” button, but then unsaved changes will be discarded.
-Back in “Data Cleanup”, there's a “Review Entries” tool.
+Back in “Data Cleanup”, there’s a “Review Entries” tool.
 That’s where you can review and edit all words in the project, and fix any words that were flagged while merging duplicates.
 We’ll cover the “Review Entries” tool in another video.
 Note that there is another option here that wasn’t here before: “Review Deferred Duplicates”.
