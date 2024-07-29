@@ -2,17 +2,20 @@
 ################################################
 # Profile specific configuration items
 #
-# Profile: prod
+# Profile: staging
 ################################################
 
 charts:
   thecombine:
     # Frontend configuration items:
     frontend:
-      configShowCertExpiration: false
       configAnalyticsWriteKey: "AoebaDJNjSlOMRUH87EaNjvwkQpfLoyy"
+      configCaptchaSiteKey: "0x4AAAAAAAe9zmM2ysXGSJk1" # Turnstile site key
+      configShowCertExpiration: false
     global:
       awsS3Location: prod.thecombine.app
+      captchaRequired: true
+      emailEnabled: true
       fontStorageAccessMode: ReadWriteMany
       imagePullPolicy: Always
       includeResourceLimits: true

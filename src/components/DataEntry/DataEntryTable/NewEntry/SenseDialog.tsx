@@ -60,7 +60,7 @@ export function SenseList(props: SenseListProps): ReactElement {
 
   const menuItem = (sense: Sense): ReactElement => {
     const word: Word = { ...props.selectedWord, senses: [sense] };
-    const gloss = firstGlossText(sense);
+    const gloss = firstGlossText(sense, props.analysisLang);
     return (
       <StyledMenuItem
         id={sense.guid}

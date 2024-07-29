@@ -39,7 +39,6 @@ jest.mock("goals/Redux/GoalActions", () => ({
   addCharInvChangesToGoal: (changes: CharInvChanges) =>
     mockAddCharInvChangesToGoal(changes),
 }));
-jest.mock("router/browserRouter");
 
 const mockAddCharInvChangesToGoal = jest.fn();
 const mockAsyncUpdateCurrentProject = jest.fn();
