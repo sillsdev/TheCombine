@@ -3,6 +3,8 @@
 # Can be overridden by specific groups/hosts
 k8s_dns_name: "{{ combine_server_name }}"
 
+keyring_location: /etc/apt/keyrings
+
 k8s_required_pkgs:
   - apt-transport-https
   - ca-certificates

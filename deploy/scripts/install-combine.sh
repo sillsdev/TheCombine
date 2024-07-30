@@ -1,6 +1,20 @@
 #! /usr/bin/env bash
 set -eo pipefail
 
+################################################################################
+#
+# install-combine.sh is intended to install the Combine on an Ubuntu-based Linux
+# Laptop.  Its usage is defined in the readme file that accompanies the packaged
+# installer, ./installer/README.md (or ./installer/README.pdf).
+#
+# Note that 2 additional options are available that are not documented in the 
+# readme file.  These are intended to only be used for debugging and under the
+# guidance of a support engineer.  They are:
+#   - single-step - run the next "step" in the installation process and stop.
+#   - start-at <step-name> - start at the step named <step-name> and run to 
+#     completion.
+#################################################################################
+
 # Warning and Error reporting functions
 warning () {
   echo "WARNING: $1" >&2

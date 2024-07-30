@@ -23,7 +23,7 @@
 
 - name: Create keyring directory if necessary
   file:
-    path: /etc/apt/keyrings
+    path: "{{ keyring_location }}"
     state: directory
     owner: root
     group: root
@@ -33,18 +33,18 @@
   shell:
     cmd: >
       curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key
-      | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-    creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      | gpg --dearmor -o {{ keyring_location }}/kubernetes-apt-keyring.gpg
+    creates: "{{ keyring_location }}/kubernetes-apt-keyring.gpg"
 
 - name: Set signing key permissions
   file:
-    name: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    name: "{{ keyring_location }}/kubernetes-apt-keyring.gpg"
     mode: 0644
     state: file
 
 - name: Add repository
   apt_repository:
-    repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /"
+    repo: "deb [signed-by={{ keyring_location }}/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /"
     filename: kubernetes
     mode: 0644
 

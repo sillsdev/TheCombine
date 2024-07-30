@@ -531,7 +531,12 @@ cd installer
 ./make-combine-installer.sh combine-release-number
 ```
 
-where `combine-release-number` is the Combine release to be installed, e.g. `v1.2.0`.
+where `combine-release-number` is the Combine release to be installed, e.g. `v2.1.0`.
+
+Options:
+
+- `--net-install` - build an installer that will download the required images at installation time. The default is to
+  package the images in the installation script.
 
 To update the PDF copy of the installer README.md file, run the following from the `installer` directory:
 

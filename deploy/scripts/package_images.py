@@ -64,7 +64,7 @@ def package_k3s(dest_dir: Path) -> None:
             "ansible-playbook",
             "playbook_k3s_airgapped_files.yml",
             "--extra-vars",
-            f"package_dir={str(dest_dir)}",
+            f"package_dir={dest_dir}",
         ],
         cwd=str(ansible_dir),
     )
