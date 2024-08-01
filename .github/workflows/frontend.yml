@@ -24,9 +24,9 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
-            *.actions.githubusercontent.com:443
             api.github.com:443
             github.com:443
+            objects.githubusercontent.com:443
             registry.npmjs.org:443
       - name: Checkout repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
@@ -121,7 +121,6 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
-            *.actions.githubusercontent.com:443
             auth.docker.io:443
             files.pythonhosted.org:443
             github.com:443
