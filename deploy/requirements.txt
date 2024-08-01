@@ -18,11 +18,11 @@ cffi==1.16.0
     # via cryptography
 charset-normalizer==3.3.2
     # via requests
-cryptography==42.0.7
+cryptography==42.0.8
     # via
     #   ansible-core
     #   pyopenssl
-google-auth==2.29.0
+google-auth==2.32.0
     # via kubernetes
 idna==3.7
     # via requests
@@ -41,7 +41,7 @@ oauthlib==3.2.2
     # via
     #   kubernetes
     #   requests-oauthlib
-packaging==24.0
+packaging==24.1
     # via ansible-core
 pyasn1==0.6.0
     # via

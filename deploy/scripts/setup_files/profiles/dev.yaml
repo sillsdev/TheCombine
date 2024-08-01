@@ -18,14 +18,14 @@ charts:
 
     global:
       imageRegistry: ""
-      imagePullPolicy: Never
+      imagePullPolicy: IfNotPresent
       includeResourceLimits: false
       awsS3Location: dev.thecombine.app
       captchaRequired: true
       emailEnabled: true
 
     ingressClass: nginx
-    imagePullPolicy: Never
+    imagePullPolicy: IfNotPresent
 
     certManager:
       enabled: true
