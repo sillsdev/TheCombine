@@ -87,7 +87,7 @@ database/semantic_domains/*
 *.mp4
 
 # Combine installer
-installer/combine-installer.run
+installer/*.run
 installer/makeself-*
 installer/README.pdf
 

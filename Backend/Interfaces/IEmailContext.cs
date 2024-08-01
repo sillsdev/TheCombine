@@ -6,6 +6,7 @@ namespace BackendFramework.Interfaces
         /// This is value is set if the user does not supply an SMTP port number.
         public const int InvalidPort = -1;
 
+        bool EmailEnabled { get; }
         string? SmtpServer { get; }
         int SmtpPort { get; }
         string? SmtpUsername { get; }
