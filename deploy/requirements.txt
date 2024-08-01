@@ -28,7 +28,7 @@ idna==3.7
     # via requests
 jinja2==3.1.4
     # via
-    #   -r deploy/requirements.in
+    #   -r requirements.in
     #   ansible-core
     #   jinja2-base64-filters
 jinja2-base64-filters==0.1.4
@@ -51,13 +51,13 @@ pyasn1-modules==0.4.0
     # via google-auth
 pycparser==2.22
     # via cffi
-pyopenssl==24.1.0
-    # via -r deploy/requirements.in
+pyopenssl==24.2.1
+    # via -r requirements.in
 python-dateutil==2.9.0.post0
     # via kubernetes
 pyyaml==6.0.1
     # via
-    #   -r deploy/requirements.in
+    #   -r requirements.in
     #   ansible-core
     #   kubernetes
 requests==2.32.3
