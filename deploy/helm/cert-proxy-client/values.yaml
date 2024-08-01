@@ -31,7 +31,9 @@ certRenewBefore: "60"
 imageName: combine_maint
 envName: env-cert-proxy
 
-schedule: "*/30 * * * *"
+# Run once a minute.  If the cert is not up for renewal, The Combine
+# will not try to reach AWS S3
+schedule: "* * * * *"
 
 cert_renew_before: 60
 

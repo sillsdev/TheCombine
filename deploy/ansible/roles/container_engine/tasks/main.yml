@@ -27,7 +27,7 @@
 
 - name: Create keyring directory
   file:
-    path: /etc/apt/keyrings
+    path: "{{ keyring_location }}"
     state: directory
     owner: root
     group: root
@@ -35,12 +35,12 @@
 
 - name: Install Docker apt key
   shell:
-    cmd: "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg"
-    creates: /etc/apt/keyrings/docker.gpg
+    cmd: "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o {{ keyring_location }}/docker.gpg"
+    creates: "{{ keyring_location }}/docker.gpg"
 
 - name: Add Docker repository
   apt_repository:
-    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    repo: "deb [arch=amd64 signed-by={{ keyring_location }}/docker.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
     state: present
     filename: docker
 
