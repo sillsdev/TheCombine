@@ -16,6 +16,7 @@
 
   vars_files:
     - "vars/config_common.yml"
+    - "vars/k3s_versions.yml"
 
   tasks:
     - name: Update packages
