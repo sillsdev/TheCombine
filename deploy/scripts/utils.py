@@ -4,6 +4,8 @@ A Collection of useful functions for Python
 
 from __future__ import annotations
 
+import argparse
+import logging
 import subprocess
 import sys
 from typing import List, Optional
@@ -101,3 +103,15 @@ def choose_from_list(
                         curr_selection = None
                     print(f"{reply} is not in the list.  Please re-enter.")
     return curr_selection
+
+
+def init_logging(args: argparse.Namespace) -> None:
+    # Setup the logging level.  The command output will be printed on stdout/stderr
+    # independent of the logging facility
+    if args.debug:
+        log_level = logging.DEBUG
+    elif args.quiet:
+        log_level = logging.WARNING
+    else:
+        log_level = logging.INFO
+    logging.basicConfig(format="%(levelname)s:%(message)s", level=log_level)

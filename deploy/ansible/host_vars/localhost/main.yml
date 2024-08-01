@@ -7,21 +7,13 @@
 # Configure Kubernetes cluster
 ################################################
 
-# Specify which Kubernetes engine to install -
-# one of k3s or none.
-k8s_engine: k3s
-
 image_pull_secret: aws-login-credentials
+use_airgap_images: true
 
 # k8s namespaces
 app_namespace: thecombine
 
 k8s_user: "{{ ansible_user_id }}"
-
-################################################
-# Helm Installation
-################################################
-install_helm: yes
 
 ################################################
 # Support Tool Settings
