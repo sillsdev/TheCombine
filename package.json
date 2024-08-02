@@ -92,7 +92,7 @@
     "@types/css-mediaquery": "^0.1.2",
     "@types/jest": "^29.5.5",
     "@types/loadable__component": "^5.13.8",
-    "@types/node": "^22.0.2",
+    "@types/node": "^20.10.6",
     "@types/nspell": "^2.1.5",
     "@types/react": "^18.2.61",
     "@types/react-beautiful-dnd": "^13.1.8",
@@ -161,6 +161,6 @@
     ]
   },
   "volta": {
-    "node": "22.5.1"
+    "node": "20.14.0"
   }
 }
