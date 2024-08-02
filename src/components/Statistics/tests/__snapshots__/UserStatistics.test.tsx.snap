@@ -7,7 +7,7 @@ exports[`UserStatistics renders without crashing, UI does not change unexpectedl
   <div
     className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-bhp9pd-MuiPaper-root-MuiCard-root"
     style={
-      Object {
+      {
         "width": 600,
       }
     }
@@ -21,7 +21,7 @@ exports[`UserStatistics renders without crashing, UI does not change unexpectedl
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
           style={
-            Object {
+            {
               "borderBottomStyle": "dotted",
               "borderBottomWidth": 1,
               "position": "relative",
@@ -37,7 +37,7 @@ exports[`UserStatistics renders without crashing, UI does not change unexpectedl
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
           style={
-            Object {
+            {
               "borderBottomStyle": "dotted",
               "borderBottomWidth": 1,
               "position": "relative",
@@ -53,7 +53,7 @@ exports[`UserStatistics renders without crashing, UI does not change unexpectedl
         <div
           className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
           style={
-            Object {
+            {
               "borderBottomStyle": "dotted",
               "borderBottomWidth": 1,
               "position": "relative",
@@ -75,7 +75,7 @@ exports[`UserStatistics renders without crashing, UI does not change unexpectedl
         className="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-1p823my-MuiListItem-root"
         disabled={false}
         style={
-          Object {
+          {
             "minWidth": "600px",
           }
         }
@@ -86,7 +86,7 @@ exports[`UserStatistics renders without crashing, UI does not change unexpectedl
           <div
             className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
             style={
-              Object {
+              {
                 "borderBottomStyle": "dotted",
                 "borderBottomWidth": 1,
                 "position": "relative",
@@ -100,7 +100,7 @@ exports[`UserStatistics renders without crashing, UI does not change unexpectedl
           <div
             className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
             style={
-              Object {
+              {
                 "borderBottomStyle": "dotted",
                 "borderBottomWidth": 1,
                 "position": "relative",
@@ -114,7 +114,7 @@ exports[`UserStatistics renders without crashing, UI does not change unexpectedl
           <div
             className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
             style={
-              Object {
+              {
                 "borderBottomStyle": "dotted",
                 "borderBottomWidth": 1,
                 "position": "relative",

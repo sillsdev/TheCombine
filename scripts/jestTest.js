@@ -28,7 +28,7 @@ const dotenv = resolve(fs.realpathSync(process.cwd()), ".env");
     // https://github.com/motdotla/dotenv
     // Variable expansion is supported in .env files.
     // https://github.com/motdotla/dotenv-expand
-    require("dotenv-expand")(require("dotenv").config({ path }));
+    require("dotenv-expand").expand(require("dotenv").config({ path }));
   });
 
 const run = require("jest").run;
