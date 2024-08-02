@@ -34,10 +34,10 @@ spec:
                 configMapKeyRef:
                   key: CERT_ADDL_DOMAINS
                   name: env-frontend
-            - name: CONFIG_CAPTCHA_REQD
+            - name: CONFIG_CAPTCHA_REQUIRED
               valueFrom:
                 configMapKeyRef:
-                  key: CONFIG_CAPTCHA_REQD
+                  key: CONFIG_CAPTCHA_REQUIRED
                   name: env-frontend
             - name: CONFIG_CAPTCHA_SITE_KEY
               valueFrom:

@@ -8,8 +8,8 @@ license Type:Apache-2.0
 
 ####################################################################################################
 Package:BouncyCastle.Cryptography
-Version:2.3.1
-project URL:https://www.bouncycastle.org/csharp/
+Version:2.4.0
+project URL:https://www.bouncycastle.org/stable/nuget/csharp/website
 Description:BouncyCastle.NET is a popular cryptography library for .NET
 licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
@@ -24,7 +24,7 @@ license Type:Apache-2.0
 
 ####################################################################################################
 Package:icu.net
-Version:2.9.0
+Version:2.10.1-beta.5
 project URL:https://github.com/sillsdev/icu-dotnet
 Description:icu.net is a C# Wrapper around ICU4C
 licenseUrl:https://licenses.nuget.org/MIT
@@ -32,19 +32,15 @@ license Type:MIT
 
 ####################################################################################################
 Package:icu.net
-Version:2.8.1
+Version:2.9.0
 project URL:https://github.com/sillsdev/icu-dotnet
 Description:icu.net is a C# Wrapper around ICU4C
-
-This version of icu.net works with (more or less) any version of ICU4C.
-
-NOTE: this package contains the managed wrapper part of icu.net. You'll also have to have the unmanaged binaries of ICU installed. On Linux it is recommended to install the official ICU package that comes with the system. On Windows you can install one of the binary nuget packages, e.g. Icu4c.Win.
 licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
 
 ####################################################################################################
 Package:Icu4c.Win.Full.Lib
-Version:62.2.1-beta
+Version:62.2.3-beta
 project URL:https://github.com/sillsdev/icu
 Description:ICU - International Components for Unicode
 
@@ -53,12 +49,12 @@ This package contains the libraries of a full build of ICU4C for Windows (32- an
 The major version number of the nuget package corresponds to the ICU release.
 
 For Linux it is recommended to install the official ICU package that comes with the system.
-licenseUrl:https://www.nuget.org/packages/Icu4c.Win.Full.Lib/62.2.1-beta/License
+licenseUrl:https://www.nuget.org/packages/Icu4c.Win.Full.Lib/62.2.3-beta/License
 license Type:LICENSE.md
 
 ####################################################################################################
 Package:MailKit
-Version:4.6.0
+Version:4.7.1.1
 project URL:http://www.mimekit.net/
 Description:MailKit is an Open Source cross-platform .NET mail-client library that is based on MimeKit and optimized for mobile devices.
 
@@ -278,21 +274,6 @@ license Type:MIT
 
 ####################################################################################################
 Package:Microsoft.Bcl.AsyncInterfaces
-Version:1.0.0
-project URL:https://github.com/dotnet/corefx
-Description:Provides the IAsyncEnumerable<T> and IAsyncDisposable interfaces and helper types for .NET Standard 2.0. This package is not required starting with .NET Standard 2.1 and .NET Core 3.0.
-
-Commonly Used Types:
-System.IAsyncDisposable
-System.Collections.Generic.IAsyncEnumerable
-System.Collections.Generic.IAsyncEnumerator
- 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
-license Type:MIT
-
-####################################################################################################
-Package:Microsoft.Bcl.AsyncInterfaces
 Version:5.0.0
 project URL:https://github.com/dotnet/runtime
 Description:Provides the IAsyncEnumerable<T> and IAsyncDisposable interfaces and helper types for .NET Standard 2.0. This package is not required starting with .NET Standard 2.1 and .NET Core 3.0.
@@ -357,23 +338,6 @@ Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
-
-####################################################################################################
-Package:Microsoft.CSharp
-Version:4.3.0
-project URL:https://dot.net/
-Description:Provides support for compilation and code generation, including dynamic, using the C# language.
-
-Commonly Used Types:
-Microsoft.CSharp.RuntimeBinder.Binder
-Microsoft.CSharp.RuntimeBinder.RuntimeBinderException
-Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo
-Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags
-Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags
- 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
-license Type:MS-EULA
 
 ####################################################################################################
 Package:Microsoft.DotNet.PlatformAbstractions
@@ -498,7 +462,7 @@ license Type:Apache-2.0
 
 ####################################################################################################
 Package:Microsoft.Extensions.Logging.Abstractions
-Version:2.1.0
+Version:2.0.0
 project URL:https://asp.net/
 Description:Logging abstractions for Microsoft.Extensions.Logging.
 Commonly used types:
@@ -514,7 +478,7 @@ license Type:Apache-2.0
 
 ####################################################################################################
 Package:Microsoft.Extensions.Logging.Abstractions
-Version:2.0.0
+Version:2.1.0
 project URL:https://asp.net/
 Description:Logging abstractions for Microsoft.Extensions.Logging.
 Commonly used types:
@@ -581,14 +545,6 @@ license Type:MIT
 
 ####################################################################################################
 Package:Microsoft.IdentityModel.JsonWebTokens
-Version:7.1.2
-project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
-Description:Includes types that provide support for creating, serializing and validating JSON Web Tokens. This is a newer, faster version of System.IdentityModel.Tokens.Jwt that has additional functionality.
-licenseUrl:https://licenses.nuget.org/MIT
-license Type:MIT
-
-####################################################################################################
-Package:Microsoft.IdentityModel.JsonWebTokens
 Version:7.5.1
 project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Description:Includes types that provide support for creating, serializing and validating JSON Web Tokens. This is a newer, faster version of System.IdentityModel.Tokens.Jwt that has additional functionality.
@@ -629,14 +585,6 @@ license Type:MIT
 
 ####################################################################################################
 Package:Microsoft.IdentityModel.Tokens
-Version:7.1.2
-project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
-Description:Includes types that provide support for SecurityTokens, Cryptographic operations: Signing, Verifying Signatures, Encryption.
-licenseUrl:https://licenses.nuget.org/MIT
-license Type:MIT
-
-####################################################################################################
-Package:Microsoft.IdentityModel.Tokens
 Version:7.5.1
 project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Description:Includes types that provide support for SecurityTokens, Cryptographic operations: Signing, Verifying Signatures, Encryption.
@@ -662,25 +610,6 @@ license Type:MS-EULA
 
 ####################################################################################################
 Package:Microsoft.NETCore.Platforms
-Version:2.0.0
-project URL:https://dot.net/
-Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages. 
-8321c729934c0f8be754953439b88e6e1c120c24 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
-license Type:MIT
-
-####################################################################################################
-Package:Microsoft.NETCore.Platforms
-Version:1.0.1
-project URL:https://dot.net/
-Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages. 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
-license Type:MS-EULA
-
-####################################################################################################
-Package:Microsoft.NETCore.Platforms
 Version:5.0.0
 project URL:https://github.com/dotnet/runtime
 Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages. 
@@ -691,6 +620,15 @@ license Type:MIT
 ####################################################################################################
 Package:Microsoft.NETCore.Platforms
 Version:1.1.1
+project URL:https://dot.net/
+Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages. 
+When using NuGet 3.x this package requires at least version 3.4.
+licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+license Type:MS-EULA
+
+####################################################################################################
+Package:Microsoft.NETCore.Platforms
+Version:1.0.1
 project URL:https://dot.net/
 Description:Provides runtime information required to resolve target framework, platform, and runtime specific implementations of .NETCore packages. 
 When using NuGet 3.x this package requires at least version 3.4.
@@ -766,7 +704,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:MimeKit
-Version:4.6.0
+Version:4.7.1
 project URL:https://www.mimekit.net/
 Description:MimeKit is an Open Source library for creating and parsing MIME, S/MIME and PGP messages on desktop and mobile platforms. It also supports parsing of Unix mbox files.
 
@@ -784,34 +722,34 @@ license Type:MIT
 
 ####################################################################################################
 Package:MongoDB.Bson
-Version:2.25.0
+Version:2.28.0
 project URL:https://www.mongodb.com/docs/drivers/csharp/
 Description:MongoDB's Official Bson Library.
-licenseUrl:https://www.nuget.org/packages/MongoDB.Bson/2.25.0/License
-license Type:LICENSE.md
+licenseUrl:https://licenses.nuget.org/Apache-2.0
+license Type:Apache-2.0
 
 ####################################################################################################
 Package:MongoDB.Driver
-Version:2.25.0
+Version:2.28.0
 project URL:https://www.mongodb.com/docs/drivers/csharp/
 Description:Official .NET driver for MongoDB.
-licenseUrl:https://www.nuget.org/packages/MongoDB.Driver/2.25.0/License
-license Type:LICENSE.md
+licenseUrl:https://licenses.nuget.org/Apache-2.0
+license Type:Apache-2.0
 
 ####################################################################################################
 Package:MongoDB.Driver.Core
-Version:2.25.0
+Version:2.28.0
 project URL:https://www.mongodb.com/docs/drivers/csharp/
 Description:Core Component of the Official MongoDB .NET Driver.
-licenseUrl:https://www.nuget.org/packages/MongoDB.Driver.Core/2.25.0/License
-license Type:LICENSE.md
+licenseUrl:https://licenses.nuget.org/Apache-2.0
+license Type:Apache-2.0
 
 ####################################################################################################
 Package:MongoDB.Libmongocrypt
-Version:1.8.2
+Version:1.11.0
 project URL:http://www.mongodb.org/display/DOCS/CSharp+Language+Center
 Description:Libmongocrypt wrapper for the .NET driver.
-licenseUrl:https://www.nuget.org/packages/MongoDB.Libmongocrypt/1.8.2/License
+licenseUrl:https://www.nuget.org/packages/MongoDB.Libmongocrypt/1.11.0/License
 license Type:License.txt
 
 ####################################################################################################
@@ -963,22 +901,6 @@ licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
 
 ####################################################################################################
-Package:SIL.Core
-Version:13.0.1
-project URL:https://github.com/sillsdev/libpalaso
-Description:SIL.Core provides general utilities for language software. It is the base library for all Palaso libraries.
-licenseUrl:https://licenses.nuget.org/MIT
-license Type:MIT
-
-####################################################################################################
-Package:SIL.Core
-Version:14.0.0
-project URL:https://github.com/sillsdev/libpalaso
-Description:SIL.Core provides general utilities for language software. It is the base library for all Palaso libraries.
-licenseUrl:https://licenses.nuget.org/MIT
-license Type:MIT
-
-####################################################################################################
 Package:SIL.Core.Desktop
 Version:14.1.1
 project URL:https://github.com/sillsdev/libpalaso
@@ -987,24 +909,8 @@ licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
 
 ####################################################################################################
-Package:SIL.Core.Desktop
-Version:13.0.1
-project URL:https://github.com/sillsdev/libpalaso
-Description:SIL.Core.Desktop provides general UI related utilities for language software.
-licenseUrl:https://licenses.nuget.org/MIT
-license Type:MIT
-
-####################################################################################################
-Package:SIL.Core.Desktop
-Version:14.0.0
-project URL:https://github.com/sillsdev/libpalaso
-Description:SIL.Core.Desktop provides general UI related utilities for language software.
-licenseUrl:https://licenses.nuget.org/MIT
-license Type:MIT
-
-####################################################################################################
 Package:SIL.DictionaryServices
-Version:13.0.1
+Version:14.1.1
 project URL:https://github.com/sillsdev/libpalaso
 Description:SIL.DictionaryServices contains classes for defining a simple lexical model that can be used across applications.
 licenseUrl:https://licenses.nuget.org/MIT
@@ -1012,33 +918,9 @@ license Type:MIT
 
 ####################################################################################################
 Package:SIL.Lift
-Version:13.0.1
+Version:14.1.1
 project URL:https://github.com/sillsdev/libpalaso
 Description:SIL.Lift contains classes for reading and writing Lexicon Interchange FormaT (LIFT) data. This assembly currently supports LIFT 0.13.
-licenseUrl:https://licenses.nuget.org/MIT
-license Type:MIT
-
-####################################################################################################
-Package:SIL.Lift
-Version:14.0.0
-project URL:https://github.com/sillsdev/libpalaso
-Description:SIL.Lift contains classes for reading and writing Lexicon Interchange FormaT (LIFT) data. This assembly currently supports LIFT 0.13.
-licenseUrl:https://licenses.nuget.org/MIT
-license Type:MIT
-
-####################################################################################################
-Package:SIL.WritingSystems
-Version:13.0.1
-project URL:https://github.com/sillsdev/libpalaso
-Description:SIL.WritingSystems contains classes for managing and persisting writing systems using the Locale Data Markup Language (LDML) format. This library also contains classes for processing IETF (BCP-47) language tags and accessing the SIL Locale Data Repository (SLDR).
-licenseUrl:https://licenses.nuget.org/MIT
-license Type:MIT
-
-####################################################################################################
-Package:SIL.WritingSystems
-Version:14.0.0
-project URL:https://github.com/sillsdev/libpalaso
-Description:SIL.WritingSystems contains classes for managing and persisting writing systems using the Locale Data Markup Language (LDML) format. This library also contains classes for processing IETF (BCP-47) language tags and accessing the SIL Locale Data Repository (SLDR).
 licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
 
@@ -1073,7 +955,7 @@ license Type:
 
 ####################################################################################################
 Package:Swashbuckle.AspNetCore
-Version:6.6.2
+Version:6.7.0
 project URL:https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Description:Swagger tools for documenting APIs built on ASP.NET Core
 licenseUrl:https://licenses.nuget.org/MIT
@@ -1081,7 +963,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:Swashbuckle.AspNetCore.Swagger
-Version:6.6.2
+Version:6.7.0
 project URL:https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Description:Middleware to expose Swagger JSON endpoints from APIs built on ASP.NET Core
 licenseUrl:https://licenses.nuget.org/MIT
@@ -1089,7 +971,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:Swashbuckle.AspNetCore.SwaggerGen
-Version:6.6.2
+Version:6.7.0
 project URL:https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Description:Swagger Generator for APIs built on ASP.NET Core
 licenseUrl:https://licenses.nuget.org/MIT
@@ -1097,7 +979,7 @@ license Type:MIT
 
 ####################################################################################################
 Package:Swashbuckle.AspNetCore.SwaggerUI
-Version:6.6.2
+Version:6.7.0
 project URL:https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Description:Middleware to expose an embedded version of the swagger-ui from an ASP.NET Core application
 licenseUrl:https://licenses.nuget.org/MIT
@@ -1155,34 +1037,6 @@ System.Buffers.ArrayPool<T>
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
-
-####################################################################################################
-Package:System.Buffers
-Version:4.4.0
-project URL:https://dot.net/
-Description:Provides resource pooling of any type for performance-critical applications that allocate and deallocate objects frequently.
-
-Commonly Used Types:
-System.Buffers.ArrayPool<T>
- 
-8321c729934c0f8be754953439b88e6e1c120c24 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
-license Type:MIT
-
-####################################################################################################
-Package:System.Buffers
-Version:4.5.0
-project URL:https://dot.net/
-Description:Provides resource pooling of any type for performance-critical applications that allocate and deallocate objects frequently.
-
-Commonly Used Types:
-System.Buffers.ArrayPool<T>
- 
-30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
-license Type:MIT
 
 ####################################################################################################
 Package:System.Collections
@@ -1654,6 +1508,18 @@ license Type:MS-EULA
 
 ####################################################################################################
 Package:System.Formats.Asn1
+Version:8.0.1
+project URL:https://dot.net/
+Description:Provides classes that can read and write the ASN.1 BER, CER, and DER data formats.
+
+Commonly Used Types:
+System.Formats.Asn1.AsnReader
+System.Formats.Asn1.AsnWriter
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:System.Formats.Asn1
 Version:8.0.0
 project URL:https://dot.net/
 Description:Provides classes that can read and write the ASN.1 BER, CER, and DER data formats.
@@ -1666,15 +1532,13 @@ license Type:MIT
 
 ####################################################################################################
 Package:System.Formats.Asn1
-Version:5.0.0
-project URL:https://github.com/dotnet/runtime
+Version:6.0.0
+project URL:https://dot.net/
 Description:Provides classes that can read and write the ASN.1 BER, CER, and DER data formats.
 
 Commonly Used Types:
 System.Formats.Asn1.AsnReader
 System.Formats.Asn1.AsnWriter
- 
-When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
 
@@ -1756,14 +1620,6 @@ System.Globalization.IdnMapping
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
-
-####################################################################################################
-Package:System.IdentityModel.Tokens.Jwt
-Version:7.1.2
-project URL:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
-Description:Includes types that provide support for creating, serializing and validating JSON Web Tokens. As of IdentityModel 7x, this is a legacy tool that should be replaced with Microsoft.IdentityModel.JsonWebTokens.
-licenseUrl:https://licenses.nuget.org/MIT
-license Type:MIT
 
 ####################################################################################################
 Package:System.IdentityModel.Tokens.Jwt
@@ -2032,69 +1888,6 @@ System.Buffers.Text.Utf8Parser
 System.Buffers.Text.Utf8Formatter
  
 32b491939fbd125f304031c35038b1e14b4e3958 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
-license Type:MIT
-
-####################################################################################################
-Package:System.Memory
-Version:4.5.4
-project URL:https://dot.net/
-Description:Provides types for efficient representation and pooling of managed, stack, and native memory segments and sequences of such segments, along with primitives to parse and format UTF-8 encoded text stored in those memory segments.
-
-Commonly Used Types:
-System.Span
-System.ReadOnlySpan
-System.Memory
-System.ReadOnlyMemory
-System.Buffers.MemoryPool
-System.Buffers.ReadOnlySequence
-System.Buffers.Text.Utf8Parser
-System.Buffers.Text.Utf8Formatter
- 
-7601f4f6225089ffb291dc7d58293c7bbf5c5d4f 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
-license Type:MIT
-
-####################################################################################################
-Package:System.Memory
-Version:4.5.0
-project URL:https://dot.net/
-Description:Provides types for efficient representation and pooling of managed, stack, and native memory segments and sequences of such segments, along with primitives to parse and format UTF-8 encoded text stored in those memory segments.
-
-Commonly Used Types:
-System.Span
-System.ReadOnlySpan
-System.Memory
-System.ReadOnlyMemory
-System.Buffers.MemoryPool
-System.Buffers.ReadOnlySequence
-System.Buffers.Text.Utf8Parser
-System.Buffers.Text.Utf8Formatter
- 
-30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
-license Type:MIT
-
-####################################################################################################
-Package:System.Memory
-Version:4.5.3
-project URL:https://dot.net/
-Description:Provides types for efficient representation and pooling of managed, stack, and native memory segments and sequences of such segments, along with primitives to parse and format UTF-8 encoded text stored in those memory segments.
-
-Commonly Used Types:
-System.Span
-System.ReadOnlySpan
-System.Memory
-System.ReadOnlyMemory
-System.Buffers.MemoryPool
-System.Buffers.ReadOnlySequence
-System.Buffers.Text.Utf8Parser
-System.Buffers.Text.Utf8Formatter
- 
-c6cf790234e063b855fcdb50f3fb1b3cfac73275 
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
@@ -2686,74 +2479,6 @@ license Type:MS-EULA
 
 ####################################################################################################
 Package:System.Runtime.CompilerServices.Unsafe
-Version:4.5.3
-project URL:https://dot.net/
-Description:Provides the System.Runtime.CompilerServices.Unsafe class, which provides generic, low-level functionality for manipulating pointers.
-
-Commonly Used Types:
-System.Runtime.CompilerServices.Unsafe
- 
-7601f4f6225089ffb291dc7d58293c7bbf5c5d4f 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
-license Type:MIT
-
-####################################################################################################
-Package:System.Runtime.CompilerServices.Unsafe
-Version:4.5.2
-project URL:https://dot.net/
-Description:Provides the System.Runtime.CompilerServices.Unsafe class, which provides generic, low-level functionality for manipulating pointers.
-
-Commonly Used Types:
-System.Runtime.CompilerServices.Unsafe
- 
-02b11eeee1fbc5f3ef43a1452fe07efd25fa1715 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
-license Type:MIT
-
-####################################################################################################
-Package:System.Runtime.CompilerServices.Unsafe
-Version:4.7.1
-project URL:https://github.com/dotnet/corefx
-Description:Provides the System.Runtime.CompilerServices.Unsafe class, which provides generic, low-level functionality for manipulating pointers.
-
-Commonly Used Types:
-System.Runtime.CompilerServices.Unsafe
- 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:https://licenses.nuget.org/MIT
-license Type:MIT
-
-####################################################################################################
-Package:System.Runtime.CompilerServices.Unsafe
-Version:4.5.0
-project URL:https://dot.net/
-Description:Provides the System.Runtime.CompilerServices.Unsafe class, which provides generic, low-level functionality for manipulating pointers.
-
-Commonly Used Types:
-System.Runtime.CompilerServices.Unsafe
- 
-30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
-license Type:MIT
-
-####################################################################################################
-Package:System.Runtime.CompilerServices.Unsafe
-Version:4.6.0
-project URL:https://github.com/dotnet/corefx
-Description:Provides the System.Runtime.CompilerServices.Unsafe class, which provides generic, low-level functionality for manipulating pointers.
-
-Commonly Used Types:
-System.Runtime.CompilerServices.Unsafe
- 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
-license Type:MIT
-
-####################################################################################################
-Package:System.Runtime.CompilerServices.Unsafe
 Version:5.0.0
 project URL:https://github.com/dotnet/runtime
 Description:Provides the System.Runtime.CompilerServices.Unsafe class, which provides generic, low-level functionality for manipulating pointers.
@@ -3317,26 +3042,6 @@ licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
 
 ####################################################################################################
-Package:System.Security.Principal.Windows
-Version:4.3.0
-project URL:https://dot.net/
-Description:Provides classes for retrieving the current Windows user and for interacting with Windows users and groups.
-
-Commonly Used Types:
-System.Security.Principal.WindowsIdentity
-System.Security.Principal.SecurityIdentifier
-System.Security.Principal.NTAccount
-System.Security.Principal.WindowsPrincipal
-System.Security.Principal.IdentityReference
-System.Security.Principal.IdentityNotMappedException
-System.Security.Principal.WindowsBuiltInRole
-System.Security.Principal.WellKnownSidType
- 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
-license Type:MS-EULA
-
-####################################################################################################
 Package:System.Text.Encoding
 Version:4.3.0
 project URL:https://dot.net/
@@ -3379,19 +3084,6 @@ System.Text.DecoderExceptionFallback
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
-
-####################################################################################################
-Package:System.Text.Encoding.CodePages
-Version:5.0.0
-project URL:https://github.com/dotnet/runtime
-Description:Provides support for code-page based encodings, including Windows-1252, Shift-JIS, and GB2312.
-
-Commonly Used Types:
-System.Text.CodePagesEncodingProvider
- 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:https://licenses.nuget.org/MIT
-license Type:MIT
 
 ####################################################################################################
 Package:System.Text.Encoding.CodePages
@@ -3405,6 +3097,17 @@ licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
 
 ####################################################################################################
+Package:System.Text.Encoding.CodePages
+Version:6.0.0
+project URL:https://dot.net/
+Description:Provides support for code-page based encodings, including Windows-1252, Shift-JIS, and GB2312.
+
+Commonly Used Types:
+System.Text.CodePagesEncodingProvider
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
 Package:System.Text.Encoding.Extensions
 Version:4.3.0
 project URL:https://dot.net/
@@ -3454,52 +3157,6 @@ licenseUrl:https://licenses.nuget.org/MIT
 license Type:MIT
 
 ####################################################################################################
-Package:System.Text.Encodings.Web
-Version:4.7.1
-project URL:https://github.com/dotnet/corefx
-Description:Provides types for encoding and escaping strings for use in JavaScript, HyperText Markup Language (HTML), and uniform resource locators (URL).
-
-Commonly Used Types:
-System.Text.Encodings.Web.HtmlEncoder
-System.Text.Encodings.Web.UrlEncoder
-System.Text.Encodings.Web.JavaScriptEncoder
- 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:https://licenses.nuget.org/MIT
-license Type:MIT
-
-####################################################################################################
-Package:System.Text.Encodings.Web
-Version:4.5.0
-project URL:https://dot.net/
-Description:Provides types for encoding and escaping strings for use in JavaScript, HyperText Markup Language (HTML), and uniform resource locators (URL).
-
-Commonly Used Types:
-System.Text.Encodings.Web.HtmlEncoder
-System.Text.Encodings.Web.UrlEncoder
-System.Text.Encodings.Web.JavaScriptEncoder
- 
-30ab651fcb4354552bd4891619a0bdd81e0ebdbf 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
-license Type:MIT
-
-####################################################################################################
-Package:System.Text.Encodings.Web
-Version:4.6.0
-project URL:https://github.com/dotnet/corefx
-Description:Provides types for encoding and escaping strings for use in JavaScript, HyperText Markup Language (HTML), and uniform resource locators (URL).
-
-Commonly Used Types:
-System.Text.Encodings.Web.HtmlEncoder
-System.Text.Encodings.Web.UrlEncoder
-System.Text.Encodings.Web.JavaScriptEncoder
- 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
-license Type:MIT
-
-####################################################################################################
 Package:System.Text.Json
 Version:4.7.2
 project URL:https://github.com/dotnet/corefx
@@ -3514,23 +3171,6 @@ System.Text.Json.Utf8JsonReader
  
 When using NuGet 3.x this package requires at least version 3.4.
 licenseUrl:https://licenses.nuget.org/MIT
-license Type:MIT
-
-####################################################################################################
-Package:System.Text.Json
-Version:4.6.0
-project URL:https://github.com/dotnet/corefx
-Description:Provides high-performance and low-allocating types that serialize objects to JavaScript Object Notation (JSON) text and deserialize JSON text to objects, with UTF-8 support built-in. Also provides types to read and write JSON text encoded as UTF-8, and to create an in-memory document object model (DOM), that is read-only, for random access of the JSON elements within a structured view of the data.
-
-Commonly Used Types:
-System.Text.Json.JsonSerializer
-System.Text.Json.JsonDocument
-System.Text.Json.JsonElement
-System.Text.Json.Utf8JsonWriter
-System.Text.Json.Utf8JsonReader
- 
-When using NuGet 3.x this package requires at least version 3.4.
-licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
 license Type:MIT
 
 ####################################################################################################
@@ -3673,19 +3313,6 @@ license Type:MS-EULA
 
 ####################################################################################################
 Package:System.Threading.Tasks.Extensions
-Version:4.5.2
-project URL:https://dot.net/
-Description:Provides additional types that simplify the work of writing concurrent and asynchronous code.
-
-Commonly Used Types:
-System.Threading.Tasks.ValueTask<TResult>
- 
-99ce22c306b07f99ddae60f443d23a983ae78f7b
-licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
-license Type:MIT
-
-####################################################################################################
-Package:System.Threading.Tasks.Extensions
 Version:4.5.4
 project URL:https://dot.net/
 Description:Provides additional types that simplify the work of writing concurrent and asynchronous code.
@@ -3707,19 +3334,6 @@ Commonly Used Types:
 System.Threading.Tasks.ValueTask<TResult>
 licenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
 license Type:MS-EULA
-
-####################################################################################################
-Package:System.Threading.Tasks.Extensions
-Version:4.5.0
-project URL:https://dot.net/
-Description:Provides additional types that simplify the work of writing concurrent and asynchronous code.
-
-Commonly Used Types:
-System.Threading.Tasks.ValueTask<TResult>
- 
-30ab651fcb4354552bd4891619a0bdd81e0ebdbf
-licenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
-license Type:MIT
 
 ####################################################################################################
 Package:System.Threading.Thread

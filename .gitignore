@@ -83,7 +83,7 @@ deploy/scripts/semantic_domains/json/*.json
 database/semantic_domains/*
 
 # Combine installer
-installer/combine-installer.run
+installer/*.run
 installer/makeself-*
 installer/README.pdf
 

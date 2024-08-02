@@ -137,10 +137,11 @@
     "project": "Proyecto:",
     "tab": {
       "basic": "Configuración básica",
+      "domains": "Dominios semánticos",
       "export": "Exportar",
       "importExport": "Importar/Exportar",
       "languages": "Idiomas",
-      "schedule": "Programar",
+      "schedule": "Calendario",
       "users": "Usuarios"
     },
     "language": {

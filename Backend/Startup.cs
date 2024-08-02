@@ -39,8 +39,12 @@ namespace BackendFramework
         {
             public const int DefaultPasswordResetExpireTime = 15;
 
+            public bool CaptchaEnabled { get; set; }
+            public string? CaptchaSecretKey { get; set; }
+            public string? CaptchaVerifyUrl { get; set; }
             public string ConnectionString { get; set; }
             public string CombineDatabase { get; set; }
+            public bool EmailEnabled { get; set; }
             public string? SmtpServer { get; set; }
             public int? SmtpPort { get; set; }
             public string? SmtpUsername { get; set; }
@@ -51,15 +55,17 @@ namespace BackendFramework
 
             public Settings()
             {
+                CaptchaEnabled = true;
                 ConnectionString = "";
                 CombineDatabase = "";
+                EmailEnabled = false;
                 PassResetExpireTime = DefaultPasswordResetExpireTime;
             }
         }
 
         private sealed class EnvironmentNotConfiguredException : Exception { }
 
-        private string? CheckedEnvironmentVariable(string name, string? defaultValue, string error = "")
+        private string? CheckedEnvironmentVariable(string name, string? defaultValue, string error = "", bool info = false)
         {
             var contents = Environment.GetEnvironmentVariable(name);
             if (contents is not null)
@@ -67,7 +73,14 @@ namespace BackendFramework
                 return contents;
             }
 
-            _logger.LogError("Environment variable: {Name} is not defined. {Error}", name, error);
+            if (info)
+            {
+                _logger.LogInformation("Environment variable: {Name} is not defined. {Error}", name, error);
+            }
+            else
+            {
+                _logger.LogError("Environment variable: {Name} is not defined. {Error}", name, error);
+            }
             return defaultValue;
         }
 
@@ -153,31 +166,56 @@ namespace BackendFramework
                     options.CombineDatabase = Configuration["MongoDB:CombineDatabase"]
                         ?? throw new EnvironmentNotConfiguredException();
 
+                    options.CaptchaEnabled = bool.Parse(CheckedEnvironmentVariable(
+                        "COMBINE_CAPTCHA_REQUIRED",
+                        "true",
+                        "CAPTCHA should be explicitly required or not required.")!);
+                    if (options.CaptchaEnabled)
+                    {
+                        options.CaptchaSecretKey = CheckedEnvironmentVariable(
+                            "COMBINE_CAPTCHA_SECRET_KEY",
+                            null,
+                            "CAPTCHA secret key required.");
+                        options.CaptchaVerifyUrl = CheckedEnvironmentVariable(
+                            "COMBINE_CAPTCHA_VERIFY_URL",
+                            null,
+                            "CAPTCHA verification URL required.");
+                    }
+
                     const string emailServiceFailureMessage = "Email services will not work.";
-                    options.SmtpServer = CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_SERVER",
-                        null,
-                        emailServiceFailureMessage);
-                    options.SmtpPort = int.Parse(CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_PORT",
-                        IEmailContext.InvalidPort.ToString(),
-                        emailServiceFailureMessage)!);
-                    options.SmtpUsername = CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_USERNAME",
-                        null,
-                        emailServiceFailureMessage);
-                    options.SmtpPassword = CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_PASSWORD",
-                        null,
-                        emailServiceFailureMessage);
-                    options.SmtpAddress = CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_ADDRESS",
-                        null,
-                        emailServiceFailureMessage);
-                    options.SmtpFrom = CheckedEnvironmentVariable(
-                        "COMBINE_SMTP_FROM",
-                        null,
-                        emailServiceFailureMessage);
+                    options.EmailEnabled = bool.Parse(CheckedEnvironmentVariable(
+                        "COMBINE_EMAIL_ENABLED",
+                        "false",
+                        emailServiceFailureMessage,
+                        true)!);
+                    if (options.EmailEnabled)
+                    {
+                        options.SmtpServer = CheckedEnvironmentVariable(
+                            "COMBINE_SMTP_SERVER",
+                            null,
+                            emailServiceFailureMessage);
+                        options.SmtpPort = int.Parse(CheckedEnvironmentVariable(
+                            "COMBINE_SMTP_PORT",
+                            IEmailContext.InvalidPort.ToString(),
+                            emailServiceFailureMessage)!);
+                        options.SmtpUsername = CheckedEnvironmentVariable(
+                            "COMBINE_SMTP_USERNAME",
+                            null,
+                            emailServiceFailureMessage);
+                        options.SmtpPassword = CheckedEnvironmentVariable(
+                            "COMBINE_SMTP_PASSWORD",
+                            null,
+                            emailServiceFailureMessage);
+                        options.SmtpAddress = CheckedEnvironmentVariable(
+                            "COMBINE_SMTP_ADDRESS",
+                            null,
+                            emailServiceFailureMessage);
+                        options.SmtpFrom = CheckedEnvironmentVariable(
+                            "COMBINE_SMTP_FROM",
+                            null,
+                            emailServiceFailureMessage);
+                    }
+
                     options.PassResetExpireTime = int.Parse(CheckedEnvironmentVariable(
                         "COMBINE_PASSWORD_RESET_EXPIRE_TIME",
                         Settings.DefaultPasswordResetExpireTime.ToString(),
@@ -189,6 +227,10 @@ namespace BackendFramework
             // Banner types
             services.AddTransient<IBannerContext, BannerContext>();
             services.AddTransient<IBannerRepository, BannerRepository>();
+
+            // CAPTCHA types
+            services.AddTransient<ICaptchaContext, CaptchaContext>();
+            services.AddTransient<ICaptchaService, CaptchaService>();
 
             // Email types
             services.AddTransient<IEmailContext, EmailContext>();
