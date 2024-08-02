@@ -1156,13 +1156,15 @@ The process for configuring and deploying _TheCombine_ for production targets is
 - [JS](https://www.w3schools.com/js/default.asp)
 - [TS](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html)
 - [Our style guide](docs/style_guide/ts_style_guide.md)
-- [React](https://reactjs.org/)
-- [React Hooks](https://reactjs.org/docs/hooks-intro.html)
+- [React](https://react.dev/learn)
+- [React Hooks](https://react.dev/reference/react/hooks)
+- [MUI](https://mui.com/material-ui/getting-started/) (styled/themed components)
 - [Redux concepts](https://redux.js.org/tutorials/fundamentals/part-2-concepts-data-flow)
 - [Redux tutorials](https://redux.js.org/tutorials/typescript-quick-start)
 - [React-i18next](https://react.i18next.com/) (text localization)
 - [Jest](https://jestjs.io/docs/getting-started) (unit testing)
 - [React-Test-Renderer](https://reactjs.org/docs/test-renderer.html) (unit testing)
+- [Parcel](https://parceljs.org/docs/) (bundler/builder)
 
 ### Kubernetes/Helm
 
