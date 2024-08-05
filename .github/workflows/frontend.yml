@@ -24,9 +24,9 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
-            *.actions.githubusercontent.com:443
             api.github.com:443
             github.com:443
+            objects.githubusercontent.com:443
             registry.npmjs.org:443
       - name: Checkout repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
@@ -53,9 +53,9 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
-            *.actions.githubusercontent.com:443
             api.github.com:443
             github.com:443
+            objects.githubusercontent.com:443
             registry.npmjs.org:443
       - name: Checkout repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
@@ -68,7 +68,7 @@ jobs:
         env:
           CI: true
       - name: Upload coverage artifact
-        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
         with:
           if-no-files-found: error
           name: coverage
@@ -101,7 +101,7 @@ jobs:
         with:
           name: coverage
       - name: Upload coverage report
-        uses: codecov/codecov-action@84508663e988701840491b86de86b666e8a86bed # v4.3.0
+        uses: codecov/codecov-action@e28ff129e5465c2c0dcc6f003fc735cb6ae0c673 # v4.5.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
@@ -121,7 +121,6 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
-            *.actions.githubusercontent.com:443
             auth.docker.io:443
             files.pythonhosted.org:443
             github.com:443

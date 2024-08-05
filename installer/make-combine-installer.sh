@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
+set -eo pipefail
 
 # Warning and Error reporting functions
 warning () {
