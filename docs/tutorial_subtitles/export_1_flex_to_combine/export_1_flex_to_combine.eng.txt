@@ -21,17 +21,17 @@ Notice there are fields below where we can specify the Vernacular Language and a
 This is not necessary when we are importing data because project languages will automatically be gathered from the data.
 To upload existing data, click the “Browse” button.
 This brings up a file explorer dialog for you to select the LIFT data that was exported from FLEx.
-I’m navigating to Desktop, where I exported my data, selecting the Naskapi ZIP file, and clicking the “Open” button.
+I’m navigating to Desktop, where I exported my data, selecting the “Naskapi.zip” file, and clicking the “Open” button.
 See that The Combine has the text “File selected: Naskapi.zip”.
 Great!
 Under “Vernacular Language” there is now a drop-down menu.
 Use it to select which of the languages in the data is to be the Vernacular Language.
-The Combine only supports data entry for one vernacular language.
+The Combine only supports data entry for one vernacular language per project.
 The vernacular language cannot be changed after the project has been created.
 If you need to gather or organize lexical data for a different language, simply create another project.
-Note that you cannot specify an analysis language.
+Note that you can no longer specify an analysis language.
 This is because all analysis languages present in the ZIP file are automatically added, and you can add and remove analysis languages in the project at any time.
-All that’s left is to click the “Create Project” button!
+All that’s left is to click the “Create Project” button.
 Once the project is created, you are taken to the project settings page.
 To access this in the future you can click on the gear icon in the top bar.
 Note that here in the “Languages” tab, we can see the Vernacular Language as well as review and change the Analysis Languages.
