@@ -18,6 +18,7 @@ docker-compose.yml
 nginx/scripts
 /backups
 /dist
+/parcel-bundle-reports
 /restore
 script_conf.json
 backup_conf.json

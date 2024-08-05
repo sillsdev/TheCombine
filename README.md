@@ -309,9 +309,9 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-#### `npm run analyze`
+#### `npm run build:analyze`
 
-Run after `npm run build` to analyze the contents build bundle chunks.
+Builds then generates a tree map of the bundle chunks.
 
 ### Using OpenAPI
 
