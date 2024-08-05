@@ -26,7 +26,6 @@ usage() {
     This script assumes:
       * internet access
       * scripts.wordlist defined in package.json
-      * hunspell-reader installed with npm
     If you run this script many times in rapid succession,
       your dictionary download may be throttled by the source
 USAGE
@@ -70,7 +69,7 @@ while [[ $# -gt 0 ]] ; do
   esac
 done
 
-SRC=https://cgit.freedesktop.org/libreoffice/dictionaries/plain/
+SRC=https://raw.githubusercontent.com/LibreOffice/dictionaries/master/
 case ${LANG} in
   ar)
     # URL=${SRC}ar/ar
@@ -83,7 +82,7 @@ case ${LANG} in
     URL=${SRC}en/en_US
     ;;
   es)
-    URL=${SRC}es/es
+    URL=${SRC}es/es_MX
     ;;
   fr)
     URL=${SRC}fr_FR/fr
