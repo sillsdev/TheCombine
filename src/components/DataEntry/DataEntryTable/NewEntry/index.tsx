@@ -221,6 +221,13 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     }
   };
 
+  /** Clear the duplicate selection if user returns to the vernacular field. */
+  const handleOnVernFocus = (): void => {
+    if (selectedDup) {
+      setSelectedDup();
+    }
+  };
+
   const handleCloseVernDialog = (id?: string): void => {
     if (id !== undefined) {
       setSelectedDup(id);
@@ -260,6 +267,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
                 setVernOpen(true);
               }
             }}
+            onFocus={handleOnVernFocus}
             suggestedVerns={suggestedVerns}
             // To prevent unintentional no-gloss submissions:
             // If enter pressed from the vern field, check whether gloss is empty
