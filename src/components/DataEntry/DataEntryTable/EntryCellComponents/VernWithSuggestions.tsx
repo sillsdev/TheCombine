@@ -41,28 +41,25 @@ export default function VernWithSuggestions(
 
   return (
     <Autocomplete
-      id={props.textFieldId}
       disabled={props.isDisabled}
       // freeSolo allows use of a typed entry not available as a drop-down option
       freeSolo
       value={props.vernacular}
       options={props.suggestedVerns ?? []}
+      id={props.textFieldId}
+      // option-never-equals-value prevents automatic option highlighting
+      isOptionEqualToValue={() => false}
       onBlur={props.onBlur}
-      onChange={(_e, value) => {
-        // onChange is triggered when an option is selected
-        props.updateVernField(value ?? "", true);
-      }}
+      onClose={props.onClose}
       onFocus={props.onFocus}
       onInputChange={(_e, value) => {
-        // onInputChange is triggered by typing
         props.updateVernField(value);
       }}
-      onKeyPress={(e: KeyboardEvent) => {
+      onKeyDown={(e: KeyboardEvent) => {
         if (e.key === Key.Enter) {
           props.handleEnter();
         }
       }}
-      onClose={props.onClose}
       renderInput={(params) => (
         <TextFieldWithFont
           {...(params as any)}
@@ -74,7 +71,12 @@ export default function VernWithSuggestions(
         />
       )}
       renderOption={(liProps, option, { selected }) => (
-        <LiWithFont {...liProps} aria-selected={selected} vernacular>
+        <LiWithFont
+          {...liProps}
+          aria-selected={selected}
+          key={option}
+          vernacular
+        >
           {option}
         </LiWithFont>
       )}

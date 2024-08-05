@@ -58,13 +58,8 @@ export default function GlossWithSuggestions(
           props.onBlur();
         }
       }}
-      onChange={(_e, newValue) => {
-        // onChange is triggered when an option is selected
-        props.updateGlossField(newValue ?? "");
-      }}
       inputValue={props.gloss}
       onInputChange={(_e, newInputValue) => {
-        // onInputChange is triggered by typing
         props.updateGlossField(newInputValue);
       }}
       renderInput={(params) => (
@@ -83,12 +78,13 @@ export default function GlossWithSuggestions(
           {...liProps}
           analysis
           aria-selected={selected}
+          key={option}
           lang={props.analysisLang.bcp47}
         >
           {SpellChecker.replaceAllButLastWordWithEllipses(option)}
         </LiWithFont>
       )}
-      onKeyPress={(e: KeyboardEvent) => {
+      onKeyDown={(e: KeyboardEvent) => {
         if (e.key === Key.Enter) {
           props.handleEnter();
         }
