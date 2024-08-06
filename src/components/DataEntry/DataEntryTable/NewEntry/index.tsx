@@ -262,8 +262,9 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
             }}
             onFocus={handleOnVernFocus}
             suggestedVerns={suggestedVerns}
-            // To prevent unintentional no-gloss submissions:
-            // If enter pressed from the vern field, move focus to gloss field.
+            // To prevent unintentional no-gloss or wrong-gloss submissions
+            // and to simplify interactions with Autocomplete and with the dialogs:
+            // if Enter is pressed from the vern field, move focus to gloss field.
             handleEnter={() => focus(FocusTarget.Gloss)}
             vernacularLang={vernacularLang}
             textFieldId={NewEntryId.TextFieldVern}

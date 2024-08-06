@@ -82,6 +82,11 @@ export default function GlossWithSuggestions(
           {SpellChecker.replaceAllButLastWordWithEllipses(option)}
         </LiWithFont>
       )}
+      /* Even though `onKeyPress` is deprecated, we need to keep using it:
+       * - `onKeyDown` doesn't work with spelling suggestion selection via Enter,
+       * because the submission occurs before the selected suggestion is applied;
+       * - `onKeyUp` doesn't work with SenseDialog selection via Enter,
+       * because the dialog closes before the key is released. */
       onKeyPress={(e: KeyboardEvent) => {
         if (e.key === Key.Enter) {
           props.handleEnter();
