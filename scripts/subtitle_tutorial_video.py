@@ -58,12 +58,17 @@ def parse_args() -> argparse.Namespace:
 
 
 def create_srt_file(script_path: Path, out_path: Path, times_strings: List[str]) -> None:
+    num_lines = len(times_strings)
     with open(script_path, "r", encoding="utf-8") as in_file:
-        with open(out_path, "w", encoding="utf-8") as out_file:
-            for i in range(len(times_strings)):
-                out_file.write(f"{i+1}\n{times_strings[i]}\n")
-                out_file.write(in_file.readline())
-                out_file.write("\n")
+        in_lines = [line.strip() for line in in_file.readlines() if len(line.strip()) > 0]
+    if len(in_lines) != num_lines:
+        logging.error(
+            f"Transcript {script_path} should have {num_lines} lines but has {len(in_lines)}"
+        )
+        exit(1)
+    out_lines = [f"{i+1}\n{times_strings[i]}\n{in_lines[i]}\n\n" for i in range(num_lines)]
+    with open(out_path, "w", encoding="utf-8") as out_file:
+        out_file.writelines(out_lines)
 
 
 def main() -> None:
