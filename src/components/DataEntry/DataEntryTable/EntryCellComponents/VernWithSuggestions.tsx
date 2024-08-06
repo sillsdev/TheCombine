@@ -19,7 +19,6 @@ interface VernWithSuggestionsProps {
   updateVernField: (newValue: string, openDialog?: boolean) => void;
   onBlur: () => void;
   onClose?: (e: SyntheticEvent, reason: AutocompleteCloseReason) => void;
-  onFocus?: () => void;
   suggestedVerns?: string[];
   handleEnter: () => void;
   vernacularLang: WritingSystem;
@@ -52,7 +51,6 @@ export default function VernWithSuggestions(
         // onChange is triggered when an option is selected
         props.updateVernField(value ?? "", true);
       }}
-      onFocus={props.onFocus}
       onInputChange={(_e, value) => {
         // onInputChange is triggered by typing
         props.updateVernField(value);
