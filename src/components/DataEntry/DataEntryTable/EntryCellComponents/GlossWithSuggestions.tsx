@@ -48,7 +48,6 @@ export default function GlossWithSuggestions(
       filterOptions={(options) => options}
       // freeSolo allows use of a typed entry not available as a drop-down option
       freeSolo
-      includeInputInList
       // option-never-equals-value prevents automatic option highlighting
       isOptionEqualToValue={() => false}
       options={spellChecker.getSpellingSuggestions(props.gloss)}
@@ -58,13 +57,7 @@ export default function GlossWithSuggestions(
           props.onBlur();
         }
       }}
-      onChange={(_e, newValue) => {
-        // onChange is triggered when an option is selected
-        props.updateGlossField(newValue ?? "");
-      }}
-      inputValue={props.gloss}
       onInputChange={(_e, newInputValue) => {
-        // onInputChange is triggered by typing
         props.updateGlossField(newInputValue);
       }}
       renderInput={(params) => (
@@ -83,6 +76,7 @@ export default function GlossWithSuggestions(
           {...liProps}
           analysis
           aria-selected={selected}
+          key={option}
           lang={props.analysisLang.bcp47}
         >
           {SpellChecker.replaceAllButLastWordWithEllipses(option)}

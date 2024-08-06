@@ -206,19 +206,12 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     }
   };
 
-  const handleEnter = async (checkGloss: boolean): Promise<void> => {
+  const handleGlossEnter = async (): Promise<void> => {
     // The user can never submit a new entry without a vernacular
     if (newVern) {
-      // The user can conditionally submit a new entry without a gloss
-      if (newGloss || !checkGloss) {
-        await addOrUpdateWord();
-        focus(FocusTarget.Vernacular);
-      } else {
-        focus(FocusTarget.Gloss);
-      }
-    } else {
-      focus(FocusTarget.Vernacular);
+      await addOrUpdateWord();
     }
+    focus(FocusTarget.Vernacular);
   };
 
   /** Clear the duplicate selection if user returns to the vernacular field. */
@@ -270,8 +263,8 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
             onFocus={handleOnVernFocus}
             suggestedVerns={suggestedVerns}
             // To prevent unintentional no-gloss submissions:
-            // If enter pressed from the vern field, check whether gloss is empty
-            handleEnter={() => handleEnter(true)}
+            // If enter pressed from the vern field, move focus to gloss field.
+            handleEnter={() => focus(FocusTarget.Gloss)}
             vernacularLang={vernacularLang}
             textFieldId={NewEntryId.TextFieldVern}
             onUpdate={() => conditionalFocus(FocusTarget.Vernacular)}
@@ -298,9 +291,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
           gloss={newGloss}
           glossInput={glossInput}
           updateGlossField={setNewGloss}
-          // To allow intentional no-gloss submissions:
-          // If enter pressed from the gloss field, don't check whether gloss is empty
-          handleEnter={() => handleEnter(false)}
+          handleEnter={() => handleGlossEnter()}
           analysisLang={analysisLang}
           textFieldId={NewEntryId.TextFieldGloss}
           onUpdate={() => conditionalFocus(FocusTarget.Gloss)}
