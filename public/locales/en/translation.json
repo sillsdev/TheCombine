@@ -14,7 +14,7 @@
     "descriptionP4": "Sign up to get started with your word collection!"
   },
   "treeView": {
-    "findDomain": "Find a domain:",
+    "findDomain": "Find a domain",
     "domainNotFound": "Domain not found",
     "returnToTop": "Return to the top of the domain tree."
   },
