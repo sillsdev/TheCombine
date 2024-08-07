@@ -5,7 +5,8 @@ import { CloseButton, DeleteButtonWithDialog } from "components/Buttons";
 
 interface ViewImageDialogProps {
   close: () => void;
-  deleteButtonId?: string;
+  buttonIdClose?: string;
+  buttonIdDelete?: string;
   deleteImage?: () => void | Promise<void>;
   deleteTextId?: string;
   imgSrc: string;
@@ -28,14 +29,14 @@ export default function ViewImageDialog(
       <DialogTitle>
         {props.title}
         <Icon />
-        <CloseButton close={props.close} />
+        <CloseButton buttonId={props.buttonIdClose} close={props.close} />
       </DialogTitle>
       <DialogContent>
         <img src={props.imgSrc || undefined} />
         <Grid container justifyContent="flex-end">
           <Grid item>
             <DeleteButtonWithDialog
-              buttonId={props.deleteButtonId || "delete-image"}
+              buttonId={props.buttonIdDelete || "delete-image"}
               delete={handleDelete}
               textId={props.deleteTextId ?? ""}
             />

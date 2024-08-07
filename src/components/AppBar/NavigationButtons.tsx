@@ -74,6 +74,7 @@ function NavButton(props: NavButtonProps): ReactElement {
 
   return (
     <Button
+      data-testid={props.buttonId}
       id={props.buttonId}
       onClick={() => navigate(props.targetPath)}
       color="inherit"

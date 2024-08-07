@@ -25,6 +25,7 @@ export default function IconButtonWithTooltip(
     >
       <span>
         <IconButton
+          data-testid={props.buttonId}
           onClick={props.onClick}
           size={props.size || "medium"}
           id={props.buttonId}

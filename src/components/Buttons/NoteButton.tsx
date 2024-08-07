@@ -44,6 +44,7 @@ export default function NoteButton(props: NoteButtonProps): ReactElement {
         close={() => setNoteOpen(false)}
         updateText={props.updateNote ?? (() => {})}
         buttonIdCancel="note-edit-cancel"
+        buttonIdClear="note-edit-clear"
         buttonIdConfirm="note-edit-confirm"
         textFieldId="note-text-field"
       />

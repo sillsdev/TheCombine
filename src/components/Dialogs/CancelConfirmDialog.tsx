@@ -53,6 +53,7 @@ export default function CancelConfirmDialog(
       <DialogActions>
         <Button
           color="primary"
+          data-testid={props.buttonIdCancel}
           disabled={loading}
           id={props.buttonIdCancel}
           onClick={props.handleCancel}
@@ -61,7 +62,11 @@ export default function CancelConfirmDialog(
           {t("buttons.cancel")}
         </Button>
         <LoadingButton
-          buttonProps={{ id: props.buttonIdConfirm, onClick: onConfirm }}
+          buttonProps={{
+            "data-testid": props.buttonIdConfirm,
+            id: props.buttonIdConfirm,
+            onClick: onConfirm,
+          }}
           loading={loading}
         >
           {t("buttons.confirm")}

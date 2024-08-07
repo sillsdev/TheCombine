@@ -35,6 +35,7 @@ export default function DeleteEntry(props: DeleteEntryProps): ReactElement {
     <>
       <Tooltip title={t("addWords.deleteRow")} placement="top">
         <IconButton
+          data-testid={props.buttonId}
           disabled={props.disabled}
           tabIndex={-1}
           size="small"
