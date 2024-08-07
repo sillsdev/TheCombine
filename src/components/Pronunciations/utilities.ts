@@ -29,3 +29,16 @@ export async function uploadFileFromPronunciation(
   URL.revokeObjectURL(fileName);
   return newId;
 }
+
+/** On Chrome/Chromium, checks if the user has granted mic permission to The Combine.
+ * On other browsers, assumes permission is granted. */
+export async function checkMicPermission(): Promise<boolean> {
+  if (navigator.userAgent.includes("Chrom")) {
+    const result = await navigator.permissions.query({
+      name: "microphone" as PermissionName, // This causes a TypeError on Firefox.
+    });
+    return result.state === "granted";
+  } else {
+    return Promise.resolve(true);
+  }
+}

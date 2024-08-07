@@ -8,6 +8,7 @@ import {
   resetPronunciations,
 } from "components/Pronunciations/Redux/PronunciationsActions";
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
+import { checkMicPermission } from "components/Pronunciations/utilities";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { themeColors } from "types/theme";
@@ -37,9 +38,7 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
   const { t } = useTranslation();
 
   useEffect(() => {
-    navigator.permissions
-      .query({ name: "microphone" as PermissionName })
-      .then((result) => setHasMic(result.state === "granted"));
+    checkMicPermission().then(setHasMic);
   }, []);
 
   function toggleIsRecordingToTrue(): void {
