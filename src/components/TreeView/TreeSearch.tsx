@@ -59,17 +59,17 @@ export default function TreeSearch(props: TreeSearchProps): ReactElement {
   );
 }
 
-/** Automatically convert a string of form 123 to 1.2.3. */
+/** Adds periods to a string of digits.
+ * If string is digits with at most 1 period between each digit
+ * (e.g.: 1234, 12.34, 123.4, 1.23.4),
+ * then removes all periods (e.g.: 1234)
+ * and inserts a period between each digit (e.g.: 1.2.3.4).
+ *
+ * Note: doesn't act on strings with double/initial/final period (e.g.: .2.3.4, 1..3.4),
+ * because a user may be changing a digit (e.g.: 1.0.3.4 -> 1..3.4 -> 1.2.3.4). */
 export function insertDecimalPoints(value: string): string {
-  // Test if input is strictly of the form: 1.2.3 or 123
-  if (/^[.\d]+$/.test(value) && !value.endsWith(".")) {
-    // Automatically insert decimal points between two numbers.
-    value = value
-      .replace(/\./g, "")
-      .split("")
-      .map((char) => `${char}.`)
-      .join("")
-      .slice(0, -1);
+  if (/^\d(.?\d)*$/.test(value)) {
+    value = value.replace(/\./g, "").split("").join(".");
   }
 
   return value;
