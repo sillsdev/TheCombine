@@ -38,7 +38,6 @@ export async function checkMicPermission(): Promise<boolean> {
       name: "microphone" as PermissionName, // This causes a TypeError on Firefox.
     });
     return result.state === "granted";
-  } else {
-    return true;
   }
+  return true;
 }
