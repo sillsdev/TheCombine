@@ -39,6 +39,6 @@ export async function checkMicPermission(): Promise<boolean> {
     });
     return result.state === "granted";
   } else {
-    return Promise.resolve(true);
+    return true;
   }
 }
