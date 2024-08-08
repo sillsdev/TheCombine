@@ -65,6 +65,8 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
           close={() => setOpen(false)}
           updateText={updateFlag}
           onDelete={removeFlag}
+          buttonIdCancel="flag-cancel"
+          buttonIdClear="flag-clear"
           buttonIdDelete="flag-remove"
           buttonIdSave="flag-save"
           buttonTextIdDelete="flags.remove"

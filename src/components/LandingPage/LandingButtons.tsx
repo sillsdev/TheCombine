@@ -82,6 +82,7 @@ function LandingButton(props: LandingButtonProps): ReactElement {
     <Button
       variant={props.filled ? "contained" : "outlined"}
       color="primary"
+      data-testid={props.buttonId}
       onClick={props.onClick}
       style={{
         height: buttonHeight,

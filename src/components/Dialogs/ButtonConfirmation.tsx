@@ -55,13 +55,18 @@ export default function ButtonConfirmation(
           onClick={props.onClose}
           variant="outlined"
           color="primary"
+          data-testid={props.buttonIdClose}
           id={props.buttonIdClose}
         >
           {t("buttons.cancel")}
         </Button>
         <LoadingButton
+          buttonProps={{
+            "data-testid": props.buttonIdConfirm,
+            id: props.buttonIdConfirm,
+            onClick: onConfirm,
+          }}
           loading={loading}
-          buttonProps={{ id: props.buttonIdConfirm, onClick: onConfirm }}
         >
           {t("buttons.confirm")}
         </LoadingButton>

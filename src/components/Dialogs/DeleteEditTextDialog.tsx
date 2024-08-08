@@ -23,6 +23,8 @@ interface DeleteEditTextDialogProps {
   close: () => void;
   updateText: (newText: string) => void | Promise<void>;
   onDelete?: () => void;
+  buttonIdCancel?: string;
+  buttonIdClear?: string;
   buttonIdDelete?: string;
   buttonIdSave?: string;
   buttonTextIdDelete?: string;
@@ -78,7 +80,12 @@ export default function DeleteEditTextDialog(
   const endAdornment = (
     <InputAdornment position="end">
       <Tooltip title={t("buttons.clearText")} placement={"left"}>
-        <IconButton size="small" onClick={() => setText("")}>
+        <IconButton
+          data-testid={props.buttonIdClear}
+          id={props.buttonIdClear}
+          onClick={() => setText("")}
+          size="small"
+        >
           <Backspace />
         </IconButton>
       </Tooltip>
@@ -98,6 +105,8 @@ export default function DeleteEditTextDialog(
           <IconButton
             size="small"
             aria-label="close"
+            data-testid={props.buttonIdCancel}
+            id={props.buttonIdCancel}
             onClick={onCancel}
             style={{ position: "absolute", right: 4, top: 4 }}
           >
@@ -109,6 +118,7 @@ export default function DeleteEditTextDialog(
         <TextField
           variant="standard"
           autoFocus
+          data-testid={props.textFieldId}
           value={text}
           onChange={(event) => setText(event.target.value)}
           onKeyPress={confirmIfEnter}
@@ -121,13 +131,18 @@ export default function DeleteEditTextDialog(
           onClick={onDelete}
           variant="outlined"
           color="primary"
+          data-testid={props.buttonIdDelete}
           id={props.buttonIdDelete}
         >
           {t(props.buttonTextIdDelete ?? "buttons.delete")}
         </Button>
         <LoadingButton
+          buttonProps={{
+            "data-testid": props.buttonIdSave,
+            id: props.buttonIdSave,
+            onClick: onSave,
+          }}
           loading={loading}
-          buttonProps={{ id: props.buttonIdSave, onClick: onSave }}
         >
           {t(props.buttonTextIdSave ?? "buttons.save")}
         </LoadingButton>
