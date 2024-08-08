@@ -135,7 +135,7 @@ describe("TreeSearch", () => {
 });
 
 describe("insertDecimalPoints", () => {
-  test.each(["a", "1a", "1", "1.", "1.0", "1.2.3.", "1..2", ".123"])(
+  test.each(["a", "1a", "1", "1.", "1.0", "1-2", "1..2", "1.2.3.", ".123"])(
     "does not change",
     (input) => {
       expect(insertDecimalPoints(input)).toBe(input);
