@@ -82,6 +82,10 @@ src/resources/dictionaries/*.txt
 deploy/scripts/semantic_domains/json/*.json
 database/semantic_domains/*
 
+# Intermediate and output files for tutorial video subtitling
+*.srt
+*.mp4
+
 # Combine installer
 installer/*.run
 installer/makeself-*

@@ -1,0 +1,27 @@
+In the first two videos about the Merge Duplicates tool, we covered all the basics.
+If you are cleaning up data gathered with The Combine, the first two videos are all you need.
+This video covers using the Merge Duplicates tool with data that was imported into The Combine.
+Lexical data from FieldWorks can have information that is not supported in The Combine.
+However, The Combine is designed to prevent accidental deletion of that information.
+In this first set of potential duplicates, note that the top bar is yellow.
+That indicates that these three imported entries have information that’s not visible in The Combine.
+Such information could include (for example) annotations, etymologies, or variants.
+Removing the final sense of a word in the Merge Duplicates tool results in that word being deleted.
+Therefore, a lone sense on a protected word cannot be moved.
+If we look at this second word, it has two senses.
+It is a protected word, but we can move one of the senses without deleting the word.
+So let’s move the sense with gloss “correct” to be a second sense of the first word.
+Now that the second word only has one sense, that sense cannot be moved.
+The third word is a duplicate of the first, but it cannot be deleted. So instead, we can add a flag.
+Now click the “Save & Continue” button to save our work.
+In this next set of potential duplicates, the tops of the words aren’t yellow but one of the senses is yellow—it is protected.
+A sense of an imported word can be protected if it has sense-specific information that isn’t supported in The Combine.
+Such information could include (for example) illustrations, reversals, or subsenses.
+Protected senses can be moved.
+However, protected senses cannot be deleted.
+A protected sense also cannot be dropped into another sense.
+If you want to merge two senses and one of them is protected, click-and-drag the other sense and drop it into the protected sense.
+Merged senses can generally be reordered in the sidebar, but if the top sense is protected, you cannot move another sense above it.
+Now click the “Save & Continue” button to save your work.
+I hope this video helps you clean up lexical data imported into The Combine.
+Have a wonderful day!
