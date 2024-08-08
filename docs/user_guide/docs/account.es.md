@@ -6,7 +6,7 @@ Cómo registrarse, iniciar sesión y editar su cuenta.
 
 ## Registrarse
 
-Para crear una nueva cuenta, pulse el botón [REGISTRARSE](../../signup) en la página de inicio de sesión.
+Para crear una nueva cuenta, pulse el botón [Registrarse](../../signup) en la página de inicio de sesión.
 
 !!! note "Nota"
 

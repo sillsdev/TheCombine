@@ -124,10 +124,10 @@ next set: "Save & Continue" and "Defer".
 
 #### Save & Continue
 
-![Merge Duplicates Save and Continue button](images/mergeSaveAndContinue.png)
+![Merge Duplicates Save & Continue button](images/mergeSaveAndContinue.png)
 
-The blue "Save and Continue" button does two things. First, it saves all changes made (i.e., all moved, merged, or
-deleted senses), updating the words in the database. Second, it saves the resulting set of words as non-duplicates.
+The blue "Save & Continue" button does two things. First, it saves all changes made (i.e., all moved, merged, or deleted
+senses), updating the words in the database. Second, it saves the resulting set of words as non-duplicates.
 
 !!! tip "Tip"
 
@@ -211,12 +211,12 @@ The middle of the panel shows up to 5 example vernacular forms in which the char
 in each occurrence.
 
 At the top of the panel are three buttons for designating whether the character should be included in the vernacular
-language's character inventory: "ACCEPT", "UNDECIDED", and "REJECT". Pressing any of these buttons will update the
+language's character inventory: "Accept", "Undecided", and "Reject". Pressing any of these buttons will update the
 designation at the bottom of the character tile. (These updates to the character inventory are not saved to the project
-until you click the SAVE button at the bottom of the page.)
+until you click the Save button at the bottom of the page.)
 
 At the bottom of the panel is a Find-and-Replace tool. If _every_ occurrence of the character should be replaced with
-something else, type the replacement character or string in the "Replace with" box and click the APPLY button.
+something else, type the replacement character or string in the "Replace with" box and click the Apply button.
 
 !!! warning "Important"
 

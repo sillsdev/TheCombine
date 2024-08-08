@@ -12,7 +12,7 @@ When creating a project, you have the option to start with an empty project or t
 
 If you have lexical data in a [LIFT](https://software.sil.org/lifttools) file (likely exported from The Combine,
 [WeSay](https://software.sil.org/wesay), [FLEx](https://software.sil.org/fieldworks), or
-[Lexique Pro](https://software.sil.org/lexiquepro)), you can click the BROWSE button next to "Upload existing data?" to
+[Lexique Pro](https://software.sil.org/lexiquepro)), you can click the Browse button next to "Upload existing data?" to
 import the data into your project.
 
 If you choose not to import data during project creation, you may still do so later (see [below](#import)).
