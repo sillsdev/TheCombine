@@ -1,3 +1,4 @@
+import { ThemeProvider } from "@mui/material/styles";
 import { Provider } from "react-redux";
 import renderer, { type ReactTestInstance } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
@@ -8,7 +9,7 @@ import NavigationButtons, {
   dataEntryButtonId,
 } from "components/AppBar/NavigationButtons";
 import { Path } from "types/path";
-import { themeColors } from "types/theme";
+import theme, { themeColors } from "types/theme";
 
 jest.mock("react-router-dom", () => ({
   useNavigate: jest.fn(),
@@ -34,9 +35,11 @@ const renderNavButtons = async (
   mockGetCurrentPermissions.mockResolvedValue([permission]);
   await renderer.act(async () => {
     testRenderer = renderer.create(
-      <Provider store={mockStore}>
-        <NavigationButtons currentTab={path} />
-      </Provider>
+      <ThemeProvider theme={theme}>
+        <Provider store={mockStore}>
+          <NavigationButtons currentTab={path} />
+        </Provider>
+      </ThemeProvider>
     );
   });
 };

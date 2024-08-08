@@ -1,10 +1,12 @@
 import { Button, MenuItem } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
 import { Provider } from "react-redux";
 import { act, create, ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import UserMenu, { UserMenuList } from "components/AppBar/UserMenu";
 import { Path } from "types/path";
+import theme from "types/theme";
 
 jest.mock("backend", () => ({
   isSiteAdmin: () => mockIsSiteAdmin(),
@@ -37,9 +39,11 @@ describe("UserMenu", () => {
   it("renders", async () => {
     await act(async () => {
       testRenderer = create(
-        <Provider store={mockStore}>
-          <UserMenu currentTab={Path.Root} />
-        </Provider>
+        <ThemeProvider theme={theme}>
+          <Provider store={mockStore}>
+            <UserMenu currentTab={Path.Root} />
+          </Provider>
+        </ThemeProvider>
       );
     });
     expect(testRenderer.root.findAllByType(Button).length).toEqual(1);

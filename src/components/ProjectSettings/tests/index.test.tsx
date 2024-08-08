@@ -1,3 +1,4 @@
+import { ThemeProvider } from "@mui/material/styles";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "@testing-library/jest-dom";
@@ -20,6 +21,7 @@ import {
   whichTabs,
 } from "components/ProjectSettings/tests/SettingsTabTypes";
 import { randomProject } from "types/project";
+import theme from "types/theme";
 
 jest.mock("react-router-dom", () => ({
   useNavigate: jest.fn(),
@@ -62,9 +64,11 @@ const updateProjSettings = async (hasSchedule = false): Promise<void> => {
     // This is accomplished by randomProject() in createMockStore().
     render(
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Provider store={createMockStore(hasSchedule)}>
-          <ProjectSettings />
-        </Provider>
+        <ThemeProvider theme={theme}>
+          <Provider store={createMockStore(hasSchedule)}>
+            <ProjectSettings />
+          </Provider>
+        </ThemeProvider>
       </LocalizationProvider>
     );
   });
@@ -88,16 +92,18 @@ const createMatchMedia = (
 };
 
 beforeAll(async () => {
-  // Required for the <Hidden> elements to show up
+  // Required (along with a `ThemeProvider`) for `useMediaQuery` to work
   window.matchMedia = createMatchMedia(window.innerWidth);
 
   resetMocks();
   await act(async () => {
     render(
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Provider store={createMockStore()}>
-          <ProjectSettings />
-        </Provider>
+        <ThemeProvider theme={theme}>
+          <Provider store={createMockStore()}>
+            <ProjectSettings />
+          </Provider>
+        </ThemeProvider>
       </LocalizationProvider>
     );
   });

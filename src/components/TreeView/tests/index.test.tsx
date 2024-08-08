@@ -1,3 +1,4 @@
+import { ThemeProvider } from "@mui/material/styles";
 import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
@@ -7,6 +8,7 @@ import { Key } from "ts-key-enum";
 import TreeView, { exitButtonId, topButtonId } from "components/TreeView";
 import { defaultState as treeViewState } from "components/TreeView/Redux/TreeViewReduxTypes";
 import mockMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
+import theme from "types/theme";
 import { newWritingSystem } from "types/writingSystem";
 import { setMatchMedia } from "utilities/testRendererUtilities";
 
@@ -78,14 +80,16 @@ describe("TreeView", () => {
 });
 
 async function renderTree(exit?: () => void, width?: number): Promise<void> {
-  // Required for <Hidden> elements to show up
+  // Required (along with a `ThemeProvider`) for `useMediaQuery` to work
   setMatchMedia(width);
 
   await renderer.act(async () => {
     treeMaster = renderer.create(
-      <Provider store={mockStore}>
-        <TreeView returnControlToCaller={jest.fn()} exit={exit} />
-      </Provider>
+      <ThemeProvider theme={theme}>
+        <Provider store={mockStore}>
+          <TreeView returnControlToCaller={jest.fn()} exit={exit} />
+        </Provider>
+      </ThemeProvider>
     );
   });
 }
