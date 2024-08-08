@@ -66,9 +66,13 @@ namespace BackendFramework.Models
         [BsonElement("username")]
         public string Username { get; set; }
 
-        /// <summary> Not implemented in frontend. </summary>
         [BsonElement("uiLang")]
         public string UILang { get; set; }
+
+        [Required]
+        [BsonElement("glossSuggestion")]
+        [BsonRepresentation(BsonType.String)]
+        public AutocompleteSetting GlossSuggestion { get; set; }
 
         [Required]
         [BsonElement("token")]
@@ -94,6 +98,7 @@ namespace BackendFramework.Models
             Password = "";
             Username = "";
             UILang = "";
+            GlossSuggestion = AutocompleteSetting.On;
             Token = "";
             IsAdmin = false;
             WorkedProjects = new();
@@ -115,6 +120,7 @@ namespace BackendFramework.Models
                 Password = Password,
                 Username = Username,
                 UILang = UILang,
+                GlossSuggestion = GlossSuggestion,
                 Token = Token,
                 IsAdmin = IsAdmin,
                 WorkedProjects = WorkedProjects.ToDictionary(kv => kv.Key, kv => kv.Value),
@@ -136,6 +142,7 @@ namespace BackendFramework.Models
                 other.Password.Equals(Password, StringComparison.Ordinal) &&
                 other.Username.Equals(Username, StringComparison.Ordinal) &&
                 other.UILang.Equals(UILang, StringComparison.Ordinal) &&
+                other.GlossSuggestion.Equals(GlossSuggestion) &&
                 other.Token.Equals(Token, StringComparison.Ordinal) &&
                 other.IsAdmin == IsAdmin &&
 
@@ -172,6 +179,7 @@ namespace BackendFramework.Models
             hash.Add(Password);
             hash.Add(Username);
             hash.Add(UILang);
+            hash.Add(GlossSuggestion);
             hash.Add(Token);
             hash.Add(IsAdmin);
             return hash.ToHashCode();

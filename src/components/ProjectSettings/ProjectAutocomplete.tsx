@@ -40,7 +40,7 @@ export default function ProjectAutocomplete(
           title={t("projectSettings.autocomplete.hint")}
           placement={document.body.dir === "rtl" ? "left" : "right"}
         >
-          <HelpOutline />
+          <HelpOutline fontSize="small" />
         </Tooltip>
       </Grid>
     </Grid>
