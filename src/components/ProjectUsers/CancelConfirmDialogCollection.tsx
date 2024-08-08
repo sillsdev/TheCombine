@@ -5,7 +5,11 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 import { Role } from "api/models";
-import { addOrUpdateUserRole, removeUserRole } from "backend";
+import {
+  addOrUpdateUserRole,
+  changeProjectOwner,
+  removeUserRole,
+} from "backend";
 import { CancelConfirmDialog } from "components/Dialogs";
 import { asyncRefreshProjectUsers } from "components/Project/ProjectActions";
 import { useAppDispatch } from "rootRedux/hooks";
@@ -97,14 +101,7 @@ export default function CancelConfirmDialogCollection(
   }
 
   function makeOwner(userId: string): void {
-    addOrUpdateUserRole(props.projectId, Role.Owner, userId)
-      .then(() => {
-        addOrUpdateUserRole(
-          props.projectId,
-          Role.Administrator,
-          props.currentUserId
-        );
-      })
+    changeProjectOwner(props.projectId, props.currentUserId, userId)
       .then(() => {
         setMakeOwner(false);
         setAnchorEl(undefined);
