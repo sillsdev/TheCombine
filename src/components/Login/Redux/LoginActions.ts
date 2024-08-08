@@ -1,6 +1,7 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import Hex from "crypto-js/enc-hex";
 import sha256 from "crypto-js/sha256";
+import { getUserPreferences } from "vanilla-cookieconsent";
 
 import * as backend from "backend";
 import {
@@ -51,9 +52,11 @@ export function asyncLogIn(username: string, password: string) {
       .authenticateUser(username, password)
       .then(async (user) => {
         dispatch(loginSuccess());
-        // hash the user name and use it in analytics.identify
-        const analyticsId = Hex.stringify(sha256(user.id));
-        analytics.identify(analyticsId);
+        if (getUserPreferences().acceptType === "all") {
+          // hash the user name and use it in analytics.identify
+          const analyticsId = Hex.stringify(sha256(user.id));
+          analytics.identify(analyticsId);
+        }
         router.navigate(Path.ProjScreen);
       })
       .catch((err) =>

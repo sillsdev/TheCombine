@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { getUserPreferences } from "vanilla-cookieconsent";
 
 import { StoreActionTypes } from "rootRedux/actions";
 import { defaultState } from "types/Redux/analyticsReduxTypes";
@@ -8,7 +9,10 @@ const analyticsSlice = createSlice({
   initialState: defaultState,
   reducers: {
     changePageAction: (state, action) => {
-      if (action.payload !== state.currentPage) {
+      if (
+        getUserPreferences().acceptType === "all" &&
+        action.payload !== state.currentPage
+      ) {
         analytics.track("navigate", {
           destination: action.payload,
           source: state.currentPage,
