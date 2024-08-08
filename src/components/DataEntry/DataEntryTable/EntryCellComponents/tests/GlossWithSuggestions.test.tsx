@@ -1,5 +1,5 @@
-import { createRef } from "react";
-import renderer from "react-test-renderer";
+import { render } from "@testing-library/react";
+import { act, createRef } from "react";
 
 import GlossWithSuggestions from "components/DataEntry/DataEntryTable/EntryCellComponents/GlossWithSuggestions";
 import { newWritingSystem } from "types/writingSystem";
@@ -17,8 +17,8 @@ jest.mock("@mui/base/node/useAutocomplete/useAutocomplete", () => ({
 
 describe("GlossWithSuggestions", () => {
   it("renders with gloss", () => {
-    renderer.act(() => {
-      renderer.create(
+    act(() => {
+      render(
         <GlossWithSuggestions
           gloss={"gloss"}
           glossInput={createRef<HTMLInputElement>()}
@@ -32,8 +32,8 @@ describe("GlossWithSuggestions", () => {
   });
 
   it("renders new", () => {
-    renderer.act(() => {
-      renderer.create(
+    act(() => {
+      render(
         <GlossWithSuggestions
           isNew
           gloss={""}
@@ -48,8 +48,8 @@ describe("GlossWithSuggestions", () => {
   });
 
   it("renders disabled", () => {
-    renderer.act(() => {
-      renderer.create(
+    act(() => {
+      render(
         <GlossWithSuggestions
           isDisabled
           gloss={""}

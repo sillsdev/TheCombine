@@ -21,7 +21,7 @@ export default function DomainChipsGrid(
   /** Change the domain name into the project's sem dom language;
    * if not available, fall back to the given domain's name.  */
   const updateName = (dom: SemanticDomain): SemanticDomain => {
-    const name = semDomNames ? semDomNames[dom.id] ?? dom.name : dom.name;
+    const name = semDomNames ? (semDomNames[dom.id] ?? dom.name) : dom.name;
     return { ...dom, name };
   };
 

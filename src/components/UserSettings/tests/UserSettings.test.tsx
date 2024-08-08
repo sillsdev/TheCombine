@@ -114,7 +114,7 @@ describe("UserSettings", () => {
 
   it("disables button when change is saved", async () => {
     const agent = userEvent.setup();
-    const stringToType = "?";
+    const stringToType = "a";
     const user = mockUser();
     await renderUserSettingsGetUser();
     const submitButton = screen.getByTestId(UserSettingsIds.ButtonSubmit);

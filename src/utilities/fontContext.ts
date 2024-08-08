@@ -89,7 +89,7 @@ export class ProjectFonts {
           ? this.getLangFont(props.lang)
           : props.analysis
             ? this.analysisFont
-            : style?.fontFamily ?? this.inherit,
+            : (style?.fontFamily ?? this.inherit),
     };
   }
 }

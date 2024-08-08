@@ -25,7 +25,7 @@ export default class Recorder {
    * If not, returns `undefined`. */
   getRecordingId(): string | undefined {
     return this.recordRTC?.getState() === "recording"
-      ? this.id ?? ""
+      ? (this.id ?? "")
       : undefined;
   }
 
