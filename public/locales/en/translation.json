@@ -30,7 +30,7 @@
     "domain": "Domain",
     "domainTitle": "Domain: {{ val1 }} ({{ val2 }})",
     "glosses": "Glosses",
-    "pressEnter": "Press enter to save word",
+    "pressEnter": "Press Enter to save word",
     "vernacular": "Vernacular"
   },
   "appBar": {

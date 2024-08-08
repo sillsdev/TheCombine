@@ -29,7 +29,7 @@
     "domain": "Domínio",
     "domainTitle": "Domínio: {{ val1 }} ({{ val2 }})",
     "glosses": "Glosas",
-    "pressEnter": "Pressione enter para salvar a palavra",
+    "pressEnter": "Pressione Enter para salvar a palavra",
     "vernacular": "Vernáculo"
   },
   "appBar": {
