@@ -30,10 +30,21 @@ export async function uploadFileFromPronunciation(
   return newId;
 }
 
-/** On Chrome/Chromium, checks if the user has granted mic permission to The Combine.
- * On other browsers, assumes permission is granted. */
+/** Names of Firefox browsers in user-agent strings, all lowercase.
+ *
+ * https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent/Firefox */
+const firefoxBrowsers = ["firefox", "focus", "fxios"];
+
+/** Check if a user-agent string is of a Firefox browser. */
+function isUserAgentFirefox(userAgent: string): boolean {
+  const uaLower = userAgent.toLocaleLowerCase();
+  return firefoxBrowsers.some((browser) => uaLower.includes(browser));
+}
+
+/** Checks if the user has granted mic permission to The Combine,
+ * except on Firefox assumes permission is granted. */
 export async function checkMicPermission(): Promise<boolean> {
-  if (navigator.userAgent.includes("Chrom")) {
+  if (!isUserAgentFirefox(navigator.userAgent)) {
     const result = await navigator.permissions.query({
       name: "microphone" as PermissionName, // This causes a TypeError on Firefox.
     });
