@@ -7,13 +7,14 @@ import { defaultWritingSystem } from "types/writingSystem";
 
 export default function useCookieConsent(): void {
   useEffect(() => {
-    console.info("C is for Cookie");
     run({
       categories: {
         analytics: {
           /* Coming soon */
         },
-        necessary: {},
+        necessary: {
+          /* Use defaults */
+        },
       },
       guiOptions: {
         consentModal: { layout: "bar inline" },
@@ -32,6 +33,9 @@ export default function useCookieConsent(): void {
             preferencesModal: { sections: [] },
           },
         },
+      },
+      onFirstConsent: () => {
+        console.info("C is for Cookie...");
       },
     });
   }, []);
