@@ -1,0 +1,29 @@
+# Default values for backend.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Note:
+#  Items with the value "Override" are secrets that are to be
+#  specified on the helm command line when the chart is installed
+#  or upgraded.  DO NOT enter secret values in this file!
+#  The ./deploy/scripts/setup_combine.py script automatically creates
+#  the overrides from environment variables.  See ./docs/deploy/README.md
+
+global:
+  updateStrategy: Recreate
+  honeycombSecretKey: "Override"
+  imagePullPolicy: IfNotPresent
+  imageRepo: "otel/opentelemetry-collector-contrib"
+  imageTag: "0.87.0"
+  localEndpoint: "http://localhost:4317"
+
+collector:
+  receivers:
+    endpoint1: "0.0.0.0:4317"
+    endpoint2: "0.0.0.0:4318"
+  exporters:
+    endpoint: "api.honeycomb.io:443"
+  service:
+    receivers: [otlp]
+    processors: [batch]
+    exporters: [otlp]

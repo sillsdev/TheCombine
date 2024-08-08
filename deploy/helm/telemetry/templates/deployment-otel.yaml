@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    combine-component: telemetry
+  name: telemetry
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      combine-component: telemetry
+  strategy: 
+    type: {{ .Values.global.updateStrategy }}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        combine-component: telemetry
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.global.imageRepo }}:{{ .Values.global.imageTag }}"
+          args:
+            - "--config"
+            - "/etc/otelcol-contrib/config.yaml"
+            - "--config"
+            - "env:COLLECTOR_CONFIG_OVERRIDE"
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          env:
+            - name: HONEYCOMB_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: HONEYCOMB_API_KEY
+                  name: secrets-otel
+            - name: COLLECTOR_CONFIG_OVERRIDE
+              valueFrom:
+                configMapKeyRef:
+                  key: COLLECTOR_CONFIG_OVERRIDE
+                  name: configmap-otel
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  key: OTEL_EXPORTER_OTLP_ENDPOINT
+                  name: configmap-otel
+                
+          ports:
+            - containerPort: 4318
+            - containerPort: 4317
+            
+

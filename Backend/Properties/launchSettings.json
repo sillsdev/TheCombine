@@ -26,7 +26,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "OTEL_SERVICE_NAME": "Backend-Otel",
         "OTEL_EXPORTER_OTLP_PROTOCOL": "grpc",
-        "OTEL_EXPORTER_OTLP_ENDPOINT": "http://localhost:4317"
+        "OTEL_EXPORTER_OTLP_ENDPOINT": "https://api.honeycomb.io"
       },
       "applicationUrl": "http://localhost:5000",
       "hotReloadProfile": "aspnetcore"

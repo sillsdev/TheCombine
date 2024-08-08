@@ -47,6 +47,9 @@ aws-login:
 cert-proxy-client:
   enabled: false
 
+telemetry:
+  enabled: true
+
 certManager:
   enabled: false
   certIssuer: letsencrypt-prod

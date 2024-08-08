@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata: 
+  name: configmap-otel
+  namespace: {{ .Release.Namespace }}
+data:
+  COLLECTOR_CONFIG_OVERRIDE: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: {{ .Values.collector.receivers.endpoint1 }}
+          http:
+            endpoint: {{ .Values.collector.receivers.endpoint2 }}
+
+    processors:
+      batch:
+
+    exporters:
+      otlp:
+        endpoint: {{ .Values.collector.exporters.endpoint }}
+        headers:
+          "x-honeycomb-team": {{ .Values.global.honeycombSecretKey }}
+
+    service:
+      pipelines:
+        traces:
+          receivers: {{ .Values.collector.service.receivers }}
+          processors: {{ .Values.collector.service.processors }}
+          exporters: {{ .Values.collector.service.exporters }}
+  OTEL_EXPORTER_OTLP_ENDPOINT: {{ .Values.global.localEndpoint }}
