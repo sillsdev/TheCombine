@@ -112,9 +112,7 @@ describe("TreeSearch", () => {
       render(<TreeSearch {...testProps} />);
       expect(getSearchInput().value).toEqual("");
       const searchText = "flibbertigibbet";
-      await act(async () => {
-        await userEvent.type(getSearchInput(), `${searchText}{enter}`);
-      });
+      await userEvent.type(getSearchInput(), `${searchText}{enter}`);
       expect(getSearchInput().value).toEqual(searchText);
       // verify that no attempt to switch domains happened
       expect(MOCK_ANIMATE).toHaveBeenCalledTimes(0);
@@ -124,9 +122,7 @@ describe("TreeSearch", () => {
       render(<TreeSearch {...testProps} />);
       expect(getSearchInput().value).toEqual("");
       setupSpies(domMap[mapIds.lastKid]);
-      await act(async () => {
-        await userEvent.type(getSearchInput(), `${mapIds.lastKid}{enter}`);
-      });
+      await userEvent.type(getSearchInput(), `${mapIds.lastKid}{enter}`);
       expect(getSearchInput().value).toEqual("");
       // verify that we would switch to the domain requested
       expect(MOCK_ANIMATE).toHaveBeenCalledWith(domMap[mapIds.lastKid]);

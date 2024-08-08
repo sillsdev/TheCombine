@@ -53,21 +53,15 @@ describe("SiteSettings", () => {
     await renderSiteSettings();
 
     // Banners tab
-    await act(async () => {
-      await agent.click(screen.getByTestId(SiteSettingsTab.Banners));
-    });
+    await agent.click(screen.getByTestId(SiteSettingsTab.Banners));
     isPanelVisible(SiteSettingsTab.Banners);
 
     // Projects tab
-    await act(async () => {
-      await agent.click(screen.getByTestId(SiteSettingsTab.Projects));
-    });
+    await agent.click(screen.getByTestId(SiteSettingsTab.Projects));
     isPanelVisible(SiteSettingsTab.Projects);
 
     // Users tab
-    await act(async () => {
-      await agent.click(screen.getByTestId(SiteSettingsTab.Users));
-    });
+    await agent.click(screen.getByTestId(SiteSettingsTab.Users));
     isPanelVisible(SiteSettingsTab.Users);
   });
 });

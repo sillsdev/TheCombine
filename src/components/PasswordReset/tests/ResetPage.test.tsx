@@ -74,10 +74,8 @@ describe("PasswordReset", () => {
       PasswordResetTestIds.ConfirmPassword
     );
 
-    await act(async () => {
-      await user.type(passwdField, shortPassword);
-      await user.type(passwdConfirm, shortPassword);
-    });
+    await user.type(passwdField, shortPassword);
+    await user.type(passwdConfirm, shortPassword);
 
     const reqErrors = screen.queryAllByTestId(
       PasswordResetTestIds.PasswordReqError
@@ -103,10 +101,8 @@ describe("PasswordReset", () => {
       PasswordResetTestIds.ConfirmPassword
     );
 
-    await act(async () => {
-      await user.type(passwdField, passwordEntry);
-      await user.type(passwdConfirm, confirmEntry);
-    });
+    await user.type(passwdField, passwordEntry);
+    await user.type(passwdConfirm, confirmEntry);
 
     const reqErrors = screen.queryAllByTestId(
       PasswordResetTestIds.PasswordReqError
@@ -132,10 +128,8 @@ describe("PasswordReset", () => {
       PasswordResetTestIds.ConfirmPassword
     );
 
-    await act(async () => {
-      await user.type(passwdField, passwordEntry);
-      await user.type(passwdConfirm, confirmEntry);
-    });
+    await user.type(passwdField, passwordEntry);
+    await user.type(passwdConfirm, confirmEntry);
 
     const reqErrors = screen.queryAllByTestId(
       PasswordResetTestIds.PasswordReqError
@@ -162,16 +156,12 @@ describe("PasswordReset", () => {
       PasswordResetTestIds.ConfirmPassword
     );
 
-    await act(async () => {
-      await user.type(passwdField, passwordEntry);
-      await user.type(passwdConfirm, confirmEntry);
-    });
+    await user.type(passwdField, passwordEntry);
+    await user.type(passwdConfirm, confirmEntry);
 
     const submitButton = screen.getByTestId(PasswordResetTestIds.SubmitButton);
     mockPasswordReset.mockResolvedValueOnce(false);
-    await act(async () => {
-      await user.click(submitButton);
-    });
+    await user.click(submitButton);
 
     const resetErrors = screen.queryAllByTestId(
       PasswordResetTestIds.PasswordResetFail
