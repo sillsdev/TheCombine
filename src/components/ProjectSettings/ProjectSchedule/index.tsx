@@ -69,7 +69,7 @@ export default function ProjectSchedule(
             item
             container
             direction="row"
-            justifyContent="space-between"
+            justifyContent="space-evenly"
             alignItems="center"
             xs={12}
           >
