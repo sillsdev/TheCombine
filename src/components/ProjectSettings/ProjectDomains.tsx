@@ -360,7 +360,7 @@ export function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
           </Box>
           <Box>
             <Typography display="inline">
-              {t("projectSettings.domains.name")}
+              {t("projectSettings.domains.subdomainName")}
             </Typography>
             <TextFieldWithFont
               analysis
