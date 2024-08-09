@@ -81,7 +81,8 @@
     "redux-thunk": "^2.4.0",
     "ts-key-enum": "^2.0.12",
     "uuid": "^9.0.1",
-    "validator": "^13.11.0"
+    "validator": "^13.11.0",
+    "vanilla-cookieconsent": "^3.0.1"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",

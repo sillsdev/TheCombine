@@ -34,6 +34,7 @@ jest.mock("components/Project/ProjectActions", () => ({
 }));
 jest.mock("rootRedux/hooks", () => ({
   useAppDispatch: () => jest.fn(),
+  useAppSelector: () => jest.fn(),
 }));
 
 // Mock "i18n", else `thrown: "Error: Error: connect ECONNREFUSED ::1:80 [...]`

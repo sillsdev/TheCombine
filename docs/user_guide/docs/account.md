@@ -36,7 +36,8 @@ You can add or update your:
 - name;
 - phone number;
 - email address;
-- user-interface language.
+- user-interface language;
+- analytics consent.
 
 !!! note "Note"
 
