@@ -16,7 +16,7 @@ export default function useCookieConsent(): void {
       console.info("C is for Cookie...");
       dispatch(updateConsent());
       if (!param.cookie.categories.includes("analytics")) {
-        eraseCookies(/^(?!cookie\_consent$)/); // Only keep cookie with name "cookie_consent"
+        eraseCookies(/^(?!cookie_consent$)/); // Only keep cookie with name "cookie_consent"
       }
     },
     [dispatch]
