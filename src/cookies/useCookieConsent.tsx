@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { run } from "vanilla-cookieconsent";
+import { eraseCookies, run } from "vanilla-cookieconsent";
 
 import "vanilla-cookieconsent/dist/cookieconsent.css";
 
@@ -10,6 +10,17 @@ import { updateConsent } from "types/Redux/analytics";
 export default function useCookieConsent(): void {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+
+  const updateAnalytics = useCallback(
+    (param: { cookie: CookieConsent.CookieValue }): void => {
+      console.info("C is for Cookie...");
+      dispatch(updateConsent());
+      if (!param.cookie.categories.includes("analytics")) {
+        eraseCookies(/^(?!cookie\_consent$)/); // Only keep cookie with name "cookie_consent"
+      }
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     run({
@@ -48,13 +59,8 @@ export default function useCookieConsent(): void {
           },
         },
       },
-      onChange: () => {
-        dispatch(updateConsent());
-      },
-      onFirstConsent: () => {
-        console.info("C is for Cookie...");
-        dispatch(updateConsent());
-      },
+      onChange: updateAnalytics,
+      onFirstConsent: updateAnalytics,
     }).then(() => dispatch(updateConsent()));
-  }, [dispatch, t]);
+  }, [dispatch, t, updateAnalytics]);
 }
