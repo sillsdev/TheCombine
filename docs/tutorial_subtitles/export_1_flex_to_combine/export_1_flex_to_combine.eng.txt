@@ -33,7 +33,7 @@ Note that you can no longer specify an analysis language.
 This is because all analysis languages present in the ZIP file are automatically added, and you can add and remove analysis languages in the project at any time.
 All that’s left is to click the “Create Project” button.
 Once the project is created, you are taken to the project settings page.
-To access this in the future you can click on the gear icon in the top bar.
+To access this in the future, you can click on the gear icon in the top bar.
 Note that here in the “Languages” tab, we can see the Vernacular Language as well as review and change the Analysis Languages.
 Let’s click on the “Import/Export” tab.
 This is where you can import lexical data into an existing project.
