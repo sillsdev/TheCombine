@@ -12,10 +12,11 @@
 global:
   updateStrategy: Recreate
   honeycombSecretKey: "Override"
-  imagePullPolicy: IfNotPresent
   imageRepo: "otel/opentelemetry-collector-contrib"
-  imageTag: "0.87.0"
   localEndpoint: "http://localhost:4317"
+
+imagePullPolicy: IfNotPresent
+imageTag: "0.87.0"
 
 collector:
   receivers:

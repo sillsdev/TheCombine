@@ -21,13 +21,13 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.global.imageRepo }}:{{ .Values.global.imageTag }}"
+          image: "{{ .Values.global.imageRepo }}:{{ .Values.imageTag }}"
           args:
             - "--config"
             - "/etc/otelcol-contrib/config.yaml"
             - "--config"
             - "env:COLLECTOR_CONFIG_OVERRIDE"
-          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
           env:
             - name: HONEYCOMB_API_KEY
               valueFrom:
@@ -49,4 +49,3 @@ spec:
             - containerPort: 4318
             - containerPort: 4317
             
-

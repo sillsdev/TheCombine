@@ -21,6 +21,7 @@ helm_charts = [
     helm_dir / "cert-proxy-client",
     helm_dir / "cert-proxy-server",
     helm_dir / "create-admin-user",
+    helm_dir / "telemetry",
 ]
 
 default_aws_login_version = "0.2.1"
