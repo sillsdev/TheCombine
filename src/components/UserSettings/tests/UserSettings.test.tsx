@@ -9,6 +9,7 @@ import UserSettingsGetUser, {
   UserSettingsIds,
 } from "components/UserSettings/UserSettings";
 import { newUser } from "types/user";
+import { useAppSelector } from "rootRedux/hooks";
 
 const mockGetAvatar = jest.fn();
 const mockGetCurrentUser = jest.fn();
@@ -34,6 +35,7 @@ jest.mock("components/Project/ProjectActions", () => ({
 }));
 jest.mock("rootRedux/hooks", () => ({
   useAppDispatch: () => jest.fn(),
+  useAppSelector: () => jest.fn(),
 }));
 
 // Mock "i18n", else `thrown: "Error: Error: connect ECONNREFUSED ::1:80 [...]`
