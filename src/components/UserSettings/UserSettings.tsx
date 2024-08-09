@@ -12,6 +12,7 @@ import {
 import { enqueueSnackbar } from "notistack";
 import { FormEvent, Fragment, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { show } from "vanilla-cookieconsent";
 
 import { User } from "api/models";
 import { isEmailTaken, updateUser } from "backend";
@@ -19,7 +20,8 @@ import { getAvatar, getCurrentUser } from "backend/localStorage";
 import { asyncLoadSemanticDomains } from "components/Project/ProjectActions";
 import ClickableAvatar from "components/UserSettings/ClickableAvatar";
 import { updateLangFromUser } from "i18n";
-import { useAppDispatch } from "rootRedux/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { StoreState } from "rootRedux/types";
 import theme from "types/theme";
 import { uiWritingSystems } from "types/writingSystem";
 
@@ -29,6 +31,7 @@ import { uiWritingSystems } from "types/writingSystem";
 const punycode = require("punycode/");
 
 export enum UserSettingsIds {
+  ButtonChangeConsent = "user-settings-change-consent",
   ButtonSubmit = "user-settings-submit",
   FieldEmail = "user-settings-email",
   FieldName = "user-settings-name",
@@ -52,6 +55,10 @@ export function UserSettings(props: {
   setUser: (user?: User) => void;
 }): ReactElement {
   const dispatch = useAppDispatch();
+
+  const analyticsConsent = useAppSelector(
+    (state: StoreState) => state.analyticsState.consent
+  );
 
   const [name, setName] = useState(props.user.name);
   const [phone, setPhone] = useState(props.user.phone);
@@ -223,6 +230,32 @@ export function UserSettings(props: {
                       </MenuItem>
                     ))}
                   </Select>
+                </Grid>
+              </Grid>
+
+              <Grid item container spacing={2}>
+                <Grid item xs={12}>
+                  <Typography variant="h6">
+                    {t("userSettings.analyticsConsent.title")}
+                  </Typography>
+                </Grid>
+
+                <Grid item>
+                  <Typography>
+                    {t(
+                      analyticsConsent
+                        ? "userSettings.analyticsConsent.consentYes"
+                        : "userSettings.analyticsConsent.consentNo"
+                    )}
+                  </Typography>
+                  <Button
+                    data-testid={UserSettingsIds.ButtonChangeConsent}
+                    id={UserSettingsIds.ButtonChangeConsent}
+                    onClick={() => show(true)}
+                    variant="outlined"
+                  >
+                    {t("userSettings.analyticsConsent.button")}
+                  </Button>
                 </Grid>
               </Grid>
 

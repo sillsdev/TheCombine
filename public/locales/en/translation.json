@@ -125,6 +125,12 @@
     }
   },
   "userSettings": {
+    "analyticsConsent": {
+      "button": "Change consent",
+      "consentNo": "You have not consented to our use of analytics cookies.",
+      "consentYes": "You have consented to our use of analytics cookies.",
+      "title": "Analytics cookies"
+    },
     "contact": "Contact info",
     "phone": "Phone number",
     "uiLanguage": "User-interface language",

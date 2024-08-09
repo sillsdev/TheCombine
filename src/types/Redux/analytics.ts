@@ -9,10 +9,7 @@ const analyticsSlice = createSlice({
   initialState: defaultState,
   reducers: {
     changePageAction: (state, action) => {
-      if (
-        getUserPreferences().acceptType === "all" &&
-        action.payload !== state.currentPage
-      ) {
+      if (state.consent && action.payload !== state.currentPage) {
         analytics.track("navigate", {
           destination: action.payload,
           source: state.currentPage,
@@ -20,15 +17,22 @@ const analyticsSlice = createSlice({
       }
       state.currentPage = action.payload;
     },
+    updateConsentAction: (state) => {
+      state.consent = getUserPreferences().acceptType === "all";
+    },
   },
   extraReducers: (builder) =>
     builder.addCase(StoreActionTypes.RESET, () => defaultState),
 });
 
-const { changePageAction } = analyticsSlice.actions;
+const { changePageAction, updateConsentAction } = analyticsSlice.actions;
 
 export default analyticsSlice.reducer;
 
 export function changePage(newPage: string): PayloadAction {
   return changePageAction(newPage);
+}
+
+export function updateConsent(): PayloadAction {
+  return updateConsentAction();
 }

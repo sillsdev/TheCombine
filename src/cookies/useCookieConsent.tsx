@@ -3,9 +3,13 @@ import { run } from "vanilla-cookieconsent";
 
 import "vanilla-cookieconsent/dist/cookieconsent.css";
 
+import { useAppDispatch } from "rootRedux/hooks";
+import { updateConsent } from "types/Redux/analytics";
 import { defaultWritingSystem } from "types/writingSystem";
 
 export default function useCookieConsent(): void {
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
     run({
       categories: {
@@ -34,9 +38,13 @@ export default function useCookieConsent(): void {
           },
         },
       },
+      onChange: () => {
+        dispatch(updateConsent());
+      },
       onFirstConsent: () => {
         console.info("C is for Cookie...");
+        dispatch(updateConsent());
       },
-    });
-  }, []);
+    }).then(() => dispatch(updateConsent()));
+  }, [dispatch]);
 }
