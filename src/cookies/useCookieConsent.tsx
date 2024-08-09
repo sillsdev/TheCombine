@@ -1,14 +1,15 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { run } from "vanilla-cookieconsent";
 
 import "vanilla-cookieconsent/dist/cookieconsent.css";
 
 import { useAppDispatch } from "rootRedux/hooks";
 import { updateConsent } from "types/Redux/analytics";
-import { defaultWritingSystem } from "types/writingSystem";
 
 export default function useCookieConsent(): void {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   useEffect(() => {
     run({
@@ -24,15 +25,20 @@ export default function useCookieConsent(): void {
         consentModal: { layout: "bar inline" },
       },
       language: {
-        default: defaultWritingSystem.bcp47,
+        default: "i18n",
         translations: {
-          en: {
+          i18n: {
             consentModal: {
-              title: "Cookies on The Combine",
-              description:
-                "The Combine stores basic info about your current session on your device. This info is necessary for The Combine to function and is not shared with anybody or any other programs. The Combine also uses analytics cookies, which are only for us to fix bugs and compile anonymized statistics. Do you consent to our usage of analytics cookies?",
-              acceptAllBtn: "Yes, allow analytics cookies",
-              acceptNecessaryBtn: "No, reject analytics cookies",
+              acceptAllBtn: t(
+                "userSettings.analyticsConsent.consentModal.acceptAllBtn"
+              ),
+              acceptNecessaryBtn: t(
+                "userSettings.analyticsConsent.consentModal.acceptNecessaryBtn"
+              ),
+              description: t(
+                "userSettings.analyticsConsent.consentModal.description"
+              ),
+              title: t("userSettings.analyticsConsent.consentModal.title"),
             },
             preferencesModal: { sections: [] },
           },
@@ -46,5 +52,5 @@ export default function useCookieConsent(): void {
         dispatch(updateConsent());
       },
     }).then(() => dispatch(updateConsent()));
-  }, [dispatch]);
+  }, [dispatch, t]);
 }
