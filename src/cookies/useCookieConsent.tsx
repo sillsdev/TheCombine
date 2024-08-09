@@ -21,6 +21,10 @@ export default function useCookieConsent(): void {
           /* Use defaults */
         },
       },
+      cookie: {
+        expiresAfterDays: 365,
+        name: "cookie_consent",
+      },
       guiOptions: {
         consentModal: { layout: "bar inline" },
       },

@@ -9,7 +9,6 @@ import UserSettingsGetUser, {
   UserSettingsIds,
 } from "components/UserSettings/UserSettings";
 import { newUser } from "types/user";
-import { useAppSelector } from "rootRedux/hooks";
 
 const mockGetAvatar = jest.fn();
 const mockGetCurrentUser = jest.fn();
