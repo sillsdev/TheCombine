@@ -130,7 +130,7 @@
       "consentModal": {
         "acceptAllBtn": "Yes, allow analytics cookies",
         "acceptNecessaryBtn": "No, reject analytics cookies",
-        "description": "The Combine stores basic info about your current session on your device. This info is necessary for The Combine to function and is not shared with anybody or any other programs. The Combine also uses analytics cookies, which are only for us to fix bugs and compile anonymized statistics. Do you consent to our usage of analytics cookies?",
+        "description": "The Combine stores basic info about your current session on your device. This info is necessary and isn't shared with anybody. The Combine also uses analytics cookies, which are only for us to fix bugs and compile anonymized statistics. Do you consent to our usage of analytics cookies?",
         "title": "Cookies on The Combine"
       },
       "consentNo": "You have not consented to our use of analytics cookies.",
