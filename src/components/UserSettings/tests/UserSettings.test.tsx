@@ -112,7 +112,7 @@ describe("UserSettings", () => {
 
   it("disables button when change is saved", async () => {
     const agent = userEvent.setup();
-    const stringToType = "a";
+    const stringToType = "a"; // Valid final character of an email address.
     const user = mockUser();
     await renderUserSettingsGetUser();
     const submitButton = screen.getByTestId(UserSettingsIds.ButtonSubmit);
@@ -150,8 +150,8 @@ describe("UserSettings", () => {
   });
 
   it("doesn't update user when email is taken", async () => {
-    await renderUserSettings(mockUser());
     const agent = userEvent.setup();
+    await renderUserSettings(mockUser());
 
     await agent.type(screen.getByTestId(UserSettingsIds.FieldEmail), "a");
     mockIsEmailTaken.mockResolvedValueOnce(true);
