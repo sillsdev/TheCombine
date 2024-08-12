@@ -125,7 +125,7 @@ def main() -> None:
         metadata_strings: List[str] = []
         for i in range(len(langs)):
             in_path = subtitles_path / f"{args.subtitles}.{langs[i]}.srt"
-            i_strings.extend(["-i", in_path])
+            i_strings.extend(["-i", str(in_path)])
             map_strings.extend(["-map", str(i + 1)])
             metadata_strings.extend([f"-metadata:s:s:{i}", f"language={langs[i]}"])
         exec_command: List[str] = (
