@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { eraseCookies, run } from "vanilla-cookieconsent";
 
 import "vanilla-cookieconsent/dist/cookieconsent.css";
+import "cookies/cc.css";
 
 import { useAppDispatch } from "rootRedux/hooks";
 import { updateConsent } from "types/Redux/analytics";
