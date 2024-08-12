@@ -5,7 +5,7 @@
     --cc-btn-primary-bg: var(--primary);
     --cc-btn-primary-border-color: var(--primary);
     --cc-btn-primary-hover-bg: var(--dark-shade);
-    --cc-btn-primary-hover-border-color: var(--primary);
+    --cc-btn-primary-hover-border-color: var(--dark-shade);
     --cc-font-family: "Noto Sans", "Open Sans", Roboto, Helvetica, Arial, sans-serif;
     --cc-primary-color: var(--primary);
     --cc-secondary-color: #000000
