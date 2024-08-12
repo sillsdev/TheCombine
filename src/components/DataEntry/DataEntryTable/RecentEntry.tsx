@@ -171,7 +171,6 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
           buttonId={`${idAffix}-${props.rowIndex}-delete`}
           confirmId={"addWords.deleteRowWarning"}
           disabled={editing || props.disabled}
-          wordId={props.entry.id}
         />
       </Grid>
     </Grid>
