@@ -121,7 +121,7 @@ def main() -> None:
     if args.input and args.output:
         logging.info(f"Attaching subtitles to {args.input}")
         i_strings: List[str] = []
-        map_strings: List[str] = ["-map" ,"0"]
+        map_strings: List[str] = ["-map", "0"]
         metadata_strings: List[str] = []
         for i in range(len(langs)):
             in_path = subtitles_path / f"{args.subtitles}.{langs[i]}.srt"
@@ -137,8 +137,11 @@ def main() -> None:
             + [args.output]
         )
         logging.info(f"Executing: {exec_command}")
-        if run(exec_command).returncode == 0:
+        completed_run = run(exec_command)
+        if completed_run.returncode == 0:
             logging.info(f"Video with subtitles saved to {args.output}")
+        else:
+            logging.error("Execution failed.")
     else:
         logging.info("No -i and -o file paths provided, so ffmpeg was not run.")
 
