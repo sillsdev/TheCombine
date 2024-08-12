@@ -3,7 +3,7 @@ In this video, we will see how to select a semantic domain in The Combine to beg
 Then at the end, we’ll see how to change the language of the semantic domains.
 Let’s go to thecombine.app and log in.
 When you click on a project, the semantic domain tree appears.
-If you are doing something else in the project (such as data cleanup or project settings), you can get back to the semantic domain tree by clicking the “Data Entry” button in the top bar.
+If you are doing a different project task (for example, in data cleanup or project settings), you can get back to the semantic domain tree by clicking the “Data Entry” button in the top bar.
 Now the easiest way to get to a domain is using the domain’s id number.
 If I want to collect words for domain 6.5.1.1, “House”, I can click in the field that says “Find a domain” and type 6.5.1.1
 In fact, I don’t even need to type the periods. If I type 6511, the periods are automatically added.

@@ -7,7 +7,7 @@ However, the third sense with gloss “winged insect” is a different concept. 
 To move a sense from one word to another, click on the sense and drag it to the other word.
 Voila! Now the correct senses are together.
 Wait a second… the two glosses of the first word are not different senses. They are the exact same idea expressed redundantly.
-To delete the unnecessary sense, click-and-drag it over the garbage icon in the bottom corner.
+To delete the unnecessary sense, click-and-drag it over the delete icon in the bottom corner.
 When the tile turns red, release and it disappears.
 When you’re satisfied with your changes, click “Save & Continue”.
 In the next set of potential duplicates, we have two words with vernacular form “fine”.
@@ -17,7 +17,7 @@ These two aren’t related to the first word or to each other. Let’s create a 
 To create a new word, click-and-drag a sense into the empty column, and release.
 Voila! Now we have three words.
 Wait a second… the sense “abcdefg” in the second word is nonsense.
-To delete it, click-and-drag it to the garbage icon.
+To delete it, click-and-drag it to the delete icon in the bottom corner.
 When you delete the only sense in a word, the whole word is deleted.
 See how the column disappeared and we are back to two words.
 Great! Click “Save & Continue” to save that work.

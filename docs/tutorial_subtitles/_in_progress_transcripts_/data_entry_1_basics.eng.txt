@@ -3,7 +3,7 @@ In this video, we will see how to do Data Entry in The Combine to collect words.
 Let’s go to thecombine.app and log in.
 When you click on a project, the semantic domain tree appears.
 Selecting your domain is the first step in Data Entry.
-If you are doing something else in the project (such as data cleanup or project settings), you can get back here by clicking the “Data Entry” button in the top bar.
+If you are doing a different project task (for example, in data cleanup or project settings), you can get back here by clicking the “Data Entry” button in the top bar.
 There is another tutorial video about navigating the semantic domain tree or changing its language.
 For this video, let’s select domain “2: Person” and start gathering words!
 There are 4 things that can be included in a new word.

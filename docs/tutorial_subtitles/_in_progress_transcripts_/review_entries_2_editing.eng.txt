@@ -4,7 +4,7 @@ This table has all the word entries in your project.
 In another video, we looked at how to sort and filter this table.
 In this video, we look at how to edit an entry.
 Each word in your project shows up as a row in this table.
-To delete a word, click the rubbish bin icon at the right end.
+To delete a word, click the delete icon at the right end.
 A pop-up will ask you to confirm whether you want to delete the word.
 Within the main body of this table, the only way to edit a word is to add or remove pronunciations.
 Pronunciation audio recordings are in this column with red circle and green square icons.
@@ -47,10 +47,10 @@ To minimize this section and only show a summary of all the senses, click on the
 Click again to restore the full detailed view.
 On the start of each sense row is a set of buttons.
 The first column has vertical arrows; click on one of them to change the order of the senses.
-The second column has a rubbish bin icon and a pencil icon.
-Click on the rubbish bin icon to delete the sense.
+The second column has a delete icon and a pencil icon.
+Click on the delete icon to delete the sense.
 Note that the sense card changes from light gray to dark gray, indicating that the sense will be deleted when edits to this word are saved.
-Click on the rubbish bin icon a second time to restore the sense.
+Click on the delete icon a second time to restore the sense.
 To edit a sense, click on the pencil icon.
 A second dialog will appear that lets you edit all the sense’s information.
 Here we see two sections: Glosses and Semantic Domains.

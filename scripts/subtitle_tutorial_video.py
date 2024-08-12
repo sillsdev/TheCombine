@@ -7,8 +7,9 @@ If video path is provided, requires ffmpeg to be installed.
 
 import argparse
 import logging
-from os import system
 from pathlib import Path
+import re
+from subprocess import run
 from typing import List
 
 combine_dir = Path(__file__).resolve().parent.parent
@@ -97,12 +98,12 @@ def main() -> None:
     with open(times_path, "r", encoding="utf-8") as file:
         start = "00:00:0,000"
         for line in file.readlines():
-            if not (line):
+            line = line.strip()
+            if not line:
                 continue
-            min_sec = line.strip().split(":")  # Split into minutes and seconds
-            sec_mil = min_sec[1].split(".")  # Check for partial seconds
-            mil = sec_mil[1] if len(sec_mil) > 1 else "0"  # Compute milliseconds
-            end = f"00:{min_sec[0]:0>2}:{sec_mil[0]},{mil:0<3}"
+            times = re.split(r":|\.", line)
+            msec = times[2] if len(times) > 2 else ""
+            end = f"00:{times[0]:0>2}:{times[1]},{msec:0<3}"
             times_strings.append(f"{start} --> {end}")
             start = end
 
@@ -120,26 +121,24 @@ def main() -> None:
     if args.input and args.output:
         logging.info(f"Attaching subtitles to {args.input}")
         i_strings: List[str] = []
-        map_strings: List[str] = ["-map 0"]
+        map_strings: List[str] = ["-map" ,"0"]
         metadata_strings: List[str] = []
         for i in range(len(langs)):
             in_path = subtitles_path / f"{args.subtitles}.{langs[i]}.srt"
-            i_strings.append(f"-i {in_path}")
-            map_strings.append(f"-map {i + 1}")
-            metadata_strings.append(f"-metadata:s:s:{i} language={langs[i]}")
-        exec_command_parts: List[str] = [
-            "ffmpeg -i",
-            f"{args.input}",
-            " ".join(i_strings),
-            " ".join(map_strings),
-            "-c copy -c:s mov_text",
-            " ".join(metadata_strings),
-            f"{args.output}",
-        ]
-        exec_command = " ".join(exec_command_parts)
+            i_strings.extend(["-i", in_path])
+            map_strings.extend(["-map", str(i + 1)])
+            metadata_strings.extend([f"-metadata:s:s:{i}", f"language={langs[i]}"])
+        exec_command: List[str] = (
+            ["ffmpeg", "-i", args.input]
+            + i_strings
+            + map_strings
+            + ["-c", "copy", "-c:s", "mov_text"]
+            + metadata_strings
+            + [args.output]
+        )
         logging.info(f"Executing: {exec_command}")
-        system(exec_command)
-        logging.info(f"Video with subtitles saved to {args.output}")
+        if run(exec_command).returncode == 0:
+            logging.info(f"Video with subtitles saved to {args.output}")
     else:
         logging.info("No -i and -o file paths provided, so ffmpeg was not run.")
 

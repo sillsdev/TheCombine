@@ -24,7 +24,7 @@ The Combine asks if we want to keep merging.
 If we click “No”, it will take us back to the “Data Cleanup” page.
 If we click “Yes”, it will look for more sets of potential duplicates.
 After The Combine can’t find any more words with identical vernacular form, it will suggest words with similar vernacular forms.
-This will help catch duplicates where one of the words has a typo or is using alternative spelling.
+This will help catch duplicates where one of the words has a typo or is using alternate spelling.
 Here we see two words with vernacular form “present”, but the second one has two “t”s at the end.
 Hmm, that must be a typo.
 A gift is spelled “p-r-e-s-e-n-t” not “p-r-e-s-e-n-t-t”.
