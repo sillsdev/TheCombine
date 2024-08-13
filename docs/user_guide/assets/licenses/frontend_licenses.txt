@@ -606,7 +606,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@floating-ui/core 1.6.5
+@floating-ui/core 1.6.7
 MIT
 MIT License
 
@@ -630,7 +630,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-@floating-ui/dom 1.6.8
+@floating-ui/dom 1.6.10
 MIT
 MIT License
 
@@ -678,7 +678,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-@floating-ui/utils 0.2.5
+@floating-ui/utils 0.2.7
 MIT
 MIT License
 
@@ -1136,7 +1136,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/core-downloads-tracker 5.16.6
+@mui/core-downloads-tracker 5.16.7
 MIT
 The MIT License (MIT)
 
@@ -1161,7 +1161,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/icons-material 5.16.6
+@mui/icons-material 5.16.7
 MIT
 The MIT License (MIT)
 
@@ -1186,7 +1186,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/material 5.16.6
+@mui/material 5.16.7
 MIT
 The MIT License (MIT)
 
@@ -1261,7 +1261,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/system 5.16.6
+@mui/system 5.16.7
 MIT
 The MIT License (MIT)
 
@@ -1906,7 +1906,7 @@ MIT
     SOFTWARE
 
 
-@types/react-transition-group 4.4.10
+@types/react-transition-group 4.4.11
 MIT
     MIT License
 
@@ -2044,7 +2044,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-axios 1.7.3
+axios 1.7.4
 MIT
 # Copyright (c) 2014-present Matt Zabriskie & Collaborators
 
@@ -3410,7 +3410,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-i18next 23.12.2
+i18next 23.12.3
 MIT
 The MIT License (MIT)
 
@@ -5291,7 +5291,7 @@ tr46 0.0.3
 MIT
 
 
-ts-key-enum 2.0.12
+ts-key-enum 2.0.13
 MIT
 MIT License
 
