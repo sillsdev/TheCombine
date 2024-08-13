@@ -11,9 +11,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace BackendFramework.Controllers
 {
     [Authorize]
-#pragma warning disable CA1825 // Avoid zero-length array allocations
     [Produces("application/json")]
-#pragma warning restore CA1825 // Avoid zero-length array allocations
     [Route("v1/projects/{projectId}/words")]
     public class WordController : Controller
     {
