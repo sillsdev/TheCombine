@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-// using Microsoft.Extensions.Diagnostics.Metrics;
 
 namespace BackendFramework.Controllers
 {
     [Authorize]
+#pragma warning disable CA1825 // Avoid zero-length array allocations
     [Produces("application/json")]
+#pragma warning restore CA1825 // Avoid zero-length array allocations
     [Route("v1/projects/{projectId}/words")]
     public class WordController : Controller
     {
@@ -20,8 +21,6 @@ namespace BackendFramework.Controllers
         private readonly IWordRepository _wordRepo;
         private readonly IPermissionService _permissionService;
         private readonly IWordService _wordService;
-
-        // private readonly WordMetrics _meters;
 
         private const string otelTagName = "otel.report.controller";
 
@@ -264,17 +263,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> CreateWord(string projectId, [FromBody, BindRequired] Word word)
         {
-            using (var activity = BackendActivitySource.Get().StartActivity())
-            {
-
-                activity?.AddTag(otelTagName, "creating a word");
-                // increment attempt at word creation
-                // _meters.CreateWord();
-                // activity.SetTag("numwords", _meters.)
-
-
-            }
-
+            using var activity = BackendActivitySource.Get().StartActivity();
+            activity?.AddTag(otelTagName, "creating a word");
 
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
