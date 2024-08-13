@@ -2,7 +2,7 @@
 
 exports[`DomainTileButton renders tile and matches the latest snapshot 1`] = `
 <button
-  className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
+  className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-colorPrimary css-1rwt2y5-MuiButtonBase-root-MuiButton-root"
   disabled={false}
   id="1"
   onBlur={[Function]}
@@ -28,7 +28,7 @@ exports[`DomainTileButton renders tile and matches the latest snapshot 1`] = `
       "width": "95%",
     }
   }
-  tabIndex={0}
+  tabIndex={-1}
   type="button"
 >
   <div

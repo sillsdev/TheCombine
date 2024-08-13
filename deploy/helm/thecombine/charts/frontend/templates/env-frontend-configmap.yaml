@@ -8,11 +8,11 @@ data:
   SERVER_NAME: {{ .Values.global.serverName }}
   CERT_ADDL_DOMAINS: {{ .Values.combineAddlDomainList | quote }}
   CONFIG_USE_CONNECTION_URL: "true"
-  CONFIG_CAPTCHA_REQD: {{ .Values.configCaptchaRequired | quote }}
+  CONFIG_CAPTCHA_REQUIRED: {{ .Values.global.captchaRequired | quote | lower }}
   CONFIG_CAPTCHA_SITE_KEY: {{ .Values.configCaptchaSiteKey | quote }}
-  CONFIG_OFFLINE: {{ .Values.configOffline | quote }}
-  CONFIG_EMAIL_ENABLED: {{ and .Values.configEmailEnabled (empty .Values.global.combineSmtpUsername | not) | quote }}
-  CONFIG_SHOW_CERT_EXPIRATION: {{ .Values.configShowCertExpiration | quote }}
+  CONFIG_OFFLINE: {{ .Values.configOffline | quote | lower }}
+  CONFIG_EMAIL_ENABLED: {{ .Values.global.emailEnabled | quote | lower }}
+  CONFIG_SHOW_CERT_EXPIRATION: {{ .Values.configShowCertExpiration | quote | lower }}
   {{- if .Values.configAnalyticsWriteKey }}
   CONFIG_ANALYTICS_WRITE_KEY: {{ .Values.configAnalyticsWriteKey | quote }}
   {{- end }}

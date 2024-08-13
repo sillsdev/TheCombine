@@ -1,5 +1,5 @@
 # Docker multi-stage build
-FROM mcr.microsoft.com/dotnet/sdk:8.0.301-jammy-amd64 AS builder
+FROM mcr.microsoft.com/dotnet/sdk:8.0.303-jammy-amd64 AS builder
 WORKDIR /app
 
 # Copy csproj and restore (fetch dependencies) as distinct layers.
@@ -11,7 +11,7 @@ COPY . ./
 RUN dotnet publish -c Release -o build
 
 # Build runtime image.
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.6-jammy-amd64
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.7-jammy-amd64
 
 ENV ASPNETCORE_URLS=http://+:5000
 ENV COMBINE_IS_IN_CONTAINER=1
@@ -26,15 +26,18 @@ ENV APP_FILES=${HOME}/.CombineFiles
 # Install system dependencies.
 RUN apt-get update \
   && apt-get install -y \
-  # icu.net dependency: libdl.so
-  libc6-dev ffmpeg \
+  ffmpeg \
   && rm -rf /var/lib/apt/lists/*
 
 # Create the home directory for the new app user.
 RUN mkdir -p $HOME
 
-# Modify the existing app user to prevent login.
-RUN usermod -s /sbin/nologin -c "Docker image user" app
+# Setup app user and group to known UID/GID; no login.
+RUN groupmod --gid 999 app
+RUN usermod  --uid 999 --gid app \
+      --shell /sbin/nologin \
+      --comment "Docker image user" \
+      app
 
 ## Set up application install directory.
 RUN mkdir $APP_HOME && \

@@ -36,9 +36,11 @@
 一旦创建或选择了一个项目，它就变成活动项目。用户可在 The Combine 顶部应用框的中间位置看到一个齿轮图标或该项目名。 点击齿
 轮图标或项目名，拉出“项目设置”以管理该项目。 具有足够权限的项目用户可以使用以下设置。
 
+![设置](../images/projectSettings123456.png)
+
 ### 基本设置
 
-![基本设置](../images/projectSettings1Basic.zh.png){width=750 .center}
+![基本设置](../images/projectSettings1Basic.zh.png)
 
 #### 项目名称
 
@@ -58,7 +60,7 @@
 
 ### 项目语言 {#project-languages}
 
-![语言](../images/projectSettings2Langs.zh.png){width=750 .center}
+![语言](../images/projectSettings2Langs.zh.png)
 
 ![项目语言 - Tzotzil](../images/projectLanguagesTzotzil.zh.png){.center}
 
@@ -74,7 +76,7 @@
 
 ### 项目用户
 
-![用户](../images/projectSettings3Users.zh.png){width=750 .center}
+![用户](../images/projectSettings3Users.zh.png)
 
 #### 当前用户
 
@@ -129,7 +131,7 @@ used for the file names).
 
 ### 导入/导出
 
-![导入/导出](../images/projectSettings4Port.zh.png){width=750 .center}
+![导入/导出](../images/projectSettings4Port.zh.png)
 
 #### 导入 {#import}
 
@@ -143,8 +145,8 @@ used for the file names).
 
 #### 导出 {#export}
 
-单击 "导出 "按钮后，在数据准备下载时，用户可以到网站的其他部分浏览。 当导出内容可供下载时，应用程序栏中会出现一个下载图
-标。 默认文件名是项目名称加上下载时间。
+单击 "导出 "按钮后，在数据准备下载时，用户可以到网站的其他部分浏览。 When the data is gathered, the download will begin
+automatically. The filename is the project id.
 
 !!! warning "重要警告"
 
@@ -152,22 +154,49 @@ used for the file names).
 
 !!! note "笔记"
 
-    Project settings, project users, and word flags are not exported.
+    Project settings, project users, word flags, and custom semantic domain questions are not exported.
 
 #### Export pronunciation speakers
 
 When a project is exported from TheCombine and imported into FieldWorks, if a pronunciation has an associated speaker,
-the speaker name and id will be added as a pronunciation label. Consent files will be exported with speaker id used for
-the file name. The consent files can be found in the zipped export, but will not be imported into FieldWorks.
+the speaker name will be added as a pronunciation label. The consent files can be found in the zipped export, but will
+not be imported into FieldWorks.
 
-### 工作坊日程 {#workshop-schedule}
+### 日程 {#schedule}
 
-![工作坊日程](../images/projectSettings5Sched.zh.png){width=750 .center}
+![日程](../images/projectSettings5Sched.zh.png)
 
 只有项目所有人可以使用该功能，以便为快速文字工作坊设定时间。 点击第一个键可选择工作坊日期范围。 点击中间键可添加或移除具
 体日期。 点击最后的键可清除日程表。
 
 ![工作坊日程](../images/projectSchedule.zh.png){.center}
+
+### 语义域 {#semantic-domains}
+
+![语义域](../images/projectSettings6Doms.zh.png)
+
+In this settings tab, you can change the semantic domain language and manage custom semantic domains.
+
+*语义领域语言*决定[词条输入](./dataEntry.md)中表达语义领域标题和描述的语言。
+
+The _custom semantic domains_ supported at this time are the [established domains](https://semdom.org/) with `.0` added
+to the end of the id. For example, domain _4.2.6.2: Sports_ has two standard subdomains, _4.2.6.2.1: Football, Soccer_
+and _4.2.6.2.2: Basketball_. If another sport is dominant among the people group gathering their language, it can be
+added as domain _4.2.6.2.0_.
+
+For each custom domain, you can add a name, description, and questions to help with word collection in that domain.
+
+!!! note "笔记"
+
+    Custom semantic domains are included in the project export and can be imported into FieldWorks. However, the
+    questions are not included.
+
+Custom semantic domains will appear in the domain tree for the project, but will not be visible to other projects.
+
+!!! note "笔记"
+
+    Custom semantic domains are language-specific. If you add a custom domain in one language then change the semantic
+    domains language, that domain will not be visible unless you change back to its language.
 
 ## 项目统计数据
 
@@ -188,8 +217,8 @@ the file name. The consent files can be found in the zipped export, but will not
 
 ### 每天字数
 
-线形图显示在 [工作坊时间表](#workshop-schedule)中指定的日子里收集到的词语。
+线形图显示在工作坊[日程](#schedule)中指定的日子里收集到的词语。
 
 ### 工作坊进度
 
-线型图显示了 [工作坊日程](#workshop-schedule)多天所累积的词以及对余下时间的预测。
+线型图显示了工作坊[日程](#schedule)多天所累积的词以及对余下时间的预测。

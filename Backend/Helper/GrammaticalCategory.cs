@@ -50,7 +50,7 @@ namespace BackendFramework.Helper
             }
         }
 
-        // The following patterns cover all grammatical categories in Fieldworks for:
+        // The following patterns cover all grammatical categories in FieldWorks for:
         //   English (en), Spanish (es), French (fr), Portuguese (pt), Russian (ru), Chinese (zh)
         // Omissions due to conflicting abbreviations:
         //   Spanish "indf" for Indefinite Pronoun (conflicts with abbrev. for Indefinite article)

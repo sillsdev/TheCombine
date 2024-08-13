@@ -606,6 +606,51 @@ export const UserApiAxiosParamCreator = function (
         options: localVarRequestOptions,
       };
     },
+    /**
+     *
+     * @param {string} token
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    verifyCaptchaToken: async (
+      token: string,
+      options: any = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'token' is not null or undefined
+      assertParamExists("verifyCaptchaToken", "token", token);
+      const localVarPath = `/v1/users/captcha/{token}`.replace(
+        `{${"token"}}`,
+        encodeURIComponent(String(token))
+      );
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
   };
 };
 
@@ -884,6 +929,27 @@ export const UserApiFp = function (configuration?: Configuration) {
         configuration
       );
     },
+    /**
+     *
+     * @param {string} token
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async verifyCaptchaToken(
+      token: string,
+      options?: any
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+    > {
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.verifyCaptchaToken(token, options);
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
   };
 };
 
@@ -1039,6 +1105,17 @@ export const UserApiFactory = function (
         .validateResetToken(token, options)
         .then((request) => request(axios, basePath));
     },
+    /**
+     *
+     * @param {string} token
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    verifyCaptchaToken(token: string, options?: any): AxiosPromise<void> {
+      return localVarFp
+        .verifyCaptchaToken(token, options)
+        .then((request) => request(axios, basePath));
+    },
   };
 };
 
@@ -1185,6 +1262,20 @@ export interface UserApiValidateResetTokenRequest {
    *
    * @type {string}
    * @memberof UserApiValidateResetToken
+   */
+  readonly token: string;
+}
+
+/**
+ * Request parameters for verifyCaptchaToken operation in UserApi.
+ * @export
+ * @interface UserApiVerifyCaptchaTokenRequest
+ */
+export interface UserApiVerifyCaptchaTokenRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof UserApiVerifyCaptchaToken
    */
   readonly token: string;
 }
@@ -1374,6 +1465,22 @@ export class UserApi extends BaseAPI {
   ) {
     return UserApiFp(this.configuration)
       .validateResetToken(requestParameters.token, options)
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
+   * @param {UserApiVerifyCaptchaTokenRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof UserApi
+   */
+  public verifyCaptchaToken(
+    requestParameters: UserApiVerifyCaptchaTokenRequest,
+    options?: any
+  ) {
+    return UserApiFp(this.configuration)
+      .verifyCaptchaToken(requestParameters.token, options)
       .then((request) => request(this.axios, this.basePath));
   }
 }

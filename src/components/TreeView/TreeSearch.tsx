@@ -1,4 +1,4 @@
-import { Grid, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import {
   type ChangeEvent,
   type KeyboardEvent,
@@ -8,14 +8,15 @@ import {
 import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
-import { type SemanticDomainTreeNode } from "api/models";
 import {
-  getSemanticDomainTreeNode,
-  getSemanticDomainTreeNodeByName,
-} from "backend";
+  type SemanticDomainFull,
+  type SemanticDomainTreeNode,
+} from "api/models";
+import { getAugmentedTreeNode } from "components/TreeView/utilities";
 
 export interface TreeSearchProps {
   currentDomain: SemanticDomainTreeNode;
+  customDomains: SemanticDomainFull[];
   animate: (domain: SemanticDomainTreeNode) => Promise<void>;
 }
 
@@ -40,23 +41,21 @@ export default function TreeSearch(props: TreeSearchProps): ReactElement {
   };
 
   return (
-    <Grid style={{ maxWidth: 200 }}>
-      <TextField
-        variant="standard"
-        fullWidth
-        id="domain-tree-search-field"
-        label={t("treeView.findDomain")}
-        onKeyDown={stopPropagation}
-        onChange={handleChange}
-        onKeyUp={handleOnKeyUp}
-        margin="normal"
-        autoComplete="off"
-        inputProps={{ "data-testid": testId }}
-        value={input}
-        error={searchError}
-        helperText={searchError ? t("treeView.domainNotFound") : undefined}
-      />
-    </Grid>
+    <TextField
+      InputLabelProps={{ shrink: true }}
+      fullWidth
+      id="domain-tree-search-field"
+      label={t("treeView.findDomain")}
+      onKeyDown={stopPropagation}
+      onChange={handleChange}
+      onKeyUp={handleOnKeyUp}
+      margin="normal"
+      autoComplete="off"
+      inputProps={{ "data-testid": testId }}
+      value={input}
+      error={searchError}
+      helperText={searchError ? t("treeView.domainNotFound") : undefined}
+    />
   );
 }
 
@@ -90,13 +89,6 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
   const [searchError, setSearchError] = useState<boolean>(false);
   const lang = props.currentDomain.lang;
 
-  // Searches for a semantic domain by name
-  async function searchDomainByName(
-    target: string
-  ): Promise<SemanticDomainTreeNode | undefined> {
-    return await getSemanticDomainTreeNodeByName(target, lang);
-  }
-
   /** Animate the domain and clear search input after successfully searching
    * for a new domain. */
   function animateSuccessfulSearch(
@@ -112,12 +104,7 @@ export function useTreeSearch(props: TreeSearchProps): TreeSearchState {
   // Dispatch the search for a specified domain, and switches to it if it exists
   async function searchAndSelectDomain(event: KeyboardEvent): Promise<void> {
     // Search for domain
-    let domain: SemanticDomainTreeNode | undefined;
-    if (!isNaN(parseInt(input))) {
-      domain = await getSemanticDomainTreeNode(input, lang);
-    } else {
-      domain = await searchDomainByName(input);
-    }
+    const domain = await getAugmentedTreeNode(input, lang, props.customDomains);
     if (domain) {
       animateSuccessfulSearch(domain, event);
       // Return to indicate success and skip setting error state.

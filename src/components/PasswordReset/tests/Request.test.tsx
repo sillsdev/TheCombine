@@ -1,7 +1,10 @@
 import "@testing-library/jest-dom";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { act } from "react";
 
+import MockBypassLoadableButton from "components/Buttons/LoadingDoneButton";
+import MockCaptcha from "components/Login/tests/MockCaptcha";
 import ResetRequest, {
   PasswordRequestIds,
 } from "components/PasswordReset/Request";
@@ -13,6 +16,10 @@ jest.mock("react-router-dom", () => ({
 jest.mock("backend", () => ({
   resetPasswordRequest: (...args: any[]) => mockResetPasswordRequest(...args),
 }));
+jest.mock("components/Buttons", () => ({
+  LoadingDoneButton: MockBypassLoadableButton,
+}));
+jest.mock("components/Login/Captcha", () => MockCaptcha);
 
 const mockResetPasswordRequest = jest.fn();
 
@@ -45,7 +52,9 @@ describe("ResetRequest", () => {
 
     // Agent
     const field = screen.getByTestId(PasswordRequestIds.FieldEmailOrUsername);
-    await agent.type(field, "a");
+    await act(async () => {
+      await agent.type(field, "a");
+    });
 
     // After
     expect(button).toBeEnabled();
@@ -57,18 +66,26 @@ describe("ResetRequest", () => {
     await renderUserSettings();
 
     // Before
-    expect(screen.queryAllByRole("textbox")).toHaveLength(1);
-    expect(screen.queryAllByRole("button")).toHaveLength(1);
+    expect(
+      screen.queryByTestId(PasswordRequestIds.FieldEmailOrUsername)
+    ).toBeTruthy();
+    expect(screen.queryByTestId(PasswordRequestIds.ButtonSubmit)).toBeTruthy();
     expect(screen.queryByTestId(PasswordRequestIds.ButtonLogin)).toBeNull();
 
     // Agent
     const field = screen.getByTestId(PasswordRequestIds.FieldEmailOrUsername);
-    await agent.type(field, "a");
-    await agent.click(screen.getByRole("button"));
+    await act(async () => {
+      await agent.type(field, "a");
+    });
+    await act(async () => {
+      await agent.click(screen.getByRole("button"));
+    });
 
     // After
-    expect(screen.queryAllByRole("textbox")).toHaveLength(0);
-    expect(screen.queryAllByRole("button")).toHaveLength(1);
+    expect(
+      screen.queryByTestId(PasswordRequestIds.FieldEmailOrUsername)
+    ).toBeNull();
+    expect(screen.queryByTestId(PasswordRequestIds.ButtonSubmit)).toBeNull();
     expect(screen.queryByTestId(PasswordRequestIds.ButtonLogin)).toBeTruthy();
   });
 });

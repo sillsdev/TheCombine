@@ -233,8 +233,7 @@ namespace BackendFramework.Controllers
         /// <returns> Updated speaker </returns>
         [HttpPost("consent/{speakerId}", Name = "UploadConsent")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Speaker))]
-        public async Task<IActionResult> UploadConsent(
-            string projectId, string speakerId, [FromForm] FileUpload upload)
+        public async Task<IActionResult> UploadConsent(string projectId, string speakerId, IFormFile? file)
         {
             // Sanitize user input
             try
@@ -261,7 +260,6 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure file is valid
-            var file = upload.File;
             if (file is null)
             {
                 return BadRequest("Null File");

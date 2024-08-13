@@ -14,17 +14,21 @@ charts:
       enabled: true
 
     frontend:
-      configCaptchaRequired: "true"
-      configCaptchaSiteKey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3"
+      # https://developers.cloudflare.com/turnstile/troubleshooting/testing/
+      # has dummy secret keys for development and testing; options are
+      # invisible pass, invisible fail, visible pass, visible fail, forced interaction
+      configCaptchaSiteKey: "1x00000000000000000000AA" # visible pass
 
     global:
       imageRegistry: ""
-      imagePullPolicy: Never
+      imagePullPolicy: IfNotPresent
       includeResourceLimits: false
       awsS3Location: dev.thecombine.app
+      captchaRequired: true
+      emailEnabled: true
 
     ingressClass: nginx
-    imagePullPolicy: Never
+    imagePullPolicy: IfNotPresent
 
     certManager:
       enabled: true

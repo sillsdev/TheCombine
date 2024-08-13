@@ -114,4 +114,30 @@ describe("SpellChecker", () => {
       }, 500);
     });
   });
+
+  describe("replaceAllButLastWordWithEllipses", () => {
+    it("handles empty string", () => {
+      expect(SpellChecker.replaceAllButLastWordWithEllipses("")).toEqual("");
+    });
+
+    it("does nothing if only 1 word", () => {
+      const word = " *(- #/;-something";
+      const result = SpellChecker.replaceAllButLastWordWithEllipses(word);
+      expect(result).toEqual(word);
+    });
+
+    it("replaces with ellipses when multiple words", () => {
+      expect(
+        SpellChecker.replaceAllButLastWordWithEllipses("double-word")
+      ).toEqual("...-word");
+
+      expect(
+        SpellChecker.replaceAllButLastWordWithEllipses("now 3 words")
+      ).toEqual("... words");
+
+      expect(
+        SpellChecker.replaceAllButLastWordWithEllipses("paren before (end")
+      ).toEqual("...(end");
+    });
+  });
 });

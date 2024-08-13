@@ -53,18 +53,22 @@ namespace BackendFramework.Controllers
         // Note: The HTTP Proxy in front, such as NGINX, also needs to be configured
         //     to allow large requests through as well.
         [RequestSizeLimit(250_000_000)]  // 250MB.
-        public async Task<IActionResult> UploadLiftFileAndGetWritingSystems([FromForm] FileUpload fileUpload)
+        public async Task<IActionResult> UploadLiftFileAndGetWritingSystems(IFormFile? file)
         {
             var userId = _permissionService.GetUserId(HttpContext);
-            return await UploadLiftFileAndGetWritingSystems(fileUpload, userId);
+            if (file is null)
+            {
+                return BadRequest("Null File");
+            }
+            return await UploadLiftFileAndGetWritingSystems(file, userId);
         }
 
-        internal async Task<IActionResult> UploadLiftFileAndGetWritingSystems(FileUpload fileUpload, string userId)
+        internal async Task<IActionResult> UploadLiftFileAndGetWritingSystems(IFormFile? file, string userId)
         {
             string extractedLiftRootPath;
             try
             {
-                var extractDir = await FileOperations.ExtractZipFile(fileUpload.File);
+                var extractDir = await FileOperations.ExtractZipFile(file);
                 _liftService.StoreImport(userId, extractDir);
                 extractedLiftRootPath = LiftHelper.GetLiftRootFromExtractedZip(extractDir);
             }
@@ -146,7 +150,7 @@ namespace BackendFramework.Controllers
         // Note: The HTTP Proxy in front, such as NGINX, also needs to be configured
         //     to allow large requests through as well.
         [RequestSizeLimit(250_000_000)]  // 250MB.
-        public async Task<IActionResult> UploadLiftFile(string projectId, [FromForm] FileUpload fileUpload)
+        public async Task<IActionResult> UploadLiftFile(string projectId, IFormFile? file)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Import, projectId))
             {
@@ -173,7 +177,7 @@ namespace BackendFramework.Controllers
             string extractedLiftRootPath;
             try
             {
-                extractDir = await FileOperations.ExtractZipFile(fileUpload.File);
+                extractDir = await FileOperations.ExtractZipFile(file);
                 extractedLiftRootPath = LiftHelper.GetLiftRootFromExtractedZip(extractDir);
             }
             catch (Exception e)
@@ -262,6 +266,15 @@ namespace BackendFramework.Controllers
             // to signal the frontend to display that data for this project.
             project.DefinitionsEnabled = doesImportHaveDefinitions;
             project.GrammaticalInfoEnabled = doesImportHaveGrammaticalInfo;
+
+            // Add new custom domains to the project
+            liftMerger.GetCustomSemanticDomains().ForEach(customDom =>
+            {
+                if (!project.SemanticDomains.Any(dom => dom.Id == customDom.Id && dom.Lang == customDom.Lang))
+                {
+                    project.SemanticDomains.Add(customDom);
+                }
+            });
 
             // Store that we have imported LIFT data already for this project
             // to signal the frontend not to attempt to import again in this project.

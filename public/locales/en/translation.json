@@ -75,6 +75,9 @@
     "resetDone": "If you have correctly entered your email or username, a password reset link has been sent to your email address.",
     "backToLogin": "Back To Login"
   },
+  "captcha": {
+    "error": "Page verification failed or expired. Please refresh the page."
+  },
   "speakerMenu": {
     "none": "No speakers in the project. To attach a speaker to audio recordings, please talk to a project administrator.",
     "other": "[None of the above]"
@@ -139,6 +142,7 @@
     "project": "Project:",
     "tab": {
       "basic": "Basic Settings",
+      "domains": "Semantic Domains",
       "export": "Export",
       "importExport": "Import/Export",
       "languages": "Languages",
@@ -253,6 +257,21 @@
       "emailLabel": "Email",
       "toastSuccess": "User added to the project.",
       "toastFail": "Failed to add user to the project."
+    },
+    "domains": {
+      "semDomLanguage": "Semantic Domains Language",
+      "label": "Custom Semantic Domains",
+      "add": "Add a custom subdomain",
+      "parent": "Parent domain: ",
+      "name": "Subdomain name: ",
+      "description": "Description: ",
+      "questions": "Questions: ",
+      "deleteConfirm": "Are you sure you want to delete this custom domain?",
+      "addError": {
+        "name": "Please enter a name for the custom domain.",
+        "customParent": "The parent domain cannot be a custom subdomain. Please choose a different parent domain.",
+        "takenParent": "The selected parent domain already has a custom subdomain."
+      }
     }
   },
   "goal": {
@@ -417,6 +436,9 @@
     "undo": {
       "undo": "Undo Merge",
       "undoDialog": "Undo this merge?",
+      "deleted": "Deleted:",
+      "undoDelete": "Undo Deletion",
+      "undoDeleteDialog": "Undo this deletion?",
       "undoDisabled": "Undo unavailable"
     }
   },
@@ -453,6 +475,7 @@
     "upload": "Upload"
   },
   "pronunciations": {
+    "enableMicTooltip": "Enable microphone access to record.",
     "recordTooltip": "Press and hold to record.",
     "playTooltip": "Click to play.",
     "deleteTooltip": "Shift click to delete.",
@@ -461,8 +484,10 @@
     "speakerAdd": "Right click to add a speaker.",
     "speakerChange": "Right click to change speaker.",
     "speakerSelect": "Select speaker of this audio recording",
-    "noMicAccess": "Recording error: Could not access a microphone.",
-    "deleteRecording": "Delete Recording"
+    "recordingError": "Recording error",
+    "deleteRecording": "Delete Recording",
+    "audioStreamError": "Error getting audio stream!",
+    "noMicAccess": "No microphone access. Audio recording disabled."
   },
   "statistics": {
     "title": "Data Statistics: {{ val }}",
