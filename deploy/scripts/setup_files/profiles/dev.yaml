@@ -11,7 +11,7 @@ charts:
       enabled: false
 
     telemetry:
-      enabled: false
+      enabled: true
 
     frontend:
       configCaptchaRequired: "true"
