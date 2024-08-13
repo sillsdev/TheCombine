@@ -41,9 +41,11 @@ When a project has been created or selected, it becomes the active project—you
 name in the middle of the App Bar at the top of The Combine. Clicking on the gear icon or project name brings up Project
 Settings for managing the project. The following settings are available for project users with sufficient permissions.
 
+![Settings](images/projectSettings123456.png)
+
 ### Basic Settings
 
-![BasicSettings](images/projectSettings1Basic.png){width=750 .center}
+![BasicSettings](images/projectSettings1Basic.png)
 
 #### Project Name
 
@@ -68,7 +70,7 @@ from the servers.
 
 ### Project Languages {#project-languages}
 
-![Languages](images/projectSettings2Langs.png){width=750 .center}
+![Languages](images/projectSettings2Langs.png)
 
 ![Project Languages - Tzotzil](images/projectLanguagesTzotzil.png){.center}
 
@@ -87,7 +89,7 @@ The _semantic domains language_ controls the language in which semantic domain t
 
 ### Project Users
 
-![Users](images/projectSettings3Users.png){width=750 .center}
+![Users](images/projectSettings3Users.png)
 
 #### Current Users
 
@@ -144,7 +146,7 @@ used for the file names).
 
 ### Import/Export
 
-![Import/Export](images/projectSettings4Port.png){width=750 .center}
+![Import/Export](images/projectSettings4Port.png)
 
 #### Import {#import}
 
@@ -175,15 +177,43 @@ When a project is exported from TheCombine and imported into FieldWorks, if a pr
 the speaker name will be added as a pronunciation label. The consent files can be found in the zipped export, but will
 not be imported into FieldWorks.
 
-### Workshop Schedule {#workshop-schedule}
+### Schedule {#schedule}
 
-![Workshop Schedule](images/projectSettings5Sched.png){width=750 .center}
+![Schedule](images/projectSettings5Sched.png)
 
 This is only available for editing by the project Owner, allowing a schedule to be set for a Rapid Word Collection
 workshop. Click the first button to select a date range for the workshop. Click the middle button to add or remove
 specific dates. Click the last button to clear the schedule.
 
 ![Workshop Schedule](images/projectSchedule.png){.center}
+
+### Semantic Domains {#semantic-domains}
+
+![Semantic Domains](images/projectSettings6Doms.png)
+
+In this settings tab, you can change the semantic domain language and manage custom semantic domains.
+
+The _semantic domains language_ controls the language in which semantic domain titles and descriptions are displayed in
+[Data Entry](./dataEntry.md).
+
+The _custom semantic domains_ supported at this time are the [established domains](https://semdom.org/) with `.0` added
+to the end of the id. For example, domain _4.2.6.2: Sports_ has two standard subdomains, _4.2.6.2.1: Football, Soccer_
+and _4.2.6.2.2: Basketball_. If another sport is dominant among the people group gathering their language, it can be
+added as domain _4.2.6.2.0_.
+
+For each custom domain, you can add a name, description, and questions to help with word collection in that domain.
+
+!!! note "Note"
+
+    Custom semantic domains are included in the project export and can be imported into FieldWorks. However, the
+    questions are not included.
+
+Custom semantic domains will appear in the domain tree for the project, but will not be visible to other projects.
+
+!!! note "Note"
+
+    Custom semantic domains are language-specific. If you add a custom domain in one language then change the semantic
+    domains language, that domain will not be visible unless you change back to its language.
 
 ## Project Statistics
 
@@ -206,13 +236,9 @@ A table listing number of words in each semantic domain.
 
 ### Words per Day
 
-Line graphs showing words collected during the days specified in the [Workshop Schedule](#workshop-schedule).
+Line graphs showing words collected during the days specified in the workshop [Schedule](#schedule).
 
 ### Workshop Progress
 
-Line graphs showing cumulative words collected across the days of the [Workshop Schedule](#workshop-schedule), as well
-as projections for remainder of the workshop.
-
-## Semantic Domains
-
-Details about custom semantic domains are coming soon.
+Line graphs showing cumulative words collected across the days of the workshop [Schedule](#schedule), as well as
+projections for remainder of the workshop.

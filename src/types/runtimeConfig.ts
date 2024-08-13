@@ -17,7 +17,7 @@ declare global {
 const defaultConfig: RuntimeConfigItems = {
   baseUrl: "http://localhost:5000",
   captchaRequired: true,
-  captchaSiteKey: "6Le6BL0UAAAAAMjSs1nINeB5hqDZ4m3mMg3k67x3",
+  captchaSiteKey: "0x4AAAAAAAe9zmM2ysXGSJk1",
   offline: false,
   emailServicesEnabled: true,
   showCertExpiration: true,
@@ -56,18 +56,18 @@ export class RuntimeConfig {
     return "v0.0.0-default.0";
   }
 
-  public captchaSiteKey(): string {
-    if (window.runtimeConfig.hasOwnProperty("captchaSiteKey")) {
-      return window.runtimeConfig.captchaSiteKey;
-    }
-    return defaultConfig.captchaSiteKey;
-  }
-
   public captchaRequired(): boolean {
     if (window.runtimeConfig.hasOwnProperty("captchaRequired")) {
       return window.runtimeConfig.captchaRequired;
     }
     return defaultConfig.captchaRequired;
+  }
+
+  public captchaSiteKey(): string {
+    if (window.runtimeConfig.hasOwnProperty("captchaSiteKey")) {
+      return window.runtimeConfig.captchaSiteKey;
+    }
+    return defaultConfig.captchaSiteKey;
   }
 
   public emailServicesEnabled(): boolean {

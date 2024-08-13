@@ -23,10 +23,12 @@ global:
   adminUsername: "Override"
   adminPassword: "Override"
   adminEmail: "Override"
+  captchaRequired: false
+  captchaSecretKey: "Override"
   combineJwtSecretKey: "Override"
   combineSmtpUsername: "Override"
   combineSmtpPassword: "Override"
-  offline: false
+  emailEnabled: false
   # Local Storage for fonts
   fontStorageAccessMode: "ReadWriteOnce"
   fontStorageSize: 1Gi
@@ -35,7 +37,7 @@ global:
   # Define the image registry to use (may be blank for local images)
   imageRegistry: awsEcr
   imageTag: "latest"
-  pullSecretName: aws-login-credentials
+  pullSecretName: "None"
   # Update strategy should be "Recreate" or "Rolling Update"
   updateStrategy: Recreate
 
@@ -50,12 +52,6 @@ cert-proxy-client:
 certManager:
   enabled: false
   certIssuer: letsencrypt-prod
-
-frontend:
-  configShowCertExpiration: false
-  configAnalyticsWriteKey: ""
-  configCaptchaRequired: false
-  configCaptchaSiteKey: "None"
 
 # Maintenance configuration items
 maintenance:
