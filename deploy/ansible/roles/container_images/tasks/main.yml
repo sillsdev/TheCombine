@@ -1,0 +1,59 @@
+---
+# Setup airgap images in {{ airgap_image_dir }} to be
+# available when k3s and subsequent helm charts are installed.
+
+- name: Create airgap image directory
+  file:
+    path: "{{ airgap_image_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Copy image files
+  copy:
+    src: "{{ source_image_dir }}/{{ item }}"
+    dest: "{{ airgap_image_dir }}/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  loop:
+    - k3s-airgap-images-amd64.tar.zst
+    - middleware-airgap-images-amd64.tar.zst
+    - combine-airgap-images-amd64.tar.zst
+
+# Add k3s, kubectl and the k3s installation script to
+# /usr/local/bin
+- name: Copy k3s & utility programes
+  copy:
+    src: "{{ source_image_dir }}/{{ item }}"
+    dest: /usr/local/bin/{{ item }}
+    owner: root
+    group: root
+    mode: 0755
+  loop:
+    - k3s
+    - kubectl
+    - install.sh
+
+# Install helm
+- name: Create directory for helm installation
+  file:
+    path: /opt/helm/{{ helm_version }}
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Unpack helm
+  shell:
+    cmd: tar xzvf "{{ source_image_dir }}/helm.tar.gz" -C /opt/helm/{{ helm_version }}
+
+- name: Create link to helm binary
+  file:
+    src: /opt/helm/{{ helm_version }}/linux-amd64/helm
+    dest: /usr/local/bin/helm
+    state: link
+    owner: root
+    group: root
+    mode: 0755

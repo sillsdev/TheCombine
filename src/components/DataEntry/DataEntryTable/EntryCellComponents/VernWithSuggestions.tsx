@@ -19,6 +19,7 @@ interface VernWithSuggestionsProps {
   updateVernField: (newValue: string, openDialog?: boolean) => void;
   onBlur: () => void;
   onClose?: (e: SyntheticEvent, reason: AutocompleteCloseReason) => void;
+  onFocus?: () => void;
   suggestedVerns?: string[];
   handleEnter: () => void;
   vernacularLang: WritingSystem;
@@ -46,13 +47,11 @@ export default function VernWithSuggestions(
       freeSolo
       value={props.vernacular}
       options={props.suggestedVerns ?? []}
+      // option-never-equals-value prevents automatic option highlighting
+      isOptionEqualToValue={() => false}
       onBlur={props.onBlur}
-      onChange={(_e, value) => {
-        // onChange is triggered when an option is selected
-        props.updateVernField(value ?? "", true);
-      }}
+      onFocus={props.onFocus}
       onInputChange={(_e, value) => {
-        // onInputChange is triggered by typing
         props.updateVernField(value);
       }}
       onKeyPress={(e: KeyboardEvent) => {
@@ -72,7 +71,12 @@ export default function VernWithSuggestions(
         />
       )}
       renderOption={(liProps, option, { selected }) => (
-        <LiWithFont {...liProps} aria-selected={selected} vernacular>
+        <LiWithFont
+          {...liProps}
+          aria-selected={selected}
+          key={option}
+          vernacular
+        >
           {option}
         </LiWithFont>
       )}

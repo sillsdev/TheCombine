@@ -14,16 +14,12 @@
 k8s_engine: k3s
 
 image_pull_secret: aws-login-credentials
+use_airgap_images: false
 
 # k8s namespaces
 app_namespace: thecombine
 
 k8s_user: sillsdev
-
-################################################
-# Helm Installation
-################################################
-install_helm: no
 
 ################################################
 # Support Tool Settings

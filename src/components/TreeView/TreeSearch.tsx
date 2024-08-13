@@ -1,4 +1,4 @@
-import { Grid, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import {
   type ChangeEvent,
   type KeyboardEvent,
@@ -41,23 +41,21 @@ export default function TreeSearch(props: TreeSearchProps): ReactElement {
   };
 
   return (
-    <Grid style={{ maxWidth: 200 }}>
-      <TextField
-        variant="standard"
-        fullWidth
-        id="domain-tree-search-field"
-        label={t("treeView.findDomain")}
-        onKeyDown={stopPropagation}
-        onChange={handleChange}
-        onKeyUp={handleOnKeyUp}
-        margin="normal"
-        autoComplete="off"
-        inputProps={{ "data-testid": testId }}
-        value={input}
-        error={searchError}
-        helperText={searchError ? t("treeView.domainNotFound") : undefined}
-      />
-    </Grid>
+    <TextField
+      InputLabelProps={{ shrink: true }}
+      fullWidth
+      id="domain-tree-search-field"
+      label={t("treeView.findDomain")}
+      onKeyDown={stopPropagation}
+      onChange={handleChange}
+      onKeyUp={handleOnKeyUp}
+      margin="normal"
+      autoComplete="off"
+      inputProps={{ "data-testid": testId }}
+      value={input}
+      error={searchError}
+      helperText={searchError ? t("treeView.domainNotFound") : undefined}
+    />
   );
 }
 
