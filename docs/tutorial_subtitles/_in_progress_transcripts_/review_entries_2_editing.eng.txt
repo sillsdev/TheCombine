@@ -1,0 +1,74 @@
+Let’s see how to edit words in your project on The Combine.
+Click the “Data Cleanup” button in the top bar, then select “Review Entries”.
+This table has all the word entries in your project.
+In another video, we looked at how to sort and filter this table.
+In this video, we look at how to edit an entry.
+Each word in your project shows up as a row in this table.
+To delete a word, click the delete icon at the right end.
+A pop-up will ask you to confirm whether you want to delete the word.
+Within the main body of this table, the only way to edit a word is to add or remove pronunciations.
+Pronunciation audio recordings are in this column with red circle and green square icons.
+To record a new pronunciation for a word, click-and-hold the red circle in the word’s row.
+Say the word out loud once or twice, then release the button.
+A new green triangle should appear in that row.
+Click the green triangle to listen to the recording.
+Hover your cursor over the green triangle to see the options for editing the recording.
+To delete a recording, hold the Shift key and click the green triangle.
+A pop-up will ask you to confirm whether you want to delete the audio recording.
+To change the speaker on a recording, right-click the green triangle.
+We’ll discuss pronunciation Speakers in another video.
+If you are using a touch-screen, press-and-hold on the green triangle and a menu will appear with the options.
+So far, we’ve seen how to delete a word entry and how to edit its pronunciation audio.
+To edit the other parts of a word, click the pencil icon on the far left.
+A dialog will open giving you all the details of that word and the ability to edit everything.
+First is the Vernacular section.
+Click in the text field to edit the vernacular form of the word.
+Note that the background of the section changes from gray to yellow when the content of the section has been changed.
+In the top corner of this dialog are two icons.
+Click the green checkmark to save changes or the red X to cancel all changes.
+If there are any changes when you click the red X, a pop-up will ask you to confirm whether to discard those changes.
+Click the “Cancel” button to keep editing, or click the “Confirm” button to discard the edits and return to the table.
+After the Vernacular section is the Senses section.
+Let’s skip that for the moment and come back to it later in this video.
+Below the Senses section is the Pronunciations section.
+Here you can add, play, and delete audio recordings exactly the same way as in the table, which we discussed earlier in the video.
+Below the Pronunciations section is the Note section.
+Click in the text field to update the text of the note.
+Click on the dropdown menu on the side if you want to change which analysis language is associated with the note.
+The project’s analysis languages can be changed in the project settings, as discussed in another video.
+Below the Note section is the Flag section.
+Click on the flag icon to toggle between flagged (indicated by a red flag) and unflagged (indicated by a gray flag).
+You can also click in the text field to add or edit text for the flag.
+Note that if you add text here, the word is automatically flagged; the gray flag icon changes to red.
+Or if you have a flag with text and click the flag icon to unflag the word, then the text disappears.
+Let us now return to the Senses section.
+Within this section there is a row for every sense.
+To minimize this section and only show a summary of all the senses, click on the double diagonal arrows in the corner.
+Click again to restore the full detailed view.
+On the start of each sense row is a set of buttons.
+The first column has vertical arrows; click on one of them to change the order of the senses.
+The second column has a delete icon and a pencil icon.
+Click on the delete icon to delete the sense.
+Note that the sense card changes from light gray to dark gray, indicating that the sense will be deleted when edits to this word are saved.
+Click on the delete icon a second time to restore the sense.
+To edit a sense, click on the pencil icon.
+A second dialog will appear that lets you edit all the sense’s information.
+Here we see two sections: Glosses and Semantic Domains.
+In the Glosses section, you must have at least one gloss for the sense.
+If you delete all the glosses, The Combine will not let you save your changes.
+In the Semantic Domains section, each domain tag has a little gray X button.
+Click the gray X to remove that semantic domain tag.
+To add the sense to a new semantic domain, click on the + button.
+The semantic domain tree pops up for you to select a domain.
+We discuss the various ways to navigate this semantic domain tree in another video.
+If you don’t want to select a new semantic domain, click the X icon in the top corner to close the tree.
+If the project has imported data and any sense in that data has definitions or a part of speech, there will be sections with that information here in this dialog.
+Note that the Semantic Domains section has a yellow background, since we deleted one of the domain tags.
+Just like the word editing dialog, this sense editing dialog has two icons in the top corner: a green checkmark to confirm changes and a red X to discard changes.
+If there are any changes in this sense when you click the red X, a pop-up will ask you to confirm whether to discard those changes.
+If there are any changes in this sense when you click the green checkmark, the sense editing dialog closes and now the card for that sense has a yellow background.
+The changes to that sense are not yet permanent. They will be saved or discarded with all other word changes when you finish with the word editing dialog.
+In the bottom row of the Senses section, there is a + icon; click this to add a new sense.
+A sense editing dialog pops up for you to fill in the details of the new sense.
+I hope this video helps you clean up your lexical data in The Combine.
+Have a wonderful day!

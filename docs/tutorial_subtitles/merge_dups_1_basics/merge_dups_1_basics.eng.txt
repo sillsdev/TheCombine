@@ -1,0 +1,42 @@
+When you collect words by semantic domain, sometimes the same word is entered multiple times.
+The Combine has a tool for finding duplicate entries and merging them together into a single entry.
+Let’s log in at thecombine.app and select a project that has duplicate entries.
+Click the “Data Cleanup” button in the top bar, then select “Merge Duplicates”.
+The Combine will find sets of words with identical vernacular form and present them to you one set at a time.
+In this project, the first set of potential duplicates is a pair of words with vernacular form “hard”. 
+One has gloss “difficult” and the other has gloss “not soft”.
+Are those two different senses of the same word or two different words?
+If we aren’t sure, or don’t want to make that decision now, we can press the “Defer” button at the bottom.
+That moves us to the next set and prevents the deferred set from coming up again here in the “Merge Duplicates” tool.
+There’s another tool for considering sets that have been deferred.
+We’ll look at that later in this video.
+This second set of potential duplicates has two words with vernacular form “bank”.
+One has gloss “side of river” and the other has gloss “financial institution”.
+These are definitely different words—homographs that we do not want to merge.
+Click the “Save & Continue” button at the bottom to confirm that they are distinct words.
+This pair will not show up again in the “Merge Duplicates”, nor in the list of deferred sets.
+Now we’ve seen what the “Save & Continue” and “Defer” buttons do.
+One important note: if a user later changes any of the words in a set of potential duplicates, then that set can show up again in the “Merge Duplicates” tool.
+For example, if you click “Save & Continue” for a set of words that are not duplicates, and then later add a semantic domain to a sense of one of the words, that set may come up again as potential duplicates.
+Or if you click “Defer” for a set, and then another user adds an audio recording for one of the words, then that set will show up again in “Merge Duplicates”, rather than among the deferred sets.
+Let’s move on.
+The Combine asks if we want to keep merging.
+If we click “No”, it will take us back to the “Data Cleanup” page.
+If we click “Yes”, it will look for more sets of potential duplicates.
+After The Combine can’t find any more words with identical vernacular form, it will suggest words with similar vernacular forms.
+This will help catch duplicates where one of the words has a typo or is using alternate spelling.
+Here we see two words with vernacular form “present”, but the second one has two “t”s at the end.
+Hmm, that must be a typo.
+A gift is spelled “p-r-e-s-e-n-t” not “p-r-e-s-e-n-t-t”.
+You cannot edit the text in the “Merge Duplicates” tool.
+However, you can click on the flag icon to add a flag and mention what needs to be fixed.
+Note that for the flag to be saved, you must click “Save & Continue”.
+We can leave the merging at any time by clicking on the “Data Cleanup” button, but then unsaved changes will be discarded.
+Back in “Data Cleanup”, there’s a “Review Entries” tool.
+That’s where you can review and edit all words in the project, and fix any words that were flagged while merging duplicates.
+We’ll cover the “Review Entries” tool in another video.
+Note that there is another option here that wasn’t here before: “Review Deferred Duplicates”.
+Click on it to review sets of potential duplicates that were previously deferred.
+Well, that’s all for this first tutorial video on the “Merge Duplicates” tool.
+In the next video, we look at moving, deleting, and combining senses.
+Have a wonderful day!

@@ -1,6 +1,6 @@
 import { FiberManualRecord } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
-import { ReactElement } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -8,6 +8,7 @@ import {
   resetPronunciations,
 } from "components/Pronunciations/Redux/PronunciationsActions";
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
+import { checkMicPermission } from "components/Pronunciations/utilities";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { themeColors } from "types/theme";
@@ -25,20 +26,42 @@ interface RecorderIconProps {
 export default function RecorderIcon(props: RecorderIconProps): ReactElement {
   const isRecording = useAppSelector(
     (state: StoreState) =>
-      state.pronunciationsState.status === PronunciationsStatus.Recording &&
-      state.pronunciationsState.wordId === props.id
+      state.pronunciationsState.status === PronunciationsStatus.Recording
   );
+  const recordingId = useAppSelector(
+    (state: StoreState) => state.pronunciationsState.wordId
+  );
+  const isRecordingThis = isRecording && recordingId === props.id;
 
   const dispatch = useAppDispatch();
+  const [hasMic, setHasMic] = useState(false);
   const { t } = useTranslation();
 
+  useEffect(() => {
+    checkMicPermission().then(setHasMic);
+  }, []);
+
   function toggleIsRecordingToTrue(): void {
-    dispatch(recording(props.id));
-    props.startRecording();
+    if (!isRecording) {
+      // Only start a recording if there's not another on in progress.
+      dispatch(recording(props.id));
+      props.startRecording();
+    } else {
+      // This triggers if user clicks-and-holds on one entry's record icon,
+      // drags the mouse outside that icon before releasing,
+      // then clicks-and-holds a different entry's record icon.
+      if (recordingId !== props.id) {
+        console.error(
+          "Tried to record for an entry before finishing a recording on another entry."
+        );
+      }
+    }
   }
   function toggleIsRecordingToFalse(): void {
-    props.stopRecording();
-    dispatch(resetPronunciations());
+    if (isRecordingThis) {
+      props.stopRecording();
+      dispatch(resetPronunciations());
+    }
   }
 
   function handleTouchStart(): void {
@@ -58,36 +81,42 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
     document.removeEventListener("contextmenu", disableContextMenu, false);
   }
 
+  const tooltipId = hasMic
+    ? "pronunciations.recordTooltip"
+    : "pronunciations.enableMicTooltip";
+
   return (
     <Tooltip
       disableTouchListener // Distracting when already recording with a long-press.
       placement="top"
-      title={t("pronunciations.recordTooltip")}
+      title={!props.disabled && t(tooltipId)}
     >
-      <IconButton
-        aria-label="record"
-        disabled={props.disabled}
-        id={recordButtonId}
-        onBlur={toggleIsRecordingToFalse}
-        onPointerDown={toggleIsRecordingToTrue}
-        onPointerUp={toggleIsRecordingToFalse}
-        onTouchEnd={handleTouchEnd}
-        onTouchStart={handleTouchStart}
-        size="large"
-        tabIndex={-1}
-      >
-        <FiberManualRecord
-          id={recordIconId}
-          sx={{
-            color: (t) =>
-              props.disabled
-                ? t.palette.grey[400]
-                : isRecording
-                  ? themeColors.recordActive
-                  : themeColors.recordIdle,
-          }}
-        />
-      </IconButton>
+      <span>
+        <IconButton
+          aria-label="record"
+          disabled={props.disabled || !hasMic}
+          id={recordButtonId}
+          onBlur={toggleIsRecordingToFalse}
+          onPointerDown={toggleIsRecordingToTrue}
+          onPointerUp={toggleIsRecordingToFalse}
+          onTouchEnd={handleTouchEnd}
+          onTouchStart={handleTouchStart}
+          size="large"
+          tabIndex={-1}
+        >
+          <FiberManualRecord
+            id={recordIconId}
+            sx={{
+              color: (t) =>
+                props.disabled || !hasMic
+                  ? t.palette.grey[400]
+                  : isRecordingThis
+                    ? themeColors.recordActive
+                    : themeColors.recordIdle,
+            }}
+          />
+        </IconButton>
+      </span>
     </Tooltip>
   );
 }
