@@ -217,13 +217,13 @@ El centro del panel muestra hasta 5 ejemplos de formas vernáculas en las que ap
 en cada ocurrencia.
 
 En la parte superior del panel hay tres botones para designar si el carácter debe incluirse en el inventario de
-caracteres de la lengua vernácula: "ACEPTAR", "NO DECIDIDO" y "RECHAZAR". Al pulsar cualquiera de estos botones se
+caracteres de la lengua vernácula: "Aceptar", "No decidido" y "Rechazar". Al pulsar cualquiera de estos botones se
 actualizará la designación en la parte inferior de la ficha de personaje. (Estas actualizaciones del inventario del
-personaje no se guardan en el proyecto hasta que pulse el botón GUARDAR en la parte inferior de la página)
+personaje no se guardan en el proyecto hasta que pulse el botón Guardar en la parte inferior de la página)
 
 En la parte inferior del panel se encuentra la herramienta Buscar y Reemplazar. Si _cada_ aparición del carácter debe
 sustituirse por otra cosa, escriba el carácter o cadena de sustitución en la casilla "Sustituir por" y pulse el botón
-APLICAR.
+Aplicar.
 
 !!! warning "Importante"
 
