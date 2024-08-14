@@ -52,9 +52,7 @@ describe("ResetRequest", () => {
 
     // Agent
     const field = screen.getByTestId(PasswordRequestIds.FieldEmailOrUsername);
-    await act(async () => {
-      await agent.type(field, "a");
-    });
+    await agent.type(field, "a");
 
     // After
     expect(button).toBeEnabled();
@@ -74,12 +72,8 @@ describe("ResetRequest", () => {
 
     // Agent
     const field = screen.getByTestId(PasswordRequestIds.FieldEmailOrUsername);
-    await act(async () => {
-      await agent.type(field, "a");
-    });
-    await act(async () => {
-      await agent.click(screen.getByRole("button"));
-    });
+    await agent.type(field, "a");
+    await agent.click(screen.getByRole("button"));
 
     // After
     expect(
