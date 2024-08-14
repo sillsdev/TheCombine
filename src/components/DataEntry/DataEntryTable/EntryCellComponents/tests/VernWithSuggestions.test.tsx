@@ -1,5 +1,5 @@
-import { createRef } from "react";
-import renderer from "react-test-renderer";
+import { render } from "@testing-library/react";
+import { act, createRef } from "react";
 
 import VernWithSuggestions from "components/DataEntry/DataEntryTable/EntryCellComponents/VernWithSuggestions";
 import { newWritingSystem } from "types/writingSystem";
@@ -17,8 +17,8 @@ jest.mock("@mui/base/node/useAutocomplete/useAutocomplete", () => ({
 
 describe("VernWithSuggestions", () => {
   it("renders with vernacular", () => {
-    renderer.act(() => {
-      renderer.create(
+    act(() => {
+      render(
         <VernWithSuggestions
           vernacular={"vern"}
           vernInput={createRef<HTMLInputElement>()}
@@ -33,8 +33,8 @@ describe("VernWithSuggestions", () => {
   });
 
   it("renders new", () => {
-    renderer.act(() => {
-      renderer.create(
+    act(() => {
+      render(
         <VernWithSuggestions
           isNew
           vernacular={""}
@@ -50,8 +50,8 @@ describe("VernWithSuggestions", () => {
   });
 
   it("renders disabled", () => {
-    renderer.act(() => {
-      renderer.create(
+    act(() => {
+      render(
         <VernWithSuggestions
           isDisabled
           vernacular={""}
