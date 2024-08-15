@@ -4,6 +4,7 @@ import {
   PlayArrow,
 } from "@mui/icons-material";
 import { Typography } from "@mui/material";
+import { createSelector } from "@reduxjs/toolkit";
 import {
   MaterialReactTable,
   type MRT_ColumnOrderState,
@@ -74,7 +75,7 @@ const IconHeaderPaddingTop = "2px"; // Vertical offset for a small icon as Heade
 const IconHeaderWidth = 20; // Width for a small icon as Header
 const SensesHeaderWidth = 15; // Width for # as Header
 
-enum ColumnId {
+export enum ColumnId {
   Definitions = "definitions",
   Delete = "delete",
   Domains = "domains",
@@ -103,8 +104,27 @@ interface RowsPerPageOption {
 export default function ReviewEntriesTable(props: {
   disableVirtualization?: boolean;
 }): ReactElement {
-  const { columnOrder, columnVisibility } = useAppSelector(
-    (state: StoreState) => state.currentProjectState.reviewEntriesColumns
+  const columnOrder = useAppSelector(
+    (state: StoreState) =>
+      state.currentProjectState.reviewEntriesColumns.columnOrder
+  );
+  const columnVisibility: MRT_VisibilityState = useAppSelector(
+    // Memoized selector that ensures correct column visibility.
+    createSelector(
+      [
+        (state: StoreState) =>
+          state.currentProjectState.reviewEntriesColumns.columnVisibility,
+        (state: StoreState) =>
+          state.currentProjectState.project.definitionsEnabled,
+        (state: StoreState) =>
+          state.currentProjectState.project.grammaticalInfoEnabled,
+      ],
+      (colVis, def, pos) => ({
+        ...colVis,
+        [ColumnId.Definitions]: (colVis[ColumnId.Definitions] ?? def) && def,
+        [ColumnId.PartOfSpeech]: (colVis[ColumnId.PartOfSpeech] ?? pos) && pos,
+      })
+    )
   );
   const { definitionsEnabled, grammaticalInfoEnabled } = useAppSelector(
     (state: StoreState) => state.currentProjectState.project
@@ -385,13 +405,7 @@ export default function ReviewEntriesTable(props: {
     enableGlobalFilter: false,
     enablePagination,
     enableRowVirtualization: !props.disableVirtualization,
-    initialState: {
-      columnVisibility: {
-        definitions: definitionsEnabled,
-        partOfSpeech: grammaticalInfoEnabled,
-      },
-      density: "compact",
-    },
+    initialState: { density: "compact" },
     localization,
     muiPaginationProps: { rowsPerPageOptions },
     // Override whiteSpace: "nowrap" from having density: "compact"
@@ -409,16 +423,7 @@ export default function ReviewEntriesTable(props: {
     },
     rowVirtualizerInstanceRef,
     sortDescFirst: false,
-    state: {
-      columnOrder: columnOrder.filter(
-        (col) =>
-          (col !== ColumnId.Definitions || definitionsEnabled) &&
-          (col !== ColumnId.PartOfSpeech || grammaticalInfoEnabled)
-      ),
-      columnVisibility,
-      isLoading,
-      pagination,
-    },
+    state: { columnOrder, columnVisibility, isLoading, pagination },
   });
 
   return <MaterialReactTable table={table} />;

@@ -9,21 +9,19 @@ const projectSlice = createSlice({
   reducers: {
     resetAction: () => defaultState,
     setColumnOrderAction: (state, action) => {
+      const columns = state.reviewEntriesColumns;
       if (typeof action.payload === "function") {
-        state.reviewEntriesColumns.columnOrder = action.payload(
-          state.reviewEntriesColumns.columnOrder
-        );
+        columns.columnOrder = action.payload(columns.columnOrder);
       } else {
-        state.reviewEntriesColumns.columnOrder = action.payload;
+        columns.columnOrder = action.payload;
       }
     },
     setColumnVisibilityAction: (state, action) => {
+      const columns = state.reviewEntriesColumns;
       if (typeof action.payload === "function") {
-        state.reviewEntriesColumns.columnVisibility = action.payload(
-          state.reviewEntriesColumns.columnVisibility
-        );
+        columns.columnVisibility = action.payload(columns.columnVisibility);
       } else {
-        state.reviewEntriesColumns.columnVisibility = action.payload;
+        columns.columnVisibility = action.payload;
       }
     },
     setProjectAction: (state, action) => {
