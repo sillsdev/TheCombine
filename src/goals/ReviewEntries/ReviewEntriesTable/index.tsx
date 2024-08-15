@@ -7,23 +7,15 @@ import { Typography } from "@mui/material";
 import { createSelector } from "@reduxjs/toolkit";
 import {
   MaterialReactTable,
-  type MRT_ColumnOrderState,
   type MRT_Localization,
   type MRT_PaginationState,
   type MRT_Row,
   type MRT_RowVirtualizer,
-  type MRT_Updater,
   type MRT_VisibilityState,
   createMRTColumnHelper,
   useMaterialReactTable,
 } from "material-react-table";
-import {
-  type ReactElement,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { type ReactElement, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, type GrammaticalInfo, type Word } from "api/models";
@@ -104,6 +96,8 @@ interface RowsPerPageOption {
 export default function ReviewEntriesTable(props: {
   disableVirtualization?: boolean;
 }): ReactElement {
+  const dispatch = useAppDispatch();
+
   const columnOrder = useAppSelector(
     (state: StoreState) =>
       state.currentProjectState.reviewEntriesColumns.columnOrder
@@ -128,20 +122,6 @@ export default function ReviewEntriesTable(props: {
   );
   const { definitionsEnabled, grammaticalInfoEnabled } = useAppSelector(
     (state: StoreState) => state.currentProjectState.project
-  );
-
-  const dispatch = useAppDispatch();
-  const onColumnOrderChange = useCallback(
-    (updater: MRT_Updater<MRT_ColumnOrderState>): void => {
-      dispatch(setReviewEntriesColumnOrder(updater));
-    },
-    [dispatch]
-  );
-  const onColumnVisibilityChange = useCallback(
-    (updater: MRT_Updater<MRT_VisibilityState>): void => {
-      dispatch(setReviewEntriesColumnVisibility(updater));
-    },
-    [dispatch]
   );
 
   const autoResetPageIndexRef = useRef(true);
@@ -415,8 +395,10 @@ export default function ReviewEntriesTable(props: {
       sx: { maxHeight: `calc(100vh - ${enablePagination ? 180 : 130}px)` },
     },
     muiTablePaperProps: { sx: { height: `calc(100vh - ${topBarHeight}px)` } },
-    onColumnOrderChange,
-    onColumnVisibilityChange,
+    onColumnOrderChange: (updater) =>
+      dispatch(setReviewEntriesColumnOrder(updater)),
+    onColumnVisibilityChange: (updater) =>
+      dispatch(setReviewEntriesColumnVisibility(updater)),
     onPaginationChange: (updater) => {
       setPagination(updater);
       scrollToTop();
