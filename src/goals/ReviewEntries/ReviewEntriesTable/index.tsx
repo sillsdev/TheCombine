@@ -11,20 +11,31 @@ import {
   type MRT_PaginationState,
   type MRT_Row,
   type MRT_RowVirtualizer,
+  type MRT_Updater,
   type MRT_VisibilityState,
   createMRTColumnHelper,
   useMaterialReactTable,
 } from "material-react-table";
-import { type ReactElement, useEffect, useRef, useState } from "react";
+import {
+  type ReactElement,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, type GrammaticalInfo, type Word } from "api/models";
 import { getAllSpeakers, getFrontierWords, getWord } from "backend";
 import { topBarHeight } from "components/LandingPage/TopBar";
+import {
+  setReviewEntriesColumnOrder,
+  setReviewEntriesColumnVisibility,
+} from "components/Project/ProjectActions";
 import * as Cell from "goals/ReviewEntries/ReviewEntriesTable/Cells";
 import * as ff from "goals/ReviewEntries/ReviewEntriesTable/filterFn";
 import * as sf from "goals/ReviewEntries/ReviewEntriesTable/sortingFn";
-import { useAppSelector } from "rootRedux/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { type Hash } from "types/hash";
 
@@ -78,21 +89,29 @@ interface RowsPerPageOption {
 export default function ReviewEntriesTable(props: {
   disableVirtualization?: boolean;
 }): ReactElement {
-  const showDefinitions = useAppSelector(
-    (state: StoreState) => state.currentProjectState.project.definitionsEnabled
+  const { columnOrder, columnVisibility } = useAppSelector(
+    (state: StoreState) => state.currentProjectState.reviewEntriesColumns
   );
-  const showGrammaticalInfo = useAppSelector(
-    (state: StoreState) =>
-      state.currentProjectState.project.grammaticalInfoEnabled
+  const { definitionsEnabled, grammaticalInfoEnabled } = useAppSelector(
+    (state: StoreState) => state.currentProjectState.project
+  );
+
+  const dispatch = useAppDispatch();
+  const onColumnOrderChange = useCallback(
+    (updater: MRT_Updater<MRT_ColumnOrderState>): void => {
+      dispatch(setReviewEntriesColumnOrder(updater));
+    },
+    [dispatch]
+  );
+  const onColumnVisibilityChange = useCallback(
+    (updater: MRT_Updater<MRT_VisibilityState>): void => {
+      dispatch(setReviewEntriesColumnVisibility(updater));
+    },
+    [dispatch]
   );
 
   const autoResetPageIndexRef = useRef(true);
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
-
-  const [columnOrder, setColumnOrder] = useState<MRT_ColumnOrderState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<MRT_VisibilityState>(
-    {}
-  );
   const [data, setData] = useState<Word[]>([]);
   const [enablePagination, setEnablePagination] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -216,7 +235,7 @@ export default function ReviewEntriesTable(props: {
       id: "definitions",
       size: BaselineColumnSize + 20,
       sortingFn: sf.sortingFnDefinitions,
-      visibleInShowHideMenu: showDefinitions,
+      visibleInShowHideMenu: definitionsEnabled,
     }),
 
     // Glosses column
@@ -243,7 +262,7 @@ export default function ReviewEntriesTable(props: {
       header: t("reviewEntries.columns.partOfSpeech"),
       id: "partOfSpeech",
       sortingFn: sf.sortingFnPartOfSpeech,
-      visibleInShowHideMenu: showGrammaticalInfo,
+      visibleInShowHideMenu: grammaticalInfoEnabled,
     }),
 
     // Domains column
@@ -349,8 +368,8 @@ export default function ReviewEntriesTable(props: {
     enableRowVirtualization: !props.disableVirtualization,
     initialState: {
       columnVisibility: {
-        definitions: showDefinitions,
-        partOfSpeech: showGrammaticalInfo,
+        definitions: definitionsEnabled,
+        partOfSpeech: grammaticalInfoEnabled,
       },
       density: "compact",
     },
@@ -363,15 +382,24 @@ export default function ReviewEntriesTable(props: {
       sx: { maxHeight: `calc(100vh - ${enablePagination ? 180 : 130}px)` },
     },
     muiTablePaperProps: { sx: { height: `calc(100vh - ${topBarHeight}px)` } },
-    onColumnOrderChange: setColumnOrder,
-    onColumnVisibilityChange: setColumnVisibility,
+    onColumnOrderChange,
+    onColumnVisibilityChange,
     onPaginationChange: (updater) => {
       setPagination(updater);
       scrollToTop();
     },
     rowVirtualizerInstanceRef,
     sortDescFirst: false,
-    state: { columnOrder, columnVisibility, isLoading, pagination },
+    state: {
+      columnOrder: columnOrder.filter(
+        (col) =>
+          (col !== "definitions" || definitionsEnabled) &&
+          (col !== "partOfSpeech" || grammaticalInfoEnabled)
+      ),
+      columnVisibility,
+      isLoading,
+      pagination,
+    },
   });
 
   return <MaterialReactTable table={table} />;
