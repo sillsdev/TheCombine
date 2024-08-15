@@ -1,3 +1,11 @@
+###########################################################
+# IMPORTANT
+#
+# Do not add any architecture specific code or packages
+# in this Docker file so that it can be used on Intel/AMD
+# and ARM platforms.
+###########################################################
+
 # User guide build environment
 FROM python:3.10.14-slim-bookworm AS user_guide_builder
 

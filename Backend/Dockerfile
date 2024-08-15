@@ -1,5 +1,13 @@
+###########################################################
+# IMPORTANT
+#
+# Do not add any architecture specific code or packages
+# in this Docker file so that it can be used on Intel/AMD
+# and ARM platforms.
+###########################################################
+
 # Docker multi-stage build
-FROM mcr.microsoft.com/dotnet/sdk:8.0.303-jammy-amd64 AS builder
+FROM mcr.microsoft.com/dotnet/sdk:8.0.303-jammy AS builder
 WORKDIR /app
 
 # Copy csproj and restore (fetch dependencies) as distinct layers.
@@ -11,7 +19,7 @@ COPY . ./
 RUN dotnet publish -c Release -o build
 
 # Build runtime image.
-FROM mcr.microsoft.com/dotnet/aspnet:8.0.7-jammy-amd64
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.7-jammy
 
 ENV ASPNETCORE_URLS=http://+:5000
 ENV COMBINE_IS_IN_CONTAINER=1
