@@ -74,6 +74,20 @@ const IconHeaderPaddingTop = "2px"; // Vertical offset for a small icon as Heade
 const IconHeaderWidth = 20; // Width for a small icon as Header
 const SensesHeaderWidth = 15; // Width for # as Header
 
+enum ColumnId {
+  Definitions = "definitions",
+  Delete = "delete",
+  Domains = "domains",
+  Edit = "edit",
+  Flag = "flag",
+  Glosses = "glosses",
+  Note = "note",
+  PartOfSpeech = "partOfSpeech",
+  Pronunciations = "pronunciations",
+  Senses = "senses",
+  Vernacular = "vernacular",
+}
+
 // Constants for pagination state.
 const rowsPerPage = [10, 100];
 const initPaginationState: MRT_PaginationState = {
@@ -197,6 +211,7 @@ export default function ReviewEntriesTable(props: {
       enableHiding: false,
       Header: "",
       header: t("reviewEntries.columns.edit"),
+      id: ColumnId.Edit,
       size: IconColumnSize,
       visibleInShowHideMenu: false,
     }),
@@ -207,6 +222,7 @@ export default function ReviewEntriesTable(props: {
       enableColumnOrdering: false,
       enableHiding: false,
       header: t("reviewEntries.columns.vernacular"),
+      id: ColumnId.Vernacular,
       size: BaselineColumnSize - 40,
     }),
 
@@ -216,7 +232,7 @@ export default function ReviewEntriesTable(props: {
       filterFn: "equals",
       Header: <Typography>#</Typography>,
       header: t("reviewEntries.columns.sensesCount"),
-      id: "senses",
+      id: ColumnId.Senses,
       muiTableHeadCellProps: {
         sx: {
           "& .Mui-TableHeadCell-Content-Wrapper": {
@@ -233,7 +249,7 @@ export default function ReviewEntriesTable(props: {
       Cell: ({ row }: CellProps) => <Cell.Definitions word={row.original} />,
       filterFn: ff.filterFnDefinitions,
       header: t("reviewEntries.columns.definitions"),
-      id: "definitions",
+      id: ColumnId.Definitions,
       size: BaselineColumnSize + 20,
       sortingFn: sf.sortingFnDefinitions,
       visibleInShowHideMenu: definitionsEnabled,
@@ -244,7 +260,7 @@ export default function ReviewEntriesTable(props: {
       Cell: ({ row }: CellProps) => <Cell.Glosses word={row.original} />,
       filterFn: ff.filterFnGlosses,
       header: t("reviewEntries.columns.glosses"),
-      id: "glosses",
+      id: ColumnId.Glosses,
       sortingFn: sf.sortingFnGlosses,
     }),
 
@@ -261,7 +277,7 @@ export default function ReviewEntriesTable(props: {
       })),
       filterVariant: "select",
       header: t("reviewEntries.columns.partOfSpeech"),
-      id: "partOfSpeech",
+      id: ColumnId.PartOfSpeech,
       sortingFn: sf.sortingFnPartOfSpeech,
       visibleInShowHideMenu: grammaticalInfoEnabled,
     }),
@@ -271,7 +287,7 @@ export default function ReviewEntriesTable(props: {
       Cell: ({ row }: CellProps) => <Cell.Domains word={row.original} />,
       filterFn: ff.filterFnDomains,
       header: t("reviewEntries.columns.domains"),
-      id: "domains",
+      id: ColumnId.Domains,
       sortingFn: sf.sortingFnDomains,
     }),
 
@@ -294,7 +310,7 @@ export default function ReviewEntriesTable(props: {
         </>
       ),
       header: t("reviewEntries.columns.pronunciations"),
-      id: "pronunciations",
+      id: ColumnId.Pronunciations,
       muiTableHeadCellProps: {
         sx: {
           "& .Mui-TableHeadCell-Content-Wrapper": {
@@ -312,7 +328,7 @@ export default function ReviewEntriesTable(props: {
     columnHelper.accessor((w) => w.note.text || undefined, {
       Cell: ({ row }: CellProps) => <Cell.Note word={row.original} />,
       header: t("reviewEntries.columns.note"),
-      id: "note",
+      id: ColumnId.Note,
       size: BaselineColumnSize - 40,
     }),
 
@@ -327,6 +343,7 @@ export default function ReviewEntriesTable(props: {
         />
       ),
       header: t("reviewEntries.columns.flag"),
+      id: ColumnId.Flag,
       muiTableHeadCellProps: {
         sx: {
           "& .Mui-TableHeadCell-Content-Wrapper": {
@@ -349,6 +366,7 @@ export default function ReviewEntriesTable(props: {
       enableHiding: false,
       Header: "",
       header: t("reviewEntries.columns.delete"),
+      id: ColumnId.Delete,
       size: IconColumnSize,
       visibleInShowHideMenu: false,
     }),
@@ -394,8 +412,8 @@ export default function ReviewEntriesTable(props: {
     state: {
       columnOrder: columnOrder.filter(
         (col) =>
-          (col !== "definitions" || definitionsEnabled) &&
-          (col !== "partOfSpeech" || grammaticalInfoEnabled)
+          (col !== ColumnId.Definitions || definitionsEnabled) &&
+          (col !== ColumnId.PartOfSpeech || grammaticalInfoEnabled)
       ),
       columnVisibility,
       isLoading,
