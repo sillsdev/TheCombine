@@ -6,10 +6,12 @@ import {
 import { Typography } from "@mui/material";
 import {
   MaterialReactTable,
+  type MRT_ColumnOrderState,
   type MRT_Localization,
   type MRT_PaginationState,
   type MRT_Row,
   type MRT_RowVirtualizer,
+  type MRT_VisibilityState,
   createMRTColumnHelper,
   useMaterialReactTable,
 } from "material-react-table";
@@ -87,6 +89,10 @@ export default function ReviewEntriesTable(props: {
   const autoResetPageIndexRef = useRef(true);
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
 
+  const [columnOrder, setColumnOrder] = useState<MRT_ColumnOrderState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<MRT_VisibilityState>(
+    {}
+  );
   const [data, setData] = useState<Word[]>([]);
   const [enablePagination, setEnablePagination] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -357,13 +363,15 @@ export default function ReviewEntriesTable(props: {
       sx: { maxHeight: `calc(100vh - ${enablePagination ? 180 : 130}px)` },
     },
     muiTablePaperProps: { sx: { height: `calc(100vh - ${topBarHeight}px)` } },
+    onColumnOrderChange: setColumnOrder,
+    onColumnVisibilityChange: setColumnVisibility,
     onPaginationChange: (updater) => {
       setPagination(updater);
       scrollToTop();
     },
     rowVirtualizerInstanceRef,
     sortDescFirst: false,
-    state: { isLoading, pagination },
+    state: { columnOrder, columnVisibility, isLoading, pagination },
   });
 
   return <MaterialReactTable table={table} />;
