@@ -112,6 +112,7 @@ export default function ReviewEntriesTable(props: {
 
   const autoResetPageIndexRef = useRef(true);
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
+
   const [data, setData] = useState<Word[]>([]);
   const [enablePagination, setEnablePagination] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
