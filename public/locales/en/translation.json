@@ -361,13 +361,13 @@
       "replaceAllWith": "Replace with: {{ val }}",
       "findAndReplace": "Find & Replace",
       "findAndReplaceError": "Error processing: find ( {{ val1 }} ), replace ( {{  val2 }} )",
-      "apply": "apply"
+      "apply": "Apply"
     },
     "dialog": {
       "title": "Unsaved changes",
       "content": "Discard your changes to the character set?",
-      "yes": "yes",
-      "no": "no"
+      "yes": "Yes",
+      "no": "No"
     },
     "changes": {
       "noCharChanges": "No changes made to character inventory.",
@@ -431,12 +431,15 @@
     },
     "continueDialog": {
       "title": "Continue merging?",
-      "yes": "yes",
-      "no": "no"
+      "yes": "Yes",
+      "no": "No"
     },
     "undo": {
       "undo": "Undo Merge",
       "undoDialog": "Undo this merge?",
+      "deleted": "Deleted:",
+      "undoDelete": "Undo Deletion",
+      "undoDeleteDialog": "Undo this deletion?",
       "undoDisabled": "Undo unavailable"
     }
   },
