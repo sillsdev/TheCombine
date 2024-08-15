@@ -8,13 +8,13 @@
 #    secret accordingly.
 # The scripts are written in Python.
 
-###########################################################
+############################################################
 # IMPORTANT
 #
-# Do not add any architecture specific code or packages
-# in this Docker file so that it can be used on Intel/AMD
-# and ARM platforms.
-###########################################################
+# Supported Platforms:
+#   - Intel/AMD 64-bit
+#   - ARM 64-bit
+############################################################
 
 FROM sillsdev/aws-kubectl:0.3.0
 

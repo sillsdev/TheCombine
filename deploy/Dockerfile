@@ -1,7 +1,8 @@
 ############################################################
 # IMPORTANT
 #
-# This Docker file is only supported on Intel/AMD platforms.
+# Supported Platforms:
+#   - Intel/AMD 64-bit
 ############################################################
 
 FROM ubuntu:22.04

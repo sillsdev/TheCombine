@@ -1,10 +1,10 @@
-###########################################################
+############################################################
 # IMPORTANT
 #
-# Do not add any architecture specific code or packages
-# in this Docker file so that it can be used on Intel/AMD
-# and ARM platforms.
-###########################################################
+# Supported Platforms:
+#   - Intel/AMD 64-bit
+#   - ARM 64-bit
+############################################################
 
 # Docker multi-stage build
 FROM mcr.microsoft.com/dotnet/sdk:8.0.303-jammy AS builder
