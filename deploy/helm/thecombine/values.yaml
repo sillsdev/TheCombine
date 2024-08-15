@@ -19,6 +19,8 @@ global:
   # AWS S3 access
   awsS3Access: aws-s3-credentials
   awsS3Location: "thecombine.app"
+  # Telemetry credentials
+  honeycombSecretKey: "Override"
   # Combine variables
   adminUsername: "Override"
   adminPassword: "Override"
@@ -50,7 +52,7 @@ cert-proxy-client:
   enabled: false
 
 telemetry:
-  enabled: true
+  enabled: false
 
 certManager:
   enabled: false

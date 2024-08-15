@@ -101,11 +101,9 @@ profiles:
   dev: # Profile for local development machines
     charts:
       - thecombine
-      - telemetry
   desktop: # Profile for installing The Combine on Ubuntu Desktop (or derivative).
     charts:
       - thecombine
-      - telemetry
   nuc: # Profile for a NUC or a machine whose TLS certificate will be created by another
     # system and is downloaded from AWS S3
     # Container images must be stored in AWS ECR Public repositories
@@ -119,13 +117,11 @@ profiles:
     charts:
       - thecombine
       - create-admin-user
-      - telemetry
   prod: # Profile for the Production/Live server
     charts:
       - thecombine
       - create-admin-user
       - cert-proxy-server
-      - telemetry
 
 # Set of charts
 # The set of charts defines properties for each of the charts listed in the profiles above.
@@ -156,10 +152,6 @@ charts:
         env_var: COMBINE_SMTP_USERNAME
       - config_item: combineSmtpPassword
         env_var: COMBINE_SMTP_PASSWORD
-  telemetry:
-    namespace: thecombine
-    install_langs: false
-    secrets:
       - config_item: honeycombSecretKey
         env_var: HONEYCOMB_API_KEY
   create-admin-user:
