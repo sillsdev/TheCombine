@@ -64,7 +64,6 @@ export default function AnnouncementBanner(): ReactElement {
         id={AnnouncementBannerId.ButtonClose}
         onClick={closeBanner}
         size="large"
-        title={t(AnnouncementBannerTextId.ButtonClose)}
       >
         <Cancel />
       </IconButton>

@@ -36,30 +36,34 @@ describe("AnnouncementBanner", () => {
   it("doesn't load if no banner text", async () => {
     await renderAnnouncementBanner();
     expect(
-      screen.queryByTitle(AnnouncementBannerTextId.ButtonClose)
+      screen.queryByLabelText(AnnouncementBannerTextId.ButtonClose)
     ).toBeNull();
   });
 
   it("loads banner with text", async () => {
     await renderAnnouncementBanner(mockBannerText);
+    expect(
+      screen.queryByLabelText(AnnouncementBannerTextId.ButtonClose)
+    ).not.toBeNull();
     expect(screen.queryByText(mockBannerText)).not.toBeNull();
   });
 
-  it("has button to close banner", async () => {
+  it("closes when button is clicked", async () => {
     // Setup
     const agent = userEvent.setup();
     await renderAnnouncementBanner(mockBannerText);
+    expect(screen.queryByText(mockBannerText)).not.toBeNull();
 
-    // Find and click close button
-    const closeButton = await screen.findByTitle(
+    // Click close button
+    const closeButton = await screen.findByLabelText(
       AnnouncementBannerTextId.ButtonClose
     );
     await agent.click(closeButton);
 
     // Confirm closed
-    expect(screen.queryByText(mockBannerText)).toBeNull();
     expect(
-      screen.queryByTitle(AnnouncementBannerTextId.ButtonClose)
+      screen.queryByLabelText(AnnouncementBannerTextId.ButtonClose)
     ).toBeNull();
+    expect(screen.queryByText(mockBannerText)).toBeNull();
   });
 });
