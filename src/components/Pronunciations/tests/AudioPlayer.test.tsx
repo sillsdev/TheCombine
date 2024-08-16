@@ -3,14 +3,13 @@ import { Provider } from "react-redux";
 import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { defaultState } from "components/App/DefaultState";
 import AudioPlayer, {
   longPressDelay,
   playButtonId,
   playMenuId,
 } from "components/Pronunciations/AudioPlayer";
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
-import { type StoreState } from "rootRedux/types";
+import { defaultState, type StoreState } from "rootRedux/types";
 import { newPronunciation } from "types/word";
 
 // Mock out Menu to avoid issues with setting its anchor.
