@@ -55,7 +55,7 @@ describe("AnnouncementBanner", () => {
     expect(screen.queryByText(mockBannerText)).not.toBeNull();
 
     // Click close button
-    const closeButton = await screen.findByLabelText(
+    const closeButton = screen.getByLabelText(
       AnnouncementBannerTextId.ButtonClose
     );
     await agent.click(closeButton);
