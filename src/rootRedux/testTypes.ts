@@ -6,5 +6,5 @@ import { defaultState } from "rootRedux/types";
 /** Preloaded values for store when testing */
 export const persistedDefaultState: PreloadedState<RootState> = {
   ...defaultState,
-  _persist: { version: 1, rehydrated: false },
+  _persist: { rehydrated: false, version: 1 },
 };

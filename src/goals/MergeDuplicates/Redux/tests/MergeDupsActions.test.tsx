@@ -25,7 +25,7 @@ import {
 } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { goalDataMock } from "goals/MergeDuplicates/Redux/tests/MergeDupsDataMock";
 import { setupStore } from "rootRedux/store";
-import { defaultState } from "rootRedux/types";
+import { persistedDefaultState } from "rootRedux/testTypes";
 import { GoalType } from "types/goals";
 import { multiSenseWord, newFlag, newWord } from "types/word";
 
@@ -63,7 +63,7 @@ mockGoal.data = goalDataMock;
 mockGoal.steps = [{ words: [] }, { words: [] }];
 
 const preloadedState = {
-  ...defaultState,
+  ...persistedDefaultState,
   goalsState: {
     allGoalTypes: [],
     currentGoal: new MergeDups(),
@@ -76,7 +76,6 @@ const preloadedState = {
     tree: {} as MergeTree,
     mergeWords: [],
   },
-  _persist: { version: 1, rehydrated: false },
 };
 
 const vernA = "AAA";
