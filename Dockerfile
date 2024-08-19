@@ -1,3 +1,11 @@
+############################################################
+# IMPORTANT
+#
+# Supported Platforms:
+#   - Intel/AMD 64-bit
+#   - ARM 64-bit
+############################################################
+
 # User guide build environment
 FROM python:3.10.14-slim-bookworm AS user_guide_builder
 
