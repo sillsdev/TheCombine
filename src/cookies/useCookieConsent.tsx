@@ -27,9 +27,7 @@ export default function useCookieConsent(): void {
     run({
       categories: { analytics: {}, necessary: {} },
       cookie: { expiresAfterDays: 365, name: "cookie_consent" },
-      guiOptions: {
-        consentModal: { layout: "bar inline" },
-      },
+      guiOptions: { consentModal: { layout: "bar inline" } },
       language: {
         default: "i18n",
         translations: {
