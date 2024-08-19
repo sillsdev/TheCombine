@@ -25,14 +25,7 @@ export default function useCookieConsent(): void {
 
   useEffect(() => {
     run({
-      categories: {
-        analytics: {
-          /* Coming soon */
-        },
-        necessary: {
-          /* Use defaults */
-        },
-      },
+      categories: { analytics: {}, necessary: {} },
       cookie: {
         expiresAfterDays: 365,
         name: "cookie_consent",
