@@ -1,12 +1,9 @@
-# Dockerfile to build a Kubernetes Worker container for the Combine.  The
-# image shall contain a collection of scripts to perform the following functions:
-#  - backup The Combine database and backend data files
-#  - restore The Combine database and backend data files from a previous backup
-#  - monitor specified secrets for changes and push the updated secrets to AWS
-#    S3 storage
-#  - check the current TLS secret for updates in AWS S3 storage and update the
-#    secret accordingly.
-# The scripts are written in Python.
+############################################################
+# IMPORTANT
+#
+# Supported Platforms:
+#   - Intel/AMD 64-bit
+############################################################
 
 FROM ubuntu:22.04
 

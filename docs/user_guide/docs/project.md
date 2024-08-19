@@ -12,7 +12,7 @@ When creating a project, you have the option to start with an empty project or t
 
 If you have lexical data in a [LIFT](https://software.sil.org/lifttools) file (likely exported from The Combine,
 [WeSay](https://software.sil.org/wesay), [FLEx](https://software.sil.org/fieldworks), or
-[Lexique Pro](https://software.sil.org/lexiquepro)), you can click the BROWSE button next to "Upload existing data?" to
+[Lexique Pro](https://software.sil.org/lexiquepro)), you can click the Browse button next to "Upload existing data?" to
 import the data into your project.
 
 If you choose not to import data during project creation, you may still do so later (see [below](#import)).
@@ -196,19 +196,26 @@ In this settings tab, you can change the semantic domain language and manage cus
 The _semantic domains language_ controls the language in which semantic domain titles and descriptions are displayed in
 [Data Entry](./dataEntry.md).
 
-The _custom semantic domains_ supported at this time are the [established domains](https://semdom.org/) with `.0` added
-to the end of the id. For example, domain _4.2.6.2: Sports_ has two standard subdomains, _4.2.6.2.1: Football, Soccer_
-and _4.2.6.2.2: Basketball_. If another sport is dominant among the people group gathering their language, it can be
-added as domain _4.2.6.2.0_.
+At this time, The Combine only supports _custom semantic domains_ that extend the
+[established domains](https://semdom.org/). For each established domain, one custom subdomain can be created, which will
+have `.0` added to the end of the domain id. For example, domain _6.2.1.1: Growing Grain_ has three standard subdomains,
+for Rice, Wheat, and Maize. If another grain, such as Barley, is dominant among the people group gathering words, it can
+be added as domain _6.2.1.1.0_.
 
-For each custom domain, you can add a name, description, and questions to help with word collection in that domain.
+![Add Custom Domain](images/projectSettingsDomsCustomAdd.png){.center}
+
+For each custom domain, you can add a description and questions to help with word collection in that domain.
+
+![Edit Custom Domain](images/projectSettingsDomsCustomEdit.png){.center}
 
 !!! note "Note"
 
     Custom semantic domains are included in the project export and can be imported into FieldWorks. However, the
     questions are not included.
 
-Custom semantic domains will appear in the domain tree for the project, but will not be visible to other projects.
+Custom semantic domains will be available to all project users doing Data Entry.
+
+![See Custom Domain](images/projectSettingsDomsCustomSee.png){.center}
 
 !!! note "Note"
 
