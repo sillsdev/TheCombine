@@ -1,0 +1,50 @@
+Let’s see how to review all the words in your project on The Combine.
+Click the “Data Cleanup” button in the top bar, then select “Review Entries”.
+This tool allows you to filter and sort all your word entries.
+You can also edit them here, but we look at that in another video.
+Each row in the table has one entry with all its content.
+The first column has the vernacular form of the entries.
+Another column has the number of senses in the entry.
+Another column has the entry’s glosses in the project analysis languages.
+Note that the glosses from different senses are separated by a vertical line.
+Another column has the semantic domains from all of the entries senses, sorted numerically.
+Another column has the pronunciation audio recordings.
+You can click on a green triangle to play the audio.
+If the audio recording has a speaker selected, hover your cursor over the green triangle to see the speaker name.
+Another column is for any note attached to the entry.
+And another column shows if the entry was flagged (which is usually done in the Merge Duplicates tool).
+Hover your cursor over the flag icon to see any text that was included in the flag.
+Note that flags are only used within The Combine and will not export with your data.
+There are two other columns—for definitions and for part of speech—that will only be available if the project has imported data with that information.
+Other lexical info on imported data—including reversals, annotations, and morph types—are not viewable within The Combine.
+But don’t worry, that information won’t be lost when you move your data back to FieldWorks!
+If you want to change the order of the columns or hide any columns, click on the icon in the top corner with three vertical bars.
+Click on the toggle next to a column name to hide or show that column.
+Click-and-drag the two horizontal lines next to a toggle to change the order of the columns.
+Note that the Vernacular column cannot be hidden or moved. It will always be visible as the first column.
+And there are three buttons at the top of this menu, one to hide all columns, one to reset the order of the columns, and one to show all columns.
+In the bottom corner, you can change the number of rows to show per page—the options are 10 entries per page, 100 entries per page, or all entries on a single page.
+There are also buttons to go to the next page, the last page, the previous page, or the first page.
+At the top of each column are several controls.
+Click on the arrow icon to sort by that column.
+You can sort by vernacular, alphabetically or reverse alphabetically.
+You can sort by the number of senses, increasing or decreasing.
+You can sort by the gloss text alphabetically or reverse alphabetically.
+You can sort by lowest semantic domain number, increasing or decreasing.
+You can sort by number of audio recordings, increasing or decreasing.
+You can sort by note text, alphabetically or reverse alphabetically.
+You can sort by whether or not the entry is flagged, and the flagged entries are sorted by the text of the flag.
+The funnel icon at the top of each column can be used to add a filter.
+In the vernacular, glosses, note, and flag columns, type text into that column’s filter and only entries containing the typed text in that column will be shown.
+You can type a number into the filter of the number of senses column and entries with exactly that many senses will be shown.
+Likewise, a number filter in the pronunciations column will only show entries with exactly that many audio recordings.
+If you type a speaker name in the filter for the pronunciations column, then you can see all words with an audio recording by that speaker.
+The filter on the semantic domains column uses domain ids.
+Type “1.2” to show all entries that have a sense in domain 1.2.
+To include a domain and all its subdomains, add a period at the end of your filter.
+For example, the filter “2.5.” shows entries in domain 2.5 as well as domain 2.5.2, domain 2.5.1.1, domain 2.5.2, etc.
+Finally, in the Domains, Pronunciations, and Flag column, you can type a space for the filter to show all entries that have something, anything in that column.
+You can only sort by one column at a time, but you can have an active filter in as many columns as you want.
+I hope this video helps you review your lexical data in The Combine.
+In another video, we will talk about editing entries in this Review Entries tool.
+Have a wonderful day!
