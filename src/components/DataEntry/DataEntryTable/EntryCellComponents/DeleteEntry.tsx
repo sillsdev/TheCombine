@@ -13,7 +13,6 @@ interface DeleteEntryProps {
   // and deletion will happen when the button is pressed
   confirmId?: string;
   disabled?: boolean;
-  wordId?: string;
 }
 
 /**

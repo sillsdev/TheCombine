@@ -256,13 +256,13 @@
       "replaceAll": "Remplacer toute instance de : {{ val }}",
       "replaceAllWith": "Remplacer par : {{ val }}",
       "findAndReplace": "Rechercher et Remplacer",
-      "apply": "appliquer"
+      "apply": "Appliquer"
     },
     "dialog": {
       "title": "Modifications non sauvegardées",
       "content": "Supprimer les modifications apportées au jeu de caractères ?",
-      "yes": "oui",
-      "no": "non"
+      "yes": "Oui",
+      "no": "Non"
     },
     "changes": { "more": "plus" },
     "undo": { "undoDisabled": "Annuler indisponible" }
@@ -285,8 +285,8 @@
     "completed": { "number": "Nombre de fusions réalisées : " },
     "continueDialog": {
       "title": "Poursuivre la fusion ?",
-      "yes": "oui",
-      "no": "non"
+      "yes": "Oui",
+      "no": "Non"
     },
     "undo": {
       "undo": "Annuler la fusion",

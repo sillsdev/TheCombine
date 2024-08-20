@@ -1,6 +1,9 @@
 import RecordRTC from "recordrtc";
 
-import { getFileNameForWord } from "components/Pronunciations/utilities";
+import {
+  checkMicPermission,
+  getFileNameForWord,
+} from "components/Pronunciations/utilities";
 
 export default class Recorder {
   private toast: (textId: string) => void;
@@ -22,7 +25,7 @@ export default class Recorder {
    * If not, returns `undefined`. */
   getRecordingId(): string | undefined {
     return this.recordRTC?.getState() === "recording"
-      ? this.id ?? ""
+      ? (this.id ?? "")
       : undefined;
   }
 
@@ -63,14 +66,12 @@ export default class Recorder {
 
   private onError(err: Error): void {
     console.error(err);
-    navigator.permissions
-      .query({ name: "microphone" as PermissionName })
-      .then((result) => {
-        this.toast(
-          result.state === "granted"
-            ? "pronunciations.audioStreamError"
-            : "pronunciations.noMicAccess"
-        );
-      });
+    checkMicPermission().then((hasPermission: boolean) =>
+      this.toast(
+        hasPermission
+          ? "pronunciations.audioStreamError"
+          : "pronunciations.noMicAccess"
+      )
+    );
   }
 }
