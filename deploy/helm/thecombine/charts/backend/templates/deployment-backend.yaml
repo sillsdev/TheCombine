@@ -29,6 +29,17 @@ spec:
           image: {{ include "backend.containerImage" . }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           env:
+            - name: OTEL_SERVICE_NAME
+              value: "Otel-k8s-simple"
+            - name: OTEL_EXPORTER_OTLP_PROTOCOL
+              value: "http/protobuf"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "https://api.honeycomb.io"
+            - name: OTEL_EXPORTER_OTLP_HEADERS
+              valueFrom:
+                secretKeyRef:
+                  key: HONEYCOMB_API_KEY
+                  name: env-backend-secrets
             - name: COMBINE_CAPTCHA_REQUIRED
               valueFrom:
                 configMapKeyRef:
@@ -89,6 +100,7 @@ spec:
                 secretKeyRef:
                   key: COMBINE_SMTP_USERNAME
                   name: env-backend-secrets
+            
           ports:
             - containerPort: 5000
           resources:
