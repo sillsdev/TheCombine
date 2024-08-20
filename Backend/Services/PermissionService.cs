@@ -170,7 +170,7 @@ namespace BackendFramework.Services
         /// <summary> Creates a JWT token for the given user. </summary>
         public async Task<User?> MakeJwt(User user)
         {
-            const int hoursUntilExpires = 4;
+            const int hoursUntilExpires = 12;
             var tokenHandler = new JwtSecurityTokenHandler();
             var secretKey = Environment.GetEnvironmentVariable("COMBINE_JWT_SECRET_KEY")!;
             var key = Encoding.ASCII.GetBytes(secretKey);
