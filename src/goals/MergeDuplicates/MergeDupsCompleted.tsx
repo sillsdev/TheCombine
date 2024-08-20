@@ -27,7 +27,9 @@ export default function MergeDupsCompleted(): ReactElement {
         {t("mergeDups.title")}
       </Typography>
       {MergesCount(changes)}
-      {changes.merges?.map(MergeChange)}
+      {changes.merges?.map((m, i) => (
+        <MergeChange change={m} key={m.parentIds[0] ?? i} />
+      ))}
     </>
   );
 }
@@ -43,52 +45,56 @@ export function MergesCount(changes: MergesCompleted): ReactElement {
   );
 }
 
-function MergeChange(change: MergeUndoIds): ReactElement {
+export function MergeChange(props: { change: MergeUndoIds }): ReactElement {
+  const change = props.change;
+  const { t } = useTranslation();
   const handleIsUndoAllowed = (): Promise<boolean> =>
     getFrontierWords().then((words) => doWordsIncludeMerges(words, change));
+  const isDeletion = !change.parentIds.length;
 
   return (
-    <div key={change.parentIds[0] ?? "deleteOnly"}>
-      <Grid
-        container
-        style={{
-          flexWrap: "nowrap",
-          overflow: "auto",
+    <Grid container style={{ flexWrap: "nowrap", overflow: "auto" }}>
+      {isDeletion && <Typography>{t("mergeDups.undo.deleted")}</Typography>}
+      {change.childIds.map((id) => (
+        <WordPaper key={id} wordId={id} />
+      ))}
+      {!isDeletion && (
+        <>
+          <Grid style={{ margin: theme.spacing(1) }}>
+            <ArrowRightAlt
+              fontSize="large"
+              style={{
+                position: "relative",
+                left: "50%",
+                top: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
+            />
+          </Grid>
+          {change.parentIds.map((id) => (
+            <WordPaper key={id} wordId={id} />
+          ))}
+        </>
+      )}
+      <UndoButton
+        buttonIdEnabled={`merge-undo-${change.parentIds.join("-")}`}
+        buttonIdCancel="merge-undo-cancel"
+        buttonIdConfirm="merge-undo-confirm"
+        textIdDialog={
+          isDeletion
+            ? "mergeDups.undo.undoDeleteDialog"
+            : "mergeDups.undo.undoDialog"
+        }
+        textIdDisabled="mergeDups.undo.undoDisabled"
+        textIdEnabled={
+          isDeletion ? "mergeDups.undo.undoDelete" : "mergeDups.undo.undo"
+        }
+        isUndoAllowed={handleIsUndoAllowed}
+        undo={async () => {
+          await undoMerge(change);
         }}
-      >
-        {change.childIds.map((id) => (
-          <WordPaper key={id} wordId={id} />
-        ))}
-        <Grid key={"arrow"} style={{ margin: theme.spacing(1) }}>
-          <ArrowRightAlt
-            fontSize="large"
-            style={{
-              position: "relative",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
-          />
-        </Grid>
-        {change.parentIds.length ? (
-          change.parentIds.map((id) => <WordPaper key={id} wordId={id} />)
-        ) : (
-          <WordPaper key={"deleteOnly"} wordId={""} />
-        )}
-        <UndoButton
-          buttonIdEnabled={`merge-undo-${change.parentIds.join("-")}`}
-          buttonIdCancel="merge-undo-cancel"
-          buttonIdConfirm="merge-undo-confirm"
-          textIdDialog="mergeDups.undo.undoDialog"
-          textIdDisabled="mergeDups.undo.undoDisabled"
-          textIdEnabled="mergeDups.undo.undo"
-          isUndoAllowed={handleIsUndoAllowed}
-          undo={async () => {
-            await undoMerge(change);
-          }}
-        />
-      </Grid>
-    </div>
+      />
+    </Grid>
   );
 }
 

@@ -55,11 +55,15 @@ export function compareFlags(a: Flag, b: Flag): number {
 }
 
 /**
- * Returns the text of the first gloss of a sense.
+ * Returns the text of the first gloss of a sense, matching the lang tag if given.
  * In the case that the array of glosses is empty, returns an empty string.
  */
-export function firstGlossText(sense: Sense): string {
-  return sense.glosses[0]?.def ?? "";
+export function firstGlossText(sense: Sense, lang?: string): string {
+  return (
+    sense.glosses.find((g) => g.language === lang)?.def ??
+    sense.glosses[0]?.def ??
+    ""
+  );
 }
 
 /**

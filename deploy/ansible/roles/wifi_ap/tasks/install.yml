@@ -59,7 +59,7 @@
     line: 127.0.0.1 localhost {{ ansible_hostname }}
     owner: root
     group: root
-    mode: "0644"
+    mode: 0644
 
 - name: Redirect traffic for The Combine to the AP gateway
   lineinfile:

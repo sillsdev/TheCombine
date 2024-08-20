@@ -9,13 +9,8 @@ import { defaultState } from "components/App/DefaultState";
 import App from "components/App/component";
 import theme from "types/theme";
 
-jest.mock(
-  "@matt-block/react-recaptcha-v2",
-  () =>
-    function MockRecaptcha() {
-      return <div id="mockRecaptcha">Recaptcha</div>;
-    }
-);
+jest.mock("react-router-dom");
+
 jest.mock("components/AnnouncementBanner/AnnouncementBanner", () => "div");
 
 const createMockStore = configureMockStore([thunk]);

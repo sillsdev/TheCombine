@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { act } from "react";
 
 import MockBypassLoadableButton from "components/Buttons/LoadingDoneButton";
+import MockCaptcha from "components/Login/tests/MockCaptcha";
 import ResetRequest, {
   PasswordRequestIds,
 } from "components/PasswordReset/Request";
@@ -18,6 +19,7 @@ jest.mock("backend", () => ({
 jest.mock("components/Buttons", () => ({
   LoadingDoneButton: MockBypassLoadableButton,
 }));
+jest.mock("components/Login/Captcha", () => MockCaptcha);
 
 const mockResetPasswordRequest = jest.fn();
 
@@ -50,9 +52,7 @@ describe("ResetRequest", () => {
 
     // Agent
     const field = screen.getByTestId(PasswordRequestIds.FieldEmailOrUsername);
-    await act(async () => {
-      await agent.type(field, "a");
-    });
+    await agent.type(field, "a");
 
     // After
     expect(button).toBeEnabled();
@@ -72,12 +72,8 @@ describe("ResetRequest", () => {
 
     // Agent
     const field = screen.getByTestId(PasswordRequestIds.FieldEmailOrUsername);
-    await act(async () => {
-      await agent.type(field, "a");
-    });
-    await act(async () => {
-      await agent.click(screen.getByRole("button"));
-    });
+    await agent.type(field, "a");
+    await agent.click(screen.getByRole("button"));
 
     // After
     expect(
