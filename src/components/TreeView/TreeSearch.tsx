@@ -68,7 +68,7 @@ export default function TreeSearch(props: TreeSearchProps): ReactElement {
  * Note: doesn't act on strings with double/initial/final period (e.g.: .2.3.4, 1..3.4),
  * because a user may be changing a digit (e.g.: 1.0.3.4 -> 1..3.4 -> 1.2.3.4). */
 export function insertDecimalPoints(value: string): string {
-  if (/^\d(\.?\d)*$/.test(value)) {
+  if (/^\d(\.?\d)+$/.test(value)) {
     value = value.replace(/\./g, "").split("").join(".");
   }
 
