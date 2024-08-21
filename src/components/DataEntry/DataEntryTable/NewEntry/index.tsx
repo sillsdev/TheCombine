@@ -224,6 +224,10 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
   const handleCloseVernDialog = (id?: string): void => {
     if (id !== undefined) {
       setSelectedDup(id);
+    } else {
+      // User closed the dialog without choosing a duplicate entry or new entry.
+      // Highlight-select the typed vernacular for easy deletion.
+      vernInput.current?.setSelectionRange(0, vernInput.current.value.length);
     }
     setVernOpen(false);
   };
