@@ -6,6 +6,7 @@ interface IconButtonWithTooltipProps {
   disabled?: boolean;
   icon: ReactElement;
   text?: ReactNode;
+  /** `textId` will only be used if `text` is null or undefined. */
   textId?: string;
   size?: "large" | "medium" | "small";
   onClick?: MouseEventHandler<HTMLButtonElement>;
