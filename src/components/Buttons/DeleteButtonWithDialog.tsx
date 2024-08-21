@@ -8,6 +8,7 @@ interface DeleteButtonWithDialogProps {
   buttonId: string;
   buttonIdCancel?: string;
   buttonIdConfirm?: string;
+  buttonLabel?: string;
   delete: () => void | Promise<void>;
   disabled?: boolean;
   textId: string;
@@ -28,6 +29,7 @@ export default function DeleteButtonWithDialog(
     <>
       <IconButtonWithTooltip
         buttonId={props.buttonId}
+        buttonLabel={props.buttonLabel ?? "Delete"}
         icon={<Delete />}
         onClick={props.disabled ? undefined : () => setOpen(true)}
         textId={props.tooltipTextId || props.textId}

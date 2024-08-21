@@ -19,6 +19,8 @@ interface ButtonConfirmationProps {
   onConfirm: () => void | Promise<void>;
   buttonIdClose?: string;
   buttonIdConfirm?: string;
+  buttonLabelClose?: string;
+  buttonLabelConfirm?: string;
 }
 
 /**
@@ -52,16 +54,18 @@ export default function ButtonConfirmation(
       </DialogContent>
       <DialogActions>
         <Button
-          onClick={props.onClose}
-          variant="outlined"
+          aria-label={props.buttonLabelClose}
           color="primary"
           data-testid={props.buttonIdClose}
           id={props.buttonIdClose}
+          onClick={props.onClose}
+          variant="outlined"
         >
           {t("buttons.cancel")}
         </Button>
         <LoadingButton
           buttonProps={{
+            "aria-label": props.buttonLabelConfirm,
             "data-testid": props.buttonIdConfirm,
             id: props.buttonIdConfirm,
             onClick: onConfirm,

@@ -6,6 +6,7 @@ import { EditTextDialog } from "components/Dialogs";
 
 interface NoteButtonProps {
   buttonId?: string;
+  buttonLabel?: string;
   disabled?: boolean;
   noteText: string;
   updateNote?: (newText: string) => void | Promise<void>;
@@ -18,7 +19,8 @@ export default function NoteButton(props: NoteButtonProps): ReactElement {
   return (
     <>
       <IconButtonWithTooltip
-        buttonId={props.buttonId ?? "entry-note-button"}
+        buttonId={props.buttonId}
+        buttonLabel={props.buttonLabel ?? "Note"}
         disabled={props.disabled}
         icon={
           props.noteText ? (
