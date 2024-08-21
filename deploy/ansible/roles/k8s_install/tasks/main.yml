@@ -3,42 +3,65 @@
   apt:
     name: "{{ k8s_required_pkgs }}"
 
-# configure kubernetes user
+# Install k3s Kubernetes engine
 - name: Install Kubernetes Engine
   include_tasks:
-    file: "{{ k8s_engine }}.yml"
-  when: k8s_engine != "none"
+    file: k3s.yml
+  when: not install_airgap_images
 
-- name: Create keyring directory if necessary
+# Install from airgap images
+- name: Install Kubernetes from Airgap Images
+  include_tasks:
+    file: k3s_airgap.yml
+  when: install_airgap_images
+
+- name: Get home directory for {{ k8s_user }}
+  shell: >
+    getent passwd {{ k8s_user }} | awk -F: '{ print $6 }'
+  register: k8s_user_home
+  changed_when: false
+
+- name: Get user group id for {{ k8s_user }}
+  shell: >
+    getent passwd {{ k8s_user }} | awk -F: '{ print $4 }'
+  register: k8s_user_group_id
+  changed_when: false
+
+- name: Create .kube directories
   file:
-    path: /etc/apt/keyrings
+    path: "{{ item.home }}/.kube"
     state: directory
-    owner: root
-    group: root
-    mode: "0755"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: 0700
+  loop:
+    - home: "{{ k8s_user_home.stdout }}"
+      owner: "{{ k8s_user }}"
+      group: "{{ k8s_user_group_id.stdout }}"
+    - home: /root
+      owner: root
+      group: root
 
-- name: Download the Kubernetes public signing key
-  shell:
-    cmd: >
-      curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key
-      | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-    creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+- name: Copy /etc/rancher/k3s/k3s.yaml to .kube/config
+  shell: |
+    cp /etc/rancher/k3s/k3s.yaml {{ item.home }}/.kube/config
+    chown {{ item.owner }}:{{ item.group }} {{ item.home }}/.kube/config
+    chmod 600 {{ item.home }}/.kube/config
+  loop:
+    - home: "{{ k8s_user_home.stdout }}"
+      owner: "{{ k8s_user }}"
+      group: "{{ k8s_user_group_id.stdout }}"
+    - home: /root
+      owner: root
+      group: root
 
-- name: Set signing key permissions
-  file:
-    name: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-    mode: 0644
-    state: file
+- name: List contexts
+  command: kubectl --kubeconfig=/etc/rancher/k3s/k3s.yaml config get-contexts
+  register: k3s_contexts
 
-- name: Add repository
-  apt_repository:
-    repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /"
-    filename: kubernetes
-    mode: 0644
-
-- name: Install kubectl
-  apt:
-    name: kubectl
+- name: Change context name from 'default'
+  command: kubectl --kubeconfig=/etc/rancher/k3s/k3s.yaml config rename-context default {{ kubecfgdir }}
+  when: k3s_contexts.stdout is regex("^\*? +default.*")
 
 - name: Get home directory for {{ k8s_user }}
   shell: >

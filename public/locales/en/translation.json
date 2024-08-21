@@ -30,7 +30,7 @@
     "domain": "Domain",
     "domainTitle": "Domain: {{ val1 }} ({{ val2 }})",
     "glosses": "Glosses",
-    "pressEnter": "Press enter to save word",
+    "pressEnter": "Press Enter to save word",
     "vernacular": "Vernacular"
   },
   "appBar": {
@@ -265,7 +265,8 @@
       "label": "Custom Semantic Domains",
       "add": "Add a custom subdomain",
       "parent": "Parent domain: ",
-      "name": "Subdomain name: ",
+      "subdomainName": "Subdomain name: ",
+      "name": "Name: ",
       "description": "Description: ",
       "questions": "Questions: ",
       "deleteConfirm": "Are you sure you want to delete this custom domain?",
@@ -362,13 +363,13 @@
       "replaceAllWith": "Replace with: {{ val }}",
       "findAndReplace": "Find & Replace",
       "findAndReplaceError": "Error processing: find ( {{ val1 }} ), replace ( {{  val2 }} )",
-      "apply": "apply"
+      "apply": "Apply"
     },
     "dialog": {
       "title": "Unsaved changes",
       "content": "Discard your changes to the character set?",
-      "yes": "yes",
-      "no": "no"
+      "yes": "Yes",
+      "no": "No"
     },
     "changes": {
       "noCharChanges": "No changes made to character inventory.",
@@ -432,12 +433,15 @@
     },
     "continueDialog": {
       "title": "Continue merging?",
-      "yes": "yes",
-      "no": "no"
+      "yes": "Yes",
+      "no": "No"
     },
     "undo": {
       "undo": "Undo Merge",
       "undoDialog": "Undo this merge?",
+      "deleted": "Deleted:",
+      "undoDelete": "Undo Deletion",
+      "undoDeleteDialog": "Undo this deletion?",
       "undoDisabled": "Undo unavailable"
     }
   },
@@ -474,6 +478,7 @@
     "upload": "Upload"
   },
   "pronunciations": {
+    "enableMicTooltip": "Enable microphone access to record.",
     "recordTooltip": "Press and hold to record.",
     "playTooltip": "Click to play.",
     "deleteTooltip": "Shift click to delete.",
@@ -482,8 +487,10 @@
     "speakerAdd": "Right click to add a speaker.",
     "speakerChange": "Right click to change speaker.",
     "speakerSelect": "Select speaker of this audio recording",
-    "noMicAccess": "Recording error: Could not access a microphone.",
-    "deleteRecording": "Delete Recording"
+    "recordingError": "Recording error",
+    "deleteRecording": "Delete Recording",
+    "audioStreamError": "Error getting audio stream!",
+    "noMicAccess": "No microphone access. Audio recording disabled."
   },
   "statistics": {
     "title": "Data Statistics: {{ val }}",

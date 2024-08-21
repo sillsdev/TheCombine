@@ -7,6 +7,8 @@ import { EditTextDialog } from "components/Dialogs";
 interface NoteButtonProps {
   buttonId?: string;
   disabled?: boolean;
+  /** If `noteText` is empty and `updateNote` defined,
+   * the button will have default add-note hover text. */
   noteText: string;
   updateNote?: (newText: string) => void | Promise<void>;
 }
@@ -34,8 +36,8 @@ export default function NoteButton(props: NoteButtonProps): ReactElement {
         onClick={props.updateNote ? () => setNoteOpen(true) : undefined}
         side="top"
         size="small"
-        text={props.noteText}
-        textId="addWords.addNote"
+        text={props.noteText || undefined}
+        textId={props.updateNote ? "addWords.addNote" : undefined}
       />
       <EditTextDialog
         open={noteOpen}

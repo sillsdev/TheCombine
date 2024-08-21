@@ -29,7 +29,7 @@
     "domain": "Domínio",
     "domainTitle": "Domínio: {{ val1 }} ({{ val2 }})",
     "glosses": "Glosas",
-    "pressEnter": "Pressione enter para salvar a palavra",
+    "pressEnter": "Pressione Enter para salvar a palavra",
     "vernacular": "Vernáculo"
   },
   "appBar": {
@@ -246,13 +246,13 @@
       "replaceAll": "Substituir todas as ocorrências de: {{ val }}",
       "replaceAllWith": "Substituir por: {{ val }}",
       "findAndReplace": "Localizar & Substituir",
-      "apply": "aplicar"
+      "apply": "Aplicar"
     },
     "dialog": {
       "title": "Alterações não salvas",
       "content": "Descartar alterações feitas no conjunto de caracteres?",
-      "yes": "sim",
-      "no": "não"
+      "yes": "Sim",
+      "no": "Não"
     },
     "changes": { "more": "mais" },
     "undo": { "undoDisabled": "Desfazer indisponível" }
@@ -270,8 +270,8 @@
     "completed": { "number": "Número de fusões concluídas: " },
     "continueDialog": {
       "title": "Continuar a mesclagem?",
-      "yes": "sim",
-      "no": "não"
+      "yes": "Sim",
+      "no": "Não"
     },
     "undo": {
       "undo": "Desfazer Mesclar",

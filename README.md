@@ -58,6 +58,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    7. [Add or Update Dictionary Files](#add-or-update-dictionary-files)
    8. [Cleanup Local Repository](#cleanup-local-repository)
    9. [Generate Installer Script for The Combine](#generate-installer-script-for-the-combine-linux-only)
+   10. [Generate Tutorial Video Subtitles](#generate-tutorial-video-subtitles)
 3. [Setup Local Kubernetes Cluster](#setup-local-kubernetes-cluster)
    1. [Install Rancher Desktop](#install-rancher-desktop)
    2. [Install Docker Desktop](#install-docker-desktop)
@@ -531,12 +532,27 @@ cd installer
 ./make-combine-installer.sh combine-release-number
 ```
 
-where `combine-release-number` is the Combine release to be installed, e.g. `v1.2.0`.
+where `combine-release-number` is the Combine release to be installed, e.g. `v2.1.0`.
+
+Options:
+
+- `--net-install` - build an installer that will download the required images at installation time. The default is to
+  package the images in the installation script.
 
 To update the PDF copy of the installer README.md file, run the following from the `installer` directory:
 
 ```console
 pandoc --pdf-engine=weasyprint README.md -o README.pdf
+```
+
+## Generate Tutorial Video Subtitles
+
+Tutorial video transcripts are housed in `docs/tutorial_subtitles`, together with timestamps aligning transcripts with
+the corresponding videos and any transcript translations downloaded from Crowdin. To generate subtitle files (and
+optionally attach them to a video file), run from within a Python virtual environment:
+
+```bash
+python scripts/subtitle_tutorial_video.py -s <subtitles_subfolder_name> [-i <input_video_path> -o <output_video_path] [-v]
 ```
 
 ## Setup Local Kubernetes Cluster
@@ -636,7 +652,7 @@ environment. (See the [Python](#python) section to create the virtual environmen
 Install the required charts by running:
 
 ```bash
-python deploy/scripts/setup_cluster.py
+python deploy/scripts/setup_cluster.py --type development
 ```
 
 `deploy/scripts/setup_cluster.py` assumes that the `kubectl` configuration file is setup to manage the desired
@@ -1151,8 +1167,9 @@ The process for configuring and deploying _TheCombine_ for production targets is
 - [JS](https://www.w3schools.com/js/default.asp)
 - [TS](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html)
 - [Our style guide](docs/style_guide/ts_style_guide.md)
-- [React](https://reactjs.org/)
-- [React Hooks](https://reactjs.org/docs/hooks-intro.html)
+- [React](https://react.dev/learn)
+- [React Hooks](https://react.dev/reference/react/hooks)
+- [MUI](https://mui.com/material-ui/getting-started/) (styled/themed components)
 - [Redux concepts](https://redux.js.org/tutorials/fundamentals/part-2-concepts-data-flow)
 - [Redux tutorials](https://redux.js.org/tutorials/typescript-quick-start)
 - [React-i18next](https://react.i18next.com/) (text localization)

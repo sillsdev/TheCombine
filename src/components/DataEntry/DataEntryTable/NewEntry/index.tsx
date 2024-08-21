@@ -206,24 +206,28 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
     }
   };
 
-  const handleEnter = async (checkGloss: boolean): Promise<void> => {
+  const handleGlossEnter = async (): Promise<void> => {
     // The user can never submit a new entry without a vernacular
     if (newVern) {
-      // The user can conditionally submit a new entry without a gloss
-      if (newGloss || !checkGloss) {
-        await addOrUpdateWord();
-        focus(FocusTarget.Vernacular);
-      } else {
-        focus(FocusTarget.Gloss);
-      }
-    } else {
-      focus(FocusTarget.Vernacular);
+      await addOrUpdateWord();
+    }
+    focus(FocusTarget.Vernacular);
+  };
+
+  /** Clear the duplicate selection if user returns to the vernacular field. */
+  const handleOnVernFocus = (): void => {
+    if (selectedDup) {
+      setSelectedDup();
     }
   };
 
   const handleCloseVernDialog = (id?: string): void => {
     if (id !== undefined) {
       setSelectedDup(id);
+    } else {
+      // User closed the dialog without choosing a duplicate entry or new entry.
+      // Highlight-select the typed vernacular for easy deletion.
+      vernInput.current?.setSelectionRange(0, vernInput.current.value.length);
     }
     setVernOpen(false);
   };
@@ -260,10 +264,12 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
                 setVernOpen(true);
               }
             }}
+            onFocus={handleOnVernFocus}
             suggestedVerns={suggestedVerns}
-            // To prevent unintentional no-gloss submissions:
-            // If enter pressed from the vern field, check whether gloss is empty
-            handleEnter={() => handleEnter(true)}
+            // To prevent unintentional no-gloss or wrong-gloss submissions
+            // and to simplify interactions with Autocomplete and with the dialogs:
+            // if Enter is pressed from the vern field, move focus to gloss field.
+            handleEnter={() => focus(FocusTarget.Gloss)}
             vernacularLang={vernacularLang}
             textFieldId={NewEntryId.TextFieldVern}
             onUpdate={() => conditionalFocus(FocusTarget.Vernacular)}
@@ -290,9 +296,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
           gloss={newGloss}
           glossInput={glossInput}
           updateGlossField={setNewGloss}
-          // To allow intentional no-gloss submissions:
-          // If enter pressed from the gloss field, don't check whether gloss is empty
-          handleEnter={() => handleEnter(false)}
+          handleEnter={() => handleGlossEnter()}
           analysisLang={analysisLang}
           textFieldId={NewEntryId.TextFieldGloss}
           onUpdate={() => conditionalFocus(FocusTarget.Gloss)}
@@ -332,7 +336,7 @@ function EnterGrid(): ReactElement {
   const { t } = useTranslation();
   return (
     <Grid item xs={12} style={{ paddingLeft: theme.spacing(2) }}>
-      <Typography variant="caption">{t("addWords.pressEnter")}</Typography>
+      <Typography variant="body2">{t("addWords.pressEnter")}</Typography>
     </Grid>
   );
 }
