@@ -1009,6 +1009,14 @@ export default function DataEntryTable(
     [state.recentWords, updateWordInBackend]
   );
 
+  const isNewEntryInProgress =
+    state.newAudio.length ||
+    state.newGloss.trim() ||
+    state.newNote.trim() ||
+    state.newVern.trim();
+  const highlightExitButton =
+    state.recentWords.length > 0 && !isNewEntryInProgress;
+
   return (
     <form onSubmit={(e?: FormEvent<HTMLFormElement>) => e?.preventDefault()}>
       <input type="submit" style={{ display: "none" }} />
@@ -1114,7 +1122,7 @@ export default function DataEntryTable(
             id={exitButtonId}
             type="submit"
             variant="contained"
-            color={state.newVern.trim() ? "primary" : "secondary"}
+            color={highlightExitButton ? "primary" : "secondary"}
             style={{ marginTop: theme.spacing(2) }}
             endIcon={<ExitToApp />}
             tabIndex={-1}
