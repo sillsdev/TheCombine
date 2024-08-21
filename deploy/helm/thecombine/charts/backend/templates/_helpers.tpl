@@ -10,3 +10,8 @@
     {{- printf "%s:%s" .Values.imageName .Values.global.imageTag }}
   {{- end }}
 {{- end }}
+
+{{/* Build Honeycomb team header for OTEL_EXPORTER_OTLP_HEADERS */}}
+{{- define "backend.honeycombTeamHeader" -}}
+  {{- printf "x-honeycomb-team=%s" .Values.global.honeycombSecretKey }}
+{{- end}}
