@@ -245,7 +245,11 @@ describe("DataEntryTable", () => {
 
   describe("updateEntryGloss", () => {
     it("throws error when entry doesn't have sense with specified guid", () => {
-      const entry: WordAccess = { word: newWord(), senseGuid: "gibberish" };
+      const entry: WordAccess = {
+        isNew: true,
+        senseGuid: "gibberish",
+        word: newWord(),
+      };
       expect(() => updateEntryGloss(entry, "def", "semDomId", "en")).toThrow();
     });
 
@@ -253,7 +257,11 @@ describe("DataEntryTable", () => {
       const senseIndex = 1;
       const sense = mockMultiWord.senses[senseIndex];
       sense.semanticDomains = [mockSemDom];
-      const entry: WordAccess = { word: mockMultiWord, senseGuid: sense.guid };
+      const entry: WordAccess = {
+        isNew: false,
+        senseGuid: sense.guid,
+        word: mockMultiWord,
+      };
       const def = "newGlossDef";
 
       const expectedGloss: Gloss = { ...sense.glosses[0], def };
@@ -271,7 +279,11 @@ describe("DataEntryTable", () => {
       const targetGloss = newGloss("target language", "tl");
       sense.glosses = [...sense.glosses, targetGloss];
       sense.semanticDomains = [mockSemDom];
-      const entry: WordAccess = { word: mockMultiWord, senseGuid: sense.guid };
+      const entry: WordAccess = {
+        isNew: false,
+        senseGuid: sense.guid,
+        word: mockMultiWord,
+      };
       const def = "newGlossDef";
 
       const expectedGloss: Gloss = { ...targetGloss, def };
@@ -291,7 +303,7 @@ describe("DataEntryTable", () => {
       const sense = word.senses[0];
       const otherDomain: SemanticDomain = { ...mockSemDom, id: "otherId" };
       sense.semanticDomains = [otherDomain, mockSemDom];
-      const entry: WordAccess = { word, senseGuid: sense.guid };
+      const entry: WordAccess = { isNew: false, senseGuid: sense.guid, word };
       const def = "newGlossDef";
 
       const oldSense: Sense = { ...sense, semanticDomains: [otherDomain] };
