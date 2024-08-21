@@ -120,6 +120,17 @@ describe("wordUtilities", () => {
       sense.glosses[0] = newGloss(text);
       expect(firstGlossText(sense)).toEqual(text);
     });
+
+    it("matches language, if lang specified and present", () => {
+      const sense = newSense();
+      const lang = "gg";
+      const defFirst = "Not this one.";
+      const defInLang = "This one!";
+      expect(firstGlossText(sense)).toEqual("");
+      sense.glosses.push(newGloss(defFirst, "en"), newGloss(defInLang, lang));
+      expect(firstGlossText(sense, lang)).toEqual(defInLang);
+      expect(firstGlossText(sense, "other")).toEqual(defFirst);
+    });
   });
 
   describe("getAnalysisLangsFromWords", () => {

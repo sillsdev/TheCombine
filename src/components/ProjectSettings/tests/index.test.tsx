@@ -128,9 +128,7 @@ describe("ProjectSettings", () => {
     const tabs = Object.values(ProjectSettingsTab);
     expect(screen.queryAllByRole("tab")).toHaveLength(tabs.length);
     for (const tab of tabs) {
-      await act(async () => {
-        await agent.click(screen.getByTestId(tab));
-      });
+      await agent.click(screen.getByTestId(tab));
       isPanelVisible(tab);
     }
   });
@@ -145,9 +143,7 @@ describe("ProjectSettings", () => {
         const tabs = whichTabs(perm, hasSchedule);
         expect(screen.queryAllByRole("tab")).toHaveLength(tabs.length);
         for (const tab of tabs) {
-          await act(async () => {
-            await agent.click(screen.getByTestId(tab));
-          });
+          await agent.click(screen.getByTestId(tab));
           whichSettings(perm, hasSchedule, tab).forEach((s) =>
             screen.getByTestId(s)
           );
@@ -166,9 +162,7 @@ describe("ProjectSettings", () => {
         const tabs = whichTabs(perm, hasSchedule);
         expect(screen.queryAllByRole("tab")).toHaveLength(tabs.length);
         for (const tab of tabs) {
-          await act(async () => {
-            await agent.click(screen.getByTestId(tab));
-          });
+          await agent.click(screen.getByTestId(tab));
           whichSettings(perm, hasSchedule, tab).forEach((s) =>
             screen.getByTestId(s)
           );
