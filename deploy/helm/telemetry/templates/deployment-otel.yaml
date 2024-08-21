@@ -29,21 +29,32 @@ spec:
             - "env:COLLECTOR_CONFIG_OVERRIDE"
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           env:
-            - name: HONEYCOMB_API_KEY
+            - name: OTEL_SERVICE_NAME
+              value: "Otel-k8s-telemetry-nocollector"
+            - name: OTEL_EXPORTER_OTLP_PROTOCOL
+              value: "http/protobuf"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "https://api.honeycomb.io"
+            - name: OTEL_EXPORTER_OTLP_HEADERS
               valueFrom:
                 secretKeyRef:
-                  key: HONEYCOMB_API_KEY
+                  key: HONEYCOMB_HEADER
                   name: secrets-otel
+            # - name: HONEYCOMB_API_KEY
+            #   valueFrom:
+            #     secretKeyRef:
+            #       key: HONEYCOMB_API_KEY
+            #       name: secrets-otel
             - name: COLLECTOR_CONFIG_OVERRIDE
               valueFrom:
                 configMapKeyRef:
                   key: COLLECTOR_CONFIG_OVERRIDE
                   name: configmap-otel
-            - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              valueFrom:
-                configMapKeyRef:
-                  key: OTEL_EXPORTER_OTLP_ENDPOINT
-                  name: configmap-otel
+            # - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            #   valueFrom:
+            #     configMapKeyRef:
+            #       key: OTEL_EXPORTER_OTLP_ENDPOINT
+            #       name: configmap-otel
                 
           ports:
             - containerPort: 4318

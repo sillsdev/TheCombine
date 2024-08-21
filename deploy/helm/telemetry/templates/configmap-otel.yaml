@@ -9,23 +9,26 @@ data:
       otlp:
         protocols:
           grpc:
-            endpoint: {{ .Values.collector.receivers.endpoint1 }}
+            endpoint: 0.0.0.0:4317
           http:
-            endpoint: {{ .Values.collector.receivers.endpoint2 }}
+            endpoint: 0.0.0.0:4318
 
     processors:
       batch:
 
     exporters:
       otlp:
-        endpoint: {{ .Values.collector.exporters.endpoint }}
+        endpoint: "https://api.honeycomb.io"
         headers:
-          "x-honeycomb-team": {{ .Values.global.honeycombSecretKey }}
+          "x-honeycomb-team": {{ .Values.global.honeycombSecretKey | quote }}
 
     service:
       pipelines:
         traces:
-          receivers: {{ .Values.collector.service.receivers }}
-          processors: {{ .Values.collector.service.processors }}
-          exporters: {{ .Values.collector.service.exporters }}
-  OTEL_EXPORTER_OTLP_ENDPOINT: {{ .Values.global.localEndpoint }}
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [otlp]
+  OTEL_SERVICE_NAME: my-service-name
+  OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+  OTEL_EXPORTER_OTLP_ENDPOINT: "https://api.honeycomb.io"
+
