@@ -224,6 +224,10 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
   const handleCloseVernDialog = (id?: string): void => {
     if (id !== undefined) {
       setSelectedDup(id);
+    } else {
+      // User closed the dialog without choosing a duplicate entry or new entry.
+      // Highlight-select the typed vernacular for easy deletion.
+      vernInput.current?.setSelectionRange(0, vernInput.current.value.length);
     }
     setVernOpen(false);
   };
@@ -332,7 +336,7 @@ function EnterGrid(): ReactElement {
   const { t } = useTranslation();
   return (
     <Grid item xs={12} style={{ paddingLeft: theme.spacing(2) }}>
-      <Typography variant="caption">{t("addWords.pressEnter")}</Typography>
+      <Typography variant="body2">{t("addWords.pressEnter")}</Typography>
     </Grid>
   );
 }
