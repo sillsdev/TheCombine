@@ -35,6 +35,8 @@ beforeEach(() => {
 describe("AnnouncementBanner", () => {
   it("doesn't load if no banner text", async () => {
     await renderAnnouncementBanner();
+
+    // Confirm no banner by the absence of its close button
     expect(
       screen.queryByLabelText(AnnouncementBannerTextId.ButtonClose)
     ).toBeNull();
@@ -42,6 +44,8 @@ describe("AnnouncementBanner", () => {
 
   it("loads banner with text", async () => {
     await renderAnnouncementBanner(mockBannerText);
+
+    // Confirm open banner by the presence of its close button and text
     expect(
       screen.queryByLabelText(AnnouncementBannerTextId.ButtonClose)
     ).not.toBeNull();
