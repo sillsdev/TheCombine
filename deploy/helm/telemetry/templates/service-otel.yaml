@@ -16,5 +16,7 @@ spec:
       targetPort: 4318
   selector:
     combine-component: telemetry
-status:
-  loadBalancer: {}
+  # type: LoadBalancer
+# status:
+#   loadBalancer: {}
+
