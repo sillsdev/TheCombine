@@ -26,7 +26,7 @@ import {
   Word,
 } from "api/models";
 import * as backend from "backend";
-import { getUserId } from "backend/localStorage";
+import { getCurrentUser, getUserId } from "backend/localStorage";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
 import { filterWordsWithSenses } from "components/DataEntry/utilities";
@@ -69,8 +69,9 @@ interface SenseSwitch {
 }
 
 export interface WordAccess {
-  word: Word;
+  isNew: boolean;
   senseGuid: string;
+  word: Word;
 }
 
 enum DefunctStatus {
@@ -270,7 +271,11 @@ export default function DataEntryTable(
   const newVernInput = useRef<HTMLInputElement>(null);
   const spellChecker = useContext(SpellCheckerContext);
   useEffect(() => {
-    spellChecker.updateLang(analysisLang.bcp47);
+    spellChecker.updateLang(
+      getCurrentUser()?.glossSuggestion === AutocompleteSetting.Off
+        ? undefined
+        : analysisLang.bcp47
+    );
   }, [analysisLang.bcp47, spellChecker]);
   const { t } = useTranslation();
 
@@ -335,7 +340,7 @@ export default function DataEntryTable(
         const recentWords = [...prevState.recentWords];
         word.senses.forEach((s) => {
           if (s.semanticDomains.some((dom) => dom.id === domId)) {
-            recentWords.push({ word, senseGuid: s.guid });
+            recentWords.push({ isNew: false, senseGuid: s.guid, word });
           }
         });
         return { ...prevState, recentWords };
@@ -358,6 +363,7 @@ export default function DataEntryTable(
       if (replaceIndex > -1) {
         deleteCount = 1;
         insertIndex = replaceIndex;
+        wordAccess.isNew = recentWords[replaceIndex].isNew;
       }
 
       if (insertIndex > -1 && insertIndex < recentWords.length) {
@@ -392,7 +398,7 @@ export default function DataEntryTable(
   const replaceInDisplay = (oldId: string, word: Word): void => {
     setState((prevState) => {
       const recentWords = prevState.recentWords.map((a) =>
-        a.word.id === oldId ? { word, senseGuid: a.senseGuid } : a
+        a.word.id === oldId ? { ...a, word } : a
       );
       return { ...prevState, isFetchingFrontier: true, recentWords };
     });
@@ -738,7 +744,10 @@ export default function DataEntryTable(
       if (wordId !== word.id) {
         word = await backend.getWord(wordId);
       }
-      addToDisplay({ word, senseGuid: word.senses[0].guid }, insertIndex);
+      addToDisplay(
+        { isNew: true, senseGuid: word.senses[0].guid, word },
+        insertIndex
+      );
     },
     [addAudiosToBackend, addDuplicateWord]
   );
@@ -754,7 +763,7 @@ export default function DataEntryTable(
       const wordId = await addAudiosToBackend(word.id, audio);
       word = await backend.getWord(wordId);
     }
-    addToDisplay({ word, senseGuid });
+    addToDisplay({ isNew: false, senseGuid, word });
   };
 
   /** Reset the entry table. If there is an un-submitted word then submit it. */
@@ -880,7 +889,7 @@ export default function DataEntryTable(
   /** Retract a recent entry. */
   const undoRecentEntry = useCallback(
     async (eIndex: number): Promise<void> => {
-      const { word, senseGuid } = state.recentWords[eIndex];
+      const { isNew, senseGuid, word } = state.recentWords[eIndex];
       const sIndex = word.senses.findIndex((s) => s.guid === senseGuid);
       if (sIndex === -1) {
         throw new Error("Entry does not have specified sense.");
@@ -890,8 +899,9 @@ export default function DataEntryTable(
       const senses = [...word.senses];
       const oldSense = senses[sIndex];
       const oldDoms = oldSense.semanticDomains;
-      if (oldDoms.length > 1) {
-        // If there is more than one semantic domain in this sense, only remove the domain.
+      if (oldDoms.length > 1 || !isNew) {
+        // If there is more than one domain in this sense or the entry isn't new,
+        // only remove the domain.
         const doms = oldDoms.filter((d) => d.id !== props.semanticDomain.id);
         const newSense: Sense = { ...oldSense, semanticDomains: doms };
         senses.splice(sIndex, 1, newSense);
@@ -901,7 +911,7 @@ export default function DataEntryTable(
         senses.splice(sIndex, 1);
         await updateWordInBackend({ ...word, senses });
       } else {
-        // Since this is the only sense, delete the word.
+        // Since this is the only sense in a new word, delete the word.
         await backend.deleteFrontierWord(word.id);
       }
     },
@@ -1002,6 +1012,14 @@ export default function DataEntryTable(
     },
     [state.recentWords, updateWordInBackend]
   );
+
+  const isNewEntryInProgress =
+    state.newAudio.length ||
+    state.newGloss.trim() ||
+    state.newNote.trim() ||
+    state.newVern.trim();
+  const highlightExitButton =
+    state.recentWords.length > 0 && !isNewEntryInProgress;
 
   return (
     <form onSubmit={(e?: FormEvent<HTMLFormElement>) => e?.preventDefault()}>
@@ -1108,7 +1126,7 @@ export default function DataEntryTable(
             id={exitButtonId}
             type="submit"
             variant="contained"
-            color={state.newVern.trim() ? "primary" : "secondary"}
+            color={highlightExitButton ? "primary" : "secondary"}
             style={{ marginTop: theme.spacing(2) }}
             endIcon={<ExitToApp />}
             tabIndex={-1}
