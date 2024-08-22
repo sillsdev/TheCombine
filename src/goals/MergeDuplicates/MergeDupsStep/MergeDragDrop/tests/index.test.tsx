@@ -4,7 +4,6 @@ import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { GramCatGroup, type Sense } from "api/models";
-import { defaultState } from "components/App/DefaultState";
 import MergeDragDrop from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop";
 import DragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DragSense";
 import DropWord from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DropWord";
@@ -17,6 +16,7 @@ import {
   type MergeTreeState,
   defaultState as mergeState,
 } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
+import { defaultState } from "rootRedux/types";
 import { newSemanticDomain } from "types/semanticDomain";
 import {
   newDefinition,
