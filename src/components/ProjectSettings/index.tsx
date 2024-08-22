@@ -158,7 +158,7 @@ export default function ProjectSettingsComponent(): ReactElement {
       </Hidden>
 
       <TabPanel value={tab} index={ProjectSettingsTab.Basic}>
-        <Stack spacing={4}>
+        <Stack>
           {/* Project name */}
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
             <BaseSettings
@@ -203,7 +203,7 @@ export default function ProjectSettingsComponent(): ReactElement {
       </TabPanel>
 
       <TabPanel value={tab} index={ProjectSettingsTab.Languages}>
-        <Stack spacing={4}>
+        <Stack>
           {/*Project languages*/}
           <BaseSettings
             icon={<Language data-testid={Setting.Languages} />}
@@ -222,7 +222,7 @@ export default function ProjectSettingsComponent(): ReactElement {
       </TabPanel>
 
       <TabPanel value={tab} index={ProjectSettingsTab.Users}>
-        <Stack spacing={4}>
+        <Stack>
           {/* See current users in project */}
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
             <BaseSettings
@@ -253,7 +253,7 @@ export default function ProjectSettingsComponent(): ReactElement {
       </TabPanel>
 
       <TabPanel value={tab} index={ProjectSettingsTab.ImportExport}>
-        <Stack spacing={4}>
+        <Stack>
           {/* Import Lift file */}
           {permissions.includes(Permission.Import) && (
             <BaseSettings
@@ -283,7 +283,7 @@ export default function ProjectSettingsComponent(): ReactElement {
       </TabPanel>
 
       <TabPanel value={tab} index={ProjectSettingsTab.Schedule}>
-        <Stack spacing={4}>
+        <Stack>
           {/* Workshop schedule */}
           <BaseSettings
             icon={<CalendarMonth data-testid={Setting.Schedule} />}
@@ -301,7 +301,7 @@ export default function ProjectSettingsComponent(): ReactElement {
       </TabPanel>
 
       <TabPanel value={tab} index={ProjectSettingsTab.Domains}>
-        <Stack spacing={4}>
+        <Stack>
           {/* Semantic domains language */}
           <BaseSettings
             icon={<Language data-testid={Setting.DomainsLanguage} />}

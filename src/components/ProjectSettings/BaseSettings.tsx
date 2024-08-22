@@ -25,7 +25,11 @@ export default function BaseSettings(props: BaseSettingsProps): ReactElement {
     <Accordion
       defaultExpanded
       disableGutters
-      sx={{ maxWidth: props.maxWidth || "700px" }}
+      sx={{
+        background: (theme) => theme.palette.background.default,
+        border: (theme) => `1px solid ${theme.palette.divider}`,
+        maxWidth: props.maxWidth || "700px",
+      }}
     >
       <AccordionSummary expandIcon={<ExpandMore />}>
         <Grid container spacing={2} style={{ flexWrap: "nowrap" }}>
