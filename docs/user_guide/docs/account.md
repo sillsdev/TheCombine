@@ -6,7 +6,7 @@ How to sign up, log in, and edit your account.
 
 ## Sign Up
 
-To create a new account, click the [SIGN UP](../signup) button on the Login page.
+To create a new account, click the [Sign Up](../signup) button on the Login page.
 
 !!! note "Note"
 

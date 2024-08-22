@@ -30,7 +30,7 @@
     "domain": "Domain",
     "domainTitle": "Domain: {{ val1 }} ({{ val2 }})",
     "glosses": "Glosses",
-    "pressEnter": "Press enter to save word",
+    "pressEnter": "Press Enter to save word",
     "vernacular": "Vernacular"
   },
   "appBar": {
@@ -121,7 +121,8 @@
     "banners": {
       "title": "Banners",
       "loginBanner": "Login Banner",
-      "announcementBanner": "Announcement Banner"
+      "announcementBanner": "Announcement Banner",
+      "bannerCloseButton": "Close banner"
     }
   },
   "userSettings": {
@@ -138,6 +139,8 @@
       "title": "Analytics cookies"
     },
     "contact": "Contact info",
+    "glossSuggestion": "Gloss spelling suggestions",
+    "glossSuggestionHint": "In Data Entry, give spelling suggestions for the Gloss being typed.",
     "phone": "Phone number",
     "uiLanguage": "User-interface language",
     "uiLanguageDefault": "(Default to browser language)",
@@ -275,7 +278,8 @@
       "label": "Custom Semantic Domains",
       "add": "Add a custom subdomain",
       "parent": "Parent domain: ",
-      "name": "Subdomain name: ",
+      "subdomainName": "Subdomain name: ",
+      "name": "Name: ",
       "description": "Description: ",
       "questions": "Questions: ",
       "deleteConfirm": "Are you sure you want to delete this custom domain?",
@@ -372,13 +376,13 @@
       "replaceAllWith": "Replace with: {{ val }}",
       "findAndReplace": "Find & Replace",
       "findAndReplaceError": "Error processing: find ( {{ val1 }} ), replace ( {{  val2 }} )",
-      "apply": "apply"
+      "apply": "Apply"
     },
     "dialog": {
       "title": "Unsaved changes",
       "content": "Discard your changes to the character set?",
-      "yes": "yes",
-      "no": "no"
+      "yes": "Yes",
+      "no": "No"
     },
     "changes": {
       "noCharChanges": "No changes made to character inventory.",
@@ -442,8 +446,8 @@
     },
     "continueDialog": {
       "title": "Continue merging?",
-      "yes": "yes",
-      "no": "no"
+      "yes": "Yes",
+      "no": "No"
     },
     "undo": {
       "undo": "Undo Merge",

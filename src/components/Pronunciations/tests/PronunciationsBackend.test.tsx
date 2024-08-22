@@ -3,10 +3,10 @@ import { Provider } from "react-redux";
 import { ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { defaultState } from "components/App/DefaultState";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
+import { defaultState } from "rootRedux/types";
 import theme from "types/theme";
 import { newPronunciation } from "types/word";
 

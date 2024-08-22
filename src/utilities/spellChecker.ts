@@ -23,6 +23,8 @@ export default class SpellChecker {
   async updateLang(lang?: string): Promise<void> {
     if (!lang) {
       this.bcp47 = undefined;
+      this.dictLoaded = {};
+      this.spell = undefined;
       return;
     }
     const bcp47 = lang.split("-")[0] as Bcp47Code;
@@ -34,11 +36,16 @@ export default class SpellChecker {
     this.dictLoader = new DictionaryLoader(bcp47);
     this.dictLoaded = {};
     await this.dictLoader.loadDictionary().then((dic) => {
-      if (dic !== undefined) {
+      if (dic) {
         this.spell = nspell("SET UTF-8", dic);
         this.addToDictLoaded(dic);
         if (process.env.NODE_ENV === "development") {
           console.log(`Loaded spell-checker: ${bcp47}`);
+        }
+      } else {
+        this.spell = undefined;
+        if (process.env.NODE_ENV === "development") {
+          console.log(`No dictionary available: ${bcp47}`);
         }
       }
     });

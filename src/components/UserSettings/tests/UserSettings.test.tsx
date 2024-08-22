@@ -84,8 +84,10 @@ describe("UserSettings", () => {
 
     const emailField = screen.getByTestId(UserSettingsIds.FieldEmail);
     expect(emailField).toHaveValue(user.email);
+
     const nameField = screen.getByTestId(UserSettingsIds.FieldName);
     expect(nameField).toHaveValue(user.name);
+
     const phoneField = screen.getByTestId(UserSettingsIds.FieldPhone);
     expect(phoneField).toHaveValue(user.phone);
   });
@@ -99,13 +101,9 @@ describe("UserSettings", () => {
     const typeAndCheckEnabled = async (id: UserSettingsIds): Promise<void> => {
       expect(submitButton).toBeDisabled();
       const field = screen.getByTestId(id);
-      await act(async () => {
-        await agent.type(field, "?");
-      });
+      await agent.type(field, "?");
       expect(submitButton).toBeEnabled();
-      await act(async () => {
-        await agent.type(field, "{backspace}");
-      });
+      await agent.type(field, "{backspace}");
     };
 
     await typeAndCheckEnabled(UserSettingsIds.FieldEmail);
@@ -115,20 +113,16 @@ describe("UserSettings", () => {
 
   it("disables button when change is saved", async () => {
     const agent = userEvent.setup();
-    const stringToType = "?";
+    const stringToType = "a"; // Valid final character of an email address.
     const user = mockUser();
     await renderUserSettingsGetUser();
     const submitButton = screen.getByTestId(UserSettingsIds.ButtonSubmit);
 
     const typeAndCheckEnabled = async (id: UserSettingsIds): Promise<void> => {
       expect(submitButton).toBeDisabled();
-      await act(async () => {
-        await agent.type(screen.getByTestId(id), stringToType);
-      });
+      await agent.type(screen.getByTestId(id), stringToType);
       expect(submitButton).toBeEnabled();
-      await act(async () => {
-        await agent.click(submitButton);
-      });
+      await agent.click(submitButton);
       expect(submitButton).toBeDisabled();
     };
 
@@ -149,13 +143,10 @@ describe("UserSettings", () => {
     const agent = userEvent.setup();
     await renderUserSettings();
 
-    await act(async () => {
-      await agent.type(screen.getByTestId(UserSettingsIds.FieldName), "a");
-    });
+    await agent.type(screen.getByTestId(UserSettingsIds.FieldName), "a");
     expect(mockUpdateUser).toHaveBeenCalledTimes(0);
-    await act(async () => {
-      await agent.click(screen.getByTestId(UserSettingsIds.ButtonSubmit));
-    });
+
+    await agent.click(screen.getByTestId(UserSettingsIds.ButtonSubmit));
     expect(mockUpdateUser).toHaveBeenCalledTimes(1);
   });
 
@@ -163,13 +154,10 @@ describe("UserSettings", () => {
     const agent = userEvent.setup();
     await renderUserSettings(mockUser());
 
-    await act(async () => {
-      await agent.type(screen.getByTestId(UserSettingsIds.FieldEmail), "a");
-    });
+    await agent.type(screen.getByTestId(UserSettingsIds.FieldEmail), "a");
     mockIsEmailTaken.mockResolvedValueOnce(true);
-    await act(async () => {
-      await agent.click(screen.getByTestId(UserSettingsIds.ButtonSubmit));
-    });
+
+    await agent.click(screen.getByTestId(UserSettingsIds.ButtonSubmit));
     expect(mockUpdateUser).toHaveBeenCalledTimes(0);
   });
 });
