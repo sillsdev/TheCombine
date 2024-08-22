@@ -9,7 +9,6 @@ import {
 import configureMockStore from "redux-mock-store";
 
 import { Gloss, SemanticDomain, Sense, Word } from "api/models";
-import { defaultState } from "components/App/DefaultState";
 import DataEntryTable, {
   WordAccess,
   addSemanticDomainToSense,
@@ -20,12 +19,14 @@ import DataEntryTable, {
   updateEntryGloss,
 } from "components/DataEntry/DataEntryTable";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
+import { defaultState } from "rootRedux/types";
 import { newProject } from "types/project";
 import {
   newSemanticDomain,
   newSemanticDomainTreeNode,
   semDomFromTreeNode,
 } from "types/semanticDomain";
+import { newUser } from "types/user";
 import {
   multiSenseWord,
   newGloss,
@@ -53,6 +54,7 @@ jest.mock("backend", () => ({
   updateWord: (...args: any[]) => mockUpdateWord(...args),
 }));
 jest.mock("backend/localStorage", () => ({
+  getCurrentUser: () => mockUser,
   getUserId: () => mockUserId,
 }));
 jest.mock("components/DataEntry/DataEntryTable/NewEntry/SenseDialog");
@@ -78,6 +80,7 @@ const mockMultiWord = multiSenseWord("vern", ["gloss1", "gloss2"]);
 const mockSemDomId = "semDomId";
 const mockTreeNode = newSemanticDomainTreeNode(mockSemDomId);
 const mockSemDom = semDomFromTreeNode(mockTreeNode);
+const mockUser = newUser();
 const mockUserId = "mockUserId";
 const mockStore = configureMockStore()(defaultState);
 
@@ -245,7 +248,11 @@ describe("DataEntryTable", () => {
 
   describe("updateEntryGloss", () => {
     it("throws error when entry doesn't have sense with specified guid", () => {
-      const entry: WordAccess = { word: newWord(), senseGuid: "gibberish" };
+      const entry: WordAccess = {
+        isNew: true,
+        senseGuid: "gibberish",
+        word: newWord(),
+      };
       expect(() => updateEntryGloss(entry, "def", "semDomId", "en")).toThrow();
     });
 
@@ -253,7 +260,11 @@ describe("DataEntryTable", () => {
       const senseIndex = 1;
       const sense = mockMultiWord.senses[senseIndex];
       sense.semanticDomains = [mockSemDom];
-      const entry: WordAccess = { word: mockMultiWord, senseGuid: sense.guid };
+      const entry: WordAccess = {
+        isNew: false,
+        senseGuid: sense.guid,
+        word: mockMultiWord,
+      };
       const def = "newGlossDef";
 
       const expectedGloss: Gloss = { ...sense.glosses[0], def };
@@ -271,7 +282,11 @@ describe("DataEntryTable", () => {
       const targetGloss = newGloss("target language", "tl");
       sense.glosses = [...sense.glosses, targetGloss];
       sense.semanticDomains = [mockSemDom];
-      const entry: WordAccess = { word: mockMultiWord, senseGuid: sense.guid };
+      const entry: WordAccess = {
+        isNew: false,
+        senseGuid: sense.guid,
+        word: mockMultiWord,
+      };
       const def = "newGlossDef";
 
       const expectedGloss: Gloss = { ...targetGloss, def };
@@ -291,7 +306,7 @@ describe("DataEntryTable", () => {
       const sense = word.senses[0];
       const otherDomain: SemanticDomain = { ...mockSemDom, id: "otherId" };
       sense.semanticDomains = [otherDomain, mockSemDom];
-      const entry: WordAccess = { word, senseGuid: sense.guid };
+      const entry: WordAccess = { isNew: false, senseGuid: sense.guid, word };
       const def = "newGlossDef";
 
       const oldSense: Sense = { ...sense, semanticDomains: [otherDomain] };
