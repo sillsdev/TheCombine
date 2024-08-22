@@ -30,7 +30,7 @@
     "domain": "Domain",
     "domainTitle": "Domain: {{ val1 }} ({{ val2 }})",
     "glosses": "Glosses",
-    "pressEnter": "Press enter to save word",
+    "pressEnter": "Press Enter to save word",
     "vernacular": "Vernacular"
   },
   "appBar": {
@@ -121,11 +121,14 @@
     "banners": {
       "title": "Banners",
       "loginBanner": "Login Banner",
-      "announcementBanner": "Announcement Banner"
+      "announcementBanner": "Announcement Banner",
+      "bannerCloseButton": "Close banner"
     }
   },
   "userSettings": {
     "contact": "Contact info",
+    "glossSuggestion": "Gloss spelling suggestions",
+    "glossSuggestionHint": "In Data Entry, give spelling suggestions for the Gloss being typed.",
     "phone": "Phone number",
     "uiLanguage": "User-interface language",
     "uiLanguageDefault": "(Default to browser language)",

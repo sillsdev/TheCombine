@@ -336,7 +336,7 @@ function EnterGrid(): ReactElement {
   const { t } = useTranslation();
   return (
     <Grid item xs={12} style={{ paddingLeft: theme.spacing(2) }}>
-      <Typography variant="caption">{t("addWords.pressEnter")}</Typography>
+      <Typography variant="body2">{t("addWords.pressEnter")}</Typography>
     </Grid>
   );
 }

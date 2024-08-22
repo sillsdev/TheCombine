@@ -1,7 +1,4 @@
-import { type PreloadedState } from "redux";
-
 import { type Project, type Speaker } from "api/models";
-import { defaultState } from "components/App/DefaultState";
 import {
   asyncRefreshProjectUsers,
   asyncSetNewCurrentProject,
@@ -9,7 +6,8 @@ import {
   clearCurrentProject,
 } from "components/Project/ProjectActions";
 import { defaultState as currentProjectState } from "components/Project/ProjectReduxTypes";
-import { type RootState, setupStore } from "rootRedux/store";
+import { setupStore } from "rootRedux/store";
+import { persistedDefaultState } from "rootRedux/testTypes";
 import { newProject } from "types/project";
 import { newUser } from "types/user";
 
@@ -25,12 +23,6 @@ const mockGetAllProjectUsers = jest.fn();
 const mockGetAllSemDomNames = jest.fn();
 const mockUpdateProject = jest.fn();
 const mockProjId = "project-id";
-
-// Preloaded values for store when testing
-const persistedDefaultState: PreloadedState<RootState> = {
-  ...defaultState,
-  _persist: { version: 1, rehydrated: false },
-};
 
 beforeEach(() => {
   jest.resetAllMocks();
