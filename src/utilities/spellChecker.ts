@@ -23,6 +23,8 @@ export default class SpellChecker {
   async updateLang(lang?: string): Promise<void> {
     if (!lang) {
       this.bcp47 = undefined;
+      this.dictLoaded = {};
+      this.spell = undefined;
       return;
     }
     const bcp47 = lang.split("-")[0] as Bcp47Code;

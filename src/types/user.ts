@@ -1,4 +1,4 @@
-import { User } from "api/models";
+import { AutocompleteSetting, User } from "api/models";
 
 export function newUser(name = "", username = "", password = ""): User {
   return {
@@ -12,6 +12,7 @@ export function newUser(name = "", username = "", password = ""): User {
     phone: "",
     projectRoles: {},
     workedProjects: {},
+    glossSuggestion: AutocompleteSetting.On,
     token: "",
     isAdmin: false,
   };

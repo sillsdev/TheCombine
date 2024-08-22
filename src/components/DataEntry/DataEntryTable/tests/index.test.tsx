@@ -26,6 +26,7 @@ import {
   newSemanticDomainTreeNode,
   semDomFromTreeNode,
 } from "types/semanticDomain";
+import { newUser } from "types/user";
 import {
   multiSenseWord,
   newGloss,
@@ -53,6 +54,7 @@ jest.mock("backend", () => ({
   updateWord: (...args: any[]) => mockUpdateWord(...args),
 }));
 jest.mock("backend/localStorage", () => ({
+  getCurrentUser: () => mockUser,
   getUserId: () => mockUserId,
 }));
 jest.mock("components/DataEntry/DataEntryTable/NewEntry/SenseDialog");
@@ -78,6 +80,7 @@ const mockMultiWord = multiSenseWord("vern", ["gloss1", "gloss2"]);
 const mockSemDomId = "semDomId";
 const mockTreeNode = newSemanticDomainTreeNode(mockSemDomId);
 const mockSemDom = semDomFromTreeNode(mockTreeNode);
+const mockUser = newUser();
 const mockUserId = "mockUserId";
 const mockStore = configureMockStore()(defaultState);
 

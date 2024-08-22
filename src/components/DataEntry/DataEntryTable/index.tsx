@@ -26,7 +26,7 @@ import {
   Word,
 } from "api/models";
 import * as backend from "backend";
-import { getUserId } from "backend/localStorage";
+import { getCurrentUser, getUserId } from "backend/localStorage";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
 import { filterWordsWithSenses } from "components/DataEntry/utilities";
@@ -271,7 +271,11 @@ export default function DataEntryTable(
   const newVernInput = useRef<HTMLInputElement>(null);
   const spellChecker = useContext(SpellCheckerContext);
   useEffect(() => {
-    spellChecker.updateLang(analysisLang.bcp47);
+    spellChecker.updateLang(
+      getCurrentUser()?.glossSuggestion === AutocompleteSetting.Off
+        ? undefined
+        : analysisLang.bcp47
+    );
   }, [analysisLang.bcp47, spellChecker]);
   const { t } = useTranslation();
 
