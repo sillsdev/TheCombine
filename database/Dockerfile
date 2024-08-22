@@ -1,4 +1,11 @@
-FROM mongo:7.0.11-jammy
+############################################################
+# IMPORTANT
+#
+# Supported Platforms:
+#   - Intel/AMD 64-bit
+#   - ARM 64-bit
+############################################################
+FROM mongo:7.0.12-jammy
 
 WORKDIR /
 

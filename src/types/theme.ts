@@ -52,7 +52,7 @@ const baseTheme = createTheme({
   },
   palette,
   spacing: 8,
-  typography: { fontFamily },
+  typography: { button: { textTransform: "none" }, fontFamily },
 });
 
 // Can have a number of additional options passed in; here, sticks with defaults

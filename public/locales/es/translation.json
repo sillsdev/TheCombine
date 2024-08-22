@@ -137,10 +137,11 @@
     "project": "Proyecto:",
     "tab": {
       "basic": "Configuración básica",
+      "domains": "Dominios semánticos",
       "export": "Exportar",
       "importExport": "Importar/Exportar",
       "languages": "Idiomas",
-      "schedule": "Programar",
+      "schedule": "Calendario",
       "users": "Usuarios"
     },
     "language": {
@@ -323,13 +324,13 @@
       "replaceAllWith": "Reemplazar con: {{ val }}",
       "findAndReplace": "Buscar y Reemplazar",
       "findAndReplaceError": "Error al procesar: encontrar ( {{ val1 }} ), reemplazar ( {{  val2 }})",
-      "apply": "aplicar"
+      "apply": "Aplicar"
     },
     "dialog": {
       "title": "Cambios no guardados",
       "content": "¿Descartar sus cambios en el conjunto de caracteres?",
-      "yes": "si",
-      "no": "no"
+      "yes": "Si",
+      "no": "No"
     },
     "changes": {
       "noCharChanges": "No se han realizado cambios en el inventario de caracteres.",
@@ -391,8 +392,8 @@
     "completed": { "number": "Número de combinaciones realizadas: " },
     "continueDialog": {
       "title": "¿Continuar con la combinación?",
-      "yes": "si",
-      "no": "no"
+      "yes": "Si",
+      "no": "No"
     },
     "undo": {
       "undo": "Deshacer la combinación",

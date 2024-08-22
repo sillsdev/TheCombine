@@ -26,7 +26,7 @@ import {
   Word,
 } from "api/models";
 import * as backend from "backend";
-import { getUserId } from "backend/localStorage";
+import { getCurrentUser, getUserId } from "backend/localStorage";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
 import { filterWordsWithSenses } from "components/DataEntry/utilities";
@@ -69,8 +69,9 @@ interface SenseSwitch {
 }
 
 export interface WordAccess {
-  word: Word;
+  isNew: boolean;
   senseGuid: string;
+  word: Word;
 }
 
 enum DefunctStatus {
@@ -150,7 +151,8 @@ export function makeSemDomCurrent(semDom: SemanticDomain): SemanticDomain {
 export function updateEntryGloss(
   entry: WordAccess,
   def: string,
-  semDomId: string
+  semDomId: string,
+  analysisLang: string
 ): Word {
   const sense = entry.word.senses.find((s) => s.guid === entry.senseGuid);
   if (!sense) {
@@ -158,7 +160,15 @@ export function updateEntryGloss(
   }
 
   const newSense: Sense = { ...sense };
-  newSense.glosses = [{ ...sense.glosses[0], def }];
+  let glossIndex = sense.glosses.findIndex((g) => g.language === analysisLang);
+  if (glossIndex === -1) {
+    // It there's no gloss in the current analysis language, then it's the first gloss
+    // that was shown in the RecentEntry that's now being updated.
+    glossIndex = 0;
+  }
+  newSense.glosses = sense.glosses.map((g, i) =>
+    i === glossIndex ? { ...g, def } : { ...g }
+  );
   const oldSense: Sense = { ...sense };
 
   // Move only the current semantic domain to the new sense.
@@ -261,7 +271,11 @@ export default function DataEntryTable(
   const newVernInput = useRef<HTMLInputElement>(null);
   const spellChecker = useContext(SpellCheckerContext);
   useEffect(() => {
-    spellChecker.updateLang(analysisLang.bcp47);
+    spellChecker.updateLang(
+      getCurrentUser()?.glossSuggestion === AutocompleteSetting.Off
+        ? undefined
+        : analysisLang.bcp47
+    );
   }, [analysisLang.bcp47, spellChecker]);
   const { t } = useTranslation();
 
@@ -326,7 +340,7 @@ export default function DataEntryTable(
         const recentWords = [...prevState.recentWords];
         word.senses.forEach((s) => {
           if (s.semanticDomains.some((dom) => dom.id === domId)) {
-            recentWords.push({ word, senseGuid: s.guid });
+            recentWords.push({ isNew: false, senseGuid: s.guid, word });
           }
         });
         return { ...prevState, recentWords };
@@ -349,6 +363,7 @@ export default function DataEntryTable(
       if (replaceIndex > -1) {
         deleteCount = 1;
         insertIndex = replaceIndex;
+        wordAccess.isNew = recentWords[replaceIndex].isNew;
       }
 
       if (insertIndex > -1 && insertIndex < recentWords.length) {
@@ -383,7 +398,7 @@ export default function DataEntryTable(
   const replaceInDisplay = (oldId: string, word: Word): void => {
     setState((prevState) => {
       const recentWords = prevState.recentWords.map((a) =>
-        a.word.id === oldId ? { word, senseGuid: a.senseGuid } : a
+        a.word.id === oldId ? { ...a, word } : a
       );
       return { ...prevState, isFetchingFrontier: true, recentWords };
     });
@@ -476,7 +491,9 @@ export default function DataEntryTable(
         : undefined;
       return {
         ...prev,
-        newGloss: selectedSense ? firstGlossText(selectedSense) : "",
+        newGloss: selectedSense
+          ? firstGlossText(selectedSense, analysisLang.bcp47)
+          : "",
         selectedSenseGuid: guid,
       };
     });
@@ -727,7 +744,10 @@ export default function DataEntryTable(
       if (wordId !== word.id) {
         word = await backend.getWord(wordId);
       }
-      addToDisplay({ word, senseGuid: word.senses[0].guid }, insertIndex);
+      addToDisplay(
+        { isNew: true, senseGuid: word.senses[0].guid, word },
+        insertIndex
+      );
     },
     [addAudiosToBackend, addDuplicateWord]
   );
@@ -743,7 +763,7 @@ export default function DataEntryTable(
       const wordId = await addAudiosToBackend(word.id, audio);
       word = await backend.getWord(wordId);
     }
-    addToDisplay({ word, senseGuid });
+    addToDisplay({ isNew: false, senseGuid, word });
   };
 
   /** Reset the entry table. If there is an un-submitted word then submit it. */
@@ -774,14 +794,15 @@ export default function DataEntryTable(
   };
 
   /** Update the selected duplicate with the new entry.
-   * (Only considers the first gloss, `.glosses[0]`, of each sense.) */
+   * (Considers the gloss in the current analysis language.) */
   const updateWordWithNewEntry = async (): Promise<void> => {
     const oldWord = state.selectedDup;
-    if (!oldWord || !oldWord.id) {
+    if (!oldWord?.id) {
       throw new Error("You are trying to update a nonexistent word");
     }
 
     const gloss = state.newGloss.trim();
+    const lang = analysisLang.bcp47;
     const semDom = makeSemDomCurrent(props.semanticDomain);
 
     // If a dup sense is selected, update it.
@@ -796,9 +817,9 @@ export default function DataEntryTable(
         oldSense.glosses.push(newGloss());
       }
 
-      // If selected sense already has this domain, add audio without updating first.
+      // If sense already has this gloss and domain, add audio without updating first.
       if (
-        oldSense.glosses[0].def === gloss &&
+        oldSense.glosses.some((g) => g.def === gloss && g.language === lang) &&
         oldSense.semanticDomains.some((d) => d.id === semDom.id)
       ) {
         enqueueSnackbar(
@@ -810,11 +831,15 @@ export default function DataEntryTable(
         return;
       }
 
-      // Only update the selected sense if the old gloss is blank or matches the new gloss.
-      if (!oldSense.glosses[0].def.trim()) {
-        oldSense.glosses[0] = newGloss(gloss, analysisLang.bcp47);
+      // Only update the sense if the old gloss is missing or matches the new gloss.
+      let glossIndex = oldSense.glosses.findIndex((g) => g.language === lang);
+      if (glossIndex === -1) {
+        oldSense.glosses.push(newGloss(gloss, lang));
+        glossIndex = oldSense.glosses.length - 1;
+      } else if (!oldSense.glosses[glossIndex].def.trim()) {
+        oldSense.glosses[glossIndex].def = gloss;
       }
-      if (oldSense.glosses[0].def === gloss) {
+      if (oldSense.glosses[glossIndex].def === gloss) {
         await updateWordBackAndFront(
           addSemanticDomainToSense(semDom, oldWord, state.selectedSenseGuid),
           state.selectedSenseGuid,
@@ -826,7 +851,7 @@ export default function DataEntryTable(
 
     // Otherwise, if new gloss matches a sense, update that sense.
     for (const sense of oldWord.senses) {
-      if (sense.glosses?.length && sense.glosses[0].def === gloss) {
+      if (sense.glosses?.some((g) => g.def === gloss && g.language === lang)) {
         if (sense.semanticDomains.some((d) => d.id === semDom.id)) {
           // User is trying to add a sense that already exists.
           enqueueSnackbar(
@@ -849,7 +874,7 @@ export default function DataEntryTable(
 
     // The gloss is new for this word, so add a new sense.
     defunctWord(oldWord.id);
-    const sense = newSense(gloss, analysisLang.bcp47, semDom);
+    const sense = newSense(gloss, lang, semDom);
     const senses = [...oldWord.senses, sense];
     const newWord: Word = { ...oldWord, senses };
 
@@ -864,7 +889,7 @@ export default function DataEntryTable(
   /** Retract a recent entry. */
   const undoRecentEntry = useCallback(
     async (eIndex: number): Promise<void> => {
-      const { word, senseGuid } = state.recentWords[eIndex];
+      const { isNew, senseGuid, word } = state.recentWords[eIndex];
       const sIndex = word.senses.findIndex((s) => s.guid === senseGuid);
       if (sIndex === -1) {
         throw new Error("Entry does not have specified sense.");
@@ -874,8 +899,9 @@ export default function DataEntryTable(
       const senses = [...word.senses];
       const oldSense = senses[sIndex];
       const oldDoms = oldSense.semanticDomains;
-      if (oldDoms.length > 1) {
-        // If there is more than one semantic domain in this sense, only remove the domain.
+      if (oldDoms.length > 1 || !isNew) {
+        // If there is more than one domain in this sense or the entry isn't new,
+        // only remove the domain.
         const doms = oldDoms.filter((d) => d.id !== props.semanticDomain.id);
         const newSense: Sense = { ...oldSense, semanticDomains: doms };
         senses.splice(sIndex, 1, newSense);
@@ -885,7 +911,7 @@ export default function DataEntryTable(
         senses.splice(sIndex, 1);
         await updateWordInBackend({ ...word, senses });
       } else {
-        // Since this is the only sense, delete the word.
+        // Since this is the only sense in a new word, delete the word.
         await backend.deleteFrontierWord(word.id);
       }
     },
@@ -922,7 +948,7 @@ export default function DataEntryTable(
         // Retract and replaced with a new entry.
         const word = simpleWord(
           vernacular,
-          firstGlossText(oldSense),
+          firstGlossText(oldSense, analysisLang.bcp47),
           analysisLang.bcp47
         );
         word.id = "";
@@ -945,7 +971,12 @@ export default function DataEntryTable(
       const oldEntry = state.recentWords[index];
       defunctWord(oldEntry.word.id);
       def = def.trim();
-      const newWord = updateEntryGloss(oldEntry, def, props.semanticDomain.id);
+      const newWord = updateEntryGloss(
+        oldEntry,
+        def,
+        props.semanticDomain.id,
+        analysisLang.bcp47
+      );
       await updateWordInBackend(newWord);
 
       // If a sense with a new guid was added, it needs to replace the old sense in the display.
@@ -959,6 +990,7 @@ export default function DataEntryTable(
       }
     },
     [
+      analysisLang.bcp47,
       defunctWord,
       props.semanticDomain.id,
       state.recentWords,
@@ -980,6 +1012,14 @@ export default function DataEntryTable(
     },
     [state.recentWords, updateWordInBackend]
   );
+
+  const isNewEntryInProgress =
+    state.newAudio.length ||
+    state.newGloss.trim() ||
+    state.newNote.trim() ||
+    state.newVern.trim();
+  const highlightExitButton =
+    state.recentWords.length > 0 && !isNewEntryInProgress;
 
   return (
     <form onSubmit={(e?: FormEvent<HTMLFormElement>) => e?.preventDefault()}>
@@ -1086,7 +1126,7 @@ export default function DataEntryTable(
             id={exitButtonId}
             type="submit"
             variant="contained"
-            color={state.newVern.trim() ? "primary" : "secondary"}
+            color={highlightExitButton ? "primary" : "secondary"}
             style={{ marginTop: theme.spacing(2) }}
             endIcon={<ExitToApp />}
             tabIndex={-1}

@@ -17,7 +17,7 @@ jobs:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
       # configuring harden-runner and identifying allowed endpoints.
       - name: Harden Runner
-        uses: step-security/harden-runner@f086349bfa2bd1361f7909c78558e816508cdc10 # v2.8.0
+        uses: step-security/harden-runner@17d0e2bd7d51742c71671bd19fa12bdc9d40a3d6 # v2.8.1
         with:
           disable-sudo: true
           egress-policy: block
@@ -25,8 +25,8 @@ jobs:
             files.pythonhosted.org:443
             github.com:443
             pypi.org:443
-      - uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
-      - uses: actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c # v5.0.0
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5.1.1
         with:
           python-version: 3.11
       - name: Install dependencies

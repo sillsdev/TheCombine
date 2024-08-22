@@ -23,6 +23,8 @@ export default class SpellChecker {
   async updateLang(lang?: string): Promise<void> {
     if (!lang) {
       this.bcp47 = undefined;
+      this.dictLoaded = {};
+      this.spell = undefined;
       return;
     }
     const bcp47 = lang.split("-")[0] as Bcp47Code;
@@ -34,11 +36,16 @@ export default class SpellChecker {
     this.dictLoader = new DictionaryLoader(bcp47);
     this.dictLoaded = {};
     await this.dictLoader.loadDictionary().then((dic) => {
-      if (dic !== undefined) {
+      if (dic) {
         this.spell = nspell("SET UTF-8", dic);
         this.addToDictLoaded(dic);
         if (process.env.NODE_ENV === "development") {
           console.log(`Loaded spell-checker: ${bcp47}`);
+        }
+      } else {
+        this.spell = undefined;
+        if (process.env.NODE_ENV === "development") {
+          console.log(`No dictionary available: ${bcp47}`);
         }
       }
     });
@@ -70,8 +77,9 @@ export default class SpellChecker {
     });
   }
 
+  /** Trim whitespace from the start and non-letter/-mark/-number characters from the end,
+   * then split off the final word. */
   static cleanAndSplit(word: string): SplitWord {
-    // Trim whitespace from the start and non-letter/-mark/-number characters from the end.
     // Use of \p{L}\p{M}\p{N} here matches that in split_dictionary.py.
     // Cf. https://en.wikipedia.org/wiki/Unicode_character_property
     word = word.trimStart().replace(/[^\p{L}\p{M}\p{N}]*$/u, "");
@@ -87,6 +95,18 @@ export default class SpellChecker {
     }
     const allButFinal = word.slice(0, word.length - final.length);
     return { allButFinal, final };
+  }
+
+  /** If the given string, split by separator (non-letter/-mark/-number) characters,
+   * is multiple words, replace all but the last word with ellipses (...).
+   * (Assumes all end-of-string separator characters have been removed,
+   * which is the case for suggestions from this SpellChecker.) */
+  public static replaceAllButLastWordWithEllipses(word: string): string {
+    // Split by non-letter/-mark/-number characters
+    const words = word.split(/[^\p{L}\p{M}\p{N}]/u).filter((w) => w);
+    // Find the last non-letter/-mark/-number character
+    const finalSep = word.match(/[^\p{L}\p{M}\p{N}]/gu)?.pop();
+    return words.length > 1 ? `...${finalSep}${words[words.length - 1]}` : word;
   }
 
   // If the word string is multiple words, separate and

@@ -4,7 +4,8 @@ import { Fragment, ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, GrammaticalInfo } from "api/models";
-import { IconButtonWithTooltip } from "components/Buttons";
+// Loadable is interfering with table rendering, so import this button directly
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import { getGramCatGroupColor } from "utilities/wordUtilities";
 
 interface PartOfSpeechButtonProps {

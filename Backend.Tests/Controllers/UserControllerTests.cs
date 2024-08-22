@@ -35,7 +35,7 @@ namespace Backend.Tests.Controllers
             _userRepo = new UserRepositoryMock();
             _permissionService = new PermissionServiceMock(_userRepo);
             _userController = new UserController(_userRepo, _permissionService,
-                new EmailServiceMock(), new PasswordResetServiceMock());
+                new CaptchaServiceMock(), new EmailServiceMock(), new PasswordResetServiceMock());
         }
 
         private static User RandomUser()

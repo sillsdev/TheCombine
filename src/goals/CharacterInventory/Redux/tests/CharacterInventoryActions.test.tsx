@@ -1,7 +1,6 @@
 import { type Action, type PreloadedState } from "redux";
 
 import { type Project, type Word } from "api/models";
-import { defaultState } from "components/App/DefaultState";
 import {
   type CharInvChanges,
   type CharacterChange,
@@ -23,6 +22,7 @@ import {
   type CharacterSetEntry,
 } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 import { type RootState, setupStore } from "rootRedux/store";
+import { persistedDefaultState } from "rootRedux/testTypes";
 import { newProject } from "types/project";
 import { newWord } from "types/word";
 
@@ -39,7 +39,6 @@ jest.mock("goals/Redux/GoalActions", () => ({
   addCharInvChangesToGoal: (changes: CharInvChanges) =>
     mockAddCharInvChangesToGoal(changes),
 }));
-jest.mock("router/browserRouter");
 
 const mockAddCharInvChangesToGoal = jest.fn();
 const mockAsyncUpdateCurrentProject = jest.fn();
@@ -55,12 +54,6 @@ const setMockFunctions = (): void => {
   mockAsyncUpdateGoal.mockReturnValue(mockAction);
   // Set mockGetFrontierWords specifically for each tests.
   mockUpdateWord.mockImplementation((w: Word) => ({ ...w, id: bumpId(w.id) }));
-};
-
-// Preloaded values for store when testing
-const persistedDefaultState: PreloadedState<RootState> = {
-  ...defaultState,
-  _persist: { version: 1, rehydrated: false },
 };
 
 beforeEach(() => {

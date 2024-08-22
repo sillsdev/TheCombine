@@ -7,6 +7,7 @@ namespace BackendFramework.Contexts
     [ExcludeFromCodeCoverage]
     public class EmailContext : IEmailContext
     {
+        public bool EmailEnabled { get; }
         public string? SmtpServer { get; }
         public int SmtpPort { get; }
         public string? SmtpUsername { get; }
@@ -16,6 +17,7 @@ namespace BackendFramework.Contexts
 
         public EmailContext(IOptions<Startup.Settings> options)
         {
+            EmailEnabled = options.Value.EmailEnabled;
             SmtpServer = options.Value.SmtpServer;
             SmtpPort = options.Value.SmtpPort ?? IEmailContext.InvalidPort;
             SmtpUsername = options.Value.SmtpUsername;

@@ -4,13 +4,13 @@ import { type PropsWithChildren, type ReactElement } from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 
-import { defaultState } from "components/App/DefaultState";
 import {
   type AppStore,
   type RootState,
   persistor,
   setupStore,
 } from "rootRedux/store";
+import { persistedDefaultState } from "rootRedux/testTypes";
 
 /** This extends the default options for `render` from `@testing-library/react`,
  * allowing the user to specify other things such as `initialState`, `store`. */
@@ -26,10 +26,7 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, "queries"> {
 export function renderWithProviders(
   ui: ReactElement,
   {
-    preloadedState = {
-      ...defaultState,
-      _persist: { version: 0, rehydrated: false },
-    },
+    preloadedState = persistedDefaultState,
     // Automatically create a store instance if no store was passed in
     store = setupStore(preloadedState),
     ...renderOptions

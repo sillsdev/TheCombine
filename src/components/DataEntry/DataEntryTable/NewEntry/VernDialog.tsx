@@ -30,6 +30,7 @@ export default function VernDialog(props: vernDialogProps): ReactElement {
 
   return (
     <Dialog
+      disableRestoreFocus
       maxWidth={false}
       onClose={(_, reason) => {
         if (reason !== "backdropClick") {

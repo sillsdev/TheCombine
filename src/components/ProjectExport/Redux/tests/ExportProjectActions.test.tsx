@@ -1,13 +1,11 @@
-import { PreloadedState } from "redux";
-
-import { defaultState } from "components/App/DefaultState";
 import {
   asyncDownloadExport,
   asyncExportProject,
   asyncResetExport,
 } from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
-import { RootState, setupStore } from "rootRedux/store";
+import { setupStore } from "rootRedux/store";
+import { persistedDefaultState } from "rootRedux/testTypes";
 
 jest.mock("backend", () => ({
   deleteLift: jest.fn,
@@ -19,12 +17,6 @@ jest.mock("components/Project/ProjectActions", () => ({}));
 const mockDownloadList = jest.fn();
 const mockExportLift = jest.fn();
 const mockProjId = "project-id";
-
-// Preloaded values for store when testing
-const persistedDefaultState: PreloadedState<RootState> = {
-  ...defaultState,
-  _persist: { version: 1, rehydrated: false },
-};
 
 describe("ExportProjectActions", () => {
   describe("asyncDownloadExport", () => {
