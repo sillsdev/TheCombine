@@ -8,6 +8,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useTranslation } from "react-i18next";
 
 import { BannerType } from "api/models";
 import { getBannerText } from "backend";
@@ -18,9 +19,19 @@ import { type StoreState } from "rootRedux/types";
 import { Path } from "types/path";
 import theme, { themeColors } from "types/theme";
 
+enum AnnouncementBannerId {
+  ButtonClose = "announcement-banner-close-button",
+}
+
+export enum AnnouncementBannerTextId {
+  ButtonClose = "siteSettings.banners.bannerCloseButton",
+}
+
 export default function AnnouncementBanner(): ReactElement {
   const [banner, setBanner] = useState<string>("");
   const [margins, setMargins] = useState<CSSProperties>({});
+
+  const { t } = useTranslation();
 
   // Adjust the margins depending on whether there is an AppBar.
   const loc = useAppSelector(
@@ -48,7 +59,12 @@ export default function AnnouncementBanner(): ReactElement {
 
   return banner ? (
     <Toolbar style={{ ...margins, backgroundColor: themeColors.warning }}>
-      <IconButton onClick={closeBanner} size="large">
+      <IconButton
+        aria-label={t(AnnouncementBannerTextId.ButtonClose)}
+        id={AnnouncementBannerId.ButtonClose}
+        onClick={closeBanner}
+        size="large"
+      >
         <Cancel />
       </IconButton>
       <Box sx={{ width: theme.spacing(2) }} />

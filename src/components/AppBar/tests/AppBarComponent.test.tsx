@@ -3,8 +3,8 @@ import { MemoryRouter } from "react-router-dom";
 import { act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { defaultState } from "components/App/DefaultState";
 import AppBar from "components/AppBar/AppBarComponent";
+import { defaultState } from "rootRedux/types";
 
 jest.mock("backend", () => ({
   isSiteAdmin: () => mockIsSiteAdmin(),
