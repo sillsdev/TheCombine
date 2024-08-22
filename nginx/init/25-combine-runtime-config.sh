@@ -49,7 +49,7 @@ OUTFILE=${FRONTEND_HOST_DIR}/scripts/config.js
 declare -A env_map
 env_map=(
   ["CONFIG_USE_CONNECTION_URL"]="useConnectionBaseUrlForApi"
-  ["CONFIG_CAPTCHA_REQD"]="captchaRequired"
+  ["CONFIG_CAPTCHA_REQUIRED"]="captchaRequired"
   ["CONFIG_CAPTCHA_SITE_KEY"]="captchaSiteKey"
   ["CONFIG_ANALYTICS_WRITE_KEY"]="analyticsWriteKey"
   ["CONFIG_OFFLINE"]="offline"

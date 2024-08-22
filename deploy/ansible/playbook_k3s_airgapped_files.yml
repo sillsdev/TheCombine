@@ -1,0 +1,58 @@
+---
+##############################################################
+# Playbook: playbook_k3s_airgapped_files.yml
+#
+# playbook_k3s_airgapped_files.yml downloads and packages the
+# files necessary to install k3s on an airgapped system.  This
+# includes:
+#  - the k3s airgap images
+#  - k3s executable
+#  - k3s installation script
+#  - kubectl
+#  - helm
+#
+##############################################################
+
+- name: Build package for k3s airgap installation
+  hosts: localhost
+  gather_facts: yes
+  become: no
+
+  vars_files:
+    - "vars/k3s_versions.yml"
+
+  tasks:
+    - name: Create package directory if necessary
+      file:
+        path: "{{ package_dir }}"
+        state: directory
+
+    - name: Download k3s assets
+      get_url:
+        dest: "{{ package_dir }}/{{ item }}"
+        url: "https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/{{ item }}"
+      loop:
+        - k3s-airgap-images-amd64.tar.zst
+        - k3s
+        - sha256sum-amd64.txt
+
+    - name: Verify k3s downloads
+      shell:
+        cmd: sha256sum --check --ignore-missing sha256sum-amd64.txt
+        chdir: "{{ package_dir }}"
+      changed_when: false
+
+    - name: Download k3s install script
+      get_url:
+        dest: "{{ package_dir }}/install.sh"
+        url: https://get.k3s.io/
+
+    - name: Download kubectl
+      get_url:
+        dest: "{{ package_dir }}/kubectl"
+        url: "https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/amd64/kubectl"
+
+    - name: Download helm
+      get_url:
+        dest: "{{ package_dir }}/helm.tar.gz"
+        url: "https://get.helm.sh/helm-{{ helm_version }}-linux-amd64.tar.gz"

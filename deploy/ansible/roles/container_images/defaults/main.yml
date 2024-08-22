@@ -1,0 +1,6 @@
+---
+# Default values for setting up the container images for
+# installing pre-downloaded images
+
+source_image_dir: ../airgap-images
+airgap_image_dir: /var/lib/rancher/k3s/agent/images

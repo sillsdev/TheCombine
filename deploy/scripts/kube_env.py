@@ -10,7 +10,7 @@ from utils import choose_from_list, run_cmd
 
 
 class KubernetesEnvironment:
-    def __init__(self, args: argparse.Namespace) -> None:
+    def __init__(self, args: argparse.Namespace, *, prompt_for_context: bool = True) -> None:
         if "kubeconfig" in args and args.kubeconfig is not None:
             self.kubeconfig = args.kubeconfig
         else:
@@ -18,7 +18,7 @@ class KubernetesEnvironment:
         if "context" in args and args.context is not None:
             # if the user specified a context, use that one.
             self.kubecontext = args.context
-        else:
+        elif prompt_for_context:
             context_list: List[str] = []
 
             result = run_cmd(
@@ -40,6 +40,8 @@ class KubernetesEnvironment:
                 self.kubecontext = curr_context
             else:
                 self.kubecontext = None
+        else:
+            self.kubecontext = None
         if "debug" in args:
             self.debug = args.debug
         else:
@@ -71,6 +73,43 @@ class KubernetesEnvironment:
         if self.kubecontext is not None:
             kubectl_opts.extend(["--context", self.kubecontext])
         return kubectl_opts
+
+
+def add_helm_opts(parser: argparse.ArgumentParser) -> None:
+    """Add command line arguments for Helm."""
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Invoke the 'helm install' command with the '--dry-run' option.",
+        dest="dry_run",
+    )
+    parser.add_argument(
+        "--wait",
+        action="store_true",
+        help="Invoke the 'helm install' command with the '--wait' option.",
+    )
+    parser.add_argument(
+        "--timeout",
+        help="""
+        Maximum time to wait for the helm commands.
+        Adds the '--wait' option if not specified in configuration.
+        TIMEOUT is specified as a Go Time Duration. See https://pkg.go.dev/time#ParseDuration.
+        """,
+    )
+    # Arguments passed to the helm install command
+    parser.add_argument(
+        "--set",  # matches a 'helm install' option
+        nargs="+",
+        help="Specify additional Helm configuration variable to override default values."
+        " See `helm install --help`",
+    )
+    parser.add_argument(
+        "--values",
+        "-f",  # matches a 'helm install' option
+        nargs="+",
+        help="Specify additional Helm configuration file to override default values."
+        " See `helm install --help`",
+    )
 
 
 def add_kube_opts(parser: argparse.ArgumentParser) -> None:

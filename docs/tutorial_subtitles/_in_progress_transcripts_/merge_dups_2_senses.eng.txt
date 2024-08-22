@@ -1,0 +1,39 @@
+This is the second video on the Merge Duplicates tool.
+In the previous video, we looked at the difference between the “Save & Continue” button and the “Defer” button, and we introduced adding a flag to words.
+This video gets to the heart of the merge tool: moving, deleting, and combining senses!
+Our first set of potential duplicates is a pair of words with vernacular form “fly”.
+The first word has 3 senses: “move through the air” and “go through the air” are definitely the same word.
+However, the third sense with gloss “winged insect” is a different concept. It’s a better fit with the second word, which has gloss “housefly”.
+To move a sense from one word to another, click on the sense and drag it to the other word.
+Voila! Now the correct senses are together.
+Wait a second… the two glosses of the first word are not different senses. They are the exact same idea expressed redundantly.
+To delete the unnecessary sense, click-and-drag it over the delete icon in the bottom corner.
+When the tile turns red, release and it disappears.
+When you’re satisfied with your changes, click “Save & Continue”.
+In the next set of potential duplicates, we have two words with vernacular form “fine”.
+Now the senses we see in the first word are in fact two different senses of the same word, so we can leave it alone.
+In the second word, we see one sense with gloss “abcdefg” and other with “fee; monetary penalty”.
+These two aren’t related to the first word or to each other. Let’s create a new word with the final sense.
+To create a new word, click-and-drag a sense into the empty column, and release.
+Voila! Now we have three words.
+Wait a second… the sense “abcdefg” in the second word is nonsense.
+To delete it, click-and-drag it to the delete icon in the bottom corner.
+When you delete the only sense in a word, the whole word is deleted.
+See how the column disappeared and we are back to two words.
+Great! Click “Save & Continue” to save that work.
+In this third set of potential duplicates are two words with vernacular form “toe”.
+The sense of the first word has gloss “leg digit” and semantic domain 2.1.3.2.
+The sense of the second word has gloss “foot digit” and semantic domain 2.1.3.3.
+These are the same sense of the same word.
+To combine them, click-and-drag one sense over the other. When both senses are green, release.
+Voila! The senses are combined into a single sense with both semantic domains.
+Note that a sidebar opened up to show the senses that are being combined.
+You can close and open the sidebar by clicking the sideways caret icon.
+Now the gloss is “leg digit; foot digit”.
+When senses are combined, all the semantic domains are preserved and all glosses of the same language are combined.
+To change which gloss comes first, click-and-drag the tiles within the sidebar to reorder them.
+If you decide to keep both glosses as separate senses, click-and-drag a sense out of the sidebar and back to the word column.
+Now click the “Save & Continue” button to save this merge.
+I hope this video helps you to clean up the data you’ve collected in The Combine!
+If you want to use the Merge tool on data that was exported from FieldWorks and imported into The Combine, please check out the third Merge Duplicates video.
+Have a wonderful day!

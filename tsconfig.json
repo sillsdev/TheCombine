@@ -16,8 +16,8 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "es5"
+    "target": "es6"
   },
   "exclude": ["*.dic.js"],
-  "include": [".eslintrc.cjs", "src", "scripts"]
+  "include": [".eslintrc.cjs", "public", "src", "scripts"]
 }

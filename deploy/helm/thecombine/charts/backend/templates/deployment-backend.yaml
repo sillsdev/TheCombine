@@ -29,6 +29,26 @@ spec:
           image: {{ include "backend.containerImage" . }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           env:
+            - name: COMBINE_CAPTCHA_REQUIRED
+              valueFrom:
+                configMapKeyRef:
+                  key: COMBINE_CAPTCHA_REQUIRED
+                  name: env-backend
+            - name: COMBINE_CAPTCHA_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: COMBINE_CAPTCHA_SECRET_KEY
+                  name: env-backend-secrets
+            - name: COMBINE_CAPTCHA_VERIFY_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: COMBINE_CAPTCHA_VERIFY_URL
+                  name: env-backend
+            - name: COMBINE_EMAIL_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  key: COMBINE_EMAIL_ENABLED
+                  name: env-backend
             - name: COMBINE_JWT_SECRET_KEY
               valueFrom:
                 secretKeyRef:
