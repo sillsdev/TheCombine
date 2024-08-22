@@ -9,7 +9,6 @@ import {
 import configureMockStore from "redux-mock-store";
 
 import { Word } from "api/models";
-import { defaultState } from "components/App/DefaultState";
 import { NoteButton } from "components/Buttons";
 import {
   DeleteEntry,
@@ -21,6 +20,7 @@ import { EditTextDialog } from "components/Dialogs";
 import AudioPlayer from "components/Pronunciations/AudioPlayer";
 import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
+import { defaultState } from "rootRedux/types";
 import theme from "types/theme";
 import { newPronunciation, simpleWord } from "types/word";
 import { newWritingSystem } from "types/writingSystem";

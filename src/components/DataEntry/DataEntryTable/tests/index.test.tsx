@@ -9,7 +9,6 @@ import {
 import configureMockStore from "redux-mock-store";
 
 import { Gloss, SemanticDomain, Sense, Word } from "api/models";
-import { defaultState } from "components/App/DefaultState";
 import DataEntryTable, {
   WordAccess,
   addSemanticDomainToSense,
@@ -20,12 +19,14 @@ import DataEntryTable, {
   updateEntryGloss,
 } from "components/DataEntry/DataEntryTable";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
+import { defaultState } from "rootRedux/types";
 import { newProject } from "types/project";
 import {
   newSemanticDomain,
   newSemanticDomainTreeNode,
   semDomFromTreeNode,
 } from "types/semanticDomain";
+import { newUser } from "types/user";
 import {
   multiSenseWord,
   newGloss,
@@ -53,6 +54,7 @@ jest.mock("backend", () => ({
   updateWord: (...args: any[]) => mockUpdateWord(...args),
 }));
 jest.mock("backend/localStorage", () => ({
+  getCurrentUser: () => mockUser,
   getUserId: () => mockUserId,
 }));
 jest.mock("components/DataEntry/DataEntryTable/NewEntry/SenseDialog");
@@ -78,6 +80,7 @@ const mockMultiWord = multiSenseWord("vern", ["gloss1", "gloss2"]);
 const mockSemDomId = "semDomId";
 const mockTreeNode = newSemanticDomainTreeNode(mockSemDomId);
 const mockSemDom = semDomFromTreeNode(mockTreeNode);
+const mockUser = newUser();
 const mockUserId = "mockUserId";
 const mockStore = configureMockStore()(defaultState);
 
