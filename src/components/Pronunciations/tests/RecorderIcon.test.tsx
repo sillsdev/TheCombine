@@ -8,12 +8,11 @@ import {
 } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import { defaultState } from "components/App/DefaultState";
 import RecorderIcon, {
   recordButtonId,
 } from "components/Pronunciations/RecorderIcon";
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
-import { type StoreState } from "rootRedux/types";
+import { type StoreState, defaultState } from "rootRedux/types";
 import theme from "types/theme";
 
 let testRenderer: ReactTestRenderer;

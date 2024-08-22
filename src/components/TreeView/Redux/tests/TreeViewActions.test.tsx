@@ -1,12 +1,10 @@
-import { PreloadedState } from "redux";
-
-import { defaultState } from "components/App/DefaultState";
 import {
   initTreeDomain,
   setDomainLanguage,
   traverseTree,
 } from "components/TreeView/Redux/TreeViewActions";
-import { RootState, setupStore } from "rootRedux/store";
+import { setupStore } from "rootRedux/store";
+import { persistedDefaultState } from "rootRedux/testTypes";
 import {
   newSemanticDomain,
   newSemanticDomainTreeNode,
@@ -26,12 +24,6 @@ global.analytics = { identify: jest.fn(), track: jest.fn() } as any;
 
 const mockId = "1.2.3";
 const mockLang = "lang";
-
-// Preloaded values for store when testing
-const persistedDefaultState: PreloadedState<RootState> = {
-  ...defaultState,
-  _persist: { version: 1, rehydrated: false },
-};
 
 describe("TreeViewActions", () => {
   describe("setDomainLanguage", () => {

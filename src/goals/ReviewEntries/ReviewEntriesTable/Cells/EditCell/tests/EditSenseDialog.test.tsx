@@ -4,11 +4,10 @@ import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { Project, type Sense } from "api/models";
-import { defaultState } from "components/App/DefaultState";
 import EditSenseDialog, {
   EditSenseDialogId,
 } from "goals/ReviewEntries/ReviewEntriesTable/Cells/EditCell/EditSenseDialog";
-import { type StoreState } from "rootRedux/types";
+import { type StoreState, defaultState } from "rootRedux/types";
 import { newSense } from "types/word";
 
 // Container uses Portal, not supported in react-test-renderer
