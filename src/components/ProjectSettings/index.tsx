@@ -295,6 +295,7 @@ export default function ProjectSettingsComponent(): ReactElement {
                 setProject={updateProject}
               />
             }
+            maxWidth="1050px" // Comfortably fits three months
           />
         </Stack>
       </TabPanel>
