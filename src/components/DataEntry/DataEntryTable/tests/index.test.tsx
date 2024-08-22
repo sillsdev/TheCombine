@@ -9,7 +9,6 @@ import {
 import configureMockStore from "redux-mock-store";
 
 import { Gloss, SemanticDomain, Sense, Word } from "api/models";
-import { defaultState } from "components/App/DefaultState";
 import DataEntryTable, {
   WordAccess,
   addSemanticDomainToSense,
@@ -20,6 +19,7 @@ import DataEntryTable, {
   updateEntryGloss,
 } from "components/DataEntry/DataEntryTable";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
+import { defaultState } from "rootRedux/types";
 import { newProject } from "types/project";
 import {
   newSemanticDomain,

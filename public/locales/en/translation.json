@@ -121,7 +121,8 @@
     "banners": {
       "title": "Banners",
       "loginBanner": "Login Banner",
-      "announcementBanner": "Announcement Banner"
+      "announcementBanner": "Announcement Banner",
+      "bannerCloseButton": "Close banner"
     }
   },
   "userSettings": {
