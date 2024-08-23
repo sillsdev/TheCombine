@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 
 import RecorderContext from "components/Pronunciations/RecorderContext";
 import RecorderIcon from "components/Pronunciations/RecorderIcon";
+import { isNavigatorFirefox } from "components/Pronunciations/utilities";
 import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { FileWithSpeakerId } from "types/word";
@@ -33,7 +34,13 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
     // Prevent starting a recording before a previous one is finished.
     await stopRecording();
 
-    recorder.startRecording(props.id);
+    if (!recorder.startRecording(props.id)) {
+      let errorMessage = t("pronunciations.recordingError");
+      if (isNavigatorFirefox()) {
+        errorMessage += ` ${t("pronunciations.recordingPermission")}`;
+      }
+      toast.error(errorMessage);
+    }
   }
 
   async function stopRecording(): Promise<string | undefined> {
