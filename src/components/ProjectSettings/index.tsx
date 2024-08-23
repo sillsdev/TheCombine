@@ -16,7 +16,7 @@ import {
 import {
   Box,
   Divider,
-  Grid,
+  Stack,
   Tab,
   Tabs,
   type Theme,
@@ -38,13 +38,13 @@ import { toast } from "react-toastify";
 
 import { Permission, type Project } from "api/models";
 import { canUploadLift, getCurrentPermissions } from "backend";
-import BaseSettings from "components/BaseSettings";
 import {
   asyncRefreshProjectUsers,
   asyncSetNewCurrentProject,
   asyncUpdateCurrentProject,
 } from "components/Project/ProjectActions";
 import ExportButton from "components/ProjectExport/ExportButton";
+import BaseSettings from "components/ProjectSettings/BaseSettings";
 import ProjectArchive from "components/ProjectSettings/ProjectArchive";
 import ProjectAutocomplete from "components/ProjectSettings/ProjectAutocomplete";
 import ProjectDomains from "components/ProjectSettings/ProjectDomains";
@@ -150,7 +150,7 @@ export default function ProjectSettingsComponent(): ReactElement {
       />
 
       <TabPanel value={tab} index={ProjectSettingsTab.Basic}>
-        <Grid container spacing={6}>
+        <Stack>
           {/* Project name */}
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
             <BaseSettings
@@ -191,11 +191,11 @@ export default function ProjectSettingsComponent(): ReactElement {
               }
             />
           )}
-        </Grid>
+        </Stack>
       </TabPanel>
 
       <TabPanel value={tab} index={ProjectSettingsTab.Languages}>
-        <Grid container spacing={6}>
+        <Stack>
           {/*Project languages*/}
           <BaseSettings
             icon={<Language data-testid={Setting.Languages} />}
@@ -210,11 +210,11 @@ export default function ProjectSettingsComponent(): ReactElement {
               />
             }
           />
-        </Grid>
+        </Stack>
       </TabPanel>
 
       <TabPanel value={tab} index={ProjectSettingsTab.Users}>
-        <Grid container spacing={6}>
+        <Stack>
           {/* See current users in project */}
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
             <BaseSettings
@@ -241,11 +241,11 @@ export default function ProjectSettingsComponent(): ReactElement {
               body={<ProjectSpeakersList projectId={project.id} />}
             />
           )}
-        </Grid>
+        </Stack>
       </TabPanel>
 
       <TabPanel value={tab} index={ProjectSettingsTab.ImportExport}>
-        <Grid container spacing={6}>
+        <Stack>
           {/* Import Lift file */}
           {permissions.includes(Permission.Import) && (
             <BaseSettings
@@ -271,11 +271,11 @@ export default function ProjectSettingsComponent(): ReactElement {
               body={<ExportButton projectId={project.id} />}
             />
           )}
-        </Grid>
+        </Stack>
       </TabPanel>
 
       <TabPanel value={tab} index={ProjectSettingsTab.Schedule}>
-        <Grid container spacing={6}>
+        <Stack>
           {/* Workshop schedule */}
           <BaseSettings
             icon={<CalendarMonth data-testid={Setting.Schedule} />}
@@ -287,12 +287,13 @@ export default function ProjectSettingsComponent(): ReactElement {
                 setProject={updateProject}
               />
             }
+            maxWidth="1050px" // Comfortably fits three months
           />
-        </Grid>
+        </Stack>
       </TabPanel>
 
       <TabPanel value={tab} index={ProjectSettingsTab.Domains}>
-        <Grid container spacing={6}>
+        <Stack>
           {/* Semantic domains language */}
           <BaseSettings
             icon={<Language data-testid={Setting.DomainsLanguage} />}
@@ -313,7 +314,7 @@ export default function ProjectSettingsComponent(): ReactElement {
               <ProjectDomains project={project} setProject={updateProject} />
             }
           />
-        </Grid>
+        </Stack>
       </TabPanel>
     </>
   );
@@ -455,10 +456,10 @@ function TabLabel(props: TabLabelProps): ReactElement {
   return props.hideLabel ? (
     <Tooltip title={t(props.textId)}>{props.icon}</Tooltip>
   ) : (
-    <Grid container>
+    <Stack direction="row">
       {props.icon}
       <Typography>{t(props.textId)}</Typography>
-    </Grid>
+    </Stack>
   );
 }
 
