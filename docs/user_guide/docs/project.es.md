@@ -163,7 +163,8 @@ used for the file names).
 #### Exportar {#export}
 
 Tras pulsar el botón Exportar, puede navegar por otras partes del sitio web mientras se preparan los datos para la
-descargar. When the data is gathered, the download will begin automatically. The filename is the project id.
+descargar. When the data is gathered, the download will begin automatically. El nombre del archivo es el id del
+proyecto.
 
 !!! warning "Importante"
 
