@@ -57,7 +57,7 @@ export function asyncLogIn(username: string, password: string) {
         router.navigate(Path.ProjScreen);
       })
       .catch((err) =>
-        dispatch(loginFailure(err.response?.data ?? err.message))
+        dispatch(loginFailure(`${err.response?.status ?? err.message}`))
       );
   };
 }
