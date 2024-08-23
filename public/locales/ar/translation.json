@@ -70,6 +70,7 @@
     "resetFail": "خطأ في إعادة تعيين كلمة المرور",
     "backToLogin": "العودة إلى تسجيل الدخول"
   },
+  "captcha": {},
   "speakerMenu": {},
   "userMenu": {
     "siteSettings": "إعدادات الموقع",
@@ -116,7 +117,11 @@
     "cannotExportEmpty": "المشروع فارغ. لا يمكنك تصدير مشروع بدون كلمات."
   },
   "projectSettings": {
-    "tab": { "export": "تصدير", "languages": "اللغات" },
+    "tab": {
+      "domains": "المجالات الدلالية",
+      "export": "تصدير",
+      "languages": "اللغات"
+    },
     "language": {
       "vernacular": "العامية",
       "vernacularLanguage": "اللغة الإغريقية",
@@ -192,7 +197,8 @@
       "emailLabel": "البريد الألكتروني",
       "toastSuccess": "تمت إضافة المستخدم إلى المشروع.",
       "toastFail": "فشل في إضافة مستخدم إلى المشروع."
-    }
+    },
+    "domains": { "addError": {} }
   },
   "goal": {
     "selector": {
@@ -325,7 +331,7 @@
     "recordTooltip": "اضغط مع الاستمرار لتسجيل.",
     "playTooltip": "اضغط للعب.",
     "deleteTooltip": "انقر فوق التحول للحذف.",
-    "noMicAccess": "خطأ في التسجيل: تعذر الوصول إلى الميكروفون.",
+    "recordingError": "خطأ في التسجيل",
     "deleteRecording": "حذف التسجيل"
   },
   "statistics": {
@@ -342,7 +348,7 @@
     },
     "column": {
       "domainNumber": "رقم النطاق:",
-      "domainName": "رقم النطاق:",
+      "domainName": "اسم النطاق:",
       "username": "اسم المستخدم:",
       "domainCount": "النطاقات:",
       "senseCount": "كلمات:"
