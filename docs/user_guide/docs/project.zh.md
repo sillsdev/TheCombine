@@ -10,10 +10,10 @@
 
 ### 输入已有数据
 
-如果用户已经有词典数据在 [LIFT](https://software.sil.org/lifttools) 文档(很可能是从 The Combine,
-[WeSay](https://software.sil.org/wesay), [FLEx](https://software.sil.org/fieldworks), 或
-[Lexique Pro](https://software.sil.org/lexiquepro) 导出的) ，只要点击“下载已有数据？”旁的“浏览”键, 就可将数据输入自己的
-项目。
+如果用户已经有词典数据在 [LIFT](https://software.sil.org/lifttools) 文档(很可能是从 The
+Combine、[WeSay](https://software.sil.org/wesay)、[FLEx](https://software.sil.org/fieldworks)、或
+[Lexique Pro](https://software.sil.org/lexiquepro) 导出的)，只要点击“下载已有数据？”旁的“浏览”键, 就可将数据输入自己的项
+目。
 
 如果用户选择在创建项目时不输入数据，可留待以后再操作(参见[下面](#import))。
 
@@ -27,7 +27,7 @@
 ### 分析语言
 
 *分析语言*是该土语被译成的语言。 这通常是指使用该土语所在地的一种地区性的、国家性的、官方的或主要的语言。 可在创建项目后
-添加其他分析语言(参 [以下](#project-languages))。
+添加其他分析语言(参[以下](#project-languages))。
 
 如果用户在创建项目的过程中选用LIFT文档来输入，定义或注释中使用的语将会自动添加到项目中作为分析语言
 
@@ -44,12 +44,12 @@
 
 #### 项目名称
 
-建议使用一个区别性和描述性的名称。 [导出](#export) 项目时，项目名称是文件名的一部分。
+建议使用一个区别性和描述性的名称。 [导出](#export)项目时，项目名称是文件名的一部分。
 
 #### 自动完成 {#autocomplete}
 
 设置默认为开启：当用户用土语输入新词条，此设置会提供现有的类似的词条作为建议，允许用户选择现有词条并为该词条添加新词义，
-而不是创建一个(可能是) 重复的词条。 详情请参阅 [词条输入](dataEntry.md#new-entry-with-duplicate-vernacular-form)。
+而不是创建一个(可能是) 重复的词条。 详情请参阅[词条输入](dataEntry.md#new-entry-with-duplicate-vernacular-form)。
 
 (这不影响对注释的拼写建议，因为这些建议是基于独立于现有项目数据的字典的)。
 
@@ -93,13 +93,13 @@
 [仅对项目所有者改项目管理员时用]
 </pre>
 
-_收集者_ 可以进行 [词条输入](./dataEntry.md) ，但不能进行 [数据清理](./goals.md)。 在项目设置中，其他人可以看到 项目语言
-和工作坊时间表，但不能做任何更改。
+*收集者*可以进行[词条输入](./dataEntry.md)，但不能进行[数据清理](./goals.md)。 在项目设置中，其他人可以看到 项目语言和工
+作坊时间表，但不能做任何更改。
 
 *编辑*具有与*收集者*相同的权限，还可
 以[审阅词条](./goals.md#review-entries)、[合并重复词条](./goals.md#merge-duplicates)和[导出](#export)。
 
-_管理员_ 拥有 _编辑_ 的所有权限，还可以修改大多数项目设置和 用户。
+*管理员*拥有*编辑*的所有权限，还可以修改大多数项目设置和 用户。
 
 !!! warning "重要警告"
 
@@ -211,8 +211,7 @@ Custom semantic domains will be available to all project users doing Data Entry.
 
 ![项目统计数据](../images/projectStatsButton.png){.center}
 
-在这些统计数据中， _词_ 指的是一对词义-词域：例如，一个词条有 3 个词义，每个词义属于2 个语义域，则该词条将被算作 6 个
-词。
+在这些统计数据中，*词*指的是一对词义-词域：例如，一个词条有 3 个词义，每个词义属于2 个语义域，则该词条将被算作 6 个词。
 
 ### 每个用户的单词词数
 
