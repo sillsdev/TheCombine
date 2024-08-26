@@ -26,10 +26,11 @@ export default function IconButtonWithTooltip(
     >
       <span>
         <IconButton
+          id={props.buttonId}
+          data-testid={props.buttonId}
+          disabled={props.disabled || !props.onClick}
           onClick={props.onClick}
           size={props.size || "medium"}
-          id={props.buttonId}
-          disabled={props.disabled || !props.onClick}
         >
           {props.icon}
         </IconButton>
