@@ -86,7 +86,7 @@ nuevas entradas de datos.
     Si el proyecto tiene glosas en varios idiomas, esos idiomas deben añadirse aquí para que todas las glosas aparezcan
     en [Limpieza de datos](goals.md). Pulse el icono de la lupa para ver todos los códigos de idioma presentes en el proyecto.
 
-El _idioma de los_ dominios semánticos controla el idioma en el que se muestran los títulos y descripciones de los
+El _idioma de los dominios semánticos_ controla el idioma en el que se muestran los títulos y descripciones de los
 dominios semánticos en [Entrada de datos](./dataEntry.md).
 
 ### Usuarios del proyecto
@@ -163,7 +163,8 @@ used for the file names).
 #### Exportar {#export}
 
 Tras pulsar el botón Exportar, puede navegar por otras partes del sitio web mientras se preparan los datos para la
-descargar. When the data is gathered, the download will begin automatically. El nombre de archivo es el id del proyecto.
+descargar. When the data is gathered, the download will begin automatically. El nombre del archivo es el id del
+proyecto.
 
 !!! warning "Importante"
 
@@ -195,7 +196,7 @@ Pulse el botón central para añadir o eliminar fechas concretas. Pulse el últi
 
 In this settings tab, you can change the semantic domain language and manage custom semantic domains.
 
-El _idioma de los_ dominios semánticos controla el idioma en el que se muestran los títulos y descripciones de los
+El _idioma de los dominios semánticos_ controla el idioma en el que se muestran los títulos y descripciones de los
 dominios semánticos en [Entrada de datos](./dataEntry.md).
 
 At this time, The Combine only supports _custom semantic domains_ that extend the
@@ -250,5 +251,5 @@ talleres.
 
 ### Progresos del taller
 
-Gráficos lineales que muestran las palabras acumuladas a lo largo de los días del [Calendario](#schedule) de talleres,
-así como las previsiones para el resto del taller.
+Gráficos lineales que muestran las palabras recogidas acumuladas a lo largo de los días del [Calendario](#schedule) de
+talleres, así como las previsiones para el resto del taller.

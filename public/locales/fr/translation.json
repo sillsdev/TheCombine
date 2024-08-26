@@ -70,6 +70,7 @@
     "resetFail": "Erreur de réinitialisation du mot de passe",
     "backToLogin": "Retour au login"
   },
+  "captcha": {},
   "speakerMenu": {},
   "userMenu": {
     "siteSettings": "Paramètres du site",
@@ -117,6 +118,7 @@
   "projectSettings": {
     "project": "Projet :",
     "tab": {
+      "domains": "Champs sémantiques",
       "export": "Exporter",
       "languages": "Langues",
       "users": "Utilisateurs"
@@ -194,7 +196,8 @@
       "emailLabel": "Email",
       "toastSuccess": "Utilisateur ajouté au projet.",
       "toastFail": "Échec de l'ajout de l'utilisateur au projet."
-    }
+    },
+    "domains": { "name": "Nom : ", "addError": {} }
   },
   "goal": {
     "selector": {
@@ -329,7 +332,7 @@
     "recordTooltip": "Maintenez le bouton enfoncée pour enregistrer.",
     "playTooltip": "Appuyez sur pour lire.",
     "deleteTooltip": "Maj + clic pour effacer.",
-    "noMicAccess": "Erreur d'enregistrement : Impossible d'accéder à un microphone.",
+    "recordingError": "Erreur d'enregistrement",
     "deleteRecording": "Effacer enregistrement"
   },
   "statistics": {
