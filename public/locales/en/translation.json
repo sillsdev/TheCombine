@@ -500,7 +500,8 @@
     "speakerAdd": "Right click to add a speaker.",
     "speakerChange": "Right click to change speaker.",
     "speakerSelect": "Select speaker of this audio recording",
-    "recordingError": "Recording error",
+    "recordingError": "Recording error.",
+    "recordingPermission": "Please check if microphone permission is enabled in your browser.",
     "deleteRecording": "Delete Recording",
     "audioStreamError": "Error getting audio stream!",
     "noMicAccess": "No microphone access. Audio recording disabled."

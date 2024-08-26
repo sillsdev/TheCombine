@@ -29,10 +29,16 @@ export default class Recorder {
       : undefined;
   }
 
-  startRecording(id: string): void {
-    this.recordRTC?.reset();
+  /** If recorder exists, start recording and return true.
+   * If no recorder, return false. */
+  startRecording(id: string): boolean {
+    if (!this.recordRTC) {
+      return false;
+    }
+    this.recordRTC.reset();
     this.id = id;
-    this.recordRTC?.startRecording();
+    this.recordRTC.startRecording();
+    return true;
   }
 
   stopRecording(): Promise<File | undefined> {
