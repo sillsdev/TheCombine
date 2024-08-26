@@ -73,6 +73,7 @@
     "resetDone": "如果您正确输入了电子邮件或用户名，您的电子邮件地址将收到密码重置链接。",
     "backToLogin": "返回登录"
   },
+  "captcha": {},
   "speakerMenu": {},
   "userMenu": {
     "siteSettings": "网站设置",
@@ -214,7 +215,8 @@
       "emailLabel": "电子邮件",
       "toastSuccess": "用户添加到项目中",
       "toastFail": "无法将用户添加到项目"
-    }
+    },
+    "domains": { "addError": {} }
   },
   "goal": {
     "selector": {
@@ -348,7 +350,7 @@
     "recordTooltip": "长按红色按钮，进行录制",
     "playTooltip": "单击来播放。",
     "deleteTooltip": "按 上档 （Shift） 并单击来删除。",
-    "noMicAccess": "录制错误：无法使用话筒。",
+    "recordingError": "录制错误",
     "deleteRecording": "删除录音"
   },
   "statistics": {

@@ -18,7 +18,7 @@ Palabra tal y como se encuentra en la lengua vernácula, normalmente deletreada 
 
 ### Glosa
 
-Aunque una entrada puede tener varios acepciones/brillos, sólo se puede añadir uno cuando se crea la entrada por primera
+Aunque una entrada puede tener varios acepciones/glosas, sólo se puede añadir uno cuando se crea la entrada por primera
 vez.
 
 ### Nota
