@@ -5,6 +5,7 @@ import {
   IconButton,
   List,
   ListItem,
+  ListItemAvatar,
   ListItemText,
   SelectChangeEvent,
 } from "@mui/material";
@@ -114,17 +115,18 @@ export default function ActiveProjectUsers(props: {
 
     return (
       <ListItem key={user.id}>
-        <Avatar
-          alt="User Avatar"
-          src={userAvatar[user.id]}
-          style={{ marginRight: theme.spacing(1) }}
-        />
+        <ListItemAvatar>
+          <Avatar
+            alt="User Avatar"
+            src={userAvatar[user.id]}
+            style={{ marginRight: theme.spacing(1) }}
+          />
+        </ListItemAvatar>
         <ListItemText primary={displayString} />
         <Chip
           label={t(`projectSettings.roles.${`${userRole}`.toLowerCase()}`)}
           size="small"
         />
-
         {manageUser}
       </ListItem>
     );
