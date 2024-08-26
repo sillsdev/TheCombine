@@ -156,9 +156,7 @@ You can delete an entire entry by clicking the
 
 !!! note "笔记"
 
-A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same
-general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different
-general categories, only the first one is preserved.
+    A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different general categories, only the first one is preserved.
 
 #### 受保护的词条与词义
 
