@@ -44,12 +44,10 @@ export default function GlossWithSuggestions(
     <Autocomplete
       id={props.textFieldId}
       disabled={props.isDisabled}
-      // there's a bug with disappearing options if filterOptions isn't specified
-      filterOptions={(options) => options}
-      // freeSolo allows use of a typed entry not available as a drop-down option
-      freeSolo
-      // option-never-equals-value prevents automatic option highlighting
-      isOptionEqualToValue={() => false}
+      filterOptions={(options) => options} // prevents a disappearing-options bug
+      freeSolo // allows use of a typed entry not available as a drop-down option
+      includeInputInList // allows arrow up/down out of the suggestions
+      isOptionEqualToValue={() => false} // prevents automatic option highlighting
       options={spellChecker.getSpellingSuggestions(props.gloss)}
       value={props.gloss}
       onBlur={() => {

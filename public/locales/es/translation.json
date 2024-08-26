@@ -11,7 +11,7 @@
     "descriptionP1": "Las palabras son los bloques de construcción de la lengua, vitales tanto para comunicar información como para compartir la cultura. Un diccionario, lleno de palabras y sus significados, es un recurso lingüístico fundamental, que ayuda a documentar y preservar la lengua para las generaciones futuras dentro de la comunidad y proporciona un puente para la comunicación con otras comunidades. Sin embargo, muchas comunidades lingüísticas minoritarias de todo el mundo carecen de este recurso en su lengua, lo que las coloca en una situación de desventaja.",
     "descriptionP2": "The Combine es una herramienta fácil de usar en el proceso de Recopilación Rápida de Palabras (RWC), un método para reunir las palabras que servirán de base para un diccionario bilingüe. En el centro del proceso de RWC se encuentran los hablantes nativos de una determinada comunidad lingüística. Un grupo de 4 a 6 hablantes nativos, a los que se les presenta un dominio semántico a la vez, proponen todas las palabras de su lengua que se les ocurran relacionadas con ese dominio. The Combine facilita la introducción de estas palabras en una base de datos, junto con traducciones, grabaciones de audio y notas, para captar mejor su forma y significado.",
     "descriptionP3": "Las personas con poco conocimiento lingüístico previo y una experiencia informática limitada pueden aprender rápidamente a utilizar las principales funciones de recopilación de palabras de The Combine. A continuación, las palabras resultantes pueden organizarse y editarse dentro de The Combine antes de exportar los datos para utilizarlos en otras herramientas como FLEx.",
-    "descriptionP4": "¡Inscríbase para comenzar con su colección de palabras!"
+    "descriptionP4": "¡Inscríbase para comenzar con su recopilación de palabras!"
   },
   "treeView": {
     "findDomain": "Buscar un dominio",
@@ -75,6 +75,7 @@
     "resetDone": "Si ha introducido correctamente su dirección de correo electrónico o su nombre de usuario, se le habrá enviado un enlace para restablecer la contraseña.",
     "backToLogin": "Volver al inicio de sesión"
   },
+  "captcha": {},
   "speakerMenu": {
     "none": "No hay locutores en el proyecto. Para adjuntar un locutor a las grabaciones de audio, habla con un administrador del proyecto.",
     "other": "[Ninguna de los anteriores]"
@@ -250,6 +251,13 @@
       "emailLabel": "Correo electrónico",
       "toastSuccess": "Usuario agregado al proyecto.",
       "toastFail": "Error al agregar usuario al proyecto."
+    },
+    "domains": {
+      "subdomainName": "Nombre de subdominio: ",
+      "name": "Nombre: ",
+      "description": "Descripción: ",
+      "questions": "Preguntas: ",
+      "addError": {}
     }
   },
   "goal": {
@@ -335,12 +343,12 @@
     "changes": {
       "noCharChanges": "No se han realizado cambios en el inventario de caracteres.",
       "more": "más",
-      "noWordChangesFindReplace": "No hay palabras cambiadas por buscar y reemblazar.",
+      "noWordChangesFindReplace": "No hay palabras cambiadas por buscar y reemplazar.",
       "wordChanges": "Palabras cambiadas:",
       "wordChangesWithStrings": "Palabras cambiadas ({{ val1 }} → {{ val2 }}):"
     },
     "undo": {
-      "undo": "Deshacer buscar y reemblazar",
+      "undo": "Deshacer buscar y reemplazar",
       "undoDialog": "¿Deshacer cambios de palabras mediante buscar y reemplazar?",
       "undoDisabled": "Deshacer no disponible",
       "undoWords": "Deshacer disponible para {{ val1 }} de las {{ val2 }} palabras modificadas."
@@ -435,14 +443,14 @@
   },
   "pronunciations": {
     "recordTooltip": "Mantenga presionado para grabar.",
-    "playTooltip": "Haz clic para reproducir.",
+    "playTooltip": "Haga clic para reproducir.",
     "deleteTooltip": "Presiona Shift más clic para eliminar.",
     "protectedTooltip": "El audio importado no se puede borrar ni modificar.",
     "speaker": "Locutor: {{ val }}.",
     "speakerAdd": "Clic derecho para añadir un locutor.",
     "speakerChange": "Clic derecho para cambiar de locutor.",
     "speakerSelect": "Seleccionar locutor de esta grabación de audio",
-    "noMicAccess": "Error de grabación: No se pudo acceder a un micrófono.",
+    "recordingError": "Error de grabación",
     "deleteRecording": "Eliminar grabación"
   },
   "statistics": {
