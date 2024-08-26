@@ -1,6 +1,6 @@
 # Resumen
 
-The Combine es una herramienta de apoyo a Talleres de
+The Combine es una herramienta de apoyo a talleres de
 [recopilación rápida de palabras](https://www.sil.org/enterprise-news/rapid-word-collection-updated-approach-dictionary-creation)
 (RWC) y la limpieza de datos posterior al taller.
 

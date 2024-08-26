@@ -43,12 +43,11 @@ export default function VernWithSuggestions(
     <Autocomplete
       id={props.textFieldId}
       disabled={props.isDisabled}
-      // freeSolo allows use of a typed entry not available as a drop-down option
-      freeSolo
       value={props.vernacular}
       options={props.suggestedVerns ?? []}
-      // option-never-equals-value prevents automatic option highlighting
-      isOptionEqualToValue={() => false}
+      freeSolo // allows use of a typed entry not available as a drop-down option
+      includeInputInList // allows arrow up/down out of the suggestions
+      isOptionEqualToValue={() => false} // prevents automatic option highlighting
       onBlur={props.onBlur}
       onFocus={props.onFocus}
       onInputChange={(_e, value) => {
