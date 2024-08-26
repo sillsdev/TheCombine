@@ -7,9 +7,10 @@
     <meta name="theme-color" content="#000000" />
     <script src="%PUBLIC_URL%/scripts/release.js"></script>
     <script src="%PUBLIC_URL%/scripts/config.js"></script>
-    <!-- Add segment.com analytics as described (https://segment.com/docs/connections/sources/catalog/libraries/website/javascript/quickstart/#step-2-copy-the-segment-snippet) 
+    <!-- Add segment.com analytics per https://segment.com/docs/connections/sources/catalog/libraries/website/javascript/quickstart/#step-2-copy-the-segment-snippet
     with modifications to read writeKey from window.runtimeConfig if it exists. -->
-    <script>
+    <!-- Control analytics per https://cookieconsent.orestbida.com/advanced/manage-scripts.html#how-to-block-manage-a-script-tag -->
+    <script data-category="analytics" type="text/plain">
       !(function () {
         var writeKey;
         if (
