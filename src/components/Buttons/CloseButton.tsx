@@ -3,6 +3,8 @@ import { IconButton } from "@mui/material";
 import { CSSProperties, ReactElement } from "react";
 
 interface CloseButtonProps {
+  buttonId?: string;
+  buttonLabel?: string;
   close: () => void;
 }
 
@@ -15,7 +17,9 @@ export default function CloseButton(props: CloseButtonProps): ReactElement {
 
   return (
     <IconButton
-      aria-label="close"
+      aria-label={props.buttonLabel ?? "Close"}
+      data-testid={props.buttonId}
+      id={props.buttonId}
       onClick={props.close}
       style={closeButtonStyle}
     >
