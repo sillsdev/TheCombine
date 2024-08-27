@@ -22,14 +22,6 @@ export default function Captcha(props: CaptchaProps): ReactElement {
     setSuccess(!isRequired.current);
   }, [isRequired, setSuccess]);
 
-  const siteKey =
-    process.env.NODE_ENV === "production"
-      ? RuntimeConfig.getInstance().captchaSiteKey()
-      : // https://developers.cloudflare.com/turnstile/troubleshooting/testing/
-        // has dummy site keys for development and testing; options are
-        // invisible pass, invisible fail, visible pass, visible fail, forced interaction
-        "1x00000000000000000000AA"; // visible pass
-
   const fail = (): void => {
     setSuccess(false);
     toast.error(t("captcha.error"));
@@ -49,7 +41,7 @@ export default function Captcha(props: CaptchaProps): ReactElement {
       onExpire={fail}
       onSuccess={verify}
       options={{ language: i18n.resolvedLanguage, theme: "light" }}
-      siteKey={siteKey}
+      siteKey={RuntimeConfig.getInstance().captchaSiteKey()}
     />
   ) : (
     <Fragment />

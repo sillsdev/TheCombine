@@ -10,12 +10,6 @@ charts:
     aws-login:
       enabled: false
 
-    frontend:
-      # https://developers.cloudflare.com/turnstile/troubleshooting/testing/
-      # has dummy secret keys for development and testing; options are
-      # invisible pass, invisible fail, visible pass, visible fail, forced interaction
-      configCaptchaSiteKey: "1x00000000000000000000AA" # visible pass
-
     global:
       imageRegistry: ""
       imagePullPolicy: IfNotPresent

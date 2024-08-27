@@ -17,8 +17,10 @@ declare global {
 const defaultConfig: RuntimeConfigItems = {
   baseUrl: "http://localhost:5000",
   captchaRequired: true,
-  // Dummy key from https://developers.cloudflare.com/turnstile/troubleshooting/testing/
-  captchaSiteKey: "3x00000000000000000000FF",
+  /* https://developers.cloudflare.com/turnstile/troubleshooting/testing/
+   * has dummy site keys for development and testing; options are:
+   * invisible pass, invisible fail, visible pass, visible fail, forced interaction */
+  captchaSiteKey: "1x00000000000000000000AA", // visible pass
   offline: false,
   emailServicesEnabled: true,
   showCertExpiration: true,
@@ -58,17 +60,17 @@ export class RuntimeConfig {
   }
 
   public captchaRequired(): boolean {
-    if (window.runtimeConfig.hasOwnProperty("captchaRequired")) {
-      return window.runtimeConfig.captchaRequired;
-    }
-    return defaultConfig.captchaRequired;
+    return window.runtimeConfig.hasOwnProperty("captchaRequired")
+      ? window.runtimeConfig.captchaRequired
+      : defaultConfig.captchaRequired;
   }
 
   public captchaSiteKey(): string {
-    if (window.runtimeConfig.hasOwnProperty("captchaSiteKey")) {
-      return window.runtimeConfig.captchaSiteKey;
-    }
-    return defaultConfig.captchaSiteKey;
+    return (
+      (window.runtimeConfig.hasOwnProperty("captchaSiteKey")
+        ? window.runtimeConfig.captchaSiteKey
+        : "") || defaultConfig.captchaSiteKey
+    );
   }
 
   public emailServicesEnabled(): boolean {
