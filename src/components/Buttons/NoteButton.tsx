@@ -6,6 +6,7 @@ import { EditTextDialog } from "components/Dialogs";
 
 interface NoteButtonProps {
   buttonId?: string;
+  buttonLabel?: string;
   disabled?: boolean;
   /** If `noteText` is empty and `updateNote` defined,
    * the button will have default add-note hover text. */
@@ -20,7 +21,8 @@ export default function NoteButton(props: NoteButtonProps): ReactElement {
   return (
     <>
       <IconButtonWithTooltip
-        buttonId={props.buttonId ?? "entry-note-button"}
+        buttonId={props.buttonId}
+        buttonLabel={props.buttonLabel ?? "Note"}
         disabled={props.disabled}
         icon={
           props.noteText ? (
@@ -46,6 +48,7 @@ export default function NoteButton(props: NoteButtonProps): ReactElement {
         close={() => setNoteOpen(false)}
         updateText={props.updateNote ?? (() => {})}
         buttonIdCancel="note-edit-cancel"
+        buttonIdClear="note-edit-clear"
         buttonIdConfirm="note-edit-confirm"
         textFieldId="note-text-field"
       />

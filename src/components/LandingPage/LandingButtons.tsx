@@ -67,11 +67,12 @@ export function SignUpButton(props: SignUpButtonProps): ReactElement {
 }
 
 interface LandingButtonProps {
-  onClick: () => void;
-  textId: string;
   buttonId: string;
+  buttonLabel?: string;
   filled?: boolean;
   icon?: ReactElement;
+  onClick: () => void;
+  textId: string;
 }
 
 /** Button for the Landing Page. (Prop `icon` overrides `textId`.) */
@@ -80,14 +81,16 @@ function LandingButton(props: LandingButtonProps): ReactElement {
 
   return (
     <Button
-      variant={props.filled ? "contained" : "outlined"}
+      aria-label={props.buttonLabel}
       color="primary"
+      data-testid={props.buttonId}
+      id={props.buttonId}
       onClick={props.onClick}
       style={{
         height: buttonHeight,
         width: props.icon ? iconButtonWidth : buttonWidth,
       }}
-      id={props.buttonId}
+      variant={props.filled ? "contained" : "outlined"}
     >
       {props.icon || (
         <Typography variant="subtitle1">{t(props.textId)}</Typography>

@@ -80,7 +80,8 @@
     "redux-thunk": "^2.4.0",
     "ts-key-enum": "^2.0.12",
     "uuid": "^10.0.0",
-    "validator": "^13.11.0"
+    "validator": "^13.11.0",
+    "vanilla-cookieconsent": "^3.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
