@@ -18,6 +18,8 @@ interface CancelConfirmDialogProps {
   handleConfirm: () => Promise<void> | void;
   buttonIdCancel?: string;
   buttonIdConfirm?: string;
+  buttonLabelCancel?: string;
+  buttonLabelConfirm?: string;
 }
 
 /**
@@ -52,7 +54,9 @@ export default function CancelConfirmDialog(
       </DialogContent>
       <DialogActions>
         <Button
+          aria-label={props.buttonLabelCancel}
           color="primary"
+          data-testid={props.buttonIdCancel}
           disabled={loading}
           id={props.buttonIdCancel}
           onClick={props.handleCancel}
@@ -61,7 +65,12 @@ export default function CancelConfirmDialog(
           {t("buttons.cancel")}
         </Button>
         <LoadingButton
-          buttonProps={{ id: props.buttonIdConfirm, onClick: onConfirm }}
+          buttonProps={{
+            "aria-label": props.buttonLabelConfirm,
+            "data-testid": props.buttonIdConfirm,
+            id: props.buttonIdConfirm,
+            onClick: onConfirm,
+          }}
           loading={loading}
         >
           {t("buttons.confirm")}

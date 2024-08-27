@@ -8,6 +8,7 @@ interface UndoButtonProps {
   buttonIdEnabled?: string;
   buttonIdCancel?: string;
   buttonIdConfirm?: string;
+  buttonLabelEnabled?: string;
   textIdDialog: string;
   textIdDisabled: string;
   textIdEnabled: string;
@@ -34,9 +35,11 @@ export default function UndoButton(props: UndoButtonProps): ReactElement {
       {isUndoEnabled ? (
         <div>
           <Button
-            variant="outlined"
+            aria-label={props.buttonLabelEnabled ?? "Undo"}
+            data-testid={props.buttonIdEnabled}
             id={props.buttonIdEnabled}
             onClick={() => setUndoDialogOpen(true)}
+            variant="outlined"
           >
             {t(props.textIdEnabled)}
           </Button>

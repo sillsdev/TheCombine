@@ -3,6 +3,8 @@ import { MouseEventHandler, ReactElement, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
 interface IconButtonWithTooltipProps {
+  buttonId?: string;
+  buttonLabel?: string;
   disabled?: boolean;
   icon: ReactElement;
   text?: ReactNode;
@@ -10,7 +12,6 @@ interface IconButtonWithTooltipProps {
   textId?: string;
   size?: "large" | "medium" | "small";
   onClick?: MouseEventHandler<HTMLButtonElement>;
-  buttonId?: string;
   side?: "bottom" | "left" | "right" | "top";
 }
 
@@ -26,11 +27,12 @@ export default function IconButtonWithTooltip(
     >
       <span>
         <IconButton
-          id={props.buttonId}
+          aria-label={props.buttonLabel}
           data-testid={props.buttonId}
-          disabled={props.disabled || !props.onClick}
           onClick={props.onClick}
           size={props.size || "medium"}
+          id={props.buttonId}
+          disabled={props.disabled || !props.onClick}
         >
           {props.icon}
         </IconButton>
