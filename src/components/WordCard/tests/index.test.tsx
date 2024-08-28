@@ -52,7 +52,7 @@ beforeEach(async () => {
 
 describe("WordCard", () => {
   it("has summary and full views", async () => {
-    //const agent = userEvent.setup();
+    const agent = userEvent.setup();
 
     /** Check that the summary view has the intended elements */
     const checkCondensed = (): void => {
@@ -100,8 +100,8 @@ describe("WordCard", () => {
     };*/
 
     checkCondensed();
-    /*await agent.click(screen.getByLabelText(WordCardLabel.ButtonExpand));
-    checkExpanded();
+    await agent.click(screen.getByLabelText(WordCardLabel.ButtonExpand));
+    /*checkExpanded();
     await agent.click(screen.getByLabelText(WordCardLabel.ButtonCondense));
     checkCondensed();*/
   });
