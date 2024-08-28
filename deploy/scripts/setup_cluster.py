@@ -12,6 +12,7 @@ import tempfile
 from typing import Any, Dict, List
 
 from enum_types import ExitStatus, HelmAction
+from helm_utils import create_secrets
 from kube_env import KubernetesEnvironment, add_helm_opts, add_kube_opts
 from utils import init_logging, run_cmd
 import yaml
@@ -155,6 +156,12 @@ def main() -> None:
                 with open(override_file, "w") as file:
                     yaml.dump(chart_spec["override"], file)
                 helm_cmd.extend(["-f", str(override_file)])
+            if "secrets" in chart_spec:
+                secrets_file = Path(temp_dir).resolve() / f"secrets_{chart_spec['name']}.yaml"
+                if create_secrets(
+                    chart_spec["secrets"], output_file=secrets_file, env_vars_req=True
+                ):
+                    helm_cmd.extend(["-f", str(secrets_file)])
             helm_cmd_str = " ".join(helm_cmd)
             logging.info(f"Running: {helm_cmd_str}")
             # Run with os.system so that there is feedback on stdout/stderr while the

@@ -110,6 +110,9 @@ cert-manager:
     wait: true
     override:
       installCRDs: true
+    # secrets:
+    #   - config_item: foo_secret
+    #     env_var: HOME
 
 nginx-ingress-controller:
   repo:
