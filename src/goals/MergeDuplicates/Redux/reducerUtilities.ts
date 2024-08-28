@@ -12,6 +12,7 @@ import {
 } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { newMergeWords } from "goals/MergeDuplicates/MergeDupsTypes";
 import { type Hash } from "types/hash";
+import { newGrammaticalInfo, newSense } from "types/word";
 import { compareFlags } from "utilities/wordUtilities";
 
 // A collection of helper/utility functions only for use in the MergeDupsReducer.
@@ -112,15 +113,42 @@ export function createMergeParent(
 export function combineIntoFirstSense(mergeSenses: MergeTreeSense[]): void {
   // Set the main sense to the first sense (the top one when the sidebar was opened).
   const mainSense = mergeSenses[0].sense;
-  const sep = "; ";
+  const senses: Sense[] = [mainSense];
 
-  // Merge the rest as duplicates.
+  // Mark the rest as duplicates.
   // These were senses dropped into another sense.
   mergeSenses.slice(1).forEach((mergeDupSense) => {
-    const dupSense = mergeDupSense.sense;
-    dupSense.accessibility = Status.Duplicate;
+    mergeDupSense.sense.accessibility = Status.Duplicate;
+    senses.push(mergeDupSense.sense);
+  });
 
-    // Merge the duplicate's definitions into the main sense.
+  // Combine the sense content and update the main sense.
+  const combinedSense = combineSenses(senses);
+  mainSense.definitions = combinedSense.definitions;
+  mainSense.glosses = combinedSense.glosses;
+  mainSense.grammaticalInfo = combinedSense.grammaticalInfo;
+  mainSense.semanticDomains = combinedSense.semanticDomains;
+}
+
+/** Create a copy of the first sense with the following content merged from all senses:
+ * definitions, glosses, grammaticalInfo, semanticDomains. */
+export function combineSenses(senses: Sense[]): Sense {
+  if (!senses.length) {
+    return newSense();
+  }
+
+  const mainSense: Sense = {
+    ...senses[0],
+    definitions: [],
+    glosses: [],
+    grammaticalInfo: newGrammaticalInfo(),
+    semanticDomains: [],
+  };
+
+  const sep = "; ";
+
+  senses.forEach((dupSense) => {
+    // Merge in the definitions.
     dupSense.definitions.forEach((def) => {
       const newText = def.text.trim();
       if (newText) {
@@ -143,7 +171,7 @@ export function combineIntoFirstSense(mergeSenses: MergeTreeSense[]): void {
       }
     });
 
-    // Merge the duplicate's glosses into the main sense.
+    // Merge in the glosses.
     dupSense.glosses.forEach((gloss) => {
       const newDef = gloss.def.trim();
       if (newDef) {
@@ -166,7 +194,7 @@ export function combineIntoFirstSense(mergeSenses: MergeTreeSense[]): void {
       }
     });
 
-    // Use the duplicate's part of speech if not specified in the main sense.
+    // Use the grammatical info if not already specified.
     if (mainSense.grammaticalInfo.catGroup === GramCatGroup.Unspecified) {
       mainSense.grammaticalInfo = { ...dupSense.grammaticalInfo };
     } else if (
@@ -180,11 +208,13 @@ export function combineIntoFirstSense(mergeSenses: MergeTreeSense[]): void {
       }
     }
 
-    // Put the duplicate's domains in the main sense if the id is new.
+    // Merge in the semantic domains.
     dupSense.semanticDomains.forEach((dom) => {
       if (mainSense.semanticDomains.every((d) => d.id !== dom.id)) {
         mainSense.semanticDomains.push({ ...dom });
       }
     });
   });
+
+  return mainSense;
 }

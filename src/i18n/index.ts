@@ -26,7 +26,8 @@ i18n
       // more easily (just switch in the browser and reload, instead of clearing all site data)
       detection: { order: ["queryString", "path", "navigator"] },
       supportedLngs: i18nLangs,
-      // "languageOnly" will (e.g.) only load 'es' if the browser is 'es-MX'
+      // "languageOnly" means use only the language part (first subtag) of the full language tag;
+      // e.g., if the user's browser is set to 'es-MX', we just use 'es'
       load: "languageOnly",
       fallbackLng: i18nFallbacks,
       interpolation: { escapeValue: false },

@@ -14,6 +14,7 @@ import { IconButtonWithTooltip, PartOfSpeechButton } from "components/Buttons";
 import MultilineTooltipTitle from "components/MultilineTooltipTitle";
 import DomainChipsGrid from "components/WordCard/DomainChipsGrid";
 import SenseCardText from "components/WordCard/SenseCardText";
+import { combineSenses } from "goals/MergeDuplicates/Redux/reducerUtilities";
 
 interface SenseCardContentProps {
   senses: Sense[];
@@ -31,13 +32,14 @@ export default function SenseCardContent(
 ): ReactElement {
   const { t } = useTranslation();
 
-  const gramInfo = props.senses
-    .map((s) => s.grammaticalInfo)
-    .find((g) => g.catGroup !== GramCatGroup.Unspecified);
-
-  const semDoms = props.senses
-    .flatMap((s) => s.semanticDomains)
-    .sort((a, b) => a.id.localeCompare(b.id));
+  const sense = combineSenses(props.senses);
+  const gramInfo =
+    sense.grammaticalInfo.catGroup === GramCatGroup.Unspecified
+      ? undefined
+      : sense.grammaticalInfo;
+  const semDoms = sense.semanticDomains.sort((a, b) =>
+    a.id.localeCompare(b.id)
+  );
 
   const reasonText = (reason: ProtectReason): string => {
     // Backend/Helper/LiftHelper.cs > GetProtectedReasons(LiftSense sense)
@@ -96,9 +98,9 @@ export default function SenseCardContent(
   };
 
   const protectedWarning =
-    !props.sidebar && props.senses[0].accessibility === Status.Protected;
+    !props.sidebar && sense.accessibility === Status.Protected;
   const tooltipTexts = [t("mergeDups.helpText.protectedSense")];
-  const reasons = props.senses[0]?.protectReasons;
+  const reasons = sense.protectReasons;
   if (reasons?.length) {
     tooltipTexts.push(
       t("mergeDups.helpText.protectedData", {
@@ -114,7 +116,7 @@ export default function SenseCardContent(
       <div style={{ position: "absolute", left: 0, top: 0 }}>
         {gramInfo && (
           <PartOfSpeechButton
-            buttonId={`sense-${props.senses[0].guid}-part-of-speech`}
+            buttonId={`sense-${sense.guid}-part-of-speech`}
             gramInfo={gramInfo}
             onlyIcon
           />
@@ -128,7 +130,7 @@ export default function SenseCardContent(
             side="top"
             size="small"
             text={<MultilineTooltipTitle lines={tooltipTexts} />}
-            buttonId={`sense-${props.senses[0].guid}-protected`}
+            buttonId={`sense-${sense.guid}-protected`}
           />
         )}
       </div>
@@ -144,7 +146,7 @@ export default function SenseCardContent(
         {props.senses.length > 1 && (
           <IconButton
             onClick={props.toggleFunction}
-            id={`sidebar-open-sense-${props.senses[0].guid}`}
+            id={`sidebar-open-sense-${sense.guid}`}
             size="large"
           >
             <ArrowForwardIos />
@@ -152,7 +154,7 @@ export default function SenseCardContent(
         )}
       </div>
       {/* List glosses and (if any) definitions. */}
-      <SenseCardText languages={props.languages} sense={props.senses[0]} />
+      <SenseCardText languages={props.languages} sense={sense} />
       {/* List semantic domains. */}
       <DomainChipsGrid semDoms={semDoms} />
     </CardContent>
