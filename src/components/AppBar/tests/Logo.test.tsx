@@ -1,7 +1,8 @@
-import { Button } from "@mui/material";
-import renderer from "react-test-renderer";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { act } from "react";
 
-import Logo from "components/AppBar/Logo";
+import Logo, { logoButtonLabel } from "components/AppBar/Logo";
 import { Path } from "types/path";
 
 jest.mock("react-router-dom", () => ({
@@ -13,17 +14,16 @@ jest.mock("react-router-dom", () => ({
 
 const mockNavigate = jest.fn();
 
-let testRenderer: renderer.ReactTestRenderer;
-
-beforeAll(() => {
-  renderer.act(() => {
-    testRenderer = renderer.create(<Logo />);
+beforeAll(async () => {
+  await act(async () => {
+    render(<Logo />);
   });
 });
 
 describe("Logo", () => {
-  it("navigates to Project Screen on click", () => {
-    testRenderer.root.findByType(Button).props.onClick();
+  it("navigates to Project Screen on click", async () => {
+    const agent = userEvent.setup();
+    await agent.click(screen.getByLabelText(logoButtonLabel));
     expect(mockNavigate).toHaveBeenCalledWith(Path.ProjScreen);
   });
 });

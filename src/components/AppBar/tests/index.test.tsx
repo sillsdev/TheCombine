@@ -1,9 +1,10 @@
+import { render } from "@testing-library/react";
+import { act } from "react";
 import { Provider } from "react-redux";
 import { MemoryRouter } from "react-router-dom";
-import { act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import AppBar from "components/AppBar/AppBarComponent";
+import AppBar from "components/AppBar";
 import { defaultState } from "rootRedux/types";
 
 jest.mock("backend", () => ({
@@ -25,7 +26,7 @@ beforeEach(() => {
 describe("AppBar", () => {
   it("renders", async () => {
     await act(async () => {
-      create(
+      render(
         <Provider store={mockStore}>
           <MemoryRouter>
             <AppBar />
