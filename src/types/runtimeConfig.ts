@@ -60,17 +60,17 @@ export class RuntimeConfig {
   }
 
   public captchaRequired(): boolean {
-    return window.runtimeConfig.hasOwnProperty("captchaRequired")
-      ? window.runtimeConfig.captchaRequired
-      : defaultConfig.captchaRequired;
+    if (window.runtimeConfig.hasOwnProperty("captchaRequired")) {
+      return window.runtimeConfig.captchaRequired;
+    }
+    return defaultConfig.captchaRequired;
   }
 
   public captchaSiteKey(): string {
-    return (
-      (window.runtimeConfig.hasOwnProperty("captchaSiteKey")
-        ? window.runtimeConfig.captchaSiteKey
-        : "") || defaultConfig.captchaSiteKey
-    );
+    if (window.runtimeConfig.hasOwnProperty("captchaSiteKey")) {
+      return window.runtimeConfig.captchaSiteKey;
+    }
+    return defaultConfig.captchaSiteKey;
   }
 
   public emailServicesEnabled(): boolean {
