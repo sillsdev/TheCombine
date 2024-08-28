@@ -10,6 +10,11 @@ export function partOfSpeechButtonId(senseGuid: string): string {
   return `sense-${senseGuid}-part-of-speech`;
 }
 
+/** Text for the aria-label of SenseCard elements */
+export enum SenseCardLabel {
+  ButtonGramInfo = "Part of speech",
+}
+
 interface SenseCardProps {
   bgColor?: string;
   languages?: string[];
@@ -35,6 +40,7 @@ export default function SenseCard(props: SenseCardProps): ReactElement {
           {gramInfo.catGroup !== GramCatGroup.Unspecified && (
             <PartOfSpeechButton
               buttonId={partOfSpeechButtonId(props.sense.guid)}
+              buttonLabel={SenseCardLabel.ButtonGramInfo}
               gramInfo={gramInfo}
               onlyIcon
             />
