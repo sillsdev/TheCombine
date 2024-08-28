@@ -14,7 +14,7 @@ charts:
     # Frontend configuration items:
     frontend:
       configAnalyticsWriteKey: "j9EeK4oURluRSIKbaXCBKBxGCnT2WahB"
-      configCaptchaSiteKey: "0x4AAAAAAAe9zmM2ysXGSJk1" # Turnstile site key
+      configCaptchaSiteKey: "0x4AAAAAAAiMciPlBW1aA1iL" # Turnstile site key
       configShowCertExpiration: false
     # Maintenance configuration items
     maintenance:

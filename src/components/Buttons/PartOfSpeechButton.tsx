@@ -10,6 +10,7 @@ import { getGramCatGroupColor } from "utilities/wordUtilities";
 
 interface PartOfSpeechButtonProps {
   buttonId?: string;
+  buttonLabel?: string;
   gramInfo: GrammaticalInfo;
   onClick?: () => void;
   onlyIcon?: boolean;
@@ -38,6 +39,7 @@ export default function PartOfSpeechButton(
   const CatGroupButton = (): ReactElement => (
     <IconButtonWithTooltip
       buttonId={props.buttonId}
+      buttonLabel={props.buttonLabel ?? "Part of speech"}
       icon={<Hexagon fontSize="small" sx={{ color }} />}
       onClick={props.onClick}
       side="top"
