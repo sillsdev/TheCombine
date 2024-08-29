@@ -115,10 +115,10 @@ cert-manager:
     additional_args:
       - --set
       - installCRDs=true
-      - --values
-      - ./setup_files/custom_config.yaml
-      - --set
-      - my_secret={HOME}
+      # - --values
+      # - ./setup_files/custom_config.yaml
+      # - --set
+      # - my_secret={HOME}
 
 nginx-ingress-controller:
   repo:
