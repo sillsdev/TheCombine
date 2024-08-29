@@ -5,6 +5,7 @@ clusters:
   development:
     - cert-manager
     - nginx-ingress-controller
+    - otel
   rancher:
     - rancher-ui
   cert-manager:
@@ -15,6 +16,88 @@ clusters:
 # Specify how each chart is to be installed.  The "repo" key specified which
 # helm repository needs to be added and the "chart" key specifies how to
 # install/update the chart.
+
+otel:
+  repo:
+    name: open-telemetry
+    url: https://open-telemetry.github.io/opentelemetry-helm-charts
+  chart:
+    name: otel
+    reference: open-telemetry/opentelemetry-collector
+    namespace: thecombine
+    wait: true
+    override:
+      mode: "deployment"
+      namespaceOverride: "thecombine"
+      image:
+        repository: "otel/opentelemetry-collector-k8s"
+      extraEnvs:
+        - name: HONEYCOMB_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: honeycomb-api-key-secret
+              key: api-key
+      config:
+        receivers:
+          jaeger: null
+          prometheus: null
+          zipkin: null
+          otlp:
+            protocols:
+              # grpc:
+              #   endpoint: otel-opentelemetry-collector:4317
+              http:
+                endpoint: otel-opentelemetry-collector:4318
+                # cors:
+                #   allowed_origins:
+                #     - "http://thecombine.localhost/*"
+        processors:
+          batch: {}
+        exporters:
+          otlp:
+            # endpoint: "api.honeycomb.io:443"
+            endpoint: "https://api.honeycomb.io:443"
+            headers:
+              "x-honeycomb-team": "${HONEYCOMB_API_KEY}"
+        service:
+          telemetry:
+            logs:
+              level: "debug"
+          pipelines:
+            traces:
+              receivers:
+                - otlp
+              processors:
+                - batch
+              exporters:
+                - otlp
+            metrics: null
+            logs: null
+      ports:
+        otlp:
+          enabled: false
+          # enabled: true
+          # containerPort: 4317
+          # servicePort: 4317
+          # hostPort: 4317
+          # protocol: TCP
+        otlp-http:
+          enabled: true
+          containerPort: 4318
+          servicePort: 4318
+          hostPort: 4318
+          protocol: TCP
+        jaeger-compact:
+          enabled: false
+        jaeger-thrift:
+          enabled: false
+        jaeger-grpc:
+          enabled: false
+        zipkin:
+          enabled: false
+        metrics:
+          enabled: false
+
 cert-manager:
   repo:
     name: jetstack
