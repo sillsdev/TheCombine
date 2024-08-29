@@ -1,12 +1,13 @@
-# fullnameOverride: "otel-collector"
-
 mode: "deployment"
-
 namespaceOverride: "thecombine"
-
 image:
   repository: "otel/opentelemetry-collector-k8s"
-
+# extraEnvs:
+#   - name: HONEYCOMB_API_KEY
+#     valueFrom:
+#       secretKeyRef:
+#         name: honeycomb-secret
+#         key: api-key
 config:
   receivers:
     jaeger: null
@@ -26,9 +27,9 @@ config:
   exporters:
     otlp:
       # endpoint: "api.honeycomb.io:443"
-      endpoint: "https://api.honeycomb.io"
+      endpoint: "https://api.honeycomb.io:443"
       headers:
-        "x-honeycomb-team": ""
+        "x-honeycomb-team": honeycomb-secret
   service:
     telemetry:
       logs:
@@ -43,7 +44,6 @@ config:
           - otlp
       metrics: null
       logs: null
-
 ports:
   otlp:
     enabled: false

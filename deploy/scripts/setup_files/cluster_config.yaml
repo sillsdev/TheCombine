@@ -27,76 +27,15 @@ otel:
     namespace: thecombine
     wait: true
     override:
-      mode: "deployment"
-      namespaceOverride: "thecombine"
-      image:
-        repository: "otel/opentelemetry-collector-k8s"
-      extraEnvs:
-        - name: HONEYCOMB_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: honeycomb-api-key-secret
-              key: api-key
-      config:
-        receivers:
-          jaeger: null
-          prometheus: null
-          zipkin: null
-          otlp:
-            protocols:
-              # grpc:
-              #   endpoint: otel-opentelemetry-collector:4317
-              http:
-                endpoint: otel-opentelemetry-collector:4318
-                # cors:
-                #   allowed_origins:
-                #     - "http://thecombine.localhost/*"
-        processors:
-          batch: {}
-        exporters:
-          otlp:
-            # endpoint: "api.honeycomb.io:443"
-            endpoint: "https://api.honeycomb.io:443"
-            headers:
-              "x-honeycomb-team": "${HONEYCOMB_API_KEY}"
-        service:
-          telemetry:
-            logs:
-              level: "debug"
-          pipelines:
-            traces:
-              receivers:
-                - otlp
-              processors:
-                - batch
-              exporters:
-                - otlp
-            metrics: null
-            logs: null
-      ports:
-        otlp:
-          enabled: false
-          # enabled: true
-          # containerPort: 4317
-          # servicePort: 4317
-          # hostPort: 4317
-          # protocol: TCP
-        otlp-http:
-          enabled: true
-          containerPort: 4318
-          servicePort: 4318
-          hostPort: 4318
-          protocol: TCP
-        jaeger-compact:
-          enabled: false
-        jaeger-thrift:
-          enabled: false
-        jaeger-grpc:
-          enabled: false
-        zipkin:
-          enabled: false
-        metrics:
-          enabled: false
+    # Additional arguments to pass to helm install/upgrade
+    # values inside curly braces ({}) are interpreted as
+    # environment variables and their values will be substituted for
+    # the curly brace expression.
+    additional_args:
+      - --values
+      - ./setup_files/collector_config.yaml
+      - --set
+      - honeycomb-secret=$HONEYCOMB_API_KEY
 
 cert-manager:
   repo:
@@ -108,17 +47,7 @@ cert-manager:
     namespace: cert-manager
     version: v1.12.3
     wait: true
-    # Additional arguments to pass to helm install/upgrade
-    # values inside curly braces ({}) are interpreted as
-    # environment variables and their values will be substituted for
-    # the curly brace expression.
-    additional_args:
-      - --set
-      - installCRDs=true
-      # - --values
-      # - ./setup_files/custom_config.yaml
-      # - --set
-      # - my_secret={HOME}
+    override: installCRDs=true
 
 nginx-ingress-controller:
   repo:
