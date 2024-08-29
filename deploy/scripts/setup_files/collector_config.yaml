@@ -29,11 +29,12 @@ config:
       # endpoint: "api.honeycomb.io:443"
       endpoint: "https://api.honeycomb.io:443"
       headers:
-        "x-honeycomb-team": honeycomb-secret
+        "x-honeycomb-team": ""
   service:
     telemetry:
       logs:
         level: "debug"
+      metrics: null
     pipelines:
       traces:
         receivers:
