@@ -108,11 +108,17 @@ cert-manager:
     namespace: cert-manager
     version: v1.12.3
     wait: true
-    override:
-      installCRDs: true
-    # secrets:
-    #   - config_item: foo_secret
-    #     env_var: HOME
+    # Additional arguments to pass to helm install/upgrade
+    # values inside curly braces ({}) are interpreted as
+    # environment variables and their values will be substituted for
+    # the curly brace expression.
+    additional_args:
+      - --set
+      - installCRDs=true
+      - --values
+      - ./setup_files/custom_config.yaml
+      - --set
+      - my_secret={HOME}
 
 nginx-ingress-controller:
   repo:

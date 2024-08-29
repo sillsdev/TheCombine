@@ -156,12 +156,9 @@ def main() -> None:
                 with open(override_file, "w") as file:
                     yaml.dump(chart_spec["override"], file)
                 helm_cmd.extend(["-f", str(override_file)])
-            if "secrets" in chart_spec:
-                secrets_file = Path(temp_dir).resolve() / f"secrets_{chart_spec['name']}.yaml"
-                if create_secrets(
-                    chart_spec["secrets"], output_file=secrets_file, env_vars_req=True
-                ):
-                    helm_cmd.extend(["-f", str(secrets_file)])
+            if "additional_args" in chart_spec:
+                for arg in chart_spec["additional_args"]:
+                    helm_cmd.append(arg.format(**os.environ))
             helm_cmd_str = " ".join(helm_cmd)
             logging.info(f"Running: {helm_cmd_str}")
             # Run with os.system so that there is feedback on stdout/stderr while the
