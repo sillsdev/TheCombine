@@ -15,8 +15,8 @@ The columns are: Edit (no header), Vernacular, Number of Senses (#), Glosses, Do
 To show/hide columns or rearrange their order, click on the
 ![Review Entries columns edit icon](../images/reviewEntriesColumnsEdit.png){width=25} icon in the top corner.
 
-由于快速字词收集（Rapid Word Collection）自身带有的特性，The Combine 中的 [词条输入](dataEntry.md) 不支持添加定义或词性
-的功能。 However, if the project has imported data in which definitions or parts of speech were already present,
+由于快速字词收集（Rapid Word Collection）自身带有的特性，The Combine 中的[词条输入](dataEntry.md)不支持添加定义或词性的
+功能。 However, if the project has imported data in which definitions or parts of speech were already present,
 additional columns will be available in the Review Entries table.
 
 #### Sorting and Filtering
@@ -38,8 +38,8 @@ include subdomains, add a final period to your filter. For example, "8111." incl
 
 ### 编辑词条行
 
-用户可以使用“发音
-”（![Review Entries pronunciations column header](images/reviewEntriesColumnPronunciations.png){width=28}）列中的图标来
+用户可以使用“发音”
+(![Review Entries pronunciations column header](../images/reviewEntriesColumnPronunciations.png){width=28}) 列中的图标来
 录制、播放或删除词条的录音。
 
 To edit any other part of an entry, click the
@@ -156,9 +156,7 @@ You can delete an entire entry by clicking the
 
 !!! note "笔记"
 
-A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same
-general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different
-general categories, only the first one is preserved.
+    A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different general categories, only the first one is preserved.
 
 #### 受保护的词条与词义
 
@@ -170,9 +168,9 @@ general categories, only the first one is preserved.
 
 创建字符工具仅供项目管理员使用。
 
-_创建字符库存_" 提供了该项目词条土语形式出现的每个符编码标准字符的概览。 这会使用户识别出该语言中经常用到的字符，并将它
-们“接受”为该语言字符库存的一部分。 字符库属于项目土语的LDML文档一部分，在项目 [导出](project.md#export) 时会包含该文件。
-接受字符后，就能用统一的字符编码标准、在民族语及其他语言资源中表达，
+*创建字符库存*提供了该项目词条土语形式出现的每个符编码标准字符的概览。 这会使用户识别出该语言中经常用到的字符，并将它们“
+接受”为该语言字符库存的一部分。 字符库属于项目土语的LDML文档一部分，在项目[导出](project.md#export)时会包含该文件。 接受
+字符后，就能用统一的字符编码标准、在民族语及其他语言资源中表达。
 
 *创建字符库存*的另一个用途，即为识别和替换那些在键入土语字形时被误用的字符。
 

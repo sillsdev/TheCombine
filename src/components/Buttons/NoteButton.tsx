@@ -6,7 +6,10 @@ import { EditTextDialog } from "components/Dialogs";
 
 interface NoteButtonProps {
   buttonId?: string;
+  buttonLabel?: string;
   disabled?: boolean;
+  /** If `noteText` is empty and `updateNote` defined,
+   * the button will have default add-note hover text. */
   noteText: string;
   updateNote?: (newText: string) => void | Promise<void>;
 }
@@ -18,7 +21,8 @@ export default function NoteButton(props: NoteButtonProps): ReactElement {
   return (
     <>
       <IconButtonWithTooltip
-        buttonId={props.buttonId ?? "entry-note-button"}
+        buttonId={props.buttonId}
+        buttonLabel={props.buttonLabel ?? "Note"}
         disabled={props.disabled}
         icon={
           props.noteText ? (
@@ -34,8 +38,8 @@ export default function NoteButton(props: NoteButtonProps): ReactElement {
         onClick={props.updateNote ? () => setNoteOpen(true) : undefined}
         side="top"
         size="small"
-        text={props.noteText}
-        textId="addWords.addNote"
+        text={props.noteText || undefined}
+        textId={props.updateNote ? "addWords.addNote" : undefined}
       />
       <EditTextDialog
         open={noteOpen}
@@ -44,6 +48,7 @@ export default function NoteButton(props: NoteButtonProps): ReactElement {
         close={() => setNoteOpen(false)}
         updateText={props.updateNote ?? (() => {})}
         buttonIdCancel="note-edit-cancel"
+        buttonIdClear="note-edit-clear"
         buttonIdConfirm="note-edit-confirm"
         textFieldId="note-text-field"
       />

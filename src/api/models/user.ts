@@ -12,6 +12,8 @@
  * Do not edit the class manually.
  */
 
+import { AutocompleteSetting } from "./autocomplete-setting";
+
 /**
  *
  * @export
@@ -108,4 +110,10 @@ export interface User {
    * @memberof User
    */
   isAdmin: boolean;
+  /**
+   *
+   * @type {AutocompleteSetting}
+   * @memberof User
+   */
+  glossSuggestion: AutocompleteSetting;
 }

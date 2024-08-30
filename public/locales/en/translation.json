@@ -30,7 +30,7 @@
     "domain": "Domain",
     "domainTitle": "Domain: {{ val1 }} ({{ val2 }})",
     "glosses": "Glosses",
-    "pressEnter": "Press enter to save word",
+    "pressEnter": "Press Enter to save word",
     "vernacular": "Vernacular"
   },
   "appBar": {
@@ -121,11 +121,26 @@
     "banners": {
       "title": "Banners",
       "loginBanner": "Login Banner",
-      "announcementBanner": "Announcement Banner"
+      "announcementBanner": "Announcement Banner",
+      "bannerCloseButton": "Close banner"
     }
   },
   "userSettings": {
+    "analyticsConsent": {
+      "button": "Change consent",
+      "consentModal": {
+        "acceptAllBtn": "Yes, allow analytics cookies",
+        "acceptNecessaryBtn": "No, reject analytics cookies",
+        "description": "The Combine stores basic info about your current session on your device. This info is necessary and isn't shared with anybody. The Combine also uses analytics cookies, which are only for us to fix bugs and compile anonymized statistics. Do you consent to our usage of analytics cookies?",
+        "title": "Cookies on The Combine"
+      },
+      "consentNo": "You have not consented to our use of analytics cookies.",
+      "consentYes": "You have consented to our use of analytics cookies.",
+      "title": "Analytics cookies"
+    },
     "contact": "Contact info",
+    "glossSuggestion": "Gloss spelling suggestions",
+    "glossSuggestionHint": "In Data Entry, give spelling suggestions for the Gloss being typed.",
     "phone": "Phone number",
     "uiLanguage": "User-interface language",
     "uiLanguageDefault": "(Default to browser language)",
@@ -485,7 +500,8 @@
     "speakerAdd": "Right click to add a speaker.",
     "speakerChange": "Right click to change speaker.",
     "speakerSelect": "Select speaker of this audio recording",
-    "recordingError": "Recording error",
+    "recordingError": "Recording error.",
+    "recordingPermission": "Please check if microphone permission is enabled in your browser.",
     "deleteRecording": "Delete Recording",
     "audioStreamError": "Error getting audio stream!",
     "noMicAccess": "No microphone access. Audio recording disabled."

@@ -1,7 +1,6 @@
 import { type PreloadedState } from "@reduxjs/toolkit";
 
 import { type Definition, type SemanticDomain, type Word } from "api/models";
-import { defaultState } from "components/App/DefaultState";
 import {
   convertSenseToMergeTreeSense,
   convertWordToMergeTreeWord,
@@ -11,6 +10,7 @@ import {
 import { type MergeDupsData } from "goals/MergeDuplicates/MergeDupsTypes";
 import { defaultState as mergeState } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { type RootState } from "rootRedux/store";
+import { persistedDefaultState } from "rootRedux/testTypes";
 import { newSense, newWord, simpleWord } from "types/word";
 
 const wordsArrayMock = (): Word[] => [
@@ -82,12 +82,6 @@ const wordFoo2 = {
   ...newWord("foo"),
   id: "wordId-foo2",
   senses: [senseBar, senseBaz],
-};
-
-// Preloaded values for store when testing the MergeDups Goal
-const persistedDefaultState: PreloadedState<RootState> = {
-  ...defaultState,
-  _persist: { version: 1, rehydrated: false },
 };
 
 export type ExpectedScenarioResult = {

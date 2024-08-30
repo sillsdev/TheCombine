@@ -10,7 +10,7 @@ charts:
     # Frontend configuration items:
     frontend:
       configAnalyticsWriteKey: "AoebaDJNjSlOMRUH87EaNjvwkQpfLoyy"
-      configCaptchaSiteKey: "0x4AAAAAAAe9zmM2ysXGSJk1" # Turnstile site key
+      configCaptchaSiteKey: "0x4AAAAAAAiMciPlBW1aA1iL" # Turnstile site key
       configShowCertExpiration: false
     global:
       awsS3Location: prod.thecombine.app

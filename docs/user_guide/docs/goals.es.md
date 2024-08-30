@@ -40,7 +40,7 @@ include subdomains, add a final period to your filter. For example, "8111." incl
 ### Edición de filas de entrada
 
 Puede grabar, reproducir o borrar las grabaciones de audio de una entrada con los iconos de la columna Pronunciaciones
-(![Review Entries pronunciations column header](images/reviewEntriesColumnPronunciations.png){width=28}).
+(![Review Entries pronunciations column header](../images/reviewEntriesColumnPronunciations.png){width=28}).
 
 To edit any other part of an entry, click the
 ![Review Entries row edit icon](../images/reviewEntriesRowEdit.png){width=20} edit icon in the initial column.
@@ -54,7 +54,7 @@ Esta herramienta encuentra automáticamente conjuntos de entradas potencialmente
 conjunto, y hasta 12 conjuntos en cada pasa). Primero presenta conjuntos de palabras con idénticas formas vernáculas. A
 continuación, presenta conjuntos con formas vernáculas similares o glosas (o definiciones) idénticas.
 
-![Fusionar duplica dos entradas](../images/mergeTwo.es.png)
+![Fusionar duplicados entradas](../images/mergeTwo.es.png)
 
 Cada entrada se muestra en una columna, y cada acepción de esa entrada se muestra como una tarjeta que puede pulsar y
 arrastrar. Hay tres cosas básicas que puede hacer con una acepción: moverlo, combinarlo con otra acepción o eliminarlo.
@@ -74,18 +74,18 @@ la columna extra vacía de la derecha.
 
 Si arrastra una tarjeta de acepción sobre otra tarjeta de acepción, la otra tarjeta de acepción también se vuelve verde.
 
-![Fusionar duplicados fusionar una acepción](../images/mergeMerge.es.png)
+![Combinar duplicados combinar una acepción](../images/mergeMerge.es.png)
 
 Soltar una carta de acepción sobre otra carta de acepción (cuando ambas están verdes) fusiona las acepciones. Esto hace
 que aparezca una barra lateral azul aparezca a la derecha, mostrando cuales acepciones se están fusionando.
 
-![Fusionar duplicados acepciones fusionadas](../images/mergeSidebar.es.png)
+![Combinar duplicados acepciones combinadas](../images/mergeSidebar.es.png)
 
 Puede arrastrar y soltar tarjetas de acepción hacia o desde la barra lateral para cambiar las acepciones que se están
-fusionando. O dentro de la barra lateral, puede desplazar una acepción diferente a la parte superior (para conservar sus
+combinando. O dentro de la barra lateral, puede desplazar una acepción diferente a la parte superior (para conservar sus
 glosas).
 
-![Fusionar duplicados moviendo una acepción de la barra lateral](../images/mergeSidebarMove.es.png)
+![Combinar duplicados moviendo una acepción de la barra lateral](../images/mergeSidebarMove.es.png)
 
 Pulse el corchete angular derecho (>) para cerrar o abrir la barra lateral azul.
 
@@ -94,29 +94,29 @@ Pulse el corchete angular derecho (>) para cerrar o abrir la barra lateral azul.
 Para eliminar una acepción por completo, arrastre su tarjeta hasta el icono del cubo de basura situado en la esquina
 inferior izquierda. Cuando la tarjeta de acepción se ponga roja, suéltela.
 
-![Fusionar duplicados eliminar una acepción](../images/mergeDelete.es.png)
+![Combinar duplicados eliminar una acepción](../images/mergeDelete.es.png)
 
 Si borra la única acepción que queda de una columna, toda la columna desaparecerá, y esa entrada entera se borrada
 cuando pulse Guardar y Continuar.
 
-![Fusionar duplicados acepción borrada](../images/mergeDeleted.es.png)
+![Combinar duplicados acepción borrada](../images/mergeDeleted.es.png)
 
 ### Marcar una entrada
 
 Hay un icono de bandera en la esquina superior derecha de cada columna (a la derecha del formulario vernáculo).
 
-![Fusionar duplicados marcar una entrada](../images/mergeFlag.es.png){.center}
+![Combinar duplicados marcar una entrada](../images/mergeFlag.es.png){.center}
 
 Puede hacer clic en el icono de la bandera para marcar la entrada para una futura inspección o edición. (Puede
 clasificar las entradas marcadas en [Revisar entradas](#review-entries)) Cuando marque una entrada, se le dará la opción
 de añadir texto a la bandera.
 
-![Fusionar duplicados añadiendo o editando una bandera](../images/mergeEditFlag.es.png){.center}
+![Combinar duplicados añadiendo o editando una bandera](../images/mergeEditFlag.es.png){.center}
 
 Tanto si se escribe texto como si no, sabrá que la entrada está marcada porque el icono de la bandera aparecerá en rojo
 sólido. Si ha añadido texto, puede pasar el cursor por encima de la bandera para ver el texto.
 
-![Fusionar Duplica una entrada marcada](../images/mergeFlagged.es.png){.center}
+![Combinar duplicados una entrada marcada](../images/mergeFlagged.es.png){.center}
 
 Pulse sobre el icono de la bandera roja para editar el texto o eliminar la bandera.
 
@@ -127,10 +127,10 @@ siguiente conjunto: "Guardar y Continuar" y "Aplazar".
 
 #### Guardar y Continuar
 
-![Fusionar duplicados botón Guardar y Continuar](../images/mergeSaveAndContinue.es.png)
+![Combinar duplicados botón Guardar y Continuar](../images/mergeSaveAndContinue.es.png)
 
 El botón azul "Guardar y continuar" hace dos cosas. En primer lugar, guarda todos los cambios realizados (es decir,
-todas las acepciones movidas, fusionadas o eliminadas), actualizando las palabras en la base de datos. Second, it saves
+todas las acepciones movidas, combinadas o eliminadas), actualizando las palabras en la base de datos. Second, it saves
 the resulting set of words as non-duplicates.
 
 !!! tip "Consejo"
@@ -139,7 +139,7 @@ the resulting set of words as non-duplicates.
 
 !!! note "Nota"
 
-    Si una de las palabras de un conjunto no fusionado intencionadamente se edita (por ejemplo, en las entradas de revisión), el conjunto puede volver a aparecer como duplicados potenciales.
+    Si una de las palabras de un conjunto no combinado intencionadamente se edita (por ejemplo, en las entradas de revisión), el conjunto puede volver a aparecer como duplicados potenciales.
 
 !!! warning "Importante"
 
@@ -147,7 +147,7 @@ the resulting set of words as non-duplicates.
 
 #### Aplazar
 
-![Fusionar duplicados botón Aplazar](../images/mergeDefer.es.png)
+![Combinar duplicados botón Aplazar](../images/mergeDefer.es.png)
 
 El botón gris "Aplazar" restablece cualquier cambio realizado en el conjunto de duplicados potenciales. El conjunto
 aplazado se puede revisar por Revisar duplicados aplazados.
@@ -157,7 +157,7 @@ aplazado se puede revisar por Revisar duplicados aplazados.
 #### Definiciones y parte de la oración
 
 Aunque las definiciones y las partes de la oración no pueden añadirse durante la introducción de datos, sí pueden estar
-presentes en las entradas importadas. Esta información aparecerá en las tarjetas de acepción de Fusionar duplicados de
+presentes en las entradas importadas. Esta información aparecerá en las tarjetas de acepción de Combinar duplicados de
 la siguiente manera:
 
 - Cualquier definición en una lengua de análisis se muestra debajo de la glosa en esa lengua.
@@ -165,13 +165,11 @@ la siguiente manera:
   corresponde a su categoría (por ejemplo, sustantivo o verbo). Pase el cursor por encima del hexágono para ver la
   categoría gramatical específica (p. ej., nombre propio o verbo transitivo).
 
-![Fusionar duplicados acepción con definiciones y parte de la oración](../images/mergeSenseDefinitionsPartOfSpeech.png){.center}
+![Combinar duplicados acepción con definiciones y parte de la oración](../images/mergeSenseDefinitionsPartOfSpeech.png){.center}
 
 !!! note "Nota"
 
-A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same
-general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different
-general categories, only the first one is preserved.
+    A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different general categories, only the first one is preserved.
 
 #### Entradas y acepciones protegidas
 

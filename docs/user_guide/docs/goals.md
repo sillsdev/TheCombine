@@ -164,9 +164,7 @@ information will appear in the Merge Duplicate sense cards as follows:
 
 !!! note "Note"
 
-A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same
-general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different
-general categories, only the first one is preserved.
+    A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different general categories, only the first one is preserved.
 
 #### Protected Entries and Senses
 

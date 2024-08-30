@@ -29,7 +29,7 @@
     "domain": "Domínio",
     "domainTitle": "Domínio: {{ val1 }} ({{ val2 }})",
     "glosses": "Glosas",
-    "pressEnter": "Pressione enter para salvar a palavra",
+    "pressEnter": "Pressione Enter para salvar a palavra",
     "vernacular": "Vernáculo"
   },
   "appBar": {
@@ -70,6 +70,7 @@
     "resetFail": "Erro de redefinição de senha",
     "backToLogin": "Voltar para Login"
   },
+  "captcha": {},
   "speakerMenu": {},
   "userMenu": {
     "siteSettings": "Configurações do site",
@@ -117,6 +118,7 @@
   "projectSettings": {
     "project": "Projeto:",
     "tab": {
+      "domains": "Domínios Semânticos",
       "export": "Exportar",
       "languages": "Idiomas",
       "users": "Usuários"
@@ -186,6 +188,13 @@
       "emailLabel": "E-mail",
       "toastSuccess": "Adicionado usuário do projeto.",
       "toastFail": "Falha ao adicionar usuário ao projeto."
+    },
+    "domains": {
+      "subdomainName": "Nome de subdomínio: ",
+      "name": "Nome: ",
+      "description": "Descrição: ",
+      "questions": "Perguntas: ",
+      "addError": {}
     }
   },
   "goal": {
@@ -314,7 +323,7 @@
     "recordTooltip": "Pressione e segure para gravar.",
     "playTooltip": "Pressione para reproduzir.",
     "deleteTooltip": "Clique em shift para excluir.",
-    "noMicAccess": "Erro de gravação: Não foi possível acessar um microfone.",
+    "recordingError": "Erro de gravação",
     "deleteRecording": "Eliminar Gravação"
   },
   "statistics": {

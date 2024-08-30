@@ -1,4 +1,4 @@
-import { Email, Phone } from "@mui/icons-material";
+import { Email, HelpOutline, Phone } from "@mui/icons-material";
 import {
   Button,
   Card,
@@ -7,19 +7,22 @@ import {
   MenuItem,
   Select,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { FormEvent, Fragment, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { show } from "vanilla-cookieconsent";
 
-import { User } from "api/models";
+import { AutocompleteSetting, User } from "api/models";
 import { isEmailTaken, updateUser } from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
 import { asyncLoadSemanticDomains } from "components/Project/ProjectActions";
 import ClickableAvatar from "components/UserSettings/ClickableAvatar";
 import { updateLangFromUser } from "i18n";
-import { useAppDispatch } from "rootRedux/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { StoreState } from "rootRedux/types";
 import theme from "types/theme";
 import { uiWritingSystems } from "types/writingSystem";
 
@@ -29,11 +32,13 @@ import { uiWritingSystems } from "types/writingSystem";
 const punycode = require("punycode/");
 
 export enum UserSettingsIds {
+  ButtonChangeConsent = "user-settings-change-consent",
   ButtonSubmit = "user-settings-submit",
   FieldEmail = "user-settings-email",
   FieldName = "user-settings-name",
   FieldPhone = "user-settings-phone",
   FieldUsername = "user-settings-username",
+  SelectGlossSuggestion = "user-settings-gloss-suggestion",
   SelectUiLang = "user-settings-ui-lang",
 }
 
@@ -53,10 +58,17 @@ export function UserSettings(props: {
 }): ReactElement {
   const dispatch = useAppDispatch();
 
+  const analyticsConsent = useAppSelector(
+    (state: StoreState) => state.analyticsState.consent
+  );
+
   const [name, setName] = useState(props.user.name);
   const [phone, setPhone] = useState(props.user.phone);
   const [email, setEmail] = useState(props.user.email);
   const [uiLang, setUiLang] = useState(props.user.uiLang ?? "");
+  const [glossSuggestion, setGlossSuggestion] = useState(
+    props.user.glossSuggestion
+  );
   const [emailTaken, setEmailTaken] = useState(false);
   const [avatar, setAvatar] = useState(getAvatar());
 
@@ -72,7 +84,8 @@ export function UserSettings(props: {
     name === props.user.name &&
     phone === props.user.phone &&
     punycode.toUnicode(email) === props.user.email &&
-    uiLang === (props.user.uiLang ?? "");
+    uiLang === (props.user.uiLang ?? "") &&
+    glossSuggestion === props.user.glossSuggestion;
 
   async function onSubmit(e: FormEvent<HTMLFormElement>): Promise<void> {
     e.preventDefault();
@@ -83,6 +96,7 @@ export function UserSettings(props: {
         phone,
         email: punycode.toUnicode(email),
         uiLang,
+        glossSuggestion,
         hasAvatar: !!avatar,
       });
 
@@ -223,6 +237,68 @@ export function UserSettings(props: {
                       </MenuItem>
                     ))}
                   </Select>
+                </Grid>
+              </Grid>
+
+              <Grid item container spacing={2}>
+                <Grid item xs={12}>
+                  <Typography variant="h6">
+                    {t("userSettings.glossSuggestion")}
+                  </Typography>
+                </Grid>
+
+                <Grid item>
+                  <Select
+                    data-testid={UserSettingsIds.SelectGlossSuggestion}
+                    id={UserSettingsIds.SelectGlossSuggestion}
+                    onChange={(e) =>
+                      setGlossSuggestion(e.target.value as AutocompleteSetting)
+                    }
+                    value={glossSuggestion}
+                    variant="standard"
+                  >
+                    <MenuItem value={AutocompleteSetting.Off}>
+                      {t("projectSettings.autocomplete.off")}
+                    </MenuItem>
+                    <MenuItem value={AutocompleteSetting.On}>
+                      {t("projectSettings.autocomplete.on")}
+                    </MenuItem>
+                  </Select>
+                </Grid>
+
+                <Grid item>
+                  <Tooltip
+                    title={t("userSettings.glossSuggestionHint")}
+                    placement={document.body.dir === "rtl" ? "left" : "right"}
+                  >
+                    <HelpOutline fontSize="small" />
+                  </Tooltip>
+                </Grid>
+              </Grid>
+
+              <Grid item container spacing={2}>
+                <Grid item xs={12}>
+                  <Typography variant="h6">
+                    {t("userSettings.analyticsConsent.title")}
+                  </Typography>
+                </Grid>
+
+                <Grid item>
+                  <Typography>
+                    {t(
+                      analyticsConsent
+                        ? "userSettings.analyticsConsent.consentYes"
+                        : "userSettings.analyticsConsent.consentNo"
+                    )}
+                  </Typography>
+                  <Button
+                    data-testid={UserSettingsIds.ButtonChangeConsent}
+                    id={UserSettingsIds.ButtonChangeConsent}
+                    onClick={() => show(true)}
+                    variant="outlined"
+                  >
+                    {t("userSettings.analyticsConsent.button")}
+                  </Button>
                 </Grid>
               </Grid>
 
