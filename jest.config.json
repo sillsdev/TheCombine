@@ -1,4 +1,5 @@
 {
+  "//": "See https://jestjs.io/docs/configuration for config option details.",
   "collectCoverageFrom": [
     "src/**/*.{js,jsx,ts,tsx}",
     "!src/api/**/*",

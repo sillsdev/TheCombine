@@ -9,6 +9,10 @@
 /coverage*
 /Backend.Tests/coverage*
 
+# Production
+build
+/dist
+
 # Generated files for development use
 docker-compose.yml
 .env.*
@@ -17,7 +21,6 @@ docker-compose.yml
 .parcel-cache
 nginx/scripts
 /backups
-/dist
 /parcel-bundle-reports
 /restore
 script_conf.json
