@@ -1,7 +1,7 @@
 
 // using System;
 using System.Diagnostics;
-using System.Diagnostics.Metrics;
+// using System.Diagnostics.Metrics;
 // using System.Net.Http;
 // using System.Net.Http.Json;
 using System.Security.Claims;
@@ -20,7 +20,7 @@ namespace BackendFramework.Otel
     public static class OtelKernel
     {
 
-        public const string ServiceName = "Backend-Otel";
+        // public const string ServiceName = "Backend-Otel";
         // private readonly LocationCache _locationCache;
 
         // public OtelKernel(LocationCache locationCache, IServiceCollection serviceCollection)
@@ -31,11 +31,11 @@ namespace BackendFramework.Otel
 
         public static void AddOpenTelemetryInstrumentation(this IServiceCollection services)
         {
-            var appResourceBuilder = ResourceBuilder.CreateDefault().AddService(ServiceName);
+            var appResourceBuilder = ResourceBuilder.CreateDefault();
             // todo: include version 
             services.AddOpenTelemetry().WithTracing(tracerProviderBuilder => tracerProviderBuilder
                 .SetResourceBuilder(appResourceBuilder)
-                .AddSource(ServiceName)
+                // .AddSource(ServiceName)
                 .AddProcessor<LocationEnricher>()
                 .AddAspNetCoreInstrumentation(options =>
                 {
@@ -119,7 +119,7 @@ namespace BackendFramework.Otel
             //     .AddOtlpExporter()
             // );
 
-            var meter = new Meter(ServiceName);
+            // var meter = new Meter(ServiceName);
 
         }
 

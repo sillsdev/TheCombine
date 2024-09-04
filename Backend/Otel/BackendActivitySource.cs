@@ -6,6 +6,6 @@ public class BackendActivitySource
 {
     public static ActivitySource Get()
     {
-        return new ActivitySource(OtelKernel.ServiceName);
+        return new ActivitySource("service");
     }
 }

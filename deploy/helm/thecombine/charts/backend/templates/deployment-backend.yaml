@@ -30,7 +30,8 @@ spec:
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           env:
             - name: OTEL_SERVICE_NAME
-              value: "Otel-k8s-simple-deployment"
+              value: {{ .Values.global.serverName }}
+              # value: "Otel-k8s-simple-deployment"
             - name: OTEL_EXPORTER_OTLP_PROTOCOL
               value: "http/protobuf"
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
