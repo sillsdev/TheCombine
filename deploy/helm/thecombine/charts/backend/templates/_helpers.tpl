@@ -15,3 +15,12 @@
 {{- define "backend.honeycombTeamHeader" -}}
   {{- printf "x-honeycomb-team=%s" .Values.global.honeycombSecretKey }}
 {{- end}}
+
+{{/* Build OTEL service name based on target */}}
+{{- define "backend.otelServiceName" -}}
+  {{- if eq .Values.global.serverName "thecombine.localhost" }}
+    {{- print "dev" }}
+  {{- else }}
+    {{- printf "%s" .Values.global.serverName}}
+  {{- end }}
+{{- end }}
