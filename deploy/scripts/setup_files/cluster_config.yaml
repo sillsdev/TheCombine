@@ -36,7 +36,7 @@ otel:
     # substituted by the scripts_dir variable set in setup_cluster.py.
     additional_args:
       - --values
-      - $scripts_dir/setup_files/collector_config.yaml
+      - "{SCRIPTS_DIR}/setup_files/collector_config.yaml"
       - --set
       - config.exporters.otlp.headers.x-honeycomb-team={HONEYCOMB_API_KEY}
 
