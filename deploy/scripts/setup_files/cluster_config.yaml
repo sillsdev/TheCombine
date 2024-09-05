@@ -33,7 +33,7 @@ otel:
     # the curly brace expression.
     additional_args:
       - --values
-      - ./deploy/scripts/setup_files/collector_config.yaml
+      - $scripts_dir/setup_files/collector_config.yaml
       - --set
       - config.exporters.otlp.headers.x-honeycomb-team={HONEYCOMB_API_KEY}
 

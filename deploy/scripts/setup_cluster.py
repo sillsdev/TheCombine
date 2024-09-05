@@ -158,6 +158,7 @@ def main() -> None:
                 helm_cmd.extend(["-f", str(override_file)])
             if "additional_args" in chart_spec:
                 for arg in chart_spec["additional_args"]:
+                    arg = str(arg).replace("$scripts_dir", str(scripts_dir))
                     helm_cmd.append(arg.format(**os.environ))
             helm_cmd_str = " ".join(helm_cmd)
             logging.info(f"Running: {helm_cmd_str}")
