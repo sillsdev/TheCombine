@@ -31,6 +31,9 @@ otel:
     # values inside curly braces ({}) are interpreted as
     # environment variables and their values will be substituted for
     # the curly brace expression.
+    # Passing $scripts_dir to helm install/upgrade
+    # will be interpreted as a variable and its value will be
+    # substituted by the scripts_dir variable set in setup_cluster.py.
     additional_args:
       - --values
       - $scripts_dir/setup_files/collector_config.yaml
