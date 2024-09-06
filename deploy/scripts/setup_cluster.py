@@ -102,6 +102,9 @@ def main() -> None:
     for chart in yaml.safe_load(chart_list_results.stdout):
         curr_charts.append(chart["name"])
 
+    # Add the current script directory to the OS Environment variables
+    os.environ["SCRIPTS_DIR"] = str(scripts_dir)
+
     # Verify the Kubernetes/Helm environment
     kube_env = KubernetesEnvironment(args)
     # Install/upgrade the required charts
@@ -158,14 +161,13 @@ def main() -> None:
                 helm_cmd.extend(["-f", str(override_file)])
             if "additional_args" in chart_spec:
                 for arg in chart_spec["additional_args"]:
-                    arg = str(arg).replace("$scripts_dir", str(scripts_dir))
                     helm_cmd.append(arg.format(**os.environ))
             helm_cmd_str = " ".join(helm_cmd)
-            logging.info(f"Running: {helm_cmd_str}")
+            logging.debug(f"Running: {helm_cmd_str}")
             # Run with os.system so that there is feedback on stdout/stderr while the
             # command is running
             exit_status = os.waitstatus_to_exitcode(os.system(helm_cmd_str))
-            logging.info(
+            logging.debug(
                 f'helm {helm_action.value} of {chart_spec["name"]} '
                 + f"returned exit status {hex(exit_status)}"
             )
