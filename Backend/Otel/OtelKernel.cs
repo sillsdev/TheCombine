@@ -4,9 +4,9 @@ using System.Diagnostics;
 // using System.Diagnostics.Metrics;
 // using System.Net.Http;
 // using System.Net.Http.Json;
-using System.Security.Claims;
+// using System.Security.Claims;
 // using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+// using Microsoft.AspNetCore.Http;
 // using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry;
@@ -20,7 +20,7 @@ namespace BackendFramework.Otel
     public static class OtelKernel
     {
 
-        // public const string ServiceName = "Backend-Otel";
+        public const string ServiceName = "Backend-Otel";
         // private readonly LocationCache _locationCache;
 
         // public OtelKernel(LocationCache locationCache, IServiceCollection serviceCollection)
@@ -32,10 +32,11 @@ namespace BackendFramework.Otel
         public static void AddOpenTelemetryInstrumentation(this IServiceCollection services)
         {
             var appResourceBuilder = ResourceBuilder.CreateDefault();
+            // var appResourceBuilder = ResourceBuilder.CreateDefault().AddService(ServiceName);
             // todo: include version 
             services.AddOpenTelemetry().WithTracing(tracerProviderBuilder => tracerProviderBuilder
                 .SetResourceBuilder(appResourceBuilder)
-                // .AddSource(ServiceName)
+                .AddSource(ServiceName)
                 .AddProcessor<LocationEnricher>()
                 .AddAspNetCoreInstrumentation(options =>
                 {
@@ -51,7 +52,7 @@ namespace BackendFramework.Otel
                         {
                             activity.SetTag("inbound.http.request.body.size", "no content");
                         }
-                        activity.EnrichWithUser(request.HttpContext);
+                        // activity.EnrichWithUser(request.HttpContext);
                     };
                     options.EnrichWithHttpResponse = (activity, response) =>
                     {
@@ -64,7 +65,7 @@ namespace BackendFramework.Otel
                         {
                             activity.SetTag("inbound.http.response.body.size", "no content");
                         }
-                        activity.EnrichWithUser(response.HttpContext);
+                        // activity.EnrichWithUser(response.HttpContext);
                     };
                 })
                 .AddHttpClientInstrumentation(options =>
@@ -83,7 +84,7 @@ namespace BackendFramework.Otel
 
                         if (request.RequestUri is not null)
                         {
-                            // activity.SetTag("url.path", request.RequestUri.AbsolutePath);
+                            activity.SetTag("url.pathHERE", request.RequestUri.AbsolutePath);
                             if (!string.IsNullOrEmpty(request.RequestUri.Query))
                                 activity.SetTag("url.query", request.RequestUri.Query);
                         }
@@ -123,25 +124,25 @@ namespace BackendFramework.Otel
 
         }
 
-        private static void EnrichWithUser(this Activity activity, HttpContext httpContext)
-        {
-            var claimsPrincipal = httpContext.User;
-            // var userId = claimsPrincipal?.FindFirstValue("sub");
-            var userId = claimsPrincipal;
-            if (userId != null)
-            {
-                activity.SetTag("app.user.id", userId);
-            }
-            var userRole = claimsPrincipal?.FindFirstValue("role");
-            if (userRole != null)
-            {
-                activity.SetTag("app.user.role", userRole);
-            }
-            if (httpContext.RequestAborted.IsCancellationRequested)
-            {
-                activity.SetTag("http.abort", true);
-            }
-        }
+        // private static void EnrichWithUser(this Activity activity, HttpContext httpContext)
+        // {
+        //     var claimsPrincipal = httpContext.User;
+        //     // var userId = claimsPrincipal?.FindFirstValue("sub");
+        //     var userId = claimsPrincipal;
+        //     if (userId != null)
+        //     {
+        //         activity.SetTag("app.user.id", userId);
+        //     }
+        //     var userRole = claimsPrincipal?.FindFirstValue("role");
+        //     if (userRole != null)
+        //     {
+        //         activity.SetTag("app.user.role", userRole);
+        //     }
+        //     if (httpContext.RequestAborted.IsCancellationRequested)
+        //     {
+        //         activity.SetTag("http.abort", true);
+        //     }
+        // }
 
         private class LocationEnricher(LocationProvider locationProvider) : BaseProcessor<Activity>
         {
