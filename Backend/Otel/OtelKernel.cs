@@ -83,7 +83,7 @@ namespace BackendFramework.Otel
 
                         if (request.RequestUri is not null)
                         {
-                            activity.SetTag("url.path", request.RequestUri.AbsolutePath);
+                            // activity.SetTag("url.path", request.RequestUri.AbsolutePath);
                             if (!string.IsNullOrEmpty(request.RequestUri.Query))
                                 activity.SetTag("url.query", request.RequestUri.Query);
                         }
@@ -146,29 +146,29 @@ namespace BackendFramework.Otel
         private class LocationEnricher(LocationProvider locationProvider) : BaseProcessor<Activity>
         {
             public override async void OnEnd(Activity data)
+        {
+            string? uriPath = (string?)data.GetTagItem("url.full");
+            string locationUri = LocationProvider.locationGetterUri;
+
+            if (uriPath == null || !uriPath.Contains(locationUri))
             {
-                string? uriPath = (string?)data.GetTagItem("url.full");
-                string locationUri = LocationProvider.locationGetterUri;
+                LocationApi? response = await locationProvider.GetLocation();
 
-                if (uriPath == null || !uriPath.Contains(locationUri))
+                var location = new
                 {
-                    LocationApi? response = await locationProvider.GetLocation();
+                    Country = response?.country,
+                    Region = response?.regionName,
+                    City = response?.city,
+                };
 
-                    var location = new
-                    {
-                        Country = response?.country,
-                        Region = response?.regionName,
-                        City = response?.city,
-                    };
-
-                    data?.AddTag("country", location.Country);
-                    data?.AddTag("region", location.Region);
-                    data?.AddTag("city", location.City);
-                }
-
+                data?.AddTag("country", location.Country);
+                data?.AddTag("region", location.Region);
+                data?.AddTag("city", location.City);
             }
+
         }
     }
+}
 
 }
 
