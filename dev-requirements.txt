@@ -22,7 +22,7 @@ certifi==2024.8.30
     # via
     #   kubernetes
     #   requests
-cffi==1.17.0
+cffi==1.17.1
     # via cryptography
 chardet==5.2.0
     # via tox
@@ -37,7 +37,7 @@ colorama==0.4.6
     #   -r dev-requirements.in
     #   mkdocs-material
     #   tox
-cryptography==43.0.0
+cryptography==43.0.1
     # via
     #   pyopenssl
     #   types-pyopenssl
@@ -212,13 +212,13 @@ types-cffi==1.16.0.20240331
     # via types-pyopenssl
 types-pyopenssl==24.1.0.20240722
     # via -r dev-requirements.in
-types-python-dateutil==2.9.0.20240821
+types-python-dateutil==2.9.0.20240906
     # via -r dev-requirements.in
 types-pyyaml==6.0.12.20240808
     # via -r dev-requirements.in
-types-requests==2.32.0.20240712
+types-requests==2.32.0.20240905
     # via -r dev-requirements.in
-types-setuptools==74.0.0.20240831
+types-setuptools==74.1.0.20240906
     # via types-cffi
 typing-extensions==4.12.2
     # via mypy
@@ -229,7 +229,7 @@ urllib3==2.2.2
     #   types-requests
 virtualenv==20.26.3
     # via tox
-watchdog==5.0.1
+watchdog==5.0.2
     # via mkdocs
 websocket-client==1.8.0
     # via kubernetes
