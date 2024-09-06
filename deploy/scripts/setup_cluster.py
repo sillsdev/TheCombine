@@ -166,7 +166,7 @@ def main() -> None:
             # Run with os.system so that there is feedback on stdout/stderr while the
             # command is running
             exit_status = os.waitstatus_to_exitcode(os.system(helm_cmd_str))
-            logging.debug(
+            logging.info(
                 f'helm {helm_action.value} of {chart_spec["name"]} '
                 + f"returned exit status {hex(exit_status)}"
             )
