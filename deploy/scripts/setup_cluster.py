@@ -12,7 +12,6 @@ import tempfile
 from typing import Any, Dict, List
 
 from enum_types import ExitStatus, HelmAction
-from helm_utils import create_secrets
 from kube_env import KubernetesEnvironment, add_helm_opts, add_kube_opts
 from utils import init_logging, run_cmd
 import yaml
