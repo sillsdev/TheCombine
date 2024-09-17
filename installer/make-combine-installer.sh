@@ -57,14 +57,6 @@ if [[ $NET_INSTALL == 0 ]] ; then
   ./package_images.py ${COMBINE_VERSION} ${TEMP_DIR}
   INSTALLER_NAME="combine-installer.run"
   popd
-  # create tarball for venv
-  #
-  # replace the current directory in the venv files with a string
-  # that can be used to relocate the venv
-  VENV_DIR=`pwd`/venv
-  echo "VENV_DIR == ${VENV_DIR}"
-  sed -i "s|${VENV_DIR}|%%VENV_DIR%%|g" venv/bin/*
-  tar czf ${TEMP_DIR}/venv.tar.gz venv
   rm -rf venv
 else
   # Package the Combine for network installation

@@ -56,18 +56,12 @@ create-python-venv () {
   #####
   # Setup Python virtual environment
   echo "Setting up venv in ${DEPLOY_DIR}"
-  if [ -f "./venv.tar.gz" ] ; then
-    tar xzf ./venv.tar.gz
-    sed -i "s|%%VENV_DIR%%|${DEPLOY_DIR}/venv|g" ${DEPLOY_DIR}/venv/bin/*
-    source venv/bin/activate
-  else
-    python3 -m venv venv
-    source venv/bin/activate
-    echo "Install pip and pip-tools"
-    python -m pip install --upgrade pip pip-tools
-    echo "Install dependencies"
-    python -m piptools sync requirements.txt
-  fi
+  python3 -m venv venv
+  source venv/bin/activate
+  echo "Install pip and pip-tools"
+  python -m pip install --upgrade pip pip-tools
+  echo "Install dependencies"
+  python -m piptools sync requirements.txt
 }
 
 # Install Kubernetes engine and other supporting
@@ -204,6 +198,7 @@ DEPLOY_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd
 CONFIG_DIR=${HOME}/.config/combine
 mkdir -p ${CONFIG_DIR}
 SINGLE_STEP=0
+IS_SERVER=0
 
 # See if we need to continue from a previous install
 STATE_FILE=${CONFIG_DIR}/install-state
@@ -225,6 +220,9 @@ while (( "$#" )) ; do
       ;;
     restart)
       next-state "Pre-reqs"
+      ;;
+    server)
+      IS_SERVER=1
       ;;
     single-step)
       SINGLE_STEP=1
@@ -313,11 +311,14 @@ while [ "$STATE" != "Done" ] ; do
       next-state "Shutdown-combine"
       ;;
     Shutdown-combine)
-      # Shut down the combine services
-      combinectl stop
-      # Disable combine services from starting at boot time
-      sudo systemctl disable create_ap
-      sudo systemctl disable k3s
+      # If not being installed as a server,
+      if [[ $IS_SERVER != 1 ]] ; then
+        # Shut down the combine services
+        combinectl stop
+        # Disable combine services from starting at boot time
+        sudo systemctl disable create_ap
+        sudo systemctl disable k3s
+      fi
       # Print the current status
       combinectl status
       next-state "Done"
