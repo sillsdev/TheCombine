@@ -15,6 +15,7 @@ from pathlib import Path
 import re
 from typing import Any, Dict, List
 
+import combine_charts
 from utils import init_logging, run_cmd
 import yaml
 
@@ -132,6 +133,8 @@ def package_middleware(
 
 def package_thecombine(tag: str, image_dir: Path) -> None:
     logging.info(f"Packaging The Combine version {tag}.")
+    logging.debug("Create helm charts from templates")
+    combine_charts.generate(tag)
     logging.debug(" - Get template for The Combine.")
     results = run_cmd(
         [
