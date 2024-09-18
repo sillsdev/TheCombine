@@ -4,8 +4,10 @@ using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
@@ -47,6 +49,8 @@ namespace Backend.Tests.Controllers
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext() }
             };
 
+            var services = new ServiceCollection();
+            services.AddOpenTelemetryInstrumentation();
             _jwtAuthenticatedUser = new User { Username = "user", Password = "pass" };
             _userRepo.Create(_jwtAuthenticatedUser);
             _jwtAuthenticatedUser = _permissionService.Authenticate(_jwtAuthenticatedUser.Username,
