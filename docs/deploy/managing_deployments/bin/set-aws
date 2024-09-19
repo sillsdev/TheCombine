@@ -1,0 +1,6 @@
+#! /usr/bin/env bash
+
+create_aws_config.py $*
+if (( $# > 0 )) ; then
+    . ${HOME}/.aws/env
+fi

@@ -1,0 +1,9 @@
+#! /bin/bash
+
+if [ "$#" != "1" ] ; then
+    echo "Incorrect number of arguments."
+    echo "Usage: $0 <deployment>"
+    exit 1
+fi
+kubectl exec -it deployment/$1 -- /bin/bash
+

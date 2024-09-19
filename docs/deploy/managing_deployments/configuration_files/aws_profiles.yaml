@@ -1,0 +1,16 @@
+# aws_profiles.yaml defines the structure used by set-aws/create_aws_config.py to change the environment variables
+# that define the access rights for commands run with the aws v2 cli.  It also adds the AWS account number to the
+# structure so that set-aws can define the AWS_ACCOUNT environment variable that is used by multiple convenience
+# scripts and command aliases.
+
+# This file shows a single profile to demonstrate the required structure.  Any number of profiles can be added.
+# The access keys ids and secrets are defined in the IAM service in the AWS Console.
+---
+profiles:
+  - name: my_profile
+    account: 123456789012 # AWS 12-digit account number
+    user: aws_user_name
+    region: us-east-1
+    aws_access_key_id: Axxxxxxxxxxxxxxxxxxx # AWS 20 character access key id
+    aws_secret_access_key: "eydSdWIhM15DLiszSEp7QkNcbEkzRmduYnVkVkU=" # AWS 40 character secret access key
+# ...

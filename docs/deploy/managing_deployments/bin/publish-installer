@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+export COMBINE_VERSION=""
+
+case $# in
+    0) echo "Missing Combine release number."
+       exit 1;;
+    1) COMBINE_VERSION=$1;;
+    *) echo "Too many arguments"
+       exit 1;;
+esac
+
+# cd installer directory if in project root directory
+if [ -d "installer" ] ; then
+    cd installer
+fi
+
+if [ ! -f "make-combine-installer.sh" ] ; then
+    echo "Cannot find script to build Combine installer."
+    exit 2
+fi
+
+if [ ! -f "README.md" ] ; then
+    echo "Cannot find README.md."
+    exit 2
+fi
+
+# Generate files to upload
+./make-combine-installer.sh
+pandoc --pdf-engine=weasyprint --metadata title="Combine Installation Instructions" README.md -o README.pdf
+
+# Setup AWS Environment
+. set-aws build
+
+# Upload files
+aws s3 cp combine-installer.run "s3://software.thecombine.app/combine-installer.run"
+
+aws s3 cp README.pdf "s3://software.thecombine.app/README.pdf"

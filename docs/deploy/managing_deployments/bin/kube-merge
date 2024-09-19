@@ -1,0 +1,19 @@
+#! /bin/bash
+
+export KUBECONFIG=${HOME}/.kube/config
+
+for var in "$@"
+do
+    if [ -f ${HOME}/.kube/${var}/config ] ; then
+        export KUBECONFIG=${HOME}/.kube/${var}/config:${KUBECONFIG}
+    else
+        echo "${HOME}/.kube/${var}/config does not exist. Ignored."
+    fi
+done
+
+kubectl config view --merge --flatten > /tmp/$$
+cp ${HOME}/.kube/config ${HOME}/.kube/config.backup
+mv /tmp/$$ ${HOME}/.kube/config
+chmod 600 ${HOME}/.kube/config
+
+

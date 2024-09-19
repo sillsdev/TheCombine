@@ -1,0 +1,16 @@
+# This file contains some bash alias definitions that can be helpful when managing Kubernetes clusters for The Combine.
+# Insert these definitions into your ${HOME}/.bash_aliases file if they seem useful.
+
+# Login to Amazon ECR Public Registry
+alias aws-pub-login='. ${HOME}/.aws/env; aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws'
+# Login to Amazon ECR Private Registry
+alias aws-login='. ${HOME}/.aws/env; aws ecr get-login-password --profile default | ${CONTAINER_CLI} login --username AWS --password-stdin ${AWS_ECR}'
+
+alias kubens='kubectl config set-context --current --namespace'
+alias kubecontext='kubectl config get-contexts'
+alias kubeuse='kubectl config use-context'
+alias kubedb='kubectl exec -it deployment/database -- mongosh CombineDatabase'
+
+# Set APP_VER variable for building and deploying Kubernetes images
+# must be run from <project_root>/deploy/scripts
+alias appver='export APP_VER=`./app_release.py --get` && echo $APP_VER'
