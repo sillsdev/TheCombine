@@ -31,17 +31,10 @@ spec:
           env:
             - name: OTEL_SERVICE_NAME
               value: {{ include "backend.otelServiceName" . }}
-              # value: {{ .Values.global.serverName }}
-              # value: "Otel-k8s-simple-deployment"
             - name: OTEL_EXPORTER_OTLP_PROTOCOL
               value: "http/protobuf"
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
               value: "http://otel-opentelemetry-collector:4318"
-            # - name: OTEL_EXPORTER_OTLP_HEADERS
-            #   valueFrom:
-            #     secretKeyRef:
-            #       key: HONEYCOMB_HEADER
-            #       name: env-backend-secrets
             - name: COMBINE_CAPTCHA_REQUIRED
               valueFrom:
                 configMapKeyRef:
