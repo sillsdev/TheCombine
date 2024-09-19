@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+# Set default values
+COMPILE_DEPS=0
+PIP_VERSION=""
+# Parse arguments
+while [ "${#@}" -gt "0" ] ; do
+    opt=$1
+    case "$opt" in
+        --build)
+            COMPILE_DEPS=1
+            ;;
+        --pip)
+            PIP_VERSION=$2
+            shift
+            ;;
+        *)
+            echo "Unrecognized option, $opt"
+            ;;
+    esac
+    shift
+done
+
+# Deactivate the virtual environment if it is active
+if which deactivate ; then
+    deactivate
+fi
+
+# Remove old venv, tox cache
+for dir in venv .tox ; do
+    if [ -d "$dir" ] ;  then
+        echo "Removing $dir" >&2
+        rm -rf $dir
+    fi
+done
+
+# Create Python virtual environment
+python3 -m venv venv
+. venv/bin/activate
+
+# Upgrade pip, piptools
+if [ -n "$PIP_VERSION" ] ; then
+    python -m pip install --upgrade pip==$PIP_VERSION pip-tools
+else
+    python -m pip install --upgrade pip pip-tools
+fi
+
+if (( $COMPILE_DEPS > 0 )) ; then
+    # Update pinned dependencies
+    if [ -f requirements.in ] ; then
+        python -m piptools compile --upgrade requirements.in
+    fi
+    python -m piptools compile --upgrade dev-requirements.in
+fi
+
+# Sync dependencies
+if [ -f requirements.txt ] ; then
+    python -m piptools sync requirements.txt dev-requirements.txt
+else
+    python -m piptools sync dev-requirements.txt
+fi

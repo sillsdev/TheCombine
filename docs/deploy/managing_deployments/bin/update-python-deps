@@ -1,0 +1,11 @@
+#! /usr/bin/env bash
+
+python -m piptools compile --upgrade dev-requirements.in --resolver=backtracking
+
+#startdir=`pwd`
+for subdir in maintenance deploy; do
+   pushd $subdir
+   python -m piptools compile --upgrade requirements.in --resolver=backtracking
+   #cd $startdir
+   popd
+done
