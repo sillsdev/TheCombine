@@ -293,11 +293,24 @@ namespace BackendFramework
             services.AddTransient<IWordService, WordService>();
 
             // OpenTelemetry
+
+
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(10);
+                // options.Cookie.HttpOnly = true;
+                // options.Cookie.IsEssential = true;
+            }
+            );
+            services.AddSingleton<SessionProvider>();
+
             services.AddMemoryCache();
             services.AddHttpContextAccessor();
 
             services.AddHttpClient();
             services.AddSingleton<LocationProvider>();
+
             services.AddOpenTelemetryInstrumentation();
 
         }
@@ -320,6 +333,7 @@ namespace BackendFramework
             app.UseRouting();
             // Apply CORS policy to all requests.
             app.UseCors(LocalhostCorsPolicy);
+            // app.UseSession();
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
@@ -328,6 +342,7 @@ namespace BackendFramework
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();

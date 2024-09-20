@@ -1,6 +1,13 @@
 
 // using System;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Http;
+
+// using Microsoft.AspNetCore.Authentication.Cookies;
+
+// using System.Security.Claims;
+// using Microsoft.AspNetCore.Http;
+
 // using System.Diagnostics.Metrics;
 // using System.Net.Http;
 // using System.Net.Http.Json;
@@ -53,6 +60,13 @@ namespace BackendFramework.Otel
                             activity.SetTag("inbound.http.request.body.size", "no content");
                         }
                         // activity.EnrichWithUser(request.HttpContext);
+
+                        // activity.SetTag("BEFORE", "before");
+                        // var sess = request.HttpContext.Session;
+                        // activity.SetTag("SESSION!", sess);
+                        // activity.SetTag("AFTER", "after");
+                        // var id = request.HttpContext.Request.Cookies[pConfig.CookieName].Value();
+                        // var id = request.HttpContext.Session.Id;
                     };
                     options.EnrichWithHttpResponse = (activity, response) =>
                     {
@@ -66,6 +80,9 @@ namespace BackendFramework.Otel
                             activity.SetTag("inbound.http.response.body.size", "no content");
                         }
                         // activity.EnrichWithUser(response.HttpContext);
+                        activity.SetTag("COOKIE-RESPONSE", "before");
+                        var id = response.HttpContext.Session.Id;
+                        activity.SetTag("COOKIE-RESPONSE", "after");
                     };
                 })
                 .AddHttpClientInstrumentation(options =>
@@ -84,7 +101,7 @@ namespace BackendFramework.Otel
 
                         if (request.RequestUri is not null)
                         {
-                            activity.SetTag("url.pathHERE", request.RequestUri.AbsolutePath);
+                            // activity.SetTag("url.pathHERE", request.RequestUri.AbsolutePath);
                             if (!string.IsNullOrEmpty(request.RequestUri.Query))
                                 activity.SetTag("url.query", request.RequestUri.Query);
                         }
@@ -142,34 +159,58 @@ namespace BackendFramework.Otel
         //     {
         //         activity.SetTag("http.abort", true);
         //     }
-        // }
 
-        private class LocationEnricher(LocationProvider locationProvider) : BaseProcessor<Activity>
+
+        // private class LocationEnricher(IHttpContextAccessor contextAccessor, LocationProvider locationProvider) : BaseProcessor<Activity>
+        // private class LocationEnricher(LocationProvider locationProvider, SessionProvider sessionProvider) : BaseProcessor<Activity>
+        private class LocationEnricher(LocationProvider locationProvider, IHttpContextAccessor contextAccessor) : BaseProcessor<Activity>
         {
+
+            // public override void OnStart(Activity data)
+            // {
+            //     // if (contextAccessor.HttpContext is { } context) data.EnrichWithUser(context);
+            //     var existingSession = sessionProvider.GetSession();
+            //     data?.AddTag("SESSIONONSTART", existingSession);
+            // }
             public override async void OnEnd(Activity data)
-        {
-            string? uriPath = (string?)data.GetTagItem("url.full");
-            string locationUri = LocationProvider.locationGetterUri;
-
-            if (uriPath == null || !uriPath.Contains(locationUri))
             {
-                LocationApi? response = await locationProvider.GetLocation();
+                string? uriPath = (string?)data.GetTagItem("url.full");
+                string locationUri = LocationProvider.locationGetterUri;
 
-                var location = new
+                if (uriPath == null || !uriPath.Contains(locationUri))
                 {
-                    Country = response?.country,
-                    Region = response?.regionName,
-                    City = response?.city,
-                };
+                    LocationApi? response = await locationProvider.GetLocation();
 
-                data?.AddTag("country", location.Country);
-                data?.AddTag("region", location.Region);
-                data?.AddTag("city", location.City);
+                    var location = new
+                    {
+                        Country = response?.country,
+                        Region = response?.regionName,
+                        City = response?.city,
+                    };
+
+                    data?.AddTag("country", location.Country);
+                    data?.AddTag("region", location.Region);
+                    data?.AddTag("city", location.City);
+
+                    if (contextAccessor.HttpContext is { } context)
+                    {
+                        // data?.SetTag("ONEND BEFORE", "before");
+                        // var sess = context.Session;
+                        // data?.SetTag("SESSION!", sess);
+
+                    }
+
+
+                    // var existingSession = sessionProvider.GetSession();
+                    // data?.AddTag("SESSIONONSTART", existingSession);
+                }
+
+
+
             }
-
         }
     }
-}
 
 }
+
 
