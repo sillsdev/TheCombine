@@ -1,4 +1,4 @@
-import "tests/reactI18nextMock";
+import "i18n/tests/reactI18nextMock";
 
 // Force tests to fail on console.error and console.warn
 global.console.error = (message) => {

@@ -171,7 +171,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 
 ### Python
 
-_Python_ (3.10 recommended) is required to run the scripts that are used to initialize and maintain the cluster. Note
+_Python_ (3.12 recommended) is required to run the scripts that are used to initialize and maintain the cluster. Note
 that the commands for setting up the virtual environment must be run from the top-level directory for _The Combine_
 source tree.
 
