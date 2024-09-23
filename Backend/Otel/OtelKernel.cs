@@ -20,7 +20,7 @@ namespace BackendFramework.Otel
     public static class OtelKernel
     {
 
-        public const string ServiceName = "Backend-Otel";
+        public const string SourceName = "Backend-Otel";
         // private readonly LocationCache _locationCache;
 
         // public OtelKernel(LocationCache locationCache, IServiceCollection serviceCollection)
@@ -36,7 +36,7 @@ namespace BackendFramework.Otel
             // todo: include version 
             services.AddOpenTelemetry().WithTracing(tracerProviderBuilder => tracerProviderBuilder
                 .SetResourceBuilder(appResourceBuilder)
-                .AddSource(ServiceName)
+                .AddSource(SourceName)
                 .AddProcessor<LocationEnricher>()
                 .AddAspNetCoreInstrumentation(options =>
                 {
