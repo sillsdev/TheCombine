@@ -22,15 +22,17 @@ namespace BackendFramework.Controllers
         private readonly IEmailService _emailService;
         private readonly IPasswordResetService _passwordResetService;
         private readonly IPermissionService _permissionService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public UserController(IUserRepository userRepo, IPermissionService permissionService,
-            ICaptchaService captchaService, IEmailService emailService, IPasswordResetService passwordResetService)
+            ICaptchaService captchaService, IEmailService emailService, IPasswordResetService passwordResetService, IHttpContextAccessor httpContextAccessor)
         {
             _userRepo = userRepo;
             _captchaService = captchaService;
             _emailService = emailService;
             _passwordResetService = passwordResetService;
             _permissionService = permissionService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary> Verifies a CAPTCHA token </summary>
@@ -128,6 +130,7 @@ namespace BackendFramework.Controllers
                 {
                     return Unauthorized(cred.Username);
                 }
+                _httpContextAccessor?.HttpContext?.Session.SetString("starting session", "start");
                 return Ok(user);
             }
             catch (KeyNotFoundException)

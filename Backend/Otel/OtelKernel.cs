@@ -66,7 +66,8 @@ namespace BackendFramework.Otel
                         // activity.SetTag("SESSION!", sess);
                         // activity.SetTag("AFTER", "after");
                         // var id = request.HttpContext.Request.Cookies[pConfig.CookieName].Value();
-                        // var id = request.HttpContext.Session.Id;
+                        // var id = request.HttpContext.Session.GetString("starting session");
+                        // activity.SetTag("TEST session values", id);
                     };
                     options.EnrichWithHttpResponse = (activity, response) =>
                     {
@@ -80,9 +81,12 @@ namespace BackendFramework.Otel
                             activity.SetTag("inbound.http.response.body.size", "no content");
                         }
                         // activity.EnrichWithUser(response.HttpContext);
-                        activity.SetTag("COOKIE-RESPONSE", "before");
-                        var id = response.HttpContext.Session.Id;
+                        // var id = response.HttpContext.Session.GetString("starting session");
+                        // activity.SetTag("TEST session values", id);
+                        activity.SetTag("COOKIE-RESPONSE-before", "before");
+                        // var id = response.HttpContext.Session.Id;
                         activity.SetTag("COOKIE-RESPONSE", "after");
+
                     };
                 })
                 .AddHttpClientInstrumentation(options =>
@@ -204,13 +208,11 @@ namespace BackendFramework.Otel
                     // var existingSession = sessionProvider.GetSession();
                     // data?.AddTag("SESSIONONSTART", existingSession);
                 }
-
-
-
             }
+
+
         }
     }
 
 }
-
 

@@ -300,6 +300,18 @@ namespace BackendFramework
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(10);
                 // options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            }
+            );
+            services.AddSingleton<SessionProvider>();
+
+
+
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(10);
+                // options.Cookie.HttpOnly = true;
                 // options.Cookie.IsEssential = true;
             }
             );
@@ -340,6 +352,8 @@ namespace BackendFramework
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
 
+
+            app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();
