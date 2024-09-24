@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { StatusCodes } from "http-status-codes";
 import { Base64 } from "js-base64";
 import { enqueueSnackbar } from "notistack";
@@ -26,6 +26,7 @@ import {
   Word,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
+import { getSessionId } from "backend/sessionStorage";
 import authHeader from "components/Login/AuthHeaders";
 import router from "router/browserRouter";
 import { Goal, GoalStep } from "types/goals";
@@ -52,6 +53,10 @@ const whiteListedErrorUrls = [
 
 // Create an axios instance to allow for attaching interceptors to it.
 const axiosInstance = axios.create({ baseURL: apiBaseURL });
+axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  config.headers.sessionId = getSessionId();
+  return config;
+});
 axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
   // Any status codes that falls outside the range of 2xx cause this function to
   // trigger.
