@@ -34,7 +34,7 @@ jobs:
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - run: npm run fmt-frontend-check
       - run: npm run lint
       - run: npm run build
@@ -63,7 +63,7 @@ jobs:
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
+      - run: npm ci --ignore-scripts
       - run: npm run test-frontend:coverage
         env:
           CI: true
