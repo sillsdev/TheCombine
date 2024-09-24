@@ -22,7 +22,7 @@ use_directory_urls: false
 repo_url: https://github.com/sillsdev/TheCombine
 edit_uri: edit/master/docs/user_guide/docs/
 repo_name: sillsdev/TheCombine
-copyright: © 2019-2023 SIL International
+copyright: © 2019-2024 SIL Global
 plugins:
   - i18n:
       docs_structure: suffix
@@ -81,13 +81,15 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/sillsdev
     - icon: fontawesome/brands/x-twitter
-      link: https://twitter.com/silintl
+      link: https://x.com/silglobal
+    - icon: fontawesome/brands/instagram
+      link: https://www.instagram.com/SIL_global/
     - icon: fontawesome/brands/facebook
-      link: https://www.facebook.com/SIL.International/
+      link: https://www.facebook.com/SILglobal/
     - icon: fontawesome/brands/youtube
       link: https://www.youtube.com/channel/UC6ojqR9jOPHuPN7XP92Zj9Q
     - icon: fontawesome/brands/linkedin
-      link: https://www.linkedin.com/company/sil-international
+      link: https://www.linkedin.com/company/silglobal
 nav:
   - Overview: index.md
   - Account: account.md
