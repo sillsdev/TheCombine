@@ -19,6 +19,7 @@ interface EditTextDialogProps {
   close: () => void;
   submitText: (newText: string) => void | Promise<void>;
   buttonIdCancel?: string;
+  buttonIdClear?: string;
   buttonIdConfirm?: string;
   buttonTextIdCancel?: string;
   buttonTextIdConfirm?: string;
@@ -62,7 +63,12 @@ export default function SubmitTextDialog(
 
   const endAdornment = (
     <InputAdornment position="end">
-      <IconButton onClick={() => setText("")} size="large">
+      <IconButton
+        data-testid={props.buttonIdClear}
+        id={props.buttonIdClear}
+        onClick={() => setText("")}
+        size="large"
+      >
         <Clear />
       </IconButton>
     </InputAdornment>
@@ -80,6 +86,7 @@ export default function SubmitTextDialog(
         <TextField
           variant="standard"
           autoFocus
+          data-testid={props.textFieldId}
           value={text}
           onChange={(event) => setText(event.target.value)}
           onKeyPress={confirmIfEnter}
@@ -92,6 +99,7 @@ export default function SubmitTextDialog(
           onClick={onCancel}
           variant="outlined"
           color="primary"
+          data-testid={props.buttonIdCancel}
           id={props.buttonIdCancel}
         >
           {t(props.buttonTextIdCancel ?? "buttons.cancel")}
@@ -100,6 +108,7 @@ export default function SubmitTextDialog(
           onClick={onConfirm}
           variant="outlined"
           color="primary"
+          data-testid={props.buttonIdConfirm}
           id={props.buttonIdConfirm}
         >
           {t(props.buttonTextIdConfirm ?? "buttons.confirm")}
