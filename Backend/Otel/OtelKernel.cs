@@ -24,13 +24,6 @@ namespace BackendFramework.Otel
     {
 
         public const string SourceName = "Backend-Otel";
-        // private readonly LocationCache _locationCache;
-
-        // public OtelKernel(LocationCache locationCache, IServiceCollection serviceCollection)
-        // {
-        //     _locationCache = locationCache;
-        //     AddOpenTelemetryInstrumentation(serviceCollection);
-        // }
 
         [ExcludeFromCodeCoverage]
         private static void AspNetCoreBuilder(AspNetCoreTraceInstrumentationOptions options)
@@ -89,8 +82,6 @@ namespace BackendFramework.Otel
                 {
                     activity.SetTag("outbound.http.response.body.size", "no content");
                 }
-
-                // await GetLocation(activity);
             };
             options.EnrichWithHttpResponseMessage = (activity, response) =>
             {
@@ -105,7 +96,6 @@ namespace BackendFramework.Otel
         public static void AddOpenTelemetryInstrumentation(this IServiceCollection services)
         {
             var appResourceBuilder = ResourceBuilder.CreateDefault();
-            // var appResourceBuilder = ResourceBuilder.CreateDefault().AddService(ServiceName);
             // todo: include version 
             services.AddOpenTelemetry().WithTracing(tracerProviderBuilder => tracerProviderBuilder
                 .SetResourceBuilder(appResourceBuilder)
@@ -117,19 +107,6 @@ namespace BackendFramework.Otel
                 .AddConsoleExporter()
                 .AddOtlpExporter()
             );
-
-            // var meter = new Meter(ServiceName);
-            // // var counter = meter.CreateCounter<int>("words-created");
-            // services.AddOpenTelemetry().WithMetrics(metricProviderBuilder => metricProviderBuilder
-            //     .SetResourceBuilder(appResourceBuilder)
-            //     .AddMeter(meter.Name)
-            //     .AddAspNetCoreInstrumentation()
-            //     .AddHttpClientInstrumentation()
-            //     .AddConsoleExporter()
-            //     .AddOtlpExporter()
-            // );
-
-            // var meter = new Meter(ServiceName);
 
         }
 
