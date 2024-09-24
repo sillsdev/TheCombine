@@ -1,12 +1,12 @@
-using System.Diagnostics;
+// using System.Diagnostics;
 
-namespace BackendFramework.Otel;
+// namespace BackendFramework.Otel;
 
-public class BackendActivitySource
-{
-    public static ActivitySource Get()
-    {
-        // return new ActivitySource("service");
-        return new ActivitySource(OtelKernel.SourceName);
-    }
-}
+// public class BackendActivitySource
+// {
+//     public static ActivitySource Get()
+//     {
+//         // return new ActivitySource("service");
+//         return new ActivitySource(OtelKernel.SourceName);
+//     }
+// }
