@@ -7,6 +7,8 @@ import AudioRecorder from "components/Pronunciations/AudioRecorder";
 
 interface RecordAudioDialogProps {
   audioId: string;
+  buttonIdClose?: string;
+  buttonLabelClose?: string;
   close: () => void;
   open: boolean;
   titleId: string;
@@ -23,7 +25,11 @@ export default function RecordAudioDialog(
       <DialogTitle>
         {t(props.titleId)}
         <Icon />
-        <CloseButton close={props.close} />
+        <CloseButton
+          buttonId={props.buttonIdClose}
+          buttonLabel={props.buttonLabelClose}
+          close={props.close}
+        />
       </DialogTitle>
       <DialogContent>
         <AudioRecorder
