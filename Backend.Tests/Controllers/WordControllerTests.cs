@@ -6,10 +6,10 @@ using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
-using BackendFramework.Otel;
+// using BackendFramework.Otel;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
+// using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
@@ -391,8 +391,8 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task TestCreateWord()
         {
-            var service = new ServiceCollection();
-            service.AddOpenTelemetryInstrumentation();
+            // var service = new ServiceCollection();
+            // service.AddOpenTelemetryInstrumentation();
 
             var word = Util.RandomWord(_projId);
 

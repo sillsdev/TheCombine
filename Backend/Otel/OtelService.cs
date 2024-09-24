@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BackendFramework.Otel;
 
@@ -11,5 +12,10 @@ public class OtelService
 
         using var activity = new ActivitySource(OtelKernel.SourceName).StartActivity();
         activity?.AddTag(key, value);
+    }
+
+    public static void AddOtelInstrumentation(IServiceCollection services)
+    {
+        services.AddOpenTelemetryInstrumentation();
     }
 }
