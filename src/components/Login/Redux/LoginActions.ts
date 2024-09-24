@@ -11,7 +11,7 @@ import {
   setSignupFailureAction,
   setSignupSuccessAction,
 } from "components/Login/Redux/LoginReducer";
-import { type StoreStateDispatch } from "rootRedux/types";
+import { type StoreState, type StoreStateDispatch } from "rootRedux/types";
 import router from "router/browserRouter";
 import { Path } from "types/path";
 import { newUser } from "types/user";
@@ -45,15 +45,17 @@ export function signupSuccess(): PayloadAction {
 // Dispatch Functions
 
 export function asyncLogIn(username: string, password: string) {
-  return async (dispatch: StoreStateDispatch) => {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     dispatch(loginAttempt(username));
     await backend
       .authenticateUser(username, password)
       .then(async (user) => {
         dispatch(loginSuccess());
-        // hash the user name and use it in analytics.identify
-        const analyticsId = Hex.stringify(sha256(user.id));
-        analytics.identify(analyticsId);
+        if (getState().analyticsState.consent) {
+          // hash the user name and use it in analytics.identify
+          const analyticsId = Hex.stringify(sha256(user.id));
+          analytics.identify(analyticsId);
+        }
         router.navigate(Path.ProjScreen);
       })
       .catch((err) =>

@@ -8,6 +8,7 @@ import { CancelConfirmDialog } from "components/Dialogs";
 interface DeleteEntryProps {
   removeEntry: () => void;
   buttonId: string;
+  buttonLabel?: string;
   // confirmId is the translation id for the text of the delete confirmation popup;
   // if no confirmId is specified, then there is no popup
   // and deletion will happen when the button is pressed
@@ -34,6 +35,8 @@ export default function DeleteEntry(props: DeleteEntryProps): ReactElement {
     <>
       <Tooltip title={t("addWords.deleteRow")} placement="top">
         <IconButton
+          aria-label={props.buttonLabel ?? "Delete entry"}
+          data-testid={props.buttonId}
           disabled={props.disabled}
           tabIndex={-1}
           size="small"

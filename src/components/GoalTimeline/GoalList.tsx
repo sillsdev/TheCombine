@@ -101,7 +101,7 @@ function buttonStyle(orientation: Orientation, size: number): CSSProperties {
 }
 
 interface GoalTileProps {
-  buttonProps?: ButtonProps;
+  buttonProps?: ButtonProps & { "data-testid"?: string };
   goal?: Goal;
   orientation: Orientation;
   size: number;
