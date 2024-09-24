@@ -6,6 +6,8 @@ import { CloseButton } from "components/Buttons";
 import UploadImage from "components/Dialogs/UploadImage";
 
 interface UploadImageDialogProps {
+  buttonIdClose?: string;
+  buttonLabelClose?: string;
   close: () => void;
   open: boolean;
   titleId: string;
@@ -22,7 +24,11 @@ export default function UploadImageDialog(
       <DialogTitle>
         {t(props.titleId)}
         <Icon />
-        <CloseButton close={props.close} />
+        <CloseButton
+          buttonId={props.buttonIdClose}
+          buttonLabel={props.buttonLabelClose}
+          close={props.close}
+        />
       </DialogTitle>
       <DialogContent>
         <UploadImage

@@ -6,8 +6,9 @@ import { IconButtonWithTooltip } from "components/Buttons";
 import { DeleteEditTextDialog } from "components/Dialogs";
 
 interface FlagButtonProps {
-  flag: Flag;
   buttonId?: string;
+  buttonLabel?: string;
+  flag: Flag;
   updateFlag?: (flag: Flag) => void;
 }
 
@@ -41,6 +42,8 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
   return (
     <>
       <IconButtonWithTooltip
+        buttonId={props.buttonId}
+        buttonLabel={props.buttonLabel ?? "Flag"}
         icon={
           active ? (
             <FlagFilled sx={{ color: (t) => t.palette.error.main }} />
@@ -54,7 +57,6 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
         textId={active ? "flags.edit" : "flags.add"}
         size="small"
         onClick={props.updateFlag ? () => setOpen(true) : undefined}
-        buttonId={props.buttonId ?? "flag-button"}
         side="top"
       />
       {props.updateFlag && (
@@ -65,6 +67,8 @@ export default function FlagButton(props: FlagButtonProps): ReactElement {
           close={() => setOpen(false)}
           updateText={updateFlag}
           onDelete={removeFlag}
+          buttonIdCancel="flag-cancel"
+          buttonIdClear="flag-clear"
           buttonIdDelete="flag-remove"
           buttonIdSave="flag-save"
           buttonTextIdDelete="flags.remove"
