@@ -4,12 +4,13 @@ using System;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using BackendFramework.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace BackendFramework.Otel
 {
-    public class LocationProvider
+    public class LocationProvider : ILocationProvider
     {
         public const string locationGetterUri = "http://ip-api.com/json/";
         private readonly IHttpContextAccessor _contextAccessor;

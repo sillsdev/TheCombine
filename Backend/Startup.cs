@@ -297,7 +297,8 @@ namespace BackendFramework
             services.AddHttpContextAccessor();
 
             services.AddHttpClient();
-            services.AddSingleton<LocationProvider>();
+            // services.AddSingleton<LocationProvider>();
+            services.AddTransient<ILocationProvider, LocationProvider>();
             services.AddOpenTelemetryInstrumentation();
 
         }
