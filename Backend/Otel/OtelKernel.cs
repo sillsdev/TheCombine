@@ -4,13 +4,6 @@ using System.Diagnostics;
 using BackendFramework.Interfaces;
 
 using System.Diagnostics.CodeAnalysis;
-// using System.Diagnostics.Metrics;
-// using System.Net.Http;
-// using System.Net.Http.Json;
-// using System.Security.Claims;
-// using System.Threading.Tasks;
-// using Microsoft.AspNetCore.Http;
-// using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry;
 using OpenTelemetry.Instrumentation.AspNetCore;
@@ -18,9 +11,7 @@ using OpenTelemetry.Instrumentation.Http;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-// using System.Collections.Generic;
 using System.Linq;
-// using Microsoft.AspNetCore.Http;
 
 namespace BackendFramework.Otel
 {
@@ -46,20 +37,15 @@ namespace BackendFramework.Otel
                     activity.SetTag("inbound.http.request.body.size", "no content");
                 }
 
-                if (request.Headers.ContainsKey("sessionId"))
+                string? sessionId = request.Headers.TryGetValue("sessionId", out var values) ? values.FirstOrDefault() : null;
+                if (sessionId != null)
                 {
-                    activity.SetTag("ID EXISTS asp", "TRUE");
+                    activity.SetTag("SESSIONID ASP REQUEST", sessionId);
                 }
-                string? theId = request.Headers.TryGetValue("sessionId", out var values) ? values.FirstOrDefault() : null;
-                if (theId != null)
+                else
                 {
-                    activity.SetTag("ID IS asp", theId);
+                    activity.SetTag("SESSIONID ASP REQUEST", "NULL");
                 }
-                // activity.EnrichWithUser(request.HttpContext);
-                activity.SetTag("BEFORE", "inasp-request");
-                var sessionContext = request.HttpContext;
-                activity.SetTag("context", sessionContext);
-                activity.SetTag("AFTER", "inasp-request");
             };
             options.EnrichWithHttpResponse = (activity, response) =>
             {
@@ -72,12 +58,15 @@ namespace BackendFramework.Otel
                 {
                     activity.SetTag("inbound.http.response.body.size", "no content");
                 }
-                // activity.EnrichWithUser(response.HttpContext);
-                activity.SetTag("BEFORE", "inasp-response");
-                // var sessionId = response.HttpContext;
-                var sessionContext = response.HttpContext;
-                activity.SetTag("context", sessionContext);
-                activity.SetTag("AFTER", "inasp-response");
+                string? sessionId = response.Headers.TryGetValue("sessionId", out var values) ? values.FirstOrDefault() : null;
+                if (sessionId != null)
+                {
+                    activity.SetTag("SESSIONID ASP RESPONSE", sessionId);
+                }
+                else
+                {
+                    activity.SetTag("SESSIONID ASP RESPONSE", "NULL");
+                }
             };
         }
 
@@ -106,11 +95,15 @@ namespace BackendFramework.Otel
                 {
                     activity.SetTag("outbound.http.response.body.size", "no content");
                 }
-                activity.SetTag("BEFORE", "inhttp-request");
-                // var sessionId = response.HttpContext;
-                var sessionContext = request.Headers.Connection;
-                activity.SetTag("context", sessionContext);
-                activity.SetTag("AFTER", "inhttp-request");
+                string? sessionId = request.Headers.TryGetValues("sessionId", out var values) ? values.FirstOrDefault() : null;
+                if (sessionId != null)
+                {
+                    activity.SetTag("SESSIONID HTTP REQUEST", sessionId);
+                }
+                else
+                {
+                    activity.SetTag("SESSIONID HTTP REQUEST", "NULL");
+                }
             };
             options.EnrichWithHttpResponseMessage = (activity, response) =>
             {
@@ -119,21 +112,15 @@ namespace BackendFramework.Otel
                 {
                     activity.SetTag("outbound.http.response.body.size", contentLength.Value);
                 }
-                if (response.Headers.Contains("sessionId"))
+                string? sessionId = response.Headers.TryGetValues("sessionId", out var values) ? values.FirstOrDefault() : null;
+                if (sessionId != null)
                 {
-                    activity.SetTag("ID EXISTS http", "TRUE");
+                    activity.SetTag("SESSIONID HTTP RESPONSE", sessionId);
                 }
-                // IEnumerable<string> values;
-                string? theId = response.Headers.TryGetValues("sessionId", out var values) ? values.FirstOrDefault() : null;
-                if (theId != null)
+                else
                 {
-                    activity.SetTag("ID IS http", theId);
+                    activity.SetTag("SESSIONID HTTP RESPONSE", "NULL");
                 }
-                activity.SetTag("BEFORE", "inhttp-response");
-                // var sessionId = response.HttpContext;
-                var sessionContext = response.Headers.Connection;
-                activity.SetTag("context", sessionContext);
-                activity.SetTag("AFTER", "inhttp-response");
             };
         }
 
@@ -154,27 +141,25 @@ namespace BackendFramework.Otel
 
         }
 
-        // private static void EnrichWithUser(this Activity activity, HttpContext httpContext)
+        // private static void EnrichWithSession(this Activity activity, HttpContext httpContext)
         // {
-        //     var claimsPrincipal = httpContext.User;
-        //     // var userId = claimsPrincipal?.FindFirstValue("sub");
-        //     var userId = claimsPrincipal;
-        //     if (userId != null)
+
+        //     // in progress
+
+        //     string? sessionId = httpContext.Headers.TryGetValues("sessionId", out var values) ? values.FirstOrDefault() : null;
+        //     if (sessionId != null)
         //     {
-        //         activity.SetTag("app.user.id", userId);
+        //         activity.SetTag("SESSIONID HTTP RESPONSE", sessionId);
         //     }
-        //     var userRole = claimsPrincipal?.FindFirstValue("role");
-        //     if (userRole != null)
+        //     else
         //     {
-        //         activity.SetTag("app.user.role", userRole);
+        //         activity.SetTag("SESSIONID HTTP RESPONSE", "NULL");
         //     }
-        //     if (httpContext.RequestAborted.IsCancellationRequested)
-        //     {
-        //         activity.SetTag("http.abort", true);
-        //     }
+
+
         // }
 
-        private class LocationEnricher(ILocationProvider locationProvider) : BaseProcessor<Activity>
+        internal class LocationEnricher(ILocationProvider locationProvider) : BaseProcessor<Activity>
         {
             public override async void OnEnd(Activity data)
             {
