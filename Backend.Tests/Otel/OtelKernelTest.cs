@@ -55,7 +55,6 @@ namespace Backend.Tests.Otel
             // }
             var testLocation = new Dictionary<string, string>
             {
-                {"status", "success"},
                 {"country", "test country"},
                 {"regionName", "test region"},
                 {"city", "city"}

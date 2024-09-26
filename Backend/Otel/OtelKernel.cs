@@ -178,7 +178,7 @@ namespace BackendFramework.Otel
                     };
 
                     data?.AddTag("country", location.Country);
-                    data?.AddTag("region", location.Region);
+                    data?.AddTag("regionName", location.Region);
                     data?.AddTag("city", location.City);
                 }
 
