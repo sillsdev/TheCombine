@@ -1,6 +1,8 @@
 
 // using System;
 using System.Diagnostics;
+using BackendFramework.Interfaces;
+
 using System.Diagnostics.CodeAnalysis;
 // using System.Diagnostics.Metrics;
 // using System.Net.Http;
@@ -16,6 +18,9 @@ using OpenTelemetry.Instrumentation.Http;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+// using System.Collections.Generic;
+using System.Linq;
+// using Microsoft.AspNetCore.Http;
 
 namespace BackendFramework.Otel
 {
@@ -40,7 +45,21 @@ namespace BackendFramework.Otel
                 {
                     activity.SetTag("inbound.http.request.body.size", "no content");
                 }
+
+                if (request.Headers.ContainsKey("sessionId"))
+                {
+                    activity.SetTag("ID EXISTS asp", "TRUE");
+                }
+                string? theId = request.Headers.TryGetValue("sessionId", out var values) ? values.FirstOrDefault() : null;
+                if (theId != null)
+                {
+                    activity.SetTag("ID IS asp", theId);
+                }
                 // activity.EnrichWithUser(request.HttpContext);
+                activity.SetTag("BEFORE", "inasp-request");
+                var sessionContext = request.HttpContext;
+                activity.SetTag("context", sessionContext);
+                activity.SetTag("AFTER", "inasp-request");
             };
             options.EnrichWithHttpResponse = (activity, response) =>
             {
@@ -54,6 +73,11 @@ namespace BackendFramework.Otel
                     activity.SetTag("inbound.http.response.body.size", "no content");
                 }
                 // activity.EnrichWithUser(response.HttpContext);
+                activity.SetTag("BEFORE", "inasp-response");
+                // var sessionId = response.HttpContext;
+                var sessionContext = response.HttpContext;
+                activity.SetTag("context", sessionContext);
+                activity.SetTag("AFTER", "inasp-response");
             };
         }
 
@@ -82,6 +106,11 @@ namespace BackendFramework.Otel
                 {
                     activity.SetTag("outbound.http.response.body.size", "no content");
                 }
+                activity.SetTag("BEFORE", "inhttp-request");
+                // var sessionId = response.HttpContext;
+                var sessionContext = request.Headers.Connection;
+                activity.SetTag("context", sessionContext);
+                activity.SetTag("AFTER", "inhttp-request");
             };
             options.EnrichWithHttpResponseMessage = (activity, response) =>
             {
@@ -90,6 +119,21 @@ namespace BackendFramework.Otel
                 {
                     activity.SetTag("outbound.http.response.body.size", contentLength.Value);
                 }
+                if (response.Headers.Contains("sessionId"))
+                {
+                    activity.SetTag("ID EXISTS http", "TRUE");
+                }
+                // IEnumerable<string> values;
+                string? theId = response.Headers.TryGetValues("sessionId", out var values) ? values.FirstOrDefault() : null;
+                if (theId != null)
+                {
+                    activity.SetTag("ID IS http", theId);
+                }
+                activity.SetTag("BEFORE", "inhttp-response");
+                // var sessionId = response.HttpContext;
+                var sessionContext = response.Headers.Connection;
+                activity.SetTag("context", sessionContext);
+                activity.SetTag("AFTER", "inhttp-response");
             };
         }
 
@@ -130,32 +174,32 @@ namespace BackendFramework.Otel
         //     }
         // }
 
-        private class LocationEnricher(LocationProvider locationProvider) : BaseProcessor<Activity>
+        private class LocationEnricher(ILocationProvider locationProvider) : BaseProcessor<Activity>
         {
             public override async void OnEnd(Activity data)
-        {
-            string? uriPath = (string?)data.GetTagItem("url.full");
-            string locationUri = LocationProvider.locationGetterUri;
-
-            if (uriPath == null || !uriPath.Contains(locationUri))
             {
-                LocationApi? response = await locationProvider.GetLocation();
+                string? uriPath = (string?)data.GetTagItem("url.full");
+                string locationUri = LocationProvider.locationGetterUri;
 
-                var location = new
+                if (uriPath == null || !uriPath.Contains(locationUri))
                 {
-                    Country = response?.country,
-                    Region = response?.regionName,
-                    City = response?.city,
-                };
+                    LocationApi? response = await locationProvider.GetLocation();
 
-                data?.AddTag("country", location.Country);
-                data?.AddTag("region", location.Region);
-                data?.AddTag("city", location.City);
+                    var location = new
+                    {
+                        Country = response?.country,
+                        Region = response?.regionName,
+                        City = response?.city,
+                    };
+
+                    data?.AddTag("country", location.Country);
+                    data?.AddTag("region", location.Region);
+                    data?.AddTag("city", location.City);
+                }
+
             }
-
         }
     }
-}
 
 }
 
