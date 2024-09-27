@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 Generates font support for all SIL fonts used in Mui-Language-Picker.
 
