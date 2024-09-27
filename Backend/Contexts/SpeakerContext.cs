@@ -9,7 +9,7 @@ namespace BackendFramework.Contexts
     public class SpeakerContext : ISpeakerContext
     {
         private readonly IMongoDbContext _mongoDbContext;
-        
+
         public SpeakerContext(IMongoDbContext mongoDbContext)
         {
             _mongoDbContext = mongoDbContext;
