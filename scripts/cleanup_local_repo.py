@@ -11,12 +11,12 @@ import shutil
 
 
 def main() -> None:
-    directories_to_remove = (".mypy_cache", ".tox", "build", "node_modules", "venv")
+    dirs_to_remove = (".mypy_cache", ".parcel-cache", ".tox", "dist", "node_modules", "venv")
     files_to_delete = (".env.backend", ".env.certmgr", ".env.frontend", "docker-compose.yml")
 
     print(
         f"The following temporary files and directories will be deleted:\n"
-        f"\t{directories_to_remove}\n"
+        f"\t{dirs_to_remove}\n"
         f"\t{files_to_delete}\n"
     )
     proceed = input("Are you sure you want to proceed? [y,N]")
@@ -25,7 +25,7 @@ def main() -> None:
         return
 
     project_dir = Path(__file__).resolve().parent.parent
-    for directory_to_delete in directories_to_remove:
+    for directory_to_delete in dirs_to_remove:
         print(f"Deleting: {directory_to_delete}")
         shutil.rmtree(project_dir / directory_to_delete, ignore_errors=True)
     for file_to_delete in files_to_delete:

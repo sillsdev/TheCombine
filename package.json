@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "license": "MIT",
   "private": true,
-  "source": "src/index.tsx",
+  "source": "public/index.html",
   "scripts": {
     "backend": "dotnet watch --project Backend/BackendFramework.csproj",
     "build": "        parcel build",
@@ -166,7 +166,8 @@
     ]
   },
   "staticFiles": {
-    "staticPath": "public"
+    "staticOutPath": "locales",
+    "staticPath": "public/locales"
   },
   "volta": {
     "node": "20.14.0"
