@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 Monitor TLS secrets for changes and push changes to AWS S3.
 
