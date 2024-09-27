@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace BackendFramework.Contexts
@@ -9,15 +8,13 @@ namespace BackendFramework.Contexts
     [ExcludeFromCodeCoverage]
     public class MergeBlacklistContext : IMergeBlacklistContext
     {
-        private readonly IMongoDatabase _db;
-
-        public MergeBlacklistContext(IOptions<Startup.Settings> options)
+        private readonly IMongoDbContext _mongoDbContext;
+        public MergeBlacklistContext(IMongoDbContext mongoDbContext)
         {
-            var client = new MongoClient(options.Value.ConnectionString);
-            _db = client.GetDatabase(options.Value.CombineDatabase);
+            _mongoDbContext = mongoDbContext;
         }
 
-        public IMongoCollection<MergeWordSet> MergeBlacklist => _db.GetCollection<MergeWordSet>(
+        public IMongoCollection<MergeWordSet> MergeBlacklist => _mongoDbContext.Db.GetCollection<MergeWordSet>(
             "MergeBlacklistCollection");
     }
 }

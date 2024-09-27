@@ -10,17 +10,16 @@ namespace BackendFramework.Contexts
     [ExcludeFromCodeCoverage]
     public class PasswordResetContext : IPasswordResetContext
     {
-        private readonly IMongoDatabase _db;
+        private readonly IMongoDbContext _mongoDbContext;
         public int ExpireTime { get; }
 
-        public PasswordResetContext(IOptions<Startup.Settings> options)
+        public PasswordResetContext(IOptions<Startup.Settings> options, IMongoDbContext mongoDbContext)
         {
-            var client = new MongoClient(options.Value.ConnectionString);
-            _db = client.GetDatabase(options.Value.CombineDatabase);
+            _mongoDbContext = mongoDbContext;
             ExpireTime = options.Value.PassResetExpireTime;
         }
 
-        private IMongoCollection<PasswordReset> PasswordResets => _db.GetCollection<PasswordReset>(
+        private IMongoCollection<PasswordReset> PasswordResets => _mongoDbContext.Db.GetCollection<PasswordReset>(
             "PasswordResetCollection");
 
         public Task ClearAll(string email)

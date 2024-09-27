@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace BackendFramework.Contexts
@@ -9,14 +8,13 @@ namespace BackendFramework.Contexts
     [ExcludeFromCodeCoverage]
     public class SpeakerContext : ISpeakerContext
     {
-        private readonly IMongoDatabase _db;
-
-        public SpeakerContext(IOptions<Startup.Settings> options)
+        private readonly IMongoDbContext _mongoDbContext;
+        
+        public SpeakerContext(IMongoDbContext mongoDbContext)
         {
-            var client = new MongoClient(options.Value.ConnectionString);
-            _db = client.GetDatabase(options.Value.CombineDatabase);
+            _mongoDbContext = mongoDbContext;
         }
 
-        public IMongoCollection<Speaker> Speakers => _db.GetCollection<Speaker>("SpeakersCollection");
+        public IMongoCollection<Speaker> Speakers => _mongoDbContext.Db.GetCollection<Speaker>("SpeakersCollection");
     }
 }

@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace BackendFramework.Contexts
@@ -9,15 +8,13 @@ namespace BackendFramework.Contexts
     [ExcludeFromCodeCoverage]
     public class SemanticDomainContext : ISemanticDomainContext
     {
-        private readonly IMongoDatabase _db;
-
-        public SemanticDomainContext(IOptions<Startup.Settings> options)
+        private readonly IMongoDbContext _mongoDbContext;
+        public SemanticDomainContext(IMongoDbContext mongoDbContext)
         {
-            var client = new MongoClient(options.Value.ConnectionString);
-            _db = client.GetDatabase(options.Value.CombineDatabase);
+            _mongoDbContext = mongoDbContext;
         }
 
-        public IMongoCollection<SemanticDomainTreeNode> SemanticDomains => _db.GetCollection<SemanticDomainTreeNode>("SemanticDomainTree");
-        public IMongoCollection<SemanticDomainFull> FullSemanticDomains => _db.GetCollection<SemanticDomainFull>("SemanticDomains");
+        public IMongoCollection<SemanticDomainTreeNode> SemanticDomains => _mongoDbContext.Db.GetCollection<SemanticDomainTreeNode>("SemanticDomainTree");
+        public IMongoCollection<SemanticDomainFull> FullSemanticDomains => _mongoDbContext.Db.GetCollection<SemanticDomainFull>("SemanticDomains");
     }
 }
