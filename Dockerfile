@@ -53,10 +53,10 @@ RUN mkdir ${FRONTEND_HOST_DIR}/url_moved
 # Setup web content
 COPY --from=user_guide_builder /app/docs/user_guide/site ${USER_GUIDE_HOST_DIR}
 COPY --from=frontend_builder /app/dist ${FRONTEND_HOST_DIR}
+COPY public ${FRONTEND_HOST_DIR}
 COPY nginx/pages/url_moved_home.html /etc/nginx/page_templates/url_moved_home.html
 COPY public/favicon.ico ${FRONTEND_HOST_DIR}/url_moved/favicon.ico
 COPY src/resources/tractor.png ${FRONTEND_HOST_DIR}/url_moved/tractor.png
-COPY public/scripts/release.js ${FRONTEND_HOST_DIR}/scripts/release.js
 
 # Setup nginx configuration templates
 COPY nginx/templates/* /etc/nginx/templates/

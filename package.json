@@ -15,7 +15,7 @@
     "fmt-backend-check": "dotnet-format --check && dotnet-format --check Backend.Tests",
     "fmt-frontend": "      prettier --write \"./{.github,.vscode,certmgr,deploy,docs,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
     "fmt-frontend-check": "prettier --check \"./{.github,.vscode,certmgr,deploy,docs,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
-    "frontend": "npm run set-release && npx parcel public/index.html",
+    "frontend": "npm run set-release && parcel",
     "gen-backend-coverage-report": "tsc scripts/genBackendCoverageReport.ts && node scripts/genBackendCoverageReport.js",
     "license-report-backend": " dotnet-project-licenses --include-transitive --input ./Backend/BackendFramework.csproj --output --outfile docs/user_guide/assets/licenses/backend_licenses.txt",
     "license-summary-backend": "dotnet-project-licenses --include-transitive --input ./Backend/BackendFramework.csproj",
@@ -26,7 +26,7 @@
     "predatabase": "tsc scripts/setupMongo.ts && node scripts/setupMongo.js",
     "set-admin-user": "tsc scripts/setAdminUser.ts && node scripts/setAdminUser.js",
     "set-release": "node scripts/setRelease.js",
-    "start": "npm install && npm run set-release && npm-run-all --parallel backend database frontend",
+    "start": "npm install && npm-run-all --parallel backend database frontend",
     "test": "npm run test-backend && npm run test-frontend",
     "test-backend": "         dotnet test Backend.Tests/Backend.Tests.csproj",
     "test-backend:coverage": "dotnet test Backend.Tests/Backend.Tests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:Threshold=77",
@@ -166,8 +166,7 @@
     ]
   },
   "staticFiles": {
-    "staticOutPath": "locales",
-    "staticPath": "public/locales"
+    "staticPath": "public"
   },
   "volta": {
     "node": "20.14.0"
