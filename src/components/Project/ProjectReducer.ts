@@ -10,6 +10,8 @@ const projectSlice = createSlice({
     resetAction: () => defaultState,
     setColumnOrderAction: (state, action) => {
       const columns = state.reviewEntriesColumns;
+      // Payload is a state updater, which can either be a new state
+      // or a function that takes the previous state and returns a new state.
       if (typeof action.payload === "function") {
         columns.columnOrder = action.payload(columns.columnOrder);
       } else {
@@ -18,6 +20,8 @@ const projectSlice = createSlice({
     },
     setColumnVisibilityAction: (state, action) => {
       const columns = state.reviewEntriesColumns;
+      // Payload is a state updater, which can either be a new state
+      // or a function that takes the previous state and returns a new state.
       if (typeof action.payload === "function") {
         columns.columnVisibility = action.payload(columns.columnVisibility);
       } else {
