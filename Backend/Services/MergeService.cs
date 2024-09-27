@@ -11,21 +11,20 @@ namespace BackendFramework.Services
     /// <summary> More complex functions and application logic for <see cref="Word"/>s </summary>
     public class MergeService : IMergeService
     {
+        private readonly IMongoDbContext _mongoDbContext;
         private readonly IMergeBlacklistRepository _mergeBlacklistRepo;
         private readonly IMergeGraylistRepository _mergeGraylistRepo;
         private readonly IWordRepository _wordRepo;
         private readonly IWordService _wordService;
-        private readonly IMongoDbContext _mongoDbContext;
 
-        public MergeService(IMergeBlacklistRepository mergeBlacklistRepo, IMergeGraylistRepository mergeGraylistRepo,
-            IWordRepository wordRepo, IWordService wordService,
-            IMongoDbContext mongoDbContext)
+        public MergeService(IMongoDbContext mongoDbContext, IMergeBlacklistRepository mergeBlacklistRepo,
+            IMergeGraylistRepository mergeGraylistRepo, IWordRepository wordRepo, IWordService wordService)
         {
+            _mongoDbContext = mongoDbContext;
             _mergeBlacklistRepo = mergeBlacklistRepo;
             _mergeGraylistRepo = mergeGraylistRepo;
             _wordRepo = wordRepo;
             _wordService = wordService;
-            _mongoDbContext = mongoDbContext;
         }
 
         /// <summary> Prepares a merge parent to be added to the database. </summary>

@@ -10,11 +10,11 @@ namespace Backend.Tests.Services
 {
     public class MergeServiceTests
     {
+        private IMongoDbContext _mongoDbContext = null!;
         private IMergeBlacklistRepository _mergeBlacklistRepo = null!;
         private IMergeGraylistRepository _mergeGraylistRepo = null!;
         private IWordRepository _wordRepo = null!;
         private IWordService _wordService = null!;
-        private IMongoDbContext _mongoDbContext = null!;
         private IMergeService _mergeService = null!;
 
         private const string ProjId = "MergeServiceTestProjId";
@@ -23,12 +23,13 @@ namespace Backend.Tests.Services
         [SetUp]
         public void Setup()
         {
+            _mongoDbContext = new MongoDbContextMock();
             _mergeBlacklistRepo = new MergeBlacklistRepositoryMock();
             _mergeGraylistRepo = new MergeGraylistRepositoryMock();
             _wordRepo = new WordRepositoryMock();
             _wordService = new WordService(_wordRepo);
-            _mongoDbContext = new MongoDbContextMock();
-            _mergeService = new MergeService(_mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService, _mongoDbContext);
+            _mergeService = new MergeService(
+                _mongoDbContext, _mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
         }
 
         [Test]

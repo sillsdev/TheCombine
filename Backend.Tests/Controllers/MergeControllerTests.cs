@@ -11,10 +11,10 @@ namespace Backend.Tests.Controllers
 {
     public class MergeControllerTests : IDisposable
     {
+        private IMongoDbContext _mongoDbContext = null!;
         private IMergeBlacklistRepository _mergeBlacklistRepo = null!;
         private IMergeGraylistRepository _mergeGraylistRepo = null!;
         private IWordRepository _wordRepo = null!;
-        private IMongoDbContext _mongoDbContext = null!;
         private IMergeService _mergeService = null!;
         private IPermissionService _permissionService = null!;
         private IWordService _wordService = null!;
@@ -39,12 +39,13 @@ namespace Backend.Tests.Controllers
         [SetUp]
         public void Setup()
         {
+            _mongoDbContext = new MongoDbContextMock();
             _mergeBlacklistRepo = new MergeBlacklistRepositoryMock();
             _mergeGraylistRepo = new MergeGraylistRepositoryMock();
             _wordRepo = new WordRepositoryMock();
             _wordService = new WordService(_wordRepo);
-            _mongoDbContext = new MongoDbContextMock();
-            _mergeService = new MergeService(_mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService, _mongoDbContext);
+            _mergeService = new MergeService(
+                _mongoDbContext, _mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
             _permissionService = new PermissionServiceMock();
             _mergeController = new MergeController(_mergeService, _permissionService);
         }
