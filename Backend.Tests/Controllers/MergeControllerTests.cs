@@ -14,6 +14,7 @@ namespace Backend.Tests.Controllers
         private IMergeBlacklistRepository _mergeBlacklistRepo = null!;
         private IMergeGraylistRepository _mergeGraylistRepo = null!;
         private IWordRepository _wordRepo = null!;
+        private IMongoDbContext _mongoDbContext = null!;
         private IMergeService _mergeService = null!;
         private IPermissionService _permissionService = null!;
         private IWordService _wordService = null!;
@@ -42,7 +43,8 @@ namespace Backend.Tests.Controllers
             _mergeGraylistRepo = new MergeGraylistRepositoryMock();
             _wordRepo = new WordRepositoryMock();
             _wordService = new WordService(_wordRepo);
-            _mergeService = new MergeService(_mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
+            _mongoDbContext = new MongoDbContextMock();
+            _mergeService = new MergeService(_mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService, _mongoDbContext);
             _permissionService = new PermissionServiceMock();
             _mergeController = new MergeController(_mergeService, _permissionService);
         }
