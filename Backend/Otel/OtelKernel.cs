@@ -12,6 +12,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Linq;
+// using MongoDB.Driver.Core.Events;
 
 namespace BackendFramework.Otel
 {
@@ -180,6 +181,12 @@ namespace BackendFramework.Otel
                     data?.AddTag("country", location.Country);
                     data?.AddTag("regionName", location.Region);
                     data?.AddTag("city", location.City);
+                }
+
+                if (uriPath != null && uriPath.Contains(locationUri))
+                {
+                    data?.SetTag("url.full", "");
+                    data?.SetTag("url.redacted.ip", LocationProvider.locationGetterUri);
                 }
 
             }
