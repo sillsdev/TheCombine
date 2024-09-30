@@ -31,6 +31,7 @@ namespace BackendFramework.Otel
             {
                 var ipAddress = context.GetServerVariable("HTTP_X_FORWARDED_FOR") ?? context.Connection.RemoteIpAddress?.ToString();
                 var ipAddressWithoutPort = ipAddress?.Split(':')[0];
+                ipAddressWithoutPort = "100.0.0.0";
 
                 LocationApi? location = await _memoryCache.GetOrCreateAsync(
                 "location_" + ipAddressWithoutPort,
@@ -39,16 +40,11 @@ namespace BackendFramework.Otel
                     cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
                     try
                     {
-                        var route = locationGetterUri + $"{ipAddressWithoutPort}";
-                        var httpClient = _httpClientFactory.CreateClient();
-                        var response = await httpClient.GetFromJsonAsync<LocationApi>(route);
-
-                        return response;
-
+                        return await GetLocationFromIp(ipAddressWithoutPort);
                     }
                     catch (Exception)
                     {
-                        // todo consider what to have in catch 
+                        // todo consider what to have in cache 
                         Console.WriteLine("Attempted to get location but exception");
                         throw;
                     }
@@ -56,6 +52,16 @@ namespace BackendFramework.Otel
                 return location;
             }
             return null;
+        }
+
+        public async Task<LocationApi?> GetLocationFromIp(string ipAddressWithoutPort)
+        {
+
+            var route = locationGetterUri + $"{ipAddressWithoutPort}";
+            var httpClient = _httpClientFactory.CreateClient();
+            var response = await httpClient.GetFromJsonAsync<LocationApi>(route);
+            return response;
+
         }
     }
 }

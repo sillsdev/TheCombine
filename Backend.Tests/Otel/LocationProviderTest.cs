@@ -1,16 +1,15 @@
-using System.Drawing;
+using System;
 using System.Net;
 using System.Net.Http;
-using System.Runtime;
-using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
-using Backend.Tests.Mocks;
+// using Backend.Tests.Mocks;
 using BackendFramework.Otel;
-using Grpc.Net.Client.Balancer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
+using Moq;
+using Moq.Protected;
 using NUnit.Framework;
-using Org.BouncyCastle.Crypto.Operators;
 
 namespace Backend.Tests.Otel
 {
@@ -18,18 +17,72 @@ namespace Backend.Tests.Otel
     {
         public const string locationGetterUri = "http://ip-api.com/json/";
         private IHttpContextAccessor? _contextAccessor;
-        private IMemoryCache? _memoryCache;
+        private Mock<IMemoryCache>? _memoryCache;
         private IHttpClientFactory? _httpClientFactory;
         private LocationProvider? _locationProvider;
+
+        private Mock<HttpMessageHandler>? _handlerMock;
+
+        // private
 
         [SetUp]
         public void Setup()
         {
             // _contextAccessor = new HttpContextAccessor();
             _contextAccessor = new HttpContextAccessor();
-            _memoryCache = null;
-            _httpClientFactory = new HttpClientFactoryMock();
-            _locationProvider = new LocationProvider(_contextAccessor, _memoryCache, _httpClientFactory);
+
+
+            _memoryCache = new Mock<IMemoryCache>();
+            _memoryCache
+                .Setup(x => x.CreateEntry(It.IsAny<string>()))
+                .Returns(Mock.Of<ICacheEntry>());
+
+
+
+
+
+            // httpclientFactory mock
+            _handlerMock = new Mock<HttpMessageHandler>();
+            _handlerMock.Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>()
+            )
+            .ReturnsAsync(new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Content = null,
+            }
+            )
+            .Verifiable();
+            var httpClient = new HttpClient(_handlerMock.Object)
+            {
+                BaseAddress = new Uri("https://abc.sample.xyz/")
+            };
+            var _httpClientFactory = new Mock<IHttpClientFactory>();
+            _httpClientFactory
+                .Setup(x => x.CreateClient(It.IsAny<string>()))
+                .Returns(httpClient);
+
+
+
+
+
+
+            _locationProvider = new LocationProvider(_contextAccessor, _memoryCache.Object, _httpClientFactory.Object);
+
+        }
+
+        public static void Verify(Mock<HttpMessageHandler> mock, Func<HttpRequestMessage, bool> match)
+        {
+            mock?.Protected()
+            .Verify(
+                "SendAsync",
+                Times.Exactly(1),
+                ItExpr.Is<HttpRequestMessage>(req => match(req)),
+                ItExpr.IsAny<CancellationToken>()
+            );
 
         }
 
@@ -48,6 +101,7 @@ namespace Backend.Tests.Otel
             {
                 _contextAccessor.HttpContext = httpContext;
             }
+
             // context.Request.Headers.
 
             // _contextAccessor.HttpContext.
@@ -72,7 +126,10 @@ namespace Backend.Tests.Otel
             //     city = "Tewksbury"
             // };
             // Assert.That 
-            _httpClientFactory
+
+
+            // not sure if okay that put ! there
+            Verify(_handlerMock!, r => r.RequestUri!.Query.Contains(testIp));
         }
 
 
