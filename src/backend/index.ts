@@ -44,10 +44,10 @@ const config = new Api.Configuration(config_parameters);
 /** A list of URL patterns for which the frontend explicitly handles errors
  * and the blanket error pop ups should be suppressed.*/
 const whiteListedErrorUrls = [
-  "users/authenticate",
-  "users/captcha",
   "/speakers/create/",
   "/speakers/update/",
+  "/users/authenticate",
+  "/users/captcha/",
 ];
 
 // Create an axios instance to allow for attaching interceptors to it.
@@ -66,16 +66,13 @@ axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
       router.navigate(Path.Login);
     }
 
-    // Check for fatal errors (4xx-5xx).
-    if (
-      status >= StatusCodes.BAD_REQUEST &&
-      status <= StatusCodes.NETWORK_AUTHENTICATION_REQUIRED
-    ) {
-      // Suppress error pop-ups for URLs the frontend already explicitly handles.
-      if (url && whiteListedErrorUrls.some((u) => url.includes(u))) {
-        return Promise.reject(err);
-      }
+    // Suppress error pop-ups for URLs the frontend already explicitly handles.
+    if (url && whiteListedErrorUrls.some((u) => url.includes(u))) {
+      return Promise.reject(err);
+    }
 
+    // Check for fatal errors (400+).
+    if (status >= StatusCodes.BAD_REQUEST) {
       console.error(err);
       enqueueSnackbar(`${status} ${response.statusText}\n${err.config.url}`);
     }

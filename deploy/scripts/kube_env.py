@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """Manage the Kubernetes environment for kubectl & helm."""
 
 from __future__ import annotations
