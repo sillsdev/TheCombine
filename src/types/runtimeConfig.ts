@@ -17,7 +17,10 @@ declare global {
 const defaultConfig: RuntimeConfigItems = {
   baseUrl: "http://localhost:5000",
   captchaRequired: true,
-  captchaSiteKey: "0x4AAAAAAAiMciPlBW1aA1iL",
+  /* https://developers.cloudflare.com/turnstile/troubleshooting/testing/
+   * has dummy site keys for development and testing; options are:
+   * invisible pass, invisible fail, visible pass, visible fail, forced interaction */
+  captchaSiteKey: "1x00000000000000000000AA", // visible pass
   offline: false,
   emailServicesEnabled: true,
   showCertExpiration: true,

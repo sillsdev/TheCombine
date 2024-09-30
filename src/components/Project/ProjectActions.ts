@@ -1,4 +1,9 @@
 import { type Action, type PayloadAction } from "@reduxjs/toolkit";
+import {
+  type MRT_ColumnOrderState,
+  type MRT_Updater,
+  type MRT_VisibilityState,
+} from "material-react-table";
 
 import { type Project, type Speaker, type User } from "api/models";
 import {
@@ -9,6 +14,8 @@ import {
 import { setProjectId } from "backend/localStorage";
 import {
   resetAction,
+  setColumnOrderAction,
+  setColumnVisibilityAction,
   setProjectAction,
   setSemanticDomainsAction,
   setSpeakerAction,
@@ -23,6 +30,18 @@ import { newProject } from "types/project";
 
 export function resetCurrentProject(): Action {
   return resetAction();
+}
+
+export function setReviewEntriesColumnOrder(
+  updater: MRT_Updater<MRT_ColumnOrderState>
+): PayloadAction {
+  return setColumnOrderAction(updater);
+}
+
+export function setReviewEntriesColumnVisibility(
+  updater: MRT_Updater<MRT_VisibilityState>
+): PayloadAction {
+  return setColumnVisibilityAction(updater);
 }
 
 export function setCurrentProject(project?: Project): PayloadAction {
