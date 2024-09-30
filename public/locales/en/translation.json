@@ -51,6 +51,7 @@
     "forgotPassword": "Forgot password?",
     "login": "Log in",
     "failed": "Failed to log in. Please check your username and password.",
+    "failedUnknownReason": "Failed to log in. Something went wrong with The Combine.",
     "backToLogin": "Back to login",
     "signUp": "Sign Up",
     "signUpNew": "Sign Up New User",
