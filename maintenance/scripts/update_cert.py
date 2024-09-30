@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 Check the expiration time of the TLS secret and update if needed.
 
