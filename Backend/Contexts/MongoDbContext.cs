@@ -17,7 +17,9 @@ public class MongoDbContext : IMongoDbContext
 
     public async Task<IMongoTransaction> BeginTransaction()
     {
-        return new MongoTransactionWrapper(await Db.Client.StartSessionAsync());
+        var session = await Db.Client.StartSessionAsync();
+        session.StartTransaction();
+        return new MongoTransactionWrapper(session);
     }
 
     private class MongoTransactionWrapper : IMongoTransaction
