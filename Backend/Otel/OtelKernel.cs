@@ -41,11 +41,13 @@ namespace BackendFramework.Otel
                 string? sessionId = request.Headers.TryGetValue("sessionId", out var values) ? values.FirstOrDefault() : null;
                 if (sessionId != null)
                 {
-                    activity.SetTag("SESSIONID ASP REQUEST", sessionId);
+                    // activity.SetTag("sessionId", sessionId);
+                    activity.SetBaggage("sessionId", sessionId);
                 }
                 else
                 {
-                    activity.SetTag("SESSIONID ASP REQUEST", "NULL");
+                    // activity.SetTag("sessionId", "NULL");
+                    // activity.SetBaggage("sessionId", "NULL");
                 }
             };
             options.EnrichWithHttpResponse = (activity, response) =>
@@ -62,11 +64,13 @@ namespace BackendFramework.Otel
                 string? sessionId = response.Headers.TryGetValue("sessionId", out var values) ? values.FirstOrDefault() : null;
                 if (sessionId != null)
                 {
-                    activity.SetTag("SESSIONID ASP RESPONSE", sessionId);
+                    // activity.SetTag("sessionId", sessionId);
+                    activity.SetBaggage("sessionId", sessionId);
                 }
                 else
                 {
-                    activity.SetTag("SESSIONID ASP RESPONSE", "NULL");
+                    // activity.SetTag("sessionId", "NULL");
+                    // activity.SetBaggage("sessionId", "NULL");
                 }
             };
         }
@@ -99,11 +103,13 @@ namespace BackendFramework.Otel
                 string? sessionId = request.Headers.TryGetValues("sessionId", out var values) ? values.FirstOrDefault() : null;
                 if (sessionId != null)
                 {
-                    activity.SetTag("SESSIONID HTTP REQUEST", sessionId);
+                    // activity.SetTag("sessionId", sessionId);
+                    activity.SetBaggage("sessionId", sessionId);
                 }
                 else
                 {
-                    activity.SetTag("SESSIONID HTTP REQUEST", "NULL");
+                    // activity.SetTag("sessionId", "NULL");
+                    // activity.SetBaggage("sessionId", "NULL");
                 }
             };
             options.EnrichWithHttpResponseMessage = (activity, response) =>
@@ -116,11 +122,13 @@ namespace BackendFramework.Otel
                 string? sessionId = response.Headers.TryGetValues("sessionId", out var values) ? values.FirstOrDefault() : null;
                 if (sessionId != null)
                 {
-                    activity.SetTag("SESSIONID HTTP RESPONSE", sessionId);
+                    // activity.SetTag("sessionId", sessionId);
+                    activity.SetBaggage("sessionId", sessionId);
                 }
                 else
                 {
-                    activity.SetTag("SESSIONID HTTP RESPONSE", "NULL");
+                    // activity.SetTag("sessionId", "NULL");
+                    // activity.SetBaggage("sessionId", "NULL");
                 }
             };
         }
@@ -162,6 +170,7 @@ namespace BackendFramework.Otel
 
         internal class LocationEnricher(ILocationProvider locationProvider) : BaseProcessor<Activity>
         {
+            // to complete at end of activities
             public override async void OnEnd(Activity data)
             {
                 string? uriPath = (string?)data.GetTagItem("url.full");
@@ -181,7 +190,14 @@ namespace BackendFramework.Otel
                     data?.AddTag("country", location.Country);
                     data?.AddTag("regionName", location.Region);
                     data?.AddTag("city", location.City);
+
+                    // data?.SetTag("SESSIONID BAGGAGE", data?.GetBaggageItem("sessionId"));
+
                 }
+
+                data?.SetTag("SESSIONID BAGGAGE", data?.GetBaggageItem("sessionId"));
+
+
 
                 if (uriPath != null && uriPath.Contains(locationUri))
                 {
