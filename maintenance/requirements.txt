@@ -18,13 +18,15 @@ cryptography==43.0.1
     # via pyopenssl
 dnspython==2.6.1
     # via pymongo
+durationpy==0.8
+    # via kubernetes
 google-auth==2.34.0
     # via kubernetes
 humanfriendly==10.0
     # via -r requirements.in
 idna==3.8
     # via requests
-kubernetes==30.1.0
+kubernetes==31.0.0
     # via -r requirements.in
 oauthlib==3.2.2
     # via
