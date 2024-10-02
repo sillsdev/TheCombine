@@ -127,8 +127,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 9. [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.1.250801`
 10. [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
     `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
-11. [dotnet-project-licenses](https://github.com/tomchavakis/nuget-license)
-    `dotnet tool update --global dotnet-project-licenses`
+11. [nuget-license](https://github.com/sensslen/nuget-license) `dotnet tool update --global nuget-project-license`
 12. Tools for generating the self installer (Linux only):
 
     - [makeself](https://makeself.io/) - a tool to make self-extracting archives in Unix
