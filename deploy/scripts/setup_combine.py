@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python
 
 """
 Install The Combine Helm charts on a specified Kubernetes cluster.

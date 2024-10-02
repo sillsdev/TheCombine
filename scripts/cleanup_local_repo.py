@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 """Remove all temporary files and folders within the local Git repository.
 

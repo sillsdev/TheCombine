@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python
 """
 Create data files for importing the Semantic Domain information into the Mongo database.
 

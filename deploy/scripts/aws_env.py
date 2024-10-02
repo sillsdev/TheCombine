@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python
 """Set AWS Environment variables from aws cli profiles."""
 
 from __future__ import annotations

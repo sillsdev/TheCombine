@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 """
 Runs maintenance/scripts/get_fonts.py with dev arguments for -f and -o.

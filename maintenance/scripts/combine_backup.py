@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """Create a backup of TheCombine and push the file to AWS S3 service."""
 
 import argparse
