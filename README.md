@@ -124,11 +124,10 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
      - If using [homebrew](https://formulae.brew.sh/formula/ffmpeg): `brew install ffmpeg`
      - If manually installing from the FFmpeg website, install both `ffmpeg` and `ffprobe`
 
-9. [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.1.250801`
-10. [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
-    `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
-11. [nuget-license](https://github.com/sensslen/nuget-license) `dotnet tool update --global nuget-project-license`
-12. Tools for generating the self installer (Linux only):
+9. [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
+   `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
+10. [nuget-license](https://github.com/sensslen/nuget-license) `dotnet tool update --global nuget-project-license`
+11. Tools for generating the self installer (Linux only):
 
     - [makeself](https://makeself.io/) - a tool to make self-extracting archives in Unix
     - [pandoc](https://pandoc.org/installing.html#linux) - a tool to convert Markdown documents to PDF.
