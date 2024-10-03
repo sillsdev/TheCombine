@@ -17,14 +17,13 @@ const infoKeys = [
   "License",
   "LicenseUrl",
 ];
-const sep =
-  "####################################################################################################\n";
+const sep = "###############################################################\n";
 let licensesString = "";
 
 for (const data of licenseData) {
   licensesString += sep;
   for (const key of infoKeys) {
-    licensesString += `${key}:${data[key]}\n`;
+    licensesString += `${key}: ${data[key]}\n`;
   }
 }
 
