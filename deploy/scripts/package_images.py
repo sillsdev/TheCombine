@@ -72,16 +72,16 @@ def package_k3s(dest_dir: Path) -> None:
 
 
 def package_images(image_list: List[str], tar_file: Path) -> None:
-    container_cli = [os.getenv("CONTAINER_CLI", "docker")]
-    if container_cli[0] == "nerdctl":
-        container_cli.extend(["--namespace", "k8s.io"])
+    container_cli_cmd = [os.getenv("CONTAINER_CLI", "docker")]
+    if container_cli_cmd[0] == "nerdctl":
+        container_cli_cmd.extend(["--namespace", "k8s.io"])
     # Pull each image
     for image in image_list:
-        pull_cmd = container_cli + ["pull", image]
+        pull_cmd = container_cli_cmd + ["pull", image]
         logging.debug(f"Running {pull_cmd}")
         run_cmd(pull_cmd)
     # Save pulled images into a .tar archive
-    run_cmd(container_cli + ["save"] + image_list + ["-o", str(tar_file)])
+    run_cmd(container_cli_cmd + ["save"] + image_list + ["-o", str(tar_file)])
     # Compress the tarball
     run_cmd(["zstd", "--rm", "--force", "--quiet", str(tar_file)])
 

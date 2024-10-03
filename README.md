@@ -589,8 +589,8 @@ When _Rancher Desktop_ is first run, you will be prompted to select a few initia
 1. Verify that _Enable Kubernetes_ is checked.
 2. Select the Kubernetes version marked as _stable, latest_.
 3. Select your container runtime, either _containerd_ or _dockerd (moby)_:
-   - _containerd_ matches what is used on the NUC and uses the `k3s` Kubernetes engine. It requires that you run the
-     `build.py` script with the `--nerdctl` option.
+   - _containerd_ matches what is used on the NUC and uses the `k3s` Kubernetes engine. It requires that you set the
+     `CONTAINER_CLI` environment variable to `nerdctl` before running the `build.py` script.
    - _dockerd_ uses the `k3d` (`k3s` in docker).
 4. Select _Automatic_ or _Manual_ path setup.
 5. Click _Accept_.
@@ -680,7 +680,7 @@ Notes:
   export CONTAINER_CLI="nerdctl"
   ```
 
-  If you are using _Docker Desktop_ or _Rancher Desktop_ with the `dockerd` container runtime, clear this variable or
+  If you are using _Rancher Desktop_ with the `dockerd` container runtime or _Docker Desktop_, clear this variable or
   set its value to `docker`.
 
 - Run with the `--help` option to see all available options.

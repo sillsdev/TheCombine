@@ -243,19 +243,19 @@ This step does more than just install the Kubernetes engine. It performs the fol
 
 To run this step:
 
-- if using the Docker image open a terminal window and run:
+- if using the Docker image, open a terminal window and run:
 
   ```console
   docker run -it -v nuc-config:/config public.ecr.aws/thecombine/combine_deploy:latest
   cd ~/ansible
-  ansible-playbook -i hosts playbook_kube_install.yml --limit <target> -u <user> -K -e link_kubeconfig=true
+  ansible-playbook -i hosts playbook_nuc_setup.yml --limit <target> -u <user> -K -e link_kubeconfig=true
   ```
 
 - if using local tools, open a terminal window and run:
 
   ```console
   cd <COMBINE>/deploy/ansible
-  ansible-playbook -i hosts playbook_kube_install.yml --limit <target> -u <user> -K
+  ansible-playbook -i hosts playbook_nuc_setup.yml --limit <target> -u <user> -K
   ```
 
   Where
