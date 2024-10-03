@@ -58,6 +58,7 @@ mongo_database
 
 # User Guide
 docs/user_guide/site
+backend_licenses.json
 
 # Python
 .tox

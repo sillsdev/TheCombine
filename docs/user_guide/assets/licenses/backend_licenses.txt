@@ -1,1187 +1,960 @@
-[
-  {
-    "PackageId": "AWSSDK.Core",
-    "PackageVersion": "3.7.100.14",
-    "PackageProjectUrl": "https://github.com/aws/aws-sdk-net/",
-    "Authors": "Amazon Web Services",
-    "License": "Apache-2.0",
-    "LicenseUrl": "http://aws.amazon.com/apache2.0/",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "AWSSDK.SecurityToken",
-    "PackageVersion": "3.7.100.14",
-    "PackageProjectUrl": "https://github.com/aws/aws-sdk-net/",
-    "Authors": "Amazon Web Services",
-    "License": "Apache-2.0",
-    "LicenseUrl": "http://aws.amazon.com/apache2.0/",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "BouncyCastle.Cryptography",
-    "PackageVersion": "2.4.0",
-    "PackageProjectUrl": "https://www.bouncycastle.org/stable/nuget/csharp/website",
-    "Copyright": "Copyright \u00A9 Legion of the Bouncy Castle Inc. 2000-2024",
-    "Authors": "Legion of the Bouncy Castle Inc.",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "DnsClient",
-    "PackageVersion": "1.6.1",
-    "PackageProjectUrl": "http://dnsclient.michaco.net/",
-    "Copyright": "Copyright (c) 2021 Michael Conrad",
-    "Authors": "MichaCo",
-    "License": "Apache-2.0",
-    "LicenseUrl": "https://licenses.nuget.org/Apache-2.0",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "icu.net",
-    "PackageVersion": "2.10.1-beta.5",
-    "PackageProjectUrl": "https://github.com/sillsdev/icu-dotnet",
-    "Copyright": "Copyright \u00A9 2007-2024 SIL International",
-    "Authors": "SIL International",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "Icu4c.Win.Full.Lib",
-    "PackageVersion": "62.2.3-beta",
-    "PackageProjectUrl": "https://github.com/sillsdev/icu",
-    "Copyright": "Copyright (c) 2016-2020 SIL International",
-    "Authors": "SIL International",
-    "LicenseUrl": "https://aka.ms/deprecateLicenseUrl",
-    "LicenseInformationOrigin": 2
-  },
-  {
-    "PackageId": "MailKit",
-    "PackageVersion": "4.8.0",
-    "PackageProjectUrl": "http://www.mimekit.net/",
-    "Copyright": ".NET Foundation and Contributors",
-    "Authors": "Jeffrey Stedfast",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
-    "PackageVersion": "8.0.3",
-    "PackageProjectUrl": "https://asp.net/",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "Microsoft.CSharp",
-    "PackageVersion": "4.7.0",
-    "PackageProjectUrl": "https://github.com/dotnet/corefx",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "Microsoft.DotNet.PlatformAbstractions",
-    "PackageVersion": "2.0.4",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft.DotNet.PlatformAbstractions",
-    "License": "https://github.com/dotnet/core-setup/blob/master/LICENSE.TXT",
-    "LicenseUrl": "https://github.com/dotnet/core-setup/blob/master/LICENSE.TXT",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "Microsoft.Extensions.ApiDescription.Server",
-    "PackageVersion": "6.0.5",
-    "PackageProjectUrl": "https://asp.net/",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "Microsoft.Extensions.DependencyModel",
-    "PackageVersion": "2.0.4",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft.Extensions.DependencyModel",
-    "License": "https://github.com/dotnet/core-setup/blob/master/LICENSE.TXT",
-    "LicenseUrl": "https://github.com/dotnet/core-setup/blob/master/LICENSE.TXT",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "Microsoft.Extensions.Logging.Abstractions",
-    "PackageVersion": "2.0.0",
-    "PackageProjectUrl": "https://asp.net/",
-    "Copyright": "Copyright \u00A9 Microsoft Corporation",
-    "Authors": "Microsoft",
-    "License": "Apache-2.0",
-    "LicenseUrl": "https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "Microsoft.IdentityModel.Abstractions",
-    "PackageVersion": "7.5.1",
-    "PackageProjectUrl": "https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "Microsoft.IdentityModel.JsonWebTokens",
-    "PackageVersion": "7.5.1",
-    "PackageProjectUrl": "https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "Microsoft.IdentityModel.Logging",
-    "PackageVersion": "7.5.1",
-    "PackageProjectUrl": "https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "Microsoft.IdentityModel.Protocols",
-    "PackageVersion": "7.1.2",
-    "PackageProjectUrl": "https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "Microsoft.IdentityModel.Protocols.OpenIdConnect",
-    "PackageVersion": "7.1.2",
-    "PackageProjectUrl": "https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "Microsoft.IdentityModel.Tokens",
-    "PackageVersion": "7.5.1",
-    "PackageProjectUrl": "https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "Microsoft.NETCore.Platforms",
-    "PackageVersion": "1.1.1",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "Microsoft.NETCore.Targets",
-    "PackageVersion": "1.1.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "Microsoft.OpenApi",
-    "PackageVersion": "1.6.14",
-    "PackageProjectUrl": "https://github.com/Microsoft/OpenAPI.NET",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "Microsoft.Win32.Registry",
-    "PackageVersion": "5.0.0",
-    "PackageProjectUrl": "https://github.com/dotnet/runtime",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "Microsoft.Win32.SystemEvents",
-    "PackageVersion": "6.0.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "MimeKit",
-    "PackageVersion": "4.8.0",
-    "PackageProjectUrl": "https://www.mimekit.net/",
-    "Copyright": ".NET Foundation and Contributors",
-    "Authors": "Jeffrey Stedfast",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "MongoDB.Bson",
-    "PackageVersion": "2.29.0",
-    "PackageProjectUrl": "https://www.mongodb.com/docs/drivers/csharp/",
-    "Copyright": "Copyright \u00A9 2010-present MongoDB Inc.",
-    "Authors": "MongoDB Inc.",
-    "License": "Apache-2.0",
-    "LicenseUrl": "https://licenses.nuget.org/Apache-2.0",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "MongoDB.Driver",
-    "PackageVersion": "2.29.0",
-    "PackageProjectUrl": "https://www.mongodb.com/docs/drivers/csharp/",
-    "Copyright": "Copyright \u00A9 2010-present MongoDB Inc.",
-    "Authors": "MongoDB Inc.",
-    "License": "Apache-2.0",
-    "LicenseUrl": "https://licenses.nuget.org/Apache-2.0",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "MongoDB.Driver.Core",
-    "PackageVersion": "2.29.0",
-    "PackageProjectUrl": "https://www.mongodb.com/docs/drivers/csharp/",
-    "Copyright": "Copyright \u00A9 2010-present MongoDB Inc.",
-    "Authors": "MongoDB Inc.",
-    "License": "Apache-2.0",
-    "LicenseUrl": "https://licenses.nuget.org/Apache-2.0",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "MongoDB.Libmongocrypt",
-    "PackageVersion": "1.12.0",
-    "PackageProjectUrl": "http://www.mongodb.org/display/DOCS/CSharp\u002BLanguage\u002BCenter",
-    "Copyright": "Copyright \u00A9 2019\u2013present MongoDB Inc.",
-    "Authors": "MongoDB Inc.",
-    "LicenseUrl": "https://aka.ms/deprecateLicenseUrl",
-    "LicenseInformationOrigin": 2
-  },
-  {
-    "PackageId": "Mono.Unix",
-    "PackageVersion": "7.1.0-final.1.21458.1",
-    "PackageProjectUrl": "https://github.com/mono/mono.posix",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "Newtonsoft.Json",
-    "PackageVersion": "13.0.2",
-    "PackageProjectUrl": "https://www.newtonsoft.com/json",
-    "Copyright": "Copyright \u00A9 James Newton-King 2008",
-    "Authors": "James Newton-King",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "RelaxNG",
-    "PackageVersion": "3.2.3",
-    "PackageProjectUrl": "https://github.com/mono/mono/tree/master/mcs/class/Commons.Xml.Relaxng",
-    "Authors": "Atsushi Enomoto,Alexandre Alapetite,the Mono team",
-    "License": "http://www.mono-project.com/FAQ:_Licensing",
-    "LicenseUrl": "http://www.mono-project.com/FAQ:_Licensing",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "relaxngDatatype",
-    "PackageVersion": "1.0.0.39",
-    "PackageProjectUrl": "https://github.com/josephmyers/relaxng-tenuto",
-    "Copyright": "Distributed under the BSD license",
-    "Authors": "relaxngDatatype",
-    "LicenseInformationOrigin": 2
-  },
-  {
-    "PackageId": "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl",
-    "PackageVersion": "4.3.2",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl",
-    "PackageVersion": "4.3.2",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "runtime.fedora.24-x64.runtime.native.System.Security.Cryptography.OpenSsl",
-    "PackageVersion": "4.3.2",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "runtime.native.System",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "runtime.native.System.Net.Http",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "runtime.native.System.Security.Cryptography.Apple",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "runtime.native.System.Security.Cryptography.OpenSsl",
-    "PackageVersion": "4.3.2",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "runtime.opensuse.13.2-x64.runtime.native.System.Security.Cryptography.OpenSsl",
-    "PackageVersion": "4.3.2",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "runtime.opensuse.42.1-x64.runtime.native.System.Security.Cryptography.OpenSsl",
-    "PackageVersion": "4.3.2",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.Apple",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.OpenSsl",
-    "PackageVersion": "4.3.2",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "runtime.rhel.7-x64.runtime.native.System.Security.Cryptography.OpenSsl",
-    "PackageVersion": "4.3.2",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl",
-    "PackageVersion": "4.3.2",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl",
-    "PackageVersion": "4.3.2",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl",
-    "PackageVersion": "4.3.2",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "SharpCompress",
-    "PackageVersion": "0.30.1",
-    "PackageProjectUrl": "https://github.com/adamhathcock/sharpcompress",
-    "Authors": "Adam Hathcock",
-    "LicenseInformationOrigin": 2
-  },
-  {
-    "PackageId": "SIL.Core",
-    "PackageVersion": "14.1.1",
-    "PackageProjectUrl": "https://github.com/sillsdev/libpalaso",
-    "Copyright": "Copyright \u00A9 2010-2023 SIL International",
-    "Authors": "SIL International",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "SIL.Core.Desktop",
-    "PackageVersion": "14.1.1",
-    "PackageProjectUrl": "https://github.com/sillsdev/libpalaso",
-    "Copyright": "Copyright \u00A9 2010-2023 SIL International",
-    "Authors": "SIL International",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "SIL.DictionaryServices",
-    "PackageVersion": "14.1.1",
-    "PackageProjectUrl": "https://github.com/sillsdev/libpalaso",
-    "Copyright": "Copyright \u00A9 2010-2023 SIL International",
-    "Authors": "SIL International",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "SIL.Lift",
-    "PackageVersion": "14.1.1",
-    "PackageProjectUrl": "https://github.com/sillsdev/libpalaso",
-    "Copyright": "Copyright \u00A9 2010-2023 SIL International",
-    "Authors": "SIL International",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "SIL.WritingSystems",
-    "PackageVersion": "14.1.1",
-    "PackageProjectUrl": "https://github.com/sillsdev/libpalaso",
-    "Copyright": "Copyright \u00A9 2010-2023 SIL International",
-    "Authors": "SIL International",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "Snappier",
-    "PackageVersion": "1.0.0",
-    "Copyright": "Copyright 2011, Google Inc. All rights reserved.",
-    "Authors": "btburnett3",
-    "LicenseUrl": "https://aka.ms/deprecateLicenseUrl",
-    "LicenseInformationOrigin": 2
-  },
-  {
-    "PackageId": "Spart",
-    "PackageVersion": "1.0.0",
-    "PackageProjectUrl": "https://github.com/sillsdev/spart",
-    "Copyright": "Copyright \u00A9 Jonathan de Halleux 2003, portions Copyright \u00A9 2018 SIL International",
-    "Authors": "Jonathan de Halleux, SIL",
-    "License": "https://opensource.org/licenses/Zlib",
-    "LicenseUrl": "https://opensource.org/licenses/Zlib",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "Swashbuckle.AspNetCore",
-    "PackageVersion": "6.8.1",
-    "PackageProjectUrl": "https://github.com/domaindrivendev/Swashbuckle.AspNetCore",
-    "Authors": "domaindrivendev",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "Swashbuckle.AspNetCore.Swagger",
-    "PackageVersion": "6.8.1",
-    "PackageProjectUrl": "https://github.com/domaindrivendev/Swashbuckle.AspNetCore",
-    "Copyright": "Copyright (c) 2016-2024 Richard Morris",
-    "Authors": "domaindrivendev",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "Swashbuckle.AspNetCore.SwaggerGen",
-    "PackageVersion": "6.8.1",
-    "PackageProjectUrl": "https://github.com/domaindrivendev/Swashbuckle.AspNetCore",
-    "Copyright": "Copyright (c) 2016-2024 Richard Morris",
-    "Authors": "domaindrivendev",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "Swashbuckle.AspNetCore.SwaggerUI",
-    "PackageVersion": "6.8.1",
-    "PackageProjectUrl": "https://github.com/domaindrivendev/Swashbuckle.AspNetCore",
-    "Copyright": "Copyright (c) 2016-2024 Richard Morris",
-    "Authors": "domaindrivendev",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "System.AppContext",
-    "PackageVersion": "4.1.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Buffers",
-    "PackageVersion": "4.5.1",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://github.com/dotnet/corefx/blob/master/LICENSE.TXT",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Collections",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Collections.Concurrent",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Configuration.ConfigurationManager",
-    "PackageVersion": "6.0.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "System.Diagnostics.Debug",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Diagnostics.DiagnosticSource",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Diagnostics.Tracing",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Drawing.Common",
-    "PackageVersion": "6.0.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "System.Dynamic.Runtime",
-    "PackageVersion": "4.0.11",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Formats.Asn1",
-    "PackageVersion": "8.0.1",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "System.Globalization",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Globalization.Calendars",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Globalization.Extensions",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.IdentityModel.Tokens.Jwt",
-    "PackageVersion": "7.5.1",
-    "PackageProjectUrl": "https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "System.IO",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.IO.FileSystem",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.IO.FileSystem.AccessControl",
-    "PackageVersion": "5.0.0",
-    "PackageProjectUrl": "https://github.com/dotnet/runtime",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "System.IO.FileSystem.Primitives",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Linq",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Linq.Expressions",
-    "PackageVersion": "4.1.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Memory",
-    "PackageVersion": "4.5.5",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://github.com/dotnet/corefx/blob/master/LICENSE.TXT",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Net.Http",
-    "PackageVersion": "4.3.4",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Net.Primitives",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.ObjectModel",
-    "PackageVersion": "4.0.12",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Reflection",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Reflection.Emit",
-    "PackageVersion": "4.0.1",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Reflection.Emit.ILGeneration",
-    "PackageVersion": "4.0.1",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Reflection.Emit.Lightweight",
-    "PackageVersion": "4.0.1",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Reflection.Extensions",
-    "PackageVersion": "4.0.1",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Reflection.Primitives",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Reflection.TypeExtensions",
-    "PackageVersion": "4.1.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Resources.ResourceManager",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Runtime",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Runtime.CompilerServices.Unsafe",
-    "PackageVersion": "5.0.0",
-    "PackageProjectUrl": "https://github.com/dotnet/runtime",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "System.Runtime.Extensions",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Runtime.Handles",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Runtime.InteropServices",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Runtime.InteropServices.RuntimeInformation",
-    "PackageVersion": "4.0.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Runtime.Numerics",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Security.AccessControl",
-    "PackageVersion": "6.0.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "System.Security.Cryptography.Algorithms",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Security.Cryptography.Cng",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Security.Cryptography.Csp",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Security.Cryptography.Encoding",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Security.Cryptography.OpenSsl",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Security.Cryptography.Pkcs",
-    "PackageVersion": "8.0.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "System.Security.Cryptography.Primitives",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Security.Cryptography.ProtectedData",
-    "PackageVersion": "6.0.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "System.Security.Cryptography.X509Certificates",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Security.Permissions",
-    "PackageVersion": "6.0.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "System.Security.Principal.Windows",
-    "PackageVersion": "5.0.0",
-    "PackageProjectUrl": "https://github.com/dotnet/runtime",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "System.Text.Encoding",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Threading",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Threading.Tasks",
-    "PackageVersion": "4.3.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseUrl": "http://go.microsoft.com/fwlink/?LinkId=329770",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.ValueTuple",
-    "PackageVersion": "4.5.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation.  All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://github.com/dotnet/corefx/blob/master/LICENSE.TXT",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "System.Windows.Extensions",
-    "PackageVersion": "6.0.0",
-    "PackageProjectUrl": "https://dot.net/",
-    "Copyright": "\u00A9 Microsoft Corporation. All rights reserved.",
-    "Authors": "Microsoft",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  },
-  {
-    "PackageId": "Tenuto",
-    "PackageVersion": "1.0.0.39",
-    "PackageProjectUrl": "https://github.com/josephmyers/relaxng-tenuto",
-    "Copyright": "Distributed under the BSD license",
-    "Authors": "Tenuto",
-    "LicenseInformationOrigin": 2
-  },
-  {
-    "PackageId": "Xabe.FFmpeg",
-    "PackageVersion": "5.2.6",
-    "PackageProjectUrl": "https://ffmpeg.xabe.net/index.html",
-    "Copyright": "Copyright 2017-2020 (c) Xabe Tomasz Zmuda.",
-    "Authors": "Xabe",
-    "License": "https://ffmpeg.xabe.net/license.html",
-    "LicenseUrl": "https://ffmpeg.xabe.net/license.html",
-    "LicenseInformationOrigin": 1
-  },
-  {
-    "PackageId": "ZstdSharp.Port",
-    "PackageVersion": "0.7.3",
-    "PackageProjectUrl": "https://github.com/oleg-st/ZstdSharp",
-    "Copyright": "Copyright Oleg Stepanischev 2023",
-    "Authors": "Oleg Stepanischev",
-    "License": "MIT",
-    "LicenseUrl": "https://licenses.nuget.org/MIT",
-    "LicenseInformationOrigin": 0
-  }
-]
+####################################################################################################
+PackageId:AWSSDK.Core
+PackageVersion:3.7.100.14
+PackageProjectUrl:https://github.com/aws/aws-sdk-net/
+Authors:Amazon Web Services
+License:Apache-2.0
+LicenseUrl:http://aws.amazon.com/apache2.0/
+
+####################################################################################################
+PackageId:AWSSDK.SecurityToken
+PackageVersion:3.7.100.14
+PackageProjectUrl:https://github.com/aws/aws-sdk-net/
+Authors:Amazon Web Services
+License:Apache-2.0
+LicenseUrl:http://aws.amazon.com/apache2.0/
+
+####################################################################################################
+PackageId:BouncyCastle.Cryptography
+PackageVersion:2.4.0
+PackageProjectUrl:https://www.bouncycastle.org/stable/nuget/csharp/website
+Authors:Legion of the Bouncy Castle Inc.
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:DnsClient
+PackageVersion:1.6.1
+PackageProjectUrl:http://dnsclient.michaco.net/
+Authors:MichaCo
+License:Apache-2.0
+LicenseUrl:https://licenses.nuget.org/Apache-2.0
+
+####################################################################################################
+PackageId:icu.net
+PackageVersion:2.10.1-beta.5
+PackageProjectUrl:https://github.com/sillsdev/icu-dotnet
+Authors:SIL International
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:Icu4c.Win.Full.Lib
+PackageVersion:62.2.3-beta
+PackageProjectUrl:https://github.com/sillsdev/icu
+Authors:SIL International
+License:undefined
+LicenseUrl:https://aka.ms/deprecateLicenseUrl
+
+####################################################################################################
+PackageId:MailKit
+PackageVersion:4.8.0
+PackageProjectUrl:http://www.mimekit.net/
+Authors:Jeffrey Stedfast
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:Microsoft.AspNetCore.Authentication.JwtBearer
+PackageVersion:8.0.3
+PackageProjectUrl:https://asp.net/
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:Microsoft.CSharp
+PackageVersion:4.7.0
+PackageProjectUrl:https://github.com/dotnet/corefx
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:Microsoft.DotNet.PlatformAbstractions
+PackageVersion:2.0.4
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft.DotNet.PlatformAbstractions
+License:https://github.com/dotnet/core-setup/blob/master/LICENSE.TXT
+LicenseUrl:https://github.com/dotnet/core-setup/blob/master/LICENSE.TXT
+
+####################################################################################################
+PackageId:Microsoft.Extensions.ApiDescription.Server
+PackageVersion:6.0.5
+PackageProjectUrl:https://asp.net/
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:Microsoft.Extensions.DependencyModel
+PackageVersion:2.0.4
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft.Extensions.DependencyModel
+License:https://github.com/dotnet/core-setup/blob/master/LICENSE.TXT
+LicenseUrl:https://github.com/dotnet/core-setup/blob/master/LICENSE.TXT
+
+####################################################################################################
+PackageId:Microsoft.Extensions.Logging.Abstractions
+PackageVersion:2.0.0
+PackageProjectUrl:https://asp.net/
+Authors:Microsoft
+License:Apache-2.0
+LicenseUrl:https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+
+####################################################################################################
+PackageId:Microsoft.IdentityModel.Abstractions
+PackageVersion:7.5.1
+PackageProjectUrl:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:Microsoft.IdentityModel.JsonWebTokens
+PackageVersion:7.5.1
+PackageProjectUrl:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:Microsoft.IdentityModel.Logging
+PackageVersion:7.5.1
+PackageProjectUrl:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:Microsoft.IdentityModel.Protocols
+PackageVersion:7.1.2
+PackageProjectUrl:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:Microsoft.IdentityModel.Protocols.OpenIdConnect
+PackageVersion:7.1.2
+PackageProjectUrl:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:Microsoft.IdentityModel.Tokens
+PackageVersion:7.5.1
+PackageProjectUrl:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:Microsoft.NETCore.Platforms
+PackageVersion:1.1.1
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:Microsoft.NETCore.Targets
+PackageVersion:1.1.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:Microsoft.OpenApi
+PackageVersion:1.6.14
+PackageProjectUrl:https://github.com/Microsoft/OpenAPI.NET
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:Microsoft.Win32.Registry
+PackageVersion:5.0.0
+PackageProjectUrl:https://github.com/dotnet/runtime
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:Microsoft.Win32.SystemEvents
+PackageVersion:6.0.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:MimeKit
+PackageVersion:4.8.0
+PackageProjectUrl:https://www.mimekit.net/
+Authors:Jeffrey Stedfast
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:MongoDB.Bson
+PackageVersion:2.29.0
+PackageProjectUrl:https://www.mongodb.com/docs/drivers/csharp/
+Authors:MongoDB Inc.
+License:Apache-2.0
+LicenseUrl:https://licenses.nuget.org/Apache-2.0
+
+####################################################################################################
+PackageId:MongoDB.Driver
+PackageVersion:2.29.0
+PackageProjectUrl:https://www.mongodb.com/docs/drivers/csharp/
+Authors:MongoDB Inc.
+License:Apache-2.0
+LicenseUrl:https://licenses.nuget.org/Apache-2.0
+
+####################################################################################################
+PackageId:MongoDB.Driver.Core
+PackageVersion:2.29.0
+PackageProjectUrl:https://www.mongodb.com/docs/drivers/csharp/
+Authors:MongoDB Inc.
+License:Apache-2.0
+LicenseUrl:https://licenses.nuget.org/Apache-2.0
+
+####################################################################################################
+PackageId:MongoDB.Libmongocrypt
+PackageVersion:1.12.0
+PackageProjectUrl:http://www.mongodb.org/display/DOCS/CSharp+Language+Center
+Authors:MongoDB Inc.
+License:undefined
+LicenseUrl:https://aka.ms/deprecateLicenseUrl
+
+####################################################################################################
+PackageId:Mono.Unix
+PackageVersion:7.1.0-final.1.21458.1
+PackageProjectUrl:https://github.com/mono/mono.posix
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:Newtonsoft.Json
+PackageVersion:13.0.2
+PackageProjectUrl:https://www.newtonsoft.com/json
+Authors:James Newton-King
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:RelaxNG
+PackageVersion:3.2.3
+PackageProjectUrl:https://github.com/mono/mono/tree/master/mcs/class/Commons.Xml.Relaxng
+Authors:Atsushi Enomoto,Alexandre Alapetite,the Mono team
+License:http://www.mono-project.com/FAQ:_Licensing
+LicenseUrl:http://www.mono-project.com/FAQ:_Licensing
+
+####################################################################################################
+PackageId:relaxngDatatype
+PackageVersion:1.0.0.39
+PackageProjectUrl:https://github.com/josephmyers/relaxng-tenuto
+Authors:relaxngDatatype
+License:undefined
+LicenseUrl:undefined
+
+####################################################################################################
+PackageId:runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl
+PackageVersion:4.3.2
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl
+PackageVersion:4.3.2
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:runtime.fedora.24-x64.runtime.native.System.Security.Cryptography.OpenSsl
+PackageVersion:4.3.2
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:runtime.native.System
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:runtime.native.System.Net.Http
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:runtime.native.System.Security.Cryptography.Apple
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:runtime.native.System.Security.Cryptography.OpenSsl
+PackageVersion:4.3.2
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:runtime.opensuse.13.2-x64.runtime.native.System.Security.Cryptography.OpenSsl
+PackageVersion:4.3.2
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:runtime.opensuse.42.1-x64.runtime.native.System.Security.Cryptography.OpenSsl
+PackageVersion:4.3.2
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.Apple
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.OpenSsl
+PackageVersion:4.3.2
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:runtime.rhel.7-x64.runtime.native.System.Security.Cryptography.OpenSsl
+PackageVersion:4.3.2
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl
+PackageVersion:4.3.2
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl
+PackageVersion:4.3.2
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl
+PackageVersion:4.3.2
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:SharpCompress
+PackageVersion:0.30.1
+PackageProjectUrl:https://github.com/adamhathcock/sharpcompress
+Authors:Adam Hathcock
+License:undefined
+LicenseUrl:undefined
+
+####################################################################################################
+PackageId:SIL.Core
+PackageVersion:14.1.1
+PackageProjectUrl:https://github.com/sillsdev/libpalaso
+Authors:SIL International
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:SIL.Core.Desktop
+PackageVersion:14.1.1
+PackageProjectUrl:https://github.com/sillsdev/libpalaso
+Authors:SIL International
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:SIL.DictionaryServices
+PackageVersion:14.1.1
+PackageProjectUrl:https://github.com/sillsdev/libpalaso
+Authors:SIL International
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:SIL.Lift
+PackageVersion:14.1.1
+PackageProjectUrl:https://github.com/sillsdev/libpalaso
+Authors:SIL International
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:SIL.WritingSystems
+PackageVersion:14.1.1
+PackageProjectUrl:https://github.com/sillsdev/libpalaso
+Authors:SIL International
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:Snappier
+PackageVersion:1.0.0
+PackageProjectUrl:undefined
+Authors:btburnett3
+License:undefined
+LicenseUrl:https://aka.ms/deprecateLicenseUrl
+
+####################################################################################################
+PackageId:Spart
+PackageVersion:1.0.0
+PackageProjectUrl:https://github.com/sillsdev/spart
+Authors:Jonathan de Halleux, SIL
+License:https://opensource.org/licenses/Zlib
+LicenseUrl:https://opensource.org/licenses/Zlib
+
+####################################################################################################
+PackageId:Swashbuckle.AspNetCore
+PackageVersion:6.8.1
+PackageProjectUrl:https://github.com/domaindrivendev/Swashbuckle.AspNetCore
+Authors:domaindrivendev
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:Swashbuckle.AspNetCore.Swagger
+PackageVersion:6.8.1
+PackageProjectUrl:https://github.com/domaindrivendev/Swashbuckle.AspNetCore
+Authors:domaindrivendev
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:Swashbuckle.AspNetCore.SwaggerGen
+PackageVersion:6.8.1
+PackageProjectUrl:https://github.com/domaindrivendev/Swashbuckle.AspNetCore
+Authors:domaindrivendev
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:Swashbuckle.AspNetCore.SwaggerUI
+PackageVersion:6.8.1
+PackageProjectUrl:https://github.com/domaindrivendev/Swashbuckle.AspNetCore
+Authors:domaindrivendev
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:System.AppContext
+PackageVersion:4.1.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Buffers
+PackageVersion:4.5.1
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+
+####################################################################################################
+PackageId:System.Collections
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Collections.Concurrent
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Configuration.ConfigurationManager
+PackageVersion:6.0.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:System.Diagnostics.Debug
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Diagnostics.DiagnosticSource
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Diagnostics.Tracing
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Drawing.Common
+PackageVersion:6.0.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:System.Dynamic.Runtime
+PackageVersion:4.0.11
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Formats.Asn1
+PackageVersion:8.0.1
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:System.Globalization
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Globalization.Calendars
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Globalization.Extensions
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.IdentityModel.Tokens.Jwt
+PackageVersion:7.5.1
+PackageProjectUrl:https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:System.IO
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.IO.FileSystem
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.IO.FileSystem.AccessControl
+PackageVersion:5.0.0
+PackageProjectUrl:https://github.com/dotnet/runtime
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:System.IO.FileSystem.Primitives
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Linq
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Linq.Expressions
+PackageVersion:4.1.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Memory
+PackageVersion:4.5.5
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+
+####################################################################################################
+PackageId:System.Net.Http
+PackageVersion:4.3.4
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Net.Primitives
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.ObjectModel
+PackageVersion:4.0.12
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Reflection
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Reflection.Emit
+PackageVersion:4.0.1
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Reflection.Emit.ILGeneration
+PackageVersion:4.0.1
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Reflection.Emit.Lightweight
+PackageVersion:4.0.1
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Reflection.Extensions
+PackageVersion:4.0.1
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Reflection.Primitives
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Reflection.TypeExtensions
+PackageVersion:4.1.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Resources.ResourceManager
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Runtime
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Runtime.CompilerServices.Unsafe
+PackageVersion:5.0.0
+PackageProjectUrl:https://github.com/dotnet/runtime
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:System.Runtime.Extensions
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Runtime.Handles
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Runtime.InteropServices
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Runtime.InteropServices.RuntimeInformation
+PackageVersion:4.0.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Runtime.Numerics
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Security.AccessControl
+PackageVersion:6.0.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:System.Security.Cryptography.Algorithms
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Security.Cryptography.Cng
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Security.Cryptography.Csp
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Security.Cryptography.Encoding
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Security.Cryptography.OpenSsl
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Security.Cryptography.Pkcs
+PackageVersion:8.0.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:System.Security.Cryptography.Primitives
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Security.Cryptography.ProtectedData
+PackageVersion:6.0.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:System.Security.Cryptography.X509Certificates
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Security.Permissions
+PackageVersion:6.0.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:System.Security.Principal.Windows
+PackageVersion:5.0.0
+PackageProjectUrl:https://github.com/dotnet/runtime
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:System.Text.Encoding
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Threading
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.Threading.Tasks
+PackageVersion:4.3.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:http://go.microsoft.com/fwlink/?LinkId=329770
+LicenseUrl:http://go.microsoft.com/fwlink/?LinkId=329770
+
+####################################################################################################
+PackageId:System.ValueTuple
+PackageVersion:4.5.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://github.com/dotnet/corefx/blob/master/LICENSE.TXT
+
+####################################################################################################
+PackageId:System.Windows.Extensions
+PackageVersion:6.0.0
+PackageProjectUrl:https://dot.net/
+Authors:Microsoft
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
+####################################################################################################
+PackageId:Tenuto
+PackageVersion:1.0.0.39
+PackageProjectUrl:https://github.com/josephmyers/relaxng-tenuto
+Authors:Tenuto
+License:undefined
+LicenseUrl:undefined
+
+####################################################################################################
+PackageId:Xabe.FFmpeg
+PackageVersion:5.2.6
+PackageProjectUrl:https://ffmpeg.xabe.net/index.html
+Authors:Xabe
+License:https://ffmpeg.xabe.net/license.html
+LicenseUrl:https://ffmpeg.xabe.net/license.html
+
+####################################################################################################
+PackageId:ZstdSharp.Port
+PackageVersion:0.7.3
+PackageProjectUrl:https://github.com/oleg-st/ZstdSharp
+Authors:Oleg Stepanischev
+License:MIT
+LicenseUrl:https://licenses.nuget.org/MIT
+
