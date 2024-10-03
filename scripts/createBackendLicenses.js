@@ -26,7 +26,6 @@ for (const data of licenseData) {
   for (const key of infoKeys) {
     licensesString += `${key}:${data[key]}\n`;
   }
-  licensesString += "\n";
 }
 
 console.log(`Writing license data to ${fileNameOut}`);
