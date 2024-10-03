@@ -17,7 +17,7 @@
     "fmt-frontend-check": "prettier --check \"./{.github,.vscode,certmgr,deploy,docs,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
     "frontend": "npm run set-release && react-scripts start",
     "gen-backend-coverage-report": "tsc scripts/genBackendCoverageReport.ts && node scripts/genBackendCoverageReport.js",
-    "license-report-backend": " nuget-license --include-transitive --input ./Backend/BackendFramework.csproj --output JsonPretty > docs/user_guide/assets/licenses/backend_licenses.json; node scripts/createBackendLicenses.js",
+    "license-report-backend": " nuget-license --include-transitive --input ./Backend/BackendFramework.csproj --output JsonPretty > docs/user_guide/assets/licenses/backend_licenses.json | exit 0 && node scripts/createBackendLicenses.js",
     "license-summary-backend": "nuget-license --include-transitive --input ./Backend/BackendFramework.csproj",
     "license-report-frontend": " npm install && license-checker-rseidelsohn --production --excludePrivatePackages --plainVertical --out docs/user_guide/assets/licenses/frontend_licenses.txt",
     "license-summary-frontend": "npm install && license-checker-rseidelsohn --production --excludePrivatePackages --summary",
