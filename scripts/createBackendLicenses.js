@@ -9,6 +9,7 @@ const fileNameOut = `${fileNameNoExt}.txt`;
 console.log(`Reading JSON data from ${fileNameIn}`);
 const licenseData = JSON.parse(fs.readFileSync(fileNameIn));
 
+// Ignore "LicenseInformationOrigin", "ValidationErrors"
 const infoKeys = [
   "PackageId",
   "PackageVersion",
@@ -17,13 +18,17 @@ const infoKeys = [
   "License",
   "LicenseUrl",
 ];
+
 const sep = "###############################################################\n";
 let licensesString = "";
 
 for (const data of licenseData) {
   licensesString += sep;
   for (const key of infoKeys) {
-    licensesString += `${key}: ${data[key]}\n`;
+    const datum = data[key];
+    if (datum) {
+      licensesString += `${key}: ${datum}\n`;
+    }
   }
 }
 

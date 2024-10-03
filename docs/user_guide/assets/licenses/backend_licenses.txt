@@ -38,7 +38,6 @@ PackageId: Icu4c.Win.Full.Lib
 PackageVersion: 62.2.3-beta
 PackageProjectUrl: https://github.com/sillsdev/icu
 Authors: SIL International
-License: undefined
 LicenseUrl: https://aka.ms/deprecateLicenseUrl
 ###############################################################
 PackageId: MailKit
@@ -199,7 +198,6 @@ PackageId: MongoDB.Libmongocrypt
 PackageVersion: 1.12.0
 PackageProjectUrl: http://www.mongodb.org/display/DOCS/CSharp+Language+Center
 Authors: MongoDB Inc.
-License: undefined
 LicenseUrl: https://aka.ms/deprecateLicenseUrl
 ###############################################################
 PackageId: Mono.Unix
@@ -227,8 +225,6 @@ PackageId: relaxngDatatype
 PackageVersion: 1.0.0.39
 PackageProjectUrl: https://github.com/josephmyers/relaxng-tenuto
 Authors: relaxngDatatype
-License: undefined
-LicenseUrl: undefined
 ###############################################################
 PackageId: runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl
 PackageVersion: 4.3.2
@@ -339,8 +335,6 @@ PackageId: SharpCompress
 PackageVersion: 0.30.1
 PackageProjectUrl: https://github.com/adamhathcock/sharpcompress
 Authors: Adam Hathcock
-License: undefined
-LicenseUrl: undefined
 ###############################################################
 PackageId: SIL.Core
 PackageVersion: 14.1.1
@@ -379,9 +373,7 @@ LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Snappier
 PackageVersion: 1.0.0
-PackageProjectUrl: undefined
 Authors: btburnett3
-License: undefined
 LicenseUrl: https://aka.ms/deprecateLicenseUrl
 ###############################################################
 PackageId: Spart
@@ -822,8 +814,6 @@ PackageId: Tenuto
 PackageVersion: 1.0.0.39
 PackageProjectUrl: https://github.com/josephmyers/relaxng-tenuto
 Authors: Tenuto
-License: undefined
-LicenseUrl: undefined
 ###############################################################
 PackageId: Xabe.FFmpeg
 PackageVersion: 5.2.6
