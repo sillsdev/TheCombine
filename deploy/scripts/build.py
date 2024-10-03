@@ -270,7 +270,7 @@ def main() -> None:
     if args.quiet:
         build_cmd += ["--quiet"]
     else:
-        build_cmd = ["--progress", "plain"]
+        build_cmd += ["--progress", "plain"]
     if args.no_cache:
         build_cmd += ["--no-cache"]
     if args.pull:
