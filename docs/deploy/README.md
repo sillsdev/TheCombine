@@ -219,7 +219,7 @@ To install the OS on a new target machine, such as, a new NUC, follow these step
      ```
 
      Where `<ip_addr>` is the IP address found in step 7, `<target>` is the server name specified when Ubuntu was
-     installed, and `<username>` is your current username.
+     installed, and `<username>` is your current username on _[Host]_.
 
    The `setup_target.py` script will do the following:
 
