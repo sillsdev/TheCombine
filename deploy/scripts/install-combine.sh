@@ -78,9 +78,9 @@ install-kubernetes () {
   cd ${DEPLOY_DIR}/ansible
 
   if [ -d "${DEPLOY_DIR}/airgap-images" ] ; then
-    ansible-playbook playbook_desktop_setup.yaml -K -e k8s_user=`whoami` -e install_airgap_images=true
+    ansible-playbook playbook_desktop_setup.yml -K -e k8s_user=`whoami` -e install_airgap_images=true
   else
-    ansible-playbook playbook_desktop_setup.yaml -K -e k8s_user=`whoami`
+    ansible-playbook playbook_desktop_setup.yml -K -e k8s_user=`whoami`
   fi
 }
 
