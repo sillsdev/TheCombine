@@ -3,10 +3,10 @@
 """
 Build the containerd images for The Combine.
 
-This script currently supports using 'docker' or 'nerdctl' to build the container
-images.  'nerdctl' is recommended when using Rancher Desktop for the development
-environment and 'docker' is recommended when using Docker Desktop with the 'containerd'
-container engine.
+This script currently supports using 'docker' or 'nerdctl' to build the container images.
+The default is 'docker' unless the CONTAINER_CLI env var is set to 'nerdctl'.
+'docker' is for Rancher Desktop with the 'dockerd' container runtime or Docker Desktop.
+'nerdctl' is for Rancher Desktop with the 'containerd' container runtime.
 
 When 'docker' is used for the build, the BuildKit backend will be enabled.
 """
@@ -190,11 +190,6 @@ def parse_args() -> Namespace:
     """Parse user command line arguments."""
     parser = ArgumentParser(
         description="Build containerd container images for project.",
-        epilog="""
-         NOTE:
-         The '--nerdctl' option is DEPRECATED and will be removed in future versions.
-         Set the environment variable CONTAINER_CLI to 'nerdctl' or 'docker' instead.
-        """,
         formatter_class=RawFormatter,
     )
     parser.add_argument(
@@ -213,11 +208,6 @@ def parse_args() -> Namespace:
     )
     parser.add_argument(
         "--repo", "-r", help="Push images to the specified Docker image repository."
-    )
-    parser.add_argument(
-        "--nerdctl",
-        action="store_true",
-        help="Use 'nerdctl' instead of 'docker' to build images.",
     )
     parser.add_argument(
         "--namespace",
@@ -264,7 +254,7 @@ def main() -> None:
     logging.basicConfig(format="%(levelname)s:%(message)s", level=log_level)
 
     # Setup required build engine - docker or nerdctl
-    container_cli = os.getenv("CONTAINER_CLI", "nerdctl" if args.nerdctl else "docker")
+    container_cli = os.getenv("CONTAINER_CLI", "docker")
     match container_cli:
         case "nerdctl":
             build_cmd = [container_cli, "-n", args.namespace, "build"]
@@ -277,18 +267,18 @@ def main() -> None:
             sys.exit(1)
 
     # Setup build options
-    build_opts: List[str] = []
     if args.quiet:
-        build_opts = ["--quiet"]
+        build_cmd += ["--quiet"]
     else:
-        build_opts = ["--progress", "plain"]
+        build_cmd += ["--progress", "plain"]
     if args.no_cache:
-        build_opts += ["--no-cache"]
+        build_cmd += ["--no-cache"]
     if args.pull:
-        build_opts += ["--pull"]
+        build_cmd += ["--pull"]
     if args.build_args is not None:
         for build_arg in args.build_args:
-            build_opts += ["--build-arg", build_arg]
+            build_cmd += ["--build-arg", build_arg]
+    logging.debug(f"build_cmd: {build_cmd}")
 
     if args.components is not None:
         to_do = args.components
@@ -301,21 +291,10 @@ def main() -> None:
         spec = build_specs[component]
         spec.pre_build()
         image_name = get_image_name(args.repo, spec.name, args.tag)
+        job_opts = ["-t", image_name, "-f", "Dockerfile", "."]
         job_set[component] = JobQueue(component)
-        job_set[component].add_job(
-            Job(
-                build_cmd
-                + build_opts
-                + [
-                    "-t",
-                    image_name,
-                    "-f",
-                    "Dockerfile",
-                    ".",
-                ],
-                spec.dir,
-            )
-        )
+        logging.debug(f"Adding job {build_cmd + job_opts}")
+        job_set[component].add_job(Job(build_cmd + job_opts, spec.dir))
         if args.repo is not None:
             if args.quiet:
                 push_args = ["--quiet"]
