@@ -990,17 +990,6 @@ Notes:
    [AWS CLI Command Reference (s3)](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3/index.html)
    for documentation on how to use the command line to list and to manage the backup objects.
 
-#### Create a New Admin User (Production)
-
-Task: create a new user who is a site administrator
-
-Run:
-
-```bash
-# Run from the `deploy` directory in the project on the host machine
-ansible-playbook playbook_admin_user.yaml --limit <target_name> -u sillsdev -K
-```
-
 #### Delete a Project
 
 Task: Delete a project
