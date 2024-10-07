@@ -18,9 +18,9 @@
     group: root
     mode: 0644
   loop:
-    - k3s-airgap-images-amd64.tar.zst
-    - middleware-airgap-images-amd64.tar.zst
-    - combine-airgap-images-amd64.tar.zst
+    - k3s-airgap-images-{{ linux_arch }}.tar.zst
+    - middleware-airgap-images-{{ linux_arch }}.tar.zst
+    - combine-airgap-images-{{ linux_arch }}.tar.zst
 
 # Add k3s, kubectl and the k3s installation script to
 # /usr/local/bin
@@ -51,7 +51,7 @@
 
 - name: Create link to helm binary
   file:
-    src: /opt/helm/{{ helm_version }}/linux-amd64/helm
+    src: /opt/helm/{{ helm_version }}/linux-{{ linux_arch }}/helm
     dest: /usr/local/bin/helm
     state: link
     owner: root

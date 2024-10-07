@@ -7,6 +7,8 @@ The package_images.py script uses the `helm template` command to print the rende
 helm templates for the middleware used by The Combine and for The Combine itself.  The
 image names are extracted from the templates and then pulled from the repo and stored
 in ../images as compressed tarballs; zstd compression is used.
+
+By default, packs images for amd64 architecture; use --arm to pack for arm64 instead.
 """
 import argparse
 import logging
@@ -38,6 +40,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("output_dir", help="Directory for the collected image files.")
     # Add Optional arguments
+    parser.add_argument(
+        "--arm",
+        help="Package for arm64 instead of the default amd64",
+        default=False,
+    )
     parser.add_argument(
         "--config",
         "-c",
@@ -87,7 +94,7 @@ def package_images(image_list: List[str], tar_file: Path) -> None:
 
 
 def package_middleware(
-    config_file: str, *, cluster_type: str, image_dir: Path, chart_dir: Path
+    config_file: str, *, cluster_type: str, image_dir: Path, chart_dir: Path, arm=False
 ) -> None:
     logging.info("Packaging middleware images.")
     # read in cluster configuration
@@ -128,10 +135,11 @@ def package_middleware(
                     logging.debug(f"    - Found image {match.group(1)}")
                     middleware_images.append(match.group(1))
     logging.debug(f"Middleware images: {middleware_images}")
-    package_images(middleware_images, image_dir / "middleware-airgap-images-amd64.tar")
+    out_file = f"middleware-airgap-images-{"arm64" if arm else "amd64"}.tar"
+    package_images(middleware_images, image_dir / out_file)
 
 
-def package_thecombine(tag: str, image_dir: Path) -> None:
+def package_thecombine(tag: str, image_dir: Path, *, arm=False) -> None:
     logging.info(f"Packaging The Combine version {tag}.")
     logging.debug("Create helm charts from templates")
     combine_charts.generate(tag)
@@ -158,7 +166,8 @@ def package_thecombine(tag: str, image_dir: Path) -> None:
                 combine_images.append(image)
     logging.debug(f"Combine images: {combine_images}")
     # Logout of AWS to allow pulling the images
-    package_images(combine_images, image_dir / "combine-airgap-images-amd64.tar")
+    out_file = f"combine-airgap-images-{"arm64" if arm else "amd64"}.tar"
+    package_images(combine_images, image_dir / out_file)
 
 
 def main() -> None:
@@ -181,9 +190,9 @@ def main() -> None:
     # Update helm repos
     package_k3s(image_dir)
     package_middleware(
-        args.config, cluster_type="standard", image_dir=image_dir, chart_dir=chart_dir
+        args.config, cluster_type="standard", image_dir=image_dir, chart_dir=chart_dir, arm=args.arm
     )
-    package_thecombine(args.tag, image_dir)
+    package_thecombine(args.tag, image_dir, arm=args.arm)
 
 
 if __name__ == "__main__":
