@@ -91,7 +91,7 @@ export default function ProjectSettingsComponent(): ReactElement {
   const project = useAppSelector(
     (state: StoreState) => state.currentProjectState.project
   );
-  const hideLabels = useMediaQuery<Theme>((t) => t.breakpoints.down("md"));
+  const hideLabels = useMediaQuery<Theme>((th) => th.breakpoints.down("md"));
   const navigate = useNavigate();
   const { t } = useTranslation();
 

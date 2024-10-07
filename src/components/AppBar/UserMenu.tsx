@@ -53,8 +53,8 @@ export default function UserMenu(props: TabProps): ReactElement {
   const [isAdmin, setIsAdmin] = useState(false);
   const username = LocalStorage.getCurrentUser()?.username;
 
-  const isLgUp = useMediaQuery<Theme>((t) => t.breakpoints.up("lg"));
-  const isXl = useMediaQuery<Theme>((t) => t.breakpoints.only("xl"));
+  const isLgUp = useMediaQuery<Theme>((th) => th.breakpoints.up("lg"));
+  const isXl = useMediaQuery<Theme>((th) => th.breakpoints.only("xl"));
   const nameLength = isXl ? usernameLength.xl : usernameLength.lg;
 
   function handleClick(event: MouseEvent<HTMLButtonElement>): void {

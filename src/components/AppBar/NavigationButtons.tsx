@@ -77,7 +77,7 @@ function NavButton(props: NavButtonProps): ReactElement {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { windowWidth } = useWindowSize();
-  const showText = useMediaQuery<Theme>((t) => t.breakpoints.up("sm"));
+  const showText = useMediaQuery<Theme>((th) => th.breakpoints.up("sm"));
 
   return (
     <Button

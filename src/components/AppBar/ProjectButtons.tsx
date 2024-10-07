@@ -48,9 +48,9 @@ export default function ProjectButtons(props: TabProps): ReactElement {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const isMdUp = useMediaQuery<Theme>((t) => t.breakpoints.up("md"));
-  const isLg = useMediaQuery<Theme>((t) => t.breakpoints.only("lg"));
-  const isXl = useMediaQuery<Theme>((t) => t.breakpoints.only("xl"));
+  const isMdUp = useMediaQuery<Theme>((th) => th.breakpoints.up("md"));
+  const isLg = useMediaQuery<Theme>((th) => th.breakpoints.only("lg"));
+  const isXl = useMediaQuery<Theme>((th) => th.breakpoints.only("xl"));
   const nameLength = isXl
     ? projNameLength.xl
     : isLg

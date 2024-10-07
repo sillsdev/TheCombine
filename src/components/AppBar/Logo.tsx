@@ -10,8 +10,8 @@ import { themeColors } from "types/theme";
 
 /** A button that redirects to the home page */
 export default function Logo(): ReactElement {
-  const isSmDown = useMediaQuery<Theme>((t) => t.breakpoints.down("sm"));
-  const isMdDown = useMediaQuery<Theme>((t) => t.breakpoints.down("md"));
+  const isSmDown = useMediaQuery<Theme>((th) => th.breakpoints.down("sm"));
+  const isMdDown = useMediaQuery<Theme>((th) => th.breakpoints.down("md"));
   const navigate = useNavigate();
   return (
     <Button

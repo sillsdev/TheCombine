@@ -15,8 +15,8 @@ export const topBarHeight = 70;
 
 /** A  bar shown at the top of the landing page. */
 export default function TopBar(): ReactElement {
-  const showSubtitle = useMediaQuery<Theme>((t) => t.breakpoints.up("sm"));
-  const isMdUp = useMediaQuery<Theme>((t) => t.breakpoints.up("md"));
+  const showSubtitle = useMediaQuery<Theme>((th) => th.breakpoints.up("sm"));
+  const isMdUp = useMediaQuery<Theme>((th) => th.breakpoints.up("md"));
   const { t } = useTranslation();
 
   return (

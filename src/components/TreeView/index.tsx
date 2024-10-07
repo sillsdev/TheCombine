@@ -51,7 +51,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
   );
   const [visible, setVisible] = useState(true);
   const dispatch = useAppDispatch();
-  const showButtonToTop = useMediaQuery<Theme>((t) => t.breakpoints.up("sm"));
+  const showButtonToTop = useMediaQuery<Theme>((th) => th.breakpoints.up("sm"));
   const { resolvedLanguage } = useTranslation().i18n;
 
   useEffect(() => {

@@ -28,7 +28,7 @@ const heightBetweenBars =
   parseInt(theme.spacing(1));
 
 export default function LandingPage(): ReactElement {
-  const isXs = useMediaQuery<Theme>((t) => t.breakpoints.only("xs"));
+  const isXs = useMediaQuery<Theme>((th) => th.breakpoints.only("xs"));
   const navigate = useNavigate();
 
   useEffect(() => {
