@@ -305,6 +305,7 @@ The setup scripts require the following environment variables to be set:
 The following environment variables are also required for online deployments (QA/Production), but not for offline
 deployments (NUC):
 
+- COMBINE_CAPTCHA_SECRET_KEY
 - COMBINE_SMTP_USERNAME
 - COMBINE_SMTP_PASSWORD
 
