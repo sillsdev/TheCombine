@@ -7,6 +7,9 @@ using System.Diagnostics;
 using Backend.Tests.Mocks;
 using BackendFramework.Interfaces;
 // using BackendFramework.Otel;
+// using Microsoft.Extensions.DependencyInjection;
+
+// using BackendFramework.Otel;
 using NUnit.Framework;
 using static BackendFramework.Otel.OtelKernel;
 
@@ -40,8 +43,29 @@ namespace Backend.Tests.Otel
 
         }
 
+        // public void TestSessionIdIsTag()
+        // {
+
+        //     var activity = new Activity("testActivity").Start();
+        //     var services = new ServiceCollection();
+        //     OtelService.AddOtelInstrumentation(services);
+        //     var tags = activity.Tags;
+        //     Assert.That(tags, Is.Not.Null);
+        //     var testId = new Dictionary<string, string> {
+        //         {"sessionnnaId", "123"}
+        //     };
+        //     List<KeyValuePair<string, string?>> list = (List<KeyValuePair<string, string?>>)tags;
+        //     foreach (var x in tags)
+        //     {
+        //         Console.WriteLine(x);
+        //     }
+        //     Assert.That(tags, Is.SupersetOf(testId));
+
+
+        // }
+
         [Test]
-        public void TestOnEnd()
+        public void TestOnEndLocation()
         {
             // mock activity
             var activity = new Activity("testActivity").Start();
@@ -58,6 +82,30 @@ namespace Backend.Tests.Otel
                 {"country", "test country"},
                 {"regionName", "test region"},
                 {"city", "city"}
+            };
+
+            // Assert.That(tags.Any(item => item == [test country]));
+            Assert.That(tags, Is.SupersetOf(testLocation));
+
+        }
+
+        [Test]
+        public void TestOnEndSession()
+        {
+            // mock activity
+            var activity = new Activity("testActivity").Start();
+
+            _locationEnricher.OnEnd(activity);
+            var tags = activity.Tags;
+            Assert.That(tags, Is.Not.Null);
+            // List<KeyValuePair<string, string?>> list = (List<KeyValuePair<string, string?>>)tags;
+            // foreach (var x in tags)
+            // {
+            //     Console.WriteLine(x);
+            // }
+            var testLocation = new Dictionary<string, string>
+            {
+                {"sessionId", "123"},
             };
 
             // Assert.That(tags.Any(item => item == [test country]));
