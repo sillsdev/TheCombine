@@ -1,19 +1,18 @@
 #! /usr/bin/env bash
 set -eo pipefail
 
-################################################################################
+#########################################################################################
 #
-# install-combine.sh is intended to install the Combine on an Ubuntu-based Linux
-# Laptop.  Its usage is defined in the readme file that accompanies the packaged
-# installer, ./installer/README.md (or ./installer/README.pdf).
+# install-combine.sh is intended to install the Combine on an Ubuntu-based Linux machine.
+# It should only be executed directly by developers. For general users, it is packaged in
+# a stand-alone installer (see ./installer/README.md or ./installer/README.pdf).
 #
-# Note that 2 additional options are available that are not documented in the 
-# readme file.  These are intended to only be used for debugging and under the
-# guidance of a support engineer.  They are:
+# The options for this script and for the packaged installer are the same. Note that 2
+# additional debugging options are available that aren't documented in the readme file:
 #   - single-step - run the next "step" in the installation process and stop.
-#   - start-at <step-name> - start at the step named <step-name> and run to 
-#     completion.
-#################################################################################
+#   - start-at <step-name> - start at the step named <step-name> and run to completion.
+#
+#########################################################################################
 
 # Warning and Error reporting functions
 warning () {
@@ -34,7 +33,7 @@ set-combine-env () {
     # Collect values from user
     read -p "Enter AWS_ACCESS_KEY_ID: " AWS_ACCESS_KEY_ID
     read -p "Enter AWS_SECRET_ACCESS_KEY: " AWS_SECRET_ACCESS_KEY
-    # write collected values and static values to config file
+    # Write collected values and static values to config file
     cat <<.EOF > ${CONFIG_DIR}/env
     export COMBINE_JWT_SECRET_KEY="${COMBINE_JWT_SECRET_KEY}"
     export AWS_DEFAULT_REGION="us-east-1"
@@ -46,8 +45,7 @@ set-combine-env () {
   source ${CONFIG_DIR}/env
 }
 
-# Create the virtual environment needed by the Python installation
-# scripts
+# Create the virtual environment needed by the Python installation scripts
 create-python-venv () {
   cd $DEPLOY_DIR
   # Install required packages
@@ -64,8 +62,7 @@ create-python-venv () {
   python -m piptools sync requirements.txt
 }
 
-# Install Kubernetes engine and other supporting
-# software
+# Install Kubernetes engine and other supporting software
 install-kubernetes () {
   # Let the user know what to expect
   cat << .EOM
@@ -105,8 +102,7 @@ set-k3s-env () {
   fi
 }
 
-# Install the public charts used by The Combine, specifically, cert-manager
-# and nginx-ingress-controller
+# Install the public charts used by The Combine
 install-base-charts () {
   set-k3s-env
   #####
@@ -150,8 +146,7 @@ wait-for-combine () {
   # Wait for all combine deployments to be up
   while true ; do
     combine_status=`kubectl -n thecombine get deployments`
-    # assert the The Combine is up; if any components are not up,
-    # set it to false
+    # Assert the The Combine is up; if any components are not up, set it to false
     combine_up=true
     for deployment in frontend backend database maintenance ; do
       deployment_status=$(echo ${combine_status} | grep "${deployment}" | sed "s/^.*\([0-9]\)\/1.*/\1/")
@@ -168,8 +163,7 @@ wait-for-combine () {
   done
 }
 
-# Set the next value for STATE and record it in
-# the STATE_FILE
+# Set the next value for STATE and record it in the STATE_FILE
 next-state () {
   STATE=$1
   if [[ "${STATE}" == "Done" && -f "${STATE_FILE}" ]] ; then
@@ -179,8 +173,7 @@ next-state () {
   fi
 }
 
-# Verify that the required network devices have been setup
-# for Kubernetes cluster
+# Verify that the required network devices have been setup for Kubernetes cluster
 wait-for-k8s-interfaces () {
   echo "Waiting for k8s interfaces"
   for interface in $@ ; do
@@ -278,9 +271,8 @@ while [ "$STATE" != "Done" ] ; do
         if [[ -z $RESTART || $RESTART =~ ^[yY].* ]] ; then
           sudo reboot
         else
-          # We don't call next-state because we don't want the $STATE_FILE
-          # removed - we want the install script to resume with the recorded
-          # state.
+          # We don't call next-state because we don't want the $STATE_FILE removed;
+          # we want the install script to resume with the recorded state.
           STATE=Done
         fi
       fi
@@ -304,18 +296,19 @@ while [ "$STATE" != "Done" ] ; do
       ;;
     Wait-for-combine)
       # Wait until all the combine deployments are up
-      echo "Waiting for The Combine components to download."
+      echo "Waiting for The Combine components to download and setup."
       echo "This may take some time depending on your Internet connection."
       echo "Press Ctrl-C to interrupt."
       wait-for-combine
+      echo "The Combine was successfully setup!"
       next-state "Shutdown-combine"
       ;;
     Shutdown-combine)
       # If not being installed as a server,
       if [[ $IS_SERVER != 1 ]] ; then
-        # Shut down the combine services
+        # Shut down The Combine services
         combinectl stop
-        # Disable combine services from starting at boot time
+        # Disable The Combine services from starting at boot time
         sudo systemctl disable create_ap
         sudo systemctl disable k3s
       fi
