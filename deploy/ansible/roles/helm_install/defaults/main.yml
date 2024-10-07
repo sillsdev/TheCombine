@@ -2,4 +2,4 @@
 helm_version: v3.15.2
 linux_arch: amd64
 
-helm_download_dir: /opt/helm-{{ helm_version }}-linux_{{ linux_arch }}
+helm_download_dir: /opt/helm-{{ helm_version }}-linux-{{ linux_arch }}
