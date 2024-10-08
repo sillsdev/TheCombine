@@ -223,14 +223,14 @@ def parse_args() -> Namespace:
         action="store_true",
         help="Always attempt to pull a newer version of an image used in the build.",
     )
-    parser.add_argument(
+    logging_group = parser.add_mutually_exclusive_group()
+    logging_group.add_argument(
         "--quiet",
         "-q",
         action="store_true",
         help="Run the docker build commands with '--quiet' instead of '--progress plain'.",
     )
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument(
+    logging_group.add_argument(
         "--debug",
         "-d",
         action="store_true",
@@ -269,6 +269,7 @@ def main() -> None:
     # Setup build options
     if args.quiet:
         build_cmd += ["--quiet"]
+        push_cmd += ["--quiet"]
     else:
         build_cmd += ["--progress", "plain"]
     if args.no_cache:
@@ -296,11 +297,8 @@ def main() -> None:
         logging.debug(f"Adding job {build_cmd + job_opts}")
         job_set[component].add_job(Job(build_cmd + job_opts, spec.dir))
         if args.repo is not None:
-            if args.quiet:
-                push_args = ["--quiet"]
-            else:
-                push_args = []
-            job_set[component].add_job(Job(push_cmd + push_args + [image_name], None))
+            logging.debug(f"Adding job {push_cmd + [image_name]}")
+            job_set[component].add_job(Job(push_cmd + [image_name], None))
         logging.info(f"Building component {component}")
 
     # Run jobs in parallel - one job per component
