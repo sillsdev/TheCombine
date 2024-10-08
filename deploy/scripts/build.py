@@ -91,8 +91,8 @@ class JobQueue:
         """
         Check if all jobs in the queue have completed.
 
-        If the current job has finished, and there are more jobs to run, it will start the next
-        job.
+        If the current job has finished, and there are more jobs to run,
+        it will start the next job.
         """
         if self.status != JobStatus.RUNNING:
             return self.status
@@ -113,8 +113,7 @@ class JobQueue:
                 self.status = JobStatus.ERROR
                 return self.status
             self.curr_job = None
-        # start the next job.  If there are no more jobs to run, we have
-        # finished successfully
+        # Start the next job; if there are no more to run, we have finished successfully
         if not self.start_next():
             self.status = JobStatus.SUCCESS
         return self.status
@@ -149,8 +148,7 @@ def no_op() -> None:
     pass
 
 
-# Create a dictionary to look up the build spec from
-# a component name
+# Create a dictionary to look up the build spec from a component name
 build_specs: Dict[str, BuildSpec] = {
     "backend": BuildSpec(project_dir / "Backend", "backend", no_op, no_op),
     "database": BuildSpec(project_dir / "database", "database", build_semantic_domains, no_op),
@@ -304,7 +302,7 @@ def main() -> None:
     # Run jobs in parallel - one job per component
     build_returncode = 0
     while True:
-        # loop through the running jobs until there is no more work left
+        # Loop through the running jobs until there is no more work left
         running_jobs = False
         for component in job_set:
             if job_set[component].check_jobs() == JobStatus.RUNNING:
