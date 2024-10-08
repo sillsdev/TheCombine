@@ -28,6 +28,7 @@ from app_release import get_release, set_release
 from enum_types import JobStatus
 from sem_dom_import import generate_semantic_domains
 from streamfile import StreamFile
+from utils import init_logging
 
 
 @dataclass(frozen=True)
@@ -240,16 +241,7 @@ def parse_args() -> Namespace:
 def main() -> None:
     """Build the Docker images for The Combine."""
     args = parse_args()
-
-    # Setup the logging level.  The command output will be printed on stdout/stderr
-    # independent of the logging facility
-    if args.debug:
-        log_level = logging.DEBUG
-    elif args.quiet:
-        log_level = logging.WARNING
-    else:
-        log_level = logging.INFO
-    logging.basicConfig(format="%(levelname)s:%(message)s", level=log_level)
+    init_logging(args)
 
     # Setup required build engine - docker or nerdctl
     container_cli = os.getenv("CONTAINER_CLI", "docker")
