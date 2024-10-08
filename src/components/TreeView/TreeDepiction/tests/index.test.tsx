@@ -1,3 +1,4 @@
+import { ThemeProvider } from "@mui/material/styles";
 import { type ReactTestRenderer, act, create } from "react-test-renderer";
 
 import { SemanticDomainTreeNode } from "api/models";
@@ -5,12 +6,13 @@ import TreeDepiction from "components/TreeView/TreeDepiction";
 import testDomainMap, {
   mapIds,
 } from "components/TreeView/tests/SemanticDomainMock";
+import theme from "types/theme";
 import { setMatchMedia } from "utilities/testRendererUtilities";
 
 let treeMaster: ReactTestRenderer;
 
 beforeAll(async () => {
-  // Required for the <Hidden> elements to show up
+  // Required (along with a `ThemeProvider`) for `useMediaQuery` to work
   setMatchMedia();
 });
 
@@ -49,7 +51,9 @@ function testFromNode(message: string, node: SemanticDomainTreeNode): void {
 async function createTree(domain: SemanticDomainTreeNode): Promise<void> {
   await act(async () => {
     treeMaster = create(
-      <TreeDepiction currentDomain={domain} animate={jest.fn()} />
+      <ThemeProvider theme={theme}>
+        <TreeDepiction currentDomain={domain} animate={jest.fn()} />
+      </ThemeProvider>
     );
   });
 }
