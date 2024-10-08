@@ -1,8 +1,10 @@
 import { Button } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
 import renderer from "react-test-renderer";
 
 import Logo from "components/AppBar/Logo";
 import { Path } from "types/path";
+import theme from "types/theme";
 
 jest.mock("react-router-dom", () => ({
   useNavigate:
@@ -17,7 +19,11 @@ let testRenderer: renderer.ReactTestRenderer;
 
 beforeAll(() => {
   renderer.act(() => {
-    testRenderer = renderer.create(<Logo />);
+    testRenderer = renderer.create(
+      <ThemeProvider theme={theme}>
+        <Logo />
+      </ThemeProvider>
+    );
   });
 });
 
