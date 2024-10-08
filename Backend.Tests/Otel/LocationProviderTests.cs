@@ -101,52 +101,94 @@ namespace Backend.Tests.Otel
 
         }
 
-        // [Test]
-        // public async Task TestGetLocation()
-        // {
-        //     var testIp = "100.0.0.0";
+        [Test]
+        public async Task TestGetLocation()
+        {
+            var testIp = "100.0.0.0";
 
-        //     var httpContext = new DefaultHttpContext()
-        //     {
-        //         Connection =
-        //         {
-        //             RemoteIpAddress = new IPAddress(100000)
-        //         }
-        //     };
-        //     if (_contextAccessor != null)
-        //     {
-        //         _contextAccessor.HttpContext = httpContext;
-        //     }
-        //     LocationApi? location = await _locationProvider?.GetLocation()!;
+            var httpContext = new DefaultHttpContext()
+            {
+                Connection =
+                {
+                    RemoteIpAddress = new IPAddress(100000)
+                }
+            };
+            if (_contextAccessor != null)
+            {
+                _contextAccessor.HttpContext = httpContext;
+            }
+            LocationApi? location = await _locationProvider?.GetLocation()!;
 
-        //     Assert.That(location, Is.Not.Null);
+            Assert.That(location, Is.Not.Null);
 
-        //     // not sure if okay that put !there
-        //     Verify(_handlerMock!, r => r.RequestUri!.Query.Contains(testIp));
+            // not sure if okay that put !there
+            Verify(_handlerMock!, r => r.RequestUri!.Query.Contains(testIp));
 
-        //     // call get location again and verify that the mock method (the async call)
-        //     // was still only called once (meaning was not called again, to test cache)
+            // call get location again and verify that the mock method (the async call)
+            // was still only called once (meaning was not called again, to test cache)
 
-        //     // Verify(_ => _.Update)
-
-
+            // Verify(_ => _.Update)
 
 
 
-        //     // context.Request.Headers.
-
-        //     // _contextAccessor.HttpContext.
 
 
-        // }
+            // context.Request.Headers.
+
+            // _contextAccessor.HttpContext.
+
+
+        }
+
+
+        [Test]
+        public async Task TestGetCached()
+        {
+            // var testIp = "100.0.0.0";
+
+            var httpContext = new DefaultHttpContext()
+            {
+                Connection =
+                {
+                    RemoteIpAddress = new IPAddress(100000)
+                }
+            };
+            if (_contextAccessor != null)
+            {
+                _contextAccessor.HttpContext = httpContext;
+            }
+            LocationApi? location = await _locationProvider?.GetCached()!;
+
+            Assert.That(location, Is.Not.Null);
+
+            // not sure if okay that put !there
+            // Verify(_handlerMock!, r => r.RequestUri!.Query.Contains(testIp));
+
+            // call get location again and verify that the mock method (the async call)
+            // was still only called once (meaning was not called again, to test cache)
+
+            // Verify(_ => _.Update)
+
+
+
+
+
+            // context.Request.Headers.
+
+            // _contextAccessor.HttpContext.
+
+
+        }
 
         [Test]
         public void TestGetLocationFromIp()
         {
-            // TODO need to mock the http call (do not make actually httpcall)
+            // TODO need to mock the http call (do not make actual httpcall)
             // need to figure out what the mock returns
             var testIp = "100.0.0.0";
             var location = _locationProvider?.GetLocationFromIp(testIp);
+
+            // Console.WriteLine("location var: " + location);
 
             Assert.That(location, Is.Not.Null);
 
@@ -161,8 +203,9 @@ namespace Backend.Tests.Otel
 
 
             // not sure if okay that put ! there
-            Verify(_handlerMock!, r => r.RequestUri!.Query.Contains(testIp));
-            Verify(_handlerMock!, r => r.RequestUri!.Query.Contains("123.1.2.3"));
+            Verify(_handlerMock!, r => r.RequestUri!.AbsoluteUri.Contains(testIp));
+            Verify(_handlerMock!, r => !r.RequestUri!.AbsoluteUri.Contains("123.1.2.3"));
+
 
             // _handlerMock.
             // Console.WriteLine("mock:" + _handlerMock);
