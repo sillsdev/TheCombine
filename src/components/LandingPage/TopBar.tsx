@@ -1,4 +1,11 @@
-import { AppBar, Hidden, Stack, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  Stack,
+  Theme,
+  Toolbar,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -8,6 +15,8 @@ export const topBarHeight = 70;
 
 /** A  bar shown at the top of the landing page. */
 export default function TopBar(): ReactElement {
+  const showSubtitle = useMediaQuery<Theme>((th) => th.breakpoints.up("sm"));
+  const isMdUp = useMediaQuery<Theme>((th) => th.breakpoints.up("md"));
   const { t } = useTranslation();
 
   return (
@@ -22,12 +31,11 @@ export default function TopBar(): ReactElement {
             style={{ width: "100%" }}
           >
             <img src={logo} height="50" alt="Logo" />
-            <Hidden smDown mdUp>
-              <Typography variant="h6">{t("landingPage.subtitle")}</Typography>
-            </Hidden>
-            <Hidden mdDown>
-              <Typography variant="h5">{t("landingPage.subtitle")}</Typography>
-            </Hidden>
+            {showSubtitle && (
+              <Typography variant={isMdUp ? "h5" : "h6"}>
+                {t("landingPage.subtitle")}
+              </Typography>
+            )}
           </Stack>
         </Toolbar>
       </AppBar>

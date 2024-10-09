@@ -13,7 +13,8 @@ export function testInstanceHasText(
   );
 }
 
-/** Call before rendering to allow `<Hidden>` items to render.
+/** Call before rendering to allow `useMediaQuery` to work.
+ *  (Also need components wrapped in a `<ThemeProvider>`.)
  *  Modified from mui.com/material-ui/react-use-media-query/#testing */
 export function setMatchMedia(width?: number): void {
   window.matchMedia = (query: string): MediaQueryList =>

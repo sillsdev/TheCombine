@@ -7,15 +7,15 @@ import {
 import {
   Avatar,
   Button,
-  Hidden,
   Menu,
   MenuItem,
+  type Theme,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import {
   type CSSProperties,
   type ForwardedRef,
-  Fragment,
   type MouseEvent,
   type ReactElement,
   useState,
@@ -53,6 +53,10 @@ export default function UserMenu(props: TabProps): ReactElement {
   const [isAdmin, setIsAdmin] = useState(false);
   const username = LocalStorage.getCurrentUser()?.username;
 
+  const isLgUp = useMediaQuery<Theme>((th) => th.breakpoints.up("lg"));
+  const isXl = useMediaQuery<Theme>((th) => th.breakpoints.only("xl"));
+  const nameLength = isXl ? usernameLength.xl : usernameLength.lg;
+
   function handleClick(event: MouseEvent<HTMLButtonElement>): void {
     setAnchorElement(event.currentTarget);
   }
@@ -78,17 +82,10 @@ export default function UserMenu(props: TabProps): ReactElement {
           padding: 0,
         }}
       >
-        {username ? (
-          <Hidden lgDown>
-            <Typography style={{ marginLeft: 5, marginRight: 5 }}>
-              <Hidden xlDown>{shortenName(username, usernameLength.xl)}</Hidden>
-              <Hidden xlUp lgDown>
-                {shortenName(username, usernameLength.lg)}
-              </Hidden>
-            </Typography>
-          </Hidden>
-        ) : (
-          <Fragment />
+        {!!username && isLgUp && (
+          <Typography style={{ marginLeft: 5, marginRight: 5 }}>
+            {shortenName(username, nameLength)}
+          </Typography>
         )}
         {avatar ? (
           <Avatar alt="User avatar" src={avatar} />
