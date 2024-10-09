@@ -141,12 +141,12 @@ install-the-combine () {
   deactivate
 }
 
-# Wait until all the combine deployments are "Running"
+# Wait until all The Combine deployments are "Running"
 wait-for-combine () {
-  # Wait for all combine deployments to be up
+  # Wait for all The Combine deployments to be up
   while true ; do
     combine_status=`kubectl -n thecombine get deployments`
-    # Assert the The Combine is up; if any components are not up, set it to false
+    # Assert The Combine is up; if any components are not up, set it to false
     combine_up=true
     for deployment in frontend backend database maintenance ; do
       deployment_status=$(echo ${combine_status} | grep "${deployment}" | sed "s/^.*\([0-9]\)\/1.*/\1/")
@@ -266,7 +266,7 @@ while [ "$STATE" != "Done" ] ; do
       next-state "Base-charts"
       if [ -f /var/run/reboot-required ] ; then
         echo -e "***** Restart required *****\n"
-        echo -e "Rerun combine installer after the system has been restarted.\n"
+        echo -e "Rerun The Combine installer after the system has been restarted.\n"
         read -p "Restart now? (Y/n) " RESTART
         if [[ -z $RESTART || $RESTART =~ ^[yY].* ]] ; then
           sudo reboot
@@ -295,7 +295,7 @@ while [ "$STATE" != "Done" ] ; do
       fi
       ;;
     Wait-for-combine)
-      # Wait until all the combine deployments are up
+      # Wait until all The Combine deployments are up
       echo "Waiting for The Combine components to download and setup."
       echo "This may take some time depending on your Internet connection."
       echo "Press Ctrl-C to interrupt."

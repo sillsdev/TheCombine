@@ -1,4 +1,5 @@
 import { Button } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
 import { Provider } from "react-redux";
 import { ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore, { MockStoreEnhanced } from "redux-mock-store";
@@ -14,7 +15,7 @@ import { MergeDups } from "goals/MergeDuplicates/MergeDupsTypes";
 import { ReviewEntries } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { Goal, GoalStatus } from "types/goals";
 import { Path } from "types/path";
-import { themeColors } from "types/theme";
+import theme, { themeColors } from "types/theme";
 
 jest.mock("react-router-dom", () => ({
   useNavigate: jest.fn(),
@@ -46,9 +47,11 @@ const renderProjectButtons = async (
 ): Promise<void> => {
   await act(async () => {
     testRenderer = create(
-      <Provider store={mockStore(goal)}>
-        <ProjectButtons currentTab={path} />
-      </Provider>
+      <ThemeProvider theme={theme}>
+        <Provider store={mockStore(goal)}>
+          <ProjectButtons currentTab={path} />
+        </Provider>
+      </ThemeProvider>
     );
   });
 };

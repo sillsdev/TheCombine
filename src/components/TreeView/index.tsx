@@ -1,5 +1,5 @@
 import { Close, KeyboardDoubleArrowUp } from "@mui/icons-material";
-import { Grid, Hidden, Zoom } from "@mui/material";
+import { Grid, type Theme, Zoom, useMediaQuery } from "@mui/material";
 import { animate } from "motion";
 import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -51,6 +51,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
   );
   const [visible, setVisible] = useState(true);
   const dispatch = useAppDispatch();
+  const showButtonToTop = useMediaQuery<Theme>((th) => th.breakpoints.up("sm"));
   const { resolvedLanguage } = useTranslation().i18n;
 
   useEffect(() => {
@@ -117,9 +118,9 @@ export default function TreeView(props: TreeViewProps): ReactElement {
       <Grid container justifyContent="space-between">
         <Grid item>
           {/* Empty grid item to balance the buttons */}
-          <Hidden smDown>
+          {showButtonToTop && (
             <div style={{ display: "inline-block", width: 40 }} />
-          </Hidden>
+          )}
           {exit && <div style={{ display: "inline-block", width: 40 }} />}
         </Grid>
         <Grid item>
@@ -130,14 +131,14 @@ export default function TreeView(props: TreeViewProps): ReactElement {
           />
         </Grid>
         <Grid item>
-          <Hidden smDown>
+          {showButtonToTop && (
             <IconButtonWithTooltip
               icon={<KeyboardDoubleArrowUp />}
               textId={"treeView.returnToTop"}
               onClick={onClickTop}
               buttonId={topButtonId}
             />
-          </Hidden>
+          )}
           {exit && (
             <IconButtonWithTooltip
               icon={<Close />}

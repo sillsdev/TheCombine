@@ -24,8 +24,8 @@ RUN MACH=$(case $(uname -m) in *86*) echo amd64;; *aarch*) echo arm64;; *arm*) e
   ./get_helm.sh && \
   rm kubectl get_helm.sh
 
-ENV HOME /root
-ENV PATH ${PATH}:${HOME}/scripts
+ENV HOME=/root
+ENV PATH=${PATH}:${HOME}/scripts
 
 COPY requirements.txt ${HOME}
 RUN pip3 install -r ${HOME}/requirements.txt
