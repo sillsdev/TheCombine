@@ -95,35 +95,8 @@ namespace Backend.Tests.Otel
             );
         }
 
-
         [Test]
-        public async Task TestGetLocation()
-        {
-            var testIp = "100.0.0.0";
-
-            LocationApi? location = await _locationProvider?.GetLocation()!;
-            location = await _locationProvider?.GetLocation()!;
-
-            Assert.That(location, Is.Not.Null);
-            Verify(_handlerMock!, r => r.RequestUri!.AbsoluteUri.Contains(testIp));
-            Verify(_handlerMock!, r => !r.RequestUri!.AbsoluteUri.Contains("123.1.2.3"));
-        }
-
-        [Test]
-        public async Task TestCaching()
-        {
-            var testIp = "100.0.0.0";
-
-            // call getLocation again and verify that the mocked async call
-            // was still only made once
-            LocationApi? location = await _locationProvider?.GetLocation()!;
-            location = await _locationProvider?.GetLocation()!;
-            Verify(_handlerMock!, r => r.RequestUri!.AbsoluteUri.Contains(testIp));
-        }
-
-
-        [Test]
-        public async Task TestGetLocationFromIp()
+        public async Task GetLocationHttpClientUsesIp()
         {
             var testIp = "100.0.0.0";
             LocationApi? location = await _locationProvider?.GetLocationFromIp(testIp)!;
@@ -131,6 +104,31 @@ namespace Backend.Tests.Otel
             Assert.That(location, Is.Not.Null);
             Verify(_handlerMock!, r => r.RequestUri!.AbsoluteUri.Contains(testIp));
             Verify(_handlerMock!, r => !r.RequestUri!.AbsoluteUri.Contains("123.1.2.3"));
+        }
+
+        [Test]
+        public async Task GetLocationUsesHttpContextIp()
+        {
+            var testIp = "100.0.0.0";
+
+            LocationApi? location = await _locationProvider?.GetLocation()!;
+            location = await _locationProvider?.GetLocation()!;
+
+            Assert.That(location, Is.Not.Null);
+            Verify(_handlerMock!, r => r.RequestUri!.AbsoluteUri.Contains(testIp));
+            Verify(_handlerMock!, r => !r.RequestUri!.AbsoluteUri.Contains("123.1.2.3"));
+        }
+
+        [Test]
+        public async Task GetLocationUsesCache()
+        {
+            var testIp = "100.0.0.0";
+
+            // call getLocation twice and verify that the mocked async call
+            // was still only made once
+            LocationApi? location = await _locationProvider?.GetLocation()!;
+            location = await _locationProvider?.GetLocation()!;
+            Verify(_handlerMock!, r => r.RequestUri!.AbsoluteUri.Contains(testIp));
         }
     }
 }
