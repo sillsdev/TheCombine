@@ -155,16 +155,16 @@ namespace BackendFramework.Otel
                 {
                     LocationApi? response = await locationProvider.GetLocation();
 
-                    var location = new
-                    {
-                        Country = response?.country,
-                        Region = response?.regionName,
-                        City = response?.city,
-                    };
+                    // var location = new LocationApi
+                    // {
+                    //     Country = response?.country,
+                    //     Region = response?.regionName,
+                    //     City = response?.city
+                    // };
 
-                    data?.AddTag("country", location.Country);
-                    data?.AddTag("regionName", location.Region);
-                    data?.AddTag("city", location.City);
+                    data?.AddTag("country", response?.country);
+                    data?.AddTag("regionName", response?.regionName);
+                    data?.AddTag("city", response?.city);
                 }
                 data?.SetTag("SESSIONID BAGGAGE", data?.GetBaggageItem("sessionId"));
                 if (uriPath != null && uriPath.Contains(locationUri))
