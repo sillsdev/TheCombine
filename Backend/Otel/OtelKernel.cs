@@ -175,7 +175,6 @@ namespace BackendFramework.Otel
             {
                 string? uriPath = (string?)data.GetTagItem("url.full");
                 string locationUri = LocationProvider.locationGetterUri;
-
                 if (uriPath == null || !uriPath.Contains(locationUri))
                 {
                     LocationApi? response = await locationProvider.GetLocation();
@@ -192,22 +191,14 @@ namespace BackendFramework.Otel
                     data?.AddTag("city", location.City);
 
                     // data?.SetTag("SESSIONID BAGGAGE", data?.GetBaggageItem("sessionId"));
-
                 }
-
                 data?.SetTag("SESSIONID BAGGAGE", data?.GetBaggageItem("sessionId"));
-
-
-
                 if (uriPath != null && uriPath.Contains(locationUri))
                 {
                     data?.SetTag("url.full", "");
                     data?.SetTag("url.redacted.ip", LocationProvider.locationGetterUri);
                 }
-
             }
         }
     }
-
 }
-
