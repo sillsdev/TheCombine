@@ -104,7 +104,7 @@ namespace BackendFramework.Otel
             {
                 var ipAddress = context.GetServerVariable("HTTP_X_FORWARDED_FOR") ?? context.Connection.RemoteIpAddress?.ToString();
                 var ipAddressWithoutPort = ipAddress?.Split(':')[0];
-                ipAddressWithoutPort = "100.0.0.0";
+                // ipAddressWithoutPort = "100.0.0.0";
 
                 LocationApi? location = await _memoryCache.GetOrCreateAsync(
                 "location_" + ipAddressWithoutPort,
@@ -127,7 +127,7 @@ namespace BackendFramework.Otel
             return null;
         }
 
-        internal async Task<LocationApi?> GetLocationFromIp(string ipAddressWithoutPort)
+        internal async Task<LocationApi?> GetLocationFromIp(string? ipAddressWithoutPort)
         {
 
             var route = locationGetterUri + $"{ipAddressWithoutPort}";
