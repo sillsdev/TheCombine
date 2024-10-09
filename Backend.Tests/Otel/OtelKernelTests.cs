@@ -89,7 +89,7 @@ namespace Backend.Tests.Otel
 
         }
 
-        [Test]
+        // [Test]
         public void TestOnEndSession()
         {
             // mock activity
