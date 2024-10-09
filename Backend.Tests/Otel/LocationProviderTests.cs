@@ -1,6 +1,8 @@
 using System;
 using System.Net;
 using System.Net.Http;
+// using System.Net.Http.Json;
+
 // using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -57,7 +59,8 @@ namespace Backend.Tests.Otel
             HttpResponseMessage result = new HttpResponseMessage()
             {
                 StatusCode = System.Net.HttpStatusCode.OK,
-                Content = new StringContent("{\"this is\":\"valid json\"}")
+                Content = new StringContent("{}")
+                // Content = JsonContent.Create(new object())
             };
 
 
