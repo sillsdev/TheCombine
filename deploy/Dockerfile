@@ -3,6 +3,7 @@
 #
 # Supported Platforms:
 #   - Intel/AMD 64-bit
+#   - ARM 64-bit
 ############################################################
 
 FROM ubuntu:22.04

@@ -94,7 +94,7 @@ def package_images(image_list: List[str], tar_file: Path) -> None:
 
 
 def package_middleware(
-    config_file: str, *, cluster_type: str, image_dir: Path, chart_dir: Path, arm=False
+    config_file: str, *, cluster_type: str, image_dir: Path, chart_dir: Path, arm: bool = False
 ) -> None:
     logging.info("Packaging middleware images.")
     # read in cluster configuration
@@ -135,11 +135,11 @@ def package_middleware(
                     logging.debug(f"    - Found image {match.group(1)}")
                     middleware_images.append(match.group(1))
     logging.debug(f"Middleware images: {middleware_images}")
-    out_file = f"middleware-airgap-images-{"arm64" if arm else "amd64"}.tar"
+    out_file = f"middleware-airgap-images-{'arm64' if arm else 'amd64'}.tar"
     package_images(middleware_images, image_dir / out_file)
 
 
-def package_thecombine(tag: str, image_dir: Path, *, arm=False) -> None:
+def package_thecombine(tag: str, image_dir: Path, *, arm: bool = False) -> None:
     logging.info(f"Packaging The Combine version {tag}.")
     logging.debug("Create helm charts from templates")
     combine_charts.generate(tag)
@@ -166,7 +166,7 @@ def package_thecombine(tag: str, image_dir: Path, *, arm=False) -> None:
                 combine_images.append(image)
     logging.debug(f"Combine images: {combine_images}")
     # Logout of AWS to allow pulling the images
-    out_file = f"combine-airgap-images-{"arm64" if arm else "amd64"}.tar"
+    out_file = f"combine-airgap-images-{'arm64' if arm else 'amd64'}.tar"
     package_images(combine_images, image_dir / out_file)
 
 
@@ -190,7 +190,11 @@ def main() -> None:
     # Update helm repos
     package_k3s(image_dir)
     package_middleware(
-        args.config, cluster_type="standard", image_dir=image_dir, chart_dir=chart_dir, arm=args.arm
+        args.config,
+        cluster_type="standard",
+        image_dir=image_dir,
+        chart_dir=chart_dir,
+        arm=args.arm,
     )
     package_thecombine(args.tag, image_dir, arm=args.arm)
 
