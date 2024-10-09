@@ -123,7 +123,7 @@ namespace BackendFramework.Otel
                 }
                 else
                 {
-                    // activity.SetTag("sessionId", "NULL");
+                    activity.SetTag("sessionId", "NULL");
                     // activity.SetBaggage("sessionId", "NULL");
                 }
             };
@@ -144,35 +144,71 @@ namespace BackendFramework.Otel
             );
 
         }
+    }
 
-        internal class LocationEnricher(ILocationProvider locationProvider) : BaseProcessor<Activity>
+    internal class LocationEnricher(ILocationProvider locationProvider) : BaseProcessor<Activity>
+    {
+        public override async void OnEnd(Activity data)
         {
-            public override async void OnEnd(Activity data)
+            string? uriPath = (string?)data.GetTagItem("url.full");
+            string locationUri = LocationProvider.locationGetterUri;
+
+            if (uriPath == null || !uriPath.Contains(locationUri))
             {
-                string? uriPath = (string?)data.GetTagItem("url.full");
-                string locationUri = LocationProvider.locationGetterUri;
-                if (uriPath == null || !uriPath.Contains(locationUri))
-                {
-                    LocationApi? response = await locationProvider.GetLocation();
+                LocationApi? response = await locationProvider.GetLocation();
 
-                    // var location = new LocationApi
-                    // {
-                    //     Country = response?.country,
-                    //     Region = response?.regionName,
-                    //     City = response?.city
-                    // };
-
-                    data?.AddTag("country", response?.country);
-                    data?.AddTag("regionName", response?.regionName);
-                    data?.AddTag("city", response?.city);
-                }
-                data?.SetTag("SESSIONID BAGGAGE", data?.GetBaggageItem("sessionId"));
-                if (uriPath != null && uriPath.Contains(locationUri))
+                var location = new
                 {
-                    data?.SetTag("url.full", "");
-                    data?.SetTag("url.redacted.ip", LocationProvider.locationGetterUri);
-                }
+                    Country = response?.country,
+                    Region = response?.regionName,
+                    City = response?.city,
+                };
+
+                data?.AddTag("country", location.Country);
+                data?.AddTag("region", location.Region);
+                data?.AddTag("city", location.City);
             }
+
+            data?.SetTag("SESSIONID BAGGAGE", data?.GetBaggageItem("sessionId"));
+            if (uriPath != null && uriPath.Contains(locationUri))
+            {
+                data?.SetTag("url.full", "");
+                data?.SetTag("url.redacted.ip", LocationProvider.locationGetterUri);
+            }
+
         }
     }
+
+
+
+    // internal class LocationEnricher(ILocationProvider locationProvider) : BaseProcessor<Activity>
+    // {
+    //     public override async void OnEnd(Activity data)
+    //     {
+    //         string? uriPath = (string?)data.GetTagItem("url.full");
+    //         string locationUri = LocationProvider.locationGetterUri;
+    //         if (uriPath == null || !uriPath.Contains(locationUri))
+    //         {
+    //             LocationApi? response = await locationProvider.GetLocation();
+
+    //             // var location = new LocationApi
+    //             // {
+    //             //     Country = response?.country,
+    //             //     Region = response?.regionName,
+    //             //     City = response?.city
+    //             // };
+
+    //             data?.AddTag("country", response?.country);
+    //             data?.AddTag("regionName", response?.regionName);
+    //             data?.AddTag("city", response?.city);
+    //         }
+    //         data?.SetTag("SESSIONID BAGGAGE", data?.GetBaggageItem("sessionId"));
+    //         if (uriPath != null && uriPath.Contains(locationUri))
+    //         {
+    //             data?.SetTag("url.full", "");
+    //             data?.SetTag("url.redacted.ip", LocationProvider.locationGetterUri);
+    //         }
+    //     }
+    // }
+
 }
