@@ -1,3 +1,4 @@
+import { ThemeProvider } from "@mui/material/styles";
 import { render } from "@testing-library/react";
 import { act } from "react";
 import { Provider } from "react-redux";
@@ -6,6 +7,7 @@ import configureMockStore from "redux-mock-store";
 
 import AppBar from "components/AppBar";
 import { defaultState } from "rootRedux/types";
+import theme from "types/theme";
 
 jest.mock("backend", () => ({
   isSiteAdmin: () => mockIsSiteAdmin(),
@@ -27,11 +29,13 @@ describe("AppBar", () => {
   it("renders", async () => {
     await act(async () => {
       render(
-        <Provider store={mockStore}>
-          <MemoryRouter>
-            <AppBar />
-          </MemoryRouter>
-        </Provider>
+        <ThemeProvider theme={theme}>
+          <Provider store={mockStore}>
+            <MemoryRouter>
+              <AppBar />
+            </MemoryRouter>
+          </Provider>
+        </ThemeProvider>
       );
     });
   });

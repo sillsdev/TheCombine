@@ -1,4 +1,4 @@
-import { Button, Hidden } from "@mui/material";
+import { Button, Theme, useMediaQuery } from "@mui/material";
 import { ReactElement } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -13,6 +13,8 @@ export const logoButtonLabel = "The Combine - return home";
 
 /** A button that redirects to the home page */
 export default function Logo(): ReactElement {
+  const isSmDown = useMediaQuery<Theme>((th) => th.breakpoints.down("sm"));
+  const isMdDown = useMediaQuery<Theme>((th) => th.breakpoints.down("md"));
   const navigate = useNavigate();
   return (
     <Button
@@ -28,15 +30,11 @@ export default function Logo(): ReactElement {
         padding: 2,
       }}
     >
-      <Hidden mdDown>
-        <img src={logo} height="45" alt="Logo" />
-      </Hidden>
-      <Hidden smDown mdUp>
-        <img src={smallLogo} height="30" alt="Logo" />
-      </Hidden>
-      <Hidden smUp>
-        <img src={smallLogo} height="20" alt="Logo" />
-      </Hidden>
+      <img
+        alt="Logo"
+        height={isSmDown ? "20" : isMdDown ? "30" : "45"}
+        src={isMdDown ? smallLogo : logo}
+      />
     </Button>
   );
 }
