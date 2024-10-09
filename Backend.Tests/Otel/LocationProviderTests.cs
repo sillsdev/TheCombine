@@ -153,7 +153,7 @@ namespace Backend.Tests.Otel
             //     _contextAccessor.HttpContext = httpContext;
             // }
             LocationApi? location = await _locationProvider?.GetLocation()!;
-            // location = await _locationProvider?.GetLocation()!;
+            location = await _locationProvider?.GetLocation()!;
 
             Assert.That(location, Is.Not.Null);
 
