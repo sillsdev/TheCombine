@@ -1,8 +1,5 @@
-
-// using System;
 using System.Diagnostics;
 using BackendFramework.Interfaces;
-
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry;
@@ -12,7 +9,6 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Linq;
-// using MongoDB.Driver.Core.Events;
 
 namespace BackendFramework.Otel
 {
@@ -46,7 +42,7 @@ namespace BackendFramework.Otel
                 }
                 else
                 {
-                    // activity.SetTag("sessionId", "NULL");
+                    activity.SetTag("sessionId", "NULL");
                     // activity.SetBaggage("sessionId", "NULL");
                 }
             };
@@ -69,7 +65,7 @@ namespace BackendFramework.Otel
                 }
                 else
                 {
-                    // activity.SetTag("sessionId", "NULL");
+                    activity.SetTag("sessionId", "NULL");
                     // activity.SetBaggage("sessionId", "NULL");
                 }
             };
@@ -108,7 +104,7 @@ namespace BackendFramework.Otel
                 }
                 else
                 {
-                    // activity.SetTag("sessionId", "NULL");
+                    activity.SetTag("sessionId", "NULL");
                     // activity.SetBaggage("sessionId", "NULL");
                 }
             };
@@ -143,30 +139,11 @@ namespace BackendFramework.Otel
                 .AddProcessor<LocationEnricher>()
                 .AddAspNetCoreInstrumentation(AspNetCoreBuilder)
                 .AddHttpClientInstrumentation(HttpClientBuilder)
-                // .AddSource("MongoDB.Driver.Core.Extensions.DiagnosticSources")
                 .AddConsoleExporter()
                 .AddOtlpExporter()
             );
 
         }
-
-        // private static void EnrichWithSession(this Activity activity, HttpContext httpContext)
-        // {
-
-        //     // in progress
-
-        //     string? sessionId = httpContext.Headers.TryGetValues("sessionId", out var values) ? values.FirstOrDefault() : null;
-        //     if (sessionId != null)
-        //     {
-        //         activity.SetTag("SESSIONID HTTP RESPONSE", sessionId);
-        //     }
-        //     else
-        //     {
-        //         activity.SetTag("SESSIONID HTTP RESPONSE", "NULL");
-        //     }
-
-
-        // }
 
         internal class LocationEnricher(ILocationProvider locationProvider) : BaseProcessor<Activity>
         {
