@@ -170,7 +170,6 @@ namespace BackendFramework.Otel
 
         internal class LocationEnricher(ILocationProvider locationProvider) : BaseProcessor<Activity>
         {
-            // to complete at end of activities
             public override async void OnEnd(Activity data)
             {
                 string? uriPath = (string?)data.GetTagItem("url.full");
@@ -189,8 +188,6 @@ namespace BackendFramework.Otel
                     data?.AddTag("country", location.Country);
                     data?.AddTag("regionName", location.Region);
                     data?.AddTag("city", location.City);
-
-                    // data?.SetTag("SESSIONID BAGGAGE", data?.GetBaggageItem("sessionId"));
                 }
                 data?.SetTag("SESSIONID BAGGAGE", data?.GetBaggageItem("sessionId"));
                 if (uriPath != null && uriPath.Contains(locationUri))
