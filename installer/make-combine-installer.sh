@@ -54,7 +54,7 @@ if [[ $NET_INSTALL == 0 ]] ; then
   # Package The Combine for "offline" installation
   TEMP_DIR=/tmp/images-$$
   pushd scripts
-  ./package_images.py ${COMBINE_VERSION} ${TEMP_DIR}
+  ./package_images.py ${COMBINE_VERSION} ${TEMP_DIR} --debug
   INSTALLER_NAME="combine-installer.run"
   popd
   rm -rf venv

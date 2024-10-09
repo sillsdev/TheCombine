@@ -1,6 +1,11 @@
 ---
+##############################################################
+# Role: container_images
+#
 # Setup airgap images in {{ airgap_image_dir }} to be
 # available when k3s and subsequent helm charts are installed.
+#
+##############################################################
 
 - name: Create airgap image directory
   file:

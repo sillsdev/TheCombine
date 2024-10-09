@@ -65,14 +65,17 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def package_k3s(dest_dir: Path) -> None:
+def package_k3s(dest_dir: Path, *, arm: bool = False) -> None:
     logging.info("Packaging k3s images.")
+    extra_vars = f"'package_dir':'{dest_dir}'"
+    if arm:
+        extra_vars += ",'cpu_arch':'arm64'"
     run_cmd(
         [
             "ansible-playbook",
             "playbook_k3s_airgapped_files.yml",
             "--extra-vars",
-            f"package_dir={dest_dir}",
+            "{" + extra_vars + "}",
         ],
         cwd=str(ansible_dir),
     )
@@ -188,7 +191,7 @@ def main() -> None:
     os.environ["AWS_DEFAULT_REGION"] = ""
 
     # Update helm repos
-    package_k3s(image_dir)
+    package_k3s(image_dir, arm=args.arm)
     package_middleware(
         args.config,
         cluster_type="standard",
