@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 Add subtitles to a tutorial video.
 If video path is not provided, still generates .srt files.

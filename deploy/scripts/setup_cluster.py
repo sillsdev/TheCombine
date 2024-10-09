@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """Install the pre-requisite helm charts for the Combine on a k8s cluster."""
 
 from __future__ import annotations

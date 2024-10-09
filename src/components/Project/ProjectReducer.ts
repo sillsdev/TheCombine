@@ -8,8 +8,29 @@ const projectSlice = createSlice({
   initialState: defaultState,
   reducers: {
     resetAction: () => defaultState,
+    setColumnOrderAction: (state, action) => {
+      const columns = state.reviewEntriesColumns;
+      // Payload is a state updater, which can either be a new state
+      // or a function that takes the previous state and returns a new state.
+      if (typeof action.payload === "function") {
+        columns.columnOrder = action.payload(columns.columnOrder);
+      } else {
+        columns.columnOrder = action.payload;
+      }
+    },
+    setColumnVisibilityAction: (state, action) => {
+      const columns = state.reviewEntriesColumns;
+      // Payload is a state updater, which can either be a new state
+      // or a function that takes the previous state and returns a new state.
+      if (typeof action.payload === "function") {
+        columns.columnVisibility = action.payload(columns.columnVisibility);
+      } else {
+        columns.columnVisibility = action.payload;
+      }
+    },
     setProjectAction: (state, action) => {
       if (state.project.id !== action.payload.id) {
+        state.reviewEntriesColumns = defaultState.reviewEntriesColumns;
         state.speaker = undefined;
         state.users = [];
       }
@@ -31,6 +52,8 @@ const projectSlice = createSlice({
 
 export const {
   resetAction,
+  setColumnOrderAction,
+  setColumnVisibilityAction,
   setProjectAction,
   setSemanticDomainsAction,
   setSpeakerAction,

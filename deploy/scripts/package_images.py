@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python
 
 """
 Package the container images used for The Combine to support air-gapped installation.
@@ -15,6 +15,7 @@ from pathlib import Path
 import re
 from typing import Any, Dict, List
 
+import combine_charts
 from utils import init_logging, run_cmd
 import yaml
 
@@ -71,16 +72,16 @@ def package_k3s(dest_dir: Path) -> None:
 
 
 def package_images(image_list: List[str], tar_file: Path) -> None:
-    container_cli = [os.getenv("CONTAINER_CLI", "docker")]
-    if container_cli[0] == "nerdctl":
-        container_cli.extend(["--namespace", "k8s.io"])
+    container_cli_cmd = [os.getenv("CONTAINER_CLI", "docker")]
+    if container_cli_cmd[0] == "nerdctl":
+        container_cli_cmd.extend(["--namespace", "k8s.io"])
     # Pull each image
     for image in image_list:
-        pull_cmd = container_cli + ["pull", image]
+        pull_cmd = container_cli_cmd + ["pull", image]
         logging.debug(f"Running {pull_cmd}")
         run_cmd(pull_cmd)
     # Save pulled images into a .tar archive
-    run_cmd(container_cli + ["save"] + image_list + ["-o", str(tar_file)])
+    run_cmd(container_cli_cmd + ["save"] + image_list + ["-o", str(tar_file)])
     # Compress the tarball
     run_cmd(["zstd", "--rm", "--force", "--quiet", str(tar_file)])
 
@@ -132,6 +133,8 @@ def package_middleware(
 
 def package_thecombine(tag: str, image_dir: Path) -> None:
     logging.info(f"Packaging The Combine version {tag}.")
+    logging.debug("Create helm charts from templates")
+    combine_charts.generate(tag)
     logging.debug(" - Get template for The Combine.")
     results = run_cmd(
         [

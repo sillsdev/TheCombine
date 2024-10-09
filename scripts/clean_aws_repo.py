@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 """
 This script cleans out old docker images from the AWS ECR repository.

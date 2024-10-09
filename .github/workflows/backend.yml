@@ -37,7 +37,7 @@ jobs:
             objects.githubusercontent.com:443
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - name: Setup dotnet
-        uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3 # v4.0.0
+        uses: actions/setup-dotnet@6bd8b7f7774af54e05809fcc5431931b3eb1ddee # v4.0.1
         with:
           dotnet-version: ${{ matrix.dotnet }}
       - name: Install ffmpeg
@@ -48,7 +48,7 @@ jobs:
         run: dotnet test Backend.Tests/Backend.Tests.csproj
         shell: bash
       - name: Upload coverage artifact
-        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
+        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
         with:
           if-no-files-found: error
           name: coverage
@@ -87,7 +87,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - name: Download coverage artifact
-        uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
         with:
           name: coverage
       - name: Upload coverage report
@@ -128,7 +128,7 @@ jobs:
       # Manually install .NET to work around:
       # https://github.com/github/codeql-action/issues/757
       - name: Setup .NET
-        uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3 # v4.0.0
+        uses: actions/setup-dotnet@6bd8b7f7774af54e05809fcc5431931b3eb1ddee # v4.0.1
         with:
           dotnet-version: "8.0.x"
       - name: Initialize CodeQL
@@ -138,7 +138,7 @@ jobs:
       - name: Autobuild
         uses: github/codeql-action/autobuild@d39d31e687223d841ef683f52467bd88e9b21c14 # v3.25.3
       - name: Upload artifacts if build failed
-        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
+        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4.4.0
         if: ${{ failure() }}
         with:
           name: tracer-logs

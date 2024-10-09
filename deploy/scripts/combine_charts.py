@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python
 """
 Update the Helm chart version with the specified version.
 """
@@ -70,6 +70,6 @@ def generate(version: str, aws_login_version: str = default_aws_login_version) -
 
 
 if __name__ == "__main__":
-    """Allow calling from the command line for testing, etc."""
+    """Allow calling from the command line."""
     args = parse_args()
     generate(args.version, args.aws)

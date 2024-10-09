@@ -124,12 +124,10 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
      - If using [homebrew](https://formulae.brew.sh/formula/ffmpeg): `brew install ffmpeg`
      - If manually installing from the FFmpeg website, install both `ffmpeg` and `ffprobe`
 
-9. [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.1.250801`
-10. [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
-    `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
-11. [dotnet-project-licenses](https://github.com/tomchavakis/nuget-license)
-    `dotnet tool update --global dotnet-project-licenses`
-12. Tools for generating the self installer (Linux only):
+9. [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
+   `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
+10. [nuget-license](https://github.com/sensslen/nuget-license) `dotnet tool update --global nuget-project-license`
+11. Tools for generating the self installer (Linux only):
 
     - [makeself](https://makeself.io/) - a tool to make self-extracting archives in Unix
     - [pandoc](https://pandoc.org/installing.html#linux) - a tool to convert Markdown documents to PDF.
@@ -171,7 +169,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 
 ### Python
 
-_Python_ (3.10 recommended) is required to run the scripts that are used to initialize and maintain the cluster. Note
+_Python_ (3.12 recommended) is required to run the scripts that are used to initialize and maintain the cluster. Note
 that the commands for setting up the virtual environment must be run from the top-level directory for _The Combine_
 source tree.
 
@@ -589,8 +587,8 @@ When _Rancher Desktop_ is first run, you will be prompted to select a few initia
 1. Verify that _Enable Kubernetes_ is checked.
 2. Select the Kubernetes version marked as _stable, latest_.
 3. Select your container runtime, either _containerd_ or _dockerd (moby)_:
-   - _containerd_ matches what is used on the NUC and uses the `k3s` Kubernetes engine. It requires that you run the
-     `build.py` script with the `--nerdctl` option.
+   - _containerd_ matches what is used on the NUC and uses the `k3s` Kubernetes engine. It requires that you set the
+     `CONTAINER_CLI` environment variable to `nerdctl` before running the `build.py` script.
    - _dockerd_ uses the `k3d` (`k3s` in docker).
 4. Select _Automatic_ or _Manual_ path setup.
 5. Click _Accept_.
@@ -680,7 +678,7 @@ Notes:
   export CONTAINER_CLI="nerdctl"
   ```
 
-  If you are using _Docker Desktop_ or _Rancher Desktop_ with the `dockerd` container runtime, clear this variable or
+  If you are using _Rancher Desktop_ with the `dockerd` container runtime or _Docker Desktop_, clear this variable or
   set its value to `docker`.
 
 - Run with the `--help` option to see all available options.
