@@ -9,16 +9,12 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Linq;
-using BackendFramework.Otel;
-
+// using BackendFramework.Otel;
 namespace BackendFramework.Otel
 {
-
     public static class OtelKernel
     {
-
         public const string SourceName = "Backend-Otel";
-
         [ExcludeFromCodeCoverage]
         private static void AspNetCoreBuilder(AspNetCoreTraceInstrumentationOptions options)
         {
@@ -34,7 +30,6 @@ namespace BackendFramework.Otel
                 {
                     activity.SetTag("inbound.http.request.body.size", "no content");
                 }
-
                 string? sessionId = request.Headers.TryGetValue("sessionId", out var values) ? values.FirstOrDefault() : null;
                 if (sessionId != null)
                 {
@@ -71,7 +66,6 @@ namespace BackendFramework.Otel
                 }
             };
         }
-
         [ExcludeFromCodeCoverage]
         private static void HttpClientBuilder(HttpClientTraceInstrumentationOptions options)
         {
@@ -86,7 +80,6 @@ namespace BackendFramework.Otel
                 {
                     activity.SetTag("outbound.http.request.body.size", "no content");
                 }
-
                 if (request.RequestUri is not null)
                 {
                     activity.SetTag("url.pathHERE", request.RequestUri.AbsolutePath);
@@ -129,88 +122,47 @@ namespace BackendFramework.Otel
                 }
             };
         }
-
         public static void AddOpenTelemetryInstrumentation(this IServiceCollection services)
         {
             var appResourceBuilder = ResourceBuilder.CreateDefault();
             // todo: include version 
             services.AddOpenTelemetry().WithTracing(tracerProviderBuilder => tracerProviderBuilder
-                .SetResourceBuilder(appResourceBuilder)
-                .AddSource(SourceName)
-                .AddProcessor<LocationEnricher>()
-                .AddAspNetCoreInstrumentation(AspNetCoreBuilder)
-                .AddHttpClientInstrumentation(HttpClientBuilder)
-                .AddConsoleExporter()
-                .AddOtlpExporter()
+            .SetResourceBuilder(appResourceBuilder)
+            .AddSource(SourceName)
+            .AddProcessor<LocationEnricher>()
+            .AddAspNetCoreInstrumentation(AspNetCoreBuilder)
+            .AddHttpClientInstrumentation(HttpClientBuilder)
+            .AddConsoleExporter()
+            .AddOtlpExporter()
             );
-
         }
     }
-}
-
-internal class LocationEnricher(ILocationProvider locationProvider) : BaseProcessor<Activity>
-{
-    public override async void OnEnd(Activity data)
+    internal class LocationEnricher(ILocationProvider locationProvider) : BaseProcessor<Activity>
     {
-        string? uriPath = (string?)data.GetTagItem("url.full");
-        string locationUri = LocationProvider.locationGetterUri;
-
-        if (uriPath == null || !uriPath.Contains(locationUri))
+        public override async void OnEnd(Activity data)
         {
-            LocationApi? response = await locationProvider.GetLocation();
-
-            var location = new
+            string? uriPath = (string?)data.GetTagItem("url.full");
+            string locationUri = LocationProvider.locationGetterUri;
+            if (uriPath == null || !uriPath.Contains(locationUri))
             {
-                Country = response?.country,
-                Region = response?.regionName,
-                City = response?.city,
-            };
-
-            data?.AddTag("country", location.Country);
-            data?.AddTag("region", location.Region);
-            data?.AddTag("city", location.City);
+                LocationApi? response = await locationProvider.GetLocation();
+                var location = new
+                {
+                    Country = response?.country,
+                    Region = response?.regionName,
+                    City = response?.city,
+                };
+                data?.AddTag("country", location.Country);
+                data?.AddTag("region", location.Region);
+                data?.AddTag("city", location.City);
+            }
+            data?.SetTag("SESSIONID BAGGAGE", data?.GetBaggageItem("sessionId"));
+            if (uriPath != null && uriPath.Contains(locationUri))
+            {
+                data?.SetTag("url.full", "");
+                data?.SetTag("url.redacted.ip", LocationProvider.locationGetterUri);
+            }
         }
-
-        data?.SetTag("SESSIONID BAGGAGE", data?.GetBaggageItem("sessionId"));
-        if (uriPath != null && uriPath.Contains(locationUri))
-        {
-            data?.SetTag("url.full", "");
-            data?.SetTag("url.redacted.ip", LocationProvider.locationGetterUri);
-        }
-
     }
 }
-
-
-
-// internal class LocationEnricher(ILocationProvider locationProvider) : BaseProcessor<Activity>
-// {
-//     public override async void OnEnd(Activity data)
-//     {
-//         string? uriPath = (string?)data.GetTagItem("url.full");
-//         string locationUri = LocationProvider.locationGetterUri;
-//         if (uriPath == null || !uriPath.Contains(locationUri))
-//         {
-//             LocationApi? response = await locationProvider.GetLocation();
-
-//             // var location = new LocationApi
-//             // {
-//             //     Country = response?.country,
-//             //     Region = response?.regionName,
-//             //     City = response?.city
-//             // };
-
-//             data?.AddTag("country", response?.country);
-//             data?.AddTag("regionName", response?.regionName);
-//             data?.AddTag("city", response?.city);
-//         }
-//         data?.SetTag("SESSIONID BAGGAGE", data?.GetBaggageItem("sessionId"));
-//         if (uriPath != null && uriPath.Contains(locationUri))
-//         {
-//             data?.SetTag("url.full", "");
-//             data?.SetTag("url.redacted.ip", LocationProvider.locationGetterUri);
-//         }
-//     }
-// }
-
 
