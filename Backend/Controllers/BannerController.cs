@@ -17,8 +17,6 @@ namespace BackendFramework.Controllers
         private readonly IBannerRepository _bannerRepo;
         private readonly IPermissionService _permissionService;
 
-        private const string otelTagName = "otel.report.controller";
-
         public BannerController(IBannerRepository bannerRepo, IPermissionService permissionService)
         {
             _bannerRepo = bannerRepo;

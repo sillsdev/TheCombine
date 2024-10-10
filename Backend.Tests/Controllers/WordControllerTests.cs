@@ -6,10 +6,8 @@ using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
-// using BackendFramework.Otel;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Mvc;
-// using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
@@ -391,9 +389,6 @@ namespace Backend.Tests.Controllers
         [Test]
         public async Task TestCreateWord()
         {
-            // var service = new ServiceCollection();
-            // service.AddOpenTelemetryInstrumentation();
-
             var word = Util.RandomWord(_projId);
 
             var id = (string)((ObjectResult)await _wordController.CreateWord(_projId, word)).Value!;
@@ -404,8 +399,6 @@ namespace Backend.Tests.Controllers
 
             var frontier = await _wordRepo.GetFrontier(_projId);
             Assert.That(frontier[0], Is.EqualTo(word));
-
-
         }
 
         [Test]

@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-// using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using BackendFramework.Otel;
-// using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
 namespace BackendFramework.Repositories
@@ -18,7 +16,7 @@ namespace BackendFramework.Repositories
     {
         private readonly IWordContext _wordDatabase;
 
-        private const string otelTagName = "otel.report.wordrepo";
+        private const string otelTagName = "otel.WordRepository";
 
         public WordRepository(IWordContext collectionSettings)
         {

@@ -1,18 +1,12 @@
 using System;
 using System.Net;
 using System.Net.Http;
-// using System.Net.Http.Json;
-
-// using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-// using Backend.Tests.Mocks;
 using BackendFramework.Otel;
-// using Castle.Core.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
-// using MongoDB.Driver;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
@@ -28,13 +22,6 @@ namespace Backend.Tests.Otel
         private LocationProvider? _locationProvider;
 
         private Mock<HttpMessageHandler>? _handlerMock;
-
-        // private
-
-        // private static void MemFunction()
-        // {
-
-        // }
 
         [SetUp]
         public void Setup()
@@ -61,7 +48,6 @@ namespace Backend.Tests.Otel
                 StatusCode = HttpStatusCode.OK,
                 Content = new StringContent("{}")
             };
-
 
             // Set up HttpClientFactory mock using httpClient with mocked HttpMessageHandler
             _handlerMock = new Mock<HttpMessageHandler>();
@@ -124,8 +110,7 @@ namespace Backend.Tests.Otel
         {
             var testIp = "100.0.0.0";
 
-            // call getLocation twice and verify that the mocked async call
-            // was still only made once
+            // call getLocation twice and verify async method is called only once
             LocationApi? location = await _locationProvider?.GetLocation()!;
             location = await _locationProvider?.GetLocation()!;
             Verify(_handlerMock!, r => r.RequestUri!.AbsoluteUri.Contains(testIp));

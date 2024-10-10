@@ -12,7 +12,7 @@ namespace BackendFramework.Services
     {
         private readonly IWordRepository _wordRepo;
 
-        private const string otelTagName = "otel.report.service";
+        private const string otelTagName = "otel.WordService";
 
         public WordService(IWordRepository wordRepo)
         {
@@ -63,7 +63,7 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> Delete(string projectId, string userId, string wordId)
         {
-            // note: review tag description
+            // TODO review tag description
             OtelService.AddOtelTag(otelTagName, "deleting a word");
 
             var wordIsInFrontier = await _wordRepo.DeleteFrontier(projectId, wordId);

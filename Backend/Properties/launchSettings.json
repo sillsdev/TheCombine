@@ -28,8 +28,6 @@
       "environmentVariables": {
         "Key": "Value",
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "OTEL_EXPORTER_OTLP_PROTOCOL": "grpc",
-        "OTEL_EXPORTER_OTLP_ENDPOINT": "http://localhost:4317",
         "COMBINE_CAPTCHA_REQUIRED": "true",
         "COMBINE_CAPTCHA_SECRET_KEY": "1x0000000000000000000000000000000AA",
         "COMBINE_CAPTCHA_VERIFY_URL": "https://challenges.cloudflare.com/turnstile/v0/siteverify",

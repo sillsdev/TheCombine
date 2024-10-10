@@ -33,7 +33,7 @@
     <!-- SIL Maintained Dependencies. -->
     <PackageReference Include="icu.net" Version="2.10.1-beta.5" />
     <PackageReference Include="Icu4c.Win.Full.Lib" Version="62.2.3-beta" />
-    <PackageReference Include="SIL.Core" Version="14.2.0-beta0009" />
+    <PackageReference Include="SIL.Core" Version="14.1.1" />
     <PackageReference Include="SIL.Core.Desktop" Version="14.1.1">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>

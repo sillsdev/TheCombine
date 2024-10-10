@@ -17,9 +17,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-// using OpenTelemetry.Resources;
-// using OpenTelemetry.Trace;
-// using OpenTelemetry.Exporter;
 using static System.Text.Encoding;
 
 namespace BackendFramework
@@ -293,11 +290,9 @@ namespace BackendFramework
             services.AddTransient<IWordService, WordService>();
 
             // OpenTelemetry
+            services.AddHttpClient();
             services.AddMemoryCache();
             services.AddHttpContextAccessor();
-
-            services.AddHttpClient();
-            // services.AddSingleton<LocationProvider>();
             services.AddTransient<ILocationProvider, LocationProvider>();
             services.AddOpenTelemetryInstrumentation();
 

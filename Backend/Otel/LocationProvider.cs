@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
-// using SharpCompress.Archives;
 
 namespace BackendFramework.Otel
 {
@@ -45,7 +44,7 @@ namespace BackendFramework.Otel
                     }
                     catch (Exception)
                     {
-                        // todo consider what to have in catch
+                        // TODO consider what to have in catch
                         Console.WriteLine("Attempted to get location but exception");
                         throw;
                     }
@@ -57,12 +56,10 @@ namespace BackendFramework.Otel
 
         internal async Task<LocationApi?> GetLocationFromIp(string? ipAddressWithoutPort)
         {
-
             var route = locationGetterUri + $"{ipAddressWithoutPort}";
             var httpClient = _httpClientFactory.CreateClient();
             var response = await httpClient.GetFromJsonAsync<LocationApi>(route);
             return response;
-
         }
     }
 }

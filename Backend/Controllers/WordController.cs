@@ -20,7 +20,7 @@ namespace BackendFramework.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IWordService _wordService;
 
-        private const string otelTagName = "otel.report.controller";
+        private const string otelTagName = "otel.WordController";
 
         public WordController(IWordRepository repo, IWordService wordService, IProjectRepository projRepo,
             IPermissionService permissionService)
