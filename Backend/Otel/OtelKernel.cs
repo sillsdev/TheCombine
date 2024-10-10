@@ -9,6 +9,8 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Linq;
+using OpenTelemetry;
+using System.Diagnostics;
 // using BackendFramework.Otel;
 namespace BackendFramework.Otel
 {
@@ -135,6 +137,12 @@ namespace BackendFramework.Otel
             .AddConsoleExporter()
             .AddOtlpExporter()
             );
+        }
+        private class UserEnricher() : BaseProcessor<Activity>
+        {
+            public override void OnStart(Activity data)
+            {
+            }
         }
     }
 }
