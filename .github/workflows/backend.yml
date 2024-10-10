@@ -62,8 +62,7 @@ jobs:
       - run: dotnet publish BackendFramework.sln
 
       # Fmt.
-      - run: dotnet tool install -g dotnet-format
-      - run: dotnet-format --check
+      - run: dotnet format --verify-no-changes
 
   upload_coverage:
     needs: test_build
