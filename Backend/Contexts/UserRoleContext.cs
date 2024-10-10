@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace BackendFramework.Contexts
@@ -9,14 +8,12 @@ namespace BackendFramework.Contexts
     [ExcludeFromCodeCoverage]
     public class UserRoleContext : IUserRoleContext
     {
-        private readonly IMongoDatabase _db;
-
-        public UserRoleContext(IOptions<Startup.Settings> options)
+        private readonly IMongoDbContext _mongoDbContext;
+        public UserRoleContext(IMongoDbContext mongoDbContext)
         {
-            var client = new MongoClient(options.Value.ConnectionString);
-            _db = client.GetDatabase(options.Value.CombineDatabase);
+            _mongoDbContext = mongoDbContext;
         }
 
-        public IMongoCollection<UserRole> UserRoles => _db.GetCollection<UserRole>("UserRolesCollection");
+        public IMongoCollection<UserRole> UserRoles => _mongoDbContext.Db.GetCollection<UserRole>("UserRolesCollection");
     }
 }
