@@ -14,15 +14,15 @@ using System.Diagnostics;
 // using BackendFramework.Otel;
 namespace BackendFramework.Otel
 {
+
+    internal class UserEnricher() : BaseProcessor<Activity>
+    {
+        public override void OnStart(Activity data)
+        {
+        }
+    }
     public static class OtelKernel
     {
-
-        private class UserEnricher() : BaseProcessor<Activity>
-        {
-            public override void OnStart(Activity data)
-            {
-            }
-        }
         public const string SourceName = "Backend-Otel";
         [ExcludeFromCodeCoverage]
         private static void AspNetCoreBuilder(AspNetCoreTraceInstrumentationOptions options)
