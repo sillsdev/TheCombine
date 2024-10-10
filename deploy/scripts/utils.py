@@ -22,7 +22,7 @@ def run_cmd(
 ) -> subprocess.CompletedProcess[str]:
     """Run a command with subprocess and catch any CalledProcessErrors."""
     if print_cmd:
-        print(f"Running: {' '.join(cmd)}")
+        print(f"Running: {' '.join([str(arg) for arg in cmd])}")
     try:
         process_results = subprocess.run(
             cmd,

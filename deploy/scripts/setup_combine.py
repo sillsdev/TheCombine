@@ -204,12 +204,17 @@ def main() -> None:
             # Create the base helm install command
             chart_dir = helm_dir / chart
             helm_install_cmd = helm_cmd + [
+                "--dependency-update",
                 "--namespace",
                 chart_namespace,
                 helm_action.value,
                 chart,
                 str(chart_dir),
             ]
+
+            # Set the debug option if desired
+            if args.debug:
+                helm_install_cmd.append("--debug")
 
             # Set the dry-run option if desired
             if args.dry_run:
@@ -251,15 +256,7 @@ def main() -> None:
             for variable in target_vars:
                 helm_install_cmd.extend(["--set", variable])
 
-            # Update chart dependencies
-            # Note that this operation is performed on the local helm charts
-            # so the kubeconfig and context arguments are not passed to the
-            # helm command.
-            helm_deps_cmd = ["helm", "dependency", "update", str(chart_dir)]
-            logging.debug(helm_deps_cmd)
-            run_cmd(helm_deps_cmd, print_cmd=not args.quiet, print_output=True)
-
-            logging.debug(helm_install_cmd)
+            # Install the chart
             run_cmd(helm_install_cmd, print_cmd=not args.quiet, print_output=True)
 
 
