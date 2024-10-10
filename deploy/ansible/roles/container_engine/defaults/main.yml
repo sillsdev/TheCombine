@@ -3,3 +3,4 @@ container_packages:
   - containerd.io
 
 keyring_location: /etc/apt/keyrings
+cpu_arch: amd64
