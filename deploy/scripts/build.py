@@ -28,6 +28,7 @@ from app_release import get_release, set_release
 from enum_types import JobStatus
 from sem_dom_import import generate_semantic_domains
 from streamfile import StreamFile
+from utils import init_logging
 
 
 @dataclass(frozen=True)
@@ -91,8 +92,8 @@ class JobQueue:
         """
         Check if all jobs in the queue have completed.
 
-        If the current job has finished, and there are more jobs to run, it will start the next
-        job.
+        If the current job has finished, and there are more jobs to run,
+        it will start the next job.
         """
         if self.status != JobStatus.RUNNING:
             return self.status
@@ -113,8 +114,7 @@ class JobQueue:
                 self.status = JobStatus.ERROR
                 return self.status
             self.curr_job = None
-        # start the next job.  If there are no more jobs to run, we have
-        # finished successfully
+        # Start the next job; if there are no more to run, we have finished successfully
         if not self.start_next():
             self.status = JobStatus.SUCCESS
         return self.status
@@ -149,8 +149,7 @@ def no_op() -> None:
     pass
 
 
-# Create a dictionary to look up the build spec from
-# a component name
+# Create a dictionary to look up the build spec from a component name
 build_specs: Dict[str, BuildSpec] = {
     "backend": BuildSpec(project_dir / "Backend", "backend", no_op, no_op),
     "database": BuildSpec(project_dir / "database", "database", build_semantic_domains, no_op),
@@ -223,14 +222,14 @@ def parse_args() -> Namespace:
         action="store_true",
         help="Always attempt to pull a newer version of an image used in the build.",
     )
-    parser.add_argument(
+    logging_group = parser.add_mutually_exclusive_group()
+    logging_group.add_argument(
         "--quiet",
         "-q",
         action="store_true",
         help="Run the docker build commands with '--quiet' instead of '--progress plain'.",
     )
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument(
+    logging_group.add_argument(
         "--debug",
         "-d",
         action="store_true",
@@ -242,16 +241,7 @@ def parse_args() -> Namespace:
 def main() -> None:
     """Build the Docker images for The Combine."""
     args = parse_args()
-
-    # Setup the logging level.  The command output will be printed on stdout/stderr
-    # independent of the logging facility
-    if args.debug:
-        log_level = logging.DEBUG
-    elif args.quiet:
-        log_level = logging.WARNING
-    else:
-        log_level = logging.INFO
-    logging.basicConfig(format="%(levelname)s:%(message)s", level=log_level)
+    init_logging(args)
 
     # Setup required build engine - docker or nerdctl
     container_cli = os.getenv("CONTAINER_CLI", "docker")
@@ -269,6 +259,7 @@ def main() -> None:
     # Setup build options
     if args.quiet:
         build_cmd += ["--quiet"]
+        push_cmd += ["--quiet"]
     else:
         build_cmd += ["--progress", "plain"]
     if args.no_cache:
@@ -296,17 +287,14 @@ def main() -> None:
         logging.debug(f"Adding job {build_cmd + job_opts}")
         job_set[component].add_job(Job(build_cmd + job_opts, spec.dir))
         if args.repo is not None:
-            if args.quiet:
-                push_args = ["--quiet"]
-            else:
-                push_args = []
-            job_set[component].add_job(Job(push_cmd + push_args + [image_name], None))
+            logging.debug(f"Adding job {push_cmd + [image_name]}")
+            job_set[component].add_job(Job(push_cmd + [image_name], None))
         logging.info(f"Building component {component}")
 
     # Run jobs in parallel - one job per component
     build_returncode = 0
     while True:
-        # loop through the running jobs until there is no more work left
+        # Loop through the running jobs until there is no more work left
         running_jobs = False
         for component in job_set:
             if job_set[component].check_jobs() == JobStatus.RUNNING:
