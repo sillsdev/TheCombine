@@ -45,17 +45,15 @@ def run_cmd(
         sys.exit(err.returncode)
 
 
-def add_namespace(namespace: str, kube_opts: List[str]) -> bool:
+def add_namespace(namespace: str, kube_cmd: List[str]) -> bool:
     """
     Create a Kubernetes namespace if and only if it does not exist.
 
     Returns True if the namespace was added.
     """
-    lookup_results = run_cmd(
-        ["kubectl"] + kube_opts + ["get", "namespace", namespace], check_results=False
-    )
+    lookup_results = run_cmd(kube_cmd + ["get", "namespace", namespace], check_results=False)
     if lookup_results.returncode != 0:
-        run_cmd(["kubectl"] + kube_opts + ["create", "namespace", namespace])
+        run_cmd(kube_cmd + ["create", "namespace", namespace])
         return True
     return False
 

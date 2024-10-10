@@ -112,7 +112,7 @@ running.
 #### Connecting to the WiFi Hotspot
 
 The wireless network name will be `thecombine_ap`. You can connect your device to this network using the passphrase
-`Combine2020`.
+`thecombine_pw`.
 
 If you would like to change the WiFi passphrase, see the options described in [combinectl Tool](#combinectl-tool).
 
@@ -183,6 +183,6 @@ To run `combine-installer.run` with options, the option list must be started wit
 
 | Command                                    | Effect                                                       |
 | ------------------------------------------ | ------------------------------------------------------------ |
-| `./combine-installer.run -- v1.1.6`        | Install version `v1.1.6` of _The Combine_.                   |
-| `./combine-installer.run -- update v1.2.1` | Update an existing Combine installation to version `v1.2.1`  |
+| `./combine-installer.run -- v2.0.1`        | Install version `v2.0.1` of _The Combine_.                   |
+| `./combine-installer.run -- update v2.2.0` | Update an existing Combine installation to version `v2.2.0`  |
 | `./combine-installer.run -- restart`       | Restart the current installation process from the beginning. |

@@ -107,7 +107,7 @@ def main() -> None:
     for chart_descr in this_cluster:
         chart_spec = config[chart_descr]["chart"]
         # install the chart
-        helm_cmd = ["helm"] + kube_env.get_helm_opts()
+        helm_cmd = kube_env.get_helm_cmd()
         if chart_spec["name"] in curr_charts:
             helm_action = HelmAction.UPGRADE
         else:

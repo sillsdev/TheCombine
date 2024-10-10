@@ -43,7 +43,7 @@ eth_optional: yes
 has_wifi: yes
 ap_domain: thecombine.app
 ap_ssid: "thecombine_ap"
-ap_passphrase: "Combine2020"
+ap_passphrase: "thecombine_pw"
 ap_gateway: "10.10.10.1"
 ap_hostname: "local"
 test_wifi: false

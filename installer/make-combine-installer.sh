@@ -38,20 +38,20 @@ done
 if [ -z "${COMBINE_VERSION}" ] ; then
   error "COMBINE_VERSION is not set."
 fi
-# setup Python virtual environment
+# Setup Python virtual environment
 cd ../deploy
 
 if [[ $NET_INSTALL == 0 ]] ; then
   if [ ! -f venv/bin/activate ] ; then
-    # virtual environment does not exist - create it
+    # Virtual environment does not exist - create it
     python3 -m venv venv
   fi
   source venv/bin/activate
-  # update the environment if necessary
+  # Update the environment if necessary
   python -m pip install --upgrade pip pip-tools
   python -m piptools sync requirements.txt
 
-  # Package the Combine for "offline" installation
+  # Package The Combine for "offline" installation
   TEMP_DIR=/tmp/images-$$
   pushd scripts
   ./package_images.py ${COMBINE_VERSION} ${TEMP_DIR}
@@ -59,7 +59,7 @@ if [[ $NET_INSTALL == 0 ]] ; then
   popd
   rm -rf venv
 else
-  # Package the Combine for network installation
+  # Package The Combine for network installation
   INSTALLER_NAME="combine-net-installer.run"
 fi
 
