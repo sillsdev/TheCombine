@@ -203,6 +203,7 @@ Create and activate an isolated Python virtual environment
 
 ```bash
 python3 -m venv venv
+# This command is shell-specific, for the common use case of bash:
 source venv/bin/activate
 ```
 
