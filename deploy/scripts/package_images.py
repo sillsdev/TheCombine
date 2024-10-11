@@ -105,11 +105,11 @@ def package_middleware(
     # Get current repos
     curr_repo_list: List[str] = []
     middleware_images: List[str] = []
-    helm_add_cmd = ["helm", "repo", "list", "-o", "yaml"]
+    helm_list_cmd = ["helm", "repo", "list", "-o", "yaml"]
     if debug:
-        helm_add_cmd.append("--debug")
+        helm_list_cmd.append("--debug")
     helm_cmd_results = run_cmd(
-        helm_add_cmd, check_results=False, print_cmd=debug, print_output=debug
+        helm_list_cmd, check_results=False, print_cmd=debug, print_output=debug
     )
     if helm_cmd_results.returncode == 0:
         curr_helm_repos = yaml.safe_load(helm_cmd_results.stdout)
