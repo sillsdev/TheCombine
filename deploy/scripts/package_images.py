@@ -83,15 +83,17 @@ def package_k3s(dest_dir: Path, *, arm: bool = False, debug: bool = False) -> No
     run_cmd(ansible_cmd, cwd=str(ansible_dir), print_cmd=debug, print_output=debug)
 
 
-def package_images(image_list: List[str], tar_file: Path, *, arm: bool = False, debug: bool = False) -> None:
+def package_images(
+    image_list: List[str], tar_file: Path, *, arm: bool = False, debug: bool = False
+) -> None:
     container_cli_cmd = [os.getenv("CONTAINER_CLI", "docker")]
     if container_cli_cmd[0] == "nerdctl":
         container_cli_cmd.extend(["--namespace", "k8s.io"])
 
     # Pull each image
+    pull_cmd = container_cli_cmd + ["pull", f"--platform=linux/{'arm64' if arm else 'amd64'}"]
     for image in image_list:
-        pull_cmd = container_cli_cmd + ["pull", f"--platform=linux/{'arm64' if arm else 'amd64'}", image]
-        run_cmd(pull_cmd, print_cmd=debug, print_output=debug)
+        run_cmd(pull_cmd + [image], print_cmd=debug, print_output=debug)
 
     # Save pulled images into a .tar archive
     save_cmd = container_cli_cmd + ["save"] + image_list + ["-o", str(tar_file)]
@@ -105,7 +107,13 @@ def package_images(image_list: List[str], tar_file: Path, *, arm: bool = False, 
 
 
 def package_middleware(
-    config_file: str, *, cluster_type: str, image_dir: Path, chart_dir: Path, arm: bool = False, debug: bool = False
+    config_file: str,
+    *,
+    cluster_type: str,
+    image_dir: Path,
+    chart_dir: Path,
+    arm: bool = False,
+    debug: bool = False,
 ) -> None:
     logging.info("Packaging middleware images.")
 
@@ -164,7 +172,9 @@ def package_middleware(
     package_images(middleware_images, image_dir / out_file, arm=arm, debug=debug)
 
 
-def package_thecombine(tag: str, image_dir: Path, *, arm: bool = False, debug: bool = False) -> None:
+def package_thecombine(
+    tag: str, image_dir: Path, *, arm: bool = False, debug: bool = False
+) -> None:
     logging.info(f"Packaging The Combine version {tag}.")
     logging.debug("Create helm charts from templates")
     combine_charts.generate(tag)

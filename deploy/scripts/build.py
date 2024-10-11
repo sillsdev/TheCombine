@@ -247,7 +247,14 @@ def main() -> None:
     container_cli = os.getenv("CONTAINER_CLI", "docker")
     match container_cli:
         case "nerdctl":
-            build_cmd = [container_cli, "-n", args.namespace, "build", "--platform", "linux/amd64,linux/arm64"]
+            build_cmd = [
+                container_cli,
+                "-n",
+                args.namespace,
+                "build",
+                "--platform",
+                "linux/amd64,linux/arm64",
+            ]
             push_cmd = [container_cli, "-n", args.namespace, "push"]
         case "docker":
             build_cmd = [container_cli, "buildx", "build", "--platform", "linux/amd64,linux/arm64"]
