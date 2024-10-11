@@ -1,5 +1,6 @@
 // using System.Diagnostics;
 using System;
+using System.Diagnostics;
 using BackendFramework.Otel;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
@@ -9,23 +10,12 @@ namespace Backend.Tests.Otel
     public class OtelServiceTests
     {
 
-        [Test]
-        public static void TestAddOtelTagCoverage()
-        {
-            var services = new ServiceCollection();
-            OtelService.AddOtelInstrumentation(services);
-            OtelService.AddOtelTag("test key", "test val");
-
-
-        }
-
         // [Test]
         // public static void TestAddOtelTagCoverage()
         // {
         //     var services = new ServiceCollection();
         //     OtelService.AddOtelInstrumentation(services);
-        //     Activity? act = OtelService.AddOtelTag("test key", "test val");
-        //     Assert.That(act, Is.Not.Null);
+        //     OtelService.AddOtelTag("test key", "test val");
 
 
         // }
@@ -36,6 +26,9 @@ namespace Backend.Tests.Otel
         {
             var services = new ServiceCollection();
             OtelService.AddOtelInstrumentation(services);
+
+            // AddActivityListener();
+
             var activity = OtelService.AddOtelTag("test key", "test val");
             Console.WriteLine("result was " + activity);
             Assert.That(activity, Is.Not.Null);
@@ -54,6 +47,18 @@ namespace Backend.Tests.Otel
             // tags = activity?.Tags;
             // Assert.That(Activity.Current, Is.Not.Null);
             Assert.That(wrongTag, Is.Null);
+
+        }
+
+        private static void AddActivityListener()
+        {
+            var activityListener = new ActivityListener
+            {
+                ShouldListenTo = s => true,
+                SampleUsingParentId = (ref ActivityCreationOptions<string> activityOptions) => ActivitySamplingResult.AllData,
+                Sample = (ref ActivityCreationOptions<ActivityContext> activityOptions) => ActivitySamplingResult.AllData
+            };
+            ActivitySource.AddActivityListener(activityListener);
 
         }
 

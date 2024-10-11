@@ -44,9 +44,4 @@ public class OtelService
         services.AddOpenTelemetryInstrumentation();
     }
 
-    public static Activity? GetActivity()
-    {
-        return Activity.Current;
-
-    }
 }
