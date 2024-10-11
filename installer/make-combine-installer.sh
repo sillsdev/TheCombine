@@ -13,11 +13,15 @@ error () {
 # cd to the directory where the script is installed
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
+DEBUG=0
 NET_INSTALL=0
 # Parse arguments to customize installation
 while (( "$#" )) ; do
   OPT=$1
   case $OPT in
+    --debug)
+      DEBUG=1
+      ;;
     --net-install)
       NET_INSTALL=1
       ;;
@@ -48,23 +52,30 @@ if [[ $NET_INSTALL == 0 ]] ; then
   fi
   source venv/bin/activate
   # Update the environment if necessary
-  python -m pip install --upgrade pip pip-tools
+  python -m pip $((( DEBUG == 0)) && echo "-q" ) install --upgrade pip pip-tools
   python -m piptools sync requirements.txt
 
   # Package The Combine for "offline" installation
   TEMP_DIR=/tmp/images-$$
   pushd scripts
-  ./package_images.py ${COMBINE_VERSION} ${TEMP_DIR} --debug
+  ./package_images.py ${COMBINE_VERSION} ${TEMP_DIR} $((( DEBUG == 1 )) && echo "--debug")
   INSTALLER_NAME="combine-installer.run"
   popd
-  rm -rf venv
 else
   # Package The Combine for network installation
   INSTALLER_NAME="combine-net-installer.run"
 fi
 
+# Remove unwanted folders
+for DIR in venv scripts/__pycache__ ; do
+  if [ -d $DIR ] ; then
+    (( DEBUG == 1 )) && echo "Removing ../deploy/$DIR/"
+    rm -rf $DIR
+  fi
+done
+
 cd ${SCRIPT_DIR}
-makeself --tar-quietly ../deploy ${INSTALLER_NAME} "Combine Installer" scripts/install-combine.sh ${COMBINE_VERSION}
+makeself $((( DEBUG == 0)) && echo "--tar-quietly" ) ../deploy ${INSTALLER_NAME} "Combine Installer" scripts/install-combine.sh ${COMBINE_VERSION}
 if  [[ $NET_INSTALL == 0 ]] ; then
   makeself --append ${TEMP_DIR} ${INSTALLER_NAME}
   rm -rf ${TEMP_DIR}

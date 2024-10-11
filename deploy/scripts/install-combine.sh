@@ -7,8 +7,9 @@ set -eo pipefail
 # It should only be executed directly by developers. For general users, it is packaged in
 # a stand-alone installer (see ./installer/README.md or ./installer/README.pdf).
 #
-# The options for this script and for the packaged installer are the same. Note that 2
-# additional debugging options are available that aren't documented in the readme file:
+# The options for this script and for the packaged installer are the same. Note that some
+# additional dev options are available that aren't documented in the readme file:
+#   - debug - show more verbose output for debugging.
 #   - single-step - run the next "step" in the installation process and stop.
 #   - start-at <step-name> - start at the step named <step-name> and run to completion.
 #
@@ -78,9 +79,9 @@ install-kubernetes () {
   cd ${DEPLOY_DIR}/ansible
 
   if [ -d "${DEPLOY_DIR}/airgap-images" ] ; then
-    ansible-playbook playbook_desktop_setup.yml -K -e k8s_user=`whoami` -e install_airgap_images=true
+    ansible-playbook playbook_desktop_setup.yml -K -e k8s_user=`whoami` -e install_airgap_images=true $(((DEBUG == 1)) && echo "-vv")
   else
-    ansible-playbook playbook_desktop_setup.yml -K -e k8s_user=`whoami`
+    ansible-playbook playbook_desktop_setup.yml -K -e k8s_user=`whoami` $(((DEBUG == 1)) && echo "-vv")
   fi
 }
 
@@ -97,7 +98,7 @@ set-k3s-env () {
   export KUBECONFIG=${K3S_CONFIG_FILE}
   #####
   # Start k3s if it is not running
-  if ! systemctl is-active --quiet k3s ; then
+  if ! systemctl is-active $(((DEBUG == 0)) && echo "--quiet") k3s ; then
     sudo systemctl start k3s
   fi
 }
@@ -137,7 +138,7 @@ install-the-combine () {
   cd ${DEPLOY_DIR}/scripts
   set-combine-env
   set-k3s-env
-  ./setup_combine.py --tag ${COMBINE_VERSION} --repo public.ecr.aws/thecombine --target desktop ${SETUP_OPTS} --debug
+  ./setup_combine.py --tag ${COMBINE_VERSION} --repo public.ecr.aws/thecombine --target desktop ${SETUP_OPTS} $(((DEBUG == 1)) && echo "--debug")
   deactivate
 }
 
@@ -175,7 +176,7 @@ next-state () {
 
 # Verify that the required network devices have been setup for Kubernetes cluster
 wait-for-k8s-interfaces () {
-  echo "Waiting for k8s interfaces"
+  echo "Waiting for k8s interfaces: $@"
   for interface in $@ ; do
     while ! ip link show $interface > /dev/null 2>&1 ; do
       sleep 1
@@ -192,6 +193,7 @@ CONFIG_DIR=${HOME}/.config/combine
 mkdir -p ${CONFIG_DIR}
 SINGLE_STEP=0
 IS_SERVER=0
+DEBUG=0
 
 # See if we need to continue from a previous install
 STATE_FILE=${CONFIG_DIR}/install-state
@@ -210,6 +212,9 @@ while (( "$#" )) ; do
       if [ -f ${CONFIG_DIR}/env ] ; then
         rm ${CONFIG_DIR}/env
       fi
+      ;;
+    debug)
+      DEBUG=1
       ;;
     restart)
       next-state "Pre-reqs"
