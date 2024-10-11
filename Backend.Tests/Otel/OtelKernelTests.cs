@@ -11,7 +11,6 @@
 
 // // using BackendFramework.Otel;
 // using NUnit.Framework;
-// using static BackendFramework.Otel.OtelKernel;
 
 // namespace Backend.Tests.Otel
 // {
