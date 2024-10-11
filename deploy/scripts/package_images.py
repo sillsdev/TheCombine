@@ -43,6 +43,7 @@ def parse_args() -> argparse.Namespace:
     # Add Optional arguments
     parser.add_argument(
         "--arm",
+        action="store_true",
         help="Package for arm64 instead of the default amd64",
         default=False,
     )
@@ -66,30 +67,30 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def package_k3s(dest_dir: Path, *, arm: bool = False) -> None:
+def package_k3s(dest_dir: Path, *, arm: bool = False, debug: bool = False) -> None:
     logging.info("Packaging k3s images.")
     extra_vars = f"'package_dir':'{dest_dir}'"
     if arm:
         extra_vars += ",'cpu_arch':'arm64'"
-    run_cmd(
-        [
-            "ansible-playbook",
-            "playbook_k3s_airgapped_files.yml",
-            "--extra-vars",
-            "{" + extra_vars + "}",
-        ],
-        cwd=str(ansible_dir),
-    )
+    ansible_cmd = [
+        "ansible-playbook",
+        "playbook_k3s_airgapped_files.yml",
+        "--extra-vars",
+        "{" + extra_vars + "}",
+    ]
+    if debug:
+        ansible_cmd.append("-vv")
+    run_cmd(ansible_cmd, cwd=str(ansible_dir), print_cmd=debug, print_output=debug)
 
 
-def package_images(image_list: List[str], tar_file: Path, *, debug: bool = False) -> None:
+def package_images(image_list: List[str], tar_file: Path, *, arm: bool = False, debug: bool = False) -> None:
     container_cli_cmd = [os.getenv("CONTAINER_CLI", "docker")]
     if container_cli_cmd[0] == "nerdctl":
         container_cli_cmd.extend(["--namespace", "k8s.io"])
 
     # Pull each image
     for image in image_list:
-        pull_cmd = container_cli_cmd + ["pull", image]
+        pull_cmd = container_cli_cmd + ["pull", f"--platform=linux/{'arm64' if arm else 'amd64'}", image]
         run_cmd(pull_cmd, print_cmd=debug, print_output=debug)
 
     # Save pulled images into a .tar archive
@@ -160,7 +161,7 @@ def package_middleware(
 
     logging.debug(f"Middleware images: {middleware_images}")
     out_file = f"middleware-airgap-images-{'arm64' if arm else 'amd64'}.tar"
-    package_images(middleware_images, image_dir / out_file, debug=debug)
+    package_images(middleware_images, image_dir / out_file, arm=arm, debug=debug)
 
 
 def package_thecombine(tag: str, image_dir: Path, *, arm: bool = False, debug: bool = False) -> None:
@@ -196,7 +197,7 @@ def package_thecombine(tag: str, image_dir: Path, *, arm: bool = False, debug: b
 
     # Logout of AWS to allow pulling the images
     out_file = f"combine-airgap-images-{'arm64' if arm else 'amd64'}.tar"
-    package_images(combine_images, image_dir / out_file, debug=debug)
+    package_images(combine_images, image_dir / out_file, arm=arm, debug=debug)
 
 
 def main() -> None:

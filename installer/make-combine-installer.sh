@@ -13,12 +13,16 @@ error () {
 # cd to the directory where the script is installed
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
+ARM=0
 DEBUG=0
 NET_INSTALL=0
 # Parse arguments to customize installation
 while (( "$#" )) ; do
   OPT=$1
   case $OPT in
+    --arm)
+      ARM=1
+      ;;
     --debug)
       DEBUG=1
       ;;
@@ -32,7 +36,7 @@ while (( "$#" )) ; do
         error "Invalid version number, $OPT"
       fi
       ;;
-  *)
+    *)
       warning "Unrecognized option: $OPT"
       ;;
   esac
@@ -52,13 +56,13 @@ if [[ $NET_INSTALL == 0 ]] ; then
   fi
   source venv/bin/activate
   # Update the environment if necessary
-  python -m pip $((( DEBUG == 0)) && echo "-q" ) install --upgrade pip pip-tools
+  python -m pip $((( DEBUG == 0)) && echo "-q") install --upgrade pip pip-tools
   python -m piptools sync requirements.txt
 
   # Package The Combine for "offline" installation
   TEMP_DIR=/tmp/images-$$
   pushd scripts
-  ./package_images.py ${COMBINE_VERSION} ${TEMP_DIR} $((( DEBUG == 1 )) && echo "--debug")
+  ./package_images.py ${COMBINE_VERSION} ${TEMP_DIR} $((( ARM == 1 )) && echo "--arm") $((( DEBUG == 1 )) && echo "--debug")
   INSTALLER_NAME="combine-installer.run"
   popd
 else
