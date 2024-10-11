@@ -126,7 +126,7 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
 
 9. [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
    `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
-10. [nuget-license](https://github.com/sensslen/nuget-license) `dotnet tool update --global nuget-project-license`
+10. [nuget-license](https://github.com/sensslen/nuget-license) `dotnet tool update --global nuget-license`
 11. Tools for generating the self installer (Linux only):
 
     - [makeself](https://makeself.io/) - a tool to make self-extracting archives in Unix
@@ -989,17 +989,6 @@ Notes:
    part of `combine_backup.py`; backups made with this script must be managed manually. See the
    [AWS CLI Command Reference (s3)](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3/index.html)
    for documentation on how to use the command line to list and to manage the backup objects.
-
-#### Create a New Admin User (Production)
-
-Task: create a new user who is a site administrator
-
-Run:
-
-```bash
-# Run from the `deploy` directory in the project on the host machine
-ansible-playbook playbook_admin_user.yaml --limit <target_name> -u sillsdev -K
-```
 
 #### Delete a Project
 
