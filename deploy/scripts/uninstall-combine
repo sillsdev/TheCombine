@@ -2,6 +2,7 @@
 set -euo pipefail
 
 delete-files () {
+  # Deletes the specified files
   for file in "$@" ; do
     if [[ -f "$file" ]] ; then
       echo "Removing $file"
@@ -10,45 +11,44 @@ delete-files () {
   done
 }
 
-kill-service () {
-  # Stops and disables the specified service
-  if systemctl is-active $1 ; then
-    echo "Stopping service $1"
-    sudo systemctl stop $1 2>&1 >/dev/null
-  fi
-  if systemctl is-enabled $1 ; then
-    echo "Disabline service $1"
-    sudo systemctl disable $1
-  fi
+kill-services () {
+  # Stops and disables the specified services
+  for service in "$@" ; do
+    if systemctl is-active $service ; then
+      echo "Stopping service $service"
+      sudo systemctl stop $service 2>&1 >/dev/null
+    fi
+    if systemctl is-enabled $service ; then
+      echo "Disabling service $service"
+      sudo systemctl disable $service
+    fi
+  done
 }
 
-# Stop & disable combine services
-echo "Stopping combine services"
-kill-service k3s
-kill-service create_ap
+# Stop and remove The Combine
+echo "Stopping The Combine services"
+kill-services k3s create_ap
+echo "Deleting The Combine files"
+delete-files ${HOME}/thecombine ${HOME}/.config/combine /usr/local/bin/combinectl
 
-# Delete $HOME/thecombine; $HOME/.config/combine
-delete-files ${HOME}/thecombine ${HOME}/.config/combine
-
-# Remove support tool
-
-kill-service display-eth.service
-kill-service display-eth.timer
+# Stop and remove support tools
+echo "Stopping display-eth services"
+kill-services display-eth.service display-eth.timer
+echo "Deleting display-eth files"
 delete-files /lib/systemd/system/display-eth.service /lib/systemd/system/display-eth.timer
-
-# Remove combine management tool
-delete-files /usr/local/bin/combinectl
-
 
 # Uninstall k3s
 if [[ -x /usr/local/bin/k3s-uninstall.sh ]] ; then
+  echo "Uninstalling k3s"
   /usr/local/bin/k3s-uninstall.sh
 fi
 
 # Remove network configurations
 if nmcli c show dummy-vip >/dev/null 2>&1 ; then
+  echo "Removing dummy-vip"
   sudo nmcli c delete dummy-vip
 fi
 
-# delete create_ap files
+# Delete create_ap files
+echo "Deleting create_ap files"
 delete-files /etc/create_ap /usr/lib/systemd/system/create_ap.service

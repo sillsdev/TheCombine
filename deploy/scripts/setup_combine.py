@@ -52,7 +52,7 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     # Arguments used by the Kubernetes tools
-    add_kube_opts(parser)
+    add_kube_opts(parser, add_debug=False)
     # Arguments used by Helm
     add_helm_opts(parser)
     # Arguments specific to setting up The Combine
@@ -187,8 +187,7 @@ def main() -> None:
             if chart in installed_charts:
                 if args.clean:
                     # Delete existing chart if --clean specified
-                    delete_cmd = helm_cmd + ["--namespace", chart_namespace, "delete", chart]
-                    logging.debug(delete_cmd)
+                    delete_cmd = helm_cmd + [f"--namespace={chart_namespace}", "delete", chart]
                     run_cmd(delete_cmd, print_cmd=not args.quiet, print_output=True)
                 else:
                     helm_action = HelmAction.UPGRADE
@@ -205,16 +204,11 @@ def main() -> None:
             chart_dir = helm_dir / chart
             helm_install_cmd = helm_cmd + [
                 "--dependency-update",
-                "--namespace",
-                chart_namespace,
+                f"--namespace={chart_namespace}",
                 helm_action.value,
                 chart,
                 str(chart_dir),
             ]
-
-            # Set the debug option if desired
-            if args.debug:
-                helm_install_cmd.append("--debug")
 
             # Set the dry-run option if desired
             if args.dry_run:
