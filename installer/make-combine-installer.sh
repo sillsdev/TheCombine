@@ -32,7 +32,7 @@ while (( "$#" )) ; do
         error "Invalid version number, $OPT"
       fi
       ;;
-  *)
+    *)
       warning "Unrecognized option: $OPT"
       ;;
   esac
@@ -52,7 +52,7 @@ if [[ $NET_INSTALL == 0 ]] ; then
   fi
   source venv/bin/activate
   # Update the environment if necessary
-  python -m pip $((( DEBUG == 0)) && echo "-q" ) install --upgrade pip pip-tools
+  python -m pip $((( DEBUG == 0)) && echo "-q") install --upgrade pip pip-tools
   python -m piptools sync requirements.txt
 
   # Package The Combine for "offline" installation
