@@ -9,7 +9,7 @@ public class OtelService
     {
         var activitySource = new ActivitySource(OtelKernel.SourceName);
 
-        AddActivityListener();
+        // AddActivityListener();
 
         using (var activity = activitySource.StartActivity())
         {
@@ -27,17 +27,17 @@ public class OtelService
 
     }
 
-    private static void AddActivityListener()
-    {
-        var activityListener = new ActivityListener
-        {
-            ShouldListenTo = s => true,
-            SampleUsingParentId = (ref ActivityCreationOptions<string> activityOptions) => ActivitySamplingResult.AllData,
-            Sample = (ref ActivityCreationOptions<ActivityContext> activityOptions) => ActivitySamplingResult.AllData
-        };
-        ActivitySource.AddActivityListener(activityListener);
+    // private static void AddActivityListener()
+    // {
+    //     var activityListener = new ActivityListener
+    //     {
+    //         ShouldListenTo = s => true,
+    //         SampleUsingParentId = (ref ActivityCreationOptions<string> activityOptions) => ActivitySamplingResult.AllData,
+    //         Sample = (ref ActivityCreationOptions<ActivityContext> activityOptions) => ActivitySamplingResult.AllData
+    //     };
+    //     ActivitySource.AddActivityListener(activityListener);
 
-    }
+    // }
 
     public static void AddOtelInstrumentation(IServiceCollection services)
     {

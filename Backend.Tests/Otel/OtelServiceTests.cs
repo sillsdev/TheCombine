@@ -27,7 +27,7 @@ namespace Backend.Tests.Otel
             var services = new ServiceCollection();
             OtelService.AddOtelInstrumentation(services);
 
-            // AddActivityListener();
+            AddActivityListener();
 
             var activity = OtelService.AddOtelTag("test key", "test val");
             Console.WriteLine("result was " + activity);
