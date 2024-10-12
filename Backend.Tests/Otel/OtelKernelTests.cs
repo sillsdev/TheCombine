@@ -1,192 +1,104 @@
-// using System;
-// using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using Backend.Tests.Mocks;
+using BackendFramework.Interfaces;
+using Microsoft.AspNetCore.Http;
+using NUnit.Framework;
+using static BackendFramework.Otel.OtelKernel;
 
-// // using System.Collections.Generic;
-// using System.Diagnostics;
-// // using System.Linq;
-// using Backend.Tests.Mocks;
-// using BackendFramework.Interfaces;
-// // using BackendFramework.Otel;
-// // using Microsoft.Extensions.DependencyInjection;
+namespace Backend.Tests.Otel
+{
+    public class OtelKernelTests : IDisposable
+    {
+        private ILocationProvider _locationProvider = null!;
+        private LocationEnricher _locationEnricher = null!;
 
-// // using BackendFramework.Otel;
-// using NUnit.Framework;
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-// namespace Backend.Tests.Otel
-// {
-//     public class OtelKernelTests : IDisposable
-//     {
-//         private ILocationProvider _locationProvider = null!;
-//         private LocationEnricher _locationEnricher = null!;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _locationEnricher?.Dispose();
+            }
+        }
 
-//         public void Dispose()
-//         {
-//             Dispose(true);
-//             GC.SuppressFinalize(this);
-//         }
+        [Test]
+        public void BuildersSetSessionBaggageFromHeader()
+        {
 
-//         protected virtual void Dispose(bool disposing)
-//         {
-//             if (disposing)
-//             {
-//                 _locationEnricher?.Dispose();
-//             }
-//         }
+            // create mock request header
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["sessionId"] = "123";
 
-//         [SetUp]
-//         public void Setup()
-//         {
-//             // Setup for testing OnEndGetLocation
-//             _locationProvider = new LocationProviderMock();
-//             _locationEnricher = new LocationEnricher(_locationProvider);
+            // call methods
+            var activity = new Activity("testActivity").Start();
 
-//             // Setup for testing session retrieval from request
-//             // _handlerMock = new Mock<HttpMessageHandler>();
-//             // _handlerMock.Protected()
-//             // .Setup<Task<HttpResponseMessage>>(
-//             //     "SendAsync",
-//             //     ItExpr.IsAny<HttpRequestMessage>(),
-//             //     ItExpr.IsAny<CancellationToken>()
-//             // )
-//             // .ReturnsAsync(result)
-//             // .Verifiable();
+            TrackSession(activity, httpContext.Request);
 
+            // check that the id was added as tag
+            var baggage = activity.Baggage;
+            Assert.That(baggage, Is.Not.Null);
+            var testId = new Dictionary<string, string> {
+                {"sessionId", "123"}
+            };
+            Assert.That(baggage.Any(tag => tag.Key == "sessionId"));
+            Assert.That(baggage, Is.SupersetOf(testId));
+        }
 
-//         }
+        [Test]
+        public void OnEndSetsSessionTagFromBaggage()
+        {
+            // mock activity
+            var activity = new Activity("testActivity").Start();
+            activity.SetBaggage("sessionId", "test session id");
 
-//         // public void TestSessionIdIsTag()
-//         // {
+            _locationEnricher.OnEnd(activity);
+            var tags = activity.Tags;
+            Assert.That(tags, Is.Not.Null);
 
-//         //     var activity = new Activity("testActivity").Start();
-//         //     var services = new ServiceCollection();
-//         //     OtelService.AddOtelInstrumentation(services);
-//         //     var tags = activity.Tags;
-//         //     Assert.That(tags, Is.Not.Null);
-//         //     var testId = new Dictionary<string, string> {
-//         //         {"sessionnnaId", "123"}
-//         //     };
-//         //     List<KeyValuePair<string, string?>> list = (List<KeyValuePair<string, string?>>)tags;
-//         //     foreach (var x in tags)
-//         //     {
-//         //         Console.WriteLine(x);
-//         //     }
-//         //     Assert.That(tags, Is.SupersetOf(testId));
+            var testLocation = new Dictionary<string, string>
+            {
+                {"sessionId", "test session id"},
+            };
 
-
-//         // }
-
-//         // [Test]
-//         public void TestOnEndLocation()
-//         {
-//             // mock activity
-//             var activity = new Activity("testActivity").Start();
-//             _locationEnricher.OnEnd(activity);
-//             var tags = activity.Tags;
-//             Assert.That(tags, Is.Not.Null);
-//             // List<KeyValuePair<string, string?>> list = (List<KeyValuePair<string, string?>>)tags;
-//             // foreach (var x in tags)
-//             // {
-//             //     Console.WriteLine(x);
-//             // }
-//             var testLocation = new Dictionary<string, string>
-//             {
-//                 {"country", "test country"},
-//                 {"regionName", "test region"},
-//                 {"city", "city"}
-//             };
-
-//             // Assert.That(tags.Any(item => item == [test country]));
-//             Assert.That(tags, Is.SupersetOf(testLocation));
-
-//         }
-
-//         // [Test]
-//         // public void TestOnEndSession()
-//         // {
-//         //     // mock activity
-//         //     var activity = new Activity("testActivity").Start();
-
-//         //     _locationEnricher.OnEnd(activity);
-//         //     var tags = activity.Tags;
-//         //     Assert.That(tags, Is.Not.Null);
-//         //     // List<KeyValuePair<string, string?>> list = (List<KeyValuePair<string, string?>>)tags;
-//         //     // foreach (var x in tags)
-//         //     // {
-//         //     //     Console.WriteLine(x);
-//         //     // }
-//         //     var testLocation = new Dictionary<string, string>
-//         //     {
-//         //         {"sessionId", "123"},
-//         //     };
-
-//         //     // Assert.That(tags.Any(item => item == [test country]));
-//         //     Assert.That(tags, Is.SupersetOf(testLocation));
-
-//         // }
-
-//         [Test]
-//         public void OnEndSetsSessionTagFromBaggage()
-//         {
-//             // mock activity
-//             var activity = new Activity("testActivity").Start();
-//             activity.SetBaggage("sessionId", "test session id");
-
-//             _locationEnricher.OnEnd(activity);
-//             var tags = activity.Tags;
-//             Assert.That(tags, Is.Not.Null);
+            // Assert.That(tags.Any(item => item == [test country]));
+            Assert.That(tags, Is.SupersetOf(testLocation));
+        }
 
 
-//             // var baggage = activity.Baggage;
-//             // Assert.That(baggage, Is.Not.Null);
-//             // List<KeyValuePair<string, string?>> list = (List<KeyValuePair<string, string?>>)tags;
-//             // foreach (var x in tags)
-//             // {
-//             //     Console.WriteLine(x);
-//             // }
-//             var testLocation = new Dictionary<string, string>
-//             {
-//                 {"SESSIONID BAGGAGE", "test session id"},
-//             };
+        [Test]
+        public void OnEndSetsLocationTags()
+        {
 
-//             // Assert.That(tags.Any(item => item == [test country]));
-//             Assert.That(tags, Is.SupersetOf(testLocation));
+            _locationProvider = new LocationProviderMock();
+            _locationEnricher = new LocationEnricher(_locationProvider);
+            // mock activity
+            var activity = new Activity("testActivity").Start();
+            _locationEnricher.OnEnd(activity);
+            var tags = activity.Tags;
+            Assert.That(tags, Is.Not.Null);
 
-//         }
+            var testLocation = new Dictionary<string, string>
+            {
+                {"country", "test country"},
+                {"regionName", "test region"},
+                {"city", "city"}
+            };
 
+            Assert.That(tags, Is.SupersetOf(testLocation));
 
+        }
 
-//         [Test]
-//         public void SetBaggage()
-//         {
-//             // mock activity
-//             var activity = new Activity("testActivity").Start();
-//             activity.SetBaggage("sessionId", "test session id");
+        public void OnEndRedactsIp()
+        {
 
-//             _locationEnricher.OnEnd(activity);
-//             var tags = activity.Tags;
-//             Assert.That(tags, Is.Not.Null);
-
-
-//             // var baggage = activity.Baggage;
-//             // Assert.That(baggage, Is.Not.Null);
-//             // List<KeyValuePair<string, string?>> list = (List<KeyValuePair<string, string?>>)tags;
-//             // foreach (var x in tags)
-//             // {
-//             //     Console.WriteLine(x);
-//             // }
-//             var testLocation = new Dictionary<string, string>
-//             {
-//                 {"SESSIONID BAGGAGE", "test session id"},
-//             };
-
-//             // Assert.That(tags.Any(item => item == [test country]));
-//             Assert.That(tags, Is.SupersetOf(testLocation));
-
-//         }
-
-
-
-
-
-//     }
-// }
+        }
+    }
+}

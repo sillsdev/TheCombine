@@ -10,6 +10,8 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
+// using System.Net;
+using System.Net.Http;
 // using System.Net.Http;
 namespace BackendFramework.Otel
 {
@@ -23,13 +25,12 @@ namespace BackendFramework.Otel
             options.RecordException = true;
             options.EnrichWithHttpRequest = (activity, request) =>
             {
-                // GetContentLength(activity, request.Headers, "inbound.http.request.body.size");
-                AddSession(activity, request);
+                GetContentLength(activity, request.Headers, "inbound.http.request.body.size");
+                TrackSession(activity, request);
             };
             options.EnrichWithHttpResponse = (activity, response) =>
             {
-                // GetContentLength(activity, response.Headers, "inbound.http.response.body.size");
-                // AddSession(activity, response);
+                GetContentLength(activity, response.Headers, "inbound.http.response.body.size");
             };
         }
         [ExcludeFromCodeCoverage]
@@ -37,24 +38,21 @@ namespace BackendFramework.Otel
         {
             options.EnrichWithHttpRequestMessage = (activity, request) =>
             {
-                // GetContentLength(activity, request.Headers, "outbound.http.request.body.size");
+                GetContentLengthHttp(activity, request.Content!, "outbound.http.request.body.size");
                 if (request.RequestUri is not null)
                 {
                     if (!string.IsNullOrEmpty(request.RequestUri.Query))
                         activity.SetTag("url.query", request.RequestUri.Query);
                 }
-                // AddSession(activity, request);
             };
             options.EnrichWithHttpResponseMessage = (activity, response) =>
             {
-                // GetContentLength(activity, response.Headers, "outbound.http.response.body.size");
-                // AddSession(activity, response);
+                GetContentLengthHttp(activity, response.Content, "outbound.http.response.body.size");
             };
         }
 
-        internal static void AddSession(Activity activity, HttpRequest request)
+        internal static void TrackSession(Activity activity, HttpRequest request)
         {
-            // var header = (HeaderDictionary)headers;
             string? sessionId = request.Headers.TryGetValue("sessionId", out var values) ? values.FirstOrDefault() : null;
             if (sessionId != null)
             {
@@ -62,10 +60,18 @@ namespace BackendFramework.Otel
             }
         }
 
-        internal static void GetContentLength(Activity activity, object headers, string label)
+        internal static void GetContentLength(Activity activity, IHeaderDictionary headers, string label)
         {
-            var header = (HeaderDictionary)headers;
-            var contentLength = header.ContentLength;
+            var contentLength = headers.ContentLength;
+            if (contentLength.HasValue)
+            {
+                activity.SetTag(label, contentLength.Value);
+            }
+        }
+
+        internal static void GetContentLengthHttp(Activity activity, HttpContent? content, string label)
+        {
+            var contentLength = content?.Headers.ContentLength;
             if (contentLength.HasValue)
             {
                 activity.SetTag(label, contentLength.Value);
@@ -103,10 +109,10 @@ namespace BackendFramework.Otel
                         City = response?.city,
                     };
                     data?.AddTag("country", location.Country);
-                    data?.AddTag("region", location.Region);
+                    data?.AddTag("regionName", location.Region);
                     data?.AddTag("city", location.City);
                 }
-                data?.SetTag("SESSIONID BAGGAGE", data?.GetBaggageItem("sessionId"));
+                data?.SetTag("sessionId", data?.GetBaggageItem("sessionId"));
                 if (uriPath != null && uriPath.Contains(locationUri))
                 {
                     data?.SetTag("url.full", "");
