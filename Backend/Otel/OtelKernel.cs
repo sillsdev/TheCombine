@@ -56,7 +56,7 @@ namespace BackendFramework.Otel
             string? sessionId = request.Headers.TryGetValue("sessionId", out var values) ? values.FirstOrDefault() : null;
             if (sessionId != null)
             {
-                activity.SetBaggage("sessionId", sessionId);
+                activity.SetBaggage("sessionBaggage", sessionId);
             }
         }
 
@@ -112,7 +112,7 @@ namespace BackendFramework.Otel
                     data?.AddTag("regionName", location.Region);
                     data?.AddTag("city", location.City);
                 }
-                data?.SetTag("sessionId", data?.GetBaggageItem("sessionId"));
+                data?.SetTag("sessionId", data?.GetBaggageItem("sessionBaggage"));
                 if (uriPath != null && uriPath.Contains(locationUri))
                 {
                     data?.SetTag("url.full", "");

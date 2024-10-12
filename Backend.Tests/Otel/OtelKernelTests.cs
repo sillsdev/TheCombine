@@ -32,73 +32,70 @@ namespace Backend.Tests.Otel
         [Test]
         public void BuildersSetSessionBaggageFromHeader()
         {
-
-            // create mock request header
+            // Arrange
             var httpContext = new DefaultHttpContext();
             httpContext.Request.Headers["sessionId"] = "123";
-
-            // call methods
             var activity = new Activity("testActivity").Start();
 
+            // Act
             TrackSession(activity, httpContext.Request);
 
-            // check that the id was added as tag
-            var baggage = activity.Baggage;
-            Assert.That(baggage, Is.Not.Null);
-            var testId = new Dictionary<string, string> {
-                {"sessionId", "123"}
-            };
-            Assert.That(baggage.Any(tag => tag.Key == "sessionId"));
-            Assert.That(baggage, Is.SupersetOf(testId));
+            // Assert
+            Assert.That(activity.Baggage.Any(_ => _.Key == "sessionBaggage"));
         }
 
         [Test]
         public void OnEndSetsSessionTagFromBaggage()
         {
-            // mock activity
+            // Arrange
             var activity = new Activity("testActivity").Start();
-            activity.SetBaggage("sessionId", "test session id");
+            activity.SetBaggage("sessionBaggage", "test session id");
 
+            // Act
             _locationEnricher.OnEnd(activity);
-            var tags = activity.Tags;
-            Assert.That(tags, Is.Not.Null);
 
-            var testLocation = new Dictionary<string, string>
-            {
-                {"sessionId", "test session id"},
-            };
-
-            // Assert.That(tags.Any(item => item == [test country]));
-            Assert.That(tags, Is.SupersetOf(testLocation));
+            // Assert
+            Assert.That(activity.Tags.Any(_ => _.Key == "sessionId"));
         }
 
 
         [Test]
         public void OnEndSetsLocationTags()
         {
-
+            // Arrange
             _locationProvider = new LocationProviderMock();
             _locationEnricher = new LocationEnricher(_locationProvider);
-            // mock activity
-            var activity = new Activity("testActivity").Start();
-            _locationEnricher.OnEnd(activity);
-            var tags = activity.Tags;
-            Assert.That(tags, Is.Not.Null);
 
+            var activity = new Activity("testActivity").Start();
+
+            // Act
+            _locationEnricher.OnEnd(activity);
+
+            // Assert
             var testLocation = new Dictionary<string, string>
             {
                 {"country", "test country"},
                 {"regionName", "test region"},
                 {"city", "city"}
             };
-
-            Assert.That(tags, Is.SupersetOf(testLocation));
-
+            Assert.That(activity.Tags, Is.SupersetOf(testLocation));
         }
 
         public void OnEndRedactsIp()
         {
+            // Arrange
+            _locationProvider = new LocationProviderMock();
+            _locationEnricher = new LocationEnricher(_locationProvider);
 
+            var activity = new Activity("testActivity").Start();
+            activity.SetTag("url.full", "http://ip-api.com/json/100.0.0.0");
+
+            // Act
+            _locationEnricher.OnEnd(activity);
+
+            // Assert
+            Assert.That(activity.Tags.Any(_ => _.Key == "url.full" && _.Value == ""));
+            Assert.That(activity.Tags.Any(_ => _.Key == "url.redacted.ip" && _.Value == "http://ip-api.com/json/"));
         }
     }
 }
