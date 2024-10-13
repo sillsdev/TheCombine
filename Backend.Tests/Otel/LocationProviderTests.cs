@@ -67,7 +67,6 @@ namespace Backend.Tests.Otel
                 .Returns(httpClient);
 
             _locationProvider = new LocationProvider(_contextAccessor, _memoryCache!, _httpClientFactory.Object);
-
         }
 
         public static void Verify(Mock<HttpMessageHandler> mock, Func<HttpRequestMessage, bool> match)

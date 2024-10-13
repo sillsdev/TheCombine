@@ -18,6 +18,5 @@ namespace Backend.Tests.Mocks
             };
             return Task.FromResult<LocationApi?>(location);
         }
-
     }
 }

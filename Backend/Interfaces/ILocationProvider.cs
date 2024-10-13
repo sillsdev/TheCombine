@@ -7,5 +7,4 @@ namespace BackendFramework.Interfaces
     {
         Task<LocationApi?> GetLocation();
     }
-
 }

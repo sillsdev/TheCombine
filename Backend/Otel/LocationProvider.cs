@@ -1,5 +1,3 @@
-
-
 using System;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -21,7 +19,6 @@ namespace BackendFramework.Otel
             _contextAccessor = contextAccessor;
             _memoryCache = memoryCache;
             _httpClientFactory = httpClientFactory;
-
         }
 
         public async Task<LocationApi?> GetLocation()
@@ -34,21 +31,22 @@ namespace BackendFramework.Otel
                 var ipAddressWithoutPort = ipAddress?.Split(':')[0];
 
                 LocationApi? location = await _memoryCache.GetOrCreateAsync(
-                "location_" + ipAddressWithoutPort,
-                async (cacheEntry) =>
-                {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
-                    try
+                    "location_" + ipAddressWithoutPort,
+                    async (cacheEntry) =>
                     {
-                        return await GetLocationFromIp(ipAddressWithoutPort);
+                        cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
+                        try
+                        {
+                            return await GetLocationFromIp(ipAddressWithoutPort);
+                        }
+                        catch
+                        {
+                            // TODO consider what to have in catch
+                            Console.WriteLine("Attempted to get location but exception");
+                            throw;
+                        }
                     }
-                    catch (Exception)
-                    {
-                        // TODO consider what to have in catch
-                        Console.WriteLine("Attempted to get location but exception");
-                        throw;
-                    }
-                });
+                );
                 return location;
             }
             return null;

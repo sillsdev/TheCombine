@@ -295,7 +295,6 @@ namespace BackendFramework
             services.AddHttpContextAccessor();
             services.AddTransient<ILocationProvider, LocationProvider>();
             services.AddOpenTelemetryInstrumentation();
-
         }
 
         /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

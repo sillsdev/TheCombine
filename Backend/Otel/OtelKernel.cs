@@ -10,14 +10,55 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
-// using System.Net;
 using System.Net.Http;
-// using System.Net.Http;
 namespace BackendFramework.Otel
 {
     public static class OtelKernel
     {
         public const string SourceName = "Backend-Otel";
+
+        public static void AddOpenTelemetryInstrumentation(this IServiceCollection services)
+        {
+            var appResourceBuilder = ResourceBuilder.CreateDefault();
+            // todo: include version 
+            services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
+                tracerProviderBuilder
+                    .SetResourceBuilder(appResourceBuilder)
+                    .AddSource(SourceName)
+                    .AddProcessor<LocationEnricher>()
+                    .AddAspNetCoreInstrumentation(AspNetCoreBuilder)
+                    .AddHttpClientInstrumentation(HttpClientBuilder)
+                    .AddConsoleExporter()
+                    .AddOtlpExporter()
+            );
+        }
+
+        internal static void TrackSession(Activity activity, HttpRequest request)
+        {
+            string? sessionId = request.Headers.TryGetValue("sessionId", out var values) ? values.FirstOrDefault() : null;
+            if (sessionId is not null)
+            {
+                activity.SetBaggage("sessionBaggage", sessionId);
+            }
+        }
+
+        internal static void GetContentLength(Activity activity, IHeaderDictionary headers, string label)
+        {
+            var contentLength = headers.ContentLength;
+            if (contentLength.HasValue)
+            {
+                activity.SetTag(label, contentLength.Value);
+            }
+        }
+
+        internal static void GetContentLengthHttp(Activity activity, HttpContent? content, string label)
+        {
+            var contentLength = content?.Headers.ContentLength;
+            if (contentLength.HasValue)
+            {
+                activity.SetTag(label, contentLength.Value);
+            }
+        }
 
         [ExcludeFromCodeCoverage]
         private static void AspNetCoreBuilder(AspNetCoreTraceInstrumentationOptions options)
@@ -51,55 +92,13 @@ namespace BackendFramework.Otel
             };
         }
 
-        internal static void TrackSession(Activity activity, HttpRequest request)
-        {
-            string? sessionId = request.Headers.TryGetValue("sessionId", out var values) ? values.FirstOrDefault() : null;
-            if (sessionId != null)
-            {
-                activity.SetBaggage("sessionBaggage", sessionId);
-            }
-        }
-
-        internal static void GetContentLength(Activity activity, IHeaderDictionary headers, string label)
-        {
-            var contentLength = headers.ContentLength;
-            if (contentLength.HasValue)
-            {
-                activity.SetTag(label, contentLength.Value);
-            }
-        }
-
-        internal static void GetContentLengthHttp(Activity activity, HttpContent? content, string label)
-        {
-            var contentLength = content?.Headers.ContentLength;
-            if (contentLength.HasValue)
-            {
-                activity.SetTag(label, contentLength.Value);
-            }
-        }
-
-        public static void AddOpenTelemetryInstrumentation(this IServiceCollection services)
-        {
-            var appResourceBuilder = ResourceBuilder.CreateDefault();
-            // todo: include version 
-            services.AddOpenTelemetry().WithTracing(tracerProviderBuilder => tracerProviderBuilder
-            .SetResourceBuilder(appResourceBuilder)
-            .AddSource(SourceName)
-            .AddProcessor<LocationEnricher>()
-            .AddAspNetCoreInstrumentation(AspNetCoreBuilder)
-            .AddHttpClientInstrumentation(HttpClientBuilder)
-            .AddConsoleExporter()
-            .AddOtlpExporter()
-            );
-        }
-
         internal class LocationEnricher(ILocationProvider locationProvider) : BaseProcessor<Activity>
         {
             public override async void OnEnd(Activity data)
             {
                 string? uriPath = (string?)data.GetTagItem("url.full");
                 string locationUri = LocationProvider.locationGetterUri;
-                if (uriPath == null || !uriPath.Contains(locationUri))
+                if (uriPath is null || !uriPath.Contains(locationUri))
                 {
                     LocationApi? response = await locationProvider.GetLocation();
                     var location = new
@@ -113,7 +112,7 @@ namespace BackendFramework.Otel
                     data?.AddTag("city", location.City);
                 }
                 data?.SetTag("sessionId", data?.GetBaggageItem("sessionBaggage"));
-                if (uriPath != null && uriPath.Contains(locationUri))
+                if (uriPath is not null && uriPath.Contains(locationUri))
                 {
                     data?.SetTag("url.full", "");
                     data?.SetTag("url.redacted.ip", LocationProvider.locationGetterUri);

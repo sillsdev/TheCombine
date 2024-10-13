@@ -120,7 +120,6 @@ namespace BackendFramework.Repositories
             await _wordDatabase.Words.InsertOneAsync(word);
             await AddFrontier(word);
             return word;
-
         }
 
         /// <summary> Adds a list of <see cref="Word"/>s to the WordsCollection and Frontier </summary>

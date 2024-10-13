@@ -63,7 +63,6 @@ namespace BackendFramework.Services
         /// <returns> A bool: success of operation </returns>
         public async Task<bool> Delete(string projectId, string userId, string wordId)
         {
-            // TODO review tag description
             OtelService.AddOtelTag(otelTagName, "deleting a word");
 
             var wordIsInFrontier = await _wordRepo.DeleteFrontier(projectId, wordId);

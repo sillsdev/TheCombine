@@ -1,4 +1,3 @@
-// using System.Diagnostics;
 using System.Diagnostics;
 using BackendFramework.Otel;
 using Microsoft.Extensions.DependencyInjection;
