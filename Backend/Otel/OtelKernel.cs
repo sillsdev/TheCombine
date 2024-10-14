@@ -43,7 +43,7 @@ namespace BackendFramework.Otel
             }
         }
 
-        internal static void GetContentLength(Activity activity, IHeaderDictionary headers, string label)
+        internal static void GetContentLengthAspNet(Activity activity, IHeaderDictionary headers, string label)
         {
             var contentLength = headers.ContentLength;
             if (contentLength.HasValue)
@@ -67,12 +67,12 @@ namespace BackendFramework.Otel
             options.RecordException = true;
             options.EnrichWithHttpRequest = (activity, request) =>
             {
-                GetContentLength(activity, request.Headers, "inbound.http.request.body.size");
+                GetContentLengthAspNet(activity, request.Headers, "inbound.http.request.body.size");
                 TrackSession(activity, request);
             };
             options.EnrichWithHttpResponse = (activity, response) =>
             {
-                GetContentLength(activity, response.Headers, "inbound.http.response.body.size");
+                GetContentLengthAspNet(activity, response.Headers, "inbound.http.response.body.size");
             };
         }
         [ExcludeFromCodeCoverage]
