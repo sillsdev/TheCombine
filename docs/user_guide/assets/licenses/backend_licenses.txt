@@ -20,13 +20,6 @@ Authors: Legion of the Bouncy Castle Inc.
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
-PackageId: Castle.Core
-PackageVersion: 4.3.1
-PackageProjectUrl: http://www.castleproject.org/
-Authors: Castle Project Contributors
-License: Apache-2.0
-LicenseUrl: http://www.apache.org/licenses/LICENSE-2.0.html
-###############################################################
 PackageId: DnsClient
 PackageVersion: 1.6.1
 PackageProjectUrl: http://dnsclient.michaco.net/
@@ -81,12 +74,6 @@ PackageProjectUrl: http://www.mimekit.net/
 Authors: Jeffrey Stedfast
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
-###############################################################
-PackageId: MemoryCache.Testing.Moq
-PackageVersion: 1.2.2
-PackageProjectUrl: https://github.com/rgvlee/MemoryCache.Testing
-Authors: rgvlee
-LicenseUrl: https://aka.ms/deprecateLicenseUrl
 ###############################################################
 PackageId: Microsoft.AspNetCore.Authentication.JwtBearer
 PackageVersion: 8.0.3
@@ -193,13 +180,6 @@ Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
-PackageId: Microsoft.Extensions.Http
-PackageVersion: 2.1.1
-PackageProjectUrl: https://asp.net/
-Authors: Microsoft
-License: Apache-2.0
-LicenseUrl: https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
-###############################################################
 PackageId: Microsoft.Extensions.Logging
 PackageVersion: 8.0.0
 PackageProjectUrl: https://dot.net/
@@ -305,13 +285,6 @@ Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
-PackageId: Microsoft.Win32.Primitives
-PackageVersion: 4.3.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
-###############################################################
 PackageId: Microsoft.Win32.Registry
 PackageVersion: 5.0.0
 PackageProjectUrl: https://github.com/dotnet/runtime
@@ -366,27 +339,6 @@ PackageProjectUrl: https://github.com/mono/mono.posix
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
-###############################################################
-PackageId: Moq
-PackageVersion: 4.9.0
-PackageProjectUrl: https://github.com/moq/moq4
-Authors: Daniel Cazzulino, kzu
-License: https://raw.githubusercontent.com/moq/moq4/master/License.txt
-LicenseUrl: https://raw.githubusercontent.com/moq/moq4/master/License.txt
-###############################################################
-PackageId: Moq.Contrib.HttpClient
-PackageVersion: 1.4.0
-PackageProjectUrl: https://github.com/maxkagamine/Moq.Contrib.HttpClient
-Authors: Max Kagamine
-License: MIT
-LicenseUrl: https://licenses.nuget.org/MIT
-###############################################################
-PackageId: NETStandard.Library
-PackageVersion: 1.6.1
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: Newtonsoft.Json
 PackageVersion: 13.0.2
@@ -451,13 +403,6 @@ Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
-PackageId: OpenTelemetry.Instrumentation.Runtime
-PackageVersion: 1.8.1
-PackageProjectUrl: https://opentelemetry.io/
-Authors: OpenTelemetry authors
-License: Apache-2.0
-LicenseUrl: https://licenses.nuget.org/Apache-2.0
-###############################################################
 PackageId: RelaxNG
 PackageVersion: 3.2.3
 PackageProjectUrl: https://github.com/mono/mono/tree/master/mcs/class/Commons.Xml.Relaxng
@@ -469,12 +414,6 @@ PackageId: relaxngDatatype
 PackageVersion: 1.0.0.39
 PackageProjectUrl: https://github.com/josephmyers/relaxng-tenuto
 Authors: relaxngDatatype
-###############################################################
-PackageId: rgvlee.Core
-PackageVersion: 1.0.0
-PackageProjectUrl: https://github.com/rgvlee/rgvlee.Core
-Authors: rgvlee
-LicenseUrl: https://aka.ms/deprecateLicenseUrl
 ###############################################################
 PackageId: runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl
 PackageVersion: 4.3.2
@@ -498,13 +437,6 @@ License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: runtime.native.System
-PackageVersion: 4.3.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
-###############################################################
-PackageId: runtime.native.System.IO.Compression
 PackageVersion: 4.3.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
@@ -669,7 +601,7 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: System.AppContext
-PackageVersion: 4.3.0
+PackageVersion: 4.1.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: http://go.microsoft.com/fwlink/?LinkId=329770
@@ -696,54 +628,12 @@ Authors: Microsoft
 License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
-PackageId: System.Collections.NonGeneric
-PackageVersion: 4.3.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
-###############################################################
-PackageId: System.Collections.Specialized
-PackageVersion: 4.3.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
-###############################################################
-PackageId: System.ComponentModel
-PackageVersion: 4.3.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
-###############################################################
-PackageId: System.ComponentModel.Primitives
-PackageVersion: 4.3.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
-###############################################################
-PackageId: System.ComponentModel.TypeConverter
-PackageVersion: 4.3.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
-###############################################################
 PackageId: System.Configuration.ConfigurationManager
 PackageVersion: 6.0.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
-###############################################################
-PackageId: System.Console
-PackageVersion: 4.3.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: System.Diagnostics.Debug
 PackageVersion: 4.3.0
@@ -758,20 +648,6 @@ PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
-###############################################################
-PackageId: System.Diagnostics.Tools
-PackageVersion: 4.3.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
-###############################################################
-PackageId: System.Diagnostics.TraceSource
-PackageVersion: 4.3.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: System.Diagnostics.Tracing
 PackageVersion: 4.3.0
@@ -788,7 +664,7 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: System.Dynamic.Runtime
-PackageVersion: 4.3.0
+PackageVersion: 4.0.11
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: http://go.microsoft.com/fwlink/?LinkId=329770
@@ -836,20 +712,6 @@ Authors: Microsoft
 License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
-PackageId: System.IO.Compression
-PackageVersion: 4.3.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
-###############################################################
-PackageId: System.IO.Compression.ZipFile
-PackageVersion: 4.3.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
-###############################################################
 PackageId: System.IO.FileSystem
 PackageVersion: 4.3.0
 PackageProjectUrl: https://dot.net/
@@ -879,14 +741,7 @@ License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: System.Linq.Expressions
-PackageVersion: 4.3.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
-###############################################################
-PackageId: System.Linq.Queryable
-PackageVersion: 4.3.0
+PackageVersion: 4.1.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: http://go.microsoft.com/fwlink/?LinkId=329770
@@ -906,13 +761,6 @@ Authors: Microsoft
 License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
-PackageId: System.Net.Http.Json
-PackageVersion: 6.0.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: MIT
-LicenseUrl: https://licenses.nuget.org/MIT
-###############################################################
 PackageId: System.Net.Primitives
 PackageVersion: 4.3.0
 PackageProjectUrl: https://dot.net/
@@ -920,15 +768,8 @@ Authors: Microsoft
 License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
-PackageId: System.Net.Sockets
-PackageVersion: 4.3.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
-###############################################################
 PackageId: System.ObjectModel
-PackageVersion: 4.3.0
+PackageVersion: 4.0.12
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: http://go.microsoft.com/fwlink/?LinkId=329770
@@ -942,28 +783,28 @@ License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: System.Reflection.Emit
-PackageVersion: 4.3.0
+PackageVersion: 4.0.1
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: System.Reflection.Emit.ILGeneration
-PackageVersion: 4.3.0
+PackageVersion: 4.0.1
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: System.Reflection.Emit.Lightweight
-PackageVersion: 4.3.0
+PackageVersion: 4.0.1
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: System.Reflection.Extensions
-PackageVersion: 4.3.0
+PackageVersion: 4.0.1
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: http://go.microsoft.com/fwlink/?LinkId=329770
@@ -977,7 +818,7 @@ License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: System.Reflection.TypeExtensions
-PackageVersion: 4.3.0
+PackageVersion: 4.1.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: http://go.microsoft.com/fwlink/?LinkId=329770
@@ -998,8 +839,8 @@ License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: System.Runtime.CompilerServices.Unsafe
-PackageVersion: 6.0.0
-PackageProjectUrl: https://dot.net/
+PackageVersion: 5.0.0
+PackageProjectUrl: https://github.com/dotnet/runtime
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
@@ -1026,7 +867,7 @@ License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: System.Runtime.InteropServices.RuntimeInformation
-PackageVersion: 4.3.0
+PackageVersion: 4.0.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: http://go.microsoft.com/fwlink/?LinkId=329770
@@ -1130,33 +971,19 @@ Authors: Microsoft
 License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
-PackageId: System.Text.Encoding.Extensions
-PackageVersion: 4.3.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
-###############################################################
 PackageId: System.Text.Encodings.Web
-PackageVersion: 6.0.0
-PackageProjectUrl: https://dot.net/
+PackageVersion: 4.7.2
+PackageProjectUrl: https://github.com/dotnet/corefx
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: System.Text.Json
-PackageVersion: 6.0.0
-PackageProjectUrl: https://dot.net/
+PackageVersion: 4.7.2
+PackageProjectUrl: https://github.com/dotnet/corefx
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
-###############################################################
-PackageId: System.Text.RegularExpressions
-PackageVersion: 4.3.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: System.Threading
 PackageVersion: 4.3.0
@@ -1166,20 +993,6 @@ License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: System.Threading.Tasks
-PackageVersion: 4.3.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
-###############################################################
-PackageId: System.Threading.Tasks.Extensions
-PackageVersion: 4.3.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
-###############################################################
-PackageId: System.Threading.Timer
 PackageVersion: 4.3.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
@@ -1199,27 +1012,6 @@ PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
-###############################################################
-PackageId: System.Xml.ReaderWriter
-PackageVersion: 4.3.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
-###############################################################
-PackageId: System.Xml.XDocument
-PackageVersion: 4.3.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
-###############################################################
-PackageId: System.Xml.XmlDocument
-PackageVersion: 4.3.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: Tenuto
 PackageVersion: 1.0.0.39
