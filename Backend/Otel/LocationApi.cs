@@ -2,8 +2,8 @@ namespace BackendFramework.Otel;
 
 public class LocationApi
 {
-    public string? status { get; set; }
-    public string? country { get; set; }
-    public string? regionName { get; set; }
-    public string? city { get; set; }
+    public string? Status { get; set; }
+    public string? Country { get; set; }
+    public string? RegionName { get; set; }
+    public string? City { get; set; }
 }

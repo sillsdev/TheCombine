@@ -16,12 +16,12 @@ namespace Backend.Tests.Otel
     public class LocationProviderTests
     {
         public const string locationGetterUri = "http://ip-api.com/json/";
+
         private IHttpContextAccessor? _contextAccessor;
         private IMemoryCache? _memoryCache;
+        private Mock<HttpMessageHandler>? _handlerMock;
         private Mock<IHttpClientFactory>? _httpClientFactory;
         private LocationProvider? _locationProvider;
-
-        private Mock<HttpMessageHandler>? _handlerMock;
 
         [SetUp]
         public void Setup()

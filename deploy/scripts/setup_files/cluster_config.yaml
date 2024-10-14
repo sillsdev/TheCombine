@@ -3,9 +3,9 @@ clusters:
   standard:
     - nginx-ingress-controller
   development:
-    - otel
     - cert-manager
     - nginx-ingress-controller
+    - otel
   rancher:
     - rancher-ui
   cert-manager:

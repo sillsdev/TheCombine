@@ -1,23 +1,24 @@
 using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BackendFramework.Otel;
-
-public class OtelService
+namespace BackendFramework.Otel
 {
-    public static Activity? AddOtelTag(string key, object? value)
+    public class OtelService
     {
-        var activitySource = new ActivitySource(OtelKernel.SourceName);
-
-        using (var activity = activitySource.StartActivity())
+        public static Activity? AddOtelTag(string key, object? value)
         {
-            activity?.AddTag(key, value);
-            return activity;
-        }
-    }
+            var activitySource = new ActivitySource(OtelKernel.SourceName);
 
-    public static void AddOtelInstrumentation(IServiceCollection services)
-    {
-        services.AddOpenTelemetryInstrumentation();
+            using (var activity = activitySource.StartActivity())
+            {
+                activity?.AddTag(key, value);
+                return activity;
+            }
+        }
+
+        public static void AddOtelInstrumentation(IServiceCollection services)
+        {
+            services.AddOpenTelemetryInstrumentation();
+        }
     }
 }

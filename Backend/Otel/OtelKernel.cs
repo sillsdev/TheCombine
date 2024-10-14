@@ -1,6 +1,9 @@
 using System.Diagnostics;
-using BackendFramework.Interfaces;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Net.Http;
+using BackendFramework.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry;
 using OpenTelemetry.Instrumentation.AspNetCore;
@@ -8,9 +11,7 @@ using OpenTelemetry.Instrumentation.Http;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
-using System.Net.Http;
+
 namespace BackendFramework.Otel
 {
     public static class OtelKernel
@@ -103,9 +104,9 @@ namespace BackendFramework.Otel
                     LocationApi? response = await locationProvider.GetLocation();
                     var location = new
                     {
-                        Country = response?.country,
-                        Region = response?.regionName,
-                        City = response?.city,
+                        Country = response?.Country,
+                        Region = response?.RegionName,
+                        City = response?.City,
                     };
                     data?.AddTag("country", location.Country);
                     data?.AddTag("regionName", location.Region);

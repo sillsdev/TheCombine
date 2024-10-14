@@ -11,10 +11,10 @@ namespace Backend.Tests.Mocks
             LocationApi location = new LocationApi
             {
                 // note that status is not currently being added as a tag
-                status = "success",
-                country = "test country",
-                regionName = "test region",
-                city = "city"
+                Status = "success",
+                Country = "test country",
+                RegionName = "test region",
+                City = "city"
             };
             return Task.FromResult<LocationApi?>(location);
         }
