@@ -52,7 +52,7 @@ def parse_args() -> argparse.Namespace:
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     # Arguments used by the Kubernetes tools
-    add_kube_opts(parser)
+    add_kube_opts(parser, add_debug=False)
     # Arguments used by Helm
     add_helm_opts(parser)
     # Arguments specific to setting up The Combine
@@ -187,8 +187,7 @@ def main() -> None:
             if chart in installed_charts:
                 if args.clean:
                     # Delete existing chart if --clean specified
-                    delete_cmd = helm_cmd + ["--namespace", chart_namespace, "delete", chart]
-                    logging.debug(delete_cmd)
+                    delete_cmd = helm_cmd + [f"--namespace={chart_namespace}", "delete", chart]
                     run_cmd(delete_cmd, print_cmd=not args.quiet, print_output=True)
                 else:
                     helm_action = HelmAction.UPGRADE
@@ -204,8 +203,8 @@ def main() -> None:
             # Create the base helm install command
             chart_dir = helm_dir / chart
             helm_install_cmd = helm_cmd + [
-                "--namespace",
-                chart_namespace,
+                "--dependency-update",
+                f"--namespace={chart_namespace}",
                 helm_action.value,
                 chart,
                 str(chart_dir),
@@ -251,15 +250,7 @@ def main() -> None:
             for variable in target_vars:
                 helm_install_cmd.extend(["--set", variable])
 
-            # Update chart dependencies
-            # Note that this operation is performed on the local helm charts
-            # so the kubeconfig and context arguments are not passed to the
-            # helm command.
-            helm_deps_cmd = ["helm", "dependency", "update", str(chart_dir)]
-            logging.debug(helm_deps_cmd)
-            run_cmd(helm_deps_cmd, print_cmd=not args.quiet, print_output=True)
-
-            logging.debug(helm_install_cmd)
+            # Install the chart
             run_cmd(helm_install_cmd, print_cmd=not args.quiet, print_output=True)
 
 

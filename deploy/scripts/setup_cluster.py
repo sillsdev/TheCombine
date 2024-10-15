@@ -26,7 +26,7 @@ def parse_args() -> argparse.Namespace:
         description="Build containerd container images for project.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    add_kube_opts(parser)
+    add_kube_opts(parser, add_debug=False)
     add_helm_opts(parser)
     parser.add_argument(
         "--chart-dir", help="Directory for the chart files when doing an airgap installation."
@@ -37,11 +37,18 @@ def parse_args() -> argparse.Namespace:
         help="Configuration file for the cluster type(s).",
         default=str(scripts_dir / "setup_files" / "cluster_config.yaml"),
     )
-    parser.add_argument(
+    logging_group = parser.add_mutually_exclusive_group()
+    logging_group.add_argument(
         "--quiet",
         "-q",
         action="store_true",
         help="Print less output information.",
+    )
+    logging_group.add_argument(
+        "--debug",
+        "-d",
+        action="store_true",
+        help="Print extra debugging information.",
     )
     parser.add_argument(
         "--type",
