@@ -38,7 +38,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
       - name: Build maintenance image
         run: |
-          deploy/scripts/build.py --components maintenance
+          deploy/scripts/build.py --components maintenance --debug
         shell: bash
       - name: Image digest
         run: |
