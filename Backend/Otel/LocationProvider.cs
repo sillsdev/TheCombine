@@ -24,7 +24,7 @@ namespace BackendFramework.Otel
         public async Task<LocationApi?> GetLocation()
         {
             // note: adding any activity tags in this function will cause overflow
-            // because function called on each activity in OtelKernel
+            // because OtelKernel calls the function for each activity
             if (_contextAccessor.HttpContext is { } context)
             {
                 var ipAddress = context.GetServerVariable("HTTP_X_FORWARDED_FOR") ?? context.Connection.RemoteIpAddress?.ToString();

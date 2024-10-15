@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Backend.Tests.Mocks;
-using BackendFramework.Interfaces;
 using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
 using static BackendFramework.Otel.OtelKernel;
@@ -12,7 +11,6 @@ namespace Backend.Tests.Otel
 {
     public class OtelKernelTests : IDisposable
     {
-        private ILocationProvider _locationProvider = null!;
         private LocationEnricher _locationEnricher = null!;
 
         public void Dispose()
@@ -63,9 +61,7 @@ namespace Backend.Tests.Otel
         public void OnEndSetsLocationTags()
         {
             // Arrange
-            _locationProvider = new LocationProviderMock();
-            _locationEnricher = new LocationEnricher(_locationProvider);
-
+            _locationEnricher = new LocationEnricher(new LocationProviderMock());
             var activity = new Activity("testActivity").Start();
 
             // Act
@@ -84,8 +80,7 @@ namespace Backend.Tests.Otel
         public void OnEndRedactsIp()
         {
             // Arrange
-            _locationProvider = new LocationProviderMock();
-            _locationEnricher = new LocationEnricher(_locationProvider);
+            _locationEnricher = new LocationEnricher(new LocationProviderMock());
 
             var activity = new Activity("testActivity").Start();
             activity.SetTag("url.full", "http://ip-api.com/json/100.0.0.0");

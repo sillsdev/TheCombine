@@ -21,7 +21,6 @@ namespace BackendFramework.Otel
         public static void AddOpenTelemetryInstrumentation(this IServiceCollection services)
         {
             var appResourceBuilder = ResourceBuilder.CreateDefault();
-            // todo: include version 
             services.AddOpenTelemetry().WithTracing(tracerProviderBuilder =>
                 tracerProviderBuilder
                     .SetResourceBuilder(appResourceBuilder)
@@ -104,17 +103,19 @@ namespace BackendFramework.Otel
                     LocationApi? response = await locationProvider.GetLocation();
                     var location = new
                     {
-                        Country = response?.Country,
-                        Region = response?.RegionName,
-                        City = response?.City,
+                        response?.Country,
+                        response?.RegionName,
+                        response?.City,
                     };
                     data?.AddTag("country", location.Country);
-                    data?.AddTag("regionName", location.Region);
+                    data?.AddTag("regionName", location.RegionName);
                     data?.AddTag("city", location.City);
                 }
                 data?.SetTag("sessionId", data?.GetBaggageItem("sessionBaggage"));
                 if (uriPath is not null && uriPath.Contains(locationUri))
                 {
+                    // When getting location externally, url.full includes site URI and user IP. 
+                    // In such cases, only add url without IP information to traces.
                     data?.SetTag("url.full", "");
                     data?.SetTag("url.redacted.ip", LocationProvider.locationGetterUri);
                 }

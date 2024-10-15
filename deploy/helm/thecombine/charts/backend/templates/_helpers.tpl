@@ -11,11 +11,6 @@
   {{- end }}
 {{- end }}
 
-{{/* Build Honeycomb team header for OTEL_EXPORTER_OTLP_HEADERS */}}
-{{- define "backend.honeycombTeamHeader" -}}
-  {{- printf "x-honeycomb-team=%s" .Values.global.honeycombSecretKey }}
-{{- end}}
-
 {{/* Build OTEL service name based on target */}}
 {{- define "backend.otelServiceName" -}}
   {{- if eq .Values.global.serverName "thecombine.localhost" }}

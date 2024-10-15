@@ -17,11 +17,11 @@ namespace Backend.Tests.Otel
     {
         public const string locationGetterUri = "http://ip-api.com/json/";
 
-        private IHttpContextAccessor? _contextAccessor;
-        private IMemoryCache? _memoryCache;
-        private Mock<HttpMessageHandler>? _handlerMock;
-        private Mock<IHttpClientFactory>? _httpClientFactory;
-        private LocationProvider? _locationProvider;
+        private IHttpContextAccessor _contextAccessor = null!;
+        private IMemoryCache _memoryCache = null!;
+        private Mock<HttpMessageHandler> _handlerMock = null!;
+        private Mock<IHttpClientFactory> _httpClientFactory = null!;
+        private LocationProvider _locationProvider = null!;
 
         [SetUp]
         public void Setup()
@@ -41,9 +41,9 @@ namespace Backend.Tests.Otel
             var services = new ServiceCollection();
             services.AddMemoryCache();
             var serviceProvider = services.BuildServiceProvider();
-            _memoryCache = serviceProvider.GetService<IMemoryCache>();
+            _memoryCache = serviceProvider.GetService<IMemoryCache>()!;
 
-            HttpResponseMessage result = new HttpResponseMessage()
+            var result = new HttpResponseMessage()
             {
                 StatusCode = HttpStatusCode.OK,
                 Content = new StringContent("{}")
@@ -66,12 +66,12 @@ namespace Backend.Tests.Otel
                 .Setup(x => x.CreateClient(It.IsAny<string>()))
                 .Returns(httpClient);
 
-            _locationProvider = new LocationProvider(_contextAccessor, _memoryCache!, _httpClientFactory.Object);
+            _locationProvider = new LocationProvider(_contextAccessor, _memoryCache, _httpClientFactory.Object);
         }
 
         public static void Verify(Mock<HttpMessageHandler> mock, Func<HttpRequestMessage, bool> match)
         {
-            mock?.Protected()
+            mock.Protected()
             .Verify(
                 "SendAsync",
                 Times.Exactly(1),
@@ -84,11 +84,11 @@ namespace Backend.Tests.Otel
         public async Task GetLocationHttpClientUsesIp()
         {
             var testIp = "100.0.0.0";
-            LocationApi? location = await _locationProvider?.GetLocationFromIp(testIp)!;
+            var location = await _locationProvider.GetLocationFromIp(testIp)!;
 
             Assert.That(location, Is.Not.Null);
-            Verify(_handlerMock!, r => r.RequestUri!.AbsoluteUri.Contains(testIp));
-            Verify(_handlerMock!, r => !r.RequestUri!.AbsoluteUri.Contains("123.1.2.3"));
+            Verify(_handlerMock, r => r.RequestUri!.AbsoluteUri.Contains(testIp));
+            Verify(_handlerMock, r => !r.RequestUri!.AbsoluteUri.Contains("123.1.2.3"));
         }
 
         [Test]
@@ -96,12 +96,11 @@ namespace Backend.Tests.Otel
         {
             var testIp = "100.0.0.0";
 
-            LocationApi? location = await _locationProvider?.GetLocation()!;
-            location = await _locationProvider?.GetLocation()!;
+            var location = await _locationProvider.GetLocation();
 
             Assert.That(location, Is.Not.Null);
-            Verify(_handlerMock!, r => r.RequestUri!.AbsoluteUri.Contains(testIp));
-            Verify(_handlerMock!, r => !r.RequestUri!.AbsoluteUri.Contains("123.1.2.3"));
+            Verify(_handlerMock, r => r.RequestUri!.AbsoluteUri.Contains(testIp));
+            Verify(_handlerMock, r => !r.RequestUri!.AbsoluteUri.Contains("123.1.2.3"));
         }
 
         [Test]
@@ -110,9 +109,9 @@ namespace Backend.Tests.Otel
             var testIp = "100.0.0.0";
 
             // call getLocation twice and verify async method is called only once
-            LocationApi? location = await _locationProvider?.GetLocation()!;
-            location = await _locationProvider?.GetLocation()!;
-            Verify(_handlerMock!, r => r.RequestUri!.AbsoluteUri.Contains(testIp));
+            var location = await _locationProvider.GetLocation();
+            location = await _locationProvider.GetLocation();
+            Verify(_handlerMock, r => r.RequestUri!.AbsoluteUri.Contains(testIp));
         }
     }
 }

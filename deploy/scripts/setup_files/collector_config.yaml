@@ -54,3 +54,6 @@ ports:
     enabled: false
   metrics:
     enabled: false
+resources:
+  limits:
+    memory: 512Mi
