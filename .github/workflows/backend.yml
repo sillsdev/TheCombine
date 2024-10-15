@@ -178,7 +178,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
       - name: Build backend
         run: |
-          deploy/scripts/build.py --components backend
+          deploy/scripts/build.py --components backend --debug
         shell: bash
       - name: Image digest
         run: |
