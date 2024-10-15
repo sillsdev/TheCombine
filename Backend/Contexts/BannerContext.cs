@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace BackendFramework.Contexts
@@ -9,14 +8,13 @@ namespace BackendFramework.Contexts
     [ExcludeFromCodeCoverage]
     public class BannerContext : IBannerContext
     {
-        private readonly IMongoDatabase _db;
+        private readonly IMongoDbContext _mongoDbContext;
 
-        public BannerContext(IOptions<Startup.Settings> options)
+        public BannerContext(IMongoDbContext mongoDbContext)
         {
-            var client = new MongoClient(options.Value.ConnectionString);
-            _db = client.GetDatabase(options.Value.CombineDatabase);
+            _mongoDbContext = mongoDbContext;
         }
 
-        public IMongoCollection<Banner> Banners => _db.GetCollection<Banner>("BannerCollection");
+        public IMongoCollection<Banner> Banners => _mongoDbContext.Db.GetCollection<Banner>("BannerCollection");
     }
 }

@@ -287,6 +287,9 @@ namespace BackendFramework
             services.AddTransient<IWordContext, WordContext>();
             services.AddTransient<IWordRepository, WordRepository>();
             services.AddTransient<IWordService, WordService>();
+
+            // mongo context, scoped so it is shared across a single request
+            services.AddScoped<IMongoDbContext, MongoDbContext>();
         }
 
         /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -336,7 +339,8 @@ namespace BackendFramework
 
             // If an admin user has been created via the command line, treat that as a single action and shut the
             // server down so the calling script knows it's been completed successfully or unsuccessfully.
-            var userRepo = app.ApplicationServices.GetService<IUserRepository>();
+            using var startupScope = app.ApplicationServices.CreateAsyncScope();
+            var userRepo = startupScope.ServiceProvider.GetService<IUserRepository>();
             if (userRepo is not null && CreateAdminUser(userRepo))
             {
                 _logger.LogInformation("Stopping application");
