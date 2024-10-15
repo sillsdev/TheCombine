@@ -8,6 +8,7 @@ helm templates for the middleware used by The Combine and for The Combine itself
 image names are extracted from the templates and then pulled from the repo and stored
 in ../images as compressed tarballs; zstd compression is used.
 """
+
 import argparse
 import logging
 import os
@@ -19,7 +20,7 @@ import combine_charts
 from utils import init_logging, run_cmd
 import yaml
 
-# Define configuration and output directories'
+# Define configuration and output directories
 scripts_dir = Path(__file__).resolve().parent
 ansible_dir = scripts_dir.parent / "ansible"
 helm_dir = scripts_dir.parent / "helm"
@@ -58,46 +59,57 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def package_k3s(dest_dir: Path) -> None:
+def package_k3s(dest_dir: Path, *, debug: bool = False) -> None:
     logging.info("Packaging k3s images.")
-    run_cmd(
-        [
-            "ansible-playbook",
-            "playbook_k3s_airgapped_files.yml",
-            "--extra-vars",
-            f"package_dir={dest_dir}",
-        ],
-        cwd=str(ansible_dir),
-    )
+    ansible_cmd = [
+        "ansible-playbook",
+        "playbook_k3s_airgapped_files.yml",
+        "--extra-vars",
+        f"package_dir={dest_dir}",
+    ]
+    if debug:
+        ansible_cmd.append("-vv")
+    run_cmd(ansible_cmd, cwd=str(ansible_dir), print_cmd=debug, print_output=debug)
 
 
-def package_images(image_list: List[str], tar_file: Path) -> None:
+def package_images(image_list: List[str], tar_file: Path, *, debug: bool = False) -> None:
     container_cli_cmd = [os.getenv("CONTAINER_CLI", "docker")]
     if container_cli_cmd[0] == "nerdctl":
         container_cli_cmd.extend(["--namespace", "k8s.io"])
+
     # Pull each image
     for image in image_list:
         pull_cmd = container_cli_cmd + ["pull", image]
-        logging.debug(f"Running {pull_cmd}")
-        run_cmd(pull_cmd)
+        run_cmd(pull_cmd, print_cmd=debug, print_output=debug)
+
     # Save pulled images into a .tar archive
-    run_cmd(container_cli_cmd + ["save"] + image_list + ["-o", str(tar_file)])
+    save_cmd = container_cli_cmd + ["save"] + image_list + ["-o", str(tar_file)]
+    run_cmd(save_cmd, print_cmd=debug, print_output=debug)
+
     # Compress the tarball
-    run_cmd(["zstd", "--rm", "--force", "--quiet", str(tar_file)])
+    tar_cmd = ["zstd", "--rm", "--force", str(tar_file)]
+    if not debug:
+        tar_cmd.append("--quiet")
+    run_cmd(tar_cmd, print_cmd=debug, print_output=debug)
 
 
 def package_middleware(
-    config_file: str, *, cluster_type: str, image_dir: Path, chart_dir: Path
+    config_file: str, *, cluster_type: str, image_dir: Path, chart_dir: Path, debug: bool = False
 ) -> None:
     logging.info("Packaging middleware images.")
-    # read in cluster configuration
+
+    # Read in cluster configuration
     with open(config_file) as file:
         config: Dict[str, Any] = yaml.safe_load(file)
-    # get current repos
+
+    # Get current repos
     curr_repo_list: List[str] = []
     middleware_images: List[str] = []
+    helm_list_cmd = ["helm", "repo", "list", "-o", "yaml"]
+    if debug:
+        helm_list_cmd.append("--debug")
     helm_cmd_results = run_cmd(
-        ["helm", "repo", "list", "-o", "yaml"], print_cmd=False, check_results=False
+        helm_list_cmd, check_results=False, print_cmd=debug, print_output=debug
     )
     if helm_cmd_results.returncode == 0:
         curr_helm_repos = yaml.safe_load(helm_cmd_results.stdout)
@@ -105,60 +117,76 @@ def package_middleware(
             curr_repo_list.append(repo["name"])
 
     for chart_descr in config["clusters"][cluster_type]:
-        # add the chart's repo if we don't already have it
+        logging.debug(f"Chart: ${chart_descr}")
+
+        # Add the chart's repo if we don't already have it
         repo = config[chart_descr]["repo"]
         if repo["name"] not in curr_helm_repos:
-            run_cmd(["helm", "repo", "add", repo["name"], repo["url"]])
+            helm_add_cmd = ["helm", "repo", "add", repo["name"], repo["url"]]
+            if debug:
+                helm_add_cmd.append("--debug")
+            run_cmd(helm_add_cmd, print_cmd=debug, print_output=debug)
             curr_repo_list.append(repo["name"])
 
-        # pull the middleware chart
+        # Pull the middleware chart
         chart = config[chart_descr]["chart"]
         dest_dir = chart_dir / chart["name"]
         dest_dir.mkdir(mode=0o755, parents=True, exist_ok=True)
-        helm_cmd = ["helm", "pull", chart["reference"], "--destination", str(dest_dir)]
+        helm_pull_cmd = ["helm", "pull", chart["reference"], "--destination", str(dest_dir)]
+        if debug:
+            helm_pull_cmd.append("--debug")
         if "version" in chart:
-            helm_cmd.extend(["--version", chart["version"]])
-        run_cmd(helm_cmd)
-        # render chart templates and extract images
+            helm_pull_cmd.extend(["--version", chart["version"]])
+        run_cmd(helm_pull_cmd, print_cmd=debug, print_output=debug)
+
+        # Render chart templates and extract images
         for chart_file in dest_dir.glob("*.tgz"):
-            results = run_cmd(["helm", "template", chart_file])
+            results = run_cmd(["helm", "template", chart_file], print_cmd=debug)
             for line in results.stdout.splitlines():
                 match = re.match(r'[-\s]+image:\s+"*([^"\n]*)"*', line)
-                if match:
+                if match and not match.group(1) in middleware_images:
                     logging.debug(f"    - Found image {match.group(1)}")
                     middleware_images.append(match.group(1))
+
     logging.debug(f"Middleware images: {middleware_images}")
-    package_images(middleware_images, image_dir / "middleware-airgap-images-amd64.tar")
+    package_images(
+        middleware_images, image_dir / "middleware-airgap-images-amd64.tar", debug=debug
+    )
 
 
-def package_thecombine(tag: str, image_dir: Path) -> None:
+def package_thecombine(tag: str, image_dir: Path, *, debug: bool = False) -> None:
     logging.info(f"Packaging The Combine version {tag}.")
     logging.debug("Create helm charts from templates")
     combine_charts.generate(tag)
+
     logging.debug(" - Get template for The Combine.")
-    results = run_cmd(
-        [
-            "helm",
-            "template",
-            "thecombine",
-            str(helm_dir / "thecombine"),
-            "--set",
-            "global.imageRegistry=public.ecr.aws/thecombine",
-            "--set",
-            f"global.imageTag={tag}",
-        ]
-    )
+    helm_template_cmd = [
+        "helm",
+        "template",
+        "thecombine",
+        str(helm_dir / "thecombine"),
+        "--dependency-update",
+        "--set",
+        "global.imageRegistry=public.ecr.aws/thecombine",
+        "--set",
+        f"global.imageTag={tag}",
+    ]
+    if debug:
+        helm_template_cmd.append("--debug")
+    results = run_cmd(helm_template_cmd, print_cmd=debug)
+
     combine_images: List[str] = []
     for line in results.stdout.splitlines():
         match = re.match(r'^[-\s]+image:\s+"*([^"\n]*)"*', line)
         if match:
             image = match.group(1)
-            logging.debug(f"    - Found image {image}")
             if image not in combine_images:
+                logging.debug(f"    - Found image {image}")
                 combine_images.append(image)
     logging.debug(f"Combine images: {combine_images}")
+
     # Logout of AWS to allow pulling the images
-    package_images(combine_images, image_dir / "combine-airgap-images-amd64.tar")
+    package_images(combine_images, image_dir / "combine-airgap-images-amd64.tar", debug=debug)
 
 
 def main() -> None:
@@ -179,11 +207,15 @@ def main() -> None:
     os.environ["AWS_DEFAULT_REGION"] = ""
 
     # Update helm repos
-    package_k3s(image_dir)
+    package_k3s(image_dir, debug=args.debug)
     package_middleware(
-        args.config, cluster_type="standard", image_dir=image_dir, chart_dir=chart_dir
+        args.config,
+        cluster_type="standard",
+        image_dir=image_dir,
+        chart_dir=chart_dir,
+        debug=args.debug,
     )
-    package_thecombine(args.tag, image_dir)
+    package_thecombine(args.tag, image_dir, debug=args.debug)
 
 
 if __name__ == "__main__":

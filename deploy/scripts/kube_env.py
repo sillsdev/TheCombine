@@ -108,17 +108,18 @@ def add_helm_opts(parser: argparse.ArgumentParser) -> None:
     )
 
 
-def add_kube_opts(parser: argparse.ArgumentParser) -> None:
+def add_kube_opts(parser: argparse.ArgumentParser, *, add_debug: bool = True) -> None:
     """Add commandline arguments for Kubernetes tools."""
     parser.add_argument(
         "--context",
         help="Context in kubectl configuration file to be used.",
     )
-    parser.add_argument(
-        "--debug",
-        action="store_true",
-        help="Enable debugging output for helm commands.",
-    )
+    if add_debug:
+        parser.add_argument(
+            "--debug",
+            action="store_true",
+            help="Enable debugging output for helm commands.",
+        )
     parser.add_argument(
         "--kubeconfig",
         help="Specify the kubectl configuration file to be used.",
