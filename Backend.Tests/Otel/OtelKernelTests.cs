@@ -11,8 +11,9 @@ namespace Backend.Tests.Otel
 {
     public class OtelKernelTests : IDisposable
     {
-        private const string SessionIdKey = "sessionId";
-        private const string SessionBaggageKey = "sessionBaggage";
+        private const string FrontendSessionIdKey = "sessionId";
+        private const string OtelSessionIdKey = "sessionId";
+        private const string OtelSessionBaggageKey = "sessionBaggage";
         private LocationEnricher _locationEnricher = null!;
 
         public void Dispose()
@@ -34,14 +35,14 @@ namespace Backend.Tests.Otel
         {
             // Arrange
             var httpContext = new DefaultHttpContext();
-            httpContext.Request.Headers[SessionIdKey] = "123";
+            httpContext.Request.Headers[FrontendSessionIdKey] = "123";
             var activity = new Activity("testActivity").Start();
 
             // Act
             TrackSession(activity, httpContext.Request);
 
             // Assert
-            Assert.That(activity.Baggage.Any(_ => _.Key == SessionBaggageKey));
+            Assert.That(activity.Baggage.Any(_ => _.Key == OtelSessionBaggageKey));
         }
 
         [Test]
@@ -49,13 +50,13 @@ namespace Backend.Tests.Otel
         {
             // Arrange
             var activity = new Activity("testActivity").Start();
-            activity.SetBaggage(SessionBaggageKey, "test session id");
+            activity.SetBaggage(OtelSessionBaggageKey, "test session id");
 
             // Act
             _locationEnricher.OnEnd(activity);
 
             // Assert
-            Assert.That(activity.Tags.Any(_ => _.Key == SessionIdKey));
+            Assert.That(activity.Tags.Any(_ => _.Key == OtelSessionIdKey));
         }
 
 
