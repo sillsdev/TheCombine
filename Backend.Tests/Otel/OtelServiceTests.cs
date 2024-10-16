@@ -12,7 +12,7 @@ namespace Backend.Tests.Otel
         {
             // Arrange
             var services = new ServiceCollection();
-            OtelService.AddOtelInstrumentation(services);
+            services.AddOpenTelemetryInstrumentation();
             AddActivityListener();
 
             // Act

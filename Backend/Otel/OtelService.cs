@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace BackendFramework.Otel
 {
@@ -13,11 +12,6 @@ namespace BackendFramework.Otel
             activity?.AddTag(key, value);
             return activity;
 
-        }
-
-        public static void AddOtelInstrumentation(IServiceCollection services)
-        {
-            services.AddOpenTelemetryInstrumentation();
         }
     }
 }
