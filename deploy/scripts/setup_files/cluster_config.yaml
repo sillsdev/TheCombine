@@ -5,6 +5,7 @@ clusters:
   development:
     - cert-manager
     - nginx-ingress-controller
+    - otel
   rancher:
     - rancher-ui
   cert-manager:
@@ -15,6 +16,26 @@ clusters:
 # Specify how each chart is to be installed.  The "repo" key specified which
 # helm repository needs to be added and the "chart" key specifies how to
 # install/update the chart.
+
+otel:
+  repo:
+    name: open-telemetry
+    url: https://open-telemetry.github.io/opentelemetry-helm-charts
+  chart:
+    name: otel
+    reference: open-telemetry/opentelemetry-collector
+    namespace: thecombine
+    wait: true
+    # Additional arguments to pass to helm install/upgrade
+    # values inside curly braces ({}) are interpreted as
+    # environment variables and their values will be substituted for
+    # the curly brace expression.
+    additional_args:
+      - --values
+      - "{SCRIPTS_DIR}/setup_files/collector_config.yaml"
+      - --set
+      - config.exporters.otlp.headers.x-honeycomb-team={HONEYCOMB_API_KEY}
+
 cert-manager:
   repo:
     name: jetstack
