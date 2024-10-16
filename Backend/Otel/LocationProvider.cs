@@ -55,8 +55,7 @@ namespace BackendFramework.Otel
         {
             var route = locationGetterUri + $"{ipAddressWithoutPort}";
             var httpClient = _httpClientFactory.CreateClient();
-            var response = await httpClient.GetFromJsonAsync<LocationApi>(route);
-            return response;
+            return await httpClient.GetFromJsonAsync<LocationApi>(route);
         }
     }
 }

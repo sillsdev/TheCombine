@@ -83,7 +83,9 @@ namespace BackendFramework.Otel
                 if (request.RequestUri is not null)
                 {
                     if (!string.IsNullOrEmpty(request.RequestUri.Query))
+                    {
                         activity.SetTag("url.query", request.RequestUri.Query);
+                    }
                 }
             };
             options.EnrichWithHttpResponseMessage = (activity, response) =>
