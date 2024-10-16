@@ -18,8 +18,6 @@ config:
   exporters:
     otlp:
       endpoint: "https://api.honeycomb.io:443"
-      headers:
-        "x-honeycomb-team": ""
   service:
     telemetry:
       logs:
