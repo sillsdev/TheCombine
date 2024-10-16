@@ -244,23 +244,29 @@ def main() -> None:
     init_logging(args)
 
     # Setup required build engine - docker or nerdctl
-    container_cli = os.getenv("CONTAINER_CLI", "docker")
-    match container_cli:
+    container_cmd = [os.getenv("CONTAINER_CLI", "docker")]
+    if args.debug:
+        container_cmd.append("--debug")
+    match container_cmd[0]:
         case "nerdctl":
-            build_cmd = [
-                container_cli,
+            build_cmd = container_cmd + [
                 "-n",
                 args.namespace,
                 "build",
                 "--platform",
                 "linux/amd64,linux/arm64",
             ]
-            push_cmd = [container_cli, "-n", args.namespace, "push"]
+            push_cmd = container_cmd + ["-n", args.namespace, "push"]
         case "docker":
-            build_cmd = [container_cli, "buildx", "build", "--platform", "linux/amd64,linux/arm64"]
-            push_cmd = [container_cli, "push"]
+            build_cmd = container_cmd + [
+                "buildx",
+                "build",
+                "--platform",
+                "linux/amd64,linux/arm64",
+            ]
+            push_cmd = container_cmd + ["push"]
         case _:
-            logging.critical(f"Container CLI '{container_cli}' is not supported.")
+            logging.critical(f"Container CLI '{container_cmd[0]}' is not supported.")
             sys.exit(1)
 
     # Setup build options
