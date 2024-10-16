@@ -35,7 +35,7 @@ namespace BackendFramework.Otel
 
         internal static void TrackSession(Activity activity, HttpRequest request)
         {
-            string? sessionId = request.Headers.TryGetValue("sessionId", out var values) ? values.FirstOrDefault() : null;
+            var sessionId = request.Headers.TryGetValue("sessionId", out var values) ? values.FirstOrDefault() : null;
             if (sessionId is not null)
             {
                 activity.SetBaggage("sessionBaggage", sessionId);
@@ -96,20 +96,14 @@ namespace BackendFramework.Otel
         {
             public override async void OnEnd(Activity data)
             {
-                string? uriPath = (string?)data.GetTagItem("url.full");
-                string locationUri = LocationProvider.locationGetterUri;
+                var uriPath = (string?)data.GetTagItem("url.full");
+                var locationUri = LocationProvider.locationGetterUri;
                 if (uriPath is null || !uriPath.Contains(locationUri))
                 {
-                    LocationApi? response = await locationProvider.GetLocation();
-                    var location = new
-                    {
-                        response?.Country,
-                        response?.RegionName,
-                        response?.City,
-                    };
-                    data?.AddTag("country", location.Country);
-                    data?.AddTag("regionName", location.RegionName);
-                    data?.AddTag("city", location.City);
+                    var location = await locationProvider.GetLocation();
+                    data?.AddTag("country", location?.Country);
+                    data?.AddTag("regionName", location?.RegionName);
+                    data?.AddTag("city", location?.City);
                 }
                 data?.SetTag("sessionId", data?.GetBaggageItem("sessionBaggage"));
                 if (uriPath is not null && uriPath.Contains(locationUri))
