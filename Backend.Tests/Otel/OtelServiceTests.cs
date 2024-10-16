@@ -10,18 +10,19 @@ namespace Backend.Tests.Otel
         [Test]
         public static void TestStartActivityWithTag()
         {
+            // Arrange
             var services = new ServiceCollection();
             OtelService.AddOtelInstrumentation(services);
-
             AddActivityListener();
 
+            // Act
             var activity = OtelService.StartActivityWithTag("test key", "test val");
-            Assert.That(activity, Is.Not.Null);
-
             var tag = activity?.GetTagItem("test key");
-            Assert.That(tag, Is.Not.Null);
-
             var wrongTag = activity?.GetTagItem("wrong key");
+
+            // Assert
+            Assert.That(activity, Is.Not.Null);
+            Assert.That(tag, Is.Not.Null);
             Assert.That(wrongTag, Is.Null);
         }
 
