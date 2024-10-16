@@ -140,6 +140,9 @@ jobs:
         run: |
           deploy/scripts/build.py --components frontend --debug
         shell: bash
+      - name: List images
+        run: |
+          docker images
       - name: Image digest
         run: |
           docker --debug image inspect combine_frontend:latest -f '{{json .Id}}'
