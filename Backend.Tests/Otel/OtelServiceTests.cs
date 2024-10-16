@@ -8,7 +8,7 @@ namespace Backend.Tests.Otel
     public class OtelServiceTests
     {
         [Test]
-        public static void TestAddOtelTag()
+        public static void TestStartActivityWithTag()
         {
             // Arrange
             var services = new ServiceCollection();
@@ -16,7 +16,7 @@ namespace Backend.Tests.Otel
             AddActivityListener();
 
             // Act
-            var activity = OtelService.AddOtelTag("test key", "test val");
+            var activity = OtelService.StartActivityWithTag("test key", "test val");
             var tag = activity?.GetTagItem("test key");
             var wrongTag = activity?.GetTagItem("wrong key");
 
@@ -30,8 +30,8 @@ namespace Backend.Tests.Otel
         {
             var activityListener = new ActivityListener
             {
-                ShouldListenTo = s => true,
-                Sample = (ref ActivityCreationOptions<ActivityContext> activityOptions) => ActivitySamplingResult.AllData
+                ShouldListenTo = _ => true,
+                Sample = (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllData
             };
             ActivitySource.AddActivityListener(activityListener);
         }
