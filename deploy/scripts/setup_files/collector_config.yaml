@@ -54,7 +54,7 @@ ports:
     enabled: false
   metrics:
     enabled: false
-useGOMEMLIMIT: false
+useGOMEMLIMIT: true
 resources:
   requests:
     cpu: 25m
