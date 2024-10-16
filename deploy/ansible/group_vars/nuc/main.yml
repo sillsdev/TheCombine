@@ -13,7 +13,7 @@
 # one of k3s or none.
 k8s_engine: k3s
 
-image_pull_secret: aws-login-credentials
+image_pull_secret: aws-ecr-credentials
 use_airgap_images: false
 
 # k8s namespaces

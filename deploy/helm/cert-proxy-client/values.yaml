@@ -11,7 +11,7 @@
 
 global:
   serverName: localhost
-  pullSecretName: aws-login-credentials
+  pullSecretName: aws-ecr-credentials
   awsS3Access: aws-s3-credentials
   # Update strategy should be "Recreate" or "Rolling Update"
   updateStrategy: Recreate

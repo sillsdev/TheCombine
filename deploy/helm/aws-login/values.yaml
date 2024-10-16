@@ -14,7 +14,7 @@ global:
   awsDefaultRegion: "Override"
   awsAccessKeyId: "Override"
   awsSecretAccessKey: "Override"
-  pullSecretName: aws-login-credentials
+  pullSecretName: aws-ecr-credentials
 
 awsEcr:
   configName: aws-ecr-config
