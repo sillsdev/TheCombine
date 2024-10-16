@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Backend.Tests.Mocks;
+using BackendFramework.Otel;
 using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
 using static BackendFramework.Otel.OtelKernel;
@@ -85,14 +86,14 @@ namespace Backend.Tests.Otel
             // Arrange
             _locationEnricher = new LocationEnricher(new LocationProviderMock());
             var activity = new Activity("testActivity").Start();
-            activity.SetTag("url.full", "http://ip-api.com/json/100.0.0.0");
+            activity.SetTag("url.full", $"{LocationProvider.locationGetterUri}100.0.0.0");
 
             // Act
             _locationEnricher.OnEnd(activity);
 
             // Assert
             Assert.That(activity.Tags.Any(_ => _.Key == "url.full" && _.Value == ""));
-            Assert.That(activity.Tags.Any(_ => _.Key == "url.redacted.ip" && _.Value == "http://ip-api.com/json/"));
+            Assert.That(activity.Tags.Any(_ => _.Key == "url.redacted.ip" && _.Value == LocationProvider.locationGetterUri));
         }
     }
 }
