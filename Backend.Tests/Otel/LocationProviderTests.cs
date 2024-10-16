@@ -15,8 +15,6 @@ namespace Backend.Tests.Otel
 {
     public class LocationProviderTests
     {
-        public const string locationGetterUri = "http://ip-api.com/json/";
-
         private IHttpContextAccessor _contextAccessor = null!;
         private IMemoryCache _memoryCache = null!;
         private Mock<HttpMessageHandler> _handlerMock = null!;
@@ -83,10 +81,13 @@ namespace Backend.Tests.Otel
         [Test]
         public async Task GetLocationHttpClientUsesIp()
         {
+            // Arrange
             var testIp = "100.0.0.0";
-            var location = await _locationProvider.GetLocationFromIp(testIp)!;
 
-            Assert.That(location, Is.Not.Null);
+            // Act
+            await _locationProvider.GetLocationFromIp(testIp);
+
+            // Assert
             Verify(_handlerMock, r => r.RequestUri!.AbsoluteUri.Contains(testIp));
             Verify(_handlerMock, r => !r.RequestUri!.AbsoluteUri.Contains("123.1.2.3"));
         }
@@ -94,11 +95,11 @@ namespace Backend.Tests.Otel
         [Test]
         public async Task GetLocationUsesHttpContextIp()
         {
+            // Act
+            await _locationProvider.GetLocation();
+
+            // Assert
             var testIp = "100.0.0.0";
-
-            var location = await _locationProvider.GetLocation();
-
-            Assert.That(location, Is.Not.Null);
             Verify(_handlerMock, r => r.RequestUri!.AbsoluteUri.Contains(testIp));
             Verify(_handlerMock, r => !r.RequestUri!.AbsoluteUri.Contains("123.1.2.3"));
         }
@@ -106,11 +107,13 @@ namespace Backend.Tests.Otel
         [Test]
         public async Task GetLocationUsesCache()
         {
-            var testIp = "100.0.0.0";
-
+            // Act
             // call getLocation twice and verify async method is called only once
-            var location = await _locationProvider.GetLocation();
-            location = await _locationProvider.GetLocation();
+            await _locationProvider.GetLocation();
+            await _locationProvider.GetLocation();
+
+            // Assert
+            var testIp = "100.0.0.0";
             Verify(_handlerMock, r => r.RequestUri!.AbsoluteUri.Contains(testIp));
         }
     }

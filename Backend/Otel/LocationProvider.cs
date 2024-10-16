@@ -30,7 +30,7 @@ namespace BackendFramework.Otel
                 var ipAddress = context.GetServerVariable("HTTP_X_FORWARDED_FOR") ?? context.Connection.RemoteIpAddress?.ToString();
                 var ipAddressWithoutPort = ipAddress?.Split(':')[0];
 
-                LocationApi? location = await _memoryCache.GetOrCreateAsync(
+                return await _memoryCache.GetOrCreateAsync(
                     "location_" + ipAddressWithoutPort,
                     async (cacheEntry) =>
                     {
@@ -47,7 +47,6 @@ namespace BackendFramework.Otel
                         }
                     }
                 );
-                return location;
             }
             return null;
         }

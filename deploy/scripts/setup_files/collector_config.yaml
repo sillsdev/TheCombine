@@ -54,6 +54,10 @@ ports:
     enabled: false
   metrics:
     enabled: false
+useGOMEMLIMIT: false
 resources:
+  requests:
+    cpu: 25m
+    memory: 256Mi
   limits:
     memory: 512Mi
