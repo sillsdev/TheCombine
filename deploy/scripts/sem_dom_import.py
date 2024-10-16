@@ -218,7 +218,6 @@ def get_sem_doms(node: ElementTree.Element, parent: SemDomTreeMap, prev: SemDomM
         elif field.tag == "Abbreviation":
             for abbrev_node in field:
                 lang, id_text = get_auni_text(abbrev_node)
-                logging.debug(f"id[{lang}]='{id_text}'")
                 domain_set[lang].id = id_text
         elif field.tag == "Description":
             for descr_node in field:
