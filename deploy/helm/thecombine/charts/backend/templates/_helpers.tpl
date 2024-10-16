@@ -15,6 +15,10 @@
 {{- define "backend.otelServiceName" -}}
   {{- if eq .Values.global.serverName "thecombine.localhost" }}
     {{- print "dev" }}
+  {{- else if eq .Values.global.serverName "qa-kube.thecombine.app" }}
+    {{- print "dev" }}
+  {{- else if eq .Values.global.serverName "thecombine.app" }}
+    {{- print "prod" }}
   {{- else }}
     {{- printf "%s" .Values.global.serverName}}
   {{- end }}

@@ -15,6 +15,7 @@ namespace Backend.Tests.Otel
 {
     public class LocationProviderTests
     {
+        private readonly IPAddress TestIpAddress = new(new byte[] { 100, 0, 0, 0 });
         private IHttpContextAccessor _contextAccessor = null!;
         private IMemoryCache _memoryCache = null!;
         private Mock<HttpMessageHandler> _handlerMock = null!;
@@ -30,7 +31,7 @@ namespace Backend.Tests.Otel
             {
                 Connection =
                 {
-                    RemoteIpAddress = new IPAddress(new byte[] { 100, 0, 0, 0 })
+                    RemoteIpAddress = TestIpAddress
                 }
             };
             _contextAccessor.HttpContext = httpContext;
@@ -81,14 +82,11 @@ namespace Backend.Tests.Otel
         [Test]
         public async Task GetLocationHttpClientUsesIp()
         {
-            // Arrange
-            var testIp = "100.0.0.0";
-
             // Act
-            await _locationProvider.GetLocationFromIp(testIp);
+            await _locationProvider.GetLocationFromIp(TestIpAddress.ToString());
 
             // Assert
-            Verify(_handlerMock, r => r.RequestUri!.AbsoluteUri.Contains(testIp));
+            Verify(_handlerMock, r => r.RequestUri!.AbsoluteUri.Contains(TestIpAddress.ToString()));
             Verify(_handlerMock, r => !r.RequestUri!.AbsoluteUri.Contains("123.1.2.3"));
         }
 
@@ -99,8 +97,7 @@ namespace Backend.Tests.Otel
             await _locationProvider.GetLocation();
 
             // Assert
-            var testIp = "100.0.0.0";
-            Verify(_handlerMock, r => r.RequestUri!.AbsoluteUri.Contains(testIp));
+            Verify(_handlerMock, r => r.RequestUri!.AbsoluteUri.Contains(TestIpAddress.ToString()));
             Verify(_handlerMock, r => !r.RequestUri!.AbsoluteUri.Contains("123.1.2.3"));
         }
 
@@ -113,8 +110,7 @@ namespace Backend.Tests.Otel
             await _locationProvider.GetLocation();
 
             // Assert
-            var testIp = "100.0.0.0";
-            Verify(_handlerMock, r => r.RequestUri!.AbsoluteUri.Contains(testIp));
+            Verify(_handlerMock, r => r.RequestUri!.AbsoluteUri.Contains(TestIpAddress.ToString()));
         }
     }
 }

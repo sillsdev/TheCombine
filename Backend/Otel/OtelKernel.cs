@@ -79,7 +79,7 @@ namespace BackendFramework.Otel
         {
             options.EnrichWithHttpRequestMessage = (activity, request) =>
             {
-                GetContentLengthHttp(activity, request.Content!, "outbound.http.request.body.size");
+                GetContentLengthHttp(activity, request.Content, "outbound.http.request.body.size");
                 if (request.RequestUri is not null)
                 {
                     if (!string.IsNullOrEmpty(request.RequestUri.Query))
