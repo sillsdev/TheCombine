@@ -17,7 +17,7 @@ global:
   combineJwtSecretKey: "Override"
   combineSmtpUsername: "Override"
   combineSmtpPassword: "Override"
-  pullSecretName: aws-login-credentials
+  pullSecretName: aws-ecr-credentials
   imageTag: "latest"
   imagePullPolicy: IfNotPresent
   # Define the type of image registry to use, awsEcr or local

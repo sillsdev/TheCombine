@@ -118,7 +118,7 @@ The specialized Docker images that are used to deploy the combine, `combine_fron
 from AWS ECR; the credentials are valid for 12 hours. In order to accommodate this requirement, when the Kubernetes
 resources are installed or reconfigured, the following jobs are created:
 
-- `ecr-cred-helper` is a one-time Job that is run to create the `aws-login-credentials` Secret. The Secret type is
+- `ecr-cred-helper` is a one-time Job that is run to create the `aws-ecr-credentials` Secret. The Secret type is
   `kubernetes.io/dockerconfigjson` and can be used by the deployments to pull the required images from AWS ECR.
 - `ecr-cred-helper-cron` refreshes the `aws-logon-credentials` periodically. The current configuration refreshes them
   every 8 hours.
