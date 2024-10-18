@@ -120,7 +120,7 @@ resources are installed or reconfigured, the following jobs are created:
 
 - `ecr-cred-helper` is a one-time Job that is run to create the `aws-login-credentials` Secret. The Secret type is
   `kubernetes.io/dockerconfigjson` and can be used by the deployments to pull the required images from AWS ECR.
-- `ecr-cred-helper-cron` refreshes the `aws-logon-credentials` periodically. The current configuration refreshes them
+- `ecr-cred-helper-cron` refreshes the `aws-login-credentials` periodically. The current configuration refreshes them
   every 8 hours.
 
 The reason that both a one-time Job and a CronJob is so that when the cluster is first created, the pull secrets are
@@ -134,10 +134,10 @@ The following diagram shows the Kubernetes resources used to create the image pu
 
 ### Additional AWS Login Resources
 
-| Resource            | Kind      | Description                                                                                                                                                                    |
-| ------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| aws-ecr-config      | ConfigMap | `aws-ecr-config` defines the runtime configuration for AWS ECR logins.                                                                                                         |
-| aws-ecr-credentials | Secret    | `aws-ecr-credentials` defines the access accounts and credentials to log in to the AWS ECR service. Note that these credentials may be different than the `aws-s3-credentials` |
+| Resource            | Kind      | Description                                                                                                                                   |
+| ------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| aws-ecr-config      | ConfigMap | Defines the runtime configuration for AWS ECR logins.                                                                                         |
+| aws-ecr-credentials | Secret    | Defines the access accounts and credentials to log in to the AWS ECR service. Note that these may be different than the `aws-s3-credentials`. |
 
 ## SSL Termination
 
