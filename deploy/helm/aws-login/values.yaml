@@ -25,7 +25,7 @@ awsEcr:
   imageTag: "0.3.0"
   jobName: ecr-cred-helper
   schedule: "0 */8 * * *"
-  secretsName: aws-login-credentials
+  secretsName: aws-ecr-credentials
   serviceAccount: account-ecr-login
   role: role-ecr-login
   roleBinding: role-ecr-login-binding
