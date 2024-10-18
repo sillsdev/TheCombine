@@ -9,7 +9,7 @@
 # Configure Kubernetes cluster
 ################################################
 
-image_pull_secret: aws-ecr-credentials
+image_pull_secret: aws-login-credentials
 use_airgap_images: false
 
 create_namespaces: []

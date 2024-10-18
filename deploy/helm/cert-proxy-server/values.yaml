@@ -13,7 +13,7 @@ Release:
   Namespace: thecombine
 
 global:
-  pullSecretName: aws-ecr-credentials
+  pullSecretName: aws-login-credentials
   awsS3Access: aws-s3-credentials
   # Update strategy should be "Recreate" or "Rolling Update"
   updateStrategy: Recreate

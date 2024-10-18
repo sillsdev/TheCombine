@@ -14,7 +14,7 @@ global:
   awsDefaultRegion: "Override"
   awsAccessKeyId: "Override"
   awsSecretAccessKey: "Override"
-  pullSecretName: aws-ecr-credentials
+  pullSecretName: aws-login-credentials
 
 awsEcr:
   configName: aws-ecr-config
@@ -25,7 +25,7 @@ awsEcr:
   imageTag: "0.3.0"
   jobName: ecr-cred-helper
   schedule: "0 */8 * * *"
-  secretsName: aws-ecr-credentials
+  secretsName: aws-login-credentials
   serviceAccount: account-ecr-login
   role: role-ecr-login
   roleBinding: role-ecr-login-binding
