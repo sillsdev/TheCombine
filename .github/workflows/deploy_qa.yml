@@ -64,9 +64,6 @@ jobs:
           build_component: ${{ matrix.component }}
   clean_ecr_repo:
     needs: build
-    env:
-      RM_PATTERN_1: v1\.\d+\.\d+-.*
-      RM_PATTERN_2: v2\.0\.\d+-.*
     runs-on: ubuntu-latest
     steps:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
@@ -89,7 +86,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       - name: Remove old AWS ECR images
-        run: scripts/clean_aws_repo.py combine_frontend combine_backend combine_maint combine_database --keep ${{ needs.build.outputs.image_tag }} --remove "${{ env.RM_PATTERN_1 }}" "${{ env.RM_PATTERN_2 }}" --verbose
+        run: |
+          TAG=${{ needs.build.outputs.image_tag }}
+          if [[ $TAG =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)-.* ]]; then
+              VA=${BASH_REMATCH[1]}; VB=${BASH_REMATCH[2]}; VC=${BASH_REMATCH[3]}
+              if [[ $VC > 0 ]]; then REM="v${VA}\.${VB}\.$((VC - 1))-.*"
+              elif [[ $VB > 0 ]]; then REM="v${VA}\.$((VB - 1))\..*"
+              else REM="v$((VA - 1))\..*"; fi
+              scripts/clean_aws_repo.py combine_frontend combine_backend combine_maint combine_database --remove "${REM}" --verbose
+          fi
   deploy_update:
     needs: build
     # Only push to the QA server when built on the master branch
