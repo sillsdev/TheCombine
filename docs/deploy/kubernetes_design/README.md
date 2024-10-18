@@ -120,7 +120,7 @@ resources are installed or reconfigured, the following jobs are created:
 
 - `ecr-cred-helper` is a one-time Job that is run to create the `aws-ecr-credentials` Secret. The Secret type is
   `kubernetes.io/dockerconfigjson` and can be used by the deployments to pull the required images from AWS ECR.
-- `ecr-cred-helper-cron` refreshes the `aws-logon-credentials` periodically. The current configuration refreshes them
+- `ecr-cred-helper-cron` refreshes the `aws-ecr-credentials` periodically. The current configuration refreshes them
   every 8 hours.
 
 The reason that both a one-time Job and a CronJob is so that when the cluster is first created, the pull secrets are
