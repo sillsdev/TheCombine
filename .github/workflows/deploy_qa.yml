@@ -87,8 +87,8 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       - name: Remove old AWS ECR images
         # Remove all images for previous version numbers.
-        # Example: for tag beginning with 1.2.5-, remove all images with tag 1.2.4-*
-        # Example: for tag beginning with 2.4.0-, remove all images with tag 2.3.*
+        # Example: for tag beginning with v1.2.5-, remove all images with tag v1.2.4-*
+        # Example: for tag beginning with v2.4.0-, remove all images with tag v2.3.*
         run: |
           TAG=${{ needs.build.outputs.image_tag }}
           if [[ $TAG =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)-.* ]]; then
