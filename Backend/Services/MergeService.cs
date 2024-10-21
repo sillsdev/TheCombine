@@ -15,14 +15,17 @@ namespace BackendFramework.Services
         private readonly IMergeGraylistRepository _mergeGraylistRepo;
         private readonly IWordRepository _wordRepo;
         private readonly IWordService _wordService;
+        private readonly IMongoDbContext _mongoDbContext;
 
         public MergeService(IMergeBlacklistRepository mergeBlacklistRepo, IMergeGraylistRepository mergeGraylistRepo,
-            IWordRepository wordRepo, IWordService wordService)
+            IWordRepository wordRepo, IWordService wordService,
+            IMongoDbContext mongoDbContext)
         {
             _mergeBlacklistRepo = mergeBlacklistRepo;
             _mergeGraylistRepo = mergeGraylistRepo;
             _wordRepo = wordRepo;
             _wordService = wordService;
+            _mongoDbContext = mongoDbContext;
         }
 
         /// <summary> Prepares a merge parent to be added to the database. </summary>
@@ -75,8 +78,11 @@ namespace BackendFramework.Services
         {
             var keptWords = mergeWordsList.Where(m => !m.DeleteOnly);
             var newWords = keptWords.Select(m => MergePrepParent(projectId, m).Result).ToList();
+            using var transaction = await _mongoDbContext.BeginTransaction();
             await Task.WhenAll(mergeWordsList.Select(m => MergeDeleteChildren(projectId, m)));
-            return await _wordService.Create(userId, newWords);
+            var words = await _wordService.Create(userId, newWords);
+            await transaction.CommitTransactionAsync();
+            return words;
         }
 
         /// <summary> Undo merge </summary>
@@ -92,15 +98,18 @@ namespace BackendFramework.Services
                 }
             }
 
+            using var transaction = await _mongoDbContext.BeginTransaction();
             // If children are not restorable, return without any undo.
             if (!await _wordService.RestoreFrontierWords(projectId, ids.ChildIds))
             {
+                // Nothing happens, transaction does not need to commit.
                 return false;
-            };
+            }
             foreach (var parentId in ids.ParentIds)
             {
                 await _wordService.DeleteFrontierWord(projectId, userId, parentId);
             }
+            await transaction.CommitTransactionAsync();
             return true;
         }
 
