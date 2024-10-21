@@ -62,6 +62,7 @@ separate organization. The characteristics of these systems are:
   - the namespace `thecombine` is created
   - the TLS certificate for the server is installed in `thecombine` namespace as a `kubernetes.io/tls` secret with the
     name `thecombine-app-tls`
+  - PersistentVolumeClaims for `backend-data`, `database-data`, and `font-data`
 
 - The QA server has services to login to a private AWS Elastic Container Registry to run private images for _The
   Combine_. In contrast, the Production server only runs public images.
@@ -284,10 +285,25 @@ setup automatically by the Ansible playbook run in the previous section.
 
 For the Production or QA server,
 
-1. login to the Rancher Dashboard for the Production (or QA) server. You need to have an account on the server that was
+1. Login to the Rancher Dashboard for the Production (or QA) server. You need to have an account on the server that was
    created by the operations group.
 2. Copy your `kubectl` configuration to the clipboard and paste it into a file on your host machine, e.g.
    `${HOME}/.kube/prod/config` for the production server.
+3. Check that the PVCs are annotated and labeled:
+   - Get the full list of `<pvc>`s with `kubectl [--context <context>] -n thecombine get pvc`
+   - Check the content of a `<pvc>` with `kubectl [--context <context>] -n thecombine get pvc <pvc> -o yaml`
+   - For all of them, make sure that `metadata:` includes the following lines:
+     ```
+       annotations:
+         meta.helm.sh/release-name: thecombine
+         meta.helm.sh/release-namespace: thecombine
+     ```
+     and
+     ```
+       labels:
+         app.kubernetes.io/managed-by: Helm
+     ```
+   - You can edit a `<pvc>` with `kubectl [--context <context>] -n thecombine edit pvc <pvc>`
 
 ### Setup Environment
 
@@ -308,6 +324,7 @@ deployments (NUC):
 - COMBINE_CAPTCHA_SECRET_KEY
 - COMBINE_SMTP_USERNAME
 - COMBINE_SMTP_PASSWORD
+- HONEYCOMB_API_KEY
 
 You may also set the KUBECONFIG environment variable to the location of the `kubectl` configuration file. This is not
 necessary if the configuration file is at `${HOME}/.kube/config`.
@@ -343,7 +360,8 @@ If using the Docker image,
 
 ## Install Helm Charts Required by _The Combine_
 
-This step sets up the NGINX Ingress Controller and the Certificate Manager, [cert-manager.io](https://cert-manager.io/).
+This step sets up the NGINX Ingress Controller, the Certificate Manager ([cert-manager.io](https://cert-manager.io/)),
+and the OpenTelemetry analytics collector.
 
 If using the Docker image, [open the Docker image terminal](#open-docker-image-terminal) and run:
 
@@ -357,6 +375,10 @@ If using local tools, open a terminal window and run:
 cd <COMBINE>/deploy/scripts
 ./setup_cluster.py
 ```
+
+Note: This script is not used for the QA/Production deployments. If you need to do a completely fresh install for either
+of those, you can see all the cluster setup steps by executing `setup_cluster.py` with
+`--type development --debug 2> setup_cluster.log`.
 
 ## Install _The Combine_
 
