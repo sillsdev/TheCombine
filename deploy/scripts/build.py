@@ -249,25 +249,15 @@ def main() -> None:
         container_cmd.append("--debug")
     match container_cmd[0]:
         case "nerdctl":
-            build_cmd = container_cmd + [
-                "-n",
-                args.namespace,
-                "build",
-                "--platform",
-                "linux/amd64,linux/arm64",
-            ]
+            build_cmd = container_cmd + ["-n", args.namespace, "build"]
             push_cmd = container_cmd + ["-n", args.namespace, "push"]
         case "docker":
-            build_cmd = container_cmd + [
-                "buildx",
-                "build",
-                "--platform",
-                "linux/amd64,linux/arm64",
-            ]
+            build_cmd = container_cmd + ["buildx", "build"]
             push_cmd = container_cmd + ["push"]
         case _:
             logging.critical(f"Container CLI '{container_cmd[0]}' is not supported.")
             sys.exit(1)
+    build_cmd.extend(["--platform", "linux/amd64,linux/arm64"])
 
     # Setup build options
     if args.quiet:
