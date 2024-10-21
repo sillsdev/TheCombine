@@ -397,19 +397,13 @@ Notes:
 
 ### Maintenance Scripts for Kubernetes
 
-There are several maintenance scripts that can be run in the kubernetes cluster:
-
-- `combine-backup-job.sh` - performs a backup of _The Combine_ database and backend files, pushes the backup to AWS S3
-  storage and then removes old backups keeping the latest 3 backups.
-- `combine_backup.py` - just performs the backup and pushes the result to AWS S3 storage.
-- `combine-clean-aws.py` - removes the oldest backups, keeping up to `max_backups`. The default for `max_backups` is 3.
-- `combine_restore.py` - restores _The Combine_ database and backend files from one of the backups in AWS S3 storage.
+There are several maintenance scripts that can be run in the kubernetes cluster; they are listed in
+[./kubernetes_design/README.md#combine_maint-image](./kubernetes_design/README.md#combine_maint-image).
 
 The `combine-backup-job.sh` is currently being run daily on _The Combine_ QA and Production servers as a Kubernetes
 CronJob.
 
-In addition to the daily backup, any of the scripts can be run on-demand using the `kubectl` command. Using the
-`kubectl` command takes the form:
+In addition to the daily backup, any of the scripts can be run on-demand using the `kubectl` command as follows:
 
 ```bash
 kubectl [--kubeconfig=<path-to-kubernetes-file>] [-n thecombine] exec -it deployment/maintenance -- <maintenance script> <script options>
@@ -429,7 +423,7 @@ Notes:
   kubectl [--kubeconfig=<path-to-kubernetes-file>] [-n thecombine] exec -it deployment/maintenance -- <maintenance scripts> --help
   ```
 
-  The only exception is `combine-backup-job.sh` which does not have any script options.
+  The exception is `combine-backup-job.sh` which does not have any script options.
 
 - The `-n thecombine` option is not required if you set `thecombine` as the default namespace for your kubeconfig file
   by running:
@@ -437,6 +431,10 @@ Notes:
   ```bash
   kubectl config set-context --current --namespace=thecombine
   ```
+
+- The `maintenance/scripts/*.py` scripts begin with `#!/usr/bin/env python3` so that they can be run directly in the
+  `maintenance` deployment. If you need to execute one of them in a Python virtual environment `(venv)`, precede the
+  script name with `python`.
 
 ### Checking Certificate Expiration
 

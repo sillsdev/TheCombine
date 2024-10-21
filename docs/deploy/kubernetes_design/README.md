@@ -89,13 +89,15 @@ features:
   `sillsdev/aws-kubectl`)
 - _Python 3_ - the maintenance scripts included in `combine_maint` are written in _Python_
 - A collection of Maintenance Scripts:
+  - `add_user_to_proj.py` - add specified user to specified project (as harvester if role not specified)
   - `combine_backup.py` - create a compressed tarball of the backend files and database contents and push it to AWS S3
     storage
   - `combine_restore.py` - pull a backup from AWS S3 storage and replace the database and backend files with the
     contents of the backup
-  - `combine-clean-aws.sh` - a `bash` script to cleanup old backups from AWS S3 storage
   - `combine-backup-job.sh` - a `bash` script to run the backup and then cleanup the S3 storage
+  - `combine-clean-aws.sh` - a `bash` script to cleanup old backups from AWS S3 storage
   - `monitor.py` - monitor a set of TLS secrets for updates; when a secret is updated, it is pushed to AWS S3 storage
+  - `rm_project.py` - remove specified project(s) from database and all associated entries and files
   - `update_cert.py` - a script to be used by the cert proxy clients on the NUCs. `update_cert.py` will update a TLS
     certificate if the NUC is connected to the internet and if the certificate is ready for renewal. If these conditions
     are met, it will update the certificate from AWS S3 storage.
