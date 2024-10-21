@@ -176,8 +176,10 @@ def main() -> None:
             chart_namespace = config["charts"][chart]["namespace"]
             logging.debug(f"Namespace: {chart_namespace}")
             if add_namespace(chart_namespace, kube_env.get_kubectl_cmd()):
+                logging.debug(f"Namespace '{chart_namespace}' created")
                 installed_charts: List[str] = []
             else:
+                logging.debug(f"Namespace '{chart_namespace}' already exists")
                 # Get list of charts in target namespace
                 installed_charts = get_installed_charts(helm_cmd, chart_namespace)
             logging.debug(f"Installed charts: {installed_charts}")
