@@ -59,7 +59,11 @@ spec:
                 configMapKeyRef:
                   key: DOCKER_EMAIL
                   name: {{ .Values.awsEcr.configName }}
-            resources: {}
+            resources:
+              limits:
+                memory: 500Mi
+              requests:
+                memory: 500Mi
             securityContext:
               capabilities: {}
             terminationMessagePath: /dev/termination-log
