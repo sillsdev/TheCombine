@@ -22,20 +22,7 @@ spec:
             imagePullPolicy: IfNotPresent
             name: {{ .Values.awsEcr.cronJobName }}
             command:
-            - /bin/sh
-            - -c
-            - |-
-              TOKEN=`aws ecr get-login --region ${AWS_DEFAULT_REGION} --registry-ids ${AWS_ACCOUNT} | cut -d' ' -f6`
-              echo "ENV variables setup done."
-              kubectl -n ${NAMESPACES} delete secret --ignore-not-found ${PULL_SECRET_NAME}
-              kubectl -n ${NAMESPACES} create secret docker-registry ${PULL_SECRET_NAME} \
-              --docker-server=https://${AWS_ACCOUNT}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com \
-              --docker-username=AWS \
-              --docker-password="${TOKEN}" \
-              --docker-email="${DOCKER_EMAIL}"
-              echo "Secret created by name: $PULL_SECRET_NAME"
-              kubectl -n ${NAMESPACES} patch serviceaccount default -p '{"imagePullSecrets":[{"name":"'$PULL_SECRET_NAME'"}]}'   # custom script | update the default service account
-              echo "All done."
+              - ecr-get-login.sh
             env:
             - name: AWS_DEFAULT_REGION
               valueFrom:
