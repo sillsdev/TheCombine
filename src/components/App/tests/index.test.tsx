@@ -3,7 +3,7 @@ import { render } from "@testing-library/react";
 import "jest-canvas-mock";
 import { act } from "react";
 import { Provider } from "react-redux";
-import configureMockStore from "redux-mock-store";
+import createMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
 import App from "components/App";
@@ -12,8 +12,7 @@ import theme from "types/theme";
 
 jest.mock("react-router-dom");
 
-const createMockStore = configureMockStore([thunk]);
-const mockStore = createMockStore(defaultState);
+const mockStore = createMockStore([thunk])(defaultState);
 
 // Need window.innerHeight defined for LandingPage.
 global.innerHeight = 100;
