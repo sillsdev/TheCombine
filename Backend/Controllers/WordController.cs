@@ -305,7 +305,6 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> RevertWords(
             string projectId, [FromBody, BindRequired] Dictionary<string, string> wordIds)
         {
-            // note: review tag description
             using var activity = OtelService.StartActivityWithTag(otelTagName, "reverting words");
 
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
