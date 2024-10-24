@@ -158,7 +158,12 @@ export default function ProjectLanguages(
     };
     await props
       .setProject({ ...props.project, vernacularWritingSystem })
-      .then(() => resetState())
+      .then(() => {
+        resetState();
+        toast.success(
+          t("projectSettings.language.updateVernacularLanguageNameSuccess")
+        );
+      })
       .catch((err) => {
         console.error(err);
         toast.error(
@@ -271,7 +276,10 @@ export default function ProjectLanguages(
           variant="contained"
           color="primary"
           id={ProjectLanguagesId.ButtonEditVernacularNameSave}
-          onClick={() => updateVernacularName()}
+          onClick={() => {
+            setChangeVernName(false);
+            updateVernacularName();
+          }}
           onMouseDown={(e) => e.preventDefault()}
         >
           {t("buttons.save")}
