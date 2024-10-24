@@ -39,7 +39,7 @@ RUN chown user:user ${FONT_DIR}
 USER user
 WORKDIR ${HOME}
 
-ENV PATH ${PATH}:${SCRIPT_DIR}
+ENV PATH=${PATH}:${SCRIPT_DIR}
 
 COPY --chown=user:user requirements.txt .
 

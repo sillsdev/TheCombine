@@ -4,10 +4,10 @@ This README describes how to install _The Combine_ Rapid Word Collection tool on
 
 ## Contents
 
-1. [System Requirements](#system-requirements)
-2. [Install _The Combine_](#install-the-combine)
-3. [Running _The Combine_](#running-the-combine)
-4. [Advanced Installation Options](#advanced-installation-options)
+ - [System Requirements](#system-requirements)
+ - [Install _The Combine_](#install-the-combine)
+ - [Running _The Combine_](#running-the-combine)
+ - [Advanced Installation Options](#advanced-installation-options)
 
 ## System Requirements
 
@@ -35,28 +35,14 @@ The installation script has been tested on _Ubuntu 22.04_ and _Wasta Linux 22.04
 
    _Note for Wasta Linux users_
 
-   _Wasta Linux_ includes Skype in its list of available software. Skype no longer supports installing it on Linux from
-   an `apt` software repository. As a result, when the installation script, or a user, updates the list of available
-   software, the process fails. To address this issue, you can either:
-
-   1. Remove the file directly:
+   _Wasta Linux_ includes Skype in its list of available software. Skype no longer supports installation
+   via `apt`. (It's available as a Snap package.) As a result, when the installation script, or a user, updates the list of available
+   software, the process fails. To address this issue, run:
 
       ```console
       sudo rm /etc/apt/sources.list.d/skype-stable.list
-      sudo apt update
+      sudo apt update && sudo apt upgrade -y
       ```
-
-      or
-
-   2. Deselect _Skype_ in the Software Updater settings
-
-      1. Open the _Software Settings_ application
-      2. Click the _Other Software_ tab
-      3. Uncheck the entry for Skype (`https://repo.skype.com/deb stable`)
-      4. Click the "Close" button
-      5. Click the "Reload" button in the dialog window that is displayed
-
-   Skype is available on _Wasta Linux_ or _Ubuntu_ as a Snap package.
 
 4. Download the installation script from
    [https://s3.amazonaws.com/software.thecombine.app/combine-installer.run](https://s3.amazonaws.com/software.thecombine.app/combine-installer.run)
@@ -90,6 +76,13 @@ The installation script has been tested on _Ubuntu 22.04_ and _Wasta Linux 22.04
      [The Combine](https://software.sil.org/thecombine/#contact)
    - When run with no options, ./combine-installer.run will install the current version of _The Combine_.
    - If the previous installation did not run to completion, it will resume where the previous installation left off.
+   - If you get the error `Job for k3s.service failed because the control process exited with error code.`,
+     make sure no other instance of k3s is running. For example, if Docker Desktop is active on the current user, run:
+
+      ```console
+     systemctl --user stop docker-desktop
+     systemctl --user disable docker-desktop
+     ```
 
 _The Combine_ will not be running when installation is complete.
 
@@ -112,16 +105,13 @@ running.
 #### Connecting to the WiFi Hotspot
 
 The wireless network name will be `thecombine_ap`. You can connect your device to this network using the passphrase
-`Combine2020`.
+`thecombine_pw`.
 
 If you would like to change the WiFi passphrase, see the options described in [combinectl Tool](#combinectl-tool).
 
 #### Connecting to the App
 
-Open a web browser and navigate to [local.thecombine.app](https://local.thecombine.app).
-
-If your browser tries to do a web search, add the `https://` to the beginning, that is,
-[https://local.thecombine.app](https://local.thecombine.app)
+Open a web browser and navigate to [https://local.thecombine.app](https://local.thecombine.app).
 
 ### Shutting Down _The Combine_
 
@@ -134,17 +124,17 @@ combinectl stop
 ### combinectl Tool
 
 Once installation is complete, you can use the `combinectl` command to manage the installation. The `combinectl` command
-is entered in a terminal window as `combinectl COMMAND [parameters]` The possible commands are:
+is entered in a terminal window as `combinectl COMMAND [parameters]`, where the possible commands are:
 
-| Command | Parameters        | Description                                                                                                                                                                                                                                                                                                                            |
-| ------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| help    | N/A               | Print a usage message.                                                                                                                                                                                                                                                                                                                 |
-| start   | N/A               | Start the combine services.                                                                                                                                                                                                                                                                                                            |
-| stop    | N/A               | Stop the combine services.                                                                                                                                                                                                                                                                                                             |
-| status  | N/A               | List the status for the combine services.                                                                                                                                                                                                                                                                                              |
-| cert    | N/A               | Print the expiration date for the web certificate.                                                                                                                                                                                                                                                                                     |
-| update  | release-number    | Update the version of The Combine to the "release-number" specified. You can see the number of the latest release at [The Combine on GitHub](https://github.com/sillsdev/TheCombine/releases). Note that not all releases can be updated this way. If The Combine does not run properly, download and run the updated install package. |
-| wifi    | [wifi-passphrase] | If no wifi-passphrase is provieded, the current wifi passphrase is printed. If a new passphase is provided, the wifi passphrase is updated to the new phrase. If your passphrase has spaces or special characters, it is best to enclose your pass phrase in quotation marks ("").                                                     |
+| Command | Parameters     | Description |
+| ------- | -------------- | ------------------------------------------------------------------- |
+| help    | N/A            | Print a usage message. |
+| start   | N/A            | Start the combine services. |
+| stop    | N/A            | Stop the combine services. |
+| status  | N/A            | List the status for the combine services. |
+| cert    | N/A            | Print the expiration date for the web certificate. |
+| update  | release-number | Update the version of The Combine to the `release-number` specified. You can see the latest release number at [The Combine on GitHub](https://github.com/sillsdev/TheCombine/releases). (This only works if the release begins with a "v".) |
+| wifi    | [passphrase]   | If no passphrase is provided, print the current passphrase. If a passphrase is provided, update the wifi passphrase. A passphrase with spaces or special characters should be enclosed in quotation marks (""). |
 
 If the command is omitted or unrecognized, the help message is printed.
 
@@ -159,30 +149,28 @@ certificate will be valid for a time between 60 and 90 days. You can use the com
 current certificate will expire, for example:
 
 ```console
-$combinectl cert
+$ combinectl cert
 Web certificate expires at Jul  8 08:54:11 2024 GMT
 ```
 
 ## Advanced Installation Options
 
-To run `combine-installer.run` with options, the option list must be started with `--`.
+To run `combine-installer.run` with options, the option list must be started with `--` . The following options are supported:
 
-`combine-installer.run` supports the following options:
-
-| option          | description                                                                                                                                                                                                      |
-| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| clean           | Remove the previously saved environment (AWS Access Key, admin user info) before performing the installation.                                                                                                    |
-| restart         | Run the installation from the beginning; do not resume a previous installation.                                                                                                                                  |
-| server          | Install _The Combine_ in a server environment so that _The Combine_ is always running by default.                                                                                                                |
-| timeout TIMEOUT | Use a different timeout when installing. The default timeout is 5 minutes. With slow internet connections, it is helpful to extend the timeout. See <https://pkg.go.dev/time#ParseDuration> for timeout formats. |
-| uninstall       | Remove software installed by this script.                                                                                                                                                                        |
-| update          | Update _The Combine_ to the version number provided. This skips installing the support software that was installed previously.                                                                                   |
-| version-number  | Specify a version to install instead of the current version. A version number will have the form `vn.n.n` where `n` represents an integer value, for example, `v1.20.0`.                                         |
+| option          | description |
+| --------------- | ---------------------------------------------------------------------------- |
+| clean           | Remove the previously saved environment (AWS Access Key, admin user info) before performing the installation. |
+| restart         | Run the installation from the beginning; do not resume a previous installation. |
+| server          | Install _The Combine_ in a server environment so that _The Combine_ is always running by default. |
+| timeout TIMEOUT | Use a different timeout when installing. (Default: 5 minutes.) With slow internet, it is helpful to extend the timeout. See <https://pkg.go.dev/time#ParseDuration> for timeout formats. |
+| uninstall       | Remove software installed by this script. |
+| update          | Update _The Combine_ to the version number provided. This skips installing support software that was installed previously. |
+| version-number  | Specify a version to install instead of the current version. A version number will have the form `vn.n.n` where `n` represents an integer value, for example, `v1.20.0`. |
 
 ### Examples
 
-| Command                                    | Effect                                                       |
-| ------------------------------------------ | ------------------------------------------------------------ |
-| `./combine-installer.run -- v1.1.6`        | Install version `v1.1.6` of _The Combine_.                   |
-| `./combine-installer.run -- update v1.2.1` | Update an existing Combine installation to version `v1.2.1`  |
-| `./combine-installer.run -- restart`       | Restart the current installation process from the beginning. |
+| Command                                                                              | Effect                                     |
+| ------------------------------------------------------------------------------------ | -------------------------------------------|
+| `./combine-installer.run -- v2.0.1`                                                  | Install version `v2.0.1` of _The Combine_. |
+| `./combine-installer.run -- update v2.2.0`                                           | Update installation to version `v2.2.0`    |
+| `./combine-installer.run -- restart`                                                 | Restart process from the beginning.        |
