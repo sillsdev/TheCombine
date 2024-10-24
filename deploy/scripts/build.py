@@ -269,8 +269,10 @@ def main() -> None:
         case "docker":
             if args.debug:
                 container_cmd.extend(["-D", "-l", "debug"])
-            build_cmd = container_cmd + ["buildx", "build", "--load"]
-            push_cmd = container_cmd + ["push"]
+            build_cmd = container_cmd + ["buildx", "build"]
+            if args.repo is not None:
+                build_cmd.append("--push")
+            push_cmd: list[str] = []
         case _:
             logging.critical(f"Container CLI '{container_cmd[0]}' is not supported.")
             sys.exit(1)
@@ -306,7 +308,7 @@ def main() -> None:
         job_set[component] = JobQueue(component, debug=args.debug)
         logging.debug(f"Adding job {build_cmd + job_opts}")
         job_set[component].add_job(Job(build_cmd + job_opts, spec.dir))
-        if args.repo is not None:
+        if args.repo is not None and container_cmd[0] == "nerdctl":
             logging.debug(f"Adding job {push_cmd + [image_name]}")
             job_set[component].add_job(Job(push_cmd + [image_name], None))
         logging.info(f"Building component {component}")
