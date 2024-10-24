@@ -41,10 +41,3 @@ jobs:
         run: |
           deploy/scripts/build.py --components database --debug --arch ${{ matrix.arch }}
         shell: bash
-      - name: List images
-        run: |
-          docker images
-      - name: Image digest
-        run: |
-          docker --debug image inspect combine_database:latest -f '{{json .Id}}'
-        shell: bash
