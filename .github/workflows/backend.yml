@@ -185,3 +185,7 @@ jobs:
         run: |
           deploy/scripts/build.py --components backend --debug --arch ${{ matrix.arch }}
         shell: bash
+      - name: Image digest
+        run: |
+          docker --debug image inspect combine_backend:latest -f '{{json .Id}}'
+        shell: bash

@@ -37,9 +37,11 @@ jobs:
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
           fetch-depth: 0
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
       - name: Build maintenance image
         run: |
           deploy/scripts/build.py --components maintenance --debug --arch ${{ matrix.arch }}
+        shell: bash
+      - name: Image digest
+        run: |
+          docker --debug image inspect combine_maint:latest -f '{{json .Id}}'
         shell: bash
