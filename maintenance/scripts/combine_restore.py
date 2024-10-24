@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Restore The Combine from a backup stored in the AWS S3 service.
 
