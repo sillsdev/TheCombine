@@ -207,6 +207,13 @@ def parse_args() -> Namespace:
         formatter_class=RawFormatter,
     )
     parser.add_argument(
+        "--arch",
+        choices=["amd64", "arm64"],
+        default=["arm64"],
+        help="Target cpu architecture(s).",
+        nargs="*",
+    )
+    parser.add_argument(
         "--build-args", nargs="*", help="Build arguments to pass to the docker build."
     )
     parser.add_argument(
@@ -276,7 +283,7 @@ def main() -> None:
         case _:
             logging.critical(f"Container CLI '{container_cmd[0]}' is not supported.")
             sys.exit(1)
-    build_cmd.extend(["--platform", "linux/amd64,linux/arm64"])
+    build_cmd.extend(["--platform", ",".join([f"linux/{arch}" for arch in args.arch])])
 
     # Setup build options
     if args.quiet:

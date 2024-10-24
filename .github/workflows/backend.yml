@@ -146,8 +146,11 @@ jobs:
         uses: github/codeql-action/analyze@d39d31e687223d841ef683f52467bd88e9b21c14 # v3.25.3
 
   docker_build:
+    if: ${{ github.event.type }} == "PullRequest"
     runs-on: ubuntu-22.04
-    #    if: ${{ github.event.type }} == "PullRequest"
+    strategy:
+      matrix:
+        arch: ["amd64", "arm64"]
     steps:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
       # configuring harden-runner and identifying allowed endpoints.
@@ -178,13 +181,9 @@ jobs:
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
           fetch-depth: 0
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
       - name: Build backend
         run: |
-          deploy/scripts/build.py --components backend --debug
+          deploy/scripts/build.py --components backend --debug --arch ${{ matrix.arch }}
         shell: bash
       - name: List images
         run: |
