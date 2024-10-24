@@ -142,6 +142,7 @@ export default function ProjectLanguages(
     setAdd(false);
     setLangsInProj("");
     setNewLang(newWritingSystem());
+    setChangeVernName(false);
   };
 
   const updateVernacularName = async (): Promise<void> => {
@@ -160,7 +161,6 @@ export default function ProjectLanguages(
       .setProject({ ...props.project, vernacularWritingSystem })
       .then(() => {
         resetState();
-        setChangeVernName(false);
         toast.success(
           t("projectSettings.language.updateVernacularLanguageNameSuccess")
         );
