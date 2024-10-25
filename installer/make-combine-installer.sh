@@ -62,7 +62,7 @@ if [[ $NET_INSTALL == 0 ]] ; then
   # Package The Combine for "offline" installation
   TEMP_DIR=/tmp/images-$$
   pushd scripts
-  ./package_images.py ${COMBINE_VERSION} ${TEMP_DIR} $((( ARM == 1 )) && echo "--arm") $((( DEBUG == 1 )) && echo "--debug")
+  ./package_images.py ${COMBINE_VERSION} ${TEMP_DIR} $((( ARM == 1 )) && echo "--arch arm64") $((( DEBUG == 1 )) && echo "--debug")
   INSTALLER_NAME="combine-installer.run"
   popd
 else
@@ -79,7 +79,7 @@ for DIR in venv scripts/__pycache__ ; do
 done
 
 cd ${SCRIPT_DIR}
-makeself $((( DEBUG == 0)) && echo "--tar-quietly" ) ../deploy ${INSTALLER_NAME} "Combine Installer" scripts/install-combine.sh ${COMBINE_VERSION}
+makeself $((( DEBUG == 0)) && echo "--tar-quietly" ) ../deploy ${INSTALLER_NAME} "Combine Installer" scripts/install-combine.sh ${COMBINE_VERSION} $((( ARM == 1 )) && echo "arm")
 if  [[ $NET_INSTALL == 0 ]] ; then
   makeself --append ${TEMP_DIR} ${INSTALLER_NAME}
   rm -rf ${TEMP_DIR}

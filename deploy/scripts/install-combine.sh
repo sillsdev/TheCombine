@@ -78,11 +78,16 @@ install-kubernetes () {
   # Setup Kubernetes environment and WiFi Access Point
   cd ${DEPLOY_DIR}/ansible
 
+  # Set -e/--extra-vars for ansible-playbook
+  EXTRA_VARS="-e k8s_user=${whoami}"
   if [ -d "${DEPLOY_DIR}/airgap-images" ] ; then
-    ansible-playbook playbook_desktop_setup.yml -K -e k8s_user=`whoami` -e install_airgap_images=true $(((DEBUG == 1)) && echo "-vv")
-  else
-    ansible-playbook playbook_desktop_setup.yml -K -e k8s_user=`whoami` $(((DEBUG == 1)) && echo "-vv")
+    EXTRA_VARS="${EXTRA_VARS} -e install_airgap_images=true"
   fi
+  if [ $ARM == 1 ] ; then
+    EXTRA_VARS="${EXTRA_VARS} -e cpu_arch=arm64"
+  fi
+
+  ansible-playbook playbook_desktop_setup.yml -K ${EXTRA_VARS} $(((DEBUG == 1)) && echo "-vv")
 }
 
 # Set the KUBECONFIG environment variable so that the cluster can
@@ -193,6 +198,7 @@ CONFIG_DIR=${HOME}/.config/combine
 mkdir -p ${CONFIG_DIR}
 SINGLE_STEP=0
 IS_SERVER=0
+ARM=0
 DEBUG=0
 
 # See if we need to continue from a previous install
@@ -207,6 +213,9 @@ fi
 while (( "$#" )) ; do
   OPT=$1
   case $OPT in
+    arm)
+      ARM=1
+      ;;
     clean)
       next-state "Pre-reqs"
       if [ -f ${CONFIG_DIR}/env ] ; then

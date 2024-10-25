@@ -8,7 +8,7 @@ helm templates for the middleware used by The Combine and for The Combine itself
 image names are extracted from the templates and then pulled from the repo and stored
 in ../images as compressed tarballs; zstd compression is used.
 
-By default, packs images for amd64 architecture; use --arm to pack for arm64 instead.
+By default, packs images for amd64; use --arch for a different architecture.
 """
 
 import argparse
@@ -42,10 +42,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("output_dir", help="Directory for the collected image files.")
     # Add Optional arguments
     parser.add_argument(
-        "--arm",
-        action="store_true",
-        help="Package for arm64 instead of the default amd64",
-        default=False,
+        "--arch",
+        choices=["amd64", "arm64"],
+        default="amd64",
+        help="Target cpu architecture.",
     )
     parser.add_argument(
         "--config",
@@ -67,16 +67,15 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def package_k3s(dest_dir: Path, *, arm: bool = False, debug: bool = False) -> None:
+def package_k3s(dest_dir: Path, *, arch: str = "arm64", debug: bool = False) -> None:
     logging.info("Packaging k3s images.")
-    extra_vars = f"'package_dir':'{dest_dir}'"
-    if arm:
-        extra_vars += ",'cpu_arch':'arm64'"
     ansible_cmd = [
         "ansible-playbook",
         "playbook_k3s_airgapped_files.yml",
         "--extra-vars",
-        "{" + extra_vars + "}",
+        f"package_dir={dest_dir}",
+        "--extra-vars",
+        f"cpu_arch={arch}",
     ]
     if debug:
         ansible_cmd.append("-vv")
@@ -84,14 +83,14 @@ def package_k3s(dest_dir: Path, *, arm: bool = False, debug: bool = False) -> No
 
 
 def package_images(
-    image_list: List[str], tar_file: Path, *, arm: bool = False, debug: bool = False
+    image_list: List[str], tar_file: Path, *, arch: str = "amd64", debug: bool = False
 ) -> None:
     container_cli_cmd = [os.getenv("CONTAINER_CLI", "docker")]
     if container_cli_cmd[0] == "nerdctl":
         container_cli_cmd.extend(["--namespace", "k8s.io"])
 
     # Pull each image
-    pull_cmd = container_cli_cmd + ["pull", f"--platform=linux/{'arm64' if arm else 'amd64'}"]
+    pull_cmd = container_cli_cmd + ["pull", f"--platform=linux/{arch}"]
     for image in image_list:
         run_cmd(pull_cmd + [image], print_cmd=debug, print_output=debug)
 
@@ -112,7 +111,7 @@ def package_middleware(
     cluster_type: str,
     image_dir: Path,
     chart_dir: Path,
-    arm: bool = False,
+    arch: str = "amd64",
     debug: bool = False,
 ) -> None:
     logging.info("Packaging middleware images.")
@@ -168,12 +167,12 @@ def package_middleware(
                     middleware_images.append(match.group(1))
 
     logging.debug(f"Middleware images: {middleware_images}")
-    out_file = f"middleware-airgap-images-{'arm64' if arm else 'amd64'}.tar"
-    package_images(middleware_images, image_dir / out_file, arm=arm, debug=debug)
+    out_file = f"middleware-airgap-images-{arch}.tar"
+    package_images(middleware_images, image_dir / out_file, arch=arch, debug=debug)
 
 
 def package_thecombine(
-    tag: str, image_dir: Path, *, arm: bool = False, debug: bool = False
+    tag: str, image_dir: Path, *, arch: str = "amd64", debug: bool = False
 ) -> None:
     logging.info(f"Packaging The Combine version {tag}.")
     logging.debug("Create helm charts from templates")
@@ -206,8 +205,8 @@ def package_thecombine(
     logging.debug(f"Combine images: {combine_images}")
 
     # Logout of AWS to allow pulling the images
-    out_file = f"combine-airgap-images-{'arm64' if arm else 'amd64'}.tar"
-    package_images(combine_images, image_dir / out_file, arm=arm, debug=debug)
+    out_file = f"combine-airgap-images-{arch}.tar"
+    package_images(combine_images, image_dir / out_file, arch=arch, debug=debug)
 
 
 def main() -> None:
@@ -228,16 +227,16 @@ def main() -> None:
     os.environ["AWS_DEFAULT_REGION"] = ""
 
     # Update helm repos
-    package_k3s(image_dir, arm=args.arm, debug=args.debug)
+    package_k3s(image_dir, arch=args.arch, debug=args.debug)
     package_middleware(
         args.config,
         cluster_type="standard",
         image_dir=image_dir,
         chart_dir=chart_dir,
-        arm=args.arm,
+        arch=args.arch,
         debug=args.debug,
     )
-    package_thecombine(args.tag, image_dir, arm=args.arm, debug=args.debug)
+    package_thecombine(args.tag, image_dir, arch=args.arch, debug=args.debug)
 
 
 if __name__ == "__main__":
