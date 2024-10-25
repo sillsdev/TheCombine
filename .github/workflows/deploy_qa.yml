@@ -2,7 +2,7 @@ name: "Deploy Update to QA Server"
 
 on:
   push:
-    branches: [arm, master]
+    branches: [master]
 
 permissions:
   contents: read

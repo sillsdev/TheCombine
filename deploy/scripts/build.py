@@ -209,7 +209,7 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "--arch",
         choices=["amd64", "arm64"],
-        default=["arm64"],
+        default=[],
         help="Target cpu architecture(s).",
         nargs="*",
     )
@@ -284,7 +284,8 @@ def main() -> None:
         case _:
             logging.critical(f"Container CLI '{container_cmd[0]}' is not supported.")
             sys.exit(1)
-    build_cmd.extend(["--platform", ",".join([f"linux/{arch}" for arch in args.arch])])
+    if len(args.arch):
+        build_cmd.extend(["--platform", ",".join([f"linux/{arch}" for arch in args.arch])])
 
     # Setup build options
     if args.quiet:

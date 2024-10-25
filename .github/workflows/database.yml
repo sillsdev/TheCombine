@@ -24,6 +24,7 @@ jobs:
           egress-policy: block
           allowed-endpoints: >
             github.com:443
+            registry-1.docker.io:443
       # For subfolders, currently a full checkout is required.
       # See: https://github.com/marketplace/actions/build-and-push-docker-images#path-context
       - name: Checkout repo
