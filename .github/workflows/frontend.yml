@@ -124,6 +124,7 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
+            auth.docker.io:443
             files.pythonhosted.org:443
             github.com:443
             pypi.org:443
@@ -139,5 +140,5 @@ jobs:
         shell: bash
       - name: Image digest
         run: |
-          docker --debug image inspect combine_frontend:latest -f '{{json .Id}}'
+          docker image inspect combine_frontend:latest -f '{{json .Id}}'
         shell: bash

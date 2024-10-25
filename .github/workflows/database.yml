@@ -23,6 +23,7 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
+            auth.docker.io:443
             github.com:443
             registry-1.docker.io:443
       # For subfolders, currently a full checkout is required.
@@ -37,5 +38,5 @@ jobs:
         shell: bash
       - name: Image digest
         run: |
-          docker --debug image inspect combine_database:latest -f '{{json .Id}}'
+          docker image inspect combine_database:latest -f '{{json .Id}}'
         shell: bash
