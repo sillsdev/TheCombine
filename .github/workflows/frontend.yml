@@ -64,7 +64,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
-      - run: npm run test-frontend:coverage
+      - name: Run tests and generate coverage
+        run: npm run test-frontend:coverage
         env:
           CI: true
       - name: Upload coverage artifact
@@ -131,7 +132,7 @@ jobs:
             pypi.org:443
             registry-1.docker.io:443
             registry.npmjs.org:443
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
           fetch-depth: 0
