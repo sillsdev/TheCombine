@@ -54,6 +54,12 @@ runs:
         username: ${{ inputs.aws_access_key_id }}
         password: ${{ inputs.aws_secret_access_key }}
 
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
     - name: Build The Combine
       run: >
         deploy/scripts/build.py

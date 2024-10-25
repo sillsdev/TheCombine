@@ -124,12 +124,9 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
-            auth.docker.io:443
             files.pythonhosted.org:443
             github.com:443
-            production.cloudflare.docker.com:443
             pypi.org:443
-            registry-1.docker.io:443
             registry.npmjs.org:443
       - name: Checkout repo
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7

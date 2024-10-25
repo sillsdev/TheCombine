@@ -24,12 +24,9 @@ jobs:
           egress-policy: block
           allowed-endpoints: >
             archive.ubuntu.com:80
-            auth.docker.io:443
             files.pythonhosted.org:443
             github.com:443
-            production.cloudflare.docker.com:443
             pypi.org:443
-            registry-1.docker.io:443
             security.ubuntu.com:80
       # For subfolders, currently a full checkout is required.
       # See: https://github.com/marketplace/actions/build-and-push-docker-images#path-context
