@@ -25,6 +25,7 @@ jobs:
           allowed-endpoints: >
             auth.docker.io:443
             github.com:443
+            production.cloudflare.docker.com:443
             registry-1.docker.io:443
       # For subfolders, currently a full checkout is required.
       # See: https://github.com/marketplace/actions/build-and-push-docker-images#path-context
@@ -34,7 +35,7 @@ jobs:
           fetch-depth: 0
       - name: Build database image
         run: |
-          deploy/scripts/build.py --components database --debug --arch ${{ matrix.arch }}
+          deploy/scripts/build.py --components database --arch ${{ matrix.arch }}
         shell: bash
       - name: Image digest
         run: |

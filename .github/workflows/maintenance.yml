@@ -27,6 +27,7 @@ jobs:
             archive.ubuntu.com:80
             files.pythonhosted.org:443
             github.com:443
+            production.cloudflare.docker.com:443
             pypi.org:443
             registry-1.docker.io:443
             security.ubuntu.com:80
@@ -38,7 +39,7 @@ jobs:
           fetch-depth: 0
       - name: Build maintenance image
         run: |
-          deploy/scripts/build.py --components maintenance --debug --arch ${{ matrix.arch }}
+          deploy/scripts/build.py --components maintenance --arch ${{ matrix.arch }}
         shell: bash
       - name: Image digest
         run: |

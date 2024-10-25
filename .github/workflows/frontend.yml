@@ -127,6 +127,7 @@ jobs:
             auth.docker.io:443
             files.pythonhosted.org:443
             github.com:443
+            production.cloudflare.docker.com:443
             pypi.org:443
             registry-1.docker.io:443
             registry.npmjs.org:443
@@ -136,7 +137,7 @@ jobs:
           fetch-depth: 0
       - name: Build frontend
         run: |
-          deploy/scripts/build.py --components frontend --debug --arch ${{ matrix.arch }}
+          deploy/scripts/build.py --components frontend --arch ${{ matrix.arch }}
         shell: bash
       - name: Image digest
         run: |
