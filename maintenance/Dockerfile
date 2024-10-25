@@ -16,7 +16,7 @@
 #   - ARM 64-bit
 ############################################################
 
-FROM --platform=$BUILDPLATFORM sillsdev/aws-kubectl:0.3.0
+FROM sillsdev/aws-kubectl:0.3.0
 
 USER root
 
