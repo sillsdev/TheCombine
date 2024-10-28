@@ -61,9 +61,9 @@ spec:
                   name: {{ .Values.awsEcr.configName }}
             resources:
               limits:
-                memory: 500Mi
+                memory: 256Mi
               requests:
-                memory: 500Mi
+                memory: 512Mi
             securityContext:
               capabilities: {}
             terminationMessagePath: /dev/termination-log

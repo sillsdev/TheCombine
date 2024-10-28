@@ -106,7 +106,7 @@ spec:
           resources:
             requests:
               cpu:  200m
-              memory: 1200Mi
+              memory: 2Gi
 {{- if .Values.global.includeResourceLimits }}
             limits:
               memory: 4Gi

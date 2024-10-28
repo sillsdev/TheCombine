@@ -52,9 +52,9 @@ spec:
           name: create-admin-user
           resources:
             limits:
-              memory: 500Mi
+              memory: 256Mi
             requests:
-              memory: 500Mi
+              memory: 512Mi
           volumeMounts:
             - mountPath: /home/app/.CombineFiles
               name: backend-data
