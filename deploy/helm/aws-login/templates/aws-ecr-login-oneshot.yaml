@@ -60,10 +60,10 @@ spec:
               key: DOCKER_EMAIL
               name: "{{ .Values.awsEcr.configName }}"
         resources:
+          requests:
+            memory: 128Mi
           limits:
             memory: 256Mi
-          requests:
-            memory: 512Mi
         securityContext:
           capabilities: {}
         terminationMessagePath: /dev/termination-log
