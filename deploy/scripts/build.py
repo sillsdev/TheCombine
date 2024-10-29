@@ -299,6 +299,7 @@ def main() -> None:
     job_set: Dict[str, JobQueue] = {}
     for component in to_do:
         spec = build_specs[component]
+        logging.info(f"Starting pre-build for {component}")
         spec.pre_build()
         image_name = get_image_name(args.repo, spec.name, args.tag)
         job_opts = ["-t", image_name, "-f", "Dockerfile", "."]
@@ -323,6 +324,7 @@ def main() -> None:
         time.sleep(5.0)
     # Run the post_build cleanup functions
     for component in to_do:
+        logging.info(f"Starting post-build for {component}")
         build_specs[component].post_build()
 
     # Print job summary if output mode is ALL
