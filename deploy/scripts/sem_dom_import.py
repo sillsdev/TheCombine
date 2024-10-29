@@ -295,7 +295,7 @@ def generate_semantic_domains(
                 # Languages can be found in the Name element
                 for sub_elem in elem:
                     lang, name_text = get_auni_text(sub_elem)
-                    logging.info(f"Language code: {lang}")
+                    logging.debug(f"Language code: {lang}")
                     if lang not in domain_tree:
                         domain_tree[lang] = {}
                     if lang not in domain_nodes:
@@ -305,9 +305,9 @@ def generate_semantic_domains(
         prev_domain = get_sem_doms(root, {}, prev_domain)
 
     for lang in domain_nodes:
-        logging.info(f"Number of {lang} Domains: {len(domain_nodes[lang])}")
+        logging.debug(f"Number of {lang} Domains: {len(domain_nodes[lang])}")
     for lang in domain_tree:
-        logging.info(f"Number of {lang} Tree Nodes: {len(domain_tree[lang])}")
+        logging.debug(f"Number of {lang} Tree Nodes: {len(domain_tree[lang])}")
     if not flatten_questions:
         SemanticDomainFull.flatten_questions = False
     write_json(output_dir)
