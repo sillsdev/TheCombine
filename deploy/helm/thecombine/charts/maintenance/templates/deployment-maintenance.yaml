@@ -109,7 +109,7 @@ spec:
               memory: 1Gi
 {{- if .Values.global.includeResourceLimits }}
             limits:
-              memory: 4Gi
+              memory: 2Gi
 {{- end }}
           volumeMounts:
             - mountPath: {{ .Values.fontsDir }}
