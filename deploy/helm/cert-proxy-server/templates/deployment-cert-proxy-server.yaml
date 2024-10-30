@@ -68,7 +68,7 @@ spec:
               cpu:  2m
               memory: 128Mi
             limits:
-              memory: 256Mi
+              memory: 128Mi
       restartPolicy: Always
 {{- if ne .Values.global.pullSecretName "None" }}
       imagePullSecrets:

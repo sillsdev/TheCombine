@@ -54,7 +54,7 @@ spec:
             requests:
               memory: 128Mi
             limits:
-              memory: 256Mi
+              memory: 128Mi
           volumeMounts:
             - mountPath: /home/app/.CombineFiles
               name: backend-data
