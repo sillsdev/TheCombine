@@ -13,10 +13,10 @@ name: "CodeQL"
 
 on:
   push:
-    branches: ["master"]
+    branches: [master]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: ["master"]
+    branches: [master]
   schedule:
     - cron: "21 8 * * 3"
 
@@ -26,7 +26,7 @@ permissions: # added using https://github.com/step-security/secure-workflows
 jobs:
   analyze:
     name: Analyze
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions:
       actions: read
       contents: read
