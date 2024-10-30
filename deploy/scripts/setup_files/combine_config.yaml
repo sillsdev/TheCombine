@@ -125,9 +125,10 @@ profiles:
 
 # Set of charts
 # The set of charts defines properties for each of the charts listed in the profiles above.
-# There are 2 keys for each chart:
+# There are 3 keys for each chart:
 #   namespace: the namespace where helm should install the chart.  Note that the namespace needs to be
 #             created beforehand
+#   install_langs: add font support for languages specified beyond the defaults
 #   secrets: a list of secrets that are required for each chart.  Each secret contains:
 #     config_item: the name of the configuration value that is referenced in the chart's template files
 #     env_var: the name of the environment variable that holds the value for the config_item.

@@ -51,9 +51,9 @@ spec:
           resources:
             requests:
               cpu:  1m
-              memory: 10M
+              memory: 128Mi
             limits:
-              memory: 50M
+              memory: 128Mi
           volumeMounts:
             - name: nginx-html
               mountPath: /usr/share/nginx/html
