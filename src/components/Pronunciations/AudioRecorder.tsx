@@ -1,4 +1,4 @@
-import { ReactElement, useContext } from "react";
+import { ReactElement, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
@@ -22,9 +22,20 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
     (state: StoreState) => state.currentProjectState.speaker?.id
   );
   const recorder = useContext(RecorderContext);
+  const [clicked, setClicked] = useState(false);
   const { t } = useTranslation();
 
+  useEffect(() => {
+    // Enable clicking only when the word id has changed
+    setClicked(false);
+  }, [props.id]);
+
   async function startRecording(): Promise<void> {
+    if (clicked) {
+      // Prevent clicking again before the word has updated with the first recording.
+      return;
+    }
+
     const recordingId = recorder.getRecordingId();
     if (recordingId && recordingId !== props.id) {
       // Prevent interfering with an active recording on a different entry.
@@ -33,6 +44,8 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
 
     // Prevent starting a recording before a previous one is finished.
     await stopRecording();
+
+    setClicked(true);
 
     if (!recorder.startRecording(props.id)) {
       let errorMessage = t("pronunciations.recordingError");
