@@ -26,7 +26,7 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
   const { t } = useTranslation();
 
   useEffect(() => {
-    // Re-enable clicking when the word id has changed.
+    // Re-enable clicking when the word id has changed
     setClicked(false);
   }, [props.id]);
 
@@ -42,10 +42,10 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
       return false;
     }
 
+    setClicked(true);
+
     // Prevent starting a recording before a previous one is finished.
     await stopRecording();
-
-    setClicked(true);
 
     if (!recorder.startRecording(props.id)) {
       let errorMessage = t("pronunciations.recordingError");
@@ -58,7 +58,7 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
     return true;
   }
 
-  async function stopRecording(): Promise<string | undefined> {
+  async function stopRecording(): Promise<void> {
     // Prevent triggering this function if no recording is active.
     if (recorder.getRecordingId() === undefined) {
       return;
@@ -68,8 +68,9 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
       props.onClick();
     }
     const file = await recorder.stopRecording();
-    if (!file) {
+    if (!file || !file.size) {
       toast.error(t("pronunciations.recordingError"));
+      setClicked(false);
       return;
     }
     if (!props.noSpeaker) {
