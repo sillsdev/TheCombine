@@ -26,20 +26,20 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
   const { t } = useTranslation();
 
   useEffect(() => {
-    // Enable clicking only when the word id has changed
+    // Re-enable clicking when the word id has changed.
     setClicked(false);
   }, [props.id]);
 
-  async function startRecording(): Promise<void> {
+  async function startRecording(): Promise<boolean> {
     if (clicked) {
-      // Prevent clicking again before the word has updated with the first recording.
-      return;
+      // Prevent recording again before this word has updated.
+      return false;
     }
 
     const recordingId = recorder.getRecordingId();
     if (recordingId && recordingId !== props.id) {
       // Prevent interfering with an active recording on a different entry.
-      return;
+      return false;
     }
 
     // Prevent starting a recording before a previous one is finished.
@@ -53,7 +53,9 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
         errorMessage += ` ${t("pronunciations.recordingPermission")}`;
       }
       toast.error(errorMessage);
+      return false;
     }
+    return true;
   }
 
   async function stopRecording(): Promise<string | undefined> {
