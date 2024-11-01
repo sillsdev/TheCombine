@@ -1,18 +1,4 @@
 ###############################################################
-PackageId: AWSSDK.Core
-PackageVersion: 3.7.100.14
-PackageProjectUrl: https://github.com/aws/aws-sdk-net/
-Authors: Amazon Web Services
-License: Apache-2.0
-LicenseUrl: http://aws.amazon.com/apache2.0/
-###############################################################
-PackageId: AWSSDK.SecurityToken
-PackageVersion: 3.7.100.14
-PackageProjectUrl: https://github.com/aws/aws-sdk-net/
-Authors: Amazon Web Services
-License: Apache-2.0
-LicenseUrl: http://aws.amazon.com/apache2.0/
-###############################################################
 PackageId: BouncyCastle.Cryptography
 PackageVersion: 2.4.0
 PackageProjectUrl: https://www.bouncycastle.org/stable/nuget/csharp/website
@@ -307,31 +293,18 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: MongoDB.Bson
-PackageVersion: 2.29.0
+PackageVersion: 3.0.0
 PackageProjectUrl: https://www.mongodb.com/docs/drivers/csharp/
 Authors: MongoDB Inc.
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: MongoDB.Driver
-PackageVersion: 2.29.0
+PackageVersion: 3.0.0
 PackageProjectUrl: https://www.mongodb.com/docs/drivers/csharp/
 Authors: MongoDB Inc.
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
-###############################################################
-PackageId: MongoDB.Driver.Core
-PackageVersion: 2.29.0
-PackageProjectUrl: https://www.mongodb.com/docs/drivers/csharp/
-Authors: MongoDB Inc.
-License: Apache-2.0
-LicenseUrl: https://licenses.nuget.org/Apache-2.0
-###############################################################
-PackageId: MongoDB.Libmongocrypt
-PackageVersion: 1.12.0
-PackageProjectUrl: http://www.mongodb.org/display/DOCS/CSharp+Language+Center
-Authors: MongoDB Inc.
-LicenseUrl: https://aka.ms/deprecateLicenseUrl
 ###############################################################
 PackageId: Mono.Unix
 PackageVersion: 7.1.0-final.1.21458.1
@@ -348,51 +321,51 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: OpenTelemetry
-PackageVersion: 1.8.1
+PackageVersion: 1.9.0
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Api
-PackageVersion: 1.8.1
+PackageVersion: 1.9.0
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Api.ProviderBuilderExtensions
-PackageVersion: 1.8.1
+PackageVersion: 1.9.0
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Exporter.Console
-PackageVersion: 1.8.1
+PackageVersion: 1.9.0
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Exporter.OpenTelemetryProtocol
-PackageVersion: 1.8.1
+PackageVersion: 1.9.0
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Extensions.Hosting
-PackageVersion: 1.8.1
+PackageVersion: 1.9.0
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Instrumentation.AspNetCore
-PackageVersion: 1.8.1
+PackageVersion: 1.9.0
 PackageProjectUrl: https://opentelemetry.io/
-Authors: OpenTelemetry Authors
+Authors: OpenTelemetry authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
@@ -573,28 +546,28 @@ License: https://opensource.org/licenses/Zlib
 LicenseUrl: https://opensource.org/licenses/Zlib
 ###############################################################
 PackageId: Swashbuckle.AspNetCore
-PackageVersion: 6.8.1
+PackageVersion: 6.9.0
 PackageProjectUrl: https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Authors: domaindrivendev
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Swashbuckle.AspNetCore.Swagger
-PackageVersion: 6.8.1
+PackageVersion: 6.9.0
 PackageProjectUrl: https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Authors: domaindrivendev
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Swashbuckle.AspNetCore.SwaggerGen
-PackageVersion: 6.8.1
+PackageVersion: 6.9.0
 PackageProjectUrl: https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Authors: domaindrivendev
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Swashbuckle.AspNetCore.SwaggerUI
-PackageVersion: 6.8.1
+PackageVersion: 6.9.0
 PackageProjectUrl: https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Authors: domaindrivendev
 License: MIT
@@ -970,20 +943,6 @@ PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
-###############################################################
-PackageId: System.Text.Encodings.Web
-PackageVersion: 4.7.2
-PackageProjectUrl: https://github.com/dotnet/corefx
-Authors: Microsoft
-License: MIT
-LicenseUrl: https://licenses.nuget.org/MIT
-###############################################################
-PackageId: System.Text.Json
-PackageVersion: 4.7.2
-PackageProjectUrl: https://github.com/dotnet/corefx
-Authors: Microsoft
-License: MIT
-LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: System.Threading
 PackageVersion: 4.3.0
