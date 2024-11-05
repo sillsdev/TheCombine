@@ -16,7 +16,7 @@ const { fuzzySearch } = require("levenshtein-search");
 /** Checks if string starts and ends with quote marks.
  * For simplicity, allows mismatched quote types. */
 export function isQuoted(filter: string): boolean {
-  return filter.length > 2 && /^["'\p{Pi}].*["'\p{Pf}]$/u.test(filter);
+  return /^["'\p{Pi}].*["'\p{Pf}]$/u.test(filter);
 }
 
 /** Checks if value contains a substring that fuzzy-matches the filter. */
