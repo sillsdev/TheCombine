@@ -1,4 +1,4 @@
-import { ReactElement, useContext } from "react";
+import { ReactElement, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
@@ -22,14 +22,27 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
     (state: StoreState) => state.currentProjectState.speaker?.id
   );
   const recorder = useContext(RecorderContext);
+  const [clicked, setClicked] = useState(false);
   const { t } = useTranslation();
 
-  async function startRecording(): Promise<void> {
+  useEffect(() => {
+    // Re-enable clicking when the word id has changed
+    setClicked(false);
+  }, [props.id]);
+
+  async function startRecording(): Promise<boolean> {
+    if (clicked) {
+      // Prevent recording again before this word has updated.
+      return false;
+    }
+
     const recordingId = recorder.getRecordingId();
     if (recordingId && recordingId !== props.id) {
       // Prevent interfering with an active recording on a different entry.
-      return;
+      return false;
     }
+
+    setClicked(true);
 
     // Prevent starting a recording before a previous one is finished.
     await stopRecording();
@@ -40,10 +53,12 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
         errorMessage += ` ${t("pronunciations.recordingPermission")}`;
       }
       toast.error(errorMessage);
+      return false;
     }
+    return true;
   }
 
-  async function stopRecording(): Promise<string | undefined> {
+  async function stopRecording(): Promise<void> {
     // Prevent triggering this function if no recording is active.
     if (recorder.getRecordingId() === undefined) {
       return;
@@ -53,8 +68,9 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
       props.onClick();
     }
     const file = await recorder.stopRecording();
-    if (!file) {
+    if (!file || !file.size) {
       toast.error(t("pronunciations.recordingError"));
+      setClicked(false);
       return;
     }
     if (!props.noSpeaker) {
