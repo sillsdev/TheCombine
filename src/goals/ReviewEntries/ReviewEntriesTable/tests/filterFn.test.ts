@@ -35,7 +35,7 @@ describe("filterFn", () => {
   describe("fuzzyContains", () => {
     const testString = "I am a string with many possible substrings.";
 
-    test("Short: no typos allowed", () => {
+    test("short: no typos allowed", () => {
       ["i", "am", "a s"].forEach((s) =>
         expect(ff.fuzzyContains(testString, s)).toBeTruthy()
       );
@@ -44,7 +44,7 @@ describe("filterFn", () => {
       );
     });
 
-    test("Medium: 1 typo allowed", () => {
+    test("medium: 1 typo allowed", () => {
       ["i b", "ama", "strim"].forEach((s) =>
         expect(ff.fuzzyContains(testString, s)).toBeTruthy()
       );
@@ -53,7 +53,7 @@ describe("filterFn", () => {
       );
     });
 
-    test("Long: 2 typos allowed", () => {
+    test("long: 2 typos allowed", () => {
       ["i'm a string", "with man88"].forEach((s) =>
         expect(ff.fuzzyContains(testString, s)).toBeTruthy()
       );
@@ -69,14 +69,14 @@ describe("filterFn", () => {
     const filterWrongCase = "HELLO";
     const filterExact = "Hello";
 
-    it("unquoted: trims whitespace, isn't case sensitive, allows typo", () => {
+    it("unquoted: trims whitespace, fuzzy match", () => {
       expect(ff.matchesFilter(value, "goodbye")).toBeFalsy();
       expect(ff.matchesFilter(value, `  ${filterWithTypo}`)).toBeTruthy();
       expect(ff.matchesFilter(value, `${filterWrongCase}\t`)).toBeTruthy();
       expect(ff.matchesFilter(value, `\t${filterExact}  `)).toBeTruthy();
     });
 
-    it("quoted: trims whitespace, is case sensitive, rejects typo", () => {
+    it("quoted: trims whitespace, exact match", () => {
       expect(ff.matchesFilter(value, `"${filterWithTypo}"`)).toBeFalsy();
       expect(ff.matchesFilter(value, `"${filterWrongCase}"`)).toBeFalsy();
       expect(ff.matchesFilter(value, ` "\t${filterExact} "\n`)).toBeTruthy();
@@ -89,12 +89,12 @@ describe("filterFn", () => {
       mockGetValue.mockReturnValue("Hello world!");
     });
 
-    it("unquoted: trims whitespace, isn't case sensitive, allows typo", () => {
+    it("unquoted: trims whitespace, fuzzy match", () => {
       expect(filterFn(mockRow, mockId, "goodbye")).toBeFalsy();
       expect(filterFn(mockRow, mockId, "  H3LLO")).toBeTruthy();
     });
 
-    it("quoted: trims whitespace, is case sensitive, rejects typo", () => {
+    it("quoted: trims whitespace, exact match", () => {
       expect(filterFn(mockRow, mockId, '"H3llo"')).toBeFalsy();
       expect(filterFn(mockRow, mockId, '"HELLO"')).toBeFalsy();
       expect(filterFn(mockRow, mockId, '" Hello"\n')).toBeTruthy();
@@ -110,12 +110,12 @@ describe("filterFn", () => {
       ]);
     });
 
-    it("unquoted: trims whitespace, isn't case sensitive, allows typo", () => {
+    it("unquoted: trims whitespace, fuzzy match", () => {
       expect(filterFn(mockRow, mockId, "earth")).toBeFalsy();
       expect(filterFn(mockRow, mockId, " wrld\t")).toBeTruthy();
     });
 
-    it("quoted: trims whitespace, is case sensitive, rejects typo", () => {
+    it("quoted: trims whitespace, exact match", () => {
       expect(filterFn(mockRow, mockId, '"h3llo"')).toBeFalsy();
       expect(filterFn(mockRow, mockId, '"HELLO"')).toBeFalsy();
       expect(filterFn(mockRow, mockId, '" hello"\n')).toBeTruthy();
@@ -128,12 +128,12 @@ describe("filterFn", () => {
       mockGetValue.mockReturnValue([newGloss("hello"), newGloss("WORLD")]);
     });
 
-    it("unquoted: trims whitespace, isn't case sensitive, allows typo", () => {
+    it("unquoted: trims whitespace, fuzzy match", () => {
       expect(filterFn(mockRow, mockId, "earth")).toBeFalsy();
       expect(filterFn(mockRow, mockId, " wrld\t")).toBeTruthy();
     });
 
-    it("quoted: trims whitespace, is case sensitive, rejects typo", () => {
+    it("quoted: trims whitespace, exact match", () => {
       expect(filterFn(mockRow, mockId, '"h3llo"')).toBeFalsy();
       expect(filterFn(mockRow, mockId, '"HELLO"')).toBeFalsy();
       expect(filterFn(mockRow, mockId, '" hello"\n')).toBeTruthy();
@@ -187,21 +187,21 @@ describe("filterFn", () => {
     // filterFnPronunciations returns a filter function when given a speaker dictionary
     const filterFn = (ff.filterFnPronunciations as any)(speakers);
 
-    it("matches number of pronunciations", () => {
+    it("numeric: matches number of pronunciations", () => {
       mockGetValue.mockReturnValue([newPronunciation(), newPronunciation()]);
       expect(filterFn(mockRow, mockId, "  2")).toBeTruthy();
       expect(filterFn(mockRow, mockId, "2.0")).toBeTruthy();
       expect(filterFn(mockRow, mockId, "1")).toBeFalsy();
     });
 
-    it("matches whitespace if any audio", () => {
+    it("whitespace: matches any audio", () => {
       mockGetValue.mockReturnValueOnce([]);
       expect(filterFn(mockRow, mockId, " ")).toBeFalsy();
       mockGetValue.mockReturnValueOnce([newPronunciation()]);
       expect(filterFn(mockRow, mockId, " ")).toBeTruthy();
     });
 
-    it("fuzzy-matches speaker name", () => {
+    it("unquoted: fuzzy-matches speaker name", () => {
       mockGetValue.mockReturnValue([newPronunciation("filename", speakerId)]);
       expect(filterFn(mockRow, mockId, "2")).toBeTruthy();
       expect(filterFn(mockRow, mockId, " NAME\t\t")).toBeTruthy();
@@ -209,7 +209,7 @@ describe("filterFn", () => {
       expect(filterFn(mockRow, mockId, "other person")).toBeFalsy();
     });
 
-    it("exact-matches speaker name", () => {
+    it("quoted: exact-matches speaker name", () => {
       mockGetValue.mockReturnValue([newPronunciation("filename", speakerId)]);
       expect(filterFn(mockRow, mockId, "'2'")).toBeTruthy();
       expect(filterFn(mockRow, mockId, "'NAME'")).toBeFalsy();
@@ -223,12 +223,12 @@ describe("filterFn", () => {
       mockGetValue.mockReturnValue(newFlag("Hello world!"));
     });
 
-    it("unquoted: trims whitespace, isn't case sensitive, allows typo", () => {
+    it("unquoted: trims whitespace, fuzzy match", () => {
       expect(filterFn(mockRow, mockId, "goodbye")).toBeFalsy();
       expect(filterFn(mockRow, mockId, "  H3LLO")).toBeTruthy();
     });
 
-    it("quoted: trims whitespace, is case sensitive, rejects typo", () => {
+    it("quoted: trims whitespace, exact match", () => {
       expect(filterFn(mockRow, mockId, '"H3llo"')).toBeFalsy();
       expect(filterFn(mockRow, mockId, '"HELLO"')).toBeFalsy();
       expect(filterFn(mockRow, mockId, ' "\tHello "\n')).toBeTruthy();
