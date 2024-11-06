@@ -26,7 +26,8 @@ There are icons at the top of each column to
 ![Review Entries column sort icon](images/reviewEntriesColumnSort.png){width=20} sort the data.
 
 In a column with predominantly text content (Vernacular, Glosses, Note, or Flag), you can sort alphabetically or filter
-with a text search.
+with a text search. By default, the text search is a fuzzy match: it is not case sensitive and it allows for one or two
+typos. If you want exact text matches, use quotes around your filter.
 
 In the Number of Senses column or Pronunciations column, you can sort or filter by the number of senses or recordings
 that entries have. In the Pronunciations column, you can also filter by speaker name.
