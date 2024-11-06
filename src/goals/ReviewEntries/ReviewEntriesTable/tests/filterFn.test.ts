@@ -34,30 +34,30 @@ describe("filterFn", () => {
 
   describe("fuzzyContains", () => {
     const testString = "I am a string with many possible substrings.";
-    const exactMatch = ["I am", "strin", "ny possi"];
-    const fuzzyMatch = ["Iam", "strink", "nt possi"];
-    const nonMatch = ["I'm", "strinket", "ny ssi"];
 
-    test("Levenshtein distance 0", () => {
-      exactMatch.forEach((s) =>
-        expect(ff.fuzzyContains(testString, s, 0)).toBeTruthy()
+    test("Short: no typos allowed", () => {
+      ["i", "am", "a s"].forEach((s) =>
+        expect(ff.fuzzyContains(testString, s)).toBeTruthy()
       );
-      fuzzyMatch.forEach((s) =>
-        expect(ff.fuzzyContains(testString, s, 0)).toBeFalsy()
-      );
-      nonMatch.forEach((s) =>
-        expect(ff.fuzzyContains(testString, s, 0)).toBeFalsy()
+      ["@", "aq"].forEach((s) =>
+        expect(ff.fuzzyContains(testString, s)).toBeFalsy()
       );
     });
 
-    test("Levenshtein distance 1 (default)", () => {
-      exactMatch.forEach((s) =>
+    test("Medium: 1 typo allowed", () => {
+      ["i b", "ama", "strim"].forEach((s) =>
         expect(ff.fuzzyContains(testString, s)).toBeTruthy()
       );
-      fuzzyMatch.forEach((s) =>
+      ["i'm", "astrr"].forEach((s) =>
+        expect(ff.fuzzyContains(testString, s)).toBeFalsy()
+      );
+    });
+
+    test("Long: 2 typos allowed", () => {
+      ["i'm a string", "with man88"].forEach((s) =>
         expect(ff.fuzzyContains(testString, s)).toBeTruthy()
       );
-      nonMatch.forEach((s) =>
+      ["i'm a ztring", "with man888"].forEach((s) =>
         expect(ff.fuzzyContains(testString, s)).toBeFalsy()
       );
     });

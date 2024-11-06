@@ -19,22 +19,22 @@ export function isQuoted(filter: string): boolean {
   return /^["'\p{Pi}].*["'\p{Pf}]$/u.test(filter);
 }
 
-/** Checks if value contains a substring that fuzzy-matches the filter. */
-export function fuzzyContains(
-  value: string,
-  filter: string,
-  levenshteinDistance = 1
-): boolean {
-  // `fuzzySearch(...)` returns a generator;
-  // `.next()` on a generator always returns an object with boolean property `done`
-  return !fuzzySearch(
-    filter.toLowerCase(),
-    value.toLowerCase(),
-    levenshteinDistance
-  ).next().done;
+/** Number of typos allowed, depending on filter-length. */
+function levDist(len: number): number {
+  return len < 3 ? 0 : len < 6 ? 1 : 2;
 }
 
-/** Check if string matches filter. */
+/** Checks if value contains a substring that fuzzy-matches the filter. */
+export function fuzzyContains(value: string, filter: string): boolean {
+  filter = filter.toLowerCase();
+  value = value.toLowerCase();
+  // `fuzzySearch(...)` returns a generator;
+  // `.next()` on a generator always returns an object with boolean property `done`
+  return !fuzzySearch(filter, value, levDist(filter.length)).next().done;
+}
+
+/** Check if string matches filter.
+ * If filter quoted, exact match. Otherwise, fuzzy match. */
 export function matchesFilter(value: string, filter: string): boolean {
   filter = filter.trim();
   return isQuoted(filter)
