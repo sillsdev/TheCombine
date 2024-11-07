@@ -32,13 +32,13 @@
         dest: "{{ package_dir }}/{{ item }}"
         url: "https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/{{ item }}"
       loop:
-        - k3s-airgap-images-amd64.tar.zst
+        - k3s-airgap-images-{{ cpu_arch }}.tar.zst
         - k3s
-        - sha256sum-amd64.txt
+        - sha256sum-{{ cpu_arch }}.txt
 
     - name: Verify k3s downloads
       shell:
-        cmd: sha256sum --check --ignore-missing sha256sum-amd64.txt
+        cmd: sha256sum --check --ignore-missing sha256sum-{{ cpu_arch }}.txt
         chdir: "{{ package_dir }}"
       changed_when: false
 
@@ -50,9 +50,9 @@
     - name: Download kubectl
       get_url:
         dest: "{{ package_dir }}/kubectl"
-        url: "https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/amd64/kubectl"
+        url: "https://dl.k8s.io/release/{{ kubectl_version }}/bin/linux/{{ cpu_arch }}/kubectl"
 
     - name: Download helm
       get_url:
         dest: "{{ package_dir }}/helm.tar.gz"
-        url: "https://get.helm.sh/helm-{{ helm_version }}-linux-amd64.tar.gz"
+        url: "https://get.helm.sh/helm-{{ helm_version }}-linux-{{ cpu_arch }}.tar.gz"

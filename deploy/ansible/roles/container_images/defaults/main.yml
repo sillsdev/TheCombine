@@ -4,3 +4,4 @@
 
 source_image_dir: ../airgap-images
 airgap_image_dir: /var/lib/rancher/k3s/agent/images
+cpu_arch: amd64
