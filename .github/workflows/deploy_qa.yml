@@ -26,6 +26,7 @@ jobs:
           egress-policy: block
           allowed-endpoints: >
             *.actions.githubusercontent.com:443
+            *.cloudfront.net:443
             *.data.mcr.microsoft.com:443
             ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com
             api.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
