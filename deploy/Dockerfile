@@ -6,7 +6,7 @@
 #   - ARM 64-bit
 ############################################################
 
-FROM --platform=$BUILDPLATFORM ubuntu:22.04
+FROM ubuntu:22.04
 
 USER root
 

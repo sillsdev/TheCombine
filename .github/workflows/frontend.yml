@@ -128,6 +128,7 @@ jobs:
             auth.docker.io:443
             files.pythonhosted.org:443
             github.com:443
+            ports.ubuntu.com:80
             production.cloudflare.docker.com:443
             pypi.org:443
             registry-1.docker.io:443
@@ -136,6 +137,8 @@ jobs:
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
           fetch-depth: 0
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
       - name: Build frontend
         run: |
           deploy/scripts/build.py --components frontend --arch ${{ matrix.arch }}

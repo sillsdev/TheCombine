@@ -165,6 +165,7 @@ jobs:
             deb.debian.org:80
             github.com:443
             mcr.microsoft.com:443
+            ports.ubuntu.com:80
             security.ubuntu.com:80
             ts-crl.ws.symantec.com:80
       # For subfolders, currently a full checkout is required.
@@ -173,6 +174,10 @@ jobs:
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
           fetch-depth: 0
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
       - name: Build backend
         run: |
           deploy/scripts/build.py --components backend --arch ${{ matrix.arch }}
