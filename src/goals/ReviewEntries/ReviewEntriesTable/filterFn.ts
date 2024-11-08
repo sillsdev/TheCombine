@@ -10,18 +10,58 @@ import {
 } from "api/models";
 import { type Hash } from "types/hash";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { fuzzySearch } = require("levenshtein-search");
+
+/** Checks if string starts and ends with quote marks.
+ * For simplicity, allows mismatched quote types. */
+export function isQuoted(filter: string): boolean {
+  return /^["'\p{Pi}].*["'\p{Pf}]$/u.test(filter);
+}
+
+/** Number of typos allowed, depending on filter-length. */
+function levDist(len: number): number {
+  return len < 3 ? 0 : len < 6 ? 1 : 2;
+}
+
+/** Checks if value contains a substring that fuzzy-matches the filter. */
+export function fuzzyContains(value: string, filter: string): boolean {
+  filter = filter.toLowerCase();
+  value = value.toLowerCase();
+  // `fuzzySearch(...)` returns a generator;
+  // `.next()` on a generator always returns an object with boolean property `done`
+  return !fuzzySearch(filter, value, levDist(filter.length)).next().done;
+}
+
+/** Check if string matches filter.
+ * If filter quoted, exact match. Otherwise, fuzzy match. */
+export function matchesFilter(value: string, filter: string): boolean {
+  filter = filter.trim();
+  return isQuoted(filter)
+    ? value.includes(filter.substring(1, filter.length - 1).trim())
+    : fuzzyContains(value, filter);
+}
+
 /* Custom `filterFn` functions for `MaterialReactTable` columns.
  * (Can always assume that `filterValue` will be truthy.) */
 
-/** Requires the accessor return type to be `Dictionary[]`. */
+/** Requires the accessor return type to be `string`. */
+export const filterFnString: MRT_FilterFn<Word> = (
+  row,
+  id,
+  filterValue: string
+) => {
+  return matchesFilter(row.getValue<string>(id), filterValue);
+};
+
+/** Requires the accessor return type to be `Definition[]`. */
 export const filterFnDefinitions: MRT_FilterFn<Word> = (
   row,
   id,
   filterValue: string
 ) => {
   const definitions = row.getValue<Definition[]>(id);
-  const filter = filterValue.trim().toLowerCase();
-  return definitions.some((d) => d.text.toLowerCase().includes(filter));
+  return definitions.some((d) => matchesFilter(d.text, filterValue));
 };
 
 /** Requires the accessor return type to be `Gloss[]`. */
@@ -31,8 +71,7 @@ export const filterFnGlosses: MRT_FilterFn<Word> = (
   filterValue: string
 ) => {
   const glosses = row.getValue<Gloss[]>(id);
-  const filter = filterValue.trim().toLowerCase();
-  return glosses.some((g) => g.def.toLowerCase().includes(filter));
+  return glosses.some((g) => matchesFilter(g.def, filterValue));
 };
 
 /** Requires the accessor return type to be `SemanticDomain[]`. */
@@ -79,10 +118,15 @@ export const filterFnPronunciations =
     /* Match either number of pronunciations or a speaker name.
      * (Whitespace will match all audio, even without a speaker.) */
     const audio = row.getValue<Pronunciation[]>(id);
-    const filter = filterValue.trim().toLocaleLowerCase();
+    const filter = filterValue.trim();
     return (
+      (audio.length && !filter) ||
       audio.length === parseInt(filter) ||
-      audio.some((p) => !filter || speakers[p.speakerId]?.includes(filter))
+      audio.some(
+        (p) =>
+          p.speakerId in speakers &&
+          matchesFilter(speakers[p.speakerId], filter)
+      )
     );
   };
 
@@ -97,6 +141,5 @@ export const filterFnFlag: MRT_FilterFn<Word> = (
     // A filter has been typed and the word isn't flagged
     return false;
   }
-  const filter = filterValue.trim().toLowerCase();
-  return flag.text.toLowerCase().includes(filter);
+  return matchesFilter(flag.text, filterValue);
 };

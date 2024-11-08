@@ -19,7 +19,7 @@ export const recordIconId = "recordingIcon";
 interface RecorderIconProps {
   disabled?: boolean;
   id: string;
-  startRecording: () => void;
+  startRecording: () => Promise<boolean>;
   stopRecording: () => void;
 }
 
@@ -41,11 +41,12 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
     checkMicPermission().then(setHasMic);
   }, []);
 
-  function toggleIsRecordingToTrue(): void {
+  async function toggleIsRecordingToTrue(): Promise<void> {
     if (!isRecording) {
       // Only start a recording if there's not another on in progress.
-      dispatch(recording(props.id));
-      props.startRecording();
+      if (await props.startRecording()) {
+        dispatch(recording(props.id));
+      }
     } else {
       // This triggers if user clicks-and-holds on one entry's record icon,
       // drags the mouse outside that icon before releasing,
