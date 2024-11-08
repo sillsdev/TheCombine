@@ -166,6 +166,7 @@ jobs:
             github.com:443
             mcr.microsoft.com:443
             ports.ubuntu.com:80
+            registry-1.docker.io:443
             security.ubuntu.com:80
             ts-crl.ws.symantec.com:80
       # For subfolders, currently a full checkout is required.
@@ -176,13 +177,7 @@ jobs:
           fetch-depth: 0
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
       - name: Build backend
         run: |
           deploy/scripts/build.py --components backend --arch ${{ matrix.arch }}
-        shell: bash
-      - name: Image digest
-        run: |
-          docker image inspect combine_backend:latest -f '{{json .Id}}'
         shell: bash

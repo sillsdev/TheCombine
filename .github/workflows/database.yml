@@ -35,13 +35,7 @@ jobs:
           fetch-depth: 0
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
       - name: Build database image
         run: |
           deploy/scripts/build.py --components database --arch ${{ matrix.arch }}
-        shell: bash
-      - name: Image digest
-        run: |
-          docker image inspect combine_database:latest -f '{{json .Id}}'
         shell: bash

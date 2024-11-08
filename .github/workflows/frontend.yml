@@ -143,7 +143,3 @@ jobs:
         run: |
           deploy/scripts/build.py --components frontend --arch ${{ matrix.arch }}
         shell: bash
-      - name: Image digest
-        run: |
-          docker image inspect combine_frontend:latest -f '{{json .Id}}'
-        shell: bash
