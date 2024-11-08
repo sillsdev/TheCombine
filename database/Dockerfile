@@ -5,7 +5,7 @@
 #   - Intel/AMD 64-bit
 #   - ARM 64-bit
 ############################################################
-FROM mongo:7.0.14-jammy
+FROM --platform=$BUILDPLATFORM mongo:7.0.14-jammy
 
 WORKDIR /
 
