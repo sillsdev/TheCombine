@@ -16,7 +16,7 @@
 #   - ARM 64-bit
 ############################################################
 
-FROM --platform=$BUILDPLATFORM public.ecr.aws/thecombine/aws-kubectl:0.4.0-$TARGETARCH
+FROM public.ecr.aws/thecombine/aws-kubectl:0.4.0-$TARGETARCH
 
 USER root
 
