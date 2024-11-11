@@ -1,6 +1,7 @@
+import { Tooltip } from "@mui/material";
 import { ButtonProps } from "@mui/material/Button";
 import { enqueueSnackbar } from "notistack";
-import { ReactElement } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { isFrontierNonempty } from "backend";
@@ -13,11 +14,13 @@ import { type StoreState } from "rootRedux/types";
 interface ExportButtonProps {
   projectId: string;
   buttonProps?: ButtonProps & { "data-testid"?: string };
+  disabled?: boolean;
 }
 
 /** A button for exporting project to Lift file */
 export default function ExportButton(props: ExportButtonProps): ReactElement {
   const dispatch = useAppDispatch();
+  const [exports, setExports] = useState<boolean>(false);
   const { t } = useTranslation();
 
   async function exportProj(): Promise<void> {
@@ -38,17 +41,33 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
     exportResult.status === ExportStatus.Success ||
     exportResult.status === ExportStatus.Downloading;
 
+  useEffect(() => {
+    const fetchNonempty = async (): Promise<void> => {
+      await isFrontierNonempty(props.projectId).then(async (isNonempty) => {
+        if (isNonempty) {
+          setExports(true);
+        }
+      });
+    };
+    fetchNonempty().catch(console.error);
+  });
+
   return (
-    <LoadingButton
-      loading={loading}
-      disabled={loading}
-      buttonProps={{
-        ...props.buttonProps,
-        onClick: exportProj,
-        id: `project-${props.projectId}-export`,
-      }}
-    >
-      {t("buttons.export")}
-    </LoadingButton>
+    <Tooltip title={!exports ? t("projectExport.cannotExportEmpty") : ""}>
+      <span>
+        <LoadingButton
+          loading={loading}
+          disabled={loading}
+          buttonProps={{
+            ...props.buttonProps,
+            onClick: exportProj,
+            id: `project-${props.projectId}-export`,
+            disabled: !exports,
+          }}
+        >
+          {t("buttons.export")}
+        </LoadingButton>
+      </span>
+    </Tooltip>
   );
 }
