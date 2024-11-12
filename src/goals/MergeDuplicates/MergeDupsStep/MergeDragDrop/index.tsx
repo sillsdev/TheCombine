@@ -24,38 +24,46 @@ export const trashId = "trash-drop";
 
 export default function MergeDragDrop(): ReactElement {
   const dispatch = useAppDispatch();
+  const overrideProtection = useAppSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.overrideProtection
+  );
   const sidebarOpen = useAppSelector(
     (state: StoreState) =>
       state.mergeDuplicateGoal.tree.sidebar.mergeSenses.length > 1
   );
   const sidebarProtected = useAppSelector((state: StoreState) => {
-    const ms = state.mergeDuplicateGoal.tree.sidebar.mergeSenses;
-    return ms.length && ms[0].protected;
+    const goal = state.mergeDuplicateGoal;
+    const ms = goal.tree.sidebar.mergeSenses;
+    return ms.length && ms[0].protected && !goal.overrideProtection;
   });
   const words = useAppSelector(
     (state: StoreState) => state.mergeDuplicateGoal.tree.words
   );
 
-  const [senseToDelete, setSenseToDelete] = useState<string>("");
+  const [senseToDelete, setSenseToDelete] = useState("");
   const { t } = useTranslation();
 
   function handleDrop(res: DropResult): void {
     const src: MergeTreeReference = JSON.parse(res.draggableId);
     const srcWordId = res.source.droppableId;
     const srcWord = words[srcWordId];
-    if (srcWord?.protected && Object.keys(srcWord.sensesGuids).length === 1) {
+    if (
+      srcWord?.protected &&
+      !overrideProtection &&
+      Object.keys(srcWord.sensesGuids).length === 1
+    ) {
       // Case 0: The final sense of a protected word cannot be moved.
       return;
     } else if (res.destination?.droppableId === trashId) {
       // Case 1: The sense was dropped on the trash icon.
-      if (src.isSenseProtected) {
+      if (src.isSenseProtected && !overrideProtection) {
         // Case 1a: Cannot delete a protected sense.
         return;
       }
       setSenseToDelete(res.draggableId);
     } else if (res.combine) {
       // Case 2: the sense was dropped on another sense.
-      if (src.isSenseProtected) {
+      if (src.isSenseProtected && !overrideProtection) {
         // Case 2a: Cannot merge a protected sense into another sense.
         if (srcWordId !== res.combine.droppableId) {
           // The target sense is in a different word, so move instead of combine.

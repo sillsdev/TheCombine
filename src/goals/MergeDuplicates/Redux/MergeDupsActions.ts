@@ -26,6 +26,7 @@ import {
   setDataAction,
   setSidebarAction,
   setVernacularAction,
+  toggleOverrideProtectionAction,
 } from "goals/MergeDuplicates/Redux/MergeDupsReducer";
 import {
   CombineSenseMergePayload,
@@ -92,6 +93,10 @@ export function setData(words: Word[]): PayloadAction {
 
 export function setVern(payload: SetVernacularPayload): PayloadAction {
   return setVernacularAction(payload);
+}
+
+export function toggleOverrideProtection(): Action {
+  return toggleOverrideProtectionAction();
 }
 
 // Dispatch Functions

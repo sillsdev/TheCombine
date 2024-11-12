@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Checkbox, FormControlLabel, Grid } from "@mui/material";
 import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -7,13 +7,22 @@ import {
   deferMerge,
   mergeAll,
   setSidebar,
+  toggleOverrideProtection,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { asyncAdvanceStep } from "goals/Redux/GoalActions";
-import { useAppDispatch } from "rootRedux/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
+import { StoreState } from "rootRedux/types";
 import theme from "types/theme";
 
 export default function SaveDeferButtons(): ReactElement {
   const dispatch = useAppDispatch();
+
+  const hasProtected = useAppSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.hasProtected
+  );
+  const overrideProtection = useAppSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.overrideProtection
+  );
 
   const [isDeferring, setIsDeferring] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -64,6 +73,17 @@ export default function SaveDeferButtons(): ReactElement {
         >
           {t("buttons.defer")}
         </LoadingButton>
+        {hasProtected && (
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={overrideProtection}
+                onChange={() => dispatch(toggleOverrideProtection())}
+              />
+            }
+            label={"Allow deletion of protected words or senses?"}
+          />
+        )}
       </Grid>
     </Grid>
   );
