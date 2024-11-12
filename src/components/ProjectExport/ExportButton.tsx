@@ -1,6 +1,5 @@
 import { Tooltip } from "@mui/material";
 import { ButtonProps } from "@mui/material/Button";
-import { enqueueSnackbar } from "notistack";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -24,13 +23,7 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
   const { t } = useTranslation();
 
   async function exportProj(): Promise<void> {
-    await isFrontierNonempty(props.projectId).then(async (isNonempty) => {
-      if (isNonempty) {
-        await dispatch(asyncExportProject(props.projectId));
-      } else {
-        enqueueSnackbar(t("projectExport.cannotExportEmpty"));
-      }
-    });
+    await dispatch(asyncExportProject(props.projectId));
   }
 
   const exportResult = useAppSelector(
