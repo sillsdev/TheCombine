@@ -7,7 +7,7 @@
 ############################################################
 
 # Docker multi-stage build
-FROM mcr.microsoft.com/dotnet/sdk:8.0.402-jammy AS builder
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0.402-jammy AS builder
 WORKDIR /app
 
 # Copy csproj and restore (fetch dependencies) as distinct layers.
@@ -33,8 +33,7 @@ ENV APP_FILES=${HOME}/.CombineFiles
 
 # Install system dependencies.
 RUN apt-get update \
-  && apt-get install -y \
-  ffmpeg \
+  && apt-get install -y ffmpeg \
   && rm -rf /var/lib/apt/lists/*
 
 # Create the home directory for the new app user.
@@ -47,7 +46,7 @@ RUN usermod  --uid 999 --gid app \
   --comment "Docker image user" \
   app
 
-## Set up application install directory.
+# Set up application install directory.
 RUN mkdir $APP_HOME && \
   mkdir $APP_FILES && \
   # Give access to the entire home folder so the backend can create files and folders there.
