@@ -9,8 +9,7 @@
 
 - name: Get Latest Release
   get_url:
-    # https://get.helm.sh/helm-v3.13.2-linux-amd64.tar.gz
-    url: "https://get.helm.sh/helm-{{ helm_version }}-{{ helm_arch }}.tar.gz"
+    url: "https://get.helm.sh/helm-{{ helm_version }}-linux-{{ cpu_arch }}.tar.gz"
     dest: "{{ helm_download_dir }}/helm.tar.gz"
     owner: root
     group: root
@@ -20,11 +19,11 @@
   command:
     cmd: "tar -zxvf {{ helm_download_dir }}/helm.tar.gz"
     chdir: "{{ helm_download_dir }}"
-    creates: "{{ helm_download_dir }}/{{ helm_arch }}/helm"
+    creates: "{{ helm_download_dir }}/linux-{{ cpu_arch }}/helm"
 
 - name: Link to extracted helm file
   file:
-    src: "{{ helm_download_dir }}/{{ helm_arch }}/helm"
+    src: "{{ helm_download_dir }}/linux-{{ cpu_arch }}/helm"
     path: /usr/local/bin/helm
     state: link
     owner: root
