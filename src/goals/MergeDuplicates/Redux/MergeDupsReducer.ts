@@ -292,6 +292,7 @@ const mergeDuplicatesSlice = createSlice({
         const senses: Hash<MergeTreeSense> = {};
         const wordsTree: Hash<MergeTreeWord> = {};
         const counts: Hash<number> = {};
+        state.hasProtected = false;
         action.payload.forEach((word: Word) => {
           state.hasProtected ||= word.accessibility === Status.Protected;
           words[word.id] = JSON.parse(JSON.stringify(word));
