@@ -38,7 +38,12 @@ namespace BackendFramework.Models
         [Required]
         [BsonElement("autocompleteSetting")]
         [BsonRepresentation(BsonType.String)]
-        public AutocompleteSetting AutocompleteSetting { get; set; }
+        public OffOnSetting AutocompleteSetting { get; set; }
+
+        [Required]
+        [BsonElement("protectedDataOverrideEnabled")]
+        [BsonRepresentation(BsonType.String)]
+        public OffOnSetting ProtectedDataOverrideEnabled { get; set; }
 
         [Required]
         [BsonElement("semDomWritingSystem")]
@@ -92,7 +97,8 @@ namespace BackendFramework.Models
             LiftImported = false;
             DefinitionsEnabled = false;
             GrammaticalInfoEnabled = false;
-            AutocompleteSetting = AutocompleteSetting.On;
+            AutocompleteSetting = OffOnSetting.On;
+            ProtectedDataOverrideEnabled = OffOnSetting.Off;
             SemDomWritingSystem = new();
             VernacularWritingSystem = new();
             AnalysisWritingSystems = new();
@@ -117,6 +123,7 @@ namespace BackendFramework.Models
                 DefinitionsEnabled = DefinitionsEnabled,
                 GrammaticalInfoEnabled = GrammaticalInfoEnabled,
                 AutocompleteSetting = AutocompleteSetting,
+                ProtectedDataOverrideEnabled = ProtectedDataOverrideEnabled,
                 SemDomWritingSystem = SemDomWritingSystem.Clone(),
                 VernacularWritingSystem = VernacularWritingSystem.Clone(),
                 AnalysisWritingSystems = AnalysisWritingSystems.Select(ws => ws.Clone()).ToList(),
@@ -140,6 +147,7 @@ namespace BackendFramework.Models
                 other.DefinitionsEnabled == DefinitionsEnabled &&
                 other.GrammaticalInfoEnabled == GrammaticalInfoEnabled &&
                 other.AutocompleteSetting.Equals(AutocompleteSetting) &&
+                other.ProtectedDataOverrideEnabled.Equals(ProtectedDataOverrideEnabled) &&
                 other.SemDomWritingSystem.Equals(SemDomWritingSystem) &&
                 other.VernacularWritingSystem.Equals(VernacularWritingSystem) &&
 
@@ -186,11 +194,12 @@ namespace BackendFramework.Models
             var hash = new HashCode();
             hash.Add(Id);
             hash.Add(Name);
+            hash.Add(IsActive);
             hash.Add(LiftImported);
             hash.Add(DefinitionsEnabled);
             hash.Add(GrammaticalInfoEnabled);
-            hash.Add(IsActive);
             hash.Add(AutocompleteSetting);
+            hash.Add(ProtectedDataOverrideEnabled);
             hash.Add(SemDomWritingSystem);
             hash.Add(VernacularWritingSystem);
             hash.Add(AnalysisWritingSystems);
@@ -329,7 +338,7 @@ namespace BackendFramework.Models
         }
     }
 
-    public enum AutocompleteSetting
+    public enum OffOnSetting
     {
         Off,
         On

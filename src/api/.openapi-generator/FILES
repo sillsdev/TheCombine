@@ -21,7 +21,6 @@ common.ts
 configuration.ts
 git_push.sh
 index.ts
-models/autocomplete-setting.ts
 models/banner-type.ts
 models/chart-root-data.ts
 models/consent-type.ts
@@ -42,6 +41,7 @@ models/merge-source-word.ts
 models/merge-undo-ids.ts
 models/merge-words.ts
 models/note.ts
+models/off-on-setting.ts
 models/password-reset-data.ts
 models/password-reset-request-data.ts
 models/permission.ts

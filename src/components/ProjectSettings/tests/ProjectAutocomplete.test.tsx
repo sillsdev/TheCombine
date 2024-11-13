@@ -1,7 +1,7 @@
 import { Select } from "@mui/material";
 import renderer from "react-test-renderer";
 
-import { AutocompleteSetting } from "api/models";
+import { OffOnSetting } from "api/models";
 import ProjectAutocomplete from "components/ProjectSettings/ProjectAutocomplete";
 import { randomProject } from "types/project";
 
@@ -26,12 +26,12 @@ describe("ProjectAutocomplete", () => {
     await renderer.act(async () => selectChange({ target: { value: "Off" } }));
     expect(mockSetProject).toHaveBeenCalledWith({
       ...mockProject,
-      autocompleteSetting: AutocompleteSetting.Off,
+      autocompleteSetting: OffOnSetting.Off,
     });
     await renderer.act(async () => selectChange({ target: { value: "On" } }));
     expect(mockSetProject).toHaveBeenCalledWith({
       ...mockProject,
-      autocompleteSetting: AutocompleteSetting.On,
+      autocompleteSetting: OffOnSetting.On,
     });
   });
 });

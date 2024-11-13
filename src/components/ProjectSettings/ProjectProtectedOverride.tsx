@@ -6,15 +6,15 @@ import { useTranslation } from "react-i18next";
 import { OffOnSetting } from "api/models";
 import { type ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 
-export default function ProjectAutocomplete(
+export default function ProjectProtectedOverride(
   props: ProjectSettingProps
 ): ReactElement {
   const { t } = useTranslation();
 
-  const updateAutocompleteSetting = async (
-    autocompleteSetting: OffOnSetting
+  const updateProtectOverrideSetting = async (
+    protectedDataOverrideEnabled: OffOnSetting
   ): Promise<void> => {
-    await props.setProject({ ...props.project, autocompleteSetting });
+    await props.setProject({ ...props.project, protectedDataOverrideEnabled });
   };
 
   return (
@@ -22,9 +22,9 @@ export default function ProjectAutocomplete(
       <Grid>
         <Select
           variant="standard"
-          value={props.project.autocompleteSetting}
+          value={props.project.protectedDataOverrideEnabled}
           onChange={(e) =>
-            updateAutocompleteSetting(e.target.value as OffOnSetting)
+            updateProtectOverrideSetting(e.target.value as OffOnSetting)
           }
         >
           <MenuItem value={OffOnSetting.Off}>
@@ -37,7 +37,7 @@ export default function ProjectAutocomplete(
       </Grid>
       <Grid>
         <Tooltip
-          title={t("projectSettings.autocomplete.hint")}
+          title={t("projectSettings.protectedDataOverride.hint")}
           placement={document.body.dir === "rtl" ? "left" : "right"}
         >
           <HelpOutline fontSize="small" />

@@ -17,8 +17,8 @@ import { useTranslation } from "react-i18next";
 import { v4 } from "uuid";
 
 import {
-  AutocompleteSetting,
   Note,
+  OffOnSetting,
   Pronunciation,
   SemanticDomain,
   SemanticDomainTreeNode,
@@ -250,8 +250,7 @@ export default function DataEntryTable(
   );
   const suggestVerns = useAppSelector(
     (state: StoreState) =>
-      state.currentProjectState.project.autocompleteSetting ===
-      AutocompleteSetting.On
+      state.currentProjectState.project.autocompleteSetting === OffOnSetting.On
   );
   const vernacularLang = useAppSelector(
     (state: StoreState) =>
@@ -272,7 +271,7 @@ export default function DataEntryTable(
   const spellChecker = useContext(SpellCheckerContext);
   useEffect(() => {
     spellChecker.updateLang(
-      getCurrentUser()?.glossSuggestion === AutocompleteSetting.Off
+      getCurrentUser()?.glossSuggestion === OffOnSetting.Off
         ? undefined
         : analysisLang.bcp47
     );

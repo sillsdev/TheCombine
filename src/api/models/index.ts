@@ -1,4 +1,3 @@
-export * from "./autocomplete-setting";
 export * from "./banner-type";
 export * from "./chart-root-data";
 export * from "./consent-type";
@@ -18,6 +17,7 @@ export * from "./merge-source-word";
 export * from "./merge-undo-ids";
 export * from "./merge-words";
 export * from "./note";
+export * from "./off-on-setting";
 export * from "./password-reset-data";
 export * from "./password-reset-request-data";
 export * from "./permission";

@@ -265,6 +265,10 @@
       "on": "On",
       "hint": "In Data Entry, suggest existing Vernaculars similar to the Vernacular being typed."
     },
+    "protectedDataOverride": {
+      "hint": "In Merge Duplicates, allow overriding protection of protected words and senses.",
+      "label": "Protected Data Override"
+    },
     "invite": {
       "inviteByEmailLabel": "Invite by Email",
       "userExists": "This user is already registered.",

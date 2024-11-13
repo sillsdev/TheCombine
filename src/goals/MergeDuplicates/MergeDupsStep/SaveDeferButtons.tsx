@@ -2,6 +2,7 @@ import { Checkbox, FormControlLabel, Grid } from "@mui/material";
 import { ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { OffOnSetting } from "api/models";
 import { LoadingButton } from "components/Buttons";
 import {
   deferMerge,
@@ -18,7 +19,10 @@ export default function SaveDeferButtons(): ReactElement {
   const dispatch = useAppDispatch();
 
   const hasProtected = useAppSelector(
-    (state: StoreState) => state.mergeDuplicateGoal.hasProtected
+    (state: StoreState) =>
+      state.mergeDuplicateGoal.hasProtected &&
+      state.currentProjectState.project.protectedDataOverrideEnabled ==
+        OffOnSetting.On
   );
   const overrideProtection = useAppSelector(
     (state: StoreState) => state.mergeDuplicateGoal.overrideProtection
