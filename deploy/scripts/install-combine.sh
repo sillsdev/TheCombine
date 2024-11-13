@@ -143,7 +143,13 @@ install-the-combine () {
   cd ${DEPLOY_DIR}/scripts
   set-combine-env
   set-k3s-env
-  ./setup_combine.py --tag ${COMBINE_VERSION} --repo public.ecr.aws/thecombine --target desktop ${SETUP_OPTS} $(((DEBUG == 1)) && echo "--debug")
+  ./setup_combine.py \
+    $(((DEBUG == 1)) && echo "--debug") \
+    --repo public.ecr.aws/thecombine \
+    $(((ARM == 1)) && echo "--set global.cpuArch=arm64" ) \
+    --tag ${COMBINE_VERSION} \
+    --target desktop \
+    ${SETUP_OPTS}
   deactivate
 }
 

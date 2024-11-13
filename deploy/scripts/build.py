@@ -277,8 +277,7 @@ def main() -> None:
             if args.debug:
                 container_cmd.extend(["-D", "-l", "debug"])
             build_cmd = container_cmd + ["buildx", "build"]
-            if args.repo is not None:
-                build_cmd.append("--push")
+            build_cmd.append("--load" if args.repo is None else "--push")
         case _:
             logging.critical(f"Container CLI '{container_cmd[0]}' is not supported.")
             sys.exit(1)
