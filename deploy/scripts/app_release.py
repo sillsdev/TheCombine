@@ -31,7 +31,7 @@ def get_release() -> str:
                 num_commits = match[2]
             # Get the branch name
             result = run_cmd(["git", "branch", "--show-current"], chomp=True)
-            branch_name = re.sub("[/_]+", "-", result.stdout)
+            branch_name = re.sub("[/_]+", "-", result.stdout) or "HEADLESS"
             return f"{release_string}-{branch_name}.{num_commits}"
     message = f"Unrecognized release value in tag: {result.stdout}"
     raise ValueError(message)

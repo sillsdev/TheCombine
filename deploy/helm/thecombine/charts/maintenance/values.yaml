@@ -26,7 +26,7 @@ global:
   imageRegistry: ""
   # Default AWS S3 location
   awsS3Location: "thecombine.app"
-  cpuArch: "arm64"
+  cpuArch: "amd64"
 
 imageName: combine_maint
 
