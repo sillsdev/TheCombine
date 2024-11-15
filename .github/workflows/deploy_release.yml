@@ -25,6 +25,7 @@ jobs:
           egress-policy: block
           allowed-endpoints: >
             *.actions.githubusercontent.com:443
+            *.cloudfront.net:443
             *.data.mcr.microsoft.com:443
             api.ecr-public.us-east-1.amazonaws.com:443
             api.github.com:443
