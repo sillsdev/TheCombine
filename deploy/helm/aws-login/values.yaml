@@ -15,7 +15,7 @@ global:
   awsAccessKeyId: "Override"
   awsSecretAccessKey: "Override"
   pullSecretName: aws-login-credentials
-  cpuArch: "arm64"
+  cpuArch: "amd64"
 
 awsEcr:
   configName: aws-ecr-config
