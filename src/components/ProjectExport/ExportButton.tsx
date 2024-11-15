@@ -34,11 +34,8 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
     exportResult.status === ExportStatus.Downloading;
 
   useEffect(() => {
-    const fetchNonempty = async (): Promise<void> => {
-      await isFrontierNonempty(props.projectId).then(setExports);
-    };
-    fetchNonempty().catch(console.error);
-  });
+    isFrontierNonempty(props.projectId).then(setExports);
+  }, [props.projectId]);
 
   return (
     <Tooltip title={!exports ? t("projectExport.cannotExportEmpty") : ""}>
