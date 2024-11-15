@@ -13,13 +13,12 @@ import { type StoreState } from "rootRedux/types";
 interface ExportButtonProps {
   projectId: string;
   buttonProps?: ButtonProps & { "data-testid"?: string };
-  disabled?: boolean;
 }
 
 /** A button for exporting project to Lift file */
 export default function ExportButton(props: ExportButtonProps): ReactElement {
   const dispatch = useAppDispatch();
-  const [exports, setExports] = useState<boolean>(false);
+  const [exports, setExports] = useState(false);
   const { t } = useTranslation();
 
   async function exportProj(): Promise<void> {
@@ -36,11 +35,7 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
 
   useEffect(() => {
     const fetchNonempty = async (): Promise<void> => {
-      await isFrontierNonempty(props.projectId).then(async (isNonempty) => {
-        if (isNonempty) {
-          setExports(true);
-        }
-      });
+      await isFrontierNonempty(props.projectId).then(setExports);
     };
     fetchNonempty().catch(console.error);
   });
@@ -50,12 +45,11 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
       <span>
         <LoadingButton
           loading={loading}
-          disabled={loading}
+          disabled={loading || !exports}
           buttonProps={{
             ...props.buttonProps,
             onClick: exportProj,
             id: `project-${props.projectId}-export`,
-            disabled: !exports,
           }}
         >
           {t("buttons.export")}
