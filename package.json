@@ -111,7 +111,7 @@
     "css-mediaquery": "^0.1.2",
     "eslint": "^8.51.0",
     "eslint-import-resolver-typescript": "^3.6.0",
-    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.3.0",
     "eslint-plugin-unused-imports": "^3.1.0",
