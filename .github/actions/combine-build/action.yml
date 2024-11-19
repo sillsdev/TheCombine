@@ -54,9 +54,13 @@ runs:
         username: ${{ inputs.aws_access_key_id }}
         password: ${{ inputs.aws_secret_access_key }}
 
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
     - name: Build The Combine
       run: >
         deploy/scripts/build.py
+        --arch amd64 arm64
         --components ${{ inputs.build_component }}
         --tag ${{ env.IMAGE_TAG }}
         --repo ${{ inputs.image_registry }}${{ inputs.image_registry_alias}}
