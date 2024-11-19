@@ -269,7 +269,7 @@ def main() -> None:
         case "docker":
             if args.debug:
                 container_cmd.extend(["-D", "-l", "debug"])
-            build_cmd = container_cmd + ["buildx", "build"]
+            build_cmd = container_cmd + ["buildx", "build", "--load"]
             push_cmd = container_cmd + ["push"]
         case _:
             logging.critical(f"Container CLI '{container_cmd[0]}' is not supported.")
