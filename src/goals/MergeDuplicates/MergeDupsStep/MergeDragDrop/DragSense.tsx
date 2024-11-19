@@ -41,6 +41,9 @@ export default function DragSense(props: DragSenseProps): ReactElement {
     arraysEqual<string>
   );
   const dispatch = useAppDispatch();
+  const overrideProtection = useAppSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.overrideProtection
+  );
   const sidebar = useAppSelector(
     (state: StoreState) => state.mergeDuplicateGoal.tree.sidebar
   );
@@ -95,7 +98,7 @@ export default function DragSense(props: DragSenseProps): ReactElement {
         isSenseProtected: props.isProtectedSense,
       })}
       index={props.index}
-      isDragDisabled={props.isOnlySenseInProtectedWord}
+      isDragDisabled={props.isOnlySenseInProtectedWord && !overrideProtection}
     >
       {(provided, snapshot): ReactElement => (
         <Card
