@@ -33,6 +33,12 @@ namespace BackendFramework.Otel
             );
         }
 
+        internal static void TrackConsent(Activity activity, HttpRequest request)
+        {
+            var consent = request.Headers.TryGetValue("otelConsent", out var values) ? values.FirstOrDefault() : "nothing";
+            activity.SetBaggage("otelConsent", consent);
+        }
+
         internal static void TrackSession(Activity activity, HttpRequest request)
         {
             var sessionId = request.Headers.TryGetValue("sessionId", out var values) ? values.FirstOrDefault() : null;
@@ -67,6 +73,7 @@ namespace BackendFramework.Otel
             options.EnrichWithHttpRequest = (activity, request) =>
             {
                 GetContentLengthAspNet(activity, request.Headers, "inbound.http.request.body.size");
+                TrackConsent(activity, request);
                 TrackSession(activity, request);
             };
             options.EnrichWithHttpResponse = (activity, response) =>
@@ -98,7 +105,8 @@ namespace BackendFramework.Otel
         {
             public override async void OnEnd(Activity data)
             {
-                var uriPath = (string?)data.GetTagItem("url.full");
+                data?.SetTag("consent value", data?.GetBaggageItem("otelConsent"));
+                var uriPath = (string?)data?.GetTagItem("url.full");
                 var locationUri = LocationProvider.locationGetterUri;
                 if (uriPath is null || !uriPath.Contains(locationUri))
                 {
