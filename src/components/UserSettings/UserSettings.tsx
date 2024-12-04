@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
-import { FormEvent, Fragment, ReactElement, useState } from "react";
+import { FormEvent, Fragment, ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { show } from "vanilla-cookieconsent";
 
@@ -65,6 +65,7 @@ export function UserSettings(props: {
   const [name, setName] = useState(props.user.name);
   const [phone, setPhone] = useState(props.user.phone);
   const [email, setEmail] = useState(props.user.email);
+  const [otelConsent, setOtelConsent] = useState(analyticsConsent);
   const [uiLang, setUiLang] = useState(props.user.uiLang ?? "");
   const [glossSuggestion, setGlossSuggestion] = useState(
     props.user.glossSuggestion
@@ -80,10 +81,15 @@ export function UserSettings(props: {
     return unchanged || !(await isEmailTaken(unicodeEmail));
   }
 
+  useEffect(() => {
+    setOtelConsent(analyticsConsent);
+  }, [analyticsConsent]);
+
   const disabled =
     name === props.user.name &&
     phone === props.user.phone &&
     punycode.toUnicode(email) === props.user.email &&
+    otelConsent === props.user.otelConsent &&
     uiLang === (props.user.uiLang ?? "") &&
     glossSuggestion === props.user.glossSuggestion;
 
@@ -95,6 +101,7 @@ export function UserSettings(props: {
         name,
         phone,
         email: punycode.toUnicode(email),
+        otelConsent,
         uiLang,
         glossSuggestion,
         hasAvatar: !!avatar,

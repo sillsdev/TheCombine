@@ -66,6 +66,9 @@ namespace BackendFramework.Models
         [BsonElement("username")]
         public string Username { get; set; }
 
+        [BsonElement("otelConsent")]
+        public bool OtelConsent { get; set; }
+
         [BsonElement("uiLang")]
         public string UILang { get; set; }
 
@@ -97,6 +100,7 @@ namespace BackendFramework.Models
             Agreement = false;
             Password = "";
             Username = "";
+            OtelConsent = false;
             UILang = "";
             GlossSuggestion = AutocompleteSetting.On;
             Token = "";
@@ -119,6 +123,7 @@ namespace BackendFramework.Models
                 Agreement = Agreement,
                 Password = Password,
                 Username = Username,
+                OtelConsent = OtelConsent,
                 UILang = UILang,
                 GlossSuggestion = GlossSuggestion,
                 Token = Token,
@@ -141,6 +146,7 @@ namespace BackendFramework.Models
                 other.Agreement == Agreement &&
                 other.Password.Equals(Password, StringComparison.Ordinal) &&
                 other.Username.Equals(Username, StringComparison.Ordinal) &&
+                other.OtelConsent == OtelConsent &&
                 other.UILang.Equals(UILang, StringComparison.Ordinal) &&
                 other.GlossSuggestion.Equals(GlossSuggestion) &&
                 other.Token.Equals(Token, StringComparison.Ordinal) &&
@@ -178,6 +184,7 @@ namespace BackendFramework.Models
             hash.Add(Agreement);
             hash.Add(Password);
             hash.Add(Username);
+            hash.Add(OtelConsent);
             hash.Add(UILang);
             hash.Add(GlossSuggestion);
             hash.Add(Token);
