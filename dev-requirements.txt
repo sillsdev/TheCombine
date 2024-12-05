@@ -39,7 +39,7 @@ colorama==0.4.6
     #   mkdocs
     #   mkdocs-material
     #   tox
-cryptography==43.0.3
+cryptography==44.0.0
     # via
     #   pyopenssl
     #   types-pyopenssl
@@ -116,7 +116,7 @@ mkdocs-get-deps==0.2.0
     # via mkdocs
 mkdocs-htmlproofer-plugin==1.3.0
     # via -r dev-requirements.in
-mkdocs-material==9.5.44
+mkdocs-material==9.5.47
     # via -r dev-requirements.in
 mkdocs-material-extensions==1.3.1
     # via mkdocs-material
@@ -172,7 +172,7 @@ pymdown-extensions==10.12
     # via mkdocs-material
 pymongo==4.10.1
     # via -r dev-requirements.in
-pyopenssl==24.2.1
+pyopenssl==24.3.0
     # via -r dev-requirements.in
 pyproject-api==1.8.0
     # via tox
@@ -206,7 +206,7 @@ requests-oauthlib==2.0.0
     # via kubernetes
 rsa==4.9
     # via google-auth
-six==1.16.0
+six==1.17.0
     # via
     #   kubernetes
     #   python-dateutil
@@ -224,7 +224,7 @@ types-pyyaml==6.0.12.20240917
     # via -r dev-requirements.in
 types-requests==2.32.0.20241016
     # via -r dev-requirements.in
-types-setuptools==75.3.0.20241112
+types-setuptools==75.6.0.20241126
     # via types-cffi
 typing-extensions==4.12.2
     # via mypy
@@ -233,7 +233,7 @@ urllib3==2.2.3
     #   kubernetes
     #   requests
     #   types-requests
-virtualenv==20.27.1
+virtualenv==20.28.0
     # via tox
 watchdog==6.0.0
     # via mkdocs
