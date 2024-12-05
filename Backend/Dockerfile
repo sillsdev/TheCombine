@@ -7,7 +7,7 @@
 ############################################################
 
 # Docker multi-stage build
-FROM mcr.microsoft.com/dotnet/sdk:8.0.403-jammy AS builder
+FROM mcr.microsoft.com/dotnet/sdk:8.0.404-jammy AS builder
 WORKDIR /app
 
 # Copy csproj and restore (fetch dependencies) as distinct layers.
@@ -43,9 +43,9 @@ RUN mkdir -p $HOME
 # Setup app user and group to known UID/GID; no login.
 RUN groupmod --gid 999 app
 RUN usermod  --uid 999 --gid app \
-      --shell /sbin/nologin \
-      --comment "Docker image user" \
-      app
+  --shell /sbin/nologin \
+  --comment "Docker image user" \
+  app
 
 ## Set up application install directory.
 RUN mkdir $APP_HOME && \
