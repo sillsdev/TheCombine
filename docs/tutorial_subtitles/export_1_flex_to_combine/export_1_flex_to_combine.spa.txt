@@ -5,8 +5,8 @@ Con el proyecto FLEx deseado abierto, haga clic en el menú “File” (“Archi
 En el diálogo “Export” (“Exportar”) que aparece, haga clic en la opción “Full Lexicon” “LIFT 0.13 XML”, luego haga clic en el botón “Export…” (“Exportar…”).
 Aparece otro diálogo para que seleccione dónde se guardarán los archivos exportados.
 Necesitarás crear una nueva carpeta para los archivos.
-Voy a Desktop y hago clic en el botón “Make New Folder” para crear una carpeta Naskapi.
-Seleccione la nueva carpeta que acaba de crear y haga clic en el botón “OK”.
+Voy a Desktop y hago clic en el botón “Make New Folder” (“Crear nueva carpeta”) para crear una carpeta Naskapi.
+Seleccione la nueva carpeta que acaba de crear y haga clic en el botón “OK” (“Aceptar”).
 En el Explorador de archivos, vaya a la carpeta que contiene esta nueva carpeta.
 Haga clic derecho en la carpeta que acaba de crear para la exportación y seleccione “Compress to ZIP file” (“Comprimir en archivo ZIP”).
 ¿Ve el archivo ZIP que se ha creado?
