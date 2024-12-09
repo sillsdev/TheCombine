@@ -78,9 +78,7 @@ export default function ProjectImport(
         {/* Displays the name of the selected file */}
         {liftFile && (
           <Typography variant="body1" noWrap>
-            {t("createProject.fileSelected")}
-            {": "}
-            {liftFile.name}
+            {t("createProject.fileSelected", { val: liftFile.name })}
           </Typography>
         )}
       </Grid>
