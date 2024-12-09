@@ -256,7 +256,7 @@ export default function CreateProject(): ReactElement {
             {/* Uploaded file name and remove button */}
             {languageData && (
               <Typography variant="body2" style={{ margin: theme.spacing(1) }}>
-                {`${t("createProject.fileSelected")}: ${languageData.name}`}
+                {t("createProject.fileSelected", { val: languageData.name })}
                 <IconButton size="small" onClick={() => updateLanguageData()}>
                   <Cancel />
                 </IconButton>
