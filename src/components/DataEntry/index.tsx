@@ -9,7 +9,7 @@ import {
 } from "react";
 
 import { getFrontierWords, getSemanticDomainFull } from "backend";
-import AppBar from "components/AppBar/AppBarComponent";
+import AppBar from "components/AppBar";
 import DataEntryHeader from "components/DataEntry/DataEntryHeader";
 import DataEntryTable from "components/DataEntry/DataEntryTable";
 import ExistingDataTable from "components/DataEntry/ExistingDataTable";
