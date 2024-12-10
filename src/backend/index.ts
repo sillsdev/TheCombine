@@ -56,8 +56,8 @@ const axiosInstance = axios.create({ baseURL: apiBaseURL });
 axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   config.headers.sessionId = getSessionId();
   LocalStorage.getCurrentUser()?.otelConsent
-    ? (config.headers.otelConsent = "yay")
-    : (config.headers.otelConsent = "nay");
+    ? (config.headers.otelConsent = true)
+    : (config.headers.otelConsent = false);
   return config;
 });
 axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {

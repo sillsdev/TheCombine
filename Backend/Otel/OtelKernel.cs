@@ -35,8 +35,8 @@ namespace BackendFramework.Otel
 
         internal static void TrackConsent(Activity activity, HttpRequest request)
         {
-            var consent = request.Headers.TryGetValue("otelConsent", out var values) ? values.FirstOrDefault() : "nothing";
-            activity.SetBaggage("otelConsent", consent);
+            var consent = request.Headers.TryGetValue("otelConsent", out var values) ? bool.TryParse(values.FirstOrDefault(), out bool _) : false;
+            activity.SetBaggage("otelConsentBaggage", consent.ToString());
         }
 
         internal static void TrackSession(Activity activity, HttpRequest request)
@@ -105,23 +105,29 @@ namespace BackendFramework.Otel
         {
             public override async void OnEnd(Activity data)
             {
-                data?.SetTag("consent value", data?.GetBaggageItem("otelConsent"));
-                var uriPath = (string?)data?.GetTagItem("url.full");
-                var locationUri = LocationProvider.locationGetterUri;
-                if (uriPath is null || !uriPath.Contains(locationUri))
+                var consentString = data?.GetBaggageItem("otelConsentBaggage");
+                data?.AddTag("otelConsent", consentString);
+                var consent = bool.TryParse(consentString, out bool value) ? value : false;
+                // Note: A bool value also would have worked for SetTag
+                if (consent)
                 {
-                    var location = await locationProvider.GetLocation();
-                    data?.AddTag("country", location?.Country);
-                    data?.AddTag("regionName", location?.RegionName);
-                    data?.AddTag("city", location?.City);
-                }
-                data?.SetTag("sessionId", data?.GetBaggageItem("sessionBaggage"));
-                if (uriPath is not null && uriPath.Contains(locationUri))
-                {
-                    // When getting location externally, url.full includes site URI and user IP. 
-                    // In such cases, only add url without IP information to traces.
-                    data?.SetTag("url.full", "");
-                    data?.SetTag("url.redacted.ip", LocationProvider.locationGetterUri);
+                    var uriPath = (string?)data?.GetTagItem("url.full");
+                    var locationUri = LocationProvider.locationGetterUri;
+                    if (uriPath is null || !uriPath.Contains(locationUri))
+                    {
+                        var location = await locationProvider.GetLocation();
+                        data?.AddTag("country", location?.Country);
+                        data?.AddTag("regionName", location?.RegionName);
+                        data?.AddTag("city", location?.City);
+                    }
+                    data?.SetTag("sessionId", data?.GetBaggageItem("sessionBaggage"));
+                    if (uriPath is not null && uriPath.Contains(locationUri))
+                    {
+                        // When getting location externally, url.full includes site URI and user IP. 
+                        // In such cases, only add url without IP information to traces.
+                        data?.SetTag("url.full", "");
+                        data?.SetTag("url.redacted.ip", LocationProvider.locationGetterUri);
+                    }
                 }
             }
         }
