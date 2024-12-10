@@ -2,9 +2,9 @@ name: "Update combine_deploy image"
 
 on:
   push:
-    branches: [docker-actions, master]
-#    paths:
-#      - "deploy/**"
+    branches: [master]
+    paths:
+      - "deploy/**"
 
 permissions: # added using https://github.com/step-security/secure-workflows
   contents: read
