@@ -26,6 +26,7 @@ jobs:
             archive.ubuntu.com:80
             auth.docker.io:443
             cdn.dl.k8s.io:443
+            deb.debian.org:80
             dl.k8s.io:443
             files.pythonhosted.org:443
             get.helm.sh:443
