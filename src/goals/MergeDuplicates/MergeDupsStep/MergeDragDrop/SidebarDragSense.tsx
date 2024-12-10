@@ -26,13 +26,16 @@ export default function SidebarDragSense(
     const ref: MergeTreeReference = { wordId, mergeSenseId, order };
     return JSON.stringify(ref);
   });
+  const overrideProtection = useAppSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.overrideProtection
+  );
 
   return (
     <Draggable
       key={props.mergeSense.sense.guid}
       draggableId={draggableId}
       index={props.index}
-      isDragDisabled={props.mergeSense.protected}
+      isDragDisabled={props.mergeSense.protected && !overrideProtection}
     >
       {(provided, snapshot): ReactElement => (
         <div
