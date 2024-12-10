@@ -2,7 +2,7 @@ name: "Update combine_deploy image"
 
 on:
   push:
-    branches: [docker-actions, master]
+    branches: ["docker-actions", "master"]
     paths:
       - "deploy/**"
 
