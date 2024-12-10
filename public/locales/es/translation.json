@@ -92,7 +92,7 @@
     "upload?": "¿Cargar los datos existentes?",
     "uploadFormat": "El archivo debe ser una carpeta comprimida que contenga un proyecto <1>Lexicon Interchange FormaT (LIFT)</1>.",
     "create": "Crear Proyecto",
-    "fileSelected": "Archivo seleccionado",
+    "fileSelected": "Archivo seleccionado: {{ val }}",
     "language": "La información lingüística del proyecto se extraerá automáticamente de los datos cargados.",
     "languageOptionOther": "otro",
     "languageSelect": "Seleccionar de idiomas en el archivo:",
