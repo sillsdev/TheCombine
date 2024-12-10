@@ -50,7 +50,7 @@ export default function ImageUpload(props: ImageUploadProps): ReactElement {
       {/* Displays the name of the selected file */}
       {filename && (
         <Typography variant="body1" noWrap>
-          {t("createProject.fileSelected")}: {filename}
+          {t("createProject.fileSelected", { val: filename })}
         </Typography>
       )}
       <Grid container spacing={1} justifyContent="flex-start">

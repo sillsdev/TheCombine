@@ -84,7 +84,7 @@
     "upload?": "Carregar dados existentes?",
     "uploadFormat": "O arquivo deve ser uma pasta zipada que contenha um <1>Lexicon Interchange FormaT (LIFT)</1> projeto.",
     "create": "Criar Projeto",
-    "fileSelected": "Arquivo selecionado",
+    "fileSelected": "Arquivo selecionado: {{ val }}",
     "success": "Projeto Criado!"
   },
   "selectProject": { "title": "Selecionar Projeto" },
