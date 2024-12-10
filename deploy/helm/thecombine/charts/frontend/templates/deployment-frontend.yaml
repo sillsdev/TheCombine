@@ -77,10 +77,10 @@ spec:
           resources:
             requests:
               cpu:  1m
-              memory: 15M
+              memory: 128Mi
 {{- if .Values.global.includeResourceLimits }}
             limits:
-              memory: 40M
+              memory: 128Mi
 {{- end }}
           volumeMounts:
             - mountPath: /usr/share/nginx/fonts

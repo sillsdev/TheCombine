@@ -13,7 +13,7 @@ jobs:
       matrix:
         component: [frontend, backend, maintenance, database]
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
       image_tag: ${{ steps.build_combine.outputs.image_tag }}
     steps:
@@ -26,6 +26,7 @@ jobs:
           egress-policy: block
           allowed-endpoints: >
             *.actions.githubusercontent.com:443
+            *.cloudfront.net:443
             *.data.mcr.microsoft.com:443
             ${{ secrets.AWS_ACCOUNT }}.dkr.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com
             api.ecr.${{ secrets.AWS_DEFAULT_REGION }}.amazonaws.com:443
@@ -42,6 +43,7 @@ jobs:
             github.com:443
             mcr.microsoft.com:443
             production.cloudflare.docker.com:443
+            public.ecr.aws:443
             pypi.org:443
             registry-1.docker.io:443
             registry.npmjs.org:443
@@ -64,10 +66,7 @@ jobs:
           build_component: ${{ matrix.component }}
   clean_ecr_repo:
     needs: build
-    env:
-      RM_PATTERN_1: \d+\.\d+\.\d+-master\.\d+
-      RM_PATTERN_2: \d+\.\d+\.\d+-[a-z]+\.\d+-master\.\d+
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
       # configuring harden-runner and identifying allowed endpoints.
@@ -89,7 +88,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       - name: Remove old AWS ECR images
-        run: scripts/clean_aws_repo.py combine_frontend combine_backend combine_maint combine_database --keep ${{ needs.build.outputs.image_tag }} --remove "${{ env.RM_PATTERN_1 }}" "${{ env.RM_PATTERN_2 }}" --verbose
+        # Remove all images for previous version numbers.
+        # Example: for tag beginning with v1.2.5-, remove all images with tag v1.2.4-*
+        # Example: for tag beginning with v2.4.0-, remove all images with tag v2.3.*
+        run: |
+          TAG=${{ needs.build.outputs.image_tag }}
+          if [[ $TAG =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)-.* ]]; then
+              VA=${BASH_REMATCH[1]}; VB=${BASH_REMATCH[2]}; VC=${BASH_REMATCH[3]}
+              if [[ $VC > 0 ]]; then REM="v${VA}\.${VB}\.$((VC - 1))-.*"
+              elif [[ $VB > 0 ]]; then REM="v${VA}\.$((VB - 1))\..*"
+              else REM="v$((VA - 1))\..*"; fi
+              scripts/clean_aws_repo.py combine_frontend combine_backend combine_maint combine_database --remove "${REM}" --verbose
+          fi
   deploy_update:
     needs: build
     # Only push to the QA server when built on the master branch

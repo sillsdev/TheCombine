@@ -25,7 +25,7 @@ When the NUC powers up, it creates a WiFi access point. The name of the access p
 NUC. Setup the WiFi network for your PC/Phone/Tablet to connect to this wireless network:
 ![alt text](images/02_Select_WiFi.jpg "Select the NUC's WiFi Network")
 
-When prompted, enter the WiFi Passphrase, `Combine2020`:
+When prompted, enter the WiFi Passphrase, `thecombine_pw`:
 
 ![alt text](images/03_Enter_WiFi_Passphrase.png "Enter Passphrase")
 

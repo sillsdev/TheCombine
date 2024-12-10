@@ -27,6 +27,34 @@ Authors: MichaCo
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
+PackageId: Google.Protobuf
+PackageVersion: 3.22.5
+PackageProjectUrl: https://github.com/protocolbuffers/protobuf
+Authors: Google Inc.
+License: BSD-3-Clause
+LicenseUrl: https://licenses.nuget.org/BSD-3-Clause
+###############################################################
+PackageId: Grpc.Core.Api
+PackageVersion: 2.52.0
+PackageProjectUrl: https://github.com/grpc/grpc-dotnet
+Authors: The gRPC Authors
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
+###############################################################
+PackageId: Grpc.Net.Client
+PackageVersion: 2.52.0
+PackageProjectUrl: https://github.com/grpc/grpc-dotnet
+Authors: The gRPC Authors
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
+###############################################################
+PackageId: Grpc.Net.Common
+PackageVersion: 2.52.0
+PackageProjectUrl: https://github.com/grpc/grpc-dotnet
+Authors: The gRPC Authors
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
+###############################################################
 PackageId: icu.net
 PackageVersion: 2.10.1-beta.5
 PackageProjectUrl: https://github.com/sillsdev/icu-dotnet
@@ -75,6 +103,55 @@ Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
+PackageId: Microsoft.Extensions.Caching.Abstractions
+PackageVersion: 8.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Caching.Memory
+PackageVersion: 8.0.1
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Configuration
+PackageVersion: 9.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Configuration.Abstractions
+PackageVersion: 9.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Configuration.Binder
+PackageVersion: 9.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.DependencyInjection
+PackageVersion: 9.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.DependencyInjection.Abstractions
+PackageVersion: 9.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
 PackageId: Microsoft.Extensions.DependencyModel
 PackageVersion: 2.0.4
 PackageProjectUrl: https://dot.net/
@@ -82,12 +159,68 @@ Authors: Microsoft.Extensions.DependencyModel
 License: https://github.com/dotnet/core-setup/blob/master/LICENSE.TXT
 LicenseUrl: https://github.com/dotnet/core-setup/blob/master/LICENSE.TXT
 ###############################################################
-PackageId: Microsoft.Extensions.Logging.Abstractions
-PackageVersion: 2.0.0
-PackageProjectUrl: https://asp.net/
+PackageId: Microsoft.Extensions.Diagnostics.Abstractions
+PackageVersion: 9.0.0
+PackageProjectUrl: https://dot.net/
 Authors: Microsoft
-License: Apache-2.0
-LicenseUrl: https://raw.githubusercontent.com/aspnet/Home/2.0.0/LICENSE.txt
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.FileProviders.Abstractions
+PackageVersion: 9.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Hosting.Abstractions
+PackageVersion: 9.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Logging
+PackageVersion: 9.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Logging.Abstractions
+PackageVersion: 9.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Logging.Configuration
+PackageVersion: 9.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Options
+PackageVersion: 9.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Options.ConfigurationExtensions
+PackageVersion: 9.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Extensions.Primitives
+PackageVersion: 9.0.0
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.IdentityModel.Abstractions
 PackageVersion: 7.5.1
@@ -213,6 +346,62 @@ PackageProjectUrl: https://www.newtonsoft.com/json
 Authors: James Newton-King
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: OpenTelemetry
+PackageVersion: 1.10.0
+PackageProjectUrl: https://opentelemetry.io/
+Authors: OpenTelemetry Authors
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
+###############################################################
+PackageId: OpenTelemetry.Api
+PackageVersion: 1.10.0
+PackageProjectUrl: https://opentelemetry.io/
+Authors: OpenTelemetry Authors
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
+###############################################################
+PackageId: OpenTelemetry.Api.ProviderBuilderExtensions
+PackageVersion: 1.10.0
+PackageProjectUrl: https://opentelemetry.io/
+Authors: OpenTelemetry Authors
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
+###############################################################
+PackageId: OpenTelemetry.Exporter.Console
+PackageVersion: 1.10.0
+PackageProjectUrl: https://opentelemetry.io/
+Authors: OpenTelemetry Authors
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
+###############################################################
+PackageId: OpenTelemetry.Exporter.OpenTelemetryProtocol
+PackageVersion: 1.10.0
+PackageProjectUrl: https://opentelemetry.io/
+Authors: OpenTelemetry Authors
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
+###############################################################
+PackageId: OpenTelemetry.Extensions.Hosting
+PackageVersion: 1.10.0
+PackageProjectUrl: https://opentelemetry.io/
+Authors: OpenTelemetry Authors
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
+###############################################################
+PackageId: OpenTelemetry.Instrumentation.AspNetCore
+PackageVersion: 1.9.0
+PackageProjectUrl: https://opentelemetry.io/
+Authors: OpenTelemetry authors
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
+###############################################################
+PackageId: OpenTelemetry.Instrumentation.Http
+PackageVersion: 1.8.1
+PackageProjectUrl: https://opentelemetry.io/
+Authors: OpenTelemetry Authors
+License: Apache-2.0
+LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: RelaxNG
 PackageVersion: 3.2.3
@@ -384,28 +573,28 @@ License: https://opensource.org/licenses/Zlib
 LicenseUrl: https://opensource.org/licenses/Zlib
 ###############################################################
 PackageId: Swashbuckle.AspNetCore
-PackageVersion: 6.8.1
+PackageVersion: 6.9.0
 PackageProjectUrl: https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Authors: domaindrivendev
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Swashbuckle.AspNetCore.Swagger
-PackageVersion: 6.8.1
+PackageVersion: 6.9.0
 PackageProjectUrl: https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Authors: domaindrivendev
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Swashbuckle.AspNetCore.SwaggerGen
-PackageVersion: 6.8.1
+PackageVersion: 6.9.0
 PackageProjectUrl: https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Authors: domaindrivendev
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Swashbuckle.AspNetCore.SwaggerUI
-PackageVersion: 6.8.1
+PackageVersion: 6.9.0
 PackageProjectUrl: https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Authors: domaindrivendev
 License: MIT
@@ -454,11 +643,11 @@ License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: System.Diagnostics.DiagnosticSource
-PackageVersion: 4.3.0
+PackageVersion: 9.0.0
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
-License: http://go.microsoft.com/fwlink/?LinkId=329770
-LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: System.Diagnostics.Tracing
 PackageVersion: 4.3.0
@@ -781,6 +970,13 @@ PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
+###############################################################
+PackageId: System.Text.Json
+PackageVersion: 8.0.5
+PackageProjectUrl: https://dot.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: System.Threading
 PackageVersion: 4.3.0

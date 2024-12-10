@@ -37,7 +37,7 @@ global:
   # Define the image registry to use (may be blank for local images)
   imageRegistry: awsEcr
   imageTag: "latest"
-  pullSecretName: "None"
+  pullSecretName: aws-login-credentials
   # Update strategy should be "Recreate" or "Rolling Update"
   updateStrategy: Recreate
 

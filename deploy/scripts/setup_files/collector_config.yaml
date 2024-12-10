@@ -1,0 +1,61 @@
+mode: "deployment"
+namespaceOverride: "thecombine"
+image:
+  repository: "otel/opentelemetry-collector-k8s"
+config:
+  receivers:
+    jaeger: null
+    prometheus: null
+    zipkin: null
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
+  processors:
+    batch: {}
+  exporters:
+    otlp:
+      endpoint: "https://api.honeycomb.io:443"
+  service:
+    telemetry:
+      logs:
+        level: "INFO"
+      metrics: null
+    pipelines:
+      traces:
+        receivers:
+          - otlp
+        processors:
+          - batch
+        exporters:
+          - otlp
+      metrics: null
+      logs: null
+ports:
+  otlp:
+    enabled: false
+  otlp-http:
+    enabled: true
+    containerPort: 4318
+    servicePort: 4318
+    hostPort: 4318
+    protocol: TCP
+  jaeger-compact:
+    enabled: false
+  jaeger-thrift:
+    enabled: false
+  jaeger-grpc:
+    enabled: false
+  zipkin:
+    enabled: false
+  metrics:
+    enabled: false
+useGOMEMLIMIT: true
+resources:
+  requests:
+    cpu: 25m
+    memory: 128Mi
+  limits:
+    memory: 128Mi
