@@ -26,6 +26,7 @@ global:
   imageRegistry: ""
   # Default AWS S3 location
   awsS3Location: "thecombine.app"
+  cpuArch: "amd64"
 
 imageName: combine_maint
 
@@ -34,7 +35,10 @@ serviceAccount:
   role: role-maintenance
   roleBinding: role-maintenance-binding
 
-serviceAccount.name: account-maintenance
+awsEcr:
+  image: "public.ecr.aws/thecombine/aws-kubectl"
+  imageVersion: "0.4.0"
+
 #######################################
 # Variables controlling backups
 #######################################

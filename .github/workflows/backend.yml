@@ -73,12 +73,10 @@ jobs:
           egress-policy: block
           allowed-endpoints: >
             api.github.com:443
-            api.codecov.io:443
             cli.codecov.io:443
-            codecov.io:443
             github.com:443
+            ingest.codecov.io:443
             storage.googleapis.com:443
-            uploader.codecov.io:443
       - name: Checkout repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - name: Download coverage artifact

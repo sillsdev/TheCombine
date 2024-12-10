@@ -83,7 +83,7 @@
     "nameTaken": "Nom pris",
     "upload?": "Télécharger des données existantes ?",
     "create": "Créer un projet",
-    "fileSelected": "Fichier sélectionné",
+    "fileSelected": "Fichier sélectionné : {{ val }}",
     "success": "Projet créé !"
   },
   "selectProject": { "title": "Sélectionner un projet" },

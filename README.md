@@ -619,7 +619,7 @@ Notes for installing _Docker Desktop_ in Linux:
 Once _Docker Desktop_ has been installed, start it, and set it up as follows:
 
 1. Click the gear icon in the upper right to open the settings dialog;
-2. Click on the _Resources_ link on the left-hand side and set the Memory to at least 4 GB (see Note);
+2. Click on the _Resources_ link on the left-hand side and set the Memory to at least 6 GB (see Note);
 3. Click on the _Kubernetes_ link on the left-hand side;
 4. Select _Enable Kubernetes_ and click _Apply & Restart_;
 5. Click _Install_ on the dialog that is displayed.
@@ -731,16 +731,20 @@ Install the Kubernetes resources to run _The Combine_ by running:
 python deploy/scripts/setup_combine.py [--target <target_name>] [--tag <image_tag>]
 ```
 
-The default target is `localhost`; the default tag is `latest`. For development testing the script will usually be run
-with no arguments.
+Notes:
 
-If an invalid target is entered, the script will list available targets and prompt the user his/her selection.
-`deploy/scripts/setup_combine.py` assumes that the `kubectl` configuration file is setup to manage the desired
-Kubernetes cluster. For most development users, there will only be the _Rancher Desktop/Docker Desktop_ cluster to
-manage and the installation process will set that up correctly. If there are multiple clusters to manage, the
-`--kubeconfig` and `--context` options will let you specify a different cluster.
+- The default target is `localhost`; the default tag is `latest`. For development testing the script will usually be run
+  with no arguments.
 
-Run the script with the `--help` option to see possible options for the script.
+- If an invalid target is entered, the script will list available targets and prompt the user his/her selection.
+  `deploy/scripts/setup_combine.py` assumes that the `kubectl` configuration file is setup to manage the desired
+  Kubernetes cluster. For most development users, there will only be the _Rancher Desktop/Docker Desktop_ cluster to
+  manage and the installation process will set that up correctly. If there are multiple clusters to manage, the
+  `--kubeconfig` and `--context` options will let you specify a different cluster.
+
+- Run the script with the `--help` option to see possible options for the script.
+
+- The setup assumes `amd64` architecture. If the target architecture is `arm64`, add `--set global.cpuArch=arm64`.
 
 When the script completes, the resources will be installed on the specified cluster. It may take a few moments before
 all the containers are up and running. If you are using _Rancher Desktop_, you can use the
@@ -749,22 +753,25 @@ all the containers are up and running. If you are using _Rancher Desktop_, you c
 
 ```console
 $ kubectl -n thecombine get deployments
-NAME          READY   UP-TO-DATE   AVAILABLE   AGE
-backend       1/1     1            1           10m
-database      1/1     1            1           10m
-frontend      1/1     1            1           10m
-maintenance   1/1     1            1           10m
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+backend                        1/1     1            1           10m
+database                       1/1     1            1           10m
+frontend                       1/1     1            1           10m
+maintenance                    1/1     1            1           10m
+otel-opentelemetry-collector   1/1     1            1           19m
 ```
 
 or
 
 ```console
 $ kubectl -n thecombine get pods
-NAME                           READY   STATUS    RESTARTS   AGE
-backend-5657559949-z2flp       1/1     Running   0          10m
-database-794b4d956f-zjszm      1/1     Running   0          10m
-frontend-7d6d79f8c5-lkhhz      1/1     Running   0          10m
-maintenance-7f4b5b89b8-rhgk9   1/1     Running   0          10m
+NAME                                            READY   STATUS      RESTARTS   AGE
+backend-5657559949-z2flp                        1/1     Running     0          10m
+database-794b4d956f-zjszm                       1/1     Running     0          10m
+frontend-7d6d79f8c5-lkhhz                       1/1     Running     0          10m
+install-fonts-4jcsl                             0/1     Completed   0          8m
+maintenance-7f4b5b89b8-rhgk9                    1/1     Running     0          10m
+otel-opentelemetry-collector-5b5b69557b-zqk5d   1/1     Running     0          19m
 ```
 
 ### Connecting to Your Cluster

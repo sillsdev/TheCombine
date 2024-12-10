@@ -221,6 +221,7 @@ export default function ReviewEntriesTable(props: {
       Cell: ({ row }: CellProps) => <Cell.Vernacular word={row.original} />,
       enableColumnOrdering: false,
       enableHiding: false,
+      filterFn: ff.filterFnString,
       header: t("reviewEntries.columns.vernacular"),
       id: ColumnId.Vernacular,
       size: BaselineColumnSize - 40,
@@ -327,6 +328,7 @@ export default function ReviewEntriesTable(props: {
     // Note column
     columnHelper.accessor((w) => w.note.text || undefined, {
       Cell: ({ row }: CellProps) => <Cell.Note word={row.original} />,
+      filterFn: ff.filterFnString,
       header: t("reviewEntries.columns.note"),
       id: ColumnId.Note,
       size: BaselineColumnSize - 40,
