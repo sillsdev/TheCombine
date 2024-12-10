@@ -53,10 +53,6 @@ jobs:
           registry: public.ecr.aws
           username: ${{ secrets.AWS_ACCESS_KEY_ID }}
           password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - name: Specify python version
-        uses: actions/setup-python@v5.3.0
-        with:
-          python-version: "3.12"
       - name: Build combine_deploy
         uses: docker/build-push-action@v6.10.0
         with:
