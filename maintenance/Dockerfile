@@ -16,7 +16,7 @@
 #   - ARM 64-bit
 ############################################################
 
-FROM sillsdev/aws-kubectl:0.3.0
+FROM public.ecr.aws/thecombine/aws-kubectl:0.4.0-$TARGETARCH
 
 USER root
 
@@ -39,7 +39,7 @@ RUN chown user:user ${FONT_DIR}
 USER user
 WORKDIR ${HOME}
 
-ENV PATH ${PATH}:${SCRIPT_DIR}
+ENV PATH=${PATH}:${SCRIPT_DIR}
 
 COPY --chown=user:user requirements.txt .
 

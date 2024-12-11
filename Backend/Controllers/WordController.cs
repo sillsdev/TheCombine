@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,8 @@ namespace BackendFramework.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IWordService _wordService;
 
+        private const string otelTagName = "otel.WordController";
+
         public WordController(IWordRepository repo, IWordService wordService, IProjectRepository projRepo,
             IPermissionService permissionService)
         {
@@ -33,6 +36,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> DeleteFrontierWord(string projectId, string wordId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word from Frontier");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
@@ -56,6 +61,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Word>))]
         public async Task<IActionResult> GetProjectWords(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all words");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
@@ -73,6 +80,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Word))]
         public async Task<IActionResult> GetWord(string projectId, string wordId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting a word");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
@@ -95,6 +104,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> IsFrontierNonempty(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if Frontier is nonempty");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
@@ -112,6 +123,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Word>))]
         public async Task<IActionResult> GetProjectFrontierWords(string projectId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "getting all Frontier words");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
@@ -129,6 +142,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> IsInFrontier(string projectId, string wordId)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if Frontier contains a word");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
@@ -146,6 +161,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<string>))]
         public async Task<IActionResult> AreInFrontier(string projectId, [FromBody, BindRequired] List<string> wordIds)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if Frontier contains given words");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
@@ -175,6 +192,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> GetDuplicateId(string projectId, [FromBody, BindRequired] Word word)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking for duplicates of a word");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
@@ -196,6 +215,8 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UpdateDuplicate(
             string projectId, string dupId, [FromBody, BindRequired] Word word)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "combining duplicate words");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
@@ -230,6 +251,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> CreateWord(string projectId, [FromBody, BindRequired] Word word)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "creating a word");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
@@ -251,6 +274,8 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> UpdateWord(
             string projectId, string wordId, [FromBody, BindRequired] Word word)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "updating words");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
@@ -280,6 +305,8 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> RevertWords(
             string projectId, [FromBody, BindRequired] Dictionary<string, string> wordIds)
         {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "reverting words");
+
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();

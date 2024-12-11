@@ -6,7 +6,7 @@ This document describes how to deploy _The Combine_ to a target Kubernetes clust
 
 - the _host_ machine is the machine that is used to perform the installation. It may be a Linux, Windows, or MacOS
   machine.
-- the _target_ machine is the machine where _The Combine_ is to be installed. It shall be referred to as _\<target\>_.
+- the _target_ machine is the machine where _The Combine_ is to be installed.
 - some of the commands described in this document are to be run from within the `git` repository for _The Combine_ that
   has been cloned on the host machine. This directory shall be referred to as `<COMBINE>`.
 
@@ -17,14 +17,15 @@ This document describes how to deploy _The Combine_ to a target Kubernetes clust
    1. [Development Environment](#development-environment)
    2. [QA/Production Server](#qaproduction-server)
    3. [NUC](#nuc)
-3. [Install Ubuntu Server](#install-ubuntu-server)
-4. [Install Kubernetes Engine](#install-kubernetes-engine)
-5. [Setup Kubectl and Environment](#setup-kubectl-and-environment)
+3. [Install Ubuntu Server on Target](#install-ubuntu-server-on-target)
+4. [Setup Target](#setup-target)
+5. [Install Kubernetes Engine on Target](#install-kubernetes-engine-on-target)
+6. [Setup Kubectl and Environment](#setup-kubectl-and-environment)
    1. [Setup Kubectl](#setup-kubectl)
    2. [Setup Environment](#setup-environment)
-6. [Install Helm Charts Required by _The Combine_](#install-helm-charts-required-by-the-combine)
-7. [Install _The Combine_](#install-the-combine)
-8. [Maintenance](#maintenance)
+7. [Install Helm Charts Required by _The Combine_](#install-helm-charts-required-by-the-combine)
+8. [Install _The Combine_](#install-the-combine)
+9. [Maintenance](#maintenance)
    1. [Maintenance Scripts for Kubernetes](#maintenance-scripts-for-kubernetes)
    2. [Checking Certificate Expiration](#checking-certificate-expiration)
    3. [Creating your own Configurations](#creating-your-own-configurations)
@@ -61,12 +62,11 @@ separate organization. The characteristics of these systems are:
   - the namespace `thecombine` is created
   - the TLS certificate for the server is installed in `thecombine` namespace as a `kubernetes.io/tls` secret with the
     name `thecombine-app-tls`
+  - PersistentVolumeClaims for `backend-data`, `database-data`, and `font-data`
 
 - The QA server has services to login to a private AWS Elastic Container Registry to run private images for _The
   Combine_. In contrast, the Production server only runs public images.
-- On the Production server an additional namespace `combine-cert-proxy`.
-
-#### Tools Required for a QA/Production Server Installation
+- The Production server has an additional namespace `combine-cert-proxy`.
 
 The host tools required to install _The Combine_ on a QA or Production server are described in
 [Install Kubernetes Tools](https://github.com/sillsdev/TheCombine#install-kubernetes-tools) in the project README.md
@@ -84,29 +84,27 @@ To install _The Combine_ on one of these systems, follow the steps in
 _The Combine_ is designed to be installed on an _Intel NUC_ or other mini-computer and to operate where no internet is
 available. The installation process assumes that a WiFi interface is available as well as a wired Ethernet interface.
 
-#### Tools Required to Install on a NUC
+There are two options for installing _The Combine_ on a NUC: local tools and Docker image.
 
-There are two options for toolsets to install _The Combine_ on a NUC:
+#### Install with Local Tools
 
-##### Locally Installed Tools
+Locally installed tools can be used to install from a Linux, MacOS, or Windows Subsystem for Linux (WSL) host machine.
+The required tools are:
 
-Locally installed tools can be used to install from a Linux, MacOS, or Windows Subsystem for Linux host machine. The
-required tools are:
-
-- _The Combine_ source tree
-
-  Clone the repo:
+- _The Combine_ source tree; clone the repo:
 
   ```bash
   git clone https://github.com/sillsdev/TheCombine.git
   ```
 
-- [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#latest-releases-via-apt-ubuntu)
+- [Docker Engine](https://docs.docker.com/engine/install/) or [Docker Desktop](https://docs.docker.com/get-docker/)
 - Python: See the instructions for installing Python and dependent libraries in the project
   [README.md](https://github.com/sillsdev/TheCombine#python)
-- [Docker Engine](https://docs.docker.com/engine/install/) or [Docker Desktop](https://docs.docker.com/get-docker/)
+- Ansible: You can
+  [install ansible directly](https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html), or
+  you can sync `<COMBINE>/deploy/requirements.txt` in your Python virtual environment (venv).
 
-##### Install From Docker Image
+#### Install from Docker Image
 
 You can use a Docker image to install _The Combine_ using a host machine running Windows, Linux, or MacOS. The only tool
 that is needed is Docker. You can install either [Docker Engine](https://docs.docker.com/engine/install/) or
@@ -123,19 +121,30 @@ The Docker image contains all the additional tools that are needed. It also has 
 you do not need to clone _The Combine's_ GitHub repo. The disadvantage of using the Docker image is that any changes to
 _The Combine_ configuration files will not be preserved. This is not a concern for most users.
 
+##### Open Docker Image Terminal
+
+To open the Docker image terminal, run:
+
+```console
+docker run -it -v nuc-config:/config public.ecr.aws/thecombine/combine_deploy:latest
+```
+
+You should see something like `root@18a8f5cf1e86:/#` in the terminal.
+
 #### Steps to Install on a NUC
 
 To install _The Combine_ on one of these systems, follow the steps in
 
-- [Install Ubuntu Server](#install-ubuntu-server)
-- [Install Kubernetes Engine](#install-kubernetes-engine)
+- [Install Ubuntu Server on Target](#install-ubuntu-server-on-target)
+- [Setup Target](#setup-target)
+- [Install Kubernetes Engine on Target](#install-kubernetes-engine-on-target)
 - [Setup Kubectl and Environment](#setup-kubectl-and-environment)
 - [Install Helm Charts Required by _The Combine_](#install-helm-charts-required-by-the-combine)
 - [Install _The Combine_](#install-the-combine)
 
-## Install Ubuntu Server
+## Install Ubuntu Server on Target
 
-Note: In the instructions below, each step indicates whether the step is to be performed on the Host PC (_[Host]_) or
+Note: In the instructions below, each step indicates whether the step is to be performed on the host PC (_[Host]_) or
 the target PC (_[NUC]_).
 
 To install the OS on a new target machine, such as, a new NUC, follow these steps:
@@ -194,43 +203,53 @@ To install the OS on a new target machine, such as, a new NUC, follow these step
    sudo reboot
    ```
 
-7. _[NUC]_ Lookup IP Address for the NUC:
+### Setup values
 
-   From the NUC, run the command `ip address`. Record the current IP address for the Ethernet interface; the Ethernet
-   interface starts with `en`, followed by a letter and then a digit (`en[a-z][0-9]`).
+The next two steps ([Setup Target](#setup-target) and
+[Install Kubernetes Engine on Target](#install-kubernetes-engine-on-target)) use the following variables.
 
-8. _[Host]_ Setup your host's connection to the NUC:
+- `<ip_addr>` is the target's ip address. From the NUC, run the command `ip address`. Record the current IP address for
+  the Ethernet interface; the Ethernet interface starts with `en`, followed by a letter and then a digit, then possibly
+  another letter and a number (`en[a-z][0-9]([a-z][0-9]+)?])`).
 
-   - if using the Docker image open a terminal window and run:
+- `<target>` is the target's server name. This was chosen during profile setup above. If you don't recall which of
+  nuc1/nuc2/nuc3 was used, run the command `hostname` on the NUC.
 
-     ```console
-     docker run -it -v nuc-config:/config public.ecr.aws/thecombine/combine_deploy:latest
-     setup_target.py <ip_addr> <target>
-     ```
+- `<target_user>` is the username on the target, chosen during profile setup above (default is `sillsdev`).
 
-     Where `<ip_addr>` is the IP address found in step 7 and `<target>` is the server name specified when Ubuntu was
-     installed.
+- `<host_user>` is your current username on the host PC.
 
-   - if using local tools, open a terminal window and run:
+## Setup Target
 
-     ```console
-     cd <COMBINE>/deploy/scripts
-     sudo ./setup_target.py <ip_addr> <target> -l <username>
-     ```
+Setup your host's connection to the NUC. This setup is all run from _[Host]_.
 
-     Where `<ip_addr>` is the IP address found in step 7, `<target>` is the server name specified when Ubuntu was
-     installed, and `<username>` is your current username.
+If using the Docker image, [open the Docker image terminal](#open-docker-image-terminal) and run:
 
-   The `setup_target.py` script will do the following:
+```console
+python3 ~/scripts/setup_target.py <ip_addr> <target> [-t <target_user>]
+```
 
-   - Add the NUC's IP address to your `/etc/hosts` file
-   - Generate an SSH key for you
-   - Copy your SSH public key to the NUC
+If using local tools, open a terminal window and run:
 
-   Note that if an SSH key exists, you will have the option to overwrite it or skip the key generation. When your SSH
-   key is copied to the NUC, it will copy the default key, `${HOME}/.ssh/id_rsa.pub`.
+```console
+cd <COMBINE>/deploy/scripts
+sudo ./setup_target.py <ip_addr> <target> -l <host_user> [-t <target_user>]
+```
 
-## Install Kubernetes Engine
+The values for `<ip_addr>`, `<target>`, `<host_user>`, and `<target_user>` are specified in
+[Setup Values](#setup-values) above. The `-t <target_user>` is not required if the default username (`sillsdev`) was
+used on the target.
+
+The `setup_target.py` script will do the following:
+
+- Add the NUC's IP address to your `/etc/hosts` file
+- Generate an SSH key for you
+- Copy your SSH public key to the NUC
+
+Note that if an SSH key exists, you will have the option to overwrite it or skip the key generation. When your SSH key
+is copied to the NUC, it will copy the default key, `${HOME}/.ssh/id_rsa.pub`.
+
+## Install Kubernetes Engine on Target
 
 This step does more than just install the Kubernetes engine. It performs the following tasks:
 
@@ -241,41 +260,50 @@ This step does more than just install the Kubernetes engine. It performs the fol
 - Installs `k3s` Kubernetes engine; and
 - Sets up a local configuration file for `kubectl` to access the cluster.
 
-To run this step:
+If using the Docker image, [open the Docker image terminal](#open-docker-image-terminal) and run:
 
-- if using the Docker image open a terminal window and run:
+```console
+cd ~/ansible
+ansible-playbook -i hosts.yml playbook_nuc_setup.yml --limit <target> -u <target_user> -K -e link_kubeconfig=true
+```
 
-  ```console
-  docker run -it -v nuc-config:/config public.ecr.aws/thecombine/combine_deploy:latest
-  cd ~/ansible
-  ansible-playbook -i hosts playbook_kube_install.yml --limit <target> -u <user> -K -e link_kubeconfig=true
-  ```
+If using local tools, open a terminal window and run:
 
-- if using local tools, open a terminal window and run:
+```console
+cd <COMBINE>/deploy/ansible
+ansible-playbook -i hosts.yml playbook_nuc_setup.yml --limit <target> -u <target_user> -K
+```
 
-  ```console
-  cd <COMBINE>/deploy/ansible
-  ansible-playbook -i hosts playbook_kube_install.yml --limit <target> -u <user> -K
-  ```
-
-  Where
-
-  - `<target>` is the server name specified when Ubuntu was installed, e.g. `nuc1`; and
-  - `<user>` is the user name specified when Ubuntu was installed, e.g. `sillsdev`.
+The values for `<target>` and `<target_user>` are specified in [Setup Values](#setup-values) above.
 
 ## Setup Kubectl and Environment
 
 ### Setup Kubectl
 
-If you do not have a `kubectl` configuration file for the `<target>` system, you need to install it. For the NUCs, it is
+If you do not have a `kubectl` configuration file for the target system, you need to install it. For the NUCs, it is
 setup automatically by the Ansible playbook run in the previous section.
 
 For the Production or QA server,
 
-1. login to the Rancher Dashboard for the Production (or QA) server. You need to have an account on the server that was
+1. Login to the Rancher Dashboard for the Production (or QA) server. You need to have an account on the server that was
    created by the operations group.
 2. Copy your `kubectl` configuration to the clipboard and paste it into a file on your host machine, e.g.
    `${HOME}/.kube/prod/config` for the production server.
+3. Check that the PVCs are annotated and labeled:
+   - Get the full list of `<pvc>`s with `kubectl [--context <context>] -n thecombine get pvc`
+   - Check the content of a `<pvc>` with `kubectl [--context <context>] -n thecombine get pvc <pvc> -o yaml`
+   - For all of them, make sure that `metadata:` includes the following lines:
+     ```
+       annotations:
+         meta.helm.sh/release-name: thecombine
+         meta.helm.sh/release-namespace: thecombine
+     ```
+     and
+     ```
+       labels:
+         app.kubernetes.io/managed-by: Helm
+     ```
+   - You can edit a `<pvc>` with `kubectl [--context <context>] -n thecombine edit pvc <pvc>`
 
 ### Setup Environment
 
@@ -285,13 +313,18 @@ The setup scripts require the following environment variables to be set:
 - AWS_DEFAULT_REGION
 - AWS_ACCESS_KEY_ID
 - AWS_SECRET_ACCESS_KEY
-- COMBINE_CAPTCHA_SECRET_KEY
 - COMBINE_JWT_SECRET_KEY
-- COMBINE_SMTP_USERNAME
-- COMBINE_SMTP_PASSWORD
 - COMBINE_ADMIN_USERNAME
 - COMBINE_ADMIN_PASSWORD
 - COMBINE_ADMIN_EMAIL
+
+The following environment variables are also required for online deployments (QA/Production), but not for offline
+deployments (NUC):
+
+- COMBINE_CAPTCHA_SECRET_KEY
+- COMBINE_SMTP_USERNAME
+- COMBINE_SMTP_PASSWORD
+- HONEYCOMB_API_KEY
 
 You may also set the KUBECONFIG environment variable to the location of the `kubectl` configuration file. This is not
 necessary if the configuration file is at `${HOME}/.kube/config`.
@@ -299,120 +332,100 @@ necessary if the configuration file is at `${HOME}/.kube/config`.
 If using local tools, these can be set in your `.profile` (Linux or Mac 10.14-), your `.zprofile` (Mac 10.15+), or the
 _System_ app (Windows).
 
-If using the docker image,
+If using the Docker image,
 
-1. Start the `combine_deploy` image:
-
-   ```console
-   docker run -it -v nuc-config:/config public.ecr.aws/thecombine/combine_deploy:latest
-   ```
-
-2. In the docker image terminal window, run:
+1. [Open the Docker image terminal](#open-docker-image-terminal) and run:
 
    ```console
    nano ~/.env
    ```
 
-3. Enter the variable definitions using the form:
+2. In the nano editor, enter the environment variable definitions using the form:
 
    ```config
    export VARIABLE=VALUE
    ```
 
-4. Enter `Ctrl-X` to exit and save the changes.
-5. Apply the definitions to the current session by running:
+   If you need the environment variable values, send a request explaining your need to
+   [admin@thecombine.app](mailto:admin@thecombine.app).
+
+3. Enter `Ctrl-X` to exit and save the changes.
+4. Apply the definitions to the current session by running:
 
    ```console
    . ~/.env
    ```
 
-Once this is done, the environment variables will be set whenever the docker image is started with the volume specified
-by the `-v` option.
-
-If you are a member of the development team and need the environment variable values, send a request explaining your
-need to [admin@thecombine.app](mailto:admin@thecombine.app).
+   Now the environment variables will be set whenever the [Docker image is started](#open-docker-image-terminal).
 
 ## Install Helm Charts Required by _The Combine_
 
-This step sets up the NGINX Ingress Controller and the Certificate Manager, [cert-manager.io](https://cert-manager.io/).
+This step sets up the NGINX Ingress Controller, the Certificate Manager ([cert-manager.io](https://cert-manager.io/)),
+and the OpenTelemetry analytics collector.
 
-- if using the Docker image open a terminal window and run:
+If using the Docker image, [open the Docker image terminal](#open-docker-image-terminal) and run:
 
-  ```console
-  docker run -it -v nuc-config:/config public.ecr.aws/thecombine/combine_deploy:latest
-  setup_cluster.py
-  ```
+```console
+python3 ~/scripts/setup_cluster.py
+```
 
-- if using local tools, open a terminal window and run:
+If using local tools, open a terminal window and run:
 
-  ```console
-  cd <COMBINE>/deploy/scripts
-  ./setup_cluster.py
-  ```
+```console
+cd <COMBINE>/deploy/scripts
+./setup_cluster.py
+```
+
+Note: This script is not used for the QA/Production deployments. If you need to do a completely fresh install for either
+of those, you can see all the cluster setup steps by executing `setup_cluster.py` with
+`--type development --debug 2> setup_cluster.log`.
 
 ## Install _The Combine_
 
 This step installs _The Combine_ application itself.
 
-- if using the Docker image
+If using the Docker image, [open the Docker image terminal](#open-docker-image-terminal) and run:
 
-- open a terminal window and run if the Docker image is not already started:
+```bash
+python3 ~/scripts/setup_combine.py --tag <release> --repo public.ecr.aws/thecombine --target <target>
+```
 
-  ```bash
-  docker run -it -v nuc-config:/config public.ecr.aws/thecombine/combine_deploy:latest
-  setup_combine.py --tag <release> --repo public.ecr.aws/thecombine --target  <target>
-  ```
+If using local tools, open a terminal window and run:
 
-- if using local tools, open a terminal window and run:
+```console
+cd <COMBINE>/deploy/scripts
+./setup_combine.py --tag <release> --repo public.ecr.aws/thecombine --target <target>
+```
+
+`<release>` is the GitHub tag (starting with 'v') for the release to be installed. This is required, since the default
+`--tag` value (`latest`) only works in the _Development Environment_. You can see the version of the latest release on
+GitHub (<https://github.com/sillsdev/TheCombine>): ![alt text](images/releases.png "The Combine Releases")
+
+Notes:
+
+- When the `./setup_combine.py` script is used to install _The Combine_ on a NUC, it will install the fonts required for
+  Arabic, English, French, Portuguese, and Spanish. If additional fonts will be required, call the `setup_combine.py`
+  commands with the `--langs` option. Use the `--help` option to see the argument syntax.
+- The database image contains a script that will initialize the `SemanticDomains` and the `SemanticDomainTree`
+  collections on _first use_ of the database. The script will not be run automatically when the database is restarted or
+  updated. If the Semantic Domain data are updated, for example, adding a new language, then the script needs to be
+  rerun manually:
 
   ```console
-  cd <COMBINE>/deploy/scripts
-  ./setup_combine.py --tag <release> --repo public.ecr.aws/thecombine --target <target>
+  kubectl -n thecombine exec deployment/database -- /docker-entrypoint-initdb.d/update-semantic-domains.sh
   ```
-
-Where:
-
-- `<release>` is the GitHub tag for the release that should be installed.
-
-  Note that:
-
-  - When the `./setup_combine.py` script is used to install _The Combine_ on a NUC, it will install the fonts required
-    for Arabic, English, French, Portuguese, and Spanish. If additional fonts will be required, call the
-    `setup_combine.py` commands with the `--langs` option. Use the `--help` option to see the argument syntax.
-
-  - Starting with version 0.7.25, the tag will start with a ‘v’, even if the release does not (we are transitioning to
-    the format where release versions start with a ‘v’).
-  - You can see the version of the latest release on the GitHub page for The Combine,
-    <https://github.com/sillsdev/TheCombine>: ![alt text](images/releases.png "The Combine Releases")
-  - The help text for `setup_combine.py` says that the `--tag` is optional and its default value is `latest`. That is
-    used in the _Development Environment_ scenario; there are no images for _The Combine's_ components in
-    `public.ecr.aws/thecombine` with the tag `latest`.
-  - The database image contains a script that will initialize the `SemanticDomains` and the `SemanticDomainTree`
-    collections on _first use_ of the database. The script will not be run automatically when the database is restarted
-    or updated. If the Semantic Domain data are updated, for example, adding a new language, then the script needs to be
-    rerun manually:
-
-    ```console
-    kubectl -n thecombine exec deployment/database -- /docker-entrypoint-initdb.d/update-semantic-domains.sh
-    ```
 
 ## Maintenance
 
 ### Maintenance Scripts for Kubernetes
 
-There are several maintenance scripts that can be run in the kubernetes cluster:
-
-- `combine-backup-job.sh` - performs a backup of _The Combine_ database and backend files, pushes the backup to AWS S3
-  storage and then removes old backups keeping the latest 3 backups.
-- `combine_backup.py` - just performs the backup and pushes the result to AWS S3 storage.
-- `combine-clean-aws.py` - removes the oldest backups, keeping up to `max_backups`. The default for `max_backups` is 3.
-- `combine_restore.py` - restores _The Combine_ database and backend files from one of the backups in AWS S3 storage.
+There are several maintenance scripts that can be run in the kubernetes cluster; they are listed in
+[./kubernetes_design/README.md#combine_maint-image](./kubernetes_design/README.md#combine_maint-image).
 
 The `combine-backup-job.sh` is currently being run daily on _The Combine_ QA and Production servers as a Kubernetes
 CronJob.
 
-In addition to the daily backup, any of the scripts can be run on-demand using the `kubectl` command. Using the
-`kubectl` command takes the form:
+In addition to the daily backup, any of the scripts can be run on-demand using the `kubectl` command as follows:
 
 ```bash
 kubectl [--kubeconfig=<path-to-kubernetes-file>] [-n thecombine] exec -it deployment/maintenance -- <maintenance script> <script options>
@@ -420,44 +433,47 @@ kubectl [--kubeconfig=<path-to-kubernetes-file>] [-n thecombine] exec -it deploy
 
 Notes:
 
-1. The `--kubeconfig` option is not required if
+- The `--kubeconfig` option is not required if
 
-   1. the `KUBECONFIG` environment variable is set to the path of your kubeconfig file, or
+  1.  the `KUBECONFIG` environment variable is set to the path of your kubeconfig file, or
 
-   2. if your kubeconfig file is located in `${HOME}/.kube/config`.
+  2.  if your kubeconfig file is located in `${HOME}/.kube/config`.
 
-2. You can see the options for a script by running:
+- You can see the options for a script by running:
 
-   ```bash
-   kubectl [--kubeconfig=<path-to-kubernetes-file>] [-n thecombine] exec -it deployment/maintenance -- <maintenance scripts> --help
-   ```
+  ```bash
+  kubectl [--kubeconfig=<path-to-kubernetes-file>] [-n thecombine] exec -it deployment/maintenance -- <maintenance scripts> --help
+  ```
 
-   The only exception is `combine-backup-job.sh` which does not have any script options.
+  The exception is `combine-backup-job.sh` which does not have any script options.
 
-3. The `-n thecombine` option is not required if you set `thecombine` as the default namespace for your kubeconfig file
-   by running:
+- The `-n thecombine` option is not required if you set `thecombine` as the default namespace for your kubeconfig file
+  by running:
 
-   ```bash
-   kubectl config set-context --current --namespace=thecombine
-   ```
+  ```bash
+  kubectl config set-context --current --namespace=thecombine
+  ```
+
+- The `maintenance/scripts/*.py` scripts begin with `#!/usr/bin/env python3` so that they can be run directly in the
+  `maintenance` deployment. If you need to execute one of them in a Python virtual environment `(venv)`, precede the
+  script name with `python`.
 
 ### Checking Certificate Expiration
 
 The `check_cert.py` will print the expiration timestamp for _The Combine's_ TLS certificate.
 
-- if using the Docker image, open a terminal window and run:
+If using the Docker image, [open the Docker image terminal](#open-docker-image-terminal) and run:
 
-  ```console
-  docker run -it -v nuc-config:/config public.ecr.aws/thecombine/combine_deploy:latest
-  check_cert.py -n thecombine
-  ```
+```console
+python3 ~/scripts/check_cert.py -n thecombine
+```
 
-- if using local tools, open a terminal window and run:
+If using local tools, open a terminal window and run:
 
-  ```console
-  cd <COMBINE>/deploy/scripts
-  ./check_cert.py -n thecombine
-  ```
+```console
+cd <COMBINE>/deploy/scripts
+./check_cert.py -n thecombine
+```
 
 The `-n thecombine` option may be omitted if the default namespace for the kubeconfig file has been set to `thecombine`
 as described in [Maintenance Scripts for Kubernetes](#maintenance-scripts-for-kubernetes).

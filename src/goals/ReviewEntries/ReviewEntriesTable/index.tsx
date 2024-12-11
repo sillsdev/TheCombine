@@ -4,12 +4,14 @@ import {
   PlayArrow,
 } from "@mui/icons-material";
 import { Typography } from "@mui/material";
+import { createSelector } from "@reduxjs/toolkit";
 import {
   MaterialReactTable,
   type MRT_Localization,
   type MRT_PaginationState,
   type MRT_Row,
   type MRT_RowVirtualizer,
+  type MRT_VisibilityState,
   createMRTColumnHelper,
   useMaterialReactTable,
 } from "material-react-table";
@@ -19,10 +21,14 @@ import { useTranslation } from "react-i18next";
 import { GramCatGroup, type GrammaticalInfo, type Word } from "api/models";
 import { getAllSpeakers, getFrontierWords, getWord } from "backend";
 import { topBarHeight } from "components/LandingPage/TopBar";
+import {
+  setReviewEntriesColumnOrder,
+  setReviewEntriesColumnVisibility,
+} from "components/Project/ProjectActions";
 import * as Cell from "goals/ReviewEntries/ReviewEntriesTable/Cells";
 import * as ff from "goals/ReviewEntries/ReviewEntriesTable/filterFn";
 import * as sf from "goals/ReviewEntries/ReviewEntriesTable/sortingFn";
-import { useAppSelector } from "rootRedux/hooks";
+import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { type Hash } from "types/hash";
 
@@ -61,6 +67,20 @@ const IconHeaderPaddingTop = "2px"; // Vertical offset for a small icon as Heade
 const IconHeaderWidth = 20; // Width for a small icon as Header
 const SensesHeaderWidth = 15; // Width for # as Header
 
+export enum ColumnId {
+  Definitions = "definitions",
+  Delete = "delete",
+  Domains = "domains",
+  Edit = "edit",
+  Flag = "flag",
+  Glosses = "glosses",
+  Note = "note",
+  PartOfSpeech = "partOfSpeech",
+  Pronunciations = "pronunciations",
+  Senses = "senses",
+  Vernacular = "vernacular",
+}
+
 // Constants for pagination state.
 const rowsPerPage = [10, 100];
 const initPaginationState: MRT_PaginationState = {
@@ -76,12 +96,32 @@ interface RowsPerPageOption {
 export default function ReviewEntriesTable(props: {
   disableVirtualization?: boolean;
 }): ReactElement {
-  const showDefinitions = useAppSelector(
-    (state: StoreState) => state.currentProjectState.project.definitionsEnabled
-  );
-  const showGrammaticalInfo = useAppSelector(
+  const dispatch = useAppDispatch();
+
+  const columnOrder = useAppSelector(
     (state: StoreState) =>
-      state.currentProjectState.project.grammaticalInfoEnabled
+      state.currentProjectState.reviewEntriesColumns.columnOrder
+  );
+  const columnVisibility: MRT_VisibilityState = useAppSelector(
+    // Memoized selector that ensures correct column visibility.
+    createSelector(
+      [
+        (state: StoreState) =>
+          state.currentProjectState.reviewEntriesColumns.columnVisibility,
+        (state: StoreState) =>
+          state.currentProjectState.project.definitionsEnabled,
+        (state: StoreState) =>
+          state.currentProjectState.project.grammaticalInfoEnabled,
+      ],
+      (colVis, def, pos) => ({
+        ...colVis,
+        [ColumnId.Definitions]: (colVis[ColumnId.Definitions] ?? def) && def,
+        [ColumnId.PartOfSpeech]: (colVis[ColumnId.PartOfSpeech] ?? pos) && pos,
+      })
+    )
+  );
+  const { definitionsEnabled, grammaticalInfoEnabled } = useAppSelector(
+    (state: StoreState) => state.currentProjectState.project
   );
 
   const autoResetPageIndexRef = useRef(true);
@@ -171,6 +211,7 @@ export default function ReviewEntriesTable(props: {
       enableHiding: false,
       Header: "",
       header: t("reviewEntries.columns.edit"),
+      id: ColumnId.Edit,
       size: IconColumnSize,
       visibleInShowHideMenu: false,
     }),
@@ -180,7 +221,9 @@ export default function ReviewEntriesTable(props: {
       Cell: ({ row }: CellProps) => <Cell.Vernacular word={row.original} />,
       enableColumnOrdering: false,
       enableHiding: false,
+      filterFn: ff.filterFnString,
       header: t("reviewEntries.columns.vernacular"),
+      id: ColumnId.Vernacular,
       size: BaselineColumnSize - 40,
     }),
 
@@ -190,7 +233,7 @@ export default function ReviewEntriesTable(props: {
       filterFn: "equals",
       Header: <Typography>#</Typography>,
       header: t("reviewEntries.columns.sensesCount"),
-      id: "senses",
+      id: ColumnId.Senses,
       muiTableHeadCellProps: {
         sx: {
           "& .Mui-TableHeadCell-Content-Wrapper": {
@@ -207,10 +250,10 @@ export default function ReviewEntriesTable(props: {
       Cell: ({ row }: CellProps) => <Cell.Definitions word={row.original} />,
       filterFn: ff.filterFnDefinitions,
       header: t("reviewEntries.columns.definitions"),
-      id: "definitions",
+      id: ColumnId.Definitions,
       size: BaselineColumnSize + 20,
       sortingFn: sf.sortingFnDefinitions,
-      visibleInShowHideMenu: showDefinitions,
+      visibleInShowHideMenu: definitionsEnabled,
     }),
 
     // Glosses column
@@ -218,7 +261,7 @@ export default function ReviewEntriesTable(props: {
       Cell: ({ row }: CellProps) => <Cell.Glosses word={row.original} />,
       filterFn: ff.filterFnGlosses,
       header: t("reviewEntries.columns.glosses"),
-      id: "glosses",
+      id: ColumnId.Glosses,
       sortingFn: sf.sortingFnGlosses,
     }),
 
@@ -235,9 +278,9 @@ export default function ReviewEntriesTable(props: {
       })),
       filterVariant: "select",
       header: t("reviewEntries.columns.partOfSpeech"),
-      id: "partOfSpeech",
+      id: ColumnId.PartOfSpeech,
       sortingFn: sf.sortingFnPartOfSpeech,
-      visibleInShowHideMenu: showGrammaticalInfo,
+      visibleInShowHideMenu: grammaticalInfoEnabled,
     }),
 
     // Domains column
@@ -245,7 +288,7 @@ export default function ReviewEntriesTable(props: {
       Cell: ({ row }: CellProps) => <Cell.Domains word={row.original} />,
       filterFn: ff.filterFnDomains,
       header: t("reviewEntries.columns.domains"),
-      id: "domains",
+      id: ColumnId.Domains,
       sortingFn: sf.sortingFnDomains,
     }),
 
@@ -268,7 +311,7 @@ export default function ReviewEntriesTable(props: {
         </>
       ),
       header: t("reviewEntries.columns.pronunciations"),
-      id: "pronunciations",
+      id: ColumnId.Pronunciations,
       muiTableHeadCellProps: {
         sx: {
           "& .Mui-TableHeadCell-Content-Wrapper": {
@@ -285,8 +328,9 @@ export default function ReviewEntriesTable(props: {
     // Note column
     columnHelper.accessor((w) => w.note.text || undefined, {
       Cell: ({ row }: CellProps) => <Cell.Note word={row.original} />,
+      filterFn: ff.filterFnString,
       header: t("reviewEntries.columns.note"),
-      id: "note",
+      id: ColumnId.Note,
       size: BaselineColumnSize - 40,
     }),
 
@@ -301,6 +345,7 @@ export default function ReviewEntriesTable(props: {
         />
       ),
       header: t("reviewEntries.columns.flag"),
+      id: ColumnId.Flag,
       muiTableHeadCellProps: {
         sx: {
           "& .Mui-TableHeadCell-Content-Wrapper": {
@@ -323,6 +368,7 @@ export default function ReviewEntriesTable(props: {
       enableHiding: false,
       Header: "",
       header: t("reviewEntries.columns.delete"),
+      id: ColumnId.Delete,
       size: IconColumnSize,
       visibleInShowHideMenu: false,
     }),
@@ -341,13 +387,7 @@ export default function ReviewEntriesTable(props: {
     enableGlobalFilter: false,
     enablePagination,
     enableRowVirtualization: !props.disableVirtualization,
-    initialState: {
-      columnVisibility: {
-        definitions: showDefinitions,
-        partOfSpeech: showGrammaticalInfo,
-      },
-      density: "compact",
-    },
+    initialState: { density: "compact" },
     localization,
     muiPaginationProps: { rowsPerPageOptions },
     // Override whiteSpace: "nowrap" from having density: "compact"
@@ -357,13 +397,17 @@ export default function ReviewEntriesTable(props: {
       sx: { maxHeight: `calc(100vh - ${enablePagination ? 180 : 130}px)` },
     },
     muiTablePaperProps: { sx: { height: `calc(100vh - ${topBarHeight}px)` } },
+    onColumnOrderChange: (updater) =>
+      dispatch(setReviewEntriesColumnOrder(updater)),
+    onColumnVisibilityChange: (updater) =>
+      dispatch(setReviewEntriesColumnVisibility(updater)),
     onPaginationChange: (updater) => {
       setPagination(updater);
       scrollToTop();
     },
     rowVirtualizerInstanceRef,
     sortDescFirst: false,
-    state: { isLoading, pagination },
+    state: { columnOrder, columnVisibility, isLoading, pagination },
   });
 
   return <MaterialReactTable table={table} />;

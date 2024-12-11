@@ -46,6 +46,9 @@ export enum LoginId {
 export default function Login(): ReactElement {
   const dispatch = useAppDispatch();
 
+  const loginError = useAppSelector(
+    (state: StoreState) => state.loginState.error
+  );
   const status = useAppSelector(
     (state: StoreState) => state.loginState.loginStatus
   );
@@ -147,7 +150,11 @@ export default function Login(): ReactElement {
                 style={{ color: "red", marginBottom: 24, marginTop: 24 }}
                 variant="body2"
               >
-                {t("login.failed")}
+                {t(
+                  loginError.includes("401")
+                    ? "login.failed"
+                    : "login.failedUnknownReason"
+                )}
               </Typography>
             )}
 

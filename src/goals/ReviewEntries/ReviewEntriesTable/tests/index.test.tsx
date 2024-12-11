@@ -5,7 +5,9 @@ import { type ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { defaultState } from "components/Project/ProjectReduxTypes";
-import ReviewEntriesTable from "goals/ReviewEntries/ReviewEntriesTable";
+import ReviewEntriesTable, {
+  ColumnId,
+} from "goals/ReviewEntries/ReviewEntriesTable";
 import VernacularCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/VernacularCell";
 import {
   mockWords,
@@ -38,10 +40,6 @@ jest.mock("backend", () => ({
 }));
 jest.mock("components/Pronunciations/PronunciationsBackend");
 jest.mock("i18n", () => ({}));
-jest.mock("rootRedux/hooks", () => ({
-  ...jest.requireActual("rootRedux/hooks"),
-  useAppDispatch: () => jest.fn(),
-}));
 
 const mockClickEvent = { stopPropagation: jest.fn() };
 const mockGetAllSpeakers = jest.fn();
@@ -153,16 +151,13 @@ describe("ReviewEntriesTable", () => {
   });
 
   describe("definitionsEnabled & grammaticalInfoEnabled", () => {
-    const definitionsId = "definitions";
-    const partOfSpeechId = "partOfSpeech";
-
     test("show definitions when definitionsEnabled is true", async () => {
       await renderReviewEntriesTable(true, false);
       const colIds = renderer.root
         .findAllByType(MRT_TableHeadCell)
         .map((col) => col.props.header.id);
-      expect(colIds).toContain(definitionsId);
-      expect(colIds).not.toContain(partOfSpeechId);
+      expect(colIds).toContain(ColumnId.Definitions);
+      expect(colIds).not.toContain(ColumnId.PartOfSpeech);
     });
 
     test("show part of speech when grammaticalInfoEnabled is true", async () => {
@@ -170,8 +165,8 @@ describe("ReviewEntriesTable", () => {
       const colIds = renderer.root
         .findAllByType(MRT_TableHeadCell)
         .map((col) => col.props.header.id);
-      expect(colIds).not.toContain(definitionsId);
-      expect(colIds).toContain(partOfSpeechId);
+      expect(colIds).not.toContain(ColumnId.Definitions);
+      expect(colIds).toContain(ColumnId.PartOfSpeech);
     });
   });
 

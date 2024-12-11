@@ -43,9 +43,9 @@ def create_secrets(
     return secrets_written
 
 
-def get_installed_charts(helm_opts: List[str], helm_namespace: str) -> List[str]:
+def get_installed_charts(helm_cmd: List[str], helm_namespace: str) -> List[str]:
     """Create a list of the helm charts that are already installed on the target."""
-    lookup_results = run_cmd(["helm"] + helm_opts + ["list", "-n", helm_namespace, "-o", "yaml"])
+    lookup_results = run_cmd(helm_cmd + ["list", "-a", "-n", helm_namespace, "-o", "yaml"])
     chart_info: List[Dict[str, str]] = yaml.safe_load(lookup_results.stdout)
     chart_list: List[str] = []
     for chart in chart_info:

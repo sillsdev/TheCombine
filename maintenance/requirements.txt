@@ -12,36 +12,40 @@ certifi==2024.8.30
     #   requests
 cffi==1.17.1
     # via cryptography
-charset-normalizer==3.3.2
+charset-normalizer==3.4.0
     # via requests
-cryptography==43.0.1
+cryptography==44.0.0
     # via pyopenssl
-dnspython==2.6.1
+dnspython==2.7.0
     # via pymongo
-google-auth==2.34.0
+durationpy==0.9
+    # via kubernetes
+google-auth==2.36.0
     # via kubernetes
 humanfriendly==10.0
     # via -r requirements.in
-idna==3.8
+idna==3.10
     # via requests
-kubernetes==30.1.0
+kubernetes==31.0.0
     # via -r requirements.in
 oauthlib==3.2.2
     # via
     #   kubernetes
     #   requests-oauthlib
-pyasn1==0.6.0
+pyasn1==0.6.1
     # via
     #   pyasn1-modules
     #   rsa
-pyasn1-modules==0.4.0
+pyasn1-modules==0.4.1
     # via google-auth
 pycparser==2.22
     # via cffi
-pymongo==4.8.0
+pymongo==4.10.1
     # via -r requirements.in
-pyopenssl==24.2.1
+pyopenssl==24.3.0
     # via -r requirements.in
+pyreadline3==3.5.4
+    # via humanfriendly
 python-dateutil==2.9.0.post0
     # via kubernetes
 pyyaml==6.0.2
@@ -54,11 +58,11 @@ requests-oauthlib==2.0.0
     # via kubernetes
 rsa==4.9
     # via google-auth
-six==1.16.0
+six==1.17.0
     # via
     #   kubernetes
     #   python-dateutil
-urllib3==2.2.2
+urllib3==2.2.3
     # via
     #   kubernetes
     #   requests

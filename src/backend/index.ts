@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { StatusCodes } from "http-status-codes";
 import { Base64 } from "js-base64";
 import { enqueueSnackbar } from "notistack";
@@ -26,6 +26,7 @@ import {
   Word,
 } from "api/models";
 import * as LocalStorage from "backend/localStorage";
+import { getSessionId } from "backend/sessionStorage";
 import authHeader from "components/Login/AuthHeaders";
 import router from "router/browserRouter";
 import { Goal, GoalStep } from "types/goals";
@@ -44,14 +45,18 @@ const config = new Api.Configuration(config_parameters);
 /** A list of URL patterns for which the frontend explicitly handles errors
  * and the blanket error pop ups should be suppressed.*/
 const whiteListedErrorUrls = [
-  "users/authenticate",
-  "users/captcha",
   "/speakers/create/",
   "/speakers/update/",
+  "/users/authenticate",
+  "/users/captcha/",
 ];
 
 // Create an axios instance to allow for attaching interceptors to it.
 const axiosInstance = axios.create({ baseURL: apiBaseURL });
+axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  config.headers.sessionId = getSessionId();
+  return config;
+});
 axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
   // Any status codes that falls outside the range of 2xx cause this function to
   // trigger.
@@ -66,16 +71,13 @@ axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
       router.navigate(Path.Login);
     }
 
-    // Check for fatal errors (4xx-5xx).
-    if (
-      status >= StatusCodes.BAD_REQUEST &&
-      status <= StatusCodes.NETWORK_AUTHENTICATION_REQUIRED
-    ) {
-      // Suppress error pop-ups for URLs the frontend already explicitly handles.
-      if (url && whiteListedErrorUrls.some((u) => url.includes(u))) {
-        return Promise.reject(err);
-      }
+    // Suppress error pop-ups for URLs the frontend already explicitly handles.
+    if (url && whiteListedErrorUrls.some((u) => url.includes(u))) {
+      return Promise.reject(err);
+    }
 
+    // Check for fatal errors (400+).
+    if (status >= StatusCodes.BAD_REQUEST) {
       console.error(err);
       enqueueSnackbar(`${status} ${response.statusText}\n${err.config.url}`);
     }
@@ -791,6 +793,15 @@ export async function removeUserRole(
 ): Promise<void> {
   const params = { projectId, userId };
   await userRoleApi.deleteUserRole(params, defaultOptions());
+}
+
+export async function changeProjectOwner(
+  projectId: string,
+  oldUserId: string,
+  newUserId: string
+): Promise<void> {
+  const params = { projectId, oldUserId, newUserId };
+  await userRoleApi.changeOwner(params, defaultOptions());
 }
 
 /* WordController.cs */

@@ -1,3 +1,4 @@
+import { ThemeProvider } from "@mui/material/styles";
 import { render } from "@testing-library/react";
 import "jest-canvas-mock";
 import { act } from "react";
@@ -7,6 +8,7 @@ import thunk from "redux-thunk";
 
 import App from "components/App";
 import { defaultState } from "rootRedux/types";
+import theme from "types/theme";
 
 jest.mock("react-router-dom");
 
@@ -22,9 +24,11 @@ describe("App", () => {
   it("renders without crashing", async () => {
     await act(async () => {
       render(
-        <Provider store={mockStore}>
-          <App />
-        </Provider>
+        <ThemeProvider theme={theme}>
+          <Provider store={mockStore}>
+            <App />
+          </Provider>
+        </ThemeProvider>
       );
     });
   });

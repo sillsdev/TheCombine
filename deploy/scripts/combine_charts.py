@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python
 """
 Update the Helm chart version with the specified version.
 """

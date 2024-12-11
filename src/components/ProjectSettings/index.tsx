@@ -16,12 +16,13 @@ import {
 import {
   Box,
   Divider,
-  Hidden,
   Stack,
   Tab,
   Tabs,
+  type Theme,
   Tooltip,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import {
   type ReactElement,
@@ -90,6 +91,7 @@ export default function ProjectSettingsComponent(): ReactElement {
   const project = useAppSelector(
     (state: StoreState) => state.currentProjectState.project
   );
+  const hideLabels = useMediaQuery<Theme>((th) => th.breakpoints.down("md"));
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -139,23 +141,13 @@ export default function ProjectSettingsComponent(): ReactElement {
 
       <Divider sx={{ my: 1 }} />
 
-      <Hidden mdDown>
-        <SettingsTabs
-          hasSchedule={!!project.workshopSchedule?.length}
-          permissions={permissions}
-          setTab={setTab}
-          tab={tab}
-        />
-      </Hidden>
-      <Hidden mdUp>
-        <SettingsTabs
-          hasSchedule={!!project.workshopSchedule?.length}
-          hideLabels
-          permissions={permissions}
-          setTab={setTab}
-          tab={tab}
-        />
-      </Hidden>
+      <SettingsTabs
+        hasSchedule={!!project.workshopSchedule?.length}
+        hideLabels={hideLabels}
+        permissions={permissions}
+        setTab={setTab}
+        tab={tab}
+      />
 
       <TabPanel value={tab} index={ProjectSettingsTab.Basic}>
         <Stack>

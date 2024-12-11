@@ -11,14 +11,14 @@
     "drop-database": "tsc scripts/dropDB.ts && node scripts/dropDB.js",
     "eject": "react-scripts eject",
     "find-circular-deps": "npx -y madge -c src/index.tsx",
-    "fmt-backend": "      dotnet-format         && dotnet-format         Backend.Tests",
-    "fmt-backend-check": "dotnet-format --check && dotnet-format --check Backend.Tests",
+    "fmt-backend": "      dotnet format                     && dotnet format                     Backend.Tests",
+    "fmt-backend-check": "dotnet format --verify-no-changes && dotnet format --verify-no-changes Backend.Tests",
     "fmt-frontend": "      prettier --write \"./{.github,.vscode,certmgr,deploy,docs,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
     "fmt-frontend-check": "prettier --check \"./{.github,.vscode,certmgr,deploy,docs,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
     "frontend": "npm run set-release && react-scripts start",
     "gen-backend-coverage-report": "tsc scripts/genBackendCoverageReport.ts && node scripts/genBackendCoverageReport.js",
-    "license-report-backend": " dotnet-project-licenses --include-transitive --input ./Backend/BackendFramework.csproj --output --outfile docs/user_guide/assets/licenses/backend_licenses.txt",
-    "license-summary-backend": "dotnet-project-licenses --include-transitive --input ./Backend/BackendFramework.csproj",
+    "license-report-backend": " nuget-license --include-transitive --input ./Backend/BackendFramework.csproj --output JsonPretty > docs/user_guide/assets/licenses/backend_licenses.json | exit 0 && node scripts/createBackendLicenses.js",
+    "license-summary-backend": "nuget-license --include-transitive --input ./Backend/BackendFramework.csproj",
     "license-report-frontend": " npm install && license-checker-rseidelsohn --production --excludePrivatePackages --plainVertical --out docs/user_guide/assets/licenses/frontend_licenses.txt",
     "license-summary-frontend": "npm install && license-checker-rseidelsohn --production --excludePrivatePackages --summary",
     "lint": "           eslint --max-warnings=0 --ext js,ts,tsx,jsx src",
@@ -59,6 +59,7 @@
     "i18next-browser-languagedetector": "^8.0.0",
     "i18next-http-backend": "^2.6.0",
     "js-base64": "^3.7.7",
+    "levenshtein-search": "^0.1.2",
     "make-dir": "^4.0.0",
     "material-react-table": "^2.9.2",
     "motion": "^10.16.2",
@@ -91,9 +92,9 @@
     "@testing-library/user-event": "^14.5.2",
     "@types/crypto-js": "^4.2.2",
     "@types/css-mediaquery": "^0.1.2",
-    "@types/jest": "^29.5.5",
+    "@types/jest": "^29.5.14",
     "@types/loadable__component": "^5.13.8",
-    "@types/node": "^20.14.0",
+    "@types/node": "^20.17.0",
     "@types/nspell": "^2.1.5",
     "@types/react": "^18.2.61",
     "@types/react-beautiful-dnd": "^13.1.8",
@@ -110,7 +111,7 @@
     "css-mediaquery": "^0.1.2",
     "eslint": "^8.51.0",
     "eslint-import-resolver-typescript": "^3.6.0",
-    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.3.0",
     "eslint-plugin-unused-imports": "^3.1.0",
@@ -160,6 +161,6 @@
     ]
   },
   "volta": {
-    "node": "20.14.0"
+    "node": "20.17.0"
   }
 }

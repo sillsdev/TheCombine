@@ -1,4 +1,11 @@
-import { Box, Grid, Hidden, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Stack,
+  Theme,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { ReactElement, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -21,42 +28,31 @@ const heightBetweenBars =
   parseInt(theme.spacing(1));
 
 export default function LandingPage(): ReactElement {
+  const isXs = useMediaQuery<Theme>((th) => th.breakpoints.only("xs"));
   const navigate = useNavigate();
+
   useEffect(() => {
     // If there is an AnnouncementBanner and somebody enters the URL for
     // the LandingPage when displaying page without an AppBar, this
     // prevents banner misalignment.
     navigate(Path.Root);
   }, [navigate]);
+
+  const maxBodyHeight =
+    heightBetweenBars - (isXs ? horizontalButtonsHeight : 0);
+
   return (
     <>
       <TopBar />
-      <Grid container>
-        <Hidden smDown>
-          <Grid item sm>
-            <Box style={{ maxHeight: heightBetweenBars, overflow: "auto" }}>
-              <Body />
-            </Box>
-          </Grid>
-          <Grid item sm="auto">
-            <LandingButtons />
-          </Grid>
-        </Hidden>
-        <Hidden smUp>
-          <Grid item xs={12}>
-            <LandingButtons top />
-          </Grid>
-          <Grid item xs={12}>
-            <Box
-              style={{
-                maxHeight: heightBetweenBars - horizontalButtonsHeight,
-                overflow: "auto",
-              }}
-            >
-              <Body />
-            </Box>
-          </Grid>
-        </Hidden>
+      <Grid container direction={isXs ? "column" : "row-reverse"}>
+        <Grid item xs="auto">
+          <LandingButtons top={isXs} />
+        </Grid>
+        <Grid item xs>
+          <Box style={{ maxHeight: maxBodyHeight, overflow: "auto" }}>
+            <Body />
+          </Box>
+        </Grid>
       </Grid>
       <BottomBar />
     </>

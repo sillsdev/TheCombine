@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """Install the pre-requisite helm charts for the Combine on a k8s cluster."""
 
 from __future__ import annotations
@@ -26,7 +26,7 @@ def parse_args() -> argparse.Namespace:
         description="Build containerd container images for project.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    add_kube_opts(parser)
+    add_kube_opts(parser, add_debug=False)
     add_helm_opts(parser)
     parser.add_argument(
         "--chart-dir", help="Directory for the chart files when doing an airgap installation."
@@ -37,11 +37,18 @@ def parse_args() -> argparse.Namespace:
         help="Configuration file for the cluster type(s).",
         default=str(scripts_dir / "setup_files" / "cluster_config.yaml"),
     )
-    parser.add_argument(
+    logging_group = parser.add_mutually_exclusive_group()
+    logging_group.add_argument(
         "--quiet",
         "-q",
         action="store_true",
         help="Print less output information.",
+    )
+    logging_group.add_argument(
+        "--debug",
+        "-d",
+        action="store_true",
+        help="Print extra debugging information.",
     )
     parser.add_argument(
         "--type",
@@ -101,13 +108,19 @@ def main() -> None:
     for chart in yaml.safe_load(chart_list_results.stdout):
         curr_charts.append(chart["name"])
 
+    # Add the current script directory to the OS Environment variables
+    os.environ["SCRIPTS_DIR"] = str(scripts_dir)
+    # Add an empty analytics key if not defined in the OS Environment variables
+    if "HONEYCOMB_API_KEY" not in os.environ:
+        os.environ["HONEYCOMB_API_KEY"] = ""
+
     # Verify the Kubernetes/Helm environment
     kube_env = KubernetesEnvironment(args)
     # Install/upgrade the required charts
     for chart_descr in this_cluster:
         chart_spec = config[chart_descr]["chart"]
         # install the chart
-        helm_cmd = ["helm"] + kube_env.get_helm_opts()
+        helm_cmd = kube_env.get_helm_cmd()
         if chart_spec["name"] in curr_charts:
             helm_action = HelmAction.UPGRADE
         else:
@@ -155,8 +168,11 @@ def main() -> None:
                 with open(override_file, "w") as file:
                     yaml.dump(chart_spec["override"], file)
                 helm_cmd.extend(["-f", str(override_file)])
+            if "additional_args" in chart_spec:
+                for arg in chart_spec["additional_args"]:
+                    helm_cmd.append(arg.format(**os.environ))
             helm_cmd_str = " ".join(helm_cmd)
-            logging.info(f"Running: {helm_cmd_str}")
+            logging.debug(f"Running: {helm_cmd_str}")
             # Run with os.system so that there is feedback on stdout/stderr while the
             # command is running
             exit_status = os.waitstatus_to_exitcode(os.system(helm_cmd_str))

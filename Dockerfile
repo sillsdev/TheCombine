@@ -7,11 +7,11 @@
 ############################################################
 
 # User guide build environment
-FROM python:3.12.5-slim-bookworm AS user_guide_builder
+FROM python:3.12.7-slim-bookworm AS user_guide_builder
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-ENV PIP_NO_CACHE_DIR 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PIP_NO_CACHE_DIR=1
 
 WORKDIR /app
 
@@ -24,7 +24,7 @@ COPY docs/user_guide docs/user_guide
 RUN tox -e user-guide
 
 # Frontend build environment.
-FROM node:20.17.0-bookworm-slim AS frontend_builder
+FROM node:20.18.1-bookworm-slim AS frontend_builder
 WORKDIR /app
 
 # Install app dependencies.
@@ -40,9 +40,9 @@ FROM nginx:1.27
 
 WORKDIR /app
 
-ENV HOST_DIR /usr/share/nginx
-ENV USER_GUIDE_HOST_DIR ${HOST_DIR}/user_guide
-ENV FRONTEND_HOST_DIR ${HOST_DIR}/html
+ENV HOST_DIR=/usr/share/nginx
+ENV USER_GUIDE_HOST_DIR=${HOST_DIR}/user_guide
+ENV FRONTEND_HOST_DIR=${HOST_DIR}/html
 
 RUN mkdir /etc/nginx/templates
 RUN mkdir /etc/nginx/page_templates

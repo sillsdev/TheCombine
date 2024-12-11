@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python
 """Set AWS Environment variables from aws cli profiles."""
 
 from __future__ import annotations
@@ -29,7 +29,7 @@ def list_aws_profiles() -> List[str]:
     aws_ver = aws_version()
     if aws_ver is not None and aws_ver == 2:
         result = run_cmd(["aws", "configure", "list-profiles"], chomp=True)
-        return result.stdout.split("\n")
+        return [profile for profile in result.stdout.split("\n") if profile]
     return []
 
 

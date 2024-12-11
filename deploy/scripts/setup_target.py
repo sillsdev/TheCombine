@@ -1,4 +1,5 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python
+"""Setup ssh connection between host and target."""
 
 import argparse
 import os

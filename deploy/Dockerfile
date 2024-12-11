@@ -23,8 +23,8 @@ RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/s
   ./get_helm.sh && \
   rm kubectl get_helm.sh
 
-ENV HOME /root
-ENV PATH ${PATH}:${HOME}/scripts
+ENV HOME=/root
+ENV PATH=${PATH}:${HOME}/scripts
 
 COPY requirements.txt ${HOME}
 RUN pip3 install -r ${HOME}/requirements.txt

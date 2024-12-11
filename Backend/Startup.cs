@@ -5,6 +5,7 @@ using BackendFramework.Contexts;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
+using BackendFramework.Otel;
 using BackendFramework.Repositories;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -290,6 +291,13 @@ namespace BackendFramework
             services.AddTransient<IWordContext, WordContext>();
             services.AddTransient<IWordRepository, WordRepository>();
             services.AddTransient<IWordService, WordService>();
+
+            // OpenTelemetry
+            services.AddHttpClient();
+            services.AddMemoryCache();
+            services.AddHttpContextAccessor();
+            services.AddTransient<ILocationProvider, LocationProvider>();
+            services.AddOpenTelemetryInstrumentation();
         }
 
         /// <summary> This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

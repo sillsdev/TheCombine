@@ -35,15 +35,14 @@ jobs:
             github.com:443
             md-hdd-t032zjxllntc.z26.blob.storage.azure.net:443
             objects.githubusercontent.com:443
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - name: Setup dotnet
-        uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3 # v4.0.0
+        uses: actions/setup-dotnet@6bd8b7f7774af54e05809fcc5431931b3eb1ddee # v4.0.1
         with:
           dotnet-version: ${{ matrix.dotnet }}
       - name: Install ffmpeg
         uses: FedericoCarboni/setup-ffmpeg@36c6454b5a2348e7794ba2d82a21506605921e3d # v3
-
-      # Coverage.
       - name: Run coverage tests
         run: dotnet test Backend.Tests/Backend.Tests.csproj
         shell: bash
@@ -54,20 +53,16 @@ jobs:
           name: coverage
           path: Backend.Tests/coverage.cobertura.xml
           retention-days: 7
-
-      # Development build.
-      - run: dotnet build BackendFramework.sln
-
-      # Release build.
-      - run: dotnet publish BackendFramework.sln
-
-      # Fmt.
-      - run: dotnet tool install -g dotnet-format
-      - run: dotnet-format --check
+      - name: Development build
+        run: dotnet build BackendFramework.sln
+      - name: Release build
+        run: dotnet publish BackendFramework.sln
+      - name: Format check
+        run: dotnet format --verify-no-changes
 
   upload_coverage:
     needs: test_build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
       # configuring harden-runner and identifying allowed endpoints.
@@ -78,12 +73,10 @@ jobs:
           egress-policy: block
           allowed-endpoints: >
             api.github.com:443
-            api.codecov.io:443
             cli.codecov.io:443
-            codecov.io:443
             github.com:443
+            ingest.codecov.io:443
             storage.googleapis.com:443
-            uploader.codecov.io:443
       - name: Checkout repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - name: Download coverage artifact
@@ -128,7 +121,7 @@ jobs:
       # Manually install .NET to work around:
       # https://github.com/github/codeql-action/issues/757
       - name: Setup .NET
-        uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3 # v4.0.0
+        uses: actions/setup-dotnet@6bd8b7f7774af54e05809fcc5431931b3eb1ddee # v4.0.1
         with:
           dotnet-version: "8.0.x"
       - name: Initialize CodeQL
@@ -147,8 +140,8 @@ jobs:
         uses: github/codeql-action/analyze@d39d31e687223d841ef683f52467bd88e9b21c14 # v3.25.3
 
   docker_build:
+    if: ${{ github.event.type }} == "PullRequest"
     runs-on: ubuntu-22.04
-    #    if: ${{ github.event.type }} == "PullRequest"
     steps:
       # See https://docs.stepsecurity.io/harden-runner/getting-started/ for instructions on
       # configuring harden-runner and identifying allowed endpoints.
@@ -171,7 +164,8 @@ jobs:
             ts-crl.ws.symantec.com:80
       # For subfolders, currently a full checkout is required.
       # See: https://github.com/marketplace/actions/build-and-push-docker-images#path-context
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
           fetch-depth: 0
       - name: Build backend

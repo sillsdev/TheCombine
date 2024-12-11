@@ -124,12 +124,10 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
      - If using [homebrew](https://formulae.brew.sh/formula/ffmpeg): `brew install ffmpeg`
      - If manually installing from the FFmpeg website, install both `ffmpeg` and `ffprobe`
 
-9. [dotnet-format](https://github.com/dotnet/format): `dotnet tool update --global dotnet-format --version 5.1.250801`
-10. [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
-    `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
-11. [dotnet-project-licenses](https://github.com/tomchavakis/nuget-license)
-    `dotnet tool update --global dotnet-project-licenses`
-12. Tools for generating the self installer (Linux only):
+9. [dotnet-reportgenerator](https://github.com/danielpalme/ReportGenerator)
+   `dotnet tool update --global dotnet-reportgenerator-globaltool --version 5.0.4`
+10. [nuget-license](https://github.com/sensslen/nuget-license) `dotnet tool update --global nuget-license`
+11. Tools for generating the self installer (Linux only):
 
     - [makeself](https://makeself.io/) - a tool to make self-extracting archives in Unix
     - [pandoc](https://pandoc.org/installing.html#linux) - a tool to convert Markdown documents to PDF.
@@ -589,8 +587,8 @@ When _Rancher Desktop_ is first run, you will be prompted to select a few initia
 1. Verify that _Enable Kubernetes_ is checked.
 2. Select the Kubernetes version marked as _stable, latest_.
 3. Select your container runtime, either _containerd_ or _dockerd (moby)_:
-   - _containerd_ matches what is used on the NUC and uses the `k3s` Kubernetes engine. It requires that you run the
-     `build.py` script with the `--nerdctl` option.
+   - _containerd_ matches what is used on the NUC and uses the `k3s` Kubernetes engine. It requires that you set the
+     `CONTAINER_CLI` environment variable to `nerdctl` before running the `build.py` script.
    - _dockerd_ uses the `k3d` (`k3s` in docker).
 4. Select _Automatic_ or _Manual_ path setup.
 5. Click _Accept_.
@@ -621,7 +619,7 @@ Notes for installing _Docker Desktop_ in Linux:
 Once _Docker Desktop_ has been installed, start it, and set it up as follows:
 
 1. Click the gear icon in the upper right to open the settings dialog;
-2. Click on the _Resources_ link on the left-hand side and set the Memory to at least 4 GB (see Note);
+2. Click on the _Resources_ link on the left-hand side and set the Memory to at least 6 GB (see Note);
 3. Click on the _Kubernetes_ link on the left-hand side;
 4. Select _Enable Kubernetes_ and click _Apply & Restart_;
 5. Click _Install_ on the dialog that is displayed.
@@ -680,7 +678,7 @@ Notes:
   export CONTAINER_CLI="nerdctl"
   ```
 
-  If you are using _Docker Desktop_ or _Rancher Desktop_ with the `dockerd` container runtime, clear this variable or
+  If you are using _Rancher Desktop_ with the `dockerd` container runtime or _Docker Desktop_, clear this variable or
   set its value to `docker`.
 
 - Run with the `--help` option to see all available options.
@@ -733,16 +731,20 @@ Install the Kubernetes resources to run _The Combine_ by running:
 python deploy/scripts/setup_combine.py [--target <target_name>] [--tag <image_tag>]
 ```
 
-The default target is `localhost`; the default tag is `latest`. For development testing the script will usually be run
-with no arguments.
+Notes:
 
-If an invalid target is entered, the script will list available targets and prompt the user his/her selection.
-`deploy/scripts/setup_combine.py` assumes that the `kubectl` configuration file is setup to manage the desired
-Kubernetes cluster. For most development users, there will only be the _Rancher Desktop/Docker Desktop_ cluster to
-manage and the installation process will set that up correctly. If there are multiple clusters to manage, the
-`--kubeconfig` and `--context` options will let you specify a different cluster.
+- The default target is `localhost`; the default tag is `latest`. For development testing the script will usually be run
+  with no arguments.
 
-Run the script with the `--help` option to see possible options for the script.
+- If an invalid target is entered, the script will list available targets and prompt the user his/her selection.
+  `deploy/scripts/setup_combine.py` assumes that the `kubectl` configuration file is setup to manage the desired
+  Kubernetes cluster. For most development users, there will only be the _Rancher Desktop/Docker Desktop_ cluster to
+  manage and the installation process will set that up correctly. If there are multiple clusters to manage, the
+  `--kubeconfig` and `--context` options will let you specify a different cluster.
+
+- Run the script with the `--help` option to see possible options for the script.
+
+- The setup assumes `amd64` architecture. If the target architecture is `arm64`, add `--set global.cpuArch=arm64`.
 
 When the script completes, the resources will be installed on the specified cluster. It may take a few moments before
 all the containers are up and running. If you are using _Rancher Desktop_, you can use the
@@ -751,22 +753,25 @@ all the containers are up and running. If you are using _Rancher Desktop_, you c
 
 ```console
 $ kubectl -n thecombine get deployments
-NAME          READY   UP-TO-DATE   AVAILABLE   AGE
-backend       1/1     1            1           10m
-database      1/1     1            1           10m
-frontend      1/1     1            1           10m
-maintenance   1/1     1            1           10m
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+backend                        1/1     1            1           10m
+database                       1/1     1            1           10m
+frontend                       1/1     1            1           10m
+maintenance                    1/1     1            1           10m
+otel-opentelemetry-collector   1/1     1            1           19m
 ```
 
 or
 
 ```console
 $ kubectl -n thecombine get pods
-NAME                           READY   STATUS    RESTARTS   AGE
-backend-5657559949-z2flp       1/1     Running   0          10m
-database-794b4d956f-zjszm      1/1     Running   0          10m
-frontend-7d6d79f8c5-lkhhz      1/1     Running   0          10m
-maintenance-7f4b5b89b8-rhgk9   1/1     Running   0          10m
+NAME                                            READY   STATUS      RESTARTS   AGE
+backend-5657559949-z2flp                        1/1     Running     0          10m
+database-794b4d956f-zjszm                       1/1     Running     0          10m
+frontend-7d6d79f8c5-lkhhz                       1/1     Running     0          10m
+install-fonts-4jcsl                             0/1     Completed   0          8m
+maintenance-7f4b5b89b8-rhgk9                    1/1     Running     0          10m
+otel-opentelemetry-collector-5b5b69557b-zqk5d   1/1     Running     0          19m
 ```
 
 ### Connecting to Your Cluster
@@ -991,17 +996,6 @@ Notes:
    part of `combine_backup.py`; backups made with this script must be managed manually. See the
    [AWS CLI Command Reference (s3)](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3/index.html)
    for documentation on how to use the command line to list and to manage the backup objects.
-
-#### Create a New Admin User (Production)
-
-Task: create a new user who is a site administrator
-
-Run:
-
-```bash
-# Run from the `deploy` directory in the project on the host machine
-ansible-playbook playbook_admin_user.yaml --limit <target_name> -u sillsdev -K
-```
 
 #### Delete a Project
 

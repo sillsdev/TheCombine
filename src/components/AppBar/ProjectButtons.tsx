@@ -1,5 +1,11 @@
 import { BarChart, Settings } from "@mui/icons-material";
-import { Button, Hidden, Tooltip, Typography } from "@mui/material";
+import {
+  Button,
+  Theme,
+  Tooltip,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -42,6 +48,15 @@ export default function ProjectButtons(props: TabProps): ReactElement {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  const isMdUp = useMediaQuery<Theme>((th) => th.breakpoints.up("md"));
+  const isLg = useMediaQuery<Theme>((th) => th.breakpoints.only("lg"));
+  const isXl = useMediaQuery<Theme>((th) => th.breakpoints.only("xl"));
+  const nameLength = isXl
+    ? projNameLength.xl
+    : isLg
+      ? projNameLength.lg
+      : projNameLength.md;
+
   useEffect(() => {
     hasPermission(Permission.Statistics).then(setHasStatsPermission);
   }, []);
@@ -77,22 +92,14 @@ export default function ProjectButtons(props: TabProps): ReactElement {
           }}
         >
           <Settings />
-          <Hidden mdDown>
+          {isMdUp && (
             <Typography
               display="inline"
               style={{ marginLeft: 5, marginRight: 5 }}
             >
-              <Hidden xlDown>
-                {shortenName(projectName, projNameLength.xl)}
-              </Hidden>
-              <Hidden lgDown xlUp>
-                {shortenName(projectName, projNameLength.lg)}
-              </Hidden>
-              <Hidden mdDown lgUp>
-                {shortenName(projectName, projNameLength.md)}
-              </Hidden>
+              {shortenName(projectName, nameLength)}
             </Typography>
-          </Hidden>
+          )}
         </Button>
       </Tooltip>
       {showSpeaker && <SpeakerMenu />}

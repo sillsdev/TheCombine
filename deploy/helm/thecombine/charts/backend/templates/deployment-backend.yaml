@@ -29,6 +29,12 @@ spec:
           image: {{ include "backend.containerImage" . }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           env:
+            - name: OTEL_SERVICE_NAME
+              value: {{ include "backend.otelServiceName" . }}
+            - name: OTEL_EXPORTER_OTLP_PROTOCOL
+              value: "http/protobuf"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://otel-opentelemetry-collector:4318"
             - name: COMBINE_CAPTCHA_REQUIRED
               valueFrom:
                 configMapKeyRef:
@@ -94,7 +100,7 @@ spec:
           resources:
             requests:
               cpu: 5m
-              memory: 960Mi
+              memory: 2Gi
 {{- if .Values.global.includeResourceLimits }}
             limits:
               memory: 4Gi

@@ -9,7 +9,9 @@ metadata:
     "helm.sh/hook": post-install, post-upgrade
     "helm.sh/hook-delete-policy": before-hook-creation
 spec:
-  ttlSecondsAfterFinished: 300
+  # keep completed jobs for 24 hrs so that logs are
+  # available in case of issues
+  ttlSecondsAfterFinished: 86400
   template:
     metadata:
       creationTimestamp: null
@@ -48,7 +50,11 @@ spec:
           image: {{ include "create-admin-user.containerImage" . }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           name: create-admin-user
-          resources: {}
+          resources:
+            requests:
+              memory: 128Mi
+            limits:
+              memory: 128Mi
           volumeMounts:
             - mountPath: /home/app/.CombineFiles
               name: backend-data

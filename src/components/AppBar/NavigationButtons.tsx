@@ -1,6 +1,12 @@
 import { PlaylistAdd, Rule } from "@mui/icons-material";
-import { Button, Hidden, Tooltip, Typography } from "@mui/material";
-import { ReactElement, useEffect, useState } from "react";
+import {
+  Button,
+  type Theme,
+  Tooltip,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
+import { type ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -71,6 +77,7 @@ function NavButton(props: NavButtonProps): ReactElement {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { windowWidth } = useWindowSize();
+  const showText = useMediaQuery<Theme>((th) => th.breakpoints.up("sm"));
 
   return (
     <Button
@@ -90,11 +97,11 @@ function NavButton(props: NavButtonProps): ReactElement {
       }}
     >
       <Tooltip title={t(props.textId)}>{props.icon}</Tooltip>
-      <Hidden smDown>
+      {showText && (
         <Typography style={{ marginLeft: 5, marginRight: 5 }}>
           {t(props.textId)}
         </Typography>
-      </Hidden>
+      )}
     </Button>
   );
 }

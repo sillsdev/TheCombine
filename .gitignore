@@ -30,9 +30,10 @@ public/scripts/config.js
 .eslintcache
 Session.vim
 scripts/*.js
+!scripts/createBackendLicenses.js
 !scripts/printVersion.js
 !scripts/setRelease.js
-
+setup_cluster.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -58,6 +59,7 @@ mongo_database
 
 # User Guide
 docs/user_guide/site
+backend_licenses.json
 
 # Python
 .tox

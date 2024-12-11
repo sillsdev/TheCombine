@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 """Regenerate the frontend OpenAPI bindings to the backend.
 
