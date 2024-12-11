@@ -11,18 +11,17 @@ import {
   Typography,
 } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
-import { FormEvent, Fragment, ReactElement, useEffect, useState } from "react";
+import { FormEvent, Fragment, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { show } from "vanilla-cookieconsent";
 
 import { AutocompleteSetting, User } from "api/models";
 import { isEmailTaken, updateUser } from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
+import { AnalyticsConsent } from "components/AnalyticsConsent/AnalyticsConsent";
 import { asyncLoadSemanticDomains } from "components/Project/ProjectActions";
 import ClickableAvatar from "components/UserSettings/ClickableAvatar";
 import { updateLangFromUser } from "i18n";
-import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
-import { StoreState } from "rootRedux/types";
+import { useAppDispatch } from "rootRedux/hooks";
 import theme from "types/theme";
 import { uiWritingSystems } from "types/writingSystem";
 
@@ -58,14 +57,10 @@ export function UserSettings(props: {
 }): ReactElement {
   const dispatch = useAppDispatch();
 
-  const analyticsConsent = useAppSelector(
-    (state: StoreState) => state.analyticsState.consent
-  );
-
   const [name, setName] = useState(props.user.name);
   const [phone, setPhone] = useState(props.user.phone);
   const [email, setEmail] = useState(props.user.email);
-  const [otelConsent, setOtelConsent] = useState(analyticsConsent);
+  const [otelConsent, setOtelConsent] = useState(props.user.otelConsent);
   const [uiLang, setUiLang] = useState(props.user.uiLang ?? "");
   const [glossSuggestion, setGlossSuggestion] = useState(
     props.user.glossSuggestion
@@ -81,9 +76,13 @@ export function UserSettings(props: {
     return unchanged || !(await isEmailTaken(unicodeEmail));
   }
 
-  useEffect(() => {
-    setOtelConsent(analyticsConsent);
-  }, [analyticsConsent]);
+  const [displayConsent, setDisplayConsent] = useState(false);
+  const show = (): void => setDisplayConsent(true);
+
+  const handleConsentChange = (consentVal: boolean): void => {
+    setOtelConsent(consentVal);
+    setDisplayConsent(false);
+  };
 
   const disabled =
     name === props.user.name &&
@@ -293,7 +292,7 @@ export function UserSettings(props: {
                 <Grid item>
                   <Typography>
                     {t(
-                      analyticsConsent
+                      otelConsent
                         ? "userSettings.analyticsConsent.consentYes"
                         : "userSettings.analyticsConsent.consentNo"
                     )}
@@ -301,11 +300,16 @@ export function UserSettings(props: {
                   <Button
                     data-testid={UserSettingsIds.ButtonChangeConsent}
                     id={UserSettingsIds.ButtonChangeConsent}
-                    onClick={() => show(true)}
+                    onClick={show}
                     variant="outlined"
                   >
                     {t("userSettings.analyticsConsent.button")}
                   </Button>
+                  {displayConsent ? (
+                    <AnalyticsConsent
+                      onChangeConsent={handleConsentChange}
+                    ></AnalyticsConsent>
+                  ) : null}
                 </Grid>
               </Grid>
 

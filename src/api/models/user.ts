@@ -100,6 +100,12 @@ export interface User {
   otelConsent?: boolean;
   /**
    *
+   * @type {boolean}
+   * @memberof User
+   */
+  answeredConsent?: boolean;
+  /**
+   *
    * @type {string}
    * @memberof User
    */

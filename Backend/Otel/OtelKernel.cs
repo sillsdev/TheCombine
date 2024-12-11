@@ -108,7 +108,6 @@ namespace BackendFramework.Otel
                 var consentString = data?.GetBaggageItem("otelConsentBaggage");
                 data?.AddTag("otelConsent", consentString);
                 var consent = bool.TryParse(consentString, out bool value) ? value : false;
-                // Note: A bool value also would have worked for SetTag
                 if (consent)
                 {
                     var uriPath = (string?)data?.GetTagItem("url.full");

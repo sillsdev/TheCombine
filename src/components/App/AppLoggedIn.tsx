@@ -4,6 +4,9 @@ import { Theme, ThemeProvider, createTheme } from "@mui/material/styles";
 import { ReactElement, useEffect, useMemo, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 
+import { updateUser } from "backend";
+import { getCurrentUser } from "backend/localStorage";
+import { AnalyticsConsent } from "components/AnalyticsConsent/AnalyticsConsent";
 import DatePickersLocalizationProvider from "components/App/DatePickersLocalizationProvider";
 import SignalRHub from "components/App/SignalRHub";
 import AppBar from "components/AppBar/AppBarComponent";
@@ -47,6 +50,18 @@ export default function AppWithBar(): ReactElement {
   const projFonts = useMemo(() => new ProjectFonts(proj), [proj]);
 
   const [styleOverrides, setStyleOverrides] = useState<string>();
+  const [answeredConsent, setAnsweredConsent] = useState(
+    getCurrentUser()?.answeredConsent
+  );
+
+  async function handleConsentChange(otelConsent: boolean): Promise<void> {
+    await updateUser({
+      ...getCurrentUser()!,
+      otelConsent,
+      answeredConsent: true,
+    });
+    setAnsweredConsent(true);
+  }
 
   useEffect(() => {
     updateLangFromUser();
@@ -83,6 +98,11 @@ export default function AppWithBar(): ReactElement {
       <FontContext.Provider value={projFonts}>
         <ThemeProvider theme={overrideThemeFont}>
           <CssBaseline />
+          {answeredConsent ? null : (
+            <AnalyticsConsent
+              onChangeConsent={handleConsentChange}
+            ></AnalyticsConsent>
+          )}
           <Routes>
             <Route path={routerPath(Path.DataEntry)} element={<DataEntry />} />
             <Route path={routerPath(Path.Goals)} element={<GoalTimeline />} />
