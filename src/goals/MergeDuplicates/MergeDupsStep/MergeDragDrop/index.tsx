@@ -5,10 +5,12 @@ import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import { v4 } from "uuid";
 
+import { type ProtectReason } from "api/models";
 import { appBarHeight } from "components/AppBar/AppBarTypes";
 import { CancelConfirmDialog } from "components/Dialogs";
 import DropWord from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DropWord";
 import SidebarDrop from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/SidebarDrop";
+import { protectReasonsText } from "goals/MergeDuplicates/MergeDupsStep/protectReasonUtils";
 import { MergeTreeReference } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import {
   combineSense,
@@ -26,6 +28,9 @@ export default function MergeDragDrop(): ReactElement {
   const dispatch = useAppDispatch();
   const overrideProtection = useAppSelector(
     (state: StoreState) => state.mergeDuplicateGoal.overrideProtection
+  );
+  const senses = useAppSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.data.senses
   );
   const sidebarOpen = useAppSelector(
     (state: StoreState) =>
@@ -71,20 +76,24 @@ export default function MergeDragDrop(): ReactElement {
     const src: MergeTreeReference = JSON.parse(res.draggableId);
     const srcWordId = res.source.droppableId;
     const srcWord = words[srcWordId];
-    if (
-      srcWord?.protected &&
-      !overrideProtection &&
-      Object.keys(srcWord.sensesGuids).length === 1
-    ) {
+    const senseReasons = senses[src.mergeSenseId].sense.protectReasons ?? [];
+    let wordReasons: ProtectReason[] = [];
+    if (srcWord?.protected && Object.keys(srcWord.sensesGuids).length === 1) {
       // Case 0: The final sense of a protected word cannot be moved.
-      return;
-    } else if (res.destination?.droppableId === trashId) {
+      if (overrideProtection) {
+        wordReasons = srcWord.protectReasons ?? [];
+      } else {
+        return;
+      }
+    }
+    const reasonsText = protectReasonsText(t, wordReasons, senseReasons);
+    if (res.destination?.droppableId === trashId) {
       // Case 1: The sense was dropped on the trash icon.
       if (src.isSenseProtected) {
         // Case 1a: Cannot delete a protected sense.
         if (overrideProtection) {
           // ... unless protection override is active and user confirms.
-          startOverrideProtectedData("TODO: extract data", src);
+          startOverrideProtectedData(reasonsText, src);
         }
         return;
       }
@@ -98,7 +107,7 @@ export default function MergeDragDrop(): ReactElement {
         // Case 2a: Cannot merge a protected sense into another sense.
         if (overrideProtection) {
           // ... unless protection override is active and user confirms.
-          startOverrideProtectedData("TODO: extract data", src, combineRef);
+          startOverrideProtectedData(reasonsText, src, combineRef);
         } else if (srcWordId !== res.combine.droppableId) {
           // Otherwise, if target sense is in different word, move instead of combine.
           dispatch(
