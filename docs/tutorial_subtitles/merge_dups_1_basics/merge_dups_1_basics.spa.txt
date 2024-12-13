@@ -1,42 +1,42 @@
 Cuando se recopilan palabras por dominio semántico, a veces se introduce la misma palabra varias veces.
 The Combine tiene una herramienta para encontrar entradas duplicadas y combinarlas en una sola entrada.
 Iniciemos sesión en thecombine.app y seleccionemos un proyecto que tenga entradas duplicadas.
-Haga clic en el botón “Limpieza de datos” en la barra superior, luego seleccione “Combinar duplicados”.
+Haga clic en el botón “Limpieza de datos” (“Data Cleanup”) en la barra superior, luego seleccione “Combinar duplicados” (“Merge Duplicates”).
 The Combine encontrará conjuntos de palabras con idéntica forma vernácula y se los presentará de uno en uno.
 En este proyecto, el primer conjunto de duplicados potenciales es un par de palabras con la forma vernácula “hard”. 
-Uno tiene glosa “difficult" (difícil) y el otro tiene glosa “not soft" (no suave).
+Uno tiene glosa “difficult” (difícil) y el otro tiene glosa “not soft” (no suave).
 ¿Son dos acepciones diferentes de la misma palabra o dos palabras diferentes?
-Si no estamos seguros, o no queremos tomar esa decisión ahora, podemos pulsar el botón “Aplazar” en la parte inferior.
-Eso nos mueve al siguiente conjunto y evita que el conjunto aplazado vuelva a aparecer aquí en la herramienta “Combinar duplicados”.
+Si no estamos seguros, o no queremos tomar esa decisión ahora, podemos pulsar el botón “Aplazar” (“Defer”) en la parte inferior.
+Eso nos mueve al siguiente conjunto y evita que el conjunto aplazado vuelva a aparecer aquí en la herramienta “Combinar duplicados” (“Merge Duplicates”).
 Hay otra herramienta para considerar los conjuntos que se han aplazado.
 Lo veremos más adelante en este video.
 Este segundo conjunto de duplicados potenciales tiene dos palabras con la forma vernácula “bank”.
 Uno tiene glosa “side of river” (lado del río) y el otro tiene glosa “financial institution” (institución financiera).
 Definitivamente son palabras diferentes—palabras homógrafas que no queremos combinar.
-Haga clic en el botón “Guardar y continuar” en la parte inferior para confirmar que son palabras distintas.
-Este par no volverá a aparecer en “Combinar duplicados”, ni en la lista de conjuntos aplazados.
-Ya hemos visto lo que hacen los botones “Guardar y continuar” y “Aplazar”.
-Una nota importante: si un usuario cambia más tarde alguna de las palabras de un conjunto de duplicados potenciales, entonces ese conjunto puede aparecer de nuevo en la herramienta “Combinar duplicados”.
-Por ejemplo, si hace clic en "Guardar y continuar" para un conjunto de palabras que no son duplicados, y más tarde añade un dominio semántico a una acepción de una de las palabras, ese conjunto puede aparecer de nuevo como duplicados potenciales.
-O si hace clic en “Aplazar” para un conjunto, y luego otro usuario añade una grabación de audio para una de las palabras, entonces ese conjunto aparecerá de nuevo en “Combinar duplicados”, en lugar de entre los conjuntos diferidos.
+Haga clic en el botón “Guardar y continuar” (“Save & Continue”) en la parte inferior para confirmar que son palabras distintas.
+Este par no volverá a aparecer en “Combinar duplicados” (“Merge Duplicates”), ni en la lista de conjuntos aplazados.
+Ya hemos visto lo que hacen los botones “Guardar y continuar” (“Save & Continue”) y “Aplazar” (“Defer”).
+Una nota importante: si un usuario cambia más tarde alguna de las palabras de un conjunto de duplicados potenciales, entonces ese conjunto puede aparecer de nuevo en la herramienta “Combinar duplicados” (“Merge Duplicates”).
+Por ejemplo, si hace clic en "Guardar y continuar" (“Save & Continue”) para un conjunto de palabras que no son duplicados, y más tarde añade un dominio semántico a una acepción de una de las palabras, ese conjunto puede aparecer de nuevo como duplicados potenciales.
+O si hace clic en “Aplazar” (“Defer”) para un conjunto, y luego otro usuario añade una grabación de audio para una de las palabras, entonces ese conjunto aparecerá de nuevo en “Combinar duplicados” (“Merge Duplicates”), en lugar de entre los conjuntos diferidos.
 Sigamos adelante.
 The Combine pregunta si queremos seguir combinando.
 Si hacemos clic en “No”, nos llevará a la página “Limpieza de datos”.
-Si hacemos clic en "Sí", buscará más conjuntos de duplicados potenciales.
+Si hacemos clic en “Sí” (“Yes”), buscará más conjuntos de duplicados potenciales.
 Después de que The Combine no pueda encontrar más palabras con idéntica forma vernácula, le sugerirá palabras con formas vernáculas similares.
 Esto ayudará a detectar duplicados donde una de las palabras tenga error tipográfico o se utilice ortografía alternativa.
 Aquí vemos dos palabras con forma vernácula “present”, pero la segunda tiene dos “t” al final.
 Mmm, debe de ser una errata.
 Un “gift” (regalo) se escribe “p-r-e-s-e-n-t” no “p-r-e-s-e-n-t-t”.
-No puede editar el texto en la herramienta "Combinar duplicados".
+No puede editar el texto en la herramienta “Combinar duplicados” (“Merge Duplicates”).
 Sin embargo, puede hacer clic en el icono de la bandera para añadir una bandera y mencionar lo que hay que arreglar.
-Tenga en cuenta que para que se guarde la bandera, debe hacer clic en “Guardar y continuar”.
-Podemos dejar la combinación en cualquier momento haciendo clic en el botón “Limpieza de datos”, pero entonces se descartarán los cambios no guardados.
-De vuelta en “Limpieza de datos”, hay una herramienta “Revisar entradas”.
+Tenga en cuenta que para que se guarde la bandera, debe hacer clic en “Guardar y continuar” (“Save & Continue”).
+Podemos dejar la combinación en cualquier momento haciendo clic en el botón “Limpieza de datos” (“Data Cleanup”), pero entonces se descartarán los cambios no guardados.
+De vuelta en “Limpieza de datos” (“Data Cleanup”), hay una herramienta “Revisar entradas” (“Review Entries”).
 Ahí puede revisar y editar todas las palabras en el proyecto y corregir las que se hayan marcado al combinar duplicados.
-Cubriremos la herramienta “Revisar entradas” en otro vídeo.
-Tenga en cuenta que aquí hay otra opción que antes no estaba aquí: “Revisar duplicados aplazados”.
+Cubriremos la herramienta “Revisar entradas” (“Review Entries”) en otro vídeo.
+Tenga en cuenta que aquí hay otra opción que antes no estaba aquí: “Revisar duplicados aplazados” (“Review Deferred Duplicates”).
 Lo haga clic para revisar los conjuntos de duplicados potenciales que se aplazaron anteriormente.
-Bueno, eso es todo para este primer video tutorial sobre la herramienta "Combinar duplicados".
+Bueno, eso es todo para este primer video tutorial sobre la herramienta “Combinar duplicados” (“Merge Duplicates”).
 En el siguiente video, veremos cómo mover, borrar y combinar acepciones.
 ¡Que tenga un día maravilloso!

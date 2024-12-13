@@ -110,6 +110,9 @@ def main() -> None:
 
     # Add the current script directory to the OS Environment variables
     os.environ["SCRIPTS_DIR"] = str(scripts_dir)
+    # Add an empty analytics key if not defined in the OS Environment variables
+    if "HONEYCOMB_API_KEY" not in os.environ:
+        os.environ["HONEYCOMB_API_KEY"] = ""
 
     # Verify the Kubernetes/Helm environment
     kube_env = KubernetesEnvironment(args)

@@ -87,7 +87,7 @@
     "upload?": "上传现有数据？",
     "uploadFormat": "文件必须是一个包含 <1>Lexicon Interchange FormaT (LIFT)</1> 项目的压缩文件夹。",
     "create": "创建项目",
-    "fileSelected": "文件已选定",
+    "fileSelected": "文件已选定: {{ val }}",
     "language": "项目语言资料将从上传的数据中提取。",
     "languageOptionOther": "其它",
     "languageSelect": "从文件中选择语言：",

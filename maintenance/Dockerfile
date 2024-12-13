@@ -16,7 +16,7 @@
 #   - ARM 64-bit
 ############################################################
 
-FROM sillsdev/aws-kubectl:0.3.0
+FROM public.ecr.aws/thecombine/aws-kubectl:0.4.0-$TARGETARCH
 
 USER root
 
