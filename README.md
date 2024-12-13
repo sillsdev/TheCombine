@@ -550,7 +550,7 @@ the corresponding videos and any transcript translations downloaded from Crowdin
 optionally attach them to a video file), run from within a Python virtual environment:
 
 ```bash
-python scripts/subtitle_tutorial_video.py -s <subtitles_subfolder_name> [-i <input_video_path> -o <output_video_path] [-v]
+python scripts/subtitle_tutorial_video.py -s <subtitles_subfolder_name> [-i <input_video_path> -o <output_video_path>] [-v]
 ```
 
 ## Setup Local Kubernetes Cluster
