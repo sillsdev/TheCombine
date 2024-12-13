@@ -17,8 +17,6 @@ const mockStore = createMockStore(defaultState);
 
 // Need window.innerHeight defined for LandingPage.
 global.innerHeight = 100;
-// Mock the track method of segment analytics.
-global.analytics = { track: jest.fn() } as any;
 
 describe("App", () => {
   it("renders without crashing", async () => {
