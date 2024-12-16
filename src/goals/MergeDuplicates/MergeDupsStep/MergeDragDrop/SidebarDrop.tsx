@@ -1,10 +1,10 @@
 import { ArrowForwardIos, HelpOutline } from "@mui/icons-material";
 import { Grid, IconButton, Typography } from "@mui/material";
-import { ReactElement } from "react";
+import { type ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
 
 import SidebarDragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/SidebarDragSense";
-import { MergeTreeSense } from "goals/MergeDuplicates/MergeDupsTreeTypes";
+import { type MergeTreeSense } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { setSidebar } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
@@ -15,16 +15,14 @@ export default function SidebarDrop(): ReactElement {
   const sidebar = useAppSelector(
     (state: StoreState) => state.mergeDuplicateGoal.tree.sidebar
   );
+  const { mergeSenseId, wordId } = sidebar.senseRef;
   const vernacular = useAppSelector((state: StoreState) => {
     const tree = state.mergeDuplicateGoal.tree;
-    return tree.words[tree.sidebar.wordId]?.vern;
+    return tree.words[tree.sidebar.senseRef.wordId]?.vern;
   });
 
   return (
-    <Droppable
-      droppableId={`${sidebar.wordId} ${sidebar.mergeSenseId}`}
-      key={sidebar.mergeSenseId}
-    >
+    <Droppable droppableId={`${wordId} ${mergeSenseId}`} key={mergeSenseId}>
       {(providedDroppable): ReactElement => (
         <div
           ref={providedDroppable.innerRef}
