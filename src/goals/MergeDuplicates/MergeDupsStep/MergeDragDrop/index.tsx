@@ -82,8 +82,7 @@ export default function MergeDragDrop(): ReactElement {
     if (isOnlySenseInProtectedWord && !overrideProtection) {
       // Case 0: The final sense of a protected word cannot be moved.
       return;
-    }
-    if (res.destination?.droppableId === trashId) {
+    } else if (res.destination?.droppableId === trashId) {
       // Case 1: The sense was dropped on the trash icon.
       if (src.isSenseProtected || isOnlySenseInProtectedWord) {
         // Case 1a: Cannot delete a protected sense.
