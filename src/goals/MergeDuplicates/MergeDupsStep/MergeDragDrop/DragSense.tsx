@@ -4,7 +4,10 @@ import { Draggable } from "react-beautiful-dnd";
 
 import { trashId } from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop";
 import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardContent";
-import { MergeTreeSense } from "goals/MergeDuplicates/MergeDupsTreeTypes";
+import {
+  MergeTreeReference,
+  MergeTreeSense,
+} from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { setSidebar } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
@@ -12,11 +15,9 @@ import theme from "types/theme";
 
 interface DragSenseProps {
   index: number;
-  wordId: string;
-  mergeSenseId: string;
-  mergeSenses: MergeTreeSense[];
   isOnlySenseInProtectedWord: boolean;
-  isProtectedSense: boolean;
+  mergeSenses: MergeTreeSense[];
+  senseRef: MergeTreeReference;
 }
 
 function arraysEqual<T>(arr1: T[], arr2: T[]): boolean {
@@ -48,17 +49,13 @@ export default function DragSense(props: DragSenseProps): ReactElement {
     (state: StoreState) => state.mergeDuplicateGoal.tree.sidebar
   );
   const isInSidebar =
-    sidebar.wordId === props.wordId &&
-    sidebar.mergeSenseId === props.mergeSenseId &&
+    sidebar.senseRef.wordId === props.senseRef.wordId &&
+    sidebar.senseRef.mergeSenseId === props.senseRef.mergeSenseId &&
     sidebar.mergeSenses.length > 1;
 
   const updateSidebar = useCallback(() => {
     dispatch(
-      setSidebar({
-        mergeSenses: props.mergeSenses,
-        wordId: props.wordId,
-        mergeSenseId: props.mergeSenseId,
-      })
+      setSidebar({ mergeSenses: props.mergeSenses, senseRef: props.senseRef })
     );
   }, [dispatch, props]);
 
@@ -91,12 +88,8 @@ export default function DragSense(props: DragSenseProps): ReactElement {
 
   return (
     <Draggable
-      key={props.mergeSenseId}
-      draggableId={JSON.stringify({
-        wordId: props.wordId,
-        mergeSenseId: props.mergeSenseId,
-        isSenseProtected: props.isProtectedSense,
-      })}
+      key={props.senseRef.mergeSenseId}
+      draggableId={JSON.stringify(props.senseRef)}
       index={props.index}
       isDragDisabled={props.isOnlySenseInProtectedWord && !overrideProtection}
     >
@@ -112,13 +105,13 @@ export default function DragSense(props: DragSenseProps): ReactElement {
             minWidth: 150,
             maxWidth: 300,
             opacity:
-              !props.isProtectedSense &&
+              !props.senseRef.isSenseProtected &&
               (snapshot.draggingOver === trashId || snapshot.combineWith)
                 ? 0.7
                 : 1,
             background: isInSidebar
               ? "lightblue"
-              : props.isProtectedSense
+              : props.senseRef.isSenseProtected
                 ? "lightyellow"
                 : snapshot.draggingOver === trashId
                   ? "red"

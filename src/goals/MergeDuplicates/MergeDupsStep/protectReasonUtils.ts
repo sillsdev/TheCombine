@@ -6,14 +6,14 @@ const sep = "; ";
 
 export function protectReasonsText(
   t: TFunction<"translation", undefined>,
-  wordReasons: ProtectReason[],
-  senseReasons: ProtectReason[]
+  wordReasons: ProtectReason[] = [],
+  senseReasons: ProtectReason[] = [],
+  defaultPreface = true
 ): string {
   const wordTexts = wordReasons.map((r) => wordReasonText(t, r));
   const senseTexts = senseReasons.map((r) => senseReasonText(t, r));
-  return t("mergeDups.helpText.protectedData", {
-    val: [...wordTexts, ...senseTexts].join(sep),
-  });
+  const val = [...wordTexts, ...senseTexts].join(sep);
+  return defaultPreface ? t("mergeDups.helpText.protectedData", { val }) : val;
 }
 
 /** Cases match Backend/Helper/LiftHelper.cs > GetProtectedReasons(LiftSense sense) */

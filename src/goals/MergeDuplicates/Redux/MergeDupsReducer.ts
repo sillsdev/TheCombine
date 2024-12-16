@@ -91,7 +91,7 @@ const mergeDuplicatesSlice = createSlice({
         }
 
         // If the deleted sense was open in the sidebar, reset the sidebar.
-        const { mergeSenseId, wordId } = state.tree.sidebar;
+        const { mergeSenseId, wordId } = state.tree.sidebar.senseRef;
         if (mergeSenseId === srcRef.mergeSenseId && wordId === srcRef.wordId) {
           state.tree.sidebar = defaultSidebar;
         }

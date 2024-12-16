@@ -14,6 +14,7 @@ import { newFlag, newNote, newSense } from "types/word";
 export interface MergeTreeSense {
   order: number;
   protected: boolean;
+  protectReasons?: ProtectReason[];
   srcWordId: string;
   sense: Sense;
 }
@@ -30,6 +31,7 @@ export interface MergeTreeReference {
   mergeSenseId: string;
   order?: number;
   isSenseProtected?: boolean;
+  protectReasons?: ProtectReason[];
 }
 
 export interface MergeTreeWord {
@@ -78,6 +80,7 @@ export function convertSenseToMergeTreeSense(
   return {
     order,
     protected: sense?.accessibility === Status.Protected,
+    protectReasons: sense?.protectReasons ?? undefined,
     srcWordId,
     sense,
   };
@@ -98,14 +101,15 @@ export function convertWordToMergeTreeWord(word: Word): MergeTreeWord {
 
 export interface Sidebar {
   mergeSenses: MergeTreeSense[];
-  wordId: string;
-  mergeSenseId: string;
+  senseRef: MergeTreeReference;
 }
 
 export const defaultSidebar: Sidebar = {
   mergeSenses: [],
-  wordId: "",
-  mergeSenseId: "",
+  senseRef: {
+    wordId: "",
+    mergeSenseId: "",
+  },
 };
 
 export interface MergeTree {
