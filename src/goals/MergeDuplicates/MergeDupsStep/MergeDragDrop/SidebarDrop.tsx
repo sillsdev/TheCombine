@@ -15,11 +15,12 @@ export default function SidebarDrop(): ReactElement {
   const sidebar = useAppSelector(
     (state: StoreState) => state.mergeDuplicateGoal.tree.sidebar
   );
-  const { mergeSenseId, wordId } = sidebar.senseRef;
   const vernacular = useAppSelector((state: StoreState) => {
     const tree = state.mergeDuplicateGoal.tree;
     return tree.words[tree.sidebar.senseRef.wordId]?.vern;
   });
+
+  const { mergeSenseId, wordId } = sidebar.senseRef;
 
   return (
     <Droppable droppableId={`${wordId} ${mergeSenseId}`} key={mergeSenseId}>

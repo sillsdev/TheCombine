@@ -1,10 +1,10 @@
 import { Card } from "@mui/material";
-import { ReactElement } from "react";
+import { type ReactElement } from "react";
 import { Draggable } from "react-beautiful-dnd";
 
 import { trashId } from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop";
 import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardContent";
-import { MergeTreeSense } from "goals/MergeDuplicates/MergeDupsTreeTypes";
+import { type MergeTreeSense } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import theme from "types/theme";
