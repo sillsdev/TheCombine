@@ -1,6 +1,6 @@
-import { TFunction } from "i18next";
+import { type TFunction } from "i18next";
 
-import { ProtectReason, ReasonType } from "api/models";
+import { type ProtectReason, ReasonType } from "api/models";
 
 const sep = "; ";
 
