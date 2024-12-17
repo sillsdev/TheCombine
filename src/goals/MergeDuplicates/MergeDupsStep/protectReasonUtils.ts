@@ -10,20 +10,17 @@ interface WordSenseReasons {
 }
 
 export function protectReasonsText(
-  t: TFunction<"translation", undefined>,
+  t: TFunction,
   reasons: WordSenseReasons
 ): string {
-  const wordTexts = reasons.word?.map((r) => wordReasonText(t, r)) ?? [];
-  const senseTexts = reasons.sense?.map((r) => senseReasonText(t, r)) ?? [];
-  const val = [...wordTexts, ...senseTexts].join(sep);
-  return t("mergeDups.helpText.protectedData", { val });
+  const wordTexts = reasons.word?.map((r) => wordReasonText(t, r));
+  const senseTexts = reasons.sense?.map((r) => senseReasonText(t, r));
+  const allTexts = [...(wordTexts ?? []), ...(senseTexts ?? [])];
+  return t("mergeDups.helpText.protectedData", { val: allTexts.join(sep) });
 }
 
 /** Cases match Backend/Helper/LiftHelper.cs > GetProtectedReasons(LiftSense sense) */
-function senseReasonText(
-  t: TFunction<"translation", undefined>,
-  reason: ProtectReason
-): string {
+function senseReasonText(t: TFunction, reason: ProtectReason): string {
   switch (reason.type) {
     case ReasonType.Annotations:
       return t("mergeDups.protectReason.annotations");
@@ -79,10 +76,7 @@ function senseReasonText(
 }
 
 /** Cases match Backend/Helper/LiftHelper.cs > GetProtectedReasons(LiftEntry entry) */
-function wordReasonText(
-  t: TFunction<"translation", undefined>,
-  reason: ProtectReason
-): string {
+function wordReasonText(t: TFunction, reason: ProtectReason): string {
   switch (reason.type) {
     case ReasonType.Annotations:
       return t("mergeDups.protectReason.annotations");
