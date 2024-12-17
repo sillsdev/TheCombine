@@ -41,7 +41,7 @@ export default function SenseCardContent(
   const tooltipTexts = [t("mergeDups.helpText.protectedSense")];
   const reasons = sense.protectReasons;
   if (reasons?.length) {
-    tooltipTexts.push(protectReasonsText(t, [], reasons));
+    tooltipTexts.push(protectReasonsText(t, { sense: reasons }));
   }
   tooltipTexts.push(t("mergeDups.helpText.protectedSenseInfo"));
 

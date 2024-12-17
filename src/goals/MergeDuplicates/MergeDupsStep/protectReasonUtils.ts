@@ -4,13 +4,17 @@ import { ProtectReason, ReasonType } from "api/models";
 
 const sep = "; ";
 
+interface WordSenseReasons {
+  sense?: ProtectReason[];
+  word?: ProtectReason[];
+}
+
 export function protectReasonsText(
   t: TFunction<"translation", undefined>,
-  wordReasons: ProtectReason[] = [],
-  senseReasons: ProtectReason[] = []
+  reasons: WordSenseReasons
 ): string {
-  const wordTexts = wordReasons.map((r) => wordReasonText(t, r));
-  const senseTexts = senseReasons.map((r) => senseReasonText(t, r));
+  const wordTexts = reasons.word?.map((r) => wordReasonText(t, r)) ?? [];
+  const senseTexts = reasons.sense?.map((r) => senseReasonText(t, r)) ?? [];
   const val = [...wordTexts, ...senseTexts].join(sep);
   return t("mergeDups.helpText.protectedData", { val });
 }

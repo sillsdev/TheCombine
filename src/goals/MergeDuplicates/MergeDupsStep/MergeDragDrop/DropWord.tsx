@@ -168,7 +168,7 @@ export function DropWordCardHeader(
   const tooltipTexts = [t("mergeDups.helpText.protectedWord")];
   const reasons = words[props.wordId]?.protectReasons;
   if (reasons?.length) {
-    tooltipTexts.push(protectReasonsText(t, reasons, []));
+    tooltipTexts.push(protectReasonsText(t, { word: reasons }));
   }
   tooltipTexts.push(t("mergeDups.helpText.protectedWordInfo"));
 
