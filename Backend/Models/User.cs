@@ -103,7 +103,7 @@ namespace BackendFramework.Models
             Agreement = false;
             Password = "";
             Username = "";
-            OtelConsent = false;
+            OtelConsent = true;
             AnsweredConsent = false;
             UILang = "";
             GlossSuggestion = AutocompleteSetting.On;
