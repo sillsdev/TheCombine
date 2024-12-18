@@ -33,6 +33,14 @@
     "pressEnter": "Press Enter to save word",
     "vernacular": "Vernacular"
   },
+  "analyticsConsent": {
+    "consentModal": {
+      "acceptAllBtn": "Yes, allow analytics cookies",
+      "acceptNecessaryBtn": "No, reject analytics cookies",
+      "description": "The Combine stores basic info about your current session on your device. This info is necessary and isn't shared with anybody. The Combine also uses analytics cookies, which are only for us to fix bugs and compile anonymized statistics. Do you consent to our usage of analytics cookies?",
+      "title": "Cookies on The Combine"
+    }
+  },
   "appBar": {
     "dataEntry": "Data Entry",
     "dataCleanup": "Data Cleanup",
@@ -129,12 +137,6 @@
   "userSettings": {
     "analyticsConsent": {
       "button": "Change consent",
-      "consentModal": {
-        "acceptAllBtn": "Yes, allow analytics cookies",
-        "acceptNecessaryBtn": "No, reject analytics cookies",
-        "description": "The Combine stores basic info about your current session on your device. This info is necessary and isn't shared with anybody. The Combine also uses analytics cookies, which are only for us to fix bugs and compile anonymized statistics. Do you consent to our usage of analytics cookies?",
-        "title": "Cookies on The Combine"
-      },
       "consentNo": "You have not consented to our use of analytics cookies.",
       "consentYes": "You have consented to our use of analytics cookies.",
       "title": "Analytics cookies"

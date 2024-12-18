@@ -94,10 +94,28 @@ export interface User {
   username: string;
   /**
    *
+   * @type {boolean}
+   * @memberof User
+   */
+  otelConsent?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof User
+   */
+  answeredConsent?: boolean;
+  /**
+   *
    * @type {string}
    * @memberof User
    */
   uiLang?: string | null;
+  /**
+   *
+   * @type {AutocompleteSetting}
+   * @memberof User
+   */
+  glossSuggestion: AutocompleteSetting;
   /**
    *
    * @type {string}
@@ -110,10 +128,4 @@ export interface User {
    * @memberof User
    */
   isAdmin: boolean;
-  /**
-   *
-   * @type {AutocompleteSetting}
-   * @memberof User
-   */
-  glossSuggestion: AutocompleteSetting;
 }
