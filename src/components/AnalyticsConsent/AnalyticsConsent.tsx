@@ -1,3 +1,4 @@
+import { Button, List } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import { ReactElement } from "react";
 
@@ -25,8 +26,10 @@ export function AnalyticsConsent(props: ConsentProps): ReactElement {
         open
         onClose={!props.required ? clickedAway : undefined}
       >
-        <button onClick={acceptAnalytics}>Accept</button>
-        <button onClick={rejectAnalytics}>Reject</button>
+        <List>
+          <Button onClick={acceptAnalytics}>Accept</Button>
+          <Button onClick={rejectAnalytics}>Reject</Button>
+        </List>
       </Drawer>
     </div>
   );
