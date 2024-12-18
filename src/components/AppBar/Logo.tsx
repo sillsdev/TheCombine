@@ -8,6 +8,9 @@ import smallLogo from "resources/CombineSmallLogoV1.png";
 import { Path } from "types/path";
 import { themeColors } from "types/theme";
 
+const logoButtonId = "logo-button";
+export const logoButtonLabel = "The Combine - return home";
+
 /** A button that redirects to the home page */
 export default function Logo(): ReactElement {
   const isSmDown = useMediaQuery<Theme>((th) => th.breakpoints.down("sm"));
@@ -15,7 +18,8 @@ export default function Logo(): ReactElement {
   const navigate = useNavigate();
   return (
     <Button
-      id="logo-button"
+      aria-label={logoButtonLabel}
+      id={logoButtonId}
       onClick={() => navigate(Path.ProjScreen)}
       style={{
         background: themeColors.lightShade,

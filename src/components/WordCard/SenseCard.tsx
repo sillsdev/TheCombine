@@ -6,6 +6,15 @@ import { PartOfSpeechButton } from "components/Buttons";
 import DomainChipsGrid from "components/WordCard/DomainChipsGrid";
 import SenseCardText from "components/WordCard/SenseCardText";
 
+export function partOfSpeechButtonId(senseGuid: string): string {
+  return `sense-${senseGuid}-part-of-speech`;
+}
+
+/** Text for the aria-label of SenseCard elements */
+export enum SenseCardLabel {
+  ButtonGramInfo = "Part of speech",
+}
+
 interface SenseCardProps {
   bgColor?: string;
   languages?: string[];
@@ -30,7 +39,8 @@ export default function SenseCard(props: SenseCardProps): ReactElement {
         <div style={{ position: "absolute", left: 0, top: 0 }}>
           {gramInfo.catGroup !== GramCatGroup.Unspecified && (
             <PartOfSpeechButton
-              buttonId={`sense-${props.sense.guid}-part-of-speech`}
+              buttonId={partOfSpeechButtonId(props.sense.guid)}
+              buttonLabel={SenseCardLabel.ButtonGramInfo}
               gramInfo={gramInfo}
               onlyIcon
             />
