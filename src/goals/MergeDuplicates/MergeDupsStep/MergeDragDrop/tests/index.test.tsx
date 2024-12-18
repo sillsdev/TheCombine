@@ -156,6 +156,6 @@ describe("MergeDragDrop", () => {
     });
     expect(mockSetSidebar).toHaveBeenCalledTimes(1);
     const callArg = mockSetSidebar.mock.calls[0][0];
-    expect(callArg.mergeSenseId).toEqual("word1_senseA");
+    expect(callArg.senseRef.mergeSenseId).toEqual("word1_senseA");
   });
 });

@@ -95,14 +95,15 @@ export function convertWordToMergeTreeWord(word: Word): MergeTreeWord {
 
 export interface Sidebar {
   mergeSenses: MergeTreeSense[];
-  wordId: string;
-  mergeSenseId: string;
+  senseRef: MergeTreeReference;
 }
 
 export const defaultSidebar: Sidebar = {
   mergeSenses: [],
-  wordId: "",
-  mergeSenseId: "",
+  senseRef: {
+    wordId: "",
+    mergeSenseId: "",
+  },
 };
 
 export interface MergeTree {
