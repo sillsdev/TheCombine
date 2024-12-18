@@ -79,8 +79,8 @@ export function UserSettings(props: {
   const [displayConsent, setDisplayConsent] = useState(false);
   const show = (): void => setDisplayConsent(true);
 
-  const handleConsentChange = (consentVal: boolean): void => {
-    setOtelConsent(consentVal);
+  const handleConsentChange = (consentVal: boolean | undefined): void => {
+    setOtelConsent(consentVal ?? otelConsent);
     setDisplayConsent(false);
   };
 
@@ -308,6 +308,7 @@ export function UserSettings(props: {
                   {displayConsent ? (
                     <AnalyticsConsent
                       onChangeConsent={handleConsentChange}
+                      required={false}
                     ></AnalyticsConsent>
                   ) : null}
                 </Grid>

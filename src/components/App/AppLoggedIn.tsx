@@ -54,7 +54,9 @@ export default function AppWithBar(): ReactElement {
     getCurrentUser()?.answeredConsent
   );
 
-  async function handleConsentChange(otelConsent: boolean): Promise<void> {
+  async function handleConsentChange(
+    otelConsent: boolean | undefined
+  ): Promise<void> {
     await updateUser({
       ...getCurrentUser()!,
       otelConsent,
@@ -101,6 +103,7 @@ export default function AppWithBar(): ReactElement {
           {answeredConsent ? null : (
             <AnalyticsConsent
               onChangeConsent={handleConsentChange}
+              required
             ></AnalyticsConsent>
           )}
           <Routes>

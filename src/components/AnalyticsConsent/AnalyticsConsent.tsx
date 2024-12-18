@@ -1,34 +1,33 @@
-import { Button } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
-import { ReactElement, useState } from "react";
+import { ReactElement } from "react";
 
 interface ConsentProps {
-  onChangeConsent: (consentVal: boolean) => void;
+  onChangeConsent: (consentVal: boolean | undefined) => void;
+  required: boolean;
 }
 
 export function AnalyticsConsent(props: ConsentProps): ReactElement {
-
-  const [responded, setResponded] = useState(false);
   const acceptAnalytics = (): void => {
-
-    setResponded(true);
     props.onChangeConsent(true);
   };
   const rejectAnalytics = (): void => {
-
-    setResponded(false);
     props.onChangeConsent(false);
   };
 
+  const clickedAway = (): void => {
+    props.onChangeConsent(undefined);
+  };
 
   return (
     <div>
-      <Drawer anchor={"bottom"} open={!responded}>
-        MyDrawer!
+      <Drawer
+        anchor={"bottom"}
+        open
+        onClose={!props.required ? clickedAway : undefined}
+      >
         <button onClick={acceptAnalytics}>Accept</button>
         <button onClick={rejectAnalytics}>Reject</button>
       </Drawer>
-      
     </div>
   );
 }
