@@ -17,7 +17,7 @@
  * @export
  * @enum {string}
  */
-export enum AutocompleteSetting {
+export enum OffOnSetting {
   Off = "Off",
   On = "On",
 }

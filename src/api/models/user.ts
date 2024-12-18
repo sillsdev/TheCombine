@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { AutocompleteSetting } from "./autocomplete-setting";
+import { OffOnSetting } from "./off-on-setting";
 
 /**
  *
@@ -100,6 +100,12 @@ export interface User {
   uiLang?: string | null;
   /**
    *
+   * @type {OffOnSetting}
+   * @memberof User
+   */
+  glossSuggestion: OffOnSetting;
+  /**
+   *
    * @type {string}
    * @memberof User
    */
@@ -110,10 +116,4 @@ export interface User {
    * @memberof User
    */
   isAdmin: boolean;
-  /**
-   *
-   * @type {AutocompleteSetting}
-   * @memberof User
-   */
-  glossSuggestion: AutocompleteSetting;
 }

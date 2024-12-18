@@ -38,7 +38,7 @@ namespace BackendFramework.Models
         [Required]
         [BsonElement("autocompleteSetting")]
         [BsonRepresentation(BsonType.String)]
-        public AutocompleteSetting AutocompleteSetting { get; set; }
+        public OffOnSetting AutocompleteSetting { get; set; }
 
         [Required]
         [BsonElement("semDomWritingSystem")]
@@ -92,7 +92,7 @@ namespace BackendFramework.Models
             LiftImported = false;
             DefinitionsEnabled = false;
             GrammaticalInfoEnabled = false;
-            AutocompleteSetting = AutocompleteSetting.On;
+            AutocompleteSetting = OffOnSetting.On;
             SemDomWritingSystem = new();
             VernacularWritingSystem = new();
             AnalysisWritingSystems = new();
@@ -186,10 +186,10 @@ namespace BackendFramework.Models
             var hash = new HashCode();
             hash.Add(Id);
             hash.Add(Name);
+            hash.Add(IsActive);
             hash.Add(LiftImported);
             hash.Add(DefinitionsEnabled);
             hash.Add(GrammaticalInfoEnabled);
-            hash.Add(IsActive);
             hash.Add(AutocompleteSetting);
             hash.Add(SemDomWritingSystem);
             hash.Add(VernacularWritingSystem);
@@ -329,7 +329,7 @@ namespace BackendFramework.Models
         }
     }
 
-    public enum AutocompleteSetting
+    public enum OffOnSetting
     {
         Off,
         On
