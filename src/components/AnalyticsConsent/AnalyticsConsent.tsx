@@ -1,4 +1,4 @@
-import { Button, List } from "@mui/material";
+import { List, ListItemButton, Typography } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import { ReactElement } from "react";
 
@@ -27,8 +27,18 @@ export function AnalyticsConsent(props: ConsentProps): ReactElement {
         onClose={!props.required ? clickedAway : undefined}
       >
         <List>
-          <Button onClick={acceptAnalytics}>Accept</Button>
-          <Button onClick={rejectAnalytics}>Reject</Button>
+          <ListItemButton
+            onClick={acceptAnalytics}
+            style={{ justifyContent: "center" }}
+          >
+            <Typography>Accept</Typography>
+          </ListItemButton>
+          <ListItemButton
+            onClick={rejectAnalytics}
+            style={{ justifyContent: "center" }}
+          >
+            <Typography>Reject</Typography>
+          </ListItemButton>
         </List>
       </Drawer>
     </div>
