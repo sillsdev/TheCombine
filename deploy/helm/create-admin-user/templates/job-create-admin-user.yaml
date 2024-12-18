@@ -50,7 +50,11 @@ spec:
           image: {{ include "create-admin-user.containerImage" . }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           name: create-admin-user
-          resources: {}
+          resources:
+            requests:
+              memory: 128Mi
+            limits:
+              memory: 128Mi
           volumeMounts:
             - mountPath: /home/app/.CombineFiles
               name: backend-data

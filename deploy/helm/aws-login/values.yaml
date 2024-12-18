@@ -15,14 +15,15 @@ global:
   awsAccessKeyId: "Override"
   awsSecretAccessKey: "Override"
   pullSecretName: aws-login-credentials
+  cpuArch: "amd64"
 
 awsEcr:
   configName: aws-ecr-config
   cron: yes
   cronJobName: ecr-cred-helper-cron
   dockerEmail: noreply@thecombine.app
-  image: sillsdev/aws-kubectl
-  imageTag: "0.3.0"
+  image: "public.ecr.aws/thecombine/aws-kubectl"
+  imageVersion: "0.4.0"
   jobName: ecr-cred-helper
   schedule: "0 */8 * * *"
   secretsName: aws-ecr-credentials

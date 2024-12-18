@@ -18,7 +18,7 @@ spec:
         spec:
           serviceAccountName: {{ .Values.serviceAccount.name }}
           containers:
-          - image: sillsdev/aws-kubectl:0.3.0
+          - image: {{ .Values.awsEcr.image }}:{{ .Values.awsEcr.imageVersion }}-{{ .Values.global.cpuArch }}
             imagePullPolicy: Always
             name: daily-backup
             command:
@@ -33,9 +33,9 @@ spec:
             resources:
               requests:
                 cpu:  200m
-                memory: 150M
+                memory: 128Mi
               limits:
-                memory: 150M
+                memory: 128Mi
             securityContext:
               capabilities: {}
             terminationMessagePath: /dev/termination-log

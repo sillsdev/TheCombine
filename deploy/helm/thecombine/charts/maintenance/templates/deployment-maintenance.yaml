@@ -106,10 +106,10 @@ spec:
           resources:
             requests:
               cpu:  200m
-              memory: 1200Mi
+              memory: 1Gi
 {{- if .Values.global.includeResourceLimits }}
             limits:
-              memory: 4Gi
+              memory: 2Gi
 {{- end }}
           volumeMounts:
             - mountPath: {{ .Values.fontsDir }}

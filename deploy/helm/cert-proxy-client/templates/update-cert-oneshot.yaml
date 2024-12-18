@@ -72,7 +72,11 @@ spec:
             configMapKeyRef:
               key: VERBOSE
               name: {{ .Values.envName  | quote }}
-        resources: {}
+        resources:
+          requests:
+            memory: 128Mi
+          limits:
+            memory: 128Mi
         securityContext:
           capabilities: {}
         terminationMessagePath: /dev/termination-log

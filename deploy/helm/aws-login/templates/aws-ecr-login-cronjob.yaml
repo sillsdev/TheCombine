@@ -18,7 +18,7 @@ spec:
         spec:
           serviceAccountName: {{ .Values.awsEcr.serviceAccount }}
           containers:
-          - image: {{ .Values.awsEcr.image }}:{{ .Values.awsEcr.imageTag }}
+          - image: {{ .Values.awsEcr.image }}:{{ .Values.awsEcr.imageVersion }}-{{ .Values.global.cpuArch }}
             imagePullPolicy: IfNotPresent
             name: {{ .Values.awsEcr.cronJobName }}
             command:
@@ -59,7 +59,11 @@ spec:
                 configMapKeyRef:
                   key: DOCKER_EMAIL
                   name: {{ .Values.awsEcr.configName }}
-            resources: {}
+            resources:
+              requests:
+                memory: 128Mi
+              limits:
+                memory: 128Mi
             securityContext:
               capabilities: {}
             terminationMessagePath: /dev/termination-log

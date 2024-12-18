@@ -1,6 +1,11 @@
 ---
+##############################################################
+# Role: container_images
+#
 # Setup airgap images in {{ airgap_image_dir }} to be
 # available when k3s and subsequent helm charts are installed.
+#
+##############################################################
 
 - name: Create airgap image directory
   file:
@@ -18,9 +23,9 @@
     group: root
     mode: 0644
   loop:
-    - k3s-airgap-images-amd64.tar.zst
-    - middleware-airgap-images-amd64.tar.zst
-    - combine-airgap-images-amd64.tar.zst
+    - k3s-airgap-images-{{ cpu_arch }}.tar.zst
+    - middleware-airgap-images-{{ cpu_arch }}.tar.zst
+    - combine-airgap-images-{{ cpu_arch }}.tar.zst
 
 # Add k3s, kubectl and the k3s installation script to
 # /usr/local/bin
@@ -51,7 +56,7 @@
 
 - name: Create link to helm binary
   file:
-    src: /opt/helm/{{ helm_version }}/linux-amd64/helm
+    src: /opt/helm/{{ helm_version }}/linux-{{ cpu_arch }}/helm
     dest: /usr/local/bin/helm
     state: link
     owner: root

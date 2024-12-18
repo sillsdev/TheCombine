@@ -31,7 +31,7 @@ function mockRecordingState(wordId: string): Partial<StoreState> {
 
 const mockWordId = "1234567890";
 
-const mockStartRecording = jest.fn();
+const mockStartRecording = jest.fn(() => Promise.resolve(true));
 const mockStopRecording = jest.fn();
 
 const renderRecorderIcon = async (wordId = ""): Promise<void> => {
