@@ -14,7 +14,7 @@ This second set of potential duplicates has two words with vernacular form “ba
 One has gloss “side of river” and the other has gloss “financial institution”.
 These are definitely different words—homographs that we do not want to merge.
 Click the “Save & Continue” button at the bottom to confirm that they are distinct words.
-This pair will not show up again in the “Merge Duplicates”, nor in the list of deferred sets.
+This pair will not show up again in the “Merge Duplicates” tool, nor in the list of deferred sets.
 Now we’ve seen what the “Save & Continue” and “Defer” buttons do.
 One important note: if a user later changes any of the words in a set of potential duplicates, then that set can show up again in the “Merge Duplicates” tool.
 For example, if you click “Save & Continue” for a set of words that are not duplicates, and then later add a semantic domain to a sense of one of the words, that set may come up again as potential duplicates.
@@ -31,7 +31,7 @@ A gift is spelled “p-r-e-s-e-n-t” not “p-r-e-s-e-n-t-t”.
 You cannot edit the text in the “Merge Duplicates” tool.
 However, you can click on the flag icon to add a flag and mention what needs to be fixed.
 Note that for the flag to be saved, you must click “Save & Continue”.
-We can leave the merging at any time by clicking on the “Data Cleanup” button, but then unsaved changes will be discarded.
+We can leave the merging at any time by clicking on the “Data Cleanup” button, but the unsaved changes will be discarded.
 Back in “Data Cleanup”, there’s a “Review Entries” tool.
 That’s where you can review and edit all words in the project, and fix any words that were flagged while merging duplicates.
 We’ll cover the “Review Entries” tool in another video.

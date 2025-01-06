@@ -14,7 +14,7 @@ Este segundo conjunto de duplicados potenciales tiene dos palabras con la forma 
 Uno tiene glosa “side of river” (lado del río) y el otro tiene glosa “financial institution” (institución financiera).
 Definitivamente son palabras diferentes—palabras homógrafas que no queremos combinar.
 Haga clic en el botón “Guardar y continuar” (“Save & Continue”) en la parte inferior para confirmar que son palabras distintas.
-Este par no volverá a aparecer en “Combinar duplicados” (“Merge Duplicates”), ni en la lista de conjuntos aplazados.
+Este par no volverá a aparecer en la herramienta “Combinar duplicados” (“Merge Duplicates”), ni en la lista de conjuntos aplazados.
 Ya hemos visto lo que hacen los botones “Guardar y continuar” (“Save & Continue”) y “Aplazar” (“Defer”).
 Una nota importante: si un usuario cambia más tarde alguna de las palabras de un conjunto de duplicados potenciales, entonces ese conjunto puede aparecer de nuevo en la herramienta “Combinar duplicados” (“Merge Duplicates”).
 Por ejemplo, si hace clic en "Guardar y continuar" (“Save & Continue”) para un conjunto de palabras que no son duplicados, y más tarde añade un dominio semántico a una acepción de una de las palabras, ese conjunto puede aparecer de nuevo como duplicados potenciales.
@@ -31,7 +31,7 @@ Un “gift” (regalo) se escribe “p-r-e-s-e-n-t” no “p-r-e-s-e-n-t-t”.
 No puede editar el texto en la herramienta “Combinar duplicados” (“Merge Duplicates”).
 Sin embargo, puede hacer clic en el icono de la bandera para añadir una bandera y mencionar lo que hay que arreglar.
 Tenga en cuenta que para que se guarde la bandera, debe hacer clic en “Guardar y continuar” (“Save & Continue”).
-Podemos dejar la combinación en cualquier momento haciendo clic en el botón “Limpieza de datos” (“Data Cleanup”), pero entonces se descartarán los cambios no guardados.
+Podemos dejar la combinación en cualquier momento haciendo clic en el botón “Limpieza de datos” (“Data Cleanup”), pero se descartarán los cambios no guardados.
 De vuelta en “Limpieza de datos” (“Data Cleanup”), hay una herramienta “Revisar entradas” (“Review Entries”).
 Ahí puede revisar y editar todas las palabras en el proyecto y corregir las que se hayan marcado al combinar duplicados.
 Cubriremos la herramienta “Revisar entradas” (“Review Entries”) en otro vídeo.
