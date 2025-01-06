@@ -14,7 +14,7 @@ License: Apache-2.0
 LicenseUrl: http://aws.amazon.com/apache2.0/
 ###############################################################
 PackageId: BouncyCastle.Cryptography
-PackageVersion: 2.4.0
+PackageVersion: 2.5.0
 PackageProjectUrl: https://www.bouncycastle.org/stable/nuget/csharp/website
 Authors: Legion of the Bouncy Castle Inc.
 License: MIT
@@ -69,14 +69,14 @@ Authors: SIL International
 LicenseUrl: https://aka.ms/deprecateLicenseUrl
 ###############################################################
 PackageId: MailKit
-PackageVersion: 4.8.0
+PackageVersion: 4.9.0
 PackageProjectUrl: http://www.mimekit.net/
 Authors: Jeffrey Stedfast
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.AspNetCore.Authentication.JwtBearer
-PackageVersion: 8.0.3
+PackageVersion: 8.0.11
 PackageProjectUrl: https://asp.net/
 Authors: Microsoft
 License: MIT
@@ -279,7 +279,7 @@ License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: Microsoft.OpenApi
-PackageVersion: 1.6.14
+PackageVersion: 1.6.22
 PackageProjectUrl: https://github.com/Microsoft/OpenAPI.NET
 Authors: Microsoft
 License: MIT
@@ -300,7 +300,7 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: MimeKit
-PackageVersion: 4.8.0
+PackageVersion: 4.9.0
 PackageProjectUrl: https://www.mimekit.net/
 Authors: Jeffrey Stedfast
 License: MIT
@@ -390,14 +390,14 @@ License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Instrumentation.AspNetCore
-PackageVersion: 1.9.0
+PackageVersion: 1.10.1
 PackageProjectUrl: https://opentelemetry.io/
-Authors: OpenTelemetry authors
+Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Instrumentation.Http
-PackageVersion: 1.8.1
+PackageVersion: 1.10.0
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
@@ -573,28 +573,28 @@ License: https://opensource.org/licenses/Zlib
 LicenseUrl: https://opensource.org/licenses/Zlib
 ###############################################################
 PackageId: Swashbuckle.AspNetCore
-PackageVersion: 6.9.0
+PackageVersion: 7.2.0
 PackageProjectUrl: https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Authors: domaindrivendev
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Swashbuckle.AspNetCore.Swagger
-PackageVersion: 6.9.0
+PackageVersion: 7.2.0
 PackageProjectUrl: https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Authors: domaindrivendev
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Swashbuckle.AspNetCore.SwaggerGen
-PackageVersion: 6.9.0
+PackageVersion: 7.2.0
 PackageProjectUrl: https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Authors: domaindrivendev
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Swashbuckle.AspNetCore.SwaggerUI
-PackageVersion: 6.9.0
+PackageVersion: 7.2.0
 PackageProjectUrl: https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 Authors: domaindrivendev
 License: MIT
@@ -923,7 +923,7 @@ License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: System.Security.Cryptography.Pkcs
-PackageVersion: 8.0.0
+PackageVersion: 8.0.1
 PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
