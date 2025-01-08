@@ -12,9 +12,9 @@
  * Do not edit the class manually.
  */
 
-import { AutocompleteSetting } from "./autocomplete-setting";
 import { CustomField } from "./custom-field";
 import { EmailInvite } from "./email-invite";
+import { OffOnSetting } from "./off-on-setting";
 import { SemanticDomainFull } from "./semantic-domain-full";
 import { WritingSystem } from "./writing-system";
 
@@ -62,10 +62,10 @@ export interface Project {
   grammaticalInfoEnabled: boolean;
   /**
    *
-   * @type {AutocompleteSetting}
+   * @type {OffOnSetting}
    * @memberof Project
    */
-  autocompleteSetting: AutocompleteSetting;
+  autocompleteSetting: OffOnSetting;
   /**
    *
    * @type {WritingSystem}
