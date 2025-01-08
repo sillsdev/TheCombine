@@ -1,6 +1,4 @@
 import { PayloadAction } from "@reduxjs/toolkit";
-import Hex from "crypto-js/enc-hex";
-import sha256 from "crypto-js/sha256";
 
 import * as backend from "backend";
 import {
@@ -11,7 +9,7 @@ import {
   setSignupFailureAction,
   setSignupSuccessAction,
 } from "components/Login/Redux/LoginReducer";
-import { type StoreState, type StoreStateDispatch } from "rootRedux/types";
+import { type StoreStateDispatch } from "rootRedux/types";
 import router from "router/browserRouter";
 import { Path } from "types/path";
 import { newUser } from "types/user";
@@ -45,17 +43,12 @@ export function signupSuccess(): PayloadAction {
 // Dispatch Functions
 
 export function asyncLogIn(username: string, password: string) {
-  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
+  return async (dispatch: StoreStateDispatch) => {
     dispatch(loginAttempt(username));
     await backend
       .authenticateUser(username, password)
-      .then(async (user) => {
+      .then(async () => {
         dispatch(loginSuccess());
-        if (getState().analyticsState.consent) {
-          // hash the user name and use it in analytics.identify
-          const analyticsId = Hex.stringify(sha256(user.id));
-          analytics.identify(analyticsId);
-        }
         router.navigate(Path.ProjScreen);
       })
       .catch((err) =>
