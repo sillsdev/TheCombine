@@ -1,0 +1,44 @@
+The Combine est conçue pour Rapid Word Collection, une méthode de collecte de mots par domaine sémantique.
+Dans cette vidéo, nous verrons comment sélectionner un domaine sémantique dans The Combine pour commencer à collecter des mots dans ce domaine.
+Ensuite, à la fin, nous verrons comment changer la langue des domaines sémantiques.
+Allons sur thecombine.app et connectons-nous.
+Lorsque vous cliquez sur un projet, l'arbre du domaine sémantique apparaît.
+Si vous effectuez une tâche différente de projet (par exemple, dans le nettoyage des données ou dans les paramètres du projet), vous pouvez revenir à l'arbre sémantique du domaine en cliquant sur le bouton « Saisie de données » (« Data Entry ») dans la barre supérieure.
+Eh bien, la façon la plus simple d'accéder à un domaine est d'utiliser le numéro d'identification du domaine.
+Si je veux collecter des mots pour le domaine 6.5.1.1, « Maison » (« House »), je peux cliquer dans le champ « Chercher un domaine » (« Find a domain ») et de type 6.5.1.1
+En fait, je n'ai même pas besoin de taper les points.
+Si je tape 6511, les points sont automatiquement ajoutés.
+Appuyez maintenant sur Entrée, et le domaine apparaît.
+Oui, c'est le domaine que nous voulons !
+Cliquez sur la tuile du domaine.
+L'arbre de domaine sémantique disparaît et l'interface de saisie de données apparaît.
+Nous aborderons cet outil de saisie de données dans une autre vidéo.
+Lorsque vous avez fini de collecter des mots dans ce domaine, cliquez sur le bouton « Quitter » (« Exit ») pour revenir à l'arbre des domaines sémantiques.
+Au lieu de taper un numéro de domaine, vous pouvez également naviguer dans l'arborescence en cliquant sur les tuiles.
+Par exemple, je peux cliquer sur la tuile « 6.5.1.2 Types De Maisons » (« 6.5.1.2 Types Of Houses ») qui est à côté du domaine actuel pour se déplacer vers ce domaine frère.
+Ou je peux cliquer sur la tuile « 6.5.1 Bâtiments » (« 6.5.1 Building ») ci-dessus pour passer au domaine parent.
+Vous pouvez également utiliser les touches fléchées gauche et droite pour naviguer entre les frères et sœurs, la flèche vers le haut pour aller au domaine parent, ou la flèche vers le bas pour aller au premier domaine enfant.
+Pour revenir au sommet de l'arbre du domaine, cliquez sur l'icône à double caret dans le coin supérieur.
+Maintenant vous savez comment sélectionner un domaine sémantique pour la collecte de données.
+Vous pouvez taper le numéro d'identification du domaine ou naviguer dans l'arbre en cliquant sur les tuiles du domaine ou en utilisant les touches fléchées.
+Et si vous avez besoin que les domaines sémantiques soient dans une langue différente ?
+Par défaut, la langue des domaines sémantiques sera la même que la langue de l'interface utilisateur.
+La langue de l'interface utilisateur correspondra automatiquement à la langue de votre navigateur, si cette langue est disponible pour The Combine.
+Pour choisir manuellement la langue de votre interface utilisateur, cliquez sur votre nom d'utilisateur ou sur l'avatar de l'utilisateur dans la barre supérieure.
+Ceci ouvre le menu utilisateur.
+Cliquez sur « Paramètres de l'utilisateur » (« User Settings »).
+Sous « Langue de l'interface utilisateur » (« User-interface language »), il y a un menu déroulant pour vous permettre de sélectionner votre langue préférée.
+Après avoir fait votre sélection, cliquez sur le bouton « Enregistrer » (« Save »).
+Mon interface utilisateur est désormais en espagnol !
+Je peux revenir à l'arbre des domaines sémantiques en cliquant sur le bouton « Saisie de données », ou plutôt sur le bouton « Entrada de datos » dans la barre supérieure.
+Réussi !
+Les noms de domaine sont tous en espagnol.
+En fait, il y a plus de langues disponibles pour les domaines sémantiques que pour l'interface utilisateur.
+Permettez-moi de revenir à l'anglais pour continuer ce tutoriel.
+(Notez que si vous utilisez la langue du navigateur pour changer la langue de l'interface utilisateur, vous devrez peut-être actualiser la page pour que la modification prenne effet.)
+Maintenant que nous sommes revenus à l'anglais, cliquez sur l'icône de l'engrenage dans la barre supérieure pour ouvrir les paramètres du projet.
+Dans l’onglet « Langues » (« Languages »), il y a un menu déroulant sous « Domaines sémantiques » (« Semantic Domains »).
+Si un administrateur de projet sélectionne l'une de ces langues, par exemple l'hindi, cette langue remplacera la langue du domaine sémantique pour tous les utilisateurs du projet.
+Revenons maintenant à « Saisie de données » (« Data Entry ») ; voyons comment les domaines sémantiques sont maintenant en hindi, même si l'interface utilisateur est toujours en anglais.
+J'espère que cette vidéo vous aidera à commencer votre collection de mots.
+Je vous souhaite une excellente journée !
