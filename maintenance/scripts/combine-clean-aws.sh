@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 ######################################################
 # Script to delete old backups from the AWS S3 bucket
@@ -6,7 +6,7 @@
 
 set -e
 
-usage() {
+usage () {
   cat <<USAGE
   Usage: $0 [options]
      Removes old Combine backups from the AWS S3 bucket
