@@ -22,7 +22,6 @@ imageName: combine_frontend
 
 # The additional domain list is a space-separated string list of domains
 combineAddlDomainList: ""
-configAnalyticsWriteKey: ""
 configCaptchaSiteKey: ""
 configOffline: false
 configShowCertExpiration: false

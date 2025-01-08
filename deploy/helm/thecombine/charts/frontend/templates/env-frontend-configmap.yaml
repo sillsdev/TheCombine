@@ -13,6 +13,3 @@ data:
   CONFIG_OFFLINE: {{ .Values.configOffline | quote | lower }}
   CONFIG_EMAIL_ENABLED: {{ .Values.global.emailEnabled | quote | lower }}
   CONFIG_SHOW_CERT_EXPIRATION: {{ .Values.configShowCertExpiration | quote | lower }}
-  {{- if .Values.configAnalyticsWriteKey }}
-  CONFIG_ANALYTICS_WRITE_KEY: {{ .Values.configAnalyticsWriteKey | quote }}
-  {{- end }}
