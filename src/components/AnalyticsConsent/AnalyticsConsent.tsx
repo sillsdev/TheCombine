@@ -1,4 +1,4 @@
-import { List, ListItemButton, Typography } from "@mui/material";
+import { Button, Grid, Theme, Typography, useMediaQuery } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
@@ -22,6 +22,8 @@ export function AnalyticsConsent(props: ConsentProps): ReactElement {
     props.onChangeConsent(undefined);
   };
 
+  const isXs = useMediaQuery<Theme>((th) => th.breakpoints.only("xs"));
+
   return (
     <div>
       <Drawer
@@ -29,24 +31,73 @@ export function AnalyticsConsent(props: ConsentProps): ReactElement {
         open
         onClose={!props.required ? clickedAway : undefined}
       >
-        <List>
-          <ListItemButton
-            onClick={acceptAnalytics}
-            style={{ justifyContent: "center" }}
+        <div style={{ padding: 20 }}>
+          <Grid
+            container
+            direction={isXs ? "column" : "row"}
+            justifyContent="space-around"
+            alignItems="center"
+            spacing={0}
           >
-            <Typography>
-              {t("analyticsConsent.consentModal.acceptAllBtn")}
-            </Typography>
-          </ListItemButton>
-          <ListItemButton
-            onClick={rejectAnalytics}
-            style={{ justifyContent: "center" }}
-          >
-            <Typography>
-              {t("analyticsConsent.consentModal.acceptNecessaryBtn")}
-            </Typography>
-          </ListItemButton>
-        </List>
+            <Grid item xs>
+              <Typography
+                variant="h6"
+                style={{ color: "#1976d2", fontWeight: 600 }}
+                color="primary"
+                gutterBottom
+              >
+                {t("analyticsConsent.consentModal.title")}
+              </Typography>
+              <Typography
+                variant="body1"
+                align="left"
+                style={{ marginRight: 25 }}
+                gutterBottom
+              >
+                {t("analyticsConsent.consentModal.description")}
+              </Typography>
+            </Grid>
+            <Grid
+              container
+              xs="auto"
+              display="flex"
+              justifyContent="space-around"
+              alignItems="center"
+              spacing={1}
+            >
+              <Grid item>
+                <Button
+                  color="primary"
+                  onClick={acceptAnalytics}
+                  style={{
+                    height: 56,
+                    width: 144,
+                  }}
+                  variant={"contained"}
+                >
+                  <Typography variant="body2">
+                    {t("analyticsConsent.consentModal.acceptAllBtn")}
+                  </Typography>
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  color="primary"
+                  onClick={rejectAnalytics}
+                  style={{
+                    height: 56,
+                    width: 144,
+                  }}
+                  variant={"contained"}
+                >
+                  <Typography variant="body2">
+                    {t("analyticsConsent.consentModal.acceptNecessaryBtn")}
+                  </Typography>
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </div>
       </Drawer>
     </div>
   );
