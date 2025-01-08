@@ -1,4 +1,4 @@
-import { AutocompleteSetting, ConsentType, Project, Speaker } from "api/models";
+import { ConsentType, OffOnSetting, Project, Speaker } from "api/models";
 import { newWritingSystem } from "types/writingSystem";
 import { randomIntString } from "utilities/utilities";
 
@@ -10,6 +10,7 @@ export function newProject(name = ""): Project {
     liftImported: false,
     definitionsEnabled: false,
     grammaticalInfoEnabled: false,
+    autocompleteSetting: OffOnSetting.On,
     semanticDomains: [],
     semDomWritingSystem: newWritingSystem(),
     vernacularWritingSystem: newWritingSystem(),
@@ -17,7 +18,6 @@ export function newProject(name = ""): Project {
     validCharacters: [],
     rejectedCharacters: [],
     inviteTokens: [],
-    autocompleteSetting: AutocompleteSetting.On,
   };
 }
 
