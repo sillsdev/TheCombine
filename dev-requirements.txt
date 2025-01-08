@@ -35,8 +35,6 @@ click==8.1.7
 colorama==0.4.6
     # via
     #   -r dev-requirements.in
-    #   click
-    #   mkdocs
     #   mkdocs-material
     #   tox
 cryptography==44.0.0
@@ -81,7 +79,7 @@ idna==3.10
     # via requests
 isort==5.13.2
     # via -r dev-requirements.in
-jinja2==3.1.4
+jinja2==3.1.5
     # via
     #   -r dev-requirements.in
     #   jinja2-base64-filters
@@ -177,9 +175,7 @@ pyopenssl==24.3.0
 pyproject-api==1.8.0
     # via tox
 pyreadline3==3.5.4
-    # via
-    #   -r dev-requirements.in
-    #   humanfriendly
+    # via -r dev-requirements.in
 python-dateutil==2.9.0.post0
     # via
     #   ghp-import
