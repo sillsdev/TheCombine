@@ -21,6 +21,8 @@ export default function SidebarDrop(): ReactElement {
     return tree.words[tree.sidebar.senseRef.wordId]?.vern;
   });
 
+  const { mergeSenseId, wordId } = sidebar.senseRef;
+
   return (
     <Droppable droppableId={`${wordId} ${mergeSenseId}`} key={mergeSenseId}>
       {(providedDroppable): ReactElement => (
