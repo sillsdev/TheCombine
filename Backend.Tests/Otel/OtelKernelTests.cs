@@ -37,7 +37,7 @@ namespace Backend.Tests.Otel
         }
 
         [Test]
-        public void BuildersSetConsentAndSessionBaggageFromHeader()
+        public void BuildersSetBaggageFromHeader()
         {
             // Arrange
             var httpContext = new DefaultHttpContext();
@@ -55,7 +55,7 @@ namespace Backend.Tests.Otel
         }
 
         [Test]
-        public void OnEndSetsConsentAndSessionTagFromBaggage()
+        public void OnEndSetsTagsFromBaggage()
         {
             // Arrange
             var activity = new Activity("testActivity").Start();

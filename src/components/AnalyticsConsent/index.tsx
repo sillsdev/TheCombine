@@ -2,13 +2,14 @@ import { Button, Grid, Theme, Typography, useMediaQuery } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
+import { themeColors } from "types/theme";
 
 interface ConsentProps {
   onChangeConsent: (consentVal: boolean | undefined) => void;
   required: boolean;
 }
 
-export function AnalyticsConsent(props: ConsentProps): ReactElement {
+export default function AnalyticsConsent(props: ConsentProps): ReactElement {
   const { t } = useTranslation();
 
   const acceptAnalytics = (): void => {
@@ -42,8 +43,7 @@ export function AnalyticsConsent(props: ConsentProps): ReactElement {
             <Grid item xs>
               <Typography
                 variant="h6"
-                style={{ color: "#1976d2", fontWeight: 600 }}
-                color="primary"
+                style={{ color: themeColors.primary, fontWeight: 600 }}
                 gutterBottom
               >
                 {t("analyticsConsent.consentModal.title")}
@@ -67,11 +67,10 @@ export function AnalyticsConsent(props: ConsentProps): ReactElement {
             >
               <Grid item>
                 <Button
-                  color="primary"
                   onClick={acceptAnalytics}
                   style={{
-                    height: 56,
-                    width: 144,
+                    height: 60,
+                    width: 155,
                   }}
                   variant={"contained"}
                 >
@@ -82,11 +81,10 @@ export function AnalyticsConsent(props: ConsentProps): ReactElement {
               </Grid>
               <Grid item>
                 <Button
-                  color="primary"
                   onClick={rejectAnalytics}
                   style={{
-                    height: 56,
-                    width: 144,
+                    height: 60,
+                    width: 155,
                   }}
                   variant={"contained"}
                 >

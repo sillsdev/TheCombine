@@ -6,7 +6,7 @@ import { Route, Routes } from "react-router-dom";
 
 import { updateUser } from "backend";
 import { getCurrentUser } from "backend/localStorage";
-import { AnalyticsConsent } from "components/AnalyticsConsent/AnalyticsConsent";
+import AnalyticsConsent from "components/AnalyticsConsent";
 import DatePickersLocalizationProvider from "components/App/DatePickersLocalizationProvider";
 import SignalRHub from "components/App/SignalRHub";
 import AppBar from "components/AppBar/AppBarComponent";
@@ -101,10 +101,7 @@ export default function AppWithBar(): ReactElement {
         <ThemeProvider theme={overrideThemeFont}>
           <CssBaseline />
           {answeredConsent ? null : (
-            <AnalyticsConsent
-              onChangeConsent={handleConsentChange}
-              required
-            ></AnalyticsConsent>
+            <AnalyticsConsent onChangeConsent={handleConsentChange} required />
           )}
           <Routes>
             <Route path={routerPath(Path.DataEntry)} element={<DataEntry />} />

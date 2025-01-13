@@ -17,7 +17,7 @@ import { useTranslation } from "react-i18next";
 import { AutocompleteSetting, User } from "api/models";
 import { isEmailTaken, updateUser } from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
-import { AnalyticsConsent } from "components/AnalyticsConsent/AnalyticsConsent";
+import AnalyticsConsent from "components/AnalyticsConsent";
 import { asyncLoadSemanticDomains } from "components/Project/ProjectActions";
 import ClickableAvatar from "components/UserSettings/ClickableAvatar";
 import { updateLangFromUser } from "i18n";
@@ -77,9 +77,8 @@ export function UserSettings(props: {
   }
 
   const [displayConsent, setDisplayConsent] = useState(false);
-  const show = (): void => setDisplayConsent(true);
 
-  const handleConsentChange = (consentVal: boolean | undefined): void => {
+  const handleConsentChange = (consentVal?: boolean): void => {
     setOtelConsent(consentVal ?? otelConsent);
     setDisplayConsent(false);
   };
@@ -300,7 +299,7 @@ export function UserSettings(props: {
                   <Button
                     data-testid={UserSettingsIds.ButtonChangeConsent}
                     id={UserSettingsIds.ButtonChangeConsent}
-                    onClick={show}
+                    onClick={() => setDisplayConsent(true)}
                     variant="outlined"
                   >
                     {t("userSettings.analyticsConsent.button")}

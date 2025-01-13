@@ -54,10 +54,12 @@ const whiteListedErrorUrls = [
 // Create an axios instance to allow for attaching interceptors to it.
 const axiosInstance = axios.create({ baseURL: apiBaseURL });
 axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  LocalStorage.getCurrentUser()?.otelConsent
-    ? ((config.headers.otelConsent = true),
-      (config.headers.sessionId = getSessionId()))
-    : (config.headers.otelConsent = false);
+  if (LocalStorage.getCurrentUser()?.otelConsent) {
+    config.headers.otelConsent = true;
+    config.headers.sessionId = getSessionId();
+  } else {
+    config.headers.otelConsent = false;
+  }
   return config;
 });
 axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
