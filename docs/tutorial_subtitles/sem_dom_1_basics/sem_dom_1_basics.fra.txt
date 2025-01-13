@@ -39,6 +39,8 @@ Permettez-moi de revenir à l'anglais pour continuer ce tutoriel.
 Maintenant que nous sommes revenus à l'anglais, cliquez sur l'icône de l'engrenage dans la barre supérieure pour ouvrir les paramètres du projet.
 Dans l’onglet « Langues » (« Languages »), il y a un menu déroulant sous « Domaines sémantiques » (« Semantic Domains »).
 Si un administrateur de projet sélectionne l'une de ces langues, par exemple l'hindi, cette langue remplacera la langue du domaine sémantique pour tous les utilisateurs du projet.
-Revenons maintenant à « Saisie de données » (« Data Entry ») ; voyons comment les domaines sémantiques sont maintenant en hindi, même si l'interface utilisateur est toujours en anglais.
+Revenons maintenant à « Saisie de données » (« Data Entry »).
+Voyons comment les domaines sémantiques sont maintenant en hindi, même si l'interface utilisateur est toujours en anglais.
+Réussi !
 J'espère que cette vidéo vous aidera à commencer votre collection de mots.
 Je vous souhaite une excellente journée !

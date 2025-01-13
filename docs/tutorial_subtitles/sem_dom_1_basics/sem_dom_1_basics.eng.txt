@@ -30,15 +30,17 @@ Click on “User Settings”.
 Under “User-interface language”, there is a dropdown menu for you to select your preferred language.
 After you’ve made your selection, click the “Save” button.
 Now my user interface is in Spanish!
-I can get back to the semantic domain tree by clicking the “Data Entry”, or rather the “Entrada de datos” button in the top bar.
+I can get back to the semantic domain tree by clicking the “Data Entry” button, or rather the “Entrada de datos” button, in the top bar.
 Success!
 The domain names are all in Spanish.
 In fact, there are more languages available for the semantic domains than for the user interface.
 Let me switch back to English to continue this tutorial.
-(Note that if you use the browser language to change the user interface language, you may have to refresh the page for the change to take effect.)
+(Note that if you use the browser language to change the user interface language, you may have to refresh the page for that change to take effect.)
 Now that we’re back to English, let’s click on the gear icon in the top bar to open the project settings.
 Here in the “Languages” tab, there is a drop-down menu under “Semantic Domains”.
 If a project administrator selects one of these languages, such as Hindi, that will override the semantic domains language for all project users.
-Now let’s go back to “Data Entry”; see how the semantic domains are now in Hindi, even though the user interface is still in English.
+Now let’s go back to “Data Entry”.
+See how the semantic domains are now in Hindi, even though the user interface is still in English.
+Success!
 I hope this video helps you get your word collection started.
 Have a wonderful day!

@@ -39,6 +39,8 @@ Permítanme volver al inglés para continuar con este tutorial.
 Ahora que volvemos al inglés, hagamos clic en el icono del engranaje en la barra superior para abrir la configuración del proyecto.
 Aquí en la pestaña “Idiomas” (“Languages”), hay un menú desplegable en “Dominios semánticos” (“Semantic Domains”).
 Si un administrador del proyecto selecciona uno de estos idiomas, como Hindi, anulará el idioma de los dominios semánticos para todos los usuarios del proyecto.
-Ahora volvamos a “Entrada de datos” (“Data Entry”); vea cómo los dominios semánticos están ahora en hindi, aunque la interfaz de usuario sigue estando en inglés.
+Ahora volvamos a “Entrada de datos” (“Data Entry”).
+Vea cómo los dominios semánticos están ahora en hindi, aunque la interfaz de usuario sigue estando en inglés.
+¡Éxito!
 Espero que este video le ayude a comenzar su colección de palabras.
 ¡Que tenga un día maravilloso!
