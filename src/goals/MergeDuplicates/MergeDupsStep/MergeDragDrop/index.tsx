@@ -40,7 +40,7 @@ export default function MergeDragDrop(): ReactElement {
   const sidebarProtected = useAppSelector((state: StoreState) => {
     const goal = state.mergeDuplicateGoal;
     const ms = goal.tree.sidebar.mergeSenses;
-    return ms.length && ms[0].protected && !goal.overrideProtection;
+    return ms.length && ms[0].protected;
   });
   const words = useAppSelector(
     (state: StoreState) => state.mergeDuplicateGoal.tree.words
@@ -144,12 +144,15 @@ export default function MergeDragDrop(): ReactElement {
         dispatch(moveSense(movePayload));
       } else {
         // Case 3b: The source & dest droppables are the same, so we reorder, not move.
+        if (src.order === destOrder) {
+          // If the sense wasn't moved, do nothing.
+          return;
+        }
         const orderPayload: OrderSensePayload = { destOrder, src };
-        if (
-          src.order === destOrder ||
-          (destOrder === 0 && src.order !== undefined && sidebarProtected)
-        ) {
-          // If the sense wasn't moved or was moved within the sidebar above a protected sense, do nothing.
+        const fromTop = src.order === 0;
+        const toTop = destOrder === 0 && src.order !== undefined;
+        if ((fromTop || toTop) && sidebarProtected) {
+          // If top sidebar sense is protected and being displaced, do nothing.
           if (overrideProtection) {
             setOverride({ orderPayload, protectReason });
           }
