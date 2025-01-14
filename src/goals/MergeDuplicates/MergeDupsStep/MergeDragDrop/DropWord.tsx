@@ -11,7 +11,7 @@ import { type ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 
-import { type Flag, type ProtectReason, ReasonType } from "api/models";
+import { type Flag } from "api/models";
 import {
   FlagButton,
   IconButtonWithTooltip,
@@ -20,6 +20,7 @@ import {
 import MultilineTooltipTitle from "components/MultilineTooltipTitle";
 import { AudioSummary } from "components/WordCard";
 import DragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DragSense";
+import { protectReasonsText } from "goals/MergeDuplicates/MergeDupsStep/protectReasonUtils";
 import { type MergeTreeWord } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import {
   flagWord,
@@ -166,68 +167,10 @@ export function DropWordCardHeader(
     <div />
   );
 
-  const reasonText = (reason: ProtectReason): string => {
-    // Backend/Helper/LiftHelper.cs > GetProtectedReasons(LiftEntry entry)
-    switch (reason.type) {
-      case ReasonType.Annotations:
-        return t("mergeDups.protectReason.annotations");
-      case ReasonType.Etymologies:
-        return t("mergeDups.protectReason.etymologies");
-      case ReasonType.Field:
-        return t("mergeDups.protectReason.field", { val: reason.value });
-      case ReasonType.NoteWithType:
-        return t("mergeDups.protectReason.noteWithType", { val: reason.value });
-      case ReasonType.Notes:
-        return t("mergeDups.protectReason.notesWord");
-      case ReasonType.Relations:
-        return t("mergeDups.protectReason.relations");
-      case ReasonType.Trait:
-        return reason.value ?? "(unknown trait)";
-      case ReasonType.TraitDialectLabels:
-        return t("mergeDups.protectReason.traitDialectLabels", {
-          val: reason.value,
-        });
-      case ReasonType.TraitDoNotPublishIn:
-        return t("mergeDups.protectReason.traitDoNotPublishIn", {
-          val: reason.value,
-        });
-      case ReasonType.TraitDoNotUseForParsing:
-        return t("mergeDups.protectReason.traitDoNotUseForParsing", {
-          val: reason.value,
-        });
-      case ReasonType.TraitEntryType:
-        return t("mergeDups.protectReason.traitEntryType", {
-          val: reason.value,
-        });
-      case ReasonType.TraitExcludeAsHeadword:
-        return t("mergeDups.protectReason.traitExcludeAsHeadword");
-      case ReasonType.TraitMinorEntryCondition:
-        return t("mergeDups.protectReason.traitMinorEntryCondition", {
-          val: reason.value,
-        });
-      case ReasonType.TraitMorphType:
-        return t("mergeDups.protectReason.traitMorphType", {
-          val: reason.value,
-        });
-      case ReasonType.TraitPublishIn:
-        return t("mergeDups.protectReason.traitPublishIn", {
-          val: reason.value,
-        });
-      case ReasonType.Variants:
-        return t("mergeDups.protectReason.variants");
-      default:
-        throw new Error();
-    }
-  };
-
   const tooltipTexts = [t("mergeDups.helpText.protectedWord")];
   const reasons = words[props.wordId]?.protectReasons;
   if (reasons?.length) {
-    tooltipTexts.push(
-      t("mergeDups.helpText.protectedData", {
-        val: reasons.map(reasonText).join("; "),
-      })
-    );
+    tooltipTexts.push(protectReasonsText(t, { word: reasons }));
   }
   tooltipTexts.push(t("mergeDups.helpText.protectedWordInfo"));
 
