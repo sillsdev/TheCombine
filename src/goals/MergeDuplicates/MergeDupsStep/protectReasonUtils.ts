@@ -1,26 +1,27 @@
-import { TFunction } from "i18next";
+import { type TFunction } from "i18next";
 
-import { ProtectReason, ReasonType } from "api/models";
+import { type ProtectReason, ReasonType } from "api/models";
 
 const sep = "; ";
 
+interface WordSenseReasons {
+  sense?: ProtectReason[];
+  word?: ProtectReason[];
+}
+
 export function protectReasonsText(
-  t: TFunction<"translation", undefined>,
-  wordReasons: ProtectReason[] = [],
-  senseReasons: ProtectReason[] = [],
+  t: TFunction,
+  reasons: WordSenseReasons,
   defaultPreface = true
 ): string {
-  const wordTexts = wordReasons.map((r) => wordReasonText(t, r));
-  const senseTexts = senseReasons.map((r) => senseReasonText(t, r));
-  const val = [...wordTexts, ...senseTexts].join(sep);
+  const wordTexts = reasons.word?.map((r) => wordReasonText(t, r));
+  const senseTexts = reasons.sense?.map((r) => senseReasonText(t, r));
+  const val = [...(wordTexts ?? []), ...(senseTexts ?? [])].join(sep);
   return defaultPreface ? t("mergeDups.helpText.protectedData", { val }) : val;
 }
 
 /** Cases match Backend/Helper/LiftHelper.cs > GetProtectedReasons(LiftSense sense) */
-function senseReasonText(
-  t: TFunction<"translation", undefined>,
-  reason: ProtectReason
-): string {
+function senseReasonText(t: TFunction, reason: ProtectReason): string {
   switch (reason.type) {
     case ReasonType.Annotations:
       return t("mergeDups.protectReason.annotations");
@@ -76,10 +77,7 @@ function senseReasonText(
 }
 
 /** Cases match Backend/Helper/LiftHelper.cs > GetProtectedReasons(LiftEntry entry) */
-function wordReasonText(
-  t: TFunction<"translation", undefined>,
-  reason: ProtectReason
-): string {
+function wordReasonText(t: TFunction, reason: ProtectReason): string {
   switch (reason.type) {
     case ReasonType.Annotations:
       return t("mergeDups.protectReason.annotations");

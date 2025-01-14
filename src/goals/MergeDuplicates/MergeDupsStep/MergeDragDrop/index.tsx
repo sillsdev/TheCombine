@@ -73,9 +73,12 @@ export default function MergeDragDrop(): ReactElement {
       const wordReasons = isOnlySenseInProtectedWord
         ? (srcWord.protectReasons ?? [])
         : undefined;
-      const senseReasons = src.protectReasons;
       protectReason = t("mergeDups.helpText.protectedOverrideWarning", {
-        val: protectReasonsText(t, wordReasons, senseReasons, false),
+        val: protectReasonsText(
+          t,
+          { sense: src.protectReasons, word: wordReasons },
+          false
+        ),
       });
     }
 
