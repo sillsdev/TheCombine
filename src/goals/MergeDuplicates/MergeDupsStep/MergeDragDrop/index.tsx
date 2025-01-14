@@ -87,7 +87,7 @@ export default function MergeDragDrop(): ReactElement {
       return;
     } else if (res.destination?.droppableId === trashId) {
       // Case 1: The sense was dropped on the trash icon.
-      if (src.isSenseProtected || isOnlySenseInProtectedWord) {
+      if ((src.isSenseProtected && !src.order) || isOnlySenseInProtectedWord) {
         // Case 1a: Cannot delete a protected sense.
         if (overrideProtection) {
           // ... unless protection override is active and user confirms.
@@ -102,7 +102,7 @@ export default function MergeDragDrop(): ReactElement {
         src,
       };
       // Case 2: the sense was dropped on another sense.
-      if (src.isSenseProtected || isOnlySenseInProtectedWord) {
+      if ((src.isSenseProtected && !src.order) || isOnlySenseInProtectedWord) {
         // Case 2a: Cannot merge a protected sense into another sense.
         if (overrideProtection) {
           // ... unless protection override is active and user confirms.
@@ -123,7 +123,6 @@ export default function MergeDragDrop(): ReactElement {
         // Case 2b: If the target is a sidebar sub-sense, it cannot receive a combine.
         return;
       }
-      // TODO: handle override case when sense is last in protected word
       dispatch(combineSense(combinePayload));
     } else if (res.destination) {
       const destOrder = res.destination.index;
