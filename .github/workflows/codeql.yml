@@ -53,6 +53,7 @@ jobs:
             *.actions.githubusercontent.com:443
             api.github.com:443
             api.nuget.org:443
+            builds.dotnet.microsoft.com:443
             dc.services.visualstudio.com:443
             files.pythonhosted.org:443
             github.com:443
