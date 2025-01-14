@@ -56,7 +56,7 @@ License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: icu.net
-PackageVersion: 2.10.1-beta.5
+PackageVersion: 3.0.0
 PackageProjectUrl: https://github.com/sillsdev/icu-dotnet
 Authors: SIL International
 License: MIT
@@ -67,6 +67,13 @@ PackageVersion: 62.2.3-beta
 PackageProjectUrl: https://github.com/sillsdev/icu
 Authors: SIL International
 LicenseUrl: https://aka.ms/deprecateLicenseUrl
+###############################################################
+PackageId: JetBrains.Annotations
+PackageVersion: 2024.2.0
+PackageProjectUrl: https://www.jetbrains.com/help/resharper/Code_Analysis__Code_Annotations.html
+Authors: JetBrains
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: MailKit
 PackageVersion: 4.9.0
@@ -526,35 +533,35 @@ PackageProjectUrl: https://github.com/adamhathcock/sharpcompress
 Authors: Adam Hathcock
 ###############################################################
 PackageId: SIL.Core
-PackageVersion: 14.1.1
+PackageVersion: 15.0.0
 PackageProjectUrl: https://github.com/sillsdev/libpalaso
 Authors: SIL International
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: SIL.Core.Desktop
-PackageVersion: 14.1.1
+PackageVersion: 15.0.0
 PackageProjectUrl: https://github.com/sillsdev/libpalaso
 Authors: SIL International
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: SIL.DictionaryServices
-PackageVersion: 14.1.1
+PackageVersion: 15.0.0
 PackageProjectUrl: https://github.com/sillsdev/libpalaso
 Authors: SIL International
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: SIL.Lift
-PackageVersion: 14.1.1
+PackageVersion: 15.0.0
 PackageProjectUrl: https://github.com/sillsdev/libpalaso
 Authors: SIL International
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: SIL.WritingSystems
-PackageVersion: 14.1.1
+PackageVersion: 15.0.0
 PackageProjectUrl: https://github.com/sillsdev/libpalaso
 Authors: SIL International
 License: MIT
@@ -839,8 +846,8 @@ License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: System.Runtime.CompilerServices.Unsafe
-PackageVersion: 5.0.0
-PackageProjectUrl: https://github.com/dotnet/runtime
+PackageVersion: 6.0.0
+PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
