@@ -1003,13 +1003,14 @@ export default function DataEntryTable(
   const updateRecentNote = useCallback(
     async (index: number, text: string): Promise<void> => {
       const oldWord = state.recentWords[index].word;
+      const language = oldWord.note.language || analysisLang.bcp47;
       text = text.trim();
       if (text !== oldWord.note.text) {
-        const note: Note = { ...oldWord.note, text };
+        const note: Note = { ...oldWord.note, language, text };
         await updateWordInBackend({ ...oldWord, note });
       }
     },
-    [state.recentWords, updateWordInBackend]
+    [analysisLang.bcp47, state.recentWords, updateWordInBackend]
   );
 
   const isNewEntryInProgress =
