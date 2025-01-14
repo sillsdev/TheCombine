@@ -66,9 +66,16 @@ namespace BackendFramework.Models
         [BsonElement("username")]
         public string Username { get; set; }
 
+        /// <summary>
+        /// Is true if user accepts analytics, false otherwise. 
+        /// User can update consent anytime.
+        /// </summary>
         [BsonElement("otelConsent")]
         public bool OtelConsent { get; set; }
 
+        /// <summary>
+        /// Is set permanently to true once user first accepts or rejects analytics upon login.
+        /// </summary>
         [BsonElement("answeredConsent")]
         public bool AnsweredConsent { get; set; }
 
