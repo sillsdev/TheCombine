@@ -207,16 +207,45 @@ function goalCleanup(goal: Goal): void {
   }
 }
 
-// Returns goal data for some goal types.
+/** Returns goal data for some goal types. */
 export async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
   switch (goalType) {
     case GoalType.MergeDups:
-      return await getDuplicates(5, maxNumSteps(goalType));
+      return checkMergeData(await getDuplicates(5, maxNumSteps(goalType)));
     case GoalType.ReviewDeferredDups:
-      return await getGraylistEntries(maxNumSteps(goalType));
+      return checkMergeData(await getGraylistEntries(maxNumSteps(goalType)));
     default:
       return [];
   }
+}
+
+/** Emergency Failsafe for bad merge sets. */
+function checkMergeData(goalData: Word[][]): Word[][] {
+  return goalData.filter((dups) => {
+    if (dups.length < 2) {
+      alert(`Set of duplicates doesn't have at least 2 words!`);
+      console.error(`Set doesn't have at least 2 words:\n${dups}`);
+      return false;
+    }
+    const wordGuids = dups.map((w) => w.guid);
+    if (new Set(wordGuids).size < wordGuids.length) {
+      alert(`Set of duplicates has multiple words with same guid!`);
+      console.error(`Set has multiple words with same guid:\n${dups}`);
+      return false;
+    }
+    if (dups.some((w) => !w.senses.length)) {
+      alert(`Set of duplicates has a word with no senses!`);
+      console.error(`Set has a word with no senses:\n${dups}`);
+      return false;
+    }
+    const senseGuids = dups.flatMap((w) => w.senses.map((s) => s.guid));
+    if (new Set(senseGuids).size < senseGuids.length) {
+      alert(`Set of duplicates has multiple senses with same guid!`);
+      console.error(`Set has multiple senses with same guid:\n${dups}`);
+      return false;
+    }
+    return true;
+  });
 }
 
 async function saveCurrentStep(goal: Goal): Promise<void> {
