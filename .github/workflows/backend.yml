@@ -28,6 +28,7 @@ jobs:
             aka.ms:443
             api.github.com:443
             api.nuget.org:443
+            builds.dotnet.microsoft.com:443
             dc.services.visualstudio.com:443
             deb.debian.org:80
             dotnetbuilds.azureedge.net:443
@@ -110,12 +111,11 @@ jobs:
             aka.ms:443
             api.github.com:443
             api.nuget.org:443
+            builds.dotnet.microsoft.com:443
             dc.services.visualstudio.com:443
             dotnetcli.azureedge.net:443
             github.com:443
             objects.githubusercontent.com:443
-            ts-crl.ws.symantec.com:80
-
       - name: Checkout repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       # Manually install .NET to work around:
@@ -153,7 +153,6 @@ jobs:
           egress-policy: block
           allowed-endpoints: >
             *.data.mcr.microsoft.com:443
-            *.symcb.com:80
             api.nuget.org:443
             archive.ubuntu.com:80
             dc.services.visualstudio.com:443
@@ -161,7 +160,6 @@ jobs:
             github.com:443
             mcr.microsoft.com:443
             security.ubuntu.com:80
-            ts-crl.ws.symantec.com:80
       # For subfolders, currently a full checkout is required.
       # See: https://github.com/marketplace/actions/build-and-push-docker-images#path-context
       - name: Checkout repository

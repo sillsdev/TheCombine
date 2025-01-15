@@ -1005,11 +1005,12 @@ export default function DataEntryTable(
       const oldWord = state.recentWords[index].word;
       text = text.trim();
       if (text !== oldWord.note.text) {
-        const note: Note = { ...oldWord.note, text };
+        const language = oldWord.note.language || analysisLang.bcp47;
+        const note: Note = { ...oldWord.note, language, text };
         await updateWordInBackend({ ...oldWord, note });
       }
     },
-    [state.recentWords, updateWordInBackend]
+    [analysisLang.bcp47, state.recentWords, updateWordInBackend]
   );
 
   const isNewEntryInProgress =
