@@ -53,12 +53,13 @@ jobs:
             *.actions.githubusercontent.com:443
             api.github.com:443
             api.nuget.org:443
-            builds.dotnet.microsoft.com:443
             dc.services.visualstudio.com:443
             files.pythonhosted.org:443
             github.com:443
             objects.githubusercontent.com:443
             pypi.org:443
+            uploads.github.com:443
+
       - name: Checkout repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
