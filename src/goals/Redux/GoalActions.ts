@@ -228,7 +228,7 @@ function checkMergeData(goalData: Word[][]): Word[][] {
     }
     const wordGuids = dups.map((w) => w.guid);
     if (new Set(wordGuids).size < wordGuids.length) {
-      errors.push(`Set of duplicates has multiple words with the same guid!`);
+      errors.push("Set of duplicates has multiple words with the same guid!");
     }
     if (dups.some((w) => !w.senses.length)) {
       errors.push("Set of duplicates has a word with no senses!");
