@@ -207,16 +207,46 @@ function goalCleanup(goal: Goal): void {
   }
 }
 
-// Returns goal data for some goal types.
+/** Returns goal data for some goal types. */
 export async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
   switch (goalType) {
     case GoalType.MergeDups:
-      return await getDuplicates(5, maxNumSteps(goalType));
+      return checkMergeData(await getDuplicates(5, maxNumSteps(goalType)));
     case GoalType.ReviewDeferredDups:
-      return await getGraylistEntries(maxNumSteps(goalType));
+      return checkMergeData(await getGraylistEntries(maxNumSteps(goalType)));
     default:
       return [];
   }
+}
+
+/** Emergency failsafe for bad merge sets. */
+function checkMergeData(goalData: Word[][]): Word[][] {
+  return goalData.filter((dups) => {
+    const errors: string[] = [];
+    if (dups.length < 2) {
+      errors.push("Set of duplicates doesn't have at least 2 words!");
+    }
+    const wordGuids = dups.map((w) => w.guid);
+    if (new Set(wordGuids).size < wordGuids.length) {
+      errors.push("Set of duplicates has multiple words with the same guid!");
+    }
+    if (dups.some((w) => !w.senses.length)) {
+      errors.push("Set of duplicates has a word with no senses!");
+    }
+    const senseGuids = dups.flatMap((w) => w.senses.map((s) => s.guid));
+    if (new Set(senseGuids).size < senseGuids.length) {
+      errors.push("Set of duplicates has multiple senses with the same guid!");
+    }
+    if (errors.length) {
+      errors.forEach((e) => {
+        console.error(e);
+        alert(e);
+      });
+      console.error(dups);
+      return false; // Skip bad merge set.
+    }
+    return true; // Include good merge set.
+  });
 }
 
 async function saveCurrentStep(goal: Goal): Promise<void> {
