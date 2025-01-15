@@ -35,7 +35,7 @@ namespace BackendFramework.Otel
 
         internal static void TrackConsent(Activity activity, HttpRequest request)
         {
-            var consent = request.Headers.TryGetValue("otelConsent", out var values) ? bool.TryParse(values.FirstOrDefault(), out bool _) : false;
+            var consent = request.Headers.TryGetValue("otelConsent", out var values) ? bool.TryParse(values.FirstOrDefault(), out bool _) : true;
             activity.SetBaggage("otelConsentBaggage", consent.ToString());
         }
 
@@ -124,7 +124,7 @@ namespace BackendFramework.Otel
                     {
                         // When getting location externally, url.full includes site URI and user IP. 
                         // In such cases, only add url without IP information to traces.
-                        // data?.SetTag("url.full", "");
+                        data?.SetTag("url.full", "");
                         data?.SetTag("url.redacted.ip", LocationProvider.locationGetterUri);
                     }
                 }
