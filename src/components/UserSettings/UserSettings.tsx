@@ -311,14 +311,6 @@ export function UserSettings(props: {
                     ></AnalyticsConsent>
                   ) : null}
                 </Grid>
-                <Grid item>
-                  <Tooltip
-                    title={t("analyticsConsent.consentModal.description")}
-                    placement={document.body.dir === "rtl" ? "left" : "right"}
-                  >
-                    <HelpOutline fontSize="small" />
-                  </Tooltip>
-                </Grid>
               </Grid>
 
               <Grid item container justifyContent="flex-end">
