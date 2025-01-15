@@ -219,32 +219,33 @@ export async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
   }
 }
 
-/** Emergency Failsafe for bad merge sets. */
+/** Emergency failsafe for bad merge sets. */
 function checkMergeData(goalData: Word[][]): Word[][] {
   return goalData.filter((dups) => {
+    const errors: string[] = [];
     if (dups.length < 2) {
-      alert(`Set of duplicates doesn't have at least 2 words!`);
-      console.error(`Set doesn't have at least 2 words:\n${dups}`);
-      return false;
+      errors.push("Set of duplicates doesn't have at least 2 words!");
     }
     const wordGuids = dups.map((w) => w.guid);
     if (new Set(wordGuids).size < wordGuids.length) {
-      alert(`Set of duplicates has multiple words with same guid!`);
-      console.error(`Set has multiple words with same guid:\n${dups}`);
-      return false;
+      errors.push(`Set of duplicates has multiple words with the same guid!`);
     }
     if (dups.some((w) => !w.senses.length)) {
-      alert(`Set of duplicates has a word with no senses!`);
-      console.error(`Set has a word with no senses:\n${dups}`);
-      return false;
+      errors.push("Set of duplicates has a word with no senses!");
     }
     const senseGuids = dups.flatMap((w) => w.senses.map((s) => s.guid));
     if (new Set(senseGuids).size < senseGuids.length) {
-      alert(`Set of duplicates has multiple senses with same guid!`);
-      console.error(`Set has multiple senses with same guid:\n${dups}`);
-      return false;
+      errors.push("Set of duplicates has multiple senses with the same guid!");
     }
-    return true;
+    if (errors.length) {
+      errors.forEach((e) => {
+        console.error(e);
+        alert(e);
+      });
+      console.error(dups);
+      return false; // Skip bad merge set.
+    }
+    return true; // Include good merge set.
   });
 }
 
