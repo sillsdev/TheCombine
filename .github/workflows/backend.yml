@@ -31,8 +31,6 @@ jobs:
             builds.dotnet.microsoft.com:443
             dc.services.visualstudio.com:443
             deb.debian.org:80
-            dotnetbuilds.azureedge.net:443
-            dotnetcli.azureedge.net:443
             github.com:443
             md-hdd-t032zjxllntc.z26.blob.storage.azure.net:443
             objects.githubusercontent.com:443
@@ -113,7 +111,6 @@ jobs:
             api.nuget.org:443
             builds.dotnet.microsoft.com:443
             dc.services.visualstudio.com:443
-            dotnetcli.azureedge.net:443
             github.com:443
             objects.githubusercontent.com:443
       - name: Checkout repository
