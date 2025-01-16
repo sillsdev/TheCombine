@@ -1,4 +1,4 @@
-import { AutocompleteSetting, User } from "api/models";
+import { OffOnSetting, User } from "api/models";
 
 export function newUser(name = "", username = "", password = ""): User {
   return {
@@ -12,7 +12,7 @@ export function newUser(name = "", username = "", password = ""): User {
     phone: "",
     projectRoles: {},
     workedProjects: {},
-    glossSuggestion: AutocompleteSetting.On,
+    glossSuggestion: OffOnSetting.On,
     token: "",
     isAdmin: false,
     answeredConsent: false,

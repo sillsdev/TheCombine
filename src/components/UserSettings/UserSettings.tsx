@@ -14,7 +14,7 @@ import { enqueueSnackbar } from "notistack";
 import { FormEvent, Fragment, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { AutocompleteSetting, User } from "api/models";
+import { OffOnSetting, User } from "api/models";
 import { isEmailTaken, updateUser } from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
 import AnalyticsConsent from "components/AnalyticsConsent";
@@ -256,15 +256,15 @@ export function UserSettings(props: {
                     data-testid={UserSettingsIds.SelectGlossSuggestion}
                     id={UserSettingsIds.SelectGlossSuggestion}
                     onChange={(e) =>
-                      setGlossSuggestion(e.target.value as AutocompleteSetting)
+                      setGlossSuggestion(e.target.value as OffOnSetting)
                     }
                     value={glossSuggestion}
                     variant="standard"
                   >
-                    <MenuItem value={AutocompleteSetting.Off}>
+                    <MenuItem value={OffOnSetting.Off}>
                       {t("projectSettings.autocomplete.off")}
                     </MenuItem>
-                    <MenuItem value={AutocompleteSetting.On}>
+                    <MenuItem value={OffOnSetting.On}>
                       {t("projectSettings.autocomplete.on")}
                     </MenuItem>
                   </Select>

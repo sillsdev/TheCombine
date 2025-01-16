@@ -85,7 +85,7 @@ namespace BackendFramework.Models
         [Required]
         [BsonElement("glossSuggestion")]
         [BsonRepresentation(BsonType.String)]
-        public AutocompleteSetting GlossSuggestion { get; set; }
+        public OffOnSetting GlossSuggestion { get; set; }
 
         [Required]
         [BsonElement("token")]
@@ -113,7 +113,7 @@ namespace BackendFramework.Models
             OtelConsent = true;
             AnsweredConsent = false;
             UILang = "";
-            GlossSuggestion = AutocompleteSetting.On;
+            GlossSuggestion = OffOnSetting.On;
             Token = "";
             IsAdmin = false;
             WorkedProjects = new();

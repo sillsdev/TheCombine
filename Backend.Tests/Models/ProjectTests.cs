@@ -107,7 +107,7 @@ namespace Backend.Tests.Models
                 LiftImported = true,
                 DefinitionsEnabled = true,
                 GrammaticalInfoEnabled = true,
-                AutocompleteSetting = AutocompleteSetting.On,
+                AutocompleteSetting = OffOnSetting.On,
                 SemDomWritingSystem = new("fr", "Français"),
                 VernacularWritingSystem = new("en", "English", "Calibri"),
                 AnalysisWritingSystems = new() { new("es", "Español") },

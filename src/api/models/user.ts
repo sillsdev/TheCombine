@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { AutocompleteSetting } from "./autocomplete-setting";
+import { OffOnSetting } from "./off-on-setting";
 
 /**
  *
@@ -112,10 +112,10 @@ export interface User {
   uiLang?: string | null;
   /**
    *
-   * @type {AutocompleteSetting}
+   * @type {OffOnSetting}
    * @memberof User
    */
-  glossSuggestion: AutocompleteSetting;
+  glossSuggestion: OffOnSetting;
   /**
    *
    * @type {string}
