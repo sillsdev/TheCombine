@@ -35,46 +35,40 @@ export default function AnalyticsConsent(props: ConsentProps): ReactElement {
   }
 
   return (
-    <>
-      <Drawer
-        anchor={"bottom"}
-        open
-        onClose={!props.required ? clickedAway : undefined}
-        PaperProps={{ style: { padding: 20 } }}
-      >
-        <Grid container direction={isXs ? "column" : "row"} alignItems="center">
-          <Grid xs>
-            <Typography
-              variant="h6"
-              style={{ color: themeColors.primary, fontWeight: 600 }}
-              gutterBottom
-            >
-              {t("analyticsConsent.consentModal.title")}
-            </Typography>
-            <Typography
-              variant="body1"
-              style={{ marginRight: 25 }}
-              gutterBottom
-            >
-              {t("analyticsConsent.consentModal.description")}
-            </Typography>
+    <Drawer
+      anchor={"bottom"}
+      open
+      onClose={!props.required ? clickedAway : undefined}
+      PaperProps={{ style: { padding: 20 } }}
+    >
+      <Grid container direction={isXs ? "column" : "row"} alignItems="center">
+        <Grid xs>
+          <Typography
+            variant="h6"
+            style={{ color: themeColors.primary, fontWeight: 600 }}
+            gutterBottom
+          >
+            {t("analyticsConsent.consentModal.title")}
+          </Typography>
+          <Typography variant="body1" style={{ marginRight: 25 }} gutterBottom>
+            {t("analyticsConsent.consentModal.description")}
+          </Typography>
+        </Grid>
+        <Grid item container xs="auto" spacing={1}>
+          <Grid item>
+            <ConsentButton
+              decision={acceptAnalytics}
+              text={t("analyticsConsent.consentModal.acceptAllBtn")}
+            ></ConsentButton>
           </Grid>
-          <Grid item container xs="auto" spacing={1}>
-            <Grid item>
-              <ConsentButton
-                decision={acceptAnalytics}
-                text={t("analyticsConsent.consentModal.acceptAllBtn")}
-              ></ConsentButton>
-            </Grid>
-            <Grid item>
-              <ConsentButton
-                decision={rejectAnalytics}
-                text={t("analyticsConsent.consentModal.acceptNecessaryBtn")}
-              ></ConsentButton>
-            </Grid>
+          <Grid item>
+            <ConsentButton
+              decision={rejectAnalytics}
+              text={t("analyticsConsent.consentModal.acceptNecessaryBtn")}
+            ></ConsentButton>
           </Grid>
         </Grid>
-      </Drawer>
-    </>
+      </Grid>
+    </Drawer>
   );
 }
