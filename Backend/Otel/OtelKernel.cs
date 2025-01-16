@@ -41,8 +41,16 @@ namespace BackendFramework.Otel
 
         internal static void TrackConsent(Activity activity, HttpRequest request)
         {
-            var consent = request.Headers.TryGetValue("otelConsent", out var values) ? bool.TryParse(values.FirstOrDefault(), out bool _) : true;
-            activity.SetBaggage("otelConsentBaggage", consent.ToString());
+            var consent = request.Headers.TryGetValue("otelConsent", out var valueString)
+                ? (bool.TryParse(valueString.FirstOrDefault(), out bool valueBool) && valueBool)
+                : true;
+            if (string.IsNullOrEmpty(valueString))
+            {
+                activity.SetTag("consent string is null", "!");
+
+            }
+            activity.SetTag("consent string", valueString.ToString());
+            activity.SetBaggage(OtelConsentBaggageKey, consent.ToString());
         }
 
         internal static void TrackSession(Activity activity, HttpRequest request)
