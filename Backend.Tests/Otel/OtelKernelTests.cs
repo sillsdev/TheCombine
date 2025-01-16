@@ -33,8 +33,8 @@ namespace Backend.Tests.Otel
         {
             // Arrange
             var httpContext = new DefaultHttpContext();
-            httpContext.Request.Headers[FrontendConsentKey] = "true";
-            httpContext.Request.Headers[FrontendSessionIdKey] = "123";
+            httpContext.Request.Headers[FrontendConsent] = "true";
+            httpContext.Request.Headers[FrontendSessionId] = "123";
             var activity = new Activity("testActivity").Start();
 
             // Act
@@ -42,8 +42,8 @@ namespace Backend.Tests.Otel
             TrackSession(activity, httpContext.Request);
 
             // Assert
-            Assert.That(activity.Baggage.Any(_ => _.Key == OtelConsentBaggageKey));
-            Assert.That(activity.Baggage.Any(_ => _.Key == OtelSessionBaggageKey));
+            Assert.That(activity.Baggage.Any(_ => _.Key == OtelConsentBaggage));
+            Assert.That(activity.Baggage.Any(_ => _.Key == OtelSessionBaggage));
         }
 
         [Test]
@@ -51,15 +51,15 @@ namespace Backend.Tests.Otel
         {
             // Arrange
             var activity = new Activity("testActivity").Start();
-            activity.SetBaggage(OtelConsentBaggageKey, "true");
-            activity.SetBaggage(OtelSessionBaggageKey, "test session id");
+            activity.SetBaggage(OtelConsentBaggage, "true");
+            activity.SetBaggage(OtelSessionBaggage, "test session id");
 
             // Act
             _locationEnricher.OnEnd(activity);
 
             // Assert
-            Assert.That(activity.Tags.Any(_ => _.Key == OtelConsentKey));
-            Assert.That(activity.Tags.Any(_ => _.Key == OtelSessionIdKey));
+            Assert.That(activity.Tags.Any(_ => _.Key == OtelConsent));
+            Assert.That(activity.Tags.Any(_ => _.Key == OtelSessionId));
         }
 
         [Test]
@@ -68,7 +68,7 @@ namespace Backend.Tests.Otel
             // Arrange
             _locationEnricher = new LocationEnricher(new LocationProviderMock());
             var activity = new Activity("testActivity").Start();
-            activity.SetBaggage(OtelConsentBaggageKey, "true");
+            activity.SetBaggage(OtelConsentBaggage, "true");
 
             // Act
             _locationEnricher.OnEnd(activity);
