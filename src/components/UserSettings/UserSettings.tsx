@@ -60,6 +60,7 @@ export function UserSettings(props: {
   const [name, setName] = useState(props.user.name);
   const [phone, setPhone] = useState(props.user.phone);
   const [email, setEmail] = useState(props.user.email);
+  const [displayConsent, setDisplayConsent] = useState(false);
   const [otelConsent, setOtelConsent] = useState(props.user.otelConsent);
   const [uiLang, setUiLang] = useState(props.user.uiLang ?? "");
   const [glossSuggestion, setGlossSuggestion] = useState(
@@ -75,8 +76,6 @@ export function UserSettings(props: {
     const unchanged = unicodeEmail === props.user.email.toLowerCase();
     return unchanged || !(await isEmailTaken(unicodeEmail));
   }
-
-  const [displayConsent, setDisplayConsent] = useState(false);
 
   const handleConsentChange = (consentVal?: boolean): void => {
     setOtelConsent(consentVal ?? otelConsent);
@@ -296,6 +295,9 @@ export function UserSettings(props: {
                         : "userSettings.analyticsConsent.consentNo"
                     )}
                   </Typography>
+                </Grid>
+
+                <Grid item>
                   <Button
                     data-testid={UserSettingsIds.ButtonChangeConsent}
                     id={UserSettingsIds.ButtonChangeConsent}
@@ -304,13 +306,13 @@ export function UserSettings(props: {
                   >
                     {t("userSettings.analyticsConsent.button")}
                   </Button>
-                  {displayConsent ? (
-                    <AnalyticsConsent
-                      onChangeConsent={handleConsentChange}
-                      required={false}
-                    ></AnalyticsConsent>
-                  ) : null}
                 </Grid>
+                {displayConsent ? (
+                  <AnalyticsConsent
+                    onChangeConsent={handleConsentChange}
+                    required={false}
+                  />
+                ) : null}
               </Grid>
 
               <Grid item container justifyContent="flex-end">

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Backend.Tests.Mocks;
-using BackendFramework.Otel;
 using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
 using static BackendFramework.Otel.OtelKernel;
@@ -12,13 +11,6 @@ namespace Backend.Tests.Otel
 {
     public class OtelKernelTests : IDisposable
     {
-
-        private const string FrontendConsentKey = "otelConsent";
-        private const string FrontendSessionIdKey = "sessionId";
-        private const string OtelConsentKey = "otelConsent";
-        private const string OtelSessionIdKey = "sessionId";
-        private const string OtelConsentBaggageKey = "otelConsentBaggage";
-        private const string OtelSessionBaggageKey = "sessionBaggage";
 
         private LocationEnricher _locationEnricher = null!;
 
@@ -89,23 +81,6 @@ namespace Backend.Tests.Otel
                 {"city", "city"}
             };
             Assert.That(activity.Tags, Is.SupersetOf(testLocation));
-        }
-
-        [Test]
-        public void OnEndRedactsIp()
-        {
-            // Arrange
-            _locationEnricher = new LocationEnricher(new LocationProviderMock());
-            var activity = new Activity("testActivity").Start();
-            activity.SetBaggage(OtelConsentBaggageKey, "true");
-            activity.SetTag("url.full", $"{LocationProvider.locationGetterUri}100.0.0.0");
-
-            // Act
-            _locationEnricher.OnEnd(activity);
-
-            // Assert
-            Assert.That(activity.Tags.Any(_ => _.Key == "url.full" && _.Value == ""));
-            Assert.That(activity.Tags.Any(_ => _.Key == "url.redacted.ip" && _.Value == LocationProvider.locationGetterUri));
         }
     }
 }

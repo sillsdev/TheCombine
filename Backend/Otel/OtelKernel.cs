@@ -17,6 +17,12 @@ namespace BackendFramework.Otel
     public static class OtelKernel
     {
         public const string SourceName = "Backend-Otel";
+        public const string FrontendConsentKey = "otelConsent";
+        public const string FrontendSessionIdKey = "sessionId";
+        public const string OtelConsentKey = "otelConsent";
+        public const string OtelSessionIdKey = "sessionId";
+        public const string OtelConsentBaggageKey = "otelConsentBaggage";
+        public const string OtelSessionBaggageKey = "sessionBaggage";
 
         public static void AddOpenTelemetryInstrumentation(this IServiceCollection services)
         {
@@ -41,10 +47,10 @@ namespace BackendFramework.Otel
 
         internal static void TrackSession(Activity activity, HttpRequest request)
         {
-            var sessionId = request.Headers.TryGetValue("sessionId", out var values) ? values.FirstOrDefault() : null;
+            var sessionId = request.Headers.TryGetValue(FrontendSessionIdKey, out var values) ? values.FirstOrDefault() : null;
             if (sessionId is not null)
             {
-                activity.SetBaggage("sessionBaggage", sessionId);
+                activity.SetBaggage(OtelSessionBaggageKey, sessionId);
             }
         }
 
@@ -105,21 +111,20 @@ namespace BackendFramework.Otel
         {
             public override async void OnEnd(Activity data)
             {
-                var consentString = data?.GetBaggageItem("otelConsentBaggage");
-                data?.AddTag("otelConsent", consentString);
-                var consent = bool.TryParse(consentString, out bool value) ? value : false;
-                if (consent)
+                var consentString = data.GetBaggageItem(OtelConsentBaggageKey);
+                data.AddTag(OtelConsentKey, consentString);
+                if (bool.TryParse(consentString, out bool consent) && consent)
                 {
-                    var uriPath = (string?)data?.GetTagItem("url.full");
+                    var uriPath = (string?)data.GetTagItem("url.full");
                     var locationUri = LocationProvider.locationGetterUri;
                     if (uriPath is null || !uriPath.Contains(locationUri))
                     {
                         var location = await locationProvider.GetLocation();
-                        data?.AddTag("country", location?.Country);
-                        data?.AddTag("regionName", location?.RegionName);
-                        data?.AddTag("city", location?.City);
+                        data.AddTag("country", location?.Country);
+                        data.AddTag("regionName", location?.RegionName);
+                        data.AddTag("city", location?.City);
                     }
-                    data?.SetTag("sessionId", data?.GetBaggageItem("sessionBaggage"));
+                    data.SetTag(OtelSessionIdKey, data?.GetBaggageItem("sessionBaggage"));
                 }
             }
         }
