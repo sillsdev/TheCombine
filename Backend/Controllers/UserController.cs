@@ -154,9 +154,9 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Returns <see cref="User"/> with the specified email address. </summary>
-        [HttpGet("getemail/{email}", Name = "GetUserByEmail")]
+        [HttpPut("getbyemail", Name = "GetUserByEmail")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
-        public async Task<IActionResult> GetUserByEmail(string email)
+        public async Task<IActionResult> GetUserByEmail([FromBody, BindRequired] string email)
         {
             if (!_permissionService.IsCurrentUserAuthorized(HttpContext))
             {
@@ -200,9 +200,9 @@ namespace BackendFramework.Controllers
 
         /// <summary> Checks whether specified email address is taken or empty. </summary>
         [AllowAnonymous]
-        [HttpGet("isemailtaken/{email}", Name = "IsEmailUnavailable")]
+        [HttpPut("isemailtaken", Name = "IsEmailUnavailable")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        public async Task<IActionResult> IsEmailUnavailable(string email)
+        public async Task<IActionResult> IsEmailUnavailable([FromBody, BindRequired] string email)
         {
             var isUnavailable = string.IsNullOrWhiteSpace(email) || await _userRepo.GetUserByEmail(email) is not null;
             return Ok(isUnavailable);

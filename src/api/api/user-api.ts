@@ -275,20 +275,17 @@ export const UserApiAxiosParamCreator = function (
     },
     /**
      *
-     * @param {string} email
+     * @param {string} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getUserByEmail: async (
-      email: string,
+      body: string,
       options: any = {}
     ): Promise<RequestArgs> => {
-      // verify required parameter 'email' is not null or undefined
-      assertParamExists("getUserByEmail", "email", email);
-      const localVarPath = `/v1/users/getemail/{email}`.replace(
-        `{${"email"}}`,
-        encodeURIComponent(String(email))
-      );
+      // verify required parameter 'body' is not null or undefined
+      assertParamExists("getUserByEmail", "body", body);
+      const localVarPath = `/v1/users/getbyemail`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -297,12 +294,14 @@ export const UserApiAxiosParamCreator = function (
       }
 
       const localVarRequestOptions = {
-        method: "GET",
+        method: "PUT",
         ...baseOptions,
         ...options,
       };
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
       let headersFromBaseOptions =
@@ -312,6 +311,11 @@ export const UserApiAxiosParamCreator = function (
         ...headersFromBaseOptions,
         ...options.headers,
       };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        body,
+        localVarRequestOptions,
+        configuration
+      );
 
       return {
         url: toPathString(localVarUrlObj),
@@ -320,20 +324,17 @@ export const UserApiAxiosParamCreator = function (
     },
     /**
      *
-     * @param {string} email
+     * @param {string} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     isEmailUnavailable: async (
-      email: string,
+      body: string,
       options: any = {}
     ): Promise<RequestArgs> => {
-      // verify required parameter 'email' is not null or undefined
-      assertParamExists("isEmailUnavailable", "email", email);
-      const localVarPath = `/v1/users/isemailtaken/{email}`.replace(
-        `{${"email"}}`,
-        encodeURIComponent(String(email))
-      );
+      // verify required parameter 'body' is not null or undefined
+      assertParamExists("isEmailUnavailable", "body", body);
+      const localVarPath = `/v1/users/isemailtaken`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -342,12 +343,14 @@ export const UserApiAxiosParamCreator = function (
       }
 
       const localVarRequestOptions = {
-        method: "GET",
+        method: "PUT",
         ...baseOptions,
         ...options,
       };
       const localVarHeaderParameter = {} as any;
       const localVarQueryParameter = {} as any;
+
+      localVarHeaderParameter["Content-Type"] = "application/json";
 
       setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
       let headersFromBaseOptions =
@@ -357,6 +360,11 @@ export const UserApiAxiosParamCreator = function (
         ...headersFromBaseOptions,
         ...options.headers,
       };
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        body,
+        localVarRequestOptions,
+        configuration
+      );
 
       return {
         url: toPathString(localVarUrlObj),
@@ -774,18 +782,18 @@ export const UserApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {string} email
+     * @param {string} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getUserByEmail(
-      email: string,
+      body: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getUserByEmail(
-        email,
+        body,
         options
       );
       return createRequestFunction(
@@ -797,18 +805,18 @@ export const UserApiFp = function (configuration?: Configuration) {
     },
     /**
      *
-     * @param {string} email
+     * @param {string} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async isEmailUnavailable(
-      email: string,
+      body: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.isEmailUnavailable(email, options);
+        await localVarAxiosParamCreator.isEmailUnavailable(body, options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -1020,24 +1028,24 @@ export const UserApiFactory = function (
     },
     /**
      *
-     * @param {string} email
+     * @param {string} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getUserByEmail(email: string, options?: any): AxiosPromise<User> {
+    getUserByEmail(body: string, options?: any): AxiosPromise<User> {
       return localVarFp
-        .getUserByEmail(email, options)
+        .getUserByEmail(body, options)
         .then((request) => request(axios, basePath));
     },
     /**
      *
-     * @param {string} email
+     * @param {string} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    isEmailUnavailable(email: string, options?: any): AxiosPromise<boolean> {
+    isEmailUnavailable(body: string, options?: any): AxiosPromise<boolean> {
       return localVarFp
-        .isEmailUnavailable(email, options)
+        .isEmailUnavailable(body, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1186,7 +1194,7 @@ export interface UserApiGetUserByEmailRequest {
    * @type {string}
    * @memberof UserApiGetUserByEmail
    */
-  readonly email: string;
+  readonly body: string;
 }
 
 /**
@@ -1200,7 +1208,7 @@ export interface UserApiIsEmailUnavailableRequest {
    * @type {string}
    * @memberof UserApiIsEmailUnavailable
    */
-  readonly email: string;
+  readonly body: string;
 }
 
 /**
@@ -1372,7 +1380,7 @@ export class UserApi extends BaseAPI {
     options?: any
   ) {
     return UserApiFp(this.configuration)
-      .getUserByEmail(requestParameters.email, options)
+      .getUserByEmail(requestParameters.body, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -1388,7 +1396,7 @@ export class UserApi extends BaseAPI {
     options?: any
   ) {
     return UserApiFp(this.configuration)
-      .isEmailUnavailable(requestParameters.email, options)
+      .isEmailUnavailable(requestParameters.body, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
