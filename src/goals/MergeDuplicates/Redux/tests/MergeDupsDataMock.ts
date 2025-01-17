@@ -1,5 +1,3 @@
-import { type PreloadedState } from "@reduxjs/toolkit";
-
 import { type Definition, type SemanticDomain, type Word } from "api/models";
 import {
   convertSenseToMergeTreeSense,
@@ -98,7 +96,7 @@ export type ExpectedScenarioResult = {
 };
 
 export type GetMergeWordsScenario = {
-  initialState: () => PreloadedState<RootState>;
+  initialState: () => RootState;
   expectedResult: ExpectedScenarioResult[];
 };
 

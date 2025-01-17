@@ -11,7 +11,7 @@ import goalsReducer from "goals/Redux/GoalReducer";
 import { type StoreState } from "rootRedux/types";
 import analyticsReducer from "types/Redux/analytics";
 
-export const rootReducer: Reducer<StoreState> = combineReducers<StoreState>({
+export const rootReducer: Reducer<StoreState> = combineReducers({
   //login and signup
   loginState: loginReducer,
 
