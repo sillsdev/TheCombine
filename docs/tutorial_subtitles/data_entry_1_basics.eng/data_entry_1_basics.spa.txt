@@ -1,0 +1,43 @@
+The Combine está diseñado para Rapid Word Collection, un método de recopilación de palabras por dominio semántico.
+En este video veremos cómo hacer Entrada de datos en The Combine para recoger palabras.
+Vamos a thecombine.app e iniciemos sesión.
+Al hacer clic en un proyecto, aparece el árbol de dominios semánticos.
+La selección del dominio es el primer paso en la Entrada de datos.
+Si está haciendo una tarea de proyecto diferente (por ejemplo, en la limpieza de datos o en la configuración del proyecto) puede volver aquí haciendo clic en el botón “Entrada de datos” (“Data Entry”) en la barra superior.
+Hay otro vídeo tutorial sobre cómo navegar por el árbol de dominios semánticos o cambiar su idioma.
+Para este vídeo, vamos a seleccionar el dominio “2: Persona” (“2: Person”) y empezar a recopilar palabras!
+Hay 4 cosas que pueden incluirse en una palabra nueva.
+En primer lugar, la forma vernácula de la palabra en el idioma vernáculo del proyecto.
+En segundo lugar, una glosa de la palabra en el idioma de análisis principal del proyecto.
+(Puede cambiar el idioma de análisis de un proyecto en los ajustes del proyecto.)
+En tercer lugar, una nota sobre la palabra.
+En cuarto lugar, grabaciones de audio de la pronunciación de la palabra.
+Tras añadir el contenido de la nueva palabra, pulse la tecla Enter.
+¿Ve cómo aparece en la tabla la palabra que acabamos de introducir?
+Si pasamos el cursor por encima del icono de nota de esa palabra, aparece el texto de la nota.
+¡Añadamos otra palabra!
+Pues la forma vernácula es necesaria para una nueva entrada, pero la glosa, la nota y el audio son opcionales.
+En cualquier momento puede modificar las palabras introducidas.
+Añadamos una glosa y una nota a la segunda entrada.
+Cambiemos la forma vernácula y eliminemos la nota de la primera entrada.
+¿Qué podemos hacer con las grabaciones de audio?
+Si pasamos el cursor por encima del botón de reproducción (el icono del triángulo verde), aparece un texto que describe las opciones disponibles.
+Haga clic en el botón de reproducción para escuchar.
+Mantenga pulsada la tecla Mayús y haga clic para eliminarla.
+Aparecerá un cuadro de diálogo para confirmar si desea eliminar la grabación.
+(Si usa una pantalla táctil, puede tocar el botón de reproducción para reproducir o mantener pulsado el botón para abrir un menú.)
+Cuando haya terminado de introducir palabras, haga clic en el botón “Salir” (“Exit”) para volver al árbol de dominios semánticos.
+(No se preocupe—las palabras introducidas ya se guardan aunque cierre la ventana sin pulsar el botón de salida.)
+Si seleccionamos el mismo dominio para introducir más palabras, ¿ve cómo las palabras que hemos introducido previamente en este dominio aparecen en un panel al lado?
+Si trabaja en una ventana estrecha del navegador, el panel de palabras introducidas previamente no aparecerá automáticamente.
+Puede activarlo haciendo clic en el icono del caret lateral en la parte inferior del cuadro de entrada de datos.
+¡Introduzcamos más palabras!
+Si quiere eliminar una de las palabras introducidas, haga clic en el icono de eliminación al final de su fila.
+Advertencia: ¡esto eliminará permanentemente la palabra y todo su contenido!
+Si quiere empezar de nuevo en una palabra que está agregando, haga clic en el icono de eliminación aquí en la fila inferior.
+Reiniciará el campo vernáculo, el campo de glosas, la nota y las grabaciones de audio para la nueva palabra.
+¡Eso cubre cómo recopilar palabras con la Entrada de datos en The Combine!
+Cuando se recopilan palabras por dominio semántico, a menudo se añade la misma palabra a múltiples dominios, resultando en muchas palabras duplicadas.
+The Combine tiene maneras de ayudar a evitar o manejar ese problema.
+En el próximo vídeo de Entrada de datos, veremos cómo introducir varias palabras con la misma forma vernácula.
+¡Que tenga un día maravilloso!

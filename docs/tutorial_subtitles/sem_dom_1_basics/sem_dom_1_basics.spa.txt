@@ -1,0 +1,46 @@
+The Combine está diseñado para Rapid Word Collection, un método de recopilación de palabras por dominio semántico.
+En este vídeo, veremos cómo seleccionar un dominio semántico en The Combine para empezar a recopilar palabras en ese dominio.
+Al final, veremos cómo cambiar el lenguaje de los dominios semánticos.
+Vamos a thecombine.app e iniciemos sesión.
+Al hacer clic en un proyecto, aparece el árbol de dominios semánticos.
+Si está haciendo una tarea de proyecto diferente (por ejemplo, en la limpieza de datos o en la configuración del proyecto) puede volver al árbol de dominios semánticos por hacer clic en el botón “Entrada de datos” (“Data Entry”) en la barra superior.
+Pues la manera más fácil de llegar a un dominio es usando el número id del dominio.
+Si quiero recoger palabras para el dominio 6.5.1.1, “Casa” (“House”), puedo hacer clic en el campo que dice “Buscar un dominio” (“Find a domain”) y escriba 6.5.1.1
+De hecho, ni siquiera necesito escribir los puntos.
+Si escribo 6511, los períodos se añaden automáticamente.
+Ahora presione Enter, y el dominio aparece.
+Sí, ¡este es el dominio que queremos!
+Haga clic en la ficha del dominio.
+El árbol de dominios semánticos desaparece y aparece la interfaz para la entrada de datos.
+Discutiremos esta herramienta de entrada de datos en otro vídeo.
+Cuando haya terminado de recoger palabras en este dominio, haga clic en el botón “Salir” (“Exit”) para volver al árbol de dominios semánticos.
+En lugar de escribir un número de dominio, también puedes navegar por el árbol por hacer clic en las fichas.
+Por ejemplo, puedo hacer clic en la ficha “6.5.1.2 Tipos de Casas” (“6.5.1.2 Types of Houses”) que está al lado del dominio actual para moverme a ese dominio hermano.
+O puedo hacer clic en la ficha “6.5.1 Edificio” (“6.5.1 Building”) para mover al dominio padre.
+También puede usar las flechas de dirección izquierda y derecha para navegar entre hermanos, la flecha arriba para ir al dominio padre o la flecha abajo para ir al primer dominio hijo.
+Para volver a la parte superior del árbol de dominios, haga clic en el icono de doble caret en la esquina superior.
+Ahora ya sabe cómo seleccionar un dominio semántico para la recopilación de datos.
+Puede escribir el número id del dominio o navegar por el árbol por hacer clic en las fichas de dominios o usar las flechas de dirección.
+¿Y si necesita que los dominios semánticos estén en un idioma diferente?
+Por defecto, el idioma de los dominios semánticos será el mismo que el idioma de la interfaz de usuario.
+El idioma de la interfaz de usuario coincidirá automáticamente con el idioma de su navegador, si ese idioma está disponible para The Combine.
+Para elegir manualmente el idioma de la interfaz de usuario, haga clic en su nombre de usuario o en el avatar de usuario en la barra superior.
+Se abre el menú de usuario.
+Haga clic en “Configuración de usuario” (“User Settings”).
+En “Idioma de la interfaz de usuario” (“User-interface language”), hay un menú desplegable para que usted seleccione su idioma preferido.
+Después de haber hecho su selección, haga clic en el botón “Guardar” (“Save”).
+¡Ahora mi interfaz de usuario está en español!
+Puedo volver al árbol de dominios semánticos por hacer clic en el botón “Entrada de datos” en la barra superior.
+¡Éxito!
+Los nombres de dominios están todos en español.
+De hecho, hay más idiomas disponibles para los dominios semánticos que para la interfaz de usuario.
+Permítanme volver al inglés para continuar con este tutorial.
+(Tenga en cuenta que si utiliza el idioma del navegador para cambiar el idioma de la interfaz de usuario, es posible que tenga que actualizar la página para que el cambio surta efecto.)
+Ahora que volvemos al inglés, hagamos clic en el icono del engranaje en la barra superior para abrir la configuración del proyecto.
+Aquí en la pestaña “Idiomas” (“Languages”), hay un menú desplegable en “Dominios semánticos” (“Semantic Domains”).
+Si un administrador del proyecto selecciona uno de estos idiomas, como Hindi, anulará el idioma de los dominios semánticos para todos los usuarios del proyecto.
+Ahora volvamos a “Entrada de datos” (“Data Entry”).
+Vea cómo los dominios semánticos están ahora en hindi, aunque la interfaz de usuario sigue estando en inglés.
+¡Éxito!
+Espero que este video le ayude a comenzar su colección de palabras.
+¡Que tenga un día maravilloso!
