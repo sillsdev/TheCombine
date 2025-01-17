@@ -29,7 +29,7 @@ namespace Backend.Tests.Otel
         }
 
         [Test]
-        public void BuildersSetBaggageFromHeader()
+        public void BuildersSetBaggageFromHeaderAllAnalytics()
         {
             // Arrange
             var httpContext = new DefaultHttpContext();
@@ -44,6 +44,23 @@ namespace Backend.Tests.Otel
             // Assert
             Assert.That(activity.Baggage.Any(_ => _.Key == OtelConsentBaggage));
             Assert.That(activity.Baggage.Any(_ => _.Key == OtelSessionBaggage));
+        }
+
+        [Test]
+        public void BuildersSetBaggageFromHeaderNecessaryAnalytics()
+        {
+            // Arrange
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers[FrontendConsent] = "false";
+            var activity = new Activity("testActivity").Start();
+
+            // Act
+            TrackConsent(activity, httpContext.Request);
+            TrackSession(activity, httpContext.Request);
+
+            // Assert
+            Assert.That(activity.Baggage.Any(_ => _.Key == OtelConsentBaggage));
+            Assert.That(!activity.Baggage.Any(_ => _.Key == OtelSessionBaggage));
         }
 
         [Test]
@@ -63,7 +80,7 @@ namespace Backend.Tests.Otel
         }
 
         [Test]
-        public void OnEndSetsLocationTags()
+        public void OnEndSetsLocationTagsAllAnalytics()
         {
             // Arrange
             _locationEnricher = new LocationEnricher(new LocationProviderMock());
@@ -81,6 +98,23 @@ namespace Backend.Tests.Otel
                 {"city", "city"}
             };
             Assert.That(activity.Tags, Is.SupersetOf(testLocation));
+        }
+
+        [Test]
+        public void OnEndSetsLocationTagsNecessaryAnalytics()
+        {
+            // Arrange
+            _locationEnricher = new LocationEnricher(new LocationProviderMock());
+            var activity = new Activity("testActivity").Start();
+            activity.SetBaggage(OtelConsentBaggage, "false");
+
+            // Act
+            _locationEnricher.OnEnd(activity);
+
+            // Assert
+            Assert.That(!activity.Tags.Any(_ => _.Key == "country"));
+            Assert.That(!activity.Tags.Any(_ => _.Key == "regionName"));
+            Assert.That(!activity.Tags.Any(_ => _.Key == "city"));
         }
     }
 }
