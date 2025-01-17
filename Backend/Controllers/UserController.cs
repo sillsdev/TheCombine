@@ -210,7 +210,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Updates <see cref="User"/> with specified id. </summary>
         /// <returns> Id of updated user. </returns>
-        [HttpPut("{userId}", Name = "UpdateUser")]
+        [HttpPut("updateuser/{userId}", Name = "UpdateUser")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> UpdateUser(string userId, [FromBody, BindRequired] User user)
         {

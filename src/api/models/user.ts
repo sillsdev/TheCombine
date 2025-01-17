@@ -94,6 +94,18 @@ export interface User {
   username: string;
   /**
    *
+   * @type {boolean}
+   * @memberof User
+   */
+  analyticsOn?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof User
+   */
+  answeredConsent?: boolean;
+  /**
+   *
    * @type {string}
    * @memberof User
    */
