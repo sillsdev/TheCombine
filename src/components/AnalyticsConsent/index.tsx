@@ -20,12 +20,12 @@ export default function AnalyticsConsent(props: ConsentProps): ReactElement {
   const isXs = useMediaQuery<Theme>((th) => th.breakpoints.only("xs"));
 
   function ConsentButton(props: {
-    decision: () => void;
+    onClick: () => void;
     text: string;
   }): ReactElement {
     return (
       <Button
-        onClick={props.decision}
+        onClick={props.onClick}
         style={{ height: 60, width: 155 }}
         variant="contained"
       >
@@ -42,7 +42,7 @@ export default function AnalyticsConsent(props: ConsentProps): ReactElement {
       PaperProps={{ style: { padding: 20 } }}
     >
       <Grid container direction={isXs ? "column" : "row"} alignItems="center">
-        <Grid xs>
+        <Grid item xs>
           <Typography
             variant="h6"
             style={{ color: themeColors.primary, fontWeight: 600 }}
@@ -57,15 +57,15 @@ export default function AnalyticsConsent(props: ConsentProps): ReactElement {
         <Grid item container xs="auto" spacing={1}>
           <Grid item>
             <ConsentButton
-              decision={acceptAnalytics}
+              onClick={acceptAnalytics}
               text={t("analyticsConsent.consentModal.acceptAllBtn")}
-            ></ConsentButton>
+            />
           </Grid>
           <Grid item>
             <ConsentButton
-              decision={rejectAnalytics}
+              onClick={rejectAnalytics}
               text={t("analyticsConsent.consentModal.acceptNecessaryBtn")}
-            ></ConsentButton>
+            />
           </Grid>
         </Grid>
       </Grid>

@@ -54,9 +54,7 @@ export default function AppWithBar(): ReactElement {
     getCurrentUser()?.answeredConsent
   );
 
-  async function handleConsentChange(
-    otelConsent: boolean | undefined
-  ): Promise<void> {
+  async function handleConsentChange(otelConsent?: boolean): Promise<void> {
     await updateUser({
       ...getCurrentUser()!,
       otelConsent,
@@ -100,7 +98,7 @@ export default function AppWithBar(): ReactElement {
       <FontContext.Provider value={projFonts}>
         <ThemeProvider theme={overrideThemeFont}>
           <CssBaseline />
-          {answeredConsent ? null : (
+          {!answeredConsent && (
             <AnalyticsConsent onChangeConsent={handleConsentChange} required />
           )}
           <Routes>

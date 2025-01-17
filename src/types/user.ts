@@ -15,7 +15,6 @@ export function newUser(name = "", username = "", password = ""): User {
     glossSuggestion: OffOnSetting.On,
     token: "",
     isAdmin: false,
-    answeredConsent: false,
   };
 }
 

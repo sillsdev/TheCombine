@@ -132,7 +132,7 @@ namespace BackendFramework.Otel
                         data.AddTag("regionName", location?.RegionName);
                         data.AddTag("city", location?.City);
                     }
-                    data.SetTag(OtelSessionId, data?.GetBaggageItem("sessionBaggage"));
+                    data.AddTag(OtelSessionId, data?.GetBaggageItem("sessionBaggage"));
                 }
             }
         }

@@ -307,12 +307,12 @@ export function UserSettings(props: {
                     {t("userSettings.analyticsConsent.button")}
                   </Button>
                 </Grid>
-                {displayConsent ? (
+                {displayConsent && (
                   <AnalyticsConsent
                     onChangeConsent={handleConsentChange}
                     required={false}
                   />
-                ) : null}
+                )}
               </Grid>
 
               <Grid item container justifyContent="flex-end">
