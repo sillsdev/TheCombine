@@ -17,8 +17,8 @@ namespace BackendFramework.Otel
     public static class OtelKernel
     {
         public const string SourceName = "Backend-Otel";
-        public const string FrontendConsent = "otelConsent";
-        public const string FrontendSessionId = "sessionId";
+        public const string AnalyticsOnHeader = "analyticsOn";
+        public const string SessionIdHeader = "sessionId";
         public const string OtelConsent = "otelConsent";
         public const string OtelSessionId = "sessionId";
         public const string OtelConsentBaggage = "otelConsentBaggage";
@@ -41,14 +41,14 @@ namespace BackendFramework.Otel
 
         internal static void TrackConsent(Activity activity, HttpRequest request)
         {
-            request.Headers.TryGetValue("otelConsent", out var consentString);
+            request.Headers.TryGetValue(AnalyticsOnHeader, out var consentString);
             var consent = bool.Parse(consentString!);
             activity.SetBaggage(OtelConsentBaggage, consent.ToString());
         }
 
         internal static void TrackSession(Activity activity, HttpRequest request)
         {
-            var sessionId = request.Headers.TryGetValue(FrontendSessionId, out var values) ? values.FirstOrDefault() : null;
+            var sessionId = request.Headers.TryGetValue(SessionIdHeader, out var values) ? values.FirstOrDefault() : null;
             if (sessionId is not null)
             {
                 activity.SetBaggage(OtelSessionBaggage, sessionId);

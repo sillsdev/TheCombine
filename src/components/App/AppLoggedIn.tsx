@@ -54,10 +54,10 @@ export default function AppWithBar(): ReactElement {
     getCurrentUser()?.answeredConsent
   );
 
-  async function handleConsentChange(otelConsent?: boolean): Promise<void> {
+  async function handleConsentChange(analyticsOn?: boolean): Promise<void> {
     await updateUser({
       ...getCurrentUser()!,
-      otelConsent,
+      analyticsOn,
       answeredConsent: true,
     });
     setAnsweredConsent(true);

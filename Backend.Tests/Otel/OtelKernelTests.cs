@@ -33,8 +33,8 @@ namespace Backend.Tests.Otel
         {
             // Arrange
             var httpContext = new DefaultHttpContext();
-            httpContext.Request.Headers[FrontendConsent] = "true";
-            httpContext.Request.Headers[FrontendSessionId] = "123";
+            httpContext.Request.Headers[AnalyticsOnHeader] = "true";
+            httpContext.Request.Headers[SessionIdHeader] = "123";
             var activity = new Activity("testActivity").Start();
 
             // Act
@@ -51,7 +51,7 @@ namespace Backend.Tests.Otel
         {
             // Arrange
             var httpContext = new DefaultHttpContext();
-            httpContext.Request.Headers[FrontendConsent] = "false";
+            httpContext.Request.Headers[AnalyticsOnHeader] = "false";
             var activity = new Activity("testActivity").Start();
 
             // Act

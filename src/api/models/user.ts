@@ -97,7 +97,7 @@ export interface User {
    * @type {boolean}
    * @memberof User
    */
-  otelConsent?: boolean;
+  analyticsOn?: boolean;
   /**
    *
    * @type {boolean}

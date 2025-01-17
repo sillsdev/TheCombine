@@ -61,7 +61,7 @@ export function UserSettings(props: {
   const [phone, setPhone] = useState(props.user.phone);
   const [email, setEmail] = useState(props.user.email);
   const [displayConsent, setDisplayConsent] = useState(false);
-  const [otelConsent, setOtelConsent] = useState(props.user.otelConsent);
+  const [analyticsOn, setAnalyticsOn] = useState(props.user.analyticsOn);
   const [uiLang, setUiLang] = useState(props.user.uiLang ?? "");
   const [glossSuggestion, setGlossSuggestion] = useState(
     props.user.glossSuggestion
@@ -78,7 +78,7 @@ export function UserSettings(props: {
   }
 
   const handleConsentChange = (consentVal?: boolean): void => {
-    setOtelConsent(consentVal ?? otelConsent);
+    setAnalyticsOn(consentVal ?? analyticsOn);
     setDisplayConsent(false);
   };
 
@@ -86,7 +86,7 @@ export function UserSettings(props: {
     name === props.user.name &&
     phone === props.user.phone &&
     punycode.toUnicode(email) === props.user.email &&
-    otelConsent === props.user.otelConsent &&
+    analyticsOn === props.user.analyticsOn &&
     uiLang === (props.user.uiLang ?? "") &&
     glossSuggestion === props.user.glossSuggestion;
 
@@ -98,7 +98,7 @@ export function UserSettings(props: {
         name,
         phone,
         email: punycode.toUnicode(email),
-        otelConsent,
+        analyticsOn,
         uiLang,
         glossSuggestion,
         hasAvatar: !!avatar,
@@ -290,7 +290,7 @@ export function UserSettings(props: {
                 <Grid item>
                   <Typography>
                     {t(
-                      otelConsent
+                      analyticsOn
                         ? "userSettings.analyticsConsent.consentYes"
                         : "userSettings.analyticsConsent.consentNo"
                     )}

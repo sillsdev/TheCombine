@@ -70,8 +70,8 @@ namespace BackendFramework.Models
         /// Is true if user accepts analytics, false otherwise.
         /// User can update consent anytime.
         /// </summary>
-        [BsonElement("otelConsent")]
-        public bool OtelConsent { get; set; }
+        [BsonElement("analyticsOn")]
+        public bool AnalyticsOn { get; set; }
 
         /// <summary>
         /// Is set permanently to true once user first accepts or rejects analytics upon login.
@@ -110,7 +110,7 @@ namespace BackendFramework.Models
             Agreement = false;
             Password = "";
             Username = "";
-            OtelConsent = true;
+            AnalyticsOn = true;
             AnsweredConsent = false;
             UILang = "";
             GlossSuggestion = OffOnSetting.On;
@@ -134,7 +134,7 @@ namespace BackendFramework.Models
                 Agreement = Agreement,
                 Password = Password,
                 Username = Username,
-                OtelConsent = OtelConsent,
+                AnalyticsOn = AnalyticsOn,
                 AnsweredConsent = AnsweredConsent,
                 UILang = UILang,
                 GlossSuggestion = GlossSuggestion,
@@ -158,7 +158,7 @@ namespace BackendFramework.Models
                 other.Agreement == Agreement &&
                 other.Password.Equals(Password, StringComparison.Ordinal) &&
                 other.Username.Equals(Username, StringComparison.Ordinal) &&
-                other.OtelConsent == OtelConsent &&
+                other.AnalyticsOn == AnalyticsOn &&
                 other.AnsweredConsent == AnsweredConsent &&
                 other.UILang.Equals(UILang, StringComparison.Ordinal) &&
                 other.GlossSuggestion.Equals(GlossSuggestion) &&
@@ -197,7 +197,7 @@ namespace BackendFramework.Models
             hash.Add(Agreement);
             hash.Add(Password);
             hash.Add(Username);
-            hash.Add(OtelConsent);
+            hash.Add(AnalyticsOn);
             hash.Add(AnsweredConsent);
             hash.Add(UILang);
             hash.Add(GlossSuggestion);
