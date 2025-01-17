@@ -499,7 +499,7 @@ export async function createSpeaker(
   projectId?: string
 ): Promise<string> {
   projectId = projectId || LocalStorage.getProjectId();
-  const params = { name, projectId };
+  const params = { body: name, projectId };
   return (await speakerApi.createSpeaker(params, defaultOptions())).data;
 }
 
@@ -530,7 +530,7 @@ export async function updateSpeakerName(
   projectId?: string
 ): Promise<string> {
   projectId = projectId || LocalStorage.getProjectId();
-  const params = { name, projectId, speakerId };
+  const params = { body: name, projectId, speakerId };
   return (await speakerApi.updateSpeakerName(params, defaultOptions())).data;
 }
 
@@ -655,7 +655,7 @@ export async function addUser(user: User): Promise<User> {
 
 /** Returns true if the email address is in use already. */
 export async function isEmailTaken(email: string): Promise<boolean> {
-  return (await userApi.isEmailUnavailable({ email })).data;
+  return (await userApi.isEmailUnavailable({ body: email })).data;
 }
 
 export async function authenticateUser(
@@ -683,7 +683,7 @@ export async function getUser(userId: string): Promise<User> {
 }
 
 export async function getUserByEmail(email: string): Promise<User> {
-  return (await userApi.getUserByEmail({ email }, defaultOptions())).data;
+  return (await userApi.getUserByEmail({ body: email }, defaultOptions())).data;
 }
 
 export async function updateUser(user: User): Promise<User> {

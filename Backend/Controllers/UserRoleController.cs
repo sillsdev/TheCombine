@@ -366,7 +366,7 @@ namespace BackendFramework.Controllers
             if (newResult != ResultOfUpdate.Updated)
             {
                 return StatusCode(StatusCodes.Status304NotModified, newRoleId);
-            };
+            }
 
             // Change the old owner to a project admin
             oldUserRole.Role = Role.Administrator;
