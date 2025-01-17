@@ -340,7 +340,7 @@ namespace BackendFramework.Services
                 if (src is null || !File.Exists(src))
                 {
                     continue;
-                };
+                }
 
                 var safeName = Sanitization.MakeFriendlyForPath(speaker.Name);
                 var fileName = safeName == "" ? Path.GetFileNameWithoutExtension(src) : safeName;
@@ -549,7 +549,7 @@ namespace BackendFramework.Services
                 if (!File.Exists(src))
                 {
                     continue;
-                };
+                }
 
                 var dest = Path.Combine(path, audio.FileName);
                 if (Path.GetExtension(dest).Equals(".webm", StringComparison.OrdinalIgnoreCase))
@@ -865,10 +865,16 @@ namespace BackendFramework.Services
                 // Only add audio if the files exist
                 if (Directory.Exists(extractedAudioDir))
                 {
-                    foreach (var pro in entry.Pronunciations)
+                    foreach (var pronunciation in entry.Pronunciations)
                     {
-                        // Add audio with Protected = true to prevent modifying or deleting imported audio
-                        newWord.Audio.Add(new Pronunciation(pro.Media.First().Url) { Protected = true });
+                        foreach (var media in pronunciation.Media)
+                        {
+                            if (!string.IsNullOrWhiteSpace(media.Url))
+                            {
+                                // Add audio with Protected = true to prevent modifying or deleting imported audio
+                                newWord.Audio.Add(new(media.Url) { Protected = true });
+                            }
+                        }
                     }
                 }
 
@@ -879,21 +885,13 @@ namespace BackendFramework.Services
             /// <summary> Creates the object to transfer all the data from a word </summary>
             public LiftEntry GetOrMakeEntry(Extensible info, int order)
             {
-                return new LiftEntry(info, info.Guid, order)
-                {
-                    LexicalForm = new LiftMultiText(),
-                    CitationForm = new LiftMultiText()
-                };
+                return new LiftEntry(info, info.Guid, order) { CitationForm = [], LexicalForm = [] };
             }
 
             /// <summary> Creates an empty sense object and adds it to the entry </summary>
             public LiftSense GetOrMakeSense(LiftEntry entry, Extensible info, string rawXml)
             {
-                var sense = new LiftSense(info, info.Guid, entry)
-                {
-                    Definition = new LiftMultiText(),
-                    Gloss = new LiftMultiText()
-                };
+                var sense = new LiftSense(info, info.Guid, entry) { Definition = [], Gloss = [] };
                 entry.Senses.Add(sense);
                 return sense;
             }
@@ -901,6 +899,7 @@ namespace BackendFramework.Services
             /// <summary> Adds each citation form to the entry for the vernacular </summary>
             public void MergeInCitationForm(LiftEntry entry, LiftMultiText contents)
             {
+                entry.CitationForm ??= [];
                 foreach (var (key, value) in contents)
                 {
                     entry.CitationForm.Add(key, value.Text);
@@ -911,15 +910,20 @@ namespace BackendFramework.Services
             public void MergeInField(LiftObject extensible, string typeAttribute, DateTime dateCreated,
                 DateTime dateModified, LiftMultiText contents, List<Trait> traits)
             {
-                var textEntry = new LiftMultiText(contents.FirstValue.Key,
-                    contents.FirstValue.Value.Text);
-                var fieldEntry = new LiftField(typeAttribute, textEntry);
-                extensible.Fields.Add(fieldEntry);
+                var field = new LiftField(typeAttribute, contents)
+                {
+                    DateCreated = dateCreated,
+                    DateModified = dateModified,
+                    Type = typeAttribute,
+                };
+                field.Traits.AddRange(traits.Select(t => new LiftTrait() { Name = t.Name, Value = t.Value }));
+                extensible.Fields.Add(field);
             }
 
             /// <summary> Adds sense's definitions to the entry. </summary>
             public void MergeInDefinition(LiftSense sense, LiftMultiText multiText)
             {
+                sense.Definition ??= [];
                 foreach (var (key, value) in multiText)
                 {
                     sense.Definition.Add(key, value.Text);
@@ -929,6 +933,7 @@ namespace BackendFramework.Services
             /// <summary> Adds sense's glosses to the entry. </summary>
             public void MergeInGloss(LiftSense sense, LiftMultiText multiText)
             {
+                sense.Gloss ??= [];
                 foreach (var (key, value) in multiText)
                 {
                     sense.Gloss.Add(key, value.Text);
@@ -938,6 +943,7 @@ namespace BackendFramework.Services
             /// <summary> Adds each lexeme form to the entry for the vernacular </summary>
             public void MergeInLexemeForm(LiftEntry entry, LiftMultiText contents)
             {
+                entry.LexicalForm ??= [];
                 foreach (var (key, value) in contents)
                 {
                     entry.LexicalForm.Add(key, value);
@@ -947,50 +953,52 @@ namespace BackendFramework.Services
             /// <summary> Adds field to the entry for semantic domains </summary>
             public void MergeInTrait(LiftObject extensible, Trait trait)
             {
-                extensible.Traits.Add(new LiftTrait { Name = trait.Name, Value = trait.Value });
+                extensible.Traits.Add(new() { Name = trait.Name, Value = trait.Value });
             }
 
             /// <summary> Needs to be called before MergeInMedia </summary>
             public LiftObject MergeInPronunciation(LiftEntry entry, LiftMultiText contents, string rawXml)
             {
-                return entry;
+                var pronunciation = new LiftPhonetic { Form = contents };
+                entry.Pronunciations.Add(pronunciation);
+                return pronunciation;
             }
 
             /// <summary> Adds in media for audio pronunciation </summary>
             public void MergeInMedia(LiftObject pronunciation, string href, LiftMultiText caption)
             {
-                var entry = (LiftEntry)pronunciation;
-                var phonetic = new LiftPhonetic();
-                var url = new LiftUrlRef { Url = href, Label = caption };
-                phonetic.Media.Add(url);
-                entry.Pronunciations.Add(phonetic);
+                (pronunciation as LiftPhonetic)?.Media.Add(new() { Label = caption, Url = href });
             }
 
             /// <summary> Adds in note, if there is one to add </summary>
             public void MergeInNote(LiftObject extensible, string type, LiftMultiText contents, string rawXml)
             {
+                var note = new LiftNote(type, contents);
                 if (extensible is LiftEntry entry)
                 {
-                    var note = new LiftNote(
-                        // This application only uses "basic" notes, which have no type
-                        null,
-                        new LiftMultiText(contents.FirstValue.Key, contents.FirstValue.Value.Text));
                     entry.Notes.Add(note);
+                }
+                else if (extensible is LiftSense sense)
+                {
+                    sense.Notes.Add(note);
+                }
+                else if (extensible is LiftExample example)
+                {
+                    example.Notes.Add(note);
                 }
             }
 
-            public void MergeInGrammaticalInfo(LiftObject senseOrReversal, string val, List<Trait> traits)
+            public void MergeInGrammaticalInfo(LiftObject obj, string val, List<Trait> traits)
             {
-                if (senseOrReversal is LiftSense sense)
+                var gramInfo = new LiftGrammaticalInfo { Value = val };
+                gramInfo.Traits.AddRange(traits.Select(t => new LiftTrait { Name = t.Name, Value = t.Value }));
+                if (obj is LiftSense sense)
                 {
-                    if (sense.GramInfo is null)
-                    {
-                        sense.GramInfo = new LiftGrammaticalInfo { Value = val };
-                    }
-                    else
-                    {
-                        sense.GramInfo.Value = val;
-                    }
+                    sense.GramInfo = gramInfo;
+                }
+                else if (obj is LiftReversal reversal)
+                {
+                    reversal.GramInfo = gramInfo;
                 }
             }
 
@@ -1024,60 +1032,113 @@ namespace BackendFramework.Services
                 }
             }
 
-            // The following are unused and are not implemented, but may still be called by the Lexicon Merger
-            // They may be useful later if we need to add more complex attributes to words in The Combine
+            // The following may be called by the Lexicon Merger.
+            // We don't use this info in The Combine except to know when to protect imported data.
             [ExcludeFromCodeCoverage]
             public LiftExample GetOrMakeExample(LiftSense sense, Extensible info)
             {
-                return new LiftExample { Content = new LiftMultiText() };
+                var example = new LiftExample
+                {
+                    DateCreated = info.CreationTime,
+                    DateModified = info.ModificationTime,
+                    Guid = info.Guid,
+                    Id = info.Id
+                };
+                sense.Examples.Add(example);
+                return example;
             }
+
             [ExcludeFromCodeCoverage]
             public LiftObject GetOrMakeParentReversal(LiftObject parent, LiftMultiText contents, string type)
             {
-                return new LiftReversal();
+                return new LiftReversal { Form = contents, Main = parent as LiftReversal, Type = type };
             }
+
             [ExcludeFromCodeCoverage]
             public LiftSense GetOrMakeSubsense(LiftSense sense, Extensible info, string rawXml)
             {
-                return new LiftSense(info, new Guid(), sense)
-                {
-                    Definition = new LiftMultiText(),
-                    Gloss = new LiftMultiText()
-                };
+                var subsense = new LiftSense(info, info.Guid, sense);
+                sense.Subsenses.Add(subsense);
+                return subsense;
             }
+
             [ExcludeFromCodeCoverage]
             public LiftObject MergeInEtymology(LiftEntry entry, string source, string type, LiftMultiText form,
                         LiftMultiText gloss, string rawXml)
             {
-                return new LiftEtymology();
+                var etymology = new LiftEtymology { Form = form, Gloss = gloss, Source = source, Type = type };
+                entry.Etymologies.Add(etymology);
+                return etymology;
             }
+
             [ExcludeFromCodeCoverage]
             public LiftObject MergeInReversal(
                         LiftSense sense, LiftObject parent, LiftMultiText contents, string type, string rawXml)
             {
-                return new LiftReversal();
+                var reversal = new LiftReversal { Form = contents, Main = parent as LiftReversal, Type = type };
+                sense.Reversals.Add(reversal);
+                return reversal;
             }
+
             [ExcludeFromCodeCoverage]
             public LiftObject MergeInVariant(LiftEntry entry, LiftMultiText contents, string rawXml)
             {
-                return new LiftVariant();
+                var variant = new LiftVariant { Form = contents, RawXml = rawXml };
+                entry.Variants.Add(variant);
+                return variant;
             }
+
             [ExcludeFromCodeCoverage]
-            public void EntryWasDeleted(Extensible info, DateTime dateDeleted) { }
+            public void MergeInExampleForm(LiftExample example, LiftMultiText multiText)
+            {
+                example.Content ??= [];
+                foreach (var (key, value) in multiText)
+                {
+                    example.Content.Add(key, value);
+                }
+            }
+
             [ExcludeFromCodeCoverage]
-            public void MergeInExampleForm(LiftExample example, LiftMultiText multiText) { }
-            [ExcludeFromCodeCoverage]
-            public void MergeInPicture(LiftSense sense, string href, LiftMultiText caption) { }
+            public void MergeInPicture(LiftSense sense, string href, LiftMultiText caption)
+            {
+                sense.Illustrations.Add(new() { Label = caption, Url = href });
+            }
+
             [ExcludeFromCodeCoverage]
             public void MergeInRelation(
                         LiftObject extensible, string relationTypeName, string targetId, string rawXml)
-            { }
+            {
+                var relation = new LiftRelation { Ref = targetId, Type = relationTypeName };
+                if (extensible is LiftEntry entry)
+                {
+                    entry.Relations.Add(relation);
+                }
+                else if (extensible is LiftSense sense)
+                {
+                    sense.Relations.Add(relation);
+                }
+                else if (extensible is LiftVariant variant)
+                {
+                    variant.Relations.Add(relation);
+                }
+            }
+
             [ExcludeFromCodeCoverage]
-            public void MergeInSource(LiftExample example, string source) { }
+            public void MergeInSource(LiftExample example, string source)
+            {
+                example.Source = source;
+            }
+
             [ExcludeFromCodeCoverage]
             public void MergeInTranslationForm(
-                        LiftExample example, string type, LiftMultiText multiText, string rawXml)
-            { }
+                        LiftExample example, string type, LiftMultiText contents, string rawXml)
+            {
+                example.Translations.Add(new() { Content = contents, Type = type });
+            }
+
+            // The following are unimplemented, but may still be called by the Lexicon Merger
+            [ExcludeFromCodeCoverage]
+            public void EntryWasDeleted(Extensible info, DateTime dateDeleted) { }
             [ExcludeFromCodeCoverage]
             public void ProcessFieldDefinition(string tag, LiftMultiText description) { }
         }
