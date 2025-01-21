@@ -7,6 +7,7 @@ using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BackendFramework.Controllers
 {
@@ -96,9 +97,9 @@ namespace BackendFramework.Controllers
 
         /// <summary> Creates a <see cref="Speaker"/> for the specified projectId </summary>
         /// <returns> Id of created Speaker </returns>
-        [HttpGet("create/{name}", Name = "CreateSpeaker")]
+        [HttpPut("create", Name = "CreateSpeaker")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        public async Task<IActionResult> CreateSpeaker(string projectId, string name)
+        public async Task<IActionResult> CreateSpeaker(string projectId, [FromBody, BindRequired] string name)
         {
             // Check permissions
             if (!await _permissionService.HasProjectPermission(
@@ -193,9 +194,10 @@ namespace BackendFramework.Controllers
 
         /// <summary> Updates the <see cref="Speaker"/>'s name for the specified projectId and speakerId </summary>
         /// <returns> Id of updated Speaker </returns>
-        [HttpGet("update/{speakerId}/{name}", Name = "UpdateSpeakerName")]
+        [HttpPut("update/{speakerId}", Name = "UpdateSpeakerName")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        public async Task<IActionResult> UpdateSpeakerName(string projectId, string speakerId, string name)
+        public async Task<IActionResult> UpdateSpeakerName(
+            string projectId, string speakerId, [FromBody, BindRequired] string name)
         {
             // Check permissions
             if (!await _permissionService.HasProjectPermission(
