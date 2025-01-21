@@ -869,7 +869,7 @@ namespace BackendFramework.Services
                     {
                         foreach (var media in pronunciation.Media)
                         {
-                            if (!string.IsNullOrWhiteSpace(media.Url))
+                            if (!string.IsNullOrEmpty(media.Url))
                             {
                                 // Add audio with Protected = true to prevent modifying or deleting imported audio
                                 newWord.Audio.Add(new(media.Url) { Protected = true });
