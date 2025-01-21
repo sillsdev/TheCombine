@@ -41,7 +41,12 @@ export default function AnalyticsConsent(props: ConsentProps): ReactElement {
       onClose={!props.required ? clickedAway : undefined}
       PaperProps={{ style: { padding: 20 } }}
     >
-      <Grid container direction={isXs ? "column" : "row"} alignItems="center">
+      <Grid
+        container
+        direction={isXs ? "column" : "row"}
+        alignItems="center"
+        spacing={3}
+      >
         <Grid item xs>
           <Typography
             variant="h6"
@@ -50,7 +55,7 @@ export default function AnalyticsConsent(props: ConsentProps): ReactElement {
           >
             {t("analyticsConsent.consentModal.title")}
           </Typography>
-          <Typography variant="body1" style={{ marginRight: 25 }} gutterBottom>
+          <Typography variant="body1">
             {t("analyticsConsent.consentModal.description")}
           </Typography>
         </Grid>

@@ -56,9 +56,9 @@ const axiosInstance = axios.create({ baseURL: apiBaseURL });
 axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const consent = LocalStorage.getCurrentUser()?.analyticsOn;
   if (consent === false) {
-    config.headers.analyticsOn = `${!!consent}`;
+    config.headers.analyticsOn = `${false}`;
   } else {
-    config.headers.analyticsOn = true;
+    config.headers.analyticsOn = `${true}`;
     config.headers.sessionId = getSessionId();
   }
   return config;
