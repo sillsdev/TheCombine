@@ -11,7 +11,6 @@ namespace Backend.Tests.Otel
 {
     public class OtelKernelTests : IDisposable
     {
-
         private LocationEnricher _locationEnricher = null!;
 
         public void Dispose()
@@ -42,8 +41,8 @@ namespace Backend.Tests.Otel
             TrackSession(activity, httpContext.Request);
 
             // Assert
-            Assert.That(activity.Baggage.Any(_ => _.Key == OtelConsentBaggage));
-            Assert.That(activity.Baggage.Any(_ => _.Key == OtelSessionBaggage));
+            Assert.That(activity.Baggage.Any(_ => _.Key == ConsentBaggage));
+            Assert.That(activity.Baggage.Any(_ => _.Key == SessionIdBaggage));
         }
 
         [Test]
@@ -59,8 +58,8 @@ namespace Backend.Tests.Otel
             TrackSession(activity, httpContext.Request);
 
             // Assert
-            Assert.That(activity.Baggage.Any(_ => _.Key == OtelConsentBaggage));
-            Assert.That(!activity.Baggage.Any(_ => _.Key == OtelSessionBaggage));
+            Assert.That(activity.Baggage.Any(_ => _.Key == ConsentBaggage));
+            Assert.That(!activity.Baggage.Any(_ => _.Key == SessionIdBaggage));
         }
 
         [Test]
@@ -68,15 +67,15 @@ namespace Backend.Tests.Otel
         {
             // Arrange
             var activity = new Activity("testActivity").Start();
-            activity.SetBaggage(OtelConsentBaggage, "true");
-            activity.SetBaggage(OtelSessionBaggage, "test session id");
+            activity.SetBaggage(ConsentBaggage, "true");
+            activity.SetBaggage(SessionIdBaggage, "test session id");
 
             // Act
             _locationEnricher.OnEnd(activity);
 
             // Assert
-            Assert.That(activity.Tags.Any(_ => _.Key == OtelConsent));
-            Assert.That(activity.Tags.Any(_ => _.Key == OtelSessionId));
+            Assert.That(activity.Tags.Any(_ => _.Key == ConsentTag));
+            Assert.That(activity.Tags.Any(_ => _.Key == SessionIdTag));
         }
 
         [Test]
@@ -85,7 +84,7 @@ namespace Backend.Tests.Otel
             // Arrange
             _locationEnricher = new LocationEnricher(new LocationProviderMock());
             var activity = new Activity("testActivity").Start();
-            activity.SetBaggage(OtelConsentBaggage, "true");
+            activity.SetBaggage(ConsentBaggage, "true");
 
             // Act
             _locationEnricher.OnEnd(activity);
@@ -106,7 +105,7 @@ namespace Backend.Tests.Otel
             // Arrange
             _locationEnricher = new LocationEnricher(new LocationProviderMock());
             var activity = new Activity("testActivity").Start();
-            activity.SetBaggage(OtelConsentBaggage, "false");
+            activity.SetBaggage(ConsentBaggage, "false");
 
             // Act
             _locationEnricher.OnEnd(activity);
