@@ -26,7 +26,7 @@ Click on the play button to listen.
 Hold the shift-key and click to delete it.
 A dialog box will appear to confirm whether you want to delete the recording.
 (If you are using a touch-screen, you can tap on the play button to play, or press and hold the button to bring up a menu.)
-When you are done entering words, click the "Exit" button to return to the semantic domain tree.
+When you are done entering words, click the “Exit” button to return to the semantic domain tree.
 (Don’t worry—the words you entered are already saved even if you close the window without clicking the exit button.)
 If we select the same domain to enter more words, see how the words we previously entered in this domain are listed in a panel on the side?
 If you are working in a narrow web browser window, the panel of previously entered words will not automatically appear.
