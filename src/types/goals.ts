@@ -1,6 +1,5 @@
 import { v4 } from "uuid";
 
-import { type User } from "api/models";
 import {
   type CharInvChanges,
   type CharInvData,
@@ -12,7 +11,6 @@ import {
   type MergesCompleted,
 } from "goals/MergeDuplicates/MergeDupsTypes";
 import { type EntriesEdited } from "goals/ReviewEntries/ReviewEntriesTypes";
-import { newUser } from "types/user";
 
 export type GoalData = CharInvData | MergeDupsData;
 // Record<string, never> is the recommended type for an empty object.
@@ -61,7 +59,6 @@ export class Goal {
   guid: string;
   goalType: GoalType;
   name: GoalName;
-  user: User;
   steps: GoalStep[];
   numSteps: number;
   currentStep: number;
@@ -78,7 +75,6 @@ export class Goal {
     this.guid = v4();
     this.goalType = type;
     this.name = name;
-    this.user = newUser();
     this.steps = steps;
     this.numSteps = 1;
     this.currentStep = 0;
