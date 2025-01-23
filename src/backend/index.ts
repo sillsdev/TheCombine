@@ -54,7 +54,13 @@ const whiteListedErrorUrls = [
 // Create an axios instance to allow for attaching interceptors to it.
 const axiosInstance = axios.create({ baseURL: apiBaseURL });
 axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  config.headers.sessionId = getSessionId();
+  const consent = LocalStorage.getCurrentUser()?.analyticsOn;
+  if (consent === false) {
+    config.headers.analyticsOn = `${false}`;
+  } else {
+    config.headers.analyticsOn = `${true}`;
+    config.headers.sessionId = getSessionId();
+  }
   return config;
 });
 axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {

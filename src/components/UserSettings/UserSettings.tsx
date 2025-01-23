@@ -13,16 +13,15 @@ import {
 import { enqueueSnackbar } from "notistack";
 import { FormEvent, Fragment, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { show } from "vanilla-cookieconsent";
 
 import { OffOnSetting, User } from "api/models";
 import { isEmailTaken, updateUser } from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
+import AnalyticsConsent from "components/AnalyticsConsent";
 import { asyncLoadSemanticDomains } from "components/Project/ProjectActions";
 import ClickableAvatar from "components/UserSettings/ClickableAvatar";
 import { updateLangFromUser } from "i18n";
-import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
-import { StoreState } from "rootRedux/types";
+import { useAppDispatch } from "rootRedux/hooks";
 import theme from "types/theme";
 import { uiWritingSystems } from "types/writingSystem";
 
@@ -58,13 +57,11 @@ export function UserSettings(props: {
 }): ReactElement {
   const dispatch = useAppDispatch();
 
-  const analyticsConsent = useAppSelector(
-    (state: StoreState) => state.analyticsState.consent
-  );
-
   const [name, setName] = useState(props.user.name);
   const [phone, setPhone] = useState(props.user.phone);
   const [email, setEmail] = useState(props.user.email);
+  const [displayConsent, setDisplayConsent] = useState(false);
+  const [analyticsOn, setAnalyticsOn] = useState(props.user.analyticsOn);
   const [uiLang, setUiLang] = useState(props.user.uiLang ?? "");
   const [glossSuggestion, setGlossSuggestion] = useState(
     props.user.glossSuggestion
@@ -80,10 +77,16 @@ export function UserSettings(props: {
     return unchanged || !(await isEmailTaken(unicodeEmail));
   }
 
+  const handleConsentChange = (consentVal?: boolean): void => {
+    setAnalyticsOn(consentVal ?? analyticsOn);
+    setDisplayConsent(false);
+  };
+
   const disabled =
     name === props.user.name &&
     phone === props.user.phone &&
     punycode.toUnicode(email) === props.user.email &&
+    analyticsOn === props.user.analyticsOn &&
     uiLang === (props.user.uiLang ?? "") &&
     glossSuggestion === props.user.glossSuggestion;
 
@@ -95,6 +98,7 @@ export function UserSettings(props: {
         name,
         phone,
         email: punycode.toUnicode(email),
+        analyticsOn,
         uiLang,
         glossSuggestion,
         hasAvatar: !!avatar,
@@ -286,20 +290,29 @@ export function UserSettings(props: {
                 <Grid item>
                   <Typography>
                     {t(
-                      analyticsConsent
+                      analyticsOn
                         ? "userSettings.analyticsConsent.consentYes"
                         : "userSettings.analyticsConsent.consentNo"
                     )}
                   </Typography>
+                </Grid>
+
+                <Grid item>
                   <Button
                     data-testid={UserSettingsIds.ButtonChangeConsent}
                     id={UserSettingsIds.ButtonChangeConsent}
-                    onClick={() => show(true)}
+                    onClick={() => setDisplayConsent(true)}
                     variant="outlined"
                   >
                     {t("userSettings.analyticsConsent.button")}
                   </Button>
                 </Grid>
+                {displayConsent && (
+                  <AnalyticsConsent
+                    onChangeConsent={handleConsentChange}
+                    required={false}
+                  />
+                )}
               </Grid>
 
               <Grid item container justifyContent="flex-end">
