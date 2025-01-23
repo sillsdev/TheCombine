@@ -17,6 +17,12 @@ namespace BackendFramework.Otel
     public static class OtelKernel
     {
         public const string SourceName = "Backend-Otel";
+        public const string AnalyticsOnHeader = "analyticsOn";
+        public const string SessionIdHeader = "sessionId";
+        public const string ConsentBaggage = "consentBaggage";
+        public const string SessionIdBaggage = "sessionIdBaggage";
+        public const string ConsentTag = "otelConsent";
+        public const string SessionIdTag = "sessionId";
 
         public static void AddOpenTelemetryInstrumentation(this IServiceCollection services)
         {
@@ -33,12 +39,19 @@ namespace BackendFramework.Otel
             );
         }
 
+        internal static void TrackConsent(Activity activity, HttpRequest request)
+        {
+            request.Headers.TryGetValue(AnalyticsOnHeader, out var consentString);
+            var consent = bool.Parse(consentString!);
+            activity.SetBaggage(ConsentBaggage, consent.ToString());
+        }
+
         internal static void TrackSession(Activity activity, HttpRequest request)
         {
-            var sessionId = request.Headers.TryGetValue("sessionId", out var values) ? values.FirstOrDefault() : null;
+            var sessionId = request.Headers.TryGetValue(SessionIdHeader, out var values) ? values.FirstOrDefault() : null;
             if (sessionId is not null)
             {
-                activity.SetBaggage("sessionBaggage", sessionId);
+                activity.SetBaggage(SessionIdBaggage, sessionId);
             }
         }
 
@@ -67,6 +80,7 @@ namespace BackendFramework.Otel
             options.EnrichWithHttpRequest = (activity, request) =>
             {
                 GetContentLengthAspNet(activity, request.Headers, "inbound.http.request.body.size");
+                TrackConsent(activity, request);
                 TrackSession(activity, request);
             };
             options.EnrichWithHttpResponse = (activity, response) =>
@@ -98,22 +112,20 @@ namespace BackendFramework.Otel
         {
             public override async void OnEnd(Activity data)
             {
-                var uriPath = (string?)data.GetTagItem("url.full");
-                var locationUri = LocationProvider.locationGetterUri;
-                if (uriPath is null || !uriPath.Contains(locationUri))
+                var consentString = data.GetBaggageItem(ConsentBaggage);
+                data.AddTag(ConsentTag, consentString);
+                if (bool.TryParse(consentString, out bool consent) && consent)
                 {
-                    var location = await locationProvider.GetLocation();
-                    data?.AddTag("country", location?.Country);
-                    data?.AddTag("regionName", location?.RegionName);
-                    data?.AddTag("city", location?.City);
-                }
-                data?.SetTag("sessionId", data?.GetBaggageItem("sessionBaggage"));
-                if (uriPath is not null && uriPath.Contains(locationUri))
-                {
-                    // When getting location externally, url.full includes site URI and user IP. 
-                    // In such cases, only add url without IP information to traces.
-                    data?.SetTag("url.full", "");
-                    data?.SetTag("url.redacted.ip", LocationProvider.locationGetterUri);
+                    var uriPath = (string?)data.GetTagItem("url.full");
+                    var locationUri = LocationProvider.locationGetterUri;
+                    if (uriPath is null || !uriPath.Contains(locationUri))
+                    {
+                        var location = await locationProvider.GetLocation();
+                        data.AddTag("country", location?.Country);
+                        data.AddTag("regionName", location?.RegionName);
+                        data.AddTag("city", location?.City);
+                    }
+                    data.AddTag(SessionIdTag, data.GetBaggageItem(SessionIdBaggage));
                 }
             }
         }

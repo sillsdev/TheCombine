@@ -1,4 +1,8 @@
-import { type Action, type PayloadAction } from "@reduxjs/toolkit";
+import {
+  type Action,
+  type PayloadAction,
+  type UnknownAction,
+} from "@reduxjs/toolkit";
 
 import {
   type MergeTreeReference,
@@ -100,8 +104,11 @@ describe("MergeDupsReducer", () => {
       ...defaultTree,
       sidebar: {
         ...defaultSidebar,
-        mergeSenseId: "word2_senseA",
-        wordId: "word2",
+        senseRef: {
+          ...defaultSidebar.senseRef,
+          mergeSenseId: "word2_senseA",
+          wordId: "word2",
+        },
       },
       words: testTreeWords(),
     },
@@ -114,7 +121,7 @@ describe("MergeDupsReducer", () => {
     sidebarClosed = false
   ): void {
     const { sidebar, words } = mergeDupStepReducer(mockState, action).tree;
-    expect(!sidebar.wordId).toEqual(sidebarClosed);
+    expect(!sidebar.senseRef.wordId).toEqual(sidebarClosed);
     // Stringify for this test, because order within `.sensesGuids` matters.
     expect(JSON.stringify(words)).toEqual(JSON.stringify(expectedWords));
   }
@@ -567,9 +574,9 @@ describe("MergeDupsReducer", () => {
       type: StoreActionTypes.RESET,
     };
 
-    expect(mergeDupStepReducer({} as MergeTreeState, action)).toEqual(
-      defaultState
-    );
+    expect(
+      mergeDupStepReducer({} as MergeTreeState, action as UnknownAction)
+    ).toEqual(defaultState);
   });
 
   test("setWordData", () => {

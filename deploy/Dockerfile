@@ -6,12 +6,12 @@
 #   - ARM 64-bit
 ############################################################
 
-FROM ubuntu:22.04
+FROM python:3.12.8-slim-bookworm
 
 USER root
 
 RUN apt-get update && \
-  apt-get install -y python3 python3-pip nano curl openssh-client iputils-ping && \
+  apt-get install -y python3-pip nano curl openssh-client iputils-ping && \
   apt-get autoremove && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*

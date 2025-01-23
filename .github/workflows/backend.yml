@@ -28,17 +28,16 @@ jobs:
             aka.ms:443
             api.github.com:443
             api.nuget.org:443
+            builds.dotnet.microsoft.com:443
             dc.services.visualstudio.com:443
             deb.debian.org:80
-            dotnetbuilds.azureedge.net:443
-            dotnetcli.azureedge.net:443
             github.com:443
             md-hdd-t032zjxllntc.z26.blob.storage.azure.net:443
             objects.githubusercontent.com:443
       - name: Checkout repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       - name: Setup dotnet
-        uses: actions/setup-dotnet@6bd8b7f7774af54e05809fcc5431931b3eb1ddee # v4.0.1
+        uses: actions/setup-dotnet@87b7050bc53ea08284295505d98d2aa94301e852 # v4.2.0
         with:
           dotnet-version: ${{ matrix.dotnet }}
       - name: Install ffmpeg
@@ -110,18 +109,16 @@ jobs:
             aka.ms:443
             api.github.com:443
             api.nuget.org:443
+            builds.dotnet.microsoft.com:443
             dc.services.visualstudio.com:443
-            dotnetcli.azureedge.net:443
             github.com:443
             objects.githubusercontent.com:443
-            ts-crl.ws.symantec.com:80
-
       - name: Checkout repository
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
       # Manually install .NET to work around:
       # https://github.com/github/codeql-action/issues/757
       - name: Setup .NET
-        uses: actions/setup-dotnet@6bd8b7f7774af54e05809fcc5431931b3eb1ddee # v4.0.1
+        uses: actions/setup-dotnet@87b7050bc53ea08284295505d98d2aa94301e852 # v4.2.0
         with:
           dotnet-version: "8.0.x"
       - name: Initialize CodeQL
@@ -156,7 +153,6 @@ jobs:
           egress-policy: block
           allowed-endpoints: >
             *.data.mcr.microsoft.com:443
-            *.symcb.com:80
             api.nuget.org:443
             archive.ubuntu.com:80
             auth.docker.io:443
@@ -168,7 +164,6 @@ jobs:
             production.cloudflare.docker.com:443
             registry-1.docker.io:443
             security.ubuntu.com:80
-            ts-crl.ws.symantec.com:80
       # For subfolders, currently a full checkout is required.
       # See: https://github.com/marketplace/actions/build-and-push-docker-images#path-context
       - name: Checkout repository

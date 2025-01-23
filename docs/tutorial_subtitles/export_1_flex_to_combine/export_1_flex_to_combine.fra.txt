@@ -1,0 +1,44 @@
+Voyons comment déplacer les données lexicales d’un projet FieldWorks vers un projet Combine.
+Pour commencer, ouvrez votre projet dans FieldWorks.
+Ici, j’utilise un projet avec des mots de la langue Naskapi.
+Ayant ouvert le projet FLEx souhaité, cliquez sur le menu « Fichier » (« File »), puis sélectionnez « Exporter… » (« Export… ») en bas du menu.
+Dans la boîte de dialogue « Exporter » (« Export ») qui apparaît, cliquez sur l'option « Full Lexicon » « LIFT 0.13 XML », puis cliquez sur le bouton "Exporter… » (« Export… »).
+Une autre boîte de dialogue apparaît pour vous permettre de sélectionner l'endroit où les fichiers exportés seront enregistrés.
+Il faudra créer un nouveau dossier pour les fichiers.
+Je vais sur le bureau et je clique sur le bouton « Créer un nouveau dossier » (« Make New Folder ») pour créer un dossier « Naskapi ».
+Sélectionnez le dossier que vous venez de créer et cliquez sur le bouton « OK ».
+Dans l'explorateur de fichiers, naviguez au dossier qui contient ce nouveau dossier.
+Faites un clic droit sur le dossier que vous venez de créer pour l’export et sélectionnez « Compresser vers fichier ZIP » (« Compress to ZIP file »).
+Voyez-vous le fichier ZIP qui a été créé ?
+C'est ce que nous allons importer dans The Combine.
+Maintenant nous ouvrons un navigateur web et allons sur thecombine.app.
+Une fois connecté, nous voyons deux sections : « Sélectionner un projet » (« Select Project ») et « Créer un projet » (« Create Project »).
+Sous « Sélectionner un projet » (« Select Project »), nous pouvons ouvrir un projet qui existe déjà.
+Il est possible d'importer les données lexicales dans un projet existant, mais nous y reviendrons plus tard.
+Sous « Créer un projet » (« Create Project »), créons un nouveau projet en utilisant l’export à partir de FLEx.
+Tout d’abord, je vais taper un nom pour le projet, dans ce cas : Naskapi.
+Remarquez qu'il y a des champs en dessous où l'on peut préciser la langue vernaculaire (Vernacular Language) et une langue d'analyse (Analysis Language) pour le projet.
+Ce n'est pas nécessaire lors de l'import des données, car les langues du projet seront automatiquement détectées.
+Pour télécharger des données existantes, cliquez sur le bouton « Parcourir » (« Browse »).
+Une boîte de dialogue d'explorateur de fichiers s'ouvre pour que vous puissiez sélectionner les données LIFT qui ont été exportées à partir de FLEx.
+Je navigue vers le dossier « Desktop », où j'ai exporté mes données, et je sélectionne le fichier « Naskapi.zip » puis je clique sur le bouton « Ouvrir » (« Open »).
+Remarquez que The Combine affiche le texte « Fichier sélectionné : Naskapi.zip ».
+Génial !
+Sous « Langue vernaculaire » (« Vernacular Language »), il y a maintenant un menu déroulant.
+Utilisez-le pour sélectionner la langue qui servira comme langue vernaculaire.
+The Combine ne permet la saisie de données qu'en une seule langue vernaculaire par projet.
+La langue vernaculaire ne peut pas être modifiée après la création du projet.
+Si vous avez besoin de rassembler ou d'organiser des données lexicales pour une langue différente, il suffit de créer un autre projet.
+Notez que vous ne pouvez plus spécifier de langue d'analyse.
+Ceci est dû au fait que toutes les langues d'analyse présentes dans le fichier ZIP sont automatiquement ajoutées, et vous pouvez ajouter ou supprimer des langues d'analyse dans le projet à tout moment.
+Il ne reste plus qu'à cliquer sur le bouton « Créer un projet » (« Create Project »).
+Une fois le projet créé, vous accédez à la page des paramètres du projet.
+Pour y accéder à l'avenir, vous pouvez cliquer sur l'icône d'engrenage dans la barre supérieure.
+Notez que dans l’onglet « Langues » (« Languages »), nous pouvons voir le langage vernaculaire ainsi que revoir et modifier les langues d’analyse.
+Cliquez sur l’onglet « Importer/Exporter » (« Import/Export »).
+C'est ici que vous pouvez importer des données lexicales dans un projet existant.
+Cette option est maintenant désactivée parce que nous avons déjà importé des données dans ce projet.
+Une seule importation est autorisée pour un projet dans The Combine.
+C'est également là que nous pouvons exporter des données de The Combine pour importer dans FieldWorks, mais c'est un sujet pour une autre vidéo.
+J'espère que cette vidéo vous aidera à démarrer avec The Combine.
+Je vous souhaite une excellente journée !

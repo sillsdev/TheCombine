@@ -3,7 +3,7 @@ import { Grid, MenuItem, Select, Tooltip } from "@mui/material";
 import { type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
-import { AutocompleteSetting } from "api/models";
+import { OffOnSetting } from "api/models";
 import { type ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 
 export default function ProjectAutocomplete(
@@ -12,7 +12,7 @@ export default function ProjectAutocomplete(
   const { t } = useTranslation();
 
   const updateAutocompleteSetting = async (
-    autocompleteSetting: AutocompleteSetting
+    autocompleteSetting: OffOnSetting
   ): Promise<void> => {
     await props.setProject({ ...props.project, autocompleteSetting });
   };
@@ -24,13 +24,13 @@ export default function ProjectAutocomplete(
           variant="standard"
           value={props.project.autocompleteSetting}
           onChange={(e) =>
-            updateAutocompleteSetting(e.target.value as AutocompleteSetting)
+            updateAutocompleteSetting(e.target.value as OffOnSetting)
           }
         >
-          <MenuItem value={AutocompleteSetting.Off}>
+          <MenuItem value={OffOnSetting.Off}>
             {t("projectSettings.autocomplete.off")}
           </MenuItem>
-          <MenuItem value={AutocompleteSetting.On}>
+          <MenuItem value={OffOnSetting.On}>
             {t("projectSettings.autocomplete.on")}
           </MenuItem>
         </Select>

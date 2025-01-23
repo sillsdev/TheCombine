@@ -1,0 +1,44 @@
+Veamos cómo mover datos léxicos de un proyecto en FieldWorks a un proyecto en The Combine.
+Para empezar, abra su proyecto en FieldWorks.
+Aquí utilizo un proyecto de ejemplo con palabras del idioma Naskapi.
+Con el proyecto FLEx deseado abierto, haga clic en el menú “Archivo” (“File”), luego seleccione “Exportar…” (“Export…”) en la parte inferior del menú.
+En el diálogo “Exportar” (“Export”) que aparece, haga clic en la opción “Full Lexicon” “LIFT 0.13 XML”, luego haga clic en el botón “Exportar…” (“Export…”).
+Aparece otro diálogo para que seleccione dónde se guardarán los archivos exportados.
+Necesitarás crear una nueva carpeta para los archivos.
+Voy a Desktop y hago clic en el botón “Crear nueva carpeta” (“Make New Folder”) para crear una carpeta Naskapi.
+Seleccione la nueva carpeta que acaba de crear y haga clic en el botón “Aceptar” (“OK”).
+En el Explorador de archivos, vaya a la carpeta que contiene esta nueva carpeta.
+Haga clic derecho en la carpeta que acaba de crear para la exportación y seleccione “Comprimir en archivo ZIP” (“Compress to ZIP file”).
+¿Ve el archivo ZIP que se ha creado?
+Esto es lo que vamos a importar en The Combine.
+Ahora abrimos un navegador web y vamos a thecombine.app.
+Una vez que hemos iniciado sesión, vemos dos secciones: “Seleccionar proyecto” (“Select Project”) y “Crear proyecto” (“Create Project”).
+En “Seleccionar proyecto” (“Select Project”) podemos abrir un proyecto creado previamente.
+ES posible importar los datos léxicos a un proyecto existente, pero eso lo veremos más adelante.
+En “Crear proyecto” (“Create Project”), vamos a crear un nuevo proyecto utilizando la exportación desde FLEx.
+Primero teclearé un nombre para el proyecto, en mi caso: Naskapi.
+Tenga en cuenta que hay campos más abajo donde podemos especificar el Idioma vernáculo (Vernacular Language) y un Idioma de análisis (Analysis Language) para el proyecto.
+Esto no es necesario cuando importamos datos porque los idiomas del proyecto se recogerán automáticamente de los datos.
+Para subir los datos existentes, haga clic en el botón “Navegar” (“Browse”).
+Aparecerá un diálogo del explorador de archivos para seleccionar los datos LIFT exportados desde FLEx.
+Navego hasta el Desktop, donde exporté mis datos, selecciono el archivo “Naskapi.zip” y hago clic en el botón “Abrir” (“Open”).
+Vea que The Combine tiene el texto “Archivo seleccionado: Naskapi.zip”.
+¡Genial!
+En “Idioma vernáculo” (“Vernacular Language”) hay ahora un menú desplegable.
+Se utiliza para seleccionar cuál de las lenguas de los datos va a ser el idioma vernáculo.
+The Combine sólo soporta la entrada de datos para un idioma vernáculo por proyecto.
+El idioma vernáculo no se puede cambiar después de crear el proyecto.
+Si necesita recopilar u organizar datos léxicos para un idioma diferente, basta con crear otro proyecto.
+Tenga en cuenta que ya no puede especificar un idioma de análisis.
+Esto se debe a que todos los idiomas de análisis presentes en el archivo ZIP se añaden automáticamente, y puede añadir y eliminar los idiomas de análisis en el proyecto en cualquier momento.
+Sólo queda hacer clic en el botón “Crear proyecto” (“Create Project”).
+Una vez creado el proyecto, se accede a la página de configuración del proyecto.
+Para accederla en el futuro, puede hacer clic en el icono de engranaje en la barra superior.
+Tenga en cuenta que en la pestaña “Idiomas” (“Languages”), podemos ver el idioma vernáculo así como revisar y cambiar los idiomas de análisis.
+Hagamos clic en la pestaña “Importar/Exportar” (“Import/Export”).
+Aquí es donde puede importar datos léxicos a un proyecto existente.
+Esa opción está desactivada ahora porque ya hemos importado datos a este proyecto.
+Sólo se permite una importación por proyecto en The Combine.
+Aquí también es donde podemos exportar datos desde The Combine para importarlos a FieldWorks, pero ese es un tema para otro video.
+Espero que este video te ayude a comenzar con The Combine.
+¡Que tenga un día maravilloso!

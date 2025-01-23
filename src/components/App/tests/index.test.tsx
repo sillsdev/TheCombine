@@ -4,7 +4,6 @@ import "jest-canvas-mock";
 import { act } from "react";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
-import thunk from "redux-thunk";
 
 import App from "components/App";
 import { defaultState } from "rootRedux/types";
@@ -12,13 +11,11 @@ import theme from "types/theme";
 
 jest.mock("react-router-dom");
 
-const createMockStore = configureMockStore([thunk]);
+const createMockStore = configureMockStore();
 const mockStore = createMockStore(defaultState);
 
 // Need window.innerHeight defined for LandingPage.
 global.innerHeight = 100;
-// Mock the track method of segment analytics.
-global.analytics = { track: jest.fn() } as any;
 
 describe("App", () => {
   it("renders without crashing", async () => {

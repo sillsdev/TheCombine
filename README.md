@@ -153,16 +153,9 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
    - `COMBINE_SMTP_ADDRESS`
    - `COMBINE_SMTP_FROM`
 
-2. _(Optional)_ To opt in to segment.com analytics to test the analytics during development:
+2. Run `npm start` from the project directory to install dependencies and start the project.
 
-   ```bash
-   # For Windows, use `copy`.
-   cp .env.local.template .env.local
-   ```
-
-3. Run `npm start` from the project directory to install dependencies and start the project.
-
-4. Consult our [C#](docs/style_guide/c_sharp_style_guide.md) and [TypeScript](docs/style_guide/ts_style_guide.md) style
+3. Consult our [C#](docs/style_guide/c_sharp_style_guide.md) and [TypeScript](docs/style_guide/ts_style_guide.md) style
    guides for best coding practices in this project.
 
 [chocolatey]: https://chocolatey.org/
@@ -550,7 +543,7 @@ the corresponding videos and any transcript translations downloaded from Crowdin
 optionally attach them to a video file), run from within a Python virtual environment:
 
 ```bash
-python scripts/subtitle_tutorial_video.py -s <subtitles_subfolder_name> [-i <input_video_path> -o <output_video_path] [-v]
+python scripts/subtitle_tutorial_video.py -s <subtitles_subfolder_name> [-i <input_video_path> -o <output_video_path>] [-v]
 ```
 
 ## Setup Local Kubernetes Cluster

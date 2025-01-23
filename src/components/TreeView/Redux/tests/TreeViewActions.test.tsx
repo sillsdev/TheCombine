@@ -19,9 +19,6 @@ jest.mock("backend", () => ({
 const mockGetSemDomTreeNode = jest.fn();
 const mockGetSemDomTreeNodeByName = jest.fn();
 
-// Mock the track and identify methods of segment analytics.
-global.analytics = { identify: jest.fn(), track: jest.fn() } as any;
-
 const mockId = "1.2.3";
 const mockLang = "lang";
 
