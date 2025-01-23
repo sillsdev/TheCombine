@@ -9,12 +9,6 @@ const analyticsSlice = createSlice({
   initialState: defaultState,
   reducers: {
     changePageAction: (state, action) => {
-      if (state.consent && action.payload !== state.currentPage) {
-        analytics.track("navigate", {
-          destination: action.payload,
-          source: state.currentPage,
-        });
-      }
       state.currentPage = action.payload;
     },
     updateConsentAction: (state) => {

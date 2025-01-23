@@ -2,7 +2,6 @@ import { ThemeProvider } from "@mui/material/styles";
 import { Provider } from "react-redux";
 import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
-import thunk from "redux-thunk";
 import { Key } from "ts-key-enum";
 
 import TreeView, { exitButtonId, topButtonId } from "components/TreeView";
@@ -30,7 +29,7 @@ jest.mock("rootRedux/hooks", () => {
   };
 });
 
-const mockStore = configureMockStore([thunk])({
+const mockStore = configureMockStore()({
   treeViewState: { ...treeViewState, currentDomain: mockMap[mapIds.parent] },
   currentProjectState: {
     project: { semDomWritingSystem: newWritingSystem() },
