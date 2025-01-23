@@ -1,4 +1,4 @@
-import { type Action, type PreloadedState } from "redux";
+import { type Action } from "redux";
 
 import { type Project, type Word } from "api/models";
 import {
@@ -47,7 +47,7 @@ const mockGetFrontierWords = jest.fn();
 const mockUpdateWord = jest.fn();
 
 const bumpId = (id: string): string => `${id}++`;
-const mockAction: Action = { type: null };
+const mockAction: Action = { type: "" };
 const setMockFunctions = (): void => {
   mockAddCharInvChangesToGoal.mockReturnValue(mockAction);
   mockAsyncUpdateCurrentProject.mockReturnValue(mockAction);
@@ -64,7 +64,7 @@ beforeEach(() => {
 describe("CharacterInventoryActions", () => {
   describe("setCharacterStatus", () => {
     const character = "C";
-    const mockState = (status: CharacterStatus): PreloadedState<RootState> => {
+    const mockState = (status: CharacterStatus): RootState => {
       const entry: CharacterSetEntry = { character, occurrences: 0, status };
       const rej = status === CharacterStatus.Rejected ? [character] : [];
       const val = status === CharacterStatus.Accepted ? [character] : [];
