@@ -27,10 +27,10 @@ namespace BackendFramework.Otel
             // because OtelKernel calls the function for each activity
             if (_contextAccessor.HttpContext is { } context)
             {
-                var ipAddress = context.GetServerVariable("HTTP_X_FORWARDED_FOR")
-                    ?? context.GetServerVariable("REMOTE_ADDR")
-                    ?? context.GetServerVariable("HTTP_CLIENT_IP")
-                    ?? context.Connection.RemoteIpAddress?.ToString();
+                // If server no longer behind Cloudflare, replace "HTTP_CF_CONNECTING_IP"
+                // with "HTTP_X_FORWARDED_FOR", "REMOTE_ADDR", or "HTTP_CLIENT_IP",
+                // or try context.Connection.RemoteIpAddress?.ToString()
+                var ipAddress = context.GetServerVariable("HTTP_CF_CONNECTING_IP");
                 var ipAddressWithoutPort = ipAddress?.Split(':')[0];
                 if (string.IsNullOrEmpty(ipAddressWithoutPort))
                 {
