@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using BackendFramework.Otel;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -27,10 +26,8 @@ namespace Backend.Tests.Otel
         public void Setup()
         {
             // Set up HttpContextAccessor with mocked IP
-            var serverVariablesFeature = new Mock<IServerVariablesFeature>();
-            serverVariablesFeature.Setup(x => x["HTTP_CF_CONNECTING_IP"]).Returns(TestIpAddress.ToString());
             var httpContext = new DefaultHttpContext();
-            httpContext.Features.Set(serverVariablesFeature.Object);
+            httpContext.Request.Headers["X-Original-Forwarded-For"] = TestIpAddress.ToString();
             _contextAccessor = new HttpContextAccessor { HttpContext = httpContext };
 
             // Set up MemoryCache

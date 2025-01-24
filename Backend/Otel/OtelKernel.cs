@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -42,13 +41,6 @@ namespace BackendFramework.Otel
 
         internal static void TrackConsent(Activity activity, HttpRequest request)
         {
-            Console.WriteLine("~~START REQUEST HEADERS~~");
-            foreach (var key in request.Headers.Keys)
-            {
-                Console.WriteLine($"{key}: {request.Headers[key]}");
-            }
-            Console.WriteLine("~~END REQUEST HEADERS~~");
-
             request.Headers.TryGetValue(AnalyticsOnHeader, out var consentString);
             var consent = bool.Parse(consentString!);
             activity.SetBaggage(ConsentBaggage, consent.ToString());
