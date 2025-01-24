@@ -42,12 +42,12 @@ namespace BackendFramework.Otel
 
         internal static void TrackConsent(Activity activity, HttpRequest request)
         {
-            Console.WriteLine("START REQUEST HEADERS");
+            Console.WriteLine("~~START REQUEST HEADERS~~");
             foreach (var key in request.Headers.Keys)
             {
                 Console.WriteLine($"{key}: {request.Headers[key]}");
             }
-            Console.WriteLine("START REQUEST HEADERS");
+            Console.WriteLine("~~END REQUEST HEADERS~~");
 
             request.Headers.TryGetValue(AnalyticsOnHeader, out var consentString);
             var consent = bool.Parse(consentString!);
