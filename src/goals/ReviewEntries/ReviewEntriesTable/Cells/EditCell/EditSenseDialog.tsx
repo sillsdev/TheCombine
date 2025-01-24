@@ -85,10 +85,10 @@ export default function EditSenseDialog(
     (state: StoreState) =>
       state.currentProjectState.project.analysisWritingSystems
   );
-  const showDefinitions = useAppSelector(
+  const definitionsEnabled = useAppSelector(
     (state: StoreState) => state.currentProjectState.project.definitionsEnabled
   );
-  const showGrammaticalInfo = useAppSelector(
+  const grammaticalInfoEnabled = useAppSelector(
     (state: StoreState) =>
       state.currentProjectState.project.grammaticalInfoEnabled
   );
@@ -138,7 +138,7 @@ export default function EditSenseDialog(
     }
 
     // Confirm nonempty senses
-    const cleanedSense = cleanSense(newSense);
+    const cleanedSense = cleanSense(newSense, definitionsEnabled);
     if (!cleanedSense || typeof cleanedSense === "string") {
       toast.error(t(cleanedSense ?? ""));
       return;
@@ -205,7 +205,7 @@ export default function EditSenseDialog(
             spacing={3}
           >
             {/* Definitions */}
-            {showDefinitions && (
+            {definitionsEnabled && (
               <Grid item>
                 <Card sx={bgStyle(EditSenseField.Definitions)}>
                   <CardHeader title={t("reviewEntries.columns.definitions")} />
@@ -239,7 +239,7 @@ export default function EditSenseDialog(
             </Grid>
 
             {/* Part of Speech */}
-            {showGrammaticalInfo && (
+            {grammaticalInfoEnabled && (
               <Grid item>
                 <Card sx={bgStyle(EditSenseField.GrammaticalInfo)}>
                   <CardHeader title={t("reviewEntries.columns.partOfSpeech")} />

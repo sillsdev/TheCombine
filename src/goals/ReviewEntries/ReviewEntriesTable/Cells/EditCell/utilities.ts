@@ -76,9 +76,11 @@ export function isSenseChanged(oldSense: Sense, newSense: Sense): boolean {
  * - If a sense is marked as deleted or is utterly blank, return undefined
  * - If a sense lacks gloss, return error string
  *
+ * (If `definitionsEnabled = true`, can have definitions instead of glosses.)
  * (If `exemptProtected = true`, protected senses are allowed to be without gloss.) */
 export function cleanSense(
   newSense: Sense,
+  definitionsEnabled = false,
   exemptProtected = false
 ): Sense | string | undefined {
   // Ignore deleted senses.
@@ -110,9 +112,11 @@ export function cleanSense(
     return;
   }
 
-  // Don't allow senses without a gloss.
-  if (!newSense.glosses.length) {
-    return "reviewEntries.error.gloss";
+  // Don't allow senses without a gloss or definition.
+  if (!newSense.glosses.length && !newSense.definitions.length) {
+    return definitionsEnabled
+      ? "reviewEntries.error.glossAndDefinition"
+      : "reviewEntries.error.gloss";
   }
 
   return newSense;
@@ -122,8 +126,13 @@ export function cleanSense(
  * - the vernacular field is empty
  * - all senses are empty/deleted
  *
+ * (If `definitionsEnabled = true`, can have definitions instead of glosses.)
  * (If `exemptProtected = true`, protected senses are allowed to be empty.) */
-export function cleanWord(word: Word, exemptProtected = false): Word | string {
+export function cleanWord(
+  word: Word,
+  definitionsEnabled = false,
+  exemptProtected = false
+): Word | string {
   // Make sure vernacular isn't empty.
   const vernacular = word.vernacular.trim();
   if (!vernacular.length) {
@@ -133,7 +142,7 @@ export function cleanWord(word: Word, exemptProtected = false): Word | string {
   // Clean senses and check for problems.
   const senses: Sense[] = [];
   for (const sense of word.senses) {
-    const cleanedSense = cleanSense(sense, exemptProtected);
+    const cleanedSense = cleanSense(sense, definitionsEnabled, exemptProtected);
     // Skip deleted or empty senses.
     if (!cleanedSense) {
       continue;
