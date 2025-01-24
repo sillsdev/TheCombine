@@ -27,32 +27,18 @@ namespace BackendFramework.Otel
             // because OtelKernel calls the function for each activity
             if (_contextAccessor.HttpContext is { } context)
             {
-
-                Console.WriteLine("~~START CONTEXT REQUEST HEADERS~~");
-                foreach (var key in context.Request.Headers.Keys)
-                {
-                    Console.WriteLine($"{key}: {context.Request.Headers[key]}");
-                }
-                Console.WriteLine("~~END CONTEXT REQUEST HEADERS~~");
-
-                Console.WriteLine("~~START CONTEXT CONNECTION~~");
-                Console.WriteLine($"LocalIpAddress: {context.Connection.LocalIpAddress}");
-                Console.WriteLine($"RemoteIpAddress: {context.Connection.RemoteIpAddress}");
-                Console.WriteLine("~~END CONTEXT CONNECTION~~");
-
-                var ipAddress = context.Request.Headers["CF-Connecting-IP"];
-                var ipAddressWithoutPort = ipAddress.ToString().Split(':')[0];
-                if (string.IsNullOrEmpty(ipAddressWithoutPort))
+                var ipAddress = context.Request.Headers["X-Original-Forwarded-For"].ToString();
+                if (string.IsNullOrEmpty(ipAddress))
                 {
                     return null;
                 }
 
                 return await _memoryCache.GetOrCreateAsync(
-                    "location_" + ipAddressWithoutPort,
+                    "location_" + ipAddress,
                     async (cacheEntry) =>
                     {
                         cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
-                        return await GetLocationFromIp(ipAddressWithoutPort);
+                        return await GetLocationFromIp(ipAddress);
                     }
                 );
             }
