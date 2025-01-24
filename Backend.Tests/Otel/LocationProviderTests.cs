@@ -28,9 +28,11 @@ namespace Backend.Tests.Otel
         {
             // Set up HttpContextAccessor with mocked IP
             var serverVariablesFeature = new Mock<IServerVariablesFeature>();
-            serverVariablesFeature.Setup(x => x["HTTP_CF_CONNECTING_IP"]).Returns(TestIpAddress.ToString());
+            serverVariablesFeature.Setup(x => x["HTTP_X_FORWARDED_FOR"]).Returns(TestIpAddress.ToString());
             var httpContext = new DefaultHttpContext();
+            httpContext.Connection.RemoteIpAddress = TestIpAddress;
             httpContext.Features.Set(serverVariablesFeature.Object);
+            httpContext.Request.Headers["CF-Connecting-IP"] = TestIpAddress.ToString();
             _contextAccessor = new HttpContextAccessor { HttpContext = httpContext };
 
             // Set up MemoryCache

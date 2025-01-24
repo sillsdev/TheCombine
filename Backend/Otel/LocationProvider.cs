@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -27,21 +28,11 @@ namespace BackendFramework.Otel
             // because OtelKernel calls the function for each activity
             if (_contextAccessor.HttpContext is { } context)
             {
-
-                Console.WriteLine("~~START CONTEXT REQUEST HEADERS~~");
-                foreach (var key in context.Request.Headers.Keys)
-                {
-                    Console.WriteLine($"{key}: {context.Request.Headers[key]}");
-                }
-                Console.WriteLine("~~END CONTEXT REQUEST HEADERS~~");
-
-                Console.WriteLine("~~START CONTEXT CONNECTION~~");
-                Console.WriteLine($"LocalIpAddress: {context.Connection.LocalIpAddress}");
-                Console.WriteLine($"RemoteIpAddress: {context.Connection.RemoteIpAddress}");
-                Console.WriteLine("~~END CONTEXT CONNECTION~~");
-
-                var ipAddress = context.Request.Headers["CF-Connecting-IP"];
-                var ipAddressWithoutPort = ipAddress.ToString().Split(':')[0];
+                // TODO: Fix the following to get the visitor IP past Cloudflare
+                var ipAddresses = context.Request.Headers["CF-Connecting-IP"].ToString()
+                    + ':' + (context.GetServerVariable("HTTP_X_FORWARDED_FOR") ?? "")
+                    + ':' + (context.Connection.RemoteIpAddress?.ToString() ?? "");
+                var ipAddressWithoutPort = ipAddresses.Split(':').FirstOrDefault(ip => ip.Contains('.'));
                 if (string.IsNullOrEmpty(ipAddressWithoutPort))
                 {
                     return null;
