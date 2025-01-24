@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -28,22 +27,18 @@ namespace BackendFramework.Otel
             // because OtelKernel calls the function for each activity
             if (_contextAccessor.HttpContext is { } context)
             {
-                // TODO: Fix the following to get the visitor IP past Cloudflare
-                var ipAddresses = context.Request.Headers["CF-Connecting-IP"].ToString()
-                    + ':' + (context.GetServerVariable("HTTP_X_FORWARDED_FOR") ?? "")
-                    + ':' + (context.Connection.RemoteIpAddress?.ToString() ?? "");
-                var ipAddressWithoutPort = ipAddresses.Split(':').FirstOrDefault(ip => ip.Contains('.'));
-                if (string.IsNullOrEmpty(ipAddressWithoutPort))
+                var ipAddress = context.Request.Headers["X-Original-Forwarded-For"].ToString();
+                if (string.IsNullOrEmpty(ipAddress))
                 {
                     return null;
                 }
 
                 return await _memoryCache.GetOrCreateAsync(
-                    "location_" + ipAddressWithoutPort,
+                    "location_" + ipAddress,
                     async (cacheEntry) =>
                     {
                         cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
-                        return await GetLocationFromIp(ipAddressWithoutPort);
+                        return await GetLocationFromIp(ipAddress);
                     }
                 );
             }
