@@ -196,6 +196,8 @@ namespace BackendFramework.Repositories
                 .Set(x => x.ProjectRoles, user.ProjectRoles)
                 .Set(x => x.Agreement, user.Agreement)
                 .Set(x => x.Username, user.Username)
+                .Set(x => x.AnalyticsOn, user.AnalyticsOn)
+                .Set(x => x.AnsweredConsent, user.AnsweredConsent)
                 .Set(x => x.UILang, user.UILang)
                 .Set(x => x.GlossSuggestion, user.GlossSuggestion);
 

@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { AutocompleteSetting } from "./autocomplete-setting";
+import { OffOnSetting } from "./off-on-setting";
 
 /**
  *
@@ -94,10 +94,28 @@ export interface User {
   username: string;
   /**
    *
+   * @type {boolean}
+   * @memberof User
+   */
+  analyticsOn?: boolean;
+  /**
+   *
+   * @type {boolean}
+   * @memberof User
+   */
+  answeredConsent?: boolean;
+  /**
+   *
    * @type {string}
    * @memberof User
    */
   uiLang?: string | null;
+  /**
+   *
+   * @type {OffOnSetting}
+   * @memberof User
+   */
+  glossSuggestion: OffOnSetting;
   /**
    *
    * @type {string}
@@ -110,10 +128,4 @@ export interface User {
    * @memberof User
    */
   isAdmin: boolean;
-  /**
-   *
-   * @type {AutocompleteSetting}
-   * @memberof User
-   */
-  glossSuggestion: AutocompleteSetting;
 }

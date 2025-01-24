@@ -66,13 +66,26 @@ namespace BackendFramework.Models
         [BsonElement("username")]
         public string Username { get; set; }
 
+        /// <summary>
+        /// Is false if user rejects analytics, true otherwise.
+        /// User can update consent anytime.
+        /// </summary>
+        [BsonElement("analyticsOn")]
+        public bool AnalyticsOn { get; set; }
+
+        /// <summary>
+        /// Is set permanently to true once user first accepts or rejects analytics upon login.
+        /// </summary>
+        [BsonElement("answeredConsent")]
+        public bool AnsweredConsent { get; set; }
+
         [BsonElement("uiLang")]
         public string UILang { get; set; }
 
         [Required]
         [BsonElement("glossSuggestion")]
         [BsonRepresentation(BsonType.String)]
-        public AutocompleteSetting GlossSuggestion { get; set; }
+        public OffOnSetting GlossSuggestion { get; set; }
 
         [Required]
         [BsonElement("token")]
@@ -97,8 +110,10 @@ namespace BackendFramework.Models
             Agreement = false;
             Password = "";
             Username = "";
+            AnalyticsOn = true;
+            AnsweredConsent = false;
             UILang = "";
-            GlossSuggestion = AutocompleteSetting.On;
+            GlossSuggestion = OffOnSetting.On;
             Token = "";
             IsAdmin = false;
             WorkedProjects = new();
@@ -119,6 +134,8 @@ namespace BackendFramework.Models
                 Agreement = Agreement,
                 Password = Password,
                 Username = Username,
+                AnalyticsOn = AnalyticsOn,
+                AnsweredConsent = AnsweredConsent,
                 UILang = UILang,
                 GlossSuggestion = GlossSuggestion,
                 Token = Token,
@@ -141,6 +158,8 @@ namespace BackendFramework.Models
                 other.Agreement == Agreement &&
                 other.Password.Equals(Password, StringComparison.Ordinal) &&
                 other.Username.Equals(Username, StringComparison.Ordinal) &&
+                other.AnalyticsOn == AnalyticsOn &&
+                other.AnsweredConsent == AnsweredConsent &&
                 other.UILang.Equals(UILang, StringComparison.Ordinal) &&
                 other.GlossSuggestion.Equals(GlossSuggestion) &&
                 other.Token.Equals(Token, StringComparison.Ordinal) &&
@@ -178,6 +197,8 @@ namespace BackendFramework.Models
             hash.Add(Agreement);
             hash.Add(Password);
             hash.Add(Username);
+            hash.Add(AnalyticsOn);
+            hash.Add(AnsweredConsent);
             hash.Add(UILang);
             hash.Add(GlossSuggestion);
             hash.Add(Token);

@@ -1,13 +1,10 @@
 import { Card } from "@mui/material";
-import { ReactElement } from "react";
+import { type ReactElement } from "react";
 import { Draggable } from "react-beautiful-dnd";
 
 import { trashId } from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop";
 import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardContent";
-import {
-  MergeTreeReference,
-  MergeTreeSense,
-} from "goals/MergeDuplicates/MergeDupsTreeTypes";
+import { type MergeTreeSense } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import theme from "types/theme";
@@ -21,10 +18,8 @@ export default function SidebarDragSense(
   props: SidebarDragSenseProps
 ): ReactElement {
   const draggableId = useAppSelector((state: StoreState) => {
-    const { mergeSenseId, wordId } = state.mergeDuplicateGoal.tree.sidebar;
-    const order = props.index;
-    const ref: MergeTreeReference = { wordId, mergeSenseId, order };
-    return JSON.stringify(ref);
+    const ref = state.mergeDuplicateGoal.tree.sidebar.senseRef;
+    return JSON.stringify({ ...ref, order: props.index });
   });
 
   return (

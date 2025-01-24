@@ -1,0 +1,42 @@
+Lorsque vous collectez des mots par domaine sémantique, parfois le même mot est saisi plusieurs fois.
+The Combine a un outil pour trouver des entrées en double et les fusionner en une seule entrée.
+Connectons-nous à thecombine.app, puis on choisira un projet qui a des entrées en double.
+Cliquez sur le bouton « Nettoyage des données » (« Data Cleanup ») dans la barre supérieure, puis sélectionnez « Fusionner les doublons » (« Merge Duplicates »).
+The Combine trouvera des séries de mots ayant une même forme vernaculaire et vous les présentera une série à la fois.
+Dans ce projet, la première série de doublons potentiels est une paire de mots ayant la forme vernaculaire « hard ». 
+L’un a la glose « difficult » (difficile) et l’autre a la glose « not soft » (pas doux).
+S'agit-il d'un mot ayant deux sens différents ou de deux mots différents?
+Si nous ne sommes pas certains ou si nous ne voulons pas prendre une décision maintenant, nous pouvons appuyer sur le bouton « Reporter » (« Defer ») en bas de page.
+Cela nous déplace vers la prochaine série et évite que la série reportée ne revienne plus dans l’outil « Fusionner les doublons » (« Merge Duplicates »).
+Il existe un autre outil permettant d'examiner les séries qui ont été reportées.
+Nous y reviendrons plus tard dans cette vidéo.
+Cette deuxième série de doublons potentiels comporte deux mots dont la forme vernaculaire est « bank ».
+L’un a la glose « side of river » (bord du fleuve) et l’autre a la glose « financial institution » (institution financière).
+Il s'agit bien de mots différents, d'homographes que nous ne voulons pas fusionner.
+Cliquez sur le bouton « Enregistrer & continuer » (« Save & Continue ») en bas pour confirmer qu’il s’agit bien de mots distincts.
+Cette paire ne sera plus affichée dans l'outil « Fusionner les doublons » (« Merge Duplicates »), ni dans la liste des séries reportées.
+Nous avons vu alors ce que font les boutons « Enregistrer & continuer » (« Save & Continue ») et « Reporter » (« Defer »).
+Remarque importante : Si un utilisateur modifie ultérieurement l'un des mots d'une série de doublons potentiels, cette série peut réapparaître dans l'outil « Fusionner les doublons » (« Merge Duplicates »).
+Par exemple, si vous cliquez sur "Enregistrer et continuer" pour une série de mots qui ne sont pas des doublons, et que vous ajoutez ensuite un domaine sémantique à un sens de l'un des mots, cette série peut apparaître à nouveau comme des doublons potentiels.
+Ou si vous cliquez sur « Reporter » (« Defer ») pour une série, et qu'un autre utilisateur ajoute un enregistrement audio pour l'un des mots, cette série apparaîtra de nouveau dans « Fusionner les doublons » (« Merge Duplicates »), au lieu de figurer parmi les séries reportées.
+Allons de l'avant.
+Le Combine nous demande si nous voulons continuer à fusionner.
+Si nous cliquons sur « Non » (« No »), nous retournons à la page « Nettoyage des données » (« Data Cleanup »).
+Si nous cliquons sur « Oui » (« Yes »), il recherchera d'autres séries de doublons potentiels.
+Si The Combine ne trouve plus de mots ayant une forme vernaculaire identique, il propose des mots de forme vernaculaire similaire.
+Cela permet de repérer les doublons lorsque l'un des mots comporte une faute de frappe ou utilise une orthographe alternative.
+Ici, nous voyons deux mots de forme vernaculaire « present », mais le second a deux « t » à la fin.
+Hmm, ça doit être une faute de frappe.
+Un « gift » (cadeau) s'écrit « p-r-e-s-e-n-t » et non « p-r-e-s-e-n-t-t ».
+Vous ne pouvez pas modifier le texte dans l'outil « Fusionner les doublons » (« Merge Duplicates »).
+Toutefois, vous pouvez cliquer sur l'icône de balise pour ajouter une balise et mentionner ce qui doit être corrigé.
+Notez que pour que la balise soit enregistrée, il faut cliquer sur « Enregistrer & continuer » (« Save & Continue »).
+On peut quitter la fusion à tout moment en cliquant sur le bouton « Nettoyage des données » (« Data Cleanup »), mais les modifications non enregistrées seront alors supprimées.
+De retour dans la section « Nettoyage des données » (« Data Cleanup ») , il existe un outil « Examiner les entrées » (« Review Entries »).
+C'est là que vous pouvez revoir et modifier tous les mots du projet, et corriger les mots qui ont été balisés lors de la fusion des doublons.
+Nous aborderons l’outil « Examiner les entrées » (« Review Entries ») dans une autre vidéo.
+Notez qu’il y a maintenant une option ici qui n’existait pas auparavant : « Examiner les doublons reportés » (« Review Deferred Duplicates »).
+Cliquez dessus pour examiner les séries de doublons potentiels qui ont été précédemment reportés.
+C’est tout pour ce premier tutoriel vidéo sur l’outil « Fusionner les doublons » (« Merge Duplicates »).
+Dans la prochaine vidéo, nous verrons comment déplacer, supprimer et combiner des sens.
+Je vous souhaite une excellente journée !

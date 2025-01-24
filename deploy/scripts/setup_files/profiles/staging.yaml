@@ -9,7 +9,6 @@ charts:
   thecombine:
     # Frontend configuration items:
     frontend:
-      configAnalyticsWriteKey: "AoebaDJNjSlOMRUH87EaNjvwkQpfLoyy"
       configCaptchaSiteKey: "0x4AAAAAAAiMciPlBW1aA1iL" # Turnstile site key
       configShowCertExpiration: false
     global:

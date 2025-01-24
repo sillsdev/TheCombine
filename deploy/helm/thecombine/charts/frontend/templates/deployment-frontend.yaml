@@ -64,13 +64,6 @@ spec:
                 configMapKeyRef:
                   key: SERVER_NAME
                   name: env-frontend
-            {{- if .Values.configAnalyticsWriteKey }}
-            - name: CONFIG_ANALYTICS_WRITE_KEY
-              valueFrom:
-                configMapKeyRef:
-                  key: CONFIG_ANALYTICS_WRITE_KEY
-                  name: env-frontend
-            {{- end }}
           ports:
             - containerPort: 80
             - containerPort: 443
