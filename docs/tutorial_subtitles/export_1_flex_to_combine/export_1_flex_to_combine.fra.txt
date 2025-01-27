@@ -2,7 +2,7 @@ Voyons comment déplacer les données lexicales d’un projet FieldWorks vers un
 Pour commencer, ouvrez votre projet dans FieldWorks.
 Ici, j’utilise un projet avec des mots de la langue Naskapi.
 Ayant ouvert le projet FLEx souhaité, cliquez sur le menu « Fichier » (« File »), puis sélectionnez « Exporter… » (« Export… ») en bas du menu.
-Dans la boîte de dialogue « Exporter » (« Export ») qui apparaît, cliquez sur l'option « Full Lexicon » « LIFT 0.13 XML », puis cliquez sur le bouton "Exporter… » (« Export… »).
+Dans la boîte de dialogue « Exporter » (« Export ») qui apparaît, cliquez sur l'option « Full Lexicon » « LIFT 0.13 XML », puis cliquez sur le bouton « Exporter… » (« Export… »).
 Une autre boîte de dialogue apparaît pour vous permettre de sélectionner l'endroit où les fichiers exportés seront enregistrés.
 Il faudra créer un nouveau dossier pour les fichiers.
 Je vais sur le bureau et je clique sur le bouton « Créer un nouveau dossier » (« Make New Folder ») pour créer un dossier « Naskapi ».
