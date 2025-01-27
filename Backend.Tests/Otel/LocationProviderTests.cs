@@ -15,7 +15,7 @@ namespace Backend.Tests.Otel
 {
     public class LocationProviderTests
     {
-        private readonly IPAddress TestIpAddress = new(new byte[] { 100, 0, 0, 0 });
+        private readonly IPAddress TestIpAddress = new([100, 0, 0, 0]);
         private IHttpContextAccessor _contextAccessor = null!;
         private IMemoryCache _memoryCache = null!;
         private Mock<HttpMessageHandler> _handlerMock = null!;
@@ -26,15 +26,9 @@ namespace Backend.Tests.Otel
         public void Setup()
         {
             // Set up HttpContextAccessor with mocked IP
-            _contextAccessor = new HttpContextAccessor();
-            var httpContext = new DefaultHttpContext()
-            {
-                Connection =
-                {
-                    RemoteIpAddress = TestIpAddress
-                }
-            };
-            _contextAccessor.HttpContext = httpContext;
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers["X-Original-Forwarded-For"] = TestIpAddress.ToString();
+            _contextAccessor = new HttpContextAccessor { HttpContext = httpContext };
 
             // Set up MemoryCache
             var services = new ServiceCollection();
