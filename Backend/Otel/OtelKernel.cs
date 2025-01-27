@@ -128,10 +128,10 @@ namespace BackendFramework.Otel
                     data.AddTag(SessionIdTag, data.GetBaggageItem(SessionIdBaggage));
                     if (uriPath is not null && uriPath.Contains(locationUri))
                     {
-                        // When getting location externally, url.full includes site URI and user IP. 
+                        // When getting location externally, url.full includes site URI and user IP.
                         // In such cases, only add url without IP information to traces.
-                        data?.SetTag("url.full", "");
-                        data?.SetTag("url.redacted.ip", LocationProvider.locationGetterUri);
+                        data.SetTag("url.full", "");
+                        data.SetTag("url.redacted.ip", LocationProvider.locationGetterUri);
                     }
                 }
             }
