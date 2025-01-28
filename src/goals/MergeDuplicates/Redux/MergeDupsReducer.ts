@@ -28,6 +28,7 @@ import {
 } from "goals/MergeDuplicates/Redux/reducerUtilities";
 import { StoreActionTypes } from "rootRedux/actions";
 import { type Hash } from "types/hash";
+import { newWord } from "types/word";
 
 const mergeDuplicatesSlice = createSlice({
   name: "mergeDupStepReducer",
@@ -144,7 +145,7 @@ const mergeDuplicatesSlice = createSlice({
         });
 
         // Check if nothing to merge.
-        const wordToUpdate = state.data.words[wordId];
+        const wordToUpdate = state.data.words[wordId] || newWord();
         if (isEmptyMerge(wordToUpdate, mergeWord)) {
           continue;
         }
