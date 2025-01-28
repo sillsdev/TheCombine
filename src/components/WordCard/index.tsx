@@ -17,7 +17,7 @@ import {
   IconButtonWithTooltip,
   NoteButton,
 } from "components/Buttons";
-import { PronunciationsBackend } from "components/Pronunciations/PronunciationsBackend";
+import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
 import SenseCard from "components/WordCard/SenseCard";
 import SummarySenseCard from "components/WordCard/SummarySenseCard";
 import { TypographyWithFont } from "utilities/fontComponents";

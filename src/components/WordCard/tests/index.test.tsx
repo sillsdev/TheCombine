@@ -2,10 +2,9 @@ import { queryByText, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { act } from "react";
 import { Provider } from "react-redux";
-import createMockStore from "redux-mock-store";
+import configureMockStore from "redux-mock-store";
 
 import { type Word } from "api/models";
-import { playButtonLabel } from "components/Pronunciations/AudioPlayer";
 import WordCard, { WordCardLabel } from "components/WordCard";
 import { defaultState } from "rootRedux/types";
 import {
@@ -16,6 +15,8 @@ import {
   newSense,
   newWord,
 } from "types/word";
+
+jest.mock("components/Pronunciations/PronunciationsBackend", () => jest.fn());
 
 const mockAudio = ["song", "rap", "poem", "sonnet", "aria", "psalm", "hymn"];
 const mockDefinitionText = "definition goes here";
@@ -39,7 +40,7 @@ mockWord.senses.push(
 const renderWordCard = async (): Promise<void> => {
   await act(async () => {
     render(
-      <Provider store={createMockStore()(defaultState)}>
+      <Provider store={configureMockStore()(defaultState)}>
         <WordCard word={mockWord} />
       </Provider>
     );
@@ -56,12 +57,11 @@ describe("WordCard", () => {
 
     /** Check that the summary view has the intended elements */
     const checkCondensed = (): void => {
-      // Has pronunciations summary and no playable audio
+      // Has pronunciations summary
       const audioSummary = screen.getByLabelText(
         WordCardLabel.ButtonAudioSummary
       );
       expect(queryByText(audioSummary, `${newAudio.length}`)).toBeTruthy();
-      expect(screen.queryByLabelText(playButtonLabel)).toBeNull();
       // Has no definitions
       expect(screen.queryByText(mockDefinitionText)).toBeNull();
       // Has flag hover-text but not regular text
@@ -76,11 +76,8 @@ describe("WordCard", () => {
     };
 
     /** Check that the full view has the intended elements */
-    /*const checkExpanded = (): void => {
-      // Has playable audio and no pronunciations summary
-      expect(screen.queryAllByLabelText(playButtonLabel)).toHaveLength(
-        newAudio.length
-      );
+    const checkExpanded = (): void => {
+      // Has no pronunciations summary
       expect(
         screen.queryByLabelText(WordCardLabel.ButtonAudioSummary)
       ).toBeNull();
@@ -97,12 +94,12 @@ describe("WordCard", () => {
       expect(
         screen.queryByLabelText(WordCardLabel.ButtonCondense)
       ).toBeTruthy();
-    };*/
+    };
 
     checkCondensed();
     await agent.click(screen.getByLabelText(WordCardLabel.ButtonExpand));
-    /*checkExpanded();
+    checkExpanded();
     await agent.click(screen.getByLabelText(WordCardLabel.ButtonCondense));
-    checkCondensed();*/
+    checkCondensed();
   });
 });
