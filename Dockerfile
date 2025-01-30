@@ -31,14 +31,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 
-# Copy over all files not ignored in .dockerignore
-# and add public/scripts content if missing
-COPY . ./
-RUN mkdir -p ./public/scripts
-RUN touch ./public/scripts/config.js
-RUN touch ./public/scripts/release.js
-
 # Build application
+COPY . ./
 RUN npm run build
 
 # Production environment
