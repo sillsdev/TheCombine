@@ -77,6 +77,12 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
       (file as FileWithSpeakerId).speakerId = speakerId;
     }
     props.uploadAudio(file);
+    if (!props.id) {
+      // If recorder is on something with an id,
+      // that id will update after the upload is complete,
+      // so rely on the useEffect above to do this.
+      setClicked(false);
+    }
   }
 
   return (
