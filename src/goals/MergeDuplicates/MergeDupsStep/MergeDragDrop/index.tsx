@@ -3,6 +3,7 @@ import { Drawer, Grid, ImageList, ImageListItem, Tooltip } from "@mui/material";
 import { CSSProperties, ReactElement, useState } from "react";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import { v4 } from "uuid";
 
 import { appBarHeight } from "components/AppBar/AppBarTypes";
@@ -107,15 +108,13 @@ export default function MergeDragDrop(): ReactElement {
         if (overrideProtection) {
           // ... unless protection override is active and user confirms.
           setOverride({ combinePayload, protectReason });
-        } else if (srcWordId !== res.combine.droppableId) {
-          // Otherwise, if target sense is in different word, move instead of combine.
-          dispatch(
-            moveSense({
-              src,
-              destWordId: res.combine.droppableId,
-              destOrder: 0,
-            })
-          );
+        } else {
+          toast.warning(t("mergeDups.helpText.dropProtectedSenseWarning"));
+          if (srcWordId !== res.combine.droppableId) {
+            // If target sense is in different word, move instead of combine.
+            const destWordId = res.combine.droppableId;
+            dispatch(moveSense({ src, destOrder: 0, destWordId }));
+          }
         }
         return;
       }
@@ -132,6 +131,7 @@ export default function MergeDragDrop(): ReactElement {
         // Case 3a: The source, dest droppables are different.
         if (destWordId.split(" ").length > 1) {
           // If the destination is SidebarDrop, it cannot receive drags from elsewhere.
+          toast.warning(t("mergeDups.helpText.dropIntoSidebarWarning"));
           return;
         }
         // Move the sense to the dest MergeWord.
