@@ -11,7 +11,8 @@ import { FileWithSpeakerId } from "types/word";
 
 interface RecorderProps {
   disabled?: boolean;
-  id: string;
+  /** Leave id blank if the id doesn't update after an audio upload. */
+  id?: string;
   noSpeaker?: boolean;
   onClick?: () => void;
   uploadAudio: (file: FileWithSpeakerId) => void;
@@ -88,7 +89,7 @@ export default function AudioRecorder(props: RecorderProps): ReactElement {
   return (
     <RecorderIcon
       disabled={props.disabled}
-      id={props.id}
+      id={props.id ?? ""}
       startRecording={startRecording}
       stopRecording={stopRecording}
     />
