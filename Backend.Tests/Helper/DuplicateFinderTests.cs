@@ -99,90 +99,49 @@ namespace Backend.Tests.Helper
         }
 
         [Test]
-        public void HaveIdenticalDefinitionTest()
+        public void HaveSameDefinitionOrGloss()
         {
-            const string text = "YesDef";
-            const string lang = "YesLang";
+            // strings that match with .Trim().ToLowerInvariant()
+            const string defiText = "YesPlease ";
+            const string glossDef = " yesPLEASE";
 
-            var defYY = new Definition { Text = text, Language = lang };
-            var defYN = new Definition { Text = text, Language = "NoLang" };
-            var defNY = new Definition { Text = "NoDef", Language = lang };
+            var senseEmpty = new Sense { Definitions = [new()], Glosses = [new(), new()] };
+            var senseDY = new Sense { Definitions = [new(), new() { Text = "other" }, new() { Text = defiText }] };
+            var senseGY = new Sense { Glosses = [new(), new() { Def = glossDef }] };
 
-            var senseEmpty = new Sense { Definitions = new List<Definition> { new() } };
-            var senseEmptyDYY = new Sense { Definitions = new List<Definition> { new(), defYY } };
-            var senseEmptyDNYDYY = new Sense { Definitions = new List<Definition> { new(), defNY, defYY } };
-            var senseDYNDNY = new Sense { Definitions = new List<Definition> { defYN, defNY } };
-
-            var wordWithOnlyDYY = new Word
+            var wordNo = new Word
             {
-                Senses = new List<Sense> { new(), senseEmpty, senseEmptyDYY }
+                Senses = [new(), new() { Definitions = [new() { Text = "different" }, new()] }, senseEmpty]
             };
-            var wordAlsoWithDYY = new Word
+            var wordDYes = new Word
             {
-                Senses = new List<Sense> { senseDYNDNY, new(), senseEmptyDNYDYY, senseEmpty }
+                Senses = [senseEmpty, new(), senseDY]
             };
-            var wordWithoutDYY = new Word
+            var wordGYes = new Word
             {
-                Senses = new List<Sense> { senseEmpty, senseDYNDNY, new() }
+                Senses = [new(), senseGY]
             };
 
-            Assert.That(DuplicateFinder.HaveIdenticalDefinition(new Word(), new Word()), Is.False);
-            Assert.That(DuplicateFinder.HaveIdenticalDefinition(new Word(), wordWithOnlyDYY), Is.False);
-            Assert.That(DuplicateFinder.HaveIdenticalDefinition(wordWithoutDYY, new Word()), Is.False);
-            Assert.That(DuplicateFinder.HaveIdenticalDefinition(wordWithOnlyDYY, wordWithoutDYY), Is.False);
+            Assert.That(DuplicateFinder.HaveSameDefinitionOrGloss(new Word(), new Word()), Is.False);
+            Assert.That(DuplicateFinder.HaveSameDefinitionOrGloss(new Word(), wordNo), Is.False);
+            Assert.That(DuplicateFinder.HaveSameDefinitionOrGloss(wordNo, wordDYes), Is.False);
+            Assert.That(DuplicateFinder.HaveSameDefinitionOrGloss(wordGYes, new Word()), Is.False);
 
-            Assert.That(DuplicateFinder.HaveIdenticalDefinition(wordWithOnlyDYY, wordAlsoWithDYY), Is.True);
-            Assert.That(DuplicateFinder.HaveIdenticalDefinition(wordAlsoWithDYY, wordWithOnlyDYY), Is.True);
-        }
-
-        [Test]
-        public void HaveIdenticalGlossTest()
-        {
-            const string def = "YesGloss";
-            const string lang = "YesLang";
-
-            var glossYY = new Gloss { Def = def, Language = lang };
-            var glossYN = new Gloss { Def = def, Language = "NoLang" };
-            var glossNY = new Gloss { Def = "NoGloss", Language = lang };
-
-            var senseEmpty = new Sense { Glosses = new List<Gloss> { new() } };
-            var senseEmptyGYY = new Sense { Glosses = new List<Gloss> { new(), glossYY } };
-            var senseEmptyGNYGYY = new Sense { Glosses = new List<Gloss> { new(), glossNY, glossYY } };
-            var senseGYNGNY = new Sense { Glosses = new List<Gloss> { glossYN, glossNY } };
-
-            var wordWithOnlyGYY = new Word
-            {
-                Senses = new List<Sense> { new(), senseEmpty, senseEmptyGYY }
-            };
-            var wordAlsoWithGYY = new Word
-            {
-                Senses = new List<Sense> { senseGYNGNY, new(), senseEmptyGNYGYY, senseEmpty }
-            };
-            var wordWithoutGYY = new Word
-            {
-                Senses = new List<Sense> { senseEmpty, senseGYNGNY, new() }
-            };
-
-            Assert.That(DuplicateFinder.HaveIdenticalGloss(new Word(), new Word()), Is.False);
-            Assert.That(DuplicateFinder.HaveIdenticalGloss(new Word(), wordWithOnlyGYY), Is.False);
-            Assert.That(DuplicateFinder.HaveIdenticalGloss(wordWithoutGYY, new Word()), Is.False);
-            Assert.That(DuplicateFinder.HaveIdenticalGloss(wordWithOnlyGYY, wordWithoutGYY), Is.False);
-
-            Assert.That(DuplicateFinder.HaveIdenticalGloss(wordWithOnlyGYY, wordAlsoWithGYY), Is.True);
-            Assert.That(DuplicateFinder.HaveIdenticalGloss(wordAlsoWithGYY, wordWithOnlyGYY), Is.True);
+            Assert.That(DuplicateFinder.HaveSameDefinitionOrGloss(wordDYes, wordDYes), Is.True);
+            Assert.That(DuplicateFinder.HaveSameDefinitionOrGloss(wordDYes, wordGYes), Is.True);
         }
 
         [Test]
         public void MightShareGramCatGroupsTest()
         {
-            var nounSense = new Sense { GrammaticalInfo = new GrammaticalInfo { CatGroup = GramCatGroup.Noun } };
-            var unspecifiedSense = new Sense { GrammaticalInfo = new GrammaticalInfo { CatGroup = GramCatGroup.Unspecified } };
-            var verbSense = new Sense { GrammaticalInfo = new GrammaticalInfo { CatGroup = GramCatGroup.Verb } };
+            var nounSense = new Sense { GrammaticalInfo = new() { CatGroup = GramCatGroup.Noun } };
+            var unspecifiedSense = new Sense { GrammaticalInfo = new() { CatGroup = GramCatGroup.Unspecified } };
+            var verbSense = new Sense { GrammaticalInfo = new() { CatGroup = GramCatGroup.Verb } };
 
-            var nnWord = new Word { Senses = new List<Sense> { nounSense.Clone(), nounSense.Clone() } };
-            var uuWord = new Word { Senses = new List<Sense> { unspecifiedSense.Clone(), unspecifiedSense.Clone() } };
-            var vnWord = new Word { Senses = new List<Sense> { verbSense.Clone(), nounSense.Clone() } };
-            var vuWord = new Word { Senses = new List<Sense> { verbSense.Clone(), unspecifiedSense.Clone() } };
+            var nnWord = new Word { Senses = [nounSense.Clone(), nounSense.Clone()] };
+            var uuWord = new Word { Senses = [unspecifiedSense.Clone(), unspecifiedSense.Clone()] };
+            var vnWord = new Word { Senses = [verbSense.Clone(), nounSense.Clone()] };
+            var vuWord = new Word { Senses = [verbSense.Clone(), unspecifiedSense.Clone()] };
 
             Assert.That(DuplicateFinder.HaveCommonGramCatGroup(nnWord, vnWord), Is.True);
             Assert.That(DuplicateFinder.HaveCommonGramCatGroup(nnWord, vuWord), Is.False);
