@@ -1,4 +1,3 @@
-import { type PreloadedState } from "@reduxjs/toolkit";
 import { type RenderOptions, render } from "@testing-library/react";
 import { type PropsWithChildren, type ReactElement } from "react";
 import { Provider } from "react-redux";
@@ -15,7 +14,7 @@ import { persistedDefaultState } from "rootRedux/testTypes";
 /** This extends the default options for `render` from `@testing-library/react`,
  * allowing the user to specify other things such as `initialState`, `store`. */
 interface ExtendedRenderOptions extends Omit<RenderOptions, "queries"> {
-  preloadedState?: PreloadedState<RootState>;
+  preloadedState?: RootState;
   store?: AppStore;
 }
 

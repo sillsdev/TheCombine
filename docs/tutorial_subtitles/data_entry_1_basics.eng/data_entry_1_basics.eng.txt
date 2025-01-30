@@ -26,11 +26,11 @@ Click on the play button to listen.
 Hold the shift-key and click to delete it.
 A dialog box will appear to confirm whether you want to delete the recording.
 (If you are using a touch-screen, you can tap on the play button to play, or press and hold the button to bring up a menu.)
-When you are done entering words, click the Exit button to return to the semantic domain tree.
+When you are done entering words, click the “Exit” button to return to the semantic domain tree.
 (Don’t worry—the words you entered are already saved even if you close the window without clicking the exit button.)
 If we select the same domain to enter more words, see how the words we previously entered in this domain are listed in a panel on the side?
 If you are working in a narrow web browser window, the panel of previously entered words will not automatically appear.
-You can bring it up by pressing the sideways carat icon at the bottom of the data entry box.
+You can bring it up by clicking the sideways carat icon at the bottom of the data entry box.
 Let’s enter more words!
 If you want to delete one of the words you added, click on the delete icon at the end of its row.
 Warning: this will permanently remove the word and all its content!
@@ -39,5 +39,5 @@ It will reset the vernacular field, the gloss field, the note, and the audio rec
 That covers how to gather words with Data Entry in The Combine!
 When gathering words by semantic domain, often the same word will be added to multiple domains, resulting in lots of duplicate words.
 The Combine has ways to help avoid or manage that issue.
-In the next video, we will look at entering multiple words with the same vernacular form.
+In the next Data Entry video, we will look at entering multiple words with the same vernacular form.
 Have a wonderful day!
