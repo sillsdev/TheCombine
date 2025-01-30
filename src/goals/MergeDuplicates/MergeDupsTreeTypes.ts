@@ -40,7 +40,7 @@ export interface MergeTreeWord {
   flag: Flag;
   note: Note;
   protected: boolean;
-  protectReasons?: ProtectReason[] | null;
+  protectReasons?: ProtectReason[];
   audioCount: number;
 }
 
@@ -79,8 +79,8 @@ export function convertSenseToMergeTreeSense(
 ): MergeTreeSense {
   return {
     order,
-    protected: sense?.accessibility === Status.Protected,
-    protectReasons: sense?.protectReasons ?? undefined,
+    protected: sense.accessibility === Status.Protected,
+    protectReasons: sense.protectReasons ?? undefined,
     srcWordId,
     sense,
   };
@@ -94,7 +94,7 @@ export function convertWordToMergeTreeWord(word: Word): MergeTreeWord {
   mergeTreeWord.flag = { ...word.flag };
   mergeTreeWord.note = { ...word.note };
   mergeTreeWord.protected = word.accessibility === Status.Protected;
-  mergeTreeWord.protectReasons = word.protectReasons;
+  mergeTreeWord.protectReasons = word.protectReasons ?? undefined;
   mergeTreeWord.audioCount = word.audio.length;
   return mergeTreeWord;
 }
