@@ -6,8 +6,6 @@
   "source": "public/index.html",
   "scripts": {
     "backend": "dotnet watch --project Backend/BackendFramework.csproj",
-    "prebuild": "        node scripts/touchPublicScripts.js",
-    "prebuild:analyze": "node scripts/touchPublicScripts.js",
     "build": "        parcel build",
     "build:analyze": "parcel build --reporter @parcel/reporter-bundle-analyzer",
     "predatabase": "tsc scripts/setupMongo.ts && node scripts/setupMongo.js",

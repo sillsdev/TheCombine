@@ -23,19 +23,25 @@ COPY docs/user_guide docs/user_guide
 
 RUN tox -e user-guide
 
-# Frontend build environment.
+# Frontend build environment
 FROM node:20.18.1-bookworm-slim AS frontend_builder
 WORKDIR /app
 
-# Install app dependencies.
+# Install app dependencies
 COPY package*.json ./
 RUN npm ci
 
-# Build application.
+# Copy over all files not ignored in .dockerignore
+# and add public/scripts content if missing
 COPY . ./
+RUN mkdir -p ./public/scripts
+RUN touch ./public/scripts/config.js
+RUN touch ./public/scripts/release.js
+
+# Build application
 RUN npm run build
 
-# Production environment.
+# Production environment
 FROM nginx:1.27
 
 WORKDIR /app
