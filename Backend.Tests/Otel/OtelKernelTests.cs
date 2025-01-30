@@ -12,9 +12,6 @@ namespace Backend.Tests.Otel
 {
     public class OtelKernelTests : IDisposable
     {
-        private const string FrontendSessionIdKey = "sessionId";
-        private const string OtelSessionIdKey = "sessionId";
-        private const string OtelSessionBaggageKey = "sessionBaggage";
         private LocationEnricher _locationEnricher = null!;
 
         public void Dispose()
@@ -32,41 +29,63 @@ namespace Backend.Tests.Otel
         }
 
         [Test]
-        public void BuildersSetSessionBaggageFromHeader()
+        public void BuildersSetBaggageFromHeaderAllAnalytics()
         {
             // Arrange
             var httpContext = new DefaultHttpContext();
-            httpContext.Request.Headers[FrontendSessionIdKey] = "123";
+            httpContext.Request.Headers[AnalyticsOnHeader] = "true";
+            httpContext.Request.Headers[SessionIdHeader] = "123";
             var activity = new Activity("testActivity").Start();
 
             // Act
+            TrackConsent(activity, httpContext.Request);
             TrackSession(activity, httpContext.Request);
 
             // Assert
-            Assert.That(activity.Baggage.Any(_ => _.Key == OtelSessionBaggageKey));
+            Assert.That(activity.Baggage.Any(_ => _.Key == ConsentBaggage));
+            Assert.That(activity.Baggage.Any(_ => _.Key == SessionIdBaggage));
         }
 
         [Test]
-        public void OnEndSetsSessionTagFromBaggage()
+        public void BuildersSetBaggageFromHeaderNecessaryAnalytics()
+        {
+            // Arrange
+            var httpContext = new DefaultHttpContext();
+            httpContext.Request.Headers[AnalyticsOnHeader] = "false";
+            var activity = new Activity("testActivity").Start();
+
+            // Act
+            TrackConsent(activity, httpContext.Request);
+            TrackSession(activity, httpContext.Request);
+
+            // Assert
+            Assert.That(activity.Baggage.Any(_ => _.Key == ConsentBaggage));
+            Assert.That(!activity.Baggage.Any(_ => _.Key == SessionIdBaggage));
+        }
+
+        [Test]
+        public void OnEndSetsTagsFromBaggage()
         {
             // Arrange
             var activity = new Activity("testActivity").Start();
-            activity.SetBaggage(OtelSessionBaggageKey, "test session id");
+            activity.SetBaggage(ConsentBaggage, "true");
+            activity.SetBaggage(SessionIdBaggage, "test session id");
 
             // Act
             _locationEnricher.OnEnd(activity);
 
             // Assert
-            Assert.That(activity.Tags.Any(_ => _.Key == OtelSessionIdKey));
+            Assert.That(activity.Tags.Any(_ => _.Key == ConsentTag));
+            Assert.That(activity.Tags.Any(_ => _.Key == SessionIdTag));
         }
 
-
         [Test]
-        public void OnEndSetsLocationTags()
+        public void OnEndSetsLocationTagsAllAnalytics()
         {
             // Arrange
             _locationEnricher = new LocationEnricher(new LocationProviderMock());
             var activity = new Activity("testActivity").Start();
+            activity.SetBaggage(ConsentBaggage, "true");
 
             // Act
             _locationEnricher.OnEnd(activity);
@@ -81,11 +100,30 @@ namespace Backend.Tests.Otel
             Assert.That(activity.Tags, Is.SupersetOf(testLocation));
         }
 
+        [Test]
+        public void OnEndSetsLocationTagsNecessaryAnalytics()
+        {
+            // Arrange
+            _locationEnricher = new LocationEnricher(new LocationProviderMock());
+            var activity = new Activity("testActivity").Start();
+            activity.SetBaggage(ConsentBaggage, "false");
+
+            // Act
+            _locationEnricher.OnEnd(activity);
+
+            // Assert
+            Assert.That(!activity.Tags.Any(_ => _.Key == "country"));
+            Assert.That(!activity.Tags.Any(_ => _.Key == "regionName"));
+            Assert.That(!activity.Tags.Any(_ => _.Key == "city"));
+        }
+
+        [Test]
         public void OnEndRedactsIp()
         {
             // Arrange
             _locationEnricher = new LocationEnricher(new LocationProviderMock());
             var activity = new Activity("testActivity").Start();
+            activity.SetBaggage(ConsentBaggage, "true");
             activity.SetTag("url.full", $"{LocationProvider.locationGetterUri}100.0.0.0");
 
             // Act

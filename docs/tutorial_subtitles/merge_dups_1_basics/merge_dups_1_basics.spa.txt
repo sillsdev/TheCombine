@@ -17,7 +17,7 @@ Haga clic en el botón “Guardar y continuar” (“Save & Continue”) en la p
 Este par no volverá a aparecer en la herramienta “Combinar duplicados” (“Merge Duplicates”), ni en la lista de conjuntos aplazados.
 Ya hemos visto lo que hacen los botones “Guardar y continuar” (“Save & Continue”) y “Aplazar” (“Defer”).
 Una nota importante: si un usuario cambia más tarde alguna de las palabras de un conjunto de duplicados potenciales, entonces ese conjunto puede aparecer de nuevo en la herramienta “Combinar duplicados” (“Merge Duplicates”).
-Por ejemplo, si hace clic en "Guardar y continuar" (“Save & Continue”) para un conjunto de palabras que no son duplicados, y más tarde añade un dominio semántico a una acepción de una de las palabras, ese conjunto puede aparecer de nuevo como duplicados potenciales.
+Por ejemplo, si hace clic en “Guardar y continuar” (“Save & Continue”) para un conjunto de palabras que no son duplicados, y más tarde añade un dominio semántico a una acepción de una de las palabras, ese conjunto puede aparecer de nuevo como duplicados potenciales.
 O si hace clic en “Aplazar” (“Defer”) para un conjunto, y luego otro usuario añade una grabación de audio para una de las palabras, entonces ese conjunto aparecerá de nuevo en “Combinar duplicados” (“Merge Duplicates”), en lugar de entre los conjuntos diferidos.
 Sigamos adelante.
 The Combine pregunta si queremos seguir combinando.

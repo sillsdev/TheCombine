@@ -54,7 +54,13 @@ const whiteListedErrorUrls = [
 // Create an axios instance to allow for attaching interceptors to it.
 const axiosInstance = axios.create({ baseURL: apiBaseURL });
 axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  config.headers.sessionId = getSessionId();
+  const consent = LocalStorage.getCurrentUser()?.analyticsOn;
+  if (consent === false) {
+    config.headers.analyticsOn = `${false}`;
+  } else {
+    config.headers.analyticsOn = `${true}`;
+    config.headers.sessionId = getSessionId();
+  }
   return config;
 });
 axiosInstance.interceptors.response.use(undefined, (err: AxiosError) => {
@@ -499,7 +505,7 @@ export async function createSpeaker(
   projectId?: string
 ): Promise<string> {
   projectId = projectId || LocalStorage.getProjectId();
-  const params = { name, projectId };
+  const params = { body: name, projectId };
   return (await speakerApi.createSpeaker(params, defaultOptions())).data;
 }
 
@@ -530,7 +536,7 @@ export async function updateSpeakerName(
   projectId?: string
 ): Promise<string> {
   projectId = projectId || LocalStorage.getProjectId();
-  const params = { name, projectId, speakerId };
+  const params = { body: name, projectId, speakerId };
   return (await speakerApi.updateSpeakerName(params, defaultOptions())).data;
 }
 
@@ -655,7 +661,7 @@ export async function addUser(user: User): Promise<User> {
 
 /** Returns true if the email address is in use already. */
 export async function isEmailTaken(email: string): Promise<boolean> {
-  return (await userApi.isEmailUnavailable({ email })).data;
+  return (await userApi.isEmailUnavailable({ body: email })).data;
 }
 
 export async function authenticateUser(
@@ -683,7 +689,7 @@ export async function getUser(userId: string): Promise<User> {
 }
 
 export async function getUserByEmail(email: string): Promise<User> {
-  return (await userApi.getUserByEmail({ email }, defaultOptions())).data;
+  return (await userApi.getUserByEmail({ body: email }, defaultOptions())).data;
 }
 
 export async function updateUser(user: User): Promise<User> {

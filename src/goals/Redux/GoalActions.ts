@@ -2,7 +2,6 @@ import { Action, PayloadAction } from "@reduxjs/toolkit";
 
 import { MergeUndoIds, Word } from "api/models";
 import * as Backend from "backend";
-import { getDuplicates, getGraylistEntries } from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
 import { CharInvChanges } from "goals/CharacterInventory/CharacterInventoryTypes";
 import { dispatchMergeStepData } from "goals/MergeDuplicates/Redux/MergeDupsActions";
@@ -211,9 +210,13 @@ function goalCleanup(goal: Goal): void {
 export async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
   switch (goalType) {
     case GoalType.MergeDups:
-      return checkMergeData(await getDuplicates(5, maxNumSteps(goalType)));
+      return checkMergeData(
+        await Backend.getDuplicates(5, maxNumSteps(goalType))
+      );
     case GoalType.ReviewDeferredDups:
-      return checkMergeData(await getGraylistEntries(maxNumSteps(goalType)));
+      return checkMergeData(
+        await Backend.getGraylistEntries(maxNumSteps(goalType))
+      );
     default:
       return [];
   }
@@ -238,6 +241,9 @@ function checkMergeData(goalData: Word[][]): Word[][] {
       errors.push("Set of duplicates has multiple senses with the same guid!");
     }
     if (errors.length) {
+      if (dups.length > 1) {
+        Backend.blacklistAdd(dups.map((w) => w.id));
+      }
       errors.forEach((e) => {
         console.error(e);
         alert(e);

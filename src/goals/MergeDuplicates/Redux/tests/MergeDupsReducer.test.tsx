@@ -1,4 +1,8 @@
-import { type Action, type PayloadAction } from "@reduxjs/toolkit";
+import {
+  type Action,
+  type PayloadAction,
+  type UnknownAction,
+} from "@reduxjs/toolkit";
 
 import { Status } from "api/models";
 import {
@@ -572,9 +576,9 @@ describe("MergeDupsReducer", () => {
       type: StoreActionTypes.RESET,
     };
 
-    expect(mergeDupStepReducer({} as MergeTreeState, action)).toEqual(
-      defaultState
-    );
+    expect(
+      mergeDupStepReducer({} as MergeTreeState, action as UnknownAction)
+    ).toEqual(defaultState);
   });
 
   describe("setWordData", () => {
