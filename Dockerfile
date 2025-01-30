@@ -23,19 +23,19 @@ COPY docs/user_guide docs/user_guide
 
 RUN tox -e user-guide
 
-# Frontend build environment
+# Frontend build environment.
 FROM node:20.18.1-bookworm-slim AS frontend_builder
 WORKDIR /app
 
-# Install app dependencies
+# Install app dependencies.
 COPY package*.json ./
 RUN npm ci
 
-# Build application
+# Build application.
 COPY . ./
 RUN npm run build
 
-# Production environment
+# Production environment.
 FROM nginx:1.27
 
 WORKDIR /app
@@ -57,6 +57,7 @@ COPY public/locales ${FRONTEND_HOST_DIR}/locales
 COPY nginx/pages/url_moved_home.html /etc/nginx/page_templates/url_moved_home.html
 COPY public/favicon.ico ${FRONTEND_HOST_DIR}/url_moved/favicon.ico
 COPY src/resources/tractor.png ${FRONTEND_HOST_DIR}/url_moved/tractor.png
+COPY public/scripts/release.js ${FRONTEND_HOST_DIR}/scripts/release.js
 
 # Setup nginx configuration templates
 COPY nginx/templates/* /etc/nginx/templates/
