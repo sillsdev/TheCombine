@@ -76,7 +76,7 @@ export function isSenseChanged(oldSense: Sense, newSense: Sense): boolean {
 interface CleanOptions {
   /** Allow no glosses if there are definitions. */
   definitionsEnabled?: boolean;
-  /** Allow no glosses if sense protected and thus cannot be deleted. */
+  /** Allow empty sense if protected and thus cannot be deleted. */
   exemptProtected?: boolean;
 }
 
