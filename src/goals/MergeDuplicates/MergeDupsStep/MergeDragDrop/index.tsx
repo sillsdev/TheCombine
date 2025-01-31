@@ -48,14 +48,14 @@ export default function MergeDragDrop(): ReactElement {
       return;
     } else if (res.destination?.droppableId === trashId) {
       // Case 1: The sense was dropped on the trash icon.
-      if (src.isSenseProtected) {
+      if (src.isSenseProtected && !src.order) {
         // Case 1a: Cannot delete a protected sense.
         return;
       }
       setSenseToDelete(res.draggableId);
     } else if (res.combine) {
       // Case 2: the sense was dropped on another sense.
-      if (src.isSenseProtected) {
+      if (src.isSenseProtected && !src.order) {
         // Case 2a: Cannot merge a protected sense into another sense.
         if (srcWordId !== res.combine.droppableId) {
           // The target sense is in a different word, so move instead of combine.
