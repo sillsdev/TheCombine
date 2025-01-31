@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Statistics renders without crashing, UI does not change unexpectedly 1`] = `
-Array [
+[
   <div
     className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 css-a5rdam-MuiGrid-root"
   >
@@ -176,7 +176,7 @@ Array [
           <div
             className="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-bhp9pd-MuiPaper-root-MuiCard-root"
             style={
-              Object {
+              {
                 "width": 600,
               }
             }
@@ -190,7 +190,7 @@ Array [
                 <div
                   className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
                   style={
-                    Object {
+                    {
                       "borderBottomStyle": "dotted",
                       "borderBottomWidth": 1,
                       "position": "relative",
@@ -206,7 +206,7 @@ Array [
                 <div
                   className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
                   style={
-                    Object {
+                    {
                       "borderBottomStyle": "dotted",
                       "borderBottomWidth": 1,
                       "position": "relative",
@@ -222,7 +222,7 @@ Array [
                 <div
                   className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5 css-k3f0g4-MuiGrid-root"
                   style={
-                    Object {
+                    {
                       "borderBottomStyle": "dotted",
                       "borderBottomWidth": 1,
                       "position": "relative",
@@ -279,7 +279,7 @@ Array [
                 <span
                   className="MuiLinearProgress-bar MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Determinate css-worpmc-MuiLinearProgress-bar1"
                   style={
-                    Object {
+                    {
                       "transform": "translateX(-100%)",
                     }
                   }
