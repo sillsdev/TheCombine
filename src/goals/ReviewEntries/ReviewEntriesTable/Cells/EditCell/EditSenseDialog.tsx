@@ -66,8 +66,8 @@ export enum EditSenseField {
 type EditSenseFieldChanged = Record<EditSenseField, boolean>;
 const defaultEditSenseFieldChanged: EditSenseFieldChanged = {
   [EditSenseField.Definitions]: false,
-  [EditSenseField.GrammaticalInfo]: false,
   [EditSenseField.Glosses]: false,
+  [EditSenseField.GrammaticalInfo]: false,
   [EditSenseField.SemanticDomains]: false,
 };
 
@@ -96,6 +96,7 @@ export default function EditSenseDialog(
   const [newSense, setNewSense] = useState(props.sense);
   const [cancelDialog, setCancelDialog] = useState(false);
   const [changes, setChanges] = useState(defaultEditSenseFieldChanged);
+  const [noDefinitionOrGloss, setNoDefinitionOrGloss] = useState(false);
 
   const { t } = useTranslation();
 
@@ -115,6 +116,10 @@ export default function EditSenseDialog(
         props.sense.semanticDomains
       ),
     });
+    setNoDefinitionOrGloss(
+      newSense.definitions.every((d) => !d.text.trim()) &&
+        newSense.glosses.every((g) => !g.def.trim())
+    );
   }, [newSense, props.sense]);
 
   const bgStyle = (field: EditSenseField): CSSProperties => ({
@@ -213,6 +218,7 @@ export default function EditSenseDialog(
                     <DefinitionList
                       defaultLang={analysisWritingSystems[0]}
                       definitions={newSense.definitions}
+                      error={noDefinitionOrGloss}
                       onChange={updateDefinitions}
                       textFieldIdPrefix={
                         EditSenseDialogId.TextFieldDefinitionPrefix
@@ -230,6 +236,7 @@ export default function EditSenseDialog(
                 <CardContent>
                   <GlossList
                     defaultLang={analysisWritingSystems[0]}
+                    error={noDefinitionOrGloss}
                     glosses={newSense.glosses}
                     onChange={updateGlosses}
                     textFieldIdPrefix={EditSenseDialogId.TextFieldGlossPrefix}
@@ -286,6 +293,7 @@ export default function EditSenseDialog(
 interface DefinitionListProps {
   defaultLang: WritingSystem;
   definitions: Definition[];
+  error?: boolean;
   onChange: (definitions: Definition[]) => void;
   textFieldIdPrefix: string;
 }
@@ -302,6 +310,7 @@ function DefinitionList(props: DefinitionListProps): ReactElement {
       {definitions.map((d, i) => (
         <DefinitionTextField
           definition={d}
+          error={props.error}
           key={i}
           onChange={(definition: Definition) => {
             const updated = [...definitions];
@@ -317,6 +326,7 @@ function DefinitionList(props: DefinitionListProps): ReactElement {
 
 interface DefinitionTextFieldProps {
   definition: Definition;
+  error?: boolean;
   textFieldId: string;
   onChange: (definition: Definition) => void;
 }
@@ -324,6 +334,7 @@ interface DefinitionTextFieldProps {
 function DefinitionTextField(props: DefinitionTextFieldProps): ReactElement {
   return (
     <TextFieldWithFont
+      error={props.error}
       fullWidth
       id={props.textFieldId}
       label={props.definition.language}
@@ -343,6 +354,7 @@ function DefinitionTextField(props: DefinitionTextFieldProps): ReactElement {
 
 interface GlossListProps {
   defaultLang: WritingSystem;
+  error?: boolean;
   glosses: Gloss[];
   onChange: (glosses: Gloss[]) => void;
   textFieldIdPrefix: string;
@@ -359,6 +371,7 @@ function GlossList(props: GlossListProps): ReactElement {
     <>
       {glosses.map((g, i) => (
         <GlossTextField
+          error={props.error}
           gloss={g}
           key={i}
           onChange={(gloss: Gloss) => {
@@ -374,6 +387,7 @@ function GlossList(props: GlossListProps): ReactElement {
 }
 
 interface GlossTextFieldProps {
+  error?: boolean;
   gloss: Gloss;
   textFieldId: string;
   onChange: (gloss: Gloss) => void;
@@ -382,9 +396,9 @@ interface GlossTextFieldProps {
 function GlossTextField(props: GlossTextFieldProps): ReactElement {
   return (
     <TextFieldWithFont
+      error={props.error}
       fullWidth
       id={props.textFieldId}
-      error={!props.gloss.def.trim()}
       label={props.gloss.language}
       lang={props.gloss.language}
       margin="dense"
