@@ -94,7 +94,6 @@ export default function MergeDragDrop(): ReactElement {
         dispatch(moveSense(movePayload));
       } else {
         // Case 3b: The source & dest droppables are the same, so we reorder, not move.
-
         if (
           src.order === destOrder ||
           (destOrder === 0 && src.order !== undefined && sidebarProtected)
