@@ -338,6 +338,7 @@
     "deleteDisabled": "This was imported with data that The Combine doesn't handle, so it may not be deleted.",
     "error": {
       "gloss": "Glosses cannot be left blank",
+      "glossAndDefinition": "Glosses and definitions cannot both be left blank",
       "senses": "Cannot save an entry with no senses",
       "vernacular": "Vernacular cannot be left blank"
     },
