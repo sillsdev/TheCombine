@@ -210,7 +210,9 @@ describe("cleanSense", () => {
     sense.guid = "guid-does-not-matter";
     sense.accessibility = Status.Protected;
     expect(cleanSense(sense)).toBeUndefined();
-    expect(typeof cleanSense(sense, false, true)).toEqual("object");
+    expect(typeof cleanSense(sense, { exemptProtected: true })).toEqual(
+      "object"
+    );
   });
 
   it("returns error string for non-empty sense without gloss (unless protected and exempted)", () => {
@@ -218,7 +220,9 @@ describe("cleanSense", () => {
     sense.grammaticalInfo.catGroup = GramCatGroup.Noun;
     sense.accessibility = Status.Protected;
     expect(typeof cleanSense(sense)).toEqual("string");
-    expect(typeof cleanSense(sense, false, true)).toEqual("object");
+    expect(typeof cleanSense(sense, { exemptProtected: true })).toEqual(
+      "object"
+    );
   });
 
   it("allow sense without gloss but with definition", () => {
@@ -230,8 +234,8 @@ describe("cleanSense", () => {
   it("returns different error if definitionsEnabled", () => {
     const sense = newSense();
     sense.grammaticalInfo.catGroup = GramCatGroup.Noun;
-    const disabledResult = cleanSense(sense, false);
-    const enabledResult = cleanSense(sense, true);
+    const disabledResult = cleanSense(sense);
+    const enabledResult = cleanSense(sense, { definitionsEnabled: true });
     expect(typeof disabledResult).toEqual("string");
     expect(typeof enabledResult).toEqual("string");
     expect(disabledResult).not.toEqual(enabledResult);
@@ -258,7 +262,7 @@ describe("cleanWord", () => {
     sense.accessibility = Status.Protected;
     word.senses.push(sense);
     expect(typeof cleanWord(word)).toEqual("string");
-    expect(typeof cleanWord(word, false, true)).toEqual("object");
+    expect(typeof cleanWord(word, { exemptProtected: true })).toEqual("object");
   });
 
   it("cleans up note", () => {

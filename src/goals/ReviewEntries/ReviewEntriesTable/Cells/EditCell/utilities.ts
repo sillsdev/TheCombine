@@ -72,16 +72,20 @@ export function isSenseChanged(oldSense: Sense, newSense: Sense): boolean {
   );
 }
 
+/** Common options for the cleanSense, cleanWord functions. */
+interface CleanOptions {
+  /** Allow no glosses if there are definitions. */
+  definitionsEnabled?: boolean;
+  /** Allow no glosses if sense protected and thus cannot be deleted. */
+  exemptProtected?: boolean;
+}
+
 /** Return a cleaned sense ready to be saved:
  * - If a sense is marked as deleted or is utterly blank, return undefined
- * - If a sense lacks gloss, return error string
- *
- * (If `definitionsEnabled = true`, can have definitions instead of glosses.)
- * (If `exemptProtected = true`, protected senses are allowed to be without gloss.) */
+ * - If a sense lacks gloss, return error string */
 export function cleanSense(
   newSense: Sense,
-  definitionsEnabled = false,
-  exemptProtected = false
+  options?: CleanOptions
 ): Sense | string | undefined {
   // Ignore deleted senses.
   if (newSense.accessibility === Status.Deleted) {
@@ -98,7 +102,7 @@ export function cleanSense(
   );
 
   // Bypass the following checks on protected senses.
-  if (exemptProtected && newSense.accessibility === Status.Protected) {
+  if (options?.exemptProtected && newSense.accessibility === Status.Protected) {
     return newSense;
   }
 
@@ -114,7 +118,7 @@ export function cleanSense(
 
   // Don't allow senses without a gloss or definition.
   if (!newSense.glosses.length && !newSense.definitions.length) {
-    return definitionsEnabled
+    return options?.definitionsEnabled
       ? "reviewEntries.error.glossAndDefinition"
       : "reviewEntries.error.gloss";
   }
@@ -124,15 +128,8 @@ export function cleanSense(
 
 /** Clean a word. Return error string id if:
  * - the vernacular field is empty
- * - all senses are empty/deleted
- *
- * (If `definitionsEnabled = true`, can have definitions instead of glosses.)
- * (If `exemptProtected = true`, protected senses are allowed to be empty.) */
-export function cleanWord(
-  word: Word,
-  definitionsEnabled = false,
-  exemptProtected = false
-): Word | string {
+ * - all senses are empty/deleted */
+export function cleanWord(word: Word, options?: CleanOptions): Word | string {
   // Make sure vernacular isn't empty.
   const vernacular = word.vernacular.trim();
   if (!vernacular.length) {
@@ -142,7 +139,7 @@ export function cleanWord(
   // Clean senses and check for problems.
   const senses: Sense[] = [];
   for (const sense of word.senses) {
-    const cleanedSense = cleanSense(sense, definitionsEnabled, exemptProtected);
+    const cleanedSense = cleanSense(sense, options);
     // Skip deleted or empty senses.
     if (!cleanedSense) {
       continue;
