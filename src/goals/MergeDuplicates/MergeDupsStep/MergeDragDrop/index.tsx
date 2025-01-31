@@ -16,6 +16,11 @@ import {
   moveSense,
   orderSense,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
+import {
+  type CombineSenseMergePayload,
+  type MoveSensePayload,
+  type OrderSensePayload,
+} from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import theme from "types/theme";
@@ -36,7 +41,10 @@ export default function MergeDragDrop(): ReactElement {
     (state: StoreState) => state.mergeDuplicateGoal.tree.words
   );
 
-  const [senseToDelete, setSenseToDelete] = useState<string>("");
+  const [srcToDelete, setSrcToDelete] = useState<
+    MergeTreeReference | undefined
+  >();
+
   const { t } = useTranslation();
 
   function handleDrop(res: DropResult): void {
@@ -52,32 +60,27 @@ export default function MergeDragDrop(): ReactElement {
         // Case 1a: Cannot delete a protected sense.
         return;
       }
-      setSenseToDelete(res.draggableId);
+      setSrcToDelete(src);
     } else if (res.combine) {
       // Case 2: the sense was dropped on another sense.
       if (src.isSenseProtected) {
         // Case 2a: Cannot merge a protected sense into another sense.
-        if (srcWordId !== res.combine.droppableId) {
+        const destWordId = res.combine.droppableId;
+        if (srcWordId !== destWordId) {
           // The target sense is in a different word, so move instead of combine.
-          dispatch(
-            moveSense({
-              src,
-              destWordId: res.combine.droppableId,
-              destOrder: 0,
-            })
-          );
+          dispatch(moveSense({ destOrder: 0, destWordId, src }));
         }
         return;
       }
-      const combineRef: MergeTreeReference = JSON.parse(
-        res.combine.draggableId
-      );
-      if (combineRef.order !== undefined) {
+      const dest: MergeTreeReference = JSON.parse(res.combine.draggableId);
+      if (dest.order !== undefined) {
         // Case 2b: If the target is a sidebar sub-sense, it cannot receive a combine.
         return;
       }
-      dispatch(combineSense({ src, dest: combineRef }));
+      const combinePayload: CombineSenseMergePayload = { dest, src };
+      dispatch(combineSense(combinePayload));
     } else if (res.destination) {
+      const destOrder = res.destination.index;
       const destWordId = res.destination.droppableId;
       // Case 3: The sense was dropped in a droppable.
       if (srcWordId !== destWordId) {
@@ -87,12 +90,11 @@ export default function MergeDragDrop(): ReactElement {
           return;
         }
         // Move the sense to the dest MergeWord.
-        dispatch(
-          moveSense({ src, destWordId, destOrder: res.destination.index })
-        );
+        const movePayload: MoveSensePayload = { destOrder, destWordId, src };
+        dispatch(moveSense(movePayload));
       } else {
         // Case 3b: The source & dest droppables are the same, so we reorder, not move.
-        const destOrder = res.destination.index;
+
         if (
           src.order === destOrder ||
           (destOrder === 0 && src.order !== undefined && sidebarProtected)
@@ -100,14 +102,17 @@ export default function MergeDragDrop(): ReactElement {
           // If the sense wasn't moved or was moved within the sidebar above a protected sense, do nothing.
           return;
         }
-        dispatch(orderSense({ src, destOrder }));
+        const orderPayload: OrderSensePayload = { destOrder, src };
+        dispatch(orderSense(orderPayload));
       }
     }
   }
 
-  function performDelete(): void {
-    dispatch(deleteSense(JSON.parse(senseToDelete)));
-    setSenseToDelete("");
+  function onConfirmDelete(): void {
+    if (srcToDelete) {
+      dispatch(deleteSense(srcToDelete));
+      setSrcToDelete(undefined);
+    }
   }
 
   function renderSidebar(): ReactElement {
@@ -170,10 +175,10 @@ export default function MergeDragDrop(): ReactElement {
             </ImageListItem>
             {renderSidebar()}
             <CancelConfirmDialog
-              open={!!senseToDelete}
+              open={!!srcToDelete}
               text="mergeDups.helpText.deleteDialog"
-              handleCancel={() => setSenseToDelete("")}
-              handleConfirm={performDelete}
+              handleCancel={() => setSrcToDelete(undefined)}
+              handleConfirm={onConfirmDelete}
             />
           </ImageList>
         </Grid>
