@@ -42,10 +42,8 @@ pycparser==2.22
     # via cffi
 pymongo==4.10.1
     # via -r requirements.in
-pyopenssl==24.3.0
+pyopenssl==25.0.0
     # via -r requirements.in
-pyreadline3==3.5.4
-    # via humanfriendly
 python-dateutil==2.9.0.post0
     # via kubernetes
 pyyaml==6.0.2
@@ -62,6 +60,8 @@ six==1.17.0
     # via
     #   kubernetes
     #   python-dateutil
+typing-extensions==4.12.2
+    # via pyopenssl
 urllib3==2.2.3
     # via
     #   kubernetes
