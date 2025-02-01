@@ -40,12 +40,10 @@ pyasn1-modules==0.4.1
     # via google-auth
 pycparser==2.22
     # via cffi
-pymongo==4.10.1
+pymongo==4.11
     # via -r requirements.in
 pyopenssl==24.3.0
     # via -r requirements.in
-pyreadline3==3.5.4
-    # via humanfriendly
 python-dateutil==2.9.0.post0
     # via kubernetes
 pyyaml==6.0.2
