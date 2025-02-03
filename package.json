@@ -61,7 +61,7 @@
     "levenshtein-search": "^0.1.2",
     "make-dir": "^4.0.0",
     "material-react-table": "^3.1.0",
-    "motion": "^10.16.2",
+    "motion": "^12.0.6",
     "mui-language-picker": "^2.1.5",
     "notistack": "^3.0.1",
     "nspell": "^2.1.5",
