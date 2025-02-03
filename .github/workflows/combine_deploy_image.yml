@@ -54,7 +54,7 @@ jobs:
           username: ${{ secrets.AWS_ACCESS_KEY_ID }}
           password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Build combine_deploy
-        uses: docker/build-push-action@v6.10.0
+        uses: docker/build-push-action@v6.13.0
         with:
           context: "{{defaultContext}}:deploy"
           push: true
