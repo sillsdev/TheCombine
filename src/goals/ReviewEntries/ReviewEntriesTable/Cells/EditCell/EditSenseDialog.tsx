@@ -145,7 +145,7 @@ export default function EditSenseDialog(
     // Confirm nonempty senses
     const cleanedSense = cleanSense(newSense, { definitionsEnabled });
     if (!cleanedSense || typeof cleanedSense === "string") {
-      toast.error(t(cleanedSense ?? ""));
+      toast.error(t(cleanedSense || "reviewEntries.error.sense"));
       return;
     }
 

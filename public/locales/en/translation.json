@@ -335,6 +335,7 @@
     "error": {
       "gloss": "Glosses cannot be left blank",
       "glossAndDefinition": "Glosses and definitions cannot both be left blank",
+      "sense": "Cannot save an empty sense",
       "senses": "Cannot save an entry with no senses",
       "vernacular": "Vernacular cannot be left blank"
     },
