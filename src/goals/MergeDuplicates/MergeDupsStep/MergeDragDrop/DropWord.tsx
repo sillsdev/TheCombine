@@ -56,11 +56,7 @@ export default function DropWord(props: DropWordProps): ReactElement {
         paddingBottom: theme.spacing(1),
       }}
     >
-      <DropWordCardHeader
-        protectedWithOneChild={protectedWithOneChild}
-        treeWord={treeWord}
-        wordId={props.wordId}
-      />
+      <DropWordCardHeader treeWord={treeWord} wordId={props.wordId} />
       <CardContent>
         <Droppable
           key={props.wordId}
@@ -102,7 +98,6 @@ export default function DropWord(props: DropWordProps): ReactElement {
 }
 
 interface DropWordCardHeaderProps {
-  protectedWithOneChild: boolean;
   treeWord?: MergeTreeWord;
   wordId: string;
 }
@@ -176,7 +171,7 @@ export function DropWordCardHeader(
 
   const headerAction = treeWord ? (
     <>
-      {props.protectedWithOneChild && (
+      {treeWord?.protected && (
         <IconButtonWithTooltip
           buttonId={`word-${props.wordId}-protected`}
           icon={<WarningOutlined />}
