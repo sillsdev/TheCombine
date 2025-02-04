@@ -19,6 +19,7 @@ import ProjectArchive from "components/ProjectSettings/ProjectArchive";
 import ProjectUsersButtonWithConfirmation from "components/SiteSettings/ProjectManagement/ProjectUsersButtonWithConfirmation";
 import theme from "types/theme";
 
+/** Component for managing all projects in the database. */
 export default function ProjectManagement(): ReactElement {
   const [allProjects, setAllProjects] = useState<Project[]>([]);
   const [activeProjects, setActiveProjects] = useState<Project[]>([]);
@@ -59,6 +60,7 @@ export default function ProjectManagement(): ReactElement {
 interface ProjectListProps {
   activeProjects: Project[];
   archivedProjects: Project[];
+  /** Function to trigger an update of all projects in the parent component. */
   updateProjects: () => Promise<void>;
 }
 
@@ -69,7 +71,7 @@ export function ProjectList(props: ProjectListProps): ReactElement {
   const { t } = useTranslation();
 
   const toggleManageProjectId = (projId: string): void => {
-    setManageProjectId(projId === manageProjectId ? "" : projId);
+    setManageProjectId((prev) => (projId === prev ? "" : projId));
   };
 
   function getProjectManagement(project: Project): ReactNode {
@@ -95,6 +97,8 @@ export function ProjectList(props: ProjectListProps): ReactElement {
     );
   }
 
+  /** Generates an array of items to fill a project List.
+   * Adds a Divider and a ListItem For each project in the given Project array. */
   function getListItems(projects: Project[]): ReactElement[] {
     const items: ReactElement[] = [];
     for (const project of projects) {
