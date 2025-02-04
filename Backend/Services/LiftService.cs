@@ -907,14 +907,13 @@ namespace BackendFramework.Services
             }
 
             /// <summary> Adds field to the entry for plural forms </summary>
-            public void MergeInField(LiftObject extensible, string typeAttribute, DateTime dateCreated,
+            public void MergeInField(LiftObject extensible, string tagAttribute, DateTime dateCreated,
                 DateTime dateModified, LiftMultiText contents, List<Trait> traits)
             {
-                var field = new LiftField(typeAttribute, contents)
+                var field = new LiftField(tagAttribute, contents)
                 {
                     DateCreated = dateCreated,
                     DateModified = dateModified,
-                    Type = typeAttribute,
                 };
                 field.Traits.AddRange(traits.Select(t => new LiftTrait() { Name = t.Name, Value = t.Value }));
                 extensible.Fields.Add(field);
