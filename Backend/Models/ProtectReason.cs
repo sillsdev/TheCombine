@@ -15,6 +15,7 @@ namespace BackendFramework.Models
         Illustrations,
         NoteWithType,
         Notes,
+        PronunciationWithoutUrl,
         Relations,
         Reversals,
         Subsenses,
