@@ -31,7 +31,7 @@ export default class Recorder {
 
   /** If recorder exists, start recording and return true.
    * If no recorder, return false. */
-  startRecording(id: string): boolean {
+  startRecording(id?: string): boolean {
     if (!this.recordRTC) {
       return false;
     }
