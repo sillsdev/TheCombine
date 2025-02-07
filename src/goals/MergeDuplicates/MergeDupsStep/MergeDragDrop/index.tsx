@@ -98,28 +98,27 @@ export default function MergeDragDrop(): ReactElement {
       }
       setSrcToDelete(src);
     } else if (res.combine) {
-      const combinePayload: CombineSenseMergePayload = {
-        dest: JSON.parse(res.combine.draggableId),
-        src,
-      };
       // Case 2: the sense was dropped on another sense.
+      const dest: MergeTreeReference = JSON.parse(res.combine.draggableId);
+      if (dest.order !== undefined) {
+        // Case 2a: If the target is a sidebar sub-sense, it cannot receive a combine.
+        toast.warning(t("mergeDups.helpText.dropIntoSidebarWarning"));
+        return;
+      }
+      const combinePayload: CombineSenseMergePayload = { dest, src };
       if ((src.isSenseProtected && !src.order) || isOnlySenseInProtectedWord) {
-        // Case 2a: Cannot merge a protected sense into another sense.
+        // Case 2b: Cannot merge a protected sense into another sense.
         if (overrideProtection) {
           // ... unless protection override is active and user confirms.
           setOverride({ combinePayload, protectReason });
         } else {
           toast.warning(t("mergeDups.helpText.dropProtectedSenseWarning"));
-          if (srcWordId !== res.combine.droppableId) {
-            // If target sense is in different word, move instead of combine.
-            const destWordId = res.combine.droppableId;
-            dispatch(moveSense({ src, destOrder: 0, destWordId }));
+          const destWordId = res.combine.droppableId;
+          if (srcWordId !== destWordId) {
+            // The target sense is in a different word, so move instead of combine.
+            dispatch(moveSense({ destOrder: 0, destWordId, src }));
           }
         }
-        return;
-      }
-      if (combinePayload.dest.order !== undefined) {
-        // Case 2b: If the target is a sidebar sub-sense, it cannot receive a combine.
         return;
       }
       dispatch(combineSense(combinePayload));

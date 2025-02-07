@@ -89,6 +89,8 @@ function wordReasonText(t: TFunction, reason: ProtectReason): string {
       return t("mergeDups.protectReason.noteWithType", { val: reason.value });
     case ReasonType.Notes:
       return t("mergeDups.protectReason.notesWord");
+    case ReasonType.PronunciationWithoutUrl:
+      return t("mergeDups.protectReason.pronunciationWithoutUrl");
     case ReasonType.Relations:
       return t("mergeDups.protectReason.relations");
     case ReasonType.Trait:

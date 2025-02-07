@@ -285,7 +285,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
     });
     if (typeof cleanedWord === "string") {
       toast.error(t(cleanedWord));
-      return Promise.reject(t(cleanedWord));
+      return;
     }
 
     // Update in backend
