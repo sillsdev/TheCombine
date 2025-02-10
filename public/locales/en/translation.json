@@ -432,6 +432,7 @@
       "noteWithType": "note with type \"{{ val }}\"",
       "notesSense": "notes",
       "notesWord": "more than 1 note",
+      "pronunciationWithoutUrl": "pronunciation without a media file",
       "relations": "relations",
       "reversal": "\"{{ val }}\" reversal",
       "subsenses": "subsenses",
