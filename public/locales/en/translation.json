@@ -114,6 +114,9 @@
   },
   "siteSettings": {
     "projectList": "Projects",
+    "activeProjects": "Active Projects: {{ val }}",
+    "archivedProjects": "Archived Projects: {{ val }}",
+    "manageProject": "Manage this project",
     "projectRoles": "Project roles",
     "addProjectUsers": "Add project users",
     "archiveProjectText": "This project will not be accessible to any users.",
