@@ -114,6 +114,9 @@
   },
   "siteSettings": {
     "projectList": "Projects",
+    "activeProjects": "Active Projects: {{ val }}",
+    "archivedProjects": "Archived Projects: {{ val }}",
+    "manageProject": "Manage this project",
     "projectRoles": "Project roles",
     "addProjectUsers": "Add project users",
     "archiveProjectText": "This project will not be accessible to any users.",
@@ -423,6 +426,7 @@
       "protectedWordInfo": "To prevent deletion, the final sense of this word cannot be safely removed.",
       "protectedData": "Protected data: {{ val }}",
       "protectedOverrideWarning": "The following data will be lost: {{ val }}",
+      "deleteProtectedSenseWarning": "You cannot delete a protected sense.",
       "dropIntoSidebarWarning": "You cannot drop senses into the sidebar.",
       "dropProtectedSenseWarning": "You cannot merge a protected sense into another sense."
     },

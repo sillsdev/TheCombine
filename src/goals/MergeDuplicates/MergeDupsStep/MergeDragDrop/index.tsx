@@ -93,6 +93,8 @@ export default function MergeDragDrop(): ReactElement {
         if (overrideProtection) {
           // ... unless protection override is active and user confirms.
           setOverride({ deletePayload: src, protectReason });
+        } else {
+          toast.warning(t("mergeDups.helpText.deleteProtectedSenseWarning"));
         }
         return;
       }
@@ -152,6 +154,7 @@ export default function MergeDragDrop(): ReactElement {
         if ((fromTop || toTop) && sidebarProtected) {
           // If top sidebar sense is protected and being displaced, do nothing.
           if (overrideProtection) {
+            // ... unless protection override is active and user confirms.
             setOverride({ orderPayload, protectReason });
           }
           return;
