@@ -114,6 +114,9 @@
   },
   "siteSettings": {
     "projectList": "Projects",
+    "activeProjects": "Active Projects: {{ val }}",
+    "archivedProjects": "Archived Projects: {{ val }}",
+    "manageProject": "Manage this project",
     "projectRoles": "Project roles",
     "addProjectUsers": "Add project users",
     "archiveProjectText": "This project will not be accessible to any users.",
@@ -334,6 +337,8 @@
     "deleteDisabled": "This was imported with data that The Combine doesn't handle, so it may not be deleted.",
     "error": {
       "gloss": "Glosses cannot be left blank",
+      "glossAndDefinition": "Glosses and definitions cannot both be left blank",
+      "sense": "Cannot save an empty sense",
       "senses": "Cannot save an entry with no senses",
       "vernacular": "Vernacular cannot be left blank"
     },
@@ -427,6 +432,7 @@
       "noteWithType": "note with type \"{{ val }}\"",
       "notesSense": "notes",
       "notesWord": "more than 1 note",
+      "pronunciationWithoutUrl": "pronunciation without a media file",
       "relations": "relations",
       "reversal": "\"{{ val }}\" reversal",
       "subsenses": "subsenses",

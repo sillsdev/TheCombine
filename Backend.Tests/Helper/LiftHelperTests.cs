@@ -27,6 +27,10 @@ namespace Backend.Tests.Helper
             entry.Notes.Add(new("", new("key", "content")));
             entry.Pronunciations.Add(new());
             entry.Pronunciations.Add(new());
+            foreach (var pronunciation in entry.Pronunciations)
+            {
+                pronunciation.Media.Add(new() { Url = "file://path" });
+            }
             entry.Senses.Add(new());
             entry.Senses.Add(new());
             // The only entry trait not protected is morph type "stem".
@@ -97,6 +101,18 @@ namespace Backend.Tests.Helper
             var reasons = GetProtectedReasons(entry);
             Assert.That(reasons, Has.Count.EqualTo(1));
             Assert.That(reasons.Last().Type, Is.EqualTo(ReasonType.Notes));
+        }
+
+        [Test]
+        public void EntryPronunciationWithoutUrlProtected()
+        {
+            var entry = new LiftEntry();
+            entry.Pronunciations.Add(new());
+            entry.Pronunciations.Add(new());
+            Assert.That(IsProtected(entry), Is.True);
+            var reasons = GetProtectedReasons(entry);
+            Assert.That(reasons, Has.Count.EqualTo(1));
+            Assert.That(reasons.Last().Type, Is.EqualTo(ReasonType.PronunciationWithoutUrl));
         }
 
         [Test]
