@@ -53,6 +53,12 @@ Combine、[WeSay](https://software.sil.org/wesay)、[FLEx](https://software.sil.
 
 (这不影响对注释的拼写建议，因为这些建议是基于独立于现有项目数据的字典的)。
 
+#### Protected Data Override
+
+The default setting is Off. Change this to On to allows project users in Merge Duplicates to override the
+[protection](goals.md#protected-entries-and-senses) of words and senses that were imported with data not handled by The
+Combine.
+
 #### 存档项目
 
 这只有项目所有者才能获取。 将项目存档后，所有用户都无法访问该项目。 只有网站管理员才能取消这一操作。 如果用户希望从服务
