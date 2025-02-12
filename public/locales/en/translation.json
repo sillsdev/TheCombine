@@ -425,6 +425,7 @@
       "protectedWord": "This word was imported with data that The Combine doesn't handle.",
       "protectedWordInfo": "To prevent deletion, the final sense of this word cannot be safely removed.",
       "protectedData": "Protected data: {{ val }}",
+      "protectedOverride": "Allow deletion of protected words or senses?",
       "protectedOverrideWarning": "The following data will be lost: {{ val }}",
       "deleteProtectedSenseWarning": "You cannot delete a protected sense.",
       "dropIntoSidebarWarning": "You cannot drop senses into the sidebar.",

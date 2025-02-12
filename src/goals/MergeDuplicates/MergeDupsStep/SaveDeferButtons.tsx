@@ -85,7 +85,7 @@ export default function SaveDeferButtons(): ReactElement {
                 onChange={() => dispatch(toggleOverrideProtection())}
               />
             }
-            label={"Allow deletion of protected words or senses?"}
+            label={t("mergeDups.helpText.protectedOverride")}
           />
         )}
       </Grid>

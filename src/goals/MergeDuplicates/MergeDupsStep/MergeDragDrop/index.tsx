@@ -39,8 +39,7 @@ export default function MergeDragDrop(): ReactElement {
       state.mergeDuplicateGoal.tree.sidebar.mergeSenses.length > 1
   );
   const sidebarProtected = useAppSelector((state: StoreState) => {
-    const goal = state.mergeDuplicateGoal;
-    const ms = goal.tree.sidebar.mergeSenses;
+    const ms = state.mergeDuplicateGoal.tree.sidebar.mergeSenses;
     return ms.length && ms[0].protected;
   });
   const words = useAppSelector(
