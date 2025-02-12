@@ -6,6 +6,10 @@ import { SemanticDomain } from "api/models";
 import { getUser } from "backend";
 import { friendlySep, getDateTimeString } from "utilities/utilities";
 
+export function domainLabel(domain: SemanticDomain): string {
+  return `${domain.id}: ${domain.name}`;
+}
+
 interface DomainChipProps {
   domain: SemanticDomain;
   provenance?: boolean;
@@ -13,7 +17,7 @@ interface DomainChipProps {
 
 export default function DomainChip(props: DomainChipProps): ReactElement {
   const { provenance } = props;
-  const { created, name, id, userId } = props.domain;
+  const { created, userId } = props.domain;
 
   const [username, setUsername] = useState("");
   const { t } = useTranslation();
@@ -24,7 +28,6 @@ export default function DomainChip(props: DomainChipProps): ReactElement {
     }
   }, [provenance, userId]);
 
-  const labelText = `${id}: ${name}`;
   const hoverText = [];
   if (provenance && created) {
     const val = getDateTimeString(created, friendlySep);
@@ -33,5 +36,7 @@ export default function DomainChip(props: DomainChipProps): ReactElement {
   if (provenance && username) {
     hoverText.push(t("wordCard.user", { val: username }));
   }
-  return <Chip label={labelText} title={hoverText.join("\n")} />;
+  return (
+    <Chip label={domainLabel(props.domain)} title={hoverText.join("\n")} />
+  );
 }
