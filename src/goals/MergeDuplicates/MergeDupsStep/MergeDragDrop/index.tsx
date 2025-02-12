@@ -59,6 +59,7 @@ export default function MergeDragDrop(): ReactElement {
       // Case 1: The sense was dropped on the trash icon.
       if (src.isSenseProtected && !src.order) {
         // Case 1a: Cannot delete a protected sense.
+        toast.warning(t("mergeDups.helpText.deleteProtectedSenseWarning"));
         return;
       }
       setSrcToDelete(src);
