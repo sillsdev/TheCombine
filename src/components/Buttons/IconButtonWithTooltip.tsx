@@ -1,8 +1,8 @@
-import { Tooltip, IconButton } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import { MouseEventHandler, ReactElement, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
-interface IconButtonWithTooltipProps {
+export interface IconButtonWithTooltipProps {
   buttonId?: string;
   buttonLabel?: string;
   disabled?: boolean;
