@@ -3,6 +3,7 @@ import { Drawer, Grid, ImageList, ImageListItem, Tooltip } from "@mui/material";
 import { CSSProperties, ReactElement, useState } from "react";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import { v4 } from "uuid";
 
 import { appBarHeight } from "components/AppBar/AppBarTypes";
@@ -58,23 +59,26 @@ export default function MergeDragDrop(): ReactElement {
       // Case 1: The sense was dropped on the trash icon.
       if (src.isSenseProtected && !src.order) {
         // Case 1a: Cannot delete a protected sense.
+        toast.warning(t("mergeDups.helpText.deleteProtectedSenseWarning"));
         return;
       }
       setSrcToDelete(src);
     } else if (res.combine) {
       // Case 2: the sense was dropped on another sense.
+      const dest: MergeTreeReference = JSON.parse(res.combine.draggableId);
+      if (dest.order !== undefined) {
+        // Case 2a: If the target is a sidebar sub-sense, it cannot receive a combine.
+        toast.warning(t("mergeDups.helpText.dropIntoSidebarWarning"));
+        return;
+      }
       if (src.isSenseProtected && !src.order) {
-        // Case 2a: Cannot merge a protected sense into another sense.
+        // Case 2b: Cannot merge a protected sense into another sense.
+        toast.warning(t("mergeDups.helpText.dropProtectedSenseWarning"));
         const destWordId = res.combine.droppableId;
         if (srcWordId !== destWordId) {
           // The target sense is in a different word, so move instead of combine.
           dispatch(moveSense({ destOrder: 0, destWordId, src }));
         }
-        return;
-      }
-      const dest: MergeTreeReference = JSON.parse(res.combine.draggableId);
-      if (dest.order !== undefined) {
-        // Case 2b: If the target is a sidebar sub-sense, it cannot receive a combine.
         return;
       }
       const combinePayload: CombineSenseMergePayload = { dest, src };
@@ -87,6 +91,7 @@ export default function MergeDragDrop(): ReactElement {
         // Case 3a: The source, dest droppables are different.
         if (destWordId.split(" ").length > 1) {
           // If the destination is SidebarDrop, it cannot receive drags from elsewhere.
+          toast.warning(t("mergeDups.helpText.dropIntoSidebarWarning"));
           return;
         }
         // Move the sense to the dest MergeWord.
@@ -94,11 +99,13 @@ export default function MergeDragDrop(): ReactElement {
         dispatch(moveSense(movePayload));
       } else {
         // Case 3b: The source & dest droppables are the same, so we reorder, not move.
-        if (
-          src.order === destOrder ||
-          (destOrder === 0 && src.order !== undefined && sidebarProtected)
-        ) {
-          // If the sense wasn't moved or was moved within the sidebar above a protected sense, do nothing.
+        if (src.order === destOrder) {
+          // If the sense wasn't moved, do nothing.
+          return;
+        }
+        const toTop = destOrder === 0 && src.order !== undefined;
+        if (toTop && sidebarProtected) {
+          // If the sense was moved within the sidebar above a protected sense, do nothing.
           return;
         }
         const orderPayload: OrderSensePayload = { destOrder, src };
