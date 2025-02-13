@@ -1,16 +1,15 @@
-import { Close } from "@mui/icons-material";
 import {
   Button,
   Dialog,
   DialogContent,
   DialogTitle,
   Divider,
-  IconButton,
   Typography,
 } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { CloseButton } from "components/Buttons";
 import { asyncRefreshProjectUsers } from "components/Project/ProjectActions";
 import ActiveProjectUsers from "components/ProjectUsers/ActiveProjectUsers";
 import AddProjectUsers from "components/ProjectUsers/AddProjectUsers";
@@ -21,9 +20,7 @@ interface ProjectUsersButtonWithConfirmationProps {
   projectId: string;
 }
 
-/**
- * Button for managing user roles in a project.
- */
+/** Button for managing user roles in a project. */
 export default function ProjectUsersButtonWithConfirmation(
   props: ProjectUsersButtonWithConfirmationProps
 ): ReactElement {
@@ -42,16 +39,11 @@ export default function ProjectUsersButtonWithConfirmation(
         {t("siteSettings.projectRoles")}
       </Button>
       <Dialog maxWidth={false} onClose={() => setOpen(false)} open={open}>
-        <DialogTitle>
-          <Typography variant="h5">{t("siteSettings.projectRoles")}</Typography>
-          <IconButton
-            aria-label="close"
-            onClick={() => setOpen(false)}
-            sx={{ position: "absolute", right: 8, top: 8 }}
-          >
-            <Close />
-          </IconButton>
+        <DialogTitle variant="h5">
+          {t("siteSettings.projectRoles")}
+          <CloseButton close={() => setOpen(false)} />
         </DialogTitle>
+
         <ProjUsersDialogContent projectId={props.projectId} />
       </Dialog>
     </>
