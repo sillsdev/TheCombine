@@ -108,10 +108,7 @@ export default function ActiveProjectUsers(props: {
       </IconButton>
     );
 
-    const displayString =
-      currentIsProjOwner || currentUser.isAdmin
-        ? `${user.name} (${user.username} | ${user.email})`
-        : `${user.name} (${user.username})`;
+    const displayString = `${user.name} (${user.username})`;
 
     return (
       <ListItem key={user.id}>
@@ -135,7 +132,6 @@ export default function ActiveProjectUsers(props: {
   return (
     <>
       <SortOptions
-        includeEmail={currentIsProjOwner || currentUser.isAdmin}
         onChange={(e: SelectChangeEvent<UserOrder>) => {
           setUserOrder(e.target.value as UserOrder);
           setReverseSorting(false);
