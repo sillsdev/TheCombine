@@ -9,7 +9,7 @@ import { getCurrentUser } from "backend/localStorage";
 import AnalyticsConsent from "components/AnalyticsConsent";
 import DatePickersLocalizationProvider from "components/App/DatePickersLocalizationProvider";
 import SignalRHub from "components/App/SignalRHub";
-import AppBar from "components/AppBar/AppBarComponent";
+import AppBar from "components/AppBar";
 import PageNotFound from "components/PageNotFound/component";
 import ProjectScreen from "components/ProjectScreen";
 import NextGoalScreen from "goals/DefaultGoal/NextGoalScreen";

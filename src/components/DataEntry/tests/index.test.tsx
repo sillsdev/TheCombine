@@ -24,7 +24,7 @@ jest.mock("@mui/material", () => {
 jest.mock("backend", () => ({
   getSemanticDomainFull: (...args: any[]) => mockGetSemanticDomainFull(...args),
 }));
-jest.mock("components/AppBar/AppBarComponent", () => "div");
+jest.mock("components/AppBar", () => "div");
 jest.mock("components/DataEntry/DataEntryTable", () => "div");
 jest.mock("components/TreeView", () => "div");
 jest.mock("rootRedux/hooks", () => {
