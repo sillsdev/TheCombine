@@ -108,8 +108,6 @@ export default function ActiveProjectUsers(props: {
       </IconButton>
     );
 
-    const displayString = `${user.name} (${user.username})`;
-
     return (
       <ListItem key={user.id}>
         <ListItemAvatar>
@@ -119,7 +117,7 @@ export default function ActiveProjectUsers(props: {
             style={{ marginRight: theme.spacing(1) }}
           />
         </ListItemAvatar>
-        <ListItemText primary={displayString} />
+        <ListItemText primary={`${user.name} (${user.username})`} />
         <Chip
           label={t(`projectSettings.roles.${`${userRole}`.toLowerCase()}`)}
           size="small"
