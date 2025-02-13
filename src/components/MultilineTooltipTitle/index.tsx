@@ -11,7 +11,7 @@ export default function MultilineTooltipTitle(props: {
         <Typography
           display="block"
           key={i}
-          variant="caption"
+          variant="body2"
           {...props.typographyProps}
         >
           {l}

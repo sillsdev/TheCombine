@@ -177,12 +177,7 @@ export function DropWordCardHeader(
           icon={<WarningOutlined />}
           side="top"
           size="small"
-          text={
-            <MultilineTooltipTitle
-              lines={tooltipTexts}
-              typographyProps={{ variant: "body2" }}
-            />
-          }
+          text={<MultilineTooltipTitle lines={tooltipTexts} />}
         />
       )}
       <AudioSummary count={audioCount} />

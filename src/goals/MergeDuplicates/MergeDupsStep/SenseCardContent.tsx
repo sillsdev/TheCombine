@@ -64,12 +64,7 @@ export default function SenseCardContent(
             icon={<WarningOutlined />}
             side="top"
             size="small"
-            text={
-              <MultilineTooltipTitle
-                lines={tooltipTexts}
-                typographyProps={{ variant: "body2" }}
-              />
-            }
+            text={<MultilineTooltipTitle lines={tooltipTexts} />}
             buttonId={`sense-${sense.guid}-protected`}
           />
         )}
