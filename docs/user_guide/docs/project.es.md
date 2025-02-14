@@ -64,6 +64,12 @@ más detalles.
 (Esto no afecta a las sugerencias ortográficas para la glosa, ya que dichas sugerencias se basan en un diccionario
 independiente de los datos existentes del proyecto)
 
+#### Protected Data Override
+
+The default setting is Off. Change this to On to allows project users in Merge Duplicates to override the
+[protection](goals.md#protected-entries-and-senses) of words and senses that were imported with data not handled by The
+Combine.
+
 #### Archivar el proyecto
 
 Sólo está disponible para el Propietario del proyecto. Archivar un proyecto lo hace inaccesible para todos los usuarios.

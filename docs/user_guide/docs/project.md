@@ -62,6 +62,12 @@ entry, rather than creating a (mostly) duplicate to something previously entered
 (This does not affect spelling suggestions for the gloss, since those suggestions are based on a dictionary independent
 of existing project data.)
 
+#### Protected Data Override
+
+The default setting is Off. Change this to On to allows project users in Merge Duplicates to override the
+[protection](goals.md#protected-entries-and-senses) of words and senses that were imported with data not handled by The
+Combine.
+
 #### Archive Project
 
 This is only available to the project Owner. Archiving a project makes it inaccessible to all users. This can only be
