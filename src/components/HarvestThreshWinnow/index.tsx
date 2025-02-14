@@ -1,4 +1,4 @@
-import { type AnimationOptionsWithOverrides, animate } from "motion";
+import { type AnimationOptions, animate } from "motion";
 import { type CSSProperties, type ReactElement, useEffect } from "react";
 
 import ImageAttributions, {
@@ -45,9 +45,9 @@ export default function HarvestThreshWinnow(
 ): ReactElement {
   useEffect(() => {
     if (props.loading) {
-      const options: AnimationOptionsWithOverrides = {
+      const options: AnimationOptions = {
         duration: 7,
-        easing: "linear",
+        ease: "linear",
         repeat: Infinity,
       };
       animate(`#${ImageId.License}`, { opacity: opacityKeyframes1 }, options);

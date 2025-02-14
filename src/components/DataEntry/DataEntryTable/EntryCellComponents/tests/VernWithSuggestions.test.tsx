@@ -5,7 +5,7 @@ import VernWithSuggestions from "components/DataEntry/DataEntryTable/EntryCellCo
 import { newWritingSystem } from "types/writingSystem";
 
 // A work-around for this console error: https://github.com/mui/material-ui/issues/28687#issuecomment-1513741911
-jest.mock("@mui/base/node/useAutocomplete/useAutocomplete", () => ({
+jest.mock("@mui/material/useAutocomplete/useAutocomplete", () => ({
   useAutocomplete: () => ({
     getInputLabelProps: jest.fn(),
     getInputProps: () => ({ onMouseDown: jest.fn() }),
