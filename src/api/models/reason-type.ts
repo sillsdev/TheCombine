@@ -26,6 +26,7 @@ export enum ReasonType {
   Illustrations = "Illustrations",
   NoteWithType = "NoteWithType",
   Notes = "Notes",
+  PronunciationWithoutUrl = "PronunciationWithoutUrl",
   Relations = "Relations",
   Reversals = "Reversals",
   Subsenses = "Subsenses",

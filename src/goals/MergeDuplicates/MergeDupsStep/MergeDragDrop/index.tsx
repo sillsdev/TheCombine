@@ -3,6 +3,7 @@ import { Drawer, Grid, ImageList, ImageListItem, Tooltip } from "@mui/material";
 import { CSSProperties, ReactElement, useState } from "react";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import { v4 } from "uuid";
 
 import { appBarHeight } from "components/AppBar/AppBarTypes";
@@ -16,6 +17,11 @@ import {
   moveSense,
   orderSense,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
+import {
+  type CombineSenseMergePayload,
+  type MoveSensePayload,
+  type OrderSensePayload,
+} from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import theme from "types/theme";
@@ -36,7 +42,10 @@ export default function MergeDragDrop(): ReactElement {
     (state: StoreState) => state.mergeDuplicateGoal.tree.words
   );
 
-  const [senseToDelete, setSenseToDelete] = useState<string>("");
+  const [srcToDelete, setSrcToDelete] = useState<
+    MergeTreeReference | undefined
+  >();
+
   const { t } = useTranslation();
 
   function handleDrop(res: DropResult): void {
@@ -50,64 +59,66 @@ export default function MergeDragDrop(): ReactElement {
       // Case 1: The sense was dropped on the trash icon.
       if (src.isSenseProtected && !src.order) {
         // Case 1a: Cannot delete a protected sense.
+        toast.warning(t("mergeDups.helpText.deleteProtectedSenseWarning"));
         return;
       }
-      setSenseToDelete(res.draggableId);
+      setSrcToDelete(src);
     } else if (res.combine) {
       // Case 2: the sense was dropped on another sense.
+      const dest: MergeTreeReference = JSON.parse(res.combine.draggableId);
+      if (dest.order !== undefined) {
+        // Case 2a: If the target is a sidebar sub-sense, it cannot receive a combine.
+        toast.warning(t("mergeDups.helpText.dropIntoSidebarWarning"));
+        return;
+      }
       if (src.isSenseProtected && !src.order) {
-        // Case 2a: Cannot merge a protected sense into another sense.
-        if (srcWordId !== res.combine.droppableId) {
+        // Case 2b: Cannot merge a protected sense into another sense.
+        toast.warning(t("mergeDups.helpText.dropProtectedSenseWarning"));
+        const destWordId = res.combine.droppableId;
+        if (srcWordId !== destWordId) {
           // The target sense is in a different word, so move instead of combine.
-          dispatch(
-            moveSense({
-              src,
-              destWordId: res.combine.droppableId,
-              destOrder: 0,
-            })
-          );
+          dispatch(moveSense({ destOrder: 0, destWordId, src }));
         }
         return;
       }
-      const combineRef: MergeTreeReference = JSON.parse(
-        res.combine.draggableId
-      );
-      if (combineRef.order !== undefined) {
-        // Case 2b: If the target is a sidebar sub-sense, it cannot receive a combine.
-        return;
-      }
-      dispatch(combineSense({ src, dest: combineRef }));
+      const combinePayload: CombineSenseMergePayload = { dest, src };
+      dispatch(combineSense(combinePayload));
     } else if (res.destination) {
+      const destOrder = res.destination.index;
       const destWordId = res.destination.droppableId;
       // Case 3: The sense was dropped in a droppable.
       if (srcWordId !== destWordId) {
         // Case 3a: The source, dest droppables are different.
         if (destWordId.split(" ").length > 1) {
           // If the destination is SidebarDrop, it cannot receive drags from elsewhere.
+          toast.warning(t("mergeDups.helpText.dropIntoSidebarWarning"));
           return;
         }
         // Move the sense to the dest MergeWord.
-        dispatch(
-          moveSense({ src, destWordId, destOrder: res.destination.index })
-        );
+        const movePayload: MoveSensePayload = { destOrder, destWordId, src };
+        dispatch(moveSense(movePayload));
       } else {
         // Case 3b: The source & dest droppables are the same, so we reorder, not move.
-        const destOrder = res.destination.index;
-        if (
-          src.order === destOrder ||
-          (destOrder === 0 && src.order !== undefined && sidebarProtected)
-        ) {
-          // If the sense wasn't moved or was moved within the sidebar above a protected sense, do nothing.
+        if (src.order === destOrder) {
+          // If the sense wasn't moved, do nothing.
           return;
         }
-        dispatch(orderSense({ src, destOrder }));
+        const toTop = destOrder === 0 && src.order !== undefined;
+        if (toTop && sidebarProtected) {
+          // If the sense was moved within the sidebar above a protected sense, do nothing.
+          return;
+        }
+        const orderPayload: OrderSensePayload = { destOrder, src };
+        dispatch(orderSense(orderPayload));
       }
     }
   }
 
-  function performDelete(): void {
-    dispatch(deleteSense(JSON.parse(senseToDelete)));
-    setSenseToDelete("");
+  function onConfirmDelete(): void {
+    if (srcToDelete) {
+      dispatch(deleteSense(srcToDelete));
+      setSrcToDelete(undefined);
+    }
   }
 
   function renderSidebar(): ReactElement {
@@ -170,10 +181,10 @@ export default function MergeDragDrop(): ReactElement {
             </ImageListItem>
             {renderSidebar()}
             <CancelConfirmDialog
-              open={!!senseToDelete}
+              open={!!srcToDelete}
               text="mergeDups.helpText.deleteDialog"
-              handleCancel={() => setSenseToDelete("")}
-              handleConfirm={performDelete}
+              handleCancel={() => setSrcToDelete(undefined)}
+              handleConfirm={onConfirmDelete}
             />
           </ImageList>
         </Grid>
