@@ -4,13 +4,28 @@ import { act } from "react";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
+import MockBypassLoadableButton from "components/Buttons/LoadingDoneButton";
+import { CaptchaProps } from "components/Login/Captcha";
 import { defaultState as loginState } from "components/Login/Redux/LoginReduxTypes";
-import Signup, { SignupId } from "components/Login/Signup";
+import Signup, {
+  SignupField,
+  SignupId,
+  signupFieldId,
+  signupFieldTextId,
+} from "components/Login/Signup";
+import MockCaptcha from "components/Login/tests/MockCaptcha";
 
 jest.mock("backend", () => ({
   getBannerText: () => Promise.resolve(""),
 }));
-jest.mock("components/Login/Captcha", () => "div");
+jest.mock("components/Buttons", () => ({
+  ...jest.requireActual("components/Buttons"),
+  LoadingDoneButton: MockBypassLoadableButton,
+}));
+jest.mock("components/Login/Captcha", () => ({
+  __esModule: true,
+  default: (props: CaptchaProps) => <MockCaptcha {...props} />,
+}));
 jest.mock("components/Login/Redux/LoginActions", () => ({
   asyncSignUp: (...args: any[]) => mockAsyncSignUp(...args),
 }));
@@ -41,29 +56,42 @@ const renderSignup = async (): Promise<void> => {
   });
 };
 
-const typeInField = async (id: SignupId, text: string): Promise<void> => {
-  const field = screen.getByTestId(id);
+const typeInFields = async (
+  textRecord: Record<SignupField, string>
+): Promise<void> => {
   const agent = userEvent.setup();
-  await act(async () => {
-    await agent.type(field, text);
-  });
+  for (const [field, text] of Object.entries(textRecord)) {
+    if (!text) {
+      return;
+    }
+    await act(async () => {
+      const id = signupFieldId[field as SignupField];
+      const input = within(screen.getByTestId(id)).getByRole("textbox");
+      await agent.type(input, text);
+    });
+  }
 };
 
-const submitAndCheckError = async (id?: SignupId): Promise<void> => {
+const submitAndCheckError = async (id?: SignupField): Promise<void> => {
   const agent = userEvent.setup();
+
   // Submit the form.
   await act(async () => {
-    await agent.click(screen.getByTestId(SignupId.Form));
+    await agent.click(screen.getByTestId(SignupId.ButtonSignUp));
   });
 
   // Only the specified field should error.
-  Object.values(SignupId).forEach((val) => {
-    const field = screen.getByTestId(val);
-    const label = within(field).getByRole("label");
+  Object.values(SignupField).forEach((val) => {
+    const field = screen.getByTestId(signupFieldId[val as SignupField]);
+    const label = within(field).getByText(
+      signupFieldTextId[val as SignupField]
+    );
+
+    const classes = label.className.split(" ");
     if (val === id) {
-      expect(label).toHaveClass("Mui-error");
+      expect(classes).toContain("Mui-error");
     } else {
-      expect(label).not.toHaveClass("Mui-error");
+      expect(classes).not.toContain("Mui-error");
     }
   });
 
@@ -81,63 +109,53 @@ beforeEach(async () => {
 
 describe("Signup", () => {
   describe("submit button", () => {
-    it("errors when email blank", async () => {
-      await renderSignup();
-      await typeInField(SignupId.FieldEmail, "");
-      await typeInField(SignupId.FieldName, nameValid);
-      await typeInField(SignupId.FieldPassword1, passValid);
-      await typeInField(SignupId.FieldPassword2, passValid);
-      await typeInField(SignupId.FieldUsername, userValid);
-      await submitAndCheckError(SignupId.FieldEmail);
-    });
-
-    it("errors when name blank", async () => {
-      await renderSignup();
-      await typeInField(SignupId.FieldEmail, emailValid);
-      await typeInField(SignupId.FieldName, "");
-      await typeInField(SignupId.FieldPassword1, passValid);
-      await typeInField(SignupId.FieldPassword2, passValid);
-      await typeInField(SignupId.FieldUsername, userValid);
-      await submitAndCheckError(SignupId.FieldName);
-    });
+    // Don't test with empty name or invalid email, because those prevent submission.
 
     it("errors when password too short", async () => {
       await renderSignup();
-      await typeInField(SignupId.FieldEmail, emailValid);
-      await typeInField(SignupId.FieldName, nameValid);
-      await typeInField(SignupId.FieldPassword1, passInvalid);
-      await typeInField(SignupId.FieldPassword2, passInvalid);
-      await typeInField(SignupId.FieldUsername, userValid);
-      await submitAndCheckError(SignupId.FieldPassword1);
+      await typeInFields({
+        [SignupField.Email]: emailValid,
+        [SignupField.Name]: nameValid,
+        [SignupField.Password1]: passInvalid,
+        [SignupField.Password2]: passInvalid,
+        [SignupField.Username]: userValid,
+      });
+      await submitAndCheckError(SignupField.Password1);
     });
 
-    it("errors when passwords don't match", async () => {
+    it("errors when password don't match", async () => {
       await renderSignup();
-      await typeInField(SignupId.FieldEmail, emailValid);
-      await typeInField(SignupId.FieldName, nameValid);
-      await typeInField(SignupId.FieldPassword1, passValid);
-      await typeInField(SignupId.FieldPassword2, `${passValid}++`);
-      await typeInField(SignupId.FieldUsername, userValid);
-      await submitAndCheckError(SignupId.FieldPassword2);
+      await typeInFields({
+        [SignupField.Email]: emailValid,
+        [SignupField.Name]: nameValid,
+        [SignupField.Password1]: passValid,
+        [SignupField.Password2]: `${passValid}++`,
+        [SignupField.Username]: userValid,
+      });
+      await submitAndCheckError(SignupField.Password2);
     });
 
     it("errors when username too short", async () => {
       await renderSignup();
-      await typeInField(SignupId.FieldEmail, emailValid);
-      await typeInField(SignupId.FieldName, nameValid);
-      await typeInField(SignupId.FieldPassword1, passValid);
-      await typeInField(SignupId.FieldPassword2, passValid);
-      await typeInField(SignupId.FieldUsername, userInvalid);
-      await submitAndCheckError(SignupId.FieldUsername);
+      await typeInFields({
+        [SignupField.Email]: emailValid,
+        [SignupField.Name]: nameValid,
+        [SignupField.Password1]: passValid,
+        [SignupField.Password2]: passValid,
+        [SignupField.Username]: userInvalid,
+      });
+      await submitAndCheckError(SignupField.Username);
     });
 
     it("submits when all fields valid", async () => {
       await renderSignup();
-      await typeInField(SignupId.FieldEmail, emailValid);
-      await typeInField(SignupId.FieldName, nameValid);
-      await typeInField(SignupId.FieldPassword1, passValid);
-      await typeInField(SignupId.FieldPassword2, passValid);
-      await typeInField(SignupId.FieldUsername, userValid);
+      await typeInFields({
+        [SignupField.Email]: emailValid,
+        [SignupField.Name]: nameValid,
+        [SignupField.Password1]: passValid,
+        [SignupField.Password2]: passValid,
+        [SignupField.Username]: userValid,
+      });
       await submitAndCheckError();
     });
   });

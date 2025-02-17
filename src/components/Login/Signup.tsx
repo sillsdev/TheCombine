@@ -30,12 +30,12 @@ import {
   meetsUsernameRequirements,
 } from "utilities/utilities";
 
-enum SignupField {
-  Email,
-  Name,
-  Password1,
-  Password2,
-  Username,
+export enum SignupField {
+  Email = "email",
+  Name = "name",
+  Password1 = "password1",
+  Password2 = "password2",
+  Username = "username",
 }
 
 type SignupError = Record<SignupField, boolean>;
@@ -56,6 +56,14 @@ const defaultSignupText: SignupText = {
   [SignupField.Username]: "",
 };
 
+export const signupFieldTextId: SignupText = {
+  [SignupField.Email]: "login.email",
+  [SignupField.Name]: "login.name",
+  [SignupField.Password1]: "login.password",
+  [SignupField.Password2]: "login.confirmPassword",
+  [SignupField.Username]: "login.username",
+};
+
 export enum SignupId {
   ButtonLogIn = "signup-log-in-button",
   ButtonSignUp = "signup-sign-up-button",
@@ -66,6 +74,14 @@ export enum SignupId {
   FieldUsername = "signup-username-field",
   Form = "signup-form",
 }
+
+export const signupFieldId: Record<SignupField, SignupId> = {
+  [SignupField.Email]: SignupId.FieldEmail,
+  [SignupField.Name]: SignupId.FieldName,
+  [SignupField.Password1]: SignupId.FieldPassword1,
+  [SignupField.Password2]: SignupId.FieldPassword2,
+  [SignupField.Username]: SignupId.FieldUsername,
+};
 
 // Chrome silently converts non-ASCII characters in a Textfield of type="email".
 // Use punycode.toUnicode() to convert them from punycode back to Unicode.
@@ -155,7 +171,7 @@ export default function Signup(props: SignupProps): ReactElement {
   };
 
   const defaultTextFieldProps: TextFieldProps = {
-    inputProps: { maxLength: 100 },
+    inputProps: { role: "textbox", maxLength: 100 },
     margin: "normal",
     required: true,
     style: { width: "100%" },
@@ -183,7 +199,7 @@ export default function Signup(props: SignupProps): ReactElement {
                 fieldError[SignupField.Name] ? t("login.required") : undefined
               }
               id={SignupId.FieldName}
-              label={t("login.name")}
+              label={t(signupFieldTextId[SignupField.Name])}
               onChange={(e) => updateField(e, SignupField.Name)}
               value={fieldText[SignupField.Name]}
             />
@@ -196,7 +212,7 @@ export default function Signup(props: SignupProps): ReactElement {
               error={fieldError[SignupField.Username]}
               helperText={t("login.usernameRequirements")}
               id={SignupId.FieldUsername}
-              label={t("login.username")}
+              label={t(signupFieldTextId[SignupField.Username])}
               onBlur={() => checkUsername()}
               onChange={(e) => updateField(e, SignupField.Username)}
               value={fieldText[SignupField.Username]}
@@ -209,7 +225,7 @@ export default function Signup(props: SignupProps): ReactElement {
               data-testid={SignupId.FieldEmail}
               error={fieldError[SignupField.Email]}
               id={SignupId.FieldEmail}
-              label={t("login.email")}
+              label={t(signupFieldTextId[SignupField.Email])}
               onChange={(e) => updateField(e, SignupField.Email)}
               type="email"
               value={fieldText[SignupField.Email]}
@@ -223,7 +239,7 @@ export default function Signup(props: SignupProps): ReactElement {
               error={fieldError[SignupField.Password1]}
               helperText={t("login.passwordRequirements")}
               id={SignupId.FieldPassword1}
-              label={t("login.password")}
+              label={t(signupFieldTextId[SignupField.Password1])}
               onBlur={() => checkPassword1()}
               onChange={(e) => updateField(e, SignupField.Password1)}
               type="password"
@@ -242,7 +258,7 @@ export default function Signup(props: SignupProps): ReactElement {
                   : undefined
               }
               id={SignupId.FieldPassword2}
-              label={t("login.confirmPassword")}
+              label={t(signupFieldTextId[SignupField.Password2])}
               onBlur={() => checkPassword2()}
               onChange={(e) => updateField(e, SignupField.Password2)}
               type="password"
@@ -278,9 +294,9 @@ export default function Signup(props: SignupProps): ReactElement {
                 <LoadingDoneButton
                   buttonProps={{
                     color: "primary",
+                    "data-testid": SignupId.ButtonSignUp,
                     id: SignupId.ButtonSignUp,
                   }}
-                  data-testid={SignupId.ButtonSignUp}
                   disabled={!isVerified}
                   done={signupStatus === LoginStatus.Success}
                   doneText={t("login.signUpSuccess")}
