@@ -1,11 +1,7 @@
-import { ChangeEvent, FormEvent } from "react";
+import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { act } from "react";
 import { Provider } from "react-redux";
-import {
-  ReactTestInstance,
-  ReactTestRenderer,
-  act,
-  create,
-} from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { defaultState as loginState } from "components/Login/Redux/LoginReduxTypes";
@@ -26,10 +22,6 @@ jest.mock("rootRedux/hooks", () => {
 });
 
 const mockAsyncSignUp = jest.fn();
-const mockChangeEvent = (text: string): Partial<ChangeEvent> => ({
-  target: { value: text } as HTMLTextAreaElement | HTMLInputElement,
-});
-const mockFormEvent: Partial<FormEvent> = { preventDefault: jest.fn() };
 const mockStore = configureMockStore()({ loginState });
 
 const emailValid = "non@empty.com";
@@ -39,41 +31,39 @@ const passValid = "@-least+8_chars";
 const userInvalid = "no";
 const userValid = "3+ letters long";
 
-let signupMaster: ReactTestRenderer;
-let signupHandle: ReactTestInstance;
-
 const renderSignup = async (): Promise<void> => {
   await act(async () => {
-    signupMaster = create(
+    render(
       <Provider store={mockStore}>
         <Signup />
       </Provider>
     );
   });
-  signupHandle = signupMaster.root.findByType(Signup);
 };
 
 const typeInField = async (id: SignupId, text: string): Promise<void> => {
-  const field = signupHandle.findByProps({ id });
+  const field = screen.getByTestId(id);
+  const agent = userEvent.setup();
   await act(async () => {
-    await field.props.onChange(mockChangeEvent(text));
+    await agent.type(field, text);
   });
 };
 
 const submitAndCheckError = async (id?: SignupId): Promise<void> => {
+  const agent = userEvent.setup();
   // Submit the form.
-  const form = signupHandle.findByProps({ id: SignupId.Form });
   await act(async () => {
-    await form.props.onSubmit(mockFormEvent);
+    await agent.click(screen.getByTestId(SignupId.Form));
   });
 
   // Only the specified field should error.
   Object.values(SignupId).forEach((val) => {
-    const field = signupHandle.findByProps({ id: val });
+    const field = screen.getByTestId(val);
+    const label = within(field).getByRole("label");
     if (val === id) {
-      expect(field.props.error).toBeTruthy();
+      expect(label).toHaveClass("Mui-error");
     } else {
-      expect(field.props.error).toBeFalsy();
+      expect(label).not.toHaveClass("Mui-error");
     }
   });
 

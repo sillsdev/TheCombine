@@ -177,6 +177,7 @@ export default function Signup(props: SignupProps): ReactElement {
               {...defaultTextFieldProps}
               autoComplete="name"
               autoFocus
+              data-testid={SignupId.FieldName}
               error={fieldError[SignupField.Name]}
               helperText={
                 fieldError[SignupField.Name] ? t("login.required") : undefined
@@ -191,6 +192,7 @@ export default function Signup(props: SignupProps): ReactElement {
             <TextField
               {...defaultTextFieldProps}
               autoComplete="username"
+              data-testid={SignupId.FieldUsername}
               error={fieldError[SignupField.Username]}
               helperText={t("login.usernameRequirements")}
               id={SignupId.FieldUsername}
@@ -204,6 +206,7 @@ export default function Signup(props: SignupProps): ReactElement {
             <TextField
               {...defaultTextFieldProps}
               autoComplete="email"
+              data-testid={SignupId.FieldEmail}
               error={fieldError[SignupField.Email]}
               id={SignupId.FieldEmail}
               label={t("login.email")}
@@ -216,6 +219,7 @@ export default function Signup(props: SignupProps): ReactElement {
             <TextField
               {...defaultTextFieldProps}
               autoComplete="new-password"
+              data-testid={SignupId.FieldPassword1}
               error={fieldError[SignupField.Password1]}
               helperText={t("login.passwordRequirements")}
               id={SignupId.FieldPassword1}
@@ -230,6 +234,7 @@ export default function Signup(props: SignupProps): ReactElement {
             <TextField
               {...defaultTextFieldProps}
               autoComplete="new-password"
+              data-testid={SignupId.FieldPassword2}
               error={fieldError[SignupField.Password2]}
               helperText={
                 fieldError[SignupField.Password2]
@@ -260,6 +265,7 @@ export default function Signup(props: SignupProps): ReactElement {
             <Grid container justifyContent="flex-end" spacing={2}>
               <Grid item>
                 <Button
+                  data-testid={SignupId.ButtonLogIn}
                   id={SignupId.ButtonLogIn}
                   onClick={() => router.navigate(Path.Login)}
                   type="button"
@@ -274,6 +280,7 @@ export default function Signup(props: SignupProps): ReactElement {
                     color: "primary",
                     id: SignupId.ButtonSignUp,
                   }}
+                  data-testid={SignupId.ButtonSignUp}
                   disabled={!isVerified}
                   done={signupStatus === LoginStatus.Success}
                   doneText={t("login.signUpSuccess")}
