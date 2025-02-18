@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { act } from "react";
 import { Provider } from "react-redux";
@@ -68,23 +68,19 @@ const typeInFields = async (textRecord: Partial<SignupText>): Promise<void> => {
       continue;
     }
     const id = signupFieldId[field as SignupField];
-    const input = within(screen.getByTestId(id)).getByRole("textbox");
-    await userEvent.type(input, text);
+    await userEvent.type(screen.getByTestId(id), text);
   }
 };
 
 /** Clicks the submit button and checks that only the specified field errors. */
 const submitAndCheckError = async (id?: SignupField): Promise<void> => {
   // Submit the form.
-  await act(async () => {
-    await userEvent.click(screen.getByTestId(SignupId.ButtonSignUp));
-  });
+  await act(async () => screen.getByTestId(SignupId.ButtonSignUp).click());
 
   // Only the specified field should error.
   Object.values(SignupField).forEach((val) => {
-    const field = screen.getByTestId(signupFieldId[val as SignupField]);
     const text = signupFieldTextId[val as SignupField];
-    const classes = within(field).getByText(text).className.split(" ");
+    const classes = screen.getByText(text).className.split(" ");
     if (val === id) {
       expect(classes).toContain(errorClass);
     } else {

@@ -170,16 +170,18 @@ export default function Signup(props: SignupProps): ReactElement {
     }
   };
 
-  const defaultTextFieldProps: TextFieldProps = {
-    inputProps: {
-      maxLength: 100,
-      role: "textbox", // Since password fields don't have a role.
-    },
+  const defaultTextFieldProps = (field: SignupField): TextFieldProps => ({
+    error: fieldError[field],
+    id: signupFieldId[field],
+    inputProps: { "data-testid": signupFieldId[field], maxLength: 100 },
+    label: t(signupFieldTextId[field]),
     margin: "normal",
+    onChange: (e) => updateField(e, field),
     required: true,
     style: { width: "100%" },
+    value: fieldText[field],
     variant: "outlined",
-  };
+  });
 
   return (
     <Grid container justifyContent="center">
@@ -193,79 +195,49 @@ export default function Signup(props: SignupProps): ReactElement {
 
             {/* Name field */}
             <TextField
-              {...defaultTextFieldProps}
+              {...defaultTextFieldProps(SignupField.Name)}
               autoComplete="name"
               autoFocus
-              data-testid={SignupId.FieldName}
-              error={fieldError[SignupField.Name]}
               helperText={
                 fieldError[SignupField.Name] ? t("login.required") : undefined
               }
-              id={SignupId.FieldName}
-              label={t(signupFieldTextId[SignupField.Name])}
-              onChange={(e) => updateField(e, SignupField.Name)}
-              value={fieldText[SignupField.Name]}
             />
 
             {/* Username field */}
             <TextField
-              {...defaultTextFieldProps}
+              {...defaultTextFieldProps(SignupField.Username)}
               autoComplete="username"
-              data-testid={SignupId.FieldUsername}
-              error={fieldError[SignupField.Username]}
               helperText={t("login.usernameRequirements")}
-              id={SignupId.FieldUsername}
-              label={t(signupFieldTextId[SignupField.Username])}
               onBlur={() => checkUsername()}
-              onChange={(e) => updateField(e, SignupField.Username)}
-              value={fieldText[SignupField.Username]}
             />
 
             {/* Email field */}
             <TextField
-              {...defaultTextFieldProps}
+              {...defaultTextFieldProps(SignupField.Email)}
               autoComplete="email"
-              data-testid={SignupId.FieldEmail}
-              error={fieldError[SignupField.Email]}
-              id={SignupId.FieldEmail}
-              label={t(signupFieldTextId[SignupField.Email])}
-              onChange={(e) => updateField(e, SignupField.Email)}
               type="email"
-              value={fieldText[SignupField.Email]}
             />
 
             {/* Password field */}
             <TextField
-              {...defaultTextFieldProps}
+              {...defaultTextFieldProps(SignupField.Password1)}
               autoComplete="new-password"
-              data-testid={SignupId.FieldPassword1}
-              error={fieldError[SignupField.Password1]}
               helperText={t("login.passwordRequirements")}
-              id={SignupId.FieldPassword1}
-              label={t(signupFieldTextId[SignupField.Password1])}
               onBlur={() => checkPassword1()}
-              onChange={(e) => updateField(e, SignupField.Password1)}
               type="password"
-              value={fieldText[SignupField.Password1]}
             />
 
             {/* Confirm Password field */}
             <TextField
-              {...defaultTextFieldProps}
+              {...defaultTextFieldProps(SignupField.Password2)}
               autoComplete="new-password"
-              data-testid={SignupId.FieldPassword2}
-              error={fieldError[SignupField.Password2]}
               helperText={
                 fieldError[SignupField.Password2]
                   ? t("login.confirmPasswordError")
                   : undefined
               }
-              id={SignupId.FieldPassword2}
-              label={t(signupFieldTextId[SignupField.Password2])}
               onBlur={() => checkPassword2()}
-              onChange={(e) => updateField(e, SignupField.Password2)}
               type="password"
-              value={fieldText[SignupField.Password2]}
             />
 
             {/* "Failed to sign up" */}

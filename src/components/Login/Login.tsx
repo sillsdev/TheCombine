@@ -98,16 +98,14 @@ export default function Login(): ReactElement {
     }
   };
 
-  const defaultTextFieldProps: TextFieldProps = {
-    inputProps: {
-      maxLength: 100,
-      role: "textbox", // Since password fields don't have a role.
-    },
+  const defaultTextFieldProps = (id?: string): TextFieldProps => ({
+    id,
+    inputProps: { "data-testid": id, maxLength: 100 },
     margin: "normal",
     required: true,
     style: { width: "100%" },
     variant: "outlined",
-  };
+  });
 
   return (
     <Grid container justifyContent="center">
@@ -121,13 +119,11 @@ export default function Login(): ReactElement {
 
             {/* Username field */}
             <TextField
-              {...defaultTextFieldProps}
+              {...defaultTextFieldProps(LoginId.FieldUsername)}
               autoComplete="username"
               autoFocus
-              data-testid={LoginId.FieldUsername}
               error={usernameError}
               helperText={usernameError ? t(LoginTextId.FieldError) : undefined}
-              id={LoginId.FieldUsername}
               label={t(LoginTextId.LabelUsername)}
               onChange={handleUpdateUsername}
               value={username}
@@ -135,12 +131,10 @@ export default function Login(): ReactElement {
 
             {/* Password field */}
             <TextField
-              {...defaultTextFieldProps}
+              {...defaultTextFieldProps(LoginId.FieldPassword)}
               autoComplete="current-password"
-              data-testid={LoginId.FieldPassword}
               error={passwordError}
               helperText={passwordError ? t(LoginTextId.FieldError) : undefined}
-              id={LoginId.FieldPassword}
               label={t(LoginTextId.LabelPassword)}
               onChange={handleUpdatePassword}
               type="password"

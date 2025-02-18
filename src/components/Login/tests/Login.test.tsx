@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { act } from "react";
 import { Provider } from "react-redux";
@@ -41,19 +41,16 @@ const renderLogin = async (): Promise<void> => {
 
 /** Type the given value into the field with the given ID. */
 const typeInField = async (id: LoginId, value: string): Promise<void> => {
-  const input = within(screen.getByTestId(id)).getByRole("textbox");
-  await userEvent.type(input, value);
+  await userEvent.type(screen.getByTestId(id), value);
 };
 
 /** Click the Login button and confirm whether the field with the given ID has an error. */
 const loginAndCheckError = async (errorId?: LoginId): Promise<void> => {
   // Login button click
-  const button = screen.getByTestId(LoginId.ButtonLogIn);
-  await act(async () => await userEvent.click(button));
+  await act(async () => screen.getByTestId(LoginId.ButtonLogIn).click());
 
   // Username field check
-  const userField = screen.getByTestId(LoginId.FieldUsername);
-  const userLabel = within(userField).getByText(LoginTextId.LabelUsername);
+  const userLabel = screen.getByText(LoginTextId.LabelUsername);
   const userClasses = userLabel.className.split(" ");
   if (errorId === LoginId.FieldUsername) {
     expect(userClasses).toContain(errorClass);
@@ -62,8 +59,7 @@ const loginAndCheckError = async (errorId?: LoginId): Promise<void> => {
   }
 
   // Password field check
-  const passField = screen.getByTestId(LoginId.FieldPassword);
-  const passLabel = within(passField).getByText(LoginTextId.LabelPassword);
+  const passLabel = screen.getByText(LoginTextId.LabelPassword);
   const passClasses = passLabel.className.split(" ");
   if (errorId === LoginId.FieldPassword) {
     expect(passClasses).toContain(errorClass);
