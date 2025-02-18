@@ -42,6 +42,18 @@ export enum LoginId {
   Form = "login-form",
 }
 
+export enum LoginTextId {
+  ButtonLogin = "login.login",
+  ButtonSignUp = "login.signUp",
+  Error401 = "login.failed",
+  ErrorUnknown = "login.failedUnknownReason",
+  FieldError = "login.required",
+  LabelPassword = "login.password",
+  LabelUsername = "login.username",
+  LinkForgotPassword = "login.forgotPassword",
+  Title = "login.title",
+}
+
 /** The Login page (also doubles as a Logout page) */
 export default function Login(): ReactElement {
   const dispatch = useAppDispatch();
@@ -87,7 +99,10 @@ export default function Login(): ReactElement {
   };
 
   const defaultTextFieldProps: TextFieldProps = {
-    inputProps: { maxLength: 100 },
+    inputProps: {
+      maxLength: 100,
+      role: "textbox", // Since password fields don't have a role.
+    },
     margin: "normal",
     required: true,
     style: { width: "100%" },
@@ -101,7 +116,7 @@ export default function Login(): ReactElement {
           <CardContent>
             {/* Title */}
             <Typography variant="h5" align="center" gutterBottom>
-              {t("login.title")}
+              {t(LoginTextId.Title)}
             </Typography>
 
             {/* Username field */}
@@ -110,9 +125,9 @@ export default function Login(): ReactElement {
               autoComplete="username"
               autoFocus
               error={usernameError}
-              helperText={usernameError ? t("login.required") : undefined}
+              helperText={usernameError ? t(LoginTextId.FieldError) : undefined}
               id={LoginId.FieldUsername}
-              label={t("login.username")}
+              label={t(LoginTextId.LabelUsername)}
               onChange={handleUpdateUsername}
               value={username}
             />
@@ -122,9 +137,9 @@ export default function Login(): ReactElement {
               {...defaultTextFieldProps}
               autoComplete="current-password"
               error={passwordError}
-              helperText={passwordError ? t("login.required") : undefined}
+              helperText={passwordError ? t(LoginTextId.FieldError) : undefined}
               id={LoginId.FieldPassword}
-              label={t("login.password")}
+              label={t(LoginTextId.LabelPassword)}
               onChange={handleUpdatePassword}
               type="password"
               value={password}
@@ -139,7 +154,7 @@ export default function Login(): ReactElement {
                   underline="hover"
                   variant="subtitle2"
                 >
-                  {t("login.forgotPassword")}
+                  {t(LoginTextId.LinkForgotPassword)}
                 </Link>
               </Typography>
             )}
@@ -152,8 +167,8 @@ export default function Login(): ReactElement {
               >
                 {t(
                   loginError.includes("401")
-                    ? "login.failed"
-                    : "login.failedUnknownReason"
+                    ? LoginTextId.Error401
+                    : LoginTextId.ErrorUnknown
                 )}
               </Typography>
             )}
@@ -184,7 +199,7 @@ export default function Login(): ReactElement {
                     onClick={() => router.navigate(Path.Signup)}
                     variant="outlined"
                   >
-                    {t("login.signUp")}
+                    {t(LoginTextId.ButtonSignUp)}
                   </Button>
                 </Grid>
 
@@ -194,7 +209,7 @@ export default function Login(): ReactElement {
                     disabled={!isVerified}
                     loading={status === LoginStatus.InProgress}
                   >
-                    {t("login.login")}
+                    {t(LoginTextId.ButtonLogin)}
                   </LoadingButton>
                 </Grid>
               </Grid>
