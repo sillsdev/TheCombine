@@ -43,7 +43,7 @@ beforeEach(async () => {
 });
 
 describe("Statistics", () => {
-  it("useEffect hook was called", async () => {
+  test("useEffect hook was called", async () => {
     expect(mockGetProject).toHaveBeenCalled();
     expect(mockGetProjectId).toHaveBeenCalled();
   });
