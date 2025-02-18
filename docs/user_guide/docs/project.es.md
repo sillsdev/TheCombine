@@ -66,7 +66,7 @@ independiente de los datos existentes del proyecto)
 
 #### Protected Data Override
 
-The default setting is Off. Change this to On to allows project users in Merge Duplicates to override the
+The default setting is Off. Change this to On to allow project users in Merge Duplicates to override the
 [protection](goals.md#protected-entries-and-senses) of words and senses that were imported with data not handled by The
 Combine.
 
