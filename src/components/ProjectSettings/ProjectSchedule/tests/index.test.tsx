@@ -1,13 +1,10 @@
-import { Button, IconButton } from "@mui/material";
-import renderer from "react-test-renderer";
+import { act, render, screen } from "@testing-library/react";
 
 import { Project } from "api/models";
 import ProjectSchedule from "components/ProjectSettings/ProjectSchedule";
 import { newProject } from "types/project";
 
 const mockSetProject = jest.fn();
-
-let projectMaster: renderer.ReactTestRenderer;
 
 function mockProject(sched?: string[]): Project {
   return { ...newProject(), workshopSchedule: sched ?? [] };
@@ -18,8 +15,8 @@ const renderProjSched = async (
   readOnly = false
 ): Promise<void> => {
   mockSetProject.mockResolvedValue(undefined);
-  await renderer.act(async () => {
-    projectMaster = renderer.create(
+  await act(async () => {
+    render(
       <ProjectSchedule
         project={project}
         readOnly={readOnly}
@@ -32,12 +29,11 @@ const renderProjSched = async (
 describe("ProjectSchedule", () => {
   it("renders with buttons", async () => {
     await renderProjSched();
-    expect(projectMaster.root.findAllByType(IconButton)).toHaveLength(3);
+    expect(screen.queryAllByRole("button")).toHaveLength(3);
   });
 
   it("renders readOnly with no buttons", async () => {
     await renderProjSched(undefined, true);
-    expect(projectMaster.root.findAllByType(Button)).toHaveLength(0);
-    expect(projectMaster.root.findAllByType(IconButton)).toHaveLength(0);
+    expect(screen.queryAllByRole("button")).toHaveLength(0);
   });
 });
