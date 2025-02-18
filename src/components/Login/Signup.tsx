@@ -39,7 +39,7 @@ export enum SignupField {
 }
 
 type SignupError = Record<SignupField, boolean>;
-type SignupText = Record<SignupField, string>;
+export type SignupText = Record<SignupField, string>;
 
 const defaultSignupError: SignupError = {
   [SignupField.Email]: false,
@@ -171,7 +171,10 @@ export default function Signup(props: SignupProps): ReactElement {
   };
 
   const defaultTextFieldProps: TextFieldProps = {
-    inputProps: { role: "textbox", maxLength: 100 },
+    inputProps: {
+      maxLength: 100,
+      role: "textbox", // Since password fields don't have a role.
+    },
     margin: "normal",
     required: true,
     style: { width: "100%" },

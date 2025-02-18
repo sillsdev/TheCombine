@@ -5,11 +5,11 @@ import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 
 import MockBypassLoadableButton from "components/Buttons/LoadingDoneButton";
-import { CaptchaProps } from "components/Login/Captcha";
 import { defaultState as loginState } from "components/Login/Redux/LoginReduxTypes";
 import Signup, {
   SignupField,
   SignupId,
+  SignupText,
   signupFieldId,
   signupFieldTextId,
 } from "components/Login/Signup";
@@ -24,7 +24,7 @@ jest.mock("components/Buttons", () => ({
 }));
 jest.mock("components/Login/Captcha", () => ({
   __esModule: true,
-  default: (props: CaptchaProps) => <MockCaptcha {...props} />,
+  default: (props: any) => <MockCaptcha {...props} />,
 }));
 jest.mock("components/Login/Redux/LoginActions", () => ({
   asyncSignUp: (...args: any[]) => mockAsyncSignUp(...args),
@@ -39,12 +39,14 @@ jest.mock("rootRedux/hooks", () => {
 const mockAsyncSignUp = jest.fn();
 const mockStore = configureMockStore()({ loginState });
 
-const emailValid = "non@empty.com";
-const nameValid = "Mr. Nonempty";
-const passInvalid = "$hort";
 const passValid = "@-least+8_chars";
-const userInvalid = "no";
-const userValid = "3+ letters long";
+const validTexts: SignupText = {
+  [SignupField.Email]: "non@empty.com",
+  [SignupField.Name]: "Mr. Nonempty",
+  [SignupField.Password1]: passValid,
+  [SignupField.Password2]: passValid,
+  [SignupField.Username]: "3+ letters long",
+};
 
 const renderSignup = async (): Promise<void> => {
   await act(async () => {
@@ -56,13 +58,14 @@ const renderSignup = async (): Promise<void> => {
   });
 };
 
-const typeInFields = async (
-  textRecord: Record<SignupField, string>
-): Promise<void> => {
+/** Types text into all fields, using text from the given `textRecord` when present,
+ * and falling back to entries in `validTexts` for keys missing from `textRecord`. */
+const typeInFields = async (textRecord: Partial<SignupText>): Promise<void> => {
   const agent = userEvent.setup();
-  for (const [field, text] of Object.entries(textRecord)) {
+  for (const field of Object.values(SignupField)) {
+    const text = textRecord[field] ?? validTexts[field];
     if (!text) {
-      return;
+      continue;
     }
     await act(async () => {
       const id = signupFieldId[field as SignupField];
@@ -72,6 +75,7 @@ const typeInFields = async (
   }
 };
 
+/** Clicks the submit button and checks that only the specified field errors. */
 const submitAndCheckError = async (id?: SignupField): Promise<void> => {
   const agent = userEvent.setup();
 
@@ -83,11 +87,8 @@ const submitAndCheckError = async (id?: SignupField): Promise<void> => {
   // Only the specified field should error.
   Object.values(SignupField).forEach((val) => {
     const field = screen.getByTestId(signupFieldId[val as SignupField]);
-    const label = within(field).getByText(
-      signupFieldTextId[val as SignupField]
-    );
-
-    const classes = label.className.split(" ");
+    const text = signupFieldTextId[val as SignupField];
+    const classes = within(field).getByText(text).className.split(" ");
     if (val === id) {
       expect(classes).toContain("Mui-error");
     } else {
@@ -109,53 +110,39 @@ beforeEach(async () => {
 
 describe("Signup", () => {
   describe("submit button", () => {
-    // Don't test with empty name or invalid email, because those prevent submission.
+    // Don't test with empty fields or invalid email, because those prevent submission.
 
-    it("errors when password too short", async () => {
+    it("errors when name is whitespace", async () => {
       await renderSignup();
+      await typeInFields({ [SignupField.Name]: "  " });
+      await submitAndCheckError(SignupField.Name);
+    });
+
+    it("errors when password is too short", async () => {
+      await renderSignup();
+      const passInvalid = "$hort";
       await typeInFields({
-        [SignupField.Email]: emailValid,
-        [SignupField.Name]: nameValid,
         [SignupField.Password1]: passInvalid,
         [SignupField.Password2]: passInvalid,
-        [SignupField.Username]: userValid,
       });
       await submitAndCheckError(SignupField.Password1);
     });
 
     it("errors when password don't match", async () => {
       await renderSignup();
-      await typeInFields({
-        [SignupField.Email]: emailValid,
-        [SignupField.Name]: nameValid,
-        [SignupField.Password1]: passValid,
-        [SignupField.Password2]: `${passValid}++`,
-        [SignupField.Username]: userValid,
-      });
+      await typeInFields({ [SignupField.Password2]: `${passValid}++` });
       await submitAndCheckError(SignupField.Password2);
     });
 
-    it("errors when username too short", async () => {
+    it("errors when username is too short", async () => {
       await renderSignup();
-      await typeInFields({
-        [SignupField.Email]: emailValid,
-        [SignupField.Name]: nameValid,
-        [SignupField.Password1]: passValid,
-        [SignupField.Password2]: passValid,
-        [SignupField.Username]: userInvalid,
-      });
+      await typeInFields({ [SignupField.Username]: "     no     " });
       await submitAndCheckError(SignupField.Username);
     });
 
-    it("submits when all fields valid", async () => {
+    it("submits when all fields are valid", async () => {
       await renderSignup();
-      await typeInFields({
-        [SignupField.Email]: emailValid,
-        [SignupField.Name]: nameValid,
-        [SignupField.Password1]: passValid,
-        [SignupField.Password2]: passValid,
-        [SignupField.Username]: userValid,
-      });
+      await typeInFields({});
       await submitAndCheckError();
     });
   });
