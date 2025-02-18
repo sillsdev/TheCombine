@@ -119,7 +119,7 @@ describe("Signup", () => {
       await submitAndCheckError(SignupField.Password1);
     });
 
-    it("errors when password don't match", async () => {
+    it("errors when passwords don't match", async () => {
       await typeInFields({ [SignupField.Password2]: `${passValid}++` });
       await submitAndCheckError(SignupField.Password2);
     });
