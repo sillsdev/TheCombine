@@ -124,6 +124,7 @@ export default function Login(): ReactElement {
               {...defaultTextFieldProps}
               autoComplete="username"
               autoFocus
+              data-testid={LoginId.FieldUsername}
               error={usernameError}
               helperText={usernameError ? t(LoginTextId.FieldError) : undefined}
               id={LoginId.FieldUsername}
@@ -136,6 +137,7 @@ export default function Login(): ReactElement {
             <TextField
               {...defaultTextFieldProps}
               autoComplete="current-password"
+              data-testid={LoginId.FieldPassword}
               error={passwordError}
               helperText={passwordError ? t(LoginTextId.FieldError) : undefined}
               id={LoginId.FieldPassword}
@@ -179,6 +181,7 @@ export default function Login(): ReactElement {
             <Grid container justifyContent="space-between">
               <Grid item xs={1}>
                 <Button
+                  data-testid={LoginId.ButtonUserGuide}
                   id={LoginId.ButtonUserGuide}
                   onClick={() => openUserGuide()}
                 >
@@ -195,6 +198,7 @@ export default function Login(): ReactElement {
               >
                 <Grid item>
                   <Button
+                    data-testid={LoginId.ButtonSignUp}
                     id={LoginId.ButtonSignUp}
                     onClick={() => router.navigate(Path.Signup)}
                     variant="outlined"
@@ -205,7 +209,11 @@ export default function Login(): ReactElement {
 
                 <Grid item>
                   <LoadingButton
-                    buttonProps={{ id: LoginId.ButtonLogIn, type: "submit" }}
+                    buttonProps={{
+                      "data-testid": LoginId.ButtonLogIn,
+                      id: LoginId.ButtonLogIn,
+                      type: "submit",
+                    }}
                     disabled={!isVerified}
                     loading={status === LoginStatus.InProgress}
                   >

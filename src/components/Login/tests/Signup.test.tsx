@@ -36,6 +36,7 @@ jest.mock("rootRedux/hooks", () => {
   };
 });
 
+const errorClass = "Mui-error";
 const mockAsyncSignUp = jest.fn();
 const mockStore = configureMockStore()({ loginState });
 
@@ -61,27 +62,22 @@ const renderSignup = async (): Promise<void> => {
 /** Types text into all fields, using text from the given `textRecord` when present,
  * and falling back to entries in `validTexts` for keys missing from `textRecord`. */
 const typeInFields = async (textRecord: Partial<SignupText>): Promise<void> => {
-  const agent = userEvent.setup();
   for (const field of Object.values(SignupField)) {
     const text = textRecord[field] ?? validTexts[field];
     if (!text) {
       continue;
     }
-    await act(async () => {
-      const id = signupFieldId[field as SignupField];
-      const input = within(screen.getByTestId(id)).getByRole("textbox");
-      await agent.type(input, text);
-    });
+    const id = signupFieldId[field as SignupField];
+    const input = within(screen.getByTestId(id)).getByRole("textbox");
+    await userEvent.type(input, text);
   }
 };
 
 /** Clicks the submit button and checks that only the specified field errors. */
 const submitAndCheckError = async (id?: SignupField): Promise<void> => {
-  const agent = userEvent.setup();
-
   // Submit the form.
   await act(async () => {
-    await agent.click(screen.getByTestId(SignupId.ButtonSignUp));
+    await userEvent.click(screen.getByTestId(SignupId.ButtonSignUp));
   });
 
   // Only the specified field should error.
@@ -90,9 +86,9 @@ const submitAndCheckError = async (id?: SignupField): Promise<void> => {
     const text = signupFieldTextId[val as SignupField];
     const classes = within(field).getByText(text).className.split(" ");
     if (val === id) {
-      expect(classes).toContain("Mui-error");
+      expect(classes).toContain(errorClass);
     } else {
-      expect(classes).not.toContain("Mui-error");
+      expect(classes).not.toContain(errorClass);
     }
   });
 
@@ -106,6 +102,7 @@ const submitAndCheckError = async (id?: SignupField): Promise<void> => {
 
 beforeEach(async () => {
   jest.clearAllMocks();
+  await renderSignup();
 });
 
 describe("Signup", () => {
@@ -113,13 +110,11 @@ describe("Signup", () => {
     // Don't test with empty fields or invalid email, because those prevent submission.
 
     it("errors when name is whitespace", async () => {
-      await renderSignup();
       await typeInFields({ [SignupField.Name]: "  " });
       await submitAndCheckError(SignupField.Name);
     });
 
     it("errors when password is too short", async () => {
-      await renderSignup();
       const passInvalid = "$hort";
       await typeInFields({
         [SignupField.Password1]: passInvalid,
@@ -129,19 +124,16 @@ describe("Signup", () => {
     });
 
     it("errors when password don't match", async () => {
-      await renderSignup();
       await typeInFields({ [SignupField.Password2]: `${passValid}++` });
       await submitAndCheckError(SignupField.Password2);
     });
 
     it("errors when username is too short", async () => {
-      await renderSignup();
       await typeInFields({ [SignupField.Username]: "     no     " });
       await submitAndCheckError(SignupField.Username);
     });
 
     it("submits when all fields are valid", async () => {
-      await renderSignup();
       await typeInFields({});
       await submitAndCheckError();
     });
