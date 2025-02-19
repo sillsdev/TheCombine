@@ -45,8 +45,13 @@ export default function SidebarDrop(): ReactElement {
             </IconButton>
           </Grid>
           <Typography variant="h5">{vernacular}</Typography>
-          {sidebar.mergeSenses.map((ms: MergeTreeSense, i: number) => (
-            <SidebarDragSense key={ms.sense.guid} index={i} mergeSense={ms} />
+          {sidebar.mergeSenses.map((ms: MergeTreeSense) => (
+            <SidebarDragSense
+              index={ms.order}
+              // Need to the key to change when the order changes for the droppable to update.
+              key={`${ms.sense.guid}-${ms.order}`}
+              mergeSense={ms}
+            />
           ))}
           {providedDroppable.placeholder}
         </div>
