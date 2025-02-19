@@ -92,7 +92,7 @@ function createVernListInstance(
             <VernList
               vernacular="mockVern"
               vernacularWords={_vernacularWords}
-              closeDialog={_mockCallback}
+              onSelect={_mockCallback}
               analysisLang={defaultWritingSystem.bcp47}
             />
           </Provider>
