@@ -57,19 +57,19 @@ export default function DownloadButton(
       URL.revokeObjectURL(fileUrl);
       setFileName(undefined);
       setFileUrl(undefined);
+      reset();
     }
-  }, [downloadLink, fileUrl]);
+  }, [downloadLink, fileUrl, reset]);
 
   useEffect(() => {
     if (fileName && exportState.projectId) {
       dispatch(asyncDownloadExport(exportState.projectId)).then((url) => {
         if (url) {
           setFileUrl(url);
-          reset();
         }
       });
     }
-  }, [dispatch, exportState.projectId, fileName, reset]);
+  }, [dispatch, exportState.projectId, fileName]);
 
   useEffect(() => {
     if (exportState.projectId) {
