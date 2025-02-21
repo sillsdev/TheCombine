@@ -15,6 +15,7 @@ import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledM
 import SensesTextSummary from "components/WordCard/SensesTextSummary";
 import DomainsCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/DomainsCell";
 import PartOfSpeechCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/PartOfSpeechCell";
+import theme from "types/theme";
 import { firstGlossText } from "utilities/wordUtilities";
 
 interface VernDialogProps {
@@ -96,6 +97,7 @@ export function VernList(props: VernListProps): ReactElement {
       <StyledMenuItem
         key={sense?.guid ?? word.id}
         onClick={() => props.onSelect(word.id, sense?.guid)}
+        sx={isSense ? { marginLeft: theme.spacing(4) } : undefined}
       >
         <DialogListItemText
           isSubitem={isSense}
@@ -129,6 +131,7 @@ export function VernList(props: VernListProps): ReactElement {
         <StyledMenuItem
           key={`${word.id}-new-sense`}
           onClick={() => props.onSelect(word.id, "")}
+          sx={{ marginLeft: theme.spacing(4) }}
         >
           <DialogListItemText isSubitem text={t("addWords.newSense")} />
         </StyledMenuItem>
@@ -171,7 +174,7 @@ interface DialogListItemTextProps {
  * the MenuList to allow for the first item to be auto-selected. */
 const DialogListItemText = (props: DialogListItemTextProps): ReactElement => {
   return (
-    <ListItemText inset={props.isSubitem}>
+    <ListItemText>
       <Grid
         alignItems="center"
         container
