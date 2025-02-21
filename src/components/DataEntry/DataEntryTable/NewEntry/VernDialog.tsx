@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { GramCatGroup, type Word } from "api/models";
 import { CloseButton } from "components/Buttons";
 import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
+import DefinitionsCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/DefinitionsCell";
 import DomainsCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/DomainsCell";
 import GlossesCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/GlossesCell";
 import PartOfSpeechCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/PartOfSpeechCell";
@@ -20,7 +21,9 @@ import { firstGlossText } from "utilities/wordUtilities";
 interface VernDialogProps {
   vernacularWords: Word[];
   open: boolean;
-  // Call handleClose with no input to indicate no selection was made.
+  /** Call handleClose with no input to indicate no selection was made.
+   * An empty string for selectedWordId indicates a new entry should be created.
+   * An empty string for selectedSenseId indicates a new sense for the specified word. */
   handleClose: (selectedWordId?: string, selectedSenseId?: string) => void;
   analysisLang?: string;
 }
@@ -44,7 +47,8 @@ export default function VernDialog(props: VernDialogProps): ReactElement {
   return (
     <Dialog
       disableRestoreFocus
-      maxWidth={false}
+      fullWidth
+      maxWidth="sm"
       onClose={(_, reason) => {
         if (reason !== "backdropClick") {
           props.handleClose();
@@ -84,42 +88,24 @@ export function VernList(props: VernListProps): ReactElement {
 
   const menuItem = (word: Word, isSense = false): ReactElement => {
     const sense = isSense ? word.senses[0] : undefined;
-    const id = sense?.guid ?? word.id;
     const text = sense
       ? firstGlossText(sense, props.analysisLang)
       : word.vernacular;
 
     return (
       <StyledMenuItem
-        id={id}
-        key={id}
+        key={sense?.guid ?? word.id}
         onClick={() => props.onSelect(word.id, sense?.guid)}
       >
-        <ListItemText inset={isSense}>
-          <Grid
-            container
-            justifyContent="space-between"
-            alignItems="center"
-            spacing={5}
-          >
-            <Grid item xs="auto">
-              <Typography variant="h5">{text}</Typography>
-            </Grid>
-            {!isSense && (
-              <Grid item xs="auto">
-                <GlossesCell word={word} />
-              </Grid>
-            )}
-            {hasPartsOfSpeech && (
-              <Grid item xs="auto">
-                <PartOfSpeechCell word={word} />
-              </Grid>
-            )}
-            <Grid item xs>
-              <DomainsCell word={word} />
-            </Grid>
-          </Grid>
-        </ListItemText>
+        <DialogListItemText
+          inset={isSense}
+          showDefinition={!!sense}
+          showDomain
+          showGloss={!sense}
+          showPartOfSpeech={hasPartsOfSpeech}
+          text={text}
+          word={word}
+        />
       </StyledMenuItem>
     );
   };
@@ -130,23 +116,10 @@ export function VernList(props: VernListProps): ReactElement {
       menuItems.push(menuItem(word));
     } else {
       menuItems.push(
-        <StyledMenuItem
-          id={word.id}
-          key={word.id}
-          onClick={() => props.onSelect(word.id)}
-        >
-          <ListItemText>
-            <Grid
-              container
-              justifyContent="space-between"
-              alignItems="center"
-              spacing={5}
-            >
-              <Grid item xs="auto">
-                <Typography variant="h5">{`${word.vernacular} (${t("addWords.selectSense")})`}</Typography>
-              </Grid>
-            </Grid>
-          </ListItemText>
+        <StyledMenuItem key={word.id} onClick={() => props.onSelect(word.id)}>
+          <DialogListItemText
+            text={`${word.vernacular} — ${t("addWords.selectSense")}`}
+          />
         </StyledMenuItem>
       );
       for (const s of word.senses) {
@@ -154,18 +127,19 @@ export function VernList(props: VernListProps): ReactElement {
       }
       menuItems.push(
         <StyledMenuItem
-          key="new-sense"
+          key={`${word.id}-new-sense`}
           onClick={() => props.onSelect(word.id, "")}
         >
-          <ListItemText inset>{t("addWords.newSense")}</ListItemText>
+          <DialogListItemText inset text={t("addWords.newSense")} />
         </StyledMenuItem>
       );
     }
   }
   menuItems.push(
     <StyledMenuItem key="new-entry" onClick={() => props.onSelect("")}>
-      {t("addWords.newEntryFor")}
-      {props.vernacular}
+      <DialogListItemText
+        text={`${t("addWords.newEntryFor")} ${props.vernacular}`}
+      />
     </StyledMenuItem>
   );
 
@@ -180,3 +154,54 @@ export function VernList(props: VernListProps): ReactElement {
     </>
   );
 }
+
+interface DialogListItemTextProps {
+  inset?: boolean;
+  showDefinition?: boolean;
+  showGloss?: boolean;
+  showPartOfSpeech?: boolean;
+  showDomain?: boolean;
+  text: string;
+  word?: Word;
+}
+
+const DialogListItemText = (props: DialogListItemTextProps): ReactElement => {
+  return (
+    <ListItemText inset={props.inset}>
+      <Grid
+        container
+        justifyContent="space-between"
+        alignItems="center"
+        spacing={5}
+      >
+        <Grid item xs="auto">
+          <Typography variant="h5">{props.text}</Typography>
+        </Grid>
+        {!!props.word && (
+          <>
+            {props.showGloss && (
+              <Grid item xs="auto">
+                <GlossesCell word={props.word} />
+              </Grid>
+            )}
+            {props.showDefinition && (
+              <Grid item xs="auto">
+                <DefinitionsCell word={props.word} />
+              </Grid>
+            )}
+            {props.showPartOfSpeech && (
+              <Grid item xs="auto">
+                <PartOfSpeechCell word={props.word} />
+              </Grid>
+            )}
+            {props.showDomain && (
+              <Grid item xs>
+                <DomainsCell word={props.word} />
+              </Grid>
+            )}
+          </>
+        )}
+      </Grid>
+    </ListItemText>
+  );
+};
