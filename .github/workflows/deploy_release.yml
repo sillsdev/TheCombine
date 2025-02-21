@@ -46,7 +46,7 @@ jobs:
             security.ubuntu.com:80
             storage.googleapis.com:443
             sts.us-east-1.amazonaws.com:443
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Build The Combine
         id: build_combine
         uses: ./.github/actions/combine-build
@@ -69,7 +69,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
       - name: Deploy The Combine Update to QA

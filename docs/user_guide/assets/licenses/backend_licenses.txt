@@ -27,34 +27,6 @@ Authors: MichaCo
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
-PackageId: Google.Protobuf
-PackageVersion: 3.22.5
-PackageProjectUrl: https://github.com/protocolbuffers/protobuf
-Authors: Google Inc.
-License: BSD-3-Clause
-LicenseUrl: https://licenses.nuget.org/BSD-3-Clause
-###############################################################
-PackageId: Grpc.Core.Api
-PackageVersion: 2.52.0
-PackageProjectUrl: https://github.com/grpc/grpc-dotnet
-Authors: The gRPC Authors
-License: Apache-2.0
-LicenseUrl: https://licenses.nuget.org/Apache-2.0
-###############################################################
-PackageId: Grpc.Net.Client
-PackageVersion: 2.52.0
-PackageProjectUrl: https://github.com/grpc/grpc-dotnet
-Authors: The gRPC Authors
-License: Apache-2.0
-LicenseUrl: https://licenses.nuget.org/Apache-2.0
-###############################################################
-PackageId: Grpc.Net.Common
-PackageVersion: 2.52.0
-PackageProjectUrl: https://github.com/grpc/grpc-dotnet
-Authors: The gRPC Authors
-License: Apache-2.0
-LicenseUrl: https://licenses.nuget.org/Apache-2.0
-###############################################################
 PackageId: icu.net
 PackageVersion: 3.0.0
 PackageProjectUrl: https://github.com/sillsdev/icu-dotnet
@@ -83,8 +55,15 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.AspNetCore.Authentication.JwtBearer
-PackageVersion: 8.0.11
+PackageVersion: 8.0.12
 PackageProjectUrl: https://asp.net/
+Authors: Microsoft
+License: MIT
+LicenseUrl: https://licenses.nuget.org/MIT
+###############################################################
+PackageId: Microsoft.Bcl.Memory
+PackageVersion: 9.0.0
+PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
@@ -106,20 +85,6 @@ LicenseUrl: https://github.com/dotnet/core-setup/blob/master/LICENSE.TXT
 PackageId: Microsoft.Extensions.ApiDescription.Server
 PackageVersion: 6.0.5
 PackageProjectUrl: https://asp.net/
-Authors: Microsoft
-License: MIT
-LicenseUrl: https://licenses.nuget.org/MIT
-###############################################################
-PackageId: Microsoft.Extensions.Caching.Abstractions
-PackageVersion: 8.0.0
-PackageProjectUrl: https://dot.net/
-Authors: Microsoft
-License: MIT
-LicenseUrl: https://licenses.nuget.org/MIT
-###############################################################
-PackageId: Microsoft.Extensions.Caching.Memory
-PackageVersion: 8.0.1
-PackageProjectUrl: https://dot.net/
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
@@ -230,21 +195,21 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.IdentityModel.Abstractions
-PackageVersion: 7.5.1
+PackageVersion: 8.3.1
 PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.IdentityModel.JsonWebTokens
-PackageVersion: 7.5.1
+PackageVersion: 8.3.1
 PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.IdentityModel.Logging
-PackageVersion: 7.5.1
+PackageVersion: 8.3.1
 PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Authors: Microsoft
 License: MIT
@@ -265,7 +230,7 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.IdentityModel.Tokens
-PackageVersion: 7.5.1
+PackageVersion: 8.3.1
 PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Authors: Microsoft
 License: MIT
@@ -355,21 +320,21 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: OpenTelemetry
-PackageVersion: 1.10.0
+PackageVersion: 1.11.1
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Api
-PackageVersion: 1.10.0
+PackageVersion: 1.11.1
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Api.ProviderBuilderExtensions
-PackageVersion: 1.10.0
+PackageVersion: 1.11.1
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
@@ -383,14 +348,14 @@ License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Exporter.OpenTelemetryProtocol
-PackageVersion: 1.10.0
+PackageVersion: 1.11.1
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Extensions.Hosting
-PackageVersion: 1.10.0
+PackageVersion: 1.11.1
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
@@ -706,7 +671,7 @@ License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: System.IdentityModel.Tokens.Jwt
-PackageVersion: 7.5.1
+PackageVersion: 8.3.1
 PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Authors: Microsoft
 License: MIT

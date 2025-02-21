@@ -11,8 +11,7 @@ import theme from "types/theme";
 
 jest.mock("react-router-dom");
 
-const createMockStore = configureMockStore();
-const mockStore = createMockStore(defaultState);
+const mockStore = configureMockStore()(defaultState);
 
 // Need window.innerHeight defined for LandingPage.
 global.innerHeight = 100;

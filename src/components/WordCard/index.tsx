@@ -17,7 +17,7 @@ import {
   IconButtonWithTooltip,
   NoteButton,
 } from "components/Buttons";
-import { PronunciationsBackend } from "components/Pronunciations/PronunciationsBackend";
+import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
 import SenseCard from "components/WordCard/SenseCard";
 import SummarySenseCard from "components/WordCard/SummarySenseCard";
 import { TypographyWithFont } from "utilities/fontComponents";
@@ -30,6 +30,15 @@ interface WordCardProps {
 }
 
 export const buttonIdFull = (wordId: string): string => `word-${wordId}-full`;
+
+/** Text for the aria-label of WordCard elements */
+export enum WordCardLabel {
+  ButtonAudioSummary = "Recorded pronunciations",
+  ButtonCondense = "Condense senses",
+  ButtonExpand = "Expand senses",
+  ButtonFlag = "Entry flag",
+  ButtonNote = "Note text",
+}
 
 export default function WordCard(props: WordCardProps): ReactElement {
   const { languages, provenance, word } = props;
@@ -46,27 +55,40 @@ export default function WordCard(props: WordCardProps): ReactElement {
     }
   }, [editedBy, provenance]);
 
-  /* Vernacular */
+  /** Flag summary icon (disabled button) */
+  const flagIcon = (
+    <FlagButton buttonLabel={WordCardLabel.ButtonFlag} flag={flag} />
+  );
+
+  /** Note summary icon (disabled button) */
+  const noteIcon = (
+    <NoteButton buttonLabel={WordCardLabel.ButtonNote} noteText={note.text} />
+  );
+
+  /** Vernacular */
   const title = (
     <TypographyWithFont variant="h5" vernacular>
       {word.vernacular}
     </TypographyWithFont>
   );
 
-  /* Icons/buttons beside vernacular */
+  /** Icons/buttons beside vernacular */
   const action = (
     <>
       {/* Condensed audio, note, flag */}
       {!full && (
         <>
           <AudioSummary count={audio.length} />
-          {!!note.text && <NoteButton noteText={note.text} />}
-          {flag.active && <FlagButton flag={flag} />}
+          {!!note.text && noteIcon}
+          {flag.active && flagIcon}
         </>
       )}
-      {/* Button for expand/condense */}
+      {/* Button for condense/expand */}
       <IconButtonWithTooltip
         buttonId={buttonIdFull(word.id)}
+        buttonLabel={
+          full ? WordCardLabel.ButtonCondense : WordCardLabel.ButtonExpand
+        }
         icon={
           full ? (
             <CloseFullscreen sx={{ color: (t) => t.palette.grey[900] }} />
@@ -93,13 +115,13 @@ export default function WordCard(props: WordCardProps): ReactElement {
             )}
             {!!note.text && (
               <div style={{ display: "block" }}>
-                <NoteButton noteText={note.text} />
+                {noteIcon}
                 <Typography display="inline">{note.text}</Typography>
               </div>
             )}
             {flag.active && (
               <div style={{ display: "block" }}>
-                <FlagButton flag={flag} />
+                {flagIcon}
                 <Typography display="inline">{flag.text}</Typography>
               </div>
             )}
@@ -143,7 +165,7 @@ export default function WordCard(props: WordCardProps): ReactElement {
 
 export function AudioSummary(props: { count: number }): ReactElement {
   return props.count > 0 ? (
-    <IconButton disabled>
+    <IconButton aria-label={WordCardLabel.ButtonAudioSummary} disabled>
       <Badge
         badgeContent={props.count}
         sx={{ color: (t) => t.palette.common.black }}

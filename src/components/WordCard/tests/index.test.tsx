@@ -1,63 +1,105 @@
-import { ReactTestRenderer, act, create } from "react-test-renderer";
+import { queryByText, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { act } from "react";
+import { Provider } from "react-redux";
+import configureMockStore from "redux-mock-store";
 
-import { Word } from "api/models";
-import WordCard, { AudioSummary, buttonIdFull } from "components/WordCard";
-import SenseCard from "components/WordCard/SenseCard";
-import SummarySenseCard from "components/WordCard/SummarySenseCard";
-import { newPronunciation, newSense, newWord } from "types/word";
+import { type Word } from "api/models";
+import WordCard, { WordCardLabel } from "components/WordCard";
+import { defaultState } from "rootRedux/types";
+import {
+  newDefinition,
+  newFlag,
+  newNote,
+  newPronunciation,
+  newSense,
+  newWord,
+} from "types/word";
 
-// Mock the audio components
-jest
-  .spyOn(window.HTMLMediaElement.prototype, "pause")
-  .mockImplementation(() => {});
-jest.mock("components/Pronunciations/AudioPlayer", () => "div");
-jest.mock("components/Pronunciations/Recorder");
-jest.mock("components/WordCard/DomainChipsGrid", () => "div");
+jest.mock("components/Pronunciations/PronunciationsBackend", () => jest.fn());
 
+const mockAudio = ["song", "rap", "poem", "sonnet", "aria", "psalm", "hymn"];
+const mockDefinitionText = "definition goes here";
+const mockFlagText = "flag text goes here";
+const mockNoteText = "note text goes here";
 const mockWordId = "mock-id";
-const buttonId = buttonIdFull(mockWordId);
-const mockWord: Word = { ...newWord(), id: mockWordId };
-const newAudio = ["song", "rap", "poem"].map((f) => newPronunciation(f));
+
+const mockWord: Word = {
+  ...newWord(),
+  flag: newFlag(mockFlagText),
+  id: mockWordId,
+  note: newNote(mockNoteText),
+};
+const newAudio = mockAudio.map((f) => newPronunciation(f));
 mockWord.audio.push(...newAudio);
-mockWord.senses.push(newSense(), newSense());
+mockWord.senses.push(
+  { ...newSense(), definitions: [newDefinition(mockDefinitionText)] },
+  newSense()
+);
 
-let cardHandle: ReactTestRenderer;
-
-const renderHistoryCell = async (): Promise<void> => {
+const renderWordCard = async (): Promise<void> => {
   await act(async () => {
-    cardHandle = create(<WordCard word={mockWord} />);
+    render(
+      <Provider store={configureMockStore()(defaultState)}>
+        <WordCard word={mockWord} />
+      </Provider>
+    );
   });
 };
 
 beforeEach(async () => {
-  await renderHistoryCell();
+  await renderWordCard();
 });
 
-describe("HistoryCell", () => {
+describe("WordCard", () => {
   it("has summary and full views", async () => {
-    const button = cardHandle.root.findByProps({ id: buttonId });
-    expect(cardHandle.root.findByType(AudioSummary).props.count).toEqual(
-      mockWord.audio.length
-    );
-    expect(cardHandle.root.findAllByType(SenseCard)).toHaveLength(0);
-    expect(cardHandle.root.findAllByType(SummarySenseCard)).toHaveLength(1);
+    const agent = userEvent.setup();
 
-    await act(async () => {
-      button.props.onClick();
-    });
-    expect(cardHandle.root.findAllByType(AudioSummary)).toHaveLength(0);
-    expect(cardHandle.root.findAllByType(SenseCard)).toHaveLength(
-      mockWord.senses.length
-    );
-    expect(cardHandle.root.findAllByType(SummarySenseCard)).toHaveLength(0);
+    /** Check that the summary view has the intended elements */
+    const checkCondensed = (): void => {
+      // Has pronunciations summary
+      const audioSummary = screen.getByLabelText(
+        WordCardLabel.ButtonAudioSummary
+      );
+      expect(queryByText(audioSummary, `${newAudio.length}`)).toBeTruthy();
+      // Has no definitions
+      expect(screen.queryByText(mockDefinitionText)).toBeNull();
+      // Has flag hover-text but not regular text
+      expect(screen.queryByLabelText(mockFlagText)).toBeTruthy();
+      expect(screen.queryByText(mockFlagText)).toBeNull();
+      // Has note hover-text but not regular text
+      expect(screen.queryByLabelText(mockNoteText)).toBeTruthy();
+      expect(screen.queryByText(mockNoteText)).toBeNull();
+      // Has expand button, not condense button
+      expect(screen.queryByLabelText(WordCardLabel.ButtonExpand)).toBeTruthy();
+      expect(screen.queryByLabelText(WordCardLabel.ButtonCondense)).toBeNull();
+    };
 
-    await act(async () => {
-      button.props.onClick();
-    });
-    expect(cardHandle.root.findByType(AudioSummary).props.count).toEqual(
-      mockWord.audio.length
-    );
-    expect(cardHandle.root.findAllByType(SenseCard)).toHaveLength(0);
-    expect(cardHandle.root.findAllByType(SummarySenseCard)).toHaveLength(1);
+    /** Check that the full view has the intended elements */
+    const checkExpanded = (): void => {
+      // Has no pronunciations summary
+      expect(
+        screen.queryByLabelText(WordCardLabel.ButtonAudioSummary)
+      ).toBeNull();
+      // Has definitions
+      expect(screen.queryByText(mockDefinitionText)).toBeTruthy();
+      // Has flag hover-text and regular text
+      expect(screen.queryByLabelText(mockFlagText)).toBeTruthy();
+      expect(screen.queryByText(mockFlagText)).toBeTruthy();
+      // Has note hover-text and regular text
+      expect(screen.queryByLabelText(mockNoteText)).toBeTruthy();
+      expect(screen.queryByText(mockNoteText)).toBeTruthy();
+      // Has condense button, not expand button
+      expect(screen.queryByLabelText(WordCardLabel.ButtonExpand)).toBeNull();
+      expect(
+        screen.queryByLabelText(WordCardLabel.ButtonCondense)
+      ).toBeTruthy();
+    };
+
+    checkCondensed();
+    await agent.click(screen.getByLabelText(WordCardLabel.ButtonExpand));
+    checkExpanded();
+    await agent.click(screen.getByLabelText(WordCardLabel.ButtonCondense));
+    checkCondensed();
   });
 });
