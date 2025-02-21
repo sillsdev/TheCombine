@@ -12,9 +12,8 @@ import { useTranslation } from "react-i18next";
 import { GramCatGroup, type Word } from "api/models";
 import { CloseButton } from "components/Buttons";
 import StyledMenuItem from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
-import DefinitionsCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/DefinitionsCell";
+import SensesTextSummary from "components/WordCard/SensesTextSummary";
 import DomainsCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/DomainsCell";
-import GlossesCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/GlossesCell";
 import PartOfSpeechCell from "goals/ReviewEntries/ReviewEntriesTable/Cells/PartOfSpeechCell";
 import { firstGlossText } from "utilities/wordUtilities";
 
@@ -86,6 +85,7 @@ export function VernList(props: VernListProps): ReactElement {
     )
   );
 
+  /** MenuItem for a word, or for the first sense of the word if isSense = true. */
   const menuItem = (word: Word, isSense = false): ReactElement => {
     const sense = isSense ? word.senses[0] : undefined;
     const text = sense
@@ -98,10 +98,10 @@ export function VernList(props: VernListProps): ReactElement {
         onClick={() => props.onSelect(word.id, sense?.guid)}
       >
         <DialogListItemText
-          inset={isSense}
-          showDefinition={!!sense}
+          isSubitem={isSense}
+          showDefinitions={!!sense}
           showDomain
-          showGloss={!sense}
+          showGlosses={!sense}
           showPartOfSpeech={hasPartsOfSpeech}
           text={text}
           word={word}
@@ -130,7 +130,7 @@ export function VernList(props: VernListProps): ReactElement {
           key={`${word.id}-new-sense`}
           onClick={() => props.onSelect(word.id, "")}
         >
-          <DialogListItemText inset text={t("addWords.newSense")} />
+          <DialogListItemText isSubitem text={t("addWords.newSense")} />
         </StyledMenuItem>
       );
     }
@@ -156,37 +156,51 @@ export function VernList(props: VernListProps): ReactElement {
 }
 
 interface DialogListItemTextProps {
-  inset?: boolean;
-  showDefinition?: boolean;
-  showGloss?: boolean;
-  showPartOfSpeech?: boolean;
+  isSubitem?: boolean;
+  showDefinitions?: boolean;
   showDomain?: boolean;
+  showGlosses?: boolean;
+  showPartOfSpeech?: boolean;
   text: string;
   word?: Word;
 }
 
+/** Child of a MenuItem in the duplicate-vernacular Dialog.
+ *
+ * Note: The MenuItem must stay out of this component and remain a direct child of
+ * the MenuList to allow for the first item to be auto-selected. */
 const DialogListItemText = (props: DialogListItemTextProps): ReactElement => {
   return (
-    <ListItemText inset={props.inset}>
+    <ListItemText inset={props.isSubitem}>
       <Grid
+        alignItems="center"
         container
         justifyContent="space-between"
-        alignItems="center"
         spacing={5}
       >
         <Grid item xs="auto">
-          <Typography variant="h5">{props.text}</Typography>
+          <Typography variant={props.isSubitem ? "h6" : "h5"}>
+            {props.text}
+          </Typography>
         </Grid>
         {!!props.word && (
           <>
-            {props.showGloss && (
+            {props.showGlosses && (
               <Grid item xs="auto">
-                <GlossesCell word={props.word} />
+                <SensesTextSummary
+                  definitionsOrGlosses="glosses"
+                  maxLengthPerSense={20}
+                  senses={props.word.senses}
+                />
               </Grid>
             )}
-            {props.showDefinition && (
+            {props.showDefinitions && (
               <Grid item xs="auto">
-                <DefinitionsCell word={props.word} />
+                <SensesTextSummary
+                  definitionsOrGlosses="definitions"
+                  maxLengthPerSense={50}
+                  senses={props.word.senses}
+                />
               </Grid>
             )}
             {props.showPartOfSpeech && (
