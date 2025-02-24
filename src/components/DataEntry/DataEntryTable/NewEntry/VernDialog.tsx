@@ -6,7 +6,7 @@ import {
   MenuList,
   Typography,
 } from "@mui/material";
-import { Fragment, useState, type ReactElement } from "react";
+import { CSSProperties, Fragment, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, type Word } from "api/models";
@@ -80,6 +80,11 @@ interface VernListProps {
 export function VernList(props: VernListProps): ReactElement {
   const { t } = useTranslation();
 
+  // Use CSSProperties instead of SxProps to avoid conflict with StyledMenuItem theming.
+  const conditionalGrey: CSSProperties = props.selectedWordId
+    ? { backgroundColor: theme.palette.grey[300] }
+    : {};
+
   /** MenuItem for a word, or for the first sense of the word if isSense = true. */
   const menuItem = (word: Word, isSense = false): ReactElement => {
     const sense = isSense ? word.senses[0] : undefined;
@@ -97,7 +102,7 @@ export function VernList(props: VernListProps): ReactElement {
       <StyledMenuItem
         key={sense?.guid ?? word.id}
         onClick={() => props.onSelect(word.id, sense?.guid)}
-        sx={isSense ? { marginLeft: theme.spacing(4) } : undefined}
+        sx={isSense ? { marginLeft: theme.spacing(4) } : conditionalGrey}
       >
         <DialogListItemText
           isSubitem={isSense}
@@ -139,7 +144,11 @@ export function VernList(props: VernListProps): ReactElement {
     }
   }
   menuItems.push(
-    <StyledMenuItem key="new-entry" onClick={() => props.onSelect("")}>
+    <StyledMenuItem
+      key="new-entry"
+      onClick={() => props.onSelect("")}
+      sx={conditionalGrey}
+    >
       <DialogListItemText
         text={`${t("addWords.newEntryFor")} ${props.vernacular}`}
       />
