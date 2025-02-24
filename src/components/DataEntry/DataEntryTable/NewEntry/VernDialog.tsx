@@ -80,18 +80,18 @@ interface VernListProps {
 export function VernList(props: VernListProps): ReactElement {
   const { t } = useTranslation();
 
-  const hasPartsOfSpeech = props.vernacularWords.some((w) =>
-    w.senses.some(
-      (s) => s.grammaticalInfo.catGroup !== GramCatGroup.Unspecified
-    )
-  );
-
   /** MenuItem for a word, or for the first sense of the word if isSense = true. */
   const menuItem = (word: Word, isSense = false): ReactElement => {
     const sense = isSense ? word.senses[0] : undefined;
     const text = sense
       ? firstGlossText(sense, props.analysisLang)
       : word.vernacular;
+
+    const hasDefinitions = sense && sense.definitions.length > 0;
+    const hasDomain = word.senses.some((s) => s.semanticDomains.length);
+    const hasPartsOfSpeech = word.senses.some(
+      (s) => s.grammaticalInfo.catGroup !== GramCatGroup.Unspecified
+    );
 
     return (
       <StyledMenuItem
@@ -101,8 +101,8 @@ export function VernList(props: VernListProps): ReactElement {
       >
         <DialogListItemText
           isSubitem={isSense}
-          showDefinitions={!!sense}
-          showDomain
+          showDefinitions={hasDefinitions}
+          showDomain={hasDomain}
           showGlosses={!sense}
           showPartOfSpeech={hasPartsOfSpeech}
           text={text}
@@ -177,9 +177,10 @@ const DialogListItemText = (props: DialogListItemTextProps): ReactElement => {
     <ListItemText>
       <Grid
         alignItems="center"
+        columnSpacing={4}
         container
-        justifyContent="space-between"
-        spacing={5}
+        justifyContent="align-start"
+        rowSpacing={1}
       >
         <Grid item xs="auto">
           <Typography variant={props.isSubitem ? "h6" : "h5"}>
