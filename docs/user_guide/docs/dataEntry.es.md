@@ -56,9 +56,9 @@ mantén pulsado en una pantalla táctil).
 ## Nueva entrada con forma vernácula duplicada {#new-entry-with-duplicate-vernacular-form}
 
 Si presenta una nueva entrada con idéntica forma vernácula y glosa a una entrada existente, se actualizará dicha entrada
-en lugar de crearse una nueva entrada. Por ejemplo, si presenta [Vernáculo: finger; Glosa: dedo] en el dominio 2.1.3.1 (Brazo)
-y de nuevo en el dominio 2.1.3.3 (Dedo, dedo del pie), el resultado será una única entrada para "finger" con un única acepción
-que tiene glosa "dedo" y dos dominios.
+en lugar de crearse una nueva entrada. Por ejemplo, si presenta [Vernáculo: finger; Glosa: dedo] en el dominio 2.1.3.1
+(Brazo) y de nuevo en el dominio 2.1.3.3 (Dedo, dedo del pie), el resultado será una única entrada para "finger" con un
+única acepción que tiene glosa "dedo" y dos dominios.
 
 The Combine dispone de una función opcional de facilitar la introducción de palabras que ya existen en el proyecto pero
 que se recogen de nuevo en nuevo dominio semántico. Esta función puede activarse o desactivarse en
