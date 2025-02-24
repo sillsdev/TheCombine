@@ -120,8 +120,10 @@ export function VernList(props: VernListProps): ReactElement {
   const menuItems: ReactElement[] = [];
   for (const word of props.vernacularWords) {
     if (word.id !== props.selectedWordId) {
+      /* Menu item for each non-selected word with the duplicate vernacular. */
       menuItems.push(menuItem(word));
     } else {
+      /* "Select a sense" menu item for the selected word (if any). */
       menuItems.push(
         <StyledMenuItem key={word.id} onClick={() => props.onSelect(word.id)}>
           <DialogListItemText
@@ -129,9 +131,13 @@ export function VernList(props: VernListProps): ReactElement {
           />
         </StyledMenuItem>
       );
+
       for (const s of word.senses) {
+        /* Menu item for each sense of the selected word (if any). */
         menuItems.push(menuItem({ ...word, senses: [s] }, true));
       }
+
+      /* "New sense" menu item for the selected word (if any). */
       menuItems.push(
         <StyledMenuItem
           key={`${word.id}-new-sense`}
@@ -143,6 +149,8 @@ export function VernList(props: VernListProps): ReactElement {
       );
     }
   }
+
+  /* "New entry" menu item for the duplicate vernacular. */
   menuItems.push(
     <StyledMenuItem
       key="new-entry"
