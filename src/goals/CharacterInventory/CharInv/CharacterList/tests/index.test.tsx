@@ -1,9 +1,8 @@
+import { act, render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
-import { ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import CharacterList from "goals/CharacterInventory/CharInv/CharacterList";
-import CharacterCard from "goals/CharacterInventory/CharInv/CharacterList/CharacterCard";
 import {
   defaultState,
   newCharacterSetEntry,
@@ -14,11 +13,9 @@ const mockStore = configureMockStore()({
   characterInventoryState: { ...defaultState, characterSet },
 });
 
-let testRenderer: ReactTestRenderer;
-
 beforeEach(async () => {
   await act(async () => {
-    testRenderer = create(
+    render(
       <Provider store={mockStore}>
         <CharacterList />
       </Provider>
@@ -28,7 +25,6 @@ beforeEach(async () => {
 
 describe("CharacterList", () => {
   it("renders", () => {
-    const chars = testRenderer.root.findAllByType(CharacterCard);
-    expect(chars).toHaveLength(characterSet.length);
+    expect(screen.queryAllByRole("button")).toHaveLength(characterSet.length);
   });
 });

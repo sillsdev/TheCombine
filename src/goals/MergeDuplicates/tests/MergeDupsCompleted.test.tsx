@@ -1,4 +1,4 @@
-import { act, create } from "react-test-renderer";
+import { act, render } from "@testing-library/react";
 
 import { MergeUndoIds, Word } from "api/models";
 import {
@@ -15,7 +15,7 @@ jest.mock("backend", () => ({
 describe("MergeChange", () => {
   const renderMergeChange = async (change: MergeUndoIds): Promise<void> => {
     await act(async () => {
-      create(<MergeChange change={change} />);
+      render(<MergeChange change={change} />);
     });
   };
 

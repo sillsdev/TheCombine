@@ -1,7 +1,6 @@
-import { Button, MenuItem } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
-import { act, create, ReactTestRenderer } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import UserMenu, { UserMenuList } from "components/AppBar/UserMenu";
@@ -20,8 +19,6 @@ jest.mock("react-router-dom", () => ({
   useNavigate: jest.fn(),
 }));
 
-let testRenderer: ReactTestRenderer;
-
 const mockStore = configureMockStore()();
 
 const mockIsSiteAdmin = jest.fn();
@@ -38,7 +35,7 @@ beforeEach(() => {
 describe("UserMenu", () => {
   it("renders", async () => {
     await act(async () => {
-      testRenderer = create(
+      render(
         <ThemeProvider theme={theme}>
           <Provider store={mockStore}>
             <UserMenu currentTab={Path.Root} />
@@ -46,23 +43,24 @@ describe("UserMenu", () => {
         </ThemeProvider>
       );
     });
-    expect(testRenderer.root.findAllByType(Button).length).toEqual(1);
+    expect(screen.queryAllByRole("button")).toHaveLength(1);
   });
 });
 
 describe("UserMenuList", () => {
   it("has one more item for admins (Site Settings)", async () => {
     await renderMenuList();
-    const normalMenuItems = testRenderer.root.findAllByType(MenuItem).length;
+    const normalMenuItems = screen.queryAllByRole("menuitem").length;
+    cleanup();
     await renderMenuList(true);
-    const adminMenuItems = testRenderer.root.findAllByType(MenuItem).length;
+    const adminMenuItems = screen.queryAllByRole("menuitem").length;
     expect(adminMenuItems).toBe(normalMenuItems + 1);
   });
 });
 
 async function renderMenuList(isAdmin = false): Promise<void> {
   await act(async () => {
-    testRenderer = create(
+    render(
       <Provider store={mockStore}>
         <UserMenuList isAdmin={isAdmin} onSelect={jest.fn()} />
       </Provider>

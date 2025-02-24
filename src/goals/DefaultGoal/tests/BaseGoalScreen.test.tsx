@@ -1,6 +1,6 @@
+import { act, render } from "@testing-library/react";
 import "jest-canvas-mock";
 import { Provider } from "react-redux";
-import renderer from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import { BaseGoalScreen } from "goals/DefaultGoal/BaseGoalScreen";
@@ -14,8 +14,8 @@ jest.mock("components/PageNotFound/component", () => "div");
 
 describe("BaseGoalScreen", () => {
   it("Renders with default goal without crashing", () => {
-    renderer.act(() => {
-      renderer.create(
+    act(() => {
+      render(
         <Provider store={mockStore}>
           <BaseGoalScreen />
         </Provider>

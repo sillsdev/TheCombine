@@ -1,5 +1,5 @@
-import { render } from "@testing-library/react";
-import { act, createRef } from "react";
+import { act, render } from "@testing-library/react";
+import { createRef } from "react";
 
 import VernWithSuggestions from "components/DataEntry/DataEntryTable/EntryCellComponents/VernWithSuggestions";
 import { newWritingSystem } from "types/writingSystem";

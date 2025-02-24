@@ -1,8 +1,8 @@
 import { PlayArrow } from "@mui/icons-material";
 import "@testing-library/jest-dom";
-import { cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { ReactElement, act } from "react";
+import { ReactElement } from "react";
 
 import { ConsentType, Speaker } from "api/models";
 import SpeakerConsentListItemIcon, {

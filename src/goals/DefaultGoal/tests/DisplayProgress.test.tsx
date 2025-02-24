@@ -1,5 +1,5 @@
+import { act, render } from "@testing-library/react";
 import { Provider } from "react-redux";
-import { act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import DisplayProgress from "goals/DefaultGoal/DisplayProgress";
@@ -17,7 +17,7 @@ describe("DisplayProgress", () => {
   it("Renders with default goal without crashing", async () => {
     createMockStoreWithGoal(new Goal());
     await act(async () => {
-      create(
+      render(
         <Provider store={mockStore}>
           <DisplayProgress />
         </Provider>
@@ -28,7 +28,7 @@ describe("DisplayProgress", () => {
   it("Renders with multi-step goal without crashing", async () => {
     createMockStoreWithGoal(new MergeDups());
     await act(async () => {
-      create(
+      render(
         <Provider store={mockStore}>
           <DisplayProgress />
         </Provider>
