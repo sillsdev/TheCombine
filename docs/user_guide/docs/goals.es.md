@@ -172,7 +172,7 @@ la siguiente manera:
 
     A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different general categories, only the first one is preserved.
 
-#### Entradas y acepciones protegidas
+#### Entradas y acepciones protegidas {#protected-entries-and-senses}
 
 Si una entrada o acepción importada contiene datos no admitidos en The Combine (por ejemplo, etimologías o inversiones
 de sentido), se protege para evitar su eliminación. Si una acepción está protegida, su tarjeta tendrá un fondo

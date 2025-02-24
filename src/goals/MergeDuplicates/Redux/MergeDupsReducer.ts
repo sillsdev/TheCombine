@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { v4 } from "uuid";
 
-import { type Word } from "api/models";
+import { Status, type Word } from "api/models";
 import {
   type MergeTreeReference,
   type MergeTreeSense,
@@ -293,9 +293,12 @@ const mergeDuplicatesSlice = createSlice({
         const senses: Hash<MergeTreeSense> = {};
         const wordsTree: Hash<MergeTreeWord> = {};
         const counts: Hash<number> = {};
+        state.hasProtected = false;
         action.payload.forEach((word: Word) => {
+          state.hasProtected ||= word.accessibility === Status.Protected;
           words[word.id] = JSON.parse(JSON.stringify(word));
           word.senses.forEach((s, order) => {
+            state.hasProtected ||= s.accessibility === Status.Protected;
             senses[s.guid] = convertSenseToMergeTreeSense(s, word.id, order);
           });
           wordsTree[word.id] = convertWordToMergeTreeWord(word);
@@ -305,11 +308,16 @@ const mergeDuplicatesSlice = createSlice({
         state.tree = { ...defaultTree, words: wordsTree };
         state.audio = { ...defaultAudio, counts };
         state.mergeWords = [];
+        state.overrideProtection = false;
       }
     },
 
     setVernacularAction: (state, action) => {
       state.tree.words[action.payload.wordId].vern = action.payload.vern;
+    },
+
+    toggleOverrideProtectionAction: (state) => {
+      state.overrideProtection = !state.overrideProtection;
     },
   },
   extraReducers: (builder) =>
@@ -330,6 +338,7 @@ export const {
   setDataAction,
   setSidebarAction,
   setVernacularAction,
+  toggleOverrideProtectionAction,
 } = mergeDuplicatesSlice.actions;
 
 export default mergeDuplicatesSlice.reducer;

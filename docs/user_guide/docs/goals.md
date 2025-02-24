@@ -167,7 +167,7 @@ information will appear in the Merge Duplicate sense cards as follows:
 
     A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different general categories, only the first one is preserved.
 
-#### Protected Entries and Senses
+#### Protected Entries and Senses {#protected-entries-and-senses}
 
 If an imported entry or sense contains data not supported in The Combine (e.g., etymologies or sense reversals), it is
 protected to prevent its deletion. If a sense is protected, its card will have a yellow background—it cannot be deleted

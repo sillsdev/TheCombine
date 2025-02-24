@@ -159,7 +159,7 @@ You can delete an entire entry by clicking the
 
     A sense can only have one part of speech. If two senses are merged that have different parts of speech in the same general category, the parts of speech will be combined, separated by a semicolon (;). However, if they have different general categories, only the first one is preserved.
 
-#### 受保护的词条与词义
+#### 受保护的词条与词义 {#protected-entries-and-senses}
 
 如果导入的词条或词义项包含 The Combine 不支持的资料(例如词源或词义反转)，它将被保护以防止删除。 受保护的词义卡会有一个黄
 色背景。它无法被删除，也无法(被合并)放入另一张词义卡。 如果整个词条受保护，其列将具有黄色标题(位于土语和旗标位置)。 当受

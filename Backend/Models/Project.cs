@@ -41,6 +41,11 @@ namespace BackendFramework.Models
         public OffOnSetting AutocompleteSetting { get; set; }
 
         [Required]
+        [BsonElement("protectedDataOverrideEnabled")]
+        [BsonRepresentation(BsonType.String)]
+        public OffOnSetting ProtectedDataOverrideEnabled { get; set; }
+
+        [Required]
         [BsonElement("semDomWritingSystem")]
         public WritingSystem SemDomWritingSystem { get; set; }
 
@@ -93,6 +98,7 @@ namespace BackendFramework.Models
             DefinitionsEnabled = false;
             GrammaticalInfoEnabled = false;
             AutocompleteSetting = OffOnSetting.On;
+            ProtectedDataOverrideEnabled = OffOnSetting.Off;
             SemDomWritingSystem = new();
             VernacularWritingSystem = new();
             AnalysisWritingSystems = new();
@@ -117,6 +123,7 @@ namespace BackendFramework.Models
                 DefinitionsEnabled = DefinitionsEnabled,
                 GrammaticalInfoEnabled = GrammaticalInfoEnabled,
                 AutocompleteSetting = AutocompleteSetting,
+                ProtectedDataOverrideEnabled = ProtectedDataOverrideEnabled,
                 SemDomWritingSystem = SemDomWritingSystem.Clone(),
                 VernacularWritingSystem = VernacularWritingSystem.Clone(),
                 AnalysisWritingSystems = AnalysisWritingSystems.Select(ws => ws.Clone()).ToList(),
@@ -140,6 +147,7 @@ namespace BackendFramework.Models
                 other.DefinitionsEnabled == DefinitionsEnabled &&
                 other.GrammaticalInfoEnabled == GrammaticalInfoEnabled &&
                 other.AutocompleteSetting.Equals(AutocompleteSetting) &&
+                other.ProtectedDataOverrideEnabled.Equals(ProtectedDataOverrideEnabled) &&
                 other.SemDomWritingSystem.Equals(SemDomWritingSystem) &&
                 other.VernacularWritingSystem.Equals(VernacularWritingSystem) &&
 
@@ -191,6 +199,7 @@ namespace BackendFramework.Models
             hash.Add(DefinitionsEnabled);
             hash.Add(GrammaticalInfoEnabled);
             hash.Add(AutocompleteSetting);
+            hash.Add(ProtectedDataOverrideEnabled);
             hash.Add(SemDomWritingSystem);
             hash.Add(VernacularWritingSystem);
             hash.Add(AnalysisWritingSystems);
