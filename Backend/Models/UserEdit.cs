@@ -67,6 +67,7 @@ namespace BackendFramework.Models
     public class UserEditStepWrapper
     {
         [Required]
+        [BsonGuidRepresentation(GuidRepresentation.CSharpLegacy)]
         public Guid EditGuid { get; set; }
 
         [Required]
@@ -105,6 +106,7 @@ namespace BackendFramework.Models
     {
         [Required]
         [BsonElement("guid")]
+        [BsonGuidRepresentation(GuidRepresentation.CSharpLegacy)]
 #pragma warning disable CA1720
         public Guid Guid { get; set; }
 #pragma warning restore CA1720
