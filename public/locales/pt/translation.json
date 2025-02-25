@@ -21,7 +21,7 @@
     "selectEntry": "Selecione uma entrada",
     "selectSense": "Selecione um sentido",
     "newEntryFor": "Nova entrada para: ",
-    "newSenseFor": "Novo sentido para: ",
+    "newSense": "Novo sentido",
     "senseInWord": "A palavra já tem este sentido neste domínio semântico: {{ val1 }}, {{ val2 }}",
     "deleteRow": "Excluir esta linha",
     "deleteRowWarning": "Esta linha será permanentemente apagada!",
