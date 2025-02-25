@@ -87,5 +87,3 @@ Si elige crear una nueva entrada, se cerrará el cuadro emergente y entonces pod
 
 Si por el contrario elige actualizar una de las entradas existentes, aparecerá mas opciones a actualizar una acepción
 existente en la entrada seleccionada o añadir una nueva acepción a esa entrada.
-
-![Entrada de datos duplicadas acepciones vernáculas](../images/data-entry-dup-vern-select-sense.es.png){.center}
