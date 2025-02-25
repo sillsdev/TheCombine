@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -44,7 +43,6 @@ namespace BackendFramework.Otel
         {
             request.Headers.TryGetValue(AnalyticsOnHeader, out var consentString);
             var consent = bool.Parse(consentString!);
-
             activity.SetBaggage(ConsentBaggage, consent.ToString());
         }
 
@@ -98,8 +96,6 @@ namespace BackendFramework.Otel
                 GetContentLengthHttp(activity, request.Content, "outbound.http.request.body.size");
                 if (request.RequestUri is not null)
                 {
-                    Console.WriteLine("request is " + request);
-                    Console.WriteLine("requestUri is " + request.RequestUri);
                     if (!string.IsNullOrEmpty(request.RequestUri.Query))
                     {
                         activity.SetTag("url.query", request.RequestUri.Query);
@@ -118,8 +114,6 @@ namespace BackendFramework.Otel
             {
                 var consentString = data.GetBaggageItem(ConsentBaggage);
                 data.AddTag(ConsentTag, consentString);
-
-
                 if (bool.TryParse(consentString, out bool consent) && consent)
                 {
                     var uriPath = (string?)data.GetTagItem("url.full");

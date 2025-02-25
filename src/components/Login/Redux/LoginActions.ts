@@ -40,6 +40,8 @@ export function signupSuccess(): PayloadAction {
   return setSignupSuccessAction();
 }
 
+// Dispatch Functions
+
 export function asyncLogIn(username: string, password: string) {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(loginAttempt(username));
