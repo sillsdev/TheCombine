@@ -43,9 +43,7 @@ namespace BackendFramework.Otel
         internal static void TrackConsent(Activity activity, HttpRequest request)
         {
             request.Headers.TryGetValue(AnalyticsOnHeader, out var consentString);
-            request.Headers.TryGetValue("authenticated", out var authenticatedString);
-            activity.SetTag("AUTH VAL", !!bool.Parse(authenticatedString!));
-            var consent = bool.Parse(consentString!) && bool.Parse(authenticatedString!);
+            var consent = bool.Parse(consentString!);
 
             activity.SetBaggage(ConsentBaggage, consent.ToString());
         }
