@@ -40,37 +40,58 @@ export default function DownloadButton(
     (state: StoreState) => state.exportProjectState
   );
   const dispatch = useAppDispatch();
-  const [fileName, setFileName] = useState<string | undefined>();
-  const [fileUrl, setFileUrl] = useState<string | undefined>();
+  const [fileName, setFileName] = useState("");
+  const [fileUrl, setFileUrl] = useState("");
   const [projectName, setProjectName] = useState("");
+  const [queueReset, setQueueReset] = useState(false);
   const { t } = useTranslation();
   const downloadLink = createRef<HTMLAnchorElement>();
 
   const reset = useCallback(async (): Promise<void> => {
-    setFileName(undefined);
+    setFileName("");
+    setFileUrl("");
+    setQueueReset(false);
     await dispatch(asyncResetExport());
   }, [dispatch]);
 
+  /* If another useEffect queued a reset, do the reset. */
   useEffect(() => {
-    if (downloadLink.current && fileUrl) {
-      downloadLink.current.click();
-      URL.revokeObjectURL(fileUrl);
-      setFileName(undefined);
-      setFileUrl(undefined);
+    if (queueReset) {
       reset();
     }
-  }, [downloadLink, fileUrl, reset]);
+  }, [queueReset, reset]);
 
+  /* This useEffect will indirectly trigger when fileUrl is nonempty,
+  because that causes the rendering of a link `<a ref={downloadLink} ...` */
+  useEffect(() => {
+    if (downloadLink.current) {
+      downloadLink.current.click();
+
+      // Clear the fileUrl, revoking its previous target.
+      setFileUrl((prev) => {
+        if (prev) {
+          URL.revokeObjectURL(prev);
+        }
+        return "";
+      });
+
+      // This keeps `reset` out of the dependency array, preventing double-download.
+      setQueueReset(true);
+    }
+  }, [downloadLink]);
+
+  /* Once a file name is ready following a successful export,
+   * bring the file from the backend for download. */
   useEffect(() => {
     if (fileName && exportState.projectId) {
-      dispatch(asyncDownloadExport(exportState.projectId)).then((url) => {
-        if (url) {
-          setFileUrl(url);
-        }
-      });
+      dispatch(asyncDownloadExport(exportState.projectId)).then((url) =>
+        setFileUrl(url ?? "")
+      );
     }
   }, [dispatch, exportState.projectId, fileName]);
 
+  /* After an export (successful or otherwise),
+   * use the id of the exported project to get the project name. */
   useEffect(() => {
     if (exportState.projectId) {
       getProjectName(exportState.projectId).then(setProjectName);
@@ -79,6 +100,7 @@ export default function DownloadButton(
     }
   }, [exportState.projectId]);
 
+  /* Upon successful export, use the project name to generate the download's filename. */
   useEffect(() => {
     if (exportState.status === ExportStatus.Success && projectName) {
       setFileName(makeExportName(projectName));
@@ -143,7 +165,7 @@ export default function DownloadButton(
           </IconButton>
         </Tooltip>
       )}
-      {fileUrl && (
+      {!!fileUrl && (
         <a
           ref={downloadLink}
           href={fileUrl}
