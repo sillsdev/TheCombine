@@ -82,5 +82,3 @@ If you choose to create a new entry, the pop-up box will close, and you can then
 
 If you instead choose to update one of the existing entries, more options will appear to update an existing sense on the
 selected entry or to add a new sense to that entry.
-
-![Data Entry duplicate vernacular senses](images/data-entry-dup-vern-select-sense.png){.center}
