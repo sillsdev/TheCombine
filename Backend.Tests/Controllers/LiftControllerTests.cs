@@ -505,7 +505,7 @@ namespace Backend.Tests.Controllers
             foreach (var file in expectedFileNames)
             {
                 Assert.That(consentFileNames.Contains(file));
-            };
+            }
 
             // Delete everything
             mockFiles.ForEach(path => File.Delete(path));
