@@ -108,11 +108,6 @@ export default function ActiveProjectUsers(props: {
       </IconButton>
     );
 
-    const displayString =
-      currentIsProjOwner || currentUser.isAdmin
-        ? `${user.name} (${user.username} | ${user.email})`
-        : `${user.name} (${user.username})`;
-
     return (
       <ListItem key={user.id}>
         <ListItemAvatar>
@@ -122,7 +117,7 @@ export default function ActiveProjectUsers(props: {
             style={{ marginRight: theme.spacing(1) }}
           />
         </ListItemAvatar>
-        <ListItemText primary={displayString} />
+        <ListItemText primary={`${user.name} (${user.username})`} />
         <Chip
           label={t(`projectSettings.roles.${`${userRole}`.toLowerCase()}`)}
           size="small"
@@ -135,7 +130,6 @@ export default function ActiveProjectUsers(props: {
   return (
     <>
       <SortOptions
-        includeEmail={currentIsProjOwner || currentUser.isAdmin}
         onChange={(e: SelectChangeEvent<UserOrder>) => {
           setUserOrder(e.target.value as UserOrder);
           setReverseSorting(false);

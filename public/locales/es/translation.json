@@ -22,7 +22,7 @@
     "selectEntry": "Seleccionar una entrada",
     "selectSense": "Seleccionar una acepción",
     "newEntryFor": "Nueva entrada para: ",
-    "newSenseFor": "Nueva acepción para: ",
+    "newSense": "Nueva acepción",
     "senseInWord": "La palabra ya tiene esta acepción en este dominio semántico: {{ val1 }}, {{ val2 }}",
     "deleteRow": "Borrar esta fila",
     "deleteRowWarning": "¡Esta fila se eliminará permanentemente!",

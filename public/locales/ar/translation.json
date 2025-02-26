@@ -22,7 +22,7 @@
     "selectEntry": "حدد إدخالاً",
     "selectSense": "حدد الإحساس",
     "newEntryFor": "إدخال جديد لـ: ",
-    "newSenseFor": "معنى جديد عن: ",
+    "newSense": "معنى جديد",
     "senseInWord": "الكلمة لها هذا المعنى بالفعل في هذا المجال الدلالي: {{ val1 }}، {{ val2 }}",
     "deleteRow": "احذف هذا الصف",
     "deleteRowWarning": "سيتم حذف هذا الصف بشكل دائم!",
