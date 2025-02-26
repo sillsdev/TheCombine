@@ -43,7 +43,11 @@ const config_parameters: Api.ConfigurationParameters = { basePath: baseURL };
 const config = new Api.Configuration(config_parameters);
 
 /** A list of URL patterns for which user analytics should not be collected. */
-const authenticationUrls = ["/login", "/signup"];
+const authenticationUrls = [
+  "/users/authenticate",
+  "/users/create",
+  "/users/forgot",
+];
 
 /** A list of URL patterns for which the frontend explicitly handles errors
  * and the blanket error pop ups should be suppressed.*/
@@ -58,11 +62,8 @@ const whiteListedErrorUrls = [
 const axiosInstance = axios.create({ baseURL: apiBaseURL });
 axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const consent = LocalStorage.getCurrentUser()?.analyticsOn;
-  const pathname = window.location.pathname;
-  if (
-    consent === false ||
-    authenticationUrls.some((u) => pathname.includes(u))
-  ) {
+  const url = config.url;
+  if (consent === false || authenticationUrls.some((u) => url?.includes(u))) {
     config.headers.analyticsOn = `${false}`;
   } else {
     config.headers.analyticsOn = `${true}`;
