@@ -173,7 +173,7 @@ namespace BackendFramework.Controllers
         /// <summary> Creates specified <see cref="User"/>. </summary>
         /// <returns> Id of created user. </returns>
         [AllowAnonymous]
-        [HttpPost(Name = "CreateUser")]
+        [HttpPost("create", Name = "CreateUser")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> CreateUser([FromBody, BindRequired] User user)
         {
