@@ -429,7 +429,8 @@
       "protectedOverrideWarning": "The following data will be lost: {{ val }}",
       "deleteProtectedSenseWarning": "You cannot delete a protected sense.",
       "dropIntoSidebarWarning": "You cannot drop senses into the sidebar.",
-      "dropProtectedSenseWarning": "You cannot merge a protected sense into another sense."
+      "dropProtectedSenseWarning": "You cannot merge a protected sense into another sense.",
+      "orderProtectedSidebarWarning": "A protected sense in the sidebar cannot be moved out of top position."
     },
     "protectReason": {
       "annotations": "annotations",

@@ -585,6 +585,7 @@ describe("MergeDupsReducer", () => {
     test("with no protected words/senses", () => {
       const wordList = testWordList();
       const treeState = mergeDupStepReducer(undefined, setData(wordList));
+
       // check if data has all words present
       for (const word of wordList) {
         const srcWordId = word.id;
@@ -606,27 +607,39 @@ describe("MergeDupsReducer", () => {
           ).toBeDefined();
         }
       }
-      // check that overrideProtection is reset
-      expect(treeState.overrideProtection).toEqual(false);
       // check that hasProtected is false
       expect(treeState.hasProtected).toBeFalsy();
+      // check that overrideProtection is false
+      expect(treeState.overrideProtection).toEqual(false);
     });
 
     test("with protected word", () => {
       const wordList = testWordList();
       wordList[1].accessibility = Status.Protected;
-      const treeState = mergeDupStepReducer(undefined, setData(wordList));
+      const treeState = mergeDupStepReducer(
+        { ...defaultState, overrideProtection: true },
+        setData(wordList)
+      );
+
       // check that hasProtected is true
       expect(treeState.hasProtected).toBeTruthy();
+      // check that overrideProtection is false
+      expect(treeState.overrideProtection).toEqual(false);
     });
 
     test("with protected sense", () => {
       const wordList = testWordList();
       wordList.find((w) => w.senses.length)!.senses[0].accessibility =
         Status.Protected;
-      const treeState = mergeDupStepReducer(undefined, setData(wordList));
+      const treeState = mergeDupStepReducer(
+        { ...defaultState, overrideProtection: true },
+        setData(wordList)
+      );
+
       // check that hasProtected is true
       expect(treeState.hasProtected).toBeTruthy();
+      // check that overrideProtection is false
+      expect(treeState.overrideProtection).toEqual(false);
     });
   });
 
