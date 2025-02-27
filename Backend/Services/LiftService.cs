@@ -470,8 +470,16 @@ namespace BackendFramework.Services
         /// <summary> Adds vernacular of a word to be written out to lift </summary>
         private static void AddVern(LexEntry entry, Word wordEntry, string vernacularBcp47)
         {
-            entry.LexicalForm.MergeIn(MultiText.Create(
-                new LiftMultiText { { vernacularBcp47, wordEntry.Vernacular } }));
+            if (wordEntry.UsingCitationForm)
+            {
+                entry.CitationForm.MergeIn(
+                    MultiText.Create(new LiftMultiText { { vernacularBcp47, wordEntry.Vernacular } }));
+            }
+            else
+            {
+                entry.LexicalForm.MergeIn(
+                    MultiText.Create(new LiftMultiText { { vernacularBcp47, wordEntry.Vernacular } }));
+            }
         }
 
         /// <summary> Adds each <see cref="Sense"/> of a word to be written out to lift </summary>
@@ -756,6 +764,7 @@ namespace BackendFramework.Services
 
                 // Add vernacular, prioritizing citation form over vernacular form.
                 var vern = entry.CitationForm.FirstOrDefault(x => x.Key == _vernLang).Value?.Text;
+                newWord.UsingCitationForm = !string.IsNullOrWhiteSpace(vern);
                 if (string.IsNullOrWhiteSpace(vern))
                 {
                     vern = entry.LexicalForm.FirstOrDefault(x => x.Key == _vernLang).Value?.Text;
@@ -764,6 +773,7 @@ namespace BackendFramework.Services
                 if (string.IsNullOrWhiteSpace(vern))
                 {
                     vern = entry.CitationForm.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Value.Text)).Value?.Text;
+                    newWord.UsingCitationForm = !string.IsNullOrWhiteSpace(vern);
                 }
                 if (string.IsNullOrWhiteSpace(vern))
                 {
