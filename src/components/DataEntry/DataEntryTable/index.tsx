@@ -1098,7 +1098,6 @@ export default function DataEntryTable(
             vernInput={newVernInput}
             // Parent handles vern suggestion state of child:
             selectedDup={state.selectedDup}
-            selectedSenseGuid={state.selectedSenseGuid}
             setSelectedDup={setSelectedDup}
             setSelectedSense={setSelectedSense}
             suggestedDups={state.suggestedDups}
