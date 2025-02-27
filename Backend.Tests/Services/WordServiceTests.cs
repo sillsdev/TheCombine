@@ -90,7 +90,7 @@ namespace Backend.Tests.Services
         [Test]
         public void TestUpdateReplacesFrontierWord()
         {
-            var word = _wordRepo.AddFrontier(new Word { ProjectId = ProjId }).Result;
+            var word = _wordRepo.Create(new Word { ProjectId = ProjId }).Result;
             Assert.That(word, Is.Not.Null);
             var oldId = word.Id;
             word.Vernacular = "NewVern";
