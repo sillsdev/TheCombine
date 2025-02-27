@@ -166,7 +166,7 @@ export default function MergeDragDrop(): ReactElement {
           return;
         }
 
-        // Prepare to reorder the sense within it's word or within the sidebar.
+        // Prepare to reorder the sense within its word or within the sidebar.
         const orderPayload: OrderSensePayload = { destOrder, src };
 
         const fromTop = src.order === 0;
