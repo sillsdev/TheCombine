@@ -29,6 +29,9 @@ namespace BackendFramework.Models
         [BsonElement("vernacular")]
         public string Vernacular { get; set; }
 
+        [BsonElement("usingCitationForm")]
+        public bool UsingCitationForm { get; set; }
+
         /// <summary> Not implemented in frontend. </summary>
         [BsonElement("plural")]
         public string Plural { get; set; }
@@ -88,6 +91,7 @@ namespace BackendFramework.Models
             // By default generate a new, unique Guid for each new Word.
             Guid = Guid.NewGuid();
             Vernacular = "";
+            UsingCitationForm = false;
             Plural = "";
             Created = "";
             Modified = "";
@@ -110,6 +114,7 @@ namespace BackendFramework.Models
                 Id = Id,
                 Guid = Guid,
                 Vernacular = Vernacular,
+                UsingCitationForm = UsingCitationForm,
                 Plural = Plural,
                 Created = Created,
                 Modified = Modified,
@@ -130,6 +135,7 @@ namespace BackendFramework.Models
         {
             return
                 other.Vernacular.Equals(Vernacular, StringComparison.Ordinal) &&
+                other.UsingCitationForm == UsingCitationForm &&
                 other.Plural.Equals(Plural, StringComparison.Ordinal) &&
                 other.OtherField.Equals(OtherField, StringComparison.Ordinal) &&
                 other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&

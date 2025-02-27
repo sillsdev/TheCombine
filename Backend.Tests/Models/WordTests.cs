@@ -47,9 +47,10 @@ namespace Backend.Tests.Models
         [Test]
         public void TestHashCode()
         {
-            Assert.That(
-                new Word { Guid = _commonGuid, Vernacular = "1" }.GetHashCode(),
-                Is.Not.EqualTo(new Word { Guid = _commonGuid, Vernacular = "2" }.GetHashCode()));
+            var hashCode = new Word { Guid = _commonGuid, Vernacular = "1" }.GetHashCode();
+            Assert.That(hashCode, Is.Not.EqualTo(new Word { Guid = _commonGuid, Vernacular = "2" }.GetHashCode()));
+            Assert.That(hashCode, Is.Not.EqualTo(
+                new Word { Guid = _commonGuid, Vernacular = "1", UsingCitationForm = true }.GetHashCode()));
         }
 
         [Test]

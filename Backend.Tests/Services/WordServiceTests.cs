@@ -103,6 +103,25 @@ namespace Backend.Tests.Services
         }
 
         [Test]
+        public void TestUpdateUsingCitationForm()
+        {
+            // Create a word with UsingCitationForm true.
+            var word = _wordRepo.Create(new Word { ProjectId = ProjId, UsingCitationForm = true }).Result;
+            Assert.That(word, Is.Not.Null);
+            Assert.That(word.UsingCitationForm, Is.True);
+
+            // Update something other than Vernacular and make sure UsingCitationForm is still true.
+            word.Note = new() { Text = "change word's note" };
+            _ = _wordService.Update(ProjId, UserId, word.Id, word).Result;
+            Assert.That(word.UsingCitationForm, Is.True);
+
+            // Update the Vernacular and make sure UsingCitationForm is false.
+            word.Vernacular = "change word's vernacular form";
+            _ = _wordService.Update(ProjId, UserId, word.Id, word).Result;
+            Assert.That(word.UsingCitationForm, Is.False);
+        }
+
+        [Test]
         public void TestRestoreFrontierWordsMissingWordFalse()
         {
             var word = _wordRepo.Add(new Word { ProjectId = ProjId }).Result;
