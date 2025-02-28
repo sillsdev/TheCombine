@@ -22,7 +22,7 @@
     "selectEntry": "选择一个词条",
     "selectSense": "选择一个词义",
     "newEntryFor": "创建新词条为: ",
-    "newSenseFor": "创建新词义为： ",
+    "newSense": "创建新词义",
     "senseInWord": "这个词在这个语义域中已经有了这样的词义: {{ val1 }}，{{ val2 }}",
     "deleteRow": "删除该行",
     "deleteRowWarning": "该行将被永久删除！",

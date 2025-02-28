@@ -42,6 +42,18 @@ export enum LoginId {
   Form = "login-form",
 }
 
+export enum LoginTextId {
+  ButtonLogin = "login.login",
+  ButtonSignUp = "login.signUp",
+  Error401 = "login.failed",
+  ErrorUnknown = "login.failedUnknownReason",
+  FieldError = "login.required",
+  LabelPassword = "login.password",
+  LabelUsername = "login.username",
+  LinkForgotPassword = "login.forgotPassword",
+  Title = "login.title",
+}
+
 /** The Login page (also doubles as a Logout page) */
 export default function Login(): ReactElement {
   const dispatch = useAppDispatch();
@@ -86,13 +98,14 @@ export default function Login(): ReactElement {
     }
   };
 
-  const defaultTextFieldProps: TextFieldProps = {
-    inputProps: { maxLength: 100 },
+  const defaultTextFieldProps = (id?: string): TextFieldProps => ({
+    id,
+    inputProps: { "data-testid": id, maxLength: 100 },
     margin: "normal",
     required: true,
     style: { width: "100%" },
     variant: "outlined",
-  };
+  });
 
   return (
     <Grid container justifyContent="center">
@@ -101,30 +114,28 @@ export default function Login(): ReactElement {
           <CardContent>
             {/* Title */}
             <Typography variant="h5" align="center" gutterBottom>
-              {t("login.title")}
+              {t(LoginTextId.Title)}
             </Typography>
 
             {/* Username field */}
             <TextField
-              {...defaultTextFieldProps}
+              {...defaultTextFieldProps(LoginId.FieldUsername)}
               autoComplete="username"
               autoFocus
               error={usernameError}
-              helperText={usernameError ? t("login.required") : undefined}
-              id={LoginId.FieldUsername}
-              label={t("login.username")}
+              helperText={usernameError ? t(LoginTextId.FieldError) : undefined}
+              label={t(LoginTextId.LabelUsername)}
               onChange={handleUpdateUsername}
               value={username}
             />
 
             {/* Password field */}
             <TextField
-              {...defaultTextFieldProps}
+              {...defaultTextFieldProps(LoginId.FieldPassword)}
               autoComplete="current-password"
               error={passwordError}
-              helperText={passwordError ? t("login.required") : undefined}
-              id={LoginId.FieldPassword}
-              label={t("login.password")}
+              helperText={passwordError ? t(LoginTextId.FieldError) : undefined}
+              label={t(LoginTextId.LabelPassword)}
               onChange={handleUpdatePassword}
               type="password"
               value={password}
@@ -139,7 +150,7 @@ export default function Login(): ReactElement {
                   underline="hover"
                   variant="subtitle2"
                 >
-                  {t("login.forgotPassword")}
+                  {t(LoginTextId.LinkForgotPassword)}
                 </Link>
               </Typography>
             )}
@@ -152,8 +163,8 @@ export default function Login(): ReactElement {
               >
                 {t(
                   loginError.includes("401")
-                    ? "login.failed"
-                    : "login.failedUnknownReason"
+                    ? LoginTextId.Error401
+                    : LoginTextId.ErrorUnknown
                 )}
               </Typography>
             )}
@@ -164,6 +175,7 @@ export default function Login(): ReactElement {
             <Grid container justifyContent="space-between">
               <Grid item xs={1}>
                 <Button
+                  data-testid={LoginId.ButtonUserGuide}
                   id={LoginId.ButtonUserGuide}
                   onClick={() => openUserGuide()}
                 >
@@ -180,21 +192,26 @@ export default function Login(): ReactElement {
               >
                 <Grid item>
                   <Button
+                    data-testid={LoginId.ButtonSignUp}
                     id={LoginId.ButtonSignUp}
                     onClick={() => router.navigate(Path.Signup)}
                     variant="outlined"
                   >
-                    {t("login.signUp")}
+                    {t(LoginTextId.ButtonSignUp)}
                   </Button>
                 </Grid>
 
                 <Grid item>
                   <LoadingButton
-                    buttonProps={{ id: LoginId.ButtonLogIn, type: "submit" }}
+                    buttonProps={{
+                      "data-testid": LoginId.ButtonLogIn,
+                      id: LoginId.ButtonLogIn,
+                      type: "submit",
+                    }}
                     disabled={!isVerified}
                     loading={status === LoginStatus.InProgress}
                   >
-                    {t("login.login")}
+                    {t(LoginTextId.ButtonLogin)}
                   </LoadingButton>
                 </Grid>
               </Grid>

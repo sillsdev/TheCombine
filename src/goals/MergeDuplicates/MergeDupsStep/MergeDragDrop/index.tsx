@@ -10,6 +10,7 @@ import { appBarHeight } from "components/AppBar/AppBarTypes";
 import { CancelConfirmDialog } from "components/Dialogs";
 import DropWord from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/DropWord";
 import SidebarDrop from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/SidebarDrop";
+import { protectReasonsText } from "goals/MergeDuplicates/MergeDupsStep/protectReasonUtils";
 import { MergeTreeReference } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import {
   combineSense,
@@ -30,6 +31,9 @@ export const trashId = "trash-drop";
 
 export default function MergeDragDrop(): ReactElement {
   const dispatch = useAppDispatch();
+  const overrideProtection = useAppSelector(
+    (state: StoreState) => state.mergeDuplicateGoal.overrideProtection
+  );
   const sidebarOpen = useAppSelector(
     (state: StoreState) =>
       state.mergeDuplicateGoal.tree.sidebar.mergeSenses.length > 1
@@ -42,6 +46,14 @@ export default function MergeDragDrop(): ReactElement {
     (state: StoreState) => state.mergeDuplicateGoal.tree.words
   );
 
+  interface ProtectedOverride {
+    combinePayload?: CombineSenseMergePayload;
+    deletePayload?: MergeTreeReference;
+    movePayload?: MoveSensePayload;
+    orderPayload?: OrderSensePayload;
+    protectReason: string;
+  }
+  const [override, setOverride] = useState<ProtectedOverride | undefined>();
   const [srcToDelete, setSrcToDelete] = useState<
     MergeTreeReference | undefined
   >();
@@ -52,63 +64,126 @@ export default function MergeDragDrop(): ReactElement {
     const src: MergeTreeReference = JSON.parse(res.draggableId);
     const srcWordId = res.source.droppableId;
     const srcWord = words[srcWordId];
-    if (srcWord?.protected && Object.keys(srcWord.sensesGuids).length === 1) {
-      // Case 0: The final sense of a protected word cannot be moved.
+
+    // Generate text for protected data that will be lost if user overrides.
+    const isOnlySenseInProtectedWord =
+      srcWord?.protected && Object.keys(srcWord.sensesGuids).length === 1;
+    let protectReason = "";
+    if (overrideProtection) {
+      const wordReasons = isOnlySenseInProtectedWord
+        ? (srcWord.protectReasons ?? [])
+        : undefined;
+      protectReason = t("mergeDups.helpText.protectedOverrideWarning", {
+        val: protectReasonsText(
+          t,
+          { sense: src.protectReasons, word: wordReasons },
+          false
+        ),
+      });
+    }
+
+    if (isOnlySenseInProtectedWord && !overrideProtection) {
+      /* Case 0: The final sense of a protected word cannot be moved. */
       return;
     } else if (res.destination?.droppableId === trashId) {
-      // Case 1: The sense was dropped on the trash icon.
-      if (src.isSenseProtected && !src.order) {
-        // Case 1a: Cannot delete a protected sense.
-        toast.warning(t("mergeDups.helpText.deleteProtectedSenseWarning"));
+      /* Case 1: The sense was dropped on the trash icon. */
+
+      if ((src.isSenseProtected && !src.order) || isOnlySenseInProtectedWord) {
+        /* Case 1a: Cannot delete a protected sense. */
+
+        if (overrideProtection) {
+          // ... unless protection override is active and user confirms.
+          setOverride({ deletePayload: src, protectReason });
+        } else {
+          toast.warning(t("mergeDups.helpText.deleteProtectedSenseWarning"));
+        }
+
         return;
       }
+
       setSrcToDelete(src);
     } else if (res.combine) {
-      // Case 2: the sense was dropped on another sense.
+      /* Case 2: the sense was dropped on another sense. */
       const dest: MergeTreeReference = JSON.parse(res.combine.draggableId);
+
       if (dest.order !== undefined) {
-        // Case 2a: If the target is a sidebar sub-sense, it cannot receive a combine.
+        /* Case 2a: If the target is a sidebar sub-sense, it cannot receive a combine. */
         toast.warning(t("mergeDups.helpText.dropIntoSidebarWarning"));
         return;
       }
-      if (src.isSenseProtected && !src.order) {
-        // Case 2b: Cannot merge a protected sense into another sense.
-        toast.warning(t("mergeDups.helpText.dropProtectedSenseWarning"));
-        const destWordId = res.combine.droppableId;
-        if (srcWordId !== destWordId) {
-          // The target sense is in a different word, so move instead of combine.
-          dispatch(moveSense({ destOrder: 0, destWordId, src }));
+
+      // Prepare to merge one sense into another.
+      const combinePayload: CombineSenseMergePayload = { dest, src };
+
+      if ((src.isSenseProtected && !src.order) || isOnlySenseInProtectedWord) {
+        /* Case 2b: Cannot merge a protected sense into another sense. */
+
+        if (overrideProtection) {
+          // ... unless protection override is active and user confirms.
+          setOverride({ combinePayload, protectReason });
+        } else {
+          toast.warning(t("mergeDups.helpText.dropProtectedSenseWarning"));
+
+          const destWordId = res.combine.droppableId;
+          if (srcWordId !== destWordId) {
+            // Since the merge is prohibited, move the sense instead.
+            dispatch(moveSense({ destOrder: 0, destWordId, src }));
+          }
         }
+
         return;
       }
-      const combinePayload: CombineSenseMergePayload = { dest, src };
+
       dispatch(combineSense(combinePayload));
     } else if (res.destination) {
+      /* Case 3: The sense was dropped in a droppable. */
       const destOrder = res.destination.index;
       const destWordId = res.destination.droppableId;
-      // Case 3: The sense was dropped in a droppable.
+
       if (srcWordId !== destWordId) {
-        // Case 3a: The source, dest droppables are different.
+        /* Case 3a: The source, dest droppables are different. */
+
         if (destWordId.split(" ").length > 1) {
           // If the destination is SidebarDrop, it cannot receive drags from elsewhere.
           toast.warning(t("mergeDups.helpText.dropIntoSidebarWarning"));
           return;
         }
-        // Move the sense to the dest MergeWord.
+
+        // Prepare to move the sense to the dest MergeWord.
         const movePayload: MoveSensePayload = { destOrder, destWordId, src };
+
+        if (isOnlySenseInProtectedWord) {
+          setOverride({ movePayload, protectReason });
+          return;
+        }
+
         dispatch(moveSense(movePayload));
       } else {
-        // Case 3b: The source & dest droppables are the same, so we reorder, not move.
+        /* Case 3b: The source & dest droppables are the same, so we reorder, not move. */
+
         if (src.order === destOrder) {
           // If the sense wasn't moved, do nothing.
           return;
         }
+
+        // Prepare to reorder the sense within its word or within the sidebar.
+        const orderPayload: OrderSensePayload = { destOrder, src };
+
+        const fromTop = src.order === 0;
         const toTop = destOrder === 0 && src.order !== undefined;
-        if (toTop && sidebarProtected) {
-          // If the sense was moved within the sidebar above a protected sense, do nothing.
+        if ((fromTop || toTop) && sidebarProtected) {
+          // If top sidebar sense is protected and being displaced, do nothing.
+
+          if (overrideProtection) {
+            // ... unless protection override is active and user confirms.
+            setOverride({ orderPayload, protectReason });
+          } else {
+            toast.warning(t("mergeDups.helpText.orderProtectedSidebarWarning"));
+          }
+
           return;
         }
-        const orderPayload: OrderSensePayload = { destOrder, src };
+
         dispatch(orderSense(orderPayload));
       }
     }
@@ -119,6 +194,19 @@ export default function MergeDragDrop(): ReactElement {
       dispatch(deleteSense(srcToDelete));
       setSrcToDelete(undefined);
     }
+  }
+
+  function onConfirmOverride(): void {
+    if (override?.combinePayload) {
+      dispatch(combineSense(override.combinePayload));
+    } else if (override?.deletePayload) {
+      dispatch(deleteSense(override.deletePayload));
+    } else if (override?.movePayload) {
+      dispatch(moveSense(override.movePayload));
+    } else if (override?.orderPayload) {
+      dispatch(orderSense(override.orderPayload));
+    }
+    setOverride(undefined);
   }
 
   function renderSidebar(): ReactElement {
@@ -180,6 +268,12 @@ export default function MergeDragDrop(): ReactElement {
               <DropWord wordId={newId} />
             </ImageListItem>
             {renderSidebar()}
+            <CancelConfirmDialog
+              open={!!override}
+              text={override?.protectReason ?? ""}
+              handleCancel={() => setOverride(undefined)}
+              handleConfirm={onConfirmOverride}
+            />
             <CancelConfirmDialog
               open={!!srcToDelete}
               text="mergeDups.helpText.deleteDialog"
