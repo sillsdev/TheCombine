@@ -26,7 +26,7 @@ humanfriendly==10.0
     # via -r requirements.in
 idna==3.10
     # via requests
-kubernetes==31.0.0
+kubernetes==32.0.1
     # via -r requirements.in
 oauthlib==3.2.2
     # via
@@ -44,8 +44,6 @@ pymongo==4.10.1
     # via -r requirements.in
 pyopenssl==24.3.0
     # via -r requirements.in
-pyreadline3==3.5.4
-    # via humanfriendly
 python-dateutil==2.9.0.post0
     # via kubernetes
 pyyaml==6.0.2
