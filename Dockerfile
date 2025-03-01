@@ -24,7 +24,7 @@ COPY docs/user_guide docs/user_guide
 RUN tox -e user-guide
 
 # Frontend build environment.
-FROM node:20.18.1-bookworm-slim AS frontend_builder
+FROM node:20.18.3-bookworm-slim AS frontend_builder
 WORKDIR /app
 
 # Install app dependencies.
