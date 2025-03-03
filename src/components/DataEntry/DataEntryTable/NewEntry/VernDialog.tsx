@@ -6,7 +6,13 @@ import {
   MenuList,
   Typography,
 } from "@mui/material";
-import { CSSProperties, Fragment, ReactElement, useState } from "react";
+import {
+  CSSProperties,
+  Fragment,
+  ReactElement,
+  useEffect,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 
 import { GramCatGroup, type Word } from "api/models";
@@ -29,7 +35,13 @@ interface VernDialogProps {
 }
 
 export default function VernDialog(props: VernDialogProps): ReactElement {
+  const onlyOneEntry = props.vernacularWords.length === 1;
   const [selectedWordId, setSelectedWordId] = useState<string | undefined>();
+
+  /* Update the selected word when a new set of words is loaded. */
+  useEffect(() => {
+    setSelectedWordId(onlyOneEntry ? props.vernacularWords[0].id : undefined);
+  }, [onlyOneEntry, props.vernacularWords]);
 
   if (!props.vernacularWords.length) {
     return <Fragment />;
@@ -40,7 +52,8 @@ export default function VernDialog(props: VernDialogProps): ReactElement {
       setSelectedWordId((prev) => (wordId === prev ? undefined : wordId));
     } else {
       props.handleClose(wordId, senseId);
-      setSelectedWordId(undefined);
+      // Reset selected word in case this dialog is re-opened for the same word array.
+      setSelectedWordId(onlyOneEntry ? props.vernacularWords[0].id : undefined);
     }
   };
 
@@ -61,6 +74,7 @@ export default function VernDialog(props: VernDialogProps): ReactElement {
           vernacular={props.vernacularWords[0].vernacular}
           vernacularWords={props.vernacularWords}
           onSelect={onSelect}
+          onlyOneEntry={onlyOneEntry}
           selectedWordId={selectedWordId}
           analysisLang={props.analysisLang}
         />
@@ -73,6 +87,7 @@ interface VernListProps {
   vernacular: string;
   vernacularWords: Word[];
   onSelect: (wordId?: string, senseId?: string) => void;
+  onlyOneEntry?: boolean;
   selectedWordId?: string;
   analysisLang?: string;
 }
@@ -125,7 +140,13 @@ export function VernList(props: VernListProps): ReactElement {
     } else {
       /* "Select a sense" menu item for the selected word (if any). */
       menuItems.push(
-        <StyledMenuItem key={word.id} onClick={() => props.onSelect(word.id)}>
+        <StyledMenuItem
+          // If there aren't other entries to expand, disable selection.
+          disabled={props.onlyOneEntry}
+          key={word.id}
+          onClick={() => props.onSelect(word.id)}
+          sx={conditionalGrey}
+        >
           <DialogListItemText
             text={`${word.vernacular} — ${t("addWords.selectSense")}`}
           />
@@ -155,7 +176,8 @@ export function VernList(props: VernListProps): ReactElement {
     <StyledMenuItem
       key="new-entry"
       onClick={() => props.onSelect("")}
-      sx={conditionalGrey}
+      // If the only entry is auto-expanded, don't gray out this option.
+      sx={props.onlyOneEntry ? undefined : conditionalGrey}
     >
       <DialogListItemText
         text={`${t("addWords.newEntryFor")} ${props.vernacular}`}

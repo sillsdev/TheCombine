@@ -10,6 +10,7 @@ import {
   People,
   PersonAdd,
   RecordVoiceOver,
+  RemoveModerator,
   Settings,
   Sms,
 } from "@mui/icons-material";
@@ -53,6 +54,7 @@ import ProjectLanguages, {
   SemanticDomainLanguage,
 } from "components/ProjectSettings/ProjectLanguages";
 import ProjectName from "components/ProjectSettings/ProjectName";
+import ProjectProtectedOverride from "components/ProjectSettings/ProjectProtectedOverride";
 import ProjectSchedule from "components/ProjectSettings/ProjectSchedule";
 import ProjectSelect from "components/ProjectSettings/ProjectSelect";
 import ActiveProjectUsers from "components/ProjectUsers/ActiveProjectUsers";
@@ -80,6 +82,7 @@ export enum Setting {
   Import = "SettingImport",
   Languages = "SettingLanguages",
   Name = "SettingName",
+  ProtectOverride = "SettingProtectOverride",
   Schedule = "SettingSchedule",
   Speakers = "SettingSpeakers",
   UserAdd = "SettingUserAdd",
@@ -169,6 +172,20 @@ export default function ProjectSettingsComponent(): ReactElement {
               title={t("projectSettings.autocomplete.label")}
               body={
                 <ProjectAutocomplete
+                  project={project}
+                  setProject={updateProject}
+                />
+              }
+            />
+          )}
+
+          {/* Protected data override toggle */}
+          {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
+            <BaseSettings
+              icon={<RemoveModerator data-testid={Setting.ProtectOverride} />}
+              title={t("projectSettings.protectedDataOverride.label")}
+              body={
+                <ProjectProtectedOverride
                   project={project}
                   setProject={updateProject}
                 />
