@@ -6,6 +6,7 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   border: "1px solid gray",
   borderRadius: "8px",
   marginTop: "8px",
+  "&.Mui-disabled": { opacity: 1 },
   "&:focus": {
     backgroundColor: theme.palette.primary.main,
     "& .MuiListItemIcon-root, & .MuiListItemText-primary": {

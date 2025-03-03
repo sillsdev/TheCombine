@@ -4,6 +4,7 @@ import {
   type UnknownAction,
 } from "@reduxjs/toolkit";
 
+import { Status } from "api/models";
 import {
   type MergeTreeReference,
   type MergeTreeWord,
@@ -21,6 +22,7 @@ import {
   moveSense,
   orderSense,
   setData,
+  toggleOverrideProtection,
 } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import mergeDupStepReducer from "goals/MergeDuplicates/Redux/MergeDupsReducer";
 import {
@@ -579,25 +581,74 @@ describe("MergeDupsReducer", () => {
     ).toEqual(defaultState);
   });
 
-  test("setWordData", () => {
-    const wordList = testWordList();
-    const treeState = mergeDupStepReducer(undefined, setData(wordList));
-    // check if data has all words present
-    for (const word of wordList) {
-      const srcWordId = word.id;
-      expect(Object.keys(treeState.data.words)).toContain(srcWordId);
-      // check each sense of word
-      for (const [order, sense] of word.senses.entries()) {
-        const treeSense = convertSenseToMergeTreeSense(sense, srcWordId, order);
-        const senses = treeState.data.senses;
-        expect(Object.values(senses).map((s) => JSON.stringify(s))).toContain(
-          JSON.stringify(treeSense)
-        );
-        // check that this sense is somewhere in the tree
-        expect(
-          getRefByGuid(treeSense.sense.guid, treeState.tree.words)
-        ).toBeDefined();
+  describe("setWordData", () => {
+    test("with no protected words/senses", () => {
+      const wordList = testWordList();
+      const treeState = mergeDupStepReducer(undefined, setData(wordList));
+
+      // check if data has all words present
+      for (const word of wordList) {
+        const srcWordId = word.id;
+        expect(Object.keys(treeState.data.words)).toContain(srcWordId);
+        // check each sense of word
+        for (const [order, sense] of word.senses.entries()) {
+          const treeSense = convertSenseToMergeTreeSense(
+            sense,
+            srcWordId,
+            order
+          );
+          const senses = treeState.data.senses;
+          expect(Object.values(senses).map((s) => JSON.stringify(s))).toContain(
+            JSON.stringify(treeSense)
+          );
+          // check that this sense is somewhere in the tree
+          expect(
+            getRefByGuid(treeSense.sense.guid, treeState.tree.words)
+          ).toBeDefined();
+        }
       }
-    }
+      // check that hasProtected is false
+      expect(treeState.hasProtected).toBeFalsy();
+      // check that overrideProtection is false
+      expect(treeState.overrideProtection).toEqual(false);
+    });
+
+    test("with protected word", () => {
+      const wordList = testWordList();
+      wordList[1].accessibility = Status.Protected;
+      const treeState = mergeDupStepReducer(
+        { ...defaultState, overrideProtection: true },
+        setData(wordList)
+      );
+
+      // check that hasProtected is true
+      expect(treeState.hasProtected).toBeTruthy();
+      // check that overrideProtection is false
+      expect(treeState.overrideProtection).toEqual(false);
+    });
+
+    test("with protected sense", () => {
+      const wordList = testWordList();
+      wordList.find((w) => w.senses.length)!.senses[0].accessibility =
+        Status.Protected;
+      const treeState = mergeDupStepReducer(
+        { ...defaultState, overrideProtection: true },
+        setData(wordList)
+      );
+
+      // check that hasProtected is true
+      expect(treeState.hasProtected).toBeTruthy();
+      // check that overrideProtection is false
+      expect(treeState.overrideProtection).toEqual(false);
+    });
+  });
+
+  test("toggleOverrideProtection", () => {
+    let state = defaultState;
+    expect(state.overrideProtection).toBeFalsy();
+    state = mergeDupStepReducer(state, toggleOverrideProtection());
+    expect(state.overrideProtection).toBeTruthy();
+    state = mergeDupStepReducer(state, toggleOverrideProtection());
+    expect(state.overrideProtection).toBeFalsy();
   });
 });

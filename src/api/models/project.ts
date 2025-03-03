@@ -68,6 +68,12 @@ export interface Project {
   autocompleteSetting: OffOnSetting;
   /**
    *
+   * @type {OffOnSetting}
+   * @memberof Project
+   */
+  protectedDataOverrideEnabled: OffOnSetting;
+  /**
+   *
    * @type {WritingSystem}
    * @memberof Project
    */

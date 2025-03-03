@@ -270,6 +270,10 @@
       "on": "On",
       "hint": "In Data Entry, suggest existing Vernaculars similar to the Vernacular being typed."
     },
+    "protectedDataOverride": {
+      "hint": "In Merge Duplicates, allow overriding protection of protected words and senses.",
+      "label": "Protected Data Override"
+    },
     "invite": {
       "inviteByEmailLabel": "Invite by Email",
       "userExists": "This user is already registered.",
@@ -417,13 +421,16 @@
       "delete": "Delete sense",
       "deleteDialog": "Delete this sense?",
       "protectedSense": "This sense was imported with data that The Combine doesn't handle.",
-      "protectedSenseInfo": "This sense cannot be deleted or dropped into another sense. You may still move it to another word or drop other senses into this one to merge them.",
+      "protectedSenseInfo": "This sense cannot be safely deleted or dropped into another sense. You may still move it to another word or drop other senses into this one to merge them.",
       "protectedWord": "This word was imported with data that The Combine doesn't handle.",
-      "protectedWordInfo": "To prevent deletion, the final sense of this word cannot be removed.",
+      "protectedWordInfo": "To prevent deletion, the final sense of this word cannot be safely removed.",
       "protectedData": "Protected data: {{ val }}",
+      "protectedOverride": "Allow deletion of protected words or senses?",
+      "protectedOverrideWarning": "The following data will be lost: {{ val }}",
       "deleteProtectedSenseWarning": "You cannot delete a protected sense.",
       "dropIntoSidebarWarning": "You cannot drop senses into the sidebar.",
-      "dropProtectedSenseWarning": "You cannot merge a protected sense into another sense."
+      "dropProtectedSenseWarning": "You cannot merge a protected sense into another sense.",
+      "orderProtectedSidebarWarning": "A protected sense in the sidebar cannot be moved out of top position."
     },
     "protectReason": {
       "annotations": "annotations",

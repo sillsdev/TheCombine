@@ -4,7 +4,6 @@ import { type ReactElement } from "react";
 import { Droppable } from "react-beautiful-dnd";
 
 import SidebarDragSense from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/SidebarDragSense";
-import { type MergeTreeSense } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { setSidebar } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
@@ -45,8 +44,13 @@ export default function SidebarDrop(): ReactElement {
             </IconButton>
           </Grid>
           <Typography variant="h5">{vernacular}</Typography>
-          {sidebar.mergeSenses.map((ms: MergeTreeSense, i: number) => (
-            <SidebarDragSense key={ms.sense.guid} index={i} mergeSense={ms} />
+          {sidebar.mergeSenses.map((mergeSense, index) => (
+            <SidebarDragSense
+              index={index}
+              // Need the key to change when the index changes for the droppable to update.
+              key={`${mergeSense.sense.guid}-${index}`}
+              mergeSense={mergeSense}
+            />
           ))}
           {providedDroppable.placeholder}
         </div>
