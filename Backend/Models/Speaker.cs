@@ -35,33 +35,19 @@ namespace BackendFramework.Models
             Name = "";
         }
 
+        /// <summary> Create a deep copy. </summary>
         public Speaker Clone()
         {
-            return new Speaker
-            {
-                Id = Id,
-                ProjectId = ProjectId,
-                Name = Name,
-                Consent = Consent
-            };
+            // Shallow copy is sufficient.
+            return (Speaker)MemberwiseClone();
         }
 
+        /// <summary> Check if content is the same as another Speaker. </summary>
         public bool ContentEquals(Speaker other)
         {
             return ProjectId.Equals(other.ProjectId, StringComparison.Ordinal) &&
                 Name.Equals(other.Name, StringComparison.Ordinal) &&
                 Consent == other.Consent;
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is Speaker other && GetType() == obj.GetType() &&
-                Id.Equals(other.Id, StringComparison.Ordinal) && ContentEquals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, ProjectId, Name, Consent);
         }
     }
 

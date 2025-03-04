@@ -52,8 +52,8 @@ namespace Backend.Tests.Mocks
 
         public Task<bool> Delete(string projectId, string userRoleId)
         {
-            var foundUserRole = _userRoles.Single(userRole => userRole.Id == userRoleId);
-            return Task.FromResult(_userRoles.Remove(foundUserRole));
+            var rmCount = _userRoles.RemoveAll(userRole => userRole.Id == userRoleId);
+            return Task.FromResult(rmCount > 0);
         }
 
         public Task<ResultOfUpdate> Update(string userRoleId, UserRole userRole)
@@ -69,12 +69,7 @@ namespace Backend.Tests.Mocks
                 return Task.FromResult(ResultOfUpdate.NoChange);
             }
 
-            var success = _userRoles.Remove(foundUserRole);
-            if (!success)
-            {
-                return Task.FromResult(ResultOfUpdate.NotFound);
-            }
-
+            var rmCount = _userRoles.RemoveAll(ur => ur.Id == userRoleId);
             _userRoles.Add(userRole.Clone());
             return Task.FromResult(ResultOfUpdate.Updated);
         }

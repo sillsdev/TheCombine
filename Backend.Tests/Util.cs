@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using BackendFramework.Models;
+using NUnit.Framework;
 using static System.Linq.Enumerable;
 
 namespace Backend.Tests
@@ -48,6 +49,7 @@ namespace Backend.Tests
         {
             return new Word
             {
+                Id = RandString(),
                 Created = RandString(),
                 Vernacular = RandString(),
                 Modified = RandString(),
@@ -133,6 +135,28 @@ namespace Backend.Tests
         public static WritingSystem RandomWritingSystem()
         {
             return new(RandString(), RandString(), RandString());
+        }
+
+        /// <summary>
+        /// Asserts whether two Words have the same content.
+        /// Ignores metadata: Created, EditedBy, History, Id, Modified.
+        /// </summary>
+        public static void AssertEqualWordContent(Word wordA, Word wordB, bool isEqual)
+        {
+            var aClone = wordA.Clone();
+            aClone.Created = wordB.Created;
+            aClone.EditedBy = wordB.EditedBy;
+            aClone.History = wordB.History;
+            aClone.Id = wordB.Id;
+            aClone.Modified = wordB.Modified;
+            if (isEqual)
+            {
+                Assert.That(aClone, Is.EqualTo(wordB).UsingPropertiesComparer());
+            }
+            else
+            {
+                Assert.That(aClone, Is.Not.EqualTo(wordB).UsingPropertiesComparer());
+            }
         }
     }
 }

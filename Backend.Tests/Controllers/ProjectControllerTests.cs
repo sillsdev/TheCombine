@@ -64,7 +64,8 @@ namespace Backend.Tests.Controllers
 
             var projects = ((ObjectResult)_projController.GetAllProjects().Result).Value as List<Project>;
             Assert.That(projects, Has.Count.EqualTo(3));
-            _projRepo.GetAllProjects().Result.ForEach(project => Assert.That(projects, Does.Contain(project)));
+            _projRepo.GetAllProjects().Result.ForEach(
+                project => Assert.That(projects, Does.Contain(project).UsingPropertiesComparer()));
         }
 
         [Test]
@@ -77,7 +78,7 @@ namespace Backend.Tests.Controllers
 
             var result = _projController.GetProject(project!.Id).Result;
             Assert.That(result, Is.InstanceOf<ObjectResult>());
-            Assert.That(((ObjectResult)result).Value, Is.EqualTo(project));
+            Assert.That(((ObjectResult)result).Value, Is.EqualTo(project).UsingPropertiesComparer());
         }
 
         [Test]
@@ -86,7 +87,7 @@ namespace Backend.Tests.Controllers
             var project = Util.RandomProject();
             var userProject = (UserCreatedProject)((ObjectResult)_projController.CreateProject(project).Result).Value!;
             project.Id = userProject.Project.Id;
-            Assert.That(_projRepo.GetAllProjects().Result, Does.Contain(project));
+            Assert.That(_projRepo.GetAllProjects().Result, Does.Contain(project).UsingPropertiesComparer());
         }
 
         [Test]
@@ -98,7 +99,7 @@ namespace Backend.Tests.Controllers
 
             _ = _projController.UpdateProject(modProject.Id, modProject);
             Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(1));
-            Assert.That(_projRepo.GetAllProjects().Result, Does.Contain(modProject));
+            Assert.That(_projRepo.GetAllProjects().Result, Does.Contain(modProject).UsingPropertiesComparer());
         }
 
         [Test]

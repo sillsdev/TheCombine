@@ -31,38 +31,17 @@ namespace BackendFramework.Models
             Role = Role.None;
         }
 
+        /// <summary> Create a deep copy. </summary>
         public UserRole Clone()
         {
-            var clone = new UserRole
-            {
-                Id = Id,
-                ProjectId = ProjectId,
-                Role = Role,
-            };
-
-            return clone;
+            // Shallow copy is sufficient.
+            return (UserRole)MemberwiseClone();
         }
 
+        /// <summary> Check if content is the same as another UserRole. </summary>
         public bool ContentEquals(UserRole other)
         {
-            return
-                other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
-                other.Role == Role;
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not UserRole other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return other.Id.Equals(Id, StringComparison.Ordinal) && ContentEquals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, ProjectId, Role);
+            return other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) && other.Role == Role;
         }
     }
 
@@ -84,35 +63,17 @@ namespace BackendFramework.Models
             Role = Role.None;
         }
 
+        /// <summary> Create a deep copy. </summary>
         public ProjectRole Clone()
         {
-
-            return new ProjectRole
-            {
-                ProjectId = ProjectId,
-                Role = Role,
-            };
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not ProjectRole other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) && other.Role == Role;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(ProjectId, Role);
+            // Shallow copy is sufficient.
+            return (ProjectRole)MemberwiseClone();
         }
 
         public static bool RoleContainsRole(Role roleA, Role roleB)
         {
             var permsA = RolePermissions(roleA);
-            return RolePermissions(roleB).All(perm => permsA.Contains(perm));
+            return RolePermissions(roleB).All(permsA.Contains);
         }
 
         public static List<Permission> RolePermissions(Role role)

@@ -103,6 +103,7 @@ namespace BackendFramework.Models
             Flag = new();
         }
 
+        /// <summary> Create a deep copy. </summary>
         public Word Clone()
         {
             return new()
@@ -124,68 +125,6 @@ namespace BackendFramework.Models
                 Note = Note.Clone(),
                 Flag = Flag.Clone(),
             };
-        }
-
-        public bool ContentEquals(Word other)
-        {
-            return
-                other.Vernacular.Equals(Vernacular, StringComparison.Ordinal) &&
-                other.Plural.Equals(Plural, StringComparison.Ordinal) &&
-                other.OtherField.Equals(OtherField, StringComparison.Ordinal) &&
-                other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
-
-                other.Audio.Count == Audio.Count &&
-                other.Audio.All(Audio.Contains) &&
-
-                other.ProtectReasons.Count == ProtectReasons.Count &&
-                other.ProtectReasons.All(ProtectReasons.Contains) &&
-
-                other.Senses.Count == Senses.Count &&
-                other.Senses.All(Senses.Contains) &&
-
-                other.Note.Equals(Note) &&
-                other.Flag.Equals(Flag);
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not Word other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return
-                other.Id.Equals(Id, StringComparison.Ordinal) &&
-                ContentEquals(other) &&
-                other.Guid == Guid &&
-                other.Created.Equals(Created, StringComparison.Ordinal) &&
-                other.Modified.Equals(Modified, StringComparison.Ordinal) &&
-                other.EditedBy.Count == EditedBy.Count &&
-                other.EditedBy.All(EditedBy.Contains) &&
-                other.History.Count == History.Count &&
-                other.History.All(History.Contains);
-        }
-
-        public override int GetHashCode()
-        {
-            var hash = new HashCode();
-            hash.Add(Id);
-            hash.Add(Guid);
-            hash.Add(Vernacular);
-            hash.Add(Plural);
-            hash.Add(Senses);
-            hash.Add(Audio);
-            hash.Add(Created);
-            hash.Add(Modified);
-            hash.Add(Accessibility);
-            hash.Add(ProtectReasons);
-            hash.Add(History);
-            hash.Add(EditedBy);
-            hash.Add(OtherField);
-            hash.Add(ProjectId);
-            hash.Add(Note);
-            hash.Add(Flag);
-            return hash.ToHashCode();
         }
 
         /// <summary> Determine whether vernacular and sense strings contain those of other word. </summary>
@@ -268,31 +207,11 @@ namespace BackendFramework.Models
             SpeakerId = speakerId;
         }
 
+        /// <summary> Create a deep copy. </summary>
         public Pronunciation Clone()
         {
-            return new Pronunciation
-            {
-                FileName = FileName,
-                SpeakerId = SpeakerId,
-                Protected = Protected
-            };
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not Pronunciation other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return FileName.Equals(other.FileName, StringComparison.Ordinal) &&
-                SpeakerId.Equals(other.SpeakerId, StringComparison.Ordinal) &&
-                Protected == other.Protected;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(FileName, SpeakerId, Protected);
+            // Shallow copy is sufficient.
+            return (Pronunciation)MemberwiseClone();
         }
     }
 
@@ -319,13 +238,18 @@ namespace BackendFramework.Models
             Text = text;
         }
 
+        /// <summary> Create a deep copy. </summary>
         public Note Clone()
         {
-            return new Note
-            {
-                Language = Language,
-                Text = Text
-            };
+            // Shallow copy is sufficient.
+            return (Note)MemberwiseClone();
+        }
+
+        /// <summary> Check if content is the same as another Note. </summary>
+        public bool ContentEquals(Note other)
+        {
+            return Language.Equals(other.Language, StringComparison.Ordinal) &&
+                Text.Equals(other.Text, StringComparison.Ordinal);
         }
 
         /// <summary> Whether the Note contains any non-whitespace contents. </summary>
@@ -338,7 +262,7 @@ namespace BackendFramework.Models
         public void Append(Note other)
         {
             // There's nothing to append if other note is blank or identical.
-            if (other.IsBlank() || Equals(other))
+            if (other.IsBlank() || ContentEquals(other))
             {
                 return;
             }
@@ -353,22 +277,6 @@ namespace BackendFramework.Models
 
             var langTag = Language == other.Language ? "" : $"[{other.Language}] ";
             Text += $"; {langTag}{other.Text}";
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not Note other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return Language.Equals(other.Language, StringComparison.Ordinal) &&
-                Text.Equals(other.Text, StringComparison.Ordinal);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Language, Text);
         }
     }
 
@@ -395,35 +303,24 @@ namespace BackendFramework.Models
             Text = text;
         }
 
+        /// <summary> Create a deep copy. </summary>
         public Flag Clone()
         {
-            return new Flag
-            {
-                Active = Active,
-                Text = Text
-            };
+            // Shallow copy is sufficient.
+            return (Flag)MemberwiseClone();
         }
 
-        public override bool Equals(object? obj)
+        /// <summary> Check if content is the same as another Flag. </summary>
+        public bool ContentEquals(Flag other)
         {
-            if (obj is not Flag other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
             return Active == other.Active && Text.Equals(other.Text, StringComparison.Ordinal);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Active, Text);
         }
 
         /// <summary> Append other flag to the present flag. </summary>
         public void Append(Flag other)
         {
             // There's nothing to append if other flag is inactive/identical, or both are active and other is empty.
-            if (!other.Active || Equals(other) || (Active && string.IsNullOrWhiteSpace(other.Text)))
+            if (!other.Active || ContentEquals(other) || (Active && string.IsNullOrWhiteSpace(other.Text)))
             {
                 return;
             }

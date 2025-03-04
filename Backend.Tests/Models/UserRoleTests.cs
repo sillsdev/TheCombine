@@ -5,86 +5,42 @@ namespace Backend.Tests.Models
 {
     public class UserRoleTests
     {
-        private const string Id1 = "one";
-        private const string Id2 = "two";
-        private const string ProjectId1 = "first";
-        private const string ProjectId2 = "second";
+        private const string Id = "one";
+        private const string ProjectId = "first";
         private const Role Role1 = Role.Harvester;
         private const Role Role2 = Role.Editor;
 
         [Test]
-        public void TestCloneEquals()
+        public void TestClone()
         {
-            var userRole = new UserRole { Id = Id1, ProjectId = ProjectId1, Role = Role1 };
-            Assert.That(userRole, Is.EqualTo(userRole.Clone()));
+            var userRole = new UserRole { Id = Id, ProjectId = ProjectId, Role = Role1 };
+            Assert.That(userRole.Clone(), Is.EqualTo(userRole).UsingPropertiesComparer());
         }
 
         [Test]
-        public void TestNotEquals()
+        public void TestContentEquals()
         {
-            var userRole = new UserRole { Id = Id1, ProjectId = ProjectId1, Role = Role1 };
-            Assert.That(userRole, Is.Not.EqualTo(new UserRole { Id = Id2, ProjectId = ProjectId1, Role = Role1 }));
-            Assert.That(userRole, Is.Not.EqualTo(new UserRole { Id = Id1, ProjectId = ProjectId2, Role = Role1 }));
-            Assert.That(userRole, Is.Not.EqualTo(new UserRole { Id = Id1, ProjectId = ProjectId1, Role = Role2 }));
-        }
+            var userRole = new UserRole { Id = Id, ProjectId = ProjectId, Role = Role1 };
 
-        [Test]
-        public void TestEqualsNull()
-        {
-            Assert.That(new UserRole().Equals(null), Is.False);
-        }
+            // Id not covered in ContentEquals.
+            Assert.That(new UserRole { Id = "diff-ur-id", ProjectId = ProjectId, Role = Role1 }
+                .ContentEquals(userRole), Is.True);
 
-        [Test]
-        public void TestGetHashCode()
-        {
-            Assert.That(
-                new UserRole { Id = Id1 }.GetHashCode(),
-                Is.Not.EqualTo(new UserRole { Id = Id2 }.GetHashCode()));
-            Assert.That(
-                new UserRole { ProjectId = ProjectId1 }.GetHashCode(),
-                Is.Not.EqualTo(new UserRole { ProjectId = ProjectId2 }.GetHashCode()));
-            Assert.That(
-                new UserRole { Role = Role1 }.GetHashCode(),
-                Is.Not.EqualTo(new UserRole { Role = Role2 }.GetHashCode()));
+            // Everything else covered in ContentEquals.
+            Assert.That(new UserRole { Id = Id, ProjectId = "diff-proj-id", Role = Role1 }
+                .ContentEquals(userRole), Is.False);
+            Assert.That(new UserRole { Id = Id, ProjectId = ProjectId, Role = Role2 }
+                .ContentEquals(userRole), Is.False);
         }
     }
+
     public class ProjectRoleTests
     {
-        private const string ProjectId1 = "first";
-        private const string ProjectId2 = "second";
-        private const Role Role1 = Role.Harvester;
-        private const Role Role2 = Role.Editor;
-
         [Test]
-        public void TestCloneEquals()
+        public void TestClone()
         {
-            var projectRole = new ProjectRole { ProjectId = ProjectId1, Role = Role1 };
-            Assert.That(projectRole, Is.EqualTo(projectRole.Clone()));
-        }
-
-        [Test]
-        public void TestNotEquals()
-        {
-            var projectRole = new ProjectRole { ProjectId = ProjectId1, Role = Role1 };
-            Assert.That(projectRole, Is.Not.EqualTo(new ProjectRole { ProjectId = ProjectId2, Role = Role1 }));
-            Assert.That(projectRole, Is.Not.EqualTo(new ProjectRole { ProjectId = ProjectId1, Role = Role2 }));
-        }
-
-        [Test]
-        public void TestEqualsNull()
-        {
-            Assert.That(new ProjectRole().Equals(null), Is.False);
-        }
-
-        [Test]
-        public void TestGetHashCode()
-        {
-            Assert.That(
-                new ProjectRole { ProjectId = ProjectId1 }.GetHashCode(),
-                Is.Not.EqualTo(new ProjectRole { ProjectId = ProjectId2 }.GetHashCode()));
-            Assert.That(
-                new ProjectRole { Role = Role1 }.GetHashCode(),
-                Is.Not.EqualTo(new ProjectRole { Role = Role2 }.GetHashCode()));
+            var projectRole = new ProjectRole { ProjectId = "proj-id", Role = Role.Editor };
+            Assert.That(projectRole.Clone(), Is.EqualTo(projectRole).UsingPropertiesComparer());
         }
     }
 }
