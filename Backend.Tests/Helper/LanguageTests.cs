@@ -40,7 +40,7 @@ namespace Backend.Tests.Helper
             var tags = new List<string> { "en", "en-US", "ajsdlfj" };
             var writingSystems =
                 new List<WritingSystem> { new("en", "English"), new("en-US", "English"), new("ajsdlfj") };
-            Assert.That(ConvertLangTagsToWritingSystems(tags).ToList(), Is.EqualTo(writingSystems));
+            Util.AssertDeepClone([.. ConvertLangTagsToWritingSystems(tags)], writingSystems, true);
         }
 
         [Test]

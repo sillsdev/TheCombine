@@ -52,17 +52,6 @@ namespace BackendFramework.Models
                 Name.Equals(other.Name, StringComparison.Ordinal) &&
                 Consent == other.Consent;
         }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is Speaker other && GetType() == obj.GetType() &&
-                Id.Equals(other.Id, StringComparison.Ordinal) && ContentEquals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, ProjectId, Name, Consent);
-        }
     }
 
     public enum ConsentType

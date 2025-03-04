@@ -9,25 +9,24 @@ namespace Backend.Tests.Models
         private const string EntryId = "MergeWordSetTestId";
         private const string ProjId = "MergeWordSetTestProjectId";
         private const string UserId = "MergeWordSetTestUserId";
-        private readonly List<string> _wordIds = new() { "word1", "word2" };
-        private readonly List<string> _wordIdsReversed = new() { "word2", "word1" };
+        private readonly List<string> _wordIds = ["word1", "word2"];
+        private readonly List<string> _wordIdsReversed = ["word2", "word1"];
 
         [Test]
         public void TestClone()
         {
-            var entryA = new MergeWordSet
+            var entry = new MergeWordSet
             {
                 Id = EntryId,
                 ProjectId = ProjId,
                 UserId = UserId,
                 WordIds = _wordIds
             };
-            var entryB = entryA.Clone();
-            Assert.That(entryA.Equals(entryB), Is.True);
+            Util.AssertDeepClone(entry, entry.Clone(), true);
         }
 
         [Test]
-        public void TestEquals()
+        public void TestContentEquals()
         {
             var entryA = new MergeWordSet
             {
@@ -38,60 +37,30 @@ namespace Backend.Tests.Models
             };
             var entryB = new MergeWordSet
             {
-                Id = EntryId,
+                Id = "different id",
                 ProjectId = ProjId,
                 UserId = UserId,
                 WordIds = _wordIdsReversed
             };
-            Assert.That(entryA.Equals(entryB), Is.True);
+            Util.AssertDeepClone(entryA, entryB, false);
+            Assert.That(entryA.ContentEquals(entryB), Is.True);
         }
 
         [Test]
-        public void TestEqualsFalse()
+        public void TestContentEqualsFalse()
         {
             var entryA = new MergeWordSet();
             var entryB = new MergeWordSet();
-            entryA.Id = EntryId;
-            Assert.That(entryA.Equals(entryB), Is.False);
-
-            entryB = entryA.Clone();
             entryA.ProjectId = ProjId;
-            Assert.That(entryA.Equals(entryB), Is.False);
+            Assert.That(entryA.ContentEquals(entryB), Is.False);
 
             entryB = entryA.Clone();
             entryA.UserId = UserId;
-            Assert.That(entryA.Equals(entryB), Is.False);
+            Assert.That(entryA.ContentEquals(entryB), Is.False);
 
             entryB = entryA.Clone();
             entryA.WordIds = _wordIds;
-            Assert.That(entryA.Equals(entryB), Is.False);
-        }
-
-        [Test]
-        public void TestEqualsNull()
-        {
-            var edit = new MergeWordSet { ProjectId = ProjId };
-            Assert.That(edit.Equals(null), Is.False);
-        }
-
-        [Test]
-        public void TestHashCode()
-        {
-            var entryA = new MergeWordSet
-            {
-                Id = EntryId,
-                ProjectId = ProjId,
-                UserId = UserId,
-                WordIds = _wordIdsReversed
-            };
-            var entryB = new MergeWordSet
-            {
-                Id = "DifferentTestId",
-                ProjectId = ProjId,
-                UserId = UserId,
-                WordIds = _wordIdsReversed
-            };
-            Assert.That(entryA.GetHashCode(), Is.Not.EqualTo(entryB.GetHashCode()));
+            Assert.That(entryA.ContentEquals(entryB), Is.False);
         }
     }
 }

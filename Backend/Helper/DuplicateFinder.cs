@@ -48,7 +48,8 @@ namespace BackendFramework.Helper
                 }
 
                 // Remove from collection and add to main list.
-                similarWords.ForEach(w => collection.Remove(w));
+                var idsToRemove = similarWords.Select(w => w.Id);
+                collection.RemoveAll(w => idsToRemove.Contains(w.Id));
                 similarWords.Insert(0, word);
                 wordLists.Add(similarWords);
             }
@@ -89,12 +90,12 @@ namespace BackendFramework.Helper
                 }
 
                 // Remove similar words from collection and add them to list with main word.
+                var idsToRemove = similarWords.Select(w => w.Item2.Id);
+                collection.RemoveAll(w => idsToRemove.Contains(w.Id));
+
+                // Add similar words to list with main word.
                 var newWordList = Tuple.Create(score, new List<Word> { word });
-                similarWords.ForEach(w =>
-                {
-                    collection.Remove(w.Item2);
-                    newWordList.Item2.Add(w.Item2);
-                });
+                newWordList.Item2.AddRange(similarWords.Select(w => w.Item2));
 
                 // Insert at correct place in list.
                 var i = wordLists.FindIndex(pair => score <= pair.Item1);

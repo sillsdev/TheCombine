@@ -49,21 +49,6 @@ namespace BackendFramework.Models
                 other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
                 other.Role == Role;
         }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not UserRole other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return other.Id.Equals(Id, StringComparison.Ordinal) && ContentEquals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, ProjectId, Role);
-        }
     }
 
     /// <remarks> This is used in a [FromBody] serializer, so its attributes cannot be set to readonly. </remarks>
@@ -94,25 +79,10 @@ namespace BackendFramework.Models
             };
         }
 
-        public override bool Equals(object? obj)
-        {
-            if (obj is not ProjectRole other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) && other.Role == Role;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(ProjectId, Role);
-        }
-
         public static bool RoleContainsRole(Role roleA, Role roleB)
         {
             var permsA = RolePermissions(roleA);
-            return RolePermissions(roleB).All(perm => permsA.Contains(perm));
+            return RolePermissions(roleB).All(permsA.Contains);
         }
 
         public static List<Permission> RolePermissions(Role role)

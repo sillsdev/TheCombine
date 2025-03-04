@@ -49,19 +49,5 @@ namespace BackendFramework.Models
                 other.WordIds.Count == WordIds.Count &&
                 other.WordIds.All(WordIds.Contains);
         }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not MergeWordSet other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-            return other.Id.Equals(Id, StringComparison.Ordinal) && ContentEquals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, ProjectId, UserId, WordIds);
-        }
     }
 }

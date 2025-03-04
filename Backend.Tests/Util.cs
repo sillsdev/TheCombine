@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using BackendFramework.Models;
+using NUnit.Framework;
 using static System.Linq.Enumerable;
 
 namespace Backend.Tests
@@ -133,6 +134,35 @@ namespace Backend.Tests
         public static WritingSystem RandomWritingSystem()
         {
             return new(RandString(), RandString(), RandString());
+        }
+
+        /// <summary> Asserts whether two objects of the same type are deep copies. </summary>
+        /// <remarks> Doesn't handle type-inheritance. </remarks>
+        /// <typeparam name="TType"> Type of the objects being compared. </typeparam>
+        /// <param name="obj"> Original object </param>
+        /// <param name="clone"> Object of the same type (or null) that might be a clone. </param>
+        /// <param name="isEqual"> Whether to assert equality or inequality. </param>
+        public static void AssertDeepClone<TType>(TType obj, TType clone, bool isEqual)
+        {
+            if (isEqual)
+            {
+                Assert.That(clone, Is.EqualTo(obj).UsingPropertiesComparer());
+            }
+            else
+            {
+                Assert.That(clone, Is.Not.EqualTo(obj).UsingPropertiesComparer());
+            }
+        }
+
+        public static void AssertSameWordContent(Word a, Word b, bool isEqual)
+        {
+            var aClone = a.Clone();
+            aClone.Created = b.Created;
+            aClone.EditedBy = b.EditedBy;
+            aClone.History = b.History;
+            aClone.Id = b.Id;
+            aClone.Modified = b.Modified;
+            AssertDeepClone(aClone, b, isEqual);
         }
     }
 }

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using SIL.Extensions;
 
 namespace BackendFramework.Models
 {
@@ -62,24 +60,6 @@ namespace BackendFramework.Models
                 UserId = UserId,
                 Created = Created
             };
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not SemanticDomain other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return Name.Equals(other.Name, StringComparison.Ordinal) &&
-                Id.Equals(other.Id, StringComparison.Ordinal) &&
-                Lang.Equals(other.Lang, StringComparison.Ordinal) &&
-                Guid.Equals(other.Guid, StringComparison.Ordinal);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Name, Id, Lang, Guid, UserId, Created);
         }
 
         /// <summary>
@@ -150,26 +130,6 @@ namespace BackendFramework.Models
                 ParentId = ParentId,
                 Questions = Questions.Select(q => q).ToList()
             };
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not SemanticDomainFull other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return
-                base.Equals(other) &&
-                Description.Equals(other.Description, StringComparison.Ordinal) &&
-                ParentId.Equals(other.ParentId, StringComparison.Ordinal) &&
-                Questions.Count == other.Questions.Count &&
-                Questions.All(other.Questions.Contains);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Name, Id, Description, ParentId, Questions);
         }
     }
 

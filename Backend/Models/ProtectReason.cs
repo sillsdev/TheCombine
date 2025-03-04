@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -57,24 +56,6 @@ namespace BackendFramework.Models
                 Count = Count,
                 Value = Value,
             };
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not ProtectReason other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return
-                Type == other.Type && Count == other.Count &&
-                ((Value is null && other.Value is null) ||
-                    (Value is not null && Value.Equals(other.Value, StringComparison.Ordinal)));
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Type, Count, Value);
         }
     }
 }

@@ -126,7 +126,8 @@ namespace Backend.Tests.Controllers
 
             var words = (List<Word>)((ObjectResult)await _wordController.GetProjectWords(_projId)).Value!;
             Assert.That(words, Has.Count.EqualTo(3));
-            (await _wordRepo.GetAllWords(_projId)).ForEach(word => Assert.That(words, Does.Contain(word)));
+            var repoWords = await _wordRepo.GetAllWords(_projId);
+            repoWords.ForEach(word => Assert.That(words, Does.Contain(word).UsingPropertiesComparer()));
         }
 
         [Test]
@@ -208,8 +209,8 @@ namespace Backend.Tests.Controllers
 
             var frontier = (List<Word>)((ObjectResult)await _wordController.GetProjectFrontierWords(_projId)).Value!;
             Assert.That(frontier, Has.Count.EqualTo(2));
-            Assert.That(frontier, Does.Contain(inWord1));
-            Assert.That(frontier, Does.Contain(inWord2));
+            Assert.That(frontier, Does.Contain(inWord1).UsingPropertiesComparer());
+            Assert.That(frontier, Does.Contain(inWord2).UsingPropertiesComparer());
         }
 
         [Test]
@@ -237,7 +238,7 @@ namespace Backend.Tests.Controllers
 
             var result = await _wordController.GetWord(_projId, word.Id);
             Assert.That(result, Is.InstanceOf<ObjectResult>());
-            Assert.That(((ObjectResult)result).Value, Is.EqualTo(word));
+            Assert.That(((ObjectResult)result).Value, Is.EqualTo(word).UsingPropertiesComparer());
         }
 
         [Test]
@@ -347,7 +348,7 @@ namespace Backend.Tests.Controllers
             var result = (ObjectResult)await _wordController.UpdateDuplicate(_projId, origWord.Id, dupWord);
             var id = (string)result.Value!;
             var updatedWord = await _wordRepo.GetWord(_projId, id);
-            Assert.That(expectedWord.ContentEquals(updatedWord!), Is.True);
+            Util.AssertSameWordContent(expectedWord, updatedWord!, true);
         }
 
         [Test]
@@ -395,10 +396,10 @@ namespace Backend.Tests.Controllers
             word.Id = id;
 
             var allWords = await _wordRepo.GetAllWords(_projId);
-            Assert.That(allWords[0], Is.EqualTo(word));
+            Assert.That(allWords[0], Is.EqualTo(word).UsingPropertiesComparer());
 
             var frontier = await _wordRepo.GetFrontier(_projId);
-            Assert.That(frontier[0], Is.EqualTo(word));
+            Assert.That(frontier[0], Is.EqualTo(word).UsingPropertiesComparer());
         }
 
         [Test]
@@ -435,12 +436,12 @@ namespace Backend.Tests.Controllers
             finalWord.History = new List<string> { origWord.Id };
 
             var allWords = await _wordRepo.GetAllWords(_projId);
-            Assert.That(allWords, Does.Contain(origWord));
-            Assert.That(allWords, Does.Contain(finalWord));
+            Assert.That(allWords, Does.Contain(origWord).UsingPropertiesComparer());
+            Assert.That(allWords, Does.Contain(finalWord).UsingPropertiesComparer());
 
             var frontier = await _wordRepo.GetFrontier(_projId);
             Assert.That(frontier, Has.Count.EqualTo(1));
-            Assert.That(frontier, Does.Contain(finalWord));
+            Assert.That(frontier, Does.Contain(finalWord).UsingPropertiesComparer());
         }
 
         [Test]

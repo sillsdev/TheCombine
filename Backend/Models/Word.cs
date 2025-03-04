@@ -126,68 +126,6 @@ namespace BackendFramework.Models
             };
         }
 
-        public bool ContentEquals(Word other)
-        {
-            return
-                other.Vernacular.Equals(Vernacular, StringComparison.Ordinal) &&
-                other.Plural.Equals(Plural, StringComparison.Ordinal) &&
-                other.OtherField.Equals(OtherField, StringComparison.Ordinal) &&
-                other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
-
-                other.Audio.Count == Audio.Count &&
-                other.Audio.All(Audio.Contains) &&
-
-                other.ProtectReasons.Count == ProtectReasons.Count &&
-                other.ProtectReasons.All(ProtectReasons.Contains) &&
-
-                other.Senses.Count == Senses.Count &&
-                other.Senses.All(Senses.Contains) &&
-
-                other.Note.Equals(Note) &&
-                other.Flag.Equals(Flag);
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not Word other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return
-                other.Id.Equals(Id, StringComparison.Ordinal) &&
-                ContentEquals(other) &&
-                other.Guid == Guid &&
-                other.Created.Equals(Created, StringComparison.Ordinal) &&
-                other.Modified.Equals(Modified, StringComparison.Ordinal) &&
-                other.EditedBy.Count == EditedBy.Count &&
-                other.EditedBy.All(EditedBy.Contains) &&
-                other.History.Count == History.Count &&
-                other.History.All(History.Contains);
-        }
-
-        public override int GetHashCode()
-        {
-            var hash = new HashCode();
-            hash.Add(Id);
-            hash.Add(Guid);
-            hash.Add(Vernacular);
-            hash.Add(Plural);
-            hash.Add(Senses);
-            hash.Add(Audio);
-            hash.Add(Created);
-            hash.Add(Modified);
-            hash.Add(Accessibility);
-            hash.Add(ProtectReasons);
-            hash.Add(History);
-            hash.Add(EditedBy);
-            hash.Add(OtherField);
-            hash.Add(ProjectId);
-            hash.Add(Note);
-            hash.Add(Flag);
-            return hash.ToHashCode();
-        }
-
         /// <summary> Determine whether vernacular and sense strings contain those of other word. </summary>
         public bool Contains(Word other)
         {
@@ -277,23 +215,6 @@ namespace BackendFramework.Models
                 Protected = Protected
             };
         }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not Pronunciation other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return FileName.Equals(other.FileName, StringComparison.Ordinal) &&
-                SpeakerId.Equals(other.SpeakerId, StringComparison.Ordinal) &&
-                Protected == other.Protected;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(FileName, SpeakerId, Protected);
-        }
     }
 
     /// <summary> A note associated with a Word, compatible with FieldWorks. </summary>
@@ -338,7 +259,7 @@ namespace BackendFramework.Models
         public void Append(Note other)
         {
             // There's nothing to append if other note is blank or identical.
-            if (other.IsBlank() || Equals(other))
+            if (other.IsBlank() || ContentEquals(other))
             {
                 return;
             }
@@ -355,20 +276,10 @@ namespace BackendFramework.Models
             Text += $"; {langTag}{other.Text}";
         }
 
-        public override bool Equals(object? obj)
+        public bool ContentEquals(Note other)
         {
-            if (obj is not Note other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
             return Language.Equals(other.Language, StringComparison.Ordinal) &&
                 Text.Equals(other.Text, StringComparison.Ordinal);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Language, Text);
         }
     }
 
@@ -404,26 +315,16 @@ namespace BackendFramework.Models
             };
         }
 
-        public override bool Equals(object? obj)
+        public bool ContentEquals(Flag other)
         {
-            if (obj is not Flag other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
             return Active == other.Active && Text.Equals(other.Text, StringComparison.Ordinal);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Active, Text);
         }
 
         /// <summary> Append other flag to the present flag. </summary>
         public void Append(Flag other)
         {
             // There's nothing to append if other flag is inactive/identical, or both are active and other is empty.
-            if (!other.Active || Equals(other) || (Active && string.IsNullOrWhiteSpace(other.Text)))
+            if (!other.Active || ContentEquals(other) || (Active && string.IsNullOrWhiteSpace(other.Text)))
             {
                 return;
             }

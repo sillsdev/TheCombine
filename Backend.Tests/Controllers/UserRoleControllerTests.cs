@@ -72,7 +72,8 @@ namespace Backend.Tests.Controllers
 
             var userRoles = ((ObjectResult)getResult).Value as List<UserRole>;
             Assert.That(roles, Has.Count.EqualTo(3));
-            (await _userRoleRepo.GetAllUserRoles(_projId)).ForEach(ur => Assert.That(userRoles, Does.Contain(ur)));
+            var repoRoles = await _userRoleRepo.GetAllUserRoles(_projId);
+            repoRoles.ForEach(ur => Assert.That(userRoles, Does.Contain(ur).UsingPropertiesComparer()));
         }
 
         [Test]
@@ -187,7 +188,8 @@ namespace Backend.Tests.Controllers
             var userRole = UserRoleInProj();
             var id = (string)((ObjectResult)await _userRoleController.CreateUserRole(_projId, userRole)).Value!;
             userRole.Id = id;
-            Assert.That(await _userRoleRepo.GetAllUserRoles(_projId), Does.Contain(userRole));
+            var repoRoles = await _userRoleRepo.GetAllUserRoles(_projId);
+            Assert.That(repoRoles, Does.Contain(userRole).UsingPropertiesComparer());
         }
 
         [Test]
