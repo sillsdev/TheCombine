@@ -1,7 +1,6 @@
 import "@testing-library/jest-dom";
-import { cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { act } from "react";
 
 import { User } from "api/models";
 import UserSettingsGetUser, {
