@@ -136,6 +136,7 @@ namespace BackendFramework.Models
             return (Definition)MemberwiseClone();
         }
 
+        /// <summary> Check if content is the same as another Definition. </summary>
         public bool ContentEquals(Definition other)
         {
             return Language.Equals(other.Language, StringComparison.Ordinal) &&
@@ -195,6 +196,7 @@ namespace BackendFramework.Models
             return (GrammaticalInfo)MemberwiseClone();
         }
 
+        /// <summary> Check if content is the same as another GrammaticalInfo. </summary>
         public bool ContentEquals(GrammaticalInfo other)
         {
             return CatGroup == other.CatGroup &&
@@ -227,6 +229,7 @@ namespace BackendFramework.Models
             return (Gloss)MemberwiseClone();
         }
 
+        /// <summary> Check if content is the same as another Gloss. </summary>
         public bool ContentEquals(Gloss other)
         {
             return Def.Equals(other.Def, StringComparison.Ordinal) &&

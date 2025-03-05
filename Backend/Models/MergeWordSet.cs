@@ -38,6 +38,7 @@ namespace BackendFramework.Models
             return clone;
         }
 
+        /// <summary> Check if content is the same as another MergeWordSet. </summary>
         public bool ContentEquals(MergeWordSet other)
         {
             return

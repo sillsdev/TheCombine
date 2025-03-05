@@ -38,11 +38,10 @@ namespace BackendFramework.Models
             return (UserRole)MemberwiseClone();
         }
 
+        /// <summary> Check if content is the same as another UserRole. </summary>
         public bool ContentEquals(UserRole other)
         {
-            return
-                other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
-                other.Role == Role;
+            return other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) && other.Role == Role;
         }
     }
 

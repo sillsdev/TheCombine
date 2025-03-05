@@ -42,6 +42,7 @@ namespace BackendFramework.Models
             return (Speaker)MemberwiseClone();
         }
 
+        /// <summary> Check if content is the same as another Speaker. </summary>
         public bool ContentEquals(Speaker other)
         {
             return ProjectId.Equals(other.ProjectId, StringComparison.Ordinal) &&
