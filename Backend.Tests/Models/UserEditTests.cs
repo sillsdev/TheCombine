@@ -10,14 +10,14 @@ namespace Backend.Tests.Models
         public void TestClone()
         {
             var edit = new UserEdit { Edits = [new() { StepData = ["datum"] }], Id = "ue-id", ProjectId = "proj-id", };
-            Util.AssertDeepClone(edit, edit.Clone(), true);
+            Assert.That(edit.Clone(), Is.EqualTo(edit).UsingPropertiesComparer());
         }
     }
 
     public class UserEditStepWrapperTests
     {
         [Test]
-        public void TestStepIndexDefaultNull()
+        public void TestConstructorStepIndexIsNull()
         {
             var wrapper = new UserEditStepWrapper(Guid.NewGuid(), "step-string");
             Assert.That(wrapper.StepIndex, Is.Null);
@@ -30,7 +30,7 @@ namespace Backend.Tests.Models
         public void TestClone()
         {
             var edit = new Edit { Changes = "{wordIds:[]}", GoalType = 1, Guid = Guid.NewGuid(), StepData = ["step"] };
-            Util.AssertDeepClone(edit, edit.Clone(), true);
+            Assert.That(edit.Clone(), Is.EqualTo(edit).UsingPropertiesComparer());
         }
     }
 }

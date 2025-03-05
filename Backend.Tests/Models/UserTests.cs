@@ -29,16 +29,16 @@ namespace Backend.Tests.Models
                 WorkedProjects = new() { { "proj-id", "ue-id" } },
                 ProjectRoles = new() { { "proj-id", "ur-id" } },
             };
-            Util.AssertDeepClone(user, user.Clone(), true);
+            Assert.That(user.Clone(), Is.EqualTo(user).UsingPropertiesComparer());
         }
 
         [Test]
         public void TestSanitize()
         {
             var user = new User { Avatar = "ava", Password = "pas", Token = "tok" };
-            Util.AssertDeepClone(user, new(), false);
+            Assert.That(user, Is.Not.EqualTo(new User()).UsingPropertiesComparer());
             user.Sanitize();
-            Util.AssertDeepClone(user, new(), true);
+            Assert.That(user, Is.EqualTo(new User()).UsingPropertiesComparer());
         }
     }
 

@@ -15,7 +15,7 @@ namespace Backend.Tests.Models
         public void TestClone()
         {
             var field = new EmailInvite { Email = Email, Token = Token, Role = Role.Owner, ExpireTime = _expireTime };
-            Util.AssertDeepClone(field, field.Clone(), true);
+            Assert.That(field.Clone(), Is.EqualTo(field).UsingPropertiesComparer());
         }
 
         [Test]

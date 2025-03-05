@@ -30,7 +30,7 @@ namespace Backend.Tests.Models
                 InviteTokens = new() { new(10, "user@combine.org", Role.Harvester) },
                 WorkshopSchedule = new() { new(2222, 2, 22), },
             };
-            Util.AssertDeepClone(project, project.Clone(), true);
+            Assert.That(project.Clone(), Is.EqualTo(project).UsingPropertiesComparer());
         }
     }
 
@@ -40,7 +40,7 @@ namespace Backend.Tests.Models
         public void TestClone()
         {
             var field = new CustomField { Name = "Name", Type = "Type" };
-            Util.AssertDeepClone(field, field.Clone(), true);
+            Assert.That(field.Clone(), Is.EqualTo(field).UsingPropertiesComparer());
         }
     }
 
@@ -65,8 +65,8 @@ namespace Backend.Tests.Models
         [Test]
         public void TestClone()
         {
-            var system = new WritingSystem(Bcp47, Name, "calibri", true);
-            Util.AssertDeepClone(system, system.Clone(), true);
+            var ws = new WritingSystem(Bcp47, Name, "calibri", true);
+            Assert.That(ws.Clone(), Is.EqualTo(ws).UsingPropertiesComparer());
         }
     }
 }

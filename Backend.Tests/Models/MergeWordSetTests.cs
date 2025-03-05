@@ -22,11 +22,11 @@ namespace Backend.Tests.Models
                 UserId = UserId,
                 WordIds = _wordIds
             };
-            Util.AssertDeepClone(entry, entry.Clone(), true);
+            Assert.That(entry.Clone(), Is.EqualTo(entry).UsingPropertiesComparer());
         }
 
         [Test]
-        public void TestContentEquals()
+        public void TestContentEqualsTrue()
         {
             var entryA = new MergeWordSet
             {
@@ -42,7 +42,7 @@ namespace Backend.Tests.Models
                 UserId = UserId,
                 WordIds = _wordIdsReversed
             };
-            Util.AssertDeepClone(entryA, entryB, false);
+            Assert.That(entryA, Is.Not.EqualTo(entryB).UsingPropertiesComparer());
             Assert.That(entryA.ContentEquals(entryB), Is.True);
         }
 

@@ -48,12 +48,12 @@ namespace Backend.Tests.Services
 
             // There should only be 1 word added and it should be identical to what we passed in
             Assert.That(newWords, Has.Count.EqualTo(1));
-            Util.AssertSameWordContent(newWords.First(), thisWord, true);
+            Util.AssertEqualWordContent(newWords.First(), thisWord, true);
 
             // Check that the only word in the frontier is the new word
             var frontier = _wordRepo.GetFrontier(ProjId).Result;
             Assert.That(frontier, Has.Count.EqualTo(1));
-            Util.AssertDeepClone(frontier.First(), newWords.First(), true);
+            Assert.That(frontier.First(), Is.EqualTo(newWords.First()).UsingPropertiesComparer());
 
             // Check that new word has the right history
             Assert.That(newWords.First().History, Has.Count.EqualTo(1));
@@ -148,7 +148,7 @@ namespace Backend.Tests.Services
 
             // There should only be 1 word added and it should be identical to what we passed in
             Assert.That(newWords, Has.Count.EqualTo(1));
-            Util.AssertSameWordContent(newWords.First(), thisWord, true);
+            Util.AssertEqualWordContent(newWords.First(), thisWord, true);
 
             var childIds = mergeObject.Children.Select(word => word.SrcWordId).ToList();
             var parentIds = new List<string> { newWords[0].Id };

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BackendFramework.Models;
 using NUnit.Framework;
@@ -9,6 +10,31 @@ namespace Backend.Tests.Models
     {
         private const string Vernacular = "fr";
         private const string Text = "Text";
+
+        [Test]
+        public void TestClone()
+        {
+            var word = new Word
+            {
+                Id = "id",
+                Guid = Guid.NewGuid(),
+                Vernacular = "vern",
+                Plural = "verns",
+                Created = "then",
+                Modified = "recently",
+                OtherField = "huh?",
+                ProjectId = "proj-id",
+                Accessibility = Status.Duplicate,
+                Audio = [new("sound.wav")],
+                EditedBy = ["me"],
+                History = ["prev-id"],
+                ProtectReasons = [new() { Count = 2 }],
+                Senses = [new() { GrammaticalInfo = new() { CatGroup = GramCatGroup.Noun } }],
+                Note = new() { Text = "noted" },
+                Flag = new() { Text = "flagged" },
+            };
+            Assert.That(word.Clone(), Is.EqualTo(word).UsingPropertiesComparer());
+        }
 
         [Test]
         public void TestContains()
@@ -56,8 +82,8 @@ namespace Backend.Tests.Models
             Assert.That(updatedSense, Is.Not.Null);
             var updatedDom = updatedSense!.SemanticDomains.Find(dom => dom.Id == newSemDom.Id);
             Assert.That(updatedDom, Is.Not.Null);
-            Util.AssertDeepClone(oldWord.Flag, newFlag, true);
-            Util.AssertDeepClone(oldWord.Note, newNote, true);
+            Assert.That(oldWord.Flag, Is.EqualTo(newFlag).UsingPropertiesComparer());
+            Assert.That(oldWord.Note, Is.EqualTo(newNote).UsingPropertiesComparer());
             Assert.That(oldWord.Audio.Any(p => p.FileName.Equals(Text, System.StringComparison.Ordinal)), Is.True);
             Assert.That(oldWord.EditedBy.Contains(Text), Is.True);
             Assert.That(oldWord.History.Contains(Text), Is.True);
@@ -67,17 +93,45 @@ namespace Backend.Tests.Models
     public class PronunciationTests
     {
         [Test]
-        public void TestProtectedDefaultFalse()
+        public void TestConstructorProtectedIsFalse()
         {
             var pronunciation = new Pronunciation();
             Assert.That(pronunciation.Protected, Is.False);
         }
+
+        [Test]
+        public void TestClone()
+        {
+            var pro = new Pronunciation
+            {
+                FileName = "file.name",
+                SpeakerId = "speaker-id",
+                Protected = true
+            };
+            Assert.That(pro.Clone(), Is.EqualTo(pro).UsingPropertiesComparer());
+        }
+
     }
 
     public class NoteTests
     {
         private const string Language = "fr";
         private const string Text = "Text";
+
+        [Test]
+        public void TestClone()
+        {
+            var note = new Note { Language = Language, Text = Text };
+            Assert.That(note.Clone(), Is.EqualTo(note).UsingPropertiesComparer());
+        }
+
+        [Test]
+        public void TestContentEquals()
+        {
+            var note = new Note { Language = Language, Text = Text };
+            Assert.That(note.ContentEquals(new() { Language = "di-FF", Text = Text }), Is.False);
+            Assert.That(note.ContentEquals(new() { Language = Language, Text = "Changed" }), Is.False);
+        }
 
         [Test]
         public void TestIsBlank()
@@ -95,12 +149,12 @@ namespace Backend.Tests.Models
             var blankNote = new Note();
             var newNote = note.Clone();
             blankNote.Append(newNote);
-            Util.AssertDeepClone(blankNote, note, true);
+            Assert.That(blankNote, Is.EqualTo(note).UsingPropertiesComparer());
 
             blankNote = new Note();
             var oldNote = note.Clone();
             oldNote.Append(blankNote);
-            Util.AssertDeepClone(oldNote, note, true);
+            Assert.That(oldNote, Is.EqualTo(note).UsingPropertiesComparer());
         }
 
         [Test]
@@ -110,7 +164,7 @@ namespace Backend.Tests.Models
             var oldNote = note.Clone();
             var newNote = note.Clone();
             oldNote.Append(newNote);
-            Util.AssertDeepClone(oldNote, note, true);
+            Assert.That(oldNote, Is.EqualTo(note).UsingPropertiesComparer());
         }
 
         [Test]
@@ -124,7 +178,7 @@ namespace Backend.Tests.Models
             oldNote.Append(newNote);
             var expectedNote = note.Clone();
             expectedNote.Text += $"; {newText}";
-            Util.AssertDeepClone(oldNote, expectedNote, true);
+            Assert.That(oldNote, Is.EqualTo(expectedNote).UsingPropertiesComparer());
         }
 
         [Test]
@@ -138,7 +192,7 @@ namespace Backend.Tests.Models
             oldNote.Append(newNote);
             var expectedNote = note.Clone();
             expectedNote.Text += $"; [{newLanguage}] {newNote.Text}";
-            Util.AssertDeepClone(oldNote, expectedNote, true);
+            Assert.That(oldNote, Is.EqualTo(expectedNote).UsingPropertiesComparer());
         }
     }
 
@@ -146,6 +200,21 @@ namespace Backend.Tests.Models
     {
         private const string Text = "Text";
         private const string Text2 = "Different Text";
+
+        [Test]
+        public void TestClone()
+        {
+            var flag = new Flag { Active = true, Text = Text };
+            Assert.That(flag.Clone(), Is.EqualTo(flag).UsingPropertiesComparer());
+        }
+
+        [Test]
+        public void TestContentEquals()
+        {
+            var flag = new Flag { Active = true, Text = Text };
+            Assert.That(flag.ContentEquals(new() { Active = false, Text = Text }), Is.False);
+            Assert.That(flag.ContentEquals(new() { Active = true, Text = Text2 }), Is.False);
+        }
 
         [Test]
         public void TestAppendBlank()
@@ -156,12 +225,12 @@ namespace Backend.Tests.Models
             var oldFlag = flag.Clone();
             var newFlag = blankFlag.Clone();
             oldFlag.Append(newFlag);
-            Util.AssertDeepClone(oldFlag, flag, true);
+            Assert.That(oldFlag, Is.EqualTo(flag).UsingPropertiesComparer());
 
             oldFlag = blankFlag.Clone();
             newFlag = flag.Clone();
             oldFlag.Append(newFlag);
-            Util.AssertDeepClone(oldFlag, flag, true);
+            Assert.That(oldFlag, Is.EqualTo(flag).UsingPropertiesComparer());
         }
 
         [Test]
@@ -173,12 +242,12 @@ namespace Backend.Tests.Models
             var oldFlag = activeFlag.Clone();
             var newFlag = inactiveFlag.Clone();
             oldFlag.Append(newFlag);
-            Util.AssertDeepClone(oldFlag, activeFlag, true);
+            Assert.That(oldFlag, Is.EqualTo(activeFlag).UsingPropertiesComparer());
 
             oldFlag = inactiveFlag.Clone();
             newFlag = activeFlag.Clone();
             oldFlag.Append(newFlag);
-            Util.AssertDeepClone(oldFlag, activeFlag, true);
+            Assert.That(oldFlag, Is.EqualTo(activeFlag).UsingPropertiesComparer());
         }
 
         [Test]
@@ -188,7 +257,7 @@ namespace Backend.Tests.Models
             var oldFlag = flag.Clone();
             var newFlag = flag.Clone();
             oldFlag.Append(newFlag);
-            Util.AssertDeepClone(oldFlag, flag, true);
+            Assert.That(oldFlag, Is.EqualTo(flag).UsingPropertiesComparer());
         }
 
         [Test]
@@ -200,7 +269,7 @@ namespace Backend.Tests.Models
             oldFlag.Append(newFlag);
             var expectedFlag = flag.Clone();
             expectedFlag.Text += $"; {Text2}";
-            Util.AssertDeepClone(oldFlag, expectedFlag, true);
+            Assert.That(oldFlag, Is.EqualTo(expectedFlag).UsingPropertiesComparer());
         }
     }
 }

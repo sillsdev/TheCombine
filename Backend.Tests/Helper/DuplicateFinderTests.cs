@@ -24,6 +24,7 @@ namespace Backend.Tests.Helper
         private static List<Word> BroadTestFrontier() => [
             new()
             {
+                Id = "1a",
                 Vernacular = "11111",
                 Senses = [new()
                 {
@@ -33,6 +34,7 @@ namespace Backend.Tests.Helper
             },
             new()
             {
+                Id = "1b",
                 Vernacular = "11111",
                 Senses = [new()
                 {
@@ -42,6 +44,7 @@ namespace Backend.Tests.Helper
             },
             new()
             {
+                Id = "1c",
                 Vernacular = "11111",
                 Senses = [new()
                 {
@@ -51,6 +54,7 @@ namespace Backend.Tests.Helper
             },
             new()
             {
+                Id = "1d",
                 Vernacular = "11111b",
                 Senses = [new()
                 {
@@ -60,6 +64,7 @@ namespace Backend.Tests.Helper
             },
             new()
             {
+                Id = "2a",
                 Vernacular = "222222222",
                 Senses = [new()
                 {
@@ -69,6 +74,7 @@ namespace Backend.Tests.Helper
             },
             new()
             {
+                Id = "2b",
                 Vernacular = "222222222a",
                 Senses = [new()
                 {
@@ -78,6 +84,7 @@ namespace Backend.Tests.Helper
             },
             new()
             {
+                Id = "3a",
                 Vernacular = "33333",
                 Senses = [new()
                 {
@@ -88,6 +95,7 @@ namespace Backend.Tests.Helper
             },
             new()
             {
+                Id = "3b",
                 Vernacular = "33333b",
                 Senses = [new()
                 {
@@ -98,6 +106,7 @@ namespace Backend.Tests.Helper
             },
             new()
             {
+                Id = "4a",
                 Vernacular = "44444",
                 Senses = [new()
                 {
@@ -107,6 +116,7 @@ namespace Backend.Tests.Helper
             },
             new()
             {
+                Id = "4b",
                 Vernacular = "44444bb",
                 Senses = [new()
                 {
@@ -116,6 +126,7 @@ namespace Backend.Tests.Helper
             },
             new()
             {
+                Id = "5a",
                 Vernacular = "55555",
                 Senses = [new()
                 {
@@ -126,6 +137,7 @@ namespace Backend.Tests.Helper
             },
             new()
             {
+                Id = "5b",
                 Vernacular = "55555",
                 Senses = [new()
                 {
@@ -136,6 +148,7 @@ namespace Backend.Tests.Helper
             },
             new()
             {
+                Id = "6a",
                 Vernacular = "66a",
                 Senses = [new()
                 {
@@ -145,6 +158,7 @@ namespace Backend.Tests.Helper
             },
             new()
             {
+                Id = "6b",
                 Vernacular = "66b",
                 Senses = [new()
                 {
@@ -216,7 +230,7 @@ namespace Backend.Tests.Helper
         [Test]
         public void GetSimilarWordsAndMaxInListAndMaxListsTest()
         {
-            _frontier = Util.RandomWordList(MaxInList * MaxLists, ProjId);
+            _frontier = Util.RandomWordList(MaxInList * MaxLists + 2, ProjId);
             _dupFinder = new DuplicateFinder(MaxInList, MaxLists, NoMaxScore);
             var wordLists = _dupFinder.GetSimilarWords(_frontier, _isUnavailableSet).Result;
             Assert.That(wordLists, Has.Count.EqualTo(MaxLists));

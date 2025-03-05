@@ -11,19 +11,22 @@ namespace Backend.Tests.Models
         private const Role Role2 = Role.Editor;
 
         [Test]
-        public void TestCloneAndContentEquals()
+        public void TestClone()
         {
             var userRole = new UserRole { Id = Id, ProjectId = ProjectId, Role = Role1 };
-            Assert.That(userRole.ContentEquals(userRole.Clone()), Is.True);
-            Util.AssertDeepClone(userRole, userRole.Clone(), true);
+            Assert.That(userRole.Clone(), Is.EqualTo(userRole).UsingPropertiesComparer());
         }
 
         [Test]
         public void TestContentEquals()
         {
             var userRole = new UserRole { Id = Id, ProjectId = ProjectId, Role = Role1 };
+
+            // Id not covered in ContentEquals.
             Assert.That(new UserRole { Id = "diff-ur-id", ProjectId = ProjectId, Role = Role1 }
                 .ContentEquals(userRole), Is.True);
+
+            // Everything else covered in ContentEquals.
             Assert.That(new UserRole { Id = Id, ProjectId = "diff-proj-id", Role = Role1 }
                 .ContentEquals(userRole), Is.False);
             Assert.That(new UserRole { Id = Id, ProjectId = ProjectId, Role = Role2 }
@@ -37,7 +40,7 @@ namespace Backend.Tests.Models
         public void TestClone()
         {
             var projectRole = new ProjectRole { ProjectId = "proj-id", Role = Role.Editor };
-            Util.AssertDeepClone(projectRole, projectRole.Clone(), true);
+            Assert.That(projectRole.Clone(), Is.EqualTo(projectRole).UsingPropertiesComparer());
         }
     }
 }

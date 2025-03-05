@@ -17,7 +17,7 @@ namespace Backend.Tests.Models
                 Name = "House",
                 UserId = "myself"
             };
-            Util.AssertDeepClone(domain, domain.Clone(), true);
+            Assert.That(domain.Clone(), Is.EqualTo(domain).UsingPropertiesComparer());
         }
 
         private static readonly List<string> _invalidIds = new()
@@ -81,7 +81,7 @@ namespace Backend.Tests.Models
                 Name = "House",
                 Questions = ["What general words refer to a house where people live?"]
             };
-            Util.AssertDeepClone(domain, domain.Clone(), true);
+            Assert.That(domain.Clone(), Is.EqualTo(domain).UsingPropertiesComparer());
         }
     }
 }

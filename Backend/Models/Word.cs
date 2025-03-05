@@ -103,6 +103,7 @@ namespace BackendFramework.Models
             Flag = new();
         }
 
+        /// <summary> Create a deep copy of the Word. </summary>
         public Word Clone()
         {
             return new()
@@ -240,6 +241,7 @@ namespace BackendFramework.Models
             Text = text;
         }
 
+        /// <summary> Create a deep copy of the Note. </summary>
         public Note Clone()
         {
             return new Note
@@ -247,6 +249,13 @@ namespace BackendFramework.Models
                 Language = Language,
                 Text = Text
             };
+        }
+
+        /// <summary> Check if content is the same as another Note. </summary>
+        public bool ContentEquals(Note other)
+        {
+            return Language.Equals(other.Language, StringComparison.Ordinal) &&
+                Text.Equals(other.Text, StringComparison.Ordinal);
         }
 
         /// <summary> Whether the Note contains any non-whitespace contents. </summary>
@@ -275,12 +284,6 @@ namespace BackendFramework.Models
             var langTag = Language == other.Language ? "" : $"[{other.Language}] ";
             Text += $"; {langTag}{other.Text}";
         }
-
-        public bool ContentEquals(Note other)
-        {
-            return Language.Equals(other.Language, StringComparison.Ordinal) &&
-                Text.Equals(other.Text, StringComparison.Ordinal);
-        }
     }
 
     /// <summary> A flag on a Word, for Combine data, not for export. </summary>
@@ -306,6 +309,7 @@ namespace BackendFramework.Models
             Text = text;
         }
 
+        /// <summary> Create a deep copy of the Flag. </summary>
         public Flag Clone()
         {
             return new Flag
@@ -315,6 +319,7 @@ namespace BackendFramework.Models
             };
         }
 
+        /// <summary> Check if content is the same as another Flag. </summary>
         public bool ContentEquals(Flag other)
         {
             return Active == other.Active && Text.Equals(other.Text, StringComparison.Ordinal);

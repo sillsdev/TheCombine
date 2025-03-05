@@ -6,7 +6,7 @@ namespace Backend.Tests.Models
     public class SiteBannerTests
     {
         [Test]
-        public void TestNoneType()
+        public void TestConstructorTypeIsNone()
         {
             Assert.That(new SiteBanner().Type, Is.EqualTo(BannerType.None));
         }

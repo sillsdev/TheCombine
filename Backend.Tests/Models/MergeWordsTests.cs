@@ -9,7 +9,7 @@ namespace Backend.Tests.Models
         public void TestClone()
         {
             var merge = new MergeUndoIds { ParentIds = ["parent1", "parent2"], ChildIds = ["child1", "child2"] };
-            Util.AssertDeepClone(merge, merge.Clone(), true);
+            Assert.That(merge.Clone(), Is.EqualTo(merge).UsingPropertiesComparer());
         }
     }
 }

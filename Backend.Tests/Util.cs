@@ -49,6 +49,7 @@ namespace Backend.Tests
         {
             return new Word
             {
+                Id = RandString(),
                 Created = RandString(),
                 Vernacular = RandString(),
                 Modified = RandString(),
@@ -136,33 +137,26 @@ namespace Backend.Tests
             return new(RandString(), RandString(), RandString());
         }
 
-        /// <summary> Asserts whether two objects of the same type are deep copies. </summary>
-        /// <remarks> Doesn't handle type-inheritance. </remarks>
-        /// <typeparam name="TType"> Type of the objects being compared. </typeparam>
-        /// <param name="obj"> Original object </param>
-        /// <param name="clone"> Object of the same type (or null) that might be a clone. </param>
-        /// <param name="isEqual"> Whether to assert equality or inequality. </param>
-        public static void AssertDeepClone<TType>(TType obj, TType clone, bool isEqual)
+        /// <summary>
+        /// Asserts whether two Words have the same content.
+        /// Ignores metadata: Created, EditedBy, History, Id, Modified.
+        /// </summary>
+        public static void AssertEqualWordContent(Word wordA, Word wordB, bool isEqual)
         {
+            var aClone = wordA.Clone();
+            aClone.Created = wordB.Created;
+            aClone.EditedBy = wordB.EditedBy;
+            aClone.History = wordB.History;
+            aClone.Id = wordB.Id;
+            aClone.Modified = wordB.Modified;
             if (isEqual)
             {
-                Assert.That(clone, Is.EqualTo(obj).UsingPropertiesComparer());
+                Assert.That(aClone, Is.EqualTo(wordB).UsingPropertiesComparer());
             }
             else
             {
-                Assert.That(clone, Is.Not.EqualTo(obj).UsingPropertiesComparer());
+                Assert.That(aClone, Is.Not.EqualTo(wordB).UsingPropertiesComparer());
             }
-        }
-
-        public static void AssertSameWordContent(Word a, Word b, bool isEqual)
-        {
-            var aClone = a.Clone();
-            aClone.Created = b.Created;
-            aClone.EditedBy = b.EditedBy;
-            aClone.History = b.History;
-            aClone.Id = b.Id;
-            aClone.Modified = b.Modified;
-            AssertDeepClone(aClone, b, isEqual);
         }
     }
 }

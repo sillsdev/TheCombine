@@ -19,15 +19,8 @@ namespace Backend.Tests.Helper
         {
             var sense = new Sense
             {
-                Definitions = new List<Definition> {
-                    new Definition {Language = "a"},
-                    new Definition {Language = "b"},
-                    new Definition {Language = "c"},
-                },
-                Glosses = new List<Gloss> {
-                    new Gloss {Language = "b"},
-                    new Gloss {Language = "d"}
-                }
+                Definitions = [new() { Language = "a" }, new() { Language = "b" }, new() { Language = "c" }],
+                Glosses = [new() { Language = "b" }, new() { Language = "d" }]
             };
             var tags = GetSenseAnalysisLangTags(sense).ToList();
             tags.Sort();
@@ -38,9 +31,9 @@ namespace Backend.Tests.Helper
         public void TestConvertLangTagToWritingSystemEn()
         {
             var tags = new List<string> { "en", "en-US", "ajsdlfj" };
-            var writingSystems =
-                new List<WritingSystem> { new("en", "English"), new("en-US", "English"), new("ajsdlfj") };
-            Util.AssertDeepClone([.. ConvertLangTagsToWritingSystems(tags)], writingSystems, true);
+            var converted = ConvertLangTagsToWritingSystems(tags).ToList();
+            var expected = new List<WritingSystem> { new("en", "English"), new("en-US", "English"), new("ajsdlfj") };
+            Assert.That(converted, Is.EqualTo(expected).UsingPropertiesComparer());
         }
 
         [Test]
@@ -61,9 +54,9 @@ namespace Backend.Tests.Helper
             var ws7 = new WritingSystem("en");
 
             var toSort = new List<WritingSystem> { ws6, ws7, ws4, ws5, ws2, ws3, ws1 };
+            var expected = new List<WritingSystem> { ws1, ws2, ws3, ws4, ws5, ws6, ws7 };
             toSort.Sort(CompareWritingSystems);
-            Assert.That(toSort, Is.EqualTo(
-                new List<WritingSystem> { ws1, ws2, ws3, ws4, ws5, ws6, ws7 }));
+            Assert.That(toSort, Is.EqualTo(expected).UsingPropertiesComparer());
         }
     }
 }

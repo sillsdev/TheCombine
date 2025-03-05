@@ -348,7 +348,7 @@ namespace Backend.Tests.Controllers
             var result = (ObjectResult)await _wordController.UpdateDuplicate(_projId, origWord.Id, dupWord);
             var id = (string)result.Value!;
             var updatedWord = await _wordRepo.GetWord(_projId, id);
-            Util.AssertSameWordContent(expectedWord, updatedWord!, true);
+            Util.AssertEqualWordContent(expectedWord, updatedWord!, true);
         }
 
         [Test]
