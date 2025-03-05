@@ -1,6 +1,5 @@
-import { queryByText, render, screen } from "@testing-library/react";
+import { act, queryByText, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { act } from "react";
 import { Provider } from "react-redux";
 import configureMockStore from "redux-mock-store";
 

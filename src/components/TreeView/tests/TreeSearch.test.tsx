@@ -1,6 +1,6 @@
-import { render, renderHook, screen } from "@testing-library/react";
+import { act, render, renderHook, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { type ChangeEvent, type KeyboardEvent, act } from "react";
+import { type ChangeEvent, type KeyboardEvent } from "react";
 import { Key } from "ts-key-enum";
 
 import { SemanticDomainTreeNode } from "api/models";

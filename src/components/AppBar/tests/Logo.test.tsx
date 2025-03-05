@@ -1,7 +1,6 @@
 import { ThemeProvider } from "@mui/material/styles";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { act } from "react";
 
 import Logo, { logoButtonLabel } from "components/AppBar/Logo";
 import { Path } from "types/path";

@@ -1,6 +1,5 @@
 import "@testing-library/jest-dom";
-import { cleanup } from "@testing-library/react";
-import { act } from "react";
+import { act, cleanup } from "@testing-library/react";
 
 import { Edit, MergeUndoIds, Permission, User, UserEdit } from "api/models";
 import * as LocalStorage from "backend/localStorage";
