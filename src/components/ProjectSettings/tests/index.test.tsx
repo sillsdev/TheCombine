@@ -2,9 +2,8 @@ import { ThemeProvider } from "@mui/material/styles";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "@testing-library/jest-dom";
-import { cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { act } from "react";
 import { Provider } from "react-redux";
 import { Store } from "redux";
 import configureMockStore from "redux-mock-store";
@@ -23,9 +22,7 @@ import { randomProject } from "types/project";
 import theme from "types/theme";
 import { setMatchMedia } from "utilities/testRendererUtilities";
 
-jest.mock("react-router-dom", () => ({
-  useNavigate: jest.fn(),
-}));
+jest.mock("react-router-dom", () => ({ useNavigate: jest.fn() }));
 
 jest.mock("backend", () => ({
   canUploadLift: () => Promise.resolve(false),

@@ -80,7 +80,5 @@ If you choose to create a new entry, the pop-up box will close, and you can then
 
     Even if you selected to create a new entry, if the gloss you type is identical to a gloss of another entry with the same vernacular form, a new entry will not be created, but rather that entry will be updated.
 
-If you instead choose to update one of the existing entries, a second box will appear. Here you can choose to update an
-existing sense on the selected entry or to add a new sense to that entry.
-
-![Data Entry duplicate vernacular senses](images/data-entry-dup-vern-select-sense.png){.center}
+If you instead choose to update one of the existing entries, more options will appear to update an existing sense on the
+selected entry or to add a new sense to that entry.

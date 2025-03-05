@@ -76,8 +76,9 @@ namespace BackendFramework.Helper
         public static bool IsProtected(LiftEntry entry)
         {
             return entry.Annotations.Count > 0 || entry.Etymologies.Count > 0 || entry.Fields.Count > 0 ||
-                (entry.Notes.Count == 1 && !string.IsNullOrEmpty(entry.Notes.First().Type)) ||
-                entry.Notes.Count > 1 || entry.Relations.Count > 0 ||
+                (entry.Notes.Count == 1 && !string.IsNullOrEmpty(entry.Notes.First().Type)) || entry.Notes.Count > 1 ||
+                entry.Pronunciations.Any(p => p.Media.All(m => string.IsNullOrEmpty(m.Url))) ||
+                entry.Relations.Count > 0 ||
                 entry.Traits.Any(t => !t.Value.Equals("stem", StringComparison.OrdinalIgnoreCase) ||
                     !t.Name.Replace("-", "").Equals(TraitNames.MorphType, StringComparison.OrdinalIgnoreCase)) ||
                 entry.Variants.Count > 0;
@@ -106,6 +107,10 @@ namespace BackendFramework.Helper
             if (entry.Notes.Count > 1)
             {
                 reasons.Add(new() { Type = ReasonType.Notes, Count = entry.Notes.Count });
+            }
+            if (entry.Pronunciations.Any(p => p.Media.All(m => string.IsNullOrEmpty(m.Url))))
+            {
+                reasons.Add(new() { Type = ReasonType.PronunciationWithoutUrl });
             }
             if (entry.Relations.Count > 0)
             {

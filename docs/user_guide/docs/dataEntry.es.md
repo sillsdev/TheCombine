@@ -85,7 +85,5 @@ Si elige crear una nueva entrada, se cerrará el cuadro emergente y entonces pod
 
     Aunque haya seleccionado crear una nueva entrada, si la glosa que escribe es idéntica a una glosa de otra entrada con la misma forma vernácula, no se creará una nueva entrada, sino que se actualizará esa entrada.
 
-Si por el contrario elige actualizar una de las entradas existentes, aparecerá un segundo cuadro. Aquí puede elegir
-actualizar una acepción existente en la entrada seleccionada o añadir una nueva acepción a esa entrada.
-
-![Entrada de datos duplicadas acepciones vernáculas](../images/data-entry-dup-vern-select-sense.es.png){.center}
+Si por el contrario elige actualizar una de las entradas existentes, aparecerá mas opciones a actualizar una acepción
+existente en la entrada seleccionada o añadir una nueva acepción a esa entrada.

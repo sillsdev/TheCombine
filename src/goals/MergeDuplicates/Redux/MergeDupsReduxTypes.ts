@@ -31,14 +31,18 @@ export interface MergeTreeState {
   data: MergeData;
   tree: MergeTree;
   audio: MergeAudio;
+  hasProtected: boolean;
   mergeWords: MergeWords[];
+  overrideProtection: boolean;
 }
 
 export const defaultState: MergeTreeState = {
   data: defaultData,
   tree: defaultTree,
   audio: defaultAudio,
+  hasProtected: false,
   mergeWords: [],
+  overrideProtection: false,
 };
 
 // Action payloads
