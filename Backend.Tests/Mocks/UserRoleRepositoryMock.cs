@@ -58,18 +58,12 @@ namespace Backend.Tests.Mocks
 
         public Task<ResultOfUpdate> Update(string userRoleId, UserRole userRole)
         {
-            var foundUserRole = _userRoles.Single(ur => ur.Id == userRoleId);
-            if (foundUserRole is null)
+            var rmCount = _userRoles.RemoveAll(ur => ur.Id == userRoleId);
+            if (rmCount == 0)
             {
                 return Task.FromResult(ResultOfUpdate.NotFound);
             }
 
-            if (foundUserRole.ContentEquals(userRole))
-            {
-                return Task.FromResult(ResultOfUpdate.NoChange);
-            }
-
-            var rmCount = _userRoles.RemoveAll(ur => ur.Id == userRoleId);
             _userRoles.Add(userRole.Clone());
             return Task.FromResult(ResultOfUpdate.Updated);
         }

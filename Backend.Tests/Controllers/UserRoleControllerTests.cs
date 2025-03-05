@@ -5,7 +5,6 @@ using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
@@ -237,18 +236,6 @@ namespace Backend.Tests.Controllers
             {
                 Assert.That(updatedPermissions, Does.Contain(p));
             });
-        }
-
-        [Test]
-        public async Task TestUpdateUserRoleNoChange()
-        {
-            var userRole = UserRoleInProj(Role.Harvester);
-            await _userRoleRepo.Create(userRole);
-            var user = new User { ProjectRoles = { [_projId] = userRole.Id } };
-            var userId = (await _userRepo.Create(user))!.Id;
-            _userRoleController.ControllerContext.HttpContext = PermissionServiceMock.HttpContextWithUserId(userId);
-            var result = await _userRoleController.UpdateUserRole(userId, ProjectRoleInProj(userRole.Role));
-            Assert.That(((ObjectResult)result).StatusCode, Is.EqualTo(StatusCodes.Status304NotModified));
         }
 
         [Test]

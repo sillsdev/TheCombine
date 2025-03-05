@@ -37,12 +37,6 @@ namespace BackendFramework.Models
             // Shallow copy is sufficient.
             return (UserRole)MemberwiseClone();
         }
-
-        /// <summary> Check if content is the same as another UserRole. </summary>
-        public bool ContentEquals(UserRole other)
-        {
-            return other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) && other.Role == Role;
-        }
     }
 
     /// <remarks> This is used in a [FromBody] serializer, so its attributes cannot be set to readonly. </remarks>

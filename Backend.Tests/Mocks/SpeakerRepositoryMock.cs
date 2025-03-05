@@ -62,6 +62,7 @@ namespace Backend.Tests.Mocks
             {
                 return Task.FromResult(ResultOfUpdate.NotFound);
             }
+
             _speakers.Add(speaker.Clone());
             return Task.FromResult(ResultOfUpdate.Updated);
         }

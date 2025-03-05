@@ -16,22 +16,6 @@ namespace Backend.Tests.Models
             var userRole = new UserRole { Id = Id, ProjectId = ProjectId, Role = Role1 };
             Assert.That(userRole.Clone(), Is.EqualTo(userRole).UsingPropertiesComparer());
         }
-
-        [Test]
-        public void TestContentEquals()
-        {
-            var userRole = new UserRole { Id = Id, ProjectId = ProjectId, Role = Role1 };
-
-            // Id not covered in ContentEquals.
-            Assert.That(new UserRole { Id = "diff-ur-id", ProjectId = ProjectId, Role = Role1 }
-                .ContentEquals(userRole), Is.True);
-
-            // Everything else covered in ContentEquals.
-            Assert.That(new UserRole { Id = Id, ProjectId = "diff-proj-id", Role = Role1 }
-                .ContentEquals(userRole), Is.False);
-            Assert.That(new UserRole { Id = Id, ProjectId = ProjectId, Role = Role2 }
-                .ContentEquals(userRole), Is.False);
-        }
     }
 
     public class ProjectRoleTests
