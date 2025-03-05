@@ -47,63 +47,44 @@ namespace Backend.Tests
 
         public static Word RandomWord(string? projId = null)
         {
-            return new Word
+            return new()
             {
                 Id = RandString(),
                 Created = RandString(),
                 Vernacular = RandString(),
-                Modified = RandString(),
                 Plural = RandString(),
-                History = new List<string>(),
-                Audio = new List<Pronunciation>(),
-                EditedBy = new List<string> { RandString(), RandString() },
+                Modified = RandString(),
+                EditedBy = [RandString(), RandString()],
                 ProjectId = projId ?? RandString(),
-                Senses = new List<Sense> { RandomSense(), RandomSense(), RandomSense() },
-                Note = new Note { Language = RandString(), Text = RandString() }
+                Senses = [RandomSense(), RandomSense(), RandomSense()],
+                Note = new() { Language = RandString(), Text = RandString() }
             };
         }
 
         public static Sense RandomSense()
         {
-            return new Sense
+            return new()
             {
                 Accessibility = Status.Active,
                 GrammaticalInfo = new GrammaticalInfo(RandString()),
-                Glosses = new List<Gloss> { RandomGloss(), RandomGloss(), RandomGloss() },
-                SemanticDomains = new List<SemanticDomain>
-                {
-                    RandomSemanticDomain(),
-                    RandomSemanticDomain(),
-                    RandomSemanticDomain()
-                }
+                Glosses = [RandomGloss(), RandomGloss(), RandomGloss()],
+                SemanticDomains = [RandomSemanticDomain(), RandomSemanticDomain(), RandomSemanticDomain()]
             };
         }
 
         public static Definition RandomDefinition()
         {
-            return new Definition
-            {
-                Text = RandString(),
-                Language = RandString(3)
-            };
+            return new() { Text = RandString(), Language = RandString(3) };
         }
 
         public static Gloss RandomGloss()
         {
-            return new Gloss
-            {
-                Def = RandString(),
-                Language = RandString(3)
-            };
+            return new() { Def = RandString(), Language = RandString(3) };
         }
 
         public static SemanticDomain RandomSemanticDomain(string? id = null)
         {
-            return new SemanticDomain
-            {
-                Name = RandString(),
-                Id = id ?? RandString(),
-            };
+            return new() { Name = RandString(), Id = id ?? RandString(), };
         }
 
         public static Project RandomProject()
@@ -112,8 +93,7 @@ namespace Backend.Tests
             {
                 Name = RandString(),
                 VernacularWritingSystem = RandomWritingSystem(),
-                AnalysisWritingSystems = new() { RandomWritingSystem() },
-                SemanticDomains = new()
+                AnalysisWritingSystems = [RandomWritingSystem()],
             };
 
             const int numSemanticDomains = 3;

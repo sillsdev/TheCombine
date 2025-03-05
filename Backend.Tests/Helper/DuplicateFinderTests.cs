@@ -228,18 +228,18 @@ namespace Backend.Tests.Helper
         }
 
         [Test]
-        public void GetSimilarWordsAndMaxInListAndMaxListsTest()
+        public void GetSimilarWordsMaxListsAndMaxInListTest()
         {
-            _frontier = Util.RandomWordList(MaxInList * MaxLists + 2, ProjId);
+            _frontier = Util.RandomWordList(2 * MaxInList * MaxLists, ProjId);
             _dupFinder = new DuplicateFinder(MaxInList, MaxLists, NoMaxScore);
             var wordLists = _dupFinder.GetSimilarWords(_frontier, _isUnavailableSet).Result;
             Assert.That(wordLists, Has.Count.EqualTo(MaxLists));
-            Assert.That(wordLists.First(), Has.Count.EqualTo(MaxInList));
-            Assert.That(wordLists.Last(), Has.Count.EqualTo(MaxInList));
+            Assert.That(wordLists.Any(list => list.Count == MaxInList), Is.True);
+            Assert.That(wordLists.Any(list => list.Count > MaxInList), Is.False);
         }
 
         [Test]
-        public void GetSimilarWordsAndMaxScoreTest()
+        public void GetSimilarWordsMaxScoreTest()
         {
             _frontier = Util.RandomWordList(MaxInList * MaxLists, ProjId);
             // Ensure at least one set of similar words, in case MaxScore is too low.

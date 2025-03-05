@@ -89,7 +89,7 @@ namespace BackendFramework.Helper
                     continue;
                 }
 
-                // Remove similar words from collection and add them to list with main word.
+                // Remove similar words from collection.
                 var idsToRemove = similarWords.Select(w => w.Item2.Id);
                 collection.RemoveAll(w => idsToRemove.Contains(w.Id));
 
