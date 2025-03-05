@@ -30,15 +30,12 @@ namespace BackendFramework.Models
             WordIds = new();
         }
 
+        /// <summary> Create a deep copy. </summary>
         public MergeWordSet Clone()
         {
-            return new()
-            {
-                Id = Id,
-                ProjectId = ProjectId,
-                UserId = UserId,
-                WordIds = WordIds.Select(id => id).ToList()
-            };
+            var clone = (MergeWordSet)MemberwiseClone();
+            clone.WordIds = WordIds.Select(id => id).ToList();
+            return clone;
         }
 
         public bool ContentEquals(MergeWordSet other)

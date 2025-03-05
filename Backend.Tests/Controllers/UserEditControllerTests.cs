@@ -155,8 +155,8 @@ namespace Backend.Tests.Controllers
             var userEdit = new UserEdit { ProjectId = _projId };
             var updatedUser = (User)((ObjectResult)await _userEditController.CreateUserEdit(_projId)).Value!;
             userEdit.Id = updatedUser.WorkedProjects[_projId];
-            var userEdits = await _userEditRepo.GetAllUserEdits(_projId);
-            Assert.That(userEdits, Does.Contain(userEdit).UsingPropertiesComparer());
+            var repoEdits = await _userEditRepo.GetAllUserEdits(_projId);
+            Assert.That(repoEdits, Does.Contain(userEdit).UsingPropertiesComparer());
         }
 
         [Test]

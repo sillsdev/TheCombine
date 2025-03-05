@@ -30,14 +30,12 @@ namespace BackendFramework.Models
             Edits = new();
         }
 
+        /// <summary> Create a deep copy. </summary>
         public UserEdit Clone()
         {
-            return new()
-            {
-                Id = Id,
-                ProjectId = ProjectId,
-                Edits = Edits.Select(e => e.Clone()).ToList()
-            };
+            var clone = (UserEdit)MemberwiseClone();
+            clone.Edits = Edits.Select(e => e.Clone()).ToList();
+            return clone;
         }
     }
 
@@ -92,15 +90,12 @@ namespace BackendFramework.Models
             Changes = "{}";
         }
 
+        /// <summary> Create a deep copy. </summary>
         public Edit Clone()
         {
-            return new()
-            {
-                Guid = Guid,
-                GoalType = GoalType,
-                StepData = StepData.Select(sd => sd).ToList(),
-                Changes = Changes
-            };
+            var clone = (Edit)MemberwiseClone();
+            clone.StepData = StepData.Select(sd => sd).ToList();
+            return clone;
         }
     }
 }

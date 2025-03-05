@@ -35,15 +35,11 @@ namespace BackendFramework.Models
             Name = "";
         }
 
+        /// <summary> Create a deep copy. </summary>
         public Speaker Clone()
         {
-            return new Speaker
-            {
-                Id = Id,
-                ProjectId = ProjectId,
-                Name = Name,
-                Consent = Consent
-            };
+            // Shallow copy is sufficient.
+            return (Speaker)MemberwiseClone();
         }
 
         public bool ContentEquals(Speaker other)

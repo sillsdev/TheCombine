@@ -48,14 +48,11 @@ namespace BackendFramework.Models
         [BsonElement("value")]
         public string? Value { get; set; }
 
+        /// <summary> Create a deep copy. </summary>
         public ProtectReason Clone()
         {
-            return new ProtectReason
-            {
-                Type = Type,
-                Count = Count,
-                Value = Value,
-            };
+            // Shallow copy is sufficient.
+            return (ProtectReason)MemberwiseClone();
         }
     }
 }

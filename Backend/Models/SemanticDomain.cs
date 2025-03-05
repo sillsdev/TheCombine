@@ -47,19 +47,12 @@ namespace BackendFramework.Models
             Created = "";
         }
 
+        /// <summary> Create a deep copy. </summary>
         public SemanticDomain Clone()
         {
-            return new SemanticDomain
-            {
-                // If this clone is ever used in production, the MongoId may need to be excluded.
-                MongoId = MongoId,
-                Guid = Guid,
-                Name = Name,
-                Id = Id,
-                Lang = Lang,
-                UserId = UserId,
-                Created = Created
-            };
+            // If this clone is ever used in production, the MongoId may need to be excluded.
+            // Shallow copy is sufficient.
+            return (SemanticDomain)MemberwiseClone();
         }
 
         /// <summary>
@@ -122,6 +115,7 @@ namespace BackendFramework.Models
             Questions = new();
         }
 
+        /// <summary> Create a deep copy. </summary>
         public new SemanticDomainFull Clone()
         {
             return new(base.Clone())

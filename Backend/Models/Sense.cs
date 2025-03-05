@@ -57,6 +57,7 @@ namespace BackendFramework.Models
             SemanticDomains = new();
         }
 
+        /// <summary> Create a deep copy. </summary>
         public Sense Clone()
         {
             return new()
@@ -65,7 +66,7 @@ namespace BackendFramework.Models
                 Accessibility = Accessibility,
                 GrammaticalInfo = GrammaticalInfo.Clone(),
                 Definitions = Definitions.Select(d => d.Clone()).ToList(),
-                Glosses = Glosses.Select(g => g.Clone()).ToList(),
+                Glosses = Glosses.Select(g => g).ToList(),
                 ProtectReasons = ProtectReasons.Select(pr => pr.Clone()).ToList(),
                 SemanticDomains = SemanticDomains.Select(sd => sd.Clone()).ToList(),
             };
@@ -128,13 +129,11 @@ namespace BackendFramework.Models
             Text = "";
         }
 
+        /// <summary> Create a deep copy. </summary>
         public Definition Clone()
         {
-            return new Definition
-            {
-                Language = Language,
-                Text = Text
-            };
+            // Shallow copy is sufficient.
+            return (Definition)MemberwiseClone();
         }
 
         public bool ContentEquals(Definition other)
@@ -189,13 +188,11 @@ namespace BackendFramework.Models
             GrammaticalCategory = gramCat;
         }
 
+        /// <summary> Create a deep copy. </summary>
         public GrammaticalInfo Clone()
         {
-            return new GrammaticalInfo
-            {
-                CatGroup = CatGroup,
-                GrammaticalCategory = GrammaticalCategory
-            };
+            // Shallow copy is sufficient.
+            return (GrammaticalInfo)MemberwiseClone();
         }
 
         public bool ContentEquals(GrammaticalInfo other)
@@ -222,13 +219,12 @@ namespace BackendFramework.Models
             Def = "";
         }
 
+
+        /// <summary> Create a deep copy. </summary>
         public Gloss Clone()
         {
-            return new Gloss
-            {
-                Language = Language,
-                Def = Def
-            };
+            // Shallow copy is sufficient.
+            return (Gloss)MemberwiseClone();
         }
 
         public bool ContentEquals(Gloss other)

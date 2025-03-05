@@ -119,29 +119,13 @@ namespace BackendFramework.Models
             ProjectRoles = new();
         }
 
+        /// <summary> Create a deep copy. </summary>
         public User Clone()
         {
-            return new()
-            {
-                Id = Id,
-                Avatar = Avatar,
-                HasAvatar = HasAvatar,
-                Name = Name,
-                Email = Email,
-                Phone = Phone,
-                OtherConnectionField = OtherConnectionField,
-                Agreement = Agreement,
-                Password = Password,
-                Username = Username,
-                AnalyticsOn = AnalyticsOn,
-                AnsweredConsent = AnsweredConsent,
-                UILang = UILang,
-                GlossSuggestion = GlossSuggestion,
-                Token = Token,
-                IsAdmin = IsAdmin,
-                WorkedProjects = WorkedProjects.ToDictionary(kv => kv.Key, kv => kv.Value),
-                ProjectRoles = ProjectRoles.ToDictionary(kv => kv.Key, kv => kv.Value),
-            };
+            var clone = (User)MemberwiseClone();
+            clone.WorkedProjects = WorkedProjects.ToDictionary(kv => kv.Key, kv => kv.Value);
+            clone.ProjectRoles = ProjectRoles.ToDictionary(kv => kv.Key, kv => kv.Value);
+            return clone;
         }
 
         /// <summary> Removes avatar path, password, and token. </summary>

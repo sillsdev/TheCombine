@@ -129,6 +129,7 @@ namespace Backend.Tests.Models
         public void TestContentEquals()
         {
             var note = new Note { Language = Language, Text = Text };
+            Assert.That(note.ContentEquals(new() { Language = Language, Text = Text }), Is.True);
             Assert.That(note.ContentEquals(new() { Language = "di-FF", Text = Text }), Is.False);
             Assert.That(note.ContentEquals(new() { Language = Language, Text = "Changed" }), Is.False);
         }
@@ -212,6 +213,7 @@ namespace Backend.Tests.Models
         public void TestContentEquals()
         {
             var flag = new Flag { Active = true, Text = Text };
+            Assert.That(flag.ContentEquals(new() { Active = true, Text = Text }), Is.True);
             Assert.That(flag.ContentEquals(new() { Active = false, Text = Text }), Is.False);
             Assert.That(flag.ContentEquals(new() { Active = true, Text = Text2 }), Is.False);
         }

@@ -103,7 +103,7 @@ namespace BackendFramework.Models
             Flag = new();
         }
 
-        /// <summary> Create a deep copy of the Word. </summary>
+        /// <summary> Create a deep copy. </summary>
         public Word Clone()
         {
             return new()
@@ -207,14 +207,11 @@ namespace BackendFramework.Models
             SpeakerId = speakerId;
         }
 
+        /// <summary> Create a deep copy. </summary>
         public Pronunciation Clone()
         {
-            return new Pronunciation
-            {
-                FileName = FileName,
-                SpeakerId = SpeakerId,
-                Protected = Protected
-            };
+            // Shallow copy is sufficient.
+            return (Pronunciation)MemberwiseClone();
         }
     }
 
@@ -241,14 +238,11 @@ namespace BackendFramework.Models
             Text = text;
         }
 
-        /// <summary> Create a deep copy of the Note. </summary>
+        /// <summary> Create a deep copy. </summary>
         public Note Clone()
         {
-            return new Note
-            {
-                Language = Language,
-                Text = Text
-            };
+            // Shallow copy is sufficient.
+            return (Note)MemberwiseClone();
         }
 
         /// <summary> Check if content is the same as another Note. </summary>
@@ -309,14 +303,11 @@ namespace BackendFramework.Models
             Text = text;
         }
 
-        /// <summary> Create a deep copy of the Flag. </summary>
+        /// <summary> Create a deep copy. </summary>
         public Flag Clone()
         {
-            return new Flag
-            {
-                Active = Active,
-                Text = Text
-            };
+            // Shallow copy is sufficient.
+            return (Flag)MemberwiseClone();
         }
 
         /// <summary> Check if content is the same as another Flag. </summary>

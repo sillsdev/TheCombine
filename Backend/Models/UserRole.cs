@@ -31,16 +31,11 @@ namespace BackendFramework.Models
             Role = Role.None;
         }
 
+        /// <summary> Create a deep copy. </summary>
         public UserRole Clone()
         {
-            var clone = new UserRole
-            {
-                Id = Id,
-                ProjectId = ProjectId,
-                Role = Role,
-            };
-
-            return clone;
+            // Shallow copy is sufficient.
+            return (UserRole)MemberwiseClone();
         }
 
         public bool ContentEquals(UserRole other)
@@ -69,14 +64,11 @@ namespace BackendFramework.Models
             Role = Role.None;
         }
 
+        /// <summary> Create a deep copy. </summary>
         public ProjectRole Clone()
         {
-
-            return new ProjectRole
-            {
-                ProjectId = ProjectId,
-                Role = Role,
-            };
+            // Shallow copy is sufficient.
+            return (ProjectRole)MemberwiseClone();
         }
 
         public static bool RoleContainsRole(Role roleA, Role roleB)

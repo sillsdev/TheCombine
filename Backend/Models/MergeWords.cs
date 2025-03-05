@@ -68,6 +68,7 @@ namespace BackendFramework.Models
             ChildIds = childIds;
         }
 
+        /// <summary> Create a deep copy. </summary>
         public MergeUndoIds Clone()
         {
             return new()

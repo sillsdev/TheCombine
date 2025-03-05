@@ -112,6 +112,7 @@ namespace BackendFramework.Models
             WorkshopSchedule = new();
         }
 
+        /// <summary> Create a deep copy. </summary>
         public Project Clone()
         {
             return new()
@@ -152,13 +153,11 @@ namespace BackendFramework.Models
             Type = "";
         }
 
+        /// <summary> Create a deep copy. </summary>
         public CustomField Clone()
         {
-            return new CustomField
-            {
-                Name = Name,
-                Type = Type
-            };
+            // Shallow copy is sufficient.
+            return (CustomField)MemberwiseClone();
         }
     }
 
@@ -198,6 +197,7 @@ namespace BackendFramework.Models
             }
         }
 
+        /// <summary> Create a deep copy. </summary>
         public WritingSystem Clone()
         {
             return new(Bcp47, Name, Font, Rtl);

@@ -43,15 +43,11 @@ namespace BackendFramework.Models
             Role = role;
         }
 
+        /// <summary> Create a deep copy. </summary>
         public EmailInvite Clone()
         {
-            return new EmailInvite
-            {
-                Email = Email,
-                Role = Role,
-                Token = Token,
-                ExpireTime = ExpireTime
-            };
+            // Shallow copy is sufficient.
+            return (EmailInvite)MemberwiseClone();
         }
     }
 }
