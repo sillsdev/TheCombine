@@ -57,18 +57,11 @@ namespace Backend.Tests.Mocks
 
         public Task<ResultOfUpdate> Update(string speakerId, Speaker speaker)
         {
-            var foundSpeaker = _speakers.Single(ur => ur.Id == speakerId);
-            if (foundSpeaker is null)
+            var rmCount = _speakers.RemoveAll(ur => ur.Id == speakerId);
+            if (rmCount == 0)
             {
                 return Task.FromResult(ResultOfUpdate.NotFound);
             }
-
-            if (foundSpeaker.ContentEquals(speaker))
-            {
-                return Task.FromResult(ResultOfUpdate.NoChange);
-            }
-
-            _speakers.RemoveAll(ur => ur.Id == speakerId);
             _speakers.Add(speaker.Clone());
             return Task.FromResult(ResultOfUpdate.Updated);
         }

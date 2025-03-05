@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -40,14 +39,6 @@ namespace BackendFramework.Models
         {
             // Shallow copy is sufficient.
             return (Speaker)MemberwiseClone();
-        }
-
-        /// <summary> Check if content is the same as another Speaker. </summary>
-        public bool ContentEquals(Speaker other)
-        {
-            return ProjectId.Equals(other.ProjectId, StringComparison.Ordinal) &&
-                Name.Equals(other.Name, StringComparison.Ordinal) &&
-                Consent == other.Consent;
         }
     }
 
