@@ -56,11 +56,11 @@ exports[`Tests AddWords Renders correctly: from parent 1`] = `
         >
           <span
             className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-            style={Object {}}
+            style={{}}
           />
           <p
             className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-            style={Object {}}
+            style={{}}
           >
             addWords.domain
           </p>
@@ -152,13 +152,13 @@ exports[`Tests AddWords Renders correctly: from parent 1`] = `
           >
             <span
               className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-              style={Object {}}
+              style={{}}
             >
               1
             </span>
             <p
               className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-              style={Object {}}
+              style={{}}
             >
               parent
             </p>
@@ -691,13 +691,13 @@ exports[`Tests AddWords Renders correctly: from parent 1`] = `
             >
               <span
                 className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 1.0
               </span>
               <p
                 className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 kid0
               </p>
@@ -780,13 +780,13 @@ exports[`Tests AddWords Renders correctly: from parent 1`] = `
             >
               <span
                 className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 1.1
               </span>
               <p
                 className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 kid1
               </p>
@@ -869,13 +869,13 @@ exports[`Tests AddWords Renders correctly: from parent 1`] = `
             >
               <span
                 className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 1.2
               </span>
               <p
                 className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 kid2
               </p>
@@ -955,13 +955,13 @@ exports[`Tests AddWords Renders correctly: node w/ 1 subdomains and 2 siblings 1
         >
           <span
             className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-            style={Object {}}
+            style={{}}
           >
             1
           </span>
           <p
             className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-            style={Object {}}
+            style={{}}
           >
             parent
           </p>
@@ -1066,13 +1066,13 @@ exports[`Tests AddWords Renders correctly: node w/ 1 subdomains and 2 siblings 1
               >
                 <span
                   className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-                  style={Object {}}
+                  style={{}}
                 >
                   1.1
                 </span>
                 <p
                   className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-                  style={Object {}}
+                  style={{}}
                 >
                   kid1
                 </p>
@@ -1128,13 +1128,13 @@ exports[`Tests AddWords Renders correctly: node w/ 1 subdomains and 2 siblings 1
           >
             <span
               className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-              style={Object {}}
+              style={{}}
             >
               1.2
             </span>
             <p
               className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-              style={Object {}}
+              style={{}}
             >
               kid2
             </p>
@@ -1315,13 +1315,13 @@ exports[`Tests AddWords Renders correctly: node w/ 1 subdomains and 2 siblings 1
             >
               <span
                 className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 1.2.1
               </span>
               <p
                 className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 depth=3
               </p>
@@ -1401,13 +1401,13 @@ exports[`Tests AddWords Renders correctly: node w/ 1 subdomains and no siblings 
         >
           <span
             className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-            style={Object {}}
+            style={{}}
           >
             1.2
           </span>
           <p
             className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-            style={Object {}}
+            style={{}}
           >
             kid2
           </p>
@@ -1499,13 +1499,13 @@ exports[`Tests AddWords Renders correctly: node w/ 1 subdomains and no siblings 
           >
             <span
               className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-              style={Object {}}
+              style={{}}
             >
               1.2.1
             </span>
             <p
               className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-              style={Object {}}
+              style={{}}
             >
               depth=3
             </p>
@@ -1686,13 +1686,13 @@ exports[`Tests AddWords Renders correctly: node w/ 1 subdomains and no siblings 
             >
               <span
                 className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 1.2.1.1
               </span>
               <p
                 className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 depth=4
               </p>
@@ -1772,13 +1772,13 @@ exports[`Tests AddWords Renders correctly: node w/ even # of subdomains 1`] = `
         >
           <span
             className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-            style={Object {}}
+            style={{}}
           >
             1
           </span>
           <p
             className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-            style={Object {}}
+            style={{}}
           >
             parent
           </p>
@@ -1870,13 +1870,13 @@ exports[`Tests AddWords Renders correctly: node w/ even # of subdomains 1`] = `
           >
             <span
               className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-              style={Object {}}
+              style={{}}
             >
               1.0
             </span>
             <p
               className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-              style={Object {}}
+              style={{}}
             >
               kid0
             </p>
@@ -1940,13 +1940,13 @@ exports[`Tests AddWords Renders correctly: node w/ even # of subdomains 1`] = `
               >
                 <span
                   className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-                  style={Object {}}
+                  style={{}}
                 >
                   1.1
                 </span>
                 <p
                   className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-                  style={Object {}}
+                  style={{}}
                 >
                   kid1
                 </p>
@@ -2660,13 +2660,13 @@ exports[`Tests AddWords Renders correctly: node w/ even # of subdomains 1`] = `
             >
               <span
                 className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 1.0.0
               </span>
               <p
                 className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 evenData0
               </p>
@@ -2749,13 +2749,13 @@ exports[`Tests AddWords Renders correctly: node w/ even # of subdomains 1`] = `
             >
               <span
                 className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 1.0.1
               </span>
               <p
                 className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 evenData1
               </p>
@@ -2838,13 +2838,13 @@ exports[`Tests AddWords Renders correctly: node w/ even # of subdomains 1`] = `
             >
               <span
                 className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 1.0.2
               </span>
               <p
                 className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 evenData2
               </p>
@@ -2927,13 +2927,13 @@ exports[`Tests AddWords Renders correctly: node w/ even # of subdomains 1`] = `
             >
               <span
                 className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 1.0.3
               </span>
               <p
                 className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 evenData3
               </p>
@@ -3013,13 +3013,13 @@ exports[`Tests AddWords Renders correctly: node w/ no subdomains 1`] = `
         >
           <span
             className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-            style={Object {}}
+            style={{}}
           >
             1.2.1.1
           </span>
           <p
             className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-            style={Object {}}
+            style={{}}
           >
             depth=4
           </p>
@@ -3111,13 +3111,13 @@ exports[`Tests AddWords Renders correctly: node w/ no subdomains 1`] = `
           >
             <span
               className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-              style={Object {}}
+              style={{}}
             >
               1.2.1.1.1
             </span>
             <p
               className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-              style={Object {}}
+              style={{}}
             >
               depth=5
             </p>
@@ -3200,13 +3200,13 @@ exports[`Tests AddWords Renders correctly: node w/ odd # of subdomains 1`] = `
         >
           <span
             className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-            style={Object {}}
+            style={{}}
           >
             1
           </span>
           <p
             className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-            style={Object {}}
+            style={{}}
           >
             parent
           </p>
@@ -3311,13 +3311,13 @@ exports[`Tests AddWords Renders correctly: node w/ odd # of subdomains 1`] = `
               >
                 <span
                   className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-                  style={Object {}}
+                  style={{}}
                 >
                   1.0
                 </span>
                 <p
                   className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-                  style={Object {}}
+                  style={{}}
                 >
                   kid0
                 </p>
@@ -3373,13 +3373,13 @@ exports[`Tests AddWords Renders correctly: node w/ odd # of subdomains 1`] = `
           >
             <span
               className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-              style={Object {}}
+              style={{}}
             >
               1.1
             </span>
             <p
               className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-              style={Object {}}
+              style={{}}
             >
               kid1
             </p>
@@ -3443,13 +3443,13 @@ exports[`Tests AddWords Renders correctly: node w/ odd # of subdomains 1`] = `
               >
                 <span
                   className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-                  style={Object {}}
+                  style={{}}
                 >
                   1.2
                 </span>
                 <p
                   className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-                  style={Object {}}
+                  style={{}}
                 >
                   kid2
                 </p>
@@ -3987,13 +3987,13 @@ exports[`Tests AddWords Renders correctly: node w/ odd # of subdomains 1`] = `
             >
               <span
                 className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 1.1.0
               </span>
               <p
                 className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 oddData0
               </p>
@@ -4076,13 +4076,13 @@ exports[`Tests AddWords Renders correctly: node w/ odd # of subdomains 1`] = `
             >
               <span
                 className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 1.1.1
               </span>
               <p
                 className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 oddData1
               </p>
@@ -4165,13 +4165,13 @@ exports[`Tests AddWords Renders correctly: node w/ odd # of subdomains 1`] = `
             >
               <span
                 className="MuiTypography-root MuiTypography-overline css-sd3blm-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 1.1.2
               </span>
               <p
                 className="MuiTypography-root MuiTypography-body1 css-2qhc2y-MuiTypography-root"
-                style={Object {}}
+                style={{}}
               >
                 oddData2
               </p>
