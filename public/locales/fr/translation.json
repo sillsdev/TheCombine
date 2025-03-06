@@ -21,7 +21,7 @@
     "selectEntry": "Choisissez une entrée",
     "selectSense": "Choisissez un sens",
     "newEntryFor": "Nouvelle entrée pour : ",
-    "newSenseFor": "Nouveau sens pour : ",
+    "newSense": "Nouveau sens",
     "senseInWord": "Le mot a déjà ce sens dans ce champ sémantique : {{ val1 }}, {{ val2 }}",
     "deleteRow": "Effacer cette ligne",
     "deleteRowWarning": "Cette ligne sera supprimée définitivement !",

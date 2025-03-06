@@ -37,6 +37,7 @@ import { type StoreState } from "rootRedux/types";
 export const longPressDelay = 700;
 
 export const playButtonId = (fileName: string): string => `audio-${fileName}`;
+export const playButtonLabel = "Play";
 export const playMenuId = "play-menu";
 
 interface PlayerProps {
@@ -232,7 +233,7 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
           onMouseDown={handleOnMouseDown}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          aria-label="play"
+          aria-label={playButtonLabel}
           disabled={props.disabled}
           id={playButtonId(props.audio.fileName)}
           size={props.size || "large"}

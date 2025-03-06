@@ -1,11 +1,11 @@
-import renderer from "react-test-renderer";
+import { act, render } from "@testing-library/react";
 
 import DeleteEntry from "components/DataEntry/DataEntryTable/EntryCellComponents/DeleteEntry";
 
 describe("DeleteEntry", () => {
-  it("renders without crashing", () => {
-    renderer.act(() => {
-      renderer.create(<DeleteEntry removeEntry={jest.fn()} buttonId="" />);
+  it("renders without crashing", async () => {
+    await act(async () => {
+      render(<DeleteEntry removeEntry={jest.fn()} buttonId="" />);
     });
   });
 });

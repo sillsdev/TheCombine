@@ -14,11 +14,145 @@ namespace Backend.Tests.Helper
         private List<Word> _frontier = null!;
         private Func<List<string>, Task<bool>> _isUnavailableSet = null!;
 
-        private const int MaxInList = 4;
-        private const int MaxLists = 3;
-        private const int MaxScore = 5;
+        private const int MaxInList = 5; // matches value in frontend function loadGoalData()
+        private const int MaxLists = 12; // matches frontend value maxNumSteps(GoalType.MergeDup)
+        private const int MaxScore = 3; // matches value in MergeServices method GetPotentialDuplicates 
         private const int NoMaxScore = 9999999;
         private const string ProjId = "DuplicateFinderTestProjId";
+
+        /// <summary> A broad set of words for testing the various DuplicateFinder cases. </summary>
+        private static List<Word> BroadTestFrontier() => [
+            new()
+            {
+                Vernacular = "11111",
+                Senses = [new()
+                {
+                    Glosses = [new(){ Def = "three", Language = "en" }],
+                    SemanticDomains = [new(){ Id = "1", Name = "Universe, creation" }]
+                }]
+            },
+            new()
+            {
+                Vernacular = "11111",
+                Senses = [new()
+                {
+                    Glosses = [new(){ Def = "identical", Language = "en" }],
+                    SemanticDomains = [new(){ Id = "1", Name = "Universe, creation" }]
+                }]
+            },
+            new()
+            {
+                Vernacular = "11111",
+                Senses = [new()
+                {
+                    Glosses = [new(){ Def = "vernacular", Language = "en" }],
+                    SemanticDomains = [new(){ Id = "1", Name = "Universe, creation" }]
+                }]
+            },
+            new()
+            {
+                Vernacular = "11111b",
+                Senses = [new()
+                {
+                    Glosses = [new(){ Def = "(and one similar)", Language = "en" }],
+                    SemanticDomains = [new(){ Id = "1", Name = "Universe, creation" }]
+                }]
+            },
+            new()
+            {
+                Vernacular = "222222222",
+                Senses = [new()
+                {
+                    Glosses = [new(){ Def = "very-similar-vernacular", Language = "en" }],
+                    SemanticDomains = [new(){ Id = "2", Name = "Person" }]
+                }]
+            },
+            new()
+            {
+                Vernacular = "222222222a",
+                Senses = [new()
+                {
+                    Glosses = [new(){ Def = "only-one-char-different-in-long-string", Language = "en" }],
+                    SemanticDomains = [new(){ Id = "2", Name = "Person" }]
+                }]
+            },
+            new()
+            {
+                Vernacular = "33333",
+                Senses = [new()
+                {
+                    Glosses = [new(){ Def = "not-CASE-or-lang-sensitive", Language = "en" }],
+                    SemanticDomains = [new(){ Id = "3", Name = "Language and thought" }]
+                }],
+                Note = new(){Language = "en", Text = "Similar vern, with same gloss/definition"}
+            },
+            new()
+            {
+                Vernacular = "33333b",
+                Senses = [new()
+                {
+                    Definitions=[new(){Text = "not-case-or-LANG-sensitive", Language = "en-GB" }],
+                    SemanticDomains = [new(){ Id = "3", Name = "Language and thought" }]
+                }],
+                Note = new(){Language = "en", Text = "Similar vern, with same gloss/definition"}
+            },
+            new()
+            {
+                Vernacular = "44444",
+                Senses = [new()
+                {
+                    Glosses = [new(){ Def = "similar-ish-vernacular-identical-glosses", Language = "en" }],
+                    SemanticDomains = [new(){ Id = "4", Name = "Social behavior" }]
+                }]
+            },
+            new()
+            {
+                Vernacular = "44444bb",
+                Senses = [new()
+                {
+                    Glosses = [new(){ Def = "similar-ish-vernacular-identical-glosses", Language = "en" }],
+                    SemanticDomains = [new(){ Id = "4", Name = "Social behavior" }]
+                }]
+            },
+            new()
+            {
+                Vernacular = "55555",
+                Senses = [new()
+                {
+                    Glosses = [new(){ Def = "same-vernacular", Language = "en" }],
+                    GrammaticalInfo = new(){ CatGroup = GramCatGroup.Verb, GrammaticalCategory = "Intransitive verb"},
+                    SemanticDomains = [new(){ Id = "5", Name = "Daily life" }]
+                }]
+            },
+            new()
+            {
+                Vernacular = "55555",
+                Senses = [new()
+                {
+                    Glosses = [new(){ Def = "different-part-of-speech", Language = "en" }],
+                    GrammaticalInfo = new(){ CatGroup = GramCatGroup.Noun, GrammaticalCategory = "Proper noun"},
+                    SemanticDomains = [new(){ Id = "5", Name = "Daily life" }]
+                }]
+            },
+            new()
+            {
+                Vernacular = "66a",
+                Senses = [new()
+                {
+                    Glosses = [new(){ Def = "one-char-different", Language = "en" }],
+                    SemanticDomains = [new(){ Id = "6", Name = "Work and occupation" }]
+                }]
+            },
+            new()
+            {
+                Vernacular = "66b",
+                Senses = [new()
+                {
+                    Glosses = [new(){ Def = "in-a-three-char-vern", Language = "en" }],
+                    SemanticDomains = [new(){ Id = "6", Name = "Work and occupation" }]
+                }]
+            },
+        ];
 
 
         [SetUp]
@@ -27,6 +161,40 @@ namespace Backend.Tests.Helper
             _dupFinder = new DuplicateFinder(MaxInList, MaxLists, MaxScore);
             _frontier = new List<Word>();
             _isUnavailableSet = _ => Task.FromResult(false);
+        }
+
+        [Test]
+        public void GetIdenticalVernWordsBroadTest()
+        {
+            var wordLists = _dupFinder.GetIdenticalVernWords(BroadTestFrontier(), _isUnavailableSet).Result;
+            // There are two subsets with identical vernacular form (#1 and #5),
+            // but the latter (#5) has entries with different GramCatGroup and should thus be skipped.
+            Assert.That(wordLists, Has.Count.EqualTo(1));
+            var wordList = wordLists.First();
+            Assert.That(wordList, Has.Count.EqualTo(3));
+            Assert.That(wordList.First().Senses.First().SemanticDomains.First().Id, Is.EqualTo("1"));
+        }
+
+        [Test]
+        public void GetSimilarWordsBroadTest()
+        {
+            var wordLists = _dupFinder.GetSimilarWords(BroadTestFrontier(), _isUnavailableSet).Result;
+            Assert.That(wordLists, Has.Count.EqualTo(6));
+            var expectedCounts = new int[6] { 4, 2, 2, 2, 2, 2 };
+            foreach (var (list, index) in wordLists.Select((l, i) => (l, i)))
+            {
+                Assert.That(list, Has.Count.EqualTo(expectedCounts[index]));
+                var domainId = list.First().Senses.First().SemanticDomains.First().Id;
+                // The 3rd and 4th subsets have the same similarity score and can show up in either order.
+                if (index == 2 || index == 3)
+                {
+                    Assert.That(domainId, Is.EqualTo("3").Or.EqualTo("4"));
+                }
+                else
+                {
+                    Assert.That(domainId, Is.EqualTo($"{index + 1}"));
+                }
+            }
         }
 
         [Test]
@@ -99,90 +267,49 @@ namespace Backend.Tests.Helper
         }
 
         [Test]
-        public void HaveIdenticalDefinitionTest()
+        public void HaveSameDefinitionOrGloss()
         {
-            const string text = "YesDef";
-            const string lang = "YesLang";
+            // strings that match with .Trim().ToLowerInvariant()
+            const string defiText = "YesPlease ";
+            const string glossDef = " yesPLEASE";
 
-            var defYY = new Definition { Text = text, Language = lang };
-            var defYN = new Definition { Text = text, Language = "NoLang" };
-            var defNY = new Definition { Text = "NoDef", Language = lang };
+            var senseEmpty = new Sense { Definitions = [new()], Glosses = [new(), new()] };
+            var senseDY = new Sense { Definitions = [new(), new() { Text = "other" }, new() { Text = defiText }] };
+            var senseGY = new Sense { Glosses = [new(), new() { Def = glossDef }] };
 
-            var senseEmpty = new Sense { Definitions = new List<Definition> { new() } };
-            var senseEmptyDYY = new Sense { Definitions = new List<Definition> { new(), defYY } };
-            var senseEmptyDNYDYY = new Sense { Definitions = new List<Definition> { new(), defNY, defYY } };
-            var senseDYNDNY = new Sense { Definitions = new List<Definition> { defYN, defNY } };
-
-            var wordWithOnlyDYY = new Word
+            var wordNo = new Word
             {
-                Senses = new List<Sense> { new(), senseEmpty, senseEmptyDYY }
+                Senses = [new(), new() { Definitions = [new() { Text = "different" }, new()] }, senseEmpty]
             };
-            var wordAlsoWithDYY = new Word
+            var wordDYes = new Word
             {
-                Senses = new List<Sense> { senseDYNDNY, new(), senseEmptyDNYDYY, senseEmpty }
+                Senses = [senseEmpty, new(), senseDY]
             };
-            var wordWithoutDYY = new Word
+            var wordGYes = new Word
             {
-                Senses = new List<Sense> { senseEmpty, senseDYNDNY, new() }
+                Senses = [new(), senseGY]
             };
 
-            Assert.That(DuplicateFinder.HaveIdenticalDefinition(new Word(), new Word()), Is.False);
-            Assert.That(DuplicateFinder.HaveIdenticalDefinition(new Word(), wordWithOnlyDYY), Is.False);
-            Assert.That(DuplicateFinder.HaveIdenticalDefinition(wordWithoutDYY, new Word()), Is.False);
-            Assert.That(DuplicateFinder.HaveIdenticalDefinition(wordWithOnlyDYY, wordWithoutDYY), Is.False);
+            Assert.That(DuplicateFinder.HaveSameDefinitionOrGloss(new Word(), new Word()), Is.False);
+            Assert.That(DuplicateFinder.HaveSameDefinitionOrGloss(new Word(), wordNo), Is.False);
+            Assert.That(DuplicateFinder.HaveSameDefinitionOrGloss(wordNo, wordDYes), Is.False);
+            Assert.That(DuplicateFinder.HaveSameDefinitionOrGloss(wordGYes, new Word()), Is.False);
 
-            Assert.That(DuplicateFinder.HaveIdenticalDefinition(wordWithOnlyDYY, wordAlsoWithDYY), Is.True);
-            Assert.That(DuplicateFinder.HaveIdenticalDefinition(wordAlsoWithDYY, wordWithOnlyDYY), Is.True);
-        }
-
-        [Test]
-        public void HaveIdenticalGlossTest()
-        {
-            const string def = "YesGloss";
-            const string lang = "YesLang";
-
-            var glossYY = new Gloss { Def = def, Language = lang };
-            var glossYN = new Gloss { Def = def, Language = "NoLang" };
-            var glossNY = new Gloss { Def = "NoGloss", Language = lang };
-
-            var senseEmpty = new Sense { Glosses = new List<Gloss> { new() } };
-            var senseEmptyGYY = new Sense { Glosses = new List<Gloss> { new(), glossYY } };
-            var senseEmptyGNYGYY = new Sense { Glosses = new List<Gloss> { new(), glossNY, glossYY } };
-            var senseGYNGNY = new Sense { Glosses = new List<Gloss> { glossYN, glossNY } };
-
-            var wordWithOnlyGYY = new Word
-            {
-                Senses = new List<Sense> { new(), senseEmpty, senseEmptyGYY }
-            };
-            var wordAlsoWithGYY = new Word
-            {
-                Senses = new List<Sense> { senseGYNGNY, new(), senseEmptyGNYGYY, senseEmpty }
-            };
-            var wordWithoutGYY = new Word
-            {
-                Senses = new List<Sense> { senseEmpty, senseGYNGNY, new() }
-            };
-
-            Assert.That(DuplicateFinder.HaveIdenticalGloss(new Word(), new Word()), Is.False);
-            Assert.That(DuplicateFinder.HaveIdenticalGloss(new Word(), wordWithOnlyGYY), Is.False);
-            Assert.That(DuplicateFinder.HaveIdenticalGloss(wordWithoutGYY, new Word()), Is.False);
-            Assert.That(DuplicateFinder.HaveIdenticalGloss(wordWithOnlyGYY, wordWithoutGYY), Is.False);
-
-            Assert.That(DuplicateFinder.HaveIdenticalGloss(wordWithOnlyGYY, wordAlsoWithGYY), Is.True);
-            Assert.That(DuplicateFinder.HaveIdenticalGloss(wordAlsoWithGYY, wordWithOnlyGYY), Is.True);
+            Assert.That(DuplicateFinder.HaveSameDefinitionOrGloss(wordDYes, wordDYes), Is.True);
+            Assert.That(DuplicateFinder.HaveSameDefinitionOrGloss(wordDYes, wordGYes), Is.True);
         }
 
         [Test]
         public void MightShareGramCatGroupsTest()
         {
-            var nounSense = new Sense { GrammaticalInfo = new GrammaticalInfo { CatGroup = GramCatGroup.Noun } };
-            var unspecifiedSense = new Sense { GrammaticalInfo = new GrammaticalInfo { CatGroup = GramCatGroup.Unspecified } };
-            var verbSense = new Sense { GrammaticalInfo = new GrammaticalInfo { CatGroup = GramCatGroup.Verb } };
+            var nounSense = new Sense { GrammaticalInfo = new() { CatGroup = GramCatGroup.Noun } };
+            var unspecifiedSense = new Sense { GrammaticalInfo = new() { CatGroup = GramCatGroup.Unspecified } };
+            var verbSense = new Sense { GrammaticalInfo = new() { CatGroup = GramCatGroup.Verb } };
 
-            var nnWord = new Word { Senses = new List<Sense> { nounSense.Clone(), nounSense.Clone() } };
-            var uuWord = new Word { Senses = new List<Sense> { unspecifiedSense.Clone(), unspecifiedSense.Clone() } };
-            var vnWord = new Word { Senses = new List<Sense> { verbSense.Clone(), nounSense.Clone() } };
-            var vuWord = new Word { Senses = new List<Sense> { verbSense.Clone(), unspecifiedSense.Clone() } };
+            var nnWord = new Word { Senses = [nounSense.Clone(), nounSense.Clone()] };
+            var uuWord = new Word { Senses = [unspecifiedSense.Clone(), unspecifiedSense.Clone()] };
+            var vnWord = new Word { Senses = [verbSense.Clone(), nounSense.Clone()] };
+            var vuWord = new Word { Senses = [verbSense.Clone(), unspecifiedSense.Clone()] };
 
             Assert.That(DuplicateFinder.HaveCommonGramCatGroup(nnWord, vnWord), Is.True);
             Assert.That(DuplicateFinder.HaveCommonGramCatGroup(nnWord, vuWord), Is.False);

@@ -32,10 +32,9 @@ public/scripts/
 .eslintcache
 Session.vim
 scripts/*.js
-setup_cluster.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+*.log
+*-debug.log*
+*-error.log*
 
 # Visual Studio
 .vs

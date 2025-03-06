@@ -110,7 +110,7 @@ export const UserApiAxiosParamCreator = function (
     createUser: async (user: User, options: any = {}): Promise<RequestArgs> => {
       // verify required parameter 'user' is not null or undefined
       assertParamExists("createUser", "user", user);
-      const localVarPath = `/v1/users`;
+      const localVarPath = `/v1/users/create`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;

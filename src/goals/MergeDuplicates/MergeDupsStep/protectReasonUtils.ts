@@ -11,12 +11,13 @@ interface WordSenseReasons {
 
 export function protectReasonsText(
   t: TFunction,
-  reasons: WordSenseReasons
+  reasons: WordSenseReasons,
+  defaultPreface = true
 ): string {
   const wordTexts = reasons.word?.map((r) => wordReasonText(t, r));
   const senseTexts = reasons.sense?.map((r) => senseReasonText(t, r));
-  const allTexts = [...(wordTexts ?? []), ...(senseTexts ?? [])];
-  return t("mergeDups.helpText.protectedData", { val: allTexts.join(sep) });
+  const val = [...(wordTexts ?? []), ...(senseTexts ?? [])].join(sep);
+  return defaultPreface ? t("mergeDups.helpText.protectedData", { val }) : val;
 }
 
 /** Cases match Backend/Helper/LiftHelper.cs > GetProtectedReasons(LiftSense sense) */
@@ -88,6 +89,8 @@ function wordReasonText(t: TFunction, reason: ProtectReason): string {
       return t("mergeDups.protectReason.noteWithType", { val: reason.value });
     case ReasonType.Notes:
       return t("mergeDups.protectReason.notesWord");
+    case ReasonType.PronunciationWithoutUrl:
+      return t("mergeDups.protectReason.pronunciationWithoutUrl");
     case ReasonType.Relations:
       return t("mergeDups.protectReason.relations");
     case ReasonType.Trait:

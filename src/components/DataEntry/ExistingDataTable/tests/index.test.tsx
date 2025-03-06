@@ -1,4 +1,4 @@
-import renderer from "react-test-renderer";
+import { act, render } from "@testing-library/react";
 
 import ExistingDataTable from "components/DataEntry/ExistingDataTable";
 import { newSemanticDomain } from "types/semanticDomain";
@@ -15,8 +15,8 @@ const mockWords = [new DomainWord(newWord()), new DomainWord(newWord())];
 
 describe("ExistingData", () => {
   it("renders side panel version", () => {
-    renderer.act(() => {
-      renderer.create(
+    act(() => {
+      render(
         <ExistingDataTable
           domain={newSemanticDomain()}
           domainWords={mockWords}
@@ -26,8 +26,8 @@ describe("ExistingData", () => {
     });
   });
   it("renders drawer version", () => {
-    renderer.act(() => {
-      renderer.create(
+    act(() => {
+      render(
         <ExistingDataTable
           domain={newSemanticDomain()}
           domainWords={mockWords}

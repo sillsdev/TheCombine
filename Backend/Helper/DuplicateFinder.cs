@@ -216,7 +216,7 @@ namespace BackendFramework.Helper
                 return vernScore;
             }
 
-            if (HaveIdenticalDefinition(wordA, wordB) || HaveIdenticalGloss(wordA, wordB))
+            if (HaveSameDefinitionOrGloss(wordA, wordB))
             {
                 return (double)checkGlossThreshold;
             }
@@ -225,69 +225,27 @@ namespace BackendFramework.Helper
         }
 
         /// <summary>
-        /// Check if two <see cref="Word"/>s have <see cref="Definition"/>s with identical Language and nonempty Text.
+        /// Check if two <see cref="Word"/>s have
+        /// <see cref="Definition"/>s and/or <see cref="Gloss"/>es with the same nonempty Text/Def.
         /// </summary>
-        public static bool HaveIdenticalDefinition(Word wordA, Word wordB)
+        public static bool HaveSameDefinitionOrGloss(Word wordA, Word wordB)
         {
-            var definitionsA = wordA.Senses.SelectMany(s => s.Definitions).ToList();
-            if (definitionsA.Count == 0)
+            var textsA = GetAllDefinitionAndGlossText(wordA);
+            if (textsA.Count == 0)
             {
                 return false;
             }
-            var definitionsB = wordB.Senses.SelectMany(s => s.Definitions).ToList();
-            if (definitionsB.Count == 0)
-            {
-                return false;
-            }
-
-            foreach (var a in definitionsA)
-            {
-                if (a.Text.Length == 0)
-                {
-                    continue;
-                }
-                foreach (var b in definitionsB)
-                {
-                    if (a.Language == b.Language && a.Text == b.Text)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
+            var textsB = GetAllDefinitionAndGlossText(wordB);
+            return textsB.Any(tB => textsA.Any(tA => tA.Equals(tB, StringComparison.Ordinal)));
         }
 
-        /// <summary>
-        /// Check if two <see cref="Word"/>s have <see cref="Gloss"/>es with identical Language and nonempty Def.
-        /// </summary>
-        public static bool HaveIdenticalGloss(Word wordA, Word wordB)
+        /// <summary> Get a List of all nonempty Definition Texts and Gloss Defs. </summary>
+        private static List<string> GetAllDefinitionAndGlossText(Word wordA)
         {
-            var glossesA = wordA.Senses.SelectMany(s => s.Glosses).ToList();
-            if (glossesA.Count == 0)
-            {
-                return false;
-            }
-            var glossesB = wordB.Senses.SelectMany(s => s.Glosses).ToList();
-            if (glossesB.Count == 0)
-            {
-                return false;
-            }
-
-            foreach (var gA in glossesA)
-            {
-                if (gA.Def.Length == 0)
-                {
-                    continue;
-                }
-                foreach (var gB in glossesB)
-                {
-                    if (gA.Language == gB.Language && gA.Def == gB.Def)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
+            var texts = wordA.Senses.SelectMany(s => s.Definitions.Select(d => d.Text.Trim().ToLowerInvariant()))
+                .ToList();
+            texts.AddRange(wordA.Senses.SelectMany(s => s.Glosses.Select(g => g.Def.Trim().ToLowerInvariant())));
+            return texts.Where(t => !string.IsNullOrEmpty(t)).ToList();
         }
 
         /// <summary>
