@@ -19,8 +19,12 @@ enum UploadState {
   Done,
 }
 
-const selectFileButtonId = "project-import-select-file";
-export const uploadFileButtonId = "project-import-upload-file";
+export enum ProjectImportIds {
+  ButtonDialogCancel = "project-import-dialog-cancel-button",
+  ButtonDialogConfirm = "project-import-dialog-confirm-button",
+  ButtonFileSelect = "project-import-file-select-button",
+  ButtonFileSubmit = "project-import-file-submit-button",
+}
 
 export default function ProjectImport(
   props: ProjectSettingProps
@@ -91,8 +95,9 @@ export default function ProjectImport(
           updateFile={setLiftFile}
           accept=".zip"
           buttonProps={{
+            "data-testid": ProjectImportIds.ButtonFileSelect,
             disabled: uploadState === UploadState.Done,
-            id: selectFileButtonId,
+            id: ProjectImportIds.ButtonFileSelect,
           }}
         >
           {t("projectSettings.import.chooseFile")}
@@ -102,7 +107,11 @@ export default function ProjectImport(
       <Grid item>
         {/* Upload button */}
         <LoadingDoneButton
-          buttonProps={{ id: uploadFileButtonId, onClick: uploadWords }}
+          buttonProps={{
+            "data-testid": ProjectImportIds.ButtonFileSubmit,
+            id: ProjectImportIds.ButtonFileSubmit,
+            onClick: uploadWords,
+          }}
           disabled={!liftLangs}
           done={uploadState === UploadState.Done}
           loading={uploadState === UploadState.InProgress}
@@ -122,6 +131,8 @@ export default function ProjectImport(
 
       {liftLangs && (
         <CancelConfirmDialog
+          buttonIdCancel={ProjectImportIds.ButtonDialogCancel}
+          buttonIdConfirm={ProjectImportIds.ButtonDialogConfirm}
           disableBackdropClick
           handleCancel={() => setLiftFile(undefined)}
           handleConfirm={() => setDialogOpen(false)}
