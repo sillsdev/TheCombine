@@ -4,7 +4,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "@testing-library/jest-dom";
 import { act, cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { match } from "css-mediaquery";
 import { Provider } from "react-redux";
 import { Store } from "redux";
 import configureMockStore from "redux-mock-store";
@@ -21,10 +20,9 @@ import {
 } from "components/ProjectSettings/tests/SettingsTabTypes";
 import { randomProject } from "types/project";
 import theme from "types/theme";
+import { setMatchMedia } from "utilities/testRendererUtilities";
 
-jest.mock("react-router-dom", () => ({
-  useNavigate: jest.fn(),
-}));
+jest.mock("react-router-dom", () => ({ useNavigate: jest.fn() }));
 
 jest.mock("backend", () => ({
   canUploadLift: () => Promise.resolve(false),
@@ -79,21 +77,9 @@ const resetMocks = (): void => {
   mockGetCurrentPermissions.mockResolvedValue([]);
 };
 
-// Modified from mui.com/material-ui/react-use-media-query/#testing
-const createMatchMedia = (
-  width: number
-): ((query: string) => MediaQueryList) => {
-  return (query: string) =>
-    ({
-      matches: match(query, { width }),
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-    }) as any;
-};
-
 beforeAll(async () => {
   // Required (along with a `ThemeProvider`) for `useMediaQuery` to work
-  window.matchMedia = createMatchMedia(window.innerWidth);
+  setMatchMedia();
 
   resetMocks();
   await act(async () => {
