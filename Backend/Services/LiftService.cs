@@ -470,15 +470,14 @@ namespace BackendFramework.Services
         /// <summary> Adds vernacular of a word to be written out to lift </summary>
         private static void AddVern(LexEntry entry, Word wordEntry, string vernacularBcp47)
         {
+            var multiText = MultiText.Create(new LiftMultiText { { vernacularBcp47, wordEntry.Vernacular } });
             if (wordEntry.UsingCitationForm)
             {
-                entry.CitationForm.MergeIn(
-                    MultiText.Create(new LiftMultiText { { vernacularBcp47, wordEntry.Vernacular } }));
+                entry.CitationForm.MergeIn(multiText);
             }
             else
             {
-                entry.LexicalForm.MergeIn(
-                    MultiText.Create(new LiftMultiText { { vernacularBcp47, wordEntry.Vernacular } }));
+                entry.LexicalForm.MergeIn(multiText);
             }
         }
 
