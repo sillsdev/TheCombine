@@ -22,16 +22,20 @@ interface ExportButtonProps {
 /** A button for exporting project to Lift file */
 export default function ExportButton(props: ExportButtonProps): ReactElement {
   const dispatch = useAppDispatch();
+  const [canceling, setCanceling] = useState(false);
   const [exports, setExports] = useState(false);
   const { t } = useTranslation();
-  // const [canceling, setCanceling] = useState(false);
 
   async function exportProj(): Promise<void> {
     await dispatch(asyncExportProject(props.projectId));
   }
 
   async function resetExport(): Promise<void> {
+    setCanceling(true);
+
+    exportResult.status === ExportStatus.Default;
     await dispatch(asyncResetExport);
+    // setCanceling(false);
   }
 
   const exportResult = useAppSelector(
@@ -51,8 +55,8 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
       <Tooltip title={!exports ? t("projectExport.cannotExportEmpty") : ""}>
         <span>
           <LoadingButton
-            loading={loading}
-            disabled={loading || !exports}
+            loading={loading && exportResult.status !== ExportStatus.Default}
+            disabled={loading || canceling || !exports}
             buttonProps={{
               ...props.buttonProps,
               onClick: exportProj,
@@ -62,9 +66,11 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
             {t("buttons.export")}
           </LoadingButton>
           {loading && (
-            <Button onClick={resetExport}>
-              <Cancel />
-            </Button>
+            <Tooltip title="Cancel export">
+              <Button onClick={resetExport} disabled={canceling}>
+                <Cancel />
+              </Button>
+            </Tooltip>
           )}
         </span>
       </Tooltip>
