@@ -769,16 +769,6 @@ namespace BackendFramework.Services
                 {
                     vern = entry.LexicalForm.FirstOrDefault(x => x.Key == _vernLang).Value?.Text;
                 }
-                // If not available in the project's vernacular writing system, fall back to the first available one.
-                if (string.IsNullOrWhiteSpace(vern))
-                {
-                    vern = entry.CitationForm.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Value.Text)).Value?.Text;
-                    newWord.UsingCitationForm = !string.IsNullOrWhiteSpace(vern);
-                }
-                if (string.IsNullOrWhiteSpace(vern))
-                {
-                    vern = entry.LexicalForm.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Value.Text)).Value?.Text;
-                }
                 // This is not a word if there is no vernacular.
                 if (string.IsNullOrWhiteSpace(vern))
                 {
