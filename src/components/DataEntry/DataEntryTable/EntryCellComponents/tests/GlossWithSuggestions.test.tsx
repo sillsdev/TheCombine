@@ -1,11 +1,11 @@
-import { render } from "@testing-library/react";
-import { act, createRef } from "react";
+import { act, render } from "@testing-library/react";
+import { createRef } from "react";
 
 import GlossWithSuggestions from "components/DataEntry/DataEntryTable/EntryCellComponents/GlossWithSuggestions";
 import { newWritingSystem } from "types/writingSystem";
 
 // A work-around for this console error: https://github.com/mui/material-ui/issues/28687#issuecomment-1513741911
-jest.mock("@mui/base/node/useAutocomplete/useAutocomplete", () => ({
+jest.mock("@mui/material/useAutocomplete/useAutocomplete", () => ({
   useAutocomplete: () => ({
     getInputLabelProps: jest.fn(),
     getInputProps: () => ({ onMouseDown: jest.fn() }),
