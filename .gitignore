@@ -22,8 +22,7 @@ nginx/scripts
 /restore
 script_conf.json
 backup_conf.json
-public/scripts/release.js
-public/scripts/config.js
+public/scripts/
 
 # Misc
 .DS_Store
