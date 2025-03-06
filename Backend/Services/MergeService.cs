@@ -35,14 +35,21 @@ namespace BackendFramework.Services
 
             foreach (var childSource in mergeWords.Children)
             {
+                var child = await _wordRepo.GetWord(projectId, childSource.SrcWordId)
+                    ?? throw new KeyNotFoundException($"Unable to locate word: ${childSource.SrcWordId}");
+
+                if (child.Guid == parent.Guid)
+                {
+                    // Update parent's UsingCitationForm.
+                    parent.UsingCitationForm = child.UsingCitationForm && parent.Vernacular == child.Vernacular;
+                }
+
                 // Add child to history.
                 parent.History.Add(childSource.SrcWordId);
 
                 if (childSource.GetAudio)
                 {
                     // Add child's audio.
-                    var child = await _wordRepo.GetWord(projectId, childSource.SrcWordId)
-                        ?? throw new KeyNotFoundException($"Unable to locate word: ${childSource.SrcWordId}");
                     child.Audio.ForEach(pro =>
                     {
                         if (parent.Audio.All(p => p.FileName != pro.FileName))

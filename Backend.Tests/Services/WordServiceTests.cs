@@ -90,7 +90,7 @@ namespace Backend.Tests.Services
         [Test]
         public void TestUpdateReplacesFrontierWord()
         {
-            var word = _wordRepo.AddFrontier(new Word { ProjectId = ProjId }).Result;
+            var word = _wordRepo.Create(new Word { ProjectId = ProjId }).Result;
             Assert.That(word, Is.Not.Null);
             var oldId = word.Id;
             word.Vernacular = "NewVern";
@@ -100,6 +100,25 @@ namespace Backend.Tests.Services
             var newWord = frontier.First();
             Assert.That(newWord.Id, Is.Not.EqualTo(oldId));
             Assert.That(newWord.History.Last(), Is.EqualTo(oldId));
+        }
+
+        [Test]
+        public void TestUpdateUsingCitationForm()
+        {
+            // Create a word with UsingCitationForm true.
+            var word = _wordRepo.Create(new Word { ProjectId = ProjId, UsingCitationForm = true }).Result;
+            Assert.That(word, Is.Not.Null);
+            Assert.That(word.UsingCitationForm, Is.True);
+
+            // Update something other than Vernacular and make sure UsingCitationForm is still true.
+            word.Note = new() { Text = "change word's note" };
+            _ = _wordService.Update(ProjId, UserId, word.Id, word).Result;
+            Assert.That(word.UsingCitationForm, Is.True);
+
+            // Update the Vernacular and make sure UsingCitationForm is false.
+            word.Vernacular = "change word's vernacular form";
+            _ = _wordService.Update(ProjId, UserId, word.Id, word).Result;
+            Assert.That(word.UsingCitationForm, Is.False);
         }
 
         [Test]
