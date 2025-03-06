@@ -275,7 +275,7 @@ In the project directory, you can run:
 
 Installs the necessary packages and runs the app in the development mode.
 
-Open <http://localhost:3000> to view it in the browser.
+Open <http://localhost:1234> to view it in the browser.
 
 #### `npm run frontend`
 
@@ -291,7 +291,7 @@ Runs only the mongo database.
 
 #### `npm run build`
 
-Builds the app for production to the `build` folder.
+Builds the app for production to the `dist` folder.
 
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
@@ -301,9 +301,9 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-#### `npm run analyze`
+#### `npm run build:analyze`
 
-Run after `npm run build` to analyze the contents build bundle chunks.
+Builds then generates a tree map of the bundle chunks.
 
 ### Using OpenAPI
 
@@ -1162,6 +1162,7 @@ The process for configuring and deploying _TheCombine_ for production targets is
 - [React-i18next](https://react.i18next.com/) (text localization)
 - [Jest](https://jestjs.io/docs/getting-started) (unit testing)
 - [React-Test-Renderer](https://reactjs.org/docs/test-renderer.html) (unit testing)
+- [Parcel](https://parceljs.org/docs/) (bundler/builder)
 
 ### Kubernetes/Helm
 
