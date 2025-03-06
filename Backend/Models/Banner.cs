@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -43,21 +42,6 @@ namespace BackendFramework.Models
         {
             Type = BannerType.None;
             Text = "";
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not SiteBanner other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return Type.Equals(other.Type) && Text.Equals(other.Text, StringComparison.Ordinal);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Type, Text);
         }
     }
 

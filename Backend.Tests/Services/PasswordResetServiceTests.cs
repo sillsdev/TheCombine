@@ -31,7 +31,7 @@ namespace Backend.Tests.Services
             _userRepo.Create(user);
 
             var res = _passwordResetService.CreatePasswordReset(Email).Result;
-            Assert.That(_passwordResets.GetResets(), Does.Contain(res));
+            Assert.That(_passwordResets.GetResets(), Does.Contain(res).UsingPropertiesComparer());
         }
 
         [Test]

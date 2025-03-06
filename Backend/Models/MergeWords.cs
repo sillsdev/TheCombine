@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -69,6 +68,7 @@ namespace BackendFramework.Models
             ChildIds = childIds;
         }
 
+        /// <summary> Create a deep copy. </summary>
         public MergeUndoIds Clone()
         {
             return new()
@@ -76,32 +76,6 @@ namespace BackendFramework.Models
                 ParentIds = ParentIds.Select(id => id).ToList(),
                 ChildIds = ChildIds.Select(id => id).ToList()
             };
-        }
-
-        public bool ContentEquals(MergeUndoIds other)
-        {
-            if (other.ParentIds.Count != ParentIds.Count || other.ChildIds.Count != ChildIds.Count)
-            {
-                return false;
-            }
-            return
-                other.ParentIds.All(ParentIds.Contains) &&
-                other.ChildIds.All(ChildIds.Contains);
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not MergeUndoIds other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return ContentEquals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(ParentIds, ChildIds);
         }
     }
 }
