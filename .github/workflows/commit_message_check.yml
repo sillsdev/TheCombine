@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [master]
 
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+
 permissions: # added using https://github.com/step-security/secure-workflows
   contents: read
   pull-requests: write

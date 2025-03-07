@@ -18,7 +18,7 @@ import TreeNavigator from "components/TreeView/TreeNavigator";
 import TreeSearch from "components/TreeView/TreeSearch";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
-import { newSemanticDomain } from "types/semanticDomain";
+import { newSemanticDomain, rootId } from "types/semanticDomain";
 import { semDomWritingSystems } from "types/writingSystem";
 
 function getSemDomWritingSystem(
@@ -153,12 +153,8 @@ export default function TreeView(props: TreeViewProps): ReactElement {
       <Zoom
         in={visible}
         onEntered={() => {
-          if (currentDomain.id) {
-            animate(
-              "#current-domain",
-              { transform: ["none", "scale(.9)", "none"] },
-              { duration: 1 }
-            );
+          if (currentDomain.id && currentDomain.id !== rootId) {
+            animate("#current-domain", { scale: [1, 0.9, 1] }, { duration: 1 });
           }
         }}
       >
