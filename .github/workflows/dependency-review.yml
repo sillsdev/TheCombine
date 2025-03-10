@@ -9,6 +9,10 @@
 name: "Dependency Review"
 on: [pull_request]
 
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+
 permissions:
   contents: read
 

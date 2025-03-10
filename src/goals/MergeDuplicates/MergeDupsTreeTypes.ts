@@ -3,6 +3,7 @@ import { v4 } from "uuid";
 import {
   type Flag,
   type Note,
+  type ProtectReason,
   type Sense,
   Status,
   type Word,
@@ -13,6 +14,7 @@ import { newFlag, newNote, newSense } from "types/word";
 export interface MergeTreeSense {
   order: number;
   protected: boolean;
+  protectReasons?: ProtectReason[];
   srcWordId: string;
   sense: Sense;
 }
@@ -29,6 +31,7 @@ export interface MergeTreeReference {
   mergeSenseId: string;
   order?: number;
   isSenseProtected?: boolean;
+  protectReasons?: ProtectReason[];
 }
 
 export interface MergeTreeWord {
@@ -37,6 +40,7 @@ export interface MergeTreeWord {
   flag: Flag;
   note: Note;
   protected: boolean;
+  protectReasons?: ProtectReason[];
   audioCount: number;
 }
 
@@ -75,7 +79,8 @@ export function convertSenseToMergeTreeSense(
 ): MergeTreeSense {
   return {
     order,
-    protected: sense?.accessibility === Status.Protected,
+    protected: sense.accessibility === Status.Protected,
+    protectReasons: sense.protectReasons ?? undefined,
     srcWordId,
     sense,
   };
@@ -89,6 +94,7 @@ export function convertWordToMergeTreeWord(word: Word): MergeTreeWord {
   mergeTreeWord.flag = { ...word.flag };
   mergeTreeWord.note = { ...word.note };
   mergeTreeWord.protected = word.accessibility === Status.Protected;
+  mergeTreeWord.protectReasons = word.protectReasons ?? undefined;
   mergeTreeWord.audioCount = word.audio.length;
   return mergeTreeWord;
 }

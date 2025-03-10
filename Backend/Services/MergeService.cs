@@ -96,7 +96,7 @@ namespace BackendFramework.Services
             if (!await _wordService.RestoreFrontierWords(projectId, ids.ChildIds))
             {
                 return false;
-            };
+            }
             foreach (var parentId in ids.ParentIds)
             {
                 await _wordService.DeleteFrontierWord(projectId, userId, parentId);

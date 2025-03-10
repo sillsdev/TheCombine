@@ -30,16 +30,16 @@ import {
   meetsUsernameRequirements,
 } from "utilities/utilities";
 
-enum SignupField {
-  Email,
-  Name,
-  Password1,
-  Password2,
-  Username,
+export enum SignupField {
+  Email = "email",
+  Name = "name",
+  Password1 = "password1",
+  Password2 = "password2",
+  Username = "username",
 }
 
 type SignupError = Record<SignupField, boolean>;
-type SignupText = Record<SignupField, string>;
+export type SignupText = Record<SignupField, string>;
 
 const defaultSignupError: SignupError = {
   [SignupField.Email]: false,
@@ -56,6 +56,14 @@ const defaultSignupText: SignupText = {
   [SignupField.Username]: "",
 };
 
+export const signupFieldTextId: SignupText = {
+  [SignupField.Email]: "login.email",
+  [SignupField.Name]: "login.name",
+  [SignupField.Password1]: "login.password",
+  [SignupField.Password2]: "login.confirmPassword",
+  [SignupField.Username]: "login.username",
+};
+
 export enum SignupId {
   ButtonLogIn = "signup-log-in-button",
   ButtonSignUp = "signup-sign-up-button",
@@ -66,6 +74,14 @@ export enum SignupId {
   FieldUsername = "signup-username-field",
   Form = "signup-form",
 }
+
+export const signupFieldId: Record<SignupField, SignupId> = {
+  [SignupField.Email]: SignupId.FieldEmail,
+  [SignupField.Name]: SignupId.FieldName,
+  [SignupField.Password1]: SignupId.FieldPassword1,
+  [SignupField.Password2]: SignupId.FieldPassword2,
+  [SignupField.Username]: SignupId.FieldUsername,
+};
 
 // Chrome silently converts non-ASCII characters in a Textfield of type="email".
 // Use punycode.toUnicode() to convert them from punycode back to Unicode.
@@ -154,13 +170,18 @@ export default function Signup(props: SignupProps): ReactElement {
     }
   };
 
-  const defaultTextFieldProps: TextFieldProps = {
-    inputProps: { maxLength: 100 },
+  const defaultTextFieldProps = (field: SignupField): TextFieldProps => ({
+    error: fieldError[field],
+    id: signupFieldId[field],
+    inputProps: { "data-testid": signupFieldId[field], maxLength: 100 },
+    label: t(signupFieldTextId[field]),
     margin: "normal",
+    onChange: (e) => updateField(e, field),
     required: true,
     style: { width: "100%" },
+    value: fieldText[field],
     variant: "outlined",
-  };
+  });
 
   return (
     <Grid container justifyContent="center">
@@ -174,74 +195,49 @@ export default function Signup(props: SignupProps): ReactElement {
 
             {/* Name field */}
             <TextField
-              {...defaultTextFieldProps}
+              {...defaultTextFieldProps(SignupField.Name)}
               autoComplete="name"
               autoFocus
-              error={fieldError[SignupField.Name]}
               helperText={
                 fieldError[SignupField.Name] ? t("login.required") : undefined
               }
-              id={SignupId.FieldName}
-              label={t("login.name")}
-              onChange={(e) => updateField(e, SignupField.Name)}
-              value={fieldText[SignupField.Name]}
             />
 
             {/* Username field */}
             <TextField
-              {...defaultTextFieldProps}
+              {...defaultTextFieldProps(SignupField.Username)}
               autoComplete="username"
-              error={fieldError[SignupField.Username]}
               helperText={t("login.usernameRequirements")}
-              id={SignupId.FieldUsername}
-              label={t("login.username")}
               onBlur={() => checkUsername()}
-              onChange={(e) => updateField(e, SignupField.Username)}
-              value={fieldText[SignupField.Username]}
             />
 
             {/* Email field */}
             <TextField
-              {...defaultTextFieldProps}
+              {...defaultTextFieldProps(SignupField.Email)}
               autoComplete="email"
-              error={fieldError[SignupField.Email]}
-              id={SignupId.FieldEmail}
-              label={t("login.email")}
-              onChange={(e) => updateField(e, SignupField.Email)}
               type="email"
-              value={fieldText[SignupField.Email]}
             />
 
             {/* Password field */}
             <TextField
-              {...defaultTextFieldProps}
+              {...defaultTextFieldProps(SignupField.Password1)}
               autoComplete="new-password"
-              error={fieldError[SignupField.Password1]}
               helperText={t("login.passwordRequirements")}
-              id={SignupId.FieldPassword1}
-              label={t("login.password")}
               onBlur={() => checkPassword1()}
-              onChange={(e) => updateField(e, SignupField.Password1)}
               type="password"
-              value={fieldText[SignupField.Password1]}
             />
 
             {/* Confirm Password field */}
             <TextField
-              {...defaultTextFieldProps}
+              {...defaultTextFieldProps(SignupField.Password2)}
               autoComplete="new-password"
-              error={fieldError[SignupField.Password2]}
               helperText={
                 fieldError[SignupField.Password2]
                   ? t("login.confirmPasswordError")
                   : undefined
               }
-              id={SignupId.FieldPassword2}
-              label={t("login.confirmPassword")}
               onBlur={() => checkPassword2()}
-              onChange={(e) => updateField(e, SignupField.Password2)}
               type="password"
-              value={fieldText[SignupField.Password2]}
             />
 
             {/* "Failed to sign up" */}
@@ -260,6 +256,7 @@ export default function Signup(props: SignupProps): ReactElement {
             <Grid container justifyContent="flex-end" spacing={2}>
               <Grid item>
                 <Button
+                  data-testid={SignupId.ButtonLogIn}
                   id={SignupId.ButtonLogIn}
                   onClick={() => router.navigate(Path.Login)}
                   type="button"
@@ -272,6 +269,7 @@ export default function Signup(props: SignupProps): ReactElement {
                 <LoadingDoneButton
                   buttonProps={{
                     color: "primary",
+                    "data-testid": SignupId.ButtonSignUp,
                     id: SignupId.ButtonSignUp,
                   }}
                   disabled={!isVerified}
