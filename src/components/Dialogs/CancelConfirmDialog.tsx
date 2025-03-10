@@ -20,6 +20,8 @@ interface CancelConfirmDialogProps {
   buttonIdConfirm?: string;
   buttonLabelCancel?: string;
   buttonLabelConfirm?: string;
+  disableBackdropClick?: boolean;
+  disableEscapeKeyDown?: boolean;
 }
 
 /**
@@ -37,10 +39,23 @@ export default function CancelConfirmDialog(
     setLoading(false);
   };
 
+  const dialogOnClose = (
+    _: unknown,
+    reason: "backdropClick" | "escapeKeyDown"
+  ): void => {
+    if (
+      (reason === "backdropClick" && props.disableBackdropClick) ||
+      (reason === "escapeKeyDown" && props.disableEscapeKeyDown)
+    ) {
+      return;
+    }
+    props.handleCancel();
+  };
+
   return (
     <Dialog
       open={props.open}
-      onClose={props.handleCancel}
+      onClose={dialogOnClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >

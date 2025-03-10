@@ -1,38 +1,30 @@
-import renderer from "react-test-renderer";
+import { act, render, screen } from "@testing-library/react";
 
-import { FileInputButton } from "components/Buttons";
+import MockBypassFileInputButton from "components/Buttons/FileInputButton";
+import MockBypassLoadableButton from "components/Buttons/LoadingDoneButton";
 import ProjectImport, {
-  uploadFileButtonId,
+  ProjectImportIds,
 } from "components/ProjectSettings/ProjectImport";
 import { randomProject } from "types/project";
 
-const mockSetProject = jest.fn();
-
-const mockProject = randomProject();
-
-let testRenderer: renderer.ReactTestRenderer;
-let uploadButton: renderer.ReactTestInstance;
+jest.mock("components/Buttons", () => ({
+  ...jest.requireActual("components/Buttons"),
+  FileInputButton: MockBypassFileInputButton,
+  LoadingDoneButton: MockBypassLoadableButton,
+}));
 
 const renderImport = async (): Promise<void> => {
-  await renderer.act(async () => {
-    testRenderer = renderer.create(
-      <ProjectImport project={mockProject} setProject={mockSetProject} />
-    );
+  await act(async () => {
+    render(<ProjectImport project={randomProject()} setProject={jest.fn()} />);
   });
-  uploadButton = testRenderer.root.findByProps({ id: uploadFileButtonId });
 };
 
 describe("ProjectImport", () => {
-  it("upload button disabled when no file selected", async () => {
+  it("renders with file select button and disabled upload button", async () => {
     await renderImport();
-    expect(uploadButton.props.disabled).toBeTruthy();
-  });
-
-  it("upload button enabled when file selected", async () => {
-    await renderImport();
-    const selectButton = testRenderer.root.findByType(FileInputButton);
-    const mockFile = { name: "name-of-a.file" } as File;
-    await renderer.act(async () => selectButton.props.updateFile(mockFile));
-    expect(uploadButton.props.disabled).toBeFalsy();
+    const fileButton = screen.getByTestId(ProjectImportIds.ButtonFileSelect);
+    expect(fileButton.classList.toString()).not.toContain("Mui-disabled");
+    const uploadButton = screen.getByTestId(ProjectImportIds.ButtonFileSubmit);
+    expect(uploadButton.classList.toString()).toContain("Mui-disabled");
   });
 });

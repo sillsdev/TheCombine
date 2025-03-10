@@ -470,8 +470,15 @@ namespace BackendFramework.Services
         /// <summary> Adds vernacular of a word to be written out to lift </summary>
         private static void AddVern(LexEntry entry, Word wordEntry, string vernacularBcp47)
         {
-            entry.LexicalForm.MergeIn(MultiText.Create(
-                new LiftMultiText { { vernacularBcp47, wordEntry.Vernacular } }));
+            var multiText = MultiText.Create(new LiftMultiText { { vernacularBcp47, wordEntry.Vernacular } });
+            if (wordEntry.UsingCitationForm)
+            {
+                entry.CitationForm.MergeIn(multiText);
+            }
+            else
+            {
+                entry.LexicalForm.MergeIn(multiText);
+            }
         }
 
         /// <summary> Adds each <see cref="Sense"/> of a word to be written out to lift </summary>
@@ -756,18 +763,10 @@ namespace BackendFramework.Services
 
                 // Add vernacular, prioritizing citation form over vernacular form.
                 var vern = entry.CitationForm.FirstOrDefault(x => x.Key == _vernLang).Value?.Text;
+                newWord.UsingCitationForm = !string.IsNullOrWhiteSpace(vern);
                 if (string.IsNullOrWhiteSpace(vern))
                 {
                     vern = entry.LexicalForm.FirstOrDefault(x => x.Key == _vernLang).Value?.Text;
-                }
-                // If not available in the project's vernacular writing system, fall back to the first available one.
-                if (string.IsNullOrWhiteSpace(vern))
-                {
-                    vern = entry.CitationForm.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Value.Text)).Value?.Text;
-                }
-                if (string.IsNullOrWhiteSpace(vern))
-                {
-                    vern = entry.LexicalForm.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Value.Text)).Value?.Text;
                 }
                 // This is not a word if there is no vernacular.
                 if (string.IsNullOrWhiteSpace(vern))
