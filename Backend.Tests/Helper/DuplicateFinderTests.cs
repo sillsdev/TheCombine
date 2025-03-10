@@ -84,17 +84,17 @@ namespace Backend.Tests.Helper
                     Glosses = [new() { Def = "not-CASE-or-lang-sensitive", Language = "en" }],
                     SemanticDomains = [new() { Id = "3", Name = "Language and thought" }]
                 }],
-                Note = new() {Language = "en", Text = "Similar vern, with same gloss/definition"}
+                Note = new() { Language = "en", Text = "Similar vern, with same gloss/definition" }
             },
             new()
             {
                 Vernacular = "33333b",
                 Senses = [new()
                 {
-                    Definitions=[new() {Text = "not-case-or-LANG-sensitive", Language = "en-GB" }],
+                    Definitions = [new() { Text = "not-case-or-LANG-sensitive", Language = "en-GB" }],
                     SemanticDomains = [new() { Id = "3", Name = "Language and thought" }]
                 }],
-                Note = new() {Language = "en", Text = "Similar vern, with same gloss/definition"}
+                Note = new() { Language = "en", Text = "Similar vern, with same gloss/definition" }
             },
             new()
             {
@@ -120,7 +120,7 @@ namespace Backend.Tests.Helper
                 Senses = [new()
                 {
                     Glosses = [new() { Def = "same-vernacular", Language = "en" }],
-                    GrammaticalInfo = new() { CatGroup = GramCatGroup.Verb, GrammaticalCategory = "Intransitive verb"},
+                    GrammaticalInfo = new() { CatGroup = GramCatGroup.Verb, GrammaticalCategory = "Intransitive verb" },
                     SemanticDomains = [new() { Id = "5", Name = "Daily life" }]
                 }]
             },
@@ -130,7 +130,7 @@ namespace Backend.Tests.Helper
                 Senses = [new()
                 {
                     Glosses = [new() { Def = "different-part-of-speech", Language = "en" }],
-                    GrammaticalInfo = new() { CatGroup = GramCatGroup.Noun, GrammaticalCategory = "Proper noun"},
+                    GrammaticalInfo = new() { CatGroup = GramCatGroup.Noun, GrammaticalCategory = "Proper noun" },
                     SemanticDomains = [new() { Id = "5", Name = "Daily life" }]
                 }]
             },
