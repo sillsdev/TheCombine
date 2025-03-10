@@ -19,7 +19,7 @@ _The Combine_ can be installed on a PC that meets the following requirements:
 - a wired-ethernet connection to the Internet
 - User account that can run as `root` with `sudo`.
 
-The installation script has been tested on _Ubuntu 22.04_ and _Wasta Linux 22.04_.
+The installation script has been tested on _Ubuntu 22.04_, _Ubuntu 24.04_, and _Wasta Linux 22.04_.
 
 ## Install _The Combine_
 
