@@ -112,6 +112,7 @@ namespace BackendFramework.Models
             WorkshopSchedule = new();
         }
 
+        /// <summary> Create a deep copy. </summary>
         public Project Clone()
         {
             return new()
@@ -137,82 +138,6 @@ namespace BackendFramework.Models
                 WorkshopSchedule = WorkshopSchedule.Select(dt => dt).ToList(),
             };
         }
-
-        public bool ContentEquals(Project other)
-        {
-            return
-                other.Name.Equals(Name, StringComparison.Ordinal) &&
-                other.IsActive == IsActive &&
-                other.LiftImported == LiftImported &&
-                other.DefinitionsEnabled == DefinitionsEnabled &&
-                other.GrammaticalInfoEnabled == GrammaticalInfoEnabled &&
-                other.AutocompleteSetting.Equals(AutocompleteSetting) &&
-                other.ProtectedDataOverrideEnabled.Equals(ProtectedDataOverrideEnabled) &&
-                other.SemDomWritingSystem.Equals(SemDomWritingSystem) &&
-                other.VernacularWritingSystem.Equals(VernacularWritingSystem) &&
-
-                other.AnalysisWritingSystems.Count == AnalysisWritingSystems.Count &&
-                other.AnalysisWritingSystems.All(AnalysisWritingSystems.Contains) &&
-
-                other.SemanticDomains.Count == SemanticDomains.Count &&
-                other.SemanticDomains.All(SemanticDomains.Contains) &&
-
-                other.ValidCharacters.Count == ValidCharacters.Count &&
-                other.ValidCharacters.All(ValidCharacters.Contains) &&
-
-                other.RejectedCharacters.Count == RejectedCharacters.Count &&
-                other.RejectedCharacters.All(RejectedCharacters.Contains) &&
-
-                other.CustomFields.Count == CustomFields.Count &&
-                other.CustomFields.All(CustomFields.Contains) &&
-
-                other.WordFields.Count == WordFields.Count &&
-                other.WordFields.All(WordFields.Contains) &&
-
-                other.PartsOfSpeech.Count == PartsOfSpeech.Count &&
-                other.PartsOfSpeech.All(PartsOfSpeech.Contains) &&
-
-                other.InviteTokens.Count == InviteTokens.Count &&
-                other.InviteTokens.All(InviteTokens.Contains) &&
-
-                other.WorkshopSchedule.Count == WorkshopSchedule.Count &&
-                other.WorkshopSchedule.All(WorkshopSchedule.Contains);
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not Project other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return other.Id.Equals(Id, StringComparison.Ordinal) && ContentEquals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            var hash = new HashCode();
-            hash.Add(Id);
-            hash.Add(Name);
-            hash.Add(IsActive);
-            hash.Add(LiftImported);
-            hash.Add(DefinitionsEnabled);
-            hash.Add(GrammaticalInfoEnabled);
-            hash.Add(AutocompleteSetting);
-            hash.Add(ProtectedDataOverrideEnabled);
-            hash.Add(SemDomWritingSystem);
-            hash.Add(VernacularWritingSystem);
-            hash.Add(AnalysisWritingSystems);
-            hash.Add(SemanticDomains);
-            hash.Add(ValidCharacters);
-            hash.Add(RejectedCharacters);
-            hash.Add(CustomFields);
-            hash.Add(WordFields);
-            hash.Add(PartsOfSpeech);
-            hash.Add(InviteTokens);
-            hash.Add(WorkshopSchedule);
-            return hash.ToHashCode();
-        }
     }
 
     public class CustomField
@@ -228,29 +153,11 @@ namespace BackendFramework.Models
             Type = "";
         }
 
+        /// <summary> Create a deep copy. </summary>
         public CustomField Clone()
         {
-            return new CustomField
-            {
-                Name = Name,
-                Type = Type
-            };
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not CustomField customField || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return Name.Equals(customField.Name, StringComparison.Ordinal) &&
-                Type.Equals(customField.Type, StringComparison.Ordinal);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Name, Type);
+            // Shallow copy is sufficient.
+            return (CustomField)MemberwiseClone();
         }
     }
 
@@ -290,27 +197,10 @@ namespace BackendFramework.Models
             }
         }
 
+        /// <summary> Create a deep copy. </summary>
         public WritingSystem Clone()
         {
             return new(Bcp47, Name, Font, Rtl);
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not WritingSystem ws || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return Bcp47.Equals(ws.Bcp47, StringComparison.Ordinal) &&
-                Name.Equals(ws.Name, StringComparison.Ordinal) &&
-                Font.Equals(ws.Font, StringComparison.Ordinal) &&
-                Rtl == ws.Rtl;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Bcp47, Name, Font, Rtl ?? false);
         }
 
         public override string ToString()

@@ -54,16 +54,15 @@ namespace Backend.Tests.Mocks
 
         public Task<bool> Delete(string projectId, string entryId)
         {
-            var foundMergeGraylist = _mergeGraylist.Single(entry => entry.Id == entryId);
-            return Task.FromResult(_mergeGraylist.Remove(foundMergeGraylist));
+            var rmCount = _mergeGraylist.RemoveAll(entry => entry.Id == entryId);
+            return Task.FromResult(rmCount > 0);
         }
 
         public Task<ResultOfUpdate> Update(MergeWordSet wordSetEntry)
         {
-            var foundEntry = _mergeGraylist.Single(
+            var rmCount = _mergeGraylist.RemoveAll(
                 e => e.ProjectId == wordSetEntry.ProjectId && e.Id == wordSetEntry.Id);
-            var success = _mergeGraylist.Remove(foundEntry);
-            if (!success)
+            if (rmCount == 0)
             {
                 return Task.FromResult(ResultOfUpdate.NotFound);
             }

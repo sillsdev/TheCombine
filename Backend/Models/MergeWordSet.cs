@@ -30,17 +30,15 @@ namespace BackendFramework.Models
             WordIds = new();
         }
 
+        /// <summary> Create a deep copy. </summary>
         public MergeWordSet Clone()
         {
-            return new()
-            {
-                Id = Id,
-                ProjectId = ProjectId,
-                UserId = UserId,
-                WordIds = WordIds.Select(id => id).ToList()
-            };
+            var clone = (MergeWordSet)MemberwiseClone();
+            clone.WordIds = WordIds.Select(id => id).ToList();
+            return clone;
         }
 
+        /// <summary> Check if content is the same as another MergeWordSet. </summary>
         public bool ContentEquals(MergeWordSet other)
         {
             return
@@ -48,20 +46,6 @@ namespace BackendFramework.Models
                 other.UserId.Equals(UserId, StringComparison.Ordinal) &&
                 other.WordIds.Count == WordIds.Count &&
                 other.WordIds.All(WordIds.Contains);
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not MergeWordSet other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-            return other.Id.Equals(Id, StringComparison.Ordinal) && ContentEquals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, ProjectId, UserId, WordIds);
         }
     }
 }

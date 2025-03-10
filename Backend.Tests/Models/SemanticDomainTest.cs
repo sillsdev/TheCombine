@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BackendFramework.Models;
 using NUnit.Framework;
 
@@ -7,39 +6,18 @@ namespace Backend.Tests.Models
 {
     public class SemanticDomainTests
     {
-        private const string Name = "Home";
-
         [Test]
-        public void TestEquals()
+        public void TestClone()
         {
-            var domain = new SemanticDomain { Name = Name };
-            Assert.That(domain.Equals(new SemanticDomain { Name = Name }), Is.True);
-        }
-
-        [Test]
-        public void TestEqualsNull()
-        {
-            var domain = new SemanticDomain { Name = Name };
-            Assert.That(domain.Equals(null), Is.False);
-        }
-
-        [Test]
-        public void TestHashCode()
-        {
-            Assert.That(
-                new SemanticDomain { Id = "1" }.GetHashCode(),
-                Is.Not.EqualTo(new SemanticDomain { Id = "2" }.GetHashCode())
-            );
-
-            Assert.That(
-                new SemanticDomain { Name = "1" }.GetHashCode(),
-                Is.Not.EqualTo(new SemanticDomain { Name = "2" }.GetHashCode())
-            );
-
-            Assert.That(
-                new SemanticDomain { Guid = Guid.NewGuid().ToString() }.GetHashCode(),
-                Is.Not.EqualTo(new SemanticDomain { Name = Guid.NewGuid().ToString() }.GetHashCode())
-            );
+            var domain = new SemanticDomain
+            {
+                Created = "now",
+                Id = "6.5.1.1",
+                Lang = "en",
+                Name = "House",
+                UserId = "myself"
+            };
+            Assert.That(domain.Clone(), Is.EqualTo(domain).UsingPropertiesComparer());
         }
 
         private static readonly List<string> _invalidIds = new()
@@ -93,44 +71,17 @@ namespace Backend.Tests.Models
 
     public class SemanticDomainFullTests
     {
-        private const string Name = "Home";
-
         [Test]
-        public void TestEquals()
+        public void TestClone()
         {
-            var domain = new SemanticDomainFull { Name = Name };
-            Assert.That(domain.Equals(new SemanticDomainFull { Name = Name }), Is.True);
-        }
-
-        [Test]
-        public void TestEqualsNull()
-        {
-            var domain = new SemanticDomainFull { Name = Name };
-            Assert.That(domain.Equals(null), Is.False);
-        }
-
-        [Test]
-        public void TestHashCode()
-        {
-            Assert.That(
-                new SemanticDomainFull { Id = "1" }.GetHashCode(),
-                Is.Not.EqualTo(new SemanticDomainFull { Id = "2" }.GetHashCode())
-            );
-
-            Assert.That(
-                new SemanticDomainFull { Name = "1" }.GetHashCode(),
-                Is.Not.EqualTo(new SemanticDomainFull { Name = "2" }.GetHashCode())
-            );
-
-            Assert.That(
-                new SemanticDomainFull { Description = "1" }.GetHashCode(),
-                Is.Not.EqualTo(new SemanticDomainFull { Description = "2" }.GetHashCode())
-            );
-
-            Assert.That(
-                new SemanticDomainFull { Questions = new List<string> { "1" } }.GetHashCode(),
-                Is.Not.EqualTo(new SemanticDomainFull { Questions = new List<string> { "2" } }.GetHashCode())
-            );
+            var domain = new SemanticDomainFull
+            {
+                Description = "Words referring to a house where people live.",
+                Id = "6.5.1.1",
+                Name = "House",
+                Questions = ["What general words refer to a house where people live?"]
+            };
+            Assert.That(domain.Clone(), Is.EqualTo(domain).UsingPropertiesComparer());
         }
     }
 }

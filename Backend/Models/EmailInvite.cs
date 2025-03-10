@@ -43,33 +43,11 @@ namespace BackendFramework.Models
             Role = role;
         }
 
+        /// <summary> Create a deep copy. </summary>
         public EmailInvite Clone()
         {
-            return new EmailInvite
-            {
-                Email = Email,
-                Role = Role,
-                Token = Token,
-                ExpireTime = ExpireTime
-            };
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not EmailInvite emailInvite || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return Email.Equals(emailInvite.Email, StringComparison.Ordinal) &&
-                   Token.Equals(emailInvite.Token, StringComparison.Ordinal) &&
-                   Role == emailInvite.Role &&
-                   ExpireTime == emailInvite.ExpireTime;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Email, Token, Role, ExpireTime);
+            // Shallow copy is sufficient.
+            return (EmailInvite)MemberwiseClone();
         }
     }
 }

@@ -73,7 +73,7 @@ namespace BackendFramework.Services
                 await _userRepo.Update(updatedUser.Id, updatedUser);
 
                 // Removes token and updates user
-                project.InviteTokens.Remove(emailInvite);
+                project.InviteTokens.RemoveAll(i => i.Token.Equals(emailInvite.Token, StringComparison.Ordinal));
                 await _projRepo.Update(project.Id, project);
 
                 return true;

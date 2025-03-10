@@ -50,9 +50,8 @@ namespace Backend.Tests.Mocks
 
         public Task<bool> Delete(string userId)
         {
-            var foundUser = _users.Single(user => user.Id == userId);
-            var success = _users.Remove(foundUser);
-            return Task.FromResult(success);
+            var rmCount = _users.RemoveAll(user => user.Id == userId);
+            return Task.FromResult(rmCount > 0);
         }
 
         public Task<User?> GetUserByEmail(string email, bool sanitize = true)
@@ -84,8 +83,8 @@ namespace Backend.Tests.Mocks
                 user.IsAdmin = foundUser.IsAdmin;
             }
 
-            var success = _users.Remove(foundUser);
-            if (!success)
+            var rmCount = _users.RemoveAll(u => u.Id == userId);
+            if (rmCount == 0)
             {
                 return Task.FromResult(ResultOfUpdate.NotFound);
             }

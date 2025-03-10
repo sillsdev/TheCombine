@@ -51,25 +51,14 @@ namespace Backend.Tests.Mocks
 
         public Task<bool> Delete(string projectId, string speakerId)
         {
-            var foundSpeaker = _speakers.Single(speaker => speaker.Id == speakerId);
-            return Task.FromResult(_speakers.Remove(foundSpeaker));
+            var rmCount = _speakers.RemoveAll(speaker => speaker.Id == speakerId);
+            return Task.FromResult(rmCount > 0);
         }
 
         public Task<ResultOfUpdate> Update(string speakerId, Speaker speaker)
         {
-            var foundSpeaker = _speakers.Single(ur => ur.Id == speakerId);
-            if (foundSpeaker is null)
-            {
-                return Task.FromResult(ResultOfUpdate.NotFound);
-            }
-
-            if (foundSpeaker.ContentEquals(speaker))
-            {
-                return Task.FromResult(ResultOfUpdate.NoChange);
-            }
-
-            var success = _speakers.Remove(foundSpeaker);
-            if (!success)
+            var rmCount = _speakers.RemoveAll(ur => ur.Id == speakerId);
+            if (rmCount == 0)
             {
                 return Task.FromResult(ResultOfUpdate.NotFound);
             }

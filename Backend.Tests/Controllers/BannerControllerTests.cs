@@ -46,7 +46,7 @@ namespace Backend.Tests.Controllers
             var updateResult = (ObjectResult)_bannerController.UpdateBanner(_siteBanner).Result;
             Assert.That(updateResult.Value, Is.True);
             var bannerResult = (ObjectResult)_bannerController.GetBanner(Type).Result;
-            Assert.That(bannerResult.Value, Is.EqualTo(_siteBanner));
+            Assert.That(bannerResult.Value, Is.EqualTo(_siteBanner).UsingPropertiesComparer());
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace Backend.Tests.Controllers
             Assert.That(updateResult.Value, Is.True);
             _bannerController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var bannerResult = (ObjectResult)_bannerController.GetBanner(Type).Result;
-            Assert.That(bannerResult.Value, Is.EqualTo(_siteBanner));
+            Assert.That(bannerResult.Value, Is.EqualTo(_siteBanner).UsingPropertiesComparer());
         }
     }
 }
