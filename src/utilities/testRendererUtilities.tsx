@@ -20,7 +20,9 @@ export function setMatchMedia(width?: number): void {
   window.matchMedia = (query: string): MediaQueryList =>
     ({
       matches: match(query, { width: width ?? window.innerWidth }),
+      addEventListener: jest.fn(),
       addListener: jest.fn(),
+      removeEventListener: jest.fn(),
       removeListener: jest.fn(),
     }) as any;
 }

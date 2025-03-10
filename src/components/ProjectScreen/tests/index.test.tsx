@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@mui/material/styles";
-import renderer from "react-test-renderer";
+import { act, render } from "@testing-library/react";
 
 import ProjectScreen from "components/ProjectScreen";
 import theme from "types/theme";
@@ -13,8 +13,8 @@ jest.mock("rootRedux/hooks", () => ({
 const mockDispatch = jest.fn();
 
 it("renders without crashing", () => {
-  renderer.act(() => {
-    renderer.create(
+  act(() => {
+    render(
       <ThemeProvider theme={theme}>
         <ProjectScreen />
       </ThemeProvider>

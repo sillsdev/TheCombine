@@ -40,13 +40,13 @@ describe("VernList", () => {
     expect(menuItems).toHaveLength(1);
   });
 
-  it("closes dialog when selecting a menu item", () => {
+  it("closes dialog when selecting the last menu item", () => {
     const closeDialogMockCallback = jest.fn();
     const words = testWordList();
     createVernListInstance(words, closeDialogMockCallback);
-    const menuItem = testRenderer.root.findByProps({ id: words[0].id });
+    const menuItems = testRenderer.root.findAllByType(StyledMenuItem);
     expect(closeDialogMockCallback).toHaveBeenCalledTimes(0);
-    menuItem.props.onClick();
+    menuItems[menuItems.length - 1].props.onClick();
     expect(closeDialogMockCallback).toHaveBeenCalledTimes(1);
   });
 
@@ -92,7 +92,7 @@ function createVernListInstance(
             <VernList
               vernacular="mockVern"
               vernacularWords={_vernacularWords}
-              closeDialog={_mockCallback}
+              onSelect={_mockCallback}
               analysisLang={defaultWritingSystem.bcp47}
             />
           </Provider>

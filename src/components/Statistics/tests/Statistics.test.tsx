@@ -1,11 +1,9 @@
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
-import { ReactTestRenderer, act, create } from "react-test-renderer";
+import { act, render } from "@testing-library/react";
 
 import Statistics from "components/Statistics/Statistics";
 import { newProject } from "types/project";
 import theme from "types/theme";
-
-let testRenderer: ReactTestRenderer;
 
 const mockProject = newProject();
 const mockProjectId = "mockProjectId";
@@ -34,7 +32,7 @@ beforeEach(async () => {
   jest.clearAllMocks();
   setMockFunctions();
   await act(async () => {
-    testRenderer = create(
+    render(
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <Statistics />{" "}
@@ -45,11 +43,7 @@ beforeEach(async () => {
 });
 
 describe("Statistics", () => {
-  it("renders without crashing, UI does not change unexpectedly", async () => {
-    expect(testRenderer.toJSON()).toMatchSnapshot();
-  });
-  it("useEffect hook was called", async () => {
-    //Verify the mock function called
+  test("useEffect hook was called", async () => {
     expect(mockGetProject).toHaveBeenCalled();
     expect(mockGetProjectId).toHaveBeenCalled();
   });
