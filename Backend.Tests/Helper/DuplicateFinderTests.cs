@@ -27,8 +27,8 @@ namespace Backend.Tests.Helper
                 Vernacular = "11111",
                 Senses = [new()
                 {
-                    Glosses = [new(){ Def = "three", Language = "en" }],
-                    SemanticDomains = [new(){ Id = "1", Name = "Universe, creation" }]
+                    Glosses = [new() { Def = "three", Language = "en" }],
+                    SemanticDomains = [new() { Id = "1", Name = "Universe, creation" }]
                 }]
             },
             new()
@@ -36,8 +36,8 @@ namespace Backend.Tests.Helper
                 Vernacular = "11111",
                 Senses = [new()
                 {
-                    Glosses = [new(){ Def = "identical", Language = "en" }],
-                    SemanticDomains = [new(){ Id = "1", Name = "Universe, creation" }]
+                    Glosses = [new() { Def = "identical", Language = "en" }],
+                    SemanticDomains = [new() { Id = "1", Name = "Universe, creation" }]
                 }]
             },
             new()
@@ -45,8 +45,8 @@ namespace Backend.Tests.Helper
                 Vernacular = "11111",
                 Senses = [new()
                 {
-                    Glosses = [new(){ Def = "vernacular", Language = "en" }],
-                    SemanticDomains = [new(){ Id = "1", Name = "Universe, creation" }]
+                    Glosses = [new() { Def = "vernacular", Language = "en" }],
+                    SemanticDomains = [new() { Id = "1", Name = "Universe, creation" }]
                 }]
             },
             new()
@@ -54,8 +54,8 @@ namespace Backend.Tests.Helper
                 Vernacular = "11111b",
                 Senses = [new()
                 {
-                    Glosses = [new(){ Def = "(and one similar)", Language = "en" }],
-                    SemanticDomains = [new(){ Id = "1", Name = "Universe, creation" }]
+                    Glosses = [new() { Def = "(and one similar)", Language = "en" }],
+                    SemanticDomains = [new() { Id = "1", Name = "Universe, creation" }]
                 }]
             },
             new()
@@ -63,8 +63,8 @@ namespace Backend.Tests.Helper
                 Vernacular = "222222222",
                 Senses = [new()
                 {
-                    Glosses = [new(){ Def = "very-similar-vernacular", Language = "en" }],
-                    SemanticDomains = [new(){ Id = "2", Name = "Person" }]
+                    Glosses = [new() { Def = "very-similar-vernacular", Language = "en" }],
+                    SemanticDomains = [new() { Id = "2", Name = "Person" }]
                 }]
             },
             new()
@@ -72,8 +72,8 @@ namespace Backend.Tests.Helper
                 Vernacular = "222222222a",
                 Senses = [new()
                 {
-                    Glosses = [new(){ Def = "only-one-char-different-in-long-string", Language = "en" }],
-                    SemanticDomains = [new(){ Id = "2", Name = "Person" }]
+                    Glosses = [new() { Def = "only-one-char-different-in-long-string", Language = "en" }],
+                    SemanticDomains = [new() { Id = "2", Name = "Person" }]
                 }]
             },
             new()
@@ -81,28 +81,28 @@ namespace Backend.Tests.Helper
                 Vernacular = "33333",
                 Senses = [new()
                 {
-                    Glosses = [new(){ Def = "not-CASE-or-lang-sensitive", Language = "en" }],
-                    SemanticDomains = [new(){ Id = "3", Name = "Language and thought" }]
+                    Glosses = [new() { Def = "not-CASE-or-lang-sensitive", Language = "en" }],
+                    SemanticDomains = [new() { Id = "3", Name = "Language and thought" }]
                 }],
-                Note = new(){Language = "en", Text = "Similar vern, with same gloss/definition"}
+                Note = new() {Language = "en", Text = "Similar vern, with same gloss/definition"}
             },
             new()
             {
                 Vernacular = "33333b",
                 Senses = [new()
                 {
-                    Definitions=[new(){Text = "not-case-or-LANG-sensitive", Language = "en-GB" }],
-                    SemanticDomains = [new(){ Id = "3", Name = "Language and thought" }]
+                    Definitions=[new() {Text = "not-case-or-LANG-sensitive", Language = "en-GB" }],
+                    SemanticDomains = [new() { Id = "3", Name = "Language and thought" }]
                 }],
-                Note = new(){Language = "en", Text = "Similar vern, with same gloss/definition"}
+                Note = new() {Language = "en", Text = "Similar vern, with same gloss/definition"}
             },
             new()
             {
                 Vernacular = "44444",
                 Senses = [new()
                 {
-                    Glosses = [new(){ Def = "similar-ish-vernacular-identical-glosses", Language = "en" }],
-                    SemanticDomains = [new(){ Id = "4", Name = "Social behavior" }]
+                    Glosses = [new() { Def = "similar-ish-vernacular-identical-glosses", Language = "en" }],
+                    SemanticDomains = [new() { Id = "4", Name = "Social behavior" }]
                 }]
             },
             new()
@@ -110,8 +110,8 @@ namespace Backend.Tests.Helper
                 Vernacular = "44444bb",
                 Senses = [new()
                 {
-                    Glosses = [new(){ Def = "similar-ish-vernacular-identical-glosses", Language = "en" }],
-                    SemanticDomains = [new(){ Id = "4", Name = "Social behavior" }]
+                    Glosses = [new() { Def = "similar-ish-vernacular-identical-glosses", Language = "en" }],
+                    SemanticDomains = [new() { Id = "4", Name = "Social behavior" }]
                 }]
             },
             new()
@@ -119,9 +119,9 @@ namespace Backend.Tests.Helper
                 Vernacular = "55555",
                 Senses = [new()
                 {
-                    Glosses = [new(){ Def = "same-vernacular", Language = "en" }],
-                    GrammaticalInfo = new(){ CatGroup = GramCatGroup.Verb, GrammaticalCategory = "Intransitive verb"},
-                    SemanticDomains = [new(){ Id = "5", Name = "Daily life" }]
+                    Glosses = [new() { Def = "same-vernacular", Language = "en" }],
+                    GrammaticalInfo = new() { CatGroup = GramCatGroup.Verb, GrammaticalCategory = "Intransitive verb"},
+                    SemanticDomains = [new() { Id = "5", Name = "Daily life" }]
                 }]
             },
             new()
@@ -129,9 +129,9 @@ namespace Backend.Tests.Helper
                 Vernacular = "55555",
                 Senses = [new()
                 {
-                    Glosses = [new(){ Def = "different-part-of-speech", Language = "en" }],
-                    GrammaticalInfo = new(){ CatGroup = GramCatGroup.Noun, GrammaticalCategory = "Proper noun"},
-                    SemanticDomains = [new(){ Id = "5", Name = "Daily life" }]
+                    Glosses = [new() { Def = "different-part-of-speech", Language = "en" }],
+                    GrammaticalInfo = new() { CatGroup = GramCatGroup.Noun, GrammaticalCategory = "Proper noun"},
+                    SemanticDomains = [new() { Id = "5", Name = "Daily life" }]
                 }]
             },
             new()
@@ -139,8 +139,8 @@ namespace Backend.Tests.Helper
                 Vernacular = "66a",
                 Senses = [new()
                 {
-                    Glosses = [new(){ Def = "one-char-different", Language = "en" }],
-                    SemanticDomains = [new(){ Id = "6", Name = "Work and occupation" }]
+                    Glosses = [new() { Def = "one-char-different", Language = "en" }],
+                    SemanticDomains = [new() { Id = "6", Name = "Work and occupation" }]
                 }]
             },
             new()
@@ -148,8 +148,8 @@ namespace Backend.Tests.Helper
                 Vernacular = "66b",
                 Senses = [new()
                 {
-                    Glosses = [new(){ Def = "in-a-three-char-vern", Language = "en" }],
-                    SemanticDomains = [new(){ Id = "6", Name = "Work and occupation" }]
+                    Glosses = [new() { Def = "in-a-three-char-vern", Language = "en" }],
+                    SemanticDomains = [new() { Id = "6", Name = "Work and occupation" }]
                 }]
             },
         ];
