@@ -449,6 +449,25 @@ namespace BackendFramework.Services
             liftRangesWriter.Close();
         }
 
+        /// <summary> Adds <see cref="Note"/> of a word to be written out to lift </summary>
+        private static void AddNote(LexEntry entry, Word wordEntry)
+        {
+            if (!wordEntry.Note.IsBlank())
+            {
+                // This application only uses "basic" notes, which have no type.
+                // To see the implementation of how notes are written to Lift XML:
+                //    https://github.com/sillsdev/libpalaso/blob/
+                //        cd94d55185bbb65adaac0e2f1b0f1afc30cc8d13/SIL.DictionaryServices/Lift/LiftWriter.cs#L218
+                var note = new LexNote();
+                var forms = new[]
+                {
+                    new LanguageForm(wordEntry.Note.Language, wordEntry.Note.Text, note)
+                };
+                note.Forms = forms;
+                entry.Notes.Add(note);
+            }
+        }
+
         /// <summary>
         /// Prefixes the given Flag's text with <see cref="LiftHelper.FlagNotePrefix"/> (ⱶ followed by a space).
         /// If the Flag isn't active or has whitespace text, return null.
@@ -471,25 +490,6 @@ namespace BackendFramework.Services
                 var note = new LexNote();
                 var form = new LanguageForm(analysisLanguage, text, note);
                 note.Forms = [form];
-                entry.Notes.Add(note);
-            }
-        }
-
-        /// <summary> Adds <see cref="Note"/> of a word to be written out to lift </summary>
-        private static void AddNote(LexEntry entry, Word wordEntry)
-        {
-            if (!wordEntry.Note.IsBlank())
-            {
-                // This application only uses "basic" notes, which have no type.
-                // To see the implementation of how notes are written to Lift XML:
-                //    https://github.com/sillsdev/libpalaso/blob/
-                //        cd94d55185bbb65adaac0e2f1b0f1afc30cc8d13/SIL.DictionaryServices/Lift/LiftWriter.cs#L218
-                var note = new LexNote();
-                var forms = new[]
-                {
-                    new LanguageForm(wordEntry.Note.Language, wordEntry.Note.Text, note)
-                };
-                note.Forms = forms;
                 entry.Notes.Add(note);
             }
         }
