@@ -459,11 +459,8 @@ namespace BackendFramework.Services
                 //    https://github.com/sillsdev/libpalaso/blob/
                 //        cd94d55185bbb65adaac0e2f1b0f1afc30cc8d13/SIL.DictionaryServices/Lift/LiftWriter.cs#L218
                 var note = new LexNote();
-                var forms = new[]
-                {
-                    new LanguageForm(wordEntry.Note.Language, wordEntry.Note.Text, note)
-                };
-                note.Forms = forms;
+                var form = new LanguageForm(wordEntry.Note.Language, wordEntry.Note.Text, note);
+                note.Forms = [form];
                 entry.Notes.Add(note);
             }
         }
@@ -474,11 +471,9 @@ namespace BackendFramework.Services
         /// </summary>
         private static string? FlagToNoteText(Models.Flag flag)
         {
-            if (!flag.Active || string.IsNullOrWhiteSpace(flag.Text))
-            {
-                return null;
-            }
-            return $"{LiftHelper.FlagNotePrefix}{flag.Text.Trim()}";
+            return !flag.Active || string.IsNullOrWhiteSpace(flag.Text)
+                ? null
+                : $"{LiftHelper.FlagNotePrefix}{flag.Text.Trim()}";
         }
 
         /// <summary> Adds <see cref="Flag"/> of a word to be written out to lift as a note </summary>
