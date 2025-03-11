@@ -215,7 +215,7 @@ namespace BackendFramework.Controllers
                 return NotFound(projectId);
             }
 
-            int liftParseResult;
+            int countWordsImported;
             // Sets the projectId of our parser to add words to that project
             var liftMerger = _liftService.GetLiftImporterExporter(
                 projectId, proj.VernacularWritingSystem.Bcp47, _wordRepo);
@@ -230,15 +230,14 @@ namespace BackendFramework.Controllers
                 var parser = new LiftParser<LiftObject, LiftEntry, LiftSense, LiftExample>(liftMerger);
 
                 // Import words from .lift file
-                liftParseResult = parser.ReadLiftFile(
-                    FileOperations.FindFilesWithExtension(liftStoragePath, ".lift", true).First());
+                parser.ReadLiftFile(FileOperations.FindFilesWithExtension(liftStoragePath, ".lift", true).First());
 
                 // Get data from imported words before they're deleted by SaveImportEntries.
                 importedAnalysisWritingSystems = liftMerger.GetImportAnalysisWritingSystems();
                 doesImportHaveDefinitions = liftMerger.DoesImportHaveDefinitions();
                 doesImportHaveGrammaticalInfo = liftMerger.DoesImportHaveGrammaticalInfo();
 
-                await liftMerger.SaveImportEntries();
+                countWordsImported = (await liftMerger.SaveImportEntries()).Count;
             }
             catch (Exception e)
             {
@@ -282,7 +281,7 @@ namespace BackendFramework.Controllers
 
             await _projRepo.Update(projectId, project);
 
-            return Ok(liftParseResult);
+            return Ok(countWordsImported);
         }
 
         /// <summary> Packages project data into zip file </summary>

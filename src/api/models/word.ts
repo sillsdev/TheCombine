@@ -45,6 +45,12 @@ export interface Word {
   vernacular: string;
   /**
    *
+   * @type {boolean}
+   * @memberof Word
+   */
+  usingCitationForm?: boolean;
+  /**
+   *
    * @type {string}
    * @memberof Word
    */
