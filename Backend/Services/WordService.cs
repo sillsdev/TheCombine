@@ -181,6 +181,11 @@ namespace BackendFramework.Services
                 return wordIsInFrontier;
             }
 
+            // If an imported word was using the citation form for its Vernacular,
+            // only keep UsingCitationForm true if the Vernacular hasn't changed.
+            word.UsingCitationForm &=
+                word.Vernacular == (await _wordRepo.GetWord(projectId, wordId))!.Vernacular;
+
             word.ProjectId = projectId;
             word.History.Add(wordId);
 
