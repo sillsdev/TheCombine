@@ -33,6 +33,9 @@ namespace BackendFramework.Helper
 
     public static class LiftHelper
     {
+        /// <summary> U+2C76 U+00A0 </summary>
+        public const string FlagNotePrefix = "ⱶ ";
+
         public static string GetLiftRootFromExtractedZip(string dirPath)
         {
             // Search for .lift files to determine the root of the Lift project.
@@ -72,11 +75,20 @@ namespace BackendFramework.Helper
             return extractedLiftRootPath;
         }
 
+        /// <summary> Returns the List with any flags removed. </summary>
+        private static List<LiftNote> NonFlagNotes(List<LiftNote> notes)
+        {
+            return notes
+                .Where(n => !n.Content.FirstValue.Value.Text.StartsWith(FlagNotePrefix, StringComparison.Ordinal))
+                .ToList();
+        }
+
         /// <summary> Determine if a <see cref="LiftEntry"/> has any data not handled by The Combine. </summary>
         public static bool IsProtected(LiftEntry entry)
         {
+            var notes = NonFlagNotes(entry.Notes);
             return entry.Annotations.Count > 0 || entry.Etymologies.Count > 0 || entry.Fields.Count > 0 ||
-                (entry.Notes.Count == 1 && !string.IsNullOrEmpty(entry.Notes.First().Type)) || entry.Notes.Count > 1 ||
+                !string.IsNullOrEmpty(notes.FirstOrDefault()?.Type) || notes.Count > 1 ||
                 entry.Pronunciations.Any(p => p.Media.All(m => string.IsNullOrEmpty(m.Url))) ||
                 entry.Relations.Count > 0 ||
                 entry.Traits.Any(t => !t.Value.Equals("stem", StringComparison.OrdinalIgnoreCase) ||
@@ -100,13 +112,14 @@ namespace BackendFramework.Helper
             {
                 reasons.Add(new() { Type = ReasonType.Field, Value = f.Type });
             });
-            if (entry.Notes.Count == 1 && !string.IsNullOrEmpty(entry.Notes.First().Type))
+            var notes = NonFlagNotes(entry.Notes);
+            if (!string.IsNullOrEmpty(notes.FirstOrDefault()?.Type))
             {
-                reasons.Add(new() { Type = ReasonType.NoteWithType, Value = entry.Notes.First().Type });
+                reasons.Add(new() { Type = ReasonType.NoteWithType, Value = notes.First().Type });
             }
-            if (entry.Notes.Count > 1)
+            if (notes.Count > 1)
             {
-                reasons.Add(new() { Type = ReasonType.Notes, Count = entry.Notes.Count });
+                reasons.Add(new() { Type = ReasonType.Notes, Count = notes.Count });
             }
             if (entry.Pronunciations.Any(p => p.Media.All(m => string.IsNullOrEmpty(m.Url))))
             {
