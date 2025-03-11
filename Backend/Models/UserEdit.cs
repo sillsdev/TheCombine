@@ -30,37 +30,12 @@ namespace BackendFramework.Models
             Edits = new();
         }
 
+        /// <summary> Create a deep copy. </summary>
         public UserEdit Clone()
         {
-            return new()
-            {
-                Id = Id,
-                ProjectId = ProjectId,
-                Edits = Edits.Select(e => e.Clone()).ToList()
-            };
-        }
-
-        public bool ContentEquals(UserEdit other)
-        {
-            return
-                other.ProjectId.Equals(ProjectId, StringComparison.Ordinal) &&
-                other.Edits.Count == Edits.Count &&
-                other.Edits.All(Edits.Contains);
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not UserEdit other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return other.Id.Equals(Id, StringComparison.Ordinal) && ContentEquals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, ProjectId, Edits);
+            var clone = (UserEdit)MemberwiseClone();
+            clone.Edits = Edits.Select(e => e.Clone()).ToList();
+            return clone;
         }
     }
 
@@ -82,23 +57,6 @@ namespace BackendFramework.Models
             EditGuid = editGuid;
             StepString = stepString;
             StepIndex = stepIndex;
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not UserEditStepWrapper other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return other.EditGuid == EditGuid &&
-                other.StepString.Equals(StepString, StringComparison.Ordinal) &&
-                other.StepIndex == StepIndex;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(EditGuid, StepString, StepIndex);
         }
     }
 
@@ -132,34 +90,12 @@ namespace BackendFramework.Models
             Changes = "{}";
         }
 
+        /// <summary> Create a deep copy. </summary>
         public Edit Clone()
         {
-            return new()
-            {
-                Guid = Guid,
-                GoalType = GoalType,
-                StepData = StepData.Select(sd => sd).ToList(),
-                Changes = Changes
-            };
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not Edit other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return other.Guid.Equals(Guid) &&
-                other.GoalType.Equals(GoalType) &&
-                other.StepData.Count == StepData.Count &&
-                other.StepData.All(StepData.Contains) &&
-                other.Changes.Equals(Changes, StringComparison.Ordinal);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Guid, GoalType, StepData, Changes);
+            var clone = (Edit)MemberwiseClone();
+            clone.StepData = StepData.Select(sd => sd).ToList();
+            return clone;
         }
     }
 }

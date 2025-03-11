@@ -60,6 +60,7 @@
     "letsencrypt",
     "Linq",
     "maint",
+    "Memberwise",
     "mongoimport",
     "mongosh",
     "nerdctl",
