@@ -58,7 +58,8 @@ namespace Backend.Tests.Controllers
 
             var users = ((ObjectResult)_userController.GetAllUsers().Result).Value as List<User>;
             Assert.That(users, Has.Count.EqualTo(3));
-            _userRepo.GetAllUsers().Result.ForEach(user => Assert.That(users, Does.Contain(user)));
+            _userRepo.GetAllUsers().Result.ForEach(
+                user => Assert.That(users, Does.Contain(user).UsingPropertiesComparer()));
         }
 
         [Test]
@@ -71,7 +72,7 @@ namespace Backend.Tests.Controllers
 
             var result = _userController.GetUser(user.Id).Result;
             Assert.That(result, Is.InstanceOf<ObjectResult>());
-            Assert.That(((ObjectResult)result).Value, Is.EqualTo(user));
+            Assert.That(((ObjectResult)result).Value, Is.EqualTo(user).UsingPropertiesComparer());
         }
 
         [Test]
@@ -91,7 +92,7 @@ namespace Backend.Tests.Controllers
 
             var result = _userController.GetUserByEmail(email).Result;
             Assert.That(result, Is.InstanceOf<ObjectResult>());
-            Assert.That(((ObjectResult)result).Value, Is.EqualTo(user));
+            Assert.That(((ObjectResult)result).Value, Is.EqualTo(user).UsingPropertiesComparer());
         }
 
         [Test]
@@ -120,7 +121,7 @@ namespace Backend.Tests.Controllers
             var user = RandomUser();
             var id = (string)((ObjectResult)_userController.CreateUser(user).Result).Value!;
             user.Id = id;
-            Assert.That(_userRepo.GetAllUsers().Result, Does.Contain(user));
+            Assert.That(_userRepo.GetAllUsers().Result, Does.Contain(user).UsingPropertiesComparer());
         }
 
         [Test]
@@ -165,7 +166,7 @@ namespace Backend.Tests.Controllers
 
             var users = _userRepo.GetAllUsers().Result;
             Assert.That(users, Has.Count.EqualTo(1));
-            Assert.That(users, Does.Contain(modUser));
+            Assert.That(users, Does.Contain(modUser).UsingPropertiesComparer());
         }
 
         [Test]
@@ -179,7 +180,7 @@ namespace Backend.Tests.Controllers
 
             var users = _userRepo.GetAllUsers().Result;
             Assert.That(users, Has.Count.EqualTo(1));
-            Assert.That(users, Does.Contain(modUser));
+            Assert.That(users, Does.Contain(modUser).UsingPropertiesComparer());
         }
 
         [Test]
