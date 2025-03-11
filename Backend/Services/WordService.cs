@@ -105,8 +105,8 @@ namespace BackendFramework.Services
                 return null;
             }
 
-            var rmCount = wordWithAudioToDelete.Audio.RemoveAll(a => a.FileName == fileName);
-            if (rmCount == 0)
+            var audioToRemove = wordWithAudioToDelete.Audio.Find(a => a.FileName == fileName);
+            if (audioToRemove is null)
             {
                 return null;
             }
@@ -117,6 +117,7 @@ namespace BackendFramework.Services
                 return null;
             }
 
+            wordWithAudioToDelete.Audio.Remove(audioToRemove);
             wordWithAudioToDelete.History.Add(wordId);
 
             return await Create(userId, wordWithAudioToDelete);
