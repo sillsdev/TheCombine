@@ -42,6 +42,8 @@ export default function DeleteEditTextDialog(
   const [text, setText] = useState<string>(props.text);
   const { t } = useTranslation();
 
+  const inlineStart = document.body.dir === "rtl" ? "right" : "left";
+
   function onCancel(): void {
     setText(props.text);
     props.close();
@@ -79,7 +81,7 @@ export default function DeleteEditTextDialog(
 
   const endAdornment = (
     <InputAdornment position="end">
-      <Tooltip title={t("buttons.clearText")} placement={"left"}>
+      <Tooltip placement={inlineStart} title={t("buttons.clearText")}>
         <IconButton
           data-testid={props.buttonIdClear}
           id={props.buttonIdClear}
@@ -101,14 +103,14 @@ export default function DeleteEditTextDialog(
     >
       <DialogTitle id="alert-dialog-title">
         {t(props.titleId)}
-        <Tooltip title={t("buttons.cancel")} placement={"left"}>
+        <Tooltip placement={inlineStart} title={t("buttons.cancel")}>
           <IconButton
             size="small"
             aria-label="close"
             data-testid={props.buttonIdCancel}
             id={props.buttonIdCancel}
             onClick={onCancel}
-            style={{ position: "absolute", right: 4, top: 4 }}
+            style={{ insetInlineEnd: 4, position: "absolute", top: 4 }}
           >
             <Close />
           </IconButton>

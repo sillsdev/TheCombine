@@ -98,7 +98,7 @@ export default function DomainTileButton(
       id={props.domain.id}
       onClick={() => props.onClick(props.domain)}
       style={{
-        left: 0,
+        insetInlineStart: 0,
         bottom: 0,
         width: "95%",
         height: "95%",

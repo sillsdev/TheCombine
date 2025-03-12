@@ -23,8 +23,7 @@ export default function Logo(): ReactElement {
       onClick={() => navigate(Path.ProjScreen)}
       style={{
         background: themeColors.lightShade,
-        marginLeft: 2,
-        marginRight: 2,
+        marginInline: 2,
         minHeight: buttonMinHeight,
         minWidth: 0,
         padding: 2,
