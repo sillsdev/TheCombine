@@ -24,6 +24,7 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
   const dispatch = useAppDispatch();
   const [canceling, setCanceling] = useState(false);
   const [exports, setExports] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
 
   async function exportProj(): Promise<void> {
@@ -32,19 +33,26 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
 
   async function resetExport(): Promise<void> {
     setCanceling(true);
-
-    exportResult.status === ExportStatus.Default;
     await dispatch(asyncResetExport);
-    // setCanceling(false);
   }
 
-  const exportResult = useAppSelector(
-    (state: StoreState) => state.exportProjectState
+  const status = useAppSelector(
+    (state: StoreState) => state.exportProjectState.status
   );
-  const loading =
-    exportResult.status === ExportStatus.Exporting ||
-    exportResult.status === ExportStatus.Success ||
-    exportResult.status === ExportStatus.Downloading;
+
+  useEffect(() => {
+    console.log("status: ", status);
+    if (
+      status === ExportStatus.Exporting ||
+      status === ExportStatus.Success ||
+      status === ExportStatus.Downloading
+    ) {
+      setLoading(true);
+    } else {
+      setCanceling(false);
+      setLoading(false);
+    }
+  }, [status]);
 
   useEffect(() => {
     isFrontierNonempty(props.projectId).then(setExports);
@@ -55,7 +63,7 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
       <Tooltip title={!exports ? t("projectExport.cannotExportEmpty") : ""}>
         <span>
           <LoadingButton
-            loading={loading && exportResult.status !== ExportStatus.Default}
+            loading={loading}
             disabled={loading || canceling || !exports}
             buttonProps={{
               ...props.buttonProps,
@@ -65,15 +73,15 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
           >
             {t("buttons.export")}
           </LoadingButton>
-          {loading && (
-            <Tooltip title="Cancel export">
-              <Button onClick={resetExport} disabled={canceling}>
-                <Cancel />
-              </Button>
-            </Tooltip>
-          )}
         </span>
       </Tooltip>
+      {loading && (
+        <Tooltip title="Cancel export">
+          <Button onClick={resetExport} disabled={canceling}>
+            <Cancel />
+          </Button>
+        </Tooltip>
+      )}
     </>
   );
 }

@@ -33,13 +33,13 @@ export function success(projectId: string): PayloadAction {
 }
 
 // Dispatch Functions
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+// const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export function asyncExportProject(projectId: string) {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(exporting(projectId));
-    console.log("sleeping");
-    await sleep(5000);
+    // console.log("sleeping");
+    // await sleep(5000);
     await exportLift(projectId).catch(() => dispatch(failure(projectId)));
   };
 }
