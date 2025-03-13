@@ -673,11 +673,11 @@ export async function isEmailTaken(email: string): Promise<boolean> {
 }
 
 export async function authenticateUser(
-  username: string,
+  emailOrUsername: string,
   password: string
 ): Promise<User> {
   const resp = await userApi.authenticate(
-    { credentials: { username, password } },
+    { credentials: { emailOrUsername, password } },
     defaultOptions()
   );
   const user = resp.data;

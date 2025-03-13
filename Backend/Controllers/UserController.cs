@@ -123,16 +123,16 @@ namespace BackendFramework.Controllers
         {
             try
             {
-                var user = await _permissionService.Authenticate(cred.Username, cred.Password);
+                var user = await _permissionService.Authenticate(cred.EmailOrUsername, cred.Password);
                 if (user is null)
                 {
-                    return Unauthorized(cred.Username);
+                    return Unauthorized(cred.EmailOrUsername);
                 }
                 return Ok(user);
             }
             catch (KeyNotFoundException)
             {
-                return NotFound(cred.Username);
+                return NotFound(cred.EmailOrUsername);
             }
         }
 
@@ -204,7 +204,8 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> IsEmailUnavailable([FromBody, BindRequired] string email)
         {
-            var isUnavailable = string.IsNullOrWhiteSpace(email) || await _userRepo.GetUserByEmail(email) is not null;
+            var isUnavailable =
+                string.IsNullOrWhiteSpace(email) || await _userRepo.GetUserByEmailOrUsername(email) is not null;
             return Ok(isUnavailable);
         }
 
