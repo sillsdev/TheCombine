@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         component: [frontend, backend, maintenance, database]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     outputs:
       image_tag: ${{ steps.build_combine.outputs.image_tag }}
     steps:
