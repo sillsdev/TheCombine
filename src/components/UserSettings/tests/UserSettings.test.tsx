@@ -11,7 +11,8 @@ import { newUser } from "types/user";
 
 const mockGetAvatar = jest.fn();
 const mockGetCurrentUser = jest.fn();
-const mockIsEmailTaken = jest.fn();
+const mockGetUserByEmailOrUsername = jest.fn();
+const mockIsEmailOrUsernameUnavailable = jest.fn();
 const mockSetUser = jest.fn();
 const mockUpdateUser = jest.fn();
 
@@ -21,12 +22,15 @@ jest.mock("notistack", () => ({
 }));
 
 jest.mock("backend", () => ({
-  isEmailTaken: (...args: any[]) => mockIsEmailTaken(...args),
-  updateUser: (...args: any[]) => mockUpdateUser(...args),
+  getUserByEmailOrUsername: (emailOrUsername: string) =>
+    mockGetUserByEmailOrUsername(emailOrUsername),
+  isEmailOrUsernameUnavailable: (emailOrUsername: string) =>
+    mockIsEmailOrUsernameUnavailable(emailOrUsername),
+  updateUser: (user: User) => mockUpdateUser(user),
 }));
 jest.mock("backend/localStorage", () => ({
-  getAvatar: (...args: any[]) => mockGetAvatar(...args),
-  getCurrentUser: (...args: any[]) => mockGetCurrentUser(...args),
+  getAvatar: () => mockGetAvatar(),
+  getCurrentUser: () => mockGetCurrentUser(),
 }));
 jest.mock("components/Project/ProjectActions", () => ({
   asyncLoadSemanticDomains: jest.fn(),
@@ -44,6 +48,7 @@ jest.mock("i18n", () => ({
 const mockUser = (): User => {
   const user = newUser("My Name", "my-username");
   user.email = "e@mail.com";
+  user.id = "mock-user-id";
   user.phone = "123-456-7890";
   user.uiLang = "fr";
   return user;
@@ -52,7 +57,8 @@ const mockUser = (): User => {
 const setupMocks = (): void => {
   mockGetAvatar.mockReturnValue("");
   mockGetCurrentUser.mockReturnValue(mockUser());
-  mockIsEmailTaken.mockResolvedValue(false);
+  mockGetUserByEmailOrUsername.mockResolvedValue(newUser());
+  mockIsEmailOrUsernameUnavailable.mockResolvedValue(false);
   mockSetUser.mockImplementation(async () => {});
   mockUpdateUser.mockImplementation((user: User) => user);
 };
@@ -154,7 +160,7 @@ describe("UserSettings", () => {
     await renderUserSettings(mockUser());
 
     await agent.type(screen.getByTestId(UserSettingsIds.FieldEmail), "a");
-    mockIsEmailTaken.mockResolvedValueOnce(true);
+    mockIsEmailOrUsernameUnavailable.mockResolvedValueOnce(true);
 
     await agent.click(screen.getByTestId(UserSettingsIds.ButtonSubmit));
     expect(mockUpdateUser).toHaveBeenCalledTimes(0);

@@ -667,9 +667,12 @@ export async function addUser(user: User): Promise<User> {
   return { ...user, id: resp.data };
 }
 
-/** Returns true if the email address is in use already. */
-export async function isEmailTaken(email: string): Promise<boolean> {
-  return (await userApi.isEmailUnavailable({ body: email })).data;
+/** Returns true if the email address or username is empty or in use. */
+export async function isEmailOrUsernameUnavailable(
+  emailOrUsername: string
+): Promise<boolean> {
+  return (await userApi.isEmailOrUsernameUnavailable({ body: emailOrUsername }))
+    .data;
 }
 
 export async function authenticateUser(
@@ -696,8 +699,12 @@ export async function getUser(userId: string): Promise<User> {
   return (await userApi.getUser({ userId }, defaultOptions())).data;
 }
 
-export async function getUserByEmail(email: string): Promise<User> {
-  return (await userApi.getUserByEmail({ body: email }, defaultOptions())).data;
+export async function getUserByEmailOrUsername(
+  emailOrUsername: string
+): Promise<User> {
+  const params = { body: emailOrUsername };
+  return (await userApi.getUserByEmailOrUsername(params, defaultOptions()))
+    .data;
 }
 
 export async function updateUser(user: User): Promise<User> {
