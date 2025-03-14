@@ -17,7 +17,7 @@ import { useTranslation } from "react-i18next";
 import { OffOnSetting, User } from "api/models";
 import {
   getUserByEmailOrUsername,
-  isEmailOrUsernameUnavailable,
+  isEmailOrUsernameAvailable,
   updateUser,
 } from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
@@ -83,7 +83,7 @@ export function UserSettings(props: {
     const unchanged = unicodeEmail === props.user.email.toLowerCase();
     return (
       unchanged ||
-      !(await isEmailOrUsernameUnavailable(unicodeEmail)) ||
+      (await isEmailOrUsernameAvailable(unicodeEmail)) ||
       (await getUserByEmailOrUsername(unicodeEmail)).id === props.user.id
     );
   }

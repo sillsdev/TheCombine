@@ -207,7 +207,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestIsEmailOrUsernameUnavailable()
+        public void TestIsEmailOrUsernameAvailable()
         {
             var user1 = RandomUser();
             var user2 = RandomUser();
@@ -216,20 +216,20 @@ namespace Backend.Tests.Controllers
             _userRepo.Create(user1);
             _userRepo.Create(user2);
 
-            var result1 = (ObjectResult)_userController.IsEmailOrUsernameUnavailable(email1.ToLowerInvariant()).Result;
-            Assert.That(result1.Value, Is.True);
+            var result1 = (ObjectResult)_userController.IsEmailOrUsernameAvailable(email1.ToLowerInvariant()).Result;
+            Assert.That(result1.Value, Is.False);
 
-            var result2 = (ObjectResult)_userController.IsEmailOrUsernameUnavailable(email2.ToUpperInvariant()).Result;
-            Assert.That(result2.Value, Is.True);
+            var result2 = (ObjectResult)_userController.IsEmailOrUsernameAvailable(email2.ToUpperInvariant()).Result;
+            Assert.That(result2.Value, Is.False);
 
-            var result3 = (ObjectResult)_userController.IsEmailOrUsernameUnavailable(email1).Result;
-            Assert.That(result3.Value, Is.True);
+            var result3 = (ObjectResult)_userController.IsEmailOrUsernameAvailable(email1).Result;
+            Assert.That(result3.Value, Is.False);
 
-            var result4 = (ObjectResult)_userController.IsEmailOrUsernameUnavailable("new@e.mail").Result;
-            Assert.That(result4.Value, Is.False);
+            var result4 = (ObjectResult)_userController.IsEmailOrUsernameAvailable("new@e.mail").Result;
+            Assert.That(result4.Value, Is.True);
 
-            var result5 = (ObjectResult)_userController.IsEmailOrUsernameUnavailable("").Result;
-            Assert.That(result5.Value, Is.True);
+            var result5 = (ObjectResult)_userController.IsEmailOrUsernameAvailable("").Result;
+            Assert.That(result5.Value, Is.False);
         }
 
         [Test]

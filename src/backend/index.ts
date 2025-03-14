@@ -667,11 +667,11 @@ export async function addUser(user: User): Promise<User> {
   return { ...user, id: resp.data };
 }
 
-/** Returns true if the email address or username is empty or in use. */
-export async function isEmailOrUsernameUnavailable(
+/** Returns true if the email address or username is neither empty nor in use. */
+export async function isEmailOrUsernameAvailable(
   emailOrUsername: string
 ): Promise<boolean> {
-  return (await userApi.isEmailOrUsernameUnavailable({ body: emailOrUsername }))
+  return (await userApi.isEmailOrUsernameAvailable({ body: emailOrUsername }))
     .data;
 }
 

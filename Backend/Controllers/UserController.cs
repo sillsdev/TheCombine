@@ -200,15 +200,15 @@ namespace BackendFramework.Controllers
             return Ok(createdUser.Id);
         }
 
-        /// <summary> Checks whether specified email address or username is empty or in use. </summary>
+        /// <summary> Checks that specified email address or username is neither empty nor in use. </summary>
         [AllowAnonymous]
-        [HttpPut("isemailorusernameunavailable", Name = "IsEmailOrUsernameUnavailable")]
+        [HttpPut("isemailorusernameavailable", Name = "IsEmailOrUsernameAvailable")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        public async Task<IActionResult> IsEmailOrUsernameUnavailable([FromBody, BindRequired] string emailOrUsername)
+        public async Task<IActionResult> IsEmailOrUsernameAvailable([FromBody, BindRequired] string emailOrUsername)
         {
-            var isUnavailable = string.IsNullOrWhiteSpace(emailOrUsername) ||
-                await _userRepo.GetUserByEmailOrUsername(emailOrUsername) is not null;
-            return Ok(isUnavailable);
+            var isAvailable = !string.IsNullOrWhiteSpace(emailOrUsername) &&
+                await _userRepo.GetUserByEmailOrUsername(emailOrUsername) is null;
+            return Ok(isAvailable);
         }
 
         /// <summary> Updates <see cref="User"/> with specified id. </summary>
