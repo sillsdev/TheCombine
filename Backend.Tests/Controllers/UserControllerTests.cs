@@ -109,7 +109,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestGetMissingEmailOrUsername()
+        public void TestGetUserByEmailOrUsernameMissing()
         {
             var result = _userController.GetUserByEmailOrUsername("INVALID_EMAIL@gmail.com").Result;
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());

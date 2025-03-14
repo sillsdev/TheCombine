@@ -129,7 +129,7 @@ namespace Backend.Tests.Mocks
         {
             try
             {
-                var user = _userRepo.GetUserByUsername(emailOrUsername).Result;
+                var user = _userRepo.GetUserByEmailOrUsername(emailOrUsername).Result;
                 if (user is null)
                 {
                     return Task.FromResult<User?>(null);
