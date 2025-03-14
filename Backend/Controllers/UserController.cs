@@ -180,22 +180,24 @@ namespace BackendFramework.Controllers
             if (string.IsNullOrWhiteSpace(user.Username)
                 || await _userRepo.GetUserByEmailOrUsername(user.Username) is not null)
             {
-                // Use GetUserByEmailOrUsername to prevent using an existing user's email
+                // Use GetUserByEmailOrUsername to prevent using an existing user's email address
                 // as a username.
                 return BadRequest("login.usernameTaken");
             }
             if (string.IsNullOrWhiteSpace(user.Email)
-                || await _userRepo.GetUserByEmail(user.Email) is not null)
+                || await _userRepo.GetUserByEmailOrUsername(user.Email) is not null)
             {
+                // Use GetUserByEmailOrUsername to prevent using an existing user's username
+                // as an email address.
                 return BadRequest("login.emailTaken");
             }
 
-            var returnUser = await _userRepo.Create(user);
-            if (returnUser is null)
+            var createdUser = await _userRepo.Create(user);
+            if (createdUser is null)
             {
                 return BadRequest("login.signUpFailed");
             }
-            return Ok(user.Id);
+            return Ok(createdUser.Id);
         }
 
         /// <summary> Checks whether specified email address is taken or empty. </summary>
