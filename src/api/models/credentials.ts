@@ -23,7 +23,7 @@ export interface Credentials {
    * @type {string}
    * @memberof Credentials
    */
-  username: string;
+  emailOrUsername: string;
   /**
    *
    * @type {string}

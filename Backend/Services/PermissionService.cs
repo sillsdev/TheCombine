@@ -149,12 +149,12 @@ namespace BackendFramework.Services
 
         /// <summary> Confirms login credentials are valid. </summary>
         /// <returns> User when credentials are correct, null otherwise. </returns>
-        public async Task<User?> Authenticate(string username, string password)
+        public async Task<User?> Authenticate(string emailOrUsername, string password)
         {
             // Fetch the stored user.
-            var user = await _userRepo.GetUserByUsername(username, false);
+            var user = await _userRepo.GetUserByEmailOrUsername(emailOrUsername, false);
 
-            // Return null if user with specified username not found.
+            // Return null if user with specified email/username not found.
             if (user is null)
             {
                 return null;

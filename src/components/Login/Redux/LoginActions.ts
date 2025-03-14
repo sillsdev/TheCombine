@@ -42,11 +42,11 @@ export function signupSuccess(): PayloadAction {
 
 // Dispatch Functions
 
-export function asyncLogIn(username: string, password: string) {
+export function asyncLogIn(emailOrUsername: string, password: string) {
   return async (dispatch: StoreStateDispatch) => {
-    dispatch(loginAttempt(username));
+    dispatch(loginAttempt(emailOrUsername));
     await backend
-      .authenticateUser(username, password)
+      .authenticateUser(emailOrUsername, password)
       .then(async () => {
         dispatch(loginSuccess());
         router.navigate(Path.ProjScreen);

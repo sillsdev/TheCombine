@@ -54,6 +54,7 @@
     "title": "Log In",
     "name": "Your Name",
     "username": "Username",
+    "usernameOrEmail": "Username or email address",
     "password": "Password",
     "passwordRequirements": "Password must be 8 characters or longer.",
     "forgotPassword": "Forgot password?",
