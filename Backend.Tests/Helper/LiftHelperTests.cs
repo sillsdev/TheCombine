@@ -24,7 +24,9 @@ namespace Backend.Tests.Helper
                 Order = 1,
             };
             // A single note with empty type is allowed.
-            entry.Notes.Add(new("", new("key", "content")));
+            entry.Notes.Add(new("", new("note-key", "note-text")));
+            // Another note that's actually a flag is allowed.
+            entry.Notes.Add(new("", new("flag-key", $"{FlagNotePrefix}flag-text")));
             entry.Pronunciations.Add(new());
             entry.Pronunciations.Add(new());
             foreach (var pronunciation in entry.Pronunciations)
@@ -83,8 +85,7 @@ namespace Backend.Tests.Helper
         public void EntryNoteTypeProtected()
         {
             var entry = new LiftEntry();
-            entry.Notes.Add(new());
-            entry.Notes.First().Type = "non-empty";
+            entry.Notes.Add(new("non-empty-type", new("key", "val")));
             Assert.That(IsProtected(entry), Is.True);
             var reasons = GetProtectedReasons(entry);
             Assert.That(reasons, Has.Count.EqualTo(1));
@@ -95,8 +96,8 @@ namespace Backend.Tests.Helper
         public void EntryNotesProtected()
         {
             var entry = new LiftEntry();
-            entry.Notes.Add(new());
-            entry.Notes.Add(new());
+            entry.Notes.Add(new("", new("key1", "val1")));
+            entry.Notes.Add(new("", new("key2", "val2")));
             Assert.That(IsProtected(entry), Is.True);
             var reasons = GetProtectedReasons(entry);
             Assert.That(reasons, Has.Count.EqualTo(1));

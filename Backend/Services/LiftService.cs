@@ -306,6 +306,7 @@ namespace BackendFramework.Services
                 entry.ModifiedTimeIsLocked = true;
 
                 AddNote(entry, wordEntry);
+                AddFlag(entry, wordEntry, proj.AnalysisWritingSystems.First().Bcp47);
                 AddVern(entry, wordEntry, proj.VernacularWritingSystem.Bcp47);
                 AddSenses(entry, wordEntry, semDomNames);
                 await AddAudio(entry, wordEntry.Audio, audioDir, projectId, projSpeakers);
@@ -458,11 +459,32 @@ namespace BackendFramework.Services
                 //    https://github.com/sillsdev/libpalaso/blob/
                 //        cd94d55185bbb65adaac0e2f1b0f1afc30cc8d13/SIL.DictionaryServices/Lift/LiftWriter.cs#L218
                 var note = new LexNote();
-                var forms = new[]
-                {
-                    new LanguageForm(wordEntry.Note.Language, wordEntry.Note.Text, note)
-                };
-                note.Forms = forms;
+                var form = new LanguageForm(wordEntry.Note.Language, wordEntry.Note.Text, note);
+                note.Forms = [form];
+                entry.Notes.Add(note);
+            }
+        }
+
+        /// <summary>
+        /// Prefixes the given Flag's text with <see cref="LiftHelper.FlagNotePrefix"/> (ⱶ followed by a space).
+        /// If the Flag isn't active or has whitespace text, return null.
+        /// </summary>
+        private static string? FlagToNoteText(Models.Flag flag)
+        {
+            return !flag.Active || string.IsNullOrWhiteSpace(flag.Text)
+                ? null
+                : $"{LiftHelper.FlagNotePrefix}{flag.Text.Trim()}";
+        }
+
+        /// <summary> Adds <see cref="Flag"/> of a word to be written out to lift as a note </summary>
+        private static void AddFlag(LexEntry entry, Word wordEntry, string analysisLanguage)
+        {
+            var text = FlagToNoteText(wordEntry.Flag);
+            if (text is not null)
+            {
+                var note = new LexNote();
+                var form = new LanguageForm(analysisLanguage, text, note);
+                note.Forms = [form];
                 entry.Notes.Add(note);
             }
         }
@@ -753,11 +775,19 @@ namespace BackendFramework.Services
                     newWord.ProtectReasons = LiftHelper.GetProtectedReasons(entry);
                 }
 
-                // Add Note if one exists.
-                // Note: Currently only support for a single note is included.
-                if (entry.Notes.Count > 0)
+                // Add Flag and Note if they exists.
+                // Note: Currently only support for a single flag and a single note is included.
+                var flag = entry.Notes.FirstOrDefault(n =>
+                    n.Content.FirstValue.Value.Text.StartsWith(LiftHelper.FlagNotePrefix, StringComparison.Ordinal));
+                if (flag is not null)
                 {
-                    var (language, liftString) = entry.Notes[0].Content.FirstValue;
+                    newWord.Flag = new(flag.Content.FirstValue.Value.Text.Substring(LiftHelper.FlagNotePrefix.Length));
+                }
+                var note = entry.Notes.FirstOrDefault(n =>
+                    !n.Content.FirstValue.Value.Text.StartsWith(LiftHelper.FlagNotePrefix, StringComparison.Ordinal));
+                if (note is not null)
+                {
+                    var (language, liftString) = note.Content.FirstValue;
                     newWord.Note = new Note(language, liftString.Text);
                 }
 

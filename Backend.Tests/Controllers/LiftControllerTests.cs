@@ -69,7 +69,7 @@ namespace Backend.Tests.Controllers
                 _wordRepo, _projRepo, _permissionService, _liftService, _notifyService, _logger);
 
             _logger = new MockLogger();
-            _projId = _projRepo.Create(new Project { Name = ProjName }).Result!.Id;
+            _projId = _projRepo.Create(new Project { AnalysisWritingSystems = [new()], Name = ProjName }).Result!.Id;
             _file = new FormFile(_stream, 0, _stream.Length, "Name", FileName);
         }
 
