@@ -26,9 +26,8 @@ const timelineStyle: { [key: string]: CSSProperties } = {
   },
   paneStyling: {
     display: "block",
-    marginLeft: "auto",
-    marginRight: "auto",
     justifyContent: "center",
+    marginInline: "auto",
     textAlign: "center",
   },
 };
@@ -137,7 +136,7 @@ export default function GoalTimeline(): ReactElement {
     return (
       <>
         {/* Alternatives */}
-        <div style={{ ...timelineStyle.paneStyling, float: "right" }}>
+        <div style={{ ...timelineStyle.paneStyling, float: "inline-end" }}>
           <GoalList
             orientation="horizontal"
             data={createSuggestionData(availableGoalTypes, goalTypeSuggestions)}
@@ -176,7 +175,7 @@ export default function GoalTimeline(): ReactElement {
         {/* Alternatives */}
         <ImageListItem
           cols={5}
-          style={{ ...timelineStyle.paneStyling, float: "right" }}
+          style={{ ...timelineStyle.paneStyling, float: "inline-end" }}
         >
           <Typography variant="h6">{t("goal.selector.other")}</Typography>
           <GoalList

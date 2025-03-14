@@ -27,8 +27,7 @@ export const smallScreenThreshold = 960;
 export const treeViewDialogId = "tree-view-dialog";
 
 const paperStyle = {
-  marginLeft: "auto",
-  marginRight: "auto",
+  marginInline: "auto",
   maxWidth: 800,
   padding: theme.spacing(2),
 };

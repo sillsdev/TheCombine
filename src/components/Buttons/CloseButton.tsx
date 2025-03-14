@@ -10,9 +10,9 @@ interface CloseButtonProps {
 
 export default function CloseButton(props: CloseButtonProps): ReactElement {
   const closeButtonStyle: CSSProperties = {
+    insetInlineEnd: 0,
     position: "absolute",
     top: 0,
-    ...(document.body.dir === "rtl" ? { left: 0 } : { right: 0 }),
   };
 
   return (

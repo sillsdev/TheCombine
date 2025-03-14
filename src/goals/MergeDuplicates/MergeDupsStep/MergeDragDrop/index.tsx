@@ -212,7 +212,7 @@ export default function MergeDragDrop(): ReactElement {
   function renderSidebar(): ReactElement {
     return sidebarOpen ? (
       <Drawer
-        anchor="right"
+        anchor={document.body.dir === "rtl" ? "left" : "right"}
         variant="persistent"
         open={sidebarOpen}
         SlideProps={{

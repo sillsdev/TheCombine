@@ -36,7 +36,7 @@ export default function SenseCard(props: SenseCardProps): ReactElement {
     >
       <CardContent style={{ position: "relative" }}>
         {/* Part of speech (if any) */}
-        <div style={{ position: "absolute", left: 0, top: 0 }}>
+        <div style={{ insetInlineStart: 0, position: "absolute", top: 0 }}>
           {gramInfo.catGroup !== GramCatGroup.Unspecified && (
             <PartOfSpeechButton
               buttonId={partOfSpeechButtonId(props.sense.guid)}
