@@ -33,6 +33,7 @@ namespace Backend.Tests.Services
         public void MergeWordsOneChildTest()
         {
             var thisWord = Util.RandomWord(ProjId);
+            thisWord.UsingCitationForm = true;
             thisWord = _wordRepo.Create(thisWord).Result;
 
             var mergeObject = new MergeWords
@@ -48,16 +49,17 @@ namespace Backend.Tests.Services
 
             // There should only be 1 word added and it should be identical to what we passed in
             Assert.That(newWords, Has.Count.EqualTo(1));
-            Assert.That(newWords.First().ContentEquals(thisWord), Is.True);
+            Util.AssertEqualWordContent(newWords.First(), thisWord, true);
 
             // Check that the only word in the frontier is the new word
             var frontier = _wordRepo.GetFrontier(ProjId).Result;
             Assert.That(frontier, Has.Count.EqualTo(1));
-            Assert.That(frontier.First(), Is.EqualTo(newWords.First()));
+            Assert.That(frontier.First(), Is.EqualTo(newWords.First()).UsingPropertiesComparer());
 
-            // Check that new word has the right history
+            // Check that new word has the right History and UsingCitationForm
             Assert.That(newWords.First().History, Has.Count.EqualTo(1));
             Assert.That(newWords.First().History.First(), Is.EqualTo(thisWord.Id));
+            Assert.That(newWords.First().UsingCitationForm, Is.True);
         }
 
         [Test]
@@ -88,11 +90,18 @@ namespace Backend.Tests.Services
         public void MergeWordsMultiChildTest()
         {
             // Build a mergeWords with a parent with 3 children.
-            var mergeWords = new MergeWords { Parent = Util.RandomWord(ProjId) };
+            var parent = Util.RandomWord(ProjId);
+            parent.UsingCitationForm = true;
+            var mergeWords = new MergeWords { Parent = parent };
             const int numberOfChildren = 3;
-            foreach (var _ in Enumerable.Range(0, numberOfChildren))
+            foreach (var i in Enumerable.Range(0, numberOfChildren))
             {
                 var child = Util.RandomWord(ProjId);
+                if (i == 0)
+                {
+                    child.Guid = parent.Guid;
+                    child.UsingCitationForm = true;
+                }
                 var id = _wordRepo.Create(child).Result.Id;
                 Assert.That(_wordRepo.GetWord(ProjId, id).Result, Is.Not.Null);
                 mergeWords.Children.Add(new MergeSourceWord { SrcWordId = id });
@@ -105,6 +114,10 @@ namespace Backend.Tests.Services
             // Check for correct history length.
             var dbParent = newWords.First();
             Assert.That(dbParent.History, Has.Count.EqualTo(numberOfChildren));
+
+            // Since the parent and child with the same Guid have different Vernacular,
+            // UsingCitationForm should change to false.
+            Assert.That(dbParent.UsingCitationForm, Is.False);
 
             // Confirm that parent added to repo and children not in frontier.
             Assert.That(_wordRepo.GetWord(ProjId, dbParent.Id).Result, Is.Not.Null);
@@ -125,8 +138,8 @@ namespace Backend.Tests.Services
             var frontier = _wordRepo.GetFrontier(ProjId).Result;
             Assert.That(frontier, Has.Count.EqualTo(wordCount));
             Assert.That(frontier.First().Id, Is.Not.EqualTo(frontier.Last().Id));
-            Assert.That(newWords, Does.Contain(frontier.First()));
-            Assert.That(newWords, Does.Contain(frontier.Last()));
+            Assert.That(newWords, Does.Contain(frontier.First()).UsingPropertiesComparer());
+            Assert.That(newWords, Does.Contain(frontier.Last()).UsingPropertiesComparer());
         }
 
         [Test]
@@ -148,7 +161,7 @@ namespace Backend.Tests.Services
 
             // There should only be 1 word added and it should be identical to what we passed in
             Assert.That(newWords, Has.Count.EqualTo(1));
-            Assert.That(newWords.First().ContentEquals(thisWord), Is.True);
+            Util.AssertEqualWordContent(newWords.First(), thisWord, true);
 
             var childIds = mergeObject.Children.Select(word => word.SrcWordId).ToList();
             var parentIds = new List<string> { newWords[0].Id };
