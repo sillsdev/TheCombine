@@ -111,6 +111,9 @@ namespace BackendFramework.Services
         private readonly Dictionary<string, string> _liftExports;
         /// A dictionary shared by all Projects for storing and retrieving paths to in-process imports.
         private readonly Dictionary<string, string> _liftImports;
+        private const string FlagFieldTag = "TheCombineFlag";
+        /// <summary> U+2C76 U+00A0 </summary>
+        public const string FlagTextPrefix = "ⱶ ";
         private const string InProgress = "IN_PROGRESS";
 
         public LiftService(ISemanticDomainRepository semDomRepo, ISpeakerRepository speakerRepo)
@@ -464,6 +467,30 @@ namespace BackendFramework.Services
                 };
                 note.Forms = forms;
                 entry.Notes.Add(note);
+            }
+        }
+
+        /// <summary>
+        /// Prefixes the given Flag's text with <see cref="FlagTextPrefix"/> (ⱶ followed by a space).
+        /// If the Flag isn't active, return null.
+        /// </summary>
+        private static string? FlagToExportText(Models.Flag flag)
+        {
+            return !flag.Active
+                ? null
+                : $"{FlagTextPrefix}{flag.Text.Trim()}";
+        }
+
+        /// <summary> Adds <see cref="Flag"/> of a word to be written out to lift as a note </summary>
+        private static void AddFlag(LexEntry entry, Word wordEntry, string analysisLanguage)
+        {
+            var text = FlagToExportText(wordEntry.Flag);
+            if (text is not null)
+            {
+                var note = new LexNote();
+                var form = new LanguageForm(analysisLanguage, text, note);
+                note.Forms = [form];
+                entry.Notes.Add(note); // No, not as a note!!
             }
         }
 
@@ -850,10 +877,18 @@ namespace BackendFramework.Services
                 {
                     if (field.Type == "Plural")
                     {
-                        foreach (var _ in field.Content)
+                        newWord.Plural = field.Content.First().Value.Text;
+                    }
+                    else if (field.Type == FlagFieldTag)
+                    {
+                        var flags = field.Content.Values.Select(v => v.Text).Where(t => !string.IsNullOrEmpty(t));
+                        if (flags.Any())
                         {
-                            var pluralForm = entry.Fields.First().Content.First().Value.Text;
-                            newWord.Plural = pluralForm;
+                            var texts = flags.Select(t => t.StartsWith(FlagTextPrefix, StringComparison.Ordinal)
+                                ? t.Substring(FlagTextPrefix.Length)
+                                : t);
+                            var text = string.Join("; ", texts.Where(t => !string.IsNullOrEmpty(t)));
+                            newWord.Flag = new() { Active = true, Text = text };
                         }
                     }
                 }
@@ -905,7 +940,7 @@ namespace BackendFramework.Services
                 }
             }
 
-            /// <summary> Adds field to the entry for plural forms </summary>
+            /// <summary> Adds field to the entry </summary>
             public void MergeInField(LiftObject extensible, string tagAttribute, DateTime dateCreated,
                 DateTime dateModified, LiftMultiText contents, List<Trait> traits)
             {
