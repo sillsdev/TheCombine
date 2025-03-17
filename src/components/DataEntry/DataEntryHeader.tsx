@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
 import { SemanticDomainFull } from "api/models";
+import BidiIcon from "components/BidiIcon";
 import theme from "types/theme";
 
 interface DataEntryHeaderProps {
@@ -22,6 +23,10 @@ export default function DataEntryHeader(
   const domain = props.domain;
   const { t } = useTranslation();
 
+  const switchIcon = (
+    <BidiIcon icon={Help} iconProps={{ style: { fontSize: 21 } }} />
+  );
+
   return (
     <Typography
       variant="h4"
@@ -33,8 +38,8 @@ export default function DataEntryHeader(
       <Switch
         id="questionVisibilitySwitch"
         onChange={() => props.setQuestionVisibility(!props.questionsVisible)}
-        icon={<Help style={{ fontSize: 21 }} />}
-        checkedIcon={<Help style={{ fontSize: 21 }} />}
+        icon={switchIcon}
+        checkedIcon={switchIcon}
         checked={props.questionsVisible}
         color="primary"
         style={{ paddingTop: "8px" }}

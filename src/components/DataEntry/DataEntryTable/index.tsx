@@ -27,6 +27,7 @@ import {
 } from "api/models";
 import * as backend from "backend";
 import { getCurrentUser, getUserId } from "backend/localStorage";
+import BidiIcon from "components/BidiIcon";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
 import { filterWordsWithSenses } from "components/DataEntry/utilities";
@@ -1127,7 +1128,7 @@ export default function DataEntryTable(
             variant="contained"
             color={highlightExitButton ? "primary" : "secondary"}
             style={{ marginTop: theme.spacing(2) }}
-            endIcon={<ExitToApp />}
+            endIcon={<BidiIcon icon={ExitToApp} />}
             tabIndex={-1}
             onClick={handleExit}
           >
