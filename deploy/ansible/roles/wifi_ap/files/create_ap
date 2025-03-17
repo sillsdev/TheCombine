@@ -14,7 +14,7 @@
 #    dnsmasq
 #    iptables
 
-VERSION=0.4.6
+VERSION=0.4.8
 PROGNAME="$(basename $0)"
 
 # make sure that all command outputs are in english
@@ -33,7 +33,7 @@ usage() {
     echo "  -h, --help              Show this help"
     echo "  --version               Print version number"
     echo "  -c <channel>            Channel number (default: 1)"
-    echo "  -w <WPA version>        Use 1 for WPA, use 2 for WPA2, use 1+2 for both (default: 1+2)"
+    echo "  -w <WPA version>        Use 1 for WPA, use 2 for WPA2, use 1+2 for both (default: 2)"
     echo "  -n                      Disable Internet sharing (if you use this, don't pass"
     echo "                          the <interface-with-internet> argument)"
     echo "  -m <method>             Method for Internet sharing."
@@ -46,13 +46,15 @@ usage() {
     echo "  --mac-filter-accept     Location of MAC address filter list (defaults to /etc/hostapd/hostapd.accept)"
     echo "  --redirect-to-localhost If -n is set, redirect every web request to localhost (useful for public information networks)"
     echo "  --hostapd-debug <level> With level between 1 and 2, passes arguments -d or -dd to hostapd for debugging."
+    echo "  --hostapd-timestamps    Include timestamps in hostapd debug messages."
     echo "  --isolate-clients       Disable communication between clients"
     echo "  --ieee80211n            Enable IEEE 802.11n (HT)"
     echo "  --ieee80211ac           Enable IEEE 802.11ac (VHT)"
+    echo "  --ieee80211ax           Enable IEEE 802.11ax (VHT)"
     echo "  --ht_capab <HT>         HT capabilities (default: [HT40+])"
     echo "  --vht_capab <VHT>       VHT capabilities"
     echo "  --country <code>        Set two-letter country code for regularity (example: US)"
-    echo "  --freq-band <GHz>       Set frequency band. Valid inputs: 2.4, 5 (default: 2.4)"
+    echo "  --freq-band <GHz>       Set frequency band. Valid inputs: 2.4, 5 (default: Use 5GHz if the interface supports it)"
     echo "  --driver                Choose your WiFi adapter driver (default: nl80211)"
     echo "  --no-virt               Do not create virtual interface"
     echo "  --no-haveged            Do not run 'haveged' automatically when needed"
@@ -64,6 +66,7 @@ usage() {
     echo "  --daemon                Run create_ap in the background"
     echo "  --pidfile <pidfile>     Save daemon PID to file"
     echo "  --logfile <logfile>     Save daemon messages to file"
+    echo "  --dns-logfile <logfile> Log DNS queries to file"
     echo "  --stop <id>             Send stop command to an already running create_ap. For an <id>"
     echo "                          you can put the PID of create_ap or the WiFi interface. You can"
     echo "                          get them with --list-running"
@@ -320,9 +323,9 @@ can_transmit_to_channel() {
 
     if [[ $USE_IWCONFIG -eq 0 ]]; then
         if [[ $FREQ_BAND == 2.4 ]]; then
-            CHANNEL_INFO=$(get_adapter_info ${IFACE} | grep " 24[0-9][0-9] MHz \[${CHANNEL_NUM}\]")
+            CHANNEL_INFO=$(get_adapter_info ${IFACE} | grep " 24[0-9][0-9]\(\.0\+\)\? MHz \[${CHANNEL_NUM}\]")
         else
-            CHANNEL_INFO=$(get_adapter_info ${IFACE} | grep " \(49[0-9][0-9]\|5[0-9]\{3\}\) MHz \[${CHANNEL_NUM}\]")
+            CHANNEL_INFO=$(get_adapter_info ${IFACE} | grep " \(49[0-9][0-9]\|5[0-9]\{3\}\)\(\.0\+\)\? MHz \[${CHANNEL_NUM}\]")
         fi
         [[ -z "${CHANNEL_INFO}" ]] && return 1
         [[ "${CHANNEL_INFO}" == *no\ IR* ]] && return 1
@@ -338,16 +341,24 @@ can_transmit_to_channel() {
 
 # taken from iw/util.c
 ieee80211_frequency_to_channel() {
-    local FREQ=$1
-    if [[ $FREQ -eq 2484 ]]; then
+    local FREQ_MAYBE_FRACTIONAL=$1
+    local FREQ=${FREQ_MAYBE_FRACTIONAL%.*}
+
+    if [[ $FREQ -lt 1000 ]]; then
+        echo 0
+    elif [[ $FREQ -eq 2484 ]]; then
         echo 14
+    elif [[ $FREQ -eq 5935 ]]; then
+        echo 2
     elif [[ $FREQ -lt 2484 ]]; then
         echo $(( ($FREQ - 2407) / 5 ))
     elif [[ $FREQ -ge 4910 && $FREQ -le 4980 ]]; then
         echo $(( ($FREQ - 4000) / 5 ))
-    elif [[ $FREQ -le 45000 ]]; then
+    elif [[ $FREQ -lt 5950 ]]; then
         echo $(( ($FREQ - 5000) / 5 ))
-    elif [[ $FREQ -ge 58320 && $FREQ -le 64800 ]]; then
+    elif [[ $FREQ -le 45000 ]]; then
+        echo $(( ($FREQ - 5950) / 5 ))
+    elif [[ $FREQ -ge 58320 && $FREQ -le 70200 ]]; then
         echo $(( ($FREQ - 56160) / 2160 ))
     else
         echo 0
@@ -355,7 +366,7 @@ ieee80211_frequency_to_channel() {
 }
 
 is_5ghz_frequency() {
-    [[ $1 =~ ^(49[0-9]{2})|(5[0-9]{3})$ ]]
+    [[ $1 =~ ^(49[0-9]{2})|(5[0-9]{3})(\.0+)?$ ]]
 }
 
 is_wifi_connected() {
@@ -508,7 +519,7 @@ networkmanager_add_unmanaged() {
     fi
 
     mutex_lock
-    UNMANAGED=$(grep -m1 -Eo '^unmanaged-devices=[[:alnum:]:;,-]*' /etc/NetworkManager/NetworkManager.conf)
+    UNMANAGED=$(grep -m1 -Eo '^unmanaged-devices=[[:alnum:]:;,?*~=-]*' /etc/NetworkManager/NetworkManager.conf)
 
     WAS_EMPTY=0
     [[ -z "$UNMANAGED" ]] && WAS_EMPTY=1
@@ -565,7 +576,7 @@ networkmanager_rm_unmanaged() {
     fi
 
     mutex_lock
-    UNMANAGED=$(grep -m1 -Eo '^unmanaged-devices=[[:alnum:]:;,-]*' /etc/NetworkManager/NetworkManager.conf | sed 's/unmanaged-devices=//' | tr ';,' ' ')
+    UNMANAGED=$(grep -m1 -Eo '^unmanaged-devices=[[:alnum:]:;,?*~=-]*' /etc/NetworkManager/NetworkManager.conf | sed 's/unmanaged-devices=//' | tr ';,' ' ')
 
     if [[ -z "$UNMANAGED" ]]; then
         mutex_unlock
@@ -626,7 +637,7 @@ networkmanager_wait_until_unmanaged() {
 
 CHANNEL=default
 GATEWAY=192.168.12.1
-WPA_VERSION=1+2
+WPA_VERSION=2
 ETC_HOSTS=0
 ADDN_HOSTS=
 DHCP_DNS=gateway
@@ -640,6 +651,7 @@ ISOLATE_CLIENTS=0
 SHARE_METHOD=nat
 IEEE80211N=0
 IEEE80211AC=0
+IEEE80211AX=0
 HT_CAPAB='[HT40+]'
 VHT_CAPAB=
 DRIVER=nl80211
@@ -650,6 +662,7 @@ NEW_MACADDR=
 DAEMONIZE=0
 DAEMON_PIDFILE=
 DAEMON_LOGFILE=/dev/null
+DNS_LOGFILE=
 NO_HAVEGED=0
 USE_PSK=0
 
@@ -657,9 +670,9 @@ HOSTAPD_DEBUG_ARGS=
 REDIRECT_TO_LOCALHOST=0
 
 CONFIG_OPTS=(CHANNEL GATEWAY WPA_VERSION ETC_HOSTS DHCP_DNS NO_DNS NO_DNSMASQ HIDDEN MAC_FILTER MAC_FILTER_ACCEPT ISOLATE_CLIENTS
-             SHARE_METHOD IEEE80211N IEEE80211AC HT_CAPAB VHT_CAPAB DRIVER NO_VIRT COUNTRY FREQ_BAND
-             NEW_MACADDR DAEMONIZE DAEMON_PIDFILE DAEMON_LOGFILE NO_HAVEGED WIFI_IFACE INTERNET_IFACE
-             SSID PASSPHRASE USE_PSK)
+             SHARE_METHOD IEEE80211N IEEE80211AC IEEE80211AX HT_CAPAB VHT_CAPAB DRIVER NO_VIRT COUNTRY FREQ_BAND
+             NEW_MACADDR DAEMONIZE DAEMON_PIDFILE DAEMON_LOGFILE DNS_LOGFILE NO_HAVEGED WIFI_IFACE INTERNET_IFACE
+             SSID PASSPHRASE USE_PSK ADDN_HOSTS)
 
 FIX_UNMANAGED=0
 LIST_RUNNING=0
@@ -1029,6 +1042,11 @@ read_config() {
         # Read switches and their values
         opt_name="${line%%=*}"
         opt_val="${line#*=}"
+
+        if [[ $opt_name == "FREQ_BAND" ]] ; then
+            FREQ_BAND_SET=1
+        fi
+
         if is_config_opt "$opt_name" ; then
             eval $opt_name="\$opt_val"
         else
@@ -1039,6 +1057,8 @@ read_config() {
 
 
 ARGS=( "$@" )
+
+FREQ_BAND_SET=0
 
 # Preprocessing for --config before option-parsing starts
 for ((i=0; i<$#; i++)); do
@@ -1054,7 +1074,7 @@ for ((i=0; i<$#; i++)); do
     fi
 done
 
-GETOPT_ARGS=$(getopt -o hc:w:g:de:nm: -l "help","hidden","hostapd-debug:","redirect-to-localhost","mac-filter","mac-filter-accept:","isolate-clients","ieee80211n","ieee80211ac","ht_capab:","vht_capab:","driver:","no-virt","fix-unmanaged","country:","freq-band:","mac:","dhcp-dns:","daemon","pidfile:","logfile:","stop:","list","list-running","list-clients:","version","psk","no-haveged","no-dns","no-dnsmasq","mkconfig:","config:" -n "$PROGNAME" -- "$@")
+GETOPT_ARGS=$(getopt -o hc:w:g:de:nm: -l "help","hidden","hostapd-debug:","hostapd-timestamps","redirect-to-localhost","mac-filter","mac-filter-accept:","isolate-clients","ieee80211n","ieee80211ac","ieee80211ax","ht_capab:","vht_capab:","driver:","no-virt","fix-unmanaged","country:","freq-band:","mac:","dhcp-dns:","daemon","pidfile:","logfile:","dns-logfile:","stop:","list","list-running","list-clients:","version","psk","no-haveged","no-dns","no-dnsmasq","mkconfig:","config:" -n "$PROGNAME" -- "$@")
 [[ $? -ne 0 ]] && exit 1
 eval set -- "$GETOPT_ARGS"
 
@@ -1127,6 +1147,10 @@ while :; do
             shift
             IEEE80211AC=1
             ;;
+	--ieee80211ax)
+	    shift
+	    IEEE80211AX=1
+	    ;;
         --ht_capab)
             shift
             HT_CAPAB="$1"
@@ -1158,6 +1182,7 @@ while :; do
         --freq-band)
             shift
             FREQ_BAND="$1"
+            FREQ_BAND_SET=1
             shift
             ;;
         --mac)
@@ -1182,6 +1207,11 @@ while :; do
         --logfile)
             shift
             DAEMON_LOGFILE="$1"
+            shift
+            ;;
+        --dns-logfile)
+            shift
+            DNS_LOGFILE="$1"
             shift
             ;;
         --stop)
@@ -1226,14 +1256,18 @@ while :; do
         --hostapd-debug)
             shift
             if [ "x$1" = "x1" ]; then
-                HOSTAPD_DEBUG_ARGS="-d"
+                HOSTAPD_DEBUG_ARGS+="-d "
             elif [ "x$1" = "x2" ]; then
-                HOSTAPD_DEBUG_ARGS="-dd"
+                HOSTAPD_DEBUG_ARGS+="-dd "
             else
                 printf "Error: argument for --hostapd-debug expected 1 or 2, got %s\n" "$1"
                 exit 1
             fi
             shift
+            ;;
+        --hostapd-timestamps)
+            shift
+            HOSTAPD_DEBUG_ARGS+="-t "
             ;;
         --mkconfig)
             shift
@@ -1279,6 +1313,11 @@ fi
 
 trap "cleanup_lock" EXIT
 
+if [[ $(id -u) -ne 0 ]]; then
+    echo "create_ap must be run as root." >&2
+    exit 1
+fi
+
 if ! init_lock; then
     echo "ERROR: Failed to initialize lock" >&2
     exit 1
@@ -1293,7 +1332,7 @@ trap "die" SIGUSR2
 [[ -n "$STORE_CONFIG" ]] && write_config "$@"
 
 if [[ $LIST_RUNNING -eq 1 ]]; then
-    echo -e "List of running $PROGNAME instances:\n"
+    #echo -e "List of running $PROGNAME instances:\n"
     list_running
     exit 0
 fi
@@ -1301,11 +1340,6 @@ fi
 if [[ -n "$LIST_CLIENTS_ID" ]]; then
     list_clients "$LIST_CLIENTS_ID"
     exit 0
-fi
-
-if [[ $(id -u) -ne 0 ]]; then
-    echo "You must run it as root." >&2
-    exit 1
 fi
 
 if [[ -n "$STOP_ID" ]]; then
@@ -1570,7 +1604,8 @@ if [[ $NO_VIRT -eq 0 ]]; then
         echo "DONE"
     fi
 
-    if is_wifi_connected ${WIFI_IFACE}; then
+
+    if is_wifi_connected ${WIFI_IFACE} && [[ $FREQ_BAND_SET -eq 0 ]]; then
         WIFI_IFACE_FREQ=$(iw dev ${WIFI_IFACE} link | grep -i freq | awk '{print $2}')
         WIFI_IFACE_CHANNEL=$(ieee80211_frequency_to_channel ${WIFI_IFACE_FREQ})
         echo -n "${WIFI_IFACE} is already associated with channel ${WIFI_IFACE_CHANNEL} (${WIFI_IFACE_FREQ} MHz)"
@@ -1580,12 +1615,21 @@ if [[ $NO_VIRT -eq 0 ]]; then
             FREQ_BAND=2.4
         fi
         if [[ $WIFI_IFACE_CHANNEL -ne $CHANNEL ]]; then
-            echo ", fallback to channel ${WIFI_IFACE_CHANNEL}"
-            CHANNEL=$WIFI_IFACE_CHANNEL
+            if ( get_adapter_info ${IFACE} | grep "#channels <= 2" -q )
+            then
+                echo -e "\nmultiple channels supported"
+            else
+                echo -e  "\nmultiple channels not supported",
+                echo -e  "\nfallback to channel ${WIFI_IFACE_CHANNEL}"
+                CHANNEL=$WIFI_IFACE_CHANNEL
+            fi
         else
-            echo
+            echo "channel------------------ ${CHANNEL}"
         fi
+    elif is_wifi_connected ${WIFI_IFACE} && [[ $FREQ_BAND_SET -eq 1 ]]; then
+        echo "Custom frequency band set with ${FREQ_BAND}Ghz with channel ${CHANNEL}"
     fi
+
 
     VIRTDIEMSG="Maybe your WiFi adapter does not fully support virtual interfaces.
        Try again with --no-virt."
@@ -1680,6 +1724,10 @@ if [[ $IEEE80211AC -eq 1 ]]; then
     echo "ieee80211ac=1" >> $CONFDIR/hostapd.conf
 fi
 
+if [[ $IEEE80211AX -eq 1 ]]; then
+    echo "ieee80211ax=1" >> $CONFDIR/hostapd.conf
+fi
+
 if [[ -n "$VHT_CAPAB" ]]; then
     echo "vht_capab=${VHT_CAPAB}" >> $CONFDIR/hostapd.conf
 fi
@@ -1689,20 +1737,39 @@ if [[ $IEEE80211N -eq 1 ]] || [[ $IEEE80211AC -eq 1 ]]; then
 fi
 
 if [[ -n "$PASSPHRASE" ]]; then
-    [[ "$WPA_VERSION" == "1+2" ]] && WPA_VERSION=3
+    if [[ "$WPA_VERSION" == "1+2" ]]; then
+        WPA_VERSION=2 # Assuming you want to default to WPA2 for the "1+2" setting
+    fi
     if [[ $USE_PSK -eq 0 ]]; then
         WPA_KEY_TYPE=passphrase
     else
         WPA_KEY_TYPE=psk
     fi
-    cat << EOF >> $CONFDIR/hostapd.conf
+
+    if [[ "$WPA_VERSION" == "3" ]]; then
+        # Configuring for WPA3 Transition Mode
+        # 80211w must be 1 or Apple Devices will not connect. 
+        # 1 is the only valid value for WPA3 Transition Mode
+        cat << EOF >> $CONFDIR/hostapd.conf
+wpa=2
+wpa_${WPA_KEY_TYPE}=${PASSPHRASE}
+wpa_key_mgmt=WPA-PSK SAE
+wpa_pairwise=CCMP
+rsn_pairwise=CCMP
+ieee80211w=1
+EOF
+    else
+        # Original configuration for WPA_VERSION other than 3
+        cat << EOF >> $CONFDIR/hostapd.conf
 wpa=${WPA_VERSION}
 wpa_${WPA_KEY_TYPE}=${PASSPHRASE}
 wpa_key_mgmt=WPA-PSK
-wpa_pairwise=TKIP CCMP
+wpa_pairwise=CCMP
 rsn_pairwise=CCMP
 EOF
+    fi
 fi
+
 
 if [[ "$SHARE_METHOD" == "bridge" ]]; then
     echo "bridge=${BRIDGE_IFACE}" >> $CONFDIR/hostapd.conf
@@ -1729,6 +1796,12 @@ EOF
     [[ -n "$MTU" ]] && echo "dhcp-option-force=option:mtu,${MTU}" >> $CONFDIR/dnsmasq.conf
     [[ $ETC_HOSTS -eq 0 ]] && echo no-hosts >> $CONFDIR/dnsmasq.conf
     [[ -n "$ADDN_HOSTS" ]] && echo "addn-hosts=${ADDN_HOSTS}" >> $CONFDIR/dnsmasq.conf
+    if [[ -n "$DNS_LOGFILE" ]]; then
+        cat << EOF >> $CONFDIR/dnsmasq.conf
+log-queries
+log-facility=${DNS_LOGFILE}
+EOF
+    fi
     if [[ "$SHARE_METHOD" == "none" && "$REDIRECT_TO_LOCALHOST" == "1" ]]; then
         cat << EOF >> $CONFDIR/dnsmasq.conf
 address=/#/$GATEWAY
@@ -1856,10 +1929,12 @@ if [[ "$SHARE_METHOD" != "bridge" ]]; then
     if [[ $NO_DNSMASQ -eq 0 ]]; then
       iptables -w -I INPUT -p udp -m udp --dport 67 -j ACCEPT || die
 
-      if which complain > /dev/null 2>&1; then
-          # openSUSE's apparmor does not allow dnsmasq to read files.
-          # remove restriction.
-          complain dnsmasq
+
+      # apparmor does not allow dnsmasq to read files.
+      # remove restriction.
+
+      if COMPLAIN_CMD=$(command -v complain || command -v aa-complain); then
+        $COMPLAIN_CMD dnsmasq
       fi
 
       umask 0033
