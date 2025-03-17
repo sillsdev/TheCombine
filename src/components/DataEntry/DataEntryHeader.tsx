@@ -52,12 +52,12 @@ export default function DataEntryHeader(
 
 function Questions(props: { questions: string[] }): ReactElement {
   return (
-    <>
+    <bdi>
       {props.questions.map((question, index) => (
         <Typography id={"q" + index} key={index}>
           {question}
         </Typography>
       ))}
-    </>
+    </bdi>
   );
 }
