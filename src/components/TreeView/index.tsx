@@ -27,8 +27,10 @@ function getSemDomWritingSystem(
   return semDomWritingSystems.find((ws) => lang.bcp47.startsWith(ws.bcp47));
 }
 
-export const exitButtonId = "tree-view-exit";
-export const topButtonId = "tree-view-top";
+export enum TreeViewIds {
+  ButtonExit = "tree-view-exit-button",
+  ButtonTop = "tree-view-top-button",
+}
 
 export interface TreeViewProps {
   exit?: () => void;
@@ -136,7 +138,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
               icon={<KeyboardDoubleArrowUp />}
               textId={"treeView.returnToTop"}
               onClick={onClickTop}
-              buttonId={topButtonId}
+              buttonId={TreeViewIds.ButtonTop}
             />
           )}
           {exit && (
@@ -144,7 +146,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
               icon={<Close />}
               textId={"buttons.exit"}
               onClick={exit}
-              buttonId={exitButtonId}
+              buttonId={TreeViewIds.ButtonExit}
             />
           )}
         </Grid>
