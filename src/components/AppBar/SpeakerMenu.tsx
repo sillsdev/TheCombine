@@ -22,6 +22,7 @@ import { useSelector } from "react-redux";
 import { type Speaker } from "api/models";
 import { getAllSpeakers } from "backend";
 import { buttonMinHeight } from "components/AppBar/AppBarTypes";
+import BidiIcon from "components/BidiIcon";
 import { setCurrentSpeaker } from "components/Project/ProjectActions";
 import { useAppDispatch } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
@@ -62,7 +63,7 @@ export default function SpeakerMenu(): ReactElement {
           minWidth: 0,
         }}
       >
-        <RecordVoiceOver />
+        <BidiIcon icon={RecordVoiceOver} />
       </Button>
       <Menu
         anchorEl={anchorElement}
