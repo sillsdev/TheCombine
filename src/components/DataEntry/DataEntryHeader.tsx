@@ -29,7 +29,9 @@ export default function DataEntryHeader(
       style={{ marginBottom: theme.spacing(2) }}
     >
       {t("addWords.domainTitle", { val1: domain.name, val2: domain.id })}
-      <Typography>{domain.description}</Typography>
+      <bdi>
+        <Typography>{domain.description}</Typography>
+      </bdi>
       <Switch
         id="questionVisibilitySwitch"
         onChange={() => props.setQuestionVisibility(!props.questionsVisible)}
