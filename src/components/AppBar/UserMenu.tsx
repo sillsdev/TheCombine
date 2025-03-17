@@ -31,7 +31,6 @@ import {
   shortenName,
   tabColor,
 } from "components/AppBar/AppBarTypes";
-import BidiIcon from "components/BidiIcon";
 import { clearCurrentProject } from "components/Project/ProjectActions";
 import { useAppDispatch } from "rootRedux/hooks";
 import { Path } from "types/path";
@@ -172,7 +171,7 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
           props.onSelect();
         }}
       >
-        <BidiIcon icon={ExitToApp} iconProps={{ style: iconStyle }} />
+        <ExitToApp style={iconStyle} />
         {t("userMenu.logout")}
       </MenuItem>
 

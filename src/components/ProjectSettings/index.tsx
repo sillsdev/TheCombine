@@ -39,7 +39,6 @@ import { toast } from "react-toastify";
 
 import { Permission, type Project } from "api/models";
 import { canUploadLift, getCurrentPermissions } from "backend";
-import BidiIcon from "components/BidiIcon";
 import {
   asyncRefreshProjectUsers,
   asyncSetNewCurrentProject,
@@ -158,12 +157,7 @@ export default function ProjectSettingsComponent(): ReactElement {
           {/* Project name */}
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
             <BaseSettings
-              icon={
-                <BidiIcon
-                  icon={Edit}
-                  iconProps={{ "data-testid": Setting.Name }}
-                />
-              }
+              icon={<Edit data-testid={Setting.Name} />}
               title={t("projectSettings.name")}
               body={
                 <ProjectName project={project} setProject={updateProject} />
@@ -174,12 +168,7 @@ export default function ProjectSettingsComponent(): ReactElement {
           {/* Autocomplete toggle */}
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
             <BaseSettings
-              icon={
-                <BidiIcon
-                  icon={Sms}
-                  iconProps={{ "data-testid": Setting.Autocomplete }}
-                />
-              }
+              icon={<Sms data-testid={Setting.Autocomplete} />}
               title={t("projectSettings.autocomplete.label")}
               body={
                 <ProjectAutocomplete
@@ -255,12 +244,7 @@ export default function ProjectSettingsComponent(): ReactElement {
           {/* Add users to project */}
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
             <BaseSettings
-              icon={
-                <BidiIcon
-                  icon={PersonAdd}
-                  iconProps={{ "data-testid": Setting.UserAdd }}
-                />
-              }
+              icon={<PersonAdd data-testid={Setting.UserAdd} />}
               title={t("projectSettings.user.addUser")}
               body={<AddProjectUsers projectId={project.id} />}
             />
@@ -269,12 +253,7 @@ export default function ProjectSettingsComponent(): ReactElement {
           {/* Manage project speakers */}
           {permissions.includes(Permission.DeleteEditSettingsAndUsers) && (
             <BaseSettings
-              icon={
-                <BidiIcon
-                  icon={RecordVoiceOver}
-                  iconProps={{ "data-testid": Setting.Speakers }}
-                />
-              }
+              icon={<RecordVoiceOver data-testid={Setting.Speakers} />}
               title={t("projectSettings.speaker.label")}
               body={<ProjectSpeakersList projectId={project.id} />}
             />

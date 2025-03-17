@@ -1,4 +1,4 @@
-import { ExitToApp } from "@mui/icons-material";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Button, Card, Grid, TextField, Typography } from "@mui/material";
 import {
   type FormEvent,
@@ -11,7 +11,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { resetPassword, validateResetToken } from "backend";
-import BidiIcon from "components/BidiIcon";
 import InvalidLink from "components/InvalidLink";
 import { Path } from "types/path";
 import { meetsPasswordRequirements } from "utilities/utilities";
@@ -169,7 +168,7 @@ export default function PasswordReset(): ReactElement {
                   >
                     {t("passwordReset.backToLogin")}
                     &nbsp;
-                    <BidiIcon icon={ExitToApp} />
+                    <ExitToAppIcon />
                   </Button>
                 </>
               ) : (
