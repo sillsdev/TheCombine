@@ -137,20 +137,20 @@ namespace BackendFramework.Models
         }
     }
 
-    /// <summary> Contains username and password for authentication. </summary>
+    /// <summary> Contains email/username and password for authentication. </summary>
     /// <remarks>
     /// This is used in a [FromBody] serializer, so its attributes cannot be set to readonly.
     /// </remarks>
     public class Credentials
     {
         [Required]
-        public string Username { get; set; }
+        public string EmailOrUsername { get; set; }
         [Required]
         public string Password { get; set; }
 
         public Credentials()
         {
-            Username = "";
+            EmailOrUsername = "";
             Password = "";
         }
     }
