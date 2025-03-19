@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 export default function UpperRightToastContainer(): ReactElement {
   return (
     <ToastContainer
-      position="top-right"
+      position={document.body.dir === "rtl" ? "top-left" : "top-right"}
       autoClose={5000}
       hideProgressBar
       closeOnClick

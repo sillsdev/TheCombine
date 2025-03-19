@@ -46,9 +46,9 @@ export default function SenseCardContent(
   tooltipTexts.push(t("mergeDups.helpText.protectedSenseInfo"));
 
   return (
-    <CardContent style={{ position: "relative", paddingRight: 40 }}>
+    <CardContent style={{ paddingInlineEnd: 40, position: "relative" }}>
       {/* Icon for part of speech (if any). */}
-      <div style={{ position: "absolute", left: 0, top: 0 }}>
+      <div style={{ insetInlineStart: 0, position: "absolute", top: 0 }}>
         {gramInfo && (
           <PartOfSpeechButton
             buttonId={`sense-${sense.guid}-part-of-speech`}
@@ -58,7 +58,7 @@ export default function SenseCardContent(
         )}
       </div>
       {/* Warning for protected senses. */}
-      <div style={{ position: "absolute", right: 0, top: 0 }}>
+      <div style={{ insetInlineEnd: 0, position: "absolute", top: 0 }}>
         {protectedWarning && (
           <IconButtonWithTooltip
             icon={<WarningOutlined />}
@@ -72,9 +72,9 @@ export default function SenseCardContent(
       {/* Button for showing the sidebar, when sense card has multiple senses. */}
       <div
         style={{
+          insetInlineEnd: 0,
           position: "absolute",
           top: "50%",
-          right: 0,
           transform: "translateY(-50%)",
         }}
       >

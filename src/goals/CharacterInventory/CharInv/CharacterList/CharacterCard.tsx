@@ -28,11 +28,7 @@ export default function CharacterCard(props: CharacterCardProps): ReactElement {
         <TypographyWithFont
           align="center"
           id="character"
-          style={{
-            height: props.fontHeight,
-            marginLeft: theme.spacing(1),
-            paddingTop: theme.spacing(1),
-          }}
+          style={{ height: props.fontHeight, paddingTop: theme.spacing(1) }}
           variant="h2"
           vernacular
         >

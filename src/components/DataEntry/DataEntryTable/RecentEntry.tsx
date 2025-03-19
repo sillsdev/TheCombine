@@ -80,11 +80,7 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
       <Grid
         item
         xs={4}
-        style={{
-          paddingLeft: theme.spacing(2),
-          paddingRight: theme.spacing(2),
-          position: "relative",
-        }}
+        style={{ paddingInline: theme.spacing(2), position: "relative" }}
       >
         <VernWithSuggestions
           vernacular={vernacular}
@@ -101,11 +97,7 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
       <Grid
         item
         xs={4}
-        style={{
-          paddingLeft: theme.spacing(2),
-          paddingRight: theme.spacing(2),
-          position: "relative",
-        }}
+        style={{ paddingInline: theme.spacing(2), position: "relative" }}
       >
         <GlossWithSuggestions
           gloss={gloss}
@@ -122,11 +114,7 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
       <Grid
         item
         xs={1}
-        style={{
-          paddingLeft: theme.spacing(1),
-          paddingRight: theme.spacing(1),
-          position: "relative",
-        }}
+        style={{ paddingInline: theme.spacing(1), position: "relative" }}
       >
         <NoteButton
           disabled={editing || props.disabled}
@@ -138,11 +126,7 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
       <Grid
         item
         xs={2}
-        style={{
-          paddingLeft: theme.spacing(1),
-          paddingRight: theme.spacing(1),
-          position: "relative",
-        }}
+        style={{ paddingInline: theme.spacing(1), position: "relative" }}
       >
         <PronunciationsBackend
           audio={props.entry.audio}
@@ -160,11 +144,7 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
       <Grid
         item
         xs={1}
-        style={{
-          paddingLeft: theme.spacing(1),
-          paddingRight: theme.spacing(1),
-          position: "relative",
-        }}
+        style={{ paddingInline: theme.spacing(1), position: "relative" }}
       >
         <DeleteEntry
           removeEntry={handleRemoveEntry}
