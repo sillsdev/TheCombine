@@ -2,6 +2,7 @@ import { Action, PayloadAction } from "@reduxjs/toolkit";
 
 import { deleteLift, downloadLift, exportLift } from "backend";
 import {
+  cancelingAction,
   downloadingAction,
   exportingAction,
   failureAction,
@@ -11,6 +12,9 @@ import {
 import { StoreStateDispatch } from "rootRedux/types";
 
 // Action Creation Functions
+export function canceling(projectId: string): PayloadAction {
+  return cancelingAction(projectId);
+}
 
 export function exporting(projectId: string): PayloadAction {
   return exportingAction(projectId);
@@ -41,6 +45,13 @@ export function asyncExportProject(projectId: string) {
     // console.log("sleeping");
     // await sleep(5000);
     await exportLift(projectId).catch(() => dispatch(failure(projectId)));
+  };
+}
+
+export function asyncCancelExport(projectId: string) {
+  return async (dispatch: StoreStateDispatch) => {
+    dispatch(canceling(projectId));
+    await asyncCancelExport(projectId);
   };
 }
 
