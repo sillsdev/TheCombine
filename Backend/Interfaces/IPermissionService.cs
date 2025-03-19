@@ -13,7 +13,7 @@ namespace BackendFramework.Interfaces
         Task<bool> IsViolationEdit(HttpContext request, string userEditId, string projectId);
         string GetUserId(HttpContext request);
         public bool IsCurrentUserAuthorized(HttpContext request);
-        Task<User?> Authenticate(string username, string password);
+        Task<User?> Authenticate(string emailOrUsername, string password);
         Task<User?> MakeJwt(User user);
     }
 }

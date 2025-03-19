@@ -25,17 +25,16 @@ export default function EmailInvite(props: InviteProps): ReactElement {
 
   const onSubmit = async (): Promise<void> => {
     setIsLoading(true);
-    if (await backend.isEmailTaken(email)) {
-      const user = await backend.getUserByEmail(email);
-      props.addToProject(user);
-      toast.error(t("projectSettings.invite.userExists"));
-    } else {
+    if (await backend.isEmailOrUsernameAvailable(email)) {
       await backend.emailInviteToProject(
         getProjectId(),
         Role.Harvester,
         email,
         message
       );
+    } else {
+      props.addToProject(await backend.getUserByEmailOrUsername(email));
+      toast.info(t("projectSettings.invite.userExists"));
     }
     setIsDone(true);
     setIsLoading(false);
