@@ -145,10 +145,17 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Store filePath for a user's Lift export. </summary>
-        public void StoreExport(string userId, string filePath)
+        /// <returns> If the export has not been canceled, true; otherwise, false. </returns>
+        public bool StoreExport(string userId, string filePath)
         {
+            // now that export has finished, check if it has been canceled before continuing
+            // cancelled
+
+
+            // note cancelled
             _liftExports.Remove(userId);
             _liftExports.Add(userId, filePath);
+            return true;
         }
 
         /// <summary> Retrieve a stored filePath for the user's Lift export. </summary>

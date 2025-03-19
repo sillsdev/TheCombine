@@ -6,5 +6,6 @@ namespace BackendFramework.Helper
     {
         public const string DownloadReady = "DownloadReady";
         public const string ExportFailed = "ExportFailed";
+        public const string CancelExport = "CancelExport";
     }
 }

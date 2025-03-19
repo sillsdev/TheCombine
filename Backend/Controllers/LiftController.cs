@@ -285,6 +285,23 @@ namespace BackendFramework.Controllers
             return Ok(liftParseResult);
         }
 
+        [HttpGet("cancel", Name = "CancelLiftExport")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        public async Task<IActionResult> CancelLiftExport(string projectId)
+        {
+            // get userID
+            var userId = _permissionService.GetUserId(HttpContext);
+            return await CancelLiftExport(projectId, userId);
+        }
+
+        private async Task<IActionResult> CancelLiftExport(string projectId, string userId)
+        {
+            // _liftService.SetExportCanceled();
+            // stand-in for async
+            await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
+            return Ok();
+        }
+
         /// <summary> Packages project data into zip file </summary>
         /// <returns> ProjectId, if export successful </returns>
         [HttpGet("export", Name = "ExportLiftFile")]
@@ -340,6 +357,7 @@ namespace BackendFramework.Controllers
             // This Task will be scheduled within the exiting Async executor thread pool efficiently.
             // See: https://stackoverflow.com/a/64614779/1398841
             _ = Task.Run(() => CreateLiftExportThenSignal(projectId, userId));
+            // maybe here check if there was a canellation
             return Ok(projectId);
         }
 
@@ -350,9 +368,26 @@ namespace BackendFramework.Controllers
             try
             {
                 var exportedFilepath = await CreateLiftExport(projectId);
+
+
+
                 // Store the temporary path to the exported file for user to download later.
-                _liftService.StoreExport(userId, exportedFilepath);
-                await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
+
+                var proceed = _liftService.StoreExport(userId, exportedFilepath);
+
+                // want to check whether a cancelation has 
+                // been made anytime during the exporting, and if so, do not want to let user know
+                // about a download. 
+
+                if (proceed)
+                {
+                    await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
+                }
+                else
+                {
+                    // check if want to notify, since may be a while later
+                    await _notifyService.Clients.All.SendAsync(CombineHub.CancelExport, userId);
+                }
                 return true;
             }
             catch (Exception e)
