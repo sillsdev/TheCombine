@@ -297,6 +297,7 @@ namespace BackendFramework.Controllers
         {
             // _liftService.SetExportCanceled();
             // stand-in for async
+            _liftService.SetCancelExport(projectId, userId, true);
             await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
             return Ok();
         }
@@ -356,7 +357,7 @@ namespace BackendFramework.Controllers
             // This Task will be scheduled within the existing Async executor thread pool efficiently.
             // See: https://stackoverflow.com/a/64614779/1398841
             _ = Task.Run(() => CreateLiftExportThenSignal(projectId, userId));
-            // maybe here check if there was a canellation
+            // maybe here check if there was a cancellation
             return Ok(projectId);
         }
 
@@ -372,7 +373,7 @@ namespace BackendFramework.Controllers
 
                 // Store the temporary path to the exported file for user to download later.
 
-                var proceed = _liftService.StoreExport(userId, exportedFilepath);
+                var proceed = _liftService.StoreExport(userId, projectId, exportedFilepath);
 
                 // want to check whether a cancelation has 
                 // been made anytime during the exporting, and if so, do not want to let user know
