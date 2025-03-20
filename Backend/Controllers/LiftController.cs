@@ -285,7 +285,9 @@ namespace BackendFramework.Controllers
             return Ok(liftParseResult);
         }
 
-        [HttpGet("cancel", Name = "CancelLiftExport")]
+        /// <summary> Cancels project data into zip file </summary>
+        /// <returns> ProjectId, if cancel successful </returns>
+        [HttpGet("cancelExport", Name = "CancelLiftExport")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public async Task<IActionResult> CancelLiftExport(string projectId)
         {
@@ -301,7 +303,7 @@ namespace BackendFramework.Controllers
             _liftService.SetCancelExport(userId, true);
             // stand-in for async
             await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
-            return Ok();
+            return Ok(projectId);
         }
 
         /// <summary> Packages project data into zip file </summary>
@@ -312,11 +314,11 @@ namespace BackendFramework.Controllers
         {
             var userId = _permissionService.GetUserId(HttpContext);
             // need to go through permissionservice to get this?
-            var traceId = HttpContext.TraceIdentifier;
-            return await ExportLiftFile(projectId, userId, traceId);
+            var exportId = HttpContext.TraceIdentifier;
+            return await ExportLiftFile(projectId, userId, exportId);
         }
 
-        private async Task<IActionResult> ExportLiftFile(string projectId, string userId, string traceId)
+        private async Task<IActionResult> ExportLiftFile(string projectId, string userId, string exportId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Export, projectId))
             {
@@ -347,7 +349,7 @@ namespace BackendFramework.Controllers
             }
 
             // Store in-progress status for the export
-            _liftService.SetExportInProgress(userId, true, traceId);
+            _liftService.SetExportInProgress(userId, true, exportId);
 
             // Ensure project has words
             var words = await _wordRepo.GetAllWords(projectId);
@@ -360,13 +362,13 @@ namespace BackendFramework.Controllers
             // Run the task without waiting for completion.
             // This Task will be scheduled within the exiting Async executor thread pool efficiently.
             // See: https://stackoverflow.com/a/64614779/1398841
-            _ = Task.Run(() => CreateLiftExportThenSignal(projectId, userId));
+            _ = Task.Run(() => CreateLiftExportThenSignal(projectId, userId, exportId));
             // maybe here check if there was a cancellation
             return Ok(projectId);
         }
 
         // These internal methods are extracted for unit testing.
-        internal async Task<bool> CreateLiftExportThenSignal(string projectId, string userId)
+        internal async Task<bool> CreateLiftExportThenSignal(string projectId, string userId, string exportId)
         {
             // Export the data to a zip, read into memory, and delete zip.
             try
@@ -377,7 +379,7 @@ namespace BackendFramework.Controllers
 
                 // Store the temporary path to the exported file for user to download later.
 
-                var proceed = _liftService.StoreExport(userId, exportedFilepath);
+                var proceed = _liftService.StoreExport(userId, exportedFilepath, exportId);
 
                 // want to check whether a cancelation has 
                 // been made anytime during the exporting, and if so, do not want to let user know
