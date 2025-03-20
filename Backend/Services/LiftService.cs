@@ -108,10 +108,11 @@ namespace BackendFramework.Services
         private readonly ISpeakerRepository _speakerRepo;
 
         /// A dictionary shared by all Projects for storing and retrieving paths to exported projects.
-        private readonly Dictionary<string, string> _liftExports;
+        private readonly Dictionary<(string, string), string> _liftExports;
         /// A dictionary shared by all Projects for storing and retrieving paths to in-process imports.
         private readonly Dictionary<string, string> _liftImports;
         private const string InProgress = "IN_PROGRESS";
+        private const string Canceled = "CANCELED";
 
         public LiftService(ISemanticDomainRepository semDomRepo, ISpeakerRepository speakerRepo)
         {
@@ -123,8 +124,25 @@ namespace BackendFramework.Services
                 Sldr.Initialize(true);
             }
 
-            _liftExports = new Dictionary<string, string>();
+            _liftExports = new Dictionary<(string, string), string>();
             _liftImports = new Dictionary<string, string>();
+        }
+
+        /// <summary> Store status that a user's export is canceled. </summary>
+        public void SetCancelExport(string projectId, string userId, bool isCanceled)
+        {
+            _liftExports.Remove(userId);
+            if (isCanceled)
+            {
+                _liftExports.Add(userId, Canceled);
+            }
+        }
+
+        /// <summary> Query whether user has an canceled export. </summary>
+        public bool IsExportCanceled(string userId)
+        {
+            _liftExports.TryGetValue(userId, out var exportPath);
+            return exportPath == Canceled;
         }
 
         /// <summary> Store status that a user's export is in-progress. </summary>
@@ -146,13 +164,18 @@ namespace BackendFramework.Services
 
         /// <summary> Store filePath for a user's Lift export. </summary>
         /// <returns> If the export has not been canceled, true; otherwise, false. </returns>
-        public bool StoreExport(string userId, string filePath)
+        public bool StoreExport(string projectId, string userId, string filePath)
         {
             // now that export has finished, check if it has been canceled before continuing
             // cancelled
+            if (IsExportCanceled(userId))
+            {
+                _liftExports.Remove(userId);
+                return false;
 
+            }
 
-            // note cancelled
+            // not cancelled
             _liftExports.Remove(userId);
             _liftExports.Add(userId, filePath);
             return true;
