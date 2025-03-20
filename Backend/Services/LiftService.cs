@@ -108,11 +108,17 @@ namespace BackendFramework.Services
         private readonly ISpeakerRepository _speakerRepo;
 
         /// A dictionary shared by all Projects for storing and retrieving paths to exported projects.
-        private readonly Dictionary<(string, string), string> _liftExports;
+        private readonly Dictionary<string, string> _liftExports;
         /// A dictionary shared by all Projects for storing and retrieving paths to in-process imports.
         private readonly Dictionary<string, string> _liftImports;
+
+        // private string _currentExportId;
+        // actually, need to allow for mutli (there might be multiple projects exporting at once, 
+        // such as for different users), so need to allow one export per user (but could one user have mult
+        // projects exporting?)
+        private readonly Dictionary<string, string> _currentExports;
         private const string InProgress = "IN_PROGRESS";
-        private const string Canceled = "CANCELED";
+        // private const string Canceled = "CANCELED";
 
         public LiftService(ISemanticDomainRepository semDomRepo, ISpeakerRepository speakerRepo)
         {
@@ -124,35 +130,43 @@ namespace BackendFramework.Services
                 Sldr.Initialize(true);
             }
 
-            _liftExports = new Dictionary<(string, string), string>();
+            _liftExports = new Dictionary<string, string>();
             _liftImports = new Dictionary<string, string>();
+            // _currentExportId = "";
+            _currentExports = new Dictionary<string, string>();
         }
 
         /// <summary> Store status that a user's export is canceled. </summary>
-        public void SetCancelExport(string projectId, string userId, bool isCanceled)
+        public void SetCancelExport(string userId, bool isCanceled)
         {
-            _liftExports.Remove(userId);
+            // _liftExports.Remove(userId);
             if (isCanceled)
             {
-                _liftExports.Add(userId, Canceled);
+                // _liftExports.Add(userId, Canceled);
+                // _currentExportId = "";
+                _currentExports.Remove(userId);
             }
         }
 
-        /// <summary> Query whether user has an canceled export. </summary>
-        public bool IsExportCanceled(string userId)
-        {
-            _liftExports.TryGetValue(userId, out var exportPath);
-            return exportPath == Canceled;
-        }
+        // /// <summary> Query whether user has a canceled export. </summary>
+        // public bool IsExportCanceled(string userId)
+        // {
+        //     _liftExports.TryGetValue(userId, out var exportPath);
+        //     return exportPath == Canceled;
+        // }
 
         /// <summary> Store status that a user's export is in-progress. </summary>
-        public void SetExportInProgress(string userId, bool isInProgress)
+        public void SetExportInProgress(string userId, bool isInProgress, string exportId)
         {
             _liftExports.Remove(userId);
+            // if in progress true but traceId is empty, that indicates an issue here
             if (isInProgress)
             {
-                _liftExports.Add(userId, InProgress);
+                _liftExports.Add(userId, exportId);
+                // _currentExportId = exportId;
+                _currentExports.Add(userId, exportId);
             }
+            // create a unique id for this export. then when canceling, this unique id would have to be linked to cancellation 
         }
 
         /// <summary> Query whether user has an in-progress export. </summary>
@@ -164,21 +178,42 @@ namespace BackendFramework.Services
 
         /// <summary> Store filePath for a user's Lift export. </summary>
         /// <returns> If the export has not been canceled, true; otherwise, false. </returns>
-        public bool StoreExport(string projectId, string userId, string filePath)
+        public bool StoreExport(string userId, string filePath)
         {
             // now that export has finished, check if it has been canceled before continuing
             // cancelled
-            if (IsExportCanceled(userId))
-            {
-                _liftExports.Remove(userId);
-                return false;
+            // if (IsExportCanceled(userId))
+            // {
+            //     _liftExports.Remove(userId);
+            //     return false;
 
-            }
+            // }
+
+            //  check if this filepath is valid or we're getting rid 
+            //  the question is do we want to set this filepath to the dictionary or not (bc it would 
+            //  get used for downloading), and do we tell the controller to message user ready
+
 
             // not cancelled
-            _liftExports.Remove(userId);
-            _liftExports.Add(userId, filePath);
-            return true;
+            // but trying to access liftExports means that whenever new export started, old ones wouldn't matter
+            // I suppose checking is thus only useful if cancel without starting new one?
+            _liftExports.TryGetValue(userId, out var exportId);
+            _currentExports.TryGetValue(userId, out var currentExport);
+            if (exportId == currentExport)
+            {
+                _liftExports.Remove(userId);
+                _liftExports.Add(userId, filePath);
+                _currentExports.Remove(userId);
+                return true;
+            }
+            else
+            {
+                // maybe delete the export. if reach this statement, means export is outdated
+                DeleteExport(userId);
+                return false;
+            }
+
+
         }
 
         /// <summary> Retrieve a stored filePath for the user's Lift export. </summary>
