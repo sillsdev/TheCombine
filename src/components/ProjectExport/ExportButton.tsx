@@ -8,7 +8,7 @@ import { isFrontierNonempty } from "backend";
 import { LoadingButton } from "components/Buttons";
 import {
   asyncExportProject,
-  asyncResetExport,
+  asyncCancelExport,
 } from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
@@ -33,7 +33,7 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
 
   async function resetExport(): Promise<void> {
     setCanceling(true);
-    await dispatch(asyncResetExport);
+    await dispatch(asyncCancelExport(props.projectId));
   }
 
   const status = useAppSelector(

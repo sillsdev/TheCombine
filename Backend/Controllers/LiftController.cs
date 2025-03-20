@@ -296,8 +296,9 @@ namespace BackendFramework.Controllers
         private async Task<IActionResult> CancelLiftExport(string projectId, string userId)
         {
             // _liftService.SetExportCanceled();
+
+            _liftService.SetCancelExport(userId, true);
             // stand-in for async
-            _liftService.SetCancelExport(projectId, userId, true);
             await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
             return Ok();
         }
@@ -309,10 +310,12 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
             var userId = _permissionService.GetUserId(HttpContext);
-            return await ExportLiftFile(projectId, userId);
+            // need to go through permissionservice to get this?
+            var traceId = HttpContext.TraceIdentifier;
+            return await ExportLiftFile(projectId, userId, traceId);
         }
 
-        private async Task<IActionResult> ExportLiftFile(string projectId, string userId)
+        private async Task<IActionResult> ExportLiftFile(string projectId, string userId, string traceId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Export, projectId))
             {
@@ -343,13 +346,13 @@ namespace BackendFramework.Controllers
             }
 
             // Store in-progress status for the export
-            _liftService.SetExportInProgress(userId, true);
+            _liftService.SetExportInProgress(userId, true, traceId);
 
             // Ensure project has words
             var words = await _wordRepo.GetAllWords(projectId);
             if (words.Count == 0)
             {
-                _liftService.SetExportInProgress(userId, false);
+                _liftService.SetExportInProgress(userId, false, "");
                 return BadRequest("No words to export.");
             }
 
@@ -373,7 +376,7 @@ namespace BackendFramework.Controllers
 
                 // Store the temporary path to the exported file for user to download later.
 
-                var proceed = _liftService.StoreExport(userId, projectId, exportedFilepath);
+                var proceed = _liftService.StoreExport(userId, exportedFilepath);
 
                 // want to check whether a cancelation has 
                 // been made anytime during the exporting, and if so, do not want to let user know
