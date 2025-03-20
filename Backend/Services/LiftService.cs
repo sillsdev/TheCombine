@@ -180,7 +180,7 @@ namespace BackendFramework.Services
 
         /// <summary> Store filePath for a user's Lift export. </summary>
         /// <returns> If the export has not been canceled, true; otherwise, false. </returns>
-        public bool StoreExport(string userId, string filePath)
+        public bool StoreExport(string userId, string filePath, string validExportId)
         {
             // now that export has finished, check if it has been canceled before continuing
             // cancelled
@@ -199,9 +199,9 @@ namespace BackendFramework.Services
             // not cancelled
             // but trying to access liftExports means that whenever new export started, old ones wouldn't matter
             // I suppose checking is thus only useful if cancel without starting new one?
-            _liftExports.TryGetValue(userId, out var exportId);
+            // _liftExports.TryGetValue(userId, out var exportId);
             _currentExports.TryGetValue(userId, out var currentExport);
-            if (exportId == currentExport)
+            if (validExportId == currentExport)
             {
                 _liftExports.Remove(userId);
                 _liftExports.Add(userId, filePath);
