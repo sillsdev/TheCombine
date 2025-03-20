@@ -49,7 +49,7 @@ export enum LoginTextId {
   ErrorUnknown = "login.failedUnknownReason",
   FieldError = "login.required",
   LabelPassword = "login.password",
-  LabelUsername = "login.username",
+  LabelUsername = "login.usernameOrEmail",
   LinkForgotPassword = "login.forgotPassword",
   Title = "login.title",
 }

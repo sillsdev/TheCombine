@@ -279,13 +279,13 @@ export const UserApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getUserByEmail: async (
+    getUserByEmailOrUsername: async (
       body: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'body' is not null or undefined
-      assertParamExists("getUserByEmail", "body", body);
-      const localVarPath = `/v1/users/getbyemail`;
+      assertParamExists("getUserByEmailOrUsername", "body", body);
+      const localVarPath = `/v1/users/getbyemailorusername`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -328,13 +328,13 @@ export const UserApiAxiosParamCreator = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    isEmailUnavailable: async (
+    isEmailOrUsernameAvailable: async (
       body: string,
       options: any = {}
     ): Promise<RequestArgs> => {
       // verify required parameter 'body' is not null or undefined
-      assertParamExists("isEmailUnavailable", "body", body);
-      const localVarPath = `/v1/users/isemailtaken`;
+      assertParamExists("isEmailOrUsernameAvailable", "body", body);
+      const localVarPath = `/v1/users/isemailorusernameavailable`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
       let baseOptions;
@@ -786,16 +786,14 @@ export const UserApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async getUserByEmail(
+    async getUserByEmailOrUsername(
       body: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>
     > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getUserByEmail(
-        body,
-        options
-      );
+      const localVarAxiosArgs =
+        await localVarAxiosParamCreator.getUserByEmailOrUsername(body, options);
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -809,14 +807,17 @@ export const UserApiFp = function (configuration?: Configuration) {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async isEmailUnavailable(
+    async isEmailOrUsernameAvailable(
       body: string,
       options?: any
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs =
-        await localVarAxiosParamCreator.isEmailUnavailable(body, options);
+        await localVarAxiosParamCreator.isEmailOrUsernameAvailable(
+          body,
+          options
+        );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
@@ -1032,9 +1033,9 @@ export const UserApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getUserByEmail(body: string, options?: any): AxiosPromise<User> {
+    getUserByEmailOrUsername(body: string, options?: any): AxiosPromise<User> {
       return localVarFp
-        .getUserByEmail(body, options)
+        .getUserByEmailOrUsername(body, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1043,9 +1044,12 @@ export const UserApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    isEmailUnavailable(body: string, options?: any): AxiosPromise<boolean> {
+    isEmailOrUsernameAvailable(
+      body: string,
+      options?: any
+    ): AxiosPromise<boolean> {
       return localVarFp
-        .isEmailUnavailable(body, options)
+        .isEmailOrUsernameAvailable(body, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1184,29 +1188,29 @@ export interface UserApiGetUserRequest {
 }
 
 /**
- * Request parameters for getUserByEmail operation in UserApi.
+ * Request parameters for getUserByEmailOrUsername operation in UserApi.
  * @export
- * @interface UserApiGetUserByEmailRequest
+ * @interface UserApiGetUserByEmailOrUsernameRequest
  */
-export interface UserApiGetUserByEmailRequest {
+export interface UserApiGetUserByEmailOrUsernameRequest {
   /**
    *
    * @type {string}
-   * @memberof UserApiGetUserByEmail
+   * @memberof UserApiGetUserByEmailOrUsername
    */
   readonly body: string;
 }
 
 /**
- * Request parameters for isEmailUnavailable operation in UserApi.
+ * Request parameters for isEmailOrUsernameAvailable operation in UserApi.
  * @export
- * @interface UserApiIsEmailUnavailableRequest
+ * @interface UserApiIsEmailOrUsernameAvailableRequest
  */
-export interface UserApiIsEmailUnavailableRequest {
+export interface UserApiIsEmailOrUsernameAvailableRequest {
   /**
    *
    * @type {string}
-   * @memberof UserApiIsEmailUnavailable
+   * @memberof UserApiIsEmailOrUsernameAvailable
    */
   readonly body: string;
 }
@@ -1370,33 +1374,33 @@ export class UserApi extends BaseAPI {
 
   /**
    *
-   * @param {UserApiGetUserByEmailRequest} requestParameters Request parameters.
+   * @param {UserApiGetUserByEmailOrUsernameRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UserApi
    */
-  public getUserByEmail(
-    requestParameters: UserApiGetUserByEmailRequest,
+  public getUserByEmailOrUsername(
+    requestParameters: UserApiGetUserByEmailOrUsernameRequest,
     options?: any
   ) {
     return UserApiFp(this.configuration)
-      .getUserByEmail(requestParameters.body, options)
+      .getUserByEmailOrUsername(requestParameters.body, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
   /**
    *
-   * @param {UserApiIsEmailUnavailableRequest} requestParameters Request parameters.
+   * @param {UserApiIsEmailOrUsernameAvailableRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UserApi
    */
-  public isEmailUnavailable(
-    requestParameters: UserApiIsEmailUnavailableRequest,
+  public isEmailOrUsernameAvailable(
+    requestParameters: UserApiIsEmailOrUsernameAvailableRequest,
     options?: any
   ) {
     return UserApiFp(this.configuration)
-      .isEmailUnavailable(requestParameters.body, options)
+      .isEmailOrUsernameAvailable(requestParameters.body, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

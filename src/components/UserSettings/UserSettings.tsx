@@ -15,7 +15,11 @@ import { FormEvent, Fragment, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { OffOnSetting, User } from "api/models";
-import { isEmailTaken, updateUser } from "backend";
+import {
+  getUserByEmailOrUsername,
+  isEmailOrUsernameAvailable,
+  updateUser,
+} from "backend";
 import { getAvatar, getCurrentUser } from "backend/localStorage";
 import AnalyticsConsent from "components/AnalyticsConsent";
 import { asyncLoadSemanticDomains } from "components/Project/ProjectActions";
@@ -72,9 +76,16 @@ export function UserSettings(props: {
   const { t } = useTranslation();
 
   async function isEmailOkay(): Promise<boolean> {
+    // Text field of type="email" silently converted its input from Unicode to punycode.
     const unicodeEmail = punycode.toUnicode(email.toLowerCase());
+
+    // If the email address hasn't changed or isn't taken, it's okay.
     const unchanged = unicodeEmail === props.user.email.toLowerCase();
-    return unchanged || !(await isEmailTaken(unicodeEmail));
+    return (
+      unchanged ||
+      (await isEmailOrUsernameAvailable(unicodeEmail)) ||
+      (await getUserByEmailOrUsername(unicodeEmail)).id === props.user.id
+    );
   }
 
   const handleConsentChange = (consentVal?: boolean): void => {

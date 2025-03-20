@@ -22,7 +22,7 @@ export default function DomainsCell(props: CellProps): ReactElement {
     <Grid container direction="row" spacing={1}>
       {gatherDomains(props.word.senses).map((dom) => (
         <Grid item key={`${dom.id}-${dom.name}`}>
-          <Chip label={`${dom.id}: ${dom.name}`} />
+          <Chip label={`${dom.id}: ${dom.name}`} style={{ color: "inherit" }} />
         </Grid>
       ))}
     </Grid>
