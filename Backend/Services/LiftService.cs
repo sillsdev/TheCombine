@@ -111,9 +111,8 @@ namespace BackendFramework.Services
         private readonly Dictionary<string, string> _liftExports;
         /// A dictionary shared by all Projects for storing and retrieving paths to in-process imports.
         private readonly Dictionary<string, string> _liftImports;
-        private const string FlagFieldTag = "TheCombineFlag";
-        /// <summary> U+2C76 </summary>
-        public const char FlagTextEmptyChar = 'ⱶ';
+        internal const string FlagFieldTag = "TheCombineFlag";
+        internal const string FlagTextEmpty = "***";
         private const string InProgress = "IN_PROGRESS";
 
         public LiftService(ISemanticDomainRepository semDomRepo, ISpeakerRepository speakerRepo)
@@ -467,7 +466,7 @@ namespace BackendFramework.Services
             {
                 var field = new LexField(FlagFieldTag);
                 var text = wordEntry.Flag.Text.Trim();
-                text = string.IsNullOrEmpty(text) ? FlagTextEmptyChar.ToString() : text;
+                text = string.IsNullOrEmpty(text) ? FlagTextEmpty : text;
                 field.Forms = [new LanguageForm(analysisLanguage, text, field)];
                 entry.Fields.Add(field);
             }
@@ -879,12 +878,13 @@ namespace BackendFramework.Services
                     }
                     else if (field.Type == FlagFieldTag)
                     {
-                        var flags = field.Content.Values.Select(v => v.Text).Where(t => !string.IsNullOrEmpty(t));
+                        var flags = field.Content.Values.Where(v => !string.IsNullOrWhiteSpace(v.Text));
                         if (flags.Any())
                         {
-                            var texts = flags.Select(t => t.Trim(FlagTextEmptyChar).Trim());
-                            var text = string.Join("; ", texts.Where(t => !string.IsNullOrEmpty(t)));
-                            newWord.Flag = new() { Active = true, Text = text };
+                            var texts = flags.Select(v => v.Text.Trim())
+                                .Select(t => t.Equals(FlagTextEmpty, StringComparison.Ordinal) ? "" : t)
+                                .Where(t => !string.IsNullOrEmpty(t));
+                            newWord.Flag = new() { Active = true, Text = string.Join("; ", texts) };
                         }
                     }
                 }
