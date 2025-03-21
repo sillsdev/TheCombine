@@ -293,13 +293,12 @@ namespace BackendFramework.Controllers
         {
             // get userID
             var userId = _permissionService.GetUserId(HttpContext);
-            return await CancelLiftExport(projectId, userId);
+            await CancelLiftExport(projectId, userId);
+            return Ok(projectId);
         }
 
         private async Task<IActionResult> CancelLiftExport(string projectId, string userId)
         {
-            // _liftService.SetExportCanceled();
-
             _liftService.SetCancelExport(userId, true);
             // stand-in for async
             await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
@@ -313,7 +312,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
             var userId = _permissionService.GetUserId(HttpContext);
-            // need to go through permissionservice to get this?
+            // permissionservice?
             var exportId = HttpContext.TraceIdentifier;
             return await ExportLiftFile(projectId, userId, exportId);
         }
@@ -375,15 +374,8 @@ namespace BackendFramework.Controllers
             {
                 var exportedFilepath = await CreateLiftExport(projectId);
 
-
-
                 // Store the temporary path to the exported file for user to download later.
-
                 var proceed = _liftService.StoreExport(userId, exportedFilepath, exportId);
-
-                // want to check whether a cancelation has 
-                // been made anytime during the exporting, and if so, do not want to let user know
-                // about a download. 
 
                 if (proceed)
                 {
