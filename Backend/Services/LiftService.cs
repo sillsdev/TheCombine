@@ -132,13 +132,11 @@ namespace BackendFramework.Services
             _currentExports = new Dictionary<string, string>();
         }
 
-        /// <summary> Store status that a user's export is canceled. </summary>
-        public void SetCancelExport(string userId, bool isCanceled)
+        /// <summary> Store status that a user's export is cancelled. </summary>
+        public void SetCancelExport(string userId)
         {
-            if (isCanceled)
-            {
-                _currentExports.Remove(userId);
-            }
+            _liftExports.Remove(userId);
+            _currentExports.Remove(userId);
         }
 
         /// <summary> Store status that a user's export is in-progress. </summary>
@@ -148,8 +146,7 @@ namespace BackendFramework.Services
             // if in progress true but exportId is empty, that indicates an issue here
             if (isInProgress)
             {
-                _liftExports.Add(userId, exportId);
-                // _currentExportId = exportId;
+                _liftExports.Add(userId, InProgress);
                 _currentExports.Add(userId, exportId);
             }
         }
@@ -162,7 +159,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Store filePath for a user's Lift export. </summary>
-        /// <returns> If the export has not been canceled, true; otherwise, false. </returns>
+        /// <returns> If the export has not been cancelled, true; otherwise, false. </returns>
         public bool StoreExport(string userId, string filePath, string validExportId)
         {
             //  check if this filepath is for a valid (not cancelled) export
