@@ -27,9 +27,9 @@ namespace Backend.Tests.Services
         public void ExportInProgressTest()
         {
             Assert.That(_liftService.IsExportInProgress(UserId), Is.False);
-            _liftService.SetExportInProgress(UserId, true);
+            _liftService.SetExportInProgress(UserId, true, "");
             Assert.That(_liftService.IsExportInProgress(UserId), Is.True);
-            _liftService.SetExportInProgress(UserId, false);
+            _liftService.SetExportInProgress(UserId, false, "");
             Assert.That(_liftService.IsExportInProgress(UserId), Is.False);
         }
 
@@ -39,12 +39,12 @@ namespace Backend.Tests.Services
             Assert.That(_liftService.RetrieveExport(UserId), Is.Null);
             Assert.That(_liftService.DeleteExport(UserId), Is.False);
 
-            _liftService.SetExportInProgress(UserId, true);
+            _liftService.SetExportInProgress(UserId, true, "");
             Assert.That(_liftService.RetrieveExport(UserId), Is.Null);
             Assert.That(_liftService.DeleteExport(UserId), Is.True);
             Assert.That(_liftService.DeleteExport(UserId), Is.False);
 
-            _liftService.StoreExport(UserId, FileName);
+            _liftService.StoreExport(UserId, FileName, "");
             Assert.That(_liftService.RetrieveExport(UserId), Is.EqualTo(FileName));
             Assert.That(_liftService.DeleteExport(UserId), Is.True);
             Assert.That(_liftService.RetrieveExport(UserId), Is.Null);

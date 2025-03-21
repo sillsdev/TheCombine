@@ -284,6 +284,26 @@ namespace BackendFramework.Controllers
             return Ok(countWordsImported);
         }
 
+        /// <summary> Cancels project data into zip file </summary>
+        /// <returns> ProjectId, if cancel successful </returns>
+        [HttpGet("cancelExport", Name = "CancelLiftExport")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        public async Task<IActionResult> CancelLiftExport(string projectId)
+        {
+            // get userID
+            var userId = _permissionService.GetUserId(HttpContext);
+            await CancelLiftExport(projectId, userId);
+            return Ok(projectId);
+        }
+
+        private async Task<IActionResult> CancelLiftExport(string projectId, string userId)
+        {
+            _liftService.SetCancelExport(userId);
+            // stand-in for async
+            await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
+            return Ok(projectId);
+        }
+
         /// <summary> Packages project data into zip file </summary>
         /// <returns> ProjectId, if export successful </returns>
         [HttpGet("export", Name = "ExportLiftFile")]
@@ -291,10 +311,12 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
             var userId = _permissionService.GetUserId(HttpContext);
-            return await ExportLiftFile(projectId, userId);
+            // permissionservice?
+            var exportId = HttpContext.TraceIdentifier;
+            return await ExportLiftFile(projectId, userId, exportId);
         }
 
-        private async Task<IActionResult> ExportLiftFile(string projectId, string userId)
+        private async Task<IActionResult> ExportLiftFile(string projectId, string userId, string exportId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Export, projectId))
             {
@@ -325,33 +347,44 @@ namespace BackendFramework.Controllers
             }
 
             // Store in-progress status for the export
-            _liftService.SetExportInProgress(userId, true);
+            _liftService.SetExportInProgress(userId, true, exportId);
 
             // Ensure project has words
             var words = await _wordRepo.GetAllWords(projectId);
             if (words.Count == 0)
             {
-                _liftService.SetExportInProgress(userId, false);
+                _liftService.SetExportInProgress(userId, false, "");
                 return BadRequest("No words to export.");
             }
 
             // Run the task without waiting for completion.
             // This Task will be scheduled within the exiting Async executor thread pool efficiently.
             // See: https://stackoverflow.com/a/64614779/1398841
-            _ = Task.Run(() => CreateLiftExportThenSignal(projectId, userId));
+            _ = Task.Run(() => CreateLiftExportThenSignal(projectId, userId, exportId));
+            // maybe here check if there was a cancellation
             return Ok(projectId);
         }
 
         // These internal methods are extracted for unit testing.
-        internal async Task<bool> CreateLiftExportThenSignal(string projectId, string userId)
+        internal async Task<bool> CreateLiftExportThenSignal(string projectId, string userId, string exportId)
         {
             // Export the data to a zip, read into memory, and delete zip.
             try
             {
                 var exportedFilepath = await CreateLiftExport(projectId);
+
                 // Store the temporary path to the exported file for user to download later.
-                _liftService.StoreExport(userId, exportedFilepath);
-                await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
+                var proceed = _liftService.StoreExport(userId, exportedFilepath, exportId);
+
+                if (proceed)
+                {
+                    await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
+                }
+                else
+                {
+                    // check if want to notify, since may be a while later
+                    await _notifyService.Clients.All.SendAsync(CombineHub.CancelExport, userId);
+                }
                 return true;
             }
             catch (Exception e)
