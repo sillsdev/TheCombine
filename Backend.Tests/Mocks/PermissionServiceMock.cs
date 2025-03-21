@@ -125,11 +125,11 @@ namespace Backend.Tests.Mocks
             return userId;
         }
 
-        public Task<User?> Authenticate(string username, string password)
+        public Task<User?> Authenticate(string emailOrUsername, string password)
         {
             try
             {
-                var user = _userRepo.GetUserByUsername(username).Result;
+                var user = _userRepo.GetUserByEmailOrUsername(emailOrUsername).Result;
                 if (user is null)
                 {
                     return Task.FromResult<User?>(null);

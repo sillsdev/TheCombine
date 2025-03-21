@@ -48,6 +48,12 @@ const dynamicFontParams = { factor: 2 };
 // Theme for the entire project
 const baseTheme = createTheme({
   components: {
+    MuiButton: {
+      styleOverrides: {
+        endIcon: { marginInlineEnd: -4, marginInlineStart: 8 },
+        startIcon: { marginInlineEnd: 8, marginInlineStart: -4 },
+      },
+    },
     MuiButtonBase: { styleOverrides: { root: { disableRipple: false } } },
     MuiTooltip: { styleOverrides: { tooltip: { fontSize: ".8em" } } },
   },

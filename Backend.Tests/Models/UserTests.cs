@@ -48,7 +48,7 @@ namespace Backend.Tests.Models
         public void TestConstructor()
         {
             var credentials = new Credentials();
-            Assert.That(credentials.Username, Is.EqualTo(""));
+            Assert.That(credentials.EmailOrUsername, Is.EqualTo(""));
             Assert.That(credentials.Password, Is.EqualTo(""));
         }
     }
