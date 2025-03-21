@@ -299,7 +299,7 @@ namespace BackendFramework.Controllers
 
         private async Task<IActionResult> CancelLiftExport(string projectId, string userId)
         {
-            _liftService.SetCancelExport(userId, true);
+            _liftService.SetCancelExport(userId);
             // stand-in for async
             await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
             return Ok(projectId);
