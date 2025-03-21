@@ -112,8 +112,8 @@ namespace BackendFramework.Services
         /// A dictionary shared by all Projects for storing and retrieving paths to in-process imports.
         private readonly Dictionary<string, string> _liftImports;
         private const string FlagFieldTag = "TheCombineFlag";
-        /// <summary> U+2C76 U+00A0 </summary>
-        public const string FlagTextPrefix = "ⱶ ";
+        /// <summary> U+2C76 </summary>
+        public const char FlagTextEmptyChar = 'ⱶ';
         private const string InProgress = "IN_PROGRESS";
 
         public LiftService(ISemanticDomainRepository semDomRepo, ISpeakerRepository speakerRepo)
@@ -254,30 +254,38 @@ namespace BackendFramework.Services
             Directory.CreateDirectory(consentDir);
             var liftPath = Path.Combine(zipDir, projNameAsPath + ".lift");
 
-            // noBOM will work with PrinceXML
+            // noBOM will work with PrinceXML.
             using var liftWriter = new CombineLiftWriter(liftPath, ByteOrderStyle.BOM);
             var rangesDest = Path.Combine(zipDir, projNameAsPath + ".lift-ranges");
 
-            // Write header of lift document.
-            var header =
-                $@"
-                    <ranges>
-                        <range id = ""semantic-domain-ddp4"" href = ""{rangesDest}""/>
-                    </ranges>
-                    <fields>
-                        <field tag = ""Plural"">
-                            <form lang = ""en""><text></text></form>
-                            <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = String; WsSelector = kwsVern </text></form>
-                        </field>
-                    </fields>
-                ";
-            liftWriter.WriteHeader(header);
-
-            // Write out every word with all of its information
+            // Get every word with all of its information.
             var allWords = await wordRepo.GetAllWords(projectId);
             var frontier = await wordRepo.GetFrontier(projectId);
             var activeWords = frontier.Where(
                 x => x.Senses.Any(s => s.Accessibility == Status.Active || s.Accessibility == Status.Protected)).ToList();
+            var hasFlags = activeWords.Any(w => w.Flag.Active);
+
+            // Write header of LIFT document.
+            var conditionalFlagField = hasFlags
+                ? $@"
+            <field tag = ""{FlagFieldTag}"">
+                <form lang = ""en""><text></text></form>
+                <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = MultiUnicode; WsSelector = kwsAnals </text></form>
+            </field>"
+                : "";
+            var headerContents =
+                $@"
+        <ranges>
+            <range id = ""semantic-domain-ddp4"" href = ""{rangesDest}""/>
+        </ranges>
+        <fields>
+            <field tag = ""Plural"">
+                <form lang = ""en""><text></text></form>
+                <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = String; WsSelector = kwsVern </text></form>
+            </field>{conditionalFlagField}
+        </fields>
+    ";
+            liftWriter.WriteHeader(headerContents);
 
             // Get all project speakers for exporting audio and consents.
             var projSpeakers = await _speakerRepo.GetAllSpeakers(projectId);
@@ -308,6 +316,7 @@ namespace BackendFramework.Services
                 // the current time, rather than the modified time stored in the database.
                 entry.ModifiedTimeIsLocked = true;
 
+                AddFlag(entry, wordEntry, proj.AnalysisWritingSystems.FirstOrDefault()?.Bcp47 ?? "en");
                 AddNote(entry, wordEntry);
                 AddVern(entry, wordEntry, proj.VernacularWritingSystem.Bcp47);
                 AddSenses(entry, wordEntry, semDomNames);
@@ -451,6 +460,19 @@ namespace BackendFramework.Services
             liftRangesWriter.Close();
         }
 
+        /// <summary> Adds <see cref="Flag"/> of a word (if it is active) to be written out to lift </summary>
+        private static void AddFlag(LexEntry entry, Word wordEntry, string analysisLanguage)
+        {
+            if (wordEntry.Flag.Active)
+            {
+                var field = new LexField(FlagFieldTag);
+                var text = wordEntry.Flag.Text.Trim();
+                text = string.IsNullOrEmpty(text) ? FlagTextEmptyChar.ToString() : text;
+                field.Forms = [new LanguageForm(analysisLanguage, text, field)];
+                entry.Fields.Add(field);
+            }
+        }
+
         /// <summary> Adds <see cref="Note"/> of a word to be written out to lift </summary>
         private static void AddNote(LexEntry entry, Word wordEntry)
         {
@@ -470,34 +492,10 @@ namespace BackendFramework.Services
             }
         }
 
-        /// <summary>
-        /// Prefixes the given Flag's text with <see cref="FlagTextPrefix"/> (ⱶ followed by a space).
-        /// If the Flag isn't active, return null.
-        /// </summary>
-        private static string? FlagToExportText(Models.Flag flag)
-        {
-            return !flag.Active
-                ? null
-                : $"{FlagTextPrefix}{flag.Text.Trim()}";
-        }
-
-        /// <summary> Adds <see cref="Flag"/> of a word to be written out to lift as a note </summary>
-        private static void AddFlag(LexEntry entry, Word wordEntry, string analysisLanguage)
-        {
-            var text = FlagToExportText(wordEntry.Flag);
-            if (text is not null)
-            {
-                var note = new LexNote();
-                var form = new LanguageForm(analysisLanguage, text, note);
-                note.Forms = [form];
-                entry.Notes.Add(note); // No, not as a note!!
-            }
-        }
-
         /// <summary> Adds vernacular of a word to be written out to lift </summary>
         private static void AddVern(LexEntry entry, Word wordEntry, string vernacularBcp47)
         {
-            var multiText = MultiText.Create(new LiftMultiText { { vernacularBcp47, wordEntry.Vernacular } });
+            var multiText = MultiTextBase.Create(new() { { vernacularBcp47, wordEntry.Vernacular } });
             if (wordEntry.UsingCitationForm)
             {
                 entry.CitationForm.MergeIn(multiText);
@@ -597,13 +595,13 @@ namespace BackendFramework.Services
                 }
 
                 var lexPhonetic = new LexPhonetic();
-                lexPhonetic.MergeIn(MultiText.Create(new LiftMultiText { { "href", dest } }));
+                lexPhonetic.MergeIn(MultiTextBase.Create(new() { { "href", dest } }));
                 // If audio has speaker, include speaker name as a pronunciation label
                 var speaker = projectSpeakers.Find(s => s.Id == audio.SpeakerId);
                 if (speaker is not null)
                 {
-                    var text = new LiftMultiText { { "en", $"Speaker: {speaker.Name}" } };
-                    lexPhonetic.MergeIn(MultiText.Create(text));
+                    lexPhonetic.MergeIn(
+                        MultiTextBase.Create(new() { { "en", $"Speaker: {speaker.Name}" } }));
                 }
                 entry.Pronunciations.Add(lexPhonetic);
             }
@@ -884,9 +882,7 @@ namespace BackendFramework.Services
                         var flags = field.Content.Values.Select(v => v.Text).Where(t => !string.IsNullOrEmpty(t));
                         if (flags.Any())
                         {
-                            var texts = flags.Select(t => t.StartsWith(FlagTextPrefix, StringComparison.Ordinal)
-                                ? t.Substring(FlagTextPrefix.Length)
-                                : t);
+                            var texts = flags.Select(t => t.Trim(FlagTextEmptyChar).Trim());
                             var text = string.Join("; ", texts.Where(t => !string.IsNullOrEmpty(t)));
                             newWord.Flag = new() { Active = true, Text = text };
                         }
