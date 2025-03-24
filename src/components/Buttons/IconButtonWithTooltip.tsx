@@ -22,8 +22,8 @@ export default function IconButtonWithTooltip(
 
   return (
     <Tooltip
+      placement={props.side ?? (document.body.dir === "rtl" ? "left" : "right")}
       title={props.text ?? (props.textId ? t(props.textId) : false)}
-      placement={props.side ?? "right"}
     >
       <span>
         <IconButton

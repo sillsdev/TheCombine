@@ -87,8 +87,7 @@ function NavButton(props: NavButtonProps): ReactElement {
       color="inherit"
       style={{
         background: tabColor(props.currentTab, props.targetPath),
-        marginLeft: 2,
-        marginRight: 2,
+        marginInline: 2,
         maxHeight: appBarHeight,
         maxWidth: navButtonMaxWidthProportion * windowWidth,
         minHeight: buttonMinHeight,
@@ -98,9 +97,7 @@ function NavButton(props: NavButtonProps): ReactElement {
     >
       <Tooltip title={t(props.textId)}>{props.icon}</Tooltip>
       {showText && (
-        <Typography style={{ marginLeft: 5, marginRight: 5 }}>
-          {t(props.textId)}
-        </Typography>
+        <Typography style={{ marginInline: 5 }}>{t(props.textId)}</Typography>
       )}
     </Button>
   );

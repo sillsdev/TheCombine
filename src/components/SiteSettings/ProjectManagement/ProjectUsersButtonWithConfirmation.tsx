@@ -34,7 +34,7 @@ export default function ProjectUsersButtonWithConfirmation(
         color={"primary"}
         onClick={() => setOpen(true)}
         id={`proj-${props.projectId}-users`}
-        style={{ marginLeft: theme.spacing(1), marginRight: theme.spacing(1) }}
+        style={{ marginInline: theme.spacing(1) }}
       >
         {t("siteSettings.projectRoles")}
       </Button>

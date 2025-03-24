@@ -37,6 +37,8 @@ export default function SpeakerMenu(): ReactElement {
   );
   const [anchorElement, setAnchorElement] = useState<HTMLElement | undefined>();
 
+  const horizontal = document.body.dir === "rtl" ? "left" : "right";
+
   function handleClick(event: MouseEvent<HTMLButtonElement>): void {
     setAnchorElement(event.currentTarget);
   }
@@ -66,11 +68,11 @@ export default function SpeakerMenu(): ReactElement {
       </Button>
       <Menu
         anchorEl={anchorElement}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        anchorOrigin={{ horizontal, vertical: "bottom" }}
         id={idAffix}
         onClose={handleClose}
         open={Boolean(anchorElement)}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        transformOrigin={{ horizontal, vertical: "top" }}
       >
         <SpeakerMenuList
           onSelect={(speaker) => dispatch(setCurrentSpeaker(speaker))}

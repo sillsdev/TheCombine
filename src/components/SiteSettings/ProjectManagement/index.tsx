@@ -111,7 +111,7 @@ export function ProjectList(props: ProjectListProps): ReactElement {
                 {/* Project name */}
                 <Typography
                   color={project.isActive ? "inherit" : "textSecondary"}
-                  style={{ marginRight: theme.spacing(1) }}
+                  style={{ marginInlineEnd: theme.spacing(1) }}
                   variant="h6"
                 >
                   {project.name}
