@@ -57,7 +57,7 @@ export default function SaveDeferButtons(): ReactElement {
         <LoadingButton
           loading={isSaving}
           buttonProps={{
-            style: { marginRight: theme.spacing(3) },
+            style: { marginInlineEnd: theme.spacing(3) },
             onClick: saveContinue,
             title: t("mergeDups.helpText.saveAndContinue"),
             id: "merge-save",
@@ -69,7 +69,7 @@ export default function SaveDeferButtons(): ReactElement {
           loading={isDeferring}
           buttonProps={{
             color: "secondary",
-            style: { marginRight: theme.spacing(3) },
+            style: { marginInlineEnd: theme.spacing(3) },
             onClick: defer,
             title: t("mergeDups.helpText.defer"),
             id: "merge-defer",

@@ -149,7 +149,7 @@ export function UserSettings(props: {
                       "data-testid": UserSettingsIds.FieldName,
                       maxLength: 100,
                     }}
-                    style={{ margin: theme.spacing(1), marginLeft: 0 }}
+                    style={{ margin: theme.spacing(1), marginInlineStart: 0 }}
                   />
                   <Typography
                     data-testid={UserSettingsIds.FieldUsername}

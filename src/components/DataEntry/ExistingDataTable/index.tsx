@@ -48,12 +48,12 @@ export default function ExistingDataTable(
 
   const renderDrawer = (): ReactElement => (
     <Drawer
-      role="presentation"
-      anchor={"left"}
+      anchor={document.body.dir === "rtl" ? "right" : "left"}
       open={props.drawerOpen}
       onClick={closeDrawer}
       onClose={closeDrawer}
       onKeyDown={closeDrawer}
+      role="presentation"
       style={{ zIndex: theme.zIndex.drawer + 1 }}
     >
       {list()}

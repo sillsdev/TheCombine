@@ -117,7 +117,7 @@ export function VernList(props: VernListProps): ReactElement {
       <StyledMenuItem
         key={sense?.guid ?? word.id}
         onClick={() => props.onSelect(word.id, sense?.guid)}
-        sx={isSense ? { marginLeft: theme.spacing(4) } : conditionalGrey}
+        sx={isSense ? { marginInlineStart: theme.spacing(4) } : conditionalGrey}
       >
         <DialogListItemText
           isSubitem={isSense}
@@ -163,7 +163,7 @@ export function VernList(props: VernListProps): ReactElement {
         <StyledMenuItem
           key={`${word.id}-new-sense`}
           onClick={() => props.onSelect(word.id, "")}
-          sx={{ marginLeft: theme.spacing(4) }}
+          sx={{ marginInlineStart: theme.spacing(4) }}
         >
           <DialogListItemText isSubitem text={t("addWords.newSense")} />
         </StyledMenuItem>
