@@ -29,7 +29,8 @@ spec:
               - exec
               - deployment/maintenance
               - --
-              - get-fonts.sh
+              - /usr/bin/python3
+              - /home/user/.local/bin/get_fonts.py
             resources:
               requests:
                 memory: 128Mi
