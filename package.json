@@ -91,7 +91,7 @@
     "@types/css-mediaquery": "^0.1.2",
     "@types/jest": "^29.5.14",
     "@types/loadable__component": "^5.13.8",
-    "@types/node": "^20.17.0",
+    "@types/node": "^22.13.16",
     "@types/nspell": "^2.1.5",
     "@types/react": "^18.2.61",
     "@types/react-beautiful-dnd": "^13.1.8",
