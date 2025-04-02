@@ -5,7 +5,7 @@
 #   - Intel/AMD 64-bit
 ############################################################
 
-FROM python:3.12.8-slim-bookworm
+FROM python:3.12.9-slim-bookworm
 
 USER root
 
