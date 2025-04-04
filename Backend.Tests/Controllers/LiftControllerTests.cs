@@ -332,7 +332,7 @@ namespace Backend.Tests.Controllers
             word.Modified = Time.ToUtcIso8601(new DateTime(2000, 1, 1));
             await _wordRepo.Create(word);
 
-            await _liftController.CreateLiftExportThenSignal(_projId, UserId);
+            await _liftController.CreateLiftExportThenSignal(_projId, UserId, "");
             var liftContents = await DownloadAndReadLift(_liftController, _projId);
             Assert.That(liftContents, Does.Contain("dateCreated=\"1000-01-01T00:00:00Z\""));
             Assert.That(liftContents, Does.Contain("dateModified=\"2000-01-01T00:00:00Z\""));
@@ -372,7 +372,7 @@ namespace Backend.Tests.Controllers
         {
             const string invalidProjectId = "INVALID_ID";
             Assert.That(
-                async () => await _liftController.CreateLiftExportThenSignal(invalidProjectId, UserId),
+                async () => await _liftController.CreateLiftExportThenSignal(invalidProjectId, UserId, ""),
                 Throws.TypeOf<MissingProjectException>());
         }
 
@@ -440,7 +440,7 @@ namespace Backend.Tests.Controllers
             await _wordService.Update(_projId, UserId, wordToUpdate.Id, word);
             await _wordService.DeleteFrontierWord(_projId, UserId, wordToDelete.Id);
 
-            await _liftController.CreateLiftExportThenSignal(_projId, UserId);
+            await _liftController.CreateLiftExportThenSignal(_projId, UserId, "");
             var text = await DownloadAndReadLift(_liftController, _projId);
             // TODO: Add SIL or other XML assertion library and verify with xpath that the correct entries are
             //      kept vs deleted

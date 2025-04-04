@@ -111,6 +111,8 @@ namespace BackendFramework.Services
         private readonly Dictionary<string, string> _liftExports;
         /// A dictionary shared by all Projects for storing and retrieving paths to in-process imports.
         private readonly Dictionary<string, string> _liftImports;
+
+        private readonly Dictionary<string, string> _currentExports;
         private const string InProgress = "IN_PROGRESS";
 
         public LiftService(ISemanticDomainRepository semDomRepo, ISpeakerRepository speakerRepo)
@@ -125,15 +127,25 @@ namespace BackendFramework.Services
 
             _liftExports = new Dictionary<string, string>();
             _liftImports = new Dictionary<string, string>();
+            _currentExports = new Dictionary<string, string>();
+        }
+
+        /// <summary> Store status that a user's export is cancelled. </summary>
+        public void SetCancelExport(string userId)
+        {
+            _liftExports.Remove(userId);
+            _currentExports.Remove(userId);
         }
 
         /// <summary> Store status that a user's export is in-progress. </summary>
-        public void SetExportInProgress(string userId, bool isInProgress)
+        public void SetExportInProgress(string userId, bool isInProgress, string exportId)
         {
             _liftExports.Remove(userId);
+            // if in progress true but exportId is empty, that indicates an issue here
             if (isInProgress)
             {
                 _liftExports.Add(userId, InProgress);
+                _currentExports.Add(userId, exportId);
             }
         }
 
@@ -145,10 +157,23 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Store filePath for a user's Lift export. </summary>
-        public void StoreExport(string userId, string filePath)
+        /// <returns> If the export has not been cancelled, true; otherwise, false. </returns>
+        public bool StoreExport(string userId, string filePath, string validExportId)
         {
-            _liftExports.Remove(userId);
-            _liftExports.Add(userId, filePath);
+            //  check if this filepath is for a valid (not cancelled) export
+            _currentExports.TryGetValue(userId, out var currentExport);
+            if (validExportId == currentExport)
+            {
+                _liftExports.Remove(userId);
+                _liftExports.Add(userId, filePath);
+                _currentExports.Remove(userId);
+                return true;
+            }
+            else
+            {
+                DeleteExport(userId);
+                return false;
+            }
         }
 
         /// <summary> Retrieve a stored filePath for the user's Lift export. </summary>
