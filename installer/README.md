@@ -84,6 +84,15 @@ The installation script has been tested on _Ubuntu 22.04_, _Ubuntu 24.04_, and _
      systemctl --user disable docker-desktop
      ```
 
+   - If you get an error with
+     `Conflicting values set for option Signed-By regarding source https://download.docker.com/linux/ubuntu/ noble`, you
+     may need to delete the `apt` files associated with Docker:
+
+     ```console
+     sudo rm /etc/apt/keyrings/*docker*
+     sudo rm /etc/apt/sources.list.d/*docker*
+     ```
+
 _The Combine_ will not be running when installation is complete.
 
 ## Running _The Combine_

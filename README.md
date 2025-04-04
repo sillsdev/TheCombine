@@ -540,7 +540,7 @@ Options:
 To update the PDF copy of the installer README.md file, run the following from the `installer` directory:
 
 ```console
-pandoc --pdf-engine=weasyprint README.md -o README.pdf
+pandoc --pdf-engine=weasyprint --metadata title="The Combine Installation Instructions" README.md -o README.pdf
 ```
 
 ## Generate Tutorial Video Subtitles
