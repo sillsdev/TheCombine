@@ -540,7 +540,7 @@ Options:
 To update the PDF copy of the installer README.md file, run the following from the `installer` directory:
 
 ```console
-pandoc --pdf-engine=weasyprint README.md -o README.pdf
+pandoc --pdf-engine=weasyprint --metadata title="The Combine Installation Instructions" README.md -o README.pdf
 ```
 
 ## Generate Tutorial Video Subtitles
@@ -629,7 +629,7 @@ Notes:
 - Normally, there is a slider to adjust the Memory size for the _Docker Desktop_ virtual machine. On Windows systems
   using the WSL 2 backend, there are instructions for setting the resources outside of the _Docker Desktop_ application.
 - On Linux, it's possible for `docker-desktop` to be run without the GUI, which can prevent the _Docker Desktop_ GUI
-  from opening. In that situation, execute `systemctl stop docker-desktop`.
+  from opening. In that situation, execute `systemctl --user stop docker-desktop`.
 
 ### Install Kubernetes Tools
 
