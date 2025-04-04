@@ -85,7 +85,7 @@ namespace Backend.Tests.Controllers
             name = Path.Combine(path, name);
             var fs = File.OpenWrite(name);
 
-            const string liftHeader = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+            const string liftHeader = $@"<?xml version=""1.0"" encoding=""UTF-8""?>
                 <lift producer = ""SIL.FLEx 8.3.12.43172"" version = ""0.13"">
                     <header>
                         <ranges>
@@ -95,6 +95,10 @@ namespace Backend.Tests.Controllers
                             <field tag = ""Plural"">
                                 <form lang = ""en""><text></text></form>
                                 <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = String; WsSelector = kwsVern </text></form>
+                            </field>
+                            <field tag = ""{LiftService.FlagFieldTag}"">
+                                <form lang = ""en""><text></text></form>
+                                <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = MultiUnicode; WsSelector = kwsAnals </text></form>
                             </field>
                         </fields>
                     </header>
@@ -112,6 +116,8 @@ namespace Backend.Tests.Controllers
                 var vernLang = $"\"{Util.RandString(3)}\"";
                 var vern = Util.RandString(6);
                 var plural = Util.RandString(8);
+                var flag = Util.RandString(10);
+                var note = Util.RandString(12);
                 var audio = $"\"{Util.RandString(3)}.mp3\"";
                 var senseId = $"\"{Util.RandString()}\"";
                 var transLang1 = $"\"{Util.RandString(3)}\"";
@@ -128,6 +134,12 @@ namespace Backend.Tests.Controllers
                             <field type = ""Plural"">
                                 <form lang = {vernLang}><text> {plural} </text></form>
                             </field>
+                            <field type = ""{LiftService.FlagFieldTag}"">
+                                <form lang = {transLang1}><text> {flag} </text></form>
+                            </field>
+                            <note>
+                                <form lang = {transLang1}><text> {note} </text></form>
+                            </note>
                             <pronunciation>
 			                    <media href= {audio}/>
                             </pronunciation>
