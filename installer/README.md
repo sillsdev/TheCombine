@@ -158,7 +158,7 @@ Web certificate expires at Jul  8 08:54:11 2024 GMT
 To run `combine-installer.run` with options, the option list must be started with `--` . The following options are supported:
 
 | option          | description |
-| --------------- | ---------------------------------------------------------------------------- |
+| ---------------- | ---------------------------------------------------------------------------- |
 | clean           | Remove the previously saved environment (AWS Access Key, admin user info) before performing the installation. |
 | restart         | Run the installation from the beginning; do not resume a previous installation. |
 | server          | Install _The Combine_ in a server environment so that _The Combine_ is always running by default. |
