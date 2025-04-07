@@ -71,9 +71,9 @@ export default function SenseCardText(props: SenseCardTextProps): ReactElement {
 }
 
 const defStyle: CSSProperties = {
-  borderLeft: "1px solid black",
+  borderInlineStart: "1px solid black",
   marginBottom: theme.spacing(1),
-  paddingLeft: theme.spacing(1),
+  paddingInlineStart: theme.spacing(1),
 };
 
 interface SenseTextRowsProps {

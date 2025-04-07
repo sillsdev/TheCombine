@@ -18,7 +18,7 @@ import TreeNavigator from "components/TreeView/TreeNavigator";
 import TreeSearch from "components/TreeView/TreeSearch";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
-import { newSemanticDomain } from "types/semanticDomain";
+import { newSemanticDomain, rootId } from "types/semanticDomain";
 import { semDomWritingSystems } from "types/writingSystem";
 
 function getSemDomWritingSystem(
@@ -27,8 +27,10 @@ function getSemDomWritingSystem(
   return semDomWritingSystems.find((ws) => lang.bcp47.startsWith(ws.bcp47));
 }
 
-export const exitButtonId = "tree-view-exit";
-export const topButtonId = "tree-view-top";
+export enum TreeViewIds {
+  ButtonExit = "tree-view-exit-button",
+  ButtonTop = "tree-view-top-button",
+}
 
 export interface TreeViewProps {
   exit?: () => void;
@@ -136,7 +138,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
               icon={<KeyboardDoubleArrowUp />}
               textId={"treeView.returnToTop"}
               onClick={onClickTop}
-              buttonId={topButtonId}
+              buttonId={TreeViewIds.ButtonTop}
             />
           )}
           {exit && (
@@ -144,7 +146,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
               icon={<Close />}
               textId={"buttons.exit"}
               onClick={exit}
-              buttonId={exitButtonId}
+              buttonId={TreeViewIds.ButtonExit}
             />
           )}
         </Grid>
@@ -153,12 +155,8 @@ export default function TreeView(props: TreeViewProps): ReactElement {
       <Zoom
         in={visible}
         onEntered={() => {
-          if (currentDomain.id) {
-            animate(
-              "#current-domain",
-              { transform: ["none", "scale(.9)", "none"] },
-              { duration: 1 }
-            );
+          if (currentDomain.id && currentDomain.id !== rootId) {
+            animate("#current-domain", { scale: [1, 0.9, 1] }, { duration: 1 });
           }
         }}
       >

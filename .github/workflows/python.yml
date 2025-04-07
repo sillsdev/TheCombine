@@ -15,7 +15,7 @@ permissions: # added using https://github.com/step-security/secure-workflows
 
 jobs:
   tox:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.12"]

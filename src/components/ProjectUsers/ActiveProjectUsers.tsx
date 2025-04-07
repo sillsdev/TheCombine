@@ -114,7 +114,7 @@ export default function ActiveProjectUsers(props: {
           <Avatar
             alt="User Avatar"
             src={userAvatar[user.id]}
-            style={{ marginRight: theme.spacing(1) }}
+            style={{ marginInlineEnd: theme.spacing(1) }}
           />
         </ListItemAvatar>
         <ListItemText primary={`${user.name} (${user.username})`} />

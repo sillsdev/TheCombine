@@ -123,16 +123,16 @@ namespace BackendFramework.Controllers
         {
             try
             {
-                var user = await _permissionService.Authenticate(cred.Username, cred.Password);
+                var user = await _permissionService.Authenticate(cred.EmailOrUsername, cred.Password);
                 if (user is null)
                 {
-                    return Unauthorized(cred.Username);
+                    return Unauthorized(cred.EmailOrUsername);
                 }
                 return Ok(user);
             }
             catch (KeyNotFoundException)
             {
-                return NotFound(cred.Username);
+                return NotFound(cred.EmailOrUsername);
             }
         }
 
@@ -153,19 +153,19 @@ namespace BackendFramework.Controllers
             return Ok(user);
         }
 
-        /// <summary> Returns <see cref="User"/> with the specified email address. </summary>
-        [HttpPut("getbyemail", Name = "GetUserByEmail")]
+        /// <summary> Returns <see cref="User"/> with the specified email address or username. </summary>
+        [HttpPut("getbyemailorusername", Name = "GetUserByEmailOrUsername")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
-        public async Task<IActionResult> GetUserByEmail([FromBody, BindRequired] string email)
+        public async Task<IActionResult> GetUserByEmailOrUsername([FromBody, BindRequired] string emailOrUsername)
         {
             if (!_permissionService.IsCurrentUserAuthorized(HttpContext))
             {
                 return Forbid();
             }
-            var user = await _userRepo.GetUserByEmail(email);
+            var user = await _userRepo.GetUserByEmailOrUsername(emailOrUsername);
             if (user is null)
             {
-                return NotFound(email);
+                return NotFound(emailOrUsername);
             }
             return Ok(user);
         }
@@ -180,32 +180,35 @@ namespace BackendFramework.Controllers
             if (string.IsNullOrWhiteSpace(user.Username)
                 || await _userRepo.GetUserByEmailOrUsername(user.Username) is not null)
             {
-                // Use GetUserByEmailOrUsername to prevent using an existing user's email
+                // Use GetUserByEmailOrUsername to prevent using an existing user's email address
                 // as a username.
                 return BadRequest("login.usernameTaken");
             }
             if (string.IsNullOrWhiteSpace(user.Email)
-                || await _userRepo.GetUserByEmail(user.Email) is not null)
+                || await _userRepo.GetUserByEmailOrUsername(user.Email) is not null)
             {
+                // Use GetUserByEmailOrUsername to prevent using an existing user's username
+                // as an email address.
                 return BadRequest("login.emailTaken");
             }
 
-            var returnUser = await _userRepo.Create(user);
-            if (returnUser is null)
+            var createdUser = await _userRepo.Create(user);
+            if (createdUser is null)
             {
                 return BadRequest("login.signUpFailed");
             }
-            return Ok(user.Id);
+            return Ok(createdUser.Id);
         }
 
-        /// <summary> Checks whether specified email address is taken or empty. </summary>
+        /// <summary> Checks that specified email address or username is neither empty nor in use. </summary>
         [AllowAnonymous]
-        [HttpPut("isemailtaken", Name = "IsEmailUnavailable")]
+        [HttpPut("isemailorusernameavailable", Name = "IsEmailOrUsernameAvailable")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        public async Task<IActionResult> IsEmailUnavailable([FromBody, BindRequired] string email)
+        public async Task<IActionResult> IsEmailOrUsernameAvailable([FromBody, BindRequired] string emailOrUsername)
         {
-            var isUnavailable = string.IsNullOrWhiteSpace(email) || await _userRepo.GetUserByEmail(email) is not null;
-            return Ok(isUnavailable);
+            var isAvailable = !string.IsNullOrWhiteSpace(emailOrUsername) &&
+                await _userRepo.GetUserByEmailOrUsername(emailOrUsername) is null;
+            return Ok(isAvailable);
         }
 
         /// <summary> Updates <see cref="User"/> with specified id. </summary>

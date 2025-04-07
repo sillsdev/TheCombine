@@ -85,7 +85,7 @@ export default function UserList(props: UserListProps): ReactElement {
         <Avatar
           alt="User Avatar"
           src={userAvatar[user.id]}
-          style={{ marginRight: theme.spacing(1) }}
+          style={{ marginInlineEnd: theme.spacing(1) }}
         />
         <ListItemText primary={`${user.name} (${user.username})`} />
       </ListItem>

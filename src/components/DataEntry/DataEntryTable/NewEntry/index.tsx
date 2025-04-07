@@ -39,8 +39,7 @@ export enum FocusTarget {
 }
 
 const gridItemStyle = (spacing: number): CSSProperties => ({
-  paddingLeft: theme.spacing(spacing),
-  paddingRight: theme.spacing(spacing),
+  paddingInline: theme.spacing(spacing),
   position: "relative",
 });
 
@@ -307,7 +306,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
 function EnterGrid(): ReactElement {
   const { t } = useTranslation();
   return (
-    <Grid item xs={12} style={{ paddingLeft: theme.spacing(2) }}>
+    <Grid item xs={12} style={{ paddingInlineStart: theme.spacing(2) }}>
       <Typography variant="body2">{t("addWords.pressEnter")}</Typography>
     </Grid>
   );

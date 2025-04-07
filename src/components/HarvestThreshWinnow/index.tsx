@@ -1,4 +1,4 @@
-import { type AnimationOptionsWithOverrides, animate } from "motion";
+import { type AnimationOptions, animate } from "motion";
 import { type CSSProperties, type ReactElement, useEffect } from "react";
 
 import ImageAttributions, {
@@ -45,9 +45,9 @@ export default function HarvestThreshWinnow(
 ): ReactElement {
   useEffect(() => {
     if (props.loading) {
-      const options: AnimationOptionsWithOverrides = {
+      const options: AnimationOptions = {
         duration: 7,
-        easing: "linear",
+        ease: "linear",
         repeat: Infinity,
       };
       animate(`#${ImageId.License}`, { opacity: opacityKeyframes1 }, options);
@@ -78,7 +78,7 @@ export default function HarvestThreshWinnow(
         alt={ImageAlt.Harvest}
         id={ImageId.Harvest}
         src={harvest}
-        style={{ ...imageStyle, left: overlap * imageSize }}
+        style={{ ...imageStyle, insetInlineStart: overlap * imageSize }}
       />
       <img
         alt={ImageAlt.Thresh}
@@ -90,14 +90,14 @@ export default function HarvestThreshWinnow(
         alt={ImageAlt.Winnow}
         id={ImageId.Winnow}
         src={winnow}
-        style={{ ...imageStyle, right: overlap * imageSize }}
+        style={{ ...imageStyle, insetInlineEnd: overlap * imageSize }}
       />
       <div
         id={ImageId.License}
         style={{
           // Use -10 to offset the button padding
           bottom: -10,
-          left: 0.2 * imageSize - 10,
+          insetInlineStart: 0.2 * imageSize - 10,
           position: "absolute",
         }}
       >

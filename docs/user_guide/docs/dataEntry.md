@@ -54,8 +54,8 @@ recording's speaker, right click the green triangle (or press-and-hold on a touc
 
 If you submit a new entry with identical vernacular form and gloss to an existing entry, that entry will be updated
 instead of a new entry created. For example, if you submit [Vernacular: dedo; Gloss: finger] in domain 2.1.3.1 (Arm) and
-again in domain 2.1.3.3 (Finger, Toe), the result will be a single entry for "dedo" with a single sense that has gloss "finger"
-and two domains.
+again in domain 2.1.3.3 (Finger, Toe), the result will be a single entry for "dedo" with a single sense that has gloss
+"finger" and two domains.
 
 The Combine has an optional feature to facilitate entry of words that already exist in the project but which are
 collected again in a new semantic domain. This feature can be turned on or off in

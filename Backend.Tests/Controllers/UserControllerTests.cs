@@ -58,7 +58,8 @@ namespace Backend.Tests.Controllers
 
             var users = ((ObjectResult)_userController.GetAllUsers().Result).Value as List<User>;
             Assert.That(users, Has.Count.EqualTo(3));
-            _userRepo.GetAllUsers().Result.ForEach(user => Assert.That(users, Does.Contain(user)));
+            _userRepo.GetAllUsers().Result.ForEach(
+                user => Assert.That(users, Does.Contain(user).UsingPropertiesComparer()));
         }
 
         [Test]
@@ -71,7 +72,7 @@ namespace Backend.Tests.Controllers
 
             var result = _userController.GetUser(user.Id).Result;
             Assert.That(result, Is.InstanceOf<ObjectResult>());
-            Assert.That(((ObjectResult)result).Value, Is.EqualTo(user));
+            Assert.That(((ObjectResult)result).Value, Is.EqualTo(user).UsingPropertiesComparer());
         }
 
         [Test]
@@ -82,27 +83,40 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestGetUserByEmail()
+        public void TestGetUserByEmailOrUsernameWithEmail()
         {
             const string email = "example@gmail.com";
             var user = _userRepo.Create(
                 new User { Email = email, Username = Util.RandString(10), Password = Util.RandString(10) }
             ).Result ?? throw new UserCreationException();
 
-            var result = _userController.GetUserByEmail(email).Result;
+            var result = _userController.GetUserByEmailOrUsername(email).Result;
             Assert.That(result, Is.InstanceOf<ObjectResult>());
-            Assert.That(((ObjectResult)result).Value, Is.EqualTo(user));
+            Assert.That(((ObjectResult)result).Value, Is.EqualTo(user).UsingPropertiesComparer());
         }
 
         [Test]
-        public void TestGetMissingEmail()
+        public void TestGetUserByEmailOrUsernameWithUsername()
         {
-            var result = _userController.GetUserByEmail("INVALID_EMAIL@gmail.com").Result;
+            const string username = "example-name";
+            var user = _userRepo.Create(
+                new User { Username = username, Password = Util.RandString(10) }
+            ).Result ?? throw new UserCreationException();
+
+            var result = _userController.GetUserByEmailOrUsername(username).Result;
+            Assert.That(result, Is.InstanceOf<ObjectResult>());
+            Assert.That(((ObjectResult)result).Value, Is.EqualTo(user).UsingPropertiesComparer());
+        }
+
+        [Test]
+        public void TestGetUserByEmailOrUsernameMissing()
+        {
+            var result = _userController.GetUserByEmailOrUsername("INVALID_EMAIL@gmail.com").Result;
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
         }
 
         [Test]
-        public void TestGetUserByEmailNoPermission()
+        public void TestGetUserByEmailOrUsernameNoPermission()
         {
             _userController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             const string email = "example@gmail.com";
@@ -110,7 +124,7 @@ namespace Backend.Tests.Controllers
                 new User { Email = email, Username = Util.RandString(10), Password = Util.RandString(10) }
             ).Result ?? throw new UserCreationException();
 
-            var result = _userController.GetUserByEmail(email).Result;
+            var result = _userController.GetUserByEmailOrUsername(email).Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 
@@ -120,7 +134,7 @@ namespace Backend.Tests.Controllers
             var user = RandomUser();
             var id = (string)((ObjectResult)_userController.CreateUser(user).Result).Value!;
             user.Id = id;
-            Assert.That(_userRepo.GetAllUsers().Result, Does.Contain(user));
+            Assert.That(_userRepo.GetAllUsers().Result, Does.Contain(user).UsingPropertiesComparer());
         }
 
         [Test]
@@ -165,7 +179,7 @@ namespace Backend.Tests.Controllers
 
             var users = _userRepo.GetAllUsers().Result;
             Assert.That(users, Has.Count.EqualTo(1));
-            Assert.That(users, Does.Contain(modUser));
+            Assert.That(users, Does.Contain(modUser).UsingPropertiesComparer());
         }
 
         [Test]
@@ -179,7 +193,7 @@ namespace Backend.Tests.Controllers
 
             var users = _userRepo.GetAllUsers().Result;
             Assert.That(users, Has.Count.EqualTo(1));
-            Assert.That(users, Does.Contain(modUser));
+            Assert.That(users, Does.Contain(modUser).UsingPropertiesComparer());
         }
 
         [Test]
@@ -193,7 +207,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestIsEmailUnavailable()
+        public void TestIsEmailOrUsernameAvailable()
         {
             var user1 = RandomUser();
             var user2 = RandomUser();
@@ -202,20 +216,20 @@ namespace Backend.Tests.Controllers
             _userRepo.Create(user1);
             _userRepo.Create(user2);
 
-            var result1 = (ObjectResult)_userController.IsEmailUnavailable(email1.ToLowerInvariant()).Result;
-            Assert.That(result1.Value, Is.True);
+            var result1 = (ObjectResult)_userController.IsEmailOrUsernameAvailable(email1.ToLowerInvariant()).Result;
+            Assert.That(result1.Value, Is.False);
 
-            var result2 = (ObjectResult)_userController.IsEmailUnavailable(email2.ToUpperInvariant()).Result;
-            Assert.That(result2.Value, Is.True);
+            var result2 = (ObjectResult)_userController.IsEmailOrUsernameAvailable(email2.ToUpperInvariant()).Result;
+            Assert.That(result2.Value, Is.False);
 
-            var result3 = (ObjectResult)_userController.IsEmailUnavailable(email1).Result;
-            Assert.That(result3.Value, Is.True);
+            var result3 = (ObjectResult)_userController.IsEmailOrUsernameAvailable(email1).Result;
+            Assert.That(result3.Value, Is.False);
 
-            var result4 = (ObjectResult)_userController.IsEmailUnavailable("new@e.mail").Result;
-            Assert.That(result4.Value, Is.False);
+            var result4 = (ObjectResult)_userController.IsEmailOrUsernameAvailable("new@e.mail").Result;
+            Assert.That(result4.Value, Is.True);
 
-            var result5 = (ObjectResult)_userController.IsEmailUnavailable("").Result;
-            Assert.That(result5.Value, Is.True);
+            var result5 = (ObjectResult)_userController.IsEmailOrUsernameAvailable("").Result;
+            Assert.That(result5.Value, Is.False);
         }
 
         [Test]

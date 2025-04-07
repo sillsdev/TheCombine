@@ -11,45 +11,29 @@ namespace Backend.Tests.Models
         private const string Vernacular = "fr";
         private const string Text = "Text";
 
-        /// <summary> Words create a unique Guid by default. Use a common GUID to ensure equality in tests. </summary>
-        private readonly Guid _commonGuid = Guid.NewGuid();
-
         [Test]
-        public void TestEquals()
+        public void TestClone()
         {
-            var word = new Word { Guid = _commonGuid, Vernacular = Vernacular };
-            Assert.That(word.Equals(new Word { Guid = _commonGuid, Vernacular = Vernacular }), Is.True);
-        }
-
-        [Test]
-        public void TestEqualsNull()
-        {
-            var word = new Word { Vernacular = Vernacular };
-            Assert.That(word.Equals(null), Is.False);
-        }
-
-        [Test]
-        public void TestEqualsNote()
-        {
-            var word = new Word { Guid = _commonGuid, Note = new Note { Language = Vernacular, Text = Text } };
-            Assert.That(word.Equals(
-                new Word { Guid = _commonGuid, Note = new Note { Language = Vernacular, Text = Text } }), Is.True);
-        }
-
-        [Test]
-        public void TestNotEqualsNote()
-        {
-            var word = new Word { Guid = _commonGuid, Note = new Note { Language = Vernacular, Text = "Bad Text" } };
-            Assert.That(word.Equals(
-                new Word { Guid = _commonGuid, Note = new Note { Language = Vernacular, Text = Text } }), Is.False);
-        }
-
-        [Test]
-        public void TestHashCode()
-        {
-            Assert.That(
-                new Word { Guid = _commonGuid, Vernacular = "1" }.GetHashCode(),
-                Is.Not.EqualTo(new Word { Guid = _commonGuid, Vernacular = "2" }.GetHashCode()));
+            var word = new Word
+            {
+                Id = "id",
+                Guid = Guid.NewGuid(),
+                Vernacular = "vern",
+                Plural = "verns",
+                Created = "then",
+                Modified = "recently",
+                OtherField = "huh?",
+                ProjectId = "proj-id",
+                Accessibility = Status.Duplicate,
+                Audio = [new("sound.wav")],
+                EditedBy = ["me"],
+                History = ["prev-id"],
+                ProtectReasons = [new() { Count = 2 }],
+                Senses = [new() { GrammaticalInfo = new() { CatGroup = GramCatGroup.Noun } }],
+                Note = new() { Text = "noted" },
+                Flag = new() { Text = "flagged" },
+            };
+            Assert.That(word.Clone(), Is.EqualTo(word).UsingPropertiesComparer());
         }
 
         [Test]
@@ -98,45 +82,30 @@ namespace Backend.Tests.Models
             Assert.That(updatedSense, Is.Not.Null);
             var updatedDom = updatedSense!.SemanticDomains.Find(dom => dom.Id == newSemDom.Id);
             Assert.That(updatedDom, Is.Not.Null);
-            Assert.That(oldWord.Flag.Equals(newFlag), Is.True);
-            Assert.That(oldWord.Note.Equals(newNote), Is.True);
-            Assert.That(oldWord.Audio.Contains(new Pronunciation(Text)), Is.True);
+            Assert.That(oldWord.Flag, Is.EqualTo(newFlag).UsingPropertiesComparer());
+            Assert.That(oldWord.Note, Is.EqualTo(newNote).UsingPropertiesComparer());
+            Assert.That(oldWord.Audio.Any(p => p.FileName.Equals(Text, System.StringComparison.Ordinal)), Is.True);
             Assert.That(oldWord.EditedBy.Contains(Text), Is.True);
             Assert.That(oldWord.History.Contains(Text), Is.True);
         }
     }
 
-    public class PronunciationTest
+    public class PronunciationTests
     {
-        private const string FileName = "file-name.mp3";
-        private const string SpeakerId = "1234567890";
-
         [Test]
-        public void TestNotEquals()
+        public void TestConstructorProtectedIsFalse()
         {
-            var pronunciation = new Pronunciation { Protected = false, FileName = FileName, SpeakerId = SpeakerId };
-            Assert.That(pronunciation.Equals(
-                new Pronunciation { Protected = true, FileName = FileName, SpeakerId = SpeakerId }), Is.False);
-            Assert.That(pronunciation.Equals(
-                new Pronunciation { Protected = false, FileName = "other-name", SpeakerId = SpeakerId }), Is.False);
-            Assert.That(pronunciation.Equals(
-                new Pronunciation { Protected = false, FileName = FileName, SpeakerId = "other-id" }), Is.False);
-            Assert.That(pronunciation.Equals(null), Is.False);
+            var pronunciation = new Pronunciation();
+            Assert.That(pronunciation.Protected, Is.False);
         }
 
         [Test]
-        public void TestHashCode()
+        public void TestClone()
         {
-            Assert.That(
-                new Pronunciation { FileName = FileName }.GetHashCode(),
-                Is.Not.EqualTo(new Pronunciation { FileName = "other-name" }.GetHashCode()));
-            Assert.That(
-                new Pronunciation { SpeakerId = SpeakerId }.GetHashCode(),
-                Is.Not.EqualTo(new Pronunciation { SpeakerId = "other-id" }.GetHashCode()));
-            Assert.That(
-                new Pronunciation { Protected = true }.GetHashCode(),
-                Is.Not.EqualTo(new Pronunciation { Protected = false }.GetHashCode()));
+            var pro = new Pronunciation { FileName = "file.name", Protected = true, SpeakerId = "speaker-id" };
+            Assert.That(pro.Clone(), Is.EqualTo(pro).UsingPropertiesComparer());
         }
+
     }
 
     public class NoteTests
@@ -145,32 +114,19 @@ namespace Backend.Tests.Models
         private const string Text = "Text";
 
         [Test]
-        public void TestEquals()
-        {
-            var note = new Note { Language = Language };
-            Assert.That(note.Equals(new Note { Language = Language }), Is.True);
-        }
-
-        [Test]
-        public void TestEqualsNull()
-        {
-            var note = new Note { Language = Language };
-            Assert.That(note.Equals(null), Is.False);
-        }
-
-        [Test]
-        public void TestNotEquals()
+        public void TestClone()
         {
             var note = new Note { Language = Language, Text = Text };
-            Assert.That(note.Equals(new Note { Language = "Different language", Text = Text }), Is.False);
+            Assert.That(note.Clone(), Is.EqualTo(note).UsingPropertiesComparer());
         }
 
         [Test]
-        public void TestHashCode()
+        public void TestContentEquals()
         {
-            Assert.That(
-                new Note { Text = "1" }.GetHashCode(),
-                Is.Not.EqualTo(new Note { Text = "2" }.GetHashCode()));
+            var note = new Note { Language = Language, Text = Text };
+            Assert.That(note.ContentEquals(new() { Language = Language, Text = Text }), Is.True);
+            Assert.That(note.ContentEquals(new() { Language = "di-FF", Text = Text }), Is.False);
+            Assert.That(note.ContentEquals(new() { Language = Language, Text = "Changed" }), Is.False);
         }
 
         [Test]
@@ -189,12 +145,12 @@ namespace Backend.Tests.Models
             var blankNote = new Note();
             var newNote = note.Clone();
             blankNote.Append(newNote);
-            Assert.That(blankNote.Equals(note), Is.True);
+            Assert.That(blankNote, Is.EqualTo(note).UsingPropertiesComparer());
 
             blankNote = new Note();
             var oldNote = note.Clone();
             oldNote.Append(blankNote);
-            Assert.That(oldNote.Equals(note), Is.True);
+            Assert.That(oldNote, Is.EqualTo(note).UsingPropertiesComparer());
         }
 
         [Test]
@@ -204,7 +160,7 @@ namespace Backend.Tests.Models
             var oldNote = note.Clone();
             var newNote = note.Clone();
             oldNote.Append(newNote);
-            Assert.That(oldNote.Equals(note), Is.True);
+            Assert.That(oldNote, Is.EqualTo(note).UsingPropertiesComparer());
         }
 
         [Test]
@@ -218,7 +174,7 @@ namespace Backend.Tests.Models
             oldNote.Append(newNote);
             var expectedNote = note.Clone();
             expectedNote.Text += $"; {newText}";
-            Assert.That(oldNote.Equals(expectedNote), Is.True);
+            Assert.That(oldNote, Is.EqualTo(expectedNote).UsingPropertiesComparer());
         }
 
         [Test]
@@ -232,7 +188,7 @@ namespace Backend.Tests.Models
             oldNote.Append(newNote);
             var expectedNote = note.Clone();
             expectedNote.Text += $"; [{newLanguage}] {newNote.Text}";
-            Assert.That(oldNote.Equals(expectedNote), Is.True);
+            Assert.That(oldNote, Is.EqualTo(expectedNote).UsingPropertiesComparer());
         }
     }
 
@@ -242,36 +198,19 @@ namespace Backend.Tests.Models
         private const string Text2 = "Different Text";
 
         [Test]
-        public void TestEquals()
+        public void TestClone()
         {
             var flag = new Flag { Active = true, Text = Text };
-            Assert.That(flag.Equals(new Flag { Active = true, Text = Text }), Is.True);
+            Assert.That(flag.Clone(), Is.EqualTo(flag).UsingPropertiesComparer());
         }
 
         [Test]
-        public void TestEqualsNull()
-        {
-            var flag = new Flag { Active = true };
-            Assert.That(flag.Equals(null), Is.False);
-        }
-
-        [Test]
-        public void TestNotEquals()
+        public void TestContentEquals()
         {
             var flag = new Flag { Active = true, Text = Text };
-            Assert.That(flag.Equals(new Flag { Active = false, Text = Text }), Is.False);
-            Assert.That(flag.Equals(new Flag { Active = true, Text = Text2 }), Is.False);
-        }
-
-        [Test]
-        public void TestHashCode()
-        {
-            Assert.That(
-                new Flag { Text = Text }.GetHashCode(),
-                Is.Not.EqualTo(new Flag { Text = Text2 }.GetHashCode()));
-            Assert.That(
-                new Flag { Active = true }.GetHashCode(),
-                Is.Not.EqualTo(new Flag { Active = false }.GetHashCode()));
+            Assert.That(flag.ContentEquals(new() { Active = true, Text = Text }), Is.True);
+            Assert.That(flag.ContentEquals(new() { Active = false, Text = Text }), Is.False);
+            Assert.That(flag.ContentEquals(new() { Active = true, Text = Text2 }), Is.False);
         }
 
         [Test]
@@ -283,12 +222,12 @@ namespace Backend.Tests.Models
             var oldFlag = flag.Clone();
             var newFlag = blankFlag.Clone();
             oldFlag.Append(newFlag);
-            Assert.That(oldFlag.Equals(flag), Is.True);
+            Assert.That(oldFlag, Is.EqualTo(flag).UsingPropertiesComparer());
 
             oldFlag = blankFlag.Clone();
             newFlag = flag.Clone();
             oldFlag.Append(newFlag);
-            Assert.That(oldFlag.Equals(flag), Is.True);
+            Assert.That(oldFlag, Is.EqualTo(flag).UsingPropertiesComparer());
         }
 
         [Test]
@@ -300,12 +239,12 @@ namespace Backend.Tests.Models
             var oldFlag = activeFlag.Clone();
             var newFlag = inactiveFlag.Clone();
             oldFlag.Append(newFlag);
-            Assert.That(oldFlag.Equals(activeFlag), Is.True);
+            Assert.That(oldFlag, Is.EqualTo(activeFlag).UsingPropertiesComparer());
 
             oldFlag = inactiveFlag.Clone();
             newFlag = activeFlag.Clone();
             oldFlag.Append(newFlag);
-            Assert.That(oldFlag.Equals(activeFlag), Is.True);
+            Assert.That(oldFlag, Is.EqualTo(activeFlag).UsingPropertiesComparer());
         }
 
         [Test]
@@ -315,7 +254,7 @@ namespace Backend.Tests.Models
             var oldFlag = flag.Clone();
             var newFlag = flag.Clone();
             oldFlag.Append(newFlag);
-            Assert.That(oldFlag.Equals(flag), Is.True);
+            Assert.That(oldFlag, Is.EqualTo(flag).UsingPropertiesComparer());
         }
 
         [Test]
@@ -327,7 +266,7 @@ namespace Backend.Tests.Models
             oldFlag.Append(newFlag);
             var expectedFlag = flag.Clone();
             expectedFlag.Text += $"; {Text2}";
-            Assert.That(oldFlag.Equals(expectedFlag), Is.True);
+            Assert.That(oldFlag, Is.EqualTo(expectedFlag).UsingPropertiesComparer());
         }
     }
 }

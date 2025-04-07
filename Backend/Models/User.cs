@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using MongoDB.Bson;
@@ -120,90 +119,13 @@ namespace BackendFramework.Models
             ProjectRoles = new();
         }
 
+        /// <summary> Create a deep copy. </summary>
         public User Clone()
         {
-            return new()
-            {
-                Id = Id,
-                Avatar = Avatar,
-                HasAvatar = HasAvatar,
-                Name = Name,
-                Email = Email,
-                Phone = Phone,
-                OtherConnectionField = OtherConnectionField,
-                Agreement = Agreement,
-                Password = Password,
-                Username = Username,
-                AnalyticsOn = AnalyticsOn,
-                AnsweredConsent = AnsweredConsent,
-                UILang = UILang,
-                GlossSuggestion = GlossSuggestion,
-                Token = Token,
-                IsAdmin = IsAdmin,
-                WorkedProjects = WorkedProjects.ToDictionary(kv => kv.Key, kv => kv.Value),
-                ProjectRoles = ProjectRoles.ToDictionary(kv => kv.Key, kv => kv.Value),
-            };
-        }
-
-        public bool ContentEquals(User other)
-        {
-            return
-                other.Id.Equals(Id, StringComparison.Ordinal) &&
-                other.Avatar.Equals(Avatar, StringComparison.Ordinal) &&
-                other.HasAvatar == HasAvatar &&
-                other.Name.Equals(Name, StringComparison.Ordinal) &&
-                other.Email.Equals(Email, StringComparison.Ordinal) &&
-                other.Phone.Equals(Phone, StringComparison.Ordinal) &&
-                other.OtherConnectionField.Equals(OtherConnectionField, StringComparison.Ordinal) &&
-                other.Agreement == Agreement &&
-                other.Password.Equals(Password, StringComparison.Ordinal) &&
-                other.Username.Equals(Username, StringComparison.Ordinal) &&
-                other.AnalyticsOn == AnalyticsOn &&
-                other.AnsweredConsent == AnsweredConsent &&
-                other.UILang.Equals(UILang, StringComparison.Ordinal) &&
-                other.GlossSuggestion.Equals(GlossSuggestion) &&
-                other.Token.Equals(Token, StringComparison.Ordinal) &&
-                other.IsAdmin == IsAdmin &&
-
-                other.WorkedProjects.Count == WorkedProjects.Count &&
-                other.WorkedProjects.All(WorkedProjects.Contains) &&
-
-                other.ProjectRoles.Count == ProjectRoles.Count &&
-                other.ProjectRoles.All(ProjectRoles.Contains);
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is not User other || GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return other.Id.Equals(Id, StringComparison.Ordinal) && ContentEquals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            var hash = new HashCode();
-            hash.Add(Id);
-            hash.Add(Avatar);
-            hash.Add(HasAvatar);
-            hash.Add(Name);
-            hash.Add(Email);
-            hash.Add(Phone);
-            hash.Add(OtherConnectionField);
-            hash.Add(WorkedProjects);
-            hash.Add(ProjectRoles);
-            hash.Add(Agreement);
-            hash.Add(Password);
-            hash.Add(Username);
-            hash.Add(AnalyticsOn);
-            hash.Add(AnsweredConsent);
-            hash.Add(UILang);
-            hash.Add(GlossSuggestion);
-            hash.Add(Token);
-            hash.Add(IsAdmin);
-            return hash.ToHashCode();
+            var clone = (User)MemberwiseClone();
+            clone.WorkedProjects = WorkedProjects.ToDictionary(kv => kv.Key, kv => kv.Value);
+            clone.ProjectRoles = ProjectRoles.ToDictionary(kv => kv.Key, kv => kv.Value);
+            return clone;
         }
 
         /// <summary> Removes avatar path, password, and token. </summary>
@@ -215,20 +137,20 @@ namespace BackendFramework.Models
         }
     }
 
-    /// <summary> Contains username and password for authentication. </summary>
+    /// <summary> Contains email/username and password for authentication. </summary>
     /// <remarks>
     /// This is used in a [FromBody] serializer, so its attributes cannot be set to readonly.
     /// </remarks>
     public class Credentials
     {
         [Required]
-        public string Username { get; set; }
+        public string EmailOrUsername { get; set; }
         [Required]
         public string Password { get; set; }
 
         public Credentials()
         {
-            Username = "";
+            EmailOrUsername = "";
             Password = "";
         }
     }

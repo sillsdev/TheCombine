@@ -53,6 +53,7 @@ export default function UserMenu(props: TabProps): ReactElement {
   const [isAdmin, setIsAdmin] = useState(false);
   const username = LocalStorage.getCurrentUser()?.username;
 
+  const horizontal = document.body.dir === "rtl" ? "left" : "right";
   const isLgUp = useMediaQuery<Theme>((th) => th.breakpoints.up("lg"));
   const isXl = useMediaQuery<Theme>((th) => th.breakpoints.only("xl"));
   const nameLength = isXl ? usernameLength.xl : usernameLength.lg;
@@ -83,7 +84,7 @@ export default function UserMenu(props: TabProps): ReactElement {
         }}
       >
         {!!username && isLgUp && (
-          <Typography style={{ marginLeft: 5, marginRight: 5 }}>
+          <Typography style={{ marginInline: 5 }}>
             {shortenName(username, nameLength)}
           </Typography>
         )}
@@ -95,11 +96,11 @@ export default function UserMenu(props: TabProps): ReactElement {
       </Button>
       <Menu
         anchorEl={anchorElement}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        anchorOrigin={{ horizontal, vertical: "bottom" }}
         id={idAffix}
         onClose={handleClose}
         open={Boolean(anchorElement)}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        transformOrigin={{ horizontal, vertical: "top" }}
       >
         <UserMenuList isAdmin={isAdmin} onSelect={handleClose} />
       </Menu>
@@ -122,8 +123,7 @@ export function UserMenuList(props: UserMenuListProps): ReactElement {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const iconStyle: CSSProperties =
-    document.body.dir == "rtl" ? { marginLeft: 6 } : { marginRight: 6 };
+  const iconStyle: CSSProperties = { marginInlineEnd: 6 };
 
   return (
     <div ref={props.forwardedRef}>

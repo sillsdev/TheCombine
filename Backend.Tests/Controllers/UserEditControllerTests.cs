@@ -90,7 +90,8 @@ namespace Backend.Tests.Controllers
 
             var edits = ((ObjectResult)getResult).Value as List<UserEdit>;
             Assert.That(edits, Has.Count.EqualTo(3));
-            (await _userEditRepo.GetAllUserEdits(_projId)).ForEach(edit => Assert.That(edits, Does.Contain(edit)));
+            var repoEdits = await _userEditRepo.GetAllUserEdits(_projId);
+            repoEdits.ForEach(edit => Assert.That(edits, Does.Contain(edit).UsingPropertiesComparer()));
         }
 
         [Test]
@@ -120,7 +121,7 @@ namespace Backend.Tests.Controllers
 
             var result = await _userEditController.GetUserEdit(_projId, userEdit.Id);
             Assert.That(result, Is.InstanceOf<ObjectResult>());
-            Assert.That(((ObjectResult)result).Value, Is.EqualTo(userEdit));
+            Assert.That(((ObjectResult)result).Value, Is.EqualTo(userEdit).UsingPropertiesComparer());
         }
 
         [Test]
@@ -154,7 +155,8 @@ namespace Backend.Tests.Controllers
             var userEdit = new UserEdit { ProjectId = _projId };
             var updatedUser = (User)((ObjectResult)await _userEditController.CreateUserEdit(_projId)).Value!;
             userEdit.Id = updatedUser.WorkedProjects[_projId];
-            Assert.That(await _userEditRepo.GetAllUserEdits(_projId), Does.Contain(userEdit));
+            var repoEdits = await _userEditRepo.GetAllUserEdits(_projId);
+            Assert.That(repoEdits, Does.Contain(userEdit).UsingPropertiesComparer());
         }
 
         [Test]
@@ -178,7 +180,7 @@ namespace Backend.Tests.Controllers
             await _userEditController.UpdateUserEditGoal(_projId, userEdit.Id, newEdit);
 
             var allUserEdits = await _userEditRepo.GetAllUserEdits(_projId);
-            Assert.That(allUserEdits, Does.Contain(updatedUserEdit));
+            Assert.That(allUserEdits, Does.Contain(updatedUserEdit).UsingPropertiesComparer());
         }
 
         [Test]

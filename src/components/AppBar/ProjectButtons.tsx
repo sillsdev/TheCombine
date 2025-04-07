@@ -93,10 +93,7 @@ export default function ProjectButtons(props: TabProps): ReactElement {
         >
           <Settings />
           {isMdUp && (
-            <Typography
-              display="inline"
-              style={{ marginLeft: 5, marginRight: 5 }}
-            >
+            <Typography display="inline" style={{ marginInline: 5 }}>
               {shortenName(projectName, nameLength)}
             </Typography>
           )}

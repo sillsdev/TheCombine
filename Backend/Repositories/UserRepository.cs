@@ -90,8 +90,8 @@ namespace BackendFramework.Repositories
         {
             // Confirm that email and username aren't empty and aren't taken
             if (string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Username) ||
-                await GetUserByEmail(user.Email) is not null ||
-                await GetUserByUsername(user.Username) is not null)
+                await GetUserByEmailOrUsername(user.Email) is not null ||
+                await GetUserByEmailOrUsername(user.Username) is not null)
             {
                 return null;
             }
@@ -130,7 +130,6 @@ namespace BackendFramework.Repositories
         /// <returns> A string with the userid, or null if not found </returns>
         public async Task<User?> GetUserByEmailOrUsername(string emailOrUsername, bool sanitize = true)
         {
-            var lower = emailOrUsername.ToLowerInvariant();
             var user = (await _userDatabase.Users.FindAsync(u =>
                 u.Username.Equals(emailOrUsername, StringComparison.OrdinalIgnoreCase) ||
                 u.Email.Equals(emailOrUsername, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
@@ -172,15 +171,22 @@ namespace BackendFramework.Repositories
             }
 
             // Confirm that email and username aren't taken by another user.
-            if (!user.Email.Equals(oldUser.Email, StringComparison.OrdinalIgnoreCase)
-                && await GetUserByEmail(user.Email) is not null)
+            // Allow for user updating their username to match their own email or vice-versa.
+            if (!user.Email.Equals(oldUser.Email, StringComparison.OrdinalIgnoreCase))
             {
-                return ResultOfUpdate.Failed;
+                var otherUser = await GetUserByEmailOrUsername(user.Email);
+                if (otherUser is not null && !otherUser.Id.Equals(userId, StringComparison.Ordinal))
+                {
+                    return ResultOfUpdate.Failed;
+                }
             }
-            if (!user.Username.Equals(oldUser.Username, StringComparison.OrdinalIgnoreCase)
-                && await GetUserByUsername(user.Username) is not null)
+            if (!user.Username.Equals(oldUser.Username, StringComparison.OrdinalIgnoreCase))
             {
-                return ResultOfUpdate.Failed;
+                var otherUser = await GetUserByEmailOrUsername(user.Username);
+                if (otherUser is not null && !otherUser.Id.Equals(userId, StringComparison.Ordinal))
+                {
+                    return ResultOfUpdate.Failed;
+                }
             }
 
             var filter = Builders<User>.Filter.Eq(x => x.Id, userId);
