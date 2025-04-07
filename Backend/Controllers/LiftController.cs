@@ -284,24 +284,22 @@ namespace BackendFramework.Controllers
             return Ok(countWordsImported);
         }
 
-        /// <summary> Cancels project data into zip file </summary>
+        /// <summary> Cancels project export </summary>
         /// <returns> ProjectId, if cancel successful </returns>
         [HttpGet("cancelExport", Name = "CancelLiftExport")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        public async Task<IActionResult> CancelLiftExport(string projectId)
+        public string CancelLiftExport(string projectId)
         {
             // get userID
             var userId = _permissionService.GetUserId(HttpContext);
-            await CancelLiftExport(projectId, userId);
-            return Ok(projectId);
+            CancelLiftExport(projectId, userId);
+            return projectId;
         }
 
-        private async Task<IActionResult> CancelLiftExport(string projectId, string userId)
+        private string CancelLiftExport(string projectId, string userId)
         {
             _liftService.SetCancelExport(userId);
-            // stand-in for async
-            await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
-            return Ok(projectId);
+            return projectId;
         }
 
         /// <summary> Packages project data into zip file </summary>
@@ -311,7 +309,6 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
             var userId = _permissionService.GetUserId(HttpContext);
-            // permissionservice?
             var exportId = HttpContext.TraceIdentifier;
             return await ExportLiftFile(projectId, userId, exportId);
         }
@@ -361,7 +358,6 @@ namespace BackendFramework.Controllers
             // This Task will be scheduled within the exiting Async executor thread pool efficiently.
             // See: https://stackoverflow.com/a/64614779/1398841
             _ = Task.Run(() => CreateLiftExportThenSignal(projectId, userId, exportId));
-            // maybe here check if there was a cancellation
             return Ok(projectId);
         }
 
@@ -372,18 +368,11 @@ namespace BackendFramework.Controllers
             try
             {
                 var exportedFilepath = await CreateLiftExport(projectId);
-
                 // Store the temporary path to the exported file for user to download later.
                 var proceed = _liftService.StoreExport(userId, exportedFilepath, exportId);
-
                 if (proceed)
                 {
                     await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
-                }
-                else
-                {
-                    // check if want to notify, since may be a while later
-                    await _notifyService.Clients.All.SendAsync(CombineHub.CancelExport, userId);
                 }
                 return true;
             }

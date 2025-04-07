@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -107,12 +108,19 @@ namespace BackendFramework.Services
         private readonly ISemanticDomainRepository _semDomRepo;
         private readonly ISpeakerRepository _speakerRepo;
 
-        /// A dictionary shared by all Projects for storing and retrieving paths to exported projects.
-        private readonly Dictionary<string, string> _liftExports;
+        /// <summary>
+        /// A dictionary shared by all Projects for storing and retrieving paths to exported projects 
+        /// and identifying valid exports.
+        /// </summary>
+        private readonly ConcurrentDictionary<string, (string, string)> _liftExports;
+        /// <summary>
+        /// A lock object for use with the _liftExports dictionary
+        /// </summary>
+        private static readonly object _exportsLock = new object();
+        /// <summary>
         /// A dictionary shared by all Projects for storing and retrieving paths to in-process imports.
+        /// </summary>
         private readonly Dictionary<string, string> _liftImports;
-
-        private readonly Dictionary<string, string> _currentExports;
         private const string InProgress = "IN_PROGRESS";
 
         public LiftService(ISemanticDomainRepository semDomRepo, ISpeakerRepository speakerRepo)
@@ -125,35 +133,38 @@ namespace BackendFramework.Services
                 Sldr.Initialize(true);
             }
 
-            _liftExports = new Dictionary<string, string>();
+            _liftExports = new ConcurrentDictionary<string, (string, string)>();
             _liftImports = new Dictionary<string, string>();
-            _currentExports = new Dictionary<string, string>();
         }
 
         /// <summary> Store status that a user's export is cancelled. </summary>
         public void SetCancelExport(string userId)
         {
-            _liftExports.Remove(userId);
-            _currentExports.Remove(userId);
+            _liftExports.TryRemove(userId, out var _);
         }
 
         /// <summary> Store status that a user's export is in-progress. </summary>
         public void SetExportInProgress(string userId, bool isInProgress, string exportId)
         {
-            _liftExports.Remove(userId);
-            // if in progress true but exportId is empty, that indicates an issue here
-            if (isInProgress)
+            lock (_exportsLock)
             {
-                _liftExports.Add(userId, InProgress);
-                _currentExports.Add(userId, exportId);
+                _liftExports.TryRemove(userId, out var _);
+                if (isInProgress)
+                {
+                    _liftExports.TryAdd(userId, (InProgress, exportId));
+                }
             }
         }
 
         /// <summary> Query whether user has an in-progress export. </summary>
         public bool IsExportInProgress(string userId)
         {
-            _liftExports.TryGetValue(userId, out var exportPath);
-            return exportPath == InProgress;
+            lock (_exportsLock)
+            {
+                _liftExports.TryGetValue(userId, out var tuple);
+                var exportPath = tuple.Item1;
+                return exportPath == InProgress;
+            }
         }
 
         /// <summary> Store filePath for a user's Lift export. </summary>
@@ -161,18 +172,21 @@ namespace BackendFramework.Services
         public bool StoreExport(string userId, string filePath, string validExportId)
         {
             //  check if this filepath is for a valid (not cancelled) export
-            _currentExports.TryGetValue(userId, out var currentExport);
-            if (validExportId == currentExport)
+            lock (_exportsLock)
             {
-                _liftExports.Remove(userId);
-                _liftExports.Add(userId, filePath);
-                _currentExports.Remove(userId);
-                return true;
-            }
-            else
-            {
-                DeleteExport(userId);
-                return false;
+                _liftExports.TryGetValue(userId, out var tuple);
+                var currentExport = tuple.Item2;
+                if (currentExport == validExportId)
+                {
+                    _liftExports.TryRemove(userId, out var _);
+                    _liftExports.TryAdd(userId, (filePath, ""));
+                    return true;
+                }
+                else
+                {
+                    DeleteExport(userId);
+                    return false;
+                }
             }
         }
 
@@ -180,7 +194,8 @@ namespace BackendFramework.Services
         /// <returns> Path to the Lift file on disk. </returns>
         public string? RetrieveExport(string userId)
         {
-            _liftExports.TryGetValue(userId, out var exportPath);
+            _liftExports.TryGetValue(userId, out var tuple);
+            var exportPath = tuple.Item1;
             return exportPath == InProgress ? null : exportPath;
         }
 
@@ -188,7 +203,8 @@ namespace BackendFramework.Services
         /// <returns> If the element is successfully found and removed, true; otherwise, false. </returns>
         public bool DeleteExport(string userId)
         {
-            var removeSuccessful = _liftExports.Remove(userId, out var filePath);
+            var removeSuccessful = _liftExports.TryRemove(userId, out var tuple);
+            var filePath = tuple.Item1;
             if (removeSuccessful && filePath != InProgress && File.Exists(filePath))
             {
                 File.Delete(filePath);
