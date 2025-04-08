@@ -81,6 +81,8 @@ def max_length(lang: str) -> int:
         return 9
     elif lang == "fr":
         return 10
+    elif lang == "hi":
+        return 6
     elif lang == "pt":
         return 7
     elif lang == "ru":
