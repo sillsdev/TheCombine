@@ -4,8 +4,6 @@ export const keys = [
   "97",
   "97-98",
   "97-99",
-  "97-100",
-  "97-103",
   "97-108",
   "97-109",
   "97-110",
@@ -15,11 +13,6 @@ export const keys = [
   "97-116",
   "98",
   "99",
-  "99-97",
-  "99-101",
-  "99-104",
-  "99-111",
-  "99-117",
   "100",
   "101",
   "101-109",
@@ -36,13 +29,9 @@ export const keys = [
   "111",
   "112",
   "114",
-  "114-97",
-  "114-101",
-  "114-111",
   "115",
   "116",
   "118",
-  "122",
 ];
 
 export default async function (key?: string): Promise<string | undefined> {
@@ -57,10 +46,6 @@ export default async function (key?: string): Promise<string | undefined> {
       return (await import("resources/dictionaries/es/u97-98.dic")).default;
     case "97-99":
       return (await import("resources/dictionaries/es/u97-99.dic")).default;
-    case "97-100":
-      return (await import("resources/dictionaries/es/u97-100.dic")).default;
-    case "97-103":
-      return (await import("resources/dictionaries/es/u97-103.dic")).default;
     case "97-108":
       return (await import("resources/dictionaries/es/u97-108.dic")).default;
     case "97-109":
@@ -79,16 +64,6 @@ export default async function (key?: string): Promise<string | undefined> {
       return (await import("resources/dictionaries/es/u98.dic")).default;
     case "99":
       return (await import("resources/dictionaries/es/u99.dic")).default;
-    case "99-97":
-      return (await import("resources/dictionaries/es/u99-97.dic")).default;
-    case "99-101":
-      return (await import("resources/dictionaries/es/u99-101.dic")).default;
-    case "99-104":
-      return (await import("resources/dictionaries/es/u99-104.dic")).default;
-    case "99-111":
-      return (await import("resources/dictionaries/es/u99-111.dic")).default;
-    case "99-117":
-      return (await import("resources/dictionaries/es/u99-117.dic")).default;
     case "100":
       return (await import("resources/dictionaries/es/u100.dic")).default;
     case "101":
@@ -121,20 +96,12 @@ export default async function (key?: string): Promise<string | undefined> {
       return (await import("resources/dictionaries/es/u112.dic")).default;
     case "114":
       return (await import("resources/dictionaries/es/u114.dic")).default;
-    case "114-97":
-      return (await import("resources/dictionaries/es/u114-97.dic")).default;
-    case "114-101":
-      return (await import("resources/dictionaries/es/u114-101.dic")).default;
-    case "114-111":
-      return (await import("resources/dictionaries/es/u114-111.dic")).default;
     case "115":
       return (await import("resources/dictionaries/es/u115.dic")).default;
     case "116":
       return (await import("resources/dictionaries/es/u116.dic")).default;
     case "118":
       return (await import("resources/dictionaries/es/u118.dic")).default;
-    case "122":
-      return (await import("resources/dictionaries/es/u122.dic")).default;
     default:
       return;
   }
