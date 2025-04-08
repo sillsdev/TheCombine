@@ -506,6 +506,7 @@ folder sizes, default maximum word-lengths are automatically imposed for some la
 
 Adjust the `-t`/`--threshold` and `-T`/`--Threshold` parameters to split a wordlist into more, smaller files; e.g.:
 
+- `python scripts/split_dictionary.py -l es -T 15000`
 - `python scripts/split_dictionary.py -l sw -t 1500`
 
 The top of each language's `index.ts` file states which values of `-m`, `-t`, and `-T` were used for that language.
