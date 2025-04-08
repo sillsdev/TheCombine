@@ -481,9 +481,9 @@ sake of devices with limited bandwidth. There are scripts for generating these f
 files in this directory should _not_ be manually edited.
 
 The bash script `scripts/fetch_wordlists.sh` is used to fetch dictionary files for a given language (e.g., `es`) from
-the [LibreOffice dictionaries](https://cgit.freedesktop.org/libreoffice/dictionaries/) and convert them to raw wordlists
-(e.g., `src/resources/dictionaries/es.txt`). Execute the script with no arguments for its usage details. Any language
-not currently supported can be manually added as a case in this script.
+the [LibreOffice dictionaries](https://github.com/LibreOffice/dictionaries) and convert them to raw wordlists (e.g.,
+`src/resources/dictionaries/es.txt`). Execute the script with no arguments for its usage details. Any language not
+currently supported can be manually added as a case in this script.
 
 ```bash
 ./scripts/fetch_wordlist.sh
