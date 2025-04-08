@@ -37,9 +37,11 @@ export enum ProjectDomainsId {
 
 export const trimDomain = (domain: SemanticDomainFull): SemanticDomainFull => ({
   ...domain,
-  description: domain.description.trim(),
-  name: domain.name.trim(),
-  questions: domain.questions.map((q) => q.trim()).filter((q) => q),
+  description: domain.description.trim().normalize("NFC"),
+  name: domain.name.trim().normalize("NFC"),
+  questions: domain.questions
+    .map((q) => q.trim().normalize("NFC"))
+    .filter((q) => q),
 });
 
 /** A project settings component for managing custom semantic domains. */
