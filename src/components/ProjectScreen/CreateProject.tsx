@@ -169,7 +169,7 @@ export default function CreateProject(): ReactElement {
 
   const createProject = async (e: FormEvent<EventTarget>): Promise<void> => {
     e.preventDefault();
-    const trimmedName = name.trim();
+    const trimmedName = name.trim().normalize("NFC");
     if (
       success ||
       !trimmedName ||

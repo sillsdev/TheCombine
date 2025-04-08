@@ -14,8 +14,9 @@ export default function ProjectName(props: ProjectSettingProps): ReactElement {
   }, [props.project.name]);
 
   const updateProjectName = async (): Promise<void> => {
-    if (projName !== props.project.name) {
-      await props.setProject({ ...props.project, name: projName }).catch(() => {
+    const name = projName.trim().normalize("NFC");
+    if (name !== props.project.name) {
+      await props.setProject({ ...props.project, name }).catch(() => {
         toast.error(t("projectSettings.nameUpdateFailed"));
       });
     }
