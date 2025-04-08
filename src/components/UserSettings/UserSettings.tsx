@@ -89,8 +89,6 @@ export function UserSettings(props: {
     );
   }
 
-  const showConsentDialog = !RuntimeConfig.getInstance().isOffline();
-
   const handleConsentChange = (consentVal?: boolean): void => {
     setAnalyticsOn(consentVal ?? analyticsOn);
     setDisplayConsent(false);
@@ -294,7 +292,7 @@ export function UserSettings(props: {
                 </Grid>
               </Grid>
 
-              {showConsentDialog && (
+              {!RuntimeConfig.getInstance().isOffline() && (
                 <Grid item container spacing={2}>
                   <Grid item xs={12}>
                     <Typography variant="h6">
