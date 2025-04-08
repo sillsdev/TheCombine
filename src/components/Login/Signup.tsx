@@ -145,9 +145,9 @@ export default function Signup(props: SignupProps): ReactElement {
   const signUp = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
-    // Trim whitespace off fields.
-    const name = fieldText[SignupField.Name].trim();
-    const username = fieldText[SignupField.Username].trim();
+    // Trim whitespace off fields and normalize name, username.
+    const name = fieldText[SignupField.Name].trim().normalize("NFC");
+    const username = fieldText[SignupField.Username].trim().normalize("NFC");
     const email = punycode.toUnicode(fieldText[SignupField.Email].trim());
     const password1 = fieldText[SignupField.Password1].trim();
     const password2 = fieldText[SignupField.Password2].trim();

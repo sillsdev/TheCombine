@@ -90,7 +90,7 @@ export default function Login(): ReactElement {
   const logIn = (e: FormEvent): void => {
     e.preventDefault();
     const p = password.trim();
-    const u = username.trim();
+    const u = username.trim().normalize("NFC");
     setPasswordError(!p);
     setUsernameError(!u);
     if (p && u) {
