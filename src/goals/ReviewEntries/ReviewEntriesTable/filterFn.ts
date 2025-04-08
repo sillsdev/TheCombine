@@ -36,7 +36,7 @@ export function fuzzyContains(value: string, filter: string): boolean {
 /** Check if string matches filter.
  * If filter quoted, exact match. Otherwise, fuzzy match. */
 export function matchesFilter(value: string, filter: string): boolean {
-  filter = filter.trim();
+  filter = filter.trim().normalize("NFC");
   return isQuoted(filter)
     ? value.includes(filter.substring(1, filter.length - 1).trim())
     : fuzzyContains(value, filter);
