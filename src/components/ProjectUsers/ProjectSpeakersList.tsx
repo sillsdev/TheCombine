@@ -89,7 +89,7 @@ function EditSpeakerNameListItemIcon(props: ProjSpeakerProps): ReactElement {
   const { t } = useTranslation();
 
   const handleUpdateText = async (name: string): Promise<void> => {
-    name = name.trim();
+    name = name.trim().normalize("NFC");
     if (!name) {
       return Promise.reject(t("projectSettings.speaker.nameEmpty"));
     }
