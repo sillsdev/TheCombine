@@ -12,14 +12,14 @@ import { newFlag, newNote } from "types/word";
 /** Trim whitespace off all definition texts, then remove those with empty text.  */
 function trimDefinitions(definitions: Definition[]): Definition[] {
   return definitions
-    .map((d) => ({ ...d, text: d.text.trim() }))
+    .map((d) => ({ ...d, text: d.text.trim().normalize("NFC") }))
     .filter((d) => d.text.length);
 }
 
 /** Trim whitespace off all gloss defs, then remove those with empty def.  */
 function trimGlosses(glosses: Gloss[]): Gloss[] {
   return glosses
-    .map((g) => ({ ...g, def: g.def.trim() }))
+    .map((g) => ({ ...g, def: g.def.trim().normalize("NFC") }))
     .filter((g) => g.def.length);
 }
 
@@ -131,7 +131,7 @@ export function cleanSense(
  * - all senses are empty/deleted */
 export function cleanWord(word: Word, options?: CleanOptions): Word | string {
   // Make sure vernacular isn't empty.
-  const vernacular = word.vernacular.trim();
+  const vernacular = word.vernacular.trim().normalize("NFC");
   if (!vernacular.length) {
     return "reviewEntries.error.vernacular";
   }
@@ -155,12 +155,14 @@ export function cleanWord(word: Word, options?: CleanOptions): Word | string {
   }
 
   // Clear note language if text empty.
-  const noteText = word.note.text.trim();
+  const noteText = word.note.text.trim().normalize("NFC");
   const note = newNote(noteText, noteText ? word.note.language : "");
 
   // Clear flag text if flag not active.
   const flagActive = word.flag.active;
-  const flag = newFlag(flagActive ? word.flag.text.trim() : undefined);
+  const flag = newFlag(
+    flagActive ? word.flag.text.trim().normalize("NFC") : undefined
+  );
   flag.active = flagActive;
 
   return { ...word, flag, note, senses, vernacular };
