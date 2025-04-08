@@ -4,29 +4,29 @@
 #
 #    pip-compile requirements.in
 #
-cachetools==5.5.0
+cachetools==5.5.2
     # via google-auth
-certifi==2024.8.30
+certifi==2025.1.31
     # via
     #   kubernetes
     #   requests
 cffi==1.17.1
     # via cryptography
-charset-normalizer==3.4.0
+charset-normalizer==3.4.1
     # via requests
-cryptography==44.0.0
+cryptography==44.0.2
     # via pyopenssl
 dnspython==2.7.0
     # via pymongo
 durationpy==0.9
     # via kubernetes
-google-auth==2.36.0
+google-auth==2.38.0
     # via kubernetes
 humanfriendly==10.0
     # via -r requirements.in
 idna==3.10
     # via requests
-kubernetes==31.0.0
+kubernetes==32.0.1
     # via -r requirements.in
 oauthlib==3.2.2
     # via
@@ -36,13 +36,13 @@ pyasn1==0.6.1
     # via
     #   pyasn1-modules
     #   rsa
-pyasn1-modules==0.4.1
+pyasn1-modules==0.4.2
     # via google-auth
 pycparser==2.22
     # via cffi
-pymongo==4.10.1
+pymongo==4.12.0
     # via -r requirements.in
-pyopenssl==24.3.0
+pyopenssl==25.0.0
     # via -r requirements.in
 pyreadline3==3.5.4
     # via humanfriendly
@@ -62,7 +62,9 @@ six==1.17.0
     # via
     #   kubernetes
     #   python-dateutil
-urllib3==2.2.3
+typing-extensions==4.13.1
+    # via pyopenssl
+urllib3==2.3.0
     # via
     #   kubernetes
     #   requests
