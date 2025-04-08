@@ -231,7 +231,7 @@ def main() -> None:
             "// Arabic word-list source (GPLv3):\n",
             "// https://sourceforge.net/projects/arabic-wordlist\n"
             "// Other languages source (MPLv2):\n",
-            "// https://cgit.freedesktop.org/libreoffice/dictionaries\n\n",
+            "// https://github.com/LibreOffice/dictionaries\n\n",
         ]
 
         # Generate the imports of the various language dictionaries...
