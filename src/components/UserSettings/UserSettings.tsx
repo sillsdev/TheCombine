@@ -26,6 +26,7 @@ import { asyncLoadSemanticDomains } from "components/Project/ProjectActions";
 import ClickableAvatar from "components/UserSettings/ClickableAvatar";
 import { updateLangFromUser } from "i18n";
 import { useAppDispatch } from "rootRedux/hooks";
+import { RuntimeConfig } from "types/runtimeConfig";
 import theme from "types/theme";
 import { uiWritingSystems } from "types/writingSystem";
 
@@ -87,6 +88,8 @@ export function UserSettings(props: {
       (await getUserByEmailOrUsername(unicodeEmail)).id === props.user.id
     );
   }
+
+  const showConsentDialog = !RuntimeConfig.getInstance().isOffline();
 
   const handleConsentChange = (consentVal?: boolean): void => {
     setAnalyticsOn(consentVal ?? analyticsOn);
@@ -291,40 +294,42 @@ export function UserSettings(props: {
                 </Grid>
               </Grid>
 
-              <Grid item container spacing={2}>
-                <Grid item xs={12}>
-                  <Typography variant="h6">
-                    {t("userSettings.analyticsConsent.title")}
-                  </Typography>
-                </Grid>
+              {showConsentDialog && (
+                <Grid item container spacing={2}>
+                  <Grid item xs={12}>
+                    <Typography variant="h6">
+                      {t("userSettings.analyticsConsent.title")}
+                    </Typography>
+                  </Grid>
 
-                <Grid item>
-                  <Typography>
-                    {t(
-                      analyticsOn
-                        ? "userSettings.analyticsConsent.consentYes"
-                        : "userSettings.analyticsConsent.consentNo"
-                    )}
-                  </Typography>
-                </Grid>
+                  <Grid item>
+                    <Typography>
+                      {t(
+                        analyticsOn
+                          ? "userSettings.analyticsConsent.consentYes"
+                          : "userSettings.analyticsConsent.consentNo"
+                      )}
+                    </Typography>
+                  </Grid>
 
-                <Grid item>
-                  <Button
-                    data-testid={UserSettingsIds.ButtonChangeConsent}
-                    id={UserSettingsIds.ButtonChangeConsent}
-                    onClick={() => setDisplayConsent(true)}
-                    variant="outlined"
-                  >
-                    {t("userSettings.analyticsConsent.button")}
-                  </Button>
+                  <Grid item>
+                    <Button
+                      data-testid={UserSettingsIds.ButtonChangeConsent}
+                      id={UserSettingsIds.ButtonChangeConsent}
+                      onClick={() => setDisplayConsent(true)}
+                      variant="outlined"
+                    >
+                      {t("userSettings.analyticsConsent.button")}
+                    </Button>
+                  </Grid>
+                  {displayConsent && (
+                    <AnalyticsConsent
+                      onChangeConsent={handleConsentChange}
+                      required={false}
+                    />
+                  )}
                 </Grid>
-                {displayConsent && (
-                  <AnalyticsConsent
-                    onChangeConsent={handleConsentChange}
-                    required={false}
-                  />
-                )}
-              </Grid>
+              )}
 
               <Grid item container justifyContent="flex-end">
                 <Button
