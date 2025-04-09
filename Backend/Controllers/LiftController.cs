@@ -286,7 +286,7 @@ namespace BackendFramework.Controllers
 
         /// <summary> Cancels project export </summary>
         /// <returns> ProjectId, if cancel successful </returns>
-        [HttpGet("cancelExport", Name = "CancelLiftExport")]
+        [HttpGet("cancelexport", Name = "CancelLiftExport")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public string CancelLiftExport(string projectId)
         {
@@ -374,7 +374,7 @@ namespace BackendFramework.Controllers
                 {
                     await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
                 }
-                return true;
+                return proceed;
             }
             catch (Exception e)
             {
