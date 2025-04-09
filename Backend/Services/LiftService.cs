@@ -12,6 +12,7 @@ using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using MongoDB.Bson;
+using MongoDB.Driver;
 using SIL.DictionaryServices.Lift;
 using SIL.DictionaryServices.Model;
 using SIL.Lift;
@@ -115,10 +116,6 @@ namespace BackendFramework.Services
         /// </summary>
         private readonly ConcurrentDictionary<string, (string, string)> _liftExports;
         /// <summary>
-        /// A lock object for use with the _liftExports dictionary
-        /// </summary>
-        private static readonly object _exportsLock = new object();
-        /// <summary>
         /// A dictionary shared by all Projects for storing and retrieving paths to in-process imports.
         /// </summary>
         private readonly Dictionary<string, string> _liftImports;
@@ -150,25 +147,22 @@ namespace BackendFramework.Services
         /// <summary> Store status that a user's export is in-progress. </summary>
         public void SetExportInProgress(string userId, bool isInProgress, string exportId)
         {
-            lock (_exportsLock)
+            if (isInProgress)
+            {
+                _liftExports.AddOrUpdate(userId, (InProgress, exportId), (k, v) => (InProgress, exportId));
+            }
+            else
             {
                 _liftExports.TryRemove(userId, out var _);
-                if (isInProgress)
-                {
-                    _liftExports.TryAdd(userId, (InProgress, exportId));
-                }
             }
         }
 
         /// <summary> Query whether user has an in-progress export. </summary>
         public bool IsExportInProgress(string userId)
         {
-            lock (_exportsLock)
-            {
-                _liftExports.TryGetValue(userId, out var tuple);
-                var exportPath = tuple.Item1;
-                return exportPath == InProgress;
-            }
+            _liftExports.TryGetValue(userId, out var tuple);
+            var exportPath = tuple.Item1;
+            return exportPath == InProgress;
         }
 
         /// <summary> Store filePath for a user's Lift export. </summary>
@@ -176,22 +170,12 @@ namespace BackendFramework.Services
         public bool StoreExport(string userId, string filePath, string validExportId)
         {
             //  check if this filepath is for a valid (not cancelled) export
-            lock (_exportsLock)
+            var valid = _liftExports.TryUpdate(userId, (filePath, ""), (InProgress, validExportId));
+            if (!valid)
             {
-                _liftExports.TryGetValue(userId, out var tuple);
-                var currentExport = tuple.Item2;
-                if (currentExport == validExportId)
-                {
-                    _liftExports.TryRemove(userId, out var _);
-                    _liftExports.TryAdd(userId, (filePath, ""));
-                    return true;
-                }
-                else
-                {
-                    DeleteExport(userId);
-                    return false;
-                }
+                DeleteExport(userId);
             }
+            return valid;
         }
 
         /// <summary> Retrieve a stored filePath for the user's Lift export. </summary>
