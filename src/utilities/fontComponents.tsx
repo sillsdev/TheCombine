@@ -17,7 +17,33 @@ import FontContext, { type WithFontProps } from "utilities/fontContext";
  * to add the appropriate font to that component. */
 
 // Cannot use `interface` with `extends` because TextFieldProps isn't static.
-type TextFieldWithFontProps = TextFieldProps & WithFontProps;
+type NormalizedTextField = TextFieldProps & {
+  form?: "NFC" | "NFD" | "NFKC" | "NFKD";
+};
+
+/** `TextField` that automatically normalizes the `onChange` text (default: with "NFC"). */
+export function NormalizedTextField(props: NormalizedTextField): ReactElement {
+  const { form, ...textFieldProps } = props;
+  return (
+    <TextField
+      {...textFieldProps}
+      onChange={(e) => {
+        if (textFieldProps.onChange) {
+          textFieldProps.onChange({
+            ...e,
+            target: {
+              ...e.target,
+              value: e.target.value.normalize(form || "NFC"),
+            },
+          });
+        }
+      }}
+    />
+  );
+}
+
+// Cannot use `interface` with `extends` because NormalizedTextField isn't static.
+type TextFieldWithFontProps = NormalizedTextField & WithFontProps;
 
 /**
  * `TextField` modified for use within a `FontContext`.
@@ -31,7 +57,7 @@ export function TextFieldWithFont(props: TextFieldWithFontProps): ReactElement {
   // Use spread to remove the custom props from what is passed into TextField.
   const { analysis, lang, vernacular, ...textFieldProps } = props;
   return (
-    <TextField
+    <NormalizedTextField
       {...textFieldProps}
       InputProps={{
         ...textFieldProps.InputProps,

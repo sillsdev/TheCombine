@@ -1,4 +1,4 @@
-import { Button, Card, Grid, TextField, Typography } from "@mui/material";
+import { Button, Card, Grid, Typography } from "@mui/material";
 import { FormEvent, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,7 @@ import { resetPasswordRequest } from "backend";
 import { LoadingDoneButton } from "components/Buttons";
 import Captcha from "components/Login/Captcha";
 import { Path } from "types/path";
+import { NormalizedTextField } from "utilities/fontComponents";
 
 export enum PasswordRequestIds {
   ButtonLogin = "password-request-login",
@@ -66,7 +67,7 @@ export default function ResetRequest(): ReactElement {
             </Typography>
             <form onSubmit={onSubmit}>
               <Grid item>
-                <TextField
+                <NormalizedTextField
                   helperText={isError && t("passwordReset.resetFail")}
                   id={PasswordRequestIds.FieldEmailOrUsername}
                   inputProps={{

@@ -6,7 +6,6 @@ import {
   Grid,
   MenuItem,
   Select,
-  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -29,6 +28,7 @@ import { useAppDispatch } from "rootRedux/hooks";
 import { RuntimeConfig } from "types/runtimeConfig";
 import theme from "types/theme";
 import { uiWritingSystems } from "types/writingSystem";
+import { NormalizedTextField } from "utilities/fontComponents";
 
 // Chrome silently converts non-ASCII characters in a Textfield of type="email".
 // Use punycode.toUnicode() to convert them from punycode back to Unicode.
@@ -139,7 +139,7 @@ export function UserSettings(props: {
                   <ClickableAvatar avatar={avatar} setAvatar={setAvatar} />
                 </Grid>
                 <Grid item xs>
-                  <TextField
+                  <NormalizedTextField
                     id={UserSettingsIds.FieldName}
                     fullWidth
                     variant="outlined"
@@ -177,7 +177,7 @@ export function UserSettings(props: {
                     <Phone />
                   </Grid>
                   <Grid item xs>
-                    <TextField
+                    <NormalizedTextField
                       id={UserSettingsIds.FieldPhone}
                       inputProps={{
                         "data-testid": UserSettingsIds.FieldPhone,
@@ -197,7 +197,7 @@ export function UserSettings(props: {
                     <Email />
                   </Grid>
                   <Grid item xs>
-                    <TextField
+                    <NormalizedTextField
                       id={UserSettingsIds.FieldEmail}
                       inputProps={{
                         "data-testid": UserSettingsIds.FieldEmail,

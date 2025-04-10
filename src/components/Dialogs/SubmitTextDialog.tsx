@@ -7,11 +7,12 @@ import {
   DialogTitle,
   IconButton,
   InputAdornment,
-  TextField,
 } from "@mui/material";
 import { type KeyboardEvent, type ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
+
+import { NormalizedTextField } from "utilities/fontComponents";
 
 interface EditTextDialogProps {
   open: boolean;
@@ -83,12 +84,12 @@ export default function SubmitTextDialog(
     >
       <DialogTitle id="alert-dialog-title">{t(props.titleId)}</DialogTitle>
       <DialogContent>
-        <TextField
+        <NormalizedTextField
           variant="standard"
           autoFocus
           data-testid={props.textFieldId}
           value={text}
-          onChange={(event) => setText(event.target.value.normalize("NFC"))}
+          onChange={(event) => setText(event.target.value)}
           onKeyPress={confirmIfEnter}
           InputProps={{ endAdornment }}
           id={props.textFieldId}
