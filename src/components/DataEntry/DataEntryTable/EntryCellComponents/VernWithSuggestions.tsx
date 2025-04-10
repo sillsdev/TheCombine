@@ -51,7 +51,7 @@ export default function VernWithSuggestions(
       onBlur={props.onBlur}
       onFocus={props.onFocus}
       onInputChange={(_e, value) => {
-        props.updateVernField(value);
+        props.updateVernField(value.normalize("NFC"));
       }}
       onKeyPress={(e: KeyboardEvent) => {
         if (e.key === Key.Enter) {

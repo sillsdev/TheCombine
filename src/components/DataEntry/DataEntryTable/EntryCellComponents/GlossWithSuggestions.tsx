@@ -56,7 +56,7 @@ export default function GlossWithSuggestions(
         }
       }}
       onInputChange={(_e, newInputValue) => {
-        props.updateGlossField(newInputValue);
+        props.updateGlossField(newInputValue.normalize("NFC"));
       }}
       renderInput={(params) => (
         <TextFieldWithFont

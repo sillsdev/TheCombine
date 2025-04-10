@@ -88,7 +88,7 @@ export default function SubmitTextDialog(
           autoFocus
           data-testid={props.textFieldId}
           value={text}
-          onChange={(event) => setText(event.target.value)}
+          onChange={(event) => setText(event.target.value.normalize("NFC"))}
           onKeyPress={confirmIfEnter}
           InputProps={{ endAdornment }}
           id={props.textFieldId}
