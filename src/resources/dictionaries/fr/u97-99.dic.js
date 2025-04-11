@@ -12,11 +12,10 @@ Achille
 Aconcagua
 Açores
 Activision
-Ac2O3
+Ac
 aC
 aCi
 Achel
-Ac
 ac
 Acabit
 Acabits

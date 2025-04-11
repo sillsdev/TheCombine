@@ -1,23 +1,14 @@
-export default `CRAD
+export default `CrO
+Cr
+CRAD
 CRS
-CrBr2
-CrBr3
-CrCl2
-CrCl3
-CrCl4
-CrF2
-CrF3
-CrF4
-CrF5
-CrF6
-CrI2
-CrI3
-CrO2
-CrO2Cl2
-CrO3
-CrPO4
-CrSi2
-CrVO4
+CrBr
+CrCl
+CrF
+CrI
+CrPO
+CrSi
+CrVO
 Cracovie
 Craig
 Cran
@@ -47,13 +38,6 @@ Cromwell
 Crozes
 Crupies
 Crusoé
-Cr2O3
-Cr2Se3
-Cr2S3
-Cr2Te3
-Cr3As2
-Cr3C2
-Cr3Sb2
 Cramayel
 crayon
 crayons

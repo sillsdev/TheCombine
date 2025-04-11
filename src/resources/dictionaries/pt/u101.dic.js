@@ -11417,8 +11417,8 @@ exma
 exmas
 exmo
 exmos
-EXMa
-EXMo
+EXMª
+EXMº
 EXO
 exoasco
 exocade

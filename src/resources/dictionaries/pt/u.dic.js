@@ -1,4 +1,4 @@
-export default `5827
+export default `5829
 henry
 hoje
 Haiti
@@ -3051,6 +3051,7 @@ kwanzas
 kWh
 Kyoto
 kemp
+º
 Wallis
 West
 watt
@@ -4865,6 +4866,7 @@ zurzis
 zurziu
 zurzo
 zuzins
+ª
 yd
 y
 yagi
@@ -5821,8 +5823,8 @@ XXXVIII
 XY
 Ø
 ø
-μg
-μL
-μm
-μmol
-μUI`;
+µg
+µL
+µm
+µmol
+µUI`;

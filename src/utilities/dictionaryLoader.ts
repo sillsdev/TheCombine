@@ -30,8 +30,7 @@ export default class DictionaryLoader {
       return "";
     }
     const charCodes = word
-      // "NFKD" to match the --normalize argument of split_dictionary.py
-      .normalize("NFKD")
+      .normalize("NFD") // match the default --normalize argument of split_dictionary.py
       .toLocaleLowerCase()
       .split("")
       .map((c) => c.charCodeAt(0));

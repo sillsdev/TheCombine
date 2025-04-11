@@ -1,16 +1,37 @@
-export default `OFBiz
+export default `O
+OFBiz
 Occidental
 Orge
+OHCH
+OH
+OCH
+OCs
+OK
+OLi
+ONa
+ORb
 Olonne
 Octeville
 Or
+ON
+OS
 Ormeaux
 Orient
 Orientale
+OSi
+OTi
+OP
+OTa
+OV
+OOs
+ORe
+OW
+OXe
+Os
 op
-O
 Oriental
 Odile
+OCONH
 Oise
 Ouest
 Orléans
@@ -18,9 +39,8 @@ OCDE
 OCaml
 ODF
 OFCE
-OF2
+OF
 OGM
-OK
 OLLN
 OMC
 OMS
@@ -33,7 +53,6 @@ OPE
 OPR
 OPV
 ORL
-OS
 OSH
 OSS
 OStatus
@@ -179,9 +198,6 @@ Oxford
 Oyonnax
 Ozog
 Ozoir
-O2
-O2F2
-O3
 Orientales
 Orangis
 Office
@@ -4429,7 +4445,6 @@ orwellien
 orwelliens
 Oryx
 oryx
-Os
 os
 Oscabrion
 Oscabrions
