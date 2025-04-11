@@ -43,9 +43,7 @@ def parse_args() -> argparse.Namespace:
         help="Override the lang's default max word-length, or -1 to force no limit",
         type=int,
     )
-    parser.add_argument(
-        "--normalize", "-n", choices=["NFC", "NFD", "NFKC", "NFKD"], default="NFD"
-    )
+    parser.add_argument("--normalize", "-n", choices=["NFC", "NFD", "NFKC", "NFKD"], default="NFD")
     parser.add_argument(
         "--threshold",
         "-t",
