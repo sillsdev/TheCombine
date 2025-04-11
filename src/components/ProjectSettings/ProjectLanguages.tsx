@@ -14,7 +14,6 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
-  TextField,
   Typography,
 } from "@mui/material";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
@@ -28,6 +27,7 @@ import { IconButtonWithTooltip } from "components/Buttons";
 import { type ProjectSettingProps } from "components/ProjectSettings/ProjectSettingsTypes";
 import theme from "types/theme";
 import { newWritingSystem, semDomWritingSystems } from "types/writingSystem";
+import { NormalizedTextField } from "utilities/fontComponents";
 import { getAnalysisLangsFromWords } from "utilities/wordUtilities";
 
 export enum ProjectLanguagesId {
@@ -260,7 +260,7 @@ export default function ProjectLanguages(
   const vernacularLanguageEditor = (): ReactElement => (
     <Grid container spacing={1}>
       <Grid item xs={12}>
-        <TextField
+        <NormalizedTextField
           variant="standard"
           id={ProjectLanguagesId.FieldEditVernacularName}
           value={newVernName}

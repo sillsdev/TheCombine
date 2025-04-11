@@ -7,7 +7,6 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
-  TextField,
   Typography,
 } from "@mui/material";
 import { LanguagePicker, languagePickerStrings_en } from "mui-language-picker";
@@ -31,6 +30,7 @@ import {
 import { useAppDispatch } from "rootRedux/hooks";
 import theme from "types/theme";
 import { newWritingSystem } from "types/writingSystem";
+import { NormalizedTextField } from "utilities/fontComponents";
 
 export const buttonIdSelectFile = "create-project-select-file";
 export const buttonIdSubmit = "create-project-submit";
@@ -206,7 +206,7 @@ export default function CreateProject(): ReactElement {
             {t("createProject.create")}
           </Typography>
           {/* Project name */}
-          <TextField
+          <NormalizedTextField
             id={fieldIdName}
             label={t("createProject.name")}
             value={name}

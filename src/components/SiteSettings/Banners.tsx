@@ -1,10 +1,11 @@
-import { Button, Grid, TextField } from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import { ChangeEvent, ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { BannerType } from "api/models";
 import { getBannerText, updateBanner } from "backend";
 import theme from "types/theme";
+import { NormalizedTextField } from "utilities/fontComponents";
 
 export default function Banners(): ReactElement {
   return (
@@ -63,7 +64,7 @@ function Banner(props: BannerProps): ReactElement {
       style={{ marginBottom: theme.spacing(1) }}
     >
       <Grid item xs={12} sm={8}>
-        <TextField
+        <NormalizedTextField
           id={`${idAffix}-text`}
           variant="outlined"
           fullWidth

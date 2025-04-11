@@ -5,7 +5,6 @@ import {
   CardContent,
   Grid,
   Link,
-  TextField,
   TextFieldProps,
   Typography,
 } from "@mui/material";
@@ -31,6 +30,7 @@ import router from "router/browserRouter";
 import { Path } from "types/path";
 import { RuntimeConfig } from "types/runtimeConfig";
 import theme from "types/theme";
+import { NormalizedTextField } from "utilities/fontComponents";
 import { openUserGuide } from "utilities/pathUtilities";
 
 export enum LoginId {
@@ -118,7 +118,7 @@ export default function Login(): ReactElement {
             </Typography>
 
             {/* Username field */}
-            <TextField
+            <NormalizedTextField
               {...defaultTextFieldProps(LoginId.FieldUsername)}
               autoComplete="username"
               autoFocus
@@ -130,7 +130,7 @@ export default function Login(): ReactElement {
             />
 
             {/* Password field */}
-            <TextField
+            <NormalizedTextField
               {...defaultTextFieldProps(LoginId.FieldPassword)}
               autoComplete="current-password"
               error={passwordError}

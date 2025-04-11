@@ -17,7 +17,6 @@ import {
   IconButton,
   MenuItem,
   Select,
-  TextField,
   type SelectChangeEvent,
 } from "@mui/material";
 import { grey, yellow } from "@mui/material/colors";
@@ -50,7 +49,10 @@ import {
   newPronunciation,
   updateSpeakerInAudio,
 } from "types/word";
-import { TextFieldWithFont } from "utilities/fontComponents";
+import {
+  NormalizedTextField,
+  TextFieldWithFont,
+} from "utilities/fontComponents";
 
 /** Add word update to the current goal. */
 function asyncUpdateWord(oldId: string, newId: string) {
@@ -485,11 +487,11 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
                       <FlagOutlined />
                     )}
                   </IconButton>
-                  <TextField
+                  <NormalizedTextField
                     id={EditDialogId.TextFieldFlag}
                     onChange={(e) => updateFlag(e.target.value)}
                     value={newWord.flag.active ? newWord.flag.text : ""}
-                  ></TextField>
+                  />
                 </CardContent>
               </Card>
             </Grid>
