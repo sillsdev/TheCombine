@@ -17,12 +17,14 @@ import FontContext, { type WithFontProps } from "utilities/fontContext";
  * to add the appropriate font to that component. */
 
 // Cannot use `interface` with `extends` because TextFieldProps isn't static.
-type NormalizedTextField = TextFieldProps & {
+type NormalizedTextFieldProps = TextFieldProps & {
   form?: "NFC" | "NFD" | "NFKC" | "NFKD";
 };
 
 /** `TextField` that automatically normalizes the `onChange` text (default: with "NFC"). */
-export function NormalizedTextField(props: NormalizedTextField): ReactElement {
+export function NormalizedTextField(
+  props: NormalizedTextFieldProps
+): ReactElement {
   const { form, ...textFieldProps } = props;
   return (
     <TextField
@@ -42,8 +44,8 @@ export function NormalizedTextField(props: NormalizedTextField): ReactElement {
   );
 }
 
-// Cannot use `interface` with `extends` because NormalizedTextField isn't static.
-type TextFieldWithFontProps = NormalizedTextField & WithFontProps;
+// Cannot use `interface` with `extends` because NormalizedTextFieldProps isn't static.
+type TextFieldWithFontProps = NormalizedTextFieldProps & WithFontProps;
 
 /**
  * `TextField` modified for use within a `FontContext`.
