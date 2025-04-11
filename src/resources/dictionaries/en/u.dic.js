@@ -1,24 +1,4 @@
-export default `4417
-0
-0th
-1
-1st
-2
-2nd
-3
-3rd
-4
-4th
-5
-5th
-6
-6th
-7
-7th
-8
-8th
-9
-9th
+export default `4397
 ve
 V
 VA

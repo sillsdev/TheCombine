@@ -1,4 +1,5 @@
-export default `Toole
+export default `th
+Toole
 T
 Ted
 Ting

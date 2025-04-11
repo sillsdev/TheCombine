@@ -1,4 +1,5 @@
-export default `s
+export default `st
+s
 S
 Sen
 SA
@@ -7114,7 +7115,6 @@ squishiest
 squishy
 sriracha
 ssh
-st
 stab
 stably
 stabs

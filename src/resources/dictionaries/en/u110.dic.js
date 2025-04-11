@@ -1,4 +1,5 @@
-export default `N
+export default `nd
+N
 Ned
 NAACP
 NAFTA

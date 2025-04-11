@@ -44,7 +44,7 @@ def parse_args() -> argparse.Namespace:
         type=int,
     )
     parser.add_argument(
-        "--normalize", "-n", choices=["NFC", "NFD", "NFKC", "NFKD"], default="NFKD"
+        "--normalize", "-n", choices=["NFC", "NFD", "NFKC", "NFKD"], default="NFD"
     )
     parser.add_argument(
         "--threshold",
@@ -133,7 +133,7 @@ def main() -> None:
         for line in file.readlines():
             # The characters sub()-ed here should match those used in spellChecker.ts
             # Cf. https://en.wikipedia.org/wiki/Unicode_character_property
-            words = sub("[^\\p{L}\\p{M}\\p{N}]+", " ", normalize(args.normalize, line)).split()
+            words = sub("[^\\p{L}\\p{M}]+", " ", normalize(args.normalize, line)).split()
 
             # If user doesn't specify -m, use lang-specific default of max_length().
             if not args.max:
