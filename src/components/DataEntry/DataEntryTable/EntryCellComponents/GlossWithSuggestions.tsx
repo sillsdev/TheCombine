@@ -56,6 +56,8 @@ export default function GlossWithSuggestions(
         }
       }}
       onInputChange={(_e, newInputValue) => {
+        // Autocomplete doesn't use its renderInput's onChange,
+        // so we need to normalize manually here.
         props.updateGlossField(newInputValue.normalize("NFC"));
       }}
       renderInput={(params) => (

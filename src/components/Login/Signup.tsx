@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   Grid,
+  TextField,
   TextFieldProps,
   Typography,
 } from "@mui/material";
@@ -145,10 +146,12 @@ export default function Signup(props: SignupProps): ReactElement {
   const signUp = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
-    // Trim whitespace off fields and normalize name, username.
+    // Trim whitespace off fields.
     const name = fieldText[SignupField.Name].trim();
     const username = fieldText[SignupField.Username].trim();
-    const email = punycode.toUnicode(fieldText[SignupField.Email].trim());
+    const email = punycode
+      .toUnicode(fieldText[SignupField.Email].trim())
+      .normalize("NFC");
     const password1 = fieldText[SignupField.Password1].trim();
     const password2 = fieldText[SignupField.Password2].trim();
 
@@ -212,7 +215,9 @@ export default function Signup(props: SignupProps): ReactElement {
             />
 
             {/* Email field */}
-            <NormalizedTextField
+            {/* Don't use NormalizedTextField for type="email".
+            At best, it doesn't normalize, because of the punycode. */}
+            <TextField
               {...defaultTextFieldProps(SignupField.Email)}
               autoComplete="email"
               type="email"

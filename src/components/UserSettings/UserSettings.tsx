@@ -6,6 +6,7 @@ import {
   Grid,
   MenuItem,
   Select,
+  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -56,6 +57,11 @@ export default function UserSettingsGetUser(): ReactElement {
   );
 }
 
+/** Text field of type="email" silently converted its input from Unicode to punycode.
+This function trims whitespace, and converts to normalized Unicode. */
+const normalizeEmail = (email: string): string =>
+  punycode.toUnicode(email.trim()).normalize("NFC");
+
 export function UserSettings(props: {
   user: User;
   setUser: (user?: User) => void;
@@ -76,14 +82,11 @@ export function UserSettings(props: {
 
   const { t } = useTranslation();
 
+  /** Checks whether email address is okay: unchanged or not taken by a different user. */
   async function isEmailOkay(): Promise<boolean> {
-    // Text field of type="email" silently converted its input from Unicode to punycode.
-    const unicodeEmail = punycode.toUnicode(email.toLowerCase());
-
-    // If the email address hasn't changed or isn't taken, it's okay.
-    const unchanged = unicodeEmail === props.user.email.toLowerCase();
+    const unicodeEmail = normalizeEmail(email);
     return (
-      unchanged ||
+      unicodeEmail === props.user.email ||
       (await isEmailOrUsernameAvailable(unicodeEmail)) ||
       (await getUserByEmailOrUsername(unicodeEmail)).id === props.user.id
     );
@@ -94,10 +97,11 @@ export function UserSettings(props: {
     setDisplayConsent(false);
   };
 
+  /** For the save button, true if nothing has changed. */
   const disabled =
     name === props.user.name &&
     phone === props.user.phone &&
-    punycode.toUnicode(email) === props.user.email &&
+    normalizeEmail(email) === props.user.email &&
     analyticsOn === props.user.analyticsOn &&
     uiLang === (props.user.uiLang ?? "") &&
     glossSuggestion === props.user.glossSuggestion;
@@ -109,7 +113,7 @@ export function UserSettings(props: {
         ...props.user,
         name,
         phone,
-        email: punycode.toUnicode(email),
+        email: normalizeEmail(email),
         analyticsOn,
         uiLang,
         glossSuggestion,
@@ -179,9 +183,7 @@ export function UserSettings(props: {
                   <Grid item xs>
                     <NormalizedTextField
                       id={UserSettingsIds.FieldPhone}
-                      inputProps={{
-                        "data-testid": UserSettingsIds.FieldPhone,
-                      }}
+                      inputProps={{ "data-testid": UserSettingsIds.FieldPhone }}
                       fullWidth
                       variant="outlined"
                       value={phone}
@@ -197,11 +199,9 @@ export function UserSettings(props: {
                     <Email />
                   </Grid>
                   <Grid item xs>
-                    <NormalizedTextField
+                    <TextField
                       id={UserSettingsIds.FieldEmail}
-                      inputProps={{
-                        "data-testid": UserSettingsIds.FieldEmail,
-                      }}
+                      inputProps={{ "data-testid": UserSettingsIds.FieldEmail }}
                       required
                       fullWidth
                       variant="outlined"
