@@ -41,7 +41,7 @@ export function matchesFilter(value: string, filter: string): boolean {
     return !!value;
   }
 
-  filter = filter.trim();
+  filter = filter.trim().normalize("NFC");
   return isQuoted(filter)
     ? value.includes(filter.substring(1, filter.length - 1).trim())
     : fuzzyContains(value, filter);

@@ -1,4 +1,4 @@
-import { Card, CardContent, Grid, TextField, Typography } from "@mui/material";
+import { Card, CardContent, Grid, Typography } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
@@ -8,6 +8,7 @@ import { Role, User } from "api/models";
 import * as backend from "backend";
 import { getProjectId } from "backend/localStorage";
 import { LoadingDoneButton } from "components/Buttons";
+import { NormalizedTextField } from "utilities/fontComponents";
 
 interface InviteProps {
   addToProject: (user: User) => void;
@@ -51,7 +52,7 @@ export default function EmailInvite(props: InviteProps): ReactElement {
         <Typography variant="h5" align="center" gutterBottom>
           {t("projectSettings.invite.inviteByEmailLabel")}
         </Typography>
-        <TextField
+        <NormalizedTextField
           id="project-user-invite-email"
           required
           label={t("projectSettings.invite.emailLabel")}
@@ -62,7 +63,7 @@ export default function EmailInvite(props: InviteProps): ReactElement {
           autoFocus
           inputProps={{ maxLength: 100 }}
         />
-        <TextField
+        <NormalizedTextField
           id="project-user-invite-message"
           label="Message"
           onChange={(e) => setMessage(e.target.value)}
