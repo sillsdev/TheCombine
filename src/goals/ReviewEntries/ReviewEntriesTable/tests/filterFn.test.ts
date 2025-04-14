@@ -69,6 +69,11 @@ describe("filterFn", () => {
     const filterWrongCase = "HELLO";
     const filterExact = "Hello";
 
+    it("whitespace: matches non-empty value", () => {
+      expect(ff.matchesFilter(value, " ")).toBeTruthy();
+      expect(ff.matchesFilter("", " ")).toBeFalsy();
+    });
+
     it("unquoted: trims whitespace, fuzzy match", () => {
       expect(ff.matchesFilter(value, "goodbye")).toBeFalsy();
       expect(ff.matchesFilter(value, `  ${filterWithTypo}`)).toBeTruthy();
@@ -87,6 +92,12 @@ describe("filterFn", () => {
     const filterFn = ff.filterFnString as any;
     beforeEach(() => {
       mockGetValue.mockReturnValue("Hello world!");
+    });
+
+    it("whitespace: matches non-empty value", () => {
+      expect(filterFn(mockRow, mockId, " ")).toBeTruthy();
+      mockGetValue.mockReturnValueOnce("");
+      expect(filterFn(mockRow, mockId, " ")).toBeFalsy();
     });
 
     it("unquoted: trims whitespace, fuzzy match", () => {
@@ -110,6 +121,14 @@ describe("filterFn", () => {
       ]);
     });
 
+    it("whitespace: matches non-empty definition text", () => {
+      expect(filterFn(mockRow, mockId, " ")).toBeTruthy();
+      mockGetValue.mockReturnValueOnce([newDefinition()]);
+      expect(filterFn(mockRow, mockId, " ")).toBeFalsy();
+      mockGetValue.mockReturnValueOnce([]);
+      expect(filterFn(mockRow, mockId, " ")).toBeFalsy();
+    });
+
     it("unquoted: trims whitespace, fuzzy match", () => {
       expect(filterFn(mockRow, mockId, "earth")).toBeFalsy();
       expect(filterFn(mockRow, mockId, " wrld\t")).toBeTruthy();
@@ -126,6 +145,14 @@ describe("filterFn", () => {
     const filterFn = ff.filterFnGlosses as any;
     beforeEach(() => {
       mockGetValue.mockReturnValue([newGloss("hello"), newGloss("WORLD")]);
+    });
+
+    it("whitespace: matches non-empty gloss text", () => {
+      expect(filterFn(mockRow, mockId, " ")).toBeTruthy();
+      mockGetValue.mockReturnValueOnce([newGloss()]);
+      expect(filterFn(mockRow, mockId, " ")).toBeFalsy();
+      mockGetValue.mockReturnValueOnce([]);
+      expect(filterFn(mockRow, mockId, " ")).toBeFalsy();
     });
 
     it("unquoted: trims whitespace, fuzzy match", () => {
@@ -221,6 +248,12 @@ describe("filterFn", () => {
     const filterFn = ff.filterFnFlag as any;
     beforeEach(() => {
       mockGetValue.mockReturnValue(newFlag("Hello world!"));
+    });
+
+    it("whitespace: matches non-empty flag text", () => {
+      expect(filterFn(mockRow, mockId, " ")).toBeTruthy();
+      mockGetValue.mockReturnValueOnce(newFlag());
+      expect(filterFn(mockRow, mockId, " ")).toBeFalsy();
     });
 
     it("unquoted: trims whitespace, fuzzy match", () => {
