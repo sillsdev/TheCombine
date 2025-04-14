@@ -51,7 +51,9 @@ export default function VernWithSuggestions(
       onBlur={props.onBlur}
       onFocus={props.onFocus}
       onInputChange={(_e, value) => {
-        props.updateVernField(value);
+        // Autocomplete doesn't use its renderInput's onChange,
+        // so we need to normalize manually here.
+        props.updateVernField(value.normalize("NFC"));
       }}
       onKeyPress={(e: KeyboardEvent) => {
         if (e.key === Key.Enter) {

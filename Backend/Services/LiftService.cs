@@ -21,6 +21,7 @@ using SIL.Lift.Parsing;
 using SIL.Text;
 using SIL.WritingSystems;
 using Xabe.FFmpeg;
+using static System.Text.NormalizationForm;
 using static SIL.DictionaryServices.Lift.LiftWriter;
 
 namespace BackendFramework.Services
@@ -786,7 +787,7 @@ namespace BackendFramework.Services
                 if (entry.Notes.Count > 0)
                 {
                     var (language, liftString) = entry.Notes[0].Content.FirstValue;
-                    newWord.Note = new Note(language, liftString.Text);
+                    newWord.Note = new Note(language, liftString.Text.Normalize(FormC));
                 }
 
                 // Add vernacular, prioritizing citation form over vernacular form.
@@ -801,7 +802,7 @@ namespace BackendFramework.Services
                 {
                     return;
                 }
-                newWord.Vernacular = vern;
+                newWord.Vernacular = vern.Normalize(FormC);
 
                 // This is not a word if there are no senses
                 if (entry.Senses.Count == 0)
@@ -831,13 +832,14 @@ namespace BackendFramework.Services
                     // Add definitions
                     foreach (var (key, value) in sense.Definition)
                     {
-                        newSense.Definitions.Add(new Definition { Language = key, Text = value.Text });
+                        newSense.Definitions.Add(
+                            new Definition { Language = key, Text = value.Text.Normalize(FormC) });
                     }
 
                     // Add glosses
                     foreach (var (key, value) in sense.Gloss)
                     {
-                        newSense.Glosses.Add(new Gloss { Language = key, Def = value.Text });
+                        newSense.Glosses.Add(new Gloss { Language = key, Def = value.Text.Normalize(FormC) });
                     }
 
                     // Find semantic domains
@@ -860,14 +862,14 @@ namespace BackendFramework.Services
                             {
                                 Id = splitSemDom[0],
                                 MongoId = ObjectId.GenerateNewId().ToString(),
-                                Name = splitSemDom[1]
+                                Name = splitSemDom[1].Normalize(FormC)
                             });
                     }
 
                     // Add grammatical info
                     if (!string.IsNullOrWhiteSpace(sense.GramInfo?.Value))
                     {
-                        newSense.GrammaticalInfo = new GrammaticalInfo(sense.GramInfo.Value);
+                        newSense.GrammaticalInfo = new GrammaticalInfo(sense.GramInfo.Value.Normalize(FormC));
                     }
 
                     newWord.Senses.Add(newSense);
@@ -880,8 +882,11 @@ namespace BackendFramework.Services
                     {
                         foreach (var _ in field.Content)
                         {
-                            var pluralForm = entry.Fields.First().Content.First().Value.Text;
-                            newWord.Plural = pluralForm;
+                            var plural = field.Content.First().Value.Text;
+                            if (!string.IsNullOrWhiteSpace(plural))
+                            {
+                                newWord.Plural = plural.Normalize(FormC);
+                            }
                         }
                     }
                 }
