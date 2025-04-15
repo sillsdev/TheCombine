@@ -84,6 +84,15 @@ The installation script has been tested on _Ubuntu 22.04_, _Ubuntu 24.04_, and _
      systemctl --user disable docker-desktop
      ```
 
+   - If you get an error with
+     `Conflicting values set for option Signed-By regarding source https://download.docker.com/linux/ubuntu/ noble`, you
+     may need to delete the `apt` files associated with Docker:
+
+     ```console
+     sudo rm /etc/apt/keyrings/*docker*
+     sudo rm /etc/apt/sources.list.d/*docker*
+     ```
+
 _The Combine_ will not be running when installation is complete.
 
 ## Running _The Combine_
@@ -158,7 +167,7 @@ Web certificate expires at Jul  8 08:54:11 2024 GMT
 To run `combine-installer.run` with options, the option list must be started with `--` . The following options are supported:
 
 | option          | description |
-| --------------- | ---------------------------------------------------------------------------- |
+| ---------------- | ---------------------------------------------------------------------------- |
 | clean           | Remove the previously saved environment (AWS Access Key, admin user info) before performing the installation. |
 | restart         | Run the installation from the beginning; do not resume a previous installation. |
 | server          | Install _The Combine_ in a server environment so that _The Combine_ is always running by default. |

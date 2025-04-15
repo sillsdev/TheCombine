@@ -3,7 +3,6 @@ import {
   Avatar,
   Button,
   Grid,
-  Input,
   List,
   ListItem,
   ListItemIcon,
@@ -18,6 +17,7 @@ import { avatarSrc, getAllUsers } from "backend";
 import { Hash } from "types/hash";
 import theme from "types/theme";
 import { doesTextMatchUser } from "types/user";
+import { NormalizedTextField } from "utilities/fontComponents";
 
 interface UserListProps {
   addToProject: (user: User) => void;
@@ -85,7 +85,7 @@ export default function UserList(props: UserListProps): ReactElement {
         <Avatar
           alt="User Avatar"
           src={userAvatar[user.id]}
-          style={{ marginRight: theme.spacing(1) }}
+          style={{ marginInlineEnd: theme.spacing(1) }}
         />
         <ListItemText primary={`${user.name} (${user.username})`} />
       </ListItem>
@@ -115,8 +115,7 @@ export default function UserList(props: UserListProps): ReactElement {
   return (
     <Grid item xs={12}>
       <Typography>{t("projectSettings.invite.searchTitle")}</Typography>
-      <Input
-        type="text"
+      <NormalizedTextField
         onChange={(e) => updateUsers(e.target.value)}
         placeholder={t("projectSettings.invite.searchPlaceholder")}
         value={filterInput}

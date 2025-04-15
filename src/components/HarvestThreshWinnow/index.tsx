@@ -78,7 +78,7 @@ export default function HarvestThreshWinnow(
         alt={ImageAlt.Harvest}
         id={ImageId.Harvest}
         src={harvest}
-        style={{ ...imageStyle, left: overlap * imageSize }}
+        style={{ ...imageStyle, insetInlineStart: overlap * imageSize }}
       />
       <img
         alt={ImageAlt.Thresh}
@@ -90,14 +90,14 @@ export default function HarvestThreshWinnow(
         alt={ImageAlt.Winnow}
         id={ImageId.Winnow}
         src={winnow}
-        style={{ ...imageStyle, right: overlap * imageSize }}
+        style={{ ...imageStyle, insetInlineEnd: overlap * imageSize }}
       />
       <div
         id={ImageId.License}
         style={{
           // Use -10 to offset the button padding
           bottom: -10,
-          left: 0.2 * imageSize - 10,
+          insetInlineStart: 0.2 * imageSize - 10,
           position: "absolute",
         }}
       >

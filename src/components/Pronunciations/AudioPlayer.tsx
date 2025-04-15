@@ -7,6 +7,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  PopoverOrigin,
   Tooltip,
 } from "@mui/material";
 import {
@@ -219,6 +220,11 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
     />
   );
 
+  const origin: PopoverOrigin = {
+    horizontal: document.body.dir === "rtl" ? "right" : "left",
+    vertical: "top",
+  };
+
   return (
     <>
       <Tooltip
@@ -247,8 +253,8 @@ export default function AudioPlayer(props: PlayerProps): ReactElement {
         anchorEl={anchor}
         open={Boolean(anchor)}
         onClose={handleMenuOnClose}
-        anchorOrigin={{ vertical: "top", horizontal: "left" }}
-        transformOrigin={{ vertical: "top", horizontal: "left" }}
+        anchorOrigin={origin}
+        transformOrigin={origin}
       >
         <MenuItem
           id={isPlaying ? "audio-stop" : "audio-play"}
