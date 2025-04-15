@@ -277,11 +277,7 @@ namespace BackendFramework.Services
         <ranges>
             <range id = ""semantic-domain-ddp4"" href = ""{rangesDest}""/>
         </ranges>
-        <fields>
-            <field tag = ""Plural"">
-                <form lang = ""en""><text></text></form>
-                <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = String; WsSelector = kwsVern </text></form>
-            </field>{conditionalFlagField}
+        <fields>{conditionalFlagField}
         </fields>
     ";
             liftWriter.WriteHeader(headerContents);
@@ -870,18 +866,10 @@ namespace BackendFramework.Services
                     newWord.Senses.Add(newSense);
                 }
 
-                // Add plural
+                // Add flag
                 foreach (var field in entry.Fields)
                 {
-                    if (field.Type == "Plural")
-                    {
-                        var plural = field.Content.First().Value.Text;
-                        if (!string.IsNullOrWhiteSpace(plural))
-                        {
-                            newWord.Plural = plural.Normalize(FormC);
-                        }
-                    }
-                    else if (field.Type == LiftHelper.FlagFieldTag)
+                    if (field.Type.Equals(LiftHelper.FlagFieldTag, StringComparison.Ordinal))
                     {
                         var flags = field.Content.Values.Where(v => !string.IsNullOrWhiteSpace(v.Text));
                         if (flags.Any())

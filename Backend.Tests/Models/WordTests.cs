@@ -19,7 +19,6 @@ namespace Backend.Tests.Models
                 Id = "id",
                 Guid = Guid.NewGuid(),
                 Vernacular = "vern",
-                Plural = "verns",
                 Created = "then",
                 Modified = "recently",
                 OtherField = "huh?",
