@@ -112,7 +112,6 @@ namespace BackendFramework.Services
         private readonly Dictionary<string, string> _liftExports;
         /// A dictionary shared by all Projects for storing and retrieving paths to in-process imports.
         private readonly Dictionary<string, string> _liftImports;
-        internal const string FlagFieldTag = "TheCombineFlag";
         internal const string FlagTextEmpty = "***";
         private const string InProgress = "IN_PROGRESS";
 
@@ -268,7 +267,7 @@ namespace BackendFramework.Services
             // Write header of LIFT document.
             var conditionalFlagField = hasFlags
                 ? $@"
-            <field tag = ""{FlagFieldTag}"">
+            <field tag = ""{LiftHelper.FlagFieldTag}"">
                 <form lang = ""en""><text></text></form>
                 <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = MultiUnicode; WsSelector = kwsAnals </text></form>
             </field>"
@@ -465,7 +464,7 @@ namespace BackendFramework.Services
         {
             if (wordEntry.Flag.Active)
             {
-                var field = new LexField(FlagFieldTag);
+                var field = new LexField(LiftHelper.FlagFieldTag);
                 var text = wordEntry.Flag.Text.Trim();
                 text = string.IsNullOrEmpty(text) ? FlagTextEmpty : text;
                 field.Forms = [new LanguageForm(analysisLanguage, text, field)];
@@ -882,7 +881,7 @@ namespace BackendFramework.Services
                             newWord.Plural = plural.Normalize(FormC);
                         }
                     }
-                    else if (field.Type == FlagFieldTag)
+                    else if (field.Type == LiftHelper.FlagFieldTag)
                     {
                         var flags = field.Content.Values.Where(v => !string.IsNullOrWhiteSpace(v.Text));
                         if (flags.Any())

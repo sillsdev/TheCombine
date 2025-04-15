@@ -96,7 +96,7 @@ namespace Backend.Tests.Controllers
                                 <form lang = ""en""><text></text></form>
                                 <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = String; WsSelector = kwsVern </text></form>
                             </field>
-                            <field tag = ""{LiftService.FlagFieldTag}"">
+                            <field tag = ""{LiftHelper.FlagFieldTag}"">
                                 <form lang = ""en""><text></text></form>
                                 <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = MultiUnicode; WsSelector = kwsAnals </text></form>
                             </field>
@@ -134,7 +134,7 @@ namespace Backend.Tests.Controllers
                             <field type = ""Plural"">
                                 <form lang = {vernLang}><text> {plural} </text></form>
                             </field>
-                            <field type = ""{LiftService.FlagFieldTag}"">
+                            <field type = ""{LiftHelper.FlagFieldTag}"">
                                 <form lang = {transLang1}><text> {flag} </text></form>
                             </field>
                             <note>
