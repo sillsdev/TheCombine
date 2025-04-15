@@ -123,6 +123,10 @@ export default function ReviewEntriesTable(props: {
   const { definitionsEnabled, grammaticalInfoEnabled } = useAppSelector(
     (state: StoreState) => state.currentProjectState.project
   );
+  const vernLang = useAppSelector(
+    (state: StoreState) =>
+      state.currentProjectState.project.vernacularWritingSystem.bcp47
+  );
 
   const autoResetPageIndexRef = useRef(true);
   const rowVirtualizerInstanceRef = useRef<MRT_RowVirtualizer>(null);
@@ -225,6 +229,7 @@ export default function ReviewEntriesTable(props: {
       header: t("reviewEntries.columns.vernacular"),
       id: ColumnId.Vernacular,
       size: BaselineColumnSize - 40,
+      sortingFn: sf.sortingFnVernacular(vernLang),
     }),
 
     // Senses column
@@ -332,6 +337,7 @@ export default function ReviewEntriesTable(props: {
       header: t("reviewEntries.columns.note"),
       id: ColumnId.Note,
       size: BaselineColumnSize - 40,
+      sortingFn: sf.sortingFnNote,
     }),
 
     // Flag column
