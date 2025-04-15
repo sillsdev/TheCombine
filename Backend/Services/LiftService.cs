@@ -112,7 +112,7 @@ namespace BackendFramework.Services
         private readonly Dictionary<string, string> _liftExports;
         /// A dictionary shared by all Projects for storing and retrieving paths to in-process imports.
         private readonly Dictionary<string, string> _liftImports;
-        internal const string FlagTextEmpty = "***";
+        private const string FlagTextEmpty = "***";
         private const string InProgress = "IN_PROGRESS";
 
         public LiftService(ISemanticDomainRepository semDomRepo, ISpeakerRepository speakerRepo)
