@@ -64,6 +64,13 @@ function compareDomains(a: SemanticDomain[], b: SemanticDomain[]): number {
 
 /* Custom `sortingFn` functions for `MaterialReactTable` columns. */
 
+/** Takes vernacular language bcp47 string.
+ * Returns a function that localCompares the vernacular forms. */
+export const sortingFnVernacular =
+  (lang: string): MRT_SortingFn<Word> =>
+  (a, b) =>
+    a.original.vernacular.localeCompare(b.original.vernacular, lang);
+
 /** Concatenates all sense definition texts for each word, then compares strings. */
 export const sortingFnDefinitions: MRT_SortingFn<Word> = (a, b) =>
   definitionString(a.original.senses).localeCompare(
@@ -86,6 +93,10 @@ export const sortingFnDomains: MRT_SortingFn<Word> = (a, b) =>
     gatherDomains(a.original.senses),
     gatherDomains(b.original.senses)
   );
+
+/** Compares note text. */
+export const sortingFnNote: MRT_SortingFn<Word> = (a, b) =>
+  a.original.note.text.localeCompare(b.original.note.text);
 
 /** Compares flags: `.active = true` before `= false`, then `.text` alphabetically. */
 export const sortingFnFlag: MRT_SortingFn<Word> = (a, b) =>
