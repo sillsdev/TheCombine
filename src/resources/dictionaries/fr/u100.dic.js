@@ -1,8 +1,10 @@
 export default `D
 d
+de
+des
+ds
 dA
 daA
-de
 Dame
 Duc
 Dioulasso
@@ -260,7 +262,6 @@ Dodoma
 Doha
 Dole
 Dollard
-des
 Dolly
 Dolorès
 Dombes
@@ -371,19 +372,20 @@ Dvorák
 Dwayne
 Dwight
 Dworkin
-DyBr3
-DyCl2
-DyCl3
-DySi2
+DyBr
+DyCl
+DySi
 Dybèle
 Dyck
 Dylan
 Dynkin
 Dysnomie
-Dy2O3
-Dy2S3
+Dy
+Dʳ
+Dʳˢ
+Dʳᵉ
+Dʳᵉˢ
 Dᴏꜱꜱᴍᴀɴɴ
-D2O
 Danlos
 dF
 daF
@@ -14558,7 +14560,6 @@ dozents
 darad
 drad
 das
-ds
 dasr
 dsr
 décatesla
@@ -14578,4 +14579,6 @@ déciwatts
 décaweber
 déciweber
 daΩ
-dΩ`;
+dΩ
+daℓ
+dℓ`;
