@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +17,9 @@ namespace BackendFramework.Services
         private readonly IWordRepository _wordRepo;
         private readonly IWordService _wordService;
 
+        /// A dictionary shared by all Projects for storing and retrieving potential duplicates.
+        private readonly ConcurrentDictionary<string, (DateTime, List<List<Word>>?)> _potentialDups;
+
         public MergeService(IMergeBlacklistRepository mergeBlacklistRepo, IMergeGraylistRepository mergeGraylistRepo,
             IWordRepository wordRepo, IWordService wordService)
         {
@@ -23,6 +27,24 @@ namespace BackendFramework.Services
             _mergeGraylistRepo = mergeGraylistRepo;
             _wordRepo = wordRepo;
             _wordService = wordService;
+
+            _potentialDups = [];
+        }
+
+        /// <summary> Store potential duplicates, but only if the most recent dateTime for the user. </summary>
+        public bool StoreDups(string userId, DateTime dateTime, List<List<Word>>? dups)
+        {
+            var val = _potentialDups.AddOrUpdate(
+                userId, (dateTime, dups), (_, v) => dateTime >= v.Item1 ? (dateTime, dups) : v);
+            return val.Item1 == dateTime;
+        }
+
+        /// <summary> Retrieve potential duplicates for a user. </summary>
+        /// <returns> List of Lists of potential duplicate Words. </returns>
+        public List<List<Word>>? RetrieveDups(string userId)
+        {
+            _potentialDups.TryRemove(userId, out var dups);
+            return dups.Item2;
         }
 
         /// <summary> Prepares a merge parent to be added to the database. </summary>

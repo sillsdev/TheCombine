@@ -26,7 +26,7 @@ namespace Backend.Tests.Controllers
         private ISpeakerRepository _speakerRepo = null!;
         private IWordRepository _wordRepo = null!;
         private ILiftService _liftService = null!;
-        private IHubContext<CombineHub> _notifyService = null!;
+        private IHubContext<ExportHub> _notifyService = null!;
         private IPermissionService _permissionService = null!;
         private IWordService _wordService = null!;
         private LiftController _liftController = null!;

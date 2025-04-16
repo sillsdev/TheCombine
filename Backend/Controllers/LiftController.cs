@@ -26,13 +26,13 @@ namespace BackendFramework.Controllers
         private readonly IProjectRepository _projRepo;
         private readonly IWordRepository _wordRepo;
         private readonly ILiftService _liftService;
-        private readonly IHubContext<CombineHub> _notifyService;
+        private readonly IHubContext<ExportHub> _notifyService;
         private readonly IPermissionService _permissionService;
         private readonly ILogger<LiftController> _logger;
 
         public LiftController(
             IWordRepository wordRepo, IProjectRepository projRepo, IPermissionService permissionService,
-            ILiftService liftService, IHubContext<CombineHub> notifyService, ILogger<LiftController> logger)
+            ILiftService liftService, IHubContext<ExportHub> notifyService, ILogger<LiftController> logger)
         {
             _projRepo = projRepo;
             _wordRepo = wordRepo;
@@ -351,7 +351,7 @@ namespace BackendFramework.Controllers
                 var exportedFilepath = await CreateLiftExport(projectId);
                 // Store the temporary path to the exported file for user to download later.
                 _liftService.StoreExport(userId, exportedFilepath);
-                await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
+                await _notifyService.Clients.All.SendAsync(ExportHub.Success, userId);
                 return true;
             }
             catch (Exception e)
@@ -359,7 +359,7 @@ namespace BackendFramework.Controllers
                 _logger.LogError("Error exporting project {ProjectId}{NewLine}{Message}:{ExceptionStack}",
                     projectId, Environment.NewLine, e.Message, e.StackTrace);
                 _liftService.DeleteExport(userId);
-                await _notifyService.Clients.All.SendAsync(CombineHub.ExportFailed, userId);
+                await _notifyService.Clients.All.SendAsync(ExportHub.Failure, userId);
                 throw;
             }
         }

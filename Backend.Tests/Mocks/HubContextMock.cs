@@ -9,7 +9,7 @@ namespace Backend.Tests.Mocks
     /// <summary>
     /// A *very* sparse, mostly unimplemented Mock of SignalR HubContext.
     /// </summary>
-    sealed internal class HubContextMock : IHubContext<CombineHub>
+    sealed internal class HubContextMock : IHubContext<ExportHub>, IHubContext<MergeHub>
     {
         public IHubClients Clients => new HubClientsMock();
 

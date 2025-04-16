@@ -326,7 +326,8 @@ namespace BackendFramework
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
-                endpoints.MapHub<CombineHub>("/hub");
+                endpoints.MapHub<ExportHub>($"/{ExportHub.Url}");
+                endpoints.MapHub<MergeHub>($"/{MergeHub.Url}");
             });
 
             // Configure OpenAPI (Formerly Swagger) schema generation
