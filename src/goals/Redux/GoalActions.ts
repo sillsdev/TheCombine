@@ -4,7 +4,10 @@ import { MergeUndoIds, Word } from "api/models";
 import * as Backend from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
 import { CharInvChanges } from "goals/CharacterInventory/CharacterInventoryTypes";
-import { asyncFindDups } from "goals/MergeDuplicates/FindDups/Redux/FindDupsActions";
+import {
+  asyncFindDups,
+  inProgress,
+} from "goals/MergeDuplicates/FindDups/Redux/FindDupsActions";
 import { dispatchMergeStepData } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import {
   addCharInvChangesToGoalAction,
@@ -75,9 +78,12 @@ export function asyncAddGoal(goal: Goal) {
       // Check if this is a new goal.
       if (goal.status !== GoalStatus.Completed) {
         await Backend.addGoalToUserEdit(userEditId, goal);
-        await dispatch(asyncStartLoadingNewGoal(goal));
-        // Load the goal data, but don't await, to allow a loading screen.
-        //dispatch(asyncLoadNewGoalData(userEditId));
+        dispatch(setCurrentGoal(goal));
+        dispatch(setGoalStatus(GoalStatus.Loading));
+        if (await dispatch(asyncIsGoalDataReady(goal))) {
+          // Load the goal data, but don't await, to allow a loading screen.
+          await dispatch(asyncLoadNewGoalData());
+        }
       }
 
       // Serve goal.
@@ -137,17 +143,20 @@ export function asyncLoadExistingUserEdits(
   };
 }
 
-function asyncStartLoadingNewGoal(goal: Goal) {
-  return async (dispatch: StoreStateDispatch) => {
-    dispatch(setCurrentGoal(goal));
-    dispatch(setGoalStatus(GoalStatus.Loading));
+/** Return a bool to indicate either (true) the goal data loading can proceed, or
+ * (false) stop and wait for a signal to trigger data loading. */
+function asyncIsGoalDataReady(goal: Goal) {
+  return async (dispatch: StoreStateDispatch): Promise<boolean> => {
     if (goal.goalType === GoalType.MergeDups) {
+      dispatch(inProgress);
       await dispatch(asyncFindDups(12, maxNumSteps(goal.goalType)));
+      return false;
     }
+    return true;
   };
 }
 
-function asyncLoadNewGoalData(userEditId: string) {
+export function asyncLoadNewGoalData() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const currentGoal = getState().goalsState.currentGoal;
     const goalData = await getGoalData(currentGoal.goalType);
@@ -156,7 +165,7 @@ function asyncLoadNewGoalData(userEditId: string) {
       dispatch(updateStepFromData());
       const updatedGoal = getState().goalsState.currentGoal;
       dispatch(dispatchStepData(updatedGoal));
-      await Backend.addGoalToUserEdit(userEditId, updatedGoal);
+      await Backend.addGoalToUserEdit(getUserEditId()!, updatedGoal);
       await saveCurrentStep(updatedGoal);
     }
     dispatch(setGoalStatus(GoalStatus.InProgress));

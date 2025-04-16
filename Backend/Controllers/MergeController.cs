@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
@@ -21,6 +21,8 @@ namespace BackendFramework.Controllers
         private readonly IMergeService _mergeService;
         private readonly IHubContext<MergeHub> _notifyService;
         private readonly IPermissionService _permissionService;
+
+        private ulong _mergeCounter;
 
         public MergeController(
             IMergeService mergeService, IHubContext<MergeHub> notifyService, IPermissionService permissionService)
@@ -135,11 +137,11 @@ namespace BackendFramework.Controllers
         internal async Task<bool> GetDuplicatesThenSignal(string projectId, int maxInList, int maxLists, string userId)
         {
             // Use timestamp to ensure that only the most recent duplicate request succeeds per user.
-            var now = DateTime.UtcNow;
-            _mergeService.StoreDups(userId, now, null);
+            var counter = Interlocked.Increment(ref _mergeCounter);
+            _mergeService.StoreDups(userId, counter, null);
             var dups = await _mergeService.GetPotentialDuplicates(projectId, maxInList, maxLists, userId);
             // Store the potential duplicates for user to retrieve later.
-            var success = _mergeService.StoreDups(userId, now, dups);
+            var success = _mergeService.StoreDups(userId, counter, dups);
             if (success)
             {
                 await _notifyService.Clients.All.SendAsync(MergeHub.Success, userId);

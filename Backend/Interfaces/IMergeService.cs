@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using BackendFramework.Models;
 
@@ -21,7 +20,7 @@ namespace BackendFramework.Interfaces
         Task<List<List<Word>>> GetGraylistEntries(string projectId, int maxLists, string? userId = null);
 
         // Methods to store and retrieve potential duplicates in a common dictionary.
-        bool StoreDups(string userId, DateTime dateTime, List<List<Word>>? dups);
+        bool StoreDups(string userId, ulong counter, List<List<Word>>? dups);
         List<List<Word>>? RetrieveDups(string userId);
     }
 }

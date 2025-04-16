@@ -18,7 +18,7 @@ namespace BackendFramework.Services
         private readonly IWordService _wordService;
 
         /// A dictionary shared by all Projects for storing and retrieving potential duplicates.
-        private readonly ConcurrentDictionary<string, (DateTime, List<List<Word>>?)> _potentialDups;
+        private readonly ConcurrentDictionary<string, (ulong, List<List<Word>>?)> _potentialDups;
 
         public MergeService(IMergeBlacklistRepository mergeBlacklistRepo, IMergeGraylistRepository mergeGraylistRepo,
             IWordRepository wordRepo, IWordService wordService)
@@ -32,11 +32,11 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Store potential duplicates, but only if the most recent dateTime for the user. </summary>
-        public bool StoreDups(string userId, DateTime dateTime, List<List<Word>>? dups)
+        public bool StoreDups(string userId, ulong counter, List<List<Word>>? dups)
         {
             var val = _potentialDups.AddOrUpdate(
-                userId, (dateTime, dups), (_, v) => dateTime >= v.Item1 ? (dateTime, dups) : v);
-            return val.Item1 == dateTime;
+                userId, (counter, dups), (_, v) => counter >= v.Item1 ? (counter, dups) : v);
+            return val.Item1 == counter;
         }
 
         /// <summary> Retrieve potential duplicates for a user. </summary>

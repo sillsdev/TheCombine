@@ -6,13 +6,19 @@ import {
   success,
 } from "goals/MergeDuplicates/FindDups/Redux/FindDupsActions";
 import { FindDupsStatus } from "goals/MergeDuplicates/FindDups/Redux/FindDupsReduxTypes";
+import { asyncLoadNewGoalData } from "goals/Redux/GoalActions";
 import { useAppSelector } from "rootRedux/hooks";
-import { type StoreState } from "rootRedux/types";
+import { StoreStateDispatch, type StoreState } from "rootRedux/types";
 
 export default function ExportHub(): ReactElement {
   const status = useAppSelector(
     (state: StoreState) => state.findDupsState.status
   );
+
+  const successAction = async (dispatch: StoreStateDispatch): Promise<void> => {
+    dispatch(success());
+    await dispatch(asyncLoadNewGoalData());
+  };
 
   return (
     <SignalRHub
@@ -20,7 +26,7 @@ export default function ExportHub(): ReactElement {
       failure="DuplicateFinderFailed"
       failureAction={failure()}
       success="DuplicatesReady"
-      successAction={success()}
+      successAction={successAction}
       url="merge-hub"
     />
   );

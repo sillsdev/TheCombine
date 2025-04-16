@@ -3,7 +3,7 @@ import {
   HubConnectionBuilder,
   HubConnectionState,
 } from "@microsoft/signalr";
-import { Action, PayloadAction } from "@reduxjs/toolkit";
+import { Action, PayloadAction, ThunkAction } from "@reduxjs/toolkit";
 import {
   Fragment,
   ReactElement,
@@ -16,14 +16,16 @@ import { baseURL } from "backend";
 import { getUserId } from "backend/localStorage";
 import { useAppDispatch } from "rootRedux/hooks";
 
+type MethodAction = Action | PayloadAction | ThunkAction<any, any, any, any>;
+
 interface SignalRHubProps {
   connect: boolean;
   /** Must match what is in Backend/Helper/CombineHub.cs */
   failure: string;
-  failureAction: Action | PayloadAction;
+  failureAction?: MethodAction;
   /** Must match what is in Backend/Helper/CombineHub.cs */
   success: string;
-  successAction: Action | PayloadAction;
+  successAction: MethodAction;
   /** Must match what is in Backend/Helper/CombineHub.cs */
   url: string;
 }
@@ -78,7 +80,7 @@ export default function SignalRHub(props: SignalRHubProps): ReactElement {
   /** Method used by connection.on upon receipt of failure message. */
   const failureMethod = useCallback(
     (userId: string): void => {
-      if (userId === getUserId()) {
+      if (failureAction && userId === getUserId()) {
         dispatch(failureAction);
       }
     },
