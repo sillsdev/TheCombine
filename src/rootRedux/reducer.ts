@@ -6,6 +6,7 @@ import exportProjectReducer from "components/ProjectExport/Redux/ExportProjectRe
 import pronunciationsReducer from "components/Pronunciations/Redux/PronunciationsReducer";
 import treeViewReducer from "components/TreeView/Redux/TreeViewReducer";
 import characterInventoryReducer from "goals/CharacterInventory/Redux/CharacterInventoryReducer";
+import findDupsReducer from "goals/MergeDuplicates/FindDups/Redux/FindDupsReducer";
 import mergeDupStepReducer from "goals/MergeDuplicates/Redux/MergeDupsReducer";
 import goalsReducer from "goals/Redux/GoalReducer";
 import { type StoreState } from "rootRedux/types";
@@ -27,6 +28,7 @@ export const rootReducer: Reducer<StoreState> = combineReducers({
   goalsState: goalsReducer,
 
   //merge duplicates goal and review deferred duplicates goal
+  findDupsState: findDupsReducer,
   mergeDuplicateGoal: mergeDupStepReducer,
 
   //character inventory goal

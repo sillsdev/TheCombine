@@ -10,17 +10,17 @@ import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 
 export default function ExportHub(): ReactElement {
-  const findDupsState = useAppSelector(
-    (state: StoreState) => state.findDuplicates
+  const status = useAppSelector(
+    (state: StoreState) => state.findDupsState.status
   );
 
   return (
     <SignalRHub
-      connect={findDupsState.status === FindDupsStatus.InProgress}
+      connect={status === FindDupsStatus.InProgress}
       failure="DuplicateFinderFailed"
-      failureAction={failure(findDupsState.projectId)}
+      failureAction={failure()}
       success="DuplicatesReady"
-      successAction={success(findDupsState.projectId)}
+      successAction={success()}
       url="merge-hub"
     />
   );

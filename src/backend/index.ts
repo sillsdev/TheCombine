@@ -335,15 +335,22 @@ export async function graylistAdd(wordIds: string[]): Promise<void> {
   );
 }
 
-/** Get list of potential duplicates for merging. */
-export async function getDuplicates(
+/** Start finding list of potential duplicates for merging. */
+export async function findDuplicates(
   maxInList: number,
   maxLists: number
-): Promise<Word[][]> {
+): Promise<void> {
   const projectId = LocalStorage.getProjectId();
-  const userId = LocalStorage.getUserId();
-  const resp = await mergeApi.getPotentialDuplicates(
-    { projectId, maxInList, maxLists, userId },
+  await mergeApi.findPotentialDuplicates(
+    { projectId, maxInList, maxLists },
+    defaultOptions()
+  );
+}
+
+/** Retrieve list of potential duplicates for merging. */
+export async function retrieveDuplicates(): Promise<Word[][]> {
+  const resp = await mergeApi.retrievePotentialDuplicates(
+    { projectId: LocalStorage.getProjectId() },
     defaultOptions()
   );
   return resp.data;

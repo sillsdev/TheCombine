@@ -4,6 +4,7 @@ import { MergeUndoIds, Word } from "api/models";
 import * as Backend from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
 import { CharInvChanges } from "goals/CharacterInventory/CharacterInventoryTypes";
+import { asyncFindDups } from "goals/MergeDuplicates/FindDups/Redux/FindDupsActions";
 import { dispatchMergeStepData } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import {
   addCharInvChangesToGoalAction,
@@ -74,8 +75,9 @@ export function asyncAddGoal(goal: Goal) {
       // Check if this is a new goal.
       if (goal.status !== GoalStatus.Completed) {
         await Backend.addGoalToUserEdit(userEditId, goal);
-        // Load the new goal, but don't await, to allow a loading screen.
-        dispatch(asyncLoadNewGoal(goal, userEditId));
+        await dispatch(asyncStartLoadingNewGoal(goal));
+        // Load the goal data, but don't await, to allow a loading screen.
+        //dispatch(asyncLoadNewGoalData(userEditId));
       }
 
       // Serve goal.
@@ -135,12 +137,20 @@ export function asyncLoadExistingUserEdits(
   };
 }
 
-export function asyncLoadNewGoal(goal: Goal, userEditId: string) {
-  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
-    // Load data.
+function asyncStartLoadingNewGoal(goal: Goal) {
+  return async (dispatch: StoreStateDispatch) => {
     dispatch(setCurrentGoal(goal));
+    dispatch(setGoalStatus(GoalStatus.Loading));
+    if (goal.goalType === GoalType.MergeDups) {
+      await dispatch(asyncFindDups(12, maxNumSteps(goal.goalType)));
+    }
+  };
+}
+
+function asyncLoadNewGoalData(userEditId: string) {
+  return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const currentGoal = getState().goalsState.currentGoal;
-    const goalData = await loadGoalData(currentGoal.goalType);
+    const goalData = await getGoalData(currentGoal.goalType);
     if (goalData.length > 0) {
       dispatch(setGoalData(goalData));
       dispatch(updateStepFromData());
@@ -207,12 +217,10 @@ function goalCleanup(goal: Goal): void {
 }
 
 /** Returns goal data for some goal types. */
-export async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
+async function getGoalData(goalType: GoalType): Promise<Word[][]> {
   switch (goalType) {
     case GoalType.MergeDups:
-      return checkMergeData(
-        await Backend.getDuplicates(5, maxNumSteps(goalType))
-      );
+      return checkMergeData(await Backend.retrieveDuplicates());
     case GoalType.ReviewDeferredDups:
       return checkMergeData(
         await Backend.getGraylistEntries(maxNumSteps(goalType))

@@ -6,11 +6,9 @@ export enum FindDupsStatus {
 }
 
 export interface FindDupsState {
-  projectId: string;
   status: FindDupsStatus;
 }
 
 export const defaultState: FindDupsState = {
-  projectId: "",
   status: FindDupsStatus.Default,
 };

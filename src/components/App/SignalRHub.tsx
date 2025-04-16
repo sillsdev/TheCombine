@@ -3,7 +3,7 @@ import {
   HubConnectionBuilder,
   HubConnectionState,
 } from "@microsoft/signalr";
-import { PayloadAction } from "@reduxjs/toolkit";
+import { Action, PayloadAction } from "@reduxjs/toolkit";
 import {
   Fragment,
   ReactElement,
@@ -20,10 +20,10 @@ interface SignalRHubProps {
   connect: boolean;
   /** Must match what is in Backend/Helper/CombineHub.cs */
   failure: string;
-  failureAction: PayloadAction;
+  failureAction: Action | PayloadAction;
   /** Must match what is in Backend/Helper/CombineHub.cs */
   success: string;
-  successAction: PayloadAction;
+  successAction: Action | PayloadAction;
   /** Must match what is in Backend/Helper/CombineHub.cs */
   url: string;
 }

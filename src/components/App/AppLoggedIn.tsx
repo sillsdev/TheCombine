@@ -13,6 +13,7 @@ import PageNotFound from "components/PageNotFound/component";
 import ExportHub from "components/ProjectExport/ExportHub";
 import ProjectScreen from "components/ProjectScreen";
 import NextGoalScreen from "goals/DefaultGoal/NextGoalScreen";
+import MergeHub from "goals/MergeDuplicates/FindDups/MergeHub";
 import { updateLangFromUser } from "i18n";
 import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
@@ -98,6 +99,7 @@ export default function AppWithBar(): ReactElement {
   return (
     <DatePickersLocalizationProvider>
       <ExportHub />
+      <MergeHub />
       <AppBar />
       <FontContext.Provider value={projFonts}>
         <ThemeProvider theme={overrideThemeFont}>

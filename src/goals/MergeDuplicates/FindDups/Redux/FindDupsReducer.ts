@@ -3,24 +3,21 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   defaultState,
   FindDupsStatus,
-} from "goals/MergeDuplicates/FindDups/Redux/FindDupsReduxTypes.ts";
+} from "goals/MergeDuplicates/FindDups/Redux/FindDupsReduxTypes";
 import { StoreActionTypes } from "rootRedux/actions";
 
 const findDupsSlice = createSlice({
   name: "findDupsState",
   initialState: defaultState,
   reducers: {
-    inProgressAction: (state, action) => {
-      state.projectId = action.payload;
+    inProgressAction: (state) => {
       state.status = FindDupsStatus.InProgress;
     },
-    failureAction: (state, action) => {
-      state.projectId = action.payload;
+    failureAction: (state) => {
       state.status = FindDupsStatus.Failure;
     },
     resetFindDupsAction: () => defaultState,
-    successAction: (state, action) => {
-      state.projectId = action.payload;
+    successAction: (state) => {
       state.status = FindDupsStatus.Success;
     },
   },

@@ -59,7 +59,7 @@ export interface StoreState {
   goalsState: GoalsState;
 
   //merge duplicates goal
-  findDuplicates: FindDupsState;
+  findDupsState: FindDupsState;
   mergeDuplicateGoal: MergeTreeState;
 
   //character inventory goal
@@ -77,7 +77,7 @@ export const defaultState: StoreState = {
   treeViewState: { ...treeViewState },
   pronunciationsState: { ...pronunciationsState },
   goalsState: { ...goalsState },
-  findDuplicates: { ...findDupsState },
+  findDupsState: { ...findDupsState },
   mergeDuplicateGoal: { ...mergeDuplicateGoal },
   characterInventoryState: { ...characterInventoryState },
   analyticsState: { ...analyticsState },
