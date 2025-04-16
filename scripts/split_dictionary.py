@@ -43,9 +43,7 @@ def parse_args() -> argparse.Namespace:
         help="Override the lang's default max word-length, or -1 to force no limit",
         type=int,
     )
-    parser.add_argument(
-        "--normalize", "-n", choices=["NFC", "NFD", "NFKC", "NFKD"], default="NFKD"
-    )
+    parser.add_argument("--normalize", "-n", choices=["NFC", "NFD", "NFKC", "NFKD"], default="NFD")
     parser.add_argument(
         "--threshold",
         "-t",
@@ -81,6 +79,8 @@ def max_length(lang: str) -> int:
         return 9
     elif lang == "fr":
         return 10
+    elif lang == "hi":
+        return 6
     elif lang == "pt":
         return 7
     elif lang == "ru":
@@ -131,7 +131,7 @@ def main() -> None:
         for line in file.readlines():
             # The characters sub()-ed here should match those used in spellChecker.ts
             # Cf. https://en.wikipedia.org/wiki/Unicode_character_property
-            words = sub("[^\\p{L}\\p{M}\\p{N}]+", " ", normalize(args.normalize, line)).split()
+            words = sub("[^\\p{L}\\p{M}]+", " ", normalize(args.normalize, line)).split()
 
             # If user doesn't specify -m, use lang-specific default of max_length().
             if not args.max:
@@ -229,7 +229,7 @@ def main() -> None:
             "// Arabic word-list source (GPLv3):\n",
             "// https://sourceforge.net/projects/arabic-wordlist\n"
             "// Other languages source (MPLv2):\n",
-            "// https://cgit.freedesktop.org/libreoffice/dictionaries\n\n",
+            "// https://github.com/LibreOffice/dictionaries\n\n",
         ]
 
         # Generate the imports of the various language dictionaries...
