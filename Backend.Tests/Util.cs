@@ -52,7 +52,6 @@ namespace Backend.Tests
                 Id = RandString(),
                 Created = RandString(),
                 Vernacular = RandString(),
-                Plural = RandString(),
                 Modified = RandString(),
                 EditedBy = [RandString(), RandString()],
                 ProjectId = projId ?? RandString(),

@@ -10,7 +10,7 @@
     <NoWarn>$(NoWarn);CA1305;CA1848;CS1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.11.1" />
+    <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.11.2" />
     <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.11.2" />
     <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.11.2" />
     <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.11.1" />
@@ -29,16 +29,10 @@
     <!-- SIL Maintained Dependencies. -->
     <PackageReference Include="icu.net" Version="3.0.1" />
     <PackageReference Include="Icu4c.Win.Full.Lib" Version="62.2.3-beta" />
-    <PackageReference Include="SIL.Core" Version="15.0.0" />
-    <PackageReference Include="SIL.Core.Desktop" Version="15.0.0">
-      <NoWarn>NU1701</NoWarn>
-    </PackageReference>
-    <PackageReference Include="SIL.DictionaryServices" Version="15.0.0">
-      <NoWarn>NU1701</NoWarn>
-    </PackageReference>
-    <PackageReference Include="SIL.Lift" Version="15.0.0">
-      <NoWarn>NU1701</NoWarn>
-    </PackageReference>
-    <PackageReference Include="SIL.WritingSystems" Version="15.0.0" />
+    <PackageReference Include="SIL.Core" Version="16.0.0-beta0140" />
+    <PackageReference Include="SIL.Core.Desktop" Version="16.0.0-beta0140"/>
+    <PackageReference Include="SIL.DictionaryServices" Version="16.0.0-beta0140"/>
+    <PackageReference Include="SIL.Lift" Version="16.0.0-beta0140"/>
+    <PackageReference Include="SIL.WritingSystems" Version="16.0.0-beta0140" />
   </ItemGroup>
 </Project>

@@ -34,7 +34,7 @@ namespace BackendFramework.Models
 
         /// <summary> Not implemented in frontend. </summary>
         [BsonElement("plural")]
-        public string Plural { get; set; }
+        public string? Plural { get; set; }
 
         [Required]
         [BsonElement("senses")]
@@ -92,7 +92,6 @@ namespace BackendFramework.Models
             Guid = Guid.NewGuid();
             Vernacular = "";
             UsingCitationForm = false;
-            Plural = "";
             Created = "";
             Modified = "";
             OtherField = "";

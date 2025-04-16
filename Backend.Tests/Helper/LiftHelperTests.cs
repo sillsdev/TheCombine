@@ -23,6 +23,7 @@ namespace Backend.Tests.Helper
                 LexicalForm = new("key", "content"),
                 Order = 1,
             };
+            entry.Fields.Add(new(FlagFieldTag, []));
             // A single note with empty type is allowed.
             entry.Notes.Add(new("", new("key", "content")));
             entry.Pronunciations.Add(new());
@@ -70,8 +71,8 @@ namespace Backend.Tests.Helper
         public void EntryFieldProtected()
         {
             var entry = new LiftEntry();
-            entry.Fields.Add(new());
-            entry.Fields.Add(new());
+            entry.Fields.Add(new("", []));
+            entry.Fields.Add(new("type", []));
             Assert.That(IsProtected(entry), Is.True);
             var reasons = GetProtectedReasons(entry);
             Assert.That(reasons, Has.Count.EqualTo(2));
