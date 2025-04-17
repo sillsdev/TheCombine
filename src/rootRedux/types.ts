@@ -26,10 +26,6 @@ import {
   defaultState as characterInventoryState,
 } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 import {
-  type FindDupsState,
-  defaultState as findDupsState,
-} from "goals/MergeDuplicates/FindDups/Redux/FindDupsReduxTypes";
-import {
   type MergeTreeState,
   defaultState as mergeDuplicateGoal,
 } from "goals/MergeDuplicates/Redux/MergeDupsReduxTypes";
@@ -59,7 +55,6 @@ export interface StoreState {
   goalsState: GoalsState;
 
   //merge duplicates goal
-  findDupsState: FindDupsState;
   mergeDuplicateGoal: MergeTreeState;
 
   //character inventory goal
@@ -77,7 +72,6 @@ export const defaultState: StoreState = {
   treeViewState: { ...treeViewState },
   pronunciationsState: { ...pronunciationsState },
   goalsState: { ...goalsState },
-  findDupsState: { ...findDupsState },
   mergeDuplicateGoal: { ...mergeDuplicateGoal },
   characterInventoryState: { ...characterInventoryState },
   analyticsState: { ...analyticsState },

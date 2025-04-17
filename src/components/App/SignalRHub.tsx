@@ -19,12 +19,15 @@ import { useAppDispatch } from "rootRedux/hooks";
 type MethodAction = Action | PayloadAction | ThunkAction<any, any, any, any>;
 
 interface SignalRHubProps {
+  /** Trigger (dis)connection. */
   connect: boolean;
   /** Must match what is in Backend/Helper/CombineHub.cs */
   failure: string;
+  /** To be dispatched when `failure` message received. */
   failureAction?: MethodAction;
   /** Must match what is in Backend/Helper/CombineHub.cs */
   success: string;
+  /** To be dispatched when `success` message received. */
   successAction: MethodAction;
   /** Must match what is in Backend/Helper/CombineHub.cs */
   url: string;
@@ -72,12 +75,10 @@ export default function SignalRHub(props: SignalRHubProps): ReactElement {
   /* Trigger a reconnect when connect is true and disconnect otherwise. */
   useEffect(() => {
     setDisconnect(true);
-    if (connect) {
-      setReconnect(true);
-    }
+    setReconnect(connect);
   }, [connect]);
 
-  /** Method used by connection.on upon receipt of failure message. */
+  /** Method used by connection.on upon receipt of `failure` message. */
   const failureMethod = useCallback(
     (userId: string): void => {
       if (failureAction && userId === getUserId()) {
@@ -87,7 +88,7 @@ export default function SignalRHub(props: SignalRHubProps): ReactElement {
     [dispatch, failureAction]
   );
 
-  /** Method used by connection.on upon receipt of success message. */
+  /** Method used by connection.on upon receipt of `success` message. */
   const successMethod = useCallback(
     (userId: string): void => {
       if (userId === getUserId()) {

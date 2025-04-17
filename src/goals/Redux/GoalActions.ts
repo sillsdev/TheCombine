@@ -4,10 +4,6 @@ import { MergeUndoIds, Word } from "api/models";
 import * as Backend from "backend";
 import { getCurrentUser, getProjectId } from "backend/localStorage";
 import { CharInvChanges } from "goals/CharacterInventory/CharacterInventoryTypes";
-import {
-  asyncFindDups,
-  inProgress,
-} from "goals/MergeDuplicates/FindDups/Redux/FindDupsActions";
 import { dispatchMergeStepData } from "goals/MergeDuplicates/Redux/MergeDupsActions";
 import {
   addCharInvChangesToGoalAction,
@@ -16,10 +12,12 @@ import {
   incrementGoalStepAction,
   loadUserEditsAction,
   setCurrentGoalAction,
+  setDataLoadStatusAction,
   setGoalDataAction,
   setGoalStatusAction,
   updateStepFromDataAction,
 } from "goals/Redux/GoalReducer";
+import { DataLoadStatus } from "goals/Redux/GoalReduxTypes";
 import { EntryEdit } from "goals/ReviewEntries/ReviewEntriesTypes";
 import { type StoreState, type StoreStateDispatch } from "rootRedux/types";
 import router from "router/browserRouter";
@@ -53,6 +51,10 @@ export function loadUserEdits(history?: Goal[]): PayloadAction {
 
 export function setCurrentGoal(goal?: Goal): PayloadAction {
   return setCurrentGoalAction(goal ? { ...goal } : new Goal());
+}
+
+export function setDataLoadStatus(status: DataLoadStatus): PayloadAction {
+  return setDataLoadStatusAction(status);
 }
 
 export function setGoalData(goalData: Word[][]): PayloadAction {
@@ -148,8 +150,10 @@ export function asyncLoadExistingUserEdits(
 function asyncIsGoalDataReady(goal: Goal) {
   return async (dispatch: StoreStateDispatch): Promise<boolean> => {
     if (goal.goalType === GoalType.MergeDups) {
-      dispatch(inProgress);
-      await dispatch(asyncFindDups(12, maxNumSteps(goal.goalType)));
+      dispatch(setDataLoadStatus(DataLoadStatus.Loading));
+      await Backend.findDuplicates(12, maxNumSteps(goal.goalType)).catch(() =>
+        dispatch(setDataLoadStatus(DataLoadStatus.Failure))
+      );
       return false;
     }
     return true;

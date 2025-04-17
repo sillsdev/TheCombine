@@ -9,18 +9,19 @@ import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxT
 import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 
+/** SignalRHub for exporting a project and preparing the download. */
 export default function ExportHub(): ReactElement {
-  const exportState = useAppSelector(
+  const { projectId, status } = useAppSelector(
     (state: StoreState) => state.exportProjectState
   );
 
   return (
     <SignalRHub
-      connect={exportState.status === ExportStatus.Exporting}
+      connect={status === ExportStatus.Exporting}
       failure="ExportFailed"
-      failureAction={failure(exportState.projectId)}
+      failureAction={failure(projectId)}
       success="DownloadReady"
-      successAction={success(exportState.projectId)}
+      successAction={success(projectId)}
       url="export-hub"
     />
   );

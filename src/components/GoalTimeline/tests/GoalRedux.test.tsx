@@ -183,15 +183,14 @@ describe("asyncGetUserEdits", () => {
 });
 
 describe("asyncAddGoal", () => {
-  it("new MergeDups goal", async () => {
+  it("adds new MergeDups goal", async () => {
     const store = setupStore();
     await act(async () => {
       renderWithProviders(<GoalTimeline />, { store: store });
     });
 
-    const goal = new MergeDups();
     await act(async () => {
-      await store.dispatch(asyncAddGoal(goal));
+      await store.dispatch(asyncAddGoal(new MergeDups()));
     });
     // verify the new goal was loaded but its data was not loaded
     const currentGoal = store.getState().goalsState.currentGoal as MergeDups;
@@ -201,15 +200,14 @@ describe("asyncAddGoal", () => {
     expect(mockNavigate).toHaveBeenCalledWith(Path.GoalCurrent);
   });
 
-  it("new CreateCharInv goal", async () => {
+  it("adds new CreateCharInv goal", async () => {
     const store = setupStore();
     await act(async () => {
       renderWithProviders(<GoalTimeline />, { store: store });
     });
 
-    const goal = new CreateCharInv();
     await act(async () => {
-      await store.dispatch(asyncAddGoal(goal));
+      await store.dispatch(asyncAddGoal(new CreateCharInv()));
     });
     // verify the new goal was loaded
     const currentGoal = store.getState().goalsState
@@ -226,15 +224,14 @@ describe("asyncAddGoal", () => {
 });
 
 describe("asyncLoadNewGoalData", () => {
-  it("MergeDups goal", async () => {
+  it("loads data for MergeDups goal", async () => {
     const store = setupStore();
     await act(async () => {
       renderWithProviders(<GoalTimeline />, { store: store });
     });
 
-    const goal = new MergeDups();
     await act(async () => {
-      await store.dispatch(asyncAddGoal(goal));
+      await store.dispatch(asyncAddGoal(new MergeDups()));
       await store.dispatch(asyncLoadNewGoalData());
     });
     // verify the goal data was loaded
@@ -243,8 +240,7 @@ describe("asyncLoadNewGoalData", () => {
     expect(currentGoal.status).toEqual(GoalStatus.InProgress);
     expect(currentGoal.numSteps).toEqual(8);
     expect(currentGoal.currentStep).toEqual(0);
-    const goalData = currentGoal.data as MergeDupsData;
-    expect(goalData).toEqual(goalDataMock);
+    expect(currentGoal.data as MergeDupsData).toEqual(goalDataMock);
   });
 });
 
@@ -256,9 +252,8 @@ describe("asyncAdvanceStep", () => {
       renderWithProviders(<GoalTimeline />, { store: store });
     });
     // create mergeDups goal
-    const goal = new MergeDups();
     await act(async () => {
-      await store.dispatch(asyncAddGoal(goal));
+      await store.dispatch(asyncAddGoal(new MergeDups()));
       await store.dispatch(asyncLoadNewGoalData());
     });
     let currentGoal = store.getState().goalsState.currentGoal as MergeDups;

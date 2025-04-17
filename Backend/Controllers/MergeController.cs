@@ -122,21 +122,21 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
-            var userId = _permissionService.GetUserId(HttpContext);
-
             await _mergeService.UpdateMergeBlacklist(projectId);
+
+            var userId = _permissionService.GetUserId(HttpContext);
 
             // Run the task without waiting for completion.
             // This Task will be scheduled within the exiting Async executor thread pool efficiently.
             // See: https://stackoverflow.com/a/64614779/1398841
             _ = Task.Run(() => GetDuplicatesThenSignal(projectId, maxInList, maxLists, userId));
+
             return Ok();
         }
 
-        // Internal method extracted for unit testing.
         internal async Task<bool> GetDuplicatesThenSignal(string projectId, int maxInList, int maxLists, string userId)
         {
-            // Use timestamp to ensure that only the most recent duplicate request succeeds per user.
+            // Use counter to ensure that only the most recent duplicate request succeeds per user.
             var counter = Interlocked.Increment(ref _mergeCounter);
             _mergeService.StoreDups(userId, counter, null);
             var dups = await _mergeService.GetPotentialDuplicates(projectId, maxInList, maxLists, userId);

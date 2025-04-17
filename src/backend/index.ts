@@ -340,9 +340,8 @@ export async function findDuplicates(
   maxInList: number,
   maxLists: number
 ): Promise<void> {
-  const projectId = LocalStorage.getProjectId();
   await mergeApi.findPotentialDuplicates(
-    { projectId, maxInList, maxLists },
+    { projectId: LocalStorage.getProjectId(), maxInList, maxLists },
     defaultOptions()
   );
 }

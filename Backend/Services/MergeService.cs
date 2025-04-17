@@ -32,6 +32,10 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Store potential duplicates, but only if the most recent dateTime for the user. </summary>
+        /// <param name="userId"> Id of user requesting duplicates. </param>
+        /// <param name="counter"> Unique and increasing identifier for duplicate request. </param>
+        /// <param name="dups"> List of sets of potential duplicates,
+        /// or null to indicate the duplicate-finding has just begun. </param>
         public bool StoreDups(string userId, ulong counter, List<List<Word>>? dups)
         {
             var val = _potentialDups.AddOrUpdate(
@@ -40,6 +44,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Retrieve potential duplicates for a user. </summary>
+        /// <param name="userId"> Id of user retrieving duplicates. </param>
         /// <returns> List of Lists of potential duplicate Words. </returns>
         public List<List<Word>>? RetrieveDups(string userId)
         {
