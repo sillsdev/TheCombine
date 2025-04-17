@@ -1,4 +1,5 @@
 export enum ExportStatus {
+  Canceling = "CANCELING",
   Default = "DEFAULT",
   Exporting = "EXPORTING",
   Downloading = "DOWNLOADING",

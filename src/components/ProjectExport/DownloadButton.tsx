@@ -111,6 +111,8 @@ export default function DownloadButton(
     switch (exportState.status) {
       case ExportStatus.Exporting:
         return t("projectExport.exportInProgress", { val: projectName });
+      case ExportStatus.Canceling:
+        return t("projectExport.canceledExport", { val: projectName });
       case ExportStatus.Success:
       case ExportStatus.Downloading:
         return t("projectExport.downloadInProgress", { val: projectName });
