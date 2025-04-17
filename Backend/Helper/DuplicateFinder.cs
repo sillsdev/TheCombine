@@ -13,6 +13,9 @@ namespace BackendFramework.Helper
         private readonly int _maxLists;
         private readonly int _maxScore;
 
+        private const double DefaultCheckGlossThreshold = 1.0;
+        private const double DefaultGramCatPenalty = 1.5;
+
         public DuplicateFinder(int maxInList, int maxLists, int maxScore)
         {
             _editDist = new LevenshteinDistance();
@@ -120,6 +123,12 @@ namespace BackendFramework.Helper
                     wordLists.RemoveAt(_maxLists);
                     currentMax = wordLists.Last().Item1;
                 }
+
+                // Stop if we have a full list below the matching-gloss threshold.
+                if (wordLists.Count == _maxLists && currentMax < DefaultCheckGlossThreshold)
+                {
+                    break;
+                }
             }
             return wordLists.Select(list => list.Item2).ToList();
         }
@@ -194,15 +203,17 @@ namespace BackendFramework.Helper
         /// <param name="wordA"> The first of two Words to compare. </param>
         /// <param name="wordB"> The second of two Words to compare. </param>
         /// <param name="checkGlossThreshold">
-        /// A double (default 1.0): If the Words' vernaculars have a score between this threshold and the _maxScore,
+        /// A double (default <see cref="DefaultCheckGlossThreshold"/>):
+        /// If the Words' vernaculars have a score between this threshold and the _maxScore,
         /// and if the Words share a common definition/gloss, then we override the score with this threshold.
         /// </param>
         /// <param name="gramCatPenalty">
-        /// A double (default 1.5): A penalty added to the score if the words have different GramCatGroups.
+        /// A double (default <see cref="DefaultGramCatPenalty"/>):
+        /// A penalty added to the score if the words have different GramCatGroups.
         /// </param>
         /// <returns> A double: the adjusted distance between the words. </returns>
-        public double GetWordScore(
-            Word wordA, Word wordB, double checkGlossThreshold = 1.0, double gramCatPenalty = 1.5)
+        public double GetWordScore(Word wordA, Word wordB,
+            double checkGlossThreshold = DefaultCheckGlossThreshold, double gramCatPenalty = DefaultGramCatPenalty)
         {
             var vernScore = GetScaledDistance(wordA.Vernacular, wordB.Vernacular);
 
