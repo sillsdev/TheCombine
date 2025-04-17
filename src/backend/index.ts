@@ -52,6 +52,7 @@ const authenticationUrls = [
 /** A list of URL patterns for which the frontend explicitly handles errors
  * and the blanket error pop ups should be suppressed.*/
 const whiteListedErrorUrls = [
+  "/merge/retrievedups",
   "/speakers/create/",
   "/speakers/update/",
   "/users/authenticate",

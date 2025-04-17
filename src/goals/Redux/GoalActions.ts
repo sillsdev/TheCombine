@@ -150,9 +150,7 @@ function asyncIsGoalDataReady(goal: Goal) {
   return async (dispatch: StoreStateDispatch): Promise<boolean> => {
     if (goal.goalType === GoalType.MergeDups) {
       dispatch(setDataLoadStatus(DataLoadStatus.Loading));
-      await Backend.findDuplicates(5, maxNumSteps(goal.goalType)).catch(() =>
-        dispatch(setDataLoadStatus(DataLoadStatus.Failure))
-      );
+      await Backend.findDuplicates(5, maxNumSteps(goal.goalType));
       return false;
     }
     return true;
@@ -162,7 +160,14 @@ function asyncIsGoalDataReady(goal: Goal) {
 export function asyncLoadNewGoalData() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const currentGoal = getState().goalsState.currentGoal;
-    const goalData = await loadGoalData(currentGoal.goalType);
+    const goalData = await loadGoalData(currentGoal.goalType).catch(() => {
+      dispatch(setDataLoadStatus(DataLoadStatus.Failure));
+      alert("Failed to load data.");
+      router.navigate(Path.Goals);
+    });
+    if (!goalData) {
+      return;
+    }
     if (goalData.length > 0) {
       dispatch(setGoalData(goalData));
       dispatch(updateStepFromData());
@@ -232,7 +237,8 @@ function goalCleanup(goal: Goal): void {
 async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
   switch (goalType) {
     case GoalType.MergeDups:
-      return checkMergeData(await Backend.retrieveDuplicates());
+      const dups = await Backend.retrieveDuplicates().catch(() => {});
+      return dups ? checkMergeData(dups) : Promise.reject();
     case GoalType.ReviewDeferredDups:
       return checkMergeData(
         await Backend.getGraylistEntries(maxNumSteps(goalType))
