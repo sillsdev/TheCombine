@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +17,9 @@ namespace BackendFramework.Services
         private readonly IWordRepository _wordRepo;
         private readonly IWordService _wordService;
 
+        /// <summary> A dictionary shared by all Projects for storing and retrieving potential duplicates. </summary>
+        private readonly ConcurrentDictionary<string, (ulong, List<List<Word>>?)> _potentialDups;
+
         public MergeService(IMergeBlacklistRepository mergeBlacklistRepo, IMergeGraylistRepository mergeGraylistRepo,
             IWordRepository wordRepo, IWordService wordService)
         {
@@ -23,6 +27,29 @@ namespace BackendFramework.Services
             _mergeGraylistRepo = mergeGraylistRepo;
             _wordRepo = wordRepo;
             _wordService = wordService;
+
+            _potentialDups = [];
+        }
+
+        /// <summary> Store potential duplicates, but only if the most recent dateTime for the user. </summary>
+        /// <param name="userId"> Id of user requesting duplicates. </param>
+        /// <param name="counter"> Unique and increasing identifier for duplicate request. </param>
+        /// <param name="dups"> List of sets of potential duplicates,
+        /// or null to indicate the duplicate-finding has just begun. </param>
+        public bool StoreDups(string userId, ulong counter, List<List<Word>>? dups)
+        {
+            var val = _potentialDups.AddOrUpdate(
+                userId, (counter, dups), (_, v) => counter >= v.Item1 ? (counter, dups) : v);
+            return val.Item1 == counter;
+        }
+
+        /// <summary> Retrieve potential duplicates for a user. </summary>
+        /// <param name="userId"> Id of user retrieving duplicates. </param>
+        /// <returns> List of Lists of potential duplicate Words. </returns>
+        public List<List<Word>>? RetrieveDups(string userId)
+        {
+            _potentialDups.TryRemove(userId, out var dups);
+            return dups.Item2;
         }
 
         /// <summary> Prepares a merge parent to be added to the database. </summary>

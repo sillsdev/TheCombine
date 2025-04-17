@@ -351,7 +351,7 @@ namespace BackendFramework.Controllers
                 var exportedFilepath = await CreateLiftExport(projectId);
                 // Store the temporary path to the exported file for user to download later.
                 _liftService.StoreExport(userId, exportedFilepath);
-                await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
+                await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId);
                 return true;
             }
             catch (Exception e)
@@ -359,7 +359,7 @@ namespace BackendFramework.Controllers
                 _logger.LogError("Error exporting project {ProjectId}{NewLine}{Message}:{ExceptionStack}",
                     projectId, Environment.NewLine, e.Message, e.StackTrace);
                 _liftService.DeleteExport(userId);
-                await _notifyService.Clients.All.SendAsync(CombineHub.ExportFailed, userId);
+                await _notifyService.Clients.All.SendAsync(CombineHub.MethodFailure, userId);
                 throw;
             }
         }

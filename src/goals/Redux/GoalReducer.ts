@@ -73,6 +73,9 @@ const goalSlice = createSlice({
           ? state.currentGoal.goalType
           : state.previousGoalType;
     },
+    setDataLoadStatusAction: (state, action) => {
+      state.dataLoadStatus = action.payload;
+    },
     setGoalDataAction: (state, action) => {
       if (action.payload.length > 0) {
         state.currentGoal.data = { plannedWords: action.payload };
@@ -107,6 +110,7 @@ export const {
   incrementGoalStepAction,
   loadUserEditsAction,
   setCurrentGoalAction,
+  setDataLoadStatusAction,
   setGoalDataAction,
   setGoalStatusAction,
   updateStepFromDataAction,

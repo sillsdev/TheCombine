@@ -18,5 +18,9 @@ namespace BackendFramework.Interfaces
         Task<List<List<Word>>> GetPotentialDuplicates(
             string projectId, int maxInList, int maxLists, string? userId = null);
         Task<List<List<Word>>> GetGraylistEntries(string projectId, int maxLists, string? userId = null);
+
+        // Methods to store and retrieve potential duplicates in a common dictionary.
+        bool StoreDups(string userId, ulong counter, List<List<Word>>? dups);
+        List<List<Word>>? RetrieveDups(string userId);
     }
 }
