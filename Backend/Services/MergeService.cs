@@ -17,7 +17,7 @@ namespace BackendFramework.Services
         private readonly IWordRepository _wordRepo;
         private readonly IWordService _wordService;
 
-        /// A dictionary shared by all Projects for storing and retrieving potential duplicates.
+        /// <summary> A dictionary shared by all Projects for storing and retrieving potential duplicates. </summary>
         private readonly ConcurrentDictionary<string, (ulong, List<List<Word>>?)> _potentialDups;
 
         public MergeService(IMergeBlacklistRepository mergeBlacklistRepo, IMergeGraylistRepository mergeGraylistRepo,

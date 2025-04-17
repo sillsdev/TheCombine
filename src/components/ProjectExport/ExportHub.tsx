@@ -18,11 +18,9 @@ export default function ExportHub(): ReactElement {
   return (
     <SignalRHub
       connect={status === ExportStatus.Exporting}
-      failure="ExportFailed"
       failureAction={failure(projectId)}
-      success="DownloadReady"
       successAction={success(projectId)}
-      url="export-hub"
+      url="export-hub" // CombineHub.UrlExport
     />
   );
 }

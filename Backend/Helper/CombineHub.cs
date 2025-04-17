@@ -2,17 +2,14 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace BackendFramework.Helper
 {
-    public class ExportHub : Hub
+    public class CombineHub : Hub
     {
-        public const string Failure = "ExportFailed";
-        public const string Success = "DownloadReady";
-        public const string Url = "export-hub";
-    }
+        // Names for the `method` parameter of _notifyService.Clients.All.SendAsync()
+        public const string MethodFailure = "Failure";
+        public const string MethodSuccess = "Success";
 
-    public class MergeHub : Hub
-    {
-        public const string Failure = "DuplicateFinderFailed";
-        public const string Success = "DuplicatesReady";
-        public const string Url = "merge-hub";
+        // `Url`s for `app.UseEndpoints(e => e.MapHub<CombineHub>($"/{Url}"))`
+        public const string UrlExport = "export-hub";
+        public const string UrlMerge = "merge-hub";
     }
 }

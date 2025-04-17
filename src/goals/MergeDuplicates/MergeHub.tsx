@@ -26,11 +26,9 @@ export default function MergeHub(): ReactElement {
   return (
     <SignalRHub
       connect={status === DataLoadStatus.Loading}
-      failure="DuplicateFinderFailed"
       failureAction={setDataLoadStatus(DataLoadStatus.Failure)}
-      success="DuplicatesReady"
       successAction={successAction}
-      url="merge-hub"
+      url="merge-hub" // CombineHub.UrlMerge
     />
   );
 }

@@ -21,22 +21,22 @@ type MethodAction = Action | PayloadAction | ThunkAction<any, any, any, any>;
 interface SignalRHubProps {
   /** Trigger (dis)connection. */
   connect: boolean;
-  /** Must match what is in Backend/Helper/CombineHub.cs */
-  failure: string;
   /** To be dispatched when `failure` message received. */
   failureAction?: MethodAction;
-  /** Must match what is in Backend/Helper/CombineHub.cs */
-  success: string;
   /** To be dispatched when `success` message received. */
   successAction: MethodAction;
-  /** Must match what is in Backend/Helper/CombineHub.cs */
+  /** Must match `CombineHub.Url*` in Backend/Helper/CombineHub.cs */
   url: string;
 }
 
+/** Matches `CombineHub.MethodFailure` in Backend/Helper/CombineHub.cs */
+const failureMethodName = "Failure";
+/** Matches `CombineHub.MethodSuccess` in Backend/Helper/CombineHub.cs */
+const successMethodName = "Success";
+
 /** A central hub for monitoring export status on SignalR */
 export default function SignalRHub(props: SignalRHubProps): ReactElement {
-  const { connect, failure, failureAction, success, successAction, url } =
-    props;
+  const { connect, failureAction, successAction, url } = props;
 
   const dispatch = useAppDispatch();
 
@@ -105,10 +105,10 @@ export default function SignalRHub(props: SignalRHubProps): ReactElement {
     }
 
     connection.start().then(() => {
-      connection.on(failure, failureMethod);
-      connection.on(success, successMethod);
+      connection.on(failureMethodName, failureMethod);
+      connection.on(successMethodName, successMethod);
     });
-  }, [connection, failure, failureMethod, success, successMethod]);
+  }, [connection, failureMethod, successMethod]);
 
   return <Fragment />;
 }

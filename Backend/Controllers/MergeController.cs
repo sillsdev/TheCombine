@@ -19,13 +19,13 @@ namespace BackendFramework.Controllers
     public class MergeController : Controller
     {
         private readonly IMergeService _mergeService;
-        private readonly IHubContext<MergeHub> _notifyService;
+        private readonly IHubContext<CombineHub> _notifyService;
         private readonly IPermissionService _permissionService;
 
         private ulong _mergeCounter;
 
         public MergeController(
-            IMergeService mergeService, IHubContext<MergeHub> notifyService, IPermissionService permissionService)
+            IMergeService mergeService, IHubContext<CombineHub> notifyService, IPermissionService permissionService)
         {
             _mergeService = mergeService;
             _notifyService = notifyService;
@@ -144,7 +144,7 @@ namespace BackendFramework.Controllers
             var success = _mergeService.StoreDups(userId, counter, dups);
             if (success)
             {
-                await _notifyService.Clients.All.SendAsync(MergeHub.Success, userId);
+                await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId);
             }
             return success;
         }
