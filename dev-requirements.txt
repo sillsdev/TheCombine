@@ -4,21 +4,23 @@
 #
 #    pip-compile dev-requirements.in
 #
-attrs==24.2.0
+attrs==25.3.0
     # via
     #   flake8-bugbear
     #   flake8-eradicate
-babel==2.16.0
+babel==2.17.0
     # via mkdocs-material
-beautifulsoup4==4.12.3
+backrefs==5.8
+    # via mkdocs-material
+beautifulsoup4==4.13.3
     # via mkdocs-htmlproofer-plugin
-black==24.10.0
+black==25.1.0
     # via -r dev-requirements.in
-cachetools==5.5.0
+cachetools==5.5.2
     # via
     #   google-auth
     #   tox
-certifi==2024.8.30
+certifi==2025.1.31
     # via
     #   kubernetes
     #   requests
@@ -26,9 +28,9 @@ cffi==1.17.1
     # via cryptography
 chardet==5.2.0
     # via tox
-charset-normalizer==3.4.0
+charset-normalizer==3.4.1
     # via requests
-click==8.1.7
+click==8.1.8
     # via
     #   black
     #   mkdocs
@@ -39,7 +41,7 @@ colorama==0.4.6
     #   mkdocs
     #   mkdocs-material
     #   tox
-cryptography==44.0.0
+cryptography==44.0.2
     # via
     #   pyopenssl
     #   types-pyopenssl
@@ -51,11 +53,11 @@ durationpy==0.9
     # via kubernetes
 eradicate==2.3.0
     # via flake8-eradicate
-filelock==3.16.1
+filelock==3.18.0
     # via
     #   tox
     #   virtualenv
-flake8==7.1.1
+flake8==7.2.0
     # via
     #   -r dev-requirements.in
     #   flake8-broken-line
@@ -65,7 +67,7 @@ flake8==7.1.1
     #   pep8-naming
 flake8-broken-line==1.0.0
     # via -r dev-requirements.in
-flake8-bugbear==24.10.31
+flake8-bugbear==24.12.12
     # via -r dev-requirements.in
 flake8-comprehensions==3.16.0
     # via -r dev-requirements.in
@@ -73,15 +75,15 @@ flake8-eradicate==1.5.0
     # via -r dev-requirements.in
 ghp-import==2.1.0
     # via mkdocs
-google-auth==2.36.0
+google-auth==2.38.0
     # via kubernetes
 humanfriendly==10.0
     # via -r dev-requirements.in
 idna==3.10
     # via requests
-isort==5.13.2
+isort==6.0.1
     # via -r dev-requirements.in
-jinja2==3.1.4
+jinja2==3.1.6
     # via
     #   -r dev-requirements.in
     #   jinja2-base64-filters
@@ -89,7 +91,7 @@ jinja2==3.1.4
     #   mkdocs-material
 jinja2-base64-filters==0.1.4
     # via -r dev-requirements.in
-kubernetes==31.0.0
+kubernetes==32.0.1
     # via -r dev-requirements.in
 markdown==3.7
     # via
@@ -116,13 +118,13 @@ mkdocs-get-deps==0.2.0
     # via mkdocs
 mkdocs-htmlproofer-plugin==1.3.0
     # via -r dev-requirements.in
-mkdocs-material==9.5.47
+mkdocs-material==9.6.11
     # via -r dev-requirements.in
 mkdocs-material-extensions==1.3.1
     # via mkdocs-material
-mkdocs-static-i18n==1.2.3
+mkdocs-static-i18n==1.3.0
     # via -r dev-requirements.in
-mypy==1.13.0
+mypy==1.15.0
     # via -r dev-requirements.in
 mypy-extensions==1.0.0
     # via
@@ -146,7 +148,7 @@ pathspec==0.12.1
     #   mkdocs
 pep8-naming==0.14.1
     # via -r dev-requirements.in
-platformdirs==4.3.6
+platformdirs==4.3.7
     # via
     #   black
     #   mkdocs-get-deps
@@ -158,23 +160,23 @@ pyasn1==0.6.1
     # via
     #   pyasn1-modules
     #   rsa
-pyasn1-modules==0.4.1
+pyasn1-modules==0.4.2
     # via google-auth
-pycodestyle==2.12.1
+pycodestyle==2.13.0
     # via flake8
 pycparser==2.22
     # via cffi
-pyflakes==3.2.0
+pyflakes==3.3.2
     # via flake8
-pygments==2.18.0
+pygments==2.19.1
     # via mkdocs-material
-pymdown-extensions==10.12
+pymdown-extensions==10.14.3
     # via mkdocs-material
-pymongo==4.10.1
+pymongo==4.12.0
     # via -r dev-requirements.in
-pyopenssl==24.3.0
+pyopenssl==25.0.0
     # via -r dev-requirements.in
-pyproject-api==1.8.0
+pyproject-api==1.9.0
     # via tox
 pyreadline3==3.5.4
     # via
@@ -194,8 +196,6 @@ pyyaml==6.0.2
     #   pyyaml-env-tag
 pyyaml-env-tag==0.1
     # via mkdocs
-regex==2024.11.6
-    # via mkdocs-material
 requests==2.32.3
     # via
     #   kubernetes
@@ -212,30 +212,36 @@ six==1.17.0
     #   python-dateutil
 soupsieve==2.6
     # via beautifulsoup4
-tox==4.23.2
+tox==4.25.0
     # via -r dev-requirements.in
-types-cffi==1.16.0.20240331
+types-cffi==1.17.0.20250326
     # via types-pyopenssl
 types-pyopenssl==24.1.0.20240722
     # via -r dev-requirements.in
-types-python-dateutil==2.9.0.20241003
+types-python-dateutil==2.9.0.20241206
     # via -r dev-requirements.in
-types-pyyaml==6.0.12.20240917
+types-pyyaml==6.0.12.20250402
     # via -r dev-requirements.in
-types-requests==2.32.0.20241016
+types-requests==2.32.0.20250328
     # via -r dev-requirements.in
-types-setuptools==75.6.0.20241126
+types-setuptools==78.1.0.20250329
     # via types-cffi
-typing-extensions==4.12.2
-    # via mypy
-urllib3==2.2.3
+typing-extensions==4.13.1
+    # via
+    #   beautifulsoup4
+    #   mypy
+    #   pyopenssl
+urllib3==2.3.0
     # via
     #   kubernetes
     #   requests
     #   types-requests
-virtualenv==20.28.0
+virtualenv==20.30.0
     # via tox
 watchdog==6.0.0
     # via mkdocs
 websocket-client==1.8.0
     # via kubernetes
+
+# The following packages are considered to be unsafe in a requirements file:
+# setuptools

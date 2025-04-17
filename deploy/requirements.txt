@@ -4,38 +4,38 @@
 #
 #    pip-compile requirements.in
 #
-ansible==11.1.0
+ansible==11.4.0
     # via -r requirements.in
-ansible-core==2.18.1
+ansible-core==2.18.4
     # via ansible
-cachetools==5.5.0
+cachetools==5.5.2
     # via google-auth
-certifi==2024.8.30
+certifi==2025.1.31
     # via
     #   kubernetes
     #   requests
 cffi==1.17.1
     # via cryptography
-charset-normalizer==3.4.0
+charset-normalizer==3.4.1
     # via requests
-cryptography==44.0.0
+cryptography==44.0.2
     # via
     #   ansible-core
     #   pyopenssl
 durationpy==0.9
     # via kubernetes
-google-auth==2.36.0
+google-auth==2.38.0
     # via kubernetes
 idna==3.10
     # via requests
-jinja2==3.1.4
+jinja2==3.1.6
     # via
     #   -r requirements.in
     #   ansible-core
     #   jinja2-base64-filters
 jinja2-base64-filters==0.1.4
     # via -r requirements.in
-kubernetes==31.0.0
+kubernetes==32.0.1
     # via -r requirements.in
 markupsafe==3.0.2
     # via jinja2
@@ -49,11 +49,11 @@ pyasn1==0.6.1
     # via
     #   pyasn1-modules
     #   rsa
-pyasn1-modules==0.4.1
+pyasn1-modules==0.4.2
     # via google-auth
 pycparser==2.22
     # via cffi
-pyopenssl==24.3.0
+pyopenssl==25.0.0
     # via -r requirements.in
 python-dateutil==2.9.0.post0
     # via kubernetes
@@ -76,7 +76,9 @@ six==1.17.0
     # via
     #   kubernetes
     #   python-dateutil
-urllib3==2.2.3
+typing-extensions==4.13.1
+    # via pyopenssl
+urllib3==2.3.0
     # via
     #   kubernetes
     #   requests
