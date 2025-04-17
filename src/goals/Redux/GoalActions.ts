@@ -81,7 +81,7 @@ export function asyncAddGoal(goal: Goal) {
       if (goal.status !== GoalStatus.Completed) {
         await Backend.addGoalToUserEdit(userEditId, goal);
         dispatch(setCurrentGoal(goal));
-        dispatch(setGoalStatus(GoalStatus.Loading));
+        //dispatch(setGoalStatus(GoalStatus.Loading));
         if (await dispatch(asyncIsGoalDataReady(goal))) {
           // Load the goal data, but don't await, to allow a loading screen.
           await dispatch(asyncLoadNewGoalData());
@@ -145,13 +145,13 @@ export function asyncLoadExistingUserEdits(
   };
 }
 
-/** Return a bool to indicate either (true) the goal data loading can proceed, or
- * (false) stop and wait for a signal to trigger data loading. */
+/** Return a bool to indicate either (true) the goal data loading can proceed,
+ * or (false) stop and wait for a signal to trigger data loading. */
 function asyncIsGoalDataReady(goal: Goal) {
   return async (dispatch: StoreStateDispatch): Promise<boolean> => {
     if (goal.goalType === GoalType.MergeDups) {
       dispatch(setDataLoadStatus(DataLoadStatus.Loading));
-      await Backend.findDuplicates(12, maxNumSteps(goal.goalType)).catch(() =>
+      await Backend.findDuplicates(5, maxNumSteps(goal.goalType)).catch(() =>
         dispatch(setDataLoadStatus(DataLoadStatus.Failure))
       );
       return false;
@@ -163,7 +163,7 @@ function asyncIsGoalDataReady(goal: Goal) {
 export function asyncLoadNewGoalData() {
   return async (dispatch: StoreStateDispatch, getState: () => StoreState) => {
     const currentGoal = getState().goalsState.currentGoal;
-    const goalData = await getGoalData(currentGoal.goalType);
+    const goalData = await loadGoalData(currentGoal.goalType);
     if (goalData.length > 0) {
       dispatch(setGoalData(goalData));
       dispatch(updateStepFromData());
@@ -230,7 +230,7 @@ function goalCleanup(goal: Goal): void {
 }
 
 /** Returns goal data for some goal types. */
-async function getGoalData(goalType: GoalType): Promise<Word[][]> {
+async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
   switch (goalType) {
     case GoalType.MergeDups:
       return checkMergeData(await Backend.retrieveDuplicates());
