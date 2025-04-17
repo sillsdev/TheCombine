@@ -81,7 +81,6 @@ export function asyncAddGoal(goal: Goal) {
       if (goal.status !== GoalStatus.Completed) {
         await Backend.addGoalToUserEdit(userEditId, goal);
         dispatch(setCurrentGoal(goal));
-        //dispatch(setGoalStatus(GoalStatus.Loading));
         if (await dispatch(asyncIsGoalDataReady(goal))) {
           // Load the goal data, but don't await, to allow a loading screen.
           await dispatch(asyncLoadNewGoalData());
