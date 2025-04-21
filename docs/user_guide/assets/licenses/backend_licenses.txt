@@ -1,18 +1,4 @@
 ###############################################################
-PackageId: AWSSDK.Core
-PackageVersion: 3.7.100.14
-PackageProjectUrl: https://github.com/aws/aws-sdk-net/
-Authors: Amazon Web Services
-License: Apache-2.0
-LicenseUrl: http://aws.amazon.com/apache2.0/
-###############################################################
-PackageId: AWSSDK.SecurityToken
-PackageVersion: 3.7.100.14
-PackageProjectUrl: https://github.com/aws/aws-sdk-net/
-Authors: Amazon Web Services
-License: Apache-2.0
-LicenseUrl: http://aws.amazon.com/apache2.0/
-###############################################################
 PackageId: BouncyCastle.Cryptography
 PackageVersion: 2.5.0
 PackageProjectUrl: https://www.bouncycastle.org/stable/nuget/csharp/website
@@ -28,7 +14,7 @@ License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: icu.net
-PackageVersion: 3.0.0
+PackageVersion: 3.0.1
 PackageProjectUrl: https://github.com/sillsdev/icu-dotnet
 Authors: SIL International
 License: MIT
@@ -41,7 +27,7 @@ Authors: SIL International
 LicenseUrl: https://aka.ms/deprecateLicenseUrl
 ###############################################################
 PackageId: JetBrains.Annotations
-PackageVersion: 2024.2.0
+PackageVersion: 2024.3.0
 PackageProjectUrl: https://www.jetbrains.com/help/resharper/Code_Analysis__Code_Annotations.html
 Authors: JetBrains
 License: MIT
@@ -54,8 +40,15 @@ Authors: Jeffrey Stedfast
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
+PackageId: Markdig.Signed
+PackageVersion: 0.37.0
+PackageProjectUrl: https://github.com/lunet-io/markdig
+Authors: Alexandre Mutel
+License: BSD-2-Clause
+LicenseUrl: https://licenses.nuget.org/BSD-2-Clause
+###############################################################
 PackageId: Microsoft.AspNetCore.Authentication.JwtBearer
-PackageVersion: 8.0.12
+PackageVersion: 8.0.14
 PackageProjectUrl: https://asp.net/
 Authors: Microsoft
 License: MIT
@@ -195,21 +188,21 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.IdentityModel.Abstractions
-PackageVersion: 8.3.1
+PackageVersion: 8.6.0
 PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.IdentityModel.JsonWebTokens
-PackageVersion: 8.3.1
+PackageVersion: 8.6.0
 PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Authors: Microsoft
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.IdentityModel.Logging
-PackageVersion: 8.3.1
+PackageVersion: 8.6.0
 PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Authors: Microsoft
 License: MIT
@@ -230,7 +223,7 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Microsoft.IdentityModel.Tokens
-PackageVersion: 8.3.1
+PackageVersion: 8.6.0
 PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Authors: Microsoft
 License: MIT
@@ -279,31 +272,18 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: MongoDB.Bson
-PackageVersion: 2.29.0
+PackageVersion: 3.3.0
 PackageProjectUrl: https://www.mongodb.com/docs/drivers/csharp/
 Authors: MongoDB Inc.
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: MongoDB.Driver
-PackageVersion: 2.29.0
+PackageVersion: 3.3.0
 PackageProjectUrl: https://www.mongodb.com/docs/drivers/csharp/
 Authors: MongoDB Inc.
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
-###############################################################
-PackageId: MongoDB.Driver.Core
-PackageVersion: 2.29.0
-PackageProjectUrl: https://www.mongodb.com/docs/drivers/csharp/
-Authors: MongoDB Inc.
-License: Apache-2.0
-LicenseUrl: https://licenses.nuget.org/Apache-2.0
-###############################################################
-PackageId: MongoDB.Libmongocrypt
-PackageVersion: 1.12.0
-PackageProjectUrl: http://www.mongodb.org/display/DOCS/CSharp+Language+Center
-Authors: MongoDB Inc.
-LicenseUrl: https://aka.ms/deprecateLicenseUrl
 ###############################################################
 PackageId: Mono.Unix
 PackageVersion: 7.1.0-final.1.21458.1
@@ -313,63 +293,63 @@ License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: Newtonsoft.Json
-PackageVersion: 13.0.2
+PackageVersion: 13.0.3
 PackageProjectUrl: https://www.newtonsoft.com/json
 Authors: James Newton-King
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: OpenTelemetry
-PackageVersion: 1.11.1
+PackageVersion: 1.11.2
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Api
-PackageVersion: 1.11.1
+PackageVersion: 1.11.2
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Api.ProviderBuilderExtensions
-PackageVersion: 1.11.1
+PackageVersion: 1.11.2
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Exporter.Console
-PackageVersion: 1.10.0
+PackageVersion: 1.11.2
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Exporter.OpenTelemetryProtocol
-PackageVersion: 1.11.1
+PackageVersion: 1.11.2
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Extensions.Hosting
-PackageVersion: 1.11.1
+PackageVersion: 1.11.2
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Instrumentation.AspNetCore
-PackageVersion: 1.10.1
+PackageVersion: 1.11.1
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
 LicenseUrl: https://licenses.nuget.org/Apache-2.0
 ###############################################################
 PackageId: OpenTelemetry.Instrumentation.Http
-PackageVersion: 1.10.0
+PackageVersion: 1.11.1
 PackageProjectUrl: https://opentelemetry.io/
 Authors: OpenTelemetry Authors
 License: Apache-2.0
@@ -498,37 +478,37 @@ PackageProjectUrl: https://github.com/adamhathcock/sharpcompress
 Authors: Adam Hathcock
 ###############################################################
 PackageId: SIL.Core
-PackageVersion: 15.0.0
+PackageVersion: 16.0.0-beta0140
 PackageProjectUrl: https://github.com/sillsdev/libpalaso
-Authors: SIL International
+Authors: SIL Global
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: SIL.Core.Desktop
-PackageVersion: 15.0.0
+PackageVersion: 16.0.0-beta0140
 PackageProjectUrl: https://github.com/sillsdev/libpalaso
-Authors: SIL International
+Authors: SIL Global
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: SIL.DictionaryServices
-PackageVersion: 15.0.0
+PackageVersion: 16.0.0-beta0140
 PackageProjectUrl: https://github.com/sillsdev/libpalaso
-Authors: SIL International
+Authors: SIL Global
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: SIL.Lift
-PackageVersion: 15.0.0
+PackageVersion: 16.0.0-beta0140
 PackageProjectUrl: https://github.com/sillsdev/libpalaso
-Authors: SIL International
+Authors: SIL Global
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
 PackageId: SIL.WritingSystems
-PackageVersion: 15.0.0
+PackageVersion: 16.0.0-beta0140
 PackageProjectUrl: https://github.com/sillsdev/libpalaso
-Authors: SIL International
+Authors: SIL Global
 License: MIT
 LicenseUrl: https://licenses.nuget.org/MIT
 ###############################################################
@@ -671,7 +651,7 @@ License: http://go.microsoft.com/fwlink/?LinkId=329770
 LicenseUrl: http://go.microsoft.com/fwlink/?LinkId=329770
 ###############################################################
 PackageId: System.IdentityModel.Tokens.Jwt
-PackageVersion: 8.3.1
+PackageVersion: 8.6.0
 PackageProjectUrl: https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet
 Authors: Microsoft
 License: MIT
