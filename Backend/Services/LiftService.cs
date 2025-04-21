@@ -778,7 +778,7 @@ namespace BackendFramework.Services
                 if (entry.Notes.Count > 0)
                 {
                     var (language, liftString) = entry.Notes[0].Content.FirstValue;
-                    newWord.Note = new Note(language, liftString.Text.Normalize(FormC));
+                    newWord.Note = new Note(language, liftString.Text.Trim().Normalize(FormC));
                 }
 
                 // Add vernacular, prioritizing citation form over vernacular form.
@@ -793,7 +793,7 @@ namespace BackendFramework.Services
                 {
                     return;
                 }
-                newWord.Vernacular = vern.Normalize(FormC);
+                newWord.Vernacular = vern.Trim().Normalize(FormC);
 
                 // This is not a word if there are no senses
                 if (entry.Senses.Count == 0)
@@ -824,13 +824,13 @@ namespace BackendFramework.Services
                     foreach (var (key, value) in sense.Definition)
                     {
                         newSense.Definitions.Add(
-                            new Definition { Language = key, Text = value.Text.Normalize(FormC) });
+                            new Definition { Language = key, Text = value.Text.Trim().Normalize(FormC) });
                     }
 
                     // Add glosses
                     foreach (var (key, value) in sense.Gloss)
                     {
-                        newSense.Glosses.Add(new Gloss { Language = key, Def = value.Text.Normalize(FormC) });
+                        newSense.Glosses.Add(new Gloss { Language = key, Def = value.Text.Trim().Normalize(FormC) });
                     }
 
                     // Find semantic domains
@@ -853,14 +853,14 @@ namespace BackendFramework.Services
                             {
                                 Id = splitSemDom[0],
                                 MongoId = ObjectId.GenerateNewId().ToString(),
-                                Name = splitSemDom[1].Normalize(FormC)
+                                Name = splitSemDom[1].Trim().Normalize(FormC)
                             });
                     }
 
                     // Add grammatical info
                     if (!string.IsNullOrWhiteSpace(sense.GramInfo?.Value))
                     {
-                        newSense.GrammaticalInfo = new GrammaticalInfo(sense.GramInfo.Value.Normalize(FormC));
+                        newSense.GrammaticalInfo = new GrammaticalInfo(sense.GramInfo.Value.Trim().Normalize(FormC));
                     }
 
                     newWord.Senses.Add(newSense);
