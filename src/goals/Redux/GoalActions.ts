@@ -81,9 +81,16 @@ export function asyncAddGoal(goal: Goal) {
       if (goal.status !== GoalStatus.Completed) {
         await Backend.addGoalToUserEdit(userEditId, goal);
         dispatch(setCurrentGoal(goal));
-        if (await dispatch(asyncIsGoalDataReady(goal))) {
+
+        // Start loading goal data.
+        if (goal.goalType === GoalType.MergeDups) {
+          // Initialize data loading in the backend.
+          dispatch(setDataLoadStatus(DataLoadStatus.Loading));
+          await Backend.findDuplicates(5, maxNumSteps(goal.goalType));
+          // Don't load goal data, since it'll be triggered by a signal from the backend when data is ready.
+        } else {
           // Load the goal data, but don't await, to allow a loading screen.
-          await dispatch(asyncLoadNewGoalData());
+          dispatch(asyncLoadNewGoalData());
         }
       }
 
@@ -141,19 +148,6 @@ export function asyncLoadExistingUserEdits(
     const userEdit = await Backend.getUserEditById(projectId, userEditId);
     const history = userEdit.edits.map(convertEditToGoal);
     dispatch(loadUserEdits(history));
-  };
-}
-
-/** Return a bool to indicate either (true) the goal data loading can proceed,
- * or (false) stop and wait for a signal to trigger data loading. */
-function asyncIsGoalDataReady(goal: Goal) {
-  return async (dispatch: StoreStateDispatch): Promise<boolean> => {
-    if (goal.goalType === GoalType.MergeDups) {
-      dispatch(setDataLoadStatus(DataLoadStatus.Loading));
-      await Backend.findDuplicates(5, maxNumSteps(goal.goalType));
-      return false;
-    }
-    return true;
   };
 }
 
@@ -237,6 +231,7 @@ function goalCleanup(goal: Goal): void {
 async function loadGoalData(goalType: GoalType): Promise<Word[][]> {
   switch (goalType) {
     case GoalType.MergeDups:
+      // Catch failure and pass to caller to allow for error dispatch.
       const dups = await Backend.retrieveDuplicates().catch(() => {});
       return dups ? checkMergeData(dups) : Promise.reject();
     case GoalType.ReviewDeferredDups:
