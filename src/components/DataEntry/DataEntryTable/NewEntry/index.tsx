@@ -275,7 +275,7 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
       </Grid>
       <Grid item xs={1} style={gridItemStyle(1)}>
         {!selectedDup?.id && (
-          // note is not available if user selected to modify an existing entry
+          // note is not available if user selected to modify an exiting entry
           <NoteButton
             buttonId={NewEntryId.ButtonNote}
             noteText={newNote}
