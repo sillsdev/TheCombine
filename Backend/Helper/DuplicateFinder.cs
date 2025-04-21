@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BackendFramework.Models;
+using SIL.Extensions;
 
 namespace BackendFramework.Helper
 {
@@ -122,6 +123,77 @@ namespace BackendFramework.Helper
                 }
             }
             return wordLists.Select(list => list.Item2).ToList();
+        }
+
+        private async Task<Tuple<double, List<Word>>> ModifiedScore(double scoreToBeat, List<string> bestIds,
+            List<Tuple<double, Word>> similarWords, Func<List<string>, Task<bool>> isUnavailableSet)
+        {
+            var trimmed = similarWords.Where(tuple => !bestIds.Contains(tuple.Item2.Id)).ToList();
+            var ids = trimmed.Select(tuple => tuple.Item2.Id).ToList();
+            while (ids.Count > 1 && trimmed.ElementAt(1).Item1 < scoreToBeat &&
+                await isUnavailableSet(ids[..Math.Min(ids.Count, _maxInList)]))
+            {
+                trimmed.RemoveAt(1);
+                ids.RemoveAt(1);
+            }
+            var words = trimmed[..Math.Min(trimmed.Count, _maxInList)].Select(tuple => tuple.Item2).ToList();
+            return Tuple.Create(words.Count < 2 ? _maxScore + 1.0 : trimmed.ElementAt(1).Item1, words);
+        }
+
+        /// <summary> Get from specified List several sub-Lists, each a set of similar <see cref="Word"/>s. </summary>
+        /// <returns>
+        /// A List of Lists: each inner list is ordered by similarity to the first entry in the List;
+        /// the outer list is ordered by similarity of the first two items in each inner List.
+        /// </returns>
+        public async Task<List<List<Word>>> GetSimilarWordsParallel(
+            List<Word> collection, Func<List<string>, Task<bool>> isUnavailableSet)
+        {
+            var similarWordsLists = collection.AsParallel()
+                .Select(w => GetAllSimilarToWord(w, collection))
+                .Where(wl => wl.Count > 1).ToList();
+            Console.WriteLine($"Found {similarWordsLists.Count} similar words lists.");
+
+            var best = new List<List<Word>>();
+            var bestIds = new List<string>();
+
+            while (best.Count < similarWordsLists.Count && best.Count < _maxLists)
+            {
+                var candidate = Tuple.Create(_maxScore + double.Epsilon, new List<Word>());
+                for (var i = 0; i < similarWordsLists.Count; i++)
+                {
+                    var temp = await ModifiedScore(candidate.Item1, bestIds, similarWordsLists[i], isUnavailableSet);
+                    if (temp.Item1 < candidate.Item1)
+                    {
+                        candidate = temp;
+                    }
+                }
+                if (candidate.Item2.Count == 0)
+                {
+                    break;
+                }
+                best.Add(candidate.Item2);
+                bestIds.AddRange(candidate.Item2.Select(w => w.Id));
+                Console.WriteLine($"With {best.Count} lists, worst score is {candidate.Item1}.");
+            }
+            return best;
+        }
+
+        /// <summary> Get from specified List a sublist of elements similar to specified <see cref="Word"/>. </summary>
+        /// <returns> List of similar <see cref="Word"/>s, ordered by similarity with most similar first. </returns>
+        private List<Tuple<double, Word>> GetAllSimilarToWord(Word word, List<Word> collection)
+        {
+            var similarWords = new List<Tuple<double, Word>>();
+            foreach (var other in collection)
+            {
+                // Add the word if the score is low enough.
+                var score = GetWordScore(word, other);
+                if (score <= _maxScore)
+                {
+                    similarWords.Add(Tuple.Create(score, other));
+                }
+            }
+            similarWords.Sort((x, y) => x.Item1.CompareTo(y.Item1));
+            return similarWords;
         }
 
         /// <summary> Get from specified List a sub-List with same vern as specified <see cref="Word"/>. </summary>
