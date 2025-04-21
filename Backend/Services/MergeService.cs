@@ -31,7 +31,7 @@ namespace BackendFramework.Services
             _potentialDups = [];
         }
 
-        /// <summary> Store potential duplicates, but only if the most recent dateTime for the user. </summary>
+        /// <summary> Store potential duplicates, but only if the user's most recent duplicate request. </summary>
         /// <param name="userId"> Id of user requesting duplicates. </param>
         /// <param name="counter"> Unique and increasing identifier for duplicate request. </param>
         /// <param name="dups"> List of sets of potential duplicates,

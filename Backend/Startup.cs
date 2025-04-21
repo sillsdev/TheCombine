@@ -326,6 +326,7 @@ namespace BackendFramework
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
+                // Each MapHub<T> needs a unique T for the controllers to resolve the correct hub.
                 endpoints.MapHub<ExportHub>($"/{ExportHub.Url}");
                 endpoints.MapHub<MergeHub>($"/{MergeHub.Url}");
             });

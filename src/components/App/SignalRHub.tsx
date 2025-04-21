@@ -21,9 +21,9 @@ type MethodAction = Action | PayloadAction | ThunkAction<any, any, any, any>;
 interface SignalRHubProps {
   /** Trigger (dis)connection. */
   connect: boolean;
-  /** To be dispatched when `failure` message received. */
+  /** To be dispatched for the failure method. */
   failureAction?: MethodAction;
-  /** To be dispatched when `success` message received. */
+  /** To be dispatched for the success method. */
   successAction: MethodAction;
   /** Must match `*Hub.Url` in Backend/Helper/CombineHub.cs */
   url: string;
@@ -78,7 +78,7 @@ export default function SignalRHub(props: SignalRHubProps): ReactElement {
     setReconnect(connect);
   }, [connect]);
 
-  /** Method used by connection.on upon receipt of `failure` message. */
+  /** Handler used by connection.on for when the failure method is invoked. */
   const failureMethod = useCallback(
     (userId: string): void => {
       if (failureAction && userId === getUserId()) {
@@ -88,7 +88,7 @@ export default function SignalRHub(props: SignalRHubProps): ReactElement {
     [dispatch, failureAction]
   );
 
-  /** Method used by connection.on upon receipt of `success` message. */
+  /** Handler used by connection.on for when the success method is invoked. */
   const successMethod = useCallback(
     (userId: string): void => {
       if (userId === getUserId()) {
@@ -98,7 +98,7 @@ export default function SignalRHub(props: SignalRHubProps): ReactElement {
     [dispatch, successAction]
   );
 
-  /* Once a connection is opened, start the relevant methods. */
+  /* Once a connection is opened, register the method handlers. */
   useEffect(() => {
     if (connection?.state !== HubConnectionState.Disconnected) {
       return;
