@@ -7,9 +7,15 @@ namespace BackendFramework.Helper
         // Names for the `method` parameter of _notifyService.Clients.All.SendAsync()
         public const string MethodFailure = "Failure";
         public const string MethodSuccess = "Success";
+    }
 
-        // `Url`s for `app.UseEndpoints(e => e.MapHub<CombineHub>($"/{Url}"))`
-        public const string UrlExport = "export-hub";
-        public const string UrlMerge = "merge-hub";
+    public class ExportHub : CombineHub
+    {
+        public const string Url = "export-hub";
+    }
+
+    public class MergeHub : CombineHub
+    {
+        public const string Url = "merge-hub";
     }
 }

@@ -28,7 +28,7 @@ export default function MergeHub(): ReactElement {
       connect={status === DataLoadStatus.Loading}
       failureAction={setDataLoadStatus(DataLoadStatus.Failure)}
       successAction={successAction}
-      url="merge-hub" // CombineHub.UrlMerge
+      url="merge-hub" // MergeHub.Url
     />
   );
 }

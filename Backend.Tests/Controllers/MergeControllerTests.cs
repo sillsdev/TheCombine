@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Backend.Tests.Mocks;
 using BackendFramework.Controllers;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
 using NUnit.Framework;
@@ -42,7 +43,8 @@ namespace Backend.Tests.Controllers
             _wordRepo = new WordRepositoryMock();
             _wordService = new WordService(_wordRepo);
             _mergeService = new MergeService(_mergeBlacklistRepo, _mergeGraylistRepo, _wordRepo, _wordService);
-            _mergeController = new MergeController(_mergeService, new HubContextMock(), new PermissionServiceMock());
+            _mergeController = new MergeController(
+                _mergeService, new HubContextMock<MergeHub>(), new PermissionServiceMock());
         }
 
         [Test]

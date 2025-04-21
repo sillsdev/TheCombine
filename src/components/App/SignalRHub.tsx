@@ -25,7 +25,7 @@ interface SignalRHubProps {
   failureAction?: MethodAction;
   /** To be dispatched when `success` message received. */
   successAction: MethodAction;
-  /** Must match `CombineHub.Url*` in Backend/Helper/CombineHub.cs */
+  /** Must match `*Hub.Url` in Backend/Helper/CombineHub.cs */
   url: string;
 }
 

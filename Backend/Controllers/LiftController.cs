@@ -26,13 +26,13 @@ namespace BackendFramework.Controllers
         private readonly IProjectRepository _projRepo;
         private readonly IWordRepository _wordRepo;
         private readonly ILiftService _liftService;
-        private readonly IHubContext<CombineHub> _notifyService;
+        private readonly IHubContext<ExportHub> _notifyService;
         private readonly IPermissionService _permissionService;
         private readonly ILogger<LiftController> _logger;
 
         public LiftController(
             IWordRepository wordRepo, IProjectRepository projRepo, IPermissionService permissionService,
-            ILiftService liftService, IHubContext<CombineHub> notifyService, ILogger<LiftController> logger)
+            ILiftService liftService, IHubContext<ExportHub> notifyService, ILogger<LiftController> logger)
         {
             _projRepo = projRepo;
             _wordRepo = wordRepo;

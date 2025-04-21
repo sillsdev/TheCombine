@@ -20,7 +20,7 @@ export default function ExportHub(): ReactElement {
       connect={status === ExportStatus.Exporting}
       failureAction={failure(projectId)}
       successAction={success(projectId)}
-      url="export-hub" // CombineHub.UrlExport
+      url="export-hub" // ExportHub.Url
     />
   );
 }
