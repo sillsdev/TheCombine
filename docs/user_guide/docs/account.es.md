@@ -26,9 +26,9 @@ restablecimiento de contraseña será enviada a la dirección de correo electró
 
 ## Configuración
 
-Tras iniciar sesión, aparecerá una barra de aplicaciones azul en la parte superior de The Combine. Pulse el icono del
-avatar en el extremo derecho de la App Barra para abrir el Menú de Usuario. Seleccione "Configuración de usuario" para
-cambiar los ajustes de cuenta/perfil.
+Tras iniciar sesión, aparecerá una barra de aplicaciones azul en la parte superior de The Combine. Haga clic en el icono
+del avatar en el extremo derecho de la App Barra para abrir el Menú de Usuario. Seleccione "Configuración de usuario"
+para cambiar los ajustes de cuenta/perfil.
 
 ![Menú de usuario](../images/userMenu.es.png){.center}
 
@@ -38,7 +38,8 @@ Puede añadir o actualizar su:
 - nombre;
 - número de teléfono;
 - dirección de correo electrónico;
-- lenguaje de interfaz de usuario.
+- idioma de la interfaz de usuario;
+- consentimiento de análisis.
 
 !!! note "Nota"
 
