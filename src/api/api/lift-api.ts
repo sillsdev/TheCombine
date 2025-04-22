@@ -103,7 +103,7 @@ export const LiftApiAxiosParamCreator = function (
     ): Promise<RequestArgs> => {
       // verify required parameter 'projectId' is not null or undefined
       assertParamExists("cancelLiftExport", "projectId", projectId);
-      const localVarPath = `/v1/projects/{projectId}/lift/cancelExport`.replace(
+      const localVarPath = `/v1/projects/{projectId}/lift/cancelexport`.replace(
         `{${"projectId"}}`,
         encodeURIComponent(String(projectId))
       );

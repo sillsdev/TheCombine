@@ -163,13 +163,14 @@ namespace BackendFramework.Services
 
         /// <summary> Store filePath for a user's Lift export. </summary>
         /// <returns> If the export has not been cancelled, true; otherwise, false. </returns>
-        public bool StoreExport(string userId, string filePath, string validExportId)
+        public bool StoreExport(string userId, string filePath, string exportId)
         {
-            //  check if this filepath is for a valid (not cancelled) export
-            var valid = _liftExports.TryUpdate(userId, (filePath, ""), (InProgress, validExportId));
-            if (!valid)
+            // Store the filepath if the export is valid (i.e. not cancelled).
+            // If the export is no longer valid, clean up any files created for it.
+            var valid = _liftExports.TryUpdate(userId, (filePath, ""), (InProgress, exportId));
+            if (!valid && File.Exists(filePath))
             {
-                DeleteExport(userId);
+                File.Delete(filePath);
             }
             return valid;
         }
@@ -183,8 +184,10 @@ namespace BackendFramework.Services
             return exportPath == InProgress ? null : exportPath;
         }
 
-        /// <summary> Delete a stored Lift export path and its file on disk. </summary>
-        /// <returns> If the element is successfully found and removed, true; otherwise, false. </returns>
+        /// <summary>
+        /// Deleting will invalidate any export the user has in progress at the time this method is called.
+        /// </summary>
+        /// <returns> False, if the user did not have any export to delete. True, otherwise. </returns>
         public bool DeleteExport(string userId)
         {
             var removeSuccessful = _liftExports.TryRemove(userId, out var tuple);
