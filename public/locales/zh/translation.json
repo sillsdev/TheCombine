@@ -11,7 +11,7 @@
     "descriptionP1": "单词是语言的基本组成单位，对交流信息和分享文化都至关重要。充满单词及其含义的字典是一种基本的语言资源，有助于为某社会的后代记录和保存语言，并为与其他社会沟通提供桥梁。但世界上许多少数民族语言的社会没有这种资源，使他们处于不利地位。",
     "descriptionP2": "The Combine 是快速收集单词（RWC）过程中的一个易于使用的工具。RWC是一种收集词汇的方法，将作为双语词典的骨干。RWC处理的核心是来自某个语言社会的母语者。由4-6名母语者组成的小组，在他们的语言中尽可能多地想出与某个指定语义域有关的词。The Combine 协助将这些词输入数据库，并附上翻译、录音和注释，以更全面地记录其形式和意义。",
     "descriptionP3": "先前几乎没有语言学知识和只有有限的电脑经验的人可以很快地接受培训，以使用 The Combine 的主要收集单词功能。然后，可以在 The Combine 中组织和编辑收集到的词而且将数据导出到其他工具（如FLEx）。",
-    "descriptionP4": "注册后就可以开始您的单词收集了!"
+    "descriptionP4": "注册后就可以开始您的单词收集了！"
   },
   "treeView": {
     "findDomain": "查找语义域",
@@ -170,12 +170,12 @@
       "changeProjectRole": "更改项目角色：",
       "makeOwner": "设为项目持有人",
       "removeUserWarning": "是否从项目中删除此用户？",
-      "makeHarvesterWarning": "是否让此用户成为项目收割的人?",
+      "makeHarvesterWarning": "是否让此用户成为项目收割的人？",
       "makeEditorWarning": "是否让此用户成为项目编辑员？",
       "makeAdminWarning": "是否让此用户成为项目管理员？",
       "makeOwnerWarning": "将项目所有权转移到此用户？",
       "userRemovedToastSuccess": "用户已经被删除！",
-      "userRemovedToastFailure": "删除用户失败.",
+      "userRemovedToastFailure": "删除用户失败。",
       "userRoleUpdateToastSuccess": "用户角色更新成功",
       "userRoleUpdateToastFailure": "无法更新用户角色",
       "makeOwnerToastSuccess": "已转移项目的所有权！",
@@ -357,9 +357,9 @@
     "deleteRecording": "删除录音"
   },
   "statistics": {
-    "title": "数据统计: {{ val }}",
+    "title": "数据统计：{{ val }}",
     "domainProgress": "语义域进度",
-    "domainsCollected": "收集的语义域: {{ val }}",
+    "domainsCollected": "收集的语义域：{{ val }}",
     "wordsCollected": "收集的单词：{{ val }}",
     "percent": "{{ val }}%",
     "view": {
@@ -372,8 +372,8 @@
       "domainNumber": "语义域号码：",
       "domainName": "语义域名：",
       "username": "用户名：",
-      "domainCount": "语义域:",
-      "senseCount": "单词:"
+      "domainCount": "语义域：",
+      "senseCount": "单词："
     },
     "axisLabel": { "date": "日期", "words": "收集的单词" }
   },
