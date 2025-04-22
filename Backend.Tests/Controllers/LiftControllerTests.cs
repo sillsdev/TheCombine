@@ -450,7 +450,8 @@ namespace Backend.Tests.Controllers
             await _wordService.Update(_projId, UserId, wordToUpdate.Id, word);
             await _wordService.DeleteFrontierWord(_projId, UserId, wordToDelete.Id);
 
-            await _liftController.CreateLiftExportThenSignal(_projId, UserId, "");
+            _liftService.SetExportInProgress(UserId, true, ExportId);
+            await _liftController.CreateLiftExportThenSignal(_projId, UserId, ExportId);
             var text = await DownloadAndReadLift(_liftController, _projId);
             // TODO: Add SIL or other XML assertion library and verify with xpath that the correct entries are
             //      kept vs deleted
