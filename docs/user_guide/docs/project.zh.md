@@ -212,7 +212,7 @@ Custom semantic domains will be available to all project users doing Data Entry.
 
 ### 每个用户的单词词数
 
-一张表格列出了每个项目用户的词数和独特的语义域。 导入的单词没有相关的用户，将计入 "未知用户"行。
+一张表格列出了每个项目用户的词数和独特的语义域。 导入的单词没有相关的用户，将计入 "unknownUser" 行。
 
 ### 每个语义域的单词
 
