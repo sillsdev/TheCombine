@@ -309,7 +309,7 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
             var userId = _permissionService.GetUserId(HttpContext);
-            var exportId = HttpContext.TraceIdentifier;
+            var exportId = _permissionService.GetExportId(HttpContext);
             return await ExportLiftFile(projectId, userId, exportId);
         }
 
@@ -365,25 +365,25 @@ namespace BackendFramework.Controllers
         internal async Task<bool> CreateLiftExportThenSignal(string projectId, string userId, string exportId)
         {
             // Export the data to a zip, read into memory, and delete zip.
+            var exportedFilepath = "";
             try
             {
-                var exportedFilepath = await CreateLiftExport(projectId);
-                // Store the temporary path to the exported file for user to download later.
-                var proceed = _liftService.StoreExport(userId, exportedFilepath, exportId);
-                if (proceed)
-                {
-                    await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
-                }
-                return proceed;
+                exportedFilepath = await CreateLiftExport(projectId);
             }
             catch (Exception e)
             {
                 _logger.LogError("Error exporting project {ProjectId}{NewLine}{Message}:{ExceptionStack}",
                     projectId, Environment.NewLine, e.Message, e.StackTrace);
-                _liftService.DeleteExport(userId);
                 await _notifyService.Clients.All.SendAsync(CombineHub.ExportFailed, userId);
                 throw;
             }
+            // Store the temporary path to the exported file for user to download later.
+            var proceed = _liftService.StoreExport(userId, exportedFilepath, exportId);
+            if (proceed)
+            {
+                await _notifyService.Clients.All.SendAsync(CombineHub.DownloadReady, userId);
+            }
+            return proceed;
         }
 
         internal async Task<string> CreateLiftExport(string projectId)

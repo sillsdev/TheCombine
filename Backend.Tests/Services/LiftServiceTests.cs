@@ -39,15 +39,26 @@ namespace Backend.Tests.Services
             Assert.That(_liftService.RetrieveExport(UserId), Is.Null);
             Assert.That(_liftService.DeleteExport(UserId), Is.False);
 
-            _liftService.SetExportInProgress(UserId, true, "");
+            _liftService.SetExportInProgress(UserId, true, "123");
             Assert.That(_liftService.RetrieveExport(UserId), Is.Null);
             Assert.That(_liftService.DeleteExport(UserId), Is.True);
             Assert.That(_liftService.DeleteExport(UserId), Is.False);
 
-            _liftService.StoreExport(UserId, FileName, "");
+            _liftService.SetExportInProgress(UserId, true, "123");
+            _liftService.StoreExport(UserId, FileName, "123");
             Assert.That(_liftService.RetrieveExport(UserId), Is.EqualTo(FileName));
             Assert.That(_liftService.DeleteExport(UserId), Is.True);
             Assert.That(_liftService.RetrieveExport(UserId), Is.Null);
+        }
+
+        [Test]
+        public void StoreOnlyValidExportsTest()
+        {
+            _liftService.SetExportInProgress(UserId, true, "123");
+            _liftService.StoreExport(UserId, FileName, "abc");
+            Assert.That(_liftService.RetrieveExport(UserId), Is.Null);
+            _liftService.StoreExport(UserId, FileName, "123");
+            Assert.That(_liftService.RetrieveExport(UserId), Is.EqualTo(FileName));
         }
 
         [Test]
