@@ -52,6 +52,7 @@ namespace Backend.Tests.Controllers
         private ILogger<LiftController> _logger = null!;
         private string _projId = null!;
         private const string ProjName = "LiftControllerTests";
+        private const string ExportId = "LiftControllerTestExportId";
         private const string UserId = "LiftControllerTestUserId";
 
         [SetUp]
@@ -336,7 +337,8 @@ namespace Backend.Tests.Controllers
             word.Modified = Time.ToUtcIso8601(new DateTime(2000, 1, 1));
             await _wordRepo.Create(word);
 
-            await _liftController.CreateLiftExportThenSignal(_projId, UserId, "");
+            _liftService.SetExportInProgress(UserId, true, ExportId);
+            await _liftController.CreateLiftExportThenSignal(_projId, UserId, ExportId);
             var liftContents = await DownloadAndReadLift(_liftController, _projId);
             Assert.That(liftContents, Does.Contain("dateCreated=\"1000-01-01T00:00:00Z\""));
             Assert.That(liftContents, Does.Contain("dateModified=\"2000-01-01T00:00:00Z\""));
@@ -376,7 +378,11 @@ namespace Backend.Tests.Controllers
         {
             const string invalidProjectId = "INVALID_ID";
             Assert.That(
-                async () => await _liftController.CreateLiftExportThenSignal(invalidProjectId, UserId, ""),
+                async () =>
+                {
+                    _liftService.SetExportInProgress(UserId, true, ExportId);
+                    await _liftController.CreateLiftExportThenSignal(invalidProjectId, UserId, ExportId);
+                },
                 Throws.TypeOf<MissingProjectException>());
         }
 
