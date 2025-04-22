@@ -42,46 +42,36 @@ describe("SpellChecker", () => {
   });
 
   describe("cleanAndSplit", () => {
-    // Valid word characters: \p{L} (letters), \p{M} (marks), \p{N} (numbers).
+    // Valid word characters: \p{L} (letters), \p{M} (marks).
     const lWord = "Женей"; // Russian word with Cyrillic letters
     const mWord = "बंगालियों"; // Hindi word with letters and marks
-    const nWord = "12345";
     const whiteSpace = "\t \n";
     const punctuation = "`~!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?";
 
     it("strips initial whitespace", () => {
       expect(
         SpellChecker.cleanAndSplit(`${whiteSpace}${punctuation}${lWord}`)
-      ).toEqual({
-        allButFinal: punctuation,
-        final: lWord,
-      });
+      ).toEqual({ allButFinal: punctuation, final: lWord });
     });
 
-    it("strips final non-letter/-mark/-number characters", () => {
+    it("strips final separator characters", () => {
       expect(SpellChecker.cleanAndSplit(`${mWord}${whiteSpace}`)).toEqual({
         allButFinal: "",
         final: mWord,
       });
-      expect(SpellChecker.cleanAndSplit(`${nWord}${punctuation}`)).toEqual({
+      expect(SpellChecker.cleanAndSplit(`${lWord}${punctuation}`)).toEqual({
         allButFinal: "",
-        final: nWord,
+        final: lWord,
       });
     });
 
-    it("splits by non-letter/-mark/-number characters", () => {
+    it("splits by separator characters", () => {
       expect(
         SpellChecker.cleanAndSplit(`${lWord}${whiteSpace}${mWord}`)
-      ).toEqual({
-        allButFinal: `${lWord}${whiteSpace}`,
-        final: mWord,
-      });
+      ).toEqual({ allButFinal: `${lWord}${whiteSpace}`, final: mWord });
       expect(
-        SpellChecker.cleanAndSplit(`${mWord}${punctuation}${nWord}`)
-      ).toEqual({
-        allButFinal: `${mWord}${punctuation}`,
-        final: nWord,
-      });
+        SpellChecker.cleanAndSplit(`${mWord}${punctuation}${lWord}`)
+      ).toEqual({ allButFinal: `${mWord}${punctuation}`, final: lWord });
     });
   });
 

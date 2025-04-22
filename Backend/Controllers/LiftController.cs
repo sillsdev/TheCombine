@@ -355,7 +355,7 @@ namespace BackendFramework.Controllers
             }
 
             // Run the task without waiting for completion.
-            // This Task will be scheduled within the exiting Async executor thread pool efficiently.
+            // This Task will be scheduled within the existing Async executor thread pool efficiently.
             // See: https://stackoverflow.com/a/64614779/1398841
             _ = Task.Run(() => CreateLiftExportThenSignal(projectId, userId, exportId));
             return Ok(projectId);

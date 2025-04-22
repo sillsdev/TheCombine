@@ -1,4 +1,4 @@
-export default `11307
+export default `11306
 Chaurembo
 Check
 Chepareria
@@ -11304,5 +11304,4 @@ zuzuka
 zuzukia
 zuzukika
 zuzukisha
-zuzuwa
-32`;
+zuzuwa`;

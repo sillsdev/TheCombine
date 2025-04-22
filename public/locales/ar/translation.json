@@ -20,7 +20,7 @@
   },
   "addWords": {
     "selectEntry": "حدد إدخالاً",
-    "selectSense": "حدد الإحساس",
+    "selectSense": "اختر معنى",
     "newEntryFor": "إدخال جديد لـ: ",
     "newSense": "معنى جديد",
     "senseInWord": "الكلمة لها هذا المعنى بالفعل في هذا المجال الدلالي: {{ val1 }}، {{ val2 }}",
@@ -33,6 +33,7 @@
     "pressEnter": "اضغط على إدخال لحفظ الكلمة",
     "vernacular": "العامية"
   },
+  "analyticsConsent": { "consentModal": {} },
   "appBar": {
     "dataEntry": "ادخال بيانات",
     "dataCleanup": "تنظيف البيانات",
@@ -107,6 +108,7 @@
     }
   },
   "userSettings": {
+    "analyticsConsent": {},
     "contact": "معلومات الاتصال",
     "phone": "رقم الهاتف",
     "uiLanguage": "لغة واجهة المستخدم",
@@ -188,6 +190,7 @@
       "on": "على",
       "hint": "عند إدخال البيانات، اقترح أن تكتب اللهجات العامية الحالية بطريقة مشابهة للغة العامية."
     },
+    "protectedDataOverride": {},
     "invite": {
       "inviteByEmailLabel": "دعوة بواسطة البريد الإلكتروني",
       "userExists": "هذا المستخدم مسجل مسبقاً.",
@@ -283,9 +286,9 @@
       "delete": "حذف المعنى",
       "deleteDialog": "هل تريد حذف هذا المعنى ؟",
       "protectedSense": "هذا المعنى تم استيراده مع بيانات لا يتعامل معها The Combine.",
-      "protectedSenseInfo": "هذا المعنى لا يمكن حذفها أو إيداع بمعنى آخر. يمكنك نقل هذا المعنى إلى كلمة أخرى أو إيداع معاني أخرى لدمجها.",
+      "protectedSenseInfo": "هذا المعنى لا يمكن حذفها أو إيداع بمعنى آخر بأمان. يمكنك نقل هذا المعنى إلى كلمة أخرى أو إيداع معاني أخرى لدمجها.",
       "protectedWord": "تم استيراد هذه الكلمة مع بيانات لا يتعامل معها The Combine.",
-      "protectedWordInfo": "لمنع الحذف، لا يمكن إزالة معناها النهائي."
+      "protectedWordInfo": "لمنع الحذف، لا يمكن إزالة معناها النهائي بأمان."
     },
     "protectReason": {},
     "completed": { "number": "عدد عمليات الدمج المكتملة: " },
@@ -331,7 +334,7 @@
     "recordTooltip": "اضغط مع الاستمرار لتسجيل.",
     "playTooltip": "اضغط للعب.",
     "deleteTooltip": "انقر فوق التحول للحذف.",
-    "recordingError": "خطأ في التسجيل",
+    "recordingError": "خطأ في التسجيل.",
     "deleteRecording": "حذف التسجيل"
   },
   "statistics": {
@@ -377,5 +380,5 @@
       "Unspecified": "غير محدد"
     }
   },
-  "wordCard": {}
+  "wordCard": { "senseCount": "المعاني: {{ val }}" }
 }

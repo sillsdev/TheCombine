@@ -481,9 +481,9 @@ sake of devices with limited bandwidth. There are scripts for generating these f
 files in this directory should _not_ be manually edited.
 
 The bash script `scripts/fetch_wordlists.sh` is used to fetch dictionary files for a given language (e.g., `es`) from
-the [LibreOffice dictionaries](https://cgit.freedesktop.org/libreoffice/dictionaries/) and convert them to raw wordlists
-(e.g., `src/resources/dictionaries/es.txt`). Execute the script with no arguments for its usage details. Any language
-not currently supported can be manually added as a case in this script.
+the [LibreOffice dictionaries](https://github.com/LibreOffice/dictionaries) and convert them to raw wordlists (e.g.,
+`src/resources/dictionaries/es.txt`). Execute the script with no arguments for its usage details. Any language not
+currently supported can be manually added as a case in this script.
 
 ```bash
 ./scripts/fetch_wordlist.sh
@@ -501,12 +501,12 @@ python scripts/split_dictionary.py --help
 For some languages, the wordlist is too large for practical use. Generally try to keep the folder for each language
 under 2.5 MB, to avoid such errors as
 `FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory` in the Kubernetes build. For smaller
-folder sizes, default maximum word-lengths are automatically imposed for some languages: (`ar`, `es`, `fr`, `pt`, `ru`).
-Use `-m`/`--max` to override the defaults, with `-m -1` to force no limit.
+folder sizes, default maximum word-lengths are automatically imposed for some languages: (`ar`, `es`, `fr`, `hi`, `pt`,
+`ru`). Use `-m`/`--max` to override the defaults, with `-m -1` to force no limit.
 
 Adjust the `-t`/`--threshold` and `-T`/`--Threshold` parameters to split a wordlist into more, smaller files; e.g.:
 
-- `python scripts/split_dictionary.py -l hi -t 1000`
+- `python scripts/split_dictionary.py -l es -T 15000`
 - `python scripts/split_dictionary.py -l sw -t 1500`
 
 The top of each language's `index.ts` file states which values of `-m`, `-t`, and `-T` were used for that language.

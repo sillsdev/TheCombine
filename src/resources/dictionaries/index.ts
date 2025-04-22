@@ -3,7 +3,7 @@
 // Arabic word-list source (GPLv3):
 // https://sourceforge.net/projects/arabic-wordlist
 // Other languages source (MPLv2):
-// https://cgit.freedesktop.org/libreoffice/dictionaries
+// https://github.com/LibreOffice/dictionaries
 
 import arDic, { keys as arKeys } from "resources/dictionaries/ar";
 import enDic, { keys as enKeys } from "resources/dictionaries/en";

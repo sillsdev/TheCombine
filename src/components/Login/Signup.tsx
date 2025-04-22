@@ -25,6 +25,7 @@ import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import router from "router/browserRouter";
 import { Path } from "types/path";
+import { NormalizedTextField } from "utilities/fontComponents";
 import {
   meetsPasswordRequirements,
   meetsUsernameRequirements,
@@ -148,7 +149,9 @@ export default function Signup(props: SignupProps): ReactElement {
     // Trim whitespace off fields.
     const name = fieldText[SignupField.Name].trim();
     const username = fieldText[SignupField.Username].trim();
-    const email = punycode.toUnicode(fieldText[SignupField.Email].trim());
+    const email = punycode
+      .toUnicode(fieldText[SignupField.Email].trim())
+      .normalize("NFC");
     const password1 = fieldText[SignupField.Password1].trim();
     const password2 = fieldText[SignupField.Password2].trim();
 
@@ -194,7 +197,7 @@ export default function Signup(props: SignupProps): ReactElement {
             </Typography>
 
             {/* Name field */}
-            <TextField
+            <NormalizedTextField
               {...defaultTextFieldProps(SignupField.Name)}
               autoComplete="name"
               autoFocus
@@ -204,7 +207,7 @@ export default function Signup(props: SignupProps): ReactElement {
             />
 
             {/* Username field */}
-            <TextField
+            <NormalizedTextField
               {...defaultTextFieldProps(SignupField.Username)}
               autoComplete="username"
               helperText={t("login.usernameRequirements")}
@@ -212,6 +215,8 @@ export default function Signup(props: SignupProps): ReactElement {
             />
 
             {/* Email field */}
+            {/* Don't use NormalizedTextField for type="email".
+            At best, it doesn't normalize, because of the punycode. */}
             <TextField
               {...defaultTextFieldProps(SignupField.Email)}
               autoComplete="email"
@@ -219,7 +224,7 @@ export default function Signup(props: SignupProps): ReactElement {
             />
 
             {/* Password field */}
-            <TextField
+            <NormalizedTextField
               {...defaultTextFieldProps(SignupField.Password1)}
               autoComplete="new-password"
               helperText={t("login.passwordRequirements")}
@@ -228,7 +233,7 @@ export default function Signup(props: SignupProps): ReactElement {
             />
 
             {/* Confirm Password field */}
-            <TextField
+            <NormalizedTextField
               {...defaultTextFieldProps(SignupField.Password2)}
               autoComplete="new-password"
               helperText={
