@@ -31,7 +31,7 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
     await dispatch(asyncExportProject(props.projectId));
   }
 
-  async function resetExport(): Promise<void> {
+  async function cancelExport(): Promise<void> {
     setCanceling(true);
     await dispatch(asyncCancelExport(props.projectId));
   }
@@ -75,9 +75,9 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
           </LoadingButton>
         </span>
       </Tooltip>
-      {loading && (
+      {status == ExportStatus.Exporting && (
         <Tooltip title="Cancel export">
-          <Button onClick={resetExport} disabled={canceling}>
+          <Button onClick={cancelExport} disabled={canceling}>
             <Cancel />
           </Button>
         </Tooltip>
