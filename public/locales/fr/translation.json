@@ -9,7 +9,7 @@
     "subtitle": "Une application web pour récolter des mots ensemble",
     "privacyPolicy": "Politique de confidentialité",
     "descriptionP1": "Les mots sont les fondements de la langue, essentiels à la communication de l’information et au partage de la culture. Un dictionnaire, rempli de mots et de significations, est une ressource linguistique fondamentale, aidant à documenter et à préserver la langue pour les générations futures au sein de la communauté et fournissant un pont pour la communication avec d'autres communautés. Malheureusement, de nombreuses communautés de langue minoritaire dans le monde ne disposent pas de telles ressources dans leur langue. Ceci les désavantage.",
-    "descriptionP2": "The Combine est un outil facile à utiliser dans le processus Rapid Word Collection (RWC) — une méthode de collecte des mots qui servira de base à un dictionnaire bilingue. Au cœur du processus du RWC se trouvent les locuteurs natifs d’une communauté linguistique particulière. Présenté avec un champ sémantique à la fois un groupe de 4-6 locuteurs natifs arrive avec autant de mots dans leur langue qu'ils peuvent le penser sont liés à ce domaine. La combinaison facilite l'entrée de ces mots dans une base de données, ainsi que les traductions, enregistrements audio, et notes, pour mieux saisir leur forme et leur signification.",
+    "descriptionP2": "The Combine est un outil facile à utiliser dans le processus Rapid Word Collection (RWC) — une méthode de rassembler des mots qui servira de base à un dictionnaire bilingue. Au cœur du processus du RWC se trouvent les locuteurs natifs d’une communauté linguistique particulière. Présenté avec un champ sémantique à la fois un groupe de 4-6 locuteurs natifs arrive avec autant de mots dans leur langue qu'ils peuvent le penser sont liés à ce domaine. The Combine facilite la saisie de ces mots dans une base de données, ainsi que les traductions, enregistrements audio, et notes, pour mieux saisir leur forme et leur signification.",
     "descriptionP3": "Les personnes ayant peu de connaissances linguistiques préalables et une expérience informatique limitée peuvent être rapidement formées à l'utilisation des principales fonctions de récolte de mots de The Combine. Les mots obtenus peuvent ensuite être organisés et édités dans The Combine avant d'exporter les données pour les utiliser dans un autre outil tel que FLEx.",
     "descriptionP4": "Inscrivez-vous pour commencer votre collection de mots !"
   },
@@ -23,7 +23,7 @@
     "newEntryFor": "Nouvelle entrée pour : ",
     "newSense": "Nouveau sens",
     "senseInWord": "Le mot a déjà ce sens dans ce champ sémantique : {{ val1 }}, {{ val2 }}",
-    "deleteRow": "Effacer cette ligne",
+    "deleteRow": "Supprimer cette ligne",
     "deleteRowWarning": "Cette ligne sera supprimée définitivement !",
     "addNote": "Ajouter une remarque",
     "domain": "Domaine",
@@ -32,8 +32,9 @@
     "pressEnter": "Appuyez sur Entrée pour enregistrer le mot",
     "vernacular": "Vernaculaire"
   },
+  "analyticsConsent": { "consentModal": {} },
   "appBar": {
-    "dataEntry": "Saisie",
+    "dataEntry": "Saisie de données",
     "dataCleanup": "Nettoyage des données",
     "statistics": "Données statistiques",
     "projectSettings": "Paramètres du projet"
@@ -74,7 +75,7 @@
   "speakerMenu": {},
   "userMenu": {
     "siteSettings": "Paramètres du site",
-    "userSettings": "Réglages utilisateur",
+    "userSettings": "Paramètres de l'utilisateur",
     "logout": "Déconnexion",
     "userGuide": "Guide d’utilisateur"
   },
@@ -107,6 +108,7 @@
     }
   },
   "userSettings": {
+    "analyticsConsent": {},
     "contact": "Informations de contact",
     "phone": "Numéro de téléphone",
     "uiLanguageDefault": "(Utiliser la langue du navigateur)",
@@ -118,9 +120,12 @@
   "projectSettings": {
     "project": "Projet :",
     "tab": {
+      "basic": "Paramètres de base",
       "domains": "Champs sémantiques",
       "export": "Exporter",
+      "importExport": "Importer/Exporter",
       "languages": "Langues",
+      "schedule": "Horaire",
       "users": "Utilisateurs"
     },
     "language": {
@@ -133,7 +138,7 @@
       "bcp47": "Code BCP 47",
       "name": "Nom",
       "font": "Police",
-      "addAnalysisLanguage": "Ajouter un langage d'analyse alternatif",
+      "addAnalysisLanguage": "Ajouter una langue d'analyse alternatif",
       "makeDefaultAnalysisLanguage": "Faire de cette langue la langue d'analyse par défaut",
       "deleteAnalysisLanguage": "Supprimer cette langue d'analyse",
       "getGlossLanguages": "Trouvez tous les codes de langue utilisés dans les données actuelles",
@@ -176,7 +181,7 @@
       "endDate": "Date de fin",
       "selectedDateAlert": "La date de début doit être antérieure à la date de fin.",
       "setDays": "Définir la plage de jours pour l'atelier.",
-      "editDays": "Ajuster le programme de l'atelier.",
+      "editDays": "Ajuster l'horaire de l'atelier.",
       "removeDays": "Supprimer tous les jours de l'atelier.",
       "removeAll": "Voulez-vous vraiment supprimer toutes les dates ?"
     },
@@ -185,8 +190,9 @@
       "label": "Autocomplet",
       "off": "Éteint",
       "on": "Allumé",
-      "hint": "En mode « Saisie », proposer des mots vernaculaires existants qui se ressemblent au mot que l'on est en train de saisir."
+      "hint": "En mode « Saisie de données », proposer des mots vernaculaires existants qui se ressemblent au mot que l'on est en train de saisir."
     },
+    "protectedDataOverride": {},
     "invite": {
       "inviteByEmailLabel": "Inviter par email",
       "userExists": "Cet utilisateur est déjà enregistré.",
@@ -212,7 +218,7 @@
   },
   "createStrWordInv": { "title": "Créer un inventaire des mots grammaticaux" },
   "handleFlags": { "title": "Gérer les drapeaux" },
-  "reviewDeferredDups": {},
+  "reviewDeferredDups": { "title": "Examiner les doublons reportés" },
   "spellCheckGloss": { "title": "Vérifier l'orthographe de glose" },
   "validateChars": { "title": "Valider les caractères" },
   "validateStrWords": { "title": "Valider les mots grammaticaux" },
@@ -228,7 +234,7 @@
     },
     "columns": {
       "definitions": "Définitions",
-      "delete": "Effacer",
+      "delete": "Supprimer",
       "domains": "Champs",
       "flag": "Balise",
       "glosses": "Gloses",
@@ -274,15 +280,15 @@
     "title": "Fusionner les doublons",
     "helpText": {
       "dragCard": "Tirer une carte ici pour la fusionner",
-      "saveAndContinue": "Sauvegarder les modifications et charger un nouvel ensemble de mots",
-      "defer": "Rejeter les modifications et charger un nouvel ensemble de mots",
+      "saveAndContinue": "Sauvegarder les modifications et charger une nouvelle série de mots",
+      "defer": "Rejeter les modifications et charger une nouvelle série de mots",
       "noDups": "Rien à fusionner.",
       "delete": "Supprimer le sens",
       "deleteDialog": "Supprimer ce sens ?",
       "protectedSense": "Ce sens a été importé avec des données que The Combine ne gère pas.",
-      "protectedSenseInfo": "Ce sens ne peut donc pas être supprimé ou déposé dans un autre sens. Vous pouvez toujours déplacer ce sens vers un autre mot ou déposer d'autres sens dans celui-ci pour les fusionner.",
+      "protectedSenseInfo": "Ce sens ne peut donc pas être supprimé ou déposé dans un autre sens en toute sécurité. Vous pouvez toujours déplacer ce sens vers un autre mot ou déposer d'autres sens dans celui-ci pour les fusionner.",
       "protectedWord": "Ce mot a été importé avec des données que The Combine ne traite pas.",
-      "protectedWordInfo": "Pour éviter qu'il ne soit supprimé, le sens final de ce mot ne peut être supprimé."
+      "protectedWordInfo": "Pour éviter qu'il ne soit supprimé, le sens final de ce mot ne peut être supprimé en toute sécurité."
     },
     "protectReason": {},
     "completed": { "number": "Nombre de fusions réalisées : " },
@@ -312,8 +318,9 @@
     "cancel": "Annuler",
     "clearText": "Supprimer le texte",
     "confirm": "Confirmer",
-    "delete": "Effacer",
-    "deletePermanently": "Effacer pour toujours ?",
+    "defer": "Reporter",
+    "delete": "Supprimer",
+    "deletePermanently": "Supprimer définitivement ?",
     "done": "Terminé",
     "exit": "Quitter",
     "export": "Exporter",
@@ -324,16 +331,17 @@
     "reset": "Remise à zéro",
     "restore": "Restaurer",
     "save": "Enregistrer",
-    "saveAndContinue": "Enregistrer & continuez",
+    "saveAndContinue": "Enregistrer & continuer",
     "undecided": "Incertain",
     "upload": "Télécharger"
   },
   "pronunciations": {
     "recordTooltip": "Maintenez le bouton enfoncée pour enregistrer.",
     "playTooltip": "Appuyez sur pour lire.",
-    "deleteTooltip": "Maj + clic pour effacer.",
-    "recordingError": "Erreur d'enregistrement",
-    "deleteRecording": "Effacer enregistrement"
+    "deleteTooltip": "Maj clic pour supprimer.",
+    "speaker": "Locuteur : {{ val }}.",
+    "recordingError": "Erreur d'enregistrement.",
+    "deleteRecording": "Supprimer l'enregistrement"
   },
   "statistics": {
     "title": "Statistiques des données : {{ val }}",
@@ -374,5 +382,5 @@
       "Verb": "Verbe"
     }
   },
-  "wordCard": {}
+  "wordCard": { "senseCount": "Sens : {{ val }}" }
 }

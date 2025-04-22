@@ -21,18 +21,19 @@
   "addWords": {
     "selectEntry": "选择一个词条",
     "selectSense": "选择一个词义",
-    "newEntryFor": "创建新词条为: ",
+    "newEntryFor": "创建新词条为：",
     "newSense": "创建新词义",
-    "senseInWord": "这个词在这个语义域中已经有了这样的词义: {{ val1 }}，{{ val2 }}",
+    "senseInWord": "这个词在这个语义域中已经有了这样的词义：{{ val1 }}，{{ val2 }}",
     "deleteRow": "删除该行",
     "deleteRowWarning": "该行将被永久删除！",
     "addNote": "添加备注",
     "domain": "语义域",
-    "domainTitle": "语义域: {{ val1 }} ({{ val2 }})",
+    "domainTitle": "语义域：{{ val1 }} ({{ val2 }})",
     "glosses": "词注释",
     "pressEnter": "按回车键保存单词",
     "vernacular": "土语"
   },
+  "analyticsConsent": { "consentModal": {} },
   "appBar": {
     "dataEntry": "输入数据",
     "dataCleanup": "清理数据",
@@ -87,7 +88,7 @@
     "upload?": "上传现有数据？",
     "uploadFormat": "文件必须是一个包含 <1>Lexicon Interchange FormaT (LIFT)</1> 项目的压缩文件夹。",
     "create": "创建项目",
-    "fileSelected": "文件已选定: {{ val }}",
+    "fileSelected": "文件已选定：{{ val }}",
     "language": "项目语言资料将从上传的数据中提取。",
     "languageOptionOther": "其它",
     "languageSelect": "从文件中选择语言：",
@@ -114,6 +115,7 @@
     }
   },
   "userSettings": {
+    "analyticsConsent": {},
     "contact": "联系信息",
     "phone": "电话号码",
     "uiLanguage": "用户界面语言",
@@ -186,7 +188,7 @@
       "header": "导入数据",
       "body": "导入的数据将被添加到此项目。The Combine 不会尝试删除重复、覆盖或同步。",
       "chooseFile": "选择文件",
-      "notAllowed": "您已经把 Lift 文件导入到这个项目中。"
+      "notAllowed": "您已经把 LIFT 文件导入到这个项目中。"
     },
     "archive": { "archive": "存档项目", "archiveToastSuccess": "项目已存档！" },
     "schedule": {
@@ -206,6 +208,7 @@
       "on": "开启",
       "hint": "在数据输入中，程序将建议与正在输入的土语词条相似的现有词条。"
     },
+    "protectedDataOverride": {},
     "invite": {
       "inviteByEmailLabel": "通过电子邮件邀请",
       "userExists": "此用户已注册！",
@@ -268,7 +271,7 @@
     "status": "状态",
     "sortBy": "排序方式",
     "characterSet": {
-      "title": "土语字符集",
+      "title": "土语字符集：",
       "help": "定义该语言的有效字符",
       "acceptedCharacters": "已审核的字符",
       "rejectedCharacters": "已拒绝的字符",
@@ -276,7 +279,7 @@
       "occurrences": "出现{{ val }}次数",
       "find": "查找",
       "replaceWith": "替换为",
-      "replaceAll": "替换所有出现的: {{ val }}",
+      "replaceAll": "替换所有出现的：{{ val }}",
       "replaceAllWith": "替换为 {{ val }}",
       "findAndReplace": "查找和替换",
       "findAndReplaceError": "处理错误：查找 ( {{ val1 }} )，替换 ( {{  val2 }})",
@@ -301,12 +304,12 @@
       "delete": "删除词义",
       "deleteDialog": "是否删除该词义？",
       "protectedSense": "这个词义是跟 The Combine 不处理的数据一起导入的。",
-      "protectedSenseInfo": "这个词义它不能被删除或者拖放入另一个词义中。您仍然可以移动这个词义，或者把其他词义拖放入这个词义中来合并它们。",
+      "protectedSenseInfo": "这个词义它不能被安全删除或者拖放入另一个词义中。您仍然可以移动这个词义，或者把其他词义拖放入这个词义中来合并它们。",
       "protectedWord": "这个词是跟 The Combine 不处理的数据一起导入的。",
-      "protectedWordInfo": "为了防止删除，它的最终词义不能被删除。"
+      "protectedWordInfo": "为了防止删除，它的最终词义不能被安全删除。"
     },
     "protectReason": {},
-    "completed": { "number": "已完成的合并次数： " },
+    "completed": { "number": "已完成的合并次数：" },
     "continueDialog": { "title": "是否继续合并？", "yes": "是", "no": "否" },
     "undo": {
       "undo": "撤消合并",
@@ -350,14 +353,14 @@
     "recordTooltip": "长按红色按钮，进行录制",
     "playTooltip": "单击来播放。",
     "deleteTooltip": "按 上档 （Shift） 并单击来删除。",
-    "recordingError": "录制错误",
+    "recordingError": "录制错误。",
     "deleteRecording": "删除录音"
   },
   "statistics": {
     "title": "数据统计: {{ val }}",
     "domainProgress": "语义域进度",
     "domainsCollected": "收集的语义域: {{ val }}",
-    "wordsCollected": "收集的单词： {{ val }}",
+    "wordsCollected": "收集的单词：{{ val }}",
     "percent": "{{ val }}%",
     "view": {
       "user": "每个用户的单词",
@@ -396,5 +399,5 @@
       "Unspecified": "没有指定"
     }
   },
-  "wordCard": {}
+  "wordCard": { "senseCount": "词义：{{ val }}" }
 }
