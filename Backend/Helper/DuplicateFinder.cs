@@ -11,9 +11,9 @@ namespace BackendFramework.Helper
         private readonly LevenshteinDistance _editDist;
         private readonly int _maxInList;
         private readonly int _maxLists;
-        private readonly int _maxScore;
+        private readonly double _maxScore;
 
-        public DuplicateFinder(int maxInList, int maxLists, int maxScore)
+        public DuplicateFinder(int maxInList, int maxLists, double maxScore)
         {
             _editDist = new LevenshteinDistance();
             _maxInList = maxInList;

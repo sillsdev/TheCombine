@@ -190,7 +190,7 @@ To install the OS on a new target machine, such as, a new NUC, follow these step
 
       ![alt text](images/ubuntu-software-selection.png "Ubuntu Server Software Selection")
 
-      In addition, you may have your SSH keys from _Github_ or _Launchpad_ preinstalled as authorized keys.
+      In addition, you may have your SSH keys from _GitHub_ or _Launchpad_ preinstalled as authorized keys.
 
       Make sure that `Allow password authentication over SSH` is checked even if you import SSH identities. This will
       make administration in the field easier.

@@ -353,7 +353,7 @@ namespace BackendFramework.Services
         public async Task<List<List<Word>>> GetPotentialDuplicates(
             string projectId, int maxInList, int maxLists, string? userId = null)
         {
-            var dupFinder = new DuplicateFinder(maxInList, maxLists, 3);
+            var dupFinder = new DuplicateFinder(maxInList, maxLists, 2);
 
             var collection = await _wordRepo.GetFrontier(projectId);
             async Task<bool> isUnavailableSet(List<string> wordIds) =>
