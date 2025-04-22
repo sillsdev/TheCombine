@@ -199,7 +199,7 @@ export function DropWordCardHeader(
       action={headerAction}
       style={{
         backgroundColor: treeWord?.protected ? "lightyellow" : "white",
-        height: 44,
+        minHeight: 44,
         minWidth: 150,
         padding: theme.spacing(1),
       }}
