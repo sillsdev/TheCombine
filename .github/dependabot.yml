@@ -3,76 +3,39 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
+      interval: "cron"
+      cronjob: "0 0 1 1-11/2 *"
 
   - package-ecosystem: "nuget"
-    directory: "/Backend.Tests"
+    directories:
+      - "/Backend"
+      - "/Backend.Tests"
     schedule:
-      interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
-
-  - package-ecosystem: "nuget"
-    directory: "/Backend"
-    schedule:
-      interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
+      interval: "cron"
+      cronjob: "0 0 1 1-11/2 *"
 
   - package-ecosystem: "docker"
-    directory: "/Backend"
+    directories:
+      - "/"
+      - "/Backend"
+      - "/database"
+      - "/deploy"
+      - "/maintenance"
     schedule:
-      interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
-
-  - package-ecosystem: "docker"
-    directory: "/"
-    schedule:
-      interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
-
-  - package-ecosystem: "docker"
-    directory: "/database"
-    schedule:
-      interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
-
-  - package-ecosystem: "docker"
-    directory: "/deploy"
-    schedule:
-      interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
+      interval: "cron"
+      cronjob: "0 0 1 1-11/2 *"
 
   - package-ecosystem: "pip"
-    directory: "/deploy"
+    directories:
+      - "/"
+      - "/deploy"
+      - "/maintenance"
     schedule:
-      interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
-
-  - package-ecosystem: "docker"
-    directory: "/maintenance"
-    schedule:
-      interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
-
-  - package-ecosystem: "pip"
-    directory: "/maintenance"
-    schedule:
-      interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
+      interval: "cron"
+      cronjob: "0 0 1 1-11/2 *"
 
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "monthly"
-      time: "12:00"
-      timezone: "UTC"
+      interval: "cron"
+      cronjob: "0 0 1 1-11/2 *"
