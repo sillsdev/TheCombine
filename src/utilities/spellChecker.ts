@@ -57,7 +57,7 @@ export default class SpellChecker {
       return;
     }
 
-    const part = await this.dictLoader.loadDictPart(word);
+    const part = (await this.dictLoader.loadDictPart(word))?.normalize("NFC");
     if (part) {
       this.addToDictLoaded(part);
       this.spell.personal(part);
