@@ -111,8 +111,9 @@ namespace BackendFramework.Services
         private readonly ISpeakerRepository _speakerRepo;
 
         /// <summary>
-        /// A dictionary shared by all Projects for storing and retrieving paths to exported projects 
-        /// and identifying valid exports.
+        /// A dictionary shared by all Projects for tracking exported projects.
+        /// The value is either ("IN_PROGRESS", exportId) or (filePath, exportId), where 
+        /// exportId identifies the currently valid (e.g. not canceled or deleted) export.
         /// </summary>
         private readonly ConcurrentDictionary<string, (string, string)> _liftExports;
         /// <summary>
@@ -120,8 +121,6 @@ namespace BackendFramework.Services
         /// </summary>
         private readonly Dictionary<string, string> _liftImports;
         private const string FlagTextEmpty = "***";
-
-        private readonly Dictionary<string, string> _currentExports;
         private const string InProgress = "IN_PROGRESS";
 
         public LiftService(ISemanticDomainRepository semDomRepo, ISpeakerRepository speakerRepo)
@@ -170,8 +169,8 @@ namespace BackendFramework.Services
         public bool StoreExport(string userId, string filePath, string exportId)
         {
             // Store the filepath if the export is valid (i.e. not cancelled).
-            // If the export is no longer valid, clean up any files created for it.
-            var valid = _liftExports.TryUpdate(userId, (filePath, ""), (InProgress, exportId));
+            // If the export is no longer valid, clean up any file created for it.
+            var valid = _liftExports.TryUpdate(userId, (filePath, exportId), (InProgress, exportId));
             if (!valid && File.Exists(filePath))
             {
                 File.Delete(filePath);

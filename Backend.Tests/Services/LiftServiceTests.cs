@@ -13,6 +13,7 @@ namespace Backend.Tests.Services
 
         private const string FileName = "file.lift-ranges";
         private const string ProjId = "LiftServiceTestsProjId";
+        private const string ExportId = "LiftServiceTestsExportId";
         private const string UserId = "LiftServiceTestsUserId";
 
         [SetUp]
@@ -27,9 +28,9 @@ namespace Backend.Tests.Services
         public void ExportInProgressTest()
         {
             Assert.That(_liftService.IsExportInProgress(UserId), Is.False);
-            _liftService.SetExportInProgress(UserId, true, "");
+            _liftService.SetExportInProgress(UserId, true, ExportId);
             Assert.That(_liftService.IsExportInProgress(UserId), Is.True);
-            _liftService.SetExportInProgress(UserId, false, "");
+            _liftService.SetExportInProgress(UserId, false, ExportId);
             Assert.That(_liftService.IsExportInProgress(UserId), Is.False);
         }
 
@@ -39,13 +40,13 @@ namespace Backend.Tests.Services
             Assert.That(_liftService.RetrieveExport(UserId), Is.Null);
             Assert.That(_liftService.DeleteExport(UserId), Is.False);
 
-            _liftService.SetExportInProgress(UserId, true, "123");
+            _liftService.SetExportInProgress(UserId, true, ExportId);
             Assert.That(_liftService.RetrieveExport(UserId), Is.Null);
             Assert.That(_liftService.DeleteExport(UserId), Is.True);
             Assert.That(_liftService.DeleteExport(UserId), Is.False);
 
-            _liftService.SetExportInProgress(UserId, true, "123");
-            _liftService.StoreExport(UserId, FileName, "123");
+            _liftService.SetExportInProgress(UserId, true, ExportId);
+            _liftService.StoreExport(UserId, FileName, ExportId);
             Assert.That(_liftService.RetrieveExport(UserId), Is.EqualTo(FileName));
             Assert.That(_liftService.DeleteExport(UserId), Is.True);
             Assert.That(_liftService.RetrieveExport(UserId), Is.Null);
@@ -54,10 +55,10 @@ namespace Backend.Tests.Services
         [Test]
         public void StoreOnlyValidExportsTest()
         {
-            _liftService.SetExportInProgress(UserId, true, "123");
-            _liftService.StoreExport(UserId, FileName, "abc");
+            _liftService.SetExportInProgress(UserId, true, ExportId);
+            _liftService.StoreExport(UserId, FileName, "expiredExportId");
             Assert.That(_liftService.RetrieveExport(UserId), Is.Null);
-            _liftService.StoreExport(UserId, FileName, "123");
+            _liftService.StoreExport(UserId, FileName, ExportId);
             Assert.That(_liftService.RetrieveExport(UserId), Is.EqualTo(FileName));
         }
 

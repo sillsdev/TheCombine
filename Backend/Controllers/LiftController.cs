@@ -290,7 +290,6 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         public string CancelLiftExport(string projectId)
         {
-            // get userID
             var userId = _permissionService.GetUserId(HttpContext);
             CancelLiftExport(projectId, userId);
             return projectId;
