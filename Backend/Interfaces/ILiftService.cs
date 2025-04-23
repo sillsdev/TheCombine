@@ -16,8 +16,8 @@ namespace BackendFramework.Interfaces
         bool StoreExport(string userId, string filePath, string exportId);
         string? RetrieveExport(string userId);
         bool DeleteExport(string userId);
-        void SetCancelExport(string userId);
-        void SetExportInProgress(string userId, bool isInProgress, string exportId);
+        void CancelRecentExport(string userId);
+        void SetExportInProgress(string userId, string exportId);
         bool IsExportInProgress(string userId);
         void StoreImport(string userId, string filePath);
         string? RetrieveImport(string userId);

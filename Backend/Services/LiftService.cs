@@ -137,23 +137,17 @@ namespace BackendFramework.Services
             _liftImports = new Dictionary<string, string>();
         }
 
-        /// <summary> Store status that a user's export is cancelled. </summary>
-        public void SetCancelExport(string userId)
+        /// <summary> Invalidate most recent export by no longer storing its exportId. </summary>
+        public void CancelRecentExport(string userId)
         {
             _liftExports.TryRemove(userId, out var _);
         }
 
         /// <summary> Store status that a user's export is in-progress. </summary>
-        public void SetExportInProgress(string userId, bool isInProgress, string exportId)
+        public void SetExportInProgress(string userId, string exportId)
         {
-            if (isInProgress)
-            {
-                _liftExports.AddOrUpdate(userId, (InProgress, exportId), (k, v) => (InProgress, exportId));
-            }
-            else
-            {
-                _liftExports.TryRemove(userId, out var _);
-            }
+            ArgumentException.ThrowIfNullOrEmpty(exportId);
+            _liftExports.AddOrUpdate(userId, (InProgress, exportId), (k, v) => (InProgress, exportId));
         }
 
         /// <summary> Query whether user has an in-progress export. </summary>

@@ -337,7 +337,7 @@ namespace Backend.Tests.Controllers
             word.Modified = Time.ToUtcIso8601(new DateTime(2000, 1, 1));
             await _wordRepo.Create(word);
 
-            _liftService.SetExportInProgress(UserId, true, ExportId);
+            _liftService.SetExportInProgress(UserId, ExportId);
             await _liftController.CreateLiftExportThenSignal(_projId, UserId, ExportId);
             var liftContents = await DownloadAndReadLift(_liftController, _projId);
             Assert.That(liftContents, Does.Contain("dateCreated=\"1000-01-01T00:00:00Z\""));
@@ -380,7 +380,7 @@ namespace Backend.Tests.Controllers
             Assert.That(
                 async () =>
                 {
-                    _liftService.SetExportInProgress(UserId, true, ExportId);
+                    _liftService.SetExportInProgress(UserId, ExportId);
                     await _liftController.CreateLiftExportThenSignal(invalidProjectId, UserId, ExportId);
                 },
                 Throws.TypeOf<MissingProjectException>());
@@ -450,7 +450,7 @@ namespace Backend.Tests.Controllers
             await _wordService.Update(_projId, UserId, wordToUpdate.Id, word);
             await _wordService.DeleteFrontierWord(_projId, UserId, wordToDelete.Id);
 
-            _liftService.SetExportInProgress(UserId, true, ExportId);
+            _liftService.SetExportInProgress(UserId, ExportId);
             await _liftController.CreateLiftExportThenSignal(_projId, UserId, ExportId);
             var text = await DownloadAndReadLift(_liftController, _projId);
             // TODO: Add SIL or other XML assertion library and verify with xpath that the correct entries are

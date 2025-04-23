@@ -297,7 +297,7 @@ namespace BackendFramework.Controllers
 
         private string CancelLiftExport(string projectId, string userId)
         {
-            _liftService.SetCancelExport(userId);
+            _liftService.CancelRecentExport(userId);
             return projectId;
         }
 
@@ -343,13 +343,13 @@ namespace BackendFramework.Controllers
             }
 
             // Store in-progress status for the export
-            _liftService.SetExportInProgress(userId, true, exportId);
+            _liftService.SetExportInProgress(userId, exportId);
 
             // Ensure project has words
             var words = await _wordRepo.GetAllWords(projectId);
             if (words.Count == 0)
             {
-                _liftService.SetExportInProgress(userId, false, "");
+                _liftService.CancelRecentExport(userId);
                 return BadRequest("No words to export.");
             }
 
