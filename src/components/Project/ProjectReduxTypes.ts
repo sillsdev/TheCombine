@@ -9,7 +9,7 @@ import { newProject } from "types/project";
 
 export interface CurrentProjectState {
   project: Project;
-  /** For project-level persistance of ReviewEntriesTable's managed states
+  /** For project-level persistence of ReviewEntriesTable's managed states
    * per https://www.material-react-table.com/docs/guides/state-management */
   reviewEntriesColumns: {
     columnOrder: MRT_ColumnOrderState;

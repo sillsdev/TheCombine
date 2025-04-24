@@ -14,7 +14,7 @@ Navegue o busque el dominio de su interés.
 
 ### Vernáculo
 
-Palabra tal y como se encuentra en la lengua vernácula, normalmente deletreada fonéticamente o con la ortografía local.
+Palabra tal y como se encuentra en el idioma vernáculo, normalmente deletreada fonéticamente o con la ortografía local.
 
 ### Glosa
 
@@ -33,8 +33,8 @@ nota, el audio se asocian a la entrada y no a acepciones individuales.
 
 Para grabar audio, hay un botón circular rojo. Para cada audio grabado, hay un botón triangular verde.
 
-**Con el ratón:** Pulse y mantenga pulsado el círculo rojo para grabar. Haga clic en un triángulo verde para reproducir
-su audio, o pulse Mayúsculas y haga clic para borrar su grabación.
+**Con el ratón:** Haga clic y mantenga pulsado el círculo rojo para grabar. Haga clic en un triángulo verde para
+reproducir su audio, o pulse Mayúsculas y haga clic para borrar su grabación.
 
 **En una pantalla táctil:** Mantenga pulsado el círculo rojo para grabar. Pulse un triángulo verde para reproducir su
 audio, o manténgalo pulsado para abrir un menú con opciones.
@@ -64,7 +64,7 @@ The Combine dispone de una función opcional de facilitar la introducción de pa
 que se recogen de nuevo en nuevo dominio semántico. Esta función puede activarse o desactivarse en
 [Configuración del proyecto > Autocompletar](project.md#autocomplete). Cuando el ajuste está activado, al escribir la
 forma vernácula en Entrada de datos, aparece un menú desplegable con formas vernáculas idénticas/similares que ya
-existen como entradas en el proyecto. Si ve que la palabra que escribe ya está en el proyecto, puede pulsar en la
+existen como entradas en el proyecto. Si ve que la palabra que escribe ya está en el proyecto, puede hacer clic en la
 palabra en la lista de sugerencias, en lugar de tener que escribir el resto de la palabra. Cuando la configuración está
 desactivada, la palabra vernácula debe escribirse en su totalidad; no se sugerirá ninguna coincidencia potencial
 existente.
@@ -85,5 +85,5 @@ Si elige crear una nueva entrada, se cerrará el cuadro emergente y entonces pod
 
     Aunque haya seleccionado crear una nueva entrada, si la glosa que escribe es idéntica a una glosa de otra entrada con la misma forma vernácula, no se creará una nueva entrada, sino que se actualizará esa entrada.
 
-Si por el contrario elige actualizar una de las entradas existentes, aparecerá mas opciones a actualizar una acepción
-existente en la entrada seleccionada o añadir una nueva acepción a esa entrada.
+Si, por el contrario, elige actualizar una de las entradas existentes, aparecerán más opciones para actualizar una
+acepción existente en la entrada seleccionada en o para añadir una nueva acepción a esa entrada.
