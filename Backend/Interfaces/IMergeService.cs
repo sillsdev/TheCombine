@@ -15,12 +15,8 @@ namespace BackendFramework.Interfaces
         Task<bool> IsInMergeGraylist(string projectId, List<string> wordIds, string? userId = null);
         Task<int> UpdateMergeBlacklist(string projectId);
         Task<int> UpdateMergeGraylist(string projectId);
-        Task<List<List<Word>>> GetPotentialDuplicates(
-            string projectId, int maxInList, int maxLists, string? userId = null);
-        Task<List<List<Word>>> GetGraylistEntries(string projectId, int maxLists, string? userId = null);
-
-        // Methods to store and retrieve potential duplicates in a common dictionary.
-        bool StoreDups(string userId, ulong counter, List<List<Word>>? dups);
+        Task<bool> GetAndStorePotentialDuplicates(string projectId, int maxInList, int maxLists, string userId);
         List<List<Word>>? RetrieveDups(string userId);
+        Task<List<List<Word>>> GetGraylistEntries(string projectId, int maxLists, string? userId = null);
     }
 }
