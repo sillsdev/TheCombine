@@ -340,7 +340,7 @@ namespace BackendFramework.Services
             if (wordLists.Count == 0)
             {
                 collection = await _wordRepo.GetFrontier(projectId);
-                wordLists = await dupFinder.GetSimilarWordsParallel(collection, isUnavailableSet);
+                wordLists = await dupFinder.GetSimilarWords(collection, isUnavailableSet);
             }
 
             return wordLists;

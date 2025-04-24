@@ -57,82 +57,17 @@ namespace BackendFramework.Helper
             return wordLists;
         }
 
-        /// <summary> Get from specified List several sub-Lists, each a set of similar <see cref="Word"/>s. </summary>
-        /// <returns>
-        /// A List of Lists: each inner list is ordered by similarity to the first entry in the List;
-        /// the outer list is ordered by similarity of the first two items in each inner List.
-        /// </returns>
-        public async Task<List<List<Word>>> GetSimilarWords(
-            List<Word> collection, Func<List<string>, Task<bool>> isUnavailableSet)
+        /// <summary> Get the earliest available sublist of the given word-list and its similarity score. </summary>
+        private async Task<Tuple<double, List<Word>>> ModifiedScore(double scoreToBeat, List<Tuple<double, Word>> similarWords,
+            List<string> unavailableIds, Func<List<string>, Task<bool>> isUnavailableSet)
         {
-            double currentMax = _maxScore;
-            var wordLists = new List<Tuple<double, List<Word>>> { Capacity = _maxLists + 1 };
-            while (collection.Count > 0 && (wordLists.Count < _maxLists || currentMax > 0))
-            {
-                var word = collection.First();
-                collection.RemoveAt(0);
-                var similarWords = GetSimilarToWord(word, collection);
-                if (similarWords.Count == 0)
-                {
-                    continue;
-                }
-                var score = similarWords.First().Item1;
-                if (score > currentMax || (wordLists.Count >= _maxLists && Math.Abs(score - currentMax) < 0.001))
-                {
-                    continue;
-                }
-
-                // Check if set is in blacklist or graylist.
-                var ids = new List<string> { word.Id };
-                ids.AddRange(similarWords.Select(w => w.Item2.Id));
-                if (await isUnavailableSet(ids))
-                {
-                    continue;
-                }
-
-                // Remove similar words from collection.
-                var idsToRemove = similarWords.Select(w => w.Item2.Id);
-                collection.RemoveAll(w => idsToRemove.Contains(w.Id));
-
-                // Add similar words to list with main word.
-                var newWordList = Tuple.Create(score, new List<Word> { word });
-                newWordList.Item2.AddRange(similarWords.Select(w => w.Item2));
-
-                // Insert at correct place in list.
-                var i = wordLists.FindIndex(pair => score <= pair.Item1);
-                if (i == -1)
-                {
-                    wordLists.Add(newWordList);
-                }
-                else
-                {
-                    wordLists.Insert(i, newWordList);
-                }
-
-                // If list is now too long, boot the last one, recycling its similar words.
-                if (wordLists.Count == _maxLists + 1)
-                {
-                    var toRecycle = wordLists.Last().Item2;
-                    toRecycle.RemoveAt(0);
-                    foreach (var simWord in toRecycle)
-                    {
-                        collection.Add(simWord);
-                    }
-                    wordLists.RemoveAt(_maxLists);
-                    currentMax = wordLists.Last().Item1;
-                }
-            }
-            return wordLists.Select(list => list.Item2).ToList();
-        }
-
-        private async Task<Tuple<double, List<Word>>> ModifiedScore(double scoreToBeat, List<string> bestIds,
-            List<Tuple<double, Word>> similarWords, Func<List<string>, Task<bool>> isUnavailableSet)
-        {
-            var trimmed = similarWords.Where(tuple => !bestIds.Contains(tuple.Item2.Id)).ToList();
+            var trimmed = similarWords.Where(tuple => !unavailableIds.Contains(tuple.Item2.Id)).ToList();
             var ids = trimmed.Select(tuple => tuple.Item2.Id).ToList();
             while (ids.Count > 1 && trimmed.ElementAt(1).Item1 < scoreToBeat &&
                 await isUnavailableSet(ids[..Math.Min(ids.Count, _maxInList)]))
             {
+                // If the initial sublist is unavailable, remove the second element and try again.
+                // (The first element is the one against which all the similarity scores were computed.)
                 trimmed.RemoveAt(1);
                 ids.RemoveAt(1);
             }
@@ -145,13 +80,12 @@ namespace BackendFramework.Helper
         /// A List of Lists: each inner list is ordered by similarity to the first entry in the List;
         /// the outer list is ordered by similarity of the first two items in each inner List.
         /// </returns>
-        public async Task<List<List<Word>>> GetSimilarWordsParallel(
+        public async Task<List<List<Word>>> GetSimilarWords(
             List<Word> collection, Func<List<string>, Task<bool>> isUnavailableSet)
         {
             var similarWordsLists = collection.AsParallel()
-                .Select(w => GetAllSimilarToWord(w, collection))
+                .Select(w => GetSimilarToWord(w, collection))
                 .Where(wl => wl.Count > 1).ToList();
-            Console.WriteLine($"Found {similarWordsLists.Count} similar words lists.");
 
             var best = new List<List<Word>>();
             var bestIds = new List<string>();
@@ -161,7 +95,7 @@ namespace BackendFramework.Helper
                 var candidate = Tuple.Create(_maxScore + double.Epsilon, new List<Word>());
                 for (var i = 0; i < similarWordsLists.Count; i++)
                 {
-                    var temp = await ModifiedScore(candidate.Item1, bestIds, similarWordsLists[i], isUnavailableSet);
+                    var temp = await ModifiedScore(candidate.Item1, similarWordsLists[i], bestIds, isUnavailableSet);
                     if (temp.Item1 < candidate.Item1)
                     {
                         candidate = temp;
@@ -173,27 +107,8 @@ namespace BackendFramework.Helper
                 }
                 best.Add(candidate.Item2);
                 bestIds.AddRange(candidate.Item2.Select(w => w.Id));
-                Console.WriteLine($"With {best.Count} lists, worst score is {candidate.Item1}.");
             }
             return best;
-        }
-
-        /// <summary> Get from specified List a sublist of elements similar to specified <see cref="Word"/>. </summary>
-        /// <returns> List of similar <see cref="Word"/>s, ordered by similarity with most similar first. </returns>
-        private List<Tuple<double, Word>> GetAllSimilarToWord(Word word, List<Word> collection)
-        {
-            var similarWords = new List<Tuple<double, Word>>();
-            foreach (var other in collection)
-            {
-                // Add the word if the score is low enough.
-                var score = GetWordScore(word, other);
-                if (score <= _maxScore)
-                {
-                    similarWords.Add(Tuple.Create(score, other));
-                }
-            }
-            similarWords.Sort((x, y) => x.Item1.CompareTo(y.Item1));
-            return similarWords;
         }
 
         /// <summary> Get from specified List a sub-List with same vern as specified <see cref="Word"/>. </summary>
@@ -214,49 +129,21 @@ namespace BackendFramework.Helper
             return identicalWords;
         }
 
-        /// <summary> Get from specified List a sublist of elements similar to specified <see cref="Word"/>. </summary>
+        /// <summary> Get all elements in specified List that are similar to specified <see cref="Word"/>. </summary>
         /// <returns> List of similar <see cref="Word"/>s, ordered by similarity with most similar first. </returns>
         private List<Tuple<double, Word>> GetSimilarToWord(Word word, List<Word> collection)
         {
-            // If the number of similar words exceeds the max allowable (i.e., .Count = _maxInList),
-            // then the currentMaxScore will be decreased.
-            var similarWords = new List<Tuple<double, Word>> { Capacity = _maxInList };
-            double currentMaxScore = _maxScore;
-
+            var similarWords = new List<Tuple<double, Word>>();
             foreach (var other in collection)
             {
                 // Add the word if the score is low enough.
                 var score = GetWordScore(word, other);
-                if (score > currentMaxScore || (similarWords.Count >= _maxInList - 1 && score >= currentMaxScore))
+                if (score <= _maxScore)
                 {
-                    continue;
-                }
-
-                // Insert at correct place in List.
-                var i = similarWords.FindIndex(pair => score <= pair.Item1);
-                var newWord = Tuple.Create(score, other.Clone());
-                if (i == -1)
-                {
-                    similarWords.Add(newWord);
-                }
-                else
-                {
-                    similarWords.Insert(i, newWord);
-                }
-
-                // Check if list is now 1 too large.
-                if (similarWords.Count == _maxInList)
-                {
-                    similarWords.RemoveAt(_maxInList - 1);
-                    currentMaxScore = similarWords.Last().Item1;
-                }
-
-                // If we've maxed out with identical words, stop.
-                if (similarWords.Count == _maxInList - 1 && similarWords.Last().Item1 == 0)
-                {
-                    break;
+                    similarWords.Add(Tuple.Create(score, other));
                 }
             }
+            similarWords.Sort((x, y) => x.Item1.CompareTo(y.Item1));
             return similarWords;
         }
 
