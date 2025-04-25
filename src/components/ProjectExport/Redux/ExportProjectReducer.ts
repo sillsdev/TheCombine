@@ -10,10 +10,6 @@ const exportProjectSlice = createSlice({
   name: "exportProjectState",
   initialState: defaultState,
   reducers: {
-    cancelingAction: (state, action) => {
-      state.projectId = action.payload;
-      state.status = ExportStatus.Canceling;
-    },
     downloadingAction: (state, action) => {
       state.projectId = action.payload;
       state.status = ExportStatus.Downloading;
@@ -37,7 +33,6 @@ const exportProjectSlice = createSlice({
 });
 
 export const {
-  cancelingAction,
   downloadingAction,
   exportingAction,
   failureAction,

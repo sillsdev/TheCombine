@@ -136,12 +136,7 @@ namespace BackendFramework.Services
         /// <returns> TraceIdentifier for the request. If null, returns an empty string. </returns>
         public string GetExportId(HttpContext request)
         {
-            var exportId = request.TraceIdentifier;
-            if (exportId is null)
-            {
-                return "";
-            }
-            return exportId;
+            return request.TraceIdentifier ?? "";
         }
 
         /// <summary>Retrieve the User ID from the JWT in a request. </summary>
