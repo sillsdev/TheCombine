@@ -20,7 +20,7 @@ import {
 } from "components/ProjectSettings/tests/SettingsTabTypes";
 import { randomProject } from "types/project";
 import theme from "types/theme";
-import { setMatchMedia } from "utilities/testRendererUtilities";
+import { setMatchMedia } from "utilities/testingLibraryUtilities";
 
 jest.mock("react-router-dom", () => ({ useNavigate: jest.fn() }));
 

@@ -9,11 +9,14 @@ import { useAppDispatch } from "rootRedux/hooks";
 import { TextFieldWithFont } from "utilities/fontComponents";
 
 const idPrefix = "find-and-replace";
-const fieldIdFind = `${idPrefix}-find-field`;
-const fieldIdReplace = `${idPrefix}-replace-field`;
-export const buttonIdSubmit = `${idPrefix}-submit-button`;
-export const buttonIdCancel = `${idPrefix}-cancel-button`;
-export const buttonIdConfirm = `${idPrefix}-confirm-button`;
+
+export enum FindAndReplaceId {
+  ButtonCancel = `${idPrefix}-cancel-button`,
+  ButtonConfirm = `${idPrefix}-confirm-button`,
+  ButtonSubmit = `${idPrefix}-submit-button`,
+  FieldFind = `${idPrefix}-find-field`,
+  FieldReplace = `${idPrefix}-replace-field`,
+}
 
 interface FindAndReplaceProps {
   initialFindValue: string;
@@ -62,30 +65,37 @@ export default function FindAndReplace(
         {t("charInventory.characterSet.findAndReplace")}
       </Typography>
       <TextFieldWithFont
-        id={fieldIdFind}
+        id={FindAndReplaceId.FieldFind}
         label={t("charInventory.characterSet.find")}
         value={findValue}
         onChange={(e) => setFindValue(e.target.value)}
         variant="outlined"
         style={{ width: "100%" }}
         margin="normal"
-        inputProps={{ maxLength: 100 }}
+        inputProps={{
+          "data-testid": FindAndReplaceId.FieldFind,
+          maxLength: 100,
+        }}
         vernacular
       />
       <TextFieldWithFont
-        id={fieldIdReplace}
+        id={FindAndReplaceId.FieldReplace}
         label={t("charInventory.characterSet.replaceWith")}
         value={replaceValue}
         onChange={(e) => setReplaceValue(e.target.value)}
         variant="outlined"
         style={{ width: "100%" }}
         margin="normal"
-        inputProps={{ maxLength: 100 }}
+        inputProps={{
+          "data-testid": FindAndReplaceId.FieldReplace,
+          maxLength: 100,
+        }}
         vernacular
       />
       <Button
         color="primary"
-        id={buttonIdSubmit}
+        data-testid={FindAndReplaceId.ButtonSubmit}
+        id={FindAndReplaceId.ButtonSubmit}
         onClick={() => setWarningDialogOpen(true)}
       >
         {t("charInventory.characterSet.apply")}
@@ -95,8 +105,8 @@ export default function FindAndReplace(
         text={dialogText}
         handleCancel={() => setWarningDialogOpen(false)}
         handleConfirm={dispatchFindAndReplace}
-        buttonIdCancel={buttonIdCancel}
-        buttonIdConfirm={buttonIdConfirm}
+        buttonIdCancel={FindAndReplaceId.ButtonCancel}
+        buttonIdConfirm={FindAndReplaceId.ButtonConfirm}
       />
     </>
   );
