@@ -285,20 +285,18 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Cancels project export </summary>
-        /// <returns> ProjectId, if cancel successful </returns>
+        /// <returns> bool: true if found export to cancel </returns>
         [HttpGet("cancelexport", Name = "CancelLiftExport")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        public string CancelLiftExport(string projectId)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        public bool CancelLiftExport()
         {
             var userId = _permissionService.GetUserId(HttpContext);
-            CancelLiftExport(projectId, userId);
-            return projectId;
+            return CancelLiftExport(userId);
         }
 
-        private string CancelLiftExport(string projectId, string userId)
+        private bool CancelLiftExport(string userId)
         {
-            _liftService.CancelRecentExport(userId);
-            return projectId;
+            return _liftService.CancelRecentExport(userId);
         }
 
         /// <summary> Packages project data into zip file </summary>

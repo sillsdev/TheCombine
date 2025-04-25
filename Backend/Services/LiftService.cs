@@ -138,9 +138,9 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Invalidate most recent export by no longer storing its exportId. </summary>
-        public void CancelRecentExport(string userId)
+        public bool CancelRecentExport(string userId)
         {
-            _liftExports.TryRemove(userId, out var _);
+            return _liftExports.TryRemove(userId, out var _);
         }
 
         /// <summary> Store status that a user's export is in-progress. </summary>

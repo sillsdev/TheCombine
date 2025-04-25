@@ -276,7 +276,7 @@ export async function exportLift(projectId: string): Promise<string> {
 
 /** Tell the backend to cancel the LIFT file export. */
 // revisit
-export async function cancelExport(projectId: string): Promise<string> {
+export async function cancelExport(projectId: string): Promise<boolean> {
   return (await liftApi.cancelLiftExport({ projectId }, defaultOptions())).data;
 }
 

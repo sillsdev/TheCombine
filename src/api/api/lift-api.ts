@@ -478,7 +478,7 @@ export const LiftApiFp = function (configuration?: Configuration) {
       projectId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<boolean>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.cancelLiftExport(projectId, options);
@@ -667,7 +667,7 @@ export const LiftApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    cancelLiftExport(projectId: string, options?: any): AxiosPromise<string> {
+    cancelLiftExport(projectId: string, options?: any): AxiosPromise<boolean> {
       return localVarFp
         .cancelLiftExport(projectId, options)
         .then((request) => request(axios, basePath));
