@@ -8,14 +8,12 @@ import { findAndReplace } from "goals/CharacterInventory/Redux/CharacterInventor
 import { useAppDispatch } from "rootRedux/hooks";
 import { TextFieldWithFont } from "utilities/fontComponents";
 
-const idPrefix = "find-and-replace";
-
 export enum FindAndReplaceId {
-  ButtonCancel = `${idPrefix}-cancel-button`,
-  ButtonConfirm = `${idPrefix}-confirm-button`,
-  ButtonSubmit = `${idPrefix}-submit-button`,
-  FieldFind = `${idPrefix}-find-field`,
-  FieldReplace = `${idPrefix}-replace-field`,
+  ButtonCancel = `find-and-replace-cancel-button`,
+  ButtonConfirm = `find-and-replace-confirm-button`,
+  ButtonSubmit = `find-and-replace-submit-button`,
+  FieldFind = `find-and-replace-find-field`,
+  FieldReplace = `find-and-replace-replace-field`,
 }
 
 interface FindAndReplaceProps {
