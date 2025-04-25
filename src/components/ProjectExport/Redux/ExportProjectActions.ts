@@ -41,7 +41,8 @@ export function asyncExportProject(projectId: string) {
 }
 
 export function asyncCancelExport(projectId: string) {
-  return async () => {
+  return async (dispatch: StoreStateDispatch) => {
+    dispatch(resetExport());
     await cancelExport(projectId);
   };
 }

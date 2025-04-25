@@ -1,4 +1,5 @@
 import {
+  asyncCancelExport,
   asyncDownloadExport,
   asyncExportProject,
   asyncResetExport,
@@ -8,17 +9,34 @@ import { setupStore } from "rootRedux/store";
 import { persistedDefaultState } from "rootRedux/testTypes";
 
 jest.mock("backend", () => ({
+  cancelExport: jest.fn,
   deleteLift: jest.fn,
   downloadLift: (...args: any[]) => mockDownloadList(...args),
   exportLift: (...args: any[]) => mockExportLift(...args),
 }));
-jest.mock("components/Project/ProjectActions", () => ({}));
 
 const mockDownloadList = jest.fn();
 const mockExportLift = jest.fn();
 const mockProjId = "project-id";
 
 describe("ExportProjectActions", () => {
+  describe("asyncCancelExport", () => {
+    it("correctly affects state", async () => {
+      const nonDefaultState = {
+        projectId: "nonempty-string",
+        status: ExportStatus.Success,
+      };
+      const store = setupStore({
+        ...persistedDefaultState,
+        exportProjectState: nonDefaultState,
+      });
+      await store.dispatch(asyncCancelExport(nonDefaultState.projectId));
+      const { projectId, status } = store.getState().exportProjectState;
+      expect(projectId).toEqual("");
+      expect(status).toEqual(ExportStatus.Default);
+    });
+  });
+
   describe("asyncDownloadExport", () => {
     it("correctly affects state on success", async () => {
       const store = setupStore();
