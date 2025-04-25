@@ -275,8 +275,10 @@ export async function exportLift(projectId: string): Promise<string> {
 }
 
 /** Tell the backend to cancel the LIFT file export. */
-export async function cancelExport(projectId: string): Promise<boolean> {
-  return (await liftApi.cancelLiftExport({ projectId }, defaultOptions())).data;
+export async function cancelExport(): Promise<boolean> {
+  return (
+    await liftApi.cancelLiftExport({ projectId: "nonempty" }, defaultOptions())
+  ).data;
 }
 
 /** After the backend confirms that a LIFT file is ready, download it. */

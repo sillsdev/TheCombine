@@ -33,7 +33,7 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
 
   async function cancelExport(): Promise<void> {
     setCanceling(true);
-    await dispatch(asyncCancelExport(props.projectId));
+    await dispatch(asyncCancelExport());
   }
 
   const status = useAppSelector(
