@@ -387,6 +387,20 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
+        public async Task TestCancelLiftExport()
+        {
+            _liftController.ControllerContext.HttpContext = PermissionServiceMock.HttpContextWithUserId(UserId);
+            _liftService.SetExportInProgress(UserId, ExportId);
+            var active = await _liftController.CreateLiftExportThenSignal(_projId, UserId, ExportId);
+            Assert.That(active, Is.True);
+
+            _liftService.SetExportInProgress(UserId, ExportId);
+            _liftController.CancelLiftExport();
+            active = await _liftController.CreateLiftExportThenSignal(_projId, UserId, ExportId);
+            Assert.That(active, Is.False);
+        }
+
+        [Test]
         public void TestDownloadLiftFileNoPermission()
         {
             _liftController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
