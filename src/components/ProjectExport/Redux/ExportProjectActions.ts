@@ -41,10 +41,10 @@ export function asyncExportProject(projectId: string) {
   };
 }
 
-export function asyncCancelExport(projectId: string) {
+export function asyncCancelExport() {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(resetExport());
-    await cancelExport(projectId);
+    await cancelExport();
   };
 }
 

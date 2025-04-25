@@ -30,7 +30,7 @@ describe("ExportProjectActions", () => {
         ...persistedDefaultState,
         exportProjectState: nonDefaultState,
       });
-      await store.dispatch(asyncCancelExport(nonDefaultState.projectId));
+      await store.dispatch(asyncCancelExport());
       const { projectId, status } = store.getState().exportProjectState;
       expect(projectId).toEqual("");
       expect(status).toEqual(ExportStatus.Default);
