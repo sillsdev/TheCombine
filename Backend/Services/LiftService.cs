@@ -119,7 +119,7 @@ namespace BackendFramework.Services
         /// <summary>
         /// A dictionary shared by all Projects for storing and retrieving paths to in-process imports.
         /// </summary>
-        private readonly Dictionary<string, string> _liftImports;
+        private readonly ConcurrentDictionary<string, string> _liftImports;
         private const string FlagTextEmpty = "***";
         private const string InProgress = "IN_PROGRESS";
 
@@ -134,7 +134,7 @@ namespace BackendFramework.Services
             }
 
             _liftExports = new ConcurrentDictionary<string, (string, string)>();
-            _liftImports = new Dictionary<string, string>();
+            _liftImports = new ConcurrentDictionary<string, string>();
         }
 
         /// <summary> Invalidate most recent export by no longer storing its exportId. </summary>
@@ -199,8 +199,7 @@ namespace BackendFramework.Services
         /// <summary> Store filePath for a user's Lift import. </summary>
         public void StoreImport(string userId, string filePath)
         {
-            _liftImports.Remove(userId);
-            _liftImports.Add(userId, filePath);
+            _liftImports.AddOrUpdate(userId, filePath, (_, _) => filePath);
         }
 
         /// <summary> Retrieve a stored filePath for the user's Lift import. </summary>
@@ -215,7 +214,7 @@ namespace BackendFramework.Services
         /// <returns> If the element is successfully found and removed, true; otherwise, false. </returns>
         public bool DeleteImport(string userId)
         {
-            var removeSuccessful = _liftImports.Remove(userId, out var dirPath);
+            var removeSuccessful = _liftImports.TryRemove(userId, out var dirPath);
             if (removeSuccessful && Directory.Exists(dirPath))
             {
                 Directory.Delete(dirPath, true);
