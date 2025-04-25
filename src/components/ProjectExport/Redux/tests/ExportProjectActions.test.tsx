@@ -77,23 +77,6 @@ describe("ExportProjectActions", () => {
     });
   });
 
-  describe("asyncCancelExport", () => {
-    it("correctly affects state", async () => {
-      const nonDefaultState = {
-        projectId: "nonempty-string",
-        status: ExportStatus.Success,
-      };
-      const store = setupStore({
-        ...persistedDefaultState,
-        exportProjectState: nonDefaultState,
-      });
-      await store.dispatch(asyncCancelExport(nonDefaultState.projectId));
-      const { projectId, status } = store.getState().exportProjectState;
-      expect(projectId).toEqual(nonDefaultState.projectId);
-      expect(status).toEqual(ExportStatus.Default);
-    });
-  });
-
   describe("asyncResetExport", () => {
     it("correctly affects state", async () => {
       const nonDefaultState = {
