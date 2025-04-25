@@ -144,7 +144,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Store status that a user's export is in-progress. </summary>
-        public void SetExportInProgress(string userId, string exportId)
+        public void SetExportInProgress(string userId, string? exportId)
         {
             ArgumentException.ThrowIfNullOrEmpty(exportId);
             _liftExports.AddOrUpdate(userId, (InProgress, exportId), (k, v) => (InProgress, exportId));
