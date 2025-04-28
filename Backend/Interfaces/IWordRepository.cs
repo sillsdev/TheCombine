@@ -12,6 +12,7 @@ namespace BackendFramework.Interfaces
         Task<List<Word>> Create(List<Word> words);
         Task<Word> Add(Word word);
         Task<bool> DeleteAllWords(string projectId);
+        Task<bool> IsWordsNonempty(string projectId);
         Task<bool> IsFrontierNonempty(string projectId);
         Task<bool> IsInFrontier(string projectId, string wordId);
         Task<List<Word>> GetFrontier(string projectId);
