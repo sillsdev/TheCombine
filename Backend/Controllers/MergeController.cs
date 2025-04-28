@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.SignalR;
 
 namespace BackendFramework.Controllers
 {
@@ -16,11 +18,14 @@ namespace BackendFramework.Controllers
     public class MergeController : Controller
     {
         private readonly IMergeService _mergeService;
+        private readonly IHubContext<MergeHub> _notifyService;
         private readonly IPermissionService _permissionService;
 
-        public MergeController(IMergeService mergeService, IPermissionService permissionService)
+        public MergeController(
+            IMergeService mergeService, IHubContext<MergeHub> notifyService, IPermissionService permissionService)
         {
             _mergeService = mergeService;
+            _notifyService = notifyService;
             _permissionService = permissionService;
         }
 
@@ -100,16 +105,13 @@ namespace BackendFramework.Controllers
             return Ok(graylistEntry.WordIds);
         }
 
-        /// <summary> Get lists of potential duplicates for merging. </summary>
+        /// <summary> Start finding lists of potential duplicates for merging. </summary>
         /// <param name="projectId"> Id of project in which to search the frontier for potential duplicates. </param>
         /// <param name="maxInList"> Max number of words allowed within a list of potential duplicates. </param>
         /// <param name="maxLists"> Max number of lists of potential duplicates. </param>
-        /// <param name="userId"> Id of user whose merge blacklist is to be used. </param>
-        /// <returns> List of Lists of <see cref="Word"/>s. </returns>
-        [HttpGet("dups/{maxInList:int}/{maxLists:int}/{userId}", Name = "GetPotentialDuplicates")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<List<Word>>))]
-        public async Task<IActionResult> GetPotentialDuplicates(
-            string projectId, int maxInList, int maxLists, string userId)
+        [HttpGet("finddups/{maxInList:int}/{maxLists:int}", Name = "FindPotentialDuplicates")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> FindPotentialDuplicates(string projectId, int maxInList, int maxLists)
         {
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.MergeAndReviewEntries, projectId))
@@ -118,7 +120,36 @@ namespace BackendFramework.Controllers
             }
 
             await _mergeService.UpdateMergeBlacklist(projectId);
-            return Ok(await _mergeService.GetPotentialDuplicates(projectId, maxInList, maxLists, userId));
+
+            var userId = _permissionService.GetUserId(HttpContext);
+
+            // Run the task without waiting for completion.
+            // This Task will be scheduled within the existing Async executor thread pool efficiently.
+            // See: https://stackoverflow.com/a/64614779/1398841
+            _ = Task.Run(() => GetDuplicatesThenSignal(projectId, maxInList, maxLists, userId));
+
+            return Ok();
+        }
+
+        internal async Task<bool> GetDuplicatesThenSignal(string projectId, int maxInList, int maxLists, string userId)
+        {
+            var success = await _mergeService.GetAndStorePotentialDuplicates(projectId, maxInList, maxLists, userId);
+            if (success)
+            {
+                await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId);
+            }
+            return success;
+        }
+
+        /// <summary> Retrieve current user's potential duplicates for merging. </summary>
+        /// <returns> List of Lists of <see cref="Word"/>s, each sublist a set of potential duplicates. </returns>
+        [HttpGet("retrievedups", Name = "RetrievePotentialDuplicates")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<List<Word>>))]
+        public IActionResult RetrievePotentialDuplicates()
+        {
+            var userId = _permissionService.GetUserId(HttpContext);
+            var dups = _mergeService.RetrieveDups(userId);
+            return dups is null ? BadRequest() : Ok(dups);
         }
 
         /// <summary> Get lists of graylist entries. </summary>
