@@ -12,7 +12,6 @@ using BackendFramework.Models;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using static System.Linq.Enumerable;
@@ -22,12 +21,9 @@ namespace Backend.Tests.Controllers
     public class LiftControllerTests : IDisposable
     {
         private IProjectRepository _projRepo = null!;
-        private ISemanticDomainRepository _semDomRepo = null!;
         private ISpeakerRepository _speakerRepo = null!;
         private IWordRepository _wordRepo = null!;
         private ILiftService _liftService = null!;
-        private IHubContext<CombineHub> _notifyService = null!;
-        private IPermissionService _permissionService = null!;
         private IWordService _wordService = null!;
         private LiftController _liftController = null!;
 
@@ -49,7 +45,6 @@ namespace Backend.Tests.Controllers
             }
         }
 
-        private ILogger<LiftController> _logger = null!;
         private string _projId = null!;
         private const string ProjName = "LiftControllerTests";
         private const string UserId = "LiftControllerTestUserId";
@@ -58,17 +53,13 @@ namespace Backend.Tests.Controllers
         public void Setup()
         {
             _projRepo = new ProjectRepositoryMock();
-            _semDomRepo = new SemanticDomainRepositoryMock();
             _speakerRepo = new SpeakerRepositoryMock();
             _wordRepo = new WordRepositoryMock();
-            _liftService = new LiftService(_semDomRepo, _speakerRepo);
-            _notifyService = new HubContextMock();
-            _permissionService = new PermissionServiceMock();
+            _liftService = new LiftService(new SemanticDomainRepositoryMock(), _speakerRepo);
             _wordService = new WordService(_wordRepo);
-            _liftController = new LiftController(
-                _wordRepo, _projRepo, _permissionService, _liftService, _notifyService, _logger);
+            _liftController = new LiftController(_wordRepo, _projRepo, new PermissionServiceMock(), _liftService,
+                new HubContextMock<ExportHub>(), new MockLogger());
 
-            _logger = new MockLogger();
             _projId = _projRepo.Create(new Project { Name = ProjName }).Result!.Id;
             _file = new FormFile(_stream, 0, _stream.Length, "Name", FileName);
         }
