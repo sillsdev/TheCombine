@@ -284,21 +284,6 @@ namespace BackendFramework.Controllers
             return Ok(countWordsImported);
         }
 
-        /// <summary> Cancels project export </summary>
-        /// <returns> bool: true if found export to cancel </returns>
-        [HttpGet("cancelexport", Name = "CancelLiftExport")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        public bool CancelLiftExport()
-        {
-            var userId = _permissionService.GetUserId(HttpContext);
-            return CancelLiftExport(userId);
-        }
-
-        private bool CancelLiftExport(string userId)
-        {
-            return _liftService.CancelRecentExport(userId);
-        }
-
         /// <summary> Packages project data into zip file </summary>
         /// <returns> ProjectId, if export successful </returns>
         [HttpGet("export", Name = "ExportLiftFile")]
@@ -362,7 +347,7 @@ namespace BackendFramework.Controllers
         internal async Task<bool> CreateLiftExportThenSignal(string projectId, string userId, string exportId)
         {
             // Export the data to a zip, read into memory, and delete zip.
-            var exportedFilepath = "";
+            string? exportedFilepath;
             try
             {
                 exportedFilepath = await CreateLiftExport(projectId);
@@ -386,6 +371,16 @@ namespace BackendFramework.Controllers
         internal async Task<string> CreateLiftExport(string projectId)
         {
             return await _liftService.LiftExport(projectId, _wordRepo, _projRepo);
+        }
+
+        /// <summary> Cancel project export </summary>
+        /// <returns> bool: true, if found export to cancel </returns>
+        [HttpGet("cancelexport", Name = "CancelLiftExport")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        public IActionResult CancelLiftExport()
+        {
+            var userId = _permissionService.GetUserId(HttpContext);
+            return Ok(_liftService.CancelRecentExport(userId));
         }
 
         /// <summary> Downloads project data in zip file </summary>

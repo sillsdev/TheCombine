@@ -1,11 +1,12 @@
 import { Cancel } from "@mui/icons-material";
 import { Tooltip } from "@mui/material";
-import Button, { ButtonProps } from "@mui/material/Button";
+import { ButtonProps } from "@mui/material/Button";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { isFrontierNonempty } from "backend";
 import { LoadingButton } from "components/Buttons";
+import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import {
   asyncExportProject,
   asyncCancelExport,
@@ -22,7 +23,6 @@ interface ExportButtonProps {
 /** A button for exporting project to Lift file */
 export default function ExportButton(props: ExportButtonProps): ReactElement {
   const dispatch = useAppDispatch();
-  const [canceling, setCanceling] = useState(false);
   const [exports, setExports] = useState(false);
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
@@ -32,7 +32,6 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
   }
 
   async function cancelExport(): Promise<void> {
-    setCanceling(true);
     await dispatch(asyncCancelExport());
   }
 
@@ -41,17 +40,11 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
   );
 
   useEffect(() => {
-    console.log("status: ", status);
-    if (
+    setLoading(
       status === ExportStatus.Exporting ||
-      status === ExportStatus.Success ||
-      status === ExportStatus.Downloading
-    ) {
-      setLoading(true);
-    } else {
-      setCanceling(false);
-      setLoading(false);
-    }
+        status === ExportStatus.Success ||
+        status === ExportStatus.Downloading
+    );
   }, [status]);
 
   useEffect(() => {
@@ -64,7 +57,7 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
         <span>
           <LoadingButton
             loading={loading}
-            disabled={loading || canceling || !exports}
+            disabled={loading || !exports}
             buttonProps={{
               ...props.buttonProps,
               onClick: exportProj,
@@ -75,12 +68,12 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
           </LoadingButton>
         </span>
       </Tooltip>
-      {status == ExportStatus.Exporting && (
-        <Tooltip title="Cancel export">
-          <Button onClick={cancelExport} disabled={canceling}>
-            <Cancel />
-          </Button>
-        </Tooltip>
+      {status === ExportStatus.Exporting && (
+        <IconButtonWithTooltip
+          icon={<Cancel />}
+          onClick={cancelExport}
+          textId={"projectExport.cancelExport"}
+        />
       )}
     </>
   );
