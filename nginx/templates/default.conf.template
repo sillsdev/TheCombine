@@ -57,7 +57,16 @@ server {
 
     # Websocket proxy.
     # https://nginx.org/en/docs/http/websocket.html
-    location /hub {
+    location /export-hub {
+        proxy_pass http://backend:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+
+    # Websocket proxy.
+    # https://nginx.org/en/docs/http/websocket.html
+    location /merge-hub {
         proxy_pass http://backend:5000;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;

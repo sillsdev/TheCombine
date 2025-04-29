@@ -247,7 +247,7 @@ namespace BackendFramework
             services.AddTransient<IMergeGraylistContext, MergeGraylistContext>();
             services.AddTransient<IMergeBlacklistRepository, MergeBlacklistRepository>();
             services.AddTransient<IMergeGraylistRepository, MergeGraylistRepository>();
-            services.AddTransient<IMergeService, MergeService>();
+            services.AddSingleton<IMergeService, MergeService>();
 
             // Password Reset types
             services.AddTransient<IPasswordResetContext, PasswordResetContext>();
@@ -326,7 +326,9 @@ namespace BackendFramework
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
-                endpoints.MapHub<CombineHub>("/hub");
+                // Each MapHub<T> needs a unique T for the controllers to resolve the correct hub.
+                endpoints.MapHub<ExportHub>($"/{ExportHub.Url}");
+                endpoints.MapHub<MergeHub>($"/{MergeHub.Url}");
             });
 
             // Configure OpenAPI (Formerly Swagger) schema generation
