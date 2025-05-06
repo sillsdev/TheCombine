@@ -88,7 +88,9 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
           updateVernField={updateVernField}
           onBlur={() => conditionallyUpdateVern()}
           handleEnter={() => {
-            vernacular && props.focusNewEntry();
+            if (vernacular) {
+              props.focusNewEntry();
+            }
           }}
           vernacularLang={props.vernacularLang}
           textFieldId={`${idAffix}-${props.rowIndex}-vernacular`}
@@ -105,7 +107,9 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
           updateGlossField={updateGlossField}
           onBlur={() => conditionallyUpdateGloss()}
           handleEnter={() => {
-            gloss && props.focusNewEntry();
+            if (gloss) {
+              props.focusNewEntry();
+            }
           }}
           analysisLang={props.analysisLang}
           textFieldId={`${idAffix}-${props.rowIndex}-gloss`}

@@ -28,7 +28,11 @@ export function quicksort<T>(arr: T[], score: (item: T) => number): T[] {
 
   for (let i = 0; i < arr.length; i++) {
     if (i !== pivotIndex) {
-      score(arr[i]) > score(pivot) ? greater.push(arr[i]) : less.push(arr[i]);
+      if (score(arr[i]) > score(pivot)) {
+        greater.push(arr[i]);
+      } else {
+        less.push(arr[i]);
+      }
     }
   }
 
