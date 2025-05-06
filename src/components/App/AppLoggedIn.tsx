@@ -8,15 +8,17 @@ import { updateUser } from "backend";
 import { getCurrentUser } from "backend/localStorage";
 import AnalyticsConsent from "components/AnalyticsConsent";
 import DatePickersLocalizationProvider from "components/App/DatePickersLocalizationProvider";
-import SignalRHub from "components/App/SignalRHub";
 import AppBar from "components/AppBar";
 import PageNotFound from "components/PageNotFound/component";
+import ExportHub from "components/ProjectExport/ExportHub";
 import ProjectScreen from "components/ProjectScreen";
 import NextGoalScreen from "goals/DefaultGoal/NextGoalScreen";
+import MergeHub from "goals/MergeDuplicates/MergeHub";
 import { updateLangFromUser } from "i18n";
 import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { Path } from "types/path";
+import { RuntimeConfig } from "types/runtimeConfig";
 import FontContext, { ProjectFonts } from "utilities/fontContext";
 import { getProjCss } from "utilities/fontCssUtilities";
 import { routerPath } from "utilities/pathUtilities";
@@ -53,6 +55,9 @@ export default function AppWithBar(): ReactElement {
   const [answeredConsent, setAnsweredConsent] = useState(
     getCurrentUser()?.answeredConsent
   );
+
+  const showConsentDialog =
+    !RuntimeConfig.getInstance().isOffline() && !answeredConsent;
 
   async function handleConsentChange(analyticsOn?: boolean): Promise<void> {
     await updateUser({
@@ -93,12 +98,13 @@ export default function AppWithBar(): ReactElement {
 
   return (
     <DatePickersLocalizationProvider>
-      <SignalRHub />
+      <ExportHub />
+      <MergeHub />
       <AppBar />
       <FontContext.Provider value={projFonts}>
         <ThemeProvider theme={overrideThemeFont}>
           <CssBaseline />
-          {!answeredConsent && (
+          {showConsentDialog && (
             <AnalyticsConsent onChangeConsent={handleConsentChange} required />
           )}
           <Routes>

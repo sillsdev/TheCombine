@@ -52,8 +52,15 @@ project README.md file.
 
 ### QA/Production Server
 
-For _The Combine_, the QA and Production servers are servers where the Kubernetes Cluster is created and maintained by a
-separate organization. The characteristics of these systems are:
+For _The Combine_, the QA and Production servers are servers where the Kubernetes Cluster is created and maintained by
+LTOps. The characteristics of these systems are:
+
+- To access these clusters, you will need a WireGuard tunnel config from LTOps.
+
+  - On Windows: you can use the [WireGuard app](https://www.wireguard.com/install/) to add a new tunnel from a config
+    file.
+  - On Linux: `sudo apt install wireguard`, then move the `.conf` file to `/etc/wireguard/<tunnel-name>.conf`, then run
+    `sudo wg-quick up <tunnel-name>`. (The last command will have to be run again if you reboot.)
 
 - The Kubernetes cluster has been created as follows:
 
@@ -183,7 +190,7 @@ To install the OS on a new target machine, such as, a new NUC, follow these step
 
       ![alt text](images/ubuntu-software-selection.png "Ubuntu Server Software Selection")
 
-      In addition, you may have your SSH keys from _Github_ or _Launchpad_ preinstalled as authorized keys.
+      In addition, you may have your SSH keys from _GitHub_ or _Launchpad_ preinstalled as authorized keys.
 
       Make sure that `Allow password authentication over SSH` is checked even if you import SSH identities. This will
       make administration in the field easier.
@@ -422,8 +429,7 @@ Notes:
 There are several maintenance scripts that can be run in the kubernetes cluster; they are listed in
 [./kubernetes_design/README.md#combine_maint-image](./kubernetes_design/README.md#combine_maint-image).
 
-The `combine-backup-job.sh` is currently being run daily on _The Combine_ QA and Production servers as a Kubernetes
-CronJob.
+On the Production server, `combine-backup-job.sh` is being run daily and `get_fonts.py` weekly as Kubernetes CronJobs.
 
 In addition to the daily backup, any of the scripts can be run on-demand using the `kubectl` command as follows:
 

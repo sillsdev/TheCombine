@@ -1,10 +1,10 @@
 #!/bin/bash
 
-######################################################
+##############################################
 # Script to fetch dictionary files from
-# cgit.freedesktop.org/libreoffice/dictionaries/tree/
+# https://github.com/LibreOffice/dictionaries
 # and convert them into wordlists
-######################################################
+##############################################
 
 set -e
 

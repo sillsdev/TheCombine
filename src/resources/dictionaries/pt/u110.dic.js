@@ -3557,6 +3557,7 @@ nylons
 nynorsk
 nzila
 nzilas
+nº
 nóbis
 nóster
 nez

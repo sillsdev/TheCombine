@@ -3,6 +3,7 @@ import {
   HubConnectionBuilder,
   HubConnectionState,
 } from "@microsoft/signalr";
+import { Action, PayloadAction, ThunkAction } from "@reduxjs/toolkit";
 import {
   Fragment,
   ReactElement,
@@ -13,20 +14,32 @@ import {
 
 import { baseURL } from "backend";
 import { getUserId } from "backend/localStorage";
-import {
-  failure,
-  success,
-} from "components/ProjectExport/Redux/ExportProjectActions";
-import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
-import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
-import { type StoreState } from "rootRedux/types";
+import { useAppDispatch } from "rootRedux/hooks";
+
+type MethodAction = Action | PayloadAction | ThunkAction<any, any, any, any>;
+
+interface SignalRHubProps {
+  /** Trigger (dis)connection. */
+  connect: boolean;
+  /** To be dispatched for the failure method. */
+  failureAction?: MethodAction;
+  /** To be dispatched for the success method. */
+  successAction: MethodAction;
+  /** Must match `*Hub.Url` in Backend/Helper/CombineHub.cs */
+  url: string;
+}
+
+/** Matches `CombineHub.MethodFailure` in Backend/Helper/CombineHub.cs */
+const failureMethodName = "Failure";
+/** Matches `CombineHub.MethodSuccess` in Backend/Helper/CombineHub.cs */
+const successMethodName = "Success";
 
 /** A central hub for monitoring export status on SignalR */
-export default function SignalRHub(): ReactElement {
-  const exportState = useAppSelector(
-    (state: StoreState) => state.exportProjectState
-  );
+export default function SignalRHub(props: SignalRHubProps): ReactElement {
+  const { connect, failureAction, successAction, url } = props;
+
   const dispatch = useAppDispatch();
+
   const [connection, setConnection] = useState<HubConnection | undefined>();
   const [disconnect, setDisconnect] = useState(false);
   const [reconnect, setReconnect] = useState(false);
@@ -36,7 +49,7 @@ export default function SignalRHub(): ReactElement {
     setDisconnect(false);
   }, []);
 
-  /** Act on the disconnect state to stop and delete the connection. */
+  /* Act on the disconnect state to stop and delete the connection. */
   useEffect(() => {
     if (disconnect) {
       if (connection) {
@@ -47,55 +60,55 @@ export default function SignalRHub(): ReactElement {
     }
   }, [connection, disconnect, finishDisconnect]);
 
-  /** Once disconnect state is acted on, act on the reconnect state. */
+  /* Once disconnect state is acted on, act on the reconnect state. */
   useEffect(() => {
     if (!disconnect && reconnect) {
       const newConnection = new HubConnectionBuilder()
-        .withUrl(`${baseURL}/hub`)
+        .withUrl(`${baseURL}/${url}`)
         .withAutomaticReconnect()
         .build();
       setReconnect(false);
       setConnection(newConnection);
     }
-  }, [disconnect, reconnect]);
+  }, [disconnect, reconnect, url]);
 
-  /** Any change in exportState should cause a disconnect.
-   * Only ExportStatus.Exporting should open a new connection.
-   */
+  /* Trigger a reconnect when connect is true and disconnect otherwise. */
   useEffect(() => {
     setDisconnect(true);
-    if (exportState.status === ExportStatus.Exporting) {
-      setReconnect(true);
-    }
-  }, [exportState]);
+    setReconnect(connect);
+  }, [connect]);
 
-  /** Once a connection is opened, start the relevant methods. */
+  /** Handler used by connection.on for when the failure method is invoked. */
+  const failureMethod = useCallback(
+    (userId: string): void => {
+      if (failureAction && userId === getUserId()) {
+        dispatch(failureAction);
+      }
+    },
+    [dispatch, failureAction]
+  );
+
+  /** Handler used by connection.on for when the success method is invoked. */
+  const successMethod = useCallback(
+    (userId: string): void => {
+      if (userId === getUserId()) {
+        dispatch(successAction);
+      }
+    },
+    [dispatch, successAction]
+  );
+
+  /* Once a connection is opened, register the method handlers. */
   useEffect(() => {
     if (connection?.state !== HubConnectionState.Disconnected) {
       return;
     }
 
-    // Name must match what is in Backend/Helper/CombineHub.cs.
-    const failName = "ExportFailed";
-    const successName = "DownloadReady";
-
-    // The method is what the frontend does upon message receipt.
-    const failMethod = (userId: string): void => {
-      if (userId === getUserId()) {
-        dispatch(failure(exportState.projectId));
-      }
-    };
-    const successMethod = (userId: string): void => {
-      if (userId === getUserId()) {
-        dispatch(success(exportState.projectId));
-      }
-    };
-
     connection.start().then(() => {
-      connection.on(failName, failMethod);
-      connection.on(successName, successMethod);
+      connection.on(failureMethodName, failureMethod);
+      connection.on(successMethodName, successMethod);
     });
-  }, [connection, dispatch, exportState.projectId]);
+  }, [connection, failureMethod, successMethod]);
 
   return <Fragment />;
 }

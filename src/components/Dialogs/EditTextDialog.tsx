@@ -7,7 +7,6 @@ import {
   DialogTitle,
   IconButton,
   InputAdornment,
-  TextField,
 } from "@mui/material";
 import {
   type KeyboardEvent,
@@ -17,6 +16,8 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
+
+import { NormalizedTextField } from "utilities/fontComponents";
 
 interface EditTextDialogProps {
   open: boolean;
@@ -94,7 +95,7 @@ export default function EditTextDialog(
     >
       <DialogTitle id="alert-dialog-title">{t(props.titleId)}</DialogTitle>
       <DialogContent>
-        <TextField
+        <NormalizedTextField
           variant="standard"
           autoFocus
           data-testid={props.textFieldId}

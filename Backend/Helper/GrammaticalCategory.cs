@@ -55,7 +55,7 @@ namespace BackendFramework.Helper
         // Omissions due to conflicting abbreviations:
         //   Spanish "indf" for Indefinite Pronoun (conflicts with abbrev. for Indefinite article)
         //   Spanish "rel" for Relative Pronoun (conflicts with abbrev. for Relativizer)
-        //   Portugues "pos" for Postposition (conflicts with Spanish "pos" for Possesive pronoun)
+        //   Portuguese "pos" for Postposition (conflicts with Spanish "pos" for Possessive pronoun)
         //   Russian "вопр" for Question Particle (conflict with Russian "вопр" for Interrogative pro-form)
         // Additions based on user-data:
         //   Determiner: "ordinal" (for Ordinal numbers with out "num")

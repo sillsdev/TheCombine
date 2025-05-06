@@ -99,6 +99,9 @@ A rapid word collection tool. See the [User Guide](https://sillsdev.github.io/Th
      appropriate Node.js version.
 
 4. [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+
+   - On Ubuntu, if using Snap: `sudo snap install dotnet-sdk --classic --channel 8.0/stable`
+
 5. [MongoDB](https://mongodb.com/docs/manual/administration/install-community/) provides instructions on how to install
    the current release of MongoDB.
 
@@ -422,7 +425,11 @@ virtual environment.
    ```
 
    where `<xml_filename>` is the name of the file(s) to import. Currently each file contains English and one other
-   language.
+   language. In bash (not powershell), you can import all the xml files at once with:
+
+   ```bash
+   cd deploy/scripts && python sem_dom_import.py semantic_domains/xml/*
+   ```
 
 2. Start the database:
 
@@ -462,7 +469,7 @@ npm run license-report-frontend
 
 ### Inspect Database
 
-To browse the database locally during development, open MongoDB Compass Community.
+To browse the database locally during development, open [MongoDB Compass](https://www.mongodb.com/try/download/compass).
 
 1. Under New Connection, enter `mongodb://localhost:27017`
 2. Under Databases, select CombineDatabase
@@ -474,9 +481,9 @@ sake of devices with limited bandwidth. There are scripts for generating these f
 files in this directory should _not_ be manually edited.
 
 The bash script `scripts/fetch_wordlists.sh` is used to fetch dictionary files for a given language (e.g., `es`) from
-the [LibreOffice dictionaries](https://cgit.freedesktop.org/libreoffice/dictionaries/) and convert them to raw wordlists
-(e.g., `src/resources/dictionaries/es.txt`). Execute the script with no arguments for its usage details. Any language
-not currently supported can be manually added as a case in this script.
+the [LibreOffice dictionaries](https://github.com/LibreOffice/dictionaries) and convert them to raw wordlists (e.g.,
+`src/resources/dictionaries/es.txt`). Execute the script with no arguments for its usage details. Any language not
+currently supported can be manually added as a case in this script.
 
 ```bash
 ./scripts/fetch_wordlist.sh
@@ -494,12 +501,12 @@ python scripts/split_dictionary.py --help
 For some languages, the wordlist is too large for practical use. Generally try to keep the folder for each language
 under 2.5 MB, to avoid such errors as
 `FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory` in the Kubernetes build. For smaller
-folder sizes, default maximum word-lengths are automatically imposed for some languages: (`ar`, `es`, `fr`, `pt`, `ru`).
-Use `-m`/`--max` to override the defaults, with `-m -1` to force no limit.
+folder sizes, default maximum word-lengths are automatically imposed for some languages: (`ar`, `es`, `fr`, `hi`, `pt`,
+`ru`). Use `-m`/`--max` to override the defaults, with `-m -1` to force no limit.
 
 Adjust the `-t`/`--threshold` and `-T`/`--Threshold` parameters to split a wordlist into more, smaller files; e.g.:
 
-- `python scripts/split_dictionary.py -l hi -t 1000`
+- `python scripts/split_dictionary.py -l es -T 15000`
 - `python scripts/split_dictionary.py -l sw -t 1500`
 
 The top of each language's `index.ts` file states which values of `-m`, `-t`, and `-T` were used for that language.
@@ -533,7 +540,7 @@ Options:
 To update the PDF copy of the installer README.md file, run the following from the `installer` directory:
 
 ```console
-pandoc --pdf-engine=weasyprint README.md -o README.pdf
+pandoc --pdf-engine=weasyprint --metadata title="The Combine Installation Instructions" README.md -o README.pdf
 ```
 
 ## Generate Tutorial Video Subtitles
@@ -599,7 +606,7 @@ Install _Docker Desktop_ from <https://docs.docker.com/get-docker/>.
 
 Notes for installing _Docker Desktop_ in Linux:
 
-1. _Docker Desktop_ requires a distribution running the GNOME or KDE Desktop environment.
+1. On Ubuntu: https://docs.docker.com/desktop/setup/install/linux/ubuntu/#install-docker-desktop
 2. If you installed `docker` or `docker-compose` previously, remove them:
 
    ```bash
@@ -617,10 +624,12 @@ Once _Docker Desktop_ has been installed, start it, and set it up as follows:
 4. Select _Enable Kubernetes_ and click _Apply & Restart_;
 5. Click _Install_ on the dialog that is displayed.
 
-Note:
+Notes:
 
-Normally, there is a slider to adjust the Memory size for the _Docker Desktop_ virtual machine. On Windows systems using
-the WSL 2 backend, there are instructions for setting the resources outside of the _Docker Desktop_ application.
+- Normally, there is a slider to adjust the Memory size for the _Docker Desktop_ virtual machine. On Windows systems
+  using the WSL 2 backend, there are instructions for setting the resources outside of the _Docker Desktop_ application.
+- On Linux, it's possible for `docker-desktop` to be run without the GUI, which can prevent the _Docker Desktop_ GUI
+  from opening. In that situation, execute `systemctl --user stop docker-desktop`.
 
 ### Install Kubernetes Tools
 
@@ -872,7 +881,7 @@ For each of the `kubectl` commands below:
 To stop _The Combine_ without deleting it, you scale it back to 0 replicas running:
 
 ```bash
-kubectl -n thecombine scale --replicas=0 deployments frontend backend maintenance database
+kubectl -n thecombine scale --replicas=0 deployments frontend backend maintenance database otel-opentelemetry-collector
 ```
 
 You can restart the deployments by setting `--replicas=1`.
@@ -904,6 +913,9 @@ helm -n <chart_namespace> delete <chart_name>
 
 where `<chart_namespace>` and `<chart_name>` are the `NAMESPACE` and `NAME` respectively of the chart you want to
 delete. These are listed in the output of `helm list -A`.
+
+You can delete the entire `thecombine` namespace and its charts with `kubectl delete namespace thecombine`. However,
+then you will have to rerun `setup_cluster.py` (to install `otel-opentelemetry-collector`) before `setup_combine.py`.
 
 #### Checking The System Status
 
