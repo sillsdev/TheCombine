@@ -164,23 +164,21 @@ namespace BackendFramework.Repositories
             return word;
         }
 
-        /// <summary> Checks if Words collection is nonempty for specified <see cref="Project"/> </summary>
-        public async Task<bool> IsWordsNonempty(string projectId)
+        /// <summary> Checks if Words collection for specified <see cref="Project"/> has any words. </summary>
+        public async Task<bool> HasWords(string projectId)
         {
             using var activity =
-                OtelService.StartActivityWithTag(otelTagName, "checking if WordsCollection is nonempty");
+                OtelService.StartActivityWithTag(otelTagName, "checking if WordsCollection has words");
 
-            return await _wordDatabase.Words.Find(GetAllProjectWordsFilter(projectId)).Limit(1)
-                .FirstOrDefaultAsync() is not null;
+            return await _wordDatabase.Words.Find(GetAllProjectWordsFilter(projectId)).Limit(1).AnyAsync();
         }
 
-        /// <summary> Checks if Frontier is nonempty for specified <see cref="Project"/> </summary>
-        public async Task<bool> IsFrontierNonempty(string projectId)
+        /// <summary> Checks if Frontier for specified <see cref="Project"/> has any words. </summary>
+        public async Task<bool> HasFrontierWords(string projectId)
         {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if Frontier is nonempty");
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if Frontier has words");
 
-            return await _wordDatabase.Frontier.Find(GetAllProjectWordsFilter(projectId)).Limit(1)
-                .FirstOrDefaultAsync() is not null;
+            return await _wordDatabase.Frontier.Find(GetAllProjectWordsFilter(projectId)).Limit(1).AnyAsync();
         }
 
         /// <summary> Checks if specified word is in Frontier for specified <see cref="Project"/> </summary>

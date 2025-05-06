@@ -3,7 +3,7 @@ import { ButtonProps } from "@mui/material/Button";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { isFrontierNonempty } from "backend";
+import { hasFrontierWords } from "backend";
 import { LoadingButton } from "components/Buttons";
 import { asyncExportProject } from "components/ProjectExport/Redux/ExportProjectActions";
 import { ExportStatus } from "components/ProjectExport/Redux/ExportProjectReduxTypes";
@@ -34,7 +34,7 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
     exportResult.status === ExportStatus.Downloading;
 
   useEffect(() => {
-    isFrontierNonempty(props.projectId).then(setExports);
+    hasFrontierWords(props.projectId).then(setExports);
   }, [props.projectId]);
 
   return (

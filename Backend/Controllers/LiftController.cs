@@ -328,7 +328,7 @@ namespace BackendFramework.Controllers
             _liftService.SetExportInProgress(userId, true);
 
             // Ensure project has words
-            if (!await _wordRepo.IsWordsNonempty(projectId))
+            if (!await _wordRepo.HasWords(projectId))
             {
                 _liftService.SetExportInProgress(userId, false);
                 return BadRequest("No words to export.");
