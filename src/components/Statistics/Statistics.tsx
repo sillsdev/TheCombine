@@ -1,6 +1,6 @@
 import {
   Divider,
-  Grid,
+  Grid2,
   ListItemButton,
   ListItemText,
   Typography,
@@ -65,24 +65,6 @@ export default function Statistics(): ReactElement {
     }
   }
 
-  function handleDisplay(): ReactElement[] {
-    return [
-      <Grid item key={"statistics-title"}>
-        <Typography variant="h4" align="center">
-          {t("statistics.title", { val: currentProject?.name })}
-        </Typography>
-      </Grid>,
-      <Grid item key={"statistics-subtitle"}>
-        <Typography variant="h5" align="center">
-          {t(`statistics.view.${viewName}`)}
-        </Typography>
-      </Grid>,
-      <Grid item key={"statistics-view"}>
-        {componentToDisplay(viewName as viewEnum)}
-      </Grid>,
-    ];
-  }
-
   function handleButton(): ReactElement {
     return (
       <StyledList>
@@ -118,23 +100,28 @@ export default function Statistics(): ReactElement {
   }
 
   return (
-    <Grid container direction="row" spacing={1}>
-      <Grid item xs={2}>
-        {handleButton()}
-      </Grid>
-      <Grid
-        item
-        xs={8}
+    <Grid2 container direction="row" spacing={1}>
+      <Grid2 size={2}>{handleButton()}</Grid2>
+
+      <Grid2
         container
         direction="column"
-        justifyContent="center"
+        alignContent="space-around"
+        size={8}
         spacing={2}
       >
-        {handleDisplay()}
-      </Grid>
-      <Grid item xs={2}>
+        <Typography align="center" variant="h4">
+          {t("statistics.title", { val: currentProject?.name })}
+        </Typography>
+        <Typography align="center" variant="h5">
+          {t(`statistics.view.${viewName}`)}
+        </Typography>
+        {componentToDisplay(viewName as viewEnum)}
+      </Grid2>
+
+      <Grid2 size={2}>
         <ProgressBarComponent />
-      </Grid>
-    </Grid>
+      </Grid2>
+    </Grid2>
   );
 }
