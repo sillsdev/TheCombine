@@ -4,8 +4,8 @@ import { type CSSProperties, type ReactElement, useEffect } from "react";
 import ImageAttributions, {
   ImageMetadata,
 } from "components/HarvestThreshWinnow/ImageAttributions";
-import { htw1Harvest, htw2Thresh, htw3Winnow } from "resources/htw";
-import imageLicenses from "resources/htw/HTW-licenses.json";
+import { harvest, thresh, winnow } from "resources/htw";
+import imageLicenses from "resources/htw/imageLicenses.json";
 
 enum ImageAlt {
   License = "CC BY-SA 4.0 license",
@@ -75,19 +75,19 @@ export default function HarvestThreshWinnow(
       <img
         alt={ImageAlt.Harvest}
         id={ImageId.Harvest}
-        src={htw1Harvest}
+        src={harvest}
         style={{ ...imageStyle, insetInlineStart: overlap * imageSize }}
       />
       <img
         alt={ImageAlt.Thresh}
         id={ImageId.Thresh}
-        src={htw2Thresh}
+        src={thresh}
         style={{ ...imageStyle }}
       />
       <img
         alt={ImageAlt.Winnow}
         id={ImageId.Winnow}
-        src={htw3Winnow}
+        src={winnow}
         style={{ ...imageStyle, insetInlineEnd: overlap * imageSize }}
       />
       <div
