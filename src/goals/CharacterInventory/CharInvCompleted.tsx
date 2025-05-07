@@ -1,5 +1,5 @@
 import { ArrowRightAlt } from "@mui/icons-material";
-import { Divider, Grid, Typography } from "@mui/material";
+import { Divider, Grid2, Typography } from "@mui/material";
 import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -194,20 +194,18 @@ function WordChanges(props: {
           val2: props.wordChanges.replace,
         })}
       </Typography>
-      <Grid container rowSpacing={2} spacing={2}>
+      <Grid2 container rowSpacing={2} spacing={2}>
         {entries.slice(0, wordLimit).map(([oldId, newId]) => (
-          <WordChangeGrid key={newId} oldId={oldId} newId={newId} />
+          <WordChange key={newId} oldId={oldId} newId={newId} />
         ))}
         {entries.length > wordLimit ? (
-          <Grid item>
-            <Typography>
-              {`+${entries.length - wordLimit} ${t(
-                "charInventory.changes.more"
-              )}`}
-            </Typography>
-          </Grid>
+          <Typography>
+            {`+${entries.length - wordLimit} ${t(
+              "charInventory.changes.more"
+            )}`}
+          </Typography>
         ) : null}
-      </Grid>
+      </Grid2>
       {undoWordsTypography}
       <UndoButton
         isUndoAllowed={isUndoAllowed}
@@ -221,7 +219,7 @@ function WordChanges(props: {
 }
 
 /** Component to show a word update that only involved a change in vernacular form. */
-function WordChangeGrid(props: { newId: string; oldId: string }): ReactElement {
+function WordChange(props: { newId: string; oldId: string }): ReactElement {
   const [oldVern, setOldVern] = useState("");
   const [newWord, setNewWord] = useState<Word | undefined>();
 
@@ -233,8 +231,6 @@ function WordChangeGrid(props: { newId: string; oldId: string }): ReactElement {
   const vernacular = `${oldVern}  →  ${newWord?.vernacular}`;
 
   return (
-    <Grid item>
-      {newWord ? <WordCard word={{ ...newWord, vernacular }} /> : null}
-    </Grid>
+    <div>{newWord ? <WordCard word={{ ...newWord, vernacular }} /> : null}</div>
   );
 }

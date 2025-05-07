@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@mui/material";
+import { Grid2, Typography } from "@mui/material";
 import { FormEvent, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -53,25 +53,21 @@ export default function ImageUpload(props: ImageUploadProps): ReactElement {
           {t("createProject.fileSelected", { val: filename })}
         </Typography>
       )}
-      <Grid container spacing={1} justifyContent="flex-start">
-        <Grid item>
-          <FileInputButton
-            updateFile={(file) => updateFile(file)}
-            accept="image/*"
-          >
-            {t("buttons.browse")}
-          </FileInputButton>
-        </Grid>
-        <Grid item>
-          <LoadingDoneButton
-            loading={loading}
-            done={done}
-            buttonProps={{ type: "submit", id: "image-upload-save" }}
-          >
-            {t("buttons.save")}
-          </LoadingDoneButton>
-        </Grid>
-      </Grid>
+      <Grid2 container spacing={1} justifyContent="flex-start">
+        <FileInputButton
+          updateFile={(file) => updateFile(file)}
+          accept="image/*"
+        >
+          {t("buttons.browse")}
+        </FileInputButton>
+        <LoadingDoneButton
+          loading={loading}
+          done={done}
+          buttonProps={{ type: "submit", id: "image-upload-save" }}
+        >
+          {t("buttons.save")}
+        </LoadingDoneButton>
+      </Grid2>
     </form>
   );
 }
