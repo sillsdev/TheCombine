@@ -4,6 +4,7 @@
 // Not in a babel.config.js file since it's only used for Jest.
 // Modified from:
 // https://github.com/facebook/create-react-app/blob/main/packages/react-scripts/config/jest/babelTransform.js
+// https://parceljs.org/migration/cra/#6.-migrate-tests
 
 const createTransformer = require("babel-jest").default.createTransformer;
 

@@ -63,12 +63,12 @@ async function getFallbacks(
   }
   const fallbackText = await fetchText(fallbackFilePath);
   if (!fallbackText || fallbackText[0] !== "{") {
-    console.error(`Failed to load: ${fallbackFilePath}`);
+    console.warn(`Failed to load: ${fallbackFilePath}`);
     return [];
   }
   const fallbackJson: Hash<Hash<string>> = JSON.parse(fallbackText);
   if (!(source in fallbackJson) || !fallbackJson[source]) {
-    console.error(`Source "${source}" not in file: ${fallbackFilePath}`);
+    console.warn(`Source "${source}" not in file: ${fallbackFilePath}`);
     return [];
   }
   const fallback = fallbackJson[source];
