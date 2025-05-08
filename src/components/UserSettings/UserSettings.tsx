@@ -3,9 +3,10 @@ import {
   Button,
   Card,
   CardContent,
-  Grid,
+  Grid2,
   MenuItem,
   Select,
+  Stack,
   TextField,
   Tooltip,
   Typography,
@@ -133,16 +134,16 @@ export function UserSettings(props: {
   }
 
   return (
-    <Grid container justifyContent="center">
+    <Grid2 container justifyContent="center">
       <Card style={{ width: 450 }}>
         <form onSubmit={(e) => onSubmit(e)}>
           <CardContent>
-            <Grid item container spacing={6}>
-              <Grid item container spacing={2} alignItems="center">
-                <Grid item>
-                  <ClickableAvatar avatar={avatar} setAvatar={setAvatar} />
-                </Grid>
-                <Grid item xs>
+            <Stack spacing={6}>
+              {/* id: avatar, name, username */}
+              <Stack alignItems="center" direction="row" spacing={2}>
+                <ClickableAvatar avatar={avatar} setAvatar={setAvatar} />
+
+                <Grid2 size="grow">
                   <NormalizedTextField
                     id={UserSettingsIds.FieldName}
                     fullWidth
@@ -156,6 +157,7 @@ export function UserSettings(props: {
                     }}
                     style={{ margin: theme.spacing(1), marginInlineStart: 0 }}
                   />
+
                   <Typography
                     data-testid={UserSettingsIds.FieldUsername}
                     id={UserSettingsIds.FieldUsername}
@@ -166,21 +168,19 @@ export function UserSettings(props: {
                     {": "}
                     {props.user.username}
                   </Typography>
-                </Grid>
-              </Grid>
+                </Grid2>
+              </Stack>
 
-              <Grid item container spacing={2}>
-                <Grid item>
-                  <Typography variant="h6">
-                    {t("userSettings.contact")}
-                  </Typography>
-                </Grid>
+              {/* contact: phone, email */}
+              <Stack spacing={2}>
+                <Typography variant="h6">
+                  {t("userSettings.contact")}
+                </Typography>
 
-                <Grid item container spacing={1} alignItems="center">
-                  <Grid item>
-                    <Phone />
-                  </Grid>
-                  <Grid item xs>
+                <Stack alignItems="center" direction="row" spacing={1}>
+                  <Phone />
+
+                  <Grid2 size="grow">
                     <NormalizedTextField
                       id={UserSettingsIds.FieldPhone}
                       inputProps={{ "data-testid": UserSettingsIds.FieldPhone }}
@@ -191,14 +191,13 @@ export function UserSettings(props: {
                       onChange={(e) => setPhone(e.target.value)}
                       type="tel"
                     />
-                  </Grid>
-                </Grid>
+                  </Grid2>
+                </Stack>
 
-                <Grid item container spacing={1} alignItems="center">
-                  <Grid item>
-                    <Email />
-                  </Grid>
-                  <Grid item xs>
+                <Stack alignItems="center" direction="row" spacing={1}>
+                  <Email />
+
+                  <Grid2 size="grow">
                     <TextField
                       id={UserSettingsIds.FieldEmail}
                       inputProps={{ "data-testid": UserSettingsIds.FieldEmail }}
@@ -217,53 +216,49 @@ export function UserSettings(props: {
                       }
                       type="email"
                     />
-                  </Grid>
-                </Grid>
-              </Grid>
+                  </Grid2>
+                </Stack>
+              </Stack>
 
-              <Grid item container spacing={2}>
-                <Grid item xs={12}>
-                  <Typography variant="h6">
-                    {t("userSettings.uiLanguage")}
-                  </Typography>
-                </Grid>
+              {/* ui language */}
+              <Stack alignItems="flex-start" spacing={2}>
+                <Typography variant="h6">
+                  {t("userSettings.uiLanguage")}
+                </Typography>
 
-                <Grid item>
-                  <Select
-                    variant="standard"
-                    data-testid={UserSettingsIds.SelectUiLang}
-                    id={UserSettingsIds.SelectUiLang}
-                    value={uiLang}
-                    onChange={(e) => setUiLang(e.target.value ?? "")}
-                    /* Use `displayEmpty` and a conditional `renderValue` function to force
-                     * something to appear when the menu is closed and its value is "" */
-                    displayEmpty
-                    renderValue={
-                      uiLang
-                        ? undefined
-                        : () => t("userSettings.uiLanguageDefault")
-                    }
-                  >
-                    <MenuItem value={""}>
-                      {t("userSettings.uiLanguageDefault")}
+                <Select
+                  variant="standard"
+                  data-testid={UserSettingsIds.SelectUiLang}
+                  id={UserSettingsIds.SelectUiLang}
+                  value={uiLang}
+                  onChange={(e) => setUiLang(e.target.value ?? "")}
+                  /* Use `displayEmpty` and a conditional `renderValue` function to force
+                   * something to appear when the menu is closed and its value is "" */
+                  displayEmpty
+                  renderValue={
+                    uiLang
+                      ? undefined
+                      : () => t("userSettings.uiLanguageDefault")
+                  }
+                >
+                  <MenuItem value={""}>
+                    {t("userSettings.uiLanguageDefault")}
+                  </MenuItem>
+                  {uiWritingSystems.map((ws) => (
+                    <MenuItem key={ws.bcp47} value={ws.bcp47}>
+                      {`${ws.bcp47} (${ws.name})`}
                     </MenuItem>
-                    {uiWritingSystems.map((ws) => (
-                      <MenuItem key={ws.bcp47} value={ws.bcp47}>
-                        {`${ws.bcp47} (${ws.name})`}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </Grid>
-              </Grid>
+                  ))}
+                </Select>
+              </Stack>
 
-              <Grid item container spacing={2}>
-                <Grid item xs={12}>
-                  <Typography variant="h6">
-                    {t("userSettings.glossSuggestion")}
-                  </Typography>
-                </Grid>
+              {/* gloss spelling suggestions */}
+              <Stack alignItems="flex-start" spacing={2}>
+                <Typography variant="h6">
+                  {t("userSettings.glossSuggestion")}
+                </Typography>
 
-                <Grid item>
+                <Stack direction="row">
                   <Select
                     data-testid={UserSettingsIds.SelectGlossSuggestion}
                     id={UserSettingsIds.SelectGlossSuggestion}
@@ -280,56 +275,51 @@ export function UserSettings(props: {
                       {t("projectSettings.autocomplete.on")}
                     </MenuItem>
                   </Select>
-                </Grid>
 
-                <Grid item>
                   <Tooltip
                     title={t("userSettings.glossSuggestionHint")}
                     placement={document.body.dir === "rtl" ? "left" : "right"}
                   >
                     <HelpOutline fontSize="small" />
                   </Tooltip>
-                </Grid>
-              </Grid>
+                </Stack>
+              </Stack>
 
+              {/* analytics consent */}
               {!RuntimeConfig.getInstance().isOffline() && (
-                <Grid item container spacing={2}>
-                  <Grid item xs={12}>
-                    <Typography variant="h6">
-                      {t("userSettings.analyticsConsent.title")}
-                    </Typography>
-                  </Grid>
+                <Stack alignItems="flex-start" spacing={2}>
+                  <Typography variant="h6">
+                    {t("userSettings.analyticsConsent.title")}
+                  </Typography>
 
-                  <Grid item>
-                    <Typography>
-                      {t(
-                        analyticsOn
-                          ? "userSettings.analyticsConsent.consentYes"
-                          : "userSettings.analyticsConsent.consentNo"
-                      )}
-                    </Typography>
-                  </Grid>
+                  <Typography>
+                    {t(
+                      analyticsOn
+                        ? "userSettings.analyticsConsent.consentYes"
+                        : "userSettings.analyticsConsent.consentNo"
+                    )}
+                  </Typography>
 
-                  <Grid item>
-                    <Button
-                      data-testid={UserSettingsIds.ButtonChangeConsent}
-                      id={UserSettingsIds.ButtonChangeConsent}
-                      onClick={() => setDisplayConsent(true)}
-                      variant="outlined"
-                    >
-                      {t("userSettings.analyticsConsent.button")}
-                    </Button>
-                  </Grid>
+                  <Button
+                    data-testid={UserSettingsIds.ButtonChangeConsent}
+                    id={UserSettingsIds.ButtonChangeConsent}
+                    onClick={() => setDisplayConsent(true)}
+                    variant="outlined"
+                  >
+                    {t("userSettings.analyticsConsent.button")}
+                  </Button>
+
                   {displayConsent && (
                     <AnalyticsConsent
                       onChangeConsent={handleConsentChange}
                       required={false}
                     />
                   )}
-                </Grid>
+                </Stack>
               )}
 
-              <Grid item container justifyContent="flex-end">
+              {/* save button */}
+              <Grid2 container justifyContent="flex-end">
                 <Button
                   data-testid={UserSettingsIds.ButtonSubmit}
                   disabled={disabled}
@@ -339,11 +329,11 @@ export function UserSettings(props: {
                 >
                   {t("buttons.save")}
                 </Button>
-              </Grid>
-            </Grid>
+              </Grid2>
+            </Stack>
           </CardContent>
         </form>
       </Card>
-    </Grid>
+    </Grid2>
   );
 }
