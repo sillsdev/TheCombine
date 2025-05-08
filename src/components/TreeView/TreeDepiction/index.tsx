@@ -1,4 +1,4 @@
-import { Grid, Theme, useMediaQuery } from "@mui/material";
+import { Grid2, Theme, useMediaQuery } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 
 import ChildrenRow from "components/TreeView/TreeDepiction/ChildrenRow";
@@ -29,34 +29,34 @@ export default function TreeDepiction(props: TreeDepictionProps): ReactElement {
       {/* Display parent domain, if available. */}
       {showTree && currentDomain.parent && (
         <>
-          <Grid item>
+          <Grid2>
             <DomainTileButton
               direction={Direction.Up}
               domain={currentDomain.parent}
               onClick={props.animate}
             />
-          </Grid>
-          <Grid item>
+          </Grid2>
+          <Grid2>
             <img
               src={parent}
               style={{ transform: "scaleY(-1)" }}
               width={colWidth}
             />
-          </Grid>
+          </Grid2>
         </>
       )}
 
       {/* Display current domain and (if available) left and right brothers. */}
-      <Grid item>
+      <Grid2>
         <CurrentRow {...props} small={!showTree} />
-      </Grid>
+      </Grid2>
 
       {/* Display subdomains, if available. */}
-      <Grid item>
+      <Grid2>
         {showTree && currentDomain.children.length > 0 && (
           <ChildrenRow {...props} colWidth={colWidth} />
         )}
-      </Grid>
+      </Grid2>
     </>
   );
 }

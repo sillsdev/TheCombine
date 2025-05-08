@@ -1,5 +1,5 @@
 import { Close, KeyboardDoubleArrowUp } from "@mui/icons-material";
-import { Grid, type Theme, Zoom, useMediaQuery } from "@mui/material";
+import { Grid2, type Theme, Zoom, useMediaQuery } from "@mui/material";
 import { animate } from "motion";
 import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -117,22 +117,24 @@ export default function TreeView(props: TreeViewProps): ReactElement {
     <>
       {/* Domain search */}
       <TreeNavigator currentDomain={currentDomain} animate={animateHandler} />
-      <Grid container justifyContent="space-between">
-        <Grid item>
+      <Grid2 container justifyContent="space-between">
+        <Grid2>
           {/* Empty grid item to balance the buttons */}
           {showButtonToTop && (
             <div style={{ display: "inline-block", width: 40 }} />
           )}
           {exit && <div style={{ display: "inline-block", width: 40 }} />}
-        </Grid>
-        <Grid item>
+        </Grid2>
+
+        <Grid2>
           <TreeSearch
             animate={animateHandler}
             currentDomain={currentDomain}
             customDomains={customDomains}
           />
-        </Grid>
-        <Grid item>
+        </Grid2>
+
+        <Grid2>
           {showButtonToTop && (
             <IconButtonWithTooltip
               icon={<KeyboardDoubleArrowUp />}
@@ -149,8 +151,9 @@ export default function TreeView(props: TreeViewProps): ReactElement {
               buttonId={TreeViewIds.ButtonExit}
             />
           )}
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
+
       {/* Domain tree */}
       <Zoom
         in={visible}
@@ -160,7 +163,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
           }
         }}
       >
-        <Grid
+        <Grid2
           container
           direction="column"
           justifyContent="center"
@@ -170,7 +173,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
             currentDomain={currentDomain}
             animate={animateHandler}
           />
-        </Grid>
+        </Grid2>
       </Zoom>
     </>
   );
