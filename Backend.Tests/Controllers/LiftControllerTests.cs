@@ -12,7 +12,6 @@ using BackendFramework.Models;
 using BackendFramework.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using static System.Linq.Enumerable;
@@ -22,12 +21,9 @@ namespace Backend.Tests.Controllers
     public class LiftControllerTests : IDisposable
     {
         private IProjectRepository _projRepo = null!;
-        private ISemanticDomainRepository _semDomRepo = null!;
         private ISpeakerRepository _speakerRepo = null!;
         private IWordRepository _wordRepo = null!;
         private ILiftService _liftService = null!;
-        private IHubContext<CombineHub> _notifyService = null!;
-        private IPermissionService _permissionService = null!;
         private IWordService _wordService = null!;
         private LiftController _liftController = null!;
 
@@ -49,26 +45,22 @@ namespace Backend.Tests.Controllers
             }
         }
 
-        private ILogger<LiftController> _logger = null!;
         private string _projId = null!;
         private const string ProjName = "LiftControllerTests";
+        private const string ExportId = "LiftControllerTestExportId";
         private const string UserId = "LiftControllerTestUserId";
 
         [SetUp]
         public void Setup()
         {
             _projRepo = new ProjectRepositoryMock();
-            _semDomRepo = new SemanticDomainRepositoryMock();
             _speakerRepo = new SpeakerRepositoryMock();
             _wordRepo = new WordRepositoryMock();
-            _liftService = new LiftService(_semDomRepo, _speakerRepo);
-            _notifyService = new HubContextMock();
-            _permissionService = new PermissionServiceMock();
+            _liftService = new LiftService(new SemanticDomainRepositoryMock(), _speakerRepo);
             _wordService = new WordService(_wordRepo);
-            _liftController = new LiftController(
-                _wordRepo, _projRepo, _permissionService, _liftService, _notifyService, _logger);
+            _liftController = new LiftController(_wordRepo, _projRepo, new PermissionServiceMock(), _liftService,
+                new HubContextMock<ExportHub>(), new MockLogger());
 
-            _logger = new MockLogger();
             _projId = _projRepo.Create(new Project { Name = ProjName }).Result!.Id;
             _file = new FormFile(_stream, 0, _stream.Length, "Name", FileName);
         }
@@ -85,16 +77,16 @@ namespace Backend.Tests.Controllers
             name = Path.Combine(path, name);
             var fs = File.OpenWrite(name);
 
-            const string liftHeader = @"<?xml version=""1.0"" encoding=""UTF-8""?>
+            const string liftHeader = $@"<?xml version=""1.0"" encoding=""UTF-8""?>
                 <lift producer = ""SIL.FLEx 8.3.12.43172"" version = ""0.13"">
                     <header>
                         <ranges>
                             <range id = ""semantic-domain-ddp4"" href = ""file://C:/Users/DelaneyS/TheCombine/testingdata/testingdata.lift-ranges""/>
                         </ranges>
                         <fields>
-                            <field tag = ""Plural"">
+                            <field tag = ""{LiftHelper.FlagFieldTag}"">
                                 <form lang = ""en""><text></text></form>
-                                <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = String; WsSelector = kwsVern </text></form>
+                                <form lang = ""qaa-x-spec""><text> Class = LexEntry; Type = MultiUnicode; WsSelector = kwsAnals </text></form>
                             </field>
                         </fields>
                     </header>
@@ -111,7 +103,8 @@ namespace Backend.Tests.Controllers
                 var guid = $"\"{Util.RandString()}\"";
                 var vernLang = $"\"{Util.RandString(3)}\"";
                 var vern = Util.RandString(6);
-                var plural = Util.RandString(8);
+                var flag = Util.RandString(10);
+                var note = Util.RandString(12);
                 var audio = $"\"{Util.RandString(3)}.mp3\"";
                 var senseId = $"\"{Util.RandString()}\"";
                 var transLang1 = $"\"{Util.RandString(3)}\"";
@@ -125,11 +118,14 @@ namespace Backend.Tests.Controllers
                             <lexical-unit>
                                 <form lang = {vernLang}><text> {vern} </text></form>
                             </lexical-unit>
-                            <field type = ""Plural"">
-                                <form lang = {vernLang}><text> {plural} </text></form>
+                            <field type = ""{LiftHelper.FlagFieldTag}"">
+                                <form lang = {transLang1}><text> {flag} </text></form>
                             </field>
+                            <note>
+                                <form lang = {transLang1}><text> {note} </text></form>
+                            </note>
                             <pronunciation>
-			                    <media href= {audio}/>
+                                <media href= {audio}/>
                             </pronunciation>
                             <sense id = {senseId}>
                                 <gloss lang = {transLang1}><text> {trans1} </text></gloss>
@@ -332,7 +328,8 @@ namespace Backend.Tests.Controllers
             word.Modified = Time.ToUtcIso8601(new DateTime(2000, 1, 1));
             await _wordRepo.Create(word);
 
-            await _liftController.CreateLiftExportThenSignal(_projId, UserId);
+            _liftService.SetExportInProgress(UserId, ExportId);
+            await _liftController.CreateLiftExportThenSignal(_projId, UserId, ExportId);
             var liftContents = await DownloadAndReadLift(_liftController, _projId);
             Assert.That(liftContents, Does.Contain("dateCreated=\"1000-01-01T00:00:00Z\""));
             Assert.That(liftContents, Does.Contain("dateModified=\"2000-01-01T00:00:00Z\""));
@@ -372,8 +369,26 @@ namespace Backend.Tests.Controllers
         {
             const string invalidProjectId = "INVALID_ID";
             Assert.That(
-                async () => await _liftController.CreateLiftExportThenSignal(invalidProjectId, UserId),
+                async () =>
+                {
+                    _liftService.SetExportInProgress(UserId, ExportId);
+                    await _liftController.CreateLiftExportThenSignal(invalidProjectId, UserId, ExportId);
+                },
                 Throws.TypeOf<MissingProjectException>());
+        }
+
+        [Test]
+        public async Task TestCancelLiftExport()
+        {
+            _liftController.ControllerContext.HttpContext = PermissionServiceMock.HttpContextWithUserId(UserId);
+            _liftService.SetExportInProgress(UserId, ExportId);
+            var active = await _liftController.CreateLiftExportThenSignal(_projId, UserId, ExportId);
+            Assert.That(active, Is.True);
+
+            _liftService.SetExportInProgress(UserId, ExportId);
+            _liftController.CancelLiftExport();
+            active = await _liftController.CreateLiftExportThenSignal(_projId, UserId, ExportId);
+            Assert.That(active, Is.False);
         }
 
         [Test]
@@ -440,7 +455,8 @@ namespace Backend.Tests.Controllers
             await _wordService.Update(_projId, UserId, wordToUpdate.Id, word);
             await _wordService.DeleteFrontierWord(_projId, UserId, wordToDelete.Id);
 
-            await _liftController.CreateLiftExportThenSignal(_projId, UserId);
+            _liftService.SetExportInProgress(UserId, ExportId);
+            await _liftController.CreateLiftExportThenSignal(_projId, UserId, ExportId);
             var text = await DownloadAndReadLift(_liftController, _projId);
             // TODO: Add SIL or other XML assertion library and verify with xpath that the correct entries are
             //      kept vs deleted

@@ -121,7 +121,7 @@ describe("combineIntoFirstSense", () => {
   });
 
   it("combines non-duplicate definitions", () => {
-    const textEn1 = "a flying fish";
+    const textEn1 = "a fish that flies; flying fish";
     const textEn1Contained = "flying fish";
     const textEn2 = "a species of flying fish";
     const textEs = "un pez volando";
@@ -150,13 +150,13 @@ describe("combineIntoFirstSense", () => {
   });
 
   it("combines non-duplicate glosses", () => {
-    const defEn1 = "a flying fish";
+    const defEn1 = "flying fish; a fish that flies";
     const defEn1Contained = "flying fish";
     const defEn2 = "a species of flying fish";
     const defEs = "un pez volando";
     const senses = [
-      mockMergeTreeSense({ glosses: [newGloss(defEn1, "en")] }),
       mockMergeTreeSense({ glosses: [newGloss(defEn1Contained, "en")] }),
+      mockMergeTreeSense({ glosses: [newGloss(defEn1, "en")] }),
       mockMergeTreeSense({
         glosses: [newGloss(defEs, "es"), newGloss(defEn2, "en")],
       }),

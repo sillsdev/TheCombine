@@ -25,6 +25,7 @@ otel:
     name: otel
     reference: open-telemetry/opentelemetry-collector
     namespace: thecombine
+    version: 0.122.5
     wait: true
     # Additional arguments to pass to helm install/upgrade
     # values inside curly braces ({}) are interpreted as

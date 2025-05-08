@@ -52,6 +52,7 @@ const authenticationUrls = [
 /** A list of URL patterns for which the frontend explicitly handles errors
  * and the blanket error pop ups should be suppressed.*/
 const whiteListedErrorUrls = [
+  "/merge/retrievedups",
   "/speakers/create/",
   "/speakers/update/",
   "/users/authenticate",
@@ -274,6 +275,13 @@ export async function exportLift(projectId: string): Promise<string> {
   return (await liftApi.exportLiftFile({ projectId }, defaultOptions())).data;
 }
 
+/** Tell the backend to cancel the LIFT file export. */
+export async function cancelExport(): Promise<boolean> {
+  return (
+    await liftApi.cancelLiftExport({ projectId: "nonempty" }, defaultOptions())
+  ).data;
+}
+
 /** After the backend confirms that a LIFT file is ready, download it. */
 export async function downloadLift(projectId: string): Promise<string> {
   /** For details on how to download binary files with axios, see:
@@ -335,15 +343,21 @@ export async function graylistAdd(wordIds: string[]): Promise<void> {
   );
 }
 
-/** Get list of potential duplicates for merging. */
-export async function getDuplicates(
+/** Start finding list of potential duplicates for merging. */
+export async function findDuplicates(
   maxInList: number,
   maxLists: number
-): Promise<Word[][]> {
-  const projectId = LocalStorage.getProjectId();
-  const userId = LocalStorage.getUserId();
-  const resp = await mergeApi.getPotentialDuplicates(
-    { projectId, maxInList, maxLists, userId },
+): Promise<void> {
+  await mergeApi.findPotentialDuplicates(
+    { projectId: LocalStorage.getProjectId(), maxInList, maxLists },
+    defaultOptions()
+  );
+}
+
+/** Retrieve list of potential duplicates for merging. */
+export async function retrieveDuplicates(): Promise<Word[][]> {
+  const resp = await mergeApi.retrievePotentialDuplicates(
+    { projectId: LocalStorage.getProjectId() },
     defaultOptions()
   );
   return resp.data;

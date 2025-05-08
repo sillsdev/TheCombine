@@ -13,10 +13,11 @@ namespace BackendFramework.Interfaces
         Task CreateLiftRanges(List<SemanticDomainFull> projDoms, string rangesDest);
 
         // Methods to store, retrieve, and delete an export string in a common dictionary.
-        void StoreExport(string userId, string filePath);
+        bool StoreExport(string userId, string filePath, string exportId);
         string? RetrieveExport(string userId);
         bool DeleteExport(string userId);
-        void SetExportInProgress(string userId, bool isInProgress);
+        bool CancelRecentExport(string userId);
+        void SetExportInProgress(string userId, string? exportId);
         bool IsExportInProgress(string userId);
         void StoreImport(string userId, string filePath);
         string? RetrieveImport(string userId);
