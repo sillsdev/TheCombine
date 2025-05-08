@@ -133,6 +133,12 @@ namespace BackendFramework.Services
             return user.WorkedProjects[projectId] != userEditId;
         }
 
+        /// <returns> TraceIdentifier for the request. If null, returns an empty string. </returns>
+        public string GetExportId(HttpContext request)
+        {
+            return request.TraceIdentifier ?? "";
+        }
+
         /// <summary>Retrieve the User ID from the JWT in a request. </summary>
         /// <exception cref="InvalidJwtTokenException"> Throws when null userId extracted from token. </exception>
         public string GetUserId(HttpContext request)

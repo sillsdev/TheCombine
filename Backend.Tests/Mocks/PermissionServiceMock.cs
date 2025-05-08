@@ -112,7 +112,20 @@ namespace Backend.Tests.Mocks
         }
 
         /// <param name="request">
-        /// Note this parameter is nullable in the mock implementation even though the real implementation it is not
+        /// Note this parameter is nullable in the mock implementation even though the real implementation is not
+        /// to support unit testing when `HttpContext`s are not available.
+        /// </param>
+        public string GetExportId(HttpContext? request)
+        {
+            if (request is null)
+            {
+                return NoHttpContextAvailable;
+            }
+            return "ExportId";
+        }
+
+        /// <param name="request">
+        /// Note this parameter is nullable in the mock implementation even though the real implementation is not
         /// to support unit testing when `HttpContext`s are not available.
         /// </param>
         public string GetUserId(HttpContext? request)
