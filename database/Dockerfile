@@ -5,7 +5,7 @@
 #   - Intel/AMD 64-bit
 #   - ARM 64-bit
 ############################################################
-FROM mongo:7.0.18-jammy
+FROM mongo:7.0.20-jammy
 
 WORKDIR /
 
