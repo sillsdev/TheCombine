@@ -1,4 +1,4 @@
-import { Card, CardContent, Grid, Typography } from "@mui/material";
+import { Box, Grid2, Stack, Typography } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
@@ -47,48 +47,45 @@ export default function EmailInvite(props: InviteProps): ReactElement {
   }, [email]);
 
   return (
-    <Card style={{ width: 450 }}>
-      <CardContent>
-        <Typography variant="h5" align="center" gutterBottom>
+    <Box sx={{ width: 450 }}>
+      <Stack alignContent="center" spacing={2}>
+        <Typography variant="h5" align="center">
           {t("projectSettings.invite.inviteByEmailLabel")}
         </Typography>
+
         <NormalizedTextField
+          autoFocus
+          fullWidth
           id="project-user-invite-email"
-          required
           label={t("projectSettings.invite.emailLabel")}
           onChange={(e) => setEmail(e.target.value)}
-          variant="outlined"
-          style={{ width: "100%" }}
-          margin="normal"
-          autoFocus
-          inputProps={{ maxLength: 100 }}
+          required
+          slotProps={{ htmlInput: { maxLength: 100 } }}
         />
+
         <NormalizedTextField
+          fullWidth
           id="project-user-invite-message"
-          label="Message"
+          label={t("projectSettings.invite.emailMessage")}
           onChange={(e) => setMessage(e.target.value)}
-          variant="outlined"
-          style={{ width: "100%" }}
-          margin="normal"
         />
-        <Grid container justifyContent="flex-end" spacing={2}>
-          <Grid item>
-            <LoadingDoneButton
-              disabled={!isValid}
-              loading={isLoading}
-              done={isDone}
-              buttonProps={{
-                id: "project-user-invite-submit",
-                onClick: () => onSubmit(),
-                variant: "contained",
-                color: "primary",
-              }}
-            >
-              {t("buttons.invite")}
-            </LoadingDoneButton>
-          </Grid>
-        </Grid>
-      </CardContent>
-    </Card>
+
+        <Grid2 container justifyContent="flex-end">
+          <LoadingDoneButton
+            disabled={!isValid}
+            loading={isLoading}
+            done={isDone}
+            buttonProps={{
+              id: "project-user-invite-submit",
+              onClick: () => onSubmit(),
+              variant: "contained",
+              color: "primary",
+            }}
+          >
+            {t("buttons.invite")}
+          </LoadingDoneButton>
+        </Grid2>
+      </Stack>
+    </Box>
   );
 }

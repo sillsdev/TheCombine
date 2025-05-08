@@ -9,7 +9,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  Grid,
+  Grid2,
   IconButton,
   Stack,
   Typography,
@@ -313,24 +313,25 @@ export function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
   return (
     <Dialog open={props.open}>
       <DialogTitle>
-        <Grid container justifyContent="space-between">
-          <Grid item>{t("projectSettings.domains.add")}</Grid>
-          <Grid item>
-            <IconButton
-              id={ProjectDomainsId.ButtonDomainAddDialogConfirm}
-              onClick={() => submit()}
-            >
-              <Check sx={{ color: (t) => t.palette.success.main }} />
-            </IconButton>
-            <IconButton
-              id={ProjectDomainsId.ButtonDomainAddDialogCancel}
-              onClick={() => cancel()}
-            >
-              <Close sx={{ color: (t) => t.palette.error.main }} />
-            </IconButton>
-          </Grid>
-        </Grid>
+        <Grid2 container justifyContent="space-between">
+          <Grid2 size="grow">{t("projectSettings.domains.add")}</Grid2>
+          <IconButton
+            id={ProjectDomainsId.ButtonDomainAddDialogConfirm}
+            onClick={() => submit()}
+            size="small"
+          >
+            <Check sx={{ color: (t) => t.palette.success.main }} />
+          </IconButton>
+          <IconButton
+            id={ProjectDomainsId.ButtonDomainAddDialogCancel}
+            onClick={() => cancel()}
+            size="small"
+          >
+            <Close sx={{ color: (t) => t.palette.error.main }} />
+          </IconButton>
+        </Grid2>
       </DialogTitle>
+
       <DialogContent>
         <Stack spacing={1}>
           <Box>
