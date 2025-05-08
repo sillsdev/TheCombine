@@ -104,7 +104,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> HasFrontierWords(string projectId)
         {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if Frontier is nonempty");
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if Frontier has any words");
 
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
