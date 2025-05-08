@@ -1,11 +1,4 @@
-import {
-  Button,
-  Grid2,
-  Stack,
-  Theme,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { Button, Grid2, Stack, Typography } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
@@ -23,8 +16,6 @@ export default function AnalyticsConsent(props: ConsentProps): ReactElement {
   const acceptAnalytics = (): void => props.onChangeConsent(true);
   const rejectAnalytics = (): void => props.onChangeConsent(false);
   const clickedAway = (): void => props.onChangeConsent(undefined);
-
-  const isXs = useMediaQuery<Theme>((th) => th.breakpoints.only("xs"));
 
   function ConsentButton(props: {
     onClick: () => void;
@@ -49,7 +40,7 @@ export default function AnalyticsConsent(props: ConsentProps): ReactElement {
       PaperProps={{ style: { padding: 20 } }}
     >
       <Stack
-        direction={isXs ? "column" : "row"}
+        direction={{ xs: "column", sm: "row" }}
         alignItems="center"
         spacing={3}
       >
