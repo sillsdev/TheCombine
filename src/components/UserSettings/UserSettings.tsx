@@ -136,8 +136,8 @@ export function UserSettings(props: {
   return (
     <Grid2 container justifyContent="center">
       <Card style={{ width: 450 }}>
-        <form onSubmit={(e) => onSubmit(e)}>
-          <CardContent>
+        <CardContent>
+          <form onSubmit={(e) => onSubmit(e)}>
             <Stack spacing={6}>
               {/* id: avatar, name, username */}
               <Stack alignItems="center" direction="row" spacing={2}>
@@ -331,8 +331,8 @@ export function UserSettings(props: {
                 </Button>
               </Grid2>
             </Stack>
-          </CardContent>
-        </form>
+          </form>
+        </CardContent>
       </Card>
     </Grid2>
   );
