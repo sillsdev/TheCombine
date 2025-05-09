@@ -7,7 +7,7 @@ import testDomainMap, {
   mapIds,
 } from "components/TreeView/tests/SemanticDomainMock";
 import theme from "types/theme";
-import { setMatchMedia } from "utilities/testRendererUtilities";
+import { setMatchMedia } from "utilities/testingLibraryUtilities";
 
 beforeAll(async () => {
   // Required (along with a `ThemeProvider`) for `useMediaQuery` to work

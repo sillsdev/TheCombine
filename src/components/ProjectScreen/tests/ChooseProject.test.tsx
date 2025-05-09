@@ -1,10 +1,9 @@
-import { ListItemButton } from "@mui/material";
-import renderer from "react-test-renderer";
+import "@testing-library/jest-dom";
+import { act, render, screen } from "@testing-library/react";
 
 import { type Project } from "api/models";
 import ChooseProject from "components/ProjectScreen/ChooseProject";
 import { newProject } from "types/project";
-import { testInstanceHasText } from "utilities/testRendererUtilities";
 import { randomIntString } from "utilities/utilities";
 
 jest.mock("backend", () => ({
@@ -21,20 +20,18 @@ const mockProj = (name: string): Project => ({
   id: randomIntString(),
 });
 
-let testRenderer: renderer.ReactTestRenderer;
-
 it("renders with projects in alphabetical order", async () => {
-  const unordered = ["In the middle", "should be last", "alphabetically first"];
+  const unordered = ["In the middle", "should be last", "álphabetically first"];
   mockGetProjects.mockResolvedValue(unordered.map((name) => mockProj(name)));
-  await renderer.act(async () => {
-    testRenderer = renderer.create(<ChooseProject />);
+  await act(async () => {
+    render(<ChooseProject />);
   });
-  const items = testRenderer.root.findAllByType(ListItemButton);
+  const items = screen.getAllByRole("listitem");
   expect(items).toHaveLength(unordered.length);
-  expect(testInstanceHasText(items[0], unordered[0])).toBeFalsy();
-  expect(testInstanceHasText(items[1], unordered[1])).toBeFalsy();
-  expect(testInstanceHasText(items[2], unordered[2])).toBeFalsy();
-  expect(testInstanceHasText(items[0], unordered[2])).toBeTruthy();
-  expect(testInstanceHasText(items[1], unordered[0])).toBeTruthy();
-  expect(testInstanceHasText(items[2], unordered[1])).toBeTruthy();
+  expect(items[0]).not.toHaveTextContent(unordered[0]);
+  expect(items[1]).not.toHaveTextContent(unordered[1]);
+  expect(items[2]).not.toHaveTextContent(unordered[2]);
+  expect(items[0]).toHaveTextContent(unordered[2]);
+  expect(items[1]).toHaveTextContent(unordered[0]);
+  expect(items[2]).toHaveTextContent(unordered[1]);
 });

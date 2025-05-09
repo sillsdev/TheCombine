@@ -1,4 +1,5 @@
 import { type RenderOptions, render } from "@testing-library/react";
+import { match } from "css-mediaquery";
 import { type PropsWithChildren, type ReactElement } from "react";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
@@ -41,4 +42,18 @@ export function renderWithProviders(
 
   // Return an object with the store and all of RTL's query functions
   return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
+}
+
+/** Call before rendering to allow `useMediaQuery` to work.
+ *  (Also need components wrapped in a `<ThemeProvider>`.)
+ *  Modified from mui.com/material-ui/react-use-media-query/#testing */
+export function setMatchMedia(width?: number): void {
+  window.matchMedia = (query: string): MediaQueryList =>
+    ({
+      matches: match(query, { width: width ?? window.innerWidth }),
+      addEventListener: jest.fn(),
+      addListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      removeListener: jest.fn(),
+    }) as any;
 }

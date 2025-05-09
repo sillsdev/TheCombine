@@ -1,4 +1,3 @@
-import { ZoomProps } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -10,16 +9,7 @@ import { defaultState as treeViewState } from "components/TreeView/Redux/TreeVie
 import mockMap, { mapIds } from "components/TreeView/tests/SemanticDomainMock";
 import theme from "types/theme";
 import { newWritingSystem } from "types/writingSystem";
-import { setMatchMedia } from "utilities/testRendererUtilities";
-
-// Mock out Zoom to avoid issues with portals
-jest.mock("@mui/material", () => {
-  const realMaterialUi = jest.requireActual("@mui/material");
-  return {
-    ...realMaterialUi,
-    Zoom: (props: ZoomProps) => <div>{props.children}</div>,
-  };
-});
+import { setMatchMedia } from "utilities/testingLibraryUtilities";
 
 jest.mock("rootRedux/hooks", () => {
   return {
