@@ -19,5 +19,5 @@
     "target": "es6"
   },
   "exclude": ["*.dic.js"],
-  "include": [".eslintrc.cjs", "public", "src", "scripts"]
+  "include": ["eslint.config.mjs", "public", "src", "scripts"]
 }

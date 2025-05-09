@@ -54,6 +54,7 @@ export default function CharacterInventory(): ReactElement {
     dispatch(loadCharInvData());
 
     // Call when component unmounts.
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     () => dispatch(resetCharInv());
   }, [dispatch]);
 
