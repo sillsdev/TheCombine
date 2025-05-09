@@ -1,5 +1,11 @@
 import { Delete } from "@mui/icons-material";
-import { Drawer, Grid, ImageList, ImageListItem, Tooltip } from "@mui/material";
+import {
+  Drawer,
+  Grid2,
+  ImageList,
+  ImageListItem,
+  Tooltip,
+} from "@mui/material";
 import { CSSProperties, ReactElement, useState } from "react";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
@@ -241,8 +247,8 @@ export default function MergeDragDrop(): ReactElement {
 
   return (
     <DragDropContext onDragEnd={handleDrop}>
-      <Grid container>
-        <Grid item columns={1} key={"trash"} style={{ marginTop: "70vh" }}>
+      <Grid2 container>
+        <Grid2 columns={1} key={"trash"} style={{ marginTop: "70vh" }}>
           <Droppable key={trashId} droppableId={trashId}>
             {(provided): ReactElement => (
               <div ref={provided.innerRef}>
@@ -253,36 +259,35 @@ export default function MergeDragDrop(): ReactElement {
               </div>
             )}
           </Droppable>
-        </Grid>
-        <Grid item sm={11} xs={10 /* Allow trash icon more space. */}>
-          <ImageList rowHeight="auto" cols={colCount} style={{ width: "90vw" }}>
-            {Object.keys(words).map((key) => (
-              <ImageListItem
-                key={key}
-                style={{ height: "70vh", margin: theme.spacing(1) }}
-              >
-                <DropWord wordId={key} />
-              </ImageListItem>
-            ))}
-            <ImageListItem key={newId} style={{ margin: theme.spacing(1) }}>
-              <DropWord wordId={newId} />
+        </Grid2>
+
+        <ImageList rowHeight="auto" cols={colCount} style={{ width: "90vw" }}>
+          {Object.keys(words).map((key) => (
+            <ImageListItem
+              key={key}
+              style={{ height: "70vh", margin: theme.spacing(1) }}
+            >
+              <DropWord wordId={key} />
             </ImageListItem>
-            {renderSidebar()}
-            <CancelConfirmDialog
-              open={!!override}
-              text={override?.protectReason ?? ""}
-              handleCancel={() => setOverride(undefined)}
-              handleConfirm={onConfirmOverride}
-            />
-            <CancelConfirmDialog
-              open={!!srcToDelete}
-              text="mergeDups.helpText.deleteDialog"
-              handleCancel={() => setSrcToDelete(undefined)}
-              handleConfirm={onConfirmDelete}
-            />
-          </ImageList>
-        </Grid>
-      </Grid>
+          ))}
+          <ImageListItem key={newId} style={{ margin: theme.spacing(1) }}>
+            <DropWord wordId={newId} />
+          </ImageListItem>
+          {renderSidebar()}
+          <CancelConfirmDialog
+            open={!!override}
+            text={override?.protectReason ?? ""}
+            handleCancel={() => setOverride(undefined)}
+            handleConfirm={onConfirmOverride}
+          />
+          <CancelConfirmDialog
+            open={!!srcToDelete}
+            text="mergeDups.helpText.deleteDialog"
+            handleCancel={() => setSrcToDelete(undefined)}
+            handleConfirm={onConfirmDelete}
+          />
+        </ImageList>
+      </Grid2>
     </DragDropContext>
   );
 }

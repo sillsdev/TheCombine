@@ -2,13 +2,8 @@ import { Provider } from "react-redux";
 import { ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import CharInv, {
-  buttonIdCancel,
-  buttonIdSave,
-  dialogButtonIdNo,
-  dialogButtonIdYes,
-  dialogIdCancel,
-} from "goals/CharacterInventory/CharInv";
+import CharInv from "goals/CharacterInventory/CharInv";
+import { CharInvCancelSaveIds } from "goals/CharacterInventory/CharInv/CharacterEntry";
 import { defaultState as characterInventoryState } from "goals/CharacterInventory/Redux/CharacterInventoryReduxTypes";
 
 // Replace Dialog with something that doesn't create portals,
@@ -67,30 +62,42 @@ describe("CharInv", () => {
 
   it("saves inventory on save", async () => {
     expect(mockUploadInventory).toHaveBeenCalledTimes(0);
-    const saveButton = charMaster.root.findByProps({ id: buttonIdSave });
+    const saveButton = charMaster.root.findByProps({
+      id: CharInvCancelSaveIds.ButtonSave,
+    });
     await act(async () => saveButton.props.onClick());
     expect(mockUploadInventory).toHaveBeenCalledTimes(1);
   });
 
   it("opens a dialogue on cancel, closes on no", async () => {
-    const cancelDialog = charMaster.root.findByProps({ id: dialogIdCancel });
+    const cancelDialog = charMaster.root.findByProps({
+      id: CharInvCancelSaveIds.DialogCancel,
+    });
     expect(cancelDialog.props.open).toBeFalsy();
 
-    const cancelButton = charMaster.root.findByProps({ id: buttonIdCancel });
+    const cancelButton = charMaster.root.findByProps({
+      id: CharInvCancelSaveIds.ButtonCancel,
+    });
     await act(async () => cancelButton.props.onClick());
     expect(cancelDialog.props.open).toBeTruthy();
 
-    const noButton = charMaster.root.findByProps({ id: dialogButtonIdNo });
+    const noButton = charMaster.root.findByProps({
+      id: CharInvCancelSaveIds.DialogCancelButtonNo,
+    });
     await act(async () => noButton.props.onClick());
     expect(cancelDialog.props.open).toBeFalsy();
   });
 
   it("exits on cancel-yes", async () => {
-    const cancelButton = charMaster.root.findByProps({ id: buttonIdCancel });
+    const cancelButton = charMaster.root.findByProps({
+      id: CharInvCancelSaveIds.ButtonCancel,
+    });
     await act(async () => cancelButton.props.onClick());
     expect(mockExit).toHaveBeenCalledTimes(0);
 
-    const yesButton = charMaster.root.findByProps({ id: dialogButtonIdYes });
+    const yesButton = charMaster.root.findByProps({
+      id: CharInvCancelSaveIds.DialogCancelButtonYes,
+    });
     await act(async () => yesButton.props.onClick());
     expect(mockExit).toHaveBeenCalledTimes(1);
   });
