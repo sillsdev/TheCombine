@@ -155,6 +155,7 @@
     "uploadAvatarTitle": "Set user avatar"
   },
   "projectExport": {
+    "cancelExport": "Cancel export",
     "cannotExportEmpty": "Project is empty. You cannot export a project with no words.",
     "downloadInProgress": "Downloading project: {{ val }}",
     "exportFailed": "Failed to export project {{ val }}. Click to clear this message.",
