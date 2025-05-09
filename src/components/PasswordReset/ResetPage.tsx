@@ -91,7 +91,7 @@ export default function PasswordReset(): ReactElement {
 
         <CardContent>
           <form onSubmit={onSubmit}>
-            <Stack spacing={2}>
+            <Stack alignItems="flex-end" spacing={2}>
               <NormalizedTextField
                 error={!passwordFitsRequirements}
                 fullWidth
@@ -126,17 +126,15 @@ export default function PasswordReset(): ReactElement {
                 value={passwordConfirm}
               />
 
-              <Grid2 container justifyContent="flex-end">
-                <Button
-                  data-testid={PasswordResetIds.SubmitButton}
-                  disabled={!(passwordFitsRequirements && isPasswordConfirmed)}
-                  id={PasswordResetIds.SubmitButton}
-                  onClick={onSubmit}
-                  variant="contained"
-                >
-                  {t("passwordReset.submit")}
-                </Button>
-              </Grid2>
+              <Button
+                data-testid={PasswordResetIds.SubmitButton}
+                disabled={!(passwordFitsRequirements && isPasswordConfirmed)}
+                id={PasswordResetIds.SubmitButton}
+                onClick={onSubmit}
+                variant="contained"
+              >
+                {t("passwordReset.submit")}
+              </Button>
             </Stack>
           </form>
         </CardContent>

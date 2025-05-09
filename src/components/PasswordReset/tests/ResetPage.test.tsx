@@ -65,7 +65,7 @@ const customRender = async (
 };
 
 describe("PasswordReset", () => {
-  it("renders with password length error", async () => {
+  it("disables button when password too short", async () => {
     const user = userEvent.setup();
     await customRender(<PasswordReset />);
 
@@ -80,7 +80,7 @@ describe("PasswordReset", () => {
     expect(submitButton.closest("button")).toBeDisabled();
   });
 
-  it("renders with password match error", async () => {
+  it("disables button when passwords don't match", async () => {
     const user = userEvent.setup();
     await customRender(<PasswordReset />);
 
@@ -96,17 +96,16 @@ describe("PasswordReset", () => {
     expect(submitButton.closest("button")).toBeDisabled();
   });
 
-  it("renders with no password errors", async () => {
+  it("enables button when passwords are long enough and match", async () => {
     const user = userEvent.setup();
     await customRender(<PasswordReset />);
 
     const passwordEntry = "password";
-    const confirmEntry = "password";
     const passwdField = screen.getByTestId(PasswordResetIds.Password);
     const passwdConfirm = screen.getByTestId(PasswordResetIds.ConfirmPassword);
 
     await user.type(passwdField, passwordEntry);
-    await user.type(passwdConfirm, confirmEntry);
+    await user.type(passwdConfirm, passwordEntry);
 
     const submitButton = screen.getByTestId(PasswordResetIds.SubmitButton);
     expect(submitButton.closest("button")).toBeEnabled();

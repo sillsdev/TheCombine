@@ -60,7 +60,7 @@ export default function ResetRequest(): ReactElement {
 
         <CardContent>
           {isDone ? (
-            <Stack alignItems="flex-start" spacing={1}>
+            <Stack alignItems="flex-start" spacing={2}>
               <Typography>{t("passwordReset.resetDone")}</Typography>
 
               <Button
