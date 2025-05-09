@@ -36,36 +36,32 @@ export default function InvalidLink(props: InvalidLinkProps): ReactElement {
 
         <CardContent>
           {/* User Guide, Sign Up, and Log In buttons */}
-          <Grid2 container justifyContent="flex-end" spacing={2}>
-            <Grid2 size={{ xs: 4, sm: 6 }}>
+          <Grid2 container spacing={2}>
+            <Grid2 size="grow">
               <Button id={`${idAffix}-guide`} onClick={() => openUserGuide()}>
                 <Help />
               </Button>
             </Grid2>
 
-            <Grid2 size={{ xs: 4, sm: 3 }}>
-              <Button
-                id={`${idAffix}-signUp`}
-                onClick={() => {
-                  navigate(Path.Signup);
-                }}
-                variant="contained"
-              >
-                {t("login.signUp")}
-              </Button>
-            </Grid2>
+            <Button
+              id={`${idAffix}-signUp`}
+              onClick={() => {
+                navigate(Path.Signup);
+              }}
+              variant="contained"
+            >
+              {t("login.signUp")}
+            </Button>
 
-            <Grid2 size={{ xs: 4, sm: 3 }}>
-              <Button
-                id={`${idAffix}-login`}
-                onClick={() => {
-                  navigate(Path.Login);
-                }}
-                variant="contained"
-              >
-                {t("login.login")}
-              </Button>
-            </Grid2>
+            <Button
+              id={`${idAffix}-login`}
+              onClick={() => {
+                navigate(Path.Login);
+              }}
+              variant="contained"
+            >
+              {t("login.login")}
+            </Button>
           </Grid2>
         </CardContent>
       </Card>

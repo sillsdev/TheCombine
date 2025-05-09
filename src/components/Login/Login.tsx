@@ -186,7 +186,7 @@ export default function Login(): ReactElement {
               <Captcha setSuccess={setIsVerified} />
 
               {/* User Guide, Sign Up, and Log In buttons */}
-              <Grid2 container spacing={1}>
+              <Grid2 container spacing={2}>
                 <Grid2 size="grow">
                   <Button
                     data-testid={LoginId.ButtonUserGuide}
@@ -197,30 +197,26 @@ export default function Login(): ReactElement {
                   </Button>
                 </Grid2>
 
-                <Grid2>
-                  <Button
-                    data-testid={LoginId.ButtonSignUp}
-                    id={LoginId.ButtonSignUp}
-                    onClick={() => router.navigate(Path.Signup)}
-                    variant="outlined"
-                  >
-                    {t(LoginTextId.ButtonSignUp)}
-                  </Button>
-                </Grid2>
+                <Button
+                  data-testid={LoginId.ButtonSignUp}
+                  id={LoginId.ButtonSignUp}
+                  onClick={() => router.navigate(Path.Signup)}
+                  variant="outlined"
+                >
+                  {t(LoginTextId.ButtonSignUp)}
+                </Button>
 
-                <Grid2>
-                  <LoadingButton
-                    buttonProps={{
-                      "data-testid": LoginId.ButtonLogIn,
-                      id: LoginId.ButtonLogIn,
-                      type: "submit",
-                    }}
-                    disabled={!isVerified}
-                    loading={status === LoginStatus.InProgress}
-                  >
-                    {t(LoginTextId.ButtonLogin)}
-                  </LoadingButton>
-                </Grid2>
+                <LoadingButton
+                  buttonProps={{
+                    "data-testid": LoginId.ButtonLogIn,
+                    id: LoginId.ButtonLogIn,
+                    type: "submit",
+                  }}
+                  disabled={!isVerified}
+                  loading={status === LoginStatus.InProgress}
+                >
+                  {t(LoginTextId.ButtonLogin)}
+                </LoadingButton>
               </Grid2>
 
               {/* Login announcement banner */}
