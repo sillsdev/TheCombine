@@ -31,7 +31,7 @@ jest.mock("backend", () => ({
   getAllUsers: () => Promise.resolve([]),
   getCurrentPermissions: () => mockGetCurrentPermissions(),
   getUserRoles: () => Promise.resolve([]),
-  isFrontierNonempty: () => Promise.resolve(false),
+  hasFrontierWords: () => Promise.resolve(false),
 }));
 jest.mock("components/Project/ProjectActions");
 // Mock "i18n", else `thrown: "Error: Error: connect ECONNREFUSED ::1:80 [...]`

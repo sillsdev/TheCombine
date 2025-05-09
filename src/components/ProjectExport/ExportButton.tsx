@@ -4,7 +4,7 @@ import { ButtonProps } from "@mui/material/Button";
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { isFrontierNonempty } from "backend";
+import { hasFrontierWords } from "backend";
 import { LoadingButton } from "components/Buttons";
 import IconButtonWithTooltip from "components/Buttons/IconButtonWithTooltip";
 import {
@@ -48,7 +48,7 @@ export default function ExportButton(props: ExportButtonProps): ReactElement {
   }, [status]);
 
   useEffect(() => {
-    isFrontierNonempty(props.projectId).then(setExports);
+    hasFrontierWords(props.projectId).then(setExports);
   }, [props.projectId]);
 
   return (

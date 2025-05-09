@@ -146,29 +146,29 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public async Task TestIsFrontierNonempty()
+        public async Task TestHasFrontierWords()
         {
             await _wordRepo.Create(Util.RandomWord("OTHER_PROJECT"));
-            var falseResult = (ObjectResult)await _wordController.IsFrontierNonempty(_projId);
+            var falseResult = (ObjectResult)await _wordController.HasFrontierWords(_projId);
             Assert.That(falseResult.Value, Is.False);
 
             await _wordRepo.Create(Util.RandomWord(_projId));
-            var trueResult = (ObjectResult)await _wordController.IsFrontierNonempty(_projId);
+            var trueResult = (ObjectResult)await _wordController.HasFrontierWords(_projId);
             Assert.That(trueResult.Value, Is.True);
         }
 
         [Test]
-        public async Task TestIsFrontierNonemptyNoPermission()
+        public async Task TestHasFrontierWordsNoPermission()
         {
             _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-            var result = await _wordController.IsFrontierNonempty(_projId);
+            var result = await _wordController.HasFrontierWords(_projId);
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 
         [Test]
-        public async Task TestIsFrontierNonemptyMissingProject()
+        public async Task TestHasFrontierWordsMissingProject()
         {
-            var result = await _wordController.IsFrontierNonempty(MissingId);
+            var result = await _wordController.HasFrontierWords(MissingId);
             Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
         }
 
