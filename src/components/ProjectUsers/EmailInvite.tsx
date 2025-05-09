@@ -79,7 +79,6 @@ export default function EmailInvite(props: InviteProps): ReactElement {
               id: "project-user-invite-submit",
               onClick: () => onSubmit(),
               variant: "contained",
-              color: "primary",
             }}
           >
             {t("buttons.invite")}
