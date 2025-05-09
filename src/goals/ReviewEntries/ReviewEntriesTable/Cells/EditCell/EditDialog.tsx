@@ -18,7 +18,6 @@ import {
   MenuItem,
   Select,
   Stack,
-  Typography,
   type SelectChangeEvent,
 } from "@mui/material";
 import { grey, yellow } from "@mui/material/colors";
@@ -354,11 +353,7 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
       <Dialog fullWidth maxWidth="lg" open>
         <DialogTitle>
           <Grid2 container justifyContent="space-between">
-            <Typography variant="h6">
-              {t("reviewEntries.columns.edit")}
-              {" : "}
-              {props.word.vernacular}
-            </Typography>
+            {`${t("reviewEntries.columns.edit")} : ${props.word.vernacular}`}
 
             <div>
               <IconButton id={EditDialogId.ButtonSave} onClick={saveAndClose}>

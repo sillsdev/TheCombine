@@ -41,10 +41,12 @@ export default function AppBarComponent(): ReactElement {
                 <NavigationButtons currentTab={currentTab} />
               )}
             </div>
+
             <div>
               {!!getProjectId() && <ProjectButtons currentTab={currentTab} />}
               <DownloadButton colorSecondary />
             </div>
+
             <div>
               <UserMenu currentTab={currentTab} />
               <UserGuideButton />

@@ -314,21 +314,25 @@ export function AddDomainDialog(props: AddDomainDialogProps): ReactElement {
     <Dialog open={props.open}>
       <DialogTitle>
         <Grid2 container justifyContent="space-between">
-          <Grid2 size="grow">{t("projectSettings.domains.add")}</Grid2>
-          <IconButton
-            id={ProjectDomainsId.ButtonDomainAddDialogConfirm}
-            onClick={() => submit()}
-            size="small"
-          >
-            <Check sx={{ color: (t) => t.palette.success.main }} />
-          </IconButton>
-          <IconButton
-            id={ProjectDomainsId.ButtonDomainAddDialogCancel}
-            onClick={() => cancel()}
-            size="small"
-          >
-            <Close sx={{ color: (t) => t.palette.error.main }} />
-          </IconButton>
+          {t("projectSettings.domains.add")}
+
+          <div>
+            <IconButton
+              id={ProjectDomainsId.ButtonDomainAddDialogConfirm}
+              onClick={() => submit()}
+              size="small"
+            >
+              <Check sx={{ color: (t) => t.palette.success.main }} />
+            </IconButton>
+
+            <IconButton
+              id={ProjectDomainsId.ButtonDomainAddDialogCancel}
+              onClick={() => cancel()}
+              size="small"
+            >
+              <Close sx={{ color: (t) => t.palette.error.main }} />
+            </IconButton>
+          </div>
         </Grid2>
       </DialogTitle>
 

@@ -53,6 +53,7 @@ export default function ImageUpload(props: ImageUploadProps): ReactElement {
           {t("createProject.fileSelected", { val: filename })}
         </Typography>
       )}
+
       <Grid2 container spacing={1} justifyContent="flex-start">
         <FileInputButton
           updateFile={(file) => updateFile(file)}
@@ -60,6 +61,7 @@ export default function ImageUpload(props: ImageUploadProps): ReactElement {
         >
           {t("buttons.browse")}
         </FileInputButton>
+
         <LoadingDoneButton
           loading={loading}
           done={done}

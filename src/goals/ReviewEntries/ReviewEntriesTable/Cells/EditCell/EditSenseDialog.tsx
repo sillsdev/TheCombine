@@ -186,7 +186,7 @@ export default function EditSenseDialog(
       <Dialog fullWidth maxWidth="sm" open={props.isOpen}>
         <DialogTitle>
           <Grid2 container justifyContent="space-between">
-            <Typography variant="h6">{t("reviewEntries.editSense")}</Typography>
+            {t("reviewEntries.editSense")}
 
             <div>
               <IconButton

@@ -56,6 +56,7 @@ export default function AnalyticsConsent(props: ConsentProps): ReactElement {
             {t("analyticsConsent.consentModal.description")}
           </Typography>
         </div>
+
         <Grid2 container size={{ xs: "auto" }} spacing={1}>
           <ConsentButton
             onClick={acceptAnalytics}
