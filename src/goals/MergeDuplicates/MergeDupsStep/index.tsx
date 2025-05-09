@@ -18,7 +18,13 @@ export default function MergeDupsStep(): ReactElement {
 
   return wordCount ? (
     <>
-      <div style={{ background: "#eee", padding: theme.spacing(1) }}>
+      <div
+        style={{
+          background: "#eee",
+          padding: theme.spacing(1),
+          paddingBottom: 0,
+        }}
+      >
         <MergeDragDrop />
       </div>
       <SaveDeferButtons />
