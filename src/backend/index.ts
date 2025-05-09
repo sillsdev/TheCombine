@@ -876,9 +876,9 @@ export async function getWord(wordId: string): Promise<Word> {
   return (await wordApi.getWord(params, defaultOptions())).data;
 }
 
-export async function isFrontierNonempty(projectId?: string): Promise<boolean> {
+export async function hasFrontierWords(projectId?: string): Promise<boolean> {
   const params = { projectId: projectId ?? LocalStorage.getProjectId() };
-  return (await wordApi.isFrontierNonempty(params, defaultOptions())).data;
+  return (await wordApi.hasFrontierWords(params, defaultOptions())).data;
 }
 
 export async function isInFrontier(
