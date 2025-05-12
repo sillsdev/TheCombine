@@ -1,9 +1,8 @@
 import { ExitToApp, List as ListIcon } from "@mui/icons-material";
-import { Button, Grid, Typography } from "@mui/material";
+import { Button, Grid2, Typography } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import {
   FormEvent,
-  Fragment,
   ReactElement,
   RefObject,
   useCallback,
@@ -1023,38 +1022,23 @@ export default function DataEntryTable(
 
   return (
     <form onSubmit={(e?: FormEvent<HTMLFormElement>) => e?.preventDefault()}>
-      <input type="submit" style={{ display: "none" }} />
-      <Grid container>
-        <Grid item xs={4}>
-          <Typography
-            variant="h5"
-            align="center"
-            style={{
-              marginTop: theme.spacing(2),
-              marginBottom: theme.spacing(2),
-            }}
-          >
+      <Grid2 container rowSpacing={theme.spacing(2)}>
+        <Grid2 size={4}>
+          <Typography align="center" variant="h5">
             {t("addWords.vernacular")}
           </Typography>
-        </Grid>
-        <Grid item xs={4}>
-          <Typography
-            variant="h5"
-            align="center"
-            style={{
-              marginTop: theme.spacing(2),
-              marginBottom: theme.spacing(2),
-            }}
-          >
+        </Grid2>
+
+        <Grid2 size={4}>
+          <Typography align="center" variant="h5">
             {t("addWords.glosses")}
           </Typography>
-        </Grid>
+        </Grid2>
 
         {state.recentWords.map((wordAccess, index) => (
-          <Grid
-            item
+          <Grid2
             key={`${wordAccess.word.id}_${wordAccess.senseGuid}`}
-            xs={12}
+            size={12}
           >
             <RecentEntry
               rowIndex={index}
@@ -1074,10 +1058,10 @@ export default function DataEntryTable(
                 wordAccess.word.id
               )}
             />
-          </Grid>
+          </Grid2>
         ))}
 
-        <Grid item xs={12}>
+        <Grid2 size={12}>
           <NewEntry
             analysisLang={analysisLang}
             vernacularLang={vernacularLang}
@@ -1103,11 +1087,9 @@ export default function DataEntryTable(
             suggestedDups={state.suggestedDups}
             suggestedVerns={state.suggestedVerns}
           />
-        </Grid>
-      </Grid>
+        </Grid2>
 
-      <Grid container justifyContent="space-between" spacing={3}>
-        <Grid item>
+        <Grid2 container justifyContent="space-between" size={12}>
           {props.hasDrawerButton ? (
             <Button
               id="toggle-existing-data"
@@ -1117,24 +1099,21 @@ export default function DataEntryTable(
               <ListIcon fontSize={"medium"} color={"inherit"} />
             </Button>
           ) : (
-            <Fragment />
+            <div />
           )}
-        </Grid>
-        <Grid item>
+
           <Button
             id={exitButtonId}
-            type="submit"
             variant="contained"
             color={highlightExitButton ? "primary" : "secondary"}
-            style={{ marginTop: theme.spacing(2) }}
             endIcon={<ExitToApp />}
             tabIndex={-1}
             onClick={handleExit}
           >
             {t("buttons.exit")}
           </Button>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
     </form>
   );
 }

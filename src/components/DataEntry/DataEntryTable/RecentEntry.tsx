@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Grid2 } from "@mui/material";
 import { ReactElement, memo, useState } from "react";
 
 import { Pronunciation, Word, WritingSystem } from "api/models";
@@ -76,10 +76,9 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
     props.updateNote(props.rowIndex, noteText);
 
   return (
-    <Grid alignItems="center" container id={`${idAffix}-${props.rowIndex}`}>
-      <Grid
-        item
-        xs={4}
+    <Grid2 alignItems="center" container id={`${idAffix}-${props.rowIndex}`}>
+      <Grid2
+        size={4}
         style={{ paddingInline: theme.spacing(2), position: "relative" }}
       >
         <VernWithSuggestions
@@ -93,10 +92,10 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
           vernacularLang={props.vernacularLang}
           textFieldId={`${idAffix}-${props.rowIndex}-vernacular`}
         />
-      </Grid>
-      <Grid
-        item
-        xs={4}
+      </Grid2>
+
+      <Grid2
+        size={4}
         style={{ paddingInline: theme.spacing(2), position: "relative" }}
       >
         <GlossWithSuggestions
@@ -110,10 +109,10 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
           analysisLang={props.analysisLang}
           textFieldId={`${idAffix}-${props.rowIndex}-gloss`}
         />
-      </Grid>
-      <Grid
-        item
-        xs={1}
+      </Grid2>
+
+      <Grid2
+        size={1}
         style={{ paddingInline: theme.spacing(1), position: "relative" }}
       >
         <NoteButton
@@ -122,10 +121,10 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
           updateNote={handleUpdateNote}
           buttonId={`${idAffix}-${props.rowIndex}-note`}
         />
-      </Grid>
-      <Grid
-        item
-        xs={2}
+      </Grid2>
+
+      <Grid2
+        size={2}
         style={{ paddingInline: theme.spacing(1), position: "relative" }}
       >
         <PronunciationsBackend
@@ -140,10 +139,10 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
             props.addAudioToWord(props.entry.id, file);
           }}
         />
-      </Grid>
-      <Grid
-        item
-        xs={1}
+      </Grid2>
+
+      <Grid2
+        size={1}
         style={{ paddingInline: theme.spacing(1), position: "relative" }}
       >
         <DeleteEntry
@@ -152,8 +151,8 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
           confirmId={"addWords.deleteRowWarning"}
           disabled={editing || props.disabled}
         />
-      </Grid>
-    </Grid>
+      </Grid2>
+    </Grid2>
   );
 }
 

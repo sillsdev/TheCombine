@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import { Key } from "ts-key-enum";
 
 import { SemanticDomainFull } from "api/models";
-import theme from "types/theme";
 
 interface DataEntryHeaderProps {
   domain: SemanticDomainFull;
@@ -23,11 +22,7 @@ export default function DataEntryHeader(
   const { t } = useTranslation();
 
   return (
-    <Typography
-      variant="h4"
-      align="center"
-      style={{ marginBottom: theme.spacing(2) }}
-    >
+    <Typography align="center" variant="h4">
       {t("addWords.domainTitle", { val1: domain.name, val2: domain.id })}
       <bdi>
         <Typography>{domain.description}</Typography>
