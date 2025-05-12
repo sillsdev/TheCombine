@@ -60,10 +60,10 @@ export default function ProjectSchedule(
       <Grid2 alignItems="center" container spacing={1}>
         {!props.readOnly && (
           <Grid2
+            alignItems="center"
             container
             direction="row"
             justifyContent="space-evenly"
-            alignItems="center"
             size={12}
           >
             <IconButtonWithTooltip

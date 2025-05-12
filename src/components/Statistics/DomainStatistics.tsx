@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { ReactElement, useState, useEffect } from "react";
 
-import { SemanticDomainCount, SemanticDomainTreeNode } from "api/models";
+import { SemanticDomainCount } from "api/models";
 import { getSemanticDomainCounts } from "backend";
 import * as LocalStorage from "backend/localStorage";
 import { Cell, HeadCell } from "components/Statistics/TableCells";
@@ -45,7 +45,7 @@ export default function DomainStatistics(
   }
 
   return (
-    <TableContainer component={Paper} style={{ maxWidth: 600 }}>
+    <TableContainer component={Paper} sx={{ maxWidth: 700 }}>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -56,27 +56,14 @@ export default function DomainStatistics(
         </TableHead>
         <TableBody>
           {statisticsList.map((t) => (
-            <Row
-              key={t.semanticDomainTreeNode.id}
-              dom={t.semanticDomainTreeNode}
-              count={t.count}
-            />
+            <TableRow key={t.semanticDomainTreeNode.id}>
+              <Cell text={t.semanticDomainTreeNode.id} />
+              <Cell text={t.semanticDomainTreeNode.name} />
+              <Cell text={t.count} />
+            </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
-  );
-}
-
-function Row(props: {
-  dom: SemanticDomainTreeNode;
-  count: number;
-}): ReactElement {
-  return (
-    <TableRow>
-      <Cell text={props.dom.id} />
-      <Cell text={props.dom.name} />
-      <Cell text={props.count} />
-    </TableRow>
   );
 }

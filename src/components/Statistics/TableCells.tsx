@@ -10,6 +10,7 @@ const cellStyle: CSSProperties = {
 
 export function HeadCell(props: { titleId: string }): ReactElement {
   const { t } = useTranslation();
+
   return (
     <TableCell style={cellStyle}>
       <Typography variant="subtitle1">{t(props.titleId)}</Typography>

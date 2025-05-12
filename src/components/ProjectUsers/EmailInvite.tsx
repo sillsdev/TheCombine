@@ -68,6 +68,7 @@ export default function EmailInvite(props: InviteProps): ReactElement {
           id="project-user-invite-message"
           label={t("projectSettings.invite.emailMessage")}
           onChange={(e) => setMessage(e.target.value)}
+          slotProps={{ htmlInput: { maxLength: 10000 } }}
         />
 
         <Grid2 container justifyContent="flex-end">

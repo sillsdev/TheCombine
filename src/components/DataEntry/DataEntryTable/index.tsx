@@ -1091,12 +1091,8 @@ export default function DataEntryTable(
 
         <Grid2 container justifyContent="space-between" size={12}>
           {props.hasDrawerButton ? (
-            <Button
-              id="toggle-existing-data"
-              style={{ marginTop: theme.spacing(2) }}
-              onClick={props.showExistingData}
-            >
-              <ListIcon fontSize={"medium"} color={"inherit"} />
+            <Button id="toggle-existing-data" onClick={props.showExistingData}>
+              <ListIcon />
             </Button>
           ) : (
             <div />

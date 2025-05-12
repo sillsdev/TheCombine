@@ -71,14 +71,17 @@ function EditedEntry(props: { edit: EntryEdit }): ReactElement {
             <WordCard word={oldWord} />
           </Box>
         )}
+
         <Box alignContent="center">
           <ArrowRightAlt fontSize="large" />
         </Box>
+
         {!!newWord && (
           <Box>
             <WordCard word={newWord} />
           </Box>
         )}
+
         <Box alignContent="center">
           <UndoButton
             buttonIdEnabled={`edit-undo-${props.edit.newId}`}

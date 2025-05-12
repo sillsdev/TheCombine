@@ -11,7 +11,7 @@ import { ReactElement, useState, useEffect } from "react";
 import { SemanticDomainUserCount } from "api/models";
 import { getSemanticDomainUserCount } from "backend";
 import * as LocalStorage from "backend/localStorage";
-import { HeadCell, Cell } from "components/Statistics/TableCells";
+import { Cell, HeadCell } from "components/Statistics/TableCells";
 
 interface UserStatisticsProps {
   lang: string;
@@ -45,7 +45,7 @@ export default function UserStatistics(
   }
 
   return (
-    <TableContainer component={Paper} style={{ width: 600 }}>
+    <TableContainer component={Paper} sx={{ maxWidth: 700 }}>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -56,20 +56,14 @@ export default function UserStatistics(
         </TableHead>
         <TableBody>
           {domainUserCountList.map((t) => (
-            <Row key={t.id} counts={t} />
+            <TableRow key={t.id}>
+              <Cell text={t.username} />
+              <Cell text={t.domainCount} />
+              <Cell text={t.wordCount} />
+            </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
-  );
-}
-
-function Row(props: { counts: SemanticDomainUserCount }): ReactElement {
-  return (
-    <TableRow>
-      <Cell text={props.counts.username} />
-      <Cell text={props.counts.domainCount} />
-      <Cell text={props.counts.wordCount} />
-    </TableRow>
   );
 }

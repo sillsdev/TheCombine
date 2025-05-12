@@ -42,10 +42,10 @@ export default function CalendarView(props: CalendarViewProps): ReactElement {
 
   return (
     <Grid2
+      alignItems="center"
       container
       direction="row"
       justifyContent="space-between"
-      alignItems="center"
       size={12}
     >
       {handleCalendarView(getScheduledMonths(props.projectSchedule))}

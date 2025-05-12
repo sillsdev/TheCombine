@@ -104,9 +104,9 @@ export default function Statistics(): ReactElement {
       <Grid2 size={2}>{handleButton()}</Grid2>
 
       <Grid2
+        alignContent="space-around"
         container
         direction="column"
-        alignContent="space-around"
         size={8}
         spacing={2}
       >
