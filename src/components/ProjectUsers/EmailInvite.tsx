@@ -60,7 +60,7 @@ export default function EmailInvite(props: InviteProps): ReactElement {
           label={t("projectSettings.invite.emailLabel")}
           onChange={(e) => setEmail(e.target.value)}
           required
-          slotProps={{ htmlInput: { maxLength: 100 } }}
+          slotProps={{ htmlInput: { maxLength: 320 } }}
         />
 
         <NormalizedTextField
