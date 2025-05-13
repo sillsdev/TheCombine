@@ -71,7 +71,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void GreylistAddTest()
+        public void GraylistAddTest()
         {
             var wordIdsA = new List<string> { "1", "2" };
             var wordIdsB = new List<string> { "3", "1" };
