@@ -329,8 +329,7 @@ namespace BackendFramework.Controllers
             _liftService.SetExportInProgress(userId, exportId);
 
             // Ensure project has words
-            var words = await _wordRepo.GetAllWords(projectId);
-            if (words.Count == 0)
+            if (!await _wordRepo.HasWords(projectId))
             {
                 _liftService.CancelRecentExport(userId);
                 return BadRequest("No words to export.");

@@ -4,13 +4,9 @@ import DeleteButtonWithDialog from "components/Buttons/DeleteButtonWithDialog";
 import { CancelConfirmDialog } from "components/Dialogs";
 
 // Dialog uses portals, which are not supported in react-test-renderer.
-jest.mock("@mui/material", () => {
-  const materialUiCore = jest.requireActual("@mui/material");
-  return {
-    ...jest.requireActual("@mui/material"),
-    Dialog: materialUiCore.Container,
-  };
-});
+jest.mock("@mui/material/Dialog", () =>
+  jest.requireActual("@mui/material/Container")
+);
 
 const mockDelete = jest.fn();
 const buttonId = "button-id";
