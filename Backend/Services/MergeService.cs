@@ -332,7 +332,7 @@ namespace BackendFramework.Services
             return updateCount;
         }
 
-        /// <summary> Are there graylist entries in the specified <see cref="Project"/>'s graylist? </summary>
+        /// <summary> Are there graylist entries in the specified <see cref="Project"/>? </summary>
         public async Task<bool> HasGraylistEntries(string projectId, string? userId = null)
         {
             var graylist = await _mergeGraylistRepo.GetAllSets(projectId, userId);
@@ -351,7 +351,7 @@ namespace BackendFramework.Services
                         oneInFrontier = true;
                     }
 
-                    // Remove graylist entry that's no longer valid
+                    // Remove graylist entry that's no longer valid.
                     await _mergeGraylistRepo.Delete(projectId, entry.Id);
                 }
             }
