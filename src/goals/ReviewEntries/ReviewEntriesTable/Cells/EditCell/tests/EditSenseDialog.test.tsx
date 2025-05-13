@@ -10,7 +10,7 @@ import EditSenseDialog, {
 import { type StoreState, defaultState } from "rootRedux/types";
 import { newSense } from "types/word";
 
-// Container uses Portal, not supported in react-test-renderer
+// Dialog uses Portal, not supported in react-test-renderer
 jest.mock("@mui/material/Dialog", () =>
   jest.requireActual("@mui/material/Container")
 );

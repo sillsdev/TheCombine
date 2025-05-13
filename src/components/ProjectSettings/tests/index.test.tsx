@@ -20,7 +20,7 @@ import {
 } from "components/ProjectSettings/tests/SettingsTabTypes";
 import { randomProject } from "types/project";
 import theme from "types/theme";
-import { setMatchMedia } from "utilities/testRendererUtilities";
+import { setMatchMedia } from "utilities/testingLibraryUtilities";
 
 jest.mock("react-router-dom", () => ({ useNavigate: jest.fn() }));
 
@@ -31,7 +31,7 @@ jest.mock("backend", () => ({
   getAllUsers: () => Promise.resolve([]),
   getCurrentPermissions: () => mockGetCurrentPermissions(),
   getUserRoles: () => Promise.resolve([]),
-  isFrontierNonempty: () => Promise.resolve(false),
+  hasFrontierWords: () => Promise.resolve(false),
 }));
 jest.mock("components/Project/ProjectActions");
 // Mock "i18n", else `thrown: "Error: Error: connect ECONNREFUSED ::1:80 [...]`
