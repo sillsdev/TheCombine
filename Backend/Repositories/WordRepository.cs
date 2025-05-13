@@ -189,6 +189,19 @@ namespace BackendFramework.Repositories
             return (await _wordDatabase.Frontier.CountDocumentsAsync(GetProjectWordFilter(projectId, wordId))) > 0;
         }
 
+        /// <summary> Checks if given words are in the project Frontier. </summary>
+        /// <param name="projectId"> Id of project to check in. </param>
+        /// <param name="wordIds"> Ids of words to check for. </param>
+        /// <param name="count"> Minimum number of words required. </param>
+        public async Task<bool> AreInFrontier(string projectId, List<string> wordIds, int count)
+        {
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if Frontier contains words");
+
+            var words = await _wordDatabase.Frontier.Find(GetProjectWordsFilter(projectId, wordIds))
+                .Limit(count).ToListAsync();
+            return words.Count == count;
+        }
+
         /// <summary> Finds all <see cref="Word"/>s in the Frontier for specified <see cref="Project"/> </summary>
         public async Task<List<Word>> GetFrontier(string projectId)
         {

@@ -339,22 +339,14 @@ namespace BackendFramework.Services
             var graylist = await _mergeGraylistRepo.GetAllSets(projectId, userId);
             foreach (var entry in graylist)
             {
-                var oneInFrontier = false;
-                foreach (var id in entry.WordIds)
+                if (await _wordRepo.AreInFrontier(projectId, entry.WordIds, 2))
                 {
-                    if (await _wordRepo.IsInFrontier(projectId, id))
-                    {
-                        if (oneInFrontier)
-                        {
-                            // Return true as soon as a graylist entry has two words in the Frontier.
-                            return true;
-                        }
-                        oneInFrontier = true;
-                    }
+                    return true;
                 }
-
-                // Remove graylist entry that's no longer valid.
-                await _mergeGraylistRepo.Delete(projectId, entry.Id);
+                else
+                {
+                    await _mergeGraylistRepo.Delete(projectId, entry.Id);
+                }
             }
             return false;
         }
