@@ -333,6 +333,7 @@ namespace BackendFramework.Services
         }
 
         /// <summary> Are there graylist entries in the specified <see cref="Project"/>? </summary>
+        /// <remarks> Removes from the graylist any checked entry without at least 2 words in the Frontier. </remarks>
         public async Task<bool> HasGraylistEntries(string projectId, string? userId = null)
         {
             var graylist = await _mergeGraylistRepo.GetAllSets(projectId, userId);
@@ -350,10 +351,10 @@ namespace BackendFramework.Services
                         }
                         oneInFrontier = true;
                     }
-
-                    // Remove graylist entry that's no longer valid.
-                    await _mergeGraylistRepo.Delete(projectId, entry.Id);
                 }
+
+                // Remove graylist entry that's no longer valid.
+                await _mergeGraylistRepo.Delete(projectId, entry.Id);
             }
             return false;
         }
