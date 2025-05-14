@@ -10,7 +10,7 @@ jest.mock("backend", () => ({
   getAllActiveProjects: () => mockGetProjects(),
 }));
 jest.mock("rootRedux/hooks");
-jest.mock("react-router-dom", () => ({
+jest.mock("react-router", () => ({
   useNavigate: jest.fn(),
 }));
 

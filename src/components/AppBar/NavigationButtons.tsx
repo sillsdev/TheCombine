@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { type ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 import { Permission } from "api/models";
 import { getCurrentPermissions } from "backend";

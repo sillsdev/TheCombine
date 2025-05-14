@@ -1,5 +1,5 @@
 import { ReactElement, Suspense } from "react";
-import { RouterProvider } from "react-router-dom";
+import { RouterProvider } from "react-router";
 
 import AnnouncementBanner from "components/AnnouncementBanner";
 import UpperRightToastContainer from "components/Toast/UpperRightToastContainer";
@@ -14,7 +14,7 @@ export default function App(): ReactElement {
       <Suspense fallback={<div />}>
         <AnnouncementBanner />
         <UpperRightToastContainer />
-        <RouterProvider router={router} future={{ v7_startTransition: true }} />
+        <RouterProvider router={router} />
       </Suspense>
     </div>
   );
