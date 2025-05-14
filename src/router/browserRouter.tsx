@@ -5,7 +5,9 @@ import { appRoutes } from "router/appRoutes";
 import { changePage } from "types/Redux/analytics";
 import { Path } from "types/path";
 
-const router = createBrowserRouter(appRoutes);
+const router = createBrowserRouter(appRoutes, {
+  future: { v7_relativeSplatPath: true },
+});
 
 // set up analytics for page navigation
 // *********** WARNING! ***********
