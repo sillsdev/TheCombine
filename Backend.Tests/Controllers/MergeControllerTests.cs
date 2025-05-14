@@ -95,7 +95,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestHasGraylistEntriesNoPermission()
+        public void HasGraylistEntriesNoPermissionTest()
         {
             _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = _mergeController.HasGraylistEntries("projId", "userId").Result;
@@ -103,7 +103,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestGetGraylistEntriesNoPermission()
+        public void GetGraylistEntriesNoPermissionTest()
         {
             _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
             var result = _mergeController.GetGraylistEntries("projId", 3, "userId").Result;
