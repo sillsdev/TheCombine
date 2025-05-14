@@ -6,7 +6,11 @@ import { changePage } from "types/Redux/analytics";
 import { Path } from "types/path";
 
 const router = createBrowserRouter(appRoutes, {
-  future: { v7_relativeSplatPath: true, v7_fetcherPersist: true },
+  future: {
+    v7_relativeSplatPath: true,
+    v7_fetcherPersist: true,
+    v7_normalizeFormMethod: true,
+  },
 });
 
 // set up analytics for page navigation
