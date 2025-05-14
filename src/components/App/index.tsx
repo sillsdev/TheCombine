@@ -14,7 +14,7 @@ export default function App(): ReactElement {
       <Suspense fallback={<div />}>
         <AnnouncementBanner />
         <UpperRightToastContainer />
-        <RouterProvider router={router} />
+        <RouterProvider router={router} future={{ v7_startTransition: true }} />
       </Suspense>
     </div>
   );
