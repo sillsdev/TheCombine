@@ -197,9 +197,8 @@ namespace BackendFramework.Repositories
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if Frontier contains words");
 
-            var words = await _wordDatabase.Frontier.Find(GetProjectWordsFilter(projectId, wordIds))
-                .Limit(count).ToListAsync();
-            return words.Count == count;
+            return await _wordDatabase.Frontier
+                .CountDocumentsAsync(GetProjectWordsFilter(projectId, wordIds), new() { Limit = count }) == count;
         }
 
         /// <summary> Finds all <see cref="Word"/>s in the Frontier for specified <see cref="Project"/> </summary>
