@@ -56,13 +56,13 @@ updates:
       interval: "cron"
       cronjob: "0 0 1 1-11/2 *"
     groups:
-      frontend-prod-minor-deps:
-        dependency-type: "production"
+      frontend-dev-minor-deps:
+        dependency-type: "development"
         update-types:
           - "minor"
           - "patch"
-      frontend-dev-minor-deps:
-        dependency-type: "development"
+      frontend-prod-minor-deps:
+        dependency-type: "production"
         update-types:
           - "minor"
           - "patch"
