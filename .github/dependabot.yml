@@ -5,6 +5,10 @@ updates:
     schedule:
       interval: "cron"
       cronjob: "0 0 1 1-11/2 *"
+    groups:
+      gha-deps:
+        patterns:
+          - "*"
 
   - package-ecosystem: "nuget"
     directories:
@@ -13,6 +17,10 @@ updates:
     schedule:
       interval: "cron"
       cronjob: "0 0 1 1-11/2 *"
+    groups:
+      backend-deps:
+        patterns:
+          - "*"
 
   - package-ecosystem: "docker"
     directories:
@@ -24,6 +32,10 @@ updates:
     schedule:
       interval: "cron"
       cronjob: "0 0 1 1-11/2 *"
+    groups:
+      docker-deps:
+        patterns:
+          - "*"
 
   - package-ecosystem: "pip"
     directories:
@@ -33,9 +45,24 @@ updates:
     schedule:
       interval: "cron"
       cronjob: "0 0 1 1-11/2 *"
+    groups:
+      python-deps:
+        patterns:
+          - "*"
 
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "cron"
       cronjob: "0 0 1 1-11/2 *"
+    groups:
+      frontend-prod-minor-deps:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+      frontend-dev-minor-deps:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
