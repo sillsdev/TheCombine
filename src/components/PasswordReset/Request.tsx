@@ -1,7 +1,7 @@
 import { Button, Card, Grid, Typography } from "@mui/material";
 import { FormEvent, ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 import { resetPasswordRequest } from "backend";
 import { LoadingDoneButton } from "components/Buttons";

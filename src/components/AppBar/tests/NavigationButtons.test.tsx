@@ -11,7 +11,7 @@ import NavigationButtons, {
 import { Path } from "types/path";
 import theme, { themeColors } from "types/theme";
 
-jest.mock("react-router-dom", () => ({
+jest.mock("react-router", () => ({
   useNavigate: jest.fn(),
 }));
 

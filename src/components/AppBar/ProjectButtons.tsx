@@ -9,7 +9,7 @@ import {
 import { ReactElement, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 import { Permission } from "api/models";
 import { hasPermission } from "backend";

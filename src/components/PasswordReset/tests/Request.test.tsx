@@ -8,7 +8,7 @@ import ResetRequest, {
   PasswordRequestIds,
 } from "components/PasswordReset/Request";
 
-jest.mock("react-router-dom", () => ({
+jest.mock("react-router", () => ({
   useNavigate: jest.fn(),
 }));
 

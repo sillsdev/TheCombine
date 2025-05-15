@@ -17,7 +17,7 @@ import { Goal, GoalStatus } from "types/goals";
 import { Path } from "types/path";
 import theme, { themeColors } from "types/theme";
 
-jest.mock("react-router-dom", () => ({
+jest.mock("react-router", () => ({
   useNavigate: jest.fn(),
 }));
 

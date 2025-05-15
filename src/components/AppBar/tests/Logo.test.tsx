@@ -6,7 +6,7 @@ import Logo, { logoButtonLabel } from "components/AppBar/Logo";
 import { Path } from "types/path";
 import theme from "types/theme";
 
-jest.mock("react-router-dom", () => ({
+jest.mock("react-router", () => ({
   useNavigate:
     () =>
     (...args: any) =>
