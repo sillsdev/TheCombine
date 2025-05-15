@@ -4,17 +4,17 @@ This README describes how to install _The Combine_ Rapid Word Collection tool on
 
 ## Contents
 
- - [System Requirements](#system-requirements)
- - [Install _The Combine_](#install-the-combine)
- - [Running _The Combine_](#running-the-combine)
- - [Advanced Installation Options](#advanced-installation-options)
+- [System Requirements](#system-requirements)
+- [Install _The Combine_](#install-the-combine)
+- [Running _The Combine_](#running-the-combine)
+- [Advanced Installation Options](#advanced-installation-options)
 
 ## System Requirements
 
 _The Combine_ can be installed on a PC that meets the following requirements:
 
 - Debian-based Linux Operating system
-- 6 GB of memory;
+- 8 GB of memory;
 - WiFi interface that supports creating a WiFi Hotspot;
 - a wired-ethernet connection to the Internet
 - User account that can run as `root` with `sudo`.
@@ -39,10 +39,10 @@ The installation script has been tested on _Ubuntu 22.04_, _Ubuntu 24.04_, and _
    via `apt`. (It's available as a Snap package.) As a result, when the installation script, or a user, updates the list of available
    software, the process fails. To address this issue, run:
 
-      ```console
-      sudo rm /etc/apt/sources.list.d/skype-stable.list
-      sudo apt update && sudo apt upgrade -y
-      ```
+   ```console
+   sudo rm /etc/apt/sources.list.d/skype-stable.list
+   sudo apt update && sudo apt upgrade -y
+   ```
 
 4. Download the installation script from
    [https://s3.amazonaws.com/software.thecombine.app/combine-installer.run](https://s3.amazonaws.com/software.thecombine.app/combine-installer.run)
@@ -76,10 +76,10 @@ The installation script has been tested on _Ubuntu 22.04_, _Ubuntu 24.04_, and _
      [The Combine](https://software.sil.org/thecombine/#contact)
    - When run with no options, ./combine-installer.run will install the current version of _The Combine_.
    - If the previous installation did not run to completion, it will resume where the previous installation left off.
-   - If you get the error `Job for k3s.service failed because the control process exited with error code.`,
-     make sure no other instance of k3s is running. For example, if Docker Desktop is active on the current user, run:
+   - If you get the error `Job for k3s.service failed because the control process exited with error code.`, make sure no
+     other instance of k3s is running. For example, if Docker Desktop is active on the current user, run:
 
-      ```console
+     ```console
      systemctl --user stop docker-desktop
      systemctl --user disable docker-desktop
      ```
