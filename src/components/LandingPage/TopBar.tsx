@@ -9,7 +9,7 @@ import {
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
-import logo from "resources/CombineLogoV1White.png";
+import { white } from "resources/logo";
 
 export const topBarHeight = 70;
 
@@ -30,7 +30,7 @@ export default function TopBar(): ReactElement {
             spacing={2}
             style={{ width: "100%" }}
           >
-            <img src={logo} height="50" alt="Logo" />
+            <img src={white} height="50" alt="Logo" />
             {showSubtitle && (
               <Typography variant={isMdUp ? "h5" : "h6"}>
                 {t("landingPage.subtitle")}

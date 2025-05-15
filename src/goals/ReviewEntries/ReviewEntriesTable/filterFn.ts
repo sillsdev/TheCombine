@@ -10,7 +10,7 @@ import {
 } from "api/models";
 import { type Hash } from "types/hash";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { fuzzySearch } = require("levenshtein-search");
 
 /** Checks if string starts and ends with quote marks.
