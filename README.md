@@ -619,7 +619,7 @@ Notes for installing _Docker Desktop_ in Linux:
 Once _Docker Desktop_ has been installed, start it, and set it up as follows:
 
 1. Click the gear icon in the upper right to open the settings dialog;
-2. Click on the _Resources_ link on the left-hand side and set the Memory to at least 6 GB (see Note);
+2. Click on the _Resources_ link on the left-hand side and set the Memory to at least 8 GB (see Note);
 3. Click on the _Kubernetes_ link on the left-hand side;
 4. Select _Enable Kubernetes_ and click _Apply & Restart_;
 5. Click _Install_ on the dialog that is displayed.
@@ -978,13 +978,13 @@ Task: add an existing user to a project
 Run:
 
 ```bash
-kubectl exec -it deployment/maintenance -- add_user_to_proj.py --project <PROJECT_NAME> --user <USER>
+kubectl -n thecombine exec -it deployment/maintenance -- add_user_to_proj.py --project <PROJECT_NAME> --user <USER>
 ```
 
 For additional options, run:
 
 ```bash
-kubectl exec -it deployment/maintenance -- add_user_to_proj.py --help`
+kubectl -n thecombine exec -it deployment/maintenance -- add_user_to_proj.py --help
 ```
 
 #### Backup _TheCombine_
@@ -994,7 +994,7 @@ Task: Backup the CombineDatabase and the Backend files to the Amazon Simple Stor
 Run:
 
 ```bash
-kubectl exec -it deployment/maintenance -- combine_backup.py [--verbose]
+kubectl -n thecombine exec -it deployment/maintenance -- combine_backup.py [--verbose]
 ```
 
 Notes:
@@ -1012,7 +1012,7 @@ Task: Delete a project
 Run:
 
 ```bash
-kubectl exec -it deployment/maintenance -- rm_project.py <PROJECT_NAME>
+kubectl -n thecombine exec -it deployment/maintenance -- rm_project.py <PROJECT_NAME>
 ```
 
 You may specify more than one `<PROJECT_NAME>` to delete multiple projects.
@@ -1024,7 +1024,7 @@ Task: Restore the CombineDatabase and the Backend files from a backup stored on 
 Run:
 
 ```bash
-kubectl exec -it deployment/maintenance -- combine_restore.py [--verbose] [BACKUP_NAME]
+kubectl -n thecombine exec -it deployment/maintenance -- combine_restore.py [--verbose] [BACKUP_NAME]
 ```
 
 Note:
