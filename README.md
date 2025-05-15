@@ -228,8 +228,8 @@ environment. This will be denoted with the `(venv)` prefix on the prompt.
 With an active virtual environment, install Python development requirements for this project:
 
 ```bash
-python -m pip install --upgrade pip pip-tools
-python -m piptools sync dev-requirements.txt
+python -m pip -q install --upgrade pip pip-tools
+python -m piptools sync -q dev-requirements.txt
 ```
 
 The following Python scripts can now be run from the virtual environment.
