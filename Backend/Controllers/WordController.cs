@@ -99,12 +99,12 @@ namespace BackendFramework.Controllers
             return Ok(word);
         }
 
-        /// <summary> Checks if Frontier nonempty for specified <see cref="Project"/>. </summary>
-        [HttpGet("isfrontiernonempty", Name = "IsFrontierNonempty")]
+        /// <summary> Checks if Frontier for specified <see cref="Project"/> has any words. </summary>
+        [HttpGet("hasfrontierwords", Name = "HasFrontierWords")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        public async Task<IActionResult> IsFrontierNonempty(string projectId)
+        public async Task<IActionResult> HasFrontierWords(string projectId)
         {
-            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if Frontier is nonempty");
+            using var activity = OtelService.StartActivityWithTag(otelTagName, "checking if Frontier has any words");
 
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
@@ -115,7 +115,7 @@ namespace BackendFramework.Controllers
             {
                 return NotFound(projectId);
             }
-            return Ok(await _wordRepo.IsFrontierNonempty(projectId));
+            return Ok(await _wordRepo.HasFrontierWords(projectId));
         }
 
         /// <summary> Returns all Frontier <see cref="Word"/> in specified <see cref="Project"/>. </summary>
