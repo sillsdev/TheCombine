@@ -13,10 +13,11 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
-  Grid,
+  Grid2,
   IconButton,
   MenuItem,
   Select,
+  Stack,
   type SelectChangeEvent,
 } from "@mui/material";
 import { grey, yellow } from "@mui/material/colors";
@@ -351,151 +352,135 @@ export default function EditDialog(props: EditDialogProps): ReactElement {
       />
       <Dialog fullWidth maxWidth="lg" open>
         <DialogTitle>
-          <Grid container justifyContent="space-between">
-            <Grid item>
-              {t("reviewEntries.columns.edit")}
-              {" : "}
-              {props.word.vernacular}
-            </Grid>
-            <Grid item>
+          <Grid2 container justifyContent="space-between">
+            {`${t("reviewEntries.columns.edit")} : ${props.word.vernacular}`}
+
+            <div>
               <IconButton id={EditDialogId.ButtonSave} onClick={saveAndClose}>
                 <Check style={{ color: themeColors.success }} />
               </IconButton>
+
               <IconButton
                 id={EditDialogId.ButtonCancel}
                 onClick={conditionalCancel}
               >
                 <Close style={{ color: themeColors.error }} />
               </IconButton>
-            </Grid>
-          </Grid>
+            </div>
+          </Grid2>
         </DialogTitle>
+
         <DialogContent>
-          <Grid
-            container
-            direction="column"
-            justifyContent="flex-start"
-            spacing={3}
-          >
+          <Stack spacing={3}>
             {/* Vernacular */}
-            <Grid item>
-              <Card sx={bgStyle(EditField.Vernacular)}>
-                <CardHeader title={t("reviewEntries.columns.vernacular")} />
-                <CardContent>
-                  <TextFieldWithFont
-                    id={EditDialogId.TextFieldVernacular}
-                    label={vernLang}
-                    onChange={(e) =>
-                      setNewWord((prev) => ({
-                        ...prev,
-                        vernacular: e.target.value,
-                      }))
-                    }
-                    value={newWord.vernacular}
-                    vernacular
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
+            <Card sx={bgStyle(EditField.Vernacular)}>
+              <CardHeader title={t("reviewEntries.columns.vernacular")} />
+              <CardContent>
+                <TextFieldWithFont
+                  id={EditDialogId.TextFieldVernacular}
+                  label={vernLang}
+                  onChange={(e) =>
+                    setNewWord((prev) => ({
+                      ...prev,
+                      vernacular: e.target.value,
+                    }))
+                  }
+                  value={newWord.vernacular}
+                  vernacular
+                />
+              </CardContent>
+            </Card>
 
             {/* Senses */}
-            <Grid item>
-              <Card sx={bgStyle(EditField.Senses)}>
-                <CardHeader
-                  action={
-                    newWord.senses.length > 1 && (
-                      <IconButton
-                        id={EditDialogId.ButtonSensesViewToggle}
-                        onClick={() => setShowSenses((prev) => !prev)}
-                      >
-                        {showSenses ? (
-                          <CloseFullscreen sx={{ color: "gray" }} />
-                        ) : (
-                          <OpenInFull sx={{ color: "gray" }} />
-                        )}
-                      </IconButton>
-                    )
-                  }
-                  title={t("reviewEntries.columns.senses")}
-                />
-                <EditSensesCardContent
-                  moveSense={moveSense}
-                  newSenses={newWord.senses}
-                  oldSenses={props.word.senses}
-                  showSenses={showSenses}
-                  toggleSenseDeleted={toggleSenseDeleted}
-                  updateOrAddSense={updateOrAddSense}
-                />
-              </Card>
-            </Grid>
+            <Card sx={bgStyle(EditField.Senses)}>
+              <CardHeader
+                action={
+                  newWord.senses.length > 1 && (
+                    <IconButton
+                      id={EditDialogId.ButtonSensesViewToggle}
+                      onClick={() => setShowSenses((prev) => !prev)}
+                    >
+                      {showSenses ? (
+                        <CloseFullscreen sx={{ color: "gray" }} />
+                      ) : (
+                        <OpenInFull sx={{ color: "gray" }} />
+                      )}
+                    </IconButton>
+                  )
+                }
+                title={t("reviewEntries.columns.senses")}
+              />
+              <EditSensesCardContent
+                moveSense={moveSense}
+                newSenses={newWord.senses}
+                oldSenses={props.word.senses}
+                showSenses={showSenses}
+                toggleSenseDeleted={toggleSenseDeleted}
+                updateOrAddSense={updateOrAddSense}
+              />
+            </Card>
 
             {/* Pronunciations */}
-            <Grid item>
-              <Card sx={bgStyle(EditField.Pronunciations)}>
-                <CardHeader title={t("reviewEntries.columns.pronunciations")} />
-                <CardContent>
-                  <PronunciationsFrontend
-                    elemBetweenRecordAndPlay={
-                      <PronunciationsBackend
-                        audio={newWord.audio}
-                        deleteAudio={delOldAudio}
-                        overrideMemo
-                        playerOnly
-                        replaceAudio={repOldAudio}
-                        wordId={newWord.id}
-                      />
-                    }
-                    audio={newAudio}
-                    deleteAudio={delNewAudio}
-                    replaceAudio={repNewAudio}
-                    uploadAudio={uplNewAudio}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
+            <Card sx={bgStyle(EditField.Pronunciations)}>
+              <CardHeader title={t("reviewEntries.columns.pronunciations")} />
+              <CardContent>
+                <PronunciationsFrontend
+                  elemBetweenRecordAndPlay={
+                    <PronunciationsBackend
+                      audio={newWord.audio}
+                      deleteAudio={delOldAudio}
+                      overrideMemo
+                      playerOnly
+                      replaceAudio={repOldAudio}
+                      wordId={newWord.id}
+                    />
+                  }
+                  audio={newAudio}
+                  deleteAudio={delNewAudio}
+                  replaceAudio={repNewAudio}
+                  uploadAudio={uplNewAudio}
+                />
+              </CardContent>
+            </Card>
 
             {/* Note */}
-            <Grid item>
-              <Card sx={bgStyle(EditField.Note)}>
-                <CardHeader
-                  action={noteLangSelect}
-                  title={t("reviewEntries.columns.note")}
+            <Card sx={bgStyle(EditField.Note)}>
+              <CardHeader
+                action={noteLangSelect}
+                title={t("reviewEntries.columns.note")}
+              />
+              <CardContent>
+                <TextFieldWithFont
+                  analysis
+                  fullWidth
+                  id={EditDialogId.TextFieldNote}
+                  lang={newWord.note.language}
+                  multiline
+                  onChange={(e) => updateNoteText(e.target.value)}
+                  value={newWord.note.text}
                 />
-                <CardContent>
-                  <TextFieldWithFont
-                    analysis
-                    fullWidth
-                    id={EditDialogId.TextFieldNote}
-                    lang={newWord.note.language}
-                    multiline
-                    onChange={(e) => updateNoteText(e.target.value)}
-                    value={newWord.note.text}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
+              </CardContent>
+            </Card>
 
             {/* Flag */}
-            <Grid item>
-              <Card sx={bgStyle(EditField.Flag)}>
-                <CardHeader title={t("reviewEntries.columns.flag")} />
-                <CardContent>
-                  <IconButton onClick={toggleFlag}>
-                    {newWord.flag.active ? (
-                      <FlagFilled sx={{ color: themeColors.error }} />
-                    ) : (
-                      <FlagOutlined />
-                    )}
-                  </IconButton>
-                  <NormalizedTextField
-                    id={EditDialogId.TextFieldFlag}
-                    onChange={(e) => updateFlag(e.target.value)}
-                    value={newWord.flag.active ? newWord.flag.text : ""}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
+            <Card sx={bgStyle(EditField.Flag)}>
+              <CardHeader title={t("reviewEntries.columns.flag")} />
+              <CardContent>
+                <IconButton onClick={toggleFlag}>
+                  {newWord.flag.active ? (
+                    <FlagFilled sx={{ color: themeColors.error }} />
+                  ) : (
+                    <FlagOutlined />
+                  )}
+                </IconButton>
+                <NormalizedTextField
+                  id={EditDialogId.TextFieldFlag}
+                  onChange={(e) => updateFlag(e.target.value)}
+                  value={newWord.flag.active ? newWord.flag.text : ""}
+                />
+              </CardContent>
+            </Card>
+          </Stack>
         </DialogContent>
       </Dialog>
     </>
