@@ -1,11 +1,6 @@
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
-import {
-  ReactTestInstance,
-  ReactTestRenderer,
-  act,
-  create,
-} from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
 import RecorderIcon, {
@@ -14,9 +9,6 @@ import RecorderIcon, {
 import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
 import { type StoreState, defaultState } from "rootRedux/types";
 import theme from "types/theme";
-
-let testRenderer: ReactTestRenderer;
-let testButton: ReactTestInstance;
 
 function mockRecordingState(wordId: string): Partial<StoreState> {
   return {
@@ -36,7 +28,7 @@ const mockStopRecording = jest.fn();
 
 const renderRecorderIcon = async (wordId = ""): Promise<void> => {
   await act(async () => {
-    testRenderer = create(
+    render(
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <Provider
@@ -54,7 +46,6 @@ const renderRecorderIcon = async (wordId = ""): Promise<void> => {
       </StyledEngineProvider>
     );
   });
-  testButton = testRenderer.root.findByProps({ id: recordButtonId });
 };
 
 beforeEach(() => {
@@ -65,34 +56,26 @@ describe("RecorderIcon", () => {
   test("pointerDown records if no recording active", async () => {
     await renderRecorderIcon();
     expect(mockStartRecording).not.toHaveBeenCalled();
-    await act(async () => {
-      testButton.props.onPointerDown();
-    });
+    fireEvent.pointerDown(screen.getByTestId(recordButtonId));
     expect(mockStartRecording).toHaveBeenCalled();
   });
 
   test("pointerUp stops recording", async () => {
     await renderRecorderIcon(mockWordId);
     expect(mockStopRecording).not.toHaveBeenCalled();
-    await act(async () => {
-      testButton.props.onPointerUp();
-    });
+    fireEvent.pointerUp(screen.getByTestId(recordButtonId));
     expect(mockStopRecording).toHaveBeenCalled();
   });
 
   test("pointerUp does nothing if no recording active", async () => {
     await renderRecorderIcon();
-    await act(async () => {
-      testButton.props.onPointerUp();
-    });
+    fireEvent.pointerUp(screen.getByTestId(recordButtonId));
     expect(mockStopRecording).not.toHaveBeenCalled();
   });
 
   test("pointerUp does nothing if different word id", async () => {
     await renderRecorderIcon("different-id");
-    await act(async () => {
-      testButton.props.onPointerUp();
-    });
+    fireEvent.pointerUp(screen.getByTestId(recordButtonId));
     expect(mockStopRecording).not.toHaveBeenCalled();
   });
 });

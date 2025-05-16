@@ -67,6 +67,7 @@ export default function ProjectButtons(props: TabProps): ReactElement {
         <Tooltip title={t("appBar.statistics")}>
           <Button
             color="inherit"
+            data-testid={statButtonId}
             id={statButtonId}
             onClick={() => navigate(Path.Statistics)}
             style={{
@@ -83,6 +84,7 @@ export default function ProjectButtons(props: TabProps): ReactElement {
       <Tooltip title={t("appBar.projectSettings")}>
         <Button
           color="inherit"
+          data-testid={projButtonId}
           id={projButtonId}
           onClick={() => navigate(Path.ProjSettings)}
           style={{

@@ -1,25 +1,33 @@
 import { StyledEngineProvider, ThemeProvider } from "@mui/material/styles";
+import { act, render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
-import { ReactTestRenderer, act, create } from "react-test-renderer";
 import configureMockStore from "redux-mock-store";
 
-import AudioPlayer from "components/Pronunciations/AudioPlayer";
-import AudioRecorder from "components/Pronunciations/AudioRecorder";
 import PronunciationsBackend from "components/Pronunciations/PronunciationsBackend";
 import { defaultState } from "rootRedux/types";
 import theme from "types/theme";
 import { newPronunciation } from "types/word";
 
+jest.mock("components/AppBar/SpeakerMenu", () => ({
+  SpeakerMenuList: () => <div />,
+}));
+jest.mock("components/Dialogs", () => ({
+  ButtonConfirmation: () => <div />,
+}));
+
 // Test variables
-let testRenderer: ReactTestRenderer;
 const mockAudio = ["a.wav", "b.wav"].map((f) => newPronunciation(f));
 const mockStore = configureMockStore()(defaultState);
+
+// Built-in data-testid values for the MUI Icons
+const testIdPlay = "PlayArrowIcon";
+const testIdRecord = "FiberManualRecordIcon";
 
 const renderPronunciationsBackend = async (
   withRecord: boolean
 ): Promise<void> => {
   await act(async () => {
-    testRenderer = create(
+    render(
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <Provider store={mockStore}>
@@ -41,17 +49,13 @@ const renderPronunciationsBackend = async (
 describe("PronunciationsBackend", () => {
   it("renders with record button and play buttons", async () => {
     await renderPronunciationsBackend(true);
-    expect(testRenderer.root.findAllByType(AudioRecorder)).toHaveLength(1);
-    expect(testRenderer.root.findAllByType(AudioPlayer)).toHaveLength(
-      mockAudio.length
-    );
+    expect(screen.queryByTestId(testIdRecord)).toBeTruthy();
+    expect(screen.queryAllByTestId(testIdPlay)).toHaveLength(mockAudio.length);
   });
 
   it("renders without a record button and with play buttons", async () => {
     await renderPronunciationsBackend(false);
-    expect(testRenderer.root.findAllByType(AudioRecorder)).toHaveLength(0);
-    expect(testRenderer.root.findAllByType(AudioPlayer)).toHaveLength(
-      mockAudio.length
-    );
+    expect(screen.queryByTestId(testIdRecord)).toBeNull();
+    expect(screen.queryAllByTestId(testIdPlay)).toHaveLength(mockAudio.length);
   });
 });

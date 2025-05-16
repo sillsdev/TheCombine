@@ -14,7 +14,6 @@ import { type StoreState } from "rootRedux/types";
 import { themeColors } from "types/theme";
 
 export const recordButtonId = "recordingButton";
-export const recordIconId = "recordingIcon";
 
 interface RecorderIconProps {
   disabled?: boolean;
@@ -95,6 +94,7 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
       <span>
         <IconButton
           aria-label="record"
+          data-testid={recordButtonId}
           disabled={props.disabled || !hasMic}
           id={recordButtonId}
           onBlur={toggleIsRecordingToFalse}
@@ -106,7 +106,6 @@ export default function RecorderIcon(props: RecorderIconProps): ReactElement {
           tabIndex={-1}
         >
           <FiberManualRecord
-            id={recordIconId}
             sx={{
               color: (t) =>
                 props.disabled || !hasMic
