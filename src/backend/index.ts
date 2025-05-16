@@ -363,6 +363,17 @@ export async function retrieveDuplicates(): Promise<Word[][]> {
   return resp.data;
 }
 
+/** Get whether the current user has any graylist entries in the current project. */
+export async function hasGraylistEntries(): Promise<boolean> {
+  const projectId = LocalStorage.getProjectId();
+  const userId = LocalStorage.getUserId();
+  const resp = await mergeApi.hasGraylistEntries(
+    { projectId, userId },
+    defaultOptions()
+  );
+  return resp.data;
+}
+
 /** Get list of deferred potential duplicates from graylist for merging. */
 export async function getGraylistEntries(maxLists: number): Promise<Word[][]> {
   const projectId = LocalStorage.getProjectId();

@@ -332,11 +332,34 @@ namespace BackendFramework.Services
             return updateCount;
         }
 
+        /// <summary> Are there graylist entries in the specified <see cref="Project"/>? </summary>
+        /// <remarks> Removes from the graylist any checked entry without at least 2 words in the Frontier. </remarks>
+        public async Task<bool> HasGraylistEntries(string projectId, string? userId = null)
+        {
+            var graylist = await _mergeGraylistRepo.GetAllSets(projectId, userId);
+            foreach (var entry in graylist)
+            {
+                if (await _wordRepo.AreInFrontier(projectId, entry.WordIds, 2))
+                {
+                    return true;
+                }
+                else
+                {
+                    await _mergeGraylistRepo.Delete(projectId, entry.Id);
+                }
+            }
+            return false;
+        }
+
         /// <summary> Get Lists of entries in specified <see cref="Project"/>'s graylist. </summary>
         public async Task<List<List<Word>>> GetGraylistEntries(
             string projectId, int maxLists, string? userId = null)
         {
             var graylist = await _mergeGraylistRepo.GetAllSets(projectId, userId);
+            if (graylist.Count == 0)
+            {
+                return [];
+            }
             var frontier = await _wordRepo.GetFrontier(projectId);
             var wordLists = new List<List<Word>> { Capacity = maxLists };
             foreach (var entry in graylist)

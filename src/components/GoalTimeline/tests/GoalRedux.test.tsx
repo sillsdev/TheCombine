@@ -40,9 +40,10 @@ jest.mock("backend", () => ({
   createUserEdit: () => mockCreateUserEdit(),
   findDuplicates: () => Promise.resolve(),
   getCurrentPermissions: () => mockGetCurrentPermissions(),
-  getGraylistEntries: (maxLists: number) => mockGetGraylistEntries(maxLists),
+  getGraylistEntries: () => Promise.resolve([]),
   getUser: (id: string) => mockGetUser(id),
   getUserEditById: (...args: any[]) => mockGetUserEditById(...args),
+  hasGraylistEntries: () => Promise.resolve(false),
   retrieveDuplicates: () => mockRetrieveDuplicates(),
   updateUser: (user: User) => mockUpdateUser(user),
 }));
@@ -56,7 +57,6 @@ const mockAddGoalToUserEdit = jest.fn();
 const mockAddStepToGoal = jest.fn();
 const mockCreateUserEdit = jest.fn();
 const mockGetCurrentPermissions = jest.fn();
-const mockGetGraylistEntries = jest.fn();
 const mockGetUser = jest.fn();
 const mockGetUserEditById = jest.fn();
 const mockNavigate = jest.fn();
@@ -70,7 +70,6 @@ function setMockFunctions(): void {
     Permission.CharacterInventory,
     Permission.MergeAndReviewEntries,
   ]);
-  mockGetGraylistEntries.mockResolvedValue([]);
   mockGetUser.mockResolvedValue(mockUser());
   mockGetUserEditById.mockResolvedValue(mockUserEdit(true));
   mockRetrieveDuplicates.mockResolvedValue(goalDataMock.plannedWords);
