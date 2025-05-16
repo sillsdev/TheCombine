@@ -17,7 +17,7 @@ const testIdComment = "CommentIcon";
 describe("NoteButton", () => {
   it("renders without text", async () => {
     await renderWithText("");
-    expect(screen.queryByTestId(testIdAddComment)).not.toBeNull();
+    expect(screen.queryByTestId(testIdAddComment)).toBeTruthy();
     expect(screen.queryByTestId(testIdComment)).toBeNull();
     expect(screen.queryByLabelText(mockText)).toBeNull();
   });
@@ -25,7 +25,7 @@ describe("NoteButton", () => {
   it("renders with text", async () => {
     await renderWithText(mockText);
     expect(screen.queryByTestId(testIdAddComment)).toBeNull();
-    expect(screen.queryByTestId(testIdComment)).not.toBeNull();
-    expect(screen.queryByLabelText(mockText)).not.toBeNull();
+    expect(screen.queryByTestId(testIdComment)).toBeTruthy();
+    expect(screen.queryByLabelText(mockText)).toBeTruthy();
   });
 });

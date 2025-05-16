@@ -40,7 +40,7 @@ describe("DeleteCell", () => {
 
     // Delete button opens the dialog.
     await userEvent.click(screen.getByTestId(buttonId));
-    expect(screen.queryByRole("dialog")).not.toBeNull();
+    expect(screen.queryByRole("dialog")).toBeTruthy();
 
     // Cancel button closes the dialog.
     await userEvent.click(screen.getByTestId(buttonIdCancel));
@@ -49,7 +49,7 @@ describe("DeleteCell", () => {
 
     // Delete button opens the dialog.
     await userEvent.click(screen.getByTestId(buttonId));
-    expect(screen.queryByRole("dialog")).not.toBeNull();
+    expect(screen.queryByRole("dialog")).toBeTruthy();
 
     // Confirm button closes the dialog.
     await userEvent.click(screen.getByTestId(buttonIdConfirm));
