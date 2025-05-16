@@ -6,15 +6,14 @@ import configureMockStore from "redux-mock-store";
 import AudioPlayer, {
   longPressDelay,
 } from "components/Pronunciations/AudioPlayer";
-import { PronunciationsStatus } from "components/Pronunciations/Redux/PronunciationsReduxTypes";
-import { type StoreState, defaultState } from "rootRedux/types";
+import { defaultState } from "rootRedux/types";
 import { newPronunciation } from "types/word";
 
 jest.mock("backend", () => ({
   getSpeaker: () => mockGetSpeaker(),
 }));
 jest.mock("components/AppBar/SpeakerMenu", () => ({
-  SpeakerMenuList: () => <div>{mockSpeakerMenuText}</div>,
+  SpeakerMenuList: () => <div />,
 }));
 jest.mock("components/Dialogs", () => ({
   ButtonConfirmation: () => <div />,
@@ -30,24 +29,10 @@ const mockCanDeleteAudio = jest.fn();
 const mockDispatch = jest.fn((action: any) => action);
 const mockGetSpeaker = jest.fn();
 
-const mockSpeakerMenuText = "speaker-menu";
-const mockStore = configureMockStore()(mockPlayingState());
-
-function mockPlayingState(fileName = ""): StoreState {
-  return {
-    ...defaultState,
-    pronunciationsState: {
-      fileName,
-      status: PronunciationsStatus.Inactive,
-      wordId: "",
-    },
-  };
-}
-
 async function renderAudioPlayer(canDelete = false): Promise<void> {
   await act(async () => {
     render(
-      <Provider store={mockStore}>
+      <Provider store={configureMockStore()(defaultState)}>
         <AudioPlayer
           audio={newPronunciation("speech.mp3")}
           deleteAudio={canDelete ? mockCanDeleteAudio : undefined}
