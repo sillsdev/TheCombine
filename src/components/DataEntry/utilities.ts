@@ -1,3 +1,5 @@
+import { RefObject } from "react";
+
 import { Sense, Status, Word } from "api/models";
 import { DomainWord } from "types/word";
 
@@ -48,4 +50,12 @@ export function filterWordsByDomain(
     );
   }
   return domainWords;
+}
+
+/** Focus on a specified object. */
+export function focusInput(ref: RefObject<HTMLDivElement>): void {
+  if (ref.current) {
+    ref.current.focus();
+    ref.current.scrollIntoView({ behavior: "smooth" });
+  }
 }

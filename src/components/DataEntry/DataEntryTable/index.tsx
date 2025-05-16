@@ -5,7 +5,6 @@ import {
   FormEvent,
   Fragment,
   ReactElement,
-  RefObject,
   useCallback,
   useContext,
   useEffect,
@@ -29,7 +28,10 @@ import * as backend from "backend";
 import { getCurrentUser, getUserId } from "backend/localStorage";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
-import { filterWordsWithSenses } from "components/DataEntry/utilities";
+import {
+  filterWordsWithSenses,
+  focusInput,
+} from "components/DataEntry/utilities";
 import { uploadFileFromPronunciation } from "components/Pronunciations/utilities";
 import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
@@ -96,14 +98,6 @@ export function addSemanticDomainToSense(
   sense.semanticDomains.push(makeSemDomCurrent(semDom));
   const senses = word.senses.map((s) => (s.guid === senseGuid ? sense : s));
   return { ...word, senses };
-}
-
-/** Focus on a specified object. */
-export function focusInput(ref: RefObject<HTMLDivElement>): void {
-  if (ref.current) {
-    ref.current.focus();
-    ref.current.scrollIntoView({ behavior: "smooth" });
-  }
 }
 
 /** Find suggestions for given text from a list of strings. */

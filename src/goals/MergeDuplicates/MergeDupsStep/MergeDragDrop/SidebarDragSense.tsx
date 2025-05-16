@@ -2,7 +2,7 @@ import { Card } from "@mui/material";
 import { type ReactElement } from "react";
 import { Draggable } from "react-beautiful-dnd";
 
-import { trashId } from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop";
+import { trashId } from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/MergeDragDropTypes";
 import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardContent";
 import { type MergeTreeSense } from "goals/MergeDuplicates/MergeDupsTreeTypes";
 import { useAppSelector } from "rootRedux/hooks";

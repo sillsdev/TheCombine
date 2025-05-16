@@ -13,13 +13,13 @@ import { useSelector } from "react-redux";
 
 import { Pronunciation, Word, WritingSystem } from "api/models";
 import { NoteButton } from "components/Buttons";
-import { focusInput } from "components/DataEntry/DataEntryTable";
 import {
   DeleteEntry,
   GlossWithSuggestions,
   VernWithSuggestions,
 } from "components/DataEntry/DataEntryTable/EntryCellComponents";
 import VernDialog from "components/DataEntry/DataEntryTable/NewEntry/VernDialog";
+import { focusInput } from "components/DataEntry/utilities";
 import PronunciationsFrontend from "components/Pronunciations/PronunciationsFrontend";
 import { type StoreState } from "rootRedux/types";
 import theme from "types/theme";

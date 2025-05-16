@@ -2,7 +2,7 @@ import { Card } from "@mui/material";
 import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 
-import { trashId } from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop";
+import { trashId } from "goals/MergeDuplicates/MergeDupsStep/MergeDragDrop/MergeDragDropTypes";
 import SenseCardContent from "goals/MergeDuplicates/MergeDupsStep/SenseCardContent";
 import {
   type MergeTreeReference,
