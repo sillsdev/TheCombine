@@ -178,7 +178,7 @@ def main() -> None:
             if start:
                 all_starts.append(start)
             logging.info(f"Saving {len(other_words)} entries to {file_path}")
-            write_dict_part(file_path, other_words, True)
+            write_dict_part(file_path, other_words, start == "")
 
     word_starts: List[str] = []
     split_and_export_entries(all_entries, word_starts)
