@@ -920,12 +920,13 @@ then you will have to rerun `setup_cluster.py` (to install `otel-opentelemetry-c
 #### Checking The System Status
 
 Once _The Combine_ is installed, it is useful to be able to see the state of the system and to look at the logs. _The
-Combine_ is setup as four deployments:
+Combine_ is setup as five deployments:
 
 - frontend
 - backend
 - database
 - maintenance
+- otel/opentelemetry-collector
 
 Each deployment definition is used to create a _pod_ that runs the docker image.
 
@@ -933,23 +934,25 @@ To see the state of the deployments, run:
 
 ```console
 $ kubectl -n thecombine get deployments
-NAME          READY   UP-TO-DATE   AVAILABLE   AGE
-database      1/1     1            1           3h41m
-maintenance   1/1     1            1           3h41m
-backend       1/1     1            1           3h41m
-frontend      1/1     1            1           3h41m
+NAME                              READY   UP-TO-DATE   AVAILABLE   AGE
+database                          1/1     1            1           3h41m
+maintenance                       1/1     1            1           3h41m
+backend                           1/1     1            1           3h41m
+frontend                          1/1     1            1           3h41m
+otel/opentelemetry-collector      1/1     1            1           3h46m
 ```
 
 Similarly, you can view the state of the pods:
 
 ```console
 $ kubectl -n thecombine get pods
-NAME                           READY   STATUS      RESTARTS        AGE
-database-794b4d956f-g2n5k      1/1     Running     1 (3h51m ago)   3h58m
-ecr-cred-helper--1-w9xxp       0/1     Completed   0               164m
-maintenance-85644b9c76-55pz8   1/1     Running     0               130m
-backend-69b77c46c5-8dqlv       1/1     Running     0               130m
-frontend-c94c5747c-pz6cc       1/1     Running     0               60m
+NAME                                                READY   STATUS      RESTARTS        AGE
+database-794b4d956f-g2n5k                           1/1     Running     1 (3h51m ago)   3h58m
+install-fonts-fvrb4                                 0/1     Completed   0               164m
+maintenance-85644b9c76-55pz8                        1/1     Running     0               130m
+backend-69b77c46c5-8dqlv                            1/1     Running     0               130m
+frontend-c94c5747c-pz6cc                            1/1     Running     0               60m
+otel/opentelemetry-collector-5cd6b9c867-6j5zb       1/1     Running     0               4h03m
 ```
 
 Use the `logs` command to view the log file of a pod; you can specify the pod name listed in the output of the

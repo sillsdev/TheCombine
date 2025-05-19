@@ -275,6 +275,13 @@ export async function exportLift(projectId: string): Promise<string> {
   return (await liftApi.exportLiftFile({ projectId }, defaultOptions())).data;
 }
 
+/** Tell the backend to cancel the LIFT file export. */
+export async function cancelExport(): Promise<boolean> {
+  return (
+    await liftApi.cancelLiftExport({ projectId: "nonempty" }, defaultOptions())
+  ).data;
+}
+
 /** After the backend confirms that a LIFT file is ready, download it. */
 export async function downloadLift(projectId: string): Promise<string> {
   /** For details on how to download binary files with axios, see:
@@ -869,9 +876,9 @@ export async function getWord(wordId: string): Promise<Word> {
   return (await wordApi.getWord(params, defaultOptions())).data;
 }
 
-export async function isFrontierNonempty(projectId?: string): Promise<boolean> {
+export async function hasFrontierWords(projectId?: string): Promise<boolean> {
   const params = { projectId: projectId ?? LocalStorage.getProjectId() };
-  return (await wordApi.isFrontierNonempty(params, defaultOptions())).data;
+  return (await wordApi.hasFrontierWords(params, defaultOptions())).data;
 }
 
 export async function isInFrontier(

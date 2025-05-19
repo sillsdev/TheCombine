@@ -709,15 +709,25 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-@loadable/component 5.16.4
+@loadable/component 5.16.7
 MIT
-Copyright 2019 Greg Bergé
+# @loadable/component
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Enable Code Splitting in your React application.
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+## Install
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+```
+npm install @loadable/component
+```
+
+## Documentation
+
+👉 [See full documentation](https://loadable-components.com/)
+
+## License
+
+MIT
 
 
 @marsidev/react-turnstile 1.1.0
@@ -1138,7 +1148,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@mui/x-date-pickers 7.29.2
+@mui/x-date-pickers 7.29.3
 MIT
 MIT License
 
@@ -1237,7 +1247,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-@reduxjs/toolkit 2.8.0
+@reduxjs/toolkit 2.8.2
 MIT
 MIT License
 
@@ -2084,7 +2094,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-debug 4.4.0
+debug 4.4.1
 MIT
 (The MIT License)
 
@@ -2692,7 +2702,7 @@ Copyright (c) 2012 Felix Geisendörfer (felix@debuggable.com) and contributors
  THE SOFTWARE.
 
 
-framer-motion 12.10.0
+framer-motion 12.12.1
 MIT
 The MIT License (MIT)
 
@@ -3777,7 +3787,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-motion-dom 12.10.0
+motion-dom 12.12.1
 MIT
 The MIT License (MIT)
 
@@ -3802,7 +3812,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-motion-utils 12.9.4
+motion-utils 12.12.1
 MIT
 The MIT License (MIT)
 
@@ -3827,7 +3837,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-motion 12.10.0
+motion 12.12.1
 MIT
 The MIT License (MIT)
 
@@ -4903,7 +4913,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-semver 7.7.1
+semver 7.7.2
 ISC
 The ISC License
 

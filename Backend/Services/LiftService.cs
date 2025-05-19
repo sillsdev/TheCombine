@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -11,6 +12,7 @@ using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Models;
 using MongoDB.Bson;
+using MongoDB.Driver;
 using SIL.DictionaryServices.Lift;
 using SIL.DictionaryServices.Model;
 using SIL.Lift;
@@ -108,10 +110,16 @@ namespace BackendFramework.Services
         private readonly ISemanticDomainRepository _semDomRepo;
         private readonly ISpeakerRepository _speakerRepo;
 
-        /// A dictionary shared by all Projects for storing and retrieving paths to exported projects.
-        private readonly Dictionary<string, string> _liftExports;
+        /// <summary>
+        /// A dictionary shared by all Projects for tracking exported projects.
+        /// The value is either ("IN_PROGRESS", exportId) or (filePath, exportId), where 
+        /// exportId identifies the currently valid (e.g. not canceled or deleted) export.
+        /// </summary>
+        private readonly ConcurrentDictionary<string, (string, string)> _liftExports;
+        /// <summary>
         /// A dictionary shared by all Projects for storing and retrieving paths to in-process imports.
-        private readonly Dictionary<string, string> _liftImports;
+        /// </summary>
+        private readonly ConcurrentDictionary<string, string> _liftImports;
         private const string FlagTextEmpty = "***";
         private const string InProgress = "IN_PROGRESS";
 
@@ -125,47 +133,62 @@ namespace BackendFramework.Services
                 Sldr.Initialize(true);
             }
 
-            _liftExports = new Dictionary<string, string>();
-            _liftImports = new Dictionary<string, string>();
+            _liftExports = new ConcurrentDictionary<string, (string, string)>();
+            _liftImports = new ConcurrentDictionary<string, string>();
+        }
+
+        /// <summary> Invalidate most recent export by no longer storing its exportId. </summary>
+        public bool CancelRecentExport(string userId)
+        {
+            return _liftExports.TryRemove(userId, out var _);
         }
 
         /// <summary> Store status that a user's export is in-progress. </summary>
-        public void SetExportInProgress(string userId, bool isInProgress)
+        public void SetExportInProgress(string userId, string? exportId)
         {
-            _liftExports.Remove(userId);
-            if (isInProgress)
-            {
-                _liftExports.Add(userId, InProgress);
-            }
+            ArgumentException.ThrowIfNullOrEmpty(exportId);
+            _liftExports.AddOrUpdate(userId, (InProgress, exportId), (k, v) => (InProgress, exportId));
         }
 
         /// <summary> Query whether user has an in-progress export. </summary>
         public bool IsExportInProgress(string userId)
         {
-            _liftExports.TryGetValue(userId, out var exportPath);
+            _liftExports.TryGetValue(userId, out var tuple);
+            var exportPath = tuple.Item1;
             return exportPath == InProgress;
         }
 
         /// <summary> Store filePath for a user's Lift export. </summary>
-        public void StoreExport(string userId, string filePath)
+        /// <returns> If the export has not been cancelled, true; otherwise, false. </returns>
+        public bool StoreExport(string userId, string filePath, string exportId)
         {
-            _liftExports.Remove(userId);
-            _liftExports.Add(userId, filePath);
+            // Store the filepath if the export is valid (i.e. not cancelled).
+            // If the export is no longer valid, clean up any file created for it.
+            var valid = _liftExports.TryUpdate(userId, (filePath, exportId), (InProgress, exportId));
+            if (!valid && File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+            return valid;
         }
 
         /// <summary> Retrieve a stored filePath for the user's Lift export. </summary>
         /// <returns> Path to the Lift file on disk. </returns>
         public string? RetrieveExport(string userId)
         {
-            _liftExports.TryGetValue(userId, out var exportPath);
+            _liftExports.TryGetValue(userId, out var tuple);
+            var exportPath = tuple.Item1;
             return exportPath == InProgress ? null : exportPath;
         }
 
-        /// <summary> Delete a stored Lift export path and its file on disk. </summary>
-        /// <returns> If the element is successfully found and removed, true; otherwise, false. </returns>
+        /// <summary>
+        /// Deleting will invalidate any export the user has in progress at the time this method is called.
+        /// </summary>
+        /// <returns> False, if the user did not have any export to delete. True, otherwise. </returns>
         public bool DeleteExport(string userId)
         {
-            var removeSuccessful = _liftExports.Remove(userId, out var filePath);
+            var removeSuccessful = _liftExports.TryRemove(userId, out var tuple);
+            var filePath = tuple.Item1;
             if (removeSuccessful && filePath != InProgress && File.Exists(filePath))
             {
                 File.Delete(filePath);
@@ -176,8 +199,7 @@ namespace BackendFramework.Services
         /// <summary> Store filePath for a user's Lift import. </summary>
         public void StoreImport(string userId, string filePath)
         {
-            _liftImports.Remove(userId);
-            _liftImports.Add(userId, filePath);
+            _liftImports.AddOrUpdate(userId, filePath, (_, _) => filePath);
         }
 
         /// <summary> Retrieve a stored filePath for the user's Lift import. </summary>
@@ -192,7 +214,7 @@ namespace BackendFramework.Services
         /// <returns> If the element is successfully found and removed, true; otherwise, false. </returns>
         public bool DeleteImport(string userId)
         {
-            var removeSuccessful = _liftImports.Remove(userId, out var dirPath);
+            var removeSuccessful = _liftImports.TryRemove(userId, out var dirPath);
             if (removeSuccessful && Directory.Exists(dirPath))
             {
                 Directory.Delete(dirPath, true);

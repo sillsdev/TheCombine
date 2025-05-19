@@ -13,7 +13,7 @@
     "predatabase": "tsc scripts/setupMongo.ts && node scripts/setupMongo.js",
     "database": "mongod --dbpath=./mongo_database",
     "drop-database": "tsc scripts/dropDB.ts && node scripts/dropDB.js",
-    "find-circular-deps": "npx -y madge -c src/index.tsx",
+    "find-circular-deps": "npx -y madge -c src/index.tsx --ts-config tsconfig.json",
     "fmt-backend": "      dotnet format                     && dotnet format                     Backend.Tests",
     "fmt-backend-check": "dotnet format --verify-no-changes && dotnet format --verify-no-changes Backend.Tests",
     "fmt-frontend": "      prettier --write \"./{.github,.vscode,deploy,docs,maintenance,public,scripts,src}/**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
