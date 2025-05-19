@@ -190,7 +190,7 @@ def main() -> None:
         header_line += "`.\n\n"
 
         # Generate the needed import
-        import_line = "import { fetchText } from \"utilities/fontCssUtilities\";\n\n"
+        import_line = 'import { fetchText } from "utilities/fontCssUtilities";\n\n'
 
         # Generate the exported array of keys for this language's dictionary parts...
         key_lines = ["export const keys = [\n"]
