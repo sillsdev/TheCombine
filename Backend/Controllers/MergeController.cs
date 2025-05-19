@@ -152,6 +152,21 @@ namespace BackendFramework.Controllers
             return dups is null ? BadRequest() : Ok(dups);
         }
 
+        /// <summary> Get whether user has graylist entries. </summary>
+        /// <param name="projectId"> Id of project in which to search the frontier for potential duplicates. </param>
+        /// <param name="userId"> Id of user whose merge graylist is to be used. </param>
+        [HttpGet("hasgraylist/{userId}", Name = "HasGraylistEntries")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        public async Task<IActionResult> HasGraylistEntries(string projectId, string userId)
+        {
+            if (!await _permissionService.HasProjectPermission(
+                HttpContext, Permission.MergeAndReviewEntries, projectId))
+            {
+                return Forbid();
+            }
+            return Ok(await _mergeService.HasGraylistEntries(projectId, userId));
+        }
+
         /// <summary> Get lists of graylist entries. </summary>
         /// <param name="projectId"> Id of project in which to search the frontier for potential duplicates. </param>
         /// <param name="maxLists"> Max number of lists of potential duplicates. </param>
@@ -159,7 +174,7 @@ namespace BackendFramework.Controllers
         /// <returns> List of Lists of <see cref="Word"/>s. </returns>
         [HttpGet("getgraylist/{maxLists}/{userId}", Name = "GetGraylistEntries")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<List<Word>>))]
-        public async Task<IActionResult> getGraylistEntries(
+        public async Task<IActionResult> GetGraylistEntries(
             string projectId, int maxLists, string userId)
         {
             if (!await _permissionService.HasProjectPermission(
