@@ -11,7 +11,7 @@ import { goalTypeToGoal } from "utilities/goalUtilities";
 
 jest.mock("backend", () => ({
   getCurrentPermissions: () => mockGetCurrentPermissions(),
-  getGraylistEntries: (maxLists: number) => mockGetGraylistEntries(maxLists),
+  hasGraylistEntries: () => mockHasGraylistEntries(),
 }));
 jest.mock("components/Pronunciations/Recorder");
 jest.mock("goals/Redux/GoalActions", () => ({
@@ -28,7 +28,7 @@ jest.mock("rootRedux/hooks", () => {
 
 const mockChooseGoal = jest.fn();
 const mockGetCurrentPermissions = jest.fn();
-const mockGetGraylistEntries = jest.fn();
+const mockHasGraylistEntries = jest.fn();
 
 const allGoals = defaultState.allGoalTypes.map((t) => goalTypeToGoal(t));
 const goalWithAnyGuid = (g: Goal): Goal => ({ ...g, guid: expect.any(String) });
@@ -40,7 +40,7 @@ beforeEach(() => {
     Permission.CharacterInventory,
     Permission.MergeAndReviewEntries,
   ]);
-  mockGetGraylistEntries.mockResolvedValue([]);
+  mockHasGraylistEntries.mockResolvedValue(false);
 });
 
 describe("GoalTimeline", () => {
@@ -53,9 +53,7 @@ describe("GoalTimeline", () => {
   });
 
   it("has one more button if there's a graylist entry", async () => {
-    mockGetGraylistEntries.mockResolvedValue([
-      [{ id: "word1" }, { id: "word2" }],
-    ]);
+    mockHasGraylistEntries.mockResolvedValue(true);
     await renderTimeline(defaultState.allGoalTypes, allGoals);
     const buttons = screen.queryAllByRole("button");
     expect(buttons).toHaveLength(
