@@ -6,7 +6,7 @@ const fontDir = "/fonts";
 const fallbackFilePath = `${fontDir}/fallback.json`;
 
 /** Given a url, returns the text content of the result, or undefined if fetch fails. */
-async function fetchText(url: string): Promise<string | undefined> {
+export async function fetchText(url: string): Promise<string | undefined> {
   const resp = await fetch(url);
   if (resp.ok) {
     return await (await resp.blob()).text();
