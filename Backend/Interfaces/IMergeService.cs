@@ -17,6 +17,7 @@ namespace BackendFramework.Interfaces
         Task<int> UpdateMergeGraylist(string projectId);
         Task<bool> GetAndStorePotentialDuplicates(string projectId, int maxInList, int maxLists, string userId);
         List<List<Word>>? RetrieveDups(string userId);
+        Task<bool> HasGraylistEntries(string projectId, string? userId = null);
         Task<List<List<Word>>> GetGraylistEntries(string projectId, int maxLists, string? userId = null);
     }
 }
