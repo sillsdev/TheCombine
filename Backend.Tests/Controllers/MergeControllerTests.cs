@@ -6,6 +6,7 @@ using BackendFramework.Controllers;
 using BackendFramework.Helper;
 using BackendFramework.Interfaces;
 using BackendFramework.Services;
+using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 
 namespace Backend.Tests.Controllers
@@ -71,7 +72,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void GreylistAddTest()
+        public void GraylistAddTest()
         {
             var wordIdsA = new List<string> { "1", "2" };
             var wordIdsB = new List<string> { "3", "1" };
@@ -91,6 +92,22 @@ namespace Backend.Tests.Controllers
             result = _mergeGraylistRepo.GetAllSets(ProjId).Result;
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result.First().WordIds, Is.EqualTo(wordIdsC));
+        }
+
+        [Test]
+        public void HasGraylistEntriesNoPermissionTest()
+        {
+            _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _mergeController.HasGraylistEntries("projId", "userId").Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
+        }
+
+        [Test]
+        public void GetGraylistEntriesNoPermissionTest()
+        {
+            _mergeController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+            var result = _mergeController.GetGraylistEntries("projId", 3, "userId").Result;
+            Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
     }
 }

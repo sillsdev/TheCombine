@@ -291,10 +291,11 @@ namespace BackendFramework.Controllers
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
             var userId = _permissionService.GetUserId(HttpContext);
-            return await ExportLiftFile(projectId, userId);
+            var exportId = _permissionService.GetExportId(HttpContext);
+            return await ExportLiftFile(projectId, userId, exportId);
         }
 
-        private async Task<IActionResult> ExportLiftFile(string projectId, string userId)
+        private async Task<IActionResult> ExportLiftFile(string projectId, string userId, string exportId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Export, projectId))
             {
@@ -325,48 +326,60 @@ namespace BackendFramework.Controllers
             }
 
             // Store in-progress status for the export
-            _liftService.SetExportInProgress(userId, true);
+            _liftService.SetExportInProgress(userId, exportId);
 
             // Ensure project has words
-            var words = await _wordRepo.GetAllWords(projectId);
-            if (words.Count == 0)
+            if (!await _wordRepo.HasWords(projectId))
             {
-                _liftService.SetExportInProgress(userId, false);
+                _liftService.CancelRecentExport(userId);
                 return BadRequest("No words to export.");
             }
 
             // Run the task without waiting for completion.
             // This Task will be scheduled within the existing Async executor thread pool efficiently.
             // See: https://stackoverflow.com/a/64614779/1398841
-            _ = Task.Run(() => CreateLiftExportThenSignal(projectId, userId));
+            _ = Task.Run(() => CreateLiftExportThenSignal(projectId, userId, exportId));
             return Ok(projectId);
         }
 
         // These internal methods are extracted for unit testing.
-        internal async Task<bool> CreateLiftExportThenSignal(string projectId, string userId)
+        internal async Task<bool> CreateLiftExportThenSignal(string projectId, string userId, string exportId)
         {
             // Export the data to a zip, read into memory, and delete zip.
+            string? exportedFilepath;
             try
             {
-                var exportedFilepath = await CreateLiftExport(projectId);
-                // Store the temporary path to the exported file for user to download later.
-                _liftService.StoreExport(userId, exportedFilepath);
-                await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId);
-                return true;
+                exportedFilepath = await CreateLiftExport(projectId);
             }
             catch (Exception e)
             {
                 _logger.LogError("Error exporting project {ProjectId}{NewLine}{Message}:{ExceptionStack}",
                     projectId, Environment.NewLine, e.Message, e.StackTrace);
-                _liftService.DeleteExport(userId);
                 await _notifyService.Clients.All.SendAsync(CombineHub.MethodFailure, userId);
                 throw;
             }
+            // Store the temporary path to the exported file for user to download later.
+            var proceed = _liftService.StoreExport(userId, exportedFilepath, exportId);
+            if (proceed)
+            {
+                await _notifyService.Clients.All.SendAsync(CombineHub.MethodSuccess, userId);
+            }
+            return proceed;
         }
 
         internal async Task<string> CreateLiftExport(string projectId)
         {
             return await _liftService.LiftExport(projectId, _wordRepo, _projRepo);
+        }
+
+        /// <summary> Cancel project export </summary>
+        /// <returns> bool: true, if found export to cancel </returns>
+        [HttpGet("cancelexport", Name = "CancelLiftExport")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        public IActionResult CancelLiftExport()
+        {
+            var userId = _permissionService.GetUserId(HttpContext);
+            return Ok(_liftService.CancelRecentExport(userId));
         }
 
         /// <summary> Downloads project data in zip file </summary>

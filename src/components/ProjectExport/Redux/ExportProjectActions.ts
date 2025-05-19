@@ -1,6 +1,6 @@
 import { Action, PayloadAction } from "@reduxjs/toolkit";
 
-import { deleteLift, downloadLift, exportLift } from "backend";
+import { cancelExport, deleteLift, downloadLift, exportLift } from "backend";
 import {
   downloadingAction,
   exportingAction,
@@ -38,6 +38,13 @@ export function asyncExportProject(projectId: string) {
   return async (dispatch: StoreStateDispatch) => {
     dispatch(exporting(projectId));
     await exportLift(projectId).catch(() => dispatch(failure(projectId)));
+  };
+}
+
+export function asyncCancelExport() {
+  return async (dispatch: StoreStateDispatch) => {
+    dispatch(resetExport());
+    await cancelExport();
   };
 }
 
