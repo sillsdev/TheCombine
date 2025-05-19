@@ -1,9 +1,9 @@
 import {
-  Button,
   Card,
   CardContent,
   List,
   ListItem,
+  ListItemButton,
   Typography,
 } from "@mui/material";
 import { type ReactElement, useEffect, useState } from "react";
@@ -12,7 +12,6 @@ import { useNavigate } from "react-router-dom";
 
 import { type Project } from "api/models";
 import { getAllActiveProjects } from "backend";
-import { styledBorder } from "components/DataEntry/DataEntryTable/NewEntry/StyledMenuItem";
 import { asyncSetNewCurrentProject } from "components/Project/ProjectActions";
 import { useAppDispatch } from "rootRedux/hooks";
 import { Path } from "types/path";
@@ -47,15 +46,14 @@ export default function ChooseProject(): ReactElement {
         {/* List of projects */}
         <List dense>
           {projectList.map((project, index) => (
-            <ListItem key={project.id}>
-              <Button
+            <ListItem key={project.id} sx={{ py: 0 }}>
+              <ListItemButton
                 id={`choose-project-${index}`}
                 onClick={() => selectProject(project)}
-                sx={{ ...styledBorder, color: "black", minWidth: 0 }}
-                variant="outlined"
+                sx={{ borderTop: "1px solid #ddd" }}
               >
                 <Typography variant="h6">{project.name}</Typography>
-              </Button>
+              </ListItemButton>
             </ListItem>
           ))}
         </List>
