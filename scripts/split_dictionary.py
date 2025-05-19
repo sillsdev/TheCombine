@@ -201,7 +201,7 @@ def main() -> None:
             key_lines.append(f'  "{key}",\n')
             switch_lines.append(f'    case "{key}":\n')
             import_path = f'"/dictionaries/{args.lang}/u{key}.dic"'
-            switch_lines.append(f"      return (await fetchText({import_path}));\n")
+            switch_lines.append(f"      return await fetchText({import_path});\n")
         key_lines.append("];\n\n")
         switch_lines.append("    default:\n      return;\n  }\n")
 
@@ -210,7 +210,7 @@ def main() -> None:
         default_function_lines = [
             "export default async function (key?: string): Promise<string | undefined> {\n",
             "  if (!key) {\n",
-            f"    return (await fetchText({default_path}));\n",
+            f"    return await fetchText({default_path});\n",
             "  }\n\n",
             *switch_lines,
             "}\n",

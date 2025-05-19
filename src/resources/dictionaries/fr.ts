@@ -39,74 +39,74 @@ export const keys = [
 
 export default async function (key?: string): Promise<string | undefined> {
   if (!key) {
-    return (await fetchText("/dictionaries/fr/u.dic"));
+    return await fetchText("/dictionaries/fr/u.dic");
   }
 
   switch (key) {
     case "97":
-      return (await fetchText("/dictionaries/fr/u97.dic"));
+      return await fetchText("/dictionaries/fr/u97.dic");
     case "97-98":
-      return (await fetchText("/dictionaries/fr/u97-98.dic"));
+      return await fetchText("/dictionaries/fr/u97-98.dic");
     case "97-99":
-      return (await fetchText("/dictionaries/fr/u97-99.dic"));
+      return await fetchText("/dictionaries/fr/u97-99.dic");
     case "97-108":
-      return (await fetchText("/dictionaries/fr/u97-108.dic"));
+      return await fetchText("/dictionaries/fr/u97-108.dic");
     case "97-110":
-      return (await fetchText("/dictionaries/fr/u97-110.dic"));
+      return await fetchText("/dictionaries/fr/u97-110.dic");
     case "97-114":
-      return (await fetchText("/dictionaries/fr/u97-114.dic"));
+      return await fetchText("/dictionaries/fr/u97-114.dic");
     case "98":
-      return (await fetchText("/dictionaries/fr/u98.dic"));
+      return await fetchText("/dictionaries/fr/u98.dic");
     case "99":
-      return (await fetchText("/dictionaries/fr/u99.dic"));
+      return await fetchText("/dictionaries/fr/u99.dic");
     case "99-97":
-      return (await fetchText("/dictionaries/fr/u99-97.dic"));
+      return await fetchText("/dictionaries/fr/u99-97.dic");
     case "99-104":
-      return (await fetchText("/dictionaries/fr/u99-104.dic"));
+      return await fetchText("/dictionaries/fr/u99-104.dic");
     case "99-111":
-      return (await fetchText("/dictionaries/fr/u99-111.dic"));
+      return await fetchText("/dictionaries/fr/u99-111.dic");
     case "99-114":
-      return (await fetchText("/dictionaries/fr/u99-114.dic"));
+      return await fetchText("/dictionaries/fr/u99-114.dic");
     case "100":
-      return (await fetchText("/dictionaries/fr/u100.dic"));
+      return await fetchText("/dictionaries/fr/u100.dic");
     case "101":
-      return (await fetchText("/dictionaries/fr/u101.dic"));
+      return await fetchText("/dictionaries/fr/u101.dic");
     case "101-109":
-      return (await fetchText("/dictionaries/fr/u101-109.dic"));
+      return await fetchText("/dictionaries/fr/u101-109.dic");
     case "101-110":
-      return (await fetchText("/dictionaries/fr/u101-110.dic"));
+      return await fetchText("/dictionaries/fr/u101-110.dic");
     case "101-120":
-      return (await fetchText("/dictionaries/fr/u101-120.dic"));
+      return await fetchText("/dictionaries/fr/u101-120.dic");
     case "101-769":
-      return (await fetchText("/dictionaries/fr/u101-769.dic"));
+      return await fetchText("/dictionaries/fr/u101-769.dic");
     case "102":
-      return (await fetchText("/dictionaries/fr/u102.dic"));
+      return await fetchText("/dictionaries/fr/u102.dic");
     case "103":
-      return (await fetchText("/dictionaries/fr/u103.dic"));
+      return await fetchText("/dictionaries/fr/u103.dic");
     case "104":
-      return (await fetchText("/dictionaries/fr/u104.dic"));
+      return await fetchText("/dictionaries/fr/u104.dic");
     case "105":
-      return (await fetchText("/dictionaries/fr/u105.dic"));
+      return await fetchText("/dictionaries/fr/u105.dic");
     case "106":
-      return (await fetchText("/dictionaries/fr/u106.dic"));
+      return await fetchText("/dictionaries/fr/u106.dic");
     case "108":
-      return (await fetchText("/dictionaries/fr/u108.dic"));
+      return await fetchText("/dictionaries/fr/u108.dic");
     case "109":
-      return (await fetchText("/dictionaries/fr/u109.dic"));
+      return await fetchText("/dictionaries/fr/u109.dic");
     case "110":
-      return (await fetchText("/dictionaries/fr/u110.dic"));
+      return await fetchText("/dictionaries/fr/u110.dic");
     case "111":
-      return (await fetchText("/dictionaries/fr/u111.dic"));
+      return await fetchText("/dictionaries/fr/u111.dic");
     case "112":
-      return (await fetchText("/dictionaries/fr/u112.dic"));
+      return await fetchText("/dictionaries/fr/u112.dic");
     case "114":
-      return (await fetchText("/dictionaries/fr/u114.dic"));
+      return await fetchText("/dictionaries/fr/u114.dic");
     case "115":
-      return (await fetchText("/dictionaries/fr/u115.dic"));
+      return await fetchText("/dictionaries/fr/u115.dic");
     case "116":
-      return (await fetchText("/dictionaries/fr/u116.dic"));
+      return await fetchText("/dictionaries/fr/u116.dic");
     case "118":
-      return (await fetchText("/dictionaries/fr/u118.dic"));
+      return await fetchText("/dictionaries/fr/u118.dic");
     default:
       return;
   }

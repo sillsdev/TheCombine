@@ -23,42 +23,42 @@ export const keys = [
 
 export default async function (key?: string): Promise<string | undefined> {
   if (!key) {
-    return (await fetchText("/dictionaries/ar/u.dic"));
+    return await fetchText("/dictionaries/ar/u.dic");
   }
 
   switch (key) {
     case "1575":
-      return (await fetchText("/dictionaries/ar/u1575.dic"));
+      return await fetchText("/dictionaries/ar/u1575.dic");
     case "1576":
-      return (await fetchText("/dictionaries/ar/u1576.dic"));
+      return await fetchText("/dictionaries/ar/u1576.dic");
     case "1578":
-      return (await fetchText("/dictionaries/ar/u1578.dic"));
+      return await fetchText("/dictionaries/ar/u1578.dic");
     case "1581":
-      return (await fetchText("/dictionaries/ar/u1581.dic"));
+      return await fetchText("/dictionaries/ar/u1581.dic");
     case "1585":
-      return (await fetchText("/dictionaries/ar/u1585.dic"));
+      return await fetchText("/dictionaries/ar/u1585.dic");
     case "1587":
-      return (await fetchText("/dictionaries/ar/u1587.dic"));
+      return await fetchText("/dictionaries/ar/u1587.dic");
     case "1588":
-      return (await fetchText("/dictionaries/ar/u1588.dic"));
+      return await fetchText("/dictionaries/ar/u1588.dic");
     case "1593":
-      return (await fetchText("/dictionaries/ar/u1593.dic"));
+      return await fetchText("/dictionaries/ar/u1593.dic");
     case "1601":
-      return (await fetchText("/dictionaries/ar/u1601.dic"));
+      return await fetchText("/dictionaries/ar/u1601.dic");
     case "1602":
-      return (await fetchText("/dictionaries/ar/u1602.dic"));
+      return await fetchText("/dictionaries/ar/u1602.dic");
     case "1603":
-      return (await fetchText("/dictionaries/ar/u1603.dic"));
+      return await fetchText("/dictionaries/ar/u1603.dic");
     case "1604":
-      return (await fetchText("/dictionaries/ar/u1604.dic"));
+      return await fetchText("/dictionaries/ar/u1604.dic");
     case "1605":
-      return (await fetchText("/dictionaries/ar/u1605.dic"));
+      return await fetchText("/dictionaries/ar/u1605.dic");
     case "1606":
-      return (await fetchText("/dictionaries/ar/u1606.dic"));
+      return await fetchText("/dictionaries/ar/u1606.dic");
     case "1608":
-      return (await fetchText("/dictionaries/ar/u1608.dic"));
+      return await fetchText("/dictionaries/ar/u1608.dic");
     case "1610":
-      return (await fetchText("/dictionaries/ar/u1610.dic"));
+      return await fetchText("/dictionaries/ar/u1610.dic");
     default:
       return;
   }

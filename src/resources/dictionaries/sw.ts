@@ -20,36 +20,36 @@ export const keys = [
 
 export default async function (key?: string): Promise<string | undefined> {
   if (!key) {
-    return (await fetchText("/dictionaries/sw/u.dic"));
+    return await fetchText("/dictionaries/sw/u.dic");
   }
 
   switch (key) {
     case "97":
-      return (await fetchText("/dictionaries/sw/u97.dic"));
+      return await fetchText("/dictionaries/sw/u97.dic");
     case "98":
-      return (await fetchText("/dictionaries/sw/u98.dic"));
+      return await fetchText("/dictionaries/sw/u98.dic");
     case "104":
-      return (await fetchText("/dictionaries/sw/u104.dic"));
+      return await fetchText("/dictionaries/sw/u104.dic");
     case "105":
-      return (await fetchText("/dictionaries/sw/u105.dic"));
+      return await fetchText("/dictionaries/sw/u105.dic");
     case "107":
-      return (await fetchText("/dictionaries/sw/u107.dic"));
+      return await fetchText("/dictionaries/sw/u107.dic");
     case "108":
-      return (await fetchText("/dictionaries/sw/u108.dic"));
+      return await fetchText("/dictionaries/sw/u108.dic");
     case "109":
-      return (await fetchText("/dictionaries/sw/u109.dic"));
+      return await fetchText("/dictionaries/sw/u109.dic");
     case "110":
-      return (await fetchText("/dictionaries/sw/u110.dic"));
+      return await fetchText("/dictionaries/sw/u110.dic");
     case "115":
-      return (await fetchText("/dictionaries/sw/u115.dic"));
+      return await fetchText("/dictionaries/sw/u115.dic");
     case "116":
-      return (await fetchText("/dictionaries/sw/u116.dic"));
+      return await fetchText("/dictionaries/sw/u116.dic");
     case "117":
-      return (await fetchText("/dictionaries/sw/u117.dic"));
+      return await fetchText("/dictionaries/sw/u117.dic");
     case "118":
-      return (await fetchText("/dictionaries/sw/u118.dic"));
+      return await fetchText("/dictionaries/sw/u118.dic");
     case "119":
-      return (await fetchText("/dictionaries/sw/u119.dic"));
+      return await fetchText("/dictionaries/sw/u119.dic");
     default:
       return;
   }

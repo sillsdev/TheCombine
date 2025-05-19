@@ -34,64 +34,64 @@ export const keys = [
 
 export default async function (key?: string): Promise<string | undefined> {
   if (!key) {
-    return (await fetchText("/dictionaries/hi/u.dic"));
+    return await fetchText("/dictionaries/hi/u.dic");
   }
 
   switch (key) {
     case "2309":
-      return (await fetchText("/dictionaries/hi/u2309.dic"));
+      return await fetchText("/dictionaries/hi/u2309.dic");
     case "2310":
-      return (await fetchText("/dictionaries/hi/u2310.dic"));
+      return await fetchText("/dictionaries/hi/u2310.dic");
     case "2313":
-      return (await fetchText("/dictionaries/hi/u2313.dic"));
+      return await fetchText("/dictionaries/hi/u2313.dic");
     case "2325":
-      return (await fetchText("/dictionaries/hi/u2325.dic"));
+      return await fetchText("/dictionaries/hi/u2325.dic");
     case "2326":
-      return (await fetchText("/dictionaries/hi/u2326.dic"));
+      return await fetchText("/dictionaries/hi/u2326.dic");
     case "2327":
-      return (await fetchText("/dictionaries/hi/u2327.dic"));
+      return await fetchText("/dictionaries/hi/u2327.dic");
     case "2330":
-      return (await fetchText("/dictionaries/hi/u2330.dic"));
+      return await fetchText("/dictionaries/hi/u2330.dic");
     case "2331":
-      return (await fetchText("/dictionaries/hi/u2331.dic"));
+      return await fetchText("/dictionaries/hi/u2331.dic");
     case "2332":
-      return (await fetchText("/dictionaries/hi/u2332.dic"));
+      return await fetchText("/dictionaries/hi/u2332.dic");
     case "2333":
-      return (await fetchText("/dictionaries/hi/u2333.dic"));
+      return await fetchText("/dictionaries/hi/u2333.dic");
     case "2335":
-      return (await fetchText("/dictionaries/hi/u2335.dic"));
+      return await fetchText("/dictionaries/hi/u2335.dic");
     case "2337":
-      return (await fetchText("/dictionaries/hi/u2337.dic"));
+      return await fetchText("/dictionaries/hi/u2337.dic");
     case "2340":
-      return (await fetchText("/dictionaries/hi/u2340.dic"));
+      return await fetchText("/dictionaries/hi/u2340.dic");
     case "2342":
-      return (await fetchText("/dictionaries/hi/u2342.dic"));
+      return await fetchText("/dictionaries/hi/u2342.dic");
     case "2343":
-      return (await fetchText("/dictionaries/hi/u2343.dic"));
+      return await fetchText("/dictionaries/hi/u2343.dic");
     case "2344":
-      return (await fetchText("/dictionaries/hi/u2344.dic"));
+      return await fetchText("/dictionaries/hi/u2344.dic");
     case "2346":
-      return (await fetchText("/dictionaries/hi/u2346.dic"));
+      return await fetchText("/dictionaries/hi/u2346.dic");
     case "2347":
-      return (await fetchText("/dictionaries/hi/u2347.dic"));
+      return await fetchText("/dictionaries/hi/u2347.dic");
     case "2348":
-      return (await fetchText("/dictionaries/hi/u2348.dic"));
+      return await fetchText("/dictionaries/hi/u2348.dic");
     case "2349":
-      return (await fetchText("/dictionaries/hi/u2349.dic"));
+      return await fetchText("/dictionaries/hi/u2349.dic");
     case "2350":
-      return (await fetchText("/dictionaries/hi/u2350.dic"));
+      return await fetchText("/dictionaries/hi/u2350.dic");
     case "2352":
-      return (await fetchText("/dictionaries/hi/u2352.dic"));
+      return await fetchText("/dictionaries/hi/u2352.dic");
     case "2354":
-      return (await fetchText("/dictionaries/hi/u2354.dic"));
+      return await fetchText("/dictionaries/hi/u2354.dic");
     case "2357":
-      return (await fetchText("/dictionaries/hi/u2357.dic"));
+      return await fetchText("/dictionaries/hi/u2357.dic");
     case "2358":
-      return (await fetchText("/dictionaries/hi/u2358.dic"));
+      return await fetchText("/dictionaries/hi/u2358.dic");
     case "2360":
-      return (await fetchText("/dictionaries/hi/u2360.dic"));
+      return await fetchText("/dictionaries/hi/u2360.dic");
     case "2361":
-      return (await fetchText("/dictionaries/hi/u2361.dic"));
+      return await fetchText("/dictionaries/hi/u2361.dic");
     default:
       return;
   }

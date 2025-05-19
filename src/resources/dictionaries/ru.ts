@@ -29,54 +29,54 @@ export const keys = [
 
 export default async function (key?: string): Promise<string | undefined> {
   if (!key) {
-    return (await fetchText("/dictionaries/ru/u.dic"));
+    return await fetchText("/dictionaries/ru/u.dic");
   }
 
   switch (key) {
     case "1072":
-      return (await fetchText("/dictionaries/ru/u1072.dic"));
+      return await fetchText("/dictionaries/ru/u1072.dic");
     case "1073":
-      return (await fetchText("/dictionaries/ru/u1073.dic"));
+      return await fetchText("/dictionaries/ru/u1073.dic");
     case "1074":
-      return (await fetchText("/dictionaries/ru/u1074.dic"));
+      return await fetchText("/dictionaries/ru/u1074.dic");
     case "1075":
-      return (await fetchText("/dictionaries/ru/u1075.dic"));
+      return await fetchText("/dictionaries/ru/u1075.dic");
     case "1076":
-      return (await fetchText("/dictionaries/ru/u1076.dic"));
+      return await fetchText("/dictionaries/ru/u1076.dic");
     case "1078":
-      return (await fetchText("/dictionaries/ru/u1078.dic"));
+      return await fetchText("/dictionaries/ru/u1078.dic");
     case "1079":
-      return (await fetchText("/dictionaries/ru/u1079.dic"));
+      return await fetchText("/dictionaries/ru/u1079.dic");
     case "1080":
-      return (await fetchText("/dictionaries/ru/u1080.dic"));
+      return await fetchText("/dictionaries/ru/u1080.dic");
     case "1082":
-      return (await fetchText("/dictionaries/ru/u1082.dic"));
+      return await fetchText("/dictionaries/ru/u1082.dic");
     case "1083":
-      return (await fetchText("/dictionaries/ru/u1083.dic"));
+      return await fetchText("/dictionaries/ru/u1083.dic");
     case "1084":
-      return (await fetchText("/dictionaries/ru/u1084.dic"));
+      return await fetchText("/dictionaries/ru/u1084.dic");
     case "1085":
-      return (await fetchText("/dictionaries/ru/u1085.dic"));
+      return await fetchText("/dictionaries/ru/u1085.dic");
     case "1086":
-      return (await fetchText("/dictionaries/ru/u1086.dic"));
+      return await fetchText("/dictionaries/ru/u1086.dic");
     case "1087":
-      return (await fetchText("/dictionaries/ru/u1087.dic"));
+      return await fetchText("/dictionaries/ru/u1087.dic");
     case "1088":
-      return (await fetchText("/dictionaries/ru/u1088.dic"));
+      return await fetchText("/dictionaries/ru/u1088.dic");
     case "1089":
-      return (await fetchText("/dictionaries/ru/u1089.dic"));
+      return await fetchText("/dictionaries/ru/u1089.dic");
     case "1090":
-      return (await fetchText("/dictionaries/ru/u1090.dic"));
+      return await fetchText("/dictionaries/ru/u1090.dic");
     case "1091":
-      return (await fetchText("/dictionaries/ru/u1091.dic"));
+      return await fetchText("/dictionaries/ru/u1091.dic");
     case "1092":
-      return (await fetchText("/dictionaries/ru/u1092.dic"));
+      return await fetchText("/dictionaries/ru/u1092.dic");
     case "1093":
-      return (await fetchText("/dictionaries/ru/u1093.dic"));
+      return await fetchText("/dictionaries/ru/u1093.dic");
     case "1095":
-      return (await fetchText("/dictionaries/ru/u1095.dic"));
+      return await fetchText("/dictionaries/ru/u1095.dic");
     case "1096":
-      return (await fetchText("/dictionaries/ru/u1096.dic"));
+      return await fetchText("/dictionaries/ru/u1096.dic");
     default:
       return;
   }
