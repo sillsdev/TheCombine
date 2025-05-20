@@ -46,10 +46,15 @@ export default function ChooseProject(): ReactElement {
         {/* List of projects */}
         <List dense>
           {projectList.map((project, index) => (
-            <ListItem key={project.id}>
+            <ListItem key={project.id} sx={{ py: 0 }}>
               <ListItemButton
                 id={`choose-project-${index}`}
                 onClick={() => selectProject(project)}
+                sx={{
+                  borderTop: index === 0 ? "1px solid #ddd" : undefined,
+                  borderBottom: "1px solid #ddd",
+                  py: 1,
+                }}
               >
                 <Typography variant="h6">{project.name}</Typography>
               </ListItemButton>

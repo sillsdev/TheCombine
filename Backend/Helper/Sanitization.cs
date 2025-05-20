@@ -54,6 +54,7 @@ namespace BackendFramework.Helper
                 ',',
                 '(',
                 ')',
+                '\'',
                 ' '
             }.ToImmutableList();
             if (fileName.All(c => char.IsLetterOrDigit(c) || validCharacters.Contains(c)))

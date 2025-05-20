@@ -468,7 +468,10 @@ function DomainList(props: DomainListProps): ReactElement {
         )}
         <IconButton
           id={props.buttonIdAdd}
-          onClick={() => setAddingDom(true)}
+          onClick={(e) => {
+            e.currentTarget.blur(); // else dialog reopens when domain selected with Enter
+            setAddingDom(true);
+          }}
           size="large"
         >
           <Add />
