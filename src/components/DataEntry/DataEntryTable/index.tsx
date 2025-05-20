@@ -27,6 +27,7 @@ import * as backend from "backend";
 import { getCurrentUser, getUserId } from "backend/localStorage";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
 import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
+import { RecentEntryCold } from "components/DataEntry/DataEntryTable/RecentEntryCold";
 import {
   filterWordsWithSenses,
   focusInput,
@@ -35,7 +36,6 @@ import { uploadFileFromPronunciation } from "components/Pronunciations/utilities
 import { useAppSelector } from "rootRedux/hooks";
 import { type StoreState } from "rootRedux/types";
 import { type Hash } from "types/hash";
-import theme from "types/theme";
 import {
   FileWithSpeakerId,
   newGloss,
@@ -214,6 +214,7 @@ const defaultNewEntryState = (): NewEntryState => ({
 interface EntryTableState extends NewEntryState {
   defunctUpdates: Hash<string>;
   defunctWordIds: Hash<DefunctStatus>;
+  recentWordEditingIndex: number | undefined;
   recentWords: WordAccess[];
   senseSwitches: SenseSwitch[];
 }
@@ -222,6 +223,7 @@ const defaultEntryTableState = (): EntryTableState => ({
   ...defaultNewEntryState(),
   defunctUpdates: {},
   defunctWordIds: {},
+  recentWordEditingIndex: undefined,
   recentWords: [],
   senseSwitches: [],
 });
@@ -1016,7 +1018,7 @@ export default function DataEntryTable(
 
   return (
     <form onSubmit={(e?: FormEvent<HTMLFormElement>) => e?.preventDefault()}>
-      <Grid2 container rowSpacing={theme.spacing(2)}>
+      <Grid2 container rowSpacing={1}>
         <Grid2 size={4}>
           <Typography align="center" variant="h5">
             {t("addWords.vernacular")}
@@ -1033,25 +1035,44 @@ export default function DataEntryTable(
           <Grid2
             key={`${wordAccess.word.id}_${wordAccess.senseGuid}`}
             size={12}
+            sx={{ borderBottom: "1px solid #eee" }}
           >
-            <RecentEntry
-              rowIndex={index}
-              entry={wordAccess.word}
-              senseGuid={wordAccess.senseGuid}
-              updateGloss={updateRecentGloss}
-              updateNote={updateRecentNote}
-              updateVern={updateRecentVern}
-              removeEntry={undoRecentEntry}
-              addAudioToWord={addAudioFileToWord}
-              delAudioFromWord={deleteAudioFromWord}
-              repAudioInWord={replaceAudioInWord}
-              focusNewEntry={handleFocusNewEntry}
-              analysisLang={analysisLang}
-              vernacularLang={vernacularLang}
-              disabled={Object.keys(state.defunctWordIds).includes(
-                wordAccess.word.id
-              )}
-            />
+            {index === state.recentWordEditingIndex ? (
+              <RecentEntry
+                rowIndex={index}
+                entry={wordAccess.word}
+                senseGuid={wordAccess.senseGuid}
+                updateGloss={updateRecentGloss}
+                updateNote={updateRecentNote}
+                updateVern={updateRecentVern}
+                removeEntry={undoRecentEntry}
+                addAudioToWord={addAudioFileToWord}
+                delAudioFromWord={deleteAudioFromWord}
+                repAudioInWord={replaceAudioInWord}
+                focusNewEntry={handleFocusNewEntry}
+                analysisLang={analysisLang}
+                vernacularLang={vernacularLang}
+                disabled={Object.keys(state.defunctWordIds).includes(
+                  wordAccess.word.id
+                )}
+              />
+            ) : (
+              <div
+                onClick={() =>
+                  setState((prev) => ({
+                    ...prev,
+                    recentWordEditingIndex: index,
+                  }))
+                }
+              >
+                <RecentEntryCold
+                  analysisLang={analysisLang}
+                  entry={wordAccess.word}
+                  rowIndex={index}
+                  senseGuid={wordAccess.senseGuid}
+                />
+              </div>
+            )}
           </Grid2>
         ))}
 
