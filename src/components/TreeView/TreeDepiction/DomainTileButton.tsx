@@ -96,6 +96,7 @@ export default function DomainTileButton(
         height: "95%",
         insetInlineStart: 0,
         padding: "5px",
+        width: "95%",
       }}
       tabIndex={-1}
       variant={"outlined"}

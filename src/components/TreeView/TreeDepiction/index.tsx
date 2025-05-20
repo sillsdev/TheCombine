@@ -13,7 +13,7 @@ import { parent } from "resources/tree";
 import { useWindowSize } from "utilities/useWindowSize";
 
 export default function TreeDepiction(props: TreeDepictionProps): ReactElement {
-  const showTree = useMediaQuery<Theme>((th) => th.breakpoints.up("sm"));
+  const showTree = true; //useMediaQuery<Theme>((th) => th.breakpoints.up("sm"));
 
   const [colWidth, setColWidth] = useState(0);
 

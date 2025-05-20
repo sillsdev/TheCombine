@@ -147,14 +147,15 @@ export default function ChildrenRow(props: TreeRowProps): ReactElement {
       <Grid2 container justifyContent="center">
         {braceRow()}
       </Grid2>
-      <Grid2 container justifyContent="center" spacing={2}>
+      <Grid2 container spacing={2}>
         {props.currentDomain.children.map((child) => (
-          <DomainTileButton
-            direction={Direction.Down}
-            domain={child}
-            key={child.id}
-            onClick={(d) => props.animate(d)}
-          />
+          <Grid2 key={child.id} size={{ xs: 4, sm: 3, md: 2 }}>
+            <DomainTileButton
+              direction={Direction.Down}
+              domain={child}
+              onClick={(d) => props.animate(d)}
+            />
+          </Grid2>
         ))}
       </Grid2>
     </>
