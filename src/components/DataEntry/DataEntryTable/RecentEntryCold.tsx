@@ -11,7 +11,7 @@ import { firstGlossText } from "utilities/wordUtilities";
 
 const idAffix = "recent-entry";
 
-export interface RecentEntryProps {
+export interface RecentEntryColdProps {
   analysisLang: WritingSystem;
   entry: Word;
   rowIndex: number;
@@ -19,7 +19,7 @@ export interface RecentEntryProps {
 }
 
 /** Displays a recently entered word that a user cannot edit. */
-export function RecentEntryCold(props: RecentEntryProps): ReactElement {
+export function RecentEntryCold(props: RecentEntryColdProps): ReactElement {
   const sense = props.entry.senses.find((s) => s.guid === props.senseGuid);
   const gloss = sense ? firstGlossText(sense, props.analysisLang.bcp47) : "";
 

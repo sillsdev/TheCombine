@@ -26,8 +26,8 @@ import {
 import * as backend from "backend";
 import { getCurrentUser, getUserId } from "backend/localStorage";
 import NewEntry from "components/DataEntry/DataEntryTable/NewEntry";
-import RecentEntry from "components/DataEntry/DataEntryTable/RecentEntry";
-import { RecentEntryCold } from "components/DataEntry/DataEntryTable/RecentEntryCold";
+import RecentEntryCold from "components/DataEntry/DataEntryTable/RecentEntryCold";
+import RecentEntryHot from "components/DataEntry/DataEntryTable/RecentEntryHot";
 import {
   filterWordsWithSenses,
   focusInput,
@@ -1038,7 +1038,7 @@ export default function DataEntryTable(
             sx={{ borderBottom: "1px solid #eee" }}
           >
             {index === state.recentWordEditingIndex ? (
-              <RecentEntry
+              <RecentEntryHot
                 rowIndex={index}
                 entry={wordAccess.word}
                 senseGuid={wordAccess.senseGuid}
@@ -1055,6 +1055,12 @@ export default function DataEntryTable(
                 disabled={Object.keys(state.defunctWordIds).includes(
                   wordAccess.word.id
                 )}
+                close={() =>
+                  setState((prev) => ({
+                    ...prev,
+                    recentWordEditingIndex: undefined,
+                  }))
+                }
               />
             ) : (
               <div
