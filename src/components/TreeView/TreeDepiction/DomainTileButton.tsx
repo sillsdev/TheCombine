@@ -92,11 +92,9 @@ export default function DomainTileButton(
       id={props.domain.id}
       onClick={() => props.onClick(props.domain)}
       style={{
-        insetInlineStart: 0,
         bottom: 0,
-        width: "95%",
         height: "95%",
-        margin: "2.5%",
+        insetInlineStart: 0,
         padding: "5px",
       }}
       tabIndex={-1}
