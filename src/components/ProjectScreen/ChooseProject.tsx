@@ -2,6 +2,7 @@ import {
   Card,
   CardContent,
   List,
+  ListItem,
   ListItemButton,
   Typography,
 } from "@mui/material";
@@ -43,15 +44,21 @@ export default function ChooseProject(): ReactElement {
         </Typography>
 
         {/* List of projects */}
-        <List>
+        <List dense>
           {projectList.map((project, index) => (
-            <ListItemButton
-              key={project.id}
-              id={`choose-project-${index}`}
-              onClick={() => selectProject(project)}
-            >
-              <Typography variant="h6">{project.name}</Typography>
-            </ListItemButton>
+            <ListItem key={project.id} sx={{ py: 0 }}>
+              <ListItemButton
+                id={`choose-project-${index}`}
+                onClick={() => selectProject(project)}
+                sx={{
+                  borderTop: index === 0 ? "1px solid #ddd" : undefined,
+                  borderBottom: "1px solid #ddd",
+                  py: 1,
+                }}
+              >
+                <Typography variant="h6">{project.name}</Typography>
+              </ListItemButton>
+            </ListItem>
           ))}
         </List>
       </CardContent>

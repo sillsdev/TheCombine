@@ -456,8 +456,13 @@ function DomainList(props: DomainListProps): ReactElement {
             <Chip color="secondary" label={t("reviewEntries.noDomain")} />
           </Grid2>
         )}
-
-        <IconButton id={props.buttonIdAdd} onClick={() => setAddingDom(true)}>
+        <IconButton
+          id={props.buttonIdAdd}
+          onClick={(e) => {
+            e.currentTarget.blur(); // else dialog reopens when domain selected with Enter
+            setAddingDom(true);
+          }}
+        >
           <Add />
         </IconButton>
       </Grid2>

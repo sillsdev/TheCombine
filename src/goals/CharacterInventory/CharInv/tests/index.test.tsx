@@ -8,13 +8,9 @@ import { defaultState as characterInventoryState } from "goals/CharacterInventor
 
 // Replace Dialog with something that doesn't create portals,
 // because react-test-renderer does not support portals.
-jest.mock("@mui/material", () => {
-  const materialUiCore = jest.requireActual("@mui/material");
-  return {
-    ...materialUiCore,
-    Dialog: materialUiCore.Container,
-  };
-});
+jest.mock("@mui/material/Dialog", () =>
+  jest.requireActual("@mui/material/Container")
+);
 
 jest.mock("goals/CharacterInventory/CharInv/CharacterDetail", () => "div");
 jest.mock("goals/CharacterInventory/Redux/CharacterInventoryActions", () => ({

@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 
-import { getCurrentPermissions, getGraylistEntries } from "backend";
+import { getCurrentPermissions, hasGraylistEntries } from "backend";
 import GoalList from "components/GoalTimeline/GoalList";
 import { asyncAddGoal, asyncGetUserEdits } from "goals/Redux/GoalActions";
 import { useAppDispatch, useAppSelector } from "rootRedux/hooks";
@@ -84,9 +84,7 @@ export default function GoalTimeline(): ReactElement {
       setLoaded(true);
     }
     const updateHasGraylist = async (): Promise<void> =>
-      setHasGraylist(
-        await getGraylistEntries(1).then((res) => res.length !== 0)
-      );
+      setHasGraylist(await hasGraylistEntries());
     updateHasGraylist();
   }, [dispatch, loaded]);
 
