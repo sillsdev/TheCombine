@@ -23,7 +23,7 @@ const mockState = (speaker?: Speaker): Partial<StoreState> => ({
     project: { ...defaultState.project, id: "mock-project-id" },
   },
 });
-const selectedIconId = "CircleIcon"; // Built-in data-testid for the MUI icon
+const testIdSelectedIcon = "CircleIcon"; // MUI Icon data-testid
 
 function setMockFunctions(): void {
   mockGetAllSpeakers.mockResolvedValue([]);
@@ -45,7 +45,7 @@ async function renderSpeakerMenu(speaker?: Speaker): Promise<void> {
 }
 
 describe("SpeakerMenu", () => {
-  it("renders", async () => {
+  it("renders with a single button", async () => {
     await renderSpeakerMenu();
     expect(screen.queryAllByRole("button").length).toEqual(1);
   });
@@ -83,7 +83,7 @@ describe("SpeakerMenu", () => {
 
     // Verify only the second item has the icon.
     screen.queryAllByRole("menuitem").forEach((item, i) => {
-      const circle = within(item).queryByTestId(selectedIconId);
+      const circle = within(item).queryByTestId(testIdSelectedIcon);
       if (i === 1) {
         expect(circle).toBeTruthy();
       } else {
@@ -101,7 +101,7 @@ describe("SpeakerMenu", () => {
 
     // Verify only the last item has the icon.
     screen.queryAllByRole("menuitem").forEach((item, i) => {
-      const circle = within(item).queryByTestId(selectedIconId);
+      const circle = within(item).queryByTestId(testIdSelectedIcon);
       if (i === speakers.length) {
         expect(circle).toBeTruthy();
       } else {

@@ -71,7 +71,7 @@ describe("ProjectButtons", () => {
   });
 
   describe("has speaker menu only where relevant", () => {
-    const testIdSpeaker = "RecordVoiceOverIcon"; // Built-in data-testid for the MUI icon
+    const testIdSpeaker = "RecordVoiceOverIcon"; // MUI Icon data-testid
     let currentGoal: Goal;
 
     test("Path.Root: no", async () => {
@@ -84,7 +84,7 @@ describe("ProjectButtons", () => {
       expect(screen.queryByTestId(testIdSpeaker)).toBeTruthy();
     });
 
-    test("Path.GoalCurrent with in=progress MergeDups: no", async () => {
+    test("Path.GoalCurrent with in-progress MergeDups: no", async () => {
       currentGoal = { ...new MergeDups(), status: GoalStatus.InProgress };
       await renderProjectButtons(Path.GoalCurrent, currentGoal);
       expect(screen.queryByTestId(testIdSpeaker)).toBeNull();

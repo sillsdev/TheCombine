@@ -137,7 +137,7 @@ describe("MergeDragDrop", () => {
   });
 
   it("renders with button for opening the sidebar", async () => {
-    const testIdSidebarIcon = "ArrowForwardIosIcon"; // Built-in data-testid for the MUI icon
+    const testIdSidebarIcon = "ArrowForwardIosIcon"; // MUI Icon data-testid
     const sidebarButton = screen
       .getAllByRole("button")
       .find((b) => within(b).queryByTestId(testIdSidebarIcon));

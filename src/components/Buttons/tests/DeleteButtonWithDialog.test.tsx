@@ -44,7 +44,8 @@ describe("DeleteCell", () => {
 
     // Cancel button closes the dialog.
     await userEvent.click(screen.getByTestId(buttonIdCancel));
-    await waitForElementToBeRemoved(() => screen.queryByRole("dialog")); // else it's just hidden
+    // Wait for dialog removal, else it's only hidden.
+    await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
     expect(screen.queryByRole("dialog")).toBeNull();
 
     // Delete button opens the dialog.
@@ -53,7 +54,8 @@ describe("DeleteCell", () => {
 
     // Confirm button closes the dialog.
     await userEvent.click(screen.getByTestId(buttonIdConfirm));
-    await waitForElementToBeRemoved(() => screen.queryByRole("dialog")); // else it's just hidden
+    // Wait for dialog removal, else it's only hidden.
+    await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
     expect(screen.queryByRole("dialog")).toBeNull();
   });
 

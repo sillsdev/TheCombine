@@ -56,26 +56,34 @@ describe("RecorderIcon", () => {
   test("pointerDown records if no recording active", async () => {
     await renderRecorderIcon();
     expect(mockStartRecording).not.toHaveBeenCalled();
-    fireEvent.pointerDown(screen.getByTestId(recordButtonId));
+    await act(async () => {
+      fireEvent.pointerDown(screen.getByTestId(recordButtonId));
+    });
     expect(mockStartRecording).toHaveBeenCalled();
   });
 
   test("pointerUp stops recording", async () => {
     await renderRecorderIcon(mockWordId);
     expect(mockStopRecording).not.toHaveBeenCalled();
-    fireEvent.pointerUp(screen.getByTestId(recordButtonId));
+    await act(async () => {
+      fireEvent.pointerUp(screen.getByTestId(recordButtonId));
+    });
     expect(mockStopRecording).toHaveBeenCalled();
   });
 
   test("pointerUp does nothing if no recording active", async () => {
     await renderRecorderIcon();
-    fireEvent.pointerUp(screen.getByTestId(recordButtonId));
+    await act(async () => {
+      fireEvent.pointerUp(screen.getByTestId(recordButtonId));
+    });
     expect(mockStopRecording).not.toHaveBeenCalled();
   });
 
   test("pointerUp does nothing if different word id", async () => {
     await renderRecorderIcon("different-id");
-    fireEvent.pointerUp(screen.getByTestId(recordButtonId));
+    await act(async () => {
+      fireEvent.pointerUp(screen.getByTestId(recordButtonId));
+    });
     expect(mockStopRecording).not.toHaveBeenCalled();
   });
 });

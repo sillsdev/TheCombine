@@ -46,7 +46,7 @@ beforeEach(() => {
 });
 
 describe("NavigationButtons", () => {
-  describe("only shows the data cleanup tab for the correct permissions", () => {
+  describe("only shows data cleanup tab for the correct permissions", () => {
     const renderNavButtonsWithPermission = async (
       perm: Permission
     ): Promise<void> => {

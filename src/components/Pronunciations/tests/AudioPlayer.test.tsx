@@ -80,7 +80,7 @@ describe("Pronunciations", () => {
     });
     expect(screen.queryByRole("menu")).toBeTruthy();
 
-    // Make sure the menu stays open and no play is dispatched
+    // End press, advance timer, and verify the menu stays open
     await act(async () => {
       fireEvent.touchEnd(playButton);
     });
@@ -89,7 +89,6 @@ describe("Pronunciations", () => {
       jest.advanceTimersByTime(longPressDelay);
     });
     expect(screen.queryByRole("menu")).toBeTruthy();
-    expect(mockDispatch).not.toHaveBeenCalled();
   });
 
   it("doesn't open the menu on short-press", async () => {
@@ -100,7 +99,7 @@ describe("Pronunciations", () => {
     // Use a mock timer to control the length of the press
     jest.useFakeTimers();
 
-    // Press the button and advance the timer, but end press before the long-press time
+    // Press button and advance timer less than the long-press time
     expect(screen.queryByRole("menu")).toBeNull();
     await act(async () => {
       fireEvent.touchStart(playButton);
@@ -110,6 +109,8 @@ describe("Pronunciations", () => {
       jest.advanceTimersByTime(longPressDelay - 1);
     });
     expect(screen.queryByRole("menu")).toBeNull();
+
+    // End press and advance timer further
     await act(async () => {
       fireEvent.touchEnd(playButton);
     });

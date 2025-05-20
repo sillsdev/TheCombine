@@ -20,7 +20,7 @@ function mockRecordingState(wordId: string): Partial<StoreState> {
     },
   };
 }
-const testIdRecordIcon = "FiberManualRecordIcon"; // Built-in data-testid for the MUI icon
+const testIdRecordIcon = "FiberManualRecordIcon"; // MUI Icon data-testid
 
 describe("AudioRecorder", () => {
   test("default icon style is idle", async () => {
