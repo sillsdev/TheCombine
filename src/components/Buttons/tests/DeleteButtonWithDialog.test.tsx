@@ -63,10 +63,10 @@ describe("DeleteCell", () => {
     // Delete function not called by clicking delete and cancel.
     await userEvent.click(screen.getByTestId(buttonId));
     await userEvent.click(screen.getByTestId(buttonIdCancel));
-    await userEvent.click(screen.getByTestId(buttonId));
     expect(mockDelete).not.toHaveBeenCalled();
 
     // Delete function called upon clicking confirm.
+    await userEvent.click(screen.getByTestId(buttonId));
     await userEvent.click(screen.getByTestId(buttonIdConfirm));
     expect(mockDelete).toHaveBeenCalled();
   });
