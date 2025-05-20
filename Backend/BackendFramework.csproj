@@ -29,10 +29,10 @@
     <!-- SIL Maintained Dependencies. -->
     <PackageReference Include="icu.net" Version="3.0.1" />
     <PackageReference Include="Icu4c.Win.Full.Lib" Version="62.2.3-beta" />
-    <PackageReference Include="SIL.Core" Version="16.0.0-beta0144" />
-    <PackageReference Include="SIL.Core.Desktop" Version="16.0.0-beta0144"/>
-    <PackageReference Include="SIL.DictionaryServices" Version="16.0.0-beta0140"/>
-    <PackageReference Include="SIL.Lift" Version="16.0.0-beta0140"/>
-    <PackageReference Include="SIL.WritingSystems" Version="16.0.0-beta0140" />
+    <PackageReference Include="SIL.Core" Version="16.0.0" />
+    <PackageReference Include="SIL.Core.Desktop" Version="16.0.0"/>
+    <PackageReference Include="SIL.DictionaryServices" Version="16.0.0"/>
+    <PackageReference Include="SIL.Lift" Version="16.0.0"/>
+    <PackageReference Include="SIL.WritingSystems" Version="16.0.0" />
   </ItemGroup>
 </Project>
