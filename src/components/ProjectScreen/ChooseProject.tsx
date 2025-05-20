@@ -50,7 +50,11 @@ export default function ChooseProject(): ReactElement {
               <ListItemButton
                 id={`choose-project-${index}`}
                 onClick={() => selectProject(project)}
-                sx={{ borderTop: index ? "1px solid #ddd" : undefined, py: 1 }}
+                sx={{
+                  borderTop: index === 0 ? "1px solid #ddd" : undefined,
+                  borderBottom: "1px solid #ddd",
+                  py: 1,
+                }}
               >
                 <Typography variant="h6">{project.name}</Typography>
               </ListItemButton>
