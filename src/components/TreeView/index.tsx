@@ -113,6 +113,15 @@ export default function TreeView(props: TreeViewProps): ReactElement {
       ? undefined
       : () => animateHandler();
 
+  const buttonToTop = (
+    <IconButtonWithTooltip
+      icon={<KeyboardDoubleArrowUp />}
+      textId={"treeView.returnToTop"}
+      onClick={onClickTop}
+      buttonId={TreeViewIds.ButtonTop}
+    />
+  );
+
   return (
     <>
       {/* Domain search */}
@@ -135,14 +144,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
         </Grid2>
 
         <Grid2>
-          {showButtonToTop && (
-            <IconButtonWithTooltip
-              icon={<KeyboardDoubleArrowUp />}
-              textId={"treeView.returnToTop"}
-              onClick={onClickTop}
-              buttonId={TreeViewIds.ButtonTop}
-            />
-          )}
+          {showButtonToTop && buttonToTop}
           {exit && (
             <IconButtonWithTooltip
               icon={<Close />}
@@ -153,6 +155,12 @@ export default function TreeView(props: TreeViewProps): ReactElement {
           )}
         </Grid2>
       </Grid2>
+
+      {!showButtonToTop && (
+        <Grid2 container justifyContent="center" size={12}>
+          {buttonToTop}
+        </Grid2>
+      )}
 
       {/* Domain tree */}
       <Zoom
