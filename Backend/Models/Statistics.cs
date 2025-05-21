@@ -27,7 +27,7 @@ namespace BackendFramework.Models
         {
             Id = "";
             Username = "";
-            DomainSet = new();
+            DomainSet = [];
             DomainCount = 0;
             WordCount = 0;
         }
@@ -75,7 +75,7 @@ namespace BackendFramework.Models
         public WordsPerDayPerUserCount(string isoString)
         {
             DateTime = DateTimeExtensions.ParseDateTimePermissivelyWithException(isoString);
-            UserNameCountDictionary = new Dictionary<string, int>();
+            UserNameCountDictionary = [];
         }
     }
 
@@ -90,8 +90,8 @@ namespace BackendFramework.Models
 
         public ChartRootData()
         {
-            Dates = new();
-            Datasets = new();
+            Dates = [];
+            Datasets = [];
         }
     }
 
@@ -104,10 +104,15 @@ namespace BackendFramework.Models
         [Required]
         public List<int> Data { get; set; }
 
+        public Dataset(string userName)
+        {
+            UserName = userName;
+            Data = [];
+        }
         public Dataset(string userName, int data)
         {
             UserName = userName;
-            Data = new() { data };
+            Data = [data];
         }
     }
 
