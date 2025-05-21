@@ -138,11 +138,6 @@ function compareColors(a: HEX, b: HEX): number {
   return (rDiff + gDiff + bDiff) / 3;
 }
 
-/** Checks whether color is far enough from all items in given array. */
-function isDistinct(color: HEX, colors: HEX[], threshold: number): boolean {
-  return colors.every((c) => compareColors(c, color) > threshold);
-}
-
 const black: HEX = "#000000";
 const white: HEX = "#ffffff";
 
@@ -165,9 +160,9 @@ export function distinctColors(
   const colors = [...include];
   while (colors.length < n) {
     const randHexInt = Math.trunc(Math.random() * 0x1000000);
-    const hexString: HEX = `#${randHexInt.toString(16).padStart(6, "0")}`;
-    if (isDistinct(hexString, [...colors, ...avoid], threshold)) {
-      colors.push(hexString);
+    const col: HEX = `#${randHexInt.toString(16).padStart(6, "0")}`;
+    if ([...colors, ...avoid].every((c) => compareColors(c, col) > threshold)) {
+      colors.push(col);
     }
   }
   return colors.slice(0, n);
