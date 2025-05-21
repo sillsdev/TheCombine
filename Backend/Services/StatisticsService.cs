@@ -22,6 +22,12 @@ namespace BackendFramework.Services
             _userRepo = userRepo;
         }
 
+        // Statistic names (TODO: localize)
+        const string StatAverage = "Average";
+        const string StatBurstProjection = "Burst Projection";
+        const string StatDailyTotal = "Daily Total";
+        const string StatProjection = "Projection";
+        const string StatRunningTotal = "Running Total";
 
         /// <summary>
         /// Get a <see cref="SemanticDomainCount"/> to generate a SemanticDomain statistics
@@ -187,7 +193,7 @@ namespace BackendFramework.Services
             // If pastDays is two or more and at least one of those days had no word added
             else if (pastDays > 1)
             {
-                averageValue = (totalCountList.Sum()) / (pastDays - 1);
+                averageValue = totalCountList.Sum() / (pastDays - 1);
             }
             // no need to remove the lowest data if there's only one past day
             else
@@ -205,24 +211,24 @@ namespace BackendFramework.Services
                 if (LineChartData.Datasets.Count == 0)
                 {
                     runningTotal = yesterday = today;
-                    LineChartData.Datasets.Add(new("Daily Total", today));
-                    LineChartData.Datasets.Add(new("Average", averageValue));
-                    LineChartData.Datasets.Add(new("Running Total", runningTotal));
-                    LineChartData.Datasets.Add(new("Projection", projection));
-                    LineChartData.Datasets.Add(new("Burst Projection", runningTotal));
+                    LineChartData.Datasets.Add(new(StatDailyTotal, today));
+                    LineChartData.Datasets.Add(new(StatAverage, averageValue));
+                    LineChartData.Datasets.Add(new(StatRunningTotal, runningTotal));
+                    LineChartData.Datasets.Add(new(StatProjection, projection));
+                    LineChartData.Datasets.Add(new(StatBurstProjection, runningTotal));
                 }
                 else
                 {
-                    // not generate data after the current date for "Daily Total", "Average" and "Running Total"
+                    // not generate data after the current date for Daily Total, Average, and Running Total
                     if (ParseDateTimePermissivelyWithException(day).CompareTo(DateTime.Now) <= 0)
                     {
                         runningTotal += today;
-                        LineChartData.Datasets.Find(element => element.UserName == "Daily Total")?.Data.Add(today);
-                        LineChartData.Datasets.Find(element => element.UserName == "Average")?.Data.Add(averageValue);
+                        LineChartData.Datasets.Find(element => element.UserName == StatDailyTotal)?.Data.Add(today);
+                        LineChartData.Datasets.Find(element => element.UserName == StatAverage)?.Data.Add(averageValue);
                         LineChartData.Datasets.Find(
-                            element => element.UserName == "Running Total")?.Data.Add(runningTotal);
+                            element => element.UserName == StatRunningTotal)?.Data.Add(runningTotal);
                         LineChartData.Datasets.Find(
-                            element => element.UserName == "Burst Projection")?.Data.Add(runningTotal);
+                            element => element.UserName == StatBurstProjection)?.Data.Add(runningTotal);
                         burst = (today + yesterday) / 2;
                         burstProjection = runningTotal + burst;
                         yesterday = today;
@@ -230,10 +236,10 @@ namespace BackendFramework.Services
                     else
                     {
                         LineChartData.Datasets.Find(
-                            element => element.UserName == "Burst Projection")?.Data.Add((burstProjection));
+                            element => element.UserName == StatBurstProjection)?.Data.Add(burstProjection);
                         burstProjection += burst;
                     }
-                    LineChartData.Datasets.Find(element => element.UserName == "Projection")?.Data.Add(projection);
+                    LineChartData.Datasets.Find(element => element.UserName == StatProjection)?.Data.Add(projection);
                 }
                 projection += averageValue;
             }
@@ -255,8 +261,7 @@ namespace BackendFramework.Services
             }
 
             // add the daily totals dataset first
-            const string totalKey = "Daily Total";
-            LineChartData.Datasets.Add(new(totalKey));
+            LineChartData.Datasets.Add(new(StatDailyTotal));
 
             // update the ChartRootData based on the order of the WordsPerDayPerUserCount from the list
             foreach (var temp in list)
@@ -277,7 +282,7 @@ namespace BackendFramework.Services
                         dataset.Data.Add(item.Value);
                     }
                 }
-                LineChartData.Datasets.Find(element => element.UserName == totalKey)!.Data.Add(totalDay);
+                LineChartData.Datasets.Find(element => element.UserName == StatDailyTotal)!.Data.Add(totalDay);
             }
 
             return LineChartData;
