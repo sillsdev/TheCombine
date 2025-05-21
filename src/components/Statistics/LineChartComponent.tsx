@@ -8,12 +8,12 @@ import {
   LineElement,
   PointElement,
 } from "chart.js";
-import distinctColors from "distinct-colors";
 import { type ReactElement, useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import { useTranslation } from "react-i18next";
 
 import { type ChartRootData } from "api/models";
+import { distinctColors } from "utilities/utilities";
 
 ChartJS.defaults.font.size = 18;
 ChartJS.register(
@@ -66,7 +66,7 @@ export default function LineChartComponent(
       const newChartData = getDefaultProps();
       if (tempData) {
         // Get array of unique Color
-        const palette = distinctColors({ count: tempData.datasets.length });
+        const palette = distinctColors(tempData.datasets.length);
         // Update the updateChartData by retrieve
         tempData.dates.map((e) => {
           // trim the format from year-mm-dd to mm-dd
@@ -76,8 +76,8 @@ export default function LineChartComponent(
           newChartData.datasets.push({
             label: e.userName,
             data: props.isFilterZero ? FilteredData(e.data) : e.data,
-            borderColor: palette[index].hex().toString(),
-            backgroundColor: palette[index].hex().toString(),
+            borderColor: palette[index],
+            backgroundColor: palette[index],
             tension: 0.4,
             fill: false,
             cubicInterpolationMode: "monotone",
