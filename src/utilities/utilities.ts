@@ -138,23 +138,28 @@ function compareColors(a: HEX, b: HEX): number {
   return (rDiff + gDiff + bDiff) / 3;
 }
 
-/** Generates array of distinct colors.
- * Starts with the `colorblindSafePalette` colors,
- * then randomly (and inefficiently) generates more colors as needed. */
-export function distinctColors(n: number): HEX[] {
+const white: HEX = "#ffffff";
+const black: HEX = "#000000";
+
+/** Generates array of distinct colors. Starts with black and the
+ * `colorblindSafePalette` colors, then randomly (and inefficiently) generates
+ * more non-white colors as needed. */
+export function distinctColors(n: number, threshold = 0.15): HEX[] {
   if (n < 1) {
     return [];
   }
   if (n > 40) {
     throw new Error(`distinctColors(n) cannot handle n = ${n} (> 40)`);
   }
-  const colors = Object.values(colorblindSafePalette);
+  const colors = [black, ...Object.values(colorblindSafePalette)];
   while (colors.length < n) {
     const randHexInt = Math.trunc(Math.random() * 0x1000000);
-    const hexString = randHexInt.toString(16).padStart(6, "0");
-    if (!colors.find((c) => compareColors(c, `#${hexString}`) < 0.15)) {
-      colors.push(`#${hexString}`);
-      console.info(`#${hexString}`);
+    const hexString: HEX = `#${randHexInt.toString(16).padStart(6, "0")}`;
+    if (
+      compareColors(white, hexString) > threshold &&
+      !colors.find((c) => compareColors(c, hexString) < threshold)
+    ) {
+      colors.push(hexString);
     }
   }
   return colors.slice(0, n);

@@ -254,34 +254,30 @@ namespace BackendFramework.Services
                 return LineChartData;
             }
 
+            // add the daily totals dataset first
+            const string totalKey = "Daily Total";
+            LineChartData.Datasets.Add(new(totalKey));
+
             // update the ChartRootData based on the order of the WordsPerDayPerUserCount from the list
             foreach (var temp in list)
             {
                 LineChartData.Dates.Add(temp.DateTime.ToISO8601TimeFormatDateOnlyString());
-                // first traversal, generate a new Dataset
-                if (LineChartData.Datasets.Count == 0)
+
+                var totalDay = 0;
+                foreach (var item in temp.UserNameCountDictionary)
                 {
-                    var totalDay = 0;
-                    foreach (var item in temp.UserNameCountDictionary)
+                    totalDay += item.Value;
+                    var dataset = LineChartData.Datasets.Find(element => element.UserName == item.Key);
+                    if (dataset is null)
                     {
-                        totalDay += item.Value;
                         LineChartData.Datasets.Add(new(item.Key, item.Value));
                     }
-                    // update "Total", Line Chart needed
-                    LineChartData.Datasets.Add(new("Daily Total", totalDay));
-                }
-                // remaining traversal, update the object by pushing the value to Data array
-                else
-                {
-                    var totalDay = 0;
-                    foreach (var item in temp.UserNameCountDictionary)
+                    else
                     {
-                        totalDay += item.Value;
-                        LineChartData.Datasets.Find(element => element.UserName == item.Key)?.Data.Add(item.Value);
+                        dataset.Data.Add(item.Value);
                     }
-                    // update "Total"
-                    LineChartData.Datasets.Find(element => element.UserName == "Daily Total")?.Data.Add(totalDay);
                 }
+                LineChartData.Datasets.Find(element => element.UserName == totalKey)!.Data.Add(totalDay);
             }
 
             return LineChartData;
