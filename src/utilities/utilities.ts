@@ -138,13 +138,13 @@ function compareColors(a: HEX, b: HEX): number {
   return (rDiff + gDiff + bDiff) / 3;
 }
 
-/** Checks whether color is far enough from all elements in given array. */
+/** Checks whether color is far enough from all items in given array. */
 function isDistinct(color: HEX, colors: HEX[], threshold: number): boolean {
-  return colors.findIndex((c) => compareColors(c, color) < threshold) === -1;
+  return colors.every((c) => compareColors(c, color) > threshold);
 }
 
-const white: HEX = "#ffffff";
 const black: HEX = "#000000";
+const white: HEX = "#ffffff";
 
 /** Generates array of distinct colors. Starts with the `include` colors
  * (default: black and `colorblindSafePalette` colors), then randomly and
