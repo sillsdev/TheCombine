@@ -4,7 +4,7 @@ import {
   KeyboardArrowDown,
   KeyboardArrowUp,
 } from "@mui/icons-material";
-import { Button, Grid, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import { CSSProperties, ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -48,31 +48,25 @@ function DomainTile(props: DomainTileProps): ReactElement {
       );
     case Direction.Prev:
       return (
-        <Grid
-          container
+        <Stack
           alignItems="center"
+          direction="row"
           justifyContent="space-around"
-          wrap="nowrap"
         >
-          <Grid item>{rtl ? <ChevronRight /> : <ChevronLeft />}</Grid>
-          <Grid item>
-            <DomainText domain={props.domain} />
-          </Grid>
-        </Grid>
+          {rtl ? <ChevronRight /> : <ChevronLeft />}
+          <DomainText domain={props.domain} />
+        </Stack>
       );
     case Direction.Next:
       return (
-        <Grid
-          container
+        <Stack
           alignItems="center"
+          direction="row"
           justifyContent="space-around"
-          wrap="nowrap"
         >
-          <Grid item>
-            <DomainText domain={props.domain} />
-          </Grid>
-          <Grid item>{rtl ? <ChevronLeft /> : <ChevronRight />}</Grid>
-        </Grid>
+          <DomainText domain={props.domain} />
+          {rtl ? <ChevronLeft /> : <ChevronRight />}
+        </Stack>
       );
     case Direction.Up:
       return (

@@ -1,4 +1,4 @@
-import { Dialog, Divider, Grid, Paper } from "@mui/material";
+import { Dialog, Divider, Grid2, Paper } from "@mui/material";
 import {
   ReactElement,
   useCallback,
@@ -28,7 +28,7 @@ export const treeViewDialogId = "tree-view-dialog";
 
 const paperStyle = {
   marginInline: "auto",
-  maxWidth: 800,
+  maxWidth: 900,
   padding: theme.spacing(2),
 };
 
@@ -54,8 +54,8 @@ export default function DataEntry(): ReactElement {
 
   /* This ref is for a container of both the <DataEntryHeader> and <DataEntryTable>,
    * in order to check its height and update the height of the <ExistingDataTable>.
-   * Attach to the <Paper> because the parent <Grid item> won't shrink to its content,
-   * but will match the height of its neighbor <Grid item> in <ExistingDataTable>. */
+   * Attach to the <Paper> because the parent <Grid2> won't shrink to its content,
+   * but will match the height of its neighbor <Grid2> in <ExistingDataTable>. */
   const dataEntryRef = useRef<HTMLDivElement | null>(null);
 
   const [domain, setDomain] = useState(newSemanticDomain(id, name, lang));
@@ -112,15 +112,20 @@ export default function DataEntry(): ReactElement {
   return (
     <>
       {!open && !!domain.guid && (
-        <Grid container justifyContent="center" spacing={3} wrap={"nowrap"}>
-          <Grid item>
+        <Grid2
+          container
+          justifyContent="center"
+          spacing={theme.spacing(2)}
+          wrap={"nowrap"}
+        >
+          <Grid2>
             <Paper ref={dataEntryRef} style={paperStyle}>
               <DataEntryHeader
                 domain={domain}
                 questionsVisible={questionsVisible}
                 setQuestionVisibility={setQuestionsVisible}
               />
-              <Divider />
+              <Divider sx={{ my: theme.spacing(2) }} />
               <DataEntryTable
                 hasDrawerButton={isSmallScreen && domainWords.length > 0}
                 hideQuestions={() => setQuestionsVisible(false)}
@@ -131,7 +136,8 @@ export default function DataEntry(): ReactElement {
                 updateHeight={updateHeight}
               />
             </Paper>
-          </Grid>
+          </Grid2>
+
           <ExistingDataTable
             domain={domain}
             domainWords={domainWords}
@@ -140,7 +146,7 @@ export default function DataEntry(): ReactElement {
             toggleDrawer={setDrawerOpen}
             typeDrawer={isSmallScreen}
           />
-        </Grid>
+        </Grid2>
       )}
       <Dialog id={treeViewDialogId} fullScreen open={open}>
         <AppBar />
