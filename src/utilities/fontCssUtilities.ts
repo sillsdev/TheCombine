@@ -6,16 +6,18 @@ const fontDir = "/fonts";
 const fallbackFilePath = `${fontDir}/fallback.json`;
 
 /** Given a url, returns the text content of the result, or undefined if fetch fails. */
-export async function fetchText(url: string): Promise<string | undefined> {
+export async function fetchText(
+  url: string,
+  required = true
+): Promise<string | undefined> {
   const resp = await fetch(url);
   if (resp.ok) {
     return await (await resp.blob()).text();
   }
 
-  if (RuntimeConfig.getInstance().isOffline()) {
-    // In an offline setting, all necessary fonts should be pre-loaded.
-    console.log(
-      `Failed to load file: ${url}\nPlease notify the admin this font is unavailable.`
+  if (required) {
+    console.warn(
+      `Failed to load file: ${url}\nPlease notify the admin this file is unavailable.`
     );
   } else {
     console.log(
@@ -43,7 +45,10 @@ export async function fetchCss(
       return;
   }
 
-  const cssText = await fetchText(cssUrl);
+  const cssText = await fetchText(
+    cssUrl,
+    RuntimeConfig.getInstance().isOffline()
+  );
   if (cssText && substitute) {
     // This assumes the only place in the css info with the full, capitalized font name
     // is the "font-family: ..." (as is the case from the Google api).
