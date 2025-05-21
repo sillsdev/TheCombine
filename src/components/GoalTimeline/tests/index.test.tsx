@@ -1,6 +1,6 @@
-import { Button } from "@mui/material";
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
-import renderer from "react-test-renderer";
 import createMockStore from "redux-mock-store";
 
 import { Permission } from "api/models";
@@ -29,15 +29,10 @@ jest.mock("rootRedux/hooks", () => {
 const mockChooseGoal = jest.fn();
 const mockGetCurrentPermissions = jest.fn();
 const mockHasGraylistEntries = jest.fn();
-const mockProjectId = "mockId";
-const mockProjectRoles: { [key: string]: string } = {};
-mockProjectRoles[mockProjectId] = "nonempty";
 
 const allGoals = defaultState.allGoalTypes.map((t) => goalTypeToGoal(t));
 const goalWithAnyGuid = (g: Goal): Goal => ({ ...g, guid: expect.any(String) });
 const allGoalsWithAnyGuids = allGoals.map(goalWithAnyGuid);
-
-let timeLord: renderer.ReactTestRenderer;
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -51,7 +46,7 @@ beforeEach(() => {
 describe("GoalTimeline", () => {
   it("has the expected number of buttons", async () => {
     await renderTimeline(defaultState.allGoalTypes, allGoals);
-    const buttons = timeLord.root.findAllByType(Button);
+    const buttons = screen.queryAllByRole("button");
     expect(buttons).toHaveLength(
       defaultState.allGoalTypes.length + allGoals.length
     );
@@ -60,22 +55,19 @@ describe("GoalTimeline", () => {
   it("has one more button if there's a graylist entry", async () => {
     mockHasGraylistEntries.mockResolvedValue(true);
     await renderTimeline(defaultState.allGoalTypes, allGoals);
-    const buttons = timeLord.root.findAllByType(Button);
+    const buttons = screen.queryAllByRole("button");
     expect(buttons).toHaveLength(
       defaultState.allGoalTypes.length + allGoals.length + 1
     );
   });
 
   it("selects a goal from suggestions", async () => {
-    const goalNumber = 2;
+    const goalNum = 2;
     await renderTimeline();
-    const goalButton = timeLord.root.findByProps({
-      id: `new-goal-${allGoals[goalNumber].name}`,
-    });
-    await renderer.act(async () => goalButton.props.onClick());
+    await userEvent.click(screen.getByText(`${allGoals[goalNum].name}.title`));
     expect(mockChooseGoal).toHaveBeenCalledTimes(1);
     expect(mockChooseGoal.mock.calls[0][0].goalType).toEqual(
-      defaultState.allGoalTypes[goalNumber]
+      defaultState.allGoalTypes[goalNum]
     );
   });
 
@@ -117,15 +109,15 @@ async function renderTimeline(
   goalTypeSuggestions?: GoalType[],
   history?: Goal[]
 ): Promise<void> {
-  const currentProjectState = { project: { id: mockProjectId } };
+  const currentProjectState = { project: { id: "mockProjId" } };
   const goalsState: GoalsState = {
     ...defaultState,
     goalTypeSuggestions: goalTypeSuggestions ?? defaultState.allGoalTypes,
     history: history ?? [],
     previousGoalType: GoalType.Default,
   };
-  await renderer.act(async () => {
-    timeLord = renderer.create(
+  await act(async () => {
+    render(
       <Provider store={createMockStore()({ currentProjectState, goalsState })}>
         <GoalTimeline />
       </Provider>
