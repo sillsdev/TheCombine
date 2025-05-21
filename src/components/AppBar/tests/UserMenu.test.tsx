@@ -15,7 +15,7 @@ jest.mock("backend/localStorage", () => ({
   getCurrentUser: jest.fn(),
 }));
 jest.mock("components/Project/ProjectActions", () => ({}));
-jest.mock("react-router-dom", () => ({
+jest.mock("react-router", () => ({
   useNavigate: jest.fn(),
 }));
 

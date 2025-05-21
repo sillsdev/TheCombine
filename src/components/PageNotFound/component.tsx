@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 import HarvestThreshWinnow from "components/HarvestThreshWinnow";
 import { Path } from "types/path";

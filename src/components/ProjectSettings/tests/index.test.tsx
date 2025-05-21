@@ -22,7 +22,7 @@ import { randomProject } from "types/project";
 import theme from "types/theme";
 import { setMatchMedia } from "utilities/testingLibraryUtilities";
 
-jest.mock("react-router-dom", () => ({ useNavigate: jest.fn() }));
+jest.mock("react-router", () => ({ useNavigate: jest.fn() }));
 
 jest.mock("backend", () => ({
   canUploadLift: () => Promise.resolve(false),

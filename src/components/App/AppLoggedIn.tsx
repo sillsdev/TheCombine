@@ -2,7 +2,7 @@ import loadable from "@loadable/component";
 import { CssBaseline } from "@mui/material";
 import { Theme, ThemeProvider, createTheme } from "@mui/material/styles";
 import { ReactElement, useEffect, useMemo, useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router";
 
 import { updateUser } from "backend";
 import { getCurrentUser } from "backend/localStorage";

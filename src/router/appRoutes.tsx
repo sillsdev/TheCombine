@@ -1,5 +1,5 @@
 import loadable from "@loadable/component";
-import { RouteObject } from "react-router-dom";
+import { RouteObject } from "react-router";
 
 import LandingPage from "components/LandingPage";
 import Login from "components/Login/Login";

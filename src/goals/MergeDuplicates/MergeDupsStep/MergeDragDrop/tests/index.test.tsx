@@ -29,7 +29,7 @@ jest.mock("react-beautiful-dnd", () => ({
     children({ draggableProps: {}, innerRef: jest.fn() }, {}, {}),
   Droppable: ({ children }: any) => children({ innerRef: jest.fn() }, {}),
 }));
-jest.mock("react-router-dom", () => ({
+jest.mock("react-router", () => ({
   useNavigate: jest.fn(),
 }));
 
