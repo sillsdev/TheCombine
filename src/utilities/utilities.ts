@@ -1,3 +1,5 @@
+import { colorblindSafePalette, HEX } from "types/theme";
+
 export function meetsPasswordRequirements(password: string): boolean {
   return password.length >= 8;
 }
@@ -117,4 +119,43 @@ export class LevenshteinDistance {
     }
     return matrix[a.length][b.length];
   }
+}
+
+/** Computes similarity of two 2-digit hex strings:
+ * - 0 means identical
+ * - 1 means `00` and `ff` */
+function compareHexPairs(a: string, b: string): number {
+  return Math.abs(parseInt(a, 16) - parseInt(b, 16)) / 255;
+}
+
+/** Computes similarity of two rbg hex strings:
+ * - 0 means identical
+ * - 1 means #000000 and #ffffff */
+function compareColors(a: HEX, b: HEX): number {
+  const rDiff = compareHexPairs(a.slice(1, 3), b.slice(1, 3));
+  const gDiff = compareHexPairs(a.slice(3, 5), b.slice(3, 5));
+  const bDiff = compareHexPairs(a.slice(5, 7), b.slice(5, 7));
+  return (rDiff + gDiff + bDiff) / 3;
+}
+
+/** Generates array of distinct colors.
+ * Starts with the `colorblindSafePalette` colors,
+ * then randomly (and inefficiently) generates more colors as needed. */
+export function distinctColors(n: number): HEX[] {
+  if (n < 1) {
+    return [];
+  }
+  if (n > 40) {
+    throw new Error(`distinctColors(n) cannot handle n = ${n} (> 40)`);
+  }
+  const colors = Object.values(colorblindSafePalette);
+  while (colors.length < n) {
+    const randHexInt = Math.trunc(Math.random() * 0x1000000);
+    const hexString = randHexInt.toString(16).padStart(6, "0");
+    if (!colors.find((c) => compareColors(c, `#${hexString}`) < 0.15)) {
+      colors.push(`#${hexString}`);
+      console.info(`#${hexString}`);
+    }
+  }
+  return colors.slice(0, n);
 }
