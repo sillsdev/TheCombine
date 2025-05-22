@@ -71,11 +71,6 @@ const preloadedState = {
     goalTypeSuggestions: [],
     history: [mockGoal],
   },
-  mergeDuplicateGoal: {
-    data: {} as MergeData,
-    tree: {} as MergeTree,
-    mergeWords: [],
-  },
 };
 
 const vernA = "AAA";
@@ -120,7 +115,7 @@ beforeEach(() => {
   );
 });
 
-describe("MergeDupActions", () => {
+describe("MergeDupsActions", () => {
   describe("mergeAll", () => {
     // Don't move or merge anything
     it("handles no merge", async () => {
