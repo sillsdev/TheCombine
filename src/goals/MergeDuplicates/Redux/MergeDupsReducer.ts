@@ -146,15 +146,13 @@ const mergeDuplicatesSlice = createSlice({
 
         // Check if nothing to merge.
         const wordToUpdate = state.data.words[wordId] || newWord();
-        if (isEmptyMerge(wordToUpdate, mergeWord)) {
+        const audioMoves = state.audio.moves[wordId];
+        if (isEmptyMerge(wordToUpdate, mergeWord) && !audioMoves.length) {
           continue;
         }
 
         // Create merge words.
-        const children = createMergeChildren(
-          mergeSenses,
-          state.audio.moves[wordId]
-        );
+        const children = createMergeChildren(mergeSenses, audioMoves);
         const parent = createMergeParent(wordToUpdate, mergeWord, allSenses);
         state.mergeWords.push({ parent, children, deleteOnly: false });
       }

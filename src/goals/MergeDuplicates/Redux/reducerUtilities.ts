@@ -81,6 +81,9 @@ export function createMergeChildren(
   const redundantIds = mergeSenses.flatMap((senses) =>
     senses.map((s) => s.srcWordId)
   );
+  // Catch words whose final sense was merge in and subsequently removed.
+  redundantIds.push(...audioMoves);
+
   const childrenIds = [...new Set(redundantIds)];
   return childrenIds.map((srcWordId) => ({
     srcWordId,
