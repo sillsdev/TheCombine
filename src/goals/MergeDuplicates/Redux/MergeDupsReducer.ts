@@ -147,7 +147,7 @@ const mergeDuplicatesSlice = createSlice({
         // Check if nothing to merge.
         const wordToUpdate = state.data.words[wordId] || newWord();
         const audioMoves = state.audio.moves[wordId];
-        if (isEmptyMerge(wordToUpdate, mergeWord) && !audioMoves.length) {
+        if (isEmptyMerge(wordToUpdate, mergeWord) && !audioMoves?.length) {
           continue;
         }
 
