@@ -498,16 +498,10 @@ script within a Python virtual environment, with `-h`/`--help` to see its usage 
 python scripts/split_dictionary.py --help
 ```
 
-For some languages, the wordlist is too large for practical use. Generally try to keep the folder for each language
-under 2.5 MB. For smaller folder sizes, default maximum word-lengths are automatically imposed for some languages:
-(`ar`, `es`, `fr`, `hi`, `pt`, `ru`). Use `-m`/`--max` to override the defaults, with `-m -1` to force no limit.
-
-Adjust the `-t`/`--threshold` and `-T`/`--Threshold` parameters to split a wordlist into more, smaller files; e.g.:
-
-- `python scripts/split_dictionary.py -l es -T 15000`
-- `python scripts/split_dictionary.py -l sw -t 1500`
-
-The top of each language's `.ts` file states which values of `-m`, `-t`, and `-T` were used for that language.
+For some languages, the `.txt` wordlist is too large for practical use. To keep each language's folder size under 6 MB,
+default maximum word-lengths are imposed. Use `-m`/`--max` to override the defaults, with `-m -1` to force no limit.
+Also, you can decrease the `-t`/`--threshold` and `-T`/`--Threshold` parameters to split a wordlist into more, smaller
+files. The top of each language's `.ts` file states which values of `-m`, `-t`, and `-T` were used for that language.
 
 ### Cleanup Local Repository
 

@@ -75,17 +75,17 @@ def parse_args() -> argparse.Namespace:
 def max_length(lang: str) -> int:
     lang = lang.lower()
     if lang == "ar":
-        return 4
+        return 5
     elif lang == "es":
-        return 9
+        return 13
     elif lang == "fr":
-        return 10
+        return 15
     elif lang == "hi":
-        return 6
+        return 8
     elif lang == "pt":
-        return 7
+        return 9
     elif lang == "ru":
-        return 7
+        return 8
     return -1
 
 
