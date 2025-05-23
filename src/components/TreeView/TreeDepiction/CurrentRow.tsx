@@ -11,55 +11,34 @@ import {
 import { parent as parentSvg } from "resources/tree";
 
 export default function CurrentRow(props: TreeRowProps): ReactElement {
-  const { next, parent, previous } = props.currentDomain;
+  return props.small ? (
+    <CurrentRowSm {...props} />
+  ) : (
+    <CurrentRowLg {...props} />
+  );
+}
 
-  const currentTile = (
+function CurrentTile(props: TreeRowProps): ReactElement {
+  const { animate, currentDomain } = props;
+
+  return (
     <Button
-      disabled={!props.currentDomain.parent}
+      disabled={!currentDomain.parent}
       fullWidth
       id="current-domain"
-      onClick={() => props.animate(props.currentDomain)}
+      onClick={() => animate(currentDomain)}
       sx={{ height: "100%", p: 1 }}
       variant="contained"
     >
-      <DomainText domain={props.currentDomain} />
+      <DomainText domain={currentDomain} />
     </Button>
   );
+}
 
-  return props.small ? (
-    <Grid2 container spacing={2} sx={{ px: 2, width: window.innerWidth }}>
-      <Grid2 size={4} />
-      <Grid2 size={4}>
-        {parent && (
-          <DomainTileButton
-            direction={Direction.Up}
-            domain={parent}
-            onClick={props.animate}
-          />
-        )}
-      </Grid2>
-      <Grid2 size={4} />
-      <Grid2 size={4}>
-        {previous && (
-          <DomainTileButton
-            direction={Direction.Prev}
-            domain={previous}
-            onClick={props.animate}
-          />
-        )}
-      </Grid2>
-      <Grid2 size={4}>{currentTile}</Grid2>
-      <Grid2 size={4}>
-        {next && (
-          <DomainTileButton
-            direction={Direction.Next}
-            domain={next}
-            onClick={props.animate}
-          />
-        )}
-      </Grid2>
-    </Grid2>
-  ) : (
+function CurrentRowLg(props: TreeRowProps): ReactElement {
+  const { next, parent, previous } = props.currentDomain;
+
+  return (
     <>
       {parent && (
         <>
@@ -87,7 +66,9 @@ export default function CurrentRow(props: TreeRowProps): ReactElement {
             />
           )}
         </ImageListItem>
-        <ImageListItem cols={3}>{currentTile}</ImageListItem>
+        <ImageListItem cols={3}>
+          <CurrentTile {...props} />
+        </ImageListItem>
         <ImageListItem cols={2}>
           {next && (
             <DomainTileButton
@@ -99,5 +80,58 @@ export default function CurrentRow(props: TreeRowProps): ReactElement {
         </ImageListItem>
       </ImageList>
     </>
+  );
+}
+
+function CurrentRowSm(props: TreeRowProps): ReactElement {
+  const { next, parent, previous } = props.currentDomain;
+
+  const grids = [
+    <Grid2 key="prev" size={4}>
+      {previous && (
+        <DomainTileButton
+          direction={Direction.Prev}
+          domain={previous}
+          onClick={props.animate}
+        />
+      )}
+    </Grid2>,
+    <Grid2 key="current" size={4}>
+      <CurrentTile {...props} />
+    </Grid2>,
+    <Grid2 key="next" size={4}>
+      {next && (
+        <DomainTileButton
+          direction={Direction.Next}
+          domain={next}
+          onClick={props.animate}
+        />
+      )}
+    </Grid2>,
+  ];
+  let ancestor = parent;
+  while (ancestor) {
+    grids.splice(
+      0,
+      0,
+      <Grid2 key={`uncle${ancestor.id}`} size={4} />,
+      <Grid2 key={`parent${ancestor.id}`} size={4}>
+        {ancestor && (
+          <DomainTileButton
+            direction={ancestor.parent ? undefined : Direction.Up}
+            domain={ancestor}
+            onClick={props.animate}
+          />
+        )}
+      </Grid2>,
+      <Grid2 key={`aunt${ancestor.id}`} size={4} />
+    );
+    ancestor = ancestor.parent;
+  }
+
+  return (
+    <Grid2 container spacing={2} sx={{ px: 2, width: window.innerWidth }}>
+      {grids}
+    </Grid2>
   );
 }

@@ -26,10 +26,15 @@ namespace BackendFramework.Repositories
                 filterDef.Eq(x => x.Id, id),
                 filterDef.Eq(x => x.Lang, lang));
 
-            var domain = await _context.SemanticDomains.FindAsync(filter: filter);
+            var domains = await _context.SemanticDomains.FindAsync(filter: filter);
             try
             {
-                return await domain.FirstAsync();
+                var domain = await domains.FirstAsync();
+                if (domain.Parent is not null)
+                {
+                    domain.Parent = await GetSemanticDomainTreeNode(domain.Parent.Id, lang);
+                }
+                return domain;
             }
             catch (InvalidOperationException)
             {

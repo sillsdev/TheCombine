@@ -156,11 +156,11 @@ export default function TreeView(props: TreeViewProps): ReactElement {
         </Grid2>
       </Grid2>
 
-      {!showButtonToTop && (
+      {/*!showButtonToTop && (
         <Grid2 container justifyContent="center" size={12}>
           {buttonToTop}
         </Grid2>
-      )}
+      )*/}
 
       {/* Domain tree */}
       <Zoom

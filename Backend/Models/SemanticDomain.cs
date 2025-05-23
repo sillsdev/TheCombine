@@ -97,7 +97,7 @@ namespace BackendFramework.Models
         {
             Description = "";
             ParentId = "";
-            Questions = new();
+            Questions = [];
         }
 
         public SemanticDomainFull(SemanticDomain semDom)
@@ -112,7 +112,7 @@ namespace BackendFramework.Models
 
             Description = "";
             ParentId = "";
-            Questions = new();
+            Questions = [];
         }
 
         /// <summary> Create a deep copy. </summary>
@@ -162,7 +162,7 @@ namespace BackendFramework.Models
         public SemanticDomain? Next { get; set; }
 
         [BsonElement("parent")]
-        public SemanticDomain? Parent { get; set; }
+        public SemanticDomainTreeNode? Parent { get; set; }
 
         [Required]
         [BsonElement("children")]
@@ -175,7 +175,7 @@ namespace BackendFramework.Models
             Lang = sd.Lang;
             Name = sd.Name;
             Id = sd.Id;
-            Children = new();
+            Children = [];
         }
     }
 }

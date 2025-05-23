@@ -3,6 +3,7 @@ import {
   ChevronRight,
   KeyboardArrowDown,
   KeyboardArrowUp,
+  KeyboardDoubleArrowUp,
 } from "@mui/icons-material";
 import { Button, Stack, Typography } from "@mui/material";
 import { ReactElement } from "react";
@@ -14,24 +15,23 @@ import { rootId } from "types/semanticDomain";
 
 interface DomainTextProps {
   domain: SemanticDomain;
+  hideId?: boolean;
 }
 
 export function DomainText(props: DomainTextProps): ReactElement {
   const { t } = useTranslation();
+  const { id, name } = props.domain;
+  const showId = !props.hideId && id !== rootId;
   return (
     <div style={{ textTransform: "capitalize" }}>
-      <Typography variant="overline">
-        {props.domain.id !== rootId ? props.domain.id : ""}
-      </Typography>
-      <Typography>
-        {props.domain.id !== rootId ? props.domain.name : t("addWords.domain")}
-      </Typography>
+      {showId && <Typography variant="overline">{id}</Typography>}
+      <Typography>{id !== rootId ? name : t("addWords.domain")}</Typography>
     </div>
   );
 }
 
 interface DomainTileProps {
-  direction: Direction;
+  direction?: Direction;
   domain: SemanticDomain;
 }
 
@@ -68,12 +68,16 @@ function DomainTile(props: DomainTileProps): ReactElement {
         </Stack>
       );
     case Direction.Up:
-      return (
+      return props.domain.id === rootId ? (
+        <KeyboardDoubleArrowUp />
+      ) : (
         <div>
           <KeyboardArrowUp />
           <DomainText domain={props.domain} />
         </div>
       );
+    default:
+      return <DomainText domain={props.domain} hideId />;
   }
 }
 
@@ -91,7 +95,7 @@ export default function DomainTileButton(
       id={props.domain.id}
       fullWidth
       onClick={() => onClick(props.domain)}
-      sx={{ height: "100%", p: 1 }}
+      sx={{ height: "100%" }}
       tabIndex={-1}
       variant="outlined"
     >
