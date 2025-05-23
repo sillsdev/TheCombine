@@ -1,4 +1,5 @@
-import { Grid2 } from "@mui/material";
+import { Check } from "@mui/icons-material";
+import { Grid2, IconButton } from "@mui/material";
 import { ReactElement, memo, useState } from "react";
 
 import { Pronunciation, Word, WritingSystem } from "api/models";
@@ -15,7 +16,7 @@ import { firstGlossText } from "utilities/wordUtilities";
 
 const idAffix = "recent-entry";
 
-export interface RecentEntryProps {
+export interface RecentEntryHotProps {
   rowIndex: number;
   entry: Word;
   senseGuid: string;
@@ -30,12 +31,13 @@ export interface RecentEntryProps {
   analysisLang: WritingSystem;
   vernacularLang: WritingSystem;
   disabled?: boolean;
+  close: () => void;
 }
 
 /**
  * Displays a recently entered word that a user can still edit
  */
-export function RecentEntry(props: RecentEntryProps): ReactElement {
+export function RecentEntryHot(props: RecentEntryHotProps): ReactElement {
   const sense = props.entry.senses.find((s) => s.guid === props.senseGuid)!;
   if (sense.glosses.length < 1) {
     sense.glosses.push(newGloss("", props.analysisLang.bcp47));
@@ -58,6 +60,7 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
   function conditionallyUpdateGloss(): void {
     if (firstGlossText(sense, props.analysisLang.bcp47) !== gloss) {
       props.updateGloss(props.rowIndex, gloss);
+      props.close();
     }
   }
 
@@ -65,6 +68,7 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
     if (vernacular.trim()) {
       if (props.entry.vernacular !== vernacular) {
         props.updateVern(props.rowIndex, vernacular);
+        props.close();
       }
     } else {
       setVernacular(props.entry.vernacular);
@@ -72,17 +76,25 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
   }
 
   const handleRemoveEntry = (): void => props.removeEntry(props.rowIndex);
-  const handleUpdateNote = (noteText: string): Promise<void> =>
-    props.updateNote(props.rowIndex, noteText);
+  const handleUpdateNote = async (noteText: string): Promise<void> => {
+    await props.updateNote(props.rowIndex, noteText);
+    props.close();
+  };
 
   return (
-    <Grid2 alignItems="center" container id={`${idAffix}-${props.rowIndex}`}>
+    <Grid2
+      alignItems="center"
+      container
+      id={`${idAffix}-${props.rowIndex}`}
+      rowSpacing={1}
+    >
       <Grid2
-        size={4}
+        size={11}
         style={{ paddingInline: theme.spacing(2), position: "relative" }}
       >
         <VernWithSuggestions
           vernacular={vernacular}
+          isNew
           isDisabled={props.disabled || props.entry.senses.length > 1}
           updateVernField={updateVernField}
           onBlur={() => conditionallyUpdateVern()}
@@ -94,13 +106,20 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
         />
       </Grid2>
 
+      <Grid2 size={1}>
+        <IconButton onClick={props.close}>
+          <Check sx={{ color: (t) => t.palette.success.main }} />
+        </IconButton>
+      </Grid2>
+
       <Grid2
-        size={4}
+        size={11}
         style={{ paddingInline: theme.spacing(2), position: "relative" }}
       >
         <GlossWithSuggestions
           gloss={gloss}
           isDisabled={props.disabled}
+          isNew
           updateGlossField={updateGlossField}
           onBlur={() => conditionallyUpdateGloss()}
           handleEnter={() => {
@@ -111,8 +130,10 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
         />
       </Grid2>
 
+      <Grid2 size={1} />
+
       <Grid2
-        size={1}
+        size={2}
         style={{ paddingInline: theme.spacing(1), position: "relative" }}
       >
         <NoteButton
@@ -124,7 +145,7 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
       </Grid2>
 
       <Grid2
-        size={2}
+        size={8}
         style={{ paddingInline: theme.spacing(1), position: "relative" }}
       >
         <PronunciationsBackend
@@ -141,6 +162,8 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
         />
       </Grid2>
 
+      <Grid2 size={1} />
+
       <Grid2
         size={1}
         style={{ paddingInline: theme.spacing(1), position: "relative" }}
@@ -156,4 +179,4 @@ export function RecentEntry(props: RecentEntryProps): ReactElement {
   );
 }
 
-export default memo(RecentEntry);
+export default memo(RecentEntryHot);

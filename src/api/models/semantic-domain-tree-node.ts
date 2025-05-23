@@ -64,10 +64,10 @@ export interface SemanticDomainTreeNode {
   next?: SemanticDomain;
   /**
    *
-   * @type {SemanticDomain}
+   * @type {SemanticDomainTreeNode}
    * @memberof SemanticDomainTreeNode
    */
-  parent?: SemanticDomain;
+  parent?: SemanticDomainTreeNode;
   /**
    *
    * @type {Array<SemanticDomain>}

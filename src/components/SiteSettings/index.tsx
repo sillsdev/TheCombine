@@ -1,5 +1,5 @@
 import { Announcement, List, People } from "@mui/icons-material";
-import { Box, Grid, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Stack, Tab, Tabs, Typography } from "@mui/material";
 import {
   type ReactElement,
   type ReactNode,
@@ -34,10 +34,10 @@ export default function SiteSettings(): ReactElement {
             data-testid={SiteSettingsTab.Projects}
             id={SiteSettingsTab.Projects.toString()}
             label={
-              <Grid container>
+              <Stack direction="row">
                 <List />
                 <Typography>{t("siteSettings.projectList")}</Typography>
-              </Grid>
+              </Stack>
             }
             value={SiteSettingsTab.Projects}
           />
@@ -45,10 +45,10 @@ export default function SiteSettings(): ReactElement {
             data-testid={SiteSettingsTab.Users}
             id={SiteSettingsTab.Users.toString()}
             label={
-              <Grid container>
+              <Stack direction="row">
                 <People />
                 <Typography>{t("siteSettings.userList")}</Typography>
-              </Grid>
+              </Stack>
             }
             value={SiteSettingsTab.Users}
           />
@@ -56,10 +56,10 @@ export default function SiteSettings(): ReactElement {
             data-testid={SiteSettingsTab.Banners}
             id={SiteSettingsTab.Banners.toString()}
             label={
-              <Grid container>
+              <Stack direction="row">
                 <Announcement />
                 <Typography>{t("siteSettings.banners.title")}</Typography>
-              </Grid>
+              </Stack>
             }
             value={SiteSettingsTab.Banners}
           />
