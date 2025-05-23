@@ -1,13 +1,8 @@
-import {
-  Grid2,
-  ImageList,
-  ImageListItem,
-  Theme,
-  useMediaQuery,
-} from "@mui/material";
+import { Grid2, ImageList, ImageListItem } from "@mui/material";
 import { ReactElement } from "react";
 
 import DomainTileButton from "components/TreeView/TreeDepiction/DomainTileButton";
+import DownBrace from "components/TreeView/TreeDepiction/DownBrace";
 import {
   Direction,
   RATIO_TILE_TO_GAP,
@@ -19,39 +14,6 @@ import * as tree from "resources/tree";
 const HALF_TILE = (RATIO_TILE_TO_GAP - 1) / 2; // Half of cols-per-tile, rounded down
 
 export default function ChildrenRow(props: TreeRowProps): ReactElement {
-  const isMdDown = useMediaQuery<Theme>((th) => th.breakpoints.down("md"));
-  const rtl = document.body.dir === "rtl";
-
-  /** Creates Grid2 tile for the specified tree part. */
-  const treeGrid = (treeSrc: string): ReactElement => {
-    return (
-      <Grid2 key={treeSrc + Math.random()} size={1}>
-        <img src={treeSrc} style={{ transform: "scaleY(-1)", width: "100%" }} />
-      </Grid2>
-    );
-  };
-
-  /** Creates array of Grid2 tiles for the specified tree part. */
-  const treeGrids = (treeSrc: string, count: number): ReactElement[] => {
-    return Array.from({ length: count }, () => treeGrid(treeSrc));
-  };
-
-  /** Creates an open-down brace of Grid2 tiles. */
-  const braceRow = (): ReactElement[] => {
-    // If there is only one child, use a pillar instead.
-    if (props.currentDomain.children.length === 1) {
-      return [treeGrid(tree.pillar)];
-    }
-
-    return [
-      treeGrid(rtl ? tree.endcapRight : tree.endcapLeft),
-      ...treeGrids(tree.span, 4),
-      treeGrid(tree.teeDown),
-      ...treeGrids(tree.span, 4),
-      treeGrid(rtl ? tree.endcapLeft : tree.endcapRight),
-    ];
-  };
-
   // Creates a tile for the specified tree part
   const treeTile = (treeSrc: string): ReactElement => (
     <ImageListItem key={treeSrc + Math.random()}>
@@ -77,6 +39,7 @@ export default function ChildrenRow(props: TreeRowProps): ReactElement {
     const teeCount = props.currentDomain.children.length - 2;
     const middleTeeCount = teeCount % 2;
     const halfTeeCount = (teeCount - middleTeeCount) / 2;
+    const rtl = document.body.dir === "rtl";
 
     // If there is only one child, the joist row has no branching
     if (teeCount === -1) {
@@ -140,16 +103,23 @@ export default function ChildrenRow(props: TreeRowProps): ReactElement {
     return subdomains;
   };
 
-  const numCols = getNumCols(props.currentDomain.children.length);
+  const numKids = props.currentDomain.children.length;
+  const numCols = getNumCols(numKids);
 
-  return isMdDown ? (
-    <>
-      <Grid2 container justifyContent="center">
-        {braceRow()}
-      </Grid2>
-      <Grid2 container spacing={2}>
+  return props.small ? (
+    <Grid2 container justifyContent="center">
+      <DownBrace
+        height={48}
+        width={(window.innerWidth * Math.min(numKids, 3)) / 3}
+      />
+      <Grid2
+        container
+        justifyContent={numKids < 3 ? "center" : "flex-start"}
+        spacing={2}
+        sx={{ px: 2, width: window.innerWidth }}
+      >
         {props.currentDomain.children.map((child) => (
-          <Grid2 key={child.id} size={{ xs: 4, sm: 3, md: 2 }}>
+          <Grid2 key={child.id} size={4}>
             <DomainTileButton
               direction={Direction.Down}
               domain={child}
@@ -158,13 +128,12 @@ export default function ChildrenRow(props: TreeRowProps): ReactElement {
           </Grid2>
         ))}
       </Grid2>
-    </>
+    </Grid2>
   ) : (
     <ImageList
       cols={numCols}
       gap={0}
-      rowHeight={"auto"}
-      style={{ overflow: "visible", width: numCols * props.colWidth }}
+      sx={{ m: 0, width: numCols * props.colWidth }}
     >
       {joistRow()}
       {domainRow()}

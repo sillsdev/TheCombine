@@ -1,19 +1,16 @@
-import { Grid2, Theme, useMediaQuery } from "@mui/material";
+import { Stack, Theme, useMediaQuery } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 
 import ChildrenRow from "components/TreeView/TreeDepiction/ChildrenRow";
 import CurrentRow from "components/TreeView/TreeDepiction/CurrentRow";
-import DomainTileButton from "components/TreeView/TreeDepiction/DomainTileButton";
 import {
-  Direction,
   TreeDepictionProps,
   getColWidth,
 } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
-import { parent } from "resources/tree";
 import { useWindowSize } from "utilities/useWindowSize";
 
 export default function TreeDepiction(props: TreeDepictionProps): ReactElement {
-  const showTree = true; //useMediaQuery<Theme>((th) => th.breakpoints.up("sm"));
+  const isSmDown = useMediaQuery<Theme>((th) => th.breakpoints.down("md"));
 
   const [colWidth, setColWidth] = useState(0);
 
@@ -24,39 +21,16 @@ export default function TreeDepiction(props: TreeDepictionProps): ReactElement {
   }, [props, windowWidth]);
 
   const currentDomain = props.currentDomain;
-  return (
-    <>
-      {/* Display parent domain, if available. */}
-      {showTree && currentDomain.parent && (
-        <>
-          <Grid2>
-            <DomainTileButton
-              direction={Direction.Up}
-              domain={currentDomain.parent}
-              onClick={props.animate}
-            />
-          </Grid2>
-          <Grid2>
-            <img
-              src={parent}
-              style={{ transform: "scaleY(-1)" }}
-              width={colWidth}
-            />
-          </Grid2>
-        </>
-      )}
 
-      {/* Display current domain and (if available) left and right brothers. */}
-      <Grid2>
-        <CurrentRow {...props} small={!showTree} />
-      </Grid2>
+  return (
+    <Stack alignItems="center">
+      {/* Display current domain and (if available) parent and siblings. */}
+      <CurrentRow {...props} colWidth={colWidth} small={isSmDown} />
 
       {/* Display subdomains, if available. */}
-      <Grid2>
-        {showTree && currentDomain.children.length > 0 && (
-          <ChildrenRow {...props} colWidth={colWidth} />
-        )}
-      </Grid2>
-    </>
+      {currentDomain.children.length > 0 && (
+        <ChildrenRow {...props} colWidth={colWidth} small={isSmDown} />
+      )}
+    </Stack>
   );
 }
