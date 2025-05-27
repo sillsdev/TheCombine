@@ -115,20 +115,17 @@ namespace Backend.Tests.Controllers
         [Test]
         public void TestDownloadAudioFileInvalidArguments()
         {
-            var result = _audioController.DownloadAudioFile("invalid/projId", "wordId", "fileName");
+            var result = _audioController.DownloadAudioFile("invalid/projId", "fileName");
             Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
 
-            result = _audioController.DownloadAudioFile("projId", "invalid/wordId", "fileName");
-            Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
-
-            result = _audioController.DownloadAudioFile("projId", "wordId", "invalid/fileName");
+            result = _audioController.DownloadAudioFile("projId", "invalid/fileName");
             Assert.That(result, Is.TypeOf<UnsupportedMediaTypeResult>());
         }
 
         [Test]
         public void TestDownloadAudioFileNoFile()
         {
-            var result = _audioController.DownloadAudioFile("projId", "wordId", "fileName");
+            var result = _audioController.DownloadAudioFile("projId", "fileName");
             Assert.That(result, Is.TypeOf<BadRequestObjectResult>());
         }
 

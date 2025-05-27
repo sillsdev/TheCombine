@@ -49,6 +49,7 @@ namespace BackendFramework.Controllers
         /// <returns> A List of <see cref="WritingSystem"/>s. </returns>
         [HttpPost("uploadandgetwritingsystems", Name = "UploadLiftFileAndGetWritingSystems")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<WritingSystem>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         // Allow clients to POST large import files to the server (default limit is 28MB).
         // Note: The HTTP Proxy in front, such as NGINX, also needs to be configured
         //     to allow large requests through as well.
@@ -85,6 +86,10 @@ namespace BackendFramework.Controllers
         /// <returns> Number of words added </returns>
         [HttpPost("finishupload", Name = "FinishUploadLiftFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public async Task<IActionResult> FinishUploadLiftFile(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Import, projectId))
@@ -146,6 +151,10 @@ namespace BackendFramework.Controllers
         /// <returns> Number of words added </returns>
         [HttpPost("upload", Name = "UploadLiftFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         // Allow clients to POST large import files to the server (default limit is 28MB).
         // Note: The HTTP Proxy in front, such as NGINX, also needs to be configured
         //     to allow large requests through as well.
@@ -288,6 +297,11 @@ namespace BackendFramework.Controllers
         /// <returns> ProjectId, if export successful </returns>
         [HttpGet("export", Name = "ExportLiftFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public async Task<IActionResult> ExportLiftFile(string projectId)
         {
             var userId = _permissionService.GetUserId(HttpContext);
@@ -386,6 +400,8 @@ namespace BackendFramework.Controllers
         /// <returns> Binary LIFT file </returns>
         [HttpGet("download", Name = "DownloadLiftFile")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> DownloadLiftFile(string projectId)
         {
             var userId = _permissionService.GetUserId(HttpContext);
@@ -436,6 +452,8 @@ namespace BackendFramework.Controllers
         /// <returns> A bool </returns>
         [HttpGet("check", Name = "CanUploadLift")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public async Task<IActionResult> CanUploadLift(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Import, projectId))

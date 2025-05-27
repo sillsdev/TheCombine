@@ -16,15 +16,13 @@ namespace BackendFramework.Controllers
     [Route("v1/projects/{projectId}/userroles")]
     public class UserRoleController : Controller
     {
-        private readonly IProjectRepository _projRepo;
         private readonly IUserRepository _userRepo;
         private readonly IUserRoleRepository _userRoleRepo;
         private readonly IPermissionService _permissionService;
 
-        public UserRoleController(IUserRepository userRepo, IUserRoleRepository userRoleRepo,
-            IProjectRepository projRepo, IPermissionService permissionService)
+        public UserRoleController(
+            IUserRepository userRepo, IUserRoleRepository userRoleRepo, IPermissionService permissionService)
         {
-            _projRepo = projRepo;
             _userRepo = userRepo;
             _userRoleRepo = userRoleRepo;
             _permissionService = permissionService;
@@ -33,18 +31,12 @@ namespace BackendFramework.Controllers
         /// <summary> Returns all <see cref="UserRole"/>s for specified <see cref="Project"/></summary>
         [HttpGet(Name = "GetProjectUserRoles")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<UserRole>))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetProjectUserRoles(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
             {
                 return Forbid();
-            }
-
-            // Ensure project exists
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
             }
 
             return Ok(await _userRoleRepo.GetAllUserRoles(projectId));
@@ -54,18 +46,12 @@ namespace BackendFramework.Controllers
         /// <returns> true: if success, false: if there were no UserRoles </returns>
         [HttpDelete(Name = "DeleteProjectUserRoles")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> DeleteProjectUserRoles(string projectId)
         {
             if (!await _permissionService.IsSiteAdmin(HttpContext))
             {
                 return Forbid();
-            }
-
-            // Ensure project exists
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
             }
 
             return Ok(await _userRoleRepo.DeleteAllUserRoles(projectId));
@@ -82,6 +68,8 @@ namespace BackendFramework.Controllers
         /// <summary> Returns <see cref="UserRole"/> with specified id </summary>
         [HttpGet("current", Name = "GetCurrentPermissions")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Permission>))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> GetCurrentPermissions(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
@@ -93,13 +81,6 @@ namespace BackendFramework.Controllers
             if (string.IsNullOrWhiteSpace(userId))
             {
                 return Forbid();
-            }
-
-            // Ensure project exists
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound($"project: {projectId}");
             }
 
             // Ensure user exists
@@ -114,18 +95,15 @@ namespace BackendFramework.Controllers
                 return Ok(new List<Permission>());
             }
             var userRole = await _userRoleRepo.GetUserRole(projectId, roleId);
-            if (userRole is null)
-            {
-                return Ok(new List<Permission>());
-            }
-
-            return Ok(ProjectRole.RolePermissions(userRole.Role));
+            return Ok(userRole is null ? [] : ProjectRole.RolePermissions(userRole.Role));
         }
 
         /// <summary> Creates a <see cref="UserRole"/> </summary>
         /// <returns> Id of updated UserRole </returns>
         [HttpPost(Name = "CreateUserRole")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CreateUserRole(string projectId, [FromBody, BindRequired] UserRole userRole)
         {
             if (!await _permissionService.HasProjectPermission(
@@ -141,18 +119,11 @@ namespace BackendFramework.Controllers
 
             userRole.ProjectId = projectId;
 
-            // Ensure project exists
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
-            }
-
             // Prevent a second project owner
             if (userRole.Role == Role.Owner
                 && (await _userRoleRepo.GetAllUserRoles(projectId)).Any((role) => role.Role == Role.Owner))
             {
-                return Forbid("This project already has an owner");
+                return BadRequest("This project already has an owner");
             }
 
             await _userRoleRepo.Create(userRole);
@@ -162,19 +133,15 @@ namespace BackendFramework.Controllers
         /// <summary> Deletes the <see cref="UserRole"/> for the specified projectId and userId </summary>
         [HttpDelete("{userId}", Name = "DeleteUserRole")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> DeleteUserRole(string projectId, string userId)
         {
             if (!await _permissionService.HasProjectPermission(
                 HttpContext, Permission.DeleteEditSettingsAndUsers, projectId))
             {
                 return Forbid();
-            }
-
-            // Ensure project exists
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
             }
 
             // Fetch the user -> fetch user role -> remove project from user's project roles
@@ -194,7 +161,7 @@ namespace BackendFramework.Controllers
             // Prevent deleting the project owner.
             if (userRole.Role == Role.Owner)
             {
-                return Forbid("Cannot use this function to remove the project owner's role");
+                return BadRequest("Cannot use this function to remove the project owner's role");
             }
 
             // Prevent deleting role of another user who has more permissions than the actor.
@@ -216,6 +183,10 @@ namespace BackendFramework.Controllers
         /// <returns> Id of updated UserRole </returns>
         [HttpPut("{userId}", Name = "UpdateUserRole")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status304NotModified, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> UpdateUserRole(
             string userId, [FromBody, BindRequired] ProjectRole projectRole)
         {
@@ -229,18 +200,12 @@ namespace BackendFramework.Controllers
             // Prevent making a new project owner.
             if (projectRole.Role == Role.Owner)
             {
-                return Forbid("Cannot use this function to give a user the project owner role");
+                return BadRequest("Cannot use this function to give a user the project owner role.");
             }
             // Prevent upgrading another user to have more permissions than the actor.
             if (!await _permissionService.ContainsProjectRole(HttpContext, projectRole.Role, projectId))
             {
                 return Forbid();
-            }
-
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
             }
 
             // Fetch the user -> fetch user role -> update user role
@@ -270,12 +235,12 @@ namespace BackendFramework.Controllers
             // Prevent downgrading the project owner.
             if (userRole.Role == Role.Owner)
             {
-                return Forbid("Cannot use this function to change the project owner's role");
+                return BadRequest("Cannot use this function to change the project owner's role.");
             }
             // Prevent downgrading another user who has more permissions than the actor.
             if (!await _permissionService.ContainsProjectRole(HttpContext, userRole.Role, projectId))
             {
-                return Forbid();
+                return BadRequest("Cannot reduce permissions of a user who has more permissions than you.");
             }
 
             userRole.Role = projectRole.Role;
@@ -295,6 +260,10 @@ namespace BackendFramework.Controllers
         /// <returns> Id of updated UserRole </returns>
         [HttpGet("changeowner/{oldUserId}/{newUserId}", Name = "ChangeOwner")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status304NotModified, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> ChangeOwner(string projectId, string oldUserId, string newUserId)
         {
             // Ensure the actor has sufficient permission to change project owner
@@ -306,14 +275,7 @@ namespace BackendFramework.Controllers
             // Ensure that the old and new owners' ids are different
             if (oldUserId.Equals(newUserId, System.StringComparison.OrdinalIgnoreCase))
             {
-                return BadRequest($"the user ids for the old and new owners should be different");
-            }
-
-            // Ensure the project exists
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
-            {
-                return NotFound(projectId);
+                return BadRequest("The user ids for the old and new owners should be different.");
             }
 
             // Fetch the users
@@ -331,12 +293,12 @@ namespace BackendFramework.Controllers
             // Ensure that the user from whom ownership is being moved is the owner
             if (!oldOwner.ProjectRoles.TryGetValue(projectId, out var oldRoleId))
             {
-                return BadRequest($"{oldUserId} is not a project user");
+                return BadRequest($"{oldUserId} is not a project user.");
             }
             var oldUserRole = await _userRoleRepo.GetUserRole(projectId, oldRoleId);
             if (oldUserRole is null || oldUserRole.Role != Role.Owner)
             {
-                return BadRequest($"{oldUserId} is not the project owner");
+                return BadRequest($"{oldUserId} is not the project owner.");
             }
 
             // Add or update the role of the new owner

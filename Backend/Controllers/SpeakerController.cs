@@ -29,6 +29,7 @@ namespace BackendFramework.Controllers
         /// <returns> List of Speakers </returns>
         [HttpGet(Name = "GetProjectSpeakers")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Speaker>))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetProjectSpeakers(string projectId)
         {
             // Check permissions
@@ -45,6 +46,7 @@ namespace BackendFramework.Controllers
         /// <returns> bool: true if success; false if no speakers in project </returns>
         [HttpDelete(Name = "DeleteProjectSpeakers")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> DeleteProjectSpeakers(string projectId)
         {
             // Check permissions
@@ -61,6 +63,8 @@ namespace BackendFramework.Controllers
         /// <returns> Speaker </returns>
         [HttpGet("{speakerId}", Name = "GetSpeaker")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Speaker))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> GetSpeaker(string projectId, string speakerId)
         {
             // Check permissions
@@ -99,6 +103,8 @@ namespace BackendFramework.Controllers
         /// <returns> Id of created Speaker </returns>
         [HttpPut("create", Name = "CreateSpeaker")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CreateSpeaker(string projectId, [FromBody, BindRequired] string name)
         {
             // Check permissions
@@ -125,6 +131,8 @@ namespace BackendFramework.Controllers
         /// <returns> bool: true if success; false if failure </returns>
         [HttpDelete("{speakerId}", Name = "DeleteSpeaker")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> DeleteSpeaker(string projectId, string speakerId)
         {
             // Check permissions
@@ -155,6 +163,9 @@ namespace BackendFramework.Controllers
         /// <returns> Id of updated Speaker </returns>
         [HttpDelete("consent/{speakerId}", Name = "RemoveConsent")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status304NotModified, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> RemoveConsent(string projectId, string speakerId)
         {
             // Check permissions
@@ -196,6 +207,10 @@ namespace BackendFramework.Controllers
         /// <returns> Id of updated Speaker </returns>
         [HttpPut("update/{speakerId}", Name = "UpdateSpeakerName")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status304NotModified, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> UpdateSpeakerName(
             string projectId, string speakerId, [FromBody, BindRequired] string name)
         {
@@ -235,6 +250,10 @@ namespace BackendFramework.Controllers
         /// <returns> Updated speaker </returns>
         [HttpPost("consent/{speakerId}", Name = "UploadConsent")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Speaker))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public async Task<IActionResult> UploadConsent(string projectId, string speakerId, IFormFile? file)
         {
             // Sanitize user input
@@ -313,6 +332,8 @@ namespace BackendFramework.Controllers
         [AllowAnonymous]
         [HttpGet("consent/{speakerId}", Name = "DownloadConsent")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public IActionResult DownloadConsent(string speakerId)
         {
             // SECURITY: Omitting authentication so the frontend can use the API endpoint directly as a URL.

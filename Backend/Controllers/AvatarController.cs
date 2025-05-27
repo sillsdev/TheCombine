@@ -25,8 +25,10 @@ namespace BackendFramework.Controllers
 
         /// <summary> Get user's avatar on disk </summary>
         /// <returns> Stream of local avatar file </returns>
+        [AllowAnonymous]
         [HttpGet("download", Name = "DownloadAvatar")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> DownloadAvatar(string userId)
         {
             // SECURITY: Omitting authentication so the frontend can use the API endpoint directly as a URL.
@@ -53,6 +55,9 @@ namespace BackendFramework.Controllers
         /// <returns> Path to local avatar file </returns>
         [HttpPost("upload", Name = "UploadAvatar")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> UploadAvatar(string userId, IFormFile? file)
         {
             if (!_permissionService.IsUserIdAuthorized(HttpContext, userId))
