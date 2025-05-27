@@ -160,12 +160,11 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Removes consent of the <see cref="Speaker"/> for specified projectId and speakerId </summary>
-        /// <returns> Id of updated Speaker </returns>
         [HttpDelete("consent/{speakerId}", Name = "RemoveConsent")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status304NotModified)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> RemoveConsent(string projectId, string speakerId)
         {
             // Check permissions
@@ -179,7 +178,7 @@ namespace BackendFramework.Controllers
             var speaker = await _speakerRepo.GetSpeaker(projectId, speakerId);
             if (speaker is null)
             {
-                return NotFound(speakerId);
+                return NotFound();
             }
 
             // Delete consent file
@@ -197,20 +196,19 @@ namespace BackendFramework.Controllers
             speaker.Consent = ConsentType.None;
             return await _speakerRepo.Update(speakerId, speaker) switch
             {
-                ResultOfUpdate.NotFound => NotFound(speakerId),
-                ResultOfUpdate.Updated => Ok(speakerId),
+                ResultOfUpdate.NotFound => NotFound(),
+                ResultOfUpdate.Updated => Ok(),
                 _ => StatusCode(StatusCodes.Status304NotModified)
             };
         }
 
         /// <summary> Updates the <see cref="Speaker"/>'s name for the specified projectId and speakerId </summary>
-        /// <returns> Id of updated Speaker </returns>
         [HttpPut("update/{speakerId}", Name = "UpdateSpeakerName")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status304NotModified)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateSpeakerName(
             string projectId, string speakerId, [FromBody, BindRequired] string name)
         {
@@ -225,7 +223,7 @@ namespace BackendFramework.Controllers
             var speaker = await _speakerRepo.GetSpeaker(projectId, speakerId);
             if (speaker is null)
             {
-                return NotFound(speakerId);
+                return NotFound();
             }
 
             // Ensure the new name is valid
@@ -240,8 +238,8 @@ namespace BackendFramework.Controllers
             speaker.Name = name;
             return await _speakerRepo.Update(speakerId, speaker) switch
             {
-                ResultOfUpdate.NotFound => NotFound(speakerId),
-                ResultOfUpdate.Updated => Ok(speakerId),
+                ResultOfUpdate.NotFound => NotFound(),
+                ResultOfUpdate.Updated => Ok(),
                 _ => StatusCode(StatusCodes.Status304NotModified)
             };
         }

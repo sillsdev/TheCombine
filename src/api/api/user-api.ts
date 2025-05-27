@@ -903,7 +903,7 @@ export const UserApiFp = function (configuration?: Configuration) {
       user: User,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.updateUser(
         userId,
@@ -1097,11 +1097,7 @@ export const UserApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    updateUser(
-      userId: string,
-      user: User,
-      options?: any
-    ): AxiosPromise<string> {
+    updateUser(userId: string, user: User, options?: any): AxiosPromise<void> {
       return localVarFp
         .updateUser(userId, user, options)
         .then((request) => request(axios, basePath));

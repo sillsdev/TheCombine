@@ -187,7 +187,7 @@ namespace Backend.Tests.Controllers
         public void TestRemoveConsentNoSpeaker()
         {
             var result = _speakerController.RemoveConsent(ProjId, "other-id").Result;
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]
@@ -201,7 +201,7 @@ namespace Backend.Tests.Controllers
 
             // Remove consent
             var result = _speakerController.RemoveConsent(ProjId, _speaker.Id).Result;
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(result, Is.InstanceOf<OkResult>());
             consentInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result!.Consent;
             Assert.That(consentInRepo, Is.EqualTo(ConsentType.None));
 
@@ -222,7 +222,7 @@ namespace Backend.Tests.Controllers
         public void TestUpdateSpeakerNameNoSpeaker()
         {
             var result = _speakerController.UpdateSpeakerName(ProjId, "other-id", "Mr. New").Result;
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]
@@ -248,7 +248,7 @@ namespace Backend.Tests.Controllers
         {
             const string NewName = "Mr. New";
             var result = _speakerController.UpdateSpeakerName(ProjId, _speaker.Id, NewName).Result;
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(result, Is.InstanceOf<OkResult>());
             var nameInRepo = _speakerRepo.GetSpeaker(ProjId, _speaker.Id).Result!.Name;
             Assert.That(nameInRepo, Is.EqualTo(NewName));
         }

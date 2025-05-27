@@ -223,12 +223,11 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Updates <see cref="User"/> with specified id. </summary>
-        /// <returns> Id of updated user. </returns>
         [HttpPut("updateuser/{userId}", Name = "UpdateUser")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status304NotModified)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateUser(string userId, [FromBody, BindRequired] User user)
         {
             if (!_permissionService.IsUserIdAuthorized(HttpContext, userId)
@@ -240,8 +239,8 @@ namespace BackendFramework.Controllers
             var result = await _userRepo.Update(userId, user);
             return result switch
             {
-                ResultOfUpdate.NotFound => NotFound(userId),
-                ResultOfUpdate.Updated => Ok(userId),
+                ResultOfUpdate.NotFound => NotFound(),
+                ResultOfUpdate.Updated => Ok(),
                 _ => StatusCode(StatusCodes.Status304NotModified)
             };
         }

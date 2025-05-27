@@ -142,12 +142,11 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Updates <see cref="Project"/> with specified id </summary>
-        /// <returns> Id of updated Project </returns>
         [HttpPut("{projectId}", Name = "UpdateProject")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status304NotModified)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateProject(string projectId, [FromBody, BindRequired] Project project)
         {
             if (!await _permissionService.HasProjectPermission(
@@ -159,8 +158,8 @@ namespace BackendFramework.Controllers
             var result = await _projRepo.Update(projectId, project);
             return result switch
             {
-                ResultOfUpdate.NotFound => NotFound(projectId),
-                ResultOfUpdate.Updated => Ok(projectId),
+                ResultOfUpdate.NotFound => NotFound(),
+                ResultOfUpdate.Updated => Ok(),
                 _ => StatusCode(StatusCodes.Status304NotModified)
             };
         }

@@ -103,9 +103,8 @@ namespace BackendFramework.Controllers
         }
 
         /// <summary> Adds/updates a goal to/in a specified <see cref="UserEdit"/> </summary>
-        /// <returns> Guid of added/updated edit </returns>
         [HttpPost("{userEditId}", Name = "UpdateUserEditGoal")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status304NotModified)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -132,7 +131,7 @@ namespace BackendFramework.Controllers
                 return NotFound($"userEditId: {userEditId}");
             }
 
-            return isSuccess ? Ok(editGuid) : StatusCode(StatusCodes.Status304NotModified);
+            return isSuccess ? Ok() : StatusCode(StatusCodes.Status304NotModified);
         }
 
         /// <summary> Adds/updates a step to/in specified goal </summary>

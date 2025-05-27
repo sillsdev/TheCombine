@@ -180,9 +180,8 @@ namespace BackendFramework.Controllers
         /// Updates permissions of <see cref="UserRole"/> for <see cref="Project"/> with specified projectId
         /// and <see cref="User"/> with specified userId.
         /// </summary>
-        /// <returns> Id of updated UserRole </returns>
         [HttpPut("{userId}", Name = "UpdateUserRole")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status304NotModified)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -248,7 +247,7 @@ namespace BackendFramework.Controllers
             return result switch
             {
                 ResultOfUpdate.NotFound => NotFound(userRoleId),
-                ResultOfUpdate.Updated => Ok(userRoleId),
+                ResultOfUpdate.Updated => Ok(),
                 _ => StatusCode(StatusCodes.Status304NotModified)
             };
         }
@@ -257,9 +256,8 @@ namespace BackendFramework.Controllers
         /// Change project owner from user with first specified id to user with second specified id.
         /// Can only be used by the project owner or a site admin.
         /// </summary>
-        /// <returns> Id of updated UserRole </returns>
         [HttpGet("changeowner/{oldUserId}/{newUserId}", Name = "ChangeOwner")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status304NotModified)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -335,7 +333,7 @@ namespace BackendFramework.Controllers
             var oldResult = await _userRoleRepo.Update(oldRoleId, oldUserRole);
             return oldResult switch
             {
-                ResultOfUpdate.Updated => Ok(oldUserRole),
+                ResultOfUpdate.Updated => Ok(),
                 _ => StatusCode(StatusCodes.Status304NotModified)
             };
         }

@@ -666,7 +666,7 @@ export const ProjectApiFp = function (configuration?: Configuration) {
       project: Project,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.updateProject(
         projectId,
@@ -805,7 +805,7 @@ export const ProjectApiFactory = function (
       projectId: string,
       project: Project,
       options?: any
-    ): AxiosPromise<string> {
+    ): AxiosPromise<void> {
       return localVarFp
         .updateProject(projectId, project, options)
         .then((request) => request(axios, basePath));

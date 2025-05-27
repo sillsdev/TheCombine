@@ -410,7 +410,7 @@ namespace Backend.Tests.Controllers
             var newId = (await _userRepo.Create(new()))!.Id;
 
             var result = await _userRoleController.ChangeOwner(ProjId, oldId, newId);
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(result, Is.InstanceOf<OkResult>());
             Assert.That((await _userRoleRepo.GetUserRole(ProjId, oldRole.Id))?.Role, Is.EqualTo(Role.Administrator));
             var newRoleId = (await _userRepo.GetUser(newId))!.ProjectRoles[ProjId];
             Assert.That((await _userRoleRepo.GetUserRole(ProjId, newRoleId))?.Role, Is.EqualTo(Role.Owner));
@@ -427,7 +427,7 @@ namespace Backend.Tests.Controllers
             var newId = (await _userRepo.Create(newOwner))!.Id;
 
             var result = await _userRoleController.ChangeOwner(ProjId, oldId, newId);
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
+            Assert.That(result, Is.InstanceOf<OkResult>());
             Assert.That((await _userRoleRepo.GetUserRole(ProjId, oldRole.Id))?.Role, Is.EqualTo(Role.Administrator));
             Assert.That((await _userRoleRepo.GetUserRole(ProjId, newRole.Id))?.Role, Is.EqualTo(Role.Owner));
         }
