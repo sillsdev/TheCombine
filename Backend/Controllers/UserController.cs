@@ -226,7 +226,7 @@ namespace BackendFramework.Controllers
         /// <returns> Id of updated user. </returns>
         [HttpPut("updateuser/{userId}", Name = "UpdateUser")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status304NotModified, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status304NotModified)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> UpdateUser(string userId, [FromBody, BindRequired] User user)
@@ -242,7 +242,7 @@ namespace BackendFramework.Controllers
             {
                 ResultOfUpdate.NotFound => NotFound(userId),
                 ResultOfUpdate.Updated => Ok(userId),
-                _ => StatusCode(StatusCodes.Status304NotModified, userId)
+                _ => StatusCode(StatusCodes.Status304NotModified)
             };
         }
 

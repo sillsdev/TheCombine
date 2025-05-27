@@ -163,7 +163,7 @@ namespace BackendFramework.Controllers
         /// <returns> Id of updated Speaker </returns>
         [HttpDelete("consent/{speakerId}", Name = "RemoveConsent")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status304NotModified, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status304NotModified)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> RemoveConsent(string projectId, string speakerId)
@@ -185,7 +185,7 @@ namespace BackendFramework.Controllers
             // Delete consent file
             if (speaker.Consent is ConsentType.None)
             {
-                return StatusCode(StatusCodes.Status304NotModified, speakerId);
+                return StatusCode(StatusCodes.Status304NotModified);
             }
             var path = FileStorage.GetConsentFilePath(speaker.Id);
             if (path is not null)
@@ -199,7 +199,7 @@ namespace BackendFramework.Controllers
             {
                 ResultOfUpdate.NotFound => NotFound(speakerId),
                 ResultOfUpdate.Updated => Ok(speakerId),
-                _ => StatusCode(StatusCodes.Status304NotModified, speakerId)
+                _ => StatusCode(StatusCodes.Status304NotModified)
             };
         }
 
@@ -207,7 +207,7 @@ namespace BackendFramework.Controllers
         /// <returns> Id of updated Speaker </returns>
         [HttpPut("update/{speakerId}", Name = "UpdateSpeakerName")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status304NotModified, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status304NotModified)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
@@ -242,7 +242,7 @@ namespace BackendFramework.Controllers
             {
                 ResultOfUpdate.NotFound => NotFound(speakerId),
                 ResultOfUpdate.Updated => Ok(speakerId),
-                _ => StatusCode(StatusCodes.Status304NotModified, speakerId)
+                _ => StatusCode(StatusCodes.Status304NotModified)
             };
         }
 

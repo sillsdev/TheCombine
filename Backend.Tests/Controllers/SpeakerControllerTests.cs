@@ -207,7 +207,7 @@ namespace Backend.Tests.Controllers
 
             // Try to remove again
             result = _speakerController.RemoveConsent(ProjId, _speaker.Id).Result;
-            Assert.That(((ObjectResult)result).StatusCode, Is.EqualTo(StatusCodes.Status304NotModified));
+            Assert.That(((StatusCodeResult)result).StatusCode, Is.EqualTo(StatusCodes.Status304NotModified));
         }
 
         [Test]

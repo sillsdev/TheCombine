@@ -183,7 +183,7 @@ namespace BackendFramework.Controllers
         /// <returns> Id of updated UserRole </returns>
         [HttpPut("{userId}", Name = "UpdateUserRole")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status304NotModified, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status304NotModified)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
@@ -249,7 +249,7 @@ namespace BackendFramework.Controllers
             {
                 ResultOfUpdate.NotFound => NotFound(userRoleId),
                 ResultOfUpdate.Updated => Ok(userRoleId),
-                _ => StatusCode(StatusCodes.Status304NotModified, userRoleId)
+                _ => StatusCode(StatusCodes.Status304NotModified)
             };
         }
 
@@ -260,7 +260,7 @@ namespace BackendFramework.Controllers
         /// <returns> Id of updated UserRole </returns>
         [HttpGet("changeowner/{oldUserId}/{newUserId}", Name = "ChangeOwner")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status304NotModified, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status304NotModified)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
@@ -327,7 +327,7 @@ namespace BackendFramework.Controllers
             }
             if (newResult != ResultOfUpdate.Updated)
             {
-                return StatusCode(StatusCodes.Status304NotModified, newRoleId);
+                return StatusCode(StatusCodes.Status304NotModified);
             }
 
             // Change the old owner to a project admin
@@ -336,7 +336,7 @@ namespace BackendFramework.Controllers
             return oldResult switch
             {
                 ResultOfUpdate.Updated => Ok(oldUserRole),
-                _ => StatusCode(StatusCodes.Status304NotModified, oldUserRole)
+                _ => StatusCode(StatusCodes.Status304NotModified)
             };
         }
     }

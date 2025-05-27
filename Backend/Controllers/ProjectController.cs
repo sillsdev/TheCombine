@@ -145,7 +145,7 @@ namespace BackendFramework.Controllers
         /// <returns> Id of updated Project </returns>
         [HttpPut("{projectId}", Name = "UpdateProject")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status304NotModified, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status304NotModified)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> UpdateProject(string projectId, [FromBody, BindRequired] Project project)
@@ -161,7 +161,7 @@ namespace BackendFramework.Controllers
             {
                 ResultOfUpdate.NotFound => NotFound(projectId),
                 ResultOfUpdate.Updated => Ok(projectId),
-                _ => StatusCode(StatusCodes.Status304NotModified, projectId)
+                _ => StatusCode(StatusCodes.Status304NotModified)
             };
         }
 
