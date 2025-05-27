@@ -34,7 +34,12 @@ async function createTree(
 ): Promise<void> {
   await act(async () => {
     render(
-      <CurrentRow animate={jest.fn()} currentDomain={domain} small={small} />
+      <CurrentRow
+        animate={jest.fn()}
+        colWidth={100}
+        currentDomain={domain}
+        small={small}
+      />
     );
   });
 }

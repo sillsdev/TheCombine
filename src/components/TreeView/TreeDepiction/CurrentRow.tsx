@@ -1,4 +1,4 @@
-import { Button, ImageList, ImageListItem } from "@mui/material";
+import { Box, Button, Grid2, ImageList, ImageListItem } from "@mui/material";
 import { ReactElement } from "react";
 
 import DomainTileButton, {
@@ -6,50 +6,132 @@ import DomainTileButton, {
 } from "components/TreeView/TreeDepiction/DomainTileButton";
 import {
   Direction,
-  TreeDepictionProps,
+  TreeRowProps,
 } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
+import { parent as parentSvg } from "resources/tree";
 
-export default function CurrentRow(props: TreeDepictionProps): ReactElement {
-  const { next, previous } = props.currentDomain;
+export default function CurrentRow(props: TreeRowProps): ReactElement {
+  return props.small ? (
+    <CurrentRowSm {...props} />
+  ) : (
+    <CurrentRowLg {...props} />
+  );
+}
 
-  const currentTile = (
+function CurrentTile(props: TreeRowProps): ReactElement {
+  const { animate, currentDomain } = props;
+
+  return (
     <Button
-      color="primary"
-      disabled={!props.currentDomain.parent}
+      disabled={!currentDomain.parent}
       fullWidth
       id="current-domain"
-      onClick={() => props.animate(props.currentDomain)}
-      size="large"
-      style={{ height: "95%" }}
+      onClick={() => animate(currentDomain)}
+      sx={{ height: "100%", p: 1 }}
       variant="contained"
     >
-      <DomainText domain={props.currentDomain} extraProps={{ minWidth: 200 }} />
+      <DomainText domain={currentDomain} />
     </Button>
   );
+}
 
-  return props.small ? (
-    currentTile
-  ) : (
-    <ImageList cols={7} gap={20} rowHeight={"auto"}>
-      <ImageListItem cols={2}>
-        {previous && (
+function CurrentRowLg(props: TreeRowProps): ReactElement {
+  const { next, parent, previous } = props.currentDomain;
+
+  return (
+    <>
+      {parent && (
+        <>
+          <Box>
+            <DomainTileButton
+              direction={Direction.Up}
+              domain={parent}
+              onClick={props.animate}
+            />
+          </Box>
+          <img
+            src={parentSvg}
+            style={{ transform: "scaleY(-1)" }}
+            width={props.colWidth}
+          />
+        </>
+      )}
+      <ImageList cols={7} gap={20} sx={{ mx: 1, my: 0 }}>
+        <ImageListItem cols={2}>
+          {previous && (
+            <DomainTileButton
+              direction={Direction.Prev}
+              domain={previous}
+              onClick={props.animate}
+            />
+          )}
+        </ImageListItem>
+        <ImageListItem cols={3}>
+          <CurrentTile {...props} />
+        </ImageListItem>
+        <ImageListItem cols={2}>
+          {next && (
+            <DomainTileButton
+              direction={Direction.Next}
+              domain={next}
+              onClick={props.animate}
+            />
+          )}
+        </ImageListItem>
+      </ImageList>
+    </>
+  );
+}
+
+function CurrentRowSm(props: TreeRowProps): ReactElement {
+  const { next, parent, previous } = props.currentDomain;
+
+  const grids = [
+    <Grid2 key="prev" size={4}>
+      {previous && (
+        <DomainTileButton
+          direction={Direction.Prev}
+          domain={previous}
+          onClick={props.animate}
+        />
+      )}
+    </Grid2>,
+    <Grid2 key="current" size={4}>
+      <CurrentTile {...props} />
+    </Grid2>,
+    <Grid2 key="next" size={4}>
+      {next && (
+        <DomainTileButton
+          direction={Direction.Next}
+          domain={next}
+          onClick={props.animate}
+        />
+      )}
+    </Grid2>,
+  ];
+  let ancestor = parent;
+  while (ancestor) {
+    grids.splice(
+      0,
+      0,
+      <Grid2 key={`uncle${ancestor.id}`} size={4} />,
+      <Grid2 key={`parent${ancestor.id}`} size={4}>
+        {ancestor && (
           <DomainTileButton
-            direction={Direction.Prev}
-            domain={previous}
+            direction={ancestor.parent ? undefined : Direction.Up}
+            domain={ancestor}
             onClick={props.animate}
           />
         )}
-      </ImageListItem>
-      <ImageListItem cols={3}>{currentTile}</ImageListItem>
-      <ImageListItem cols={2}>
-        {next && (
-          <DomainTileButton
-            direction={Direction.Next}
-            domain={next}
-            onClick={props.animate}
-          />
-        )}
-      </ImageListItem>
-    </ImageList>
+      </Grid2>,
+      <Grid2 key={`aunt${ancestor.id}`} size={4} />
+    );
+    ancestor = ancestor.parent;
+  }
+
+  return (
+    <Grid2 container spacing={2} sx={{ px: 2, width: window.innerWidth }}>
+      {grids}
+    </Grid2>
   );
 }

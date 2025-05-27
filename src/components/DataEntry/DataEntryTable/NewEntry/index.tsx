@@ -1,4 +1,4 @@
-import { AutocompleteCloseReason, Grid, Typography } from "@mui/material";
+import { AutocompleteCloseReason, Grid2, Typography } from "@mui/material";
 import {
   CSSProperties,
   ReactElement,
@@ -38,10 +38,10 @@ export enum FocusTarget {
   Vernacular,
 }
 
-const gridItemStyle = (spacing: number): CSSProperties => ({
-  paddingInline: theme.spacing(spacing),
+const gridItemStyle: CSSProperties = {
+  paddingInline: theme.spacing(1),
   position: "relative",
-});
+};
 
 interface NewEntryProps {
   analysisLang: WritingSystem;
@@ -224,44 +224,43 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
   };
 
   return (
-    <Grid alignItems="center" container id={NewEntryId.GridNewEntry}>
-      <Grid container item xs={4} style={gridItemStyle(2)}>
-        <Grid item xs={12}>
-          <VernWithSuggestions
-            isNew
-            vernacular={newVern}
-            vernInput={vernInput}
-            updateVernField={(newValue: string, openDialog?: boolean) =>
-              updateVernField(newValue, openDialog)
+    <Grid2 alignItems="center" container id={NewEntryId.GridNewEntry}>
+      <Grid2 size={4} style={gridItemStyle}>
+        <VernWithSuggestions
+          isNew
+          vernacular={newVern}
+          vernInput={vernInput}
+          updateVernField={(newValue: string, openDialog?: boolean) =>
+            updateVernField(newValue, openDialog)
+          }
+          onBlur={() => setVernOpen(true)}
+          onClose={(_, reason: AutocompleteCloseReason) => {
+            // Handle if the user fully types an identical vernacular to a suggestion
+            // and selects it from the Autocomplete. This should open the dialog.
+            if (reason === "selectOption") {
+              // User pressed Enter or Left Click on an item.
+              setVernOpen(true);
             }
-            onBlur={() => setVernOpen(true)}
-            onClose={(_, reason: AutocompleteCloseReason) => {
-              // Handle if the user fully types an identical vernacular to a suggestion
-              // and selects it from the Autocomplete. This should open the dialog.
-              if (reason === "selectOption") {
-                // User pressed Enter or Left Click on an item.
-                setVernOpen(true);
-              }
-            }}
-            onFocus={handleOnVernFocus}
-            suggestedVerns={suggestedVerns}
-            // To prevent unintentional no-gloss or wrong-gloss submissions
-            // and to simplify interactions with Autocomplete and with the dialogs:
-            // if Enter is pressed from the vern field, move focus to gloss field.
-            handleEnter={() => focus(FocusTarget.Gloss)}
-            vernacularLang={vernacularLang}
-            textFieldId={NewEntryId.TextFieldVern}
-            onUpdate={() => conditionalFocus(FocusTarget.Vernacular)}
-          />
-          <VernDialog
-            open={vernOpen && !!suggestedDups.length && !selectedDup}
-            handleClose={handleCloseVernDialog}
-            vernacularWords={suggestedDups}
-            analysisLang={analysisLang.bcp47}
-          />
-        </Grid>
-      </Grid>
-      <Grid item xs={4} style={gridItemStyle(1)}>
+          }}
+          onFocus={handleOnVernFocus}
+          suggestedVerns={suggestedVerns}
+          // To prevent unintentional no-gloss or wrong-gloss submissions
+          // and to simplify interactions with Autocomplete and with the dialogs:
+          // if Enter is pressed from the vern field, move focus to gloss field.
+          handleEnter={() => focus(FocusTarget.Gloss)}
+          vernacularLang={vernacularLang}
+          textFieldId={NewEntryId.TextFieldVern}
+          onUpdate={() => conditionalFocus(FocusTarget.Vernacular)}
+        />
+        <VernDialog
+          open={vernOpen && !!suggestedDups.length && !selectedDup}
+          handleClose={handleCloseVernDialog}
+          vernacularWords={suggestedDups}
+          analysisLang={analysisLang.bcp47}
+        />
+      </Grid2>
+
+      <Grid2 size={4} style={gridItemStyle}>
         <GlossWithSuggestions
           isNew
           gloss={newGloss}
@@ -272,8 +271,9 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
           textFieldId={NewEntryId.TextFieldGloss}
           onUpdate={() => conditionalFocus(FocusTarget.Gloss)}
         />
-      </Grid>
-      <Grid item xs={1} style={gridItemStyle(1)}>
+      </Grid2>
+
+      <Grid2 size={1} style={gridItemStyle}>
         {!selectedDup?.id && (
           // note is not available if user selected to modify an existing entry
           <NoteButton
@@ -282,8 +282,9 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
             updateNote={setNewNote}
           />
         )}
-      </Grid>
-      <Grid item xs={2} style={gridItemStyle(1)}>
+      </Grid2>
+
+      <Grid2 size={2} style={gridItemStyle}>
         <PronunciationsFrontend
           audio={newAudio}
           deleteAudio={delNewAudio}
@@ -291,23 +292,25 @@ export default function NewEntry(props: NewEntryProps): ReactElement {
           uploadAudio={addNewAudio}
           onClick={() => focus(FocusTarget.Gloss)}
         />
-      </Grid>
-      <Grid item xs={1} style={gridItemStyle(1)}>
+      </Grid2>
+
+      <Grid2 size={1} style={gridItemStyle}>
         <DeleteEntry
           buttonId={NewEntryId.ButtonDelete}
           removeEntry={() => resetState()}
         />
-      </Grid>
+      </Grid2>
+
       <EnterGrid />
-    </Grid>
+    </Grid2>
   );
 }
 
 function EnterGrid(): ReactElement {
   const { t } = useTranslation();
   return (
-    <Grid item xs={12} style={{ paddingInlineStart: theme.spacing(2) }}>
+    <Grid2 size={12} style={{ paddingInlineStart: theme.spacing(1) }}>
       <Typography variant="body2">{t("addWords.pressEnter")}</Typography>
-    </Grid>
+    </Grid2>
   );
 }
