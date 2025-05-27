@@ -62,7 +62,7 @@ namespace Backend.Tests.Controllers
         {
             var wordInFrontier = await _wordRepo.AddFrontier(Util.RandomWord(ProjId));
             _wordController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
-            var result = await _wordController.AreInFrontier(ProjId, [ wordInFrontier.Id ]);
+            var result = await _wordController.AreInFrontier(ProjId, [wordInFrontier.Id]);
             Assert.That(result, Is.InstanceOf<ForbidResult>());
         }
 

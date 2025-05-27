@@ -63,13 +63,14 @@ namespace Backend.Tests.Controllers
         {
             var rnd = new Random();
 
-            var userEdit = new UserEdit {
+            var userEdit = new UserEdit
+            {
                 ProjectId = ProjId,
             };
             var edit = new Edit
             {
                 GoalType = rnd.Next(0, 7),
-                StepData =  [Util.RandString() ]
+                StepData = [Util.RandString()]
             };
             userEdit.Edits.Add(edit);
             return userEdit;
