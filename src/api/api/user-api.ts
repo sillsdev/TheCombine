@@ -725,7 +725,7 @@ export const UserApiFp = function (configuration?: Configuration) {
       userId: string,
       options?: any
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUser(
         userId,
@@ -1001,7 +1001,7 @@ export const UserApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteUser(userId: string, options?: any): AxiosPromise<string> {
+    deleteUser(userId: string, options?: any): AxiosPromise<void> {
       return localVarFp
         .deleteUser(userId, options)
         .then((request) => request(axios, basePath));

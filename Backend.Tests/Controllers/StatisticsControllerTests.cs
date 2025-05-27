@@ -99,7 +99,7 @@ namespace Backend.Tests.Controllers
         public async Task TestGetProgressEstimationLineChartRootMissingProject()
         {
             var result = await _statsController.GetProgressEstimationLineChartRoot(MissingId);
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]

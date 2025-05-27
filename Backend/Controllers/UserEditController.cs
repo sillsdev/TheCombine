@@ -49,7 +49,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{userEditId}", Name = "GetUserEdit")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserEdit))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUserEdit(string projectId, string userEditId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
@@ -58,7 +58,7 @@ namespace BackendFramework.Controllers
             }
 
             var userEdit = await _userEditRepo.GetUserEdit(projectId, userEditId);
-            return userEdit is null ? NotFound(userEditId) : Ok(userEdit);
+            return userEdit is null ? NotFound($"userEditId: {userEditId}") : Ok(userEdit);
         }
 
         /// <summary> Creates a <see cref="UserEdit"/> </summary>
@@ -67,7 +67,6 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
         public async Task<IActionResult> CreateUserEdit(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(
@@ -76,17 +75,16 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
 
-            // Generate the new userEdit
-            var userEdit = new UserEdit { ProjectId = projectId };
-            await _userEditRepo.Create(userEdit);
-            // Update current user
             var currentUserId = _permissionService.GetUserId(HttpContext);
             var currentUser = await _userRepo.GetUser(currentUserId, false);
             if (currentUser is null)
             {
-                return NotFound(currentUserId);
+                return Forbid();
             }
 
+            // Generate the new userEdit
+            var userEdit = new UserEdit { ProjectId = projectId };
+            await _userEditRepo.Create(userEdit);
             currentUser.WorkedProjects.Add(projectId, userEdit.Id);
             await _userRepo.Update(currentUserId, currentUser);
 
@@ -160,14 +158,14 @@ namespace BackendFramework.Controllers
             var document = await _userEditRepo.GetUserEdit(projectId, userEditId);
             if (document is null)
             {
-                return NotFound(projectId);
+                return NotFound($"userEditId: {userEditId}");
             }
 
             // Ensure Edit exist.
             var edit = document.Edits.FindLast(e => e.Guid == stepWrapper.EditGuid);
             if (edit is null)
             {
-                return NotFound(stepWrapper.EditGuid);
+                return NotFound($"editGuid: {stepWrapper.EditGuid}");
             }
             var maxStepIndex = edit.StepData.Count;
             var stepIndex = stepWrapper.StepIndex ?? maxStepIndex;
@@ -208,7 +206,7 @@ namespace BackendFramework.Controllers
             {
                 return Ok();
             }
-            return NotFound(userEditId);
+            return NotFound($"userEditId: {userEditId}");
         }
     }
 }

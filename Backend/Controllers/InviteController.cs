@@ -51,7 +51,7 @@ namespace BackendFramework.Controllers
             var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
-                return NotFound(projectId);
+                return NotFound($"projectId: {projectId}");
             }
 
             var linkWithIdentifier = await _inviteService.CreateLinkWithToken(project, data.Role, data.EmailAddress);
@@ -69,7 +69,7 @@ namespace BackendFramework.Controllers
             var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
-                return NotFound(projectId);
+                return NotFound($"projectId: {projectId}");
             }
 
             var isTokenValid = false;

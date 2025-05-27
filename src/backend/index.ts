@@ -734,8 +734,8 @@ export async function updateUser(user: User): Promise<void> {
   }
 }
 
-export async function deleteUser(userId: string): Promise<string> {
-  return (await userApi.deleteUser({ userId }, defaultOptions())).data;
+export async function deleteUser(userId: string): Promise<void> {
+  await userApi.deleteUser({ userId }, defaultOptions());
 }
 
 export async function isSiteAdmin(): Promise<boolean> {

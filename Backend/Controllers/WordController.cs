@@ -32,7 +32,7 @@ namespace BackendFramework.Controllers
         [HttpDelete("frontier/{wordId}", Name = "DeleteFrontierWord")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteFrontierWord(string projectId, string wordId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "deleting a word from Frontier");
@@ -42,10 +42,9 @@ namespace BackendFramework.Controllers
                 return Forbid();
             }
             var userId = _permissionService.GetUserId(HttpContext);
-            var id = await _wordService.DeleteFrontierWord(projectId, userId, wordId);
-            if (id is null)
+            if (await _wordService.DeleteFrontierWord(projectId, userId, wordId) is null)
             {
-                return NotFound(wordId);
+                return NotFound();
             }
             return Ok(wordId);
         }
@@ -69,7 +68,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{wordId}", Name = "GetWord")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Word))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetWord(string projectId, string wordId)
         {
             using var activity = OtelService.StartActivityWithTag(otelTagName, "getting a word");
@@ -81,7 +80,7 @@ namespace BackendFramework.Controllers
             var word = await _wordRepo.GetWord(projectId, wordId);
             if (word is null)
             {
-                return NotFound(wordId);
+                return NotFound();
             }
             return Ok(word);
         }
@@ -181,7 +180,7 @@ namespace BackendFramework.Controllers
         [HttpPost("{dupId}", Name = "UpdateDuplicate")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> UpdateDuplicate(
             string projectId, string dupId, [FromBody, BindRequired] Word word)
@@ -197,7 +196,7 @@ namespace BackendFramework.Controllers
             var duplicatedWord = await _wordRepo.GetWord(word.ProjectId, dupId);
             if (duplicatedWord is null)
             {
-                return NotFound(dupId);
+                return NotFound();
             }
 
             var userId = _permissionService.GetUserId(HttpContext);
@@ -234,7 +233,7 @@ namespace BackendFramework.Controllers
         [HttpPut("{wordId}", Name = "UpdateWord")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateWord(
             string projectId, string wordId, [FromBody, BindRequired] Word word)
         {
@@ -247,7 +246,7 @@ namespace BackendFramework.Controllers
             var document = await _wordRepo.GetWord(projectId, wordId);
             if (document is null)
             {
-                return NotFound(wordId);
+                return NotFound();
             }
 
             // Add the found id to the updated word.

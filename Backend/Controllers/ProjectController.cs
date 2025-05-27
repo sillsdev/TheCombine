@@ -90,18 +90,18 @@ namespace BackendFramework.Controllers
         [HttpPost(Name = "CreateProject")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserCreatedProject))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CreateProject([FromBody, BindRequired] Project project)
         {
-            await _projRepo.Create(project);
-
-            // Get user.
+            // Get current user.
             var currentUserId = _permissionService.GetUserId(HttpContext);
             var currentUser = await _userRepo.GetUser(currentUserId, false);
             if (currentUser is null)
             {
-                return NotFound(currentUserId);
+                return Forbid();
             }
+
+            await _projRepo.Create(project);
 
             // Give Project owner privileges to user who creates a Project.
             var userRole = new UserRole

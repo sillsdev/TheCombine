@@ -79,7 +79,7 @@ namespace Backend.Tests.Controllers
         public void TestGetMissingUser()
         {
             var result = _userController.GetUser("INVALID_USER_ID").Result;
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]
@@ -112,7 +112,7 @@ namespace Backend.Tests.Controllers
         public void TestGetUserByEmailOrUsernameMissing()
         {
             var result = _userController.GetUserByEmailOrUsername("INVALID_EMAIL@gmail.com").Result;
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]

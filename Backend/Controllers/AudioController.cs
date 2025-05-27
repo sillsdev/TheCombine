@@ -134,7 +134,7 @@ namespace BackendFramework.Controllers
             var word = await _wordRepo.GetWord(projectId, wordId);
             if (word is null)
             {
-                return NotFound(wordId);
+                return NotFound($"wordId: {wordId}");
             }
             var audio = new Pronunciation(Path.GetFileName(filePath), speakerId);
             word.Audio.Add(audio);
@@ -176,7 +176,7 @@ namespace BackendFramework.Controllers
             {
                 return Ok(newWord.Id);
             }
-            return NotFound("The project was found, but the word audio was not deleted");
+            return NotFound($"wordId: {wordId}; fileName: {fileName}");
         }
     }
 }

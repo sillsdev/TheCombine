@@ -105,7 +105,7 @@ namespace Backend.Tests.Controllers
         public void TestGetSpeakerNoSpeaker()
         {
             var result = _speakerController.GetSpeaker(ProjId, "other-id").Result;
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]
@@ -164,7 +164,7 @@ namespace Backend.Tests.Controllers
         public void TestDeleteSpeakerNoSpeaker()
         {
             var result = _speakerController.DeleteSpeaker(ProjId, "other-id").Result;
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]
@@ -275,7 +275,7 @@ namespace Backend.Tests.Controllers
         public void TestUploadConsentNoSpeaker()
         {
             var result = _speakerController.UploadConsent(ProjId, "other", _file).Result;
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]
@@ -341,7 +341,7 @@ namespace Backend.Tests.Controllers
         public void TestDownloadSpeakerFileNoFile()
         {
             var result = _speakerController.DownloadConsent("speakerId");
-            Assert.That(result, Is.TypeOf<NotFoundObjectResult>());
+            Assert.That(result, Is.TypeOf<NotFoundResult>());
         }
     }
 }

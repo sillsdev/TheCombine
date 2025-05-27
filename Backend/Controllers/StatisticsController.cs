@@ -62,7 +62,7 @@ namespace BackendFramework.Controllers
         [HttpGet("GetProgressEstimationLineChartRoot", Name = "GetProgressEstimationLineChartRoot")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ChartRootData))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetProgressEstimationLineChartRoot(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.Statistics, projectId))
@@ -73,7 +73,7 @@ namespace BackendFramework.Controllers
             var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
-                return NotFound(projectId);
+                return NotFound();
             }
 
             return Ok(await _statService.GetProgressEstimationLineChartRoot(projectId, proj.WorkshopSchedule));

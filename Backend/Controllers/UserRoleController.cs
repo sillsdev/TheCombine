@@ -87,7 +87,7 @@ namespace BackendFramework.Controllers
             var user = await _userRepo.GetUser(userId);
             if (user is null)
             {
-                return NotFound($"user: {userId}");
+                return NotFound($"userId: {userId}");
             }
 
             if (!user.ProjectRoles.TryGetValue(projectId, out var roleId))
@@ -148,14 +148,14 @@ namespace BackendFramework.Controllers
             var changeUser = await _userRepo.GetUser(userId, false);
             if (changeUser is null)
             {
-                return NotFound(userId);
+                return NotFound($"userId: {userId}");
             }
 
             var userRoleId = changeUser.ProjectRoles[projectId];
             var userRole = await _userRoleRepo.GetUserRole(projectId, userRoleId);
             if (userRole is null)
             {
-                return NotFound(userRoleId);
+                return NotFound($"userRoleId: {userRoleId}");
             }
 
             // Prevent deleting the project owner.
@@ -211,7 +211,7 @@ namespace BackendFramework.Controllers
             var changeUser = await _userRepo.GetUser(userId, false);
             if (changeUser is null)
             {
-                return NotFound(userId);
+                return NotFound($"userId: {userId}");
             }
 
             if (!changeUser.ProjectRoles.TryGetValue(projectId, out var userRoleId))
@@ -228,7 +228,7 @@ namespace BackendFramework.Controllers
             var userRole = await _userRoleRepo.GetUserRole(projectId, userRoleId);
             if (userRole is null)
             {
-                return NotFound(userRoleId);
+                return NotFound($"userRoleId: {userRoleId}");
             }
 
             // Prevent downgrading the project owner.
@@ -246,7 +246,7 @@ namespace BackendFramework.Controllers
             var result = await _userRoleRepo.Update(userRoleId, userRole);
             return result switch
             {
-                ResultOfUpdate.NotFound => NotFound(userRoleId),
+                ResultOfUpdate.NotFound => NotFound($"userRoleId: {userRoleId}"),
                 ResultOfUpdate.Updated => Ok(),
                 _ => StatusCode(StatusCodes.Status304NotModified)
             };
@@ -280,12 +280,12 @@ namespace BackendFramework.Controllers
             var oldOwner = await _userRepo.GetUser(oldUserId, false);
             if (oldOwner is null)
             {
-                return NotFound(oldUserId);
+                return NotFound($"oldUserId: {oldUserId}");
             }
             var newOwner = await _userRepo.GetUser(newUserId, false);
             if (newOwner is null)
             {
-                return NotFound(newUserId);
+                return NotFound($"newUserId: {newUserId}");
             }
 
             // Ensure that the user from whom ownership is being moved is the owner
@@ -318,7 +318,7 @@ namespace BackendFramework.Controllers
                 var newUsersRole = await _userRoleRepo.GetUserRole(projectId, newRoleId);
                 if (newUsersRole is null)
                 {
-                    return NotFound(newRoleId);
+                    return NotFound($"newRoleId: {newRoleId}");
                 }
                 newUsersRole.Role = Role.Owner;
                 newResult = await _userRoleRepo.Update(newRoleId, newUsersRole);

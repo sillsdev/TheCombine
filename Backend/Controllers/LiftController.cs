@@ -221,7 +221,7 @@ namespace BackendFramework.Controllers
             var proj = await _projRepo.GetProject(projectId);
             if (proj is null)
             {
-                return NotFound(projectId);
+                return NotFound($"projectId: {projectId}");
             }
 
             int countWordsImported;
@@ -257,7 +257,7 @@ namespace BackendFramework.Controllers
             var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
-                return NotFound(projectId);
+                return NotFound($"projectId: {projectId}");
             }
 
             // Add analysis writing systems found in the data, avoiding duplicate and empty bcp47 codes.
@@ -327,10 +327,9 @@ namespace BackendFramework.Controllers
             }
 
             // Ensure project exists
-            var proj = await _projRepo.GetProject(projectId);
-            if (proj is null)
+            if (await _projRepo.GetProject(projectId) is null)
             {
-                return NotFound(projectId);
+                return NotFound($"projectId: {projectId}");
             }
 
             // Check if another export started
@@ -419,7 +418,7 @@ namespace BackendFramework.Controllers
             var filePath = _liftService.RetrieveExport(userId);
             if (filePath is null)
             {
-                return NotFound(userId);
+                return NotFound($"export for userId: {userId}");
             }
 
             var file = System.IO.File.OpenRead(filePath);

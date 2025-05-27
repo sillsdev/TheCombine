@@ -124,7 +124,7 @@ namespace BackendFramework.Controllers
         [HttpPost("authenticate", Name = "Authenticate")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(string))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Authenticate([FromBody, BindRequired] Credentials cred)
         {
             try
@@ -138,7 +138,7 @@ namespace BackendFramework.Controllers
             }
             catch (KeyNotFoundException)
             {
-                return NotFound(cred.EmailOrUsername);
+                return NotFound();
             }
         }
 
@@ -146,38 +146,32 @@ namespace BackendFramework.Controllers
         [HttpGet("{userId}", Name = "GetUser")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUser(string userId)
         {
             if (!_permissionService.IsUserIdAuthorized(HttpContext, userId))
             {
                 return Forbid();
             }
+
             var user = await _userRepo.GetUser(userId);
-            if (user is null)
-            {
-                return NotFound(userId);
-            }
-            return Ok(user);
+            return (user is null) ? NotFound() : Ok(user);
         }
 
         /// <summary> Returns <see cref="User"/> with the specified email address or username. </summary>
         [HttpPut("getbyemailorusername", Name = "GetUserByEmailOrUsername")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(User))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUserByEmailOrUsername([FromBody, BindRequired] string emailOrUsername)
         {
             if (!_permissionService.IsCurrentUserAuthorized(HttpContext))
             {
                 return Forbid();
             }
+
             var user = await _userRepo.GetUserByEmailOrUsername(emailOrUsername);
-            if (user is null)
-            {
-                return NotFound(emailOrUsername);
-            }
-            return Ok(user);
+            return (user is null) ? NotFound() : Ok(user);
         }
 
         /// <summary> Creates specified <see cref="User"/>. </summary>
@@ -247,20 +241,17 @@ namespace BackendFramework.Controllers
 
         /// <summary> Deletes <see cref="User"/> with specified id. </summary>
         [HttpDelete("{userId}", Name = "DeleteUser")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteUser(string userId)
         {
             if (!await _permissionService.IsSiteAdmin(HttpContext))
             {
                 return Forbid();
             }
-            if (await _userRepo.Delete(userId))
-            {
-                return Ok(userId);
-            }
-            return NotFound(userId);
+
+            return await _userRepo.Delete(userId) ? Ok() : NotFound();
         }
 
         /// <summary> Checks if current user is a site administrator. </summary>

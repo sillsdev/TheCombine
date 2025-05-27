@@ -97,7 +97,7 @@ namespace Backend.Tests.Controllers
         public async Task TestDeleteFrontierWordMissingWord()
         {
             var wordResult = await _wordController.DeleteFrontierWord(ProjId, MissingId);
-            Assert.That(wordResult, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.That(wordResult, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]
@@ -297,7 +297,7 @@ namespace Backend.Tests.Controllers
         {
             var word = Util.RandomWord(ProjId);
             var result = await _wordController.UpdateDuplicate(ProjId, MissingId, word);
-            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]
@@ -375,7 +375,7 @@ namespace Backend.Tests.Controllers
         public async Task TestUpdateWordMissingWord()
         {
             var wordResult = await _wordController.UpdateWord(ProjId, MissingId, Util.RandomWord(ProjId));
-            Assert.That(wordResult, Is.InstanceOf<NotFoundObjectResult>());
+            Assert.That(wordResult, Is.InstanceOf<NotFoundResult>());
         }
     }
 }
