@@ -1,11 +1,4 @@
-import {
-  Button,
-  Grid,
-  Typography,
-  CardContent,
-  Card,
-  CardActions,
-} from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { Fragment, ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -26,63 +19,44 @@ export default function ConfirmDeletion(
     return <Fragment />;
   }
   return (
-    <>
-      <Grid container justifyContent="center">
-        <Card style={{ width: 500 }}>
-          <CardContent>
-            <Typography
-              align="center"
-              variant="h5"
-              style={{ color: "primary" }}
-            >
-              {props.user.username}
+    <Box sx={{ maxWidth: 500 }}>
+      <Stack spacing={2}>
+        <Typography align="center" sx={{ color: "red" }} variant="h4">
+          {props.user.username}
+        </Typography>
+
+        <Typography align="center" variant="h6">
+          {t("siteSettings.deleteUser.confirm")}
+        </Typography>
+
+        <Stack direction="row" justifyContent="space-evenly">
+          <Button
+            color="secondary"
+            id="user-delete-confirm"
+            onClick={() => {
+              if (props.user) {
+                props.deleteUser(props.user.id);
+              }
+            }}
+            variant="contained"
+          >
+            <Typography align="center" sx={{ color: "red" }} variant="h6">
+              {t("buttons.delete")}
             </Typography>
+          </Button>
+
+          <Button
+            color="secondary"
+            id="user-delete-cancel"
+            onClick={() => props.handleCloseModal()}
+            variant="contained"
+          >
             <Typography align="center" variant="h6">
-              {t("siteSettings.deleteUser.confirm")}
+              {t("buttons.cancel")}
             </Typography>
-          </CardContent>
-          <CardActions>
-            <Grid container justifyContent="space-evenly">
-              <Grid item xs={6} sm={3}>
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    if (props.user) {
-                      props.deleteUser(props.user.id);
-                    }
-                  }}
-                  color="secondary"
-                  id="user-delete-confirm"
-                >
-                  <Typography
-                    align="center"
-                    variant="h6"
-                    style={{ color: "red" }}
-                  >
-                    {t("buttons.delete")}
-                  </Typography>
-                </Button>
-              </Grid>
-              <Grid item xs={6} sm={3}>
-                <Button
-                  variant="contained"
-                  onClick={() => props.handleCloseModal()}
-                  color="secondary"
-                  id="user-delete-cancel"
-                >
-                  <Typography
-                    align="center"
-                    variant="h6"
-                    style={{ color: "inherit" }}
-                  >
-                    {t("buttons.cancel")}
-                  </Typography>
-                </Button>
-              </Grid>
-            </Grid>
-          </CardActions>
-        </Card>
-      </Grid>
-    </>
+          </Button>
+        </Stack>
+      </Stack>
+    </Box>
   );
 }

@@ -1,4 +1,4 @@
-import { Button, Grid } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Dayjs } from "dayjs";
 import { enqueueSnackbar } from "notistack";
@@ -60,40 +60,40 @@ export default function DateSelector(props: DateSelectorProps): ReactElement {
   }
 
   return (
-    <>
-      <DatePicker
-        label={t("projectSettings.schedule.startDate")}
-        value={startDate}
-        onChange={(newValue) => setStartDate(newValue)}
-      />
-      <span>&nbsp;&nbsp;</span>
-      <DatePicker
-        label={t("projectSettings.schedule.endDate")}
-        value={endDate}
-        onChange={(newValue) => setEndDate(newValue)}
-      />
-      <Grid container justifyContent="flex-end" spacing={2}>
-        <Grid item marginTop={1}>
-          <Button
-            variant="contained"
-            onClick={() => props.close()}
-            id="DateSelectorCancelButton"
-          >
-            {t("buttons.cancel")}
-          </Button>
-        </Grid>
-        <Grid item marginTop={1}>
-          <LoadingButton
-            disabled={!startDate || !endDate}
-            buttonProps={{
-              id: "DateSelectorSubmitButton",
-              onClick: () => handleSubmit(),
-            }}
-          >
-            {t("buttons.confirm")}
-          </LoadingButton>
-        </Grid>
-      </Grid>
-    </>
+    <Stack spacing={2}>
+      <Stack direction="row" spacing={2}>
+        <DatePicker
+          label={t("projectSettings.schedule.startDate")}
+          value={startDate}
+          onChange={(newValue) => setStartDate(newValue)}
+        />
+
+        <DatePicker
+          label={t("projectSettings.schedule.endDate")}
+          value={endDate}
+          onChange={(newValue) => setEndDate(newValue)}
+        />
+      </Stack>
+
+      <Stack direction="row" justifyContent="flex-end" spacing={2}>
+        <Button
+          variant="contained"
+          onClick={() => props.close()}
+          id="DateSelectorCancelButton"
+        >
+          {t("buttons.cancel")}
+        </Button>
+
+        <LoadingButton
+          disabled={!startDate || !endDate}
+          buttonProps={{
+            id: "DateSelectorSubmitButton",
+            onClick: () => handleSubmit(),
+          }}
+        >
+          {t("buttons.confirm")}
+        </LoadingButton>
+      </Stack>
+    </Stack>
   );
 }

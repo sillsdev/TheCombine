@@ -2,7 +2,6 @@ import { Done } from "@mui/icons-material";
 import {
   Avatar,
   Button,
-  Grid,
   List,
   ListItem,
   ListItemIcon,
@@ -113,7 +112,7 @@ export default function UserList(props: UserListProps): ReactElement {
   };
 
   return (
-    <Grid item xs={12}>
+    <div>
       <Typography>{t("projectSettings.invite.searchTitle")}</Typography>
       <NormalizedTextField
         onChange={(e) => updateUsers(e.target.value)}
@@ -124,6 +123,6 @@ export default function UserList(props: UserListProps): ReactElement {
         {filteredProjUsers.map(projUserListItem)}
         {filteredNonProjUsers.map(nonProjUserListItem)}
       </List>
-    </Grid>
+    </div>
   );
 }

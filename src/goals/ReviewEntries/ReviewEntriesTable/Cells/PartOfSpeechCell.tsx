@@ -1,4 +1,4 @@
-import { Grid } from "@mui/material";
+import { Grid2 } from "@mui/material";
 import { type ReactElement } from "react";
 
 import { type GrammaticalInfo, type Sense } from "api/models";
@@ -18,12 +18,13 @@ function gatherGramInfo(senses: Sense[]): GrammaticalInfo[] {
 
 export default function PartOfSpeechCell(props: CellProps): ReactElement {
   return (
-    <Grid container direction="row" spacing={2}>
+    <Grid2 container spacing={2}>
       {gatherGramInfo(props.word.senses).map((gi) => (
-        <Grid item key={`${gi.catGroup}-${gi.grammaticalCategory}`}>
-          <PartOfSpeechButton gramInfo={gi} />
-        </Grid>
+        <PartOfSpeechButton
+          gramInfo={gi}
+          key={`${gi.catGroup}-${gi.grammaticalCategory}`}
+        />
       ))}
-    </Grid>
+    </Grid2>
   );
 }

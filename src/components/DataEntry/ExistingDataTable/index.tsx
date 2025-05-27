@@ -1,4 +1,4 @@
-import { Drawer, Grid, List, SxProps } from "@mui/material";
+import { Drawer, Grid2, List, SxProps } from "@mui/material";
 import { Fragment, ReactElement } from "react";
 
 import { SemanticDomain } from "api/models";
@@ -66,9 +66,9 @@ export default function ExistingDataTable(
   };
 
   const renderSidePanel = (): ReactElement => (
-    <Grid item md={5} lg={4} sx={sxScrollOverflow}>
+    <Grid2 size={{ md: 5, lg: 4, xl: 3 }} sx={sxScrollOverflow}>
       {list()}
-    </Grid>
+    </Grid2>
   );
 
   return props.typeDrawer ? renderDrawer() : renderSidePanel();
