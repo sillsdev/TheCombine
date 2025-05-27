@@ -8,7 +8,9 @@ interface DownBraceProps {
 }
 
 export default function DownBrace(props: DownBraceProps): ReactElement {
+  const backgroundColor = props.backgroundColor ?? "white";
   const color = props.color ?? "#C6CACC";
+
   const height = 16;
   const wScaled = props.width * (height / props.height);
   const wEnd = 9;
@@ -26,11 +28,7 @@ export default function DownBrace(props: DownBraceProps): ReactElement {
       xmlns="http://www.w3.org/2000/svg"
     >
       {/* Background */}
-      <rect
-        fill={props.backgroundColor ?? "white"}
-        height={height}
-        width={width}
-      />
+      <rect fill={backgroundColor} height={height} width={width} />
 
       {/* Endcap */}
       <g fill={color}>
