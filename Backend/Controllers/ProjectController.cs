@@ -61,25 +61,11 @@ namespace BackendFramework.Controllers
             return Ok(projectUsers);
         }
 
-        /// <summary> Deletes all <see cref="Project"/>s </summary>
-        /// <returns> true: if success, false: if there were no projects </returns>
-        [HttpDelete(Name = "DeleteAllProjects")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> DeleteAllProjects()
-        {
-            if (!await _permissionService.IsSiteAdmin(HttpContext))
-            {
-                return Forbid();
-            }
-            return Ok(await _projRepo.DeleteAllProjects());
-        }
-
         /// <summary> Returns <see cref="Project"/> with specified id </summary>
         [HttpGet("{projectId}", Name = "GetProject")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Project))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetProject(string projectId)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.WordEntry, projectId))
@@ -90,7 +76,7 @@ namespace BackendFramework.Controllers
             var project = await _projRepo.GetProject(projectId);
             if (project is null)
             {
-                return NotFound(projectId);
+                return NotFound();
             }
 
             // If there are fields we need to hide from lower users, check for Permission.DeleteEditSettingsAndUsers
@@ -168,7 +154,7 @@ namespace BackendFramework.Controllers
         [HttpPut("{projectId}/characters", Name = "PutChars")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Project))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> PutChars(string projectId, [FromBody, BindRequired] Project project)
         {
             if (!await _permissionService.HasProjectPermission(HttpContext, Permission.CharacterInventory, projectId))
@@ -179,7 +165,7 @@ namespace BackendFramework.Controllers
             var currentProj = await _projRepo.GetProject(projectId);
             if (currentProj is null)
             {
-                return NotFound(projectId);
+                return NotFound();
             }
 
             currentProj.ValidCharacters = project.ValidCharacters;
@@ -193,7 +179,7 @@ namespace BackendFramework.Controllers
         [HttpDelete("{projectId}", Name = "DeleteProject")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public async Task<IActionResult> DeleteProject(string projectId)
         {
@@ -212,11 +198,7 @@ namespace BackendFramework.Controllers
                 return new UnsupportedMediaTypeResult();
             }
 
-            if (await _projRepo.Delete(projectId))
-            {
-                return Ok();
-            }
-            return NotFound(projectId);
+            return await _projRepo.Delete(projectId) ? Ok() : NotFound();
         }
 
         [HttpGet("duplicate/{projectName}", Name = "ProjectDuplicateCheck")]

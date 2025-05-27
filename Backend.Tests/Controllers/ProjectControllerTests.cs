@@ -113,18 +113,6 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestDeleteAllProjects()
-        {
-            _projRepo.Create(Util.RandomProject());
-            _projRepo.Create(Util.RandomProject());
-            _projRepo.Create(Util.RandomProject());
-            Assert.That(_projRepo.GetAllProjects().Result, Has.Count.EqualTo(3));
-
-            _ = _projController.DeleteAllProjects().Result;
-            Assert.That(_projRepo.GetAllProjects().Result, Is.Empty);
-        }
-
-        [Test]
         public void TestProjectDuplicateCheck()
         {
             var project1 = _projRepo.Create(Util.RandomProject()).Result;

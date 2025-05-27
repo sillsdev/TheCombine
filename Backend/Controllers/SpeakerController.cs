@@ -64,7 +64,7 @@ namespace BackendFramework.Controllers
         [HttpGet("{speakerId}", Name = "GetSpeaker")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Speaker))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetSpeaker(string projectId, string speakerId)
         {
             // Check permissions
@@ -77,7 +77,7 @@ namespace BackendFramework.Controllers
             var speaker = await _speakerRepo.GetSpeaker(projectId, speakerId);
             if (speaker is null)
             {
-                return NotFound(speakerId);
+                return NotFound();
             }
 
             // Return speaker
@@ -132,7 +132,7 @@ namespace BackendFramework.Controllers
         [HttpDelete("{speakerId}", Name = "DeleteSpeaker")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteSpeaker(string projectId, string speakerId)
         {
             // Check permissions
@@ -145,7 +145,7 @@ namespace BackendFramework.Controllers
             // Ensure the speaker exists
             if (await _speakerRepo.GetSpeaker(projectId, speakerId) is null)
             {
-                return NotFound(speakerId);
+                return NotFound();
             }
 
             // Delete consent file
@@ -250,7 +250,7 @@ namespace BackendFramework.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Speaker))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(string))]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public async Task<IActionResult> UploadConsent(string projectId, string speakerId, IFormFile? file)
         {
@@ -275,7 +275,7 @@ namespace BackendFramework.Controllers
             var speaker = await _speakerRepo.GetSpeaker(projectId, speakerId);
             if (speaker is null)
             {
-                return NotFound(speakerId);
+                return NotFound();
             }
 
             // Ensure file is valid
@@ -320,7 +320,7 @@ namespace BackendFramework.Controllers
             // Update and return speaker
             return await _speakerRepo.Update(speakerId, speaker) switch
             {
-                ResultOfUpdate.NotFound => NotFound(speaker),
+                ResultOfUpdate.NotFound => NotFound(),
                 _ => Ok(speaker),
             };
         }
@@ -330,7 +330,7 @@ namespace BackendFramework.Controllers
         [AllowAnonymous]
         [HttpGet("consent/{speakerId}", Name = "DownloadConsent")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
         public IActionResult DownloadConsent(string speakerId)
         {
@@ -354,7 +354,7 @@ namespace BackendFramework.Controllers
             var path = FileStorage.GetConsentFilePath(speakerId);
             if (path is null)
             {
-                return NotFound(speakerId);
+                return NotFound();
             }
 
             // Return file as stream
