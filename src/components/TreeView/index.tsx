@@ -1,5 +1,5 @@
 import { Close, KeyboardDoubleArrowUp } from "@mui/icons-material";
-import { Grid2, type Theme, Zoom, useMediaQuery } from "@mui/material";
+import { Grid2, Zoom } from "@mui/material";
 import { animate } from "motion";
 import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -53,7 +53,6 @@ export default function TreeView(props: TreeViewProps): ReactElement {
   );
   const [visible, setVisible] = useState(true);
   const dispatch = useAppDispatch();
-  const showButtonToTop = useMediaQuery<Theme>((th) => th.breakpoints.up("sm"));
   const { resolvedLanguage } = useTranslation().i18n;
 
   useEffect(() => {
@@ -113,29 +112,17 @@ export default function TreeView(props: TreeViewProps): ReactElement {
       ? undefined
       : () => animateHandler();
 
-  const buttonToTop = (
-    <IconButtonWithTooltip
-      icon={<KeyboardDoubleArrowUp />}
-      textId={"treeView.returnToTop"}
-      onClick={onClickTop}
-      buttonId={TreeViewIds.ButtonTop}
-    />
-  );
-
   return (
     <>
       {/* Domain search */}
       <TreeNavigator currentDomain={currentDomain} animate={animateHandler} />
       <Grid2 container justifyContent="space-between">
         <Grid2>
-          {/* Empty grid item to balance the buttons */}
-          {showButtonToTop && (
-            <div style={{ display: "inline-block", width: 40 }} />
-          )}
-          {exit && <div style={{ display: "inline-block", width: 40 }} />}
+          {/* Empty grid to balance the buttons */}
+          <div style={{ width: exit ? 80 : 40 }} />
         </Grid2>
 
-        <Grid2>
+        <Grid2 container justifyContent="center" size="grow">
           <TreeSearch
             animate={animateHandler}
             currentDomain={currentDomain}
@@ -144,7 +131,12 @@ export default function TreeView(props: TreeViewProps): ReactElement {
         </Grid2>
 
         <Grid2>
-          {showButtonToTop && buttonToTop}
+          <IconButtonWithTooltip
+            icon={<KeyboardDoubleArrowUp />}
+            textId={"treeView.returnToTop"}
+            onClick={onClickTop}
+            buttonId={TreeViewIds.ButtonTop}
+          />
           {exit && (
             <IconButtonWithTooltip
               icon={<Close />}
