@@ -10,7 +10,7 @@ import {
 } from "components/TreeView/TreeDepiction/TreeDepictionTypes";
 import { parent as parentSvg } from "resources/tree";
 
-export const currentDomainButtonId = "current-domain";
+const currentDomainButtonId = "current-domain";
 
 export default function CurrentRow(props: TreeRowProps): ReactElement {
   return props.small ? (

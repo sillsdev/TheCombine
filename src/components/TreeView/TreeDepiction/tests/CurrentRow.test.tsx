@@ -3,9 +3,7 @@ import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { SemanticDomainTreeNode } from "api/models";
-import CurrentRow, {
-  currentDomainButtonId,
-} from "components/TreeView/TreeDepiction/CurrentRow";
+import CurrentRow from "components/TreeView/TreeDepiction/CurrentRow";
 import testDomainMap, {
   mapIds,
 } from "components/TreeView/tests/SemanticDomainMock";
@@ -43,8 +41,7 @@ describe("CurrentRow", () => {
     describe(small ? "clickability narrow" : "clickability wide", () => {
       test("root is not clickable", async () => {
         await createTree(testDomainMap[mapIds.head], small);
-        const currentButton = screen.getByTestId(currentDomainButtonId);
-        expect(currentButton).toBeDisabled();
+        expect(screen.getByRole("button")).toBeDisabled();
       });
 
       test("everything else is clickable", async () => {
