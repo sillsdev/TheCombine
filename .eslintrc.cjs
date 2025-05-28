@@ -9,7 +9,7 @@ module.exports = {
     "plugin:react-hooks/recommended",
     "plugin:import/recommended",
   ],
-  ignorePatterns: ["*.dic.js"],
+  ignorePatterns: ["*.dic"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaFeatures: { jsx: true },

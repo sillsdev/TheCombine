@@ -1,7 +1,7 @@
 import { ThemeProvider } from "@mui/material/styles";
 import { act, render } from "@testing-library/react";
 import { Provider } from "react-redux";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router";
 import configureMockStore from "redux-mock-store";
 
 import AppBar from "components/AppBar";
