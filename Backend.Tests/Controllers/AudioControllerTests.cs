@@ -58,6 +58,7 @@ namespace Backend.Tests.Controllers
         public void TestUploadAudioFileUnauthorized()
         {
             _audioController.ControllerContext.HttpContext = PermissionServiceMock.UnauthorizedHttpContext();
+
             var result = _audioController.UploadAudioFile(_projId, _wordId, _file).Result;
             Assert.That(result, Is.InstanceOf<ForbidResult>());
 
@@ -82,7 +83,7 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestUploadConsentNullFile()
+        public void TestUploadAudioFileNullFile()
         {
             var result = _audioController.UploadAudioFile(_projId, _wordId, null).Result;
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
@@ -92,13 +93,14 @@ namespace Backend.Tests.Controllers
         }
 
         [Test]
-        public void TestUploadConsentEmptyFile()
+        public void TestUploadAudioFileEmptyFile()
         {
             // Use 0 for the third argument
             _file = new FormFile(_stream, 0, 0, "Name", FileName);
 
             var result = _audioController.UploadAudioFile(_projId, _wordId, _file).Result;
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+
             result = _audioController.UploadAudioFile(_projId, _wordId, "speakerId", _file).Result;
             Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
         }
@@ -135,7 +137,7 @@ namespace Backend.Tests.Controllers
             // Refill test database
             _wordRepo.DeleteAllWords(_projId);
             var origWord = Util.RandomWord(_projId);
-            var fileName = "a.wav";
+            const string fileName = "a.wav";
             origWord.Audio.Add(new Pronunciation(fileName));
             var wordId = _wordRepo.Create(origWord).Result.Id;
 
