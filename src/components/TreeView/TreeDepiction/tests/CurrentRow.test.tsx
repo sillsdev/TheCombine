@@ -7,54 +7,34 @@ import testDomainMap, {
 } from "components/TreeView/tests/SemanticDomainMock";
 
 describe("CurrentRow", () => {
-  describe("wide", () => {
-    it("renders with no parent and no siblings", async () => {
-      await createTree(testDomainMap[mapIds.head]);
-      expect(screen.getAllByRole("button")).toHaveLength(1);
-    });
+  for (const small of [false, true]) {
+    describe(small ? "renders narrow" : "renders wide", () => {
+      test("with no parent and no siblings", async () => {
+        await createTree(testDomainMap[mapIds.head], small);
+        expect(screen.getAllByRole("button")).toHaveLength(1);
+      });
 
-    it("renders with parent and no siblings", async () => {
-      await createTree(testDomainMap[mapIds.parent]);
-      expect(screen.getAllByRole("button")).toHaveLength(2);
-    });
+      test("with parent and no siblings", async () => {
+        await createTree(testDomainMap[mapIds.parent], small);
+        expect(screen.getAllByRole("button")).toHaveLength(2);
+      });
 
-    it("renders with parent and 1 sibling", async () => {
-      await createTree(testDomainMap[mapIds.firstKid]);
-      expect(screen.getAllByRole("button")).toHaveLength(3);
-    });
+      test("with parent and 1 sibling", async () => {
+        await createTree(testDomainMap[mapIds.firstKid], small);
+        expect(screen.getAllByRole("button")).toHaveLength(3);
+      });
 
-    it("renders with parent and 2 siblings", async () => {
-      await createTree(testDomainMap[mapIds.middleKid]);
-      expect(screen.getAllByRole("button")).toHaveLength(4);
+      test("with parent and 2 siblings", async () => {
+        await createTree(testDomainMap[mapIds.middleKid], small);
+        expect(screen.getAllByRole("button")).toHaveLength(4);
+      });
     });
-  });
-
-  describe("narrow", () => {
-    it("renders with no parent and no siblings", async () => {
-      await createTree(testDomainMap[mapIds.head]);
-      expect(screen.getAllByRole("button")).toHaveLength(1);
-    });
-
-    it("renders with parent and no siblings", async () => {
-      await createTree(testDomainMap[mapIds.parent], true);
-      expect(screen.getAllByRole("button")).toHaveLength(2);
-    });
-
-    it("renders with parent and 1 sibling", async () => {
-      await createTree(testDomainMap[mapIds.firstKid], true);
-      expect(screen.getAllByRole("button")).toHaveLength(3);
-    });
-
-    it("renders with parent and 2 siblings", async () => {
-      await createTree(testDomainMap[mapIds.middleKid], true);
-      expect(screen.getAllByRole("button")).toHaveLength(4);
-    });
-  });
+  }
 });
 
 async function createTree(
   domain: SemanticDomainTreeNode,
-  small = false
+  small: boolean
 ): Promise<void> {
   await act(async () => {
     render(

@@ -93,7 +93,7 @@ function CurrentRowSm(props: TreeRowProps): ReactElement {
 
   return (
     <Grid2 container spacing={2} sx={{ px: 2, width: window.innerWidth }}>
-      {!!parent && (
+      {parent && (
         <>
           <Grid2 key="uncle" size={4} />
           <Grid2 key="parent" size={4}>
