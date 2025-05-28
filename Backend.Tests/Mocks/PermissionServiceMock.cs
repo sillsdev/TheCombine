@@ -61,7 +61,7 @@ namespace Backend.Tests.Mocks
 
         public bool IsUserIdAuthorized(HttpContext request, string userId)
         {
-            return true;
+            return IsAuthorizedHttpContext(request);
         }
 
         /// <summary>
@@ -168,8 +168,5 @@ namespace Backend.Tests.Mocks
         }
     }
 
-    internal sealed class UserAuthenticationException : Exception
-    {
-        public UserAuthenticationException() { }
-    }
+    internal sealed class UserAuthenticationException : Exception;
 }
