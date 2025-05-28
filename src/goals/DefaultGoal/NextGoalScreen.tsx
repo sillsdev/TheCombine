@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 import PageNotFound from "components/PageNotFound/component";
 import MergeDupsContinueDialog from "goals/MergeDuplicates/MergeDupsContinueDialog";
