@@ -1,4 +1,4 @@
-import { Stack, Theme, useMediaQuery } from "@mui/material";
+import { Stack } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 
 import ChildrenRow from "components/TreeView/TreeDepiction/ChildrenRow";
@@ -10,8 +10,6 @@ import {
 import { useWindowSize } from "utilities/useWindowSize";
 
 export default function TreeDepiction(props: TreeDepictionProps): ReactElement {
-  const isSmDown = useMediaQuery<Theme>((th) => th.breakpoints.down("md"));
-
   const [colWidth, setColWidth] = useState(0);
 
   const { windowWidth } = useWindowSize();
@@ -25,11 +23,11 @@ export default function TreeDepiction(props: TreeDepictionProps): ReactElement {
   return (
     <Stack alignItems="center">
       {/* Display current domain and (if available) parent and siblings. */}
-      <CurrentRow {...props} colWidth={colWidth} small={isSmDown} />
+      <CurrentRow {...props} colWidth={colWidth} />
 
       {/* Display subdomains, if available. */}
       {currentDomain.children.length > 0 && (
-        <ChildrenRow {...props} colWidth={colWidth} small={isSmDown} />
+        <ChildrenRow {...props} colWidth={colWidth} />
       )}
     </Stack>
   );

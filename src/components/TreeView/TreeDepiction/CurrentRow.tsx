@@ -56,7 +56,12 @@ function CurrentRowLg(props: TreeRowProps): ReactElement {
           />
         </>
       )}
-      <ImageList cols={7} gap={20} sx={{ mx: 1, my: 0 }}>
+      <ImageList
+        cols={7}
+        gap={20}
+        // Specify overflowY and zIndex for the current button bounce.
+        sx={{ overflowY: "visible", mx: 1, my: 0, zIndex: 1 }}
+      >
         <ImageListItem cols={2}>
           {previous && (
             <DomainTileButton

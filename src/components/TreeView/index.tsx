@@ -1,5 +1,5 @@
 import { Close, KeyboardDoubleArrowUp } from "@mui/icons-material";
-import { Grid2, Zoom } from "@mui/material";
+import { Grid2, Theme, Zoom, useMediaQuery } from "@mui/material";
 import { animate } from "motion";
 import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -53,6 +53,7 @@ export default function TreeView(props: TreeViewProps): ReactElement {
   );
   const [visible, setVisible] = useState(true);
   const dispatch = useAppDispatch();
+  const isMdUp = useMediaQuery<Theme>((th) => th.breakpoints.up("md"));
   const { resolvedLanguage } = useTranslation().i18n;
 
   useEffect(() => {
@@ -84,6 +85,9 @@ export default function TreeView(props: TreeViewProps): ReactElement {
 
   useEffect(() => {
     setVisible(true);
+    if (currentDomain.id && currentDomain.id !== rootId) {
+      animate("#current-domain", { scale: [1, 1.05, 1] }, { duration: 1 });
+    }
   }, [currentDomain]);
 
   const goToDomFromId = useCallback(
@@ -149,26 +153,22 @@ export default function TreeView(props: TreeViewProps): ReactElement {
       </Grid2>
 
       {/* Domain tree */}
-      <Zoom
-        in={visible}
-        onEntered={() => {
-          if (currentDomain.id && currentDomain.id !== rootId) {
-            animate("#current-domain", { scale: [1, 0.9, 1] }, { duration: 1 });
-          }
-        }}
-      >
-        <Grid2
-          container
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <TreeDepiction
-            currentDomain={currentDomain}
-            animate={animateHandler}
-          />
-        </Grid2>
-      </Zoom>
+      {isMdUp ? (
+        <Zoom in={visible}>
+          <Grid2 container justifyContent="center">
+            <TreeDepiction
+              animate={animateHandler}
+              currentDomain={currentDomain}
+            />
+          </Grid2>
+        </Zoom>
+      ) : (
+        <TreeDepiction
+          animate={animateHandler}
+          currentDomain={currentDomain}
+          small
+        />
+      )}
     </>
   );
 }
