@@ -37,7 +37,7 @@ describe("TreeView", () => {
 
       describe("without exit", () => {
         beforeEach(async () => {
-          await renderTree(undefined);
+          await renderTree();
         });
 
         it("has top button", async () => {
